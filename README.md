@@ -1,5 +1,8 @@
 # Harden-Windows-Security
 
+This is also available on PowerShell Gallery
+https://www.powershellgallery.com/packages/Harden-Windows-Security/
+
 Harden Windows 11 Safely without any worries for breaking anything or causing problem.
 
 it is suitable for tech-savvy and non-tech-savvy users and it is recommended to be run and applied to every Windows system.

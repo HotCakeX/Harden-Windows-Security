@@ -1,7 +1,7 @@
 
 <#PSScriptInfo
 
-.VERSION 2022.11.15
+.VERSION 2022.11.24
 
 .GUID d435a293-c9ee-4217-8dc1-4ad2318a5770
 
@@ -30,29 +30,30 @@ Version 2022.11.06:  Completely suppressed elevation related console error messa
 Version 2022.11.07:  Added group name to the Windows Firewall rules created using this script for easier recognition
 Version 2022.11.13:  Added TLS and Cipher Suites hardening
 Version 2022.11.15:  Changed a few commands, that were using netsh utility, to now use modern PowerShell cmdlets.
+VERSION 2022.11.24:  Improved the TLS settings section with more options and added one Windows Defender related setting
 #>
 
 <# 
 
 .SYNOPSIS
-    Harden Windows 11 Safely without any worries for breaking anything or causing problem.
+    Harden Windows 11 Safely and Securely without breaking anything or causing problems
 
 .DESCRIPTION
-Harden Windows 11 Safely without any worries for breaking anything or causing problem.
+Harden Windows 11 Safely and Securely without breaking anything or causing problems
 
-it is suitable for tech-savvy and non-tech-savvy users and it is recommended to be run and applied to every Windows system.
+This script is suitable for tech-savvy and non-tech-savvy users and it is recommended to be run and applied to every Windows 11 system.
 
-Every command is clearly explained with comments and if necessary, links to sources are available as comments for each command as well as extra info necessary to understand each command.
+Every command is explained as clearly as possible with comments and if necessary, links to relevant resources are available as comments for each command as well as extra info necessary to understand them.
 
-This script will be maintained up-to-date. always tested on latest available version of Windows. also works on latest versions of Windows insider builds.
+This script will be maintained up-to-date. always tested on the latest available version of Windows. also works on latest versions of Windows insider builds.
 
 This script should be run for each user to be effective. admins run it as admin and standard users run it as standard, in PowerShell.
 
 This script can be run infinite number of times without causing any problem, it doesn't make any duplicate modification.
 
-Things with #TopSecurity tag can break functionalities so this script doesn't enable them by default. press Control + F and search for #TopSecurity in the script to find those commands and how to enable them.
+Things with #TopSecurity tag can break functionalities so this script doesn't enable them by default. press Control + F and search for #TopSecurity in this PowerShell script file to find those commands and how to enable them.
 
-When the script is running, please keep an eye on the PowerShell console because you might need to provide input for Bitlocker activation etc.
+When the script is running as Admin, please keep an eye on the PowerShell console because you might need to provide input for Bitlocker activation if it's not already set up with Startup-key key protector.
 
 .EXAMPLE
 
@@ -60,7 +61,7 @@ When the script is running, please keep an eye on the PowerShell console because
    type: "Set-ExecutionPolicy bypass" without quotes, in an Elevated PowerShell, to allow running this script.
    
 .NOTES
-    When the script is running as Admin, please keep an eye on the PowerShell console because you might need to provide some input for Bitlocker activation if Bitlocker isn't fully enabled on your computer.
+    When the script is running as Admin, please keep an eye on the PowerShell console because you might need to provide input for Bitlocker activation if it's not already set up with Startup-key key protector.
 
 #>
 
@@ -458,11 +459,8 @@ set-processmitigation -System -Enable ForceRelocateImages
 # Set-ProcessMitigation -Name "D:\program.exe" -Disable ForceRelocateImages
 
 
-# Set the Network Location of all connections to Public/Private
+# Set the Network Location of all connections to Public
  Get-NetConnectionProfile | Set-NetConnectionProfile -NetworkCategory Public
-
-
-
 
 
 
@@ -1532,13 +1530,37 @@ else {
 
 
 
+<#
+
+# =========================================================================================================================
+# ==========================================TLS Security Settings==========================================================
+# =========================================================================================================================
 
 
 
-# TLS Security Settings
+
+Resources used:
+
+https://learn.microsoft.com/en-us/windows/win32/secauthn/protocols-in-tls-ssl--schannel-ssp-
+These registry settings only affect things that use Microsoft Schannel, such as Windows components and Microsoft software.
+other 3rd party software might use a portable TLS stack implementation that won't be affected by these settings. 
+
+  
+  https://en.wikipedia.org/wiki/Comparison_of_TLS_implementations#Portability_concerns
 
 
-# Disable TLS 1
+  https://techcommunity.microsoft.com/t5/core-infrastructure-and-security/demystifying-schannel/ba-p/259233
+
+
+  https://dirteam.com/sander/2019/07/30/howto-disable-weak-protocols-cipher-suites-and-hashing-algorithms-on-web-application-proxies-ad-fs-servers-and-windows-servers-running-azure-ad-connect/
+
+  https://github.com/ssllabs/research/wiki/SSL-and-TLS-Deployment-Best-Practices
+
+  https://learn.microsoft.com/en-us/windows/win32/secauthn/tls-cipher-suites-in-windows-11
+  
+  #>
+
+# Disable TLS v1
 # step 1
 $RegistryPath = 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.0\Client'  
 $Name         = 'DisabledByDefault'  
@@ -1569,7 +1591,7 @@ New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWO
 
 
 
-# Disable TLS 1.1
+# Disable TLS v1.1
 # step 1
 $RegistryPath = 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.1\Client'  
 $Name         = 'DisabledByDefault'  
@@ -1598,10 +1620,13 @@ New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWO
 
 
 # Enable TLS_CHACHA20_POLY1305_SHA256 Cipher Suite which is available but not enabled by default in Windows 11
-# https://learn.microsoft.com/en-us/windows/win32/secauthn/tls-cipher-suites-in-windows-11
 Enable-TlsCipherSuite -Name "TLS_CHACHA20_POLY1305_SHA256" -Position 0
 
-# disabling weak cipher suites
+
+
+
+# Disabling weak cipher suites
+
 
 # Disable NULL Cipher Suites - 1 
 Disable-TlsCipherSuite TLS_RSA_WITH_NULL_SHA256
@@ -1613,6 +1638,188 @@ Disable-TlsCipherSuite TLS_PSK_WITH_NULL_SHA384
 Disable-TlsCipherSuite TLS_PSK_WITH_NULL_SHA256
 
 
+
+
+
+Disable-TlsCipherSuite -Name "TLS_RSA_WITH_AES_256_GCM_SHA384"
+Disable-TlsCipherSuite -Name "TLS_RSA_WITH_AES_128_GCM_SHA256"
+Disable-TlsCipherSuite -Name "TLS_RSA_WITH_AES_256_CBC_SHA256" 
+Disable-TlsCipherSuite -Name "TLS_RSA_WITH_AES_128_CBC_SHA256"
+Disable-TlsCipherSuite -Name "TLS_RSA_WITH_AES_256_CBC_SHA"
+Disable-TlsCipherSuite -Name "TLS_RSA_WITH_AES_128_CBC_SHA"
+Disable-TlsCipherSuite -Name "TLS_PSK_WITH_AES_256_GCM_SHA384" 
+Disable-TlsCipherSuite -Name "TLS_PSK_WITH_AES_128_GCM_SHA256"
+Disable-TlsCipherSuite -Name "TLS_PSK_WITH_AES_256_CBC_SHA384"
+Disable-TlsCipherSuite -Name "TLS_PSK_WITH_AES_128_CBC_SHA256" 
+
+
+
+# Enabling Diffie–Hellman based Cipher Suits
+
+# TLS_DHE_RSA_WITH_AES_128_GCM_SHA256
+# must be already available by default according to Microsoft Docs but it isn't, on Windows 11 insider dev build 25247
+# https://learn.microsoft.com/en-us/windows/win32/secauthn/tls-cipher-suites-in-windows-11
+Enable-TlsCipherSuite -Name "TLS_DHE_RSA_WITH_AES_128_GCM_SHA256"
+
+
+
+# TLS_DHE_RSA_WITH_AES_128_CBC_SHA
+# Not enabled by default on Windows 11 according to the Microsoft Docs above
+Enable-TlsCipherSuite -Name "TLS_DHE_RSA_WITH_AES_128_CBC_SHA"
+
+
+# TLS_DHE_RSA_WITH_AES_256_CBC_SHA
+# Not enabled by default on Windows 11 according to the Microsoft Docs above
+Enable-TlsCipherSuite -Name "TLS_DHE_RSA_WITH_AES_256_CBC_SHA"
+
+
+
+
+
+
+
+
+
+# Disabling weak and unsecure ciphers
+
+
+
+# NULL
+
+$RegistryPath = 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\NULL\'  
+$Name         = 'Enabled'  
+$Value        = '0' 
+If (-NOT (Test-Path $RegistryPath)) {   New-Item -Path $RegistryPath -Force | Out-Null } 
+New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
+
+
+
+
+# DES 56-bit
+ 
+([Microsoft.Win32.RegistryKey]::OpenRemoteBaseKey([Microsoft.Win32.RegistryHive]::LocalMachine, $env:COMPUTERNAME)).CreateSubKey('SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\DES 56/56')
+$RegistryPath = "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\DES 56/56" 
+$Name         = 'Enabled'  
+$Value        = '0' 
+New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
+
+
+
+
+# RC2 40-bit
+
+([Microsoft.Win32.RegistryKey]::OpenRemoteBaseKey([Microsoft.Win32.RegistryHive]::LocalMachine, $env:COMPUTERNAME)).CreateSubKey('SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC2 40/128')
+$RegistryPath = 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC2 40/128' 
+$Name         = 'Enabled'  
+$Value        = '0' 
+New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
+
+
+
+
+# RC2 56-bit
+
+([Microsoft.Win32.RegistryKey]::OpenRemoteBaseKey([Microsoft.Win32.RegistryHive]::LocalMachine, $env:COMPUTERNAME)).CreateSubKey('SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC2 56/128')
+$RegistryPath = 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC2 56/128' 
+$Name         = 'Enabled'  
+$Value        = '0' 
+New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
+
+
+
+
+# RC2 128-bit
+
+([Microsoft.Win32.RegistryKey]::OpenRemoteBaseKey([Microsoft.Win32.RegistryHive]::LocalMachine, $env:COMPUTERNAME)).CreateSubKey('SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC2 128/128')
+$RegistryPath = 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC2 128/128' 
+$Name         = 'Enabled'  
+$Value        = '0'
+New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
+
+
+
+
+# RC4 40-bit
+
+([Microsoft.Win32.RegistryKey]::OpenRemoteBaseKey([Microsoft.Win32.RegistryHive]::LocalMachine, $env:COMPUTERNAME)).CreateSubKey('SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC4 40/128')
+$RegistryPath = 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC4 40/128'
+$Name         = 'Enabled'  
+$Value        = '0' 
+New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
+
+
+
+
+# RC4 56-bit
+
+([Microsoft.Win32.RegistryKey]::OpenRemoteBaseKey([Microsoft.Win32.RegistryHive]::LocalMachine, $env:COMPUTERNAME)).CreateSubKey('SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC4 56/128')
+$RegistryPath = 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC4 56/128'
+$Name         = 'Enabled'  
+$Value        = '0' 
+New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
+
+
+
+
+# RC4 64-bit
+
+([Microsoft.Win32.RegistryKey]::OpenRemoteBaseKey([Microsoft.Win32.RegistryHive]::LocalMachine, $env:COMPUTERNAME)).CreateSubKey('SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC4 64/128')
+$RegistryPath = 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC4 64/128'
+$Name         = 'Enabled'  
+$Value        = '0'
+New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
+
+
+
+
+# RC4 128-bit
+
+([Microsoft.Win32.RegistryKey]::OpenRemoteBaseKey([Microsoft.Win32.RegistryHive]::LocalMachine, $env:COMPUTERNAME)).CreateSubKey('SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC4 128/128')
+$RegistryPath = 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC4 128/128'
+$Name         = 'Enabled'  
+$Value        = '0'
+New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
+
+
+
+# 3DES 168-bit (Triple DES 168)
+
+([Microsoft.Win32.RegistryKey]::OpenRemoteBaseKey([Microsoft.Win32.RegistryHive]::LocalMachine, $env:COMPUTERNAME)).CreateSubKey('SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\Triple DES 168')
+$RegistryPath = 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\Triple DES 168'
+$Name         = 'Enabled'  
+$Value        = '0'
+New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
+
+
+# Disable MD5 Hashing Algorithm
+
+$RegistryPath = 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Hashes\MD5'  
+$Name         = 'Enabled'  
+$Value        = '0' 
+If (-NOT (Test-Path $RegistryPath)) {   New-Item -Path $RegistryPath -Force | Out-Null } 
+New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
+
+
+
+
+
+
+
+
+
+
+
+# =========================================================================================================================
+# ==========================================End of TLS Security Settings===================================================
+# =========================================================================================================================
+
+
+
+
+
+# Optimizing Network Protection Performance of Windows Defender - this was off by default on Windows 11 insider build 25247
+# https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/network-protection?view=o365-worldwide#optimizing-network-protection-performance
+Set-MpPreference -AllowSwitchToAsyncInspection $True
 
 
 

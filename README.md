@@ -4,7 +4,7 @@ Harden Windows 11 Safely, securely and without breaking anything
 
 This is suitable for tech-savvy and non-tech-savvy users and it is recommended to be run and applied to every Windows system.
 
-Above each command there are comments (lines starting with # or <# are comments in PowerShell) that explain what it does and I provided links to additional resources where necessary to help understand it better.
+Above each command there are comments (lines starting with `#` or `<#` are comments in PowerShell) that explain what it does and I provided links to additional resources where necessary to help understand it better.
 
 This script will be maintained up-to-date. always tested on latest available version of Windows (stable and insider builds)
 

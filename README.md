@@ -38,5 +38,6 @@ https://github.com/HotCakeX/Harden-Windows-Security/discussions
 
 
 ![PowerShell Gallery](https://img.shields.io/powershellgallery/v/Harden-Windows-Security?style=for-the-badge)
+![PowerShell Gallery Downloads count](https://img.shields.io/powershellgallery/dt/Harden-Windows-Security?style=for-the-badge)
 
 

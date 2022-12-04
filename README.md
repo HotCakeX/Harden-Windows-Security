@@ -8,6 +8,7 @@
 
 Above each command there are comments (lines starting with `#` or `<#` are comments in PowerShell) that explain what it does and I provided links to additional resources where necessary to help understand it better. 
   
+___
 
 This script will be kept up-to-date. always tested on latest available version of Windows (stable and insider builds) 
   
@@ -35,9 +36,11 @@ if you have any questions, requests, suggestions etc. about this script, please 
 
 https://github.com/HotCakeX/Harden-Windows-Security/discussions
 
-https://img.shields.io/powershellgallery/v/Harden-Windows-Security?style=for-the-badge
 
 
 ![PowerShell Gallery](https://img.shields.io/powershellgallery/v/Harden-Windows-Security?style=for-the-badge)
+
+
+<img alt="PowerShell Gallery Version" src="https://img.shields.io/powershellgallery/v/Harden-Windows-Security?color=fdfd&label=fdf&logo=fdfd&logoColor=fdfd&style=for-the-badge">
 
 

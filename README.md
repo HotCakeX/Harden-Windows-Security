@@ -12,7 +12,7 @@ Above each command there are comments (lines starting with `#` or `<#` are comme
 This script will be kept up-to-date. always tested on latest available version of Windows (stable and insider builds) 
   
 
-This script should be run for each user individually to be effective. admins should run it as admin and standard users run it as standard, in PowerShell. 
+This script should be run for each user individually to be effective. admins should run it with Administrator privileges and standard users run it with standard privileges, in PowerShell. 
 
   
 This script can be run infinite number of times without causing any problem, it does not make any duplicate modification. 
@@ -29,3 +29,8 @@ This script is available and mirrored on both PowerShell Gallery and GitHub
 https://www.powershellgallery.com/packages/Harden-Windows-Security/
 
 https://github.com/HotCakeX/Harden-Windows-Security
+
+
+if you have any questions, requests, suggestions etc. about this script, please open a new discussion in Github:
+
+https://github.com/HotCakeX/Harden-Windows-Security/discussions

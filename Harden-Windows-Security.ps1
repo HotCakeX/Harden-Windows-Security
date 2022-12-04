@@ -1,7 +1,7 @@
 
 <#PSScriptInfo
 
-.VERSION 2022.12.04
+.VERSION 2022.12.4.1
 
 .GUID d435a293-c9ee-4217-8dc1-4ad2318a5770
 
@@ -26,12 +26,13 @@
 .EXTERNALSCRIPTDEPENDENCIES 
 
 .RELEASENOTES
-Version 2022.11.06:  Completely suppressed elevation related console error messages when running this script as Standard user
-Version 2022.11.07:  Added group name to the Windows Firewall rules created using this script for easier recognition
-Version 2022.11.13:  Added TLS and Cipher Suites hardening
-Version 2022.11.15:  Changed a few commands, that were using netsh utility, to now use modern PowerShell cmdlets.
-VERSION 2022.11.24:  Improved the TLS settings section with more options and added one Windows Defender related setting
-VERSION 2022.12.04:  Improved the overall quality of the script code
+Version 2022.11.06:   Completely suppressed elevation related console error messages when running this script as Standard user
+Version 2022.11.07:   Added group name to the Windows Firewall rules created using this script for easier recognition
+Version 2022.11.13:   Added TLS and Cipher Suites hardening
+Version 2022.11.15:   Changed a few commands, that were using netsh utility, to now use modern PowerShell cmdlets.
+Version 2022.11.24:   Improved the TLS settings section with more options and added one Windows Defender related setting
+Version 2022.12.4:    Improved the overall quality of the script code
+Version 2022.12.4.1:  Changed the descripption
 #>
 
 <# 
@@ -40,21 +41,30 @@ VERSION 2022.12.04:  Improved the overall quality of the script code
     Harden Windows 11 Safely and Securely without breaking anything or causing problems
 
 .DESCRIPTION
-Harden Windows 11 Safely and Securely without breaking anything or causing problems
+Harden Windows 11 Safely, securely and without breaking anything 🔐
+This is suitable for tech-savvy and non-tech-savvy users and it is recommended to be run and applied to every Windows system.
 
-This script is suitable for tech-savvy and non-tech-savvy users and it is recommended to be run and applied to every Windows 11 system.
+Above each command there are comments (lines starting with # or <# are comments in PowerShell) that explain what it does and I provided links to additional resources where necessary to help understand it better.
 
-Every command is explained as clearly as possible with comments and if necessary, links to relevant resources are available as comments for each command as well as extra info necessary to understand them.
+This script will be kept up-to-date. always tested on latest available version of Windows (stable and insider builds)
 
-This script will be maintained up-to-date. always tested on the latest available version of Windows. also works on latest versions of Windows insider builds.
+This script should be run for each user individually to be effective. admins should run it with Administrator privileges and standard users run it with standard privileges, in PowerShell.
 
-This script should be run for each user to be effective. admins run it as admin and standard users run it as standard, in PowerShell.
+This script can be run infinite number of times without causing any problem, it does not make any duplicate modification.
 
-This script can be run infinite number of times without causing any problem, it doesn't make any duplicate modification.
+Things with #TopSecurity tag can break functionalities or cause difficulties so this script does NOT enable them by default. press Control + F and search for #TopSecurity in the script to find those commands and how to enable them if you want.
 
-Things with #TopSecurity tag can break functionalities so this script doesn't enable them by default. press Control + F and search for #TopSecurity in this PowerShell script file to find those commands and how to enable them.
+When the script is running for the first time, please keep an eye on the PowerShell console because you might need to provide input for Bitlocker activation etc.
 
-When the script is running as Admin, please keep an eye on the PowerShell console because you might need to provide input for Bitlocker activation if it's not already set up with Startup-key key protector.
+This script is available and mirrored on both PowerShell Gallery and GitHub
+
+https://www.powershellgallery.com/packages/Harden-Windows-Security/
+
+https://github.com/HotCakeX/Harden-Windows-Security
+
+🎯 if you have any questions, requests, suggestions etc. about this script, please open a new discussion in Github:
+
+https://github.com/HotCakeX/Harden-Windows-Security/discussions
 
 .EXAMPLE
 

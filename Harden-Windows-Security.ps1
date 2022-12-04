@@ -1,7 +1,7 @@
 
 <#PSScriptInfo
 
-.VERSION 2022.11.24
+.VERSION 2022.12.04
 
 .GUID d435a293-c9ee-4217-8dc1-4ad2318a5770
 
@@ -31,6 +31,7 @@ Version 2022.11.07:  Added group name to the Windows Firewall rules created usin
 Version 2022.11.13:  Added TLS and Cipher Suites hardening
 Version 2022.11.15:  Changed a few commands, that were using netsh utility, to now use modern PowerShell cmdlets.
 VERSION 2022.11.24:  Improved the TLS settings section with more options and added one Windows Defender related setting
+VERSION 2022.12.04:  Improved the overall quality of the script code
 #>
 
 <# 
@@ -82,7 +83,7 @@ Function Test-IsAdmin
  
 if(-NOT (Test-IsAdmin))
 
-   { write-host "Skipping Admin commands" -ForegroundColor black -BackgroundColor Magenta }
+   { write-host "Skipping Admin commands" -ForegroundColor Magenta }
 
 else {
   
@@ -268,7 +269,7 @@ New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWO
 
 if(-NOT (Test-IsAdmin))
 
-   { write-host "Skipping Admin commands" -ForegroundColor black -BackgroundColor Magenta }
+   { write-host "Skipping Admin commands" -ForegroundColor Magenta }
 
 else {
 
@@ -575,7 +576,7 @@ New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWO
 
 if(-NOT (Test-IsAdmin))
 
-   { write-host "Skipping Admin commands" -ForegroundColor black -BackgroundColor Magenta }
+   { write-host "Skipping Admin commands" -ForegroundColor Magenta }
 
 else {
 
@@ -647,7 +648,7 @@ New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWO
 
 if(-NOT (Test-IsAdmin))
 
-   { write-host "Skipping Admin commands" -ForegroundColor black -BackgroundColor Magenta }
+   { write-host "Skipping Admin commands" -ForegroundColor Magenta }
 
 else {
 
@@ -715,7 +716,7 @@ $RegistryPath = 'HKLM:\SOFTWARE\Classes\.devicemetadata-ms'
 }
 catch
 {
-write-host "phishing mitigation for WDK (Windows Driver Kit) not applicable, it's probably not installed `n" -ForegroundColor black -BackgroundColor yellow
+write-host "phishing mitigation for WDK (Windows Driver Kit) not applicable, it's probably not installed `n" -ForegroundColor Magenta
 }
 
 try {
@@ -724,7 +725,7 @@ $RegistryPath = 'HKLM:\SOFTWARE\Classes\.devicemanifest-ms'
 }
 catch
 {
-write-host "phishing mitigation for WDK (Windows Driver Kit) not applicable, it's probably not installed `n" -ForegroundColor black -BackgroundColor yellow
+write-host "phishing mitigation for WDK (Windows Driver Kit) not applicable, it's probably not installed `n" -ForegroundColor Magenta
 }
 
 
@@ -799,7 +800,7 @@ function Firewallblock {
 
                 $r = Get-NetFirewallRule -DisplayName $n 2> $null; 
                 if ($r) { 
-                write-host "Firewall rule already exists, skipping to the next one" -ForegroundColor Yellow -BackgroundColor DarkGray ; 
+                write-host "Firewall rule already exists, skipping to the next one" -ForegroundColor Magenta ; 
                 } 
                 else { 
                 New-NetFirewallRule -DisplayName $n -Protocol "TCP" -Program $p -Action Block -Direction Outbound -Profile Any -Enabled True -Group "LOLBins Blocking" 
@@ -1132,7 +1133,7 @@ New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType str
 
 if(-NOT (Test-IsAdmin))
 
-   { write-host "Skipping Admin commands" -ForegroundColor Black -BackgroundColor Magenta }
+   { write-host "Skipping Admin commands" -ForegroundColor Magenta }
 
 else {
 
@@ -1162,7 +1163,7 @@ try {
  }
  catch  
  { 
- write-host "user account is already part of the Hyper-V Administrators group `n" -ForegroundColor black -BackgroundColor yellow
+ write-host "user account is already part of the Hyper-V Administrators group `n" -ForegroundColor Magenta
  
  } 
  
@@ -1253,15 +1254,26 @@ New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWO
 
 <# Disable PowerShell v2
 https://devblogs.microsoft.com/powershell/windows-powershell-2-0-deprecation/ #>
+# Enable Windows Defender Application Guard optional feature
+# Enable Windows Sandbox optional feature
+
+# since PowerShell Core has problem with these commands (There are Github issues for it already),
+# letting the built-in PowerShell handle them
+
+$arguments = @"
 Disable-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2 -norestart
 Disable-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2Root -norestart
-
-
-# Enable Windows Defender Application Guard optional feature
 Enable-WindowsOptionalFeature -online -FeatureName Windows-Defender-ApplicationGuard -norestart
-
-# Enable Windows Sandbox optional feature
 Enable-WindowsOptionalFeature -online -FeatureName Containers-DisposableClientVM -All -norestart
+"@
+
+if ($PSVersionTable.PSVersion -gt [version]"5.1") {
+
+    
+
+    Start-Process -FilePath "PowerShell.exe" -ArgumentList $arguments
+  }
+
 
 
 
@@ -1530,14 +1542,14 @@ else {
 
 
 
-<#
+
 
 # =========================================================================================================================
 # ==========================================TLS Security Settings==========================================================
 # =========================================================================================================================
 
 
-
+<#
 
 Resources used:
 
@@ -1628,29 +1640,32 @@ Enable-TlsCipherSuite -Name "TLS_CHACHA20_POLY1305_SHA256" -Position 0
 # Disabling weak cipher suites
 
 
-# Disable NULL Cipher Suites - 1 
-Disable-TlsCipherSuite TLS_RSA_WITH_NULL_SHA256
-# Disable NULL Cipher Suites - 2
-Disable-TlsCipherSuite TLS_RSA_WITH_NULL_SHA
-# Disable NULL Cipher Suites - 3
-Disable-TlsCipherSuite TLS_PSK_WITH_NULL_SHA384
-# Disable NULL Cipher Suites - 4
-Disable-TlsCipherSuite TLS_PSK_WITH_NULL_SHA256
-
-
-
-
-
-Disable-TlsCipherSuite -Name "TLS_RSA_WITH_AES_256_GCM_SHA384"
-Disable-TlsCipherSuite -Name "TLS_RSA_WITH_AES_128_GCM_SHA256"
-Disable-TlsCipherSuite -Name "TLS_RSA_WITH_AES_256_CBC_SHA256" 
-Disable-TlsCipherSuite -Name "TLS_RSA_WITH_AES_128_CBC_SHA256"
-Disable-TlsCipherSuite -Name "TLS_RSA_WITH_AES_256_CBC_SHA"
-Disable-TlsCipherSuite -Name "TLS_RSA_WITH_AES_128_CBC_SHA"
-Disable-TlsCipherSuite -Name "TLS_PSK_WITH_AES_256_GCM_SHA384" 
-Disable-TlsCipherSuite -Name "TLS_PSK_WITH_AES_128_GCM_SHA256"
-Disable-TlsCipherSuite -Name "TLS_PSK_WITH_AES_256_CBC_SHA384"
-Disable-TlsCipherSuite -Name "TLS_PSK_WITH_AES_128_CBC_SHA256" 
+try {
+  # Disable NULL Cipher Suites - 1 
+  Disable-TlsCipherSuite TLS_RSA_WITH_NULL_SHA256
+  # Disable NULL Cipher Suites - 2
+  Disable-TlsCipherSuite TLS_RSA_WITH_NULL_SHA
+  # Disable NULL Cipher Suites - 3
+  Disable-TlsCipherSuite TLS_PSK_WITH_NULL_SHA384
+  # Disable NULL Cipher Suites - 4
+  Disable-TlsCipherSuite TLS_PSK_WITH_NULL_SHA256
+  
+  
+  
+  Disable-TlsCipherSuite -Name "TLS_RSA_WITH_AES_256_GCM_SHA384"
+  Disable-TlsCipherSuite -Name "TLS_RSA_WITH_AES_128_GCM_SHA256"
+  Disable-TlsCipherSuite -Name "TLS_RSA_WITH_AES_256_CBC_SHA256" 
+  Disable-TlsCipherSuite -Name "TLS_RSA_WITH_AES_128_CBC_SHA256"
+  Disable-TlsCipherSuite -Name "TLS_RSA_WITH_AES_256_CBC_SHA"
+  Disable-TlsCipherSuite -Name "TLS_RSA_WITH_AES_128_CBC_SHA"
+  Disable-TlsCipherSuite -Name "TLS_PSK_WITH_AES_256_GCM_SHA384" 
+  Disable-TlsCipherSuite -Name "TLS_PSK_WITH_AES_128_GCM_SHA256"
+  Disable-TlsCipherSuite -Name "TLS_PSK_WITH_AES_256_CBC_SHA384"
+  Disable-TlsCipherSuite -Name "TLS_PSK_WITH_AES_128_CBC_SHA256" 
+  }
+  catch {
+      Write-Host "All weak TLS Cipher Suites have been disabled" -ForegroundColor Magenta
+  }
 
 
 
@@ -1822,6 +1837,17 @@ New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWO
 Set-MpPreference -AllowSwitchToAsyncInspection $True
 
 
+
+
+# Setting Edge Traversal policy for All Firewall rules to Block (only inbound rules have that) 
+# https://learn.microsoft.com/en-us/windows/win32/teredo/receiving-unsolicited-traffic-over-teredo
+
+Get-NetFirewallRule | Where-Object {$_.EdgeTraversalPolicy -notmatch "Block"} | ForEach-Object { Set-NetFirewallRule -Name $_.Name -EdgeTraversalPolicy Block}
+
+$badrules = Get-NetFirewallRule | Where-Object {$_.EdgeTraversalPolicy -notmatch "Block"}
+
+
+Write-Host "There are currently" $badrules.count "Firewall rules that allow Edge Traversal" -ForegroundColor Magenta
 
 
 

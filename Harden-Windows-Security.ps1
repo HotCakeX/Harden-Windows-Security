@@ -1,7 +1,7 @@
 
 <#PSScriptInfo
 
-.VERSION 2022.12.4.1
+.VERSION 2022.12.5
 
 .GUID d435a293-c9ee-4217-8dc1-4ad2318a5770
 
@@ -33,6 +33,7 @@ Version 2022.11.15:   Changed a few commands, that were using netsh utility, to 
 Version 2022.11.24:   Improved the TLS settings section with more options and added one Windows Defender related setting
 Version 2022.12.4:    Improved the overall quality of the script code
 Version 2022.12.4.1:  Changed the descripption
+ersion 2022.12.5:     Added 3 more privacy-oriented Microsoft Edge policies
 #>
 
 <# 
@@ -1324,7 +1325,28 @@ If (-NOT (Test-Path $RegistryPath)) {   New-Item -Path $RegistryPath -Force | Ou
 New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
 
 
+# Enable Encrypted Client Hello - ECH
+$RegistryPath = 'HKLM:\SOFTWARE\Policies\Microsoft\Edge'  
+$Name         = 'EncryptedClientHelloEnabled'  
+$Value        = '1' 
+If (-NOT (Test-Path $RegistryPath)) {   New-Item -Path $RegistryPath -Force | Out-Null } 
+New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
 
+
+# Disable access to sensors such as light and motion, in Microsoft Edge
+$RegistryPath = 'HKLM:\SOFTWARE\Policies\Microsoft\Edge'  
+$Name         = 'DefaultSensorsSetting'  
+$Value        = '2' 
+If (-NOT (Test-Path $RegistryPath)) {   New-Item -Path $RegistryPath -Force | Out-Null } 
+New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
+
+
+# Disable access to Clipboard, in Microsoft Edge
+$RegistryPath = 'HKLM:\SOFTWARE\Policies\Microsoft\Edge'  
+$Name         = 'DefaultClipboardSetting'  
+$Value        = '2' 
+If (-NOT (Test-Path $RegistryPath)) {   New-Item -Path $RegistryPath -Force | Out-Null } 
+New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
 
 
 #////////////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\///////////

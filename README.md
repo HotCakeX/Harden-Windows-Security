@@ -1,6 +1,6 @@
 # Harden-Windows-Security
 
-Harden Windows 11 Safely, securely and without breaking anything 
+## Harden Windows 11 Safely, securely and without breaking anything 
   
 
 This is suitable for tech-savvy and non-tech-savvy users and it is recommended to be run and applied to every Windows system. 

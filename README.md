@@ -31,15 +31,12 @@ https://www.powershellgallery.com/packages/Harden-Windows-Security/
 https://github.com/HotCakeX/Harden-Windows-Security
 
 
-if you have any questions, requests, suggestions etc. about this script, please open a new discussion in Github:
+🎯 if you have any questions, requests, suggestions etc. about this script, please open a new discussion in Github:
 
 https://github.com/HotCakeX/Harden-Windows-Security/discussions
 
 
 
 ![PowerShell Gallery](https://img.shields.io/powershellgallery/v/Harden-Windows-Security?style=for-the-badge)
-
-
-<img alt="PowerShell Gallery Version" src="https://img.shields.io/powershellgallery/v/Harden-Windows-Security?color=fdfd&label=fdf&logo=fdfd&logoColor=fdfd&style=for-the-badge">
 
 

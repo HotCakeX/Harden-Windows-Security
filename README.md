@@ -1,6 +1,7 @@
 # Harden-Windows-Security
 
 This script is available and mirrored on both PowerShell Gallery and GitHub
+
 https://www.powershellgallery.com/packages/Harden-Windows-Security/
 https://github.com/HotCakeX/Harden-Windows-Security
 

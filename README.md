@@ -35,4 +35,7 @@ if you have any questions, requests, suggestions etc. about this script, please 
 
 https://github.com/HotCakeX/Harden-Windows-Security/discussions
 
-https://img.shields.io/powershellgallery/v/Harden-Windows-Security?style=for-the-badge
+
+![PowerShell Gallery]([https://myoctocat.com/assets/images/base-octocat.svg](https://img.shields.io/powershellgallery/v/Harden-Windows-Security?style=for-the-badge))
+
+

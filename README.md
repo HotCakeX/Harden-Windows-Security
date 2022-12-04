@@ -34,3 +34,5 @@ https://github.com/HotCakeX/Harden-Windows-Security
 if you have any questions, requests, suggestions etc. about this script, please open a new discussion in Github:
 
 https://github.com/HotCakeX/Harden-Windows-Security/discussions
+
+https://img.shields.io/powershellgallery/v/Harden-Windows-Security?style=for-the-badge

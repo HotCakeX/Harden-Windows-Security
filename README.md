@@ -15,6 +15,7 @@ This script will be kept up-to-date. always tested on latest available version o
 
 This script should be run for each user individually to be effective. admins should run it with Administrator privileges and standard users run it with standard privileges, in PowerShell. 
 
+___
   
 This script can be run infinite number of times without causing any problem, it does not make any duplicate modification. 
   
@@ -23,7 +24,8 @@ Things with **#TopSecurity** tag can break functionalities or cause difficulties
   
 
 When the script is running for the first time, please keep an eye on the PowerShell console because you might need to provide input for Bitlocker activation etc. 
-  
+
+___
 
 This script is available and mirrored on both PowerShell Gallery and GitHub 
 

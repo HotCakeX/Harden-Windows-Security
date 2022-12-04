@@ -3,6 +3,7 @@
 This script is available and mirrored on both PowerShell Gallery and GitHub
 
 https://www.powershellgallery.com/packages/Harden-Windows-Security/
+
 https://github.com/HotCakeX/Harden-Windows-Security
 
 Harden Windows 11 Safely, securely and without breaking anything

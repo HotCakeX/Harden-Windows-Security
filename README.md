@@ -10,7 +10,7 @@ ___
 
 Above each command there are comments (lines starting with `#` or `<#` are comments in PowerShell) that explain what it does and I provided links to additional resources where necessary to help understand it better. 
   
-This script will be kept up-to-date. always tested on latest available version of Windows (stable and insider builds) 
+This script will be kept up-to-date. always tested on latest available version of Windows (stable and insider builds). so make sure you always download and use the latest version of it.
   
 This script should be run for each user individually to be effective. admins should run it with Administrator privileges and standard users run it with standard privileges, in PowerShell. 
 

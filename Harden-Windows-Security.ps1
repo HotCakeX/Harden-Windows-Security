@@ -1,7 +1,7 @@
 
 <#PSScriptInfo
 
-.VERSION 2022.12.5
+.VERSION 2022.12.8
 
 .GUID d435a293-c9ee-4217-8dc1-4ad2318a5770
 
@@ -26,14 +26,8 @@
 .EXTERNALSCRIPTDEPENDENCIES 
 
 .RELEASENOTES
-Version 2022.11.06:   Completely suppressed elevation related console error messages when running this script as Standard user
-Version 2022.11.07:   Added group name to the Windows Firewall rules created using this script for easier recognition
-Version 2022.11.13:   Added TLS and Cipher Suites hardening
-Version 2022.11.15:   Changed a few commands, that were using netsh utility, to now use modern PowerShell cmdlets.
-Version 2022.11.24:   Improved the TLS settings section with more options and added one Windows Defender related setting
-Version 2022.12.4:    Improved the overall quality of the script code
-Version 2022.12.4.1:  Changed the descripption
-ersion 2022.12.5:     Added 3 more privacy-oriented Microsoft Edge policies
+Version 2022.12.8: Improved the script
+
 #>
 
 <# 
@@ -47,7 +41,7 @@ This is suitable for tech-savvy and non-tech-savvy users and it is recommended t
 
 Above each command there are comments (lines starting with # or <# are comments in PowerShell) that explain what it does and I provided links to additional resources where necessary to help understand it better.
 
-This script will be kept up-to-date. always tested on latest available version of Windows (stable and insider builds)
+This script will be kept up-to-date. always tested on latest available version of Windows (stable and insider builds). so make sure you always download and use the latest version of it.
 
 This script should be run for each user individually to be effective. admins should run it with Administrator privileges and standard users run it with standard privileges, in PowerShell.
 
@@ -227,15 +221,12 @@ New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWO
 
 
 
+
+} #end of the 1st Admin test function
+
+
+
 # Show known file extensions
-$RegistryPath = 'HKLM:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced'  
-$Name         = 'HideFileExt'  
-$Value        = '0' 
-If (-NOT (Test-Path $RegistryPath)) {   New-Item -Path $RegistryPath -Force | Out-Null } 
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
-
-    } #end of the 1st Admin test function
-
 $RegistryPath = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced'  
 $Name         = 'HideFileExt'  
 $Value        = '0' 
@@ -255,9 +246,9 @@ New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWO
 
 
 
+
+
 # Disable websites accessing local language list
-
-
 $RegistryPath = 'HKCU:\Control Panel\International\User Profile'  
 $Name         = 'HttpAcceptLanguageOptOut'  
 $Value        = '1' 
@@ -278,17 +269,12 @@ New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWO
 
 
 
+
 if(-NOT (Test-IsAdmin))
 
    { write-host "Skipping Admin commands" -ForegroundColor Magenta }
 
 else {
-
-$RegistryPath = 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced'  
-$Name         = 'Hidden'  
-$Value        = '1' 
-If (-NOT (Test-Path $RegistryPath)) {   New-Item -Path $RegistryPath -Force | Out-Null } 
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
 
 
 
@@ -624,6 +610,7 @@ powercfg /setactive ([string]$p.InstanceID).Replace("Microsoft:PowerPlan\{","").
 
 
 # Turn on Enhanced mode search for Windows indexer. the default is classic mode.
+# this causes some UI elements in the search settings in Windows settings to become unavailable for Standard users to view.
 $RegistryPath = 'HKLM:\SOFTWARE\Microsoft\Windows Search'  
 $Name         = 'EnableFindMyFiles'  
 $Value        = '1' 
@@ -1284,75 +1271,6 @@ if ($PSVersionTable.PSVersion -gt [version]"5.1") {
 
     Start-Process -FilePath "PowerShell.exe" -ArgumentList $arguments
   }
-
-
-
-
-#////////////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\///////////
-#////////////////////////////////Microsoft Edge related policies\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-#////////////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\///////////
-# most of these settings aren't synced.
-
-
-# Block 3rd party cookies in Microsoft Edge browser system-wide - doing this from registry/policy because this setting is not synced with user's Microsoft account
-$RegistryPath = 'HKLM:\Software\Policies\Microsoft\Edge'  
-$Name         = 'BlockThirdPartyCookies'  
-$Value        = '1' 
-If (-NOT (Test-Path $RegistryPath)) {   New-Item -Path $RegistryPath -Force | Out-Null } 
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
-
-# set DNS over HTTPS to Automatic - The "automatic" mode will send DNS-over-HTTPS queries first if a DNS-over-HTTPS server is available and may fallback to sending insecure queries on error.
-$RegistryPath = 'HKLM:\SOFTWARE\Policies\Microsoft\Edge'  
-$Name         = 'DnsOverHttpsMode'  
-$Value        = 'automatic' 
-If (-NOT (Test-Path $RegistryPath)) {   New-Item -Path $RegistryPath -Force | Out-Null } 
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType string -Force
-
-
-# block access to geo-location
-$RegistryPath = 'HKLM:\SOFTWARE\Policies\Microsoft\Edge'  
-$Name         = 'DefaultGeolocationSetting'  
-$Value        = '2' 
-If (-NOT (Test-Path $RegistryPath)) {   New-Item -Path $RegistryPath -Force | Out-Null } 
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
-
-
-# Microsoft Edge asks for device-based authentication before auto-filling passwords in websites
-$RegistryPath = 'HKLM:\SOFTWARE\Policies\Microsoft\Edge'  
-$Name         = 'PrimaryPasswordSetting'  
-$Value        = '1' 
-If (-NOT (Test-Path $RegistryPath)) {   New-Item -Path $RegistryPath -Force | Out-Null } 
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
-
-
-# Enable Encrypted Client Hello - ECH
-$RegistryPath = 'HKLM:\SOFTWARE\Policies\Microsoft\Edge'  
-$Name         = 'EncryptedClientHelloEnabled'  
-$Value        = '1' 
-If (-NOT (Test-Path $RegistryPath)) {   New-Item -Path $RegistryPath -Force | Out-Null } 
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
-
-
-# Disable access to sensors such as light and motion, in Microsoft Edge
-$RegistryPath = 'HKLM:\SOFTWARE\Policies\Microsoft\Edge'  
-$Name         = 'DefaultSensorsSetting'  
-$Value        = '2' 
-If (-NOT (Test-Path $RegistryPath)) {   New-Item -Path $RegistryPath -Force | Out-Null } 
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
-
-
-# Disable access to Clipboard, in Microsoft Edge
-$RegistryPath = 'HKLM:\SOFTWARE\Policies\Microsoft\Edge'  
-$Name         = 'DefaultClipboardSetting'  
-$Value        = '2' 
-If (-NOT (Test-Path $RegistryPath)) {   New-Item -Path $RegistryPath -Force | Out-Null } 
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
-
-
-#////////////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\///////////
-#////////////////////////////////End of Microsoft Edge related policies\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-#////////////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\///////////
-
 
 
 

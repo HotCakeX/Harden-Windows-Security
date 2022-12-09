@@ -1,7 +1,7 @@
 
 <#PSScriptInfo
 
-.VERSION 2022.12.9
+.VERSION 2022.12.9.1
 
 .GUID d435a293-c9ee-4217-8dc1-4ad2318a5770
 
@@ -17,7 +17,7 @@
 
 .PROJECTURI https://github.com/HotCakeX/Harden-Windows-Security
 
-.ICONURI https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/ICONURI%20.jpg
+.ICONURI https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/ICONURI.png
 
 .EXTERNALMODULEDEPENDENCIES 
 
@@ -28,6 +28,7 @@
 .RELEASENOTES
 Version 2022.12.8: Improved the script
 Version 2022.12.9: Configured LSASS process to run as a protected process with UEFI Lock
+Version 2022.12.9.1: Added new icon for the script
 
 #>
 

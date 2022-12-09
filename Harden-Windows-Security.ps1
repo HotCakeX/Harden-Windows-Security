@@ -1,13 +1,13 @@
 
 <#PSScriptInfo
 
-.VERSION 2022.12.8
+.VERSION 2022.12.9
 
 .GUID d435a293-c9ee-4217-8dc1-4ad2318a5770
 
 .AUTHOR HotCakeX
 
-.COMPANYNAME
+.COMPANYNAME HotCakeX Corp.
 
 .COPYRIGHT N\A
 
@@ -15,9 +15,9 @@
 
 .LICENSEURI 
 
-.PROJECTURI 
+.PROJECTURI https://github.com/HotCakeX/Harden-Windows-Security
 
-.ICONURI 
+.ICONURI https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/ICONURI%20.jpg
 
 .EXTERNALMODULEDEPENDENCIES 
 
@@ -27,6 +27,7 @@
 
 .RELEASENOTES
 Version 2022.12.8: Improved the script
+Version 2022.12.9: Configured LSASS process to run as a protected process with UEFI Lock
 
 #>
 
@@ -282,7 +283,6 @@ else {
 
 
 # Disable Location services from Windows - affects Windows settings privacy section
-
 $RegistryPath = 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\LocationAndSensors'  
 $Name         = 'DisableLocation'  
 $Value        = '1' 
@@ -295,8 +295,10 @@ New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWO
 
 # Enable Hibernate
 powercfg /hibernate on
+
 # Set Hibnernate mode to full
 powercfg /h /type full
+
 # Add Hibernate option to Start menu's power options
 $RegistryPath = 'HKLM:\Software\Policies\Microsoft\Windows\Explorer'
 $Name         = 'ShowHibernateOption'
@@ -315,6 +317,7 @@ New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWO
  the registry keys location: https://admx.help/?Category=Windows_10_2016&Policy=Microsoft.Policies.PowerManagement::AllowStandbyStatesDC_2
  computer restart is required for the changes to take effect
 #>
+
 
 # Disable sleep for when plugged in
 $RegistryPath = 'HKLM:\Software\Policies\Microsoft\Power\PowerSettings\abfc2519-3608-4c2a-94ea-171b0ed546ab'
@@ -358,6 +361,7 @@ If (-NOT (Test-Path $RegistryPath)) {
   New-Item -Path $RegistryPath -Force | Out-Null 
 }   
 New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force 
+
 # Set Fixed drive Encryption algorithm and Cipher | XTS-AES 256-bit
 $RegistryPath = 'HKLM:\SOFTWARE\Policies\Microsoft\FVE' 
 $Name         = 'EncryptionMethodWithXtsFdv' 
@@ -366,6 +370,7 @@ If (-NOT (Test-Path $RegistryPath)) {
   New-Item -Path $RegistryPath -Force | Out-Null 
 }   
 New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force 
+
 # Set removable drives data Encryption algorithm and Cipher | XTS-AES 256-bit
 $RegistryPath = 'HKLM:\SOFTWARE\Policies\Microsoft\FVE'
 $Name         = 'EncryptionMethodWithXtsRdv'
@@ -374,6 +379,7 @@ If (-NOT (Test-Path $RegistryPath)) {
   New-Item -Path $RegistryPath -Force | Out-Null 
 }   
 New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force 
+
 # Bitlocker: Allow Enhanced PINs for startup 
 $RegistryPath = 'HKLM:\SOFTWARE\Policies\Microsoft\FVE' 
 $Name         = 'UseEnhancedPin' 
@@ -382,6 +388,7 @@ If (-NOT (Test-Path $RegistryPath)) {
   New-Item -Path $RegistryPath -Force | Out-Null 
 }   
 New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
+
 # Enforce drive encryption type on operating system drives: full drive encryption
 $RegistryPath = 'HKLM:\SOFTWARE\Policies\Microsoft\FVE' 
 $Name         = 'OSEncryptionType' 
@@ -399,6 +406,7 @@ If (-NOT (Test-Path $RegistryPath)) {
   New-Item -Path $RegistryPath -Force | Out-Null 
 }   
 New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
+
 # Bitlocker: Don't allow Bitlocker with no TPM
 $RegistryPath = 'HKLM:\SOFTWARE\Policies\Microsoft\FVE' 
 $Name         = 'EnableBDEWithNoTPM'
@@ -407,6 +415,7 @@ If (-NOT (Test-Path $RegistryPath)) {
   New-Item -Path $RegistryPath -Force | Out-Null 
 }   
 New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force 
+
 # Bitlocker: Allow/Use startup key with TPM
 $RegistryPath = 'HKLM:\SOFTWARE\Policies\Microsoft\FVE' 
 $Name         = 'UseTPMKey' 
@@ -415,6 +424,7 @@ If (-NOT (Test-Path $RegistryPath)) {
   New-Item -Path $RegistryPath -Force | Out-Null 
 }   
 New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force 
+
 # Bitlocker: Allow/Use startup PIN with TPM
 $RegistryPath = 'HKLM:\SOFTWARE\Policies\Microsoft\FVE' 
 $Name         = 'UseTPMPIN' 
@@ -423,6 +433,7 @@ If (-NOT (Test-Path $RegistryPath)) {
   New-Item -Path $RegistryPath -Force | Out-Null 
 }   
 New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force 
+
 # Bitlocker: Allow/Use startup key and PIN with TPM
 $RegistryPath = 'HKLM:\SOFTWARE\Policies\Microsoft\FVE' 
 $Name         = 'UseTPMKeyPIN' 
@@ -431,6 +442,7 @@ If (-NOT (Test-Path $RegistryPath)) {
   New-Item -Path $RegistryPath -Force | Out-Null 
 }   
 New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force 
+
 # Bitlocker: Allow/Use TPM
 $RegistryPath = 'HKLM:\SOFTWARE\Policies\Microsoft\FVE' 
 $Name         = 'UseTPM' 
@@ -475,6 +487,7 @@ If (-NOT (Test-Path $RegistryPath)) {
   New-Item -Path $RegistryPath -Force | Out-Null 
 }   
 New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force 
+
 # Next one - this automatically denies all UAC prompts on Standard accounts when set to "0". good for forcing log out of Standard account and logging in Admin account to perform actions. 1 = Prompt for credentials on the secure desktop #topSecurity
 $RegistryPath = 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System' 
 $Name         = 'ConsentPromptBehaviorUser' 
@@ -483,6 +496,7 @@ If (-NOT (Test-Path $RegistryPath)) {
   New-Item -Path $RegistryPath -Force | Out-Null 
 }   
 New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force 
+
 # Last one, Enforce cryptographic signatures on any interactive application that requests elevation of privilege.
 # it can prevent certain programs from running
 # I set it to 0, only set it to 1 for #TopSecurity
@@ -554,7 +568,13 @@ If (-NOT (Test-Path $RegistryPath)) {   New-Item -Path $RegistryPath -Force | Ou
 New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
 
 
+
+
 } #end of the 2nd Admin test function
+
+
+
+
 
 # prevent showing notifications in Lock screen - this is the same as toggling the button in Windows settings > system > notifications > show notifications in the lock screen
 $RegistryPath = 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Notifications\Settings'  
@@ -562,6 +582,7 @@ $Name         = 'NOC_GLOBAL_SETTING_ALLOW_TOASTS_ABOVE_LOCK'
 $Value        = '0' 
 If (-NOT (Test-Path $RegistryPath)) {   New-Item -Path $RegistryPath -Force | Out-Null } 
 New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
+
 # prevent showing notifications in Lock screen, 2nd reg key - this is the same as toggling the button in Windows settings > system > notifications > show notifications in the lock screen
 $RegistryPath = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\PushNotifications'  
 $Name         = 'LockScreenToastEnabled'  
@@ -571,11 +592,16 @@ New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWO
 
 
 
+
+
+
+
 if(-NOT (Test-IsAdmin))
 
    { write-host "Skipping Admin commands" -ForegroundColor Magenta }
 
 else {
+
 
 
 # Don't show network (like WiFi) icon on lock screen
@@ -623,6 +649,8 @@ New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWO
 } #end of the 3rd Admin test function
 
 
+
+
 # Enable Clipboard History for the current user
 $RegistryPath = 'HKCU:\Software\Microsoft\Clipboard'  
 $Name         = 'EnableClipboardHistory'  
@@ -644,11 +672,16 @@ New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWO
 
 
 
+
+
+
+
 if(-NOT (Test-IsAdmin))
 
    { write-host "Skipping Admin commands" -ForegroundColor Magenta }
 
 else {
+
 
 
 
@@ -769,13 +802,6 @@ $Name         = 'EnableSecuritySignature'
 $Value        = '1' 
 If (-NOT (Test-Path $RegistryPath)) {   New-Item -Path $RegistryPath -Force | Out-Null } 
 New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
-
-
-
-# Disable 8.3 names (Mitigate Microsoft IIS tilde directory enumeration) and Last Access timestamp for files and folder (Performance)
-fsutil behavior set disable8dot3 1
-fsutil behavior set disablelastaccess 0
-
 
 
 
@@ -1006,6 +1032,7 @@ New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWO
 } #end of the 4th Admin test function
 
 
+
 # creates Custom Views for Event Viewer in "C:\ProgramData\Microsoft\Event Viewer\Views\Hardening Script\"
 
 
@@ -1129,11 +1156,14 @@ New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType str
 
 
 
+
 if(-NOT (Test-IsAdmin))
 
    { write-host "Skipping Admin commands" -ForegroundColor Magenta }
 
 else {
+
+
 
 
 # Disable Autoplay page in settings - responsible for the toggle in Windows settings to become unavailable for users to change
@@ -1226,9 +1256,8 @@ New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWO
 
 <# Disable IP Source Routing
 After applying this and restarting computer, "Source Routing Behavior" in "netsh int IPv4 show global" shows "Drop"
-which is what the value "2" does.
+which is what the value "2" does.#>
 
-#>
 $RegistryPath = 'HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters'  
 $Name         = 'DisableIPSourceRouting'  
 $Value        = '2' 
@@ -1796,8 +1825,25 @@ Get-NetFirewallRule | Where-Object {$_.EdgeTraversalPolicy -notmatch "Block"} | 
 
 $badrules = Get-NetFirewallRule | Where-Object {$_.EdgeTraversalPolicy -notmatch "Block"}
 
-
 Write-Host "There are currently" $badrules.count "Firewall rules that allow Edge Traversal" -ForegroundColor Magenta
+
+
+
+
+
+
+
+
+# Configure LSASS process to run as a protected process with UEFI Lock
+$RegistryPath = 'HKLM:\SYSTEM\CurrentControlSet\Control\Lsa'  
+$Name         = 'RunAsPPL'  
+$Value        = '1' 
+If (-NOT (Test-Path $RegistryPath)) {   New-Item -Path $RegistryPath -Force | Out-Null } 
+New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
+
+
+
+
 
 
 

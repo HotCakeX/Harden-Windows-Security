@@ -1,7 +1,7 @@
 
 <#PSScriptInfo
 
-.VERSION 2022.12.9.1
+.VERSION 2022.12.10
 
 .GUID d435a293-c9ee-4217-8dc1-4ad2318a5770
 
@@ -9,9 +9,9 @@
 
 .COMPANYNAME HotCakeX Corp.
 
-.COPYRIGHT N\A
+.COPYRIGHT 2022
 
-.TAGS Windows Hardening Security Bitlocker Windows Defender Firewall
+.TAGS Windows Hardening Security Bitlocker Defender Firewall Edge Protection
 
 .LICENSEURI 
 
@@ -29,7 +29,7 @@
 Version 2022.12.8: Improved the script
 Version 2022.12.9: Configured LSASS process to run as a protected process with UEFI Lock
 Version 2022.12.9.1: Added new icon for the script
-
+Version 2022.12.10: Enabled ECH (Encrypted Client Hello of TLS) feature for Edge browser 
 #>
 
 <# 
@@ -1836,6 +1836,8 @@ Write-Host "There are currently" $badrules.count "Firewall rules that allow Edge
 
 
 # Configure LSASS process to run as a protected process with UEFI Lock
+# https://gpsearch.azurewebsites.net/#16238
+# doing this will add a new option called "Local Security Authority Protection" that is turned on in Windows Security GUI => Device Security
 $RegistryPath = 'HKLM:\SYSTEM\CurrentControlSet\Control\Lsa'  
 $Name         = 'RunAsPPL'  
 $Value        = '1' 
@@ -1848,12 +1850,112 @@ New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWO
 
 
 
+
+# Check if HKCR Alias for HKEY_CLASSES_ROOT exists in PSDrive
+$HKCRExists = Get-PSDrive | Where-Object {$_.Name -contains "HKCR" -and $_.Root -contains "HKEY_CLASSES_ROOT"}
+
+if (-NOT $HKCRExists){
+    New-PSDrive -PSProvider Registry -Name HKCR -Root "HKEY_CLASSES_ROOT"
+
+    Write-Host "HKCR Alias has been successfully added to the PSDrives" -ForegroundColor Magenta
+}
+
+else {Write-Host "HKCR Alias Exists for HKEY_CLASSES_ROOT" -ForegroundColor Magenta}
+
+
+
+
+
+
+
+
+# Add ECH (Encrypted Client Hello) to the Edge browser when it's launched by clicking on a link in an app
+$EdgeRegPath = "HKCR:\MSEdgeHTM\shell\open\command\"
+$EdgeRegValue = Get-ItemPropertyValue -Path $EdgeRegPath -Name "(default)"
+
+ 
+
+if ($EdgeRegValue -notlike "*--enable-features=EncryptedClientHello*")
+
+{
+        if ($EdgeRegValue -like "*C:\Program Files (x86)\Microsoft\Edge Dev\Application\msedge.exe*")
+        {
+            Set-ItemProperty -Path $EdgeRegPath -Name "(default)" -Value '"C:\Program Files (x86)\Microsoft\Edge Dev\Application\msedge.exe" --enable-features=EncryptedClientHello --single-argument %1'
+        }
+
+        elseif ($EdgeRegValue -like "*C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe*")
+        {
+            Set-ItemProperty -Path $EdgeRegPath -Name "(default)" -Value '"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" --enable-features=EncryptedClientHello --single-argument %1'
+        }
+
+}
+
+else 
+{
+Write-Host "The ECH flag is Enabled for Edge" -ForegroundColor Magenta
+}
+
+        
+
+
+
+
+
+
+# Add ECH flag to the target of Edge browser shortcuts (all channel) on desktop of all users
+$path = Get-ChildItem "C:\Users\Public\Desktop" | Where-Object {$_.Name -like "*Microsoft Edge*"} 
+$shell = New-Object -COM WScript.Shell
+
+$path | ForEach-Object {
+$shortcut = $shell.CreateShortcut($_.FullName)  ## Open the lnk
+$shortcut.Arguments = "--enable-features=EncryptedClientHello"
+$shortcut.Save()  ## Save
+
+}
+
+
+
+
+
+# Add ECH flag to the target of Pinned Edge browser Start menu shortcuts (all channel) for all users
+$path = Get-ChildItem "C:\ProgramData\Microsoft\Windows\Start Menu\Programs" | Where-Object {$_.Name -like "*Microsoft Edge*"} 
+$shell = New-Object -COM WScript.Shell
+
+$path | ForEach-Object {
+$shortcut = $shell.CreateShortcut($_.FullName)  ## Open the lnk
+$shortcut.Arguments = "--enable-features=EncryptedClientHello"
+$shortcut.Save()  ## Save
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
 } #end of the 5th Admin test function
 
 
 
 
-#
+
+
+# Add ECH flag to the target of Pinned Taskbar Edge browser shortcuts (all channel) of the current user
+$path = Get-ChildItem "$home\AppData\Roaming\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar" | Where-Object {$_.Name -like "*Microsoft Edge*"} 
+$shell = New-Object -COM WScript.Shell
+
+$path | ForEach-Object {
+$shortcut = $shell.CreateShortcut($_.FullName)  ## Open the lnk
+$shortcut.Arguments = "--enable-features=EncryptedClientHello"
+$shortcut.Save()  ## Save
+
+}
 
 
 

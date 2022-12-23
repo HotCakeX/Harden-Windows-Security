@@ -126,7 +126,7 @@ Features of this Hardening script:
 
 ## License
 
-Free For All
+MIT License
 
 ---
 

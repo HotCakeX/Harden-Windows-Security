@@ -27,8 +27,8 @@
 
 <p align="center">
   <a href="#Hardening-Categories">Hardening Categories</a> •
-  <a href="#how-to-use">How To Use</a> •
   <a href="#download">Download</a> •
+  <a href="#how-to-use">How To Use</a> •
   <a href="#credits">Credits</a> •
   <a href="#related">Related</a> •
   <a href="#license">License</a>
@@ -55,30 +55,30 @@
   - Non-Admin Commands
 
 
+## Download
+
+You can [download](https://github.com/amitmerchant1990/electron-markdownify/releases/tag/v1.2.0) the latest installable version of Markdownify for Windows, macOS and Linux.
+
 ## How To Use
 
-To run the script, first you need to go to the top of this page, select Code and then select Download Zip, or just click here to start the download:[Download the Zip package](https://github.com/HotCakeX/Harden-Windows-Security/archive/refs/heads/main.zip) then extract it to a folder
+To run the script, first you need to go to the top of this page, select Code and then select Download Zip, or just click here to start the download: [Download the Zip package](https://github.com/HotCakeX/Harden-Windows-Security/archive/refs/heads/main.zip) and then extract it to a folder.
 
 
 ```PowerShell
 # Set Execution policy to bypass for the current process which is temporary only for current PowerShell instance 
-$ Set-ExecutionPolicy Bypass -Scope Process
+Set-ExecutionPolicy Bypass -Scope Process
 
 # use CD command to change the working directory to the folder where you've downloaded and extracted the zip files, like this example:
-$ cd "C:\Users\$env:username\Downloads\Harden-Windows-Security-main\Harden-Windows-Security-main\"
+cd "C:\Users\$env:username\Downloads\Harden-Windows-Security-main\Harden-Windows-Security-main\"
 
 # use this command to run the script
-$ .\Harden-Windows-Security.ps1
+.\Harden-Windows-Security.ps1
 
 ```
 
 > **Note**
-> If you're using Linux Bash for Windows, [see this guide](https://www.howtogeek.com/261575/how-to-run-graphical-linux-desktop-applications-from-windows-10s-bash-shell/) or use `node` from the command prompt.
+> if there are multiple Windows user accounts in your computer, it's recommended to run this script in each of them, without administrator privileges, because Non-admin commands only apply to the current user and are not machine wide.
 
-
-## Download
-
-You can [download](https://github.com/amitmerchant1990/electron-markdownify/releases/tag/v1.2.0) the latest installable version of Markdownify for Windows, macOS and Linux.
 
 ## Emailware
 

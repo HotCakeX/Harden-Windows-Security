@@ -111,18 +111,21 @@ Features of this Hardening script:
 
 
 
-## You may also like...
+## Some of the resources used...
 
-- [Pomolectron](https://github.com/amitmerchant1990/pomolectron) - A pomodoro app
-- [Correo](https://github.com/amitmerchant1990/correo) - A menubar/taskbar Gmail App for Windows and macOS
+- [Microsoft Learn](https://learn.microsoft.com/en-us/) - Technical Documentation
+- [ADMX](https://admx.help/) - Group Policy Administrative Templates Catalog
+- [GPS](https://gpsearch.azurewebsites.net/) - Group Policy Search
+- [Germany Intelligence Agency - BND](https://www.bsi.bund.de/EN/Service-Navi/Publikationen/publikationen_node.html) - Federal Office for Information Security
+- [Microsoft Tech Community](https://techcommunity.microsoft.com/) - Official blogs and documentations
 
 ## License
 
-MIT
+Free For All
 
 ---
 
-> [amitmerchant.com](https://www.amitmerchant.com) &nbsp;&middot;&nbsp;
-> GitHub [@amitmerchant1990](https://github.com/amitmerchant1990) &nbsp;&middot;&nbsp;
-> Twitter [@amit_merchant](https://twitter.com/amit_merchant)
+> [Microsoft Tech Community Profile](https://techcommunity.microsoft.com/t5/user/viewprofilepage/user-id/310193) &nbsp;&middot;&nbsp;
+> GitHub [@HotCakeX](https://github.com/HotCakeX) &nbsp;&middot;&nbsp;
+> Steam [@HotCakeX](https://steamcommunity.com/id/HotCakeX)
 

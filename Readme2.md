@@ -29,7 +29,7 @@
   <a href="#Hardening-Categories">Hardening Categories</a> •
   <a href="#download">Download</a> •
   <a href="#how-to-use">How To Use</a> •
-  <a href="#credits">Credits</a> •
+  <a href="#About">About</a> •
   <a href="#related">Related</a> •
   <a href="#license">License</a>
 </p>
@@ -79,36 +79,37 @@ cd "C:\Users\$env:username\Downloads\Harden-Windows-Security-main\Harden-Windows
 > **Note**
 > if there are multiple Windows user accounts in your computer, it's recommended to run this script in each of them, without administrator privileges, because Non-admin commands only apply to the current user and are not machine wide.
 
+> **Note**
+> When the script is running for the first time, please keep an eye on the PowerShell console because you might need to provide input for Bitlocker activation. 
 
-## Emailware
 
-Markdownify is an [emailware](https://en.wiktionary.org/wiki/emailware). Meaning, if you liked using this app or it has helped you in any way, I'd like you send me an email at <bullredeyes@gmail.com> about anything you'd want to say about this software. I'd really appreciate it!
+> **Note**
+> Things with **#TopSecurity** tag can break functionalities or cause difficulties so this script does NOT enable them by default. press Control + F and search for #TopSecurity in the script to find those commands and how to enable them if you want. 
 
-## Credits
+## About
 
-This software uses the following open source packages:
+Features of this Hardening script:
 
-- [Electron](http://electron.atom.io/)
-- [Node.js](https://nodejs.org/)
-- [Marked - a markdown parser](https://github.com/chjj/marked)
-- [showdown](http://showdownjs.github.io/showdown/)
-- [CodeMirror](http://codemirror.net/)
-- Emojis are taken from [here](https://github.com/arvida/emoji-cheat-sheet.com)
-- [highlight.js](https://highlightjs.org/)
+- Always up-to-date and works with latest build of Windows (Currently Windows 11)
+- Doesn't break anything
+- Doesn't remove or disable Windows functionlities against Microsoft's recommendation
+- Above each command there are comments that explain what it does and links to additional resources are provided for better understanding
+- When a hardening command is no longer necessary because it's applied by default by Microsoft on new builds of Windows, it will also be removed from this script in order to prevent any problems and since it won't be necessary anymore.
+- The script can be run infinite number of times, it's made in a way that it won't make any duplicate changes.
+
 
 ## Related
 
-[markdownify-web](https://github.com/amitmerchant1990/markdownify-web) - Web version of Markdownify
+[PowerShell Gallery](https://www.powershellgallery.com/packages/Harden-Windows-Security/) - Also available in PowerShell Gallery
 
 ## Support
 
-<a href="https://www.buymeacoffee.com/5Zn8Xh3l9" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/purple_img.png" alt="Buy Me A Coffee" style="height: 41px !important;width: 174px !important;box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;" ></a>
-
-<p>Or</p> 
-
-<a href="https://www.patreon.com/amitmerchant">
-	<img src="https://c5.patreon.com/external/logo/become_a_patron_button@2x.png" width="160">
+<a href="https://github.com/HotCakeX/Harden-Windows-Security/discussions">
+🎯 if you have any questions, requests, suggestions etc. about this script, please open a new discussion on Github
 </a>
+
+
+
 
 ## You may also like...
 

@@ -57,12 +57,12 @@
 
 ## Download
 
-You can [download](https://github.com/amitmerchant1990/electron-markdownify/releases/tag/v1.2.0) the latest installable version of Markdownify for Windows, macOS and Linux.
+Go to the top of this page, select Code and then select Download Zip, or just click here to start the download: [Download the Zip package](https://github.com/HotCakeX/Harden-Windows-Security/archive/refs/heads/main.zip) and then extract it to a folder.
+
 
 ## How To Use
 
-To run the script, first you need to go to the top of this page, select Code and then select Download Zip, or just click here to start the download: [Download the Zip package](https://github.com/HotCakeX/Harden-Windows-Security/archive/refs/heads/main.zip) and then extract it to a folder.
-
+To run the script:
 
 ```PowerShell
 # Set Execution policy to bypass for the current process which is temporary only for current PowerShell instance 

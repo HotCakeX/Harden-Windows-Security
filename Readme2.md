@@ -10,6 +10,8 @@
 <h4 align="center">Harden Windows 11 Safely, securely and without breaking anything</h4>
 
 <p align="center">
+	
+	[PowerShell Gallery](https://img.shields.io/powershellgallery/v/Harden-Windows-Security?style=for-the-badge)
   <a href="https://badge.fury.io/js/electron-markdownify">
     <img src="https://badge.fury.io/js/electron-markdownify.svg"
          alt="Gitter">

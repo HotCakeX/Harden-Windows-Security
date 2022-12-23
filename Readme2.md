@@ -31,7 +31,7 @@
   <a href="#how-to-use">How To Use</a> •
   <a href="#About">About</a> •
   <a href="#related">Related</a> •
-  <a href="#license">License</a>
+  <a href="#Support">Support</a>
 </p>
 
 ![screenshot](https://raw.githubusercontent.com/amitmerchant1990/electron-markdownify/master/app/img/markdownify.gif)

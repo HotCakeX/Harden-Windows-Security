@@ -16,13 +16,13 @@
     <img src="https://img.shields.io/powershellgallery/v/Harden-Windows-Security?style=for-the-badge"
          alt="PowerShell Gallery">
   </a>
-  <a href="https://gitter.im/amitmerchant1990/electron-markdownify"><img src="https://badges.gitter.im/amitmerchant1990/electron-markdownify.svg"></a>
-  <a href="https://saythanks.io/to/bullredeyes@gmail.com">
-      <img src="https://img.shields.io/badge/SayThanks.io-%E2%98%BC-1EAEDB.svg">
-  </a>
-  <a href="https://www.paypal.me/AmitMerchant">
-    <img src="https://img.shields.io/badge/$-donate-ff69b4.svg?maxAge=2592000&amp;style=flat">
-  </a>
+	
+	
+  <a href="https://gitter.im/amitmerchant1990/electron-markdownify">
+	  <imgsrc="PowerShell Gallery Downloads count"></a>
+	  
+	  
+ 
 </p>
 
 <p align="center">

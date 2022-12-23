@@ -18,10 +18,10 @@
   </a>
 	
 	
-  <a href="https://gitter.im/amitmerchant1990/electron-markdownify">
-	  <imgsrc="PowerShell Gallery Downloads count"></a>
-	  
-	  
+  <a href="https://badge.fury.io/js/electron-markdownify">
+    <img src="https://img.shields.io/powershellgallery/dt/Harden-Windows-Security?style=for-the-badge"
+         alt="PowerShell Gallery">
+  </a>
  
 </p>
 

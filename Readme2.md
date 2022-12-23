@@ -57,20 +57,19 @@
 
 ## How To Use
 
-To clone and run this application, you'll need [Git](https://git-scm.com) and [Node.js](https://nodejs.org/en/download/) (which comes with [npm](http://npmjs.com)) installed on your computer. From your command line:
+To run the script, first you need to go to the top of this page, select Code and then select Download Zip, or just click here to start the download:[Download the Zip package](https://github.com/HotCakeX/Harden-Windows-Security/archive/refs/heads/main.zip) then extract it to a folder
 
-```bash
-# Clone this repository
-$ git clone https://github.com/amitmerchant1990/electron-markdownify
 
-# Go into the repository
-$ cd electron-markdownify
+```PowerShell
+# Set Execution policy to bypass for the current process which is temporary only for current PowerShell instance 
+$ Set-ExecutionPolicy Bypass -Scope Process
 
-# Install dependencies
-$ npm install
+# use CD command to change the working directory to the folder where you've downloaded and extracted the zip files, like this example:
+$ cd "C:\Users\$env:username\Downloads\Harden-Windows-Security-main\Harden-Windows-Security-main\"
 
-# Run the app
-$ npm start
+# use this command to run the script
+$ .\Harden-Windows-Security.ps1
+
 ```
 
 > **Note**

@@ -3,11 +3,11 @@
   <br>
   <a href="http://www.amitmerchant.com/electron-markdownify"><img src="https://avatars.akamai.steamstatic.com/48612a0ea22fed72aea709509281d0b4e4a4e227_full.jpg" alt="Markdownify" width="200"></a>
   <br>
-  Markdownify
+  Harden Windows Security
   <br>
 </h1>
 
-<h4 align="center">A minimal Markdown Editor desktop app built on top of <a href="http://electron.atom.io" target="_blank">Electron</a>.</h4>
+<h4 align="center">Harden Windows 11 Safely, securely and without breaking anything</h4>
 
 <p align="center">
   <a href="https://badge.fury.io/js/electron-markdownify">

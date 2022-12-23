@@ -86,6 +86,7 @@ cd "C:\Users\$env:username\Downloads\Harden-Windows-Security-main\Harden-Windows
 > **Note**
 > Things with **#TopSecurity** tag can break functionalities or cause difficulties so this script does NOT enable them by default. press Control + F and search for #TopSecurity in the script to find those commands and how to enable them if you want. 
 
+
 ## About
 
 Features of this Hardening script:
@@ -98,15 +99,18 @@ Features of this Hardening script:
 - The script can be run infinite number of times, it's made in a way that it won't make any duplicate changes.
 
 
+
 ## Related
 
 [PowerShell Gallery](https://www.powershellgallery.com/packages/Harden-Windows-Security/) - Also available in PowerShell Gallery
+
 
 ## Support
 
 <a href="https://github.com/HotCakeX/Harden-Windows-Security/discussions">
 🎯 if you have any questions, requests, suggestions etc. about this script, please open a new discussion on Github
 </a>
+
 
 
 
@@ -118,6 +122,7 @@ Features of this Hardening script:
 - [GPS](https://gpsearch.azurewebsites.net/) - Group Policy Search
 - [Germany Intelligence Agency - BND](https://www.bsi.bund.de/EN/Service-Navi/Publikationen/publikationen_node.html) - Federal Office for Information Security
 - [Microsoft Tech Community](https://techcommunity.microsoft.com/) - Official blogs and documentations
+
 
 ## License
 

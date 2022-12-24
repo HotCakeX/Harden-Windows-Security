@@ -113,6 +113,10 @@ Features of this Hardening script:
 🎯 if you have any questions, requests, suggestions etc. about this script, please open a new discussion on Github
 </a>
 
+<br />
+<br />
+<br />
+
 
 <p align="center">
 	<img src="https://steamuserimages-a.akamaihd.net/ugc/767147583903894076/B41D0F01F90A186FCF15883E6F381F08B57A505E/"
@@ -120,6 +124,9 @@ Features of this Hardening script:
 	
 
 </p>
+
+<br />
+<br />
 
 
 ## Some of the resources used...

@@ -32,9 +32,13 @@
   <a href="#About">About</a> •
   <a href="#related">Related</a> •
   <a href="#Support">Support</a>
+
+</p>
+![screenshot](https://steamuserimages-a.akamaihd.net/ugc/767147583903894076/B41D0F01F90A186FCF15883E6F381F08B57A505E/)
+<p align="center">
+  
 </p>
 
-![screenshot](https://raw.githubusercontent.com/amitmerchant1990/electron-markdownify/master/app/img/markdownify.gif)
 
 ## Hardening Categories
 

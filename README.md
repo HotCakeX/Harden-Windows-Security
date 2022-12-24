@@ -1,7 +1,7 @@
 
 <h1 align="center">
   <br>
-  <a href="https://github.com/HotCakeX"><img src="https://avatars.akamai.steamstatic.com/48612a0ea22fed72aea709509281d0b4e4a4e227_full.jpg" alt="Markdownify" width="200"></a>
+  <a href="https://github.com/HotCakeX"><img src="https://github.com/HotCakeX/Harden-Windows-Security/blob/main/png-donut-2.png" alt="Avatar" width="200"></a>
   <br>
   Harden Windows Security
   <br>

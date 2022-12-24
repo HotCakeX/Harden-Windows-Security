@@ -1862,7 +1862,7 @@ set-processmitigation -System -Enable ForceRelocateImages
 
 
 # Set a trusted program to be exempt from Mandatory ASLR
-Set-ProcessMitigation -Name "D:\trusted program.exe" -Disable ForceRelocateImages
+# Set-ProcessMitigation -Name "D:\trusted program.exe" -Disable ForceRelocateImages
 
 
 # Enable svchost.exe mitigation options - more info: https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-servicecontrolmanager

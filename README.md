@@ -7,7 +7,7 @@
   <br>
 </h1>
 
-<h4 align="center">Harden Windows 11 Safely, securely and without breaking anything</h4>
+<h4 align="center">Harden Windows 11 safely, securely and without breaking anything</h4>
 
 <p align="center">
 	

@@ -69,14 +69,15 @@ Go to the top of this page, select Code and then select Download Zip, or just cl
 To run the script:
 
 ```PowerShell
-# Set Execution policy to bypass for the current process which is temporary only for current PowerShell instance 
+# Download the latest version of the script to the current user folder
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security.ps1" -OutFile "Harden-Windows-Security.ps1"
+
+# set execution policy temporarily to bypass for the current PowerShell session only
 Set-ExecutionPolicy Bypass -Scope Process
 
-# use CD command to change the working directory to the folder where you've downloaded and extracted the zip files, like this example:
-cd "C:\Users\$env:username\Downloads\Harden-Windows-Security-main\Harden-Windows-Security-main\"
-
-# use this command to run the script
+# run the script
 .\Harden-Windows-Security.ps1
+
 
 ```
 

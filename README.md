@@ -31,7 +31,8 @@
   <a href="#features">Features</a> •
   <a href="#related">Related</a> •
   <a href="#Support">Support</a> •
-  <a href="#resources">Resources</a> 
+  <a href="#resources">Resources</a> •
+  <a href="#license">License</a>
 
 
 </p>

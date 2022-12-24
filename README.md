@@ -28,10 +28,11 @@
 <p align="center">
   <a href="#Hardening-Categories">Hardening Categories</a> •
   <a href="#how-to-use">How To Use</a> •
-  <a href="#features">features</a> •
+  <a href="#features">Features</a> •
   <a href="#related">Related</a> •
-  <a href="#resources">Resources</a> •
   <a href="#Support">Support</a>
+  <a href="#resources">Resources</a> •
+
 
 </p>
 

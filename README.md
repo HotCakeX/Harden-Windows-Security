@@ -27,10 +27,10 @@
 
 <p align="center">
   <a href="#Hardening-Categories">Hardening Categories</a> •
-  <a href="#download">Download</a> •
   <a href="#how-to-use">How To Use</a> •
-  <a href="#About">About</a> •
+  <a href="#features">features</a> •
   <a href="#related">Related</a> •
+  <a href="#resources">Resources</a> •
   <a href="#Support">Support</a>
 
 </p>
@@ -42,6 +42,7 @@
 
 ## Hardening Categories
 
+From Top to bottom in order:
 
 * Commands that require Administrator Privileges
   - Windows Security aka Defender
@@ -58,10 +59,6 @@
 * Commands that don't require Administrator Privileges
   - Non-Admin Commands
 
-
-## Download
-
-Go to the top of this page, select Code and then select Download Zip, or just click here to start the download: [Download the Zip package](https://github.com/HotCakeX/Harden-Windows-Security/archive/refs/heads/main.zip) and then extract it to a folder.
 
 
 ## How To Use
@@ -92,9 +89,7 @@ Set-ExecutionPolicy Bypass -Scope Process
 > Things with **#TopSecurity** tag can break functionalities or cause difficulties so this script does NOT enable them by default. press Control + F and search for #TopSecurity in the script to find those commands and how to enable them if you want. 
 
 
-## About
-
-Features of this Hardening script:
+## Features:
 
 - Always up-to-date and works with latest build of Windows (Currently Windows 11)
 - Doesn't break anything
@@ -120,7 +115,10 @@ Features of this Hardening script:
 
 
 
-## Some of the resources used...
+## Resources
+<br />
+
+Some of the resources used...
 
 - [Microsoft Learn](https://learn.microsoft.com/en-us/) - Technical Documentation
 - [ADMX](https://admx.help/) - Group Policy Administrative Templates Catalog

@@ -42,6 +42,10 @@
 </p>
 
 
+<p align="center">
+  <img src="https://bafybeicass6d3ftqyfigxciwfysnzm4aobfjuk4zvtueenvqqpjo3p75ju.ipfs.nftstorage.link/" alt="Sublime's custom image"/>
+</p>
+
 ## Hardening Categories
 
 From Top to bottom in order:

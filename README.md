@@ -114,19 +114,7 @@ Features of this Hardening script:
 </a>
 
 <br />
-<br />
-<br />
 
-
-<p align="center">
-	<img src="https://steamuserimages-a.akamaihd.net/ugc/767147583903894076/B41D0F01F90A186FCF15883E6F381F08B57A505E/"
-         alt="Support">
-	
-
-</p>
-
-<br />
-<br />
 
 
 ## Some of the resources used...

@@ -36,9 +36,6 @@
 </p>
 
 
-<p align="center">
-  ![screenshot](https://steamuserimages-a.akamaihd.net/ugc/767147583903894076/B41D0F01F90A186FCF15883E6F381F08B57A505E/)
-</p>
 
 
 ## Hardening Categories
@@ -117,7 +114,12 @@ Features of this Hardening script:
 </a>
 
 
+<p align="center">
+	<img src="https://steamuserimages-a.akamaihd.net/ugc/767147583903894076/B41D0F01F90A186FCF15883E6F381F08B57A505E/"
+         alt="Support">
+	
 
+</p>
 
 
 ## Some of the resources used...

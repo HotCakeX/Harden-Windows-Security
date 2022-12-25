@@ -92,7 +92,7 @@ Set-ExecutionPolicy Bypass -Scope Process
 
 ## Features:
 
-- Always up-to-date and works with latest build of Windows (Currently Windows 11)
+- Always up-to-date and works with latest build of Windows (Currently Windows 11 - compatible and fully tested a Lot on stable and Insider Dev builds)
 - Doesn't break anything
 - Doesn't remove or disable Windows functionlities against Microsoft's recommendation
 - Above each command there are comments that explain what it does, why it's there, provide extra important information about it and links to additional resources for better understanding

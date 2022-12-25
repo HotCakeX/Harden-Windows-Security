@@ -466,7 +466,8 @@ New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWO
 
 # set-up Bitlocker encryption for OS Drive with TPMandPIN and recovery password keyprotectors and Verify its implementation
 # https://learn.microsoft.com/en-us/powershell/module/bitlocker/remove-bitlockerkeyprotector?view=windowsserver2022-ps
-
+# Once it's done, it saves the recovery password in a text file called "Drive C recovery password.txt" in Drive D:\
+# Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which requires authentication to access.
 
 
 
@@ -599,8 +600,8 @@ if ((Get-BitLockerVolume -MountPoint $env:SystemDrive).ProtectionStatus -eq "on"
     
 
 else {
-    Write-Host "Bitlocker is Not enabled for C Drive, activating now... `n the recovery password will be saved in D:\Drive C recovery password.txt  " -ForegroundColor black -BackgroundColor yellow
-
+    Write-Host "Bitlocker is Not enabled for C Drive, activating now... `n the recovery password will be saved in a Text file in D:\Drive C recovery password.txt" -ForegroundColor Magenta -BackgroundColor yellow
+    Write-Host "Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which requires authentication to access." -ForegroundColor Magenta -BackgroundColor white
 
 
         do  {

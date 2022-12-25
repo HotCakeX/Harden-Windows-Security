@@ -1203,17 +1203,20 @@ https://techcommunity.microsoft.com/t5/microsoft-security-baselines/windows-11-v
 # ====================================================Windows Firewall=====================================================
 # =========================================================================================================================
 
+<#
+Block LOLBins from making Internet connections
+ 
+LOLBins are Microsoft-signed files, meaning they are either native to the Operating System (OS) and come pre-installed,
+or are available from Microsoft (i.e. a Microsoft program or add-on).
+Despite being legitimate (and well-intentioned) files,
+these binaries can be exploited by an attacker and used in an attack.
 
+https://blog.teamascend.com/lolbins
 
-
-
-
-#######################################################################
-# Enable Windows Firewall and configure some advanced options
-# Block Win32/64 binaries (LOLBins) from making Internet connections when they shouldn't
-# this website also lists them as well: https://lolbas-project.github.io
-# THESE COMMANDS CHECK IF THE RULE ALREADY EXISTS BEFORE ADDING THEM TO WINDOWS FIREWALL
-# https://stackoverflow.com/questions/6597951/how-can-you-check-for-existing-firewall-rules-using-powershell
+this website also lists them as well: https://lolbas-project.github.io
+THESE COMMANDS CHECK IF THE RULE ALREADY EXISTS BEFORE ADDING THEM TO WINDOWS FIREWALL
+https://stackoverflow.com/questions/6597951/how-can-you-check-for-existing-firewall-rules-using-powershell
+#>
 
 
 

@@ -27,11 +27,12 @@
 </p>
 
 <p align="center">
-  <a href="#Hardening-Categories">Hardening Categories</a> •
+  <a href="#hardening-Categories">Hardening Categories</a> •
   <a href="#how-to-use">How To Use</a> •
   <a href="#features">Features</a> •
   <a href="#related">Related</a> •
-  <a href="#Support">Support</a> •
+  <a href="#support">Support</a> •
+  <a href="#security-reccomendations">Security Reccomendations</a> •
   <a href="#resources">Resources</a> •
   <a href="#license">License</a>
 
@@ -113,6 +114,13 @@ Set-ExecutionPolicy Bypass -Scope Process
 
 <br />
 
+
+## Security Reccomendations
+<br />
+
+* Use the latest version of the PowerShell, easiest and fastest way to install it is using <a href="https://www.microsoft.com/store/productId/9MZ1SNWT0N5D">Microsoft Store</a> but also available on <a href="https://github.com/PowerShell/PowerShell/releases">Github</a>
+*
+*
 
 
 ## Resources

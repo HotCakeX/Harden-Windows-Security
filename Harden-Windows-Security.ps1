@@ -36,7 +36,7 @@ Version 2022.12.25: Entirely changed and organized the script's style to be easi
 <# 
 
 .SYNOPSIS
-    Harden Windows 11 Safely, securely and without breaking anything
+    Harden Windows 11 safely, securely and without breaking anything
 
 .DESCRIPTION
 
@@ -78,7 +78,7 @@ https://github.com/HotCakeX/Harden-Windows-Security/discussions
 .EXAMPLE
 
   
-   type: "Set-ExecutionPolicy Bypass -Scope Process" without quotes, in an Elevated PowerShell, to allow running this script.
+   type: "Set-ExecutionPolicy Bypass -Scope Process" without quotes, in an Elevated PowerShell, to allow running this script for the current session.
    
 .NOTES
     When the script is running as Admin, please keep an eye on the PowerShell console because you might need to provide input for Bitlocker activation if it's not already set up with Startup-key key protector.
@@ -2041,12 +2041,17 @@ $EdgeRegValue = Get-ItemPropertyValue -Path $EdgeRegPath -Name "(default)"
 
 if ($EdgeRegValue -notlike "*--enable-features=EncryptedClientHello*")
 
-{
+{       # checks whether Edge Dev channel is the default browser
         if ($EdgeRegValue -like "*C:\Program Files (x86)\Microsoft\Edge Dev\Application\msedge.exe*")
         {
             Set-ItemProperty -Path $EdgeRegPath -Name "(default)" -Value '"C:\Program Files (x86)\Microsoft\Edge Dev\Application\msedge.exe" --enable-features=EncryptedClientHello --single-argument %1'
         }
-
+        # checks whether Edge Beta channel is the default browser
+        elseif ($EdgeRegValue -like "*C:\Program Files (x86)\Microsoft\Edge Beta\Application\msedge.exe*")
+        {
+            Set-ItemProperty -Path $EdgeRegPath -Name "(default)" -Value '"C:\Program Files (x86)\Microsoft\Edge Beta\Application\msedge.exe" --enable-features=EncryptedClientHello --single-argument %1'
+        }
+        # checks whether Edge Stable channel is the default browser
         elseif ($EdgeRegValue -like "*C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe*")
         {
             Set-ItemProperty -Path $EdgeRegPath -Name "(default)" -Value '"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" --enable-features=EncryptedClientHello --single-argument %1'

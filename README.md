@@ -58,7 +58,7 @@ From Top to bottom in order:
   - Windows Networking
   - Miscellaneous Configurations  
 * Commands that don't require Administrator Privileges
-  - Non-Admin Commands
+  - Non-Admin Commands that only affect the current user and do not make machine-wide changes.
 
 
 

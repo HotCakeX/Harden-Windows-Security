@@ -70,7 +70,7 @@ To run the script:
 
 ```PowerShell
 # Download the latest version of the script to the current user folder
-Invoke-WebRequest -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security.ps1" -OutFile "Harden-Windows-Security.ps1"
+iwr -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security.ps1" -OutFile "Harden-Windows-Security.ps1"
 
 # set execution policy temporarily to bypass for the current PowerShell session only
 Set-ExecutionPolicy Bypass -Scope Process

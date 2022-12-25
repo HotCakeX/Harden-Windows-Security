@@ -38,9 +38,6 @@
 
 </p>
 
-<p align="center">
-  <img src="https://media0.giphy.com/media/xTiTnxpQ3ghPiB2Hp6/giphy.gif?cid=ecf05e4753sksatv85kypy30bjuf9yb9dsc7uwz547zek4xn&rid=giphy.gif&ct=g" alt="Sublime's custom image"/>
-</p>
 
 
 ## Hardening Categories

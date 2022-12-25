@@ -125,9 +125,6 @@ Set-ExecutionPolicy Bypass -Scope Process
 
 
 ## Resources
-<br />
-
-Some of the resources used...
 
 - [Microsoft Learn](https://learn.microsoft.com/en-us/) - Technical Documentation
 - [ADMX](https://admx.help/) - Group Policy Administrative Templates Catalog

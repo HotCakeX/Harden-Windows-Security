@@ -1,0 +1,2 @@
+- name: wiki-page-creator-action
+  uses: Decathlon/wiki-page-creator-action@v2.0.0

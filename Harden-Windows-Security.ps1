@@ -223,7 +223,7 @@ Set-MpPreference -AllowSwitchToAsyncInspection $True
 # ==========================================Attack surface reduction rules=================================================
 # =========================================================================================================================
 
-
+# https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/attack-surface-reduction-rules-reference?view=o365-worldwide
 
 
 
@@ -242,6 +242,7 @@ Add-MpPreference -AttackSurfaceReductionRules_Ids 9e6c4e1f-7d60-472f-ba1a-a39ef6
 # Block executable content from email client and webmail
 Add-MpPreference -AttackSurfaceReductionRules_Ids be9ba2d9-53ea-4cdc-84e5-9b1eeee46550 -AttackSurfaceReductionRules_Actions Enabled
 # Block executable files from running unless they meet a prevalence, age, or trusted list criteria #TopSecurity set to AuditMode 
+# https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/attack-surface-reduction-faq?view=o365-worldwide#i-enabled-the-asr-rule---block-executable-files-from-running-unless-they-meet-a-prevalence--age--or-trusted-list-criterion---after-some-time--i-updated-a-piece-of-software--and-the-rule-is-now-blocking-it--even-though-it-didn-t-before--did-something-go-wrong-
 Add-MpPreference -AttackSurfaceReductionRules_Ids 01443614-cd74-433a-b99e-2ecdc07bfc25 -AttackSurfaceReductionRules_Actions AuditMode
 # Block execution of potentially obfuscated scripts
 Add-MpPreference -AttackSurfaceReductionRules_Ids 5beb7efe-fd9a-4556-801d-275e5ffc04cc -AttackSurfaceReductionRules_Actions Enabled
@@ -1018,7 +1019,8 @@ New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWO
 
 
 # https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/interactive-logon-do-not-display-last-user-name
-# Don't display last signed-in: this will stop showing Any info about Windows accounts; users need to manually enter username and password/Pin to sign in #TopSecurity causes annoyance - Disabled here - to enable it, change it to 1
+# Don't display last signed-in: this will stop showing Any info about Windows accounts; users need to manually enter username and password/Pin to sign in #TopSecurity could causes annoyance - Disabled here - to enable it, change it to 1
+# this can be useful to enable if you live in a risky place and you don't want people to get any information about your computer when it's locked and you're not around
 $RegistryPath = 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System'  
 $Name         = 'dontdisplaylastusername'  
 $Value        = '0'

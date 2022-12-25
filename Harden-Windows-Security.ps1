@@ -1,7 +1,7 @@
 
 <#PSScriptInfo
 
-.VERSION 2022.12.25
+.VERSION 2022.12.26.1
 
 .GUID d435a293-c9ee-4217-8dc1-4ad2318a5770
 
@@ -31,6 +31,8 @@ Version 2022.12.9: Configured LSASS process to run as a protected process with U
 Version 2022.12.9.1: Added new icon for the script
 Version 2022.12.10: Enabled ECH (Encrypted Client Hello of TLS) feature for Edge browser
 Version 2022.12.25: Entirely changed and organized the script's style to be easier to read and find commands
+Version 2022.12.26: Further improved the script with explanatory comments and improved the Optional Windows Features section
+Version 2022.12.26.1: Significantly improved Bitlocker script block, logic and style
 #>
 
 <# 
@@ -278,8 +280,6 @@ Add-MpPreference -AttackSurfaceReductionRules_Ids c1db55ab-c21a-4637-bb3f-a12568
 
 
 
-
-
 # =========================================================================================================================
 # ==========================================Bitlocker Settings=============================================================
 # =========================================================================================================================
@@ -518,98 +518,115 @@ function Compare-SecureString {
 
 
 
+ # first make sure Bitlocker isn't in the middle of any decryption/encryption operation
+if ((Get-BitLockerVolume -MountPoint $env:SystemDrive).EncryptionPercentage -ne "100" -and (Get-BitLockerVolume -MountPoint $env:SystemDrive).EncryptionPercentage -ne "0") {
+
+    $kawai = (Get-BitLockerVolume -MountPoint $env:SystemDrive).EncryptionPercentage
+    Write-Host "Please wait for Bitlocker operation to finish encrypting or decrypting the disk" -ForegroundColor Magenta -BackgroundColor white
+    Write-Host $env:SystemDrive" drive encryption is currently at" $kawai -ForegroundColor Magenta -BackgroundColor white
+
+}
+
+else {
 
 
 
 
-
-
+    # check if Bitlocker is enabled for the system drive
 if ((Get-BitLockerVolume -MountPoint $env:SystemDrive).ProtectionStatus -eq "on")  { 
-
-    if ((Get-BitLockerVolume -MountPoint $env:SystemDrive).EncryptionPercentage -eq "100") {
-             
-                
+                 
                
-        $KeyProtectors = (Get-BitLockerVolume -MountPoint $env:SystemDrive).KeyProtector.keyprotectortype
-
-        if ($KeyProtectors -contains 'Tpmpin' -and $KeyProtectors -contains 'recoveryPassword') {
-            
-            Write-Host "Bitlocker is fully and securely enabled" -ForegroundColor black -BackgroundColor Green
+    $KeyProtectors = (Get-BitLockerVolume -MountPoint $env:SystemDrive).KeyProtector.keyprotectortype
+    # check if TPM, PIN and recovery password are being used with Bitlocker which are the safest settings
+    if ($KeyProtectors -contains 'Tpmpin' -and $KeyProtectors -contains 'recoveryPassword') {
         
-        }
-        else {
-                
-                       
-                   
-                
-                if ($KeyProtectors -contains 'Tpmpin' -and $KeyProtectors -notcontains 'recoveryPassword') {
+        Write-Host "Bitlocker is fully and securely enabled" -ForegroundColor black -BackgroundColor Green
+    
+    }
+    else {       
+            # check if Bitlocker is using TPM and PIN but not recovery password as key protector
+            if ($KeyProtectors -contains 'Tpmpin' -and $KeyProtectors -notcontains 'recoveryPassword')
+             {
+
+                 if (Test-Path D:){
                     Add-BitLockerKeyProtector -MountPoint $env:SystemDrive -RecoveryPasswordProtector *> "D:\Drive C recovery password.txt"
-                    Write-Host "TPM and Startup Pin are available but the recovery password is missing, adding it now... `n the recovery password will be saved in D:\Drive C recovery password.txt" -ForegroundColor black -BackgroundColor yellow
-                }
-                    
+                    Write-Host "TPM and Startup Pin are available but the recovery password is missing, adding it now... `nthe recovery password will be saved in a Text file in D:\Drive C recovery password.txt" -ForegroundColor Magenta -BackgroundColor yellow
+                    Write-Host "Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which requires authentication to access." -ForegroundColor Magenta -BackgroundColor white
 
-                if($KeyProtectors -notcontains 'Tpmpin' -and $KeyProtectors -contains 'recoveryPassword') {
+                }
+                 elseif (Test-Path E:) {
+                    Add-BitLockerKeyProtector -MountPoint $env:SystemDrive -RecoveryPasswordProtector *> "E:\Drive C recovery password.txt"
+                    Write-Host "TPM and Startup Pin are available but the recovery password is missing, adding it now... `nthe recovery password will be saved in a Text file in E:\Drive C recovery password.txt" -ForegroundColor Magenta -BackgroundColor yellow
+                    Write-Host "Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which requires authentication to access." -ForegroundColor Magenta -BackgroundColor white
                 
-                    Write-Host "TPM and Start up key protectors are missing but recovery password key protector is in place, `n adding TPM and Start up key protectors now..." -ForegroundColor black -BackgroundColor yellow
-                    
-
-
-
-                    do  {
-
-                        $pin1 =  read-host "Enter a Pin for Bitlocker startup (at least 6 digits)" -AsSecureString
-                        $pin2 = read-host "Confirm your Bitlocker Startup Pin (at least 6 digits)" -AsSecureString
-                        
-                      
-                      $theyMatch = Compare-SecureString $pin1 $pin2
-                         
-                      
-                      if ( $theyMatch  ) {
-                      
-                       $pin = $pin1
-                      
-                      }
-                      
-                      else {Write-Host "the Pins you entered didn't match, try again" -ForegroundColor Black -BackgroundColor red}
-                      
-                      }
-                      
-                      until (
-                          $theyMatch
-                      )
-
-
-                    Add-BitLockerKeyProtector -MountPoint $env:SystemDrive -TpmAndPinProtector -Pin $pin
                 }
 
+
+                 else {
+
+                    Add-BitLockerKeyProtector -MountPoint $env:SystemDrive -RecoveryPasswordProtector *> "C:\Drive C recovery password.txt"
+                    Write-Host "TPM and Startup Pin are available but the recovery password is missing, adding it now... `nthe recovery password will be saved in a Text file in C:\Drive C recovery password.txt" -ForegroundColor Magenta -BackgroundColor yellow
+                    Write-Host "Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which requires authentication to access." -ForegroundColor Magenta -BackgroundColor white
+                }
+                
+                
+             }
+                
+                # check if Bitlocker is using recovery password but not TPM and PIN
+            if($KeyProtectors -notcontains 'Tpmpin' -and $KeyProtectors -contains 'recoveryPassword') {
             
+                Write-Host "TPM and Start up PIN key protectors are missing but recovery password key protector is in place, `nadding TPM and Start up PIN key protectors now..." -ForegroundColor Magenta -BackgroundColor white
+                
+
+
+
+                do  {
+
+                    $pin1 = $(write-host "Enter a Pin for Bitlocker startup (at least 6 digits)" -ForegroundColor Magenta -BackgroundColor white; Read-Host -AsSecureString)
+                    $pin2 = $(write-host "Confirm your Bitlocker Startup Pin (at least 6 digits)" -ForegroundColor Magenta -BackgroundColor white; Read-Host -AsSecureString)
+                    
+                  
+                    $theyMatch = Compare-SecureString $pin1 $pin2
+                     
+                  
+                    if ( $theyMatch  ) {
+                  
+                    $pin = $pin1
+                  
+                     }
+                  
+                    else {Write-Host "the PINs you entered didn't match, try again" -ForegroundColor Black -BackgroundColor red}
+                  
+                  }
+                  
+                  until (
+                      $theyMatch
+                  )
+
+
+                Add-BitLockerKeyProtector -MountPoint $env:SystemDrive -TpmAndPinProtector -Pin $pin
+                Write-Host "PINs matched, enabling TPM and startup PIN now" -ForegroundColor DarkMagenta -BackgroundColor White
             }
 
-
         
         }
 
-        else {
-         $EncryptionPercentage = (Get-BitLockerVolume -MountPoint $env:SystemDrive).encryptionpercentage
-        Write-Host "Bitlocker is enabled but the C Drive is only" $EncryptionPercentage "percent encrypted" -ForegroundColor black -BackgroundColor yellow
-            
-        }
 
+    
+      
      
 }
 
     
 
 else {
-    Write-Host "Bitlocker is Not enabled for C Drive, activating now... `n the recovery password will be saved in a Text file in D:\Drive C recovery password.txt" -ForegroundColor Magenta -BackgroundColor yellow
-    Write-Host "Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which requires authentication to access." -ForegroundColor Magenta -BackgroundColor white
-
-
+    Write-Host "Bitlocker is Not enabled for the System Drive Drive, activating now..." -ForegroundColor Magenta -BackgroundColor yellow
+    
         do  {
 
-        $pin1 =  read-host "Enter a Pin for Bitlocker startup (at least 6 digits)" -AsSecureString
-        $pin2 = read-host "Confirm your Bitlocker Startup Pin (at least 6 digits)" -AsSecureString
-        
+            $pin1 = $(write-host "Enter a Pin for Bitlocker startup (at least 6 digits)" -ForegroundColor Magenta -BackgroundColor white; Read-Host -AsSecureString)
+            $pin2 = $(write-host "Confirm your Bitlocker Startup Pin (at least 6 digits)" -ForegroundColor Magenta -BackgroundColor white; Read-Host -AsSecureString)
+
       
         $theyMatch = Compare-SecureString $pin1 $pin2
       
@@ -632,16 +649,41 @@ else {
 
      enable-bitlocker -MountPoint $env:SystemDrive -EncryptionMethod XtsAes256 -pin $pin -TpmAndPinProtector -SkipHardwareTest
 
-     Add-BitLockerKeyProtector -MountPoint $env:SystemDrive -RecoveryPasswordProtector *> "D:\Drive C recovery password.txt" 
+     
 
-     Resume-BitLocker -MountPoint $env:SystemDrive 
+        if(Test-Path D:){
+            Add-BitLockerKeyProtector -MountPoint $env:SystemDrive -RecoveryPasswordProtector *> "D:\Drive C recovery password.txt" 
+            Resume-BitLocker -MountPoint $env:SystemDrive
+            Write-Host "the recovery password will be saved in a Text file in D:\Drive C recovery password.txt `nMake sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which requires authentication to access." -ForegroundColor Magenta -BackgroundColor white
+            Write-Host "Bitlocker is now fully and securely enabled" -ForegroundColor black -BackgroundColor Green
+        }
 
-     Write-Host "Bitlocker is now fully and securely enabled" -ForegroundColor black -BackgroundColor Green
+        elseif(Test-Path E:){
+            Add-BitLockerKeyProtector -MountPoint $env:SystemDrive -RecoveryPasswordProtector *> "E:\Drive C recovery password.txt" 
+            Resume-BitLocker -MountPoint $env:SystemDrive
+            Write-Host "the recovery password will be saved in a Text file in E:\Drive C recovery password.txt `nMake sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which requires authentication to access." -ForegroundColor Magenta -BackgroundColor white
+            Write-Host "Bitlocker is now fully and securely enabled" -ForegroundColor black -BackgroundColor Green
+        
+        }
+
+        else {
+            Add-BitLockerKeyProtector -MountPoint $env:SystemDrive -RecoveryPasswordProtector *> "C:\Drive C recovery password.txt" 
+            Resume-BitLocker -MountPoint $env:SystemDrive
+            Write-Host "the recovery password will be saved in a Text file in C:\Drive C recovery password.txt `nMake sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which requires authentication to access." -ForegroundColor Magenta -BackgroundColor white
+            Write-Host "Bitlocker is now fully and securely enabled" -ForegroundColor black -BackgroundColor Green
+            
+        }
+     
+     
 
 }
 
 
 
+
+
+
+}
 
 
 

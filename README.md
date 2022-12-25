@@ -116,11 +116,11 @@ Set-ExecutionPolicy Bypass -Scope Process
 
 
 ## Security Reccomendations
-<br />
 
 * Use the latest version of the PowerShell, easiest and fastest way to install it is using <a href="https://www.microsoft.com/store/productId/9MZ1SNWT0N5D">Microsoft Store</a> but also available on <a href="https://github.com/PowerShell/PowerShell/releases">Github</a>
-*
-*
+* When you decide to install a program or app in Windows, first use the Microsoft Store and <a href="https://github.com/microsoft/winget-cli">Winget</a>, somebody created a nice web interface for interacting with Winget CLI <a href="https://winstall.app/">here</a>. if the program or app you are looking for isn't available in there, then download it from its official website.
+* Use Secure DNS. Windows 11 natively supports DNS over HTTPS and DNS over TLS.
+* 
 
 
 ## Resources

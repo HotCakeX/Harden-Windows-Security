@@ -45,7 +45,7 @@ Features of this Hardening script:
  -Always up-to-date and works with latest build of Windows (Currently Windows 11)
  -Doesn't break anything
  -Doesn't remove or disable Windows functionlities against Microsoft's recommendation
- -Above each command there are comments that explain what it does and links to additional resources are provided for better understanding
+ -Above each command there are comments that explain what it does, why it's there, provide extra important information about it and links to additional resources for better understanding
  -When a hardening command is no longer necessary because it's applied by default by Microsoft on new builds of Windows, it will also be removed from this script in order to prevent any problems and because it won't be necessary anymore.
  -The script can be run infinite number of times, it's made in a way that it won't make any duplicate changes.
 
@@ -66,7 +66,7 @@ Hardening Categories from top to bottom:
   -Windows Networking
   -Miscellaneous Configurations
  Commands that don't require Administrator Privileges
-  -Non-Admin Commands
+  -Non-Admin Commands that only affect the current user and do not make machine-wide changes.
 
 
 

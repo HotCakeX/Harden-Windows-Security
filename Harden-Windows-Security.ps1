@@ -682,7 +682,7 @@ these portable stacks are:
 
 Example of portable TLS stacks used in 3rd party programs: OpenSSL/SSLeay (plus forks LibreSSL and BoringSSL), NSS and GnuTLS are written in C,
 and JSSE and BouncyCastle in Java, and are widely available and used on at least all Linux (usually other Unix also) and Windows.
-MbedTLS/PolarSSL Wolf/CyaSSL and BearSSL 
+MbedTLS/PolarSSL Wolf/CyaSSL and BearSSL
 
   https://en.wikipedia.org/wiki/Comparison_of_TLS_implementations#Portability_concerns
 
@@ -1582,55 +1582,92 @@ Write-Host "There are currently" $badrules.count "Firewall rules that allow Edge
 
 
 
+if ($PSVersionTable.PSVersion.Major,$PSVersionTable.PSVersion.Minor -join "." -gt 5.1)
 
-<#
-Disable PowerShell v2 (2 commands) - because it's old and doesn't support AMSI: https://devblogs.microsoft.com/powershell/powershell-the-blue-team/#antimalware-scan-interface-integration
-https://devblogs.microsoft.com/powershell/windows-powershell-2-0-deprecation/ 
 
-Disable Work Folders client, not used when your computer is not part of a domain or enterprise network
-https://learn.microsoft.com/en-us/windows-server/storage/work-folders/work-folders-overview
+# since PowerShell Core (only if installed from Microsoft Store) has problem with these commands, letting the built-in PowerShell handle them
+# There are Github issues for it already: https://github.com/PowerShell/PowerShell/issues/13866
 
-Disable Internet Printing Client, used in combination with IIS web server, old feature, can be disabled without causing problems further down the road
-https://learn.microsoft.com/en-us/troubleshoot/windows-server/printing/manage-connect-printers-use-web-browser
 
-Disable Windows Media Player (legacy)
-isn't needed anymore, Windows 11 has modern media player app. everything, including connecting phone to computer and importing photos etc., works after disabling it
+{ 
 
-Enable Windows Defender Application Guard
-which is a safe environment to open untrusted websites safely
+# Disable PowerShell v2 (needs 2 commands) - because it's old and doesn't support AMSI: https://devblogs.microsoft.com/powershell/powershell-the-blue-team/#antimalware-scan-interface-integration
+# https://devblogs.microsoft.com/powershell/windows-powershell-2-0-deprecation/ 
+PowerShell.exe "if((get-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2).state -eq 'enabled'){disable-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2 -norestart}else{Write-Host 'MicrosoftWindowsPowerShellV2 is already disabled' -ForegroundColor Magenta}"
+PowerShell.exe "if((get-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2Root).state -eq 'enabled'){disable-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2Root -norestart}else{Write-Host 'MicrosoftWindowsPowerShellV2Root is already disabled' -ForegroundColor Magenta}"
 
-Enable Windows Sandbox
-install, test and use programs in a disposable virtual operation system, completely separate from your main OS
+# Disable Work Folders client, not used when your computer is not part of a domain or enterprise network
+# https://learn.microsoft.com/en-us/windows-server/storage/work-folders/work-folders-overview
+PowerShell.exe "if((get-WindowsOptionalFeature -Online -FeatureName WorkFolders-Client).state -eq 'enabled'){disable-WindowsOptionalFeature -Online -FeatureName WorkFolders-Client -norestart}else{Write-Host 'WorkFolders-Client is already disabled' -ForegroundColor Magenta}"
 
-Enable Hyper-V
-the best hypervisor to run virtual machines on
+# Disable Internet Printing Client, used in combination with IIS web server, old feature, can be disabled without causing problems further down the road
+# https://learn.microsoft.com/en-us/troubleshoot/windows-server/printing/manage-connect-printers-use-web-browser
+PowerShell.exe "if((get-WindowsOptionalFeature -Online -FeatureName Printing-Foundation-Features).state -eq 'enabled'){disable-WindowsOptionalFeature -Online -FeatureName Printing-Foundation-Features -norestart}else{Write-Host 'Printing-Foundation-Features is already disabled' -ForegroundColor Magenta}"
 
-Enable Virtual Machine Platform
-required for Android subsystem or WSA (Windows subsystem for Android). if it's disabled, it will be automatically enabled either way when you try to install WSA from Store app
+# Disable Windows Media Player (legacy)
+# isn't needed anymore, Windows 11 has modern media player app. everything, including connecting phone to computer and importing photos etc., works after disabling it
+PowerShell.exe "if((get-WindowsOptionalFeature -Online -FeatureName WindowsMediaPlayer).state -eq 'enabled'){disable-WindowsOptionalFeature -Online -FeatureName WindowsMediaPlayer -norestart}else{Write-Host 'WindowsMediaPlayer is already disabled' -ForegroundColor Magenta}"
 
-since PowerShell Core has problem with these commands, letting the built-in PowerShell handle them
-There are Github issues for it already: https://github.com/PowerShell/PowerShell/issues/13866
-#>
 
-$arguments = @"
-Disable-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2 -norestart
-Disable-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2Root -norestart
-Disable-WindowsOptionalFeature -Online -FeatureName "WorkFolders-Client" -NoRestart
-Disable-WindowsOptionalFeature -Online -FeatureName "Printing-Foundation-Features" -NoRestart
-Disable-WindowsOptionalFeature -Online -FeatureName "WindowsMediaPlayer" -NoRestart
-Enable-WindowsOptionalFeature -online -FeatureName Windows-Defender-ApplicationGuard -norestart
-Enable-WindowsOptionalFeature -online -FeatureName Containers-DisposableClientVM -All -norestart
-Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All -norestart
-Enable-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform -NoRestart
-"@
+# Enable Windows Defender Application Guard
+# which is a safe environment to open untrusted websites safely
+PowerShell.exe "if((get-WindowsOptionalFeature -Online -FeatureName Windows-Defender-ApplicationGuard).state -eq 'disabled'){enable-WindowsOptionalFeature -Online -FeatureName Windows-Defender-ApplicationGuard -norestart}else{Write-Host 'Windows-Defender-ApplicationGuard is already enabled' -ForegroundColor Magenta}"
 
-if ($PSVersionTable.PSVersion -gt [version]"5.1") {
+# Enable Windows Sandbox
+# install, test and use programs in a disposable virtual operation system, completely separate from your main OS
+PowerShell.exe "if((get-WindowsOptionalFeature -Online -FeatureName Containers-DisposableClientVM).state -eq 'disabled'){enable-WindowsOptionalFeature -Online -FeatureName Containers-DisposableClientVM -All -norestart}else{Write-Host 'Containers-DisposableClientVM (Windows Sandbox) is already enabled' -ForegroundColor Magenta}"
 
-    
+# Enable Hyper-V
+# the best hypervisor to run virtual machines on
+PowerShell.exe "if((get-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V).state -eq 'disabled'){enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All -norestart}else{Write-Host 'Microsoft-Hyper-V is already enabled' -ForegroundColor Magenta}"
 
-    Start-Process -FilePath "PowerShell.exe" -ArgumentList $arguments
-  }
+# Enable Virtual Machine Platform
+# required for Android subsystem or WSA (Windows subsystem for Android). if it's disabled, it will be automatically enabled either way when you try to install WSA from Store app
+PowerShell.exe "if((get-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform).state -eq 'disabled'){enable-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform -norestart}else{Write-Host 'VirtualMachinePlatform is already enabled' -ForegroundColor Magenta}"
 
+
+}
+
+else {
+
+    # Disable PowerShell v2 (needs 2 commands) - because it's old and doesn't support AMSI: https://devblogs.microsoft.com/powershell/powershell-the-blue-team/#antimalware-scan-interface-integration
+# https://devblogs.microsoft.com/powershell/windows-powershell-2-0-deprecation/ 
+ if((get-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2).state -eq 'enabled'){disable-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2 -norestart}else{Write-Host 'MicrosoftWindowsPowerShellV2 is already disabled' -ForegroundColor Magenta}
+ if((get-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2Root).state -eq 'enabled'){disable-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2Root -norestart}else{Write-Host 'MicrosoftWindowsPowerShellV2Root is already disabled' -ForegroundColor Magenta}
+
+# Disable Work Folders client, not used when your computer is not part of a domain or enterprise network
+# https://learn.microsoft.com/en-us/windows-server/storage/work-folders/work-folders-overview
+ if((get-WindowsOptionalFeature -Online -FeatureName WorkFolders-Client).state -eq 'enabled'){disable-WindowsOptionalFeature -Online -FeatureName WorkFolders-Client -norestart}else{Write-Host 'WorkFolders-Client is already disabled' -ForegroundColor Magenta}
+
+# Disable Internet Printing Client, used in combination with IIS web server, old feature, can be disabled without causing problems further down the road
+# https://learn.microsoft.com/en-us/troubleshoot/windows-server/printing/manage-connect-printers-use-web-browser
+ if((get-WindowsOptionalFeature -Online -FeatureName Printing-Foundation-Features).state -eq 'enabled'){disable-WindowsOptionalFeature -Online -FeatureName Printing-Foundation-Features -norestart}else{Write-Host 'Printing-Foundation-Features is already disabled' -ForegroundColor Magenta}
+
+# Disable Windows Media Player (legacy)
+# isn't needed anymore, Windows 11 has modern media player app. everything, including connecting phone to computer and importing photos etc., works after disabling it
+ if((get-WindowsOptionalFeature -Online -FeatureName WindowsMediaPlayer).state -eq 'enabled'){disable-WindowsOptionalFeature -Online -FeatureName WindowsMediaPlayer -norestart}else{Write-Host 'WindowsMediaPlayer is already disabled' -ForegroundColor Magenta}
+
+
+# Enable Windows Defender Application Guard
+# which is a safe environment to open untrusted websites safely
+ if((get-WindowsOptionalFeature -Online -FeatureName Windows-Defender-ApplicationGuard).state -eq 'disabled'){enable-WindowsOptionalFeature -Online -FeatureName Windows-Defender-ApplicationGuard -norestart}else{Write-Host 'Windows-Defender-ApplicationGuard is already enabled' -ForegroundColor Magenta}
+
+# Enable Windows Sandbox
+# install, test and use programs in a disposable virtual operation system, completely separate from your main OS
+ if((get-WindowsOptionalFeature -Online -FeatureName Containers-DisposableClientVM).state -eq 'disabled'){enable-WindowsOptionalFeature -Online -FeatureName Containers-DisposableClientVM -All -norestart}else{Write-Host 'Containers-DisposableClientVM (Windows Sandbox) is already enabled' -ForegroundColor Magenta}
+
+# Enable Hyper-V
+# the best hypervisor to run virtual machines on
+ if((get-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V).state -eq 'disabled'){enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All -norestart}else{Write-Host 'Microsoft-Hyper-V is already enabled' -ForegroundColor Magenta}
+
+# Enable Virtual Machine Platform
+# required for Android subsystem or WSA (Windows subsystem for Android). if it's disabled, it will be automatically enabled either way when you try to install WSA from Store app
+if((get-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform).state -eq 'disabled'){enable-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform -norestart}else{Write-Host 'VirtualMachinePlatform is already enabled' -ForegroundColor Magenta}
+
+
+
+        
+}
 
 
 

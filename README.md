@@ -132,6 +132,7 @@ Set-ExecutionPolicy Bypass -Scope Process
 - [GPS](https://gpsearch.azurewebsites.net/) - Group Policy Search
 - [Germany Intelligence Agency - BND](https://www.bsi.bund.de/EN/Service-Navi/Publikationen/publikationen_node.html) - Federal Office for Information Security
 - [Microsoft Tech Community](https://techcommunity.microsoft.com/) - Official blogs and documentations
+- [Microsoft Security baselines](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-security-configuration-framework/windows-security-baselines) - Security baselines from Microsoft
 
 
 ## License

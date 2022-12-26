@@ -1,7 +1,6 @@
+ <#PSScriptInfo
 
-<#PSScriptInfo
-
-.VERSION 2022.12.26.1
+.VERSION 2022.12.26.2
 
 .GUID d435a293-c9ee-4217-8dc1-4ad2318a5770
 
@@ -33,6 +32,7 @@ Version 2022.12.10: Enabled ECH (Encrypted Client Hello of TLS) feature for Edge
 Version 2022.12.25: Entirely changed and organized the script's style to be easier to read and find commands
 Version 2022.12.26: Further improved the script with explanatory comments and improved the Optional Windows Features section
 Version 2022.12.26.1: Significantly improved Bitlocker script block, logic and style
+Version 2022.12.26.2: Optimized the script by performing registry modifications using a function and saved 600 lines of code
 #>
 
 <# 
@@ -44,12 +44,12 @@ Version 2022.12.26.1: Significantly improved Bitlocker script block, logic and s
 
 Features of this Hardening script:
 
- -Always up-to-date and works with latest build of Windows (Currently Windows 11)
+ -Always up-to-date and works with latest build of Windows (Currently Windows 11 - compatible and fully tested a Lot on stable and Insider Dev builds)
  -Doesn't break anything
  -Doesn't remove or disable Windows functionlities against Microsoft's recommendation
  -Above each command there are comments that explain what it does, why it's there, provide extra important information about it and links to additional resources for better understanding
  -When a hardening command is no longer necessary because it's applied by default by Microsoft on new builds of Windows, it will also be removed from this script in order to prevent any problems and because it won't be necessary anymore.
- -The script can be run infinite number of times, it's made in a way that it won't make any duplicate changes.
+ -The script can be run infinite number of times, it's made in a way that it won't make any duplicate changes at all.
 
 
 
@@ -87,9 +87,20 @@ https://github.com/HotCakeX/Harden-Windows-Security/discussions
 
 #>
  
+  
+ 
+  # Function to modify registry, checks before modification
+function ModifyRegistry {
+  param ($RegPath, $RegName, $RegValue )
 
-#https://devblogs.microsoft.com/scripting/use-function-to-determine-elevation-of-powershell-console/
-   
+  If (-NOT (Test-Path $RegPath)) { 
+New-Item -Path $RegPath -Force | Out-Null
+  }
+  New-ItemProperty -Path $RegPath -Name $RegName -Value $RegValue -PropertyType DWORD -Force
+}
+
+
+ # Function to test if current session has administrator privileges
 Function Test-IsAdmin
 {
  $identity = [Security.Principal.WindowsIdentity]::GetCurrent()
@@ -218,6 +229,17 @@ Set-MpPreference -AllowSwitchToAsyncInspection $True
 
 
 
+<#  JUST AN IDEA:
+add all drives to the Controlled Folder Access using Windows Defender GUI. (probably not do this because then have to allow so many default Microsoft programs too)
+we can add multiple exlusions to the Controlled Folder Access allowed apps list using this command:
+Set-MpPreference -ControlledFolderAccessAllowedApplications 'C:\Program Files\App\app.exe','C:\Program Files\App2\app2.exe'
+we can get a list of all allowd apps using this command:
+$(get-MpPreference).ControlledFolderAccessAllowedApplications
+then we can use it in this powershell script so we add all the apps automatically to exlusion list of Controlled Folder Acess on new Windows installations.
+#>
+
+
+
 
 
 
@@ -297,114 +319,37 @@ Add-MpPreference -AttackSurfaceReductionRules_Ids c1db55ab-c21a-4637-bb3f-a12568
 
 
 # Set OS drive Encryption algorithm and Cipher | XTS-AES 256-bit
-$RegistryPath = 'HKLM:\SOFTWARE\Policies\Microsoft\FVE' 
-$Name         = 'EncryptionMethodWithXtsOs' 
-$Value        = '7' 
-If (-NOT (Test-Path $RegistryPath)) { 
-  New-Item -Path $RegistryPath -Force | Out-Null 
-}   
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force 
-
+ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Policies\Microsoft\FVE' -RegName 'EncryptionMethodWithXtsOs' -RegValue '7'
 
 # Set Fixed drive Encryption algorithm and Cipher | XTS-AES 256-bit
-$RegistryPath = 'HKLM:\SOFTWARE\Policies\Microsoft\FVE' 
-$Name         = 'EncryptionMethodWithXtsFdv' 
-$Value        = '7' 
-If (-NOT (Test-Path $RegistryPath)) { 
-  New-Item -Path $RegistryPath -Force | Out-Null 
-}   
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force 
-
+ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Policies\Microsoft\FVE' -RegName 'EncryptionMethodWithXtsFdv' -RegValue '7'
 
 # Set removable drives data Encryption algorithm and Cipher | XTS-AES 256-bit
-$RegistryPath = 'HKLM:\SOFTWARE\Policies\Microsoft\FVE'
-$Name         = 'EncryptionMethodWithXtsRdv'
-$Value        = '7' 
-If (-NOT (Test-Path $RegistryPath)) { 
-  New-Item -Path $RegistryPath -Force | Out-Null 
-}   
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force 
-
+ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Policies\Microsoft\FVE' -RegName 'EncryptionMethodWithXtsRdv' -RegValue '7'
 
 # Bitlocker: Allow Enhanced PINs for startup 
-$RegistryPath = 'HKLM:\SOFTWARE\Policies\Microsoft\FVE' 
-$Name         = 'UseEnhancedPin' 
-$Value        = '1' 
-If (-NOT (Test-Path $RegistryPath)) { 
-  New-Item -Path $RegistryPath -Force | Out-Null 
-}   
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
-
+ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Policies\Microsoft\FVE' -RegName 'UseEnhancedPin' -RegValue '1'
 
 # Enforce drive encryption type on operating system drives: full drive encryption
-$RegistryPath = 'HKLM:\SOFTWARE\Policies\Microsoft\FVE' 
-$Name         = 'OSEncryptionType' 
-$Value        = '1' 
-If (-NOT (Test-Path $RegistryPath)) { 
-  New-Item -Path $RegistryPath -Force | Out-Null 
-}  
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
-
+ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Policies\Microsoft\FVE' -RegName 'OSEncryptionType' -RegValue '1'
 
 # Bitlocker: use Advanced Startup - Require additional authentication at startup
-$RegistryPath = 'HKLM:\SOFTWARE\Policies\Microsoft\FVE' 
-$Name         = 'UseAdvancedStartup' 
-$Value        = '1' 
-If (-NOT (Test-Path $RegistryPath)) { 
-  New-Item -Path $RegistryPath -Force | Out-Null 
-}   
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
-
+ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Policies\Microsoft\FVE' -RegName 'UseAdvancedStartup' -RegValue '1'
 
 # Bitlocker: Don't allow Bitlocker with no TPM
-$RegistryPath = 'HKLM:\SOFTWARE\Policies\Microsoft\FVE' 
-$Name         = 'EnableBDEWithNoTPM'
-$Value        = '0'
-If (-NOT (Test-Path $RegistryPath)) { 
-  New-Item -Path $RegistryPath -Force | Out-Null 
-}   
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force 
-
+ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Policies\Microsoft\FVE' -RegName 'EnableBDEWithNoTPM' -RegValue '0'
 
 # Bitlocker: Allow/Use startup key with TPM
-$RegistryPath = 'HKLM:\SOFTWARE\Policies\Microsoft\FVE' 
-$Name         = 'UseTPMKey' 
-$Value        = '2' 
-If (-NOT (Test-Path $RegistryPath)) { 
-  New-Item -Path $RegistryPath -Force | Out-Null 
-}   
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force 
-
+ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Policies\Microsoft\FVE' -RegName 'UseTPMKey' -RegValue '2'
 
 # Bitlocker: Allow/Use startup PIN with TPM
-$RegistryPath = 'HKLM:\SOFTWARE\Policies\Microsoft\FVE' 
-$Name         = 'UseTPMPIN' 
-$Value        = '2' 
-If (-NOT (Test-Path $RegistryPath)) { 
-  New-Item -Path $RegistryPath -Force | Out-Null 
-}   
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force 
-
+ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Policies\Microsoft\FVE' -RegName 'UseTPMPIN' -RegValue '2'
 
 # Bitlocker: Allow/Use startup key and PIN with TPM
-$RegistryPath = 'HKLM:\SOFTWARE\Policies\Microsoft\FVE' 
-$Name         = 'UseTPMKeyPIN' 
-$Value        = '2' 
-If (-NOT (Test-Path $RegistryPath)) { 
-  New-Item -Path $RegistryPath -Force | Out-Null 
-}   
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force 
-
+ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Policies\Microsoft\FVE' -RegName 'UseTPMKeyPIN' -RegValue '2'
 
 # Bitlocker: Allow/Use TPM
-$RegistryPath = 'HKLM:\SOFTWARE\Policies\Microsoft\FVE' 
-$Name         = 'UseTPM' 
-$Value        = '2' 
-If (-NOT (Test-Path $RegistryPath)) { 
-  New-Item -Path $RegistryPath -Force | Out-Null 
-}   
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force 
-
+ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Policies\Microsoft\FVE' -RegName 'UseTPM' -RegValue '2'
 
 
 <#
@@ -441,28 +386,12 @@ turn on Intel Virtualization features and also turn on VT-d (Intel Virtualizatio
 
 Disable new DMA devices when this computer is locked
 #> 
-$RegistryPath = 'HKLM:\Software\Policies\Microsoft\FVE' 
-$Name         = 'DisableExternalDMAUnderLock' 
-$Value        = '1' 
-If (-NOT (Test-Path $RegistryPath)) { 
-  New-Item -Path $RegistryPath -Force | Out-Null 
-}   
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force 
-
-
+ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Policies\Microsoft\FVE' -RegName 'DisableExternalDMAUnderLock' -RegValue '1'
 
 
 # Disallow standard users from changing the Bitlocker Startup PIN or password
 # this is complementary for the Bitlocker activation and verification script below to work properly
-$RegistryPath = 'HKLM:\SOFTWARE\Policies\Microsoft\FVE'
-$Name         = 'DisallowStandardUserPINReset'  
-$Value        = '1' 
-If (-NOT (Test-Path $RegistryPath)) {   New-Item -Path $RegistryPath -Force | Out-Null } 
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
-
-
-
-
+ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Policies\Microsoft\FVE' -RegName 'DisallowStandardUserPINReset' -RegValue '1'
 
 
 # set-up Bitlocker encryption for OS Drive with TPMandPIN and recovery password keyprotectors and Verify its implementation
@@ -579,7 +508,6 @@ if ((Get-BitLockerVolume -MountPoint $env:SystemDrive).ProtectionStatus -eq "on"
                 
 
 
-
                 do  {
 
                     $pin1 = $(write-host "Enter a Pin for Bitlocker startup (at least 6 digits)" -ForegroundColor Magenta -BackgroundColor white; Read-Host -AsSecureString)
@@ -607,18 +535,13 @@ if ((Get-BitLockerVolume -MountPoint $env:SystemDrive).ProtectionStatus -eq "on"
                 Add-BitLockerKeyProtector -MountPoint $env:SystemDrive -TpmAndPinProtector -Pin $pin
                 Write-Host "PINs matched, enabling TPM and startup PIN now" -ForegroundColor DarkMagenta -BackgroundColor White
             }
-
-        
+     
         }
-
-
     
-      
      
 }
 
-    
-
+   
 else {
     Write-Host "Bitlocker is Not enabled for the System Drive Drive, activating now..." -ForegroundColor Magenta -BackgroundColor yellow
     
@@ -679,18 +602,7 @@ else {
 }
 
 
-
-
-
-
 }
-
-
-
-
-
-
-
 
 
 
@@ -698,12 +610,6 @@ else {
 # =========================================================================================================================
 # ==========================================End of Bitlocker Settings======================================================
 # =========================================================================================================================
-
-
-
-
-
-
 
 
 
@@ -739,60 +645,24 @@ MbedTLS/PolarSSL Wolf/CyaSSL and BearSSL
 
 # Disable TLS v1
 # step 1
-$RegistryPath = 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.0\Client'  
-$Name         = 'DisabledByDefault'  
-$Value        = '1' 
-If (-NOT (Test-Path $RegistryPath)) {   New-Item -Path $RegistryPath -Force | Out-Null } 
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
+ModifyRegistry -RegPath 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.0\Client' -RegName 'DisabledByDefault' -RegValue '1'
 # step 2
-$RegistryPath = 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.0\Client'  
-$Name         = 'Enabled'  
-$Value        = '0' 
-If (-NOT (Test-Path $RegistryPath)) {   New-Item -Path $RegistryPath -Force | Out-Null } 
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
+ModifyRegistry -RegPath 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.0\Client' -RegName 'Enabled' -RegValue '0'
 # step 3
-$RegistryPath = 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.0\Server'  
-$Name         = 'DisabledByDefault'  
-$Value        = '1' 
-If (-NOT (Test-Path $RegistryPath)) {   New-Item -Path $RegistryPath -Force | Out-Null } 
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
+ModifyRegistry -RegPath 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.0\Server' -RegName 'DisabledByDefault' -RegValue '1'
 # step 4
-$RegistryPath = 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.0\Server'  
-$Name         = 'Enabled'  
-$Value        = '0' 
-If (-NOT (Test-Path $RegistryPath)) {   New-Item -Path $RegistryPath -Force | Out-Null } 
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
-
-
-
-
+ModifyRegistry -RegPath 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.0\Server' -RegName 'Enabled' -RegValue '0'
 
 
 # Disable TLS v1.1
 # step 1
-$RegistryPath = 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.1\Client'  
-$Name         = 'DisabledByDefault'  
-$Value        = '1' 
-If (-NOT (Test-Path $RegistryPath)) {   New-Item -Path $RegistryPath -Force | Out-Null } 
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
+ModifyRegistry -RegPath 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.1\Client' -RegName 'DisabledByDefault' -RegValue '1'
 # step 2
-$RegistryPath = 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.1\Client'  
-$Name         = 'Enabled'  
-$Value        = '0' 
-If (-NOT (Test-Path $RegistryPath)) {   New-Item -Path $RegistryPath -Force | Out-Null } 
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
+ModifyRegistry -RegPath 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.1\Client' -RegName 'Enabled' -RegValue '0'
 # step 3
-$RegistryPath = 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.1\Server'  
-$Name         = 'DisabledByDefault'  
-$Value        = '1' 
-If (-NOT (Test-Path $RegistryPath)) {   New-Item -Path $RegistryPath -Force | Out-Null } 
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
+ModifyRegistry -RegPath 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.1\Server' -RegName 'DisabledByDefault' -RegValue '1'
 # step 4
-$RegistryPath = 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.1\Server'  
-$Name         = 'Enabled'  
-$Value        = '0' 
-If (-NOT (Test-Path $RegistryPath)) {   New-Item -Path $RegistryPath -Force | Out-Null } 
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
+ModifyRegistry -RegPath 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.1\Server' -RegName 'Enabled' -RegValue '0'
 
 
 
@@ -858,27 +728,14 @@ Enable-TlsCipherSuite -Name "TLS_DHE_RSA_WITH_AES_256_CBC_SHA"
 
 
 
-
-
-
-
 # Disabling weak and unsecure ciphers
 
 
-
 # NULL
-
-$RegistryPath = 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\NULL\'  
-$Name         = 'Enabled'  
-$Value        = '0' 
-If (-NOT (Test-Path $RegistryPath)) {   New-Item -Path $RegistryPath -Force | Out-Null } 
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
+ModifyRegistry -RegPath 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\NULL\' -RegName 'Enabled' -RegValue '0'
 
 
-
-
-# DES 56-bit
- 
+# DES 56-bit 
 ([Microsoft.Win32.RegistryKey]::OpenRemoteBaseKey([Microsoft.Win32.RegistryHive]::LocalMachine, $env:COMPUTERNAME)).CreateSubKey('SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\DES 56/56')
 $RegistryPath = "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\DES 56/56" 
 $Name         = 'Enabled'  
@@ -886,10 +743,7 @@ $Value        = '0'
 New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
 
 
-
-
 # RC2 40-bit
-
 ([Microsoft.Win32.RegistryKey]::OpenRemoteBaseKey([Microsoft.Win32.RegistryHive]::LocalMachine, $env:COMPUTERNAME)).CreateSubKey('SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC2 40/128')
 $RegistryPath = 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC2 40/128' 
 $Name         = 'Enabled'  
@@ -897,10 +751,7 @@ $Value        = '0'
 New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
 
 
-
-
 # RC2 56-bit
-
 ([Microsoft.Win32.RegistryKey]::OpenRemoteBaseKey([Microsoft.Win32.RegistryHive]::LocalMachine, $env:COMPUTERNAME)).CreateSubKey('SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC2 56/128')
 $RegistryPath = 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC2 56/128' 
 $Name         = 'Enabled'  
@@ -908,10 +759,7 @@ $Value        = '0'
 New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
 
 
-
-
 # RC2 128-bit
-
 ([Microsoft.Win32.RegistryKey]::OpenRemoteBaseKey([Microsoft.Win32.RegistryHive]::LocalMachine, $env:COMPUTERNAME)).CreateSubKey('SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC2 128/128')
 $RegistryPath = 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC2 128/128' 
 $Name         = 'Enabled'  
@@ -919,10 +767,7 @@ $Value        = '0'
 New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
 
 
-
-
 # RC4 40-bit
-
 ([Microsoft.Win32.RegistryKey]::OpenRemoteBaseKey([Microsoft.Win32.RegistryHive]::LocalMachine, $env:COMPUTERNAME)).CreateSubKey('SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC4 40/128')
 $RegistryPath = 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC4 40/128'
 $Name         = 'Enabled'  
@@ -930,10 +775,7 @@ $Value        = '0'
 New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
 
 
-
-
 # RC4 56-bit
-
 ([Microsoft.Win32.RegistryKey]::OpenRemoteBaseKey([Microsoft.Win32.RegistryHive]::LocalMachine, $env:COMPUTERNAME)).CreateSubKey('SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC4 56/128')
 $RegistryPath = 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC4 56/128'
 $Name         = 'Enabled'  
@@ -941,10 +783,7 @@ $Value        = '0'
 New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
 
 
-
-
 # RC4 64-bit
-
 ([Microsoft.Win32.RegistryKey]::OpenRemoteBaseKey([Microsoft.Win32.RegistryHive]::LocalMachine, $env:COMPUTERNAME)).CreateSubKey('SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC4 64/128')
 $RegistryPath = 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC4 64/128'
 $Name         = 'Enabled'  
@@ -952,10 +791,7 @@ $Value        = '0'
 New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
 
 
-
-
 # RC4 128-bit
-
 ([Microsoft.Win32.RegistryKey]::OpenRemoteBaseKey([Microsoft.Win32.RegistryHive]::LocalMachine, $env:COMPUTERNAME)).CreateSubKey('SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC4 128/128')
 $RegistryPath = 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC4 128/128'
 $Name         = 'Enabled'  
@@ -963,9 +799,7 @@ $Value        = '0'
 New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
 
 
-
 # 3DES 168-bit (Triple DES 168)
-
 ([Microsoft.Win32.RegistryKey]::OpenRemoteBaseKey([Microsoft.Win32.RegistryHive]::LocalMachine, $env:COMPUTERNAME)).CreateSubKey('SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\Triple DES 168')
 $RegistryPath = 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\Triple DES 168'
 $Name         = 'Enabled'  
@@ -974,18 +808,7 @@ New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWO
 
 
 # Disable MD5 Hashing Algorithm
-
-$RegistryPath = 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Hashes\MD5'  
-$Name         = 'Enabled'  
-$Value        = '0' 
-If (-NOT (Test-Path $RegistryPath)) {   New-Item -Path $RegistryPath -Force | Out-Null } 
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
-
-
-
-
-
-
+ModifyRegistry -RegPath 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Hashes\MD5' -RegName 'Enabled' -RegValue '0'
 
 
 
@@ -994,7 +817,6 @@ New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWO
 # =========================================================================================================================
 # ==========================================End of TLS Security============================================================
 # =========================================================================================================================
-
 
 
 
@@ -1009,21 +831,13 @@ New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWO
 
 # Automatically lock computer after X seconds, set to 120 seconds in this command.
 # https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/interactive-logon-machine-inactivity-limit
-$RegistryPath = 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System'
-$Name         = 'InactivityTimeoutSecs'
-$Value        = '120'
-If (-NOT (Test-Path $RegistryPath)) {  New-Item -Path $RegistryPath -Force | Out-Null} 
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
+ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System' -RegName 'InactivityTimeoutSecs' -RegValue '120'
 
 
 # https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/interactive-logon-do-not-require-ctrl-alt-del
 # forces CAD requirement, CTRL + ALT + DELETE at Windows Lock screen to be pressed to show sign in fields
 # Interactive logon: Do not require CTRL+ALT+DEL - when set to '0', CAD is required
-$RegistryPath = 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System'
-$Name         = 'DisableCAD'
-$Value        = '0'
-If (-NOT (Test-Path $RegistryPath)) {  New-Item -Path $RegistryPath -Force | Out-Null} 
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force 
+ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System' -RegName 'DisableCAD' -RegValue '0'
 
 
 # https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/interactive-logon-machine-account-lockout-threshold
@@ -1033,44 +847,25 @@ New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWO
 # except the 48-digit recovery password, and then reboot. During Device Lockout mode,
 # the computer or device only boots into the touch-enabled Windows Recovery Environment (WinRE) until an authorized user enters the recovery password to restore full access.
 # it can provide security against brute force methods
-$RegistryPath = 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System'
-$Name         = 'MaxDevicePasswordFailedAttempts'
-$Value        = '6'
-If (-NOT (Test-Path $RegistryPath)) {  New-Item -Path $RegistryPath -Force | Out-Null} 
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force 
+ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System' -RegName 'MaxDevicePasswordFailedAttempts' -RegValue '6'
 
 
 # https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/interactive-logon-display-user-information-when-the-session-is-locked
 # https://www.itsecdb.com/oval/definition/oval/gov.nist.3/def/5002/Interactive-logon-Display-user-information-when-the-session.html
 # hides email address of the Microsoft account on lock screen
-$RegistryPath = 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System'
-$Name         = 'DontDisplayLockedUserId'
-$Value        = '3'
-If (-NOT (Test-Path $RegistryPath)) {  New-Item -Path $RegistryPath -Force | Out-Null} 
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force 
+ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System' -RegName 'DontDisplayLockedUserId' -RegValue '3'
 
 
 # If the policy is enabled and a user signs in as Other user, the full name of the user is not displayed during sign-in.
 # In the same context, if users type their email address and password at the sign in screen and press Enter,
 # the displayed text "Other user" remains unchanged, and is no longer replaced by the user's first and last name
-$RegistryPath = 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System'
-$Name         = 'DontDisplayUserName'
-$Value        = '1'
-If (-NOT (Test-Path $RegistryPath)) {  New-Item -Path $RegistryPath -Force | Out-Null} 
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
+ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System' -RegName 'DontDisplayUserName' -RegValue '1'
 
 
 # https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/interactive-logon-do-not-display-last-user-name
 # Don't display last signed-in: this will stop showing Any info about Windows accounts; users need to manually enter username and password/Pin to sign in #TopSecurity could causes annoyance - Disabled here - to enable it, change it to 1
 # this can be useful to enable if you live in a risky place and you don't want people to get any information about your computer when it's locked and you're not around
-$RegistryPath = 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System'  
-$Name         = 'dontdisplaylastusername'  
-$Value        = '0'
-If (-NOT (Test-Path $RegistryPath)) {   New-Item -Path $RegistryPath -Force | Out-Null } 
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
-
-
-
+ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System' -RegName 'dontdisplaylastusername' -RegValue '0'
 
 
 
@@ -1079,7 +874,6 @@ New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWO
 # =========================================================================================================================
 # ==============================================End of Lock Screen=========================================================
 # =========================================================================================================================
-
 
 
 
@@ -1093,53 +887,26 @@ New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWO
 
 
 
-
-
 # https://docs.microsoft.com/en-us/windows/security/identity-protection/user-account-control/user-account-control-group-policy-and-registry-key-settings#registry-key-settings
 # The following 3 changes harden UAC and set its slider in control panel beyond what's available in there.
 # setting it to 1 asks for Admin credentials, setting it to 2 asks for Accept/Deny for Admin tasks in Admin account.
-$RegistryPath = 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System' 
-$Name         = 'ConsentPromptBehaviorAdmin' 
-$Value        = '1' 
-If (-NOT (Test-Path $RegistryPath)) { 
-  New-Item -Path $RegistryPath -Force | Out-Null 
-}   
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force 
+ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System' -RegName 'ConsentPromptBehaviorAdmin' -RegValue '1'
 
 
 # Next one - this automatically denies all UAC prompts on Standard accounts when set to "0". not enabled here #topSecurity
 # good for forcing log out of Standard account and logging in Admin account to perform actions,
 # or switching to Admin account to perform elevated task. 1 = Prompt for credentials on the secure desktop 
-$RegistryPath = 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System' 
-$Name         = 'ConsentPromptBehaviorUser' 
-$Value        = '1' 
-If (-NOT (Test-Path $RegistryPath)) { 
-  New-Item -Path $RegistryPath -Force | Out-Null 
-}   
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force 
+ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System' -RegName 'ConsentPromptBehaviorUser' -RegValue '1'
 
 
 # Enforce cryptographic signatures on any interactive application that requests elevation of privilege.
 # it can prevent certain programs from running, e.g. it prevents Cheat Engine from prompting for UAC
 # here is set to 0, only set it to 1 for #TopSecurity
-$RegistryPath = 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System' 
-$Name         = 'ValidateAdminCodeSignatures' 
-$Value        = '0' 
-If (-NOT (Test-Path $RegistryPath)) { 
-  New-Item -Path $RegistryPath -Force | Out-Null 
-}   
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
+ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System' -RegName 'ValidateAdminCodeSignatures' -RegValue '0'
 
 
 # Don't show network (like WiFi) icon on lock screen
-$RegistryPath = 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\System'  
-$Name         = 'DontDisplayNetworkSelectionUI'  
-$Value        = '1' 
-If (-NOT (Test-Path $RegistryPath)) {   New-Item -Path $RegistryPath -Force | Out-Null } 
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
-
-
-
+ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\System' -RegName 'DontDisplayNetworkSelectionUI' -RegValue '1'
 
 
 
@@ -1152,12 +919,9 @@ New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWO
 
 
 
-
 # =========================================================================================================================
 # ======================================================Device Guard=======================================================
 # =========================================================================================================================
-
-
 
 
 
@@ -1166,47 +930,19 @@ New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWO
 
 
 # To enable VBS
-$RegistryPath = 'HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard'
-$Name         = 'EnableVirtualizationBasedSecurity'
-$Value        = '1' 
-If (-NOT (Test-Path $RegistryPath)) {   New-Item -Path $RegistryPath -Force | Out-Null } 
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
-
-
+ModifyRegistry -RegPath 'HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard' -RegName 'EnableVirtualizationBasedSecurity' -RegValue '1'
 
 # To require Secure boot and DMA protection for VBS
-$RegistryPath = 'HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard'
-$Name         = 'RequirePlatformSecurityFeatures'
-$Value        = '3'
-If (-NOT (Test-Path $RegistryPath)) {   New-Item -Path $RegistryPath -Force | Out-Null }
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
-
-
+ModifyRegistry -RegPath 'HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard' -RegName 'RequirePlatformSecurityFeatures' -RegValue '3'
 
 # To turn on UEFI lock for VBS
-$RegistryPath = 'HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard'
-$Name         = 'Locked'
-$Value        = '1'
-If (-NOT (Test-Path $RegistryPath)) {   New-Item -Path $RegistryPath -Force | Out-Null }
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
-
-
+ModifyRegistry -RegPath 'HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard' -RegName 'Locked' -RegValue '1'
 
 # To enable virtualization-based protection of Code Integrity policies
-$RegistryPath = 'HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\HypervisorEnforcedCodeIntegrity'
-$Name         = 'Enabled'
-$Value        = '1'
-If (-NOT (Test-Path $RegistryPath)) {   New-Item -Path $RegistryPath -Force | Out-Null }
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
-
-
+ModifyRegistry -RegPath 'HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\HypervisorEnforcedCodeIntegrity' -RegName 'Enabled' -RegValue '1'
 
 # To turn on UEFI lock for virtualization-based protection of Code Integrity policies
-$RegistryPath = 'HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\HypervisorEnforcedCodeIntegrity'
-$Name         = 'Locked'
-$Value        = '1'
-If (-NOT (Test-Path $RegistryPath)) {   New-Item -Path $RegistryPath -Force | Out-Null }
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
+ModifyRegistry -RegPath 'HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\HypervisorEnforcedCodeIntegrity' -RegName 'Locked' -RegValue '1'
 
 
 <#
@@ -1236,7 +972,6 @@ https://techcommunity.microsoft.com/t5/microsoft-security-baselines/windows-11-v
 # =========================================================================================================================
 # ====================================================End of Device Guard==================================================
 # =========================================================================================================================
-
 
 
 
@@ -1273,7 +1008,6 @@ Set-NetFirewallProfile -Name Domain -DefaultInboundAction Block -DefaultOutbound
 
 
 
-
 function Firewallblock {
     param ($n , $p)
 
@@ -1291,154 +1025,104 @@ function Firewallblock {
 
 # LOLBins-01 Block appvlp.exe netconns
 Firewallblock -n "LOLBins-01 Block appvlp.exe netconns" -p "C:\Program Files (x86)\Microsoft Office\root\client\AppVLP.exe"
-
 # LOLBins-02 Block appvlp.exe netconns
 Firewallblock -n  "LOLBins-02 Block appvlp.exe netconns" -p "C:\Program Files\Microsoft Office\root\client\AppVLP.exe"
-
 # LOLBins-03 Block certutil.exe netconns
 Firewallblock -n  "LOLBins-03 Block certutil.exe netconns" -p "%systemroot%\system32\certutil.exe"
-
 # LOLBins-04 Block certutil.exe netconns
 Firewallblock -n  "LOLBins-04 Block certutil.exe netconns" -p "%systemroot%\SysWOW64\certutil.exe"
-
 # LOLBins-05 Block cmstp.exe netconns
 Firewallblock -n  "LOLBins-05 Block cmstp.exe netconns" -p "%systemroot%\system32\cmstp.exe"
-
 # LOLBins-06 Block cmstp.exe netconns
 Firewallblock -n  "LOLBins-06 Block cmstp.exe netconns" -p "%systemroot%\SysWOW64\cmstp.exe"
-
 # LOLBins-07 Block cscript.exe netconns
 Firewallblock -n  "LOLBins-07 Block cscript.exe netconns" -p "%systemroot%\system32\cscript.exe"
-
 # LOLBins-08 Block cscript.exe netconns
 Firewallblock -n  "LOLBins-08 Block cscript.exe netconns" -p "%systemroot%\SysWOW64\cscript.exe"
-
 # LOLBins-09 Block esentutl.exe netconns
 Firewallblock -n  "LOLBins-09 Block esentutl.exe netconns" -p "%systemroot%\system32\esentutl.exe"
-
 # LOLBins-10 Block esentutl.exe netconns
 Firewallblock -n  "LOLBins-10 Block esentutl.exe netconns" -p "%systemroot%\SysWOW64\esentutl.exe"
-
 # LOLBins-11 Block expand.exe netconns
 Firewallblock -n  "LOLBins-11 Block expand.exe netconns" -p "%systemroot%\system32\expand.exe"
-
 # LOLBins-12 Block expand.exe netconns
 Firewallblock -n  "LOLBins-12 Block expand.exe netconns" -p "%systemroot%\SysWOW64\expand.exe"
-
 # LOLBins-13 Block extrac32.exe netconns
 Firewallblock -n  "LOLBins-13 Block extrac32.exe netconns" -p "%systemroot%\system32\extrac32.exe"
-
 # LOLBins-14 Block extrac32.exe netconns
 Firewallblock -n  "LOLBins-14 Block extrac32.exe netconns" -p "%systemroot%\SysWOW64\extrac32.exe"
-
 # LOLBins-15 Block findstr.exe netconns
 Firewallblock -n  "LOLBins-15 Block findstr.exe netconns" -p "%systemroot%\system32\findstr.exe"
-
 # LOLBins-16 Block findstr.exe netconns
 Firewallblock -n  "LOLBins-16 Block findstr.exe netconns" -p "%systemroot%\SysWOW64\findstr.exe"
-
 # LOLBins-17 hh.exe netconns
 Firewallblock -n  "LOLBins-17 hh.exe netconns" -p "%systemroot%\system32\hh.exe"
-
 # LOLBins-18 hh.exe netconns
 Firewallblock -n  "LOLBins-18 hh.exe netconns" -p "%systemroot%\SysWOW64\hh.exe"
-
 # LOLBins-19 Block makecab.exe netconns
 Firewallblock -n  "LOLBins-19 Block makecab.exe netconns" -p "%systemroot%\system32\makecab.exe"
-
 # LOLBins-20 Block makecab.exe netconns
 Firewallblock -n  "LOLBins-20 Block makecab.exe netconns" -p "%systemroot%\SysWOW64\makecab.exe"
-
 # LOLBins-21 mshta.exe netconns
 Firewallblock -n  "LOLBins-21 mshta.exe netconns" -p "%systemroot%\system32\mshta.exe"
-
 # LOLBins-22 mshta.exe netconns
 Firewallblock -n  "LOLBins-22 mshta.exe netconns" -p "%systemroot%\SysWOW64\mshta.exe"
-
 # LOLBins-23 Block msiexec.exe netconns
 Firewallblock -n  "LOLBins-23 Block msiexec.exe netconns" -p "%systemroot%\system32\msiexec.exe"
-
 # LOLBins-24 Block msiexec.exe netconns
 Firewallblock -n  "LOLBins-24 Block msiexec.exe netconns" -p "%systemroot%\SysWOW64\msiexec.exe"
-
 # LOLBins-25 Block nltest.exe netconns
 Firewallblock -n  "LOLBins-25 Block nltest.exe netconns" -p "%systemroot%\system32\nltest.exe"
-
 # LOLBins-26 Block nltest.exe netconns
 Firewallblock -n  "LOLBins-26 Block nltest.exe netconns" -p "%systemroot%\SysWOW64\nltest.exe"
-
 # LOLBins-27 Block Notepad.exe netconns
 Firewallblock -n  "LOLBins-27 Block Notepad.exe netconns" -p "%systemroot%\system32\notepad.exe"
-
 # LOLBins-28 Block Notepad.exe netconns
 Firewallblock -n  "LOLBins-28 Block Notepad.exe netconns" -p "%systemroot%\SysWOW64\notepad.exe"
-
 # LOLBins-29 Block odbcconf.exe netconns
 Firewallblock -n  "LOLBins-29 Block odbcconf.exe netconns" -p "%systemroot%\system32\odbcconf.exe"
-
 # LOLBins-30 Block odbcconf.exe netconns
 Firewallblock -n  "LOLBins-30 Block odbcconf.exe netconns" -p "%systemroot%\SysWOW64\odbcconf.exe"
-
 # LOLBins-31 Block pcalua.exe netconns
 Firewallblock -n  "LOLBins-31 Block pcalua.exe netconns" -p "%systemroot%\system32\pcalua.exe"
-
 # LOLBins-32 Block pcalua.exe netconns
 Firewallblock -n  "LOLBins-32 Block pcalua.exe netconns" -p "%systemroot%\SysWOW64\pcalua.exe"
-
 # LOLBins-33 Block regasm.exe netconns
 Firewallblock -n  "LOLBins-33 Block regasm.exe netconns" -p "%systemroot%\system32\regasm.exe"
-
 # LOLBins-34 Block regasm.exe netconns
 Firewallblock -n  "LOLBins-34 Block regasm.exe netconns" -p "%systemroot%\SysWOW64\regasm.exe"
-
 # LOLBins-35 lock regsvr32.exe netconns
 Firewallblock -n  "LOLBins-35 lock regsvr32.exe netconns" -p "%systemroot%\system32\regsvr32.exe"
-
 # LOLBins-36 lock regsvr32.exe netconns
 Firewallblock -n  "LOLBins-36 lock regsvr32.exe netconns" -p "%systemroot%\SysWOW64\regsvr32.exe"
-
 # LOLBins-37 Block replace.exe netconns
 Firewallblock -n  "LOLBins-37 Block replace.exe netconns" -p "%systemroot%\system32\replace.exe"
-
 # LOLBins-38 Block replace.exe netconns
 Firewallblock -n  "LOLBins-38 Block replace.exe netconns" -p "%systemroot%\SysWOW64\replace.exe"
-
 # LOLBins-39 Block rpcping.exe netconns
 Firewallblock -n  "LOLBins-39 Block rpcping.exe netconns" -p "%systemroot%\SysWOW64\rpcping.exe"
-
 # LOLBins-40 Block rundll32.exe netconns
 Firewallblock -n  "LOLBins-40 Block rundll32.exe netconns" -p "%systemroot%\system32\rundll32.exe"
-
 # LOLBins-41 Block rundll32.exe netconns
 Firewallblock -n  "LOLBins-41 Block rundll32.exe netconns" -p "%systemroot%\SysWOW64\rundll32.exe"
-
 # LOLBins-42 Block runscripthelper.exe netconns
 Firewallblock -n  "LOLBins-42 Block runscripthelper.exe netconns" -p "%systemroot%\system32\runscripthelper.exe"
-
 # LOLBins-43 Block runscripthelper.exe netconns
 Firewallblock -n  "LOLBins-43 Block runscripthelper.exe netconns" -p "%systemroot%\SysWOW64\runscripthelper.exe"
-
 # LOLBins-44 Block scriptrunner.exe netconns
 Firewallblock -n  "LOLBins-44 Block scriptrunner.exe netconns" -p "%systemroot%\system32\scriptrunner.exe"
-
 # LOLBins-45 Block scriptrunner.exe netconns
 Firewallblock -n  "LOLBins-45 Block scriptrunner.exe netconns" -p "%systemroot%\SysWOW64\scriptrunner.exe"
-
 # LOLBins-46 Block SyncAppvPublishingServer.exe netconns
 Firewallblock -n  "LOLBins-46 Block SyncAppvPublishingServer.exe netconns" -p "%systemroot%\system32\SyncAppvPublishingServer.exe"
-
 # LOLBins-47 Block SyncAppvPublishingServer.exe netconns
 Firewallblock -n  "LOLBins-47 Block SyncAppvPublishingServer.exe netconns" -p "%systemroot%\SysWOW64\SyncAppvPublishingServer.exe"
-
 # LOLBins-48 Block wmic.exe netconns
 Firewallblock -n  "LOLBins-48 Block wmic.exe netconns" -p "%systemroot%\system32\wbem\wmic.exe"
-
 # LOLBins-49 Block wmic.exe netconns
 Firewallblock -n  "LOLBins-49 Block wmic.exe netconns" -p "%systemroot%\SysWOW64\wbem\wmic.exe"
-
 # LOLBins-50 Block wscript.exe netconns
 Firewallblock -n  "LOLBins-50 Block wscript.exe netconns" -p "%systemroot%\system32\wscript.exe"
-
 # LOLBins-51 Block wscript.exe netconns
 Firewallblock -n  "LOLBins-51 Block wscript.exe netconns" -p "%systemroot%\SysWOW64\wscript.exe"
 
@@ -1446,121 +1130,8 @@ Firewallblock -n  "LOLBins-51 Block wscript.exe netconns" -p "%systemroot%\SysWO
 
 
 
-
-
-
-<#
-
-Doing the same Firewall block but instead of using function, using Hashtables, nested hashtables, splatting and foreach loop.
-
-
-$common = @{
-    Protocol = "TCP"
-    Action = "Block"
-    Direction = "Outbound"
-    Profile = "Any"
-    Enabled = "True"
-    Group = "LOLBins Blocking"
-}
-
-
- 
-$programsList = @{
-
-
-    Lolbin1 = @{
-        DisplayName = "LOLBins-01 Block appvlp.exe netconns"
-        Program = "C:\Program Files (x86)\Microsoft Office\root\client\AppVLP.exe"
-
-    }
-
-    Lolbin2 = @{
-        DisplayName = "LOLBins-02 Block appvlp.exe netconns"
-        Program = "C:\Program Files\Microsoft Office\root\client\AppVLP.exe"
-
-    }
-
-
-    Lolbin3 = @{
-        DisplayName = 
-        Program = 
-
-    }
-
-    Lolbin4 = @{
-        DisplayName = 
-        Program = 
-
-    }
-
-
-    Lolbin5 = @{
-        DisplayName = 
-        Program = 
-
-    }
-
-
-    Lolbin6 = @{
-        DisplayName = 
-        Program = 
-
-    }
-
-
-    Lolbin7 = @{
-        DisplayName = 
-        Program = 
-
-    }
-
-
-
-    Lolbin8 = @{
-        DisplayName = 
-        Program = 
-
-    }
-
-
-    Lolbin9 = @{
-        DisplayName = 
-        Program = 
-
-    }
-
-
-}
-
-
-  
-   
-    
-        foreach ($Name in $programsList.values.GetEnumerator()) {
-
-
-                $r = Get-NetFirewallRule -DisplayName $Name.DisplayName  2> $null; 
-                if (-NOT $r) { 
-                             
-                New-NetFirewallRule -DisplayName $Name.DisplayName  -Program $Name.Program @common
-             
-            }
-            Else { write-host "Firewall rule already exists, skipping to the next one" -ForegroundColor Yellow -BackgroundColor DarkGray}
-
-        }
-
-          
-
-      #>
-
-
-
-
 # Enable Windows Firewall logging for Private and Public profiles, set the log file size to max 32.767 MB, log only dropped packets.
 Set-NetFirewallProfile -Name private, Public -LogBlocked True -LogMaxSizeKilobytes 32767 -LogFileName %systemroot%\system32\LogFiles\Firewall\pfirewall.log
-
-
-
 
 
 
@@ -1604,13 +1175,6 @@ Write-Host "There are currently" $badrules.count "Firewall rules that allow Edge
 
 
 
-
-
-
-
-
-
-
 # =========================================================================================================================
 # =================================================End of Windows Firewall=================================================
 # =========================================================================================================================
@@ -1623,7 +1187,6 @@ Write-Host "There are currently" $badrules.count "Firewall rules that allow Edge
 # =========================================================================================================================
 # =================================================Optional Windows Features===============================================
 # =========================================================================================================================
-
 
 
 
@@ -1730,7 +1293,6 @@ if((get-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform).stat
 
 
 
-
 # =========================================================================================================================
 # ====================================================Windows Networking===================================================
 # =========================================================================================================================
@@ -1751,13 +1313,7 @@ New-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\DNSClient" -Name 
 
 # disable LMHOSTS lookup protocol on all network adapters
 # the reason why we do this: https://www.crowe.com/cybersecurity-watch/netbios-llmnr-giving-away-credentials
-$RegistryPath = 'HKLM:\SYSTEM\CurrentControlSet\Services\NetBT\Parameters' 
-$Name         = 'EnableLMHOSTS' 
-$Value        = '0' 
-If (-NOT (Test-Path $RegistryPath)) { 
-  New-Item -Path $RegistryPath -Force | Out-Null 
-}   
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force 
+ModifyRegistry -RegPath 'HKLM:\SYSTEM\CurrentControlSet\Services\NetBT\Parameters' -RegName 'EnableLMHOSTS' -RegValue '0'
 
 
 # Set the Network Location of all connections to Public (or Private)
@@ -1769,27 +1325,13 @@ Get-NetConnectionProfile | Set-NetConnectionProfile -NetworkCategory Public
 https://www.stigviewer.com/stig/microsoft_windows_server_2012_member_server/2013-07-25/finding/WN12-CC-000039
 https://www.windows-security.org/6a6bdc56768622d3fd84f1719d330d12/turn-off-printing-over-http
 #>
-$RegistryPath = 'HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Printers'  
-$Name         = 'DisableHTTPPrinting'  
-$Value        = '1' 
-If (-NOT (Test-Path $RegistryPath)) {   New-Item -Path $RegistryPath -Force | Out-Null } 
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
-
+ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Printers' -RegName 'DisableHTTPPrinting' -RegValue '1'
 
 # Turn off downloading of print drivers over HTTP
-$RegistryPath = 'HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Printers'  
-$Name         = 'DisableWebPnPDownload'  
-$Value        = '1' 
-If (-NOT (Test-Path $RegistryPath)) {   New-Item -Path $RegistryPath -Force | Out-Null } 
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
-
+ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Printers' -RegName 'DisableWebPnPDownload' -RegValue '1'
 
 # Disable Multicast DNS
-$RegistryPath = 'HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\DNSClient'  
-$Name         = 'EnableMulticast'  
-$Value        = '0' 
-If (-NOT (Test-Path $RegistryPath)) {   New-Item -Path $RegistryPath -Force | Out-Null } 
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
+ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\DNSClient' -RegName 'EnableMulticast' -RegValue '0'
 
 
 <# Turn off smart multi-homed name resolution in Windows
@@ -1800,22 +1342,13 @@ Since requests are sent out to all network adapters at the same time,
 all configured DNS servers receive the requests and with them information on the sites that you visit. 
 https://www.windows-security.org/2718dc40b3ecea129213e7eca29b7357/turn-off-smart-multi-homed-name-resolution
 #>
-$RegistryPath = 'HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\DNSClient'  
-$Name         = 'DisableSmartNameResolution'  
-$Value        = '1' 
-If (-NOT (Test-Path $RegistryPath)) {   New-Item -Path $RegistryPath -Force | Out-Null } 
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
+ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\DNSClient' -RegName 'DisableSmartNameResolution' -RegValue '1'
 
 
 <# The value is 1 to disable DNS A and AAAA queries from executing in parallel on all configured DNS servers,
 with the fastest response being theoretically accepted first.
 benefits of disabling this are the same as "DisableSmartNameResolution" #>
-$RegistryPath = 'HKLM:\SYSTEM\CurrentControlSet\Services\Dnscache\Parameters'  
-$Name         = 'DisableParallelAandAAAA'  
-$Value        = '1' 
-If (-NOT (Test-Path $RegistryPath)) {   New-Item -Path $RegistryPath -Force | Out-Null } 
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
-
+ModifyRegistry -RegPath 'HKLM:\SYSTEM\CurrentControlSet\Services\Dnscache\Parameters' -RegName 'DisableParallelAandAAAA' -RegValue '1'
 
 <# Disable IP Source Routing
 https://www.curvesandchaos.com/what-is-disableipsourcerouting/
@@ -1823,23 +1356,14 @@ https://www.curvesandchaos.com/what-is-disableipsourcerouting/
 After applying this and restarting computer, "Source Routing Behavior" in "netsh int IPv4 show global" shows "Drop"
 which is what the value "2" does.
 #>
-$RegistryPath = 'HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters'  
-$Name         = 'DisableIPSourceRouting'  
-$Value        = '2' 
-If (-NOT (Test-Path $RegistryPath)) {   New-Item -Path $RegistryPath -Force | Out-Null } 
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
+ModifyRegistry -RegPath 'HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters' -RegName 'DisableIPSourceRouting' -RegValue '2'
 
 
 <# https://support.microsoft.com/en-us/topic/security-configuration-guidance-support-ea9aef24-347f-15fa-b94f-36f967907f2f
 Allow the computer to ignore NetBIOS name release requests.
 This setting is a good preventive measure for denial of service attacks against name servers and other very important server roles.
 #>
-$RegistryPath = 'HKLM:\SYSTEM\CurrentControlSet\Services\Netbt\Parameters'  
-$Name         = 'NoNameReleaseOnDemand'  
-$Value        = '1' 
-If (-NOT (Test-Path $RegistryPath)) {   New-Item -Path $RegistryPath -Force | Out-Null } 
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
-
+ModifyRegistry -RegPath 'HKLM:\SYSTEM\CurrentControlSet\Services\Netbt\Parameters' -RegName 'NoNameReleaseOnDemand' -RegValue '1'
 
 # Disable TCP timestamping
 # https://www.kicksecure.com/wiki/Disable_TCP_and_ICMP_Timestamps
@@ -1848,14 +1372,9 @@ netsh int tcp set global timestamps=disabled
 
 
 
-
-
-
 # =========================================================================================================================
 # =================================================End of Windows Networking===============================================
 # =========================================================================================================================
-
-
 
 
 
@@ -1871,42 +1390,23 @@ netsh int tcp set global timestamps=disabled
 
 
 
-
 # Enable early launch antimalware driver for scan of boot-start drivers
 # 3 is the default which allows good, unknown and 'bad but critical'.
 # 1 is for 'good and unknown' , 8 is for 'good only', used in this command
 # https://www.stigviewer.com/stig/windows_10/2021-03-10/finding/V-220813
-$RegistryPath = 'HKLM:\SYSTEM\CurrentControlSet\Policies\EarlyLaunch'
-$Name         = 'DriverLoadPolicy'
-$Value        = '8'
-If (-NOT (Test-Path $RegistryPath)) {   New-Item -Path $RegistryPath -Force | Out-Null }
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
-
+ModifyRegistry -RegPath 'HKLM:\SYSTEM\CurrentControlSet\Policies\EarlyLaunch' -RegName 'DriverLoadPolicy' -RegValue '8'
 
 # Disable Location services from Windows - affects Windows settings privacy section
-$RegistryPath = 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\LocationAndSensors'  
-$Name         = 'DisableLocation'  
-$Value        = '1' 
-If (-NOT (Test-Path $RegistryPath)) {   New-Item -Path $RegistryPath -Force | Out-Null } 
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
-
+ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\LocationAndSensors' -RegName 'DisableLocation' -RegValue '1'
 
 # Enable Hibernate
 powercfg /hibernate on
 
-
 # Set Hibnernate mode to full, more info: https://learn.microsoft.com/en-us/windows/win32/power/system-power-states#hibernation-file-types
 powercfg /h /type full
 
-
 # Add Hibernate option to Start menu's power options
-$RegistryPath = 'HKLM:\Software\Policies\Microsoft\Windows\Explorer'
-$Name         = 'ShowHibernateOption'
-$Value        = '1'
-If (-NOT (Test-Path $RegistryPath)) { 
-  New-Item -Path $RegistryPath -Force | Out-Null
-}
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
+ModifyRegistry -RegPath 'HKLM:\Software\Policies\Microsoft\Windows\Explorer' -RegName 'ShowHibernateOption' -RegValue '1'
 
 
 <# Disable Sleep (Power states S1-S3) - doing this also removes the Sleep option from Start menu and even using commands to put the computer to sleep won't work.
@@ -1919,43 +1419,22 @@ New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWO
 #>
 
 # Disable sleep for when plugged in
-$RegistryPath = 'HKLM:\Software\Policies\Microsoft\Power\PowerSettings\abfc2519-3608-4c2a-94ea-171b0ed546ab'
-$Name         = 'ACSettingIndex'
-$Value        = '0'
-If (-NOT (Test-Path $RegistryPath)) { 
-  New-Item -Path $RegistryPath -Force | Out-Null
-}
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
-
+ModifyRegistry -RegPath 'HKLM:\Software\Policies\Microsoft\Power\PowerSettings\abfc2519-3608-4c2a-94ea-171b0ed546ab' -RegName 'ACSettingIndex' -RegValue '0'
 
 # Disable sleep for when on battery
-$RegistryPath = 'HKLM:\Software\Policies\Microsoft\Power\PowerSettings\abfc2519-3608-4c2a-94ea-171b0ed546ab'
-$Name         = 'DCSettingIndex'
-$Value        = '0'
-If (-NOT (Test-Path $RegistryPath)) { 
-  New-Item -Path $RegistryPath -Force | Out-Null
-}
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
+ModifyRegistry -RegPath 'HKLM:\Software\Policies\Microsoft\Power\PowerSettings\abfc2519-3608-4c2a-94ea-171b0ed546ab' -RegName 'DCSettingIndex' -RegValue '0'
 
 
-<#
- Enable Mandatory ASLR, there are more options in this official chart:
-https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/enable-exploit-protection?view=o365-worldwide
-You can add an override for any program that has problem with this (Mandatory ASLR) using the command below or in the Program Settings section of Exploit Protection in Windows Defender app. 
-#> 
+# Enable Mandatory ASLR, there are more options in this official chart:
+# https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/enable-exploit-protection?view=o365-worldwide
 set-processmitigation -System -Enable ForceRelocateImages
 
-
-# Set a trusted program to be exempt from Mandatory ASLR
-# Set-ProcessMitigation -Name "D:\trusted program.exe" -Disable ForceRelocateImages
+# You can add Mandatory ASLR override for a trusted program using the command below or in the Program Settings section of Exploit Protection in Windows Defender app. 
+# Set-ProcessMitigation -Name "D:\trustedProgram.exe" -Disable ForceRelocateImages
 
 
 # Enable svchost.exe mitigation options - more info: https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-servicecontrolmanager
-$RegistryPath = 'HKLM:\SYSTEM\CurrentControlSet\Control\SCMConfig'  
-$Name         = 'EnableSvchostMitigationPolicy'  
-$Value        = '1' 
-If (-NOT (Test-Path $RegistryPath)) {   New-Item -Path $RegistryPath -Force | Out-Null } 
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
+ModifyRegistry -RegPath 'HKLM:\SYSTEM\CurrentControlSet\Control\SCMConfig' -RegName 'EnableSvchostMitigationPolicy' -RegValue '1'
 
 
 # Set Power Plan to "Ultimate Performance". replace it with "High Performance" if wanted.
@@ -1965,11 +1444,7 @@ powercfg /setactive ([string]$p.InstanceID).Replace("Microsoft:PowerPlan\{","").
 
 # Turn on Enhanced mode search for Windows indexer. the default is classic mode.
 # this causes some UI elements in the search settings in Windows settings to become unavailable for Standard users to view.
-$RegistryPath = 'HKLM:\SOFTWARE\Microsoft\Windows Search'  
-$Name         = 'EnableFindMyFiles'  
-$Value        = '1' 
-If (-NOT (Test-Path $RegistryPath)) {   New-Item -Path $RegistryPath -Force | Out-Null } 
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
+ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Microsoft\Windows Search' -RegName 'EnableFindMyFiles' -RegValue '1'
 
 
 # https://posts.specterops.io/remote-code-execution-via-path-traversal-in-the-device-metadata-authoring-wizard-a0d5839fc54f
@@ -1995,114 +1470,53 @@ write-host "phishing mitigation for WDK (Windows Driver Kit) not applicable, it'
 
 
 # Enforce the Administrator role for adding printer drivers. This is a frequent exploit attack vector. 
-$RegistryPath = 'HKLM:\SYSTEM\CurrentControlSet\Control\Print\Providers\LanMan Print Services\Servers'  
-$Name         = 'AddPrinterDrivers'  
-$Value        = '1' 
-If (-NOT (Test-Path $RegistryPath)) {   New-Item -Path $RegistryPath -Force | Out-Null } 
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
+ModifyRegistry -RegPath 'HKLM:\SYSTEM\CurrentControlSet\Control\Print\Providers\LanMan Print Services\Servers' -RegName 'AddPrinterDrivers' -RegValue '1'
 
 
 # Forces Installer NOT to use elevated privileges during installs by default, which prevents escalation of privileges vulnerabilities and attacks
-$RegistryPath = 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\Installer'  
-$Name         = 'AlwaysInstallElevated'  
-$Value        = '0' 
-If (-NOT (Test-Path $RegistryPath)) {   New-Item -Path $RegistryPath -Force | Out-Null } 
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
+ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\Installer' -RegName 'AlwaysInstallElevated' -RegValue '0'
 
 
 # Enable SMB/LDAP Signing
 # Sources:  http://eddiejackson.net/wp/?p=15812  and https://en.hackndo.com/ntlm-relay/ 
-# 1
-$RegistryPath = 'HKLM:\System\CurrentControlSet\Services\LanmanWorkStation\Parameters'  
-$Name         = 'RequireSecuritySignature'  
-$Value        = '1' 
-If (-NOT (Test-Path $RegistryPath)) {   New-Item -Path $RegistryPath -Force | Out-Null } 
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
-# 2
-$RegistryPath = 'HKLM:\System\CurrentControlSet\Services\LanmanWorkStation\Parameters'  
-$Name         = 'EnableSecuritySignature'  
-$Value        = '1' 
-If (-NOT (Test-Path $RegistryPath)) {   New-Item -Path $RegistryPath -Force | Out-Null } 
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
-# 3
-$RegistryPath = 'HKLM:\System\CurrentControlSet\Services\LanmanServer\Parameters'  
-$Name         = 'RequireSecuritySignature'  
-$Value        = '1' 
-If (-NOT (Test-Path $RegistryPath)) {   New-Item -Path $RegistryPath -Force | Out-Null } 
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
-# 4
-$RegistryPath = 'HKLM:\System\CurrentControlSet\Services\LanmanServer\Parameters'  
-$Name         = 'EnableSecuritySignature'  
-$Value        = '1' 
-If (-NOT (Test-Path $RegistryPath)) {   New-Item -Path $RegistryPath -Force | Out-Null } 
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
-
+ModifyRegistry -RegPath 'HKLM:\System\CurrentControlSet\Services\LanmanWorkStation\Parameters' -RegName 'RequireSecuritySignature' -RegValue '1'
+ModifyRegistry -RegPath 'HKLM:\System\CurrentControlSet\Services\LanmanWorkStation\Parameters' -RegName 'EnableSecuritySignature' -RegValue '1'
+ModifyRegistry -RegPath 'HKLM:\System\CurrentControlSet\Services\LanmanServer\Parameters' -RegName 'RequireSecuritySignature' -RegValue '1'
+ModifyRegistry -RegPath 'HKLM:\System\CurrentControlSet\Services\LanmanServer\Parameters' -RegName 'EnableSecuritySignature' -RegValue '1'
 
 
 
 # Disable "Use my sign in info to automatically finish setting up after an update".
 # when this option is enabled (default value), and the everyday account is Standard, it causes the other admin account to be
 # automatically signed into and in the lock screen when logging into Standard account, you have to double sign in, asks twice for the Windows Pin.
-
-$RegistryPath = 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System'  
-$Name         = 'DisableAutomaticRestartSignOn'  
-$Value        = '1' 
-If (-NOT (Test-Path $RegistryPath)) {   New-Item -Path $RegistryPath -Force | Out-Null } 
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
-
+ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System' -RegName 'DisableAutomaticRestartSignOn' -RegValue '1'
 
 
 # Set Microsoft Edge to update over Metered connections - toggles the button in edge://settings/help
 # These updates are very important, shouldn't let anything suppress them
-$RegistryPath = 'HKLM:\SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate\ClientStateMedium\{56EB18F8-B008-4CBD-B6D2-8C97FE7E9062}'  
-$Name         = 'allowautoupdatesmetered'  
-$Value        = '1' 
-If (-NOT (Test-Path $RegistryPath)) {   New-Item -Path $RegistryPath -Force | Out-Null } 
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
+ModifyRegistry -RegPath 'HKLM:\SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate\ClientStateMedium\{56EB18F8-B008-4CBD-B6D2-8C97FE7E9062}' -RegName 'allowautoupdatesmetered' -RegValue '1'
 
 
 # Download Windows Updates over metered connections - responsible for the toggle in Windows settings => Windows Update => Advanced options
 # These updates are very important, shouldn't let anything suppress them
-$RegistryPath = 'HKLM:\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings'  
-$Name         = 'AllowAutoWindowsUpdateDownloadOverMeteredNetwork'  
-$Value        = '1' 
-If (-NOT (Test-Path $RegistryPath)) {   New-Item -Path $RegistryPath -Force | Out-Null } 
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
+ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings' -RegName 'AllowAutoWindowsUpdateDownloadOverMeteredNetwork' -RegValue '1'
 
 
 # Enable notify me when a restart is required to finish updating - responsible for the toggle in Windows settings => Windows Update => Advanced options
-$RegistryPath = 'HKLM:\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings'  
-$Name         = 'RestartNotificationsAllowed2'  
-$Value        = '1' 
-If (-NOT (Test-Path $RegistryPath)) {   New-Item -Path $RegistryPath -Force | Out-Null } 
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
+ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings' -RegName 'RestartNotificationsAllowed2' -RegValue '1'
 
 
 # Allow all Windows users to use Hyper-V and Windows Sandbox by adding all Windows users to the "Hyper-V Administrators" security group
 $usernames = Get-LocalUser | Where-Object{$_.enabled -EQ "True"} | Select-Object "Name"
 $usernames | ForEach-Object {
 
-try {
-
- Add-LocalGroupMember -Group "Hyper-V Administrators" -Member $_.Name -ErrorAction Stop
- 
- }
- catch  
- { 
- write-host "user account is already part of the Hyper-V Administrators group `n" -ForegroundColor Magenta
- 
- } 
- 
- }
-
+try { Add-LocalGroupMember -Group "Hyper-V Administrators" -Member $_.Name -ErrorAction Stop  }
+ catch {  write-host "user account is already part of the Hyper-V Administrators group `n" -ForegroundColor Magenta } 
+  }
 
 
 # change Windows time sync interval from every 7 days to every 2 days (= every 172800 seconds)
-$RegistryPath = 'HKLM:\SYSTEM\ControlSet001\Services\W32Time\TimeProviders\NtpClient'  
-$Name         = 'SpecialPollInterval'  
-$Value        = '172800' 
-If (-NOT (Test-Path $RegistryPath)) {   New-Item -Path $RegistryPath -Force | Out-Null } 
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
+ModifyRegistry -RegPath 'HKLM:\SYSTEM\ControlSet001\Services\W32Time\TimeProviders\NtpClient' -RegName 'SpecialPollInterval' -RegValue '172800'
 
 
 # this was automatically turned on after clean installing Windows 11 insider Dev build 25267 but was set to "2" which is without UEFI lock, and that is expected according to this:
@@ -2110,12 +1524,7 @@ New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWO
 # Configure LSASS process to run as a protected process with UEFI Lock
 # https://learn.microsoft.com/en-us/windows-server/security/credentials-protection-and-management/configuring-additional-lsa-protection
 # when this feature is on, a new option called "Local Security Authority Protection" appears in Windows Security GUI => Device Security => Core Isolation
-$RegistryPath = 'HKLM:\SYSTEM\CurrentControlSet\Control\Lsa'  
-$Name         = 'RunAsPPL'  
-$Value        = '1'
-If (-NOT (Test-Path $RegistryPath)) {   New-Item -Path $RegistryPath -Force | Out-Null } 
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
-
+ModifyRegistry -RegPath 'HKLM:\SYSTEM\CurrentControlSet\Control\Lsa' -RegName 'RunAsPPL' -RegValue '1'
 
 
 # Add ECH (Encrypted Client Hello) to the Edge browser when it's launched by clicking on a link in an app
@@ -2189,7 +1598,6 @@ $shortcut.Save()  ## Save
 
 
 
-
 # =========================================================================================================================
 # ====================================================Non-Admin Commands===================================================
 # =========================================================================================================================
@@ -2197,73 +1605,32 @@ $shortcut.Save()  ## Save
 
 
 # Show known file extensions in File explorer
-$RegistryPath = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced'  
-$Name         = 'HideFileExt'  
-$Value        = '0' 
-If (-NOT (Test-Path $RegistryPath)) {   New-Item -Path $RegistryPath -Force | Out-Null } 
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
-
+ModifyRegistry -RegPath 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced' -RegName 'HideFileExt' -RegValue '0'
 
 # Show hidden files, folders and drives (toggles the control panel folder options item)
-$RegistryPath = 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced'  
-$Name         = 'Hidden'  
-$Value        = '1' 
-If (-NOT (Test-Path $RegistryPath)) {   New-Item -Path $RegistryPath -Force | Out-Null } 
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
-
+ModifyRegistry -RegPath 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced' -RegName 'Hidden' -RegValue '1'
 
 # Disable websites accessing local language list - good for privacy
-$RegistryPath = 'HKCU:\Control Panel\International\User Profile'  
-$Name         = 'HttpAcceptLanguageOptOut'  
-$Value        = '1' 
-If (-NOT (Test-Path $RegistryPath)) {   New-Item -Path $RegistryPath -Force | Out-Null } 
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
-
+ModifyRegistry -RegPath 'HKCU:\Control Panel\International\User Profile' -RegName 'HttpAcceptLanguageOptOut' -RegValue '1'
 
 # turn off safe search in Windows search. from Windows settings > privacy and security > search permissions > safe search
-$RegistryPath = 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\SearchSettings'
-$Name         = 'SafeSearchMode'
-$Value        = '0'
-If (-NOT (Test-Path $RegistryPath)) {  New-Item -Path $RegistryPath -Force | Out-Null} 
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
-
+ModifyRegistry -RegPath 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\SearchSettings' -RegName 'SafeSearchMode' -RegValue '0'
 
 # prevent showing notifications in Lock screen - this is the same as toggling the button in Windows settings > system > notifications > show notifications in the lock screen
-$RegistryPath = 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Notifications\Settings'  
-$Name         = 'NOC_GLOBAL_SETTING_ALLOW_TOASTS_ABOVE_LOCK'  
-$Value        = '0' 
-If (-NOT (Test-Path $RegistryPath)) {   New-Item -Path $RegistryPath -Force | Out-Null } 
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
-
+ModifyRegistry -RegPath 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Notifications\Settings' -RegName 'NOC_GLOBAL_SETTING_ALLOW_TOASTS_ABOVE_LOCK' -RegValue '0'
 
 # prevent showing notifications in Lock screen, 2nd reg key - this is the same as toggling the button in Windows settings > system > notifications > show notifications in the lock screen
-$RegistryPath = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\PushNotifications'  
-$Name         = 'LockScreenToastEnabled'  
-$Value        = '0' 
-If (-NOT (Test-Path $RegistryPath)) {   New-Item -Path $RegistryPath -Force | Out-Null } 
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
-
+ModifyRegistry -RegPath 'HKCU:\Software\Microsoft\Windows\CurrentVersion\PushNotifications' -RegName 'LockScreenToastEnabled' -RegValue '0'
 
 # Enable Clipboard History for the current user
-$RegistryPath = 'HKCU:\Software\Microsoft\Clipboard'
-$Name         = 'EnableClipboardHistory'  
-$Value        = '1' 
-If (-NOT (Test-Path $RegistryPath)) {   New-Item -Path $RegistryPath -Force | Out-Null } 
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
+ModifyRegistry -RegPath 'HKCU:\Software\Microsoft\Clipboard' -RegName 'EnableClipboardHistory' -RegValue '1'
 
 # 2 commands to enable sync of Clipboard history in Windows between devices
-$RegistryPath = 'HKCU:\Software\Microsoft\Clipboard'
-$Name         = 'CloudClipboardAutomaticUpload'
-$Value        = '1'
-If (-NOT (Test-Path $RegistryPath)) {   New-Item -Path $RegistryPath -Force | Out-Null }
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
+ModifyRegistry -RegPath 'HKCU:\Software\Microsoft\Clipboard' -RegName 'CloudClipboardAutomaticUpload' -RegValue '1'
 
 # last one, to enable Clipboard sync
-$RegistryPath = 'HKCU:\Software\Microsoft\Clipboard'
-$Name         = 'EnableCloudClipboard'  
-$Value        = '1' 
-If (-NOT (Test-Path $RegistryPath)) {   New-Item -Path $RegistryPath -Force | Out-Null } 
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
+ModifyRegistry -RegPath 'HKCU:\Software\Microsoft\Clipboard' -RegName 'EnableCloudClipboard' -RegValue '1'
+
 
 
 
@@ -2353,31 +1720,20 @@ Add-Content -Path "C:\ProgramData\Microsoft\Event Viewer\Views\Hardening Script\
 
 
 
-
 # turn on "Show text suggestions when typing on the physical keyboard" for the current user, toggles the option in Windows settings
-$RegistryPath = 'HKCU:\Software\Microsoft\Input\Settings'  
-$Name         = 'EnableHwkbTextPrediction'  
-$Value        = '1' 
-If (-NOT (Test-Path $RegistryPath)) {   New-Item -Path $RegistryPath -Force | Out-Null } 
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
-
+ModifyRegistry -RegPath 'HKCU:\Software\Microsoft\Input\Settings' -RegName 'EnableHwkbTextPrediction' -RegValue '1'
 
 # turn on "Multilingual text suggestions" for the current user, toggles the option in Windows settings
-$RegistryPath = 'HKCU:\Software\Microsoft\Input\Settings'  
-$Name         = 'MultilingualEnabled'  
-$Value        = '1' 
-If (-NOT (Test-Path $RegistryPath)) {   New-Item -Path $RegistryPath -Force | Out-Null } 
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType DWORD -Force
-
-
+ModifyRegistry -RegPath 'HKCU:\Software\Microsoft\Input\Settings' -RegName 'MultilingualEnabled' -RegValue '1'
 
 # turn off sticky key shortcut of pressing shift key 5 time fast
-$RegistryPath = 'HKCU:\Control Panel\Accessibility\StickyKeys'  
-$Name         = 'Flags'  
-$Value        = '506' 
-If (-NOT (Test-Path $RegistryPath)) {   New-Item -Path $RegistryPath -Force | Out-Null } 
-New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType string -Force
+ModifyRegistry -RegPath 'HKCU:\Control Panel\Accessibility\StickyKeys' -RegName 'Flags' -RegValue '506'
 
+# Set Windows Personalization, color settings, to enable Dark mode for System
+ModifyRegistry -RegPath 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize' -RegName 'SystemUsesLightTheme' -RegValue '0'
+
+# Set Windows Personalization, color settings, to enable Dark mode for Apps
+ModifyRegistry -RegPath 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize' -RegName 'AppsUseLightTheme' -RegValue '0'
 
 
 # Add ECH flag to the target of Pinned Taskbar Edge browser shortcuts (all channel) of the current user

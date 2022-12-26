@@ -89,7 +89,7 @@ https://github.com/HotCakeX/Harden-Windows-Security/discussions
  
   
  
-  # Function to modify registry, checks before modification
+  # Function to modify registry, only DWORD property Types, checks before modification
 function ModifyRegistry {
   param ($RegPath, $RegName, $RegValue )
 
@@ -1726,8 +1726,12 @@ ModifyRegistry -RegPath 'HKCU:\Software\Microsoft\Input\Settings' -RegName 'Enab
 # turn on "Multilingual text suggestions" for the current user, toggles the option in Windows settings
 ModifyRegistry -RegPath 'HKCU:\Software\Microsoft\Input\Settings' -RegName 'MultilingualEnabled' -RegValue '1'
 
-# turn off sticky key shortcut of pressing shift key 5 time fast
-ModifyRegistry -RegPath 'HKCU:\Control Panel\Accessibility\StickyKeys' -RegName 'Flags' -RegValue '506'
+# turn off sticky key shortcut of pressing shift key 5 time fast - value is type string, can't use ModifyRegistry Function
+$RegistryPath = 'HKCU:\Control Panel\Accessibility\StickyKeys'  
+$Name         = 'Flags'  
+$Value        = '506' 
+If (-NOT (Test-Path $RegistryPath)) {   New-Item -Path $RegistryPath -Force | Out-Null } 
+New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType string -Force
 
 # Set Windows Personalization, color settings, to enable Dark mode for System
 ModifyRegistry -RegPath 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize' -RegName 'SystemUsesLightTheme' -RegValue '0'

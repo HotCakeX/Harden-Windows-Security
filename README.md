@@ -144,6 +144,5 @@ MIT License
 > [Microsoft Tech Community Profile](https://techcommunity.microsoft.com/t5/user/viewprofilepage/user-id/310193) &nbsp;&middot;&nbsp;
 > GitHub [@HotCakeX](https://github.com/HotCakeX) &nbsp;&middot;&nbsp;
 > Steam [@HotCakeX](https://steamcommunity.com/id/HotCakeX) &nbsp;&middot;&nbsp;
-> Xbox: [@HottCakeX](https://account.xbox.com/en-US/Profile?Gamertag=HottCakeX) &nbsp;&middot;&nbsp;
-> [Reddit](https://www.reddit.com/user/HotCakeXXXXXXXXXXXXX)
+> Xbox: [@HottCakeX](https://account.xbox.com/en-US/Profile?Gamertag=HottCakeX)
 

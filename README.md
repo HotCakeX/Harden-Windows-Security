@@ -55,7 +55,7 @@
 From Top to bottom in order:
 
 * Commands that require Administrator Privileges
-  - Windows Security aka Defender
+  - <a href="#Windows-Security-aka-Defender">Windows Security aka Defender</a>
   - Attack surface reduction rules
   - Bitlocker Settings 
   - TLS Security
@@ -112,6 +112,77 @@ Set-ExecutionPolicy Bypass -Scope Process
 - When a hardening command is no longer necessary because it's applied by default by Microsoft on new builds of Windows, it will also be removed from this script in order to prevent any problems and because it won't be necessary anymore.
 - The script can be run infinite number of times, it's made in a way that it won't make any duplicate changes at all.
 
+
+
+<h1> <br> </h1>
+
+
+## Windows Security aka Defender
+Enables additional security features of Windows Security (Defender) to further secure the OS.
+You can refer to [this official documentation](https://docs.microsoft.com/en-us/powershell/module/defender/set-mppreference?view=windowsserver2022-ps) for full details.
+
+## Attack surface reduction rules
+Reducing your attack surface means protecting your devices and network, which leaves attackers with fewer ways to perform attacks. Configuring attack surface reduction rules in Windows can help!
+
+Attack surface reduction rules target certain software behaviors, such as:
+
+- Launching executable files and scripts that attempt to download or run files
+- Running obfuscated or otherwise suspicious scripts
+- Performing behaviors that apps don't usually initiate during normal day-to-day work
+
+Such software behaviors are sometimes seen in legitimate applications. However, these behaviors are often considered risky because they are commonly abused by attackers through malware. Attack surface reduction rules can constrain software-based risky behaviors and help keep your organization safe.
+
+You can find more info [here](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/attack-surface-reduction?view=o365-worldwide) and [ASR Reference](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/attack-surface-reduction-rules-reference?view=o365-worldwide)
+
+## Bitlocker Settings 
+This script sets up and configures Bitlocker, [using official documentation](https://learn.microsoft.com/en-us/windows/security/information-protection/bitlocker/bitlocker-group-policy-settings), with the most secure configuration and Military Grade encryption algorithm, XTS-AES-256, TPM 2.0 and start-up PIN.
+
+BitLocker software will bring you a real security against the theft of your computer if you strictly abide by the following basic rule:
+ As soon as you have finished working, completly shut Windows down and allow for every shadow of information to disappear
+(from RAM, disk caches) within 2 minutes. **this practice is recommended in high-risk environments.**
+
+Refer to this [official documentation about the countermeasures of Bitlocker](https://learn.microsoft.com/en-us/windows/security/information-protection/bitlocker/bitlocker-countermeasures)
+
+Bitlocker uses SecureBoot and TPM 2.0 among other advanced features, performs pre-boot checks to verify the OS hasn't been corrupted/tampered with a bootkit. Third party encryption software and tools should Not be used because they break this secure chain of trust which, flows from the firmware (UEFI) to Windows bootloader and then to BitLocker. it is critical for this chain of trust to exist in order to prevent an entire category of attack against Windows systems. This is not theoretical, this stops real-life attacks.
+
+## TLS Security
+Refer to [this documentation](https://learn.microsoft.com/en-us/windows/win32/secauthn/protocols-in-tls-ssl--schannel-ssp-) for more info about TLS and Schannel in Windows. this script disables TLS 1 and TLS 1.1 security protocols that only exist for backward compatibility. all modern software should and do use TLS 1.2 and TLS 1.3.
+
+Changes made by the script only affect things that use schannel: that includes Edge, IIS web server, built-in inbox Windows apps and some other programs supplied by Microsoft, but not 3rd party software that use [portable stacks](https://en.wikipedia.org/wiki/Comparison_of_TLS_implementations#Portability_concerns) like Java, nodejs, python or php.
+
+if you want to read more: [Demystifying Schannel](https://techcommunity.microsoft.com/t5/core-infrastructure-and-security/demystifying-schannel/ba-p/259233)
+
+  
+
+## Lock Screen
+This part includes commands like Automatically locking computer after X seconds, which is set to 120 seconds (2 minutes) in this script, you can change that to any value you like.
+
+there are also other commands in the script, of course each of them have comments above them that provide explanation,
+one of them is "Require CTRL+ALT+DEL on the lock screen", the reason and logic behind it is:
+
+A malicious user might install malware that looks like the standard sign-in dialog box for the Windows operating system, and capture a user's password. The attacker can then sign in to the compromised account with whatever level of user rights that user has.
+
+[More info here](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/interactive-logon-do-not-require-ctrl-alt-del#reference)
+
+## UAC (User Account Control)
+
+Here is [the official reference](https://learn.microsoft.com/en-us/windows/security/identity-protection/user-account-control/user-account-control-group-policy-and-registry-key-settings#registry-key-settings) for the commands using in this section of the script, User Account Control Group Policy and registry key settings.
+
+## Device Guard
+## Windows Firewall
+## Optional Windows Features
+## Windows Networking
+## Miscellaneous Configurations
+## Certificate Checking Commands
+## Country IP Blocking
+
+
+
+
+
+
+
+<h1> <br> </h1>
 
 
 ## Related

@@ -244,7 +244,7 @@ The script fetches the newest range of [IPv4](https://www.ipdeny.com/ipblocks/) 
 
 ## Non-Admin Commands
 
-In order to run commands in these section, you don't need administrator privileges, because no system-wide configuration is made, only user-level configurations, such as:
+In order to run commands in this category, you don't need administrator privileges, because no system-wide configuration is made. changes in this category only apply to the user account that is running the current PowerShell session:
 - Show known file extensions in File explorer
 - Disable websites accessing local language list - good for privacy
 - Turn off safe search in Windows search, will enable +18 adult content in searches; from Windows settings > privacy and security > search permissions > safe search

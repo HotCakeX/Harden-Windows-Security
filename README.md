@@ -92,7 +92,6 @@ Set-ExecutionPolicy Bypass -Scope Process
 # delete the script file from computer
 remove-Item .\Harden-Windows-Security.ps1
 
-
 ```
 
 > **Note**

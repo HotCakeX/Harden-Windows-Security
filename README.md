@@ -54,7 +54,7 @@
 
 From Top to bottom in order:
 
-* Commands that require Administrator Privileges
+* Commands that require Administrator Privileges (click on each of these to see in-depth info)
   - <a href="#Windows-Security-aka-Defender">Windows Security aka Defender</a>
   - <a href="#Attack-surface-reduction-rules">Attack surface reduction rules</a>
   - <a href="#Bitlocker-Settings">Bitlocker Settings</a>

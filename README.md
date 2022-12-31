@@ -56,18 +56,18 @@ From Top to bottom in order:
 
 * Commands that require Administrator Privileges
   - <a href="#Windows-Security-aka-Defender">Windows Security aka Defender</a>
-  - Attack surface reduction rules
-  - Bitlocker Settings 
-  - TLS Security
-  - Lock Screen
-  - UAC (User Account Control)
-  - Device Guard
-  - Windows Firewall
-  - Optional Windows Features
-  - Windows Networking
-  - Miscellaneous Configurations
-  - Certificate Checking Commands
-  - Country IP Blocking
+  - <a href="#Attack-surface-reduction-rules">Attack surface reduction rules</a>
+  - <a href="#Bitlocker-Settings">Bitlocker Settings</a>
+  - <a href="#TLS-Security">TLS Security</a>
+  - <a href="#Lock-Screen">Lock Screen</a>
+  - <a href="#UAC-(User-Account-Control)">UAC (User Account Control)</a>
+  - <a href="#">Device Guard</a>
+  - <a href="#">Windows Firewall</a>
+  - <a href="#">Optional Windows Features</a>
+  - <a href="#">Windows Networking</a>
+  - <a href="#">Miscellaneous Configurations</a>
+  - <a href="#">Certificate Checking Commands</a>
+  - <a href="#">Country IP Blocking</a>
   
 
 * Commands that don't require Administrator Privileges

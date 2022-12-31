@@ -60,14 +60,14 @@ From Top to bottom in order:
   - <a href="#Bitlocker-Settings">Bitlocker Settings</a>
   - <a href="#TLS-Security">TLS Security</a>
   - <a href="#Lock-Screen">Lock Screen</a>
-  - <a href="#UAC-(UserAccountControl)">UAC (User Account Control)</a>
-  - <a href="#">Device Guard</a>
-  - <a href="#">Windows Firewall</a>
-  - <a href="#">Optional Windows Features</a>
-  - <a href="#">Windows Networking</a>
-  - <a href="#">Miscellaneous Configurations</a>
-  - <a href="#">Certificate Checking Commands</a>
-  - <a href="#">Country IP Blocking</a>
+  - <a href="#User-Account-Control">UAC (User Account Control)</a>
+  - <a href="#Device-Guard">Device Guard</a>
+  - <a href="#Windows-Firewall">Windows Firewall</a>
+  - <a href="#Optional-Windows-Features">Optional Windows Features</a>
+  - <a href="#Windows-Networking">Windows Networking</a>
+  - <a href="#Miscellaneous-Configurations">Miscellaneous Configurations</a>
+  - <a href="#Certificate-Checking-Commands">Certificate Checking Commands</a>
+  - <a href="#Country-IP-Blocking">Country IP Blocking</a>
   
 
 * Commands that don't require Administrator Privileges
@@ -164,7 +164,7 @@ A malicious user might install malware that looks like the standard sign-in dial
 
 [More info here](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/interactive-logon-do-not-require-ctrl-alt-del#reference)
 
-## UAC (UserAccountControl)
+## User Account Control
 
 Here is [the official reference](https://learn.microsoft.com/en-us/windows/security/identity-protection/user-account-control/user-account-control-group-policy-and-registry-key-settings#registry-key-settings) for the commands using in this section of the script, User Account Control Group Policy and registry key settings.
 

@@ -200,9 +200,37 @@ Also enables these useful optional features:
 - Virtual Machine Platform; required for Android subsystem or WSA (Windows subsystem for Android). if it's disabled, it will be automatically enabled either way when you try to install WSA from Store app
 
 ## Windows Networking
+These are configurations that are typically recommended in high-risk environments but also can be applied for home users.
+such as:
+- [Disabling NetBIOS over TCP/IP](https://learn.microsoft.com/en-us/windows-hardware/customize/desktop/unattend/microsoft-windows-netbt-interfaces-interface-netbiosoptions) on all network interfaces
+- Disabling the LLMNR protocol
+- Disabling [LMHOSTS lookup protocol](https://www.crowe.com/cybersecurity-watch/netbios-llmnr-giving-away-credentials) on all network adapters
+- and more, comments as always provided above each command in the script.
 
 
 ## Miscellaneous Configurations
+Sets Early launch antimalware engine's status to 8 which is Good only.
+the default value is 3, which allows good, unknown and 'bad but critical'.
+that is the default value, because setting it to 8 can prevent your computer from booting if
+the driver it relies on is critical but at the same time unknown or bad.
+
+as mentioned earlier, this script sets it to 8, so only drivers verified by Microsoft to be Good can boot.
+
+[some background](https://learn.microsoft.com/en-us/windows/compatibility/early-launch-antimalware):
+
+By being launched first by the kernel, ELAM is ensured to be launched before any third-party software, and is therefore able to detect malware in the boot process and prevent it from initializing.
+
+ELAM drivers must be specially signed by Microsoft to ensure they are started by the Windows kernel early in the boot process. To get the signature, ELAM drivers must pass a set of certification tests to verify performance and other behavior
+
+other commands included in this category include:
+- Disabling location service system-wide. websites and apps won't be able to use your precise location, however they will still be able to detect your location using your IP address.
+- Enabling Mandatory ASLR, [more info here](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/enable-exploit-protection?view=o365-worldwide). it might cause problem for some unofficial 3rd party portable programs, such as Photoshop portable, Telegram portable etc. the command and ways to add exception for such programs are provided in the script file.
+- Enable Hyper-V and Disable Sleep, this feature is only recommended for very high-risk environments.
+This is to prevent an **Attacker with skill and lengthy physical access to your computer**
+
+Attack Scenario: Targeted attack with plenty of time; this attacker will open the case, will solder, and will use sophisticated hardware or software.
+Of course [Bitlocker and configurations](https://learn.microsoft.com/en-us/windows/security/information-protection/bitlocker/bitlocker-countermeasures#attacker-with-skill-and-lengthy-physical-access) made by this script will prevent that.
+- Enable Windows update and Edge browser to download and install updates on any network; because the updates are importants and should not be suppressed, that's what bad actors would want.
 ## Certificate Checking Commands
 ## Country IP Blocking
 

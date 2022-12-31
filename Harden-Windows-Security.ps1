@@ -1,6 +1,6 @@
- <#PSScriptInfo
+<#PSScriptInfo
 
-.VERSION 2022.12.26.2
+.VERSION 2023
 
 .GUID d435a293-c9ee-4217-8dc1-4ad2318a5770
 
@@ -33,6 +33,7 @@ Version 2022.12.25: Entirely changed and organized the script's style to be easi
 Version 2022.12.26: Further improved the script with explanatory comments and improved the Optional Windows Features section
 Version 2022.12.26.1: Significantly improved Bitlocker script block, logic and style
 Version 2022.12.26.2: Optimized the script by performing registry modifications using a function and saved 600 lines of code
+Version 2023: The script now allows you to run each hardening category separately and added 2 more categories, 1) certificates and 2) Country IP Blocking
 #>
 
 <# 
@@ -67,6 +68,8 @@ Hardening Categories from top to bottom:
   -Optional Windows Features
   -Windows Networking
   -Miscellaneous Configurations
+  -Certificate Checking Commands
+  -Country IP Blocking
  Commands that don't require Administrator Privileges
   -Non-Admin Commands that only affect the current user and do not make machine-wide changes.
 
@@ -83,12 +86,18 @@ https://github.com/HotCakeX/Harden-Windows-Security/discussions
    type: "Set-ExecutionPolicy Bypass -Scope Process" without quotes, in an Elevated PowerShell, to allow running this script for the current session.
    
 .NOTES
-    When the script is running as Admin, please keep an eye on the PowerShell console because you might need to provide input for Bitlocker activation if it's not already set up with Startup-key key protector.
+    
+    Check out GitHub page for more security recommendations: https://github.com/HotCakeX/Harden-Windows-Security
 
 #>
- 
+
+
   
- 
+ # https://devblogs.microsoft.com/scripting/use-function-to-determine-elevation-of-powershell-console/
+   
+
+
+
   # Function to modify registry, only DWORD property Types, checks before modification
 function ModifyRegistry {
   param ($RegPath, $RegName, $RegValue )
@@ -126,6 +135,12 @@ else {
 # =========================================================================================================================
 # ==========================================Windows Security aka Defender==================================================
 # =========================================================================================================================
+do { $WindowsSecurityQuestion = $(write-host "Run Windows Security (aka Defender) section? Enter Y for Yes or N for No" -ForegroundColor Magenta; Read-Host)
+    switch ($WindowsSecurityQuestion) {   
+    "y" { 
+
+
+
 
 # https://docs.microsoft.com/en-us/powershell/module/defender/set-mppreference?view=windowsserver2022-ps 
   
@@ -220,23 +235,11 @@ Set-MpPreference -MAPSReporting 2
 Set-MpPreference -AllowSwitchToAsyncInspection $True
 
 
-
+}"N" {Break}   }}  until ($WindowsSecurityQuestion -eq "y" -or $WindowsSecurityQuestion -eq "N")
 # =========================================================================================================================
 # =========================================End of Windows Security aka Defender============================================
 # =========================================================================================================================
 
-
-
-
-
-<#  JUST AN IDEA:
-add all drives to the Controlled Folder Access using Windows Defender GUI. (probably not do this because then have to allow so many default Microsoft programs too)
-we can add multiple exlusions to the Controlled Folder Access allowed apps list using this command:
-Set-MpPreference -ControlledFolderAccessAllowedApplications 'C:\Program Files\App\app.exe','C:\Program Files\App2\app2.exe'
-we can get a list of all allowd apps using this command:
-$(get-MpPreference).ControlledFolderAccessAllowedApplications
-then we can use it in this powershell script so we add all the apps automatically to exlusion list of Controlled Folder Acess on new Windows installations.
-#>
 
 
 
@@ -246,11 +249,13 @@ then we can use it in this powershell script so we add all the apps automaticall
 # =========================================================================================================================
 # ==========================================Attack surface reduction rules=================================================
 # =========================================================================================================================
+do { $ASRulesQuestion = $(write-host "Run Attack Surface Reduction Rules section? Enter Y for Yes or N for No" -ForegroundColor Magenta; Read-Host)
+    switch ($ASRulesQuestion) {   
+    "y" { 
+
+
 
 # https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/attack-surface-reduction-rules-reference?view=o365-worldwide
-
-
-
 
 
 
@@ -291,7 +296,7 @@ Add-MpPreference -AttackSurfaceReductionRules_Ids c1db55ab-c21a-4637-bb3f-a12568
 
 
 
-
+} "N" {Break}   }}  until ($ASRulesQuestion -eq "y" -or $ASRulesQuestion -eq "N")
 # =========================================================================================================================
 # =========================================End of Attack surface reduction rules===========================================
 # =========================================================================================================================
@@ -305,7 +310,9 @@ Add-MpPreference -AttackSurfaceReductionRules_Ids c1db55ab-c21a-4637-bb3f-a12568
 # =========================================================================================================================
 # ==========================================Bitlocker Settings=============================================================
 # =========================================================================================================================
-
+do { $BitlockerQuestion = $(write-host "Run Bitlocker section? Enter Y for Yes or N for No" -ForegroundColor Magenta; Read-Host)
+    switch ($BitlockerQuestion) {   
+    "y" { 
 
 
 <#
@@ -606,7 +613,7 @@ else {
 
 
 
-
+} "N" {Break}   }}  until ($BitlockerQuestion -eq "y" -or $BitlockerQuestion -eq "N")
 # =========================================================================================================================
 # ==========================================End of Bitlocker Settings======================================================
 # =========================================================================================================================
@@ -618,7 +625,9 @@ else {
 # =========================================================================================================================
 # ==============================================TLS Security===============================================================
 # =========================================================================================================================
-
+do { $TLSQuestion = $(write-host "Run TLS Security section? Enter Y for Yes or N for No" -ForegroundColor Magenta; Read-Host)
+    switch ($TLSQuestion) {   
+    "y" { 
 
 <#
 
@@ -813,7 +822,7 @@ ModifyRegistry -RegPath 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProvider
 
 
 
-
+} "N" {Break}   }}  until ($TLSQuestion -eq "y" -or $TLSQuestion -eq "N")
 # =========================================================================================================================
 # ==========================================End of TLS Security============================================================
 # =========================================================================================================================
@@ -825,7 +834,9 @@ ModifyRegistry -RegPath 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProvider
 # =========================================================================================================================
 # ==============================================Lock Screen================================================================
 # =========================================================================================================================
-
+do { $LockScreenQuestion = $(write-host "Run Lock Screen section? Enter Y for Yes or N for No" -ForegroundColor Magenta; Read-Host)
+    switch ($LockScreenQuestion) {   
+    "y" { 
 
 
 
@@ -870,7 +881,7 @@ ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policie
 
 
 
-
+} "N" {Break}   }}  until ($LockScreenQuestion -eq "y" -or $LockScreenQuestion -eq "N")
 # =========================================================================================================================
 # ==============================================End of Lock Screen=========================================================
 # =========================================================================================================================
@@ -881,7 +892,9 @@ ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policie
 # =========================================================================================================================
 # ==============================================UAC (User Account Control)=================================================
 # =========================================================================================================================
-
+do { $UACQuestion = $(write-host "Run UAC section? Enter Y for Yes or N for No" -ForegroundColor Magenta; Read-Host)
+    switch ($UACQuestion) {   
+    "y" { 
 
 
 
@@ -910,7 +923,7 @@ ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\System' -RegN
 
 
 
-
+} "N" {Break}   }}  until ($UACQuestion -eq "y" -or $UACQuestion -eq "N")
 # =========================================================================================================================
 # ============================================End of UAC (User Account Control)============================================
 # =========================================================================================================================
@@ -922,7 +935,9 @@ ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\System' -RegN
 # =========================================================================================================================
 # ======================================================Device Guard=======================================================
 # =========================================================================================================================
-
+do { $DeviceGuardQuestion= $(write-host "Run Device Guard section? Enter Y for Yes or N for No" -ForegroundColor Magenta; Read-Host)
+    switch ($DeviceGuardQuestion) {   
+    "y" { 
 
 
 
@@ -968,7 +983,7 @@ https://techcommunity.microsoft.com/t5/microsoft-security-baselines/windows-11-v
 
 #>
 
-
+} "N" {Break}   }}  until ($DeviceGuardQuestion -eq "y" -or $DeviceGuardQuestion -eq "N")
 # =========================================================================================================================
 # ====================================================End of Device Guard==================================================
 # =========================================================================================================================
@@ -981,6 +996,9 @@ https://techcommunity.microsoft.com/t5/microsoft-security-baselines/windows-11-v
 # =========================================================================================================================
 # ====================================================Windows Firewall=====================================================
 # =========================================================================================================================
+do { $WinFirewallQuestion= $(write-host "Run Windows Firewall section? Enter Y for Yes or N for No" -ForegroundColor Magenta; Read-Host)
+    switch ($WinFirewallQuestion) {   
+    "y" { 
 
 <#
 Block LOLBins from making Internet connections
@@ -1014,7 +1032,7 @@ function Firewallblock {
 
                 $r = Get-NetFirewallRule -DisplayName $n 2> $null; 
                 if ($r) { 
-                write-host "Firewall rule already exists, skipping to the next one" -ForegroundColor Magenta ; 
+                write-host "Firewall rule already exists, skipping to the next one" -ForegroundColor Darkgreen ; 
                 } 
                 else { 
                 New-NetFirewallRule -DisplayName $n -Protocol "TCP" -Program $p -Action Block -Direction Outbound -Profile Any -Enabled True -Group "LOLBins Blocking"
@@ -1169,12 +1187,12 @@ Get-NetFirewallRule | Where-Object {$_.EdgeTraversalPolicy -notmatch "Block"} | 
 
 $badrules = Get-NetFirewallRule | Where-Object {$_.EdgeTraversalPolicy -notmatch "Block"}
 
-Write-Host "There are currently" $badrules.count "Firewall rules that allow Edge Traversal" -ForegroundColor Magenta
+Write-Host "There are currently" $badrules.count "Firewall rules that allow Edge Traversal" -ForegroundColor yellow
 
 
 
 
-
+} "N" {Break}   }}  until ($WinFirewallQuestion -eq "y" -or $WinFirewallQuestion -eq "N")
 # =========================================================================================================================
 # =================================================End of Windows Firewall=================================================
 # =========================================================================================================================
@@ -1187,7 +1205,9 @@ Write-Host "There are currently" $badrules.count "Firewall rules that allow Edge
 # =========================================================================================================================
 # =================================================Optional Windows Features===============================================
 # =========================================================================================================================
-
+do { $OptionalFeaturesQuestion= $(write-host "Run Optional Windows Features section? Enter Y for Yes or N for No" -ForegroundColor Magenta; Read-Host)
+    switch ($OptionalFeaturesQuestion) {   
+    "y" { 
 
 
 
@@ -1203,37 +1223,37 @@ if ($PSVersionTable.PSVersion.Major,$PSVersionTable.PSVersion.Minor -join "." -g
 
 # Disable PowerShell v2 (needs 2 commands) - because it's old and doesn't support AMSI: https://devblogs.microsoft.com/powershell/powershell-the-blue-team/#antimalware-scan-interface-integration
 # https://devblogs.microsoft.com/powershell/windows-powershell-2-0-deprecation/ 
-PowerShell.exe "if((get-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2).state -eq 'enabled'){disable-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2 -norestart}else{Write-Host 'MicrosoftWindowsPowerShellV2 is already disabled' -ForegroundColor Magenta}"
-PowerShell.exe "if((get-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2Root).state -eq 'enabled'){disable-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2Root -norestart}else{Write-Host 'MicrosoftWindowsPowerShellV2Root is already disabled' -ForegroundColor Magenta}"
+PowerShell.exe "if((get-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2).state -eq 'enabled'){disable-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2 -norestart}else{Write-Host 'MicrosoftWindowsPowerShellV2 is already disabled' -ForegroundColor Darkgreen}"
+PowerShell.exe "if((get-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2Root).state -eq 'enabled'){disable-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2Root -norestart}else{Write-Host 'MicrosoftWindowsPowerShellV2Root is already disabled' -ForegroundColor Darkgreen}"
 
 # Disable Work Folders client, not used when your computer is not part of a domain or enterprise network
 # https://learn.microsoft.com/en-us/windows-server/storage/work-folders/work-folders-overview
-PowerShell.exe "if((get-WindowsOptionalFeature -Online -FeatureName WorkFolders-Client).state -eq 'enabled'){disable-WindowsOptionalFeature -Online -FeatureName WorkFolders-Client -norestart}else{Write-Host 'WorkFolders-Client is already disabled' -ForegroundColor Magenta}"
+PowerShell.exe "if((get-WindowsOptionalFeature -Online -FeatureName WorkFolders-Client).state -eq 'enabled'){disable-WindowsOptionalFeature -Online -FeatureName WorkFolders-Client -norestart}else{Write-Host 'WorkFolders-Client is already disabled' -ForegroundColor Darkgreen}"
 
 # Disable Internet Printing Client, used in combination with IIS web server, old feature, can be disabled without causing problems further down the road
 # https://learn.microsoft.com/en-us/troubleshoot/windows-server/printing/manage-connect-printers-use-web-browser
-PowerShell.exe "if((get-WindowsOptionalFeature -Online -FeatureName Printing-Foundation-Features).state -eq 'enabled'){disable-WindowsOptionalFeature -Online -FeatureName Printing-Foundation-Features -norestart}else{Write-Host 'Printing-Foundation-Features is already disabled' -ForegroundColor Magenta}"
+PowerShell.exe "if((get-WindowsOptionalFeature -Online -FeatureName Printing-Foundation-Features).state -eq 'enabled'){disable-WindowsOptionalFeature -Online -FeatureName Printing-Foundation-Features -norestart}else{Write-Host 'Printing-Foundation-Features is already disabled' -ForegroundColor Darkgreen}"
 
 # Disable Windows Media Player (legacy)
 # isn't needed anymore, Windows 11 has modern media player app. everything, including connecting phone to computer and importing photos etc., works after disabling it
-PowerShell.exe "if((get-WindowsOptionalFeature -Online -FeatureName WindowsMediaPlayer).state -eq 'enabled'){disable-WindowsOptionalFeature -Online -FeatureName WindowsMediaPlayer -norestart}else{Write-Host 'WindowsMediaPlayer is already disabled' -ForegroundColor Magenta}"
+PowerShell.exe "if((get-WindowsOptionalFeature -Online -FeatureName WindowsMediaPlayer).state -eq 'enabled'){disable-WindowsOptionalFeature -Online -FeatureName WindowsMediaPlayer -norestart}else{Write-Host 'WindowsMediaPlayer is already disabled' -ForegroundColor Darkgreen}"
 
 
 # Enable Windows Defender Application Guard
 # which is a safe environment to open untrusted websites safely
-PowerShell.exe "if((get-WindowsOptionalFeature -Online -FeatureName Windows-Defender-ApplicationGuard).state -eq 'disabled'){enable-WindowsOptionalFeature -Online -FeatureName Windows-Defender-ApplicationGuard -norestart}else{Write-Host 'Windows-Defender-ApplicationGuard is already enabled' -ForegroundColor Magenta}"
+PowerShell.exe "if((get-WindowsOptionalFeature -Online -FeatureName Windows-Defender-ApplicationGuard).state -eq 'disabled'){enable-WindowsOptionalFeature -Online -FeatureName Windows-Defender-ApplicationGuard -norestart}else{Write-Host 'Windows-Defender-ApplicationGuard is already enabled' -ForegroundColor Darkgreen}"
 
 # Enable Windows Sandbox
 # install, test and use programs in a disposable virtual operation system, completely separate from your main OS
-PowerShell.exe "if((get-WindowsOptionalFeature -Online -FeatureName Containers-DisposableClientVM).state -eq 'disabled'){enable-WindowsOptionalFeature -Online -FeatureName Containers-DisposableClientVM -All -norestart}else{Write-Host 'Containers-DisposableClientVM (Windows Sandbox) is already enabled' -ForegroundColor Magenta}"
+PowerShell.exe "if((get-WindowsOptionalFeature -Online -FeatureName Containers-DisposableClientVM).state -eq 'disabled'){enable-WindowsOptionalFeature -Online -FeatureName Containers-DisposableClientVM -All -norestart}else{Write-Host 'Containers-DisposableClientVM (Windows Sandbox) is already enabled' -ForegroundColor Darkgreen}"
 
 # Enable Hyper-V
 # the best hypervisor to run virtual machines on
-PowerShell.exe "if((get-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V).state -eq 'disabled'){enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All -norestart}else{Write-Host 'Microsoft-Hyper-V is already enabled' -ForegroundColor Magenta}"
+PowerShell.exe "if((get-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V).state -eq 'disabled'){enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All -norestart}else{Write-Host 'Microsoft-Hyper-V is already enabled' -ForegroundColor Darkgreen}"
 
 # Enable Virtual Machine Platform
 # required for Android subsystem or WSA (Windows subsystem for Android). if it's disabled, it will be automatically enabled either way when you try to install WSA from Store app
-PowerShell.exe "if((get-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform).state -eq 'disabled'){enable-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform -norestart}else{Write-Host 'VirtualMachinePlatform is already enabled' -ForegroundColor Magenta}"
+PowerShell.exe "if((get-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform).state -eq 'disabled'){enable-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform -norestart}else{Write-Host 'VirtualMachinePlatform is already enabled' -ForegroundColor Darkgreen}"
 
 
 }
@@ -1242,37 +1262,37 @@ else {
 
     # Disable PowerShell v2 (needs 2 commands) - because it's old and doesn't support AMSI: https://devblogs.microsoft.com/powershell/powershell-the-blue-team/#antimalware-scan-interface-integration
 # https://devblogs.microsoft.com/powershell/windows-powershell-2-0-deprecation/ 
- if((get-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2).state -eq 'enabled'){disable-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2 -norestart}else{Write-Host 'MicrosoftWindowsPowerShellV2 is already disabled' -ForegroundColor Magenta}
- if((get-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2Root).state -eq 'enabled'){disable-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2Root -norestart}else{Write-Host 'MicrosoftWindowsPowerShellV2Root is already disabled' -ForegroundColor Magenta}
+ if((get-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2).state -eq 'enabled'){disable-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2 -norestart}else{Write-Host 'MicrosoftWindowsPowerShellV2 is already disabled' -ForegroundColor Darkgreen}
+ if((get-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2Root).state -eq 'enabled'){disable-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2Root -norestart}else{Write-Host 'MicrosoftWindowsPowerShellV2Root is already disabled' -ForegroundColor Darkgreen}
 
 # Disable Work Folders client, not used when your computer is not part of a domain or enterprise network
 # https://learn.microsoft.com/en-us/windows-server/storage/work-folders/work-folders-overview
- if((get-WindowsOptionalFeature -Online -FeatureName WorkFolders-Client).state -eq 'enabled'){disable-WindowsOptionalFeature -Online -FeatureName WorkFolders-Client -norestart}else{Write-Host 'WorkFolders-Client is already disabled' -ForegroundColor Magenta}
+ if((get-WindowsOptionalFeature -Online -FeatureName WorkFolders-Client).state -eq 'enabled'){disable-WindowsOptionalFeature -Online -FeatureName WorkFolders-Client -norestart}else{Write-Host 'WorkFolders-Client is already disabled' -ForegroundColor Darkgreen}
 
 # Disable Internet Printing Client, used in combination with IIS web server, old feature, can be disabled without causing problems further down the road
 # https://learn.microsoft.com/en-us/troubleshoot/windows-server/printing/manage-connect-printers-use-web-browser
- if((get-WindowsOptionalFeature -Online -FeatureName Printing-Foundation-Features).state -eq 'enabled'){disable-WindowsOptionalFeature -Online -FeatureName Printing-Foundation-Features -norestart}else{Write-Host 'Printing-Foundation-Features is already disabled' -ForegroundColor Magenta}
+ if((get-WindowsOptionalFeature -Online -FeatureName Printing-Foundation-Features).state -eq 'enabled'){disable-WindowsOptionalFeature -Online -FeatureName Printing-Foundation-Features -norestart}else{Write-Host 'Printing-Foundation-Features is already disabled' -ForegroundColor Darkgreen}
 
 # Disable Windows Media Player (legacy)
 # isn't needed anymore, Windows 11 has modern media player app. everything, including connecting phone to computer and importing photos etc., works after disabling it
- if((get-WindowsOptionalFeature -Online -FeatureName WindowsMediaPlayer).state -eq 'enabled'){disable-WindowsOptionalFeature -Online -FeatureName WindowsMediaPlayer -norestart}else{Write-Host 'WindowsMediaPlayer is already disabled' -ForegroundColor Magenta}
+ if((get-WindowsOptionalFeature -Online -FeatureName WindowsMediaPlayer).state -eq 'enabled'){disable-WindowsOptionalFeature -Online -FeatureName WindowsMediaPlayer -norestart}else{Write-Host 'WindowsMediaPlayer is already disabled' -ForegroundColor Darkgreen}
 
 
 # Enable Windows Defender Application Guard
 # which is a safe environment to open untrusted websites safely
- if((get-WindowsOptionalFeature -Online -FeatureName Windows-Defender-ApplicationGuard).state -eq 'disabled'){enable-WindowsOptionalFeature -Online -FeatureName Windows-Defender-ApplicationGuard -norestart}else{Write-Host 'Windows-Defender-ApplicationGuard is already enabled' -ForegroundColor Magenta}
+ if((get-WindowsOptionalFeature -Online -FeatureName Windows-Defender-ApplicationGuard).state -eq 'disabled'){enable-WindowsOptionalFeature -Online -FeatureName Windows-Defender-ApplicationGuard -norestart}else{Write-Host 'Windows-Defender-ApplicationGuard is already enabled' -ForegroundColor Darkgreen}
 
 # Enable Windows Sandbox
 # install, test and use programs in a disposable virtual operation system, completely separate from your main OS
- if((get-WindowsOptionalFeature -Online -FeatureName Containers-DisposableClientVM).state -eq 'disabled'){enable-WindowsOptionalFeature -Online -FeatureName Containers-DisposableClientVM -All -norestart}else{Write-Host 'Containers-DisposableClientVM (Windows Sandbox) is already enabled' -ForegroundColor Magenta}
+ if((get-WindowsOptionalFeature -Online -FeatureName Containers-DisposableClientVM).state -eq 'disabled'){enable-WindowsOptionalFeature -Online -FeatureName Containers-DisposableClientVM -All -norestart}else{Write-Host 'Containers-DisposableClientVM (Windows Sandbox) is already enabled' -ForegroundColor Darkgreen}
 
 # Enable Hyper-V
 # the best hypervisor to run virtual machines on
- if((get-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V).state -eq 'disabled'){enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All -norestart}else{Write-Host 'Microsoft-Hyper-V is already enabled' -ForegroundColor Magenta}
+ if((get-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V).state -eq 'disabled'){enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All -norestart}else{Write-Host 'Microsoft-Hyper-V is already enabled' -ForegroundColor Darkgreen}
 
 # Enable Virtual Machine Platform
 # required for Android subsystem or WSA (Windows subsystem for Android). if it's disabled, it will be automatically enabled either way when you try to install WSA from Store app
-if((get-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform).state -eq 'disabled'){enable-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform -norestart}else{Write-Host 'VirtualMachinePlatform is already enabled' -ForegroundColor Magenta}
+if((get-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform).state -eq 'disabled'){enable-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform -norestart}else{Write-Host 'VirtualMachinePlatform is already enabled' -ForegroundColor Darkgreen}
 
 
 
@@ -1281,7 +1301,7 @@ if((get-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform).stat
 
 
 
-
+} "N" {Break}   }}  until ($OptionalFeaturesQuestion -eq "y" -or $OptionalFeaturesQuestion -eq "N")
 # =========================================================================================================================
 # ==============================================End of Optional Windows Features===========================================
 # =========================================================================================================================
@@ -1296,7 +1316,9 @@ if((get-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform).stat
 # =========================================================================================================================
 # ====================================================Windows Networking===================================================
 # =========================================================================================================================
-
+do { $WinNetworkingQuestion= $(write-host "Run Windows Networking section? Enter Y for Yes or N for No" -ForegroundColor Magenta; Read-Host)
+    switch ($WinNetworkingQuestion) {   
+    "y" { 
 
 
 
@@ -1372,6 +1394,9 @@ netsh int tcp set global timestamps=disabled
 
 
 
+
+
+} "N" {Break}   }}  until ($WinNetworkingQuestion -eq "y" -or $WinNetworkingQuestion -eq "N")
 # =========================================================================================================================
 # =================================================End of Windows Networking===============================================
 # =========================================================================================================================
@@ -1385,7 +1410,9 @@ netsh int tcp set global timestamps=disabled
 # =========================================================================================================================
 # ==============================================Miscellaneous Configurations===============================================
 # =========================================================================================================================
-
+do { $MiscellaneousQuestion= $(write-host "Run Miscellaneous section? Enter Y for Yes or N for No" -ForegroundColor Magenta; Read-Host)
+    switch ($MiscellaneousQuestion) {   
+    "y" {
 
 
 
@@ -1555,7 +1582,7 @@ if ($EdgeRegValue -notlike "*--enable-features=EncryptedClientHello*")
 
 else 
 {
-Write-Host "The ECH flag is Enabled for Edge" -ForegroundColor Magenta
+Write-Host "The ECH flag is Enabled for Edge" -ForegroundColor yellow
 }
 
 
@@ -1586,7 +1613,15 @@ $shortcut.Save()  ## Save
 
 
 
-} # End of Admin test function
+
+
+
+
+
+
+}
+"N" {Break}   }}  until ($MiscellaneousQuestion -eq "y" -or $MiscellaneousQuestion -eq "N")
+
 
 
 # =========================================================================================================================
@@ -1599,9 +1634,187 @@ $shortcut.Save()  ## Save
 
 
 # =========================================================================================================================
-# ====================================================Non-Admin Commands===================================================
+# ====================================================Certificate Checking Commands========================================
+# =========================================================================================================================
+do { $CertCheckQuestion= $(write-host "Run Certificate Checking section? Enter Y for Yes or N for No" -ForegroundColor Magenta; Read-Host)
+    switch ($CertCheckQuestion) {   
+    "y" { 
+
+
+
+# https://learn.microsoft.com/en-us/sysinternals/
+# https://learn.microsoft.com/en-us/sysinternals/downloads/sigcheck
+
+
+      # List valid certificates not rooted to the Microsoft Certificate Trust List in the User store
+      do { $UserStoreQ= $(write-host "List valid certificates not rooted to the Microsoft Certificate Trust List in the User store ? Enter Y for Yes or N for No" -ForegroundColor Cyan; Read-Host)
+      switch ($UserStoreQ) {   
+      "y" { 
+      
+        \\live.sysinternals.com\tools\sigcheck64.exe -tuv -nobanner
+      
+      } "N" {Break}   }}  until ($UserStoreQ -eq "y" -or $UserStoreQ -eq "N")
+
+
+
+      
+
+      # List valid certificates not rooted to the Microsoft Certificate Trust List in the Machine store
+    do { $MachineStoreQ= $(write-host "List valid certificates not rooted to the Microsoft Certificate Trust List in the Machine store ? Enter Y for Yes or N for No" -ForegroundColor Cyan; Read-Host)
+    switch ($MachineStoreQ) {   
+    "y" { 
+
+      \\live.sysinternals.com\tools\sigcheck64.exe -tv -nobanner
+
+    } "N" {Break}   }}  until ($MachineStoreQ -eq "y" -or $MachineStoreQ -eq "N")
+
+
+
+
+
+
+
+
+
+    }  "N" {Break}   }}  until ($CertCheckQuestion -eq "y" -or $CertCheckQuestion -eq "N")
+# =========================================================================================================================
+# ====================================================End of Certificate Checking Commands=================================
 # =========================================================================================================================
 
+
+
+
+
+
+# =========================================================================================================================
+# ====================================================Country IP Blocking==================================================
+# =========================================================================================================================
+do { $CountryIPBlockingQuestion = $(write-host "Run Country IP Blocking section? Enter Y for Yes or N for No" -ForegroundColor Magenta; Read-Host)
+    switch ($CountryIPBlockingQuestion) {   
+    "y" {  
+
+
+
+
+
+
+# IPv4 source https://www.ipdeny.com/ipblocks/
+# IPv6 source https://www.ipdeny.com/ipv6/ipaddresses/blocks/
+# -RemoteAddress in New-NetFirewallRule accepts array according to Microsoft Docs, 
+# so we use "[string[]]$IPList = $IPList -split '\r?\n' -ne ''" to convert the IP lists, which is a single multiline string, into an array
+
+function BlockCountryIP {
+    param ($IPList , $CountryName)
+
+    # checks if the rule is present and if it is, deletes them to get new up-to-date IP ranges from the sources
+    if (Get-NetFirewallRule -DisplayName "$CountryName IP range blocking" 2> $null) 
+    {Remove-NetFirewallRule -DisplayName "$CountryName IP range blocking" }
+     
+    [string[]]$IPList = $IPList -split '\r?\n' -ne ''
+    
+    New-NetFirewallRule -DisplayName "$CountryName IP range blocking" -Direction Inbound -Action Block -LocalAddress Any -RemoteAddress $IPList -Description "$CountryName IP range blocking" -Profile Any -InterfaceType Any -Group "Hardening-Script-CountryIP-Blocking" -EdgeTraversalPolicy Block
+    New-NetFirewallRule -DisplayName "$CountryName IP range blocking" -Direction Outbound -Action Block -LocalAddress Any -RemoteAddress $IPList -Description "$CountryName IP range blocking" -Profile Any -InterfaceType Any -Group "Hardening-Script-CountryIP-Blocking" -EdgeTraversalPolicy Block
+
+}
+
+
+
+
+
+
+
+# Russia
+do { $BlockRussiaIP = $(write-host "Block the entire range of IPv4 and IPv6 belonging to Russia? Enter Y for Yes or N for No" -ForegroundColor Cyan ; Read-Host)
+    switch ($BlockRussiaIP) {   
+    "y" {  
+          
+    $RussiaIPv4 = Invoke-RestMethod -Uri "https://www.ipdeny.com/ipblocks/data/aggregated/ru-aggregated.zone"
+    $RussiaIPv6 = Invoke-RestMethod -Uri "https://www.ipdeny.com/ipv6/ipaddresses/blocks/ru.zone"
+    $RussiaIPRange = $RussiaIPv4 + $RussiaIPv6
+    BlockCountryIP -IPList $RussiaIPRange -CountryName "Russia"
+
+}"N" {Break}   }}  until ($BlockRussiaIP -eq "y" -or $BlockRussiaIP -eq "N")
+
+
+
+
+
+# Iran
+do { $BlockIranIP = $(write-host "Block the entire range of IPv4 and IPv6 belonging to Iran? Enter Y for Yes or N for No" -ForegroundColor Cyan ; Read-Host)
+    switch ($BlockIranIP) {   
+    "y" {  
+    
+    $IranIPv4 = Invoke-RestMethod -Uri "https://www.ipdeny.com/ipblocks/data/aggregated/ir-aggregated.zone"
+    $IranIPv6 = Invoke-RestMethod -Uri "https://www.ipdeny.com/ipv6/ipaddresses/blocks/ir.zone"
+    $IranIPRange = $IranIPv4 + $IranIPv6
+    BlockCountryIP -IPList $IranIPRange -CountryName "Iran"
+
+}"N" {Break}   }}  until ($BlockIranIP -eq "y" -or $BlockIranIP -eq "N")
+
+
+
+
+
+# China
+do { $BlockChinaIP = $(write-host "Block the entire range of IPv4 and IPv6 belonging to China? Enter Y for Yes or N for No" -ForegroundColor Cyan ; Read-Host)
+    switch ($BlockChinaIP) {   
+    "y" {  
+
+    $ChinaIPv4 = Invoke-RestMethod -Uri "https://www.ipdeny.com/ipblocks/data/aggregated/cn-aggregated.zone"
+    $ChinaIPv6 = Invoke-RestMethod -Uri "https://www.ipdeny.com/ipv6/ipaddresses/blocks/cn.zone"
+    $ChinaIPRange = $ChinaIPv4 + $ChinaIPv6
+    BlockCountryIP -IPList $ChinaIPRange -CountryName "China"
+
+}"N" {Break}   }}  until ($BlockChinaIP -eq "y" -or $BlockChinaIP -eq "N")
+
+
+
+# North Korea
+do { $BlockNorthKoreaIP = $(write-host "Block the entire range of IPv4 and IPv6 belonging to North Korea? Enter Y for Yes or N for No" -ForegroundColor Cyan ; Read-Host)
+    switch ($BlockNorthKoreaIP) {   
+    "y" {  
+    
+    $NorthKoreaIPv4 = Invoke-RestMethod -Uri "https://www.ipdeny.com/ipblocks/data/aggregated/cn-aggregated.zone"
+    $NorthKoreaIPv6 = Invoke-RestMethod -Uri "https://www.ipdeny.com/ipv6/ipaddresses/blocks/cn.zone"
+    $NorthKoreaIPRange = $NorthKoreaIPv4 + $NorthKoreaIPv6
+    BlockCountryIP -IPList $NorthKoreaIPRange -CountryName "North Korea"
+
+}"N" {Break}   }}  until ($BlockNorthKoreaIP -eq "y" -or $BlockNorthKoreaIP -eq "N")
+
+
+
+# how to query the number of IPs in each rule
+# https://learn.microsoft.com/en-us/powershell/module/netsecurity/new-netfirewallrule?view=windowsserver2022-ps#-remoteaddress
+# (Get-NetFirewallRule -DisplayName "Russia IP range blocking" | Get-NetFirewallAddressFilter).RemoteAddress.count
+
+
+
+
+
+
+        
+
+    }"N" {Break}   }}  until ($CountryIPBlockingQuestion -eq "y" -or $CountryIPBlockingQuestion -eq "N")
+# =========================================================================================================================
+# ====================================================End of Country IP Blocking===========================================
+# =========================================================================================================================
+
+
+
+
+
+
+
+} # End of Admin test function
+
+
+
+# =========================================================================================================================
+# ====================================================Non-Admin Commands===================================================
+# =========================================================================================================================
+do { $NonAdminQuestion= $(write-host "Run Non-Admin section? Enter Y for Yes or N for No" -ForegroundColor Magenta; Read-Host)
+    switch ($NonAdminQuestion) {   
+    "y" { 
 
 
 # Show known file extensions in File explorer
@@ -1733,11 +1946,6 @@ $Value        = '506'
 If (-NOT (Test-Path $RegistryPath)) {   New-Item -Path $RegistryPath -Force | Out-Null } 
 New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType string -Force
 
-# Set Windows Personalization, color settings, to enable Dark mode for System
-ModifyRegistry -RegPath 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize' -RegName 'SystemUsesLightTheme' -RegValue '0'
-
-# Set Windows Personalization, color settings, to enable Dark mode for Apps
-ModifyRegistry -RegPath 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize' -RegName 'AppsUseLightTheme' -RegValue '0'
 
 
 # Add ECH flag to the target of Pinned Taskbar Edge browser shortcuts (all channel) of the current user
@@ -1754,8 +1962,15 @@ $shortcut.Save()  ## Save
 
 
 
-
+}
+"N" {Break}   }}  until ($NonAdminQuestion -eq "y" -or $NonAdminQuestion -eq "N")
 # =========================================================================================================================
 # ====================================================End of Non-Admin Commands============================================
 # =========================================================================================================================
 
+Write-Host "T" -ForegroundColor Green -NoNewline;
+Write-Host "H" -ForegroundColor Yellow -NoNewline;
+Write-Host "E " -ForegroundColor Blue -NoNewline;
+Write-Host "E" -ForegroundColor Red -NoNewline;
+Write-Host "N" -ForegroundColor Magenta -NoNewline;
+Write-Host "D" -ForegroundColor Cyan ;

@@ -166,7 +166,7 @@ A malicious user might install malware that looks like the standard sign-in dial
 
 ## User Account Control
 
-Here is [the official reference](https://learn.microsoft.com/en-us/windows/security/identity-protection/user-account-control/user-account-control-group-policy-and-registry-key-settings#registry-key-settings) for the commands using in this section of the script, User Account Control Group Policy and registry key settings.
+Here is [the official reference](https://learn.microsoft.com/en-us/windows/security/identity-protection/user-account-control/user-account-control-group-policy-and-registry-key-settings#registry-key-settings) for the commands used in this section of the script, User Account Control Group Policy and registry key settings.
 
 ## Device Guard
 Since Device Guard and Virtualization-Based Security features are by default enabled automatically on capable and modern hardware, this script only double-checks their status and if needed, fully enables them to the highest level. you can find all the information on that [in this official documentation](https://learn.microsoft.com/en-us/windows/security/threat-protection/device-guard/enable-virtualization-based-protection-of-code-integrity). one of the notable commands used in this category is ensuring that UEFI lock is enabled for VBS features.

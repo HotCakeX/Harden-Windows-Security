@@ -247,7 +247,7 @@ The script fetches the newest range of [IPv4](https://www.ipdeny.com/ipblocks/) 
 In order to run commands in this category, you don't need administrator privileges, because no system-wide configuration is made. changes in this category only apply to the user account that is running the current PowerShell session:
 - Show known file extensions in File explorer
 - Disable websites accessing local language list - good for privacy
-- Turn off safe search in Windows search, will enable +18 adult content in searches; from Windows settings > privacy and security > search permissions > safe search
+- Turn off safe search in Windows search, will enable +18 content to appear in searches; essentially toggles the button in: Windows settings > privacy and security > search permissions > safe search
 - Enable Clipboard History and sync with Microsoft Account
 - Create custom views for Windows Event Viewer to help you keep tabs on important security events
 - Turn on text suggestions when typing on the physical keyboard

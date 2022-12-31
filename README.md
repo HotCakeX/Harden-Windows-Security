@@ -183,7 +183,7 @@ or are available from Microsoft (i.e. a Microsoft program or add-on).
 Despite being legitimate (and well-intentioned) files,
 these binaries can be exploited by an attacker and used in an attack.
 
-This scriptuses built-in Firewall cmdlet to block those binaries in Windows Firewall.
+This script uses built-in Firewall cmdlet to block those binaries in Windows Firewall.
 
 you can completely skip this category when running the script and choose N (for No) when prompted for input for this category, in PowerShell console.
 

@@ -10,6 +10,8 @@
 
 <h4 align="center">Harden Windows 11 safely, securely and without breaking anything</h4>
 
+
+
 <p align="center">
 	
 	
@@ -40,6 +42,13 @@
 </p>
 
 
+<h1> <br> </h1>
+</br>
+
+> __Warning__  <h4>Windows by default is secure and safe, this script does not imply nor claim otherwise. just like anything, you have to use it wisely and don't compromise yourself with reckless behavior and bad user configuration; Nothing is foolproof. this script only uses the tools and features that have already been implemented by Microsoft in Windows OS to fine-tune it towards the highest security and locked-down state, using well-documented, supported, often recommended and official methods.</h4>
+
+<h1> <br> </h1>
+
 
 ## Hardening Categories
 
@@ -56,7 +65,11 @@ From Top to bottom in order:
   - Windows Firewall
   - Optional Windows Features
   - Windows Networking
-  - Miscellaneous Configurations  
+  - Miscellaneous Configurations
+  - Certificate Checking Commands
+  - Country IP Blocking
+  
+
 * Commands that don't require Administrator Privileges
   - Non-Admin Commands that only affect the current user and do not make machine-wide changes.
 
@@ -83,7 +96,7 @@ Set-ExecutionPolicy Bypass -Scope Process
 > if there are multiple Windows user accounts in your computer, it's recommended to run this script in each of them, without administrator privileges, because Non-admin commands only apply to the current user and are not machine wide.
 
 > **Note**
-> When the script is running for the first time, please keep an eye on the PowerShell console because you might need to provide input for Bitlocker activation. 
+> The script asks for confirmation, in the PowerShell console, before running each hardening category, so you can selectively run (or don't run) each hardening category.
 
 
 > **Note**

@@ -169,9 +169,39 @@ A malicious user might install malware that looks like the standard sign-in dial
 Here is [the official reference](https://learn.microsoft.com/en-us/windows/security/identity-protection/user-account-control/user-account-control-group-policy-and-registry-key-settings#registry-key-settings) for the commands using in this section of the script, User Account Control Group Policy and registry key settings.
 
 ## Device Guard
+Since Device Guard and Virtualization-Based Security features are by default enabled automatically on capable and modern hardware, this script only double-checks their status and if needed, fully enables them to the highest level. you can find all the information on that [in this official documentation](https://learn.microsoft.com/en-us/windows/security/threat-protection/device-guard/enable-virtualization-based-protection-of-code-integrity). one of the notable commands used in this category is ensuring that UEFI lock is enabled for VBS features.
+
 ## Windows Firewall
+This category makes sure Firewall is enabled for all profiles (which is the default)
+
+additionally, blocks LOLbins (Living Off The Land Binaries) from making Internet connections.
+
+LOLBins are Microsoft-signed files, meaning they are either native to the Operating System (OS) and come pre-installed,
+or are available from Microsoft (i.e. a Microsoft program or add-on).
+Despite being legitimate (and well-intentioned) files,
+these binaries can be exploited by an attacker and used in an attack.
+
+This scriptuses built-in Firewall cmdlet to block those binaries in Windows Firewall.
+
+you can completely skip this category when running the script and choose N (for No) when prompted for input for this category, in PowerShell console.
+
 ## Optional Windows Features
+
+This script disables some rarely used features in Windows optional features, those are as follows:
+- PowerShell v2; because it's old and doesn't support [AMSI](https://devblogs.microsoft.com/powershell/powershell-the-blue-team/#antimalware-scan-interface-integration)
+- Work Folders client; not used when your computer is not part of a domain or enterprise network
+- Internet Printing Client; used in combination with IIS web server, [old feature](https://learn.microsoft.com/en-us/troubleshoot/windows-server/printing/manage-connect-printers-use-web-browser), can be disabled without causing problems further down the road
+- Windows Media Player (legacy); isn't needed anymore, Windows 11 has modern media player app.
+
+Also enables these useful optional features:
+- Windows Defender Application Guard; which is a safe environment to open untrusted websites
+- Windows Sandbox; install, test and use programs in a disposable virtual operation system, completely separate from your main OS
+- Hyper-V; the best and a hybrid hypervisor (Type 1 and Type 2) to run virtual machines on
+- Virtual Machine Platform; required for Android subsystem or WSA (Windows subsystem for Android). if it's disabled, it will be automatically enabled either way when you try to install WSA from Store app
+
 ## Windows Networking
+
+
 ## Miscellaneous Configurations
 ## Certificate Checking Commands
 ## Country IP Blocking

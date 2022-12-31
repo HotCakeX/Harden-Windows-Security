@@ -96,7 +96,7 @@ Set-ExecutionPolicy Bypass -Scope Process
 > if there are multiple Windows user accounts in your computer, it's recommended to run this script in each of them, without administrator privileges, because Non-admin commands only apply to the current user and are not machine wide.
 
 > **Note**
-> The script asks for confirmation, in the PowerShell console, before running each hardening category, so you can selectively run (or don't run) each hardening category.
+> The script asks for confirmation, in the PowerShell console, before running each hardening category, so you can selectively run (or don't run) each of them.
 
 
 > **Note**

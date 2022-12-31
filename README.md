@@ -47,7 +47,7 @@
 
 > __Warning__  <h4>Windows by default is secure and safe, this script does not imply nor claim otherwise. just like anything, you have to use it wisely and don't compromise yourself with reckless behavior and bad user configuration; Nothing is foolproof. this script only uses the tools and features that have already been implemented by Microsoft in Windows OS to fine-tune it towards the highest security and locked-down state, using well-documented, supported, often recommended and official methods.</h4>
 
-<h1> <br> </h1>
+ </br>
 
 
 ## Hardening Categories

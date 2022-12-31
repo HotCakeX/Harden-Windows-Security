@@ -232,9 +232,13 @@ Attack Scenario: Targeted attack with plenty of time; this attacker will open th
 Of course [Bitlocker and configurations](https://learn.microsoft.com/en-us/windows/security/information-protection/bitlocker/bitlocker-countermeasures#attacker-with-skill-and-lengthy-physical-access) made by this script will prevent that.
 - Enable Windows update and Edge browser to download and install updates on any network; because the updates are importants and should not be suppressed, that's what bad actors would want.
 ## Certificate Checking Commands
+In this category, the script runs [sigcheck64.exe](https://learn.microsoft.com/en-us/sysinternals/downloads/sigcheck) live from [Sysinternals ](https://learn.microsoft.com/en-us/sysinternals/), then lists valid certificates not rooted to the Microsoft Certificate Trust List in the User and Machine stores. unless you use Windows insiders, all the certificates that will be listed should be treated as dangerous and removed from your system immediately. however, if you are a Windows Insider user, like me, there will be certificates listed that belong to Microsoft and pre-public build of Windows that you use, so they are OK and should not be removed. some of those safe Windows-Insider-build related certificates that should be left alone are:
+* Microsoft ECC Development Root Certificate Authority 2018
+* Microsoft Development Root Certificate Authority 2014
+
+
 ## Country IP Blocking
-
-
+The script fetches the newest range of [IPv4](https://www.ipdeny.com/ipblocks/) and [IPv6](https://www.ipdeny.com/ipv6/ipaddresses/blocks/) addresses for terrorist and terrorist supporting countries such as Russia, Iran, China and North Korea, then creates 2 rules for each country in Windows firewall, completely blocking connections, inbound or outbound, to or from those countries.
 
 
 

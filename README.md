@@ -172,9 +172,9 @@ Here is [the official reference](https://learn.microsoft.com/en-us/windows/secur
 Since Device Guard and Virtualization-Based Security features are by default enabled automatically on capable and modern hardware, this script only double-checks their status and if needed, fully enables them to the highest level. you can find all the information on that [in this official documentation](https://learn.microsoft.com/en-us/windows/security/threat-protection/device-guard/enable-virtualization-based-protection-of-code-integrity). one of the notable commands used in this category is ensuring that UEFI lock is enabled for VBS features.
 
 ## Windows Firewall
-This category makes sure Firewall is enabled for all profiles (which is the default)
+This category makes sure Windows Firewall is enabled for all profiles (which is the default)
 
-additionally, blocks LOLbins (Living Off The Land Binaries) from making Internet connections.
+additionally, [blocks LOLbins (Living Off The Land Binaries)](https://lolbas-project.github.io/) from making Internet connections.
 
 LOLBins are Microsoft-signed files, meaning they are either native to the Operating System (OS) and come pre-installed,
 or are available from Microsoft (i.e. a Microsoft program or add-on).

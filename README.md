@@ -238,7 +238,7 @@ In this category, the script runs [sigcheck64.exe](https://learn.microsoft.com/e
 
 
 ## Country IP Blocking
-The script fetches the newest range of [IPv4](https://www.ipdeny.com/ipblocks/) and [IPv6](https://www.ipdeny.com/ipv6/ipaddresses/blocks/) addresses for terrorist and terrorist supporting countries such as Russia, Iran, China and North Korea, then creates 2 rules for each country in Windows firewall, completely blocking connections, inbound and outbound, to and from those countries.
+The script fetches the newest range of [IPv4](https://www.ipdeny.com/ipblocks/) and [IPv6](https://www.ipdeny.com/ipv6/ipaddresses/blocks/) addresses for terrorist and terrorist supporting countries such as Russia, Iran, China and North Korea, then creates 2 rules (inbound and outbound) for each country in Windows firewall, completely blocking connections to and from those countries.
 
 
 

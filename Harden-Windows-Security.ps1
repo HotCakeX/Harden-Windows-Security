@@ -1,6 +1,6 @@
 <#PSScriptInfo
 
-.VERSION 2023
+.VERSION 2023.1.1.1
 
 .GUID d435a293-c9ee-4217-8dc1-4ad2318a5770
 
@@ -33,7 +33,9 @@ Version 2022.12.25: Entirely changed and organized the script's style to be easi
 Version 2022.12.26: Further improved the script with explanatory comments and improved the Optional Windows Features section
 Version 2022.12.26.1: Significantly improved Bitlocker script block, logic and style
 Version 2022.12.26.2: Optimized the script by performing registry modifications using a function and saved 600 lines of code
-Version 2023: The script now allows you to run each hardening category separately and added 2 more categories, 1) certificates and 2) Country IP Blocking
+Version 2023.1: The script now allows you to run each hardening category separately and added 2 more categories, 1) certificates and 2) Country IP Blocking
+Version 2023.1.1: added a checking process to the country IP blocking category so that if the list is empty, no rule will be created.
+Version 2023.1.1.1: Changed description of the PowerShell Gallery's page
 #>
 
 <# 
@@ -43,42 +45,56 @@ Version 2023: The script now allows you to run each hardening category separatel
 
 .DESCRIPTION
 
-Features of this Hardening script:
-
- -Always up-to-date and works with latest build of Windows (Currently Windows 11 - compatible and fully tested a Lot on stable and Insider Dev builds)
- -Doesn't break anything
- -Doesn't remove or disable Windows functionlities against Microsoft's recommendation
- -Above each command there are comments that explain what it does, why it's there, provide extra important information about it and links to additional resources for better understanding
- -When a hardening command is no longer necessary because it's applied by default by Microsoft on new builds of Windows, it will also be removed from this script in order to prevent any problems and because it won't be necessary anymore.
- -The script can be run infinite number of times, it's made in a way that it won't make any duplicate changes at all.
-
+💠 Features of this Hardening script:
+  ✅ Always up-to-date and works with latest build of Windows (Currently Windows 11 - compatible and fully tested a Lot on stable and Insider Dev builds)
+  ✅ Doesn't break anything
+  ✅ Doesn't remove or disable Windows functionlities against Microsoft's recommendation
+  ✅ Above each command there are comments that explain what it does, why it's there, provide extra important information about it and links to additional resources for better understanding
+  ✅ When a hardening command is no longer necessary because it's applied by default by Microsoft on new builds of Windows, it will also be removed from this script in order to prevent any problems and because it won't be necessary anymore.
+  ✅ The script can be run infinite number of times, it's made in a way that it won't make any duplicate changes at all.
 
 
-Hardening Categories from top to bottom:
+💠 Hardening Categories from top to bottom: (🔺Detailed info about each of them at my Github🔻)
 
-  Commands that require Administrator Privileges
-  -Windows Security aka Defender
-  -Attack surface reduction rules
-  -Bitlocker Settings
-  -TLS Security
-  -Lock Screen
-  -UAC (User Account Control)
-  -Device Guard
-  -Windows Firewall
-  -Optional Windows Features
-  -Windows Networking
-  -Miscellaneous Configurations
-  -Certificate Checking Commands
-  -Country IP Blocking
- Commands that don't require Administrator Privileges
-  -Non-Admin Commands that only affect the current user and do not make machine-wide changes.
+🟣 https://github.com/HotCakeX/Harden-Windows-Security
+
+⏹ Commands that require Administrator Privileges
+  ✅ Windows Security aka Defender
+  ✅ Attack surface reduction rules
+  ✅ Bitlocker Settings
+  ✅ TLS Security
+  ✅ Lock Screen
+  ✅ UAC (User Account Control)
+  ✅ Device Guard
+  ✅ Windows Firewall
+  ✅ Optional Windows Features
+  ✅ Windows Networking
+  ✅ Miscellaneous Configurations
+  ✅ Certificate Checking Commands
+  ✅ Country IP Blocking
+⏹ Commands that don't require Administrator Privileges
+  ✅ Non-Admin Commands that only affect the current user and do not make machine-wide changes.
 
 
+🛑 Warning:
+Windows by default is secure and safe, this script does not imply nor claim otherwise.
+just like anything, you have to use it wisely and don't compromise yourself with reckless behavior and bad user configuration; Nothing is foolproof.
+this script only uses the tools and features that have already been implemented by Microsoft in Windows OS to fine-tune it towards the highest security and locked-down state,
+using well-documented, supported, often recommended and official methods.
 
+💎 Note: if there are multiple Windows user accounts in your computer,
+it's recommended to run this script in each of them, without administrator privileges,
+because Non-admin commands only apply to the current user and are not machine wide.
 
-🎯 if you have any questions, requests, suggestions etc. about this script, please open a new discussion in Github:
+💎 Note: The script asks for confirmation, in the PowerShell console, before running each hardening category,
+so you can selectively run (or don't run) each of them.
 
-https://github.com/HotCakeX/Harden-Windows-Security/discussions
+💎 Note: Things with #TopSecurity tag can break functionalities or cause difficulties so this script does NOT enable them by default.
+press Control + F and search for #TopSecurity in the script to find those commands and how to enable them if you want.
+
+🏴 if you have any questions, requests, suggestions etc. about this script, please open a new discussion in Github:
+
+🟡 https://github.com/HotCakeX/Harden-Windows-Security/discussions
 
 .EXAMPLE
 
@@ -634,8 +650,7 @@ do { $TLSQuestion = $(write-host "Run TLS Security section? Enter Y for Yes or N
 Resources used:
 
 https://learn.microsoft.com/en-us/windows/win32/secauthn/protocols-in-tls-ssl--schannel-ssp-
-These registry settings only affect things that use schannel: that includes Edge, IIS, built-in inbox Windows apps, posh and vbscript(!), I'd expect but can't verify Outlook, the curl.exe supplied by Microsoft,
-, but not Chrome, Firefox, other programs that use portable stacks like Java nodejs python php, and anything in wsl.
+These registry settings only affect things that use schannel: that includes Edge, IIS, built-in inbox Windows apps, but not Chrome, Firefox, other programs that use portable stacks like Java, nodejs, python or php.
 these portable stacks are:
 
 Example of portable TLS stacks used in 3rd party programs: OpenSSL/SSLeay (plus forks LibreSSL and BoringSSL), NSS and GnuTLS are written in C,
@@ -1240,7 +1255,7 @@ PowerShell.exe "if((get-WindowsOptionalFeature -Online -FeatureName WindowsMedia
 
 
 # Enable Windows Defender Application Guard
-# which is a safe environment to open untrusted websites safely
+# which is a safe environment to open untrusted websites
 PowerShell.exe "if((get-WindowsOptionalFeature -Online -FeatureName Windows-Defender-ApplicationGuard).state -eq 'disabled'){enable-WindowsOptionalFeature -Online -FeatureName Windows-Defender-ApplicationGuard -norestart}else{Write-Host 'Windows-Defender-ApplicationGuard is already enabled' -ForegroundColor Darkgreen}"
 
 # Enable Windows Sandbox
@@ -1696,8 +1711,6 @@ do { $CountryIPBlockingQuestion = $(write-host "Run Country IP Blocking section?
 
 
 
-
-
 # IPv4 source https://www.ipdeny.com/ipblocks/
 # IPv6 source https://www.ipdeny.com/ipv6/ipaddresses/blocks/
 # -RemoteAddress in New-NetFirewallRule accepts array according to Microsoft Docs, 
@@ -1709,22 +1722,24 @@ function BlockCountryIP {
     # checks if the rule is present and if it is, deletes them to get new up-to-date IP ranges from the sources
     if (Get-NetFirewallRule -DisplayName "$CountryName IP range blocking" 2> $null) 
     {Remove-NetFirewallRule -DisplayName "$CountryName IP range blocking" }
-     
+
+    # converts the list which is in string into array
     [string[]]$IPList = $IPList -split '\r?\n' -ne ''
-    
+
+    # makes sure the list isn't empty
+    if ($IPList.count -eq 0) { Write-Host "The IP list was empty, skipping $CountryName" -ForegroundColor Yellow ; break }
+
+      
     New-NetFirewallRule -DisplayName "$CountryName IP range blocking" -Direction Inbound -Action Block -LocalAddress Any -RemoteAddress $IPList -Description "$CountryName IP range blocking" -Profile Any -InterfaceType Any -Group "Hardening-Script-CountryIP-Blocking" -EdgeTraversalPolicy Block
     New-NetFirewallRule -DisplayName "$CountryName IP range blocking" -Direction Outbound -Action Block -LocalAddress Any -RemoteAddress $IPList -Description "$CountryName IP range blocking" -Profile Any -InterfaceType Any -Group "Hardening-Script-CountryIP-Blocking" -EdgeTraversalPolicy Block
-
+        
 }
 
 
 
 
-
-
-
 # Russia
-do { $BlockRussiaIP = $(write-host "Block the entire range of IPv4 and IPv6 belonging to Russia? Enter Y for Yes or N for No" -ForegroundColor Cyan ; Read-Host)
+do { $BlockRussiaIP = $(write-host "Block the entire range of IPv4 and IPv6 belonging to Russia? Enter Y for Yes or N for No" -ForegroundColor DarkCyan ; Read-Host)
     switch ($BlockRussiaIP) {   
     "y" {  
           
@@ -1738,9 +1753,8 @@ do { $BlockRussiaIP = $(write-host "Block the entire range of IPv4 and IPv6 belo
 
 
 
-
 # Iran
-do { $BlockIranIP = $(write-host "Block the entire range of IPv4 and IPv6 belonging to Iran? Enter Y for Yes or N for No" -ForegroundColor Cyan ; Read-Host)
+do { $BlockIranIP = $(write-host "Block the entire range of IPv4 and IPv6 belonging to Iran? Enter Y for Yes or N for No" -ForegroundColor DarkCyan ; Read-Host)
     switch ($BlockIranIP) {   
     "y" {  
     
@@ -1754,9 +1768,8 @@ do { $BlockIranIP = $(write-host "Block the entire range of IPv4 and IPv6 belong
 
 
 
-
 # China
-do { $BlockChinaIP = $(write-host "Block the entire range of IPv4 and IPv6 belonging to China? Enter Y for Yes or N for No" -ForegroundColor Cyan ; Read-Host)
+do { $BlockChinaIP = $(write-host "Block the entire range of IPv4 and IPv6 belonging to China? Enter Y for Yes or N for No" -ForegroundColor DarkCyan ; Read-Host)
     switch ($BlockChinaIP) {   
     "y" {  
 
@@ -1769,8 +1782,9 @@ do { $BlockChinaIP = $(write-host "Block the entire range of IPv4 and IPv6 belon
 
 
 
+
 # North Korea
-do { $BlockNorthKoreaIP = $(write-host "Block the entire range of IPv4 and IPv6 belonging to North Korea? Enter Y for Yes or N for No" -ForegroundColor Cyan ; Read-Host)
+do { $BlockNorthKoreaIP = $(write-host "Block the entire range of IPv4 and IPv6 belonging to North Korea? Enter Y for Yes or N for No" -ForegroundColor DarkCyan ; Read-Host)
     switch ($BlockNorthKoreaIP) {   
     "y" {  
     
@@ -1784,9 +1798,7 @@ do { $BlockNorthKoreaIP = $(write-host "Block the entire range of IPv4 and IPv6 
 
 
 # how to query the number of IPs in each rule
-# https://learn.microsoft.com/en-us/powershell/module/netsecurity/new-netfirewallrule?view=windowsserver2022-ps#-remoteaddress
 # (Get-NetFirewallRule -DisplayName "Russia IP range blocking" | Get-NetFirewallAddressFilter).RemoteAddress.count
-
 
 
 

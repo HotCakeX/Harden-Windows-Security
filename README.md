@@ -141,7 +141,7 @@ This script sets up and configures Bitlocker, [using official documentation](htt
 
 BitLocker software will bring you a real security against the theft of your computer if you strictly abide by the following basic rule:
  As soon as you have finished working, completly shut Windows down and allow for every shadow of information to disappear
-(from RAM, disk caches) within 2 minutes. **this practice is recommended in high-risk environments.**
+(from RAM, disk caches) within 2 minutes. **🔺this practice is recommended in high-risk environments.🔻**
 
 Refer to this [official documentation about the countermeasures of Bitlocker](https://learn.microsoft.com/en-us/windows/security/information-protection/bitlocker/bitlocker-countermeasures)
 
@@ -202,7 +202,7 @@ you can completely skip this category when running the script and choose N (for 
   - Virtual Machine Platform; required for Android subsystem or WSA (Windows subsystem for Android). if it's disabled, it will be automatically enabled either way when you try to install WSA from Store app
 
 ## Windows Networking
-These are configurations that are typically recommended in high-risk environments but also can be applied for home users.
+These are configurations that are typically 🔺recommended in high-risk environments🔻 but also can be applied for home users.
 such as:
 - [Disabling NetBIOS over TCP/IP](https://learn.microsoft.com/en-us/windows-hardware/customize/desktop/unattend/microsoft-windows-netbt-interfaces-interface-netbiosoptions) on all network interfaces
 - Disabling the LLMNR protocol
@@ -227,7 +227,7 @@ ELAM drivers must be specially signed by Microsoft to ensure they are started by
 other commands included in this category:
 - Disabling location service system-wide. websites and apps won't be able to use your precise location, however they will still be able to detect your location using your IP address.
 - Enabling Mandatory ASLR, [more info here](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/enable-exploit-protection?view=o365-worldwide). it might cause problem for some unofficial 3rd party portable programs, such as Photoshop portable, Telegram portable etc. the command and ways to add exception for such programs are provided in the script file.
-- Enable Hibernate and Disable Sleep, this feature is only recommended for very high-risk environments.
+- Enable Hibernate and Disable Sleep, this feature is only 🔺recommended for high-risk environments.🔻
 This is to prevent an **Attacker with skill and lengthy physical access to your computer**
 
   - Attack Scenario: Targeted attack with plenty of time; this attacker will open the case, will solder, and will use   sophisticated hardware or software. Of course [Bitlocker and configurations](https://learn.microsoft.com/en-us/windows/security/information-protection/bitlocker/bitlocker-countermeasures#attacker-with-skill-and-lengthy-physical-access) made by this script will protect you against that.

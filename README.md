@@ -189,17 +189,17 @@ you can completely skip this category when running the script and choose N (for 
 
 ## Optional Windows Features
 
-This script disables some rarely used features in Windows optional features, those are as follows:
-- PowerShell v2; because it's old and doesn't support [AMSI](https://devblogs.microsoft.com/powershell/powershell-the-blue-team/#antimalware-scan-interface-integration)
-- Work Folders client; not used when your computer is not part of a domain or enterprise network
-- Internet Printing Client; used in combination with IIS web server, [old feature](https://learn.microsoft.com/en-us/troubleshoot/windows-server/printing/manage-connect-printers-use-web-browser), can be disabled without causing problems further down the road
-- Windows Media Player (legacy); isn't needed anymore, Windows 11 has modern media player app.
+- This script disables some rarely used features in [Windows optional features](https://learn.microsoft.com/en-us/windows/application-management/add-apps-and-features#use-windows-powershell-to-disable-specific-features):
+  - PowerShell v2; because it's old and doesn't support [AMSI](https://devblogs.microsoft.com/powershell/powershell-the-blue-team/#antimalware-scan-interface-integration)
+  - Work Folders client; not used when your computer is not part of a domain or enterprise network
+  - Internet Printing Client; used in combination with IIS web server, [old feature](https://learn.microsoft.com/en-us/troubleshoot/windows-server/printing/manage-connect-printers-use-web-browser), can be disabled without causing problems further down the road
+  - Windows Media Player (legacy); isn't needed anymore, Windows 11 has modern media player app.
 
-Also enables these useful optional features:
-- Windows Defender Application Guard; which is a safe environment to open untrusted websites
-- Windows Sandbox; install, test and use programs in a disposable virtual operation system, completely separate from your main OS
-- Hyper-V; the best and a hybrid hypervisor (Type 1 and Type 2) to run virtual machines on
-- Virtual Machine Platform; required for Android subsystem or WSA (Windows subsystem for Android). if it's disabled, it will be automatically enabled either way when you try to install WSA from Store app
+- Also enables these optional features:
+  - Windows Defender Application Guard; which is a safe environment to open untrusted websites
+  - Windows Sandbox; install, test and use programs in a disposable virtual operation system, completely separate from your  main OS
+  - Hyper-V; the best and a hybrid hypervisor (Type 1 and Type 2) to run virtual machines on
+  - Virtual Machine Platform; required for Android subsystem or WSA (Windows subsystem for Android). if it's disabled, it will be automatically enabled either way when you try to install WSA from Store app
 
 ## Windows Networking
 These are configurations that are typically recommended in high-risk environments but also can be applied for home users.

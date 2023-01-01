@@ -230,9 +230,15 @@ other commands included in this category:
 - Enable Hibernate and Disable Sleep, this feature is only recommended for very high-risk environments.
 This is to prevent an **Attacker with skill and lengthy physical access to your computer**
 
-Attack Scenario: Targeted attack with plenty of time; this attacker will open the case, will solder, and will use sophisticated hardware or software.
-Of course [Bitlocker and configurations](https://learn.microsoft.com/en-us/windows/security/information-protection/bitlocker/bitlocker-countermeasures#attacker-with-skill-and-lengthy-physical-access) made by this script will protect you against that.
+  - Attack Scenario: Targeted attack with plenty of time; this attacker will open the case, will solder, and will use   sophisticated hardware or software. Of course [Bitlocker and configurations](https://learn.microsoft.com/en-us/windows/security/information-protection/bitlocker/bitlocker-countermeasures#attacker-with-skill-and-lengthy-physical-access) made by this script will protect you against that.
 - Enable Windows update and Edge browser to download and install updates on any network, metered or not; because the updates are important and should not be suppressed, that's what bad actors would want.
+- Enable ECH for Edge browser. using ECH (Encrypted Client Hello) is recommended in [Security baseline for Microsoft Edge version 108](https://techcommunity.microsoft.com/t5/microsoft-security-baselines/security-baseline-for-microsoft-edge-version-108/ba-p/3691250). although, officially [Microsoft recommends](https://learn.microsoft.com/en-us/deployedge/microsoft-edge-policies#encryptedclienthelloenabled) enabling it via Group Policy, the method used in this script simply adds `--enable-features=EncryptedClientHello` to the target of Edge shortcuts in desktop, taskbar and start menu, even when Edge browser is launched by clicking on a link in an app like Mail app, it will still use ECH.
+You can test if your browser is using Encrypted Client Hello by visiting [this website](https://defo.ie/ech-check.php).
+
+  - [Read more about TLS's Encrypted Client Hello in this most recent Cloudflare's blog post](https://blog.cloudflare.com/handshake-encryption-endgame-an-ech-update/).
+
+  - Note that support for Encrypted Client Hello needs to be added by each website's owner.
+
 ## Certificate Checking Commands
 In this category, the script runs [sigcheck64.exe](https://learn.microsoft.com/en-us/sysinternals/downloads/sigcheck) live from [Sysinternals ](https://learn.microsoft.com/en-us/sysinternals/), then lists valid certificates not rooted to the Microsoft Certificate Trust List in the User and Machine stores. unless you use Windows insider build, all the certificates that will be listed should be treated as dangerous and removed from your system immediately. however, if you are a Windows Insider user, like me, there will be certificates listed that belong to Microsoft and pre-public build of Windows that you use, so they are OK and should not be removed. some of those safe Windows-Insider-build related certificates that should be left alone are:
 * Microsoft ECC Development Root Certificate Authority 2018

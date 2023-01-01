@@ -224,7 +224,7 @@ By being launched first by the kernel, ELAM is ensured to be launched before any
 
 ELAM drivers must be specially signed by Microsoft to ensure they are started by the Windows kernel early in the boot process. To get the signature, ELAM drivers must pass a set of certification tests to verify performance and other behavior
 
-other commands included in this category include:
+other commands included in this category:
 - Disabling location service system-wide. websites and apps won't be able to use your precise location, however they will still be able to detect your location using your IP address.
 - Enabling Mandatory ASLR, [more info here](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/enable-exploit-protection?view=o365-worldwide). it might cause problem for some unofficial 3rd party portable programs, such as Photoshop portable, Telegram portable etc. the command and ways to add exception for such programs are provided in the script file.
 - Enable Hibernate and Disable Sleep, this feature is only recommended for very high-risk environments.

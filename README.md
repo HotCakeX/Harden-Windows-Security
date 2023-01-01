@@ -235,7 +235,7 @@ This is to prevent an **Attacker with skill and lengthy physical access to your 
 - Enable ECH for Edge browser. using ECH (Encrypted Client Hello) is recommended in [Security baseline for Microsoft Edge version 108](https://techcommunity.microsoft.com/t5/microsoft-security-baselines/security-baseline-for-microsoft-edge-version-108/ba-p/3691250). although, officially [Microsoft recommends](https://learn.microsoft.com/en-us/deployedge/microsoft-edge-policies#encryptedclienthelloenabled) enabling it via Group Policy, the method used in this script simply adds `--enable-features=EncryptedClientHello` to the target of Edge shortcuts in desktop, taskbar and start menu, even when Edge browser is launched by clicking on a link in an app like Mail app, it will still use ECH.
 You can test if your browser is using Encrypted Client Hello by visiting [this website](https://defo.ie/ech-check.php).
 
-  - [Read more about TLS's Encrypted Client Hello in this most recent Cloudflare's blog post](https://blog.cloudflare.com/handshake-encryption-endgame-an-ech-update/).
+  - [Read more about TLS's Encrypted Client Hello in this most recent Cloudflare's blog post about it](https://blog.cloudflare.com/handshake-encryption-endgame-an-ech-update/).
 
   - Note that support for Encrypted Client Hello needs to be added by each website's owner.
 

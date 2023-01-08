@@ -256,7 +256,7 @@ as mentioned earlier, this script sets it to 8, so only drivers verified by Micr
 
 [some background](https://learn.microsoft.com/en-us/windows/compatibility/early-launch-antimalware):
 
-By being launched first by the kernel, ELAM is ensured to be launched before any third-party software, and is therefore able to detect malware in the boot process and prevent it from initializing.
+By being launched first by the kernel, ELAM is ensured to be launched before any third-party software and is therefore able to detect malware in the boot process and prevent it from initializing.
 
 ELAM drivers must be specially signed by Microsoft to ensure they are started by the Windows kernel early in the boot process. To get the signature, ELAM drivers must pass a set of certification tests to verify performance and other behavior
 

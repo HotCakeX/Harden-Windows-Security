@@ -339,7 +339,8 @@ In order to run commands in this category, you don't need administrator privileg
 <a href="https://github.com/HotCakeX/Harden-Windows-Security/discussions">
 🎯 if you have any questions, requests, suggestions etc. about this script, please open a new discussion on Github
 </a>
-
+<br>
+<br>
 <br />
 
 <p align="right"><a href="#readme-top">💡(back to top)</a></p>

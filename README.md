@@ -110,7 +110,7 @@ remove-Item .\Harden-Windows-Security.ps1
 
 ## Features:
 
-- Always up-to-date and works with latest build of Windows (Currently Windows 11 - compatible and fully tested a Lot on stable and Insider Dev builds)
+- Always up-to-date and works with latest build of Windows (Currently Windows 11 - compatible and rigorously tested on stable and Insider Dev builds)
 - Doesn't break anything
 - Doesn't remove or disable Windows functionalities against Microsoft's recommendation
 - Above each command there are comments that explain what it does, why it's there, provide extra important information about it and links to additional resources for better understanding
@@ -123,11 +123,11 @@ remove-Item .\Harden-Windows-Security.ps1
 
 
 ## Windows Security aka Defender
-Enables additional security features of Windows Security (Defender) to further secure the OS.
+- Enables additional security features of Windows Security (Defender) to further secure the OS.
 You can refer to [this official document](https://docs.microsoft.com/en-us/powershell/module/defender/set-mppreference?view=windowsserver2022-ps) for full details.
 
-This script makes sure [Cloud Security Scan](https://support.microsoft.com/en-us/topic/what-is-a-cloud-security-scan-75112696-7660-4450-9194-d717f72a8ad8) and [Block At First Sight](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/configure-block-at-first-sight-microsoft-defender-antivirus?view=o365-worldwide#turn-on-block-at-first-sight-with-group-policy) are enabled to the highest possible security states available.
-you need to be aware that this means actions like downloading and opening an unknown file WILL make Windows Security send samples of it to the Cloud for more advanced analysis and it can take a maximum of 60 seconds (this script sets it to max) from the time you try to open that unknown file to the time when it will be opened (if deemed safe). all of these security measure are in place by default in Windows and happen automatically without the need to run this script, but this script maxes them out at the cost of a little bit of inconvenience.
+- This script makes sure [Cloud Security Scan](https://support.microsoft.com/en-us/topic/what-is-a-cloud-security-scan-75112696-7660-4450-9194-d717f72a8ad8) and [Block At First Sight](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/configure-block-at-first-sight-microsoft-defender-antivirus?view=o365-worldwide#turn-on-block-at-first-sight-with-group-policy) are enabled to the highest possible security states available.
+you need to be aware that this means actions like downloading and opening an unknown file WILL make Windows Security send samples of it to the Cloud for more advanced analysis and it can take a maximum of 60 seconds (this script sets it to max) from the time you try to open that unknown file to the time when it will be opened (if deemed safe). all of these security measure are in place by default in Windows and happen automatically without the need to run this script, but this script maxes them out at the cost of 🔻a little bit of inconvenience.🔺
 
 Here is an example of the notification you will see in Windows 11 if that happens.
 
@@ -138,6 +138,7 @@ Here is an example of the notification you will see in Windows 11 if that happen
  
 </h1>
 
+- Enables file hash computation; [designed](https://learn.microsoft.com/en-us/powershell/module/defender/set-mppreference?view=windowsserver2022-ps#-enablefilehashcomputation) to allow admins to force the anti-malware solution to "compute file hashes for every executable file that is scanned if it wasn't previously computed" to "improve blocking for custom indicators in Microsoft Defender Advanced Threat Protection (Microsoft Defender ATP)
 
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 

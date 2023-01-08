@@ -160,7 +160,7 @@ You can find more info [here](https://learn.microsoft.com/en-us/microsoft-365/se
 This script sets up and configures Bitlocker, [using official documentation](https://learn.microsoft.com/en-us/windows/security/information-protection/bitlocker/bitlocker-group-policy-settings), with the most secure configuration and Military Grade encryption algorithm, XTS-AES-256, TPM 2.0 and start-up PIN.
 
 BitLocker software will bring you a real security against the theft of your computer if you strictly abide by the following basic rule:
- As soon as you have finished working, completly shut Windows down and allow for every shadow of information to disappear
+ As soon as you have finished working, completely shut Windows down and allow for every shadow of information to disappear
 (from RAM, disk caches) within 2 minutes. **🔺this practice is recommended in high-risk environments.🔻**
 
 Refer to this [official documentation about the countermeasures of Bitlocker](https://learn.microsoft.com/en-us/windows/security/information-protection/bitlocker/bitlocker-countermeasures)
@@ -318,7 +318,7 @@ In order to run commands in this category, you don't need administrator privileg
 
 <p align="right"><a href="#readme-top">💡(back to top)</a></p>
 
-## Security Reccomendations
+## Security Recommendations
 
 * Use the latest version of the PowerShell, easiest and fastest way to install it is using <a href="https://www.microsoft.com/store/productId/9MZ1SNWT0N5D">Microsoft Store</a> but also available on <a href="https://github.com/PowerShell/PowerShell/releases">Github</a>.
 * When you decide to install a program or app in Windows, first use the Microsoft Store and <a href="https://github.com/microsoft/winget-cli">Winget</a>, somebody created a nice web interface for interacting with Winget CLI <a href="https://winstall.app/">here</a>. if the program or app you are looking for isn't available in there, then download it from its official website.

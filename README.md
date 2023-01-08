@@ -138,7 +138,7 @@ Here is an example of the notification you will see in Windows 11 if that happen
  
 </h1>
 
-- Enables file hash computation; [designed](https://learn.microsoft.com/en-us/powershell/module/defender/set-mppreference?view=windowsserver2022-ps#-enablefilehashcomputation) to allow admins to force the anti-malware solution to "compute file hashes for every executable file that is scanned if it wasn't previously computed" to "improve blocking for custom indicators in Microsoft Defender Advanced Threat Protection (Microsoft Defender ATP)
+- Enables file hash computation; [designed](https://learn.microsoft.com/en-us/powershell/module/defender/set-mppreference?view=windowsserver2022-ps#-enablefilehashcomputation) to allow admins to force the anti-malware solution to "compute file hashes for every executable file that is scanned if it wasn't previously computed" to "improve blocking for custom indicators in Microsoft Defender Advanced Threat Protection (Microsoft Defender ATP).
 
 - Clears Quarantined items after 5 days instead of the default behavior of keeping them indefinitely.
 
@@ -146,8 +146,13 @@ Here is an example of the notification you will see in Windows 11 if that happen
 
 - Allows Windows Defender to download security updates even on a metered connection.
 
-- Forces Windows Defender to scan network drives, restore points, Emails and removable drives during a full scan, so it will take a while to finish a full scan if you have lots of those Items.
+- Enables Windows Defender to scan network drives, restore points, Emails and removable drives during a full scan, so it will take a while to finish a full scan if you have lots of those Items.
 
+- Sets the Signature Update Interval to every 3 hours instead of automatically.
+
+- Forces Windows Defender to check for new virus and spyware definitions before it runs a scan.
+
+- Makes Windows Defender run [catch-up scans](https://learn.microsoft.com/en-us/powershell/module/defender/set-mppreference?view=windowsserver2022-ps#-disablecatchupquickscan) for scheduled quick scans. A computer can miss a scheduled scan, usually because the computer is off at the scheduled time, but now after the computer misses two scheduled quick scans, Windows Defender runs a catch-up scan the next time someone logs onto the computer.
 
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 

@@ -210,7 +210,7 @@ additionally, [blocks LOLbins (Living Off The Land Binaries)](https://lolbas-pro
 🔻This is a Defense-in-Depth strategy for High-risk environments🔺
 
 LOLBins are Microsoft-signed files, meaning they are either native to the Operating System (OS) and come pre-installed,
-or are available from Microsoft (i.e. a Microsoft program or add-on).
+or are available from Microsoft (i.e., a Microsoft program or add-on).
 Despite being legitimate (and well-intentioned) files,
 these binaries can be exploited by an attacker and used in an attack.
 

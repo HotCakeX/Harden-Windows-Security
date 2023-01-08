@@ -53,6 +53,7 @@
 
 ## Hardening Categories
 
+<a name="menu-back-to-top"></a>
 From Top to bottom in order:
 
 * Commands that require Administrator Privileges (click on each of these to see in-depth info)

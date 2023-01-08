@@ -118,6 +118,7 @@ remove-Item .\Harden-Windows-Security.ps1
 - The script can be run infinite number of times, it's made in a way that it won't make any duplicate changes at all.
 
 
+<p align="right"><a href="#readme-top">💡(back to top)</a></p>
 
 <h1> <br> </h1>
 

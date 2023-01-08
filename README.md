@@ -185,7 +185,7 @@ This part includes commands like Automatically locking computer after X seconds,
 there are also other commands in the script, of course each of them has comments above them that provide explanation,
 one of them is "Require CTRL+ALT+DEL on the lock screen", the reason and logic behind it is:
 
-A malicious user might install malware that looks like the standard sign-in dialog box for the Windows operating system and capture a user's password. The attacker can then sign in to the compromised account with whatever level of user rights that user has.
+A malicious user might install malware that looks like the standard sign-in dialog box for the Windows operating system and capture a user's password. The attacker can then sign into the compromised account with whatever level of user rights that user has.
 
 [More info here](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/interactive-logon-do-not-require-ctrl-alt-del#reference)
 

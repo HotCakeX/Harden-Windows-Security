@@ -145,7 +145,7 @@ Such software behaviors are sometimes seen in legitimate applications. However, 
 
 You can find more info [here](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/attack-surface-reduction?view=o365-worldwide) and [ASR Reference](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/attack-surface-reduction-rules-reference?view=o365-worldwide)
 
-<p align="right"><a href="#menu-back-to-top">💡back to categories</a></p>
+<p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
 ## Bitlocker Settings 
 This script sets up and configures Bitlocker, [using official documentation](https://learn.microsoft.com/en-us/windows/security/information-protection/bitlocker/bitlocker-group-policy-settings), with the most secure configuration and Military Grade encryption algorithm, XTS-AES-256, TPM 2.0 and start-up PIN.

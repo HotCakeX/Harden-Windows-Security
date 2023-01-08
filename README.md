@@ -35,7 +35,7 @@
   <a href="#features">Features</a> •
   <a href="#related">Related</a> •
   <a href="#support">Support</a> •
-  <a href="#security-reccomendations">Security Reccomendations</a> •
+  <a href="#security-recommendations">Security Recommendations</a> •
   <a href="#resources">Resources</a> •
   <a href="#license">License</a>
 

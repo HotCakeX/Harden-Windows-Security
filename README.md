@@ -262,7 +262,7 @@ ELAM drivers must be specially signed by Microsoft to ensure they are started by
 
 other commands included in this category:
 - Disabling location service system wide. websites and apps won't be able to use your precise location, however they will still be able to detect your location using your IP address.
-- Enabling Mandatory ASLR, [more info here](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/enable-exploit-protection?view=o365-worldwide). It might cause a problem for some unofficial 3rd party portable programs, such as Photoshop portable, Telegram portable etc. the command and ways to add exception for such programs are provided in the script file.
+- Enabling Mandatory ASLR, [more info here](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/enable-exploit-protection?view=o365-worldwide). It might cause a problem for some unofficial 3rd party portable programs, such as Photoshop portable, Telegram portable etc. The command and ways to add exceptions for such programs are provided in the script file.
 - Enable Hibernate and Disable Sleep, this feature is only 🔺recommended for high-risk environments.🔻
 This is to prevent an **Attacker with skill and lengthy physical access to your computer**
 

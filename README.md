@@ -176,7 +176,7 @@ You can find more info [here](https://learn.microsoft.com/en-us/microsoft-365/se
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
 ## Bitlocker Settings 
-This script sets up and configures Bitlocker, [using official documentation](https://learn.microsoft.com/en-us/windows/security/information-protection/bitlocker/bitlocker-group-policy-settings), with the most secure configuration and Military Grade encryption algorithm, XTS-AES-256, TPM 2.0 and start-up PIN.
+This script sets up and configures Bitlocker, [using official documentation](https://learn.microsoft.com/en-us/windows/security/information-protection/bitlocker/bitlocker-group-policy-settings), with the most secure configuration and Military Grade encryption algorithm, XTS-AES-256, TPM 2.0 and start-up PIN. So it performs pre-boot checks to verify the OS hasn't been corrupted/tampered with malware. Third party encryption software and tools should Not be used because they break this secure chain of trust which, flows from the UEFI firmware to Windows bootloader and then to BitLocker. it is critical for this chain of trust to exist in order to prevent an entire range of attacks against Windows systems and to stop real-life attacks.
 
 BitLocker software will bring you a real security against the theft of your computer if you strictly abide by the following basic rule:
  As soon as you have finished working, completely shut Windows down and allow for every shadow of information to disappear
@@ -184,7 +184,7 @@ BitLocker software will bring you a real security against the theft of your comp
 
 Refer to this [official documentation about the countermeasures of Bitlocker](https://learn.microsoft.com/en-us/windows/security/information-protection/bitlocker/bitlocker-countermeasures)
 
-Bitlocker uses SecureBoot and TPM 2.0 among other advanced features, performs pre-boot checks to verify the OS hasn't been corrupted/tampered with a bootkit. Third party encryption software and tools should Not be used because they break this secure chain of trust which, flows from the firmware (UEFI) to Windows bootloader and then to BitLocker. it is critical for this chain of trust to exist in order to prevent an entire category of attack against Windows systems. This is not theoretical, this stops real-life attacks.
+
 
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 

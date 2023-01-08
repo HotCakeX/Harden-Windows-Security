@@ -214,6 +214,12 @@ A malicious user might install malware that looks like the standard sign-in dial
 
 Here is [the official reference](https://learn.microsoft.com/en-us/windows/security/identity-protection/user-account-control/user-account-control-group-policy-and-registry-key-settings#registry-key-settings) for the commands used in this section of the script, User Account Control Group Policy and registry key settings.
 
+- Makes all prompts for elevation to use [secure desktop](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/user-account-control-switch-to-the-secure-desktop-when-prompting-for-elevation#reference) which presents the sign-in UI and restricts functionality and access to the system until the sign-in requirements are satisfied. The secure desktop’s primary difference from the user desktop is that only trusted processes running as SYSTEM are allowed to run here (that is, nothing is running at the user’s privilege level). The path to get to the secure desktop from the user desktop must also be trusted through the entire chain.
+
+- Introduces (but Not enables, because [it can cause inconvenience](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/user-account-control-only-elevate-executables-that-are-signed-and-validated#potential-impact)) a feature that Enforces cryptographic signatures on any interactive application that requests elevation of privilege. it can prevent certain programs from running, e.g. it prevents Cheat Engine from prompting for UAC. 🔻#TopSecurity🔺
+
+
+
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
 ## Device Guard

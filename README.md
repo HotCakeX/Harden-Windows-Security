@@ -140,6 +140,15 @@ Here is an example of the notification you will see in Windows 11 if that happen
 
 - Enables file hash computation; [designed](https://learn.microsoft.com/en-us/powershell/module/defender/set-mppreference?view=windowsserver2022-ps#-enablefilehashcomputation) to allow admins to force the anti-malware solution to "compute file hashes for every executable file that is scanned if it wasn't previously computed" to "improve blocking for custom indicators in Microsoft Defender Advanced Threat Protection (Microsoft Defender ATP)
 
+- Clears Quarantined items after 5 days instead of the default behavior of keeping them indefinitely.
+
+- Lets Windows Defender use up to 70% of the CPU instead of the default 50%, during scans.
+
+- Allows Windows Defender to download security updates even on a metered connection.
+
+- Forces Windows Defender to scan network drives, restore points, Emails and removable drives during a full scan, so it will take a while to finish a full scan if you have lots of those Items.
+
+
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
 ## Attack surface reduction rules

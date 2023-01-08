@@ -226,7 +226,7 @@ Just like any other hardening category, you can skip this one when running the s
   - PowerShell v2; because it's old and doesn't support [AMSI](https://devblogs.microsoft.com/powershell/powershell-the-blue-team/#antimalware-scan-interface-integration)
   - Work Folders client; not used when your computer is not part of a domain or enterprise network
   - Internet Printing Client; used in combination with IIS web server, [old feature](https://learn.microsoft.com/en-us/troubleshoot/windows-server/printing/manage-connect-printers-use-web-browser), can be disabled without causing problems further down the road
-  - Windows Media Player (legacy); isn't needed anymore, Windows 11 has modern media player app.
+  - Windows Media Player (legacy); isn't needed anymore, Windows 11 has a modern media player app.
 
 - Also enables these optional features:
   - Windows Defender Application Guard; which is a safe environment to open untrusted websites

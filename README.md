@@ -198,6 +198,8 @@ This category makes sure Windows Firewall is enabled for all profiles (which is 
 
 additionally, [blocks LOLbins (Living Off The Land Binaries)](https://lolbas-project.github.io/) from making Internet connections.
 
+🔻This is a Defense-in-Depth strategy for High-risk environments🔺
+
 LOLBins are Microsoft-signed files, meaning they are either native to the Operating System (OS) and come pre-installed,
 or are available from Microsoft (i.e. a Microsoft program or add-on).
 Despite being legitimate (and well-intentioned) files,
@@ -205,7 +207,7 @@ these binaries can be exploited by an attacker and used in an attack.
 
 This script uses built-in Firewall cmdlet to block those binaries in Windows Firewall.
 
-you can completely skip this category when running the script and choose N (for No) when prompted for input for this category, in PowerShell console.
+Just like any other hardening category, you can skip this one when running the script and choose N (for No) when prompted for input in PowerShell console.
 
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 

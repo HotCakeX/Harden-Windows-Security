@@ -248,7 +248,7 @@ such as:
 
 ## Miscellaneous Configurations
 Sets Early launch antimalware engine's status to 8 which is Good only.
-the default value is 3, which allows good, unknown and 'bad but critical'.
+The default value is 3, which allows good, unknown and 'bad but critical'.
 that is the default value, because setting it to 8 can prevent your computer from booting if
 the driver it relies on is critical but at the same time unknown or bad.
 

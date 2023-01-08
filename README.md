@@ -75,7 +75,7 @@ From Top to bottom in order:
 * Commands that don't require Administrator Privileges
   - <a href="#Non-Admin-Commands">Non-Admin Commands that only affect the current user and do not make machine-wide changes</a>
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+<p align="right"><a href="#readme-top">💡(back to top)</a></p>
 
 ## How To Use
 
@@ -106,7 +106,7 @@ remove-Item .\Harden-Windows-Security.ps1
 > **Note**
 > Things with **#TopSecurity** tag can break functionalities or cause difficulties so this script does NOT enable them by default. press Control + F and search for #TopSecurity in the script to find those commands and how to enable them if you want. 
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+<p align="right"><a href="#readme-top">💡(back to top)</a></p>
 
 ## Features:
 
@@ -130,7 +130,7 @@ You can refer to [this official documentation](https://docs.microsoft.com/en-us/
 
 [Block At First Sight](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/configure-block-at-first-sight-microsoft-defender-antivirus?view=o365-worldwide#turn-on-block-at-first-sight-with-group-policy)
 
-<p align="right">(<a href="#menu-back-to-top">back to categories</a>)</p>
+<p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
 ## Attack surface reduction rules
 Reducing your attack surface means protecting your devices and network, which leaves attackers with fewer ways to perform attacks. Configuring attack surface reduction rules in Windows can help!
@@ -158,7 +158,7 @@ Refer to this [official documentation about the countermeasures of Bitlocker](ht
 
 Bitlocker uses SecureBoot and TPM 2.0 among other advanced features, performs pre-boot checks to verify the OS hasn't been corrupted/tampered with a bootkit. Third party encryption software and tools should Not be used because they break this secure chain of trust which, flows from the firmware (UEFI) to Windows bootloader and then to BitLocker. it is critical for this chain of trust to exist in order to prevent an entire category of attack against Windows systems. This is not theoretical, this stops real-life attacks.
 
-<p align="right">(<a href="#menu-back-to-top">back to categories</a>)</p>
+<p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
 ## TLS Security
 Refer to [this documentation](https://learn.microsoft.com/en-us/windows/win32/secauthn/protocols-in-tls-ssl--schannel-ssp-) for more info about TLS and Schannel in Windows. this script disables TLS 1 and TLS 1.1 security protocols that only exist for backward compatibility. all modern software should and do use TLS 1.2 and TLS 1.3.
@@ -168,7 +168,7 @@ Changes made by the script only affect things that use schannel: that includes E
 if you want to read more: [Demystifying Schannel](https://techcommunity.microsoft.com/t5/core-infrastructure-and-security/demystifying-schannel/ba-p/259233)
 
 
-<p align="right">(<a href="#menu-back-to-top">back to categories</a>)</p>
+<p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
 ## Lock Screen
 This part includes commands like Automatically locking computer after X seconds, which is set to 120 seconds (2 minutes) in this script, you can change that to any value you like.
@@ -180,18 +180,18 @@ A malicious user might install malware that looks like the standard sign-in dial
 
 [More info here](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/interactive-logon-do-not-require-ctrl-alt-del#reference)
 
-<p align="right">(<a href="#menu-back-to-top">back to categories</a>)</p>
+<p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
 ## User Account Control
 
 Here is [the official reference](https://learn.microsoft.com/en-us/windows/security/identity-protection/user-account-control/user-account-control-group-policy-and-registry-key-settings#registry-key-settings) for the commands used in this section of the script, User Account Control Group Policy and registry key settings.
 
-<p align="right">(<a href="#menu-back-to-top">back to categories</a>)</p>
+<p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
 ## Device Guard
 Since Device Guard and Virtualization-Based Security features are by default enabled automatically on capable and modern hardware, this script only double-checks their status and if needed, fully enables them to the highest level. you can find all the information on that [in this official documentation](https://learn.microsoft.com/en-us/windows/security/threat-protection/device-guard/enable-virtualization-based-protection-of-code-integrity). one of the notable commands used in this category is ensuring that UEFI lock is enabled for VBS features.
 
-<p align="right">(<a href="#menu-back-to-top">back to categories</a>)</p>
+<p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
 ## Windows Firewall
 This category makes sure Windows Firewall is enabled for all profiles (which is the default)
@@ -207,7 +207,7 @@ This script uses built-in Firewall cmdlet to block those binaries in Windows Fir
 
 you can completely skip this category when running the script and choose N (for No) when prompted for input for this category, in PowerShell console.
 
-<p align="right">(<a href="#menu-back-to-top">back to categories</a>)</p>
+<p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
 ## Optional Windows Features
 
@@ -223,7 +223,7 @@ you can completely skip this category when running the script and choose N (for 
   - Hyper-V; the best and a hybrid hypervisor (Type 1 and Type 2) to run virtual machines on
   - Virtual Machine Platform; required for Android subsystem or WSA (Windows subsystem for Android). if it's disabled, it will be automatically enabled either way when you try to install WSA from Store app
 
-<p align="right">(<a href="#menu-back-to-top">back to categories</a>)</p>
+<p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
 ## Windows Networking
 These are configurations that are typically 🔺recommended in high-risk environments🔻 but also can be applied for home users.
@@ -233,7 +233,7 @@ such as:
 - Disabling [LMHOSTS lookup protocol](https://www.crowe.com/cybersecurity-watch/netbios-llmnr-giving-away-credentials) on all network adapters
 - and more, comments as always provided above each command in the script.
 
-<p align="right">(<a href="#menu-back-to-top">back to categories</a>)</p>
+<p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
 ## Miscellaneous Configurations
 Sets Early launch antimalware engine's status to 8 which is Good only.
@@ -264,19 +264,19 @@ You can test if your browser is using Encrypted Client Hello by visiting [this w
 
   - Note that support for Encrypted Client Hello needs to be added by each website's owner.
 
-<p align="right">(<a href="#menu-back-to-top">back to categories</a>)</p>
+<p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
 ## Certificate Checking Commands
 In this category, the script runs [sigcheck64.exe](https://learn.microsoft.com/en-us/sysinternals/downloads/sigcheck) live from [Sysinternals ](https://learn.microsoft.com/en-us/sysinternals/), then lists valid certificates not rooted to the Microsoft Certificate Trust List in the User and Machine stores. unless you use Windows insider build, all the certificates that will be listed should be treated as dangerous and removed from your system immediately. however, if you are a Windows Insider user, like me, there will be certificates listed that belong to Microsoft and pre-public build of Windows that you use, so they are OK and should not be removed. some of those safe Windows-Insider-build related certificates that should be left alone are:
 * Microsoft ECC Development Root Certificate Authority 2018
 * Microsoft Development Root Certificate Authority 2014
 
-<p align="right">(<a href="#menu-back-to-top">back to categories</a>)</p>
+<p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
 ## Country IP Blocking
 The script fetches the newest range of [IPv4](https://www.ipdeny.com/ipblocks/) and [IPv6](https://www.ipdeny.com/ipv6/ipaddresses/blocks/) addresses for terrorist and terrorist supporting countries such as Russia, Iran, China and North Korea, then creates 2 rules (inbound and outbound) for each country in Windows firewall, completely blocking connections to and from those countries.
 
-<p align="right">(<a href="#menu-back-to-top">back to categories</a>)</p>
+<p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
 ## Non-Admin Commands
 
@@ -290,7 +290,7 @@ In order to run commands in this category, you don't need administrator privileg
 
 <h1> <br> </h1>
 
-<p align="right">(<a href="#menu-back-to-top">back to categories</a>)</p>
+<p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
 ## Related
 
@@ -305,7 +305,7 @@ In order to run commands in this category, you don't need administrator privileg
 
 <br />
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+<p align="right"><a href="#readme-top">💡(back to top)</a></p>
 
 ## Security Reccomendations
 
@@ -316,7 +316,7 @@ In order to run commands in this category, you don't need administrator privileg
 * Always enable 2FA (Two Factor Authentication) on websites, apps and services that you use. preferably, use Microsoft Authenticator app which has backup and restore feature so you never lose access to your TOTPs (Time-Based One-Time Passwords) even if you lose your phone. available for <a href="https://play.google.com/store/apps/details?id=com.azure.authenticator&gl=US">Android</a> and <a href="https://apps.apple.com/us/app/microsoft-authenticator/id983156458">IOS</a>. you can also use Microsoft Authenticator on Windows 11 (PC, Laptop or Tablet) using <a href="https://apps.microsoft.com/store/detail/windows-subsystem-for-android%E2%84%A2-with-amazon-appstore/9P3395VX91NR?hl=en-us&gl=us">Windows Subsystem for Android (WSA)</a> and access your authenticator codes without the need to use your phone (again thanks to the secure automatic backup/restore feature). use an open-source and trusted Android store such as <a href="https://auroraoss.com/">Aurora Store</a> to <a href="https://github.com/whyorean/AuroraStore">install</a> and keep it up-to-date.
 * More Security Recommendations coming soon...
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+<p align="right"><a href="#readme-top">💡(back to top)</a></p>
 
 ## Resources
 
@@ -327,7 +327,7 @@ In order to run commands in this category, you don't need administrator privileg
 - [Microsoft Tech Community](https://techcommunity.microsoft.com/) - Official blogs and documentations
 - [Microsoft Security baselines](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-security-configuration-framework/windows-security-baselines) - Security baselines from Microsoft
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+<p align="right"><a href="#readme-top">💡(back to top)</a></p>
 
 ## License
 

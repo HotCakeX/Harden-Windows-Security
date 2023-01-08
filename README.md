@@ -1,3 +1,4 @@
+<a name="readme-top"></a>
 
 <h1 align="center">
   <br>
@@ -73,7 +74,7 @@ From Top to bottom in order:
 * Commands that don't require Administrator Privileges
   - <a href="#Non-Admin-Commands">Non-Admin Commands that only affect the current user and do not make machine-wide changes</a>
 
-
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## How To Use
 
@@ -104,6 +105,7 @@ remove-Item .\Harden-Windows-Security.ps1
 > **Note**
 > Things with **#TopSecurity** tag can break functionalities or cause difficulties so this script does NOT enable them by default. press Control + F and search for #TopSecurity in the script to find those commands and how to enable them if you want. 
 
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## Features:
 
@@ -266,6 +268,7 @@ In order to run commands in this category, you don't need administrator privileg
 
 <h1> <br> </h1>
 
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## Related
 
@@ -280,6 +283,7 @@ In order to run commands in this category, you don't need administrator privileg
 
 <br />
 
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## Security Reccomendations
 
@@ -290,6 +294,7 @@ In order to run commands in this category, you don't need administrator privileg
 * Always enable 2FA (Two Factor Authentication) on websites, apps and services that you use. preferably, use Microsoft Authenticator app which has backup and restore feature so you never lose access to your TOTPs (Time-Based One-Time Passwords) even if you lose your phone. available for <a href="https://play.google.com/store/apps/details?id=com.azure.authenticator&gl=US">Android</a> and <a href="https://apps.apple.com/us/app/microsoft-authenticator/id983156458">IOS</a>. you can also use Microsoft Authenticator on Windows 11 (PC, Laptop or Tablet) using <a href="https://apps.microsoft.com/store/detail/windows-subsystem-for-android%E2%84%A2-with-amazon-appstore/9P3395VX91NR?hl=en-us&gl=us">Windows Subsystem for Android (WSA)</a> and access your authenticator codes without the need to use your phone (again thanks to the secure automatic backup/restore feature). use an open-source and trusted Android store such as <a href="https://auroraoss.com/">Aurora Store</a> to <a href="https://github.com/whyorean/AuroraStore">install</a> and keep it up-to-date.
 * More Security Recommendations coming soon...
 
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## Resources
 
@@ -300,6 +305,7 @@ In order to run commands in this category, you don't need administrator privileg
 - [Microsoft Tech Community](https://techcommunity.microsoft.com/) - Official blogs and documentations
 - [Microsoft Security baselines](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-security-configuration-framework/windows-security-baselines) - Security baselines from Microsoft
 
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## License
 

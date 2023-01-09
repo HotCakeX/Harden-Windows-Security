@@ -192,7 +192,7 @@ Refer to this [official documentation about the countermeasures of Bitlocker](ht
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
 ## TLS Security
-Refer to [this documentation](https://learn.microsoft.com/en-us/windows/win32/secauthn/protocols-in-tls-ssl--schannel-ssp-) for more info about TLS and Schannel in Windows. this script disables TLS 1 and TLS 1.1 security protocols that only exist for backward compatibility. all modern software should and do use TLS 1.2 and TLS 1.3.
+Refer to [this documentation](https://learn.microsoft.com/en-us/windows/win32/secauthn/protocols-in-tls-ssl--schannel-ssp-) for more info about TLS and Schannel in Windows. this script disables TLS 1 and TLS 1.1 security protocols that only **exist for backward compatibility**. all modern software should and do use TLS 1.2 and TLS 1.3.
 
 Changes made by the script only affect things that use schannel: that includes Edge, IIS web server, built-in inbox Windows apps and some other programs supplied by Microsoft, but not 3rd party software that use [portable stacks](https://en.wikipedia.org/wiki/Comparison_of_TLS_implementations#Portability_concerns) like Java, nodejs, python or php.
 

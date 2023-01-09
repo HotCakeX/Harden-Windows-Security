@@ -198,6 +198,11 @@ Changes made by the script only affect things that use schannel: that includes E
 
 if you want to read more: [Demystifying Schannel](https://techcommunity.microsoft.com/t5/core-infrastructure-and-security/demystifying-schannel/ba-p/259233)
 
+- Enables `TLS_CHACHA20_POLY1305_SHA256` cipher Suite which is [available but not enabled](https://learn.microsoft.com/en-us/windows/win32/secauthn/tls-cipher-suites-in-windows-11) by default in Windows 11
+
+- Disables `NULL` cipher suites
+
+- Disables [MD5 Hashing Algorithm](https://security.stackexchange.com/questions/52461/how-weak-is-md5-as-a-password-hashing-function)
 
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 

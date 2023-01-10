@@ -325,26 +325,20 @@ These are configurations that are typically 🔺recommended in High-Risk Environ
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
 ## Miscellaneous Configurations
-Sets Early launch antimalware engine's status to 8 which is Good only.
-The default value is 3, which allows good, unknown and 'bad but critical'.
-that is the default value, because setting it to 8 can prevent your computer from booting if
-the driver it relies on is critical but at the same time unknown or bad.
+- Sets [Early launch antimalware](https://learn.microsoft.com/en-us/windows-hardware/drivers/install/elam-driver-requirements) engine's status to 8 which is **Good only.** The [default value](https://gpsearch.azurewebsites.net/#7437) is 3, which allows good, unknown and 'bad but critical'. that is the default value, because setting it to 8 [can prevent your computer from booting](https://learn.microsoft.com/en-us/windows/compatibility/early-launch-antimalware#mitigation) if the driver it relies on is critical but at the same time unknown or bad.
 
-as mentioned earlier, this script sets it to 8, so only drivers verified by Microsoft to be Good can boot.
+  - By being launched first by the kernel, ELAM is ensured to be launched before any third-party software and is therefore able to detect malware in the boot process and prevent it from initializing. ELAM drivers must be specially signed by Microsoft to ensure they are started by the Windows kernel early in the boot process.
 
-[some background](https://learn.microsoft.com/en-us/windows/compatibility/early-launch-antimalware):
-
-By being launched first by the kernel, ELAM is ensured to be launched before any third-party software and is therefore able to detect malware in the boot process and prevent it from initializing.
-
-ELAM drivers must be specially signed by Microsoft to ensure they are started by the Windows kernel early in the boot process. To get the signature, ELAM drivers must pass a set of certification tests to verify performance and other behavior
-
-other commands included in this category:
 - Disabling location service system wide. websites and apps won't be able to use your precise location, however they will still be able to detect your location using your IP address.
-- Enabling Mandatory ASLR, [more info here](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/enable-exploit-protection?view=o365-worldwide). It might cause a problem for some unofficial 3rd party portable programs, such as Photoshop portable, Telegram portable etc. The command and ways to add exceptions for such programs are provided in the script file.
-- Enable Hibernate and Disable Sleep, this feature is only 🔺recommended for High-Risk Environments.🔻
-This is to prevent an **Attacker with skill and lengthy physical access to your computer**
 
-  - Attack Scenario: Targeted attack with plenty of time; this attacker will open the case, will solder, and will use   sophisticated hardware or software. Of course, [Bitlocker and configurations](https://learn.microsoft.com/en-us/windows/security/information-protection/bitlocker/bitlocker-countermeasures#attacker-with-skill-and-lengthy-physical-access) made by this script will protect you against that.
+- Enable Hibernate, [sets it to full](https://learn.microsoft.com/en-us/windows/win32/power/system-power-states#hibernation-file-types) and Disables Sleep, this feature is only 🔺recommended for High-Risk Environments.🔻
+This is to prevent an 🔺**Attacker with skill and lengthy physical access to your computer**🔻
+
+  - Attack Scenario: Targeted attack with plenty of time; this attacker will open the case, will solder, and will use sophisticated hardware or software. Of course, [Bitlocker and configurations](https://learn.microsoft.com/en-us/windows/security/information-protection/bitlocker/bitlocker-countermeasures#attacker-with-skill-and-lengthy-physical-access) applied by this script will protect you against that.
+  - [Power states S1-S3 will be disabled](https://learn.microsoft.com/en-us/windows/win32/power/system-power-states#sleep-state-s1-s3) in order to completely disable Sleep, doing this also removes the Sleep option from Start menu and even using commands to put the computer to sleep won't work. [2 registry keys](https://admx.help/?Category=Windows_10_2016&Policy=Microsoft.Policies.PowerManagement::AllowStandbyStatesDC_2) are required to be used to disable Sleep. You will have to restart your device for the changes to take effect.
+
+- Enabling Mandatory ASLR, [more info here](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/enable-exploit-protection?view=o365-worldwide). It might cause a problem for some unofficial 3rd party portable programs, such as Photoshop portable, Telegram portable etc. The command and ways to add exceptions for such programs are provided in the script file.
+
 - Enable Windows update and Edge browser to download and install updates on any network, metered or not; because the updates are important and should not be suppressed, that's what bad actors would want.
 - Enable ECH for Edge browser. using ECH (Encrypted Client Hello) is recommended in [Security baseline for Microsoft Edge version 108](https://techcommunity.microsoft.com/t5/microsoft-security-baselines/security-baseline-for-microsoft-edge-version-108/ba-p/3691250). although officially [Microsoft recommends](https://learn.microsoft.com/en-us/deployedge/microsoft-edge-policies#encryptedclienthelloenabled) enabling it via Group Policy, the method used in this script simply adds `--enable-features=EncryptedClientHello` to the target of Edge shortcuts in desktop, taskbar and start menu, even when Edge browser is launched by clicking on a link in an app like Mail app, it will still use ECH.
 You can test if your browser is using Encrypted Client Hello by visiting [this website](https://defo.ie/ech-check.php).

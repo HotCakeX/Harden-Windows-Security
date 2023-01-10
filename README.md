@@ -437,6 +437,8 @@ In order to run commands in this category, you don't need administrator privileg
 - [ADMX](https://admx.help/) - Group Policy Administrative Templates Catalog
 - [GPS](https://gpsearch.azurewebsites.net/) - Group Policy Search
 - [Germany Intelligence Agency - BND](https://www.bsi.bund.de/EN/Service-Navi/Publikationen/publikationen_node.html) - Federal Office for Information Security
+  - [Analysis of Device Guard](https://www.bsi.bund.de/EN/Service-Navi/Publikationen/Studien/SiSyPHuS_Win10/AP7/SiSyPHuS_AP7_node.html)
+  - [Device Guard Differential Analysis](https://www.bsi.bund.de/SharedDocs/Downloads/DE/BSI/Cyber-Sicherheit/SiSyPHus/E20172000_BSI_Win10_DGABGL_Win10_v_1_0.pdf?__blob=publicationFile&v=3)
 - [Microsoft Tech Community](https://techcommunity.microsoft.com/) - Official blogs and documentations
 - [Microsoft Security baselines](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-security-configuration-framework/windows-security-baselines) - Security baselines from Microsoft
 

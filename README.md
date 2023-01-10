@@ -305,10 +305,15 @@ Just like any other hardening category, you can skip this one when running the s
 ## Windows Networking
 These are configurations that are typically 🔺recommended in High-Risk Environments🔻 but also can be applied for home users.
 such as:
-- [Disabling NetBIOS over TCP/IP](https://learn.microsoft.com/en-us/windows-hardware/customize/desktop/unattend/microsoft-windows-netbt-interfaces-interface-netbiosoptions) on all network interfaces
-- Disabling the LLMNR protocol
+- [Disabling NetBIOS over TCP/IP](https://learn.microsoft.com/en-us/windows-hardware/customize/desktop/unattend/microsoft-windows-netbt-interfaces-interface-netbiosoptions) on all network interfaces, virtual and physical
+- Disabling the LLMNR protocol [(Link Local Multicast Name Resolution)](https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-llmnrp/eed7fe96-9013-4dec-b14f-5abf85545385) because it's only [useful for networks that do not have a Domain Name System (DNS) server](https://learn.microsoft.com/en-us/previous-versions//bb878128(v=technet.10)?redirectedfrom=MSDN) and Microsoft themselves are [ramping down NetBIOS name resolution and LLMNR.](https://techcommunity.microsoft.com/t5/networking-blog/aligning-on-mdns-ramping-down-netbios-name-resolution-and-llmnr/ba-p/3290816)
+
 - Disabling [LMHOSTS lookup protocol](https://www.crowe.com/cybersecurity-watch/netbios-llmnr-giving-away-credentials) on all network adapters
-- and more, comments as always provided above each command in the script.
+- Setting the Network Location of all connections to Public; Public network means less trust to other network devices.
+- Disable [Printing over HTTP](https://learn.microsoft.com/en-us/troubleshoot/windows-server/printing/manage-connect-printers-use-web-browser) because HTTP is not encrypted and it's an old feature that's not used anymore.
+- [Turns off downloading of print drivers over HTTP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-connectivity#connectivity-disabledownloadingofprintdriversoverhttp) because HTTP is not encrypted and that method isn't used anymore. this is the [recommended and secure way of downloading printer drivers in Windows 11](https://support.microsoft.com/en-us/windows/download-printer-drivers-in-windows-da9b1460-7299-4cc3-e974-33cf99d86880).
+- Disables [Multicast DNS](https://www.ionos.com/digitalguide/server/know-how/multicast-dns/)
+  - The domain name .local, which is used in mDNS (Multicast DNS) [is a special-use domain name reserved by the Internet Engineering Task Force (IETF)](https://en.wikipedia.org/wiki/.local) so that **it may not be installed as a top-level domain in the Domain Name System (DNS) of the Internet.**
 
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 

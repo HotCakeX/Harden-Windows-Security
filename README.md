@@ -117,7 +117,7 @@ remove-Item .\Harden-Windows-Security.ps1
 - Always up-to-date and works with latest build of Windows (Currently Windows 11 - compatible and rigorously tested on stable and Insider Dev builds)
 - Doesn't break anything
 - Doesn't remove or disable Windows functionalities against Microsoft's recommendation
-- This Readme page is used as the reference for the commands used in the script
+- This Readme page is used as the reference for all of the commands used in the script. the order in which they appear here is the same as the one in the script file.
 - When a hardening command is no longer necessary because it's applied by default by Microsoft on new builds of Windows, it will also be removed from this script in order to prevent any problems and because it won't be necessary anymore.
 - The script can be run infinite number of times, it's made in a way that it won't make any duplicate changes at all.
 

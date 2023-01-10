@@ -187,7 +187,7 @@ This script sets up and configures Bitlocker, [using official documentation](htt
 
 - BitLocker software will bring you a real security against the theft of your computer if you strictly abide by the following basic rule:
    - As soon as you have finished working, completely shut Windows down and allow for every shadow of information to disappear
-(from RAM, disk caches) within 2 minutes. **🔺this practice is recommended in high-risk environments.🔻**
+(from RAM, disk caches) within 2 minutes. **🔺this practice is recommended in High-Risk Environments.🔻**
 
 Refer to this [official documentation about the countermeasures of Bitlocker](https://learn.microsoft.com/en-us/windows/security/information-protection/bitlocker/bitlocker-countermeasures)
 
@@ -206,7 +206,7 @@ if you want to read more: [Demystifying Schannel](https://techcommunity.microsof
 
 - Enables `TLS_CHACHA20_POLY1305_SHA256` cipher Suite which is [available but not enabled](https://learn.microsoft.com/en-us/windows/win32/secauthn/tls-cipher-suites-in-windows-11) by default in Windows 11, and sets its priority to highest.
 
-- Enables the following secure Diffie–Hellman based key exchange algorithms which are available in Windows 11 but not enabled by default, [according to this Microsoft Document](https://learn.microsoft.com/en-us/windows/win32/secauthn/tls-cipher-suites-in-windows-11): `"TLS_DHE_RSA_WITH_AES_256_CBC_SHA"`,`"TLS_DHE_RSA_WITH_AES_128_CBC_SHA"`,`"TLS_DHE_RSA_WITH_AES_128_GCM_SHA256"`
+- Enables the following secure Diffie-Hellman based key exchange algorithms which are available in Windows 11 but not enabled by default, [according to this Microsoft Document](https://learn.microsoft.com/en-us/windows/win32/secauthn/tls-cipher-suites-in-windows-11): `"TLS_DHE_RSA_WITH_AES_256_CBC_SHA"`,`"TLS_DHE_RSA_WITH_AES_128_CBC_SHA"`,`"TLS_DHE_RSA_WITH_AES_128_GCM_SHA256"`
 
 - Disables `NULL` ciphers that are **only available for backward compatibility**:`"TLS_RSA_WITH_NULL_SHA256"`,`"TLS_RSA_WITH_NULL_SHA"`,`"TLS_PSK_WITH_NULL_SHA384"`,`"TLS_PSK_WITH_NULL_SHA256"`
 
@@ -226,18 +226,18 @@ if you want to read more: [Demystifying Schannel](https://techcommunity.microsof
 
   - A malicious user might install malware that looks like the standard sign-in dialog box for the Windows operating system and capture a user's password. The attacker can then sign into the compromised account with whatever level of user rights that user has.
 
-- Enables a [security feature](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/interactive-logon-machine-account-lockout-threshold) that sets a threshold (6 in this script) for the number of failed sign-in attempts that causes the device to be locked by using BitLocker. This threshold means, if the specified maximum number of failed sign-in attempts is exceeded, the device will invalidate the Trusted Platform Module (TPM) protector and any other protector except the 48-digit recovery password, and then reboot. During Device Lockout mode, the computer or device only boots into the touch-enabled Windows Recovery Environment (WinRE) until an authorized user enters the recovery password to restore full access.
+- Enables a [security feature](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/interactive-logon-machine-account-lockout-threshold) that sets a threshold (6 in this script) for the number of failed sign-in attempts that causes the device to be locked by using BitLocker. This threshold means, if the specified maximum number of failed sign-in attempts is exceeded, the device will invalidate the Trusted Platform Module (TPM) protector and any other protector except the 48-digit recovery password, and then reboot. During Device Lockout mode, the computer or device only boots into the touch-enabled Windows Recovery Environments (WinRE) until an authorized user enters the recovery password to restore full access.
   - This Script (<a href="#Bitlocker-Settings">in the Bitlocker category</a>) automatically saves your 48-digit recovery password in your drive, the exact location of it will be visible on the PowerShell console when you run it.
 
 - [Hides email address of the Microsoft account on lock screen](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/interactive-logon-display-user-information-when-the-session-is-locked), if your device is in a trusted place like at home then this isn't necessary.
 
-- [Don't display username at sign-in](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/interactive-logon-dont-display-username-at-sign-in); If a user signs in as Other user, the full name of the user isn't displayed during sign-in. In the same context, if users type their email address and password at the sign-in screen and press Enter, the displayed text “Other user” remains unchanged, and is no longer replaced by the user’s first and last name, as in previous versions of Windows 10. Additionally,if users enter their domain user name and password and click Submit, their full name isn't shown until the Start screen displays.
-  - [Useful](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/interactive-logon-dont-display-username-at-sign-in#best-practices) If you have devices that store sensitive data, with monitors displayed in unsecured locations, or if you have devices with sensitive data that are remotely accessed, revealing logged on user’s full names or domain account names
+- [Don't display username at sign-in](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/interactive-logon-dont-display-username-at-sign-in); If a user signs in as Other user, the full name of the user isn't displayed during sign-in. In the same context, if users type their email address and password at the sign-in screen and press Enter, the displayed text "Other user" remains unchanged, and is no longer replaced by the user's first and last name, as in previous versions of Windows 10. Additionally,if users enter their domain user name and password and click Submit, their full name isn't shown until the Start screen displays.
+  - [Useful](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/interactive-logon-dont-display-username-at-sign-in#best-practices) If you have devices that store sensitive data, with monitors displayed in unsecured locations, or if you have devices with sensitive data that are remotely accessed, revealing logged on user's full names or domain account names
 
-- [Don't display last signed-in](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/interactive-logon-do-not-display-last-user-name); This security policy setting determines whether the name of the last user to sign in to the device is displayed on the Secure Desktop. If this policy is enabled, the full name of the last user to successfully sign in isn't displayed on the Secure Desktop, nor is the user’s sign-in tile displayed. Additionally, if the Switch user feature is used, the full name and sign-in tile aren't displayed. The sign-in screen requests a qualified domain account name (or local user name) and password. 
-  - Users need will to manually enter username and password/Pin to sign in. **it can cause annoyance, so disabled in this script**. this feature however can be useful to enable if you live in 🔻high-risk environment🔺 and you don't want Anyone to get Any information about your device when it's locked and you're not around. if you want to enable it, change its value to 1. 🔻#TopSecurity🔺
+- [Don't display last signed-in](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/interactive-logon-do-not-display-last-user-name); This security policy setting determines whether the name of the last user to sign in to the device is displayed on the Secure Desktop. If this policy is enabled, the full name of the last user to successfully sign in isn't displayed on the Secure Desktop, nor is the user's sign-in tile displayed. Additionally, if the Switch user feature is used, the full name and sign-in tile aren't displayed. The sign-in screen requests a qualified domain account name (or local user name) and password. 
+  - Users need will to manually enter username and password/Pin to sign in. **it can cause annoyance, so disabled in this script**. this feature however can be useful to enable if you live in 🔻High-Risk Environments🔺 and you don't want Anyone to get Any information about your device when it's locked and you're not around. if you want to enable it, change its value to 1. 🔻#TopSecurity🔺
 
-- [Don't Display Network Selection UI on Lock Screen](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-windowslogon#dontdisplaynetworkselectionui) (like WIFI Icon); This setting allows you to control whether anyone can interact with available networks UI on the logon screen. once enabled, the devicees's network connectivity state cannot be changed without signing into Windows. suitable for🔻high-risk environments🔺
+- [Don't Display Network Selection UI on Lock Screen](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-windowslogon#dontdisplaynetworkselectionui) (like WIFI Icon); This setting allows you to control whether anyone can interact with available networks UI on the logon screen. once enabled, the devicees's network connectivity state cannot be changed without signing into Windows. suitable for🔻High-Risk Environments🔺
 
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
@@ -245,7 +245,7 @@ if you want to read more: [Demystifying Schannel](https://techcommunity.microsof
 
 Here is [the official reference](https://learn.microsoft.com/en-us/windows/security/identity-protection/user-account-control/user-account-control-group-policy-and-registry-key-settings#registry-key-settings) for the commands used in this section of the script, User Account Control Group Policy and registry key settings.
 
-- Makes all prompts for elevation to use [secure desktop](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/user-account-control-switch-to-the-secure-desktop-when-prompting-for-elevation#reference) which presents the sign-in UI and restricts functionality and access to the system until the sign-in requirements are satisfied. The secure desktop’s primary difference from the user desktop is that only trusted processes running as SYSTEM are allowed to run here (that is, nothing is running at the user’s privilege level). The path to get to the secure desktop from the user desktop must also be trusted through the entire chain.
+- Makes all prompts for elevation to use [secure desktop](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/user-account-control-switch-to-the-secure-desktop-when-prompting-for-elevation#reference) which presents the sign-in UI and restricts functionality and access to the system until the sign-in requirements are satisfied. The secure desktop's primary difference from the user desktop is that only trusted processes running as SYSTEM are allowed to run here (that is, nothing is running at the user's privilege level). The path to get to the secure desktop from the user desktop must also be trusted through the entire chain.
 
 - Introduces (but Not enables, because [it can cause inconvenience](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/user-account-control-only-elevate-executables-that-are-signed-and-validated#potential-impact)) a feature that [Enforces cryptographic signatures on any interactive application](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/user-account-control-only-elevate-executables-that-are-signed-and-validated) that requests elevation of privilege. it can prevent certain programs from running, e.g. it prevents Cheat Engine from prompting for UAC. 🔻#TopSecurity🔺
 
@@ -264,7 +264,7 @@ This category makes sure Windows Firewall is enabled for all profiles (which is 
 
 additionally, [blocks LOLbins (Living Off The Land Binaries)](https://lolbas-project.github.io/) from making Internet connections.
 
-🔻This is a Defense-in-Depth strategy for High-risk environments🔺
+🔻This is a Defense-in-Depth strategy for High-Risk Environments🔺
 
 LOLBins are Microsoft-signed files, meaning they are either native to the Operating System (OS) and come pre-installed,
 or are available from Microsoft (i.e., a Microsoft program or add-on).
@@ -286,7 +286,7 @@ Just like any other hardening category, you can skip this one when running the s
   - Windows Media Player (legacy); isn't needed anymore, Windows 11 has a modern media player app.
 
 - Also enables these optional features:
-  - Windows Defender Application Guard; which is a safe environment to open untrusted websites
+  - Windows Defender Application Guard; which is a safe Environments to open untrusted websites
   - Windows Sandbox; install, test and use programs in a disposable virtual operation system, completely separate from your  main OS
   - Hyper-V; the best and a hybrid hypervisor (Type 1 and Type 2) to run virtual machines on
   - Virtual Machine Platform; required for [Android subsystem or WSA (Windows subsystem for Android)](https://learn.microsoft.com/en-us/windows/android/wsa/). if it's disabled, it will be automatically enabled either way when you try to install WSA from Store app
@@ -294,7 +294,7 @@ Just like any other hardening category, you can skip this one when running the s
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
 ## Windows Networking
-These are configurations that are typically 🔺recommended in high-risk environments🔻 but also can be applied for home users.
+These are configurations that are typically 🔺recommended in High-Risk Environments🔻 but also can be applied for home users.
 such as:
 - [Disabling NetBIOS over TCP/IP](https://learn.microsoft.com/en-us/windows-hardware/customize/desktop/unattend/microsoft-windows-netbt-interfaces-interface-netbiosoptions) on all network interfaces
 - Disabling the LLMNR protocol
@@ -320,7 +320,7 @@ ELAM drivers must be specially signed by Microsoft to ensure they are started by
 other commands included in this category:
 - Disabling location service system wide. websites and apps won't be able to use your precise location, however they will still be able to detect your location using your IP address.
 - Enabling Mandatory ASLR, [more info here](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/enable-exploit-protection?view=o365-worldwide). It might cause a problem for some unofficial 3rd party portable programs, such as Photoshop portable, Telegram portable etc. The command and ways to add exceptions for such programs are provided in the script file.
-- Enable Hibernate and Disable Sleep, this feature is only 🔺recommended for high-risk environments.🔻
+- Enable Hibernate and Disable Sleep, this feature is only 🔺recommended for High-Risk Environments.🔻
 This is to prevent an **Attacker with skill and lengthy physical access to your computer**
 
   - Attack Scenario: Targeted attack with plenty of time; this attacker will open the case, will solder, and will use   sophisticated hardware or software. Of course, [Bitlocker and configurations](https://learn.microsoft.com/en-us/windows/security/information-protection/bitlocker/bitlocker-countermeasures#attacker-with-skill-and-lengthy-physical-access) made by this script will protect you against that.

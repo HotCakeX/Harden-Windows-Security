@@ -263,6 +263,11 @@ You can find all the information on them [in this official document](https://lea
 
 [Validate enabled Windows Defender Device Guard hardware-based security features](https://learn.microsoft.com/en-us/windows/security/threat-protection/device-guard/enable-virtualization-based-protection-of-code-integrity#validate-enabled-windows-defender-device-guard-hardware-based-security-features)
 
+There are more settings available in the Group Policy Device Guard section that this script does Not enable,
+because [I don't know if your hardware is modern enough to support them,](https://learn.microsoft.com/en-us/windows/security/identity-protection/credential-guard/credential-guard-requirements) so provided resources below to check them out and enable them if you can.
+
+  - [Require UEFI Memory Attributes Table](https://learn.microsoft.com/en-us/windows-hardware/drivers/bringup/unified-extensible-firmware-interface)
+  - [Kernel Mode Hardware Enforced Stack Protection](https://techcommunity.microsoft.com/t5/microsoft-security-baselines/windows-11-version-22h2-security-baseline/ba-p/3632520)
 
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 

@@ -231,7 +231,10 @@ if you want to read more: [Demystifying Schannel](https://techcommunity.microsof
 
 - [Hides email address of the Microsoft account on lock screen](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/interactive-logon-display-user-information-when-the-session-is-locked), if your device is in a trusted place like at home then this isn't necessary.
 
-[More info here](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/interactive-logon-do-not-require-ctrl-alt-del#reference)
+- [Don't display username at sign-in](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/interactive-logon-dont-display-username-at-sign-in); If a user signs in as Other user, the full name of the user isn't displayed during sign-in. In the same context, if users type their email address and password at the sign-in screen and press Enter, the displayed text “Other user” remains unchanged, and is no longer replaced by the user’s first and last name, as in previous versions of Windows 10. Additionally,if users enter their domain user name and password and click Submit, their full name isn't shown until the Start screen displays.
+  - [Useful](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/interactive-logon-dont-display-username-at-sign-in#best-practices) If you have devices that store sensitive data, with monitors displayed in unsecured locations, or if you have devices with sensitive data that are remotely accessed, revealing logged on user’s full names or domain account names
+
+- [More info here](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/interactive-logon-do-not-require-ctrl-alt-del#reference)
 
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 

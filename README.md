@@ -280,7 +280,7 @@ because [I don't know if your hardware is modern enough to support them,](https:
 
 - Sets inbound and outbound default actions for Domain Firewall Profile to Block; because this script is Not intended to be used on devices that are part of a domain or controlled by an Active Directory Domain Controller, since they will have their own policies and policy management systems in place.
 
-- Enables Windows Firewall logging for Private and Public profiles, set the log file size to max `32.767 MB`, logs only dropped packets.
+- Enables Windows Firewall logging for Private and Public profiles, sets the log file size to max `32.767 MB`, logs only dropped packets.
 
 Just like any other hardening category, you can skip this one when running the script and choose N (for No) when prompted for input in PowerShell console.
 

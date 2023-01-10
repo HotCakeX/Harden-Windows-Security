@@ -219,12 +219,15 @@ if you want to read more: [Demystifying Schannel](https://techcommunity.microsof
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
 ## Lock Screen
-This part includes commands like Automatically locking computer after X seconds, which is set to 120 seconds (2 minutes) in this script, you can change that to any value you like.
 
-there are also other commands in the script, of course each of them has comments above them that provide explanation,
-one of them is "Require CTRL+ALT+DEL on the lock screen", the reason and logic behind it is:
+- Automatically locks device after X seconds of inactivity (just like mobile phones), which is set to 120 seconds (2 minutes) in this script, you can change that to any value you like.
 
-A malicious user might install malware that looks like the standard sign-in dialog box for the Windows operating system and capture a user's password. The attacker can then sign into the compromised account with whatever level of user rights that user has.
+- "Require CTRL+ALT+DEL on the lock screen", the reason and logic behind it is:
+
+  - A malicious user might install malware that looks like the standard sign-in dialog box for the Windows operating system and capture a user's password. The attacker can then sign into the compromised account with whatever level of user rights that user has.
+
+- Enables a security feature that sets a threshold (6 in this script) for the number of failed sign-in attempts that causes the device to be locked by using BitLocker. This threshold means, if the specified maximum number of failed sign-in attempts is exceeded, the device will invalidate the Trusted Platform Module (TPM) protector and any other protector except the 48-digit recovery password, and then reboot. During Device Lockout mode, the computer or device only boots into the touch-enabled Windows Recovery Environment (WinRE) until an authorized user enters the recovery password to restore full access.
+  - This Script (<a href="#Bitlocker-Settings">in the Bitlocker category</a>) automatically saves your 48-digit recovery password in your drive, the exact location of it will be visible on the PowerShell console when you run it.
 
 [More info here](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/interactive-logon-do-not-require-ctrl-alt-del#reference)
 

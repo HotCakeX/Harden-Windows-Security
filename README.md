@@ -120,6 +120,8 @@ remove-Item .\Harden-Windows-Security.ps1
 - This Readme page is used as the reference for all of the commands used in the script. the order in which they appear here is the same as the one in the script file.
 - When a hardening command is no longer necessary because it's applied by default by Microsoft on new builds of Windows, it will also be removed from this script in order to prevent any problems and because it won't be necessary anymore.
 - The script can be run infinite number of times, it's made in a way that it won't make any duplicate changes at all.
+- Running this script turns your PC officially into a Secured-core PC (providing that you use a modern hardware that supports the latest Windows security features). [See what makes a Secured-core PC](https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/oem-highly-secure#what-makes-a-secured-core-pc). not only that, but also goes far beyond the Secured-core PC designated specifications. think of it like a `Secured-core PC ++` if you will.
+  - [Secured-core](https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/oem-highly-secure) – recommended for the most sensitive systems and industries like financial, healthcare, and government agencies. Builds on the previous layers and leverages advanced processor capabilities to provide protection from firmware attacks.
 
 
 <p align="right"><a href="#readme-top">💡(back to top)</a></p>

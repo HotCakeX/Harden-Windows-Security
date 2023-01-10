@@ -272,18 +272,17 @@ because [I don't know if your hardware is modern enough to support them,](https:
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
 ## Windows Firewall
-This category makes sure Windows Firewall is enabled for all profiles (which is the default)
+- This category makes sure Windows Firewall is enabled for all profiles (which is the default)
 
-additionally, [blocks LOLbins (Living Off The Land Binaries)](https://lolbas-project.github.io/) from making Internet connections.
+- [blocks LOLbins (Living Off The Land Binaries)](https://lolbas-project.github.io/) from making Internet connections.
 
-🔻This is a Defense-in-Depth strategy for High-Risk Environments🔺
+  -🔻This is a Defense-in-Depth strategy for High-Risk Environments🔺
 
-LOLBins are Microsoft-signed files, meaning they are either native to the Operating System (OS) and come pre-installed,
-or are available from Microsoft (i.e., a Microsoft program or add-on).
-Despite being legitimate (and well-intentioned) files,
-these binaries can be exploited by an attacker and used in an attack.
+  - LOLBins are Microsoft-signed files, meaning they are either native to the Operating System (OS) and come pre-installed, or are available from Microsoft (i.e., a Microsoft program or add-on). Despite being legitimate (and well-intentioned) files, these binaries can be exploited by an attacker and used in an attack. This script uses built-in Firewall cmdlet to block those binaries in Windows Firewall.
 
-This script uses built-in Firewall cmdlet to block those binaries in Windows Firewall.
+- Sets inbound and outbound default actions for Domain Firewall Profile to Block; because this script is Not intended to be used on devices that are part of a domain or controlled by an Active Directory Domain Controller, since they will have their own policies and policy management systems in place.
+
+- Enables Windows Firewall logging for Private and Public profiles, set the log file size to max `32.767 MB`, logs only dropped packets.
 
 Just like any other hardening category, you can skip this one when running the script and choose N (for No) when prompted for input in PowerShell console.
 

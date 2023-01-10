@@ -79,7 +79,7 @@ From Top to bottom in order:
 
 ## How To Use
 
-> __Warning__ Make sure your hardware (Tablet, Laptop, PC, Phone) meets the [Windows 11 hardware requirements](https://www.microsoft.com/en-in/windows/windows-11-specifications?r=1). this script will NOT work as intended if your hardware doesn't support or use TPM 2.0, Secure Boot or Virtualization Technology (For Intel based CPUs it's called: VT-X and VT-D, VT-D is Intel's Virtualization Technology for Directed I/O). even if your CPU isn't at least Intel 8th Gen (or its AMD equivalent), you should still have the options in your UEFI firmware to turn on virtualization Technology, TPM 2.0 and Secure Boot. currently, Windows 11 allows older than 8th Gen Intel CPUs (or their AMD equivalents) only on insider builds. you will miss a lot of new feautres, benefits and new security technologies that are only available on new hardware.
+> __Warning__ Make sure your hardware (Tablet, Laptop, PC, Phone) meets the [Windows 11 hardware requirements](https://www.microsoft.com/en-in/windows/windows-11-specifications?r=1). this script will NOT work as intended if your hardware doesn't support or use TPM 2.0, Secure Boot or Virtualization Technology (For Intel based CPUs it's called: VT-X and VT-D, VT-D is Intel's Virtualization Technology for Directed I/O). even if your CPU isn't at least Intel 8th Gen (or its AMD equivalent), you should still have the options in your UEFI firmware to turn on virtualization Technology, TPM 2.0 and Secure Boot. currently, Windows 11 allows some older than 8th Gen Intel CPUs (or their AMD equivalents) only on insider builds. you will miss a lot of new feautres, benefits and new security technologies that are only available on new hardware.
 <br>
 </br>
 

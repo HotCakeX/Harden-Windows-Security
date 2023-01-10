@@ -127,18 +127,15 @@ remove-Item .\Harden-Windows-Security.ps1
 - Enables **additional** security features of Windows Security (Defender), You can refer to [this official document](https://docs.microsoft.com/en-us/powershell/module/defender/set-mppreference?view=windowsserver2022-ps) for full details.
 
 - This script makes sure [Cloud Security Scan](https://support.microsoft.com/en-us/topic/what-is-a-cloud-security-scan-75112696-7660-4450-9194-d717f72a8ad8) and [Block At First Sight](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/configure-block-at-first-sight-microsoft-defender-antivirus?view=o365-worldwide#turn-on-block-at-first-sight-with-group-policy) are enabled to the highest possible security states available, **Zero Tolerance Cloud Block level**. you need to be aware that this means actions like downloading and opening an unknown file WILL make Windows Security send samples of it to the Cloud for more advanced analysis and it can take a maximum of 60 seconds (this script sets it to max) from the time you try to open that unknown file to the time when it will be opened (if deemed safe), so you will have to wait. all of these security measure are in place by default in Windows to some extent and happen automatically without the need to run this script, but this script **maxes them out and sets them to the highest possible levels** at the cost of 🔻convenience and usability.🔺it's always a trade-off.
-   - [Configure and validate Microsoft Defender Antivirus network connections](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/configure-network-connections-microsoft-defender-antivirus?view=o365-worldwide)
-
-Here is an example of the notification you will see in Windows 11 if that happens.
 
 
-
-
-<h1>
+  - Here is an example of the notification you will see in Windows 11 if that happens. 
   
-  <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Windows%20Security%20Cloud%20Analysis.png" alt="Windows Security Cloud Scan Notification" width="200">
+  <p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Windows%20Security%20Cloud%20Analysis.png" alt="Windows Security Cloud Scan Notification" width="200"></p>
+  
+  
  
-</h1>
+
 
 - Enables file hash computation; [designed](https://learn.microsoft.com/en-us/powershell/module/defender/set-mppreference?view=windowsserver2022-ps#-enablefilehashcomputation) to allow admins to force the anti-malware solution to "compute file hashes for every executable file that is scanned if it wasn't previously computed" to "improve blocking for custom indicators in Microsoft Defender Advanced Threat Protection (Microsoft Defender ATP).
 
@@ -152,6 +149,7 @@ Here is an example of the notification you will see in Windows 11 if that happen
 
 - Sets the Signature Update Interval to every 3 hours instead of automatically.
   - [Change logs for security intelligence updates](https://www.microsoft.com/en-us/wdsi/definitions/antimalware-definition-release-notes)
+  - [Configure and validate Microsoft Defender Antivirus network connections](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/configure-network-connections-microsoft-defender-antivirus?view=o365-worldwide)
 
 - Forces Windows Defender to check for new virus and spyware definitions before it runs a scan.
 
@@ -181,10 +179,10 @@ This script enables [all 16 available Attack Surface Reduction rules shown in th
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
 ## Bitlocker Settings 
-This script sets up and configures Bitlocker, [using official documentation](https://learn.microsoft.com/en-us/windows/security/information-protection/bitlocker/bitlocker-group-policy-settings), with the most secure configuration and Military Grade encryption algorithm, **XTS-AES-256, TPM 2.0 and start-up PIN**. So it performs pre-boot checks to verify the OS hasn't been corrupted/tampered with malware. Third party encryption software and tools should Not be used because they break this secure chain of trust which, flows from the UEFI firmware to Windows bootloader and then to BitLocker. it is critical for this chain of trust to exist in order to prevent an entire range of attacks against Windows systems and to stop real-life attacks.
+This script sets up and configures Bitlocker, [using official documentation](https://learn.microsoft.com/en-us/windows/security/information-protection/bitlocker/bitlocker-group-policy-settings), with the most secure configuration and Military Grade encryption algorithm, **XTS-AES-256, TPM 2.0 and start-up PIN**. So it performs pre-boot checks to verify the OS hasn't been corrupted/tampered with malware. Third party encryption software and tools should Not be used because they break this secure chain of trust, flowing from the UEFI firmware to Windows bootloader and then to BitLocker. it is critical for this chain of trust to exist in order to prevent an entire range of **real-life** attacks against Windows systems.
 
-BitLocker software will bring you a real security against the theft of your computer if you strictly abide by the following basic rule:
- As soon as you have finished working, completely shut Windows down and allow for every shadow of information to disappear
+- BitLocker software will bring you a real security against the theft of your computer if you strictly abide by the following basic rule:
+   - As soon as you have finished working, completely shut Windows down and allow for every shadow of information to disappear
 (from RAM, disk caches) within 2 minutes. **🔺this practice is recommended in high-risk environments.🔻**
 
 Refer to this [official documentation about the countermeasures of Bitlocker](https://learn.microsoft.com/en-us/windows/security/information-protection/bitlocker/bitlocker-countermeasures)

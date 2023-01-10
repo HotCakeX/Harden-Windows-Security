@@ -318,6 +318,10 @@ such as:
 - Disables [IP Source Routing](https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2008-R2-and-2008/dd349797(v=ws.10)#disableipsourcerouting); Source routing allows a computer that sends a packet to specify the route that the packet takes. Attackers can use source routed packets to obscure their identity and location.
   - After applying this and restarting your device, `Source Routing Behavior` in `netsh int IPv4 show global` shows `Drop` instead of the default `dontforward` value in Windows 11 dev build 25272.
 
+- Allows the device to [ignore NetBIOS name release requests.](https://support.microsoft.com/en-us/topic/security-configuration-guidance-support-ea9aef24-347f-15fa-b94f-36f967907f2f) This setting is a good preventive measure for denial of service attacks against name servers and other very important server roles.
+
+
+
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
 ## Miscellaneous Configurations

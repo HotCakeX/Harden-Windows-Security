@@ -221,7 +221,7 @@ if you want to read more: [Demystifying Schannel](https://techcommunity.microsof
 
 ## Lock Screen
 
-- Automatically locks device after X seconds of inactivity (just like mobile phones), which is set to 120 seconds (2 minutes) in this script, you can change that to any value you like.
+- [Automatically locks device after X seconds of inactivity](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/interactive-logon-machine-inactivity-limit) (just like mobile phones), which is set to 120 seconds (2 minutes) in this script, you can change that to any value you like.
 
 - "Require CTRL+ALT+DEL on the lock screen", the reason and logic behind it is:
 

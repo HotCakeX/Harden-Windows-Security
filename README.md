@@ -387,11 +387,16 @@ The script fetches the newest range of [IPv4](https://www.ipdeny.com/ipblocks/) 
 
 In order to run commands in this category, you don't need administrator privileges, because no system-wide configuration is made. changes in this category only apply to the user account that is running the current PowerShell session:
 - Show known file extensions in File explorer
+- Show hidden files, folders and drives (toggles the control panel folder options item)
 - Disable websites accessing local language list - good for privacy
 - Turn off safe search in Windows search, will enable +18 content to appear in searches; essentially toggles the button in: Windows settings > privacy and security > search permissions > safe search
+- prevent showing notifications in Lock screen - this is the same as toggling the button in Windows settings > system > notifications > show notifications in the lock screen
 - Enable Clipboard History and sync with Microsoft Account
 - Create custom views for Windows Event Viewer to help you keep tabs on important security events: attack surface reduction rules events, controlled folder access events, exploit protection events, network protection events, MSI and Scripts for WDAC Auditing events, Sudden Shut down events and Code Integrity Operational events. 
 - Turn on text suggestions when typing on the physical keyboard
+- Turn on "Multilingual text suggestions" for the current user, toggles the option in Windows settings
+- Turn off sticky key shortcut of pressing shift key 5 times fast
+
 
 <h1> <br> </h1>
 

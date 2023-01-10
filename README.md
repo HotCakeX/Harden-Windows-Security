@@ -315,6 +315,9 @@ such as:
 - Disables [Multicast DNS](https://www.ionos.com/digitalguide/server/know-how/multicast-dns/)
   - The domain name .local, which is used in mDNS (Multicast DNS) [is a special-use domain name reserved by the Internet Engineering Task Force (IETF)](https://en.wikipedia.org/wiki/.local) so that **it may not be installed as a top-level domain in the Domain Name System (DNS) of the Internet.**
 
+- Disables [IP Source Routing](https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2008-R2-and-2008/dd349797(v=ws.10)#disableipsourcerouting); Source routing allows a computer that sends a packet to specify the route that the packet takes. Attackers can use source routed packets to obscure their identity and location.
+  - After applying this and restarting your device, `Source Routing Behavior` in `netsh int IPv4 show global` shows `Drop` instead of the default `dontforward` value in Windows 11 dev build 25272.
+
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
 ## Miscellaneous Configurations

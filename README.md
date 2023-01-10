@@ -255,7 +255,12 @@ Here is [the official reference](https://learn.microsoft.com/en-us/windows/secur
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
 ## Device Guard
-Since Device Guard and Virtualization-Based Security features are by default enabled automatically on capable and modern hardware, this script only double-checks their status and if needed, fully enables them to the highest level. you can find all the information on that [in this official documentation](https://learn.microsoft.com/en-us/windows/security/threat-protection/device-guard/enable-virtualization-based-protection-of-code-integrity). one of the notable commands used in this category is ensuring that UEFI lock is enabled for VBS features.
+**Device Guard and Virtualization-Based Security features are Automatically enabled by default on capable and modern hardware, this script only checks their status and if needed, enables UEFI lock for**:
+- Virtualization-Based Security
+- Virtualization-based protection of Code Integrity policies
+
+you can find all the information on that [in this official document](https://learn.microsoft.com/en-us/windows/security/threat-protection/device-guard/enable-virtualization-based-protection-of-code-integrity).
+
 
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 

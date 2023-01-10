@@ -276,7 +276,7 @@ because [I don't know if your hardware is modern enough to support them,](https:
 
 - [blocks LOLbins (Living Off The Land Binaries)](https://lolbas-project.github.io/) from making Internet connections.
 
-  -🔻This is a Defense-in-Depth strategy for High-Risk Environments🔺
+🔻This is a Defense-in-Depth strategy for High-Risk Environments🔺
 
   - LOLBins are Microsoft-signed files, meaning they are either native to the Operating System (OS) and come pre-installed, or are available from Microsoft (i.e., a Microsoft program or add-on). Despite being legitimate (and well-intentioned) files, these binaries can be exploited by an attacker and used in an attack. This script uses built-in Firewall cmdlet to block those binaries in Windows Firewall.
 

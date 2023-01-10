@@ -286,7 +286,7 @@ Just like any other hardening category, you can skip this one when running the s
   - Windows Media Player (legacy); isn't needed anymore, Windows 11 has a modern media player app.
 
 - Also enables these optional features:
-  - Windows Defender Application Guard; which is a safe Environments to open untrusted websites
+  - Windows Defender Application Guard; which is a safe Environment to open untrusted websites
   - Windows Sandbox; install, test and use programs in a disposable virtual operation system, completely separate from your  main OS
   - Hyper-V; the best and a hybrid hypervisor (Type 1 and Type 2) to run virtual machines on
   - Virtual Machine Platform; required for [Android subsystem or WSA (Windows subsystem for Android)](https://learn.microsoft.com/en-us/windows/android/wsa/). if it's disabled, it will be automatically enabled either way when you try to install WSA from Store app

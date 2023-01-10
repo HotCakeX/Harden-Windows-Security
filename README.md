@@ -274,11 +274,9 @@ because [I don't know if your hardware is modern enough to support them,](https:
 ## Windows Firewall
 - This category makes sure Windows Firewall is enabled for all profiles (which is the default)
 
-- [blocks LOLbins (Living Off The Land Binaries)](https://lolbas-project.github.io/) from making Internet connections.
-
-🔻This is a Defense-in-Depth strategy for High-Risk Environments🔺
-
+- [Blocks LOLbins (Living Off The Land Binaries)](https://lolbas-project.github.io/) from making Internet connections.
   - LOLBins are Microsoft-signed files, meaning they are either native to the Operating System (OS) and come pre-installed, or are available from Microsoft (i.e., a Microsoft program or add-on). Despite being legitimate (and well-intentioned) files, these binaries can be exploited by an attacker and used in an attack. This script uses built-in Firewall cmdlet to block those binaries in Windows Firewall.
+  - 🔻This is a Defense-in-Depth strategy for High-Risk Environments🔺
 
 - Sets inbound and outbound default actions for Domain Firewall Profile to Block; because this script is Not intended to be used on devices that are part of a domain or controlled by an Active Directory Domain Controller, since they will have their own policies and policy management systems in place.
 

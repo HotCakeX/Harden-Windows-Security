@@ -343,6 +343,14 @@ This is to prevent an 🔺**Attacker with skill and lengthy physical access to y
 - Enables [`svchost.exe` mitigations.](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-servicecontrolmanager) built-in system services hosted in `svchost.exe` processes will have stricter security policies enabled on them. These stricter security policies include a policy requiring all binaries loaded in these processes to be signed by Microsoft, and a policy disallowing dynamically generated code.
   - Requires Business (e.g. [Windows 11 pro for Workstations](https://www.microsoft.com/en-us/windows/business/windows-11-pro-workstations)), [Enterprise](https://www.microsoft.com/en-us/microsoft-365/windows/windows-11-enterprise) or [Education](https://www.microsoft.com/en-us/education/products/windows) Windows licenses
 
+- Turns on Enhanced mode search for Windows indexer. the default is classic mode. 
+  - this causes some UI elements in the search settings in Windows settings to become unavailable for Standard user accounts to view.
+
+- [Enforce the Administrator role for adding printer drivers](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/devices-prevent-users-from-installing-printer-drivers)
+
+- Enables [SMB/LDAP Signing](https://techcommunity.microsoft.com/t5/storage-at-microsoft/configure-smb-signing-with-confidence/ba-p/2418102)
+- Enables [SMB Encryption](https://learn.microsoft.com/en-us/windows-server/storage/file-server/smb-security) (New in Windows 11 and Windows Server 2022) (the status of `(get-SmbServerConfiguration).EncryptData` was `$False` when tested on [Windows 11 dev build 25272](https://blogs.windows.com/windows-insider/2023/01/05/announcing-windows-11-insider-preview-build-25272/))
+
 - Enable Windows update and Edge browser to download and install updates on any network, metered or not; because the updates are important and should not be suppressed, **that's what bad actors would want.**
 - Enable ECH for Edge browser. using ECH (Encrypted Client Hello) is recommended in [Security baseline for Microsoft Edge version 108](https://techcommunity.microsoft.com/t5/microsoft-security-baselines/security-baseline-for-microsoft-edge-version-108/ba-p/3691250). although officially [Microsoft recommends](https://learn.microsoft.com/en-us/deployedge/microsoft-edge-policies#encryptedclienthelloenabled) enabling it via Group Policy, the method used in this script simply adds `--enable-features=EncryptedClientHello` to the target of Edge shortcuts in desktop, taskbar and start menu, even when Edge browser is launched by clicking on a link in an app like Mail app, it will still use ECH.
 You can test if your browser is using Encrypted Client Hello by visiting [this website](https://defo.ie/ech-check.php).

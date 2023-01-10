@@ -326,7 +326,7 @@ These are configurations that are typically 🔺recommended in High-Risk Environ
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
 ## Miscellaneous Configurations
-- Sets [Early launch antimalware](https://learn.microsoft.com/en-us/windows-hardware/drivers/install/elam-driver-requirements) engine's status to 8 which is **Good only.** The [default value](https://gpsearch.azurewebsites.net/#7437) is 3, which allows good, unknown and 'bad but critical'. that is the default value, because setting it to 8 [can prevent your computer from booting](https://learn.microsoft.com/en-us/windows/compatibility/early-launch-antimalware#mitigation) if the driver it relies on is critical but at the same time unknown or bad.
+- Sets [Early launch antimalware](https://learn.microsoft.com/en-us/windows-hardware/drivers/install/elam-driver-requirements) engine's status to `8` which is **Good only.** The [default value](https://gpsearch.azurewebsites.net/#7437) is `3`, which allows good, unknown and 'bad but critical'. that is the default value, because setting it to `8` [can prevent your computer from booting](https://learn.microsoft.com/en-us/windows/compatibility/early-launch-antimalware#mitigation) if the driver it relies on is critical but at the same time unknown or bad.
 
   - By being launched first by the kernel, ELAM is ensured to be launched before any third-party software and is therefore able to detect malware in the boot process and prevent it from initializing. ELAM drivers must be specially signed by Microsoft to ensure they are started by the Windows kernel early in the boot process.
 

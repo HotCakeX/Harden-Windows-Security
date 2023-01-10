@@ -259,7 +259,8 @@ Here is [the official reference](https://learn.microsoft.com/en-us/windows/secur
 - Virtualization-Based Security
 - Virtualization-based protection of Code Integrity policies
 
-you can find all the information on that [in this official document](https://learn.microsoft.com/en-us/windows/security/threat-protection/device-guard/enable-virtualization-based-protection-of-code-integrity).
+  - you can find all the information on them [in this official document](https://learn.microsoft.com/en-us/windows/security/threat-protection/device-guard/enable-virtualization-based-protection-of-code-integrity).
+  - [Validate enabled Windows Defender Device Guard hardware-based security features](https://learn.microsoft.com/en-us/windows/security/threat-protection/device-guard/enable-virtualization-based-protection-of-code-integrity#validate-enabled-windows-defender-device-guard-hardware-based-security-features)
 
 
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>

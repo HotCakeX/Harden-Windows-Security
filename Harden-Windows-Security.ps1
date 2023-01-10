@@ -1,6 +1,6 @@
 <#PSScriptInfo
 
-.VERSION 2023.1.1.1
+.VERSION 2023.1.10
 
 .GUID d435a293-c9ee-4217-8dc1-4ad2318a5770
 
@@ -36,6 +36,7 @@ Version 2022.12.26.2: Optimized the script by performing registry modifications 
 Version 2023.1: The script now allows you to run each hardening category separately and added 2 more categories, 1) certificates and 2) Country IP Blocking
 Version 2023.1.1: added a checking process to the country IP blocking category so that if the list is empty, no rule will be created.
 Version 2023.1.1.1: Changed description of the PowerShell Gallery's page
+Version 2023.1.10: Removed old unnecessary outdated commands, removed most of the links and all descriptions from the script file, USE GITHUB PAGE FOR THE REFERENCE AND PROPER EXPLANATION.
 #>
 
 <# 
@@ -46,17 +47,18 @@ Version 2023.1.1.1: Changed description of the PowerShell Gallery's page
 .DESCRIPTION
 
 💠 Features of this Hardening script:
-  ✅ Always up-to-date and works with latest build of Windows (Currently Windows 11 - compatible and fully tested a Lot on stable and Insider Dev builds)
+
+  ✅ Always up-to-date and works with latest build of Windows (Currently Windows 11 - compatible and rigorously tested on stable and Insider Dev builds)
   ✅ Doesn't break anything
-  ✅ Doesn't remove or disable Windows functionlities against Microsoft's recommendation
-  ✅ Above each command there are comments that explain what it does, why it's there, provide extra important information about it and links to additional resources for better understanding
+  ✅ Doesn't remove or disable Windows functionalities against Microsoft's recommendation
+  ✅ The Readme page on GitHub is used as the reference for all of the commands used in the script. the order in which they appear there is the same as the one in the script file.
   ✅ When a hardening command is no longer necessary because it's applied by default by Microsoft on new builds of Windows, it will also be removed from this script in order to prevent any problems and because it won't be necessary anymore.
   ✅ The script can be run infinite number of times, it's made in a way that it won't make any duplicate changes at all.
 
 
 💠 Hardening Categories from top to bottom: (🔺Detailed info about each of them at my Github🔻)
 
-🟣 https://github.com/HotCakeX/Harden-Windows-Security
+🟣 All the explanations and references in here: https://github.com/HotCakeX/Harden-Windows-Security
 
 ⏹ Commands that require Administrator Privileges
   ✅ Windows Security aka Defender
@@ -77,20 +79,13 @@ Version 2023.1.1.1: Changed description of the PowerShell Gallery's page
 
 
 🛑 Warning:
-Windows by default is secure and safe, this script does not imply nor claim otherwise.
-just like anything, you have to use it wisely and don't compromise yourself with reckless behavior and bad user configuration; Nothing is foolproof.
-this script only uses the tools and features that have already been implemented by Microsoft in Windows OS to fine-tune it towards the highest security and locked-down state,
-using well-documented, supported, often recommended and official methods.
+Windows by default is secure and safe, this script does not imply nor claim otherwise. just like anything, you have to use it wisely and don't compromise yourself with reckless behavior and bad user configuration; Nothing is foolproof. this script only uses the tools and features that have already been implemented by Microsoft in Windows OS to fine-tune it towards the highest security and locked-down state, using well-documented, supported, often recommended and official methods. continue reading for comprehensive info.
 
-💎 Note: if there are multiple Windows user accounts in your computer,
-it's recommended to run this script in each of them, without administrator privileges,
-because Non-admin commands only apply to the current user and are not machine wide.
+💎 Note: if there are multiple Windows user accounts in your computer, it's recommended to run this script in each of them, without administrator privileges, because Non-admin commands only apply to the current user and are not machine wide.
 
-💎 Note: The script asks for confirmation, in the PowerShell console, before running each hardening category,
-so you can selectively run (or don't run) each of them.
+💎 Note: The script asks for confirmation, in the PowerShell console, before running each hardening category, so you can selectively run (or don't run) each of them.
 
-💎 Note: Things with #TopSecurity tag can break functionalities or cause difficulties so this script does NOT enable them by default.
-press Control + F and search for #TopSecurity in the script to find those commands and how to enable them if you want.
+💎 Note: Things with #TopSecurity tag can break functionalities or cause difficulties so this script does NOT enable them by default. press Control + F and search for #TopSecurity in GitHub Readme page or in the script to find those commands and how to enable them if you want.
 
 🏴 if you have any questions, requests, suggestions etc. about this script, please open a new discussion in Github:
 
@@ -108,12 +103,13 @@ press Control + F and search for #TopSecurity in the script to find those comman
 #>
 
 
+ 
+ 
+
   
+
  # https://devblogs.microsoft.com/scripting/use-function-to-determine-elevation-of-powershell-console/
    
-
-
-
   # Function to modify registry, only DWORD property Types, checks before modification
 function ModifyRegistry {
   param ($RegPath, $RegName, $RegValue )
@@ -158,35 +154,20 @@ do { $WindowsSecurityQuestion = $(write-host "Run Windows Security (aka Defender
 
 
 
-# https://docs.microsoft.com/en-us/powershell/module/defender/set-mppreference?view=windowsserver2022-ps 
-  
-
 
 # Indicates whether to scan for malicious and unwanted software in removable drives, such as flash drives, during a full scan.
 Set-MpPreference -DisableRemovableDriveScanning 0
 
-
-<# Specifies whether to enable file hash computation. When this feature is enabled, Windows Defender computes hashes for files it scans.
- In Windows 10 2004, Microsoft Defender Antivirus provides a new setting known as 'Enable file hash computation feature'
- designed to allow admins to force the anti-malware solution to "compute file hashes for every executable file that is scanned
- if it wasn't previously computed" to "improve blocking for custom indicators in Microsoft Defender Advanced Threat Protection (Microsoft Defender ATP). #>
+# Enables file hash computation
 Set-MpPreference -efhc 1 
 
-
-# good source of info: https://answers.microsoft.com/en-us/protect/forum/all/windows-defender/e23367ac-e99c-48f5-8b11-68a3fa0abff7
 # increases level of Cloud Protection - this sets it to 6 which is currently the highest possible
 Set-MpPreference -CloudBlockLevel ZeroTolerance
-
 
 # This increases the allotted analysis time to max:
 Set-MpPreference -CloudExtendedTimeout 50
 
-
-<# Indicates whether Windows Defender runs catch-up scans for scheduled quick scans. 
- A computer can miss a scheduled scan, usually because the computer is off at the scheduled time. 
- If you specify a value of $False, after the computer misses two scheduled quick scans,
- Windows Defender runs a catch-up scan the next time someone logs onto the computer.
- If you specify a value of $True, the computer does not run catch-up scans for scheduled quick scans. #>
+# Enable Windows Defender catch-up scans for scheduled, but missed, quick scans
 Set-MpPreference -DisableCatchupQuickScan $False
 
 
@@ -247,7 +228,6 @@ Set-MpPreference -MAPSReporting 2
 
 
 # Optimizing Network Protection Performance of Windows Defender - this was off by default on Windows 11 insider build 25247
-# https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/network-protection?view=o365-worldwide#optimizing-network-protection-performance
 Set-MpPreference -AllowSwitchToAsyncInspection $True
 
 
@@ -255,6 +235,7 @@ Set-MpPreference -AllowSwitchToAsyncInspection $True
 # =========================================================================================================================
 # =========================================End of Windows Security aka Defender============================================
 # =========================================================================================================================
+
 
 
 
@@ -271,11 +252,10 @@ do { $ASRulesQuestion = $(write-host "Run Attack Surface Reduction Rules section
 
 
 
-# https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/attack-surface-reduction-rules-reference?view=o365-worldwide
 
+# You can manually turn off any of them by changing them from Enabled to AuditMode or Disabled
 
-
-# ASR Rules, All 16 available rules are set to Enabled which means Block, except for 1 tagged with #TopSecurity
+# ASR Rules, All 16 available rules are set to Enabled which means Block
 # Block abuse of exploited vulnerable signed drivers
 Set-MpPreference -AttackSurfaceReductionRules_Ids 56a863a9-875e-4185-98a7-b882c64b5ce5 -AttackSurfaceReductionRules_Actions Enabled
 # Block Adobe Reader from creating child processes
@@ -286,9 +266,8 @@ Add-MpPreference -AttackSurfaceReductionRules_Ids d4f940ab-401b-4efc-aadc-ad5f3c
 Add-MpPreference -AttackSurfaceReductionRules_Ids 9e6c4e1f-7d60-472f-ba1a-a39ef669e4b2 -AttackSurfaceReductionRules_Actions Enabled
 # Block executable content from email client and webmail
 Add-MpPreference -AttackSurfaceReductionRules_Ids be9ba2d9-53ea-4cdc-84e5-9b1eeee46550 -AttackSurfaceReductionRules_Actions Enabled
-# Block executable files from running unless they meet a prevalence, age, or trusted list criteria #TopSecurity set to AuditMode 
-# https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/attack-surface-reduction-faq?view=o365-worldwide#i-enabled-the-asr-rule---block-executable-files-from-running-unless-they-meet-a-prevalence--age--or-trusted-list-criterion---after-some-time--i-updated-a-piece-of-software--and-the-rule-is-now-blocking-it--even-though-it-didn-t-before--did-something-go-wrong-
-Add-MpPreference -AttackSurfaceReductionRules_Ids 01443614-cd74-433a-b99e-2ecdc07bfc25 -AttackSurfaceReductionRules_Actions AuditMode
+# Block executable files from running unless they meet a prevalence, age, or trusted list criteria 
+Add-MpPreference -AttackSurfaceReductionRules_Ids 01443614-cd74-433a-b99e-2ecdc07bfc25 -AttackSurfaceReductionRules_Actions Enabled
 # Block execution of potentially obfuscated scripts
 Add-MpPreference -AttackSurfaceReductionRules_Ids 5beb7efe-fd9a-4556-801d-275e5ffc04cc -AttackSurfaceReductionRules_Actions Enabled
 # Block JavaScript or VBScript from launching downloaded executable content
@@ -331,15 +310,6 @@ do { $BitlockerQuestion = $(write-host "Run Bitlocker section? Enter Y for Yes o
     "y" { 
 
 
-<#
- BitLocker software will bring you a real security against the theft of your computer if you strictly abide by the following basic rule:
- As soon as you have finished working, completly shut Windows down and allow for every shadow of information to disappear
- (from RAM, disk caches) within 2 minutes.
-#>
-
-# Bitlocker Drive Encryption settings: setting the encryption algorithm and cipher options
-# https://learn.microsoft.com/en-us/windows/security/information-protection/bitlocker/bitlocker-countermeasures
-
 
 # Set OS drive Encryption algorithm and Cipher | XTS-AES 256-bit
 ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Policies\Microsoft\FVE' -RegName 'EncryptionMethodWithXtsOs' -RegValue '7'
@@ -375,46 +345,94 @@ ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Policies\Microsoft\FVE' -RegName 'UseTPM
 ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Policies\Microsoft\FVE' -RegName 'UseTPM' -RegValue '2'
 
 
-<#
-Bitlocker Group policy settings:
-https://learn.microsoft.com/en-us/windows/security/information-protection/bitlocker/bitlocker-group-policy-settings
-
-System compatibility Warning
-https://learn.microsoft.com/en-us/windows/security/information-protection/kernel-dma-protection-for-thunderbolt#system-compatibility
-
-
-"To see if a system supports Kernel DMA Protection, check the System Information desktop app (MSINFO32).
-Systems released prior to Windows 10 version 1803 do not support Kernel DMA Protection,
-but they can leverage other DMA attack mitigations as described in BitLocker countermeasures."
-
-
-"Kernel DMA Protection is not compatible with other BitLocker DMA attacks countermeasures.
-It is recommended to disable the BitLocker DMA attacks countermeasures if the system supports Kernel DMA Protection.
-Kernel DMA Protection provides higher security bar for the system over the BitLocker DMA attack countermeasures,
-while maintaining usability of external peripherals."
-
-
-in short, if your hardware is old and System Information shows Kernel DMA protection is off, use Bitlocker DMA protection from the command below.
-but if System Information shows Kernel DMA protection is on, do not run the command below and if already run, set it in group policy to Not Configured state.
-
-
-https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/oem-kernel-dma-protection
-*these requirements such as VT-X and VT-D support can be found in Inte's CPU product page,
-e.g. https://www.intel.com/content/www/us/en/products/sku/134594/intel-core-i712700k-processor-25m-cache-up-to-5-00-ghz/specifications.html
-
-to have VBS and Kernel protection, in Intel CPUs, from UEFI,
-turn on Intel Virtualization features and also turn on VT-d (Intel Virtualization Technology for Directed I/O)
 
 
 
-Disable new DMA devices when this computer is locked
-#> 
-ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Policies\Microsoft\FVE' -RegName 'DisableExternalDMAUnderLock' -RegValue '1'
+
+
+
+# bootDMAProtection check - checks for Kernel DMA Protection status in System information or msinfo32
+$bootDMAProtectionCheck =
+@"
+  namespace SystemInfo
+    {
+      using System;
+      using System.Runtime.InteropServices;
+
+      public static class NativeMethods
+      {
+        internal enum SYSTEM_DMA_GUARD_POLICY_INFORMATION : int
+        {
+            /// </summary>
+            SystemDmaGuardPolicyInformation = 202
+        }
+
+        [DllImport("ntdll.dll")]
+        internal static extern Int32 NtQuerySystemInformation(
+          SYSTEM_DMA_GUARD_POLICY_INFORMATION SystemDmaGuardPolicyInformation,
+          IntPtr SystemInformation,
+          Int32 SystemInformationLength,
+          out Int32 ReturnLength);
+
+        public static byte BootDmaCheck() {
+          Int32 result;
+          Int32 SystemInformationLength = 1;
+          IntPtr SystemInformation = Marshal.AllocHGlobal(SystemInformationLength);
+          Int32 ReturnLength;
+
+          result = NativeMethods.NtQuerySystemInformation(
+                    NativeMethods.SYSTEM_DMA_GUARD_POLICY_INFORMATION.SystemDmaGuardPolicyInformation,
+                    SystemInformation,
+                    SystemInformationLength,
+                    out ReturnLength);
+
+          if (result == 0) {
+            byte info = Marshal.ReadByte(SystemInformation, 0);
+            return info;
+          }
+
+          return 0;
+        }
+      }
+    }
+"@
+
+Add-Type -TypeDefinition $bootDMAProtectionCheck
+
+# returns true or false depending on whether Kernel DMA Protection is on or off
+$bootDMAProtection = ([SystemInfo.NativeMethods]::BootDmaCheck()) -ne 0
+
+
+# Enables or disables DMA protection from Bitlocker Countermeasures based on the status of Kernel DMA protection.
+# https://admx.help/?Category=Windows_11_2022&Policy=Microsoft.Policies.VolumeEncryption::DisableExternalDMAUnderLock_Name
+if ($bootDMAProtection) {
+
+    ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Policies\Microsoft\FVE' -RegName 'DisableExternalDMAUnderLock' -RegValue '1'
+
+}
+else {
+
+    ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Policies\Microsoft\FVE' -RegName 'DisableExternalDMAUnderLock' -RegValue '0'
+}
+
+
+
+
 
 
 # Disallow standard users from changing the Bitlocker Startup PIN or password
-# this is complementary for the Bitlocker activation and verification script below to work properly
 ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Policies\Microsoft\FVE' -RegName 'DisallowStandardUserPINReset' -RegValue '1'
+
+
+
+
+
+
+
+
+
+
+
 
 
 # set-up Bitlocker encryption for OS Drive with TPMandPIN and recovery password keyprotectors and Verify its implementation
@@ -645,27 +663,7 @@ do { $TLSQuestion = $(write-host "Run TLS Security section? Enter Y for Yes or N
     switch ($TLSQuestion) {   
     "y" { 
 
-<#
 
-Resources used:
-
-https://learn.microsoft.com/en-us/windows/win32/secauthn/protocols-in-tls-ssl--schannel-ssp-
-These registry settings only affect things that use schannel: that includes Edge, IIS, built-in inbox Windows apps, but not Chrome, Firefox, other programs that use portable stacks like Java, nodejs, python or php.
-these portable stacks are:
-
-Example of portable TLS stacks used in 3rd party programs: OpenSSL/SSLeay (plus forks LibreSSL and BoringSSL), NSS and GnuTLS are written in C,
-and JSSE and BouncyCastle in Java, and are widely available and used on at least all Linux (usually other Unix also) and Windows.
-MbedTLS/PolarSSL Wolf/CyaSSL and BearSSL
-
-  https://en.wikipedia.org/wiki/Comparison_of_TLS_implementations#Portability_concerns
-
-
-  https://techcommunity.microsoft.com/t5/core-infrastructure-and-security/demystifying-schannel/ba-p/259233
-
-
-  https://dirteam.com/sander/2019/07/30/howto-disable-weak-protocols-cipher-suites-and-hashing-algorithms-on-web-application-proxies-ad-fs-servers-and-windows-servers-running-azure-ad-connect/
-
-  #>
 
 # Disable TLS v1
 # step 1
@@ -691,7 +689,6 @@ ModifyRegistry -RegPath 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProvider
 
 
 # Enable TLS_CHACHA20_POLY1305_SHA256 Cipher Suite which is available but not enabled by default in Windows 11
-# https://learn.microsoft.com/en-us/windows/win32/secauthn/tls-cipher-suites-in-windows-11
 Enable-TlsCipherSuite -Name "TLS_CHACHA20_POLY1305_SHA256" -Position 0
 
 
@@ -699,7 +696,7 @@ Enable-TlsCipherSuite -Name "TLS_CHACHA20_POLY1305_SHA256" -Position 0
 
 
 # disabling weak cipher suites
-# https://github.com/ssllabs/research/wiki/SSL-and-TLS-Deployment-Best-Practices
+
 
 try {
   # Disable NULL Cipher Suites - 1 
@@ -730,10 +727,10 @@ try {
 
 
 
-# Enabling Diffie–Hellman based Cipher Suits
+# Enabling Diffie–Hellman based key exchange algorithms
 
 # TLS_DHE_RSA_WITH_AES_128_GCM_SHA256
-# must be already available by default according to Microsoft Docs but it isn't, on Windows 11 insider dev build 25247
+# must be already available by default according to Microsoft Docs but it isn't, on Windows 11 insider dev build 25272
 # https://learn.microsoft.com/en-us/windows/win32/secauthn/tls-cipher-suites-in-windows-11
 Enable-TlsCipherSuite -Name "TLS_DHE_RSA_WITH_AES_128_GCM_SHA256"
 
@@ -856,44 +853,25 @@ do { $LockScreenQuestion = $(write-host "Run Lock Screen section? Enter Y for Ye
 
 
 # Automatically lock computer after X seconds, set to 120 seconds in this command.
-# https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/interactive-logon-machine-inactivity-limit
 ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System' -RegName 'InactivityTimeoutSecs' -RegValue '120'
 
-
-# https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/interactive-logon-do-not-require-ctrl-alt-del
 # forces CAD requirement, CTRL + ALT + DELETE at Windows Lock screen to be pressed to show sign in fields
-# Interactive logon: Do not require CTRL+ALT+DEL - when set to '0', CAD is required
 ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System' -RegName 'DisableCAD' -RegValue '0'
 
-
-# https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/interactive-logon-machine-account-lockout-threshold
-# The security setting allows you to set a threshold for the number of failed sign-in attempts that causes the device to be locked by using BitLocker.
-# This threshold means, if the specified maximum number of failed sign-in attempts is exceeded,
-# the device will invalidate the Trusted Platform Module (TPM) protector and any other protector
-# except the 48-digit recovery password, and then reboot. During Device Lockout mode,
-# the computer or device only boots into the touch-enabled Windows Recovery Environment (WinRE) until an authorized user enters the recovery password to restore full access.
-# it can provide security against brute force methods
+# set a threshold for the number of failed sign-in attempts that causes the device to be locked by using BitLocker.
 ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System' -RegName 'MaxDevicePasswordFailedAttempts' -RegValue '6'
 
-
-# https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/interactive-logon-display-user-information-when-the-session-is-locked
-# https://www.itsecdb.com/oval/definition/oval/gov.nist.3/def/5002/Interactive-logon-Display-user-information-when-the-session.html
 # hides email address of the Microsoft account on lock screen
 ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System' -RegName 'DontDisplayLockedUserId' -RegValue '3'
 
-
-# If the policy is enabled and a user signs in as Other user, the full name of the user is not displayed during sign-in.
-# In the same context, if users type their email address and password at the sign in screen and press Enter,
-# the displayed text "Other user" remains unchanged, and is no longer replaced by the user's first and last name
+# Don't display username at sign-in when user signs in as Other user
 ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System' -RegName 'DontDisplayUserName' -RegValue '1'
 
-
-# https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/interactive-logon-do-not-display-last-user-name
-# Don't display last signed-in: this will stop showing Any info about Windows accounts; users need to manually enter username and password/Pin to sign in #TopSecurity could causes annoyance - Disabled here - to enable it, change it to 1
-# this can be useful to enable if you live in a risky place and you don't want people to get any information about your computer when it's locked and you're not around
+# Don't display last signed-in #TopSecurity
 ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System' -RegName 'dontdisplaylastusername' -RegValue '0'
 
-
+# Don't show network (like WiFi) icon on lock screen
+ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\System' -RegName 'DontDisplayNetworkSelectionUI' -RegValue '1'
 
 
 } "N" {Break}   }}  until ($LockScreenQuestion -eq "y" -or $LockScreenQuestion -eq "N")
@@ -914,27 +892,15 @@ do { $UACQuestion = $(write-host "Run UAC section? Enter Y for Yes or N for No" 
 
 
 
-
-# https://docs.microsoft.com/en-us/windows/security/identity-protection/user-account-control/user-account-control-group-policy-and-registry-key-settings#registry-key-settings
-# The following 3 changes harden UAC and set its slider in control panel beyond what's available in there.
 # setting it to 1 asks for Admin credentials, setting it to 2 asks for Accept/Deny for Admin tasks in Admin account.
 ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System' -RegName 'ConsentPromptBehaviorAdmin' -RegValue '1'
 
-
-# Next one - this automatically denies all UAC prompts on Standard accounts when set to "0". not enabled here #topSecurity
-# good for forcing log out of Standard account and logging in Admin account to perform actions,
-# or switching to Admin account to perform elevated task. 1 = Prompt for credentials on the secure desktop 
+# this automatically denies all UAC prompts on Standard accounts when set to "0", 1 = Prompt for credentials on the secure desktop #TopSecurity
 ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System' -RegName 'ConsentPromptBehaviorUser' -RegValue '1'
 
-
-# Enforce cryptographic signatures on any interactive application that requests elevation of privilege.
-# it can prevent certain programs from running, e.g. it prevents Cheat Engine from prompting for UAC
-# here is set to 0, only set it to 1 for #TopSecurity
+# Enforce cryptographic signatures on any interactive application that requests elevation of privilege #TopSecurity
 ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System' -RegName 'ValidateAdminCodeSignatures' -RegValue '0'
 
-
-# Don't show network (like WiFi) icon on lock screen
-ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\System' -RegName 'DontDisplayNetworkSelectionUI' -RegValue '1'
 
 
 
@@ -956,8 +922,6 @@ do { $DeviceGuardQuestion= $(write-host "Run Device Guard section? Enter Y for Y
 
 
 
-<# source: https://learn.microsoft.com/en-us/windows/security/threat-protection/device-guard/enable-virtualization-based-protection-of-code-integrity  #>
-
 
 # To enable VBS
 ModifyRegistry -RegPath 'HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard' -RegName 'EnableVirtualizationBasedSecurity' -RegValue '1'
@@ -975,28 +939,7 @@ ModifyRegistry -RegPath 'HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scen
 ModifyRegistry -RegPath 'HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\HypervisorEnforcedCodeIntegrity' -RegName 'Locked' -RegValue '1'
 
 
-<#
-More Device Guard info:
-https://www.bsi.bund.de/EN/Service-Navi/Publikationen/Studien/SiSyPHuS_Win10/AP7/SiSyPHuS_AP7_node.html
-https://www.bsi.bund.de/SharedDocs/Downloads/DE/BSI/Cyber-Sicherheit/SiSyPHus/E20172000_BSI_Win10_DGABGL_Win10_v_1_0.pdf?__blob=publicationFile&v=3
 
-
-
-there are more settings available in Group Policy Device Guard section that these modifications do Not enable,
-because I don't know if your hardware is modern to support them, so provided resources below to check them out and enable them if you wish.
-
-
-1. Secure Launch:
-https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-system-guard/how-hardware-based-root-of-trust-helps-protect-windows#secure-launchthe-dynamic-root-of-trust-for-measurement-drtm
-https://www.microsoft.com/en-us/security/blog/2020/09/01/force-firmware-code-to-be-measured-and-attested-by-secure-launch-on-windows-10
-
-2. Require UEFI Memory Attributes Table"
-https://learn.microsoft.com/en-us/windows-hardware/drivers/bringup/unified-extensible-firmware-interface
-
-3. Kernel Mode Hardware Enforced Stack Protection
-https://techcommunity.microsoft.com/t5/microsoft-security-baselines/windows-11-version-22h2-security-baseline/ba-p/3632520
-
-#>
 
 } "N" {Break}   }}  until ($DeviceGuardQuestion -eq "y" -or $DeviceGuardQuestion -eq "N")
 # =========================================================================================================================
@@ -1015,26 +958,11 @@ do { $WinFirewallQuestion= $(write-host "Run Windows Firewall section? Enter Y f
     switch ($WinFirewallQuestion) {   
     "y" { 
 
-<#
-Block LOLBins from making Internet connections
- 
-LOLBins are Microsoft-signed files, meaning they are either native to the Operating System (OS) and come pre-installed,
-or are available from Microsoft (i.e. a Microsoft program or add-on).
-Despite being legitimate (and well-intentioned) files,
-these binaries can be exploited by an attacker and used in an attack.
-
-https://blog.teamascend.com/lolbins
-
-this website also lists them as well: https://lolbas-project.github.io
-THESE COMMANDS CHECK IF THE RULE ALREADY EXISTS BEFORE ADDING THEM TO WINDOWS FIREWALL
-https://stackoverflow.com/questions/6597951/how-can-you-check-for-existing-firewall-rules-using-powershell
-#>
 
 
 
 # make sure Firewall for all 3 profiles is enabled
 Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled True
-
 
 # set inbound and outbound default actions for Domain Firewall Profile to Block
 Set-NetFirewallProfile -Name Domain -DefaultInboundAction Block -DefaultOutboundAction Block
@@ -1162,47 +1090,10 @@ Firewallblock -n  "LOLBins-51 Block wscript.exe netconns" -p "%systemroot%\SysWO
 
 
 
-
 # Enable Windows Firewall logging for Private and Public profiles, set the log file size to max 32.767 MB, log only dropped packets.
 Set-NetFirewallProfile -Name private, Public -LogBlocked True -LogMaxSizeKilobytes 32767 -LogFileName %systemroot%\system32\LogFiles\Firewall\pfirewall.log
 
 
-
-
-
-
-<#
-
- Setting Edge Traversal policy for All Firewall rules to Block (only inbound rules have that) 
-
- https://learn.microsoft.com/en-us/windows/win32/teredo/receiving-unsolicited-traffic-over-teredo
-
- UDP is a stateless protocol; blocking all traffic would block, for instance, inbound replies to DNS requests made by your server.
-
- Windows Firewall is Stateful https://geekflare.com/stateful-vs-stateless-firewalls/
-
- https://serverfault.com/questions/342985/what-is-solicited-network-traffic-and-what-is-unsolicited-network-traffic?newreg=e2271f0f1a2448d4bd772d686ff98f48
-
-
-How Windows Firewall Works
-
-this link also has explanation about IPSec policy which is accessible through MSC (Microsoft Management Console)
-
-https://learn.microsoft.com/en-us/previous-versions//bb727017(v=technet.10)?redirectedfrom=MSDN#how-windows-firewall-works
-
-
-https://superuser.com/questions/923937/how-does-my-computers-firewall-work-like-inbound-rule-outbound-rule-reply
-
-
-https://security.stackexchange.com/a/106585
-
-#>
-
-Get-NetFirewallRule | Where-Object {$_.EdgeTraversalPolicy -notmatch "Block"} | ForEach-Object { Set-NetFirewallRule -Name $_.Name -EdgeTraversalPolicy Block}
-
-$badrules = Get-NetFirewallRule | Where-Object {$_.EdgeTraversalPolicy -notmatch "Block"}
-
-Write-Host "There are currently" $badrules.count "Firewall rules that allow Edge Traversal" -ForegroundColor yellow
 
 
 
@@ -1236,38 +1127,29 @@ if ($PSVersionTable.PSVersion.Major,$PSVersionTable.PSVersion.Minor -join "." -g
 
 { 
 
-# Disable PowerShell v2 (needs 2 commands) - because it's old and doesn't support AMSI: https://devblogs.microsoft.com/powershell/powershell-the-blue-team/#antimalware-scan-interface-integration
-# https://devblogs.microsoft.com/powershell/windows-powershell-2-0-deprecation/ 
+# Disable PowerShell v2 (needs 2 commands)
 PowerShell.exe "if((get-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2).state -eq 'enabled'){disable-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2 -norestart}else{Write-Host 'MicrosoftWindowsPowerShellV2 is already disabled' -ForegroundColor Darkgreen}"
 PowerShell.exe "if((get-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2Root).state -eq 'enabled'){disable-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2Root -norestart}else{Write-Host 'MicrosoftWindowsPowerShellV2Root is already disabled' -ForegroundColor Darkgreen}"
 
-# Disable Work Folders client, not used when your computer is not part of a domain or enterprise network
-# https://learn.microsoft.com/en-us/windows-server/storage/work-folders/work-folders-overview
+# Disable Work Folders client
 PowerShell.exe "if((get-WindowsOptionalFeature -Online -FeatureName WorkFolders-Client).state -eq 'enabled'){disable-WindowsOptionalFeature -Online -FeatureName WorkFolders-Client -norestart}else{Write-Host 'WorkFolders-Client is already disabled' -ForegroundColor Darkgreen}"
 
-# Disable Internet Printing Client, used in combination with IIS web server, old feature, can be disabled without causing problems further down the road
-# https://learn.microsoft.com/en-us/troubleshoot/windows-server/printing/manage-connect-printers-use-web-browser
+# Disable Internet Printing Client
 PowerShell.exe "if((get-WindowsOptionalFeature -Online -FeatureName Printing-Foundation-Features).state -eq 'enabled'){disable-WindowsOptionalFeature -Online -FeatureName Printing-Foundation-Features -norestart}else{Write-Host 'Printing-Foundation-Features is already disabled' -ForegroundColor Darkgreen}"
 
 # Disable Windows Media Player (legacy)
-# isn't needed anymore, Windows 11 has modern media player app. everything, including connecting phone to computer and importing photos etc., works after disabling it
 PowerShell.exe "if((get-WindowsOptionalFeature -Online -FeatureName WindowsMediaPlayer).state -eq 'enabled'){disable-WindowsOptionalFeature -Online -FeatureName WindowsMediaPlayer -norestart}else{Write-Host 'WindowsMediaPlayer is already disabled' -ForegroundColor Darkgreen}"
 
-
 # Enable Windows Defender Application Guard
-# which is a safe environment to open untrusted websites
 PowerShell.exe "if((get-WindowsOptionalFeature -Online -FeatureName Windows-Defender-ApplicationGuard).state -eq 'disabled'){enable-WindowsOptionalFeature -Online -FeatureName Windows-Defender-ApplicationGuard -norestart}else{Write-Host 'Windows-Defender-ApplicationGuard is already enabled' -ForegroundColor Darkgreen}"
 
 # Enable Windows Sandbox
-# install, test and use programs in a disposable virtual operation system, completely separate from your main OS
 PowerShell.exe "if((get-WindowsOptionalFeature -Online -FeatureName Containers-DisposableClientVM).state -eq 'disabled'){enable-WindowsOptionalFeature -Online -FeatureName Containers-DisposableClientVM -All -norestart}else{Write-Host 'Containers-DisposableClientVM (Windows Sandbox) is already enabled' -ForegroundColor Darkgreen}"
 
 # Enable Hyper-V
-# the best hypervisor to run virtual machines on
 PowerShell.exe "if((get-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V).state -eq 'disabled'){enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All -norestart}else{Write-Host 'Microsoft-Hyper-V is already enabled' -ForegroundColor Darkgreen}"
 
 # Enable Virtual Machine Platform
-# required for Android subsystem or WSA (Windows subsystem for Android). if it's disabled, it will be automatically enabled either way when you try to install WSA from Store app
 PowerShell.exe "if((get-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform).state -eq 'disabled'){enable-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform -norestart}else{Write-Host 'VirtualMachinePlatform is already enabled' -ForegroundColor Darkgreen}"
 
 
@@ -1275,40 +1157,30 @@ PowerShell.exe "if((get-WindowsOptionalFeature -Online -FeatureName VirtualMachi
 
 else {
 
-    # Disable PowerShell v2 (needs 2 commands) - because it's old and doesn't support AMSI: https://devblogs.microsoft.com/powershell/powershell-the-blue-team/#antimalware-scan-interface-integration
-# https://devblogs.microsoft.com/powershell/windows-powershell-2-0-deprecation/ 
- if((get-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2).state -eq 'enabled'){disable-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2 -norestart}else{Write-Host 'MicrosoftWindowsPowerShellV2 is already disabled' -ForegroundColor Darkgreen}
- if((get-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2Root).state -eq 'enabled'){disable-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2Root -norestart}else{Write-Host 'MicrosoftWindowsPowerShellV2Root is already disabled' -ForegroundColor Darkgreen}
+    # Disable PowerShell v2 (needs 2 commands) 
+    if((get-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2).state -eq 'enabled'){disable-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2 -norestart}else{Write-Host 'MicrosoftWindowsPowerShellV2 is already disabled' -ForegroundColor Darkgreen}
+    if((get-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2Root).state -eq 'enabled'){disable-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2Root -norestart}else{Write-Host 'MicrosoftWindowsPowerShellV2Root is already disabled' -ForegroundColor Darkgreen}
 
-# Disable Work Folders client, not used when your computer is not part of a domain or enterprise network
-# https://learn.microsoft.com/en-us/windows-server/storage/work-folders/work-folders-overview
- if((get-WindowsOptionalFeature -Online -FeatureName WorkFolders-Client).state -eq 'enabled'){disable-WindowsOptionalFeature -Online -FeatureName WorkFolders-Client -norestart}else{Write-Host 'WorkFolders-Client is already disabled' -ForegroundColor Darkgreen}
+    # Disable Work Folders client
+    if((get-WindowsOptionalFeature -Online -FeatureName WorkFolders-Client).state -eq 'enabled'){disable-WindowsOptionalFeature -Online -FeatureName WorkFolders-Client -norestart}else{Write-Host 'WorkFolders-Client is already disabled' -ForegroundColor Darkgreen}
 
-# Disable Internet Printing Client, used in combination with IIS web server, old feature, can be disabled without causing problems further down the road
-# https://learn.microsoft.com/en-us/troubleshoot/windows-server/printing/manage-connect-printers-use-web-browser
- if((get-WindowsOptionalFeature -Online -FeatureName Printing-Foundation-Features).state -eq 'enabled'){disable-WindowsOptionalFeature -Online -FeatureName Printing-Foundation-Features -norestart}else{Write-Host 'Printing-Foundation-Features is already disabled' -ForegroundColor Darkgreen}
+    # Disable Internet Printing Client
+    if((get-WindowsOptionalFeature -Online -FeatureName Printing-Foundation-Features).state -eq 'enabled'){disable-WindowsOptionalFeature -Online -FeatureName Printing-Foundation-Features -norestart}else{Write-Host 'Printing-Foundation-Features is already disabled' -ForegroundColor Darkgreen}
 
-# Disable Windows Media Player (legacy)
-# isn't needed anymore, Windows 11 has modern media player app. everything, including connecting phone to computer and importing photos etc., works after disabling it
- if((get-WindowsOptionalFeature -Online -FeatureName WindowsMediaPlayer).state -eq 'enabled'){disable-WindowsOptionalFeature -Online -FeatureName WindowsMediaPlayer -norestart}else{Write-Host 'WindowsMediaPlayer is already disabled' -ForegroundColor Darkgreen}
+    # Disable Windows Media Player (legacy)
+    if((get-WindowsOptionalFeature -Online -FeatureName WindowsMediaPlayer).state -eq 'enabled'){disable-WindowsOptionalFeature -Online -FeatureName WindowsMediaPlayer -norestart}else{Write-Host 'WindowsMediaPlayer is already disabled' -ForegroundColor Darkgreen}
 
+    # Enable Windows Defender Application Guard
+    if((get-WindowsOptionalFeature -Online -FeatureName Windows-Defender-ApplicationGuard).state -eq 'disabled'){enable-WindowsOptionalFeature -Online -FeatureName Windows-Defender-ApplicationGuard -norestart}else{Write-Host 'Windows-Defender-ApplicationGuard is already enabled' -ForegroundColor Darkgreen}
 
-# Enable Windows Defender Application Guard
-# which is a safe environment to open untrusted websites safely
- if((get-WindowsOptionalFeature -Online -FeatureName Windows-Defender-ApplicationGuard).state -eq 'disabled'){enable-WindowsOptionalFeature -Online -FeatureName Windows-Defender-ApplicationGuard -norestart}else{Write-Host 'Windows-Defender-ApplicationGuard is already enabled' -ForegroundColor Darkgreen}
+    # Enable Windows Sandbox
+    if((get-WindowsOptionalFeature -Online -FeatureName Containers-DisposableClientVM).state -eq 'disabled'){enable-WindowsOptionalFeature -Online -FeatureName Containers-DisposableClientVM -All -norestart}else{Write-Host 'Containers-DisposableClientVM (Windows Sandbox) is already enabled' -ForegroundColor Darkgreen}
 
-# Enable Windows Sandbox
-# install, test and use programs in a disposable virtual operation system, completely separate from your main OS
- if((get-WindowsOptionalFeature -Online -FeatureName Containers-DisposableClientVM).state -eq 'disabled'){enable-WindowsOptionalFeature -Online -FeatureName Containers-DisposableClientVM -All -norestart}else{Write-Host 'Containers-DisposableClientVM (Windows Sandbox) is already enabled' -ForegroundColor Darkgreen}
+    # Enable Hyper-V
+    if((get-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V).state -eq 'disabled'){enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All -norestart}else{Write-Host 'Microsoft-Hyper-V is already enabled' -ForegroundColor Darkgreen}
 
-# Enable Hyper-V
-# the best hypervisor to run virtual machines on
- if((get-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V).state -eq 'disabled'){enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All -norestart}else{Write-Host 'Microsoft-Hyper-V is already enabled' -ForegroundColor Darkgreen}
-
-# Enable Virtual Machine Platform
-# required for Android subsystem or WSA (Windows subsystem for Android). if it's disabled, it will be automatically enabled either way when you try to install WSA from Store app
-if((get-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform).state -eq 'disabled'){enable-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform -norestart}else{Write-Host 'VirtualMachinePlatform is already enabled' -ForegroundColor Darkgreen}
-
+    # Enable Virtual Machine Platform
+    if((get-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform).state -eq 'disabled'){enable-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform -norestart}else{Write-Host 'VirtualMachinePlatform is already enabled' -ForegroundColor Darkgreen}
 
 
         
@@ -1337,8 +1209,7 @@ do { $WinNetworkingQuestion= $(write-host "Run Windows Networking section? Enter
 
 
 
-# disable NetBIOS over TCP/IP on all network interfaces, virtual and physical. need to run it every time after installing a new VPN software or network adapater, virtual or physical.
-# https://learn.microsoft.com/en-us/windows-hardware/customize/desktop/unattend/microsoft-windows-netbt-interfaces-interface-netbiosoptions
+# disable NetBIOS over TCP/IP on all network interfaces, virtual and physical
 $regkey = "HKLM:SYSTEM\CurrentControlSet\services\NetBT\Parameters\Interfaces"
 Get-ChildItem $regkey |ForEach-Object { Set-ItemProperty -Path "$regkey\$($_.pschildname)" -Name NetbiosOptions -Value 2 }
 
@@ -1349,19 +1220,14 @@ New-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\DNSClient" -Name 
 
 
 # disable LMHOSTS lookup protocol on all network adapters
-# the reason why we do this: https://www.crowe.com/cybersecurity-watch/netbios-llmnr-giving-away-credentials
 ModifyRegistry -RegPath 'HKLM:\SYSTEM\CurrentControlSet\Services\NetBT\Parameters' -RegName 'EnableLMHOSTS' -RegValue '0'
 
 
 # Set the Network Location of all connections to Public (or Private)
-# Public network means less trust to the nearby devices
 Get-NetConnectionProfile | Set-NetConnectionProfile -NetworkCategory Public
 
 
-<# Disable Printing over HTTP
-https://www.stigviewer.com/stig/microsoft_windows_server_2012_member_server/2013-07-25/finding/WN12-CC-000039
-https://www.windows-security.org/6a6bdc56768622d3fd84f1719d330d12/turn-off-printing-over-http
-#>
+# Disable Printing over HTTP
 ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Printers' -RegName 'DisableHTTPPrinting' -RegValue '1'
 
 # Turn off downloading of print drivers over HTTP
@@ -1370,43 +1236,11 @@ ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Printers' 
 # Disable Multicast DNS
 ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\DNSClient' -RegName 'EnableMulticast' -RegValue '0'
 
-
-<# Turn off smart multi-homed name resolution in Windows
-
-While the feature makes sense from a performance point of view, it introduces an issue from a privacy one.
-If you connect to a VPN network on a Windows machine for instance, smart multi-homed name resolution may lead to DNS leakage.
-Since requests are sent out to all network adapters at the same time,
-all configured DNS servers receive the requests and with them information on the sites that you visit. 
-https://www.windows-security.org/2718dc40b3ecea129213e7eca29b7357/turn-off-smart-multi-homed-name-resolution
-#>
-ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\DNSClient' -RegName 'DisableSmartNameResolution' -RegValue '1'
-
-
-<# The value is 1 to disable DNS A and AAAA queries from executing in parallel on all configured DNS servers,
-with the fastest response being theoretically accepted first.
-benefits of disabling this are the same as "DisableSmartNameResolution" #>
-ModifyRegistry -RegPath 'HKLM:\SYSTEM\CurrentControlSet\Services\Dnscache\Parameters' -RegName 'DisableParallelAandAAAA' -RegValue '1'
-
-<# Disable IP Source Routing
-https://www.curvesandchaos.com/what-is-disableipsourcerouting/
-
-After applying this and restarting computer, "Source Routing Behavior" in "netsh int IPv4 show global" shows "Drop"
-which is what the value "2" does.
-#>
+# Disable IP Source Routing
 ModifyRegistry -RegPath 'HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters' -RegName 'DisableIPSourceRouting' -RegValue '2'
 
-
-<# https://support.microsoft.com/en-us/topic/security-configuration-guidance-support-ea9aef24-347f-15fa-b94f-36f967907f2f
-Allow the computer to ignore NetBIOS name release requests.
-This setting is a good preventive measure for denial of service attacks against name servers and other very important server roles.
-#>
+# Allow the computer to ignore NetBIOS name release requests
 ModifyRegistry -RegPath 'HKLM:\SYSTEM\CurrentControlSet\Services\Netbt\Parameters' -RegName 'NoNameReleaseOnDemand' -RegValue '1'
-
-# Disable TCP timestamping
-# https://www.kicksecure.com/wiki/Disable_TCP_and_ICMP_Timestamps
-netsh int tcp set global timestamps=disabled
-
-
 
 
 
@@ -1433,9 +1267,6 @@ do { $MiscellaneousQuestion= $(write-host "Run Miscellaneous section? Enter Y fo
 
 
 # Enable early launch antimalware driver for scan of boot-start drivers
-# 3 is the default which allows good, unknown and 'bad but critical'.
-# 1 is for 'good and unknown' , 8 is for 'good only', used in this command
-# https://www.stigviewer.com/stig/windows_10/2021-03-10/finding/V-220813
 ModifyRegistry -RegPath 'HKLM:\SYSTEM\CurrentControlSet\Policies\EarlyLaunch' -RegName 'DriverLoadPolicy' -RegValue '8'
 
 # Disable Location services from Windows - affects Windows settings privacy section
@@ -1444,21 +1275,11 @@ ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\LocationAndSe
 # Enable Hibernate
 powercfg /hibernate on
 
-# Set Hibnernate mode to full, more info: https://learn.microsoft.com/en-us/windows/win32/power/system-power-states#hibernation-file-types
+# Set Hibnernate mode to full
 powercfg /h /type full
 
 # Add Hibernate option to Start menu's power options
 ModifyRegistry -RegPath 'HKLM:\Software\Policies\Microsoft\Windows\Explorer' -RegName 'ShowHibernateOption' -RegValue '1'
-
-
-<# Disable Sleep (Power states S1-S3) - doing this also removes the Sleep option from Start menu and even using commands to put the computer to sleep won't work.
- https://learn.microsoft.com/en-us/windows/win32/power/system-power-states#sleep-state-s1-s3
- also is suggested to disable it for Bitlocker protection at the bottom of this page: 
- https://learn.microsoft.com/en-us/windows/security/information-protection/bitlocker/bitlocker-countermeasures#attacker-with-skill-and-lengthy-physical-access
- 2 registry keys are required for disabling Sleep.
- how the relevant registry keys were found: https://admx.help/?Category=Windows_10_2016&Policy=Microsoft.Policies.PowerManagement::AllowStandbyStatesDC_2
- computer restart is required for the changes to take effect
-#>
 
 # Disable sleep for when plugged in
 ModifyRegistry -RegPath 'HKLM:\Software\Policies\Microsoft\Power\PowerSettings\abfc2519-3608-4c2a-94ea-171b0ed546ab' -RegName 'ACSettingIndex' -RegValue '0'
@@ -1466,87 +1287,40 @@ ModifyRegistry -RegPath 'HKLM:\Software\Policies\Microsoft\Power\PowerSettings\a
 # Disable sleep for when on battery
 ModifyRegistry -RegPath 'HKLM:\Software\Policies\Microsoft\Power\PowerSettings\abfc2519-3608-4c2a-94ea-171b0ed546ab' -RegName 'DCSettingIndex' -RegValue '0'
 
-
-# Enable Mandatory ASLR, there are more options in this official chart:
-# https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/enable-exploit-protection?view=o365-worldwide
+# Enable Mandatory ASLR
 set-processmitigation -System -Enable ForceRelocateImages
 
-# You can add Mandatory ASLR override for a trusted program using the command below or in the Program Settings section of Exploit Protection in Windows Defender app. 
-# Set-ProcessMitigation -Name "D:\trustedProgram.exe" -Disable ForceRelocateImages
+# You can add Mandatory ASLR override for a trusted app using the command below or in the Program Settings section of Exploit Protection in Windows Defender app. 
+# Set-ProcessMitigation -Name "D:\TrustedApp.exe" -Disable ForceRelocateImages
 
-
-# Enable svchost.exe mitigation options - more info: https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-servicecontrolmanager
+# Enable svchost.exe mitigations
 ModifyRegistry -RegPath 'HKLM:\SYSTEM\CurrentControlSet\Control\SCMConfig' -RegName 'EnableSvchostMitigationPolicy' -RegValue '1'
 
-
-# Set Power Plan to "Ultimate Performance". replace it with "High Performance" if wanted.
-$p = Get-CimInstance -Name root\cimv2\power -Class win32_PowerPlan -Filter "ElementName = 'Ultimate Performance'"      
-powercfg /setactive ([string]$p.InstanceID).Replace("Microsoft:PowerPlan\{","").Replace("}","")
-
-
-# Turn on Enhanced mode search for Windows indexer. the default is classic mode.
-# this causes some UI elements in the search settings in Windows settings to become unavailable for Standard users to view.
+# Turn on Enhanced mode search for Windows indexer
 ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Microsoft\Windows Search' -RegName 'EnableFindMyFiles' -RegValue '1'
 
-
-# https://posts.specterops.io/remote-code-execution-via-path-traversal-in-the-device-metadata-authoring-wizard-a0d5839fc54f
-# this is phishing protection mitigation - affects only people who have Windows Driver Kit installed.
-
-try {
-$RegistryPath = 'HKLM:\SOFTWARE\Classes\.devicemetadata-ms'  
-  Remove-Item -Path $RegistryPath -Force  -ErrorAction stop
-}
-catch
-{
-write-host "phishing mitigation for WDK (Windows Driver Kit) not applicable, it's probably not installed `n" -ForegroundColor Magenta
-}
-
-try {
-$RegistryPath = 'HKLM:\SOFTWARE\Classes\.devicemanifest-ms'  
-  Remove-Item -Path $RegistryPath -Force  -ErrorAction stop
-}
-catch
-{
-write-host "phishing mitigation for WDK (Windows Driver Kit) not applicable, it's probably not installed `n" -ForegroundColor Magenta
-}
-
-
-# Enforce the Administrator role for adding printer drivers. This is a frequent exploit attack vector. 
+# Enforce the Administrator role for adding printer drivers
 ModifyRegistry -RegPath 'HKLM:\SYSTEM\CurrentControlSet\Control\Print\Providers\LanMan Print Services\Servers' -RegName 'AddPrinterDrivers' -RegValue '1'
 
 
-# Forces Installer NOT to use elevated privileges during installs by default, which prevents escalation of privileges vulnerabilities and attacks
-ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\Installer' -RegName 'AlwaysInstallElevated' -RegValue '0'
-
-
 # Enable SMB/LDAP Signing
-# Sources:  http://eddiejackson.net/wp/?p=15812  and https://en.hackndo.com/ntlm-relay/ 
 ModifyRegistry -RegPath 'HKLM:\System\CurrentControlSet\Services\LanmanWorkStation\Parameters' -RegName 'RequireSecuritySignature' -RegValue '1'
 ModifyRegistry -RegPath 'HKLM:\System\CurrentControlSet\Services\LanmanWorkStation\Parameters' -RegName 'EnableSecuritySignature' -RegValue '1'
 ModifyRegistry -RegPath 'HKLM:\System\CurrentControlSet\Services\LanmanServer\Parameters' -RegName 'RequireSecuritySignature' -RegValue '1'
 ModifyRegistry -RegPath 'HKLM:\System\CurrentControlSet\Services\LanmanServer\Parameters' -RegName 'EnableSecuritySignature' -RegValue '1'
 
 
+# Enable SMB Encryption - using force to confirm the action
+Set-SmbServerConfiguration -EncryptData $true -force
 
-# Disable "Use my sign in info to automatically finish setting up after an update".
-# when this option is enabled (default value), and the everyday account is Standard, it causes the other admin account to be
-# automatically signed into and in the lock screen when logging into Standard account, you have to double sign in, asks twice for the Windows Pin.
-ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System' -RegName 'DisableAutomaticRestartSignOn' -RegValue '1'
-
-
-# Set Microsoft Edge to update over Metered connections - toggles the button in edge://settings/help
-# These updates are very important, shouldn't let anything suppress them
+# Set Microsoft Edge to update over Metered connections
 ModifyRegistry -RegPath 'HKLM:\SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate\ClientStateMedium\{56EB18F8-B008-4CBD-B6D2-8C97FE7E9062}' -RegName 'allowautoupdatesmetered' -RegValue '1'
 
-
-# Download Windows Updates over metered connections - responsible for the toggle in Windows settings => Windows Update => Advanced options
-# These updates are very important, shouldn't let anything suppress them
+# Download Windows Updates over metered connections
 ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings' -RegName 'AllowAutoWindowsUpdateDownloadOverMeteredNetwork' -RegValue '1'
 
-
-# Enable notify me when a restart is required to finish updating - responsible for the toggle in Windows settings => Windows Update => Advanced options
+# Enable notify me when a restart is required to finish updating
 ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings' -RegName 'RestartNotificationsAllowed2' -RegValue '1'
-
 
 # Allow all Windows users to use Hyper-V and Windows Sandbox by adding all Windows users to the "Hyper-V Administrators" security group
 $usernames = Get-LocalUser | Where-Object{$_.enabled -EQ "True"} | Select-Object "Name"
@@ -1557,20 +1331,16 @@ try { Add-LocalGroupMember -Group "Hyper-V Administrators" -Member $_.Name -Erro
   }
 
 
+
 # change Windows time sync interval from every 7 days to every 2 days (= every 172800 seconds)
 ModifyRegistry -RegPath 'HKLM:\SYSTEM\ControlSet001\Services\W32Time\TimeProviders\NtpClient' -RegName 'SpecialPollInterval' -RegValue '172800'
 
 
-# this was automatically turned on after clean installing Windows 11 insider Dev build 25267 but was set to "2" which is without UEFI lock, and that is expected according to this:
-# https://learn.microsoft.com/en-us/windows-server/security/credentials-protection-and-management/configuring-additional-lsa-protection#automatic-enablement
-# Configure LSASS process to run as a protected process with UEFI Lock
-# https://learn.microsoft.com/en-us/windows-server/security/credentials-protection-and-management/configuring-additional-lsa-protection
-# when this feature is on, a new option called "Local Security Authority Protection" appears in Windows Security GUI => Device Security => Core Isolation
+# Configure LSASS process to run as a protected process with UEFI Lock, the expected default value on new Windows 11 installations is "2" which is without UEFI lock, "1" is with UEFI lock
 ModifyRegistry -RegPath 'HKLM:\SYSTEM\CurrentControlSet\Control\Lsa' -RegName 'RunAsPPL' -RegValue '1'
 
 
 # Add ECH (Encrypted Client Hello) to the Edge browser when it's launched by clicking on a link in an app
-# https://techcommunity.microsoft.com/t5/microsoft-security-baselines/security-baseline-for-microsoft-edge-version-108/ba-p/3691250
 $EdgeRegPath = "Registry::HKEY_CLASSES_ROOT\MSEdgeHTM\shell\open\command\"
 $EdgeRegValue = Get-ItemPropertyValue -Path $EdgeRegPath -Name "(default)"
 
@@ -1657,10 +1427,6 @@ do { $CertCheckQuestion= $(write-host "Run Certificate Checking section? Enter Y
 
 
 
-# https://learn.microsoft.com/en-us/sysinternals/
-# https://learn.microsoft.com/en-us/sysinternals/downloads/sigcheck
-
-
       # List valid certificates not rooted to the Microsoft Certificate Trust List in the User store
       do { $UserStoreQ= $(write-host "List valid certificates not rooted to the Microsoft Certificate Trust List in the User store ? Enter Y for Yes or N for No" -ForegroundColor Cyan; Read-Host)
       switch ($UserStoreQ) {   
@@ -1711,8 +1477,6 @@ do { $CountryIPBlockingQuestion = $(write-host "Run Country IP Blocking section?
 
 
 
-# IPv4 source https://www.ipdeny.com/ipblocks/
-# IPv6 source https://www.ipdeny.com/ipv6/ipaddresses/blocks/
 # -RemoteAddress in New-NetFirewallRule accepts array according to Microsoft Docs, 
 # so we use "[string[]]$IPList = $IPList -split '\r?\n' -ne ''" to convert the IP lists, which is a single multiline string, into an array
 
@@ -1835,7 +1599,7 @@ ModifyRegistry -RegPath 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explore
 # Show hidden files, folders and drives (toggles the control panel folder options item)
 ModifyRegistry -RegPath 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced' -RegName 'Hidden' -RegValue '1'
 
-# Disable websites accessing local language list - good for privacy
+# Disable websites accessing local language list
 ModifyRegistry -RegPath 'HKCU:\Control Panel\International\User Profile' -RegName 'HttpAcceptLanguageOptOut' -RegValue '1'
 
 # turn off safe search in Windows search. from Windows settings > privacy and security > search permissions > safe search
@@ -1860,7 +1624,6 @@ ModifyRegistry -RegPath 'HKCU:\Software\Microsoft\Clipboard' -RegName 'EnableClo
 
 
 # creates Custom Views for Event Viewer in "C:\ProgramData\Microsoft\Event Viewer\Views\Hardening Script\"
-# these are important event logs that are tracked and organized into a folder called "Hardening Script", it can be checked when you open Event Viewer
 # Event Viewer custom views are saved in "C:\ProgramData\Microsoft\Event Viewer\Views". files in there can be backed up and restored on new Windows installations.
 
 # attack surface reduction rules events
@@ -1957,6 +1720,7 @@ $Name         = 'Flags'
 $Value        = '506' 
 If (-NOT (Test-Path $RegistryPath)) {   New-Item -Path $RegistryPath -Force | Out-Null } 
 New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType string -Force
+
 
 
 

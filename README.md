@@ -265,19 +265,14 @@ Here is [the official reference](https://learn.microsoft.com/en-us/windows/secur
 - Turns on UEFI lock for Virtualization-Based Security
 - Makes sure Virtualization-based protection of Code Integrity policies is Enabled
 - Turns on UEFI lock for virtualization-based protection of Code Integrity policies
+- [Require UEFI Memory Attributes Table](https://github.com/microsoft/MSLab/blob/master/Scenarios/DeviceGuard/VBS/readme.md)
 - [Enables Windows Defender Credential Guard with UEFI Lock](https://learn.microsoft.com/en-us/windows/security/identity-protection/credential-guard/credential-guard-manage#enable-virtualization-based-security-and-windows-defender-credential-guard)
   - [Windows Defender Device Guard and Windows Defender Credential Guard hardware readiness tool](https://learn.microsoft.com/en-us/windows/security/identity-protection/credential-guard/dg-readiness-tool)
+  - [Windows Defender Credential Guard requirements](https://learn.microsoft.com/en-us/windows/security/identity-protection/credential-guard/credential-guard-requirements)
 - [Enables System Guard Secure Launch and SMM protection](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-system-guard/system-guard-secure-launch-and-smm-protection#registry)
   - [How to verify System Guard Secure Launch is configured and running](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-system-guard/system-guard-secure-launch-and-smm-protection#how-to-verify-system-guard-secure-launch-is-configured-and-running)
+- [Kernel Mode Hardware Enforced Stack Protection](https://techcommunity.microsoft.com/t5/microsoft-security-baselines/windows-11-version-22h2-security-baseline/ba-p/3632520)
 
-
-
-
-There are more settings available in the Group Policy Device Guard section that this script does Not enable,
-because [I don't know if your hardware is modern enough to support them,](https://learn.microsoft.com/en-us/windows/security/identity-protection/credential-guard/credential-guard-requirements) so provided resources below to check them out and enable them if you can.
-
-  - [Require UEFI Memory Attributes Table](https://learn.microsoft.com/en-us/windows-hardware/drivers/bringup/unified-extensible-firmware-interface)
-  - [Kernel Mode Hardware Enforced Stack Protection](https://techcommunity.microsoft.com/t5/microsoft-security-baselines/windows-11-version-22h2-security-baseline/ba-p/3632520)
 
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 

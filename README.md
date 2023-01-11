@@ -289,7 +289,7 @@ Here is [the official reference](https://learn.microsoft.com/en-us/windows/secur
 
 - Enables Windows Firewall logging for Private and Public profiles, sets the log file size to max `32.767 MB`, logs only dropped packets.
 
-- Disables [Multicast DNS (mDNS) UDP-in Firewall Rules](https://techcommunity.microsoft.com/t5/networking-blog/mdns-in-the-enterprise/ba-p/3275777), This might interfere with Miracast screen sharing, which relies on the Public profile, and homes where the Private profile is not selected, but it does add an extra measure of security in public places, like a coffee shop.
+- Disables [Multicast DNS (mDNS) UDP-in Firewall Rules for all 3 Firewall profiles](https://techcommunity.microsoft.com/t5/networking-blog/mdns-in-the-enterprise/ba-p/3275777), This might interfere with Miracast screen sharing, which relies on the Public profile, and homes where the Private profile is not selected, but it does add an extra measure of security in public places, like a coffee shop.
   - The domain name `.local` which is used in mDNS (Multicast DNS) [is a special-use domain name reserved by the Internet Engineering Task Force (IETF)](https://en.wikipedia.org/wiki/.local) so that **it may not be installed as a top-level domain in the Domain Name System (DNS) of the Internet.**
 
 Just like any other hardening category, you can skip this one when running the script and choose N (for No) when prompted for input in PowerShell console.

@@ -258,9 +258,13 @@ Here is [the official reference](https://learn.microsoft.com/en-us/windows/secur
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
 ## Device Guard
-**Device Guard and Virtualization-Based Security features are Automatically enabled by default on capable and modern hardware, this script only checks their status and if needed, enables UEFI lock for**:
-- Virtualization-Based Security
-- Virtualization-based protection of Code Integrity policies
+**Most of the Device Guard and Virtualization-Based Security features are Automatically enabled by default on capable and modern hardware, this script only checks their status and if needed, enables UEFI lock for them and also proceeds with enabling full Secured-Core PC requirements**:
+- Makes sure Virtualization-Based Security is Enabled
+- Requires Secure boot and DMA protection for Virtualization-Based Security
+- Turns on UEFI lock for Virtualization-Based Security
+- Makes sure Virtualization-based protection of Code Integrity policies is Enabled
+- Turns on UEFI lock for virtualization-based protection of Code Integrity policies
+
 
 You can find all the information on them [in this official document](https://learn.microsoft.com/en-us/windows/security/threat-protection/device-guard/enable-virtualization-based-protection-of-code-integrity)
 

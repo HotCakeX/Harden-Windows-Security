@@ -120,7 +120,7 @@ remove-Item .\Harden-Windows-Security.ps1
 - This Readme page is used as the reference for all of the commands used in the script. the order in which they appear here is the same as the one in the script file.
 - When a hardening command is no longer necessary because it's applied by default by Microsoft on new builds of Windows, it will also be removed from this script in order to prevent any problems and because it won't be necessary anymore.
 - The script can be run infinite number of times, it's made in a way that it won't make any duplicate changes at all.
-- Running this script turns your PC officially into a Secured-core PC (providing that you use a modern hardware that supports the latest Windows security features). [See what makes a Secured-core PC](https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/oem-highly-secure#what-makes-a-secured-core-pc). not only that, but also goes far beyond the Secured-core PC designated specifications. think of it like a `Secured-core PC ++` if you will.
+- Running this script turns your PC officially into a Secured-core PC (providing that you use a modern hardware that supports the latest Windows security features). [See what makes a Secured-core PC](https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/oem-highly-secure#what-makes-a-secured-core-pc). <a href="#Device-Guard">Check Device Guard category for more details.</a>
   - [Secured-core](https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/oem-highly-secure) – recommended for the most sensitive systems and industries like financial, healthcare, and government agencies. Builds on the previous layers and leverages advanced processor capabilities to provide protection from firmware attacks.
 
 
@@ -259,16 +259,19 @@ Here is [the official reference](https://learn.microsoft.com/en-us/windows/secur
 
 ## Device Guard
 **Most of the Device Guard and Virtualization-Based Security features are Automatically enabled by default on capable and modern hardware, this script only checks their status and if needed, enables UEFI lock for them and also proceeds with enabling full Secured-Core PC requirements**:
-- Makes sure Virtualization-Based Security is Enabled
-- Requires Secure boot and DMA protection for Virtualization-Based Security
+- [Makes sure Virtualization-Based Security is Enabled](https://learn.microsoft.com/en-us/windows/security/threat-protection/device-guard/enable-virtualization-based-protection-of-code-integrity)
+  - [Validate enabled Windows Defender Device Guard hardware-based security features](https://learn.microsoft.com/en-us/windows/security/threat-protection/device-guard/enable-virtualization-based-protection-of-code-integrity#validate-enabled-windows-defender-device-guard-hardware-based-security-features)
+- [Requires Secure boot and DMA protection for Virtualization-Based Security](https://learn.microsoft.com/en-us/windows/security/information-protection/kernel-dma-protection-for-thunderbolt)
 - Turns on UEFI lock for Virtualization-Based Security
 - Makes sure Virtualization-based protection of Code Integrity policies is Enabled
 - Turns on UEFI lock for virtualization-based protection of Code Integrity policies
+- [Enables Windows Defender Credential Guard with UEFI Lock](https://learn.microsoft.com/en-us/windows/security/identity-protection/credential-guard/credential-guard-manage#enable-virtualization-based-security-and-windows-defender-credential-guard)
+  - [Windows Defender Device Guard and Windows Defender Credential Guard hardware readiness tool](https://learn.microsoft.com/en-us/windows/security/identity-protection/credential-guard/dg-readiness-tool)
+- [Enables System Guard Secure Launch and SMM protection](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-system-guard/system-guard-secure-launch-and-smm-protection#registry)
+  - [How to verify System Guard Secure Launch is configured and running](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-system-guard/system-guard-secure-launch-and-smm-protection#how-to-verify-system-guard-secure-launch-is-configured-and-running)
 
 
-You can find all the information on them [in this official document](https://learn.microsoft.com/en-us/windows/security/threat-protection/device-guard/enable-virtualization-based-protection-of-code-integrity)
 
-[Validate enabled Windows Defender Device Guard hardware-based security features](https://learn.microsoft.com/en-us/windows/security/threat-protection/device-guard/enable-virtualization-based-protection-of-code-integrity#validate-enabled-windows-defender-device-guard-hardware-based-security-features)
 
 There are more settings available in the Group Policy Device Guard section that this script does Not enable,
 because [I don't know if your hardware is modern enough to support them,](https://learn.microsoft.com/en-us/windows/security/identity-protection/credential-guard/credential-guard-requirements) so provided resources below to check them out and enable them if you can.

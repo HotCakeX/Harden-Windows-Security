@@ -116,7 +116,7 @@ remove-Item .\Harden-Windows-Security.ps1
 
 - Always up-to-date and works with latest build of Windows (Currently Windows 11 - compatible and rigorously tested on stable and Insider Dev builds)
 - Doesn't break anything
-- All of the links and sources are official from Microsoft websites, there are no links to 3rd party news websites, blogs or made up articles.
+- All of the links and sources are official from Microsoft websites, there are no links to 3rd party news websites, made up blogs or articles.
 
 <details><summary>With the following exceptions</summary>
 	

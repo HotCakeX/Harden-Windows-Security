@@ -121,16 +121,16 @@ remove-Item .\Harden-Windows-Security.ps1
 <details><summary>With the following exceptions</summary>
 <p align="left">
 
-| Count| Link                          | Reason                                          |
-| ---- |:-----------------------------:| -----------------------------------------------:|
-| 1    | Intel website                 |i7 12700k product page                           |
-| 1    | Cloudflare website            |About ECH encryption                             |
-| 2    | Wikipedia                     |providing further information for the reader     |
-| 1    | admx.help                     |show how 2 registry keys were found              |
-| 1    | non-official Github Wiki page |providing further information for the reader     |
-| 1    | non-official Github website   |providing further information for the reader     |
-| 2    | Security.Stackexchange Q&A    |providing logic and reasoning for certain actions|
-| 1    | defo.ie                       |provide a way to test ECH in the browser         |
+| Count| Link                          | Reason                                            |
+|:----:|:-----------------------------:|:-------------------------------------------------:|
+| 1    | Intel website                 | i7 12700k product page                            |
+| 1    | Cloudflare website            | About ECH encryption                              |
+| 2    | Wikipedia                     | providing further information for the reader      |
+| 1    | admx.help                     | show how 2 registry keys were found               |
+| 1    | non-official Github Wiki page | providing further information for the reader      |
+| 1    | non-official Github website   | providing further information for the reader      |
+| 2    | Security.Stackexchange Q&A    | providing logic and reasoning for certain actions |
+| 1    | defo.ie                       | provide a way to test ECH in the browser          |
 
 
 </p>

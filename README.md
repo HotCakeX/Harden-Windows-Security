@@ -185,9 +185,9 @@ remove-Item .\Harden-Windows-Security.ps1
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
 ## Attack surface reduction rules
-Reducing your attack surface means protecting your devices and network, which leaves attackers with fewer ways to perform attacks. Configuring attack surface reduction rules in Windows can help!
+[Reducing your attack surface](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/attack-surface-reduction?view=o365-worldwide) means protecting your devices and network, which leaves attackers with fewer ways to perform attacks. Configuring attack surface reduction rules in Windows can help!
 
-Attack surface reduction rules target certain software behaviors, such as:
+[Attack surface reduction rules](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/attack-surface-reduction-rules-reference?view=o365-worldwide) target certain software behaviors, such as:
 
  - Launching executable files and scripts that attempt to download or run files
  - Running obfuscated or otherwise suspicious scripts
@@ -195,7 +195,6 @@ Attack surface reduction rules target certain software behaviors, such as:
 
 Such software behaviors are sometimes seen in legitimate applications. However, these behaviors are often considered risky because they are commonly abused by attackers through malware. Attack surface reduction rules can constrain software-based risky behaviors and help keep your organization safe.
 
-You can find more info [here](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/attack-surface-reduction?view=o365-worldwide) and [ASR Reference](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/attack-surface-reduction-rules-reference?view=o365-worldwide)
 
 This script enables [all 16 available Attack Surface Reduction rules shown in the official chart](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/attack-surface-reduction-rules-reference?view=o365-worldwide#asr-rule-to-guid-matrix), You can manually turn off any of them by changing them from `Enabled` to `AuditMode` or `Disabled` in the script.
 

@@ -129,7 +129,7 @@ remove-Item .\Harden-Windows-Security.ps1
 | 1    | non-official Github Wiki page | providing further information for the reader about TLS     |
 | 1    | non-official Github website   | providing further information for the reader about LOLBins |
 | 2    | Security.Stackexchange Q&A    | providing logic and reasoning for certain actions          |
-| 1    | defo.ie                       | provide a way to test ECH in the browser                   |
+| 1    | defo.ie                       | providding a way to test ECH in the browser                |
 
 </details>    
 

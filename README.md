@@ -116,6 +116,8 @@ remove-Item .\Harden-Windows-Security.ps1
 
 - Always up-to-date and works with latest build of Windows (Currently Windows 11 - compatible and rigorously tested on stable and Insider Dev builds)
 - Doesn't break anything
+- All of the links and sources are official from Microsoft websites, there are no links to 3rd party news websites, blogs or made up articles.
+  - With these exceptions: 1 link to Intel CPU product page, 1 link to Cloudflare website, 2 links to Wikipedia for providing further information for the reader, 1 link to admx.help website to show the reader where the location of 2 registry keys were found, 1 link to a non-official Github Wiki page to provide more information for the reader, 1 link to a non-official Github website to provide more information for the reader, 2 links to Security.Stackexchange Q&A website for providing logic and reasoning for certain actions, 1 link to defo.ie to provide a way to test ECH in the browser, 
 - Doesn't remove or disable Windows functionalities against Microsoft's recommendation
 - This Readme page is used as the reference for all of the commands used in the script. the order in which they appear here is the same as the one in the script file.
 - When a hardening command is no longer necessary because it's applied by default by Microsoft on new builds of Windows, it will also be removed from this script in order to prevent any problems and because it won't be necessary anymore.
@@ -287,6 +289,9 @@ Here is [the official reference](https://learn.microsoft.com/en-us/windows/secur
 
 - Enables Windows Firewall logging for Private and Public profiles, sets the log file size to max `32.767 MB`, logs only dropped packets.
 
+- Disables [Multicast DNS (mDNS) UDP-in Firewall Rules](https://techcommunity.microsoft.com/t5/networking-blog/mdns-in-the-enterprise/ba-p/3275777), This might interfere with Miracast screen sharing, which relies on the Public profile, and homes where the Private profile is not selected, but it does add an extra measure of security in public places, like a coffee shop.
+  - The domain name `.local` which is used in mDNS (Multicast DNS) [is a special-use domain name reserved by the Internet Engineering Task Force (IETF)](https://en.wikipedia.org/wiki/.local) so that **it may not be installed as a top-level domain in the Domain Name System (DNS) of the Internet.**
+
 Just like any other hardening category, you can skip this one when running the script and choose N (for No) when prompted for input in PowerShell console.
 
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
@@ -313,13 +318,10 @@ These are configurations that are typically 🔺recommended in High-Risk Environ
 - [Disabling NetBIOS over TCP/IP](https://learn.microsoft.com/en-us/windows-hardware/customize/desktop/unattend/microsoft-windows-netbt-interfaces-interface-netbiosoptions) on all network interfaces, virtual and physical. This command needs to run every time after installing a new VPN software or network adapater.
 - Disabling the LLMNR protocol [(Link Local Multicast Name Resolution)](https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-llmnrp/eed7fe96-9013-4dec-b14f-5abf85545385) because it's only [useful for networks that do not have a Domain Name System (DNS) server](https://learn.microsoft.com/en-us/previous-versions//bb878128(v=technet.10)?redirectedfrom=MSDN) and Microsoft themselves are [ramping down NetBIOS name resolution and LLMNR.](https://techcommunity.microsoft.com/t5/networking-blog/aligning-on-mdns-ramping-down-netbios-name-resolution-and-llmnr/ba-p/3290816)
 
-- Disabling [LMHOSTS lookup protocol](https://www.crowe.com/cybersecurity-watch/netbios-llmnr-giving-away-credentials) on all network adapters
+- Disabling [LMHOSTS lookup protocol](https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-nbte/bec3913a-c359-4e6f-8c7e-40c2f43f546b#gt_5f0744c1-5105-4e4a-b71c-b9c7ecaed910) on all network adapters, legacy feature that's not used anymore.
 - Setting the Network Location of all connections to Public; Public network means less trust to other network devices.
 - Disable [Printing over HTTP](https://learn.microsoft.com/en-us/troubleshoot/windows-server/printing/manage-connect-printers-use-web-browser) because HTTP is not encrypted and it's an old feature that's not used anymore.
 - [Turns off downloading of print drivers over HTTP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-connectivity#connectivity-disabledownloadingofprintdriversoverhttp) because HTTP is not encrypted and that method isn't used anymore. this is the [recommended and secure way of downloading printer drivers in Windows 11](https://support.microsoft.com/en-us/windows/download-printer-drivers-in-windows-da9b1460-7299-4cc3-e974-33cf99d86880).
-- Disables [Multicast DNS](https://www.ionos.com/digitalguide/server/know-how/multicast-dns/)
-  - The domain name `.local` which is used in mDNS (Multicast DNS) [is a special-use domain name reserved by the Internet Engineering Task Force (IETF)](https://en.wikipedia.org/wiki/.local) so that **it may not be installed as a top-level domain in the Domain Name System (DNS) of the Internet.**
-
 - Disables [IP Source Routing](https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2008-R2-and-2008/dd349797(v=ws.10)#disableipsourcerouting); Source routing allows a computer that sends a packet to specify the route that the packet takes. Attackers can use source routed packets to obscure their identity and location.
   - After applying this and restarting your device, `Source Routing Behavior` in `netsh int IPv4 show global` shows `Drop` instead of the default `dontforward` value (in Windows 11 dev build 25272).
 

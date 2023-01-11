@@ -367,7 +367,7 @@ This is to prevent an 🔺**Attacker with skill and lengthy physical access to y
   - Requires Business (e.g. [Windows 11 pro for Workstations](https://www.microsoft.com/en-us/windows/business/windows-11-pro-workstations)), [Enterprise](https://www.microsoft.com/en-us/microsoft-365/windows/windows-11-enterprise) or [Education](https://www.microsoft.com/en-us/education/products/windows) Windows licenses
 
 - Turns on Enhanced mode search for Windows indexer. the default is classic mode. 
-  - this causes some UI elements in the search settings in Windows settings to become unavailable for Standard user accounts to view.
+  - this causes some UI elements in the search settings in Windows settings to become unavailable for Standard user accounts to view, because it will be a managed feature by an Administrator.
 
 - [Enforce the Administrator role for adding printer drivers](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/devices-prevent-users-from-installing-printer-drivers)
 

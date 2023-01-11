@@ -119,24 +119,20 @@ remove-Item .\Harden-Windows-Security.ps1
 - All of the links and sources are official from Microsoft websites, there are no links to 3rd party news websites, blogs or made up articles.
 
 <details><summary>With the following exceptions</summary>
-<p align="left">
+	
+| Count| Link                          | Reason                                                     |
+|:----:|:-----------------------------:|:----------------------------------------------------------:|
+| 1    | Intel website                 | i7 12700k product page                                     |
+| 1    | Cloudflare website            | About ECH encryption - Official Info                       |
+| 2    | Wikipedia                     | providing further information for the reader               |
+| 1    | admx.help                     | show how 2 registry keys were found for sleep states       |
+| 1    | non-official Github Wiki page | providing further information for the reader about TLS     |
+| 1    | non-official Github website   | providing further information for the reader about LOLBins |
+| 2    | Security.Stackexchange Q&A    | providing logic and reasoning for certain actions          |
+| 1    | defo.ie                       | provide a way to test ECH in the browser                   |
 
-| Count| Link                          | Reason                                            |
-|:----:|:-----------------------------:|:-------------------------------------------------:|
-| 1    | Intel website                 | i7 12700k product page                            |
-| 1    | Cloudflare website            | About ECH encryption                              |
-| 2    | Wikipedia                     | providing further information for the reader      |
-| 1    | admx.help                     | show how 2 registry keys were found               |
-| 1    | non-official Github Wiki page | providing further information for the reader      |
-| 1    | non-official Github website   | providing further information for the reader      |
-| 2    | Security.Stackexchange Q&A    | providing logic and reasoning for certain actions |
-| 1    | defo.ie                       | provide a way to test ECH in the browser          |
+</details>    
 
-
-</p>
-</details>
-
-    
 - Doesn't remove or disable Windows functionalities against Microsoft's recommendation
 - This Readme page is used as the reference for all of the commands used in the script. the order in which they appear here is the same as the one in the script file.
 - When a hardening command is no longer necessary because it's applied by default by Microsoft on new builds of Windows, it will also be removed from this script in order to prevent any problems and because it won't be necessary anymore.

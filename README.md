@@ -127,12 +127,13 @@ remove-Item .\Harden-Windows-Security.ps1
 |:----:|:-----------------------------:|:----------------------------------------------------------:|
 | 1    | Intel website                 | i7 12700k product page                                     |
 | 1    | Cloudflare website            | About ECH encryption - Official Info                       |
-| 2    | Wikipedia                     | providing further information for the reader               |
+| 3    | Wikipedia                     | providing further information for the reader               |
 | 3    | gpsearch.azurewebsites.net    | showing how certain registry keys of GPolicies were found  |
 | 1    | non-official Github Wiki page | providing further information for the reader about TLS     |
 | 1    | non-official Github website   | providing further information for the reader about LOLBins |
 | 2    | Security.Stackexchange Q&A    | providing logic and reasoning for certain actions          |
 | 1    | defo.ie                       | providding a way to test ECH in the browser                |
+| 1    | state.gov                     | List of State Sponsors of Terrorism                        |
 
 </details>    
 
@@ -405,7 +406,7 @@ In this category, the script runs [sigcheck64.exe](https://learn.microsoft.com/e
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
 ## Country IP Blocking
-The script fetches the newest range of [IPv4](https://www.ipdeny.com/ipblocks/) and [IPv6](https://www.ipdeny.com/ipv6/ipaddresses/blocks/) addresses **for terrorist and terrorist supporting countries** such as Russia, Iran, China and North Korea, then creates 2 rules (inbound and outbound) for each country in Windows firewall, completely blocking connections to and from those countries.
+The script fetches the newest range of [IPv4](https://www.ipdeny.com/ipblocks/) and [IPv6](https://www.ipdeny.com/ipv6/ipaddresses/blocks/) addresses of **[State Sponsors of Terrorism](https://www.state.gov/state-sponsors-of-terrorism/)** (Iran, North Korea, Cuba, Syria PLUS [Russia](https://en.wikipedia.org/wiki/State_Sponsors_of_Terrorism_(U.S._list)#Russia)), then creates 2 rules (inbound and outbound) for each country in Windows firewall, completely blocking connections to and from those countries.
 
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 

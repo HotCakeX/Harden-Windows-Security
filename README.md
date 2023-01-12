@@ -119,7 +119,7 @@ remove-Item .\Harden-Windows-Security.ps1
 
 - Always up-to-date and works with latest build of Windows (Currently Windows 11 - compatible and rigorously tested on stable and Insider Dev builds)
 - Doesn't break anything
-- All of the links and sources are official from Microsoft websites, there are no links to 3rd party news websites, made up blogs or articles.
+- All of the links and sources are official from Microsoft websites, straight from the source. no bias, no misinformation and no old obsolete methods, that's why there are no links to 3rd party news websites, made up blogs or articles.
 
 <details><summary>With the following exceptions</summary>
 	
@@ -483,7 +483,7 @@ How can you 100% trust this script and know that nothing shady is going on?
 
 ## License
 
-MIT License
+Not Applicable, No license. because the only mission of this GitHub repository and script is to give all Windows users accurate, up to date and correct information about how to stay secure and safe in dangerous environments, and to stay not one, but Many steps, ahead of threat actors.
 
 ---
 

@@ -1,6 +1,6 @@
 <#PSScriptInfo
 
-.VERSION 2023.1.12.1
+.VERSION 2023.1.13
 
 .GUID d435a293-c9ee-4217-8dc1-4ad2318a5770
 
@@ -39,6 +39,7 @@ Version 2023.1.1.1: Changed description of the PowerShell Gallery's page
 Version 2023.1.10: Removed old unnecessary outdated commands, removed most of the links and all descriptions from the script file, USE GITHUB PAGE FOR THE REFERENCE AND PROPER EXPLANATION.
 Version 2023.1.12: changed Firewall LOLBin blocking section to be faster with Parallel operations and added Secured-core PC compliancy
 Version 2023.1.12.1: Fixed description text in PowerShell Gallery
+Version 2023.1.13: Fixed the Country IP blocking list and made it fully compliant with https://www.state.gov/state-sponsors-of-terrorism/
 #>
 
 <# 
@@ -1535,17 +1536,17 @@ do { $BlockIranIP = $(write-host "Block the entire range of IPv4 and IPv6 belong
 
 
 
-# China
-do { $BlockChinaIP = $(write-host "Block the entire range of IPv4 and IPv6 belonging to China? Enter Y for Yes or N for No" -ForegroundColor DarkCyan ; Read-Host)
-    switch ($BlockChinaIP) {   
+# Cuba
+do { $BlockCubaIP = $(write-host "Block the entire range of IPv4 and IPv6 belonging to Cuba? Enter Y for Yes or N for No" -ForegroundColor DarkCyan ; Read-Host)
+    switch ($BlockCubaIP) {   
     "y" {  
 
-    $ChinaIPv4 = Invoke-RestMethod -Uri "https://www.ipdeny.com/ipblocks/data/aggregated/cn-aggregated.zone"
-    $ChinaIPv6 = Invoke-RestMethod -Uri "https://www.ipdeny.com/ipv6/ipaddresses/blocks/cn.zone"
-    $ChinaIPRange = $ChinaIPv4 + $ChinaIPv6
-    BlockCountryIP -IPList $ChinaIPRange -CountryName "China"
+    $CubaIPv4 = Invoke-RestMethod -Uri "https://www.ipdeny.com/ipblocks/data/aggregated/cu-aggregated.zone"
+    $CubaIPv6 = Invoke-RestMethod -Uri "https://www.ipdeny.com/ipv6/ipaddresses/blocks/cu.zone"
+    $CubaIPRange = $CubaIPv4 + $CubaIPv6
+    BlockCountryIP -IPList $CubaIPRange -CountryName "Cuba"
 
-}"N" {Break}   }}  until ($BlockChinaIP -eq "y" -or $BlockChinaIP -eq "N")
+}"N" {Break}   }}  until ($BlockCubaIP -eq "y" -or $BlockCubaIP -eq "N")
 
 
 
@@ -1555,12 +1556,26 @@ do { $BlockNorthKoreaIP = $(write-host "Block the entire range of IPv4 and IPv6 
     switch ($BlockNorthKoreaIP) {   
     "y" {  
     
-    $NorthKoreaIPv4 = Invoke-RestMethod -Uri "https://www.ipdeny.com/ipblocks/data/aggregated/cn-aggregated.zone"
-    $NorthKoreaIPv6 = Invoke-RestMethod -Uri "https://www.ipdeny.com/ipv6/ipaddresses/blocks/cn.zone"
+    $NorthKoreaIPv4 = Invoke-RestMethod -Uri "https://www.ipdeny.com/ipblocks/data/aggregated/kp-aggregated.zone"
+    $NorthKoreaIPv6 = Invoke-RestMethod -Uri "https://www.ipdeny.com/ipv6/ipaddresses/blocks/kn.zone"
     $NorthKoreaIPRange = $NorthKoreaIPv4 + $NorthKoreaIPv6
     BlockCountryIP -IPList $NorthKoreaIPRange -CountryName "North Korea"
 
 }"N" {Break}   }}  until ($BlockNorthKoreaIP -eq "y" -or $BlockNorthKoreaIP -eq "N")
+
+
+
+# Syria
+do { $BlockSyriaIP = $(write-host "Block the entire range of IPv4 and IPv6 belonging to Syria? Enter Y for Yes or N for No" -ForegroundColor DarkCyan ; Read-Host)
+    switch ($BlockSyriaIP) {   
+    "y" {  
+    
+    $SyriaIPv4 = Invoke-RestMethod -Uri "https://www.ipdeny.com/ipblocks/data/aggregated/sy-aggregated.zone"
+    $SyriaIPv6 = Invoke-RestMethod -Uri "https://www.ipdeny.com/ipv6/ipaddresses/blocks/sy.zone"
+    $SyriaIPRange = $SyriaIPv4 + $SyriaIPv6
+    BlockCountryIP -IPList $SyriaIPRange -CountryName "Syria"
+
+}"N" {Break}   }}  until ($BlockSyriaIP -eq "y" -or $BlockSyriaIP -eq "N")
 
 
 
@@ -1577,7 +1592,6 @@ do { $BlockNorthKoreaIP = $(write-host "Block the entire range of IPv4 and IPv6 
 # =========================================================================================================================
 # ====================================================End of Country IP Blocking===========================================
 # =========================================================================================================================
-
 
 
 

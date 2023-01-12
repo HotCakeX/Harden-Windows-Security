@@ -1,6 +1,6 @@
 <#PSScriptInfo
 
-.VERSION 2023.1.10
+.VERSION 2023.1.12.1
 
 .GUID d435a293-c9ee-4217-8dc1-4ad2318a5770
 
@@ -37,6 +37,8 @@ Version 2023.1: The script now allows you to run each hardening category separat
 Version 2023.1.1: added a checking process to the country IP blocking category so that if the list is empty, no rule will be created.
 Version 2023.1.1.1: Changed description of the PowerShell Gallery's page
 Version 2023.1.10: Removed old unnecessary outdated commands, removed most of the links and all descriptions from the script file, USE GITHUB PAGE FOR THE REFERENCE AND PROPER EXPLANATION.
+Version 2023.1.12: changed Firewall LOLBin blocking section to be faster with Parallel operations and added Secured-core PC compliancy
+Version 2023.1.12.1: Fixed description text in PowerShell Gallery
 #>
 
 <# 
@@ -48,17 +50,20 @@ Version 2023.1.10: Removed old unnecessary outdated commands, removed most of th
 
 💠 Features of this Hardening script:
 
-  ✅ Always up-to-date and works with latest build of Windows (Currently Windows 11 - compatible and rigorously tested on stable and Insider Dev builds)
+  ✅ Running this script makes your PC compliant with Secured-core PC specifications (providing that you use a modern hardware that supports the latest Windows security features).
+  ✅ Always up-to-date and works with the latest build of Windows (Currently Windows 11 - compatible and rigorously tested on stable and Insider Dev builds)
   ✅ Doesn't break anything
   ✅ Doesn't remove or disable Windows functionalities against Microsoft's recommendation
   ✅ The Readme page on GitHub is used as the reference for all of the commands used in the script. the order in which they appear there is the same as the one in the script file.
   ✅ When a hardening command is no longer necessary because it's applied by default by Microsoft on new builds of Windows, it will also be removed from this script in order to prevent any problems and because it won't be necessary anymore.
   ✅ The script can be run infinite number of times, it's made in a way that it won't make any duplicate changes at all.
+  
 
+🛑 Warning: Windows by default is secure and safe, this script does not imply nor claim otherwise. just like anything, you have to use it wisely and don't compromise yourself with reckless behavior and bad user configuration; Nothing is foolproof. this script only uses the tools and features that have already been implemented by Microsoft in Windows OS to fine-tune it towards the highest security and locked-down state, using well-documented, supported, often recommended and official methods. continue reading for comprehensive info.
+
+🛑 Requires PowerShell 7.3, download the latest version from Microsoft Store or GitHub: https://github.com/PowerShell/PowerShell/releases/latest
 
 💠 Hardening Categories from top to bottom: (🔺Detailed info about each of them at my Github🔻)
-
-🟣 All the explanations and references in here: https://github.com/HotCakeX/Harden-Windows-Security
 
 ⏹ Commands that require Administrator Privileges
   ✅ Windows Security aka Defender
@@ -78,14 +83,11 @@ Version 2023.1.10: Removed old unnecessary outdated commands, removed most of th
   ✅ Non-Admin Commands that only affect the current user and do not make machine-wide changes.
 
 
-🛑 Warning:
-Windows by default is secure and safe, this script does not imply nor claim otherwise. just like anything, you have to use it wisely and don't compromise yourself with reckless behavior and bad user configuration; Nothing is foolproof. this script only uses the tools and features that have already been implemented by Microsoft in Windows OS to fine-tune it towards the highest security and locked-down state, using well-documented, supported, often recommended and official methods. continue reading for comprehensive info.
-
 💎 Note: if there are multiple Windows user accounts in your computer, it's recommended to run this script in each of them, without administrator privileges, because Non-admin commands only apply to the current user and are not machine wide.
 
 💎 Note: The script asks for confirmation, in the PowerShell console, before running each hardening category, so you can selectively run (or don't run) each of them.
 
-💎 Note: Things with #TopSecurity tag can break functionalities or cause difficulties so this script does NOT enable them by default. press Control + F and search for #TopSecurity in GitHub Readme page or in the script to find those commands and how to enable them if you want.
+💎 Note: Things with #TopSecurity tag can break functionalities or cause difficulties so this script does NOT enable them by default. press Control + F and search for #TopSecurity in the GitHub page or in the script to find those commands and how to enable them if you want.
 
 🏴 if you have any questions, requests, suggestions etc. about this script, please open a new discussion in Github:
 
@@ -105,11 +107,43 @@ Windows by default is secure and safe, this script does not imply nor claim othe
 
  
  
+ 
+ # Source https://github.com/HotCakeX/Harden-Windows-Security
+ <# 
+Hardening Categories from top to bottom:
 
+  Commands that require Administrator Privileges
+  -Windows Security aka Defender
+  -Attack surface reduction rules
+  -Bitlocker Settings
+  -TLS Security
+  -Lock Screen
+  -UAC (User Account Control)
+  -Device Guard
+  -Windows Firewall
+  -Optional Windows Features
+  -Windows Networking
+  -Miscellaneous Configurations
+  -Certificate Checking Commands
+  -Country IP Blocking
+ Commands that don't require Administrator Privileges
+  -Non-Admin Commands that only affect the current user and do not make machine-wide changes.
+
+ #>
+ 
   
+ <#
+    .Synopsis
+        Tests if the user is an administrator
+    .Description
+        Returns true if a user is an administrator, false if the user is not an administrator   
+    .Example
+        Test-IsAdmin
+  https://devblogs.microsoft.com/scripting/use-function-to-determine-elevation-of-powershell-console/
+    #>
 
- # https://devblogs.microsoft.com/scripting/use-function-to-determine-elevation-of-powershell-console/
-   
+
+
   # Function to modify registry, only DWORD property Types, checks before modification
 function ModifyRegistry {
   param ($RegPath, $RegName, $RegValue )
@@ -404,7 +438,6 @@ $bootDMAProtection = ([SystemInfo.NativeMethods]::BootDmaCheck()) -ne 0
 
 
 # Enables or disables DMA protection from Bitlocker Countermeasures based on the status of Kernel DMA protection.
-# https://admx.help/?Category=Windows_11_2022&Policy=Microsoft.Policies.VolumeEncryption::DisableExternalDMAUnderLock_Name
 if ($bootDMAProtection) {
 
     ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Policies\Microsoft\FVE' -RegName 'DisableExternalDMAUnderLock' -RegValue '1'
@@ -938,6 +971,21 @@ ModifyRegistry -RegPath 'HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scen
 # To turn on UEFI lock for virtualization-based protection of Code Integrity policies
 ModifyRegistry -RegPath 'HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\HypervisorEnforcedCodeIntegrity' -RegName 'Locked' -RegValue '1'
 
+# To Require UEFI Memory Attributes Table
+ModifyRegistry -RegPath 'HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\HypervisorEnforcedCodeIntegrity' -RegName 'HVCIMATRequired' -RegValue '1'
+
+# To Enable Windows Defender Credential Guard with UEFI Lock
+ModifyRegistry -RegPath 'HKLM:\SYSTEM\CurrentControlSet\Control\Lsa' -RegName 'LsaCfgFlags' -RegValue '1'
+
+# To Enable System Guard Secure Launch and SMM protection
+ModifyRegistry -RegPath 'HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\SystemGuard' -RegName 'Enabled' -RegValue '1'
+
+# To Enable Kernel-mode Hardware-enforced Stack Protection
+ModifyRegistry -RegPath 'HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\KernelShadowStacks' -RegName 'Enabled' -RegValue '1'
+
+# To disable Audit Mode for Kernel-mode Hardware-enforced Stack Protection
+ModifyRegistry -RegPath 'HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\KernelShadowStacks' -RegName 'AuditModeEnabled' -RegValue '0'
+
 
 
 
@@ -968,124 +1016,81 @@ Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled True
 Set-NetFirewallProfile -Name Domain -DefaultInboundAction Block -DefaultOutboundAction Block
 
 
+# measure execution time of Firewall LOLBins blocking section
+$fsw = [Diagnostics.Stopwatch]::StartNew()
 
-function Firewallblock {
-    param ($n , $p)
+
+# list all the LOLBin programs in an array
+$programs = @("C:\Program Files (x86)\Microsoft Office\root\client\AppVLP.exe",
+"C:\Program Files\Microsoft Office\root\client\AppVLP.exe",
+"%systemroot%\system32\certutil.exe",
+"%systemroot%\SysWOW64\certutil.exe",
+"%systemroot%\system32\cmstp.exe",
+"%systemroot%\SysWOW64\cmstp.exe",
+"%systemroot%\system32\cscript.exe",
+"%systemroot%\SysWOW64\cscript.exe",
+"%systemroot%\system32\esentutl.exe",
+"%systemroot%\SysWOW64\esentutl.exe",
+"%systemroot%\system32\expand.exe",
+"%systemroot%\SysWOW64\expand.exe",
+"%systemroot%\system32\extrac32.exe",
+"%systemroot%\SysWOW64\extrac32.exe",
+"%systemroot%\system32\findstr.exe",
+"%systemroot%\SysWOW64\findstr.exe",
+"%systemroot%\system32\hh.exe",
+"%systemroot%\SysWOW64\hh.exe",
+"%systemroot%\system32\makecab.exe",
+"%systemroot%\SysWOW64\makecab.exe",
+"%systemroot%\system32\mshta.exe",
+"%systemroot%\SysWOW64\mshta.exe",
+"%systemroot%\system32\msiexec.exe",
+"%systemroot%\SysWOW64\msiexec.exe",
+"%systemroot%\system32\nltest.exe",
+"%systemroot%\SysWOW64\nltest.exe",
+"%systemroot%\system32\notepad.exe",
+"%systemroot%\SysWOW64\notepad.exe",
+"%systemroot%\system32\odbcconf.exe",
+"%systemroot%\SysWOW64\odbcconf.exe",
+"%systemroot%\system32\pcalua.exe",
+"%systemroot%\SysWOW64\pcalua.exe",
+"%systemroot%\system32\regasm.exe",
+"%systemroot%\SysWOW64\regasm.exe",
+"%systemroot%\system32\regsvr32.exe",
+"%systemroot%\SysWOW64\regsvr32.exe",
+"%systemroot%\system32\replace.exe",
+"%systemroot%\SysWOW64\replace.exe",
+"%systemroot%\SysWOW64\rpcping.exe",
+"%systemroot%\system32\rundll32.exe",
+"%systemroot%\SysWOW64\rundll32.exe",
+"%systemroot%\system32\runscripthelper.exe",
+"%systemroot%\SysWOW64\runscripthelper.exe",
+"%systemroot%\system32\scriptrunner.exe",
+"%systemroot%\SysWOW64\scriptrunner.exe",
+"%systemroot%\system32\SyncAppvPublishingServer.exe",
+"%systemroot%\SysWOW64\SyncAppvPublishingServer.exe",
+"%systemroot%\system32\wbem\wmic.exe",
+"%systemroot%\SysWOW64\wbem\wmic.exe",
+"%systemroot%\system32\wscript.exe",
+"%systemroot%\SysWOW64\wscript.exe")
 
 
-                $r = Get-NetFirewallRule -DisplayName $n 2> $null; 
-                if ($r) { 
-                write-host "Firewall rule already exists, skipping to the next one" -ForegroundColor Darkgreen ; 
-                } 
-                else { 
-                New-NetFirewallRule -DisplayName $n -Protocol "TCP" -Program $p -Action Block -Direction Outbound -Profile Any -Enabled True -Group "LOLBins Blocking"
-                }
+
+$programs | ForEach-Object -parallel {
+
+    $program = $_     
+
+    if (-NOT (Get-NetFirewallApplicationFilter -All | Select-Object * | Where-Object { $_.AppPath -eq $program }))
+     {
+
+    New-NetFirewallRule -DisplayName "LOLBin blocking rule for $program" -Protocol "TCP" -Program $program -Action Block -Direction Outbound -Profile Any -Enabled True -Group "LOLBins Blocking"
+               
+        }
 
 }
- 
 
-# LOLBins-01 Block appvlp.exe netconns
-Firewallblock -n "LOLBins-01 Block appvlp.exe netconns" -p "C:\Program Files (x86)\Microsoft Office\root\client\AppVLP.exe"
-# LOLBins-02 Block appvlp.exe netconns
-Firewallblock -n  "LOLBins-02 Block appvlp.exe netconns" -p "C:\Program Files\Microsoft Office\root\client\AppVLP.exe"
-# LOLBins-03 Block certutil.exe netconns
-Firewallblock -n  "LOLBins-03 Block certutil.exe netconns" -p "%systemroot%\system32\certutil.exe"
-# LOLBins-04 Block certutil.exe netconns
-Firewallblock -n  "LOLBins-04 Block certutil.exe netconns" -p "%systemroot%\SysWOW64\certutil.exe"
-# LOLBins-05 Block cmstp.exe netconns
-Firewallblock -n  "LOLBins-05 Block cmstp.exe netconns" -p "%systemroot%\system32\cmstp.exe"
-# LOLBins-06 Block cmstp.exe netconns
-Firewallblock -n  "LOLBins-06 Block cmstp.exe netconns" -p "%systemroot%\SysWOW64\cmstp.exe"
-# LOLBins-07 Block cscript.exe netconns
-Firewallblock -n  "LOLBins-07 Block cscript.exe netconns" -p "%systemroot%\system32\cscript.exe"
-# LOLBins-08 Block cscript.exe netconns
-Firewallblock -n  "LOLBins-08 Block cscript.exe netconns" -p "%systemroot%\SysWOW64\cscript.exe"
-# LOLBins-09 Block esentutl.exe netconns
-Firewallblock -n  "LOLBins-09 Block esentutl.exe netconns" -p "%systemroot%\system32\esentutl.exe"
-# LOLBins-10 Block esentutl.exe netconns
-Firewallblock -n  "LOLBins-10 Block esentutl.exe netconns" -p "%systemroot%\SysWOW64\esentutl.exe"
-# LOLBins-11 Block expand.exe netconns
-Firewallblock -n  "LOLBins-11 Block expand.exe netconns" -p "%systemroot%\system32\expand.exe"
-# LOLBins-12 Block expand.exe netconns
-Firewallblock -n  "LOLBins-12 Block expand.exe netconns" -p "%systemroot%\SysWOW64\expand.exe"
-# LOLBins-13 Block extrac32.exe netconns
-Firewallblock -n  "LOLBins-13 Block extrac32.exe netconns" -p "%systemroot%\system32\extrac32.exe"
-# LOLBins-14 Block extrac32.exe netconns
-Firewallblock -n  "LOLBins-14 Block extrac32.exe netconns" -p "%systemroot%\SysWOW64\extrac32.exe"
-# LOLBins-15 Block findstr.exe netconns
-Firewallblock -n  "LOLBins-15 Block findstr.exe netconns" -p "%systemroot%\system32\findstr.exe"
-# LOLBins-16 Block findstr.exe netconns
-Firewallblock -n  "LOLBins-16 Block findstr.exe netconns" -p "%systemroot%\SysWOW64\findstr.exe"
-# LOLBins-17 hh.exe netconns
-Firewallblock -n  "LOLBins-17 hh.exe netconns" -p "%systemroot%\system32\hh.exe"
-# LOLBins-18 hh.exe netconns
-Firewallblock -n  "LOLBins-18 hh.exe netconns" -p "%systemroot%\SysWOW64\hh.exe"
-# LOLBins-19 Block makecab.exe netconns
-Firewallblock -n  "LOLBins-19 Block makecab.exe netconns" -p "%systemroot%\system32\makecab.exe"
-# LOLBins-20 Block makecab.exe netconns
-Firewallblock -n  "LOLBins-20 Block makecab.exe netconns" -p "%systemroot%\SysWOW64\makecab.exe"
-# LOLBins-21 mshta.exe netconns
-Firewallblock -n  "LOLBins-21 mshta.exe netconns" -p "%systemroot%\system32\mshta.exe"
-# LOLBins-22 mshta.exe netconns
-Firewallblock -n  "LOLBins-22 mshta.exe netconns" -p "%systemroot%\SysWOW64\mshta.exe"
-# LOLBins-23 Block msiexec.exe netconns
-Firewallblock -n  "LOLBins-23 Block msiexec.exe netconns" -p "%systemroot%\system32\msiexec.exe"
-# LOLBins-24 Block msiexec.exe netconns
-Firewallblock -n  "LOLBins-24 Block msiexec.exe netconns" -p "%systemroot%\SysWOW64\msiexec.exe"
-# LOLBins-25 Block nltest.exe netconns
-Firewallblock -n  "LOLBins-25 Block nltest.exe netconns" -p "%systemroot%\system32\nltest.exe"
-# LOLBins-26 Block nltest.exe netconns
-Firewallblock -n  "LOLBins-26 Block nltest.exe netconns" -p "%systemroot%\SysWOW64\nltest.exe"
-# LOLBins-27 Block Notepad.exe netconns
-Firewallblock -n  "LOLBins-27 Block Notepad.exe netconns" -p "%systemroot%\system32\notepad.exe"
-# LOLBins-28 Block Notepad.exe netconns
-Firewallblock -n  "LOLBins-28 Block Notepad.exe netconns" -p "%systemroot%\SysWOW64\notepad.exe"
-# LOLBins-29 Block odbcconf.exe netconns
-Firewallblock -n  "LOLBins-29 Block odbcconf.exe netconns" -p "%systemroot%\system32\odbcconf.exe"
-# LOLBins-30 Block odbcconf.exe netconns
-Firewallblock -n  "LOLBins-30 Block odbcconf.exe netconns" -p "%systemroot%\SysWOW64\odbcconf.exe"
-# LOLBins-31 Block pcalua.exe netconns
-Firewallblock -n  "LOLBins-31 Block pcalua.exe netconns" -p "%systemroot%\system32\pcalua.exe"
-# LOLBins-32 Block pcalua.exe netconns
-Firewallblock -n  "LOLBins-32 Block pcalua.exe netconns" -p "%systemroot%\SysWOW64\pcalua.exe"
-# LOLBins-33 Block regasm.exe netconns
-Firewallblock -n  "LOLBins-33 Block regasm.exe netconns" -p "%systemroot%\system32\regasm.exe"
-# LOLBins-34 Block regasm.exe netconns
-Firewallblock -n  "LOLBins-34 Block regasm.exe netconns" -p "%systemroot%\SysWOW64\regasm.exe"
-# LOLBins-35 lock regsvr32.exe netconns
-Firewallblock -n  "LOLBins-35 lock regsvr32.exe netconns" -p "%systemroot%\system32\regsvr32.exe"
-# LOLBins-36 lock regsvr32.exe netconns
-Firewallblock -n  "LOLBins-36 lock regsvr32.exe netconns" -p "%systemroot%\SysWOW64\regsvr32.exe"
-# LOLBins-37 Block replace.exe netconns
-Firewallblock -n  "LOLBins-37 Block replace.exe netconns" -p "%systemroot%\system32\replace.exe"
-# LOLBins-38 Block replace.exe netconns
-Firewallblock -n  "LOLBins-38 Block replace.exe netconns" -p "%systemroot%\SysWOW64\replace.exe"
-# LOLBins-39 Block rpcping.exe netconns
-Firewallblock -n  "LOLBins-39 Block rpcping.exe netconns" -p "%systemroot%\SysWOW64\rpcping.exe"
-# LOLBins-40 Block rundll32.exe netconns
-Firewallblock -n  "LOLBins-40 Block rundll32.exe netconns" -p "%systemroot%\system32\rundll32.exe"
-# LOLBins-41 Block rundll32.exe netconns
-Firewallblock -n  "LOLBins-41 Block rundll32.exe netconns" -p "%systemroot%\SysWOW64\rundll32.exe"
-# LOLBins-42 Block runscripthelper.exe netconns
-Firewallblock -n  "LOLBins-42 Block runscripthelper.exe netconns" -p "%systemroot%\system32\runscripthelper.exe"
-# LOLBins-43 Block runscripthelper.exe netconns
-Firewallblock -n  "LOLBins-43 Block runscripthelper.exe netconns" -p "%systemroot%\SysWOW64\runscripthelper.exe"
-# LOLBins-44 Block scriptrunner.exe netconns
-Firewallblock -n  "LOLBins-44 Block scriptrunner.exe netconns" -p "%systemroot%\system32\scriptrunner.exe"
-# LOLBins-45 Block scriptrunner.exe netconns
-Firewallblock -n  "LOLBins-45 Block scriptrunner.exe netconns" -p "%systemroot%\SysWOW64\scriptrunner.exe"
-# LOLBins-46 Block SyncAppvPublishingServer.exe netconns
-Firewallblock -n  "LOLBins-46 Block SyncAppvPublishingServer.exe netconns" -p "%systemroot%\system32\SyncAppvPublishingServer.exe"
-# LOLBins-47 Block SyncAppvPublishingServer.exe netconns
-Firewallblock -n  "LOLBins-47 Block SyncAppvPublishingServer.exe netconns" -p "%systemroot%\SysWOW64\SyncAppvPublishingServer.exe"
-# LOLBins-48 Block wmic.exe netconns
-Firewallblock -n  "LOLBins-48 Block wmic.exe netconns" -p "%systemroot%\system32\wbem\wmic.exe"
-# LOLBins-49 Block wmic.exe netconns
-Firewallblock -n  "LOLBins-49 Block wmic.exe netconns" -p "%systemroot%\SysWOW64\wbem\wmic.exe"
-# LOLBins-50 Block wscript.exe netconns
-Firewallblock -n  "LOLBins-50 Block wscript.exe netconns" -p "%systemroot%\system32\wscript.exe"
-# LOLBins-51 Block wscript.exe netconns
-Firewallblock -n  "LOLBins-51 Block wscript.exe netconns" -p "%systemroot%\SysWOW64\wscript.exe"
+# show the execution time on the console
+$fsw.Stop()
+$fsw.Elapsed
 
 
 
@@ -1093,8 +1098,8 @@ Firewallblock -n  "LOLBins-51 Block wscript.exe netconns" -p "%systemroot%\SysWO
 # Enable Windows Firewall logging for Private and Public profiles, set the log file size to max 32.767 MB, log only dropped packets.
 Set-NetFirewallProfile -Name private, Public -LogBlocked True -LogMaxSizeKilobytes 32767 -LogFileName %systemroot%\system32\LogFiles\Firewall\pfirewall.log
 
-
-
+# Disables Multicast DNS (mDNS) UDP-in Firewall Rules for all 3 Firewall profiles
+Disable-NetFirewallRule -DisplayName "mDNS (UDP-In)"
 
 
 
@@ -1233,9 +1238,6 @@ ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Printers' 
 # Turn off downloading of print drivers over HTTP
 ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Printers' -RegName 'DisableWebPnPDownload' -RegValue '1'
 
-# Disable Multicast DNS
-ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\DNSClient' -RegName 'EnableMulticast' -RegValue '0'
-
 # Disable IP Source Routing
 ModifyRegistry -RegPath 'HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters' -RegName 'DisableIPSourceRouting' -RegValue '2'
 
@@ -1290,8 +1292,8 @@ ModifyRegistry -RegPath 'HKLM:\Software\Policies\Microsoft\Power\PowerSettings\a
 # Enable Mandatory ASLR
 set-processmitigation -System -Enable ForceRelocateImages
 
-# You can add Mandatory ASLR override for a trusted app using the command below or in the Program Settings section of Exploit Protection in Windows Defender app. 
-# Set-ProcessMitigation -Name "D:\TrustedApp.exe" -Disable ForceRelocateImages
+# You can add Mandatory ASLR override for Trusted Program using the command below or in the Program Settings section of Exploit Protection in Windows Defender app. 
+# Set-ProcessMitigation -Name "C:\TrustedProgram.exe" -Disable ForceRelocateImages
 
 # Enable svchost.exe mitigations
 ModifyRegistry -RegPath 'HKLM:\SYSTEM\CurrentControlSet\Control\SCMConfig' -RegName 'EnableSvchostMitigationPolicy' -RegValue '1'
@@ -1312,6 +1314,7 @@ ModifyRegistry -RegPath 'HKLM:\System\CurrentControlSet\Services\LanmanServer\Pa
 
 # Enable SMB Encryption - using force to confirm the action
 Set-SmbServerConfiguration -EncryptData $true -force
+
 
 # Set Microsoft Edge to update over Metered connections
 ModifyRegistry -RegPath 'HKLM:\SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate\ClientStateMedium\{56EB18F8-B008-4CBD-B6D2-8C97FE7E9062}' -RegName 'allowautoupdatesmetered' -RegValue '1'
@@ -1720,7 +1723,6 @@ $Name         = 'Flags'
 $Value        = '506' 
 If (-NOT (Test-Path $RegistryPath)) {   New-Item -Path $RegistryPath -Force | Out-Null } 
 New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType string -Force
-
 
 
 

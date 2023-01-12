@@ -34,6 +34,7 @@
   <a href="#how-to-use">How To Use</a> •
   <a href="#features">Features</a> •
   <a href="#related">Related</a> •
+  <a href="#Trust">Trust</a> •
   <a href="#support">Support</a> •
   <a href="#security-recommendations">Security Recommendations</a> •
   <a href="#resources">Resources</a> •
@@ -431,6 +432,18 @@ In order to run commands in this category, you don't need administrator privileg
 
 [PowerShell Gallery](https://www.powershellgallery.com/packages/Harden-Windows-Security/) - Also available in PowerShell Gallery
 
+## Trust
+
+How can you 100% trust this script and know that nothing shady is going on?
+- The script is in plain-text, nothing hidden
+- Change log history is present on GitHub
+- You can open the file in [Visual Studio Code](https://code.visualstudio.com/)/[Visual Studio Code Web](https://vscode.dev/), which is the best and view the script in a nice easy to read environment, I've included a lot of spacing in the script file for this purpose
+- You can learn PowerShell which is super easy, multiplatform, and useful for the future, Microsoft Learn website teaches you everything, then you will understand everything in the script is safe, or you can ask someone that you trust and knows PowerShell to verify the script for you
+
+
+
+
+<p align="right"><a href="#readme-top">💡(back to top)</a></p>
 
 ## Support
 

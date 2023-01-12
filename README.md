@@ -406,7 +406,7 @@ In this category, the script runs [sigcheck64.exe](https://learn.microsoft.com/e
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
 ## Country IP Blocking
-The script fetches the newest range of [IPv4](https://www.ipdeny.com/ipblocks/) and [IPv6](https://www.ipdeny.com/ipv6/ipaddresses/blocks/) addresses of **[State Sponsors of Terrorism](https://www.state.gov/state-sponsors-of-terrorism/)** (Iran, North Korea, Cuba, Syria PLUS [Russia](https://en.wikipedia.org/wiki/State_Sponsors_of_Terrorism_(U.S._list)#Russia)), then creates 2 rules (inbound and outbound) for each country in Windows firewall, completely blocking connections to and from those countries.
+The script fetches the newest range of [IPv4](https://www.ipdeny.com/ipblocks/) and [IPv6](https://www.ipdeny.com/ipv6/ipaddresses/blocks/) addresses of [State Sponsors of Terrorism](https://www.state.gov/state-sponsors-of-terrorism/) (Iran, North Korea, Cuba, Syria PLUS [Russia](https://en.wikipedia.org/wiki/State_Sponsors_of_Terrorism_(U.S._list)#Russia)), then creates 2 rules (inbound and outbound) for each country in Windows firewall, completely blocking connections to and from those countries.
 
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 

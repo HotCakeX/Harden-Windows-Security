@@ -125,14 +125,12 @@ remove-Item .\Harden-Windows-Security.ps1
 	
 | Count| Link                          | Reason                                                     |
 |:----:|:-----------------------------:|:----------------------------------------------------------:|
-| 1    | Intel website                 | i7 12700k product page                                     |
-| 1    | Cloudflare website            | About ECH encryption - Official Info                       |
-| 3    | Wikipedia                     | providing further information for the reader               |
+| 1    | Intel website                 | i7 13700k product page                                     |
+| 2    | Wikipedia                     | providing further information for the reader               |
 | 3    | gpsearch.azurewebsites.net    | showing how certain registry keys of GPolicies were found  |
 | 1    | non-official Github Wiki page | providing further information for the reader about TLS     |
 | 1    | non-official Github website   | providing further information for the reader about LOLBins |
 | 2    | Security.Stackexchange Q&A    | providing logic and reasoning for certain actions          |
-| 1    | defo.ie                       | providding a way to test ECH in the browser                |
 | 1    | state.gov                     | List of State Sponsors of Terrorism                        |
 
 </details>    
@@ -214,7 +212,7 @@ This script sets up and configures Bitlocker, [using official documentation](htt
 Refer to this [official documentation about the countermeasures of Bitlocker](https://learn.microsoft.com/en-us/windows/security/information-protection/bitlocker/bitlocker-countermeasures)
 
 - Enables or disables [DMA protection from Bitlocker Countermeasures](https://learn.microsoft.com/en-us/windows/security/information-protection/bitlocker/bitlocker-countermeasures#protecting-thunderbolt-and-other-dma-ports) based [on the status](https://github.com/MicrosoftDocs/windows-itpro-docs/issues/6878#issuecomment-742429128) of [Kernel DMA protection](https://learn.microsoft.com/en-us/windows/security/information-protection/kernel-dma-protection-for-thunderbolt). Kernel DMA Protection is [not compatible](https://learn.microsoft.com/en-us/windows/security/information-protection/kernel-dma-protection-for-thunderbolt#system-compatibility) with other BitLocker DMA attacks countermeasures. It is recommended to [disable the BitLocker DMA](https://gpsearch.azurewebsites.net/#13639) attacks countermeasures if the system supports Kernel DMA Protection (this script does that exactly). Kernel DMA Protection provides higher security bar for the system over the BitLocker DMA attack countermeasures, while maintaining usability of external peripherals. you can check the status of Kernel DMA protection [using this official guide](https://learn.microsoft.com/en-us/windows/security/information-protection/kernel-dma-protection-for-thunderbolt#how-to-check-if-kernel-dma-protection-is-enabled).
-  - [Kernel DMA Protection (Memory Access Protection) for OEMs](https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/oem-kernel-dma-protection) page shows the requirements for Kernel DMA Protection. for Intel CPUs, support for requirements such as VT-X and VT-D can be found in each CPU's respective product page. e.g. [Intel i7 12700K](https://www.intel.com/content/www/us/en/products/sku/134594/intel-core-i712700k-processor-25m-cache-up-to-5-00-ghz/specifications.html)
+  - [Kernel DMA Protection (Memory Access Protection) for OEMs](https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/oem-kernel-dma-protection) page shows the requirements for Kernel DMA Protection. for Intel CPUs, support for requirements such as VT-X and VT-D can be found in each CPU's respective product page. e.g. [Intel i7 13700K](https://ark.intel.com/content/www/us/en/ark/products/230500/intel-core-i713700k-processor-30m-cache-up-to-5-40-ghz.html)
 
 - Disallow standard (Non-Administrator) users from changing the Bitlocker Startup PIN or password
 
@@ -389,12 +387,7 @@ This is to prevent an 🔺**Attacker with skill and lengthy physical access to y
 - Enables UEFI Lock for Local Security Authority (LSA) process Protection. [it is turned on by default on new Windows 11 installations](https://learn.microsoft.com/en-us/windows-server/security/credentials-protection-and-management/configuring-additional-lsa-protection#automatic-enablement) but not with UEFI Lock. When this setting is used with UEFI lock and Secure Boot, additional protection is achieved because disabling its registry key will have no effect.
   - when this feature is on, a new option called "Local Security Authority Protection" appears in Windows Security GUI => Device Security => Core Isolation
 
-- Enable ECH for Edge browser. using ECH (Encrypted Client Hello) is recommended in [Security baseline for Microsoft Edge version 108](https://techcommunity.microsoft.com/t5/microsoft-security-baselines/security-baseline-for-microsoft-edge-version-108/ba-p/3691250). although officially [Microsoft recommends](https://learn.microsoft.com/en-us/deployedge/microsoft-edge-policies#encryptedclienthelloenabled) enabling it via Group Policy, the method used in this script simply adds `--enable-features=EncryptedClientHello` to the target of Edge shortcuts in desktop, taskbar and start menu, even when Edge browser is launched by clicking on a link in an app like Mail app, it will still use ECH.
-You can test if your browser is using Encrypted Client Hello by visiting [this website](https://defo.ie/ech-check.php).
 
-  - [Read more about TLS's Encrypted Client Hello in this most recent Cloudflare's blog post about it](https://blog.cloudflare.com/handshake-encryption-endgame-an-ech-update/).
-
-  - Note that support for Encrypted Client Hello needs to be added by each website's owner.
 
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
@@ -406,7 +399,7 @@ In this category, the script runs [sigcheck64.exe](https://learn.microsoft.com/e
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
 ## Country IP Blocking
-The script fetches the newest range of [IPv4](https://www.ipdeny.com/ipblocks/) and [IPv6](https://www.ipdeny.com/ipv6/ipaddresses/blocks/) addresses of [State Sponsors of Terrorism](https://www.state.gov/state-sponsors-of-terrorism/) (Iran, North Korea, Cuba, Syria PLUS [Russia](https://en.wikipedia.org/wiki/State_Sponsors_of_Terrorism_(U.S._list)#Russia)), then creates 2 rules (inbound and outbound) for each country in Windows firewall, completely blocking connections to and from those countries.
+The script fetches the newest range of [IPv4](https://www.ipdeny.com/ipblocks/) and [IPv6](https://www.ipdeny.com/ipv6/ipaddresses/blocks/) addresses of [State Sponsors of Terrorism](https://www.state.gov/state-sponsors-of-terrorism/) (Iran, North Korea, Cuba, Syria), then creates 2 rules (inbound and outbound) for each country in Windows firewall, completely blocking connections to and from those countries.
 
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 

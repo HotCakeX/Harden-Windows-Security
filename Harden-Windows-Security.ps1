@@ -40,7 +40,7 @@ Version 2023.1.10: Removed old unnecessary outdated commands, removed most of th
 Version 2023.1.12: changed Firewall LOLBin blocking section to be faster with Parallel operations and added Secured-core PC compliancy
 Version 2023.1.12.1: Fixed description text in PowerShell Gallery
 Version 2023.1.13: Fixed the Country IP blocking list and made it fully compliant with https://www.state.gov/state-sponsors-of-terrorism/
-Version 2023.1.13.1: Removed the ECH related commands, were causing problems with ASR rules, there weren't official methods anyway. removed Russia in country IP blocking since it wasn't mentioned in https://www.state.gov/state-sponsors-of-terrorism/ . changed Windows time sync interval from every 7 days to every 4 days (previous script value was 2).
+Version 2023.1.13.1: Removed the ECH related commands, were causing problems with ASR rules, they weren't official methods anyway. removed Russia in country IP blocking since it wasn't mentioned in https://www.state.gov/state-sponsors-of-terrorism/ . changed Windows time sync interval from every 7 days to every 4 days (previous script value was 2).
 #>
 
 <# 

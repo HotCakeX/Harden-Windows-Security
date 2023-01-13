@@ -382,7 +382,7 @@ This is to prevent an 🔺**Attacker with skill and lengthy physical access to y
 
 - Enables all Windows users to use Hyper-V and Windows Sandbox by adding all Windows users to the "Hyper-V Administrators" security group, by default only Administrators can use Hyper-V or Windows Sandbox. Windows Sandbox is a disposable OS to test unsafe programs, websites etc. and Hyper-V virtualizes OSes, it makes sense to let Standard users use these technologies as they pose no security risk.
 
-- Changes Windows time sync interval from every 7 days to every 2 days (= every 172800 seconds)
+- Changes Windows time sync interval from the default every 7 days to every 4 days (= every 345600 seconds)
 
 - Enables UEFI Lock for Local Security Authority (LSA) process Protection. [it is turned on by default on new Windows 11 installations](https://learn.microsoft.com/en-us/windows-server/security/credentials-protection-and-management/configuring-additional-lsa-protection#automatic-enablement) but not with UEFI Lock. When this setting is used with UEFI lock and Secure Boot, additional protection is achieved because disabling its registry key will have no effect.
   - when this feature is on, a new option called "Local Security Authority Protection" appears in Windows Security GUI => Device Security => Core Isolation

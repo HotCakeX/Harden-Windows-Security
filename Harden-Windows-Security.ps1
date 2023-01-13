@@ -1,6 +1,6 @@
 <#PSScriptInfo
 
-.VERSION 2023.1.13
+.VERSION 2023.1.13.1
 
 .GUID d435a293-c9ee-4217-8dc1-4ad2318a5770
 
@@ -40,6 +40,7 @@ Version 2023.1.10: Removed old unnecessary outdated commands, removed most of th
 Version 2023.1.12: changed Firewall LOLBin blocking section to be faster with Parallel operations and added Secured-core PC compliancy
 Version 2023.1.12.1: Fixed description text in PowerShell Gallery
 Version 2023.1.13: Fixed the Country IP blocking list and made it fully compliant with https://www.state.gov/state-sponsors-of-terrorism/
+Version 2023.1.13.1: Removed the ECH related commands, were causing problems with ASR rules, there weren't official methods anyway. removed Russia in country IP blocking since it wasn't mentioned in https://www.state.gov/state-sponsors-of-terrorism/ . changed Windows time sync interval from every 7 days to every 4 days (previous script value was 2).
 #>
 
 <# 
@@ -132,6 +133,8 @@ Hardening Categories from top to bottom:
 
  #>
  
+ 
+
   
  <#
     .Synopsis
@@ -1293,8 +1296,8 @@ ModifyRegistry -RegPath 'HKLM:\Software\Policies\Microsoft\Power\PowerSettings\a
 # Enable Mandatory ASLR
 set-processmitigation -System -Enable ForceRelocateImages
 
-# You can add Mandatory ASLR override for Trusted Program using the command below or in the Program Settings section of Exploit Protection in Windows Defender app. 
-# Set-ProcessMitigation -Name "C:\TrustedProgram.exe" -Disable ForceRelocateImages
+# You can add Mandatory ASLR override for a Trusted App using the command below or in the Program Settings section of Exploit Protection in Windows Defender app. 
+# Set-ProcessMitigation -Name "C:\TrustedApp.exe" -Disable ForceRelocateImages
 
 # Enable svchost.exe mitigations
 ModifyRegistry -RegPath 'HKLM:\SYSTEM\CurrentControlSet\Control\SCMConfig' -RegName 'EnableSvchostMitigationPolicy' -RegValue '1'
@@ -1332,76 +1335,15 @@ $usernames | ForEach-Object {
 
 try { Add-LocalGroupMember -Group "Hyper-V Administrators" -Member $_.Name -ErrorAction Stop  }
  catch {  write-host "user account is already part of the Hyper-V Administrators group `n" -ForegroundColor Magenta } 
-  }
+    }
 
 
-
-# change Windows time sync interval from every 7 days to every 2 days (= every 172800 seconds)
-ModifyRegistry -RegPath 'HKLM:\SYSTEM\ControlSet001\Services\W32Time\TimeProviders\NtpClient' -RegName 'SpecialPollInterval' -RegValue '172800'
+# Change Windows time sync interval from every 7 days to every 4 days (= every 345600 seconds)
+ModifyRegistry -RegPath 'HKLM:\SYSTEM\ControlSet001\Services\W32Time\TimeProviders\NtpClient' -RegName 'SpecialPollInterval' -RegValue '345600'
 
 
 # Configure LSASS process to run as a protected process with UEFI Lock, the expected default value on new Windows 11 installations is "2" which is without UEFI lock, "1" is with UEFI lock
 ModifyRegistry -RegPath 'HKLM:\SYSTEM\CurrentControlSet\Control\Lsa' -RegName 'RunAsPPL' -RegValue '1'
-
-
-# Add ECH (Encrypted Client Hello) to the Edge browser when it's launched by clicking on a link in an app
-$EdgeRegPath = "Registry::HKEY_CLASSES_ROOT\MSEdgeHTM\shell\open\command\"
-$EdgeRegValue = Get-ItemPropertyValue -Path $EdgeRegPath -Name "(default)"
-
-
-if ($EdgeRegValue -notlike "*--enable-features=EncryptedClientHello*")
-
-{       # checks whether Edge Dev channel is the default browser
-        if ($EdgeRegValue -like "*C:\Program Files (x86)\Microsoft\Edge Dev\Application\msedge.exe*")
-        {
-            Set-ItemProperty -Path $EdgeRegPath -Name "(default)" -Value '"C:\Program Files (x86)\Microsoft\Edge Dev\Application\msedge.exe" --enable-features=EncryptedClientHello --single-argument %1'
-        }
-        # checks whether Edge Beta channel is the default browser
-        elseif ($EdgeRegValue -like "*C:\Program Files (x86)\Microsoft\Edge Beta\Application\msedge.exe*")
-        {
-            Set-ItemProperty -Path $EdgeRegPath -Name "(default)" -Value '"C:\Program Files (x86)\Microsoft\Edge Beta\Application\msedge.exe" --enable-features=EncryptedClientHello --single-argument %1'
-        }
-        # checks whether Edge Stable channel is the default browser
-        elseif ($EdgeRegValue -like "*C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe*")
-        {
-            Set-ItemProperty -Path $EdgeRegPath -Name "(default)" -Value '"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" --enable-features=EncryptedClientHello --single-argument %1'
-        }
-
-}
-
-else 
-{
-Write-Host "The ECH flag is Enabled for Edge" -ForegroundColor yellow
-}
-
-
-# Add ECH flag to the target of Edge browser shortcuts (all channel) on desktop of all users
-# https://stackoverflow.com/questions/484560/editing-shortcut-lnk-properties-with-powershell
-$path = Get-ChildItem "C:\Users\Public\Desktop" | Where-Object {$_.Name -like "*Microsoft Edge*"} 
-$shell = New-Object -COM WScript.Shell
-
-$path | ForEach-Object {
-$shortcut = $shell.CreateShortcut($_.FullName)  ## Open the lnk
-$shortcut.Arguments = "--enable-features=EncryptedClientHello"
-$shortcut.Save()  ## Save
-
-}
-
-
-# Add ECH flag to the target of Pinned Edge browser Start menu shortcuts (all channel) for all users
-$path = Get-ChildItem "C:\ProgramData\Microsoft\Windows\Start Menu\Programs" | Where-Object {$_.Name -like "*Microsoft Edge*"} 
-$shell = New-Object -COM WScript.Shell
-
-$path | ForEach-Object {
-$shortcut = $shell.CreateShortcut($_.FullName)  ## Open the lnk
-$shortcut.Arguments = "--enable-features=EncryptedClientHello"
-$shortcut.Save()  ## Save
-
-}
-
-
-
-
 
 
 
@@ -1506,21 +1448,6 @@ function BlockCountryIP {
 
 
 
-# Russia
-do { $BlockRussiaIP = $(write-host "Block the entire range of IPv4 and IPv6 belonging to Russia? Enter Y for Yes or N for No" -ForegroundColor DarkCyan ; Read-Host)
-    switch ($BlockRussiaIP) {   
-    "y" {  
-          
-    $RussiaIPv4 = Invoke-RestMethod -Uri "https://www.ipdeny.com/ipblocks/data/aggregated/ru-aggregated.zone"
-    $RussiaIPv6 = Invoke-RestMethod -Uri "https://www.ipdeny.com/ipv6/ipaddresses/blocks/ru.zone"
-    $RussiaIPRange = $RussiaIPv4 + $RussiaIPv6
-    BlockCountryIP -IPList $RussiaIPRange -CountryName "Russia"
-
-}"N" {Break}   }}  until ($BlockRussiaIP -eq "y" -or $BlockRussiaIP -eq "N")
-
-
-
-
 # Iran
 do { $BlockIranIP = $(write-host "Block the entire range of IPv4 and IPv6 belonging to Iran? Enter Y for Yes or N for No" -ForegroundColor DarkCyan ; Read-Host)
     switch ($BlockIranIP) {   
@@ -1580,7 +1507,7 @@ do { $BlockSyriaIP = $(write-host "Block the entire range of IPv4 and IPv6 belon
 
 
 # how to query the number of IPs in each rule
-# (Get-NetFirewallRule -DisplayName "Russia IP range blocking" | Get-NetFirewallAddressFilter).RemoteAddress.count
+# (Get-NetFirewallRule -DisplayName "Cuba IP range blocking" | Get-NetFirewallAddressFilter).RemoteAddress.count
 
 
 
@@ -1739,18 +1666,6 @@ If (-NOT (Test-Path $RegistryPath)) {   New-Item -Path $RegistryPath -Force | Ou
 New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType string -Force
 
 
-
-# Add ECH flag to the target of Pinned Taskbar Edge browser shortcuts (all channel) of the current user
-# the rest of the ECH flag related commands are in the section where Admin privileges are required.
-$path = Get-ChildItem "$home\AppData\Roaming\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar" | Where-Object {$_.Name -like "*Microsoft Edge*"} 
-$shell = New-Object -COM WScript.Shell
-
-$path | ForEach-Object {
-$shortcut = $shell.CreateShortcut($_.FullName)  ## Open the lnk
-$shortcut.Arguments = "--enable-features=EncryptedClientHello"
-$shortcut.Save()  ## Save
-
-}
 
 
 

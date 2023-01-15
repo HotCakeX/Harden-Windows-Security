@@ -52,7 +52,7 @@
  </br>
 
 
-## Hardening Categories <a href="#hardening-Categories">![HardeningCategoriesIcon]</a>
+## Hardening Categories<a href="#hardening-Categories">![HardeningCategoriesIcon]</a>
 
 <a name="menu-back-to-top"></a>
 From Top to bottom in order:
@@ -78,7 +78,7 @@ From Top to bottom in order:
 
 <p align="right"><a href="#readme-top">💡(back to top)</a></p>
 
-## How To Use <a href="#how-to-use">![HowToUseIcon]</a>
+## How To Use<a href="#how-to-use">![HowToUseIcon]</a>
 
 > __Warning__ Make sure your hardware (Tablet, Laptop, PC, Phone) meets the [Windows 11 hardware requirements](https://www.microsoft.com/en-in/windows/windows-11-specifications?r=1). this script will NOT work as intended if your hardware doesn't support or use TPM 2.0, Secure Boot or Virtualization Technology (For Intel based CPUs it's called: VT-X and VT-D, VT-D is Intel's Virtualization Technology for Directed I/O). even if your CPU isn't at least Intel 8th Gen (or its AMD equivalent), you should still have the options in your UEFI firmware to turn on virtualization Technology, TPM 2.0 and Secure Boot. currently, Windows 11 allows some older than 8th Gen Intel CPUs (or their AMD equivalents) only on insider builds. you will miss a lot of new feautres, benefits and new security technologies that are only available on new hardware.
 <br>
@@ -115,7 +115,7 @@ remove-Item .\Harden-Windows-Security.ps1
 
 <p align="right"><a href="#readme-top">💡(back to top)</a></p>
 
-## Features: <a href="#features">![FeaturesIcon]</a>
+## Features:<a href="#features">![FeaturesIcon]</a>
 
 - Always up-to-date and works with latest build of Windows (Currently Windows 11 - compatible and rigorously tested on stable and Insider Dev builds)
 - Doesn't break anything
@@ -148,7 +148,7 @@ remove-Item .\Harden-Windows-Security.ps1
 <h1> <br> </h1>
 
 
-## Windows Security aka Defender <a href="#Windows-Security-aka-Defender">![WindowsDefenderIcon]</a>
+## Windows Security aka Defender<a href="#Windows-Security-aka-Defender">![WindowsDefenderIcon]</a>
 - Enables **additional** security features of Windows Security (Defender), You can refer to [this official document](https://docs.microsoft.com/en-us/powershell/module/defender/set-mppreference?view=windowsserver2022-ps) for full details.
 
 - This script makes sure [Cloud Security Scan](https://support.microsoft.com/en-us/topic/what-is-a-cloud-security-scan-75112696-7660-4450-9194-d717f72a8ad8) and [Block At First Sight](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/configure-block-at-first-sight-microsoft-defender-antivirus?view=o365-worldwide#turn-on-block-at-first-sight-with-group-policy) are enabled to the highest possible security states available, **Zero Tolerance Cloud Block level**. you need to be aware that this means actions like downloading and opening an unknown file WILL make Windows Security send samples of it to the Cloud for more advanced analysis and it can take a maximum of 60 seconds (this script sets it to max) from the time you try to open that unknown file to the time when it will be opened (if deemed safe), so you will have to wait. all of these security measure are in place by default in Windows to some extent and happen automatically without the need to run this script, but this script **maxes them out and sets them to the highest possible levels** at the cost of 🔻convenience and usability.🔺it's always a trade-off.
@@ -188,7 +188,7 @@ remove-Item .\Harden-Windows-Security.ps1
 
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
-## Attack surface reduction rules <a href="#Attack-surface-reduction-rules">![ASRrulesIcon]</a>
+## Attack surface reduction rules<a href="#Attack-surface-reduction-rules">![ASRrulesIcon]</a>
 [Reducing your attack surface](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/attack-surface-reduction?view=o365-worldwide) means protecting your devices and network, which leaves attackers with fewer ways to perform attacks. Configuring attack surface reduction rules in Windows can help!
 
 [Attack surface reduction rules](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/attack-surface-reduction-rules-reference?view=o365-worldwide) target certain software behaviors, such as:
@@ -204,7 +204,7 @@ This script enables [all 16 available Attack Surface Reduction rules shown in th
 
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
-## Bitlocker Settings <a href="#Bitlocker-Settings">![BitlockerIcon]</a>
+## Bitlocker Settings<a href="#Bitlocker-Settings">![BitlockerIcon]</a>
 This script sets up and configures Bitlocker, [using official documentation](https://learn.microsoft.com/en-us/windows/security/information-protection/bitlocker/bitlocker-group-policy-settings), with the most secure configuration and Military Grade encryption algorithm, **XTS-AES-256, TPM 2.0 and start-up PIN**. So it performs pre-boot checks to verify the OS hasn't been corrupted/tampered with malware. Third party encryption software and tools should Not be used because they break this secure chain of trust, flowing from the UEFI firmware to Windows bootloader and then to BitLocker. it is critical for this chain of trust to exist in order to prevent an entire range of **real-life** attacks against Windows systems.
 
 - BitLocker software will bring you a real security against the theft of your computer if you strictly abide by the following basic rule:
@@ -220,7 +220,7 @@ Refer to this [official documentation about the countermeasures of Bitlocker](ht
 
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
-## TLS Security <a href="#TLS-Security">![TLSIcon]</a>
+## TLS Security<a href="#TLS-Security">![TLSIcon]</a>
 This script disables TLS 1 and TLS 1.1 security protocols that only **exist for backward compatibility**. all modern software should and do use `TLS 1.2` and `TLS 1.3`.
 
 Changes made by the script only affect things that use [Schannel SSP](https://learn.microsoft.com/en-us/windows/win32/secauthn/protocols-in-tls-ssl--schannel-ssp-): that includes Edge, IIS web server, built-in inbox Windows apps and some other programs supplied by Microsoft, but not 3rd party software that use [portable stacks](https://en.wikipedia.org/wiki/Comparison_of_TLS_implementations#Portability_concerns) like Java, nodejs, python or php.
@@ -241,7 +241,7 @@ if you want to read more: [Demystifying Schannel](https://techcommunity.microsof
 
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
-## Lock Screen <a href="#Lock-Screen">![LockScreenIcon]</a>
+## Lock Screen<a href="#Lock-Screen">![LockScreenIcon]</a>
 
 - [Automatically locks device after X seconds of inactivity](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/interactive-logon-machine-inactivity-limit) (just like mobile phones), which is set to 120 seconds (2 minutes) in this script, you can change that to any value you like.
 
@@ -264,7 +264,7 @@ if you want to read more: [Demystifying Schannel](https://techcommunity.microsof
 
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
-## User Account Control <a href="#User-Account-Control">![UACIcon]</a>
+## User Account Control<a href="#User-Account-Control">![UACIcon]</a>
 
 Here is [the official reference](https://learn.microsoft.com/en-us/windows/security/identity-protection/user-account-control/user-account-control-group-policy-and-registry-key-settings#registry-key-settings) for the commands used in this section of the script, User Account Control Group Policy and registry key settings.
 
@@ -277,7 +277,7 @@ Here is [the official reference](https://learn.microsoft.com/en-us/windows/secur
 
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
-## Device Guard <a href="#Device-Guard">![DeviceGuardIcon]</a>
+## Device Guard<a href="#Device-Guard">![DeviceGuardIcon]</a>
 **Most of the Device Guard and Virtualization-Based Security features are Automatically enabled by default** on capable and modern hardware, this script only checks their status and if needed, enables UEFI lock for them and also proceeds with enabling **full Secured-Core PC requirements**:
 - [Makes sure Virtualization-Based Security is Enabled](https://learn.microsoft.com/en-us/windows/security/threat-protection/device-guard/enable-virtualization-based-protection-of-code-integrity)
   - [Validate enabled Windows Defender Device Guard hardware-based security features](https://learn.microsoft.com/en-us/windows/security/threat-protection/device-guard/enable-virtualization-based-protection-of-code-integrity#validate-enabled-windows-defender-device-guard-hardware-based-security-features)
@@ -296,7 +296,7 @@ Here is [the official reference](https://learn.microsoft.com/en-us/windows/secur
 
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
-## Windows Firewall <a href="#Windows-Firewall">![FirewallIcon]</a>
+## Windows Firewall<a href="#Windows-Firewall">![FirewallIcon]</a>
 - This category makes sure Windows Firewall is enabled for all profiles (which is the default)
 
 - [Blocks LOLbins (Living Off The Land Binaries)](https://lolbas-project.github.io/) from making Internet connections.
@@ -314,7 +314,7 @@ Just like any other hardening category, you can skip this one when running the s
 
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
-## Optional Windows Features <a href="#Optional-Windows-Features">![OptionalFeaturesIcon]</a>
+## Optional Windows Features<a href="#Optional-Windows-Features">![OptionalFeaturesIcon]</a>
 
 - This script disables some rarely used features in [Windows optional features](https://learn.microsoft.com/en-us/windows/application-management/add-apps-and-features#use-windows-powershell-to-disable-specific-features):
   - PowerShell v2; because it's old and doesn't support [AMSI](https://devblogs.microsoft.com/powershell/powershell-the-blue-team/#antimalware-scan-interface-integration)
@@ -330,7 +330,7 @@ Just like any other hardening category, you can skip this one when running the s
 
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
-## Windows Networking <a href="#Windows-Networking">![NetworkingIcon]</a>
+## Windows Networking<a href="#Windows-Networking">![NetworkingIcon]</a>
 These are configurations that are typically 🔺recommended in High-Risk Environments🔻 but also can be applied for home users
 
 - [Disabling NetBIOS over TCP/IP](https://learn.microsoft.com/en-us/windows-hardware/customize/desktop/unattend/microsoft-windows-netbt-interfaces-interface-netbiosoptions) on all network interfaces, virtual and physical. This command needs to run every time after installing a new VPN software or network adapater.
@@ -349,7 +349,7 @@ These are configurations that are typically 🔺recommended in High-Risk Environ
 
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
-## Miscellaneous Configurations <a href="#Miscellaneous-Configurations">![MiscellaneousIcon]</a>
+## Miscellaneous Configurations<a href="#Miscellaneous-Configurations">![MiscellaneousIcon]</a>
 - Sets [Early launch antimalware](https://learn.microsoft.com/en-us/windows-hardware/drivers/install/elam-driver-requirements) engine's status to `8` which is **Good only.** The [default value](https://gpsearch.azurewebsites.net/#7437) is `3`, which allows good, unknown and 'bad but critical'. that is the default value, because setting it to `8` [can prevent your computer from booting](https://learn.microsoft.com/en-us/windows/compatibility/early-launch-antimalware#mitigation) if the driver it relies on is critical but at the same time unknown or bad.
 
   - By being launched first by the kernel, ELAM is ensured to be launched before any third-party software and is therefore able to detect malware in the boot process and prevent it from initializing. ELAM drivers must be specially signed by Microsoft to ensure they are started by the Windows kernel early in the boot process.
@@ -393,19 +393,19 @@ This is to prevent an 🔺**Attacker with skill and lengthy physical access to y
 
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
-## Certificate Checking Commands <a href="#Certificate-Checking-Commands">![CertificateIcon]</a>
+## Certificate Checking Commands<a href="#Certificate-Checking-Commands">![CertificateIcon]</a>
 In this category, the script runs [sigcheck64.exe](https://learn.microsoft.com/en-us/sysinternals/downloads/sigcheck) live from [Sysinternals ](https://learn.microsoft.com/en-us/sysinternals/), then lists valid certificates not rooted to the Microsoft Certificate Trust List in the User and Machine stores. unless you use Windows insider build, all the certificates that will be listed should be treated as dangerous and removed from your system immediately. however, if you are a Windows Insider user, like me, there will be certificates listed that belong to Microsoft and pre-public build of Windows that you use, so they are OK and should not be removed. some of those safe Windows-Insider-build related certificates that should be left alone are:
 * Microsoft ECC Development Root Certificate Authority 2018
 * Microsoft Development Root Certificate Authority 2014
 
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
-## Country IP Blocking <a href="#Country-IP-Blocking">![CountryIPBlockingIcon]</a>
+## Country IP Blocking<a href="#Country-IP-Blocking">![CountryIPBlockingIcon]</a>
 The script fetches the newest range of [IPv4](https://www.ipdeny.com/ipblocks/) and [IPv6](https://www.ipdeny.com/ipv6/ipaddresses/blocks/) addresses of [State Sponsors of Terrorism](https://www.state.gov/state-sponsors-of-terrorism/) then creates 2 rules (inbound and outbound) for each country in Windows firewall, completely blocking connections to and from those countries.
 
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
-## Non-Admin Commands <a href="#non-admin-commands">![NonAdminIcon]</a>
+## Non-Admin Commands<a href="#non-admin-commands">![NonAdminIcon]</a>
 
 In order to run commands in this category, you don't need administrator privileges, because no system-wide configuration is made. changes in this category only apply to the user account that is running the current PowerShell session:
 - Show known file extensions in File explorer
@@ -424,11 +424,11 @@ In order to run commands in this category, you don't need administrator privileg
 
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
-## Related <a href="#related">![RelatedIcon]</a>
+## Related<a href="#related">![RelatedIcon]</a>
 
 [PowerShell Gallery](https://www.powershellgallery.com/packages/Harden-Windows-Security/) - Also available in PowerShell Gallery
 
-## Trust <a href="#trust">![TrustIcon]</a>
+## Trust<a href="#trust">![TrustIcon]</a>
 
 How can you 100% trust this script and know that nothing shady is going on?
 - The script is in plain-text, nothing hidden
@@ -441,7 +441,7 @@ How can you 100% trust this script and know that nothing shady is going on?
 
 <p align="right"><a href="#readme-top">💡(back to top)</a></p>
 
-## Support <a href="#support">![SupportIcon]</a>
+## Support<a href="#support">![SupportIcon]</a>
 
 <a href="https://github.com/HotCakeX/Harden-Windows-Security/discussions">
 🎯 if you have any questions, requests, suggestions etc. about this script, please open a new discussion on Github
@@ -452,7 +452,7 @@ How can you 100% trust this script and know that nothing shady is going on?
 
 <p align="right"><a href="#readme-top">💡(back to top)</a></p>
 
-## Security Recommendations <a href="#security-recommendations">![SecurityRecommendationIcon]</a>
+## Security Recommendations<a href="#security-recommendations">![SecurityRecommendationIcon]</a>
 
 * When you decide to install a program or app in Windows, first use the Microsoft Store and <a href="https://github.com/microsoft/winget-cli">Winget</a>, somebody created a nice web interface for interacting with Winget CLI <a href="https://winstall.app/">here</a>. if the program or app you are looking for isn't available in there, then download it from its official website.
 * Use Secure DNS; Windows 11 natively supports <a href="https://learn.microsoft.com/en-us/windows-server/networking/dns/doh-client-support">DNS over HTTPS</a> and <a href="https://techcommunity.microsoft.com/t5/networking-blog/dns-over-tls-available-to-windows-insiders/ba-p/3565859">DNS over TLS</a>.
@@ -463,7 +463,7 @@ How can you 100% trust this script and know that nothing shady is going on?
 
 <p align="right"><a href="#readme-top">💡(back to top)</a></p>
 
-## Resources <a href="#resources">![ResourcesIcon]</a>
+## Resources<a href="#resources">![ResourcesIcon]</a>
 
 - [Microsoft.com](https://microsoft.com)
   - [Force firmware code to be measured and attested by Secure Launch](https://www.microsoft.com/en-us/security/blog/2020/09/01/force-firmware-code-to-be-measured-and-attested-by-secure-launch-on-windows-10/)
@@ -477,7 +477,7 @@ How can you 100% trust this script and know that nothing shady is going on?
 
 <p align="right"><a href="#readme-top">💡(back to top)</a></p>
 
-## License <a href="#license">![LicenseFreeIcon]</a>
+## License<a href="#license">![LicenseFreeIcon]</a>
 
 Not Applicable, No license. because the only mission of this GitHub repository and script is to give all Windows users accurate, up to date and correct information about how to stay secure and safe in dangerous environments, and to stay not one, but Many steps, ahead of threat actors.
 

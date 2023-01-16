@@ -206,13 +206,16 @@ This script enables [all 16 available Attack Surface Reduction rules shown in th
 
 ## Bitlocker Settings<a href="#Bitlocker-Settings">![BitlockerIcon]</a>
 
-This script sets up and configures Bitlocker, for OS drive and all other drives on the device. [using official documentation](https://learn.microsoft.com/en-us/windows/security/information-protection/bitlocker/bitlocker-group-policy-settings), with the most secure configuration and Military Grade encryption algorithm, **XTS-AES-256, TPM 2.0 and start-up PIN**. 
+- This script sets up and configures Bitlocker, for OS drive and all other drives on the device. [using official documentation](https://learn.microsoft.com/en-us/windows/security/information-protection/bitlocker/bitlocker-group-policy-settings), with the most secure configuration and Military Grade encryption algorithm, **XTS-AES-256, TPM 2.0 and start-up PIN**. 
 
-You will be asked to enter a Startup PIN when activating Bitlocker for the first time. make sure the PIN you enter is at least 6 digits. since this script enables Enhanced Startup PIN, you can use characters including uppercase and lowercase letters, symbols, numbers, and spaces. just make sure the Bitlocker PIN that you choose is not the same as your Windows Hello PIN.
+- You will be asked to enter a Startup PIN when activating Bitlocker for the first time. make sure the PIN you enter is at least 6 digits. since this script enables Enhanced Startup PIN, you can use characters including uppercase and lowercase letters, symbols, numbers, and spaces. just make sure the Bitlocker PIN that you choose is not the same as your Windows Hello PIN.
 
-Once you run this script for the first time, there will be a text file containing the 48-digit recovery password for each encrypted drive that will be saved in itself, with the names like `Drive C recovery password.txt`. it is 🔻very important to keep it in a safe place, e.g. in OneDrive's Personal Vault which requires authentication to access. see [Here](https://www.microsoft.com/en-us/microsoft-365/onedrive/personal-vault) and [Here](https://support.microsoft.com/en-us/office/protect-your-onedrive-files-in-personal-vault-6540ef37-e9bf-4121-a773-56f98dce78c4) for more info about OneDrive's Personal Vault🔺
+- Once you run this script for the first time, there will be a text file containing the 48-digit recovery password for each encrypted drive that will be saved in itself, with the names like `Drive C recovery password.txt`. it is 🔻very important to keep it in a safe place, e.g. in OneDrive's Personal Vault which requires authentication to access. see [Here](https://www.microsoft.com/en-us/microsoft-365/onedrive/personal-vault) and [Here](https://support.microsoft.com/en-us/office/protect-your-onedrive-files-in-personal-vault-6540ef37-e9bf-4121-a773-56f98dce78c4) for more info about OneDrive's Personal Vault🔺
 
-Check out <a href="#Lock-Screen">Lock Screen</a> category down below, for more info about the recovery password.
+  - Check out <a href="#Lock-Screen">Lock Screen</a> category for more info about the recovery password.
+
+  - Also Check out <a href="#Miscellaneous-Configurations">Miscellaneous Configurations</a> category for more info about how Bitlocker protects your device and data against an Attacker with skill and lengthy physical access.
+  - To have even more security than what the script provides, you can utilize a [Startup key in additiona to the other 3 key protectors](https://learn.microsoft.com/en-us/windows/security/information-protection/bitlocker/bitlocker-countermeasures#pre-boot-authentication) (TPM, Startup PIN and Recovery password). with this method, part of the encryption key is stored on a USB flash drive, and a PIN is required to authenticate the user to the TPM. This configuration provides multifactor authentication so that if the USB key is lost or stolen, it can't be used for access to the drive, because the correct PIN is also required.
 
 
 

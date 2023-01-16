@@ -205,11 +205,24 @@ This script enables [all 16 available Attack Surface Reduction rules shown in th
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
 ## Bitlocker Settings<a href="#Bitlocker-Settings">![BitlockerIcon]</a>
-This script sets up and configures Bitlocker, [using official documentation](https://learn.microsoft.com/en-us/windows/security/information-protection/bitlocker/bitlocker-group-policy-settings), with the most secure configuration and Military Grade encryption algorithm, **XTS-AES-256, TPM 2.0 and start-up PIN**. So it performs pre-boot checks to verify the OS hasn't been corrupted/tampered with malware. Third party encryption software and tools should Not be used because they break this secure chain of trust, flowing from the UEFI firmware to Windows bootloader and then to BitLocker. it is critical for this chain of trust to exist in order to prevent an entire range of **real-life** attacks against Windows systems.
+
+This script sets up and configures Bitlocker, for OS drive and all other drives on the device. [using official documentation](https://learn.microsoft.com/en-us/windows/security/information-protection/bitlocker/bitlocker-group-policy-settings), with the most secure configuration and Military Grade encryption algorithm, **XTS-AES-256, TPM 2.0 and start-up PIN**. 
+
+You will be asked to enter a Startup PIN when activating Bitlocker for the first time. make sure the PIN you enter is at least 6 digits. since this script enables Enhanced Startup PIN, you can use characters including uppercase and lowercase letters, symbols, numbers, and spaces. just make sure the Bitlocker PIN that you choose is not the same as your Windows Hello PIN.
+
+Once you run this script for the first time, there will be a text file containing the 48-digit recovery password for each encrypted drive that will be saved in itself, with the names like `Drive C recovery password.txt`. it is 🔻very important to keep it in a safe place, e.g. in OneDrive's Personal Vault which requires authentication to access. see [Here](https://www.microsoft.com/en-us/microsoft-365/onedrive/personal-vault) and [Here](https://support.microsoft.com/en-us/office/protect-your-onedrive-files-in-personal-vault-6540ef37-e9bf-4121-a773-56f98dce78c4) for more info about OneDrive's Personal Vault🔺
+
+Check out <a href="#Lock-Screen">Lock Screen</a> category down below, for more info about the recovery password.
+
+
+
 
 - BitLocker software will bring you a real security against the theft of your computer if you strictly abide by the following basic rule:
    - As soon as you have finished working, completely shut Windows down and allow for every shadow of information to disappear
 (from RAM, disk caches) within 2 minutes. **🔺this practice is recommended in High-Risk Environments.🔻**
+
+  - Do not mix 3rd party encryption software and tools with Bitlocker. Bitlocker creates a secure end-to-end encrypted ecosystem for your device and its peripherals, this secure ecosystem is backed by things such as software, Virtualization Technology, TPM 2.0 and UEFI firmware, Bitlocker protects your data and entire device against **real-life attacks and threats**. You can encrypt your external SSDs and flash drives with Bitlocker too.
+
 
 Refer to this [official documentation about the countermeasures of Bitlocker](https://learn.microsoft.com/en-us/windows/security/information-protection/bitlocker/bitlocker-countermeasures)
 
@@ -217,6 +230,8 @@ Refer to this [official documentation about the countermeasures of Bitlocker](ht
   - [Kernel DMA Protection (Memory Access Protection) for OEMs](https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/oem-kernel-dma-protection) page shows the requirements for Kernel DMA Protection. for Intel CPUs, support for requirements such as VT-X and VT-D can be found in each CPU's respective product page. e.g. [Intel i7 13700K](https://ark.intel.com/content/www/us/en/ark/products/230500/intel-core-i713700k-processor-30m-cache-up-to-5-40-ghz.html)
 
 - Disallow standard (Non-Administrator) users from changing the Bitlocker Startup PIN or password
+
+- [Allow Enhanced PINs for startup](https://learn.microsoft.com/en-us/windows/security/information-protection/bitlocker/bitlocker-group-policy-settings#allow-enhanced-pins-for-startup)
 
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
@@ -250,7 +265,7 @@ if you want to read more: [Demystifying Schannel](https://techcommunity.microsof
   - A malicious user might install malware that looks like the standard sign-in dialog box for the Windows operating system and capture a user's password. The attacker can then sign into the compromised account with whatever level of user rights that user has.
 
 - Enables a [security feature](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/interactive-logon-machine-account-lockout-threshold) that sets a threshold (6 in this script) for the number of failed sign-in attempts that causes the device to be locked by using BitLocker. This threshold means, if the specified maximum number of failed sign-in attempts is exceeded, the device will invalidate the Trusted Platform Module (TPM) protector and any other protector except the 48-digit recovery password, and then reboot. During Device Lockout mode, the computer or device only boots into the touch-enabled Windows Recovery Environment (WinRE) until an authorized user enters the recovery password to restore full access.
-  - This Script (<a href="#Bitlocker-Settings">in the Bitlocker category</a>) automatically saves your 48-digit recovery password in your drive, the exact location of it will be visible on the PowerShell console when you run it.
+  - This Script (<a href="#Bitlocker-Settings">in the Bitlocker category</a>) automatically saves the 48-digit recovery password of each drive in itself, the location of it will also be visible on the PowerShell console when you run it. it is 🔻very important to keep it in a safe place, e.g. in OneDrive's Personal Vault which requires authentication to access. see [Here](https://www.microsoft.com/en-us/microsoft-365/onedrive/personal-vault) and [Here](https://support.microsoft.com/en-us/office/protect-your-onedrive-files-in-personal-vault-6540ef37-e9bf-4121-a773-56f98dce78c4) for more info about OneDrive's Personal Vault🔺
 
 - [Hides email address of the Microsoft account on lock screen](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/interactive-logon-display-user-information-when-the-session-is-locked), if your device is in a trusted place like at home then this isn't necessary.
 

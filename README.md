@@ -375,7 +375,7 @@ These are configurations that are typically 🔺recommended in High-Risk Environ
 - Disabling location service system wide. websites and apps won't be able to use your precise location, however they will still be able to detect your location using your IP address.
 
 - Enables Hibernate, [sets it to full](https://learn.microsoft.com/en-us/windows/win32/power/system-power-states#hibernation-file-types), adds Hibernate to Start menu's power options and disables Sleep. this feature is only 🔺recommended for High-Risk Environments.🔻
-This is to prevent an 🔺**Attacker with skill and lengthy physical access to your computer**🔻
+This is to prevent an 🔺**Attacker with skill and lengthy physical access to your computer**🔻**which is the Worst-case Scenario**
 
   - Attack Scenario: Targeted attack with plenty of time; this attacker will open the case, will solder, and will use sophisticated hardware or software. Of course, [Bitlocker and configurations](https://learn.microsoft.com/en-us/windows/security/information-protection/bitlocker/bitlocker-countermeasures#attacker-with-skill-and-lengthy-physical-access) applied by this script will protect you against that.
   - [Power states S1-S3 will be disabled](https://learn.microsoft.com/en-us/windows/win32/power/system-power-states#sleep-state-s1-s3) in order to completely disable Sleep, doing so also removes the Sleep option from Start menu and even using commands to put the computer to sleep won't work. [2 registry keys](https://gpsearch.azurewebsites.net/#2166) are required to be used to disable Sleep. You will have to restart your device for the changes to take effect.

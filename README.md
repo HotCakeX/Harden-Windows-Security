@@ -217,7 +217,7 @@ Check out <a href="#Lock-Screen">Lock Screen</a> category down below, for more i
 
 
 
-- BitLocker software will bring you a real security against the theft of your computer if you strictly abide by the following basic rule:
+- BitLocker will bring you a real security against the theft of your computer if you strictly abide by the following basic rules:
    - As soon as you have finished working, completely shut Windows down and allow for every shadow of information to disappear
 (from RAM, disk caches) within 2 minutes. **🔺this practice is recommended in High-Risk Environments.🔻**
 

@@ -215,7 +215,7 @@ This script enables [all 16 available Attack Surface Reduction rules shown in th
   - Check out <a href="#Lock-Screen">Lock Screen</a> category for more info about the recovery password.
 
   - Also Check out <a href="#Miscellaneous-Configurations">Miscellaneous Configurations</a> category for more info about how Bitlocker protects your device and data against an Attacker with skill and lengthy physical access.
-  - To have even more security than what the script provides, you can utilize a [Startup key in additiona to the other 3 key protectors](https://learn.microsoft.com/en-us/windows/security/information-protection/bitlocker/bitlocker-countermeasures#pre-boot-authentication) (TPM, Startup PIN and Recovery password). with this method, part of the encryption key is stored on a USB flash drive, and a PIN is required to authenticate the user to the TPM. This configuration provides multifactor authentication so that if the USB key is lost or stolen, it can't be used for access to the drive, because the correct PIN is also required.
+  - To have even more security than what the script provides, you can utilize a [Startup key in addition to the other 3 key protectors](https://learn.microsoft.com/en-us/windows/security/information-protection/bitlocker/bitlocker-countermeasures#pre-boot-authentication) (TPM, Startup PIN and Recovery password). with this method, part of the encryption key is stored on a USB flash drive, and a PIN is required to authenticate the user to the TPM. This configuration **provides multifactor authentication** so that if the USB key is lost or stolen, it can't be used for access to the drive, because the correct PIN is also required.
 
 
 

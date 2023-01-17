@@ -129,7 +129,6 @@ remove-Item .\Harden-Windows-Security.ps1
 | 2    | Wikipedia                     | providing further information for the reader               |
 | 3    | gpsearch.azurewebsites.net    | showing how certain registry keys of GPolicies were found  |
 | 1    | non-official Github Wiki page | providing further information for the reader about TLS     |
-| 1    | non-official Github website   | providing further information for the reader about LOLBins |
 | 2    | Security.Stackexchange Q&A    | providing logic and reasoning for certain actions          |
 | 1    | state.gov                     | List of State Sponsors of Terrorism                        |
 
@@ -315,11 +314,7 @@ Here is [the official reference](https://learn.microsoft.com/en-us/windows/secur
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
 ## Windows Firewall<a href="#Windows-Firewall">![FirewallIcon]</a>
-- This category makes sure Windows Firewall is enabled for all profiles (which is the default)
-
-- [Blocks LOLbins (Living Off The Land Binaries)](https://lolbas-project.github.io/) from making Internet connections.
-  - LOLBins are Microsoft-signed files, meaning they are either native to the Operating System (OS) and come pre-installed, or are available from Microsoft (i.e., a Microsoft program or add-on). Despite being legitimate (and well-intentioned) files, these binaries can be exploited by an attacker and used in an attack. This script uses built-in Firewall cmdlet to block those binaries in Windows Firewall.
-  - 🔻This is a Defense-in-Depth strategy for High-Risk Environments🔺
+- Makes sure Windows Firewall is enabled for all profiles (which is the default)
 
 - Sets inbound and outbound default actions for Domain Firewall Profile to Block; because this script is Not intended to be used on devices that are part of a domain or controlled by an Active Directory Domain Controller, since they will have their own policies and policy management systems in place.
 
@@ -328,7 +323,7 @@ Here is [the official reference](https://learn.microsoft.com/en-us/windows/secur
 - Disables [Multicast DNS (mDNS) UDP-in Firewall Rules for all 3 Firewall profiles](https://techcommunity.microsoft.com/t5/networking-blog/mdns-in-the-enterprise/ba-p/3275777), This might interfere with Miracast screen sharing, which relies on the Public profile, and homes where the Private profile is not selected, but it does add an extra measure of security in public places, like a coffee shop.
   - The domain name `.local` which is used in mDNS (Multicast DNS) [is a special-use domain name reserved by the Internet Engineering Task Force (IETF)](https://en.wikipedia.org/wiki/.local) so that **it may not be installed as a top-level domain in the Domain Name System (DNS) of the Internet.**
 
-Just like any other hardening category, you can skip this one when running the script and choose N (for No) when prompted for input in PowerShell console.
+
 
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 

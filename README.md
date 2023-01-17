@@ -206,7 +206,7 @@ This script enables [all 16 available Attack Surface Reduction rules shown in th
 
 ## Bitlocker Settings<a href="#Bitlocker-Settings">![BitlockerIcon]</a>
 
-- This script sets up and configures Bitlocker, for OS drive and all other drives on the device. [using official documentation](https://learn.microsoft.com/en-us/windows/security/information-protection/bitlocker/bitlocker-group-policy-settings), with the most secure configuration and Military Grade encryption algorithm, **XTS-AES-256, TPM 2.0 and start-up PIN**. 
+- This script sets up and configures Bitlocker, for OS drive and all other drives on the device (including any connected USB storage devices) [using official documentation](https://learn.microsoft.com/en-us/windows/security/information-protection/bitlocker/bitlocker-group-policy-settings), with the most secure configuration and Military Grade encryption algorithm, **XTS-AES-256, TPM 2.0 and start-up PIN**. 
 
 - You will be asked to enter a Startup PIN when activating Bitlocker for the first time. make sure the PIN you enter is at least 6 digits. since this script enables Enhanced Startup PIN, you can use characters including uppercase and lowercase letters, symbols, numbers, and spaces. make sure the Bitlocker PIN that you choose is not the same as your Windows Hello PIN.
 

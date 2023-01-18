@@ -341,7 +341,7 @@ Here is [the official reference](https://learn.microsoft.com/en-us/windows/secur
 - Also enables these optional features:
   - [Windows Defender Application Guard](https://learn.microsoft.com/en-us/windows/security/threat-protection/microsoft-defender-application-guard/md-app-guard-overview); which is a safe Environment to open untrusted websites
   - [Windows Sandbox](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-sandbox/windows-sandbox-overview); install, test and use programs in a disposable virtual operation system, completely separate from your  main OS
-  - Hyper-V; the best and a hybrid hypervisor (Type 1 and Type 2) to run virtual machines on
+  - Hyper-V; the best and a hybrid hypervisor (Type 1 and Type 2) to run virtual machines on. [check out this Hyper-V Wiki page](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Hyper-V)
   - Virtual Machine Platform; required for [Android subsystem or WSA (Windows subsystem for Android)](https://learn.microsoft.com/en-us/windows/android/wsa/). if it's disabled, it will be automatically enabled either way when you try to install WSA from Store app
 
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>

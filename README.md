@@ -441,6 +441,8 @@ In this category, the script runs [sigcheck64.exe](https://learn.microsoft.com/e
 ## Country IP Blocking<a href="#Country-IP-Blocking">![CountryIPBlockingIcon]</a>
 The script fetches the newest range of [IPv4](https://www.ipdeny.com/ipblocks/) and [IPv6](https://www.ipdeny.com/ipv6/ipaddresses/blocks/) addresses of [State Sponsors of Terrorism](https://www.state.gov/state-sponsors-of-terrorism/) then creates 2 rules (inbound and outbound) for each country in Windows firewall, completely blocking connections to and from those countries.
 
+Once you have those Firewall rules added, you can [use this method](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Event-Viewer#how-to-identify-which-windows-firewall-rule-is-responsible-for-a-blocked-packets) to see if any of the blocked connections were from/to those countries.
+
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
 ## Non-Admin Commands<a href="#non-admin-commands">![NonAdminIcon]</a>

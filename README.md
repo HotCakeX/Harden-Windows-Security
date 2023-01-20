@@ -38,8 +38,8 @@
   <a href="#support">Support</a> •
   <a href="#security-recommendations">Security Recommendations</a> •
   <a href="#resources">Resources</a> •
-  <a href="#license">License</a>
-
+  <a href="#license">License</a> •
+  <a href="https://github.com/HotCakeX/Harden-Windows-Security/wiki">Wiki</a>
 
 </p>
 

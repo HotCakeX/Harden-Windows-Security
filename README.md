@@ -245,9 +245,8 @@ This script enables [all 16 available Attack Surface Reduction rules shown in th
 
 
 
-- BitLocker will bring you a real security against the theft of your computer if you strictly abide by the following basic rules:
-   - As soon as you have finished working, completely shut Windows down and allow for every shadow of information to disappear
-(from RAM, disk caches) within 2 minutes. **🔺this practice is recommended in High-Risk Environments.🔻**
+- BitLocker will bring you a real security against the theft of your device if you strictly abide by the following basic rules:
+   - As soon as you have finished working, either Hibernate or shut Windows down and allow for every shadow of information to disappear from RAM within 2 minutes. **🔺this practice is recommended in High-Risk Environments.🔻**
 
   - Do not mix 3rd party encryption software and tools with Bitlocker. Bitlocker creates a secure end-to-end encrypted ecosystem for your device and its peripherals, this secure ecosystem is backed by things such as software, Virtualization Technology, TPM 2.0 and UEFI firmware, Bitlocker protects your data and entire device against **real-life attacks and threats**. You can encrypt your external SSDs and flash drives with Bitlocker too.
 

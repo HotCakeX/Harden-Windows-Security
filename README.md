@@ -200,7 +200,7 @@ remove-Item .\Harden-Windows-Security.ps1
 
 ```PowerShell
 # Add multiple programs to the exclusion list of Controlled Folder Access
-Set-MpPreference -ControlledFolderAccessAllowedApplications 'C:\Program Files\App\app.exe','C:\Program Files\App2\app2.exe
+Set-MpPreference -ControlledFolderAccessAllowedApplications 'C:\Program Files\App\app.exe','C:\Program Files\App2\app2.exe'
 ```
 
 

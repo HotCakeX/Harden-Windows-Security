@@ -320,6 +320,7 @@ Here is [the official reference](https://learn.microsoft.com/en-us/windows/secur
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
 ## Device Guard<a href="#Device-Guard">![DeviceGuardIcon]</a>
+
 **Most of the Device Guard and Virtualization-Based Security features are Automatically enabled by default** on capable and modern hardware, this script only checks their status and if needed, enables UEFI lock for them and also proceeds with enabling [**full Secured-Core PC requirements**:](https://www.microsoft.com/en-us/windows/business/windows-11-secured-core-computers)
 - [Makes sure Virtualization-Based Security is Enabled](https://learn.microsoft.com/en-us/windows/security/threat-protection/device-guard/enable-virtualization-based-protection-of-code-integrity)
   - [Validate enabled Windows Defender Device Guard hardware-based security features](https://learn.microsoft.com/en-us/windows/security/threat-protection/device-guard/enable-virtualization-based-protection-of-code-integrity#validate-enabled-windows-defender-device-guard-hardware-based-security-features)
@@ -334,6 +335,16 @@ Here is [the official reference](https://learn.microsoft.com/en-us/windows/secur
 - [Enables System Guard Secure Launch and SMM protection](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-system-guard/system-guard-secure-launch-and-smm-protection#registry)
   - [How to verify System Guard Secure Launch is configured and running](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-system-guard/system-guard-secure-launch-and-smm-protection#how-to-verify-system-guard-secure-launch-is-configured-and-running)
 - [Kernel Mode Hardware Enforced Stack Protection](https://techcommunity.microsoft.com/t5/microsoft-security-baselines/windows-11-version-22h2-security-baseline/ba-p/3632520)
+
+<br>
+
+[Device protection in Windows Security gives you one of these 4 hardware scores:](https://support.microsoft.com/en-us/windows/device-protection-in-windows-security-afa11526-de57-b1c5-599f-3a4c6a61c5e2)
+<ol>
+<li>Standard hardware security not supported</li>
+<li>Your device meets the requirements for standard hardware security</li>
+<li>Your device meets the requirements for enhanced hardware security</li>
+<li>Your device has all Secured-core PC features enabled</li>
+</ol>
 
 
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>

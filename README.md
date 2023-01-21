@@ -340,7 +340,7 @@ Here is [the official reference](https://learn.microsoft.com/en-us/windows/secur
 <br>
 <br>
 
-[Device protection in Windows Security gives you one of these 4 hardware scores:](https://support.microsoft.com/en-us/windows/device-protection-in-windows-security-afa11526-de57-b1c5-599f-3a4c6a61c5e2)
+#### [Device protection in Windows Security gives you one of these 4 hardware scores:](https://support.microsoft.com/en-us/windows/device-protection-in-windows-security-afa11526-de57-b1c5-599f-3a4c6a61c5e2)
 <ol>
 <li>Standard hardware security not supported</li>
 	<ul>

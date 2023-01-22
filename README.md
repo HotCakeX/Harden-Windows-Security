@@ -582,7 +582,7 @@ Not Applicable, No license. because the only mission of this GitHub repository a
 	
 	
 	
-![USAIcon]![NATOIcon]![UKicon]![AUIcon]![IsraelIcon]![EUIcon]
+![USAIcon]  ![NATOIcon]  ![UKicon]  ![AUIcon]  ![IsraelIcon]  ![EUIcon]
 	
 	
 

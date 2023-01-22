@@ -586,12 +586,12 @@ Not Applicable, No license. because the only mission of this GitHub repository a
 	
 	
 
-[USAIcon]: images/USAIcon.png	
-[NATOIcon]: images/NATOIcon.png
-[UKicon]: images/UKicon.png	
-[AUIcon]: images/AUIcon.png	
-[IsraelIcon]: images/IsraelIcon.png	
-[EUIcon]: images/EUIcon.png
+[USAIcon]: images/USA.png	
+[NATOIcon]: images/NATO.png
+[UKicon]: images/UK.png	
+[AUIcon]: images/AU.png	
+[IsraelIcon]: images/Israel.png	
+[EUIcon]: images/EU.png
 	
 	
 	

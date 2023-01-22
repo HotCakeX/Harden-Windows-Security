@@ -1,6 +1,6 @@
 <#PSScriptInfo
 
-.VERSION 2023.1.16
+.VERSION 2023.1.22
 
 .GUID d435a293-c9ee-4217-8dc1-4ad2318a5770
 
@@ -61,9 +61,10 @@ Version 2023.1.13.1: Removed the ECH related commands, they weren't official met
 Version 2023.1.13.2: made Firewall processing section faster by defining a ThrottleLimit based on CPU's logical cores
 ## 
 Version 2023.1.16: Bitlocker category now encrypts all drives instead of just OS drive. Certificate checking category now handles situations when WebDav can't be used.
-
-
-
+## 
+Version 2023.1.17: fixed text spacing and colors to improve readability, removed LOLBins blocking as it's no longer necessary to do so. the security features in place make LOLBins blocking unnecessary and redundant and blocking those programs in Firewall can have unknown/unwated behavior.
+## 
+Version 2023.1.22: Added a notice at the beginning of the script to remind the user to read GitHub readme page. added Smart App Control to the Windows Security (Defender) section. script asks for confirmation before turning on Smart App Control.
 
 
 
@@ -72,9 +73,12 @@ Version 2023.1.16: Bitlocker category now encrypts all drives instead of just OS
 <# 
 
 .SYNOPSIS
-    Harden Windows 11 safely, securely and without breaking anything
+    Harden Windows 11 safely, securely using Official Supported methods with proper explanation
 
 .DESCRIPTION
+
+
+  ⭕ You need to read the GitHub's readme page before running this script: https://github.com/HotCakeX/Harden-Windows-Security
 
 💠 Features of this Hardening script:
 
@@ -128,51 +132,17 @@ Version 2023.1.16: Bitlocker category now encrypts all drives instead of just OS
    
 .NOTES
     
-    Check out GitHub page for more security recommendations: https://github.com/HotCakeX/Harden-Windows-Security
+    Check out GitHub page for security recommendations: https://github.com/HotCakeX/Harden-Windows-Security
 
 #>
 
 
- 
- 
- 
- # Source https://github.com/HotCakeX/Harden-Windows-Security
- <# 
-Hardening Categories from top to bottom:
 
-  Commands that require Administrator Privileges
-  -Windows Security aka Defender
-  -Attack surface reduction rules
-  -Bitlocker Settings
-  -TLS Security
-  -Lock Screen
-  -UAC (User Account Control)
-  -Device Guard
-  -Windows Firewall
-  -Optional Windows Features
-  -Windows Networking
-  -Miscellaneous Configurations
-  -Certificate Checking Commands
-  -Country IP Blocking
- Commands that don't require Administrator Privileges
-  -Non-Admin Commands that only affect the current user and do not make machine-wide changes.
+write-host "`n`n ⚠️ Make Sure you've completely read what's written in the GitHub repository, before running this script ⚠️`n" -ForegroundColor yellow
 
- #>
- 
- 
+Write-Host "Link to the GitHub Repository ➡️" -ForegroundColor Green "https://github.com/HotCakeX/Harden-Windows-Security `n`n"
 
   
- <#
-    .Synopsis
-        Tests if the user is an administrator
-    .Description
-        Returns true if a user is an administrator, false if the user is not an administrator   
-    .Example
-        Test-IsAdmin
-  https://devblogs.microsoft.com/scripting/use-function-to-determine-elevation-of-powershell-console/
-    #>
-
-
 
   # Function to modify registry, only DWORD property Types, checks before modification
 function ModifyRegistry {
@@ -211,7 +181,7 @@ else {
 # =========================================================================================================================
 # ==========================================Windows Security aka Defender==================================================
 # =========================================================================================================================
-do { $WindowsSecurityQuestion = $(write-host "Run Windows Security (aka Defender) section? Enter Y for Yes or N for No" -ForegroundColor Magenta; Read-Host)
+do { $WindowsSecurityQuestion = $(write-host "`nRun Windows Security (aka Defender) section? Enter Y for Yes or N for No" -ForegroundColor Magenta; Read-Host)
     switch ($WindowsSecurityQuestion) {   
     "y" { 
 
@@ -295,6 +265,35 @@ Set-MpPreference -MAPSReporting 2
 Set-MpPreference -AllowSwitchToAsyncInspection $True
 
 
+
+
+
+
+
+
+
+do { $WindowsSecurityQuestion = $(write-host "`nTurn on Smart App Control? Enter Y for Yes or N for No" -ForegroundColor Cyan; Read-Host)
+    switch ($WindowsSecurityQuestion) {   
+    "y" { 
+
+
+
+# Turn on Smart App Control
+ModifyRegistry -RegPath 'HKLM:\SYSTEM\CurrentControlSet\Control\CI\Policy' -RegName 'VerifiedAndReputablePolicyState' -RegValue '1'
+
+}"N" {Break}   }}  until ($WindowsSecurityQuestion -eq "y" -or $WindowsSecurityQuestion -eq "N")
+
+
+
+
+
+
+
+
+
+
+
+
 }"N" {Break}   }}  until ($WindowsSecurityQuestion -eq "y" -or $WindowsSecurityQuestion -eq "N")
 # =========================================================================================================================
 # =========================================End of Windows Security aka Defender============================================
@@ -310,7 +309,7 @@ Set-MpPreference -AllowSwitchToAsyncInspection $True
 # =========================================================================================================================
 # ==========================================Attack surface reduction rules=================================================
 # =========================================================================================================================
-do { $ASRulesQuestion = $(write-host "Run Attack Surface Reduction Rules section? Enter Y for Yes or N for No" -ForegroundColor Magenta; Read-Host)
+do { $ASRulesQuestion = $(write-host "`nRun Attack Surface Reduction Rules section? Enter Y for Yes or N for No" -ForegroundColor Magenta; Read-Host)
     switch ($ASRulesQuestion) {   
     "y" { 
 
@@ -365,11 +364,10 @@ Add-MpPreference -AttackSurfaceReductionRules_Ids c1db55ab-c21a-4637-bb3f-a12568
 
 
 
-
 # =========================================================================================================================
 # ==========================================Bitlocker Settings=============================================================
 # =========================================================================================================================
-do { $BitlockerQuestion = $(write-host "Run Bitlocker section? Enter Y for Yes or N for No" -ForegroundColor Magenta; Read-Host)
+do { $BitlockerQuestion = $(write-host "`nRun Bitlocker section? Enter Y for Yes or N for No" -ForegroundColor Magenta; Read-Host)
     switch ($BitlockerQuestion) {   
     "y" { 
 
@@ -583,7 +581,7 @@ if ((Get-BitLockerVolume -MountPoint $env:SystemDrive).ProtectionStatus -eq "on"
 
                     Add-BitLockerKeyProtector -MountPoint $env:SystemDrive -RecoveryPasswordProtector *> "$env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt"
                     Write-Host "TPM and Startup Pin are available but the recovery password is missing, adding it now... `nthe recovery password will be saved in a Text file in $env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt" -ForegroundColor yellow
-                    Write-Host "Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which requires authentication to access." -ForegroundColor Magenta
+                    Write-Host "Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which requires authentication to access." -ForegroundColor Blue
                 
                 
                 
@@ -684,7 +682,7 @@ else {
      
             Add-BitLockerKeyProtector -MountPoint $env:SystemDrive -RecoveryPasswordProtector *> "$env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt" 
             Resume-BitLocker -MountPoint $env:SystemDrive
-            Write-Host "the recovery password will be saved in a Text file in $env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt `nMake sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which requires authentication to access." -ForegroundColor Magenta
+            Write-Host "the recovery password will be saved in a Text file in $env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt `nMake sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which requires authentication to access." -ForegroundColor Blue
             Write-Host "Bitlocker is now fully and securely enabled for OS drive" -ForegroundColor Green
             
         
@@ -736,7 +734,7 @@ Get-BitLockerVolume | Where-Object {$_.volumeType -ne "OperatingSystem"}
 
         Add-BitLockerKeyProtector -MountPoint $MountPoint -RecoveryPasswordProtector *> "$MountPoint\Drive $($MountPoint.Remove(1)) recovery password.txt";
         Enable-BitLockerAutoUnlock -MountPoint $MountPoint
-        Write-Host "Bitlocker Recovery Password has been added for drive $MountPoint . it will be saved in a Text file in $($MountPoint)\Drive $($MountPoint.Remove(1)) recovery password.txt `nMake sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which requires authentication to access." -ForegroundColor Magenta
+        Write-Host "Bitlocker Recovery Password has been added for drive $MountPoint . it will be saved in a Text file in $($MountPoint)\Drive $($MountPoint.Remove(1)) recovery password.txt `nMake sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which requires authentication to access." -ForegroundColor Blue
    
         }
 
@@ -747,7 +745,7 @@ Get-BitLockerVolume | Where-Object {$_.volumeType -ne "OperatingSystem"}
 
   Enable-BitLocker -MountPoint $MountPoint -RecoveryPasswordProtector *> "$MountPoint\Drive $($MountPoint.Remove(1)) recovery password.txt";
   Enable-BitLockerAutoUnlock -MountPoint $MountPoint
-  Write-Host "Bitlocker has started encrypting drive $MountPoint . recovery password will be saved in a Text file in $($MountPoint)\Drive $($MountPoint.Remove(1)) recovery password.txt `nMake sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which requires authentication to access." -ForegroundColor Magenta
+  Write-Host "Bitlocker has started encrypting drive $MountPoint . recovery password will be saved in a Text file in $($MountPoint)\Drive $($MountPoint.Remove(1)) recovery password.txt `nMake sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which requires authentication to access." -ForegroundColor Blue
            
 
   }
@@ -776,7 +774,7 @@ Get-BitLockerVolume | Where-Object {$_.volumeType -ne "OperatingSystem"}
 # =========================================================================================================================
 # ==============================================TLS Security===============================================================
 # =========================================================================================================================
-do { $TLSQuestion = $(write-host "Run TLS Security section? Enter Y for Yes or N for No" -ForegroundColor Magenta; Read-Host)
+do { $TLSQuestion = $(write-host "`nRun TLS Security section? Enter Y for Yes or N for No" -ForegroundColor Magenta; Read-Host)
     switch ($TLSQuestion) {   
     "y" { 
 
@@ -963,7 +961,7 @@ ModifyRegistry -RegPath 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProvider
 # =========================================================================================================================
 # ==============================================Lock Screen================================================================
 # =========================================================================================================================
-do { $LockScreenQuestion = $(write-host "Run Lock Screen section? Enter Y for Yes or N for No" -ForegroundColor Magenta; Read-Host)
+do { $LockScreenQuestion = $(write-host "`nRun Lock Screen section? Enter Y for Yes or N for No" -ForegroundColor Magenta; Read-Host)
     switch ($LockScreenQuestion) {   
     "y" { 
 
@@ -1002,7 +1000,7 @@ ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\System' -RegN
 # =========================================================================================================================
 # ==============================================UAC (User Account Control)=================================================
 # =========================================================================================================================
-do { $UACQuestion = $(write-host "Run UAC section? Enter Y for Yes or N for No" -ForegroundColor Magenta; Read-Host)
+do { $UACQuestion = $(write-host "`nRun UAC section? Enter Y for Yes or N for No" -ForegroundColor Magenta; Read-Host)
     switch ($UACQuestion) {   
     "y" { 
 
@@ -1033,7 +1031,7 @@ ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policie
 # =========================================================================================================================
 # ======================================================Device Guard=======================================================
 # =========================================================================================================================
-do { $DeviceGuardQuestion= $(write-host "Run Device Guard section? Enter Y for Yes or N for No" -ForegroundColor Magenta; Read-Host)
+do { $DeviceGuardQuestion= $(write-host "`nRun Device Guard section? Enter Y for Yes or N for No" -ForegroundColor Magenta; Read-Host)
     switch ($DeviceGuardQuestion) {   
     "y" { 
 
@@ -1086,7 +1084,7 @@ ModifyRegistry -RegPath 'HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scen
 # =========================================================================================================================
 # ====================================================Windows Firewall=====================================================
 # =========================================================================================================================
-do { $WinFirewallQuestion= $(write-host "Run Windows Firewall section? Enter Y for Yes or N for No" -ForegroundColor Magenta; Read-Host)
+do { $WinFirewallQuestion= $(write-host "`nRun Windows Firewall section? Enter Y for Yes or N for No" -ForegroundColor Magenta; Read-Host)
     switch ($WinFirewallQuestion) {   
     "y" { 
 
@@ -1098,89 +1096,6 @@ Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled True
 
 # set inbound and outbound default actions for Domain Firewall Profile to Block
 Set-NetFirewallProfile -Name Domain -DefaultInboundAction Block -DefaultOutboundAction Block
-
-
-# measure execution time of Firewall LOLBins blocking section
-$fsw = [Diagnostics.Stopwatch]::StartNew()
-
-
-# list all the LOLBin programs in an array
-$programs = @("C:\Program Files (x86)\Microsoft Office\root\client\AppVLP.exe",
-"C:\Program Files\Microsoft Office\root\client\AppVLP.exe",
-"%systemroot%\system32\certutil.exe",
-"%systemroot%\SysWOW64\certutil.exe",
-"%systemroot%\system32\cmstp.exe",
-"%systemroot%\SysWOW64\cmstp.exe",
-"%systemroot%\system32\cscript.exe",
-"%systemroot%\SysWOW64\cscript.exe",
-"%systemroot%\system32\esentutl.exe",
-"%systemroot%\SysWOW64\esentutl.exe",
-"%systemroot%\system32\expand.exe",
-"%systemroot%\SysWOW64\expand.exe",
-"%systemroot%\system32\extrac32.exe",
-"%systemroot%\SysWOW64\extrac32.exe",
-"%systemroot%\system32\findstr.exe",
-"%systemroot%\SysWOW64\findstr.exe",
-"%systemroot%\system32\hh.exe",
-"%systemroot%\SysWOW64\hh.exe",
-"%systemroot%\system32\makecab.exe",
-"%systemroot%\SysWOW64\makecab.exe",
-"%systemroot%\system32\mshta.exe",
-"%systemroot%\SysWOW64\mshta.exe",
-"%systemroot%\system32\msiexec.exe",
-"%systemroot%\SysWOW64\msiexec.exe",
-"%systemroot%\system32\nltest.exe",
-"%systemroot%\SysWOW64\nltest.exe",
-"%systemroot%\system32\notepad.exe",
-"%systemroot%\SysWOW64\notepad.exe",
-"%systemroot%\system32\odbcconf.exe",
-"%systemroot%\SysWOW64\odbcconf.exe",
-"%systemroot%\system32\pcalua.exe",
-"%systemroot%\SysWOW64\pcalua.exe",
-"%systemroot%\system32\regasm.exe",
-"%systemroot%\SysWOW64\regasm.exe",
-"%systemroot%\system32\regsvr32.exe",
-"%systemroot%\SysWOW64\regsvr32.exe",
-"%systemroot%\system32\replace.exe",
-"%systemroot%\SysWOW64\replace.exe",
-"%systemroot%\SysWOW64\rpcping.exe",
-"%systemroot%\system32\rundll32.exe",
-"%systemroot%\SysWOW64\rundll32.exe",
-"%systemroot%\system32\runscripthelper.exe",
-"%systemroot%\SysWOW64\runscripthelper.exe",
-"%systemroot%\system32\scriptrunner.exe",
-"%systemroot%\SysWOW64\scriptrunner.exe",
-"%systemroot%\system32\SyncAppvPublishingServer.exe",
-"%systemroot%\SysWOW64\SyncAppvPublishingServer.exe",
-"%systemroot%\system32\wbem\wmic.exe",
-"%systemroot%\SysWOW64\wbem\wmic.exe",
-"%systemroot%\system32\wscript.exe",
-"%systemroot%\SysWOW64\wscript.exe")
-
-
-
-# get number of physical CPU cores multiplied by 2 for the best parallel performance
-$ThrottleLimit = ((Get-CimInstance -ClassName Win32_Processor).NumberOfCores * 2)
-
-$programs | ForEach-Object -ThrottleLimit $ThrottleLimit -parallel {
-
-    $program = $_     
-
-    if (-NOT (Get-NetFirewallApplicationFilter -All | Select-Object * | Where-Object { $_.AppPath -eq $program }))
-     {
-
-    New-NetFirewallRule -DisplayName "LOLBin blocking rule for $program" -Protocol "TCP" -Program $program -Action Block -Direction Outbound -Profile Any -Enabled True -Group "LOLBins Blocking"
-               
-        }
-
-}
-
-# show the execution time on the console
-$fsw.Stop()
-$fsw.Elapsed
-
-
-
 
 # Enable Windows Firewall logging for Private and Public profiles, set the log file size to max 32.767 MB, log only dropped packets.
 Set-NetFirewallProfile -Name private, Public -LogBlocked True -LogMaxSizeKilobytes 32767 -LogFileName %systemroot%\system32\LogFiles\Firewall\pfirewall.log
@@ -1203,7 +1118,7 @@ Disable-NetFirewallRule -DisplayName "mDNS (UDP-In)"
 # =========================================================================================================================
 # =================================================Optional Windows Features===============================================
 # =========================================================================================================================
-do { $OptionalFeaturesQuestion= $(write-host "Run Optional Windows Features section? Enter Y for Yes or N for No" -ForegroundColor Magenta; Read-Host)
+do { $OptionalFeaturesQuestion= $(write-host "`nRun Optional Windows Features section? Enter Y for Yes or N for No" -ForegroundColor Magenta; Read-Host)
     switch ($OptionalFeaturesQuestion) {   
     "y" { 
 
@@ -1295,7 +1210,7 @@ else {
 # =========================================================================================================================
 # ====================================================Windows Networking===================================================
 # =========================================================================================================================
-do { $WinNetworkingQuestion= $(write-host "Run Windows Networking section? Enter Y for Yes or N for No" -ForegroundColor Magenta; Read-Host)
+do { $WinNetworkingQuestion= $(write-host "`nRun Windows Networking section? Enter Y for Yes or N for No" -ForegroundColor Magenta; Read-Host)
     switch ($WinNetworkingQuestion) {   
     "y" { 
 
@@ -1348,7 +1263,7 @@ ModifyRegistry -RegPath 'HKLM:\SYSTEM\CurrentControlSet\Services\Netbt\Parameter
 # =========================================================================================================================
 # ==============================================Miscellaneous Configurations===============================================
 # =========================================================================================================================
-do { $MiscellaneousQuestion= $(write-host "Run Miscellaneous section? Enter Y for Yes or N for No" -ForegroundColor Magenta; Read-Host)
+do { $MiscellaneousQuestion= $(write-host "`nRun Miscellaneous section? Enter Y for Yes or N for No" -ForegroundColor Magenta; Read-Host)
     switch ($MiscellaneousQuestion) {   
     "y" {
 
@@ -1379,7 +1294,7 @@ ModifyRegistry -RegPath 'HKLM:\Software\Policies\Microsoft\Power\PowerSettings\a
 # Enable Mandatory ASLR
 set-processmitigation -System -Enable ForceRelocateImages
 
-# You can add Mandatory ASLR override for a Trusted App using the command below or in the Program Settings section of Exploit Protection in Windows Defender app. 
+# You can add Mandatory ASLR override for a trusted app using the command below or in the Program Settings section of Exploit Protection in Windows Defender app. 
 # Set-ProcessMitigation -Name "C:\TrustedApp.exe" -Disable ForceRelocateImages
 
 # Enable svchost.exe mitigations
@@ -1450,7 +1365,7 @@ ModifyRegistry -RegPath 'HKLM:\SYSTEM\CurrentControlSet\Control\Lsa' -RegName 'R
 # =========================================================================================================================
 # ====================================================Certificate Checking Commands========================================
 # =========================================================================================================================
-do { $CertCheckQuestion= $(write-host "Run Certificate Checking section? Enter Y for Yes or N for No" -ForegroundColor Magenta; Read-Host)
+do { $CertCheckQuestion= $(write-host "`nRun Certificate Checking section? Enter Y for Yes or N for No" -ForegroundColor Magenta; Read-Host)
     switch ($CertCheckQuestion) {   
     "y" { 
 
@@ -1531,7 +1446,7 @@ do { $CertCheckQuestion= $(write-host "Run Certificate Checking section? Enter Y
 # =========================================================================================================================
 # ====================================================Country IP Blocking==================================================
 # =========================================================================================================================
-do { $CountryIPBlockingQuestion = $(write-host "Run Country IP Blocking section? Enter Y for Yes or N for No" -ForegroundColor Magenta; Read-Host)
+do { $CountryIPBlockingQuestion = $(write-host "`nRun Country IP Blocking section? Enter Y for Yes or N for No" -ForegroundColor Magenta; Read-Host)
     switch ($CountryIPBlockingQuestion) {   
     "y" {  
 
@@ -1647,7 +1562,7 @@ do { $BlockSyriaIP = $(write-host "Block the entire range of IPv4 and IPv6 belon
 # =========================================================================================================================
 # ====================================================Non-Admin Commands===================================================
 # =========================================================================================================================
-do { $NonAdminQuestion= $(write-host "Run Non-Admin section? Enter Y for Yes or N for No" -ForegroundColor Magenta; Read-Host)
+do { $NonAdminQuestion= $(write-host "`nRun Non-Admin section? Enter Y for Yes or N for No" -ForegroundColor Magenta; Read-Host)
     switch ($NonAdminQuestion) {   
     "y" { 
 

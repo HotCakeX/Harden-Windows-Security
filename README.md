@@ -580,9 +580,9 @@ Not Applicable, No license. because the only mission of this GitHub repository a
 > Xbox: [@HottCakeX](https://account.xbox.com/en-US/Profile?Gamertag=HottCakeX)
 
 	
+---
 	
-	
-![USAIcon]  ![NATOIcon]  ![UKicon]  ![AUIcon]  ![IsraelIcon]  ![EUIcon]
+   ![EUIcon]  ![USAIcon]  ![NATOIcon]  ![UKicon]  ![AUIcon]  ![IsraelIcon]
 	
 	
 

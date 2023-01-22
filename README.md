@@ -457,7 +457,7 @@ This is to prevent an 🔺**Attacker with skill and lengthy physical access to y
 
 - Enables "notify me when a restart is required to finish updating" in Windows Update, responsible for the toggle in Windows settings => Windows Update => Advanced options
 
-- Enables all Windows users to use Hyper-V and Windows Sandbox by adding all Windows users to the "Hyper-V Administrators" security group, by default only Administrators can use Hyper-V or Windows Sandbox. Windows Sandbox is a disposable OS to test unsafe programs, websites etc. and Hyper-V virtualizes OSes, it makes sense to let Standard users use these technologies as they pose no security risk.
+- Enables all Windows users to use Hyper-V and Windows Sandbox by adding all Windows users to the "Hyper-V Administrators" security group, by default only Administrators can use Hyper-V or Windows Sandbox. Windows Sandbox is a disposable OS to test unsafe programs, websites etc. and Hyper-V virtualizes OSes, [it makes sense to let Standard users use these technologies as they pose no security risk.](https://learn.microsoft.com/en-us/archive/blogs/virtual_pc_guy/why-do-you-have-to-elevate-powershell-to-use-hyper-v-cmdlets)
 
 - Changes Windows time sync interval from the default every 7 days to every 4 days (= every 345600 seconds)
 

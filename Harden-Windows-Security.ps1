@@ -66,7 +66,7 @@ Version 2023.1.17: fixed text spacing and colors to improve readability, removed
 ## 
 Version 2023.1.22: Added a notice at the beginning of the script to remind the user to read GitHub readme page. added Smart App Control to the Windows Security (Defender) section. script asks for confirmation before turning on Smart App Control.
 ## 
-Version 2023.1.23: Changed the registry modification function with a more advanced one. changed code style to reduce function call and use hash tables. Improved the overal design and style of the script. Changed 'ConsentPromptBehaviorAdmin' from UAC category to a #TopSecurity tagged command. see this GitHub issue for more info. https://github.com/HotCakeX/Harden-Windows-Security/issues/2#issuecomment-1400115303
+Version 2023.1.23: Changed the registry modification function with a more advanced one. changed code style to reduce function call and use hash tables. Improved the overall design and style of the script. Changed 'ConsentPromptBehaviorAdmin' from UAC category to a #TopSecurity tagged command. see this GitHub issue for more info. https://github.com/HotCakeX/Harden-Windows-Security/issues/2#issuecomment-1400115303
 
 
 #>

@@ -1,6 +1,6 @@
 <#PSScriptInfo
 
-.VERSION 2023.1.23
+.VERSION 2023.1.25
 
 .GUID d435a293-c9ee-4217-8dc1-4ad2318a5770
 
@@ -66,8 +66,11 @@ Version 2023.1.17: fixed text spacing and colors to improve readability, removed
 ## 
 Version 2023.1.22: Added a notice at the beginning of the script to remind the user to read GitHub readme page. added Smart App Control to the Windows Security (Defender) section. script asks for confirmation before turning on Smart App Control.
 ## 
-Version 2023.1.23: Changed the registry modification function with a more advanced one. changed code style to reduce function call and use hash tables. Improved the overall design and style of the script. Changed 'ConsentPromptBehaviorAdmin' from UAC category to a #TopSecurity tagged command. see this GitHub issue for more info. https://github.com/HotCakeX/Harden-Windows-Security/issues/2#issuecomment-1400115303
-
+Version 2023.1.23: Changed the registry modification function with a more advanced one. changed code style to reduce function call and use hash tables. Improved the overall design and style of the script. Changed 'ConsentPromptBehaviorAdmin' from UAC category to a #TopSecurity tagged command. see this GitHub issue for more info. https://github.com/HotCakeX/Harden-Windows-Security/issues/2#issuecomment-1400115303 . removed PowerShell Core requirement.
+## 
+Version 2023.1.24: enforce encryption type on removable and fixed drive types to full disk encryption instead of only used disk encryption
+## 
+Version 2023.1.25: The script now applies the official Microsoft Security Baselines and on top of that applies as many of the script settings as possible using Group Policy, the rest of the settings that aren't possible to be applied using Group Policy continue to be applied using registry and PowerShell Cmdlets.
 
 #>
 
@@ -138,12 +141,131 @@ Version 2023.1.23: Changed the registry modification function with a more advanc
  
  
 
+<#
 
-    write-host "`n`n  Make Sure you've completely read what's written in the GitHub repository, before running this script `n" -ForegroundColor yellow
+# Source https://github.com/HotCakeX/Harden-Windows-Security
+ 
+Hardening Categories from top to bottom:
 
-    Write-Host "Link to the GitHub Repository: " -ForegroundColor Green "https://github.com/HotCakeX/Harden-Windows-Security `n`n"
-    
+  Commands that require Administrator Privileges
+  -Windows Security aka Defender
+  -Attack surface reduction rules
+  -Bitlocker Settings
+  -TLS Security
+  -Lock Screen
+  -UAC (User Account Control)
+  -Device Guard
+  -Windows Firewall
+  -Optional Windows Features
+  -Windows Networking
+  -Miscellaneous Configurations
+  -Certificate Checking Commands
+  -Country IP Blocking
+ Commands that don't require Administrator Privileges
+  -Non-Admin Commands that only affect the current user and do not make machine-wide changes.
+
+
+
+Applying the latest Microsoft Security Baseline + Hardening script Group Policies
+
+The rest of the commands that couldn't be applied as Group Policies are applied using registry and PowerShell
+
+
+
+#>
+
+
+
+write-host "`n`n  Make Sure you've completely read what's written in the GitHub repository, before running this script `n" -ForegroundColor yellow
+
+Write-Host "Link to the GitHub Repository: " -ForegroundColor Green "https://github.com/HotCakeX/Harden-Windows-Security `n`n"
+
+
+
+
+do { $GroupPolicyQuestion = $(write-host "`nApply Microsoft Security Baseline + Hardening Script's Baseline? Enter Y for Yes or N for No" -ForegroundColor Magenta; Read-Host)
+    switch ($GroupPolicyQuestion) {   
+    "y" { 
+
+
+
+
+ # download Microsoft Security Baselines directly from their servers
+Invoke-WebRequest -Uri "https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/Windows%2011%20version%2022H2%20Security%20Baseline.zip" -OutFile "Windows1122H2SecurityBaseline.zip"
+
+# unzip Microsoft Security Baselines file
+Expand-Archive -Path .\Windows1122H2SecurityBaseline.zip -DestinationPath .\
+
+# Download LGPO program from Microsoft servers
+Invoke-WebRequest -Uri "https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/LGPO.zip" -OutFile "LGPO.zip"
+
+# unzip the LGPO file
+Expand-Archive -Path .\LGPO.zip -DestinationPath .\
+
+# Download the Group Policies of Windows Hardening script from GitHub
+Invoke-WebRequest -Uri 'https://github.com/HotCakeX/Harden-Windows-Security/raw/main/GroupPolicy/Security-Baselines-X.zip' -OutFile 'Security-Baselines-X.zip'
+
+# unzip the Security-Baselines-X file which contains Windows Hardening script Group Policy Objects
+expand-Archive -Path .\Security-Baselines-X.zip
+
+# Copy LGPO.exe from its folder to Microsoft Security Baseline folder in order to get it ready to be used by PowerShell script
+Copy-Item -Path ".\LGPO_30\LGPO.exe" -Destination ".\Windows-11-v22H2-Security-Baseline\Scripts\Tools"
+
+# Change directory to the Security Baselines folder
+pushd .\Windows-11-v22H2-Security-Baseline\Scripts
+
+# Run the official PowerShell script included in the Microsoft Security Baseline file we downloaded from official servers
+.\Baseline-LocalInstall.ps1 -Win11NonDomainJoined
   
+# Change current working directory back to where we were  
+popd
+
+# Change current working directory to the LGPO's folder
+pushd .\LGPO_30
+
+# Use LGPO.exe to apply the Windows Hardening script Group Policy Objects on top of Microsoft Security Baselines
+.\LGPO.exe /g '..\Security-Baselines-X\{300945C6-E397-4D12-A29F-18612FBD1058}'
+
+# Change the current working directory back to where we were
+popd
+
+# Delete Microsoft Security Baselines zip file
+Remove-Item -Path .\Windows1122H2SecurityBaseline.zip -Force
+
+# Delete Microsoft Security Baselines folder where we extracted the zip file
+remove-item -Path .\Windows-11-v22H2-Security-Baseline -Recurse -Force
+
+# Delete the LGPO zip file
+remove-item -Path .\LGPO_30 -Recurse -Force
+
+# Delete the LGPO folder where we extracted the zip file
+Remove-Item -Path .\LGPO.zip -Force
+
+# Delete the Windows Hardening script Group Policy Objects zip file
+remove-item .\Security-Baselines-X -Recurse -Force
+
+# Delete the Windows Hardening script Group Policy Objects folder we extracted the zip file
+remove-item .\Security-Baselines-X.zip -Force
+
+
+
+
+}"N" {Break}   }}  until ($GroupPolicyQuestion -eq "y" -or $GroupPolicyQuestion -eq "N")
+ 
+ 
+  
+ <#
+    .Synopsis
+        Tests if the user is an administrator
+    .Description
+        Returns true if a user is an administrator, false if the user is not an administrator   
+    .Example
+        Test-IsAdmin
+  https://devblogs.microsoft.com/scripting/use-function-to-determine-elevation-of-powershell-console/
+    #>
+
+
+
 
 
   # Registry modification function
@@ -235,78 +357,6 @@ do { $WindowsSecurityQuestion = $(write-host "`nRun Windows Security (aka Defend
 
 
 
-# Indicates whether to scan for malicious and unwanted software in removable drives, such as flash drives, during a full scan.
-Set-MpPreference -DisableRemovableDriveScanning 0
-
-# Enables file hash computation
-Set-MpPreference -efhc 1 
-
-# increases level of Cloud Protection - this sets it to 6 which is currently the highest possible
-Set-MpPreference -CloudBlockLevel ZeroTolerance
-
-# This increases the allotted analysis time to max:
-Set-MpPreference -CloudExtendedTimeout 50
-
-# Enable Windows Defender catch-up scans for scheduled, but missed, quick scans
-Set-MpPreference -DisableCatchupQuickScan $False
-
-
-<# Indicates whether to check for new virus and spyware definitions before Windows Defender runs a scan. 
- If you specify a value of $True, Windows Defender checks for new definitions. 
- If you specify $False or don't specify a value, the scan begins with existing definitions. 
- This value applies to scheduled scans and to scans that you start from the command line, 
- but it doesn't affect scans that you start from the user interface. #>
-Set-MpPreference -CheckForSignaturesBeforeRunningScan 1
-
-
-<# Specifies the interval, in hours, at which to check for definition updates. 
- The acceptable values for this parameter are: integers from 1 through 24. 
- If you do not specify a value for this parameter, Windows Defender checks at the default interval. 
- You can use this parameter instead of the SignatureScheduleDay parameter and SignatureScheduleTime parameter. #>
-Set-MpPreference -SignatureUpdateInterval 3
-
-
-<# Indicates whether Windows Defender parses the mailbox and mail files, according to their specific format, 
- in order to analyze mail bodies and attachments. Windows Defender supports several formats, 
- including .pst, .dbx, .mbx, .mime, and .binhex. If you specify a value of $False or do not specify a value, 
- Windows Defender performs email scanning. If you specify a value of $True, Windows Defender does not perform email scanning. #>
-Set-MpPreference -DisableEmailScanning $false
-
-
-# Indicates whether to disable scanning of restore points. If you specify a value of $False or do not specify a value, Windows Defender restore point is enabled.
-Set-MpPreference -DisableRestorePoint $false
-
-
-# Specifies how the network protection service handles web-based malicious threats, including phishing and malware. Possible values are Disabled, Enabled, and AuditMode.
-Set-MpPreference -EnableNetworkProtection enabled
-
-
-# Specifies the number of days to keep items in the Quarantine folder. If you specify a value of zero or do not specify a value for this parameter, items stay in the Quarantine folder indefinitely.
-Set-MpPreference -QuarantinePurgeItemsAfterDelay 5
-
-
-# Disable CPU THrottling for Windows Defender Scans; Specifies the maximum percentage CPU usage for a scan. 
-# The acceptable values for this parameter are: integers from 5 through 100, and the value 0, which disables CPU throttling.
-# Windows Defender does not exceed the percentage of CPU usage that you specify. The default value is 50.
-Set-MpPreference -ScanAvgCPULoadFactor 70
-
-
-# Specifies how Windows Defender checks for user consent for certain samples. 3: Send all samples automatically
-Set-MpPreference -SubmitSamplesConsent 3
-
-
-# Indicates whether to scan mapped network drives. If you specify a value of $False or do not specify a value, Windows Defender scans mapped network drives. If you specify a value of $True, Windows Defender does not scan mapped network drives.
-Set-MpPreference -DisableScanningMappedNetworkDrivesForFullScan $false
-
-
-# Specifies whether to update managed devices to update through metered connections. Data charges may apply.
-Set-MpPreference -MeteredConnectionUpdates $true
-
-
-# Specifies the type of membership in Microsoft Active Protection Service. Highest: 2: Advanced membership.
-Set-MpPreference -MAPSReporting 2
-
-
 # Optimizing Network Protection Performance of Windows Defender - this was off by default on Windows 11 insider build 25247
 Set-MpPreference -AllowSwitchToAsyncInspection $True
 
@@ -344,108 +394,12 @@ ModifyRegistry -RegPath 'HKLM:\SYSTEM\CurrentControlSet\Control\CI\Policy' -RegN
 
 
 
-
-# =========================================================================================================================
-# ==========================================Attack surface reduction rules=================================================
-# =========================================================================================================================
-do { $ASRulesQuestion = $(write-host "`nRun Attack Surface Reduction Rules section? Enter Y for Yes or N for No" -ForegroundColor Magenta; Read-Host)
-    switch ($ASRulesQuestion) {   
-    "y" { 
-
-
-
-
-# You can manually turn off any of them by changing them from Enabled to AuditMode or Disabled
-
-# ASR Rules, All 16 available rules are set to Enabled which means Block
-# Block abuse of exploited vulnerable signed drivers
-Set-MpPreference -AttackSurfaceReductionRules_Ids 56a863a9-875e-4185-98a7-b882c64b5ce5 -AttackSurfaceReductionRules_Actions Enabled
-# Block Adobe Reader from creating child processes
-Add-MpPreference -AttackSurfaceReductionRules_Ids 7674ba52-37eb-4a4f-a9a1-f0f9a1619a2c -AttackSurfaceReductionRules_Actions Enabled
-# Block all Office applications from creating child processes
-Add-MpPreference -AttackSurfaceReductionRules_Ids d4f940ab-401b-4efc-aadc-ad5f3c50688a -AttackSurfaceReductionRules_Actions Enabled
-# Block credential stealing from the Windows local security authority subsystem (lsass.exe)
-Add-MpPreference -AttackSurfaceReductionRules_Ids 9e6c4e1f-7d60-472f-ba1a-a39ef669e4b2 -AttackSurfaceReductionRules_Actions Enabled
-# Block executable content from email client and webmail
-Add-MpPreference -AttackSurfaceReductionRules_Ids be9ba2d9-53ea-4cdc-84e5-9b1eeee46550 -AttackSurfaceReductionRules_Actions Enabled
-# Block executable files from running unless they meet a prevalence, age, or trusted list criteria 
-Add-MpPreference -AttackSurfaceReductionRules_Ids 01443614-cd74-433a-b99e-2ecdc07bfc25 -AttackSurfaceReductionRules_Actions Enabled
-# Block execution of potentially obfuscated scripts
-Add-MpPreference -AttackSurfaceReductionRules_Ids 5beb7efe-fd9a-4556-801d-275e5ffc04cc -AttackSurfaceReductionRules_Actions Enabled
-# Block JavaScript or VBScript from launching downloaded executable content
-Add-MpPreference -AttackSurfaceReductionRules_Ids d3e037e1-3eb8-44c8-a917-57927947596d -AttackSurfaceReductionRules_Actions Enabled
-# Block Office applications from creating executable content
-Add-MpPreference -AttackSurfaceReductionRules_Ids 3b576869-a4ec-4529-8536-b80a7769e899 -AttackSurfaceReductionRules_Actions Enabled
-# Block Office applications from injecting code into other processes
-Add-MpPreference -AttackSurfaceReductionRules_Ids 75668c1f-73b5-4cf0-bb93-3ecf5cb7cc84 -AttackSurfaceReductionRules_Actions Enabled
-# Block Office communication application from creating child processes
-Add-MpPreference -AttackSurfaceReductionRules_Ids 26190899-1602-49e8-8b27-eb1d0a1ce869 -AttackSurfaceReductionRules_Actions Enabled
-# Block persistence through WMI event subscription * File and folder exclusions not supported.
-Add-MpPreference -AttackSurfaceReductionRules_Ids e6db77e5-3df2-4cf1-b95a-636979351e5b -AttackSurfaceReductionRules_Actions Enabled
-# Block process creations originating from PSExec and WMI commands
-Add-MpPreference -AttackSurfaceReductionRules_Ids d1e49aac-8f56-4280-b9ba-993a6d77406c -AttackSurfaceReductionRules_Actions Enabled
-# Block untrusted and unsigned processes that run from USB
-Add-MpPreference -AttackSurfaceReductionRules_Ids b2b3f03d-6a65-4f7b-a9c7-1c7ef74a9ba4 -AttackSurfaceReductionRules_Actions Enabled
-# Block Win32 API calls from Office macros
-Add-MpPreference -AttackSurfaceReductionRules_Ids 92e97fa1-2edf-4476-bdd6-9dd0b4dddc7b -AttackSurfaceReductionRules_Actions Enabled
-# Use advanced protection against ransomware
-Add-MpPreference -AttackSurfaceReductionRules_Ids c1db55ab-c21a-4637-bb3f-a12568109d35 -AttackSurfaceReductionRules_Actions Enabled
-
-
-
-} "N" {Break}   }}  until ($ASRulesQuestion -eq "y" -or $ASRulesQuestion -eq "N")
-# =========================================================================================================================
-# =========================================End of Attack surface reduction rules===========================================
-# =========================================================================================================================
-
-
-
-
-
-
 # =========================================================================================================================
 # ==========================================Bitlocker Settings=============================================================
 # =========================================================================================================================
 do { $BitlockerQuestion = $(write-host "`nRun Bitlocker section? Enter Y for Yes or N for No" -ForegroundColor Magenta; Read-Host)
     switch ($BitlockerQuestion) {   
     "y" { 
-
-
-
-# Set OS drive Encryption algorithm and Cipher | XTS-AES 256-bit
-ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Policies\Microsoft\FVE' -RegName 'EncryptionMethodWithXtsOs' -RegValue '7'
-
-# Set Fixed drive Encryption algorithm and Cipher | XTS-AES 256-bit
-ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Policies\Microsoft\FVE' -RegName 'EncryptionMethodWithXtsFdv' -RegValue '7'
-
-# Set removable drives data Encryption algorithm and Cipher | XTS-AES 256-bit
-ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Policies\Microsoft\FVE' -RegName 'EncryptionMethodWithXtsRdv' -RegValue '7'
-
-# Bitlocker: Allow Enhanced PINs for startup 
-ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Policies\Microsoft\FVE' -RegName 'UseEnhancedPin' -RegValue '1'
-
-# Enforce drive encryption type on operating system drives: full drive encryption
-ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Policies\Microsoft\FVE' -RegName 'OSEncryptionType' -RegValue '1'
-
-# Note: Only one of the additional authentication options can be required at startup, otherwise a policy error occurs.
-# Bitlocker: use Advanced Startup - Require additional authentication at startup
-ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Policies\Microsoft\FVE' -RegName 'UseAdvancedStartup' -RegValue '1'
-
-# Bitlocker: Don't allow Bitlocker with no TPM
-ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Policies\Microsoft\FVE' -RegName 'EnableBDEWithNoTPM' -RegValue '0'
-
-# Bitlocker: Allow/Use startup key with TPM
-ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Policies\Microsoft\FVE' -RegName 'UseTPMKey' -RegValue '2'
-
-# Bitlocker: Allow/Use startup PIN with TPM
-ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Policies\Microsoft\FVE' -RegName 'UseTPMPIN' -RegValue '2'
-
-# Bitlocker: Allow/Use startup key and PIN with TPM
-ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Policies\Microsoft\FVE' -RegName 'UseTPMKeyPIN' -RegValue '2'
-
-# Bitlocker: Allow/Use TPM
-ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Policies\Microsoft\FVE' -RegName 'UseTPM' -RegValue '2'
-
 
 
 
@@ -515,15 +469,6 @@ else {
 
     ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Policies\Microsoft\FVE' -RegName 'DisableExternalDMAUnderLock' -RegValue '0'
 }
-
-
-
-
-
-
-# Disallow standard users from changing the Bitlocker Startup PIN or password
-ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Policies\Microsoft\FVE' -RegName 'DisallowStandardUserPINReset' -RegValue '1'
-
 
 
 
@@ -1038,47 +983,8 @@ do { $LockScreenQuestion = $(write-host "`nRun Lock Screen section? Enter Y for 
     "y" { 
 
 
-$LockScreenRegistry = [ordered]@{
-    # Automatically lock computer after X seconds, set to 120 seconds in this command.
-    InactivityTimeoutSecs = @{ 
-    RegPath = 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System'
-    RegValue = '120'
-    }
-    # forces CAD requirement, CTRL + ALT + DELETE at Windows Lock screen to be pressed to show sign in fields
-    DisableCAD = @{
-    RegPath = 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System'
-    RegValue = '0'
-    }
-    # set a threshold for the number of failed sign-in attempts that causes the device to be locked by using BitLocker.
-    MaxDevicePasswordFailedAttempts = @{
-    RegPath = 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System'
-    RegValue = '6'
-    }
-    # hides email address of the Microsoft account on lock screen
-    DontDisplayLockedUserId = @{
-    RegPath = 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System'
-    RegValue = '3'
-    }
-    # Don't display username at sign-in when user signs in as Other user
-    DontDisplayUserName = @{
-    RegPath = 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System'
-    RegValue = '1'
-    }
-    # Don't display last signed-in #TopSecurity
-    dontdisplaylastusername = @{
-    RegPath = 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System'
-    RegValue = '0'
-    }
-    # Don't show network (like WiFi) icon on lock screen
-    DontDisplayNetworkSelectionUI = @{
-    RegPath = 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\System'
-    RegValue = '1'
-    }
-}
 
-# Lock Screen Registry modifications
-ModifyRegistry -HashTable $LockScreenRegistry
-
+ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System' -RegName 'dontdisplaylastusername' -RegValue '0'
 
 
 
@@ -1099,10 +1005,6 @@ do { $UACQuestion = $(write-host "`nRun UAC section? Enter Y for Yes or N for No
 
 
 
-
-# setting it to 2 to prompt for Accept/Deny for Admin tasks in Admin account. #TopSecurity
-ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System' -RegName 'ConsentPromptBehaviorAdmin' -RegValue '2'
-
 # this automatically denies all UAC prompts on Standard accounts when set to "0", 1 = Prompt for credentials on the secure desktop #TopSecurity
 ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System' -RegName 'ConsentPromptBehaviorUser' -RegValue '1'
 
@@ -1121,58 +1023,6 @@ ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policie
 
 
 
-# =========================================================================================================================
-# ======================================================Device Guard=======================================================
-# =========================================================================================================================
-do { $DeviceGuardQuestion= $(write-host "`nRun Device Guard section? Enter Y for Yes or N for No" -ForegroundColor Magenta; Read-Host)
-    switch ($DeviceGuardQuestion) {   
-    "y" { 
-
-
-
-
-# To enable VBS
-ModifyRegistry -RegPath 'HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard' -RegName 'EnableVirtualizationBasedSecurity' -RegValue '1'
-
-# To require Secure boot and DMA protection for VBS
-ModifyRegistry -RegPath 'HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard' -RegName 'RequirePlatformSecurityFeatures' -RegValue '3'
-
-# To turn on UEFI lock for VBS
-ModifyRegistry -RegPath 'HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard' -RegName 'Locked' -RegValue '1'
-
-# To enable virtualization-based protection of Code Integrity policies
-ModifyRegistry -RegPath 'HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\HypervisorEnforcedCodeIntegrity' -RegName 'Enabled' -RegValue '1'
-
-# To turn on UEFI lock for virtualization-based protection of Code Integrity policies
-ModifyRegistry -RegPath 'HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\HypervisorEnforcedCodeIntegrity' -RegName 'Locked' -RegValue '1'
-
-# To Require UEFI Memory Attributes Table
-ModifyRegistry -RegPath 'HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\HypervisorEnforcedCodeIntegrity' -RegName 'HVCIMATRequired' -RegValue '1'
-
-# To Enable Windows Defender Credential Guard with UEFI Lock
-ModifyRegistry -RegPath 'HKLM:\SYSTEM\CurrentControlSet\Control\Lsa' -RegName 'LsaCfgFlags' -RegValue '1'
-
-# To Enable System Guard Secure Launch and SMM protection
-ModifyRegistry -RegPath 'HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\SystemGuard' -RegName 'Enabled' -RegValue '1'
-
-# To Enable Kernel-mode Hardware-enforced Stack Protection
-ModifyRegistry -RegPath 'HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\KernelShadowStacks' -RegName 'Enabled' -RegValue '1'
-
-# To disable Audit Mode for Kernel-mode Hardware-enforced Stack Protection
-ModifyRegistry -RegPath 'HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\KernelShadowStacks' -RegName 'AuditModeEnabled' -RegValue '0'
-
-
-
-
-} "N" {Break}   }}  until ($DeviceGuardQuestion -eq "y" -or $DeviceGuardQuestion -eq "N")
-# =========================================================================================================================
-# ====================================================End of Device Guard==================================================
-# =========================================================================================================================
-
-
-
-
-
 
 # =========================================================================================================================
 # ====================================================Windows Firewall=====================================================
@@ -1181,17 +1031,6 @@ do { $WinFirewallQuestion= $(write-host "`nRun Windows Firewall section? Enter Y
     switch ($WinFirewallQuestion) {   
     "y" { 
 
-
-
-
-# make sure Firewall for all 3 profiles is enabled
-Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled True
-
-# set inbound and outbound default actions for Domain Firewall Profile to Block
-Set-NetFirewallProfile -Name Domain -DefaultInboundAction Block -DefaultOutboundAction Block
-
-# Enable Windows Firewall logging for Private and Public profiles, set the log file size to max 32.767 MB, log only dropped packets.
-Set-NetFirewallProfile -Name private, Public -LogBlocked True -LogMaxSizeKilobytes 32767 -LogFileName %systemroot%\system32\LogFiles\Firewall\pfirewall.log
 
 # Disables Multicast DNS (mDNS) UDP-in Firewall Rules for all 3 Firewall profiles
 Disable-NetFirewallRule -DisplayName "mDNS (UDP-In)"
@@ -1268,12 +1107,7 @@ do { $WinNetworkingQuestion= $(write-host "`nRun Windows Networking section? Ent
     "y" { 
 
 
-# disable NetBIOS over TCP/IP on all network interfaces, virtual and physical
-$regkey = 'HKLM:SYSTEM\CurrentControlSet\services\NetBT\Parameters\Interfaces'
-Get-ChildItem $regkey |ForEach-Object { Set-ItemProperty -Path "$regkey\$($_.pschildname)" -Name NetbiosOptions -Value 2 }
 
-# disable the LLMNR protocol on a Windows
-ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\DNSClient' -RegName 'EnableMultiCast' -RegValue '0'
 
 # disable LMHOSTS lookup protocol on all network adapters
 ModifyRegistry -RegPath 'HKLM:\SYSTEM\CurrentControlSet\Services\NetBT\Parameters' -RegName 'EnableLMHOSTS' -RegValue '0'
@@ -1281,14 +1115,24 @@ ModifyRegistry -RegPath 'HKLM:\SYSTEM\CurrentControlSet\Services\NetBT\Parameter
 # Set the Network Location of all connections to Public
 Get-NetConnectionProfile | Set-NetConnectionProfile -NetworkCategory Public
 
-# Disable Printing over HTTP
-ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Printers' -RegName 'DisableHTTPPrinting' -RegValue '1'
 
-# Turn off downloading of print drivers over HTTP
-ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Printers' -RegName 'DisableWebPnPDownload' -RegValue '1'
 
 # Disable IP Source Routing
+# https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2008-R2-and-2008/dd349797(v=ws.10)#disableipsourcerouting
 ModifyRegistry -RegPath 'HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters' -RegName 'DisableIPSourceRouting' -RegValue '2'
+
+
+
+
+
+<#
+Configure the policy value for Computer Configuration >> Administrative Templates >> MSS (Legacy) >> "MSS: (NoNameReleaseOnDemand) Allow the computer to ignore NetBIOS name release requests except from WINS servers" to "Enabled".
+
+This policy setting requires the installation of the MSS-Legacy custom templates.
+"MSS-Legacy.admx" and " MSS-Legacy.adml" must be copied to the \Windows\PolicyDefinitions and \Windows\PolicyDefinitions\en-US directories respectively.
+
+they are available in Microsoft Security Baselines
+#>
 
 # Allow the computer to ignore NetBIOS name release requests
 ModifyRegistry -RegPath 'HKLM:\SYSTEM\CurrentControlSet\Services\Netbt\Parameters' -RegName 'NoNameReleaseOnDemand' -RegValue '1'
@@ -1306,7 +1150,6 @@ ModifyRegistry -RegPath 'HKLM:\SYSTEM\CurrentControlSet\Services\Netbt\Parameter
 
 
 
-
 # =========================================================================================================================
 # ==============================================Miscellaneous Configurations===============================================
 # =========================================================================================================================
@@ -1317,48 +1160,36 @@ do { $MiscellaneousQuestion= $(write-host "`nRun Miscellaneous section? Enter Y 
 
 
 
-# Enable early launch antimalware driver for scan of boot-start drivers
-ModifyRegistry -RegPath 'HKLM:\SYSTEM\CurrentControlSet\Policies\EarlyLaunch' -RegName 'DriverLoadPolicy' -RegValue '8'
-
-# Disable Location services from Windows - affects Windows settings privacy section
-ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\LocationAndSensors' -RegName 'DisableLocation' -RegValue '1'
-
 # Enable Hibernate
 powercfg /hibernate on
 
 # Set Hibnernate mode to full
 powercfg /h /type full
 
+
+# Need to verify this
 # Add Hibernate option to Start menu's power options
 ModifyRegistry -RegPath 'HKLM:\Software\Policies\Microsoft\Windows\Explorer' -RegName 'ShowHibernateOption' -RegValue '1'
 
+# Power options in administrative template is unavailable
 # Disable sleep for when plugged in
 ModifyRegistry -RegPath 'HKLM:\Software\Policies\Microsoft\Power\PowerSettings\abfc2519-3608-4c2a-94ea-171b0ed546ab' -RegName 'ACSettingIndex' -RegValue '0'
 
+# https://learn.microsoft.com/en-us/windows/security/information-protection/bitlocker/bitlocker-countermeasures#attacker-with-skill-and-lengthy-physical-access
+# Power options in administrative template is unavailable
 # Disable sleep for when on battery
 ModifyRegistry -RegPath 'HKLM:\Software\Policies\Microsoft\Power\PowerSettings\abfc2519-3608-4c2a-94ea-171b0ed546ab' -RegName 'DCSettingIndex' -RegValue '0'
+
 
 # Enable Mandatory ASLR
 set-processmitigation -System -Enable ForceRelocateImages
 
-# You can add Mandatory ASLR override for Trusted app using the command below or in the Program Settings section of Exploit Protection in Windows Defender app. 
+# You can add Mandatory ASLR override for a Trusted App using the command below or in the Program Settings section of Exploit Protection in Windows Defender app. 
 # Set-ProcessMitigation -Name "C:\TrustedApp.exe" -Disable ForceRelocateImages
 
-# Enable svchost.exe mitigations
-ModifyRegistry -RegPath 'HKLM:\SYSTEM\CurrentControlSet\Control\SCMConfig' -RegName 'EnableSvchostMitigationPolicy' -RegValue '1'
 
 # Turn on Enhanced mode search for Windows indexer
 ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Microsoft\Windows Search' -RegName 'EnableFindMyFiles' -RegValue '1'
-
-# Enforce the Administrator role for adding printer drivers
-ModifyRegistry -RegPath 'HKLM:\SYSTEM\CurrentControlSet\Control\Print\Providers\LanMan Print Services\Servers' -RegName 'AddPrinterDrivers' -RegValue '1'
-
-
-# Enable SMB/LDAP Signing
-ModifyRegistry -RegPath 'HKLM:\System\CurrentControlSet\Services\LanmanWorkStation\Parameters' -RegName 'RequireSecuritySignature' -RegValue '1'
-ModifyRegistry -RegPath 'HKLM:\System\CurrentControlSet\Services\LanmanWorkStation\Parameters' -RegName 'EnableSecuritySignature' -RegValue '1'
-ModifyRegistry -RegPath 'HKLM:\System\CurrentControlSet\Services\LanmanServer\Parameters' -RegName 'RequireSecuritySignature' -RegValue '1'
-ModifyRegistry -RegPath 'HKLM:\System\CurrentControlSet\Services\LanmanServer\Parameters' -RegName 'EnableSecuritySignature' -RegValue '1'
 
 
 # Enable SMB Encryption - using force to confirm the action
@@ -1366,9 +1197,6 @@ Set-SmbServerConfiguration -EncryptData $true -force
 
 # Set Microsoft Edge to update over Metered connections
 ModifyRegistry -RegPath 'HKLM:\SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate\ClientStateMedium\{56EB18F8-B008-4CBD-B6D2-8C97FE7E9062}' -RegName 'allowautoupdatesmetered' -RegValue '1'
-
-# Download Windows Updates over metered connections
-ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings' -RegName 'AllowAutoWindowsUpdateDownloadOverMeteredNetwork' -RegValue '1'
 
 # Enable notify me when a restart is required to finish updating
 ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings' -RegName 'RestartNotificationsAllowed2' -RegValue '1'
@@ -1735,7 +1563,6 @@ $Name         = 'Flags'
 $Value        = '506' 
 If (-NOT (Test-Path $RegistryPath)) {   New-Item -Path $RegistryPath -Force | Out-Null } 
 New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType string -Force
-
 
 
 

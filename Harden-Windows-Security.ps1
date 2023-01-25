@@ -141,41 +141,6 @@ Version 2023.1.25: The script now applies the official Microsoft Security Baseli
  
  
 
-<#
-
-# Source https://github.com/HotCakeX/Harden-Windows-Security
- 
-Hardening Categories from top to bottom:
-
-  Commands that require Administrator Privileges
-  -Windows Security aka Defender
-  -Attack surface reduction rules
-  -Bitlocker Settings
-  -TLS Security
-  -Lock Screen
-  -UAC (User Account Control)
-  -Device Guard
-  -Windows Firewall
-  -Optional Windows Features
-  -Windows Networking
-  -Miscellaneous Configurations
-  -Certificate Checking Commands
-  -Country IP Blocking
- Commands that don't require Administrator Privileges
-  -Non-Admin Commands that only affect the current user and do not make machine-wide changes.
-
-
-
-Applying the latest Microsoft Security Baseline + Hardening script Group Policies
-
-The rest of the commands that couldn't be applied as Group Policies are applied using registry and PowerShell
-
-
-
-#>
-
-
-
 write-host "`n`n  Make Sure you've completely read what's written in the GitHub repository, before running this script `n" -ForegroundColor yellow
 
 Write-Host "Link to the GitHub Repository: " -ForegroundColor Green "https://github.com/HotCakeX/Harden-Windows-Security `n`n"

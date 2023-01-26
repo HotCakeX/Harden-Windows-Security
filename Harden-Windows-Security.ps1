@@ -140,6 +140,40 @@ Version 2023.1.25: The script now applies the official Microsoft Security Baseli
 
  
  
+<#
+
+# Source https://github.com/HotCakeX/Harden-Windows-Security
+ 
+Hardening Categories from top to bottom:
+
+  Commands that require Administrator Privileges
+  -Windows Security aka Defender
+  -Attack surface reduction rules
+  -Bitlocker Settings
+  -TLS Security
+  -Lock Screen
+  -UAC (User Account Control)
+  -Device Guard
+  -Windows Firewall
+  -Optional Windows Features
+  -Windows Networking
+  -Miscellaneous Configurations
+  -Certificate Checking Commands
+  -Country IP Blocking
+ Commands that don't require Administrator Privileges
+  -Non-Admin Commands that only affect the current user and do not make machine-wide changes.
+
+
+
+Applying the latest Microsoft Security Baseline + Hardening script Group Policies
+
+The rest of the commands that couldn't be applied as Group Policies are applied using registry and PowerShell
+
+
+
+#>
+
+
 
 write-host "`n`n  Make Sure you've completely read what's written in the GitHub repository, before running this script `n" -ForegroundColor yellow
 
@@ -154,10 +188,30 @@ Write-Host "Link to the GitHub Repository: " -ForegroundColor Green "https://git
 if (((Get-WmiObject Win32_OperatingSystem).OperatingSystemSKU) -eq "101"){
 
     Write-host "Windows Home edition detected, exiting..." -ForegroundColor Red
-
     break
-    
-}
+    }
+
+
+
+
+    # Questions function
+    function Select-Option
+    {
+        param(
+            [parameter(Mandatory = $true, Position = 0)][string]$Message,
+            [parameter(Mandatory = $true, Position = 1)][string[]]$Options
+        )
+        $Selected = $null
+        while ($null -eq $Selected)
+        {
+            Write-Host $Message -ForegroundColor DarkMagenta
+            for ($i = 0; $i -lt $Options.Length; $i++) { Write-Host "$($i+1): $($Options[$i])" }
+            $SelectedIndex = Read-Host "Select an option"
+            if ($SelectedIndex -gt 0 -and $SelectedIndex -le $Options.Length) { $Selected = $Options[$SelectedIndex - 1] }
+            else { Write-Host "Invalid Option." -ForegroundColor Yellow }
+        }
+        return $Selected
+    }
 
 
 
@@ -166,12 +220,8 @@ if (((Get-WmiObject Win32_OperatingSystem).OperatingSystemSKU) -eq "101"){
 
 
 
-
-do { $GroupPolicyQuestion = $(write-host "`nApply Microsoft Security Baseline + Hardening Script's Baseline? Enter Y for Yes or N for No" -ForegroundColor Magenta; Read-Host)
-    switch ($GroupPolicyQuestion) {   
-    "y" { 
-
-
+ switch (Select-Option -Options "Yes", "No", "Exit" -Message "`nApply Microsoft Security Baseline + Hardening Script's Baseline?")
+ {  "Yes"  {
 
 
  # download Microsoft Security Baselines directly from their servers
@@ -235,22 +285,13 @@ remove-item .\Security-Baselines-X.zip -Force
 gpupdate /force
 
 
-}"N" {Break}   }}  until ($GroupPolicyQuestion -eq "y" -or $GroupPolicyQuestion -eq "N")
+
  
- 
+} "No" { break }
+"Exit" { exit }
+}
   
- <#
-    .Synopsis
-        Tests if the user is an administrator
-    .Description
-        Returns true if a user is an administrator, false if the user is not an administrator   
-    .Example
-        Test-IsAdmin
-  https://devblogs.microsoft.com/scripting/use-function-to-determine-elevation-of-powershell-console/
-    #>
-
-
-
+ 
 
 
   # Registry modification function
@@ -307,8 +348,11 @@ gpupdate /force
 
 
 
+  
+   
 
- # Function to test if current session has administrator privileges
+# https://devblogs.microsoft.com/scripting/use-function-to-determine-elevation-of-powershell-console/
+# Function to test if current session has administrator privileges
 Function Test-IsAdmin
 {
  $identity = [Security.Principal.WindowsIdentity]::GetCurrent()
@@ -329,16 +373,12 @@ else {
 
 
 
-
-
 # =========================================================================================================================
 # ==========================================Windows Security aka Defender==================================================
 # =========================================================================================================================
-do { $WindowsSecurityQuestion = $(write-host "`nRun Windows Security (aka Defender) section? Enter Y for Yes or N for No" -ForegroundColor Magenta; Read-Host)
-    switch ($WindowsSecurityQuestion) {   
-    "y" { 
-
-
+switch (Select-Option -Options "Yes", "No", "Exit" -Message "Run Windows Security (Defender) category ?")
+{  "Yes"  {
+ 
 
 
 # Optimizing Network Protection Performance of Windows Defender - this was off by default on Windows 11 insider build 25247
@@ -347,25 +387,24 @@ Set-MpPreference -AllowSwitchToAsyncInspection $True
 
 
 
-do { $WindowsSecurityQuestion = $(write-host "`nTurn on Smart App Control? Enter Y for Yes or N for No" -ForegroundColor Cyan; Read-Host)
-    switch ($WindowsSecurityQuestion) {   
-    "y" { 
-
+switch (Select-Option -Options "Yes", "No", "Exit" -Message "Turn on Smart App Control ?")
+{  "Yes"  {
 
 # Turn on Smart App Control
 ModifyRegistry -RegPath 'HKLM:\SYSTEM\CurrentControlSet\Control\CI\Policy' -RegName 'VerifiedAndReputablePolicyState' -RegValue '1'
 
-
-}"N" {Break}   }}  until ($WindowsSecurityQuestion -eq "y" -or $WindowsSecurityQuestion -eq "N")
-
-
-
+} "No" { break }
+"Exit" { exit }
+}
 
 
 
 
 
-}"N" {Break}   }}  until ($WindowsSecurityQuestion -eq "y" -or $WindowsSecurityQuestion -eq "N")
+} "No" { break }
+"Exit" { exit }
+}
+
 # =========================================================================================================================
 # =========================================End of Windows Security aka Defender============================================
 # =========================================================================================================================
@@ -374,17 +413,11 @@ ModifyRegistry -RegPath 'HKLM:\SYSTEM\CurrentControlSet\Control\CI\Policy' -RegN
 
 
 
-
-
 # =========================================================================================================================
 # ==========================================Bitlocker Settings=============================================================
 # =========================================================================================================================
-do { $BitlockerQuestion = $(write-host "`nRun Bitlocker section? Enter Y for Yes or N for No" -ForegroundColor Magenta; Read-Host)
-    switch ($BitlockerQuestion) {   
-    "y" { 
-
-
-
+switch (Select-Option -Options "Yes", "No", "Exit" -Message "Run Bitlocker category ?")
+ {  "Yes"  {
 
 
 # This PowerShell script can be used to find out if the DMA Protection is ON \ OFF.
@@ -745,7 +778,9 @@ $nonOSVolumes | ForEach-Object {
 
 
 
-} "N" {Break}   }}  until ($BitlockerQuestion -eq "y" -or $BitlockerQuestion -eq "N")
+} "No" { break }
+"Exit" { exit }
+}
 # =========================================================================================================================
 # ==========================================End of Bitlocker Settings======================================================
 # =========================================================================================================================
@@ -757,9 +792,8 @@ $nonOSVolumes | ForEach-Object {
 # =========================================================================================================================
 # ==============================================TLS Security===============================================================
 # =========================================================================================================================
-do { $TLSQuestion = $(write-host "`nRun TLS Security section? Enter Y for Yes or N for No" -ForegroundColor Magenta; Read-Host)
-    switch ($TLSQuestion) {   
-    "y" { 
+switch (Select-Option -Options "Yes", "No", "Exit" -Message "Run TLS Security category ?")
+{  "Yes"  {
 
 
 
@@ -955,7 +989,9 @@ $WeakCiphers = [ordered]@{
 ModifyRegistry -HashTable $WeakCiphers
 
 
-} "N" {Break}   }}  until ($TLSQuestion -eq "y" -or $TLSQuestion -eq "N")
+} "No" { break }
+"Exit" { exit }
+}
 # =========================================================================================================================
 # ==========================================End of TLS Security============================================================
 # =========================================================================================================================
@@ -969,9 +1005,8 @@ ModifyRegistry -HashTable $WeakCiphers
 # =========================================================================================================================
 # ====================================================Windows Firewall=====================================================
 # =========================================================================================================================
-do { $WinFirewallQuestion= $(write-host "`nRun Windows Firewall section? Enter Y for Yes or N for No" -ForegroundColor Magenta; Read-Host)
-    switch ($WinFirewallQuestion) {   
-    "y" { 
+switch (Select-Option -Options "Yes", "No", "Exit" -Message "Run Windows Firewall category ?")
+{  "Yes"  {
 
 
 # Disables Multicast DNS (mDNS) UDP-in Firewall Rules for all 3 Firewall profiles - disables only 3 rules
@@ -982,7 +1017,9 @@ get-NetFirewallRule
 
 
 
-} "N" {Break}   }}  until ($WinFirewallQuestion -eq "y" -or $WinFirewallQuestion -eq "N")
+} "No" { break }
+"Exit" { exit }
+}
 # =========================================================================================================================
 # =================================================End of Windows Firewall=================================================
 # =========================================================================================================================
@@ -995,10 +1032,8 @@ get-NetFirewallRule
 # =========================================================================================================================
 # =================================================Optional Windows Features===============================================
 # =========================================================================================================================
-do { $OptionalFeaturesQuestion= $(write-host "`nRun Optional Windows Features section? Enter Y for Yes or N for No" -ForegroundColor Magenta; Read-Host)
-    switch ($OptionalFeaturesQuestion) {   
-    "y" { 
-
+switch (Select-Option -Options "Yes", "No", "Exit" -Message "Run Optional Windows Features category ?")
+{  "Yes"  {
 
 
 # since PowerShell Core (only if installed from Microsoft Store) has problem with these commands, making sure the built-in PowerShell handles them
@@ -1032,7 +1067,9 @@ PowerShell.exe "if((get-WindowsOptionalFeature -Online -FeatureName VirtualMachi
 
 
 
-} "N" {Break}   }}  until ($OptionalFeaturesQuestion -eq "y" -or $OptionalFeaturesQuestion -eq "N")
+} "No" { break }
+"Exit" { exit }
+}
 # =========================================================================================================================
 # ==============================================End of Optional Windows Features===========================================
 # =========================================================================================================================
@@ -1047,10 +1084,8 @@ PowerShell.exe "if((get-WindowsOptionalFeature -Online -FeatureName VirtualMachi
 # =========================================================================================================================
 # ====================================================Windows Networking===================================================
 # =========================================================================================================================
-do { $WinNetworkingQuestion= $(write-host "`nRun Windows Networking section? Enter Y for Yes or N for No" -ForegroundColor Magenta; Read-Host)
-    switch ($WinNetworkingQuestion) {   
-    "y" { 
-
+switch (Select-Option -Options "Yes", "No", "Exit" -Message "Run Windows Networking category ?")
+{  "Yes"  {
 
 
 
@@ -1085,7 +1120,9 @@ ModifyRegistry -RegPath 'HKLM:\SYSTEM\CurrentControlSet\Services\Netbt\Parameter
 
 
 
-} "N" {Break}   }}  until ($WinNetworkingQuestion -eq "y" -or $WinNetworkingQuestion -eq "N")
+} "No" { break }
+"Exit" { exit }
+}
 # =========================================================================================================================
 # =================================================End of Windows Networking===============================================
 # =========================================================================================================================
@@ -1098,9 +1135,8 @@ ModifyRegistry -RegPath 'HKLM:\SYSTEM\CurrentControlSet\Services\Netbt\Parameter
 # =========================================================================================================================
 # ==============================================Miscellaneous Configurations===============================================
 # =========================================================================================================================
-do { $MiscellaneousQuestion= $(write-host "`nRun Miscellaneous section? Enter Y for Yes or N for No" -ForegroundColor Magenta; Read-Host)
-    switch ($MiscellaneousQuestion) {   
-    "y" {
+switch (Select-Option -Options "Yes", "No", "Exit" -Message "Run Miscellaneous Configurations category ?")
+{  "Yes"  {
 
 
 
@@ -1112,7 +1148,6 @@ set-processmitigation -System -Enable ForceRelocateImages
 
 # You can add Mandatory ASLR override for a Trusted App using the command below or in the Program Settings section of Exploit Protection in Windows Defender app. 
 # Set-ProcessMitigation -Name "C:\TrustedApp.exe" -Disable ForceRelocateImages
-
 
 # Turn on Enhanced mode search for Windows indexer
 ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Microsoft\Windows Search' -RegName 'EnableFindMyFiles' -RegValue '1'
@@ -1136,11 +1171,9 @@ ModifyRegistry -RegPath 'HKLM:\SYSTEM\ControlSet001\Services\W32Time\TimeProvide
 
 
 
+} "No" { break }
+"Exit" { exit }
 }
-"N" {Break}   }}  until ($MiscellaneousQuestion -eq "y" -or $MiscellaneousQuestion -eq "N")
-
-
-
 # =========================================================================================================================
 # ============================================End of Miscellaneous Configurations==========================================
 # =========================================================================================================================
@@ -1153,47 +1186,40 @@ ModifyRegistry -RegPath 'HKLM:\SYSTEM\ControlSet001\Services\W32Time\TimeProvide
 # =========================================================================================================================
 # ====================================================Certificate Checking Commands========================================
 # =========================================================================================================================
-do { $CertCheckQuestion= $(write-host "`nRun Certificate Checking section? Enter Y for Yes or N for No" -ForegroundColor Magenta; Read-Host)
-    switch ($CertCheckQuestion) {   
-    "y" { 
+switch (Select-Option -Options "Yes", "No", "Exit" -Message "Run Certificate Checking category ?")
+{  "Yes"  {
 
 
 
       # List valid certificates not rooted to the Microsoft Certificate Trust List in the User store
-      do { $UserStoreQ= $(write-host "List valid certificates not rooted to the Microsoft Certificate Trust List in the User store ? Enter Y for Yes or N for No" -ForegroundColor Cyan; Read-Host)
-      switch ($UserStoreQ) {   
-      "y" { 
+      switch (Select-Option -Options "Yes", "No", "Exit" -Message "List valid certificates not rooted to the Microsoft Certificate Trust List in the User store ?")
+      {  "Yes"  {
 
 
-        try {
-      
+        try {      
         \\live.sysinternals.com\tools\sigcheck64.exe -tuv -accepteula -nobanner
         }
-
         catch {
 
             Invoke-WebRequest -Uri "https://live.sysinternals.com/sigcheck64.exe" -OutFile "sigcheck64.exe"
             .\sigcheck64.exe -tuv -accepteula -nobanner
             Remove-Item .\sigcheck64.exe
-
-
-
         }
 
 
 
 
-
-      } "N" {Break}   }}  until ($UserStoreQ -eq "y" -or $UserStoreQ -eq "N")
+    } "No" { break }
+    "Exit" { exit }
+    }
 
 
 
       
 
       # List valid certificates not rooted to the Microsoft Certificate Trust List in the Machine store
-    do { $MachineStoreQ= $(write-host "List valid certificates not rooted to the Microsoft Certificate Trust List in the Machine store ? Enter Y for Yes or N for No" -ForegroundColor Cyan; Read-Host)
-    switch ($MachineStoreQ) {   
-    "y" { 
+      switch (Select-Option -Options "Yes", "No", "Exit" -Message "List valid certificates not rooted to the Microsoft Certificate Trust List in the Machine store ?")
+      {  "Yes"  {
 
 
         try {
@@ -1205,23 +1231,22 @@ do { $CertCheckQuestion= $(write-host "`nRun Certificate Checking section? Enter
             Invoke-WebRequest -Uri "https://live.sysinternals.com/sigcheck64.exe" -OutFile "sigcheck64.exe"
             .\sigcheck64.exe -tv -accepteula -nobanner
             Remove-Item .\sigcheck64.exe
-
         }
 
 
 
-
-    } "N" {Break}   }}  until ($MachineStoreQ -eq "y" -or $MachineStoreQ -eq "N")
-
-
-
+    } "No" { break }
+    "Exit" { exit }
+    }
 
 
 
 
 
 
-    }  "N" {Break}   }}  until ($CertCheckQuestion -eq "y" -or $CertCheckQuestion -eq "N")
+} "No" { break }
+"Exit" { exit }
+}
 # =========================================================================================================================
 # ====================================================End of Certificate Checking Commands=================================
 # =========================================================================================================================
@@ -1234,10 +1259,8 @@ do { $CertCheckQuestion= $(write-host "`nRun Certificate Checking section? Enter
 # =========================================================================================================================
 # ====================================================Country IP Blocking==================================================
 # =========================================================================================================================
-do { $CountryIPBlockingQuestion = $(write-host "`nRun Country IP Blocking section? Enter Y for Yes or N for No" -ForegroundColor Magenta; Read-Host)
-    switch ($CountryIPBlockingQuestion) {   
-    "y" {  
-
+switch (Select-Option -Options "Yes", "No", "Exit" -Message "Run Country IP Blocking category ?")
+{  "Yes"  {
 
 
 
@@ -1267,60 +1290,64 @@ function BlockCountryIP {
 
 
 # Iran
-do { $BlockIranIP = $(write-host "Block the entire range of IPv4 and IPv6 belonging to Iran? Enter Y for Yes or N for No" -ForegroundColor DarkCyan ; Read-Host)
-    switch ($BlockIranIP) {   
-    "y" {  
+switch (Select-Option -Options "Yes", "No", "Exit" -Message "Block the entire range of IPv4 and IPv6 belonging to Iran?")
+{  "Yes"  {
     
     $IranIPv4 = Invoke-RestMethod -Uri "https://www.ipdeny.com/ipblocks/data/aggregated/ir-aggregated.zone"
     $IranIPv6 = Invoke-RestMethod -Uri "https://www.ipdeny.com/ipv6/ipaddresses/blocks/ir.zone"
     $IranIPRange = $IranIPv4 + $IranIPv6
     BlockCountryIP -IPList $IranIPRange -CountryName "Iran"
 
-}"N" {Break}   }}  until ($BlockIranIP -eq "y" -or $BlockIranIP -eq "N")
+} "No" { break }
+"Exit" { exit }
+}
 
 
 
 
 # Cuba
-do { $BlockCubaIP = $(write-host "Block the entire range of IPv4 and IPv6 belonging to Cuba? Enter Y for Yes or N for No" -ForegroundColor DarkCyan ; Read-Host)
-    switch ($BlockCubaIP) {   
-    "y" {  
+switch (Select-Option -Options "Yes", "No", "Exit" -Message "Block the entire range of IPv4 and IPv6 belonging to Cuba?")
+{  "Yes"  {
 
     $CubaIPv4 = Invoke-RestMethod -Uri "https://www.ipdeny.com/ipblocks/data/aggregated/cu-aggregated.zone"
     $CubaIPv6 = Invoke-RestMethod -Uri "https://www.ipdeny.com/ipv6/ipaddresses/blocks/cu.zone"
     $CubaIPRange = $CubaIPv4 + $CubaIPv6
     BlockCountryIP -IPList $CubaIPRange -CountryName "Cuba"
 
-}"N" {Break}   }}  until ($BlockCubaIP -eq "y" -or $BlockCubaIP -eq "N")
+} "No" { break }
+"Exit" { exit }
+}
 
 
 
 
 # North Korea
-do { $BlockNorthKoreaIP = $(write-host "Block the entire range of IPv4 and IPv6 belonging to North Korea? Enter Y for Yes or N for No" -ForegroundColor DarkCyan ; Read-Host)
-    switch ($BlockNorthKoreaIP) {   
-    "y" {  
+switch (Select-Option -Options "Yes", "No", "Exit" -Message "Block the entire range of IPv4 and IPv6 belonging to North Korea?")
+{  "Yes"  {
     
     $NorthKoreaIPv4 = Invoke-RestMethod -Uri "https://www.ipdeny.com/ipblocks/data/aggregated/kp-aggregated.zone"
     $NorthKoreaIPv6 = Invoke-RestMethod -Uri "https://www.ipdeny.com/ipv6/ipaddresses/blocks/kn.zone"
     $NorthKoreaIPRange = $NorthKoreaIPv4 + $NorthKoreaIPv6
     BlockCountryIP -IPList $NorthKoreaIPRange -CountryName "North Korea"
 
-}"N" {Break}   }}  until ($BlockNorthKoreaIP -eq "y" -or $BlockNorthKoreaIP -eq "N")
+} "No" { break }
+"Exit" { exit }
+}
 
 
 
 # Syria
-do { $BlockSyriaIP = $(write-host "Block the entire range of IPv4 and IPv6 belonging to Syria? Enter Y for Yes or N for No" -ForegroundColor DarkCyan ; Read-Host)
-    switch ($BlockSyriaIP) {   
-    "y" {  
+switch (Select-Option -Options "Yes", "No", "Exit" -Message "Block the entire range of IPv4 and IPv6 belonging to Syria?")
+{  "Yes"  {
     
     $SyriaIPv4 = Invoke-RestMethod -Uri "https://www.ipdeny.com/ipblocks/data/aggregated/sy-aggregated.zone"
     $SyriaIPv6 = Invoke-RestMethod -Uri "https://www.ipdeny.com/ipv6/ipaddresses/blocks/sy.zone"
     $SyriaIPRange = $SyriaIPv4 + $SyriaIPv6
     BlockCountryIP -IPList $SyriaIPRange -CountryName "Syria"
 
-}"N" {Break}   }}  until ($BlockSyriaIP -eq "y" -or $BlockSyriaIP -eq "N")
+} "No" { break }
+"Exit" { exit }
+}
 
 
 
@@ -1330,10 +1357,11 @@ do { $BlockSyriaIP = $(write-host "Block the entire range of IPv4 and IPv6 belon
 
 
 
-
         
 
-    }"N" {Break}   }}  until ($CountryIPBlockingQuestion -eq "y" -or $CountryIPBlockingQuestion -eq "N")
+} "No" { break }
+"Exit" { exit }
+}
 # =========================================================================================================================
 # ====================================================End of Country IP Blocking===========================================
 # =========================================================================================================================
@@ -1350,9 +1378,8 @@ do { $BlockSyriaIP = $(write-host "Block the entire range of IPv4 and IPv6 belon
 # =========================================================================================================================
 # ====================================================Non-Admin Commands===================================================
 # =========================================================================================================================
-do { $NonAdminQuestion= $(write-host "`nRun Non-Admin section? Enter Y for Yes or N for No" -ForegroundColor Magenta; Read-Host)
-    switch ($NonAdminQuestion) {   
-    "y" { 
+switch (Select-Option -Options "Yes", "No", "Exit" -Message "Run Non-Admin category ?")
+{  "Yes"  {
 
 
 # Show known file extensions in File explorer
@@ -1487,10 +1514,9 @@ New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType str
 
 
 
-
-
+} "No" { break }
+"Exit" { exit }
 }
-"N" {Break}   }}  until ($NonAdminQuestion -eq "y" -or $NonAdminQuestion -eq "N")
 # =========================================================================================================================
 # ====================================================End of Non-Admin Commands============================================
 # =========================================================================================================================

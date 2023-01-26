@@ -331,12 +331,6 @@ else {
             # Delete the Windows Hardening script Group Policy Objects folder we extracted the zip file
             remove-item .\Security-Baselines-X.zip -Force
 
-            # wait 3 seconds
-            Start-Sleep -Seconds 3
-            
-            # Force update the applied Group Policies
-            gpupdate /force
-
 
  
         } "No" { break }
@@ -1495,9 +1489,8 @@ switch (Select-Option -Options "Yes", "No", "Exit" -Message "Run Non-Admin categ
 # =========================================================================================================================
 #endregion Non-Admin-Commands
 
-Write-Host "T" -ForegroundColor Green -NoNewline;
-Write-Host "H" -ForegroundColor Yellow -NoNewline;
-Write-Host "E " -ForegroundColor Blue -NoNewline;
-Write-Host "E" -ForegroundColor Red -NoNewline;
-Write-Host "N" -ForegroundColor Magenta -NoNewline;
-Write-Host "D" -ForegroundColor Cyan ;
+$infomsg = "`r`n" +
+"################################################################################################`r`n" +
+"###  Please Restart your device to completely apply the security measures and Group Policies ###`r`n" +
+"################################################################################################`r`n"
+Write-Host $infomsg -ForegroundColor Cyan

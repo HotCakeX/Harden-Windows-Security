@@ -196,16 +196,18 @@ A security baseline is a group of Microsoft-recommended configuration settings t
 
 This is the `.zip` file that I've created and [uploaded to this GitHub repository](https://github.com/HotCakeX/Harden-Windows-Security/tree/main/GroupPolicy). it contains Group Policy Objects that apply hardening measures explained in this page. Those security measures that can't be applied using Group Policy, will be applied using PowerShell cmdlets and registry.
 
+[**How is Group Policy used in this PowerShell script?**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Group-Policy#how-is-group-policy-used-in-this-powershell-script)
+
 this script also undoes 3 policies set by Microsoft Security Baseline because they can cause some inconvenience.
 
-<details><summary>Click/Tap here to see them</summary>
+<details><summary>▶️ Click/Tap here to see them</summary>
 
 * 1. **Windows Game Recording and Broadcasting**: This setting enables or disables the Windows Game Recording and Broadcasting features. If you disable this setting, Windows Game Recording will not be allowed.
 If the setting is enabled or not configured, then Recording and Broadcasting (streaming) will be allowed.
 
 * 2. **Prohibit use of Internet Connection Sharing on your DNS domain network**: Determines whether administrators can enable and configure the Internet Connection Sharing (ICS) feature of an Internet connection and if the ICS service can run on the computer.
  
-<details><summary>Expand to see more info about number 2</summary>
+<details><summary>▶️ Expand to see more info about number 2</summary>
 ICS lets administrators configure their system as an Internet gateway for a small network and provides network services, such as name resolution and addressing through DHCP, to the local private network.
 
 If you enable this setting, ICS cannot be enabled or configured by administrators, and the ICS service cannot run on the computer. The Advanced tab in the Properties dialog box for a LAN or remote access connection is removed. The Internet Connection Sharing page is removed from the New Connection Wizard. The Network Setup Wizard is disabled.
@@ -620,13 +622,13 @@ In order to run commands in this category, you don't need administrator privileg
 
 ## Trust<a href="#trust">![TrustIcon]</a>
 
-How can you 100% trust this script and know that nothing shady is going on?
+#### How can you 100% trust this script and know that nothing shady is going on?
 - The script is in plain-text, nothing hidden
 - Change log history is present on GitHub
 - You can open the file in [Visual Studio Code](https://code.visualstudio.com/)/[Visual Studio Code Web](https://vscode.dev/), which is the best and view the script in a nice easy to read environment, I've included a lot of spacing in the script file for this purpose
 - You can learn PowerShell which is super easy, multiplatform, and useful for the future, Microsoft Learn website teaches you everything, then you will understand everything in the script is safe, or you can ask someone that you trust and knows PowerShell to verify the script for you
 
-
+### [How to verify security-baselines-x.zip file and 100% trust it?](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Group-Policy#how-to-verify-security-baselines-xzip-file-and-100-trust-it)
 
 
 <p align="right"><a href="#readme-top">💡(back to top)</a></p>

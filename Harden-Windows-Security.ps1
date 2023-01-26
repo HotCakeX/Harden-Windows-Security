@@ -308,7 +308,7 @@ else {
             Push-Location .\LGPO_30
 
             # Use LGPO.exe to apply the Windows Hardening script Group Policy Objects on top of Microsoft Security Baselines
-            .\LGPO.exe /g '..\Security-Baselines-X\{300945C6-E397-4D12-A29F-18612FBD1058}'
+            .\LGPO.exe /g '..\Security-Baselines-X\GPOX'
 
             # Change the current working directory back to where we were
             Pop-Location
@@ -331,9 +331,11 @@ else {
             # Delete the Windows Hardening script Group Policy Objects folder we extracted the zip file
             remove-item .\Security-Baselines-X.zip -Force
 
+            # wait 3 seconds
+            Start-Sleep -Seconds 3
+            
             # Force update the applied Group Policies
             gpupdate /force
-
 
 
  

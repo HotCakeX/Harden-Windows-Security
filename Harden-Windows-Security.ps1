@@ -87,20 +87,24 @@ Version 2023.1.26: completely optimized the script, changed it to be multilingua
 
 💠 Features of this Hardening script:
 
-  ✅ Running this script makes your PC compliant with Secured-core PC specifications (providing that you use a modern hardware that supports the latest Windows security features).
-  ✅ Always up-to-date and works with the latest build of Windows (Currently Windows 11 - compatible and rigorously tested on stable and Insider Dev builds)
+  ✅ Always up-to-date and works with latest build of Windows (Currently Windows 11 - compatible and rigorously tested on stable and Insider Dev builds)
   ✅ Doesn't break anything
   ✅ Doesn't remove or disable Windows functionalities against Microsoft's recommendation
-  ✅ The Readme page on GitHub is used as the reference for all of the commands used in the script. the order in which they appear there is the same as the one in the script file.
+  ✅ The Readme page on GitHub is used as the reference for all of the security measures applied by this script and Group Policies. the order in which they appear there is the same as the one in the script file.
   ✅ When a hardening command is no longer necessary because it's applied by default by Microsoft on new builds of Windows, it will also be removed from this script in order to prevent any problems and because it won't be necessary anymore.
   ✅ The script can be run infinite number of times, it's made in a way that it won't make any duplicate changes at all.
-  
+  ✅ The script asks for confirmation, in the PowerShell console, before running each hardening category, so you can selectively run (or don't run) each of them.
+  ✅ Running this script makes your PC compliant with Secured-core PC specifications (providing that you use a modern hardware that supports the latest Windows security features). 
+  ✅ Running this script makes your system compliant with the official Microsoft Security Baselines
+
 
 🛑 Warning: Windows by default is secure and safe, this script does not imply nor claim otherwise. just like anything, you have to use it wisely and don't compromise yourself with reckless behavior and bad user configuration; Nothing is foolproof. this script only uses the tools and features that have already been implemented by Microsoft in Windows OS to fine-tune it towards the highest security and locked-down state, using well-documented, supported, often recommended and official methods. continue reading for comprehensive info.
 
 💠 Hardening Categories from top to bottom: (🔺Detailed info about each of them at my Github🔻)
 
 ⏹ Commands that require Administrator Privileges
+  ✅Microsoft Security Baselines
+  ✅Security Baselines X
   ✅ Windows Security aka Defender
   ✅ Attack surface reduction rules
   ✅ Bitlocker Settings
@@ -122,7 +126,7 @@ Version 2023.1.26: completely optimized the script, changed it to be multilingua
 
 💎 Note: The script asks for confirmation, in the PowerShell console, before running each hardening category, so you can selectively run (or don't run) each of them.
 
-💎 Note: There are 4 items tagged with #TopSecurity that can break functionalities or cause difficulties so this script does NOT enable them by default. press Control + F and search for #TopSecurity in GitHub readme to find those commands and how to enable them if you want.
+💎 Note: There are 4 items tagged with #TopSecurity that can break functionalities or cause difficulties so this script does NOT enable them by default. press Control + F and search for #TopSecurity in the GitHub Readme page to find those security measures and how to enable them if you want.
 
 🏴 if you have any questions, requests, suggestions etc. about this script, please open a new discussion in Github:
 
@@ -139,7 +143,6 @@ Version 2023.1.26: completely optimized the script, changed it to be multilingua
 
 #>
 
- 
  
 
 $infomsg = "`r`n" +
@@ -165,8 +168,7 @@ if (((Get-WmiObject Win32_OperatingSystem).OperatingSystemSKU) -eq "101"){
     }
 
 
-
-
+#region Functions
     # Questions function
     function Select-Option
     {
@@ -256,9 +258,7 @@ $principal = New-Object Security.Principal.WindowsPrincipal $identity
 
 $principal.IsInRole([Security.Principal.WindowsBuiltinRole]::Administrator)
 }
-
-
-
+#endregion functions
 
 
 if(-NOT (Test-IsAdmin))
@@ -266,13 +266,15 @@ if(-NOT (Test-IsAdmin))
    { write-host "Skipping commands that require Administrator privileges" -ForegroundColor Magenta }
 
 else {
-    
 
+ 
+#region Security-Baselines   
 # =========================================================================================================================
 # ================================================Security Baselines=======================================================
 # =========================================================================================================================
- switch (Select-Option -Options "Yes", "No", "Exit" -Message "`nApply Microsoft Security Baseline + Hardening Script's Baseline?")
- {  "Yes"  {
+
+switch (Select-Option -Options "Yes", "No", "Exit" -Message "`nApply Microsoft Security Baseline + Hardening Script's Baseline?")
+{  "Yes"  {
 
 
  # download Microsoft Security Baselines directly from their servers
@@ -340,17 +342,15 @@ gpupdate /force
  
 } "No" { break }
 "Exit" { exit }
-} 
+}
 # =========================================================================================================================
 # ============================================End of Security Baselines====================================================
 # =========================================================================================================================
-
-  
-
+#endregion Security-Baselines
 
 
  
-
+#region Windows-Security-Defender
 # =========================================================================================================================
 # ==========================================Windows Security aka Defender==================================================
 # =========================================================================================================================
@@ -385,11 +385,11 @@ ModifyRegistry -RegPath 'HKLM:\SYSTEM\CurrentControlSet\Control\CI\Policy' -RegN
 # =========================================================================================================================
 # =========================================End of Windows Security aka Defender============================================
 # =========================================================================================================================
+#endregion Windows-Security-Defender
 
 
 
-
-
+#region Bitlocker-Settings
 # =========================================================================================================================
 # ==========================================Bitlocker Settings=============================================================
 # =========================================================================================================================
@@ -761,11 +761,11 @@ $nonOSVolumes | ForEach-Object {
 # =========================================================================================================================
 # ==========================================End of Bitlocker Settings======================================================
 # =========================================================================================================================
+#endregion Bitlocker-Settings
 
 
 
-
-
+#region TLS-Security
 # =========================================================================================================================
 # ==============================================TLS Security===============================================================
 # =========================================================================================================================
@@ -972,13 +972,13 @@ ModifyRegistry -HashTable $WeakCiphers
 # =========================================================================================================================
 # ==========================================End of TLS Security============================================================
 # =========================================================================================================================
+#endregion TLS-Security
 
 
 
 
 
-
-
+#region Windows-Firewall
 # =========================================================================================================================
 # ====================================================Windows Firewall=====================================================
 # =========================================================================================================================
@@ -987,10 +987,9 @@ switch (Select-Option -Options "Yes", "No", "Exit" -Message "Run Windows Firewal
 
 
 # Disables Multicast DNS (mDNS) UDP-in Firewall Rules for all 3 Firewall profiles - disables only 3 rules
-get-NetFirewallRule
-    | Where-Object {$_.RuleGroup -eq "@%SystemRoot%\system32\firewallapi.dll,-37302" -and $_.Direction -eq "inbound" }
-        | ForEach-Object {
-            Disable-NetFirewallRule -DisplayName $_.DisplayName}
+get-NetFirewallRule |
+Where-Object {$_.RuleGroup -eq "@%SystemRoot%\system32\firewallapi.dll,-37302" -and $_.Direction -eq "inbound" } |
+ForEach-Object {Disable-NetFirewallRule -DisplayName $_.DisplayName}
 
 
 
@@ -1000,12 +999,12 @@ get-NetFirewallRule
 # =========================================================================================================================
 # =================================================End of Windows Firewall=================================================
 # =========================================================================================================================
+#endregion Windows-Firewall
 
 
 
 
-
-
+#region Optional-Windows-Features
 # =========================================================================================================================
 # =================================================Optional Windows Features===============================================
 # =========================================================================================================================
@@ -1050,14 +1049,14 @@ PowerShell.exe "if((get-WindowsOptionalFeature -Online -FeatureName VirtualMachi
 # =========================================================================================================================
 # ==============================================End of Optional Windows Features===========================================
 # =========================================================================================================================
+#endregion Optional-Windows-Features
 
 
 
 
 
 
-
-
+#region Windows-Networking
 # =========================================================================================================================
 # ====================================================Windows Networking===================================================
 # =========================================================================================================================
@@ -1103,12 +1102,12 @@ ModifyRegistry -RegPath 'HKLM:\SYSTEM\CurrentControlSet\Services\Netbt\Parameter
 # =========================================================================================================================
 # =================================================End of Windows Networking===============================================
 # =========================================================================================================================
+#endregion Windows-Networking
 
 
 
 
-
-
+#region Miscellaneous-Configurations
 # =========================================================================================================================
 # ==============================================Miscellaneous Configurations===============================================
 # =========================================================================================================================
@@ -1145,6 +1144,12 @@ ForEach-Object {Add-LocalGroupMember -Group "Hyper-V Administrators" -Member $_.
 # Change Windows time sync interval from every 7 days to every 4 days (= every 345600 seconds)
 ModifyRegistry -RegPath 'HKLM:\SYSTEM\ControlSet001\Services\W32Time\TimeProviders\NtpClient' -RegName 'SpecialPollInterval' -RegValue '345600'
 
+# Change Computer Name from the random Desktop-.... to "Mainframe"
+if (-NOT ($env:computername -eq "Mainframe"))
+{Rename-Computer -NewName "Mainframe"}
+
+
+
 
 
 
@@ -1154,12 +1159,12 @@ ModifyRegistry -RegPath 'HKLM:\SYSTEM\ControlSet001\Services\W32Time\TimeProvide
 # =========================================================================================================================
 # ============================================End of Miscellaneous Configurations==========================================
 # =========================================================================================================================
+#endregion Miscellaneous-Configurations
 
 
 
 
-
-
+#region Certificate-Checking-Commands
 # =========================================================================================================================
 # ====================================================Certificate Checking Commands========================================
 # =========================================================================================================================
@@ -1227,12 +1232,12 @@ switch (Select-Option -Options "Yes", "No", "Exit" -Message "Run Certificate Che
 # =========================================================================================================================
 # ====================================================End of Certificate Checking Commands=================================
 # =========================================================================================================================
+#endregion Certificate-Checking-Commands
 
 
 
 
-
-
+#region Country-IP-Blocking
 # =========================================================================================================================
 # ====================================================Country IP Blocking==================================================
 # =========================================================================================================================
@@ -1342,7 +1347,7 @@ switch (Select-Option -Options "Yes", "No", "Exit" -Message "Block the entire ra
 # =========================================================================================================================
 # ====================================================End of Country IP Blocking===========================================
 # =========================================================================================================================
-
+#endregion Country-IP-Blocking
 
 
 
@@ -1351,7 +1356,7 @@ switch (Select-Option -Options "Yes", "No", "Exit" -Message "Block the entire ra
 } # End of Admin test function
 
 
-
+#region Non-Admin-Commands
 # =========================================================================================================================
 # ====================================================Non-Admin Commands===================================================
 # =========================================================================================================================
@@ -1473,7 +1478,6 @@ Add-Content -Path "C:\ProgramData\Microsoft\Event Viewer\Views\Hardening Script\
 
 
 
-
 # turn on "Show text suggestions when typing on the physical keyboard" for the current user, toggles the option in Windows settings
 ModifyRegistry -RegPath 'HKCU:\Software\Microsoft\Input\Settings' -RegName 'EnableHwkbTextPrediction' -RegValue '1'
 
@@ -1490,12 +1494,14 @@ New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType str
 
 
 
+
 } "No" { break }
 "Exit" { exit }
 }
 # =========================================================================================================================
 # ====================================================End of Non-Admin Commands============================================
 # =========================================================================================================================
+#endregion Non-Admin-Commands
 
 Write-Host "T" -ForegroundColor Green -NoNewline;
 Write-Host "H" -ForegroundColor Yellow -NoNewline;

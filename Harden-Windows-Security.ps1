@@ -121,7 +121,7 @@ Version 2023.1.25: The script now applies the official Microsoft Security Baseli
 
 💎 Note: The script asks for confirmation, in the PowerShell console, before running each hardening category, so you can selectively run (or don't run) each of them.
 
-💎 Note: There are 4 items tagged with #TopSecurity that can break functionalities or cause difficulties so this script does NOT enable them by default. press Control + F and search for #TopSecurity in GitHub readme or in the script to find those commands and how to enable them if you want.
+💎 Note: There are 4 items tagged with #TopSecurity that can break functionalities or cause difficulties so this script does NOT enable them by default. press Control + F and search for #TopSecurity in GitHub readme to find those commands and how to enable them if you want.
 
 🏴 if you have any questions, requests, suggestions etc. about this script, please open a new discussion in Github:
 
@@ -144,6 +144,25 @@ Version 2023.1.25: The script now applies the official Microsoft Security Baseli
 write-host "`n`n  Make Sure you've completely read what's written in the GitHub repository, before running this script `n" -ForegroundColor yellow
 
 Write-Host "Link to the GitHub Repository: " -ForegroundColor Green "https://github.com/HotCakeX/Harden-Windows-Security `n`n"
+
+
+
+
+
+
+# check if user's OS is Windows Home edition
+if (((Get-WmiObject Win32_OperatingSystem).OperatingSystemSKU) -eq "101"){
+
+    Write-host "Windows Home edition detected, exiting..." -ForegroundColor Red
+
+    break
+    
+}
+
+
+
+
+
 
 
 
@@ -177,22 +196,22 @@ expand-Archive -Path .\Security-Baselines-X.zip
 Copy-Item -Path ".\LGPO_30\LGPO.exe" -Destination ".\Windows-11-v22H2-Security-Baseline\Scripts\Tools"
 
 # Change directory to the Security Baselines folder
-pushd .\Windows-11-v22H2-Security-Baseline\Scripts
+Push-Location .\Windows-11-v22H2-Security-Baseline\Scripts
 
 # Run the official PowerShell script included in the Microsoft Security Baseline file we downloaded from official servers
 .\Baseline-LocalInstall.ps1 -Win11NonDomainJoined
   
 # Change current working directory back to where we were  
-popd
+Pop-Location
 
 # Change current working directory to the LGPO's folder
-pushd .\LGPO_30
+Push-Location .\LGPO_30
 
 # Use LGPO.exe to apply the Windows Hardening script Group Policy Objects on top of Microsoft Security Baselines
 .\LGPO.exe /g '..\Security-Baselines-X\{300945C6-E397-4D12-A29F-18612FBD1058}'
 
 # Change the current working directory back to where we were
-popd
+Pop-Location
 
 # Delete Microsoft Security Baselines zip file
 Remove-Item -Path .\Windows1122H2SecurityBaseline.zip -Force
@@ -212,13 +231,24 @@ remove-item .\Security-Baselines-X -Recurse -Force
 # Delete the Windows Hardening script Group Policy Objects folder we extracted the zip file
 remove-item .\Security-Baselines-X.zip -Force
 
-
+# Force update the applied Group Policies
+gpupdate /force
 
 
 }"N" {Break}   }}  until ($GroupPolicyQuestion -eq "y" -or $GroupPolicyQuestion -eq "N")
  
  
   
+ <#
+    .Synopsis
+        Tests if the user is an administrator
+    .Description
+        Returns true if a user is an administrator, false if the user is not an administrator   
+    .Example
+        Test-IsAdmin
+  https://devblogs.microsoft.com/scripting/use-function-to-determine-elevation-of-powershell-console/
+    #>
+
 
 
 
@@ -276,16 +306,7 @@ remove-item .\Security-Baselines-X.zip -Force
  
 
 
- <#
-    .Synopsis
-        Tests if the user is an administrator
-    .Description
-        Returns true if a user is an administrator, false if the user is not an administrator   
-    .Example
-        Test-IsAdmin
-  https://devblogs.microsoft.com/scripting/use-function-to-determine-elevation-of-powershell-console/
-    #>
-    
+
 
  # Function to test if current session has administrator privileges
 Function Test-IsAdmin
@@ -320,11 +341,8 @@ do { $WindowsSecurityQuestion = $(write-host "`nRun Windows Security (aka Defend
 
 
 
-
 # Optimizing Network Protection Performance of Windows Defender - this was off by default on Windows 11 insider build 25247
 Set-MpPreference -AllowSwitchToAsyncInspection $True
-
-
 
 
 
@@ -946,53 +964,6 @@ ModifyRegistry -HashTable $WeakCiphers
 
 
 
-# =========================================================================================================================
-# ==============================================Lock Screen================================================================
-# =========================================================================================================================
-do { $LockScreenQuestion = $(write-host "`nRun Lock Screen section? Enter Y for Yes or N for No" -ForegroundColor Magenta; Read-Host)
-    switch ($LockScreenQuestion) {   
-    "y" { 
-
-
-
-ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System' -RegName 'dontdisplaylastusername' -RegValue '0'
-
-
-
-} "N" {Break}   }}  until ($LockScreenQuestion -eq "y" -or $LockScreenQuestion -eq "N")
-# =========================================================================================================================
-# ==============================================End of Lock Screen=========================================================
-# =========================================================================================================================
-
-
-
-
-# =========================================================================================================================
-# ==============================================UAC (User Account Control)=================================================
-# =========================================================================================================================
-do { $UACQuestion = $(write-host "`nRun UAC section? Enter Y for Yes or N for No" -ForegroundColor Magenta; Read-Host)
-    switch ($UACQuestion) {   
-    "y" { 
-
-
-
-# this automatically denies all UAC prompts on Standard accounts when set to "0", 1 = Prompt for credentials on the secure desktop #TopSecurity
-ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System' -RegName 'ConsentPromptBehaviorUser' -RegValue '1'
-
-# Enforce cryptographic signatures on any interactive application that requests elevation of privilege #TopSecurity
-ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System' -RegName 'ValidateAdminCodeSignatures' -RegValue '0'
-
-
-
-
-} "N" {Break}   }}  until ($UACQuestion -eq "y" -or $UACQuestion -eq "N")
-# =========================================================================================================================
-# ============================================End of UAC (User Account Control)============================================
-# =========================================================================================================================
-
-
-
-
 
 
 # =========================================================================================================================
@@ -1003,8 +974,11 @@ do { $WinFirewallQuestion= $(write-host "`nRun Windows Firewall section? Enter Y
     "y" { 
 
 
-# Disables Multicast DNS (mDNS) UDP-in Firewall Rules for all 3 Firewall profiles
-Disable-NetFirewallRule -DisplayName "mDNS (UDP-In)"
+# Disables Multicast DNS (mDNS) UDP-in Firewall Rules for all 3 Firewall profiles - disables only 3 rules
+get-NetFirewallRule
+    | Where-Object {$_.RuleGroup -eq "@%SystemRoot%\system32\firewallapi.dll,-37302" -and $_.Direction -eq "inbound" }
+        | ForEach-Object {
+            Disable-NetFirewallRule -DisplayName $_.DisplayName}
 
 
 
@@ -1130,27 +1104,8 @@ do { $MiscellaneousQuestion= $(write-host "`nRun Miscellaneous section? Enter Y 
 
 
 
-
-# Enable Hibernate
-powercfg /hibernate on
-
 # Set Hibnernate mode to full
 powercfg /h /type full
-
-
-# Need to verify this
-# Add Hibernate option to Start menu's power options
-ModifyRegistry -RegPath 'HKLM:\Software\Policies\Microsoft\Windows\Explorer' -RegName 'ShowHibernateOption' -RegValue '1'
-
-# Power options in administrative template is unavailable
-# Disable sleep for when plugged in
-ModifyRegistry -RegPath 'HKLM:\Software\Policies\Microsoft\Power\PowerSettings\abfc2519-3608-4c2a-94ea-171b0ed546ab' -RegName 'ACSettingIndex' -RegValue '0'
-
-# https://learn.microsoft.com/en-us/windows/security/information-protection/bitlocker/bitlocker-countermeasures#attacker-with-skill-and-lengthy-physical-access
-# Power options in administrative template is unavailable
-# Disable sleep for when on battery
-ModifyRegistry -RegPath 'HKLM:\Software\Policies\Microsoft\Power\PowerSettings\abfc2519-3608-4c2a-94ea-171b0ed546ab' -RegName 'DCSettingIndex' -RegValue '0'
-
 
 # Enable Mandatory ASLR
 set-processmitigation -System -Enable ForceRelocateImages
@@ -1161,7 +1116,6 @@ set-processmitigation -System -Enable ForceRelocateImages
 
 # Turn on Enhanced mode search for Windows indexer
 ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Microsoft\Windows Search' -RegName 'EnableFindMyFiles' -RegValue '1'
-
 
 # Enable SMB Encryption - using force to confirm the action
 Set-SmbServerConfiguration -EncryptData $true -force
@@ -1178,12 +1132,6 @@ ForEach-Object {Add-LocalGroupMember -Group "Hyper-V Administrators" -Member $_.
 
 # Change Windows time sync interval from every 7 days to every 4 days (= every 345600 seconds)
 ModifyRegistry -RegPath 'HKLM:\SYSTEM\ControlSet001\Services\W32Time\TimeProviders\NtpClient' -RegName 'SpecialPollInterval' -RegValue '345600'
-
-
-# Configure LSASS process to run as a protected process with UEFI Lock, the expected default value on new Windows 11 installations is "2" which is without UEFI lock, "1" is with UEFI lock
-ModifyRegistry -RegPath 'HKLM:\SYSTEM\CurrentControlSet\Control\Lsa' -RegName 'RunAsPPL' -RegValue '1'
-
-
 
 
 
@@ -1534,6 +1482,8 @@ $Name         = 'Flags'
 $Value        = '506' 
 If (-NOT (Test-Path $RegistryPath)) {   New-Item -Path $RegistryPath -Force | Out-Null } 
 New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType string -Force
+
+
 
 
 

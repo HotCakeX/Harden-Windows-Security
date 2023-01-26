@@ -219,16 +219,6 @@ remove-item .\Security-Baselines-X.zip -Force
  
  
   
- <#
-    .Synopsis
-        Tests if the user is an administrator
-    .Description
-        Returns true if a user is an administrator, false if the user is not an administrator   
-    .Example
-        Test-IsAdmin
-  https://devblogs.microsoft.com/scripting/use-function-to-determine-elevation-of-powershell-console/
-    #>
-
 
 
 
@@ -286,7 +276,16 @@ remove-item .\Security-Baselines-X.zip -Force
  
 
 
-
+ <#
+    .Synopsis
+        Tests if the user is an administrator
+    .Description
+        Returns true if a user is an administrator, false if the user is not an administrator   
+    .Example
+        Test-IsAdmin
+  https://devblogs.microsoft.com/scripting/use-function-to-determine-elevation-of-powershell-console/
+    #>
+    
 
  # Function to test if current session has administrator privileges
 Function Test-IsAdmin
@@ -498,8 +497,16 @@ function Compare-SecureString {
 
 
 
+  
+ # check, make sure there is no CD/DVD drives in the system, because Bitlocker throws an error when there is
+ $CDDVDCheck = (Get-WMIObject -Class Win32_CDROMDrive -Property *).MediaLoaded
+ if ($CDDVDCheck){
+    Write-Warning "Remove any CD/DVD drives from the system and run the Bitlocker category after that"
+    break
+}
 
- # first make sure Bitlocker isn't in the middle of any decryption/encryption operation
+
+ # check, make sure Bitlocker isn't in the middle of decryption/encryption operation (on System Drive)
 if ((Get-BitLockerVolume -MountPoint $env:SystemDrive).EncryptionPercentage -ne "100" -and (Get-BitLockerVolume -MountPoint $env:SystemDrive).EncryptionPercentage -ne "0") {
 
     $kawai = (Get-BitLockerVolume -MountPoint $env:SystemDrive).EncryptionPercentage
@@ -645,7 +652,6 @@ else {
 
 
 }
-
 
 
 

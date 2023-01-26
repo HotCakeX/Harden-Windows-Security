@@ -1144,12 +1144,6 @@ ForEach-Object {Add-LocalGroupMember -Group "Hyper-V Administrators" -Member $_.
 # Change Windows time sync interval from every 7 days to every 4 days (= every 345600 seconds)
 ModifyRegistry -RegPath 'HKLM:\SYSTEM\ControlSet001\Services\W32Time\TimeProviders\NtpClient' -RegName 'SpecialPollInterval' -RegValue '345600'
 
-# Change Computer Name from the random Desktop-.... to "Mainframe"
-if (-NOT ($env:computername -eq "Mainframe"))
-{Rename-Computer -NewName "Mainframe"}
-
-
-
 
 
 

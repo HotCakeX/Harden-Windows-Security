@@ -1,6 +1,6 @@
 <#PSScriptInfo
 
-.VERSION 2023.1.25
+.VERSION 2023.1.26
 
 .GUID d435a293-c9ee-4217-8dc1-4ad2318a5770
 
@@ -71,7 +71,8 @@ Version 2023.1.23: Changed the registry modification function with a more advanc
 Version 2023.1.24: enforce encryption type on removable and fixed drive types to full disk encryption instead of only used disk encryption
 ## 
 Version 2023.1.25: The script now applies the official Microsoft Security Baselines and on top of that applies as many of the script settings as possible using Group Policy, the rest of the settings that aren't possible to be applied using Group Policy continue to be applied using registry and PowerShell Cmdlets.
-
+## 
+Version 2023.1.26: completely optimized the script, changed it to be multilingual-friendly and people with non-English language packs installed or with non-English keyboards, will have an easy time using the script. Thanks to the community feedback on GitHub!
 #>
 
 <# 
@@ -140,46 +141,18 @@ Version 2023.1.25: The script now applies the official Microsoft Security Baseli
 
  
  
-<#
 
-# Source https://github.com/HotCakeX/Harden-Windows-Security
- 
-Hardening Categories from top to bottom:
+$infomsg = "`r`n" +
+"#############################################################################################################`r`n" +
+"###  Make Sure you've completely read what's written in the GitHub repository, before running this script ###`r`n" +
+"#############################################################################################################`r`n"
+Write-Host $infomsg -ForegroundColor Blue
 
-  Commands that require Administrator Privileges
-  -Windows Security aka Defender
-  -Attack surface reduction rules
-  -Bitlocker Settings
-  -TLS Security
-  -Lock Screen
-  -UAC (User Account Control)
-  -Device Guard
-  -Windows Firewall
-  -Optional Windows Features
-  -Windows Networking
-  -Miscellaneous Configurations
-  -Certificate Checking Commands
-  -Country IP Blocking
- Commands that don't require Administrator Privileges
-  -Non-Admin Commands that only affect the current user and do not make machine-wide changes.
-
-
-
-Applying the latest Microsoft Security Baseline + Hardening script Group Policies
-
-The rest of the commands that couldn't be applied as Group Policies are applied using registry and PowerShell
-
-
-
-#>
-
-
-
-write-host "`n`n  Make Sure you've completely read what's written in the GitHub repository, before running this script `n" -ForegroundColor yellow
-
-Write-Host "Link to the GitHub Repository: " -ForegroundColor Green "https://github.com/HotCakeX/Harden-Windows-Security `n`n"
-
-
+$infomsg = "`r`n" +
+"###########################################################################################`r`n" +
+"###  Link to the GitHub Repository: https://github.com/HotCakeX/Harden-Windows-Security ###`r`n" +
+"###########################################################################################`r`n"
+Write-Host $infomsg -ForegroundColor Green
 
 
 
@@ -216,10 +189,88 @@ if (((Get-WmiObject Win32_OperatingSystem).OperatingSystemSKU) -eq "101"){
 
 
 
+# Registry modification function
+function ModifyRegistry {
+    param (
+        [Parameter(Mandatory = $false)][HashTable]$HashTable,
+        [Parameter(Mandatory = $false)][String]$RegPath,
+        [Parameter(Mandatory = $false)][String]$RegName,
+        [Parameter(Mandatory = $false)][String]$RegValue
+    )
+    function processit {
+        param([hashtable]$hash)
+
+        If (-NOT (Test-Path $hash.RegPath)) { 
+            New-Item -Path $hash.RegPath -Force | Out-Null
+              }
+              New-ItemProperty -Path $hash.RegPath -Name $hash.RegName -Value $hash.RegValue -PropertyType DWORD -Force
+
+        [pscustomobject]@{
+            Path  = $hash.RegPath
+            Name  = $hash.RegName
+            Value = $hash.RegValue
+        }
+    }
+    if ($HashTable) {
+        if ($HashTable.ContainsKey('RegPath')) {
+            processit -hash $HashTable
+        }
+        else {
+            foreach ($item in $HashTable.GetEnumerator()) {
+                if ($item.Value -is [hashtable]) {
+                    if ($item.Value.ContainsKey('RegPath') -and $item.Value.ContainsKey('RegValue')) {
+                        $hash = $item.Value
+                        if (-not $hash.ContainsKey('RegName')){
+                            $hash.RegName = $item.Key
+                        }
+                        processit -hash $hash
+                    }
+                    else {
+                        Write-Warning "Invalid hashtable format - missing RegPath and/or RegValue key"
+                    }
+                }
+                else {
+                    Write-Warning "Item does not contain a hashtable"
+                }
+            }
+        }
+    }
+    else {
+        processit @{RegPath = $RegPath; RegName = $RegName; RegValue = $RegValue }
+    }
+}
 
 
 
 
+
+
+
+# https://devblogs.microsoft.com/scripting/use-function-to-determine-elevation-of-powershell-console/
+# Function to test if current session has administrator privileges
+Function Test-IsAdmin
+{
+$identity = [Security.Principal.WindowsIdentity]::GetCurrent()
+
+$principal = New-Object Security.Principal.WindowsPrincipal $identity
+
+$principal.IsInRole([Security.Principal.WindowsBuiltinRole]::Administrator)
+}
+
+
+
+
+
+if(-NOT (Test-IsAdmin))
+
+   { write-host "Skipping commands that require Administrator privileges" -ForegroundColor Magenta }
+
+else {
+    
+
+# =========================================================================================================================
+# ================================================Security Baselines=======================================================
+# =========================================================================================================================
  switch (Select-Option -Options "Yes", "No", "Exit" -Message "`nApply Microsoft Security Baseline + Hardening Script's Baseline?")
  {  "Yes"  {
 
@@ -289,89 +340,16 @@ gpupdate /force
  
 } "No" { break }
 "Exit" { exit }
-}
-  
- 
-
-
-  # Registry modification function
-    function ModifyRegistry {
-        param (
-            [Parameter(Mandatory = $false)][HashTable]$HashTable,
-            [Parameter(Mandatory = $false)][String]$RegPath,
-            [Parameter(Mandatory = $false)][String]$RegName,
-            [Parameter(Mandatory = $false)][String]$RegValue
-        )
-        function processit {
-            param([hashtable]$hash)
-    
-            If (-NOT (Test-Path $hash.RegPath)) { 
-                New-Item -Path $hash.RegPath -Force | Out-Null
-                  }
-                  New-ItemProperty -Path $hash.RegPath -Name $hash.RegName -Value $hash.RegValue -PropertyType DWORD -Force
-    
-            [pscustomobject]@{
-                Path  = $hash.RegPath
-                Name  = $hash.RegName
-                Value = $hash.RegValue
-            }
-        }
-        if ($HashTable) {
-            if ($HashTable.ContainsKey('RegPath')) {
-                processit -hash $HashTable
-            }
-            else {
-                foreach ($item in $HashTable.GetEnumerator()) {
-                    if ($item.Value -is [hashtable]) {
-                        if ($item.Value.ContainsKey('RegPath') -and $item.Value.ContainsKey('RegValue')) {
-                            $hash = $item.Value
-                            if (-not $hash.ContainsKey('RegName')){
-                                $hash.RegName = $item.Key
-                            }
-                            processit -hash $hash
-                        }
-                        else {
-                            Write-Warning "Invalid hashtable format - missing RegPath and/or RegValue key"
-                        }
-                    }
-                    else {
-                        Write-Warning "Item does not contain a hashtable"
-                    }
-                }
-            }
-        }
-        else {
-            processit @{RegPath = $RegPath; RegName = $RegName; RegValue = $RegValue }
-        }
-    }
- 
-
-
+} 
+# =========================================================================================================================
+# ============================================End of Security Baselines====================================================
+# =========================================================================================================================
 
   
-   
-
-# https://devblogs.microsoft.com/scripting/use-function-to-determine-elevation-of-powershell-console/
-# Function to test if current session has administrator privileges
-Function Test-IsAdmin
-{
- $identity = [Security.Principal.WindowsIdentity]::GetCurrent()
-
- $principal = New-Object Security.Principal.WindowsPrincipal $identity
-
- $principal.IsInRole([Security.Principal.WindowsBuiltinRole]::Administrator)
-}
 
 
 
  
-if(-NOT (Test-IsAdmin))
-
-   { write-host "Skipping commands that require Administrator privileges" -ForegroundColor Magenta }
-
-else {
-
-
 
 # =========================================================================================================================
 # ==========================================Windows Security aka Defender==================================================
@@ -383,7 +361,6 @@ switch (Select-Option -Options "Yes", "No", "Exit" -Message "Run Windows Securit
 
 # Optimizing Network Protection Performance of Windows Defender - this was off by default on Windows 11 insider build 25247
 Set-MpPreference -AllowSwitchToAsyncInspection $True
-
 
 
 
@@ -1146,7 +1123,7 @@ powercfg /h /type full
 # Enable Mandatory ASLR
 set-processmitigation -System -Enable ForceRelocateImages
 
-# You can add Mandatory ASLR override for a Trusted App using the command below or in the Program Settings section of Exploit Protection in Windows Defender app. 
+# You can add Mandatory ASLR override for a Trusted app using the command below or in the Program Settings section of Exploit Protection in Windows Defender app. 
 # Set-ProcessMitigation -Name "C:\TrustedApp.exe" -Disable ForceRelocateImages
 
 # Turn on Enhanced mode search for Windows indexer
@@ -1509,7 +1486,6 @@ $Name         = 'Flags'
 $Value        = '506' 
 If (-NOT (Test-Path $RegistryPath)) {   New-Item -Path $RegistryPath -Force | Out-Null } 
 New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType string -Force
-
 
 
 

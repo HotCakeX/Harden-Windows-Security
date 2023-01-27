@@ -274,20 +274,50 @@ else {
         "Yes" {
 
 
-            # download Microsoft Security Baselines directly from their servers
-            Invoke-WebRequest -Uri "https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/Windows%2011%20version%2022H2%20Security%20Baseline.zip" -OutFile "Windows1122H2SecurityBaseline.zip"
+            # Hiding invoke-webrequest progress because it creates lingering visual effect on PowerShell console for some reason
+            # https://github.com/PowerShell/PowerShell/issues/14348
 
+            # https://stackoverflow.com/questions/18770723/hide-progress-of-invoke-webrequest
+            # Create an in-memory module so $ScriptBlock doesn't run in new scope
+            $null = New-Module {
+                function Invoke-WithoutProgress {
+                    [CmdletBinding()]
+                    param (
+                        [Parameter(Mandatory)] [scriptblock] $ScriptBlock
+                    )
+
+                    # Save current progress preference and hide the progress
+                    $prevProgressPreference = $global:ProgressPreference
+                    $global:ProgressPreference = 'SilentlyContinue'
+
+                    try {
+                        # Run the script block in the scope of the caller of this module function
+                        . $ScriptBlock
+                    }
+                    finally {
+                        # Restore the original behavior
+                        $global:ProgressPreference = $prevProgressPreference
+                    }
+                }
+            }
+
+
+            Invoke-WithoutProgress { 
+
+                # download Microsoft Security Baselines directly from their servers
+                Invoke-WebRequest -Uri "https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/Windows%2011%20version%2022H2%20Security%20Baseline.zip" -OutFile "Windows1122H2SecurityBaseline.zip"
+
+                # Download LGPO program from Microsoft servers
+                Invoke-WebRequest -Uri "https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/LGPO.zip" -OutFile "LGPO.zip"
+
+                # Download the Group Policies of Windows Hardening script from GitHub
+                Invoke-WebRequest -Uri 'https://github.com/HotCakeX/Harden-Windows-Security/raw/main/GroupPolicy/Security-Baselines-X.zip' -OutFile 'Security-Baselines-X.zip'
+            }
             # unzip Microsoft Security Baselines file
             Expand-Archive -Path .\Windows1122H2SecurityBaseline.zip -DestinationPath .\
 
-            # Download LGPO program from Microsoft servers
-            Invoke-WebRequest -Uri "https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/LGPO.zip" -OutFile "LGPO.zip"
-
             # unzip the LGPO file
             Expand-Archive -Path .\LGPO.zip -DestinationPath .\
-
-            # Download the Group Policies of Windows Hardening script from GitHub
-            Invoke-WebRequest -Uri 'https://github.com/HotCakeX/Harden-Windows-Security/raw/main/GroupPolicy/Security-Baselines-X.zip' -OutFile 'Security-Baselines-X.zip'
 
             # unzip the Security-Baselines-X file which contains Windows Hardening script Group Policy Objects
             expand-Archive -Path .\Security-Baselines-X.zip
@@ -300,7 +330,7 @@ else {
 
             # Run the official PowerShell script included in the Microsoft Security Baseline file we downloaded from official servers
             .\Baseline-LocalInstall.ps1 -Win11NonDomainJoined
-  
+
             # Change current working directory back to where we were  
             Pop-Location
 

@@ -77,7 +77,7 @@
  ## Features:<a href="#features">![FeaturesIcon]</a>
 
 - Always up-to-date and works with the latest build of Windows (Currently Windows 11 - compatible and rigorously tested on stable and Insider Dev builds)
-- Doesn't break anything
+- Doesn't break anything.
 - All of the links and sources are official from Microsoft websites, straight from the source. no bias, no misinformation and no old obsolete methods, that's why there are no links to 3rd party news websites, made up blogs or articles.
 
 <details><summary>With the following exceptions</summary>
@@ -93,7 +93,7 @@
 
 </details>    
 
-- Doesn't remove or disable Windows functionalities against Microsoft's recommendation
+- Doesn't remove or disable Windows functionalities against Microsoft's recommendation.
 - This Readme page is used as the reference for all of the security measures applied by this script and Group Policies.
 - When a hardening command is no longer necessary because it's applied by default by Microsoft on new builds of Windows, it will also be removed from this script in order to prevent any problems and because it won't be necessary anymore.
 - The script can be run infinite number of times, it's made in a way that it won't make any duplicate changes at all.
@@ -166,6 +166,7 @@ From Top to bottom in order:
 * 🟦 Means the security measure is applied using PowerShell script (Cmdlet or registry)
 * 🟥 Means the entire hardening category is applied using Group Policy (Security Baselines X)
 * 🟨 Means the entire hardening category is applied using PowerShell script (Cmdlet or registry)
+* 🟧 Means the security measure used to be applied by the script but now Microsoft Security Baselines apply it
 * 🟣 Means the security measure is only introduced but isn't enabled/modified
 
 
@@ -247,7 +248,7 @@ Here is a screenshot:
 
 
 ## Windows Security aka Defender<a href="#Windows-Security-aka-Defender">![WindowsDefenderIcon]</a>
-- Enables **additional** security features of Windows Security (Defender), You can refer to [this official document](https://docs.microsoft.com/en-us/powershell/module/defender/set-mppreference?view=windowsserver2022-ps) for full details.
+- 🟩 Enables **additional** security features of Windows Security (Defender), You can refer to [this official document](https://docs.microsoft.com/en-us/powershell/module/defender/set-mppreference?view=windowsserver2022-ps) for full details.
 
 - 🟩 This script makes sure [Cloud Security Scan](https://support.microsoft.com/en-us/topic/what-is-a-cloud-security-scan-75112696-7660-4450-9194-d717f72a8ad8) and [Block At First Sight](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/configure-block-at-first-sight-microsoft-defender-antivirus?view=o365-worldwide#turn-on-block-at-first-sight-with-group-policy) are enabled to the highest possible security states available, **Zero Tolerance Cloud Block level**. you need to be aware that this means actions like downloading and opening an unknown file WILL make Windows Security send samples of it to the Cloud for more advanced analysis and it can take a maximum of 60 seconds (this script sets it to max) from the time you try to open that unknown file to the time when it will be opened (if deemed safe), so you will have to wait. all of these security measure are in place by default in Windows to some extent and happen automatically without the need to run this script, but this script **maxes them out and sets them to the highest possible levels** at the cost of 🔻convenience and usability.🔺it's always a trade-off.
 
@@ -282,7 +283,7 @@ Here is a screenshot:
 
 - 🟩 Enables [Network Protection of Windows Defender](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/network-protection?view=o365-worldwide) (Requires Windows Pro or Enterprise editions)
 
-- 🟩 Makes sure [Async Inspection for Network protection](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/network-protection?view=o365-worldwide#optimizing-network-protection-performance) of Windows Defender is turned on - Network protection now has a performance optimization that allows Block mode to start asynchronously inspecting long connections after they're validated and allowed by SmartScreen, which might provide a potential reduction in the cost that inspection has on bandwidth and can also help with app compatibility problems.
+- 🟦 Makes sure [Async Inspection for Network protection](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/network-protection?view=o365-worldwide#optimizing-network-protection-performance) of Windows Defender is turned on - Network protection now has a performance optimization that allows Block mode to start asynchronously inspecting long connections after they're validated and allowed by SmartScreen, which might provide a potential reduction in the cost that inspection has on bandwidth and can also help with app compatibility problems.
 
 - 🟦 [Smart App Control:](https://support.microsoft.com/en-us/topic/what-is-smart-app-control-285ea03d-fa88-4d56-882e-6698afdb7003) Smart App Control adds significant protection from new and emerging threats by blocking apps that are malicious or untrusted. Smart App Control also helps to block potentially unwanted apps, which are apps that may cause your device to run slowly, display unexpected ads, offer extra software you didn't want, or do other things you don't expect.
   - Smart App Control is User-Mode [Windows Defender Application Control policy (WDAC)](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/windows-defender-application-control-design-guide) for non-enterprise consumers. you can see its status in [`System Information`](https://support.microsoft.com/en-us/windows/view-your-system-info-a965a8f2-0773-1d65-472a-1e747c9ebe00) and enable it manually from Windows Security (Defender) app's GUI. it is very important for Windows and Windows Defender intelligence updates to be always new in order for Smart App Control to work properly as it relies on live intelligence and definition data from the cloud and other sources to make a Smart decision about programs and files it encounters.
@@ -519,10 +520,11 @@ These are configurations that are typically 🔺recommended in High-Risk Environ
 - 🟦 Setting the Network Location of all connections to Public; [Public network means less trust to other network devices](https://support.microsoft.com/en-us/windows/make-a-wi-fi-network-public-or-private-in-windows-0460117d-8d3e-a7ac-f003-7a0da607448d).
 - 🟩 Disable [Printing over HTTP](https://learn.microsoft.com/en-us/troubleshoot/windows-server/printing/manage-connect-printers-use-web-browser) because HTTP is not encrypted and it's an old feature that's not used anymore.
 - 🟩 [Turns off downloading of print drivers over HTTP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-connectivity#connectivity-disabledownloadingofprintdriversoverhttp) because HTTP is not encrypted and that method isn't used anymore. [This is the recommended and secure way of downloading printer drivers in Windows 11](https://support.microsoft.com/en-us/windows/download-printer-drivers-in-windows-da9b1460-7299-4cc3-e974-33cf99d86880).
-- 🟦 Disables [IP Source Routing](https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2008-R2-and-2008/dd349797(v=ws.10)#disableipsourcerouting); Source routing allows a computer that sends a packet to specify the route that the packet takes. Attackers can use source routed packets to obscure their identity and location.
+- 🟧 Disables [IP Source Routing](https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2008-R2-and-2008/dd349797(v=ws.10)#disableipsourcerouting); Source routing allows a computer that sends a packet to specify the route that the packet takes. Attackers can use source routed packets to obscure their identity and location.
   - After applying this and restarting your device, `Source Routing Behavior` in `netsh int IPv4 show global` shows `Drop` instead of the default `dontforward` value (in [Windows 11 dev build 25272](https://blogs.windows.com/windows-insider/2023/01/05/announcing-windows-11-insider-preview-build-25272/)).
+  - In Group Policy, it's located at: Computer Configuration -> Administrative Templates -> MSS (Legacy) -> "MSS: (NoNameReleaseOnDemand) Allow the computer to ignore NetBIOS name release requests except from WINS servers" to "Enabled".
 
-- 🟦 Allows the device to [ignore NetBIOS name release requests.](https://support.microsoft.com/en-us/topic/security-configuration-guidance-support-ea9aef24-347f-15fa-b94f-36f967907f2f) This setting is a good preventive measure for denial of service attacks against name servers and other very important server roles.
+- 🟧 Allows the device to [ignore NetBIOS name release requests.](https://support.microsoft.com/en-us/topic/security-configuration-guidance-support-ea9aef24-347f-15fa-b94f-36f967907f2f) This setting is a good preventive measure for denial of service attacks against name servers and other very important server roles.
 
 
 

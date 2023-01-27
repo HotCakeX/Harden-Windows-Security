@@ -307,9 +307,6 @@ else {
             # Change current working directory to the LGPO's folder
             Push-Location .\LGPO_30
 
-            # Use LGPO.exe to apply the Windows Hardening script Group Policy Objects on top of Microsoft Security Baselines
-            #.\LGPO.exe /g '..\Security-Baselines-X\GPOX'
-
             # Import settings from Security Baselines X Registry Policy file into Computer (Machine) Configuration.
             .\LGPO.exe /m "..\Security-Baselines-X\GPOX\DomainSysvol\GPO\Machine\registry.pol"
 
@@ -1255,8 +1252,8 @@ they are available in Microsoft Security Baselines
                 if ($IPList.count -eq 0) { Write-Host "The IP list was empty, skipping $CountryName" -ForegroundColor Yellow ; break }
 
       
-                New-NetFirewallRule -DisplayName "$CountryName IP range blocking" -Direction Inbound -Action Block -LocalAddress Any -RemoteAddress $IPList -Description "$CountryName IP range blocking" -Profile Any -InterfaceType Any -Group "Hardening-Script-CountryIP-Blocking" -EdgeTraversalPolicy Block
-                New-NetFirewallRule -DisplayName "$CountryName IP range blocking" -Direction Outbound -Action Block -LocalAddress Any -RemoteAddress $IPList -Description "$CountryName IP range blocking" -Profile Any -InterfaceType Any -Group "Hardening-Script-CountryIP-Blocking" -EdgeTraversalPolicy Block
+                New-NetFirewallRule -DisplayName "$CountryName IP range blocking" -Direction Inbound -Action Block -LocalAddress Any -RemoteAddress $IPList -Description "$CountryName IP range blocking" -Profile Any -InterfaceType Any -Group "Hardening-Script-CountryIP-Blocking" -EdgeTraversalPolicy Block -PolicyStore localhost
+                New-NetFirewallRule -DisplayName "$CountryName IP range blocking" -Direction Outbound -Action Block -LocalAddress Any -RemoteAddress $IPList -Description "$CountryName IP range blocking" -Profile Any -InterfaceType Any -Group "Hardening-Script-CountryIP-Blocking" -EdgeTraversalPolicy Block -PolicyStore localhost
         
             }
 
@@ -1340,7 +1337,6 @@ they are available in Microsoft Security Baselines
     # ====================================================End of Country IP Blocking===========================================
     # =========================================================================================================================
     #endregion Country-IP-Blocking
-
 
 
 

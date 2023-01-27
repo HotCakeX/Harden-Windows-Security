@@ -592,7 +592,7 @@ Once you have those Firewall rules added, you can [use this method](https://gith
 
 ## Non-Admin Commands<a href="#non-admin-commands">![NonAdminIcon]</a>
 
-In order to run commands in this category, you don't need administrator privileges, because no system-wide configuration is made. changes in this category only apply to the user account that is running the current PowerShell session: 🟨
+🟨 In order to run commands in this category, you don't need administrator privileges, because no system-wide configuration is made. changes in this category only apply to the user account that is running the current PowerShell session:
 - Show known file extensions in File explorer
 - Show hidden files, folders and drives (toggles the control panel folder options item)
 - Disable websites accessing local language list - good for privacy

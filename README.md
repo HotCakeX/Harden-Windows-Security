@@ -121,7 +121,7 @@ To run the script:
 Set-ExecutionPolicy Bypass -Scope Process
 
 # Run the PowerShell script
-irm -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security.ps1" | iex
+Invoke-RestMethod -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security.ps1" | Invoke-Expression
 
 ```
 

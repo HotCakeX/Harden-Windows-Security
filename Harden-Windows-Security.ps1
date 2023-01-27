@@ -1089,35 +1089,11 @@ https://stackoverflow.com/questions/48809012/compare-two-credentials-in-powershe
         "Yes" {
 
 
-
             # disable LMHOSTS lookup protocol on all network adapters
             ModifyRegistry -RegPath 'HKLM:\SYSTEM\CurrentControlSet\Services\NetBT\Parameters' -RegName 'EnableLMHOSTS' -RegValue '0'
 
             # Set the Network Location of all connections to Public
             Get-NetConnectionProfile | Set-NetConnectionProfile -NetworkCategory Public
-
-
-
-            # Disable IP Source Routing
-            # https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2008-R2-and-2008/dd349797(v=ws.10)#disableipsourcerouting
-            ModifyRegistry -RegPath 'HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters' -RegName 'DisableIPSourceRouting' -RegValue '2'
-
-
-
-
-
-            <#
-Configure the policy value for Computer Configuration >> Administrative Templates >> MSS (Legacy) >> "MSS: (NoNameReleaseOnDemand) Allow the computer to ignore NetBIOS name release requests except from WINS servers" to "Enabled".
-
-This policy setting requires the installation of the MSS-Legacy custom templates.
-"MSS-Legacy.admx" and " MSS-Legacy.adml" must be copied to the \Windows\PolicyDefinitions and \Windows\PolicyDefinitions\en-US directories respectively.
-
-they are available in Microsoft Security Baselines
-#>
-
-            # Allow the computer to ignore NetBIOS name release requests
-            ModifyRegistry -RegPath 'HKLM:\SYSTEM\CurrentControlSet\Services\Netbt\Parameters' -RegName 'NoNameReleaseOnDemand' -RegValue '1'
-
 
 
 

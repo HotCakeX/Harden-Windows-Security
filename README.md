@@ -200,6 +200,9 @@ If the setting is enabled or not configured, then Recording and Broadcasting (st
 * 2. **Prohibit use of Internet Connection Sharing on your DNS domain network**: Determines whether administrators can enable and configure the Internet Connection Sharing (ICS) feature of an Internet connection and if the ICS service can run on the computer.
  
 <details><summary>▶️ Expand to see more info about number 2</summary>
+	
+<h1> <br> </h1>
+	
 ICS lets administrators configure their system as an Internet gateway for a small network and provides network services, such as name resolution and addressing through DHCP, to the local private network.
 
 If you enable this setting, ICS cannot be enabled or configured by administrators, and the ICS service cannot run on the computer. The Advanced tab in the Properties dialog box for a LAN or remote access connection is removed. The Internet Connection Sharing page is removed from the New Connection Wizard. The Network Setup Wizard is disabled.
@@ -216,8 +219,9 @@ Note: Nonadministrators are already prohibited from configuring Internet Connect
 
 Note: Disabling this setting does not prevent Wireless Hosted Networking from using the ICS service for DHCP services. To prevent the ICS service from running, on the Network Permissions tab in the network's policy properties, select the "Don't use hosted networks" check box.
 
-<br>
-
+	
+<h1> <br> </h1>
+	
 </details>  
 
 
@@ -239,12 +243,13 @@ Here is a screenshot:
 
 
 
-
+<h1> <br> </h1>
 
 </details>    
 
 
-<h1> <br> </h1>
+ <br> 
+ <br> 
 
 
 ## Windows Security aka Defender<a href="#Windows-Security-aka-Defender">![WindowsDefenderIcon]</a>

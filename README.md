@@ -175,7 +175,7 @@ From Top to bottom in order:
 
 
 
-## Microsoft Security Baselines
+## Microsoft Security Baselines<a href="#Microsoft-Security-Baselines">![MicrosoftSecurityBaseline]</a>
 
 A security baseline is a group of Microsoft-recommended configuration settings that explains their security implication. These settings are based on feedback from Microsoft security engineering teams, product groups, partners, and customers.
 
@@ -184,7 +184,7 @@ A security baseline is a group of Microsoft-recommended configuration settings t
 
 
 
-## Security Baselines X
+## Security Baselines X<a href="#Security-Baselines-X">![SecurityBaselineX]</a>
 
 This is the `.zip` file that I've created and [uploaded to this GitHub repository](https://github.com/HotCakeX/Harden-Windows-Security/tree/main/GroupPolicy). it contains the Group Policy Object that applies security measures explained in this page.
 
@@ -703,6 +703,8 @@ Not Applicable, No license. because the only mission of this GitHub repository a
 	
 	
 	
+
+	
 [HardeningCategoriesIcon]: images/HardeningCategories.png
 [FeaturesIcon]: images/Features.png	
 [HowToUseIcon]: images/HowToUse.png
@@ -726,3 +728,5 @@ Not Applicable, No license. because the only mission of this GitHub repository a
 [UACIcon]: images/UAC.png
 [TLSIcon]: images/TLS.png
 [WindowsDefenderIcon]: images/WindowsDefender.png
+[SecurityBaselineX]: images/Security-Baseline-X.png
+[MicrosoftSecurityBaseline]: images/Microsoft-Security-Baseline.png

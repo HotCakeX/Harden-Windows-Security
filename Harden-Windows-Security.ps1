@@ -308,7 +308,13 @@ else {
             Push-Location .\LGPO_30
 
             # Use LGPO.exe to apply the Windows Hardening script Group Policy Objects on top of Microsoft Security Baselines
-            .\LGPO.exe /g '..\Security-Baselines-X\GPOX'
+            #.\LGPO.exe /g '..\Security-Baselines-X\GPOX'
+
+            # Import settings from Security Baselines X Registry Policy file into Computer (Machine) Configuration.
+            .\LGPO.exe /m "..\Security-Baselines-X\GPOX\DomainSysvol\GPO\Machine\registry.pol"
+
+            # Apply the Security Baselines X security template into Computer (Machine) Configuration
+            .\lgpo.exe /s "..\Security-Baselines-X\GPOX\DomainSysvol\GPO\Machine\microsoft\windows nt\SecEdit\GptTmpl.inf"
 
             # Change the current working directory back to where we were
             Pop-Location

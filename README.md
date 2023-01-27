@@ -116,17 +116,12 @@
 To run the script:
 
 ```PowerShell
-# Download the latest version of the script to the current working directory
-irm -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security.ps1" -OutFile "Harden-Windows-Security.ps1"
 
 # set execution policy temporarily to bypass for the current PowerShell session only
 Set-ExecutionPolicy Bypass -Scope Process
 
-# run the script
-.\Harden-Windows-Security.ps1
-
-# delete the script file from computer
-remove-Item .\Harden-Windows-Security.ps1
+# Run the PowerShell script
+irm -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security.ps1" | iex
 
 ```
 

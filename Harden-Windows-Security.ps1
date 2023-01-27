@@ -1242,8 +1242,8 @@ they are available in Microsoft Security Baselines
                 param ($IPList , $CountryName)
 
                 # checks if the rule is present and if it is, deletes them to get new up-to-date IP ranges from the sources
-                if (Get-NetFirewallRule -DisplayName "$CountryName IP range blocking" 2> $null) 
-                { Remove-NetFirewallRule -DisplayName "$CountryName IP range blocking" }
+                if (Get-NetFirewallRule -DisplayName "$CountryName IP range blocking" -PolicyStore localhost 2> $null) 
+                { Remove-NetFirewallRule -DisplayName "$CountryName IP range blocking" -PolicyStore localhost }
 
                 # converts the list which is in string into array
                 [string[]]$IPList = $IPList -split '\r?\n' -ne ''

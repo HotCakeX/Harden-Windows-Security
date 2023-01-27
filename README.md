@@ -51,14 +51,14 @@
 
  </br>
  
-> __Warning__ Make sure your hardware (Tablet, Laptop, PC, Phone) meets the [Windows 11 hardware requirements](https://www.microsoft.com/en-in/windows/windows-11-specifications?r=1) AND [Virtualization Based Security requirements](https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/oem-vbs). currently, Windows 11 allows some older than 8th Gen Intel CPUs (or their AMD equivalents), such as Intel i7 7700K, to use [insider builds](https://insider.windows.com/) only. you will miss a lot of new feautres, benefits and new security technologies that are only available on newer hardware. you need to enable TPM 2.0, Virtualization technology and Secure Boot in your UEFI if they aren't enabled by default (which is the case on older hardware). To Enable Secure Boot in your UEFI firmware settings [Check out this official guide](https://support.microsoft.com/en-us/windows/windows-11-and-secure-boot-a8ff1202-c0d9-42f5-940f-843abef64fad) - How to enable Secure Boot on: [HP](https://support.hp.com/document/ish_4300937-4295746-16?openCLC=true) - [Lenovo](https://support.lenovo.com/solutions/ht509044) - [Dell](https://www.dell.com/support/kbdoc/000190116/How-to-Enable-Secure-Boot-on-Your-Dell-Device)
+> __Warning__ Make sure your hardware (Tablet, Laptop, PC, Phone) meets the [Windows 11 hardware requirements](https://www.microsoft.com/en-in/windows/windows-11-specifications?r=1) **AND** [Virtualization Based Security requirements](https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/oem-vbs). currently, Windows 11 allows some older than 8th Gen Intel CPUs (or their AMD equivalents), such as Intel i7 7700K, to use [insider builds](https://insider.windows.com/) only. you will miss a lot of new feautres, benefits and new security technologies that are only available on newer hardware. you need to enable TPM 2.0, Virtualization technology and Secure Boot in your UEFI if they aren't enabled by default (which is the case on older hardware). To Enable Secure Boot in your UEFI firmware settings [Check out this official guide](https://support.microsoft.com/en-us/windows/windows-11-and-secure-boot-a8ff1202-c0d9-42f5-940f-843abef64fad) - How to enable Secure Boot on: [HP](https://support.hp.com/document/ish_4300937-4295746-16?openCLC=true) - [Lenovo](https://support.lenovo.com/solutions/ht509044) - [Dell](https://www.dell.com/support/kbdoc/000190116/How-to-Enable-Secure-Boot-on-Your-Dell-Device)
 
  </br>
 
 
  
 > **Note**
-> if there are multiple Windows user accounts in your computer, it's recommended to run this script in each of them, without administrator privileges, because Non-admin commands only apply to the current user and are not machine wide.
+> if there are multiple Windows user accounts in your computer, it's recommended to run this script in each of them, **without administrator privileges**, because Non-admin commands only apply to the current user and are not machine wide.
 
 > **Note**
 > There are 4 items tagged with **#TopSecurity** that can break functionalities or cause difficulties so this script does NOT enable them by default. press `Control + F` and search for `#TopSecurity` in this page to find those security measures and how to enable them if you want. 
@@ -76,7 +76,7 @@
  
  ## Features:<a href="#features">![FeaturesIcon]</a>
 
-- Always up-to-date and works with latest build of Windows (Currently Windows 11 - compatible and rigorously tested on stable and Insider Dev builds)
+- Always up-to-date and works with the latest build of Windows (Currently Windows 11 - compatible and rigorously tested on stable and Insider Dev builds)
 - Doesn't break anything
 - All of the links and sources are official from Microsoft websites, straight from the source. no bias, no misinformation and no old obsolete methods, that's why there are no links to 3rd party news websites, made up blogs or articles.
 
@@ -94,13 +94,13 @@
 </details>    
 
 - Doesn't remove or disable Windows functionalities against Microsoft's recommendation
-- This Readme page is used as the reference for all of the security measures applied by this script and Group Policies. the order in which they appear here is the same as the one in the script file.
+- This Readme page is used as the reference for all of the security measures applied by this script and Group Policies.
 - When a hardening command is no longer necessary because it's applied by default by Microsoft on new builds of Windows, it will also be removed from this script in order to prevent any problems and because it won't be necessary anymore.
 - The script can be run infinite number of times, it's made in a way that it won't make any duplicate changes at all.
-- The script asks for confirmation, in the PowerShell console, before running each hardening category, so you can selectively run (or don't run) each of them.
-- Running this script makes your PC compliant with Secured-core PC specifications (providing that you use a modern hardware that supports the latest Windows security features). - [See what makes a Secured-core PC](https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/oem-highly-secure#what-makes-a-secured-core-pc). <a href="#Device-Guard">Check Device Guard category for more details.</a>
+- The script asks for confirmation, in the PowerShell console, before running each hardening category that is not applied by Group Policies, so you can selectively run (or don't run) each of them.
+- Applying this script makes your PC compliant with Microsoft Security Baselines and Secured-core PC specifications (providing that you use a modern hardware that supports the latest Windows security features). - [See what makes a Secured-core PC](https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/oem-highly-secure#what-makes-a-secured-core-pc). <a href="#Device-Guard">Check Device Guard category for more details.</a>
   - [Secured-core](https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/oem-highly-secure) – recommended for the most sensitive systems and industries like financial, healthcare, and government agencies. Builds on the previous layers and leverages advanced processor capabilities to provide protection from firmware attacks.
-- Running this script makes your system compliant with the official Microsoft Security Baselines
+
 
 <p align="right"><a href="#readme-top">💡(back to top)</a></p>
 
@@ -124,10 +124,6 @@ Set-ExecutionPolicy Bypass -Scope Process
 Invoke-RestMethod "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security.ps1" | Invoke-Expression
 
 ```
-
-<br>
-
-➡️ [Learn about this PowerShell script's workflow and logic in the Wiki](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Group-Policy#how-is-group-policy-used-in-this-powershell-script)
 
 
 
@@ -189,7 +185,7 @@ A security baseline is a group of Microsoft-recommended configuration settings t
 
 ## Security Baselines X
 
-This is the `.zip` file that I've created and [uploaded to this GitHub repository](https://github.com/HotCakeX/Harden-Windows-Security/tree/main/GroupPolicy). it contains Group Policy Objects that apply hardening measures explained in this page. Those security measures that can't be applied using Group Policy, will be applied using PowerShell cmdlets and registry.
+This is the `.zip` file that I've created and [uploaded to this GitHub repository](https://github.com/HotCakeX/Harden-Windows-Security/tree/main/GroupPolicy). it contains the Group Policy Object that applies security measures explained in this page.
 
 [**How is Group Policy used in this PowerShell script?**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Group-Policy#how-is-group-policy-used-in-this-powershell-script)
 

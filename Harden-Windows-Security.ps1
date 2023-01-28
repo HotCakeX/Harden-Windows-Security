@@ -145,6 +145,7 @@ Version 2023.1.26: completely optimized the script, changed it to be multilingua
 
  
 
+
 $infomsg = "`r`n" +
 "#############################################################################################################`r`n" +
 "###  Make Sure you've completely read what's written in the GitHub repository, before running this script ###`r`n" +
@@ -311,8 +312,10 @@ else {
                 Invoke-WebRequest -Uri "https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/LGPO.zip" -OutFile "LGPO.zip"
 
                 # Download the Group Policies of Windows Hardening script from GitHub
-                Invoke-WebRequest -Uri 'https://github.com/HotCakeX/Harden-Windows-Security/raw/main/GroupPolicy/Security-Baselines-X.zip' -OutFile 'Security-Baselines-X.zip'
+                Invoke-WebRequest -Uri 'https://github.com/HotCakeX/Harden-Windows-Security/raw/9be1d75766d4303715d471c1e5cf95e94d4e4507/GroupPolicy/Security-Baselines-X.zip' -OutFile 'Security-Baselines-X.zip'
+                  
             }
+              
             # unzip Microsoft Security Baselines file
             Expand-Archive -Path .\Windows1122H2SecurityBaseline.zip -DestinationPath .\
 
@@ -343,87 +346,11 @@ else {
             # Apply the Security Baselines X security template into Computer (Machine) Configuration
             .\Lgpo.exe /s "..\Security-Baselines-X\GPOX\DomainSysvol\GPO\Machine\microsoft\windows nt\SecEdit\GptTmpl.inf"
 
-            # Change the current working directory back to where we were
-            Pop-Location
-
-            # Delete Microsoft Security Baselines zip file
-            Remove-Item -Path .\Windows1122H2SecurityBaseline.zip -Force
-
-            # Delete Microsoft Security Baselines folder where we extracted the zip file
-            remove-item -Path .\Windows-11-v22H2-Security-Baseline -Recurse -Force
-
-            # Delete the LGPO zip file
-            remove-item -Path .\LGPO_30 -Recurse -Force
-
-            # Delete the LGPO folder where we extracted the zip file
-            Remove-Item -Path .\LGPO.zip -Force
-
-            # Delete the Windows Hardening script Group Policy Objects zip file
-            remove-item .\Security-Baselines-X -Recurse -Force
-
-            # Delete the Windows Hardening script Group Policy Objects folder we extracted the zip file
-            remove-item .\Security-Baselines-X.zip -Force
-
-
- 
-        } "No" { break }
-        "Exit" { exit }
-    }
-    # =========================================================================================================================
-    # ============================================End of Security Baselines====================================================
-    # =========================================================================================================================
-    #endregion Security-Baselines
-
-
- 
-    #region Windows-Security-Defender
-    # =========================================================================================================================
-    # ==========================================Windows Security aka Defender==================================================
-    # =========================================================================================================================
-    switch (Select-Option -Options "Yes", "No", "Exit" -Message "Run Windows Security (Defender) category ?") {
-        "Yes" {
- 
-
-
-            # Optimizing Network Protection Performance of Windows Defender - this was off by default on Windows 11 insider build 25247
-            Set-MpPreference -AllowSwitchToAsyncInspection $True
-
-
-
-            switch (Select-Option -Options "Yes", "No", "Exit" -Message "Turn on Smart App Control ?") {
-                "Yes" {
-
-                    # Turn on Smart App Control
-                    ModifyRegistry -RegPath 'HKLM:\SYSTEM\CurrentControlSet\Control\CI\Policy' -RegName 'VerifiedAndReputablePolicyState' -RegValue '1'
-
-                } "No" { break }
-                "Exit" { exit }
-            }
 
 
 
 
-
-        } "No" { break }
-        "Exit" { exit }
-    }
-
-    # =========================================================================================================================
-    # =========================================End of Windows Security aka Defender============================================
-    # =========================================================================================================================
-    #endregion Windows-Security-Defender
-
-
-
-    #region Bitlocker-Settings
-    # =========================================================================================================================
-    # ==========================================Bitlocker Settings=============================================================
-    # =========================================================================================================================
-    switch (Select-Option -Options "Yes", "No", "Exit" -Message "Run Bitlocker category ?") {
-        "Yes" {
-
-
-            # This PowerShell script can be used to find out if the DMA Protection is ON \ OFF.
+   # This PowerShell script can be used to find out if the DMA Protection is ON \ OFF.
             # The Script will show this by emitting True \ False for On \ Off respectively.
 
             # bootDMAProtection check - checks for Kernel DMA Protection status in System information or msinfo32
@@ -477,26 +404,104 @@ else {
             # returns true or false depending on whether Kernel DMA Protection is on or off
             $bootDMAProtection = ([SystemInfo.NativeMethods]::BootDmaCheck()) -ne 0
 
-
+            
             # Enables or disables DMA protection from Bitlocker Countermeasures based on the status of Kernel DMA protection.
             if ($bootDMAProtection) {
+ 
+                
+                Write-Host "Kernel DMA protection is enabled on the system, disabling Bitlocker DMA protection." -ForegroundColor Blue
+                .\LGPO.exe /m "..\Security-Baselines-X\Bitlocker DMA\Bitlocker DMA Countermeasure OFF\Registry.pol"
 
-                ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Policies\Microsoft\FVE' -RegName 'DisableExternalDMAUnderLock' -RegValue '1'
+                           
             }
             else {
 
-                ModifyRegistry -RegPath 'HKLM:\SOFTWARE\Policies\Microsoft\FVE' -RegName 'DisableExternalDMAUnderLock' -RegValue '0'
+                Write-Host "Kernel DMA protection is unavailable on the system, enabling Bitlocker DMA protection." -ForegroundColor Blue
+                .\LGPO.exe /m "..\Security-Baselines-X\Bitlocker DMA\Bitlocker DMA Countermeasure ON\Registry.pol"
+
+                           
+            }
+
+
+            # Change the current working directory back to where we were
+            Pop-Location
+
+            # Delete Microsoft Security Baselines zip file
+            Remove-Item -Path .\Windows1122H2SecurityBaseline.zip -Force
+
+            # Delete Microsoft Security Baselines folder where we extracted the zip file
+            remove-item -Path .\Windows-11-v22H2-Security-Baseline -Recurse -Force
+
+            # Delete the LGPO zip file
+            remove-item -Path .\LGPO_30 -Recurse -Force
+
+            # Delete the LGPO folder where we extracted the zip file
+            Remove-Item -Path .\LGPO.zip -Force
+
+            # Delete the Windows Hardening script Group Policy Objects zip file
+            remove-item .\Security-Baselines-X -Recurse -Force
+
+            # Delete the Windows Hardening script Group Policy Objects folder we extracted the zip file
+            remove-item .\Security-Baselines-X.zip -Force
+
+
+ 
+        } "No" { break }
+        "Exit" { exit }
+    }
+    # =========================================================================================================================
+    # ============================================End of Security Baselines====================================================
+    # =========================================================================================================================
+    #endregion Security-Baselines
+
+
+ 
+    #region Windows-Security-Defender
+    # =========================================================================================================================
+    # ==========================================Windows Security aka Defender==================================================
+    # =========================================================================================================================
+    switch (Select-Option -Options "Yes", "No", "Exit" -Message "Run Windows Security (Defender) category ?") {
+        "Yes" {
+ 
+
+            # Optimizing Network Protection Performance of Windows Defender - this was off by default on Windows 11 insider build 25247
+            Set-MpPreference -AllowSwitchToAsyncInspection $True
+
+
+            switch (Select-Option -Options "Yes", "No", "Exit" -Message "Turn on Smart App Control ?") {
+                "Yes" {
+
+                    # Turn on Smart App Control
+                    ModifyRegistry -RegPath 'HKLM:\SYSTEM\CurrentControlSet\Control\CI\Policy' -RegName 'VerifiedAndReputablePolicyState' -RegValue '1'
+
+                } "No" { break }
+                "Exit" { exit }
             }
 
 
 
 
 
+        } "No" { break }
+        "Exit" { exit }
+    }
+
+    # =========================================================================================================================
+    # =========================================End of Windows Security aka Defender============================================
+    # =========================================================================================================================
+    #endregion Windows-Security-Defender
 
 
 
+    #region Bitlocker-Settings
+    # =========================================================================================================================
+    # ==========================================Bitlocker Settings=============================================================
+    # =========================================================================================================================
+    switch (Select-Option -Options "Yes", "No", "Exit" -Message "Run Bitlocker category ?") {
+        "Yes" {
 
 
+         
 
 
             # set-up Bitlocker encryption for OS Drive with TPMandPIN and recovery password keyprotectors and Verify its implementation
@@ -1123,7 +1128,7 @@ https://stackoverflow.com/questions/48809012/compare-two-credentials-in-powershe
             # Enable Mandatory ASLR
             set-processmitigation -System -Enable ForceRelocateImages
 
-            # You can add Mandatory ASLR override for a Trusted app using the command below or in the Program Settings section of Exploit Protection in Windows Defender app. 
+            # You can add Mandatory ASLR override for a Trusted App using the command below or in the Program Settings section of Exploit Protection in Windows Defender app. 
             # Set-ProcessMitigation -Name "C:\TrustedApp.exe" -Disable ForceRelocateImages
 
             # Turn on Enhanced mode search for Windows indexer
@@ -1144,7 +1149,6 @@ https://stackoverflow.com/questions/48809012/compare-two-credentials-in-powershe
 
             # Change Windows time sync interval from every 7 days to every 4 days (= every 345600 seconds)
             ModifyRegistry -RegPath 'HKLM:\SYSTEM\ControlSet001\Services\W32Time\TimeProviders\NtpClient' -RegName 'SpecialPollInterval' -RegValue '345600'
-
 
 
 
@@ -1472,6 +1476,7 @@ switch (Select-Option -Options "Yes", "No", "Exit" -Message "Run Non-Admin categ
 
 
 
+
         # turn on "Show text suggestions when typing on the physical keyboard" for the current user, toggles the option in Windows settings
         ModifyRegistry -RegPath 'HKCU:\Software\Microsoft\Input\Settings' -RegName 'EnableHwkbTextPrediction' -RegValue '1'
 
@@ -1484,8 +1489,6 @@ switch (Select-Option -Options "Yes", "No", "Exit" -Message "Run Non-Admin categ
         $Value = '506' 
         If (-NOT (Test-Path $RegistryPath)) { New-Item -Path $RegistryPath -Force | Out-Null } 
         New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType string -Force
-
-
 
 
 

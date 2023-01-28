@@ -188,7 +188,9 @@ A security baseline is a group of Microsoft-recommended configuration settings t
 
 This is the `.zip` file that I've created and [uploaded to this GitHub repository](https://github.com/HotCakeX/Harden-Windows-Security/tree/main/GroupPolicy). it contains the Group Policy Object that applies security measures explained in this page.
 
-[**How is Group Policy used in this PowerShell script?**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Group-Policy#how-is-group-policy-used-in-this-powershell-script)
+- [**How is Group Policy used in this PowerShell script?**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Group-Policy#how-is-group-policy-used-in-this-powershell-script)
+- [**How is Security Baseline X created and maintained?**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Group-Policy#how-is-security-baseline-x-created-and-maintained)
+- [**How to verify security-baselines-x.zip file and 100% trust it?**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Group-Policy#how-to-verify-security-baselines-xzip-file-and-100-trust-it)
 
 this script also undoes 3 policies set by Microsoft Security Baseline because they can cause some inconvenience.
 

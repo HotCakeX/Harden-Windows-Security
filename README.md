@@ -159,9 +159,10 @@ From Top to bottom in order:
 * Commands that don't require Administrator Privileges
   - <a href="#Non-Admin-Commands">Non-Admin Commands that only affect the current user and do not make machine-wide changes</a>
 
-<p align="right"><a href="#readme-top">💡(back to top)</a></p>
 
-
+</br>
+</br>
+</br>
 </br>
 
 * 🟩 Means the security measure is applied using Group Policies (Security Baselines X)
@@ -169,10 +170,9 @@ From Top to bottom in order:
 * 🟣 Means the security measure is only introduced but isn't enabled/modified
 
 
-</br>
 
 
-
+<p align="right"><a href="#readme-top">💡(back to top)</a></p>
 
 ## Microsoft Security Baselines<a href="#Microsoft-Security-Baselines">![MicrosoftSecurityBaseline]</a>
 

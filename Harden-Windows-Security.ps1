@@ -1,6 +1,6 @@
 <#PSScriptInfo
 
-.VERSION 2023.1.26
+.VERSION 2023.1.28
 
 .GUID d435a293-c9ee-4217-8dc1-4ad2318a5770
 
@@ -73,6 +73,8 @@ Version 2023.1.24: enforce encryption type on removable and fixed drive types to
 Version 2023.1.25: The script now applies the official Microsoft Security Baselines and on top of that applies as many of the script settings as possible using Group Policy, the rest of the settings that aren't possible to be applied using Group Policy continue to be applied using registry and PowerShell Cmdlets.
 ## 
 Version 2023.1.26: completely optimized the script, changed it to be multilingual-friendly and people with non-English language packs installed or with non-English keyboards, will have an easy time using the script. Thanks to the community feedback on GitHub!
+## 
+Version 2023.1.28: Bitlocker DMA protection enables ony when Kernel DMA protection is unavailable, as suggested by Microsoft, and this happens using Group Policies instead of registry. Improved verbosity when importing and installing policies.
 #>
 
 <# 
@@ -150,7 +152,7 @@ $infomsg = "`r`n" +
 "#############################################################################################################`r`n" +
 "###  Make Sure you've completely read what's written in the GitHub repository, before running this script ###`r`n" +
 "#############################################################################################################`r`n"
-Write-Host $infomsg -ForegroundColor Blue
+Write-Host $infomsg -ForegroundColor Cyan
 
 $infomsg = "`r`n" +
 "###########################################################################################`r`n" +
@@ -178,7 +180,7 @@ function Select-Option {
     )
     $Selected = $null
     while ($null -eq $Selected) {
-        Write-Host $Message -ForegroundColor DarkMagenta
+        Write-Host $Message -ForegroundColor Magenta
         for ($i = 0; $i -lt $Options.Length; $i++) { Write-Host "$($i+1): $($Options[$i])" }
         $SelectedIndex = Read-Host "Select an option"
         if ($SelectedIndex -gt 0 -and $SelectedIndex -le $Options.Length) { $Selected = $Options[$SelectedIndex - 1] }
@@ -302,7 +304,7 @@ else {
                 }
             }
 
-
+            Write-Host "Downloading the required files, Please wait..." -ForegroundColor Yellow
             Invoke-WithoutProgress { 
 
                 # download Microsoft Security Baselines directly from their servers
@@ -312,7 +314,7 @@ else {
                 Invoke-WebRequest -Uri "https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/LGPO.zip" -OutFile "LGPO.zip"
 
                 # Download the Group Policies of Windows Hardening script from GitHub
-                Invoke-WebRequest -Uri 'https://github.com/HotCakeX/Harden-Windows-Security/raw/9be1d75766d4303715d471c1e5cf95e94d4e4507/GroupPolicy/Security-Baselines-X.zip' -OutFile 'Security-Baselines-X.zip'
+                Invoke-WebRequest -Uri 'https://github.com/HotCakeX/Harden-Windows-Security/raw/main/GroupPolicy/Security-Baselines-X.zip' -OutFile 'Security-Baselines-X.zip'
                   
             }
               
@@ -341,16 +343,19 @@ else {
             Push-Location .\LGPO_30
 
             # Import settings from Security Baselines X Registry Policy file into Computer (Machine) Configuration.
+            Write-Host "Importing Security Baselines X Machine wide policies" -ForegroundColor Green
             .\LGPO.exe /m "..\Security-Baselines-X\GPOX\DomainSysvol\GPO\Machine\registry.pol"
+            
 
             # Apply the Security Baselines X security template into Computer (Machine) Configuration
+            Write-Host "Importing Security Baselines X Security Policies" -ForegroundColor Green
             .\Lgpo.exe /s "..\Security-Baselines-X\GPOX\DomainSysvol\GPO\Machine\microsoft\windows nt\SecEdit\GptTmpl.inf"
 
 
 
 
 
-   # This PowerShell script can be used to find out if the DMA Protection is ON \ OFF.
+            # This PowerShell script can be used to find out if the DMA Protection is ON \ OFF.
             # The Script will show this by emitting True \ False for On \ Off respectively.
 
             # bootDMAProtection check - checks for Kernel DMA Protection status in System information or msinfo32

@@ -74,7 +74,7 @@ Version 2023.1.25: The script now applies the official Microsoft Security Baseli
 ## 
 Version 2023.1.26: completely optimized the script, changed it to be multilingual-friendly and people with non-English language packs installed or with non-English keyboards, will have an easy time using the script. Thanks to the community feedback on GitHub!
 ## 
-Version 2023.1.28: Bitlocker DMA protection enables ony when Kernel DMA protection is unavailable, as suggested by Microsoft, and this happens using Group Policies instead of registry. Improved verbosity when importing and installing policies.
+Version 2023.1.28: Bitlocker DMA protection enables only when Kernel DMA protection is unavailable, as suggested by Microsoft, and this happens using Group Policies instead of registry. Improved verbosity when importing and installing policies.
 #>
 
 <# 

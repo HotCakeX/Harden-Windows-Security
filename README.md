@@ -617,13 +617,20 @@ In order to run commands in this category, you don't need administrator privileg
 ## Trust<a href="#trust">![TrustIcon]</a>
 
 #### How can you 100% trust this script and know that nothing shady is going on?
-- The script is in plain-text, nothing hidden
-- Change log history is present on GitHub
+
+Trust is very important, you shouldn't blindly trust me nor any other 3rd party person/organization just because they say they are trustworthy. this script uses the simplest possible, yet effective, methods that make it very easy to verify: 
+
+- The script is in plain-text, nothing hidden, no 3rd party executable or pre-compiled binary is involved.
+- Change log history is present on GitHub. _(despite some of my awkward documentation typos)_
 - You can open the file in [Visual Studio Code](https://code.visualstudio.com/)/[Visual Studio Code Web](https://vscode.dev/), and view the script in a nice easy to read environment, I've included a lot of spacing in the script file for this purpose
 - You can learn PowerShell which is super easy, multiplatform, and useful for the future, Microsoft Learn website teaches you everything, then you will understand everything in the script is safe, or you can ask someone that you trust and knows PowerShell to verify the script for you
+- There is no unexpected behavior involved.
+- You can even fork this repository, 100% verify it until that point in time, then you can verify any subsequent changes/updates I push to this repository, at your own pace, and if you are happy, allow it to be merged with your own copy/fork on your own GitHub account.
 
 ### [How to verify security-baselines-x.zip file and 100% trust it?](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Group-Policy#how-to-verify-security-baselines-xzip-file-and-100-trust-it)
 
+
+_If there is any other verification method in your mind that I haven't mentioned or applied, please let me know._
 
 <p align="right"><a href="#readme-top">💡(back to top)</a></p>
 

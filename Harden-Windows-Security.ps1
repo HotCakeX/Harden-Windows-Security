@@ -308,7 +308,7 @@ else {
 
 
             # create our working directory                           
-            New-Item -ItemType Directory -Path ".\HardeningXStuff\"
+            New-Item -ItemType Directory -Path ".\HardeningXStuff\" -Force
 
             # change location to the new directory
             Push-Location ".\HardeningXStuff\"
@@ -318,14 +318,14 @@ else {
 
                 try {
                 
-                # download Microsoft Security Baselines directly from their servers
-                Invoke-WebRequest -Uri "https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/Windows%2011%20version%2022H2%20Security%20Baseline.zip" -OutFile ".\Windows1122H2SecurityBaseline.zip" -ErrorAction Stop
+                    # download Microsoft Security Baselines directly from their servers
+                    Invoke-WebRequest -Uri "https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/Windows%2011%20version%2022H2%20Security%20Baseline.zip" -OutFile ".\Windows1122H2SecurityBaseline.zip" -ErrorAction Stop
 
-                # Download LGPO program from Microsoft servers
-                Invoke-WebRequest -Uri "https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/LGPO.zip" -OutFile ".\LGPO.zip" -ErrorAction Stop
+                    # Download LGPO program from Microsoft servers
+                    Invoke-WebRequest -Uri "https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/LGPO.zip" -OutFile ".\LGPO.zip" -ErrorAction Stop
 
-                # Download the Group Policies of Windows Hardening script from GitHub
-                Invoke-WebRequest -Uri "https://github.com/HotCakeX/Harden-Windows-Security/raw/main/GroupPolicy/Security-Baselines-X.zip" -OutFile ".\Security-Baselines-X.zip" -ErrorAction Stop
+                    # Download the Group Policies of Windows Hardening script from GitHub
+                    Invoke-WebRequest -Uri "https://github.com/HotCakeX/Harden-Windows-Security/raw/main/GroupPolicy/Security-Baselines-X.zip" -OutFile ".\Security-Baselines-X.zip" -ErrorAction Stop
                
                 }
                 catch {
@@ -442,7 +442,7 @@ else {
             }
 
             # Change the current working directory back to where we started
-            Pop-Location;Pop-Location
+            Pop-Location; Pop-Location
 
             # delete our working directory
             remove-item -Path ".\HardeningXStuff" -Recurse -Force

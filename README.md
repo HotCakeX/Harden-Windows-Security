@@ -489,7 +489,7 @@ Here is [the official reference](https://learn.microsoft.com/en-us/windows/secur
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
 ## Windows Firewall<a href="#Windows-Firewall">![FirewallIcon]</a>
-- Makes sure Windows Firewall is enabled for all profiles (which is the default)
+- 🟩 Makes sure Windows Firewall is enabled for all profiles (which is the default)
 
 - 🟩 Sets inbound and outbound default actions for Domain Firewall Profile to Block; because this script is Not intended to be used on devices that are part of a domain or controlled by an Active Directory Domain Controller, since they will have their own policies and policy management systems in place.
 

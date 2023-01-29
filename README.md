@@ -507,7 +507,7 @@ Here is [the official reference](https://learn.microsoft.com/en-us/windows/secur
   - PowerShell v2; because it's old and doesn't support [AMSI](https://devblogs.microsoft.com/powershell/powershell-the-blue-team/#antimalware-scan-interface-integration)
   - Work Folders client; not used when your computer is not part of a domain or enterprise network
   - Internet Printing Client; used in combination with IIS web server, [old feature](https://learn.microsoft.com/en-us/troubleshoot/windows-server/printing/manage-connect-printers-use-web-browser), can be disabled without causing problems further down the road
-  - Windows Media Player (legacy); isn't needed anymore, Windows 11 has a modern media player app.
+  - Windows Media Player (legacy); isn't needed anymore, [Windows 11 has a modern media player app](https://blogs.windows.com/windows-insider/2021/11/16/new-media-player-for-windows-11-begins-rolling-out-to-windows-insiders/).
 
 - 🔶 Also enables these optional features:
   - [Windows Defender Application Guard](https://learn.microsoft.com/en-us/windows/security/threat-protection/microsoft-defender-application-guard/md-app-guard-overview); which is a safe Environment to open untrusted websites. - [System Requirements](https://learn.microsoft.com/en-us/windows/security/threat-protection/microsoft-defender-application-guard/reqs-md-app-guard) - [Frequently asked questions](https://learn.microsoft.com/en-us/windows/security/threat-protection/microsoft-defender-application-guard/faq-md-app-guard)

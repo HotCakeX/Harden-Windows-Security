@@ -677,10 +677,12 @@ _If there is any other verification method in your mind that I haven't mentioned
   - [Device Guard Differential Analysis](https://www.bsi.bund.de/SharedDocs/Downloads/DE/BSI/Cyber-Sicherheit/SiSyPHus/E20172000_BSI_Win10_DGABGL_Win10_v_1_0.pdf?__blob=publicationFile&v=3)
 - [Microsoft Tech Community](https://techcommunity.microsoft.com/) - Official blogs and documentations
 - [Microsoft Security baselines](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-security-configuration-framework/windows-security-baselines) - Security baselines from Microsoft
-- [Microsoft Security Response Center (MSRC)](https://www.youtube.com/@microsoftsecurityresponsec2390)
+- [Microsoft Security Response Center (MSRC) YouTube channel](https://www.youtube.com/@microsoftsecurityresponsec2390)
   - [BlueHat Seattle 2019 || Guarding Against Physical Attacks: The Xbox One Story](https://www.youtube.com/watch?v=quLa6kzzra0)
   - [Security Update Guide:](https://msrc.microsoft.com/update-guide) The Microsoft Security Response Center (MSRC) investigates all reports of security vulnerabilities affecting Microsoft products and services, and provides the information here as part of the ongoing effort to help you manage security risks and help keep your systems protected.
   - [Microsoft Security Response Center Blog](https://msrc-blog.microsoft.com/)
+- [Microsoft Security Blog](https://www.microsoft.com/en-us/security/blog/)
+
 
 
 <p align="right"><a href="#readme-top">💡(back to top)</a></p>

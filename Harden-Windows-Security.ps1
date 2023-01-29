@@ -1,6 +1,6 @@
 <#PSScriptInfo
 
-.VERSION 2023.1.28
+.VERSION 2023.1.29
 
 .GUID d435a293-c9ee-4217-8dc1-4ad2318a5770
 
@@ -75,6 +75,8 @@ Version 2023.1.25: The script now applies the official Microsoft Security Baseli
 Version 2023.1.26: completely optimized the script, changed it to be multilingual-friendly and people with non-English language packs installed or with non-English keyboards, will have an easy time using the script. Thanks to the community feedback on GitHub!
 ## 
 Version 2023.1.28: Bitlocker DMA protection enables only when Kernel DMA protection is unavailable, as suggested by Microsoft, and this happens using Group Policies instead of registry. Improved verbosity when importing and installing policies.
+## 
+Version 2023.1.29: Improved Security Baselines categories. added error handling when no Internet connection is available to download them.
 #>
 
 <# 
@@ -304,43 +306,60 @@ else {
                 }
             }
 
+
+            # create our working directory                           
+            New-Item -ItemType Directory -Path ".\HardeningXStuff\"
+
+            # change location to the new directory
+            Push-Location ".\HardeningXStuff\"
+
             Write-Host "Downloading the required files, Please wait..." -ForegroundColor Yellow
             Invoke-WithoutProgress { 
 
+                try {
+                
                 # download Microsoft Security Baselines directly from their servers
-                Invoke-WebRequest -Uri "https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/Windows%2011%20version%2022H2%20Security%20Baseline.zip" -OutFile "Windows1122H2SecurityBaseline.zip"
+                Invoke-WebRequest -Uri "https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/Windows%2011%20version%2022H2%20Security%20Baseline.zip" -OutFile ".\Windows1122H2SecurityBaseline.zip" -ErrorAction Stop
 
                 # Download LGPO program from Microsoft servers
-                Invoke-WebRequest -Uri "https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/LGPO.zip" -OutFile "LGPO.zip"
+                Invoke-WebRequest -Uri "https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/LGPO.zip" -OutFile ".\LGPO.zip" -ErrorAction Stop
 
                 # Download the Group Policies of Windows Hardening script from GitHub
-                Invoke-WebRequest -Uri 'https://github.com/HotCakeX/Harden-Windows-Security/raw/main/GroupPolicy/Security-Baselines-X.zip' -OutFile 'Security-Baselines-X.zip'
-                  
+                Invoke-WebRequest -Uri "https://github.com/HotCakeX/Harden-Windows-Security/raw/main/GroupPolicy/Security-Baselines-X.zip" -OutFile ".\Security-Baselines-X.zip" -ErrorAction Stop
+               
+                }
+                catch {
+                    Write-Host "The required files couldn't be downloaded, skipping this category..." -ForegroundColor Red
+                    break
+                }
+
+
+
             }
               
             # unzip Microsoft Security Baselines file
-            Expand-Archive -Path .\Windows1122H2SecurityBaseline.zip -DestinationPath .\
+            Expand-Archive -Path .\Windows1122H2SecurityBaseline.zip -DestinationPath .\ -Force
 
             # unzip the LGPO file
-            Expand-Archive -Path .\LGPO.zip -DestinationPath .\
+            Expand-Archive -Path .\LGPO.zip -DestinationPath .\ -Force
 
             # unzip the Security-Baselines-X file which contains Windows Hardening script Group Policy Objects
-            expand-Archive -Path .\Security-Baselines-X.zip
+            expand-Archive -Path .\Security-Baselines-X.zip -DestinationPath .\Security-Baselines-X\ -Force
 
             # Copy LGPO.exe from its folder to Microsoft Security Baseline folder in order to get it ready to be used by PowerShell script
             Copy-Item -Path ".\LGPO_30\LGPO.exe" -Destination ".\Windows-11-v22H2-Security-Baseline\Scripts\Tools"
 
             # Change directory to the Security Baselines folder
-            Push-Location .\Windows-11-v22H2-Security-Baseline\Scripts
+            Push-Location ".\Windows-11-v22H2-Security-Baseline\Scripts\"
 
-            # Run the official PowerShell script included in the Microsoft Security Baseline file we downloaded from official servers
+            # Run the official PowerShell script included in the Microsoft Security Baseline file we downloaded from Microsoft servers
             .\Baseline-LocalInstall.ps1 -Win11NonDomainJoined
 
             # Change current working directory back to where we were  
             Pop-Location
 
             # Change current working directory to the LGPO's folder
-            Push-Location .\LGPO_30
+            Push-Location ".\LGPO_30"
 
             # Import settings from Security Baselines X Registry Policy file into Computer (Machine) Configuration.
             Write-Host "Importing Security Baselines X Machine wide policies" -ForegroundColor Green
@@ -349,10 +368,8 @@ else {
 
             # Apply the Security Baselines X security template into Computer (Machine) Configuration
             Write-Host "Importing Security Baselines X Security Policies" -ForegroundColor Green
-            .\Lgpo.exe /s "..\Security-Baselines-X\GPOX\DomainSysvol\GPO\Machine\microsoft\windows nt\SecEdit\GptTmpl.inf"
-
-
-
+            .\LGPO.exe /s "..\Security-Baselines-X\GPOX\DomainSysvol\GPO\Machine\microsoft\windows nt\SecEdit\GptTmpl.inf"
+            
 
 
             # This PowerShell script can be used to find out if the DMA Protection is ON \ OFF.
@@ -411,44 +428,25 @@ else {
 
             
             # Enables or disables DMA protection from Bitlocker Countermeasures based on the status of Kernel DMA protection.
-            if ($bootDMAProtection) {
- 
+            if ($bootDMAProtection) { 
                 
                 Write-Host "Kernel DMA protection is enabled on the system, disabling Bitlocker DMA protection." -ForegroundColor Blue
                 .\LGPO.exe /m "..\Security-Baselines-X\Bitlocker DMA\Bitlocker DMA Countermeasure OFF\Registry.pol"
-
                            
             }
             else {
 
                 Write-Host "Kernel DMA protection is unavailable on the system, enabling Bitlocker DMA protection." -ForegroundColor Blue
                 .\LGPO.exe /m "..\Security-Baselines-X\Bitlocker DMA\Bitlocker DMA Countermeasure ON\Registry.pol"
-
-                           
+                                           
             }
 
+            # Change the current working directory back to where we started
+            Pop-Location;Pop-Location
 
-            # Change the current working directory back to where we were
-            Pop-Location
-
-            # Delete Microsoft Security Baselines zip file
-            Remove-Item -Path .\Windows1122H2SecurityBaseline.zip -Force
-
-            # Delete Microsoft Security Baselines folder where we extracted the zip file
-            remove-item -Path .\Windows-11-v22H2-Security-Baseline -Recurse -Force
-
-            # Delete the LGPO zip file
-            remove-item -Path .\LGPO_30 -Recurse -Force
-
-            # Delete the LGPO folder where we extracted the zip file
-            Remove-Item -Path .\LGPO.zip -Force
-
-            # Delete the Windows Hardening script Group Policy Objects zip file
-            remove-item .\Security-Baselines-X -Recurse -Force
-
-            # Delete the Windows Hardening script Group Policy Objects folder we extracted the zip file
-            remove-item .\Security-Baselines-X.zip -Force
-
+            # delete our working directory
+            remove-item -Path ".\HardeningXStuff" -Recurse -Force
+           
 
  
         } "No" { break }

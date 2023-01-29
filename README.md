@@ -682,6 +682,7 @@ _If there is any other verification method in your mind that I haven't mentioned
   - [Security Update Guide:](https://msrc.microsoft.com/update-guide) The Microsoft Security Response Center (MSRC) investigates all reports of security vulnerabilities affecting Microsoft products and services, and provides the information here as part of the ongoing effort to help you manage security risks and help keep your systems protected.
   - [Microsoft Security Response Center Blog](https://msrc-blog.microsoft.com/)
 - [Microsoft Security Blog](https://www.microsoft.com/en-us/security/blog/)
+- [Microsoft Podcasts](https://news.microsoft.com/podcasts/)
 
 
 

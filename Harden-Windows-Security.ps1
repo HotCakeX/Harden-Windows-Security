@@ -6,7 +6,7 @@
 
 .AUTHOR HotCakeX
 
-.COMPANYNAME HotCakeX Corp.
+.COMPANYNAME SpyNetGirl
 
 .COPYRIGHT 2023
 

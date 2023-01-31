@@ -436,7 +436,8 @@ Here is [the official reference](https://learn.microsoft.com/en-us/windows/secur
 - 🟩 [Makes sure Virtualization-Based Security is Enabled](https://learn.microsoft.com/en-us/windows/security/threat-protection/device-guard/enable-virtualization-based-protection-of-code-integrity)
   - [Validate enabled Windows Defender Device Guard hardware-based security features](https://learn.microsoft.com/en-us/windows/security/threat-protection/device-guard/enable-virtualization-based-protection-of-code-integrity#validate-enabled-windows-defender-device-guard-hardware-based-security-features)
 - 🟩 [Requires Secure boot and DMA protection for Virtualization-Based Security](https://learn.microsoft.com/en-us/windows/security/information-protection/kernel-dma-protection-for-thunderbolt)
-  - Secure boot has 2 parts, part 1 is enforced using the Group Policy by this script, but for part 2, you need to [enable Secure Boot in your UEFI firmware settings](https://support.microsoft.com/en-us/windows/windows-11-and-secure-boot-a8ff1202-c0d9-42f5-940f-843abef64fad) if it's not enabled by default.
+  - Secure boot has 2 parts, part 1 is enforced using the Group Policy by this script, but for part 2, you need to [enable Secure Boot in your UEFI firmware settings](https://support.microsoft.com/en-us/windows/windows-11-and-secure-boot-a8ff1202-c0d9-42f5-940f-843abef64fad) **if** it's not enabled by default (which is the case on older hardware).
+  - [(Kernel) DMA protection hardware requirements](https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/oem-kernel-dma-protection)
 - 🟩 Turns on UEFI lock for Virtualization-Based Security
 - 🟩 Makes sure Virtualization-based protection of Code Integrity policies is Enabled
 - 🟩 Turns on UEFI lock for virtualization-based protection of Code Integrity policies

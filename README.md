@@ -248,30 +248,9 @@ Here is a screenshot:
 
 </details>    
 
--------
 
  <br> 
- 
-* [Virus Total scan resaults of Security-Baselines-X.zip](https://www.virustotal.com/gui/file/38b55080f0ab749ab32e2dce6b059768f9115662d9261163fb087d84c44a6678/details)
-* `SHA256` Hash of Security-Baselines-X.zip:
-```
-38B55080F0AB749AB32E2DCE6B059768F9115662D9261163FB087D84C44A6678
-```
-* `SHA512` Hash of Security-Baselines-X.zip:
-```
-5E1E74B5D308AB6A683281A6281A892F3E0126FBB4ACD3983EEDAE68DFCD561BE0538C84EFDE5908C3E2F167E908BEC3FC990F2BA3EF7166719187377B886DAC
-```
-
-<details><summary>✨ View Virus Total Security Graph</summary>
-
-<a href="https://www.virustotal.com/graph/embed/g6c49a695a5714f19bbb4934a430791dbeb71d28967114c389dee11fdc3b3baf0">![g6c49a695a5714f19bbb4934a430791dbeb71d28967114c389dee11fdc3b3baf0](https://user-images.githubusercontent.com/118815227/216070713-af8677ac-fe94-4485-9e2e-c1339a788ae4.png)</a>
-
-
-</details>
-
-        
-
- 
+      
  <br> 
 
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>

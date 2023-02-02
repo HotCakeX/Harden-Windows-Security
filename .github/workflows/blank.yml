@@ -14,4 +14,4 @@ jobs:
         with:
           vt_api_key: ${{ secrets.VTAPI }}
           files: |
-            .\GroupPolicy\**
+            .\GroupPolicy\

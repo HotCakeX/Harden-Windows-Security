@@ -1,0 +1,29 @@
+name: Renew File Hash
+on: [workflow_dispatch]
+
+jobs:
+    build:
+      name: Run Script
+      runs-on: windows-latest
+      steps:
+        - uses: actions/checkout@v3
+        - name: HashRenewal
+          run: |
+                .\Workflowstuff\Hashrenewal
+                 
+         
+         
+                 git branch temp-branch
+                 git checkout master
+                 git merge temp-branch
+                 git push origin master
+            
+                 git config --global user.email "118815227+HotCakeX@users.noreply.github.com"
+                 git config --global user.name "HotCakeX"
+                 git add "README.md"
+                 git commit -m "updating file"
+                 git push
+          
+          
+          shell: pwsh
+

@@ -647,13 +647,13 @@ Trust is very important; you shouldn't blindly trust me nor any other 3rd party 
 * `SHA256` Hash of Security-Baselines-X.zip:
 <!-- SHA-256-Hash:START -->
 ```
-111111111111
+38B55080F0AB749AB32E2DCE6B059768F9115662D9261163FB087D84C44A6678
 ```
 <!-- SHA-256-Hash:END -->
 * `SHA512` Hash of Security-Baselines-X.zip:
 <!-- SHA-512-Hash:START -->
 ```
-1111111111111111
+5E1E74B5D308AB6A683281A6281A892F3E0126FBB4ACD3983EEDAE68DFCD561BE0538C84EFDE5908C3E2F167E908BEC3FC990F2BA3EF7166719187377B886DAC
 ```
 <!-- SHA-512-Hash:END -->
 
@@ -670,8 +670,8 @@ _if the output is `True`, then the file is safe as Virus Total website scanned._
 ```PowerShell
 $WebClient = [System.Net.WebClient]::new()
 $PackageURL = 'https://github.com/HotCakeX/Harden-Windows-Security/raw/main/GroupPolicy/Security-Baselines-X.zip'
-$publishedHashSHA256 = '1111111111111111'
-$publishedHashSHA512 = '1111111111111111111111'
+$publishedHashSHA256 = '38B55080F0AB749AB32E2DCE6B059768F9115662D9261163FB087D84C44A6678'
+$publishedHashSHA512 = '5E1E74B5D308AB6A683281A6281A892F3E0126FBB4ACD3983EEDAE68DFCD561BE0538C84EFDE5908C3E2F167E908BEC3FC990F2BA3EF7166719187377B886DAC'
 $SHA256Hash = Get-FileHash -Algorithm SHA256 -InputStream ($WebClient.OpenRead($PackageURL))
 $SHA512Hash = Get-FileHash -Algorithm SHA512 -InputStream ($WebClient.OpenRead($PackageURL))
 $SHA256Hash.Hash -eq $publishedHashSHA256 -and $SHA512Hash.Hash -eq $publishedHashSHA512

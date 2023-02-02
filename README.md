@@ -187,9 +187,10 @@ A security baseline is a group of Microsoft-recommended configuration settings t
 
 This is the `.zip` file that I've created and [uploaded to this GitHub repository](https://github.com/HotCakeX/Harden-Windows-Security/tree/main/GroupPolicy). it contains the Group Policy Object that applies security measures explained in this page.
 
-- [**How is Group Policy used in this PowerShell script?**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Group-Policy#how-is-group-policy-used-in-this-powershell-script)
-- [**How is Security Baseline X created and maintained?**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Group-Policy#how-is-security-baseline-x-created-and-maintained)
-- [**How to verify security-baselines-x.zip file and 100% trust it?**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Group-Policy#how-to-verify-security-baselines-xzip-file-and-100-trust-it)
+- [How is Group Policy used in this PowerShell script?](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Group-Policy#how-is-group-policy-used-in-this-powershell-script)
+- [How is Security Baseline X created and maintained?](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Group-Policy#how-is-security-baseline-x-created-and-maintained)
+- [How to verify security-baselines-x.zip file and 100% trust it?](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Group-Policy#how-to-verify-security-baselines-xzip-file-and-100-trust-it)
+- <a href="#Trust">View Trust section for more info</a>
 
 This script also undoes 3 policies set by Microsoft Security Baseline because they can cause some inconvenience.
 
@@ -250,8 +251,13 @@ Here is a screenshot:
 
 
  <br> 
-      
- <br> 
+
+
+
+
+<br>
+
+
 
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
@@ -629,10 +635,60 @@ Trust is very important; you shouldn't blindly trust me nor any other 3rd party 
 - There is no unexpected behavior involved.
 - You can even fork this repository, 100% verify it until that point in time, then verify any subsequent changes/updates I push to this repository, **at your own pace** (using `Sync fork` and `Compare` options on your fork), and if you are happy with the changes, allow it to be merged with your own copy/fork on your GitHub account.
 
-### [How to verify security-baselines-x.zip file and 100% trust it?](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Group-Policy#how-to-verify-security-baselines-xzip-file-and-100-trust-it)
+#### [How to verify security-baselines-x.zip file and 100% trust it?](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Group-Policy#how-to-verify-security-baselines-xzip-file-and-100-trust-it)
 
 
-_If there is any other verification method in your mind that I haven't mentioned or applied, please let me know._
+<br>
+<br>
+
+
+ 
+* [Virus Total scan resaults of Security-Baselines-X.zip](https://www.virustotal.com/gui/file/38b55080f0ab749ab32e2dce6b059768f9115662d9261163fb087d84c44a6678/details)
+* `SHA256` Hash of Security-Baselines-X.zip:
+<!-- SHA-256-Hash:START -->
+```
+111111111111
+```
+<!-- SHA-256-Hash:END -->
+* `SHA512` Hash of Security-Baselines-X.zip:
+<!-- SHA-512-Hash:START -->
+```
+1111111111111111
+```
+<!-- SHA-512-Hash:END -->
+
+
+<br>
+
+
+
+
+#### To quickly and easily verify the file hashes, without even downloading the zip file, run this in PowerShell:
+_if the output is `True`, then the file is safe as Virus Total website scanned._
+
+<!-- Hash-Verification:START -->
+```PowerShell
+$WebClient = [System.Net.WebClient]::new()
+$PackageURL = 'https://github.com/HotCakeX/Harden-Windows-Security/raw/main/GroupPolicy/Security-Baselines-X.zip'
+$publishedHashSHA256 = '1111111111111111'
+$publishedHashSHA512 = '1111111111111111111111'
+$SHA256Hash = Get-FileHash -Algorithm SHA256 -InputStream ($WebClient.OpenRead($PackageURL))
+$SHA512Hash = Get-FileHash -Algorithm SHA512 -InputStream ($WebClient.OpenRead($PackageURL))
+$SHA256Hash.Hash -eq $publishedHashSHA256 -and $SHA512Hash.Hash -eq $publishedHashSHA512
+```
+<!-- Hash-Verification:END -->
+
+_Don't know what those commands are? [check this Microsoft Learn article](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/get-filehash?view=powershell-7.3)_
+
+
+<br>
+
+
+
+ <br> 
+
+
+
 
 <p align="right"><a href="#readme-top">💡(back to top)</a></p>
 

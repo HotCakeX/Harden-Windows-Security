@@ -1,31 +1,17 @@
-name: Virus Total Upload
+name: released
 
 on:
-  push:
-    paths:
-      - GroupPolicy/**
-
+  release:
+    types: [published]
+  workflow_dispatch:
 jobs:
-  build:
-    runs-on: windows-latest
+  virustotal:
+    runs-on: ubuntu-latest
     steps:
-      -
-        name: Checkout
-        uses: actions/checkout@v3
-      -
-        name: Set up Go
-        uses: actions/setup-go@v3
-      -
-        name: Build
-        run: |
-          GOOS=windows GOARCH=386 go build -o ./ghaction-virustotal-win32.exe -v -ldflags "-s -w"
-          GOOS=windows GOARCH=amd64 go build -o ./ghaction-virustotal-win64.exe -v -ldflags "-s -w"
       -
         name: VirusTotal Scan
         uses: crazy-max/ghaction-virustotal@v3
         with:
           vt_api_key: ${{ secrets.VTAPI }}
           files: |
-            ./ghaction-virustotal-win32.exe
-            ./ghaction-virustotal-win64.exe
-            ./GroupPolicy/**
+            .\GroupPolicy\

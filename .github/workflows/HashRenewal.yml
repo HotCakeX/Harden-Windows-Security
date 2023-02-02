@@ -1,5 +1,8 @@
 name: Renew File Hash
-on: [workflow_dispatch]
+on:
+  push:
+    paths:
+      - GroupPolicy/**
 
 jobs:
     build:

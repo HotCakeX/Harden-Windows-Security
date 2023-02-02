@@ -7,10 +7,11 @@ jobs:
       runs-on: windows-latest
       steps:
         - uses: actions/checkout@v3
-        - name: HashRenewal
+        - name: Script
           run: |
+          
                 .\Workflowstuff\Hashrenewal
-                 
+                                 
          
          
                  git branch temp-branch
@@ -26,4 +27,5 @@ jobs:
           
           
           shell: pwsh
+
 

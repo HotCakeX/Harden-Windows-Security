@@ -192,7 +192,7 @@ This is the `.zip` file that I've created and [uploaded to this GitHub repositor
 - [How to verify security-baselines-x.zip file and 100% trust it?](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Group-Policy#how-to-verify-security-baselines-xzip-file-and-100-trust-it)
 - <a href="#Trust">View Trust section for more info</a>
 
-This script also undoes 3 policies set by Microsoft Security Baseline because they can cause some inconvenience.
+This script also undoes 4 policies set by Microsoft Security Baseline because they can cause some inconvenience. this is optional and you can skip these 4 overrides when running this script.
 
 <details><summary>▶️ Click/Tap here to see them</summary>
 
@@ -243,7 +243,7 @@ Here is a screenshot:
 
 ![Firewall](https://user-images.githubusercontent.com/118815227/214886150-0acca5b6-5e38-49c4-b0ef-99b1eb832f4f.png)
 
-
+* 4. Deny write access to removable drives not protected by Bitlocker. Disabling this policy because it can cause inconvenience and if your flash drive is Bitlocker encrypted, It can't be used as a bootable Windows installation USB flash drive.
 
 <h1> <br> </h1>
 
@@ -307,10 +307,8 @@ Here is a screenshot:
   - The script [enables Smart App Control](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/windows-defender-application-control#wdac-and-smart-app-control), it will ask for confirmation before enabling it.
   - Once you turn Smart App Control off, it can't be turned on without resetting or reinstalling Windows.
 
-- 🟣 There is another Security feature, for Ransomware Protection, that's been in Windows for a while and it's called [Controlled Folder Access](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/enable-controlled-folders). **This script does not enable it. the default state is disabled.**
-  - [Protect important folders with controlled folder access](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/controlled-folders): Controlled folder access helps protect your valuable data from malicious apps and threats, such as ransomware. Controlled folder access protects your data by checking apps against a list of known, trusted apps.
+- 🟩 Enables [Controlled Folder Access](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/enable-controlled-folders). It [helps protect your valuable data](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/controlled-folders) from malicious apps and threats, such as ransomware. Controlled folder access protects your data by checking apps against a list of known, trusted apps. Due to the recent wave of global ransomware attacks, it is important to use this feature to protect your valuables files, specially OneDrive folders.
   - If it blocks a program from accessing one of your folders it protects, and you absolutely trust that program, then you can add it to exclusion list using Windows Security (Defender) GUI or PowerShell. you can also query the list of allowed apps using PowerShell (commands below). with these commands, you can backup your personalized list of allowed apps, that are relevant to your system, and restore them in case you clean install your Windows.
-
 
 ```PowerShell
 # Add multiple programs to the exclusion list of Controlled Folder Access
@@ -323,7 +321,10 @@ Set-MpPreference -ControlledFolderAccessAllowedApplications 'C:\Program Files\Ap
 # Get the list of all allowed apps
 $(get-MpPreference).ControlledFolderAccessAllowedApplications
 ```
-
+- 🔶 Enabling [Mandatory ASLR,](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/enable-exploit-protection?view=o365-worldwide) 🔻It might cause compatibility issues🔺 for some unofficial 3rd party portable programs, such as Photoshop portable, Telegram portable etc. or some software installers.
+  - You can add Mandatory ASLR override for a trusted program using the PowerShell command below or in the Program Settings section of Exploit Protection in Windows Security (Defender) app.
+  - `Set-ProcessMitigation -Name "C:\TrustedApp.exe" -Disable ForceRelocateImages`
+  - [There are more options for Exploit Protection](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/enable-exploit-protection?view=o365-worldwide) but enabling them requires extensive reviewing by users because mixing them up can cause a lot of compatibility issues.
 
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
@@ -354,10 +355,7 @@ Such software behaviors are sometimes seen in legitimate applications. However, 
 
   - Check out <a href="#Lock-Screen">Lock Screen</a> category for more info about the recovery password.
 
-  - Also check out <a href="#Miscellaneous-Configurations">Miscellaneous Configurations</a> category for more info about how Bitlocker protects your device and data against an Attacker with skill and lengthy physical access, which is **worst-case scenario**.
   - To have even more security than what the script provides, you can utilize a [Startup key in addition to the other 3 key protectors](https://learn.microsoft.com/en-us/windows/security/information-protection/bitlocker/bitlocker-countermeasures#pre-boot-authentication) (TPM, Startup PIN and Recovery password). with this method, part of the encryption key is stored on a USB flash drive, and a PIN is required to authenticate the user to the TPM. This configuration **provides multifactor authentication** so that if the USB key is lost or stolen, it can't be used for access to the drive, because the correct PIN is also required.
-
-
 
 
 - BitLocker will bring you a real security against the theft of your device if you strictly abide by the following basic rules:
@@ -374,6 +372,14 @@ Refer to this [official documentation about the countermeasures of Bitlocker](ht
 - 🟩 Disallow standard (non-Administrator) users from changing the Bitlocker Startup PIN or password
 
 - 🟩 [Allow Enhanced PINs for startup](https://learn.microsoft.com/en-us/windows/security/information-protection/bitlocker/bitlocker-group-policy-settings#allow-enhanced-pins-for-startup)
+
+- 🟩 Enables Hibernate, adds Hibernate to Start menu's power options and disables Sleep. this feature is only 🔺recommended for High-Risk Environments.🔻
+This is to prevent an 🔺**Attacker with skill and lengthy physical access to your computer**🔻**which is the Worst-case Scenario**
+
+  - Attack Scenario: Targeted attack with plenty of time; this attacker will open the case, will solder, and will use sophisticated hardware or software. Of course, [Bitlocker and configurations](https://learn.microsoft.com/en-us/windows/security/information-protection/bitlocker/bitlocker-countermeasures#attacker-with-skill-and-lengthy-physical-access) applied by this script will protect you against that.
+  - [Power states S1-S3 will be disabled](https://learn.microsoft.com/en-us/windows/win32/power/system-power-states#sleep-state-s1-s3) in order to completely disable Sleep, doing so also removes the Sleep option from Start menu and even using commands to put the computer to sleep won't work. You will have to restart your device for the changes to take effect.
+- 🔶 [sets Hibernate to full](https://learn.microsoft.com/en-us/windows/win32/power/system-power-states#hibernation-file-types)
+
 
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
@@ -455,6 +461,8 @@ Here is [the official reference](https://learn.microsoft.com/en-us/windows/secur
 - 🟩 [Enables System Guard Secure Launch and SMM protection](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-system-guard/system-guard-secure-launch-and-smm-protection#registry)
   - [How to verify System Guard Secure Launch is configured and running](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-system-guard/system-guard-secure-launch-and-smm-protection#how-to-verify-system-guard-secure-launch-is-configured-and-running)
 - 🟩 [Kernel Mode Hardware Enforced Stack Protection](https://techcommunity.microsoft.com/t5/microsoft-security-baselines/windows-11-version-22h2-security-baseline/ba-p/3632520)
+- 🟩 Enables UEFI Lock for Local Security Authority (LSA) process Protection. [it is turned on by default on new Windows 11 installations](https://learn.microsoft.com/en-us/windows-server/security/credentials-protection-and-management/configuring-additional-lsa-protection#automatic-enablement) but not with UEFI Lock. When this setting is used with UEFI lock and Secure Boot, additional protection is achieved because disabling its registry key will have no effect.
+  - when this feature is on, a new option called "Local Security Authority Protection" appears in Windows Security GUI => Device Security => Core Isolation
 
 <br>
 <br>
@@ -546,18 +554,6 @@ These are configurations that are typically 🔺recommended in High-Risk Environ
 
 - 🟩 Disabling location service system wide. websites and apps won't be able to use your precise location, however they will still be able to detect your location using your IP address.
 
-- 🟩 Enables Hibernate, adds Hibernate to Start menu's power options and disables Sleep. this feature is only 🔺recommended for High-Risk Environments.🔻
-This is to prevent an 🔺**Attacker with skill and lengthy physical access to your computer**🔻**which is the Worst-case Scenario**
-
-  - Attack Scenario: Targeted attack with plenty of time; this attacker will open the case, will solder, and will use sophisticated hardware or software. Of course, [Bitlocker and configurations](https://learn.microsoft.com/en-us/windows/security/information-protection/bitlocker/bitlocker-countermeasures#attacker-with-skill-and-lengthy-physical-access) applied by this script will protect you against that.
-  - [Power states S1-S3 will be disabled](https://learn.microsoft.com/en-us/windows/win32/power/system-power-states#sleep-state-s1-s3) in order to completely disable Sleep, doing so also removes the Sleep option from Start menu and even using commands to put the computer to sleep won't work. You will have to restart your device for the changes to take effect.
-- 🔶 [sets Hibernate to full](https://learn.microsoft.com/en-us/windows/win32/power/system-power-states#hibernation-file-types)
-
-- 🔶 Enabling [Mandatory ASLR,](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/enable-exploit-protection?view=o365-worldwide) 🔻It might cause compatibility issues🔺 for some unofficial 3rd party portable programs, such as Photoshop portable, Telegram portable etc. or some software installers.
-  - You can add Mandatory ASLR override for a trusted program using the PowerShell command below or in the Program Settings section of Exploit Protection in Windows Security (Defender) app.
-  - `Set-ProcessMitigation -Name "C:\TrustedApp.exe" -Disable ForceRelocateImages`
-  - [There are more options for Exploit Protection](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/enable-exploit-protection?view=o365-worldwide) but enabling them requires extensive reviewing by users because mixing them up can cause a lot of compatibility issues.
-
 - 🟩 Enables [`svchost.exe` mitigations.](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-servicecontrolmanager) built-in system services hosted in `svchost.exe` processes will have stricter security policies enabled on them. These stricter security policies include a policy requiring all binaries loaded in these processes to be signed by Microsoft, and a policy disallowing dynamically generated code.
   - Requires Business (e.g. [Windows 11 pro for Workstations](https://www.microsoft.com/en-us/windows/business/windows-11-pro-workstations)), [Enterprise](https://www.microsoft.com/en-us/microsoft-365/windows/windows-11-enterprise) or [Education](https://www.microsoft.com/en-us/education/products/windows) Windows licenses
 
@@ -576,9 +572,6 @@ This is to prevent an 🔺**Attacker with skill and lengthy physical access to y
 - 🔶 [Enables all Windows users to use Hyper-V and Windows Sandbox](https://learn.microsoft.com/en-us/archive/blogs/virtual_pc_guy/why-do-you-have-to-elevate-powershell-to-use-hyper-v-cmdlets) by adding all Windows users to the "Hyper-V Administrators" security group, by default only Administrators can use Hyper-V or Windows Sandbox. 
 
 - 🔶 Changes Windows time sync interval from the default every 7 days to every 4 days (= every 345600 seconds)
-
-- 🟩 Enables UEFI Lock for Local Security Authority (LSA) process Protection. [it is turned on by default on new Windows 11 installations](https://learn.microsoft.com/en-us/windows-server/security/credentials-protection-and-management/configuring-additional-lsa-protection#automatic-enablement) but not with UEFI Lock. When this setting is used with UEFI lock and Secure Boot, additional protection is achieved because disabling its registry key will have no effect.
-  - when this feature is on, a new option called "Local Security Authority Protection" appears in Windows Security GUI => Device Security => Core Isolation
 
 
 

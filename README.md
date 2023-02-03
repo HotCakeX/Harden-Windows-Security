@@ -61,7 +61,7 @@
 > if there are multiple Windows user accounts in your computer, it's recommended to run this script in each of them, **without administrator privileges**, because non-admin commands only apply to the current user and are not machine wide.
 
 > **Note**
-> There are 4 items tagged with **#TopSecurity** that can cause difficulties. when you run this script, you will have an option to enable them if you want to. press `Control + F` and search for `#TopSecurity` on this page to find those security measures.
+> There are 4 items tagged with **#TopSecurity** that can cause difficulties. When you run this script, you will have an option to enable them if you want to. Press `Control + F` and search for `#TopSecurity` on this page to find those security measures.
  
 > **Note**
 > [Windows Home edition is not supported.](https://www.microsoft.com/en-us/windows/compare-windows-10-home-vs-pro)

@@ -313,7 +313,7 @@ else {
 
 
     # create our working directory                           
-    New-Item -ItemType Directory -Path "$env:TEMP\HardeningXStuff\" -Force
+    New-Item -ItemType Directory -Path "$env:TEMP\HardeningXStuff\" -Force 1> $null
 
     # working directory assignment
     $workingDir = "$env:TEMP\HardeningXStuff\"
@@ -1533,8 +1533,8 @@ https://stackoverflow.com/questions/48809012/compare-two-credentials-in-powershe
     # =========================================================================================================================
     #endregion Country-IP-Blocking
 
-
-    &$cleanUp
+    # make sure there is no leftover
+    Set-Location $env:user; remove-item -Recurse "$env:TEMP\HardeningXStuff\" -Force
     
 } # End of Admin test function
 
@@ -1683,9 +1683,10 @@ switch (Select-Option -Options "Yes", "No", "Exit" -Message "Run Non-Admin categ
         "################################################################################################`r`n"
         Write-Host $infomsg -ForegroundColor Cyan
 
-        
+   
+      
     } "No" { break }
-    "Exit" { exit }
+    "Exit" { break }
 }
 # =========================================================================================================================
 # ====================================================End of Non-Admin Commands============================================

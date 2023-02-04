@@ -326,7 +326,7 @@ else {
     Set-Location $workingDir
 
     # Clean up script block
-    $cleanUp = { Set-Location $env:user; remove-item -Recurse "$env:TEMP\HardeningXStuff\" -Force; exit }
+    $cleanUp = { Set-Location $HOME; remove-item -Recurse "$env:TEMP\HardeningXStuff\" -Force; exit }
 
 
 
@@ -1349,7 +1349,7 @@ https://stackoverflow.com/questions/48809012/compare-two-credentials-in-powershe
     # =========================================================================================================================
     # ============================================Top Security Measures========================================================
     # =========================================================================================================================
-    switch (Select-Option -Options "Yes", "No", "Exit" -Message "Apply Top Security Measures ?") {
+    switch (Select-Option -Options "Yes", "No", "Exit" -Message "Apply Top Security Measures ? Make sure you've read the GitHub repository") {
         "Yes" { 
 
             
@@ -1538,7 +1538,7 @@ https://stackoverflow.com/questions/48809012/compare-two-credentials-in-powershe
     #endregion Country-IP-Blocking
 
     # make sure there is no leftover
-    Set-Location $env:user; remove-item -Recurse "$env:TEMP\HardeningXStuff\" -Force
+    Set-Location $HOME; remove-item -Recurse "$env:TEMP\HardeningXStuff\" -Force
     
 } # End of Admin test function
 

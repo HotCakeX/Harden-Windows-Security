@@ -165,11 +165,8 @@ $infomsg = "`r`n" +
 Write-Host $infomsg -ForegroundColor Green
 
 
-
 # Set execution policy temporarily to bypass for the current PowerShell session only
 Set-ExecutionPolicy Bypass -Scope Process
-
-
 
 # check if user's OS is Windows Home edition
 if (((Get-WmiObject Win32_OperatingSystem).OperatingSystemSKU) -eq "101") {
@@ -196,7 +193,6 @@ function Select-Option {
     }
     return $Selected
 }
-
 
 
 
@@ -253,10 +249,6 @@ function ModifyRegistry {
 
 
 
-
-
-
-
 # https://devblogs.microsoft.com/scripting/use-function-to-determine-elevation-of-powershell-console/
 # Function to test if current session has administrator privileges
 Function Test-IsAdmin {
@@ -266,8 +258,6 @@ Function Test-IsAdmin {
 
     $principal.IsInRole([Security.Principal.WindowsBuiltinRole]::Administrator)
 }
-
-
 
 
 # Hiding invoke-webrequest progress because it creates lingering visual effect on PowerShell console for some reason
@@ -297,27 +287,14 @@ $null = New-Module {
     }
 }
 
-
-
-
-
-
-
-
-
 #endregion functions
 
-
 if (-NOT (Test-IsAdmin))
-
 { write-host "Skipping commands that require Administrator privileges" -ForegroundColor Magenta }
-
 else {
 
-
-
     # create our working directory                           
-    New-Item -ItemType Directory -Path "$env:TEMP\HardeningXStuff\" -Force 1> $null
+    New-Item -ItemType Directory -Path "$env:TEMP\HardeningXStuff\" -Force | Out-Null
 
     # working directory assignment
     $workingDir = "$env:TEMP\HardeningXStuff\"
@@ -327,8 +304,6 @@ else {
 
     # Clean up script block
     $cleanUp = { Set-Location $HOME; remove-item -Recurse "$env:TEMP\HardeningXStuff\" -Force; exit }
-
-
 
     Write-Host "Downloading the required files, Please wait..." -ForegroundColor Yellow
     Invoke-WithoutProgress { 
@@ -349,9 +324,7 @@ else {
             Write-Host "The required files couldn't be downloaded, Make sure you have Internet connection." -ForegroundColor Red
             &$cleanUp   
         }
-
     }
-
 
     # unzip Microsoft Security Baselines file
     Expand-Archive -Path .\Windows1122H2SecurityBaseline.zip -DestinationPath .\ -Force
@@ -363,7 +336,6 @@ else {
     expand-Archive -Path .\Security-Baselines-X.zip -DestinationPath .\Security-Baselines-X\ -Force
 
 
-
     #region Microsoft-Security-Baseline   
     # =========================================================================================================================
     # ================================================Microsoft Security Baseline==============================================
@@ -372,7 +344,6 @@ else {
     switch (Select-Option -Options "Yes", "No", "Exit" -Message "`nApply Microsoft Security Baseline ?") {
         "Yes" {
        
-
             # Copy LGPO.exe from its folder to Microsoft Security Baseline folder in order to get it ready to be used by PowerShell script
             Copy-Item -Path ".\LGPO_30\LGPO.exe" -Destination ".\Windows-11-v22H2-Security-Baseline\Scripts\Tools"
 
@@ -382,9 +353,7 @@ else {
             Write-Host "`nApplying Microsoft Security Baseline" -ForegroundColor Cyan
             # Run the official PowerShell script included in the Microsoft Security Baseline file we downloaded from Microsoft servers
             .\Baseline-LocalInstall.ps1 -Win11NonDomainJoined
-           
-
- 
+            
         } "No" { break }
         "Exit" { &$cleanUp }
     }
@@ -392,10 +361,6 @@ else {
     # ============================================End of Microsoft Security Baselines====================================================
     # =========================================================================================================================
     #endregion Microsoft-Security-Baseline
-
-
-
-
 
  
     #region Windows-Security-Defender
@@ -405,18 +370,14 @@ else {
     switch (Select-Option -Options "Yes", "No", "Exit" -Message "Run Windows Security (Defender) category ?") {
         "Yes" {
  
-
             # Change current working directory to the LGPO's folder
             Set-Location "$workingDir\LGPO_30"
 
             Write-Host "`nApplying Windows Security (Defender) policies" -ForegroundColor Cyan
             .\LGPO.exe /m "..\Security-Baselines-X\Windows Security (Defender) Policies\registry.pol"
         
-
             # Optimizing Network Protection Performance of Windows Defender - this was off by default on Windows 11 insider build 25247
             Set-MpPreference -AllowSwitchToAsyncInspection $True
-
-
             
             switch (Select-Option -Options "Yes", "No", "Exit" -Message "Turn on Smart App Control ?") {
                 "Yes" {
@@ -431,7 +392,6 @@ else {
             # Enable Mandatory ASLR
             set-processmitigation -System -Enable ForceRelocateImages
 
-
         } "No" { break }
         "Exit" { &$cleanUp }
     }
@@ -442,9 +402,6 @@ else {
     #endregion Windows-Security-Defender
 
 
-
-
-
     #region Attack-Surface-Reduction-Rules
     # =========================================================================================================================
     # =========================================Attack Surface Reduction Rules==================================================
@@ -452,14 +409,11 @@ else {
     switch (Select-Option -Options "Yes", "No", "Exit" -Message "Run Attack Surface Reduction Rules category ?") {
         "Yes" {
 
-
             # Change current working directory to the LGPO's folder
             Set-Location "$workingDir\LGPO_30"
 
             Write-Host "`nApplying Attack Surface Reduction rules policies" -ForegroundColor Cyan
             .\LGPO.exe /m "..\Security-Baselines-X\Attack Surface Reduction Rules Policies\registry.pol"
-
-
 
         } "No" { break }
         "Exit" { &$cleanUp }
@@ -469,27 +423,19 @@ else {
     # =========================================================================================================================
     #endregion Attack-Surface-Reduction-Rules
 
-
-
-
-
-
-
-
+    
     #region Bitlocker-Settings
     # =========================================================================================================================
     # ==========================================Bitlocker Settings=============================================================
     # =========================================================================================================================
     switch (Select-Option -Options "Yes", "No", "Exit" -Message "Run Bitlocker category ?") {
-        "Yes" {
-     
+        "Yes" {     
 
             # Change current working directory to the LGPO's folder
             Set-Location "$workingDir\LGPO_30"
 
             Write-Host "`nApplying Bitlocker policies" -ForegroundColor Cyan
             .\LGPO.exe /m "..\Security-Baselines-X\Bitlocker Policies\registry.pol"
-
 
             # This PowerShell script can be used to find out if the DMA Protection is ON \ OFF.
             # The Script will show this by emitting True \ False for On \ Off respectively.
@@ -545,7 +491,6 @@ else {
             # returns true or false depending on whether Kernel DMA Protection is on or off
             $bootDMAProtection = ([SystemInfo.NativeMethods]::BootDmaCheck()) -ne 0
 
-
             # Change current working directory to the LGPO's folder
             Set-Location "$workingDir\LGPO_30"
             
@@ -563,23 +508,10 @@ else {
                                                           
             }
 
-            
-
-
-
-
-
-
-
-
-
             # set-up Bitlocker encryption for OS Drive with TPMandPIN and recovery password keyprotectors and Verify its implementation
             # https://learn.microsoft.com/en-us/powershell/module/bitlocker/remove-bitlockerkeyprotector?view=windowsserver2022-ps
             # Once it's done, it saves the recovery password in a text file in the encrypted drive
             # Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which requires authentication to access.
-
-
-
 
             <#
 https://stackoverflow.com/questions/48809012/compare-two-credentials-in-powershell
@@ -588,8 +520,6 @@ https://stackoverflow.com/questions/48809012/compare-two-credentials-in-powershe
  Safely compares two SecureString objects without decrypting them.
  Outputs $true if they are equal, or $false otherwise.
 #>
-
-
 
             function Compare-SecureString {
                 param(
@@ -623,8 +553,6 @@ https://stackoverflow.com/questions/48809012/compare-two-credentials-in-powershe
                 }
             }
 
-
-
   
             # check, make sure there is no CD/DVD drives in the system, because Bitlocker throws an error when there is
             $CDDVDCheck = (Get-WMIObject -Class Win32_CDROMDrive -Property *).MediaLoaded
@@ -632,7 +560,6 @@ https://stackoverflow.com/questions/48809012/compare-two-credentials-in-powershe
                 Write-Warning "Remove any CD/DVD drives from the system and run the Bitlocker category after that"
                 break
             }
-
 
             # check, make sure Bitlocker isn't in the middle of decryption/encryption operation (on System Drive)
             if ((Get-BitLockerVolume -MountPoint $env:SystemDrive).EncryptionPercentage -ne "100" -and (Get-BitLockerVolume -MountPoint $env:SystemDrive).EncryptionPercentage -ne "0") {
@@ -645,13 +572,9 @@ https://stackoverflow.com/questions/48809012/compare-two-credentials-in-powershe
 
             else {
 
-
-
-
                 # check if Bitlocker is enabled for the system drive
                 if ((Get-BitLockerVolume -MountPoint $env:SystemDrive).ProtectionStatus -eq "on") { 
-                 
-               
+                                
                     $KeyProtectors = (Get-BitLockerVolume -MountPoint $env:SystemDrive).KeyProtector.keyprotectortype
                     # check if TPM, PIN and recovery password are being used with Bitlocker which are the safest settings
                     if ($KeyProtectors -contains 'Tpmpin' -and $KeyProtectors -contains 'recoveryPassword') {
@@ -666,9 +589,7 @@ https://stackoverflow.com/questions/48809012/compare-two-credentials-in-powershe
                             Add-BitLockerKeyProtector -MountPoint $env:SystemDrive -RecoveryPasswordProtector *> "$env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt"
                             Write-Host "TPM and Startup Pin are available but the recovery password is missing, adding it now... `nthe recovery password will be saved in a Text file in $env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt" -ForegroundColor yellow
                             Write-Host "Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which requires authentication to access." -ForegroundColor Blue
-                
-                
-                
+                         
                         }
                 
                         # check if Bitlocker is using recovery password but not TPM and PIN
@@ -676,40 +597,30 @@ https://stackoverflow.com/questions/48809012/compare-two-credentials-in-powershe
             
                             Write-Host "TPM and Start up PIN key protectors are missing but recovery password key protector is in place, `nadding TPM and Start up PIN key protectors now..." -ForegroundColor Magenta
                 
-
-
                             do {
 
                                 $pin1 = $(write-host "Enter a Pin for Bitlocker startup (at least 6 digits)" -ForegroundColor Magenta; Read-Host -AsSecureString)
                                 $pin2 = $(write-host "Confirm your Bitlocker Startup Pin (at least 6 digits)" -ForegroundColor Magenta; Read-Host -AsSecureString)
-                    
-                  
+                                      
                                 $theyMatch = Compare-SecureString $pin1 $pin2
-                     
-                  
+                                       
                                 if ( $theyMatch -and $pin1.Length -gt 5 -and $pin2.Length -gt 5  ) {
                   
-                                    $pin = $pin1
-                  
+                                    $pin = $pin1                  
                                 }
                   
-                                else { Write-Host "the PINs you entered didn't match, try again" -ForegroundColor red }
-                  
+                                else { Write-Host "the PINs you entered didn't match, try again" -ForegroundColor red }                  
                             }
                   
                             until (
                                 $theyMatch -and $pin1.Length -gt 5 -and $pin2.Length -gt 5
                             )
-
-
-
                  
                             try {
 
                                 Add-BitLockerKeyProtector -MountPoint $env:SystemDrive -TpmAndPinProtector -Pin $pin -ErrorAction Stop
                                 Write-Host "PINs matched, enabling TPM and startup PIN now" -ForegroundColor DarkMagenta
-                            }
-    
+                            }    
                             catch {
          
                                 Write-Host "These errors occured, run Bitlocker category again after meeting the requirements" -ForegroundColor Red
@@ -723,7 +634,6 @@ https://stackoverflow.com/questions/48809012/compare-two-credentials-in-powershe
     
      
                 }
-
    
                 else {
                     Write-Host "Bitlocker is Not enabled for the System Drive Drive, activating now..." -ForegroundColor yellow
@@ -732,15 +642,12 @@ https://stackoverflow.com/questions/48809012/compare-two-credentials-in-powershe
 
                         $pin1 = $(write-host "Enter a Pin for Bitlocker startup (at least 6 digits)" -ForegroundColor Magenta; Read-Host -AsSecureString)
                         $pin2 = $(write-host "Confirm your Bitlocker Startup Pin (at least 6 digits)" -ForegroundColor Magenta; Read-Host -AsSecureString)
-
       
                         $theyMatch = Compare-SecureString $pin1 $pin2
-      
-      
+            
                         if ( $theyMatch -and $pin1.Length -gt 5 -and $pin2.Length -gt 5  ) {
       
-                            $pin = $pin1
-      
+                            $pin = $pin1      
                         }
       
                         else { Write-Host "the Pins you entered didn't match, try again" -ForegroundColor red }
@@ -763,24 +670,14 @@ https://stackoverflow.com/questions/48809012/compare-two-credentials-in-powershe
                         $Error
                         break
                     }
-
-
      
                     Add-BitLockerKeyProtector -MountPoint $env:SystemDrive -RecoveryPasswordProtector *> "$env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt" 
                     Resume-BitLocker -MountPoint $env:SystemDrive
                     Write-Host "the recovery password will be saved in a Text file in $env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt `nMake sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which requires authentication to access." -ForegroundColor Blue
                     Write-Host "Bitlocker is now fully and securely enabled for OS drive" -ForegroundColor Green
-            
-             
-     
-
+                     
                 }
-
-
             }
-
-
-
 
             # Enable Bitlocker for all the other drives
 
@@ -793,9 +690,6 @@ https://stackoverflow.com/questions/48809012/compare-two-credentials-in-powershe
 
                     $MountPoint = $_.MountPoint
 
-
-
-
                     if ((Get-BitLockerVolume -MountPoint $MountPoint).EncryptionPercentage -ne "100" -and (Get-BitLockerVolume -MountPoint $MountPoint).EncryptionPercentage -ne "0") {
 
                         $kawai = (Get-BitLockerVolume -MountPoint $MountPoint).EncryptionPercentage
@@ -805,10 +699,6 @@ https://stackoverflow.com/questions/48809012/compare-two-credentials-in-powershe
                     }   
 
                     else {
-
-
-
-
 
                         if ((Get-BitLockerVolume -MountPoint $MountPoint).ProtectionStatus -eq "on") {          
     
@@ -825,33 +715,20 @@ https://stackoverflow.com/questions/48809012/compare-two-credentials-in-powershe
                                 Add-BitLockerKeyProtector -MountPoint $MountPoint -RecoveryPasswordProtector *> "$MountPoint\Drive $($MountPoint.Remove(1)) recovery password.txt";
                                 Enable-BitLockerAutoUnlock -MountPoint $MountPoint
                                 Write-Host "Bitlocker Recovery Password has been added for drive $MountPoint . it will be saved in a Text file in $($MountPoint)\Drive $($MountPoint.Remove(1)) recovery password.txt `nMake sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which requires authentication to access." -ForegroundColor Blue
-   
                             }
-
-
                         }
-
                         else {
 
                             Enable-BitLocker -MountPoint $MountPoint -RecoveryPasswordProtector *> "$MountPoint\Drive $($MountPoint.Remove(1)) recovery password.txt";
                             Enable-BitLockerAutoUnlock -MountPoint $MountPoint
                             Write-Host "Bitlocker has started encrypting drive $MountPoint . recovery password will be saved in a Text file in $($MountPoint)\Drive $($MountPoint.Remove(1)) recovery password.txt `nMake sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which requires authentication to access." -ForegroundColor Blue
-           
-
                         }
-
-
                     }
-
                 }
-
             } # end of if statement for detecting whether there is any non-OS drives
-
-
 
             # Set Hibnernate mode to full
             powercfg /h /type full
-
 
 
         } "No" { break }
@@ -863,17 +740,12 @@ https://stackoverflow.com/questions/48809012/compare-two-credentials-in-powershe
     #endregion Bitlocker-Settings
 
 
-
-
     #region TLS-Security
     # =========================================================================================================================
     # ==============================================TLS Security===============================================================
     # =========================================================================================================================
     switch (Select-Option -Options "Yes", "No", "Exit" -Message "Run TLS Security category ?") {
         "Yes" {
-
-
-
 
             $TLS = [ordered]@{
                 # Disable TLS v1
@@ -922,19 +794,10 @@ https://stackoverflow.com/questions/48809012/compare-two-credentials-in-powershe
             # Disable TLS v1 and v1.1
             ModifyRegistry -HashTable $TLS
 
-
-
-
-
             # Enable TLS_CHACHA20_POLY1305_SHA256 Cipher Suite which is available but not enabled by default in Windows 11
             Enable-TlsCipherSuite -Name "TLS_CHACHA20_POLY1305_SHA256" -Position 0
 
-
-
-
             # disabling weak cipher suites
-
-
             try {
                 # Disable NULL Cipher Suites - 1 
                 Disable-TlsCipherSuite TLS_RSA_WITH_NULL_SHA256
@@ -944,8 +807,7 @@ https://stackoverflow.com/questions/48809012/compare-two-credentials-in-powershe
                 Disable-TlsCipherSuite TLS_PSK_WITH_NULL_SHA384
                 # Disable NULL Cipher Suites - 4
                 Disable-TlsCipherSuite TLS_PSK_WITH_NULL_SHA256
-    
-  
+      
                 Disable-TlsCipherSuite -Name "TLS_RSA_WITH_AES_256_GCM_SHA384"
                 Disable-TlsCipherSuite -Name "TLS_RSA_WITH_AES_128_GCM_SHA256"
                 Disable-TlsCipherSuite -Name "TLS_RSA_WITH_AES_256_CBC_SHA256" 
@@ -961,8 +823,6 @@ https://stackoverflow.com/questions/48809012/compare-two-credentials-in-powershe
                 Write-Host "All weak TLS Cipher Suites have been disabled" -ForegroundColor Magenta
             }
 
-
-
             # Enabling Diffie–Hellman based key exchange algorithms
 
             # TLS_DHE_RSA_WITH_AES_128_GCM_SHA256
@@ -970,23 +830,15 @@ https://stackoverflow.com/questions/48809012/compare-two-credentials-in-powershe
             # https://learn.microsoft.com/en-us/windows/win32/secauthn/tls-cipher-suites-in-windows-11
             Enable-TlsCipherSuite -Name "TLS_DHE_RSA_WITH_AES_128_GCM_SHA256"
 
-
-
             # TLS_DHE_RSA_WITH_AES_128_CBC_SHA
             # Not enabled by default on Windows 11 according to the Microsoft Docs above
             Enable-TlsCipherSuite -Name "TLS_DHE_RSA_WITH_AES_128_CBC_SHA"
-
 
             # TLS_DHE_RSA_WITH_AES_256_CBC_SHA
             # Not enabled by default on Windows 11 according to the Microsoft Docs above
             Enable-TlsCipherSuite -Name "TLS_DHE_RSA_WITH_AES_256_CBC_SHA"
 
-
-
-
-
             # Disabling weak and unsecure ciphers
-
 
             @( # creating these registry keys that have forward slashes in them
                 'SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\DES 56/56', # DES 56-bit 
@@ -1001,7 +853,6 @@ https://stackoverflow.com/questions/48809012/compare-two-credentials-in-powershe
             ) | ForEach-Object {
 ([Microsoft.Win32.RegistryKey]::OpenRemoteBaseKey([Microsoft.Win32.RegistryHive]::LocalMachine, $env:COMPUTERNAME)).CreateSubKey($_)
             }
-
 
             $WeakCiphers = [ordered]@{
                 key1  = @{ #NULL
@@ -1082,7 +933,6 @@ https://stackoverflow.com/questions/48809012/compare-two-credentials-in-powershe
     switch (Select-Option -Options "Yes", "No", "Exit" -Message "Run Lock Screen category ?") {
         "Yes" {
 
-
             # Change current working directory to the LGPO's folder
             Set-Location "$workingDir\LGPO_30"
 
@@ -1092,8 +942,6 @@ https://stackoverflow.com/questions/48809012/compare-two-credentials-in-powershe
             Write-Host "`nApplying Lock Screen Security policies" -ForegroundColor Cyan
             .\LGPO.exe /s "..\Security-Baselines-X\Lock Screen Policies\GptTmpl.inf"
         
-
-
         } "No" { break }
         "Exit" { &$cleanUp }
     }
@@ -1101,8 +949,6 @@ https://stackoverflow.com/questions/48809012/compare-two-credentials-in-powershe
     # ==========================================End of Lock Screen=============================================================
     # =========================================================================================================================
     #endregion Lock-Screen
-
-
 
 
     #region User-Account-Control
@@ -1128,9 +974,6 @@ https://stackoverflow.com/questions/48809012/compare-two-credentials-in-powershe
     #endregion User-Account-Control
 
 
-
-
-
     #region Device-Guard
     # =========================================================================================================================
     # ==========================================Device Guard===================================================================
@@ -1144,7 +987,6 @@ https://stackoverflow.com/questions/48809012/compare-two-credentials-in-powershe
             Write-Host "`nApplying Device Guard policies" -ForegroundColor Cyan
             .\LGPO.exe /m "..\Security-Baselines-X\Device Guard Policies\registry.pol"
 
-
         } "No" { break }
         "Exit" { &$cleanUp }
     }
@@ -1154,17 +996,12 @@ https://stackoverflow.com/questions/48809012/compare-two-credentials-in-powershe
     #endregion Device-Guard
 
 
-
-
-
-
     #region Windows-Firewall
     # =========================================================================================================================
     # ====================================================Windows Firewall=====================================================
     # =========================================================================================================================
     switch (Select-Option -Options "Yes", "No", "Exit" -Message "Run Windows Firewall category ?") {
         "Yes" {
-
 
             # Change current working directory to the LGPO's folder
             Set-Location "$workingDir\LGPO_30"
@@ -1177,8 +1014,6 @@ https://stackoverflow.com/questions/48809012/compare-two-credentials-in-powershe
             Where-Object { $_.RuleGroup -eq "@%SystemRoot%\system32\firewallapi.dll,-37302" -and $_.Direction -eq "inbound" } |
             ForEach-Object { Disable-NetFirewallRule -DisplayName $_.DisplayName }
 
-
-
         } "No" { break }
         "Exit" { exit }
     }
@@ -1188,8 +1023,6 @@ https://stackoverflow.com/questions/48809012/compare-two-credentials-in-powershe
     #endregion Windows-Firewall
 
 
-
-
     #region Optional-Windows-Features
     # =========================================================================================================================
     # =================================================Optional Windows Features===============================================
@@ -1197,10 +1030,8 @@ https://stackoverflow.com/questions/48809012/compare-two-credentials-in-powershe
     switch (Select-Option -Options "Yes", "No", "Exit" -Message "Run Optional Windows Features category ?") {
         "Yes" {
 
-
             # since PowerShell Core (only if installed from Microsoft Store) has problem with these commands, making sure the built-in PowerShell handles them
             # There are Github issues for it already: https://github.com/PowerShell/PowerShell/issues/13866
-
 
             # Disable PowerShell v2 (needs 2 commands)
             PowerShell.exe "if((get-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2).state -eq 'enabled'){disable-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2 -norestart}else{Write-Host 'MicrosoftWindowsPowerShellV2 is already disabled' -ForegroundColor Darkgreen}"
@@ -1227,8 +1058,6 @@ https://stackoverflow.com/questions/48809012/compare-two-credentials-in-powershe
             # Enable Virtual Machine Platform
             PowerShell.exe "if((get-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform).state -eq 'disabled'){enable-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform -norestart}else{Write-Host 'VirtualMachinePlatform is already enabled' -ForegroundColor Darkgreen}"
 
-
-
         } "No" { break }
         "Exit" { &$cleanUp }
     }
@@ -1236,9 +1065,6 @@ https://stackoverflow.com/questions/48809012/compare-two-credentials-in-powershe
     # ==============================================End of Optional Windows Features===========================================
     # =========================================================================================================================
     #endregion Optional-Windows-Features
-
-
-
 
 
     #region Windows-Networking
@@ -1260,7 +1086,6 @@ https://stackoverflow.com/questions/48809012/compare-two-credentials-in-powershe
             # Set the Network Location of all connections to Public
             Get-NetConnectionProfile | Set-NetConnectionProfile -NetworkCategory Public
 
-
         } "No" { break }
         "Exit" { &$cleanUp }
     }
@@ -1270,15 +1095,12 @@ https://stackoverflow.com/questions/48809012/compare-two-credentials-in-powershe
     #endregion Windows-Networking
 
 
-
-
     #region Miscellaneous-Configurations
     # =========================================================================================================================
     # ==============================================Miscellaneous Configurations===============================================
     # =========================================================================================================================
     switch (Select-Option -Options "Yes", "No", "Exit" -Message "Run Miscellaneous Configurations category ?") {
         "Yes" {
-
 
             # Change current working directory to the LGPO's folder
             Set-Location "$workingDir\LGPO_30"
@@ -1318,8 +1140,6 @@ https://stackoverflow.com/questions/48809012/compare-two-credentials-in-powershe
     #endregion Miscellaneous-Configurations
 
 
-
-
     #region Overrides-for-Microsoft-Security-Baseline
     # =========================================================================================================================
     # ============================================Overrides for Microsoft Security Baseline====================================
@@ -1344,21 +1164,18 @@ https://stackoverflow.com/questions/48809012/compare-two-credentials-in-powershe
     #endregion Overrides-for-Microsoft-Security-Baseline
 
 
-
     #region Top-Security-Measures
     # =========================================================================================================================
     # ============================================Top Security Measures========================================================
     # =========================================================================================================================
     switch (Select-Option -Options "Yes", "No", "Exit" -Message "Apply Top Security Measures ? Make sure you've read the GitHub repository") {
         "Yes" { 
-
             
             # Change current working directory to the LGPO's folder
             Set-Location "$workingDir\LGPO_30"
 
             Write-Host "`nApplying Top Security Measures" -ForegroundColor Cyan
             .\LGPO.exe /s "..\Security-Baselines-X\Top Security Measures\GptTmpl.inf"
-
 
         } "No" { break }
         "Exit" { &$cleanUp }
@@ -1369,16 +1186,12 @@ https://stackoverflow.com/questions/48809012/compare-two-credentials-in-powershe
     #endregion Top-Security-Measures
 
 
-
-
-
     #region Certificate-Checking-Commands
     # =========================================================================================================================
     # ====================================================Certificate Checking Commands========================================
     # =========================================================================================================================
     switch (Select-Option -Options "Yes", "No", "Exit" -Message "Run Certificate Checking category ?") {
         "Yes" {
-
 
             # List valid certificates not rooted to the Microsoft Certificate Trust List in the User store
             switch (Select-Option -Options "Yes", "No" -Message "List valid certificates not rooted to the Microsoft Certificate Trust List in the User store ?") {
@@ -1393,18 +1206,12 @@ https://stackoverflow.com/questions/48809012/compare-two-credentials-in-powershe
                         .\sigcheck64.exe -tuv -accepteula -nobanner
                         Remove-Item .\sigcheck64.exe
                     }
-
-                } "No" { break }
-              
+                } "No" { break }              
             }
-
-      
 
             # List valid certificates not rooted to the Microsoft Certificate Trust List in the Machine store
             switch (Select-Option -Options "Yes", "No" -Message "List valid certificates not rooted to the Microsoft Certificate Trust List in the Machine store ?") {
                 "Yes" {
-
-
                     try {
         
                         \\live.sysinternals.com\tools\sigcheck64.exe -tv -accepteula -nobanner
@@ -1416,11 +1223,8 @@ https://stackoverflow.com/questions/48809012/compare-two-credentials-in-powershe
                         Remove-Item .\sigcheck64.exe
                     }
 
-
-                } "No" { break }
-               
+                } "No" { break }               
             }
-
 
 
         } "No" { break }
@@ -1432,15 +1236,12 @@ https://stackoverflow.com/questions/48809012/compare-two-credentials-in-powershe
     #endregion Certificate-Checking-Commands
 
 
-
-
     #region Country-IP-Blocking
     # =========================================================================================================================
     # ====================================================Country IP Blocking==================================================
     # =========================================================================================================================
     switch (Select-Option -Options "Yes", "No", "Exit" -Message "Run Country IP Blocking category ?") {
         "Yes" {
-
 
             # -RemoteAddress in New-NetFirewallRule accepts array according to Microsoft Docs, 
             # so we use "[string[]]$IPList = $IPList -split '\r?\n' -ne ''" to convert the IP lists, which is a single multiline string, into an array
@@ -1449,7 +1250,7 @@ https://stackoverflow.com/questions/48809012/compare-two-credentials-in-powershe
                 param ($IPList , $CountryName)
 
                 # checks if the rule is present and if it is, deletes them to get new up-to-date IP ranges from the sources
-                if (Get-NetFirewallRule -DisplayName "$CountryName IP range blocking" -PolicyStore localhost 2> $null) 
+                if (Get-NetFirewallRule -DisplayName "$CountryName IP range blocking" -PolicyStore localhost -ErrorAction SilentlyContinue) 
                 { Remove-NetFirewallRule -DisplayName "$CountryName IP range blocking" -PolicyStore localhost }
 
                 # converts the list which is in string into array
@@ -1464,8 +1265,6 @@ https://stackoverflow.com/questions/48809012/compare-two-credentials-in-powershe
         
             }
 
-
-
             # Iran
             switch (Select-Option -Options "Yes", "No" -Message "Block the entire range of IPv4 and IPv6 belonging to Iran?") {
                 "Yes" {
@@ -1479,8 +1278,6 @@ https://stackoverflow.com/questions/48809012/compare-two-credentials-in-powershe
 
             }
 
-
-
             # Cuba
             switch (Select-Option -Options "Yes", "No" -Message "Block the entire range of IPv4 and IPv6 belonging to Cuba?") {
                 "Yes" {
@@ -1491,10 +1288,7 @@ https://stackoverflow.com/questions/48809012/compare-two-credentials-in-powershe
                     BlockCountryIP -IPList $CubaIPRange -CountryName "Cuba"
 
                 } "No" { break }
-
             }
-
-
 
             # North Korea
             switch (Select-Option -Options "Yes", "No" -Message "Block the entire range of IPv4 and IPv6 belonging to North Korea?") {
@@ -1506,9 +1300,7 @@ https://stackoverflow.com/questions/48809012/compare-two-credentials-in-powershe
                     BlockCountryIP -IPList $NorthKoreaIPRange -CountryName "North Korea"
 
                 } "No" { break }
-
             }
-
 
             # Syria
             switch (Select-Option -Options "Yes", "No" -Message "Block the entire range of IPv4 and IPv6 belonging to Syria?") {
@@ -1520,14 +1312,10 @@ https://stackoverflow.com/questions/48809012/compare-two-credentials-in-powershe
                     BlockCountryIP -IPList $SyriaIPRange -CountryName "Syria"
 
                 } "No" { break }
-
             }
-
 
             # how to query the number of IPs in each rule
             # (Get-NetFirewallRule -DisplayName "Cuba IP range blocking" | Get-NetFirewallAddressFilter).RemoteAddress.count
-
-        
 
         } "No" { break }
         "Exit" { &$cleanUp }
@@ -1549,7 +1337,6 @@ https://stackoverflow.com/questions/48809012/compare-two-credentials-in-powershe
 # =========================================================================================================================
 switch (Select-Option -Options "Yes", "No", "Exit" -Message "Run Non-Admin category ?") {
     "Yes" {
-
 
         # Show known file extensions in File explorer
         ModifyRegistry -RegPath 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced' -RegName 'HideFileExt' -RegValue '0'
@@ -1664,8 +1451,6 @@ switch (Select-Option -Options "Yes", "No", "Exit" -Message "Run Non-Admin categ
         }
 
 
-
-
         # turn on "Show text suggestions when typing on the physical keyboard" for the current user, toggles the option in Windows settings
         ModifyRegistry -RegPath 'HKCU:\Software\Microsoft\Input\Settings' -RegName 'EnableHwkbTextPrediction' -RegValue '1'
 
@@ -1679,16 +1464,13 @@ switch (Select-Option -Options "Yes", "No", "Exit" -Message "Run Non-Admin categ
         If (-NOT (Test-Path $RegistryPath)) { New-Item -Path $RegistryPath -Force | Out-Null } 
         New-ItemProperty -Path $RegistryPath -Name $Name -Value $Value -PropertyType string -Force
 
-
-
         $infomsg = "`r`n" +
         "################################################################################################`r`n" +
         "###  Please Restart your device to completely apply the security measures and Group Policies ###`r`n" +
         "################################################################################################`r`n"
         Write-Host $infomsg -ForegroundColor Cyan
 
-   
-      
+         
     } "No" { break }
     "Exit" { break }
 }

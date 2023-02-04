@@ -338,7 +338,7 @@ else {
             Invoke-WebRequest -Uri "https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/LGPO.zip" -OutFile ".\LGPO.zip" -ErrorAction Stop
 
             # Download the Group Policies of Windows Hardening script from GitHub
-            Invoke-WebRequest -Uri "https://github.com/HotCakeX/Harden-Windows-Security/raw/5cd8e2aa2eb528c5844da891c2f045c9ad8a0719/GroupPolicy/Security-Baselines-X.zip" -OutFile ".\Security-Baselines-X.zip" -ErrorAction Stop
+            Invoke-WebRequest -Uri "https://github.com/HotCakeX/Harden-Windows-Security/raw/61f4f9fd8c0813230435ba22534e5897ad36eff1/GroupPolicy/Security-Baselines-X.zip" -OutFile ".\Security-Baselines-X.zip" -ErrorAction Stop
                
         }
         catch {
@@ -1326,9 +1326,9 @@ https://stackoverflow.com/questions/48809012/compare-two-credentials-in-powershe
             # Change current working directory to the LGPO's folder
             Set-Location "$workingDir\LGPO_30"
 
-            Write-Host "`nApplying Overrides for Microsoft Security Baseline" -ForegroundColor Cyan
+            Write-Host "`nApplying policy Overrides for Microsoft Security Baseline" -ForegroundColor Cyan
             .\LGPO.exe /v /m "..\Security-Baselines-X\Overrides for Microsoft Security Baseline\registry.pol"
-
+            Write-Host "`nApplying Security policy Overrides for Microsoft Security Baseline" -ForegroundColor Cyan
             .\LGPO.exe /v /s "..\Security-Baselines-X\Overrides for Microsoft Security Baseline\GptTmpl.inf"
 
         } "No" { break }

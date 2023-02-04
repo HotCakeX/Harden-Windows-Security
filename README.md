@@ -525,7 +525,7 @@ These are configurations that are typically 🔺recommended in High-Risk Environ
 - 🟩
 - 🟩
 - 🟩
-- 🔶 Enable Windows Update to download and install updates on any network, metered or not; because the updates are important and should not be suppressed, **that's what bad actors would want.**
+- 🟩 Enable Windows Update to download and install updates on any network, metered or not; because the updates are important and should not be suppressed, **that's what bad actors would want.**
 
 
 

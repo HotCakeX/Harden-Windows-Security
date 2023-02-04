@@ -78,7 +78,7 @@ Version 2023.1.28: Bitlocker DMA protection enables only when Kernel DMA protect
 ## 
 Version 2023.1.29: Improved Security Baselines categories. added error handling when no Internet connection is available to download them.
 ## 
-Version 2023.2.4: Added more Windows Security Policies, the script now lets you run each category individually even if they involve Group Policy.
+Version 2023.2.4: Added more Windows Security Policies, the script now lets you run each category individually even if they involve Group Policy. Added Windows update category.
 #>
 
 <# 
@@ -122,6 +122,7 @@ Version 2023.2.4: Added more Windows Security Policies, the script now lets you 
   ✅ Optional Windows Features
   ✅ Windows Networking
   ✅ Miscellaneous Configurations
+  ✅ Windows Update Configurations
   ✅ Certificate Checking Commands
   ✅ Country IP Blocking
 ⏹ Commands that don't require Administrator Privileges
@@ -317,7 +318,7 @@ else {
             Invoke-WebRequest -Uri "https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/LGPO.zip" -OutFile ".\LGPO.zip" -ErrorAction Stop
 
             # Download the Group Policies of Windows Hardening script from GitHub
-            Invoke-WebRequest -Uri "https://github.com/HotCakeX/Harden-Windows-Security/raw/d3679c99dfb7960d29551b7005731413575fd16d/GroupPolicy/Security-Baselines-X.zip" -OutFile ".\Security-Baselines-X.zip" -ErrorAction Stop
+            Invoke-WebRequest -Uri "https://github.com/HotCakeX/Harden-Windows-Security/raw/main/GroupPolicy/Security-Baselines-X.zip" -OutFile ".\Security-Baselines-X.zip" -ErrorAction Stop
                
         }
         catch {
@@ -1162,6 +1163,31 @@ https://stackoverflow.com/questions/48809012/compare-two-credentials-in-powershe
     # ============================================End of Overrides for Microsoft Security Baseline=============================
     # =========================================================================================================================
     #endregion Overrides-for-Microsoft-Security-Baseline
+
+
+    #region Windows-Update-Commands
+    # =========================================================================================================================
+    # ====================================================Windows Update Commands==============================================
+    # =========================================================================================================================
+    switch (Select-Option -Options "Yes", "No", "Exit" -Message "Apply Windows Update Policies ?") {
+        "Yes" {
+
+            # enable restart notification for Windows update
+            ModifyRegistry -RegPath "HKLM:\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings" -RegName "RestartNotificationsAllowed2" -RegValue "1"
+
+            # Change current working directory to the LGPO's folder
+            Set-Location "$workingDir\LGPO_30"
+
+            Write-Host "`nApplying Windows Update policies" -ForegroundColor Cyan
+            .\LGPO.exe /m "..\Security-Baselines-X\Windows Update Policies\registry.pol"
+
+        } "No" { break }
+        "Exit" { &$cleanUp }
+    }
+    # =========================================================================================================================
+    # ====================================================End of Windows Update Commands=======================================
+    # =========================================================================================================================
+    #endregion Windows-Update-Commands
 
 
     #region Top-Security-Measures

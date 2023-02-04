@@ -147,6 +147,7 @@ From Top to bottom in order:
   - <a href="#Optional-Windows-Features">Optional Windows Features</a>
   - <a href="#Windows-Networking">Windows Networking</a>
   - <a href="#Miscellaneous-Configurations">Miscellaneous Configurations</a>
+  - <a href="#Windows-Update">Windows Update configurations</a>
   - <a href="#Certificate-Checking-Commands">Certificate Checking Commands</a>
   - <a href="#Country-IP-Blocking">Country IP Blocking</a>
   
@@ -505,13 +506,27 @@ These are configurations that are typically 🔺recommended in High-Risk Environ
 - 🟩 Enables [SMB/LDAP Signing](https://techcommunity.microsoft.com/t5/storage-at-microsoft/configure-smb-signing-with-confidence/ba-p/2418102)
 - 🔶 Enables [SMB Encryption](https://learn.microsoft.com/en-us/windows-server/storage/file-server/smb-security) (the status of `(get-SmbServerConfiguration).EncryptData` was `$False` when tested on [Windows 11 dev build 25272](https://blogs.windows.com/windows-insider/2023/01/05/announcing-windows-11-insider-preview-build-25272/), this script sets it to `$True`)
 
-- 🔶🟩 Enable Windows update and Edge browser to download and install updates on any network, metered or not; because the updates are important and should not be suppressed, **that's what bad actors would want.**
+- 🔶 Enable Edge browser to download and install updates on any network, metered or not; because the updates are important and should not be suppressed, **that's what bad actors would want.**
 
 - 🔶 Enables "notify me when a restart is required to finish updating" in Windows Update, responsible for the toggle in Windows settings => Windows Update => Advanced options
 
 - 🔶 [Enables all Windows users to use Hyper-V and Windows Sandbox](https://learn.microsoft.com/en-us/archive/blogs/virtual_pc_guy/why-do-you-have-to-elevate-powershell-to-use-hyper-v-cmdlets) by adding all Windows users to the "Hyper-V Administrators" security group, by default only Administrators can use Hyper-V or Windows Sandbox. 
 
 - 🔶 Changes Windows time sync interval from the default every 7 days to every 4 days (= every 345600 seconds)
+
+
+
+<p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
+
+
+
+## Windows Update Configurations
+
+- 🟩
+- 🟩
+- 🟩
+- 🔶 Enable Windows Update to download and install updates on any network, metered or not; because the updates are important and should not be suppressed, **that's what bad actors would want.**
+
 
 
 

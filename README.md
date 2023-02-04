@@ -117,10 +117,6 @@
 To run the script:
 
 ```PowerShell
-
-# Set execution policy temporarily to bypass for the current PowerShell session only
-Set-ExecutionPolicy Bypass -Scope Process
-
 # Run the PowerShell script
 Invoke-RestMethod "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security.ps1" | Invoke-Expression
 

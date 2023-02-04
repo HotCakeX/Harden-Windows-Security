@@ -263,8 +263,8 @@ $(get-MpPreference).ControlledFolderAccessAllowedApplications
   - [There are more options for Exploit Protection](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/enable-exploit-protection?view=o365-worldwide) but enabling them requires extensive reviewing by users because mixing them up can cause a lot of compatibility issues.
 
 - 🟩 Check for the latest virus and spyware security intelligence on startup
-- 🟩 Specify the maximum depth to scan archive files to max `4294967295`
-- 🟩 [Define the maximum size of downloaded files and attachments to be scanned](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/configure-advanced-scan-types-microsoft-defender-antivirus?view=o365-worldwide) to max `10,000,000 KB` or `10 GB`. [the default is](https://github.com/MicrosoftDocs/microsoft-365-docs/pull/5600) `20480 KB` or `~20MB`
+- 🟩 Specify the maximum depth to scan archive files to the maximum possible value of `4,294,967,295`
+- 🟩 [Define the maximum size of downloaded files and attachments to be scanned](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/configure-advanced-scan-types-microsoft-defender-antivirus?view=o365-worldwide) and set it to the maximum possible value of `10,000,000 KB` or `10 GB`. [the default is](https://github.com/MicrosoftDocs/microsoft-365-docs/pull/5600) `20480 KB` or `~20MB`
 
 
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>

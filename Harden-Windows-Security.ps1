@@ -166,6 +166,10 @@ Write-Host $infomsg -ForegroundColor Green
 
 
 
+# Set execution policy temporarily to bypass for the current PowerShell session only
+Set-ExecutionPolicy Bypass -Scope Process
+
+
 
 # check if user's OS is Windows Home edition
 if (((Get-WmiObject Win32_OperatingSystem).OperatingSystemSKU) -eq "101") {

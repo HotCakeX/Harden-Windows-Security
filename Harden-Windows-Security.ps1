@@ -122,6 +122,7 @@ Version 2023.2.4: Added more Windows Security Policies, the script now lets you 
   ✅ Optional Windows Features
   ✅ Windows Networking
   ✅ Miscellaneous Configurations
+  ✅ Windows Update Configurations
   ✅ Certificate Checking Commands
   ✅ Country IP Blocking
 ⏹ Commands that don't require Administrator Privileges

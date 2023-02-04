@@ -1534,7 +1534,7 @@ https://stackoverflow.com/questions/48809012/compare-two-credentials-in-powershe
     #endregion Country-IP-Blocking
 
 
-
+    &$cleanUp
     
 } # End of Admin test function
 
@@ -1677,19 +1677,15 @@ switch (Select-Option -Options "Yes", "No", "Exit" -Message "Run Non-Admin categ
 
 
 
-
         $infomsg = "`r`n" +
         "################################################################################################`r`n" +
         "###  Please Restart your device to completely apply the security measures and Group Policies ###`r`n" +
         "################################################################################################`r`n"
         Write-Host $infomsg -ForegroundColor Cyan
 
-
-
-
-        &$cleanUp
+        
     } "No" { break }
-    "Exit" { &$cleanUp }
+    "Exit" { exit }
 }
 # =========================================================================================================================
 # ====================================================End of Non-Admin Commands============================================

@@ -132,7 +132,7 @@ Version 2023.2.4: Added more Windows Security Policies, the script now lets you 
 
 💎 Note: The script asks for confirmation, in the PowerShell console, before running each hardening category, so you can selectively run (or don't run) each of them.
 
-💎 Note: There are 4 items tagged with #TopSecurity that can cause difficulties. When you run this script, you will have an option to enable them if you want to. You can find all the information about them on GitHub.
+💎 Note: There are 3 items tagged with #TopSecurity that can cause difficulties. When you run this script, you will have an option to enable them if you want to. You can find all the information about them on GitHub.
 
 🏴 if you have any questions, requests, suggestions etc. about this script, please open a new discussion in GitHub:
 
@@ -338,7 +338,7 @@ else {
             Invoke-WebRequest -Uri "https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/LGPO.zip" -OutFile ".\LGPO.zip" -ErrorAction Stop
 
             # Download the Group Policies of Windows Hardening script from GitHub
-            Invoke-WebRequest -Uri "https://github.com/HotCakeX/Harden-Windows-Security/raw/61f4f9fd8c0813230435ba22534e5897ad36eff1/GroupPolicy/Security-Baselines-X.zip" -OutFile ".\Security-Baselines-X.zip" -ErrorAction Stop
+            Invoke-WebRequest -Uri "https://github.com/HotCakeX/Harden-Windows-Security/raw/d3679c99dfb7960d29551b7005731413575fd16d/GroupPolicy/Security-Baselines-X.zip" -OutFile ".\Security-Baselines-X.zip" -ErrorAction Stop
                
         }
         catch {

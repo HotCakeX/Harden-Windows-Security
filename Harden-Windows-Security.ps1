@@ -317,7 +317,7 @@ else {
             Invoke-WebRequest -Uri "https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/LGPO.zip" -OutFile ".\LGPO.zip" -ErrorAction Stop
 
             # Download the Group Policies of Windows Hardening script from GitHub
-            Invoke-WebRequest -Uri "https://github.com/HotCakeX/Harden-Windows-Security/raw/d3679c99dfb7960d29551b7005731413575fd16d/GroupPolicy/Security-Baselines-X.zip" -OutFile ".\Security-Baselines-X.zip" -ErrorAction Stop
+            Invoke-WebRequest -Uri "https://github.com/HotCakeX/Harden-Windows-Security/raw/main/GroupPolicy/Security-Baselines-X.zip" -OutFile ".\Security-Baselines-X.zip" -ErrorAction Stop
                
         }
         catch {
@@ -1162,6 +1162,28 @@ https://stackoverflow.com/questions/48809012/compare-two-credentials-in-powershe
     # ============================================End of Overrides for Microsoft Security Baseline=============================
     # =========================================================================================================================
     #endregion Overrides-for-Microsoft-Security-Baseline
+
+
+    #region Windows-Update-Commands
+    # =========================================================================================================================
+    # ====================================================Windows Update Commands==============================================
+    # =========================================================================================================================
+    
+
+    # enable restart notification for Windows update
+    ModifyRegistry -RegPath "HKLM:\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings" -RegName "RestartNotificationsAllowed2" -RegValue "1"
+
+             # Change current working directory to the LGPO's folder
+             Set-Location "$workingDir\LGPO_30"
+
+        Write-Host "`nApplying Windows Update policies" -ForegroundColor Cyan
+        .\LGPO.exe /m "..\Security-Baselines-X\Windows Update Policies\registry.pol"
+
+
+    # =========================================================================================================================
+    # ====================================================End of Windows Update Commands=======================================
+    # =========================================================================================================================
+    #endregion Windows-Update-Commands
 
 
     #region Top-Security-Measures

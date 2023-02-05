@@ -516,10 +516,27 @@ These are configurations that are typically 🔺recommended in High-Risk Environ
 
 ## Edge Browser configurations<a href="edge-browser-configurations">![EdgeBrowser]</a>
 
-[Microsoft Edge Browser Policy Documentation](https://learn.microsoft.com/en-us/deployedge/microsoft-edge-policies)
 
-<h3> Coming Soon... </h3>
+- 🔶 [Block 3rd party cookies](https://learn.microsoft.com/en-us/deployedge/microsoft-edge-policies#blockthirdpartycookies)
+- 🔶 [Use DNS over HTTPS](https://learn.microsoft.com/en-us/deployedge/microsoft-edge-policies#dnsoverhttpsmode)
+- 🔶 [Set DNS over HTTPS template to Cloudflare's](https://learn.microsoft.com/en-us/deployedge/microsoft-edge-policies#dnsoverhttpstemplates)
+- 🔶 [Automatic HTTPS upgrade of HTTP connections](https://learn.microsoft.com/en-us/deployedge/microsoft-edge-policies#configure-automatic-https)
+- 🔶 [Enable Encrypted Client Hello](https://learn.microsoft.com/en-us/deployedge/microsoft-edge-policies#encryptedclienthelloenabled)
+- 🔶 [Enforce SmartScreen](https://learn.microsoft.com/en-us/deployedge/microsoft-edge-policies#smartscreenenabled)
+- 🔶 [Prevent users from ignoring and bypassing SmartScreen warnings for malicious websites](https://learn.microsoft.com/en-us/deployedge/microsoft-edge-policies#preventsmartscreenpromptoverride)
 
+<br>
+
+- Useful links:
+  - [Microsoft Edge stable channel change log](https://learn.microsoft.com/en-us/deployedge/microsoft-edge-relnote-stable-channel)
+
+  - [Microsoft Edge Security updates change log](https://learn.microsoft.com/en-us/deployedge/microsoft-edge-relnotes-security)
+
+  - [Microsoft Edge Beta channel change log](https://learn.microsoft.com/en-us/deployedge/microsoft-edge-relnote-beta-channel)
+
+  - [Microsoft Edge Mobile stable channel change log](https://learn.microsoft.com/en-us/deployedge/microsoft-edge-relnote-mobile-stable-channel)
+
+  - [Edge Insider for Beta/Dev/Canary channels](https://www.microsoftedgeinsider.com/en-us/)
 
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 

@@ -527,6 +527,11 @@ These are configurations that are typically 🔺recommended in High-Risk Environ
 
 <br>
 
+* You can view what policies are being applied to your Edge browser by going to this page: <a href="edge://policy/">`edge://policy/`</a>
+* You can find all of the available internal Edge pages by going to this page: <a href="edge://about/">`edge://about/`</a>
+
+<br>
+
 - Useful links:
   - [Microsoft Edge stable channel change log](https://learn.microsoft.com/en-us/deployedge/microsoft-edge-relnote-stable-channel)
 

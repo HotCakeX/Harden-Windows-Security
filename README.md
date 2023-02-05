@@ -503,10 +503,10 @@ These are configurations that are typically 🔺recommended in High-Risk Environ
 
 ## Windows Update Configurations
 
-- 🟩
-- 🟩
-- 🟩
-- 🟩 Enable Windows Update to download and install updates on any network, metered or not; because the updates are important and should not be suppressed, **that's what bad actors would want.**
+- 🟩 Enables Windows Update to download and install updates on any network, metered or not; because the updates are important and should not be suppressed, **that's what bad actors would want.**
+- 🟩 Enables "Receive Updates for other Microsoft products" (such as PowerShell) and sets updates to be installed outside of active hours automatically
+- 🟩 Enables "Notify me when a restart is required to finish updating"
+- 🟩 Sets the deadline for automatic updates and restarts for quality and feature updates to 2 days
 
 
 
@@ -573,19 +573,17 @@ Trust is very important; you shouldn't blindly trust me nor any other 3rd party 
 
  
 
-* `SHA256` Hash of Security-Baselines-X.zip:
+* `SHA256` Hash of [Security-Baselines-X.zip](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Payload/Security-Baselines-X.zip):
 <!-- SHA-256-X-Hash:START -->
 ```
 702af11e4c74cfe58d4e09fbcdfc192609950768a9306eb667517f2b6996e708
 ```
 <!-- SHA-256-X-Hash:END -->
 
-* `SHA256` Hash of EventViewerCustomViews.zip:
+* `SHA256` Hash of [EventViewerCustomViews.zip](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Payload/EventViewerCustomViews.zip):
 ```
 5909e7b10f5780f7708db1ab8e97d12c99884d4f704f3f4ea961622b631dc133
 ```
-
-
 
 
 

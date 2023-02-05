@@ -622,12 +622,14 @@ a5742fa802fd7eae15375db8f2d6aa87ff3e565b57bbba32e41135e33a6a8129
 
 ## Support<a href="#support">![SupportIcon]</a>
 
-<a href="https://github.com/HotCakeX/Harden-Windows-Security/discussions">
-🎯 if you have any questions, requests, suggestions etc. about this script, please open a new discussion on Github
-</a>
+
+- If you have any questions, requests, suggestions etc. about this GitHub repository and its content, please open [a new discussion](https://github.com/HotCakeX/Harden-Windows-Security/discussions) or [Issue](https://github.com/HotCakeX/Harden-Windows-Security/issues).
+
+
+- If there is an urgent matter or security issue and you want to privately reach me, you can do so by [reporting a vulnerability](https://github.com/HotCakeX/Harden-Windows-Security/security/advisories) on this GitHub repository and I will be immediately notified by Email.
+
 <br>
-<br>
-<br />
+
 
 <p align="right"><a href="#readme-top">💡(back to top)</a></p>
 

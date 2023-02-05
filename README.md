@@ -145,6 +145,7 @@ From Top to bottom in order:
   - <a href="#Windows-Networking">Windows Networking</a>
   - <a href="#Miscellaneous-Configurations">Miscellaneous Configurations</a>
   - <a href="#windows-update-configurations">Windows Update configurations</a>
+  - <a href="#edge-browser-configurations">Edge Browser configurations</a>
   - <a href="#Certificate-Checking-Commands">Certificate Checking Commands</a>
   - <a href="#Country-IP-Blocking">Country IP Blocking</a>
   
@@ -509,6 +510,13 @@ These are configurations that are typically 🔺recommended in High-Risk Environ
 - 🟩 Sets the deadline for automatic updates and restarts for quality and feature updates to 2 days
 
 
+
+<p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
+
+
+## Edge Browser configurations
+
+<h3> Coming Soon... </h3>
 
 
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>

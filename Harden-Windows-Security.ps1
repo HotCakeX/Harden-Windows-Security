@@ -26,14 +26,15 @@
 
 .RELEASENOTES
 ##
-Version 2023.1.28: Bitlocker DMA protection enables only when Kernel DMA protection is unavailable, as suggested by Microsoft, and this happens using Group Policies instead of registry. Improved verbosity when importing and installing policies.
-## 
-Version 2023.1.29: Improved Security Baselines categories. added error handling when no Internet connection is available to download them.
-## 
+Version 2023.2.5: Optimized the code and removed a lot of empty lines. optimized the Bitlocker category. moved all registry stuff to registry.csv located in the GitHub repository.
+##
 Version 2023.2.4: Added more Windows Security Policies, the script now lets you run each category individually even if they involve Group Policy. Added Windows update category.
 ##
-Version 2023.2.5: Optimized the code and removed a lot of empty lines. optimized the Bitlocker category. moved all registry stuff to registry.csv located in the GitHub repository.
+Version 2023.1.29: Improved Security Baselines categories. added error handling when no Internet connection is available to download them.
+##
+Version 2023.1.28: Bitlocker DMA protection enables only when Kernel DMA protection is unavailable, as suggested by Microsoft, and this happens using Group Policies instead of registry. Improved verbosity when importing and installing policies.
 #>
+
 <# 
 
 .SYNOPSIS
@@ -93,8 +94,8 @@ Version 2023.2.5: Optimized the code and removed a lot of empty lines. optimized
 🟡 https://github.com/HotCakeX/Harden-Windows-Security/discussions
 
 .EXAMPLE  
-   type: "Set-ExecutionPolicy Bypass -Scope Process" without quotes, in an Elevated PowerShell, to allow running this script for the current session. 
-.NOTES    
+   type: "Set-ExecutionPolicy Bypass -Scope Process" without quotes, in an Elevated PowerShell, to allow running this script for the current session.
+   .NOTES  
     Check out GitHub page for security recommendations: https://github.com/HotCakeX/Harden-Windows-Security
 #>
 
@@ -169,7 +170,6 @@ $null = New-Module {
         # Save current progress preference and hide the progress
         $prevProgressPreference = $global:ProgressPreference
         $global:ProgressPreference = 'SilentlyContinue'
-
         try {
             # Run the script block in the scope of the caller of this module function
             . $ScriptBlock

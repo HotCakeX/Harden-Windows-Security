@@ -514,6 +514,7 @@ These are configurations that are typically 🔺recommended in High-Risk Environ
 
 - 🔶 Changes Windows time sync interval from the default every 7 days to every 4 days (= every 345600 seconds)
 
+- 🔶 Create custom views for Windows Event Viewer to help you keep tabs on important security events: attack surface reduction rules events, controlled folder access events, exploit protection events, network protection events, MSI and Scripts for WDAC Auditing events, Sudden Shut down events and Code Integrity Operational events. 
 
 
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
@@ -556,7 +557,6 @@ In order to run commands in this category, you don't need administrator privileg
 - 🔶 Turn off safe search in Windows search, will enable +18 content to appear in searches; essentially toggles the button in: Windows settings > privacy and security > search permissions > safe search
 - 🔶 prevent showing notifications in Lock screen - this is the same as toggling the button in Windows settings > system > notifications > show notifications in the lock screen
 - 🔶 Enable Clipboard History and sync with Microsoft Account
-- 🔶 Create custom views for Windows Event Viewer to help you keep tabs on important security events: attack surface reduction rules events, controlled folder access events, exploit protection events, network protection events, MSI and Scripts for WDAC Auditing events, Sudden Shut down events and Code Integrity Operational events. 
 - 🔶 Turn on text suggestions when typing on the physical keyboard
 - 🔶 Turn on "Multilingual text suggestions" for the current user, toggles the option in Windows settings
 - 🔶 Turn off sticky key shortcut of pressing shift key 5 times fast
@@ -610,31 +610,7 @@ E205E0B9D1CD8D1A8A82F66BECF5EE947BF5355F500345E3970CDD8A76B686A2CACB2AC5297DE865
 
 
 
-
-#### To quickly and easily verify the file hashes, without even downloading the zip file, run this in PowerShell:
-_if the output is `True`, then the file is safe as Virus Total website scanned._
-
-<!-- Hash-Verification:START -->
-```PowerShell
-$WebClient = [System.Net.WebClient]::new()
-$PackageURL = 'https://github.com/HotCakeX/Harden-Windows-Security/raw/main/GroupPolicy/Security-Baselines-X.zip'
-$publishedHashSHA256 = '32F1D5E62AA426261169F024D974CCF3A7E31DFC86EDF8F7643F1186D707C644'
-$publishedHashSHA512 = 'E205E0B9D1CD8D1A8A82F66BECF5EE947BF5355F500345E3970CDD8A76B686A2CACB2AC5297DE865E6E7F5DF05C95BB5BFB2E1182A071161997DE0F29074ECE4'
-$SHA256Hash = Get-FileHash -Algorithm SHA256 -InputStream ($WebClient.OpenRead($PackageURL))
-$SHA512Hash = Get-FileHash -Algorithm SHA512 -InputStream ($WebClient.OpenRead($PackageURL))
-$SHA256Hash.Hash -eq $publishedHashSHA256 -and $SHA512Hash.Hash -eq $publishedHashSHA512
-```
-<!-- Hash-Verification:END -->
-
-_Don't know what those commands are? [check this Microsoft Learn article](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/get-filehash?view=powershell-7.3)_
-
-
-<br>
-
-
-
  <br> 
-
 
 
 

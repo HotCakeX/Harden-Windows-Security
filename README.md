@@ -579,12 +579,12 @@ Trust is very important; you shouldn't blindly trust me nor any other 3rd party 
 702af11e4c74cfe58d4e09fbcdfc192609950768a9306eb667517f2b6996e708
 ```
 <!-- SHA-256-X-Hash:END -->
+
 * `SHA256` Hash of EventViewerCustomViews.zip:
-<!-- SHA-256-E-Hash:START -->
 ```
 5909e7b10f5780f7708db1ab8e97d12c99884d4f704f3f4ea961622b631dc133
 ```
-<!-- SHA-256-E-Hash:END -->
+
 
 
 
@@ -701,5 +701,4 @@ Not Applicable, No license. because the only mission of this GitHub repository a
 [UACIcon]: images/UAC.png
 [TLSIcon]: images/TLS.png
 [WindowsDefenderIcon]: images/WindowsDefender.png
-[SecurityBaselineX]: images/Security-Baseline-X.png
 [MicrosoftSecurityBaseline]: images/Microsoft-Security-Baseline.png

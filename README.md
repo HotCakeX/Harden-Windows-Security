@@ -144,7 +144,7 @@ From Top to bottom in order:
   - <a href="#Optional-Windows-Features">Optional Windows Features</a>
   - <a href="#Windows-Networking">Windows Networking</a>
   - <a href="#Miscellaneous-Configurations">Miscellaneous Configurations</a>
-  - <a href="#Windows-Update">Windows Update configurations</a>
+  - <a href="#windows-update-configurations">Windows Update configurations</a>
   - <a href="#Certificate-Checking-Commands">Certificate Checking Commands</a>
   - <a href="#Country-IP-Blocking">Country IP Blocking</a>
   

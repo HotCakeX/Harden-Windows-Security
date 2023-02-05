@@ -117,9 +117,7 @@
 To run the script:
 
 ```PowerShell
-# Run the PowerShell script
 Invoke-RestMethod "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security.ps1" | Invoke-Expression
-
 ```
 
 
@@ -135,7 +133,6 @@ From Top to bottom in order:
 
 * Commands that require Administrator Privileges (click/tap on each of these to see in-depth info)
   - <a href="#microsoft-security-baselines">Microsoft Security Baselines</a>
-  - <a href="#security-baselines-x">Security Baselines X</a>
   - <a href="#Windows-Security-aka-Defender">Windows Security aka Defender</a>
   - <a href="#Attack-surface-reduction-rules">Attack surface reduction rules</a>
   - <a href="#Bitlocker-Settings">Bitlocker Settings</a>
@@ -159,10 +156,9 @@ From Top to bottom in order:
 </br>
 </br>
 </br>
-</br>
 
-* 🟩 Means the security measure is applied using Group Policies (Security Baselines X)
-* 🔶 Means the security measure is applied using PowerShell script (Cmdlet or registry)
+* 🟩 Means the security measure is applied using Group Policies
+* 🔶 Means the security measure is applied using PowerShell script
 
 
 
@@ -174,28 +170,12 @@ A security baseline is a group of Microsoft-recommended configuration settings t
 
 [Continue reading in the official documentation](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-security-configuration-framework/windows-security-baselines#what-are-security-baselines)
 
+[Optional Overrides for Microsoft Security Baselines](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Overrides-for-Microsoft-Security-Baseline)
 
 
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
-
-## Security Baselines X<a href="#Security-Baselines-X">![SecurityBaselineX]</a>
-
-This is the `.zip` file that I've created and [uploaded to this GitHub repository](https://github.com/HotCakeX/Harden-Windows-Security/tree/main/GroupPolicy). it contains the Group Policy files that apply security measures explained in this page.
-
-- [How is Group Policy used in this PowerShell script?](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Group-Policy#how-is-group-policy-used-in-this-powershell-script)
-- [How is Security Baseline X created and maintained?](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Group-Policy#how-is-security-baseline-x-created-and-maintained)
-- [How to verify security-baselines-x.zip file and 100% trust it?](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Group-Policy#how-to-verify-security-baselines-xzip-file-and-100-trust-it)
-- <a href="#Trust">View Trust section for more info</a>
-- [Optional Overrides for Microsoft Security Baselines](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Overrides-for-Microsoft-Security-Baseline)
-
-
-
 
 <br>
-
-
-
-<p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
 ## Windows Security aka Defender<a href="#Windows-Security-aka-Defender">![WindowsDefenderIcon]</a>
 - 🟩 Enables **additional** security features of Windows Security (Defender), You can refer to [this official document](https://docs.microsoft.com/en-us/powershell/module/defender/set-mppreference?view=windowsserver2022-ps) for full details.
@@ -583,30 +563,29 @@ Trust is very important; you shouldn't blindly trust me nor any other 3rd party 
 - There is no unexpected behavior involved.
 - You can even fork this repository, 100% verify it until that point in time, then verify any subsequent changes/updates I push to this repository, **at your own pace** (using `Sync fork` and `Compare` options on your fork), and if you are happy with the changes, allow it to be merged with your own copy/fork on your GitHub account.
 
-#### [How to verify security-baselines-x.zip file and 100% trust it?](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Group-Policy#how-to-verify-security-baselines-xzip-file-and-100-trust-it)
 
 
 <br>
-<br>
 
+- [How is Group Policy used in this PowerShell script?](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Group-Policy#how-is-group-policy-used-in-this-powershell-script)
+- [How is Security Baseline X created and maintained?](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Group-Policy#how-is-security-baseline-x-created-and-maintained)
+- [How to verify security-baselines-x.zip file and 100% trust it?](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Group-Policy#how-to-verify-security-baselines-xzip-file-and-100-trust-it)
 
  
-* [Virus Total scan resaults of Security-Baselines-X.zip](https://www.virustotal.com/gui/file/38b55080f0ab749ab32e2dce6b059768f9115662d9261163fb087d84c44a6678/details)
+
 * `SHA256` Hash of Security-Baselines-X.zip:
-<!-- SHA-256-Hash:START -->
+<!-- SHA-256-X-Hash:START -->
 ```
-32F1D5E62AA426261169F024D974CCF3A7E31DFC86EDF8F7643F1186D707C644
+702af11e4c74cfe58d4e09fbcdfc192609950768a9306eb667517f2b6996e708
 ```
-<!-- SHA-256-Hash:END -->
-* `SHA512` Hash of Security-Baselines-X.zip:
-<!-- SHA-512-Hash:START -->
+<!-- SHA-256-X-Hash:END -->
+* `SHA256` Hash of EventViewerCustomViews.zip:
+<!-- SHA-256-E-Hash:START -->
 ```
-E205E0B9D1CD8D1A8A82F66BECF5EE947BF5355F500345E3970CDD8A76B686A2CACB2AC5297DE865E6E7F5DF05C95BB5BFB2E1182A071161997DE0F29074ECE4
+5909e7b10f5780f7708db1ab8e97d12c99884d4f704f3f4ea961622b631dc133
 ```
-<!-- SHA-512-Hash:END -->
+<!-- SHA-256-E-Hash:END -->
 
-
-<br>
 
 
 

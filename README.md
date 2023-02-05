@@ -502,7 +502,7 @@ These are configurations that are typically 🔺recommended in High-Risk Environ
 
 
 
-## Windows Update Configurations
+## Windows Update Configurations<a href="windows-update-configurations">![WindowsUpdate]</a>
 
 - 🟩 Enables [Windows Update to download and install updates on any network](https://techcommunity.microsoft.com/t5/windows-it-pro-blog/the-windows-update-policies-you-should-set-and-why/ba-p/3270914), metered or not; because the updates are important and should not be suppressed, **that's what bad actors would want.**
 - 🟩 Enables "Receive Updates for other Microsoft products" (such as PowerShell) and sets updates to be installed outside of active hours automatically
@@ -514,7 +514,7 @@ These are configurations that are typically 🔺recommended in High-Risk Environ
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
 
-## Edge Browser configurations
+## Edge Browser configurations<a href="edge-browser-configurations">![EdgeBrowser]</a>
 
 [Microsoft Edge Browser Policy Documentation](https://learn.microsoft.com/en-us/deployedge/microsoft-edge-policies)
 
@@ -710,3 +710,5 @@ Not Applicable, No license. because the only mission of this GitHub repository a
 [TLSIcon]: images/TLS.png
 [WindowsDefenderIcon]: images/WindowsDefender.png
 [MicrosoftSecurityBaseline]: images/Microsoft-Security-Baseline.png
+[WindowsUpdate]: images/WindowsUpdate.png
+[EdgeBrowser]: images/EdgeBrowser.png

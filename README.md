@@ -504,7 +504,7 @@ These are configurations that are typically 🔺recommended in High-Risk Environ
 
 ## Windows Update Configurations
 
-- 🟩 Enables Windows Update to download and install updates on any network, metered or not; because the updates are important and should not be suppressed, **that's what bad actors would want.**
+- 🟩 Enables [Windows Update to download and install updates on any network](https://techcommunity.microsoft.com/t5/windows-it-pro-blog/the-windows-update-policies-you-should-set-and-why/ba-p/3270914), metered or not; because the updates are important and should not be suppressed, **that's what bad actors would want.**
 - 🟩 Enables "Receive Updates for other Microsoft products" (such as PowerShell) and sets updates to be installed outside of active hours automatically
 - 🟩 Enables "Notify me when a restart is required to finish updating"
 - 🟩 Sets the deadline for automatic updates and restarts for quality and feature updates to 2 days
@@ -515,6 +515,8 @@ These are configurations that are typically 🔺recommended in High-Risk Environ
 
 
 ## Edge Browser configurations
+
+[Microsoft Edge Browser Policy Documentation](https://learn.microsoft.com/en-us/deployedge/microsoft-edge-policies)
 
 <h3> Coming Soon... </h3>
 

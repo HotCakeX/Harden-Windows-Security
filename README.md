@@ -495,7 +495,7 @@ These are configurations that are typically 🔺recommended in High-Risk Environ
 
 - 🔶 Changes Windows time sync interval from the default every 7 days to every 4 days (= every 345600 seconds)
 
-- 🔶 Create custom views for Windows Event Viewer to help you keep tabs on important security events: attack surface reduction rules events, controlled folder access events, exploit protection events, network protection events, MSI and Scripts for WDAC Auditing events, Sudden Shut down events and Code Integrity Operational events. 
+- 🔶 Create custom views for [Windows Event Viewer](https://learn.microsoft.com/en-us/shows/inside/event-viewer) to help you keep tabs on important security events: attack surface reduction rules events, controlled folder access events, exploit protection events, network protection events, MSI and Scripts for WDAC Auditing events, Sudden Shut down events and Code Integrity Operational events. 
 
 - 🟩 Enables ["Send optional diagnostic data"](https://learn.microsoft.com/en-us/windows/privacy/windows-diagnostic-data) because it is [required for Smart App Control](https://support.microsoft.com/en-us/topic/what-is-smart-app-control-285ea03d-fa88-4d56-882e-6698afdb7003) to operate and be enabled, and for communication between [Intelligent Security Graph (ISG)](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/use-windows-defender-application-control-with-intelligent-security-graph) and you.
 
@@ -583,9 +583,9 @@ In order to run commands in this category, you don't need administrator privileg
 
 ## Trust<a href="#trust">![TrustIcon]</a>
 
-#### How can you 100% trust this script and know that nothing shady is going on?
+#### How can you 100% trust this repository and know that nothing shady is going on?
 
-Trust is very important; you shouldn't blindly trust me nor any other 3rd party person/organization just because they say they are trustworthy. this script uses the simplest possible, yet effective, methods that make it very easy to verify: 
+Trust is very important; you shouldn't blindly trust me nor any other **3rd party** person/organization just because they say they are trustworthy. This repository uses the simplest possible, yet effective, methods that make it very easy to verify: 
 
 - The script is in plain text, nothing hidden, no 3rd party executable or pre-compiled binary is involved.
 - Change log history is present on GitHub. _(Despite some of my awkward documentation typos)_
@@ -593,32 +593,28 @@ Trust is very important; you shouldn't blindly trust me nor any other 3rd party 
 - You can learn PowerShell which is super easy, multiplatform, and useful for the future, Microsoft Learn website teaches you everything, then you will understand everything in the script is safe, or you can ask someone that you trust and knows PowerShell to verify the script for you
 - There is no unexpected behavior involved.
 - You can even fork this repository, 100% verify it until that point in time, then verify any subsequent changes/updates I push to this repository, **at your own pace** (using `Sync fork` and `Compare` options on your fork), and if you are happy with the changes, allow it to be merged with your own copy/fork on your GitHub account.
-
-
-
-<br>
-
+- The [Payload folder](https://github.com/HotCakeX/Harden-Windows-Security/tree/main/Payload) in this repository contains the files required to run this script:
+  - [Registry.csv](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Payload/Registry.csv) includes registry data used by this script, viewable in plain text and easily verifiable.
+  - [EventViewerCustomViews.zip](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Payload/EventViewerCustomViews.zip) includes XML files, in plain text, easily readable and verifiable. the script downloads and copies them to `C:\ProgramData\Microsoft\Event Viewer\Views` so that when you open [Windows Event Viewer](https://learn.microsoft.com/en-us/host-integration-server/core/windows-event-viewer1), you will find custom views as explained in the Miscellaneous category.
+  - [Security-Baselines-X.zip](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Payload/Security-Baselines-X.zip) includes Group Policies that are used by this script to apply the security measures explained in this page.
 - [How is Group Policy used in this PowerShell script?](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Group-Policy#how-is-group-policy-used-in-this-powershell-script)
 - [How is Security Baseline X created and maintained?](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Group-Policy#how-is-security-baseline-x-created-and-maintained)
 - [How to verify security-baselines-x.zip file and 100% trust it?](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Group-Policy#how-to-verify-security-baselines-xzip-file-and-100-trust-it)
 
- 
+<br>
 
-* `SHA256` Hash of [Security-Baselines-X.zip](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Payload/Security-Baselines-X.zip):
+- `SHA256` Hash of [Security-Baselines-X.zip](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Payload/Security-Baselines-X.zip):
 <!-- SHA-256-X-Hash:START -->
 ```
-702af11e4c74cfe58d4e09fbcdfc192609950768a9306eb667517f2b6996e708
+a5742fa802fd7eae15375db8f2d6aa87ff3e565b57bbba32e41135e33a6a8129
 ```
 <!-- SHA-256-X-Hash:END -->
 
-* `SHA256` Hash of [EventViewerCustomViews.zip](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Payload/EventViewerCustomViews.zip):
+- `SHA256` Hash of [EventViewerCustomViews.zip](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Payload/EventViewerCustomViews.zip):
 ```
 5909e7b10f5780f7708db1ab8e97d12c99884d4f704f3f4ea961622b631dc133
 ```
 
-
-
- <br> 
 
 
 

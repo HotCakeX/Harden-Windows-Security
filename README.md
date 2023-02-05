@@ -548,9 +548,7 @@ These are configurations that are typically 🔺recommended in High-Risk Environ
 
 ## Certificate Checking Commands<a href="#Certificate-Checking-Commands">![CertificateIcon]</a>
 
-🔶 In this category, the script runs [sigcheck64.exe](https://learn.microsoft.com/en-us/sysinternals/downloads/sigcheck) live from [Sysinternals](https://learn.microsoft.com/en-us/sysinternals/), then lists valid certificates not rooted to the Microsoft Certificate Trust List in the User and Machine stores. Unless you use Windows insider build, all the certificates that will be listed should be treated as dangerous and removed from your system immediately. However, if you are a Windows Insider user, like me, there will be certificates listed that belong to Microsoft and pre-public build of Windows that you use, so they are OK and should not be removed. some of those safe Windows-Insider-build related certificates that should be left alone are: 
-* Microsoft ECC Development Root Certificate Authority 2018 
-* Microsoft Development Root Certificate Authority 2014 
+🔶 In this category, the script runs [sigcheck64.exe](https://learn.microsoft.com/en-us/sysinternals/downloads/sigcheck) live from [Sysinternals](https://learn.microsoft.com/en-us/sysinternals/), then lists valid certificates not rooted to the [Microsoft Certificate Trust List](https://learn.microsoft.com/en-us/windows/win32/seccrypto/certificate-trust-list-overview) in the [User and Machine certificate stores](https://learn.microsoft.com/en-us/windows-hardware/drivers/install/local-machine-and-current-user-certificate-stores). **Except for some Microsoft/Xbox/XBL certificates used by Xbox services or Windows insider builds,** All other certificates that will be listed should be treated as dangerous and removed from your system immediately.
 
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 

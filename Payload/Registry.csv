@@ -21,6 +21,13 @@ TLS;HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Hashes\MD5
 Miscellaneous;HKLM:\SOFTWARE\Microsoft\Windows Search;EnableFindMyFiles;1;DWORD;Turn on Enhanced mode search for Windows indexer
 Miscellaneous;HKLM:\SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate\ClientStateMedium\{56EB18F8-B008-4CBD-B6D2-8C97FE7E9062};allowautoupdatesmetered;1;DWORD;Set Microsoft Edge to update over Metered connections
 Miscellaneous;HKLM:\SYSTEM\ControlSet001\Services\W32Time\TimeProviders\NtpClient;SpecialPollInterval;345600;DWORD;Change Windows time sync interval from every 7 days to every 4 days (= every 345600 seconds)
+Edge;HKLM:\SOFTWARE\Policies\Microsoft\Edge\Recommended;BlockThirdPartyCookies;1;DWORD;Recommends to block 3rd party cookies
+Edge;HKLM:\SOFTWARE\Policies\Microsoft\Edge;DnsOverHttpsMode;secure;String;Enables Secure DNS without insecure fallback
+Edge;HKLM:\SOFTWARE\Policies\Microsoft\Edge;DnsOverHttpsTemplates;https://chrome.cloudflare-dns.com/dns-query;String;Set DNS over HTTPS template to Cloudflare's
+Edge;HKLM:\SOFTWARE\Policies\Microsoft\Edge;AutomaticHttpsDefault;2;DWORD;Automatically upgrade HTTP connections to HTTPS
+Edge;HKLM:\SOFTWARE\Policies\Microsoft\Edge;EncryptedClientHelloEnabled;1;DWORD;Enable Encrypted Client Hello
+Edge;HKLM:\SOFTWARE\Policies\Microsoft\Edge;PreventSmartScreenPromptOverride;1;DWORD;Prevent users from ignoring and bypassing SmartScreen warnings for malicious websites
+Edge;HKLM:\SOFTWARE\Policies\Microsoft\Edge;SmartScreenEnabled;1;DWORD;Enforce SmartScreen
 NonAdmin;HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced;HideFileExt;0;DWORD;Show known file extensions in File explorer
 NonAdmin;HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced;Hidden;1;DWORD;Show hidden files,folders and drives toggles the control panel folder options item
 NonAdmin;HKCU:\Control Panel\International\User Profile;HttpAcceptLanguageOptOut;1;DWORD;Disable websites accessing local language list

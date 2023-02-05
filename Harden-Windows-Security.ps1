@@ -95,7 +95,7 @@ Version 2023.1.28: Bitlocker DMA protection enables only when Kernel DMA protect
 
 .EXAMPLE  
    type: "Set-ExecutionPolicy Bypass -Scope Process" without quotes, in an Elevated PowerShell, to allow running this script for the current session.
-   .NOTES  
+.NOTES  
     Check out GitHub page for security recommendations: https://github.com/HotCakeX/Harden-Windows-Security
 #>
 
@@ -414,7 +414,6 @@ https://stackoverflow.com/questions/48809012/compare-two-credentials-in-powershe
                 Write-Warning "Remove any CD/DVD drives from the system and run the Bitlocker category after that"
                 break
             }
-
             # check make sure Bitlocker isn't in the middle of decryption/encryption operation (on System Drive)
             if ((Get-BitLockerVolume -MountPoint $env:SystemDrive).EncryptionPercentage -ne "100" -and (Get-BitLockerVolume -MountPoint $env:SystemDrive).EncryptionPercentage -ne "0") {
                 $kawai = (Get-BitLockerVolume -MountPoint $env:SystemDrive).EncryptionPercentage
@@ -423,10 +422,8 @@ https://stackoverflow.com/questions/48809012/compare-two-credentials-in-powershe
             }
 
             else {
-
                 # check if Bitlocker is enabled for the system drive
-                if ((Get-BitLockerVolume -MountPoint $env:SystemDrive).ProtectionStatus -eq "on") { 
-                                
+                if ((Get-BitLockerVolume -MountPoint $env:SystemDrive).ProtectionStatus -eq "on") {                                 
                     $KeyProtectors = (Get-BitLockerVolume -MountPoint $env:SystemDrive).KeyProtector.keyprotectortype
                     # check if TPM+PIN and recovery password are being used with Bitlocker which are the safest settings
                     if ($KeyProtectors -contains 'Tpmpin' -and $KeyProtectors -contains 'recoveryPassword') {        
@@ -452,8 +449,7 @@ https://stackoverflow.com/questions/48809012/compare-two-credentials-in-powershe
                                     $pin = $pin1                  
                                 }                  
                                 else { Write-Host "the PINs you entered didn't match, try again" -ForegroundColor red }                  
-                            }
-                  
+                            }                  
                             until ($theyMatch -and $pin1.Length -gt 5 -and $pin2.Length -gt 5)
                  
                             try {
@@ -497,7 +493,6 @@ https://stackoverflow.com/questions/48809012/compare-two-credentials-in-powershe
                     Write-Host "Bitlocker is now fully and securely enabled for OS drive" -ForegroundColor Green                     
                 }
             }
-
             # Enable Bitlocker for all the other drives
             # check if there is any other drive besides OS drive
             $nonOSVolumes = Get-BitLockerVolume | Where-Object { $_.volumeType -ne "OperatingSystem" }

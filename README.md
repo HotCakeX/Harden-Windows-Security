@@ -117,9 +117,7 @@
 To run the script:
 
 ```PowerShell
-# Run the PowerShell script
 Invoke-RestMethod "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security.ps1" | Invoke-Expression
-
 ```
 
 
@@ -135,7 +133,6 @@ From Top to bottom in order:
 
 * Commands that require Administrator Privileges (click/tap on each of these to see in-depth info)
   - <a href="#microsoft-security-baselines">Microsoft Security Baselines</a>
-  - <a href="#security-baselines-x">Security Baselines X</a>
   - <a href="#Windows-Security-aka-Defender">Windows Security aka Defender</a>
   - <a href="#Attack-surface-reduction-rules">Attack surface reduction rules</a>
   - <a href="#Bitlocker-Settings">Bitlocker Settings</a>
@@ -147,6 +144,7 @@ From Top to bottom in order:
   - <a href="#Optional-Windows-Features">Optional Windows Features</a>
   - <a href="#Windows-Networking">Windows Networking</a>
   - <a href="#Miscellaneous-Configurations">Miscellaneous Configurations</a>
+  - <a href="#Windows-Update">Windows Update configurations</a>
   - <a href="#Certificate-Checking-Commands">Certificate Checking Commands</a>
   - <a href="#Country-IP-Blocking">Country IP Blocking</a>
   
@@ -158,10 +156,9 @@ From Top to bottom in order:
 </br>
 </br>
 </br>
-</br>
 
-* 🟩 Means the security measure is applied using Group Policies (Security Baselines X)
-* 🔶 Means the security measure is applied using PowerShell script (Cmdlet or registry)
+* 🟩 Means the security measure is applied using Group Policies
+* 🔶 Means the security measure is applied using PowerShell script
 
 
 
@@ -173,28 +170,12 @@ A security baseline is a group of Microsoft-recommended configuration settings t
 
 [Continue reading in the official documentation](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-security-configuration-framework/windows-security-baselines#what-are-security-baselines)
 
+[Optional Overrides for Microsoft Security Baselines](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Overrides-for-Microsoft-Security-Baseline)
 
 
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
-
-## Security Baselines X<a href="#Security-Baselines-X">![SecurityBaselineX]</a>
-
-This is the `.zip` file that I've created and [uploaded to this GitHub repository](https://github.com/HotCakeX/Harden-Windows-Security/tree/main/GroupPolicy). it contains the Group Policy files that apply security measures explained in this page.
-
-- [How is Group Policy used in this PowerShell script?](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Group-Policy#how-is-group-policy-used-in-this-powershell-script)
-- [How is Security Baseline X created and maintained?](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Group-Policy#how-is-security-baseline-x-created-and-maintained)
-- [How to verify security-baselines-x.zip file and 100% trust it?](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Group-Policy#how-to-verify-security-baselines-xzip-file-and-100-trust-it)
-- <a href="#Trust">View Trust section for more info</a>
-- [Optional Overrides for Microsoft Security Baselines](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Overrides-for-Microsoft-Security-Baseline)
-
-
-
 
 <br>
-
-
-
-<p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
 ## Windows Security aka Defender<a href="#Windows-Security-aka-Defender">![WindowsDefenderIcon]</a>
 - 🟩 Enables **additional** security features of Windows Security (Defender), You can refer to [this official document](https://docs.microsoft.com/en-us/powershell/module/defender/set-mppreference?view=windowsserver2022-ps) for full details.
@@ -262,8 +243,8 @@ $(get-MpPreference).ControlledFolderAccessAllowedApplications
   - [There are more options for Exploit Protection](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/enable-exploit-protection?view=o365-worldwide) but enabling them requires extensive reviewing by users because mixing them up can cause a lot of compatibility issues.
 
 - 🟩 Check for the latest virus and spyware security intelligence on startup
-- 🟩 Specify the maximum depth to scan archive files to max `4294967295`
-- 🟩 [Define the maximum size of downloaded files and attachments to be scanned](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/configure-advanced-scan-types-microsoft-defender-antivirus?view=o365-worldwide) to max `10,000,000 KB` or `10 GB`. [the default is](https://github.com/MicrosoftDocs/microsoft-365-docs/pull/5600) `20480 KB` or `~20MB`
+- 🟩 Specify the maximum depth to scan archive files to the maximum possible value of `4,294,967,295`
+- 🟩 [Define the maximum size of downloaded files and attachments to be scanned](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/configure-advanced-scan-types-microsoft-defender-antivirus?view=o365-worldwide) and set it to the maximum possible value of `10,000,000 KB` or `10 GB`. [the default is](https://github.com/MicrosoftDocs/microsoft-365-docs/pull/5600) `20480 KB` or `~20MB`
 
 
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
@@ -505,13 +486,28 @@ These are configurations that are typically 🔺recommended in High-Risk Environ
 - 🟩 Enables [SMB/LDAP Signing](https://techcommunity.microsoft.com/t5/storage-at-microsoft/configure-smb-signing-with-confidence/ba-p/2418102)
 - 🔶 Enables [SMB Encryption](https://learn.microsoft.com/en-us/windows-server/storage/file-server/smb-security) (the status of `(get-SmbServerConfiguration).EncryptData` was `$False` when tested on [Windows 11 dev build 25272](https://blogs.windows.com/windows-insider/2023/01/05/announcing-windows-11-insider-preview-build-25272/), this script sets it to `$True`)
 
-- 🔶🟩 Enable Windows update and Edge browser to download and install updates on any network, metered or not; because the updates are important and should not be suppressed, **that's what bad actors would want.**
+- 🔶 Enable Edge browser to download and install updates on any network, metered or not; because the updates are important and should not be suppressed, **that's what bad actors would want.**
 
 - 🔶 Enables "notify me when a restart is required to finish updating" in Windows Update, responsible for the toggle in Windows settings => Windows Update => Advanced options
 
 - 🔶 [Enables all Windows users to use Hyper-V and Windows Sandbox](https://learn.microsoft.com/en-us/archive/blogs/virtual_pc_guy/why-do-you-have-to-elevate-powershell-to-use-hyper-v-cmdlets) by adding all Windows users to the "Hyper-V Administrators" security group, by default only Administrators can use Hyper-V or Windows Sandbox. 
 
 - 🔶 Changes Windows time sync interval from the default every 7 days to every 4 days (= every 345600 seconds)
+
+- 🔶 Create custom views for Windows Event Viewer to help you keep tabs on important security events: attack surface reduction rules events, controlled folder access events, exploit protection events, network protection events, MSI and Scripts for WDAC Auditing events, Sudden Shut down events and Code Integrity Operational events. 
+
+
+<p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
+
+
+
+## Windows Update Configurations
+
+- 🟩
+- 🟩
+- 🟩
+- 🟩 Enable Windows Update to download and install updates on any network, metered or not; because the updates are important and should not be suppressed, **that's what bad actors would want.**
+
 
 
 
@@ -541,7 +537,6 @@ In order to run commands in this category, you don't need administrator privileg
 - 🔶 Turn off safe search in Windows search, will enable +18 content to appear in searches; essentially toggles the button in: Windows settings > privacy and security > search permissions > safe search
 - 🔶 prevent showing notifications in Lock screen - this is the same as toggling the button in Windows settings > system > notifications > show notifications in the lock screen
 - 🔶 Enable Clipboard History and sync with Microsoft Account
-- 🔶 Create custom views for Windows Event Viewer to help you keep tabs on important security events: attack surface reduction rules events, controlled folder access events, exploit protection events, network protection events, MSI and Scripts for WDAC Auditing events, Sudden Shut down events and Code Integrity Operational events. 
 - 🔶 Turn on text suggestions when typing on the physical keyboard
 - 🔶 Turn on "Multilingual text suggestions" for the current user, toggles the option in Windows settings
 - 🔶 Turn off sticky key shortcut of pressing shift key 5 times fast
@@ -568,58 +563,33 @@ Trust is very important; you shouldn't blindly trust me nor any other 3rd party 
 - There is no unexpected behavior involved.
 - You can even fork this repository, 100% verify it until that point in time, then verify any subsequent changes/updates I push to this repository, **at your own pace** (using `Sync fork` and `Compare` options on your fork), and if you are happy with the changes, allow it to be merged with your own copy/fork on your GitHub account.
 
-#### [How to verify security-baselines-x.zip file and 100% trust it?](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Group-Policy#how-to-verify-security-baselines-xzip-file-and-100-trust-it)
 
 
 <br>
-<br>
 
+- [How is Group Policy used in this PowerShell script?](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Group-Policy#how-is-group-policy-used-in-this-powershell-script)
+- [How is Security Baseline X created and maintained?](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Group-Policy#how-is-security-baseline-x-created-and-maintained)
+- [How to verify security-baselines-x.zip file and 100% trust it?](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Group-Policy#how-to-verify-security-baselines-xzip-file-and-100-trust-it)
 
  
-* [Virus Total scan resaults of Security-Baselines-X.zip](https://www.virustotal.com/gui/file/38b55080f0ab749ab32e2dce6b059768f9115662d9261163fb087d84c44a6678/details)
+
 * `SHA256` Hash of Security-Baselines-X.zip:
-<!-- SHA-256-Hash:START -->
+<!-- SHA-256-X-Hash:START -->
 ```
-702AF11E4C74CFE58D4E09FBCDFC192609950768A9306EB667517F2B6996E708
+702af11e4c74cfe58d4e09fbcdfc192609950768a9306eb667517f2b6996e708
 ```
-<!-- SHA-256-Hash:END -->
-* `SHA512` Hash of Security-Baselines-X.zip:
-<!-- SHA-512-Hash:START -->
+<!-- SHA-256-X-Hash:END -->
+
+* `SHA256` Hash of EventViewerCustomViews.zip:
 ```
-0803EC4DCB00A3FE7072DF56872562FD753303976361192BC5EA9AD33243C708BFA4794BF102983818FCE70952AAD4DBC1F4993A646D8FAB25729EB27B2F89CE
+5909e7b10f5780f7708db1ab8e97d12c99884d4f704f3f4ea961622b631dc133
 ```
-<!-- SHA-512-Hash:END -->
 
 
-<br>
-
-
-
-
-#### To quickly and easily verify the file hashes, without even downloading the zip file, run this in PowerShell:
-_if the output is `True`, then the file is safe as Virus Total website scanned._
-
-<!-- Hash-Verification:START -->
-```PowerShell
-$WebClient = [System.Net.WebClient]::new()
-$PackageURL = 'https://github.com/HotCakeX/Harden-Windows-Security/raw/main/GroupPolicy/Security-Baselines-X.zip'
-$publishedHashSHA256 = '702AF11E4C74CFE58D4E09FBCDFC192609950768A9306EB667517F2B6996E708'
-$publishedHashSHA512 = '0803EC4DCB00A3FE7072DF56872562FD753303976361192BC5EA9AD33243C708BFA4794BF102983818FCE70952AAD4DBC1F4993A646D8FAB25729EB27B2F89CE'
-$SHA256Hash = Get-FileHash -Algorithm SHA256 -InputStream ($WebClient.OpenRead($PackageURL))
-$SHA512Hash = Get-FileHash -Algorithm SHA512 -InputStream ($WebClient.OpenRead($PackageURL))
-$SHA256Hash.Hash -eq $publishedHashSHA256 -and $SHA512Hash.Hash -eq $publishedHashSHA512
-```
-<!-- Hash-Verification:END -->
-
-_Don't know what those commands are? [check this Microsoft Learn article](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/get-filehash?view=powershell-7.3)_
-
-
-<br>
 
 
 
  <br> 
-
 
 
 
@@ -731,5 +701,4 @@ Not Applicable, No license. because the only mission of this GitHub repository a
 [UACIcon]: images/UAC.png
 [TLSIcon]: images/TLS.png
 [WindowsDefenderIcon]: images/WindowsDefender.png
-[SecurityBaselineX]: images/Security-Baseline-X.png
 [MicrosoftSecurityBaseline]: images/Microsoft-Security-Baseline.png

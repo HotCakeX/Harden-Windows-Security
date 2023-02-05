@@ -1,104 +1,3 @@
-<#PSScriptInfo
-
-.VERSION 2023.2.5
-
-.GUID d435a293-c9ee-4217-8dc1-4ad2318a5770
-
-.AUTHOR HotCakeX
-
-.COMPANYNAME SpyNetGirl
-
-.COPYRIGHT 2023
-
-.TAGS Windows Hardening Security Bitlocker Defender Firewall Edge Protection
-
-.LICENSEURI 
-
-.PROJECTURI https://github.com/HotCakeX/Harden-Windows-Security
-
-.ICONURI https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/ICONURI.png
-
-.EXTERNALMODULEDEPENDENCIES 
-
-.REQUIREDSCRIPTS 
-
-.EXTERNALSCRIPTDEPENDENCIES 
-
-.RELEASENOTES
-##
-Version 2023.2.5: Optimized the code and removed a lot of empty lines. optimized the Bitlocker category. moved all registry stuff to registry.csv located in the GitHub repository.
-##
-Version 2023.2.4: Added more Windows Security Policies, the script now lets you run each category individually even if they involve Group Policy. Added Windows update category.
-##
-Version 2023.1.29: Improved Security Baselines categories. added error handling when no Internet connection is available to download them.
-##
-Version 2023.1.28: Bitlocker DMA protection enables only when Kernel DMA protection is unavailable, as suggested by Microsoft, and this happens using Group Policies instead of registry. Improved verbosity when importing and installing policies.
-#>
-
-<# 
-
-.SYNOPSIS
-    Harden Windows 11 safely, securely using Official Supported methods with proper explanation
-
-.DESCRIPTION
-
-
-  ⭕ You need to read the GitHub's readme page before running this script: https://github.com/HotCakeX/Harden-Windows-Security
-
-💠 Features of this Hardening script:
-
-  ✅ Always up-to-date and works with latest build of Windows (Currently Windows 11 - compatible and rigorously tested on stable and Insider Dev builds)
-  ✅ Doesn't break anything
-  ✅ Doesn't remove or disable Windows functionalities against Microsoft's recommendation
-  ✅ The Readme page on GitHub is used as the reference for all of the security measures applied by this script and Group Policies. the order in which they appear there is the same as the one in the script file.
-  ✅ When a hardening command is no longer necessary because it's applied by default by Microsoft on new builds of Windows, it will also be removed from this script in order to prevent any problems and because it won't be necessary anymore.
-  ✅ The script can be run infinite number of times, it's made in a way that it won't make any duplicate changes at all.
-  ✅ The script asks for confirmation, in the PowerShell console, before running each hardening category, so you can selectively run (or don't run) each of them.
-  ✅ Running this script makes your PC compliant with Secured-core PC specifications (providing that you use a modern hardware that supports the latest Windows security features). 
-  ✅ Running this script makes your system compliant with the official Microsoft Security Baselines
-
-
-🛑 Warning: Windows by default is secure and safe, this script does not imply nor claim otherwise. just like anything, you have to use it wisely and don't compromise yourself with reckless behavior and bad user configuration; Nothing is foolproof. this script only uses the tools and features that have already been implemented by Microsoft in Windows OS to fine-tune it towards the highest security and locked-down state, using well-documented, supported, recommended and official methods. continue reading on GitHub for comprehensive info.
-
-💠 Hardening Categories from top to bottom: (🔺Detailed info about each of them at my Github🔻)
-
-⏹ Commands that require Administrator Privileges
-  ✅Microsoft Security Baselines
-  ✅Security Baselines X
-  ✅ Windows Security aka Defender
-  ✅ Attack surface reduction rules
-  ✅ Bitlocker Settings
-  ✅ TLS Security
-  ✅ Lock Screen
-  ✅ UAC (User Account Control)
-  ✅ Device Guard
-  ✅ Windows Firewall
-  ✅ Optional Windows Features
-  ✅ Windows Networking
-  ✅ Miscellaneous Configurations
-  ✅ Windows Update Configurations
-  ✅ Certificate Checking Commands
-  ✅ Country IP Blocking
-⏹ Commands that don't require Administrator Privileges
-  ✅ Non-Admin Commands that only affect the current user and do not make machine-wide changes.
-
-
-💎 Note: if there are multiple Windows user accounts in your computer, it's recommended to run this script in each of them, without administrator privileges, because Non-admin commands only apply to the current user and are not machine wide.
-
-💎 Note: The script asks for confirmation, in the PowerShell console, before running each hardening category, so you can selectively run (or don't run) each of them.
-
-💎 Note: There are 3 items tagged with #TopSecurity that can cause difficulties. When you run this script, you will have an option to enable them if you want to. You can find all the information about them on GitHub.
-
-🏴 if you have any questions, requests, suggestions etc. about this script, please open a new discussion in GitHub:
-
-🟡 https://github.com/HotCakeX/Harden-Windows-Security/discussions
-
-.EXAMPLE  
-   type: "Set-ExecutionPolicy Bypass -Scope Process" without quotes, in an Elevated PowerShell, to allow running this script for the current session.
-.NOTES  
-    Check out GitHub page for security recommendations: https://github.com/HotCakeX/Harden-Windows-Security
-#>
-
 $infomsg = "`r`n" +
 "#############################################################################################################`r`n" +
 "###  Make Sure you've completely read what's written in the GitHub repository, before running this script ###`r`n" +
@@ -432,7 +331,8 @@ https://stackoverflow.com/questions/48809012/compare-two-credentials-in-powershe
                     else {       
                         # if Bitlocker is using TPM+PIN but not recovery password (for key protectors)
                         if ($KeyProtectors -contains 'Tpmpin' -and $KeyProtectors -notcontains 'recoveryPassword') {
-                            Write-Host "TPM and Startup Pin are available but the recovery password is missing, adding it now... `nthe recovery password will be saved in a Text file in $env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt" -ForegroundColor yellow
+                            Write-Host "TPM and Startup Pin are available but the recovery password is missing, adding it now...`
+the recovery password will be saved in a Text file in $env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt" -ForegroundColor yellow                          
                             Add-BitLockerKeyProtector -MountPoint $env:SystemDrive -RecoveryPasswordProtector *> "$env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt"
                             Write-Host "Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which requires authentication to access." -ForegroundColor Blue                         
                         }                
@@ -489,7 +389,8 @@ https://stackoverflow.com/questions/48809012/compare-two-credentials-in-powershe
                     }     
                     Add-BitLockerKeyProtector -MountPoint $env:SystemDrive -RecoveryPasswordProtector *> "$env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt" 
                     Resume-BitLocker -MountPoint $env:SystemDrive
-                    Write-Host "the recovery password will be saved in a Text file in $env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt `nMake sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which requires authentication to access." -ForegroundColor Blue
+                    Write-Host "the recovery password will be saved in a Text file in $env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt`
+Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which requires authentication to access." -ForegroundColor Blue
                     Write-Host "Bitlocker is now fully and securely enabled for OS drive" -ForegroundColor Green                     
                 }
             }
@@ -520,7 +421,9 @@ https://stackoverflow.com/questions/48809012/compare-two-credentials-in-powershe
                             else {
                                 if ($KeyProtectors -contains 'ExternalKey' -and $KeyProtectors -notcontains 'RecoveryPassword' ) {                                              
                                     Add-BitLockerKeyProtector -MountPoint $MountPoint -RecoveryPasswordProtector *> "$MountPoint\Drive $($MountPoint.Remove(1)) recovery password.txt";
-                                    Write-Host "`nDrive $MountPoint is auto-unlocked but doesn't have Recovery Password, adding it now... `nBitlocker Recovery Password has been added for drive $MountPoint . it will be saved in a Text file in $($MountPoint)\Drive $($MountPoint.Remove(1)) recovery password.txt `nMake sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which requires authentication to access." -ForegroundColor Blue
+                                    Write-Host "`nDrive $MountPoint is auto-unlocked but doesn't have Recovery Password, adding it now...`
+Bitlocker Recovery Password has been added for drive $MountPoint . it will be saved in a Text file in $($MountPoint)\Drive $($MountPoint.Remove(1)) recovery password.txt`
+Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which requires authentication to access." -ForegroundColor Blue
                                 }
                                 if ($KeyProtectors -contains 'RecoveryPassword' -and $KeyProtectors -notcontains 'ExternalKey') {
                                     Enable-BitLockerAutoUnlock -MountPoint $MountPoint                                
@@ -530,7 +433,8 @@ https://stackoverflow.com/questions/48809012/compare-two-credentials-in-powershe
                         else {
                             Enable-BitLocker -MountPoint $MountPoint -RecoveryPasswordProtector *> "$MountPoint\Drive $($MountPoint.Remove(1)) recovery password.txt";
                             Enable-BitLockerAutoUnlock -MountPoint $MountPoint
-                            Write-Host "Bitlocker has started encrypting drive $MountPoint . recovery password will be saved in a Text file in $($MountPoint)\Drive $($MountPoint.Remove(1)) recovery password.txt `nMake sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which requires authentication to access." -ForegroundColor Blue
+                            Write-Host "Bitlocker has started encrypting drive $MountPoint . recovery password will be saved in a Text file in $($MountPoint)\Drive $($MountPoint.Remove(1)) recovery password.txt`
+Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which requires authentication to access." -ForegroundColor Blue
                         }
                     }
                 }
@@ -831,6 +735,24 @@ https://stackoverflow.com/questions/48809012/compare-two-credentials-in-powershe
     }    
     # ====================================================End of Windows Update Configurations=======================================
     #endregion Windows-Update-Configurations
+
+    #region Edge-Browser-Configurations
+    # ====================================================Edge Browser Configurations====================================================
+    switch (Select-Option -Options "Yes", "No", "Exit" -Message "Apply Edge Browser Configurations ?") {
+        "Yes" {
+            # Edge Browser Configurations registry
+            Set-Location $workingDir
+            $items = Import-Csv '.\Registry.csv' -Delimiter ";"
+            foreach ($item in $items) {
+                if ($item.category -eq 'Edge') {
+                    ModifyRegistry -path $item.path -key $item.key -value $item.value -type $item.type
+                }
+            }
+        } "No" { break }
+        "Exit" { &$cleanUp }
+    } 
+    # ====================================================End of Edge Browser Configurations==============================================
+    #endregion Edge-Browser-Configurations
 
     #region Top-Security-Measures    
     # ============================================Top Security Measures========================================================

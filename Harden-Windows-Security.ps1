@@ -194,6 +194,13 @@ else {
     # ==========================================Bitlocker Settings=============================================================    
     switch (Select-Option -Options "Yes", "No", "Exit" -Message "Run Bitlocker category ?") {
         "Yes" {
+            # doing this so Controlled Folder Access won't bitch about powercfg.exe
+            Set-MpPreference -ControlledFolderAccessAllowedApplications "C:\Windows\System32\powercfg.exe"
+            Start-Sleep 5
+            # Set Hibnernate mode to full
+            powercfg /h /type full
+            Start-Sleep 2
+            Remove-MpPreference -ControlledFolderAccessAllowedApplications "C:\Windows\System32\powercfg.exe"
             # Change current working directory to the LGPO's folder
             Set-Location "$workingDir\LGPO_30"
 
@@ -248,9 +255,7 @@ else {
       }
     }
 "@
-
             Add-Type -TypeDefinition $bootDMAProtectionCheck
-
             # returns true or false depending on whether Kernel DMA Protection is on or off
             $bootDMAProtection = ([SystemInfo.NativeMethods]::BootDmaCheck()) -ne 0
 
@@ -266,7 +271,6 @@ else {
                 Write-Host "Kernel DMA protection is unavailable on the system, enabling Bitlocker DMA protection." -ForegroundColor Blue
                 .\LGPO.exe /m "..\Security-Baselines-X\Overrides for Microsoft Security Baseline\Bitlocker DMA\Bitlocker DMA Countermeasure ON\Registry.pol"                                                          
             }
-
             # set-up Bitlocker encryption for OS Drive with TPMandPIN and recovery password keyprotectors and Verify its implementation
             <#
 https://stackoverflow.com/questions/48809012/compare-two-credentials-in-powershell
@@ -305,7 +309,6 @@ https://stackoverflow.com/questions/48809012/compare-two-credentials-in-powershe
                     }
                 }
             }
-
   
             # check, make sure there is no CD/DVD drives in the system, because Bitlocker throws an error when there is
             $CDDVDCheck = (Get-WMIObject -Class Win32_CDROMDrive -Property *).MediaLoaded
@@ -476,11 +479,6 @@ Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which re
                     }
                 }
             }
-            # add exception in Controlled Folder Access for built-in powercfg.exe so Controlled folder access won't bitch about it
-            Set-MpPreference -ControlledFolderAccessAllowedApplications "C:\Windows\System32\powercfg.exe"
-            # Set Hibnernate mode to full
-            powercfg /h /type full
-
         } "No" { break }
         "Exit" { &$cleanUp }
     }    
@@ -811,11 +809,15 @@ Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which re
             # List valid certificates not rooted to the Microsoft Certificate Trust List in the User store
             switch (Select-Option -Options "Yes", "No" -Message "List valid certificates not rooted to the Microsoft Certificate Trust List in the User store ?") {
                 "Yes" {
-                    try { \\live.sysinternals.com\tools\sigcheck64.exe -tuv -accepteula -nobanner }
-                    catch {
-                        Invoke-WebRequest -Uri "https://live.sysinternals.com/sigcheck64.exe" -OutFile "sigcheck64.exe"
+                    try {
+                        Invoke-WithoutProgress {
+                            Invoke-WebRequest -Uri "https://live.sysinternals.com/sigcheck64.exe" -OutFile "sigcheck64.exe" -ErrorAction Stop
+                        }
                         .\sigcheck64.exe -tuv -accepteula -nobanner
-                        Remove-Item .\sigcheck64.exe
+                        Remove-Item .\sigcheck64.exe -Force
+                    }
+                    catch {                    
+                        Write-Host "sigcheck64.exe couldn't be downloaded from https://live.sysinternals.com" -ForegroundColor Red
                     }
                 } "No" { break }              
             }
@@ -823,18 +825,20 @@ Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which re
             switch (Select-Option -Options "Yes", "No" -Message "List valid certificates not rooted to the Microsoft Certificate Trust List in the Machine store ?") {
                 "Yes" {
                     try {
-                        \\live.sysinternals.com\tools\sigcheck64.exe -tv -accepteula -nobanner
+                        Invoke-WithoutProgress {
+                            Invoke-WebRequest -Uri "https://live.sysinternals.com/sigcheck64.exe" -OutFile "sigcheck64.exe" -ErrorAction Stop
+                        }
+                        .\sigcheck64.exe -tv -accepteula -nobanner
+                        Remove-Item .\sigcheck64.exe -Force
                     }
                     catch {
-                        Invoke-WebRequest -Uri "https://live.sysinternals.com/sigcheck64.exe" -OutFile "sigcheck64.exe"
-                        .\sigcheck64.exe -tv -accepteula -nobanner
-                        Remove-Item .\sigcheck64.exe
+                        Write-Host "sigcheck64.exe couldn't be downloaded from https://live.sysinternals.com" -ForegroundColor Red
                     }
-                } "No" { break }               
+                } "No" { break }  
             }
         } "No" { break }
         "Exit" { &$cleanUp }
-    }    
+    }
     # ====================================================End of Certificate Checking Commands=================================
     #endregion Certificate-Checking-Commands
 

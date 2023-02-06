@@ -439,6 +439,8 @@ Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which re
                     }
                 }
             }
+            # add exception in Controlled Folder Access for built-in powercfg.exe so Controlled Folder Access won't bitch about it
+            Set-MpPreference -ControlledFolderAccessAllowedApplications "C:\Windows\System32\powercfg.exe"
             # Set Hibnernate mode to full
             powercfg /h /type full
 

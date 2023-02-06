@@ -71,7 +71,7 @@
  
  ## Features:<a href="#features">![FeaturesIcon]</a>
 
-- Always up-to-date and works with the latest build of Windows (Currently Windows 11 - compatible and rigorously tested on stable and Insider Dev builds)
+- Always up-to-date and only guaranteed to work with the latest build of Windows (Currently Windows 11 - Rigorously tested on the latest Stable and Insider Dev builds)
 - It doesn't break anything.
 - All of the links and sources are official from Microsoft websites, straight from the source. no bias, no misinformation and no old obsolete methods, that's why there are no links to 3rd party news websites, made up blogs or articles.
 
@@ -190,7 +190,7 @@ A security baseline is a group of Microsoft-recommended configuration settings t
 
 - 🟩 Clears Quarantined items after 5 days instead of the default behavior of keeping them indefinitely.
 
-- 🟩 Lets Windows Defender use up to 70% of the CPU instead of the default 50%, during scans.
+- 🟩 Lets Windows Defender use up to 60% of the CPU instead of the default 50%, during scans.
 
 - 🟩 Allows Windows Defender to download security updates even on a metered connection.
 
@@ -240,6 +240,7 @@ $(get-MpPreference).ControlledFolderAccessAllowedApplications
 - 🟩 Check for the latest virus and spyware security intelligence on startup
 - 🟩 Specify the maximum depth to scan archive files to the maximum possible value of `4,294,967,295`
 - 🟩 [Define the maximum size of downloaded files and attachments to be scanned](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/configure-advanced-scan-types-microsoft-defender-antivirus?view=o365-worldwide) and set it to the maximum possible value of `10,000,000 KB` or `10 GB`. [the default is](https://github.com/MicrosoftDocs/microsoft-365-docs/pull/5600) `20480 KB` or `~20MB`
+- 🟩 Enforces all features of the [Enhanced Phishing Protection](https://learn.microsoft.com/en-us/windows/security/threat-protection/microsoft-defender-smartscreen/phishing-protection-microsoft-defender-smartscreen?tabs=gpo) in Microsoft Defender SmartScreen
 
 
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>

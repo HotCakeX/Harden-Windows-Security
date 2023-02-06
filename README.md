@@ -602,7 +602,7 @@ Trust is very important; you shouldn't blindly trust me nor any other **3rd part
 - `SHA256` Hash of [Security-Baselines-X.zip](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Payload/Security-Baselines-X.zip):
 <!-- SHA-256-X-Hash:START -->
 ```
-a5742fa802fd7eae15375db8f2d6aa87ff3e565b57bbba32e41135e33a6a8129
+8bdc1f3bdcaf9da9efb3aa6ff435efe71a1c65bc25a12235fb46203f2a9d2936
 ```
 <!-- SHA-256-X-Hash:END -->
 

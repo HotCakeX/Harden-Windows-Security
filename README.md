@@ -594,7 +594,7 @@ Trust is very important; you shouldn't blindly trust me nor any other **3rd part
   - [EventViewerCustomViews.zip](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Payload/EventViewerCustomViews.zip) includes XML files, in plain text, easily readable and verifiable. the script downloads and copies them to `C:\ProgramData\Microsoft\Event Viewer\Views` so that when you open [Windows Event Viewer](https://learn.microsoft.com/en-us/host-integration-server/core/windows-event-viewer1), you will find custom views as explained in the Miscellaneous category.
   - [Security-Baselines-X.zip](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Payload/Security-Baselines-X.zip) includes Group Policies that are used by this script to apply the security measures explained in this page.
 - [How is Group Policy used in this PowerShell script?](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Group-Policy#how-is-group-policy-used-in-this-powershell-script)
-- [How is Security Baseline X created and maintained?](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Group-Policy#how-is-security-baseline-x-created-and-maintained)
+- [How are Group Policies for this script created and maintained?](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Group-Policy#how-are-group-policies-for-this-script-created-and-maintained)
 - [How to verify security-baselines-x.zip file and 100% trust it?](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Group-Policy#how-to-verify-security-baselines-xzip-file-and-100-trust-it)
 
 <br>

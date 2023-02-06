@@ -345,12 +345,12 @@ the recovery password will be saved in a Text file in $env:SystemDrive\Drive $($
                                       
                                 $theyMatch = Compare-SecureString $pin1 $pin2
 
-                                if ( $theyMatch -and $pin1.Length -gt 5 -and $pin2.Length -gt 5  ) {                  
+                                if ( $theyMatch -and $pin1.Length -ge 6 -and $pin2.Length -ge 6  ) {                  
                                     $pin = $pin1                  
                                 }                  
                                 else { Write-Host "the PINs you entered didn't match, try again" -ForegroundColor red }                  
                             }                  
-                            until ($theyMatch -and $pin1.Length -gt 5 -and $pin2.Length -gt 5)
+                            until ($theyMatch -and $pin1.Length -ge 6 -and $pin2.Length -ge 6)
                  
                             try {
                                 Add-BitLockerKeyProtector -MountPoint $env:SystemDrive -TpmAndPinProtector -Pin $pin -ErrorAction Stop
@@ -372,12 +372,12 @@ the recovery password will be saved in a Text file in $env:SystemDrive\Drive $($
       
                         $theyMatch = Compare-SecureString $pin1 $pin2
             
-                        if ($theyMatch -and $pin1.Length -gt 5 -and $pin2.Length -gt 5) {      
+                        if ($theyMatch -and $pin1.Length -ge 6 -and $pin2.Length -ge 6) {      
                             $pin = $pin1      
                         }      
                         else { Write-Host "the Pins you entered didn't match, try again" -ForegroundColor red }      
                     }      
-                    until ($theyMatch -and $pin1.Length -gt 5 -and $pin2.Length -gt 5)
+                    until ($theyMatch -and $pin1.Length -ge 6 -and $pin2.Length -ge 6)
 
                     try {
                         enable-bitlocker -MountPoint $env:SystemDrive -EncryptionMethod XtsAes256 -pin $pin -TpmAndPinProtector -SkipHardwareTest -ErrorAction Stop             
@@ -410,23 +410,60 @@ Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which re
                         if ((Get-BitLockerVolume -MountPoint $MountPoint).ProtectionStatus -eq "on") {    
                             $KeyProtectors = (Get-BitLockerVolume -MountPoint $MountPoint).KeyProtector.keyprotectortype    
                             if ($KeyProtectors -contains 'RecoveryPassword' -and $KeyProtectors -contains 'ExternalKey') {
+                                # if there is any External key key protector, delete all of them and add a new one
                                 $ExternalKeyProtectors = ((Get-BitLockerVolume -MountPoint $MountPoint).KeyProtector |
                                     Where-Object { $_.keyprotectortype -eq "ExternalKey" }).KeyProtectorId
                                 if ($ExternalKeyProtectors) {
-                                    $ExternalKeyProtectors | ForEach-Object { Remove-BitLockerKeyProtector -MountPoint $MountPoint -KeyProtectorId $_ -ErrorAction SilentlyContinue }
+                                    $ExternalKeyProtectors | ForEach-Object {
+                                        Remove-BitLockerKeyProtector -MountPoint $MountPoint -KeyProtectorId $_ -ErrorAction SilentlyContinue 
+                                    }
                                 }
                                 Enable-BitLockerAutoUnlock -MountPoint $MountPoint
+                                # if there is more than 1 Recovery Password, delete all of them and add a new one
+                                $RecoveryPasswordKeyProtectors = ((Get-BitLockerVolume -MountPoint $MountPoint).KeyProtector |
+                                    Where-Object { $_.keyprotectortype -eq "RecoveryPassword" }).KeyProtectorId
+                                if ($RecoveryPasswordKeyProtectors.Count -gt 1) {
+                                    write-host "there are more than 1 recovery password key protector associated with the drive $mountpoint`
+Removing all of them and adding a new one now. Bitlocker Recovery Password has been added for drive $MountPoint`
+it will be saved in a Text file in $($MountPoint)\Drive $($MountPoint.Remove(1)) recovery password.txt . Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which requires authentication to access." -ForegroundColor Yellow   
+                                    $RecoveryPasswordKeyProtectors | ForEach-Object {
+                                        Remove-BitLockerKeyProtector -MountPoint $MountPoint -KeyProtectorId $_ 
+                                    }
+                                    Add-BitLockerKeyProtector -MountPoint $MountPoint -RecoveryPasswordProtector *> "$MountPoint\Drive $($MountPoint.Remove(1)) recovery password.txt";
+                                }
+                                
                                 Write-Host "Bitlocker is fully and securely enabled for drive $MountPoint" -ForegroundColor Green    
                             }
                             else {
-                                if ($KeyProtectors -contains 'ExternalKey' -and $KeyProtectors -notcontains 'RecoveryPassword' ) {                                              
+                                if ($KeyProtectors -contains 'ExternalKey' -and $KeyProtectors -notcontains 'RecoveryPassword' ) {
+                                    # if there is any External key key protector, delete all of them and add a new one
+                                    $ExternalKeyProtectors = ((Get-BitLockerVolume -MountPoint $MountPoint).KeyProtector |
+                                        Where-Object { $_.keyprotectortype -eq "ExternalKey" }).KeyProtectorId
+                                    if ($ExternalKeyProtectors) {
+                                        $ExternalKeyProtectors | ForEach-Object {
+                                            Remove-BitLockerKeyProtector -MountPoint $MountPoint -KeyProtectorId $_ -ErrorAction SilentlyContinue 
+                                        }
+                                    }
+                                    Enable-BitLockerAutoUnlock -MountPoint $MountPoint                                             
                                     Add-BitLockerKeyProtector -MountPoint $MountPoint -RecoveryPasswordProtector *> "$MountPoint\Drive $($MountPoint.Remove(1)) recovery password.txt";
                                     Write-Host "`nDrive $MountPoint is auto-unlocked but doesn't have Recovery Password, adding it now...`
 Bitlocker Recovery Password has been added for drive $MountPoint . it will be saved in a Text file in $($MountPoint)\Drive $($MountPoint.Remove(1)) recovery password.txt`
 Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which requires authentication to access." -ForegroundColor Blue
                                 }
                                 if ($KeyProtectors -contains 'RecoveryPassword' -and $KeyProtectors -notcontains 'ExternalKey') {
-                                    Enable-BitLockerAutoUnlock -MountPoint $MountPoint                                
+                                    Enable-BitLockerAutoUnlock -MountPoint $MountPoint
+                                    # if there is more than 1 Recovery Password, delete all of them and add a new one
+                                    $RecoveryPasswordKeyProtectors = ((Get-BitLockerVolume -MountPoint $MountPoint).KeyProtector |
+                                        Where-Object { $_.keyprotectortype -eq "RecoveryPassword" }).KeyProtectorId
+                                    if ($RecoveryPasswordKeyProtectors.Count -gt 1) {
+                                        write-host "there are more than 1 recovery password key protector associated with the drive $mountpoint`
+Removing all of them and adding a new one now. Bitlocker Recovery Password has been added for drive $MountPoint`
+it will be saved in a Text file in $($MountPoint)\Drive $($MountPoint.Remove(1)) recovery password.txt . Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which requires authentication to access." -ForegroundColor Yellow   
+                                        $RecoveryPasswordKeyProtectors | ForEach-Object {
+                                            Remove-BitLockerKeyProtector -MountPoint $MountPoint -KeyProtectorId $_ 
+                                        }
+                                        Add-BitLockerKeyProtector -MountPoint $MountPoint -RecoveryPasswordProtector *> "$MountPoint\Drive $($MountPoint.Remove(1)) recovery password.txt";
+                                    }                                    
                                 }                      
                             }
                         }
@@ -439,7 +476,7 @@ Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which re
                     }
                 }
             }
-            # add exception in Controlled Folder Access for built-in powercfg.exe so Controlled Folder Access won't bitch about it
+            # add exception in Controlled Folder Access for built-in powercfg.exe so Controlled folder access won't bitch about it
             Set-MpPreference -ControlledFolderAccessAllowedApplications "C:\Windows\System32\powercfg.exe"
             # Set Hibnernate mode to full
             powercfg /h /type full
@@ -467,7 +504,6 @@ Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which re
             ) | ForEach-Object {
 ([Microsoft.Win32.RegistryKey]::OpenRemoteBaseKey([Microsoft.Win32.RegistryHive]::LocalMachine, $env:COMPUTERNAME)).CreateSubKey($_)
             }
-
             # TLS Registry section
             Set-Location $workingDir
             $items = Import-Csv '.\Registry.csv' -Delimiter ";"
@@ -477,7 +513,6 @@ Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which re
                     ModifyRegistry -path $item.path -key $item.key -value $item.value -type $item.type
                 }
             }
-
             # Enable TLS_CHACHA20_POLY1305_SHA256 Cipher Suite which is available but not enabled by default in Windows 11
             Enable-TlsCipherSuite -Name "TLS_CHACHA20_POLY1305_SHA256" -Position 0
 
@@ -506,7 +541,6 @@ Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which re
             catch {
                 Write-Host "`nAll weak TLS Cipher Suites have been disabled`n" -ForegroundColor Magenta
             }
-
             # Enabling Diffie–Hellman based key exchange algorithms
 
             # TLS_DHE_RSA_WITH_AES_128_GCM_SHA256
@@ -520,9 +554,7 @@ Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which re
 
             # TLS_DHE_RSA_WITH_AES_256_CBC_SHA
             # Not enabled by default on Windows 11 according to the Microsoft Docs above
-            Enable-TlsCipherSuite -Name "TLS_DHE_RSA_WITH_AES_256_CBC_SHA"
-
-  
+            Enable-TlsCipherSuite -Name "TLS_DHE_RSA_WITH_AES_256_CBC_SHA"  
         } "No" { break }
         "Exit" { &$cleanUp }
     }    
@@ -790,7 +822,9 @@ Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which re
             # List valid certificates not rooted to the Microsoft Certificate Trust List in the Machine store
             switch (Select-Option -Options "Yes", "No" -Message "List valid certificates not rooted to the Microsoft Certificate Trust List in the Machine store ?") {
                 "Yes" {
-                    try { \\live.sysinternals.com\tools\sigcheck64.exe -tv -accepteula -nobanner }
+                    try {
+                        \\live.sysinternals.com\tools\sigcheck64.exe -tv -accepteula -nobanner
+                    }
                     catch {
                         Invoke-WebRequest -Uri "https://live.sysinternals.com/sigcheck64.exe" -OutFile "sigcheck64.exe"
                         .\sigcheck64.exe -tv -accepteula -nobanner

@@ -56,13 +56,6 @@
  </br>
 
 
- 
-> **Note**
-> if there are multiple Windows user accounts in your computer, it's recommended to run this script in each of them, **without administrator privileges**, because non-admin commands only apply to the current user and are not machine wide.
-
-> **Note**
-> There are 3 items tagged with **#TopSecurity** that can cause difficulties. When you run this script, you will have an option to enable them if you want to. Press `Control + F` and search for `#TopSecurity` on this page to find those security measures.
- 
 > **Note**
 > [Windows Home edition is not supported.](https://www.microsoft.com/en-us/windows/compare-windows-10-home-vs-pro)
  
@@ -96,11 +89,12 @@
 
 - Doesn't remove or disable Windows functionalities against Microsoft's recommendation.
 - This Readme page is used as the reference for all of the security measures applied by this script and Group Policies.
-- When a hardening command is no longer necessary because it's applied by default by Microsoft on new builds of Windows, it will also be removed from this script in order to prevent any problems and because it won't be necessary anymore.
+- When a hardening measure is no longer necessary because it's applied by default by Microsoft on new builds of Windows, it will also be removed from this script in order to prevent any problems and because it won't be necessary anymore.
 - The script can be run infinite number of times, it's made in a way that it won't make any duplicate changes at all.
-- The script asks for confirmation, in the PowerShell console, before running each hardening category that is not applied by Group Policies, so you can selectively run (or don't run) each of them.
+- The script asks for confirmation, in the PowerShell console, before running each hardening category, so you can selectively run (or don't run) each of them.
 - Applying this script makes your PC compliant with Microsoft Security Baselines and Secured-core PC specifications (providing that you use modern hardware that supports the latest Windows security features). - [See what makes a Secured-core PC](https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/oem-highly-secure#what-makes-a-secured-core-pc). <a href="#Device-Guard">Check Device Guard category for more details.</a>
   - [Secured-core](https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/oem-highly-secure) – recommended for the most sensitive systems and industries like financial, healthcare, and government agencies. Builds on the previous layers and leverages advanced processor capabilities to provide protection from firmware attacks.
+- There are 3 items tagged with **#TopSecurity** that can cause difficulties. When you run this script, you will have an option to enable them if you want to. Press `Control + F` and search for `#TopSecurity` on this page to find those security measures.
 
 
 <p align="right"><a href="#readme-top">💡(back to top)</a></p>
@@ -262,14 +256,14 @@ $(get-MpPreference).ControlledFolderAccessAllowedApplications
 Such software behaviors are sometimes seen in legitimate applications. However, these behaviors are often considered risky because they are commonly abused by attackers through malware. Attack surface reduction rules can constrain software-based risky behaviors and help keep your organization safe.
 
 
-🟩 This script enables [all 16 available Attack Surface Reduction rules shown in the official chart](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/attack-surface-reduction-rules-reference?view=o365-worldwide#asr-rule-to-guid-matrix), You can manually turn off any of them by changing them from `Enabled` to `AuditMode` or `Disabled` in the script.
+🟩 This script enables [all 16 available Attack Surface Reduction rules shown in the official chart](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/attack-surface-reduction-rules-reference?view=o365-worldwide#asr-rule-to-guid-matrix).
 
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
 ## Bitlocker Settings<a href="#Bitlocker-Settings">![BitlockerIcon]</a>
 
 - 🔶🟩 This script sets up and configures Bitlocker, for OS drive and all other drives on the device [using official documentation](https://learn.microsoft.com/en-us/windows/security/information-protection/bitlocker/bitlocker-group-policy-settings), with the most secure configuration and Military Grade encryption algorithm, **XTS-AES-256, TPM 2.0 and start-up PIN**.
-  - When running this category, any connected external storage devices such as external SSDs, USB flash drives will also be encrypted, if that's not what you want, please eject them from your device before running Bitlocker Category.
+  - When running this category, any connected external storage devices such as external SSDs or USB flash drives will also be encrypted, if that's not desired, please eject them from your device prior to running Bitlocker Category.
 
 - 🔶 You will be asked to enter a Startup PIN when activating Bitlocker for the first time. make sure the PIN you enter is at least 6 digits. Since this script enables Enhanced Startup PIN, you can use characters including uppercase and lowercase letters, symbols, numbers, and spaces. Make sure the Bitlocker PIN that you choose is not the same as your Windows Hello PIN.
 
@@ -561,7 +555,8 @@ Once you have those Firewall rules added, you can [use this method](https://gith
 
 ## Non-Admin Commands<a href="#non-admin-commands">![NonAdminIcon]</a>
 
-In order to run commands in this category, you don't need administrator privileges, because no system-wide configuration is made. changes in this category only apply to the user account that is running the current PowerShell session:
+You don't need admin privileges to run this category, because no system-wide changes is made. changes in this category only apply to the current user account that is running the PowerShell session. For this reason, in addition to running this category as admin on your own user account, it's better to run it without elevation on any other available standard accounts too.
+
 - 🔶 Show known file extensions in File explorer
 - 🔶 Show hidden files, folders and drives (toggles the control panel folder options item)
 - 🔶 Disable websites accessing local language list - good for privacy

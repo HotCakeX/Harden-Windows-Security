@@ -601,18 +601,6 @@ Trust is very important; you shouldn't blindly trust me nor any other **3rd part
 
 <br>
 
-- `SHA256` Hash of [Security-Baselines-X.zip](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Payload/Security-Baselines-X.zip):
-<!-- SHA-256-X-Hash:START -->
-```
-8bdc1f3bdcaf9da9efb3aa6ff435efe71a1c65bc25a12235fb46203f2a9d2936
-```
-<!-- SHA-256-X-Hash:END -->
-
-- `SHA256` Hash of [EventViewerCustomViews.zip](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Payload/EventViewerCustomViews.zip):
-```
-5909e7b10f5780f7708db1ab8e97d12c99884d4f704f3f4ea961622b631dc133
-```
-
 
 
 

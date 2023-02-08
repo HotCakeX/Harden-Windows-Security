@@ -31,7 +31,7 @@ jobs:
           Do {
               $OutputScan = Get-VirusReport -ApiKey $VTApi -AnalysisId $Output.data.id
               if ($OutputScan.data.attributes.status -eq 'queued') {
-                  Write-Host "Waiting..." -ForegroundColor Gray
+                  Write-Host "Waiting... $($OutputScan.data.attributes.status)" -ForegroundColor Gray
                   Start-Sleep 10
               }
           }
@@ -61,7 +61,7 @@ jobs:
 
 
 
-          $SecurityBaselinesXVT = "<!-- Security-Baselines-X-VT:START --><a href=`https://www.virustotal.com/gui/file/$($OutputScan.meta.file_info.sha256)`>Virus Total scan results of Security-Baselines-X.zip</a><!-- Security-Baselines-X-VT:END -->"
+          $SecurityBaselinesXVT = "<!-- Security-Baselines-X-VT:START --><a href='https://www.virustotal.com/gui/file/$($OutputScan.meta.file_info.sha256)'>Virus Total scan results of Security-Baselines-X.zip</a><!-- Security-Baselines-X-VT:END -->"
 
           $readme = Get-Content -raw -path "README.md"
           $readme = $readme -replace "(?s)(?<=<!-- Security-Baselines-X-VT:START -->).*(?=<!-- Security-Baselines-X-VT:END -->)", $SecurityBaselinesXVT

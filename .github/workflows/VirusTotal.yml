@@ -60,6 +60,8 @@ jobs:
 
           }
 
+          $SecurityBaselinesXvar = "https://www.virustotal.com/gui/file/$($OutputScan.meta.file_info.sha256)"
+
           # Submit
           $Output = New-VirusScan -ApiKey $VTApi -File .\Payload\EventViewerCustomViews.zip
 
@@ -93,8 +95,10 @@ jobs:
               ) -ForegroundColor Green
           }
 
-          $SecurityBaselinesXVT = "<a href='https://www.virustotal.com/gui/file/$($OutputScan.meta.file_info.sha256)'>Virus Total scan results of Security-Baselines-X.zip</a>"
-          $EventViewerCustomViewsVT = "<a href='https://www.virustotal.com/gui/file/$($OutputScan.meta.file_info.sha256)'>Virus Total scan results of EventViewerCustomViews.zip</a>"
+            $EventViewerCustomViewsvar = "https://www.virustotal.com/gui/file/$($OutputScan.meta.file_info.sha256)"
+
+          $SecurityBaselinesXVT = "<a href='$SecurityBaselinesXvar'>Virus Total scan results of Security-Baselines-X.zip</a>"
+          $EventViewerCustomViewsVT = "<a href='$($EventViewerCustomViewsvar)'>Virus Total scan results of EventViewerCustomViews.zip</a>"
           $readme = Get-Content -Raw -Path "README.md"
           $readme = $readme -replace "(?s)(?<=<!-- Security-Baselines-X-VT:START -->).*(?=<!-- Security-Baselines-X-VT:END -->)", $SecurityBaselinesXVT
           $readme = $readme -replace "(?s)(?<=<!-- EventViewer-CustomViews-VT:START -->).*(?=<!-- EventViewer-CustomViews-VT:END -->)", $EventViewerCustomViewsVT

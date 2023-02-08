@@ -602,11 +602,11 @@ Trust is very important; you shouldn't blindly trust me nor any other **3rd part
 <br>
 
 
-<!-- Security-Baselines-X-VT:START --><a href='mdr'>Virus Total scan results of Security-Baselines-X.zip</a><!-- Security-Baselines-X-VT:END -->
+<!-- Security-Baselines-X-VT:START --><a href='https://www.virustotal.com/gui/file/8bdc1f3bdcaf9da9efb3aa6ff435efe71a1c65bc25a12235fb46203f2a9d2936'>Virus Total scan results of Security-Baselines-X.zip</a><!-- Security-Baselines-X-VT:END -->
 
 <br>
 
-<!-- EventViewer-CustomViews-VT:START --><a href='mdr'>Virus Total scan results of EventViewerCustomViews.zip</a><!-- EventViewer-CustomViews-VT:END -->
+<!-- EventViewer-CustomViews-VT:START --><a href='https://www.virustotal.com/gui/file/3303d00c7fd26be51a7d893d5434867df2e1f50a362fc65bb2d18d0427be3adb'>Virus Total scan results of EventViewerCustomViews.zip</a><!-- EventViewer-CustomViews-VT:END -->
 
 
 <p align="right"><a href="#readme-top">💡(back to top)</a></p>

@@ -1,4 +1,5 @@
 # Starter pipeline
+
 # Start with a minimal pipeline that you can customize to build and deploy your code.
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
@@ -12,11 +13,9 @@ pool:
 steps:
 
 
-- task: Mirror Repositories@1
+- task: mirror-git-repository-vsts-task@1
   inputs:
-    sourceType: true
-    sourceURL: 'https://github.com/HotCakeX/Harden-Windows-Security'
-    sourcePAT: '$(GitPaT)'
-    destinationType: true
-    destinationURL: 'https://dev.azure.com/SpyNetGirl/_git/Harden-Windows-Security'
-    destinationPAT: '$(AzurePaT)'
+    sourceGitRepositoryUri: 'https://github.com/HotCakeX/Harden-Windows-Security/'
+    sourceGitRepositoryPersonalAccessToken: '$(GitPaT)'
+    destinationGitRepositoryUri: 'https://dev.azure.com/SpyNetGirl/Harden-Windows-Security/'
+    destinationGitRepositoryPersonalAccessToken: '$(AzurePaT)'

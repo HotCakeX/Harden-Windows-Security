@@ -1,9 +1,9 @@
 name: Renew File Hash
 on:
-workflow_dispatch:
   push:
     paths:
       - Payload/**
+  workflow_dispatch:
 
 jobs:
     build:

@@ -19,7 +19,7 @@ variables:
   system_accesstoken: $(System.AccessToken)
 
 pool:
-  vmImage: 'ubuntu-latest'
+  vmImage: 'Windows-latest'
 
 steps:
 - checkout: self

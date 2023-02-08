@@ -602,7 +602,7 @@ Trust is very important; you shouldn't blindly trust me nor any other **3rd part
 <br>
 
 
-<!-- Security-Baselines-X-VT:START --><a href='9874523'>Virus Total scan results of Security-Baselines-X.zip</a><!-- Security-Baselines-X-VT:END -->
+<!-- Security-Baselines-X-VT:START --><a href='https://www.virustotal.com/gui/file/8bdc1f3bdcaf9da9efb3aa6ff435efe71a1c65bc25a12235fb46203f2a9d2936'>Virus Total scan results of Security-Baselines-X.zip</a><!-- Security-Baselines-X-VT:END -->
 
 <br>
 

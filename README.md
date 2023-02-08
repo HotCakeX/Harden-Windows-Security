@@ -2,7 +2,7 @@
 
 <h1 align="center">
   <br>
-  <a href="https://github.com/HotCakeX/Harden-Windows-Security"><img src="https://github.com/HotCakeX/Harden-Windows-Security/blob/main/png-donut-2.png" alt="Avatar" width="200"></a>
+  <a href="https://github.com/HotCakeX/Harden-Windows-Security"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/png-donut-2.png" alt="Avatar" width="200"></a>
   <br />
   <br>
   Harden Windows Security

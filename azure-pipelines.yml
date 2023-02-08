@@ -1,4 +1,12 @@
 # Starter pipeline
+- task: Mirror Repositories@1
+  inputs:
+    sourceType: true
+    sourceURL: 'https://github.com/HotCakeX/Harden-Windows-Security'
+    sourcePAT: '$(GitPaT)'
+    destinationType: true
+    destinationURL: 'https://dev.azure.com/SpyNetGirl/_git/Harden-Windows-Security'
+    destinationPAT: '$(AzurePaT)'
 # Start with a minimal pipeline that you can customize to build and deploy your code.
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml

@@ -606,7 +606,7 @@ Trust is very important; you shouldn't blindly trust me nor any other **3rd part
 
 <br>
 
-<!-- EventViewer-CustomViews-VT:START --><a href='12345'>Virus Total scan results of EventViewerCustomViews.zip</a><!-- EventViewer-CustomViews-VT:END -->
+<!-- EventViewer-CustomViews-VT:START --><a href='https://www.virustotal.com/gui/file/3303d00c7fd26be51a7d893d5434867df2e1f50a362fc65bb2d18d0427be3adb'>Virus Total scan results of EventViewerCustomViews.zip</a><!-- EventViewer-CustomViews-VT:END -->
 
 
 <p align="right"><a href="#readme-top">💡(back to top)</a></p>

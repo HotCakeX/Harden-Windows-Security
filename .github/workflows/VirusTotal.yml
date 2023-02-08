@@ -1,4 +1,4 @@
-name: Virus Total
+name: Security Baseline X Virtus Total
 on:
   push:
     paths:
@@ -65,7 +65,7 @@ jobs:
 
           $readme = Get-Content -raw -path "README.md"
           $readme = $readme -replace "(?s)(?<=<!-- Security-Baselines-X-VT:START -->).*(?=<!-- Security-Baselines-X-VT:END -->)", $SecurityBaselinesXVT
-          set-Content -path "README.md" -Value $readme.TrimEnd()
+
 
 
 
@@ -137,7 +137,6 @@ jobs:
 
               $EventViewerCustomViewsVT = "<a href='https://www.virustotal.com/gui/file/$($OutputScan.meta.file_info.sha256)'>Virus Total scan results of EventViewerCustomViews.zip</a>"
 
-              $readme = Get-Content -raw -path "README.md"
               $readme = $readme -replace "(?s)(?<=<!-- EventViewer-CustomViews-VT:START -->).*(?=<!-- EventViewer-CustomViews-VT:END -->)", $EventViewerCustomViewsVT
               set-Content -path "README.md" -Value $readme.TrimEnd()
 

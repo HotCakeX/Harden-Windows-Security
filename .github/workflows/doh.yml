@@ -20,8 +20,8 @@ jobs:
               
               $IPs = curl --ssl-no-revoke --max-time 10 --tlsv1.3 --tls13-ciphers TLS_CHACHA20_POLY1305_SHA256 --http2 -H "accept: application/dns-json" "https://1.1.1.1/dns-query?name=$url&type=A"
               $IPs = ( $IPs | ConvertFrom-Json).answer.data
-
-              $IPs | Out-File .\Workflowstuff\IPs.txt
+              $IPs
+              $IPs | Out-File ./Workflowstuff/IPs.txt
             
             
             

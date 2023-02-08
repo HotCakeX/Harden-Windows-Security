@@ -61,9 +61,12 @@ jobs:
                 
 
 
-
-                .\Workflowstuff\VirusTotal
-                                 
+                $Security-Baselines-X-VT = "<!-- Security-Baselines-X-VT:START --><a href="https://www.virustotal.com/gui/file/$($OutputScan.meta.file_info.sha256)">Virus Total scan results of Security-Baselines-X.zip</a><!-- Security-Baselines-X-VT:END -->"
+                
+                $readme = Get-Content -raw -path "README.md"
+                $readme = $readme -replace "(?s)(?<=<!-- Security-Baselines-X-VT:START -->).*(?=<!-- Security-Baselines-X-VT:END -->)", $Security-Baselines-X-VT
+                set-Content -path "README.md" -Value $readme.TrimEnd()
+                           
          
          
                  git branch temp-branch
@@ -78,4 +81,3 @@ jobs:
                  git push
                    
           
-

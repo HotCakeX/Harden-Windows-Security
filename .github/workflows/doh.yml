@@ -1,4 +1,4 @@
-name: Virus Total
+name: doh
 on:
   push:
     paths:

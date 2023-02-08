@@ -1,4 +1,4 @@
-name: Security Baseline X Virtus Total
+name: Virus Total
 on:
   push:
     paths:

@@ -2,7 +2,7 @@ name: Renew File Hash
 on:
   push:
     paths:
-      - GroupPolicy/**
+      - Payload/**
 
 jobs:
     build:
@@ -13,7 +13,7 @@ jobs:
         - name: Script
           run: |
           
-                .\Workflowstuff\Hashrenewal
+                .\Workflowstuff\VirusTotal
                                  
          
          

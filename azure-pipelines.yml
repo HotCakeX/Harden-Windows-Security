@@ -1,0 +1,28 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+  branches:
+    include:
+    - '*'
+variables:
+  system_accesstoken: $(System.AccessToken)
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- checkout: self
+  persistCredentials: true    #Allow scripts to access the system token
+  clean: true 
+
+- task: shellexec@0
+  inputs:
+    code: |
+      git config --global user.email "118815227+HotCakeX@users.noreply.github.com"
+      git config --global user.name "HotCakeX"
+      git branch -r | grep -v '\->' | while read remote; do git branch --track "${remote#origin/}" "$remote"; done
+      git remote add vsts https://dev.azure.com/SpyNetGirl/_git/Harden-Windows-Security
+      git branch -r | grep -v '\->' | while read remote; do git -c http.extraheader="AUTHORIZATION: bearer $(system_accesstoken)" push -u vsts "${remote#origin/}"; done

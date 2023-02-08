@@ -11,13 +11,20 @@ name: PSScriptAnalyzer
 
 on:
   push:
-    branches: [ "main", Sub-branch ]
-    paths-ignore:
-      - 'Payload/**'
+    branches: ["main", Sub-branch]
+    paths:
+      - "**.ps1"
+      - "**.psm1"
+      - "**.psd1"
   pull_request:
-    branches: [ "main" ]
-  schedule:
-    - cron: '16 22 * * 4'
+    branches: ["main", Sub-branch]
+    paths:
+      - "**.ps1"
+      - "**.psm1"
+      - "**.psd1"
+  workflow_dispatch:
+
+
 
 permissions:
   contents: read

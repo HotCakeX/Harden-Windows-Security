@@ -12,6 +12,8 @@ name: PSScriptAnalyzer
 on:
   push:
     branches: [ "main", Sub-branch ]
+    paths-ignore:
+      - 'Payload/**'
   pull_request:
     branches: [ "main" ]
   schedule:

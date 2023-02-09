@@ -65,7 +65,6 @@ $null = New-Module {
         param (
             [Parameter(Mandatory)] [scriptblock] $ScriptBlock
         )
-
         # Save current progress preference and hide the progress
         $prevProgressPreference = $global:ProgressPreference
         $global:ProgressPreference = 'SilentlyContinue'
@@ -82,23 +81,23 @@ $null = New-Module {
 
 #endregion functions
 
+# create our working directory
+New-Item -ItemType Directory -Path "$env:TEMP\HardeningXStuff\" -Force | Out-Null
+
+# working directory assignment
+$workingDir = "$env:TEMP\HardeningXStuff\"
+
+# change location to the new directory
+Set-Location $workingDir
+
+# Clean up script block
+$cleanUp = { Set-Location $HOME; remove-item -Recurse "$env:TEMP\HardeningXStuff\" -Force; exit }
+
 if (-NOT (Test-IsAdmin))
 { write-host "Skipping commands that require Administrator privileges" -ForegroundColor Magenta }
-else {
-    # create our working directory
-    New-Item -ItemType Directory -Path "$env:TEMP\HardeningXStuff\" -Force | Out-Null
-
-    # working directory assignment
-    $workingDir = "$env:TEMP\HardeningXStuff\"
-
-    # change location to the new directory
-    Set-Location $workingDir
-
-    # Clean up script block
-    $cleanUp = { Set-Location $HOME; remove-item -Recurse "$env:TEMP\HardeningXStuff\" -Force; exit }
+else {    
     Write-Host "Downloading the required files, Please wait..." -ForegroundColor Yellow
     Invoke-WithoutProgress { 
-
         try {                
             # download Microsoft Security Baselines directly from their servers
             Invoke-WebRequest -Uri "https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/Windows%2011%20version%2022H2%20Security%20Baseline.zip" -OutFile ".\Windows1122H2SecurityBaseline.zip" -ErrorAction Stop
@@ -124,8 +123,7 @@ else {
     #region Microsoft-Security-Baseline    
     # ================================================Microsoft Security Baseline==============================================
     switch (Select-Option -Options "Yes", "No", "Exit" -Message "`nApply Microsoft Security Baseline ?") {
-        "Yes" {
-       
+        "Yes" {       
             # Copy LGPO.exe from its folder to Microsoft Security Baseline folder in order to get it ready to be used by PowerShell script
             Copy-Item -Path ".\LGPO_30\LGPO.exe" -Destination ".\Windows-11-v22H2-Security-Baseline\Scripts\Tools"
 
@@ -134,20 +132,17 @@ else {
 
             Write-Host "`nApplying Microsoft Security Baseline" -ForegroundColor Cyan
             # Run the official PowerShell script included in the Microsoft Security Baseline file we downloaded from Microsoft servers
-            .\Baseline-LocalInstall.ps1 -Win11NonDomainJoined
-            
+            .\Baseline-LocalInstall.ps1 -Win11NonDomainJoined            
         } "No" { break }
         "Exit" { &$cleanUp }
-    }
-    
+    }    
     # ============================================End of Microsoft Security Baselines==========================================   
     #endregion Microsoft-Security-Baseline
  
     #region Windows-Security-Defender    
     # ==========================================Windows Security aka Defender==================================================
     switch (Select-Option -Options "Yes", "No", "Exit" -Message "Run Windows Security (Defender) category ?") {
-        "Yes" {
- 
+        "Yes" { 
             # Change current working directory to the LGPO's folder
             Set-Location "$workingDir\LGPO_30"
 
@@ -164,10 +159,8 @@ else {
                 } "No" { break }
                 "Exit" { exit }
             }
-
             # Enable Mandatory ASLR
             set-processmitigation -System -Enable ForceRelocateImages
-
         } "No" { break }
         "Exit" { &$cleanUp }
     }    
@@ -183,7 +176,6 @@ else {
 
             Write-Host "`nApplying Attack Surface Reduction rules policies" -ForegroundColor Cyan
             .\LGPO.exe /m "..\Security-Baselines-X\Attack Surface Reduction Rules Policies\registry.pol"
-
         } "No" { break }
         "Exit" { &$cleanUp }
     }
@@ -308,8 +300,7 @@ https://stackoverflow.com/questions/48809012/compare-two-credentials-in-powershe
                         [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($bstr2)
                     }
                 }
-            }
-  
+            }  
             # check, make sure there is no CD/DVD drives in the system, because Bitlocker throws an error when there is
             $CDDVDCheck = (Get-WMIObject -Class Win32_CDROMDrive -Property *).MediaLoaded
             if ($CDDVDCheck) {
@@ -506,8 +497,7 @@ Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which re
             Set-Location $workingDir
             $items = Import-Csv '.\Registry.csv' -Delimiter ";"
             foreach ($item in $items) {
-                if ($item.category -eq 'TLS') {    
-
+                if ($item.category -eq 'TLS') {
                     ModifyRegistry -path $item.path -key $item.key -value $item.value -type $item.type
                 }
             }
@@ -570,8 +560,7 @@ Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which re
             .\LGPO.exe /m "..\Security-Baselines-X\Lock Screen Policies\registry.pol"
 
             Write-Host "`nApplying Lock Screen Security policies" -ForegroundColor Cyan
-            .\LGPO.exe /s "..\Security-Baselines-X\Lock Screen Policies\GptTmpl.inf"
-        
+            .\LGPO.exe /s "..\Security-Baselines-X\Lock Screen Policies\GptTmpl.inf"        
         } "No" { break }
         "Exit" { &$cleanUp }
     }    
@@ -586,8 +575,7 @@ Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which re
             Set-Location "$workingDir\LGPO_30"
 
             Write-Host "`nApplying User Account Control (UAC) Security policies" -ForegroundColor Cyan
-            .\LGPO.exe /s "..\Security-Baselines-X\User Account Control UAC Policies\GptTmpl.inf"
-        
+            .\LGPO.exe /s "..\Security-Baselines-X\User Account Control UAC Policies\GptTmpl.inf"        
         } "No" { break }
         "Exit" { &$cleanUp }
     }    
@@ -624,7 +612,6 @@ Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which re
             get-NetFirewallRule |
             Where-Object { $_.RuleGroup -eq "@%SystemRoot%\system32\firewallapi.dll,-37302" -and $_.Direction -eq "inbound" } |
             ForEach-Object { Disable-NetFirewallRule -DisplayName $_.DisplayName }
-
         } "No" { break }
         "Exit" { exit }
     }    
@@ -676,7 +663,6 @@ Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which re
 
             # Set the Network Location of all connections to Public
             Get-NetConnectionProfile | Set-NetConnectionProfile -NetworkCategory Public
-
         } "No" { break }
         "Exit" { &$cleanUp }
     }    
@@ -742,7 +728,6 @@ Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which re
             .\LGPO.exe /v /m "..\Security-Baselines-X\Overrides for Microsoft Security Baseline\registry.pol"
             Write-Host "`nApplying Security policy Overrides for Microsoft Security Baseline" -ForegroundColor Cyan
             .\LGPO.exe /v /s "..\Security-Baselines-X\Overrides for Microsoft Security Baseline\GptTmpl.inf"
-
         } "No" { break }
         "Exit" { &$cleanUp }
     }    
@@ -761,7 +746,6 @@ Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which re
 
             Write-Host "`nApplying Windows Update policies" -ForegroundColor Cyan
             .\LGPO.exe /m "..\Security-Baselines-X\Windows Update Policies\registry.pol"
-
         } "No" { break }
         "Exit" { &$cleanUp }
     }    
@@ -908,26 +892,18 @@ Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which re
     }    
     # ====================================================End of Country IP Blocking===========================================
     #endregion Country-IP-Blocking
-
-    # make sure there is no leftover
-    Set-Location $HOME; remove-item -Recurse "$env:TEMP\HardeningXStuff\" -Force
     
 } # End of Admin test function
-
 
 #region Non-Admin-Commands
 # ====================================================Non-Admin Commands===================================================
 switch (Select-Option -Options "Yes", "No", "Exit" -Message "Run Non-Admin category ?") {
     "Yes" {
-        # Non-Admin Registry section
-        try {        
-            Set-Location $workingDir -ErrorAction Stop
-        }
-        catch {
-            Invoke-WithoutProgress { 
-                # Download Registry CSV file
-                Invoke-WebRequest -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Payload/Registry.csv" -OutFile ".\Registry.csv"
-            }
+        # Non-Admin Registry section              
+        Set-Location $workingDir       
+        Invoke-WithoutProgress { 
+            # Download Registry CSV file               
+            Invoke-WebRequest -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Payload/Registry.csv" -OutFile ".\Registry.csv"
         }
         $items = Import-Csv '.\Registry.csv' -Delimiter ";"
         foreach ($item in $items) {
@@ -939,9 +915,10 @@ switch (Select-Option -Options "Yes", "No", "Exit" -Message "Run Non-Admin categ
         "################################################################################################`r`n" +
         "###  Please Restart your device to completely apply the security measures and Group Policies ###`r`n" +
         "################################################################################################`r`n"
-        Write-Host $infomsg -ForegroundColor Cyan         
+        Write-Host $infomsg -ForegroundColor Cyan
+        Start-Sleep 3; &$cleanUp
     } "No" { break }
-    "Exit" { break }
+    "Exit" { &$cleanUp }
 }
 # ====================================================End of Non-Admin Commands============================================
 #endregion Non-Admin-Commands

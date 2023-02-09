@@ -484,8 +484,6 @@ These are configurations that are typically 🔺recommended in High-Risk Environ
 
 - 🔶 Enable Edge browser to download and install updates on any network, metered or not; because the updates are important and should not be suppressed, **that's what bad actors would want.**
 
-- 🔶 Enables "notify me when a restart is required to finish updating" in Windows Update, responsible for the toggle in Windows settings => Windows Update => Advanced options
-
 - 🔶 [Enables all Windows users to use Hyper-V and Windows Sandbox](https://learn.microsoft.com/en-us/archive/blogs/virtual_pc_guy/why-do-you-have-to-elevate-powershell-to-use-hyper-v-cmdlets) by adding all Windows users to the "Hyper-V Administrators" security group, by default only Administrators can use Hyper-V or Windows Sandbox. 
 
 - 🔶 Changes Windows time sync interval from the default every 7 days to every 4 days (= every 345600 seconds)

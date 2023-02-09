@@ -503,9 +503,9 @@ These are configurations that are typically 🔺recommended in High-Risk Environ
 ## Windows Update Configurations<a href="windows-update-configurations">![WindowsUpdate]</a>
 
 - 🟩 Enables [Windows Update to download and install updates on any network](https://techcommunity.microsoft.com/t5/windows-it-pro-blog/the-windows-update-policies-you-should-set-and-why/ba-p/3270914), metered or not; because the updates are important and should not be suppressed, **that's what bad actors would want.**
-- 🟩 Enables "Receive Updates for other Microsoft products" (such as PowerShell) and sets updates to be installed outside of active hours automatically
-- 🟩 Enables "Notify me when a restart is required to finish updating"
-- 🟩 Sets the deadline for automatic updates and restarts for quality and feature updates to 2 days
+- 🟩 Enables "Receive Updates for other Microsoft products" (such as PowerShell)
+- 🔶 Enables "Notify me when a restart is required to finish updating"
+- 🟩 Sets the deadline for automatic quality and feature updates and restarts to 2 days with 2 extra days as grace periods, so after Windows update installations, users will have up to 4 days to save their work and restart their device, before system is automatically restarted, to apply the updates.
 
 
 

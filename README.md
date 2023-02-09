@@ -611,6 +611,11 @@ Trust is very important; you shouldn't blindly trust me nor any other **3rd part
 <!-- EventViewer-CustomViews-VT:START --><a href='https://www.virustotal.com/gui/file/3303d00c7fd26be51a7d893d5434867df2e1f50a362fc65bb2d18d0427be3adb'>Virus Total scan results of EventViewerCustomViews.zip</a><!-- EventViewer-CustomViews-VT:END -->
 
 
+<br>
+<br>
+
+_Links above are automatically updated. There is a [GitHub workflow](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/VirusTotal.yml) that automatically detects changes to the files and uploads them to Virus Total website for scanning._
+
 <p align="right"><a href="#readme-top">💡(back to top)</a></p>
 
 ## Support<a href="#support">![SupportIcon]</a>
@@ -664,7 +669,10 @@ Trust is very important; you shouldn't blindly trust me nor any other **3rd part
   - [Microsoft Security Response Center Blog](https://msrc-blog.microsoft.com/)
 - [Microsoft Security Blog](https://www.microsoft.com/en-us/security/blog/)
 - [Microsoft Podcasts](https://news.microsoft.com/podcasts/)
-
+- [Bug Bounty Program](https://www.microsoft.com/en-us/msrc/bounty) - With bounties worth up to 250,000 $
+- [Microsoft Active Protections Program](https://www.microsoft.com/en-us/msrc/mapp)
+- [Security Update Guide FAQs](https://www.microsoft.com/en-us/msrc/faqs-security-update-guide)
+- [Microsoft On the Issues](https://blogs.microsoft.com/on-the-issues/) - Assessments, Investigations and Reports of APTs (Advanced Persistent Threats[¹](https://learn.microsoft.com/en-us/events/teched-2012/sia303)) and nation-sponsored cyberattacks globally
 
 
 <p align="right"><a href="#readme-top">💡(back to top)</a></p>

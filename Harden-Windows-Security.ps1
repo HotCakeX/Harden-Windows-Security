@@ -916,7 +916,7 @@ switch (Select-Option -Options "Yes", "No", "Exit" -Message "Run Non-Admin categ
         "###  Please Restart your device to completely apply the security measures and Group Policies ###`r`n" +
         "################################################################################################`r`n"
         Write-Host $infomsg -ForegroundColor Cyan
-        &$cleanUp         
+        Start-Sleep 3; &$cleanUp
     } "No" { break }
     "Exit" { &$cleanUp }
 }

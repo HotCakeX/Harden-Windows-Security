@@ -832,61 +832,31 @@ Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which re
         "Yes" {
             # -RemoteAddress in New-NetFirewallRule accepts array according to Microsoft Docs, 
             # so we use "[string[]]$IPList = $IPList -split '\r?\n' -ne ''" to convert the IP lists, which is a single multiline string, into an array
-
             function BlockCountryIP {
-                param ($IPList , $CountryName)
-
-                # checks if the rule is present and if it is, deletes them to get new up-to-date IP ranges from the sources
-                if (Get-NetFirewallRule -DisplayName "$CountryName IP range blocking" -PolicyStore localhost -ErrorAction SilentlyContinue) 
-                { Remove-NetFirewallRule -DisplayName "$CountryName IP range blocking" -PolicyStore localhost }
-
+                param ($IPList , $ListName)
+                # deletes previous rules (if any) to get new up-to-date IP ranges from the sources and set new rules               
+                Remove-NetFirewallRule -DisplayName "$ListName IP range blocking" -PolicyStore localhost -ErrorAction SilentlyContinue
                 # converts the list which is in string into array
                 [string[]]$IPList = $IPList -split '\r?\n' -ne ''
-
                 # makes sure the list isn't empty
-                if ($IPList.count -eq 0) { Write-Host "The IP list was empty, skipping $CountryName" -ForegroundColor Yellow ; break }
-      
-                New-NetFirewallRule -DisplayName "$CountryName IP range blocking" -Direction Inbound -Action Block -LocalAddress Any -RemoteAddress $IPList -Description "$CountryName IP range blocking" -Profile Any -InterfaceType Any -Group "Hardening-Script-CountryIP-Blocking" -EdgeTraversalPolicy Block -PolicyStore localhost
-                New-NetFirewallRule -DisplayName "$CountryName IP range blocking" -Direction Outbound -Action Block -LocalAddress Any -RemoteAddress $IPList -Description "$CountryName IP range blocking" -Profile Any -InterfaceType Any -Group "Hardening-Script-CountryIP-Blocking" -EdgeTraversalPolicy Block -PolicyStore localhost        
+                if ($IPList.count -eq 0) { Write-Host "The IP list was empty, skipping $ListName" -ForegroundColor Yellow ; break }      
+                New-NetFirewallRule -DisplayName "$ListName IP range blocking" -Direction Inbound -Action Block -LocalAddress Any -RemoteAddress $IPList -Description "$ListName IP range blocking" -EdgeTraversalPolicy Block -PolicyStore localhost
+                New-NetFirewallRule -DisplayName "$ListName IP range blocking" -Direction Outbound -Action Block -LocalAddress Any -RemoteAddress $IPList -Description "$ListName IP range blocking" -EdgeTraversalPolicy Block -PolicyStore localhost        
             }
-            # Iran
-            switch (Select-Option -Options "Yes", "No" -Message "Block the entire range of IPv4 and IPv6 belonging to Iran?") {
-                "Yes" {    
-                    $IranIPv4 = Invoke-RestMethod -Uri "https://www.ipdeny.com/ipblocks/data/aggregated/ir-aggregated.zone"
-                    $IranIPv6 = Invoke-RestMethod -Uri "https://www.ipdeny.com/ipv6/ipaddresses/blocks/ir.zone"
-                    $IranIPRange = $IranIPv4 + $IranIPv6
-                    BlockCountryIP -IPList $IranIPRange -CountryName "Iran"
-                } "No" { break }
-            }
-            # Cuba
-            switch (Select-Option -Options "Yes", "No" -Message "Block the entire range of IPv4 and IPv6 belonging to Cuba?") {
+            switch (Select-Option -Options "Yes", "No" -Message "Add countries in the State Sponsors of Terrorism list to the Firewall block list?") {
                 "Yes" {
-                    $CubaIPv4 = Invoke-RestMethod -Uri "https://www.ipdeny.com/ipblocks/data/aggregated/cu-aggregated.zone"
-                    $CubaIPv6 = Invoke-RestMethod -Uri "https://www.ipdeny.com/ipv6/ipaddresses/blocks/cu.zone"
-                    $CubaIPRange = $CubaIPv4 + $CubaIPv6
-                    BlockCountryIP -IPList $CubaIPRange -CountryName "Cuba"
+                    $StateSponsorsofTerrorism = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/Curated-Lists/StateSponsorsOfTerrorism.txt"
+                    BlockCountryIP -IPList $StateSponsorsofTerrorism -ListName "State Sponsors of Terrorism"
                 } "No" { break }
             }
-            # North Korea
-            switch (Select-Option -Options "Yes", "No" -Message "Block the entire range of IPv4 and IPv6 belonging to North Korea?") {
-                "Yes" {    
-                    $NorthKoreaIPv4 = Invoke-RestMethod -Uri "https://www.ipdeny.com/ipblocks/data/aggregated/kp-aggregated.zone"
-                    $NorthKoreaIPv6 = Invoke-RestMethod -Uri "https://www.ipdeny.com/ipv6/ipaddresses/blocks/kn.zone"
-                    $NorthKoreaIPRange = $NorthKoreaIPv4 + $NorthKoreaIPv6
-                    BlockCountryIP -IPList $NorthKoreaIPRange -CountryName "North Korea"
-                } "No" { break }
-            }
-            # Syria
-            switch (Select-Option -Options "Yes", "No" -Message "Block the entire range of IPv4 and IPv6 belonging to Syria?") {
-                "Yes" {    
-                    $SyriaIPv4 = Invoke-RestMethod -Uri "https://www.ipdeny.com/ipblocks/data/aggregated/sy-aggregated.zone"
-                    $SyriaIPv6 = Invoke-RestMethod -Uri "https://www.ipdeny.com/ipv6/ipaddresses/blocks/sy.zone"
-                    $SyriaIPRange = $SyriaIPv4 + $SyriaIPv6
-                    BlockCountryIP -IPList $SyriaIPRange -CountryName "Syria"
+            switch (Select-Option -Options "Yes", "No" -Message "Add OFAC Sanctioned Countries to the Firewall block list?") {
+                "Yes" {
+                    $OFACSanctioned = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/Curated-Lists/OFACSanctioned.txt"            
+                    BlockCountryIP -IPList $OFACSanctioned -ListName "OFAC Sanctioned Countries"
                 } "No" { break }
             }
             # how to query the number of IPs in each rule
-            # (Get-NetFirewallRule -DisplayName "Cuba IP range blocking" | Get-NetFirewallAddressFilter).RemoteAddress.count
+            (Get-NetFirewallRule -DisplayName "OFAC Sanctioned Countries IP range blocking" -PolicyStore localhost | Get-NetFirewallAddressFilter).RemoteAddress.count
         } "No" { break }
         "Exit" { &$cleanUp }
     }    

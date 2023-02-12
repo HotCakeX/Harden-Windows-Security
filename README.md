@@ -9,7 +9,7 @@
   <br>
 </h1>
 
-<h4 align="center">Harden Windows 11 safely, securely and without breaking anything</h4>
+<h4 align="center">Harden Windows 11 Safely, Securely, only with Official Microsoft methods</h4>
 
 
 
@@ -72,7 +72,6 @@
  ## Features:<a href="#features">![FeaturesIcon]</a>
 
 - Always up-to-date and only guaranteed to work with the latest build of Windows (Currently Windows 11 - Rigorously tested on the latest Stable and Insider Dev builds)
-- It doesn't break anything.
 - All of the links and sources are official from Microsoft websites, straight from the source. no bias, no misinformation and no old obsolete methods, that's why there are no links to 3rd party news websites, made up blogs or articles.
 
 <details><summary>With the following exceptions</summary>

@@ -548,7 +548,7 @@ These are configurations that are typically 🔺recommended in High-Risk Environ
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
 ## Country IP Blocking<a href="#Country-IP-Blocking">![CountryIPBlockingIcon]</a>
-🔶 The script fetches the newest range of [IPv4](https://www.ipdeny.com/ipblocks/) and [IPv6](https://www.ipdeny.com/ipv6/ipaddresses/blocks/) addresses of [State Sponsors of Terrorism](https://www.state.gov/state-sponsors-of-terrorism/) then creates 2 rules (inbound and outbound) for each country in Windows firewall, completely blocking connections to and from those countries.
+🔶 The script uses the newest range of `IPv4` and `IPv6` addresses of [State Sponsors of Terrorism](https://www.state.gov/state-sponsors-of-terrorism/) and [OFAC Sanctioned Countries](https://orpa.princeton.edu/export-controls/sanctioned-countries), directly [from official IANA sources](https://github.com/HotCakeX/Official-IANA-IP-blocks), then creates 2 rules (inbound and outbound) for each list in Windows firewall, completely blocking connections to and from those countries.
 
 Once you have those Firewall rules added, you can [use this method](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Event-Viewer#how-to-identify-which-windows-firewall-rule-is-responsible-for-a-blocked-packets) to see if any of the blocked connections were from/to those countries.
 

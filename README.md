@@ -666,10 +666,10 @@ _Links above are automatically updated. There is a [GitHub workflow](https://git
   - [Microsoft Security Response Center Blog](https://msrc-blog.microsoft.com/)
 - [Microsoft Security Blog](https://www.microsoft.com/en-us/security/blog/)
 - [Microsoft Podcasts](https://news.microsoft.com/podcasts/)
-- [Bug Bounty Program](https://www.microsoft.com/en-us/msrc/bounty) - With bounties worth up to 250,000 $
+- [Bug Bounty Program](https://www.microsoft.com/en-us/msrc/bounty) - With bounties worth up to `250,000`$
 - [Microsoft Active Protections Program](https://www.microsoft.com/en-us/msrc/mapp)
 - [Security Update Guide FAQs](https://www.microsoft.com/en-us/msrc/faqs-security-update-guide)
-- [Microsoft On the Issues](https://blogs.microsoft.com/on-the-issues/) - Assessments, Investigations and Reports of APTs (Advanced Persistent Threats[¹](https://learn.microsoft.com/en-us/events/teched-2012/sia303)) and nation-sponsored cyberattacks globally
+- [Microsoft On the Issues](https://blogs.microsoft.com/on-the-issues/) - Assessments, Investigations and Reports of APTs (Advanced Persistent Threats[¹](https://learn.microsoft.com/en-us/events/teched-2012/sia303)) and nation-sponsored cyberattack operations globally
 
 
 <p align="right"><a href="#readme-top">💡(back to top)</a></p>

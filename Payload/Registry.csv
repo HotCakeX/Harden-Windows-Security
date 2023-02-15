@@ -27,7 +27,7 @@ Edge;HKLM:\SOFTWARE\Policies\Microsoft\Edge;DnsOverHttpsTemplates;https://chrome
 Edge;HKLM:\SOFTWARE\Policies\Microsoft\Edge;AutomaticHttpsDefault;2;DWORD;Automatically upgrade HTTP connections to HTTPS
 Edge;HKLM:\SOFTWARE\Policies\Microsoft\Edge;EncryptedClientHelloEnabled;1;DWORD;Enable Encrypted Client Hello
 Edge;HKLM:\SOFTWARE\Policies\Microsoft\Edge;PrimaryPasswordSetting;1;DWORD;Configures a setting that asks users to enter their device password while using password autofill
-Edge;HKLM:\SOFTWARE\Policies\Microsoft\Edge;WebRtcLocalhostIpHandling;default_public_interface_only;String; Allow public interface over http default route. This doesn't expose the local IP address when using WebRTC
+Edge;HKLM:\SOFTWARE\Policies\Microsoft\Edge;WebRtcLocalhostIpHandling;default_public_interface_only;String;Allow public interface over http default route. This doesn't expose the local IP address when using WebRTC
 NonAdmin;HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced;HideFileExt;0;DWORD;Show known file extensions in File explorer
 NonAdmin;HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced;Hidden;1;DWORD;Show hidden files,folders and drives toggles the control panel folder options item
 NonAdmin;HKCU:\Control Panel\International\User Profile;HttpAcceptLanguageOptOut;1;DWORD;Disable websites accessing local language list

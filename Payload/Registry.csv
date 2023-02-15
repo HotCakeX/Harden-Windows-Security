@@ -1,42 +1,42 @@
-Category;Path;Key;Value;Type;Comment
-TLS;HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.0\Client;DisabledByDefault;1;DWORD;Disable TLS v1
-TLS;HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.0\Client;Enabled;0;DWORD;Disable TLS v1
-TLS;HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.0\Server;DisabledByDefault;1;DWORD;Disable TLS v1
-TLS;HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.0\Server;Enabled;0;DWORD;Disable TLS v1
-TLS;HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.1\Client;DisabledByDefault;1;DWORD;Disable TLS v1.1
-TLS;HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.1\Client;Enabled;0;DWORD;Disable TLS v1.1
-TLS;HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.1\Server;DisabledByDefault;1;DWORD;Disable TLS v1.1
-TLS;HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.1\Server;Enabled;0;DWORD;Disable TLS v1.1
-TLS;HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\NULL\;Enabled;0;DWORD;Disabling NULL
-TLS;HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\DES 56/56;Enabled;0;DWORD;Disabling DES 56-bit
-TLS;HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC2 40/128;Enabled;0;DWORD;Disabling RC2 40-bit
-TLS;HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC2 56/128;Enabled;0;DWORD;RC2 56-bit
-TLS;HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC2 128/128;Enabled;0;DWORD;RC2 128-bit
-TLS;HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC4 40/128;Enabled;0;DWORD;RC4 40-bit
-TLS;HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC4 56/128;Enabled;0;DWORD;RC4 56-bit
-TLS;HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC4 64/128;Enabled;0;DWORD;RC4 64-bit
-TLS;HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC4 128/128;Enabled;0;DWORD;RC4 128-bit
-TLS;HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\Triple DES 168;Enabled;0;DWORD;3DES 168-bit (Triple DES 168)
-TLS;HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Hashes\MD5;Enabled;0;DWORD;Disable MD5 Hashing Algorithm
-Miscellaneous;HKLM:\SOFTWARE\Microsoft\Windows Search;EnableFindMyFiles;1;DWORD;Turn on Enhanced mode search for Windows indexer
-Miscellaneous;HKLM:\SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate\ClientStateMedium\{56EB18F8-B008-4CBD-B6D2-8C97FE7E9062};allowautoupdatesmetered;1;DWORD;Set Microsoft Edge to update over Metered connections
-Miscellaneous;HKLM:\SYSTEM\ControlSet001\Services\W32Time\TimeProviders\NtpClient;SpecialPollInterval;345600;DWORD;Change Windows time sync interval from every 7 days to every 4 days (= every 345600 seconds)
-Edge;HKLM:\SOFTWARE\Policies\Microsoft\Edge\Recommended;BlockThirdPartyCookies;1;DWORD;Recommends to block 3rd party cookies
-Edge;HKLM:\SOFTWARE\Policies\Microsoft\Edge;DnsOverHttpsMode;secure;String;Enables Secure DNS without insecure fallback
-Edge;HKLM:\SOFTWARE\Policies\Microsoft\Edge;DnsOverHttpsTemplates;https://chrome.cloudflare-dns.com/dns-query;String;Set DNS over HTTPS template to Cloudflare's
-Edge;HKLM:\SOFTWARE\Policies\Microsoft\Edge;AutomaticHttpsDefault;2;DWORD;Automatically upgrade HTTP connections to HTTPS
-Edge;HKLM:\SOFTWARE\Policies\Microsoft\Edge;EncryptedClientHelloEnabled;1;DWORD;Enable Encrypted Client Hello
-Edge;HKLM:\SOFTWARE\Policies\Microsoft\Edge;PrimaryPasswordSetting;1;DWORD;Configures a setting that asks users to enter their device password while using password autofill
-Edge;HKLM:\SOFTWARE\Policies\Microsoft\Edge;WebRtcLocalhostIpHandling;default_public_interface_only;String;Allow public interface over http default route. This doesn't expose the local IP address when using WebRTC
-NonAdmin;HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced;HideFileExt;0;DWORD;Show known file extensions in File explorer
-NonAdmin;HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced;Hidden;1;DWORD;Show hidden files and folders and drives toggles the control panel folder options item
-NonAdmin;HKCU:\Control Panel\International\User Profile;HttpAcceptLanguageOptOut;1;DWORD;Disable websites accessing local language list
-NonAdmin;HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\SearchSettings;SafeSearchMode;0;DWORD;turn off safe search in Windows search. from Windows settings > privacy and security > search permissions > safe search
-NonAdmin;HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Notifications\Settings;NOC_GLOBAL_SETTING_ALLOW_TOASTS_ABOVE_LOCK;0;DWORD;prevent showing notifications in Lock screen - this is the same as toggling the button in Windows settings > system > notifications > show notifications in the lock screen
-NonAdmin;HKCU:\Software\Microsoft\Windows\CurrentVersion\PushNotifications;LockScreenToastEnabled;0;DWORD;prevent showing notifications in Lock screen 2nd reg key this is the same as toggling the button in Windows settings > system > notifications > show notifications in the lock screen
-NonAdmin;HKCU:\Software\Microsoft\Clipboard;EnableClipboardHistory;1;DWORD;Enable Clipboard History for the current user
-NonAdmin;HKCU:\Software\Microsoft\Clipboard;CloudClipboardAutomaticUpload;1;DWORD;2nd commands to enable sync of Clipboard history in Windows between devices
-NonAdmin;HKCU:\Software\Microsoft\Clipboard;EnableCloudClipboard;1;DWORD;last one to enable Clipboard sync
-NonAdmin;HKCU:\Software\Microsoft\Input\Settings;EnableHwkbTextPrediction;1;DWORD;turn on Show text suggestions when typing on the physical keyboard for the current user toggles the option in Windows settings
-NonAdmin;HKCU:\Software\Microsoft\Input\Settings;MultilingualEnabled;1;DWORD;turn on Multilingual text suggestions for the current user toggles the option in Windows settings
-NonAdmin;HKCU:\Control Panel\Accessibility\StickyKeys;Flags;506;String;turn off sticky key shortcut of pressing shift key 5 time fast
+Category,Path,Key,Value,Type,Comment
+TLS,HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.0\Client,DisabledByDefault,1,DWORD,Disable TLS v1
+TLS,HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.0\Client,Enabled,0,DWORD,Disable TLS v1
+TLS,HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.0\Server,DisabledByDefault,1,DWORD,Disable TLS v1
+TLS,HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.0\Server,Enabled,0,DWORD,Disable TLS v1
+TLS,HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.1\Client,DisabledByDefault,1,DWORD,Disable TLS v1.1
+TLS,HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.1\Client,Enabled,0,DWORD,Disable TLS v1.1
+TLS,HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.1\Server,DisabledByDefault,1,DWORD,Disable TLS v1.1
+TLS,HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.1\Server,Enabled,0,DWORD,Disable TLS v1.1
+TLS,HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\NULL\,Enabled,0,DWORD,Disabling NULL
+TLS,HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\DES 56/56,Enabled,0,DWORD,Disabling DES 56-bit
+TLS,HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC2 40/128,Enabled,0,DWORD,Disabling RC2 40-bit
+TLS,HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC2 56/128,Enabled,0,DWORD,RC2 56-bit
+TLS,HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC2 128/128,Enabled,0,DWORD,RC2 128-bit
+TLS,HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC4 40/128,Enabled,0,DWORD,RC4 40-bit
+TLS,HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC4 56/128,Enabled,0,DWORD,RC4 56-bit
+TLS,HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC4 64/128,Enabled,0,DWORD,RC4 64-bit
+TLS,HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC4 128/128,Enabled,0,DWORD,RC4 128-bit
+TLS,HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\Triple DES 168,Enabled,0,DWORD,3DES 168-bit (Triple DES 168)
+TLS,HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Hashes\MD5,Enabled,0,DWORD,Disable MD5 Hashing Algorithm
+Miscellaneous,HKLM:\SOFTWARE\Microsoft\Windows Search,EnableFindMyFiles,1,DWORD,Turn on Enhanced mode search for Windows indexer
+Miscellaneous,HKLM:\SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate\ClientStateMedium\{56EB18F8-B008-4CBD-B6D2-8C97FE7E9062},allowautoupdatesmetered,1,DWORD,Set Microsoft Edge to update over Metered connections
+Miscellaneous,HKLM:\SYSTEM\ControlSet001\Services\W32Time\TimeProviders\NtpClient,SpecialPollInterval,345600,DWORD,Change Windows time sync interval from every 7 days to every 4 days (= every 345600 seconds)
+Edge,HKLM:\SOFTWARE\Policies\Microsoft\Edge\Recommended,BlockThirdPartyCookies,1,DWORD,Recommends to block 3rd party cookies
+Edge,HKLM:\SOFTWARE\Policies\Microsoft\Edge,DnsOverHttpsMode,secure,String,Enables Secure DNS without insecure fallback
+Edge,HKLM:\SOFTWARE\Policies\Microsoft\Edge,DnsOverHttpsTemplates,https://chrome.cloudflare-dns.com/dns-query,String,Set DNS over HTTPS template to Cloudflare's
+Edge,HKLM:\SOFTWARE\Policies\Microsoft\Edge,AutomaticHttpsDefault,2,DWORD,Automatically upgrade HTTP connections to HTTPS
+Edge,HKLM:\SOFTWARE\Policies\Microsoft\Edge,EncryptedClientHelloEnabled,1,DWORD,Enable Encrypted Client Hello
+Edge,HKLM:\SOFTWARE\Policies\Microsoft\Edge,PrimaryPasswordSetting,1,DWORD,Configures a setting that asks users to enter their device password while using password autofill
+Edge,HKLM:\SOFTWARE\Policies\Microsoft\Edge,WebRtcLocalhostIpHandling,default_public_interface_only,String,Allow public interface over http default route. This doesn't expose the local IP address when using WebRTC
+NonAdmin,HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced,HideFileExt,0,DWORD,Show known file extensions in File explorer
+NonAdmin,HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced,Hidden,1,DWORD,Show hidden files and folders and drives toggles the control panel folder options item
+NonAdmin,HKCU:\Control Panel\International\User Profile,HttpAcceptLanguageOptOut,1,DWORD,Disable websites accessing local language list
+NonAdmin,HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\SearchSettings,SafeSearchMode,0,DWORD,turn off safe search in Windows search. from Windows settings > privacy and security > search permissions > safe search
+NonAdmin,HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Notifications\Settings,NOC_GLOBAL_SETTING_ALLOW_TOASTS_ABOVE_LOCK,0,DWORD,prevent showing notifications in Lock screen - this is the same as toggling the button in Windows settings > system > notifications > show notifications in the lock screen
+NonAdmin,HKCU:\Software\Microsoft\Windows\CurrentVersion\PushNotifications,LockScreenToastEnabled,0,DWORD,prevent showing notifications in Lock screen 2nd reg key this is the same as toggling the button in Windows settings > system > notifications > show notifications in the lock screen
+NonAdmin,HKCU:\Software\Microsoft\Clipboard,EnableClipboardHistory,1,DWORD,Enable Clipboard History for the current user
+NonAdmin,HKCU:\Software\Microsoft\Clipboard,CloudClipboardAutomaticUpload,1,DWORD,2nd commands to enable sync of Clipboard history in Windows between devices
+NonAdmin,HKCU:\Software\Microsoft\Clipboard,EnableCloudClipboard,1,DWORD,last one to enable Clipboard sync
+NonAdmin,HKCU:\Software\Microsoft\Input\Settings,EnableHwkbTextPrediction,1,DWORD,turn on Show text suggestions when typing on the physical keyboard for the current user toggles the option in Windows settings
+NonAdmin,HKCU:\Software\Microsoft\Input\Settings,MultilingualEnabled,1,DWORD,turn on Multilingual text suggestions for the current user toggles the option in Windows settings
+NonAdmin,HKCU:\Control Panel\Accessibility\StickyKeys,Flags,506,String,turn off sticky key shortcut of pressing shift key 5 time fast

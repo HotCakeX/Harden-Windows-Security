@@ -26,14 +26,14 @@ Edge;HKLM:\SOFTWARE\Policies\Microsoft\Edge;DnsOverHttpsMode;secure;String;Enabl
 Edge;HKLM:\SOFTWARE\Policies\Microsoft\Edge;DnsOverHttpsTemplates;https://chrome.cloudflare-dns.com/dns-query;String;Set DNS over HTTPS template to Cloudflare's
 Edge;HKLM:\SOFTWARE\Policies\Microsoft\Edge;AutomaticHttpsDefault;2;DWORD;Automatically upgrade HTTP connections to HTTPS
 Edge;HKLM:\SOFTWARE\Policies\Microsoft\Edge;EncryptedClientHelloEnabled;1;DWORD;Enable Encrypted Client Hello
-Edge;HKLM:\SOFTWARE\Policies\Microsoft\Edge;PreventSmartScreenPromptOverride;1;DWORD;Prevent users from ignoring and bypassing SmartScreen warnings for malicious websites
-Edge;HKLM:\SOFTWARE\Policies\Microsoft\Edge;SmartScreenEnabled;1;DWORD;Enforce SmartScreen
+Edge;HKLM:\SOFTWARE\Policies\Microsoft\Edge;PrimaryPasswordSetting;1;DWORD;Configures a setting that asks users to enter their device password while using password autofill
+Edge;HKLM:\SOFTWARE\Policies\Microsoft\Edge;WebRtcLocalhostIpHandling;default_public_interface_only;String; Allow public interface over http default route. This doesn't expose the local IP address when using WebRTC
 NonAdmin;HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced;HideFileExt;0;DWORD;Show known file extensions in File explorer
 NonAdmin;HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced;Hidden;1;DWORD;Show hidden files,folders and drives toggles the control panel folder options item
 NonAdmin;HKCU:\Control Panel\International\User Profile;HttpAcceptLanguageOptOut;1;DWORD;Disable websites accessing local language list
 NonAdmin;HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\SearchSettings;SafeSearchMode;0;DWORD;turn off safe search in Windows search. from Windows settings > privacy and security > search permissions > safe search
 NonAdmin;HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Notifications\Settings;NOC_GLOBAL_SETTING_ALLOW_TOASTS_ABOVE_LOCK;0;DWORD;prevent showing notifications in Lock screen - this is the same as toggling the button in Windows settings > system > notifications > show notifications in the lock screen
-NonAdmin;HKCU:\Software\Microsoft\Windows\CurrentVersion\PushNotifications;LockScreenToastEnabled;0;DWORD;prevent showing notifications in Lock screen, 2nd reg key this is the same as toggling the button in Windows settings > system > notifications > show notifications in the lock screen
+NonAdmin;HKCU:\Software\Microsoft\Windows\CurrentVersion\PushNotifications;LockScreenToastEnabled;0;DWORD;prevent showing notifications in Lock screen 2nd reg key this is the same as toggling the button in Windows settings > system > notifications > show notifications in the lock screen
 NonAdmin;HKCU:\Software\Microsoft\Clipboard;EnableClipboardHistory;1;DWORD;Enable Clipboard History for the current user
 NonAdmin;HKCU:\Software\Microsoft\Clipboard;CloudClipboardAutomaticUpload;1;DWORD;2nd commands to enable sync of Clipboard history in Windows between devices
 NonAdmin;HKCU:\Software\Microsoft\Clipboard;EnableCloudClipboard;1;DWORD;last one to enable Clipboard sync

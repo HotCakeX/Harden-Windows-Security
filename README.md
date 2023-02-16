@@ -517,13 +517,17 @@ These are configurations that are typically 🔺recommended in High-Risk Environ
 - 🔶 [Set DNS over HTTPS template to Cloudflare's](https://learn.microsoft.com/en-us/deployedge/microsoft-edge-policies#dnsoverhttpstemplates)
 - 🔶 [Automatic HTTPS upgrade of HTTP connections](https://learn.microsoft.com/en-us/deployedge/microsoft-edge-policies#configure-automatic-https)
 - 🔶 [Enable Encrypted Client Hello](https://learn.microsoft.com/en-us/deployedge/microsoft-edge-policies#encryptedclienthelloenabled)
-- 🔶 [Enforce SmartScreen](https://learn.microsoft.com/en-us/deployedge/microsoft-edge-policies#smartscreenenabled)
-- 🔶 [Prevent users from ignoring and bypassing SmartScreen warnings for malicious websites](https://learn.microsoft.com/en-us/deployedge/microsoft-edge-policies#preventsmartscreenpromptoverride)
+- 🔶[Configures a setting that asks users to enter their device password while using password autofill](https://learn.microsoft.com/en-us/DeployEdge/microsoft-edge-policies#primarypasswordsetting)
+- 🔶[Restrict exposure of local IP address by WebRTC](https://learn.microsoft.com/en-us/DeployEdge/microsoft-edge-policies#webrtclocalhostiphandling)
 
 <br>
 
-* You can view what policies are being applied to your Edge browser by going to this page: `edge://policy/`
-* You can find all of the available internal Edge pages by going to this page: `edge://about/`
+_Some settings require the client to be joined to Windows Server Active Directory/Azure Active Directory, in order to be applied. This script does not use any of them. When those settings are applied using registry, they are ignored by the browser and `edge://policy/` shows an error for them. This is a security measure._
+
+<br>
+
+* You can view all of the policies being applied to your Edge browser by visiting this page: `edge://policy/`
+* You can find all of the available internal Edge pages in here: `edge://about/`
 
 <br>
 

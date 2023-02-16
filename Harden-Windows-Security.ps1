@@ -495,7 +495,7 @@ Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which re
             }
             # TLS Registry section
             Set-Location $workingDir
-            $items = Import-Csv '.\Registry.csv' -Delimiter ";"
+            $items = Import-Csv '.\Registry.csv' -Delimiter ","
             foreach ($item in $items) {
                 if ($item.category -eq 'TLS') {
                     ModifyRegistry -path $item.path -key $item.key -value $item.value -type $item.type
@@ -675,7 +675,7 @@ Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which re
         "Yes" {
             # Miscellaneous Registry section
             Set-Location $workingDir
-            $items = Import-Csv '.\Registry.csv' -Delimiter ";"
+            $items = Import-Csv '.\Registry.csv' -Delimiter ","
             foreach ($item in $items) {
                 if ($item.category -eq 'Miscellaneous') {              
                     ModifyRegistry -path $item.path -key $item.key -value $item.value -type $item.type
@@ -758,7 +758,7 @@ Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which re
         "Yes" {
             # Edge Browser Configurations registry
             Set-Location $workingDir
-            $items = Import-Csv '.\Registry.csv' -Delimiter ";"
+            $items = Import-Csv '.\Registry.csv' -Delimiter ","
             foreach ($item in $items) {
                 if ($item.category -eq 'Edge') {
                     ModifyRegistry -path $item.path -key $item.key -value $item.value -type $item.type
@@ -875,7 +875,7 @@ switch (Select-Option -Options "Yes", "No", "Exit" -Message "Run Non-Admin categ
             # Download Registry CSV file               
             Invoke-WebRequest -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Payload/Registry.csv" -OutFile ".\Registry.csv"
         }
-        $items = Import-Csv '.\Registry.csv' -Delimiter ";"
+        $items = Import-Csv '.\Registry.csv' -Delimiter ","
         foreach ($item in $items) {
             if ($item.category -eq 'NonAdmin') {              
                 ModifyRegistry -path $item.path -key $item.key -value $item.value -type $item.type

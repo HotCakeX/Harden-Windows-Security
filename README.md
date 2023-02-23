@@ -49,12 +49,8 @@
 
 > __Warning__  Windows by default is secure and safe, this script does not imply nor claim otherwise. just like anything, you have to use it wisely and don't compromise yourself with reckless behavior and bad user configuration; Nothing is foolproof. This script only uses the tools and features that have already been implemented by Microsoft in Windows OS to fine-tune it towards the highest security and locked-down state, using well-documented, supported, recommended and official methods. continue reading for comprehensive info.
 
- </br>
  
 > __Warning__ Make sure your hardware (Tablet, Laptop, PC, Phone) meets the [Windows 11 hardware requirements](https://www.microsoft.com/en-in/windows/windows-11-specifications?r=1) **AND** [Virtualization Based Security requirements](https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/oem-vbs). Currently, Windows 11 allows some older than 8th Gen Intel CPUs (or their AMD equivalents), such as Intel i7 7700K, to use [insider builds](https://insider.windows.com/) only. You will miss a lot of new features, benefits and new security technologies that are only available on newer hardware. You need to enable TPM 2.0, Virtualization technology and Secure Boot in your UEFI if they aren't enabled by default (which is the case on older hardware). To Enable Secure Boot in your UEFI firmware settings [Check out this official guide](https://support.microsoft.com/en-us/windows/windows-11-and-secure-boot-a8ff1202-c0d9-42f5-940f-843abef64fad) - How to enable Secure Boot on: [HP](https://support.hp.com/document/ish_4300937-4295746-16?openCLC=true) - [Lenovo](https://support.lenovo.com/solutions/ht509044) - [Dell](https://www.dell.com/support/kbdoc/000190116/How-to-Enable-Secure-Boot-on-Your-Dell-Device)
-
- </br>
-
 
 > **Note**
 > [Windows Home edition is not supported.](https://www.microsoft.com/en-us/windows/compare-windows-10-home-vs-pro)
@@ -63,10 +59,16 @@
 > Restart your device after you apply the script, [don't use any commands to force Group Policy update](https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2012-R2-and-2012/jj573586(v=ws.11)?redirectedfrom=MSDN#asynchronous-and-synchronous-processing).
  
  
+<h3> <br> </h3>
 
- 
- <br>
- <br>
+
+
+<p align="center">		
+  <a href="https://www.youtube.com/watch?v=Ty_NoguyMhc">
+    <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/YouTubeVideoLogo.png" width="400"
+         alt="YouTube Video showcase">
+  </a>
+
  
  
  ## Features:<a href="#features">![FeaturesIcon]</a>
@@ -715,7 +717,8 @@ Not Applicable, No license. because the only mission of this GitHub repository a
 	
 	
 
-	
+
+
 [HardeningCategoriesIcon]: images/HardeningCategories.png
 [FeaturesIcon]: images/Features.png	
 [HowToUseIcon]: images/HowToUse.png

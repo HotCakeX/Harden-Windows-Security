@@ -69,7 +69,17 @@
          alt="YouTube Video showcase">
   </a>
 
+<h1> <br> </h1>
+
  
+![GreenCheckCircleMark] Check out Windows Defender Application Control (WDAC) posts for **Advanced Hardening beyond this script**. Target users range from Enterprises, Highly-Secure Servers and Data Centers, Highly-Secure Workstations and such:
+  - [Introduction](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Introduction)
+  - [WDAC for Lightly Managed Devices](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-for-Lightly-Managed-Devices)
+  - [WDAC for Fully Managed Devices](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-for-Fully-Managed-Devices)
+  - [WDAC notes about manual Policy XML modification, creation and related cmdlets](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-notes-about-manual-Policy-XML-modification,-creation-and-related-cmdlets)
+  - [**How to Create and Deploy a Signed WDAC Policy**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/How-to-Create-and-Deploy-a-Signed-WDAC-Policy-(Windows-Defender-Application-Control))
+ 
+<h1> <br> </h1>
  
  ## Features:<a href="#features">![FeaturesIcon]</a>
 
@@ -575,7 +585,6 @@ You don't need admin privileges to run this category, because no system-wide cha
 - 🔶 Turn off sticky key shortcut of pressing shift key 5 times fast
 
 
-<h1> <br> </h1>
 
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
@@ -584,6 +593,8 @@ You don't need admin privileges to run this category, because no system-wide cha
 [PowerShell Gallery](https://www.powershellgallery.com/packages/Harden-Windows-Security/) - Also available in PowerShell Gallery
 
 [Azure DevOps](https://dev.azure.com/SpyNetGirl/_git/Harden-Windows-Security) - Azure DevOps Repository
+
+<br>
 
 ## Trust<a href="#trust">![TrustIcon]</a>
 
@@ -718,7 +729,7 @@ Not Applicable, No license. because the only mission of this GitHub repository a
 	
 
 
-
+[GreenCheckCircleMark]: images/GreenCheckCircle.png
 [HardeningCategoriesIcon]: images/HardeningCategories.png
 [FeaturesIcon]: images/Features.png	
 [HowToUseIcon]: images/HowToUse.png

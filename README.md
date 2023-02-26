@@ -70,7 +70,7 @@
 
 <h2> <br> </h2>
  
-![GreenCheckCircleMark] [Check out Windows Defender Application Control (WDAC) posts on this repository](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Introduction) for **Advanced Hardening beyond this script**. Target users range from Enterprises, Highly-Secure Servers and Data Centers, Highly-Secure Workstations and such.
+![GreenCheckCircleMark] [**Check out Windows Defender Application Control (WDAC) posts on this repository**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Introduction) **for Advanced Hardening beyond this script. Target users range from Enterprises, Highly-Secure Servers and Data Centers, Highly-Secure Workstations and such.**
 
  
 <h2> <br> </h2>

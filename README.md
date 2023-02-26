@@ -158,7 +158,7 @@ From Top to bottom in order:
 </br>
 
 * 🟩 Means the security measure is applied using Group Policies
-* 🔶 Means the security measure is applied using PowerShell script
+* 🔶 Means the security measure is applied using PowerShell cmdlets or Registry
 
 
 

@@ -19,7 +19,9 @@ TLS,HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC
 TLS,HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\Triple DES 168,Enabled,0,DWORD,3DES 168-bit (Triple DES 168)
 TLS,HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Hashes\MD5,Enabled,0,DWORD,Disable MD5 Hashing Algorithm
 Miscellaneous,HKLM:\SOFTWARE\Microsoft\Windows Search,EnableFindMyFiles,1,DWORD,Turn on Enhanced mode search for Windows indexer
-Miscellaneous,HKLM:\SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate\ClientStateMedium\{56EB18F8-B008-4CBD-B6D2-8C97FE7E9062},allowautoupdatesmetered,1,DWORD,Set Microsoft Edge to update over Metered connections
+Miscellaneous,HKLM:\SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate\ClientStateMedium\{56EB18F8-B008-4CBD-B6D2-8C97FE7E9062},allowautoupdatesmetered,1,DWORD,Set Microsoft Edge (Stable) to update over Metered connections
+Miscellaneous,HKLM:\SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate\ClientStateMedium\{2CD8A007-E189-409D-A2C8-9AF4EF3C72AA},allowautoupdatesmetered,1,DWORD,Set Microsoft Edge (Beta) to update over Metered connections
+Miscellaneous,HKLM:\SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate\ClientStateMedium\{0D50BFEC-CD6A-4F9A-964C-C7416E3ACB10},allowautoupdatesmetered,1,DWORD,Set Microsoft Edge (Dev) to update over Metered connections
 Miscellaneous,HKLM:\SYSTEM\ControlSet001\Services\W32Time\TimeProviders\NtpClient,SpecialPollInterval,345600,DWORD,Change Windows time sync interval from every 7 days to every 4 days (= every 345600 seconds)
 Edge,HKLM:\SOFTWARE\Policies\Microsoft\Edge\Recommended,BlockThirdPartyCookies,1,DWORD,Recommends to block 3rd party cookies
 Edge,HKLM:\SOFTWARE\Policies\Microsoft\Edge,DnsOverHttpsMode,secure,String,Enables Secure DNS without insecure fallback

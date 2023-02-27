@@ -488,7 +488,7 @@ These are configurations that are typically 🔺recommended in High-Risk Environ
 - 🟩 Enables [SMB/LDAP Signing](https://techcommunity.microsoft.com/t5/storage-at-microsoft/configure-smb-signing-with-confidence/ba-p/2418102)
 - 🔶 Enables [SMB Encryption](https://learn.microsoft.com/en-us/windows-server/storage/file-server/smb-security) (the status of `(get-SmbServerConfiguration).EncryptData` was `$False` when tested on [Windows 11 dev build 25272](https://blogs.windows.com/windows-insider/2023/01/05/announcing-windows-11-insider-preview-build-25272/), this script sets it to `$True`)
 
-- 🔶 Enable Edge browser to download and install updates on any network, metered or not; because the updates are important and should not be suppressed, **that's what bad actors would want.**
+- 🔶 Enable Edge browser (stable/beta/dev channels) to download and install updates on any network, metered or not; because the updates are important and should not be suppressed.
 
 - 🔶 [Enables all Windows users to use Hyper-V and Windows Sandbox](https://learn.microsoft.com/en-us/archive/blogs/virtual_pc_guy/why-do-you-have-to-elevate-powershell-to-use-hyper-v-cmdlets) by adding all Windows users to the "Hyper-V Administrators" security group, by default only Administrators can use Hyper-V or Windows Sandbox. 
 

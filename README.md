@@ -703,6 +703,7 @@ Get-Content <Path-To-File> -stream zone.identifier
 - [Microsoft On the Issues](https://blogs.microsoft.com/on-the-issues/) - Assessments, Investigations and Reports of APTs (Advanced Persistent Threats[¹](https://learn.microsoft.com/en-us/events/teched-2012/sia303)) and nation-sponsored cyberattack operations globally
 - [Center for Internet Security (CIS) Benchmarks](https://learn.microsoft.com/en-us/compliance/regulatory/offering-CIS-Benchmark)
 - [A high level overview paper by Microsoft (in `PDF`)](http://download.microsoft.com/download/8/0/1/801358EC-2A0A-4675-A2E7-96C2E7B93E73/Framework_for_Cybersecurity_Info_Sharing.pdf), framework for cybersecurity information sharing and risk reduction.  
+- [Microsoft Threat Modeling Tool](https://learn.microsoft.com/en-us/azure/security/develop/threat-modeling-tool) - for software architects and developers
 
 <p align="right"><a href="#readme-top">💡(back to top)</a></p>
 

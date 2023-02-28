@@ -704,6 +704,14 @@ Get-Content <Path-To-File> -stream zone.identifier
 - [Center for Internet Security (CIS) Benchmarks](https://learn.microsoft.com/en-us/compliance/regulatory/offering-CIS-Benchmark)
 - [A high level overview paper by Microsoft (in `PDF`)](http://download.microsoft.com/download/8/0/1/801358EC-2A0A-4675-A2E7-96C2E7B93E73/Framework_for_Cybersecurity_Info_Sharing.pdf), framework for cybersecurity information sharing and risk reduction.  
 - [Microsoft Threat Modeling Tool](https://learn.microsoft.com/en-us/azure/security/develop/threat-modeling-tool) - for software architects and developers
+- [Important events to monitor](https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/plan/appendix-l--events-to-monitor)
+- [Windows Security portal](https://learn.microsoft.com/en-us/windows/security/)
+- [Security auditing](https://learn.microsoft.com/en-us/windows/security/threat-protection/auditing/security-auditing-overview)
+- [Microsoft SysInternals Sysmon for Windows Event Collection or SIEM](https://learn.microsoft.com/en-us/sysinternals/downloads/sysmon)
+- [Privileged Access Workstations](http://aka.ms/cyberpaw)
+- [Enhanced Security Administrative Environment](http://aka.ms/ESAE)
+- [New Zealand 2016 Demystifying the Windows Firewall – Learn how to irritate attackers without crippli](https://youtu.be/InPiE0EOArs)
+
 
 <p align="right"><a href="#readme-top">💡(back to top)</a></p>
 

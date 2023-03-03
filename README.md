@@ -694,9 +694,9 @@ Not Applicable, No license. because the only mission of this GitHub repository a
 ---
 
 <p align="center">
-<a href="https://techcommunity.microsoft.com/t5/user/viewprofilepage/user-id/310193">Microsoft Tech Community Profile &nbsp;&middot;&nbsp; </a>
-<a href="https://github.com/HotCakeX">GitHub @HotCakeX &nbsp;&middot;&nbsp; </a>
-<a href="https://steamcommunity.com/id/HotCakeX">Steam @HotCakeX &nbsp;&middot;&nbsp; </a>
+<a href="https://techcommunity.microsoft.com/t5/user/viewprofilepage/user-id/310193">Microsoft Tech Community Profile</a> &nbsp;&middot;&nbsp;
+<a href="https://github.com/HotCakeX">GitHub @HotCakeX</a> &nbsp;&middot;&nbsp;
+<a href="https://steamcommunity.com/id/HotCakeX">Steam @HotCakeX</a> &nbsp;&middot;&nbsp;
 <a href="https://account.xbox.com/en-US/Profile?Gamertag=HottCakeX">Xbox @HottCakeX</a>
 </p>
 

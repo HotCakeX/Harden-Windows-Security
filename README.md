@@ -1,5 +1,3 @@
-<a name="readme-top"></a>
-
 <h1 align="center">
   <br>
   <a href="https://github.com/HotCakeX/Harden-Windows-Security"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/png-donut-2.png" alt="Avatar" width="200"></a>
@@ -8,7 +6,7 @@
   Harden Windows Security
   <br>
 </h1>
-
+<a name="readme-top"></a>
 <h4 align="center">Harden Windows 11 Safely, Securely, only with Official Microsoft methods</h4>
 
 <p align="center">
@@ -218,7 +216,7 @@ $(get-MpPreference).ControlledFolderAccessAllowedApplications
 
 <br>
 
-- 🔶 Enables [Mandatory ASLR,](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/enable-exploit-protection?view=o365-worldwide) 🔻It might cause compatibility issues🔺 only for some 3rd party programs that aren't built properly, specially portable ones.
+- 🔶 Enables [Mandatory ASLR,](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/enable-exploit-protection?view=o365-worldwide) 🔻It might cause compatibility issues🔺 only for some poorly-made 3rd party programs, specially portable ones.
   - You can add Mandatory ASLR override for a trusted program using the PowerShell command below or in the Program Settings section of Exploit Protection in Microsoft Defender app.
   - `Set-ProcessMitigation -Name "C:\TrustedApp.exe" -Disable ForceRelocateImages`
   - [There are more options for Exploit Protection](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/enable-exploit-protection?view=o365-worldwide) but enabling them requires extensive reviewing by users because mixing them up can cause a lot of compatibility issues.

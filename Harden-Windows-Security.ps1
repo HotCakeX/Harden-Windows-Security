@@ -325,7 +325,7 @@ https://stackoverflow.com/questions/48809012/compare-two-credentials-in-powershe
                     else {       
                         # if Bitlocker is using TPM+PIN but not recovery password (for key protectors)
                         if ($KeyProtectors -contains 'Tpmpin' -and $KeyProtectors -notcontains 'recoveryPassword') {
-                            Write-Host "TPM and Startup Pin are available but the recovery password is missing, adding it now...`
+                            Write-Host "`nTPM and Startup Pin are available but the recovery password is missing, adding it now...`
 the recovery password will be saved in a Text file in $env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt" -ForegroundColor yellow                          
                             Add-BitLockerKeyProtector -MountPoint $env:SystemDrive -RecoveryPasswordProtector *> "$env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt"
                             Write-Host "Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which requires authentication to access." -ForegroundColor Blue                         
@@ -334,17 +334,17 @@ the recovery password will be saved in a Text file in $env:SystemDrive\Drive $($
                         if ($KeyProtectors -notcontains 'Tpmpin' -and $KeyProtectors -contains 'recoveryPassword') {            
                             Write-Host "TPM and Start up PIN are missing but recovery password is in place, `nadding TPM and Start up PIN now..." -ForegroundColor Magenta
                             do {
-                                $pin1 = $(write-host "Enter a Pin for Bitlocker startup (at least 6 digits)" -ForegroundColor Magenta; Read-Host -AsSecureString)
-                                $pin2 = $(write-host "Confirm your Bitlocker Startup Pin (at least 6 digits)" -ForegroundColor Magenta; Read-Host -AsSecureString)
+                                $pin1 = $(write-host "Enter a Pin for Bitlocker startup (at least 10 characters)" -ForegroundColor Magenta; Read-Host -AsSecureString)
+                                $pin2 = $(write-host "Confirm your Bitlocker Startup Pin (at least 10 characters)" -ForegroundColor Magenta; Read-Host -AsSecureString)
                                       
                                 $theyMatch = Compare-SecureString $pin1 $pin2
 
-                                if ( $theyMatch -and $pin1.Length -ge 6 -and $pin2.Length -ge 6  ) {                  
+                                if ( $theyMatch -and $pin1.Length -ge 10 -and $pin2.Length -ge 10  ) {                  
                                     $pin = $pin1                  
                                 }                  
                                 else { Write-Host "the PINs you entered didn't match, try again" -ForegroundColor red }                  
                             }                  
-                            until ($theyMatch -and $pin1.Length -ge 6 -and $pin2.Length -ge 6)
+                            until ($theyMatch -and $pin1.Length -ge 10 -and $pin2.Length -ge 10)
                  
                             try {
                                 Add-BitLockerKeyProtector -MountPoint $env:SystemDrive -TpmAndPinProtector -Pin $pin -ErrorAction Stop
@@ -361,17 +361,17 @@ the recovery password will be saved in a Text file in $env:SystemDrive\Drive $($
                 else {
                     Write-Host "Bitlocker is Not enabled for the System Drive Drive, activating now..." -ForegroundColor yellow    
                     do {
-                        $pin1 = $(write-host "Enter a Pin for Bitlocker startup (at least 6 digits)" -ForegroundColor Magenta; Read-Host -AsSecureString)
-                        $pin2 = $(write-host "Confirm your Bitlocker Startup Pin (at least 6 digits)" -ForegroundColor Magenta; Read-Host -AsSecureString)
+                        $pin1 = $(write-host "Enter a Pin for Bitlocker startup (at least 10 characters)" -ForegroundColor Magenta; Read-Host -AsSecureString)
+                        $pin2 = $(write-host "Confirm your Bitlocker Startup Pin (at least 10 characters)" -ForegroundColor Magenta; Read-Host -AsSecureString)
       
                         $theyMatch = Compare-SecureString $pin1 $pin2
             
-                        if ($theyMatch -and $pin1.Length -ge 6 -and $pin2.Length -ge 6) {      
+                        if ($theyMatch -and $pin1.Length -ge 10 -and $pin2.Length -ge 10) {      
                             $pin = $pin1      
                         }      
                         else { Write-Host "the Pins you entered didn't match, try again" -ForegroundColor red }      
                     }      
-                    until ($theyMatch -and $pin1.Length -ge 6 -and $pin2.Length -ge 6)
+                    until ($theyMatch -and $pin1.Length -ge 10 -and $pin2.Length -ge 10)
 
                     try {
                         enable-bitlocker -MountPoint $env:SystemDrive -EncryptionMethod XtsAes256 -pin $pin -TpmAndPinProtector -SkipHardwareTest -ErrorAction Stop             
@@ -383,7 +383,7 @@ the recovery password will be saved in a Text file in $env:SystemDrive\Drive $($
                     }     
                     Add-BitLockerKeyProtector -MountPoint $env:SystemDrive -RecoveryPasswordProtector *> "$env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt" 
                     Resume-BitLocker -MountPoint $env:SystemDrive
-                    Write-Host "the recovery password will be saved in a Text file in $env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt`
+                    Write-Host "`nthe recovery password will be saved in a Text file in $env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt`
 Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which requires authentication to access." -ForegroundColor Blue
                     Write-Host "Bitlocker is now fully and securely enabled for OS drive" -ForegroundColor Green                     
                 }

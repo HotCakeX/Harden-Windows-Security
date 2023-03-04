@@ -139,15 +139,15 @@ else {
     # ============================================End of Microsoft Security Baselines==========================================   
     #endregion Microsoft-Security-Baseline
  
-    #region Windows-Security-Defender    
-    # ==========================================Windows Security aka Defender==================================================
-    switch (Select-Option -Options "Yes", "No", "Exit" -Message "Run Windows Security (Defender) category ?") {
+    #region Microsoft-Defender
+    # ================================================Microsoft Defender=======================================================
+    switch (Select-Option -Options "Yes", "No", "Exit" -Message "Run Microsoft Defender category ?") {
         "Yes" { 
             # Change current working directory to the LGPO's folder
             Set-Location "$workingDir\LGPO_30"
 
-            Write-Host "`nApplying Windows Security (Defender) policies" -ForegroundColor Cyan
-            .\LGPO.exe /m "..\Security-Baselines-X\Windows Security (Defender) Policies\registry.pol"
+            Write-Host "`nApplying Microsoft Defender Policies" -ForegroundColor Cyan
+            .\LGPO.exe /m "..\Security-Baselines-X\Microsoft Defender Policies\registry.pol"
         
             # Optimizing Network Protection Performance of Windows Defender - this was off by default on Windows 11 insider build 25247
             Set-MpPreference -AllowSwitchToAsyncInspection $True
@@ -164,8 +164,8 @@ else {
         } "No" { break }
         "Exit" { &$cleanUp }
     }    
-    # =========================================End of Windows Security aka Defender============================================    
-    #endregion Windows-Security-Defender
+    # ============================================End of Microsoft Defender====================================================    
+    #endregion Microsoft-Defender
 
     #region Attack-Surface-Reduction-Rules    
     # =========================================Attack Surface Reduction Rules==================================================

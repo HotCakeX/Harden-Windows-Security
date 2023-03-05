@@ -604,7 +604,7 @@ Trust is very important; you shouldn't blindly trust me nor any other __3rd part
 
 <br>
 
-<!-- Security-Baselines-X-VT:START --><a href='https://www.virustotal.com/gui/file/696a73e15efb9f4d5e993fc7effd16abe5b2701c97104e8a68d9ff53b06ddc82'>Virus Total scan results of Security-Baselines-X.zip</a><!-- Security-Baselines-X-VT:END -->
+<!-- Security-Baselines-X-VT:START --><a href='https://www.virustotal.com/gui/file/b0ac7e4e38d5731b9a45a86208fd7b369a8a8707b408b053bb2a9beab7345814'>Virus Total scan results of Security-Baselines-X.zip</a><!-- Security-Baselines-X-VT:END -->
 
 <br>
 

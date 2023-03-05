@@ -78,18 +78,14 @@ $null = New-Module {
         }
     }
 }
-
 #endregion functions
 
 # create our working directory
 New-Item -ItemType Directory -Path "$env:TEMP\HardeningXStuff\" -Force | Out-Null
-
 # working directory assignment
 $workingDir = "$env:TEMP\HardeningXStuff\"
-
 # change location to the new directory
 Set-Location $workingDir
-
 # Clean up script block
 $cleanUp = { Set-Location $HOME; remove-item -Recurse "$env:TEMP\HardeningXStuff\" -Force; exit }
 
@@ -161,6 +157,35 @@ else {
             }
             # Enable Mandatory ASLR
             set-processmitigation -System -Enable ForceRelocateImages
+
+            # Create scheduled task for fast weekly Microsoft recommended driver block list update
+            switch (Select-Option -Options "Yes", "No", "Exit" -Message "Create scheduled task for fast weekly Microsoft recommended driver block list update ?") {
+                "Yes" { 
+                    # create a scheduled task that runs every 7 days
+                    if (-NOT (Get-ScheduledTask -TaskName "MSFT Driver Block list update" -ErrorAction SilentlyContinue)) {        
+                        $action = New-ScheduledTaskAction -Execute 'Powershell.exe' `
+                            -Argument '-NoProfile -WindowStyle Hidden -command "& {Invoke-WebRequest -Uri "https://aka.ms/VulnerableDriverBlockList" -OutFile VulnerableDriverBlockList.zip;Expand-Archive .\VulnerableDriverBlockList.zip -DestinationPath "VulnerableDriverBlockList" -Force;Rename-Item .\VulnerableDriverBlockList\SiPolicy_Enforced.p7b -NewName "SiPolicy.p7b" -Force;Copy-Item .\VulnerableDriverBlockList\SiPolicy.p7b -Destination "C:\Windows\System32\CodeIntegrity";$job = Start-Job -Name "Job1" -ScriptBlock { CiTool.exe -r };Start-Sleep -s 15;Stop-Job $job;Remove-Item .\VulnerableDriverBlockList -Recurse -Force;Remove-Item .\VulnerableDriverBlockList.zip -Force;}"'    
+                        $TaskPrincipal = New-ScheduledTaskPrincipal -LogonType S4U -UserId $env:USERNAME -RunLevel Highest
+                        # trigger
+                        $Time = New-ScheduledTaskTrigger -Once -At (Get-Date).AddHours(3) -RepetitionInterval (New-TimeSpan -Days 7)
+                        # register the task
+                        Register-ScheduledTask -Action $action -Trigger $Time -Principal $TaskPrincipal -TaskPath "MSFT Driver Block list update" -TaskName "MSFT Driver Block list update" -Description "Microsoft Recommended Driver Block List update"
+                        # define advanced settings for the task
+                        $TaskSettings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -Compatibility Win8 -StartWhenAvailable -ExecutionTimeLimit (New-TimeSpan -Minutes 3)
+                        # add advanced settings we defined to the task
+                        Set-ScheduledTask -TaskPath "MSFT Driver Block list update" -TaskName "MSFT Driver Block list update" -Settings $TaskSettings 
+                    }
+                } "No" { break }
+                "Exit" { exit }
+            }
+            # Set Microsoft Defender engine and platform update channel to beta - Devices in the Windows Insider Program are subscribed to this channel by default.
+            switch (Select-Option -Options "Yes", "No", "Exit" -Message "Set Microsoft Defender engine and platform update channel to beta ?") {
+                "Yes" {             
+                    Set-MpPreference -EngineUpdatesChannel beta
+                    Set-MpPreference -PlatformUpdatesChannel beta
+                } "No" { break }
+                "Exit" { &$cleanUp }
+            }            
         } "No" { break }
         "Exit" { &$cleanUp }
     }    
@@ -191,7 +216,7 @@ else {
             Start-Sleep 5
             # Set Hibnernate mode to full
             powercfg /h /type full
-            Start-Sleep 2
+            Start-Sleep 3
             Remove-MpPreference -ControlledFolderAccessAllowedApplications "C:\Windows\System32\powercfg.exe"
             # Change current working directory to the LGPO's folder
             Set-Location "$workingDir\LGPO_30"
@@ -624,24 +649,38 @@ Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which re
         "Yes" {
             # since PowerShell Core (only if installed from Microsoft Store) has problem with these commands, making sure the built-in PowerShell handles them
             # There are Github issues for it already: https://github.com/PowerShell/PowerShell/issues/13866
-
+            
             # Disable PowerShell v2 (needs 2 commands)
-            PowerShell.exe "if((get-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2).state -eq 'enabled'){disable-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2 -norestart}else{Write-Host 'MicrosoftWindowsPowerShellV2 is already disabled' -ForegroundColor Darkgreen}"
-            PowerShell.exe "if((get-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2Root).state -eq 'enabled'){disable-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2Root -norestart}else{Write-Host 'MicrosoftWindowsPowerShellV2Root is already disabled' -ForegroundColor Darkgreen}"
+            PowerShell.exe "Write-Host 'Disabling PowerShellv2 1st command' -ForegroundColor Yellow;if((get-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2).state -eq 'enabled'){disable-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2 -norestart}else{Write-Host 'MicrosoftWindowsPowerShellV2 is already disabled' -ForegroundColor Darkgreen}"
+            PowerShell.exe "Write-Host 'Disabling PowerShellv2 2nd command' -ForegroundColor Yellow;if((get-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2Root).state -eq 'enabled'){disable-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2Root -norestart}else{Write-Host 'MicrosoftWindowsPowerShellV2Root is already disabled' -ForegroundColor Darkgreen}"
             # Disable Work Folders client
-            PowerShell.exe "if((get-WindowsOptionalFeature -Online -FeatureName WorkFolders-Client).state -eq 'enabled'){disable-WindowsOptionalFeature -Online -FeatureName WorkFolders-Client -norestart}else{Write-Host 'WorkFolders-Client is already disabled' -ForegroundColor Darkgreen}"
+            PowerShell.exe "Write-Host 'Disabling Work Folders' -ForegroundColor Yellow;if((get-WindowsOptionalFeature -Online -FeatureName WorkFolders-Client).state -eq 'enabled'){disable-WindowsOptionalFeature -Online -FeatureName WorkFolders-Client -norestart}else{Write-Host 'WorkFolders-Client is already disabled' -ForegroundColor Darkgreen}"
             # Disable Internet Printing Client
-            PowerShell.exe "if((get-WindowsOptionalFeature -Online -FeatureName Printing-Foundation-Features).state -eq 'enabled'){disable-WindowsOptionalFeature -Online -FeatureName Printing-Foundation-Features -norestart}else{Write-Host 'Printing-Foundation-Features is already disabled' -ForegroundColor Darkgreen}"
+            PowerShell.exe "Write-Host 'Disabling Internet Printing Client' -ForegroundColor Yellow;if((get-WindowsOptionalFeature -Online -FeatureName Printing-Foundation-Features).state -eq 'enabled'){disable-WindowsOptionalFeature -Online -FeatureName Printing-Foundation-Features -norestart}else{Write-Host 'Printing-Foundation-Features is already disabled' -ForegroundColor Darkgreen}"
             # Disable Windows Media Player (legacy)
-            PowerShell.exe "if((get-WindowsOptionalFeature -Online -FeatureName WindowsMediaPlayer).state -eq 'enabled'){disable-WindowsOptionalFeature -Online -FeatureName WindowsMediaPlayer -norestart}else{Write-Host 'WindowsMediaPlayer is already disabled' -ForegroundColor Darkgreen}"
+            PowerShell.exe "Write-Host 'Disabling Windows Media Player (Legacy)' -ForegroundColor Yellow;if((get-WindowsOptionalFeature -Online -FeatureName WindowsMediaPlayer).state -eq 'enabled'){disable-WindowsOptionalFeature -Online -FeatureName WindowsMediaPlayer -norestart}else{Write-Host 'WindowsMediaPlayer is already disabled' -ForegroundColor Darkgreen}"            
             # Enable Windows Defender Application Guard
-            PowerShell.exe "if((get-WindowsOptionalFeature -Online -FeatureName Windows-Defender-ApplicationGuard).state -eq 'disabled'){enable-WindowsOptionalFeature -Online -FeatureName Windows-Defender-ApplicationGuard -norestart}else{Write-Host 'Windows-Defender-ApplicationGuard is already enabled' -ForegroundColor Darkgreen}"
+            PowerShell.exe "Write-Host 'Enabling Windows Defender Application Guard' -ForegroundColor Yellow;if((get-WindowsOptionalFeature -Online -FeatureName Windows-Defender-ApplicationGuard).state -eq 'disabled'){enable-WindowsOptionalFeature -Online -FeatureName Windows-Defender-ApplicationGuard -norestart}else{Write-Host 'Windows-Defender-ApplicationGuard is already enabled' -ForegroundColor Darkgreen}"
             # Enable Windows Sandbox
-            PowerShell.exe "if((get-WindowsOptionalFeature -Online -FeatureName Containers-DisposableClientVM).state -eq 'disabled'){enable-WindowsOptionalFeature -Online -FeatureName Containers-DisposableClientVM -All -norestart}else{Write-Host 'Containers-DisposableClientVM (Windows Sandbox) is already enabled' -ForegroundColor Darkgreen}"
+            PowerShell.exe "Write-Host 'Enabling Windows Sandbox' -ForegroundColor Yellow;if((get-WindowsOptionalFeature -Online -FeatureName Containers-DisposableClientVM).state -eq 'disabled'){enable-WindowsOptionalFeature -Online -FeatureName Containers-DisposableClientVM -All -norestart}else{Write-Host 'Containers-DisposableClientVM (Windows Sandbox) is already enabled' -ForegroundColor Darkgreen}"
             # Enable Hyper-V
-            PowerShell.exe "if((get-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V).state -eq 'disabled'){enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All -norestart}else{Write-Host 'Microsoft-Hyper-V is already enabled' -ForegroundColor Darkgreen}"
+            PowerShell.exe "Write-Host 'Enabling Hyper-V' -ForegroundColor Yellow;if((get-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V).state -eq 'disabled'){enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All -norestart}else{Write-Host 'Microsoft-Hyper-V is already enabled' -ForegroundColor Darkgreen}"
             # Enable Virtual Machine Platform
-            PowerShell.exe "if((get-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform).state -eq 'disabled'){enable-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform -norestart}else{Write-Host 'VirtualMachinePlatform is already enabled' -ForegroundColor Darkgreen}"
+            PowerShell.exe "Write-Host 'Enabling Virtual Machine Platform' -ForegroundColor Yellow;if((get-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform).state -eq 'disabled'){enable-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform -norestart}else{Write-Host 'VirtualMachinePlatform is already enabled' -ForegroundColor Darkgreen}"
+            
+            # Uninstall VBScript that is now uninstallable as an optional features since Windows 11 insider Dev build 25309                       
+            PowerShell.exe 'if (Get-WindowsCapability -Online | Where-Object { $_.Name -like ''*VBSCRIPT*'' }){`
+            Get-WindowsCapability -Online | Where-Object { $_.Name -like ''*VBSCRIPT*'' } | remove-WindowsCapability -Online;`
+            Write-Host "VBSCRIPT has been uninstalled" -ForegroundColor Green}'         
+            # Uninstall Internet Explorer mode functionality for Edge
+            PowerShell.exe 'Get-WindowsCapability -Online | Where-Object { $_.Name -like ''*Browser.InternetExplorer*'' } | remove-WindowsCapability -Online'
+            Write-Host "Internet Explorer mode functionality for Edge has been uninstalled" -ForegroundColor Green
+            # Uninstall WMIC
+            PowerShell.exe 'Get-WindowsCapability -Online | Where-Object { $_.Name -like ''*wmic*'' } | remove-WindowsCapability -Online'
+            Write-Host "WMIC has been uninstalled" -ForegroundColor Green
+            # Uninstall Legacy Notepad
+            PowerShell.exe 'Get-WindowsCapability -Online | Where-Object { $_.Name -like ''*Microsoft.Windows.Notepad.System*'' } | remove-WindowsCapability -Online'
+            Write-Host "Legacy Notepad has been uninstalled. The modern multi-tabbed Notepad is unaffected." -ForegroundColor Green
         } "No" { break }
         "Exit" { &$cleanUp }
     }    
@@ -740,7 +779,6 @@ Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which re
         "Yes" {
             # enable restart notification for Windows update
             ModifyRegistry -path "HKLM:\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings" -key "RestartNotificationsAllowed2" -value "1" -type 'DWORD'
-
             # Change current working directory to the LGPO's folder
             Set-Location "$workingDir\LGPO_30"
 
@@ -780,6 +818,8 @@ Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which re
             Write-Host "`nApplying Top Security Measures" -ForegroundColor Cyan
             .\LGPO.exe /s "..\Security-Baselines-X\Top Security Measures\GptTmpl.inf"
 
+            Write-Host "`nApplying Top Security Measures Registry settings" -ForegroundColor Cyan
+            .\LGPO.exe /m "..\Security-Baselines-X\Top Security Measures\registry.pol"
         } "No" { break }
         "Exit" { &$cleanUp }
     }    
@@ -789,37 +829,22 @@ Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which re
     #region Certificate-Checking-Commands    
     # ====================================================Certificate Checking Commands========================================
     switch (Select-Option -Options "Yes", "No", "Exit" -Message "Run Certificate Checking category ?") {
-        "Yes" {            
-            # List valid certificates not rooted to the Microsoft Certificate Trust List in the User store
-            switch (Select-Option -Options "Yes", "No" -Message "List valid certificates not rooted to the Microsoft Certificate Trust List in the User store ?") {
-                "Yes" {
-                    try {
-                        Invoke-WithoutProgress {
-                            Invoke-WebRequest -Uri "https://live.sysinternals.com/sigcheck64.exe" -OutFile "sigcheck64.exe" -ErrorAction Stop
-                        }
-                        .\sigcheck64.exe -tuv -accepteula -nobanner
-                        Remove-Item .\sigcheck64.exe -Force
-                    }
-                    catch {                    
-                        Write-Host "sigcheck64.exe couldn't be downloaded from https://live.sysinternals.com" -ForegroundColor Red
-                    }
-                } "No" { break }              
+        "Yes" {      
+            try {
+                Invoke-WithoutProgress {                    
+                    Invoke-WebRequest -Uri "https://live.sysinternals.com/sigcheck64.exe" -OutFile "sigcheck64.exe" -ErrorAction Stop
+                }                
             }
-            # List valid certificates not rooted to the Microsoft Certificate Trust List in the Machine store
-            switch (Select-Option -Options "Yes", "No" -Message "List valid certificates not rooted to the Microsoft Certificate Trust List in the Machine store ?") {
-                "Yes" {
-                    try {
-                        Invoke-WithoutProgress {
-                            Invoke-WebRequest -Uri "https://live.sysinternals.com/sigcheck64.exe" -OutFile "sigcheck64.exe" -ErrorAction Stop
-                        }
-                        .\sigcheck64.exe -tv -accepteula -nobanner
-                        Remove-Item .\sigcheck64.exe -Force
-                    }
-                    catch {
-                        Write-Host "sigcheck64.exe couldn't be downloaded from https://live.sysinternals.com" -ForegroundColor Red
-                    }
-                } "No" { break }  
-            }
+            catch {                    
+                Write-Host "sigcheck64.exe couldn't be downloaded from https://live.sysinternals.com" -ForegroundColor Red
+                break
+            }      
+            Write-Host -nonewline "`nListing valid certificates not rooted to the Microsoft Certificate Trust List in the" -ForegroundColor Yellow; write-host " User store`n" -ForegroundColor cyan
+            .\sigcheck64.exe -tuv -accepteula -nobanner     
+    
+            Write-Host -nonewline "`nListing valid certificates not rooted to the Microsoft Certificate Trust List in the" -ForegroundColor Yellow; write-host " Machine Store`n" -ForegroundColor Blue
+            .\sigcheck64.exe -tv -accepteula -nobanner
+            Remove-Item .\sigcheck64.exe -Force
         } "No" { break }
         "Exit" { &$cleanUp }
     }

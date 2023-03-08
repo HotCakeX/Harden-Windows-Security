@@ -575,9 +575,13 @@ You don't need admin privileges to run this category, because no system-wide cha
 
 ## Related<a href="#related">![RelatedIcon]</a>
 
-[PowerShell Gallery](https://www.powershellgallery.com/packages/Harden-Windows-Security/) - Also available in PowerShell Gallery
+[PowerShell Gallery mirror](https://www.powershellgallery.com/packages/Harden-Windows-Security/)
 
-[Azure DevOps](https://dev.azure.com/SpyNetGirl/_git/Harden-Windows-Security) - Azure DevOps Repository
+[Azure DevOps Repository](https://dev.azure.com/SpyNetGirl/_git/Harden-Windows-Security)
+
+[Harden Windows Security website](https://hotcakex.github.io/)
+
+[Official global IANA IP block for each country](https://hotcakex.github.io/Official-IANA-IP-blocks/)
 
 <br>
 

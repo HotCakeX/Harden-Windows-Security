@@ -75,6 +75,8 @@ function New-ConfigWDAC {
 
         Merge-CIPolicy -PolicyPaths .\AllowMicrosoft.xml, '.\Microsoft recommended block rules.XML', '.\Microsoft recommended driver block rules.XML' -OutputFilePath .\AllowMicrosoftPlusBlockRules.XML
         
+        Set-CIPolicyIdInfo -FilePath .\AllowMicrosoftPlusBlockRules.XML -ResetPolicyID
+        
         Set-RuleOption -FilePath .\AllowMicrosoftPlusBlockRules.XML -Option 3 -Delete
 
         Set-HVCIOptions -Strict -FilePath .\AllowMicrosoftPlusBlockRules.XML
@@ -364,4 +366,3 @@ $RulesRefs
     }      
     #endregion function-processing
 }
-

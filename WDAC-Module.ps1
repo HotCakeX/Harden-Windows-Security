@@ -1,20 +1,27 @@
+#requires -version 7.3.3
 function New-ConfigWDAC {
     [CmdletBinding(
-        HelpURI = "https://github.com/HotCakeX/Harden-Windows-Security/wiki/Introduction"
+        DefaultParameterSetName = "set1",
+        HelpURI = "https://github.com/HotCakeX/Harden-Windows-Security/wiki/Introduction#wdac-module"
+    )]
+    Param(
+        [Parameter(Mandatory = $false, ParameterSetName = "set1")][switch]$Get_Recommended_Block_Rules,
+        [Parameter(Mandatory = $false, ParameterSetName = "set1")][switch]$Get_Recommended_Driver_Block_Rules,
+        [Parameter(Mandatory = $false, ParameterSetName = "set1")][switch]$Merge_Both_Block_Rules_With_Allow_Microsoft,
+        [Parameter(Mandatory = $false, ParameterSetName = "set1")][switch]$Install_Latest_Driver_BlockRules,
+        [Parameter(Mandatory = $false, ParameterSetName = "set1")][switch]$Create_Scheduled_Task_Auto_Driver_BlockRules_Update,
+        [Parameter(Mandatory = $false, ParameterSetName = "set1")][switch]$Create_WDAC_Policy_From_Audit_Logs,
+        [Parameter(Mandatory = $false, ParameterSetName = "set1")][switch]$Prep_System_For_MSFT_Only_Audit,
+        [Parameter(Mandatory = $false, ParameterSetName = "set1")][switch]$Create_Lightly_Managed_WDAC_Policy,
+        [Parameter(Mandatory = $false, ParameterSetName = "set1")][switch]$Deploy_Lightly_Managed_WDAC_Policy,
+        [Parameter(Mandatory = $false, ParameterSetName = "set2")][switch]$Sign_Policy,       
+        [parameter(ParameterSetName = "set2", Mandatory = $true)][string]$WDACPolicyPath,
+        [parameter(ParameterSetName = "set2", Mandatory = $true)][string]$CertPath,
+        [parameter(ParameterSetName = "set2", Mandatory = $true)][string]$CertCN,
+        [parameter(ParameterSetName = "set2", Mandatory = $false)][string]$SignToolExePath
+        
     )
-    ]  Param(
-        [Parameter(Mandatory = $false)][switch]$Get_Recommended_Block_Rules,
-        [Parameter(Mandatory = $false)][switch]$Get_Recommended_Driver_Block_Rules,
-        [Parameter(Mandatory = $false)][switch]$Merge_Both_Block_Rules_With_Allow_Microsoft,
-        [Parameter(Mandatory = $false)][switch]$Install_Latest_Driver_BlockRules,
-        [Parameter(Mandatory = $false)][switch]$Create_Scheduled_Task_Auto_Driver_BlockRules_Update,
-        [Parameter(Mandatory = $false)][switch]$Create_WDAC_Policy_From_Audit_Logs,
-        [Parameter(Mandatory = $false)][switch]$Prep_System_For_MSFT_Only_Audit,
-        [Parameter(Mandatory = $false)][switch]$Create_Lightly_Managed_WDAC_Policy,
-        [Parameter(Mandatory = $false)][switch]$Deploy_Lightly_Managed_WDAC_Policy
 
-    )
-    
     #region Script-Blocks
 
     # Create Microsoft recommended block rules XML policy and remove the allow rules
@@ -334,6 +341,70 @@ $RulesRefs
         Move-Item -Path ".\$PolicyID.cip" -Destination "C:\Windows\System32\CodeIntegrity\CiPolicies\Active"
     }
 
+    # Sign Policy
+    $Sign_PolicySCRIPTBLOCK = {
+        Add-SignerRule -FilePath $WDACPolicyPath -CertificatePath $CertPath -Update -User -Kernel -Supplemental
+
+        Set-HVCIOptions -Strict -FilePath $WDACPolicyPath
+
+        Set-RuleOption -FilePath $WDACPolicyPath -Option 6 -Delete
+
+        $xml = [xml](Get-Content $WDACPolicyPath)
+        $PolicyID = $xml.SiPolicy.PolicyID
+
+        ConvertFrom-CIPolicy $WDACPolicyPath "$PolicyID.cip"
+
+        if ($SignToolExePath) {
+            $SignToolExePath = $SignToolExePath
+        }
+        else {
+
+            if ($Env:PROCESSOR_ARCHITECTURE -eq "AMD64") {
+                if ( Test-Path -Path "C:\Program Files (x86)\Windows Kits\*\bin\*\x64\signtool.exe") {
+                    $SignToolExePath = "C:\Program Files (x86)\Windows Kits\*\bin\*\x64\signtool.exe" 
+                }
+                else {
+                    Write-Error "signtool.exe couldn't be found"
+                    break
+                }
+            }
+            elseif ($Env:PROCESSOR_ARCHITECTURE -eq "ARM64") {
+                if (Test-Path -Path "C:\Program Files (x86)\Windows Kits\*\bin\*\arm64\signtool.exe") {
+                    $SignToolExePath = "C:\Program Files (x86)\Windows Kits\*\bin\*\arm64\signtool.exe"
+                }
+                else {
+                    Write-Error "signtool.exe couldn't be found"
+                    break
+                }
+            }
+           
+        }
+
+        & $SignToolExePath sign -v -n $CertCN -p7 . -p7co 1.3.6.1.4.1.311.79.1 -fd certHash ".\$PolicyID.cip"
+
+        Remove-Item ".\$PolicyID.cip" -Force
+
+        Rename-Item "$PolicyID.cip.p7" -NewName "$PolicyID.cip" -Force
+
+        Copy-Item -Path ".\$PolicyID.cip" -Destination "C:\Windows\System32\CodeIntegrity\CiPolicies\Active"
+
+        $MountPoint = "C:\EFIMount"
+        $EFIDestinationFolder = "$MountPoint\EFI\Microsoft\Boot\CiPolicies\Active"
+        $EFIPartition = (Get-Partition | Where-Object IsSystem).AccessPaths[0]
+        if (-Not (Test-Path $MountPoint)) { New-Item -Path $MountPoint -Type Directory -Force }
+        mountvol $MountPoint $EFIPartition
+        if (-Not (Test-Path $EFIDestinationFolder)) { New-Item -Path $EFIDestinationFolder -Type Directory -Force }
+
+        Copy-Item -Path ".\$PolicyID.cip" -Destination $EFIDestinationFolder -Force
+
+        Remove-Item "C:\EFIMount" -Recurse -Force
+
+        $WDACPolicyPath,
+        $CertPath,
+        $CertCN,
+        $SignToolExePath
+    }
+
     #endregion Script-Blocks
 
     #region function-processing
@@ -363,6 +434,10 @@ $RulesRefs
     }
     if ($Deploy_Lightly_Managed_WDAC_Policy) {
         Invoke-Command -ScriptBlock $Deploy_Lightly_Managed_WDAC_PolicySCRIPTBLOCK
-    }      
+    }
+    if ($Sign_Policy) {
+        Invoke-Command -ScriptBlock $Sign_PolicySCRIPTBLOCK
+    }
     #endregion function-processing
 }
+

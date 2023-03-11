@@ -2,19 +2,20 @@
 function New-ConfigWDAC {
     [CmdletBinding(
         DefaultParameterSetName = "set1",
-        HelpURI = "https://github.com/HotCakeX/Harden-Windows-Security/wiki/Introduction#wdac-module"
+        HelpURI = "https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-Module"
     )]
     Param(
         [Parameter(Mandatory = $false, ParameterSetName = "set1")][switch]$Get_Recommended_Block_Rules,
         [Parameter(Mandatory = $false, ParameterSetName = "set1")][switch]$Get_Recommended_Driver_Block_Rules,
-        [Parameter(Mandatory = $false, ParameterSetName = "set1")][switch]$Merge_Both_Block_Rules_With_Allow_Microsoft,
-        [Parameter(Mandatory = $false, ParameterSetName = "set1")][switch]$Install_Latest_Driver_BlockRules,
+        [Parameter(Mandatory = $false, ParameterSetName = "set1")][switch]$Create_AllowMicrosoft_With_Rec_BlockRules,
+        [Parameter(Mandatory = $false, ParameterSetName = "set1")][switch]$Deploy_AllowMicrosoft_With_Rec_BlockRules,
+        [Parameter(Mandatory = $false, ParameterSetName = "set1")][switch]$Deploy_Latest_Driver_BlockRules,
         [Parameter(Mandatory = $false, ParameterSetName = "set1")][switch]$Create_Scheduled_Task_Auto_Driver_BlockRules_Update,
         [Parameter(Mandatory = $false, ParameterSetName = "set1")][switch]$Create_WDAC_Policy_From_Audit_Logs,
         [Parameter(Mandatory = $false, ParameterSetName = "set1")][switch]$Prep_System_For_MSFT_Only_Audit,
         [Parameter(Mandatory = $false, ParameterSetName = "set1")][switch]$Create_Lightly_Managed_WDAC_Policy,
         [Parameter(Mandatory = $false, ParameterSetName = "set1")][switch]$Deploy_Lightly_Managed_WDAC_Policy,
-        [Parameter(Mandatory = $false, ParameterSetName = "set2")][switch]$Sign_Policy,       
+        [Parameter(Mandatory = $false, ParameterSetName = "set2")][switch]$Sign_Deploy_Policy,       
         [parameter(ParameterSetName = "set2", Mandatory = $true)][string]$WDACPolicyPath,
         [parameter(ParameterSetName = "set2", Mandatory = $true)][string]$CertPath,
         [parameter(ParameterSetName = "set2", Mandatory = $true)][string]$CertCN,
@@ -87,30 +88,43 @@ function New-ConfigWDAC {
         Set-HVCIOptions -Strict -FilePath '.\Microsoft recommended driver block rules.XML'
     }
 
-    # Merge AllowMicrosoft policy with the 2 recommended block rules
-    $Merge_Both_Block_Rules_With_Allow_MicrosoftSCRIPTBLOCK = {
+    # Create WDAC policy by merging AllowMicrosoft policy with the recommended block rules
+    $Create_AllowMicrosoft_With_Rec_BlockRulesSCRIPTBLOCK = {
         Invoke-Command -ScriptBlock $Get_Recommended_Block_RulesSCRIPTBLOCK
-        Invoke-Command -ScriptBlock $Get_Recommended_Driver_Block_RulesSCRIPTBLOCK
                               
         Copy-Item -Path "C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml" -Destination ".\AllowMicrosoft.xml"
 
-        Merge-CIPolicy -PolicyPaths .\AllowMicrosoft.xml, '.\Microsoft recommended block rules.XML', '.\Microsoft recommended driver block rules.XML' -OutputFilePath .\AllowMicrosoftPlusBlockRules.XML
+        Merge-CIPolicy -PolicyPaths .\AllowMicrosoft.xml, '.\Microsoft recommended block rules.XML' -OutputFilePath .\AllowMicrosoftPlusBlockRules.XML
         
-        Set-CIPolicyIdInfo -FilePath .\AllowMicrosoftPlusBlockRules.XML -ResetPolicyID
-        
+        $PolicyID = Set-CIPolicyIdInfo -FilePath .\AllowMicrosoftPlusBlockRules.XML -ResetPolicyID
+
+        $PolicyID = $PolicyID.Substring(11)
+
         Set-RuleOption -FilePath .\AllowMicrosoftPlusBlockRules.XML -Option 3 -Delete
+
+        @(2, 11, 12, 20) | ForEach-Object { Set-RuleOption -FilePath .\AllowMicrosoftPlusBlockRules.XML -Option $_ }
 
         Set-HVCIOptions -Strict -FilePath .\AllowMicrosoftPlusBlockRules.XML
 
+        ConvertFrom-CIPolicy .\AllowMicrosoftPlusBlockRules.XML "$PolicyID.cip"
+
         Remove-Item .\AllowMicrosoft.xml -Force
         Remove-Item '.\Microsoft recommended block rules.XML' -Force
-        Remove-Item '.\Microsoft recommended driver block rules.XML' -Force
+    }
+
+    # Deploy WDAC policy created by merging AllowMicrosoft policy with the recommended block rules
+    $Deploy_AllowMicrosoft_With_Rec_BlockRulesSCRIPTBLOCK = {
+        Invoke-Command -ScriptBlock $Create_AllowMicrosoft_With_Rec_BlockRulesSCRIPTBLOCK
+        $xml = [xml](Get-Content ".\AllowMicrosoftPlusBlockRules.XML")
+        $PolicyID = $xml.SiPolicy.PolicyID
+        Move-Item -Path "$PolicyID.cip" -Destination "C:\Windows\System32\CodeIntegrity\CiPolicies\Active"
+        Write-Host "The AllowMicrosoftPlusBlockRules policy has been deployed and its GUID is $PolicyID" -ForegroundColor Cyan
     }
 
     # Automatically download and install Microsoft Recommended Driver Block Rules
-    $Install_Latest_Driver_BlockRulesSCRIPTBLOCK = {
+    $Deploy_Latest_Driver_BlockRulesSCRIPTBLOCK = {
         try {
-        Invoke-WebRequest -Uri "https://aka.ms/VulnerableDriverBlockList" -OutFile VulnerableDriverBlockList.zip -ErrorAction Stop
+            Invoke-WebRequest -Uri "https://aka.ms/VulnerableDriverBlockList" -OutFile VulnerableDriverBlockList.zip -ErrorAction Stop
         }
         catch {
             Write-Error "Couldn't download the required resource, check your Internet connection"
@@ -353,20 +367,24 @@ $RulesRefs
         
         Set-HVCIOptions -Strict -FilePath .\SignedAndReputable.xml
 
+        Remove-Item .\AllowMicrosoft.xml -Force
+        Remove-Item '.\Microsoft recommended block rules.XML' -Force
+
         Write-Host -NoNewline "This is the PolicyID of the SignedAndReputable.xml:"; Write-Host " $BasePolicyID" -ForegroundColor Magenta
+    
     }
 
     # Deploy WDAC Policy with ISG for Lightly Managed system
     $Deploy_Lightly_Managed_WDAC_PolicySCRIPTBLOCK = {
-        Invoke-Command -ScriptBlock $Create_Lightly_Managed_WDAC_PolicySCRIPTBLOCK
+        Invoke-Command -ScriptBlock $Create_Lightly_Managed_WDAC_PolicySCRIPTBLOCK        
         $xml = [xml](Get-Content .\SignedAndReputable.xml)
         $PolicyID = $xml.SiPolicy.PolicyID
         ConvertFrom-CIPolicy .\SignedAndReputable.xml "$PolicyID.cip"
         Move-Item -Path ".\$PolicyID.cip" -Destination "C:\Windows\System32\CodeIntegrity\CiPolicies\Active"
     }
 
-    # Sign Policy
-    $Sign_PolicySCRIPTBLOCK = {
+    # Sign and deploy a WDAC policy
+    $Sign_Deploy_PolicySCRIPTBLOCK = {
         Add-SignerRule -FilePath $WDACPolicyPath -CertificatePath $CertPath -Update -User -Kernel -Supplemental
 
         Set-HVCIOptions -Strict -FilePath $WDACPolicyPath
@@ -400,15 +418,20 @@ $RulesRefs
                     Write-Error "signtool.exe couldn't be found"
                     break
                 }
-            }
-           
+            }           
         }
-
+        
         & $SignToolExePath sign -v -n $CertCN -p7 . -p7co 1.3.6.1.4.1.311.79.1 -fd certHash ".\$PolicyID.cip"
-
+              
         Remove-Item ".\$PolicyID.cip" -Force
 
-        Rename-Item "$PolicyID.cip.p7" -NewName "$PolicyID.cip" -Force
+        try {
+            Rename-Item "$PolicyID.cip.p7" -NewName "$PolicyID.cip" -Force -ErrorAction Stop
+        }
+        catch {
+            Write-Error "Certificate with the Common Name $CertCN couldn't be found"
+            break
+        }
 
         Copy-Item -Path ".\$PolicyID.cip" -Destination "C:\Windows\System32\CodeIntegrity\CiPolicies\Active"
 
@@ -433,11 +456,14 @@ $RulesRefs
     if ($Get_Recommended_Driver_Block_Rules) {
         Invoke-Command -ScriptBlock $Get_Recommended_Driver_Block_RulesSCRIPTBLOCK
     }   
-    if ($Merge_Both_Block_Rules_With_Allow_Microsoft) {
-        Invoke-Command -ScriptBlock $Merge_Both_Block_Rules_With_Allow_MicrosoftSCRIPTBLOCK
+    if ($Create_AllowMicrosoft_With_Rec_BlockRules) {
+        Invoke-Command -ScriptBlock $Create_AllowMicrosoft_With_Rec_BlockRulesSCRIPTBLOCK
     }
-    if ($Install_Latest_Driver_BlockRules) {
-        Invoke-Command -ScriptBlock $Install_Latest_Driver_BlockRulesSCRIPTBLOCK
+    if ($Deploy_AllowMicrosoft_With_Rec_BlockRules) {
+        Invoke-Command -ScriptBlock $Deploy_AllowMicrosoft_With_Rec_BlockRulesSCRIPTBLOCK
+    }
+    if ($Deploy_Latest_Driver_BlockRules) {
+        Invoke-Command -ScriptBlock $Deploy_Latest_Driver_BlockRulesSCRIPTBLOCK
     }                               
     if ($Create_Scheduled_Task_Auto_Driver_BlockRules_Update) {
         Invoke-Command -ScriptBlock $Create_Scheduled_Task_Auto_Driver_BlockRules_UpdateSCRIPTBLOCK
@@ -454,8 +480,10 @@ $RulesRefs
     if ($Deploy_Lightly_Managed_WDAC_Policy) {
         Invoke-Command -ScriptBlock $Deploy_Lightly_Managed_WDAC_PolicySCRIPTBLOCK
     }
-    if ($Sign_Policy) {
-        Invoke-Command -ScriptBlock $Sign_PolicySCRIPTBLOCK
+    if ($Sign_Deploy_Policy) {
+        Invoke-Command -ScriptBlock $Sign_Deploy_PolicySCRIPTBLOCK
     }
     #endregion function-processing
 }
+
+New-ConfigWDAC -Create_AllowMicrosoft_With_Rec_BlockRules

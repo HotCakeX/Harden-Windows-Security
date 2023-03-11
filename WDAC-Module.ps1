@@ -26,7 +26,14 @@ function New-ConfigWDAC {
 
     # Create Microsoft recommended block rules XML policy and remove the allow rules
     $Get_Recommended_Block_RulesSCRIPTBLOCK = {
-        $MicrosoftRecommendeDriverBlockRules = Invoke-WebRequest -Uri "https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/public/windows/security/threat-protection/windows-defender-application-control/microsoft-recommended-block-rules.md"
+        try {
+            $MicrosoftRecommendeDriverBlockRules = Invoke-WebRequest -Uri "https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/public/windows/security/threat-protection/windows-defender-application-control/microsoft-recommended-block-rules.md" -ErrorAction Stop
+        }
+        catch {
+            Write-Error "Couldn't download the required resource, check your Internet connection"
+            break
+        }
+
         $MicrosoftRecommendeDriverBlockRules -match "(?s)(?<=``````xml).*(?=``````)"
 
         $Rules = $Matches[0]
@@ -49,7 +56,14 @@ function New-ConfigWDAC {
 
     # Create Microsoft recommended driver block rules XML policy and remove the allow rules
     $Get_Recommended_Driver_Block_RulesSCRIPTBLOCK = {
-        $MicrosoftRecommendeDriverBlockRules = Invoke-WebRequest -Uri "https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/public/windows/security/threat-protection/windows-defender-application-control/microsoft-recommended-driver-block-rules.md"
+        try {
+            $MicrosoftRecommendeDriverBlockRules = Invoke-WebRequest -Uri "https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/public/windows/security/threat-protection/windows-defender-application-control/microsoft-recommended-driver-block-rules.md" -ErrorAction Stop
+        }
+        catch {
+            Write-Error "Couldn't download the required resource, check your Internet connection"
+            break
+        }
+
         $MicrosoftRecommendeDriverBlockRules -match "(?s)(?<=``````xml).*(?=``````)"
 
         $DriverRules = $Matches[0]
@@ -87,11 +101,21 @@ function New-ConfigWDAC {
         Set-RuleOption -FilePath .\AllowMicrosoftPlusBlockRules.XML -Option 3 -Delete
 
         Set-HVCIOptions -Strict -FilePath .\AllowMicrosoftPlusBlockRules.XML
+
+        Remove-Item .\AllowMicrosoft.xml -Force
+        Remove-Item '.\Microsoft recommended block rules.XML' -Force
+        Remove-Item '.\Microsoft recommended driver block rules.XML' -Force
     }
 
     # Automatically download and install Microsoft Recommended Driver Block Rules
     $Install_Latest_Driver_BlockRulesSCRIPTBLOCK = {
-        Invoke-WebRequest -Uri "https://aka.ms/VulnerableDriverBlockList" -OutFile VulnerableDriverBlockList.zip
+        try {
+        Invoke-WebRequest -Uri "https://aka.ms/VulnerableDriverBlockList" -OutFile VulnerableDriverBlockList.zip -ErrorAction Stop
+        }
+        catch {
+            Write-Error "Couldn't download the required resource, check your Internet connection"
+            break
+        }
         Expand-Archive .\VulnerableDriverBlockList.zip -DestinationPath "VulnerableDriverBlockList" -Force
         Rename-Item .\VulnerableDriverBlockList\SiPolicy_Enforced.p7b -NewName "SiPolicy.p7b" -Force
         Copy-Item .\VulnerableDriverBlockList\SiPolicy.p7b -Destination "C:\Windows\System32\CodeIntegrity"
@@ -107,7 +131,7 @@ function New-ConfigWDAC {
         # create a scheduled task that runs every 7 days
         if (-NOT (Get-ScheduledTask -TaskName "MSFT Driver Block list update" -ErrorAction SilentlyContinue)) {        
             $action = New-ScheduledTaskAction -Execute 'Powershell.exe' `
-                -Argument '-NoProfile -WindowStyle Hidden -command "& {Invoke-WebRequest -Uri "https://aka.ms/VulnerableDriverBlockList" -OutFile VulnerableDriverBlockList.zip;Expand-Archive .\VulnerableDriverBlockList.zip -DestinationPath "VulnerableDriverBlockList" -Force;Rename-Item .\VulnerableDriverBlockList\SiPolicy_Enforced.p7b -NewName "SiPolicy.p7b" -Force;Copy-Item .\VulnerableDriverBlockList\SiPolicy.p7b -Destination "C:\Windows\System32\CodeIntegrity";$job = Start-Job -Name "Job1" -ScriptBlock { CiTool.exe -r };Start-Sleep -s 15;Stop-Job $job;Remove-Item .\VulnerableDriverBlockList -Recurse -Force;Remove-Item .\VulnerableDriverBlockList.zip -Force;}"'    
+                -Argument '-NoProfile -WindowStyle Hidden -command "& {try {Invoke-WebRequest -Uri "https://aka.ms/VulnerableDriverBlockList" -OutFile VulnerableDriverBlockList.zip -ErrorAction Stop}catch{exit};Expand-Archive .\VulnerableDriverBlockList.zip -DestinationPath "VulnerableDriverBlockList" -Force;Rename-Item .\VulnerableDriverBlockList\SiPolicy_Enforced.p7b -NewName "SiPolicy.p7b" -Force;Copy-Item .\VulnerableDriverBlockList\SiPolicy.p7b -Destination "C:\Windows\System32\CodeIntegrity";$job = Start-Job -Name "Job1" -ScriptBlock { CiTool.exe -r };Start-Sleep -s 15;Stop-Job $job;Remove-Item .\VulnerableDriverBlockList -Recurse -Force;Remove-Item .\VulnerableDriverBlockList.zip -Force;}"'    
             $TaskPrincipal = New-ScheduledTaskPrincipal -LogonType S4U -UserId $env:USERNAME -RunLevel Highest
             # trigger
             $Time = 
@@ -397,12 +421,7 @@ $RulesRefs
 
         Copy-Item -Path ".\$PolicyID.cip" -Destination $EFIDestinationFolder -Force
 
-        Remove-Item "C:\EFIMount" -Recurse -Force
-
-        $WDACPolicyPath,
-        $CertPath,
-        $CertCN,
-        $SignToolExePath
+        Remove-Item "C:\EFIMount" -Recurse -Force    
     }
 
     #endregion Script-Blocks
@@ -440,4 +459,3 @@ $RulesRefs
     }
     #endregion function-processing
 }
-

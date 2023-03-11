@@ -485,5 +485,3 @@ $RulesRefs
     }
     #endregion function-processing
 }
-
-New-ConfigWDAC -Create_AllowMicrosoft_With_Rec_BlockRules

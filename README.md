@@ -583,6 +583,8 @@ You don't need admin privileges to run this category, because no system-wide cha
 
 [Official global IANA IP block for each country](https://hotcakex.github.io/Official-IANA-IP-blocks/)
 
+[`New-ConfigWDAC` Module](https://www.powershellgallery.com/packages/New-ConfigWDAC/)
+
 <br>
 
 ## Trust<a href="#trust">![TrustIcon]</a>

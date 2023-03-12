@@ -7,7 +7,7 @@
   <br>
 </h1>
 <a name="readme-top"></a>
-<h4 align="center">Harden Windows 11 Safely, Securely, only with Official Microsoft methods</h4>
+<h4 align="center">Harden Windows Safely, Securely, only with Official Microsoft methods</h4>
 
 <p align="center">
 
@@ -37,6 +37,12 @@
 
 </p>
 
+<h2> <br> </h2>
+
+![GreenCheckCircleMark] __Harden-Windows-Security is a PowerShell script. It automates all of the tasks required to harden Windows Security beyond the default state. It is suitable and recommended to be run on every home computer.__ See the <a href="#features">Features</a> section below.
+
+![GreenCheckCircleMark] __For Enterprises, Highly-Secure Servers and Data Centers, Highly-Secure Workstations and such, [__Use Windows Defender Application Control (WDAC) resources on this repository.__](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Introduction)__
+
 <h1> <br> </h1>
 </br>
 
@@ -52,22 +58,26 @@
 
 <h2> <br> </h2>
 
+<p align="center"> A quick video demonstrating how the Harden-Windows-Security script works </p>
+
+<br>
+
 <p align="center">
   <a href="https://www.youtube.com/watch?v=Ty_NoguyMhc">
-    <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/YouTubeVideoLogo.png" width="400"
+    <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/YouTubeVideoLogo.png" width="500"
          alt="YouTube Video showcase">
   </a>
 
-<h2> <br> </h2>
-
-![GreenCheckCircleMark] [__Check out Windows Defender Application Control (WDAC) posts on this repository__](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Introduction) __for Advanced Hardening beyond this script. Target users range from Enterprises, Highly-Secure Servers and Data Centers, Highly-Secure Workstations and such.__
-
-<h2> <br> </h2>
+<br>
 
 ## Features:<a href="#features">![FeaturesIcon]</a>
 
-- Always up-to-date and only guaranteed to work on the latest version of Windows (Which is currently Windows 11 - _Rigorously tested on the latest Stable and Insider Dev builds_)
-- All of the links and sources are official from Microsoft websites, straight from the source. no bias, no misinformation and no old obsolete methods, that's why there are no links to 3rd party news websites, made up blogs or articles.
+- Always stays up-to-date with the newest security features and only guaranteed to work on the latest version of Windows, **which is currently Windows 11**. (_rigorously tested on the latest Stable and Insider preview builds_).
+  
+- The script is in plain text, nothing hidden, no 3rd party executable or pre-compiled binary is involved.
+  - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/red-alert.gif" width="25" alt="Important notice"> **For your own security**, do not use any other 3rd party tools, programs or scripts that claim to harden Windows or modify it in any way, unless you can 100% verify it. A common big mistake people make is thinking just because something is used by a lot of people, then that means it's safe. Never trust 3rd party people on the Internet, always verify their resources and do that after each release. **Keep on reading the features to see why this Harden-Windows-Security script is different and <a href="#Trust">read the Trust section</a> to see how you can 100% Trust it.**
+
+- All of the links and sources are official from Microsoft websites, straight from the source. No bias, No misinformation and definitely No old obsolete methods. That's why there are no links to 3rd party news websites, forums, made up blogs/articles and such.
 
 <details><summary>With the following exceptions</summary>
 
@@ -81,14 +91,25 @@
 
 </details>
 
-- Doesn't remove or disable Windows functionalities against Microsoft's recommendation.
+- The script doesn't remove or disable Windows functionalities against Microsoft's recommendation.
+
+- The script primarily uses Group policies, **the Microsoft recommended way of configuring Windows**. It also uses PowerShell cmdlets where Group Policies aren't available, and finally uses [a few registry keys](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Payload/Registry.csv) to configure security measures that can neither be configured using Group Policies nor PowerShell cmdlets. This is why the script doesn't break anything or cause unwanted behavior.
+  - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/red-alert.gif" width="25" alt="Important notice"> **Any other 3rd party tool/program/script that claims to modify Windows or harden it, if they don't strictly adhere to the official rules above, they can damage your system, cause unknown problems and bugs.** [How are Group Policies for this script created and maintained?](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Group-Policy#how-are-group-policies-for-this-script-created-and-maintained)
+
 - This Readme page is used as the reference for all of the security measures applied by this script and Group Policies.
+
 - When a hardening measure is no longer necessary because it's applied by default by Microsoft on new builds of Windows, it will also be removed from this script in order to prevent any problems and because it won't be necessary anymore.
+
 - The script can be run infinite number of times, it's made in a way that it won't make any duplicate changes at all.
-- The script asks for confirmation, in the PowerShell console, before running each hardening category, so you can selectively run (or don't run) each of them.
-- Applying this script makes your PC compliant with Microsoft Security Baselines and Secured-core PC specifications (providing that you use modern hardware that supports the latest Windows security features). - [See what makes a Secured-core PC](https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/oem-highly-secure#what-makes-a-secured-core-pc). <a href="#Device-Guard">Check Device Guard category for more details.</a>
+
+- The script asks for confirmation, in the PowerShell console, before running each hardening category and some sub-categories, so you can selectively run (or don't run) each of them.
+
+- Applying this script makes your PC compliant with Microsoft Security Baselines and Secured-core PC specifications (providing that you use modern hardware that supports the latest Windows security features). - [See what makes a Secured-core PC](https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/oem-highly-secure#what-makes-a-secured-core-pc). - <a href="#Device-Guard">Check Device Guard category for more details.</a>
   - [Secured-core](https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/oem-highly-secure) – recommended for the most sensitive systems and industries like financial, healthcare, and government agencies. Builds on the previous layers and leverages advanced processor capabilities to provide protection from firmware attacks.
-- There are 4 items tagged with __#TopSecurity__ that can cause difficulties. When you run this script, you will have an option to enable them if you want to. Press `Control + F` and search for `#TopSecurity` on this page to find those security measures.
+  
+- There are 4 items tagged with __#TopSecurity__ that can cause some inconvenience. When you run this script, you will have an option to enable them if you want to. Press `Control + F` and search for `#TopSecurity` on this page to find those security measures.
+
+- Since I originally created this repository for myself and people I care about, I always maintain it to the highest possible standard.
 
 <p align="right"><a href="#readme-top">💡(back to top)</a></p>
 
@@ -593,12 +614,11 @@ You don't need admin privileges to run this category, because no system-wide cha
 
 Trust is very important; you shouldn't blindly trust me nor any other __3rd party__ person/organization just because they say they are trustworthy. This repository uses the simplest possible, yet effective, methods that make it very easy to verify:
 
-- The script is in plain text, nothing hidden, no 3rd party executable or pre-compiled binary is involved.
 - Change log history is present on GitHub. _(Despite some of my awkward documentation typos)_
 - You can open the file in [Visual Studio Code](https://code.visualstudio.com/)/[Visual Studio Code Web](https://vscode.dev/), and view the script in a nice easy to read environment, it's well formatted and indented.
 - You can learn PowerShell which is super easy, multiplatform, and useful for the future, Microsoft Learn website teaches you everything, then you will understand everything in the script is safe, or you can ask someone that you trust and knows PowerShell to verify the script for you
 - There is no unexpected behavior involved.
-- You can even fork this repository, 100% verify it until that point in time, then verify any subsequent changes/updates I push to this repository, __at your own pace__ (using `Sync fork` and `Compare` options on your fork), and if you are happy with the changes, allow it to be merged with your own copy/fork on your GitHub account.
+- You can fork this repository, 100% verify it until that point in time, then verify any subsequent changes/updates I push to this repository, __at your own pace__ (using `Sync fork` and `Compare` options on your fork), and if you are happy with the changes, allow it to be merged with your own copy/fork on your GitHub account.
 - The [Payload folder](https://github.com/HotCakeX/Harden-Windows-Security/tree/main/Payload) in this repository contains the files required to run this script:
   - [Registry.csv](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Payload/Registry.csv) includes registry data used by this script, viewable in plain text and easily verifiable.
   - [EventViewerCustomViews.zip](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Payload/EventViewerCustomViews.zip) includes XML files, in plain text, easily readable and verifiable. the script downloads and copies them to `C:\ProgramData\Microsoft\Event Viewer\Views` so that when you open [Windows Event Viewer](https://learn.microsoft.com/en-us/host-integration-server/core/windows-event-viewer1), you will find custom views as explained in the Miscellaneous category.
@@ -666,6 +686,8 @@ Get-Content <Path-To-File> -stream zone.identifier
 
 * When using Xbox, make sure you [configure sign-in preference](https://support.xbox.com/en-US/help/account-profile/signin-security/change-signin-preferences) and set it to either `Ask for my PIN` or `Lock it down`. The latter is the most secure one since it will require authentication using Microsoft Authenticator app. `Ask for my PIN` is recommended for the most people because it will only require a PIN to be entered using controller.
 
+* A common misconception among some people is that *"open source software is safer because we can see its source."* **It's fundamentally incorrect and wrong.** If you are an average end-user who isn't a full-stack programmer, it doesn't matter at all whether or not you can see the source code, because you don't understand it anyway to verify and trust it. Even if you are a programmer, chances are you aren't fluent in every programming language to be able to verify the source code of every program. EVEN if you are a highly-skilled programmer at every programming language, and you manage to 100% verify every single line of code in an open source program, it still does NOT mean that the compiled binary that you are downloading is safe, because the code you spent all that time verifying might not even belong to the pre-compiled program's installer you are trying to download and use, so you will have to build the program from the source code yourself by setting up a development environment and spending anywhere from minutes to hours/days building the program from the source code, and you will have to repeat all of those steps for each subsequent version. **Another problem with open source programs is that roughly 99.9% of them are unsigned,** meaning they don't have a digital signature, their developers haven't used a code signing certificate to sign their program. Among other problems, this poses a danger to the end-users, makes it harder to create trust for those programs in security solutions and makes it hard to authenticate them. [Read Microsoft's Introduction to Code Signing](https://learn.microsoft.com/en-us/previous-versions/windows/internet-explorer/ie-developer/platform-apis/ms537361(v=vs.85)) or [Digicert's 5 reasons why Code Signing is necessary.](https://www.websecurity.digicert.com/security-topics/why-use-code-signing)
+
 * More Security Recommendations coming soon...
 
 <p align="right"><a href="#readme-top">💡(back to top)</a></p>
@@ -708,7 +730,7 @@ Get-Content <Path-To-File> -stream zone.identifier
 
 ## License<a href="#license">![LicenseFreeIcon]</a>
 
-Not Applicable, No license. because the only mission of this GitHub repository and script is to give all Windows users accurate, up to date and correct information about how to stay secure and safe in dangerous environments, and to stay not one, but Many steps, ahead of threat actors.
+Not Applicable, No license, just free information, because the only mission of this GitHub repository is to give all Windows users accurate, up to date and correct facts and information about how to stay secure and safe in dangerous environments, and to stay not one, but Many steps, ahead of threat actors.
 
 ---
 

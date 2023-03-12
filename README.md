@@ -81,13 +81,14 @@
 
 <details><summary>With the following exceptions</summary>
 
-| Link Count| Link                          | Reason                                                     |
+| Link Count| Link                     | Reason                                                     |
 |:----:|:-----------------------------:|:----------------------------------------------------------:|
 | 1    | Intel website                 | i7 13700k product page                                     |
 | 2    | Wikipedia                     | providing further information for the reader               |
-| 1    | non-official Github Wiki page | providing further information for the reader about TLS     |
+| 1    | non-official Github Wiki      | providing further information for the reader about TLS     |
 | 1    | Security.Stackexchange Q&A    | providing logic and reasoning for certain actions          |
 | 1    | state.gov                     | List of State Sponsors of Terrorism                        |
+| 1    | orpa.princeton.edu            | OFAC Sanctioned Countries                                  |
 
 </details>
 

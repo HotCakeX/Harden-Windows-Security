@@ -74,7 +74,7 @@
 
 - Always stays up-to-date with the newest security features and only guaranteed to work on the latest version of Windows, **which is currently Windows 11**. (_rigorously tested on the latest Stable and Insider preview builds_).
   
-- The script is in plain text, nothing hidden, no 3rd party executable or pre-compiled binary is involved.
+- The script is in [plain text](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden-Windows-Security.ps1), nothing hidden, no 3rd party executable or pre-compiled binary is involved.
   - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/red-alert.gif" width="25" alt="Important notice"> **For your own security**, do not use any other 3rd party tools, programs or scripts that claim to harden Windows or modify it in any way, unless you can 100% verify it. A common big mistake people make is thinking just because something is used by a lot of people, then that means it's safe. Never trust 3rd party people on the Internet, always verify their resources and do that after each release. **Keep on reading the features to see why this Harden-Windows-Security script is different and <a href="#Trust">read the Trust section</a> to see how you can 100% Trust it.**
 
 - All of the links and sources are official from Microsoft websites, straight from the source. No bias, No misinformation and definitely No old obsolete methods. That's why there are no links to 3rd party news websites, forums, made up blogs/articles and such.
@@ -613,17 +613,22 @@ You don't need admin privileges to run this category, because no system-wide cha
 
 ### How can you 100% trust this repository and know that nothing shady is going on?
 
-Trust is very important; you shouldn't blindly trust me nor any other __3rd party__ person/organization just because they say they are trustworthy. This repository uses the simplest possible, yet effective, methods that make it very easy to verify:
+This repository uses the simplest possible, yet effective, methods that make it very easy to verify:
 
 - Change log history is present on GitHub. _(Despite some of my awkward documentation typos)_
+
 - You can open the file in [Visual Studio Code](https://code.visualstudio.com/)/[Visual Studio Code Web](https://vscode.dev/), and view the script in a nice easy to read environment, it's well formatted and indented.
-- You can learn PowerShell which is super easy, multiplatform, and useful for the future, Microsoft Learn website teaches you everything, then you will understand everything in the script is safe, or you can ask someone that you trust and knows PowerShell to verify the script for you
-- There is no unexpected behavior involved.
+
 - You can fork this repository, 100% verify it until that point in time, then verify any subsequent changes/updates I push to this repository, __at your own pace__ (using `Sync fork` and `Compare` options on your fork), and if you are happy with the changes, allow it to be merged with your own copy/fork on your GitHub account.
+- You can learn PowerShell which is super easy, multiplatform, and useful for the future, Microsoft Learn website teaches you everything, then you will understand everything in the script is safe, or you can ask someone that you trust and knows PowerShell to verify the script for you.
+
 - The [Payload folder](https://github.com/HotCakeX/Harden-Windows-Security/tree/main/Payload) in this repository contains the files required to run this script:
   - [Registry.csv](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Payload/Registry.csv) includes registry data used by this script, viewable in plain text and easily verifiable.
+  
   - [EventViewerCustomViews.zip](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Payload/EventViewerCustomViews.zip) includes XML files, in plain text, easily readable and verifiable. the script downloads and copies them to `C:\ProgramData\Microsoft\Event Viewer\Views` so that when you open [Windows Event Viewer](https://learn.microsoft.com/en-us/host-integration-server/core/windows-event-viewer1), you will find custom views as explained in the <a href="#Miscellaneous-Configurations">Miscellaneous Configurations</a> category.
+  
   - [Security-Baselines-X.zip](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Payload/Security-Baselines-X.zip) includes Group Policies that are used by this script to apply the security measures explained in this page.
+
 - [How is Group Policy used in this PowerShell script?](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Group-Policy#how-is-group-policy-used-in-this-powershell-script)
 - [How are Group Policies for this script created and maintained?](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Group-Policy#how-are-group-policies-for-this-script-created-and-maintained)
 - [How to verify security-baselines-x.zip file and 100% trust it?](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Group-Policy#how-to-verify-security-baselines-xzip-file-and-100-trust-it)

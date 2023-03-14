@@ -607,6 +607,8 @@ You don't need admin privileges to run this category, because no system-wide cha
 
 [`New-ConfigWDAC` Module](https://www.powershellgallery.com/packages/New-ConfigWDAC/)
 
+[Windows Security Blog](https://spynetgirl.github.io/)
+
 <br>
 
 ## Trust<a href="#trust">![TrustIcon]</a>

@@ -12,7 +12,7 @@
     RootModule           = 'New-ConfigWDAC.psm1'
 
     # Version number of this module.
-    ModuleVersion        = '0.0.1'
+    ModuleVersion        = '0.0.2'
 
     # Supported PSEditions
     CompatiblePSEditions = @("Desktop", "Core")
@@ -44,25 +44,25 @@ This is a module for WDAC (Windows Defender Application Control) and automates a
 
 ✔️ Get_Recommended_Driver_Block_Rules: Creates a WDAC policy file called Microsoft recommended driver block rules.XML from the official source for Microsoft recommended driver block rules, with allow all rules removed, no audit mode, uses strict HVCI
 
-✔️ Create_AllowMicrosoft_With_Rec_BlockRules: Gets the Microsoft recommended block rules, removes its allow all rules and merges it with AllowMicrosoft default policy. The created file is called AllowMicrosoftPlusBlockRules.XML. The Policy doesn't have Audit rule option and uses strict HVCI
+✔️ MakeAllowMicrosoft_With_RecBlockRules: Gets the Microsoft recommended block rules, removes its allow all rules and merges it with AllowMicrosoft default policy. The created file is called AllowMicrosoftPlusBlockRules.XML. The Policy doesn't have Audit rule option and uses strict HVCI
 
 ✔️ Deploy_AllowMicrosoft_With_Rec_BlockRules: Deploys the AllowMicrosoftPlusBlockRules policy
 
 ✔️ Deploy_Latest_Driver_BlockRules: With the help of PowerShell, uses the official method to deploy the latest version of Microsoft recommended driver block rules
 
-✔️ Create_Scheduled_Task_Auto_Driver_BlockRules_Update: Creates a scheduled task that runs every 7 days to automatically perform the the official method for updating Microsoft recommended driver block rules
+✔️ Make_Scheduled_Task_Auto_Driver_BlockRules_Update: Creates a scheduled task that runs every 7 days to automatically perform the the official method for updating Microsoft recommended driver block rules
 
-✔️ Create_WDAC_Policy_From_Audit_Logs: Creates a WDAC policy using the Audit event logs generated for a fully managed device
+✔️ MakePolicy_From_AuditLogs: Creates a WDAC policy using the Audit event logs generated for a fully managed device
 
 ✔️ Prep_System_For_MSFT_Only_Audit: Prepares the system for generating Audit event logs for a fully managed device
 
-✔️ Create_Lightly_Managed_WDAC_Policy: Creates a WDAC policy for a Lightly managed system. Outputs a file called SignedAndReputable.xml
+✔️ Make_Lightly_Managed_Policy: Creates a WDAC policy for a Lightly managed system. Outputs a file called SignedAndReputable.xml
 
-✔️ Deploy_Lightly_Managed_WDAC_Policy: Creates a WDAC policy for a Lightly managed system. Outputs a file called SignedAndReputable.xml, converts it to .cip policy binary file deploys it by copying it to C:\Windows\System32\CodeIntegrity\CiPolicies\Active
+✔️ Deploy_Lightly_Managed_Policy: Creates a WDAC policy for a Lightly managed system. Outputs a file called SignedAndReputable.xml, converts it to .cip policy binary file deploys it by copying it to C:\Windows\System32\CodeIntegrity\CiPolicies\Active
 
-✔️ Sign_Deploy_Policy: Signs and Deploys a WDAC policy - Needs 3 mandatory arguments: WDACPolicyPath,CertPath,CertCN and Accepts 1 optional argument SignToolExePath
+✔️ Sign_Deploy_Policy: Signs and Deploys a WDAC policy - Needs 4 mandatory arguments: WDACPolicyPath,CertPath,CertCN,IsSupplemental[True or False] and Accepts 1 optional argument SignToolExePath
 
-
+✔️ Make_SupplementalPolicy: Create a supplementary policy - Needs 4 mandatory arguments: ScanLocation,BasePolicyPath,SuppPolicyName,DeploySuppPolicy[True or False]
 
 
 "@
@@ -122,7 +122,7 @@ This is a module for WDAC (Windows Defender Application Control) and automates a
     # ModuleList = @()
 
     # List of all files packaged with this module
-    FileList = @('New-ConfigWDAC.psm1','New-ConfigWDAC.psd1')
+    FileList             = @('New-ConfigWDAC.psm1', 'New-ConfigWDAC.psd1')
 
     # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.
     PrivateData          = @{
@@ -130,16 +130,16 @@ This is a module for WDAC (Windows Defender Application Control) and automates a
         PSData = @{
 
             # Tags applied to this module. These help with module discovery in online galleries.
-             Tags = @('WDAC','WindowsDefenderApplicationControl','Windows','Security')
+            Tags       = @('WDAC', 'Windows-Defender-Application-Control', 'Windows', 'Security', 'Microsoft', 'Application-Control')
 
             # A URL to the license for this module.
             # LicenseUri = ''
 
             # A URL to the main website for this project.
-             ProjectUri = 'https://github.com/HotCakeX/Harden-Windows-Security/wiki/Introduction'
+            ProjectUri = 'https://github.com/HotCakeX/Harden-Windows-Security/wiki/Introduction'
 
             # A URL to an icon representing this module.
-            # IconUri = ''
+            IconUri    = 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/New-ConfigWDAC/PowerShellGalleryIcon.png'
 
             # ReleaseNotes of this module
             # ReleaseNotes = ''
@@ -158,7 +158,7 @@ This is a module for WDAC (Windows Defender Application Control) and automates a
     } # End of PrivateData hashtable
 
     # HelpInfo URI of this module
-    # HelpInfoURI = ''
+    HelpInfoURI          = 'https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-ConfigWDAC'
 
     # Default prefix for commands exported from this module. Override the default prefix using Import-Module -Prefix.
     # DefaultCommandPrefix = ''

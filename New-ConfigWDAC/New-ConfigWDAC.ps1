@@ -7,20 +7,26 @@ function New-ConfigWDAC {
     Param(
         [Parameter(Mandatory = $false, ParameterSetName = "set1")][switch]$Get_Recommended_Block_Rules,
         [Parameter(Mandatory = $false, ParameterSetName = "set1")][switch]$Get_Recommended_Driver_Block_Rules,
-        [Parameter(Mandatory = $false, ParameterSetName = "set1")][switch]$Create_AllowMicrosoft_With_Rec_BlockRules,
+        [Parameter(Mandatory = $false, ParameterSetName = "set1")][switch]$MakeAllowMicrosoft_With_RecBlockRules,
         [Parameter(Mandatory = $false, ParameterSetName = "set1")][switch]$Deploy_AllowMicrosoft_With_Rec_BlockRules,
         [Parameter(Mandatory = $false, ParameterSetName = "set1")][switch]$Deploy_Latest_Driver_BlockRules,
-        [Parameter(Mandatory = $false, ParameterSetName = "set1")][switch]$Create_Scheduled_Task_Auto_Driver_BlockRules_Update,
-        [Parameter(Mandatory = $false, ParameterSetName = "set1")][switch]$Create_WDAC_Policy_From_Audit_Logs,
+        [Parameter(Mandatory = $false, ParameterSetName = "set1")][switch]$Make_Scheduled_Task_Auto_Driver_BlockRules_Update,
+        [Parameter(Mandatory = $false, ParameterSetName = "set1")][switch]$MakePolicy_From_AuditLogs,
         [Parameter(Mandatory = $false, ParameterSetName = "set1")][switch]$Prep_System_For_MSFT_Only_Audit,
-        [Parameter(Mandatory = $false, ParameterSetName = "set1")][switch]$Create_Lightly_Managed_WDAC_Policy,
-        [Parameter(Mandatory = $false, ParameterSetName = "set1")][switch]$Deploy_Lightly_Managed_WDAC_Policy,
+        [Parameter(Mandatory = $false, ParameterSetName = "set1")][switch]$Make_Lightly_Managed_Policy,
+        [Parameter(Mandatory = $false, ParameterSetName = "set1")][switch]$Deploy_Lightly_Managed_Policy,      
         [Parameter(Mandatory = $false, ParameterSetName = "set2")][switch]$Sign_Deploy_Policy,       
         [parameter(ParameterSetName = "set2", Mandatory = $true)][string]$WDACPolicyPath,
         [parameter(ParameterSetName = "set2", Mandatory = $true)][string]$CertPath,
         [parameter(ParameterSetName = "set2", Mandatory = $true)][string]$CertCN,
-        [parameter(ParameterSetName = "set2", Mandatory = $false)][string]$SignToolExePath
-        
+        [parameter(ParameterSetName = "set2", Mandatory = $false)][string]$SignToolExePath,
+        [parameter(ParameterSetName = "set2", Mandatory = $true)][bool]$IsSupplemental,
+        [Parameter(Mandatory = $false, ParameterSetName = "set3")][switch]$Make_SupplementalPolicy,
+        [parameter(ParameterSetName = "set3", Mandatory = $true)][string]$ScanLocation,
+        [parameter(ParameterSetName = "set3", Mandatory = $true)][string]$BasePolicyPath,
+        [parameter(ParameterSetName = "set3", Mandatory = $true)][string]$SuppPolicyName,
+        [parameter(ParameterSetName = "set3", Mandatory = $true)][bool]$DeploySuppPolicy
+
     )
 
     #region Script-Blocks
@@ -35,7 +41,7 @@ function New-ConfigWDAC {
             break
         }
 
-        $MicrosoftRecommendeDriverBlockRules -match "(?s)(?<=``````xml).*(?=``````)"
+        $MicrosoftRecommendeDriverBlockRules -match "(?s)(?<=``````xml).*(?=``````)" | Out-Null
 
         $Rules = $Matches[0]
     
@@ -53,6 +59,8 @@ function New-ConfigWDAC {
         Set-RuleOption -FilePath '.\Microsoft recommended block rules.XML' -Option 3 -Delete
 
         Set-HVCIOptions -Strict -FilePath '.\Microsoft recommended block rules.XML'
+
+        Write-Host "Microsoft recommended block rules.XML policy file has been created in $(Get-Location)" -ForegroundColor Green
     }   
 
     # Create Microsoft recommended driver block rules XML policy and remove the allow rules
@@ -65,7 +73,7 @@ function New-ConfigWDAC {
             break
         }
 
-        $MicrosoftRecommendeDriverBlockRules -match "(?s)(?<=``````xml).*(?=``````)"
+        $MicrosoftRecommendeDriverBlockRules -match "(?s)(?<=``````xml).*(?=``````)" | Out-Null
 
         $DriverRules = $Matches[0]
 
@@ -86,10 +94,12 @@ function New-ConfigWDAC {
         Set-RuleOption -FilePath '.\Microsoft recommended driver block rules.XML' -Option 3 -Delete
 
         Set-HVCIOptions -Strict -FilePath '.\Microsoft recommended driver block rules.XML'
+
+        Write-Host "Microsoft recommended driver block rules.XML policy file has been created in $(Get-Location)" -ForegroundColor Green
     }
 
-    # Create WDAC policy by merging AllowMicrosoft policy with the recommended block rules
-    $Create_AllowMicrosoft_With_Rec_BlockRulesSCRIPTBLOCK = {
+    # Make WDAC policy by merging AllowMicrosoft policy with the recommended block rules
+    $MakeAllowMicrosoft_With_RecBlockRulesSCRIPTBLOCK = {
         Invoke-Command -ScriptBlock $Get_Recommended_Block_RulesSCRIPTBLOCK
                               
         Copy-Item -Path "C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml" -Destination ".\AllowMicrosoft.xml"
@@ -110,18 +120,19 @@ function New-ConfigWDAC {
 
         Remove-Item .\AllowMicrosoft.xml -Force
         Remove-Item '.\Microsoft recommended block rules.XML' -Force
+        Write-Host -NoNewline "AllowMicrosoftPlusBlockRules.XML policy with GUID" -ForegroundColor Green; Write-Host -NoNewline " $PolicyID" -ForegroundColor Magenta; Write-Host " has been created." -ForegroundColor Green
     }
 
     # Deploy WDAC policy created by merging AllowMicrosoft policy with the recommended block rules
     $Deploy_AllowMicrosoft_With_Rec_BlockRulesSCRIPTBLOCK = {
-        Invoke-Command -ScriptBlock $Create_AllowMicrosoft_With_Rec_BlockRulesSCRIPTBLOCK
+        Invoke-Command -ScriptBlock $MakeAllowMicrosoft_With_RecBlockRulesSCRIPTBLOCK
         $xml = [xml](Get-Content ".\AllowMicrosoftPlusBlockRules.XML")
         $PolicyID = $xml.SiPolicy.PolicyID
-        Move-Item -Path "$PolicyID.cip" -Destination "C:\Windows\System32\CodeIntegrity\CiPolicies\Active"
-        Write-Host "The AllowMicrosoftPlusBlockRules policy has been deployed and its GUID is $PolicyID" -ForegroundColor Cyan
+        copy-Item -Path "$PolicyID.cip" -Destination "C:\Windows\System32\CodeIntegrity\CiPolicies\Active"
+        Write-Host "AllowMicrosoftPlusBlockRules.XML policy has been deployed and its GUID is $PolicyID" -ForegroundColor Cyan
     }
 
-    # Automatically download and install Microsoft Recommended Driver Block Rules
+    # Automatically download and deploy the latest Microsoft Recommended Driver Block Rules from Microsoft's source
     $Deploy_Latest_Driver_BlockRulesSCRIPTBLOCK = {
         try {
             Invoke-WebRequest -Uri "https://aka.ms/VulnerableDriverBlockList" -OutFile VulnerableDriverBlockList.zip -ErrorAction Stop
@@ -133,19 +144,19 @@ function New-ConfigWDAC {
         Expand-Archive .\VulnerableDriverBlockList.zip -DestinationPath "VulnerableDriverBlockList" -Force
         Rename-Item .\VulnerableDriverBlockList\SiPolicy_Enforced.p7b -NewName "SiPolicy.p7b" -Force
         Copy-Item .\VulnerableDriverBlockList\SiPolicy.p7b -Destination "C:\Windows\System32\CodeIntegrity"
-        $job = Start-Job -Name "Job1" -ScriptBlock { CiTool.exe -r }
+        $job = Start-Job -Name "Job1" -ScriptBlock { citool --refresh }
         Start-Sleep -s 15
         Stop-Job $job
         Remove-Item .\VulnerableDriverBlockList -Recurse -Force
         Remove-Item .\VulnerableDriverBlockList.zip -Force
     }
 
-    # Create a Scheduled Task that automatically runs every 7 days to download the newest Microsoft Recommended driver block rules
-    $Create_Scheduled_Task_Auto_Driver_BlockRules_UpdateSCRIPTBLOCK = {
+    # Make a Scheduled Task that automatically runs every 7 days to download the newest Microsoft Recommended driver block rules
+    $Make_Scheduled_Task_Auto_Driver_BlockRules_UpdateSCRIPTBLOCK = {
         # create a scheduled task that runs every 7 days
         if (-NOT (Get-ScheduledTask -TaskName "MSFT Driver Block list update" -ErrorAction SilentlyContinue)) {        
             $action = New-ScheduledTaskAction -Execute 'Powershell.exe' `
-                -Argument '-NoProfile -WindowStyle Hidden -command "& {try {Invoke-WebRequest -Uri "https://aka.ms/VulnerableDriverBlockList" -OutFile VulnerableDriverBlockList.zip -ErrorAction Stop}catch{exit};Expand-Archive .\VulnerableDriverBlockList.zip -DestinationPath "VulnerableDriverBlockList" -Force;Rename-Item .\VulnerableDriverBlockList\SiPolicy_Enforced.p7b -NewName "SiPolicy.p7b" -Force;Copy-Item .\VulnerableDriverBlockList\SiPolicy.p7b -Destination "C:\Windows\System32\CodeIntegrity";$job = Start-Job -Name "Job1" -ScriptBlock { CiTool.exe -r };Start-Sleep -s 15;Stop-Job $job;Remove-Item .\VulnerableDriverBlockList -Recurse -Force;Remove-Item .\VulnerableDriverBlockList.zip -Force;}"'    
+                -Argument '-NoProfile -WindowStyle Hidden -command "& {try {Invoke-WebRequest -Uri "https://aka.ms/VulnerableDriverBlockList" -OutFile VulnerableDriverBlockList.zip -ErrorAction Stop}catch{exit};Expand-Archive .\VulnerableDriverBlockList.zip -DestinationPath "VulnerableDriverBlockList" -Force;Rename-Item .\VulnerableDriverBlockList\SiPolicy_Enforced.p7b -NewName "SiPolicy.p7b" -Force;Copy-Item .\VulnerableDriverBlockList\SiPolicy.p7b -Destination "C:\Windows\System32\CodeIntegrity";$job = Start-Job -Name "Job1" -ScriptBlock { citool --refresh };Start-Sleep -s 15;Stop-Job $job;Remove-Item .\VulnerableDriverBlockList -Recurse -Force;Remove-Item .\VulnerableDriverBlockList.zip -Force;}"'    
             $TaskPrincipal = New-ScheduledTaskPrincipal -LogonType S4U -UserId $env:USERNAME -RunLevel Highest
             # trigger
             $Time = 
@@ -161,8 +172,8 @@ function New-ConfigWDAC {
         }
     }
 
-    # Create WDAC Policy from Audit event logs that also covers files no longer on disk
-    $Create_WDAC_Policy_From_Audit_LogsSCRIPTBLOCK = {
+    # Make WDAC Policy from Audit event logs that also covers files no longer on disk
+    $MakePolicy_From_AuditLogsSCRIPTBLOCK = {
         # Make sure there is no lingering variable from previous runs - prevent the outfile from getting duplicate rules/ruleRefs if user run this script multiple times
         Remove-Variable * -ErrorAction SilentlyContinue
         # Create a working directory in user's folder
@@ -176,7 +187,7 @@ function New-ConfigWDAC {
         $BasePolicy = "$home\WDAC\AllowMicrosoft.xml"
         # produce policy XML file from event viewer logs
         Write-Host "Scanning Windows Event logs and creating a policy file, please wait..." -ForegroundColor Cyan
-        New-CIPolicy -FilePath .\WDAC_From_AuditEvents.xml -Audit -Level PcaCertificate -Fallback FilePublisher, Publisher, SignedVersion, FileName, Hash -UserPEs -MultiplePolicyFormat -UserWriteablePaths 3> Warnings.txt
+        New-CIPolicy -FilePath .\WDAC_From_AuditEvents.xml -Audit -Level PcaCertificate -Fallback FilePublisher, Publisher, SignedVersion, FileName, Hash -UserPEs -MultiplePolicyFormat -UserWriteablePaths -WarningAction SilentlyContinue
 
         # List every \Device\Harddiskvolume - Needed to resolve the file pathes to detect which files in even Event viewer logs are no longer present on the disk - https://superuser.com/questions/1058217/list-every-device-harddiskvolume
         $ScriptBlock = {
@@ -284,7 +295,7 @@ public static extern uint QueryDosDevice(string lpDeviceName, StringBuilder lpTa
 
         # Create an empty Policy XML template file
         Write-Host "Creating a template policy file, please wait..." -ForegroundColor Cyan
-        New-CIPolicy -FilePath .\policy.xml -Audit -Level None -MultiplePolicyFormat 3> $null
+        New-CIPolicy -FilePath .\policy.xml -Audit -Level None -MultiplePolicyFormat -WarningAction SilentlyContinue
         # Store our $Rules in the FileRules section of this empty policy template
         $xmlAsText = (Get-Content '.\policy.xml' -Raw)
         $pattern1 = "<FileRules />"
@@ -350,10 +361,11 @@ $RulesRefs
         $PolicyID = $PolicyID.Substring(11)
         ConvertFrom-CIPolicy .\AllowMicrosoft.xml "$PolicyID.cip"
         Move-Item -Path "$PolicyID.cip" -Destination "C:\Windows\System32\CodeIntegrity\CiPolicies\Active"
+        Write-Host "The default AllowMicrosoft policy has been deployed in Audit mode. Restart the system." -ForegroundColor Magenta
     }
 
-    # Create WDAC Policy with ISG for Lightly Managed system
-    $Create_Lightly_Managed_WDAC_PolicySCRIPTBLOCK = { 
+    # Make WDAC Policy with ISG for Lightly Managed system
+    $Make_Lightly_Managed_PolicySCRIPTBLOCK = { 
         copy-item -Path "C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml" -Destination ".\AllowMicrosoft.xml"
         @(0, 2, 11, 12, 14, 15, 16, 17, 19, 20) | ForEach-Object { Set-RuleOption -FilePath .\AllowMicrosoft.xml -Option $_ }
         @(1, 3, 4, 5, 6, 7, 8, 9, 10, 13, 18) | ForEach-Object { Set-RuleOption -FilePath .\AllowMicrosoft.xml -Option $_ -Delete }
@@ -370,22 +382,30 @@ $RulesRefs
         Remove-Item .\AllowMicrosoft.xml -Force
         Remove-Item '.\Microsoft recommended block rules.XML' -Force
 
-        Write-Host -NoNewline "This is the PolicyID of the SignedAndReputable.xml:"; Write-Host " $BasePolicyID" -ForegroundColor Magenta
+        Write-Host -NoNewline "This is the PolicyID of the SignedAndReputable.xml:" -ForegroundColor Yellow; Write-Host " $BasePolicyID" -ForegroundColor Magenta
     
     }
 
     # Deploy WDAC Policy with ISG for Lightly Managed system
-    $Deploy_Lightly_Managed_WDAC_PolicySCRIPTBLOCK = {
-        Invoke-Command -ScriptBlock $Create_Lightly_Managed_WDAC_PolicySCRIPTBLOCK        
+    $Deploy_Lightly_Managed_PolicySCRIPTBLOCK = {
+        Invoke-Command -ScriptBlock $Make_Lightly_Managed_PolicySCRIPTBLOCK   
         $xml = [xml](Get-Content .\SignedAndReputable.xml)
         $PolicyID = $xml.SiPolicy.PolicyID
-        ConvertFrom-CIPolicy .\SignedAndReputable.xml "$PolicyID.cip"
+        ConvertFrom-CIPolicy .\SignedAndReputable.xml "$PolicyID.cip" | Out-Null
         Move-Item -Path ".\$PolicyID.cip" -Destination "C:\Windows\System32\CodeIntegrity\CiPolicies\Active"
+        Write-Host -NoNewline "SignedAndReputable.xml policy with GUID" -ForegroundColor Green; Write-Host -NoNewline " $PolicyID" -ForegroundColor Magenta; Write-Host " has been deployed." -ForegroundColor Green
+        appidtel start
+        sc.exe config appidsvc start= auto
     }
 
     # Sign and deploy a WDAC policy
     $Sign_Deploy_PolicySCRIPTBLOCK = {
-        Add-SignerRule -FilePath $WDACPolicyPath -CertificatePath $CertPath -Update -User -Kernel -Supplemental
+        if ($IsSupplemental) {
+            Add-SignerRule -FilePath $WDACPolicyPath -CertificatePath $CertPath -Update -User -Kernel
+        }
+        else {
+            Add-SignerRule -FilePath $WDACPolicyPath -CertificatePath $CertPath -Update -User -Kernel -Supplemental
+        }
 
         Set-HVCIOptions -Strict -FilePath $WDACPolicyPath
 
@@ -445,6 +465,32 @@ $RulesRefs
         Copy-Item -Path ".\$PolicyID.cip" -Destination $EFIDestinationFolder -Force
 
         Remove-Item "C:\EFIMount" -Recurse -Force    
+
+        Write-Host "$PolicyID.cip has been Signed and Deployed." -ForegroundColor Green
+    }
+
+    # Make a Supplemental policy by scanning a directory
+    $Make_SupplementalPolicySCRIPTBLOCK = {        
+        New-CIPolicy -FilePath ".\SupplementalPolicy$SuppPolicyName.xml" -ScanPath $ScanLocation `
+            -Level PcaCertificate -Fallback FilePublisher, Publisher, SignedVersion, FileName, Hash -UserPEs -MultiplePolicyFormat -UserWriteablePaths
+        $policyID = Set-CiPolicyIdInfo -FilePath ".\SupplementalPolicy$SuppPolicyName.xml" -ResetPolicyID
+        $policyID = $policyID.Substring(11)
+        Set-CIPolicyIdInfo -FilePath ".\SupplementalPolicy$SuppPolicyName.xml" -BasePolicyToSupplementPath $BasePolicyPath
+        @(0, 1, 2, 3, 4, 8, 9, 10, 11, 12, 15, 16, 17, 19, 20) | ForEach-Object {
+            Set-RuleOption -FilePath ".\SupplementalPolicy$SuppPolicyName.xml" -Option $_ -Delete }        
+        Set-HVCIOptions -Strict -FilePath ".\SupplementalPolicy$SuppPolicyName.xml"
+        Set-CIPolicyIdInfo -PolicyName "Supplemental Policy for $SuppPolicyName" -FilePath ".\SupplementalPolicy$SuppPolicyName.xml"
+        ConvertFrom-CIPolicy ".\SupplementalPolicy$SuppPolicyName.xml" "$policyID.cip"
+        if ($DeploySuppPolicy -eq "True") {
+            copy-Item -Path "$policyID.cip" -Destination "C:\Windows\System32\CodeIntegrity\CiPolicies\Active"
+            Write-Host -NoNewline "$policyID.cip for " -ForegroundColor Green;
+            write-host -NoNewline "$SuppPolicyName" -ForegroundColor Magenta;
+            Write-Host " has been deployed." -ForegroundColor Green
+            Write-Host "Please wait few seconds, policies are being refreshed, no reboot required." -ForegroundColor Yellow
+            $job = Start-Job -Name "Job1" -ScriptBlock { citool --refresh }
+            Start-Sleep -s 15
+            Stop-Job $job
+        }
     }
 
     #endregion Script-Blocks
@@ -456,8 +502,8 @@ $RulesRefs
     if ($Get_Recommended_Driver_Block_Rules) {
         Invoke-Command -ScriptBlock $Get_Recommended_Driver_Block_RulesSCRIPTBLOCK
     }   
-    if ($Create_AllowMicrosoft_With_Rec_BlockRules) {
-        Invoke-Command -ScriptBlock $Create_AllowMicrosoft_With_Rec_BlockRulesSCRIPTBLOCK
+    if ($MakeAllowMicrosoft_With_RecBlockRules) {
+        Invoke-Command -ScriptBlock $MakeAllowMicrosoft_With_RecBlockRulesSCRIPTBLOCK
     }
     if ($Deploy_AllowMicrosoft_With_Rec_BlockRules) {
         Invoke-Command -ScriptBlock $Deploy_AllowMicrosoft_With_Rec_BlockRulesSCRIPTBLOCK
@@ -465,23 +511,26 @@ $RulesRefs
     if ($Deploy_Latest_Driver_BlockRules) {
         Invoke-Command -ScriptBlock $Deploy_Latest_Driver_BlockRulesSCRIPTBLOCK
     }                               
-    if ($Create_Scheduled_Task_Auto_Driver_BlockRules_Update) {
-        Invoke-Command -ScriptBlock $Create_Scheduled_Task_Auto_Driver_BlockRules_UpdateSCRIPTBLOCK
+    if ($Make_Scheduled_Task_Auto_Driver_BlockRules_Update) {
+        Invoke-Command -ScriptBlock $Make_Scheduled_Task_Auto_Driver_BlockRules_UpdateSCRIPTBLOCK
     }                                
-    if ($Create_WDAC_Policy_From_Audit_Logs) {
-        Invoke-Command -ScriptBlock $Create_WDAC_Policy_From_Audit_LogsSCRIPTBLOCK
+    if ($MakePolicy_From_AuditLogs) {
+        Invoke-Command -ScriptBlock $MakePolicy_From_AuditLogsSCRIPTBLOCK
     }                                
     if ($Prep_System_For_MSFT_Only_Audit) {
         Invoke-Command -ScriptBlock $Prep_System_For_MSFT_Only_AuditSCRIPTBLOCK
     }
-    if ($Create_Lightly_Managed_WDAC_Policy) {
-        Invoke-Command -ScriptBlock $Create_Lightly_Managed_WDAC_PolicySCRIPTBLOCK
+    if ($Make_Lightly_Managed_Policy) {
+        Invoke-Command -ScriptBlock $Make_Lightly_Managed_PolicySCRIPTBLOCK
     }
-    if ($Deploy_Lightly_Managed_WDAC_Policy) {
-        Invoke-Command -ScriptBlock $Deploy_Lightly_Managed_WDAC_PolicySCRIPTBLOCK
+    if ($Deploy_Lightly_Managed_Policy) {
+        Invoke-Command -ScriptBlock $Deploy_Lightly_Managed_PolicySCRIPTBLOCK
     }
     if ($Sign_Deploy_Policy) {
         Invoke-Command -ScriptBlock $Sign_Deploy_PolicySCRIPTBLOCK
+    }
+    if ($Make_SupplementalPolicy) {
+        Invoke-Command -ScriptBlock $Make_SupplementalPolicySCRIPTBLOCK
     }
     #endregion function-processing
 }

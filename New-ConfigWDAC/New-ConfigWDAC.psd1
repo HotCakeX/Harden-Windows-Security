@@ -12,7 +12,7 @@
     RootModule           = 'New-ConfigWDAC.psm1'
 
     # Version number of this module.
-    ModuleVersion        = '0.0.2'
+    ModuleVersion        = '0.0.3'
 
     # Supported PSEditions
     CompatiblePSEditions = @("Desktop", "Core")
@@ -32,38 +32,47 @@
     # Description of the functionality provided by this module
     Description          = @"
 
-This is a module for WDAC (Windows Defender Application Control) and automates a lot of tasks.
+This is an advanced PowerShell module for WDAC (Windows Defender Application Control) and automates a lot of tasks.
 
-🟢 Full details available on GitHub: https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-ConfigWDAC
 
+🟢 Please see the GitHub page for Full details and everything about the module: https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-ConfigWDAC
 
 
 🛡️ Here is the list of parameters the module supports
 
-✔️ Get_Recommended_Block_Rules: Creates a WDAC policy: file called Microsoft recommended block rules.XML from the official source for Microsoft recommended block rules, with allow all rules removed, no audit mode, uses strict HVCI
+✔️ New-ConfigWDAC [[-Get_RecommendedBlockRules]] [-WhatIf] [-Confirm] [<CommonParameters>]
+    
+✔️ New-ConfigWDAC [[-Get_RecommendedDriverBlockRules]] [-WhatIf] [-Confirm] [<CommonParameters>]
 
-✔️ Get_Recommended_Driver_Block_Rules: Creates a WDAC policy file called Microsoft recommended driver block rules.XML from the official source for Microsoft recommended driver block rules, with allow all rules removed, no audit mode, uses strict HVCI
+✔️ New-ConfigWDAC [[-Make_AllowMSFT_WithReccBlockRules]] [-Deployit] [-TestMode] [-RequireEVSigners] [-WhatIf] [-Confirm] [<CommonParameters>]
 
-✔️ MakeAllowMicrosoft_With_RecBlockRules: Gets the Microsoft recommended block rules, removes its allow all rules and merges it with AllowMicrosoft default policy. The created file is called AllowMicrosoftPlusBlockRules.XML. The Policy doesn't have Audit rule option and uses strict HVCI
+✔️ New-ConfigWDAC [[-Deploy_LatestDriverBlockRules]] [-WhatIf] [-Confirm] [<CommonParameters>]
 
-✔️ Deploy_AllowMicrosoft_With_Rec_BlockRules: Deploys the AllowMicrosoftPlusBlockRules policy
+✔️ New-ConfigWDAC [[-Make_ScheduledTask_AutoUpdate_DriverBlockRules]] [-WhatIf] [-Confirm] [<CommonParameters>]
 
-✔️ Deploy_Latest_Driver_BlockRules: With the help of PowerShell, uses the official method to deploy the latest version of Microsoft recommended driver block rules
+✔️ New-ConfigWDAC [[-Make_PolicyFromAuditLogs]] [-Deployit] [-TestMode] [-RequireEVSigners] [-WhatIf] [-Confirm] [<CommonParameters>]
 
-✔️ Make_Scheduled_Task_Auto_Driver_BlockRules_Update: Creates a scheduled task that runs every 7 days to automatically perform the the official method for updating Microsoft recommended driver block rules
+✔️ New-ConfigWDAC [[-Prep_SystemFor_MSFTOnlyAudit]] [-WhatIf] [-Confirm] [<CommonParameters>]
 
-✔️ MakePolicy_From_AuditLogs: Creates a WDAC policy using the Audit event logs generated for a fully managed device
+✔️ New-ConfigWDAC [[-Make_LightlyManagedPolicy]] [-Deployit] [-TestMode] [-RequireEVSigners] [-WhatIf] [-Confirm] [<CommonParameters>]
 
-✔️ Prep_System_For_MSFT_Only_Audit: Prepares the system for generating Audit event logs for a fully managed device
+✔️ New-ConfigWDAC [[-ListActivePolicies]] [-WhatIf] [-Confirm] [<CommonParameters>]
 
-✔️ Make_Lightly_Managed_Policy: Creates a WDAC policy for a Lightly managed system. Outputs a file called SignedAndReputable.xml
+✔️ New-ConfigWDAC [[-VerifyWDACStatus]] [-WhatIf] [-Confirm] [<CommonParameters>]
 
-✔️ Deploy_Lightly_Managed_Policy: Creates a WDAC policy for a Lightly managed system. Outputs a file called SignedAndReputable.xml, converts it to .cip policy binary file deploys it by copying it to C:\Windows\System32\CodeIntegrity\CiPolicies\Active
+✔️ New-ConfigWDAC [[-Sign_Deploy_Policy]] -CertPath <String> -PolicyPaths <String[]> [-SignToolPath <String>] -CertCN <String> [-WhatIf] [-Confirm] [<CommonParameters>]
 
-✔️ Sign_Deploy_Policy: Signs and Deploys a WDAC policy - Needs 4 mandatory arguments: WDACPolicyPath,CertPath,CertCN,IsSupplemental[True or False] and Accepts 1 optional argument SignToolExePath
+✔️ New-ConfigWDAC [[-Make_SupplementalPolicy]] -ScanLocation <String> -SuppPolicyName <String> [-Deployit] -PolicyPaths <String[]> [-WhatIf] [-Confirm] [<CommonParameters>]
 
-✔️ Make_SupplementalPolicy: Create a supplementary policy - Needs 4 mandatory arguments: ScanLocation,BasePolicyPath,SuppPolicyName,DeploySuppPolicy[True or False]
+✔️ New-ConfigWDAC [[-RemoveSignedPolicy]] -PolicyPaths <String[]> [-SignToolPath <String>] -CertCN <String> [-WhatIf] [-Confirm] [<CommonParameters>]
 
+✔️ New-ConfigWDAC [[-AfterRebootRemoval]] -PolicyPaths <String[]> [-WhatIf] [-Confirm] [<CommonParameters>]
+
+✔️ New-ConfigWDAC [[-RemoveUNsignedPolicy]] [-PolicyIDs <String[]>] [-PolicyNames <String[]>] [-WhatIf] [-Confirm] [<CommonParameters>]
+
+
+REMARKS
+To see the syntax, type: "get-help New-ConfigWDAC"
 
 "@
 
@@ -107,7 +116,7 @@ This is a module for WDAC (Windows Defender Application Control) and automates a
     FunctionsToExport    = @("New-ConfigWDAC")
 
     # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
-    CmdletsToExport      = @()
+    CmdletsToExport      = @("New-ConfigWDAC")
 
     # Variables to export from this module
     VariablesToExport    = '*'
@@ -130,13 +139,13 @@ This is a module for WDAC (Windows Defender Application Control) and automates a
         PSData = @{
 
             # Tags applied to this module. These help with module discovery in online galleries.
-            Tags       = @('WDAC', 'Windows-Defender-Application-Control', 'Windows', 'Security', 'Microsoft', 'Application-Control')
+            Tags       = @('WDAC', 'Windows-Defender-Application-Control', 'Windows', 'Security', 'Microsoft', 'Application-Control', 'MDAC')
 
             # A URL to the license for this module.
-            # LicenseUri = ''
+            LicenseUri = 'https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE'
 
             # A URL to the main website for this project.
-            ProjectUri = 'https://github.com/HotCakeX/Harden-Windows-Security/wiki/Introduction'
+            ProjectUri = 'https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-ConfigWDAC'
 
             # A URL to an icon representing this module.
             IconUri    = 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/New-ConfigWDAC/PowerShellGalleryIcon.png'

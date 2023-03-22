@@ -182,6 +182,8 @@ A security baseline is a group of Microsoft-recommended configuration settings t
 
 - 🟩 Enables __additional__ security features of Microsoft Defender, You can refer to [this official document](https://docs.microsoft.com/en-us/powershell/module/defender/set-mppreference?view=windowsserver2022-ps) for full details.
 
+  - [Performance analyzer for Microsoft Defender Antivirus](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/tune-performance-defender-antivirus)
+
 - 🟩 This script makes sure [Cloud Security Scan](https://support.microsoft.com/en-us/topic/what-is-a-cloud-security-scan-75112696-7660-4450-9194-d717f72a8ad8) and [Block At First Sight](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/configure-block-at-first-sight-microsoft-defender-antivirus?view=o365-worldwide#turn-on-block-at-first-sight-with-group-policy) are enabled to the highest possible security states available, __Zero Tolerance Cloud Block level__. You need to be aware that this means actions like downloading and opening an unknown file __will__ make Microsoft Defender send samples of it to the Cloud for more advanced analysis and it can take a maximum of 60 seconds (this script sets it to max) from the time you try to open that unknown file to the time when it will be opened (if deemed safe), so you will have to wait. All of these security measures are in place by default in Windows to some extent and happen automatically without the need to run this script, but this script __maxes them out and sets them to the highest possible levels__ at the cost of 🔻convenience and usability.🔺It's always a trade-off.
 
   - Here is an example of the notification you will see in Windows 11 if that happens.

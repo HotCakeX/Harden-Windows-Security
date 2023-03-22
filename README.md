@@ -124,10 +124,11 @@
 To run the script:
 
 ```PowerShell
-Invoke-RestMethod "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security.ps1" | Invoke-Expression
+irm 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security.ps1' | iex
 ```
 
-<br>
+* [*irm*](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/invoke-restmethod)
+* [*iex*](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/invoke-expression)
 
 <p align="right"><a href="#readme-top">💡(back to top)</a></p>
 

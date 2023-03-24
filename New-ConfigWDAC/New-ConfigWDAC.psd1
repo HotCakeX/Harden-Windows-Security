@@ -12,7 +12,7 @@
     RootModule           = 'New-ConfigWDAC.psm1'
 
     # Version number of this module.
-    ModuleVersion        = '0.0.3'
+    ModuleVersion        = '0.0.4'
 
     # Supported PSEditions
     CompatiblePSEditions = @("Desktop", "Core")
@@ -40,35 +40,34 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
 
 🛡️ Here is the list of parameters the module supports
 
-✔️ New-ConfigWDAC [[-Get_RecommendedBlockRules]] [-WhatIf] [-Confirm] [<CommonParameters>]
+✔️ New-ConfigWDAC [[-Get_RecommendedBlockRules]] 
     
-✔️ New-ConfigWDAC [[-Get_RecommendedDriverBlockRules]] [-WhatIf] [-Confirm] [<CommonParameters>]
+✔️ New-ConfigWDAC [[-Get_RecommendedDriverBlockRules]] 
+    
+✔️ New-ConfigWDAC [[-Make_AllowMSFT_WithReccBlockRules]] [-Deployit] [-TestMode] [-RequireEVSigners] 
+    
+✔️ New-ConfigWDAC [[-Deploy_LatestDriverBlockRules]] 
+    
+✔️ New-ConfigWDAC [[-Make_ScheduledTask_AutoUpdate_DriverBlockRules]] 
+    
+✔️ New-ConfigWDAC [[-Make_PolicyFromAuditLogs]] [-Deployit] [-TestMode] [-RequireEVSigners] [-Debugmode] [-IncludeBlockRules] 
+    
+✔️ New-ConfigWDAC [[-Prep_SystemFor_MSFTOnlyAudit]] 
+    
+✔️ New-ConfigWDAC [[-Make_LightlyManagedPolicy]] [-Deployit] [-TestMode] [-RequireEVSigners] 
+    
+✔️ New-ConfigWDAC [[-ListActivePolicies]] 
+    
+✔️ New-ConfigWDAC [[-VerifyWDACStatus]] 
+    
+✔️ New-ConfigWDAC [[-Sign_Deploy_Policy]] [-CertPath] <String> -PolicyPaths <String[]> [-SignToolPath <String>] -CertCN <String> 
+    
+✔️ New-ConfigWDAC [[-Make_SupplementalPolicy]] -ScanLocation <String> -SuppPolicyName <String> [-Deployit] -PolicyPaths <String[]> 
+    
+✔️ New-ConfigWDAC [[-RemoveSignedPolicy]] -PolicyPaths <String[]> [-SignToolPath <String>] -CertCN <String> 
+    
+✔️ New-ConfigWDAC [[-RemoveUNsignedPolicy]] [-PolicyIDs <String[]>] [-PolicyNames <String[]>] 
 
-✔️ New-ConfigWDAC [[-Make_AllowMSFT_WithReccBlockRules]] [-Deployit] [-TestMode] [-RequireEVSigners] [-WhatIf] [-Confirm] [<CommonParameters>]
-
-✔️ New-ConfigWDAC [[-Deploy_LatestDriverBlockRules]] [-WhatIf] [-Confirm] [<CommonParameters>]
-
-✔️ New-ConfigWDAC [[-Make_ScheduledTask_AutoUpdate_DriverBlockRules]] [-WhatIf] [-Confirm] [<CommonParameters>]
-
-✔️ New-ConfigWDAC [[-Make_PolicyFromAuditLogs]] [-Deployit] [-TestMode] [-RequireEVSigners] [-WhatIf] [-Confirm] [<CommonParameters>]
-
-✔️ New-ConfigWDAC [[-Prep_SystemFor_MSFTOnlyAudit]] [-WhatIf] [-Confirm] [<CommonParameters>]
-
-✔️ New-ConfigWDAC [[-Make_LightlyManagedPolicy]] [-Deployit] [-TestMode] [-RequireEVSigners] [-WhatIf] [-Confirm] [<CommonParameters>]
-
-✔️ New-ConfigWDAC [[-ListActivePolicies]] [-WhatIf] [-Confirm] [<CommonParameters>]
-
-✔️ New-ConfigWDAC [[-VerifyWDACStatus]] [-WhatIf] [-Confirm] [<CommonParameters>]
-
-✔️ New-ConfigWDAC [[-Sign_Deploy_Policy]] -CertPath <String> -PolicyPaths <String[]> [-SignToolPath <String>] -CertCN <String> [-WhatIf] [-Confirm] [<CommonParameters>]
-
-✔️ New-ConfigWDAC [[-Make_SupplementalPolicy]] -ScanLocation <String> -SuppPolicyName <String> [-Deployit] -PolicyPaths <String[]> [-WhatIf] [-Confirm] [<CommonParameters>]
-
-✔️ New-ConfigWDAC [[-RemoveSignedPolicy]] -PolicyPaths <String[]> [-SignToolPath <String>] -CertCN <String> [-WhatIf] [-Confirm] [<CommonParameters>]
-
-✔️ New-ConfigWDAC [[-AfterRebootRemoval]] -PolicyPaths <String[]> [-WhatIf] [-Confirm] [<CommonParameters>]
-
-✔️ New-ConfigWDAC [[-RemoveUNsignedPolicy]] [-PolicyIDs <String[]>] [-PolicyNames <String[]>] [-WhatIf] [-Confirm] [<CommonParameters>]
 
 
 REMARKS

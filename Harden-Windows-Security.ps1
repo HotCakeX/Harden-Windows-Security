@@ -415,7 +415,8 @@ Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which re
             }
             # Enable Bitlocker for all the other drives
             # check if there is any other drive besides OS drive
-            $nonOSVolumes = Get-BitLockerVolume | Where-Object { $_.volumeType -ne "OperatingSystem" }
+            $nonOSVolumes = Get-Volume | Where-Object { $_.DriveType -ne "Removable" } | Where-Object { $_.DriveLetter } -PipelineVariable NonRemovableDrives |
+            foreach-object { Get-BitLockerVolume | Where-Object { $_.volumeType -ne "OperatingSystem" -and $_.MountPoint -eq $($($NonRemovableDrives.DriveLetter) + ":") } }
             if ($nonOSVolumes) {
                 $nonOSVolumes |
                 ForEach-Object {
@@ -659,8 +660,8 @@ Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which re
             PowerShell.exe "Write-Host 'Disabling Internet Printing Client' -ForegroundColor Yellow;if((get-WindowsOptionalFeature -Online -FeatureName Printing-Foundation-Features).state -eq 'enabled'){disable-WindowsOptionalFeature -Online -FeatureName Printing-Foundation-Features -norestart}else{Write-Host 'Printing-Foundation-Features is already disabled' -ForegroundColor Darkgreen}"
             # Disable Windows Media Player (legacy)
             PowerShell.exe "Write-Host 'Disabling Windows Media Player (Legacy)' -ForegroundColor Yellow;if((get-WindowsOptionalFeature -Online -FeatureName WindowsMediaPlayer).state -eq 'enabled'){disable-WindowsOptionalFeature -Online -FeatureName WindowsMediaPlayer -norestart}else{Write-Host 'WindowsMediaPlayer is already disabled' -ForegroundColor Darkgreen}"            
-            # Enable Windows Defender Application Guard
-            PowerShell.exe "Write-Host 'Enabling Windows Defender Application Guard' -ForegroundColor Yellow;if((get-WindowsOptionalFeature -Online -FeatureName Windows-Defender-ApplicationGuard).state -eq 'disabled'){enable-WindowsOptionalFeature -Online -FeatureName Windows-Defender-ApplicationGuard -norestart}else{Write-Host 'Windows-Defender-ApplicationGuard is already enabled' -ForegroundColor Darkgreen}"
+            # Enable Microsoft Defender Application Guard
+            PowerShell.exe "Write-Host 'Enabling Microsoft Defender Application Guard' -ForegroundColor Yellow;if((get-WindowsOptionalFeature -Online -FeatureName Windows-Defender-ApplicationGuard).state -eq 'disabled'){enable-WindowsOptionalFeature -Online -FeatureName Windows-Defender-ApplicationGuard -norestart}else{Write-Host 'Microsoft-Defender-ApplicationGuard is already enabled' -ForegroundColor Darkgreen}"
             # Enable Windows Sandbox
             PowerShell.exe "Write-Host 'Enabling Windows Sandbox' -ForegroundColor Yellow;if((get-WindowsOptionalFeature -Online -FeatureName Containers-DisposableClientVM).state -eq 'disabled'){enable-WindowsOptionalFeature -Online -FeatureName Containers-DisposableClientVM -All -norestart}else{Write-Host 'Containers-DisposableClientVM (Windows Sandbox) is already enabled' -ForegroundColor Darkgreen}"
             # Enable Hyper-V
@@ -881,7 +882,7 @@ Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which re
                 } "No" { break }
             }
             # how to query the number of IPs in each rule
-            (Get-NetFirewallRule -DisplayName "OFAC Sanctioned Countries IP range blocking" -PolicyStore localhost | Get-NetFirewallAddressFilter).RemoteAddress.count
+            # (Get-NetFirewallRule -DisplayName "OFAC Sanctioned Countries IP range blocking" -PolicyStore localhost | Get-NetFirewallAddressFilter).RemoteAddress.count
         } "No" { break }
         "Exit" { &$cleanUp }
     }    

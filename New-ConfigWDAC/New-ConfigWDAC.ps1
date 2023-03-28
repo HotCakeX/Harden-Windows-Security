@@ -8,25 +8,34 @@ function New-ConfigWDAC {
         ConfirmImpact = 'High'
     )]
     Param(
-        [Parameter(Mandatory = $false, ParameterSetName = "set1", Position = 0)][switch]$Get_RecommendedBlockRules,
-        [Parameter(Mandatory = $false, ParameterSetName = "set9", Position = 0)][switch]$Get_RecommendedDriverBlockRules,
-        [Parameter(Mandatory = $false, ParameterSetName = "set7", Position = 0)][switch]$Make_AllowMSFT_WithReccBlockRules,  
+        [Parameter(Mandatory = $false, ParameterSetName = "set1", Position = 0)][switch]$Get_BlockRules,
+        [Parameter(Mandatory = $false, ParameterSetName = "set9", Position = 0)][switch]$Get_DriverBlockRules,
+        [Parameter(Mandatory = $false, ParameterSetName = "set7", Position = 0)][switch]$Make_AllowMSFT_WithBlockRules,  
         [Parameter(Mandatory = $false, ParameterSetName = "set10", Position = 0)][switch]$Deploy_LatestDriverBlockRules,                                                                                       
-        [Parameter(Mandatory = $false, ParameterSetName = "set11", Position = 0)][switch]$Make_ScheduledTask_AutoUpdate_DriverBlockRules,
+        [Parameter(Mandatory = $false, ParameterSetName = "set11", Position = 0)][switch]$Set_AutoUpdateDriverBlockRules,
         [Parameter(Mandatory = $false, ParameterSetName = "set12", Position = 0)][switch]$Make_PolicyFromAuditLogs,
-        [Parameter(Mandatory = $false, ParameterSetName = "set13", Position = 0)][switch]$Prep_SystemFor_MSFTOnlyAudit,        
-        [Parameter(Mandatory = $false, ParameterSetName = "set8", Position = 0)][switch]$Make_LightlyManagedPolicy,
+        [Parameter(Mandatory = $false, ParameterSetName = "set13", Position = 0)][switch]$Prep_MSFTOnlyAudit,        
+        [Parameter(Mandatory = $false, ParameterSetName = "set8", Position = 0)][switch]$Make_LightPolicy,
         [Parameter(Mandatory = $false, ParameterSetName = "set14", Position = 0)][switch]$ListActivePolicies,
         [Parameter(Mandatory = $false, ParameterSetName = "set15", Position = 0)][switch]$VerifyWDACStatus,
         [Parameter(Mandatory = $false, ParameterSetName = "set2", Position = 0)][switch]$Sign_Deploy_Policy,
-        [Parameter(Mandatory = $false, ParameterSetName = "set3", Position = 0)][switch]$Make_SupplementalPolicy,
+        [Parameter(Mandatory = $false, ParameterSetName = "set3", Position = 0)][switch]$Make_SuppPolicy,
         [Parameter(Mandatory = $false, ParameterSetName = "set4", Position = 0)][switch]$RemoveSignedPolicy,
-        [Parameter(Mandatory = $false, ParameterSetName = "set6", Position = 0)][switch]$RemoveUNsignedPolicy,  
+        [Parameter(Mandatory = $false, ParameterSetName = "set6", Position = 0)][switch]$RemoveUNsignedPolicy,
+        [Parameter(Mandatory = $false, ParameterSetName = "set18", Position = 0)][switch]$AllowNewApp_AuditEvents,
+        [Parameter(Mandatory = $false, ParameterSetName = "set19", Position = 0)][switch]$AllowNewApp,
             
-        [parameter(Mandatory = $true, ParameterSetName = "set2", ValueFromPipeline = $true, Position = 1)][string]$CertPath,
+        [Parameter(Mandatory = $true, ParameterSetName = "set19", ValueFromPipeline = $true, Position = 1)]
+        [Parameter(Mandatory = $true, ParameterSetName = "set18", ValueFromPipeline = $true, Position = 1)]
+        [parameter(Mandatory = $true, ParameterSetName = "set2", ValueFromPipeline = $true, Position = 1)]
+        [string]$CertPath,
         
         [parameter(Mandatory = $true, ParameterSetName = "set3", ValueFromPipeline = $true)][string]$ScanLocation,
-        [parameter(Mandatory = $true, ParameterSetName = "set3")][string]$SuppPolicyName,
+
+        [Parameter(Mandatory = $true, ParameterSetName = "set19")]
+        [Parameter(Mandatory = $true, ParameterSetName = "set18")]
+        [parameter(Mandatory = $true, ParameterSetName = "set3")]
+        [string]$SuppPolicyName,
 
         [Parameter(Mandatory = $false, ParameterSetName = "set12")]
         [Parameter(Mandatory = $false, ParameterSetName = "set8")]
@@ -34,13 +43,21 @@ function New-ConfigWDAC {
         [parameter(Mandatory = $false, ParameterSetName = "set3")]
         [switch]$Deployit,
 
+        [Parameter(Mandatory = $true, ParameterSetName = "set19")]
+        [Parameter(Mandatory = $true, ParameterSetName = "set18")]
         [parameter(Mandatory = $true, ParameterSetName = "set2", ValueFromPipeline = $true)]
         [parameter(Mandatory = $true, ParameterSetName = "set3", ValueFromPipeline = $true)]
         [parameter(Mandatory = $true, ParameterSetName = "set4", ValueFromPipeline = $true)]
         [string[]]$PolicyPaths,
+
+        [Parameter(Mandatory = $false, ParameterSetName = "set19")]
+        [Parameter(Mandatory = $false, ParameterSetName = "set18")]
         [parameter(Mandatory = $false, ParameterSetName = "set2", ValueFromPipeline = $true)]
         [parameter(Mandatory = $false, ParameterSetName = "set4", ValueFromPipeline = $true)]
         [string]$SignToolPath,
+
+        [Parameter(Mandatory = $true, ParameterSetName = "set19")]
+        [Parameter(Mandatory = $true, ParameterSetName = "set18")]
         [parameter(Mandatory = $true, ParameterSetName = "set2", ValueFromPipeline = $true)]
         [parameter(Mandatory = $true, ParameterSetName = "set4", ValueFromPipeline = $true)]
         [string]$CertCN,
@@ -61,11 +78,9 @@ function New-ConfigWDAC {
         [Parameter(Mandatory = $false, ParameterSetName = "set7")]
         [switch]$RequireEVSigners,
 
+        [Parameter(Mandatory = $false, ParameterSetName = "set18")]
         [Parameter(Mandatory = $false, ParameterSetName = "set12")]
-        [switch]$Debugmode,
-
-        [Parameter(Mandatory = $false, ParameterSetName = "set12")]
-        [switch]$IncludeBlockRules
+        [switch]$Debugmode
     )
 
     $ErrorActionPreference = 'Stop'
@@ -80,7 +95,7 @@ function New-ConfigWDAC {
     }
 
     #region Script-Blocks    
-    $Get_RecommendedBlockRulesSCRIPTBLOCK = {             
+    $Get_BlockRulesSCRIPTBLOCK = {             
         $MicrosoftRecommendeDriverBlockRules = Invoke-WebRequest -Uri "https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/public/windows/security/threat-protection/windows-defender-application-control/microsoft-recommended-block-rules.md"
         $MicrosoftRecommendeDriverBlockRules -match "(?s)(?<=``````xml).*(?=``````)" | Out-Null
         $Rules = $Matches[0]
@@ -99,7 +114,7 @@ function New-ConfigWDAC {
         Set-HVCIOptions -Strict -FilePath '.\Microsoft recommended block rules.XML'
         Write-host "Microsoft recommended block rules.XML policy file has been created in $(Get-Location)" -ForegroundColor Green
     }    
-    $Get_RecommendedDriverBlockRulesSCRIPTBLOCK = {       
+    $Get_DriverBlockRulesSCRIPTBLOCK = {       
         $MicrosoftRecommendeDriverBlockRules = Invoke-WebRequest -Uri "https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/public/windows/security/threat-protection/windows-defender-application-control/microsoft-recommended-driver-block-rules.md"
        
         $MicrosoftRecommendeDriverBlockRules -match "(?s)(?<=``````xml).*(?=``````)" | Out-Null
@@ -121,10 +136,10 @@ function New-ConfigWDAC {
         Set-HVCIOptions -Strict -FilePath '.\Microsoft recommended driver block rules.XML'
         Write-host "Microsoft recommended driver block rules.XML policy file has been created in $(Get-Location)" -ForegroundColor Green
     }
-    $Make_AllowMSFT_WithReccBlockRulesSCRIPTBLOCK = {
-        Invoke-Command -ScriptBlock $Get_RecommendedBlockRulesSCRIPTBLOCK                              
+    $Make_AllowMSFT_WithBlockRulesSCRIPTBLOCK = {
+        Invoke-Command -ScriptBlock $Get_BlockRulesSCRIPTBLOCK                              
         Copy-item -Path "C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml" -Destination ".\AllowMicrosoft.xml"
-        Merge-CIPolicy -PolicyPaths .\AllowMicrosoft.xml, '.\Microsoft recommended block rules.XML' -OutputFilePath .\AllowMicrosoftPlusBlockRules.XML        
+        Merge-CIPolicy -PolicyPaths .\AllowMicrosoft.xml, '.\Microsoft recommended block rules.XML' -OutputFilePath .\AllowMicrosoftPlusBlockRules.XML | Out-Null     
         $PolicyID = Set-CIPolicyIdInfo -FilePath .\AllowMicrosoftPlusBlockRules.XML -PolicyName "DefaultAllowMicrosoft Plus ReccommendedBlockRules Made On $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID
         $PolicyID = $PolicyID.Substring(11)
         Set-CIPolicyVersion -FilePath .\AllowMicrosoftPlusBlockRules.XML -Version "1.0.0.0"
@@ -156,7 +171,7 @@ function New-ConfigWDAC {
         Remove-Item .\VulnerableDriverBlockList -Recurse -Force
         Remove-Item .\VulnerableDriverBlockList.zip -Force
     }    
-    $Make_ScheduledTask_AutoUpdate_DriverBlockRulesSCRIPTBLOCK = {
+    $Set_AutoUpdateDriverBlockRulesSCRIPTBLOCK = {
         # create a scheduled task that runs every 7 days
         if (-NOT (Get-ScheduledTask -TaskName "MSFT Driver Block list update" -ErrorAction SilentlyContinue)) {        
             $action = New-ScheduledTaskAction -Execute 'Powershell.exe' `
@@ -173,30 +188,18 @@ function New-ConfigWDAC {
         }
     }
     $Make_PolicyFromAuditLogsSCRIPTBLOCK = {
+        Remove-Item -Path "$home\WDAC\*" -Recurse -Force
         # Create a working directory in user's folder
         new-item -Type Directory -Path "$home\WDAC" -Force | Out-Null
         Set-Location "$home\WDAC"
 
-        # Base Policy Processing
-        if ($IncludeBlockRules) {
-            Invoke-Command -ScriptBlock $Make_AllowMSFT_WithReccBlockRulesSCRIPTBLOCK
-            $xml = [xml](Get-Content .\AllowMicrosoftPlusBlockRules.XML)
-            $BasePolicyID = $xml.SiPolicy.PolicyID
-            # define the location of the base policy
-            $BasePolicy = ".\AllowMicrosoftPlusBlockRules.XML"
-        }
-        else {
-            Copy-item -Path C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml -Destination .\AllowMicrosoft.xml
-            # define the location of the base policy
-            $BasePolicy = "$home\WDAC\AllowMicrosoft.xml"
-            $BasePolicyID = Set-CIPolicyIdInfo -FilePath .\AllowMicrosoft.xml -ResetPolicyID
-            $BasePolicyID = $BasePolicyID.Substring(11)            
-            # Set the base policy rule options 
-            @(0, 2, 5, 6, 11, 12, 16, 17, 19, 20) | ForEach-Object { Set-RuleOption -FilePath $BasePolicy -Option $_ }
-            @(3, 4, 9, 10, 13, 14, 15, 18) | ForEach-Object { Set-RuleOption -FilePath $BasePolicy -Option $_ -Delete }
-            Set-HVCIOptions -Strict -FilePath $BasePolicy
-            ConvertFrom-CIPolicy .\AllowMicrosoft.xml "$BasePolicyID.cip" | Out-Null
-        }
+        # Base Policy Processing        
+        Invoke-Command -ScriptBlock $Make_AllowMSFT_WithBlockRulesSCRIPTBLOCK
+        $xml = [xml](Get-Content .\AllowMicrosoftPlusBlockRules.XML)
+        $BasePolicyID = $xml.SiPolicy.PolicyID
+        # define the location of the base policy
+        $BasePolicy = ".\AllowMicrosoftPlusBlockRules.XML"        
+      
         if ($TestMode) {
             & $TestModeSCRIPTBLOCK -PolicyPathToEnableTesting $BasePolicy
         }
@@ -363,7 +366,7 @@ public static extern uint QueryDosDevice(string lpDeviceName, StringBuilder lpTa
             # Merge the policy file we created at first using Event Viewer logs, with the policy file we created for Hash of the files no longer available on the disk
             Merge-CIPolicy -PolicyPaths ".\AuditLogsPolicy_NoDeletedFiles.xml", .\DeletedFilesHashes.XML -OutputFilePath .\SupplementalPolicy.xml
         }
-        # do this only if there are no event logs detected with files no longer on the disk, so we use the policy file creater earlier using Audit even logs
+        # do this only if there are no event logs detected with files no longer on the disk, so we use the policy file created earlier using Audit even logs
         else {
             Rename-Item ".\AuditLogsPolicy_NoDeletedFiles.xml" -NewName "SupplementalPolicy.xml" -Force
         }      
@@ -383,19 +386,19 @@ public static extern uint QueryDosDevice(string lpDeviceName, StringBuilder lpTa
         Write-host "`nThis is the GUID of the Supplemental Policy: $PolicyID" -ForegroundColor Cyan 
 
         if (-NOT $Debugmode) {
-            Remove-Item -Path ".\AuditLogsPolicy_NoDeletedFiles.xml" -Force
-            Remove-Item -Path ".\FileRulesAndFileRefs.txt" -Force
-            Remove-Item -Path ".\DeletedFilesHashes.xml" -Force           
+            Remove-Item -Path ".\AuditLogsPolicy_NoDeletedFiles.xml" -Force -ErrorAction SilentlyContinue
+            Remove-Item -Path ".\FileRulesAndFileRefs.txt" -Force -ErrorAction SilentlyContinue
+            Remove-Item -Path ".\DeletedFilesHashes.xml" -Force -ErrorAction SilentlyContinue
         }
         if ($Deployit) {            
             CiTool --update-policy ".\$BasePolicyID.cip" -json
             CiTool --update-policy ".\$policyID.cip" -json
-            Write-host "System restart required to activate the deployed policies" -ForegroundColor Green                       
+            Write-host "`nSystem restart required to activate the deployed policies" -ForegroundColor Green                       
         }        
         do {
             $RemovalQuestion = $(Write-host "`nRemove the Audit mode MicrosoftOnly policy deployed during the prep phase? Enter 1 for Yes, 2 for No." -ForegroundColor Cyan; Read-Host)     
             if ($RemovalQuestion -eq "1" ) {
-                $IDToRemove = ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.FriendlyName -eq "Prep_SystemFor_MSFTOnlyAudit" }).PolicyID
+                $IDToRemove = ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.FriendlyName -eq "Prep_MSFTOnlyAudit" }).PolicyID
                 CiTool --remove-policy "{$IDToRemove}"
                 Write-host "System restart required to finish removing the Audit mode Prep policy" -ForegroundColor Green                   
             }
@@ -405,21 +408,21 @@ public static extern uint QueryDosDevice(string lpDeviceName, StringBuilder lpTa
         }                  
         until ($RemovalQuestion -eq "1" -or $RemovalQuestion -eq "2")            
     }
-    $Prep_SystemFor_MSFTOnlyAuditSCRIPTBLOCK = {
+    $Prep_MSFTOnlyAuditSCRIPTBLOCK = {
         Copy-item -Path C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml -Destination .\AllowMicrosoft.xml
         Set-RuleOption -FilePath .\AllowMicrosoft.xml -Option 3
         $PolicyID = Set-CIPolicyIdInfo -FilePath .\AllowMicrosoft.xml -ResetPolicyID
         $PolicyID = $PolicyID.Substring(11)
-        Set-CIPolicyIdInfo -PolicyName "Prep_SystemFor_MSFTOnlyAudit" -FilePath .\AllowMicrosoft.xml
+        Set-CIPolicyIdInfo -PolicyName "Prep_MSFTOnlyAudit" -FilePath .\AllowMicrosoft.xml
         ConvertFrom-CIPolicy .\AllowMicrosoft.xml "$PolicyID.cip" | Out-Null
         CiTool --update-policy "$PolicyID.cip" -json
         Remove-Item ".\AllowMicrosoft.xml" -Force
         Remove-Item "$PolicyID.cip" -Force
         Write-host "`nThe default AllowMicrosoft policy has been deployed in Audit mode. Restart the system." -ForegroundColor Magenta
     }
-    $Make_LightlyManagedPolicySCRIPTBLOCK = { 
+    $Make_LightPolicySCRIPTBLOCK = {        
         Copy-item -Path "C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml" -Destination ".\AllowMicrosoft.xml"       
-        Invoke-Command -ScriptBlock $Get_RecommendedBlockRulesSCRIPTBLOCK                
+        Invoke-Command -ScriptBlock $Get_BlockRulesSCRIPTBLOCK                
         Merge-CIPolicy -PolicyPaths .\AllowMicrosoft.xml, '.\Microsoft recommended block rules.XML' -OutputFilePath .\SignedAndReputable.xml        
         @(0, 2, 6, 11, 12, 14, 15, 16, 17, 19, 20) | ForEach-Object { Set-RuleOption -FilePath .\SignedAndReputable.xml -Option $_ }
         @(3, 4, 9, 10, 13, 18) | ForEach-Object { Set-RuleOption -FilePath .\SignedAndReputable.xml -Option $_ -Delete }
@@ -493,7 +496,7 @@ public static extern uint QueryDosDevice(string lpDeviceName, StringBuilder lpTa
             Write-host " has been Signed and Deployed." -ForegroundColor Green
         }
     }
-    $Make_SupplementalPolicySCRIPTBLOCK = {
+    $Make_SuppPolicySCRIPTBLOCK = {
         foreach ($PolicyPath in $PolicyPaths) {
             New-CIPolicy -FilePath ".\SupplementalPolicy$SuppPolicyName.xml" -ScanPath $ScanLocation `
                 -Level SignedVersion -Fallback FilePublisher, Hash -UserPEs -MultiplePolicyFormat -UserWriteablePaths
@@ -602,38 +605,416 @@ public static extern uint QueryDosDevice(string lpDeviceName, StringBuilder lpTa
         param($PolicyPathToEnableEVSigners)
         Set-RuleOption -FilePath $PolicyPathToEnableEVSigners -Option 8
     }
+    $AllowNewApp_AuditEventsSCRIPTBLOCK = {
+        Remove-Item -Path ".\ProgramDir_ScanResults*.xml" -Force -ErrorAction SilentlyContinue
+        Remove-Item -Path ".\SupplementalPolicy$SuppPolicyName.xml" -Force -ErrorAction SilentlyContinue
+        $Date = Get-Date
+        $ProgramDir_ScanResultsArray = @()
+
+        #Initiate Live Audit Mode
+
+        foreach ($PolicyPath in $PolicyPaths) {            
+            # defining Base policy
+            $xml = [xml](Get-Content $PolicyPath)            
+            $PolicyID = $xml.SiPolicy.PolicyID
+            $PolicyName = ($xml.SiPolicy.Settings.Setting | Where-Object { $_.provider -eq "PolicyInfo" -and $_.valuename -eq "Name" -and $_.key -eq "Information" }).value.string
+
+            # Remove any cip file if there is any
+            Remove-Item -Path ".\$PolicyID.cip" -ErrorAction SilentlyContinue       
+            Set-RuleOption -FilePath $PolicyPath -Option 6 -Delete        
+            Set-RuleOption -FilePath $PolicyPath -Option 3
+            ConvertFrom-CIPolicy $PolicyPath "$PolicyID.cip" | Out-Null
+
+            if ($SignToolPath) {
+                $SignToolPath = $SignToolPath
+            }
+            else {
+                if ($Env:PROCESSOR_ARCHITECTURE -eq "AMD64") {
+                    if ( Test-Path -Path "C:\Program Files (x86)\Windows Kits\*\bin\*\x64\signtool.exe") {
+                        $SignToolPath = "C:\Program Files (x86)\Windows Kits\*\bin\*\x64\signtool.exe" 
+                    }
+                    else {
+                        Write-Error "signtool.exe couldn't be found"
+                        break
+                    }
+                }
+                elseif ($Env:PROCESSOR_ARCHITECTURE -eq "ARM64") {
+                    if (Test-Path -Path "C:\Program Files (x86)\Windows Kits\*\bin\*\arm64\signtool.exe") {
+                        $SignToolPath = "C:\Program Files (x86)\Windows Kits\*\bin\*\arm64\signtool.exe"
+                    }
+                    else {
+                        Write-Error "signtool.exe couldn't be found"
+                        break
+                    }
+                }           
+            }
+            & $SignToolPath sign -v -n $CertCN -p7 . -p7co 1.3.6.1.4.1.311.79.1 -fd certHash ".\$PolicyID.cip"              
+            Remove-Item ".\$PolicyID.cip" -Force         
+            Rename-Item "$PolicyID.cip.p7" -NewName "$PolicyID.cip" -Force
+            CiTool --update-policy ".\$PolicyID.cip" -json
+            Remove-Item ".\$PolicyID.cip" -Force
+            Write-host -NoNewline "`n$PolicyID.cip for " -ForegroundColor Green
+            Write-Host -NoNewline "$PolicyName" -ForegroundColor Yellow
+            Write-host " has been Re-Signed and Re-Deployed in Audit Mode." -ForegroundColor Green
+
+            #User Interaction            
+
+            Write-host "`nAudit mode deployed, start installing your programs now" -ForegroundColor Magenta
+        
+            Write-Host "When you've finished installing programs, Press any key to start selecting program directories to scan" -ForegroundColor Blue
+            $null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown');
+
+            $ProgramsPaths = @()
+            Write-host "`nSelect program directories to scan`n" -ForegroundColor Cyan
+            do {
+                [System.Reflection.Assembly]::LoadWithPartialName("System.windows.forms") | Out-Null
+                $OBJ = New-Object System.Windows.Forms.FolderBrowserDialog
+                $OBJ.InitialDirectory = "$env:SystemDrive"
+                $OBJ.Description = $Description
+                $Spawn = New-Object System.Windows.Forms.Form -Property @{TopMost = $true }
+                $Show = $OBJ.ShowDialog($Spawn)
+                If ($Show -eq "OK") { $ProgramsPaths += $OBJ.SelectedPath }
+                Else { break }
+            }
+            while ($true)
+        
+            if (-NOT ($ProgramsPaths.count -eq 0)) {
+
+                Write-Host "Here are the paths you selected`n$ProgramsPaths`n" -ForegroundColor Yellow
+
+                # EventCapturing                   
+
+                # produce policy XML file from event viewer logs
+                Write-host "Scanning Windows Event logs and creating a policy file, please wait..." -ForegroundColor Cyan
+    
+                # Get Event viewer logs for code integrity
+                $block2 = {
+                    foreach ($event in Get-WinEvent -FilterHashtable @{LogName = 'Microsoft-Windows-CodeIntegrity/Operational'; ID = 3076 } | Where-Object { $_.TimeCreated -ge $Date } ) {
+                        $xml = [xml]$event.toxml()
+                        $xml.event.eventdata.data |
+                        ForEach-Object { $hash = @{} } { $hash[$_.name] = $_.'#text' } { [pscustomobject]$hash } |
+                        ForEach-Object {
+                            $_ | Select-Object FileVersion, 'File Name', PolicyGUID, 'SHA256 Hash', 'SHA256 Flat Hash', 'SHA1 Hash', 'SHA1 Flat Hash'                    
+                        }
+                    }
+                }                
+                $block2results = Invoke-Command -ScriptBlock $block2
+
+                if ($block2results) {
+
+                    # Create File Rules based on hash of the files and store them in the $Rules variable
+                    $i = 1
+                    $imax = ($block2results).count
+                    while ($i -le $imax) {
+                        $block2results | ForEach-Object {  
+                            $Rules += Write-Output "`n<Allow ID=`"ID_ALLOW_AA_$i`" FriendlyName=`"$($_.'File Name') SHA256 Hash`" Hash=`"$($_.'SHA256 Hash')`" />"
+                            $Rules += Write-Output "`n<Allow ID=`"ID_ALLOW_AB_$i`" FriendlyName=`"$($_.'File Name') SHA256 Flat Hash`" Hash=`"$($_.'SHA256 Flat Hash')`" />"
+                            $Rules += Write-Output "`n<Allow ID=`"ID_ALLOW_AC_$i`" FriendlyName=`"$($_.'File Name') SHA1 Hash`" Hash=`"$($_.'SHA1 Hash')`" />"
+                            $Rules += Write-Output "`n<Allow ID=`"ID_ALLOW_AD_$i`" FriendlyName=`"$($_.'File Name') SHA1 Flat Hash`" Hash=`"$($_.'SHA1 Flat Hash')`" />"
+                            $i++
+                        }
+                    }
+                    # Create File Rule Refs based on the ID of the File Rules above and store them in the $RulesRefs variable
+                    $i = 1
+                    $imax = ($block2results).count
+                    while ($i -le $imax) {
+                        $block2results | ForEach-Object { 
+                            $RulesRefs += Write-Output "`n<FileRuleRef RuleID=`"ID_ALLOW_AA_$i`" />"
+                            $RulesRefs += Write-Output "`n<FileRuleRef RuleID=`"ID_ALLOW_AB_$i`" />"
+                            $RulesRefs += Write-Output "`n<FileRuleRef RuleID=`"ID_ALLOW_AC_$i`" />"
+                            $RulesRefs += Write-Output "`n<FileRuleRef RuleID=`"ID_ALLOW_AD_$i`" />"
+                            $i++
+                        }
+                    }  
+                    # Save the the File Rules and File Rule Refs to the Out-File FileRulesAndFileRefs.txt in the current working directory for debugging purposes
+                    $Rules + $RulesRefs | Out-File FileRulesAndFileRefs.txt
+
+                    $EmptyPolicy = @"
+<?xml version="1.0" encoding="utf-8"?>
+<SiPolicy xmlns="urn:schemas-microsoft-com:sipolicy" PolicyType="Base Policy">
+<VersionEx>10.0.0.0</VersionEx>
+<PlatformID>{2E07F7E4-194C-4D20-B7C9-6F44A6C5A234}</PlatformID>
+<Rules>
+<Rule>
+<Option>Enabled:Unsigned System Integrity Policy</Option>
+</Rule>
+<Rule>
+<Option>Enabled:Audit Mode</Option>
+</Rule>
+<Rule>
+<Option>Enabled:Advanced Boot Options Menu</Option>
+</Rule>
+<Rule>
+<Option>Required:Enforce Store Applications</Option>
+</Rule>
+</Rules>
+<!--EKUS-->
+<EKUs />
+<!--File Rules-->
+<FileRules>
+$Rules
+</FileRules>
+<!--Signers-->
+<Signers />
+<!--Driver Signing Scenarios-->
+<SigningScenarios>
+<SigningScenario Value="131" ID="ID_SIGNINGSCENARIO_DRIVERS_1" FriendlyName="Auto generated policy on $(Get-Date -Format 'MM-dd-yyyy')">
+<ProductSigners />
+</SigningScenario>
+<SigningScenario Value="12" ID="ID_SIGNINGSCENARIO_WINDOWS" FriendlyName="Auto generated policy on $(Get-Date -Format 'MM-dd-yyyy')">
+<ProductSigners>
+<FileRulesRef>
+$RulesRefs
+</FileRulesRef>
+</ProductSigners>
+</SigningScenario>
+</SigningScenarios>
+<UpdatePolicySigners />
+<CiSigners />
+<HvciOptions>0</HvciOptions>
+<BasePolicyID>{B163125F-E30A-43FC-ABEC-E30B4EE88FA8}</BasePolicyID>
+<PolicyID>{B163125F-E30A-43FC-ABEC-E30B4EE88FA8}</PolicyID>
+</SiPolicy>
+"@
+                    $EmptyPolicy | Out-File .\EventsSupplementalPolicy.xml                    
+                    # adding the policy file that consists of rules from audit even logs, to the array
+                    $ProgramDir_ScanResultsArray += "EventsSupplementalPolicy.xml"
+                }
+
+                #Process Program Folders From User input
+        
+                for ($i = 0; $i -lt $ProgramsPaths.Count; $i++) {
+                    New-CIPolicy -FilePath ".\ProgramDir_ScanResults$($i).xml" -ScanPath $ProgramsPaths[$i] -Level SignedVersion -Fallback FilePublisher, Hash -UserPEs -MultiplePolicyFormat -UserWriteablePaths
+                }            
+
+                # merge-cipolicy accept arrays - collecting all the policy files created by scanning user specified folders
+                $ProgramDir_ScanResults = Get-ChildItem ".\" | Where-Object { $_.Name -like 'ProgramDir_ScanResults*.xml' }                
+                foreach ($file in $ProgramDir_ScanResults) {
+                    $ProgramDir_ScanResultsArray += $file.FullName
+                }             
+
+                Merge-CIPolicy -PolicyPaths $ProgramDir_ScanResultsArray -OutputFilePath ".\SupplementalPolicy$SuppPolicyName.xml" | Out-Null     
+            }
+
+            else {                                      
+                Write-Host "`nNo program folder was selected, reverting the changes and quitting...`n" -ForegroundColor Magent
+                # Re-Deploy Basepolicy in Enforcement mode 
+                Invoke-Command -ScriptBlock $BasePolicyReDeploymentSCRIPTBLOCK -NoNewScope
+                break
+            }
+
+            if (-NOT $Debugmode) {
+                Remove-Item -Path ".\FileRulesAndFileRefs.txt" -Force -ErrorAction SilentlyContinue
+                Remove-Item -Path "EventsSupplementalPolicy.xml" -Force -ErrorAction SilentlyContinue
+                Remove-Item -Path ".\ProgramDir_ScanResults*.xml" -Force  -ErrorAction SilentlyContinue
+            }
+
+            # Re-Deploy Basepolicy in Enforcement mode 
+            Invoke-Command -ScriptBlock $BasePolicyReDeploymentSCRIPTBLOCK -NoNewScope            
+
+            #Supplemental-policy-processing-and-deployment
+        
+            $SuppPolicyPath = ".\SupplementalPolicy$SuppPolicyName.xml" 
+            $SuppPolicyID = Set-CIPolicyIdInfo -FilePath $SuppPolicyPath -PolicyName "Supplemental Policy $SuppPolicyName made on $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath
+            $SuppPolicyID = $SuppPolicyID.Substring(11)
+            Add-SignerRule -FilePath $SuppPolicyPath -CertificatePath $CertPath -Update -User -Kernel
+
+            # Make sure policy rule options that don't belong to a Supplemental policy don't exit
+            @(0, 1, 2, 3, 4, 6, 8, 9, 10, 11, 12, 15, 16, 17, 19, 20) | ForEach-Object { Set-RuleOption -FilePath $SuppPolicyPath -Option $_ -Delete }
+     
+            Set-HVCIOptions -Strict -FilePath $SuppPolicyPath             
+            Set-CIPolicyVersion -FilePath $SuppPolicyPath -Version "1.0.0.0"            
+
+            ConvertFrom-CIPolicy $SuppPolicyPath "$SuppPolicyID.cip" | Out-Null
+
+            & $SignToolPath sign -v -n $CertCN -p7 . -p7co 1.3.6.1.4.1.311.79.1 -fd certHash ".\$SuppPolicyID.cip"              
+            Remove-Item ".\$SuppPolicyID.cip" -Force            
+            Rename-Item "$SuppPolicyID.cip.p7" -NewName "$SuppPolicyID.cip" -Force
+            CiTool --update-policy ".\$SuppPolicyID.cip" -json
+            Remove-Item ".\$SuppPolicyID.cip" -Force        
+
+            Write-host -NoNewline "`n$SuppPolicyID.cip for " -ForegroundColor Green
+            Write-Host -NoNewline "$SuppPolicyName" -ForegroundColor Yellow
+            Write-host " has been Signed and Deployed in Enforcement Mode." -ForegroundColor Green           
+        }
+    }
+    $AllowNewAppSCRIPTBLOCK = {
+        # remove any possible files from previous runs
+        Remove-Item -Path ".\ProgramDir_ScanResults*.xml" -Force -ErrorAction SilentlyContinue
+        Remove-Item -Path ".\SupplementalPolicy$SuppPolicyName.xml" -Force -ErrorAction SilentlyContinue
+    
+        $ProgramDir_ScanResultsArray = @()
+    
+        #Initiate Live Audit Mode
+    
+        foreach ($PolicyPath in $PolicyPaths) {            
+            # defining Base policy
+            $xml = [xml](Get-Content $PolicyPath)            
+            $PolicyID = $xml.SiPolicy.PolicyID
+            $PolicyName = ($xml.SiPolicy.Settings.Setting | Where-Object { $_.provider -eq "PolicyInfo" -and $_.valuename -eq "Name" -and $_.key -eq "Information" }).value.string
+    
+            # Remove any cip file if there is any
+            Remove-Item -Path ".\$PolicyID.cip" -ErrorAction SilentlyContinue       
+            Set-RuleOption -FilePath $PolicyPath -Option 6 -Delete        
+            Set-RuleOption -FilePath $PolicyPath -Option 3
+            ConvertFrom-CIPolicy $PolicyPath "$PolicyID.cip" | Out-Null
+    
+            if ($SignToolPath) {
+                $SignToolPath = $SignToolPath
+            }
+            else {
+                if ($Env:PROCESSOR_ARCHITECTURE -eq "AMD64") {
+                    if ( Test-Path -Path "C:\Program Files (x86)\Windows Kits\*\bin\*\x64\signtool.exe") {
+                        $SignToolPath = "C:\Program Files (x86)\Windows Kits\*\bin\*\x64\signtool.exe" 
+                    }
+                    else {
+                        Write-Error "signtool.exe couldn't be found"
+                        break
+                    }
+                }
+                elseif ($Env:PROCESSOR_ARCHITECTURE -eq "ARM64") {
+                    if (Test-Path -Path "C:\Program Files (x86)\Windows Kits\*\bin\*\arm64\signtool.exe") {
+                        $SignToolPath = "C:\Program Files (x86)\Windows Kits\*\bin\*\arm64\signtool.exe"
+                    }
+                    else {
+                        Write-Error "signtool.exe couldn't be found"
+                        break
+                    }
+                }           
+            }        
+            & $SignToolPath sign -v -n $CertCN -p7 . -p7co 1.3.6.1.4.1.311.79.1 -fd certHash ".\$PolicyID.cip"              
+            Remove-Item ".\$PolicyID.cip" -Force         
+            Rename-Item "$PolicyID.cip.p7" -NewName "$PolicyID.cip" -Force
+            CiTool --update-policy ".\$PolicyID.cip" -json
+            Remove-Item ".\$PolicyID.cip" -Force
+            Write-host -NoNewline "`n$PolicyID.cip for " -ForegroundColor Green
+            Write-Host -NoNewline "$PolicyName" -ForegroundColor Yellow
+            Write-host " has been Re-Signed and Re-Deployed in Audit Mode." -ForegroundColor Green
+    
+            #User Interaction
+            
+            Write-host "`nAudit mode deployed, start installing your programs now" -ForegroundColor Magenta
+    
+            Write-Host "When you've finished installing programs, Press any key to start selecting program directories to scan" -ForegroundColor Blue;
+            $null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown');
+    
+            $ProgramsPaths = @()
+            Write-host "`nSelect program directories to scan`n" -ForegroundColor Cyan
+            do {
+                [System.Reflection.Assembly]::LoadWithPartialName("System.windows.forms") | Out-Null
+                $OBJ = New-Object System.Windows.Forms.FolderBrowserDialog
+                $OBJ.InitialDirectory = "$env:SystemDrive"
+                $OBJ.Description = $Description
+                $Spawn = New-Object System.Windows.Forms.Form -Property @{TopMost = $true }
+                $Show = $OBJ.ShowDialog($Spawn)
+                If ($Show -eq "OK") { $ProgramsPaths += $OBJ.SelectedPath }
+                Else { break }
+            }
+            while ($true)
+            
+            if (-NOT ($ProgramsPaths.count -eq 0)) {
+        
+                Write-Host "Here are the paths you selected`n$ProgramsPaths`n" -ForegroundColor Yellow 
+    
+                #Process Program Folders From User input     
+                for ($i = 0; $i -lt $ProgramsPaths.Count; $i++) {
+                    New-CIPolicy -FilePath ".\ProgramDir_ScanResults$($i).xml" -ScanPath $ProgramsPaths[$i] -Level SignedVersion -Fallback FilePublisher, Hash -UserPEs -MultiplePolicyFormat -UserWriteablePaths
+                }            
+    
+                # merge-cipolicy accept arrays - collecting all the policy files created by scanning user specified folders
+                $ProgramDir_ScanResults = Get-ChildItem ".\" | Where-Object { $_.Name -like 'ProgramDir_ScanResults*.xml' }                
+                foreach ($file in $ProgramDir_ScanResults) {
+                    $ProgramDir_ScanResultsArray += $file.FullName
+                }
+    
+                Merge-CIPolicy -PolicyPaths $ProgramDir_ScanResultsArray -OutputFilePath ".\SupplementalPolicy$SuppPolicyName.xml" | Out-Null                                  
+                
+                #Re-Deploy-Basepolicy-in-Enforcement-mode
+    
+                Invoke-Command -ScriptBlock $BasePolicyReDeploymentSCRIPTBLOCK -NoNewScope         
+    
+                Remove-Item -Path ".\ProgramDir_ScanResults*.xml" -Force 
+    
+                #Supplemental-policy-processing-and-deployment
+        
+                $SuppPolicyPath = ".\SupplementalPolicy$SuppPolicyName.xml" 
+                $SuppPolicyID = Set-CIPolicyIdInfo -FilePath $SuppPolicyPath -PolicyName "Supplemental Policy $SuppPolicyName made on $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath
+                $SuppPolicyID = $SuppPolicyID.Substring(11)
+                Add-SignerRule -FilePath $SuppPolicyPath -CertificatePath $CertPath -Update -User -Kernel
+    
+                # Make sure policy rule options that don't belong to a Supplemental policy don't exit
+                @(0, 1, 2, 3, 4, 6, 8, 9, 10, 11, 12, 15, 16, 17, 19, 20) | ForEach-Object { Set-RuleOption -FilePath $SuppPolicyPath -Option $_ -Delete }
+     
+                Set-HVCIOptions -Strict -FilePath $SuppPolicyPath             
+                Set-CIPolicyVersion -FilePath $SuppPolicyPath -Version "1.0.0.0"            
+    
+                ConvertFrom-CIPolicy $SuppPolicyPath "$SuppPolicyID.cip" | Out-Null
+    
+                & $SignToolPath sign -v -n $CertCN -p7 . -p7co 1.3.6.1.4.1.311.79.1 -fd certHash ".\$SuppPolicyID.cip"              
+                Remove-Item ".\$SuppPolicyID.cip" -Force            
+                Rename-Item "$SuppPolicyID.cip.p7" -NewName "$SuppPolicyID.cip" -Force
+                CiTool --update-policy ".\$SuppPolicyID.cip" -json
+                Remove-Item ".\$SuppPolicyID.cip" -Force        
+    
+                Write-host -NoNewline "`n$SuppPolicyID.cip for " -ForegroundColor Green
+                Write-Host -NoNewline "$SuppPolicyName" -ForegroundColor Yellow
+                Write-host " has been Signed and Deployed in Enforcement Mode." -ForegroundColor Green           
+            }            
+            # If no program path was provied
+            else {
+                Write-Host "`nNo program folder was selected, reverting the changes and quitting...`n" -ForegroundColor Magenta
+                #Re-Deploy Basepolicy in Enforcement mode
+                Invoke-Command -ScriptBlock $BasePolicyReDeploymentSCRIPTBLOCK -NoNewScope
+                break
+            }
+        }
+    }
+    $BasePolicyReDeploymentSCRIPTBLOCK = {
+        #Re-Deploy Basepolicy in Enforcement mode
+        Set-RuleOption -FilePath $PolicyPath -Option 6 -Delete
+        Set-RuleOption -FilePath $PolicyPath -Option 3 -Delete
+        ConvertFrom-CIPolicy $PolicyPath "$PolicyID.cip" | Out-Null
+        & $SignToolPath sign -v -n $CertCN -p7 . -p7co 1.3.6.1.4.1.311.79.1 -fd certHash ".\$PolicyID.cip"              
+        Remove-Item ".\$PolicyID.cip" -Force            
+        Rename-Item "$PolicyID.cip.p7" -NewName "$PolicyID.cip" -Force
+        CiTool --update-policy ".\$PolicyID.cip" -json
+        Remove-Item ".\$PolicyID.cip" -Force
+        Write-host -NoNewline "`n$PolicyID.cip for " -ForegroundColor Green
+        Write-Host -NoNewline "$PolicyName" -ForegroundColor Yellow
+        Write-host " has been Re-Signed and Re-Deployed in Enforcement Mode." -ForegroundColor Green        
+    }
     #endregion Script-Blocks
 
     #region function-processing
-    if ($Get_RecommendedBlockRules) {              
-        Invoke-Command -ScriptBlock $Get_RecommendedBlockRulesSCRIPTBLOCK
+    if ($Get_BlockRules) {              
+        Invoke-Command -ScriptBlock $Get_BlockRulesSCRIPTBLOCK
     }                                
-    if ($Get_RecommendedDriverBlockRules) {
-        Invoke-Command -ScriptBlock $Get_RecommendedDriverBlockRulesSCRIPTBLOCK
+    if ($Get_DriverBlockRules) {
+        Invoke-Command -ScriptBlock $Get_DriverBlockRulesSCRIPTBLOCK
     }   
-    if ($Make_AllowMSFT_WithReccBlockRules) {
-        Invoke-Command -ScriptBlock $Make_AllowMSFT_WithReccBlockRulesSCRIPTBLOCK
+    if ($Make_AllowMSFT_WithBlockRules) {
+        Invoke-Command -ScriptBlock $Make_AllowMSFT_WithBlockRulesSCRIPTBLOCK
     }
     if ($Deploy_LatestDriverBlockRules) {
         Invoke-Command -ScriptBlock $Deploy_LatestDriverBlockRulesSCRIPTBLOCK
     }                               
-    if ($Make_ScheduledTask_AutoUpdate_DriverBlockRules) {
-        Invoke-Command -ScriptBlock $Make_ScheduledTask_AutoUpdate_DriverBlockRulesSCRIPTBLOCK
+    if ($Set_AutoUpdateDriverBlockRules) {
+        Invoke-Command -ScriptBlock $Set_AutoUpdateDriverBlockRulesSCRIPTBLOCK
     }                                
     if ($Make_PolicyFromAuditLogs) {
         Invoke-Command -ScriptBlock $Make_PolicyFromAuditLogsSCRIPTBLOCK
     }                                
-    if ($Prep_SystemFor_MSFTOnlyAudit) {
-        Invoke-Command -ScriptBlock $Prep_SystemFor_MSFTOnlyAuditSCRIPTBLOCK
+    if ($Prep_MSFTOnlyAudit) {
+        Invoke-Command -ScriptBlock $Prep_MSFTOnlyAuditSCRIPTBLOCK
     }
-    if ($Make_LightlyManagedPolicy) {
-        Invoke-Command -ScriptBlock $Make_LightlyManagedPolicySCRIPTBLOCK
+    if ($Make_LightPolicy) {
+        Invoke-Command -ScriptBlock $Make_LightPolicySCRIPTBLOCK
     }
     if ($Sign_Deploy_Policy) {
         Invoke-Command -ScriptBlock $Sign_Deploy_PolicySCRIPTBLOCK
     }
-    if ($Make_SupplementalPolicy) {
-        Invoke-Command -ScriptBlock $Make_SupplementalPolicySCRIPTBLOCK
+    if ($Make_SuppPolicy) {
+        Invoke-Command -ScriptBlock $Make_SuppPolicySCRIPTBLOCK
     }
     if ($RemoveSignedPolicy) {
         Invoke-Command -ScriptBlock $RemoveSignedPolicySCRIPTBLOCK
@@ -646,6 +1027,12 @@ public static extern uint QueryDosDevice(string lpDeviceName, StringBuilder lpTa
     }
     if ($RemoveUNsignedPolicy) {
         Invoke-Command -ScriptBlock $RemoveUNsignedPolicySCRIPTBLOCK
+    }
+    if ($AllowNewApp_AuditEvents) {
+        Invoke-Command -ScriptBlock $AllowNewApp_AuditEventsSCRIPTBLOCK
+    }
+    if ($AllowNewApp) {
+        Invoke-Command -ScriptBlock $AllowNewAppSCRIPTBLOCK
     }
     #endregion function-processing
 
@@ -665,28 +1052,28 @@ Windows Defender Application Control
 .FUNCTIONALITY
 Automate various tasks related to Windows Defender Application Control (WDAC)
 
-.PARAMETER Get_RecommendedBlockRules
+.PARAMETER Get_BlockRules
 Create Microsoft recommended block rules XML policy and remove the allow rules
 
-.PARAMETER Get_RecommendedDriverBlockRules
+.PARAMETER Get_DriverBlockRules
 Create Microsoft recommended driver block rules XML policy and remove the allow rules
 
-.PARAMETER Make_AllowMSFT_WithReccBlockRules
+.PARAMETER Make_AllowMSFT_WithBlockRules
 Make WDAC policy by merging AllowMicrosoft policy with the recommended block rules
 
 .PARAMETER Deploy_LatestDriverBlockRules
 Automatically download and deploy the latest Microsoft Recommended Driver Block Rules from Microsoft's source
 
-.PARAMETER Make_ScheduledTask_AutoUpdate_DriverBlockRules
+.PARAMETER Set_AutoUpdateDriverBlockRules
 Make a Scheduled Task that automatically runs every 7 days to download the newest Microsoft Recommended driver block rules
 
 .PARAMETER Make_PolicyFromAuditLogs
 Make WDAC Policy from Audit event logs that also covers files no longer on disk
 
-.PARAMETER Prep_SystemFor_MSFTOnlyAudit
+.PARAMETER Prep_MSFTOnlyAudit
 Prepare the system for Audit mode using AllowMicrosoft example policy
 
-.PARAMETER Make_LightlyManagedPolicy
+.PARAMETER Make_LightPolicy
 Make WDAC Policy with ISG for Lightly Managed system
 
 .PARAMETER ListActivePolicies
@@ -698,7 +1085,7 @@ Shows the status of User-mode and Kernel-mode Windows Defender Application Contr
 .PARAMETER Sign_Deploy_Policy 
 Sign and deploy a WDAC policy
 
-.PARAMETER Make_SupplementalPolicy 
+.PARAMETER Make_SuppPolicy 
 Make a Supplemental policy by scanning a directory    
 
 .PARAMETER RemoveSignedPolicy
@@ -706,6 +1093,12 @@ Remove Signed WDAC Policies, can remove more than 1 at a time.
 
 .PARAMETER RemoveUNsignedPolicy
 Removes Unsigned deployed WDAC policies, requires PolicyIDs as input, can remove more than 1 at a time.
+
+.PARAMETER AllowNewApp_AuditEvents
+Rebootlessly install new apps/programs when Signed policy is already deployed, use audit events to capture installation files, scan their directories for new Supplemental policy, Sign and deploy thew Supplemental policy.
+
+.PARAMETER AllowNewApp
+Rebootlessly install new apps/programs when Signed policy is already deployed, scan their directories for new Supplemental policy, Sign and deploy thew Supplemental policy.
 
 #>
 }

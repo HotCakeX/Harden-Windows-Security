@@ -12,7 +12,7 @@
     RootModule           = 'New-ConfigWDAC.psm1'
 
     # Version number of this module.
-    ModuleVersion        = '0.0.6'
+    ModuleVersion        = '0.0.7'
 
     # Supported PSEditions
     CompatiblePSEditions = @("Desktop", "Core")
@@ -51,9 +51,9 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
     
 ✔️ New-ConfigWDAC [[-Set_AutoUpdateDriverBlockRules]]
     
-✔️ New-ConfigWDAC [[-Make_PolicyFromAuditLogs]] [-Deployit] [-TestMode] [-RequireEVSigners] [-Debugmode]
-    
 ✔️ New-ConfigWDAC [[-Prep_MSFTOnlyAudit]]
+    
+✔️ New-ConfigWDAC [[-Make_PolicyFromAuditLogs]] [-Deployit] [-TestMode] [-RequireEVSigners] [-Debugmode]
     
 ✔️ New-ConfigWDAC [[-Make_LightPolicy]] [-Deployit] [-TestMode] [-RequireEVSigners]
     
@@ -71,8 +71,7 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
     
 ✔️ New-ConfigWDAC [[-AllowNewApp_AuditEvents]] [-CertPath] <String> -SuppPolicyName <String> -PolicyPaths <String[]> [-SignToolPath <String>] -CertCN <String> [-Debugmode]
     
-✔️ New-ConfigWDAC [[-AllowNewApp]] [-CertPath] <String> -SuppPolicyName <String> -PolicyPaths <String[]> [-SignToolPath <String>] -CertCN <String> 
-
+✔️ New-ConfigWDAC [[-AllowNewApp]] [-CertPath] <String> -SuppPolicyName <String> -PolicyPaths <String[]> [-SignToolPath <String>] -CertCN <String>
 
 
 REMARKS
@@ -158,6 +157,7 @@ To see the syntax, type: "get-help New-ConfigWDAC"
              ReleaseNotes =  @"
 
 ## Version
+* 0.0.7 Added argument tab completion for many new parameters, making things easier to use by auto-completing arguments.
 * 0.0.6 Many parameters now output objects instead of strings. Improved some of the logics and fixed an error with Audit event log creation. Also started adding change logs.
 * 0.0.5 Added -AllowNewApp and -AllowNewApp_AuditEvents parameters to the module to rebootlessly allow an app.
 "@

@@ -25,9 +25,9 @@ function New-ConfigWDAC {
         [Parameter(Mandatory = $false, ParameterSetName = "set18", Position = 0, ValueFromPipeline = $true)][switch]$AllowNewApp_AuditEvents,
         [Parameter(Mandatory = $false, ParameterSetName = "set19", Position = 0, ValueFromPipeline = $true)][switch]$AllowNewApp,
             
-        [Parameter(Mandatory = $true, ParameterSetName = "set19", ValueFromPipelineByPropertyName = $true, Position = 1)]
-        [Parameter(Mandatory = $true, ParameterSetName = "set18", ValueFromPipelineByPropertyName = $true, Position = 1)]
-        [parameter(Mandatory = $true, ParameterSetName = "set2", ValueFromPipelineByPropertyName = $true, Position = 1)]
+        [Parameter(Mandatory = $true, ParameterSetName = "set19", ValueFromPipelineByPropertyName = $true)]
+        [Parameter(Mandatory = $true, ParameterSetName = "set18", ValueFromPipelineByPropertyName = $true)]
+        [parameter(Mandatory = $true, ParameterSetName = "set2", ValueFromPipelineByPropertyName = $true)]
         [string]$CertPath,
         
         [parameter(Mandatory = $true, ParameterSetName = "set3", ValueFromPipelineByPropertyName = $true)][string]$ScanLocation,
@@ -42,7 +42,7 @@ function New-ConfigWDAC {
         [Parameter(Mandatory = $false, ParameterSetName = "set7")]
         [parameter(Mandatory = $false, ParameterSetName = "set3")]
         [switch]$Deployit,
-
+        
         [Parameter(Mandatory = $true, ParameterSetName = "set19", ValueFromPipelineByPropertyName = $true)]
         [Parameter(Mandatory = $true, ParameterSetName = "set18", ValueFromPipelineByPropertyName = $true)]
         [parameter(Mandatory = $true, ParameterSetName = "set2", ValueFromPipelineByPropertyName = $true)]
@@ -62,7 +62,9 @@ function New-ConfigWDAC {
         [parameter(Mandatory = $true, ParameterSetName = "set4", ValueFromPipelineByPropertyName = $true)]
         [string]$CertCN,
         
-        [parameter(Mandatory = $false, ParameterSetName = "set6")][string[]]$PolicyIDs,
+        [ValidateSet([PolicyIDz])]
+        [parameter(Mandatory = $false, ParameterSetName = "set6")]
+        [string[]]$PolicyIDs,
 
         [ValidateSet([PolicyNamez])]
         [parameter(Mandatory = $false, ParameterSetName = "set6")]
@@ -85,14 +87,23 @@ function New-ConfigWDAC {
 
     $ErrorActionPreference = 'Stop'
     
-    # argument tab auto-completion for Policy names 
+    # argument tab auto-completion and ValidateSet for Policy names 
     Class PolicyNamez : System.Management.Automation.IValidateSetValuesGenerator {
         [string[]] GetValidValues() {
             $PolicyNamez = ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsSystemPolicy -ne "True" }).Friendlyname
            
             return [string[]]$PolicyNamez
         }
-    }
+    }   
+    
+    # argument tab auto-completion and ValidateSet for Policy IDs     
+    Class PolicyIDz : System.Management.Automation.IValidateSetValuesGenerator {
+        [string[]] GetValidValues() {
+            $PolicyIDz = ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsSystemPolicy -ne "True" }).policyID
+           
+            return [string[]]$PolicyIDz
+        }
+    }   
 
     #region Script-Blocks    
     $Get_BlockRulesSCRIPTBLOCK = {             
@@ -1129,14 +1140,9 @@ Rebootlessly install new apps/programs when Signed policy is already deployed, s
 #>
 }
 
-# argument tab auto-completion for Policy IDs
-$ArgumentCompleterPolicyID = {
-    ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsSystemPolicy -ne "True" }).policyID
-}
-Register-ArgumentCompleter -CommandName "New-ConfigWDAC" -ParameterName "PolicyIDs" -ScriptBlock $ArgumentCompleterPolicyID
-
 # Set PSReadline tab completion to complete menu for easier access to available parameters - Only for the current session
 Set-PSReadlineKeyHandler -Key Tab -Function MenuComplete
+
 
 # argument tab auto-completion for Certificate common name
 $ArgumentCompleterCertificateCN = {
@@ -1173,3 +1179,24 @@ $ArgumentCompleterCertificateCN = {
     return "`"$finalResult`""
 }
 Register-ArgumentCompleter -CommandName "New-ConfigWDAC" -ParameterName "CertCN" -ScriptBlock $ArgumentCompleterCertificateCN
+
+
+# argument tab auto-completion for Policy Paths to show only .xml files
+$ArgumentCompleterPolicyPaths = {
+    Get-ChildItem | where-object { $_.extension -like '*.xml' }
+}
+Register-ArgumentCompleter -CommandName "New-ConfigWDAC" -ParameterName "PolicyPaths" -ScriptBlock $ArgumentCompleterPolicyPaths
+
+
+# argument tab auto-completion for Certificate Path to show only .cer files
+$ArgumentCompleterCertPath = {
+    Get-ChildItem | where-object { $_.extension -like '*.cer' }
+}
+Register-ArgumentCompleter -CommandName "New-ConfigWDAC" -ParameterName "CertPath" -ScriptBlock $ArgumentCompleterCertPath
+
+
+# argument tab auto-completion for Certificate Path to show only .cer files
+$ArgumentCompleterSignToolPath = {
+    Get-ChildItem | where-object { $_.extension -like '*.exe' }
+}
+Register-ArgumentCompleter -CommandName "New-ConfigWDAC" -ParameterName "SignToolPath" -ScriptBlock $ArgumentCompleterSignToolPath

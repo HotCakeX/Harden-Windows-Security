@@ -12,7 +12,7 @@
     RootModule           = 'New-ConfigWDAC.psm1'
 
     # Version number of this module.
-    ModuleVersion        = '0.0.5'
+    ModuleVersion        = '0.0.6'
 
     # Supported PSEditions
     CompatiblePSEditions = @("Desktop", "Core")
@@ -27,7 +27,7 @@
     CompanyName          = 'SpyNetGirl'
 
     # Copyright statement for this module
-    Copyright            = '(c) HotCakeX. All rights reserved.'
+    Copyright            = '(c) 2023'
 
     # Description of the functionality provided by this module
     Description          = @"
@@ -40,33 +40,38 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
 
 🛡️ Here is the list of parameters the module supports
 
-✔️ New-ConfigWDAC [[-Get_RecommendedBlockRules]] 
+
+✔️ New-ConfigWDAC [[-Get_BlockRules]]
     
-✔️ New-ConfigWDAC [[-Get_RecommendedDriverBlockRules]] 
+✔️ New-ConfigWDAC [[-Get_DriverBlockRules]]
     
-✔️ New-ConfigWDAC [[-Make_AllowMSFT_WithReccBlockRules]] [-Deployit] [-TestMode] [-RequireEVSigners] 
+✔️ New-ConfigWDAC [[-Make_AllowMSFT_WithBlockRules]] [-Deployit] [-TestMode] [-RequireEVSigners]
     
-✔️ New-ConfigWDAC [[-Deploy_LatestDriverBlockRules]] 
+✔️ New-ConfigWDAC [[-Deploy_LatestDriverBlockRules]]
     
-✔️ New-ConfigWDAC [[-Make_ScheduledTask_AutoUpdate_DriverBlockRules]] 
+✔️ New-ConfigWDAC [[-Set_AutoUpdateDriverBlockRules]]
     
-✔️ New-ConfigWDAC [[-Make_PolicyFromAuditLogs]] [-Deployit] [-TestMode] [-RequireEVSigners] [-Debugmode] [-IncludeBlockRules] 
+✔️ New-ConfigWDAC [[-Make_PolicyFromAuditLogs]] [-Deployit] [-TestMode] [-RequireEVSigners] [-Debugmode]
     
-✔️ New-ConfigWDAC [[-Prep_SystemFor_MSFTOnlyAudit]] 
+✔️ New-ConfigWDAC [[-Prep_MSFTOnlyAudit]]
     
-✔️ New-ConfigWDAC [[-Make_LightlyManagedPolicy]] [-Deployit] [-TestMode] [-RequireEVSigners] 
+✔️ New-ConfigWDAC [[-Make_LightPolicy]] [-Deployit] [-TestMode] [-RequireEVSigners]
     
-✔️ New-ConfigWDAC [[-ListActivePolicies]] 
+✔️ New-ConfigWDAC [[-ListActivePolicies]]
     
-✔️ New-ConfigWDAC [[-VerifyWDACStatus]] 
+✔️ New-ConfigWDAC [[-VerifyWDACStatus]]
     
-✔️ New-ConfigWDAC [[-Sign_Deploy_Policy]] [-CertPath] <String> -PolicyPaths <String[]> [-SignToolPath <String>] -CertCN <String> 
+✔️ New-ConfigWDAC [[-Sign_Deploy_Policy]] [-CertPath] <String> -PolicyPaths <String[]> [-SignToolPath <String>] -CertCN <String>
     
-✔️ New-ConfigWDAC [[-Make_SupplementalPolicy]] -ScanLocation <String> -SuppPolicyName <String> [-Deployit] -PolicyPaths <String[]> 
+✔️ New-ConfigWDAC [[-Make_SuppPolicy]] -ScanLocation <String> -SuppPolicyName <String> [-Deployit] -PolicyPaths <String[]>
     
-✔️ New-ConfigWDAC [[-RemoveSignedPolicy]] -PolicyPaths <String[]> [-SignToolPath <String>] -CertCN <String> 
+✔️ New-ConfigWDAC [[-RemoveSignedPolicy]] -PolicyPaths <String[]> [-SignToolPath <String>] -CertCN <String>
     
-✔️ New-ConfigWDAC [[-RemoveUNsignedPolicy]] [-PolicyIDs <String[]>] [-PolicyNames <String[]>] 
+✔️ New-ConfigWDAC [[-RemoveUNsignedPolicy]] [-PolicyIDs <String[]>] [-PolicyNames <String[]>]
+    
+✔️ New-ConfigWDAC [[-AllowNewApp_AuditEvents]] [-CertPath] <String> -SuppPolicyName <String> -PolicyPaths <String[]> [-SignToolPath <String>] -CertCN <String> [-Debugmode]
+    
+✔️ New-ConfigWDAC [[-AllowNewApp]] [-CertPath] <String> -SuppPolicyName <String> -PolicyPaths <String[]> [-SignToolPath <String>] -CertCN <String> 
 
 
 
@@ -150,7 +155,13 @@ To see the syntax, type: "get-help New-ConfigWDAC"
             IconUri    = 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/New-ConfigWDAC/PowerShellGalleryIcon.png'
 
             # ReleaseNotes of this module
-            # ReleaseNotes = ''
+             ReleaseNotes =  @"
+
+## Version
+* 0.0.6 Many parameters now output objects instead of strings. Improved some of the logics and fixed an error with Audit event log creation. Also started adding change logs.
+* 0.0.5 Added -AllowNewApp and -AllowNewApp_AuditEvents parameters to the module to rebootlessly allow an app.
+"@
+
 
             # Prerelease string of this module
             # Prerelease = ''

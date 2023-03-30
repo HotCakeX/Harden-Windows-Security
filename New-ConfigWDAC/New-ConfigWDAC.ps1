@@ -1,4 +1,15 @@
 #requires -version 7.3.3
+
+Function Test-IsAdmin {
+    $identity = [Security.Principal.WindowsIdentity]::GetCurrent()
+    $principal = New-Object Security.Principal.WindowsPrincipal $identity
+    $principal.IsInRole([Security.Principal.WindowsBuiltinRole]::Administrator)
+}
+if (-NOT (Test-IsAdmin)) {
+    write-host "Administrator privileges Required" -ForegroundColor Magenta
+    break
+}
+
 function New-ConfigWDAC {
     [CmdletBinding(
         DefaultParameterSetName = "set1",
@@ -1181,22 +1192,30 @@ $ArgumentCompleterCertificateCN = {
 Register-ArgumentCompleter -CommandName "New-ConfigWDAC" -ParameterName "CertCN" -ScriptBlock $ArgumentCompleterCertificateCN
 
 
-# argument tab auto-completion for Policy Paths to show only .xml files
+# argument tab auto-completion for Policy Paths to show only .xml files and only base policies
 $ArgumentCompleterPolicyPaths = {
-    Get-ChildItem | where-object { $_.extension -like '*.xml' }
+    Get-ChildItem | where-object { $_.extension -like '*.xml' } | foreach-object {
+
+        $TestXML = [xml](Get-Content $_.FullName)
+        $PolicyTypeTest = $TestXML.SiPolicy.PolicyType
+
+        if ($PolicyTypeTest -eq "Base Policy") {          
+            $_
+        }
+    } | foreach-object { return "`"$_`"" }
 }
 Register-ArgumentCompleter -CommandName "New-ConfigWDAC" -ParameterName "PolicyPaths" -ScriptBlock $ArgumentCompleterPolicyPaths
 
 
 # argument tab auto-completion for Certificate Path to show only .cer files
 $ArgumentCompleterCertPath = {
-    Get-ChildItem | where-object { $_.extension -like '*.cer' }
+    Get-ChildItem | where-object { $_.extension -like '*.cer' } | foreach-object { return "`"$_`"" }   
 }
 Register-ArgumentCompleter -CommandName "New-ConfigWDAC" -ParameterName "CertPath" -ScriptBlock $ArgumentCompleterCertPath
 
 
 # argument tab auto-completion for Certificate Path to show only .cer files
 $ArgumentCompleterSignToolPath = {
-    Get-ChildItem | where-object { $_.extension -like '*.exe' }
+    Get-ChildItem | where-object { $_.extension -like '*.exe' } | foreach-object { return "`"$_`"" }
 }
 Register-ArgumentCompleter -CommandName "New-ConfigWDAC" -ParameterName "SignToolPath" -ScriptBlock $ArgumentCompleterSignToolPath

@@ -97,6 +97,8 @@ else {
         try {                
             # download Microsoft Security Baselines directly from their servers
             Invoke-WebRequest -Uri "https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/Windows%2011%20version%2022H2%20Security%20Baseline.zip" -OutFile ".\Windows1122H2SecurityBaseline.zip" -ErrorAction Stop
+            # download Microsoft 365 Apps Security Baselines directly from their servers
+            Invoke-WebRequest -Uri "https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/Microsoft%20365%20Apps%20for%20Enterprise-2206-FINAL.zip" -OutFile ".\Microsoft365SecurityBaseline2206.zip" -ErrorAction Stop
             # Download LGPO program from Microsoft servers
             Invoke-WebRequest -Uri "https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/LGPO.zip" -OutFile ".\LGPO.zip" -ErrorAction Stop
             # Download the Group Policies of Windows Hardening script from GitHub
@@ -111,6 +113,9 @@ else {
     }
     # unzip Microsoft Security Baselines file
     Expand-Archive -Path .\Windows1122H2SecurityBaseline.zip -DestinationPath .\ -Force
+    # unzip Microsoft 365 Apps Security Baselines file
+    Expand-Archive -Path .\Microsoft365SecurityBaseline2206.zip -DestinationPath .\ -Force
+    Rename-Item -Path ".\Microsoft 365 Apps for Enterprise-2206-FINAL" -NewName "Microsoft-365-Apps-Enterprise-2206"
     # unzip the LGPO file
     Expand-Archive -Path .\LGPO.zip -DestinationPath .\ -Force
     # unzip the Security-Baselines-X file which contains Windows Hardening script Group Policy Objects
@@ -131,7 +136,25 @@ else {
             .\Baseline-LocalInstall.ps1 -Win11NonDomainJoined            
         } "No" { break }
         "Exit" { &$cleanUp }
-    }    
+    }
+
+    #region Microsoft-365-Apps-Security-Baseline    
+    # ================================================Microsoft 365 Apps Security Baseline==============================================
+    switch (Select-Option -Options "Yes", "No", "Exit" -Message "`nApply Microsoft 365 Apps Security Baseline ?") {
+        "Yes" {       
+            # Copy LGPO.exe from its folder to Microsoft Security Baseline folder in order to get it ready to be used by PowerShell script
+            cd.. ; cd..
+            Copy-Item -Path ".\LGPO_30\LGPO.exe" -Destination ".\Microsoft-365-Apps-Enterprise-2206\Scripts\Tools"
+
+            # Change directory to the Security Baselines folder
+            Set-Location ".\Microsoft-365-Apps-Enterprise-2206\Scripts\"
+
+            Write-Host "`nApplying Microsoft 365 Apps Security Baseline" -ForegroundColor Cyan
+            # Run the official PowerShell script included in the Microsoft Security Baseline file we downloaded from Microsoft servers
+            .\Baseline-LocalInstall.ps1           
+        } "No" { break }
+        "Exit" { &$cleanUp }
+    }
     # ============================================End of Microsoft Security Baselines==========================================   
     #endregion Microsoft-Security-Baseline
  

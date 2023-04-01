@@ -1,5 +1,4 @@
 #requires -version 7.3.3
-
 Function Test-IsAdmin {
     $identity = [Security.Principal.WindowsIdentity]::GetCurrent()
     $principal = New-Object Security.Principal.WindowsPrincipal $identity
@@ -9,7 +8,6 @@ if (-NOT (Test-IsAdmin)) {
     write-host "Administrator privileges Required" -ForegroundColor Magenta
     break
 }
-
 function New-ConfigWDAC {
     [CmdletBinding(
         DefaultParameterSetName = "set1",
@@ -93,7 +91,13 @@ function New-ConfigWDAC {
 
         [Parameter(Mandatory = $false, ParameterSetName = "set18")]
         [Parameter(Mandatory = $false, ParameterSetName = "set12")]
-        [switch]$Debugmode
+        [switch]$Debugmode,
+
+        [ValidateRange(1024KB, [int64]::MaxValue)]
+        [Parameter(Mandatory = $false, ParameterSetName = "set12")]
+        [Parameter(Mandatory = $false, ParameterSetName = "set13")]
+        [Parameter(Mandatory = $false, ParameterSetName = "set18")]
+        [Int64]$LogSize
     )
 
     $ErrorActionPreference = 'Stop'
@@ -114,9 +118,47 @@ function New-ConfigWDAC {
            
             return [string[]]$PolicyIDz
         }
-    }   
+    }
 
-    #region Script-Blocks    
+    # Make sure the latest version of the module is installed and if not, automatically update it, clean up any old versions
+    $currentversion = (Test-modulemanifest "$psscriptroot\New-ConfigWDAC.psd1").Version.ToString()
+    $latestversion = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/New-ConfigWDAC/version.txt"
+    if (-NOT ($currentversion -eq $latestversion)) {
+        Write-Host "The currently installed module's version is $currentversion while the latest version is $latestversion - Auto Updating the module now and will run your command after that 💓"
+        Remove-Module -Name New-ConfigWDAC -Force
+        Uninstall-Module -Name New-ConfigWDAC -AllVersions -Force  
+        Install-Module -Name New-ConfigWDAC -RequiredVersion $latestversion -Force              
+        Import-Module -Name New-ConfigWDAC -RequiredVersion $latestversion -Force -Global
+    }
+
+    #region Misc-Functions    
+    # Increase Code Integrity Operational Event Logs size from the default 1MB to user defined size
+    function Set-LogSize {
+        [CmdletBinding()]
+        param ([int64]$LogSize)        
+        $logName = 'Microsoft-Windows-CodeIntegrity/Operational'
+        $log = New-Object System.Diagnostics.Eventing.Reader.EventLogConfiguration $logName
+        $log.MaximumSizeInBytes = $LogSize
+        $log.IsEnabled = $true
+        $log.SaveChanges()
+    }
+    #Re-Deploy Basepolicy in Enforcement mode
+    function Update-BasePolicyToEnforcement {        
+        Set-RuleOption -FilePath $PolicyPath -Option 6 -Delete
+        Set-RuleOption -FilePath $PolicyPath -Option 3 -Delete
+        ConvertFrom-CIPolicy $PolicyPath "$PolicyID.cip" | Out-Null
+        & $SignToolPath sign -v -n $CertCN -p7 . -p7co 1.3.6.1.4.1.311.79.1 -fd certHash ".\$PolicyID.cip"              
+        Remove-Item ".\$PolicyID.cip" -Force            
+        Rename-Item "$PolicyID.cip.p7" -NewName "$PolicyID.cip" -Force
+        CiTool --update-policy ".\$PolicyID.cip" -json
+        Remove-Item ".\$PolicyID.cip" -Force
+        Write-host "`n`nThe Base policy with the following details has been Re-Signed and Re-Deployed in Enforcement Mode:" -ForegroundColor Green        
+        Write-Output "PolicyName = $PolicyName"
+        Write-Output "PolicyGUID = $PolicyID`n"
+    }
+    #endregion Misc-Functions    
+
+    #region Main-Script-Blocks    
     $Get_BlockRulesSCRIPTBLOCK = {             
         $MicrosoftRecommendeDriverBlockRules = Invoke-WebRequest -Uri "https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/public/windows/security/threat-protection/windows-defender-application-control/microsoft-recommended-block-rules.md"
         $MicrosoftRecommendeDriverBlockRules -match "(?s)(?<=``````xml).*(?=``````)" | Out-Null
@@ -158,9 +200,11 @@ function New-ConfigWDAC {
         Set-RuleOption -FilePath '.\Microsoft recommended driver block rules.xml' -Option 3 -Delete
         Set-HVCIOptions -Strict -FilePath '.\Microsoft recommended driver block rules.xml'
         
+        Invoke-Command -ScriptBlock $DriversBlockListInfoGatheringSCRIPTBLOCK
+
         [PSCustomObject]@{
             PolicyFile = "Microsoft recommended driver block rules.xml"
-        }
+        }        
     }
     $Make_AllowMSFT_WithBlockRulesSCRIPTBLOCK = {
         param([bool]$NoCIP)
@@ -204,6 +248,9 @@ function New-ConfigWDAC {
         citool --refresh -json
         Remove-Item .\VulnerableDriverBlockList -Recurse -Force
         Remove-Item .\VulnerableDriverBlockList.zip -Force
+        Write-Host "`nSiPolicy.p7b has been deployed and policies refreshed." -ForegroundColor Cyan
+        
+        Invoke-Command -ScriptBlock $DriversBlockListInfoGatheringSCRIPTBLOCK
     }    
     $Set_AutoUpdateDriverBlockRulesSCRIPTBLOCK = {
         # create a scheduled task that runs every 7 days
@@ -218,10 +265,12 @@ function New-ConfigWDAC {
             # define advanced settings for the task
             $TaskSettings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -Compatibility Win8 -StartWhenAvailable -ExecutionTimeLimit (New-TimeSpan -Minutes 3)
             # add advanced settings we defined to the task
-            Set-ScheduledTask -TaskPath "MSFT Driver Block list update" -TaskName "MSFT Driver Block list update" -Settings $TaskSettings 
+            Set-ScheduledTask -TaskPath "MSFT Driver Block list update" -TaskName "MSFT Driver Block list update" -Settings $TaskSettings                       
         }
+        Invoke-Command -ScriptBlock $DriversBlockListInfoGatheringSCRIPTBLOCK
     }
     $Prep_MSFTOnlyAuditSCRIPTBLOCK = {
+        if ($Prep_MSFTOnlyAuditSCRIPTBLOCK -and $LogSize) { Set-LogSize -LogSize $LogSize }
         Copy-item -Path C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml -Destination .\AllowMicrosoft.xml
         Set-RuleOption -FilePath .\AllowMicrosoft.xml -Option 3
         $PolicyID = Set-CIPolicyIdInfo -FilePath .\AllowMicrosoft.xml -ResetPolicyID
@@ -234,6 +283,7 @@ function New-ConfigWDAC {
         Write-host "`nThe default AllowMicrosoft policy has been deployed in Audit mode. No reboot required." -ForegroundColor Magenta     
     }
     $Make_PolicyFromAuditLogsSCRIPTBLOCK = {
+        if ($Make_PolicyFromAuditLogsSCRIPTBLOCK -and $LogSize) { Set-LogSize -LogSize $LogSize }
         Remove-Item -Path "$home\WDAC\*" -Recurse -Force -ErrorAction SilentlyContinue
         # Create a working directory in user's folder
         new-item -Type Directory -Path "$home\WDAC" -Force | Out-Null
@@ -639,16 +689,9 @@ public static extern uint QueryDosDevice(string lpDeviceName, StringBuilder lpTa
             $NameID = ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.FriendlyName -eq $PolicyName }).PolicyID                                   
             citool --remove-policy "{$NameID}"
         }        
-    }
-    $TestModeSCRIPTBLOCK = { 
-        param($PolicyPathToEnableTesting)
-        @(9, 10) | ForEach-Object { Set-RuleOption -FilePath $PolicyPathToEnableTesting -Option $_ }
-    }
-    $RequireEVSignersSCRIPTBLOCK = {
-        param($PolicyPathToEnableEVSigners)
-        Set-RuleOption -FilePath $PolicyPathToEnableEVSigners -Option 8
-    }
+    }   
     $AllowNewApp_AuditEventsSCRIPTBLOCK = {
+        if ($AllowNewApp_AuditEventsSCRIPTBLOCK -and $LogSize) { Set-LogSize -LogSize $LogSize }
         Remove-Item -Path ".\ProgramDir_ScanResults*.xml" -Force -ErrorAction SilentlyContinue
         Remove-Item -Path ".\SupplementalPolicy$SuppPolicyName.xml" -Force -ErrorAction SilentlyContinue
         $Date = Get-Date
@@ -697,13 +740,13 @@ public static extern uint QueryDosDevice(string lpDeviceName, StringBuilder lpTa
             Rename-Item "$PolicyID.cip.p7" -NewName "$PolicyID.cip" -Force
             CiTool --update-policy ".\$PolicyID.cip" -json
             Remove-Item ".\$PolicyID.cip" -Force
-            Write-host -NoNewline "`n$PolicyID.cip for " -ForegroundColor Green
-            Write-Host -NoNewline "$PolicyName" -ForegroundColor Yellow
-            Write-host " has been Re-Signed and Re-Deployed in Audit Mode." -ForegroundColor Green
+            Write-host "`n`nThe Base policy with the following details has been Re-Signed and Re-Deployed in Audit Mode:" -ForegroundColor Green        
+            Write-Output "PolicyName = $PolicyName"
+            Write-Output "PolicyGUID = $PolicyID"
 
             #User Interaction
             Write-host "`nAudit mode deployed, start installing your programs now" -ForegroundColor Magenta        
-            Write-Host "When you've finished installing programs, Press Enter to start selecting program directories to scan" -ForegroundColor Blue
+            Write-Host "When you've finished installing programs, Press Enter to start selecting program directories to scan`n" -ForegroundColor Blue
             Pause
 
             $ProgramsPaths = @()
@@ -722,7 +765,8 @@ public static extern uint QueryDosDevice(string lpDeviceName, StringBuilder lpTa
         
             if (-NOT ($ProgramsPaths.count -eq 0)) {
 
-                Write-Host "Here are the paths you selected`n$ProgramsPaths`n" -ForegroundColor Yellow
+                Write-Host "Here are the paths you selected:" -ForegroundColor Yellow
+                $ProgramsPaths | ForEach-Object { $_ }
 
                 # EventCapturing                   
 
@@ -840,8 +884,8 @@ $RulesRefs
 
             else {                                      
                 Write-Host "`nNo program folder was selected, reverting the changes and quitting...`n" -ForegroundColor Magent
-                # Re-Deploy Basepolicy in Enforcement mode 
-                Invoke-Command -ScriptBlock $BasePolicyReDeploymentSCRIPTBLOCK -NoNewScope
+                # Re-Deploy Basepolicy in Enforcement mode
+                Update-BasePolicyToEnforcement 
                 break
             }
 
@@ -851,8 +895,8 @@ $RulesRefs
                 Remove-Item -Path ".\ProgramDir_ScanResults*.xml" -Force  -ErrorAction SilentlyContinue
             }
 
-            # Re-Deploy Basepolicy in Enforcement mode 
-            Invoke-Command -ScriptBlock $BasePolicyReDeploymentSCRIPTBLOCK -NoNewScope            
+            # Re-Deploy Basepolicy in Enforcement mode
+            Update-BasePolicyToEnforcement         
 
             #Supplemental-policy-processing-and-deployment
         
@@ -931,14 +975,14 @@ $RulesRefs
             Remove-Item ".\$PolicyID.cip" -Force         
             Rename-Item "$PolicyID.cip.p7" -NewName "$PolicyID.cip" -Force
             CiTool --update-policy ".\$PolicyID.cip" -json
-            Remove-Item ".\$PolicyID.cip" -Force
-            Write-host -NoNewline "`n$PolicyID.cip for " -ForegroundColor Green
-            Write-Host -NoNewline "$PolicyName" -ForegroundColor Yellow
-            Write-host " has been Re-Signed and Re-Deployed in Audit Mode." -ForegroundColor Green
+            Remove-Item ".\$PolicyID.cip" -Force            
+            Write-host "`n`nThe Base policy with the following details has been Re-Signed and Re-Deployed in Audit Mode:" -ForegroundColor Green        
+            Write-Output "PolicyName = $PolicyName"
+            Write-Output "PolicyGUID = $PolicyID"
     
             #User Interaction            
             Write-host "`nAudit mode deployed, start installing your programs now" -ForegroundColor Magenta    
-            Write-Host "When you've finished installing programs, Press Enter to start selecting program directories to scan" -ForegroundColor Blue
+            Write-Host "When you've finished installing programs, Press Enter to start selecting program directories to scan`n" -ForegroundColor Blue
             Pause
     
             $ProgramsPaths = @()
@@ -957,7 +1001,8 @@ $RulesRefs
             
             if (-NOT ($ProgramsPaths.count -eq 0)) {
         
-                Write-Host "Here are the paths you selected`n$ProgramsPaths`n" -ForegroundColor Yellow 
+                Write-Host "Here are the paths you selected:" -ForegroundColor Yellow
+                $ProgramsPaths | ForEach-Object { $_ }
     
                 #Process Program Folders From User input     
                 for ($i = 0; $i -lt $ProgramsPaths.Count; $i++) {
@@ -973,8 +1018,7 @@ $RulesRefs
                 Merge-CIPolicy -PolicyPaths $ProgramDir_ScanResultsArray -OutputFilePath ".\SupplementalPolicy$SuppPolicyName.xml" | Out-Null                                  
                 
                 #Re-Deploy-Basepolicy-in-Enforcement-mode
-    
-                Invoke-Command -ScriptBlock $BasePolicyReDeploymentSCRIPTBLOCK -NoNewScope         
+                Update-BasePolicyToEnforcement       
     
                 Remove-Item -Path ".\ProgramDir_ScanResults*.xml" -Force 
     
@@ -1000,40 +1044,54 @@ $RulesRefs
                 Remove-Item ".\$SuppPolicyID.cip" -Force
 
                 Write-host "`nSupplemental policy with the following details has been Signed and Deployed in Enforcement Mode.`n" -ForegroundColor Green
-
+                                
                 [PSCustomObject]@{
                     SupplementalPolicyName = $SuppPolicyName
                     SupplementalPolicyGUID = $SuppPolicyID
-                }           
+                }
+
             }            
             # If no program path was provied
             else {
                 Write-Host "`nNo program folder was selected, reverting the changes and quitting...`n" -ForegroundColor Magenta
                 #Re-Deploy Basepolicy in Enforcement mode
-                Invoke-Command -ScriptBlock $BasePolicyReDeploymentSCRIPTBLOCK -NoNewScope
+                Update-BasePolicyToEnforcement              
                 break
             }
         }
-    }
-    $BasePolicyReDeploymentSCRIPTBLOCK = {
-        #Re-Deploy Basepolicy in Enforcement mode
-        Set-RuleOption -FilePath $PolicyPath -Option 6 -Delete
-        Set-RuleOption -FilePath $PolicyPath -Option 3 -Delete
-        ConvertFrom-CIPolicy $PolicyPath "$PolicyID.cip" | Out-Null
-        & $SignToolPath sign -v -n $CertCN -p7 . -p7co 1.3.6.1.4.1.311.79.1 -fd certHash ".\$PolicyID.cip"              
-        Remove-Item ".\$PolicyID.cip" -Force            
-        Rename-Item "$PolicyID.cip.p7" -NewName "$PolicyID.cip" -Force
-        CiTool --update-policy ".\$PolicyID.cip" -json
-        Remove-Item ".\$PolicyID.cip" -Force
-        Write-host "`nThe Base policy with the following details has been Re-Signed and Re-Deployed in Enforcement Mode.`n" -ForegroundColor Green
-        [PSCustomObject]@{
-            PolicyName = $PolicyName
-            PolicyGUID = $PolicyID
-        }        
-    }
-    #endregion Script-Blocks
+    }        
+    #endregion Main-Script-Blocks
 
-    #region function-processing
+
+    #region Misc-Script-Blocks
+    $TestModeSCRIPTBLOCK = { 
+        param($PolicyPathToEnableTesting)
+        @(9, 10) | ForEach-Object { Set-RuleOption -FilePath $PolicyPathToEnableTesting -Option $_ }
+    }
+    $RequireEVSignersSCRIPTBLOCK = {
+        param($PolicyPathToEnableEVSigners)
+        Set-RuleOption -FilePath $PolicyPathToEnableEVSigners -Option 8
+    }
+    $DriversBlockListInfoGatheringSCRIPTBLOCK = {
+        $owner = "MicrosoftDocs"
+        $repo = "windows-itpro-docs"
+        $path = "windows/security/threat-protection/windows-defender-application-control/microsoft-recommended-driver-block-rules.md"
+
+        $apiUrl = "https://api.github.com/repos/$owner/$repo/commits?path=$path"
+        $response = Invoke-RestMethod -Uri $apiUrl -Method Get
+        $date = $response[0].commit.author.date
+
+        Write-Host "`nThe document containing the drivers block list on GitHub was last updated on $date" -ForegroundColor Magenta
+
+        $MicrosoftRecommendeDriverBlockRules = Invoke-WebRequest -Uri "https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/public/windows/security/threat-protection/windows-defender-application-control/microsoft-recommended-driver-block-rules.md"
+        $MicrosoftRecommendeDriverBlockRules -match "<VersionEx>(.*)</VersionEx>" | Out-Null
+        
+        Write-Host "`nThe current version of Microsoft recommended drivers block list is $($Matches[1])" -ForegroundColor Cyan
+    }    
+    #endregion Misc-Script-Blocks    
+
+    
+    #region Main-Function-Processing
     if ($Get_BlockRules) {              
         Invoke-Command -ScriptBlock $Get_BlockRulesSCRIPTBLOCK
     }                                
@@ -1082,7 +1140,7 @@ $RulesRefs
     if ($AllowNewApp) {
         Invoke-Command -ScriptBlock $AllowNewAppSCRIPTBLOCK
     }
-    #endregion function-processing
+    #endregion Main-Function-Processing
 
     <#
 .SYNOPSIS
@@ -1194,15 +1252,7 @@ Register-ArgumentCompleter -CommandName "New-ConfigWDAC" -ParameterName "CertCN"
 
 # argument tab auto-completion for Policy Paths to show only .xml files and only base policies
 $ArgumentCompleterPolicyPaths = {
-    Get-ChildItem | where-object { $_.extension -like '*.xml' } | foreach-object {
-
-        $TestXML = [xml](Get-Content $_.FullName)
-        $PolicyTypeTest = $TestXML.SiPolicy.PolicyType
-
-        if ($PolicyTypeTest -eq "Base Policy") {          
-            $_
-        }
-    } | foreach-object { return "`"$_`"" }
+    Get-ChildItem | where-object { $_.extension -like '*.xml' } | foreach-object { return "`"$_`"" }
 }
 Register-ArgumentCompleter -CommandName "New-ConfigWDAC" -ParameterName "PolicyPaths" -ScriptBlock $ArgumentCompleterPolicyPaths
 

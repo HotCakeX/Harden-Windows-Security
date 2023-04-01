@@ -12,7 +12,7 @@
     RootModule           = 'New-ConfigWDAC.psm1'
 
     # Version number of this module.
-    ModuleVersion        = '0.0.8'
+    ModuleVersion        = '0.0.9'
 
     # Supported PSEditions
     CompatiblePSEditions = @("Desktop", "Core")
@@ -157,6 +157,7 @@ To see the syntax, type: "get-help New-ConfigWDAC"
              ReleaseNotes =  @"
 
 ## Version
+* 0.0.9 The Module automatically self-updates itself now by checking the currently installed version against the latest version when you run it, reducing maintenance. Parameters dealing with Microsoft recommended driver bock rules will show the latest version of the block list as well as the date the list was last updated on GitHub. Users have an optional parameter to increase the Event viewer log size of Code Integrity Operational from the default 1MB to any number in order to capture all of the audit logs when user decides to install many new apps for policy making. PolicyPaths parameter auto tab completing only base policies doesn't happen anymore, in preparation for a new upcoming future, soon.
 * 0.0.8 Argument tab completion for PoliyPaths now automatically filters out supplemental policies and only suggests base policies, which is what the parameter should receive only, so this prevents user error. Module now checks Admin privileges before running to prevent any problem in the middle of operations due to lack of privileges.
 * 0.0.7 Added argument tab completion for many new parameters, making things easier to use by auto-completing arguments.
 * 0.0.6 Many parameters now output objects instead of strings. Improved some of the logics and fixed an error with Audit event log creation. Also started adding change logs.

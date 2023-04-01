@@ -27,13 +27,13 @@ function New-ConfigWDAC {
         [Parameter(Mandatory = $false, ParameterSetName = "set8", Position = 0, ValueFromPipeline = $true)][switch]$Make_LightPolicy,
         [Parameter(Mandatory = $false, ParameterSetName = "set14", Position = 0, ValueFromPipeline = $true)][switch]$ListActivePolicies,
         [Parameter(Mandatory = $false, ParameterSetName = "set15", Position = 0, ValueFromPipeline = $true)][switch]$VerifyWDACStatus,
-        [Parameter(Mandatory = $false, ParameterSetName = "set2", Position = 0, ValueFromPipeline = $true)][switch]$Sign_Deploy_Policy,
+        [Parameter(Mandatory = $false, ParameterSetName = "set2", Position = 0, ValueFromPipeline = $true)][switch]$Sign_Deploy_Policies,
         [Parameter(Mandatory = $false, ParameterSetName = "set3", Position = 0, ValueFromPipeline = $true)][switch]$Make_SuppPolicy,
-        [Parameter(Mandatory = $false, ParameterSetName = "set4", Position = 0, ValueFromPipeline = $true)][switch]$RemoveSignedPolicy,
-        [Parameter(Mandatory = $false, ParameterSetName = "set6", Position = 0, ValueFromPipeline = $true)][switch]$RemoveUNsignedPolicy,
-        [Parameter(Mandatory = $false, ParameterSetName = "set18", Position = 0, ValueFromPipeline = $true)][switch]$AllowNewApp_AuditEvents,
-        [Parameter(Mandatory = $false, ParameterSetName = "set19", Position = 0, ValueFromPipeline = $true)][switch]$AllowNewApp,
-            
+        [Parameter(Mandatory = $false, ParameterSetName = "set4", Position = 0, ValueFromPipeline = $true)][switch]$RemoveSignedPolicies,
+        [Parameter(Mandatory = $false, ParameterSetName = "set6", Position = 0, ValueFromPipeline = $true)][switch]$RemovePolicies,
+        [Parameter(Mandatory = $false, ParameterSetName = "set18", Position = 0, ValueFromPipeline = $true)][switch]$AllowNewApps_AuditEvents,
+        [Parameter(Mandatory = $false, ParameterSetName = "set19", Position = 0, ValueFromPipeline = $true)][switch]$AllowNewApps,
+                    
         [Parameter(Mandatory = $true, ParameterSetName = "set19", ValueFromPipelineByPropertyName = $true)]
         [Parameter(Mandatory = $true, ParameterSetName = "set18", ValueFromPipelineByPropertyName = $true)]
         [parameter(Mandatory = $true, ParameterSetName = "set2", ValueFromPipelineByPropertyName = $true)]
@@ -97,7 +97,9 @@ function New-ConfigWDAC {
         [Parameter(Mandatory = $false, ParameterSetName = "set12")]
         [Parameter(Mandatory = $false, ParameterSetName = "set13")]
         [Parameter(Mandatory = $false, ParameterSetName = "set18")]
-        [Int64]$LogSize
+        [Int64]$LogSize,
+
+        [Parameter(Mandatory = $false)][switch]$SkipVersionCheck
     )
 
     $ErrorActionPreference = 'Stop'
@@ -120,15 +122,23 @@ function New-ConfigWDAC {
         }
     }
 
-    # Make sure the latest version of the module is installed and if not, automatically update it, clean up any old versions
-    $currentversion = (Test-modulemanifest "$psscriptroot\New-ConfigWDAC.psd1").Version.ToString()
-    $latestversion = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/New-ConfigWDAC/version.txt"
-    if (-NOT ($currentversion -eq $latestversion)) {
-        Write-Host "The currently installed module's version is $currentversion while the latest version is $latestversion - Auto Updating the module now and will run your command after that 💓"
-        Remove-Module -Name New-ConfigWDAC -Force
-        Uninstall-Module -Name New-ConfigWDAC -AllVersions -Force  
-        Install-Module -Name New-ConfigWDAC -RequiredVersion $latestversion -Force              
-        Import-Module -Name New-ConfigWDAC -RequiredVersion $latestversion -Force -Global
+    if (-NOT $SkipVersionCheck) {
+        # Make sure the latest version of the module is installed and if not, automatically update it, clean up any old versions
+        $currentversion = (Test-modulemanifest "$psscriptroot\New-ConfigWDAC.psd1").Version.ToString()
+        try {
+            $latestversion = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/New-ConfigWDAC/version.txt"
+        }
+        catch {
+            Write-Error "Couldn't verify if the latest version of the module is installed, please check your Internet connection. You can optionally bypass the online check by using -SkipVersionCheck parameter."
+            break
+        }
+        if (-NOT ($currentversion -eq $latestversion)) {
+            Write-Host "The currently installed module's version is $currentversion while the latest version is $latestversion - Auto Updating the module now and will run your command after that 💓"
+            Remove-Module -Name New-ConfigWDAC -Force
+            Uninstall-Module -Name New-ConfigWDAC -AllVersions -Force  
+            Install-Module -Name New-ConfigWDAC -RequiredVersion $latestversion -Force              
+            Import-Module -Name New-ConfigWDAC -RequiredVersion $latestversion -Force -Global
+        }
     }
 
     #region Misc-Functions    
@@ -537,7 +547,7 @@ public static extern uint QueryDosDevice(string lpDeviceName, StringBuilder lpTa
             BasePolicyGUID = $BasePolicyID
         }       
     }
-    $Sign_Deploy_PolicySCRIPTBLOCK = {
+    $Sign_Deploy_PoliciesSCRIPTBLOCK = {
         foreach ($PolicyPath in $PolicyPaths) {
             $xml = [xml](Get-Content $PolicyPath)
             $PolicyType = $xml.SiPolicy.PolicyType
@@ -607,11 +617,10 @@ public static extern uint QueryDosDevice(string lpDeviceName, StringBuilder lpTa
                 Write-host -NoNewline "`n$policyID.cip for " -ForegroundColor Green;
                 Write-host -NoNewline "$SuppPolicyName" -ForegroundColor Magenta;
                 Write-host " has been deployed." -ForegroundColor Green
-                Write-host "Policies are being refreshed, no reboot required." -ForegroundColor Yellow
             }
         }
     }
-    $RemoveSignedPolicySCRIPTBLOCK = {
+    $RemoveSignedPoliciesSCRIPTBLOCK = {
         foreach ($PolicyPath in $PolicyPaths) {
             # sanitize the policy file by removing SupplementalPolicySigners
             $xml = [xml](Get-Content $PolicyPath)
@@ -681,7 +690,7 @@ public static extern uint QueryDosDevice(string lpDeviceName, StringBuilder lpTa
         Get-CimInstance -ClassName Win32_DeviceGuard -Namespace root\Microsoft\Windows\DeviceGuard | Select-Object -Property *codeintegrity* | Format-List
         Write-host "2 -> Enforced`n1 -> Audit mode`n0 -> Disabled/Not running`n" -ForegroundColor Cyan
     }
-    $RemoveUNsignedPolicySCRIPTBLOCK = {             
+    $RemovePoliciesSCRIPTBLOCK = {             
         foreach ($ID in $PolicyIDs ) {
             citool --remove-policy "{$ID}"
         }
@@ -690,8 +699,8 @@ public static extern uint QueryDosDevice(string lpDeviceName, StringBuilder lpTa
             citool --remove-policy "{$NameID}"
         }        
     }   
-    $AllowNewApp_AuditEventsSCRIPTBLOCK = {
-        if ($AllowNewApp_AuditEventsSCRIPTBLOCK -and $LogSize) { Set-LogSize -LogSize $LogSize }
+    $AllowNewApps_AuditEventsSCRIPTBLOCK = {
+        if ($AllowNewApps_AuditEventsSCRIPTBLOCK -and $LogSize) { Set-LogSize -LogSize $LogSize }
         Remove-Item -Path ".\ProgramDir_ScanResults*.xml" -Force -ErrorAction SilentlyContinue
         Remove-Item -Path ".\SupplementalPolicy$SuppPolicyName.xml" -Force -ErrorAction SilentlyContinue
         $Date = Get-Date
@@ -927,7 +936,7 @@ $RulesRefs
             }             
         }
     }
-    $AllowNewAppSCRIPTBLOCK = {
+    $AllowNewAppsSCRIPTBLOCK = {
         # remove any possible files from previous runs
         Remove-Item -Path ".\ProgramDir_ScanResults*.xml" -Force -ErrorAction SilentlyContinue
         Remove-Item -Path ".\SupplementalPolicy$SuppPolicyName.xml" -Force -ErrorAction SilentlyContinue
@@ -1116,14 +1125,14 @@ $RulesRefs
     if ($Make_LightPolicy) {
         Invoke-Command -ScriptBlock $Make_LightPolicySCRIPTBLOCK
     }
-    if ($Sign_Deploy_Policy) {
-        Invoke-Command -ScriptBlock $Sign_Deploy_PolicySCRIPTBLOCK
+    if ($Sign_Deploy_Policies) {
+        Invoke-Command -ScriptBlock $Sign_Deploy_PoliciesSCRIPTBLOCK
     }
     if ($Make_SuppPolicy) {
         Invoke-Command -ScriptBlock $Make_SuppPolicySCRIPTBLOCK
     }
-    if ($RemoveSignedPolicy) {
-        Invoke-Command -ScriptBlock $RemoveSignedPolicySCRIPTBLOCK
+    if ($RemoveSignedPolicies) {
+        Invoke-Command -ScriptBlock $RemoveSignedPoliciesSCRIPTBLOCK
     }
     if ($ListActivePolicies) {
         Invoke-Command -ScriptBlock $ListActivePoliciesSCRIPTBLOCK
@@ -1131,14 +1140,14 @@ $RulesRefs
     if ($VerifyWDACStatus) {
         Invoke-Command -ScriptBlock $VerifyWDACStatusSCRIPTBLOCK
     }
-    if ($RemoveUNsignedPolicy) {
-        Invoke-Command -ScriptBlock $RemoveUNsignedPolicySCRIPTBLOCK
+    if ($RemovePolicies) {
+        Invoke-Command -ScriptBlock $RemovePoliciesSCRIPTBLOCK
     }
-    if ($AllowNewApp_AuditEvents) {
-        Invoke-Command -ScriptBlock $AllowNewApp_AuditEventsSCRIPTBLOCK
+    if ($AllowNewApps_AuditEvents) {
+        Invoke-Command -ScriptBlock $AllowNewApps_AuditEventsSCRIPTBLOCK
     }
-    if ($AllowNewApp) {
-        Invoke-Command -ScriptBlock $AllowNewAppSCRIPTBLOCK
+    if ($AllowNewApps) {
+        Invoke-Command -ScriptBlock $AllowNewAppsSCRIPTBLOCK
     }
     #endregion Main-Function-Processing
 
@@ -1174,7 +1183,7 @@ Automatically download and deploy the latest Microsoft Recommended Driver Block 
 Make a Scheduled Task that automatically runs every 7 days to download the newest Microsoft Recommended driver block rules
 
 .PARAMETER Prep_MSFTOnlyAudit
-Prepare the system for Audit mode using AllowMicrosoft example policy
+Prepare the system for Audit mode using AllowMicrosoft default policy
 
 .PARAMETER Make_PolicyFromAuditLogs
 Make WDAC Policy from Audit event logs that also covers files no longer on disk
@@ -1188,23 +1197,26 @@ List the non-System WDAC Policies
 .PARAMETER VerifyWDACStatus
 Shows the status of User-mode and Kernel-mode Windows Defender Application Control deployments
 
-.PARAMETER Sign_Deploy_Policy 
-Sign and deploy a WDAC policy
+.PARAMETER Sign_Deploy_Policies 
+Sign and deploy WDAC policies
 
 .PARAMETER Make_SuppPolicy 
 Make a Supplemental policy by scanning a directory    
 
-.PARAMETER RemoveSignedPolicy
-Remove Signed WDAC Policies, can remove more than 1 at a time.
+.PARAMETER RemoveSignedPolicies
+Remove Signed WDAC Policies
 
-.PARAMETER RemoveUNsignedPolicy
-Removes Unsigned deployed WDAC policies, requires PolicyIDs as input, can remove more than 1 at a time.
+.PARAMETER RemovePolicies
+Removes Unsigned deployed WDAC policies as well as Signed deployed Supplemental WDAC policies
 
-.PARAMETER AllowNewApp_AuditEvents
+.PARAMETER AllowNewApps_AuditEvents
 Rebootlessly install new apps/programs when Signed policy is already deployed, use audit events to capture installation files, scan their directories for new Supplemental policy, Sign and deploy thew Supplemental policy.
 
-.PARAMETER AllowNewApp
+.PARAMETER AllowNewApps
 Rebootlessly install new apps/programs when Signed policy is already deployed, scan their directories for new Supplemental policy, Sign and deploy thew Supplemental policy.
+
+.PARAMETER SkipVersionCheck
+Can be used with any parameter to bypass the online version check - only to be used in rare cases
 
 #>
 }

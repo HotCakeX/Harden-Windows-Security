@@ -41,37 +41,38 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
 🛡️ Here is the list of parameters the module supports
 
 
-✔️ New-ConfigWDAC [[-Get_BlockRules]]
+✔️ New-ConfigWDAC [[-Get_BlockRules]] [-SkipVersionCheck]
     
-✔️ New-ConfigWDAC [[-Get_DriverBlockRules]]
+✔️ New-ConfigWDAC [[-Get_DriverBlockRules]] [-SkipVersionCheck]
     
-✔️ New-ConfigWDAC [[-Make_AllowMSFT_WithBlockRules]] [-Deployit] [-TestMode] [-RequireEVSigners]
+✔️ New-ConfigWDAC [[-Make_AllowMSFT_WithBlockRules]] [-Deployit] [-TestMode] [-RequireEVSigners] [-SkipVersionCheck]
     
-✔️ New-ConfigWDAC [[-Deploy_LatestDriverBlockRules]]
+✔️ New-ConfigWDAC [[-Deploy_LatestDriverBlockRules]] [-SkipVersionCheck]
     
-✔️ New-ConfigWDAC [[-Set_AutoUpdateDriverBlockRules]]
+✔️ New-ConfigWDAC [[-Set_AutoUpdateDriverBlockRules]] [-SkipVersionCheck]
     
-✔️ New-ConfigWDAC [[-Prep_MSFTOnlyAudit]]
+✔️ New-ConfigWDAC [[-Prep_MSFTOnlyAudit]] [-LogSize <Int64>] [-SkipVersionCheck]
     
-✔️ New-ConfigWDAC [[-Make_PolicyFromAuditLogs]] [-Deployit] [-TestMode] [-RequireEVSigners] [-Debugmode]
+✔️ New-ConfigWDAC [[-Make_PolicyFromAuditLogs]] [-Deployit] [-TestMode] [-RequireEVSigners] [-Debugmode] [-LogSize <Int64>] [-SkipVersionCheck]
     
-✔️ New-ConfigWDAC [[-Make_LightPolicy]] [-Deployit] [-TestMode] [-RequireEVSigners]
+✔️ New-ConfigWDAC [[-Make_LightPolicy]] [-Deployit] [-TestMode] [-RequireEVSigners] [-SkipVersionCheck]
     
-✔️ New-ConfigWDAC [[-ListActivePolicies]]
+✔️ New-ConfigWDAC [[-ListActivePolicies]] [-SkipVersionCheck]
     
-✔️ New-ConfigWDAC [[-VerifyWDACStatus]]
+✔️ New-ConfigWDAC [[-VerifyWDACStatus]] [-SkipVersionCheck]
     
-✔️ New-ConfigWDAC [[-Sign_Deploy_Policy]] [-CertPath] <String> -PolicyPaths <String[]> [-SignToolPath <String>] -CertCN <String>
+✔️ New-ConfigWDAC [[-Sign_Deploy_Policies]] -CertPath <String> -PolicyPaths <String[]> [-SignToolPath <String>] -CertCN <String> [-SkipVersionCheck]
     
-✔️ New-ConfigWDAC [[-Make_SuppPolicy]] -ScanLocation <String> -SuppPolicyName <String> [-Deployit] -PolicyPaths <String[]>
+✔️ New-ConfigWDAC [[-Make_SuppPolicy]] -ScanLocation <String> -SuppPolicyName <String> [-Deployit] -PolicyPaths <String[]> [-SkipVersionCheck]
     
-✔️ New-ConfigWDAC [[-RemoveSignedPolicy]] -PolicyPaths <String[]> [-SignToolPath <String>] -CertCN <String>
+✔️ New-ConfigWDAC [[-RemoveSignedPolicies]] -PolicyPaths <String[]> [-SignToolPath <String>] -CertCN <String> [-SkipVersionCheck]
     
-✔️ New-ConfigWDAC [[-RemoveUNsignedPolicy]] [-PolicyIDs <String[]>] [-PolicyNames <String[]>]
+✔️ New-ConfigWDAC [[-RemovePolicies]] [-PolicyIDs <String[]>] [-PolicyNames <String[]>] [-SkipVersionCheck]
     
-✔️ New-ConfigWDAC [[-AllowNewApp_AuditEvents]] [-CertPath] <String> -SuppPolicyName <String> -PolicyPaths <String[]> [-SignToolPath <String>] -CertCN <String> [-Debugmode]
+✔️ New-ConfigWDAC [[-AllowNewApps_AuditEvents]] -CertPath <String> -SuppPolicyName <String> -PolicyPaths <String[]> [-SignToolPath <String>] -CertCN <String> [-Debugmode] [-LogSize <Int64>] [-SkipVersionCheck]
     
-✔️ New-ConfigWDAC [[-AllowNewApp]] [-CertPath] <String> -SuppPolicyName <String> -PolicyPaths <String[]> [-SignToolPath <String>] -CertCN <String>
+✔️ New-ConfigWDAC [[-AllowNewApps]] -CertPath <String> -SuppPolicyName <String> -PolicyPaths <String[]> [-SignToolPath <String>] -CertCN <String> [-SkipVersionCheck]
+    
 
 
 REMARKS
@@ -157,7 +158,7 @@ To see the syntax, type: "get-help New-ConfigWDAC"
              ReleaseNotes =  @"
 
 ## Version
-* 0.0.9 The Module automatically self-updates itself now by checking the currently installed version against the latest version when you run it, reducing maintenance. Parameters dealing with Microsoft recommended driver bock rules will show the latest version of the block list as well as the date the list was last updated on GitHub. Users have an optional parameter to increase the Event viewer log size of Code Integrity Operational from the default 1MB to any number in order to capture all of the audit logs when user decides to install many new apps for policy making. PolicyPaths parameter auto tab completing only base policies doesn't happen anymore, in preparation for a new upcoming future, soon.
+* 0.0.9 The Module automatically self-updates itself now by checking the currently installed version against the latest online version when you run it, reducing maintenance (can be optionally bypassed if -SkipVersionCheck parameter is used, but recommended to leave it be). Parameters dealing with Microsoft recommended driver bock rules will show the latest version number of the block list as well as the date the list was last updated on GitHub. Users have an optional parameter to increase the Event viewer log size of Code Integrity Operational from the default 1MB to any number in order to capture all of the audit logs when user decides to install many new apps for policy making. PolicyPaths parameter auto tab completing only base policies doesn't happen anymore, in preparation for a new upcoming future, soon. Improved style of the module code for better readability. Changed some parameter names to show they accept multiple values.
 * 0.0.8 Argument tab completion for PoliyPaths now automatically filters out supplemental policies and only suggests base policies, which is what the parameter should receive only, so this prevents user error. Module now checks Admin privileges before running to prevent any problem in the middle of operations due to lack of privileges.
 * 0.0.7 Added argument tab completion for many new parameters, making things easier to use by auto-completing arguments.
 * 0.0.6 Many parameters now output objects instead of strings. Improved some of the logics and fixed an error with Audit event log creation. Also started adding change logs.

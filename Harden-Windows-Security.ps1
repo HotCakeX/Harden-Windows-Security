@@ -143,6 +143,8 @@ else {
     switch (Select-Option -Options "Yes", "No", "Exit" -Message "`nApply Microsoft 365 Apps Security Baseline ?") {
         "Yes" {       
             # Copy LGPO.exe from its folder to Microsoft Security Baseline folder in order to get it ready to be used by PowerShell script
+            # Changing the location from Windows 11 22H2 Security baseline to the current folder created in temp folder to Office 365
+            # security baseline could be applied without issues...
             cd.. ; cd..
             Copy-Item -Path ".\LGPO_30\LGPO.exe" -Destination ".\Microsoft-365-Apps-Enterprise-2206\Scripts\Tools"
 

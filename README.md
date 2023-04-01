@@ -740,6 +740,11 @@ Get-Content <Path-To-File> -stream zone.identifier
 - [Download Windows virtual machines ready for development](https://developer.microsoft.com/en-us/windows/downloads/virtual-machines/)
 - [UK National Cyber Security Centre Advice & guidance](https://www.ncsc.gov.uk/section/advice-guidance/all-topics)
 - [Technical PDF documents in online viewer on my website](https://hotcakex.github.io/PDFViewer)
+- [Global threat activity](https://www.microsoft.com/en-us/wdsi/threats)
+- [Microsoft Zero Trust](https://aka.ms/zerotrust)
+- [Understanding malware & other threats, phrases](https://learn.microsoft.com/en-us/microsoft-365/security/intelligence/understanding-malware)
+- [Malware naming](https://learn.microsoft.com/en-us/microsoft-365/security/intelligence/malware-naming)
+- [Microsoft Digital Defense Report](https://www.microsoft.com/en-us/security/business/microsoft-digital-defense-report)
 
 <p align="right"><a href="#readme-top">💡(back to top)</a></p>
 

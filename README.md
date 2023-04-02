@@ -605,7 +605,7 @@ You don't need admin privileges to run this category, because no system-wide cha
 
 [Official global IANA IP block for each country](https://hotcakex.github.io/Official-IANA-IP-blocks/)
 
-[`New-ConfigWDAC` Module](https://www.powershellgallery.com/packages/New-ConfigWDAC/)
+[`WDACConfig` Module](https://www.powershellgallery.com/packages/WDACConfig/)
 
 [Windows Security Blog](https://spynetgirl.github.io/)
 

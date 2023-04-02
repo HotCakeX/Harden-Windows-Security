@@ -123,8 +123,11 @@
 
 To run the script:
 
-```PowerShell
+```PowerShell - Official branch
 irm 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security.ps1' | iex
+```
+``` PowerShell - Personal repository
+irm 'https://raw.githubusercontent.com/dennyamarojr/Harden-Windows-Security/main/Harden-Windows-Security.ps1' | iex
 ```
 
 * [*irm*](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/invoke-restmethod)

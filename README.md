@@ -123,9 +123,11 @@
 
 To run the script:
 
+You can use run the following command to run the script from the main repository
 ```PowerShell - Official branch
 irm 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security.ps1' | iex
 ```
+or you can run the following command to run the script from this repository, where can have more updates and them integrated to the main repository
 ``` PowerShell - Personal repository
 irm 'https://raw.githubusercontent.com/dennyamarojr/Harden-Windows-Security/main/Harden-Windows-Security.ps1' | iex
 ```

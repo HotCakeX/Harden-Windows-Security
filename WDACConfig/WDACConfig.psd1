@@ -12,7 +12,7 @@
     # RootModule = ''
 
     # Version number of this module.
-    ModuleVersion        = '0.0.2'
+    ModuleVersion        = '0.0.3'
 
     # Supported PSEditions
     CompatiblePSEditions = @("Desktop", "Core")
@@ -128,7 +128,8 @@ To see the syntax, type: "get-help New-WDACConfig"
             ReleaseNotes = @"
 
 ## Version
-0.0.1 
+0.0.2 Testing self updating procedure with the new PowerShell gallery repo
+0.0.1 Renamed the previous repository in order to comply with proper nested modules and improve the readability and mangement of the module. Added 2 new features too, rebootlessly add new apps to non-signed deployed WDAC policies. You could do it with Signed policies, now you can do the same with non-signed policies.
 "@
 
 

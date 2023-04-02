@@ -13,14 +13,15 @@ function Confirm-WDACConfig {
         HelpURI = "https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-Module"
     )]
     Param(     
-        [Parameter(Mandatory = $false, Position = 0,ParameterSetName="set1")][switch]$ListActivePolicies,
-        [Parameter(Mandatory = $false, Position = 0,ParameterSetName="set2")][switch]$VerifyWDACStatus
+        [Parameter(Mandatory = $false, Position = 0, ParameterSetName = "set1")][switch]$ListActivePolicies,
+        [Parameter(Mandatory = $false, Position = 0, ParameterSetName = "set2")][switch]$VerifyWDACStatus,
+        [Parameter(Mandatory = $false)][switch]$SkipVersionCheck
     )
     $ErrorActionPreference = 'Stop'         
 
     
+    # Make sure the latest version of the module is installed and if not, automatically update it, clean up any old versions
     if (-NOT $SkipVersionCheck) {
-        # Make sure the latest version of the module is installed and if not, automatically update it, clean up any old versions
         $currentversion = (Test-modulemanifest "$psscriptroot\WDACConfig.psd1").Version.ToString()
         try {
             $latestversion = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/WDACConfig/version.txt"
@@ -32,9 +33,16 @@ function Confirm-WDACConfig {
         if (-NOT ($currentversion -eq $latestversion)) {
             Write-Host "The currently installed module's version is $currentversion while the latest version is $latestversion - Auto Updating the module now and will run your command after that 💓"
             Remove-Module -Name WDACConfig -Force
-            Uninstall-Module -Name WDACConfig -AllVersions -Force  
-            Install-Module -Name WDACConfig -RequiredVersion $latestversion -Force              
-            Import-Module -Name WDACConfig -RequiredVersion $latestversion -Force -Global
+            try {
+                Uninstall-Module -Name WDACConfig -AllVersions -Force -ErrorAction Stop
+                Install-Module -Name WDACConfig -RequiredVersion $latestversion -Force              
+                Import-Module -Name WDACConfig -RequiredVersion $latestversion -Force -Global
+            }
+            catch {
+                Install-Module -Name WDACConfig -RequiredVersion $latestversion -Force
+                Import-Module -Name WDACConfig -RequiredVersion $latestversion -Force -Global
+            }
+            
         }
     }
 

@@ -18,13 +18,12 @@ function Confirm-WDACConfig {
     )
     $ErrorActionPreference = 'Stop'         
 
-    <#
-
+    
     if (-NOT $SkipVersionCheck) {
         # Make sure the latest version of the module is installed and if not, automatically update it, clean up any old versions
-        $currentversion = (Test-modulemanifest "$psscriptroot\New-WDACConfig.psd1").Version.ToString()
+        $currentversion = (Test-modulemanifest "$psscriptroot\WDACConfig.psd1").Version.ToString()
         try {
-            $latestversion = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/New-WDACConfig/version.txt"
+            $latestversion = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/WDACConfig/version.txt"
         }
         catch {
             Write-Error "Couldn't verify if the latest version of the module is installed, please check your Internet connection. You can optionally bypass the online check by using -SkipVersionCheck parameter."
@@ -32,15 +31,13 @@ function Confirm-WDACConfig {
         }
         if (-NOT ($currentversion -eq $latestversion)) {
             Write-Host "The currently installed module's version is $currentversion while the latest version is $latestversion - Auto Updating the module now and will run your command after that 💓"
-            Remove-Module -Name New-WDACConfig -Force
-            Uninstall-Module -Name New-WDACConfig -AllVersions -Force  
-            Install-Module -Name New-WDACConfig -RequiredVersion $latestversion -Force              
-            Import-Module -Name New-WDACConfig -RequiredVersion $latestversion -Force -Global
+            Remove-Module -Name WDACConfig -Force
+            Uninstall-Module -Name WDACConfig -AllVersions -Force  
+            Install-Module -Name WDACConfig -RequiredVersion $latestversion -Force              
+            Import-Module -Name WDACConfig -RequiredVersion $latestversion -Force -Global
         }
     }
 
-
-#>
 
     if ($ListActivePolicies) {
         Write-host "`nDisplaying non-System WDAC Policies:" -ForegroundColor Cyan

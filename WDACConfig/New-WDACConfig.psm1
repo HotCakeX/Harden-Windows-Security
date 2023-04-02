@@ -11,7 +11,7 @@ if (-NOT (Test-IsAdmin)) {
 function New-WDACConfig {
     [CmdletBinding(
         DefaultParameterSetName = "set1",
-        HelpURI = "https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-Module",
+        HelpURI = "https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig",
         SupportsShouldProcess = $true,
         PositionalBinding = $false,
         ConfirmImpact = 'High'
@@ -567,7 +567,7 @@ public static extern uint QueryDosDevice(string lpDeviceName, StringBuilder lpTa
 Automate a lot of tasks related to WDAC (Windows Defender Application Control)
 
 .LINK
-https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-WDACConfig
+https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig
 
 .DESCRIPTION
 Using official Microsoft methods, configure and use Windows Defender Application Control

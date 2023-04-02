@@ -10,7 +10,7 @@ if (-NOT (Test-IsAdmin)) {
 }
 function Deploy-SignedWDACConfig {
     [CmdletBinding(
-        HelpURI = "https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-Module",
+        HelpURI = "https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig",
         SupportsShouldProcess = $true,
         PositionalBinding = $false,
         ConfirmImpact = 'High'

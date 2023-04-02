@@ -10,7 +10,7 @@ if (-NOT (Test-IsAdmin)) {
 }
 function Confirm-WDACConfig {
     [CmdletBinding(
-        HelpURI = "https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-Module"
+        HelpURI = "https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig"
     )]
     Param(     
         [Parameter(Mandatory = $false, Position = 0, ParameterSetName = "set1")][switch]$ListActivePolicies,

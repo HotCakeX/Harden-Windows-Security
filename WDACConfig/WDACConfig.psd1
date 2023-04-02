@@ -41,11 +41,51 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
 🛡️ Here is the list of parameters the module supports
 
 
-✔️ 
+✔️ Remove-WDACConfig [[-RemoveSignedPolicies]] -PolicyPaths <String[]> [-SignToolPath <String>] -CertCN <String> [-SkipVersionCheck]
+    
+✔️ Remove-WDACConfig [[-RemovePolicies]] [-PolicyIDs <String[]>] [-PolicyNames <String[]>] [-SkipVersionCheck]
+
+✔️ New-WDACConfig [[-Get_BlockRules]] [-SkipVersionCheck]
+    
+✔️ New-WDACConfig [[-Get_DriverBlockRules]] [-SkipVersionCheck]
+    
+✔️ New-WDACConfig [[-Make_AllowMSFT_WithBlockRules]] [-Deployit] [-TestMode] [-RequireEVSigners] [-SkipVersionCheck]
+    
+✔️ New-WDACConfig [[-Deploy_LatestDriverBlockRules]] [-SkipVersionCheck]
+    
+✔️ New-WDACConfig [[-Set_AutoUpdateDriverBlockRules]] [-SkipVersionCheck]
+    
+✔️ New-WDACConfig [[-Prep_MSFTOnlyAudit]] [-LogSize <Int64>] [-SkipVersionCheck]
+    
+✔️ New-WDACConfig [[-Make_PolicyFromAuditLogs]] [-Deployit] [-TestMode] [-RequireEVSigners] [-Debugmode] [-LogSize <Int64>] [-SkipVersionCheck]
+    
+✔️ New-WDACConfig [[-Make_LightPolicy]] [-Deployit] [-TestMode] [-RequireEVSigners] [-SkipVersionCheck]
+    
+✔️ New-WDACConfig [[-Make_SuppPolicy]] -ScanLocation <String> -SuppPolicyName <String> -PolicyPath <String> [-Deployit] [-SkipVersionCheck]
+
+✔️ Edit-WDACConfig [[-AllowNewApps_AuditEvents]] -SuppPolicyName <string> -PolicyPaths <string[]> [-Debugmode] [-LogSize <long>] [-SkipVersionCheck]
+    
+✔️ Edit-WDACConfig [[-AllowNewApps]] -SuppPolicyName <string> -PolicyPaths <string[]> [-SkipVersionCheck]
+
+✔️ Edit-SignedWDACConfig [[-AllowNewApps_AuditEvents]] -CertPath <String> -SuppPolicyName <String> -PolicyPaths <String[]> [-SignToolPath <String>] -CertCN <String> [-Debugmode] [-LogSize <Int64>] [-SkipVersionCheck]
+    
+✔️ Edit-SignedWDACConfig [[-AllowNewApps]] -CertPath <String> -SuppPolicyName <String> -PolicyPaths <String[]> [-SignToolPath <String>] -CertCN <String> [-SkipVersionCheck]
+
+✔️ Deploy-SignedWDACConfig -CertPath <String> -PolicyPaths <String[]> [-SignToolPath <String>] -CertCN <String> [-SkipVersionCheck]
+    
+✔️ Confirm-WDACConfig [[-ListActivePolicies]] [-SkipVersionCheck]
+    
+✔️ Confirm-WDACConfig [[-VerifyWDACStatus]] [-SkipVersionCheck]
 
 
-REMARKS
-To see the syntax, type: "get-help New-WDACConfig"
+To get help and syntax on PowerShell console, type:
+"Get-Command -Module WDACConfig"
+"Get-Help Confirm-WDACConfig"
+"Get-Help Deploy-SignedWDACConfig"
+"Get-Help Edit-SignedWDACConfig"
+"Get-Help Edit-WDACConfig"
+"Get-Help New-WDACConfig"
+"Get-Help Remove-WDACConfig"
 
 "@
 
@@ -122,12 +162,13 @@ To see the syntax, type: "get-help New-WDACConfig"
             ProjectUri   = 'https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig'
 
             # A URL to an icon representing this module.
-            IconUri      = 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/WDACConfig/PowerShellGalleryIcon.png'
+            IconUri      = 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/WDACConfig/icon.png'
 
             # ReleaseNotes of this module
             ReleaseNotes = @"
 
 ## Version
+0.0.3 Completed self-updating feature. Changed icon, added syntaxes.
 0.0.2 Testing self updating procedure with the new PowerShell gallery repo
 0.0.1 Renamed the previous repository in order to comply with proper nested modules and improve the readability and mangement of the module. Added 2 new features too, rebootlessly add new apps to non-signed deployed WDAC policies. You could do it with Signed policies, now you can do the same with non-signed policies.
 "@

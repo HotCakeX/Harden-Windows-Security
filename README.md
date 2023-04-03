@@ -139,6 +139,7 @@ From Top to bottom in order:
 
 * Commands that require Administrator Privileges (click/tap on each of these to see in-depth info)
   - <a href="#microsoft-security-baselines">Microsoft Security Baselines</a>
+  - <a href="Microsoft-365-Apps-Security-Baselines">Microsoft 365 Apps Security Baselines</a>
   - <a href="#Microsoft-Defender">Microsoft Defender</a>
   - <a href="#Attack-surface-reduction-rules">Attack surface reduction rules</a>
   - <a href="#Bitlocker-Settings">Bitlocker Settings</a>
@@ -176,6 +177,16 @@ A security baseline is a group of Microsoft-recommended configuration settings t
 [Optional Overrides for Microsoft Security Baselines](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Overrides-for-Microsoft-Security-Baseline)
 
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
+
+<br>
+
+## Microsoft 365 Apps Security Baselines<a href="#Microsoft-365-Apps-Security-Baselines">![Microsoft365AppsSecurityBaselines]</a>
+
+The security baseline for Microsoft 365 Apps for enterprise is published twice a year, usually in June and December.
+
+[More info in Microsoft Learn](https://learn.microsoft.com/en-us/deployoffice/security/security-baseline)
+
+[Microsoft Security Baselines Version Matrix](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-security-configuration-framework/get-support-for-security-baselines#version-matrix)
 
 <br>
 
@@ -774,6 +785,7 @@ Not Applicable, No license, just free information, because the only mission of t
 
 </a> </p>
 
+[Microsoft365AppsSecurityBaselines]: images/Microsoft-365-Apps-Security-Baselines.png
 [GreenCheckCircleMark]: images/GreenCheckCircle.png
 [HardeningCategoriesIcon]: images/HardeningCategories.png
 [FeaturesIcon]: images/Features.png

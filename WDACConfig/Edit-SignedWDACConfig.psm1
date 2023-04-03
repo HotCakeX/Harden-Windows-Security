@@ -104,7 +104,7 @@ function Edit-SignedWDACConfig {
     #region Main-Script-Blocks    
 
     $AllowNewApps_AuditEventsSCRIPTBLOCK = {
-        if ($AllowNewApps_AuditEventsSCRIPTBLOCK -and $LogSize) { Set-LogSize -LogSize $LogSize }
+        if ($AllowNewApps_AuditEvents -and $LogSize) { Set-LogSize -LogSize $LogSize }
         Remove-Item -Path ".\ProgramDir_ScanResults*.xml" -Force -ErrorAction SilentlyContinue
         Remove-Item -Path ".\SupplementalPolicy$SuppPolicyName.xml" -Force -ErrorAction SilentlyContinue
         $Date = Get-Date
@@ -489,19 +489,19 @@ $RulesRefs
 
     <#
 .SYNOPSIS
-Automate a lot of tasks related to WDAC (Windows Defender Application Control)
+Edits Signed WDAC policies deployed on the system (Windows Defender Application Control)
 
 .LINK
 https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig
 
 .DESCRIPTION
-Using official Microsoft methods, configure and use Windows Defender Application Control
+Using official Microsoft methods, Edits Signed WDAC policies deployed on the system (Windows Defender Application Control)
 
 .COMPONENT
 Windows Defender Application Control
 
 .FUNCTIONALITY
-Automate various tasks related to Windows Defender Application Control (WDAC)
+Using official Microsoft methods, Edits Signed WDAC policies deployed on the system (Windows Defender Application Control)
 
 .PARAMETER AllowNewApps_AuditEvents
 Rebootlessly install new apps/programs when Signed policy is already deployed, use audit events to capture installation files, scan their directories for new Supplemental policy, Sign and deploy thew Supplemental policy.
@@ -557,7 +557,12 @@ Register-ArgumentCompleter -CommandName "Edit-SignedWDACConfig" -ParameterName "
 
 # argument tab auto-completion for Policy Paths to show only .xml files and only base policies
 $ArgumentCompleterPolicyPaths = {
-    Get-ChildItem | where-object { $_.extension -like '*.xml' } | foreach-object { return "`"$_`"" }
+    Get-ChildItem | where-object { $_.extension -like '*.xml' } | ForEach-Object {
+        $xmlitem = [xml](Get-Content $_)
+        $PolicyType = $xmlitem.SiPolicy.PolicyType
+
+        if ($PolicyType -eq "Base Policy") { $_ }
+    } | foreach-object { return "`"$_`"" }
 }
 Register-ArgumentCompleter -CommandName "Edit-SignedWDACConfig" -ParameterName "PolicyPaths" -ScriptBlock $ArgumentCompleterPolicyPaths
 

@@ -104,19 +104,19 @@ function Deploy-SignedWDACConfig {
 
     <#
 .SYNOPSIS
-Automate a lot of tasks related to WDAC (Windows Defender Application Control)
+Signs and Deploys WDAC policies, accepts signed or unsigned policies and deploys them
 
 .LINK
 https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig
 
 .DESCRIPTION
-Using official Microsoft methods, configure and use Windows Defender Application Control
+Using official Microsoft methods, Signs and Deploys WDAC policies, accepts signed or unsigned policies and deploys them (Windows Defender Application Control)
 
 .COMPONENT
 Windows Defender Application Control
 
 .FUNCTIONALITY
-Automate various tasks related to Windows Defender Application Control (WDAC)
+Using official Microsoft methods, Signs and Deploys WDAC policies, accepts signed or unsigned policies and deploys them (Windows Defender Application Control)
 
 .PARAMETER Sign_Deploy_Policies 
 Sign and deploy WDAC policies

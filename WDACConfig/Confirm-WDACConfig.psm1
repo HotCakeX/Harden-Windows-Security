@@ -54,7 +54,33 @@ function Confirm-WDACConfig {
     if ($VerifyWDACStatus) {
         Get-CimInstance -ClassName Win32_DeviceGuard -Namespace root\Microsoft\Windows\DeviceGuard | Select-Object -Property *codeintegrity* | Format-List
         Write-host "2 -> Enforced`n1 -> Audit mode`n0 -> Disabled/Not running`n" -ForegroundColor Cyan
-    } 
+    }
+    <#
+.SYNOPSIS
+Show the status of WDAC on the system and lists the current deployed policies and shows details about each of them
+
+.LINK
+https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig
+
+.DESCRIPTION
+Using official Microsoft methods, Show the status of WDAC on the system and lists the current deployed policies and shows details about each of them (Windows Defender Application Control)
+
+.COMPONENT
+Windows Defender Application Control
+
+.FUNCTIONALITY
+Using official Microsoft methods, Show the status of WDAC on the system and lists the current deployed policies and shows details about each of them (Windows Defender Application Control)
+
+.PARAMETER VerifyWDACStatus
+Shows the status of WDAC on the system
+
+.PARAMETER ListActivePolicies
+lists the current deployed policies and shows details about each of them
+
+.PARAMETER SkipVersionCheck
+Can be used with any parameter to bypass the online version check - only to be used in rare cases
+
+#> 
 }
 
 # Set PSReadline tab completion to complete menu for easier access to available parameters - Only for the current session

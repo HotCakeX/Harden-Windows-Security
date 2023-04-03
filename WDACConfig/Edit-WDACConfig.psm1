@@ -19,14 +19,20 @@ function Edit-WDACConfig {
     Param(
         [Parameter(Mandatory = $false, ParameterSetName = "set1", Position = 0, ValueFromPipeline = $true)][switch]$AllowNewApps_AuditEvents,
         [Parameter(Mandatory = $false, ParameterSetName = "set2", Position = 0, ValueFromPipeline = $true)][switch]$AllowNewApps,
+        [Parameter(Mandatory = $false, ParameterSetName = "set3", Position = 0, ValueFromPipeline = $true)][switch]$Merge_SupplementalPolicies,
                     
         [Parameter(Mandatory = $true, ParameterSetName = "set1", ValueFromPipelineByPropertyName = $true)]
         [Parameter(Mandatory = $true, ParameterSetName = "set2", ValueFromPipelineByPropertyName = $true)]
+        [Parameter(Mandatory = $true, ParameterSetName = "set3", ValueFromPipelineByPropertyName = $true)]
         [string]$SuppPolicyName,
         
         [Parameter(Mandatory = $true, ParameterSetName = "set1", ValueFromPipelineByPropertyName = $true)]
         [Parameter(Mandatory = $true, ParameterSetName = "set2", ValueFromPipelineByPropertyName = $true)]
+        [Parameter(Mandatory = $true, ParameterSetName = "set3", ValueFromPipelineByPropertyName = $true)]
         [string[]]$PolicyPaths,
+
+        [Parameter(Mandatory = $true, ParameterSetName = "set3", ValueFromPipelineByPropertyName = $true)]
+        [string[]]$SuppPolicyPaths,
 
         [Parameter(Mandatory = $false, ParameterSetName = "set1")]
         [switch]$Debugmode,
@@ -89,6 +95,7 @@ function Edit-WDACConfig {
         Write-Output "PolicyGUID = $PolicyID`n"
     }
     #endregion Misc-Functions
+
     if ($AllowNewApps) {
         # remove any possible files from previous runs
         Remove-Item -Path ".\ProgramDir_ScanResults*.xml" -Force -ErrorAction SilentlyContinue
@@ -172,7 +179,7 @@ function Edit-WDACConfig {
                 CiTool --update-policy ".\$SuppPolicyID.cip" -json
                 Remove-Item ".\$SuppPolicyID.cip" -Force
 
-                Write-host "`nSupplemental policy with the following details has been Deployed in Enforcement Mode.`n" -ForegroundColor Green
+                Write-host "`nSupplemental policy with the following details has been Deployed in Enforcement Mode:" -ForegroundColor Green
                                 
                 [PSCustomObject]@{
                     SupplementalPolicyName = $SuppPolicyName
@@ -191,7 +198,7 @@ function Edit-WDACConfig {
     }
 
     if ($AllowNewApps_AuditEvents) {
-        if ($AllowNewApps_AuditEventsSCRIPTBLOCK -and $LogSize) { Set-LogSize -LogSize $LogSize }
+        if ($AllowNewApps_AuditEvents -and $LogSize) { Set-LogSize -LogSize $LogSize }
         Remove-Item -Path ".\ProgramDir_ScanResults*.xml" -Force -ErrorAction SilentlyContinue
         Remove-Item -Path ".\SupplementalPolicy$SuppPolicyName.xml" -Force -ErrorAction SilentlyContinue
         $Date = Get-Date
@@ -385,7 +392,7 @@ $RulesRefs
             ConvertFrom-CIPolicy $SuppPolicyPath "$SuppPolicyID.cip" | Out-Null 
             CiTool --update-policy ".\$SuppPolicyID.cip" -json
             Remove-Item ".\$SuppPolicyID.cip" -Force            
-            Write-host "`nSupplemental policy with the following details has been Deployed in Enforcement Mode.`n" -ForegroundColor Green
+            Write-host "`nSupplemental policy with the following details has been Deployed in Enforcement Mode:" -ForegroundColor Green
 
             [PSCustomObject]@{
                 SupplementalPolicyName = $SuppPolicyName
@@ -393,6 +400,68 @@ $RulesRefs
             }             
         }
     }
+
+    if ($Merge_SupplementalPolicies) {        
+        foreach ($PolicyPath in $PolicyPaths) {
+            # Input policy verification prior to doing anything
+            foreach ($SuppPolicyPath in $SuppPolicyPaths) {                                
+                $Supplementalxml = [xml](Get-Content $SuppPolicyPath)
+                $SupplementalPolicyID = $Supplementalxml.SiPolicy.PolicyID
+                $SupplementalPolicyType = $Supplementalxml.SiPolicy.PolicyType
+                $DeployedPoliciesIDs = (CiTool -lp -json | ConvertFrom-Json).Policies.PolicyID | ForEach-Object { return "{$_}" }         
+                if ($SupplementalPolicyType -ne "Supplemental Policy")
+                {
+                    Write-Error "The Selected XML file with GUID $SupplementalPolicyID isn't a Supplemental Policy."
+                    break
+                }
+                if ($DeployedPoliciesIDs -notcontains $SupplementalPolicyID) {
+                    Write-Error "The Selected Supplemental XML file with GUID $SupplementalPolicyID isn't deployed on the system."
+                    break
+                }
+            }
+            Merge-CIPolicy -PolicyPaths $SuppPolicyPaths -OutputFilePath "$SuppPolicyName.xml" | Out-Null
+            foreach ($SuppPolicyPath in $SuppPolicyPaths) {                                
+                $Supplementalxml = [xml](Get-Content $SuppPolicyPath)
+                $SupplementalPolicyID = $Supplementalxml.SiPolicy.PolicyID                         
+                citool --remove-policy $SupplementalPolicyID -json | Out-Null                
+            }            
+            $SuppPolicyID = Set-CIPolicyIdInfo -FilePath "$SuppPolicyName.xml" -ResetPolicyID -PolicyName "$SuppPolicyName Merged on $(Get-Date -Format 'MM-dd-yyyy')" -BasePolicyToSupplementPath $PolicyPath
+            $SuppPolicyID = $SuppPolicyID.Substring(11)
+            Set-HVCIOptions -Strict -FilePath "$SuppPolicyName.xml" 
+            ConvertFrom-CIPolicy "$SuppPolicyName.xml" "$SuppPolicyID.cip" | Out-Null
+            CiTool --update-policy "$SuppPolicyID.cip" -json
+            Write-Host "`nThe Supplemental policy $SuppPolicyName has been deployed on the system, replacing the old ones, please restart your system." -ForegroundColor Green
+        }
+    }
+    <#
+.SYNOPSIS
+Edits non-signed WDAC policies deployed on the system
+
+.LINK
+https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig
+
+.DESCRIPTION
+Using official Microsoft methods, Edits non-signed WDAC policies deployed on the system
+
+.COMPONENT
+Windows Defender Application Control
+
+.FUNCTIONALITY
+Using official Microsoft methods, Edits non-signed WDAC policies deployed on the system
+
+.PARAMETER AllowNewApps
+While an unsigned WDAC policy is already deployed on the system, rebootlessly turn on Audit mode in it, which will allow you to install a new app that was otherwise getting blocked.
+
+.PARAMETER AllowNewApps_AuditEvents
+While an unsigned WDAC policy is already deployed on the system, rebootlessly turn on Audit mode in it, which will allow you to install a new app that was otherwise getting blocked.
+
+.PARAMETER SkipVersionCheck
+Can be used with any parameter to bypass the online version check - only to be used in rare cases
+
+.PARAMETER Merge_SupplementalPolicies
+Merges multiple deployed supplemental policies into 1 single supplemental policy, removes the old ones, deploys the new one. System restart needed to take effect.
+
+#>
 }
 
 # Set PSReadline tab completion to complete menu for easier access to available parameters - Only for the current session
@@ -401,7 +470,23 @@ Set-PSReadlineKeyHandler -Key Tab -Function MenuComplete
 
 # argument tab auto-completion for Policy Paths to show only .xml files and only base policies
 $ArgumentCompleterPolicyPaths = {
-    Get-ChildItem | where-object { $_.extension -like '*.xml' } | foreach-object { return "`"$_`"" }
+    Get-ChildItem | where-object { $_.extension -like '*.xml' } | ForEach-Object {
+        $xmlitem = [xml](Get-Content $_)
+        $PolicyType = $xmlitem.SiPolicy.PolicyType
+
+        if ($PolicyType -eq "Base Policy") { $_ }
+    } | foreach-object { return "`"$_`"" }
 }
 Register-ArgumentCompleter -CommandName "Edit-WDACConfig" -ParameterName "PolicyPaths" -ScriptBlock $ArgumentCompleterPolicyPaths
 
+
+# argument tab auto-completion for Supplemental Policy Paths to show only .xml files and only Supplemental policies
+$ArgumentCompleterSuppPolicyPaths = {
+    Get-ChildItem | where-object { $_.extension -like '*.xml' } | ForEach-Object {
+        $xmlitem = [xml](Get-Content $_)
+        $PolicyType = $xmlitem.SiPolicy.PolicyType
+
+        if ($PolicyType -eq "Supplemental Policy") { $_ }
+    } | foreach-object { return "`"$_`"" }
+}
+Register-ArgumentCompleter -CommandName "Edit-WDACConfig" -ParameterName "SuppPolicyPaths" -ScriptBlock $ArgumentCompleterSuppPolicyPaths

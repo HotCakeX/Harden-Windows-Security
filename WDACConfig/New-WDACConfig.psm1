@@ -211,7 +211,7 @@ function New-WDACConfig {
         Invoke-Command -ScriptBlock $DriversBlockListInfoGatheringSCRIPTBLOCK
     }
     $Prep_MSFTOnlyAuditSCRIPTBLOCK = {
-        if ($Prep_MSFTOnlyAuditSCRIPTBLOCK -and $LogSize) { Set-LogSize -LogSize $LogSize }
+        if ($Prep_MSFTOnlyAudit -and $LogSize) { Set-LogSize -LogSize $LogSize }
         Copy-item -Path C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml -Destination .\AllowMicrosoft.xml
         Set-RuleOption -FilePath .\AllowMicrosoft.xml -Option 3
         $PolicyID = Set-CIPolicyIdInfo -FilePath .\AllowMicrosoft.xml -ResetPolicyID
@@ -224,7 +224,7 @@ function New-WDACConfig {
         Write-host "`nThe default AllowMicrosoft policy has been deployed in Audit mode. No reboot required." -ForegroundColor Magenta     
     }
     $Make_PolicyFromAuditLogsSCRIPTBLOCK = {
-        if ($Make_PolicyFromAuditLogsSCRIPTBLOCK -and $LogSize) { Set-LogSize -LogSize $LogSize }
+        if ($Make_PolicyFromAuditLogs -and $LogSize) { Set-LogSize -LogSize $LogSize }
         Remove-Item -Path "$home\WDAC\*" -Recurse -Force -ErrorAction SilentlyContinue
         # Create a working directory in user's folder
         new-item -Type Directory -Path "$home\WDAC" -Force | Out-Null

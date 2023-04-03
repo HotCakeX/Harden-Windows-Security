@@ -12,7 +12,7 @@
     # RootModule = ''
 
     # Version number of this module.
-    ModuleVersion        = '0.0.3'
+    ModuleVersion        = '0.0.4'
 
     # Supported PSEditions
     CompatiblePSEditions = @("Desktop", "Core")
@@ -168,6 +168,7 @@ To get help and syntax on PowerShell console, type:
             ReleaseNotes = @"
 
 ## Version
+0.0.4 New feature: Merge multiple deployed Supplemental policies into 1 and deploy it, remove the individual ones, all happening automatically. Very useful to keep Supplemental policies below 32 since that's the limit.
 0.0.3 Completed self-updating feature. Changed icon, added syntaxes.
 0.0.2 Testing self updating procedure with the new PowerShell gallery repo
 0.0.1 Renamed the previous repository in order to comply with proper nested modules and improve the readability and mangement of the module. Added 2 new features too, rebootlessly add new apps to non-signed deployed WDAC policies. You could do it with Signed policies, now you can do the same with non-signed policies.

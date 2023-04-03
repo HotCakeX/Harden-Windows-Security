@@ -188,6 +188,8 @@ The security baseline for Microsoft 365 Apps for enterprise is published twice a
 
 [Microsoft Security Baselines Version Matrix](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-security-configuration-framework/get-support-for-security-baselines#version-matrix)
 
+<p align="right"><a href="#readme-top">💡(back to top)</a></p>
+
 <br>
 
 ## Microsoft Defender<a href="#Microsoft-Defender">![WindowsDefenderIcon]</a>

@@ -139,7 +139,7 @@ From Top to bottom in order:
 
 * Commands that require Administrator Privileges (click/tap on each of these to see in-depth info)
   - <a href="#microsoft-security-baselines">Microsoft Security Baselines</a>
-  - <a href="Microsoft-365-Apps-Security-Baselines">Microsoft 365 Apps Security Baselines</a>
+  - <a href="#Microsoft-365-Apps-Security-Baselines">Microsoft 365 Apps Security Baselines</a>
   - <a href="#Microsoft-Defender">Microsoft Defender</a>
   - <a href="#Attack-surface-reduction-rules">Attack surface reduction rules</a>
   - <a href="#Bitlocker-Settings">Bitlocker Settings</a>

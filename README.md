@@ -67,6 +67,7 @@
     <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/YouTubeVideoLogo.png" width="500"
          alt="YouTube Video showcase">
   </a>
+  </p>
 
 <br>
 

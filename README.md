@@ -759,6 +759,7 @@ Get-Content <Path-To-File> -stream zone.identifier
 - [Understanding malware & other threats, phrases](https://learn.microsoft.com/en-us/microsoft-365/security/intelligence/understanding-malware)
 - [Malware naming](https://learn.microsoft.com/en-us/microsoft-365/security/intelligence/malware-naming)
 - [Microsoft Digital Defense Report](https://www.microsoft.com/en-us/security/business/microsoft-digital-defense-report)
+- [Microsoft Defender for Individuals](https://www.microsoft.com/en-us/microsoft-365/microsoft-defender-for-individuals)
 
 <p align="right"><a href="#readme-top">💡(back to top)</a></p>
 

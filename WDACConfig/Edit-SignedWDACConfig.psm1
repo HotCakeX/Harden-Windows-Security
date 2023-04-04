@@ -18,27 +18,36 @@ function Edit-SignedWDACConfig {
     )]
     Param(
         [Parameter(Mandatory = $false, ParameterSetName = "set1", Position = 0, ValueFromPipeline = $true)][switch]$AllowNewApps_AuditEvents,
-        [Parameter(Mandatory = $false, ParameterSetName = "set2", Position = 0, ValueFromPipeline = $true)][switch]$AllowNewApps,        
+        [Parameter(Mandatory = $false, ParameterSetName = "set2", Position = 0, ValueFromPipeline = $true)][switch]$AllowNewApps,
+        [Parameter(Mandatory = $false, ParameterSetName = "set3", Position = 0, ValueFromPipeline = $true)][switch]$Merge_SupplementalPolicies,        
                     
-        [Parameter(Mandatory = $true, ParameterSetName = "set2", ValueFromPipelineByPropertyName = $true)]
         [Parameter(Mandatory = $true, ParameterSetName = "set1", ValueFromPipelineByPropertyName = $true)]
+        [Parameter(Mandatory = $true, ParameterSetName = "set2", ValueFromPipelineByPropertyName = $true)]
+        [Parameter(Mandatory = $true, ParameterSetName = "set3", ValueFromPipelineByPropertyName = $true)]     
         [string]$CertPath,
 
-        [Parameter(Mandatory = $true, ParameterSetName = "set2", ValueFromPipelineByPropertyName = $true)]
         [Parameter(Mandatory = $true, ParameterSetName = "set1", ValueFromPipelineByPropertyName = $true)]
+        [Parameter(Mandatory = $true, ParameterSetName = "set2", ValueFromPipelineByPropertyName = $true)]
+        [Parameter(Mandatory = $true, ParameterSetName = "set3", ValueFromPipelineByPropertyName = $true)]       
         [string]$SuppPolicyName,        
 
-        [Parameter(Mandatory = $true, ParameterSetName = "set2", ValueFromPipelineByPropertyName = $true)]
         [Parameter(Mandatory = $true, ParameterSetName = "set1", ValueFromPipelineByPropertyName = $true)]
+        [Parameter(Mandatory = $true, ParameterSetName = "set2", ValueFromPipelineByPropertyName = $true)]
+        [Parameter(Mandatory = $true, ParameterSetName = "set3", ValueFromPipelineByPropertyName = $true)]        
         [string[]]$PolicyPaths,
 
-        [Parameter(Mandatory = $false, ParameterSetName = "set2", ValueFromPipelineByPropertyName = $true)]
         [Parameter(Mandatory = $false, ParameterSetName = "set1", ValueFromPipelineByPropertyName = $true)]
+        [Parameter(Mandatory = $false, ParameterSetName = "set2", ValueFromPipelineByPropertyName = $true)]
+        [Parameter(Mandatory = $false, ParameterSetName = "set3", ValueFromPipelineByPropertyName = $true)]
         [string]$SignToolPath,
 
-        [Parameter(Mandatory = $true, ParameterSetName = "set2", ValueFromPipelineByPropertyName = $true)]
         [Parameter(Mandatory = $true, ParameterSetName = "set1", ValueFromPipelineByPropertyName = $true)]
+        [Parameter(Mandatory = $true, ParameterSetName = "set2", ValueFromPipelineByPropertyName = $true)]
+        [Parameter(Mandatory = $true, ParameterSetName = "set3", ValueFromPipelineByPropertyName = $true)]
         [string]$CertCN,
+
+        [Parameter(Mandatory = $true, ParameterSetName = "set3", ValueFromPipelineByPropertyName = $true)]
+        [string[]]$SuppPolicyPaths,
 
         [Parameter(Mandatory = $false, ParameterSetName = "set1")][switch]$Debugmode,
         [ValidateRange(1024KB, [int64]::MaxValue)][Parameter(Mandatory = $false, ParameterSetName = "set1")][Int64]$LogSize,
@@ -472,19 +481,80 @@ $RulesRefs
             }
         }
     }
+    $Merge_SupplementalPoliciesSCRIPTBLOCK = {        
+        foreach ($PolicyPath in $PolicyPaths) {
+            # Input policy verification prior to doing anything
+            foreach ($SuppPolicyPath in $SuppPolicyPaths) {                                
+                $Supplementalxml = [xml](Get-Content $SuppPolicyPath)
+                $SupplementalPolicyID = $Supplementalxml.SiPolicy.PolicyID
+                $SupplementalPolicyType = $Supplementalxml.SiPolicy.PolicyType
+                $DeployedPoliciesIDs = (CiTool -lp -json | ConvertFrom-Json).Policies.PolicyID | ForEach-Object { return "{$_}" }         
+                if ($SupplementalPolicyType -ne "Supplemental Policy") {
+                    Write-Error "The Selected XML file with GUID $SupplementalPolicyID isn't a Supplemental Policy."
+                    break
+                }
+                if ($DeployedPoliciesIDs -notcontains $SupplementalPolicyID) {
+                    Write-Error "The Selected Supplemental XML file with GUID $SupplementalPolicyID isn't deployed on the system."
+                    break
+                }
+            }
+            Merge-CIPolicy -PolicyPaths $SuppPolicyPaths -OutputFilePath "$SuppPolicyName.xml" | Out-Null
+            foreach ($SuppPolicyPath in $SuppPolicyPaths) {                                
+                $Supplementalxml = [xml](Get-Content $SuppPolicyPath)
+                $SupplementalPolicyID = $Supplementalxml.SiPolicy.PolicyID                         
+                citool --remove-policy $SupplementalPolicyID -json | Out-Null             
+            }            
+            $SuppPolicyID = Set-CIPolicyIdInfo -FilePath "$SuppPolicyName.xml" -ResetPolicyID -PolicyName "$SuppPolicyName Merged on $(Get-Date -Format 'MM-dd-yyyy')" -BasePolicyToSupplementPath $PolicyPath
+            $SuppPolicyID = $SuppPolicyID.Substring(11)                  
+            Add-SignerRule -FilePath $SuppPolicyPath -CertificatePath $CertPath -Update -User -Kernel
+            Set-HVCIOptions -Strict -FilePath "$SuppPolicyName.xml"
+            Set-RuleOption -FilePath $SuppPolicyPath -Option 6 -Delete
+            ConvertFrom-CIPolicy "$SuppPolicyName.xml" "$SuppPolicyID.cip" | Out-Null
+
+            if ($SignToolPath) {
+                $SignToolPath = $SignToolPath
+            }
+            else {
+                if ($Env:PROCESSOR_ARCHITECTURE -eq "AMD64") {
+                    if ( Test-Path -Path "C:\Program Files (x86)\Windows Kits\*\bin\*\x64\signtool.exe") {
+                        $SignToolPath = "C:\Program Files (x86)\Windows Kits\*\bin\*\x64\signtool.exe" 
+                    }
+                    else {
+                        Write-Error "signtool.exe couldn't be found"
+                        break
+                    }
+                }
+                elseif ($Env:PROCESSOR_ARCHITECTURE -eq "ARM64") {
+                    if (Test-Path -Path "C:\Program Files (x86)\Windows Kits\*\bin\*\arm64\signtool.exe") {
+                        $SignToolPath = "C:\Program Files (x86)\Windows Kits\*\bin\*\arm64\signtool.exe"
+                    }
+                    else {
+                        Write-Error "signtool.exe couldn't be found"
+                        break
+                    }
+                }           
+            }        
+            & $SignToolPath sign -v -n $CertCN -p7 . -p7co 1.3.6.1.4.1.311.79.1 -fd certHash ".\$SuppPolicyID.cip"              
+            Remove-Item ".\$SuppPolicyID.cip" -Force            
+            Rename-Item "$SuppPolicyID.cip.p7" -NewName "$SuppPolicyID.cip" -Force
+            CiTool --update-policy "$SuppPolicyID.cip" -json
+            Write-Host "`nThe Signed Supplemental policy $SuppPolicyName has been deployed on the system, replacing the old ones, please restart your system." -ForegroundColor Green                       
+        }
+    }
     #endregion Main-Script-Blocks
 
 
     
-    #region Main-Function-Processing
-                              
+    #region Main-Function-Processing                              
     if ($AllowNewApps_AuditEvents) {
         Invoke-Command -ScriptBlock $AllowNewApps_AuditEventsSCRIPTBLOCK
     }
     if ($AllowNewApps) {
         Invoke-Command -ScriptBlock $AllowNewAppsSCRIPTBLOCK
     }
-
+    if ($Merge_SupplementalPolicies) {
+        Invoke-Command -ScriptBlock $Merge_SupplementalPoliciesSCRIPTBLOCK
+    }
     #endregion Main-Function-Processing
 
     <#
@@ -511,6 +581,9 @@ Rebootlessly install new apps/programs when Signed policy is already deployed, s
 
 .PARAMETER SkipVersionCheck
 Can be used with any parameter to bypass the online version check - only to be used in rare cases
+
+.PARAMETER Merge_SupplementalPolicies
+Merges multiple Signed deployed supplemental policies into 1 single supplemental policy, removes the old ones, deploys the new one. System restart needed to take effect.
 
 #>
 }
@@ -579,3 +652,14 @@ $ArgumentCompleterSignToolPath = {
     Get-ChildItem | where-object { $_.extension -like '*.exe' } | foreach-object { return "`"$_`"" }
 }
 Register-ArgumentCompleter -CommandName "Edit-SignedWDACConfig" -ParameterName "SignToolPath" -ScriptBlock $ArgumentCompleterSignToolPath
+
+# argument tab auto-completion for Supplemental Policy Paths to show only .xml files and only Supplemental policies
+$ArgumentCompleterSuppPolicyPaths = {
+    Get-ChildItem | where-object { $_.extension -like '*.xml' } | ForEach-Object {
+        $xmlitem = [xml](Get-Content $_)
+        $PolicyType = $xmlitem.SiPolicy.PolicyType
+
+        if ($PolicyType -eq "Supplemental Policy") { $_ }
+    } | foreach-object { return "`"$_`"" }
+}
+Register-ArgumentCompleter -CommandName "Edit-SignedWDACConfig" -ParameterName "SuppPolicyPaths" -ScriptBlock $ArgumentCompleterSuppPolicyPaths

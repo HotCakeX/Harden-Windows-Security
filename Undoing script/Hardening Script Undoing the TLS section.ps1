@@ -20,7 +20,6 @@ Enable-TlsCipherSuite -Name "TLS_PSK_WITH_AES_128_GCM_SHA256"
 Enable-TlsCipherSuite -Name "TLS_PSK_WITH_AES_256_CBC_SHA384"
 Enable-TlsCipherSuite -Name "TLS_PSK_WITH_AES_128_CBC_SHA256"
 
-
 @( # Deleting the registry keys
     'HKLM:SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\DES 56/56', # DES 56-bit
     'HKLM:SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC2 40/128', # RC2 40-bit

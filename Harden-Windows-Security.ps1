@@ -172,10 +172,18 @@ else {
             # Optimizing Network Protection Performance of Windows Defender - this was off by default on Windows 11 insider build 25247
             Set-MpPreference -AllowSwitchToAsyncInspection $True
             
+            # Try turning on Smart App Control
             switch (Select-Option -Options "Yes", "No", "Exit" -Message "Turn on Smart App Control ?") {
-                "Yes" {
-                    # Turn on Smart App Control
-                    ModifyRegistry -path 'HKLM:\SYSTEM\CurrentControlSet\Control\CI\Policy' -key 'VerifiedAndReputablePolicyState' -value '1' -type 'DWORD'
+                "Yes" {               
+                    if ((Get-MpComputerStatus).SmartAppControlState -eq "Eval") {
+                        ModifyRegistry -path 'HKLM:\SYSTEM\CurrentControlSet\Control\CI\Policy' -key 'VerifiedAndReputablePolicyState' -value '1' -type 'DWORD'
+                    }
+                    elseif ((Get-MpComputerStatus).SmartAppControlState -eq "On") {
+                        Write-Host "Smart App Control is already turned on, skipping...`n"
+                    }
+                    elseif ((Get-MpComputerStatus).SmartAppControlState -eq "Off") {
+                        Write-Host "Smart App Control is turned off. Can't use registry to force enable it.`n"
+                    }
                 } "No" { break }
                 "Exit" { exit }
             }

@@ -15,6 +15,7 @@ function Confirm-WDACConfig {
     Param(     
         [Parameter(Mandatory = $false, Position = 0, ParameterSetName = "set1")][switch]$ListActivePolicies,
         [Parameter(Mandatory = $false, Position = 0, ParameterSetName = "set2")][switch]$VerifyWDACStatus,
+        [Parameter(Mandatory = $false, Position = 0, ParameterSetName = "set3")][switch]$CheckSmartAppControlStatus,
         [Parameter(Mandatory = $false)][switch]$SkipVersionCheck
     )
     $ErrorActionPreference = 'Stop'         
@@ -49,12 +50,31 @@ function Confirm-WDACConfig {
 
     if ($ListActivePolicies) {
         Write-host "`nDisplaying non-System WDAC Policies:" -ForegroundColor Cyan
-        (CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsSystemPolicy -ne "True" }
+        (CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsSystemPolicy -ne "True" } | Tee-Object -Variable DeployedNonSystemPolicies
+        $i = 0
+        $DeployedNonSystemPolicies | ForEach-Object {
+            if ($_.policyid -eq $_.Basepolicyid)
+            { $i++ }
+        }
+        Write-Host "There are currently $(($DeployedNonSystemPolicies.count)) Non-system policies deployed. $i of them are Base policies, the rest must be Supplemental policies." -ForegroundColor Green
     }
     if ($VerifyWDACStatus) {
         Get-CimInstance -ClassName Win32_DeviceGuard -Namespace root\Microsoft\Windows\DeviceGuard | Select-Object -Property *codeintegrity* | Format-List
         Write-host "2 -> Enforced`n1 -> Audit mode`n0 -> Disabled/Not running`n" -ForegroundColor Cyan
     }
+    if ($CheckSmartAppControlStatus) {
+        Get-MpComputerStatus | Select-Object -Property SmartAppControlExpiration, SmartAppControlState
+        if ((Get-MpComputerStatus).SmartAppControlState -eq "Eval") {
+            Write-Host "Smart App Control is in Evaluation mode.`n"
+        }
+        elseif ((Get-MpComputerStatus).SmartAppControlState -eq "On") {
+            Write-Host "Smart App Control is turned on.`n"
+        }
+        elseif ((Get-MpComputerStatus).SmartAppControlState -eq "Off") {
+            Write-Host "Smart App Control is turned off.`n"
+        }
+    }
+    
     <#
 .SYNOPSIS
 Show the status of WDAC on the system and lists the current deployed policies and shows details about each of them
@@ -76,6 +96,9 @@ Shows the status of WDAC on the system
 
 .PARAMETER ListActivePolicies
 lists the current deployed policies and shows details about each of them
+
+.PARAMETER $CheckSmartAppControlStatus
+Checks the status of Smart App Control and reports the results on the console
 
 .PARAMETER SkipVersionCheck
 Can be used with any parameter to bypass the online version check - only to be used in rare cases

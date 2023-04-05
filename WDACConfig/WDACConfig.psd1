@@ -12,7 +12,7 @@
     # RootModule = ''
 
     # Version number of this module.
-    ModuleVersion        = '0.0.5'
+    ModuleVersion        = '0.0.6'
 
     # Supported PSEditions
     CompatiblePSEditions = @("Desktop", "Core")
@@ -80,6 +80,8 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
 ✔️ Confirm-WDACConfig [[-ListActivePolicies]]
  
 ✔️ Confirm-WDACConfig [[-VerifyWDACStatus]]
+
+✔️ Confirm-WDACConfig [[-CheckSmartAppControlStatus]]
 
 
 To get help and syntax on PowerShell console, type:
@@ -172,6 +174,7 @@ To get help and syntax on PowerShell console, type:
             ReleaseNotes = @"
 
 ## Version
+0.0.6 New feature: Confirm-WDACConfig -CheckSmartAppControlStatus. Checks the status of Smart App Control and reports the results on the console. Improved Confirm-WDACConfig -ListActivePolicies by showing the number of deployed non-system WDAC policies and base policies on the console.
 0.0.5 New feature: Edit-SignedWDACConfig -Merge_SupplementalPolicies. It can merge multiple deployed Signed supplemental policies into 1 and deploy it, remove the individual ones, all happening automatically. Very useful to keep Supplemental policies below 32 since that's the limit.
 0.0.4 New feature: Merge multiple deployed Supplemental policies into 1 and deploy it, remove the individual ones, all happening automatically. Very useful to keep Supplemental policies below 32 since that's the limit.
 0.0.3 Completed self-updating feature. Changed icon, added syntaxes.

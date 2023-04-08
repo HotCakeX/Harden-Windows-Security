@@ -761,6 +761,7 @@ Get-Content <Path-To-File> -stream zone.identifier
 - [Microsoft Digital Defense Report](https://www.microsoft.com/en-us/security/business/microsoft-digital-defense-report)
 - [Microsoft Defender for Individuals](https://www.microsoft.com/en-us/microsoft-365/microsoft-defender-for-individuals)
 - [Submit a file for malware analysis](https://www.microsoft.com/en-us/wdsi/filesubmission)
+- [Service health status](https://admin.microsoft.com/servicestatus)
 
 <p align="right"><a href="#readme-top">💡(back to top)</a></p>
 

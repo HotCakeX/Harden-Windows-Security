@@ -1,13 +1,4 @@
 #requires -version 7.3.3
-Function Test-IsAdmin {
-    $identity = [Security.Principal.WindowsIdentity]::GetCurrent()
-    $principal = New-Object Security.Principal.WindowsPrincipal $identity
-    $principal.IsInRole([Security.Principal.WindowsBuiltinRole]::Administrator)
-}
-if (-NOT (Test-IsAdmin)) {
-    write-host "Administrator privileges Required" -ForegroundColor Magenta
-    break
-}
 function Confirm-WDACConfig {
     [CmdletBinding(
         HelpURI = "https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig"
@@ -18,61 +9,80 @@ function Confirm-WDACConfig {
         [Parameter(Mandatory = $false, Position = 0, ParameterSetName = "set3")][switch]$CheckSmartAppControlStatus,
         [Parameter(Mandatory = $false)][switch]$SkipVersionCheck
     )
-    $ErrorActionPreference = 'Stop'         
 
-    
-    # Make sure the latest version of the module is installed and if not, automatically update it, clean up any old versions
-    if (-NOT $SkipVersionCheck) {
-        $currentversion = (Test-modulemanifest "$psscriptroot\WDACConfig.psd1").Version.ToString()
-        try {
-            $latestversion = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/WDACConfig/version.txt"
-        }
-        catch {
-            Write-Error "Couldn't verify if the latest version of the module is installed, please check your Internet connection. You can optionally bypass the online check by using -SkipVersionCheck parameter."
-            break
-        }
-        if (-NOT ($currentversion -eq $latestversion)) {
-            Write-Host "The currently installed module's version is $currentversion while the latest version is $latestversion - Auto Updating the module now and will run your command after that 💓"
-            Remove-Module -Name WDACConfig -Force
+    begin {
+
+        # Make sure the latest version of the module is installed and if not, automatically update it, clean up any old versions
+        function Update-self {
+            $currentversion = (Test-modulemanifest "$psscriptroot\WDACConfig.psd1").Version.ToString()
             try {
-                Uninstall-Module -Name WDACConfig -AllVersions -Force -ErrorAction Stop
-                Install-Module -Name WDACConfig -RequiredVersion $latestversion -Force              
-                Import-Module -Name WDACConfig -RequiredVersion $latestversion -Force -Global
+                $latestversion = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/WDACConfig/version.txt"
             }
             catch {
-                Install-Module -Name WDACConfig -RequiredVersion $latestversion -Force
-                Import-Module -Name WDACConfig -RequiredVersion $latestversion -Force -Global
+                Write-Error "Couldn't verify if the latest version of the module is installed, please check your Internet connection. You can optionally bypass the online check by using -SkipVersionCheck parameter."
+                break
             }
-            
+            if (-NOT ($currentversion -eq $latestversion)) {
+                Write-Host "The currently installed module's version is $currentversion while the latest version is $latestversion - Auto Updating the module now and will run your command after that 💓"
+                Remove-Module -Name WDACConfig -Force
+                try {
+                    Uninstall-Module -Name WDACConfig -AllVersions -Force -ErrorAction Stop
+                    Install-Module -Name WDACConfig -RequiredVersion $latestversion -Force              
+                    Import-Module -Name WDACConfig -RequiredVersion $latestversion -Force -Global
+                }
+                catch {
+                    Install-Module -Name WDACConfig -RequiredVersion $latestversion -Force
+                    Import-Module -Name WDACConfig -RequiredVersion $latestversion -Force -Global
+                }            
+            }
         }
+
+        # Test Admin privileges
+        Function Test-IsAdmin {
+            $identity = [Security.Principal.WindowsIdentity]::GetCurrent()
+            $principal = New-Object Security.Principal.WindowsPrincipal $identity
+            $principal.IsInRole([Security.Principal.WindowsBuiltinRole]::Administrator)
+        }
+
+        if (-NOT (Test-IsAdmin)) {
+            write-host "Administrator privileges Required" -ForegroundColor Magenta
+            break
+        }
+
+        $ErrorActionPreference = 'Stop'         
+        if (-NOT $SkipVersionCheck) { Update-self }
     }
 
+    process {
 
-    if ($ListActivePolicies) {
-        Write-host "`nDisplaying non-System WDAC Policies:" -ForegroundColor Cyan
-        (CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsSystemPolicy -ne "True" } | Tee-Object -Variable DeployedNonSystemPolicies
-        $i = 0
-        $DeployedNonSystemPolicies | ForEach-Object {
-            if ($_.policyid -eq $_.Basepolicyid)
-            { $i++ }
+        if ($ListActivePolicies) {
+            Write-host "`nDisplaying non-System WDAC Policies:" -ForegroundColor Cyan
+            (CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsSystemPolicy -ne "True" } | Tee-Object -Variable DeployedNonSystemPolicies
+            $i = 0
+            $DeployedNonSystemPolicies | ForEach-Object {
+                if ($DeployedNonSystemPolicies) {
+                    if ($_.policyid -eq $_.Basepolicyid)
+                    { $i++ }
+                }               
+            }
+            Write-Host "There are currently $(($DeployedNonSystemPolicies.count)) Non-system policies deployed. $i of them are Base policies, the rest must be Supplemental policies." -ForegroundColor Green
         }
-        Write-Host "There are currently $(($DeployedNonSystemPolicies.count)) Non-system policies deployed. $i of them are Base policies, the rest must be Supplemental policies." -ForegroundColor Green
-    }
-    if ($VerifyWDACStatus) {
-        Get-CimInstance -ClassName Win32_DeviceGuard -Namespace root\Microsoft\Windows\DeviceGuard | Select-Object -Property *codeintegrity* | Format-List
-        Write-host "2 -> Enforced`n1 -> Audit mode`n0 -> Disabled/Not running`n" -ForegroundColor Cyan
-    }
-    if ($CheckSmartAppControlStatus) {
-        Get-MpComputerStatus | Select-Object -Property SmartAppControlExpiration, SmartAppControlState
-        if ((Get-MpComputerStatus).SmartAppControlState -eq "Eval") {
-            Write-Host "Smart App Control is in Evaluation mode.`n"
+        if ($VerifyWDACStatus) {
+            Get-CimInstance -ClassName Win32_DeviceGuard -Namespace root\Microsoft\Windows\DeviceGuard | Select-Object -Property *codeintegrity* | Format-List
+            Write-host "2 -> Enforced`n1 -> Audit mode`n0 -> Disabled/Not running`n" -ForegroundColor Cyan
         }
-        elseif ((Get-MpComputerStatus).SmartAppControlState -eq "On") {
-            Write-Host "Smart App Control is turned on.`n"
-        }
-        elseif ((Get-MpComputerStatus).SmartAppControlState -eq "Off") {
-            Write-Host "Smart App Control is turned off.`n"
-        }
+        if ($CheckSmartAppControlStatus) {
+            Get-MpComputerStatus | Select-Object -Property SmartAppControlExpiration, SmartAppControlState
+            if ((Get-MpComputerStatus).SmartAppControlState -eq "Eval") {
+                Write-Host "Smart App Control is in Evaluation mode.`n"
+            }
+            elseif ((Get-MpComputerStatus).SmartAppControlState -eq "On") {
+                Write-Host "Smart App Control is turned on.`n"
+            }
+            elseif ((Get-MpComputerStatus).SmartAppControlState -eq "Off") {
+                Write-Host "Smart App Control is turned off.`n"
+            }
+        }    
     }
     
     <#

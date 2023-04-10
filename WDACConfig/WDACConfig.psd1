@@ -9,10 +9,10 @@
 @{
 
     # Script module or binary module file associated with this manifest.
-    # RootModule = ''
+    # RootModule = ""
 
     # Version number of this module.
-    ModuleVersion        = '0.0.6'
+    ModuleVersion        = '0.0.7'
 
     # Supported PSEditions
     CompatiblePSEditions = @("Desktop", "Core")
@@ -68,6 +68,8 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
 ✔️ Edit-WDACConfig [[-AllowNewApps]] -SuppPolicyName <string> -PolicyPaths <string[]>
 
 ✔️ Edit-WDACConfig [[-Merge_SupplementalPolicies]] -SuppPolicyName <String> -PolicyPaths <String[]> -SuppPolicyPaths <String[]>
+
+✔️ Edit-WDACConfig [[-UpdateBasePolicy]] -CurrentBasePolicyName <String[]> -NewBasePolicyType <String> [-RequireEVSigners]
 
 ✔️ Edit-SignedWDACConfig [[-AllowNewApps_AuditEvents]] -CertPath <String> -SuppPolicyName <String> -PolicyPaths <String[]> [-SignToolPath <String>] -CertCN <String> [-Debugmode] [-LogSize <Int64>]
     
@@ -129,14 +131,13 @@ To get help and syntax on PowerShell console, type:
     # FormatsToProcess = @()
 
     # Modules to import as nested modules of the module specified in RootModule/ModuleToProcess
-    NestedModules        = @("Remove-WDACConfig.psm1","New-WDACConfig.psm1","Deploy-SignedWDACConfig.psm1","Confirm-WDACConfig.psm1","Edit-WDACConfig.psm1","Edit-SignedWDACConfig.psm1")
-
+    NestedModules        = @("Remove-WDACConfig.psm1", "New-WDACConfig.psm1", "Deploy-SignedWDACConfig.psm1", "Confirm-WDACConfig.psm1", "Edit-WDACConfig.psm1", "Edit-SignedWDACConfig.psm1")
+# ,"New-AllowMSFT_WithBlockRules","Update-self","Test-IsAdmin","Set-LogSize"
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
-    FunctionsToExport    = @("New-WDACConfig", "Remove-WDACConfig","Deploy-SignedWDACConfig","Confirm-WDACConfig","Edit-WDACConfig","Edit-SignedWDACConfig")
+    FunctionsToExport    = @("New-WDACConfig", "Remove-WDACConfig", "Deploy-SignedWDACConfig", "Confirm-WDACConfig", "Edit-WDACConfig", "Edit-SignedWDACConfig")
 
     # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
-    CmdletsToExport      = @("New-WDACConfig", "Remove-WDACConfig","Deploy-SignedWDACConfig","Confirm-WDACConfig","Edit-WDACConfig","Edit-SignedWDACConfig
-    ")
+    CmdletsToExport      = @("New-WDACConfig", "Remove-WDACConfig", "Deploy-SignedWDACConfig", "Confirm-WDACConfig", "Edit-WDACConfig", "Edit-SignedWDACConfig")
 
     # Variables to export from this module
     VariablesToExport    = '*'
@@ -151,7 +152,7 @@ To get help and syntax on PowerShell console, type:
     # ModuleList = @()
 
     # List of all files packaged with this module
-    FileList             = @('WDACConfig.psd1','New-WDACConfig.psm1','Deploy-SignedWDACConfig.psm1','Remove-WDACConfig.psm1',"Confirm-WDACConfig.psm1","Edit-WDACConfig.psm1","Edit-SignedWDACConfig.psm1")
+    FileList             = @('WDACConfig.psd1', 'New-WDACConfig.psm1', 'Deploy-SignedWDACConfig.psm1', 'Remove-WDACConfig.psm1', "Confirm-WDACConfig.psm1", "Edit-WDACConfig.psm1", "Edit-SignedWDACConfig.psm1")
 
     # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.
     PrivateData          = @{
@@ -174,6 +175,7 @@ To get help and syntax on PowerShell console, type:
             ReleaseNotes = @"
 
 ## Version
+0.0.7" New feature: Edit-WDACConfig -UpdateBasePolicy It can rebootlessly change the type of the deployed base policy. It can update the recommended block rules and/or change policy rule options in the deployed base policy. Used Begin and Process blocks in module functions to organize everything properly. Added a lot of parameter validations.
 0.0.6 New feature: Confirm-WDACConfig -CheckSmartAppControlStatus. Checks the status of Smart App Control and reports the results on the console. Improved Confirm-WDACConfig -ListActivePolicies by showing the number of deployed non-system WDAC policies and base policies on the console.
 0.0.5 New feature: Edit-SignedWDACConfig -Merge_SupplementalPolicies. It can merge multiple deployed Signed supplemental policies into 1 and deploy it, remove the individual ones, all happening automatically. Very useful to keep Supplemental policies below 32 since that's the limit.
 0.0.4 New feature: Merge multiple deployed Supplemental policies into 1 and deploy it, remove the individual ones, all happening automatically. Very useful to keep Supplemental policies below 32 since that's the limit.

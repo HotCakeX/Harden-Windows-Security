@@ -1,13 +1,4 @@
 #requires -version 7.3.3
-Function Test-IsAdmin {
-    $identity = [Security.Principal.WindowsIdentity]::GetCurrent()
-    $principal = New-Object Security.Principal.WindowsPrincipal $identity
-    $principal.IsInRole([Security.Principal.WindowsBuiltinRole]::Administrator)
-}
-if (-NOT (Test-IsAdmin)) {
-    write-host "Administrator privileges Required" -ForegroundColor Magenta
-    break
-}
 function Deploy-SignedWDACConfig {
     [CmdletBinding(
         HelpURI = "https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig",
@@ -16,42 +7,68 @@ function Deploy-SignedWDACConfig {
         ConfirmImpact = 'High'
     )]
     Param(
-        [parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true)][string]$CertPath,       
-        [parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true)][string[]]$PolicyPaths,
-        [parameter(Mandatory = $false, ValueFromPipelineByPropertyName = $true)][string]$SignToolPath,
+        [ValidatePattern('.*\.cer')][parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true)][string]$CertPath,       
+        [ValidatePattern('.*\.xml')][parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true)][string[]]$PolicyPaths,        
+        [ValidatePattern('.*\.exe')][parameter(Mandatory = $false, ValueFromPipelineByPropertyName = $true)][string]$SignToolPath,
+        
+        [ValidateScript({
+                try {
+                    # TryCatch to show a custom error message instead of saying input is null when personal store is empty 
+                    ((Get-ChildItem -ErrorAction Stop -Path 'Cert:\CurrentUser\My').Subject.Substring(3)) -contains $_            
+                }
+                catch {
+                    Write-Error "A certificate with the provided common name doesn't exist in the personal store of the user certificates."
+                } # this error msg is shown when cert CN is not available in the personal store of the user certs
+            }, ErrorMessage = "A certificate with the provided common name doesn't exist in the personal store of the user certificates." )]
         [parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true)][string]$CertCN,
+        
         [Parameter(Mandatory = $false)][switch]$SkipVersionCheck
     )
 
-    $ErrorActionPreference = 'Stop'         
+    begin {
 
-
-    # Make sure the latest version of the module is installed and if not, automatically update it, clean up any old versions
-    if (-NOT $SkipVersionCheck) {
-        $currentversion = (Test-modulemanifest "$psscriptroot\WDACConfig.psd1").Version.ToString()
-        try {
-            $latestversion = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/WDACConfig/version.txt"
-        }
-        catch {
-            Write-Error "Couldn't verify if the latest version of the module is installed, please check your Internet connection. You can optionally bypass the online check by using -SkipVersionCheck parameter."
-            break
-        }
-        if (-NOT ($currentversion -eq $latestversion)) {
-            Write-Host "The currently installed module's version is $currentversion while the latest version is $latestversion - Auto Updating the module now and will run your command after that 💓"
-            Remove-Module -Name WDACConfig -Force
+        # Make sure the latest version of the module is installed and if not, automatically update it, clean up any old versions
+        function Update-self {
+            $currentversion = (Test-modulemanifest "$psscriptroot\WDACConfig.psd1").Version.ToString()
             try {
-                Uninstall-Module -Name WDACConfig -AllVersions -Force -ErrorAction Stop
-                Install-Module -Name WDACConfig -RequiredVersion $latestversion -Force              
-                Import-Module -Name WDACConfig -RequiredVersion $latestversion -Force -Global
+                $latestversion = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/WDACConfig/version.txt"
             }
             catch {
-                Install-Module -Name WDACConfig -RequiredVersion $latestversion -Force
-                Import-Module -Name WDACConfig -RequiredVersion $latestversion -Force -Global
+                Write-Error "Couldn't verify if the latest version of the module is installed, please check your Internet connection. You can optionally bypass the online check by using -SkipVersionCheck parameter."
+                break
             }
-            
+            if (-NOT ($currentversion -eq $latestversion)) {
+                Write-Host "The currently installed module's version is $currentversion while the latest version is $latestversion - Auto Updating the module now and will run your command after that 💓"
+                Remove-Module -Name WDACConfig -Force
+                try {
+                    Uninstall-Module -Name WDACConfig -AllVersions -Force -ErrorAction Stop
+                    Install-Module -Name WDACConfig -RequiredVersion $latestversion -Force              
+                    Import-Module -Name WDACConfig -RequiredVersion $latestversion -Force -Global
+                }
+                catch {
+                    Install-Module -Name WDACConfig -RequiredVersion $latestversion -Force
+                    Import-Module -Name WDACConfig -RequiredVersion $latestversion -Force -Global
+                }            
+            }
         }
+
+        # Test Admin privileges
+        Function Test-IsAdmin {
+            $identity = [Security.Principal.WindowsIdentity]::GetCurrent()
+            $principal = New-Object Security.Principal.WindowsPrincipal $identity
+            $principal.IsInRole([Security.Principal.WindowsBuiltinRole]::Administrator)
+        }
+
+        if (-NOT (Test-IsAdmin)) {
+            write-host "Administrator privileges Required" -ForegroundColor Magenta
+            break
+        }
+
+        $ErrorActionPreference = 'Stop'         
+        if (-NOT $SkipVersionCheck) { Update-self }
     }
 
+    process {
 
         foreach ($PolicyPath in $PolicyPaths) {
             $xml = [xml](Get-Content $PolicyPath)
@@ -100,7 +117,7 @@ function Deploy-SignedWDACConfig {
             Write-Output "PolicyName = $PolicyName"
             Write-Output "PolicyGUID = $PolicyID`n"
         }
-
+    }
 
     <#
 .SYNOPSIS

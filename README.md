@@ -665,7 +665,9 @@ _Links above are automatically updated. There is a [GitHub workflow](https://git
 
 - If you have any questions, requests, suggestions etc. about this GitHub repository and its content, please open [a new discussion](https://github.com/HotCakeX/Harden-Windows-Security/discussions) or [Issue](https://github.com/HotCakeX/Harden-Windows-Security/issues).
 
-- If there is an urgent matter or security issue and you want to privately reach me, you can do so by [reporting a vulnerability](https://github.com/HotCakeX/Harden-Windows-Security/security/advisories) on this GitHub repository and I will be immediately notified by Email.
+- [Reporting a vulnerability](https://github.com/HotCakeX/Harden-Windows-Security/security/advisories) on this GitHub repository.
+
+- I can also be reached privately at: spynetgirl@outlook.com
 
 <br>
 

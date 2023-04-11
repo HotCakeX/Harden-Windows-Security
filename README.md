@@ -41,8 +41,6 @@
 
 ![GreenCheckCircleMark] __Harden-Windows-Security is a PowerShell script. It automates all of the tasks required to harden Windows Security beyond the default state. It is suitable and recommended to be run on every home computer.__ See the <a href="#features">Features</a> section below.
 
- <video src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/18cc3eabfb102c8382091c721093b375b081a5d8/videos/Harden-Windows-Security-Demo.mp4"></video>
-
 ![GreenCheckCircleMark] __For Enterprises, Highly-Secure Servers and Data Centers, Highly-Secure Workstations and such, [__Use Windows Defender Application Control (WDAC) resources on this repository.__](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Introduction)__
 
 <h1> <br> </h1>
@@ -129,6 +127,12 @@ To run the script: ([*irm*](https://learn.microsoft.com/en-us/powershell/module/
 ```PowerShell
 irm https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security.ps1 | iex
 ```
+
+<br>
+
+  ![image](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Harden-Windows-Security-Demo.apng)
+  
+  <br>
 
 <p align="right"><a href="#readme-top">💡(back to top)</a></p>
 

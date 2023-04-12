@@ -27,16 +27,19 @@ function New-WDACConfig {
         [Parameter(Mandatory = $false, ParameterSetName = "set7")]
         [Parameter(Mandatory = $false, ParameterSetName = "set8")]        
         [parameter(Mandatory = $false, ParameterSetName = "set9")]
+        [Parameter(Mandatory = $false, ParameterSetName = "set10")]
         [switch]$Deployit,
 
         [Parameter(Mandatory = $false, ParameterSetName = "set8")]
         [Parameter(Mandatory = $false, ParameterSetName = "set7")]
         [Parameter(Mandatory = $false, ParameterSetName = "set3")]
+        [Parameter(Mandatory = $false, ParameterSetName = "set10")]
         [switch]$TestMode,
         
         [Parameter(Mandatory = $false, ParameterSetName = "set3")]
         [Parameter(Mandatory = $false, ParameterSetName = "set7")]
         [Parameter(Mandatory = $false, ParameterSetName = "set8")]
+        [Parameter(Mandatory = $false, ParameterSetName = "set10")]
         [switch]$RequireEVSigners,
 
         [Parameter(Mandatory = $false, ParameterSetName = "set7")][switch]$Debugmode,

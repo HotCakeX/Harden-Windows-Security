@@ -149,40 +149,20 @@ Set-PSReadlineKeyHandler -Key Tab -Function MenuComplete
 
 # argument tab auto-completion for Certificate common name
 $ArgumentCompleterCertificateCN = {
-
-    # extracting the certificates' CNs from the supplied .cer file
+     
+    $CNs = (Get-ChildItem -Path 'Cert:\CurrentUser\My').Subject.Substring(3) | Where-Object { $_ -NotLike "*, DC=*" } |
+    ForEach-Object {
+            
+        if ($_ -like "*CN=*") {
+            
+            $_ -match "CN=(?<cn>[^,]+)" | Out-Null
+        
+            return $Matches['cn']
+        }
+        else { return $_ }
+    }   
     
-    $var = certutil -asn $CertPath
-
-    $cnFound = $false
-    $count = 0
-    foreach ($line in $var -split "`n") {
-        if ($line -match '\(cn\)') {
-            if ($count -eq 0) {
-                $count++
-            }
-            elseif ($count -eq 1) {
-                $cnFound = $true
-            }
-            continue
-        }
-        if ($cnFound -and $line -match '"(.+)"') {
-            $regexString = $matches[1]
-            break
-        }
-    }                
-
-    $CertStoreResults = (Get-ChildItem -Path 'Cert:\CurrentUser\My').Subject.Substring(3)
-    foreach ($item in $CertStoreResults) {
-        if ($item -eq $regexString) {
-            $finalResult = $item 
-        }
-    }
-    if (-NOT $finalResult) {
-        $finalResult = (Get-ChildItem -Path 'Cert:\CurrentUser\My').Subject.Substring(3) | Where-Object { $_ -NotLike "*, DC=*" }
-    }
-    $finalResult | foreach-object { return "`"$_`"" }      
-    
+    $CNs | foreach-object { return "`"$_`"" }
 }
 Register-ArgumentCompleter -CommandName "Deploy-SignedWDACConfig" -ParameterName "CertCN" -ScriptBlock $ArgumentCompleterCertificateCN
 

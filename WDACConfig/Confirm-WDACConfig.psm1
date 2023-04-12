@@ -7,6 +7,10 @@ function Confirm-WDACConfig {
         [Parameter(Mandatory = $false, Position = 0, ParameterSetName = "set1")][switch]$ListActivePolicies,
         [Parameter(Mandatory = $false, Position = 0, ParameterSetName = "set2")][switch]$VerifyWDACStatus,
         [Parameter(Mandatory = $false, Position = 0, ParameterSetName = "set3")][switch]$CheckSmartAppControlStatus,
+
+        [Parameter(Mandatory = $false, ParameterSetName = "set1")][switch]$OnlyBasePolicies,
+        [Parameter(Mandatory = $false, ParameterSetName = "set1")][switch]$OnlySupplementalPolicies,
+        
         [Parameter(Mandatory = $false)][switch]$SkipVersionCheck
     )
 
@@ -51,21 +55,22 @@ function Confirm-WDACConfig {
 
         $ErrorActionPreference = 'Stop'         
         if (-NOT $SkipVersionCheck) { Update-self }
+    
+        $OnlySupplementalPoliciesBLOCK = { Write-host "`nDisplaying non-System Supplemental WDAC Policies:" -ForegroundColor Cyan
+        (CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsSystemPolicy -ne "True" } | Where-Object { $_.PolicyID -ne $_.BasePolicyID } | Tee-Object SupplementalPolicies            
+            Write-Host "There are currently $(($SupplementalPolicies.count)) Non-system Supplemental policies deployed." -ForegroundColor Green }
+
+        $OnlyBasePoliciesBLOCK = { Write-host "`nDisplaying non-System Base WDAC Policies:" -ForegroundColor Cyan
+            (CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsSystemPolicy -ne "True" } | Where-Object { $_.PolicyID -eq $_.BasePolicyID } | Tee-Object BasePolicies            
+            Write-Host "There are currently $(($BasePolicies.count)) Non-system Base policies deployed." -ForegroundColor Green }
     }
 
     process {
 
         if ($ListActivePolicies) {
-            Write-host "`nDisplaying non-System WDAC Policies:" -ForegroundColor Cyan
-            (CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsSystemPolicy -ne "True" } | Tee-Object -Variable DeployedNonSystemPolicies
-            $i = 0
-            $DeployedNonSystemPolicies | ForEach-Object {
-                if ($DeployedNonSystemPolicies) {
-                    if ($_.policyid -eq $_.Basepolicyid)
-                    { $i++ }
-                }               
-            }
-            Write-Host "There are currently $(($DeployedNonSystemPolicies.count)) Non-system policies deployed. $i of them are Base policies, the rest must be Supplemental policies." -ForegroundColor Green
+            if ($OnlyBasePolicies) { &$OnlyBasePoliciesBLOCK }
+            if ($OnlySupplementalPolicies) { &$OnlySupplementalPoliciesBLOCK }               
+            if (!$OnlyBasePolicies -and !$OnlySupplementalPolicies) { &$OnlyBasePoliciesBLOCK; &$OnlySupplementalPoliciesBLOCK }
         }
         if ($VerifyWDACStatus) {
             Get-CimInstance -ClassName Win32_DeviceGuard -Namespace root\Microsoft\Windows\DeviceGuard | Select-Object -Property *codeintegrity* | Format-List

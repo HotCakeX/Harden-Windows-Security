@@ -17,6 +17,7 @@ function New-WDACConfig {
         [Parameter(Mandatory = $false, ParameterSetName = "set7", Position = 0, ValueFromPipeline = $true)][switch]$Make_PolicyFromAuditLogs,  
         [Parameter(Mandatory = $false, ParameterSetName = "set8", Position = 0, ValueFromPipeline = $true)][switch]$Make_LightPolicy,
         [Parameter(Mandatory = $false, ParameterSetName = "set9", Position = 0, ValueFromPipeline = $true)][switch]$Make_SuppPolicy,
+        [Parameter(Mandatory = $false, ParameterSetName = "set10", Position = 0, ValueFromPipeline = $true)][switch]$Make_DefaultWindows_WithBlockRules,
        
         [parameter(Mandatory = $true, ParameterSetName = "set9", ValueFromPipelineByPropertyName = $true)][string]$ScanLocation,
         [parameter(Mandatory = $true, ParameterSetName = "set9", ValueFromPipelineByPropertyName = $true)][string]$SuppPolicyName,
@@ -40,6 +41,16 @@ function New-WDACConfig {
 
         [Parameter(Mandatory = $false, ParameterSetName = "set7")][switch]$Debugmode,
 
+        [ValidateSet([Levelz])]
+        [parameter(Mandatory = $false, ParameterSetName = "set7")]
+        [parameter(Mandatory = $false, ParameterSetName = "set9")]
+        [string]$Levels,
+
+        [ValidateSet([Fallbackz])]
+        [parameter(Mandatory = $false, ParameterSetName = "set7")]
+        [parameter(Mandatory = $false, ParameterSetName = "set9")]
+        [string[]]$Fallbacks, 
+
         [ValidateRange(1024KB, [int64]::MaxValue)]
         [Parameter(Mandatory = $false, ParameterSetName = "set6")]
         [Parameter(Mandatory = $false, ParameterSetName = "set7")]        
@@ -49,6 +60,25 @@ function New-WDACConfig {
     )
 
     begin {
+
+        # argument tab auto-completion and ValidateSet for Fallbacks
+        Class Fallbackz : System.Management.Automation.IValidateSetValuesGenerator {
+            [string[]] GetValidValues() {
+                $Fallbackz = ('Hash', 'FileName', 'SignedVersion', 'Publisher', 'FilePublisher', 'LeafCertificate', 'PcaCertificate', 'RootCertificate', 'WHQL', 'WHQLPublisher', 'WHQLFilePublisher', 'PFN', 'FilePath')
+   
+                return [string[]]$Fallbackz
+            }
+        }
+
+        # argument tab auto-completion and ValidateSet for levels
+        Class Levelz : System.Management.Automation.IValidateSetValuesGenerator {
+            [string[]] GetValidValues() {
+                $Levelz = ('Hash', 'FileName', 'SignedVersion', 'Publisher', 'FilePublisher', 'LeafCertificate', 'PcaCertificate', 'RootCertificate', 'WHQL', 'WHQLPublisher', 'WHQLFilePublisher', 'PFN', 'FilePath')
+       
+                return [string[]]$Levelz
+            }
+        }
+
         # Make sure the latest version of the module is installed and if not, automatically update it, clean up any old versions
         function Update-self {
             $currentversion = (Test-modulemanifest "$psscriptroot\WDACConfig.psd1").Version.ToString()
@@ -179,7 +209,43 @@ function New-WDACConfig {
             }
             if ($NoCIP)
             { Remove-Item -Path "$PolicyID.cip" -Force }
-        } 
+        }
+        
+        $Make_DefaultWindows_WithBlockRulesSCRIPTBLOCK = {
+            param([bool]$NoCIP)
+            Invoke-Command -ScriptBlock $Get_BlockRulesSCRIPTBLOCK | Out-Null                        
+            Copy-item -Path "C:\Windows\schemas\CodeIntegrity\ExamplePolicies\DefaultWindows_Enforced.xml" -Destination ".\DefaultWindows_Enforced.xml"
+            Merge-CIPolicy -PolicyPaths .\DefaultWindows_Enforced.xml, '.\Microsoft recommended block rules.xml' -OutputFilePath .\DefaultWindowsPlusBlockRules.xml | Out-Null     
+            $PolicyID = Set-CIPolicyIdInfo -FilePath .\DefaultWindowsPlusBlockRules.xml -PolicyName "DefaultWindowsPlusBlockRules Made On $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID
+            $PolicyID = $PolicyID.Substring(11)
+            Set-CIPolicyVersion -FilePath .\DefaultWindowsPlusBlockRules.xml -Version "1.0.0.0"
+            @(0, 2, 5, 6, 11, 12, 16, 17, 19, 20) | ForEach-Object { Set-RuleOption -FilePath .\DefaultWindowsPlusBlockRules.xml -Option $_ }
+            @(3, 4, 9, 10, 13, 18) | ForEach-Object { Set-RuleOption -FilePath .\DefaultWindowsPlusBlockRules.xml -Option $_ -Delete }        
+            if ($TestMode -and $Make_DefaultWindows_WithBlockRules) {
+                & $TestModeSCRIPTBLOCK -PolicyPathToEnableTesting .\DefaultWindowsPlusBlockRules.xml
+            }
+            if ($RequireEVSigners -and $Make_DefaultWindows_WithBlockRules) {
+                & $RequireEVSignersSCRIPTBLOCK -PolicyPathToEnableEVSigners .\DefaultWindowsPlusBlockRules.xml
+            }        
+            Set-HVCIOptions -Strict -FilePath .\DefaultWindowsPlusBlockRules.xml
+            ConvertFrom-CIPolicy .\DefaultWindowsPlusBlockRules.xml "$PolicyID.cip" | Out-Null   
+
+            Remove-Item .\DefaultWindows_Enforced.xml -Force
+            Remove-Item '.\Microsoft recommended block rules.xml' -Force
+
+            [PSCustomObject]@{
+                PolicyFile = "DefaultWindowsPlusBlockRules.xml"
+                BinaryFile = "$PolicyID.cip"
+            }
+
+            if ($Deployit -and $Make_DefaultWindows_WithBlockRules) {            
+                CiTool --update-policy ".\$PolicyID.cip" -json
+                Write-host "`n"
+            }
+            if ($NoCIP)
+            { Remove-Item -Path "$PolicyID.cip" -Force }
+            
+        }
 
         $Deploy_LatestDriverBlockRulesSCRIPTBLOCK = {        
             Invoke-WebRequest -Uri "https://aka.ms/VulnerableDriverBlockList" -OutFile VulnerableDriverBlockList.zip      
@@ -247,10 +313,47 @@ function New-WDACConfig {
             }
 
             # Supplemental Processing
+            $AssignedLevels = $null
+            switch ($Levels) {
+                'Hash' { $AssignedLevels = 'Hash' }
+                'FileName' { $AssignedLevels = 'FileName' }
+                'SignedVersion' { $AssignedLevels = 'SignedVersion' }
+                'Publisher' { $AssignedLevels = 'Publisher' }
+                'FilePublisher' { $AssignedLevels = 'FilePublisher' }
+                'LeafCertificate' { $AssignedLevels = 'LeafCertificate' }
+                'PcaCertificate' { $AssignedLevels = 'PcaCertificate' }
+                'RootCertificate' { $AssignedLevels = 'RootCertificate' }
+                'WHQL' { $AssignedLevels = 'WHQL' }
+                'WHQLPublisher' { $AssignedLevels = 'WHQLPublisher' }
+                'WHQLFilePublisher' { $AssignedLevels = 'WHQLFilePublisher' }
+                'PFN' { $AssignedLevels = 'PFN' }
+                'FilePath' { $AssignedLevels = 'FilePath' }
+                Default { $AssignedLevels = 'SignedVersion' }
+            }
+
+            $AssignedFallbacks = @()
+            switch ($Fallbacks) {
+                'Hash' { $AssignedFallbacks += 'Hash' }
+                'FileName' { $AssignedFallbacks += 'FileName' }
+                'SignedVersion' { $AssignedFallbacks += 'SignedVersion' }
+                'Publisher' { $AssignedFallbacks += 'Publisher' }
+                'FilePublisher' { $AssignedFallbacks += 'FilePublisher' }
+                'LeafCertificate' { $AssignedFallbacks += 'LeafCertificate' }
+                'PcaCertificate' { $AssignedFallbacks += 'PcaCertificate' }
+                'RootCertificate' { $AssignedFallbacks += 'RootCertificate' }
+                'WHQL' { $AssignedFallbacks += 'WHQL' }
+                'WHQLPublisher' { $AssignedFallbacks += 'WHQLPublisher' }
+                'WHQLFilePublisher' { $AssignedFallbacks += 'WHQLFilePublisher' }
+                'PFN' { $AssignedFallbacks += 'PFN' }
+                'FilePath' { $AssignedFallbacks += 'FilePath' }
+                Default { $AssignedFallbacks += ('FilePublisher', 'Hash') }
+            }
+
+            Write-Host -ForegroundColor Magenta "These are the Assigned levels: $AssignedLevels `n and these are the AssignedFallbacks: $AssignedFallbacks"
 
             # produce policy xml file from event viewer logs
             Write-host "Scanning Windows Event logs and creating a policy file, please wait..." -ForegroundColor Cyan
-            New-CIPolicy -FilePath ".\AuditLogsPolicy_NoDeletedFiles.xml" -Audit -Level SignedVersion -Fallback FilePublisher, Hash -UserPEs -MultiplePolicyFormat -UserWriteablePaths -WarningAction SilentlyContinue                               
+            New-CIPolicy -FilePath ".\AuditLogsPolicy_NoDeletedFiles.xml" -Audit -Level $AssignedLevels -Fallback $AssignedFallbacks -UserPEs -MultiplePolicyFormat -UserWriteablePaths -WarningAction SilentlyContinue                               
             # List every \Device\Harddiskvolume - Needed to resolve the file pathes to detect which files in even Event viewer logs are no longer present on the disk - https://superuser.com/questions/1058217/list-every-device-harddiskvolume
             $ScriptBlock = {
                 $signature = @'
@@ -483,8 +586,45 @@ $Rules
         }
 
         $Make_SuppPolicySCRIPTBLOCK = {
+
+            $AssignedLevels = $null
+            switch ($Levels) {
+                'Hash' { $AssignedLevels = 'Hash' }
+                'FileName' { $AssignedLevels = 'FileName' }
+                'SignedVersion' { $AssignedLevels = 'SignedVersion' }
+                'Publisher' { $AssignedLevels = 'Publisher' }
+                'FilePublisher' { $AssignedLevels = 'FilePublisher' }
+                'LeafCertificate' { $AssignedLevels = 'LeafCertificate' }
+                'PcaCertificate' { $AssignedLevels = 'PcaCertificate' }
+                'RootCertificate' { $AssignedLevels = 'RootCertificate' }
+                'WHQL' { $AssignedLevels = 'WHQL' }
+                'WHQLPublisher' { $AssignedLevels = 'WHQLPublisher' }
+                'WHQLFilePublisher' { $AssignedLevels = 'WHQLFilePublisher' }
+                'PFN' { $AssignedLevels = 'PFN' }
+                'FilePath' { $AssignedLevels = 'FilePath' }
+                Default { $AssignedLevels = 'SignedVersion' }
+            }
+
+            $AssignedFallbacks = @()
+            switch ($Fallbacks) {
+                'Hash' { $AssignedFallbacks += 'Hash' }
+                'FileName' { $AssignedFallbacks += 'FileName' }
+                'SignedVersion' { $AssignedFallbacks += 'SignedVersion' }
+                'Publisher' { $AssignedFallbacks += 'Publisher' }
+                'FilePublisher' { $AssignedFallbacks += 'FilePublisher' }
+                'LeafCertificate' { $AssignedFallbacks += 'LeafCertificate' }
+                'PcaCertificate' { $AssignedFallbacks += 'PcaCertificate' }
+                'RootCertificate' { $AssignedFallbacks += 'RootCertificate' }
+                'WHQL' { $AssignedFallbacks += 'WHQL' }
+                'WHQLPublisher' { $AssignedFallbacks += 'WHQLPublisher' }
+                'WHQLFilePublisher' { $AssignedFallbacks += 'WHQLFilePublisher' }
+                'PFN' { $AssignedFallbacks += 'PFN' }
+                'FilePath' { $AssignedFallbacks += 'FilePath' }
+                Default { $AssignedFallbacks += ('FilePublisher', 'Hash') }
+            }
+            
             New-CIPolicy -FilePath ".\SupplementalPolicy$SuppPolicyName.xml" -ScanPath $ScanLocation `
-                -Level SignedVersion -Fallback FilePublisher, Hash -UserPEs -MultiplePolicyFormat -UserWriteablePaths
+                -Level $AssignedLevels -Fallback $AssignedFallbacks -UserPEs -MultiplePolicyFormat -UserWriteablePaths
             $policyID = Set-CiPolicyIdInfo -FilePath ".\SupplementalPolicy$SuppPolicyName.xml" -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath -PolicyName "$SuppPolicyName"
             $policyID = $policyID.Substring(11)
             Set-CIPolicyVersion -FilePath ".\SupplementalPolicy$SuppPolicyName.xml" -Version "1.0.0.0"
@@ -547,6 +687,7 @@ $Rules
         if ($Prep_MSFTOnlyAudit) { Invoke-Command -ScriptBlock $Prep_MSFTOnlyAuditSCRIPTBLOCK }
         if ($Make_LightPolicy) { Invoke-Command -ScriptBlock $Make_LightPolicySCRIPTBLOCK }
         if ($Make_SuppPolicy) { Invoke-Command -ScriptBlock $Make_SuppPolicySCRIPTBLOCK }
+        if ($Make_DefaultWindows_WithBlockRules) { Invoke-Command -ScriptBlock $Make_DefaultWindows_WithBlockRulesSCRIPTBLOCK }
 
     }    
   
@@ -592,6 +733,9 @@ Make WDAC Policy with ISG for Lightly Managed system
 
 .PARAMETER Make_SuppPolicy 
 Make a Supplemental policy by scanning a directory    
+
+.PARAMETER Make_DefaultWindows_WithBlockRules
+Make WDAC policy by merging DefaultWindows policy with the recommended block rules
 
 .PARAMETER SkipVersionCheck
 Can be used with any parameter to bypass the online version check - only to be used in rare cases

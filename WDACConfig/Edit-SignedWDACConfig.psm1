@@ -11,11 +11,13 @@ function Edit-SignedWDACConfig {
         [Parameter(Mandatory = $false, ParameterSetName = "set1", Position = 0, ValueFromPipeline = $true)][switch]$AllowNewApps_AuditEvents,
         [Parameter(Mandatory = $false, ParameterSetName = "set2", Position = 0, ValueFromPipeline = $true)][switch]$AllowNewApps,
         [Parameter(Mandatory = $false, ParameterSetName = "set3", Position = 0, ValueFromPipeline = $true)][switch]$Merge_SupplementalPolicies,        
-                 
+        [Parameter(Mandatory = $false, ParameterSetName = "set4", Position = 0, ValueFromPipeline = $true)][switch]$UpdateBasePolicy,
+
         [ValidatePattern('.*\.cer')]
         [Parameter(Mandatory = $true, ParameterSetName = "set1", ValueFromPipelineByPropertyName = $true)]
         [Parameter(Mandatory = $true, ParameterSetName = "set2", ValueFromPipelineByPropertyName = $true)]
-        [Parameter(Mandatory = $true, ParameterSetName = "set3", ValueFromPipelineByPropertyName = $true)]     
+        [Parameter(Mandatory = $true, ParameterSetName = "set3", ValueFromPipelineByPropertyName = $true)]
+        [Parameter(Mandatory = $true, ParameterSetName = "set4", ValueFromPipelineByPropertyName = $true)] 
         [string]$CertPath,
 
         [Parameter(Mandatory = $true, ParameterSetName = "set1", ValueFromPipelineByPropertyName = $true)]
@@ -33,6 +35,7 @@ function Edit-SignedWDACConfig {
         [Parameter(Mandatory = $false, ParameterSetName = "set1", ValueFromPipelineByPropertyName = $true)]
         [Parameter(Mandatory = $false, ParameterSetName = "set2", ValueFromPipelineByPropertyName = $true)]
         [Parameter(Mandatory = $false, ParameterSetName = "set3", ValueFromPipelineByPropertyName = $true)]
+        [Parameter(Mandatory = $true, ParameterSetName = "set4", ValueFromPipelineByPropertyName = $true)]
         [string]$SignToolPath,
 
         [ValidateScript({
@@ -47,6 +50,7 @@ function Edit-SignedWDACConfig {
         [Parameter(Mandatory = $true, ParameterSetName = "set1", ValueFromPipelineByPropertyName = $true)]
         [Parameter(Mandatory = $true, ParameterSetName = "set2", ValueFromPipelineByPropertyName = $true)]
         [Parameter(Mandatory = $true, ParameterSetName = "set3", ValueFromPipelineByPropertyName = $true)]
+        [Parameter(Mandatory = $true, ParameterSetName = "set4", ValueFromPipelineByPropertyName = $true)]
         [string]$CertCN,
 
         [ValidatePattern('.*\.xml')]
@@ -54,11 +58,62 @@ function Edit-SignedWDACConfig {
         [string[]]$SuppPolicyPaths,
 
         [Parameter(Mandatory = $false, ParameterSetName = "set1")][switch]$Debugmode,
-        [ValidateRange(1024KB, [int64]::MaxValue)][Parameter(Mandatory = $false, ParameterSetName = "set1")][Int64]$LogSize,
-        [Parameter(Mandatory = $false)][switch]$SkipVersionCheck
+        [ValidateRange(1024KB, [int64]::MaxValue)][Parameter(Mandatory = $false, ParameterSetName = "set1")]
+        [Int64]$LogSize,
+
+        [ValidateSet([BasePolicyNamez])]
+        [Parameter(Mandatory = $true, ParameterSetName = "set4")]
+        [string[]]$CurrentBasePolicyName,
+
+        [ValidateSet("AllowMicrosoft_Plus_Block_Rules", "Lightly_Managed_system_Policy", "DefaultWindows_WithBlockRules")]
+        [Parameter(Mandatory = $true, ParameterSetName = "set4")]
+        [string]$NewBasePolicyType,
+
+        [ValidateSet([Levelz])]
+        [parameter(Mandatory = $false, ParameterSetName = "set1")]
+        [parameter(Mandatory = $false, ParameterSetName = "set2")]
+        [string]$Levels,
+
+        [ValidateSet([Fallbackz])]
+        [parameter(Mandatory = $false, ParameterSetName = "set1")]
+        [parameter(Mandatory = $false, ParameterSetName = "set2")]
+        [string[]]$Fallbacks, 
+
+        [Parameter(Mandatory = $false, ParameterSetName = "set4")]
+        [switch]$RequireEVSigners,
+
+        [Parameter(Mandatory = $false)]
+        [switch]$SkipVersionCheck
     )
 
     begin {
+
+        # argument tab auto-completion and ValidateSet for Policy names 
+        Class BasePolicyNamez : System.Management.Automation.IValidateSetValuesGenerator {
+            [string[]] GetValidValues() {
+                $BasePolicyNamez = ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsSystemPolicy -ne "True" } | Where-Object { $_.PolicyID -eq $_.BasePolicyID }).Friendlyname
+           
+                return [string[]]$BasePolicyNamez
+            }
+        }
+
+        # argument tab auto-completion and ValidateSet for Fallbacks
+        Class Fallbackz : System.Management.Automation.IValidateSetValuesGenerator {
+            [string[]] GetValidValues() {
+                $Fallbackz = ('Hash', 'FileName', 'SignedVersion', 'Publisher', 'FilePublisher', 'LeafCertificate', 'PcaCertificate', 'RootCertificate', 'WHQL', 'WHQLPublisher', 'WHQLFilePublisher', 'PFN', 'FilePath')
+   
+                return [string[]]$Fallbackz
+            }
+        }
+
+        # argument tab auto-completion and ValidateSet for levels
+        Class Levelz : System.Management.Automation.IValidateSetValuesGenerator {
+            [string[]] GetValidValues() {
+                $Levelz = ('Hash', 'FileName', 'SignedVersion', 'Publisher', 'FilePublisher', 'LeafCertificate', 'PcaCertificate', 'RootCertificate', 'WHQL', 'WHQLPublisher', 'WHQLFilePublisher', 'PFN', 'FilePath')
+       
+                return [string[]]$Levelz
+            }
+        }
 
         # Make sure the latest version of the module is installed and if not, automatically update it, clean up any old versions
         function Update-self {
@@ -101,6 +156,27 @@ function Edit-SignedWDACConfig {
             $log.MaximumSizeInBytes = $LogSize
             $log.IsEnabled = $true
             $log.SaveChanges()
+        }
+
+        $Get_BlockRulesSCRIPTBLOCK = {             
+            $MicrosoftRecommendeDriverBlockRules = Invoke-WebRequest -Uri "https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/public/windows/security/threat-protection/windows-defender-application-control/microsoft-recommended-block-rules.md"
+            $MicrosoftRecommendeDriverBlockRules -match "(?s)(?<=``````xml).*(?=``````)" | Out-Null
+            $Rules = $Matches[0]
+
+            $Rules = $Rules -replace '<Allow\sID="ID_ALLOW_A_1"\sFriendlyName="Allow\sKernel\sDrivers"\sFileName="\*".*/>', ''
+            $Rules = $Rules -replace '<Allow\sID="ID_ALLOW_A_2"\sFriendlyName="Allow\sUser\smode\scomponents"\sFileName="\*".*/>', ''
+            $Rules = $Rules -replace '<FileRuleRef\sRuleID="ID_ALLOW_A_1".*/>', ''
+            $Rules = $Rules -replace '<FileRuleRef\sRuleID="ID_ALLOW_A_2".*/>', ''
+
+            $Rules | Out-File '.\Microsoft recommended block rules TEMP.xml'
+
+            Get-Content '.\Microsoft recommended block rules TEMP.xml' | Where-Object { $_.trim() -ne "" } | Out-File '.\Microsoft recommended block rules.xml'                
+            Remove-Item '.\Microsoft recommended block rules TEMP.xml' -Force
+            Set-RuleOption -FilePath '.\Microsoft recommended block rules.xml' -Option 3 -Delete
+            Set-HVCIOptions -Strict -FilePath '.\Microsoft recommended block rules.xml'
+            [PSCustomObject]@{
+                PolicyFile = 'Microsoft recommended block rules.xml'
+            }
         }
 
         #Re-Deploy Basepolicy in Enforcement mode
@@ -307,9 +383,45 @@ $RulesRefs
                     }
 
                     #Process Program Folders From User input
+
+                    $AssignedLevels = $null
+                    switch ($Levels) {
+                        'Hash' { $AssignedLevels = 'Hash' }
+                        'FileName' { $AssignedLevels = 'FileName' }
+                        'SignedVersion' { $AssignedLevels = 'SignedVersion' }
+                        'Publisher' { $AssignedLevels = 'Publisher' }
+                        'FilePublisher' { $AssignedLevels = 'FilePublisher' }
+                        'LeafCertificate' { $AssignedLevels = 'LeafCertificate' }
+                        'PcaCertificate' { $AssignedLevels = 'PcaCertificate' }
+                        'RootCertificate' { $AssignedLevels = 'RootCertificate' }
+                        'WHQL' { $AssignedLevels = 'WHQL' }
+                        'WHQLPublisher' { $AssignedLevels = 'WHQLPublisher' }
+                        'WHQLFilePublisher' { $AssignedLevels = 'WHQLFilePublisher' }
+                        'PFN' { $AssignedLevels = 'PFN' }
+                        'FilePath' { $AssignedLevels = 'FilePath' }
+                        Default { $AssignedLevels = 'SignedVersion' }
+                    }
+
+                    $AssignedFallbacks = @()
+                    switch ($Fallbacks) {
+                        'Hash' { $AssignedFallbacks += 'Hash' }
+                        'FileName' { $AssignedFallbacks += 'FileName' }
+                        'SignedVersion' { $AssignedFallbacks += 'SignedVersion' }
+                        'Publisher' { $AssignedFallbacks += 'Publisher' }
+                        'FilePublisher' { $AssignedFallbacks += 'FilePublisher' }
+                        'LeafCertificate' { $AssignedFallbacks += 'LeafCertificate' }
+                        'PcaCertificate' { $AssignedFallbacks += 'PcaCertificate' }
+                        'RootCertificate' { $AssignedFallbacks += 'RootCertificate' }
+                        'WHQL' { $AssignedFallbacks += 'WHQL' }
+                        'WHQLPublisher' { $AssignedFallbacks += 'WHQLPublisher' }
+                        'WHQLFilePublisher' { $AssignedFallbacks += 'WHQLFilePublisher' }
+                        'PFN' { $AssignedFallbacks += 'PFN' }
+                        'FilePath' { $AssignedFallbacks += 'FilePath' }
+                        Default { $AssignedFallbacks += ('FilePublisher', 'Hash') }
+                    }
         
                     for ($i = 0; $i -lt $ProgramsPaths.Count; $i++) {
-                        New-CIPolicy -FilePath ".\ProgramDir_ScanResults$($i).xml" -ScanPath $ProgramsPaths[$i] -Level SignedVersion -Fallback FilePublisher, Hash -UserPEs -MultiplePolicyFormat -UserWriteablePaths
+                        New-CIPolicy -FilePath ".\ProgramDir_ScanResults$($i).xml" -ScanPath $ProgramsPaths[$i] -Level $AssignedLevels -Fallback $AssignedFallbacks -UserPEs -MultiplePolicyFormat -UserWriteablePaths
                     }            
 
                     # merge-cipolicy accept arrays - collecting all the policy files created by scanning user specified folders
@@ -443,9 +555,46 @@ $RulesRefs
                     Write-Host "Here are the paths you selected:" -ForegroundColor Yellow
                     $ProgramsPaths | ForEach-Object { $_ }
     
-                    #Process Program Folders From User input     
+                    #Process Program Folders From User input
+                    
+                    $AssignedLevels = $null
+                    switch ($Levels) {
+                        'Hash' { $AssignedLevels = 'Hash' }
+                        'FileName' { $AssignedLevels = 'FileName' }
+                        'SignedVersion' { $AssignedLevels = 'SignedVersion' }
+                        'Publisher' { $AssignedLevels = 'Publisher' }
+                        'FilePublisher' { $AssignedLevels = 'FilePublisher' }
+                        'LeafCertificate' { $AssignedLevels = 'LeafCertificate' }
+                        'PcaCertificate' { $AssignedLevels = 'PcaCertificate' }
+                        'RootCertificate' { $AssignedLevels = 'RootCertificate' }
+                        'WHQL' { $AssignedLevels = 'WHQL' }
+                        'WHQLPublisher' { $AssignedLevels = 'WHQLPublisher' }
+                        'WHQLFilePublisher' { $AssignedLevels = 'WHQLFilePublisher' }
+                        'PFN' { $AssignedLevels = 'PFN' }
+                        'FilePath' { $AssignedLevels = 'FilePath' }
+                        Default { $AssignedLevels = 'SignedVersion' }
+                    }
+
+                    $AssignedFallbacks = @()
+                    switch ($Fallbacks) {
+                        'Hash' { $AssignedFallbacks += 'Hash' }
+                        'FileName' { $AssignedFallbacks += 'FileName' }
+                        'SignedVersion' { $AssignedFallbacks += 'SignedVersion' }
+                        'Publisher' { $AssignedFallbacks += 'Publisher' }
+                        'FilePublisher' { $AssignedFallbacks += 'FilePublisher' }
+                        'LeafCertificate' { $AssignedFallbacks += 'LeafCertificate' }
+                        'PcaCertificate' { $AssignedFallbacks += 'PcaCertificate' }
+                        'RootCertificate' { $AssignedFallbacks += 'RootCertificate' }
+                        'WHQL' { $AssignedFallbacks += 'WHQL' }
+                        'WHQLPublisher' { $AssignedFallbacks += 'WHQLPublisher' }
+                        'WHQLFilePublisher' { $AssignedFallbacks += 'WHQLFilePublisher' }
+                        'PFN' { $AssignedFallbacks += 'PFN' }
+                        'FilePath' { $AssignedFallbacks += 'FilePath' }
+                        Default { $AssignedFallbacks += ('FilePublisher', 'Hash') }
+                    }
+            
                     for ($i = 0; $i -lt $ProgramsPaths.Count; $i++) {
-                        New-CIPolicy -FilePath ".\ProgramDir_ScanResults$($i).xml" -ScanPath $ProgramsPaths[$i] -Level SignedVersion -Fallback FilePublisher, Hash -UserPEs -MultiplePolicyFormat -UserWriteablePaths
+                        New-CIPolicy -FilePath ".\ProgramDir_ScanResults$($i).xml" -ScanPath $ProgramsPaths[$i] -Level $AssignedLevels -Fallback $AssignedFallbacks -UserPEs -MultiplePolicyFormat -UserWriteablePaths
                     }            
     
                     # merge-cipolicy accept arrays - collecting all the policy files created by scanning user specified folders
@@ -560,7 +709,89 @@ $RulesRefs
                 Write-Host "`nThe Signed Supplemental policy $SuppPolicyName has been deployed on the system, replacing the old ones, please restart your system." -ForegroundColor Green                       
             } 
         }
-    }
+
+
+        if ($UpdateBasePolicy) {     
+
+            Invoke-Command -ScriptBlock $Get_BlockRulesSCRIPTBLOCK | Out-Null            
+   
+            switch ($NewBasePolicyType) {
+                "AllowMicrosoft_Plus_Block_Rules" {                  
+                    Copy-item -Path "C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml" -Destination ".\AllowMicrosoft.xml"
+                    Merge-CIPolicy -PolicyPaths .\AllowMicrosoft.xml, '.\Microsoft recommended block rules.xml' -OutputFilePath .\BasePolicy.xml | Out-Null
+                    Set-CIPolicyIdInfo -FilePath .\BasePolicy.xml -PolicyName "AllowMicrosoftPlusBlockRules refreshed On $(Get-Date -Format 'MM-dd-yyyy')"
+                    @(0, 2, 5, 6, 11, 12, 16, 17, 19, 20) | ForEach-Object { Set-RuleOption -FilePath .\BasePolicy.xml -Option $_ }
+                    @(3, 4, 9, 10, 13, 18) | ForEach-Object { Set-RuleOption -FilePath .\BasePolicy.xml -Option $_ -Delete } 
+                }
+                "Lightly_Managed_system_Policy" {                                          
+                    Copy-item -Path "C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml" -Destination ".\AllowMicrosoft.xml"
+                    Merge-CIPolicy -PolicyPaths .\AllowMicrosoft.xml, '.\Microsoft recommended block rules.xml' -OutputFilePath .\BasePolicy.xml | Out-Null
+                    Set-CIPolicyIdInfo -FilePath .\BasePolicy.xml -PolicyName "SignedAndReputable policy refreshed on $(Get-Date -Format 'MM-dd-yyyy')"
+                    @(0, 2, 5, 6, 11, 12, 14, 15, 16, 17, 19, 20) | ForEach-Object { Set-RuleOption -FilePath .\BasePolicy.xml -Option $_ }
+                    @(3, 4, 9, 10, 13, 18) | ForEach-Object { Set-RuleOption -FilePath .\BasePolicy.xml -Option $_ -Delete }            
+                    appidtel start
+                    sc.exe config appidsvc start= auto
+                }
+                "DefaultWindows_WithBlockRules" {                                            
+                    Copy-item -Path "C:\Windows\schemas\CodeIntegrity\ExamplePolicies\DefaultWindows_Enforced.xml" -Destination ".\DefaultWindows_Enforced.xml"
+                    Merge-CIPolicy -PolicyPaths .\DefaultWindows_Enforced.xml, '.\Microsoft recommended block rules.xml' -OutputFilePath .\BasePolicy.xml | Out-Null     
+                    Set-CIPolicyIdInfo -FilePath .\BasePolicy.xml -PolicyName "DefaultWindowsPlusBlockRules refreshed On $(Get-Date -Format 'MM-dd-yyyy')"
+                    @(0, 2, 5, 6, 11, 12, 16, 17, 19, 20) | ForEach-Object { Set-RuleOption -FilePath .\BasePolicy.xml -Option $_ }
+                    @(3, 4, 9, 10, 13, 18) | ForEach-Object { Set-RuleOption -FilePath .\BasePolicy.xml -Option $_ -Delete }
+                }
+            }
+    
+            if ($UpdateBasePolicy -and $RequireEVSigners) { Set-RuleOption -FilePath .\BasePolicy.xml -Option 8 }   
+            
+            Remove-Item .\DefaultWindows_Enforced.xml -Force -ErrorAction SilentlyContinue
+            Remove-Item .\AllowMicrosoft.xml -Force -ErrorAction SilentlyContinue
+            Remove-Item '.\Microsoft recommended block rules.xml' -Force
+
+            $CurrentID = ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsSystemPolicy -ne "True" } | Where-Object { $_.Friendlyname -eq $CurrentBasePolicyName }).BasePolicyID
+            $CurrentID = "{$CurrentID}"
+            [xml]$xml = Get-Content ".\BasePolicy.xml"        
+            $xml.SiPolicy.PolicyID = $CurrentID
+            $xml.SiPolicy.BasePolicyID = $CurrentID
+            $xml.Save(".\BasePolicy.xml")
+
+            Add-SignerRule -FilePath .\BasePolicy.xml -CertificatePath $CertPath -Update -User -Kernel -Supplemental
+
+            Set-CIPolicyVersion -FilePath .\BasePolicy.xml -Version "1.0.0.1"
+            Set-HVCIOptions -Strict -FilePath .\BasePolicy.xml
+
+            ConvertFrom-CIPolicy ".\BasePolicy.xml" "$CurrentID.cip" | Out-Null
+
+            if ($SignToolPath) {
+                $SignToolPath = $SignToolPath
+            }
+            else {
+                if ($Env:PROCESSOR_ARCHITECTURE -eq "AMD64") {
+                    if ( Test-Path -Path "C:\Program Files (x86)\Windows Kits\*\bin\*\x64\signtool.exe") {
+                        $SignToolPath = "C:\Program Files (x86)\Windows Kits\*\bin\*\x64\signtool.exe" 
+                    }
+                    else {
+                        Write-Error "signtool.exe couldn't be found"
+                        break
+                    }
+                }
+                elseif ($Env:PROCESSOR_ARCHITECTURE -eq "ARM64") {
+                    if (Test-Path -Path "C:\Program Files (x86)\Windows Kits\*\bin\*\arm64\signtool.exe") {
+                        $SignToolPath = "C:\Program Files (x86)\Windows Kits\*\bin\*\arm64\signtool.exe"
+                    }
+                    else {
+                        Write-Error "signtool.exe couldn't be found"
+                        break
+                    }
+                }           
+            }        
+            & $SignToolPath sign -v -n $CertCN -p7 . -p7co 1.3.6.1.4.1.311.79.1 -fd certHash ".\$CurrentID.cip" 
+
+            CiTool --update-policy "$CurrentID.cip" -json
+            Remove-Item "$CurrentID.cip" -Force
+            Remove-Item ".\BasePolicy.xml" -Force
+        }
+
+    }    
 
     <#
 .SYNOPSIS
@@ -589,6 +820,9 @@ Can be used with any parameter to bypass the online version check - only to be u
 
 .PARAMETER Merge_SupplementalPolicies
 Merges multiple Signed deployed supplemental policies into 1 single supplemental policy, removes the old ones, deploys the new one. System restart needed to take effect.
+
+.PARAMETER UpdateBasePolicy
+It can rebootlessly change the type of the deployed signed base policy. It can update the recommended block rules and/or change policy rule options in the deployed base policy.
 
 #>
 }

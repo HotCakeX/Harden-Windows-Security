@@ -8,16 +8,16 @@ function New-WDACConfig {
         ConfirmImpact = 'High'
     )]
     Param(
-        [Parameter(Mandatory = $false, ParameterSetName = "set1", Position = 0, ValueFromPipeline = $true)][switch]$Get_BlockRules,
-        [Parameter(Mandatory = $false, ParameterSetName = "set2", Position = 0, ValueFromPipeline = $true)][switch]$Get_DriverBlockRules,
-        [Parameter(Mandatory = $false, ParameterSetName = "set3", Position = 0, ValueFromPipeline = $true)][switch]$Make_AllowMSFT_WithBlockRules,  
-        [Parameter(Mandatory = $false, ParameterSetName = "set4", Position = 0, ValueFromPipeline = $true)][switch]$Deploy_LatestDriverBlockRules,                                                                                       
-        [Parameter(Mandatory = $false, ParameterSetName = "set5", Position = 0, ValueFromPipeline = $true)][switch]$Set_AutoUpdateDriverBlockRules,
-        [Parameter(Mandatory = $false, ParameterSetName = "set6", Position = 0, ValueFromPipeline = $true)][switch]$Prep_MSFTOnlyAudit,
-        [Parameter(Mandatory = $false, ParameterSetName = "set7", Position = 0, ValueFromPipeline = $true)][switch]$Make_PolicyFromAuditLogs,  
-        [Parameter(Mandatory = $false, ParameterSetName = "set8", Position = 0, ValueFromPipeline = $true)][switch]$Make_LightPolicy,
-        [Parameter(Mandatory = $false, ParameterSetName = "set9", Position = 0, ValueFromPipeline = $true)][switch]$Make_SuppPolicy,
-        [Parameter(Mandatory = $false, ParameterSetName = "set10", Position = 0, ValueFromPipeline = $true)][switch]$Make_DefaultWindows_WithBlockRules,
+        [Parameter(Mandatory = $false, ParameterSetName = "set1", ValueFromPipeline = $true)][switch]$Get_BlockRules,
+        [Parameter(Mandatory = $false, ParameterSetName = "set2", ValueFromPipeline = $true)][switch]$Get_DriverBlockRules,
+        [Parameter(Mandatory = $false, ParameterSetName = "set3", ValueFromPipeline = $true)][switch]$Make_AllowMSFT_WithBlockRules,  
+        [Parameter(Mandatory = $false, ParameterSetName = "set4", ValueFromPipeline = $true)][switch]$Deploy_LatestDriverBlockRules,                                                                                       
+        [Parameter(Mandatory = $false, ParameterSetName = "set5", ValueFromPipeline = $true)][switch]$Set_AutoUpdateDriverBlockRules,
+        [Parameter(Mandatory = $false, ParameterSetName = "set6", ValueFromPipeline = $true)][switch]$Prep_MSFTOnlyAudit,
+        [Parameter(Mandatory = $false, ParameterSetName = "set7", ValueFromPipeline = $true)][switch]$Make_PolicyFromAuditLogs,  
+        [Parameter(Mandatory = $false, ParameterSetName = "set8", ValueFromPipeline = $true)][switch]$Make_LightPolicy,
+        [Parameter(Mandatory = $false, ParameterSetName = "set9", ValueFromPipeline = $true)][switch]$Make_SuppPolicy,
+        [Parameter(Mandatory = $false, ParameterSetName = "set10", ValueFromPipeline = $true)][switch]$Make_DefaultWindows_WithBlockRules,
        
         [parameter(Mandatory = $true, ParameterSetName = "set9", ValueFromPipelineByPropertyName = $true)][string]$ScanLocation,
         [parameter(Mandatory = $true, ParameterSetName = "set9", ValueFromPipelineByPropertyName = $true)][string]$SuppPolicyName,

@@ -8,10 +8,10 @@ function Edit-WDACConfig {
         ConfirmImpact = 'High'
     )]
     Param(
-        [Parameter(Mandatory = $false, ParameterSetName = "set1", Position = 0, ValueFromPipeline = $true)][switch]$AllowNewApps_AuditEvents,
-        [Parameter(Mandatory = $false, ParameterSetName = "set2", Position = 0, ValueFromPipeline = $true)][switch]$AllowNewApps,
-        [Parameter(Mandatory = $false, ParameterSetName = "set3", Position = 0, ValueFromPipeline = $true)][switch]$Merge_SupplementalPolicies,
-        [Parameter(Mandatory = $false, ParameterSetName = "set4", Position = 0, ValueFromPipeline = $true)][switch]$UpdateBasePolicy,
+        [Parameter(Mandatory = $false, ParameterSetName = "set1", ValueFromPipeline = $true)][switch]$AllowNewApps_AuditEvents,
+        [Parameter(Mandatory = $false, ParameterSetName = "set2", ValueFromPipeline = $true)][switch]$AllowNewApps,
+        [Parameter(Mandatory = $false, ParameterSetName = "set3", ValueFromPipeline = $true)][switch]$Merge_SupplementalPolicies,
+        [Parameter(Mandatory = $false, ParameterSetName = "set4", ValueFromPipeline = $true)][switch]$UpdateBasePolicy,
 
         [Parameter(Mandatory = $true, ParameterSetName = "set1", ValueFromPipelineByPropertyName = $true)]
         [Parameter(Mandatory = $true, ParameterSetName = "set2", ValueFromPipelineByPropertyName = $true)]

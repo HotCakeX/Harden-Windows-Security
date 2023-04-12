@@ -150,6 +150,8 @@ Set-PSReadlineKeyHandler -Key Tab -Function MenuComplete
 # argument tab auto-completion for Certificate common name
 $ArgumentCompleterCertificateCN = {
 
+    # extracting the certificates' CNs from the supplied .cer file
+    
     $var = certutil -asn $CertPath
 
     $cnFound = $false
@@ -179,7 +181,8 @@ $ArgumentCompleterCertificateCN = {
     if (-NOT $finalResult) {
         $finalResult = (Get-ChildItem -Path 'Cert:\CurrentUser\My').Subject.Substring(3) | Where-Object { $_ -NotLike "*, DC=*" }
     }
-    return "`"$finalResult`""
+    $finalResult | foreach-object { return "`"$_`"" }      
+    
 }
 Register-ArgumentCompleter -CommandName "Deploy-SignedWDACConfig" -ParameterName "CertCN" -ScriptBlock $ArgumentCompleterCertificateCN
 

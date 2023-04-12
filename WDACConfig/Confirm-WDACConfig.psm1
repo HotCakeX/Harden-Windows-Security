@@ -4,9 +4,9 @@ function Confirm-WDACConfig {
         HelpURI = "https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig"
     )]
     Param(     
-        [Parameter(Mandatory = $false, Position = 0, ParameterSetName = "set1")][switch]$ListActivePolicies,
-        [Parameter(Mandatory = $false, Position = 0, ParameterSetName = "set2")][switch]$VerifyWDACStatus,
-        [Parameter(Mandatory = $false, Position = 0, ParameterSetName = "set3")][switch]$CheckSmartAppControlStatus,
+        [Parameter(Mandatory = $false, ParameterSetName = "set1")][switch]$ListActivePolicies,
+        [Parameter(Mandatory = $false, ParameterSetName = "set2")][switch]$VerifyWDACStatus,
+        [Parameter(Mandatory = $false, ParameterSetName = "set3")][switch]$CheckSmartAppControlStatus,
 
         [Parameter(Mandatory = $false, ParameterSetName = "set1")][switch]$OnlyBasePolicies,
         [Parameter(Mandatory = $false, ParameterSetName = "set1")][switch]$OnlySupplementalPolicies,

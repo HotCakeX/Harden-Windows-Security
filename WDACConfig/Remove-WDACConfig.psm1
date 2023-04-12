@@ -8,8 +8,8 @@ function Remove-WDACConfig {
         ConfirmImpact = 'High'
     )]
     Param(        
-        [Parameter(Mandatory = $false, ParameterSetName = "set1", Position = 0, ValueFromPipeline = $true)][switch]$RemoveSignedPolicies,
-        [Parameter(Mandatory = $false, ParameterSetName = "set2", Position = 0, ValueFromPipeline = $true)][switch]$RemovePolicies,
+        [Parameter(Mandatory = $false, ParameterSetName = "set1", ValueFromPipeline = $true)][switch]$RemoveSignedPolicies,
+        [Parameter(Mandatory = $false, ParameterSetName = "set2", ValueFromPipeline = $true)][switch]$RemovePolicies,
 
         [ValidatePattern('.*\.xml')]
         [parameter(Mandatory = $true, ParameterSetName = "set1", ValueFromPipelineByPropertyName = $true)][string[]]$PolicyPaths,

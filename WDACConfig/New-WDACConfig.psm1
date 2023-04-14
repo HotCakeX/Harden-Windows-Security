@@ -1,62 +1,62 @@
 #requires -version 7.3.3
 function New-WDACConfig {
     [CmdletBinding(
-        DefaultParameterSetName = "set1",
+        DefaultParameterSetName = "Get Block Rules",
         HelpURI = "https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig",
         SupportsShouldProcess = $true,
         PositionalBinding = $false,
         ConfirmImpact = 'High'
     )]
     Param(
-        [Parameter(Mandatory = $false, ParameterSetName = "set1", ValueFromPipeline = $true)][switch]$Get_BlockRules,
-        [Parameter(Mandatory = $false, ParameterSetName = "set2", ValueFromPipeline = $true)][switch]$Get_DriverBlockRules,
-        [Parameter(Mandatory = $false, ParameterSetName = "set3", ValueFromPipeline = $true)][switch]$Make_AllowMSFT_WithBlockRules,  
-        [Parameter(Mandatory = $false, ParameterSetName = "set4", ValueFromPipeline = $true)][switch]$Deploy_LatestDriverBlockRules,                                                                                       
-        [Parameter(Mandatory = $false, ParameterSetName = "set5", ValueFromPipeline = $true)][switch]$Set_AutoUpdateDriverBlockRules,
-        [Parameter(Mandatory = $false, ParameterSetName = "set6", ValueFromPipeline = $true)][switch]$Prep_MSFTOnlyAudit,
-        [Parameter(Mandatory = $false, ParameterSetName = "set7", ValueFromPipeline = $true)][switch]$Make_PolicyFromAuditLogs,  
-        [Parameter(Mandatory = $false, ParameterSetName = "set8", ValueFromPipeline = $true)][switch]$Make_LightPolicy,
-        [Parameter(Mandatory = $false, ParameterSetName = "set9", ValueFromPipeline = $true)][switch]$Make_SuppPolicy,
-        [Parameter(Mandatory = $false, ParameterSetName = "set10", ValueFromPipeline = $true)][switch]$Make_DefaultWindows_WithBlockRules,
+        [Parameter(Mandatory = $false, ParameterSetName = "Get Block Rules")][switch]$GetBlockRules,
+        [Parameter(Mandatory = $false, ParameterSetName = "Get Driver Block Rules")][switch]$GetDriverBlockRules,
+        [Parameter(Mandatory = $false, ParameterSetName = "Make AllowMSFT With Block Rules")][switch]$MakeAllowMSFTWithBlockRules,
+        [Parameter(Mandatory = $false, ParameterSetName = "Deploy Latest Driver Block Rules")][switch]$DeployLatestDriverBlockRules,                                                                                       
+        [Parameter(Mandatory = $false, ParameterSetName = "Set Auto Update Driver Block Rules")][switch]$SetAutoUpdateDriverBlockRules,
+        [Parameter(Mandatory = $false, ParameterSetName = "Prep MSFT Only Audit")][switch]$PrepMSFTOnlyAudit,
+        [Parameter(Mandatory = $false, ParameterSetName = "Make Policy From Audit Logs")][switch]$MakePolicyFromAuditLogs,  
+        [Parameter(Mandatory = $false, ParameterSetName = "Make Light Policy")][switch]$MakeLightPolicy,
+        [Parameter(Mandatory = $false, ParameterSetName = "Make Supplemental Policy")][switch]$MakeSupplementalPolicy,
+        [Parameter(Mandatory = $false, ParameterSetName = "Make DefaultWindows With Block Rules")][switch]$MakeDefaultWindowsWithBlockRules,
        
-        [parameter(Mandatory = $true, ParameterSetName = "set9", ValueFromPipelineByPropertyName = $true)][string]$ScanLocation,
-        [parameter(Mandatory = $true, ParameterSetName = "set9", ValueFromPipelineByPropertyName = $true)][string]$SuppPolicyName,
-        [ValidatePattern('.*\.xml')][parameter(Mandatory = $true, ParameterSetName = "set9", ValueFromPipelineByPropertyName = $true)][string]$PolicyPath,
+        [parameter(Mandatory = $true, ParameterSetName = "Make Supplemental Policy", ValueFromPipelineByPropertyName = $true)][string]$ScanLocation,
+        [parameter(Mandatory = $true, ParameterSetName = "Make Supplemental Policy", ValueFromPipelineByPropertyName = $true)][string]$SuppPolicyName,
+        [ValidatePattern('.*\.xml')][parameter(Mandatory = $true, ParameterSetName = "Make Supplemental Policy", ValueFromPipelineByPropertyName = $true)][string]$PolicyPath,
 
-        [Parameter(Mandatory = $false, ParameterSetName = "set3")]
-        [Parameter(Mandatory = $false, ParameterSetName = "set7")]
-        [Parameter(Mandatory = $false, ParameterSetName = "set8")]        
-        [parameter(Mandatory = $false, ParameterSetName = "set9")]
-        [Parameter(Mandatory = $false, ParameterSetName = "set10")]
+        [Parameter(Mandatory = $false, ParameterSetName = "Make AllowMSFT With Block Rules")]
+        [Parameter(Mandatory = $false, ParameterSetName = "Make Policy From Audit Logs")]
+        [Parameter(Mandatory = $false, ParameterSetName = "Make Light Policy")]        
+        [parameter(Mandatory = $false, ParameterSetName = "Make Supplemental Policy")]
+        [Parameter(Mandatory = $false, ParameterSetName = "Make DefaultWindows With Block Rules")]
         [switch]$Deployit,
 
-        [Parameter(Mandatory = $false, ParameterSetName = "set8")]
-        [Parameter(Mandatory = $false, ParameterSetName = "set7")]
-        [Parameter(Mandatory = $false, ParameterSetName = "set3")]
-        [Parameter(Mandatory = $false, ParameterSetName = "set10")]
+        [Parameter(Mandatory = $false, ParameterSetName = "Make Light Policy")]
+        [Parameter(Mandatory = $false, ParameterSetName = "Make Policy From Audit Logs")]
+        [Parameter(Mandatory = $false, ParameterSetName = "Make AllowMSFT With Block Rules")]
+        [Parameter(Mandatory = $false, ParameterSetName = "Make DefaultWindows With Block Rules")]
         [switch]$TestMode,
         
-        [Parameter(Mandatory = $false, ParameterSetName = "set3")]
-        [Parameter(Mandatory = $false, ParameterSetName = "set7")]
-        [Parameter(Mandatory = $false, ParameterSetName = "set8")]
-        [Parameter(Mandatory = $false, ParameterSetName = "set10")]
+        [Parameter(Mandatory = $false, ParameterSetName = "Make AllowMSFT With Block Rules")]
+        [Parameter(Mandatory = $false, ParameterSetName = "Make Policy From Audit Logs")]
+        [Parameter(Mandatory = $false, ParameterSetName = "Make Light Policy")]
+        [Parameter(Mandatory = $false, ParameterSetName = "Make DefaultWindows With Block Rules")]
         [switch]$RequireEVSigners,
 
-        [Parameter(Mandatory = $false, ParameterSetName = "set7")][switch]$Debugmode,
+        [Parameter(Mandatory = $false, ParameterSetName = "Make Policy From Audit Logs")][switch]$Debugmode,
 
         [ValidateSet([Levelz])]
-        [parameter(Mandatory = $false, ParameterSetName = "set7")]
-        [parameter(Mandatory = $false, ParameterSetName = "set9")]
+        [parameter(Mandatory = $false, ParameterSetName = "Make Policy From Audit Logs")]
+        [parameter(Mandatory = $false, ParameterSetName = "Make Supplemental Policy")]
         [string]$Levels,
 
         [ValidateSet([Fallbackz])]
-        [parameter(Mandatory = $false, ParameterSetName = "set7")]
-        [parameter(Mandatory = $false, ParameterSetName = "set9")]
+        [parameter(Mandatory = $false, ParameterSetName = "Make Policy From Audit Logs")]
+        [parameter(Mandatory = $false, ParameterSetName = "Make Supplemental Policy")]
         [string[]]$Fallbacks, 
 
         [ValidateRange(1024KB, [int64]::MaxValue)]
-        [Parameter(Mandatory = $false, ParameterSetName = "set6")]
-        [Parameter(Mandatory = $false, ParameterSetName = "set7")]        
+        [Parameter(Mandatory = $false, ParameterSetName = "Prep MSFT Only Audit")]
+        [Parameter(Mandatory = $false, ParameterSetName = "Make Policy From Audit Logs")]        
         [Int64]$LogSize,
 
         [Parameter(Mandatory = $false)][switch]$SkipVersionCheck    
@@ -67,7 +67,7 @@ function New-WDACConfig {
         # argument tab auto-completion and ValidateSet for Fallbacks
         Class Fallbackz : System.Management.Automation.IValidateSetValuesGenerator {
             [string[]] GetValidValues() {
-                $Fallbackz = ('Hash', 'FileName', 'SignedVersion', 'Publisher', 'FilePublisher', 'LeafCertificate', 'PcaCertificate', 'RootCertificate', 'WHQL', 'WHQLPublisher', 'WHQLFilePublisher', 'PFN', 'FilePath')
+                $Fallbackz = ('Hash', 'FileName', 'SignedVersion', 'Publisher', 'FilePublisher', 'LeafCertificate', 'PcaCertificate', 'RootCertificate', 'WHQL', 'WHQLPublisher', 'WHQLFilePublisher', 'PFN', 'FilePath', 'None')
    
                 return [string[]]$Fallbackz
             }
@@ -76,7 +76,7 @@ function New-WDACConfig {
         # argument tab auto-completion and ValidateSet for levels
         Class Levelz : System.Management.Automation.IValidateSetValuesGenerator {
             [string[]] GetValidValues() {
-                $Levelz = ('Hash', 'FileName', 'SignedVersion', 'Publisher', 'FilePublisher', 'LeafCertificate', 'PcaCertificate', 'RootCertificate', 'WHQL', 'WHQLPublisher', 'WHQLFilePublisher', 'PFN', 'FilePath')
+                $Levelz = ('Hash', 'FileName', 'SignedVersion', 'Publisher', 'FilePublisher', 'LeafCertificate', 'PcaCertificate', 'RootCertificate', 'WHQL', 'WHQLPublisher', 'WHQLFilePublisher', 'PFN', 'FilePath', 'None')
        
                 return [string[]]$Levelz
             }
@@ -130,7 +130,7 @@ function New-WDACConfig {
             $log.SaveChanges()
         }
         
-        $Get_BlockRulesSCRIPTBLOCK = {             
+        $GetBlockRulesSCRIPTBLOCK = {             
             $MicrosoftRecommendeDriverBlockRules = Invoke-WebRequest -Uri "https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/public/windows/security/threat-protection/windows-defender-application-control/microsoft-recommended-block-rules.md"
             $MicrosoftRecommendeDriverBlockRules -match "(?s)(?<=``````xml).*(?=``````)" | Out-Null
             $Rules = $Matches[0]
@@ -151,7 +151,7 @@ function New-WDACConfig {
             }
         }
            
-        $Get_DriverBlockRulesSCRIPTBLOCK = {       
+        $GetDriverBlockRulesSCRIPTBLOCK = {       
             $MicrosoftRecommendeDriverBlockRules = Invoke-WebRequest -Uri "https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/public/windows/security/threat-protection/windows-defender-application-control/microsoft-recommended-driver-block-rules.md"
    
             $MicrosoftRecommendeDriverBlockRules -match "(?s)(?<=``````xml).*(?=``````)" | Out-Null
@@ -179,9 +179,9 @@ function New-WDACConfig {
             }        
         }
 
-        $Make_AllowMSFT_WithBlockRulesSCRIPTBLOCK = {
+        $MakeAllowMSFTWithBlockRulesSCRIPTBLOCK = {
             param([bool]$NoCIP)
-            Invoke-Command -ScriptBlock $Get_BlockRulesSCRIPTBLOCK | Out-Null                        
+            Invoke-Command -ScriptBlock $GetBlockRulesSCRIPTBLOCK | Out-Null                        
             Copy-item -Path "C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml" -Destination ".\AllowMicrosoft.xml"
             Merge-CIPolicy -PolicyPaths .\AllowMicrosoft.xml, '.\Microsoft recommended block rules.xml' -OutputFilePath .\AllowMicrosoftPlusBlockRules.xml | Out-Null     
             $PolicyID = Set-CIPolicyIdInfo -FilePath .\AllowMicrosoftPlusBlockRules.xml -PolicyName "AllowMicrosoftPlusBlockRules Made On $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID
@@ -189,10 +189,10 @@ function New-WDACConfig {
             Set-CIPolicyVersion -FilePath .\AllowMicrosoftPlusBlockRules.xml -Version "1.0.0.0"
             @(0, 2, 5, 6, 11, 12, 16, 17, 19, 20) | ForEach-Object { Set-RuleOption -FilePath .\AllowMicrosoftPlusBlockRules.xml -Option $_ }
             @(3, 4, 9, 10, 13, 18) | ForEach-Object { Set-RuleOption -FilePath .\AllowMicrosoftPlusBlockRules.xml -Option $_ -Delete }        
-            if ($TestMode -and $Make_AllowMSFT_WithBlockRules) {
+            if ($TestMode -and $MakeAllowMSFTWithBlockRules) {
                 & $TestModeSCRIPTBLOCK -PolicyPathToEnableTesting .\AllowMicrosoftPlusBlockRules.xml
             }
-            if ($RequireEVSigners -and $Make_AllowMSFT_WithBlockRules) {
+            if ($RequireEVSigners -and $MakeAllowMSFTWithBlockRules) {
                 & $RequireEVSignersSCRIPTBLOCK -PolicyPathToEnableEVSigners .\AllowMicrosoftPlusBlockRules.xml
             }        
             Set-HVCIOptions -Strict -FilePath .\AllowMicrosoftPlusBlockRules.xml
@@ -206,7 +206,7 @@ function New-WDACConfig {
                 BinaryFile = "$PolicyID.cip"
             }
 
-            if ($Deployit -and $Make_AllowMSFT_WithBlockRules) {            
+            if ($Deployit -and $MakeAllowMSFTWithBlockRules) {            
                 CiTool --update-policy ".\$PolicyID.cip" -json
                 Write-host "`n"
             }
@@ -214,25 +214,34 @@ function New-WDACConfig {
             { Remove-Item -Path "$PolicyID.cip" -Force }
         }
         
-        $Make_DefaultWindows_WithBlockRulesSCRIPTBLOCK = {
+        $MakeDefaultWindowsWithBlockRulesSCRIPTBLOCK = {
             param([bool]$NoCIP)
-            Invoke-Command -ScriptBlock $Get_BlockRulesSCRIPTBLOCK | Out-Null                        
+            Invoke-Command -ScriptBlock $GetBlockRulesSCRIPTBLOCK | Out-Null                        
             Copy-item -Path "C:\Windows\schemas\CodeIntegrity\ExamplePolicies\DefaultWindows_Enforced.xml" -Destination ".\DefaultWindows_Enforced.xml"
-            Merge-CIPolicy -PolicyPaths .\DefaultWindows_Enforced.xml, '.\Microsoft recommended block rules.xml' -OutputFilePath .\DefaultWindowsPlusBlockRules.xml | Out-Null     
+            
+            if (Test-Path "C:\Program Files\PowerShell") {
+                Write-Host "Creating allow rules for PowerShell in the DefaultWindows base policy so you can continue using this module after deploying it." -ForegroundColor Blue                    
+                New-CIPolicy -ScanPath "C:\Program Files\PowerShell" -Level SignedVersion -Fallback FilePublisher, Hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -FilePath .\AllowPowerShell.xml
+                Merge-CIPolicy -PolicyPaths .\DefaultWindows_Enforced.xml, .\AllowPowerShell.xml, '.\Microsoft recommended block rules.xml' -OutputFilePath .\DefaultWindowsPlusBlockRules.xml | Out-Null
+            }
+            else {
+                Merge-CIPolicy -PolicyPaths .\DefaultWindows_Enforced.xml, '.\Microsoft recommended block rules.xml' -OutputFilePath .\DefaultWindowsPlusBlockRules.xml | Out-Null     
+            }
             $PolicyID = Set-CIPolicyIdInfo -FilePath .\DefaultWindowsPlusBlockRules.xml -PolicyName "DefaultWindowsPlusBlockRules Made On $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID
             $PolicyID = $PolicyID.Substring(11)
             Set-CIPolicyVersion -FilePath .\DefaultWindowsPlusBlockRules.xml -Version "1.0.0.0"
             @(0, 2, 5, 6, 11, 12, 16, 17, 19, 20) | ForEach-Object { Set-RuleOption -FilePath .\DefaultWindowsPlusBlockRules.xml -Option $_ }
             @(3, 4, 9, 10, 13, 18) | ForEach-Object { Set-RuleOption -FilePath .\DefaultWindowsPlusBlockRules.xml -Option $_ -Delete }        
-            if ($TestMode -and $Make_DefaultWindows_WithBlockRules) {
+            if ($TestMode -and $MakeDefaultWindowsWithBlockRules) {
                 & $TestModeSCRIPTBLOCK -PolicyPathToEnableTesting .\DefaultWindowsPlusBlockRules.xml
             }
-            if ($RequireEVSigners -and $Make_DefaultWindows_WithBlockRules) {
+            if ($RequireEVSigners -and $MakeDefaultWindowsWithBlockRules) {
                 & $RequireEVSignersSCRIPTBLOCK -PolicyPathToEnableEVSigners .\DefaultWindowsPlusBlockRules.xml
             }        
             Set-HVCIOptions -Strict -FilePath .\DefaultWindowsPlusBlockRules.xml
             ConvertFrom-CIPolicy .\DefaultWindowsPlusBlockRules.xml "$PolicyID.cip" | Out-Null   
 
+            Remove-item .\AllowPowerShell.xml -Force -ErrorAction SilentlyContinue
             Remove-Item .\DefaultWindows_Enforced.xml -Force
             Remove-Item '.\Microsoft recommended block rules.xml' -Force
 
@@ -241,7 +250,7 @@ function New-WDACConfig {
                 BinaryFile = "$PolicyID.cip"
             }
 
-            if ($Deployit -and $Make_DefaultWindows_WithBlockRules) {            
+            if ($Deployit -and $MakeDefaultWindowsWithBlockRules) {            
                 CiTool --update-policy ".\$PolicyID.cip" -json
                 Write-host "`n"
             }
@@ -250,7 +259,7 @@ function New-WDACConfig {
             
         }
 
-        $Deploy_LatestDriverBlockRulesSCRIPTBLOCK = {        
+        $DeployLatestDriverBlockRulesSCRIPTBLOCK = {        
             Invoke-WebRequest -Uri "https://aka.ms/VulnerableDriverBlockList" -OutFile VulnerableDriverBlockList.zip      
             Expand-Archive .\VulnerableDriverBlockList.zip -DestinationPath "VulnerableDriverBlockList" -Force
             Rename-Item .\VulnerableDriverBlockList\SiPolicy_Enforced.p7b -NewName "SiPolicy.p7b" -Force
@@ -262,7 +271,7 @@ function New-WDACConfig {
             Invoke-Command -ScriptBlock $DriversBlockListInfoGatheringSCRIPTBLOCK
         }  
 
-        $Set_AutoUpdateDriverBlockRulesSCRIPTBLOCK = {
+        $SetAutoUpdateDriverBlockRulesSCRIPTBLOCK = {
             # create a scheduled task that runs every 7 days
             if (-NOT (Get-ScheduledTask -TaskName "MSFT Driver Block list update" -ErrorAction SilentlyContinue)) {        
                 $action = New-ScheduledTaskAction -Execute 'Powershell.exe' `
@@ -280,13 +289,13 @@ function New-WDACConfig {
             Invoke-Command -ScriptBlock $DriversBlockListInfoGatheringSCRIPTBLOCK
         }
 
-        $Prep_MSFTOnlyAuditSCRIPTBLOCK = {
-            if ($Prep_MSFTOnlyAudit -and $LogSize) { Set-LogSize -LogSize $LogSize }
+        $PrepMSFTOnlyAuditSCRIPTBLOCK = {
+            if ($PrepMSFTOnlyAudit -and $LogSize) { Set-LogSize -LogSize $LogSize }
             Copy-item -Path C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml -Destination .\AllowMicrosoft.xml
             Set-RuleOption -FilePath .\AllowMicrosoft.xml -Option 3
             $PolicyID = Set-CIPolicyIdInfo -FilePath .\AllowMicrosoft.xml -ResetPolicyID
             $PolicyID = $PolicyID.Substring(11)
-            Set-CIPolicyIdInfo -PolicyName "Prep_MSFTOnlyAudit" -FilePath .\AllowMicrosoft.xml
+            Set-CIPolicyIdInfo -PolicyName "PrepMSFTOnlyAudit" -FilePath .\AllowMicrosoft.xml
             ConvertFrom-CIPolicy .\AllowMicrosoft.xml "$PolicyID.cip" | Out-Null
             CiTool --update-policy "$PolicyID.cip" -json
             Remove-Item ".\AllowMicrosoft.xml" -Force
@@ -294,24 +303,24 @@ function New-WDACConfig {
             Write-host "`nThe default AllowMicrosoft policy has been deployed in Audit mode. No reboot required." -ForegroundColor Magenta     
         }
 
-        $Make_PolicyFromAuditLogsSCRIPTBLOCK = {
-            if ($Make_PolicyFromAuditLogs -and $LogSize) { Set-LogSize -LogSize $LogSize }
+        $MakePolicyFromAuditLogsSCRIPTBLOCK = {
+            if ($MakePolicyFromAuditLogs -and $LogSize) { Set-LogSize -LogSize $LogSize }
             Remove-Item -Path "$home\WDAC\*" -Recurse -Force -ErrorAction SilentlyContinue
             # Create a working directory in user's folder
             new-item -Type Directory -Path "$home\WDAC" -Force | Out-Null
             Set-Location "$home\WDAC"
 
             # Base Policy Processing        
-            Invoke-Command -ScriptBlock $Make_AllowMSFT_WithBlockRulesSCRIPTBLOCK | Out-Null
+            Invoke-Command -ScriptBlock $MakeAllowMSFTWithBlockRulesSCRIPTBLOCK | Out-Null
             $xml = [xml](Get-Content .\AllowMicrosoftPlusBlockRules.xml)
             $BasePolicyID = $xml.SiPolicy.PolicyID
             # define the location of the base policy
             $BasePolicy = ".\AllowMicrosoftPlusBlockRules.xml"        
   
-            if ($TestMode -and $Make_PolicyFromAuditLogs) {
+            if ($TestMode -and $MakePolicyFromAuditLogs) {
                 & $TestModeSCRIPTBLOCK -PolicyPathToEnableTesting $BasePolicy
             }
-            if ($RequireEVSigners -and $Make_PolicyFromAuditLogs) {
+            if ($RequireEVSigners -and $MakePolicyFromAuditLogs) {
                 & $RequireEVSignersSCRIPTBLOCK -PolicyPathToEnableEVSigners $BasePolicy
             }
 
@@ -331,6 +340,7 @@ function New-WDACConfig {
                 'WHQLFilePublisher' { $AssignedLevels = 'WHQLFilePublisher' }
                 'PFN' { $AssignedLevels = 'PFN' }
                 'FilePath' { $AssignedLevels = 'FilePath' }
+                'None' { $AssignedLevels = 'None' }
                 Default { $AssignedLevels = 'SignedVersion' }
             }
 
@@ -349,10 +359,9 @@ function New-WDACConfig {
                 'WHQLFilePublisher' { $AssignedFallbacks += 'WHQLFilePublisher' }
                 'PFN' { $AssignedFallbacks += 'PFN' }
                 'FilePath' { $AssignedFallbacks += 'FilePath' }
+                'None' { $AssignedFallbacks += 'None' }
                 Default { $AssignedFallbacks += ('FilePublisher', 'Hash') }
-            }
-
-            Write-Host -ForegroundColor Magenta "These are the Assigned levels: $AssignedLevels `n and these are the AssignedFallbacks: $AssignedFallbacks"
+            }            
 
             # produce policy xml file from event viewer logs
             Write-host "Scanning Windows Event logs and creating a policy file, please wait..." -ForegroundColor Cyan
@@ -541,7 +550,7 @@ $Rules
                 Remove-Item -Path ".\FileRulesAndFileRefs.txt" -Force -ErrorAction SilentlyContinue
                 Remove-Item -Path ".\DeletedFilesHashes.xml" -Force -ErrorAction SilentlyContinue
             }
-            if ($Deployit -and $Make_PolicyFromAuditLogs) {            
+            if ($Deployit -and $MakePolicyFromAuditLogs) {            
                 CiTool --update-policy ".\$BasePolicyID.cip" -json
                 CiTool --update-policy ".\$policyID.cip" -json
                 Write-host "`nBase policy and Supplemental Policies deployed and activated." -ForegroundColor Green                       
@@ -549,7 +558,7 @@ $Rules
             do {
                 $RemovalQuestion = $(Write-host "`nRemove the Audit mode MicrosoftOnly policy deployed during the prep phase? Enter 1 for Yes, 2 for No." -ForegroundColor Cyan; Read-Host)     
                 if ($RemovalQuestion -eq "1" ) {
-                    $IDToRemove = ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.FriendlyName -eq "Prep_MSFTOnlyAudit" }).PolicyID
+                    $IDToRemove = ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.FriendlyName -eq "PrepMSFTOnlyAudit" }).PolicyID
                     CiTool --remove-policy "{$IDToRemove}"
                     Write-host "System restart required to finish removing the Audit mode Prep policy" -ForegroundColor Green                   
                 }
@@ -560,15 +569,15 @@ $Rules
             until ($RemovalQuestion -eq "1" -or $RemovalQuestion -eq "2")            
         }
 
-        $Make_LightPolicySCRIPTBLOCK = {
+        $MakeLightPolicySCRIPTBLOCK = {
             Remove-Item -Path ".\SignedAndReputable.xml" -Force -ErrorAction SilentlyContinue
-            Invoke-Command $Make_AllowMSFT_WithBlockRulesSCRIPTBLOCK -ArgumentList $true | Out-Null
+            Invoke-Command $MakeAllowMSFTWithBlockRulesSCRIPTBLOCK -ArgumentList $true | Out-Null
             Rename-Item -Path ".\AllowMicrosoftPlusBlockRules.xml" -NewName "SignedAndReputable.xml" -Force
             @(14, 15) | ForEach-Object { Set-RuleOption -FilePath .\SignedAndReputable.xml -Option $_ }
-            if ($TestMode -and $Make_LightPolicy) {
+            if ($TestMode -and $MakeLightPolicy) {
                 & $TestModeSCRIPTBLOCK -PolicyPathToEnableTesting .\SignedAndReputable.xml
             }
-            if ($RequireEVSigners -and $Make_LightPolicy) {
+            if ($RequireEVSigners -and $MakeLightPolicy) {
                 & $RequireEVSignersSCRIPTBLOCK -PolicyPathToEnableEVSigners .\SignedAndReputable.xml
             }
             $BasePolicyID = Set-CiPolicyIdInfo -FilePath .\SignedAndReputable.xml -ResetPolicyID -PolicyName "SignedAndReputable policy deployed on $(Get-Date -Format 'MM-dd-yyyy')"
@@ -578,7 +587,7 @@ $Rules
             ConvertFrom-CIPolicy .\SignedAndReputable.xml "$BasePolicyID.cip" | Out-Null 
             appidtel start
             sc.exe config appidsvc start= auto
-            if ($Deployit -and $Make_LightPolicy) {
+            if ($Deployit -and $MakeLightPolicy) {
                 CiTool --update-policy ".\$BasePolicyID.cip" -json
                 Write-host -NoNewline "`nSignedAndReputable.xml policy has been deployed.`n" -ForegroundColor Green            
             }
@@ -588,7 +597,7 @@ $Rules
             }       
         }
 
-        $Make_SuppPolicySCRIPTBLOCK = {
+        $MakeSupplementalPolicySCRIPTBLOCK = {
 
             $AssignedLevels = $null
             switch ($Levels) {
@@ -605,6 +614,7 @@ $Rules
                 'WHQLFilePublisher' { $AssignedLevels = 'WHQLFilePublisher' }
                 'PFN' { $AssignedLevels = 'PFN' }
                 'FilePath' { $AssignedLevels = 'FilePath' }
+                'None' { $AssignedLevels = 'None' }
                 Default { $AssignedLevels = 'SignedVersion' }
             }
 
@@ -623,6 +633,7 @@ $Rules
                 'WHQLFilePublisher' { $AssignedFallbacks += 'WHQLFilePublisher' }
                 'PFN' { $AssignedFallbacks += 'PFN' }
                 'FilePath' { $AssignedFallbacks += 'FilePath' }
+                'None' { $AssignedFallbacks += 'None' }
                 Default { $AssignedFallbacks += ('FilePublisher', 'Hash') }
             }
             
@@ -681,16 +692,16 @@ $Rules
 
     process {
 
-        if ($Get_BlockRules) { Invoke-Command -ScriptBlock $Get_BlockRulesSCRIPTBLOCK }                                
-        if ($Get_DriverBlockRules) { Invoke-Command -ScriptBlock $Get_DriverBlockRulesSCRIPTBLOCK }   
-        if ($Make_AllowMSFT_WithBlockRules) { Invoke-Command -ScriptBlock $Make_AllowMSFT_WithBlockRulesSCRIPTBLOCK }
-        if ($Deploy_LatestDriverBlockRules) { Invoke-Command -ScriptBlock $Deploy_LatestDriverBlockRulesSCRIPTBLOCK }                               
-        if ($Set_AutoUpdateDriverBlockRules) { Invoke-Command -ScriptBlock $Set_AutoUpdateDriverBlockRulesSCRIPTBLOCK }                                
-        if ($Make_PolicyFromAuditLogs) { Invoke-Command -ScriptBlock $Make_PolicyFromAuditLogsSCRIPTBLOCK }                                
-        if ($Prep_MSFTOnlyAudit) { Invoke-Command -ScriptBlock $Prep_MSFTOnlyAuditSCRIPTBLOCK }
-        if ($Make_LightPolicy) { Invoke-Command -ScriptBlock $Make_LightPolicySCRIPTBLOCK }
-        if ($Make_SuppPolicy) { Invoke-Command -ScriptBlock $Make_SuppPolicySCRIPTBLOCK }
-        if ($Make_DefaultWindows_WithBlockRules) { Invoke-Command -ScriptBlock $Make_DefaultWindows_WithBlockRulesSCRIPTBLOCK }
+        if ($GetBlockRules) { Invoke-Command -ScriptBlock $GetBlockRulesSCRIPTBLOCK }                                
+        if ($GetDriverBlockRules) { Invoke-Command -ScriptBlock $GetDriverBlockRulesSCRIPTBLOCK }   
+        if ($MakeAllowMSFTWithBlockRules) { Invoke-Command -ScriptBlock $MakeAllowMSFTWithBlockRulesSCRIPTBLOCK }
+        if ($DeployLatestDriverBlockRules) { Invoke-Command -ScriptBlock $DeployLatestDriverBlockRulesSCRIPTBLOCK }                               
+        if ($SetAutoUpdateDriverBlockRules) { Invoke-Command -ScriptBlock $SetAutoUpdateDriverBlockRulesSCRIPTBLOCK }                                
+        if ($MakePolicyFromAuditLogs) { Invoke-Command -ScriptBlock $MakePolicyFromAuditLogsSCRIPTBLOCK }                                
+        if ($PrepMSFTOnlyAudit) { Invoke-Command -ScriptBlock $PrepMSFTOnlyAuditSCRIPTBLOCK }
+        if ($MakeLightPolicy) { Invoke-Command -ScriptBlock $MakeLightPolicySCRIPTBLOCK }
+        if ($MakeSupplementalPolicy) { Invoke-Command -ScriptBlock $MakeSupplementalPolicySCRIPTBLOCK }
+        if ($MakeDefaultWindowsWithBlockRules) { Invoke-Command -ScriptBlock $MakeDefaultWindowsWithBlockRulesSCRIPTBLOCK }
 
     }    
   
@@ -710,34 +721,34 @@ Windows Defender Application Control
 .FUNCTIONALITY
 Automate various tasks related to Windows Defender Application Control (WDAC)
 
-.PARAMETER Get_BlockRules
+.PARAMETER GetBlockRules
 Create Microsoft recommended block rules xml policy and remove the allow rules
 
-.PARAMETER Get_DriverBlockRules
+.PARAMETER GetDriverBlockRules
 Create Microsoft recommended driver block rules xml policy and remove the allow rules
 
-.PARAMETER Make_AllowMSFT_WithBlockRules
+.PARAMETER MakeAllowMSFTWithBlockRules
 Make WDAC policy by merging AllowMicrosoft policy with the recommended block rules
 
-.PARAMETER Deploy_LatestDriverBlockRules
+.PARAMETER DeployLatestDriverBlockRules
 Automatically download and deploy the latest Microsoft Recommended Driver Block Rules from Microsoft's source
 
-.PARAMETER Set_AutoUpdateDriverBlockRules
+.PARAMETER SetAutoUpdateDriverBlockRules
 Make a Scheduled Task that automatically runs every 7 days to download the newest Microsoft Recommended driver block rules
 
-.PARAMETER Prep_MSFTOnlyAudit
+.PARAMETER PrepMSFTOnlyAudit
 Prepare the system for Audit mode using AllowMicrosoft default policy
 
-.PARAMETER Make_PolicyFromAuditLogs
+.PARAMETER MakePolicyFromAuditLogs
 Make WDAC Policy from Audit event logs that also covers files no longer on disk
 
-.PARAMETER Make_LightPolicy
+.PARAMETER MakeLightPolicy
 Make WDAC Policy with ISG for Lightly Managed system
 
-.PARAMETER Make_SuppPolicy 
+.PARAMETER MakeSupplementalPolicy 
 Make a Supplemental policy by scanning a directory    
 
-.PARAMETER Make_DefaultWindows_WithBlockRules
+.PARAMETER MakeDefaultWindowsWithBlockRules
 Make WDAC policy by merging DefaultWindows policy with the recommended block rules
 
 .PARAMETER SkipVersionCheck

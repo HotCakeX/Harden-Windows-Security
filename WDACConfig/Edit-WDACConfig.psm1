@@ -1,57 +1,57 @@
 #requires -version 7.3.3
 function Edit-WDACConfig {
     [CmdletBinding(
-        DefaultParameterSetName = "set1",
+        DefaultParameterSetName = "Allow New Apps Audit Events",
         HelpURI = "https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig",
         SupportsShouldProcess = $true,
         PositionalBinding = $false,
         ConfirmImpact = 'High'
     )]
     Param(
-        [Parameter(Mandatory = $false, ParameterSetName = "set1", ValueFromPipeline = $true)][switch]$AllowNewApps_AuditEvents,
-        [Parameter(Mandatory = $false, ParameterSetName = "set2", ValueFromPipeline = $true)][switch]$AllowNewApps,
-        [Parameter(Mandatory = $false, ParameterSetName = "set3", ValueFromPipeline = $true)][switch]$Merge_SupplementalPolicies,
-        [Parameter(Mandatory = $false, ParameterSetName = "set4", ValueFromPipeline = $true)][switch]$UpdateBasePolicy,
+        [Parameter(Mandatory = $false, ParameterSetName = "Allow New Apps Audit Events")][switch]$AllowNewAppsAuditEvents,
+        [Parameter(Mandatory = $false, ParameterSetName = "Allow New Apps")][switch]$AllowNewApps,
+        [Parameter(Mandatory = $false, ParameterSetName = "Merge Supplemental Policies")][switch]$MergeSupplementalPolicies,
+        [Parameter(Mandatory = $false, ParameterSetName = "Update Base Policy")][switch]$UpdateBasePolicy,
 
-        [Parameter(Mandatory = $true, ParameterSetName = "set1", ValueFromPipelineByPropertyName = $true)]
-        [Parameter(Mandatory = $true, ParameterSetName = "set2", ValueFromPipelineByPropertyName = $true)]
-        [Parameter(Mandatory = $true, ParameterSetName = "set3", ValueFromPipelineByPropertyName = $true)]
+        [Parameter(Mandatory = $true, ParameterSetName = "Allow New Apps Audit Events", ValueFromPipelineByPropertyName = $true)]
+        [Parameter(Mandatory = $true, ParameterSetName = "Allow New Apps", ValueFromPipelineByPropertyName = $true)]
+        [Parameter(Mandatory = $true, ParameterSetName = "Merge Supplemental Policies", ValueFromPipelineByPropertyName = $true)]
         [string]$SuppPolicyName,
         
         [ValidatePattern('.*\.xml')]
-        [Parameter(Mandatory = $true, ParameterSetName = "set1", ValueFromPipelineByPropertyName = $true)]
-        [Parameter(Mandatory = $true, ParameterSetName = "set2", ValueFromPipelineByPropertyName = $true)]
-        [Parameter(Mandatory = $true, ParameterSetName = "set3", ValueFromPipelineByPropertyName = $true)]
+        [Parameter(Mandatory = $true, ParameterSetName = "Allow New Apps Audit Events", ValueFromPipelineByPropertyName = $true)]
+        [Parameter(Mandatory = $true, ParameterSetName = "Allow New Apps", ValueFromPipelineByPropertyName = $true)]
+        [Parameter(Mandatory = $true, ParameterSetName = "Merge Supplemental Policies", ValueFromPipelineByPropertyName = $true)]
         [string[]]$PolicyPaths,
 
         [ValidatePattern('.*\.xml')]
-        [Parameter(Mandatory = $true, ParameterSetName = "set3", ValueFromPipelineByPropertyName = $true)]
+        [Parameter(Mandatory = $true, ParameterSetName = "Merge Supplemental Policies", ValueFromPipelineByPropertyName = $true)]
         [string[]]$SuppPolicyPaths,
 
-        [Parameter(Mandatory = $false, ParameterSetName = "set1")]
+        [Parameter(Mandatory = $false, ParameterSetName = "Allow New Apps Audit Events")]
         [switch]$Debugmode,
 
         [ValidateSet([Levelz])]
-        [parameter(Mandatory = $false, ParameterSetName = "set1")]
-        [parameter(Mandatory = $false, ParameterSetName = "set2")]
+        [parameter(Mandatory = $false, ParameterSetName = "Allow New Apps Audit Events")]
+        [parameter(Mandatory = $false, ParameterSetName = "Allow New Apps")]
         [string]$Levels,
 
         [ValidateSet([Fallbackz])]
-        [parameter(Mandatory = $false, ParameterSetName = "set1")]
-        [parameter(Mandatory = $false, ParameterSetName = "set2")]
+        [parameter(Mandatory = $false, ParameterSetName = "Allow New Apps Audit Events")]
+        [parameter(Mandatory = $false, ParameterSetName = "Allow New Apps")]
         [string[]]$Fallbacks,
 
         [ValidateRange(1024KB, [int64]::MaxValue)]
-        [Parameter(Mandatory = $false, ParameterSetName = "set1")]
+        [Parameter(Mandatory = $false, ParameterSetName = "Allow New Apps Audit Events")]
         [Int64]$LogSize,
 
         [ValidateSet([BasePolicyNamez])]
-        [Parameter(Mandatory = $true, ParameterSetName = "set4")][string[]]$CurrentBasePolicyName,
+        [Parameter(Mandatory = $true, ParameterSetName = "Update Base Policy")][string[]]$CurrentBasePolicyName,
 
         [ValidateSet("AllowMicrosoft_Plus_Block_Rules", "Lightly_Managed_system_Policy", "DefaultWindows_WithBlockRules")]
-        [Parameter(Mandatory = $true, ParameterSetName = "set4")][string]$NewBasePolicyType,
+        [Parameter(Mandatory = $true, ParameterSetName = "Update Base Policy")][string]$NewBasePolicyType,
 
-        [Parameter(Mandatory = $false, ParameterSetName = "set4")][switch]$RequireEVSigners,
+        [Parameter(Mandatory = $false, ParameterSetName = "Update Base Policy")][switch]$RequireEVSigners,
 
         [Parameter(Mandatory = $false)][switch]$SkipVersionCheck
     )
@@ -67,10 +67,10 @@ function Edit-WDACConfig {
             }
         }
 
-         # argument tab auto-completion and ValidateSet for Fallbacks
-         Class Fallbackz : System.Management.Automation.IValidateSetValuesGenerator {
+        # argument tab auto-completion and ValidateSet for Fallbacks
+        Class Fallbackz : System.Management.Automation.IValidateSetValuesGenerator {
             [string[]] GetValidValues() {
-                $Fallbackz = ('Hash', 'FileName', 'SignedVersion', 'Publisher', 'FilePublisher', 'LeafCertificate', 'PcaCertificate', 'RootCertificate', 'WHQL', 'WHQLPublisher', 'WHQLFilePublisher', 'PFN', 'FilePath')
+                $Fallbackz = ('Hash', 'FileName', 'SignedVersion', 'Publisher', 'FilePublisher', 'LeafCertificate', 'PcaCertificate', 'RootCertificate', 'WHQL', 'WHQLPublisher', 'WHQLFilePublisher', 'PFN', 'FilePath', 'None')
    
                 return [string[]]$Fallbackz
             }
@@ -79,7 +79,7 @@ function Edit-WDACConfig {
         # argument tab auto-completion and ValidateSet for levels
         Class Levelz : System.Management.Automation.IValidateSetValuesGenerator {
             [string[]] GetValidValues() {
-                $Levelz = ('Hash', 'FileName', 'SignedVersion', 'Publisher', 'FilePublisher', 'LeafCertificate', 'PcaCertificate', 'RootCertificate', 'WHQL', 'WHQLPublisher', 'WHQLFilePublisher', 'PFN', 'FilePath')
+                $Levelz = ('Hash', 'FileName', 'SignedVersion', 'Publisher', 'FilePublisher', 'LeafCertificate', 'PcaCertificate', 'RootCertificate', 'WHQL', 'WHQLPublisher', 'WHQLFilePublisher', 'PFN', 'FilePath', 'None')
        
                 return [string[]]$Levelz
             }
@@ -236,6 +236,7 @@ function Edit-WDACConfig {
                         'WHQLFilePublisher' { $AssignedLevels = 'WHQLFilePublisher' }
                         'PFN' { $AssignedLevels = 'PFN' }
                         'FilePath' { $AssignedLevels = 'FilePath' }
+                        'None' { $AssignedLevels = 'None' }
                         Default { $AssignedLevels = 'SignedVersion' }
                     }
 
@@ -254,6 +255,7 @@ function Edit-WDACConfig {
                         'WHQLFilePublisher' { $AssignedFallbacks += 'WHQLFilePublisher' }
                         'PFN' { $AssignedFallbacks += 'PFN' }
                         'FilePath' { $AssignedFallbacks += 'FilePath' }
+                        'None' { $AssignedFallbacks += 'None' }
                         Default { $AssignedFallbacks += ('FilePublisher', 'Hash') }
                     }
 
@@ -308,8 +310,8 @@ function Edit-WDACConfig {
             }
         }
 
-        if ($AllowNewApps_AuditEvents) {
-            if ($AllowNewApps_AuditEvents -and $LogSize) { Set-LogSize -LogSize $LogSize }
+        if ($AllowNewAppsAuditEvents) {
+            if ($AllowNewAppsAuditEvents -and $LogSize) { Set-LogSize -LogSize $LogSize }
             Remove-Item -Path ".\ProgramDir_ScanResults*.xml" -Force -ErrorAction SilentlyContinue
             Remove-Item -Path ".\SupplementalPolicy$SuppPolicyName.xml" -Force -ErrorAction SilentlyContinue
             $Date = Get-Date
@@ -364,6 +366,8 @@ function Edit-WDACConfig {
                     Write-host "Scanning Windows Event logs and creating a policy file, please wait..." -ForegroundColor Cyan
     
                     # Get Event viewer logs for code integrity
+                    # since New-CIPolicy -Audit doesn't support specifying a time frame for Audit event logs scan, we have to rely on Hash
+                    # of the files included in each audit log to create a supplemental policy and can't use any other levels of fallbacks
                     $block2 = {
                         foreach ($event in Get-WinEvent -FilterHashtable @{LogName = 'Microsoft-Windows-CodeIntegrity/Operational'; ID = 3076 } | Where-Object { $_.TimeCreated -ge $Date } ) {
                             $xml = [xml]$event.toxml()
@@ -474,6 +478,7 @@ $RulesRefs
                         'WHQLFilePublisher' { $AssignedLevels = 'WHQLFilePublisher' }
                         'PFN' { $AssignedLevels = 'PFN' }
                         'FilePath' { $AssignedLevels = 'FilePath' }
+                        'None' { $AssignedLevels = 'None' }
                         Default { $AssignedLevels = 'SignedVersion' }
                     }
 
@@ -492,6 +497,7 @@ $RulesRefs
                         'WHQLFilePublisher' { $AssignedFallbacks += 'WHQLFilePublisher' }
                         'PFN' { $AssignedFallbacks += 'PFN' }
                         'FilePath' { $AssignedFallbacks += 'FilePath' }
+                        'None' { $AssignedFallbacks += 'None' }
                         Default { $AssignedFallbacks += ('FilePublisher', 'Hash') }
                     }
         
@@ -548,7 +554,7 @@ $RulesRefs
             }
         }
 
-        if ($Merge_SupplementalPolicies) {        
+        if ($MergeSupplementalPolicies) {        
             foreach ($PolicyPath in $PolicyPaths) {
                 # Input policy verification prior to doing anything
                 foreach ($SuppPolicyPath in $SuppPolicyPaths) {                                
@@ -603,7 +609,14 @@ $RulesRefs
                 }
                 "DefaultWindows_WithBlockRules" {                                            
                     Copy-item -Path "C:\Windows\schemas\CodeIntegrity\ExamplePolicies\DefaultWindows_Enforced.xml" -Destination ".\DefaultWindows_Enforced.xml"
-                    Merge-CIPolicy -PolicyPaths .\DefaultWindows_Enforced.xml, '.\Microsoft recommended block rules.xml' -OutputFilePath .\BasePolicy.xml | Out-Null     
+                    if (Test-Path "C:\Program Files\PowerShell") {
+                        Write-Host "Creating allow rules for PowerShell in the DefaultWindows base policy so you can continue using this module after deploying it." -ForegroundColor Blue                    
+                        New-CIPolicy -ScanPath "C:\Program Files\PowerShell" -Level SignedVersion -Fallback FilePublisher, Hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -FilePath .\AllowPowerShell.xml
+                        Merge-CIPolicy -PolicyPaths .\DefaultWindows_Enforced.xml, .\AllowPowerShell.xml, '.\Microsoft recommended block rules.xml' -OutputFilePath .\BasePolicy.xml | Out-Null
+                    }
+                    else {
+                        Merge-CIPolicy -PolicyPaths .\DefaultWindows_Enforced.xml, '.\Microsoft recommended block rules.xml' -OutputFilePath .\BasePolicy.xml | Out-Null
+                    }     
                     Set-CIPolicyIdInfo -FilePath .\BasePolicy.xml -PolicyName "DefaultWindowsPlusBlockRules refreshed On $(Get-Date -Format 'MM-dd-yyyy')"
                     @(0, 2, 5, 6, 11, 12, 16, 17, 19, 20) | ForEach-Object { Set-RuleOption -FilePath .\BasePolicy.xml -Option $_ }
                     @(3, 4, 9, 10, 13, 18) | ForEach-Object { Set-RuleOption -FilePath .\BasePolicy.xml -Option $_ -Delete }
@@ -615,6 +628,7 @@ $RulesRefs
             Set-CIPolicyVersion -FilePath .\BasePolicy.xml -Version "1.0.0.1"
             Set-HVCIOptions -Strict -FilePath .\BasePolicy.xml
             
+            Remove-Item .\AllowPowerShell.xml -Force -ErrorAction SilentlyContinue
             Remove-Item .\DefaultWindows_Enforced.xml -Force -ErrorAction SilentlyContinue
             Remove-Item .\AllowMicrosoft.xml -Force -ErrorAction SilentlyContinue
             Remove-Item '.\Microsoft recommended block rules.xml' -Force
@@ -628,7 +642,12 @@ $RulesRefs
             ConvertFrom-CIPolicy ".\BasePolicy.xml" "$CurrentID.cip" | Out-Null
             CiTool --update-policy "$CurrentID.cip" -json
             Remove-Item "$CurrentID.cip" -Force
-            Remove-Item ".\BasePolicy.xml" -Force
+            
+            switch ($NewBasePolicyType) {
+                "AllowMicrosoft_Plus_Block_Rules" { Rename-Item -Path ".\BasePolicy.xml" -NewName "AllowMicrosoftPlusBlockRules.xml" }
+                "Lightly_Managed_system_Policy" { Rename-Item -Path ".\BasePolicy.xml" -NewName "SignedAndReputable.xml" }
+                "DefaultWindows_WithBlockRules" { Rename-Item -Path ".\BasePolicy.xml" -NewName "DefaultWindowsPlusBlockRules.xml" }
+            }
         }
     }
 
@@ -651,13 +670,13 @@ Using official Microsoft methods, Edits non-signed WDAC policies deployed on the
 .PARAMETER AllowNewApps
 While an unsigned WDAC policy is already deployed on the system, rebootlessly turn on Audit mode in it, which will allow you to install a new app that was otherwise getting blocked.
 
-.PARAMETER AllowNewApps_AuditEvents
+.PARAMETER AllowNewAppsAuditEvents
 While an unsigned WDAC policy is already deployed on the system, rebootlessly turn on Audit mode in it, which will allow you to install a new app that was otherwise getting blocked.
 
 .PARAMETER SkipVersionCheck
 Can be used with any parameter to bypass the online version check - only to be used in rare cases
 
-.PARAMETER Merge_SupplementalPolicies
+.PARAMETER MergeSupplementalPolicies
 Merges multiple deployed supplemental policies into 1 single supplemental policy, removes the old ones, deploys the new one. System restart needed to take effect.
 
 .PARAMETER UpdateBasePolicy

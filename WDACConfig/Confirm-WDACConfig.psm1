@@ -4,12 +4,12 @@ function Confirm-WDACConfig {
         HelpURI = "https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig"
     )]
     Param(     
-        [Parameter(Mandatory = $false, ParameterSetName = "set1")][switch]$ListActivePolicies,
-        [Parameter(Mandatory = $false, ParameterSetName = "set2")][switch]$VerifyWDACStatus,
-        [Parameter(Mandatory = $false, ParameterSetName = "set3")][switch]$CheckSmartAppControlStatus,
+        [Parameter(Mandatory = $false, ParameterSetName = "List Active Policies")][switch]$ListActivePolicies,
+        [Parameter(Mandatory = $false, ParameterSetName = "Verify WDAC Status")][switch]$VerifyWDACStatus,
+        [Parameter(Mandatory = $false, ParameterSetName = "Check SmartAppControl Status")][switch]$CheckSmartAppControlStatus,
 
-        [Parameter(Mandatory = $false, ParameterSetName = "set1")][switch]$OnlyBasePolicies,
-        [Parameter(Mandatory = $false, ParameterSetName = "set1")][switch]$OnlySupplementalPolicies,
+        [Parameter(Mandatory = $false, ParameterSetName = "List Active Policies")][switch]$OnlyBasePolicies,
+        [Parameter(Mandatory = $false, ParameterSetName = "List Active Policies")][switch]$OnlySupplementalPolicies,
         
         [Parameter(Mandatory = $false)][switch]$SkipVersionCheck
     )
@@ -57,21 +57,21 @@ function Confirm-WDACConfig {
         if (-NOT $SkipVersionCheck) { Update-self }
     
         $OnlySupplementalPoliciesBLOCK = { Write-host "`nDisplaying non-System Supplemental WDAC Policies:" -ForegroundColor Cyan
-        (CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsSystemPolicy -ne "True" } | Where-Object { $_.PolicyID -ne $_.BasePolicyID } | Tee-Object SupplementalPolicies            
+            $SupplementalPolicies = (CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsSystemPolicy -ne "True" } | Where-Object { $_.PolicyID -ne $_.BasePolicyID } ; $SupplementalPolicies           
             Write-Host "There are currently $(($SupplementalPolicies.count)) Non-system Supplemental policies deployed." -ForegroundColor Green }
 
         $OnlyBasePoliciesBLOCK = { Write-host "`nDisplaying non-System Base WDAC Policies:" -ForegroundColor Cyan
-            (CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsSystemPolicy -ne "True" } | Where-Object { $_.PolicyID -eq $_.BasePolicyID } | Tee-Object BasePolicies            
+            $BasePolicies = (CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsSystemPolicy -ne "True" } | Where-Object { $_.PolicyID -eq $_.BasePolicyID } ; $BasePolicies           
             Write-Host "There are currently $(($BasePolicies.count)) Non-system Base policies deployed." -ForegroundColor Green }
     }
 
     process {
-
         if ($ListActivePolicies) {
             if ($OnlyBasePolicies) { &$OnlyBasePoliciesBLOCK }
             if ($OnlySupplementalPolicies) { &$OnlySupplementalPoliciesBLOCK }               
-            if (!$OnlyBasePolicies -and !$OnlySupplementalPolicies) { &$OnlyBasePoliciesBLOCK; &$OnlySupplementalPoliciesBLOCK }
+            if (-NOT $OnlyBasePolicies -and -NOT$OnlySupplementalPolicies) { &$OnlyBasePoliciesBLOCK; &$OnlySupplementalPoliciesBLOCK }
         }
+        
         if ($VerifyWDACStatus) {
             Get-CimInstance -ClassName Win32_DeviceGuard -Namespace root\Microsoft\Windows\DeviceGuard | Select-Object -Property *codeintegrity* | Format-List
             Write-host "2 -> Enforced`n1 -> Audit mode`n0 -> Disabled/Not running`n" -ForegroundColor Cyan

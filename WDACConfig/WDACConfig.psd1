@@ -12,7 +12,7 @@
     # RootModule = ""
 
     # Version number of this module.
-    ModuleVersion        = '0.0.7'
+    ModuleVersion        = '0.0.8'
 
     # Supported PSEditions
     CompatiblePSEditions = @("Desktop", "Core")
@@ -41,49 +41,52 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
 🛡️ Here is the list of parameters the module supports
 
 
-✔️ New-WDACConfig [[-Get_BlockRules]]
- 
-✔️ New-WDACConfig [[-Get_DriverBlockRules]]
- 
-✔️ New-WDACConfig [[-Make_AllowMSFT_WithBlockRules]] [-Deployit] [-TestMode] [-RequireEVSigners]
- 
-✔️ New-WDACConfig [[-Deploy_LatestDriverBlockRules]]
- 
-✔️ New-WDACConfig [[-Set_AutoUpdateDriverBlockRules]]
- 
-✔️ New-WDACConfig [[-Prep_MSFTOnlyAudit]] [-LogSize <Int64>]
- 
-✔️ New-WDACConfig [[-Make_PolicyFromAuditLogs]] [-Deployit] [-TestMode] [-RequireEVSigners] [-Debugmode] [-LogSize <Int64>]
- 
-✔️ New-WDACConfig [[-Make_LightPolicy]] [-Deployit] [-TestMode] [-RequireEVSigners]
- 
-✔️ New-WDACConfig [[-Make_SuppPolicy]] -ScanLocation <String> -SuppPolicyName <String> -PolicyPath <String> [-Deployit]
-
-✔️ Remove-WDACConfig [[-RemoveSignedPolicies]] -PolicyPaths <String[]> [-SignToolPath <String>] -CertCN <String>
- 
-✔️ Remove-WDACConfig [[-RemovePolicies]] [-PolicyIDs <String[]>] [-PolicyNames <String[]>]
-
-✔️ Edit-WDACConfig [[-AllowNewApps_AuditEvents]] -SuppPolicyName <string> -PolicyPaths <string[]> [-Debugmode] [-LogSize <long>]
- 
-✔️ Edit-WDACConfig [[-AllowNewApps]] -SuppPolicyName <string> -PolicyPaths <string[]>
-
-✔️ Edit-WDACConfig [[-Merge_SupplementalPolicies]] -SuppPolicyName <String> -PolicyPaths <String[]> -SuppPolicyPaths <String[]>
-
-✔️ Edit-WDACConfig [[-UpdateBasePolicy]] -CurrentBasePolicyName <String[]> -NewBasePolicyType <String> [-RequireEVSigners]
-
-✔️ Edit-SignedWDACConfig [[-AllowNewApps_AuditEvents]] -CertPath <String> -SuppPolicyName <String> -PolicyPaths <String[]> [-SignToolPath <String>] -CertCN <String> [-Debugmode] [-LogSize <Int64>]
+✔️ New-WDACConfig [-GetBlockRules] [-SkipVersionCheck]
     
-✔️ Edit-SignedWDACConfig [[-AllowNewApps]] -CertPath <String> -SuppPolicyName <String> -PolicyPaths <String[]> [-SignToolPath <String>] -CertCN <String>
+✔️ New-WDACConfig [-GetDriverBlockRules] [-SkipVersionCheck]
     
-✔️ Edit-SignedWDACConfig [[-Merge_SupplementalPolicies]] -CertPath <String> -SuppPolicyName <String> -PolicyPaths <String[]> [-SignToolPath <String>] -CertCN <String> -SuppPolicyPaths <String[]>
+✔️ New-WDACConfig [-MakeAllowMSFTWithBlockRules] [-Deployit] [-TestMode] [-RequireEVSigners] [-SkipVersionCheck]
+    
+✔️ New-WDACConfig [-DeployLatestDriverBlockRules] [-SkipVersionCheck]
+    
+✔️ New-WDACConfig [-SetAutoUpdateDriverBlockRules] [-SkipVersionCheck]
+    
+✔️ New-WDACConfig [-PrepMSFTOnlyAudit] [-LogSize <Int64>] [-SkipVersionCheck]
+    
+✔️ New-WDACConfig [-MakePolicyFromAuditLogs] [-Deployit] [-TestMode] [-RequireEVSigners] [-Debugmode] [-Levels <String>] [-Fallbacks <String[]>] [-LogSize <Int64>] [-SkipVersionCheck]
+    
+✔️ New-WDACConfig [-MakeLightPolicy] [-Deployit] [-TestMode] [-RequireEVSigners] [-SkipVersionCheck]
+    
+✔️ New-WDACConfig [-MakeSupplementalPolicy] -ScanLocation <String> -SuppPolicyName <String> -PolicyPath <String> [-Deployit] [-Levels <String>] [-Fallbacks <String[]>] [-SkipVersionCheck]
+    
+✔️ New-WDACConfig [-MakeDefaultWindowsWithBlockRules] [-Deployit] [-TestMode] [-RequireEVSigners] [-SkipVersionCheck]
+    
+✔️ Remove-WDACConfig [-RemoveSignedPolicies] -PolicyPaths <String[]> [-SignToolPath <String>] -CertCN <String> [-SkipVersionCheck]
+    
+✔️ Remove-WDACConfig [-RemovePolicies] [-PolicyIDs <String[]>] [-PolicyNames <String[]>] [-SkipVersionCheck]
 
-✔️ Deploy-SignedWDACConfig -CertPath <String> -PolicyPaths <String[]> [-SignToolPath <String>] -CertCN <String>
- 
-✔️ Confirm-WDACConfig [[-ListActivePolicies]]
- 
-✔️ Confirm-WDACConfig [[-VerifyWDACStatus]]
+✔️ Edit-WDACConfig [-AllowNewAppsAuditEvents] -SuppPolicyName <String> -PolicyPaths <String[]> [-Debugmode] [-Levels <String>] [-Fallbacks <String[]>] [-LogSize <Int64>] [-SkipVersionCheck]
+    
+✔️ Edit-WDACConfig [-AllowNewApps] -SuppPolicyName <String> -PolicyPaths <String[]> [-Levels <String>] [-Fallbacks <String[]>] [-SkipVersionCheck]
+    
+✔️ Edit-WDACConfig [-MergeSupplementalPolicies] -SuppPolicyName <String> -PolicyPaths <String[]> -SuppPolicyPaths <String[]> [-SkipVersionCheck]
+    
+✔️ Edit-WDACConfig [-UpdateBasePolicy] -CurrentBasePolicyName <String[]> -NewBasePolicyType <String> [-RequireEVSigners] [-SkipVersionCheck]
+    
+✔️ Edit-SignedWDACConfig [-AllowNewAppsAuditEvents] -CertPath <String> -SuppPolicyName <String> -PolicyPaths <String[]> [-SignToolPath <String>] -CertCN <String> [-Debugmode] [-LogSize <Int64>] [-Levels <String>] [-Fallbacks <String[]>] [-SkipVersionCheck]
+    
+✔️ Edit-SignedWDACConfig [-AllowNewApps] -CertPath <String> -SuppPolicyName <String> -PolicyPaths <String[]> [-SignToolPath <String>] -CertCN <String> [-Levels <String>] [-Fallbacks <String[]>] [-SkipVersionCheck]
+    
+✔️ Edit-SignedWDACConfig [-MergeSupplementalPolicies] -CertPath <String> -SuppPolicyName <String> -PolicyPaths <String[]> [-SignToolPath <String>] -CertCN <String> -SuppPolicyPaths <String[]> [-SkipVersionCheck]
+    
+✔️ Edit-SignedWDACConfig [-UpdateBasePolicy] -CertPath <String> -SignToolPath <String> -CertCN <String> -CurrentBasePolicyName <String[]> -NewBasePolicyType <String> [-RequireEVSigners] [-SkipVersionCheck]
 
-✔️ Confirm-WDACConfig [[-CheckSmartAppControlStatus]]
+✔️ Confirm-WDACConfig [-ListActivePolicies] [-OnlyBasePolicies] [-OnlySupplementalPolicies] [-SkipVersionCheck]
+    
+✔️ Confirm-WDACConfig [-VerifyWDACStatus] [-SkipVersionCheck]
+
+✔️ Confirm-WDACConfig [-CheckSmartAppControlStatus] [-SkipVersionCheck]
+
 
 
 To get help and syntax on PowerShell console, type:
@@ -131,8 +134,8 @@ To get help and syntax on PowerShell console, type:
     # FormatsToProcess = @()
 
     # Modules to import as nested modules of the module specified in RootModule/ModuleToProcess
-    NestedModules        = @("Remove-WDACConfig.psm1", "New-WDACConfig.psm1", "Deploy-SignedWDACConfig.psm1", "Confirm-WDACConfig.psm1", "Edit-WDACConfig.psm1", "Edit-SignedWDACConfig.psm1")
-# ,"New-AllowMSFT_WithBlockRules","Update-self","Test-IsAdmin","Set-LogSize"
+    NestedModules        = @("New-WDACConfig.psm1", "Remove-WDACConfig.psm1", "Deploy-SignedWDACConfig.psm1", "Confirm-WDACConfig.psm1", "Edit-WDACConfig.psm1", "Edit-SignedWDACConfig.psm1")
+
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
     FunctionsToExport    = @("New-WDACConfig", "Remove-WDACConfig", "Deploy-SignedWDACConfig", "Confirm-WDACConfig", "Edit-WDACConfig", "Edit-SignedWDACConfig")
 
@@ -175,14 +178,34 @@ To get help and syntax on PowerShell console, type:
             ReleaseNotes = @"
 
 ## Version
-0.0.8 New features: Added the last base policy type, DefaultWindows, to the available base policy options to be used for the cmdlets of this module. Added -UpdateBasePolicy parameter for the Edit-SignedWDACConfig cmdlet, so you can seamlessly change the base policy type or update block rules in it without changing or redeploying supplemental policies. All cmdlets and parameters that create a supplemental policy by scanning now allow granular controls over levels and fallback levels, giving user full control over that process.
-0.0.7 New feature: Edit-WDACConfig -UpdateBasePolicy It can rebootlessly change the type of the deployed base policy. It can update the recommended block rules and/or change policy rule options in the deployed base policy. Used Begin and Process blocks in module functions to organize everything properly. Added a lot of parameter validations.
-0.0.6 New feature: Confirm-WDACConfig -CheckSmartAppControlStatus. Checks the status of Smart App Control and reports the results on the console. Improved Confirm-WDACConfig -ListActivePolicies by showing the number of deployed non-system WDAC policies and base policies on the console.
-0.0.5 New feature: Edit-SignedWDACConfig -Merge_SupplementalPolicies. It can merge multiple deployed Signed supplemental policies into 1 and deploy it, remove the individual ones, all happening automatically. Very useful to keep Supplemental policies below 32 since that's the limit.
+
+0.0.8 New features: Added the last base policy type, DefaultWindows, to the available base policy options to be used for the cmdlets of this module.
+New features: Added -UpdateBasePolicy parameter for the Edit-SignedWDACConfig cmdlet, so you can seamlessly change the base policy type or update block rules in it without changing or redeploying supplemental policies.
+All cmdlets and parameters that create a supplemental policy by scanning now allow optional granular controls over levels and fallback levels, giving user full control over that process.
+Removed underscore (_) from parameter names and now using camel case for all of them.
+Changed parameter set names from generic Set1,Set2 etc. to proper names that can easily identify which parameter they belong to.
+Added [-OnlyBasePolicies] and [-OnlySupplementalPolicies] switches to "Confirm-WDACConfig [-ListActivePolicies]".
+The module now has a total of 23 distinct parameters/features to help easily manage advanced WDAC and Application Whitelisting tasks.
+
+0.0.7 New feature: Edit-WDACConfig -UpdateBasePolicy It can rebootlessly change the type of the deployed base policy. It can update the recommended block rules and/or change policy rule options in the deployed base policy.
+Used Begin and Process blocks in module functions to organize everything properly. Added a lot of parameter validations.
+
+0.0.6 New feature: Confirm-WDACConfig -CheckSmartAppControlStatus.
+Checks the status of Smart App Control and reports the results on the console.
+Improved Confirm-WDACConfig -ListActivePolicies by showing the number of deployed non-system WDAC policies and base policies on the console.
+
+0.0.5 New feature: Edit-SignedWDACConfig -Merge_SupplementalPolicies. It can merge multiple deployed Signed supplemental policies into 1 and deploy it, remove the individual ones, all happening automatically.
+Very useful to keep Supplemental policies below 32 since that's the limit.
+
 0.0.4 New feature: Merge multiple deployed Supplemental policies into 1 and deploy it, remove the individual ones, all happening automatically. Very useful to keep Supplemental policies below 32 since that's the limit.
+
 0.0.3 Completed self-updating feature. Changed icon, added syntaxes.
+
 0.0.2 Testing self updating procedure with the new PowerShell gallery repo
-0.0.1 Renamed the previous repository in order to comply with proper nested modules and improve the readability and mangement of the module. Added 2 new features too, rebootlessly add new apps to non-signed deployed WDAC policies. You could do it with Signed policies, now you can do the same with non-signed policies.
+
+0.0.1 Renamed the previous repository in order to comply with proper nested modules and improve the readability and mangement of the module.
+Added 2 new features too, rebootlessly add new apps to non-signed deployed WDAC policies. You could do it with Signed policies, now you can do the same with non-signed policies.
+
 "@
 
 

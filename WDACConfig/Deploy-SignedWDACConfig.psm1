@@ -7,9 +7,9 @@ function Deploy-SignedWDACConfig {
         ConfirmImpact = 'High'
     )]
     Param(
-        [ValidatePattern('.*\.cer')][parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true)][string]$CertPath,       
-        [ValidatePattern('.*\.xml')][parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true)][string[]]$PolicyPaths,        
-        [ValidatePattern('.*\.exe')][parameter(Mandatory = $false, ValueFromPipelineByPropertyName = $true)][string]$SignToolPath,
+        [ValidatePattern('.*\.cer')][parameter(Mandatory = $true)][string]$CertPath,       
+        [ValidatePattern('.*\.xml')][parameter(Mandatory = $true)][string[]]$PolicyPaths,        
+        [ValidatePattern('.*\.exe')][parameter(Mandatory = $false)][string]$SignToolPath,
         
         [ValidateScript({
                 try {

@@ -1,21 +1,21 @@
 #requires -version 7.3.3
 function Remove-WDACConfig {
     [CmdletBinding(      
-        DefaultParameterSetName = "set1",  
+        DefaultParameterSetName = "Remove Signed Policies",  
         HelpURI = "https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig",
         SupportsShouldProcess = $true,
         PositionalBinding = $false,
         ConfirmImpact = 'High'
     )]
     Param(        
-        [Parameter(Mandatory = $false, ParameterSetName = "set1", ValueFromPipeline = $true)][switch]$RemoveSignedPolicies,
-        [Parameter(Mandatory = $false, ParameterSetName = "set2", ValueFromPipeline = $true)][switch]$RemovePolicies,
+        [Parameter(Mandatory = $false, ParameterSetName = "Remove Signed Policies")][switch]$RemoveSignedPolicies,
+        [Parameter(Mandatory = $false, ParameterSetName = "Remove Policies")][switch]$RemovePolicies,
 
         [ValidatePattern('.*\.xml')]
-        [parameter(Mandatory = $true, ParameterSetName = "set1", ValueFromPipelineByPropertyName = $true)][string[]]$PolicyPaths,
+        [parameter(Mandatory = $true, ParameterSetName = "Remove Signed Policies", ValueFromPipelineByPropertyName = $true)][string[]]$PolicyPaths,
 
         [ValidatePattern('.*\.exe')]
-        [parameter(Mandatory = $false, ParameterSetName = "set1", ValueFromPipelineByPropertyName = $true)][string]$SignToolPath,
+        [parameter(Mandatory = $false, ParameterSetName = "Remove Signed Policies", ValueFromPipelineByPropertyName = $true)][string]$SignToolPath,
         
         [ValidateScript({
                 try {
@@ -26,10 +26,11 @@ function Remove-WDACConfig {
                     Write-Error "A certificate with the provided common name doesn't exist in the personal store of the user certificates."
                 } # this error msg is shown when cert CN is not available in the personal store of the user certs
             }, ErrorMessage = "A certificate with the provided common name doesn't exist in the personal store of the user certificates." )]
-        [parameter(Mandatory = $true, ParameterSetName = "set1", ValueFromPipelineByPropertyName = $true)][string]$CertCN,        
+        [parameter(Mandatory = $true, ParameterSetName = "Remove Signed Policies", ValueFromPipelineByPropertyName = $true)]
+        [string]$CertCN,        
         
-        [ValidateSet([PolicyIDz])][parameter(Mandatory = $false, ParameterSetName = "set2")][string[]]$PolicyIDs,
-        [ValidateSet([PolicyNamez])][parameter(Mandatory = $false, ParameterSetName = "set2")][string[]]$PolicyNames,
+        [ValidateSet([PolicyIDz])][parameter(Mandatory = $false, ParameterSetName = "Remove Policies")][string[]]$PolicyIDs,
+        [ValidateSet([PolicyNamez])][parameter(Mandatory = $false, ParameterSetName = "Remove Policies")][string[]]$PolicyNames,
 
         [Parameter(Mandatory = $false)][switch]$SkipVersionCheck
     )

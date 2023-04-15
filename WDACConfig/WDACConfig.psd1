@@ -12,7 +12,7 @@
     # RootModule = ""
 
     # Version number of this module.
-    ModuleVersion        = '0.0.8'
+    ModuleVersion        = '0.0.9'
 
     # Supported PSEditions
     CompatiblePSEditions = @("Desktop", "Core")
@@ -41,62 +41,64 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
 🛡️ Here is the list of parameters the module supports
 
 
-✔️ New-WDACConfig [-GetBlockRules] [-SkipVersionCheck]
+✔️ New-WDACConfig [-GetBlockRules]
     
-✔️ New-WDACConfig [-GetDriverBlockRules] [-SkipVersionCheck]
+✔️ New-WDACConfig [-GetDriverBlockRules]
     
-✔️ New-WDACConfig [-MakeAllowMSFTWithBlockRules] [-Deployit] [-TestMode] [-RequireEVSigners] [-SkipVersionCheck]
+✔️ New-WDACConfig [-MakeAllowMSFTWithBlockRules] [-Deployit] [-TestMode] [-RequireEVSigners]
     
-✔️ New-WDACConfig [-DeployLatestDriverBlockRules] [-SkipVersionCheck]
+✔️ New-WDACConfig [-DeployLatestDriverBlockRules]
     
-✔️ New-WDACConfig [-SetAutoUpdateDriverBlockRules] [-SkipVersionCheck]
+✔️ New-WDACConfig [-SetAutoUpdateDriverBlockRules]
     
-✔️ New-WDACConfig [-PrepMSFTOnlyAudit] [-LogSize <Int64>] [-SkipVersionCheck]
+✔️ New-WDACConfig [-PrepMSFTOnlyAudit] [-LogSize <Int64>]
     
-✔️ New-WDACConfig [-MakePolicyFromAuditLogs] [-Deployit] [-TestMode] [-RequireEVSigners] [-Debugmode] [-Levels <String>] [-Fallbacks <String[]>] [-LogSize <Int64>] [-SkipVersionCheck]
+✔️ New-WDACConfig [-MakePolicyFromAuditLogs] [-Deployit] [-TestMode] [-RequireEVSigners] [-Debugmode] [-Levels <String>] [-Fallbacks <String[]>] [-LogSize <Int64>]
     
-✔️ New-WDACConfig [-MakeLightPolicy] [-Deployit] [-TestMode] [-RequireEVSigners] [-SkipVersionCheck]
+✔️ New-WDACConfig [-MakeLightPolicy] [-Deployit] [-TestMode] [-RequireEVSigners]
     
-✔️ New-WDACConfig [-MakeSupplementalPolicy] -ScanLocation <String> -SuppPolicyName <String> -PolicyPath <String> [-Deployit] [-Levels <String>] [-Fallbacks <String[]>] [-SkipVersionCheck]
+✔️ New-WDACConfig [-MakeSupplementalPolicy] -ScanLocation <String> -SuppPolicyName <String> -PolicyPath <String> [-Deployit] [-Levels <String>] [-Fallbacks <String[]>]
     
-✔️ New-WDACConfig [-MakeDefaultWindowsWithBlockRules] [-Deployit] [-TestMode] [-RequireEVSigners] [-SkipVersionCheck]
+✔️ New-WDACConfig [-MakeDefaultWindowsWithBlockRules] [-Deployit] [-TestMode] [-RequireEVSigners]
     
-✔️ Remove-WDACConfig [-RemoveSignedPolicies] -PolicyPaths <String[]> [-SignToolPath <String>] -CertCN <String> [-SkipVersionCheck]
+✔️ Remove-WDACConfig [-RemoveSignedPolicies] -PolicyPaths <String[]> [-SignToolPath <String>] -CertCN <String>
     
-✔️ Remove-WDACConfig [-RemovePolicies] [-PolicyIDs <String[]>] [-PolicyNames <String[]>] [-SkipVersionCheck]
+✔️ Remove-WDACConfig [-RemovePolicies] [-PolicyIDs <String[]>] [-PolicyNames <String[]>]
 
-✔️ Edit-WDACConfig [-AllowNewAppsAuditEvents] -SuppPolicyName <String> -PolicyPaths <String[]> [-Debugmode] [-Levels <String>] [-Fallbacks <String[]>] [-LogSize <Int64>] [-SkipVersionCheck]
+✔️ Edit-WDACConfig [-AllowNewAppsAuditEvents] -SuppPolicyName <String> -PolicyPaths <String[]> [-Debugmode] [-Levels <String>] [-Fallbacks <String[]>] [-LogSize <Int64>]
     
-✔️ Edit-WDACConfig [-AllowNewApps] -SuppPolicyName <String> -PolicyPaths <String[]> [-Levels <String>] [-Fallbacks <String[]>] [-SkipVersionCheck]
+✔️ Edit-WDACConfig [-AllowNewApps] -SuppPolicyName <String> -PolicyPaths <String[]> [-Levels <String>] [-Fallbacks <String[]>]
     
-✔️ Edit-WDACConfig [-MergeSupplementalPolicies] -SuppPolicyName <String> -PolicyPaths <String[]> -SuppPolicyPaths <String[]> [-SkipVersionCheck]
+✔️ Edit-WDACConfig [-MergeSupplementalPolicies] -SuppPolicyName <String> -PolicyPaths <String[]> -SuppPolicyPaths <String[]>
     
-✔️ Edit-WDACConfig [-UpdateBasePolicy] -CurrentBasePolicyName <String[]> -NewBasePolicyType <String> [-RequireEVSigners] [-SkipVersionCheck]
+✔️ Edit-WDACConfig [-UpdateBasePolicy] -CurrentBasePolicyName <String[]> -NewBasePolicyType <String> [-RequireEVSigners]
     
-✔️ Edit-SignedWDACConfig [-AllowNewAppsAuditEvents] -CertPath <String> -SuppPolicyName <String> -PolicyPaths <String[]> [-SignToolPath <String>] -CertCN <String> [-Debugmode] [-LogSize <Int64>] [-Levels <String>] [-Fallbacks <String[]>] [-SkipVersionCheck]
+✔️ Edit-SignedWDACConfig [-AllowNewAppsAuditEvents] -CertPath <String> -SuppPolicyName <String> -PolicyPaths <String[]> [-SignToolPath <String>] -CertCN <String> [-Debugmode] [-LogSize <Int64>] [-Levels <String>] [-Fallbacks <String[]>]
     
-✔️ Edit-SignedWDACConfig [-AllowNewApps] -CertPath <String> -SuppPolicyName <String> -PolicyPaths <String[]> [-SignToolPath <String>] -CertCN <String> [-Levels <String>] [-Fallbacks <String[]>] [-SkipVersionCheck]
+✔️ Edit-SignedWDACConfig [-AllowNewApps] -CertPath <String> -SuppPolicyName <String> -PolicyPaths <String[]> [-SignToolPath <String>] -CertCN <String> [-Levels <String>] [-Fallbacks <String[]>]
     
-✔️ Edit-SignedWDACConfig [-MergeSupplementalPolicies] -CertPath <String> -SuppPolicyName <String> -PolicyPaths <String[]> [-SignToolPath <String>] -CertCN <String> -SuppPolicyPaths <String[]> [-SkipVersionCheck]
+✔️ Edit-SignedWDACConfig [-MergeSupplementalPolicies] -CertPath <String> -SuppPolicyName <String> -PolicyPaths <String[]> [-SignToolPath <String>] -CertCN <String> -SuppPolicyPaths <String[]>
     
-✔️ Edit-SignedWDACConfig [-UpdateBasePolicy] -CertPath <String> -SignToolPath <String> -CertCN <String> -CurrentBasePolicyName <String[]> -NewBasePolicyType <String> [-RequireEVSigners] [-SkipVersionCheck]
+✔️ Edit-SignedWDACConfig [-UpdateBasePolicy] -CertPath <String> -SignToolPath <String> -CertCN <String> -CurrentBasePolicyName <String[]> -NewBasePolicyType <String> [-RequireEVSigners]
 
-✔️ Confirm-WDACConfig [-ListActivePolicies] [-OnlyBasePolicies] [-OnlySupplementalPolicies] [-SkipVersionCheck]
-    
-✔️ Confirm-WDACConfig [-VerifyWDACStatus] [-SkipVersionCheck]
+✔️ Deploy-SignedWDACConfig -CertPath <String> -PolicyPaths <String[]> [-SignToolPath <String>] -CertCN <String>
 
-✔️ Confirm-WDACConfig [-CheckSmartAppControlStatus] [-SkipVersionCheck]
+✔️ Confirm-WDACConfig [-ListActivePolicies] [-OnlyBasePolicies] [-OnlySupplementalPolicies]
+    
+✔️ Confirm-WDACConfig [-VerifyWDACStatus]
+
+✔️ Confirm-WDACConfig [-CheckSmartAppControlStatus]
 
 
 
 To get help and syntax on PowerShell console, type:
 "Get-Command -Module WDACConfig"
-"Get-Help Confirm-WDACConfig"
-"Get-Help Deploy-SignedWDACConfig"
-"Get-Help Edit-SignedWDACConfig"
-"Get-Help Edit-WDACConfig"
 "Get-Help New-WDACConfig"
 "Get-Help Remove-WDACConfig"
+"Get-Help Edit-WDACConfig"
+"Get-Help Edit-SignedWDACConfig"
+"Get-Help Deploy-SignedWDACConfig"
+"Get-Help Confirm-WDACConfig"
 
 "@
 
@@ -179,13 +181,15 @@ To get help and syntax on PowerShell console, type:
 
 ## Version
 
+0.0.9 Very small update only to change the description of the PowerShell gallery's page and fix the details, nothing code related.
+
 0.0.8 New features: Added the last base policy type, DefaultWindows, to the available base policy options to be used for the cmdlets of this module.
 New features: Added -UpdateBasePolicy parameter for the Edit-SignedWDACConfig cmdlet, so you can seamlessly change the base policy type or update block rules in it without changing or redeploying supplemental policies.
 All cmdlets and parameters that create a supplemental policy by scanning now allow optional granular controls over levels and fallback levels, giving user full control over that process.
 Removed underscore (_) from parameter names and now using camel case for all of them.
 Changed parameter set names from generic Set1,Set2 etc. to proper names that can easily identify which parameter they belong to.
 Added [-OnlyBasePolicies] and [-OnlySupplementalPolicies] switches to "Confirm-WDACConfig [-ListActivePolicies]".
-The module now has a total of 23 distinct parameters/features to help easily manage advanced WDAC and Application Whitelisting tasks.
+The module now has a total of 24 distinct parameters/features to help easily manage advanced WDAC and Application Whitelisting tasks.
 
 0.0.7 New feature: Edit-WDACConfig -UpdateBasePolicy It can rebootlessly change the type of the deployed base policy. It can update the recommended block rules and/or change policy rule options in the deployed base policy.
 Used Begin and Process blocks in module functions to organize everything properly. Added a lot of parameter validations.

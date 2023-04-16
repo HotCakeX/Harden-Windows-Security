@@ -365,7 +365,7 @@ else {
             # check, make sure there is no CD/DVD drives in the system, because Bitlocker throws an error when there is
             $CDDVDCheck = (Get-WMIObject -Class Win32_CDROMDrive -Property *).MediaLoaded
             if ($CDDVDCheck) {
-                Write-Warning "Remove any CD/DVD drives from the system and run the Bitlocker category after that"
+                Write-Warning "Remove any CD/DVD drives or mounted images/ISO from the system and run the Bitlocker category after that"
                 break
             }
             # check make sure Bitlocker isn't in the middle of decryption/encryption operation (on System Drive)
@@ -649,9 +649,8 @@ Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which re
                         $Password2 = $(write-host "Confirm your password for the built-in Administrator account" -ForegroundColor Magenta; Read-Host -AsSecureString)      
                         $theyMatch = Compare-SecureString $Password1 $Password2
             
-                        if ($theyMatch) {      
-                            $Password = $Password1        
-                            Set-LocalUser -Name "Administrator" -Password $Password
+                        if ($theyMatch) {
+                            Set-LocalUser -Name "Administrator" -Password $Password1
                         }      
                         else { Write-Host "the passwords you entered didn't match, try again" -ForegroundColor red }
                     }      
@@ -662,7 +661,7 @@ Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which re
                         Write-Host "Enabling Built-in Administrator account." -ForegroundColor Green
                     }
                     else {
-                        Write-Host "Built-in Administrator account is enabled." -ForegroundColor Green
+                        Write-Host "Built-in Administrator account is already enabled." -ForegroundColor Green
                     }
                 } "No" { break }
                 "Exit" { &$cleanUp }

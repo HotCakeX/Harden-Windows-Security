@@ -118,6 +118,7 @@ function Compare-SecureString {
 } 
 #endregion functions
 
+# doing a try-finally block so that when CTRL + C is pressed to forcefully exit the script, clean up will still happen
 try {
 
     # create our working directory
@@ -126,8 +127,16 @@ try {
     $workingDir = "$env:TEMP\HardeningXStuff\"
     # change location to the new directory
     Set-Location $workingDir
+
     # Clean up script block
-    $cleanUp = { Set-Location $HOME; remove-item -Recurse "$env:TEMP\HardeningXStuff\" -Force; pause; exit }
+    $cleanUp = { param([bool]$finally) 
+        if (-NOT $finally) {
+            Set-Location $HOME; remove-item -Recurse "$env:TEMP\HardeningXStuff\" -Force; pause; exit
+        }
+        elseif ($finally) {
+            Set-Location $HOME; remove-item -Recurse "$env:TEMP\HardeningXStuff\" -Force -ErrorAction SilentlyContinue; break
+        }
+    }
 
     if (-NOT (Test-IsAdmin))
     { write-host "Skipping commands that require Administrator privileges" -ForegroundColor Magenta }
@@ -978,8 +987,7 @@ Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which re
             "################################################################################################`r`n" +
             "###  Please Restart your device to completely apply the security measures and Group Policies ###`r`n" +
             "################################################################################################`r`n"
-            Write-Host $infomsg -ForegroundColor Cyan      
-            &$cleanUp
+            Write-Host $infomsg -ForegroundColor Cyan
         } "No" { &$cleanUp }
         "Exit" { &$cleanUp }
     }
@@ -987,5 +995,5 @@ Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which re
     #endregion Non-Admin-Commands
 }
 finally {
-    &$cleanUp
+    &$cleanUp $True
 }

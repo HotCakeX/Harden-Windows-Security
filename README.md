@@ -636,6 +636,8 @@ This repository uses the simplest possible, yet effective, methods that make it 
 
 - Change log history is present on GitHub. _(Despite some of my awkward documentation typos)_
 
+- [Full change log available in Excel online too](https://1drv.ms/x/s!AtCaUNAJbbvIhuVQhdMu_Hts7YZ_lA?e=df6H6P)
+
 - You can open the file in [Visual Studio Code](https://code.visualstudio.com/)/[Visual Studio Code Web](https://vscode.dev/), and view the script in a nice easy to read environment, it's well formatted and indented.
 
 - You can fork this repository, verify it until that point in time, then verify any subsequent changes/updates I push to this repository, __at your own pace__ (using `Sync fork` and `Compare` options on your fork), and if you are happy with the changes, allow it to be merged with your own copy/fork on your GitHub account.

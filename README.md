@@ -33,7 +33,9 @@
   <a href="#security-recommendations">Security Recommendations</a> •
   <a href="#resources">Resources</a> •
   <a href="#license">License</a> •
-  <a href="https://github.com/HotCakeX/Harden-Windows-Security/wiki">Wiki</a>
+  <a href="https://github.com/HotCakeX/Harden-Windows-Security/wiki">Wiki</a> •
+  <a href="https://1drv.ms/x/s!AtCaUNAJbbvIhuVQhdMu_Hts7YZ_lA?e=df6H6P">Full change log in Excel online</a>
+
 
 </p>
 
@@ -638,8 +640,6 @@ You don't need admin privileges to run this category, because no system-wide cha
 This repository uses the simplest possible, yet effective, methods that make it very easy to verify:
 
 - Change log history is present on GitHub. _(Despite some of my awkward documentation typos)_
-
-- [Full change log available in Excel online too](https://1drv.ms/x/s!AtCaUNAJbbvIhuVQhdMu_Hts7YZ_lA?e=df6H6P)
 
 - You can open the file in [Visual Studio Code](https://code.visualstudio.com/)/[Visual Studio Code Web](https://vscode.dev/), and view the script in a nice easy to read environment, it's well formatted and indented.
 

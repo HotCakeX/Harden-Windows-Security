@@ -39,11 +39,11 @@
 
 <h2> <br> </h2>
 
-<img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/yellow%20bell%20small.gif" alt="PowerShell Gallery"> __Harden-Windows-Security is a PowerShell script. It automates all of the tasks required to harden Windows Security beyond the default state. It is suitable and recommended to be run on every home computer.__ See the <a href="#features">Features</a> section below.
+<img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/yellow%20bell%20small.gif" alt="Harden-Windows-Security is a PowerShell script"> __Harden-Windows-Security is a PowerShell script. It automates all of the tasks required to harden Windows Security beyond the default state. It is suitable and recommended to be run on every home computer.__ See the <a href="#features">Features</a> section below.
 
-<img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/yellow%20bell%20small.gif" alt="PowerShell Gallery"> __For Enterprises, Highly-Secure Servers and Data Centers, Highly-Secure Workstations and such, [__Use Windows Defender Application Control (WDAC) resources on this repository.__](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Introduction)__
+<img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/yellow%20bell%20small.gif" alt="For Enterprises, Highly-Secure Servers and Data Centers, Highly-Secure Workstations"> __For Enterprises, Highly-Secure Servers and Data Centers, Highly-Secure Workstations and such, [__Use Windows Defender Application Control (WDAC) resources on this repository.__](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Introduction)__
 
- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/PNGs/StonkUp.png" width="35" alt="PowerShell Gallery"> [__WDACConfig Module__](https://www.powershellgallery.com/packages/WDACConfig/) for advanced automated WDAC configurations and Application whitelisting in Windows.
+ <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/PNGs/StonkUp.png" width="35" alt="WDACConfig module for advanced automated WDAC configurations and Application whitelisting in Windows"> [__WDACConfig Module__](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig) for advanced automated WDAC configurations and Application whitelisting in Windows.
 
 <h1> <br> </h1>
 </br>

@@ -78,6 +78,44 @@ $null = New-Module {
         }
     }
 }
+
+<#
+https://stackoverflow.com/questions/48809012/compare-two-credentials-in-powershell
+
+ Safely compares two SecureString objects without decrypting them.
+ Outputs $true if they are equal, or $false otherwise.
+#>
+function Compare-SecureString {
+    param(
+        [Security.SecureString] $secureString1,
+        [Security.SecureString] $secureString2
+    )
+    try {
+        $bstr1 = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($secureString1)
+        $bstr2 = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($secureString2)
+        $length1 = [Runtime.InteropServices.Marshal]::ReadInt32($bstr1, -4)
+        $length2 = [Runtime.InteropServices.Marshal]::ReadInt32($bstr2, -4)
+        if ( $length1 -ne $length2 ) {
+            return $false
+        }
+        for ( $i = 0; $i -lt $length1; ++$i ) {
+            $b1 = [Runtime.InteropServices.Marshal]::ReadByte($bstr1, $i)
+            $b2 = [Runtime.InteropServices.Marshal]::ReadByte($bstr2, $i)
+            if ( $b1 -ne $b2 ) {
+                return $false
+            }
+        }
+        return $true
+    }
+    finally {
+        if ( $bstr1 -ne [IntPtr]::Zero ) {
+            [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($bstr1)
+        }
+        if ( $bstr2 -ne [IntPtr]::Zero ) {
+            [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($bstr2)
+        }
+    }
+} 
 #endregion functions
 
 # create our working directory
@@ -321,43 +359,7 @@ else {
                 .\LGPO.exe /m "..\Security-Baselines-X\Overrides for Microsoft Security Baseline\Bitlocker DMA\Bitlocker DMA Countermeasure ON\Registry.pol"                                                          
             }
             # set-up Bitlocker encryption for OS Drive with TPMandPIN and recovery password keyprotectors and Verify its implementation
-            <#
-https://stackoverflow.com/questions/48809012/compare-two-credentials-in-powershell
-
- Safely compares two SecureString objects without decrypting them.
- Outputs $true if they are equal, or $false otherwise.
-#>
-            function Compare-SecureString {
-                param(
-                    [Security.SecureString] $secureString1,
-                    [Security.SecureString] $secureString2
-                )
-                try {
-                    $bstr1 = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($secureString1)
-                    $bstr2 = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($secureString2)
-                    $length1 = [Runtime.InteropServices.Marshal]::ReadInt32($bstr1, -4)
-                    $length2 = [Runtime.InteropServices.Marshal]::ReadInt32($bstr2, -4)
-                    if ( $length1 -ne $length2 ) {
-                        return $false
-                    }
-                    for ( $i = 0; $i -lt $length1; ++$i ) {
-                        $b1 = [Runtime.InteropServices.Marshal]::ReadByte($bstr1, $i)
-                        $b2 = [Runtime.InteropServices.Marshal]::ReadByte($bstr2, $i)
-                        if ( $b1 -ne $b2 ) {
-                            return $false
-                        }
-                    }
-                    return $true
-                }
-                finally {
-                    if ( $bstr1 -ne [IntPtr]::Zero ) {
-                        [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($bstr1)
-                    }
-                    if ( $bstr2 -ne [IntPtr]::Zero ) {
-                        [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($bstr2)
-                    }
-                }
-            }  
+             
             # check, make sure there is no CD/DVD drives in the system, because Bitlocker throws an error when there is
             $CDDVDCheck = (Get-WMIObject -Class Win32_CDROMDrive -Property *).MediaLoaded
             if ($CDDVDCheck) {
@@ -633,7 +635,36 @@ Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which re
             Set-Location "$workingDir\LGPO_30"
 
             Write-Host "`nApplying User Account Control (UAC) Security policies" -ForegroundColor Cyan
-            .\LGPO.exe /s "..\Security-Baselines-X\User Account Control UAC Policies\GptTmpl.inf"        
+            .\LGPO.exe /s "..\Security-Baselines-X\User Account Control UAC Policies\GptTmpl.inf" 
+            
+            # built-in Administrator account enablement
+            switch (Select-Option -Options "Yes", "No", "Exit" -Message "Enable the built-in Administrator account ?") {
+                "Yes" {
+                    # show password policy details
+                    net accounts
+                    do {
+                        $Password1 = $(write-host "Enter a password for the built-in Administrator account" -ForegroundColor Magenta; Read-Host -AsSecureString)
+                        $Password2 = $(write-host "Confirm your password for the built-in Administrator account" -ForegroundColor Magenta; Read-Host -AsSecureString)      
+                        $theyMatch = Compare-SecureString $Password1 $Password2
+            
+                        if ($theyMatch) {      
+                            $Password = $Password1        
+                            Set-LocalUser -Name "Administrator" -Password $Password
+                        }      
+                        else { Write-Host "the passwords you entered didn't match, try again" -ForegroundColor red }
+                    }      
+                    until ($theyMatch -and $?)
+
+                    if (-NOT ((Get-LocalUser | Where-Object { $_.name -eq "Administrator" }).enabled)) {
+                        Enable-LocalUser -Name "Administrator"
+                        Write-Host "Enabling Built-in Administrator account." -ForegroundColor Green
+                    }
+                    else {
+                        Write-Host "Built-in Administrator account is enabled." -ForegroundColor Green
+                    }
+                } "No" { break }
+                "Exit" { &$cleanUp }
+            }    
         } "No" { break }
         "Exit" { &$cleanUp }
     }    
@@ -944,8 +975,12 @@ switch (Select-Option -Options "Yes", "No", "Exit" -Message "Run Non-Admin categ
         "###  Please Restart your device to completely apply the security measures and Group Policies ###`r`n" +
         "################################################################################################`r`n"
         Write-Host $infomsg -ForegroundColor Cyan
-        Start-Sleep 3; &$cleanUp
-    } "No" { break }
+        Pause        
+        &$cleanUp
+    } "No" {
+        Pause
+        &$cleanUp 
+    }
     "Exit" { &$cleanUp }
 }
 # ====================================================End of Non-Admin Commands============================================

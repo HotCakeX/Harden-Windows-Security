@@ -246,6 +246,7 @@ The security baseline for Microsoft 365 Apps for enterprise is published twice a
 
 - 🟩 Enables [Controlled Folder Access](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/enable-controlled-folders). It [helps protect your valuable data](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/controlled-folders) from malicious apps and threats, such as ransomware. Controlled folder access protects your data by checking apps against a list of known, trusted apps. Due to the recent wave of global ransomware attacks, it is important to use this feature to protect your valuables files, specially OneDrive folders.
   - If it blocks a program from accessing one of your folders it protects, and you absolutely trust that program, then you can add it to exclusion list using Microsoft Defender GUI or PowerShell. you can also query the list of allowed apps using PowerShell (commands below). with these commands, you can backup your personalized list of allowed apps, that are relevant to your system, and restore them in case you clean install your Windows.
+  - 🔶 The script adds the root of OneDrive folders of all user accounts present when running the script, to the protected folders list of Controlled Folder Access, to provide Ransomware protection for the entire OneDrive folder.
 
 ```PowerShell
 # Add multiple programs to the exclusion list of Controlled Folder Access
@@ -388,6 +389,8 @@ If you want to read more: [Demystifying Schannel](https://techcommunity.microsof
   - 🔻#TopSecurity🔺 behavior: Automatically deny all UAC prompts on Standard accounts. __Highly recommended to be used on sensitive critical machines.__ Only use Standard account for regular everyday tasks, and if you want to perform administrative tasks such as intalling a program system-wide or changing system settings, completely log out of the Standard account and log into an Administrator account, perform the tasks, then completely log out and log back into the Standard account to continue your work. No [fast user switching](https://learn.microsoft.com/en-us/windows/win32/shell/fast-user-switching) and ___absolutely no UAC on Standard accounts.___
 
 - 🟩 🔻#TopSecurity🔺Hides the entry points for [Fast User Switching](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-windowslogon).
+
+- 🔶 __(Requires additional confirmation to run):__ [Asks for a strong password for the built-in Administrator account and then enables it.](https://github.com/HotCakeX/Harden-Windows-Security/discussions/30#discussioncomment-5627737)
 
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 

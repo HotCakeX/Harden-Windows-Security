@@ -223,7 +223,7 @@ else {
                         Write-Host "Smart App Control is turned off. Can't use registry to force enable it.`n"
                     }
                 } "No" { break }
-                "Exit" { exit }
+                "Exit" { &$cleanUp }
             }
             # Enable Mandatory ASLR
             set-processmitigation -System -Enable ForceRelocateImages
@@ -246,7 +246,7 @@ else {
                         Set-ScheduledTask -TaskPath "MSFT Driver Block list update" -TaskName "MSFT Driver Block list update" -Settings $TaskSettings 
                     }
                 } "No" { break }
-                "Exit" { exit }
+                "Exit" { &$cleanUp }
             }
             # Set Microsoft Defender engine and platform update channel to beta - Devices in the Windows Insider Program are subscribed to this channel by default.
             switch (Select-Option -Options "Yes", "No", "Exit" -Message "Set Microsoft Defender engine and platform update channel to beta ?") {
@@ -702,7 +702,7 @@ Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which re
             Where-Object { $_.RuleGroup -eq "@%SystemRoot%\system32\firewallapi.dll,-37302" -and $_.Direction -eq "inbound" } |
             ForEach-Object { Disable-NetFirewallRule -DisplayName $_.DisplayName }
         } "No" { break }
-        "Exit" { exit }
+        "Exit" { &$cleanUp }
     }    
     # =================================================End of Windows Firewall=================================================
     #endregion Windows-Firewall

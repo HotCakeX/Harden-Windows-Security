@@ -125,7 +125,7 @@ $workingDir = "$env:TEMP\HardeningXStuff\"
 # change location to the new directory
 Set-Location $workingDir
 # Clean up script block
-$cleanUp = { Set-Location $HOME; remove-item -Recurse "$env:TEMP\HardeningXStuff\" -Force; break }
+$cleanUp = { Set-Location $HOME; remove-item -Recurse "$env:TEMP\HardeningXStuff\" -Force; pause; exit }
 
 if (-NOT (Test-IsAdmin))
 { write-host "Skipping commands that require Administrator privileges" -ForegroundColor Magenta }
@@ -974,13 +974,9 @@ switch (Select-Option -Options "Yes", "No", "Exit" -Message "Run Non-Admin categ
         "################################################################################################`r`n" +
         "###  Please Restart your device to completely apply the security measures and Group Policies ###`r`n" +
         "################################################################################################`r`n"
-        Write-Host $infomsg -ForegroundColor Cyan
-        Pause        
+        Write-Host $infomsg -ForegroundColor Cyan      
         &$cleanUp
-    } "No" {
-        Pause
-        &$cleanUp 
-    }
+    } "No" { &$cleanUp }
     "Exit" { &$cleanUp }
 }
 # ====================================================End of Non-Admin Commands============================================

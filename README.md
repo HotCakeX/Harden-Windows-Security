@@ -1,7 +1,7 @@
 <h1 align="center">
   <br>
   <a href="https://github.com/HotCakeX/Harden-Windows-Security"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/png-donut-2.png" alt="Avatar" width="200"></a>
-  <br> 
+  <br>
   <br>
   Harden Windows Security
   <br>
@@ -39,9 +39,11 @@
 
 <h2> <br> </h2>
 
-![GreenCheckCircleMark] __Harden-Windows-Security is a PowerShell script. It automates all of the tasks required to harden Windows Security beyond the default state. It is suitable and recommended to be run on every home computer.__ See the <a href="#features">Features</a> section below.
+<img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/yellow%20bell%20small.gif" alt="PowerShell Gallery"> __Harden-Windows-Security is a PowerShell script. It automates all of the tasks required to harden Windows Security beyond the default state. It is suitable and recommended to be run on every home computer.__ See the <a href="#features">Features</a> section below.
 
-![GreenCheckCircleMark] __For Enterprises, Highly-Secure Servers and Data Centers, Highly-Secure Workstations and such, [__Use Windows Defender Application Control (WDAC) resources on this repository.__](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Introduction)__
+<img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/yellow%20bell%20small.gif" alt="PowerShell Gallery"> __For Enterprises, Highly-Secure Servers and Data Centers, Highly-Secure Workstations and such, [__Use Windows Defender Application Control (WDAC) resources on this repository.__](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Introduction)__
+
+ <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/PNGs/StonkUp.png" width="35" alt="PowerShell Gallery"> [__WDACConfig Module__](https://www.powershellgallery.com/packages/WDACConfig/) for advanced automated WDAC configurations and Application whitelisting in Windows.
 
 <h1> <br> </h1>
 </br>
@@ -76,7 +78,7 @@
 - Always stays up-to-date with the newest security features and only guaranteed to work on the latest version of Windows, **which is currently Windows 11**. (_rigorously tested on the latest Stable and Insider preview builds_).
   
 - The script is in [plain text](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden-Windows-Security.ps1), nothing hidden, no 3rd party executable or pre-compiled binary is involved.
-  - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/red-alert.gif" width="25" alt="Important notice"> **For your own security**, do not use any other 3rd party tools, programs or scripts that claim to harden Windows or modify it in any way, **unless you can 100% verify it**. [Never trust 3rd party people on the Internet,](https://hotcakex.github.io/PDFViewer#5-Risk-Points-to-Avoid-in-Enterprise-Security) always verify their resources and do that after each release. **Keep on reading the features to see why this Harden-Windows-Security script is different and <a href="#Trust">read the Trust section</a> to see how you can 100% Trust it.**
+  - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/red-alert.gif" width="25" alt="Important notice"> **For your own security**, do not use any other 3rd party tools, programs or scripts that claim to harden Windows or modify it in any way, **unless you can 100% verify it**. [Never trust 3rd party people on the Internet,](https://hotcakex.github.io/PDFViewer#5-Risk-Points-to-Avoid-in-Enterprise-Security) always verify their resources and do that after each release. **Keep on reading the features to see why this Harden-Windows-Security script is different and <a href="#Trust">read the Trust section</a> to see how you can 100% Trust it.**
 
 - The script doesn't remove or disable Windows functionalities against Microsoft's recommendation.
   
@@ -96,7 +98,7 @@
 </details>
 
 - The script primarily uses Group policies, **the Microsoft recommended way of configuring Windows**. It also uses PowerShell cmdlets where Group Policies aren't available, and finally uses [a few registry keys](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Payload/Registry.csv) to configure security measures that can neither be configured using Group Policies nor PowerShell cmdlets. This is why the script doesn't break anything or cause unwanted behavior.
-  - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/red-alert.gif" width="25" alt="Important notice"> **Any other 3rd party tool/program/script that claims to modify Windows or harden it, if they don't strictly adhere to the official rules above, they can damage your system, cause unknown problems and bugs.** [How are Group Policies for this script created and maintained?](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Group-Policy#how-are-group-policies-for-this-script-created-and-maintained)
+  - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/red-alert.gif" width="25" alt="Important notice"> **Any other 3rd party tool/program/script that claims to modify Windows or harden it, if they don't strictly adhere to the official rules above, they can damage your system, cause unknown problems and bugs.** [How are Group Policies for this script created and maintained?](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Group-Policy#how-are-group-policies-for-this-script-created-and-maintained)
 
 - This Readme page is used as the reference for all of the security measures applied by this script and Group Policies.
 
@@ -622,8 +624,6 @@ You don't need admin privileges to run this category, because no system-wide cha
 
 [Official global IANA IP block for each country](https://hotcakex.github.io/Official-IANA-IP-blocks/)
 
-[`WDACConfig` Module](https://www.powershellgallery.com/packages/WDACConfig/)
-
 [Windows Security Blog](https://spynetgirl.github.io/)
 
 <br>
@@ -669,11 +669,11 @@ _Links above are automatically updated. There is a [GitHub workflow](https://git
 
 ## Support<a href="#support">![SupportIcon]</a>
 
-- If you have any questions, requests, suggestions etc. about this GitHub repository and its content, please open [a new discussion](https://github.com/HotCakeX/Harden-Windows-Security/discussions) or [Issue](https://github.com/HotCakeX/Harden-Windows-Security/issues).
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/WebP/Heart%20Microsoft.webp" width="28" alt="PowerShell Gallery"> If you have any questions, requests, suggestions etc. about this GitHub repository and its content, please open [a new discussion](https://github.com/HotCakeX/Harden-Windows-Security/discussions) or [Issue](https://github.com/HotCakeX/Harden-Windows-Security/issues).
 
-- [Reporting a vulnerability](https://github.com/HotCakeX/Harden-Windows-Security/security/advisories) on this GitHub repository.
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/WebP/Ninja%20cat.webp" width="28" alt="PowerShell Gallery"> [Reporting a vulnerability](https://github.com/HotCakeX/Harden-Windows-Security/security/advisories) on this GitHub repository.
 
-- I can also be reached privately at: spynetgirl@outlook.com
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/Outlook%20small.gif" alt="PowerShell Gallery"> I can also be reached privately at: spynetgirl@outlook.com
 
 <br>
 
@@ -797,7 +797,6 @@ Not Applicable, No license, just free information, because the only mission of t
 </a> </p>
 
 [Microsoft365AppsSecurityBaselines]: images/Microsoft-365-Apps-Security-Baselines.png
-[GreenCheckCircleMark]: images/GreenCheckCircle.png
 [HardeningCategoriesIcon]: images/HardeningCategories.png
 [FeaturesIcon]: images/Features.png
 [HowToUseIcon]: images/HowToUse.png

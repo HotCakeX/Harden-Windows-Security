@@ -125,7 +125,7 @@ $workingDir = "$env:TEMP\HardeningXStuff\"
 # change location to the new directory
 Set-Location $workingDir
 # Clean up script block
-$cleanUp = { Set-Location $HOME; remove-item -Recurse "$env:TEMP\HardeningXStuff\" -Force; exit }
+$cleanUp = { Set-Location $HOME; remove-item -Recurse "$env:TEMP\HardeningXStuff\" -Force; break }
 
 if (-NOT (Test-IsAdmin))
 { write-host "Skipping commands that require Administrator privileges" -ForegroundColor Magenta }

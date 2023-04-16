@@ -210,6 +210,9 @@ else {
             # Optimizing Network Protection Performance of Windows Defender - this was off by default on Windows 11 insider build 25247
             Set-MpPreference -AllowSwitchToAsyncInspection $True
             
+            # Add OneDrive folders of all user accounts to the Controlled Folder Access for Ransomware Protection
+            Get-ChildItem "C:\Users\*\OneDrive" | ForEach-Object { Add-MpPreference -ControlledFolderAccessProtectedFolders $_ }
+
             # Try turning on Smart App Control
             switch (Select-Option -Options "Yes", "No", "Exit" -Message "Turn on Smart App Control ?") {
                 "Yes" {               
@@ -358,8 +361,7 @@ else {
                 Write-Host "Kernel DMA protection is unavailable on the system, enabling Bitlocker DMA protection." -ForegroundColor Blue
                 .\LGPO.exe /m "..\Security-Baselines-X\Overrides for Microsoft Security Baseline\Bitlocker DMA\Bitlocker DMA Countermeasure ON\Registry.pol"                                                          
             }
-            # set-up Bitlocker encryption for OS Drive with TPMandPIN and recovery password keyprotectors and Verify its implementation
-             
+            # Set-up Bitlocker encryption for OS Drive with TPMandPIN and recovery password keyprotectors and Verify its implementation            
             # check, make sure there is no CD/DVD drives in the system, because Bitlocker throws an error when there is
             $CDDVDCheck = (Get-WMIObject -Class Win32_CDROMDrive -Property *).MediaLoaded
             if ($CDDVDCheck) {
@@ -732,7 +734,7 @@ Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which re
             # Enable Virtual Machine Platform
             PowerShell.exe "Write-Host 'Enabling Virtual Machine Platform' -ForegroundColor Yellow;if((get-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform).state -eq 'disabled'){enable-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform -norestart}else{Write-Host 'VirtualMachinePlatform is already enabled' -ForegroundColor Darkgreen}"
             
-            # Uninstall VBScript that is now uninstallable as an optional features since Windows 11 insider Dev build 25309                       
+            # Uninstall VBScript that is now uninstallable as an optional features since Windows 11 insider Dev build 25309 - Won't do anything in other builds                      
             PowerShell.exe 'if (Get-WindowsCapability -Online | Where-Object { $_.Name -like ''*VBSCRIPT*'' }){`
             Get-WindowsCapability -Online | Where-Object { $_.Name -like ''*VBSCRIPT*'' } | remove-WindowsCapability -Online;`
             Write-Host "VBSCRIPT has been uninstalled" -ForegroundColor Green}'         

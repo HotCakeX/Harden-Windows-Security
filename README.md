@@ -202,6 +202,8 @@ The security baseline for Microsoft 365 Apps for enterprise is published twice a
 
 ## Microsoft Defender<a href="#Microsoft-Defender">![WindowsDefenderIcon]</a>
 
+<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/PNGs/mde-cloud-protection.png" alt="Microsoft Defender Cloud Protection" width="450"></p>
+
 - 🟩 Enables __additional__ security features of Microsoft Defender, You can refer to [this official document](https://docs.microsoft.com/en-us/powershell/module/defender/set-mppreference?view=windowsserver2022-ps) for full details.
 
   - [Performance analyzer for Microsoft Defender Antivirus](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/tune-performance-defender-antivirus)
@@ -279,6 +281,8 @@ $(get-MpPreference).ControlledFolderAccessAllowedApplications
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
 ## Attack surface reduction rules<a href="#Attack-surface-reduction-rules">![ASRrulesIcon]</a>
+
+<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/BIGCDOC.jpg" alt="Microsoft Protect" width="900"></p>
 
 🟩 [Reducing your attack surface](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/attack-surface-reduction) means protecting your devices and network, which leaves attackers with fewer ways to perform attacks. Configuring attack surface reduction rules in Windows can help!
 

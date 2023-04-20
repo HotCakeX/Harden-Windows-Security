@@ -647,6 +647,8 @@ This repository uses the simplest possible, yet effective, methods that make it 
 
 - You can open the file in [Visual Studio Code](https://code.visualstudio.com/)/[Visual Studio Code Web](https://vscode.dev/), and view the script in a nice easy to read environment, it's well formatted and indented.
 
+- Commits are verified with my GPG or SSH keys
+
 - You can fork this repository, verify it until that point in time, then verify any subsequent changes/updates I push to this repository, __at your own pace__ (using `Sync fork` and `Compare` options on your fork), and if you are happy with the changes, allow it to be merged with your own copy/fork on your GitHub account.
 - You can learn PowerShell which is super easy, multiplatform, and useful for the future, Microsoft Learn website teaches you everything, then you will understand everything in the script is safe, or you can ask someone that you trust and knows PowerShell to verify the script for you.
 

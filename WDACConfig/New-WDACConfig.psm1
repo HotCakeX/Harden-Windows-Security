@@ -8,12 +8,14 @@ function New-WDACConfig {
         ConfirmImpact = 'High'
     )]
     Param(
+        # 11 Main parameters - should be used for position 0
         [Parameter(Mandatory = $false, ParameterSetName = "Get Block Rules")][switch]$GetBlockRules,
         [Parameter(Mandatory = $false, ParameterSetName = "Get Driver Block Rules")][switch]$GetDriverBlockRules,
         [Parameter(Mandatory = $false, ParameterSetName = "Make AllowMSFT With Block Rules")][switch]$MakeAllowMSFTWithBlockRules,
         [Parameter(Mandatory = $false, ParameterSetName = "Deploy Latest Driver Block Rules")][switch]$DeployLatestDriverBlockRules,                                                                                       
         [Parameter(Mandatory = $false, ParameterSetName = "Set Auto Update Driver Block Rules")][switch]$SetAutoUpdateDriverBlockRules,
         [Parameter(Mandatory = $false, ParameterSetName = "Prep MSFT Only Audit")][switch]$PrepMSFTOnlyAudit,
+        [Parameter(Mandatory = $false, ParameterSetName = "Prep Default Windows Audit")][switch]$PrepDefaultWindowsAudit,        
         [Parameter(Mandatory = $false, ParameterSetName = "Make Policy From Audit Logs")][switch]$MakePolicyFromAuditLogs,  
         [Parameter(Mandatory = $false, ParameterSetName = "Make Light Policy")][switch]$MakeLightPolicy,
         [Parameter(Mandatory = $false, ParameterSetName = "Make Supplemental Policy")][switch]$MakeSupplementalPolicy,
@@ -22,6 +24,9 @@ function New-WDACConfig {
         [parameter(Mandatory = $true, ParameterSetName = "Make Supplemental Policy", ValueFromPipelineByPropertyName = $true)][string]$ScanLocation,
         [parameter(Mandatory = $true, ParameterSetName = "Make Supplemental Policy", ValueFromPipelineByPropertyName = $true)][string]$SuppPolicyName,
         [ValidatePattern('.*\.xml')][parameter(Mandatory = $true, ParameterSetName = "Make Supplemental Policy", ValueFromPipelineByPropertyName = $true)][string]$PolicyPath,
+          
+        [ValidateSet("Allow Microsoft Base", "Default Windows Base")]
+        [Parameter(Mandatory = $true, ParameterSetName = "Make Policy From Audit Logs")][string]$BasePolicyType,
 
         [Parameter(Mandatory = $false, ParameterSetName = "Make AllowMSFT With Block Rules")]
         [Parameter(Mandatory = $false, ParameterSetName = "Make Policy From Audit Logs")]
@@ -44,6 +49,25 @@ function New-WDACConfig {
 
         [Parameter(Mandatory = $false, ParameterSetName = "Make Policy From Audit Logs")][switch]$Debugmode,
 
+        [Parameter(Mandatory = $false, ParameterSetName = "Make Supplemental Policy")]
+        [Parameter(Mandatory = $false, ParameterSetName = "Make Policy From Audit Logs")]
+        [switch]$AllowFileNameFallbacks,
+        
+        [ValidateSet("OriginalFileName", "InternalName", "FileDescription", "ProductName", "PackageFamilyName", "FilePath")]
+        [Parameter(Mandatory = $false, ParameterSetName = "Make Supplemental Policy")]
+        [Parameter(Mandatory = $false, ParameterSetName = "Make Policy From Audit Logs")]
+        [string]$SpecificFileNameLevel,
+
+        [Parameter(Mandatory = $false, ParameterSetName = "Make Policy From Audit Logs")][switch]$NoDeletedFiles,
+
+        [Parameter(Mandatory = $false, ParameterSetName = "Make Supplemental Policy")]
+        [Parameter(Mandatory = $false, ParameterSetName = "Make Policy From Audit Logs")]
+        [switch]$NoUserPEs,
+
+        [Parameter(Mandatory = $false, ParameterSetName = "Make Supplemental Policy")]
+        [Parameter(Mandatory = $false, ParameterSetName = "Make Policy From Audit Logs")]
+        [switch]$NoScript,
+
         [ValidateSet([Levelz])]
         [parameter(Mandatory = $false, ParameterSetName = "Make Policy From Audit Logs")]
         [parameter(Mandatory = $false, ParameterSetName = "Make Supplemental Policy")]
@@ -56,9 +80,10 @@ function New-WDACConfig {
 
         [ValidateRange(1024KB, [int64]::MaxValue)]
         [Parameter(Mandatory = $false, ParameterSetName = "Prep MSFT Only Audit")]
+        [Parameter(Mandatory = $false, ParameterSetName = "Prep Default Windows Audit")]
         [Parameter(Mandatory = $false, ParameterSetName = "Make Policy From Audit Logs")]        
         [Int64]$LogSize,
-
+        
         [Parameter(Mandatory = $false)][switch]$SkipVersionCheck    
     )
 
@@ -84,6 +109,8 @@ function New-WDACConfig {
 
         # Make sure the latest version of the module is installed and if not, automatically update it, clean up any old versions
         function Update-self {
+            # this works too - for when module is installed using manual copy/paste and when installed through PSGallery
+            # (get-Module -ListAvailable -Name WDACConfig).Version.ToString()
             $currentversion = (Test-modulemanifest "$psscriptroot\WDACConfig.psd1").Version.ToString()
             try {
                 $latestversion = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/WDACConfig/version.txt"
@@ -140,12 +167,12 @@ function New-WDACConfig {
             $Rules = $Rules -replace '<FileRuleRef\sRuleID="ID_ALLOW_A_1".*/>', ''
             $Rules = $Rules -replace '<FileRuleRef\sRuleID="ID_ALLOW_A_2".*/>', ''
             
-            $Rules | Out-File '.\Microsoft recommended block rules TEMP.xml'
+            $Rules | Out-File 'Microsoft recommended block rules TEMP.xml'
             
-            Get-Content '.\Microsoft recommended block rules TEMP.xml' | Where-Object { $_.trim() -ne "" } | Out-File '.\Microsoft recommended block rules.xml'                
-            Remove-Item '.\Microsoft recommended block rules TEMP.xml' -Force
-            Set-RuleOption -FilePath '.\Microsoft recommended block rules.xml' -Option 3 -Delete
-            Set-HVCIOptions -Strict -FilePath '.\Microsoft recommended block rules.xml'
+            Get-Content 'Microsoft recommended block rules TEMP.xml' | Where-Object { $_.trim() -ne "" } | Out-File 'Microsoft recommended block rules.xml'                
+            Remove-Item 'Microsoft recommended block rules TEMP.xml' -Force
+            Set-RuleOption -FilePath 'Microsoft recommended block rules.xml' -Option 3 -Delete
+            Set-HVCIOptions -Strict -FilePath 'Microsoft recommended block rules.xml'
             [PSCustomObject]@{
                 PolicyFile = 'Microsoft recommended block rules.xml'
             }
@@ -165,12 +192,12 @@ function New-WDACConfig {
             #$DriverRules = $DriverRules -replace '<FileRuleRef\sRuleID="ID_ALLOW_ALL_2".*/>',''
             $DriverRules = $DriverRules -replace '<SigningScenario\sValue="12"\sID="ID_SIGNINGSCENARIO_WINDOWS"\sFriendlyName="Auto\sgenerated\spolicy[\S\s]*<\/SigningScenario>', ''
 
-            $DriverRules | Out-File '.\Microsoft recommended driver block rules TEMP.xml'
+            $DriverRules | Out-File 'Microsoft recommended driver block rules TEMP.xml'
 
-            Get-Content '.\Microsoft recommended driver block rules TEMP.xml' | Where-Object { $_.trim() -ne "" } | Out-File '.\Microsoft recommended driver block rules.xml'
-            Remove-Item '.\Microsoft recommended driver block rules TEMP.xml' -Force
-            Set-RuleOption -FilePath '.\Microsoft recommended driver block rules.xml' -Option 3 -Delete
-            Set-HVCIOptions -Strict -FilePath '.\Microsoft recommended driver block rules.xml'
+            Get-Content 'Microsoft recommended driver block rules TEMP.xml' | Where-Object { $_.trim() -ne "" } | Out-File 'Microsoft recommended driver block rules.xml'
+            Remove-Item 'Microsoft recommended driver block rules TEMP.xml' -Force
+            Set-RuleOption -FilePath 'Microsoft recommended driver block rules.xml' -Option 3 -Delete
+            Set-HVCIOptions -Strict -FilePath 'Microsoft recommended driver block rules.xml'
     
             Invoke-Command -ScriptBlock $DriversBlockListInfoGatheringSCRIPTBLOCK
 
@@ -182,8 +209,8 @@ function New-WDACConfig {
         $MakeAllowMSFTWithBlockRulesSCRIPTBLOCK = {
             param([bool]$NoCIP)
             Invoke-Command -ScriptBlock $GetBlockRulesSCRIPTBLOCK | Out-Null                        
-            Copy-item -Path "C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml" -Destination ".\AllowMicrosoft.xml"
-            Merge-CIPolicy -PolicyPaths .\AllowMicrosoft.xml, '.\Microsoft recommended block rules.xml' -OutputFilePath .\AllowMicrosoftPlusBlockRules.xml | Out-Null     
+            Copy-item -Path "C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml" -Destination "AllowMicrosoft.xml"
+            Merge-CIPolicy -PolicyPaths .\AllowMicrosoft.xml, 'Microsoft recommended block rules.xml' -OutputFilePath .\AllowMicrosoftPlusBlockRules.xml | Out-Null     
             $PolicyID = Set-CIPolicyIdInfo -FilePath .\AllowMicrosoftPlusBlockRules.xml -PolicyName "AllowMicrosoftPlusBlockRules Made On $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID
             $PolicyID = $PolicyID.Substring(11)
             Set-CIPolicyVersion -FilePath .\AllowMicrosoftPlusBlockRules.xml -Version "1.0.0.0"
@@ -199,7 +226,7 @@ function New-WDACConfig {
             ConvertFrom-CIPolicy .\AllowMicrosoftPlusBlockRules.xml "$PolicyID.cip" | Out-Null   
 
             Remove-Item .\AllowMicrosoft.xml -Force
-            Remove-Item '.\Microsoft recommended block rules.xml' -Force
+            Remove-Item 'Microsoft recommended block rules.xml' -Force
 
             [PSCustomObject]@{
                 PolicyFile = "AllowMicrosoftPlusBlockRules.xml"
@@ -207,7 +234,7 @@ function New-WDACConfig {
             }
 
             if ($Deployit -and $MakeAllowMSFTWithBlockRules) {            
-                CiTool --update-policy ".\$PolicyID.cip" -json
+                CiTool --update-policy "$PolicyID.cip" -json
                 Write-host "`n"
             }
             if ($NoCIP)
@@ -217,16 +244,17 @@ function New-WDACConfig {
         $MakeDefaultWindowsWithBlockRulesSCRIPTBLOCK = {
             param([bool]$NoCIP)
             Invoke-Command -ScriptBlock $GetBlockRulesSCRIPTBLOCK | Out-Null                        
-            Copy-item -Path "C:\Windows\schemas\CodeIntegrity\ExamplePolicies\DefaultWindows_Enforced.xml" -Destination ".\DefaultWindows_Enforced.xml"
-            
+            Copy-item -Path "C:\Windows\schemas\CodeIntegrity\ExamplePolicies\DefaultWindows_Enforced.xml" -Destination "DefaultWindows_Enforced.xml"
+          
             if (Test-Path "C:\Program Files\PowerShell") {
                 Write-Host "Creating allow rules for PowerShell in the DefaultWindows base policy so you can continue using this module after deploying it." -ForegroundColor Blue                    
-                New-CIPolicy -ScanPath "C:\Program Files\PowerShell" -Level SignedVersion -Fallback FilePublisher, Hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -FilePath .\AllowPowerShell.xml
-                Merge-CIPolicy -PolicyPaths .\DefaultWindows_Enforced.xml, .\AllowPowerShell.xml, '.\Microsoft recommended block rules.xml' -OutputFilePath .\DefaultWindowsPlusBlockRules.xml | Out-Null
+                New-CIPolicy -ScanPath "C:\Program Files\PowerShell" -Level FilePublisher -NoScript -Fallback Hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -FilePath .\AllowPowerShell.xml
+                Merge-CIPolicy -PolicyPaths .\DefaultWindows_Enforced.xml, .\AllowPowerShell.xml, 'Microsoft recommended block rules.xml' -OutputFilePath .\DefaultWindowsPlusBlockRules.xml | Out-Null
             }
             else {
-                Merge-CIPolicy -PolicyPaths .\DefaultWindows_Enforced.xml, '.\Microsoft recommended block rules.xml' -OutputFilePath .\DefaultWindowsPlusBlockRules.xml | Out-Null     
-            }
+                Merge-CIPolicy -PolicyPaths .\DefaultWindows_Enforced.xml, 'Microsoft recommended block rules.xml' -OutputFilePath .\DefaultWindowsPlusBlockRules.xml | Out-Null                         
+            }                  
+            
             $PolicyID = Set-CIPolicyIdInfo -FilePath .\DefaultWindowsPlusBlockRules.xml -PolicyName "DefaultWindowsPlusBlockRules Made On $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID
             $PolicyID = $PolicyID.Substring(11)
             Set-CIPolicyVersion -FilePath .\DefaultWindowsPlusBlockRules.xml -Version "1.0.0.0"
@@ -243,7 +271,7 @@ function New-WDACConfig {
 
             Remove-item .\AllowPowerShell.xml -Force -ErrorAction SilentlyContinue
             Remove-Item .\DefaultWindows_Enforced.xml -Force
-            Remove-Item '.\Microsoft recommended block rules.xml' -Force
+            Remove-Item 'Microsoft recommended block rules.xml' -Force
 
             [PSCustomObject]@{
                 PolicyFile = "DefaultWindowsPlusBlockRules.xml"
@@ -251,7 +279,7 @@ function New-WDACConfig {
             }
 
             if ($Deployit -and $MakeDefaultWindowsWithBlockRules) {            
-                CiTool --update-policy ".\$PolicyID.cip" -json
+                CiTool --update-policy "$PolicyID.cip" -json
                 Write-host "`n"
             }
             if ($NoCIP)
@@ -298,9 +326,39 @@ function New-WDACConfig {
             Set-CIPolicyIdInfo -PolicyName "PrepMSFTOnlyAudit" -FilePath .\AllowMicrosoft.xml
             ConvertFrom-CIPolicy .\AllowMicrosoft.xml "$PolicyID.cip" | Out-Null
             CiTool --update-policy "$PolicyID.cip" -json
-            Remove-Item ".\AllowMicrosoft.xml" -Force
+            Remove-Item "AllowMicrosoft.xml" -Force
             Remove-Item "$PolicyID.cip" -Force
             Write-host "`nThe default AllowMicrosoft policy has been deployed in Audit mode. No reboot required." -ForegroundColor Magenta     
+        }
+
+        $PrepDefaultWindowsAuditSCRIPTBLOCK = {
+            if ($PrepDefaultWindowsAudit -and $LogSize) { Set-LogSize -LogSize $LogSize }
+            Copy-item -Path C:\Windows\schemas\CodeIntegrity\ExamplePolicies\DefaultWindows_Audit.xml -Destination .\DefaultWindows_Audit.xml
+           
+            # Making Sure neither PowerShell core nor WDACConfig module files are added to the Supplemental policy created by -MakePolicyFromAuditLogs parameter
+            # by addibg them first to the deployed Default Windows policy in Audit mode. Because WDACConfig module files don't need to be allowed to run and
+            # PowerShell core files will be added to the DefaultWindows Base policy anyway
+            if (Test-Path "C:\Program Files\PowerShell") {               
+                New-CIPolicy -ScanPath "C:\Program Files\PowerShell" -Level FilePublisher -NoScript -Fallback Hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -FilePath .\AllowPowerShell.xml
+                New-CIPolicy -ScanPath "$psscriptroot" -Level hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -FilePath .\WDACConfigModule.xml
+                Merge-CIPolicy -PolicyPaths .\DefaultWindows_Audit.xml, .\AllowPowerShell.xml, .\WDACConfigModule.xml -OutputFilePath .\DefaultWindows_Audit_temp.xml | Out-Null
+            } 
+
+            Remove-Item DefaultWindows_Audit.xml -Force            
+            Rename-Item -Path .\DefaultWindows_Audit_temp.xml -NewName "DefaultWindows_Audit.xml" -Force
+
+            Remove-Item WDACConfigModule.xml -Force
+            Remove-Item AllowPowerShell.xml -Force
+                   
+            Set-RuleOption -FilePath .\DefaultWindows_Audit.xml -Option 3
+            $PolicyID = Set-CIPolicyIdInfo -FilePath .\DefaultWindows_Audit.xml -ResetPolicyID
+            $PolicyID = $PolicyID.Substring(11)
+            Set-CIPolicyIdInfo -PolicyName "PrepDefaultWindows" -FilePath .\DefaultWindows_Audit.xml
+            ConvertFrom-CIPolicy .\DefaultWindows_Audit.xml "$PolicyID.cip" | Out-Null
+            CiTool --update-policy "$PolicyID.cip" -json
+            Remove-Item "DefaultWindows_Audit.xml" -Force
+            Remove-Item "$PolicyID.cip" -Force
+            Write-host "`nThe defaultWindows policy has been deployed in Audit mode. No reboot required." -ForegroundColor Magenta    
         }
 
         $MakePolicyFromAuditLogsSCRIPTBLOCK = {
@@ -310,12 +368,24 @@ function New-WDACConfig {
             new-item -Type Directory -Path "$home\WDAC" -Force | Out-Null
             Set-Location "$home\WDAC"
 
-            # Base Policy Processing        
-            Invoke-Command -ScriptBlock $MakeAllowMSFTWithBlockRulesSCRIPTBLOCK | Out-Null
-            $xml = [xml](Get-Content .\AllowMicrosoftPlusBlockRules.xml)
-            $BasePolicyID = $xml.SiPolicy.PolicyID
-            # define the location of the base policy
-            $BasePolicy = ".\AllowMicrosoftPlusBlockRules.xml"        
+            # Base Policy Processing
+            switch ($BasePolicyType) {
+
+                "Allow Microsoft Base" {
+                    Invoke-Command -ScriptBlock $MakeAllowMSFTWithBlockRulesSCRIPTBLOCK | Out-Null
+                    $xml = [xml](Get-Content .\AllowMicrosoftPlusBlockRules.xml)
+                    $BasePolicyID = $xml.SiPolicy.PolicyID
+                    # define the location of the base policy
+                    $BasePolicy = "AllowMicrosoftPlusBlockRules.xml" 
+                }
+                "Default Windows Base" {
+                    Invoke-Command -ScriptBlock $MakeDefaultWindowsWithBlockRulesSCRIPTBLOCK | Out-Null
+                    $xml = [xml](Get-Content .\DefaultWindowsPlusBlockRules.xml)
+                    $BasePolicyID = $xml.SiPolicy.PolicyID
+                    # define the location of the base policy
+                    $BasePolicy = "DefaultWindowsPlusBlockRules.xml" 
+                }
+            }          
   
             if ($TestMode -and $MakePolicyFromAuditLogs) {
                 & $TestModeSCRIPTBLOCK -PolicyPathToEnableTesting $BasePolicy
@@ -341,9 +411,9 @@ function New-WDACConfig {
                 'PFN' { $AssignedLevels = 'PFN' }
                 'FilePath' { $AssignedLevels = 'FilePath' }
                 'None' { $AssignedLevels = 'None' }
-                Default { $AssignedLevels = 'SignedVersion' }
+                Default { $AssignedLevels = 'FilePublisher' }         
             }
-
+  
             $AssignedFallbacks = @()
             switch ($Fallbacks) {
                 'Hash' { $AssignedFallbacks += 'Hash' }
@@ -360,12 +430,49 @@ function New-WDACConfig {
                 'PFN' { $AssignedFallbacks += 'PFN' }
                 'FilePath' { $AssignedFallbacks += 'FilePath' }
                 'None' { $AssignedFallbacks += 'None' }
-                Default { $AssignedFallbacks += ('FilePublisher', 'Hash') }
+                Default { $AssignedFallbacks += 'Hash' }                
             }            
-
+  
             # produce policy xml file from event viewer logs
             Write-host "Scanning Windows Event logs and creating a policy file, please wait..." -ForegroundColor Cyan
-            New-CIPolicy -FilePath ".\AuditLogsPolicy_NoDeletedFiles.xml" -Audit -Level $AssignedLevels -Fallback $AssignedFallbacks -UserPEs -MultiplePolicyFormat -UserWriteablePaths -WarningAction SilentlyContinue                               
+              
+            <#  keeping this for historic purposes
+            # Create an array to dynamically feed parameters to New-CIPolicy Cmdlet
+            $PolicyMakerArray = @()
+            $PolicyMakerArray += 'New-CIPolicy -FilePath "AuditLogsPolicy_NoDeletedFiles.xml"'
+            $PolicyMakerArray += "-Audit -Level $AssignedLevels -Fallback $AssignedFallbacks"
+            if ($AllowFileNameFallbacks) { $PolicyMakerArray += "-AllowFileNameFallbacks" }
+            if ($SpecificFileNameLevel) { $PolicyMakerArray += "-SpecificFileNameLevel $SpecificFileNameLevel" }
+            if ($NoScript) { $PolicyMakerArray += "-NoScript" }
+            if (!$NoUserPEs) { $PolicyMakerArray += "-UserPEs" }            
+            $PolicyMakerArray += "-MultiplePolicyFormat -UserWriteablePaths -WarningAction SilentlyContinue"            
+            
+            $PolicyMakerArray = $PolicyMakerArray -Join " " 
+            write-host "The following command is running: `n$PolicyMakerArray" -ForegroundColor Magenta
+            $PolicyMakerArray | Invoke-Expression
+            #>
+
+            # Creating a hash table to dynamically add parameters based on user input and pass them to New-Cipolicy cmdlet
+            $PolicyMakerHashTable = @{
+                FilePath             = "AuditLogsPolicy_NoDeletedFiles.xml"
+                Audit                = $true
+                Level                = $AssignedLevels
+                Fallback             = $AssignedFallbacks
+                MultiplePolicyFormat = $true
+                UserWriteablePaths   = $true
+                WarningAction        = 'SilentlyContinue'
+            }
+         
+            $AllowFileNameFallbacks ? ($PolicyMakerHashTable['AllowFileNameFallbacks'] = $true) : $null         
+            $SpecificFileNameLevel ? ($PolicyMakerHashTable['SpecificFileNameLevel'] = $SpecificFileNameLevel) : $null
+            $NoScript ? ($PolicyMakerHashTable['NoScript'] = $true) : $null
+            if (!$NoUserPEs) { $PolicyMakerHashTable['UserPEs'] = $true } 
+
+            write-host "Generating Supplemental policy with the following specifications:" -ForegroundColor Magenta
+            $PolicyMakerHashTable
+            Write-Host "`n"
+            New-CIPolicy @PolicyMakerHashTable
+
             # List every \Device\Harddiskvolume - Needed to resolve the file pathes to detect which files in even Event viewer logs are no longer present on the disk - https://superuser.com/questions/1058217/list-every-device-harddiskvolume
             $ScriptBlock = {
                 $signature = @'
@@ -438,7 +545,7 @@ public static extern uint QueryDosDevice(string lpDeviceName, StringBuilder lpTa
             $block2results = Invoke-Command -ScriptBlock $block2
 
             # run the following only if there are any event logs for files no longer on the disk
-            if ($block2results) {
+            if ($block2results -and !$NoDeletedFiles) {
 
                 # Create File Rules based on hash of the files no longer available on the disk and store them in the $Rules variable
                 $i = 1
@@ -518,26 +625,26 @@ $Rules
                 $EmptyPolicy | Out-File .\DeletedFilesHashes.xml
 
                 # Merge the policy file we created at first using Event Viewer logs, with the policy file we created for Hash of the files no longer available on the disk
-                Merge-CIPolicy -PolicyPaths ".\AuditLogsPolicy_NoDeletedFiles.xml", .\DeletedFilesHashes.xml -OutputFilePath .\SupplementalPolicy.xml
+                Merge-CIPolicy -PolicyPaths "AuditLogsPolicy_NoDeletedFiles.xml", .\DeletedFilesHashes.xml -OutputFilePath .\SupplementalPolicy.xml | Out-Null
             }
             # do this only if there are no event logs detected with files no longer on the disk, so we use the policy file created earlier using Audit even logs
             else {
-                Rename-Item ".\AuditLogsPolicy_NoDeletedFiles.xml" -NewName "SupplementalPolicy.xml" -Force
+                Rename-Item "AuditLogsPolicy_NoDeletedFiles.xml" -NewName "SupplementalPolicy.xml" -Force
             }      
             # Convert the SupplementalPolicy.xml policy file from base policy to supplemental policy of our base policy
-            Set-CIPolicyVersion -FilePath ".\SupplementalPolicy.xml" -Version "1.0.0.0"
-            $PolicyID = Set-CIPolicyIdInfo -FilePath ".\SupplementalPolicy.xml" -PolicyName "Supplemental Policy made from Audit Event Logs on $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID -BasePolicyToSupplementPath $BasePolicy
+            Set-CIPolicyVersion -FilePath "SupplementalPolicy.xml" -Version "1.0.0.0"
+            $PolicyID = Set-CIPolicyIdInfo -FilePath "SupplementalPolicy.xml" -PolicyName "Supplemental Policy made from Audit Event Logs on $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID -BasePolicyToSupplementPath $BasePolicy
             $PolicyID = $PolicyID.Substring(11)        
             # Make sure policy rule options that don't belong to a Supplemental policy don't exit
-            @(0, 1, 2, 3, 4, 8, 9, 10, 11, 12, 15, 16, 17, 19, 20) | ForEach-Object { Set-RuleOption -FilePath ".\SupplementalPolicy.xml" -Option $_ -Delete }
+            @(0, 1, 2, 3, 4, 8, 9, 10, 11, 12, 15, 16, 17, 19, 20) | ForEach-Object { Set-RuleOption -FilePath "SupplementalPolicy.xml" -Option $_ -Delete }
 
             # Set the hypervisor Code Integrity option for Supplemental policy to Strict        
-            Set-HVCIOptions -Strict -FilePath ".\SupplementalPolicy.xml"
+            Set-HVCIOptions -Strict -FilePath "SupplementalPolicy.xml"
             # convert the Supplemental Policy file to .cip binary file
-            ConvertFrom-CIPolicy ".\SupplementalPolicy.xml" "$policyID.cip" | Out-Null
+            ConvertFrom-CIPolicy "SupplementalPolicy.xml" "$policyID.cip" | Out-Null
 
             [PSCustomObject]@{
-                BasePolicyFile = "AllowMicrosoftPlusBlockRules.xml"      
+                BasePolicyFile = $BasePolicy    
                 BasePolicyGUID = $BasePolicyID
             }
             [PSCustomObject]@{
@@ -546,33 +653,34 @@ $Rules
             }       
 
             if (-NOT $Debugmode) {
-                Remove-Item -Path ".\AuditLogsPolicy_NoDeletedFiles.xml" -Force -ErrorAction SilentlyContinue
-                Remove-Item -Path ".\FileRulesAndFileRefs.txt" -Force -ErrorAction SilentlyContinue
-                Remove-Item -Path ".\DeletedFilesHashes.xml" -Force -ErrorAction SilentlyContinue
+                Remove-Item -Path "AuditLogsPolicy_NoDeletedFiles.xml" -Force -ErrorAction SilentlyContinue
+                Remove-Item -Path "FileRulesAndFileRefs.txt" -Force -ErrorAction SilentlyContinue
+                Remove-Item -Path "DeletedFilesHashes.xml" -Force -ErrorAction SilentlyContinue
             }
+
             if ($Deployit -and $MakePolicyFromAuditLogs) {            
-                CiTool --update-policy ".\$BasePolicyID.cip" -json
-                CiTool --update-policy ".\$policyID.cip" -json
-                Write-host "`nBase policy and Supplemental Policies deployed and activated." -ForegroundColor Green                       
-            }        
-            do {
-                $RemovalQuestion = $(Write-host "`nRemove the Audit mode MicrosoftOnly policy deployed during the prep phase? Enter 1 for Yes, 2 for No." -ForegroundColor Cyan; Read-Host)     
-                if ($RemovalQuestion -eq "1" ) {
-                    $IDToRemove = ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.FriendlyName -eq "PrepMSFTOnlyAudit" }).PolicyID
-                    CiTool --remove-policy "{$IDToRemove}"
-                    Write-host "System restart required to finish removing the Audit mode Prep policy" -ForegroundColor Green                   
+                CiTool --update-policy "$BasePolicyID.cip" -json
+                CiTool --update-policy "$policyID.cip" -json
+                Write-host "`nBase policy and Supplemental Policies deployed and activated.`n" -ForegroundColor Green
+                
+                # Get the correct Prep mode Audit policy ID to remove 
+                switch ($BasePolicyType) {
+                    "Allow Microsoft Base" {
+                        $IDToRemove = ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.FriendlyName -eq "PrepMSFTOnlyAudit" }).PolicyID
+                    }
+                    "Default Windows Base" {
+                        $IDToRemove = ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.FriendlyName -eq "PrepDefaultWindows" }).PolicyID
+                    }
                 }
-                if ($RemovalQuestion -eq "2" ) {
-                    Write-host "Skipping" -ForegroundColor Yellow
-                }         
-            }                  
-            until ($RemovalQuestion -eq "1" -or $RemovalQuestion -eq "2")            
+                CiTool --remove-policy "{$IDToRemove}" -json
+                Write-host "System restart required to finish removing the Audit mode Prep policy" -ForegroundColor Green                
+            }     
         }
 
         $MakeLightPolicySCRIPTBLOCK = {
-            Remove-Item -Path ".\SignedAndReputable.xml" -Force -ErrorAction SilentlyContinue
+            Remove-Item -Path "SignedAndReputable.xml" -Force -ErrorAction SilentlyContinue
             Invoke-Command $MakeAllowMSFTWithBlockRulesSCRIPTBLOCK -ArgumentList $true | Out-Null
-            Rename-Item -Path ".\AllowMicrosoftPlusBlockRules.xml" -NewName "SignedAndReputable.xml" -Force
+            Rename-Item -Path "AllowMicrosoftPlusBlockRules.xml" -NewName "SignedAndReputable.xml" -Force
             @(14, 15) | ForEach-Object { Set-RuleOption -FilePath .\SignedAndReputable.xml -Option $_ }
             if ($TestMode -and $MakeLightPolicy) {
                 & $TestModeSCRIPTBLOCK -PolicyPathToEnableTesting .\SignedAndReputable.xml
@@ -588,7 +696,7 @@ $Rules
             appidtel start
             sc.exe config appidsvc start= auto
             if ($Deployit -and $MakeLightPolicy) {
-                CiTool --update-policy ".\$BasePolicyID.cip" -json
+                CiTool --update-policy "$BasePolicyID.cip" -json
                 Write-host -NoNewline "`nSignedAndReputable.xml policy has been deployed.`n" -ForegroundColor Green            
             }
             [PSCustomObject]@{
@@ -615,7 +723,7 @@ $Rules
                 'PFN' { $AssignedLevels = 'PFN' }
                 'FilePath' { $AssignedLevels = 'FilePath' }
                 'None' { $AssignedLevels = 'None' }
-                Default { $AssignedLevels = 'SignedVersion' }
+                Default { $AssignedLevels = 'FilePublisher' }
             }
 
             $AssignedFallbacks = @()
@@ -634,19 +742,37 @@ $Rules
                 'PFN' { $AssignedFallbacks += 'PFN' }
                 'FilePath' { $AssignedFallbacks += 'FilePath' }
                 'None' { $AssignedFallbacks += 'None' }
-                Default { $AssignedFallbacks += ('FilePublisher', 'Hash') }
+                Default { $AssignedFallbacks += 'Hash' }
             }
             
-            New-CIPolicy -FilePath ".\SupplementalPolicy$SuppPolicyName.xml" -ScanPath $ScanLocation `
-                -Level $AssignedLevels -Fallback $AssignedFallbacks -UserPEs -MultiplePolicyFormat -UserWriteablePaths
-            $policyID = Set-CiPolicyIdInfo -FilePath ".\SupplementalPolicy$SuppPolicyName.xml" -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath -PolicyName "$SuppPolicyName"
+            # Creating a hash table to dynamically add parameters based on user input and pass them to New-Cipolicy cmdlet
+            $PolicyMakerHashTable = @{
+                FilePath             = "SupplementalPolicy$SuppPolicyName.xml"
+                ScanPath             = $ScanLocation
+                Level                = $AssignedLevels
+                Fallback             = $AssignedFallbacks
+                MultiplePolicyFormat = $true
+                UserWriteablePaths   = $true
+            }
+
+            $AllowFileNameFallbacks ? ($PolicyMakerHashTable['AllowFileNameFallbacks'] = $true) : $null         
+            $SpecificFileNameLevel ? ($PolicyMakerHashTable['SpecificFileNameLevel'] = $SpecificFileNameLevel) : $null
+            $NoScript ? ($PolicyMakerHashTable['NoScript'] = $true) : $null       
+            if (!$NoUserPEs) { $PolicyMakerHashTable['UserPEs'] = $true } 
+
+            write-host "Generating Supplemental policy with the following specifications:" -ForegroundColor Magenta
+            $PolicyMakerHashTable
+            Write-Host "`n"
+            New-CIPolicy @PolicyMakerHashTable           
+            
+            $policyID = Set-CiPolicyIdInfo -FilePath "SupplementalPolicy$SuppPolicyName.xml" -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath -PolicyName "$SuppPolicyName"
             $policyID = $policyID.Substring(11)
-            Set-CIPolicyVersion -FilePath ".\SupplementalPolicy$SuppPolicyName.xml" -Version "1.0.0.0"
+            Set-CIPolicyVersion -FilePath "SupplementalPolicy$SuppPolicyName.xml" -Version "1.0.0.0"
             # Make sure policy rule options that don't belong to a Supplemental policy don't exit             
             @(0, 1, 2, 3, 4, 9, 10, 11, 12, 15, 16, 17, 19, 20) | ForEach-Object {
-                Set-RuleOption -FilePath ".\SupplementalPolicy$SuppPolicyName.xml" -Option $_ -Delete }        
-            Set-HVCIOptions -Strict -FilePath ".\SupplementalPolicy$SuppPolicyName.xml"        
-            ConvertFrom-CIPolicy ".\SupplementalPolicy$SuppPolicyName.xml" "$policyID.cip" | Out-Null
+                Set-RuleOption -FilePath "SupplementalPolicy$SuppPolicyName.xml" -Option $_ -Delete }        
+            Set-HVCIOptions -Strict -FilePath "SupplementalPolicy$SuppPolicyName.xml"        
+            ConvertFrom-CIPolicy "SupplementalPolicy$SuppPolicyName.xml" "$policyID.cip" | Out-Null
             [PSCustomObject]@{
                 SupplementalPolicyFile = "SupplementalPolicy$SuppPolicyName.xml"
                 SupplementalPolicyGUID = $PolicyID
@@ -698,10 +824,11 @@ $Rules
         if ($DeployLatestDriverBlockRules) { Invoke-Command -ScriptBlock $DeployLatestDriverBlockRulesSCRIPTBLOCK }                               
         if ($SetAutoUpdateDriverBlockRules) { Invoke-Command -ScriptBlock $SetAutoUpdateDriverBlockRulesSCRIPTBLOCK }                                
         if ($MakePolicyFromAuditLogs) { Invoke-Command -ScriptBlock $MakePolicyFromAuditLogsSCRIPTBLOCK }                                
-        if ($PrepMSFTOnlyAudit) { Invoke-Command -ScriptBlock $PrepMSFTOnlyAuditSCRIPTBLOCK }
+        if ($PrepMSFTOnlyAudit) { Invoke-Command -ScriptBlock $PrepMSFTOnlyAuditSCRIPTBLOCK }        
         if ($MakeLightPolicy) { Invoke-Command -ScriptBlock $MakeLightPolicySCRIPTBLOCK }
         if ($MakeSupplementalPolicy) { Invoke-Command -ScriptBlock $MakeSupplementalPolicySCRIPTBLOCK }
         if ($MakeDefaultWindowsWithBlockRules) { Invoke-Command -ScriptBlock $MakeDefaultWindowsWithBlockRulesSCRIPTBLOCK }
+        if ($PrepDefaultWindowsAudit) { Invoke-Command -ScriptBlock $PrepDefaultWindowsAuditSCRIPTBLOCK }
 
     }    
   

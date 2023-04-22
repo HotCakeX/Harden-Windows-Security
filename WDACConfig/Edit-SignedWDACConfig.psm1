@@ -402,7 +402,7 @@ $RulesRefs
                         'PFN' { $AssignedLevels = 'PFN' }
                         'FilePath' { $AssignedLevels = 'FilePath' }
                         'None' { $AssignedLevels = 'None' }
-                        Default { $AssignedLevels = 'SignedVersion' }
+                        Default { $AssignedLevels = 'FilePublisher' }
                     }
 
                     $AssignedFallbacks = @()
@@ -421,7 +421,7 @@ $RulesRefs
                         'PFN' { $AssignedFallbacks += 'PFN' }
                         'FilePath' { $AssignedFallbacks += 'FilePath' }
                         'None' { $AssignedFallbacks += 'None' }
-                        Default { $AssignedFallbacks += ('FilePublisher', 'Hash') }
+                        Default { $AssignedFallbacks += 'Hash' }
                     }
         
                     for ($i = 0; $i -lt $ProgramsPaths.Count; $i++) {
@@ -577,7 +577,7 @@ $RulesRefs
                         'PFN' { $AssignedLevels = 'PFN' }
                         'FilePath' { $AssignedLevels = 'FilePath' }
                         'None' { $AssignedLevels = 'None' }
-                        Default { $AssignedLevels = 'SignedVersion' }
+                        Default { $AssignedLevels = 'FilePublisher' }
                     }
 
                     $AssignedFallbacks = @()
@@ -596,7 +596,7 @@ $RulesRefs
                         'PFN' { $AssignedFallbacks += 'PFN' }
                         'FilePath' { $AssignedFallbacks += 'FilePath' }
                         'None' { $AssignedFallbacks += 'None' }
-                        Default { $AssignedFallbacks += ('FilePublisher', 'Hash') }
+                        Default { $AssignedFallbacks += 'Hash' }
                     }
             
                     for ($i = 0; $i -lt $ProgramsPaths.Count; $i++) {
@@ -742,7 +742,7 @@ $RulesRefs
                     Copy-item -Path "C:\Windows\schemas\CodeIntegrity\ExamplePolicies\DefaultWindows_Enforced.xml" -Destination ".\DefaultWindows_Enforced.xml"
                     if (Test-Path "C:\Program Files\PowerShell") {
                         Write-Host "Creating allow rules for PowerShell in the DefaultWindows base policy so you can continue using this module after deploying it." -ForegroundColor Blue                    
-                        New-CIPolicy -ScanPath "C:\Program Files\PowerShell" -Level SignedVersion -Fallback FilePublisher, Hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -FilePath .\AllowPowerShell.xml
+                        New-CIPolicy -ScanPath "C:\Program Files\PowerShell" -Level FilePublisher -Fallback Hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -FilePath .\AllowPowerShell.xml
                         Merge-CIPolicy -PolicyPaths .\DefaultWindows_Enforced.xml, .\AllowPowerShell.xml, '.\Microsoft recommended block rules.xml' -OutputFilePath .\BasePolicy.xml | Out-Null
                     }
                     else {

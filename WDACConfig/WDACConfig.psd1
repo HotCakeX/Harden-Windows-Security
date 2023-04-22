@@ -12,7 +12,7 @@
     # RootModule = ""
 
     # Version number of this module.
-    ModuleVersion        = '0.0.9'
+    ModuleVersion        = '0.1.0'
 
     # Supported PSEditions
     CompatiblePSEditions = @("Desktop", "Core")
@@ -52,13 +52,15 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
 ✔️ New-WDACConfig [-SetAutoUpdateDriverBlockRules]
     
 ✔️ New-WDACConfig [-PrepMSFTOnlyAudit] [-LogSize <Int64>]
+
+✔️ New-WDACConfig [-PrepDefaultWindowsAudit] [-LogSize <Int64>]
     
-✔️ New-WDACConfig [-MakePolicyFromAuditLogs] [-Deployit] [-TestMode] [-RequireEVSigners] [-Debugmode] [-Levels <String>] [-Fallbacks <String[]>] [-LogSize <Int64>]
+✔️ New-WDACConfig [-MakePolicyFromAuditLogs] -BasePolicyType <String> [-Deployit] [-TestMode] [-RequireEVSigners] [-Debugmode] [-AllowFileNameFallbacks] [-SpecificFileNameLevel <String>] [-NoDeletedFiles] [-NoUserPEs] [-NoScript] [-Levels <String>] [-Fallbacks <String[]>] [-LogSize <Int64>]
     
 ✔️ New-WDACConfig [-MakeLightPolicy] [-Deployit] [-TestMode] [-RequireEVSigners]
     
-✔️ New-WDACConfig [-MakeSupplementalPolicy] -ScanLocation <String> -SuppPolicyName <String> -PolicyPath <String> [-Deployit] [-Levels <String>] [-Fallbacks <String[]>]
-    
+✔️ New-WDACConfig [-MakeSupplementalPolicy] -ScanLocation <String> -SuppPolicyName <String> -PolicyPath <String> [-Deployit] [-AllowFileNameFallbacks] [-SpecificFileNameLevel <String>] [-NoUserPEs] [-NoScript] [-Levels <String>] [-Fallbacks <String[]>]  
+
 ✔️ New-WDACConfig [-MakeDefaultWindowsWithBlockRules] [-Deployit] [-TestMode] [-RequireEVSigners]
     
 ✔️ Remove-WDACConfig [-RemoveSignedPolicies] -PolicyPaths <String[]> [-SignToolPath <String>] -CertCN <String>
@@ -178,6 +180,19 @@ To get help and syntax on PowerShell console, type:
 
             # ReleaseNotes of this module
             ReleaseNotes = @"
+
+## Version 0.1.0
+New features: Added new parameter to New-WDACConfig cmdlet, -PrepDefaultWindowsAudit, which as the name suggests, will prepare the system for Default Windows auditing,
+it will create audit logs for any file that is run and is not part of the Windows, unlike -PrepMSFTOnlyAudit parameter that creates audit logs for any file that is not signed,
+by Microsoft's trusted root certificate. The -PrepDefaultWindowsAudit parameter also scans the WDACConfig module files and PowerShell core files, adds them to the Prep base policy,
+so that the final Supplemental policy generated from Event viewer audit logs, won't include those files.
+New features: Added more control over the workflow of -MakePolicyFromAuditLogs and -MakeSupplementalPolicy parameters. They now accept multiple new parameters to fine tune the supplemental policy.
+Quality improvements: The default level in the module is FilePublisher now, previously it was SignedVersion. The default Fallbacks have also changed from "FilePublisher, Hash" to "Hash" only.
+This change contributes to more secure policy creation, although these defaults can be overwritten by user via available parameters.
+Quality improvements: Removed the question asked from the user at the end of the -MakePolicyFromAuditLogs parameter about deleting the deployed Prep Audit mode policy.
+It will now be automatically deleted when -Deployit switch parameter is used, Otherwise the Prep audit mode policy will stay on the system.
+Added -NoDeletedFiles switch parameter to -MakePolicyFromAuditLogs, When used, only event viewer log data will be scanned and used in the final supplemental policy, and no rules will be created for files
+that were run but then deleted during program installation.
 
 ## Version 0.0.9
 Very small update only to change the description of the PowerShell gallery's page and fix the details, nothing code related.

@@ -1,6 +1,6 @@
 <#PSScriptInfo
 
-.VERSION 2023.4.23.1
+.VERSION 2023.4.23.2
 
 .GUID d435a293-c9ee-4217-8dc1-4ad2318a5770
 
@@ -16,7 +16,7 @@
 
 .PROJECTURI https://github.com/HotCakeX/Harden-Windows-Security
 
-.ICONURI https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/PowerShell%20Gallery%20Harden-Windows-Security/ICONURI.png
+.ICONURI https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/PowerShellGalleryICONURI.png
 
 .EXTERNALMODULEDEPENDENCIES 
 
@@ -229,10 +229,10 @@ if ($PackageProviderList.Name -NotContains 'NuGet') {
 }
 
 # Check the current hard-coded version against the latest version online and self-update if necessary
-$currentVersion = '2023.4.23.1'
+$currentVersion = '2023.4.23.2'
 $currentVersion = (Get-InstalledScript -Name 'Harden-Windows-Security').Version.ToString()
 try {
-    $latestVersion = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/PowerShell%20Gallery%20Harden-Windows-Security/Version.txt"
+    $latestVersion = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Version.txt"
 }
 catch {
     Write-Error "Couldn't verify if the latest version of the script is installed, please check your Internet connection."

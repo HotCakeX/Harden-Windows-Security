@@ -140,7 +140,7 @@ if ($null -ne (Get-InstalledScript -ErrorAction SilentlyContinue -Name Harden-Wi
             Update-Script -Name 'Harden-Windows-Security' -RequiredVersion $latestVersion -Force
         }
         else {
-            Write-Host "The currently installed script's version is $currentVersion while the latest version is $latestVersion - Run the script as Admin to update it, and then run it as Standard user again if you want." -ForegroundColor Blue
+            Write-Host "The currently installed script's version is $currentVersion while the latest version is $latestVersion - Please run the script as Admin to update it, then run it as Standard user again if you want." -ForegroundColor Blue
             break
         }
     }
@@ -426,8 +426,8 @@ try {
                 }
                 # Set-up Bitlocker encryption for OS Drive with TPMandPIN and recovery password keyprotectors and Verify its implementation            
                 # check, make sure there is no CD/DVD drives in the system, because Bitlocker throws an error when there is
-                $CDDVDCheck = (Get-WMIObject -Class Win32_CDROMDrive -Property *).MediaLoaded
-                if ($CDDVDCheck) {
+                $CdDvdCheck = (Get-CimInstance -ClassName Win32_CDROMDrive -Property *).MediaLoaded
+                if ($CdDvdCheck) {
                     Write-Warning "Remove any CD/DVD drives or mounted images/ISO from the system and run the Bitlocker category after that"
                     break
                 }

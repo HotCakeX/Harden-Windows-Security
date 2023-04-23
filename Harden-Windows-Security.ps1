@@ -97,26 +97,38 @@ function Compare-SecureString {
 } 
 #endregion functions
 
+if (Test-IsAdmin) {
+    # backup the current allowed apps list in Controlled folder access in order to restore them at the end of the script
+    # doing this so that when we Add and then Remove PowerShell executables in Controlled folder access exclusions
+    # no user customization will be affected
+    $CFAAllowedAppsBackup = (Get-MpPreference).ControlledFolderAccessAllowedApplications
+
+    # Temporarily allow the currently running PowerShell executables to the Controlled Folder Access allowed apps
+    # so that the script can run without interruption. This change is reverted at the end.
+    Get-ChildItem -Path "$PSHOME\*.exe" | ForEach-Object {
+        Add-MpPreference -ControlledFolderAccessAllowedApplications $_.FullName
+    }
+}
+
 # List of package providers installed
 [Microsoft.PackageManagement.Implementation.PackageProvider[]]$PackageProviderList = Get-PackageProvider
 # Check that the version of PS is below 6
 if ($PackageProviderList.Name -NotContains 'NuGet') {
     # Install package manager pre-req for legacy platform
     if (Test-IsAdmin) { 
-        Install-PackageProvider -Name 'NuGet' -Scope AllUsers -Force | Out-Null
+        Install-PackageProvider -Name 'NuGet' -Scope 'AllUsers' -Force | Out-Null
     }
     else {
-        Install-PackageProvider -Name 'NuGet' -Scope CurrentUser -Force | Out-Null
+        Install-PackageProvider -Name 'NuGet' -Scope 'CurrentUser' -Force | Out-Null
     }
 }
 
 # Only update the script if it's actually installed. If running directly from GitHub or downloaded file then skip
 if ($null -ne (Get-InstalledScript -ErrorAction SilentlyContinue -Name Harden-Windows-Security)) {
 
-    $currentVersion = (Get-InstalledScript -Name Harden-Windows-Security).Version.ToString()
+    $currentVersion = (Get-InstalledScript -Name 'Harden-Windows-Security').Version.ToString()
     try {
-        # $latestVersion = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/WDACConfig/version.txt"
-        $latestVersion = '2023.4.16'
+        $latestVersion = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/PowerShell%20Gallery%20Harden-Windows-Security/Version.txt"
     }
     catch {
         Write-Error "Couldn't verify if the latest version of the script is installed, please check your Internet connection."
@@ -124,7 +136,7 @@ if ($null -ne (Get-InstalledScript -ErrorAction SilentlyContinue -Name Harden-Wi
     }
     if (-NOT ($currentVersion -eq $latestVersion)) {
         Write-Host "The currently installed script's version is $currentVersion while the latest version is $latestVersion - Auto Updating the script now and will run it after that" -ForegroundColor Cyan
-        Update-Script -Name Harden-Windows-Security -RequiredVersion $latestVersion -Force
+        Update-Script -Name 'Harden-Windows-Security' -RequiredVersion $latestVersion -Force
     }
 }
 
@@ -141,7 +153,7 @@ $infomsg = "`r`n" +
 Write-Host $infomsg -ForegroundColor Green
 
 # check if user's OS is Windows Home edition
-if (((Get-WmiObject Win32_OperatingSystem).OperatingSystemSKU) -eq "101") {
+if ((Get-CimInstance -ClassName Win32_OperatingSystem).OperatingSystemSKU -eq "101") {
     Write-host "Windows Home edition detected, exiting..." -ForegroundColor Red
     break
 }
@@ -168,18 +180,7 @@ try {
     if (-NOT (Test-IsAdmin))
     { write-host "Skipping commands that require Administrator privileges" -ForegroundColor Magenta }
     else {
-        Write-Progress -Activity 'Initialization' -Status 'Downloading the required files for the script' -PercentComplete 0
-
-        # backup the current allowed apps list in Controlled folder access in order to restore them at the end of the script
-        # doing this so that when we Add and then Remove PowerShell executables in Controlled folder access exclusions
-        # no user customization will be affected
-        $CFAAllowedAppsBackup = (Get-MpPreference).ControlledFolderAccessAllowedApplications
-
-        # Temporarily allow the currently running PowerShell executables to the Controlled Folder Access allowed apps
-        # so that the script can run without interruption. This change is reverted at the end.
-        Get-ChildItem -Path "$PSHOME\*.exe" | ForEach-Object {
-            Add-MpPreference -ControlledFolderAccessAllowedApplications $_.FullName
-        }
+        Write-Progress -Activity 'Initialization' -Status 'Downloading the required files for the script' -PercentComplete 0      
         
         Invoke-WithoutProgress { 
             try {                
@@ -426,9 +427,9 @@ try {
                 }
                 # check make sure Bitlocker isn't in the middle of decryption/encryption operation (on System Drive)
                 if ((Get-BitLockerVolume -MountPoint $env:SystemDrive).EncryptionPercentage -ne "100" -and (Get-BitLockerVolume -MountPoint $env:SystemDrive).EncryptionPercentage -ne "0") {
-                    $kawai = (Get-BitLockerVolume -MountPoint $env:SystemDrive).EncryptionPercentage
+                    $EncryptionPercentageVar = (Get-BitLockerVolume -MountPoint $env:SystemDrive).EncryptionPercentage
                     Write-Host "Please wait for Bitlocker operation to finish encrypting or decrypting the disk" -ForegroundColor Magenta
-                    Write-Host "drive $env:SystemDrive encryption is currently at $kawai" -ForegroundColor Magenta
+                    Write-Host "drive $env:SystemDrive encryption is currently at $EncryptionPercentageVar" -ForegroundColor Magenta
                 }
 
                 else {
@@ -454,14 +455,14 @@ the recovery password will be saved in a Text file in $env:SystemDrive\Drive $($
                                     $pin1 = $(write-host "Enter a Pin for Bitlocker startup (at least 10 characters)" -ForegroundColor Magenta; Read-Host -AsSecureString)
                                     $pin2 = $(write-host "Confirm your Bitlocker Startup Pin (at least 10 characters)" -ForegroundColor Magenta; Read-Host -AsSecureString)
                                       
-                                    $theyMatch = Compare-SecureString $pin1 $pin2
+                                    $TheyMatch = Compare-SecureString $pin1 $pin2
 
-                                    if ( $theyMatch -and $pin1.Length -ge 10 -and $pin2.Length -ge 10  ) {                  
+                                    if ( $TheyMatch -and $pin1.Length -ge 10 -and $pin2.Length -ge 10  ) {                  
                                         $pin = $pin1                  
                                     }                  
                                     else { Write-Host "The PINs you entered didn't match or they weren't at least 10 characters, try again" -ForegroundColor red }                  
                                 }                  
-                                until ($theyMatch -and $pin1.Length -ge 10 -and $pin2.Length -ge 10)
+                                until ($TheyMatch -and $pin1.Length -ge 10 -and $pin2.Length -ge 10)
                  
                                 try {
                                     Add-BitLockerKeyProtector -MountPoint $env:SystemDrive -TpmAndPinProtector -Pin $pin -ErrorAction Stop
@@ -481,14 +482,14 @@ the recovery password will be saved in a Text file in $env:SystemDrive\Drive $($
                             $pin1 = $(write-host "Enter a Pin for Bitlocker startup (at least 10 characters)" -ForegroundColor Magenta; Read-Host -AsSecureString)
                             $pin2 = $(write-host "Confirm your Bitlocker Startup Pin (at least 10 characters)" -ForegroundColor Magenta; Read-Host -AsSecureString)
       
-                            $theyMatch = Compare-SecureString $pin1 $pin2
+                            $TheyMatch = Compare-SecureString $pin1 $pin2
             
-                            if ($theyMatch -and $pin1.Length -ge 10 -and $pin2.Length -ge 10) {      
+                            if ($TheyMatch -and $pin1.Length -ge 10 -and $pin2.Length -ge 10) {      
                                 $pin = $pin1      
                             }      
                             else { Write-Host "The PINs you entered didn't match or they weren't at least 10 characters, try again" -ForegroundColor red }      
                         }      
-                        until ($theyMatch -and $pin1.Length -ge 10 -and $pin2.Length -ge 10)
+                        until ($TheyMatch -and $pin1.Length -ge 10 -and $pin2.Length -ge 10)
 
                         try {
                             enable-bitlocker -MountPoint $env:SystemDrive -EncryptionMethod XtsAes256 -pin $pin -TpmAndPinProtector -SkipHardwareTest -ErrorAction Stop             
@@ -514,9 +515,9 @@ Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which re
                     ForEach-Object {
                         $MountPoint = $_.MountPoint
                         if ((Get-BitLockerVolume -MountPoint $MountPoint).EncryptionPercentage -ne "100" -and (Get-BitLockerVolume -MountPoint $MountPoint).EncryptionPercentage -ne "0") {
-                            $kawai = (Get-BitLockerVolume -MountPoint $MountPoint).EncryptionPercentage
+                            $EncryptionPercentageVar = (Get-BitLockerVolume -MountPoint $MountPoint).EncryptionPercentage
                             Write-Host "Please wait for Bitlocker operation to finish encrypting or decrypting drive $MountPoint" -ForegroundColor Magenta
-                            Write-Host "drive $MountPoint encryption is currently at $kawai" -ForegroundColor Magenta
+                            Write-Host "drive $MountPoint encryption is currently at $EncryptionPercentageVar" -ForegroundColor Magenta
                         }   
                         else {
                             if ((Get-BitLockerVolume -MountPoint $MountPoint).ProtectionStatus -eq "on") {    
@@ -707,14 +708,14 @@ Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which re
                             $Password2 = Get-Credential -UserName Administrator -Message "Confirm your password for the built-in Administrator account"
                             #$Password2 = $host.ui.ReadLineAsSecureString()
 
-                            $theyMatch = Compare-SecureString $Password1.Password $Password2.Password
+                            $TheyMatch = Compare-SecureString $Password1.Password $Password2.Password
             
-                            if ($theyMatch) {
+                            if ($TheyMatch) {
                                 Set-LocalUser -Name "Administrator" -Password $Password1.Password
                             }      
                             else { Write-Host "the passwords you entered didn't match, try again" -ForegroundColor red }
                         }      
-                        until ($theyMatch -and $?)
+                        until ($TheyMatch -and $?)
 
                         if (-NOT ((Get-LocalUser | Where-Object { $_.name -eq "Administrator" }).enabled)) {
                             Enable-LocalUser -Name "Administrator"

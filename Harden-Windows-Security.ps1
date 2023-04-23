@@ -1,6 +1,6 @@
 <#PSScriptInfo
 
-.VERSION 2023.4.23.6
+.VERSION 2023.4.23.9
 
 .GUID d435a293-c9ee-4217-8dc1-4ad2318a5770
 
@@ -202,6 +202,19 @@ function Compare-SecureString {
 } 
 #endregion functions
 
+$ControlledFolderAccessCleanUp = { if (Test-IsAdmin) {
+        # Reverting the PowerShell executables allow listings in Controlled folder access
+        Get-ChildItem -Path "$PSHOME\*.exe" | ForEach-Object {
+            Remove-MpPreference -ControlledFolderAccessAllowedApplications $_.FullName
+        }
+        # restoring the original Controlled folder access allow list - if user already had added PowerShell executables to the list
+        # they will be restored as well, so user customization will remain intact 
+        $CFAAllowedAppsBackup | ForEach-Object {
+            Add-MpPreference -ControlledFolderAccessAllowedApplications $_
+        }
+    }
+}
+
 if (Test-IsAdmin) {
     # backup the current allowed apps list in Controlled folder access in order to restore them at the end of the script
     # doing this so that when we Add and then Remove PowerShell executables in Controlled folder access exclusions
@@ -229,7 +242,7 @@ if ($PackageProviderList.Name -NotContains 'NuGet') {
 }
 
 # Check the current hard-coded version against the latest version online and self-update if necessary
-$currentVersion = '2023.4.23.6'
+$currentVersion = '2023.4.23.9'
 try {
     $latestVersion = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Version.txt"
 }
@@ -240,8 +253,16 @@ catch {
 if (-NOT ($currentVersion -eq $latestVersion)) {
     if (Test-IsAdmin) {       
         Write-Host "The currently installed script's version is $currentVersion while the latest version is $latestVersion - Auto Updating the script now. Please run it again." -ForegroundColor Cyan
-        Update-Script -Name 'Harden-Windows-Security' -RequiredVersion $latestVersion -Force
+       
+        # This try and catch block will take care of scenarios where user installs the script in PowerShell core
+        # and then runs it in Windows PowerShell and then there is a new version of script available online
+        try { Update-Script -Name 'Harden-Windows-Security' -RequiredVersion $latestVersion -Force -ErrorAction Stop }
+        catch {
+            Install-Script -Name 'Harden-Windows-Security' -RequiredVersion $latestVersion -Force
+        }
+        &$ControlledFolderAccessCleanUp        
         break
+        
     }
     else {
         Write-Host "The currently installed script's version is $currentVersion while the latest version is $latestVersion - Please run the script as Admin to update it, then run it as Standard user again if you want." -ForegroundColor Blue
@@ -306,6 +327,8 @@ try {
             }
             catch {
                 Write-Error "The required files couldn't be downloaded, Make sure you have Internet connection."
+
+                &$ControlledFolderAccessCleanUp
                 &$cleanUp   
             }
         }
@@ -1158,16 +1181,6 @@ Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which re
     #endregion Non-Admin-Commands
 }
 finally {
-    &$cleanUp $True
-    if (Test-IsAdmin) {
-        # Reverting the PowerShell executables allow listings in Controlled folder access
-        Get-ChildItem -Path "$PSHOME\*.exe" | ForEach-Object {
-            Remove-MpPreference -ControlledFolderAccessAllowedApplications $_.FullName
-        }
-        # restoring the original Controlled folder access allow list - if user already had added PowerShell executables to the list
-        # they will be restored as well, so user customization will remain intact 
-        $CFAAllowedAppsBackup | ForEach-Object {
-            Add-MpPreference -ControlledFolderAccessAllowedApplications $_
-        }
-    }
+    &$ControlledFolderAccessCleanUp  
+    &$cleanUp $True    
 }

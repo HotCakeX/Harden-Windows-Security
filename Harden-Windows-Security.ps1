@@ -1,6 +1,6 @@
 <#PSScriptInfo
 
-.VERSION 2023.4.23.10
+.VERSION 2023.4.23.11
 
 .GUID d435a293-c9ee-4217-8dc1-4ad2318a5770
 
@@ -26,7 +26,7 @@
 
 .RELEASENOTES
 
-## Version 2023.4.23: improved code quality for best practices and compliance - Finished testing the self-updating mechanism
+## Version 2023.4.23.x: improved code quality for best practices and compliance - Finished testing the self-updating mechanism
 
 ## Version 2023.4.22.1: For testing the self-updating functionality - improved code quality for best practices and compliance
 
@@ -202,19 +202,6 @@ function Compare-SecureString {
 } 
 #endregion functions
 
-$ControlledFolderAccessCleanUp = { if (Test-IsAdmin) {
-        # Reverting the PowerShell executables allow listings in Controlled folder access
-        Get-ChildItem -Path "$PSHOME\*.exe" | ForEach-Object {
-            Remove-MpPreference -ControlledFolderAccessAllowedApplications $_.FullName
-        }
-        # restoring the original Controlled folder access allow list - if user already had added PowerShell executables to the list
-        # they will be restored as well, so user customization will remain intact 
-        $CFAAllowedAppsBackup | ForEach-Object {
-            Add-MpPreference -ControlledFolderAccessAllowedApplications $_
-        }
-    }
-}
-
 if (Test-IsAdmin) {
     # backup the current allowed apps list in Controlled folder access in order to restore them at the end of the script
     # doing this so that when we Add and then Remove PowerShell executables in Controlled folder access exclusions
@@ -225,6 +212,22 @@ if (Test-IsAdmin) {
     # so that the script can run without interruption. This change is reverted at the end.
     Get-ChildItem -Path "$PSHOME\*.exe" | ForEach-Object {
         Add-MpPreference -ControlledFolderAccessAllowedApplications $_.FullName
+    }
+}
+
+# ScriptBlock to securely finish up Controlled Folder Access modifications
+$ControlledFolderAccessCleanUp = { if (Test-IsAdmin) {
+        # Reverting the PowerShell executables allow listings in Controlled folder access
+        Get-ChildItem -Path "$PSHOME\*.exe" | ForEach-Object {
+            Remove-MpPreference -ControlledFolderAccessAllowedApplications $_.FullName
+        }
+        # restoring the original Controlled folder access allow list - if user already had added PowerShell executables to the list
+        # they will be restored as well, so user customization will remain intact
+        if ($null -ne $CFAAllowedAppsBackup) { 
+            $CFAAllowedAppsBackup | ForEach-Object {
+                Add-MpPreference -ControlledFolderAccessAllowedApplications $_
+            }
+        }
     }
 }
 
@@ -242,12 +245,13 @@ if ($PackageProviderList.Name -NotContains 'NuGet') {
 }
 
 # Check the current hard-coded version against the latest version online and self-update if necessary
-$currentVersion = '2023.4.23.10'
+$currentVersion = '2023.4.23.11'
 try {
     $latestVersion = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Version.txt"
 }
 catch {
     Write-Error "Couldn't verify if the latest version of the script is installed, please check your Internet connection."
+    &$ControlledFolderAccessCleanUp
     break
 }
 if (-NOT ($currentVersion -eq $latestVersion)) {
@@ -255,12 +259,12 @@ if (-NOT ($currentVersion -eq $latestVersion)) {
         Write-Host "The currently installed script's version is $currentVersion while the latest version is $latestVersion - Auto Updating the script now. Please run it again." -ForegroundColor Cyan
        
         # This try and catch block will take care of scenarios where user installs the script in PowerShell core
-        # and then runs it in Windows PowerShell and then there is a new version of script available online
+        # and then runs it in Windows PowerShell and at the same time there is a new version of the script available online!
         try { Update-Script -Name 'Harden-Windows-Security' -RequiredVersion $latestVersion -Force -ErrorAction Stop }
         catch {
             Install-Script -Name 'Harden-Windows-Security' -RequiredVersion $latestVersion -Force
         }
-        &$ControlledFolderAccessCleanUp        
+        &$ControlledFolderAccessCleanUp       
         break
         
     }
@@ -288,7 +292,7 @@ if ((Get-CimInstance -ClassName Win32_OperatingSystem).OperatingSystemSKU -eq "1
     break
 }
 
-# doing a try-finally block so that when CTRL + C is pressed to forcefully exit the script, clean up will still happen
+# doing a try-finally block so that when CTRL + C is pressed to forcefully exit the script, clean up will still happen for secure exit
 try {
     # create our working directory
     New-Item -ItemType Directory -Path "$env:TEMP\HardeningXStuff\" -Force | Out-Null
@@ -298,14 +302,7 @@ try {
     Set-Location $workingDir
 
     # Clean up script block
-    $cleanUp = { param([bool]$finally) 
-        if (-NOT $finally) {
-            Set-Location $HOME; remove-item -Recurse "$env:TEMP\HardeningXStuff\" -Force; pause; exit
-        }
-        elseif ($finally) {            
-            Set-Location $HOME; remove-item -Recurse "$env:TEMP\HardeningXStuff\" -Force -ErrorAction SilentlyContinue
-        }
-    }
+    $cleanUp = { Set-Location $HOME; remove-item -Recurse "$env:TEMP\HardeningXStuff\" -Force; exit }
 
     if (-NOT (Test-IsAdmin))
     { write-host "Skipping commands that require Administrator privileges" -ForegroundColor Magenta }
@@ -327,8 +324,6 @@ try {
             }
             catch {
                 Write-Error "The required files couldn't be downloaded, Make sure you have Internet connection."
-
-                &$ControlledFolderAccessCleanUp
                 &$cleanUp   
             }
         }
@@ -1181,6 +1176,6 @@ Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which re
     #endregion Non-Admin-Commands
 }
 finally {
-    &$ControlledFolderAccessCleanUp  
-    &$cleanUp $True    
+    &$ControlledFolderAccessCleanUp
+    Set-Location $HOME; remove-item -Recurse "$env:TEMP\HardeningXStuff\" -Force -ErrorAction SilentlyContinue    
 }

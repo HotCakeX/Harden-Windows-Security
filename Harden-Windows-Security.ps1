@@ -135,11 +135,17 @@ if ($null -ne (Get-InstalledScript -ErrorAction SilentlyContinue -Name Harden-Wi
         break
     }
     if (-NOT ($currentVersion -eq $latestVersion)) {
-        Write-Host "The currently installed script's version is $currentVersion while the latest version is $latestVersion - Auto Updating the script now and will run it after that" -ForegroundColor Cyan
-        Update-Script -Name 'Harden-Windows-Security' -RequiredVersion $latestVersion -Force
+        if (Test-IsAdmin) {       
+            Write-Host "The currently installed script's version is $currentVersion while the latest version is $latestVersion - Auto Updating the script now and will run it after that" -ForegroundColor Cyan
+            Update-Script -Name 'Harden-Windows-Security' -RequiredVersion $latestVersion -Force
+        }
+        else {
+            Write-Error "The currently installed script's version is $currentVersion while the latest version is $latestVersio - Run the script as Admin to update it, and then run it as Standard user again if you want."
+            break
+        }
     }
 }
-
+ 
 $infomsg = "`r`n" +
 "#############################################################################################################`r`n" +
 "###  Make Sure you've completely read what's written in the GitHub repository, before running this script ###`r`n" +

@@ -1,6 +1,6 @@
 <#PSScriptInfo
 
-.VERSION 2023.4.22.2
+.VERSION 2023.4.22.3
 
 .GUID d435a293-c9ee-4217-8dc1-4ad2318a5770
 
@@ -100,6 +100,24 @@ https://1drv.ms/x/s!AtCaUNAJbbvIhuVQhdMu_Hts7YZ_lA?e=df6H6P
 .NOTES  
     Check out GitHub page for security recommendations: https://github.com/HotCakeX/Harden-Windows-Security
 #>
+
+#region Functions
+# Questions function
+function Select-Option {
+    param(
+        [parameter(Mandatory = $true, Position = 0)][string]$Message,
+        [parameter(Mandatory = $true, Position = 1)][string[]]$Options
+    )
+    $Selected = $null
+    while ($null -eq $Selected) {
+        Write-Host $Message -ForegroundColor Magenta
+        for ($i = 0; $i -lt $Options.Length; $i++) { Write-Host "$($i+1): $($Options[$i])" }
+        $SelectedIndex = Read-Host "Select an option"
+        if ($SelectedIndex -gt 0 -and $SelectedIndex -le $Options.Length) { $Selected = $Options[$SelectedIndex - 1] }
+        else { Write-Host "Invalid Option." -ForegroundColor Yellow }
+    }
+    return $Selected
+}
 
 #region Functions
 # Questions function
@@ -238,11 +256,17 @@ if ($null -ne (Get-InstalledScript -ErrorAction SilentlyContinue -Name Harden-Wi
         break
     }
     if (-NOT ($currentVersion -eq $latestVersion)) {
-        Write-Host "The currently installed script's version is $currentVersion while the latest version is $latestVersion - Auto Updating the script now and will run it after that" -ForegroundColor Cyan
-        Update-Script -Name 'Harden-Windows-Security' -RequiredVersion $latestVersion -Force
+        if (Test-IsAdmin) {       
+            Write-Host "The currently installed script's version is $currentVersion while the latest version is $latestVersion - Auto Updating the script now and will run it after that" -ForegroundColor Cyan
+            Update-Script -Name 'Harden-Windows-Security' -RequiredVersion $latestVersion -Force
+        }
+        else {
+            Write-Error "The currently installed script's version is $currentVersion while the latest version is $latestVersio - Run the script as Admin to update it, and then run it as Standard user again if you want."
+            break
+        }
     }
 }
-
+ 
 $infomsg = "`r`n" +
 "#############################################################################################################`r`n" +
 "###  Make Sure you've completely read what's written in the GitHub repository, before running this script ###`r`n" +

@@ -1,24 +1,3 @@
-$infomsg = "`r`n" +
-"#############################################################################################################`r`n" +
-"###  Make Sure you've completely read what's written in the GitHub repository, before running this script ###`r`n" +
-"#############################################################################################################`r`n"
-Write-Host $infomsg -ForegroundColor Cyan
-
-$infomsg = "`r`n" +
-"###########################################################################################`r`n" +
-"###  Link to the GitHub Repository: https://github.com/HotCakeX/Harden-Windows-Security ###`r`n" +
-"###########################################################################################`r`n"
-Write-Host $infomsg -ForegroundColor Green
-
-# Set execution policy temporarily to bypass for the current PowerShell session only
-Set-ExecutionPolicy Bypass -Scope Process
-
-# check if user's OS is Windows Home edition
-if (((Get-WmiObject Win32_OperatingSystem).OperatingSystemSKU) -eq "101") {
-    Write-host "Windows Home edition detected, exiting..." -ForegroundColor Red
-    break
-}
-
 #region Functions
 # Questions function
 function Select-Option {
@@ -118,9 +97,57 @@ function Compare-SecureString {
 } 
 #endregion functions
 
+# List of package providers installed
+[Microsoft.PackageManagement.Implementation.PackageProvider[]]$PackageProviderList = Get-PackageProvider
+# Check that the version of PS is below 6
+if ($PackageProviderList.Name -NotContains 'NuGet') {
+    # Install package manager pre-req for legacy platform
+    if (Test-IsAdmin) { 
+        Install-PackageProvider -Name 'NuGet' -Scope AllUsers -Force | Out-Null
+    }
+    else {
+        Install-PackageProvider -Name 'NuGet' -Scope CurrentUser -Force | Out-Null
+    }
+}
+
+# Only update the script if it's actually installed. If running directly from GitHub or downloaded file then skip
+if ($null -ne (Get-InstalledScript -ErrorAction SilentlyContinue -Name Harden-Windows-Security)) {
+
+    $currentVersion = (Get-InstalledScript -Name Harden-Windows-Security).Version.ToString()
+    try {
+        # $latestVersion = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/WDACConfig/version.txt"
+        $latestVersion = '2023.4.16'
+    }
+    catch {
+        Write-Error "Couldn't verify if the latest version of the script is installed, please check your Internet connection."
+        break
+    }
+    if (-NOT ($currentVersion -eq $latestVersion)) {
+        Write-Host "The currently installed script's version is $currentVersion while the latest version is $latestVersion - Auto Updating the script now and will run it after that" -ForegroundColor Cyan
+        Update-Script -Name Harden-Windows-Security -RequiredVersion $latestVersion -Force
+    }
+}
+
+$infomsg = "`r`n" +
+"#############################################################################################################`r`n" +
+"###  Make Sure you've completely read what's written in the GitHub repository, before running this script ###`r`n" +
+"#############################################################################################################`r`n"
+Write-Host $infomsg -ForegroundColor Cyan
+
+$infomsg = "`r`n" +
+"###########################################################################################`r`n" +
+"###  Link to the GitHub Repository: https://github.com/HotCakeX/Harden-Windows-Security ###`r`n" +
+"###########################################################################################`r`n"
+Write-Host $infomsg -ForegroundColor Green
+
+# check if user's OS is Windows Home edition
+if (((Get-WmiObject Win32_OperatingSystem).OperatingSystemSKU) -eq "101") {
+    Write-host "Windows Home edition detected, exiting..." -ForegroundColor Red
+    break
+}
+
 # doing a try-finally block so that when CTRL + C is pressed to forcefully exit the script, clean up will still happen
 try {
-
     # create our working directory
     New-Item -ItemType Directory -Path "$env:TEMP\HardeningXStuff\" -Force | Out-Null
     # working directory assignment
@@ -133,15 +160,27 @@ try {
         if (-NOT $finally) {
             Set-Location $HOME; remove-item -Recurse "$env:TEMP\HardeningXStuff\" -Force; pause; exit
         }
-        elseif ($finally) {
-            Set-Location $HOME; remove-item -Recurse "$env:TEMP\HardeningXStuff\" -Force -ErrorAction SilentlyContinue; break
+        elseif ($finally) {            
+            Set-Location $HOME; remove-item -Recurse "$env:TEMP\HardeningXStuff\" -Force -ErrorAction SilentlyContinue
         }
     }
 
     if (-NOT (Test-IsAdmin))
     { write-host "Skipping commands that require Administrator privileges" -ForegroundColor Magenta }
-    else {    
-        Write-Host "Downloading the required files, Please wait..." -ForegroundColor Yellow
+    else {
+        Write-Progress -Activity 'Initialization' -Status 'Downloading the required files for the script' -PercentComplete 0
+
+        # backup the current allowed apps list in Controlled folder access in order to restore them at the end of the script
+        # doing this so that when we Add and then Remove PowerShell executables in Controlled folder access exclusions
+        # no user customization will be affected
+        $CFAAllowedAppsBackup = (Get-MpPreference).ControlledFolderAccessAllowedApplications
+
+        # Temporarily allow the currently running PowerShell executables to the Controlled Folder Access allowed apps
+        # so that the script can run without interruption. This change is reverted at the end.
+        Get-ChildItem -Path "$PSHOME\*.exe" | ForEach-Object {
+            Add-MpPreference -ControlledFolderAccessAllowedApplications $_.FullName
+        }
+        
         Invoke-WithoutProgress { 
             try {                
                 # download Microsoft Security Baselines directly from their servers
@@ -156,7 +195,7 @@ try {
                 Invoke-WebRequest -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Payload/Registry.csv" -OutFile ".\Registry.csv" -ErrorAction Stop
             }
             catch {
-                Write-Host "The required files couldn't be downloaded, Make sure you have Internet connection." -ForegroundColor Red
+                Write-Error "The required files couldn't be downloaded, Make sure you have Internet connection."
                 &$cleanUp   
             }
         }
@@ -172,7 +211,9 @@ try {
         #region Microsoft-Security-Baseline    
         # ================================================Microsoft Security Baseline==============================================
         switch (Select-Option -Options "Yes", "No", "Exit" -Message "`nApply Microsoft Security Baseline ?") {
-            "Yes" {   
+            "Yes" {
+                Write-Progress -Activity 'Microsoft Security Baseline' -Status 'Running Microsoft Security Baseline section' -PercentComplete 5
+
                 # Copy LGPO.exe from its folder to Microsoft Security Baseline folder in order to get it ready to be used by PowerShell script
                 Copy-Item -Path ".\LGPO_30\LGPO.exe" -Destination ".\Windows-11-v22H2-Security-Baseline\Scripts\Tools"
 
@@ -192,6 +233,8 @@ try {
         # ================================================Microsoft 365 Apps Security Baseline==============================================
         switch (Select-Option -Options "Yes", "No", "Exit" -Message "`nApply Microsoft 365 Apps Security Baseline ?") {
             "Yes" {
+                Write-Progress -Activity 'Microsoft 365 Apps Security Baseline' -Status 'Running Microsoft 365 Apps Security Baseline section' -PercentComplete 10
+    
                 Set-Location $workingDir
                 # Copy LGPO.exe from its folder to Microsoft Office 365 Apps for Enterprise Security Baseline folder in order to get it ready to be used by PowerShell script
                 Copy-Item -Path ".\LGPO_30\LGPO.exe" -Destination '.\Microsoft 365 Apps for Enterprise-2206-FINAL\Scripts\Tools'
@@ -211,16 +254,16 @@ try {
         #region Microsoft-Defender
         # ================================================Microsoft Defender=======================================================
         switch (Select-Option -Options "Yes", "No", "Exit" -Message "Run Microsoft Defender category ?") {
-            "Yes" { 
+            "Yes" {
+                Write-Progress -Activity 'Microsoft Defender' -Status 'Running Microsoft Defender section' -PercentComplete 15
+
                 # Change current working directory to the LGPO's folder
                 Set-Location "$workingDir\LGPO_30"
-
-                Write-Host "`nApplying Microsoft Defender Policies" -ForegroundColor Cyan
                 .\LGPO.exe /m "..\Security-Baselines-X\Microsoft Defender Policies\registry.pol"
         
                 # Optimizing Network Protection Performance of Windows Defender - this was off by default on Windows 11 insider build 25247
                 Set-MpPreference -AllowSwitchToAsyncInspection $True
-            
+
                 # Add OneDrive folders of all user accounts to the Controlled Folder Access for Ransomware Protection
                 Get-ChildItem "C:\Users\*\OneDrive" | ForEach-Object { Add-MpPreference -ControlledFolderAccessProtectedFolders $_ }
 
@@ -280,10 +323,11 @@ try {
         # =========================================Attack Surface Reduction Rules==================================================
         switch (Select-Option -Options "Yes", "No", "Exit" -Message "Run Attack Surface Reduction Rules category ?") {
             "Yes" {
+                Write-Progress -Activity 'Attack Surface Reduction Rules' -Status 'Running Attack Surface Reduction Rules section' -PercentComplete 20
+                                
                 # Change current working directory to the LGPO's folder
                 Set-Location "$workingDir\LGPO_30"
-
-                Write-Host "`nApplying Attack Surface Reduction rules policies" -ForegroundColor Cyan
+                
                 .\LGPO.exe /m "..\Security-Baselines-X\Attack Surface Reduction Rules Policies\registry.pol"
             } "No" { break }
             "Exit" { &$cleanUp }
@@ -295,8 +339,10 @@ try {
         # ==========================================Bitlocker Settings=============================================================    
         switch (Select-Option -Options "Yes", "No", "Exit" -Message "Run Bitlocker category ?") {
             "Yes" {
+                Write-Progress -Activity 'Bitlocker Settings' -Status 'Running Bitlocker Settings section' -PercentComplete 25                       
+
                 # doing this so Controlled Folder Access won't bitch about powercfg.exe
-                Set-MpPreference -ControlledFolderAccessAllowedApplications "C:\Windows\System32\powercfg.exe"
+                Add-MpPreference -ControlledFolderAccessAllowedApplications "C:\Windows\System32\powercfg.exe"
                 Start-Sleep 5
                 # Set Hibnernate mode to full
                 powercfg /h /type full
@@ -305,7 +351,6 @@ try {
                 # Change current working directory to the LGPO's folder
                 Set-Location "$workingDir\LGPO_30"
 
-                Write-Host "`nApplying Bitlocker policies" -ForegroundColor Cyan
                 .\LGPO.exe /m "..\Security-Baselines-X\Bitlocker Policies\registry.pol"
 
                 # This PowerShell script can be used to find out if the DMA Protection is ON \ OFF.
@@ -414,7 +459,7 @@ the recovery password will be saved in a Text file in $env:SystemDrive\Drive $($
                                     if ( $theyMatch -and $pin1.Length -ge 10 -and $pin2.Length -ge 10  ) {                  
                                         $pin = $pin1                  
                                     }                  
-                                    else { Write-Host "the PINs you entered didn't match, try again" -ForegroundColor red }                  
+                                    else { Write-Host "The PINs you entered didn't match or they weren't at least 10 characters, try again" -ForegroundColor red }                  
                                 }                  
                                 until ($theyMatch -and $pin1.Length -ge 10 -and $pin2.Length -ge 10)
                  
@@ -441,7 +486,7 @@ the recovery password will be saved in a Text file in $env:SystemDrive\Drive $($
                             if ($theyMatch -and $pin1.Length -ge 10 -and $pin2.Length -ge 10) {      
                                 $pin = $pin1      
                             }      
-                            else { Write-Host "the Pins you entered didn't match, try again" -ForegroundColor red }      
+                            else { Write-Host "The PINs you entered didn't match or they weren't at least 10 characters, try again" -ForegroundColor red }      
                         }      
                         until ($theyMatch -and $pin1.Length -ge 10 -and $pin2.Length -ge 10)
 
@@ -553,6 +598,8 @@ Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which re
         # ==============================================TLS Security===============================================================    
         switch (Select-Option -Options "Yes", "No", "Exit" -Message "Run TLS Security category ?") {
             "Yes" {
+                Write-Progress -Activity 'TLS Security' -Status 'Running TLS Security section' -PercentComplete 30
+                                
                 @( # creating these registry keys that have forward slashes in them
                     'SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\DES 56/56', # DES 56-bit 
                     'SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC2 40/128', # RC2 40-bit
@@ -626,13 +673,11 @@ Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which re
         # ==========================================Lock Screen====================================================================
         switch (Select-Option -Options "Yes", "No", "Exit" -Message "Run Lock Screen category ?") {
             "Yes" {
+                Write-Progress -Activity 'Lock Screen' -Status 'Running Lock Screen section' -PercentComplete 35
+                                
                 # Change current working directory to the LGPO's folder
                 Set-Location "$workingDir\LGPO_30"
-
-                Write-Host "`nApplying Lock Screen policies" -ForegroundColor Cyan
                 .\LGPO.exe /m "..\Security-Baselines-X\Lock Screen Policies\registry.pol"
-
-                Write-Host "`nApplying Lock Screen Security policies" -ForegroundColor Cyan
                 .\LGPO.exe /s "..\Security-Baselines-X\Lock Screen Policies\GptTmpl.inf"        
             } "No" { break }
             "Exit" { &$cleanUp }
@@ -640,29 +685,32 @@ Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which re
         # ==========================================End of Lock Screen=============================================================
         #endregion Lock-Screen
 
-        #region User-Account-Control    
+        #region User-Account-Control
         # ==========================================User Account Control===========================================================
         switch (Select-Option -Options "Yes", "No", "Exit" -Message "Run User Account Control category ?") {
             "Yes" {
+                Write-Progress -Activity 'User Account Control' -Status 'User Account Control section' -PercentComplete 40
+
                 # Change current working directory to the LGPO's folder
                 Set-Location "$workingDir\LGPO_30"
-
-                Write-Host "`nApplying User Account Control (UAC) Security policies" -ForegroundColor Cyan
                 .\LGPO.exe /s "..\Security-Baselines-X\User Account Control UAC Policies\GptTmpl.inf" 
             
                 # built-in Administrator account enablement
-                switch (Select-Option -Options "Yes", "No", "Exit" -Message "Enable the built-in Administrator account ?") {
+                switch (Select-Option -Options "Yes", "No", "Exit" -Message "`nEnable the built-in Administrator account and set password for it?") {
                     "Yes" {
                         # show password policy details
                         Write-Host "`nHere are the current password & logon restrictions`n"
                         net accounts
                         do {
-                            $Password1 = $(write-host "Enter a password for the built-in Administrator account" -ForegroundColor Magenta; Read-Host -AsSecureString)
-                            $Password2 = $(write-host "Confirm your password for the built-in Administrator account" -ForegroundColor Magenta; Read-Host -AsSecureString)      
-                            $theyMatch = Compare-SecureString $Password1 $Password2
+                            $Password1 = Get-Credential -UserName Administrator -Message "Enter a password for the built-in Administrator account"
+                            #$Password1 = $host.ui.ReadLineAsSecureString()                            
+                            $Password2 = Get-Credential -UserName Administrator -Message "Confirm your password for the built-in Administrator account"
+                            #$Password2 = $host.ui.ReadLineAsSecureString()
+
+                            $theyMatch = Compare-SecureString $Password1.Password $Password2.Password
             
                             if ($theyMatch) {
-                                Set-LocalUser -Name "Administrator" -Password $Password1
+                                Set-LocalUser -Name "Administrator" -Password $Password1.Password
                             }      
                             else { Write-Host "the passwords you entered didn't match, try again" -ForegroundColor red }
                         }      
@@ -688,12 +736,11 @@ Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which re
         # ==========================================Device Guard===================================================================
         switch (Select-Option -Options "Yes", "No", "Exit" -Message "Run Device Guard category ?") {
             "Yes" {
+                Write-Progress -Activity 'Device Guard' -Status 'Running Device Guard section' -PercentComplete 45
+                
                 # Change current working directory to the LGPO's folder
                 Set-Location "$workingDir\LGPO_30"
-
-                Write-Host "`nApplying Device Guard policies" -ForegroundColor Cyan
                 .\LGPO.exe /m "..\Security-Baselines-X\Device Guard Policies\registry.pol"
-
             } "No" { break }
             "Exit" { &$cleanUp }
         }    
@@ -704,10 +751,10 @@ Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which re
         # ====================================================Windows Firewall=====================================================
         switch (Select-Option -Options "Yes", "No", "Exit" -Message "Run Windows Firewall category ?") {
             "Yes" {
+                Write-Progress -Activity 'Windows Firewall' -Status 'Running Windows Firewall section' -PercentComplete 50
+                                
                 # Change current working directory to the LGPO's folder
                 Set-Location "$workingDir\LGPO_30"
-
-                Write-Host "`nApplying Windows Firewall policies" -ForegroundColor Cyan
                 .\LGPO.exe /m "..\Security-Baselines-X\Windows Firewall Policies\registry.pol"
 
                 # Disables Multicast DNS (mDNS) UDP-in Firewall Rules for all 3 Firewall profiles - disables only 3 rules
@@ -724,6 +771,8 @@ Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which re
         # =================================================Optional Windows Features===============================================
         switch (Select-Option -Options "Yes", "No", "Exit" -Message "Run Optional Windows Features category ?") {
             "Yes" {
+                Write-Progress -Activity 'Optional Windows Features' -Status 'Running Optional Windows Features section' -PercentComplete 55
+                                
                 # since PowerShell Core (only if installed from Microsoft Store) has problem with these commands, making sure the built-in PowerShell handles them
                 # There are Github issues for it already: https://github.com/PowerShell/PowerShell/issues/13866
             
@@ -768,10 +817,10 @@ Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which re
         # ====================================================Windows Networking===================================================
         switch (Select-Option -Options "Yes", "No", "Exit" -Message "Run Windows Networking category ?") {
             "Yes" {
+                Write-Progress -Activity 'Windows Networking' -Status 'Running Windows Networking section' -PercentComplete 60
+
                 # Change current working directory to the LGPO's folder
                 Set-Location "$workingDir\LGPO_30"
-
-                Write-Host "`nApplying Windows Networking policies" -ForegroundColor Cyan
                 .\LGPO.exe /m "..\Security-Baselines-X\Windows Networking Policies\registry.pol"
 
                 # disable LMHOSTS lookup protocol on all network adapters
@@ -789,6 +838,8 @@ Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which re
         # ==============================================Miscellaneous Configurations===============================================
         switch (Select-Option -Options "Yes", "No", "Exit" -Message "Run Miscellaneous Configurations category ?") {
             "Yes" {
+                Write-Progress -Activity 'Miscellaneous Configurations' -Status 'Running Miscellaneous Configurations section' -PercentComplete 65
+                                
                 # Miscellaneous Registry section
                 Set-Location $workingDir
                 $items = Import-Csv '.\Registry.csv' -Delimiter ","
@@ -799,11 +850,7 @@ Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which re
                 }
                 # Change current working directory to the LGPO's folder
                 Set-Location "$workingDir\LGPO_30"
-
-                Write-Host "`nApplying Miscellaneous Configurations policies" -ForegroundColor Cyan
                 .\LGPO.exe /m "..\Security-Baselines-X\Miscellaneous Policies\registry.pol"
-
-                Write-Host "`nApplying Miscellaneous Configurations Security policies" -ForegroundColor Cyan
                 .\LGPO.exe /s "..\Security-Baselines-X\Miscellaneous Policies\GptTmpl.inf"
 
                 # Enable SMB Encryption - using force to confirm the action
@@ -837,12 +884,11 @@ Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which re
         # ============================================Overrides for Microsoft Security Baseline====================================
         switch (Select-Option -Options "Yes", "No", "Exit" -Message "Apply Overrides for Microsoft Security Baseline ?") {
             "Yes" {
+                Write-Progress -Activity 'Overrides for Microsoft Security Baseline' -Status 'Running Overrides for Microsoft Security Baseline section' -PercentComplete 70
+
                 # Change current working directory to the LGPO's folder
                 Set-Location "$workingDir\LGPO_30"
-
-                Write-Host "`nApplying policy Overrides for Microsoft Security Baseline" -ForegroundColor Cyan
                 .\LGPO.exe /v /m "..\Security-Baselines-X\Overrides for Microsoft Security Baseline\registry.pol"
-                Write-Host "`nApplying Security policy Overrides for Microsoft Security Baseline" -ForegroundColor Cyan
                 .\LGPO.exe /v /s "..\Security-Baselines-X\Overrides for Microsoft Security Baseline\GptTmpl.inf"
             } "No" { break }
             "Exit" { &$cleanUp }
@@ -854,12 +900,12 @@ Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which re
         # ====================================================Windows Update Configurations==============================================
         switch (Select-Option -Options "Yes", "No", "Exit" -Message "Apply Windows Update Policies ?") {
             "Yes" {
+                Write-Progress -Activity 'Windows Update Configurations' -Status 'Running Windows Update Configurations section' -PercentComplete 75
+
                 # enable restart notification for Windows update
                 ModifyRegistry -path "HKLM:\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings" -key "RestartNotificationsAllowed2" -value "1" -type 'DWORD'
                 # Change current working directory to the LGPO's folder
                 Set-Location "$workingDir\LGPO_30"
-
-                Write-Host "`nApplying Windows Update policies" -ForegroundColor Cyan
                 .\LGPO.exe /m "..\Security-Baselines-X\Windows Update Policies\registry.pol"
             } "No" { break }
             "Exit" { &$cleanUp }
@@ -871,6 +917,8 @@ Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which re
         # ====================================================Edge Browser Configurations====================================================
         switch (Select-Option -Options "Yes", "No", "Exit" -Message "Apply Edge Browser Configurations ?") {
             "Yes" {
+                Write-Progress -Activity 'Edge Browser Configurations' -Status 'Running Edge Browser Configurations section' -PercentComplete 80
+
                 # Edge Browser Configurations registry
                 Set-Location $workingDir
                 $items = Import-Csv '.\Registry.csv' -Delimiter ","
@@ -888,14 +936,12 @@ Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which re
         #region Top-Security-Measures    
         # ============================================Top Security Measures========================================================
         switch (Select-Option -Options "Yes", "No", "Exit" -Message "Apply Top Security Measures ? Make sure you've read the GitHub repository") {
-            "Yes" {             
+            "Yes" {                
+                Write-Progress -Activity 'Top Security Measures' -Status 'Running Top Security Measures section' -PercentComplete 85
+                                
                 # Change current working directory to the LGPO's folder
                 Set-Location "$workingDir\LGPO_30"
-
-                Write-Host "`nApplying Top Security Measures" -ForegroundColor Cyan
                 .\LGPO.exe /s "..\Security-Baselines-X\Top Security Measures\GptTmpl.inf"
-
-                Write-Host "`nApplying Top Security Measures Registry settings" -ForegroundColor Cyan
                 .\LGPO.exe /m "..\Security-Baselines-X\Top Security Measures\registry.pol"
             } "No" { break }
             "Exit" { &$cleanUp }
@@ -906,7 +952,9 @@ Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which re
         #region Certificate-Checking-Commands    
         # ====================================================Certificate Checking Commands========================================
         switch (Select-Option -Options "Yes", "No", "Exit" -Message "Run Certificate Checking category ?") {
-            "Yes" {      
+            "Yes" {
+                Write-Progress -Activity 'Certificate Checking Commands' -Status 'Running Certificate Checking Commands section' -PercentComplete 90
+               
                 try {
                     Invoke-WithoutProgress {                    
                         Invoke-WebRequest -Uri "https://live.sysinternals.com/sigcheck64.exe" -OutFile "sigcheck64.exe" -ErrorAction Stop
@@ -932,6 +980,8 @@ Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which re
         # ====================================================Country IP Blocking==================================================
         switch (Select-Option -Options "Yes", "No", "Exit" -Message "Run Country IP Blocking category ?") {
             "Yes" {
+                Write-Progress -Activity 'Country IP Blocking' -Status 'Running Country IP Blocking section' -PercentComplete 95
+
                 # -RemoteAddress in New-NetFirewallRule accepts array according to Microsoft Docs, 
                 # so we use "[string[]]$IPList = $IPList -split '\r?\n' -ne ''" to convert the IP lists, which is a single multiline string, into an array
                 function BlockCountryIP {
@@ -971,6 +1021,8 @@ Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which re
     # ====================================================Non-Admin Commands===================================================
     switch (Select-Option -Options "Yes", "No", "Exit" -Message "Run Non-Admin category ?") {
         "Yes" {
+            Write-Progress -Activity 'Non-Admin Commands' -Status 'Running Non-Admin Commands section' -PercentComplete 100
+            
             # Non-Admin Registry section              
             Set-Location $workingDir       
             Invoke-WithoutProgress { 
@@ -982,7 +1034,8 @@ Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which re
                 if ($item.category -eq 'NonAdmin') {              
                     ModifyRegistry -path $item.path -key $item.key -value $item.value -type $item.type
                 }
-            }        
+            }  
+                        
             $infomsg = "`r`n" +
             "################################################################################################`r`n" +
             "###  Please Restart your device to completely apply the security measures and Group Policies ###`r`n" +
@@ -996,4 +1049,15 @@ Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which re
 }
 finally {
     &$cleanUp $True
+    if (Test-IsAdmin) {
+        # Reverting the PowerShell executables allow listings in Controlled folder access
+        Get-ChildItem -Path "$PSHOME\*.exe" | ForEach-Object {
+            Remove-MpPreference -ControlledFolderAccessAllowedApplications $_.FullName
+        }
+        # restoring the original Controlled folder access allow list - if user already had added PowerShell executables to the list
+        # they will be restored as well, so user customization will remain intact 
+        $CFAAllowedAppsBackup | ForEach-Object {
+            Add-MpPreference -ControlledFolderAccessAllowedApplications $_
+        }
+    }
 }

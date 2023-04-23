@@ -1,6 +1,6 @@
 <#PSScriptInfo
 
-.VERSION 2023.4.23.9
+.VERSION 2023.4.23.10
 
 .GUID d435a293-c9ee-4217-8dc1-4ad2318a5770
 
@@ -242,7 +242,7 @@ if ($PackageProviderList.Name -NotContains 'NuGet') {
 }
 
 # Check the current hard-coded version against the latest version online and self-update if necessary
-$currentVersion = '2023.4.23.9'
+$currentVersion = '2023.4.23.10'
 try {
     $latestVersion = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Version.txt"
 }
@@ -269,7 +269,7 @@ if (-NOT ($currentVersion -eq $latestVersion)) {
         break
     }
 }
- 
+
 $infomsg = "`r`n" +
 "#############################################################################################################`r`n" +
 "###  Make Sure you've completely read what's written in the GitHub repository, before running this script ###`r`n" +

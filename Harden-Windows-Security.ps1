@@ -1,6 +1,6 @@
 <#PSScriptInfo
 
-.VERSION 2023.4.23.2
+.VERSION 2023.4.23.6
 
 .GUID d435a293-c9ee-4217-8dc1-4ad2318a5770
 
@@ -229,8 +229,7 @@ if ($PackageProviderList.Name -NotContains 'NuGet') {
 }
 
 # Check the current hard-coded version against the latest version online and self-update if necessary
-$currentVersion = '2023.4.23.2'
-$currentVersion = (Get-InstalledScript -Name 'Harden-Windows-Security').Version.ToString()
+$currentVersion = '2023.4.23.6'
 try {
     $latestVersion = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Version.txt"
 }
@@ -240,8 +239,9 @@ catch {
 }
 if (-NOT ($currentVersion -eq $latestVersion)) {
     if (Test-IsAdmin) {       
-        Write-Host "The currently installed script's version is $currentVersion while the latest version is $latestVersion - Auto Updating the script now and will run it after that" -ForegroundColor Cyan
+        Write-Host "The currently installed script's version is $currentVersion while the latest version is $latestVersion - Auto Updating the script now. Please run it again." -ForegroundColor Cyan
         Update-Script -Name 'Harden-Windows-Security' -RequiredVersion $latestVersion -Force
+        break
     }
     else {
         Write-Host "The currently installed script's version is $currentVersion while the latest version is $latestVersion - Please run the script as Admin to update it, then run it as Standard user again if you want." -ForegroundColor Blue

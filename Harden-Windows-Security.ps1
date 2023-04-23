@@ -1,3 +1,108 @@
+<#PSScriptInfo
+
+.VERSION 2023.4.23.1
+
+.GUID d435a293-c9ee-4217-8dc1-4ad2318a5770
+
+.AUTHOR HotCakeX
+
+.COMPANYNAME SpyNetGirl
+
+.COPYRIGHT 2023
+
+.TAGS Windows Hardening Security Bitlocker Defender Firewall Edge Protection
+
+.LICENSEURI https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
+
+.PROJECTURI https://github.com/HotCakeX/Harden-Windows-Security
+
+.ICONURI https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/PowerShell%20Gallery%20Harden-Windows-Security/ICONURI.png
+
+.EXTERNALMODULEDEPENDENCIES 
+
+.REQUIREDSCRIPTS 
+
+.EXTERNALSCRIPTDEPENDENCIES 
+
+.RELEASENOTES
+
+## Version 2023.4.23: improved code quality for best practices and compliance - Finished testing the self-updating mechanism
+
+## Version 2023.4.22.1: For testing the self-updating functionality - improved code quality for best practices and compliance
+
+## Version 2023.4.22: Added Self-updating functionality to the script. Script now shows progress bar when running it. Fixed an error related to Controlled Folder Access. Improved compatibility with Controlled Folder Access.
+
+## Version 2023.4.16: Added optional feature to enable the built-in Administrator account and set a password for it. Enabled the script to clean up after itself when CTRL + C are pressed to forcefully stop the operation. Made some quality of life improvements too.
+
+Full Change log always available in Excel online: 
+https://1drv.ms/x/s!AtCaUNAJbbvIhuVQhdMu_Hts7YZ_lA?e=df6H6P
+
+#>
+
+<# 
+
+.SYNOPSIS
+    Harden Windows Safely, Securely, only with Official Microsoft methods
+
+.DESCRIPTION
+
+
+  ⭕ You need to read the GitHub's readme page before running this script: https://github.com/HotCakeX/Harden-Windows-Security
+
+💠 Features of this Hardening script:
+
+  ✅ Always stays up-to-date with the newest security features and only guaranteed to work on the latest version of Windows, which is currently Windows 11. (rigorously tested on the latest Stable and Insider preview builds).
+  ✅ The script is in plain text, nothing hidden, no 3rd party executable or pre-compiled binary is involved.
+  ✅ Doesn't remove or disable Windows functionalities against Microsoft's recommendation.
+  ✅ The Readme page on GitHub is used as the reference for all of the security measures applied by this script and Group Policies. The order in which they appear there is the same as the one in the script file.
+  ✅ When a hardening command is no longer necessary because it's applied by default by Microsoft on new builds of Windows, it will also be removed from this script in order to prevent any problems and because it won't be necessary anymore.
+  ✅ The script can be run infinite number of times, it's made in a way that it won't make any duplicate changes at all.
+  ✅ The script asks for confirmation, in the PowerShell console, before running each hardening category and some sub-categories, so you can selectively run (or don't run) each of them.
+  ✅ Running this script makes your PC compliant with Secured-core PC specifications (providing that you use a modern hardware that supports the latest Windows security features). 
+  ✅ Running this script makes your system compliant with the official Microsoft Security Baselines
+  ✅ The script primarily uses Group policies, the Microsoft recommended way of configuring Windows. It also uses PowerShell cmdlets where Group Policies aren't available, and finally uses a few registry keys to configure security measures that can neither be configured using Group Policies nor PowerShell cmdlets. This is why the script doesn't break anything or cause unwanted behavior.
+
+
+🛑 Warning: Windows by default is secure and safe, this script does not imply nor claim otherwise. just like anything, you have to use it wisely and don't compromise yourself with reckless behavior and bad user configuration; Nothing is foolproof. this script only uses the tools and features that have already been implemented by Microsoft in Windows OS to fine-tune it towards the highest security and locked-down state, using well-documented, supported, recommended and official methods. continue reading on GitHub for comprehensive info.
+
+💠 Hardening Categories from top to bottom: (🔺Detailed info about each of them at my Github🔻)
+
+⏹ Commands that require Administrator Privileges
+  ✅ Microsoft Security Baselines
+  ✅ Microsoft 365 Apps Security Baselines
+  ✅ Microsoft Defender
+  ✅ Attack surface reduction rules
+  ✅ Bitlocker Settings
+  ✅ TLS Security
+  ✅ Lock Screen
+  ✅ UAC (User Account Control)
+  ✅ Device Guard
+  ✅ Windows Firewall
+  ✅ Optional Windows Features
+  ✅ Windows Networking
+  ✅ Miscellaneous Configurations
+  ✅ Windows Update Configurations
+  ✅ Edge Browser Configurations
+  ✅ Certificate Checking Commands
+  ✅ Country IP Blocking
+⏹ Commands that don't require Administrator Privileges
+  ✅ Non-Admin Commands that only affect the current user and do not make machine-wide changes.
+
+
+💎 Note: If there are multiple Windows user accounts in your computer, it's recommended to run this script in each of them, without administrator privileges, because Non-admin commands only apply to the current user and are not machine wide.
+
+💎 Note: There are 4 items tagged with #TopSecurity that can cause difficulties. When you run this script, you will have an option to enable them if you want to. You can find all the information about them on GitHub.
+
+🏴 If you have any questions, requests, suggestions etc. about this script, please open a new discussion in GitHub:
+
+🟡 https://github.com/HotCakeX/Harden-Windows-Security/discussions
+
+.EXAMPLE  
+
+.NOTES  
+    Check out GitHub page for security recommendations: https://github.com/HotCakeX/Harden-Windows-Security
+#>
+
 #region Functions
 # Questions function
 function Select-Option {
@@ -123,26 +228,24 @@ if ($PackageProviderList.Name -NotContains 'NuGet') {
     }
 }
 
-# Only update the script if it's actually installed. If running directly from GitHub or downloaded file then skip
-if ($null -ne (Get-InstalledScript -ErrorAction SilentlyContinue -Name Harden-Windows-Security)) {
-
-    $currentVersion = (Get-InstalledScript -Name 'Harden-Windows-Security').Version.ToString()
-    try {
-        $latestVersion = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/PowerShell%20Gallery%20Harden-Windows-Security/Version.txt"
+# Check the current hard-coded version against the latest version online and self-update if necessary
+$currentVersion = '2023.4.23.1'
+$currentVersion = (Get-InstalledScript -Name 'Harden-Windows-Security').Version.ToString()
+try {
+    $latestVersion = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/PowerShell%20Gallery%20Harden-Windows-Security/Version.txt"
+}
+catch {
+    Write-Error "Couldn't verify if the latest version of the script is installed, please check your Internet connection."
+    break
+}
+if (-NOT ($currentVersion -eq $latestVersion)) {
+    if (Test-IsAdmin) {       
+        Write-Host "The currently installed script's version is $currentVersion while the latest version is $latestVersion - Auto Updating the script now and will run it after that" -ForegroundColor Cyan
+        Update-Script -Name 'Harden-Windows-Security' -RequiredVersion $latestVersion -Force
     }
-    catch {
-        Write-Error "Couldn't verify if the latest version of the script is installed, please check your Internet connection."
+    else {
+        Write-Host "The currently installed script's version is $currentVersion while the latest version is $latestVersion - Please run the script as Admin to update it, then run it as Standard user again if you want." -ForegroundColor Blue
         break
-    }
-    if (-NOT ($currentVersion -eq $latestVersion)) {
-        if (Test-IsAdmin) {       
-            Write-Host "The currently installed script's version is $currentVersion while the latest version is $latestVersion - Auto Updating the script now and will run it after that" -ForegroundColor Cyan
-            Update-Script -Name 'Harden-Windows-Security' -RequiredVersion $latestVersion -Force
-        }
-        else {
-            Write-Host "The currently installed script's version is $currentVersion while the latest version is $latestVersion - Please run the script as Admin to update it, then run it as Standard user again if you want." -ForegroundColor Blue
-            break
-        }
     }
 }
  

@@ -140,7 +140,7 @@ if ($null -ne (Get-InstalledScript -ErrorAction SilentlyContinue -Name Harden-Wi
             Update-Script -Name 'Harden-Windows-Security' -RequiredVersion $latestVersion -Force
         }
         else {
-            Write-Error "The currently installed script's version is $currentVersion while the latest version is $latestVersio - Run the script as Admin to update it, and then run it as Standard user again if you want."
+            Write-Host "The currently installed script's version is $currentVersion while the latest version is $latestVersion - Run the script as Admin to update it, and then run it as Standard user again if you want." -ForegroundColor Blue
             break
         }
     }

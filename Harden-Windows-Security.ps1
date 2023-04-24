@@ -1,6 +1,6 @@
 <#PSScriptInfo
 
-.VERSION 2023.4.24.2
+.VERSION 2023.4.24.3
 
 .GUID d435a293-c9ee-4217-8dc1-4ad2318a5770
 
@@ -219,21 +219,8 @@ if (Test-IsAdmin) {
 # or break is passed, clean up will still happen for secure exit
 try {
 
-    # List of package providers installed
-    [Microsoft.PackageManagement.Implementation.PackageProvider[]]$PackageProviderList = Get-PackageProvider
-    # Check that the version of PS is below 6
-    if ($PackageProviderList.Name -NotContains 'NuGet') {
-        # Install package manager pre-req for legacy platform
-        if (Test-IsAdmin) { 
-            Install-PackageProvider -Name 'NuGet' -Scope 'AllUsers' -Force | Out-Null
-        }
-        else {
-            Install-PackageProvider -Name 'NuGet' -Scope 'CurrentUser' -Force | Out-Null
-        }
-    }
-
     # Check the current hard-coded version against the latest version online and self-update if necessary
-    $currentVersion = '2023.4.24.2'
+    $currentVersion = '2023.4.24.3'
     try {
         $latestVersion = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Version.txt"
     }
@@ -242,29 +229,13 @@ try {
         break
     }
     if (-NOT ($currentVersion -eq $latestVersion)) {
-        if (Test-IsAdmin) {
-
-            Write-Host "The currently installed script's version is $currentVersion while the latest version is $latestVersion - Auto Updating the script now. Please run it again." -ForegroundColor Cyan
-            Write-host "You can view the change log in here: https://1drv.ms/x/s!AtCaUNAJbbvIhuVQhdMu_Hts7YZ_lA?e=df6H6P" -ForegroundColor Magenta
-            
-            # This try and catch block will take care of scenarios where user installs the script in PowerShell core
-            # and then runs it in Windows PowerShell and at the same time there is a new version of the script available online!
-            try { Uninstall-Script -Name 'Harden-Windows-Security' -Force -ErrorAction Stop
-                 # Update-Script -Name 'Harden-Windows-Security' -RequiredVersion $latestVersion -Force -ErrorAction Stop
-                 }
-            catch {
-                Install-Script -Name 'Harden-Windows-Security' -Scope AllUsers -RequiredVersion $latestVersion -Force
-            }      
-            break        
-        }    
-        # Show this message when there is an update for script available but user is running the script with non-Admin privileges
-        else {
-            Write-Host "The currently installed script's version is $currentVersion while the latest version is $latestVersion - Please run the script as Admin to update it, then run it as Standard user again if you want." -ForegroundColor Blue
-            Write-host "You can view the change log in here: https://1drv.ms/x/s!AtCaUNAJbbvIhuVQhdMu_Hts7YZ_lA?e=df6H6P" -ForegroundColor Magenta
-            break
-        }
+        Write-Host "The currently installed script's version is $currentVersion while the latest version is $latestVersion" -ForegroundColor Cyan
+        Write-Host "Please update your script using:" -ForegroundColor Yellow
+        Write-Host "Update-Script -Name 'Harden-Windows-Security' -Force" -ForegroundColor Green
+        Write-Host "and run it again after that." -ForegroundColor Yellow        
+        Write-host "You can view the change log in here: https://1drv.ms/x/s!AtCaUNAJbbvIhuVQhdMu_Hts7YZ_lA?e=df6H6P" -ForegroundColor Magenta
+        break
     }
-
 
     $infomsg = "`r`n" +
     "#############################################################################################################`r`n" +

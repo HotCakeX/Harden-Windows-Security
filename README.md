@@ -258,12 +258,12 @@ The security baseline for Microsoft 365 Apps for enterprise is published twice a
 
 ```powershell
 # Add multiple programs to the exclusion list of Controlled Folder Access
-Set-MpPreference -ControlledFolderAccessAllowedApplications 'C:\Program Files\App\app.exe','C:\Program Files\App2\app2.exe'
+Add-MpPreference -ControlledFolderAccessAllowedApplications 'C:\Program Files\App\app.exe','C:\Program Files\App2\app2.exe'
 ```
 
 ```powershell
 # Get the list of all allowed apps
-$(get-MpPreference).ControlledFolderAccessAllowedApplications
+(Get-MpPreference).ControlledFolderAccessAllowedApplications
 ```
 
 <br>

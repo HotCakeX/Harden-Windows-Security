@@ -124,12 +124,16 @@
 
 ## How To Use<a href="#how-to-use">![HowToUseIcon]</a>
 
-<br>
+#### Using GitHub source (Always up to date)
 
-To run the script: ([*irm*](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/invoke-restmethod) [*iex*](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/invoke-expression))
+```powershell
+irm 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security.ps1' | iex
+```
 
-```PowerShell
-irm https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security.ps1 | iex
+#### Using [PowerShell gallery](https://www.powershellgallery.com/packages/Harden-Windows-Security) (You need to manually update the script whenever a new version is released)
+
+```powershell
+Install-Script -Name Harden-Windows-Security
 ```
 
 <br>
@@ -252,12 +256,12 @@ The security baseline for Microsoft 365 Apps for enterprise is published twice a
   - If it blocks a program from accessing one of your folders it protects, and you absolutely trust that program, then you can add it to exclusion list using Microsoft Defender GUI or PowerShell. you can also query the list of allowed apps using PowerShell (commands below). with these commands, you can backup your personalized list of allowed apps, that are relevant to your system, and restore them in case you clean install your Windows.
   - 🔶 The script adds the root of OneDrive folders of all user accounts present when running the script, to the protected folders list of Controlled Folder Access, to provide Ransomware protection for the entire OneDrive folder.
 
-```PowerShell
+```powershell
 # Add multiple programs to the exclusion list of Controlled Folder Access
 Set-MpPreference -ControlledFolderAccessAllowedApplications 'C:\Program Files\App\app.exe','C:\Program Files\App2\app2.exe'
 ```
 
-```PowerShell
+```powershell
 # Get the list of all allowed apps
 $(get-MpPreference).ControlledFolderAccessAllowedApplications
 ```
@@ -647,7 +651,7 @@ This repository uses the simplest possible, yet effective, methods that make it 
 
 - You can open the file in [Visual Studio Code](https://code.visualstudio.com/)/[Visual Studio Code Web](https://vscode.dev/), and view the script in a nice easy to read environment, it's well formatted and indented.
 
-- Commits are verified with my GPG or SSH keys
+- Commits are verified either with my GPG key or SSH key and [Vigilant mode](https://docs.github.com/en/authentication/managing-commit-signature-verification/displaying-verification-statuses-for-all-of-your-commits) is turned on in my GitHub account.
 
 - You can fork this repository, verify it until that point in time, then verify any subsequent changes/updates I push to this repository, __at your own pace__ (using `Sync fork` and `Compare` options on your fork), and if you are happy with the changes, allow it to be merged with your own copy/fork on your GitHub account.
 - You can learn PowerShell which is super easy, multiplatform, and useful for the future, Microsoft Learn website teaches you everything, then you will understand everything in the script is safe, or you can ask someone that you trust and knows PowerShell to verify the script for you.
@@ -718,7 +722,7 @@ _Links above are automatically updated. There is a [GitHub workflow](https://git
 
 * Use __NTFS__ (which is the default Filesystem in Windows) or __ReFS__ (Resilient File System, newer). In addition to all their benefits, they support `Mark Of The Web` (MOTW) or `zone.identifier`. When a file is downloaded to a device running Windows, Mark of the Web is added to the file, identifying its source as being from the internet. [You can read all the information about it in here](https://learn.microsoft.com/en-us/deployoffice/security/internet-macros-blocked#mark-of-the-web-and-trusted-documents). If your USB flash drive is formatted as `FAT32`, change it to `NTFS`, because `FAT32` does not keep the `MOTW` of the files. If the file you are downloading is compressed in `.zip` format, make sure you open/extract it using Windows built-in support for `.zip` files because it keeps the MOTW of the files. If the compressed file you downloaded is in other formats such as `.7zip` or `.rar`, make sure you use an archive program that supports keeping the mark of the Web of files after extraction. One of those programs is NanaZip which is a fork of 7zip, available in [Microsoft Store](https://www.microsoft.com/store/productId/9N8G7TSCL18R) and [GitHub](https://github.com/M2Team/NanaZip), compared to 7zip, it has better and modern GUI, and the application is [digitally signed](https://learn.microsoft.com/en-us/security/trusted-root/program-requirements). After installation, open it, navigate to `Tools` at the top then select `Options`, set `Propagate zone.id stream` to `Yes`. You can use this [PowerShell command](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/get-content?view=powershell-7.3#-stream) to find all the info about the Zone Identifier of the files you downloaded from the Internet.
 
-```PowerShell
+```powershell
 Get-Content <Path-To-File> -stream zone.identifier
 ```
 

@@ -1,6 +1,6 @@
 <#PSScriptInfo
 
-.VERSION 2023.4.24.4
+.VERSION 2023.4.24.5
 
 .GUID d435a293-c9ee-4217-8dc1-4ad2318a5770
 
@@ -26,15 +26,7 @@
 
 .RELEASENOTES
 
-## Version 2023.4.23.x: improved code quality for best practices and compliance - Finished testing the self-updating mechanism
-
-## Version 2023.4.22.1: For testing the self-updating functionality - improved code quality for best practices and compliance
-
-## Version 2023.4.22: Added Self-updating functionality to the script. Script now shows progress bar when running it. Fixed an error related to Controlled Folder Access. Improved compatibility with Controlled Folder Access.
-
-## Version 2023.4.16: Added optional feature to enable the built-in Administrator account and set a password for it. Enabled the script to clean up after itself when CTRL + C are pressed to forcefully stop the operation. Made some quality of life improvements too.
-
-Full Change log always available in Excel online: 
+Full Change log always available in Excel online (Copy and Paste the link if not displaying correctly): 
 https://1drv.ms/x/s!AtCaUNAJbbvIhuVQhdMu_Hts7YZ_lA?e=df6H6P
 
 #>
@@ -219,8 +211,8 @@ if (Test-IsAdmin) {
 # or break is passed, clean up will still happen for secure exit
 try {
 
-    # Check the current hard-coded version against the latest version online and self-update if necessary
-    $currentVersion = '2023.4.24.4'
+    # Check the current hard-coded version against the latest version online
+    $currentVersion = '2023.4.24.5'
     try {
         $latestVersion = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Version.txt"
     }

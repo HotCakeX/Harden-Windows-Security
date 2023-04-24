@@ -1,6 +1,6 @@
 <#PSScriptInfo
 
-.VERSION 2023.4.24
+.VERSION 2023.4.24.1
 
 .GUID d435a293-c9ee-4217-8dc1-4ad2318a5770
 
@@ -233,7 +233,7 @@ try {
     }
 
     # Check the current hard-coded version against the latest version online and self-update if necessary
-    $currentVersion = '2023.4.24'
+    $currentVersion = '2023.4.24.1'
     try {
         $latestVersion = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Version.txt"
     }
@@ -249,9 +249,11 @@ try {
             
             # This try and catch block will take care of scenarios where user installs the script in PowerShell core
             # and then runs it in Windows PowerShell and at the same time there is a new version of the script available online!
-            try { Update-Script -Name 'Harden-Windows-Security' -RequiredVersion $latestVersion -Force -ErrorAction Stop }
+            try { Uninstall-Script -Name 'Harden-Windows-Security' -Force -ErrorAction Stop
+                 # Update-Script -Name 'Harden-Windows-Security' -RequiredVersion $latestVersion -Force -ErrorAction Stop
+                 }
             catch {
-                Install-Script -Name 'Harden-Windows-Security' -RequiredVersion $latestVersion -Force
+                Install-Script -Name 'Harden-Windows-Security' -Scope AllUsers -RequiredVersion $latestVersion -Force
             }      
             break        
         }    

@@ -1,6 +1,6 @@
 <#PSScriptInfo
 
-.VERSION 2023.4.24.3
+.VERSION 2023.4.24.4
 
 .GUID d435a293-c9ee-4217-8dc1-4ad2318a5770
 
@@ -220,7 +220,7 @@ if (Test-IsAdmin) {
 try {
 
     # Check the current hard-coded version against the latest version online and self-update if necessary
-    $currentVersion = '2023.4.24.3'
+    $currentVersion = '2023.4.24.4'
     try {
         $latestVersion = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Version.txt"
     }

@@ -1,6 +1,6 @@
 <#PSScriptInfo
 
-.VERSION 2023.4.23.12
+.VERSION 2023.4.23.13
 
 .GUID d435a293-c9ee-4217-8dc1-4ad2318a5770
 
@@ -215,85 +215,73 @@ if (Test-IsAdmin) {
     }
 }
 
-# ScriptBlock to securely finish up Controlled Folder Access modifications
-$ControlledFolderAccessCleanUp = { if (Test-IsAdmin) {
-        # Reverting the PowerShell executables allow listings in Controlled folder access
-        Get-ChildItem -Path "$PSHOME\*.exe" | ForEach-Object {
-            Remove-MpPreference -ControlledFolderAccessAllowedApplications $_.FullName
-        }
-        # restoring the original Controlled folder access allow list - if user already had added PowerShell executables to the list
-        # they will be restored as well, so user customization will remain intact
-        if ($null -ne $CFAAllowedAppsBackup) { 
-            $CFAAllowedAppsBackup | ForEach-Object {
-                Add-MpPreference -ControlledFolderAccessAllowedApplications $_
-            }
-        }
-    }
-}
-
-# List of package providers installed
-[Microsoft.PackageManagement.Implementation.PackageProvider[]]$PackageProviderList = Get-PackageProvider
-# Check that the version of PS is below 6
-if ($PackageProviderList.Name -NotContains 'NuGet') {
-    # Install package manager pre-req for legacy platform
-    if (Test-IsAdmin) { 
-        Install-PackageProvider -Name 'NuGet' -Scope 'AllUsers' -Force | Out-Null
-    }
-    else {
-        Install-PackageProvider -Name 'NuGet' -Scope 'CurrentUser' -Force | Out-Null
-    }
-}
-
-# Check the current hard-coded version against the latest version online and self-update if necessary
-$currentVersion = '2023.4.23.12'
+# doing a try-finally block on the entire script so that when CTRL + C is pressed to forcefully exit the script,
+# or break is passed, clean up will still happen for secure exit
 try {
-    $latestVersion = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Version.txt"
-}
-catch {
-    Write-Error "Couldn't verify if the latest version of the script is installed, please check your Internet connection."
-    &$ControlledFolderAccessCleanUp
-    break
-}
-if (-NOT ($currentVersion -eq $latestVersion)) {
-    if (Test-IsAdmin) {       
-        Write-Host "The currently installed script's version is $currentVersion while the latest version is $latestVersion - Auto Updating the script now. Please run it again." -ForegroundColor Cyan
-       
-        # This try and catch block will take care of scenarios where user installs the script in PowerShell core
-        # and then runs it in Windows PowerShell and at the same time there is a new version of the script available online!
-        try { Update-Script -Name 'Harden-Windows-Security' -RequiredVersion $latestVersion -Force -ErrorAction Stop }
-        catch {
-            Install-Script -Name 'Harden-Windows-Security' -RequiredVersion $latestVersion -Force
+
+    # List of package providers installed
+    [Microsoft.PackageManagement.Implementation.PackageProvider[]]$PackageProviderList = Get-PackageProvider
+    # Check that the version of PS is below 6
+    if ($PackageProviderList.Name -NotContains 'NuGet') {
+        # Install package manager pre-req for legacy platform
+        if (Test-IsAdmin) { 
+            Install-PackageProvider -Name 'NuGet' -Scope 'AllUsers' -Force | Out-Null
         }
-        &$ControlledFolderAccessCleanUp       
-        break
-        
+        else {
+            Install-PackageProvider -Name 'NuGet' -Scope 'CurrentUser' -Force | Out-Null
+        }
     }
-    else {
-        Write-Host "The currently installed script's version is $currentVersion while the latest version is $latestVersion - Please run the script as Admin to update it, then run it as Standard user again if you want." -ForegroundColor Blue
+
+    # Check the current hard-coded version against the latest version online and self-update if necessary
+    $currentVersion = '2023.4.23.13'
+    try {
+        $latestVersion = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Version.txt"
+    }
+    catch {
+        Write-Error "Couldn't verify if the latest version of the script is installed, please check your Internet connection."
         break
     }
-}
+    if (-NOT ($currentVersion -eq $latestVersion)) {
+        if (Test-IsAdmin) {
 
-$infomsg = "`r`n" +
-"#############################################################################################################`r`n" +
-"###  Make Sure you've completely read what's written in the GitHub repository, before running this script ###`r`n" +
-"#############################################################################################################`r`n"
-Write-Host $infomsg -ForegroundColor Cyan
+            Write-Host "The currently installed script's version is $currentVersion while the latest version is $latestVersion - Auto Updating the script now. Please run it again." -ForegroundColor Cyan
+            Write-host "You can view the change log in here: https://1drv.ms/x/s!AtCaUNAJbbvIhuVQhdMu_Hts7YZ_lA?e=df6H6P" -ForegroundColor Magenta
+            
+            # This try and catch block will take care of scenarios where user installs the script in PowerShell core
+            # and then runs it in Windows PowerShell and at the same time there is a new version of the script available online!
+            try { Update-Script -Name 'Harden-Windows-Security' -RequiredVersion $latestVersion -Force -ErrorAction Stop }
+            catch {
+                Install-Script -Name 'Harden-Windows-Security' -RequiredVersion $latestVersion -Force
+            }      
+            break        
+        }    
+        # Show this message when there is an update for script available but user is running the script with non-Admin privileges
+        else {
+            Write-Host "The currently installed script's version is $currentVersion while the latest version is $latestVersion - Please run the script as Admin to update it, then run it as Standard user again if you want." -ForegroundColor Blue
+            Write-host "You can view the change log in here: https://1drv.ms/x/s!AtCaUNAJbbvIhuVQhdMu_Hts7YZ_lA?e=df6H6P" -ForegroundColor Magenta
+            break
+        }
+    }
 
-$infomsg = "`r`n" +
-"###########################################################################################`r`n" +
-"###  Link to the GitHub Repository: https://github.com/HotCakeX/Harden-Windows-Security ###`r`n" +
-"###########################################################################################`r`n"
-Write-Host $infomsg -ForegroundColor Green
 
-# check if user's OS is Windows Home edition
-if ((Get-CimInstance -ClassName Win32_OperatingSystem).OperatingSystemSKU -eq "101") {
-    Write-host "Windows Home edition detected, exiting..." -ForegroundColor Red
-    break
-}
+    $infomsg = "`r`n" +
+    "#############################################################################################################`r`n" +
+    "###  Make Sure you've completely read what's written in the GitHub repository, before running this script ###`r`n" +
+    "#############################################################################################################`r`n"
+    Write-Host $infomsg -ForegroundColor Cyan
 
-# doing a try-finally block so that when CTRL + C is pressed to forcefully exit the script, clean up will still happen for secure exit
-try {
+    $infomsg = "`r`n" +
+    "###########################################################################################`r`n" +
+    "###  Link to the GitHub Repository: https://github.com/HotCakeX/Harden-Windows-Security ###`r`n" +
+    "###########################################################################################`r`n"
+    Write-Host $infomsg -ForegroundColor Green
+
+    # check if user's OS is Windows Home edition
+    if ((Get-CimInstance -ClassName Win32_OperatingSystem).OperatingSystemSKU -eq "101") {
+        Write-host "Windows Home edition detected, exiting..." -ForegroundColor Red
+        break
+    }
+
     # create our working directory
     New-Item -ItemType Directory -Path "$env:TEMP\HardeningXStuff\" -Force | Out-Null
     # working directory assignment
@@ -1163,12 +1151,16 @@ Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which re
                     ModifyRegistry -path $item.path -key $item.key -value $item.value -type $item.type
                 }
             }  
-                        
-            $infomsg = "`r`n" +
-            "################################################################################################`r`n" +
-            "###  Please Restart your device to completely apply the security measures and Group Policies ###`r`n" +
-            "################################################################################################`r`n"
-            Write-Host $infomsg -ForegroundColor Cyan
+
+            # Only suggest restarting the device if Admin related categories were run
+            if (Test-IsAdmin) {          
+                $infomsg = "`r`n" +
+                "################################################################################################`r`n" +
+                "###  Please Restart your device to completely apply the security measures and Group Policies ###`r`n" +
+                "################################################################################################`r`n"
+                Write-Host $infomsg -ForegroundColor Cyan
+            }
+
         } "No" { &$cleanUp }
         "Exit" { &$cleanUp }
     }
@@ -1176,6 +1168,18 @@ Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which re
     #endregion Non-Admin-Commands
 }
 finally {
-    &$ControlledFolderAccessCleanUp
+    if (Test-IsAdmin) {
+        # Reverting the PowerShell executables allow listings in Controlled folder access
+        Get-ChildItem -Path "$PSHOME\*.exe" | ForEach-Object {
+            Remove-MpPreference -ControlledFolderAccessAllowedApplications $_.FullName
+        }
+        # restoring the original Controlled folder access allow list - if user already had added PowerShell executables to the list
+        # they will be restored as well, so user customization will remain intact
+        if ($null -ne $CFAAllowedAppsBackup) { 
+            $CFAAllowedAppsBackup | ForEach-Object {
+                Add-MpPreference -ControlledFolderAccessAllowedApplications $_
+            }
+        }
+    }
     Set-Location $HOME; remove-item -Recurse "$env:TEMP\HardeningXStuff\" -Force -ErrorAction SilentlyContinue    
 }

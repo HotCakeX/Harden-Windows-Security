@@ -95,6 +95,8 @@ https://1drv.ms/x/s!AtCaUNAJbbvIhuVQhdMu_Hts7YZ_lA?e=df6H6P
     Check out GitHub page for security recommendations: https://github.com/HotCakeX/Harden-Windows-Security
 #>
 
+Set-ExecutionPolicy Bypass -Scope Process
+
 #region Functions
 # Questions function
 function Select-Option {

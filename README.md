@@ -75,7 +75,7 @@
 
 <br>
 
-## Features:<a href="#features">![FeaturesIcon]</a>
+## Features:<a href="#features">![FeaturesIcon](https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Features.png)</a>
 
 - Always stays up-to-date with the newest security features and only guaranteed to work on the latest version of Windows, **which is currently Windows 11**. (_rigorously tested on the latest Stable and Insider preview builds_).
   
@@ -122,7 +122,7 @@
 <br>
 <br>
 
-## How To Use<a href="#how-to-use">![HowToUseIcon]</a>
+## How To Use<a href="#how-to-use">![HowToUseIcon](https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/HowToUse.png)</a>
 
 #### Using GitHub source (Always up to date)
 
@@ -144,7 +144,7 @@ Install-Script -Name Harden-Windows-Security
 
 <p align="right"><a href="#readme-top">💡(back to top)</a></p>
 
-## Hardening Categories<a href="#hardening-Categories">![HardeningCategoriesIcon]</a>
+## Hardening Categories<a href="#hardening-Categories">![HardeningCategoriesIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/HardeningCategories.png)</a>
 
 <a name="menu-back-to-top"></a>
 From Top to bottom in order:
@@ -180,7 +180,7 @@ From Top to bottom in order:
 
 <p align="right"><a href="#readme-top">💡(back to top)</a></p>
 
-## Microsoft Security Baselines<a href="#Microsoft-Security-Baselines">![MicrosoftSecurityBaseline]</a>
+## Microsoft Security Baselines<a href="#Microsoft-Security-Baselines">![MicrosoftSecurityBaseline](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Microsoft-Security-Baseline.png)</a>
 
 A security baseline is a group of Microsoft-recommended configuration settings that explains their security implications. These settings are based on feedback from Microsoft security engineering teams, product groups, partners, and customers.
 
@@ -192,7 +192,7 @@ A security baseline is a group of Microsoft-recommended configuration settings t
 
 <br>
 
-## Microsoft 365 Apps Security Baselines<a href="#Microsoft-365-Apps-Security-Baselines">![Microsoft365AppsSecurityBaselines]</a>
+## Microsoft 365 Apps Security Baselines<a href="#Microsoft-365-Apps-Security-Baselines">![Microsoft365AppsSecurityBaselines](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Microsoft-365-Apps-Security-Baselines.png)</a>
 
 The security baseline for Microsoft 365 Apps for enterprise is published twice a year, usually in June and December.
 
@@ -204,7 +204,7 @@ The security baseline for Microsoft 365 Apps for enterprise is published twice a
 
 <br>
 
-## Microsoft Defender<a href="#Microsoft-Defender">![WindowsDefenderIcon]</a>
+## Microsoft Defender<a href="#Microsoft-Defender">![WindowsDefenderIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/WindowsDefender.png)</a>
 
 <p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/PNGs/mde-cloud-protection.png" alt="Microsoft Defender Cloud Protection" width="450"></p>
 
@@ -284,7 +284,7 @@ Add-MpPreference -ControlledFolderAccessAllowedApplications 'C:\Program Files\Ap
 
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
-## Attack surface reduction rules<a href="#Attack-surface-reduction-rules">![ASRrulesIcon]</a>
+## Attack surface reduction rules<a href="#Attack-surface-reduction-rules">![ASRrulesIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/ASRrules.png)</a>
 
 <p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/BIGCDOC.jpg" alt="Microsoft Protect" width="900"></p>
 
@@ -302,7 +302,7 @@ Such software behaviors are sometimes seen in legitimate applications. However, 
 
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
-## Bitlocker Settings<a href="#Bitlocker-Settings">![BitlockerIcon]</a>
+## Bitlocker Settings<a href="#Bitlocker-Settings">![BitlockerIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Bitlocker.png)</a>
 
 - 🔶🟩 This script sets up and configures Bitlocker, for OS drive and all other non-removable drives on the device [using official documentation](https://learn.microsoft.com/en-us/windows/security/information-protection/bitlocker/bitlocker-group-policy-settings), with the most secure configuration and Military Grade encryption algorithm, __XTS-AES-256, TPM 2.0 and start-up PIN__, to protect the confidentiality and integrity of all information at rest and in use.
 
@@ -342,7 +342,7 @@ Refer to this [official documentation about the countermeasures of Bitlocker](ht
 
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
-## TLS Security<a href="#TLS-Security">![TLSIcon]</a>
+## TLS Security<a href="#TLS-Security">![TLSIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/TLS.png)</a>
 
 🔶 This script disables TLS 1 and TLS 1.1 security protocols that only __exist for backward compatibility__. All modern software should and do use `TLS 1.2` and `TLS 1.3`.
 
@@ -364,11 +364,11 @@ If you want to read more: [Demystifying Schannel](https://techcommunity.microsof
 
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
-## Lock Screen<a href="#Lock-Screen">![LockScreenIcon]</a>
+## Lock Screen<a href="#Lock-Screen">![LockScreenIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/LockScreen.png)</a>
 
 - 🟩 [Automatically locks device after X seconds of inactivity](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/interactive-logon-machine-inactivity-limit) (just like mobile phones), which is set to 120 seconds (2 minutes) in this script, you can change that to any value you like.
 
-- 🟩 [Requires `CTRL+ALT+DEL` on the lock screen](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/interactive-logon-do-not-require-ctrl-alt-del), the reason and logic behind it is:
+- 🟩 [Requires **CTRL+ALT+DEL** on the lock screen](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/interactive-logon-do-not-require-ctrl-alt-del), kernel protected set of key strokes. The reason and logic behind it is:
 
   - A malicious user might install malware that looks like the standard sign-in dialog box for the Windows operating system and capture a user's password. The attacker can then sign into the compromised account with whatever level of user rights that user has.
 
@@ -387,7 +387,7 @@ If you want to read more: [Demystifying Schannel](https://techcommunity.microsof
 
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
-## User Account Control<a href="#User-Account-Control">![UACIcon]</a>
+## User Account Control<a href="#User-Account-Control">![UACIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/UAC.png)</a>
 
 - 🟩 [Prompt for elevation of privilege on secure desktop for all binaries](https://learn.microsoft.com/en-us/windows/security/identity-protection/user-account-control/user-account-control-group-policy-and-registry-key-settings#user-account-control-behavior-of-the-elevation-prompt-for-administrators-in-admin-approval-mode) in [Administrator accounts](https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-gpsb/341747f5-6b5d-4d30-85fc-fa1cc04038d4), which presents the sign-in UI and restricts functionality and access to the system until the sign-in requirements are satisfied. The [secure desktop's](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/user-account-control-switch-to-the-secure-desktop-when-prompting-for-elevation#reference) primary difference from the user desktop is that only trusted processes running as SYSTEM are allowed to run here (that is, nothing is running at the user's privilege level). The path to get to the secure desktop from the user desktop must also be trusted through the entire chain.
   - __This is the default behavior:__ prompt the administrator in Admin Approval Mode to select either "Permit" or "Deny" for an operation that requires elevation of privilege for any non-Windows binaries. If the Consent Admin selects Permit, the operation will continue with the highest available privilege. This operation will happen on the secure desktop
@@ -404,7 +404,7 @@ If you want to read more: [Demystifying Schannel](https://techcommunity.microsof
 
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
-## Device Guard<a href="#Device-Guard">![DeviceGuardIcon]</a>
+## Device Guard<a href="#Device-Guard">![DeviceGuardIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/DeviceGuard.png)</a>
 
 __Most of the Device Guard and Virtualization-Based Security features are Automatically enabled by default__ on capable and modern hardware, this script only checks their status and if needed, enables UEFI lock for them and also proceeds with enabling [__full Secured-Core PC requirements__:](https://www.microsoft.com/en-us/windows/business/windows-11-secured-core-computers)
 
@@ -471,7 +471,7 @@ __Most of the Device Guard and Virtualization-Based Security features are Automa
 
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
-## Windows Firewall<a href="#Windows-Firewall">![FirewallIcon]</a>
+## Windows Firewall<a href="#Windows-Firewall">![FirewallIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Firewall.png)</a>
 
 - 🟩 Makes sure Windows Firewall is enabled for all profiles (which is the default)
 
@@ -484,7 +484,7 @@ __Most of the Device Guard and Virtualization-Based Security features are Automa
   
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
-## Optional Windows Features<a href="#Optional-Windows-Features">![OptionalFeaturesIcon]</a>
+## Optional Windows Features<a href="#Optional-Windows-Features">![OptionalFeaturesIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/OptionalFeatures.png)</a>
 
 - 🔶 The script [disables](https://learn.microsoft.com/en-us/powershell/module/dism/disable-windowsoptionalfeature) the following rarely used features in [Windows optional features](https://learn.microsoft.com/en-us/windows/application-management/add-apps-and-features#use-windows-powershell-to-disable-specific-features) (Control Panel):
   - PowerShell v2; because it's old and doesn't support [AMSI](https://devblogs.microsoft.com/powershell/powershell-the-blue-team/#antimalware-scan-interface-integration).
@@ -507,7 +507,7 @@ __Most of the Device Guard and Virtualization-Based Security features are Automa
 
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
-## Windows Networking<a href="#Windows-Networking">![NetworkingIcon]</a>
+## Windows Networking<a href="#Windows-Networking">![NetworkingIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Networking.png)</a>
 
 These are configurations that are typically 🔺recommended in High-Risk Environments🔻 but also can be applied for home users
 
@@ -521,7 +521,7 @@ These are configurations that are typically 🔺recommended in High-Risk Environ
 
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
-## Miscellaneous Configurations<a href="#Miscellaneous-Configurations">![MiscellaneousIcon]</a>
+## Miscellaneous Configurations<a href="#Miscellaneous-Configurations">![MiscellaneousIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/MiscellaneousCommands.png)</a>
 
 - 🟩 Sets [Early launch antimalware](https://learn.microsoft.com/en-us/windows-hardware/drivers/install/elam-driver-requirements) engine's status to `8` which is __Good only.__ The default value is `3`, which allows good, unknown and 'bad but critical'. that is the default value, because setting it to `8` [can prevent your computer from booting](https://learn.microsoft.com/en-us/windows/compatibility/early-launch-antimalware#mitigation) if the driver it relies on is critical but at the same time unknown or bad.
 
@@ -530,10 +530,10 @@ These are configurations that are typically 🔺recommended in High-Risk Environ
 - 🟩 Disables location service system wide. Websites and apps won't be able to use your precise location, however they will still be able to detect your location using your IP address.
 
 - 🟩 Enables [`svchost.exe` mitigations.](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-servicecontrolmanager) built-in system services hosted in `svchost.exe` processes will have stricter security policies enabled on them. These stricter security policies include a policy requiring all binaries loaded in these processes to be signed by Microsoft, and a policy disallowing dynamically generated code.
-  - Requires Business (e.g. [Windows 11 pro for Workstations](https://www.microsoft.com/en-us/windows/business/windows-11-pro-workstations)), [Enterprise](https://www.microsoft.com/en-us/microsoft-365/windows/windows-11-enterprise) or [Education](https://www.microsoft.com/en-us/education/products/windows) Windows licenses
+  - Requires Business Windows licenses. e.g., [Windows 11 pro for Workstations](https://www.microsoft.com/en-us/windows/business/windows-11-pro-workstations), [Enterprise](https://www.microsoft.com/en-us/microsoft-365/windows/windows-11-enterprise) or [Education](https://www.microsoft.com/en-us/education/products/windows).
 
 - 🔶 Turns on Enhanced mode search for Windows indexer. the default is classic mode.
-  - this causes some UI elements in the search settings in Windows settings to become unavailable for Standard user accounts to view, because it will be a managed feature by an Administrator.
+  - This causes some UI elements in the search settings in Windows settings to become unavailable for Standard user accounts to view, because it will be a managed feature by an Administrator.
 
 - 🟩 [Enforce the Administrator role for adding printer drivers](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/devices-prevent-users-from-installing-printer-drivers)
 
@@ -554,7 +554,7 @@ These are configurations that are typically 🔺recommended in High-Risk Environ
 
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
-## Windows Update Configurations<a href="windows-update-configurations">![WindowsUpdate]</a>
+## Windows Update Configurations<a href="windows-update-configurations">![WindowsUpdate](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/WindowsUpdate.png)</a>
 
 - 🟩 Enables [Windows Update to download and install updates on any network](https://techcommunity.microsoft.com/t5/windows-it-pro-blog/the-windows-update-policies-you-should-set-and-why/ba-p/3270914), metered or not; because the updates are important and should not be suppressed, __that's what bad actors would want.__
 - 🟩 Enables "Receive Updates for other Microsoft products" (such as PowerShell)
@@ -563,7 +563,7 @@ These are configurations that are typically 🔺recommended in High-Risk Environ
 
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
-## Edge Browser configurations<a href="edge-browser-configurations">![EdgeBrowser]</a>
+## Edge Browser configurations<a href="edge-browser-configurations">![EdgeBrowser](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/EdgeBrowser.png)</a>
 
 - 🔶 [Block 3rd party cookies](https://learn.microsoft.com/en-us/deployedge/microsoft-edge-policies#blockthirdpartycookies)
 - 🔶 [Use DNS over HTTPS](https://learn.microsoft.com/en-us/deployedge/microsoft-edge-policies#dnsoverhttpsmode)
@@ -597,23 +597,23 @@ _Some settings require the client to be joined to Windows Server Active Director
 
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
-## Certificate Checking Commands<a href="#Certificate-Checking-Commands">![CertificateIcon]</a>
+## Certificate Checking Commands<a href="#Certificate-Checking-Commands">![CertificateIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Certificate.png)</a>
 
 🔶 In this category, the script downloads and runs [sigcheck64.exe](https://learn.microsoft.com/en-us/sysinternals/downloads/sigcheck) from [Sysinternals](https://learn.microsoft.com/en-us/sysinternals/), then lists valid certificates not rooted to the [Microsoft Certificate Trust List](https://learn.microsoft.com/en-us/windows/win32/seccrypto/certificate-trust-list-overview) in the [User and Machine certificate stores](https://learn.microsoft.com/en-us/windows-hardware/drivers/install/local-machine-and-current-user-certificate-stores). __Except for some possible Microsoft certificates, Windows insider builds certificates or certificates that have your own computer's name, which are perfectly safe and should not be deleted,__ All other certificates that will be listed should be treated as dangerous and removed from your system immediately.
 
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
-## Country IP Blocking<a href="#Country-IP-Blocking">![CountryIPBlockingIcon]</a>
+## Country IP Blocking<a href="#Country-IP-Blocking">![CountryIPBlockingIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/CountryIPBlocking.png)</a>
 
-🔶 The script uses the newest range of `IPv4` and `IPv6` addresses of [State Sponsors of Terrorism](https://www.state.gov/state-sponsors-of-terrorism/) and [OFAC Sanctioned Countries](https://orpa.princeton.edu/export-controls/sanctioned-countries), directly [from official IANA sources](https://github.com/HotCakeX/Official-IANA-IP-blocks), then creates 2 rules (inbound and outbound) for each list in Windows firewall, completely blocking connections to and from those countries.
+🔶 The script uses the newest range of `IPv4` and `IPv6` addresses of [State Sponsors of Terrorism](https://www.state.gov/state-sponsors-of-terrorism/) and [OFAC Sanctioned Countries](https://orpa.princeton.edu/export-controls/sanctioned-countries), directly [from official IANA sources](https://github.com/HotCakeX/Official-IANA-IP-blocks) repository, then creates 2 rules (inbound and outbound) for each list in Windows firewall, completely blocking connections to and from those countries.
 
 Once you have those Firewall rules added, you can [use this method](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Event-Viewer#how-to-identify-which-windows-firewall-rule-is-responsible-for-a-blocked-packets) to see if any of the blocked connections were from/to those countries.
 
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
-## Non-Admin Commands<a href="#non-admin-commands">![NonAdminIcon]</a>
+## Non-Admin Commands<a href="#non-admin-commands">![NonAdminIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/NonAdmin.png)</a>
 
-You don't need admin privileges to run this category, because no system-wide changes is made. changes in this category only apply to the current user account that is running the PowerShell session. For this reason, in addition to running this category as admin on your own user account, it's better to run it without elevation on any other available standard accounts too.
+You don't need Admin privileges to run this category, because no system-wide changes is made. Changes in this category only apply to the current user account that is running the PowerShell session. For this reason, in addition to running this category as Admin, it's better to run it without elevation on any other available Standard accounts too.
 
 - 🔶 Shows known file extensions in File explorer
 - 🔶 Shows hidden files, folders and drives (toggles the control panel folder options item)
@@ -627,7 +627,7 @@ You don't need admin privileges to run this category, because no system-wide cha
 
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
-## Related<a href="#related">![RelatedIcon]</a>
+## Related<a href="#related">![RelatedIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Related.png)</a>
 
 [PowerShell Gallery mirror](https://www.powershellgallery.com/packages/Harden-Windows-Security/)
 
@@ -641,7 +641,7 @@ You don't need admin privileges to run this category, because no system-wide cha
 
 <br>
 
-## Trust<a href="#trust">![TrustIcon]</a>
+## Trust<a href="#trust">![TrustIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Trust.png)</a>
 
 ### How can you 100% trust this repository and know that nothing shady is going on?
 
@@ -682,7 +682,7 @@ _Links above are automatically updated. There is a [GitHub workflow](https://git
 
 <p align="right"><a href="#readme-top">💡(back to top)</a></p>
 
-## Support<a href="#support">![SupportIcon]</a>
+## Support<a href="#support">![SupportIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Support.png)</a>
 
 <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/WebP/Heart%20Microsoft.webp" width="28" alt="If you have any questions, requests, suggestions etc"> If you have any questions, requests, suggestions etc. about this GitHub repository and its content, please open [a new discussion](https://github.com/HotCakeX/Harden-Windows-Security/discussions) or [Issue](https://github.com/HotCakeX/Harden-Windows-Security/issues).
 
@@ -694,7 +694,7 @@ _Links above are automatically updated. There is a [GitHub workflow](https://git
 
 <p align="right"><a href="#readme-top">💡(back to top)</a></p>
 
-## Security Recommendations<a href="#security-recommendations">![SecurityRecommendationIcon]</a>
+## Security Recommendations<a href="#security-recommendations">![SecurityRecommendationIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/SecurityRecommendation.png)</a>
 
 * Always download your operation system from [official Microsoft websites](https://www.microsoft.com/en-us/software-download). Right now, Windows 11 is the latest version of Windows, its ISO file can be downloaded from this [official Microsoft server](https://www.microsoft.com/en-us/software-download/windows11). One of the worst things you can do to your own security and privacy is downloading your OS, which is the root of all the active and passive security measures, from a 3rd party website claiming they have the official unmodified files. There are countless bad things that can happen as the result of it such as threat actors embedding malware or backdoors inside the customized OS, or pre-installing customized root CA certificates in your OS so that they can perform TLS termination and view all of your HTTPS and encrypted Internet data in plain clear text, __even if you use VPN.__ Having a poisoned and compromised certificate store is the endgame for you, and _that's just the tip of the iceberg._
   - Refer to [Wiki](https://github.com/HotCakeX/Harden-Windows-Security/wiki) to see [how to create Bootable USB flash drive with no 3rd party tools](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-Bootable-USB-flash-drive-with-no-3rd-party-tools)
@@ -739,7 +739,7 @@ Get-Content <Path-To-File> -stream zone.identifier
 
 <p align="right"><a href="#readme-top">💡(back to top)</a></p>
 
-## Resources<a href="#resources">![ResourcesIcon]</a>
+## Resources<a href="#resources">![ResourcesIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Resources.png)</a>
 
 - [Microsoft.com](https://microsoft.com)
   - [Force firmware code to be measured and attested by Secure Launch](https://www.microsoft.com/en-us/security/blog/2020/09/01/force-firmware-code-to-be-measured-and-attested-by-secure-launch-on-windows-10/)
@@ -785,7 +785,7 @@ Get-Content <Path-To-File> -stream zone.identifier
 
 <p align="right"><a href="#readme-top">💡(back to top)</a></p>
 
-## License<a href="#license">![LicenseFreeIcon]</a>
+## License<a href="#license">![LicenseFreeIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/LicenseFree.png)</a>
 
 Not Applicable, No license, just free information, because the only mission of this GitHub repository is to give all Windows users accurate, up to date and correct facts and information about how to stay secure and safe in dangerous environments, and to stay not one, but Many steps, ahead of threat actors.
 
@@ -810,31 +810,3 @@ Not Applicable, No license, just free information, because the only mission of t
 <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Israel.png">
 
 </a> </p>
-
-[Microsoft365AppsSecurityBaselines]: images/Microsoft-365-Apps-Security-Baselines.png
-[HardeningCategoriesIcon]: images/HardeningCategories.png
-[FeaturesIcon]: images/Features.png
-[HowToUseIcon]: images/HowToUse.png
-[LicenseFreeIcon]: images/LicenseFree.png
-[ResourcesIcon]: images/Resources.png
-[SecurityRecommendationIcon]: images/SecurityRecommendation.png
-[SupportIcon]: images/Support.png
-[RelatedIcon]: images/Related.png
-[TrustIcon]: images/Trust.png
-[NonAdminIcon]: images/NonAdmin.png
-[CountryIPBlockingIcon]: images/CountryIPBlocking.png
-[NetworkingIcon]: images/Networking.png
-[OptionalFeaturesIcon]: images/OptionalFeatures.png
-[FirewallIcon]: images/Firewall.png
-[ASRrulesIcon]: images/ASRrules.png
-[DeviceGuardIcon]: images/DeviceGuard.png
-[MiscellaneousIcon]: images/MiscellaneousCommands.png
-[LockScreenIcon]: images/LockScreen.png
-[CertificateIcon]: images/Certificate.png
-[BitlockerIcon]: images/Bitlocker.png
-[UACIcon]: images/UAC.png
-[TLSIcon]: images/TLS.png
-[WindowsDefenderIcon]: images/WindowsDefender.png
-[MicrosoftSecurityBaseline]: images/Microsoft-Security-Baseline.png
-[WindowsUpdate]: images/WindowsUpdate.png
-[EdgeBrowser]: images/EdgeBrowser.png

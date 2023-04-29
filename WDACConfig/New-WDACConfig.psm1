@@ -1,4 +1,4 @@
-#requires -version 7.3.3
+#Requires -RunAsAdministrator
 function New-WDACConfig {
     [CmdletBinding(
         DefaultParameterSetName = "Get Block Rules",
@@ -77,8 +77,8 @@ function New-WDACConfig {
         [parameter(Mandatory = $false, ParameterSetName = "Make Policy From Audit Logs")]
         [parameter(Mandatory = $false, ParameterSetName = "Make Supplemental Policy")]
         [string[]]$Fallbacks, 
-
-        [ValidateRange(1024KB, [int64]::MaxValue)]
+        # Setting the maxim range to the maximum allowed log size by Windows Event viewer
+        [ValidateRange(1024KB, 18014398509481983KB)]
         [Parameter(Mandatory = $false, ParameterSetName = "Prep MSFT Only Audit")]
         [Parameter(Mandatory = $false, ParameterSetName = "Prep Default Windows Audit")]
         [Parameter(Mandatory = $false, ParameterSetName = "Make Policy From Audit Logs")]        
@@ -88,6 +88,8 @@ function New-WDACConfig {
     )
 
     begin {
+        # Importing resources such as functions by dot-sourcing so that they will run in the same scope and their variables will be usable
+        . "$psscriptroot\Resources.ps1"
 
         # argument tab auto-completion and ValidateSet for Fallbacks
         Class Fallbackz : System.Management.Automation.IValidateSetValuesGenerator {
@@ -106,56 +108,6 @@ function New-WDACConfig {
                 return [string[]]$Levelz
             }
         }
-
-        # Make sure the latest version of the module is installed and if not, automatically update it, clean up any old versions
-        function Update-self {
-            # this works too - for when module is installed using manual copy/paste and when installed through PSGallery
-            # (get-Module -ListAvailable -Name WDACConfig).Version.ToString()
-            $currentversion = (Test-modulemanifest "$psscriptroot\WDACConfig.psd1").Version.ToString()
-            try {
-                $latestversion = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/WDACConfig/version.txt"
-            }
-            catch {
-                Write-Error "Couldn't verify if the latest version of the module is installed, please check your Internet connection. You can optionally bypass the online check by using -SkipVersionCheck parameter."
-                break
-            }
-            if (-NOT ($currentversion -eq $latestversion)) {
-                Write-Host "The currently installed module's version is $currentversion while the latest version is $latestversion - Auto Updating the module now and will run your command after that 💓"
-                Remove-Module -Name WDACConfig -Force
-                try {
-                    Uninstall-Module -Name WDACConfig -AllVersions -Force -ErrorAction Stop
-                    Install-Module -Name WDACConfig -RequiredVersion $latestversion -Force              
-                    Import-Module -Name WDACConfig -RequiredVersion $latestversion -Force -Global
-                }
-                catch {
-                    Install-Module -Name WDACConfig -RequiredVersion $latestversion -Force
-                    Import-Module -Name WDACConfig -RequiredVersion $latestversion -Force -Global
-                }            
-            }
-        }
-
-        # Test Admin privileges
-        Function Test-IsAdmin {
-            $identity = [Security.Principal.WindowsIdentity]::GetCurrent()
-            $principal = New-Object Security.Principal.WindowsPrincipal $identity
-            $principal.IsInRole([Security.Principal.WindowsBuiltinRole]::Administrator)
-        }
-
-        if (-NOT (Test-IsAdmin)) {
-            write-host "Administrator privileges Required" -ForegroundColor Magenta
-            break
-        }
-
-        # Increase Code Integrity Operational Event Logs size from the default 1MB to user defined size
-        function Set-LogSize {
-            [CmdletBinding()]
-            param ([int64]$LogSize)        
-            $logName = 'Microsoft-Windows-CodeIntegrity/Operational'
-            $log = New-Object System.Diagnostics.Eventing.Reader.EventLogConfiguration $logName
-            $log.MaximumSizeInBytes = $LogSize
-            $log.IsEnabled = $true
-            $log.SaveChanges()
-        }
         
         $GetBlockRulesSCRIPTBLOCK = {             
             $MicrosoftRecommendeDriverBlockRules = Invoke-WebRequest -Uri "https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/public/windows/security/threat-protection/windows-defender-application-control/microsoft-recommended-block-rules.md"
@@ -168,7 +120,7 @@ function New-WDACConfig {
             $Rules = $Rules -replace '<FileRuleRef\sRuleID="ID_ALLOW_A_2".*/>', ''
             
             $Rules | Out-File 'Microsoft recommended block rules TEMP.xml'
-            
+            # Remove empty lines from the policy file
             Get-Content 'Microsoft recommended block rules TEMP.xml' | Where-Object { $_.trim() -ne "" } | Out-File 'Microsoft recommended block rules.xml'                
             Remove-Item 'Microsoft recommended block rules TEMP.xml' -Force
             Set-RuleOption -FilePath 'Microsoft recommended block rules.xml' -Option 3 -Delete
@@ -193,7 +145,7 @@ function New-WDACConfig {
             $DriverRules = $DriverRules -replace '<SigningScenario\sValue="12"\sID="ID_SIGNINGSCENARIO_WINDOWS"\sFriendlyName="Auto\sgenerated\spolicy[\S\s]*<\/SigningScenario>', ''
 
             $DriverRules | Out-File 'Microsoft recommended driver block rules TEMP.xml'
-
+            # Remove empty lines from the policy file
             Get-Content 'Microsoft recommended driver block rules TEMP.xml' | Where-Object { $_.trim() -ne "" } | Out-File 'Microsoft recommended driver block rules.xml'
             Remove-Item 'Microsoft recommended driver block rules TEMP.xml' -Force
             Set-RuleOption -FilePath 'Microsoft recommended driver block rules.xml' -Option 3 -Delete
@@ -208,6 +160,7 @@ function New-WDACConfig {
 
         $MakeAllowMSFTWithBlockRulesSCRIPTBLOCK = {
             param([bool]$NoCIP)
+            # Get the latest Microsoft recommended block rules
             Invoke-Command -ScriptBlock $GetBlockRulesSCRIPTBLOCK | Out-Null                        
             Copy-item -Path "C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml" -Destination "AllowMicrosoft.xml"
             Merge-CIPolicy -PolicyPaths .\AllowMicrosoft.xml, 'Microsoft recommended block rules.xml' -OutputFilePath .\AllowMicrosoftPlusBlockRules.xml | Out-Null     
@@ -224,7 +177,7 @@ function New-WDACConfig {
             }        
             Set-HVCIOptions -Strict -FilePath .\AllowMicrosoftPlusBlockRules.xml
             ConvertFrom-CIPolicy .\AllowMicrosoftPlusBlockRules.xml "$PolicyID.cip" | Out-Null   
-
+            # Remove the extra files that were created during module operation and are no longer needed
             Remove-Item .\AllowMicrosoft.xml -Force
             Remove-Item 'Microsoft recommended block rules.xml' -Force
 
@@ -245,7 +198,7 @@ function New-WDACConfig {
             param([bool]$NoCIP)
             Invoke-Command -ScriptBlock $GetBlockRulesSCRIPTBLOCK | Out-Null                        
             Copy-item -Path "C:\Windows\schemas\CodeIntegrity\ExamplePolicies\DefaultWindows_Enforced.xml" -Destination "DefaultWindows_Enforced.xml"
-          
+            # Scan PowerShell core directory and allow its files in the Default Windows base policy so that module can still be used once it's been deployed
             if (Test-Path "C:\Program Files\PowerShell") {
                 Write-Host "Creating allow rules for PowerShell in the DefaultWindows base policy so you can continue using this module after deploying it." -ForegroundColor Blue                    
                 New-CIPolicy -ScanPath "C:\Program Files\PowerShell" -Level FilePublisher -NoScript -Fallback Hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -FilePath .\AllowPowerShell.xml
@@ -318,7 +271,7 @@ function New-WDACConfig {
         }
 
         $PrepMSFTOnlyAuditSCRIPTBLOCK = {
-            if ($PrepMSFTOnlyAudit -and $LogSize) { Set-LogSize -LogSize $LogSize }
+            if ($PrepMSFTOnlyAudit -and $LogSize) { . Set-LogSize -LogSize $LogSize }
             Copy-item -Path C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml -Destination .\AllowMicrosoft.xml
             Set-RuleOption -FilePath .\AllowMicrosoft.xml -Option 3
             $PolicyID = Set-CIPolicyIdInfo -FilePath .\AllowMicrosoft.xml -ResetPolicyID
@@ -332,7 +285,7 @@ function New-WDACConfig {
         }
 
         $PrepDefaultWindowsAuditSCRIPTBLOCK = {
-            if ($PrepDefaultWindowsAudit -and $LogSize) { Set-LogSize -LogSize $LogSize }
+            if ($PrepDefaultWindowsAudit -and $LogSize) { . Set-LogSize -LogSize $LogSize }
             Copy-item -Path C:\Windows\schemas\CodeIntegrity\ExamplePolicies\DefaultWindows_Audit.xml -Destination .\DefaultWindows_Audit.xml
            
             # Making Sure neither PowerShell core nor WDACConfig module files are added to the Supplemental policy created by -MakePolicyFromAuditLogs parameter
@@ -362,13 +315,15 @@ function New-WDACConfig {
         }
 
         $MakePolicyFromAuditLogsSCRIPTBLOCK = {
-            if ($MakePolicyFromAuditLogs -and $LogSize) { Set-LogSize -LogSize $LogSize }
+            if ($MakePolicyFromAuditLogs -and $LogSize) { . Set-LogSize -LogSize $LogSize }
+            # Make sure there is no leftover files from previous operations of this same command
             Remove-Item -Path "$home\WDAC\*" -Recurse -Force -ErrorAction SilentlyContinue
             # Create a working directory in user's folder
-            new-item -Type Directory -Path "$home\WDAC" -Force | Out-Null
+            New-item -Type Directory -Path "$home\WDAC" -Force | Out-Null
             Set-Location "$home\WDAC"
 
-            # Base Policy Processing
+            ############################### Base Policy Processing ###############################
+
             switch ($BasePolicyType) {
 
                 "Allow Microsoft Base" {
@@ -394,7 +349,8 @@ function New-WDACConfig {
                 & $RequireEVSignersSCRIPTBLOCK -PolicyPathToEnableEVSigners $BasePolicy
             }
 
-            # Supplemental Processing
+            ############################### Supplemental Processing ###############################
+
             $AssignedLevels = $null
             switch ($Levels) {
                 'Hash' { $AssignedLevels = 'Hash' }
@@ -433,7 +389,7 @@ function New-WDACConfig {
                 Default { $AssignedFallbacks += 'Hash' }                
             }            
   
-            # produce policy xml file from event viewer logs
+            # Produce a policy xml file from event viewer logs
             Write-host "Scanning Windows Event logs and creating a policy file, please wait..." -ForegroundColor Cyan
               
             <#  keeping this for historic purposes
@@ -462,67 +418,23 @@ function New-WDACConfig {
                 UserWriteablePaths   = $true
                 WarningAction        = 'SilentlyContinue'
             }
-         
-            $AllowFileNameFallbacks ? ($PolicyMakerHashTable['AllowFileNameFallbacks'] = $true) : $null         
-            $SpecificFileNameLevel ? ($PolicyMakerHashTable['SpecificFileNameLevel'] = $SpecificFileNameLevel) : $null
-            $NoScript ? ($PolicyMakerHashTable['NoScript'] = $true) : $null
+            # Assess user input parameters and add the required parameters to the hash table
+            if ($AllowFileNameFallbacks) { $PolicyMakerHashTable['AllowFileNameFallbacks'] = $true }
+            if ($SpecificFileNameLevel) { $PolicyMakerHashTable['SpecificFileNameLevel'] = $SpecificFileNameLevel }    
+            if ($NoScript) { $PolicyMakerHashTable['NoScript'] = $true }        
             if (!$NoUserPEs) { $PolicyMakerHashTable['UserPEs'] = $true } 
 
             write-host "Generating Supplemental policy with the following specifications:" -ForegroundColor Magenta
             $PolicyMakerHashTable
             Write-Host "`n"
+            # Create the supplemental policy via parameter splatting
             New-CIPolicy @PolicyMakerHashTable
-
-            # List every \Device\Harddiskvolume - Needed to resolve the file pathes to detect which files in even Event viewer logs are no longer present on the disk - https://superuser.com/questions/1058217/list-every-device-harddiskvolume
-            $ScriptBlock = {
-                $signature = @'
-[DllImport("kernel32.dll", SetLastError=true)]
-[return: MarshalAs(UnmanagedType.Bool)]
-public static extern bool GetVolumePathNamesForVolumeNameW([MarshalAs(UnmanagedType.LPWStr)] string lpszVolumeName,
-[MarshalAs(UnmanagedType.LPWStr)] [Out] StringBuilder lpszVolumeNamePaths, uint cchBuferLength, 
-ref UInt32 lpcchReturnLength);
-
-[DllImport("kernel32.dll", SetLastError = true)]
-public static extern IntPtr FindFirstVolume([Out] StringBuilder lpszVolumeName,
-uint cchBufferLength);
-
-[DllImport("kernel32.dll", SetLastError = true)]
-public static extern bool FindNextVolume(IntPtr hFindVolume, [Out] StringBuilder lpszVolumeName, uint cchBufferLength);
-
-[DllImport("kernel32.dll", SetLastError = true)]
-public static extern uint QueryDosDevice(string lpDeviceName, StringBuilder lpTargetPath, int ucchMax);
-
-'@;
-                Add-Type -MemberDefinition $signature -Name Win32Utils -Namespace PInvoke -Using PInvoke, System.Text;
-
-                [UInt32] $lpcchReturnLength = 0;
-                [UInt32] $Max = 65535
-                $sbVolumeName = New-Object System.Text.StringBuilder($Max, $Max)
-                $sbPathName = New-Object System.Text.StringBuilder($Max, $Max)
-                $sbMountPoint = New-Object System.Text.StringBuilder($Max, $Max)
-                [IntPtr] $volumeHandle = [PInvoke.Win32Utils]::FindFirstVolume($sbVolumeName, $Max)
-                do {
-                    $volume = $sbVolumeName.toString()
-                    $unused = [PInvoke.Win32Utils]::GetVolumePathNamesForVolumeNameW($volume, $sbMountPoint, $Max, [Ref] $lpcchReturnLength);
-                    $ReturnLength = [PInvoke.Win32Utils]::QueryDosDevice($volume.Substring(4, $volume.Length - 1 - 4), $sbPathName, [UInt32] $Max);
-                    if ($ReturnLength) {
-                        $DriveMapping = @{
-                            DriveLetter = $sbMountPoint.toString()
-                            VolumeName  = $volume
-                            DevicePath  = $sbPathName.ToString()
-                        }
-                        Write-Output (New-Object PSObject -Property $DriveMapping)
-                    }
-                    else {
-                        Write-Output "No mountpoint found for: " + $volume
-                    } 
-                } while ([PInvoke.Win32Utils]::FindNextVolume([IntPtr] $volumeHandle, $sbVolumeName, $Max));
-            }
-            # using script block here because otherwise this command and the command below wouldn't both output to the console
-            $results = Invoke-Command -ScriptBlock $ScriptBlock       
+            
+            # Calling the script block from Resources file that is dot-sourced
+            $DirveLettersGlobalRootFix = Invoke-Command -ScriptBlock $DirveLettersGlobalRootFixScriptBlock       
 
             # Get Event viewer logs for code integrity - check the file path of all of the files in the log, resolve them using the command above - show files that are no longer available on the disk
-            $block2 = {
+            $AuditEventLogsDeletedFilesScriptBlock = {
                 foreach ($event in Get-WinEvent -FilterHashtable @{LogName = 'Microsoft-Windows-CodeIntegrity/Operational'; ID = 3076 }) {
                     $xml = [xml]$event.toxml()
                     $xml.event.eventdata.data |
@@ -531,7 +443,7 @@ public static extern uint QueryDosDevice(string lpDeviceName, StringBuilder lpTa
                         if ($_.'File Name' -match ($pattern = '\\Device\\HarddiskVolume(\d+)\\(.*)$')) {
                             $hardDiskVolumeNumber = $Matches[1]
                             $remainingPath = $Matches[2]
-                            $getletter = $results | Where-Object { $_.devicepath -eq "\Device\HarddiskVolume$hardDiskVolumeNumber" }
+                            $getletter = $DirveLettersGlobalRootFix | Where-Object { $_.devicepath -eq "\Device\HarddiskVolume$hardDiskVolumeNumber" }
                             $usablePath = "$($getletter.DriveLetter)$remainingPath"
                             $_.'File Name' = $_.'File Name' -replace $pattern, $usablePath
                         }
@@ -541,17 +453,17 @@ public static extern uint QueryDosDevice(string lpDeviceName, StringBuilder lpTa
                     }
                 }
             }
-            # using script block here because otherwise this command and the command above wouldn't both output to the console
-            $block2results = Invoke-Command -ScriptBlock $block2
+            # storing the output from the scriptblock above in a variable
+            $DeletedFileHashesArray = Invoke-Command -ScriptBlock $AuditEventLogsDeletedFilesScriptBlock
 
-            # run the following only if there are any event logs for files no longer on the disk
-            if ($block2results -and !$NoDeletedFiles) {
+            # run the following only if there are any event logs for files no longer on the disk and if -NoDeletedFiles switch parameter wasn't used
+            if ($DeletedFileHashesArray -and !$NoDeletedFiles) {
 
                 # Create File Rules based on hash of the files no longer available on the disk and store them in the $Rules variable
                 $i = 1
-                $imax = ($block2results).count
+                $imax = ($DeletedFileHashesArray).count
                 while ($i -le $imax) {
-                    $block2results | ForEach-Object {  
+                    $DeletedFileHashesArray | ForEach-Object {  
                         $Rules += Write-Output "`n<Allow ID=`"ID_ALLOW_AA_$i`" FriendlyName=`"$($_.'File Name') SHA256 Hash`" Hash=`"$($_.'SHA256 Hash')`" />"
                         $Rules += Write-Output "`n<Allow ID=`"ID_ALLOW_AB_$i`" FriendlyName=`"$($_.'File Name') SHA256 Flat Hash`" Hash=`"$($_.'SHA256 Flat Hash')`" />"
                         $Rules += Write-Output "`n<Allow ID=`"ID_ALLOW_AC_$i`" FriendlyName=`"$($_.'File Name') SHA1 Hash`" Hash=`"$($_.'SHA1 Hash')`" />"
@@ -561,9 +473,9 @@ public static extern uint QueryDosDevice(string lpDeviceName, StringBuilder lpTa
                 }
                 # Create File Rule Refs based on the ID of the File Rules above and store them in the $RulesRefs variable
                 $i = 1
-                $imax = ($block2results).count
+                $imax = ($DeletedFileHashesArray).count
                 while ($i -le $imax) {
-                    $block2results | ForEach-Object { 
+                    $DeletedFileHashesArray | ForEach-Object { 
                         $RulesRefs += Write-Output "`n<FileRuleRef RuleID=`"ID_ALLOW_AA_$i`" />"
                         $RulesRefs += Write-Output "`n<FileRuleRef RuleID=`"ID_ALLOW_AB_$i`" />"
                         $RulesRefs += Write-Output "`n<FileRuleRef RuleID=`"ID_ALLOW_AC_$i`" />"
@@ -663,7 +575,7 @@ $Rules
                 CiTool --update-policy "$policyID.cip" -json
                 Write-host "`nBase policy and Supplemental Policies deployed and activated.`n" -ForegroundColor Green
                 
-                # Get the correct Prep mode Audit policy ID to remove 
+                # Get the correct Prep mode Audit policy ID to remove from the system
                 switch ($BasePolicyType) {
                     "Allow Microsoft Base" {
                         $IDToRemove = ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.FriendlyName -eq "PrepMSFTOnlyAudit" }).PolicyID
@@ -678,6 +590,7 @@ $Rules
         }
 
         $MakeLightPolicySCRIPTBLOCK = {
+            # Delete the any policy with the same name in the current working directory
             Remove-Item -Path "SignedAndReputable.xml" -Force -ErrorAction SilentlyContinue
             Invoke-Command $MakeAllowMSFTWithBlockRulesSCRIPTBLOCK -ArgumentList $true | Out-Null
             Rename-Item -Path "AllowMicrosoftPlusBlockRules.xml" -NewName "SignedAndReputable.xml" -Force
@@ -692,7 +605,8 @@ $Rules
             $BasePolicyID = $BasePolicyID.Substring(11)        
             Set-CIPolicyVersion -FilePath .\SignedAndReputable.xml -Version "1.0.0.0"
             Set-HVCIOptions -Strict -FilePath .\SignedAndReputable.xml        
-            ConvertFrom-CIPolicy .\SignedAndReputable.xml "$BasePolicyID.cip" | Out-Null 
+            ConvertFrom-CIPolicy .\SignedAndReputable.xml "$BasePolicyID.cip" | Out-Null
+            # Configure required services for ISG authorization
             appidtel start
             sc.exe config appidsvc start= auto
             if ($Deployit -and $MakeLightPolicy) {
@@ -754,15 +668,16 @@ $Rules
                 MultiplePolicyFormat = $true
                 UserWriteablePaths   = $true
             }
-
-            $AllowFileNameFallbacks ? ($PolicyMakerHashTable['AllowFileNameFallbacks'] = $true) : $null         
-            $SpecificFileNameLevel ? ($PolicyMakerHashTable['SpecificFileNameLevel'] = $SpecificFileNameLevel) : $null
-            $NoScript ? ($PolicyMakerHashTable['NoScript'] = $true) : $null       
+            # Assess user input parameters and add the required parameters to the hash table
+            if ($AllowFileNameFallbacks) { $PolicyMakerHashTable['AllowFileNameFallbacks'] = $true }
+            if ($SpecificFileNameLevel) { $PolicyMakerHashTable['SpecificFileNameLevel'] = $SpecificFileNameLevel }  
+            if ($NoScript) { $PolicyMakerHashTable['NoScript'] = $true }                 
             if (!$NoUserPEs) { $PolicyMakerHashTable['UserPEs'] = $true } 
 
             write-host "Generating Supplemental policy with the following specifications:" -ForegroundColor Magenta
             $PolicyMakerHashTable
             Write-Host "`n"
+            # Create the supplemental policy via parameter splatting
             New-CIPolicy @PolicyMakerHashTable           
             
             $policyID = Set-CiPolicyIdInfo -FilePath "SupplementalPolicy$SuppPolicyName.xml" -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath -PolicyName "$SuppPolicyName"
@@ -784,17 +699,17 @@ $Rules
                 Write-host " has been deployed." -ForegroundColor Green
             }    
         }
-
+        # Script block that is used to add policy rule options 9 and 10 to the base policy
         $TestModeSCRIPTBLOCK = { 
             param($PolicyPathToEnableTesting)
             @(9, 10) | ForEach-Object { Set-RuleOption -FilePath $PolicyPathToEnableTesting -Option $_ }
         }
-
+        # Script block that is used to add Require EV Singers policy rule option to the base policy
         $RequireEVSignersSCRIPTBLOCK = {
             param($PolicyPathToEnableEVSigners)
             Set-RuleOption -FilePath $PolicyPathToEnableEVSigners -Option 8
         }
-
+        # Script block that is used to supply extra information regarding Microsoft recommended driver block rules in commands that use them
         $DriversBlockListInfoGatheringSCRIPTBLOCK = {
             $owner = "MicrosoftDocs"
             $repo = "windows-itpro-docs"
@@ -811,9 +726,9 @@ $Rules
     
             Write-Host "`nThe current version of Microsoft recommended drivers block list is $($Matches[1])" -ForegroundColor Cyan
         }    
-
+        # Stop operation as soon as there is an error, anywhere, unless explicitly specified otherwise
         $ErrorActionPreference = 'Stop'
-        if (-NOT $SkipVersionCheck) { Update-self }    
+        if (-NOT $SkipVersionCheck) { . Update-self }    
     }
 
     process {

@@ -1,4 +1,4 @@
-#requires -version 7.3.3
+#Requires -RunAsAdministrator
 function Deploy-SignedWDACConfig {
     [CmdletBinding(
         HelpURI = "https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig",
@@ -8,9 +8,8 @@ function Deploy-SignedWDACConfig {
     )]
     Param(
         [ValidatePattern('.*\.cer')][parameter(Mandatory = $true)][string]$CertPath,       
-        [ValidatePattern('.*\.xml')][parameter(Mandatory = $true)][string[]]$PolicyPaths,        
-        [ValidatePattern('.*\.exe')][parameter(Mandatory = $false)][string]$SignToolPath,
-        
+        [ValidatePattern('.*\.xml')][parameter(Mandatory = $true)][string[]]$PolicyPaths,
+
         [ValidateScript({
                 try {
                     # TryCatch to show a custom error message instead of saying input is null when personal store is empty 
@@ -21,51 +20,19 @@ function Deploy-SignedWDACConfig {
                 } # this error msg is shown when cert CN is not available in the personal store of the user certs
             }, ErrorMessage = "A certificate with the provided common name doesn't exist in the personal store of the user certificates." )]
         [parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true)][string]$CertCN,
+
+        [ValidatePattern('.*\.exe')][parameter(Mandatory = $false)][string]$SignToolPath,
         
         [Parameter(Mandatory = $false)][switch]$SkipVersionCheck
     )
 
     begin {
+        # Importing resources such as functions by dot-sourcing so that they will run in the same scope and their variables will be usable
+        . "$psscriptroot\Resources.ps1"
 
-        # Make sure the latest version of the module is installed and if not, automatically update it, clean up any old versions
-        function Update-self {
-            $currentversion = (Test-modulemanifest "$psscriptroot\WDACConfig.psd1").Version.ToString()
-            try {
-                $latestversion = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/WDACConfig/version.txt"
-            }
-            catch {
-                Write-Error "Couldn't verify if the latest version of the module is installed, please check your Internet connection. You can optionally bypass the online check by using -SkipVersionCheck parameter."
-                break
-            }
-            if (-NOT ($currentversion -eq $latestversion)) {
-                Write-Host "The currently installed module's version is $currentversion while the latest version is $latestversion - Auto Updating the module now and will run your command after that 💓"
-                Remove-Module -Name WDACConfig -Force
-                try {
-                    Uninstall-Module -Name WDACConfig -AllVersions -Force -ErrorAction Stop
-                    Install-Module -Name WDACConfig -RequiredVersion $latestversion -Force              
-                    Import-Module -Name WDACConfig -RequiredVersion $latestversion -Force -Global
-                }
-                catch {
-                    Install-Module -Name WDACConfig -RequiredVersion $latestversion -Force
-                    Import-Module -Name WDACConfig -RequiredVersion $latestversion -Force -Global
-                }            
-            }
-        }
-
-        # Test Admin privileges
-        Function Test-IsAdmin {
-            $identity = [Security.Principal.WindowsIdentity]::GetCurrent()
-            $principal = New-Object Security.Principal.WindowsPrincipal $identity
-            $principal.IsInRole([Security.Principal.WindowsBuiltinRole]::Administrator)
-        }
-
-        if (-NOT (Test-IsAdmin)) {
-            write-host "Administrator privileges Required" -ForegroundColor Magenta
-            break
-        }
-
+        # Stop operation as soon as there is an error, anywhere, unless explicitly specified otherwise
         $ErrorActionPreference = 'Stop'         
-        if (-NOT $SkipVersionCheck) { Update-self }
+        if (-NOT $SkipVersionCheck) { . Update-self }       
     }
 
     process {
@@ -86,29 +53,8 @@ function Deploy-SignedWDACConfig {
             Set-RuleOption -FilePath $PolicyPath -Option 6 -Delete
             ConvertFrom-CIPolicy $PolicyPath "$PolicyID.cip" | Out-Null
 
-            if ($SignToolPath) {
-                $SignToolPath = $SignToolPath
-            }
-            else {
-                if ($Env:PROCESSOR_ARCHITECTURE -eq "AMD64") {
-                    if ( Test-Path -Path "C:\Program Files (x86)\Windows Kits\*\bin\*\x64\signtool.exe") {
-                        $SignToolPath = "C:\Program Files (x86)\Windows Kits\*\bin\*\x64\signtool.exe" 
-                    }
-                    else {
-                        Write-Error "signtool.exe couldn't be found"
-                        break
-                    }
-                }
-                elseif ($Env:PROCESSOR_ARCHITECTURE -eq "ARM64") {
-                    if (Test-Path -Path "C:\Program Files (x86)\Windows Kits\*\bin\*\arm64\signtool.exe") {
-                        $SignToolPath = "C:\Program Files (x86)\Windows Kits\*\bin\*\arm64\signtool.exe"
-                    }
-                    else {
-                        Write-Error "signtool.exe couldn't be found"
-                        break
-                    }
-                }           
-            }        
+            . Get-SignTool
+
             & $SignToolPath sign -v -n $CertCN -p7 . -p7co 1.3.6.1.4.1.311.79.1 -fd certHash ".\$PolicyID.cip"              
             Remove-Item ".\$PolicyID.cip" -Force            
             Rename-Item "$PolicyID.cip.p7" -NewName "$PolicyID.cip" -Force

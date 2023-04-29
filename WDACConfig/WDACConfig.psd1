@@ -15,7 +15,7 @@
     ModuleVersion        = '0.1.0'
 
     # Supported PSEditions
-    CompatiblePSEditions = @("Desktop", "Core")
+    CompatiblePSEditions = @("Core")
 
     # ID used to uniquely identify this module
     GUID                 = '79920947-efb5-48c1-a567-5b02ebe74793'
@@ -105,7 +105,7 @@ To get help and syntax on PowerShell console, type:
 "@
 
     # Minimum version of the PowerShell engine required by this module
-    PowerShellVersion    = '7.3'
+    PowerShellVersion    = '7.3.4'
 
     # Name of the PowerShell host required by this module
     # PowerShellHostName = ''
@@ -159,7 +159,7 @@ To get help and syntax on PowerShell console, type:
     # ModuleList = @()
 
     # List of all files packaged with this module
-    FileList             = @('WDACConfig.psd1', 'New-WDACConfig.psm1', 'Deploy-SignedWDACConfig.psm1', 'Remove-WDACConfig.psm1', "Confirm-WDACConfig.psm1", "Edit-WDACConfig.psm1", "Edit-SignedWDACConfig.psm1")
+    FileList             = @('WDACConfig.psd1', 'New-WDACConfig.psm1', 'Deploy-SignedWDACConfig.psm1', 'Remove-WDACConfig.psm1', "Confirm-WDACConfig.psm1", "Edit-WDACConfig.psm1", "Edit-SignedWDACConfig.psm1","Resources.ps1")
 
     # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.
     PrivateData          = @{
@@ -180,6 +180,21 @@ To get help and syntax on PowerShell console, type:
 
             # ReleaseNotes of this module
             ReleaseNotes = @"
+
+## Version 0.1.1
+Created a Resources.ps1 file to store repeated functions that are using in all sub-modules, resulting in reduced repeated codes. It is dot-sourced at the beginning of each sub-module and function calls are dot-sourced too.
+Started using #Requires -RunAsAdministrator instead of a function to check for Admin privileges, also resulting in reduced repeated codes.
+Bumped PowerShell required version to 7.3.4 since it has some fixed for ConfigCI module cmdlets that the WDACConfig module relies on.
+Improved the Edit-WDACConfig -AllowNewAppsAuditEvents so that it can now produce a more effective supplemental policy. Also going forward, it won't include deleted files by default, unless the newly introduced -IncludeDeletedFiles switch is used. Deleted files are files that are run and then deleted during a program's installation but event viewer audit logs will have their records.
+To improve readability and code validation, added lots of meaningful comments to many commands, functions and script blocks.
+Removed "Dekstop" from CompatiblePSEditions in the module manifest since WDACConfig module needs PowerShell and not Windows PowerShell (old).
+Removed #requires -version from the top of each sub-module since it's enough for version control to be enforced using module manifest only.
+Added extra validation to Edit-SignedWDACConfig cmdlet to prevent user from accidentally using Unsigned policies.
+Added extra validation to Edit-WDACConfig cmdlet to prevent user from accidentally using Signed policies.
+Changed Valid range for log size parameter from [int64]::MaxValue (9223372036854775807 KB) to 18014398509481983 KB which is the maximum allowed log size by Windows Event viewer
+Edit-SignedWDACConfig -AllowNewAppsAuditEvents and Edit-WDACConfig -AllowNewAppsAuditEvents no longer include file rules for deleted file hashes by default, unless -IncludeDeletedFiles optional switch parameter is used.
+Edit-SignedWDACConfig -AllowNewAppsAuditEvents and Edit-WDACConfig -AllowNewAppsAuditEvents got smarter. They now can successfully detect and only create extra rules for files that are not in the user-selected paths.
+Edit-SignedWDACConfig cmdlet and Edit-WDACConfig got equiped with multiple new optional parameters that were added to New-WDACConfig cmdlet in the previous update. Those parameters include: -NoUserPEs, -NoScript, -AllowFileNameFallbacks and -SpecificFileNameLevel.
 
 ## Version 0.1.0
 New features: Added new parameter to New-WDACConfig cmdlet, -PrepDefaultWindowsAudit, which as the name suggests, will prepare the system for Default Windows auditing,

@@ -1,4 +1,4 @@
-#requires -version 7.3.3
+#Requires -RunAsAdministrator
 function Remove-WDACConfig {
     [CmdletBinding(      
         DefaultParameterSetName = "Remove Signed Policies",  
@@ -13,9 +13,6 @@ function Remove-WDACConfig {
 
         [ValidatePattern('.*\.xml')]
         [parameter(Mandatory = $true, ParameterSetName = "Remove Signed Policies", ValueFromPipelineByPropertyName = $true)][string[]]$PolicyPaths,
-
-        [ValidatePattern('.*\.exe')]
-        [parameter(Mandatory = $false, ParameterSetName = "Remove Signed Policies", ValueFromPipelineByPropertyName = $true)][string]$SignToolPath,
         
         [ValidateScript({
                 try {
@@ -32,49 +29,19 @@ function Remove-WDACConfig {
         [ValidateSet([PolicyIDz])][parameter(Mandatory = $false, ParameterSetName = "Remove Policies")][string[]]$PolicyIDs,
         [ValidateSet([PolicyNamez])][parameter(Mandatory = $false, ParameterSetName = "Remove Policies")][string[]]$PolicyNames,
 
+        [ValidatePattern('.*\.exe')]
+        [parameter(Mandatory = $false, ParameterSetName = "Remove Signed Policies", ValueFromPipelineByPropertyName = $true)][string]$SignToolPath,
+
         [Parameter(Mandatory = $false)][switch]$SkipVersionCheck
     )
 
     begin {
-        # Make sure the latest version of the module is installed and if not, automatically update it, clean up any old versions
-        function Update-self {
-            $currentversion = (Test-modulemanifest "$psscriptroot\WDACConfig.psd1").Version.ToString()
-            try {
-                $latestversion = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/WDACConfig/version.txt"
-            }
-            catch {
-                Write-Error "Couldn't verify if the latest version of the module is installed, please check your Internet connection. You can optionally bypass the online check by using -SkipVersionCheck parameter."
-                break
-            }
-            if (-NOT ($currentversion -eq $latestversion)) {
-                Write-Host "The currently installed module's version is $currentversion while the latest version is $latestversion - Auto Updating the module now and will run your command after that 💓"
-                Remove-Module -Name WDACConfig -Force
-                try {
-                    Uninstall-Module -Name WDACConfig -AllVersions -Force -ErrorAction Stop
-                    Install-Module -Name WDACConfig -RequiredVersion $latestversion -Force              
-                    Import-Module -Name WDACConfig -RequiredVersion $latestversion -Force -Global
-                }
-                catch {
-                    Install-Module -Name WDACConfig -RequiredVersion $latestversion -Force
-                    Import-Module -Name WDACConfig -RequiredVersion $latestversion -Force -Global
-                }            
-            }
-        }
+        # Importing resources such as functions by dot-sourcing so that they will run in the same scope and their variables will be usable
+        . "$psscriptroot\Resources.ps1"
 
-        # Test Admin privileges
-        Function Test-IsAdmin {
-            $identity = [Security.Principal.WindowsIdentity]::GetCurrent()
-            $principal = New-Object Security.Principal.WindowsPrincipal $identity
-            $principal.IsInRole([Security.Principal.WindowsBuiltinRole]::Administrator)
-        }
-
-        if (-NOT (Test-IsAdmin)) {
-            write-host "Administrator privileges Required" -ForegroundColor Magenta
-            break
-        }
-
+        # Stop operation as soon as there is an error, anywhere, unless explicitly specified otherwise
         $ErrorActionPreference = 'Stop'
-        if (-NOT $SkipVersionCheck) { Update-self }
+        if (-NOT $SkipVersionCheck) { . Update-self }
 
         # argument tab auto-completion and ValidateSet for Policy names 
         Class PolicyNamez : System.Management.Automation.IValidateSetValuesGenerator {
@@ -99,7 +66,7 @@ function Remove-WDACConfig {
 
         if ($RemoveSignedPolicies) {
             foreach ($PolicyPath in $PolicyPaths) {
-                # sanitize the policy file by removing SupplementalPolicySigners
+                ######################## Sanitize the policy file by removing SupplementalPolicySigners ########################                
                 $xml = [xml](Get-Content $PolicyPath)
                 $SuppSingerIDs = $xml.SiPolicy.SupplementalPolicySigners.SupplementalPolicySigner.SignerId
                 $PolicyName = ($xml.SiPolicy.Settings.Setting | Where-Object { $_.provider -eq "PolicyInfo" -and $_.valuename -eq "Name" -and $_.key -eq "Information" }).value.string
@@ -122,34 +89,13 @@ function Remove-WDACConfig {
                 else {
                     Write-host "`nNo sanitization required because no SupplementalPolicySigners have been found in $PolicyName policy." -ForegroundColor Green
                 }
-                    
+                
                 Set-RuleOption -FilePath $PolicyPath -Option 6       
                 $PolicyID = $xml.SiPolicy.PolicyID
                 ConvertFrom-CIPolicy $PolicyPath "$PolicyID.cip" | Out-Null
-                
-                if ($SignToolPath) {
-                    $SignToolPath = $SignToolPath
-                }
-                else {
-                    if ($Env:PROCESSOR_ARCHITECTURE -eq "AMD64") {
-                        if ( Test-Path -Path "C:\Program Files (x86)\Windows Kits\*\bin\*\x64\signtool.exe") {
-                            $SignToolPath = "C:\Program Files (x86)\Windows Kits\*\bin\*\x64\signtool.exe" 
-                        }
-                        else {
-                            Write-Error "signtool.exe couldn't be found"
-                            break
-                        }
-                    }
-                    elseif ($Env:PROCESSOR_ARCHITECTURE -eq "ARM64") {
-                        if (Test-Path -Path "C:\Program Files (x86)\Windows Kits\*\bin\*\arm64\signtool.exe") {
-                            $SignToolPath = "C:\Program Files (x86)\Windows Kits\*\bin\*\arm64\signtool.exe"
-                        }
-                        else {
-                            Write-Error "signtool.exe couldn't be found"
-                            break
-                        }
-                    }           
-                }                    
+
+                . Get-SignTool
+
                 & $SignToolPath sign -v -n $CertCN -p7 . -p7co 1.3.6.1.4.1.311.79.1 -fd certHash ".\$PolicyID.cip"                          
                 Remove-Item ".\$PolicyID.cip" -Force
                 Rename-Item "$PolicyID.cip.p7" -NewName "$PolicyID.cip" -Force  

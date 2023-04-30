@@ -13,7 +13,7 @@ function Edit-SignedWDACConfig {
         [Parameter(Mandatory = $false, ParameterSetName = "Merge Supplemental Policies")][switch]$MergeSupplementalPolicies,        
         [Parameter(Mandatory = $false, ParameterSetName = "Update Base Policy")][switch]$UpdateBasePolicy,
 
-        [ValidatePattern('.*\.cer')]
+        [ValidatePattern('\.cer$')][ValidateScript({ Test-Path $_ -PathType Leaf }, ErrorMessage = "The path you selected is not a file path.")]
         [Parameter(Mandatory = $true, ParameterSetName = "Allow New Apps Audit Events", ValueFromPipelineByPropertyName = $true)]
         [Parameter(Mandatory = $true, ParameterSetName = "Allow New Apps", ValueFromPipelineByPropertyName = $true)]
         [Parameter(Mandatory = $true, ParameterSetName = "Merge Supplemental Policies", ValueFromPipelineByPropertyName = $true)]
@@ -25,7 +25,7 @@ function Edit-SignedWDACConfig {
         [Parameter(Mandatory = $true, ParameterSetName = "Merge Supplemental Policies", ValueFromPipelineByPropertyName = $true)]       
         [string]$SuppPolicyName,        
 
-        [ValidatePattern('.*\.xml')]
+        [ValidatePattern('\.xml$')]
         [ValidateScript({
                 # Validate each Policy file in PolicyPaths parameter to make sure the user isn't accidentally trying to
                 # Edit a Unsigned policy using Edit-SignedWDACConfig cmdlet which is only made for Signed policies
@@ -56,7 +56,7 @@ function Edit-SignedWDACConfig {
         [Parameter(Mandatory = $true, ParameterSetName = "Update Base Policy", ValueFromPipelineByPropertyName = $true)]
         [string]$CertCN,
 
-        [ValidatePattern('.*\.xml')]
+        [ValidatePattern('\.xml$')][ValidateScript({ Test-Path $_ -PathType Leaf }, ErrorMessage = "The path you selected is not a file path.")]
         [Parameter(Mandatory = $true, ParameterSetName = "Merge Supplemental Policies", ValueFromPipelineByPropertyName = $true)]
         [string[]]$SuppPolicyPaths,
 
@@ -84,7 +84,7 @@ function Edit-SignedWDACConfig {
 
         [parameter(Mandatory = $false, ParameterSetName = "Allow New Apps Audit Events")][switch]$IncludeDeletedFiles,
 
-        [ValidatePattern('.*\.exe')]
+        [ValidatePattern('\.exe$')][ValidateScript({ Test-Path $_ -PathType Leaf }, ErrorMessage = "The path you selected is not a file path.")]
         [Parameter(Mandatory = $false, ParameterSetName = "Allow New Apps Audit Events", ValueFromPipelineByPropertyName = $true)]
         [Parameter(Mandatory = $false, ParameterSetName = "Allow New Apps", ValueFromPipelineByPropertyName = $true)]
         [Parameter(Mandatory = $false, ParameterSetName = "Merge Supplemental Policies", ValueFromPipelineByPropertyName = $true)]
@@ -896,6 +896,7 @@ $ArgumentCompleterSignToolPath = {
     Get-ChildItem | where-object { $_.extension -like '*.exe' } | foreach-object { return "`"$_`"" }
 }
 Register-ArgumentCompleter -CommandName "Edit-SignedWDACConfig" -ParameterName "SignToolPath" -ScriptBlock $ArgumentCompleterSignToolPath
+
 
 # argument tab auto-completion for Supplemental Policy Paths to show only .xml files and only Supplemental policies
 $ArgumentCompleterSuppPolicyPaths = {

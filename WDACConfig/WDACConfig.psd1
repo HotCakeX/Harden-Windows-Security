@@ -42,51 +42,51 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
 
 
 ✔️ New-WDACConfig [-GetBlockRules]
-    
+
 ✔️ New-WDACConfig [-GetDriverBlockRules]
-    
+
 ✔️ New-WDACConfig [-MakeAllowMSFTWithBlockRules] [-Deployit] [-TestMode] [-RequireEVSigners]
-    
+
 ✔️ New-WDACConfig [-DeployLatestDriverBlockRules]
-    
+
 ✔️ New-WDACConfig [-SetAutoUpdateDriverBlockRules]
-    
+
 ✔️ New-WDACConfig [-PrepMSFTOnlyAudit] [-LogSize <Int64>]
 
 ✔️ New-WDACConfig [-PrepDefaultWindowsAudit] [-LogSize <Int64>]
-    
+
 ✔️ New-WDACConfig [-MakePolicyFromAuditLogs] -BasePolicyType <String> [-Deployit] [-TestMode] [-RequireEVSigners] [-Debugmode] [-AllowFileNameFallbacks] [-SpecificFileNameLevel <String>] [-NoDeletedFiles] [-NoUserPEs] [-NoScript] [-Levels <String>] [-Fallbacks <String[]>] [-LogSize <Int64>]
-    
+
 ✔️ New-WDACConfig [-MakeLightPolicy] [-Deployit] [-TestMode] [-RequireEVSigners]
-    
-✔️ New-WDACConfig [-MakeSupplementalPolicy] -ScanLocation <String> -SuppPolicyName <String> -PolicyPath <String> [-Deployit] [-AllowFileNameFallbacks] [-SpecificFileNameLevel <String>] [-NoUserPEs] [-NoScript] [-Levels <String>] [-Fallbacks <String[]>]  
+
+✔️ New-WDACConfig [-MakeSupplementalPolicy] -ScanLocation <String> -SuppPolicyName <String> -PolicyPath <String> [-Deployit] [-AllowFileNameFallbacks] [-SpecificFileNameLevel <String>] [-NoUserPEs] [-NoScript] [-Levels <String>] [-Fallbacks <String[]>]
 
 ✔️ New-WDACConfig [-MakeDefaultWindowsWithBlockRules] [-Deployit] [-TestMode] [-RequireEVSigners]
-    
-✔️ Remove-WDACConfig [-RemoveSignedPolicies] -PolicyPaths <String[]> [-SignToolPath <String>] -CertCN <String>
-    
+
+✔️ Remove-WDACConfig [-RemoveSignedPolicies] -PolicyPaths <String[]> -CertCN <String> [-SignToolPath <String>] 
+
 ✔️ Remove-WDACConfig [-RemovePolicies] [-PolicyIDs <String[]>] [-PolicyNames <String[]>]
 
-✔️ Edit-WDACConfig [-AllowNewAppsAuditEvents] -SuppPolicyName <String> -PolicyPaths <String[]> [-Debugmode] [-Levels <String>] [-Fallbacks <String[]>] [-LogSize <Int64>]
-    
-✔️ Edit-WDACConfig [-AllowNewApps] -SuppPolicyName <String> -PolicyPaths <String[]> [-Levels <String>] [-Fallbacks <String[]>]
-    
-✔️ Edit-WDACConfig [-MergeSupplementalPolicies] -SuppPolicyName <String> -PolicyPaths <String[]> -SuppPolicyPaths <String[]>
-    
-✔️ Edit-WDACConfig [-UpdateBasePolicy] -CurrentBasePolicyName <String[]> -NewBasePolicyType <String> [-RequireEVSigners]
-    
-✔️ Edit-SignedWDACConfig [-AllowNewAppsAuditEvents] -CertPath <String> -SuppPolicyName <String> -PolicyPaths <String[]> [-SignToolPath <String>] -CertCN <String> [-Debugmode] [-LogSize <Int64>] [-Levels <String>] [-Fallbacks <String[]>]
-    
-✔️ Edit-SignedWDACConfig [-AllowNewApps] -CertPath <String> -SuppPolicyName <String> -PolicyPaths <String[]> [-SignToolPath <String>] -CertCN <String> [-Levels <String>] [-Fallbacks <String[]>]
-    
-✔️ Edit-SignedWDACConfig [-MergeSupplementalPolicies] -CertPath <String> -SuppPolicyName <String> -PolicyPaths <String[]> [-SignToolPath <String>] -CertCN <String> -SuppPolicyPaths <String[]>
-    
-✔️ Edit-SignedWDACConfig [-UpdateBasePolicy] -CertPath <String> -SignToolPath <String> -CertCN <String> -CurrentBasePolicyName <String[]> -NewBasePolicyType <String> [-RequireEVSigners]
+✔️ Edit-WDACConfig [-AllowNewAppsAuditEvents] -SuppPolicyName <String> -PolicyPaths <String[]> [-Debugmode] [-Levels <String>] [-Fallbacks <String[]>] [-NoScript] [-NoUserPEs] [-AllowFileNameFallbacks] [-SpecificFileNameLevel <String>] [-LogSize <Int64>] [-IncludeDeletedFiles]
 
-✔️ Deploy-SignedWDACConfig -CertPath <String> -PolicyPaths <String[]> [-SignToolPath <String>] -CertCN <String>
+✔️ Edit-WDACConfig [-AllowNewApps] -SuppPolicyName <String> -PolicyPaths <String[]> [-Levels <String>] [-Fallbacks <String[]>] [-NoScript] [-NoUserPEs] [-AllowFileNameFallbacks] [-SpecificFileNameLevel <String>]    
+
+✔️ Edit-WDACConfig [-MergeSupplementalPolicies] -SuppPolicyName <String> -PolicyPaths <String[]> -SuppPolicyPaths <String[]>
+
+✔️ Edit-WDACConfig [-UpdateBasePolicy] -CurrentBasePolicyName <String[]> -NewBasePolicyType <String> [-RequireEVSigners]
+
+✔️ Edit-SignedWDACConfig [-AllowNewAppsAuditEvents] -CertPath <String> -SuppPolicyName <String> -PolicyPaths <String[]> -CertCN <String> [-Debugmode] [-LogSize <Int64>] [-NoScript] [-NoUserPEs] [-AllowFileNameFallbacks] [-SpecificFileNameLevel <String>] [-IncludeDeletedFiles] [-SignToolPath <String>] [-Levels <String>] [-Fallbacks <String[]>]
+
+✔️ Edit-SignedWDACConfig [-AllowNewApps] -CertPath <String> -SuppPolicyName <String> -PolicyPaths <String[]> -CertCN <String> [-NoScript] [-NoUserPEs] [-AllowFileNameFallbacks] [-SpecificFileNameLevel <String>] [-SignToolPath <String>] [-Levels <String>] [-Fallbacks <String[]>]
+
+✔️ Edit-SignedWDACConfig [-MergeSupplementalPolicies] -CertPath <String> -SuppPolicyName <String> -PolicyPaths <String[]> -CertCN <String> -SuppPolicyPaths <String[]> [-SignToolPath <String>]
+
+✔️ Edit-SignedWDACConfig [-UpdateBasePolicy] -CertPath <String> -CertCN <String> -SignToolPath <String> -CurrentBasePolicyName <String[]> -NewBasePolicyType <String> [-RequireEVSigners]
+
+✔️ Deploy-SignedWDACConfig -CertPath <String> -PolicyPaths <String[]> -CertCN <String> [-SignToolPath <String>]
 
 ✔️ Confirm-WDACConfig [-ListActivePolicies] [-OnlyBasePolicies] [-OnlySupplementalPolicies]
-    
+
 ✔️ Confirm-WDACConfig [-VerifyWDACStatus]
 
 ✔️ Confirm-WDACConfig [-CheckSmartAppControlStatus]
@@ -182,7 +182,7 @@ To get help and syntax on PowerShell console, type:
             ReleaseNotes = @"
 
 ## Version 0.1.1
-Created a Resources.ps1 file to store repeated functions that are using in all sub-modules, resulting in reduced repeated codes. It is dot-sourced at the beginning of each sub-module and function calls are dot-sourced too.
+Created a Resources.ps1 file to store repeated functions that are used in all sub-modules, resulting in reduced repeated codes. It is dot-sourced at the beginning of each sub-module and function calls are dot-sourced too.
 Started using #Requires -RunAsAdministrator instead of a function to check for Admin privileges, also resulting in reduced repeated codes.
 Bumped PowerShell required version to 7.3.4 since it has some fixed for ConfigCI module cmdlets that the WDACConfig module relies on.
 Improved the Edit-WDACConfig -AllowNewAppsAuditEvents so that it can now produce a more effective supplemental policy. Also going forward, it won't include deleted files by default, unless the newly introduced -IncludeDeletedFiles switch is used. Deleted files are files that are run and then deleted during a program's installation but event viewer audit logs will have their records.
@@ -195,6 +195,8 @@ Changed Valid range for log size parameter from [int64]::MaxValue (9223372036854
 Edit-SignedWDACConfig -AllowNewAppsAuditEvents and Edit-WDACConfig -AllowNewAppsAuditEvents no longer include file rules for deleted file hashes by default, unless -IncludeDeletedFiles optional switch parameter is used.
 Edit-SignedWDACConfig -AllowNewAppsAuditEvents and Edit-WDACConfig -AllowNewAppsAuditEvents got smarter. They now can successfully detect and only create extra rules for files that are not in the user-selected paths.
 Edit-SignedWDACConfig cmdlet and Edit-WDACConfig got equiped with multiple new optional parameters that were added to New-WDACConfig cmdlet in the previous update. Those parameters include: -NoUserPEs, -NoScript, -AllowFileNameFallbacks and -SpecificFileNameLevel.
+Added Validations to parameters to validate folder paths and file paths.
+
 
 ## Version 0.1.0
 New features: Added new parameter to New-WDACConfig cmdlet, -PrepDefaultWindowsAudit, which as the name suggests, will prepare the system for Default Windows auditing,

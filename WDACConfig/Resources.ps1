@@ -41,11 +41,13 @@ function Update-self {
     if (-NOT ($currentversion -eq $latestversion)) {
         Write-Host "The currently installed module's version is $currentversion while the latest version is $latestversion - Auto Updating the module now and will run your command after that 💓"
         Remove-Module -Name WDACConfig -Force
+        # Do this if the module was installed properly using Install-moodule cmdlet
         try {
             Uninstall-Module -Name WDACConfig -AllVersions -Force -ErrorAction Stop
             Install-Module -Name WDACConfig -RequiredVersion $latestversion -Force              
             Import-Module -Name WDACConfig -RequiredVersion $latestversion -Force -Global
         }
+        # Do this if module files/folder was just copied to Documents folder and not properly installed - Should rarely happen
         catch {
             Install-Module -Name WDACConfig -RequiredVersion $latestversion -Force
             Import-Module -Name WDACConfig -RequiredVersion $latestversion -Force -Global
@@ -164,6 +166,7 @@ public static extern uint QueryDosDevice(string lpDeviceName, StringBuilder lpTa
 }
 
 ### ScriptBlock to separately capture FileHashes of deleted files and FilePaths of available files from Event Viewer Audit Logs ####
+# The unsued notice should be ignored, it is being used multiple times throughout the module by dot-sourcing
 $AuditEventLogsProcessingScriptBlock = {
     # holds FileHashes of unavailable files
     $DeletedFileHashesArray = @()
@@ -193,5 +196,3 @@ $AuditEventLogsProcessingScriptBlock = {
     # return the results as arrays so they can be used outside of the ScriptBlock
     return $DeletedFileHashesArray, $AvailableFilesPathsArray
 }
-
-

@@ -21,9 +21,15 @@ function New-WDACConfig {
         [Parameter(Mandatory = $false, ParameterSetName = "Make Supplemental Policy")][switch]$MakeSupplementalPolicy,
         [Parameter(Mandatory = $false, ParameterSetName = "Make DefaultWindows With Block Rules")][switch]$MakeDefaultWindowsWithBlockRules,
        
-        [parameter(Mandatory = $true, ParameterSetName = "Make Supplemental Policy", ValueFromPipelineByPropertyName = $true)][string]$ScanLocation,
+        [ValidateScript({ Test-Path $_ -PathType Container }, ErrorMessage = "The path you selected is not a folder path.")]
+        [parameter(Mandatory = $true, ParameterSetName = "Make Supplemental Policy", ValueFromPipelineByPropertyName = $true)]
+        [string]$ScanLocation,
+
         [parameter(Mandatory = $true, ParameterSetName = "Make Supplemental Policy", ValueFromPipelineByPropertyName = $true)][string]$SuppPolicyName,
-        [ValidatePattern('.*\.xml')][parameter(Mandatory = $true, ParameterSetName = "Make Supplemental Policy", ValueFromPipelineByPropertyName = $true)][string]$PolicyPath,
+        
+        [ValidatePattern('\.xml$')][ValidateScript({ Test-Path $_ -PathType Leaf }, ErrorMessage = "The path you selected is not a file path.")]
+        [parameter(Mandatory = $true, ParameterSetName = "Make Supplemental Policy", ValueFromPipelineByPropertyName = $true)]
+        [string]$PolicyPath,
           
         [ValidateSet("Allow Microsoft Base", "Default Windows Base")]
         [Parameter(Mandatory = $true, ParameterSetName = "Make Policy From Audit Logs")][string]$BasePolicyType,
@@ -76,7 +82,8 @@ function New-WDACConfig {
         [ValidateSet([Fallbackz])]
         [parameter(Mandatory = $false, ParameterSetName = "Make Policy From Audit Logs")]
         [parameter(Mandatory = $false, ParameterSetName = "Make Supplemental Policy")]
-        [string[]]$Fallbacks, 
+        [string[]]$Fallbacks,
+
         # Setting the maxim range to the maximum allowed log size by Windows Event viewer
         [ValidateRange(1024KB, 18014398509481983KB)]
         [Parameter(Mandatory = $false, ParameterSetName = "Prep MSFT Only Audit")]

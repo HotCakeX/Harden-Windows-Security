@@ -7,8 +7,11 @@ function Deploy-SignedWDACConfig {
         ConfirmImpact = 'High'
     )]
     Param(
-        [ValidatePattern('.*\.cer')][parameter(Mandatory = $true)][string]$CertPath,       
-        [ValidatePattern('.*\.xml')][parameter(Mandatory = $true)][string[]]$PolicyPaths,
+        [ValidatePattern('\.cer$')][ValidateScript({ Test-Path $_ -PathType Leaf }, ErrorMessage = "The path you selected is not a file path.")]
+        [parameter(Mandatory = $true)][string]$CertPath,
+
+        [ValidatePattern('\.xml$')][ValidateScript({ Test-Path $_ -PathType Leaf }, ErrorMessage = "The path you selected is not a file path.")]
+        [parameter(Mandatory = $true)][string[]]$PolicyPaths,
 
         [ValidateScript({
                 try {
@@ -21,7 +24,7 @@ function Deploy-SignedWDACConfig {
             }, ErrorMessage = "A certificate with the provided common name doesn't exist in the personal store of the user certificates." )]
         [parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true)][string]$CertCN,
 
-        [ValidatePattern('.*\.exe')][parameter(Mandatory = $false)][string]$SignToolPath,
+        [ValidatePattern('\.exe$')][parameter(Mandatory = $false)][string]$SignToolPath,
         
         [Parameter(Mandatory = $false)][switch]$SkipVersionCheck
     )
@@ -113,7 +116,7 @@ $ArgumentCompleterCertificateCN = {
 Register-ArgumentCompleter -CommandName "Deploy-SignedWDACConfig" -ParameterName "CertCN" -ScriptBlock $ArgumentCompleterCertificateCN
 
 
-# argument tab auto-completion for Policy Paths to show only .xml files and only base policies
+# argument tab auto-completion for Policy Paths to show only .xml files
 $ArgumentCompleterPolicyPaths = {
     Get-ChildItem | where-object { $_.extension -like '*.xml' } | foreach-object { return "`"$_`"" }
 }

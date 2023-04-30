@@ -11,7 +11,7 @@ function Remove-WDACConfig {
         [Parameter(Mandatory = $false, ParameterSetName = "Remove Signed Policies")][switch]$RemoveSignedPolicies,
         [Parameter(Mandatory = $false, ParameterSetName = "Remove Policies")][switch]$RemovePolicies,
 
-        [ValidatePattern('.*\.xml')]
+        [ValidatePattern('\.xml$')][ValidateScript({ Test-Path $_ -PathType Leaf }, ErrorMessage = "The path you selected is not a file path.")]
         [parameter(Mandatory = $true, ParameterSetName = "Remove Signed Policies", ValueFromPipelineByPropertyName = $true)][string[]]$PolicyPaths,
         
         [ValidateScript({
@@ -29,7 +29,7 @@ function Remove-WDACConfig {
         [ValidateSet([PolicyIDz])][parameter(Mandatory = $false, ParameterSetName = "Remove Policies")][string[]]$PolicyIDs,
         [ValidateSet([PolicyNamez])][parameter(Mandatory = $false, ParameterSetName = "Remove Policies")][string[]]$PolicyNames,
 
-        [ValidatePattern('.*\.exe')]
+        [ValidatePattern('\.exe$')][ValidateScript({ Test-Path $_ -PathType Leaf }, ErrorMessage = "The path you selected is not a file path.")]
         [parameter(Mandatory = $false, ParameterSetName = "Remove Signed Policies", ValueFromPipelineByPropertyName = $true)][string]$SignToolPath,
 
         [Parameter(Mandatory = $false)][switch]$SkipVersionCheck
@@ -107,15 +107,16 @@ function Remove-WDACConfig {
         }
     
         if ($RemovePolicies) {
+            # If IDs were supplied by user
             foreach ($ID in $PolicyIDs ) {
                 citool --remove-policy "{$ID}"
             }
+            # If names were supplied by user
             foreach ($PolicyName in $PolicyNames) {                    
                 $NameID = ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.FriendlyName -eq $PolicyName }).PolicyID                                   
                 citool --remove-policy "{$NameID}"
             }      
         }
-
     } 
    
     <#

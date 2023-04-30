@@ -18,7 +18,7 @@ function Edit-WDACConfig {
         [Parameter(Mandatory = $true, ParameterSetName = "Merge Supplemental Policies", ValueFromPipelineByPropertyName = $true)]
         [string]$SuppPolicyName,
         
-        [ValidatePattern('.*\.xml')]
+        [ValidatePattern('\.xml$')]
         [ValidateScript({
                 # Validate each Policy file in PolicyPaths parameter to make sure the user isn't accidentally trying to
                 # Edit a Signed policy using Edit-WDACConfig cmdlet which is only made for Unsigned policies
@@ -34,7 +34,7 @@ function Edit-WDACConfig {
         [Parameter(Mandatory = $true, ParameterSetName = "Merge Supplemental Policies", ValueFromPipelineByPropertyName = $true)]
         [string[]]$PolicyPaths,
 
-        [ValidatePattern('.*\.xml')]        
+        [ValidatePattern('\.xml$')][ValidateScript({ Test-Path $_ -PathType Leaf }, ErrorMessage = "The path you selected is not a file path.")]      
         [Parameter(Mandatory = $true, ParameterSetName = "Merge Supplemental Policies", ValueFromPipelineByPropertyName = $true)]
         [string[]]$SuppPolicyPaths,
 
@@ -67,6 +67,7 @@ function Edit-WDACConfig {
         [parameter(Mandatory = $false, ParameterSetName = "Allow New Apps Audit Events")]
         [parameter(Mandatory = $false, ParameterSetName = "Allow New Apps")]
         [string]$SpecificFileNameLevel,
+
         # Setting the maxim range to the maximum allowed log size by Windows Event viewer
         [ValidateRange(1024KB, 18014398509481983KB)]
         [Parameter(Mandatory = $false, ParameterSetName = "Allow New Apps Audit Events")]

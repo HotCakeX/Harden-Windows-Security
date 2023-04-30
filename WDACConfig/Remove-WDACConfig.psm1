@@ -24,10 +24,42 @@ function Remove-WDACConfig {
                 } # this error msg is shown when cert CN is not available in the personal store of the user certs
             }, ErrorMessage = "A certificate with the provided common name doesn't exist in the personal store of the user certificates." )]
         [parameter(Mandatory = $true, ParameterSetName = "Remove Signed Policies", ValueFromPipelineByPropertyName = $true)]
-        [string]$CertCN,        
-        
-        [ValidateSet([PolicyIDz])][parameter(Mandatory = $false, ParameterSetName = "Remove Policies")][string[]]$PolicyIDs,
-        [ValidateSet([PolicyNamez])][parameter(Mandatory = $false, ParameterSetName = "Remove Policies")][string[]]$PolicyNames,
+        [string]$CertCN,
+
+        # https://stackoverflow.com/questions/76143006/how-to-prevent-powershell-validateset-argument-completer-from-suggesting-the-sam/76143269
+        [ArgumentCompleter({
+                param($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameters)
+                $candidates = [PolicyIDz]::new().GetValidValues()
+                $existing = $commandAst.FindAll({ 
+                        $args[0] -is [System.Management.Automation.Language.StringConstantExpressionAst]
+                    }, 
+                    $false
+                ).Value  
+                Compare-Object -PassThru $candidates $existing | Where-Object SideIndicator -eq '<='
+            })]
+        [ValidateScript({
+                if ($_ -notin [PolicyIDz]::new().GetValidValues()) { throw "Invalid policy ID: $_" }
+                $true
+            })]
+        [string[]]$PolicyIDs,
+
+        # https://stackoverflow.com/questions/76143006/how-to-prevent-powershell-validateset-argument-completer-from-suggesting-the-sam/76143269
+        [ArgumentCompleter({
+                param($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameters)
+                $candidates = [PolicyNamez]::new().GetValidValues()
+                $existing = $commandAst.FindAll({ 
+                        $args[0] -is [System.Management.Automation.Language.StringConstantExpressionAst]
+                    }, 
+                    $false
+                ).Value  
+          (Compare-Object -PassThru $candidates $existing | Where-Object SideIndicator -eq '<=').
+                ForEach({ if ($_ -match ' ') { "'{0}'" -f $_ } else { $_ } })
+            })]
+        [ValidateScript({
+                if ($_ -notin [PolicyNamez]::new().GetValidValues()) { throw "Invalid policy name: $_" }
+                $true
+            })]
+        [string[]]$PolicyNames,
 
         [ValidatePattern('\.exe$')][ValidateScript({ Test-Path $_ -PathType Leaf }, ErrorMessage = "The path you selected is not a file path.")]
         [parameter(Mandatory = $false, ParameterSetName = "Remove Signed Policies", ValueFromPipelineByPropertyName = $true)][string]$SignToolPath,
@@ -47,19 +79,20 @@ function Remove-WDACConfig {
         Class PolicyNamez : System.Management.Automation.IValidateSetValuesGenerator {
             [string[]] GetValidValues() {
                 $PolicyNamez = ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsSystemPolicy -ne "True" }).Friendlyname
-           
+   
                 return [string[]]$PolicyNamez
             }
         }   
-    
+
         # argument tab auto-completion and ValidateSet for Policy IDs     
         Class PolicyIDz : System.Management.Automation.IValidateSetValuesGenerator {
             [string[]] GetValidValues() {
                 $PolicyIDz = ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsSystemPolicy -ne "True" }).policyID
-           
+   
                 return [string[]]$PolicyIDz
             }
         }
+        
     }
     
     process {

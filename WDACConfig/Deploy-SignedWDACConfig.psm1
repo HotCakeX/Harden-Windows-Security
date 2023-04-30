@@ -116,12 +116,33 @@ $ArgumentCompleterCertificateCN = {
 Register-ArgumentCompleter -CommandName "Deploy-SignedWDACConfig" -ParameterName "CertCN" -ScriptBlock $ArgumentCompleterCertificateCN
 
 
-# argument tab auto-completion for Policy Paths to show only .xml files
-$ArgumentCompleterPolicyPaths = {
-    Get-ChildItem | where-object { $_.extension -like '*.xml' } | foreach-object { return "`"$_`"" }
-}
-Register-ArgumentCompleter -CommandName "Deploy-SignedWDACConfig" -ParameterName "PolicyPaths" -ScriptBlock $ArgumentCompleterPolicyPaths
+# argument tab auto-completion for Policy Paths to show only .xml files and only suggest files that haven't been already selected by user 
+# https://stackoverflow.com/questions/76141864/how-to-make-a-powershell-argument-completer-that-only-suggests-files-not-already/76142865
+Register-ArgumentCompleter `
+    -CommandName Deploy-SignedWDACConfig `
+    -ParameterName PolicyPaths `
+    -ScriptBlock {
+    # Get the current command and the already bound parameters
+    param($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameters)
 
+    # Find all string constants in the AST that end in ".xml"
+    $existing = $commandAst.FindAll({ 
+            $args[0] -is [System.Management.Automation.Language.StringConstantExpressionAst] -and 
+            $args[0].Value -like '*.xml' 
+        }, 
+        $false
+    ).Value  
+
+    # Get the xml files in the current directory
+    Get-ChildItem -Filter *.xml | ForEach-Object {
+        # Check if the file is already selected
+        if ($_.FullName -notin $existing) {
+            # Return the file name with quotes
+            "`"$_`""
+        }
+    }
+}
+ 
 
 # argument tab auto-completion for Certificate Path to show only .cer files
 $ArgumentCompleterCertPath = {

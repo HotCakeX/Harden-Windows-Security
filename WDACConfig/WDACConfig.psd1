@@ -196,6 +196,9 @@ Edit-SignedWDACConfig -AllowNewAppsAuditEvents and Edit-WDACConfig -AllowNewApps
 Edit-SignedWDACConfig -AllowNewAppsAuditEvents and Edit-WDACConfig -AllowNewAppsAuditEvents got smarter. They now can successfully detect and only create extra rules for files that are not in the user-selected paths.
 Edit-SignedWDACConfig cmdlet and Edit-WDACConfig got equiped with multiple new optional parameters that were added to New-WDACConfig cmdlet in the previous update. Those parameters include: -NoUserPEs, -NoScript, -AllowFileNameFallbacks and -SpecificFileNameLevel.
 Added Validations to parameters to validate folder paths and file paths.
+Made multiple argument completers and validate sets more advanced. They no longer suggest the same values that have been selected by user. Thanks to helpful answers by mklement0 on StackOverflow: https://stackoverflow.com/users/45375/mklement0
+https://stackoverflow.com/questions/76143006/how-to-prevent-powershell-validateset-argument-completer-from-suggesting-the-sam/76143269
+https://stackoverflow.com/questions/76141864/how-to-make-a-powershell-argument-completer-that-only-suggests-files-not-already/76142865
 
 
 ## Version 0.1.0

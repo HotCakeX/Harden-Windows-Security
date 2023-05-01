@@ -2,21 +2,20 @@
 function Edit-WDACConfig {
     [CmdletBinding(
         DefaultParameterSetName = "Allow New Apps Audit Events",
-        HelpURI = "https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig",
         SupportsShouldProcess = $true,
         PositionalBinding = $false,
         ConfirmImpact = 'High'
     )]
     Param(
-        [Parameter(Mandatory = $false, ParameterSetName = "Allow New Apps Audit Events")][switch]$AllowNewAppsAuditEvents,
-        [Parameter(Mandatory = $false, ParameterSetName = "Allow New Apps")][switch]$AllowNewApps,
-        [Parameter(Mandatory = $false, ParameterSetName = "Merge Supplemental Policies")][switch]$MergeSupplementalPolicies,
-        [Parameter(Mandatory = $false, ParameterSetName = "Update Base Policy")][switch]$UpdateBasePolicy,
+        [Parameter(Mandatory = $false, ParameterSetName = "Allow New Apps Audit Events")][Switch]$AllowNewAppsAuditEvents,
+        [Parameter(Mandatory = $false, ParameterSetName = "Allow New Apps")][Switch]$AllowNewApps,
+        [Parameter(Mandatory = $false, ParameterSetName = "Merge Supplemental Policies")][Switch]$MergeSupplementalPolicies,
+        [Parameter(Mandatory = $false, ParameterSetName = "Update Base Policy")][Switch]$UpdateBasePolicy,
 
         [Parameter(Mandatory = $true, ParameterSetName = "Allow New Apps Audit Events", ValueFromPipelineByPropertyName = $true)]
         [Parameter(Mandatory = $true, ParameterSetName = "Allow New Apps", ValueFromPipelineByPropertyName = $true)]
         [Parameter(Mandatory = $true, ParameterSetName = "Merge Supplemental Policies", ValueFromPipelineByPropertyName = $true)]
-        [string]$SuppPolicyName,
+        [System.String]$SuppPolicyName,
         
         [ValidatePattern('\.xml$')]
         [ValidateScript({
@@ -32,58 +31,59 @@ function Edit-WDACConfig {
         [Parameter(Mandatory = $true, ParameterSetName = "Allow New Apps Audit Events", ValueFromPipelineByPropertyName = $true)]
         [Parameter(Mandatory = $true, ParameterSetName = "Allow New Apps", ValueFromPipelineByPropertyName = $true)]
         [Parameter(Mandatory = $true, ParameterSetName = "Merge Supplemental Policies", ValueFromPipelineByPropertyName = $true)]
-        [string[]]$PolicyPaths,
+        [System.String[]]$PolicyPaths,
 
-        [ValidatePattern('\.xml$')][ValidateScript({ Test-Path $_ -PathType Leaf }, ErrorMessage = "The path you selected is not a file path.")]      
+        [ValidatePattern('\.xml$')]
+        [ValidateScript({ Test-Path $_ -PathType 'Leaf' }, ErrorMessage = "The path you selected is not a file path.")]      
         [Parameter(Mandatory = $true, ParameterSetName = "Merge Supplemental Policies", ValueFromPipelineByPropertyName = $true)]
-        [string[]]$SuppPolicyPaths,
+        [System.String[]]$SuppPolicyPaths,
 
         [Parameter(Mandatory = $false, ParameterSetName = "Allow New Apps Audit Events")]
-        [switch]$Debugmode,
+        [Switch]$Debugmode,
 
         [ValidateSet([Levelz])]
         [parameter(Mandatory = $false, ParameterSetName = "Allow New Apps Audit Events")]
         [parameter(Mandatory = $false, ParameterSetName = "Allow New Apps")]
-        [string]$Levels,
+        [System.String]$Levels,
 
         [ValidateSet([Fallbackz])]
         [parameter(Mandatory = $false, ParameterSetName = "Allow New Apps Audit Events")]
         [parameter(Mandatory = $false, ParameterSetName = "Allow New Apps")]
-        [string[]]$Fallbacks,
+        [System.String[]]$Fallbacks,
 
         [parameter(Mandatory = $false, ParameterSetName = "Allow New Apps Audit Events")]
         [parameter(Mandatory = $false, ParameterSetName = "Allow New Apps")]
-        [switch]$NoScript,
+        [Switch]$NoScript,
 
         [parameter(Mandatory = $false, ParameterSetName = "Allow New Apps Audit Events")]
         [parameter(Mandatory = $false, ParameterSetName = "Allow New Apps")]
-        [switch]$NoUserPEs,
+        [Switch]$NoUserPEs,
 
         [parameter(Mandatory = $false, ParameterSetName = "Allow New Apps Audit Events")]
         [parameter(Mandatory = $false, ParameterSetName = "Allow New Apps")]
-        [switch]$AllowFileNameFallbacks,
+        [Switch]$AllowFileNameFallbacks,
         
         [ValidateSet("OriginalFileName", "InternalName", "FileDescription", "ProductName", "PackageFamilyName", "FilePath")]
         [parameter(Mandatory = $false, ParameterSetName = "Allow New Apps Audit Events")]
         [parameter(Mandatory = $false, ParameterSetName = "Allow New Apps")]
-        [string]$SpecificFileNameLevel,
+        [System.String]$SpecificFileNameLevel,
 
         # Setting the maxim range to the maximum allowed log size by Windows Event viewer
         [ValidateRange(1024KB, 18014398509481983KB)]
         [Parameter(Mandatory = $false, ParameterSetName = "Allow New Apps Audit Events")]
-        [Int64]$LogSize,
+        [System.Int64]$LogSize,
 
-        [parameter(Mandatory = $false, ParameterSetName = "Allow New Apps Audit Events")][switch]$IncludeDeletedFiles,
+        [parameter(Mandatory = $false, ParameterSetName = "Allow New Apps Audit Events")][Switch]$IncludeDeletedFiles,
 
         [ValidateSet([BasePolicyNamez])]
-        [Parameter(Mandatory = $true, ParameterSetName = "Update Base Policy")][string[]]$CurrentBasePolicyName,
+        [Parameter(Mandatory = $true, ParameterSetName = "Update Base Policy")][System.String[]]$CurrentBasePolicyName,
 
         [ValidateSet("AllowMicrosoft_Plus_Block_Rules", "Lightly_Managed_system_Policy", "DefaultWindows_WithBlockRules")]
-        [Parameter(Mandatory = $true, ParameterSetName = "Update Base Policy")][string]$NewBasePolicyType,
+        [Parameter(Mandatory = $true, ParameterSetName = "Update Base Policy")][System.String]$NewBasePolicyType,
 
-        [Parameter(Mandatory = $false, ParameterSetName = "Update Base Policy")][switch]$RequireEVSigners,
+        [Parameter(Mandatory = $false, ParameterSetName = "Update Base Policy")][Switch]$RequireEVSigners,
 
-        [Parameter(Mandatory = $false)][switch]$SkipVersionCheck
+        [Parameter(Mandatory = $false)][Switch]$SkipVersionCheck
     )
 
     begin {
@@ -92,28 +92,28 @@ function Edit-WDACConfig {
 
         # argument tab auto-completion and ValidateSet for Policy names 
         Class BasePolicyNamez : System.Management.Automation.IValidateSetValuesGenerator {
-            [string[]] GetValidValues() {
+            [System.String[]] GetValidValues() {
                 $BasePolicyNamez = ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsSystemPolicy -ne "True" } | Where-Object { $_.PolicyID -eq $_.BasePolicyID }).Friendlyname
            
-                return [string[]]$BasePolicyNamez
+                return [System.String[]]$BasePolicyNamez
             }
         }
 
         # argument tab auto-completion and ValidateSet for Fallbacks
         Class Fallbackz : System.Management.Automation.IValidateSetValuesGenerator {
-            [string[]] GetValidValues() {
+            [System.String[]] GetValidValues() {
                 $Fallbackz = ('Hash', 'FileName', 'SignedVersion', 'Publisher', 'FilePublisher', 'LeafCertificate', 'PcaCertificate', 'RootCertificate', 'WHQL', 'WHQLPublisher', 'WHQLFilePublisher', 'PFN', 'FilePath', 'None')
    
-                return [string[]]$Fallbackz
+                return [System.String[]]$Fallbackz
             }
         }
 
         # argument tab auto-completion and ValidateSet for levels
         Class Levelz : System.Management.Automation.IValidateSetValuesGenerator {
-            [string[]] GetValidValues() {
+            [System.String[]] GetValidValues() {
                 $Levelz = ('Hash', 'FileName', 'SignedVersion', 'Publisher', 'FilePublisher', 'LeafCertificate', 'PcaCertificate', 'RootCertificate', 'WHQL', 'WHQLPublisher', 'WHQLFilePublisher', 'PFN', 'FilePath', 'None')
        
-                return [string[]]$Levelz
+                return [System.String[]]$Levelz
             }
         }
 
@@ -250,7 +250,7 @@ function Edit-WDACConfig {
                     for ($i = 0; $i -lt $ProgramsPaths.Count; $i++) {
 
                         # Creating a hash table to dynamically add parameters based on user input and pass them to New-Cipolicy cmdlet
-                        $UserInputProgramFoldersPolicyMakerHashTable = @{
+                        [System.Collections.Hashtable]$UserInputProgramFoldersPolicyMakerHashTable = @{
                             FilePath             = ".\ProgramDir_ScanResults$($i).xml"
                             ScanPath             = $ProgramsPaths[$i]
                             Level                = $AssignedLevels
@@ -437,7 +437,7 @@ function Edit-WDACConfig {
                         # Create a policy XML file for available files on the disk
 
                         # Creating a hash table to dynamically add parameters based on user input and pass them to New-Cipolicy cmdlet
-                        $AvailableFilesOnDiskPolicyMakerHashTable = @{
+                        [System.Collections.Hashtable]$AvailableFilesOnDiskPolicyMakerHashTable = @{
                             FilePath             = ".\RulesForFilesNotInUserSelectedPaths.xml"
                             ScanPath             = "$env:TEMP\TemporaryScanFolderForEventViewerFiles\"
                             Level                = $AssignedLevels
@@ -547,7 +547,7 @@ $RulesRefs
                     for ($i = 0; $i -lt $ProgramsPaths.Count; $i++) {
 
                         # Creating a hash table to dynamically add parameters based on user input and pass them to New-Cipolicy cmdlet
-                        $UserInputProgramFoldersPolicyMakerHashTable = @{
+                        [System.Collections.Hashtable]$UserInputProgramFoldersPolicyMakerHashTable = @{
                             FilePath             = ".\ProgramDir_ScanResults$($i).xml"
                             ScanPath             = $ProgramsPaths[$i]
                             Level                = $AssignedLevels
@@ -625,12 +625,12 @@ $RulesRefs
                     $DeployedPoliciesIDs = (CiTool -lp -json | ConvertFrom-Json).Policies.PolicyID | ForEach-Object { return "{$_}" }         
                     # Check the type of the user selected Supplemental policy XML files to make sure they are indeed Supplemental policies
                     if ($SupplementalPolicyType -ne "Supplemental Policy") {
-                        Write-Error "The Selected XML file with GUID $SupplementalPolicyID isn't a Supplemental Policy."
+                        Write-Error -Message "The Selected XML file with GUID $SupplementalPolicyID isn't a Supplemental Policy."
                         break
                     }
                     # Check to make sure the user selected Supplemental policy XML files are deployed on the system
                     if ($DeployedPoliciesIDs -notcontains $SupplementalPolicyID) {
-                        Write-Error "The Selected Supplemental XML file with GUID $SupplementalPolicyID isn't deployed on the system."
+                        Write-Error -Message "The Selected Supplemental XML file with GUID $SupplementalPolicyID isn't deployed on the system."
                         break
                     }
                 }
@@ -670,8 +670,9 @@ $RulesRefs
                     Set-CIPolicyIdInfo -FilePath .\BasePolicy.xml -PolicyName "SignedAndReputable policy refreshed on $(Get-Date -Format 'MM-dd-yyyy')"
                     @(0, 2, 5, 6, 11, 12, 14, 15, 16, 17, 19, 20) | ForEach-Object { Set-RuleOption -FilePath .\BasePolicy.xml -Option $_ }
                     @(3, 4, 9, 10, 13, 18) | ForEach-Object { Set-RuleOption -FilePath .\BasePolicy.xml -Option $_ -Delete }            
-                    appidtel start
-                    sc.exe config appidsvc start= auto
+                    # Configure required services for ISG authorization
+                    Start-Process -FilePath 'C:\Windows\System32\appidtel.exe' -ArgumentList 'start' -Wait -NoNewWindow
+                    Start-Process -FilePath 'C:\Windows\System32\sc.exe' -ArgumentList 'config', 'appidsvc', "start= auto" -Wait -NoNewWindow
                 }
                 "DefaultWindows_WithBlockRules" {                                            
                     Copy-item -Path "C:\Windows\schemas\CodeIntegrity\ExamplePolicies\DefaultWindows_Enforced.xml" -Destination ".\DefaultWindows_Enforced.xml"

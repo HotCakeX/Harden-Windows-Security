@@ -1,3 +1,6 @@
+# Stop operation as soon as there is an error, anywhere, unless explicitly specified otherwise
+$ErrorActionPreference = 'Stop'
+
 # Get the path to SignTool
 function Get-SignTool {
     # If Sign tool path was provided by user the use it
@@ -11,8 +14,7 @@ function Get-SignTool {
                 $SignToolPath = "C:\Program Files (x86)\Windows Kits\*\bin\*\x64\signtool.exe" 
             }
             else {
-                Write-Error "signtool.exe couldn't be found"
-                break
+                Write-Error -Message "signtool.exe couldn't be found"
             }
         }
         elseif ($Env:PROCESSOR_ARCHITECTURE -eq "ARM64") {
@@ -21,11 +23,22 @@ function Get-SignTool {
             }
             # If sign tool path was neither provided by user nor detected on the system, stop the operation and show error
             else {
-                Write-Error "signtool.exe couldn't be found"
-                break
+                Write-Error -Message "signtool.exe couldn't be found"
             }
         }           
-    }            
+    }
+    
+    # Setting the minimum version of SignTool that is allowed to be executed
+    [System.Version]$WindowsSdkVersion = '10.0.22621.755'
+    [System.Boolean]$GreenFlag1 = (((get-item -Path $SignToolPath).VersionInfo).ProductVersionRaw -ge $WindowsSdkVersion)
+    [System.Boolean]$GreenFlag2 = (((get-item -Path $SignToolPath).VersionInfo).FileVersionRaw -ge $WindowsSdkVersion)
+    [System.Boolean]$GreenFlag3 = ((get-item -Path $SignToolPath).VersionInfo).CompanyName -eq 'Microsoft Corporation'
+    [System.Boolean]$GreenFlag4 = ((Get-AuthenticodeSignature -FilePath $SignToolPath).Status -eq 'Valid')
+    [System.Boolean]$GreenFlag5 = ((Get-AuthenticodeSignature -FilePath $SignToolPath).StatusMessage -eq 'Signature verified.')
+    # If any of the 5 checks above fails, the operation stops
+    if (!$GreenFlag1 -or !$GreenFlag2 -or !$GreenFlag3 -or !$GreenFlag4 -or !$GreenFlag5) {
+        Write-Error -Message "The SignTool executable was found but couldn't be verified. Please download the latest Windows SDK to get the newest SignTool executable. Official download link: http://aka.ms/WinSDK"        
+    }
 }
 
 # Make sure the latest version of the module is installed and if not, automatically update it, clean up any old versions
@@ -35,8 +48,7 @@ function Update-self {
         $latestversion = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/WDACConfig/version.txt"
     }
     catch {
-        Write-Error "Couldn't verify if the latest version of the module is installed, please check your Internet connection. You can optionally bypass the online check by using -SkipVersionCheck parameter."
-        break
+        Write-Error -Message "Couldn't verify if the latest version of the module is installed, please check your Internet connection. You can optionally bypass the online check by using -SkipVersionCheck parameter."
     }
     if (-NOT ($currentversion -eq $latestversion)) {
         Write-Host "The currently installed module's version is $currentversion while the latest version is $latestversion - Auto Updating the module now and will run your command after that 💓"
@@ -58,7 +70,7 @@ function Update-self {
 # Increase Code Integrity Operational Event Logs size from the default 1MB to user defined size
 function Set-LogSize {
     [CmdletBinding()]
-    param ([int64]$LogSize)        
+    param ([System.Int64]$LogSize)        
     $logName = 'Microsoft-Windows-CodeIntegrity/Operational'
     $log = New-Object System.Diagnostics.Eventing.Reader.EventLogConfiguration $logName
     $log.MaximumSizeInBytes = $LogSize
@@ -71,15 +83,15 @@ function Set-LogSize {
 function Test-FilePath {
     param (
         [Parameter(Mandatory = $true)]
-        [string[]]$FilePath,
+        [System.String[]]$FilePath,
         [Parameter(Mandatory = $true)]
-        [string[]]$DirectoryPath
+        [System.String[]]$DirectoryPath
     )
 
     # Loop through each file path
     foreach ($file in $FilePath) {
         # Check if the file path is valid
-        if (Test-Path $file -PathType Leaf) {
+        if (Test-Path $file -PathType 'Leaf') {
             # Get the full path of the file
             $FileFullPath = Resolve-Path $file
 
@@ -89,7 +101,7 @@ function Test-FilePath {
             # Loop through each directory path
             foreach ($directory in $DirectoryPath) {
                 # Check if the directory path is valid
-                if (Test-Path $directory -PathType Container) {
+                if (Test-Path $directory -PathType 'Container') {
                     # Get the full path of the directory
                     $DirectoryFullPath = Resolve-Path $directory
 

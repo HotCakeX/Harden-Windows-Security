@@ -2,96 +2,96 @@
 function New-WDACConfig {
     [CmdletBinding(
         DefaultParameterSetName = "Get Block Rules",
-        HelpURI = "https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig",
         SupportsShouldProcess = $true,
         PositionalBinding = $false,
         ConfirmImpact = 'High'
     )]
     Param(
         # 11 Main parameters - should be used for position 0
-        [Parameter(Mandatory = $false, ParameterSetName = "Get Block Rules")][switch]$GetBlockRules,
-        [Parameter(Mandatory = $false, ParameterSetName = "Get Driver Block Rules")][switch]$GetDriverBlockRules,
-        [Parameter(Mandatory = $false, ParameterSetName = "Make AllowMSFT With Block Rules")][switch]$MakeAllowMSFTWithBlockRules,
-        [Parameter(Mandatory = $false, ParameterSetName = "Deploy Latest Driver Block Rules")][switch]$DeployLatestDriverBlockRules,                                                                                       
-        [Parameter(Mandatory = $false, ParameterSetName = "Set Auto Update Driver Block Rules")][switch]$SetAutoUpdateDriverBlockRules,
-        [Parameter(Mandatory = $false, ParameterSetName = "Prep MSFT Only Audit")][switch]$PrepMSFTOnlyAudit,
-        [Parameter(Mandatory = $false, ParameterSetName = "Prep Default Windows Audit")][switch]$PrepDefaultWindowsAudit,        
-        [Parameter(Mandatory = $false, ParameterSetName = "Make Policy From Audit Logs")][switch]$MakePolicyFromAuditLogs,  
-        [Parameter(Mandatory = $false, ParameterSetName = "Make Light Policy")][switch]$MakeLightPolicy,
-        [Parameter(Mandatory = $false, ParameterSetName = "Make Supplemental Policy")][switch]$MakeSupplementalPolicy,
-        [Parameter(Mandatory = $false, ParameterSetName = "Make DefaultWindows With Block Rules")][switch]$MakeDefaultWindowsWithBlockRules,
+        [Parameter(Mandatory = $false, ParameterSetName = "Get Block Rules")][Switch]$GetBlockRules,
+        [Parameter(Mandatory = $false, ParameterSetName = "Get Driver Block Rules")][Switch]$GetDriverBlockRules,
+        [Parameter(Mandatory = $false, ParameterSetName = "Make AllowMSFT With Block Rules")][Switch]$MakeAllowMSFTWithBlockRules,
+        [Parameter(Mandatory = $false, ParameterSetName = "Deploy Latest Driver Block Rules")][Switch]$DeployLatestDriverBlockRules,                                                                                       
+        [Parameter(Mandatory = $false, ParameterSetName = "Set Auto Update Driver Block Rules")][Switch]$SetAutoUpdateDriverBlockRules,
+        [Parameter(Mandatory = $false, ParameterSetName = "Prep MSFT Only Audit")][Switch]$PrepMSFTOnlyAudit,
+        [Parameter(Mandatory = $false, ParameterSetName = "Prep Default Windows Audit")][Switch]$PrepDefaultWindowsAudit,        
+        [Parameter(Mandatory = $false, ParameterSetName = "Make Policy From Audit Logs")][Switch]$MakePolicyFromAuditLogs,  
+        [Parameter(Mandatory = $false, ParameterSetName = "Make Light Policy")][Switch]$MakeLightPolicy,
+        [Parameter(Mandatory = $false, ParameterSetName = "Make Supplemental Policy")][Switch]$MakeSupplementalPolicy,
+        [Parameter(Mandatory = $false, ParameterSetName = "Make DefaultWindows With Block Rules")][Switch]$MakeDefaultWindowsWithBlockRules,
        
-        [ValidateScript({ Test-Path $_ -PathType Container }, ErrorMessage = "The path you selected is not a folder path.")]
+        [ValidateScript({ Test-Path $_ -PathType 'Container' }, ErrorMessage = "The path you selected is not a folder path.")]
         [parameter(Mandatory = $true, ParameterSetName = "Make Supplemental Policy", ValueFromPipelineByPropertyName = $true)]
-        [string]$ScanLocation,
+        [System.String]$ScanLocation,
 
-        [parameter(Mandatory = $true, ParameterSetName = "Make Supplemental Policy", ValueFromPipelineByPropertyName = $true)][string]$SuppPolicyName,
+        [parameter(Mandatory = $true, ParameterSetName = "Make Supplemental Policy", ValueFromPipelineByPropertyName = $true)][System.String]$SuppPolicyName,
         
-        [ValidatePattern('\.xml$')][ValidateScript({ Test-Path $_ -PathType Leaf }, ErrorMessage = "The path you selected is not a file path.")]
+        [ValidatePattern('\.xml$')]
+        [ValidateScript({ Test-Path $_ -PathType 'Leaf' }, ErrorMessage = "The path you selected is not a file path.")]
         [parameter(Mandatory = $true, ParameterSetName = "Make Supplemental Policy", ValueFromPipelineByPropertyName = $true)]
-        [string]$PolicyPath,
+        [System.String]$PolicyPath,
           
         [ValidateSet("Allow Microsoft Base", "Default Windows Base")]
-        [Parameter(Mandatory = $true, ParameterSetName = "Make Policy From Audit Logs")][string]$BasePolicyType,
+        [Parameter(Mandatory = $true, ParameterSetName = "Make Policy From Audit Logs")][System.String]$BasePolicyType,
 
         [Parameter(Mandatory = $false, ParameterSetName = "Make AllowMSFT With Block Rules")]
         [Parameter(Mandatory = $false, ParameterSetName = "Make Policy From Audit Logs")]
         [Parameter(Mandatory = $false, ParameterSetName = "Make Light Policy")]        
         [parameter(Mandatory = $false, ParameterSetName = "Make Supplemental Policy")]
         [Parameter(Mandatory = $false, ParameterSetName = "Make DefaultWindows With Block Rules")]
-        [switch]$Deployit,
+        [Switch]$Deployit,
 
         [Parameter(Mandatory = $false, ParameterSetName = "Make Light Policy")]
         [Parameter(Mandatory = $false, ParameterSetName = "Make Policy From Audit Logs")]
         [Parameter(Mandatory = $false, ParameterSetName = "Make AllowMSFT With Block Rules")]
         [Parameter(Mandatory = $false, ParameterSetName = "Make DefaultWindows With Block Rules")]
-        [switch]$TestMode,
+        [Switch]$TestMode,
         
         [Parameter(Mandatory = $false, ParameterSetName = "Make AllowMSFT With Block Rules")]
         [Parameter(Mandatory = $false, ParameterSetName = "Make Policy From Audit Logs")]
         [Parameter(Mandatory = $false, ParameterSetName = "Make Light Policy")]
         [Parameter(Mandatory = $false, ParameterSetName = "Make DefaultWindows With Block Rules")]
-        [switch]$RequireEVSigners,
+        [Switch]$RequireEVSigners,
 
-        [Parameter(Mandatory = $false, ParameterSetName = "Make Policy From Audit Logs")][switch]$Debugmode,
+        [Parameter(Mandatory = $false, ParameterSetName = "Make Policy From Audit Logs")][Switch]$Debugmode,
 
         [Parameter(Mandatory = $false, ParameterSetName = "Make Supplemental Policy")]
         [Parameter(Mandatory = $false, ParameterSetName = "Make Policy From Audit Logs")]
-        [switch]$AllowFileNameFallbacks,
+        [Switch]$AllowFileNameFallbacks,
         
         [ValidateSet("OriginalFileName", "InternalName", "FileDescription", "ProductName", "PackageFamilyName", "FilePath")]
         [Parameter(Mandatory = $false, ParameterSetName = "Make Supplemental Policy")]
         [Parameter(Mandatory = $false, ParameterSetName = "Make Policy From Audit Logs")]
-        [string]$SpecificFileNameLevel,
+        [System.String]$SpecificFileNameLevel,
 
-        [Parameter(Mandatory = $false, ParameterSetName = "Make Policy From Audit Logs")][switch]$NoDeletedFiles,
-
-        [Parameter(Mandatory = $false, ParameterSetName = "Make Supplemental Policy")]
-        [Parameter(Mandatory = $false, ParameterSetName = "Make Policy From Audit Logs")]
-        [switch]$NoUserPEs,
+        [Parameter(Mandatory = $false, ParameterSetName = "Make Policy From Audit Logs")][Switch]$NoDeletedFiles,
 
         [Parameter(Mandatory = $false, ParameterSetName = "Make Supplemental Policy")]
         [Parameter(Mandatory = $false, ParameterSetName = "Make Policy From Audit Logs")]
-        [switch]$NoScript,
+        [Switch]$NoUserPEs,
+
+        [Parameter(Mandatory = $false, ParameterSetName = "Make Supplemental Policy")]
+        [Parameter(Mandatory = $false, ParameterSetName = "Make Policy From Audit Logs")]
+        [Switch]$NoScript,
 
         [ValidateSet([Levelz])]
         [parameter(Mandatory = $false, ParameterSetName = "Make Policy From Audit Logs")]
         [parameter(Mandatory = $false, ParameterSetName = "Make Supplemental Policy")]
-        [string]$Levels,
+        [System.String]$Levels,
 
         [ValidateSet([Fallbackz])]
         [parameter(Mandatory = $false, ParameterSetName = "Make Policy From Audit Logs")]
         [parameter(Mandatory = $false, ParameterSetName = "Make Supplemental Policy")]
-        [string[]]$Fallbacks,
+        [System.String[]]$Fallbacks,
 
         # Setting the maxim range to the maximum allowed log size by Windows Event viewer
         [ValidateRange(1024KB, 18014398509481983KB)]
         [Parameter(Mandatory = $false, ParameterSetName = "Prep MSFT Only Audit")]
         [Parameter(Mandatory = $false, ParameterSetName = "Prep Default Windows Audit")]
         [Parameter(Mandatory = $false, ParameterSetName = "Make Policy From Audit Logs")]        
-        [Int64]$LogSize,
+        [System.Int64]$LogSize,
         
-        [Parameter(Mandatory = $false)][switch]$SkipVersionCheck    
+        [Parameter(Mandatory = $false)][Switch]$SkipVersionCheck    
     )
 
     begin {
@@ -100,19 +100,19 @@ function New-WDACConfig {
 
         # argument tab auto-completion and ValidateSet for Fallbacks
         Class Fallbackz : System.Management.Automation.IValidateSetValuesGenerator {
-            [string[]] GetValidValues() {
+            [System.String[]] GetValidValues() {
                 $Fallbackz = ('Hash', 'FileName', 'SignedVersion', 'Publisher', 'FilePublisher', 'LeafCertificate', 'PcaCertificate', 'RootCertificate', 'WHQL', 'WHQLPublisher', 'WHQLFilePublisher', 'PFN', 'FilePath', 'None')
    
-                return [string[]]$Fallbackz
+                return [System.String[]]$Fallbackz
             }
         }
 
         # argument tab auto-completion and ValidateSet for levels
         Class Levelz : System.Management.Automation.IValidateSetValuesGenerator {
-            [string[]] GetValidValues() {
+            [System.String[]] GetValidValues() {
                 $Levelz = ('Hash', 'FileName', 'SignedVersion', 'Publisher', 'FilePublisher', 'LeafCertificate', 'PcaCertificate', 'RootCertificate', 'WHQL', 'WHQLPublisher', 'WHQLFilePublisher', 'PFN', 'FilePath', 'None')
        
-                return [string[]]$Levelz
+                return [System.String[]]$Levelz
             }
         }
         
@@ -166,7 +166,7 @@ function New-WDACConfig {
         }
 
         $MakeAllowMSFTWithBlockRulesSCRIPTBLOCK = {
-            param([bool]$NoCIP)
+            param([System.Boolean]$NoCIP)
             # Get the latest Microsoft recommended block rules
             Invoke-Command -ScriptBlock $GetBlockRulesSCRIPTBLOCK | Out-Null                        
             Copy-item -Path "C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml" -Destination "AllowMicrosoft.xml"
@@ -202,7 +202,7 @@ function New-WDACConfig {
         }
         
         $MakeDefaultWindowsWithBlockRulesSCRIPTBLOCK = {
-            param([bool]$NoCIP)
+            param([System.Boolean]$NoCIP)
             Invoke-Command -ScriptBlock $GetBlockRulesSCRIPTBLOCK | Out-Null                        
             Copy-item -Path "C:\Windows\schemas\CodeIntegrity\ExamplePolicies\DefaultWindows_Enforced.xml" -Destination "DefaultWindows_Enforced.xml"
             # Scan PowerShell core directory and allow its files in the Default Windows base policy so that module can still be used once it's been deployed
@@ -416,7 +416,7 @@ function New-WDACConfig {
             #>
 
             # Creating a hash table to dynamically add parameters based on user input and pass them to New-Cipolicy cmdlet
-            $PolicyMakerHashTable = @{
+            [System.Collections.Hashtable]$PolicyMakerHashTable = @{
                 FilePath             = "AuditLogsPolicy_NoDeletedFiles.xml"
                 Audit                = $true
                 Level                = $AssignedLevels
@@ -614,8 +614,8 @@ $Rules
             Set-HVCIOptions -Strict -FilePath .\SignedAndReputable.xml        
             ConvertFrom-CIPolicy .\SignedAndReputable.xml "$BasePolicyID.cip" | Out-Null
             # Configure required services for ISG authorization
-            appidtel start
-            sc.exe config appidsvc start= auto
+            Start-Process -FilePath 'C:\Windows\System32\appidtel.exe' -ArgumentList 'start' -Wait -NoNewWindow
+            Start-Process -FilePath 'C:\Windows\System32\sc.exe' -ArgumentList 'config', 'appidsvc', "start= auto" -Wait -NoNewWindow
             if ($Deployit -and $MakeLightPolicy) {
                 CiTool --update-policy "$BasePolicyID.cip" -json
                 Write-host -NoNewline "`nSignedAndReputable.xml policy has been deployed.`n" -ForegroundColor Green            
@@ -667,7 +667,7 @@ $Rules
             }
             
             # Creating a hash table to dynamically add parameters based on user input and pass them to New-Cipolicy cmdlet
-            $PolicyMakerHashTable = @{
+            [System.Collections.Hashtable]$PolicyMakerHashTable = @{
                 FilePath             = "SupplementalPolicy$SuppPolicyName.xml"
                 ScanPath             = $ScanLocation
                 Level                = $AssignedLevels
@@ -708,12 +708,12 @@ $Rules
         }
         # Script block that is used to add policy rule options 9 and 10 to the base policy
         $TestModeSCRIPTBLOCK = { 
-            param($PolicyPathToEnableTesting)
+            param([System.String]$PolicyPathToEnableTesting)
             @(9, 10) | ForEach-Object { Set-RuleOption -FilePath $PolicyPathToEnableTesting -Option $_ }
         }
         # Script block that is used to add Require EV Singers policy rule option to the base policy
         $RequireEVSignersSCRIPTBLOCK = {
-            param($PolicyPathToEnableEVSigners)
+            param([System.String]$PolicyPathToEnableEVSigners)
             Set-RuleOption -FilePath $PolicyPathToEnableEVSigners -Option 8
         }
         # Script block that is used to supply extra information regarding Microsoft recommended driver block rules in commands that use them

@@ -2,28 +2,28 @@
 function Edit-SignedWDACConfig {
     [CmdletBinding(
         DefaultParameterSetName = "Allow New Apps Audit Events",
-        HelpURI = "https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig",
         SupportsShouldProcess = $true,
         PositionalBinding = $false,
         ConfirmImpact = 'High'
     )]
     Param(
-        [Parameter(Mandatory = $false, ParameterSetName = "Allow New Apps Audit Events")][switch]$AllowNewAppsAuditEvents,
-        [Parameter(Mandatory = $false, ParameterSetName = "Allow New Apps")][switch]$AllowNewApps,
-        [Parameter(Mandatory = $false, ParameterSetName = "Merge Supplemental Policies")][switch]$MergeSupplementalPolicies,        
-        [Parameter(Mandatory = $false, ParameterSetName = "Update Base Policy")][switch]$UpdateBasePolicy,
+        [Parameter(Mandatory = $false, ParameterSetName = "Allow New Apps Audit Events")][Switch]$AllowNewAppsAuditEvents,
+        [Parameter(Mandatory = $false, ParameterSetName = "Allow New Apps")][Switch]$AllowNewApps,
+        [Parameter(Mandatory = $false, ParameterSetName = "Merge Supplemental Policies")][Switch]$MergeSupplementalPolicies,        
+        [Parameter(Mandatory = $false, ParameterSetName = "Update Base Policy")][Switch]$UpdateBasePolicy,
 
-        [ValidatePattern('\.cer$')][ValidateScript({ Test-Path $_ -PathType Leaf }, ErrorMessage = "The path you selected is not a file path.")]
+        [ValidatePattern('\.cer$')]
+        [ValidateScript({ Test-Path $_ -PathType 'Leaf' }, ErrorMessage = "The path you selected is not a file path.")]
         [Parameter(Mandatory = $true, ParameterSetName = "Allow New Apps Audit Events", ValueFromPipelineByPropertyName = $true)]
         [Parameter(Mandatory = $true, ParameterSetName = "Allow New Apps", ValueFromPipelineByPropertyName = $true)]
         [Parameter(Mandatory = $true, ParameterSetName = "Merge Supplemental Policies", ValueFromPipelineByPropertyName = $true)]
         [Parameter(Mandatory = $true, ParameterSetName = "Update Base Policy", ValueFromPipelineByPropertyName = $true)] 
-        [string]$CertPath,
+        [System.String]$CertPath,
 
         [Parameter(Mandatory = $true, ParameterSetName = "Allow New Apps Audit Events", ValueFromPipelineByPropertyName = $true)]
         [Parameter(Mandatory = $true, ParameterSetName = "Allow New Apps", ValueFromPipelineByPropertyName = $true)]
         [Parameter(Mandatory = $true, ParameterSetName = "Merge Supplemental Policies", ValueFromPipelineByPropertyName = $true)]       
-        [string]$SuppPolicyName,        
+        [System.String]$SuppPolicyName,        
 
         [ValidatePattern('\.xml$')]
         [ValidateScript({
@@ -39,7 +39,7 @@ function Edit-SignedWDACConfig {
         [Parameter(Mandatory = $true, ParameterSetName = "Allow New Apps Audit Events", ValueFromPipelineByPropertyName = $true)]
         [Parameter(Mandatory = $true, ParameterSetName = "Allow New Apps", ValueFromPipelineByPropertyName = $true)]
         [Parameter(Mandatory = $true, ParameterSetName = "Merge Supplemental Policies", ValueFromPipelineByPropertyName = $true)]     
-        [string[]]$PolicyPaths,
+        [System.String[]]$PolicyPaths,
 
         [ValidateScript({
                 try {
@@ -47,73 +47,76 @@ function Edit-SignedWDACConfig {
                 ((Get-ChildItem -ErrorAction Stop -Path 'Cert:\CurrentUser\My').Subject.Substring(3)) -contains $_            
                 }
                 catch {
-                    Write-Error "A certificate with the provided common name doesn't exist in the personal store of the user certificates."
+                    Write-Error -Message "A certificate with the provided common name doesn't exist in the personal store of the user certificates."
                 } # this error msg is shown when cert CN is not available in the personal store of the user certs
             }, ErrorMessage = "A certificate with the provided common name doesn't exist in the personal store of the user certificates." )]
         [Parameter(Mandatory = $true, ParameterSetName = "Allow New Apps Audit Events", ValueFromPipelineByPropertyName = $true)]
         [Parameter(Mandatory = $true, ParameterSetName = "Allow New Apps", ValueFromPipelineByPropertyName = $true)]
         [Parameter(Mandatory = $true, ParameterSetName = "Merge Supplemental Policies", ValueFromPipelineByPropertyName = $true)]
         [Parameter(Mandatory = $true, ParameterSetName = "Update Base Policy", ValueFromPipelineByPropertyName = $true)]
-        [string]$CertCN,
+        [System.String]$CertCN,
 
-        [ValidatePattern('\.xml$')][ValidateScript({ Test-Path $_ -PathType Leaf }, ErrorMessage = "The path you selected is not a file path.")]
+        [ValidatePattern('\.xml$')]
+        [ValidateScript({ Test-Path $_ -PathType 'Leaf' }, ErrorMessage = "The path you selected is not a file path.")]
         [Parameter(Mandatory = $true, ParameterSetName = "Merge Supplemental Policies", ValueFromPipelineByPropertyName = $true)]
-        [string[]]$SuppPolicyPaths,
+        [System.String[]]$SuppPolicyPaths,
 
-        [Parameter(Mandatory = $false, ParameterSetName = "Allow New Apps Audit Events")][switch]$Debugmode,
+        [Parameter(Mandatory = $false, ParameterSetName = "Allow New Apps Audit Events")][Switch]$Debugmode,
+
         # Setting the maxim range to the maximum allowed log size by Windows Event viewer
         [ValidateRange(1024KB, 18014398509481983KB)][Parameter(Mandatory = $false, ParameterSetName = "Allow New Apps Audit Events")]
-        [Int64]$LogSize,
+        [System.Int64]$LogSize,
 
         [parameter(Mandatory = $false, ParameterSetName = "Allow New Apps Audit Events")]
         [parameter(Mandatory = $false, ParameterSetName = "Allow New Apps")]
-        [switch]$NoScript,
+        [Switch]$NoScript,
 
         [parameter(Mandatory = $false, ParameterSetName = "Allow New Apps Audit Events")]
         [parameter(Mandatory = $false, ParameterSetName = "Allow New Apps")]
-        [switch]$NoUserPEs,
+        [Switch]$NoUserPEs,
 
         [parameter(Mandatory = $false, ParameterSetName = "Allow New Apps Audit Events")]
         [parameter(Mandatory = $false, ParameterSetName = "Allow New Apps")]
-        [switch]$AllowFileNameFallbacks,
+        [Switch]$AllowFileNameFallbacks,
         
         [ValidateSet("OriginalFileName", "InternalName", "FileDescription", "ProductName", "PackageFamilyName", "FilePath")]
         [parameter(Mandatory = $false, ParameterSetName = "Allow New Apps Audit Events")]
         [parameter(Mandatory = $false, ParameterSetName = "Allow New Apps")]
-        [string]$SpecificFileNameLevel,
+        [System.String]$SpecificFileNameLevel,
 
-        [parameter(Mandatory = $false, ParameterSetName = "Allow New Apps Audit Events")][switch]$IncludeDeletedFiles,
-
-        [ValidatePattern('\.exe$')][ValidateScript({ Test-Path $_ -PathType Leaf }, ErrorMessage = "The path you selected is not a file path.")]
-        [Parameter(Mandatory = $false, ParameterSetName = "Allow New Apps Audit Events", ValueFromPipelineByPropertyName = $true)]
-        [Parameter(Mandatory = $false, ParameterSetName = "Allow New Apps", ValueFromPipelineByPropertyName = $true)]
-        [Parameter(Mandatory = $false, ParameterSetName = "Merge Supplemental Policies", ValueFromPipelineByPropertyName = $true)]
-        [Parameter(Mandatory = $true, ParameterSetName = "Update Base Policy", ValueFromPipelineByPropertyName = $true)]
-        [string]$SignToolPath,
+        [parameter(Mandatory = $false, ParameterSetName = "Allow New Apps Audit Events")][Switch]$IncludeDeletedFiles,
 
         [ValidateSet([BasePolicyNamez])]
         [Parameter(Mandatory = $true, ParameterSetName = "Update Base Policy")]
-        [string[]]$CurrentBasePolicyName,
+        [System.String[]]$CurrentBasePolicyName,
 
         [ValidateSet("AllowMicrosoft_Plus_Block_Rules", "Lightly_Managed_system_Policy", "DefaultWindows_WithBlockRules")]
         [Parameter(Mandatory = $true, ParameterSetName = "Update Base Policy")]
-        [string]$NewBasePolicyType,
+        [System.String]$NewBasePolicyType,
 
         [ValidateSet([Levelz])]
         [parameter(Mandatory = $false, ParameterSetName = "Allow New Apps Audit Events")]
         [parameter(Mandatory = $false, ParameterSetName = "Allow New Apps")]
-        [string]$Levels,
+        [System.String]$Levels,
 
         [ValidateSet([Fallbackz])]
         [parameter(Mandatory = $false, ParameterSetName = "Allow New Apps Audit Events")]
         [parameter(Mandatory = $false, ParameterSetName = "Allow New Apps")]
-        [string[]]$Fallbacks, 
+        [System.String[]]$Fallbacks,
+
+        [ValidatePattern('\.exe$')]
+        [ValidateScript({ Test-Path $_ -PathType 'Leaf' }, ErrorMessage = "The path you selected is not a file path.")]
+        [Parameter(Mandatory = $false, ParameterSetName = "Allow New Apps Audit Events", ValueFromPipelineByPropertyName = $true)]
+        [Parameter(Mandatory = $false, ParameterSetName = "Allow New Apps", ValueFromPipelineByPropertyName = $true)]
+        [Parameter(Mandatory = $false, ParameterSetName = "Merge Supplemental Policies", ValueFromPipelineByPropertyName = $true)]
+        [Parameter(Mandatory = $false, ParameterSetName = "Update Base Policy", ValueFromPipelineByPropertyName = $true)]
+        [System.String]$SignToolPath,
 
         [Parameter(Mandatory = $false, ParameterSetName = "Update Base Policy")]
-        [switch]$RequireEVSigners,
+        [Switch]$RequireEVSigners,
 
         [Parameter(Mandatory = $false)]
-        [switch]$SkipVersionCheck
+        [Switch]$SkipVersionCheck
     )
 
     begin {
@@ -122,28 +125,28 @@ function Edit-SignedWDACConfig {
 
         # argument tab auto-completion and ValidateSet for Policy names 
         Class BasePolicyNamez : System.Management.Automation.IValidateSetValuesGenerator {
-            [string[]] GetValidValues() {
+            [System.String[]] GetValidValues() {
                 $BasePolicyNamez = ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsSystemPolicy -ne "True" } | Where-Object { $_.PolicyID -eq $_.BasePolicyID }).Friendlyname
            
-                return [string[]]$BasePolicyNamez
+                return [System.String[]]$BasePolicyNamez
             }
         }
 
         # argument tab auto-completion and ValidateSet for Fallbacks
         Class Fallbackz : System.Management.Automation.IValidateSetValuesGenerator {
-            [string[]] GetValidValues() {
+            [System.String[]] GetValidValues() {
                 $Fallbackz = ('Hash', 'FileName', 'SignedVersion', 'Publisher', 'FilePublisher', 'LeafCertificate', 'PcaCertificate', 'RootCertificate', 'WHQL', 'WHQLPublisher', 'WHQLFilePublisher', 'PFN', 'FilePath', 'None')
    
-                return [string[]]$Fallbackz
+                return [System.String[]]$Fallbackz
             }
         }
 
         # argument tab auto-completion and ValidateSet for levels
         Class Levelz : System.Management.Automation.IValidateSetValuesGenerator {
-            [string[]] GetValidValues() {
+            [System.String[]] GetValidValues() {
                 $Levelz = ('Hash', 'FileName', 'SignedVersion', 'Publisher', 'FilePublisher', 'LeafCertificate', 'PcaCertificate', 'RootCertificate', 'WHQL', 'WHQLPublisher', 'WHQLFilePublisher', 'PFN', 'FilePath', 'None')
        
-                return [string[]]$Levelz
+                return [System.String[]]$Levelz
             }
         }
         
@@ -173,8 +176,18 @@ function Edit-SignedWDACConfig {
         function Update-BasePolicyToEnforcement {        
             Set-RuleOption -FilePath $PolicyPath -Option 6 -Delete
             Set-RuleOption -FilePath $PolicyPath -Option 3 -Delete
-            ConvertFrom-CIPolicy $PolicyPath "$PolicyID.cip" | Out-Null
-            & $SignToolPath sign -v -n $CertCN -p7 . -p7co 1.3.6.1.4.1.311.79.1 -fd certHash ".\$PolicyID.cip"              
+            ConvertFrom-CIPolicy $PolicyPath "$PolicyID.cip" | Out-Null            
+            
+            # Configure the parameter splat
+            $ProcessParams = @{
+                'ArgumentList' = 'sign', '/v' , '/n', "`"$CertCN`"", '/p7', '.', '/p7co', '1.3.6.1.4.1.311.79.1', '/fd', 'certHash', ".\$PolicyID.cip"
+                'FilePath'     = $SignToolPath
+                'NoNewWindow'  = $true
+                'Wait'         = $true
+            }
+            # Sign the files with the specified cert
+            Start-Process @ProcessParams
+
             Remove-Item ".\$PolicyID.cip" -Force            
             Rename-Item "$PolicyID.cip.p7" -NewName "$PolicyID.cip" -Force
             CiTool --update-policy ".\$PolicyID.cip" -json
@@ -192,6 +205,10 @@ function Edit-SignedWDACConfig {
     process {
                             
         if ($AllowNewAppsAuditEvents) {
+
+            # Get SignTool Path and validate the executable
+            . Get-SignTool
+                        
             # Change Code Integrity event logs size
             if ($AllowNewAppsAuditEvents -and $LogSize) { . Set-LogSize -LogSize $LogSize }
             # Make sure there is no leftover from previous runs
@@ -216,10 +233,17 @@ function Edit-SignedWDACConfig {
                 Set-RuleOption -FilePath $PolicyPath -Option 6 -Delete        
                 Set-RuleOption -FilePath $PolicyPath -Option 3
                 ConvertFrom-CIPolicy $PolicyPath "$PolicyID.cip" | Out-Null
-
-                . Get-SignTool
-
-                & $SignToolPath sign -v -n $CertCN -p7 . -p7co 1.3.6.1.4.1.311.79.1 -fd certHash ".\$PolicyID.cip"              
+                
+                # Configure the parameter splat
+                $ProcessParams = @{
+                    'ArgumentList' = 'sign', '/v' , '/n', "`"$CertCN`"", '/p7', '.', '/p7co', '1.3.6.1.4.1.311.79.1', '/fd', 'certHash', ".\$PolicyID.cip"
+                    'FilePath'     = $SignToolPath
+                    'NoNewWindow'  = $true
+                    'Wait'         = $true
+                }
+                # Sign the files with the specified cert
+                Start-Process @ProcessParams
+            
                 Remove-Item ".\$PolicyID.cip" -Force         
                 Rename-Item "$PolicyID.cip.p7" -NewName "$PolicyID.cip" -Force
                 CiTool --update-policy ".\$PolicyID.cip" -json
@@ -320,7 +344,7 @@ function Edit-SignedWDACConfig {
                         # Create a policy XML file for available files on the disk
 
                         # Creating a hash table to dynamically add parameters based on user input and pass them to New-Cipolicy cmdlet
-                        $AvailableFilesOnDiskPolicyMakerHashTable = @{
+                        [System.Collections.Hashtable]$AvailableFilesOnDiskPolicyMakerHashTable = @{
                             FilePath             = ".\RulesForFilesNotInUserSelectedPaths.xml"
                             ScanPath             = "$env:TEMP\TemporaryScanFolderForEventViewerFiles\"
                             Level                = $AssignedLevels
@@ -430,7 +454,7 @@ $RulesRefs
                     for ($i = 0; $i -lt $ProgramsPaths.Count; $i++) {
 
                         # Creating a hash table to dynamically add parameters based on user input and pass them to New-Cipolicy cmdlet
-                        $UserInputProgramFoldersPolicyMakerHashTable = @{
+                        [System.Collections.Hashtable]$UserInputProgramFoldersPolicyMakerHashTable = @{
                             FilePath             = ".\ProgramDir_ScanResults$($i).xml"
                             ScanPath             = $ProgramsPaths[$i]
                             Level                = $AssignedLevels
@@ -490,8 +514,17 @@ $RulesRefs
                 Set-CIPolicyVersion -FilePath $SuppPolicyPath -Version "1.0.0.0"            
 
                 ConvertFrom-CIPolicy $SuppPolicyPath "$SuppPolicyID.cip" | Out-Null
-
-                & $SignToolPath sign -v -n $CertCN -p7 . -p7co 1.3.6.1.4.1.311.79.1 -fd certHash ".\$SuppPolicyID.cip"              
+                
+                # Configure the parameter splat
+                $ProcessParams = @{
+                    'ArgumentList' = 'sign', '/v' , '/n', "`"$CertCN`"", '/p7', '.', '/p7co', '1.3.6.1.4.1.311.79.1', '/fd', 'certHash', ".\$SuppPolicyID.cip"
+                    'FilePath'     = $SignToolPath
+                    'NoNewWindow'  = $true
+                    'Wait'         = $true
+                }
+                # Sign the files with the specified cert
+                Start-Process @ProcessParams
+            
                 Remove-Item ".\$SuppPolicyID.cip" -Force            
                 Rename-Item "$SuppPolicyID.cip.p7" -NewName "$SuppPolicyID.cip" -Force
                 CiTool --update-policy ".\$SuppPolicyID.cip" -json
@@ -506,7 +539,11 @@ $RulesRefs
             } 
         }
 
-        if ($AllowNewApps) {        
+        if ($AllowNewApps) {
+            
+            # Get SignTool Path and validate the executable
+            . Get-SignTool
+                        
             # remove any possible files from previous runs
             Remove-Item -Path ".\ProgramDir_ScanResults*.xml" -Force -ErrorAction SilentlyContinue
             Remove-Item -Path ".\SupplementalPolicy$SuppPolicyName.xml" -Force -ErrorAction SilentlyContinue
@@ -526,10 +563,17 @@ $RulesRefs
                 Set-RuleOption -FilePath $PolicyPath -Option 6 -Delete        
                 Set-RuleOption -FilePath $PolicyPath -Option 3
                 ConvertFrom-CIPolicy $PolicyPath "$PolicyID.cip" | Out-Null
-    
-                . Get-SignTool
-
-                & $SignToolPath sign -v -n $CertCN -p7 . -p7co 1.3.6.1.4.1.311.79.1 -fd certHash ".\$PolicyID.cip"              
+                
+                # Configure the parameter splat
+                $ProcessParams = @{
+                    'ArgumentList' = 'sign', '/v' , '/n', "`"$CertCN`"", '/p7', '.', '/p7co', '1.3.6.1.4.1.311.79.1', '/fd', 'certHash', ".\$PolicyID.cip"
+                    'FilePath'     = $SignToolPath
+                    'NoNewWindow'  = $true
+                    'Wait'         = $true
+                }
+                # Sign the files with the specified cert
+                Start-Process @ProcessParams
+            
                 Remove-Item ".\$PolicyID.cip" -Force         
                 Rename-Item "$PolicyID.cip.p7" -NewName "$PolicyID.cip" -Force
                 CiTool --update-policy ".\$PolicyID.cip" -json
@@ -608,7 +652,7 @@ $RulesRefs
                     for ($i = 0; $i -lt $ProgramsPaths.Count; $i++) {
 
                         # Creating a hash table to dynamically add parameters based on user input and pass them to New-Cipolicy cmdlet
-                        $UserInputProgramFoldersPolicyMakerHashTable = @{
+                        [System.Collections.Hashtable]$UserInputProgramFoldersPolicyMakerHashTable = @{
                             FilePath             = ".\ProgramDir_ScanResults$($i).xml"
                             ScanPath             = $ProgramsPaths[$i]
                             Level                = $AssignedLevels
@@ -652,9 +696,18 @@ $RulesRefs
                     Set-HVCIOptions -Strict -FilePath $SuppPolicyPath             
                     Set-CIPolicyVersion -FilePath $SuppPolicyPath -Version "1.0.0.0"            
     
-                    ConvertFrom-CIPolicy $SuppPolicyPath "$SuppPolicyID.cip" | Out-Null
-    
-                    & $SignToolPath sign -v -n $CertCN -p7 . -p7co 1.3.6.1.4.1.311.79.1 -fd certHash ".\$SuppPolicyID.cip"              
+                    ConvertFrom-CIPolicy $SuppPolicyPath "$SuppPolicyID.cip" | Out-Null 
+                    
+                    # Configure the parameter splat
+                    $ProcessParams = @{
+                        'ArgumentList' = 'sign', '/v' , '/n', "`"$CertCN`"", '/p7', '.', '/p7co', '1.3.6.1.4.1.311.79.1', '/fd', 'certHash', ".\$SuppPolicyID.cip"
+                        'FilePath'     = $SignToolPath
+                        'NoNewWindow'  = $true
+                        'Wait'         = $true
+                    }
+                    # Sign the files with the specified cert
+                    Start-Process @ProcessParams
+            
                     Remove-Item ".\$SuppPolicyID.cip" -Force            
                     Rename-Item "$SuppPolicyID.cip.p7" -NewName "$SuppPolicyID.cip" -Force
                     CiTool --update-policy ".\$SuppPolicyID.cip" -json
@@ -679,6 +732,10 @@ $RulesRefs
         }
 
         if ($MergeSupplementalPolicies) {
+
+            # Get SignTool Path and validate the executable
+            . Get-SignTool
+                        
             foreach ($PolicyPath in $PolicyPaths) {
                 ############ Input policy verification prior to doing anything ############
                 foreach ($SuppPolicyPath in $SuppPolicyPaths) {                                
@@ -688,12 +745,12 @@ $RulesRefs
                     $DeployedPoliciesIDs = (CiTool -lp -json | ConvertFrom-Json).Policies.PolicyID | ForEach-Object { return "{$_}" }         
                     # Check the type of the user selected Supplemental policy XML files to make sure they are indeed Supplemental policies
                     if ($SupplementalPolicyType -ne "Supplemental Policy") {
-                        Write-Error "The Selected XML file with GUID $SupplementalPolicyID isn't a Supplemental Policy."
+                        Write-Error -Message "The Selected XML file with GUID $SupplementalPolicyID isn't a Supplemental Policy."
                         break
                     }
                     # Check to make sure the user selected Supplemental policy XML files are deployed on the system
                     if ($DeployedPoliciesIDs -notcontains $SupplementalPolicyID) {
-                        Write-Error "The Selected Supplemental XML file with GUID $SupplementalPolicyID isn't deployed on the system."
+                        Write-Error -Message "The Selected Supplemental XML file with GUID $SupplementalPolicyID isn't deployed on the system."
                         break
                     }
                 }
@@ -712,10 +769,17 @@ $RulesRefs
                 Set-HVCIOptions -Strict -FilePath "$SuppPolicyName.xml"
                 Set-RuleOption -FilePath $SuppPolicyPath -Option 6 -Delete
                 ConvertFrom-CIPolicy "$SuppPolicyName.xml" "$SuppPolicyID.cip" | Out-Null
-    
-                . Get-SignTool
-
-                & $SignToolPath sign -v -n $CertCN -p7 . -p7co 1.3.6.1.4.1.311.79.1 -fd certHash ".\$SuppPolicyID.cip"              
+                
+                # Configure the parameter splat
+                $ProcessParams = @{
+                    'ArgumentList' = 'sign', '/v' , '/n', "`"$CertCN`"", '/p7', '.', '/p7co', '1.3.6.1.4.1.311.79.1', '/fd', 'certHash', ".\$SuppPolicyID.cip"
+                    'FilePath'     = $SignToolPath
+                    'NoNewWindow'  = $true
+                    'Wait'         = $true
+                }
+                # Sign the files with the specified cert
+                Start-Process @ProcessParams
+            
                 Remove-Item ".\$SuppPolicyID.cip" -Force            
                 Rename-Item "$SuppPolicyID.cip.p7" -NewName "$SuppPolicyID.cip" -Force
                 CiTool --update-policy "$SuppPolicyID.cip" -json
@@ -723,9 +787,12 @@ $RulesRefs
             } 
         }
 
-        if ($UpdateBasePolicy) {     
+        if ($UpdateBasePolicy) {
             # First get the Microsoft recommended driver block rules
-            Invoke-Command -ScriptBlock $Get_BlockRulesSCRIPTBLOCK | Out-Null            
+            Invoke-Command -ScriptBlock $Get_BlockRulesSCRIPTBLOCK | Out-Null
+            
+            # Get SignTool Path and validate the executable
+            . Get-SignTool
    
             switch ($NewBasePolicyType) {
                 "AllowMicrosoft_Plus_Block_Rules" {                  
@@ -741,19 +808,29 @@ $RulesRefs
                     Set-CIPolicyIdInfo -FilePath .\BasePolicy.xml -PolicyName "SignedAndReputable policy refreshed on $(Get-Date -Format 'MM-dd-yyyy')"
                     @(0, 2, 5, 11, 12, 14, 15, 16, 17, 19, 20) | ForEach-Object { Set-RuleOption -FilePath .\BasePolicy.xml -Option $_ }
                     @(3, 4, 6, 9, 10, 13, 18) | ForEach-Object { Set-RuleOption -FilePath .\BasePolicy.xml -Option $_ -Delete }            
-                    appidtel start
-                    sc.exe config appidsvc start= auto
+                    # Configure required services for ISG authorization
+                    Start-Process -FilePath 'C:\Windows\System32\appidtel.exe' -ArgumentList 'start' -Wait -NoNewWindow
+                    Start-Process -FilePath 'C:\Windows\System32\sc.exe' -ArgumentList 'config', 'appidsvc', "start= auto" -Wait -NoNewWindow
                 }
                 "DefaultWindows_WithBlockRules" {                                            
                     Copy-item -Path "C:\Windows\schemas\CodeIntegrity\ExamplePolicies\DefaultWindows_Enforced.xml" -Destination ".\DefaultWindows_Enforced.xml"
+                   
+                    # Allowing SignTool to be able to run after Default Windows base policy is deployed
+                    Write-Host "`nCreating allow rules for SignTool.exe in the DefaultWindows base policy so you can continue using it after deploying the DefaultWindows base policy." -ForegroundColor Blue
+                    New-Item -Path "$env:TEMP\TemporarySignToolFile" -ItemType Directory | Out-Null
+                    Copy-Item -Path $SignToolPath -Destination "$env:TEMP\TemporarySignToolFile" -Force
+                    New-CIPolicy -ScanPath "$env:TEMP\TemporarySignToolFile" -Level FilePublisher -Fallback Hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -FilePath .\SignTool.xml
+                    # Delete the Temporary folder in the TEMP folder
+                    Remove-Item -Recurse -Path "$env:TEMP\TemporarySignToolFile" -Force
+                                            
                     # Scan PowerShell core directory and add them to the Default Windows base policy so that the module can be used after it's been deployed
                     if (Test-Path "C:\Program Files\PowerShell") {
-                        Write-Host "Creating allow rules for PowerShell in the DefaultWindows base policy so you can continue using this module after deploying it." -ForegroundColor Blue                    
-                        New-CIPolicy -ScanPath "C:\Program Files\PowerShell" -Level FilePublisher -Fallback Hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -FilePath .\AllowPowerShell.xml
-                        Merge-CIPolicy -PolicyPaths .\DefaultWindows_Enforced.xml, .\AllowPowerShell.xml, '.\Microsoft recommended block rules.xml' -OutputFilePath .\BasePolicy.xml | Out-Null
+                        Write-Host "`nCreating allow rules for PowerShell in the DefaultWindows base policy so you can continue using this module after deploying it." -ForegroundColor Blue                    
+                        New-CIPolicy -ScanPath "C:\Program Files\PowerShell" -Level FilePublisher -Fallback Hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -FilePath .\AllowPowerShell.xml                        
+                        Merge-CIPolicy -PolicyPaths .\DefaultWindows_Enforced.xml, .\AllowPowerShell.xml, .\SignTool.xml, '.\Microsoft recommended block rules.xml' -OutputFilePath .\BasePolicy.xml | Out-Null
                     }
                     else {
-                        Merge-CIPolicy -PolicyPaths .\DefaultWindows_Enforced.xml, '.\Microsoft recommended block rules.xml' -OutputFilePath .\BasePolicy.xml | Out-Null
+                        Merge-CIPolicy -PolicyPaths .\DefaultWindows_Enforced.xml, .\SignTool.xml, '.\Microsoft recommended block rules.xml' -OutputFilePath .\BasePolicy.xml | Out-Null
                     }      
                     Set-CIPolicyIdInfo -FilePath .\BasePolicy.xml -PolicyName "DefaultWindowsPlusBlockRules refreshed On $(Get-Date -Format 'MM-dd-yyyy')"
                     @(0, 2, 5, 11, 12, 16, 17, 19, 20) | ForEach-Object { Set-RuleOption -FilePath .\BasePolicy.xml -Option $_ }
@@ -767,7 +844,8 @@ $RulesRefs
             Remove-Item .\AllowPowerShell.xml -Force -ErrorAction SilentlyContinue
             Remove-Item .\DefaultWindows_Enforced.xml -Force -ErrorAction SilentlyContinue
             Remove-Item .\AllowMicrosoft.xml -Force -ErrorAction SilentlyContinue
-            Remove-Item '.\Microsoft recommended block rules.xml' -Force            
+            Remove-Item '.\Microsoft recommended block rules.xml' -Force
+            Remove-Item .\SignTool.xml -Force            
 
             # Get the policy ID of the currently deployed base policy based on the policy name that user selected
             $CurrentID = ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsSystemPolicy -ne "True" } | Where-Object { $_.Friendlyname -eq $CurrentBasePolicyName }).BasePolicyID
@@ -784,11 +862,17 @@ $RulesRefs
             Set-CIPolicyVersion -FilePath .\BasePolicy.xml -Version "1.0.0.1"
             Set-HVCIOptions -Strict -FilePath .\BasePolicy.xml
 
-            ConvertFrom-CIPolicy ".\BasePolicy.xml" "$CurrentID.cip" | Out-Null
+            ConvertFrom-CIPolicy ".\BasePolicy.xml" "$CurrentID.cip" | Out-Null                       
 
-            . Get-SignTool  
-
-            & $SignToolPath sign -v -n $CertCN -p7 . -p7co 1.3.6.1.4.1.311.79.1 -fd certHash ".\$CurrentID.cip" 
+            # Configure the parameter splat
+            $ProcessParams = @{
+                'ArgumentList' = 'sign', '/v' , '/n', "`"$CertCN`"", '/p7', '.', '/p7co', '1.3.6.1.4.1.311.79.1', '/fd', 'certHash', ".\$CurrentID.cip"
+                'FilePath'     = $SignToolPath
+                'NoNewWindow'  = $true
+                'Wait'         = $true
+            }
+            # Sign the files with the specified cert
+            Start-Process @ProcessParams
 
             Remove-Item ".\$CurrentID.cip" -Force            
             Rename-Item "$CurrentID.cip.p7" -NewName "$CurrentID.cip" -Force  

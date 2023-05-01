@@ -1,17 +1,15 @@
 #Requires -RunAsAdministrator
 function Confirm-WDACConfig {
-    [CmdletBinding(
-        HelpURI = "https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig"
-    )]
+    [CmdletBinding()]
     Param(     
-        [Parameter(Mandatory = $false, ParameterSetName = "List Active Policies")][switch]$ListActivePolicies,
-        [Parameter(Mandatory = $false, ParameterSetName = "Verify WDAC Status")][switch]$VerifyWDACStatus,
-        [Parameter(Mandatory = $false, ParameterSetName = "Check SmartAppControl Status")][switch]$CheckSmartAppControlStatus,
+        [Parameter(Mandatory = $false, ParameterSetName = "List Active Policies")][Switch]$ListActivePolicies,
+        [Parameter(Mandatory = $false, ParameterSetName = "Verify WDAC Status")][Switch]$VerifyWDACStatus,
+        [Parameter(Mandatory = $false, ParameterSetName = "Check SmartAppControl Status")][Switch]$CheckSmartAppControlStatus,
 
-        [Parameter(Mandatory = $false, ParameterSetName = "List Active Policies")][switch]$OnlyBasePolicies,
-        [Parameter(Mandatory = $false, ParameterSetName = "List Active Policies")][switch]$OnlySupplementalPolicies,
+        [Parameter(Mandatory = $false, ParameterSetName = "List Active Policies")][Switch]$OnlyBasePolicies,
+        [Parameter(Mandatory = $false, ParameterSetName = "List Active Policies")][Switch]$OnlySupplementalPolicies,
         
-        [Parameter(Mandatory = $false)][switch]$SkipVersionCheck
+        [Parameter(Mandatory = $false)][Switch]$SkipVersionCheck
     )
 
     begin {

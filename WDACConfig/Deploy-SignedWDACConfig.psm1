@@ -1,17 +1,18 @@
 #Requires -RunAsAdministrator
 function Deploy-SignedWDACConfig {
     [CmdletBinding(
-        HelpURI = "https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig",
         SupportsShouldProcess = $true,
         PositionalBinding = $false,
         ConfirmImpact = 'High'
     )]
     Param(
-        [ValidatePattern('\.cer$')][ValidateScript({ Test-Path $_ -PathType Leaf }, ErrorMessage = "The path you selected is not a file path.")]
-        [parameter(Mandatory = $true)][string]$CertPath,
+        [ValidatePattern('\.cer$')]
+        [ValidateScript({ Test-Path $_ -PathType 'Leaf' }, ErrorMessage = "The path you selected is not a file path.")]
+        [parameter(Mandatory = $true)][System.String]$CertPath,
 
-        [ValidatePattern('\.xml$')][ValidateScript({ Test-Path $_ -PathType Leaf }, ErrorMessage = "The path you selected is not a file path.")]
-        [parameter(Mandatory = $true)][string[]]$PolicyPaths,
+        [ValidatePattern('\.xml$')]
+        [ValidateScript({ Test-Path $_ -PathType 'Leaf' }, ErrorMessage = "The path you selected is not a file path.")]
+        [parameter(Mandatory = $true)][System.String[]]$PolicyPaths,
 
         [ValidateScript({
                 try {
@@ -19,14 +20,14 @@ function Deploy-SignedWDACConfig {
                     ((Get-ChildItem -ErrorAction Stop -Path 'Cert:\CurrentUser\My').Subject.Substring(3)) -contains $_            
                 }
                 catch {
-                    Write-Error "A certificate with the provided common name doesn't exist in the personal store of the user certificates."
+                    Write-Error -Message "A certificate with the provided common name doesn't exist in the personal store of the user certificates."
                 } # this error msg is shown when cert CN is not available in the personal store of the user certs
             }, ErrorMessage = "A certificate with the provided common name doesn't exist in the personal store of the user certificates." )]
-        [parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true)][string]$CertCN,
+        [parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true)][System.String]$CertCN,
 
-        [ValidatePattern('\.exe$')][parameter(Mandatory = $false)][string]$SignToolPath,
+        [ValidatePattern('\.exe$')][parameter(Mandatory = $false)][System.String]$SignToolPath,
         
-        [Parameter(Mandatory = $false)][switch]$SkipVersionCheck
+        [Parameter(Mandatory = $false)][Switch]$SkipVersionCheck
     )
 
     begin {
@@ -41,6 +42,10 @@ function Deploy-SignedWDACConfig {
     process {
 
         foreach ($PolicyPath in $PolicyPaths) {
+
+            # Get SignTool Path and validate the executable
+            . Get-SignTool
+                        
             $xml = [xml](Get-Content $PolicyPath)
             $PolicyType = $xml.SiPolicy.PolicyType
             $PolicyID = $xml.SiPolicy.PolicyID
@@ -55,10 +60,18 @@ function Deploy-SignedWDACConfig {
             Set-HVCIOptions -Strict -FilePath $PolicyPath
             Set-RuleOption -FilePath $PolicyPath -Option 6 -Delete
             ConvertFrom-CIPolicy $PolicyPath "$PolicyID.cip" | Out-Null
+            
+            # Old Method:  & $SignToolPath sign -v -n $CertCN -p7 . -p7co 1.3.6.1.4.1.311.79.1 -fd certHash ".\$PolicyID.cip"
+            # Configure the parameter splat
+            $ProcessParams = @{
+                'ArgumentList' = 'sign', '/v' , '/n', "`"$CertCN`"", '/p7', '.', '/p7co', '1.3.6.1.4.1.311.79.1', '/fd', 'certHash', ".\$PolicyID.cip"
+                'FilePath'     = $SignToolPath
+                'NoNewWindow'  = $true
+                'Wait'         = $true
+            }
+            # Sign the files with the specified cert
+            Start-Process @ProcessParams
 
-            . Get-SignTool
-
-            & $SignToolPath sign -v -n $CertCN -p7 . -p7co 1.3.6.1.4.1.311.79.1 -fd certHash ".\$PolicyID.cip"              
             Remove-Item ".\$PolicyID.cip" -Force            
             Rename-Item "$PolicyID.cip.p7" -NewName "$PolicyID.cip" -Force
             CiTool --update-policy ".\$PolicyID.cip" -json

@@ -12,7 +12,7 @@
     # RootModule = ""
 
     # Version number of this module.
-    ModuleVersion        = '0.1.0'
+    ModuleVersion        = '0.1.1'
 
     # Supported PSEditions
     CompatiblePSEditions = @("Core")
@@ -191,7 +191,7 @@ Removed "Dekstop" from CompatiblePSEditions in the module manifest since WDACCon
 Removed #requires -version from the top of each sub-module since it's enough for version control to be enforced using module manifest only.
 Added extra validation to Edit-SignedWDACConfig cmdlet to prevent user from accidentally using Unsigned policies.
 Added extra validation to Edit-WDACConfig cmdlet to prevent user from accidentally using Signed policies.
-Changed Valid range for log size parameter from [int64]::MaxValue (9223372036854775807 KB) to 18014398509481983 KB which is the maximum allowed log size by Windows Event viewer
+Changed Valid range for log size parameter from [System.Int64]::MaxValue (9223372036854775807 KB) to 18014398509481983 KB which is the maximum allowed log size by Windows Event viewer
 Edit-SignedWDACConfig -AllowNewAppsAuditEvents and Edit-WDACConfig -AllowNewAppsAuditEvents no longer include file rules for deleted file hashes by default, unless -IncludeDeletedFiles optional switch parameter is used.
 Edit-SignedWDACConfig -AllowNewAppsAuditEvents and Edit-WDACConfig -AllowNewAppsAuditEvents got smarter. They now can successfully detect and only create extra rules for files that are not in the user-selected paths.
 Edit-SignedWDACConfig cmdlet and Edit-WDACConfig got equiped with multiple new optional parameters that were added to New-WDACConfig cmdlet in the previous update. Those parameters include: -NoUserPEs, -NoScript, -AllowFileNameFallbacks and -SpecificFileNameLevel.
@@ -199,7 +199,8 @@ Added Validations to parameters to validate folder paths and file paths.
 Made multiple argument completers and validate sets more advanced. They no longer suggest the same values that have been selected by user. Thanks to helpful answers by mklement0 on StackOverflow: https://stackoverflow.com/users/45375/mklement0
 https://stackoverflow.com/questions/76143006/how-to-prevent-powershell-validateset-argument-completer-from-suggesting-the-sam/76143269
 https://stackoverflow.com/questions/76141864/how-to-make-a-powershell-argument-completer-that-only-suggests-files-not-already/76142865
-
+Added 5-way validation for the SignTool executable before it is allowed to be executed.
+Substantially improved the security of the script.
 
 ## Version 0.1.0
 New features: Added new parameter to New-WDACConfig cmdlet, -PrepDefaultWindowsAudit, which as the name suggests, will prepare the system for Default Windows auditing,

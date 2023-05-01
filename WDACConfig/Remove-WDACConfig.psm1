@@ -1,18 +1,18 @@
 #Requires -RunAsAdministrator
 function Remove-WDACConfig {
     [CmdletBinding(      
-        DefaultParameterSetName = "Remove Signed Policies",  
-        HelpURI = "https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig",
+        DefaultParameterSetName = "Remove Signed Policies",
         SupportsShouldProcess = $true,
         PositionalBinding = $false,
         ConfirmImpact = 'High'
     )]
     Param(        
-        [Parameter(Mandatory = $false, ParameterSetName = "Remove Signed Policies")][switch]$RemoveSignedPolicies,
-        [Parameter(Mandatory = $false, ParameterSetName = "Remove Policies")][switch]$RemovePolicies,
+        [Parameter(Mandatory = $false, ParameterSetName = "Remove Signed Policies")][Switch]$RemoveSignedPolicies,
+        [Parameter(Mandatory = $false, ParameterSetName = "Remove Policies")][Switch]$RemovePolicies,
 
-        [ValidatePattern('\.xml$')][ValidateScript({ Test-Path $_ -PathType Leaf }, ErrorMessage = "The path you selected is not a file path.")]
-        [parameter(Mandatory = $true, ParameterSetName = "Remove Signed Policies", ValueFromPipelineByPropertyName = $true)][string[]]$PolicyPaths,
+        [ValidatePattern('\.xml$')]
+        [ValidateScript({ Test-Path $_ -PathType 'Leaf' }, ErrorMessage = "The path you selected is not a file path.")]
+        [parameter(Mandatory = $true, ParameterSetName = "Remove Signed Policies", ValueFromPipelineByPropertyName = $true)][System.String[]]$PolicyPaths,
         
         [ValidateScript({
                 try {
@@ -20,11 +20,11 @@ function Remove-WDACConfig {
                 ((Get-ChildItem -ErrorAction Stop -Path 'Cert:\CurrentUser\My').Subject.Substring(3)) -contains $_            
                 }
                 catch {
-                    Write-Error "A certificate with the provided common name doesn't exist in the personal store of the user certificates."
+                    Write-Error -Message "A certificate with the provided common name doesn't exist in the personal store of the user certificates."
                 } # this error msg is shown when cert CN is not available in the personal store of the user certs
             }, ErrorMessage = "A certificate with the provided common name doesn't exist in the personal store of the user certificates." )]
         [parameter(Mandatory = $true, ParameterSetName = "Remove Signed Policies", ValueFromPipelineByPropertyName = $true)]
-        [string]$CertCN,
+        [System.String]$CertCN,
 
         # https://stackoverflow.com/questions/76143006/how-to-prevent-powershell-validateset-argument-completer-from-suggesting-the-sam/76143269
         [ArgumentCompleter({
@@ -41,7 +41,7 @@ function Remove-WDACConfig {
                 if ($_ -notin [PolicyIDz]::new().GetValidValues()) { throw "Invalid policy ID: $_" }
                 $true
             })]
-        [string[]]$PolicyIDs,
+        [System.String[]]$PolicyIDs,
 
         # https://stackoverflow.com/questions/76143006/how-to-prevent-powershell-validateset-argument-completer-from-suggesting-the-sam/76143269
         [ArgumentCompleter({
@@ -59,12 +59,13 @@ function Remove-WDACConfig {
                 if ($_ -notin [PolicyNamez]::new().GetValidValues()) { throw "Invalid policy name: $_" }
                 $true
             })]
-        [string[]]$PolicyNames,
+        [System.String[]]$PolicyNames,
 
-        [ValidatePattern('\.exe$')][ValidateScript({ Test-Path $_ -PathType Leaf }, ErrorMessage = "The path you selected is not a file path.")]
-        [parameter(Mandatory = $false, ParameterSetName = "Remove Signed Policies", ValueFromPipelineByPropertyName = $true)][string]$SignToolPath,
+        [ValidatePattern('\.exe$')]
+        [ValidateScript({ Test-Path $_ -PathType 'Leaf' }, ErrorMessage = "The path you selected is not a file path.")]
+        [parameter(Mandatory = $false, ParameterSetName = "Remove Signed Policies", ValueFromPipelineByPropertyName = $true)][System.String]$SignToolPath,
 
-        [Parameter(Mandatory = $false)][switch]$SkipVersionCheck
+        [Parameter(Mandatory = $false)][Switch]$SkipVersionCheck
     )
 
     begin {
@@ -77,19 +78,19 @@ function Remove-WDACConfig {
 
         # argument tab auto-completion and ValidateSet for Policy names 
         Class PolicyNamez : System.Management.Automation.IValidateSetValuesGenerator {
-            [string[]] GetValidValues() {
+            [System.String[]] GetValidValues() {
                 $PolicyNamez = ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsSystemPolicy -ne "True" }).Friendlyname
    
-                return [string[]]$PolicyNamez
+                return [System.String[]]$PolicyNamez
             }
         }   
 
         # argument tab auto-completion and ValidateSet for Policy IDs     
         Class PolicyIDz : System.Management.Automation.IValidateSetValuesGenerator {
-            [string[]] GetValidValues() {
+            [System.String[]] GetValidValues() {
                 $PolicyIDz = ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsSystemPolicy -ne "True" }).policyID
    
-                return [string[]]$PolicyIDz
+                return [System.String[]]$PolicyIDz
             }
         }
         
@@ -99,6 +100,10 @@ function Remove-WDACConfig {
 
         if ($RemoveSignedPolicies) {
             foreach ($PolicyPath in $PolicyPaths) {
+
+                # Get SignTool Path and validate the executable
+                . Get-SignTool
+            
                 ######################## Sanitize the policy file by removing SupplementalPolicySigners ########################                
                 $xml = [xml](Get-Content $PolicyPath)
                 $SuppSingerIDs = $xml.SiPolicy.SupplementalPolicySigners.SupplementalPolicySigner.SignerId
@@ -126,10 +131,17 @@ function Remove-WDACConfig {
                 Set-RuleOption -FilePath $PolicyPath -Option 6       
                 $PolicyID = $xml.SiPolicy.PolicyID
                 ConvertFrom-CIPolicy $PolicyPath "$PolicyID.cip" | Out-Null
-
-                . Get-SignTool
-
-                & $SignToolPath sign -v -n $CertCN -p7 . -p7co 1.3.6.1.4.1.311.79.1 -fd certHash ".\$PolicyID.cip"                          
+                
+                # Configure the parameter splat
+                $ProcessParams = @{
+                    'ArgumentList' = 'sign', '/v' , '/n', "`"$CertCN`"", '/p7', '.', '/p7co', '1.3.6.1.4.1.311.79.1', '/fd', 'certHash', ".\$PolicyID.cip"
+                    'FilePath'     = $SignToolPath
+                    'NoNewWindow'  = $true
+                    'Wait'         = $true
+                }
+                # Sign the files with the specified cert
+                Start-Process @ProcessParams
+            
                 Remove-Item ".\$PolicyID.cip" -Force
                 Rename-Item "$PolicyID.cip.p7" -NewName "$PolicyID.cip" -Force  
                 CiTool --update-policy ".\$PolicyID.cip" -json
@@ -142,12 +154,12 @@ function Remove-WDACConfig {
         if ($RemovePolicies) {
             # If IDs were supplied by user
             foreach ($ID in $PolicyIDs ) {
-                citool --remove-policy "{$ID}"
+                citool --remove-policy "{$ID}" -json
             }
             # If names were supplied by user
             foreach ($PolicyName in $PolicyNames) {                    
                 $NameID = ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.FriendlyName -eq $PolicyName }).PolicyID                                   
-                citool --remove-policy "{$NameID}"
+                citool --remove-policy "{$NameID}" -json
             }      
         }
     } 

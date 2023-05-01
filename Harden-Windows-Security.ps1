@@ -559,7 +559,7 @@ the recovery password will be saved in a Text file in $env:SystemDrive\Drive $($
                         }     
                     }   
                     else {
-                        Write-Host "Bitlocker is Not enabled for the System Drive Drive, activating now..." -ForegroundColor yellow    
+                        Write-Host "Bitlocker is Not enabled for the System Drive, activating now..." -ForegroundColor yellow    
                         do {
                             $pin1 = $(write-host "Enter a Pin for Bitlocker startup (at least 10 characters)" -ForegroundColor Magenta; Read-Host -AsSecureString)
                             $pin2 = $(write-host "Confirm your Bitlocker Startup Pin (at least 10 characters)" -ForegroundColor Magenta; Read-Host -AsSecureString)

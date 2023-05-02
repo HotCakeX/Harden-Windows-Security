@@ -1,13 +1,14 @@
 <h1 align="center">
-  <br>
-  <a href="https://github.com/HotCakeX/Harden-Windows-Security"><img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/PNGs/png-donut-2.png" alt="Avatar" width="200"></a>
-  <br>
+  <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/PNGs/png-donut-2.png" alt="Big Donut" width="150">
   <br>
   Harden Windows Security
-  <br>
 </h1>
 <a name="readme-top"></a>
-<h4 align="center">Harden Windows Safely, Securely, only with Official Microsoft methods</h4>
+
+<h4 align="center">
+
+ Harden Windows Safely, Securely, only with Official Microsoft methods
+</h4>
 
 <p align="center">
 
@@ -23,6 +24,13 @@
 
 </p>
 
+<h6 align="center">
+
+<a href="https://twitter.com/intent/tweet?text=Harden%20Windows%20Security%20Using%20Official%20Microsoft%20Methods%20https://github.com/HotCakeX/Harden-Windows-Security/">[![Twitter URL](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/SVGs/Twitter%20with%20URL.svg)]</a>
+
+
+</h6>
+
 <p align="center">
   <a href="#hardening-Categories">Hardening Categories</a> •
   <a href="#how-to-use">How To Use</a> •
@@ -36,31 +44,51 @@
   <a href="https://github.com/HotCakeX/Harden-Windows-Security/wiki">Wiki</a> •
   <a href="https://1drv.ms/x/s!AtCaUNAJbbvIhuVQhdMu_Hts7YZ_lA?e=df6H6P">Full change log in Excel online</a>
 
-
 </p>
 
-<h2> <br> </h2>
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="Harden-Windows-Security is a PowerShell script">
 
-<img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/yellow%20bell%20small.gif" alt="Harden-Windows-Security is a PowerShell script"> __Harden-Windows-Security is a PowerShell script. It automates all of the tasks required to harden Windows Security beyond the default state. It is suitable and recommended to be run on every home computer.__ See the <a href="#features">Features</a> section below.
+#### <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/accepted.gif" width= "30" alt="Harden-Windows-Security is a PowerShell script"> Security for Personal users
 
-<img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/yellow%20bell%20small.gif" alt="For Enterprises, Highly-Secure Servers and Data Centers, Highly-Secure Workstations"> __For Enterprises, Highly-Secure Servers and Data Centers, Highly-Secure Workstations and such, [__Use Windows Defender Application Control (WDAC) resources on this repository.__](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Introduction)__
+**Use the PowerShell script [below](#how-to-use) to automatically apply the security measures described in this page.**
 
- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/PNGs/StonkUp.png" width="35" alt="WDACConfig module for advanced automated WDAC configurations and Application whitelisting in Windows"> [__WDACConfig Module__](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig) for advanced automated WDAC configurations and Application whitelisting in Windows.
+#### <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/accepted.gif" width= "30" alt=""> Security for Organizations, Enterprises and Highly secure personal users
 
-<h1> <br> </h1>
-</br>
+**Refer to [Windows Defender Application Control](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Introduction) resources on this GitHub repository.**
 
-> __Warning__  Windows by default is secure and safe, this script does not imply nor claim otherwise. just like anything, you have to use it wisely and don't compromise yourself with reckless behavior and bad user configuration; Nothing is foolproof. This script only uses the tools and features that have already been implemented by Microsoft in Windows OS to fine-tune it towards the highest security and locked-down state, using well-documented, supported, recommended and official methods. continue reading for comprehensive info.
+<img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/yellow%20bell%20small.gif" width="36" alt="WDACConfig module for advanced automated WDAC configurations and Application whitelisting in Windows">**Use the [WDACConfig Module](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig) for Advanced Automated WDAC configurations and Application/File whitelisting in Windows.**
 
-> __Note__ Make sure your hardware (Tablet, Laptop, PC, Phone) meets the [Windows 11 hardware requirements](https://www.microsoft.com/en-in/windows/windows-11-specifications?r=1) __AND__ [Virtualization Based Security requirements](https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/oem-vbs). Currently, Windows 11 allows some older than 8th Gen Intel CPUs (or their AMD equivalents), such as Intel i7 7700K, to use [insider builds](https://insider.windows.com/) only. You will miss a lot of new features, benefits and new security technologies that are only available on newer hardware. You need to enable TPM 2.0, Virtualization technology and Secure Boot in your UEFI if they aren't enabled by default (which is the case on older hardware). To Enable Secure Boot in your UEFI firmware settings [Check out this official guide](https://support.microsoft.com/en-us/windows/windows-11-and-secure-boot-a8ff1202-c0d9-42f5-940f-843abef64fad) - How to enable Secure Boot on: [HP](https://support.hp.com/document/ish_4300937-4295746-16?openCLC=true) - [Lenovo](https://support.lenovo.com/solutions/ht509044) - [Dell](https://www.dell.com/support/kbdoc/000190116/How-to-Enable-Secure-Boot-on-Your-Dell-Device)
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="Harden-Windows-Security is a PowerShell script">
+<br>
 
-> __Note__
-> [Windows Home edition is not supported.](https://www.microsoft.com/en-us/windows/compare-windows-10-home-vs-pro)
+> __Note__  Windows by default is secure and safe, this repository does not imply nor claim otherwise. just like anything, you have to use it wisely and don't compromise yourself with reckless behavior and bad user configuration; Nothing is foolproof. This repository only uses the tools and features that have already been implemented by Microsoft in Windows OS to fine-tune it towards the highest security and locked-down state, using well-documented, supported, recommended and official methods. continue reading for comprehensive info.
 
-> __Note__
-> Restart your device after you apply the script, [don't use any commands to force Group Policy update](https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2012-R2-and-2012/jj573586(v=ws.11)?redirectedfrom=MSDN#asynchronous-and-synchronous-processing).
+<br>
 
-<h2> <br> </h2>
+## How To Use<a href="#how-to-use">![HowToUseIcon](https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/HowToUse.png)</a>
+
+#### Using GitHub source (Always up to date)
+
+```powershell
+irm 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security.ps1' | iex
+```
+
+> __Note__  About [Invoke-Expression or iex](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/invoke-expression?view=powershell-7.3).
+
+#### Using [PowerShell gallery](https://www.powershellgallery.com/packages/Harden-Windows-Security) (You need to manually update the script whenever a new version is released)
+
+```powershell
+Install-Script -Name Harden-Windows-Security
+```
+
+<br>
+
+  ![image](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Harden-Windows-Security-Demo.apng)
+  
+  <br>
+
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="Harden-Windows-Security is a PowerShell script">
 
 <p align="center"> A quick video demonstrating how the Harden-Windows-Security script works </p>
 
@@ -73,18 +101,32 @@
   </a>
   </p>
 
-<br>
+## Requirements <a href="#features">![FeaturesIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Requirements.png)</a>
 
-## Features:<a href="#features">![FeaturesIcon](https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Features.png)</a>
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/verticalshine.gif" width="27" alt="Important notice"> Any device that meets the [Windows 11 hardware](https://www.microsoft.com/en-in/windows/windows-11-specifications?r=1) and [Virtualization Based Security](https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/oem-vbs) requirements. **Most of the hardware manufactured in the past few years are supported.**
 
-- Always stays up-to-date with the newest security features and only guaranteed to work on the latest version of Windows, **which is currently Windows 11**. (_rigorously tested on the latest Stable and Insider preview builds_).
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/verticalshine.gif" width="27" alt="Important notice"> TPM 2.0, Virtualization technology and Secure Boot enabled in your UEFI settings. [Official guide](https://support.microsoft.com/en-us/windows/windows-11-and-secure-boot-a8ff1202-c0d9-42f5-940f-843abef64fad) - How to enable Secure Boot on: [HP](https://support.hp.com/document/ish_4300937-4295746-16?openCLC=true) - [Lenovo](https://support.lenovo.com/solutions/ht509044) - [Dell](https://www.dell.com/support/kbdoc/000190116/How-to-Enable-Secure-Boot-on-Your-Dell-Device).
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/verticalshine.gif" width="27" alt="Important notice"> Windows editions higher than [Home edition](https://www.microsoft.com/en-us/windows/compare-windows-10-home-vs-pro).
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/verticalshine.gif" width="27" alt="Important notice"> [Latest available version](https://www.microsoft.com/en-us/software-download/windows11/) of Windows installed.
+
+> __Note__
+> Restart your device after applying the script, [don't use any commands to force Group Policy update](https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2012-R2-and-2012/jj573586(v=ws.11)?redirectedfrom=MSDN#asynchronous-and-synchronous-processing).
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="Harden-Windows-Security is a PowerShell script">
+
+## Features <a href="#features">![FeaturesIcon](https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Features.png)</a>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/Shiny.gif" width="27" alt="Important notice"> Always stays up-to-date with the newest security measures.
   
-- The script is in [plain text](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden-Windows-Security.ps1), nothing hidden, no 3rd party executable or pre-compiled binary is involved.
-  - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/red-alert.gif" width="25" alt="Important notice"> **For your own security**, do not use any other 3rd party tools, programs or scripts that claim to harden Windows or modify it in any way, **unless you can 100% verify it**. [Never trust 3rd party people on the Internet,](https://hotcakex.github.io/PDFViewer#5-Risk-Points-to-Avoid-in-Enterprise-Security) always verify their resources and do that after each release. **Keep on reading the features to see why this Harden-Windows-Security script is different and <a href="#Trust">read the Trust section</a> to see how you can 100% Trust it.**
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/Shiny.gif" width="27" alt="Important notice"> Everything is in [plain text](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden-Windows-Security.ps1), nothing hidden, no 3rd party executable or pre-compiled binary is involved.
 
-- The script doesn't remove or disable Windows functionalities against Microsoft's recommendation.
+> __Warning__ For your own security, do not use any other 3rd party tools, programs or scripts that claim to harden Windows or modify it in any way, **unless you can 100% verify it**. [Never trust 3rd party people on the Internet,](https://hotcakex.github.io/PDFViewer#5-Risk-Points-to-Avoid-in-Enterprise-Security) always verify their resources and do that after each release. **Keep on reading the features to see why this Harden-Windows-Security script is different and <a href="#Trust">read the Trust section</a> to see how you can 100% Trust it.**
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/Shiny.gif" width="27" alt="Important notice"> Doesn't remove or disable Windows functionalities against Microsoft's recommendation.
   
-- All of the links and sources are official from Microsoft websites, straight from the source. No bias, No misinformation and definitely No old obsolete methods. That's why there are no links to 3rd party news websites, forums, made up blogs/articles and such.
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/Shiny.gif" width="27" alt="Important notice"> All of the links and sources are official from Microsoft websites, straight from the source. No bias, No misinformation and definitely No old obsolete methods. That's why there are no links to 3rd party news websites, forums, made up blogs/articles and such.
 
 <details><summary>With the following exceptions</summary>
 
@@ -99,50 +141,31 @@
 
 </details>
 
-- The script primarily uses Group policies, **the Microsoft recommended way of configuring Windows**. It also uses PowerShell cmdlets where Group Policies aren't available, and finally uses [a few registry keys](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Payload/Registry.csv) to configure security measures that can neither be configured using Group Policies nor PowerShell cmdlets. This is why the script doesn't break anything or cause unwanted behavior.
-  - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/red-alert.gif" width="25" alt="Important notice"> **Any other 3rd party tool/program/script that claims to modify Windows or harden it, if they don't strictly adhere to the official rules above, they can damage your system, cause unknown problems and bugs.** [How are Group Policies for this script created and maintained?](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Group-Policy#how-are-group-policies-for-this-script-created-and-maintained)
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/Shiny.gif" width="27" alt="Important notice"> The script primarily uses Group policies, **the Microsoft recommended way of configuring Windows**. It also uses PowerShell cmdlets where Group Policies aren't available, and finally uses [a few registry keys](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Payload/Registry.csv) to configure security measures that can neither be configured using Group Policies nor PowerShell cmdlets. This is why the script doesn't break anything or cause unwanted behavior.
 
-- This Readme page is used as the reference for all of the security measures applied by this script and Group Policies.
+> __Warning__  **Any other 3rd party tool/program/script that claims to modify Windows or harden it, if they don't strictly adhere to the official rules above, they can damage your system, cause unknown problems and bugs.** [How are Group Policies for this script created and maintained?](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Group-Policy#how-are-group-policies-for-this-script-created-and-maintained)
 
-- When a hardening measure is no longer necessary because it's applied by default by Microsoft on new builds of Windows, it will also be removed from this script in order to prevent any problems and because it won't be necessary anymore.
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/Shiny.gif" width="27" alt="Important notice"> This Readme page lists all of the security measures applied by this script.
 
-- The script can be run infinite number of times, it's made in a way that it won't make any duplicate changes at all.
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/Shiny.gif" width="27" alt="Important notice"> When a hardening measure is no longer necessary because it's applied by default by Microsoft on new builds of Windows, it will also be removed from this script in order to prevent any problems and because it won't be necessary anymore.
 
-- The script asks for confirmation, in the PowerShell console, before running each hardening category and some sub-categories, so you can selectively run (or don't run) each of them.
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/Shiny.gif" width="27" alt="Important notice"> The script can be run infinite number of times, it's made in a way that it won't make any duplicate changes.
 
-- Applying this script makes your PC compliant with Microsoft Security Baselines and Secured-core PC specifications (providing that you use modern hardware that supports the latest Windows security features) - [See what makes a Secured-core PC](https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/oem-highly-secure#what-makes-a-secured-core-pc) - <a href="#Device-Guard">Check Device Guard category for more details.</a>
-  - [Secured-core](https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/oem-highly-secure) – recommended for the most sensitive systems and industries like financial, healthcare, and government agencies. Builds on the previous layers and leverages advanced processor capabilities to provide protection from firmware attacks.
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/Shiny.gif" width="27" alt="Important notice"> The script asks for confirmation before running each hardening category and some sub-categories, so you can selectively run (or don't run) each of them.
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/Shiny.gif" width="27" alt="Important notice"> Applying this script makes your PC compliant with Microsoft Security Baselines and Secured-core PC specifications (providing that you use modern hardware that supports the latest Windows security features) - [See what makes a Secured-core PC](https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/oem-highly-secure#what-makes-a-secured-core-pc) - <a href="#Device-Guard">Check Device Guard category for more details.</a>
+> [Secured-core](https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/oem-highly-secure) – recommended for the most sensitive systems and industries like financial, healthcare, and government agencies. Builds on the previous layers and leverages advanced processor capabilities to provide protection from firmware attacks.
   
-- There are 4 items tagged with __#TopSecurity__ that can cause some inconvenience. When you run this script, you will have an option to enable them if you want to. Press `Control + F` and search for `#TopSecurity` on this page to find those security measures.
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/Shiny.gif" width="27" alt="Important notice"> There are 4 items tagged with __#TopSecurity__ that can cause some inconvenience. When you run this script, you will have an option to enable them if you want to. Press `Control + F` and search for `#TopSecurity` on this page to find those security measures.
 
-- Since I originally created this repository for myself and people I care about, I always maintain it to the highest possible standard.
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/Shiny.gif" width="27" alt="Important notice"> Since I originally created this repository for myself and people I care about, I always maintain it to the highest possible standard.
+
+<br>
+
 
 <p align="right"><a href="#readme-top">💡(back to top)</a></p>
 
-<br>
-<br>
-
-## How To Use<a href="#how-to-use">![HowToUseIcon](https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/HowToUse.png)</a>
-
-#### Using GitHub source (Always up to date)
-
-```powershell
-irm 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security.ps1' | iex
-```
-
-#### Using [PowerShell gallery](https://www.powershellgallery.com/packages/Harden-Windows-Security) (You need to manually update the script whenever a new version is released)
-
-```powershell
-Install-Script -Name Harden-Windows-Security
-```
-
-<br>
-
-  ![image](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Harden-Windows-Security-Demo.apng)
-  
-  <br>
-
-<p align="right"><a href="#readme-top">💡(back to top)</a></p>
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="Harden-Windows-Security is a PowerShell script">
 
 ## Hardening Categories<a href="#hardening-Categories">![HardeningCategoriesIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/HardeningCategories.png)</a>
 
@@ -182,17 +205,23 @@ From Top to bottom in order:
 
 ## Microsoft Security Baselines<a href="#Microsoft-Security-Baselines">![MicrosoftSecurityBaseline](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Microsoft-Security-Baseline.png)</a>
 
+<p align="center"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/ocr.jpg" alt="Microsoft Protect" width="700"></p>
+
 A security baseline is a group of Microsoft-recommended configuration settings that explains their security implications. These settings are based on feedback from Microsoft security engineering teams, product groups, partners, and customers.
 
 [Continue reading in the official documentation](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-security-configuration-framework/windows-security-baselines#what-are-security-baselines)
 
 [Optional Overrides for Microsoft Security Baselines](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Overrides-for-Microsoft-Security-Baseline)
 
+Highly recommended to apply these overrides, the script will ask you whether you want to apply them or not.
+
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
 <br>
 
 ## Microsoft 365 Apps Security Baselines<a href="#Microsoft-365-Apps-Security-Baselines">![Microsoft365AppsSecurityBaselines](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Microsoft-365-Apps-Security-Baselines.png)</a>
+
+<p align="center"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/original2.png" alt="Microsoft Protect" width="500"></p>
 
 The security baseline for Microsoft 365 Apps for enterprise is published twice a year, usually in June and December.
 
@@ -243,7 +272,7 @@ The security baseline for Microsoft 365 Apps for enterprise is published twice a
 - 🔶 Makes sure [Async Inspection for Network protection](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/network-protection?view=o365-worldwide#optimizing-network-protection-performance) of Microsoft Defender is turned on - Network protection now has a performance optimization that allows Block mode to start asynchronously inspecting long connections after they're validated and allowed by SmartScreen, which might provide a potential reduction in the cost that inspection has on bandwidth and can also help with app compatibility problems.
 
 - 🔶 __(Requires additional confirmation to run):__ Enables [Smart App Control](https://support.microsoft.com/en-us/topic/what-is-smart-app-control-285ea03d-fa88-4d56-882e-6698afdb7003) (*if it's in Evaluation mode*): adds significant protection from new and emerging threats by blocking apps that are malicious or untrusted. Smart App Control also helps to block potentially unwanted apps, which are apps that may cause your device to run slowly, display unexpected ads, offer extra software you didn't want, or do other things you don't expect.
-  - Smart App Control is User-Mode (and enforces Kernel-Mode) [Windows Defender Application Control policy (WDAC)](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/windows-defender-application-control-design-guide), __more info__ [__in the Wiki__](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Introduction). You can see its status in [`System Information`](https://support.microsoft.com/en-us/windows/view-your-system-info-a965a8f2-0773-1d65-472a-1e747c9ebe00) and enable it manually from Microsoft Defender app's GUI. It is very important for Windows and Windows Defender intelligence updates to be always up-to-date in order for Smart App Control to work properly as it relies on live intelligence and definition data from the cloud and other sources to make a Smart decision about programs and files it encounters.
+  - Smart App Control is User-Mode (and enforces Kernel-Mode) [Windows Defender Application Control policy (WDAC)](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/windows-defender-application-control-design-guide), __more info__ [__in the Wiki__](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Introduction). You can see its status in [System Information](https://support.microsoft.com/en-us/windows/view-your-system-info-a965a8f2-0773-1d65-472a-1e747c9ebe00) and enable it manually from Microsoft Defender app's GUI. It is very important for Windows and Windows Defender intelligence updates to be always up-to-date in order for Smart App Control to work properly as it relies on live intelligence and definition data from the cloud and other sources to make a Smart decision about programs and files it encounters.
   - Smart App Control uses [ISG (Intelligent Security Graph)](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/use-windows-defender-application-control-with-intelligent-security-graph#how-does-wdac-work-with-the-isg). The ISG isn't a "list" of apps. Rather, it uses the same vast security intelligence and machine learning analytics that power Microsoft Defender SmartScreen and Microsoft Defender Antivirus to help classify applications as having "known good", "known bad", or "unknown" reputation. This cloud-based AI is based on trillions of signals collected from Windows endpoints and other data sources and processed every 24 hours. As a result, the decision from the cloud can change.
   - [Smart App Control](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/windows-defender-application-control#wdac-and-smart-app-control) can block a program entirely from running or only [some parts of it](https://support.microsoft.com/en-us/topic/smart-app-control-has-blocked-part-of-this-app-0729fff1-48bf-4b25-aa97-632fe55ccca2) in which case your app or program will continue working just fine most of the time. It's improved a lot since it was introduced, and it continues doing so. Consider turning it on after clean installing a new OS and fully updating it.
 
@@ -609,6 +638,9 @@ _Some settings require the client to be joined to Windows Server Active Director
 
 Once you have those Firewall rules added, you can [use this method](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Event-Viewer#how-to-identify-which-windows-firewall-rule-is-responsible-for-a-blocked-packets) to see if any of the blocked connections were from/to those countries.
 
+> __Note__
+Threat actors can use VPN, VPS etc. to mask their originating IP address and location. So don't take this category as the perfect solution for network protection.
+
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
 ## Non-Admin Commands<a href="#non-admin-commands">![NonAdminIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/NonAdmin.png)</a>
@@ -789,7 +821,9 @@ Get-Content <Path-To-File> -stream zone.identifier
 
 Not Applicable, No license, just free information, because the only mission of this GitHub repository is to give all Windows users accurate, up to date and correct facts and information about how to stay secure and safe in dangerous environments, and to stay not one, but Many steps, ahead of threat actors.
 
----
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="Harden-Windows-Security is a PowerShell script">
+
+<br>
 
 <p align="center">
 <a href="https://techcommunity.microsoft.com/t5/user/viewprofilepage/user-id/310193">Microsoft Tech Community Profile</a> &nbsp;&middot;&nbsp;
@@ -798,7 +832,7 @@ Not Applicable, No license, just free information, because the only mission of t
 <a href="https://account.xbox.com/en-US/Profile?Gamertag=HottCakeX">Xbox @HottCakeX</a>
 </p>
 
----
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="Harden-Windows-Security is a PowerShell script">
 
 <p align="center"> <a href="#readme-top">
 

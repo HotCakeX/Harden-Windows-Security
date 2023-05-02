@@ -46,7 +46,7 @@
 
 </p>
 
-<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="Harden-Windows-Security is a PowerShell script">
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
 
 #### <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/accepted.gif" width= "30" alt="Harden-Windows-Security is a PowerShell script"> Security for Personal users
 
@@ -58,7 +58,8 @@
 
 <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/yellow%20bell%20small.gif" width="36" alt="WDACConfig module for advanced automated WDAC configurations and Application whitelisting in Windows">**Use the [WDACConfig Module](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig) for Advanced Automated WDAC configurations and Application/File whitelisting in Windows.**
 
-<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="Harden-Windows-Security is a PowerShell script">
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+
 <br>
 
 > __Note__  Windows by default is secure and safe, this repository does not imply nor claim otherwise. just like anything, you have to use it wisely and don't compromise yourself with reckless behavior and bad user configuration; Nothing is foolproof. This repository only uses the tools and features that have already been implemented by Microsoft in Windows OS to fine-tune it towards the highest security and locked-down state, using well-documented, supported, recommended and official methods. continue reading for comprehensive info.
@@ -87,12 +88,11 @@ Install-Script -Name Harden-Windows-Security
   
   <br>
 
-
-<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="Harden-Windows-Security is a PowerShell script">
-
-<p align="center"> A quick video demonstrating how the Harden-Windows-Security script works </p>
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
 
 <br>
+
+<p align="center"> A quick video demonstrating how the Harden-Windows-Security script works </p>
 
 <p align="center">
   <a href="https://www.youtube.com/watch?v=Ty_NoguyMhc">
@@ -100,6 +100,10 @@ Install-Script -Name Harden-Windows-Security
          alt="YouTube Video showcase">
   </a>
   </p>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+
+<br>
 
 ## Requirements <a href="#features">![FeaturesIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Requirements.png)</a>
 
@@ -203,6 +207,12 @@ From Top to bottom in order:
 
 <p align="right"><a href="#readme-top">💡(back to top)</a></p>
 
+<br>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+
+<br>
+
 ## Microsoft Security Baselines<a href="#Microsoft-Security-Baselines">![MicrosoftSecurityBaseline](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Microsoft-Security-Baseline.png)</a>
 
 <p align="center"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/ocr.jpg" alt="Microsoft Protect" width="700"></p>
@@ -219,6 +229,10 @@ Highly recommended to apply these overrides, the script will ask you whether you
 
 <br>
 
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+
+<br>
+
 ## Microsoft 365 Apps Security Baselines<a href="#Microsoft-365-Apps-Security-Baselines">![Microsoft365AppsSecurityBaselines](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Microsoft-365-Apps-Security-Baselines.png)</a>
 
 <p align="center"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/original2.png" alt="Microsoft Protect" width="500"></p>
@@ -230,6 +244,10 @@ The security baseline for Microsoft 365 Apps for enterprise is published twice a
 [Microsoft Security Baselines Version Matrix](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-security-configuration-framework/get-support-for-security-baselines#version-matrix)
 
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
+
+<br>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
 
 <br>
 
@@ -313,6 +331,12 @@ Add-MpPreference -ControlledFolderAccessAllowedApplications 'C:\Program Files\Ap
 
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
+<br>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+
+<br>
+
 ## Attack surface reduction rules<a href="#Attack-surface-reduction-rules">![ASRrulesIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/ASRrules.png)</a>
 
 <p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/BIGCDOC.jpg" alt="Microsoft Protect" width="900"></p>
@@ -330,6 +354,12 @@ Such software behaviors are sometimes seen in legitimate applications. However, 
 🟩 This script enables [all 16 available Attack Surface Reduction rules shown in the official chart](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/attack-surface-reduction-rules-reference?view=o365-worldwide#asr-rule-to-guid-matrix).
 
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
+
+<br>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+
+<br>
 
 ## Bitlocker Settings<a href="#Bitlocker-Settings">![BitlockerIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Bitlocker.png)</a>
 
@@ -371,6 +401,12 @@ Refer to this [official documentation about the countermeasures of Bitlocker](ht
 
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
+<br>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+
+<br>
+
 ## TLS Security<a href="#TLS-Security">![TLSIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/TLS.png)</a>
 
 🔶 This script disables TLS 1 and TLS 1.1 security protocols that only __exist for backward compatibility__. All modern software should and do use `TLS 1.2` and `TLS 1.3`.
@@ -392,6 +428,12 @@ If you want to read more: [Demystifying Schannel](https://techcommunity.microsof
 - 🔶 Disables the following [weak ciphers](https://github.com/ssllabs/research/wiki/SSL-and-TLS-Deployment-Best-Practices) that are __only available for backward compatibility__: `"DES 56-bit"`,`"RC2 40-bit"`,`"RC2 56-bit"`,`"RC2 128-bit"`,`"RC4 40-bit"`,`"RC4 56-bit"`,`"RC4 64-bit"`,`"RC4 128-bit"`,`"3DES 168-bit (Triple DES 168)"`
 
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
+
+<br>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+
+<br>
 
 ## Lock Screen<a href="#Lock-Screen">![LockScreenIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/LockScreen.png)</a>
 
@@ -416,6 +458,12 @@ If you want to read more: [Demystifying Schannel](https://techcommunity.microsof
 
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
+<br>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+
+<br>
+
 ## User Account Control<a href="#User-Account-Control">![UACIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/UAC.png)</a>
 
 - 🟩 [Prompt for elevation of privilege on secure desktop for all binaries](https://learn.microsoft.com/en-us/windows/security/identity-protection/user-account-control/user-account-control-group-policy-and-registry-key-settings#user-account-control-behavior-of-the-elevation-prompt-for-administrators-in-admin-approval-mode) in [Administrator accounts](https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-gpsb/341747f5-6b5d-4d30-85fc-fa1cc04038d4), which presents the sign-in UI and restricts functionality and access to the system until the sign-in requirements are satisfied. The [secure desktop's](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/user-account-control-switch-to-the-secure-desktop-when-prompting-for-elevation#reference) primary difference from the user desktop is that only trusted processes running as SYSTEM are allowed to run here (that is, nothing is running at the user's privilege level). The path to get to the secure desktop from the user desktop must also be trusted through the entire chain.
@@ -432,6 +480,12 @@ If you want to read more: [Demystifying Schannel](https://techcommunity.microsof
 - 🔶 __(Requires additional confirmation to run):__ [Asks for a strong password for the built-in Administrator account and then enables it.](https://github.com/HotCakeX/Harden-Windows-Security/discussions/30#discussioncomment-5627737)
 
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
+
+<br>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+
+<br>
 
 ## Device Guard<a href="#Device-Guard">![DeviceGuardIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/DeviceGuard.png)</a>
 
@@ -500,6 +554,12 @@ __Most of the Device Guard and Virtualization-Based Security features are Automa
 
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
+<br>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+
+<br>
+
 ## Windows Firewall<a href="#Windows-Firewall">![FirewallIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Firewall.png)</a>
 
 - 🟩 Makes sure Windows Firewall is enabled for all profiles (which is the default)
@@ -512,6 +572,12 @@ __Most of the Device Guard and Virtualization-Based Security features are Automa
   - The domain name `.local` which is used in mDNS (Multicast DNS) [is a special-use domain name reserved by the Internet Engineering Task Force (IETF)](https://en.wikipedia.org/wiki/.local) so that it may not be installed as a top-level domain in the Domain Name System (DNS) of the Internet.
   
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
+
+<br>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+
+<br>
 
 ## Optional Windows Features<a href="#Optional-Windows-Features">![OptionalFeaturesIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/OptionalFeatures.png)</a>
 
@@ -536,6 +602,12 @@ __Most of the Device Guard and Virtualization-Based Security features are Automa
 
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
+<br>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+
+<br>
+
 ## Windows Networking<a href="#Windows-Networking">![NetworkingIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Networking.png)</a>
 
 These are configurations that are typically 🔺recommended in High-Risk Environments🔻 but also can be applied for home users
@@ -549,6 +621,12 @@ These are configurations that are typically 🔺recommended in High-Risk Environ
 - 🟩 [Turns off downloading of print drivers over HTTP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-connectivity#connectivity-disabledownloadingofprintdriversoverhttp) because HTTP is not encrypted and that method isn't used anymore. [This is the recommended and secure way of downloading printer drivers in Windows 11](https://support.microsoft.com/en-us/windows/download-printer-drivers-in-windows-da9b1460-7299-4cc3-e974-33cf99d86880).
 
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
+
+<br>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+
+<br>
 
 ## Miscellaneous Configurations<a href="#Miscellaneous-Configurations">![MiscellaneousIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/MiscellaneousCommands.png)</a>
 
@@ -583,6 +661,12 @@ These are configurations that are typically 🔺recommended in High-Risk Environ
 
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
+<br>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+
+<br>
+
 ## Windows Update Configurations<a href="windows-update-configurations">![WindowsUpdate](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/WindowsUpdate.png)</a>
 
 - 🟩 Enables [Windows Update to download and install updates on any network](https://techcommunity.microsoft.com/t5/windows-it-pro-blog/the-windows-update-policies-you-should-set-and-why/ba-p/3270914), metered or not; because the updates are important and should not be suppressed, __that's what bad actors would want.__
@@ -591,6 +675,12 @@ These are configurations that are typically 🔺recommended in High-Risk Environ
 - 🟩 Sets the deadline for automatic quality and feature updates and restarts to 2 days with 2 extra days as grace periods, so after Windows update installations, users will have up to 4 days to save their work and restart their device, before system is automatically restarted, to apply the updates.
 
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
+
+<br>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+
+<br>
 
 ## Edge Browser configurations<a href="edge-browser-configurations">![EdgeBrowser](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/EdgeBrowser.png)</a>
 
@@ -626,11 +716,23 @@ _Some settings require the client to be joined to Windows Server Active Director
 
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
+<br>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+
+<br>
+
 ## Certificate Checking Commands<a href="#Certificate-Checking-Commands">![CertificateIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Certificate.png)</a>
 
 🔶 In this category, the script downloads and runs [sigcheck64.exe](https://learn.microsoft.com/en-us/sysinternals/downloads/sigcheck) from [Sysinternals](https://learn.microsoft.com/en-us/sysinternals/), then lists valid certificates not rooted to the [Microsoft Certificate Trust List](https://learn.microsoft.com/en-us/windows/win32/seccrypto/certificate-trust-list-overview) in the [User and Machine certificate stores](https://learn.microsoft.com/en-us/windows-hardware/drivers/install/local-machine-and-current-user-certificate-stores). __Except for some possible Microsoft certificates, Windows insider builds certificates or certificates that have your own computer's name, which are perfectly safe and should not be deleted,__ All other certificates that will be listed should be treated as dangerous and removed from your system immediately.
 
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
+
+<br>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+
+<br>
 
 ## Country IP Blocking<a href="#Country-IP-Blocking">![CountryIPBlockingIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/CountryIPBlocking.png)</a>
 
@@ -642,6 +744,12 @@ Once you have those Firewall rules added, you can [use this method](https://gith
 Threat actors can use VPN, VPS etc. to mask their originating IP address and location. So don't take this category as the perfect solution for network protection.
 
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
+
+<br>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+
+<br>
 
 ## Non-Admin Commands<a href="#non-admin-commands">![NonAdminIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/NonAdmin.png)</a>
 
@@ -659,6 +767,12 @@ You don't need Admin privileges to run this category, because no system-wide cha
 
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 
+<br>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+
+<br>
+
 ## Related<a href="#related">![RelatedIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Related.png)</a>
 
 [PowerShell Gallery mirror](https://www.powershellgallery.com/packages/Harden-Windows-Security/)
@@ -670,6 +784,12 @@ You don't need Admin privileges to run this category, because no system-wide cha
 [Official global IANA IP block for each country](https://hotcakex.github.io/Official-IANA-IP-blocks/)
 
 [Windows Security Blog](https://spynetgirl.github.io/)
+
+<br>
+
+<br>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
 
 <br>
 
@@ -714,6 +834,12 @@ _Links above are automatically updated. There is a [GitHub workflow](https://git
 
 <p align="right"><a href="#readme-top">💡(back to top)</a></p>
 
+<br>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+
+<br>
+
 ## Support<a href="#support">![SupportIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Support.png)</a>
 
 <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/WebP/Heart%20Microsoft.webp" width="28" alt="If you have any questions, requests, suggestions etc"> If you have any questions, requests, suggestions etc. about this GitHub repository and its content, please open [a new discussion](https://github.com/HotCakeX/Harden-Windows-Security/discussions) or [Issue](https://github.com/HotCakeX/Harden-Windows-Security/issues).
@@ -725,6 +851,12 @@ _Links above are automatically updated. There is a [GitHub workflow](https://git
 <br>
 
 <p align="right"><a href="#readme-top">💡(back to top)</a></p>
+
+<br>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+
+<br>
 
 ## Security Recommendations<a href="#security-recommendations">![SecurityRecommendationIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/SecurityRecommendation.png)</a>
 
@@ -771,6 +903,12 @@ Get-Content <Path-To-File> -stream zone.identifier
 
 <p align="right"><a href="#readme-top">💡(back to top)</a></p>
 
+<br>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+
+<br>
+
 ## Resources<a href="#resources">![ResourcesIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Resources.png)</a>
 
 - [Microsoft.com](https://microsoft.com)
@@ -816,6 +954,8 @@ Get-Content <Path-To-File> -stream zone.identifier
 - [Service health status](https://admin.microsoft.com/servicestatus)
 
 <p align="right"><a href="#readme-top">💡(back to top)</a></p>
+
+<br>
 
 ## License<a href="#license">![LicenseFreeIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/LicenseFree.png)</a>
 

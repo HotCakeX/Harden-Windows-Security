@@ -134,9 +134,9 @@ Install-Script -Name Harden-Windows-Security
 
 > __Warning__ For your own security, do not use any other 3rd party tools, programs or scripts that claim to harden Windows or modify it in any way, **unless you can 100% verify it**. [Never trust 3rd party people on the Internet,](https://hotcakex.github.io/PDFViewer#5-Risk-Points-to-Avoid-in-Enterprise-Security) always verify their resources and do that after each release. **Keep on reading the features to see why this Harden-Windows-Security script is different and <a href="#Trust">read the Trust section</a> to see how you can 100% Trust it.**
 
-<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/Shiny.gif" width="27" alt="Features Item"> Doesn't remove or disable Windows functionalities against Microsoft's recommendation.
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/Shiny.gif" width="27" alt="Features Item"> Doesn't remove or disable Windows functionalities against Microsoft's recommendations.
   
-<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/Shiny.gif" width="27" alt="Features Item"> All of the links and sources are official from Microsoft websites, straight from the source. No bias, No misinformation and definitely No old obsolete methods. That's why there are no links to 3rd party news websites, forums, made up blogs/articles and such.
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/Shiny.gif" width="27" alt="Features Item"> All of the links and sources are from official Microsoft websites, straight from the source. No bias, No misinformation and definitely No old obsolete methods. That's why there are no links to 3rd party news websites, forums, made up blogs/articles and such.
 
 <details><summary>With the following exceptions</summary>
 
@@ -161,9 +161,9 @@ Install-Script -Name Harden-Windows-Security
 
 <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/Shiny.gif" width="27" alt="Features Item"> The script can be run infinite number of times, it's made in a way that it won't make any duplicate changes.
 
-<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/Shiny.gif" width="27" alt="Features Item"> The script asks for confirmation before running each hardening category and some sub-categories, so you can selectively run (or don't run) each of them.
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/Shiny.gif" width="27" alt="Features Item"> The script prompts for confirmation before running each hardening category and some sub-categories, so you can selectively run (or don't run) each of them.
 
-<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/Shiny.gif" width="27" alt="Features Item"> Applying this script makes your PC compliant with Microsoft Security Baselines and Secured-core PC specifications (providing that you use modern hardware that supports the latest Windows security features) - [See what makes a Secured-core PC](https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/oem-highly-secure#what-makes-a-secured-core-pc) - <a href="#Device-Guard">Check Device Guard category for more details.</a>
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/Shiny.gif" width="27" alt="Features Item"> Applying this script makes your PC compliant with Microsoft Security Baselines and Secured-core PC specifications (provided that you use modern hardware that supports the latest Windows security features) - [See what makes a Secured-core PC](https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/oem-highly-secure#what-makes-a-secured-core-pc) - <a href="#Device-Guard">Check Device Guard category for more details.</a>
 > [Secured-core](https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/oem-highly-secure) – recommended for the most sensitive systems and industries like financial, healthcare, and government agencies. Builds on the previous layers and leverages advanced processor capabilities to provide protection from firmware attacks.
   
 <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/Shiny.gif" width="27" alt="Features Item"> There are 4 items tagged with __#TopSecurity__ that can cause some inconvenience. When you run this script, you will have an option to enable them if you want to. Press `Control + F` and search for `#TopSecurity` on this page to find those security measures.

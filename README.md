@@ -368,6 +368,10 @@ Such software behaviors are sometimes seen in legitimate applications. However, 
 
 ## Bitlocker Settings<a href="#Bitlocker-Settings">![BitlockerIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Bitlocker.png)</a>
 
+<p align="center"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/conclusionSmall.jpg" alt="A woman working in a server room with her laptop, standing" width="550"></p>
+
+<br>
+
 - 🔶🟩 This script sets up and configures Bitlocker, for OS drive and all other non-removable drives on the device [using official documentation](https://learn.microsoft.com/en-us/windows/security/information-protection/bitlocker/bitlocker-group-policy-settings), with the most secure configuration and Military Grade encryption algorithm, __XTS-AES-256, TPM 2.0 and start-up PIN__, to protect the confidentiality and integrity of all information at rest and in use.
 
   - You will be asked to enter a Startup PIN when activating Bitlocker for the first time. Make sure it contains at least 10 characters (uppercase and lowercase letters, symbols, numbers, spaces) and it's not the same as your Windows Hello PIN.
@@ -414,6 +418,10 @@ Refer to this [official documentation about the countermeasures of Bitlocker](ht
 
 ## TLS Security<a href="#TLS-Security">![TLSIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/TLS.png)</a>
 
+<p align="center"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/hardenSmall.jpg" alt="A young woman working at a headless server farm with her tablet, standing" width="550"></p>
+
+<br>
+
 🔶 This script disables TLS 1 and TLS 1.1 security protocols that only __exist for backward compatibility__. All modern software should and do use `TLS 1.2` and `TLS 1.3`.
 
 Changes made by the script only affect things that use [Schannel SSP](https://learn.microsoft.com/en-us/windows/win32/secauthn/protocols-in-tls-ssl--schannel-ssp-): that includes IIS web server, built-in inbox Windows apps and some other programs supplied by Microsoft, but not 3rd party software that use [portable stacks](https://en.wikipedia.org/wiki/Comparison_of_TLS_implementations#Portability_concerns) like Java, nodejs, python or php.
@@ -441,6 +449,10 @@ If you want to read more: [Demystifying Schannel](https://techcommunity.microsof
 <br>
 
 ## Lock Screen<a href="#Lock-Screen">![LockScreenIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/LockScreen.png)</a>
+
+<p align="center"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Bing%20AI%20generated/_4f587ac7-ca0a-4f31-a13d-5763616b5d3d.jpg" alt="An AI generated picture of a girl working in a server farm" width="600"></p>
+
+<br>
 
 - 🟩 [Automatically locks device after X seconds of inactivity](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/interactive-logon-machine-inactivity-limit) (just like mobile phones), which is set to 120 seconds (2 minutes) in this script, you can change that to any value you like.
 
@@ -471,6 +483,10 @@ If you want to read more: [Demystifying Schannel](https://techcommunity.microsof
 
 ## User Account Control<a href="#User-Account-Control">![UACIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/UAC.png)</a>
 
+<p align="center"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Bing%20AI%20generated/_70f44af7-57d0-414e-85de-7fff3a9b64b2.jpg" alt="An AI generated picture of a cat girl working in a server farm" width="600"></p>
+
+<br>
+
 - 🟩 [Prompt for elevation of privilege on secure desktop for all binaries](https://learn.microsoft.com/en-us/windows/security/identity-protection/user-account-control/user-account-control-group-policy-and-registry-key-settings#user-account-control-behavior-of-the-elevation-prompt-for-administrators-in-admin-approval-mode) in [Administrator accounts](https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-gpsb/341747f5-6b5d-4d30-85fc-fa1cc04038d4), which presents the sign-in UI and restricts functionality and access to the system until the sign-in requirements are satisfied. The [secure desktop's](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/user-account-control-switch-to-the-secure-desktop-when-prompting-for-elevation#reference) primary difference from the user desktop is that only trusted processes running as SYSTEM are allowed to run here (that is, nothing is running at the user's privilege level). The path to get to the secure desktop from the user desktop must also be trusted through the entire chain.
   - __This is the default behavior:__ prompt the administrator in Admin Approval Mode to select either "Permit" or "Deny" for an operation that requires elevation of privilege for any non-Windows binaries. If the Consent Admin selects Permit, the operation will continue with the highest available privilege. This operation will happen on the secure desktop
   - __This is the behavior that this script sets:__ prompts the administrator in Admin Approval Mode to select either "Permit" or "Deny" an operation that requires elevation of privilege. If the Consent Admin selects Permit, the operation will continue with the highest available privilege. "Prompt for consent" removes the inconvenience of requiring that users enter their name and password to perform a privileged task. This operation occurs on the secure desktop.
@@ -493,6 +509,10 @@ If you want to read more: [Demystifying Schannel](https://techcommunity.microsof
 <br>
 
 ## Device Guard<a href="#Device-Guard">![DeviceGuardIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/DeviceGuard.png)</a>
+
+<p align="center"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Bing%20AI%20generated/_7b1941d2-cc77-4423-b4d9-76986bdc3680.jpg" alt="An AI generated picture of a cat girl working in a server farm" width="600"></p>
+
+<br>
 
 __Most of the Device Guard and Virtualization-Based Security features are Automatically enabled by default__ on capable and modern hardware, this script only checks their status and if needed, enables UEFI lock for them and also proceeds with enabling [__full Secured-Core PC requirements__:](https://www.microsoft.com/en-us/windows/business/windows-11-secured-core-computers)
 
@@ -567,6 +587,10 @@ __Most of the Device Guard and Virtualization-Based Security features are Automa
 
 ## Windows Firewall<a href="#Windows-Firewall">![FirewallIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Firewall.png)</a>
 
+<p align="center"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Bing%20AI%20generated/Selected%20photo%20(4).jpg" alt="An AI generated picture of a cat girl working in a server farm" width="600"></p>
+
+<br>
+
 - 🟩 Makes sure Windows Firewall is enabled for all profiles (which is the default)
 
 - 🟩 Sets inbound and outbound default actions for Domain Firewall Profile to Block; because this script is Not intended to be used on devices that are part of a domain or controlled by an Active Directory Domain Controller, since they will have their own policies and policy management systems in place.
@@ -585,6 +609,10 @@ __Most of the Device Guard and Virtualization-Based Security features are Automa
 <br>
 
 ## Optional Windows Features<a href="#Optional-Windows-Features">![OptionalFeaturesIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/OptionalFeatures.png)</a>
+
+<p align="center"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Bing%20AI%20generated/Ft8V6bfX0AwVr7a.jpg" alt="An AI generated picture of a cat girl working in a server farm" width="600"></p>
+
+<br>
 
 - 🔶 The script [disables](https://learn.microsoft.com/en-us/powershell/module/dism/disable-windowsoptionalfeature) the following rarely used features in [Windows optional features](https://learn.microsoft.com/en-us/windows/application-management/add-apps-and-features#use-windows-powershell-to-disable-specific-features) (Control Panel):
   - PowerShell v2; because it's old and doesn't support [AMSI](https://devblogs.microsoft.com/powershell/powershell-the-blue-team/#antimalware-scan-interface-integration).
@@ -615,6 +643,10 @@ __Most of the Device Guard and Virtualization-Based Security features are Automa
 
 ## Windows Networking<a href="#Windows-Networking">![NetworkingIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Networking.png)</a>
 
+<p align="center"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Bing%20AI%20generated/Ft8TCOwX0AQgKN-.jpg" alt="An AI generated picture of a cat girl working in a server farm" width="600"></p>
+
+<br>
+
 These are configurations that are typically 🔺recommended in High-Risk Environments🔻 but also can be applied for home users
 
 - 🟩 [Disables NetBIOS over TCP/IP](https://learn.microsoft.com/en-us/windows-hardware/customize/desktop/unattend/microsoft-windows-netbt-interfaces-interface-netbiosoptions) on all network interfaces, virtual and physical. This command needs to run every time after installing a new VPN software or network adapter.
@@ -634,6 +666,10 @@ These are configurations that are typically 🔺recommended in High-Risk Environ
 <br>
 
 ## Miscellaneous Configurations<a href="#Miscellaneous-Configurations">![MiscellaneousIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/MiscellaneousCommands.png)</a>
+
+<p align="center"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Bing%20AI%20generated/Fr3e8zzXsAUM2I6.jpg" alt="An AI generated picture of a cat girl working in a server farm" width="600"></p>
+
+<br>
 
 - 🟩 Sets [Early launch antimalware](https://learn.microsoft.com/en-us/windows-hardware/drivers/install/elam-driver-requirements) engine's status to `8` which is __Good only.__ The default value is `3`, which allows good, unknown and 'bad but critical'. that is the default value, because setting it to `8` [can prevent your computer from booting](https://learn.microsoft.com/en-us/windows/compatibility/early-launch-antimalware#mitigation) if the driver it relies on is critical but at the same time unknown or bad.
 

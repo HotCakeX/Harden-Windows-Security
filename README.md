@@ -171,7 +171,7 @@ Install-Script -Name Harden-Windows-Security
 
 <br>
 
-<p align="right"><a href="#readme-top"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/bluearrowUP.gif" alt="Back to top blue arrow"> (back to top)</a></p>
+<p align="right"><a href="#readme-top"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/bluearrowUP.gif" width="15" height="25" alt="Back to top blue arrow"> (back to top)</a></p>
 
 <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="Harden-Windows-Security is a PowerShell script">
 
@@ -210,7 +210,7 @@ From Top to bottom in order:
 
 <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/roratinggem.gif" width="28" alt="Rotating pink gem denoting registry or cmdlet"> Indicates the security measure is applied using PowerShell cmdlets or Registry
 
-<p align="right"><a href="#readme-top"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/bluearrowUP.gif" alt="Back to top blue arrow"> (back to top)</a></p>
+<p align="right"><a href="#readme-top"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/bluearrowUP.gif" width="15" height="25" alt="Back to top blue arrow"> (back to top)</a></p>
 
 <br>
 
@@ -230,7 +230,7 @@ A security baseline is a group of Microsoft-recommended configuration settings t
 
 Highly recommended to apply these overrides, the script will ask you whether you want to apply them or not.
 
-<p align="right"><a href="#menu-back-to-top"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/bluearrowUP.gif" alt="Back to top blue arrow"> (back to categories)</a></p>
+<p align="right"><a href="#menu-back-to-top"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/bluearrowUP.gif" width="15" height="25" alt="Back to top blue arrow"> (back to categories)</a></p>
 
 <br>
 
@@ -248,7 +248,7 @@ The security baseline for Microsoft 365 Apps for enterprise is published twice a
 
 [Microsoft Security Baselines Version Matrix](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-security-configuration-framework/get-support-for-security-baselines#version-matrix)
 
-<p align="right"><a href="#menu-back-to-top"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/bluearrowUP.gif" alt="Back to top blue arrow"> (back to categories)</a></p>
+<p align="right"><a href="#menu-back-to-top"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/bluearrowUP.gif" width="15" height="25" alt="Back to top blue arrow"> (back to categories)</a></p>
 
 <br>
 
@@ -334,7 +334,7 @@ Add-MpPreference -ControlledFolderAccessAllowedApplications 'C:\Program Files\Ap
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/roratinggem.gif" width="28" alt="Rotating pink gem denoting registry or cmdlet"> **(Requires additional confirmation to run):** Set Microsoft [Defender engine](https://learn.microsoft.com/en-us/powershell/module/defender/set-mppreference#-engineupdateschannel) and [platform update channel](https://learn.microsoft.com/en-us/powershell/module/defender/set-mppreference#-platformupdateschannel) to beta.
 
-<p align="right"><a href="#menu-back-to-top"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/bluearrowUP.gif" alt="Back to top blue arrow"> (back to categories)</a></p>
+<p align="right"><a href="#menu-back-to-top"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/bluearrowUP.gif" width="15" height="25" alt="Back to top blue arrow"> (back to categories)</a></p>
 
 <br>
 
@@ -358,7 +358,7 @@ Such software behaviors are sometimes seen in legitimate applications. However, 
 
 <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> This script enables [all 16 available Attack Surface Reduction rules shown in the official chart](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/attack-surface-reduction-rules-reference?view=o365-worldwide#asr-rule-to-guid-matrix).
 
-<p align="right"><a href="#menu-back-to-top"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/bluearrowUP.gif" alt="Back to top blue arrow"> (back to categories)</a></p>
+<p align="right"><a href="#menu-back-to-top"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/bluearrowUP.gif" width="15" height="25" alt="Back to top blue arrow"> (back to categories)</a></p>
 
 <br>
 
@@ -408,7 +408,7 @@ This is to prevent an **Attacker with skill and lengthy physical access to your 
 
 Refer to this [official documentation about the countermeasures of Bitlocker](https://learn.microsoft.com/en-us/windows/security/information-protection/bitlocker/bitlocker-countermeasures)
 
-<p align="right"><a href="#menu-back-to-top"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/bluearrowUP.gif" alt="Back to top blue arrow"> (back to categories)</a></p>
+<p align="right"><a href="#menu-back-to-top"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/bluearrowUP.gif" width="15" height="25" alt="Back to top blue arrow"> (back to categories)</a></p>
 
 <br>
 
@@ -440,7 +440,7 @@ If you want to read more: [Demystifying Schannel](https://techcommunity.microsof
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/roratinggem.gif" width="28" alt="Rotating pink gem denoting registry or cmdlet"> Disables the following [weak ciphers](https://github.com/ssllabs/research/wiki/SSL-and-TLS-Deployment-Best-Practices) that are **only available for backward compatibility**: `"DES 56-bit"`,`"RC2 40-bit"`,`"RC2 56-bit"`,`"RC2 128-bit"`,`"RC4 40-bit"`,`"RC4 56-bit"`,`"RC4 64-bit"`,`"RC4 128-bit"`,`"3DES 168-bit (Triple DES 168)"`
 
-<p align="right"><a href="#menu-back-to-top"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/bluearrowUP.gif" alt="Back to top blue arrow"> (back to categories)</a></p>
+<p align="right"><a href="#menu-back-to-top"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/bluearrowUP.gif" width="15" height="25" alt="Back to top blue arrow"> (back to categories)</a></p>
 
 <br>
 
@@ -473,7 +473,7 @@ If you want to read more: [Demystifying Schannel](https://techcommunity.microsof
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> [Don't Display Network Selection UI on Lock Screen](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-windowslogon#dontdisplaynetworkselectionui) (like WIFI Icon); This setting allows you to control whether anyone can interact with available networks UI on the logon screen. Once enabled, the device's network connectivity state cannot be changed without signing into Windows. Suitable for *High-Risk Environments*.
 
-<p align="right"><a href="#menu-back-to-top"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/bluearrowUP.gif" alt="Back to top blue arrow"> (back to categories)</a></p>
+<p align="right"><a href="#menu-back-to-top"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/bluearrowUP.gif" width="15" height="25" alt="Back to top blue arrow"> (back to categories)</a></p>
 
 <br>
 
@@ -500,7 +500,7 @@ If you want to read more: [Demystifying Schannel](https://techcommunity.microsof
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/roratinggem.gif" width="28" alt="Rotating pink gem denoting registry or cmdlet"> **(Requires additional confirmation to run):** [Asks for a strong password for the built-in Administrator account and then enables it.](https://github.com/HotCakeX/Harden-Windows-Security/discussions/30#discussioncomment-5627737)
 
-<p align="right"><a href="#menu-back-to-top"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/bluearrowUP.gif" alt="Back to top blue arrow"> (back to categories)</a></p>
+<p align="right"><a href="#menu-back-to-top"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/bluearrowUP.gif" width="15" height="25" alt="Back to top blue arrow"> (back to categories)</a></p>
 
 <br>
 
@@ -577,7 +577,7 @@ If you want to read more: [Demystifying Schannel](https://techcommunity.microsof
  </ul>
 </ol>
 
-<p align="right"><a href="#menu-back-to-top"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/bluearrowUP.gif" alt="Back to top blue arrow"> (back to categories)</a></p>
+<p align="right"><a href="#menu-back-to-top"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/bluearrowUP.gif" width="15" height="25" alt="Back to top blue arrow"> (back to categories)</a></p>
 
 <br>
 
@@ -600,7 +600,7 @@ If you want to read more: [Demystifying Schannel](https://techcommunity.microsof
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/roratinggem.gif" width="28" alt="Rotating pink gem denoting registry or cmdlet"> Disables [Multicast DNS (mDNS) UDP-in Firewall Rules for all 3 Firewall profiles](https://techcommunity.microsoft.com/t5/networking-blog/mdns-in-the-enterprise/ba-p/3275777), This might interfere with Miracast screen sharing, which relies on the Public profile, and homes where the Private profile is not selected, but it does add an extra measure of security in public places, like a coffee shop.
   - The domain name `.local` which is used in mDNS (Multicast DNS) [is a special-use domain name reserved by the Internet Engineering Task Force (IETF)](https://en.wikipedia.org/wiki/.local) so that it may not be installed as a top-level domain in the Domain Name System (DNS) of the Internet.
   
-<p align="right"><a href="#menu-back-to-top"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/bluearrowUP.gif" alt="Back to top blue arrow"> (back to categories)</a></p>
+<p align="right"><a href="#menu-back-to-top"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/bluearrowUP.gif" width="15" height="25" alt="Back to top blue arrow"> (back to categories)</a></p>
 
 <br>
 
@@ -633,7 +633,7 @@ If you want to read more: [Demystifying Schannel](https://techcommunity.microsof
   - Hyper-V; a great hybrid hypervisor (Type 1 and Type 2) to run virtual machines on. [check out this Hyper-V Wiki page](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Hyper-V)
   - Virtual Machine Platform; required for [Android subsystem or WSA (Windows subsystem for Android)](https://learn.microsoft.com/en-us/windows/android/wsa/). if it's disabled, it will be automatically enabled either way when you try to install WSA from Store app
 
-<p align="right"><a href="#menu-back-to-top"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/bluearrowUP.gif" alt="Back to top blue arrow"> (back to categories)</a></p>
+<p align="right"><a href="#menu-back-to-top"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/bluearrowUP.gif" width="15" height="25" alt="Back to top blue arrow"> (back to categories)</a></p>
 
 <br>
 
@@ -657,7 +657,7 @@ These are configurations that are typically *recommended in High-Risk Environmen
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Disables [Printing over HTTP](https://learn.microsoft.com/en-us/troubleshoot/windows-server/printing/manage-connect-printers-use-web-browser) because HTTP is not encrypted and it's an old feature that's not used anymore.
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> [Turns off downloading of print drivers over HTTP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-connectivity#connectivity-disabledownloadingofprintdriversoverhttp) because HTTP is not encrypted and that method isn't used anymore. [This is the recommended and secure way of downloading printer drivers in Windows 11](https://support.microsoft.com/en-us/windows/download-printer-drivers-in-windows-da9b1460-7299-4cc3-e974-33cf99d86880).
 
-<p align="right"><a href="#menu-back-to-top"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/bluearrowUP.gif" alt="Back to top blue arrow"> (back to categories)</a></p>
+<p align="right"><a href="#menu-back-to-top"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/bluearrowUP.gif" width="15" height="25" alt="Back to top blue arrow"> (back to categories)</a></p>
 
 <br>
 
@@ -700,7 +700,7 @@ These are configurations that are typically *recommended in High-Risk Environmen
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Enables ["Send optional diagnostic data"](https://learn.microsoft.com/en-us/windows/privacy/windows-diagnostic-data) because it is [required for Smart App Control](https://support.microsoft.com/en-us/topic/what-is-smart-app-control-285ea03d-fa88-4d56-882e-6698afdb7003) to operate and be enabled, and for communication between [Intelligent Security Graph (ISG)](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/use-windows-defender-application-control-with-intelligent-security-graph) and you.
 
-<p align="right"><a href="#menu-back-to-top"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/bluearrowUP.gif" alt="Back to top blue arrow"> (back to categories)</a></p>
+<p align="right"><a href="#menu-back-to-top"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/bluearrowUP.gif" width="15" height="25" alt="Back to top blue arrow"> (back to categories)</a></p>
 
 <br>
 
@@ -716,7 +716,7 @@ These are configurations that are typically *recommended in High-Risk Environmen
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Sets the deadline for automatic quality and feature updates and restarts to 2 days. Sets the grace periods to 2 days as well.
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> [Enables features introduced via servicing that are off by default](https://learn.microsoft.com/en-us/windows/deployment/update/waas-configure-wufb) so that users will be able to get new features after having Windows Update settings managed by Group Policy as the result of running this category.
 
-<p align="right"><a href="#menu-back-to-top"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/bluearrowUP.gif" alt="Back to top blue arrow"> (back to categories)</a></p>
+<p align="right"><a href="#menu-back-to-top"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/bluearrowUP.gif" width="15" height="25" alt="Back to top blue arrow"> (back to categories)</a></p>
 
 <br>
 
@@ -756,7 +756,7 @@ Some settings require the client to be joined to Windows Server Active Directory
 
   - [Edge Insider for Beta/Dev/Canary channels](https://www.microsoftedgeinsider.com/en-us/)
 
-<p align="right"><a href="#menu-back-to-top"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/bluearrowUP.gif" alt="Back to top blue arrow"> (back to categories)</a></p>
+<p align="right"><a href="#menu-back-to-top"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/bluearrowUP.gif" width="15" height="25" alt="Back to top blue arrow"> (back to categories)</a></p>
 
 <br>
 
@@ -768,7 +768,7 @@ Some settings require the client to be joined to Windows Server Active Directory
 
 <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/roratinggem.gif" width="28" alt="Rotating pink gem denoting registry or cmdlet"> In this category, the script downloads and runs [sigcheck64.exe](https://learn.microsoft.com/en-us/sysinternals/downloads/sigcheck) from [Sysinternals](https://learn.microsoft.com/en-us/sysinternals/), then lists valid certificates not rooted to the [Microsoft Certificate Trust List](https://learn.microsoft.com/en-us/windows/win32/seccrypto/certificate-trust-list-overview) in the [User and Machine certificate stores](https://learn.microsoft.com/en-us/windows-hardware/drivers/install/local-machine-and-current-user-certificate-stores). **Except for some possible Microsoft certificates, Windows insider builds certificates or certificates that have your own computer's name, which are perfectly safe and should not be deleted,** All other certificates that will be listed should be treated as dangerous and removed from your system immediately.
 
-<p align="right"><a href="#menu-back-to-top"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/bluearrowUP.gif" alt="Back to top blue arrow"> (back to categories)</a></p>
+<p align="right"><a href="#menu-back-to-top"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/bluearrowUP.gif" width="15" height="25" alt="Back to top blue arrow"> (back to categories)</a></p>
 
 <br>
 
@@ -785,7 +785,7 @@ Once you have those Firewall rules added, you can [use this method](https://gith
 > **Note**
 Threat actors can use VPN, VPS etc. to mask their originating IP address and location. So don't take this category as the perfect solution for network protection.
 
-<p align="right"><a href="#menu-back-to-top"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/bluearrowUP.gif" alt="Back to top blue arrow"> (back to categories)</a></p>
+<p align="right"><a href="#menu-back-to-top"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/bluearrowUP.gif" width="15" height="25" alt="Back to top blue arrow"> (back to categories)</a></p>
 
 <br>
 
@@ -807,7 +807,7 @@ You don't need Admin privileges to run this category, because no system-wide cha
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/roratinggem.gif" width="28" alt="Rotating pink gem denoting registry or cmdlet"> Turns on "Multilingual text suggestions" for the current user, toggles the option in Windows settings
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/roratinggem.gif" width="28" alt="Rotating pink gem denoting registry or cmdlet"> Turns off sticky key shortcut of pressing shift key 5 times fast
 
-<p align="right"><a href="#menu-back-to-top"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/bluearrowUP.gif" alt="Back to top blue arrow"> (back to categories)</a></p>
+<p align="right"><a href="#menu-back-to-top"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/bluearrowUP.gif" width="15" height="25" alt="Back to top blue arrow"> (back to categories)</a></p>
 
 <br>
 
@@ -874,7 +874,7 @@ This repository uses the simplest possible, yet effective, methods that make it 
 
 *Links above are automatically updated. There is a [GitHub workflow](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/VirusTotal.yml) that automatically detects changes to the files and uploads them to Virus Total website for scanning.*
 
-<p align="right"><a href="#readme-top"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/bluearrowUP.gif" alt="Back to top blue arrow"> (back to top)</a></p>
+<p align="right"><a href="#readme-top"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/bluearrowUP.gif" width="15" height="25" alt="Back to top blue arrow"> (back to top)</a></p>
 
 <br>
 
@@ -892,7 +892,7 @@ This repository uses the simplest possible, yet effective, methods that make it 
 
 <br>
 
-<p align="right"><a href="#readme-top"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/bluearrowUP.gif" alt="Back to top blue arrow"> (back to top)</a></p>
+<p align="right"><a href="#readme-top"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/bluearrowUP.gif" width="15" height="25" alt="Back to top blue arrow"> (back to top)</a></p>
 
 <br>
 
@@ -943,7 +943,7 @@ Get-Content <Path-To-File> -stream zone.identifier
 
 * More Security Recommendations coming soon...
 
-<p align="right"><a href="#readme-top"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/bluearrowUP.gif" alt="Back to top blue arrow"> (back to top)</a></p>
+<p align="right"><a href="#readme-top"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/bluearrowUP.gif" width="15" height="25" alt="Back to top blue arrow"> (back to top)</a></p>
 
 <br>
 
@@ -995,7 +995,7 @@ Get-Content <Path-To-File> -stream zone.identifier
 - [Submit a file for malware analysis](https://www.microsoft.com/en-us/wdsi/filesubmission)
 - [Service health status](https://admin.microsoft.com/servicestatus)
 
-<p align="right"><a href="#readme-top"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/bluearrowUP.gif" alt="Back to top blue arrow"> (back to top)</a></p>
+<p align="right"><a href="#readme-top"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/bluearrowUP.gif" width="15" height="25" alt="Back to top blue arrow"> (back to top)</a></p>
 
 <br>
 

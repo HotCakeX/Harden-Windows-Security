@@ -105,7 +105,15 @@ function Edit-SignedWDACConfig {
         [System.String[]]$Fallbacks,
 
         [ValidatePattern('\.exe$')]
-        [ValidateScript({ Test-Path $_ -PathType 'Leaf' }, ErrorMessage = "The path you selected is not a file path.")]
+        [ValidateScript({ # Setting the minimum version of SignTool that is allowed to be executed as well as other checks
+                [System.Version]$WindowsSdkVersion = '10.0.22621.755'
+                (((get-item -Path $_).VersionInfo).ProductVersionRaw -ge $WindowsSdkVersion)
+                (((get-item -Path $_).VersionInfo).FileVersionRaw -ge $WindowsSdkVersion)
+                ((get-item -Path $_).VersionInfo).CompanyName -eq 'Microsoft Corporation'
+                ((Get-AuthenticodeSignature -FilePath $_).Status -eq 'Valid')
+                ((Get-AuthenticodeSignature -FilePath $_).StatusMessage -eq 'Signature verified.')
+            }, ErrorMessage = "The SignTool executable was found but couldn't be verified. Please download the latest Windows SDK to get the newest SignTool executable. Official download link: http://aka.ms/WinSDK")]
+        [parameter(ValueFromPipelineByPropertyName = $true)]
         [Parameter(Mandatory = $false, ParameterSetName = "Allow New Apps Audit Events", ValueFromPipelineByPropertyName = $true)]
         [Parameter(Mandatory = $false, ParameterSetName = "Allow New Apps", ValueFromPipelineByPropertyName = $true)]
         [Parameter(Mandatory = $false, ParameterSetName = "Merge Supplemental Policies", ValueFromPipelineByPropertyName = $true)]
@@ -181,7 +189,7 @@ function Edit-SignedWDACConfig {
             # Configure the parameter splat
             $ProcessParams = @{
                 'ArgumentList' = 'sign', '/v' , '/n', "`"$CertCN`"", '/p7', '.', '/p7co', '1.3.6.1.4.1.311.79.1', '/fd', 'certHash', ".\$PolicyID.cip"
-                'FilePath'     = $SignToolPath
+                'FilePath'     = ($SignToolPath ? (Get-SignTool -SignToolExePath $SignToolPath) : (Get-SignTool))
                 'NoNewWindow'  = $true
                 'Wait'         = $true
             }
@@ -205,9 +213,6 @@ function Edit-SignedWDACConfig {
     process {
                             
         if ($AllowNewAppsAuditEvents) {
-
-            # Get SignTool Path and validate the executable
-            . Get-SignTool
                         
             # Change Code Integrity event logs size
             if ($AllowNewAppsAuditEvents -and $LogSize) { . Set-LogSize -LogSize $LogSize }
@@ -237,7 +242,7 @@ function Edit-SignedWDACConfig {
                 # Configure the parameter splat
                 $ProcessParams = @{
                     'ArgumentList' = 'sign', '/v' , '/n', "`"$CertCN`"", '/p7', '.', '/p7co', '1.3.6.1.4.1.311.79.1', '/fd', 'certHash', ".\$PolicyID.cip"
-                    'FilePath'     = $SignToolPath
+                    'FilePath'     = ($SignToolPath ? (Get-SignTool -SignToolExePath $SignToolPath) : (Get-SignTool))
                     'NoNewWindow'  = $true
                     'Wait'         = $true
                 }
@@ -518,7 +523,7 @@ $RulesRefs
                 # Configure the parameter splat
                 $ProcessParams = @{
                     'ArgumentList' = 'sign', '/v' , '/n', "`"$CertCN`"", '/p7', '.', '/p7co', '1.3.6.1.4.1.311.79.1', '/fd', 'certHash', ".\$SuppPolicyID.cip"
-                    'FilePath'     = $SignToolPath
+                    'FilePath'     = ($SignToolPath ? (Get-SignTool -SignToolExePath $SignToolPath) : (Get-SignTool))
                     'NoNewWindow'  = $true
                     'Wait'         = $true
                 }
@@ -540,9 +545,6 @@ $RulesRefs
         }
 
         if ($AllowNewApps) {
-            
-            # Get SignTool Path and validate the executable
-            . Get-SignTool
                         
             # remove any possible files from previous runs
             Remove-Item -Path ".\ProgramDir_ScanResults*.xml" -Force -ErrorAction SilentlyContinue
@@ -567,7 +569,7 @@ $RulesRefs
                 # Configure the parameter splat
                 $ProcessParams = @{
                     'ArgumentList' = 'sign', '/v' , '/n', "`"$CertCN`"", '/p7', '.', '/p7co', '1.3.6.1.4.1.311.79.1', '/fd', 'certHash', ".\$PolicyID.cip"
-                    'FilePath'     = $SignToolPath
+                    'FilePath'     = ($SignToolPath ? (Get-SignTool -SignToolExePath $SignToolPath) : (Get-SignTool))
                     'NoNewWindow'  = $true
                     'Wait'         = $true
                 }
@@ -701,7 +703,7 @@ $RulesRefs
                     # Configure the parameter splat
                     $ProcessParams = @{
                         'ArgumentList' = 'sign', '/v' , '/n', "`"$CertCN`"", '/p7', '.', '/p7co', '1.3.6.1.4.1.311.79.1', '/fd', 'certHash', ".\$SuppPolicyID.cip"
-                        'FilePath'     = $SignToolPath
+                        'FilePath'     = ($SignToolPath ? (Get-SignTool -SignToolExePath $SignToolPath) : (Get-SignTool))
                         'NoNewWindow'  = $true
                         'Wait'         = $true
                     }
@@ -723,7 +725,7 @@ $RulesRefs
                 }            
                 # Do this if no program path(s) was selected by user
                 else {
-                    Write-Host "`nNo program folder was selected, reverting the changes and quitting...`n" -ForegroundColor Magenta
+                    Write-Host "`nNo program folder was selected, reverting the changes and quitting...`n" -ForegroundColor Red
                     #Re-Deploy Basepolicy in Enforcement mode
                     Update-BasePolicyToEnforcement              
                     break
@@ -732,9 +734,6 @@ $RulesRefs
         }
 
         if ($MergeSupplementalPolicies) {
-
-            # Get SignTool Path and validate the executable
-            . Get-SignTool
                         
             foreach ($PolicyPath in $PolicyPaths) {
                 ############ Input policy verification prior to doing anything ############
@@ -773,7 +772,7 @@ $RulesRefs
                 # Configure the parameter splat
                 $ProcessParams = @{
                     'ArgumentList' = 'sign', '/v' , '/n', "`"$CertCN`"", '/p7', '.', '/p7co', '1.3.6.1.4.1.311.79.1', '/fd', 'certHash', ".\$SuppPolicyID.cip"
-                    'FilePath'     = $SignToolPath
+                    'FilePath'     = ($SignToolPath ? (Get-SignTool -SignToolExePath $SignToolPath) : (Get-SignTool))
                     'NoNewWindow'  = $true
                     'Wait'         = $true
                 }
@@ -790,9 +789,6 @@ $RulesRefs
         if ($UpdateBasePolicy) {
             # First get the Microsoft recommended driver block rules
             Invoke-Command -ScriptBlock $Get_BlockRulesSCRIPTBLOCK | Out-Null
-            
-            # Get SignTool Path and validate the executable
-            . Get-SignTool
    
             switch ($NewBasePolicyType) {
                 "AllowMicrosoft_Plus_Block_Rules" {                  
@@ -817,8 +813,8 @@ $RulesRefs
                    
                     # Allowing SignTool to be able to run after Default Windows base policy is deployed
                     Write-Host "`nCreating allow rules for SignTool.exe in the DefaultWindows base policy so you can continue using it after deploying the DefaultWindows base policy." -ForegroundColor Blue
-                    New-Item -Path "$env:TEMP\TemporarySignToolFile" -ItemType Directory | Out-Null
-                    Copy-Item -Path $SignToolPath -Destination "$env:TEMP\TemporarySignToolFile" -Force
+                    New-Item -Path "$env:TEMP\TemporarySignToolFile" -ItemType Directory -Force | Out-Null
+                    Copy-Item -Path $($SignToolPath ? (Get-SignTool -SignToolExePath $SignToolPath) : (Get-SignTool)) -Destination "$env:TEMP\TemporarySignToolFile" -Force
                     New-CIPolicy -ScanPath "$env:TEMP\TemporarySignToolFile" -Level FilePublisher -Fallback Hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -FilePath .\SignTool.xml
                     # Delete the Temporary folder in the TEMP folder
                     Remove-Item -Recurse -Path "$env:TEMP\TemporarySignToolFile" -Force
@@ -826,7 +822,7 @@ $RulesRefs
                     # Scan PowerShell core directory and add them to the Default Windows base policy so that the module can be used after it's been deployed
                     if (Test-Path "C:\Program Files\PowerShell") {
                         Write-Host "`nCreating allow rules for PowerShell in the DefaultWindows base policy so you can continue using this module after deploying it." -ForegroundColor Blue                    
-                        New-CIPolicy -ScanPath "C:\Program Files\PowerShell" -Level FilePublisher -Fallback Hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -FilePath .\AllowPowerShell.xml                        
+                        New-CIPolicy -ScanPath "C:\Program Files\PowerShell" -Level FilePublisher -NoScript -Fallback Hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -FilePath .\AllowPowerShell.xml                        
                         Merge-CIPolicy -PolicyPaths .\DefaultWindows_Enforced.xml, .\AllowPowerShell.xml, .\SignTool.xml, '.\Microsoft recommended block rules.xml' -OutputFilePath .\BasePolicy.xml | Out-Null
                     }
                     else {
@@ -841,11 +837,11 @@ $RulesRefs
             if ($UpdateBasePolicy -and $RequireEVSigners) { Set-RuleOption -FilePath .\BasePolicy.xml -Option 8 }   
             
             # Remove the extra files create during module operation that are no longer necessary
-            Remove-Item .\AllowPowerShell.xml -Force -ErrorAction SilentlyContinue
-            Remove-Item .\DefaultWindows_Enforced.xml -Force -ErrorAction SilentlyContinue
-            Remove-Item .\AllowMicrosoft.xml -Force -ErrorAction SilentlyContinue
-            Remove-Item '.\Microsoft recommended block rules.xml' -Force
-            Remove-Item .\SignTool.xml -Force            
+            Remove-Item '.\AllowPowerShell.xml' -Force -ErrorAction SilentlyContinue
+            Remove-Item '.\DefaultWindows_Enforced.xml' -Force -ErrorAction SilentlyContinue
+            Remove-Item '.\AllowMicrosoft.xml' -Force -ErrorAction SilentlyContinue
+            Remove-Item '.\Microsoft recommended block rules.xml' -Force     
+            Remove-Item '.\SignTool.xml' -Force -ErrorAction SilentlyContinue 
 
             # Get the policy ID of the currently deployed base policy based on the policy name that user selected
             $CurrentID = ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsSystemPolicy -ne "True" } | Where-Object { $_.Friendlyname -eq $CurrentBasePolicyName }).BasePolicyID
@@ -867,7 +863,7 @@ $RulesRefs
             # Configure the parameter splat
             $ProcessParams = @{
                 'ArgumentList' = 'sign', '/v' , '/n', "`"$CertCN`"", '/p7', '.', '/p7co', '1.3.6.1.4.1.311.79.1', '/fd', 'certHash', ".\$CurrentID.cip"
-                'FilePath'     = $SignToolPath
+                'FilePath'     = ($SignToolPath ? (Get-SignTool -SignToolExePath $SignToolPath) : (Get-SignTool))
                 'NoNewWindow'  = $true
                 'Wait'         = $true
             }

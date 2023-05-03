@@ -12,7 +12,7 @@
     # RootModule = ""
 
     # Version number of this module.
-    ModuleVersion        = '0.1.1'
+    ModuleVersion        = '0.1.2'
 
     # Supported PSEditions
     CompatiblePSEditions = @("Core")
@@ -159,7 +159,7 @@ To get help and syntax on PowerShell console, type:
     # ModuleList = @()
 
     # List of all files packaged with this module
-    FileList             = @('WDACConfig.psd1', 'New-WDACConfig.psm1', 'Deploy-SignedWDACConfig.psm1', 'Remove-WDACConfig.psm1', "Confirm-WDACConfig.psm1", "Edit-WDACConfig.psm1", "Edit-SignedWDACConfig.psm1","Resources.ps1")
+    FileList             = @('WDACConfig.psd1', 'New-WDACConfig.psm1', 'Deploy-SignedWDACConfig.psm1', 'Remove-WDACConfig.psm1', "Confirm-WDACConfig.psm1", "Edit-WDACConfig.psm1", "Edit-SignedWDACConfig.psm1", "Resources.ps1")
 
     # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.
     PrivateData          = @{
@@ -167,7 +167,7 @@ To get help and syntax on PowerShell console, type:
         PSData = @{
 
             # Tags applied to this module. These help with module discovery in online galleries.
-            Tags         = @('WDAC', 'Windows-Defender-Application-Control', 'Windows', 'Security', 'Microsoft', 'Application-Control', 'MDAC')
+            Tags         = @('WDAC', 'Windows-Defender-Application-Control', 'Windows', 'Security', 'Microsoft', 'Application-Control', 'MDAC', 'Application-Whitelisting')
 
             # A URL to the license for this module.
             LicenseUri   = 'https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE'
@@ -180,6 +180,10 @@ To get help and syntax on PowerShell console, type:
 
             # ReleaseNotes of this module
             ReleaseNotes = @"
+
+## Version 0.1.2
+Made the Get-SignTool function more secure.
+Added smarter argument completer to Remove-WDACConfig cmdlet.
 
 ## Version 0.1.1
 Created a Resources.ps1 file to store repeated functions that are used in all sub-modules, resulting in reduced repeated codes. It is dot-sourced at the beginning of each sub-module and function calls are dot-sourced too.

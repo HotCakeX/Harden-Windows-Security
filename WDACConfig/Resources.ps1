@@ -3,15 +3,19 @@ $ErrorActionPreference = 'Stop'
 
 # Get the path to SignTool
 function Get-SignTool {
-    # If Sign tool path was provided by user the use it
-    if ($SignToolPath) {
-        $SignToolPath = $SignToolPath
+    param(    
+        [parameter(Mandatory = $false)][System.String]$SignToolExePath
+    )
+    
+    # If Sign tool path was provided by user, return it, validation already happened in the parameter ValidateScript
+    if ($SignToolExePath) {
+        return $SignToolExePath
     }
-    # If Sign tool path wasn't provided by user, detect it automatically
+    # If Sign tool path wasn't provided by user, detect it automatically and then validate it here
     else {
         if ($Env:PROCESSOR_ARCHITECTURE -eq "AMD64") {
             if ( Test-Path -Path "C:\Program Files (x86)\Windows Kits\*\bin\*\x64\signtool.exe") {
-                $SignToolPath = "C:\Program Files (x86)\Windows Kits\*\bin\*\x64\signtool.exe" 
+                $SignToolExePath = "C:\Program Files (x86)\Windows Kits\*\bin\*\x64\signtool.exe" 
             }
             else {
                 Write-Error -Message "signtool.exe couldn't be found"
@@ -19,26 +23,26 @@ function Get-SignTool {
         }
         elseif ($Env:PROCESSOR_ARCHITECTURE -eq "ARM64") {
             if (Test-Path -Path "C:\Program Files (x86)\Windows Kits\*\bin\*\arm64\signtool.exe") {
-                $SignToolPath = "C:\Program Files (x86)\Windows Kits\*\bin\*\arm64\signtool.exe"
+                $SignToolExePath = "C:\Program Files (x86)\Windows Kits\*\bin\*\arm64\signtool.exe"
             }
-            # If sign tool path was neither provided by user nor detected on the system, stop the operation and show error
+            # If sign tool path was neither provided by user nor detected on the system, stop the operation and throw error
             else {
                 Write-Error -Message "signtool.exe couldn't be found"
             }
-        }           
-    }
-    
-    # Setting the minimum version of SignTool that is allowed to be executed
-    [System.Version]$WindowsSdkVersion = '10.0.22621.755'
-    [System.Boolean]$GreenFlag1 = (((get-item -Path $SignToolPath).VersionInfo).ProductVersionRaw -ge $WindowsSdkVersion)
-    [System.Boolean]$GreenFlag2 = (((get-item -Path $SignToolPath).VersionInfo).FileVersionRaw -ge $WindowsSdkVersion)
-    [System.Boolean]$GreenFlag3 = ((get-item -Path $SignToolPath).VersionInfo).CompanyName -eq 'Microsoft Corporation'
-    [System.Boolean]$GreenFlag4 = ((Get-AuthenticodeSignature -FilePath $SignToolPath).Status -eq 'Valid')
-    [System.Boolean]$GreenFlag5 = ((Get-AuthenticodeSignature -FilePath $SignToolPath).StatusMessage -eq 'Signature verified.')
-    # If any of the 5 checks above fails, the operation stops
-    if (!$GreenFlag1 -or !$GreenFlag2 -or !$GreenFlag3 -or !$GreenFlag4 -or !$GreenFlag5) {
-        Write-Error -Message "The SignTool executable was found but couldn't be verified. Please download the latest Windows SDK to get the newest SignTool executable. Official download link: http://aka.ms/WinSDK"        
-    }
+        }
+        # Setting the minimum version of SignTool that is allowed to be executed
+        [System.Version]$WindowsSdkVersion = '10.0.22621.755'
+        [System.Boolean]$GreenFlag1 = (((get-item -Path $SignToolExePath).VersionInfo).ProductVersionRaw -ge $WindowsSdkVersion)
+        [System.Boolean]$GreenFlag2 = (((get-item -Path $SignToolExePath).VersionInfo).FileVersionRaw -ge $WindowsSdkVersion)
+        [System.Boolean]$GreenFlag3 = ((get-item -Path $SignToolExePath).VersionInfo).CompanyName -eq 'Microsoft Corporation'
+        [System.Boolean]$GreenFlag4 = ((Get-AuthenticodeSignature -FilePath $SignToolExePath).Status -eq 'Valid')
+        [System.Boolean]$GreenFlag5 = ((Get-AuthenticodeSignature -FilePath $SignToolExePath).StatusMessage -eq 'Signature verified.')
+        # If any of the 5 checks above fails, the operation stops
+        if (!$GreenFlag1 -or !$GreenFlag2 -or !$GreenFlag3 -or !$GreenFlag4 -or !$GreenFlag5) {
+            Write-Error -Message "The SignTool executable was found but couldn't be verified. Please download the latest Windows SDK to get the newest SignTool executable. Official download link: http://aka.ms/WinSDK"        
+        }
+        return $SignToolExePath        
+    }        
 }
 
 # Make sure the latest version of the module is installed and if not, automatically update it, clean up any old versions

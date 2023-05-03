@@ -25,7 +25,17 @@ function Deploy-SignedWDACConfig {
             }, ErrorMessage = "A certificate with the provided common name doesn't exist in the personal store of the user certificates." )]
         [parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true)][System.String]$CertCN,
 
-        [ValidatePattern('\.exe$')][parameter(Mandatory = $false)][System.String]$SignToolPath,
+        [ValidatePattern('\.exe$')]
+        [ValidateScript({ # Setting the minimum version of SignTool that is allowed to be executed as well as other checks
+                [System.Version]$WindowsSdkVersion = '10.0.22621.755'
+                (((get-item -Path $_).VersionInfo).ProductVersionRaw -ge $WindowsSdkVersion)
+                (((get-item -Path $_).VersionInfo).FileVersionRaw -ge $WindowsSdkVersion)
+                ((get-item -Path $_).VersionInfo).CompanyName -eq 'Microsoft Corporation'
+                ((Get-AuthenticodeSignature -FilePath $_).Status -eq 'Valid')
+                ((Get-AuthenticodeSignature -FilePath $_).StatusMessage -eq 'Signature verified.')
+            }, ErrorMessage = "The SignTool executable was found but couldn't be verified. Please download the latest Windows SDK to get the newest SignTool executable. Official download link: http://aka.ms/WinSDK")]
+        [parameter(ValueFromPipelineByPropertyName = $true)]
+        [System.String]$SignToolPath,
         
         [Parameter(Mandatory = $false)][Switch]$SkipVersionCheck
     )
@@ -41,10 +51,7 @@ function Deploy-SignedWDACConfig {
 
     process {
 
-        foreach ($PolicyPath in $PolicyPaths) {
-
-            # Get SignTool Path and validate the executable
-            . Get-SignTool
+        foreach ($PolicyPath in $PolicyPaths) {          
                         
             $xml = [xml](Get-Content $PolicyPath)
             $PolicyType = $xml.SiPolicy.PolicyType
@@ -65,7 +72,7 @@ function Deploy-SignedWDACConfig {
             # Configure the parameter splat
             $ProcessParams = @{
                 'ArgumentList' = 'sign', '/v' , '/n', "`"$CertCN`"", '/p7', '.', '/p7co', '1.3.6.1.4.1.311.79.1', '/fd', 'certHash', ".\$PolicyID.cip"
-                'FilePath'     = $SignToolPath
+                'FilePath'     = ($SignToolPath ? (Get-SignTool -SignToolExePath $SignToolPath) : (Get-SignTool))           
                 'NoNewWindow'  = $true
                 'Wait'         = $true
             }

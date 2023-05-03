@@ -41,7 +41,7 @@ function Remove-WDACConfig {
                 if ($_ -notin [PolicyIDz]::new().GetValidValues()) { throw "Invalid policy ID: $_" }
                 $true
             })]
-        [System.String[]]$PolicyIDs,
+        [Parameter(Mandatory = $false, ParameterSetName = "Remove Policies")][System.String[]]$PolicyIDs,
 
         # https://stackoverflow.com/questions/76143006/how-to-prevent-powershell-validateset-argument-completer-from-suggesting-the-sam/76143269
         [ArgumentCompleter({
@@ -59,11 +59,19 @@ function Remove-WDACConfig {
                 if ($_ -notin [PolicyNamez]::new().GetValidValues()) { throw "Invalid policy name: $_" }
                 $true
             })]
-        [System.String[]]$PolicyNames,
+        [Parameter(Mandatory = $false, ParameterSetName = "Remove Policies")][System.String[]]$PolicyNames,
 
         [ValidatePattern('\.exe$')]
-        [ValidateScript({ Test-Path $_ -PathType 'Leaf' }, ErrorMessage = "The path you selected is not a file path.")]
-        [parameter(Mandatory = $false, ParameterSetName = "Remove Signed Policies", ValueFromPipelineByPropertyName = $true)][System.String]$SignToolPath,
+        [ValidateScript({ # Setting the minimum version of SignTool that is allowed to be executed as well as other checks
+                [System.Version]$WindowsSdkVersion = '10.0.22621.755'
+                (((get-item -Path $_).VersionInfo).ProductVersionRaw -ge $WindowsSdkVersion)
+                (((get-item -Path $_).VersionInfo).FileVersionRaw -ge $WindowsSdkVersion)
+                ((get-item -Path $_).VersionInfo).CompanyName -eq 'Microsoft Corporation'
+                ((Get-AuthenticodeSignature -FilePath $_).Status -eq 'Valid')
+                ((Get-AuthenticodeSignature -FilePath $_).StatusMessage -eq 'Signature verified.')
+            }, ErrorMessage = "The SignTool executable was found but couldn't be verified. Please download the latest Windows SDK to get the newest SignTool executable. Official download link: http://aka.ms/WinSDK")]
+        [parameter(ValueFromPipelineByPropertyName = $true)]
+        [System.String]$SignToolPath,
 
         [Parameter(Mandatory = $false)][Switch]$SkipVersionCheck
     )
@@ -100,9 +108,6 @@ function Remove-WDACConfig {
 
         if ($RemoveSignedPolicies) {
             foreach ($PolicyPath in $PolicyPaths) {
-
-                # Get SignTool Path and validate the executable
-                . Get-SignTool
             
                 ######################## Sanitize the policy file by removing SupplementalPolicySigners ########################                
                 $xml = [xml](Get-Content $PolicyPath)
@@ -135,7 +140,7 @@ function Remove-WDACConfig {
                 # Configure the parameter splat
                 $ProcessParams = @{
                     'ArgumentList' = 'sign', '/v' , '/n', "`"$CertCN`"", '/p7', '.', '/p7co', '1.3.6.1.4.1.311.79.1', '/fd', 'certHash', ".\$PolicyID.cip"
-                    'FilePath'     = $SignToolPath
+                    'FilePath'     = ($SignToolPath ? (Get-SignTool -SignToolExePath $SignToolPath) : (Get-SignTool))
                     'NoNewWindow'  = $true
                     'Wait'         = $true
                 }
@@ -215,16 +220,32 @@ $ArgumentCompleterCertificateCN = {
 Register-ArgumentCompleter -CommandName "Remove-WDACConfig" -ParameterName "CertCN" -ScriptBlock $ArgumentCompleterCertificateCN
 
 
-# argument tab auto-completion for Policy Paths to show only .xml files and only base policies
-$ArgumentCompleterPolicyPaths = {
-    Get-ChildItem | where-object { $_.extension -like '*.xml' } | ForEach-Object {
-        $xmlitem = [xml](Get-Content $_)
-        $PolicyType = $xmlitem.SiPolicy.PolicyType
+# argument tab auto-completion for Policy Paths to show only .xml files and only suggest files that haven't been already selected by user 
+# https://stackoverflow.com/questions/76141864/how-to-make-a-powershell-argument-completer-that-only-suggests-files-not-already/76142865
+Register-ArgumentCompleter `
+    -CommandName Remove-WDACConfig `
+    -ParameterName PolicyPaths `
+    -ScriptBlock {
+    # Get the current command and the already bound parameters
+    param($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameters)
 
-        if ($PolicyType -eq "Base Policy") { $_ }
-    } | foreach-object { return "`"$_`"" }
+    # Find all string constants in the AST that end in ".xml"
+    $existing = $commandAst.FindAll({ 
+            $args[0] -is [System.Management.Automation.Language.StringConstantExpressionAst] -and 
+            $args[0].Value -like '*.xml' 
+        }, 
+        $false
+    ).Value  
+
+    # Get the xml files in the current directory
+    Get-ChildItem -Filter *.xml | ForEach-Object {
+        # Check if the file is already selected
+        if ($_.FullName -notin $existing) {
+            # Return the file name with quotes
+            "`"$_`""
+        }
+    }
 }
-Register-ArgumentCompleter -CommandName "Remove-WDACConfig" -ParameterName "PolicyPaths" -ScriptBlock $ArgumentCompleterPolicyPaths
 
 
 # argument tab auto-completion for Certificate Path to show only .cer files

@@ -162,7 +162,7 @@ Install-Script -Name Harden-Windows-Security
 
 <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/Shiny.gif" width="27" alt="Features Item"> The script prompts for confirmation before running each hardening category and some sub-categories, so you can selectively run (or don't run) each of them.
 
-<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/Shiny.gif" width="27" alt="Features Item"> Applying this script makes your PC compliant with Microsoft Security Baselines and Secured-core PC specifications (provided that you use modern hardware that supports the latest Windows security features) - [See what makes a Secured-core PC](https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/oem-highly-secure#what-makes-a-secured-core-pc) - <a href="#Device-Guard">Check Device Guard category for more details.</a>
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/Shiny.gif" width="27" alt="Features Item"> Applying this script makes your PC compliant with Microsoft Security Baselines and Secured-core PC specifications (provided that you use modern hardware that supports the latest Windows security features) - [See what makes a Secured-core PC](https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/oem-highly-secure#what-makes-a-secured-core-pc) - <a href="#device-guard">Check Device Guard category for more details.</a>
 > [Secured-core](https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/oem-highly-secure) – recommended for the most sensitive systems and industries like financial, healthcare, and government agencies. Builds on the previous layers and leverages advanced processor capabilities to provide protection from firmware attacks.
   
 <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/Shiny.gif" width="27" alt="Features Item"> There are 4 items tagged with **#TopSecurity** that can cause some inconvenience. When you run this script, you will have an option to enable them if you want to. Press `Control + F` and search for `#TopSecurity` on this page to find those security measures.
@@ -182,25 +182,25 @@ From Top to bottom in order:
 
 * Commands that require Administrator Privileges (click/tap on each of these to see in-depth info)
   - <a href="#microsoft-security-baselines">Microsoft Security Baselines</a>
-  - <a href="#Microsoft-365-Apps-Security-Baselines">Microsoft 365 Apps Security Baselines</a>
-  - <a href="#Microsoft-Defender">Microsoft Defender</a>
-  - <a href="#Attack-surface-reduction-rules">Attack surface reduction rules</a>
-  - <a href="#Bitlocker-Settings">Bitlocker Settings</a>
-  - <a href="#TLS-Security">TLS Security</a>
-  - <a href="#Lock-Screen">Lock Screen</a>
-  - <a href="#User-Account-Control">UAC (User Account Control)</a>
-  - <a href="#Device-Guard">Device Guard</a>
-  - <a href="#Windows-Firewall">Windows Firewall</a>
-  - <a href="#Optional-Windows-Features">Optional Windows Features</a>
-  - <a href="#Windows-Networking">Windows Networking</a>
-  - <a href="#Miscellaneous-Configurations">Miscellaneous Configurations</a>
+  - <a href="#microsoft-365-apps-security-baselines">Microsoft 365 Apps Security Baselines</a>
+  - <a href="#microsoft-defender">Microsoft Defender</a>
+  - <a href="#attack-surface-reduction-rules">Attack surface reduction rules</a>
+  - <a href="#bitlocker-settings">Bitlocker Settings</a>
+  - <a href="#tls-security">TLS Security</a>
+  - <a href="#lock-screen">Lock Screen</a>
+  - <a href="#user-account-control">UAC (User Account Control)</a>
+  - <a href="#device-guard">Device Guard</a>
+  - <a href="#windows-firewall">Windows Firewall</a>
+  - <a href="#optional-windows-features">Optional Windows Features</a>
+  - <a href="#windows-networking">Windows Networking</a>
+  - <a href="#miscellaneous-configurations">Miscellaneous Configurations</a>
   - <a href="#windows-update-configurations">Windows Update configurations</a>
   - <a href="#edge-browser-configurations">Edge Browser configurations</a>
-  - <a href="#Certificate-Checking-Commands">Certificate Checking Commands</a>
-  - <a href="#Country-IP-Blocking">Country IP Blocking</a>
+  - <a href="#certificate-checking-commands">Certificate Checking Commands</a>
+  - <a href="#country-ip-blocking">Country IP Blocking</a>
   
 * Commands that don't require Administrator Privileges
-  - <a href="#Non-Admin-Commands">Non-Admin Commands that only affect the current user and do not make machine-wide changes</a>
+  - <a href="#non-admin-commands">Non-Admin Commands that only affect the current user and do not make machine-wide changes</a>
 
 </br>
 </br>
@@ -237,7 +237,7 @@ Highly recommended to apply these overrides, the script will ask you whether you
 
 <br>
 
-## Microsoft 365 Apps Security Baselines<a href="#Microsoft-365-Apps-Security-Baselines">![Microsoft365AppsSecurityBaselines](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Microsoft-365-Apps-Security-Baselines.png)</a>
+## Microsoft 365 Apps Security Baselines<a href="#microsoft-365-apps-security-baselines">![Microsoft365AppsSecurityBaselines](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Microsoft-365-Apps-Security-Baselines.png)</a>
 
 <p align="center"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/original2.png" alt="Some kind of futuristic Microsoft Protect" width="500"></p>
 
@@ -255,7 +255,7 @@ The security baseline for Microsoft 365 Apps for enterprise is published twice a
 
 <br>
 
-## Microsoft Defender<a href="#Microsoft-Defender">![WindowsDefenderIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/WindowsDefender.png)</a>
+## Microsoft Defender<a href="#microsoft-defender">![WindowsDefenderIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/WindowsDefender.png)</a>
 
 <p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/PNGs/mde-cloud-protection.png" alt="Microsoft Defender Cloud Protection features and abilities" width="450"></p>
 
@@ -341,7 +341,7 @@ Add-MpPreference -ControlledFolderAccessAllowedApplications 'C:\Program Files\Ap
 
 <br>
 
-## Attack surface reduction rules<a href="#Attack-surface-reduction-rules">![ASRrulesIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/ASRrules.png)</a>
+## Attack surface reduction rules<a href="#attack-surface-reduction-rules">![ASRrulesIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/ASRrules.png)</a>
 
 <p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/BIGCDOC.jpg" alt="Microsoft Protect Detect Respond Center" width="900"></p>
 
@@ -365,7 +365,7 @@ Such software behaviors are sometimes seen in legitimate applications. However, 
 
 <br>
 
-## Bitlocker Settings<a href="#Bitlocker-Settings">![BitlockerIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Bitlocker.png)</a>
+## Bitlocker Settings<a href="#bitlocker-settings">![BitlockerIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Bitlocker.png)</a>
 
 <p align="center"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/conclusionSmall.jpg" alt="A woman working in a server room with her laptop, standing" width="550"></p>
 
@@ -379,7 +379,7 @@ Such software behaviors are sometimes seen in legitimate applications. However, 
 
   - TPM has [special anti-hammering logic](https://learn.microsoft.com/en-us/windows/security/information-protection/tpm/tpm-fundamentals) which prevents malicious user from guessing the authorization data indefinitely. [Microsoft defines that maximum number of failed attempts](https://learn.microsoft.com/en-us/archive/blogs/dubaisec/tpm-lockout) in Windows is 32 and every single failed attempt is forgotten after 2 hours. This means that every continuous two hours of powered on (and successfully booted) operation without an event which increases the counter will cause the counter to decrease by 1. You can view all the details using this [PowerShell command](https://learn.microsoft.com/en-us/powershell/module/trustedplatformmodule/get-tpm): `Get-TPM`.
 
-  - Check out <a href="#Lock-Screen">Lock Screen</a> category for more info about the recovery password and the 2nd anti-hammering mechanism.
+  - Check out <a href="#lock-screen">Lock Screen</a> category for more info about the recovery password and the 2nd anti-hammering mechanism.
 
   - To have even more security than what the script provides, you can utilize a [Startup key in addition to the other 3 key protectors](https://learn.microsoft.com/en-us/windows/security/information-protection/bitlocker/bitlocker-countermeasures#pre-boot-authentication) (TPM, Startup PIN and Recovery password). with this method, part of the encryption key is stored on a USB flash drive, and a PIN is required to authenticate the user to the TPM. This configuration **provides multifactor authentication** so that if the USB key is lost or stolen, it can't be used for access to the drive, because the correct PIN is also required.
 
@@ -415,7 +415,7 @@ Refer to this [official documentation about the countermeasures of Bitlocker](ht
 
 <br>
 
-## TLS Security<a href="#TLS-Security">![TLSIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/TLS.png)</a>
+## TLS Security<a href="#tls-security">![TLSIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/TLS.png)</a>
 
 <p align="center"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/hardenSmall.jpg" alt="A young woman working at a headless server farm with her tablet, standing" width="550"></p>
 
@@ -447,7 +447,7 @@ If you want to read more: [Demystifying Schannel](https://techcommunity.microsof
 
 <br>
 
-## Lock Screen<a href="#Lock-Screen">![LockScreenIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/LockScreen.png)</a>
+## Lock Screen<a href="#lock-screen">![LockScreenIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/LockScreen.png)</a>
 
 <p align="center"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Bing%20AI%20generated/_4f587ac7-ca0a-4f31-a13d-5763616b5d3d.jpg" alt="An AI generated picture of a girl working in a server farm" width="600"></p>
 
@@ -460,7 +460,7 @@ If you want to read more: [Demystifying Schannel](https://techcommunity.microsof
   - A malicious user might install malware that looks like the standard sign-in dialog box for the Windows operating system and capture a user's password. The attacker can then sign into the compromised account with whatever level of user rights that user has.
 
 - 🟩 Enables [a security anti-hammering feature](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/interactive-logon-machine-account-lockout-threshold) that sets a threshold of 6 for the number of failed sign-in attempts that causes the device to be locked by using BitLocker. Sign-in attempts include Windows password or Windows Hello authentication methods. This threshold means, if the specified maximum number of failed sign-in attempts is exceeded, the device will invalidate the Trusted Platform Module (TPM) protector and any other protector except the 48-digit recovery password, and then reboot. During Device Lockout mode, the computer or device only boots into the touch-enabled Windows Recovery Environment (WinRE) until an authorized user enters the recovery password to restore full access.
-  - This script (<a href="#Bitlocker-Settings">in the Bitlocker category</a>) automatically saves the 48-digit recovery password of each drive in itself, the location of it will also be visible on the PowerShell console when you run it. It is **very important to keep it in a safe and reachable place, e.g. in OneDrive's Personal Vault which requires authentication to access. See [Here](https://www.microsoft.com/en-us/microsoft-365/onedrive/personal-vault) and [Here](https://support.microsoft.com/en-us/office/protect-your-onedrive-files-in-personal-vault-6540ef37-e9bf-4121-a773-56f98dce78c4) for more info about OneDrive's Personal Vault**
+  - This script (<a href="#bitlocker-settings">in the Bitlocker category</a>) automatically saves the 48-digit recovery password of each drive in itself, the location of it will also be visible on the PowerShell console when you run it. It is **very important to keep it in a safe and reachable place, e.g. in OneDrive's Personal Vault which requires authentication to access. See [Here](https://www.microsoft.com/en-us/microsoft-365/onedrive/personal-vault) and [Here](https://support.microsoft.com/en-us/office/protect-your-onedrive-files-in-personal-vault-6540ef37-e9bf-4121-a773-56f98dce78c4) for more info about OneDrive's Personal Vault**
 
 - 🟩 [Hides email address of the Microsoft account on lock screen](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/interactive-logon-display-user-information-when-the-session-is-locked), if your device is in a trusted place like at home then this isn't necessary.
 
@@ -480,7 +480,7 @@ If you want to read more: [Demystifying Schannel](https://techcommunity.microsof
 
 <br>
 
-## User Account Control<a href="#User-Account-Control">![UACIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/UAC.png)</a>
+## User Account Control<a href="#user-account-control">![UACIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/UAC.png)</a>
 
 <p align="center"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Bing%20AI%20generated/_70f44af7-57d0-414e-85de-7fff3a9b64b2.jpg" alt="An AI generated picture of a cat girl working in a server farm" width="600"></p>
 
@@ -507,7 +507,7 @@ If you want to read more: [Demystifying Schannel](https://techcommunity.microsof
 
 <br>
 
-## Device Guard<a href="#Device-Guard">![DeviceGuardIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/DeviceGuard.png)</a>
+## Device Guard<a href="#device-guard">![DeviceGuardIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/DeviceGuard.png)</a>
 
 <p align="center"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Bing%20AI%20generated/_7b1941d2-cc77-4423-b4d9-76986bdc3680.jpg" alt="An AI generated picture of a cat girl working in a server farm" width="600"></p>
 
@@ -584,7 +584,7 @@ If you want to read more: [Demystifying Schannel](https://techcommunity.microsof
 
 <br>
 
-## Windows Firewall<a href="#Windows-Firewall">![FirewallIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Firewall.png)</a>
+## Windows Firewall<a href="#windows-firewall">![FirewallIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Firewall.png)</a>
 
 <p align="center"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Bing%20AI%20generated/Selected%20photo%20(4).jpg" alt="An AI generated picture of a cat girl working in a server farm" width="600"></p>
 
@@ -607,7 +607,7 @@ If you want to read more: [Demystifying Schannel](https://techcommunity.microsof
 
 <br>
 
-## Optional Windows Features<a href="#Optional-Windows-Features">![OptionalFeaturesIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/OptionalFeatures.png)</a>
+## Optional Windows Features<a href="#optional-windows-features">![OptionalFeaturesIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/OptionalFeatures.png)</a>
 
 <p align="center"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Bing%20AI%20generated/Ft8V6bfX0AwVr7a.jpg" alt="An AI generated picture of a cat girl working in a server farm" width="600"></p>
 
@@ -640,7 +640,7 @@ If you want to read more: [Demystifying Schannel](https://techcommunity.microsof
 
 <br>
 
-## Windows Networking<a href="#Windows-Networking">![NetworkingIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Networking.png)</a>
+## Windows Networking<a href="#windows-networking">![NetworkingIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Networking.png)</a>
 
 <p align="center"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Bing%20AI%20generated/Ft8TCOwX0AQgKN-.jpg" alt="An AI generated picture of a cat girl working in a server farm" width="600"></p>
 
@@ -664,7 +664,7 @@ These are configurations that are typically *recommended in High-Risk Environmen
 
 <br>
 
-## Miscellaneous Configurations<a href="#Miscellaneous-Configurations">![MiscellaneousIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/MiscellaneousCommands.png)</a>
+## Miscellaneous Configurations<a href="#miscellaneous-configurations">![MiscellaneousIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/MiscellaneousCommands.png)</a>
 
 <p align="center"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Bing%20AI%20generated/Fr3e8zzXsAUM2I6.jpg" alt="An AI generated picture of a cat girl working in a server farm" width="600"></p>
 
@@ -762,7 +762,7 @@ Some settings require the client to be joined to Windows Server Active Directory
 
 <br>
 
-## Certificate Checking Commands<a href="#Certificate-Checking-Commands">![CertificateIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Certificate.png)</a>
+## Certificate Checking Commands<a href="#certificate-checking-commands">![CertificateIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Certificate.png)</a>
 
 🔶 In this category, the script downloads and runs [sigcheck64.exe](https://learn.microsoft.com/en-us/sysinternals/downloads/sigcheck) from [Sysinternals](https://learn.microsoft.com/en-us/sysinternals/), then lists valid certificates not rooted to the [Microsoft Certificate Trust List](https://learn.microsoft.com/en-us/windows/win32/seccrypto/certificate-trust-list-overview) in the [User and Machine certificate stores](https://learn.microsoft.com/en-us/windows-hardware/drivers/install/local-machine-and-current-user-certificate-stores). **Except for some possible Microsoft certificates, Windows insider builds certificates or certificates that have your own computer's name, which are perfectly safe and should not be deleted,** All other certificates that will be listed should be treated as dangerous and removed from your system immediately.
 
@@ -774,7 +774,7 @@ Some settings require the client to be joined to Windows Server Active Directory
 
 <br>
 
-## Country IP Blocking<a href="#Country-IP-Blocking">![CountryIPBlockingIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/CountryIPBlocking.png)</a>
+## Country IP Blocking<a href="#country-ip-blocking">![CountryIPBlockingIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/CountryIPBlocking.png)</a>
 
 🔶 The script uses the newest range of `IPv4` and `IPv6` addresses of [State Sponsors of Terrorism](https://www.state.gov/state-sponsors-of-terrorism/) and [OFAC Sanctioned Countries](https://orpa.princeton.edu/export-controls/sanctioned-countries), directly [from official IANA sources](https://github.com/HotCakeX/Official-IANA-IP-blocks) repository, then creates 2 rules (inbound and outbound) for each list in Windows firewall, completely blocking connections to and from those countries.
 
@@ -851,7 +851,7 @@ This repository uses the simplest possible, yet effective, methods that make it 
 - The [Payload folder](https://github.com/HotCakeX/Harden-Windows-Security/tree/main/Payload) in this repository contains the files required to run this script:
   - [Registry.csv](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Payload/Registry.csv) includes registry data used by this script, viewable in plain text and easily verifiable.
   
-  - [EventViewerCustomViews.zip](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Payload/EventViewerCustomViews.zip) includes XML files, in plain text, easily readable and verifiable. the script downloads and copies them to `C:\ProgramData\Microsoft\Event Viewer\Views` so that when you open [Windows Event Viewer](https://learn.microsoft.com/en-us/host-integration-server/core/windows-event-viewer1), you will find custom views as explained in the <a href="#Miscellaneous-Configurations">Miscellaneous Configurations</a> category.
+  - [EventViewerCustomViews.zip](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Payload/EventViewerCustomViews.zip) includes XML files, in plain text, easily readable and verifiable. the script downloads and copies them to `C:\ProgramData\Microsoft\Event Viewer\Views` so that when you open [Windows Event Viewer](https://learn.microsoft.com/en-us/host-integration-server/core/windows-event-viewer1), you will find custom views as explained in the <a href="#miscellaneous-configurations">Miscellaneous Configurations</a> category.
   
   - [Security-Baselines-X.zip](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Payload/Security-Baselines-X.zip) includes Group Policies that are used by this script to apply the security measures explained in this page.
 

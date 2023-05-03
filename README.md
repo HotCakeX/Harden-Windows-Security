@@ -106,7 +106,7 @@ Install-Script -Name Harden-Windows-Security
 
 <br>
 
-## Requirements <a href="#Requirements">![RequirementsIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Requirements.png)</a>
+## Requirements <a href="#requirements">![RequirementsIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Requirements.png)</a>
 
 <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/verticalshine.gif" width="27" alt="Requirements item"> Any device that meets the [Windows 11 hardware](https://www.microsoft.com/en-in/windows/windows-11-specifications?r=1) and [Virtualization Based Security](https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/oem-vbs) requirements. **Most of the hardware manufactured in the past few years are supported.**
 
@@ -175,7 +175,7 @@ Install-Script -Name Harden-Windows-Security
 
 <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="Harden-Windows-Security is a PowerShell script">
 
-## Hardening Categories<a href="#hardening-Categories">![HardeningCategoriesIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/HardeningCategories.png)</a>
+## Hardening Categories<a href="#hardening-categories">![HardeningCategoriesIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/HardeningCategories.png)</a>
 
 <a name="menu-back-to-top"></a>
 From Top to bottom in order:
@@ -217,7 +217,7 @@ From Top to bottom in order:
 
 <br>
 
-## Microsoft Security Baselines<a href="#Microsoft-Security-Baselines">![MicrosoftSecurityBaseline](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Microsoft-Security-Baseline.png)</a>
+## Microsoft Security Baselines<a href="#microsoft-security-baselines">![MicrosoftSecurityBaseline](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Microsoft-Security-Baseline.png)</a>
 
 <p align="center"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/ocr.jpg" alt="A woman looking at her Windows laptop, indoor" width="700"></p>
 
@@ -707,7 +707,7 @@ These are configurations that are typically *recommended in High-Risk Environmen
 
 <br>
 
-## Windows Update Configurations<a href="windows-update-configurations">![WindowsUpdate](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/WindowsUpdate.png)</a>
+## Windows Update Configurations<a href="#windows-update-configurations">![WindowsUpdate](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/WindowsUpdate.png)</a>
 
 - 🟩 Enables [Windows Update to download and install updates on any network](https://techcommunity.microsoft.com/t5/windows-it-pro-blog/the-windows-update-policies-you-should-set-and-why/ba-p/3270914), metered or not; because the updates are important and should not be suppressed, **that's what bad actors would want.**
 - 🟩 Enables "Receive Updates for other Microsoft products" (such as PowerShell)
@@ -723,7 +723,7 @@ These are configurations that are typically *recommended in High-Risk Environmen
 
 <br>
 
-## Edge Browser configurations<a href="edge-browser-configurations">![EdgeBrowser](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/EdgeBrowser.png)</a>
+## Edge Browser configurations<a href="#edge-browser-configurations">![EdgeBrowser](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/EdgeBrowser.png)</a>
 
 - 🔶 [Block 3rd party cookies](https://learn.microsoft.com/en-us/deployedge/microsoft-edge-policies#blockthirdpartycookies)
 - 🔶 [Use DNS over HTTPS](https://learn.microsoft.com/en-us/deployedge/microsoft-edge-policies#dnsoverhttpsmode)

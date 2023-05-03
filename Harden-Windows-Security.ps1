@@ -1,6 +1,6 @@
 <#PSScriptInfo
 
-.VERSION 2023.4.24.5
+.VERSION 2023.5.3
 
 .GUID d435a293-c9ee-4217-8dc1-4ad2318a5770
 
@@ -10,7 +10,7 @@
 
 .COPYRIGHT 2023
 
-.TAGS Windows Hardening Security Bitlocker Defender Firewall Edge Protection
+.TAGS Windows Hardening Security Bitlocker Defender Firewall Edge Protection Baseline TLS UAC
 
 .LICENSEURI https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 
@@ -43,21 +43,18 @@ https://1drv.ms/x/s!AtCaUNAJbbvIhuVQhdMu_Hts7YZ_lA?e=df6H6P
 
 💠 Features of this Hardening script:
 
-  ✅ Always stays up-to-date with the newest security features and only guaranteed to work on the latest version of Windows, which is currently Windows 11. (rigorously tested on the latest Stable and Insider preview builds).
-  ✅ The script is in plain text, nothing hidden, no 3rd party executable or pre-compiled binary is involved.
-  ✅ Doesn't remove or disable Windows functionalities against Microsoft's recommendation.
-  ✅ The Readme page on GitHub is used as the reference for all of the security measures applied by this script and Group Policies. The order in which they appear there is the same as the one in the script file.
-  ✅ When a hardening command is no longer necessary because it's applied by default by Microsoft on new builds of Windows, it will also be removed from this script in order to prevent any problems and because it won't be necessary anymore.
-  ✅ The script can be run infinite number of times, it's made in a way that it won't make any duplicate changes at all.
-  ✅ The script asks for confirmation, in the PowerShell console, before running each hardening category and some sub-categories, so you can selectively run (or don't run) each of them.
-  ✅ Running this script makes your PC compliant with Secured-core PC specifications (providing that you use a modern hardware that supports the latest Windows security features). 
-  ✅ Running this script makes your system compliant with the official Microsoft Security Baselines
+  ✅ Always stays up-to-date with the newest security measures.
+  ✅ Everything is in plain text, nothing hidden, no 3rd party executable or pre-compiled binary is involved.
+  ✅ Doesn't remove or disable Windows functionalities against Microsoft's recommendations.
   ✅ The script primarily uses Group policies, the Microsoft recommended way of configuring Windows. It also uses PowerShell cmdlets where Group Policies aren't available, and finally uses a few registry keys to configure security measures that can neither be configured using Group Policies nor PowerShell cmdlets. This is why the script doesn't break anything or cause unwanted behavior.
+  ✅ When a hardening measure is no longer necessary because it's applied by default by Microsoft on new builds of Windows, it will also be removed from this script in order to prevent any problems and because it won't be necessary anymore.
+  ✅ The script can be run infinite number of times, it's made in a way that it won't make any duplicate changes.
+  ✅ The script prompts for confirmation before running each hardening category and some sub-categories, so you can selectively run (or don't run) each of them.
+  ✅ Applying this script makes your PC compliant with Microsoft Security Baselines and Secured-core PC specifications (provided that you use modern hardware that supports the latest Windows security features)
 
+🛑 Note: Windows by default is secure and safe, this script does not imply nor claim otherwise. just like anything, you have to use it wisely and don't compromise yourself with reckless behavior and bad user configuration; Nothing is foolproof. this script only uses the tools and features that have already been implemented by Microsoft in Windows OS to fine-tune it towards the highest security and locked-down state, using well-documented, supported, recommended and official methods. continue reading on GitHub for comprehensive info.
 
-🛑 Warning: Windows by default is secure and safe, this script does not imply nor claim otherwise. just like anything, you have to use it wisely and don't compromise yourself with reckless behavior and bad user configuration; Nothing is foolproof. this script only uses the tools and features that have already been implemented by Microsoft in Windows OS to fine-tune it towards the highest security and locked-down state, using well-documented, supported, recommended and official methods. continue reading on GitHub for comprehensive info.
-
-💠 Hardening Categories from top to bottom: (🔺Detailed info about each of them at my Github🔻)
+💠 Hardening Categories from top to bottom: (🔻Detailed info about each of them at my Github🔻)
 
 ⏹ Commands that require Administrator Privileges
   ✅ Microsoft Security Baselines
@@ -95,6 +92,7 @@ https://1drv.ms/x/s!AtCaUNAJbbvIhuVQhdMu_Hts7YZ_lA?e=df6H6P
     Check out GitHub page for security recommendations: https://github.com/HotCakeX/Harden-Windows-Security
 #>
 
+# Change the execution policy temporarily only for the current PowerShell session
 Set-ExecutionPolicy Bypass -Scope Process
 
 #region Functions
@@ -141,7 +139,7 @@ $null = New-Module {
     function Invoke-WithoutProgress {
         [CmdletBinding()]
         param (
-            [Parameter(Mandatory)] [scriptblock] $ScriptBlock
+            [Parameter(Mandatory)][scriptblock]$ScriptBlock
         )
         # Save current progress preference and hide the progress
         $prevProgressPreference = $global:ProgressPreference
@@ -214,7 +212,7 @@ if (Test-IsAdmin) {
 try {
 
     # Check the current hard-coded version against the latest version online
-    $currentVersion = '2023.4.24.5'
+    $currentVersion = '2023.5.3'
     try {
         $latestVersion = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Version.txt"
     }
@@ -222,7 +220,7 @@ try {
         Write-Error "Couldn't verify if the latest version of the script is installed, please check your Internet connection."
         break
     }
-    if (-NOT ($currentVersion -eq $latestVersion)) {
+    if ($currentVersion -lt $latestVersion) {
         Write-Host "The currently installed script's version is $currentVersion while the latest version is $latestVersion" -ForegroundColor Cyan
         Write-Host "Please update your script using:" -ForegroundColor Yellow
         Write-Host "Update-Script -Name 'Harden-Windows-Security' -Force" -ForegroundColor Green
@@ -245,7 +243,13 @@ try {
 
     # check if user's OS is Windows Home edition
     if ((Get-CimInstance -ClassName Win32_OperatingSystem).OperatingSystemSKU -eq "101") {
-        Write-host "Windows Home edition detected, exiting..." -ForegroundColor Red
+        Write-Error "Windows Home edition detected, exiting..."
+        break
+    }
+
+    # check if user's OS is latest version
+    if (-NOT ([System.Environment]::OSVersion.Version -ge '10.0.22621')) {
+        Write-Error "You're not using the latest version of Windows, exitting..."
         break
     }
 
@@ -312,11 +316,27 @@ try {
         # ============================================End of Microsoft Security Baselines==========================================   
         #endregion Microsoft-Security-Baseline
 
+        #region Overrides-for-Microsoft-Security-Baseline    
+        # ============================================Overrides for Microsoft Security Baseline====================================
+        switch (Select-Option -Options "Yes", "No", "Exit" -Message "Apply Overrides for Microsoft Security Baseline ?") {
+            "Yes" {
+                Write-Progress -Activity 'Overrides for Microsoft Security Baseline' -Status 'Running Overrides for Microsoft Security Baseline section' -PercentComplete 10
+
+                # Change current working directory to the LGPO's folder
+                Set-Location "$workingDir\LGPO_30"
+                .\LGPO.exe /v /m "..\Security-Baselines-X\Overrides for Microsoft Security Baseline\registry.pol"
+                .\LGPO.exe /v /s "..\Security-Baselines-X\Overrides for Microsoft Security Baseline\GptTmpl.inf"
+            } "No" { break }
+            "Exit" { &$cleanUp }
+        }    
+        # ============================================End of Overrides for Microsoft Security Baseline=============================
+        #endregion Overrides-for-Microsoft-Security-Baseline
+
         #region Microsoft-365-Apps-Security-Baseline
         # ================================================Microsoft 365 Apps Security Baseline==============================================
         switch (Select-Option -Options "Yes", "No", "Exit" -Message "`nApply Microsoft 365 Apps Security Baseline ?") {
             "Yes" {
-                Write-Progress -Activity 'Microsoft 365 Apps Security Baseline' -Status 'Running Microsoft 365 Apps Security Baseline section' -PercentComplete 10
+                Write-Progress -Activity 'Microsoft 365 Apps Security Baseline' -Status 'Running Microsoft 365 Apps Security Baseline section' -PercentComplete 15
     
                 Set-Location $workingDir
                 # Copy LGPO.exe from its folder to Microsoft Office 365 Apps for Enterprise Security Baseline folder in order to get it ready to be used by PowerShell script
@@ -338,7 +358,7 @@ try {
         # ================================================Microsoft Defender=======================================================
         switch (Select-Option -Options "Yes", "No", "Exit" -Message "Run Microsoft Defender category ?") {
             "Yes" {
-                Write-Progress -Activity 'Microsoft Defender' -Status 'Running Microsoft Defender section' -PercentComplete 15
+                Write-Progress -Activity 'Microsoft Defender' -Status 'Running Microsoft Defender section' -PercentComplete 20
 
                 # Change current working directory to the LGPO's folder
                 Set-Location "$workingDir\LGPO_30"
@@ -406,7 +426,7 @@ try {
         # =========================================Attack Surface Reduction Rules==================================================
         switch (Select-Option -Options "Yes", "No", "Exit" -Message "Run Attack Surface Reduction Rules category ?") {
             "Yes" {
-                Write-Progress -Activity 'Attack Surface Reduction Rules' -Status 'Running Attack Surface Reduction Rules section' -PercentComplete 20
+                Write-Progress -Activity 'Attack Surface Reduction Rules' -Status 'Running Attack Surface Reduction Rules section' -PercentComplete 25
                                 
                 # Change current working directory to the LGPO's folder
                 Set-Location "$workingDir\LGPO_30"
@@ -422,7 +442,7 @@ try {
         # ==========================================Bitlocker Settings=============================================================    
         switch (Select-Option -Options "Yes", "No", "Exit" -Message "Run Bitlocker category ?") {
             "Yes" {
-                Write-Progress -Activity 'Bitlocker Settings' -Status 'Running Bitlocker Settings section' -PercentComplete 25                       
+                Write-Progress -Activity 'Bitlocker Settings' -Status 'Running Bitlocker Settings section' -PercentComplete 30                     
 
                 # doing this so Controlled Folder Access won't bitch about powercfg.exe
                 Add-MpPreference -ControlledFolderAccessAllowedApplications "C:\Windows\System32\powercfg.exe"
@@ -681,7 +701,7 @@ Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which re
         # ==============================================TLS Security===============================================================    
         switch (Select-Option -Options "Yes", "No", "Exit" -Message "Run TLS Security category ?") {
             "Yes" {
-                Write-Progress -Activity 'TLS Security' -Status 'Running TLS Security section' -PercentComplete 30
+                Write-Progress -Activity 'TLS Security' -Status 'Running TLS Security section' -PercentComplete 35
                                 
                 @( # creating these registry keys that have forward slashes in them
                     'SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\DES 56/56', # DES 56-bit 
@@ -756,7 +776,7 @@ Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which re
         # ==========================================Lock Screen====================================================================
         switch (Select-Option -Options "Yes", "No", "Exit" -Message "Run Lock Screen category ?") {
             "Yes" {
-                Write-Progress -Activity 'Lock Screen' -Status 'Running Lock Screen section' -PercentComplete 35
+                Write-Progress -Activity 'Lock Screen' -Status 'Running Lock Screen section' -PercentComplete 40
                                 
                 # Change current working directory to the LGPO's folder
                 Set-Location "$workingDir\LGPO_30"
@@ -772,7 +792,7 @@ Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which re
         # ==========================================User Account Control===========================================================
         switch (Select-Option -Options "Yes", "No", "Exit" -Message "Run User Account Control category ?") {
             "Yes" {
-                Write-Progress -Activity 'User Account Control' -Status 'User Account Control section' -PercentComplete 40
+                Write-Progress -Activity 'User Account Control' -Status 'User Account Control section' -PercentComplete 45
 
                 # Change current working directory to the LGPO's folder
                 Set-Location "$workingDir\LGPO_30"
@@ -819,7 +839,7 @@ Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which re
         # ==========================================Device Guard===================================================================
         switch (Select-Option -Options "Yes", "No", "Exit" -Message "Run Device Guard category ?") {
             "Yes" {
-                Write-Progress -Activity 'Device Guard' -Status 'Running Device Guard section' -PercentComplete 45
+                Write-Progress -Activity 'Device Guard' -Status 'Running Device Guard section' -PercentComplete 50
                 
                 # Change current working directory to the LGPO's folder
                 Set-Location "$workingDir\LGPO_30"
@@ -834,7 +854,7 @@ Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which re
         # ====================================================Windows Firewall=====================================================
         switch (Select-Option -Options "Yes", "No", "Exit" -Message "Run Windows Firewall category ?") {
             "Yes" {
-                Write-Progress -Activity 'Windows Firewall' -Status 'Running Windows Firewall section' -PercentComplete 50
+                Write-Progress -Activity 'Windows Firewall' -Status 'Running Windows Firewall section' -PercentComplete 55
                                 
                 # Change current working directory to the LGPO's folder
                 Set-Location "$workingDir\LGPO_30"
@@ -854,7 +874,7 @@ Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which re
         # =================================================Optional Windows Features===============================================
         switch (Select-Option -Options "Yes", "No", "Exit" -Message "Run Optional Windows Features category ?") {
             "Yes" {
-                Write-Progress -Activity 'Optional Windows Features' -Status 'Running Optional Windows Features section' -PercentComplete 55
+                Write-Progress -Activity 'Optional Windows Features' -Status 'Running Optional Windows Features section' -PercentComplete 60
                                 
                 # since PowerShell Core (only if installed from Microsoft Store) has problem with these commands, making sure the built-in PowerShell handles them
                 # There are Github issues for it already: https://github.com/PowerShell/PowerShell/issues/13866
@@ -900,7 +920,7 @@ Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which re
         # ====================================================Windows Networking===================================================
         switch (Select-Option -Options "Yes", "No", "Exit" -Message "Run Windows Networking category ?") {
             "Yes" {
-                Write-Progress -Activity 'Windows Networking' -Status 'Running Windows Networking section' -PercentComplete 60
+                Write-Progress -Activity 'Windows Networking' -Status 'Running Windows Networking section' -PercentComplete 65
 
                 # Change current working directory to the LGPO's folder
                 Set-Location "$workingDir\LGPO_30"
@@ -921,7 +941,7 @@ Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which re
         # ==============================================Miscellaneous Configurations===============================================
         switch (Select-Option -Options "Yes", "No", "Exit" -Message "Run Miscellaneous Configurations category ?") {
             "Yes" {
-                Write-Progress -Activity 'Miscellaneous Configurations' -Status 'Running Miscellaneous Configurations section' -PercentComplete 65
+                Write-Progress -Activity 'Miscellaneous Configurations' -Status 'Running Miscellaneous Configurations section' -PercentComplete 70
                                 
                 # Miscellaneous Registry section
                 Set-Location $workingDir
@@ -962,23 +982,7 @@ Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which re
         }    
         # ============================================End of Miscellaneous Configurations==========================================
         #endregion Miscellaneous-Configurations
-
-        #region Overrides-for-Microsoft-Security-Baseline    
-        # ============================================Overrides for Microsoft Security Baseline====================================
-        switch (Select-Option -Options "Yes", "No", "Exit" -Message "Apply Overrides for Microsoft Security Baseline ?") {
-            "Yes" {
-                Write-Progress -Activity 'Overrides for Microsoft Security Baseline' -Status 'Running Overrides for Microsoft Security Baseline section' -PercentComplete 70
-
-                # Change current working directory to the LGPO's folder
-                Set-Location "$workingDir\LGPO_30"
-                .\LGPO.exe /v /m "..\Security-Baselines-X\Overrides for Microsoft Security Baseline\registry.pol"
-                .\LGPO.exe /v /s "..\Security-Baselines-X\Overrides for Microsoft Security Baseline\GptTmpl.inf"
-            } "No" { break }
-            "Exit" { &$cleanUp }
-        }    
-        # ============================================End of Overrides for Microsoft Security Baseline=============================
-        #endregion Overrides-for-Microsoft-Security-Baseline
-
+ 
         #region Windows-Update-Configurations    
         # ====================================================Windows Update Configurations==============================================
         switch (Select-Option -Options "Yes", "No", "Exit" -Message "Apply Windows Update Policies ?") {

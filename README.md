@@ -712,7 +712,8 @@ These are configurations that are typically *recommended in High-Risk Environmen
 - 🟩 Enables [Windows Update to download and install updates on any network](https://techcommunity.microsoft.com/t5/windows-it-pro-blog/the-windows-update-policies-you-should-set-and-why/ba-p/3270914), metered or not; because the updates are important and should not be suppressed, **that's what bad actors would want.**
 - 🟩 Enables "Receive Updates for other Microsoft products" (such as PowerShell)
 - 🔶 Enables "Notify me when a restart is required to finish updating"
-- 🟩 Sets the deadline for automatic quality and feature updates and restarts to 2 days with 2 extra days as grace periods, so after Windows update installations, users will have up to 4 days to save their work and restart their device, before system is automatically restarted, to apply the updates.
+- 🟩 Sets the deadline for automatic quality and feature updates and restarts to 2 days. Sets the grace periods to 2 days as well.
+- 🟩 [Enables features introduced via servicing that are off by default](https://learn.microsoft.com/en-us/windows/deployment/update/waas-configure-wufb) so that users will be able to get new features after having Windows Update settings managed by Group Policy as the result of running this category.
 
 <p align="right"><a href="#menu-back-to-top">💡(back to categories)</a></p>
 

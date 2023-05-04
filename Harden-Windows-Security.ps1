@@ -1,6 +1,6 @@
 <#PSScriptInfo
 
-.VERSION 2023.5.3
+.VERSION 2023.5.4
 
 .GUID d435a293-c9ee-4217-8dc1-4ad2318a5770
 
@@ -10,7 +10,7 @@
 
 .COPYRIGHT 2023
 
-.TAGS Windows Hardening Security Bitlocker Defender Firewall Edge Protection Baseline TLS UAC
+.TAGS Windows Hardening Security Bitlocker Defender Firewall Edge Protection Baseline TLS UAC Encryption
 
 .LICENSEURI https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 
@@ -212,7 +212,7 @@ if (Test-IsAdmin) {
 try {
 
     # Check the current hard-coded version against the latest version online
-    $currentVersion = '2023.5.3'
+    $currentVersion = '2023.5.4'
     try {
         $latestVersion = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Version.txt"
     }
@@ -256,12 +256,12 @@ try {
     # create our working directory
     New-Item -ItemType Directory -Path "$env:TEMP\HardeningXStuff\" -Force | Out-Null
     # working directory assignment
-    $workingDir = "$env:TEMP\HardeningXStuff\"
+    $WorkingDir = "$env:TEMP\HardeningXStuff\"
     # change location to the new directory
-    Set-Location $workingDir
+    Set-Location $WorkingDir
 
     # Clean up script block
-    $cleanUp = { Set-Location $HOME; remove-item -Recurse "$env:TEMP\HardeningXStuff\" -Force; exit }
+    $CleanUp = { Set-Location $HOME; remove-item -Recurse "$env:TEMP\HardeningXStuff\" -Force; exit }
 
     if (-NOT (Test-IsAdmin))
     { write-host "Skipping commands that require Administrator privileges" -ForegroundColor Magenta }
@@ -283,7 +283,7 @@ try {
             }
             catch {
                 Write-Error "The required files couldn't be downloaded, Make sure you have Internet connection."
-                &$cleanUp   
+                &$CleanUp   
             }
         }
         # unzip Microsoft Security Baselines file
@@ -311,23 +311,23 @@ try {
                 # Run the official PowerShell script included in the Microsoft Security Baseline file we downloaded from Microsoft servers
                 .\Baseline-LocalInstall.ps1 -Win11NonDomainJoined            
             } "No" { break }
-            "Exit" { &$cleanUp }
+            "Exit" { &$CleanUp }
         }    
         # ============================================End of Microsoft Security Baselines==========================================   
         #endregion Microsoft-Security-Baseline
 
         #region Overrides-for-Microsoft-Security-Baseline    
         # ============================================Overrides for Microsoft Security Baseline====================================
-        switch (Select-Option -Options "Yes", "No", "Exit" -Message "Apply Overrides for Microsoft Security Baseline ?") {
+        switch (Select-Option -Options "Yes", "No", "Exit" -Message "`nApply Overrides for Microsoft Security Baseline ?") {
             "Yes" {
                 Write-Progress -Activity 'Overrides for Microsoft Security Baseline' -Status 'Running Overrides for Microsoft Security Baseline section' -PercentComplete 10
 
                 # Change current working directory to the LGPO's folder
-                Set-Location "$workingDir\LGPO_30"
+                Set-Location "$WorkingDir\LGPO_30"
                 .\LGPO.exe /v /m "..\Security-Baselines-X\Overrides for Microsoft Security Baseline\registry.pol"
                 .\LGPO.exe /v /s "..\Security-Baselines-X\Overrides for Microsoft Security Baseline\GptTmpl.inf"
             } "No" { break }
-            "Exit" { &$cleanUp }
+            "Exit" { &$CleanUp }
         }    
         # ============================================End of Overrides for Microsoft Security Baseline=============================
         #endregion Overrides-for-Microsoft-Security-Baseline
@@ -338,30 +338,30 @@ try {
             "Yes" {
                 Write-Progress -Activity 'Microsoft 365 Apps Security Baseline' -Status 'Running Microsoft 365 Apps Security Baseline section' -PercentComplete 15
     
-                Set-Location $workingDir
+                Set-Location $WorkingDir
                 # Copy LGPO.exe from its folder to Microsoft Office 365 Apps for Enterprise Security Baseline folder in order to get it ready to be used by PowerShell script
                 Copy-Item -Path ".\LGPO_30\LGPO.exe" -Destination '.\Microsoft 365 Apps for Enterprise-2206-FINAL\Scripts\Tools'
 
                 # Change directory to the Security Baselines folder
-                Set-Location "$workingDir\Microsoft 365 Apps for Enterprise-2206-FINAL\Scripts\"
+                Set-Location "$WorkingDir\Microsoft 365 Apps for Enterprise-2206-FINAL\Scripts\"
 
                 Write-Host "`nApplying Microsoft 365 Apps Security Baseline" -ForegroundColor Cyan
                 # Run the official PowerShell script included in the Microsoft Security Baseline file we downloaded from Microsoft servers
                 .\Baseline-LocalInstall.ps1           
             } "No" { break }
-            "Exit" { &$cleanUp }
+            "Exit" { &$CleanUp }
         }
         # ================================================End of Microsoft 365 Apps Security Baseline==============================================
         #endregion Microsoft-365-Apps-Security-Baseline
     
         #region Microsoft-Defender
         # ================================================Microsoft Defender=======================================================
-        switch (Select-Option -Options "Yes", "No", "Exit" -Message "Run Microsoft Defender category ?") {
+        switch (Select-Option -Options "Yes", "No", "Exit" -Message "`nRun Microsoft Defender category ?") {
             "Yes" {
                 Write-Progress -Activity 'Microsoft Defender' -Status 'Running Microsoft Defender section' -PercentComplete 20
 
                 # Change current working directory to the LGPO's folder
-                Set-Location "$workingDir\LGPO_30"
+                Set-Location "$WorkingDir\LGPO_30"
                 .\LGPO.exe /m "..\Security-Baselines-X\Microsoft Defender Policies\registry.pol"
         
                 # Optimizing Network Protection Performance of Windows Defender - this was off by default on Windows 11 insider build 25247
@@ -371,7 +371,7 @@ try {
                 Get-ChildItem "C:\Users\*\OneDrive" | ForEach-Object { Add-MpPreference -ControlledFolderAccessProtectedFolders $_ }
 
                 # Try turning on Smart App Control
-                switch (Select-Option -Options "Yes", "No", "Exit" -Message "Turn on Smart App Control ?") {
+                switch (Select-Option -Options "Yes", "No", "Exit" -Message "`nTurn on Smart App Control ?") {
                     "Yes" {               
                         if ((Get-MpComputerStatus).SmartAppControlState -eq "Eval") {
                             ModifyRegistry -path 'HKLM:\SYSTEM\CurrentControlSet\Control\CI\Policy' -key 'VerifiedAndReputablePolicyState' -value '1' -type 'DWORD'
@@ -383,13 +383,13 @@ try {
                             Write-Host "Smart App Control is turned off. Can't use registry to force enable it.`n"
                         }
                     } "No" { break }
-                    "Exit" { &$cleanUp }
+                    "Exit" { &$CleanUp }
                 }
                 # Enable Mandatory ASLR
                 set-processmitigation -System -Enable ForceRelocateImages
 
                 # Create scheduled task for fast weekly Microsoft recommended driver block list update
-                switch (Select-Option -Options "Yes", "No", "Exit" -Message "Create scheduled task for fast weekly Microsoft recommended driver block list update ?") {
+                switch (Select-Option -Options "Yes", "No", "Exit" -Message "`nCreate scheduled task for fast weekly Microsoft recommended driver block list update ?") {
                     "Yes" { 
                         # create a scheduled task that runs every 7 days
                         if (-NOT (Get-ScheduledTask -TaskName "MSFT Driver Block list update" -ErrorAction SilentlyContinue)) {        
@@ -406,41 +406,41 @@ try {
                             Set-ScheduledTask -TaskPath "MSFT Driver Block list update" -TaskName "MSFT Driver Block list update" -Settings $TaskSettings 
                         }
                     } "No" { break }
-                    "Exit" { &$cleanUp }
+                    "Exit" { &$CleanUp }
                 }
                 # Set Microsoft Defender engine and platform update channel to beta - Devices in the Windows Insider Program are subscribed to this channel by default.
-                switch (Select-Option -Options "Yes", "No", "Exit" -Message "Set Microsoft Defender engine and platform update channel to beta ?") {
+                switch (Select-Option -Options "Yes", "No", "Exit" -Message "`nSet Microsoft Defender engine and platform update channel to beta ?") {
                     "Yes" {             
                         Set-MpPreference -EngineUpdatesChannel beta
                         Set-MpPreference -PlatformUpdatesChannel beta
                     } "No" { break }
-                    "Exit" { &$cleanUp }
+                    "Exit" { &$CleanUp }
                 }            
             } "No" { break }
-            "Exit" { &$cleanUp }
+            "Exit" { &$CleanUp }
         }    
         # ============================================End of Microsoft Defender====================================================    
         #endregion Microsoft-Defender
 
         #region Attack-Surface-Reduction-Rules    
         # =========================================Attack Surface Reduction Rules==================================================
-        switch (Select-Option -Options "Yes", "No", "Exit" -Message "Run Attack Surface Reduction Rules category ?") {
+        switch (Select-Option -Options "Yes", "No", "Exit" -Message "`nRun Attack Surface Reduction Rules category ?") {
             "Yes" {
                 Write-Progress -Activity 'Attack Surface Reduction Rules' -Status 'Running Attack Surface Reduction Rules section' -PercentComplete 25
                                 
                 # Change current working directory to the LGPO's folder
-                Set-Location "$workingDir\LGPO_30"
+                Set-Location "$WorkingDir\LGPO_30"
                 
                 .\LGPO.exe /m "..\Security-Baselines-X\Attack Surface Reduction Rules Policies\registry.pol"
             } "No" { break }
-            "Exit" { &$cleanUp }
+            "Exit" { &$CleanUp }
         }
         # =========================================End of Attack Surface Reduction Rules===========================================
         #endregion Attack-Surface-Reduction-Rules
     
         #region Bitlocker-Settings    
         # ==========================================Bitlocker Settings=============================================================    
-        switch (Select-Option -Options "Yes", "No", "Exit" -Message "Run Bitlocker category ?") {
+        switch (Select-Option -Options "Yes", "No", "Exit" -Message "`nRun Bitlocker category ?") {
             "Yes" {
                 Write-Progress -Activity 'Bitlocker Settings' -Status 'Running Bitlocker Settings section' -PercentComplete 30                     
 
@@ -452,7 +452,7 @@ try {
                 Start-Sleep 3
                 Remove-MpPreference -ControlledFolderAccessAllowedApplications "C:\Windows\System32\powercfg.exe"
                 # Change current working directory to the LGPO's folder
-                Set-Location "$workingDir\LGPO_30"
+                Set-Location "$WorkingDir\LGPO_30"
 
                 .\LGPO.exe /m "..\Security-Baselines-X\Bitlocker Policies\registry.pol"
 
@@ -509,7 +509,7 @@ try {
                 $bootDMAProtection = ([SystemInfo.NativeMethods]::BootDmaCheck()) -ne 0
 
                 # Change current working directory to the LGPO's folder
-                Set-Location "$workingDir\LGPO_30"
+                Set-Location "$WorkingDir\LGPO_30"
             
                 # Enables or disables DMA protection from Bitlocker Countermeasures based on the status of Kernel DMA protection.
                 if ($bootDMAProtection) {                 
@@ -520,186 +520,246 @@ try {
                     Write-Host "Kernel DMA protection is unavailable on the system, enabling Bitlocker DMA protection." -ForegroundColor Blue
                     .\LGPO.exe /m "..\Security-Baselines-X\Overrides for Microsoft Security Baseline\Bitlocker DMA\Bitlocker DMA Countermeasure ON\Registry.pol"                                                          
                 }
+
                 # Set-up Bitlocker encryption for OS Drive with TPMandPIN and recovery password keyprotectors and Verify its implementation            
                 # check, make sure there is no CD/DVD drives in the system, because Bitlocker throws an error when there is
                 $CdDvdCheck = (Get-CimInstance -ClassName Win32_CDROMDrive -Property *).MediaLoaded
                 if ($CdDvdCheck) {
-                    Write-Warning "Remove any CD/DVD drives or mounted images/ISO from the system and run the Bitlocker category after that"
+                    Write-Warning "Remove any CD/DVD drives or mounted images/ISO from the system and run the Bitlocker category again."
+                    # break from the current loop and continue to the next hardening category
                     break
                 }
+        
                 # check make sure Bitlocker isn't in the middle of decryption/encryption operation (on System Drive)
                 if ((Get-BitLockerVolume -MountPoint $env:SystemDrive).EncryptionPercentage -ne "100" -and (Get-BitLockerVolume -MountPoint $env:SystemDrive).EncryptionPercentage -ne "0") {
                     $EncryptionPercentageVar = (Get-BitLockerVolume -MountPoint $env:SystemDrive).EncryptionPercentage
-                    Write-Host "Please wait for Bitlocker operation to finish encrypting or decrypting the disk" -ForegroundColor Magenta
-                    Write-Host "drive $env:SystemDrive encryption is currently at $EncryptionPercentageVar" -ForegroundColor Magenta
+                    Write-Host "`nPlease wait for Bitlocker to finish encrypting or decrypting the Operation System Drive." -ForegroundColor Yellow
+                    Write-Host "Drive $env:SystemDrive encryption is currently at $EncryptionPercentageVar percent." -ForegroundColor Yellow
+                    break
                 }
-
-                else {
-                    # check if Bitlocker is enabled for the system drive
-                    if ((Get-BitLockerVolume -MountPoint $env:SystemDrive).ProtectionStatus -eq "on") {                                 
-                        $KeyProtectors = (Get-BitLockerVolume -MountPoint $env:SystemDrive).KeyProtector.keyprotectortype
-                        # check if TPM+PIN and recovery password are being used with Bitlocker which are the safest settings
-                        if ($KeyProtectors -contains 'Tpmpin' -and $KeyProtectors -contains 'recoveryPassword') {        
-                            Write-Host "Bitlocker is fully and securely enabled for the OS drive" -ForegroundColor Green    
-                        }
-                        else {       
-                            # if Bitlocker is using TPM+PIN but not recovery password (for key protectors)
-                            if ($KeyProtectors -contains 'Tpmpin' -and $KeyProtectors -notcontains 'recoveryPassword') {
-                                Write-Host "`nTPM and Startup Pin are available but the recovery password is missing, adding it now...`
-the recovery password will be saved in a Text file in $env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt" -ForegroundColor yellow                          
-                                Add-BitLockerKeyProtector -MountPoint $env:SystemDrive -RecoveryPasswordProtector *> "$env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt"
-                                Write-Host "Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which requires authentication to access." -ForegroundColor Blue                         
-                            }                
-                            # if Bitlocker is using recovery password but not TPM+PIN
-                            if ($KeyProtectors -notcontains 'Tpmpin' -and $KeyProtectors -contains 'recoveryPassword') {            
-                                Write-Host "TPM and Start up PIN are missing but recovery password is in place, `nadding TPM and Start up PIN now..." -ForegroundColor Magenta
-                                do {
-                                    $pin1 = $(write-host "Enter a Pin for Bitlocker startup (at least 10 characters)" -ForegroundColor Magenta; Read-Host -AsSecureString)
-                                    $pin2 = $(write-host "Confirm your Bitlocker Startup Pin (at least 10 characters)" -ForegroundColor Magenta; Read-Host -AsSecureString)
-                                      
-                                    $TheyMatch = Compare-SecureString $pin1 $pin2
-
-                                    if ( $TheyMatch -and $pin1.Length -ge 10 -and $pin2.Length -ge 10  ) {                  
-                                        $pin = $pin1                  
-                                    }                  
-                                    else { Write-Host "The PINs you entered didn't match or they weren't at least 10 characters, try again" -ForegroundColor red }                  
-                                }                  
-                                until ($TheyMatch -and $pin1.Length -ge 10 -and $pin2.Length -ge 10)
-                 
-                                try {
-                                    Add-BitLockerKeyProtector -MountPoint $env:SystemDrive -TpmAndPinProtector -Pin $pin -ErrorAction Stop
-                                    Write-Host "PINs matched, enabling TPM and startup PIN now" -ForegroundColor DarkMagenta
-                                }    
-                                catch {         
-                                    Write-Host "These errors occured, run Bitlocker category again after meeting the requirements" -ForegroundColor Red
-                                    $Error
-                                    break
-                                }
-                            }     
-                        }     
-                    }   
-                    else {
-                        Write-Host "Bitlocker is Not enabled for the System Drive, activating now..." -ForegroundColor yellow    
-                        do {
-                            $pin1 = $(write-host "Enter a Pin for Bitlocker startup (at least 10 characters)" -ForegroundColor Magenta; Read-Host -AsSecureString)
-                            $pin2 = $(write-host "Confirm your Bitlocker Startup Pin (at least 10 characters)" -ForegroundColor Magenta; Read-Host -AsSecureString)
-      
-                            $TheyMatch = Compare-SecureString $pin1 $pin2
-            
-                            if ($TheyMatch -and $pin1.Length -ge 10 -and $pin2.Length -ge 10) {      
-                                $pin = $pin1      
-                            }      
-                            else { Write-Host "The PINs you entered didn't match or they weren't at least 10 characters, try again" -ForegroundColor red }      
-                        }      
-                        until ($TheyMatch -and $pin1.Length -ge 10 -and $pin2.Length -ge 10)
-
-                        try {
-                            enable-bitlocker -MountPoint $env:SystemDrive -EncryptionMethod XtsAes256 -pin $pin -TpmAndPinProtector -SkipHardwareTest -ErrorAction Stop             
-                        }
-                        catch {
-                            Write-Host "These errors occured, run Bitlocker category again after meeting the requirements" -ForegroundColor Red
-                            $Error
-                            break
-                        }     
-                        Add-BitLockerKeyProtector -MountPoint $env:SystemDrive -RecoveryPasswordProtector *> "$env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt" 
-                        Resume-BitLocker -MountPoint $env:SystemDrive
-                        Write-Host "`nthe recovery password will be saved in a Text file in $env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt`
-Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which requires authentication to access." -ForegroundColor Blue
-                        Write-Host "Bitlocker is now fully and securely enabled for OS drive" -ForegroundColor Green                     
+                
+                # check if Bitlocker is enabled for the system drive
+                if ((Get-BitLockerVolume -MountPoint $env:SystemDrive).ProtectionStatus -eq "on") {                                 
+                    $KeyProtectors = (Get-BitLockerVolume -MountPoint $env:SystemDrive).KeyProtector.keyprotectortype
+                    # check if TPM+PIN and recovery password are being used with Bitlocker which are the safest settings
+                    if ($KeyProtectors -contains 'Tpmpin' -and $KeyProtectors -contains 'recoveryPassword') {        
+                        Write-Host "Bitlocker is fully and securely enabled for the OS drive" -ForegroundColor Green
                     }
+                    else {       
+                        # if Bitlocker is using TPM+PIN but not recovery password (for key protectors)
+                        if ($KeyProtectors -contains 'Tpmpin' -and $KeyProtectors -notcontains 'recoveryPassword') {
+
+                            $BitLockerMsg = "`nTPM and Startup Pin are available but the recovery password is missing, adding it now... `n" +
+                            "The recovery password will be saved in a Text file in $env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt"
+                            Write-Host $BitLockerMsg -ForegroundColor Yellow
+
+                            Add-BitLockerKeyProtector -MountPoint $env:SystemDrive -RecoveryPasswordProtector *> "$env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt"
+                            Write-Host "`nMake sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which requires authentication to access." -ForegroundColor Cyan                         
+                        }                
+                        # if Bitlocker is using recovery password but not TPM+PIN
+                        if ($KeyProtectors -notcontains 'Tpmpin' -and $KeyProtectors -contains 'recoveryPassword') {            
+                            Write-Host "`nTPM and Start up PIN are missing but recovery password is in place, `nAdding TPM and Start up PIN now..." -ForegroundColor Cyan
+                            do {
+                                $pin1 = $(write-host "`nEnter a Pin for Bitlocker startup (at least 10 characters)" -ForegroundColor Magenta; Read-Host -AsSecureString)
+                                $pin2 = $(write-host "Confirm your Bitlocker Startup Pin (at least 10 characters)" -ForegroundColor Magenta; Read-Host -AsSecureString)
+                        
+                                # Compare the PINs and make sure they match
+                                $TheyMatch = Compare-SecureString $pin1 $pin2
+                                # If the PINs match and they are at least 10 characters long
+                                if ( $TheyMatch -and $pin1.Length -ge 10 -and $pin2.Length -ge 10  ) {                  
+                                    $pin = $pin1                  
+                                }                  
+                                else { Write-Host "The PINs you entered didn't match or they weren't at least 10 characters, try again" -ForegroundColor red }                  
+                            }
+                            # Repeat this process until the entered PINs match and they are at least 10 characters long            
+                            until ($TheyMatch -and $pin1.Length -ge 10 -and $pin2.Length -ge 10)
+                 
+                            try {
+                                Add-BitLockerKeyProtector -MountPoint $env:SystemDrive -TpmAndPinProtector -Pin $pin -ErrorAction Stop
+                                Write-Host "`nPINs matched, enabling TPM and startup PIN now" -ForegroundColor Green
+                            }    
+                            catch {         
+                                Write-Host "These errors occured, run Bitlocker category again after meeting the requirements" -ForegroundColor Red
+                                $Error
+                                break
+                            }
+                        }     
+                    }     
                 }
+                # Do this if Bitlocker is not enabled for the OS drive
+                else {
+                    Write-Host "`nBitlocker is Not enabled for the System Drive, activating now..." -ForegroundColor Yellow    
+                    do {
+                        $pin1 = $(write-host "Enter a Pin for Bitlocker startup (at least 10 characters)" -ForegroundColor Magenta; Read-Host -AsSecureString)
+                        $pin2 = $(write-host "Confirm your Bitlocker Startup Pin (at least 10 characters)" -ForegroundColor Magenta; Read-Host -AsSecureString)
+      
+                        $TheyMatch = Compare-SecureString $pin1 $pin2
+            
+                        if ($TheyMatch -and $pin1.Length -ge 10 -and $pin2.Length -ge 10) {      
+                            $pin = $pin1      
+                        }      
+                        else { Write-Host "The PINs you entered didn't match or they weren't at least 10 characters, try again" -ForegroundColor red }      
+                    }      
+                    until ($TheyMatch -and $pin1.Length -ge 10 -and $pin2.Length -ge 10)
+
+                    try {
+                        Enable-bitlocker -MountPoint $env:SystemDrive -EncryptionMethod XtsAes256 -pin $pin -TpmAndPinProtector -SkipHardwareTest -ErrorAction Stop             
+                    }
+                    catch {
+                        Write-Host "These errors occured, run Bitlocker category again after meeting the requirements" -ForegroundColor Red
+                        $Error
+                        break
+                    }     
+                    Add-BitLockerKeyProtector -MountPoint $env:SystemDrive -RecoveryPasswordProtector *> "$env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt" 
+                    Resume-BitLocker -MountPoint $env:SystemDrive
+
+                    $BitLockerMsg = "`nThe recovery password will be saved in a Text file in $env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt `n" +
+                    "Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which requires authentication to access."
+                    Write-Host $BitLockerMsg -ForegroundColor Cyan
+
+                    Write-Host "`nBitlocker is now fully and securely enabled for OS drive" -ForegroundColor Green                
+                }
+
                 # Enable Bitlocker for all the other drives
                 # check if there is any other drive besides OS drive
-                $nonOSVolumes = Get-Volume | Where-Object { $_.DriveType -ne "Removable" } | Where-Object { $_.DriveLetter } -PipelineVariable NonRemovableDrives |
+                $NonOSVolumes = Get-Volume | Where-Object { $_.DriveType -ne "Removable" } | Where-Object { $_.DriveLetter } -PipelineVariable NonRemovableDrives |
                 foreach-object { Get-BitLockerVolume | Where-Object { $_.volumeType -ne "OperatingSystem" -and $_.MountPoint -eq $($($NonRemovableDrives.DriveLetter) + ":") } }
-                if ($nonOSVolumes) {
-                    $nonOSVolumes |
-                    ForEach-Object {
+
+                if ($NonOSVolumes) {
+                    
+                    $NonOSVolumes | Sort-Object | ForEach-Object {
                         $MountPoint = $_.MountPoint
-                        if ((Get-BitLockerVolume -MountPoint $MountPoint).EncryptionPercentage -ne "100" -and (Get-BitLockerVolume -MountPoint $MountPoint).EncryptionPercentage -ne "0") {
-                            $EncryptionPercentageVar = (Get-BitLockerVolume -MountPoint $MountPoint).EncryptionPercentage
-                            Write-Host "Please wait for Bitlocker operation to finish encrypting or decrypting drive $MountPoint" -ForegroundColor Magenta
-                            Write-Host "drive $MountPoint encryption is currently at $EncryptionPercentageVar" -ForegroundColor Magenta
-                        }   
-                        else {
-                            if ((Get-BitLockerVolume -MountPoint $MountPoint).ProtectionStatus -eq "on") {    
-                                $KeyProtectors = (Get-BitLockerVolume -MountPoint $MountPoint).KeyProtector.keyprotectortype    
-                                if ($KeyProtectors -contains 'RecoveryPassword' -and $KeyProtectors -contains 'ExternalKey') {
-                                    # if there is any External key key protector, delete all of them and add a new one
-                                    $ExternalKeyProtectors = ((Get-BitLockerVolume -MountPoint $MountPoint).KeyProtector |
-                                        Where-Object { $_.keyprotectortype -eq "ExternalKey" }).KeyProtectorId
-                                    if ($ExternalKeyProtectors) {
-                                        $ExternalKeyProtectors | ForEach-Object {
-                                            Remove-BitLockerKeyProtector -MountPoint $MountPoint -KeyProtectorId $_ -ErrorAction SilentlyContinue 
-                                        }
-                                    }
-                                    Enable-BitLockerAutoUnlock -MountPoint $MountPoint
-                                    # if there is more than 1 Recovery Password, delete all of them and add a new one
-                                    $RecoveryPasswordKeyProtectors = ((Get-BitLockerVolume -MountPoint $MountPoint).KeyProtector |
-                                        Where-Object { $_.keyprotectortype -eq "RecoveryPassword" }).KeyProtectorId
-                                    if ($RecoveryPasswordKeyProtectors.Count -gt 1) {
-                                        write-host "there are more than 1 recovery password key protector associated with the drive $mountpoint`
-Removing all of them and adding a new one now. Bitlocker Recovery Password has been added for drive $MountPoint`
-it will be saved in a Text file in $($MountPoint)\Drive $($MountPoint.Remove(1)) recovery password.txt . Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which requires authentication to access." -ForegroundColor Yellow   
-                                        $RecoveryPasswordKeyProtectors | ForEach-Object {
-                                            Remove-BitLockerKeyProtector -MountPoint $MountPoint -KeyProtectorId $_ 
-                                        }
-                                        Add-BitLockerKeyProtector -MountPoint $MountPoint -RecoveryPasswordProtector *> "$MountPoint\Drive $($MountPoint.Remove(1)) recovery password.txt";
-                                    }
-                                
-                                    Write-Host "Bitlocker is fully and securely enabled for drive $MountPoint" -ForegroundColor Green    
-                                }
-                                else {
-                                    if ($KeyProtectors -contains 'ExternalKey' -and $KeyProtectors -notcontains 'RecoveryPassword' ) {
-                                        # if there is any External key key protector, delete all of them and add a new one
+
+                        # Prompt for confirmation before encrypting each drive
+                        switch (Select-Option -Options "Yes", "No", "Exit" -Message "`nEncrypt $MountPoint drive ?`n") {
+                            "Yes" {  
+
+                                #Make sure the non-OS drive that the user selected to be encrypted is not in the middle of any encryption/decryption operation
+                                if ((Get-BitLockerVolume -MountPoint $MountPoint).EncryptionPercentage -ne "100" -and (Get-BitLockerVolume -MountPoint $MountPoint).EncryptionPercentage -ne "0") {
+                                    $EncryptionPercentageVar = (Get-BitLockerVolume -MountPoint $MountPoint).EncryptionPercentage
+                                    Write-Host "`nPlease wait for Bitlocker to finish encrypting or decrypting drive $MountPoint" -ForegroundColor Magenta
+                                    Write-Host "Drive $MountPoint encryption is currently at $EncryptionPercentageVar percent." -ForegroundColor Magenta
+                                    break
+                                }   
+                        
+                                # Check to see if Bitlocker is already turned on in the user selected drive
+                                # if it is, perform multiple checks on its key protectors                        
+                                if ((Get-BitLockerVolume -MountPoint $MountPoint).ProtectionStatus -eq "on") {  
+
+                                    # Check 1: if Recovery Password and Auto Unlock key protectors are available on the drive
+                                    $KeyProtectors = (Get-BitLockerVolume -MountPoint $MountPoint).KeyProtector.keyprotectortype 
+                                    if ($KeyProtectors -contains 'RecoveryPassword' -and $KeyProtectors -contains 'ExternalKey') {
+
+                                        # Additional Check 1: if there is any External key key protector, try delete all of them and add a new one
+                                        # The external key protector that is being used to unlock the drive will not be deleted
                                         $ExternalKeyProtectors = ((Get-BitLockerVolume -MountPoint $MountPoint).KeyProtector |
                                             Where-Object { $_.keyprotectortype -eq "ExternalKey" }).KeyProtectorId
-                                        if ($ExternalKeyProtectors) {
-                                            $ExternalKeyProtectors | ForEach-Object {
-                                                Remove-BitLockerKeyProtector -MountPoint $MountPoint -KeyProtectorId $_ -ErrorAction SilentlyContinue 
-                                            }
+
+                                        $ExternalKeyProtectors | ForEach-Object {
+                                            # -ErrorAction SilentlyContinue makes sure no error is thrown if the drive only has 1 External key key protector
+                                            # and it's being used to unlock the drive
+                                            Remove-BitLockerKeyProtector -MountPoint $MountPoint -KeyProtectorId $_ -ErrorAction SilentlyContinue                                            
                                         }
-                                        Enable-BitLockerAutoUnlock -MountPoint $MountPoint                                             
-                                        Add-BitLockerKeyProtector -MountPoint $MountPoint -RecoveryPasswordProtector *> "$MountPoint\Drive $($MountPoint.Remove(1)) recovery password.txt";
-                                        Write-Host "`nDrive $MountPoint is auto-unlocked but doesn't have Recovery Password, adding it now...`
-Bitlocker Recovery Password has been added for drive $MountPoint . it will be saved in a Text file in $($MountPoint)\Drive $($MountPoint.Remove(1)) recovery password.txt`
-Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which requires authentication to access." -ForegroundColor Blue
-                                    }
-                                    if ($KeyProtectors -contains 'RecoveryPassword' -and $KeyProtectors -notcontains 'ExternalKey') {
                                         Enable-BitLockerAutoUnlock -MountPoint $MountPoint
-                                        # if there is more than 1 Recovery Password, delete all of them and add a new one
+
+                                        # Additional Check 2: if there are more than 1 Recovery Password, delete all of them and add a new one
                                         $RecoveryPasswordKeyProtectors = ((Get-BitLockerVolume -MountPoint $MountPoint).KeyProtector |
                                             Where-Object { $_.keyprotectortype -eq "RecoveryPassword" }).KeyProtectorId
                                         if ($RecoveryPasswordKeyProtectors.Count -gt 1) {
-                                            write-host "there are more than 1 recovery password key protector associated with the drive $mountpoint`
-Removing all of them and adding a new one now. Bitlocker Recovery Password has been added for drive $MountPoint`
-it will be saved in a Text file in $($MountPoint)\Drive $($MountPoint.Remove(1)) recovery password.txt . Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which requires authentication to access." -ForegroundColor Yellow   
+
+                                            $BitLockerMsg = "`nThere are more than 1 recovery password key protector associated with the drive $mountpoint `n" +
+                                            "Removing all of them and adding a new one now. `n" + 
+                                            "Bitlocker Recovery Password has been added for drive $MountPoint `n" +
+                                            "It will be saved in a Text file in $($MountPoint)\Drive $($MountPoint.Remove(1)) recovery password.txt `n" +
+                                            "Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which requires authentication to access." 
+                                            write-host $BitLockerMsg -ForegroundColor Yellow
+
                                             $RecoveryPasswordKeyProtectors | ForEach-Object {
                                                 Remove-BitLockerKeyProtector -MountPoint $MountPoint -KeyProtectorId $_ 
                                             }
+                                            # Add new Recovery Password key protector after removing the previous ones
                                             Add-BitLockerKeyProtector -MountPoint $MountPoint -RecoveryPasswordProtector *> "$MountPoint\Drive $($MountPoint.Remove(1)) recovery password.txt";
-                                        }                                    
-                                    }                      
+                                        }                                
+                                        Write-Host "`nBitlocker is fully and securely enabled for drive $MountPoint" -ForegroundColor Green    
+                                    }
+                                    
+                                    # This happens if the drive has either Recovery Password or Auto Unlock key protector missing
+                                    else {
+
+                                        # Check 2: If the selected drive has Auto Unlock key protector but doesn't have Recovery Password
+                                        if ($KeyProtectors -contains 'ExternalKey' -and $KeyProtectors -notcontains 'RecoveryPassword' ) {
+
+                                            # if there is any External key key protector, delete all of them and add a new one
+                                            $ExternalKeyProtectors = ((Get-BitLockerVolume -MountPoint $MountPoint).KeyProtector |
+                                                Where-Object { $_.keyprotectortype -eq "ExternalKey" }).KeyProtectorId
+                                            if ($ExternalKeyProtectors) {
+                                                $ExternalKeyProtectors | ForEach-Object {
+                                                    Remove-BitLockerKeyProtector -MountPoint $MountPoint -KeyProtectorId $_ -ErrorAction SilentlyContinue 
+                                                }
+                                            }
+                                            Enable-BitLockerAutoUnlock -MountPoint $MountPoint
+                                            # Add Recovery Password Key protector and save it to a file inside the drive                                            
+                                            Add-BitLockerKeyProtector -MountPoint $MountPoint -RecoveryPasswordProtector *> "$MountPoint\Drive $($MountPoint.Remove(1)) recovery password.txt";
+                                    
+                                            $BitLockerMsg = "`nDrive $MountPoint is auto-unlocked but doesn't have Recovery Password, adding it now... `n" +
+                                            "Bitlocker Recovery Password has been added for drive $MountPoint `n" +
+                                            "It will be saved in a Text file in $($MountPoint)\Drive $($MountPoint.Remove(1)) recovery password.txt `n" +
+                                            "Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which requires authentication to access."
+                                            Write-Host $BitLockerMsg -ForegroundColor Cyan
+                                        }
+
+                                        # Check 3: If the selected drive has Recovery Password key protector but doesn't have Auto Unlock enabled
+                                        if ($KeyProtectors -contains 'RecoveryPassword' -and $KeyProtectors -notcontains 'ExternalKey') {
+                                            Enable-BitLockerAutoUnlock -MountPoint $MountPoint
+                                    
+                                            # if there are more than 1 Recovery Password, delete all of them and add a new one
+                                            $RecoveryPasswordKeyProtectors = ((Get-BitLockerVolume -MountPoint $MountPoint).KeyProtector |
+                                                Where-Object { $_.keyprotectortype -eq "RecoveryPassword" }).KeyProtectorId
+
+                                            if ($RecoveryPasswordKeyProtectors.Count -gt 1) {
+
+                                                $BitLockerMsg = "`nThere are more than 1 recovery password key protector associated with the drive $mountpoint `n" +
+                                                "Removing all of them and adding a new one now. Bitlocker Recovery Password has been added for drive $MountPoint `n" +
+                                                "It will be saved in a Text file in $($MountPoint)\Drive $($MountPoint.Remove(1)) recovery password.txt `n" +
+                                                "Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which requires authentication to access." 
+                                                write-host $BitLockerMsg -ForegroundColor Yellow   
+                                        
+                                                # Delete all Recovery Passwords because there were more than 1
+                                                $RecoveryPasswordKeyProtectors | ForEach-Object {
+                                                    Remove-BitLockerKeyProtector -MountPoint $MountPoint -KeyProtectorId $_ 
+                                                }
+                                                # Add a new Recovery Password
+                                                Add-BitLockerKeyProtector -MountPoint $MountPoint -RecoveryPasswordProtector *> "$MountPoint\Drive $($MountPoint.Remove(1)) recovery password.txt";
+                                            }                                    
+                                        }                      
+                                    }
                                 }
-                            }
-                            else {
-                                Enable-BitLocker -MountPoint $MountPoint -RecoveryPasswordProtector *> "$MountPoint\Drive $($MountPoint.Remove(1)) recovery password.txt";
-                                Enable-BitLockerAutoUnlock -MountPoint $MountPoint
-                                Write-Host "Bitlocker has started encrypting drive $MountPoint . recovery password will be saved in a Text file in $($MountPoint)\Drive $($MountPoint.Remove(1)) recovery password.txt`
-Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which requires authentication to access." -ForegroundColor Blue
-                            }
-                        }
+
+                                # Do this if Bitlocker isn't turned on at all on the user selected drive
+                                else {
+                                    Enable-BitLocker -MountPoint $MountPoint -RecoveryPasswordProtector *> "$MountPoint\Drive $($MountPoint.Remove(1)) recovery password.txt";
+                                    Enable-BitLockerAutoUnlock -MountPoint $MountPoint
+
+                                    $BitLockerMsg = "`nBitlocker has started encrypting drive $MountPoint `n" +
+                                    "Recovery password will be saved in a Text file in $($MountPoint)\Drive $($MountPoint.Remove(1)) recovery password.txt `n" +
+                                    "Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which requires authentication to access."
+                                    Write-Host $BitLockerMsg -ForegroundColor Cyan
+                                }                                
+
+                            } "No" { break }
+                            "Exit" { &$CleanUp }
+                        }                            
                     }
                 }
             } "No" { break }
-            "Exit" { &$cleanUp }
+            "Exit" { &$CleanUp }
         }    
         # ==========================================End of Bitlocker Settings======================================================    
         #endregion Bitlocker-Settings
 
         #region TLS-Security    
         # ==============================================TLS Security===============================================================    
-        switch (Select-Option -Options "Yes", "No", "Exit" -Message "Run TLS Security category ?") {
+        switch (Select-Option -Options "Yes", "No", "Exit" -Message "`nRun TLS Security category ?") {
             "Yes" {
                 Write-Progress -Activity 'TLS Security' -Status 'Running TLS Security section' -PercentComplete 35
                                 
@@ -717,7 +777,7 @@ Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which re
 ([Microsoft.Win32.RegistryKey]::OpenRemoteBaseKey([Microsoft.Win32.RegistryHive]::LocalMachine, $env:COMPUTERNAME)).CreateSubKey($_)
                 }
                 # TLS Registry section
-                Set-Location $workingDir
+                Set-Location $WorkingDir
                 $items = Import-Csv '.\Registry.csv' -Delimiter ","
                 foreach ($item in $items) {
                     if ($item.category -eq 'TLS') {
@@ -767,35 +827,35 @@ Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which re
                 # Not enabled by default on Windows 11 according to the Microsoft Docs above
                 Enable-TlsCipherSuite -Name "TLS_DHE_RSA_WITH_AES_256_CBC_SHA"  
             } "No" { break }
-            "Exit" { &$cleanUp }
+            "Exit" { &$CleanUp }
         }    
         # ==========================================End of TLS Security============================================================
         #endregion TLS-Security
 
         #region Lock-Screen    
         # ==========================================Lock Screen====================================================================
-        switch (Select-Option -Options "Yes", "No", "Exit" -Message "Run Lock Screen category ?") {
+        switch (Select-Option -Options "Yes", "No", "Exit" -Message "`nRun Lock Screen category ?") {
             "Yes" {
                 Write-Progress -Activity 'Lock Screen' -Status 'Running Lock Screen section' -PercentComplete 40
                                 
                 # Change current working directory to the LGPO's folder
-                Set-Location "$workingDir\LGPO_30"
+                Set-Location "$WorkingDir\LGPO_30"
                 .\LGPO.exe /m "..\Security-Baselines-X\Lock Screen Policies\registry.pol"
                 .\LGPO.exe /s "..\Security-Baselines-X\Lock Screen Policies\GptTmpl.inf"        
             } "No" { break }
-            "Exit" { &$cleanUp }
+            "Exit" { &$CleanUp }
         }    
         # ==========================================End of Lock Screen=============================================================
         #endregion Lock-Screen
 
         #region User-Account-Control
         # ==========================================User Account Control===========================================================
-        switch (Select-Option -Options "Yes", "No", "Exit" -Message "Run User Account Control category ?") {
+        switch (Select-Option -Options "Yes", "No", "Exit" -Message "`nRun User Account Control category ?") {
             "Yes" {
                 Write-Progress -Activity 'User Account Control' -Status 'User Account Control section' -PercentComplete 45
 
                 # Change current working directory to the LGPO's folder
-                Set-Location "$workingDir\LGPO_30"
+                Set-Location "$WorkingDir\LGPO_30"
                 .\LGPO.exe /s "..\Security-Baselines-X\User Account Control UAC Policies\GptTmpl.inf" 
             
                 # built-in Administrator account enablement
@@ -827,37 +887,37 @@ Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which re
                             Write-Host "Built-in Administrator account is already enabled.`n" -ForegroundColor Green
                         }
                     } "No" { break }
-                    "Exit" { &$cleanUp }
+                    "Exit" { &$CleanUp }
                 }    
             } "No" { break }
-            "Exit" { &$cleanUp }
+            "Exit" { &$CleanUp }
         }    
         # ==========================================End of User Account Control====================================================
         #endregion User-Account-Control
 
         #region Device-Guard    
         # ==========================================Device Guard===================================================================
-        switch (Select-Option -Options "Yes", "No", "Exit" -Message "Run Device Guard category ?") {
+        switch (Select-Option -Options "Yes", "No", "Exit" -Message "`nRun Device Guard category ?") {
             "Yes" {
                 Write-Progress -Activity 'Device Guard' -Status 'Running Device Guard section' -PercentComplete 50
                 
                 # Change current working directory to the LGPO's folder
-                Set-Location "$workingDir\LGPO_30"
+                Set-Location "$WorkingDir\LGPO_30"
                 .\LGPO.exe /m "..\Security-Baselines-X\Device Guard Policies\registry.pol"
             } "No" { break }
-            "Exit" { &$cleanUp }
+            "Exit" { &$CleanUp }
         }    
         # ==========================================End of Device Guard============================================================
         #endregion Device-Guard
 
         #region Windows-Firewall    
         # ====================================================Windows Firewall=====================================================
-        switch (Select-Option -Options "Yes", "No", "Exit" -Message "Run Windows Firewall category ?") {
+        switch (Select-Option -Options "Yes", "No", "Exit" -Message "`nRun Windows Firewall category ?") {
             "Yes" {
                 Write-Progress -Activity 'Windows Firewall' -Status 'Running Windows Firewall section' -PercentComplete 55
                                 
                 # Change current working directory to the LGPO's folder
-                Set-Location "$workingDir\LGPO_30"
+                Set-Location "$WorkingDir\LGPO_30"
                 .\LGPO.exe /m "..\Security-Baselines-X\Windows Firewall Policies\registry.pol"
 
                 # Disables Multicast DNS (mDNS) UDP-in Firewall Rules for all 3 Firewall profiles - disables only 3 rules
@@ -865,14 +925,14 @@ Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which re
                 Where-Object { $_.RuleGroup -eq "@%SystemRoot%\system32\firewallapi.dll,-37302" -and $_.Direction -eq "inbound" } |
                 ForEach-Object { Disable-NetFirewallRule -DisplayName $_.DisplayName }
             } "No" { break }
-            "Exit" { &$cleanUp }
+            "Exit" { &$CleanUp }
         }    
         # =================================================End of Windows Firewall=================================================
         #endregion Windows-Firewall
 
         #region Optional-Windows-Features    
         # =================================================Optional Windows Features===============================================
-        switch (Select-Option -Options "Yes", "No", "Exit" -Message "Run Optional Windows Features category ?") {
+        switch (Select-Option -Options "Yes", "No", "Exit" -Message "`nRun Optional Windows Features category ?") {
             "Yes" {
                 Write-Progress -Activity 'Optional Windows Features' -Status 'Running Optional Windows Features section' -PercentComplete 60
                                 
@@ -911,19 +971,19 @@ Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which re
                 PowerShell.exe 'Get-WindowsCapability -Online | Where-Object { $_.Name -like ''*Microsoft.Windows.Notepad.System*'' } | remove-WindowsCapability -Online'
                 Write-Host "Legacy Notepad has been uninstalled. The modern multi-tabbed Notepad is unaffected." -ForegroundColor Green
             } "No" { break }
-            "Exit" { &$cleanUp }
+            "Exit" { &$CleanUp }
         }    
         # ==============================================End of Optional Windows Features===========================================
         #endregion Optional-Windows-Features
 
         #region Windows-Networking    
         # ====================================================Windows Networking===================================================
-        switch (Select-Option -Options "Yes", "No", "Exit" -Message "Run Windows Networking category ?") {
+        switch (Select-Option -Options "Yes", "No", "Exit" -Message "`nRun Windows Networking category ?") {
             "Yes" {
                 Write-Progress -Activity 'Windows Networking' -Status 'Running Windows Networking section' -PercentComplete 65
 
                 # Change current working directory to the LGPO's folder
-                Set-Location "$workingDir\LGPO_30"
+                Set-Location "$WorkingDir\LGPO_30"
                 .\LGPO.exe /m "..\Security-Baselines-X\Windows Networking Policies\registry.pol"
 
                 # disable LMHOSTS lookup protocol on all network adapters
@@ -932,19 +992,19 @@ Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which re
                 # Set the Network Location of all connections to Public
                 Get-NetConnectionProfile | Set-NetConnectionProfile -NetworkCategory Public
             } "No" { break }
-            "Exit" { &$cleanUp }
+            "Exit" { &$CleanUp }
         }    
         # =================================================End of Windows Networking===============================================
         #endregion Windows-Networking
 
         #region Miscellaneous-Configurations    
         # ==============================================Miscellaneous Configurations===============================================
-        switch (Select-Option -Options "Yes", "No", "Exit" -Message "Run Miscellaneous Configurations category ?") {
+        switch (Select-Option -Options "Yes", "No", "Exit" -Message "`nRun Miscellaneous Configurations category ?") {
             "Yes" {
                 Write-Progress -Activity 'Miscellaneous Configurations' -Status 'Running Miscellaneous Configurations section' -PercentComplete 70
                                 
                 # Miscellaneous Registry section
-                Set-Location $workingDir
+                Set-Location $WorkingDir
                 $items = Import-Csv '.\Registry.csv' -Delimiter ","
                 foreach ($item in $items) {
                     if ($item.category -eq 'Miscellaneous') {              
@@ -952,7 +1012,7 @@ Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which re
                     }
                 }
                 # Change current working directory to the LGPO's folder
-                Set-Location "$workingDir\LGPO_30"
+                Set-Location "$WorkingDir\LGPO_30"
                 .\LGPO.exe /m "..\Security-Baselines-X\Miscellaneous Policies\registry.pol"
                 .\LGPO.exe /s "..\Security-Baselines-X\Miscellaneous Policies\GptTmpl.inf"
 
@@ -978,36 +1038,36 @@ Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which re
                     }
                 }
             } "No" { break }
-            "Exit" { &$cleanUp }
+            "Exit" { &$CleanUp }
         }    
         # ============================================End of Miscellaneous Configurations==========================================
         #endregion Miscellaneous-Configurations
  
         #region Windows-Update-Configurations    
         # ====================================================Windows Update Configurations==============================================
-        switch (Select-Option -Options "Yes", "No", "Exit" -Message "Apply Windows Update Policies ?") {
+        switch (Select-Option -Options "Yes", "No", "Exit" -Message "`nApply Windows Update Policies ?") {
             "Yes" {
                 Write-Progress -Activity 'Windows Update Configurations' -Status 'Running Windows Update Configurations section' -PercentComplete 75
 
                 # enable restart notification for Windows update
                 ModifyRegistry -path "HKLM:\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings" -key "RestartNotificationsAllowed2" -value "1" -type 'DWORD'
                 # Change current working directory to the LGPO's folder
-                Set-Location "$workingDir\LGPO_30"
+                Set-Location "$WorkingDir\LGPO_30"
                 .\LGPO.exe /m "..\Security-Baselines-X\Windows Update Policies\registry.pol"
             } "No" { break }
-            "Exit" { &$cleanUp }
+            "Exit" { &$CleanUp }
         }    
         # ====================================================End of Windows Update Configurations=======================================
         #endregion Windows-Update-Configurations
 
         #region Edge-Browser-Configurations
         # ====================================================Edge Browser Configurations====================================================
-        switch (Select-Option -Options "Yes", "No", "Exit" -Message "Apply Edge Browser Configurations ?") {
+        switch (Select-Option -Options "Yes", "No", "Exit" -Message "`nApply Edge Browser Configurations ?") {
             "Yes" {
                 Write-Progress -Activity 'Edge Browser Configurations' -Status 'Running Edge Browser Configurations section' -PercentComplete 80
 
                 # Edge Browser Configurations registry
-                Set-Location $workingDir
+                Set-Location $WorkingDir
                 $items = Import-Csv '.\Registry.csv' -Delimiter ","
                 foreach ($item in $items) {
                     if ($item.category -eq 'Edge') {
@@ -1015,30 +1075,30 @@ Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which re
                     }
                 }
             } "No" { break }
-            "Exit" { &$cleanUp }
+            "Exit" { &$CleanUp }
         } 
         # ====================================================End of Edge Browser Configurations==============================================
         #endregion Edge-Browser-Configurations
 
         #region Top-Security-Measures    
         # ============================================Top Security Measures========================================================
-        switch (Select-Option -Options "Yes", "No", "Exit" -Message "Apply Top Security Measures ? Make sure you've read the GitHub repository") {
+        switch (Select-Option -Options "Yes", "No", "Exit" -Message "`nApply Top Security Measures ? Make sure you've read the GitHub repository") {
             "Yes" {                
                 Write-Progress -Activity 'Top Security Measures' -Status 'Running Top Security Measures section' -PercentComplete 85
                                 
                 # Change current working directory to the LGPO's folder
-                Set-Location "$workingDir\LGPO_30"
+                Set-Location "$WorkingDir\LGPO_30"
                 .\LGPO.exe /s "..\Security-Baselines-X\Top Security Measures\GptTmpl.inf"
                 .\LGPO.exe /m "..\Security-Baselines-X\Top Security Measures\registry.pol"
             } "No" { break }
-            "Exit" { &$cleanUp }
+            "Exit" { &$CleanUp }
         }    
         # ============================================End of Top Security Measures=================================================
         #endregion Top-Security-Measures
 
         #region Certificate-Checking-Commands    
         # ====================================================Certificate Checking Commands========================================
-        switch (Select-Option -Options "Yes", "No", "Exit" -Message "Run Certificate Checking category ?") {
+        switch (Select-Option -Options "Yes", "No", "Exit" -Message "`nRun Certificate Checking category ?") {
             "Yes" {
                 Write-Progress -Activity 'Certificate Checking Commands' -Status 'Running Certificate Checking Commands section' -PercentComplete 90
                
@@ -1058,14 +1118,14 @@ Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which re
                 .\sigcheck64.exe -tv -accepteula -nobanner
                 Remove-Item .\sigcheck64.exe -Force
             } "No" { break }
-            "Exit" { &$cleanUp }
+            "Exit" { &$CleanUp }
         }
         # ====================================================End of Certificate Checking Commands=================================
         #endregion Certificate-Checking-Commands
 
         #region Country-IP-Blocking    
         # ====================================================Country IP Blocking==================================================
-        switch (Select-Option -Options "Yes", "No", "Exit" -Message "Run Country IP Blocking category ?") {
+        switch (Select-Option -Options "Yes", "No", "Exit" -Message "`nRun Country IP Blocking category ?") {
             "Yes" {
                 Write-Progress -Activity 'Country IP Blocking' -Status 'Running Country IP Blocking section' -PercentComplete 95
 
@@ -1097,7 +1157,7 @@ Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which re
                 # how to query the number of IPs in each rule
                 # (Get-NetFirewallRule -DisplayName "OFAC Sanctioned Countries IP range blocking" -PolicyStore localhost | Get-NetFirewallAddressFilter).RemoteAddress.count
             } "No" { break }
-            "Exit" { &$cleanUp }
+            "Exit" { &$CleanUp }
         }    
         # ====================================================End of Country IP Blocking===========================================
         #endregion Country-IP-Blocking
@@ -1106,12 +1166,12 @@ Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which re
 
     #region Non-Admin-Commands
     # ====================================================Non-Admin Commands===================================================
-    switch (Select-Option -Options "Yes", "No", "Exit" -Message "Run Non-Admin category ?") {
+    switch (Select-Option -Options "Yes", "No", "Exit" -Message "`nRun Non-Admin category ?") {
         "Yes" {
             Write-Progress -Activity 'Non-Admin Commands' -Status 'Running Non-Admin Commands section' -PercentComplete 100
             
             # Non-Admin Registry section              
-            Set-Location $workingDir       
+            Set-Location $WorkingDir       
             Invoke-WithoutProgress { 
                 # Download Registry CSV file               
                 Invoke-WebRequest -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Payload/Registry.csv" -OutFile ".\Registry.csv"
@@ -1132,8 +1192,8 @@ Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which re
                 Write-Host $infomsg -ForegroundColor Cyan
             }
 
-        } "No" { &$cleanUp }
-        "Exit" { &$cleanUp }
+        } "No" { &$CleanUp }
+        "Exit" { &$CleanUp }
     }
     # ====================================================End of Non-Admin Commands============================================
     #endregion Non-Admin-Commands

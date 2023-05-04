@@ -222,13 +222,13 @@ From Top to bottom in order:
 
 <p align="center"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/ocr.jpg" alt="A woman looking at her Windows laptop, indoor" width="700"></p>
 
-A security baseline is a group of Microsoft-recommended configuration settings that explains their security implications. These settings are based on feedback from Microsoft security engineering teams, product groups, partners, and customers.
+<img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> A security baseline is a group of Microsoft-recommended configuration settings that explains their security implications. These settings are based on feedback from Microsoft security engineering teams, product groups, partners, and customers.
 
 [Continue reading in the official documentation](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-security-configuration-framework/windows-security-baselines#what-are-security-baselines)
 
 [Optional Overrides for Microsoft Security Baselines](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Overrides-for-Microsoft-Security-Baseline)
 
-Highly recommended to apply these overrides, the script will ask you whether you want to apply them or not.
+<img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Highly recommended to apply these overrides, the script will ask you whether you want to apply them or not.
 
 <p align="right"><a href="#menu-back-to-top">💡 (back to categories)</a></p>
 
@@ -242,7 +242,7 @@ Highly recommended to apply these overrides, the script will ask you whether you
 
 <p align="center"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/original2.png" alt="Some kind of futuristic Microsoft Protect" width="500"></p>
 
-The security baseline for Microsoft 365 Apps for enterprise is published twice a year, usually in June and December.
+<img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> The security baseline for Microsoft 365 Apps for enterprise is published twice a year, usually in June and December.
 
 [More info in Microsoft Learn](https://learn.microsoft.com/en-us/deployoffice/security/security-baseline)
 

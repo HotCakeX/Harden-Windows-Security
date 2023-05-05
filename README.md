@@ -994,6 +994,8 @@ Get-Content <Path-To-File> -stream zone.identifier
 - [Microsoft Defender for Individuals](https://www.microsoft.com/en-us/microsoft-365/microsoft-defender-for-individuals)
 - [Submit a file for malware analysis](https://www.microsoft.com/en-us/wdsi/filesubmission)
 - [Service health status](https://admin.microsoft.com/servicestatus)
+- [Microsoft Defender Threat Intelligence](https://ti.defender.microsoft.com/)
+  - [Free community edition vs Premium edition comparison](https://jeffreyappel.nl/how-works-microsoft-defender-threat-intelligence-defender-ti-and-what-is-the-difference-between-free-and-paid/)
 
 <p align="right"><a href="#readme-top">💡 (back to top)</a></p>
 

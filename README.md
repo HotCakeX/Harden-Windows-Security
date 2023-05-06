@@ -702,6 +702,8 @@ These are configurations that are typically *recommended in High-Risk Environmen
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Enables ["Send optional diagnostic data"](https://learn.microsoft.com/en-us/windows/privacy/windows-diagnostic-data) because it is [required for Smart App Control](https://support.microsoft.com/en-us/topic/what-is-smart-app-control-285ea03d-fa88-4d56-882e-6698afdb7003) to operate and be enabled, and for communication between [Intelligent Security Graph (ISG)](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/use-windows-defender-application-control-with-intelligent-security-graph) and you.
 
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/roratinggem.gif" width="28" alt="Rotating pink gem denoting registry or cmdlet"> Enables **WinVerifyTrust Signature Validation**, [a security feature related to WinVerifyTrust function that handles Windows Authenticode signature verification for portable executable (PE) files.](https://msrc.microsoft.com/update-guide/vulnerability/CVE-2013-3900)
+
 <p align="right"><a href="#menu-back-to-top">💡 (back to categories)</a></p>
 
 <br>

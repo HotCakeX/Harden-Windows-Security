@@ -295,7 +295,8 @@ try {
                 # Download the Group Policies of Windows Hardening script from GitHub
                 Invoke-WebRequest -Uri "https://github.com/HotCakeX/Harden-Windows-Security/raw/main/Payload/Security-Baselines-X.zip" -OutFile ".\Security-Baselines-X.zip" -ErrorAction Stop         
                 # Download Registry CSV file
-                Invoke-WebRequest -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Payload/Registry.csv" -OutFile ".\Registry.csv" -ErrorAction Stop
+                # Invoke-WebRequest -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Payload/Registry.csv" -OutFile ".\Registry.csv" -ErrorAction Stop
+                  Invoke-WebRequest -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/temp/Payload/Registry.csv" -OutFile ".\Registry.csv" -ErrorAction Stop
             }
             catch {
                 Write-Error "The required files couldn't be downloaded, Make sure you have Internet connection."

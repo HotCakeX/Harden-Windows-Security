@@ -254,18 +254,20 @@ try {
         break
     }
 
-    # check to make sure Secure Boot is enabled
-    if (-NOT (Confirm-SecureBootUEFI)) {
-        Write-Error "Secure Boot is not enabled, please go to your UEFI settings and enable it and then run the script again."
-        break    
-    }
+    if (Test-IsAdmin) {
+        # check to make sure Secure Boot is enabled
+        if (-NOT (Confirm-SecureBootUEFI)) {
+            Write-Error "Secure Boot is not enabled, please go to your UEFI settings and enable it and then run the script again."
+            break    
+        }
 
-    # check to make sure TPM is available and enabled
-    $TPMFlag1 = (Get-Tpm).tpmpresent
-    $TPMFlag2 = (Get-Tpm).tpmenabled
-    if (!$TPMFlag1 -or !$TPMFlag2) {
-        Write-Error "TPM is not available or enabled, please go to your UEFI settings and enable it and then run the script again."
-        break    
+        # check to make sure TPM is available and enabled
+        $TPMFlag1 = (Get-Tpm).tpmpresent
+        $TPMFlag2 = (Get-Tpm).tpmenabled
+        if (!$TPMFlag1 -or !$TPMFlag2) {
+            Write-Error "TPM is not available or enabled, please go to your UEFI settings and enable it and then run the script again."
+            break    
+        }
     }
     #endregion RequirementsCheck
 
@@ -296,7 +298,7 @@ try {
                 Invoke-WebRequest -Uri "https://github.com/HotCakeX/Harden-Windows-Security/raw/main/Payload/Security-Baselines-X.zip" -OutFile ".\Security-Baselines-X.zip" -ErrorAction Stop         
                 # Download Registry CSV file
                 # Invoke-WebRequest -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Payload/Registry.csv" -OutFile ".\Registry.csv" -ErrorAction Stop
-                  Invoke-WebRequest -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/temp/Payload/Registry.csv" -OutFile ".\Registry.csv" -ErrorAction Stop
+                Invoke-WebRequest -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/temp/Payload/Registry.csv" -OutFile ".\Registry.csv" -ErrorAction Stop
             }
             catch {
                 Write-Error "The required files couldn't be downloaded, Make sure you have Internet connection."

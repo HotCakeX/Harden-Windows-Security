@@ -1,6 +1,6 @@
 <#PSScriptInfo
 
-.VERSION 2023.5.4
+.VERSION 2023.5.6
 
 .GUID d435a293-c9ee-4217-8dc1-4ad2318a5770
 
@@ -212,7 +212,7 @@ if (Test-IsAdmin) {
 try {
 
     # Check the current hard-coded version against the latest version online
-    $currentVersion = '2023.5.4'
+    $currentVersion = '2023.5.6'
     try {
         $latestVersion = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Version.txt"
     }
@@ -297,8 +297,7 @@ try {
                 # Download the Group Policies of Windows Hardening script from GitHub
                 Invoke-WebRequest -Uri "https://github.com/HotCakeX/Harden-Windows-Security/raw/main/Payload/Security-Baselines-X.zip" -OutFile ".\Security-Baselines-X.zip" -ErrorAction Stop         
                 # Download Registry CSV file
-                # Invoke-WebRequest -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Payload/Registry.csv" -OutFile ".\Registry.csv" -ErrorAction Stop
-                Invoke-WebRequest -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/temp/Payload/Registry.csv" -OutFile ".\Registry.csv" -ErrorAction Stop
+                Invoke-WebRequest -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Payload/Registry.csv" -OutFile ".\Registry.csv" -ErrorAction Stop                
             }
             catch {
                 Write-Error "The required files couldn't be downloaded, Make sure you have Internet connection."

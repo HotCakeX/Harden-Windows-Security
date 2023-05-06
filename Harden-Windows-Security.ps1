@@ -1,6 +1,6 @@
 <#PSScriptInfo
 
-.VERSION 2023.5.4
+.VERSION 2023.5.6
 
 .GUID d435a293-c9ee-4217-8dc1-4ad2318a5770
 
@@ -212,7 +212,7 @@ if (Test-IsAdmin) {
 try {
 
     # Check the current hard-coded version against the latest version online
-    $currentVersion = '2023.5.4'
+    $currentVersion = '2023.5.6'
     try {
         $latestVersion = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Version.txt"
     }
@@ -241,6 +241,7 @@ try {
     "###########################################################################################`r`n"
     Write-Host $infomsg -ForegroundColor Green
 
+    #region RequirementsCheck
     # check if user's OS is Windows Home edition
     if ((Get-CimInstance -ClassName Win32_OperatingSystem).OperatingSystemSKU -eq "101") {
         Write-Error "Windows Home edition detected, exiting..."
@@ -252,6 +253,23 @@ try {
         Write-Error "You're not using the latest version of Windows, exitting..."
         break
     }
+
+    if (Test-IsAdmin) {
+        # check to make sure Secure Boot is enabled
+        if (-NOT (Confirm-SecureBootUEFI)) {
+            Write-Error "Secure Boot is not enabled, please go to your UEFI settings and enable it and then run the script again."
+            break    
+        }
+
+        # check to make sure TPM is available and enabled
+        $TPMFlag1 = (Get-Tpm).tpmpresent
+        $TPMFlag2 = (Get-Tpm).tpmenabled
+        if (!$TPMFlag1 -or !$TPMFlag2) {
+            Write-Error "TPM is not available or enabled, please go to your UEFI settings and enable it and then run the script again."
+            break    
+        }
+    }
+    #endregion RequirementsCheck
 
     # create our working directory
     New-Item -ItemType Directory -Path "$env:TEMP\HardeningXStuff\" -Force | Out-Null
@@ -279,7 +297,7 @@ try {
                 # Download the Group Policies of Windows Hardening script from GitHub
                 Invoke-WebRequest -Uri "https://github.com/HotCakeX/Harden-Windows-Security/raw/main/Payload/Security-Baselines-X.zip" -OutFile ".\Security-Baselines-X.zip" -ErrorAction Stop         
                 # Download Registry CSV file
-                Invoke-WebRequest -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Payload/Registry.csv" -OutFile ".\Registry.csv" -ErrorAction Stop
+                Invoke-WebRequest -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Payload/Registry.csv" -OutFile ".\Registry.csv" -ErrorAction Stop                
             }
             catch {
                 Write-Error "The required files couldn't be downloaded, Make sure you have Internet connection."
@@ -634,7 +652,7 @@ try {
                         switch (Select-Option -Options "Yes", "No", "Exit" -Message "`nEncrypt $MountPoint drive ?`n") {
                             "Yes" {  
 
-                                #Make sure the non-OS drive that the user selected to be encrypted is not in the middle of any encryption/decryption operation
+                                # Make sure the non-OS drive that the user selected to be encrypted is not in the middle of any encryption/decryption operation
                                 if ((Get-BitLockerVolume -MountPoint $MountPoint).EncryptionPercentage -ne "100" -and (Get-BitLockerVolume -MountPoint $MountPoint).EncryptionPercentage -ne "0") {
                                     $EncryptionPercentageVar = (Get-BitLockerVolume -MountPoint $MountPoint).EncryptionPercentage
                                     Write-Host "`nPlease wait for Bitlocker to finish encrypting or decrypting drive $MountPoint" -ForegroundColor Magenta
@@ -642,7 +660,7 @@ try {
                                     break
                                 }   
                         
-                                # Check to see if Bitlocker is already turned on in the user selected drive
+                                # Check to see if Bitlocker is already turned on for the user selected drive
                                 # if it is, perform multiple checks on its key protectors                        
                                 if ((Get-BitLockerVolume -MountPoint $MountPoint).ProtectionStatus -eq "on") {  
 

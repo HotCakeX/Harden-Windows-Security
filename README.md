@@ -1011,7 +1011,7 @@ Get-Content <Path-To-File> -stream zone.identifier
 
 ## License<a href="#license">![LicenseFreeIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/LicenseFree.png)</a>
 
-Not Applicable, No license, just free information, because the only mission of this GitHub repository is to give all Windows users accurate, up to date and correct facts and information about how to stay secure and safe in dangerous environments, and to stay not one, but Many steps, ahead of threat actors.
+Using [GPL-2.0 license](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE). Just free information, because the only mission of this GitHub repository is to give all Windows users accurate, up to date and correct facts and information about how to stay secure and safe in dangerous environments, and to stay not one, but Many steps, ahead of threat actors.
 
 <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="Harden-Windows-Security is a PowerShell script">
 

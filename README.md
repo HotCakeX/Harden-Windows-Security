@@ -718,10 +718,17 @@ These are configurations that are typically *recommended in High-Risk Environmen
 
 <br>
 
+Windows updates are extremely important. They always should be installed as fast as possible to stay secure and if a reboot is required, it should be done immediately. Threat actors can weaponize publicly disclosed vulnerabilities [**the same day** their POC (Proof-Of-Concept) is released.](https://www.microsoft.com/en-us/security/blog/2023/04/18/nation-state-threat-actor-mint-sandstorm-refines-tradecraft-to-attack-high-value-targets/).
+
+In Windows by default, devices will scan daily, automatically download and install any applicable updates at a time optimized to reduce interference with usage, and then automatically try to restart when the end user is away.
+
+**The following policies the script configures make sure the default behavior explained above is tightly enforced.**
+
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Enables [Windows Update to download and install updates on any network](https://techcommunity.microsoft.com/t5/windows-it-pro-blog/the-windows-update-policies-you-should-set-and-why/ba-p/3270914), metered or not; because the updates are important and should not be suppressed, **that's what bad actors would want.**
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Enables "Receive Updates for other Microsoft products" (such as PowerShell)
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/roratinggem.gif" width="28" alt="Rotating pink gem denoting registry or cmdlet"> Enables "Notify me when a restart is required to finish updating"
-- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Sets the deadline for automatic quality and feature updates and restarts to 2 days. Sets the grace periods to 2 days as well.
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Sets the [grace period](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-update#configuredeadlinegraceperiodforfeatureupdates) for auto restart to 1 day.
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Configures the [automatic updates to happen every day](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-update#allowautoupdate), automatically be downloaded and installed, notify users for restart.
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> [Enables features introduced via servicing that are off by default](https://learn.microsoft.com/en-us/windows/deployment/update/waas-configure-wufb) so that users will be able to get new features after having Windows Update settings managed by Group Policy as the result of running this category.
 
 <p align="right"><a href="#menu-back-to-top">💡 (back to categories)</a></p>

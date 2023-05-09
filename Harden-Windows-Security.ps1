@@ -1,6 +1,6 @@
 <#PSScriptInfo
 
-.VERSION 2023.5.6
+.VERSION 2023.5.9
 
 .GUID d435a293-c9ee-4217-8dc1-4ad2318a5770
 
@@ -212,7 +212,7 @@ if (Test-IsAdmin) {
 try {
 
     # Check the current hard-coded version against the latest version online
-    $currentVersion = '2023.5.6'
+    $currentVersion = '2023.5.9'
     try {
         $latestVersion = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Version.txt"
     }
@@ -312,6 +312,38 @@ try {
         Expand-Archive -Path .\LGPO.zip -DestinationPath .\ -Force
         # unzip the Security-Baselines-X file which contains Windows Hardening script Group Policy Objects
         Expand-Archive -Path .\Security-Baselines-X.zip -DestinationPath .\Security-Baselines-X\ -Force
+
+        #region Windows-Boot-Manager-revocations-for-Secure-Boot   
+        # ============================ May 9 2023 Windows Boot Manager revocations for Secure Boot =================================
+        switch (Select-Option -Options "Yes", "No", "Exit" -Message "`nApply May 9 2023 Windows Boot Manager Security measures ? (If you've already run this category, don't need to do it again)") {
+            "Yes" {              
+
+                # First make sure the update is installed since the next steps can't run without it
+                if (Get-HotFix -Id 'KB5026372' -ErrorAction SilentlyContinue) { 
+        
+                    mountvol q: /S
+                    xcopy /y C:\Windows\System32\SecureBootUpdates\SKUSiPolicy.p7b q:\EFI\Microsoft\Boot 
+                    mountvol q: /D
+
+                    reg add HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Secureboot /v AvailableUpdates /t REG_DWORD /d 0x10 /f
+
+                    Write-Host "`nThe required security measures have been applied to the system" -ForegroundColor Green
+                    Write-Host "IMPORTANT: Make sure to restart your device once. After restart, wait for at least 5-10 minutes and perform a 2nd restart to finish applying security measures completely.`n" -ForegroundColor Red
+
+                }
+
+                # if the update is not installed, show warning
+                else {
+                    $UpdateWarningMessage = "`nYour OS is missing an important security update.`n" +
+                    "Please open Windows Updates from settings and check for updates to install them.`n"
+                    Write-Warning -Message $UpdateWarningMessage
+                }
+
+            } "No" { break }
+            "Exit" { &$CleanUp }
+        }    
+        # ============================ End of May 9 2023 Windows Boot Manager revocations for Secure Boot===========================
+        #endregion Windows-Boot-Manager-revocations-for-Secure-Boot 
 
         #region Microsoft-Security-Baseline    
         # ================================================Microsoft Security Baseline==============================================

@@ -82,7 +82,7 @@ function Deploy-SignedWDACConfig {
             Remove-Item ".\$PolicyID.cip" -Force            
             Rename-Item "$PolicyID.cip.p7" -NewName "$PolicyID.cip" -Force
             CiTool --update-policy ".\$PolicyID.cip" -json
-            Write-host "`n`npolicy with the following details has been Signed and Deployed in Enforcement Mode:" -ForegroundColor Green        
+            Write-host "`n`npolicy with the following details has been Signed and Deployed in Enforced Mode:" -ForegroundColor Green        
             Write-Output "PolicyName = $PolicyName"
             Write-Output "PolicyGUID = $PolicyID`n"
         }
@@ -93,13 +93,13 @@ function Deploy-SignedWDACConfig {
 Signs and Deploys WDAC policies, accepts signed or unsigned policies and deploys them
 
 .LINK
-https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig
+https://github.com/HotCakeX/Harden-Windows-Security/wiki/Deploy-SignedWDACConfig
 
 .DESCRIPTION
 Using official Microsoft methods, Signs and Deploys WDAC policies, accepts signed or unsigned policies and deploys them (Windows Defender Application Control)
 
 .COMPONENT
-Windows Defender Application Control
+Windows Defender Application Control, ConfigCI PowerShell module
 
 .FUNCTIONALITY
 Using official Microsoft methods, Signs and Deploys WDAC policies, accepts signed or unsigned policies and deploys them (Windows Defender Application Control)
@@ -162,11 +162,17 @@ Register-ArgumentCompleter `
         }
     }
 }
- 
+
 
 # argument tab auto-completion for Certificate Path to show only .cer files
 $ArgumentCompleterCertPath = {
-    Get-ChildItem | where-object { $_.extension -like '*.cer' } | foreach-object { return "`"$_`"" }   
+    # Note the use of -Depth 1
+    # Enclosing the $results = ... assignment in (...) also passes the value through.
+    ($results = Get-ChildItem -Depth 2 -Filter *.cer | foreach-object { "`"$_`"" })
+    if (-not $results) {
+        # No results?
+        $null # Dummy response that prevents fallback to the default file-name completion.
+    }   
 }
 Register-ArgumentCompleter -CommandName "Deploy-SignedWDACConfig" -ParameterName "CertPath" -ScriptBlock $ArgumentCompleterCertPath
 

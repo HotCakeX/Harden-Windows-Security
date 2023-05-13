@@ -1,18 +1,28 @@
 #Requires -RunAsAdministrator
 function Remove-WDACConfig {
     [CmdletBinding(      
-        DefaultParameterSetName = "Remove Signed Policies",
+        DefaultParameterSetName = "Signed Base",
         SupportsShouldProcess = $true,
         PositionalBinding = $false,
         ConfirmImpact = 'High'
     )]
     Param(        
-        [Parameter(Mandatory = $false, ParameterSetName = "Remove Signed Policies")][Switch]$RemoveSignedPolicies,
-        [Parameter(Mandatory = $false, ParameterSetName = "Remove Policies")][Switch]$RemovePolicies,
+        [Parameter(Mandatory = $false, ParameterSetName = "Signed Base")][Switch]$SignedBase,                                                                                            
+        [Parameter(Mandatory = $false, ParameterSetName = "Unsigned Or Supplemental")][Switch]$UnsignedOrSupplemental,
 
         [ValidatePattern('\.xml$')]
-        [ValidateScript({ Test-Path $_ -PathType 'Leaf' }, ErrorMessage = "The path you selected is not a file path.")]
-        [parameter(Mandatory = $true, ParameterSetName = "Remove Signed Policies", ValueFromPipelineByPropertyName = $true)][System.String[]]$PolicyPaths,
+        [ValidateScript({
+                # Validate each Policy file in PolicyPaths parameter to make sure the user isn't accidentally trying to
+                # remove an Unsigned policy
+                $_ | ForEach-Object {                   
+                    $xmlTest = [xml](Get-Content $_)
+                    $RedFlag1 = $xmlTest.SiPolicy.SupplementalPolicySigners.SupplementalPolicySigner.SignerId
+                    $RedFlag2 = $xmlTest.SiPolicy.UpdatePolicySigners.UpdatePolicySigner.SignerId
+                    if ($RedFlag1 -or $RedFlag2) { return $True }                   
+                }
+            }, ErrorMessage = "The policy XML file(s) you chose are Unsigned policies. Please use Remove-WDACConfig cmdlet with -UnsignedOrSupplemental parameter instead.")]
+        [parameter(Mandatory = $true, ParameterSetName = "Signed Base", ValueFromPipelineByPropertyName = $true)]
+        [System.String[]]$PolicyPaths,
         
         [ValidateScript({
                 try {
@@ -23,7 +33,7 @@ function Remove-WDACConfig {
                     Write-Error -Message "A certificate with the provided common name doesn't exist in the personal store of the user certificates."
                 } # this error msg is shown when cert CN is not available in the personal store of the user certs
             }, ErrorMessage = "A certificate with the provided common name doesn't exist in the personal store of the user certificates." )]
-        [parameter(Mandatory = $true, ParameterSetName = "Remove Signed Policies", ValueFromPipelineByPropertyName = $true)]
+        [parameter(Mandatory = $true, ParameterSetName = "Signed Base", ValueFromPipelineByPropertyName = $true)]
         [System.String]$CertCN,
 
         # https://stackoverflow.com/questions/76143006/how-to-prevent-powershell-validateset-argument-completer-from-suggesting-the-sam/76143269
@@ -41,7 +51,8 @@ function Remove-WDACConfig {
                 if ($_ -notin [PolicyIDz]::new().GetValidValues()) { throw "Invalid policy ID: $_" }
                 $true
             })]
-        [Parameter(Mandatory = $false, ParameterSetName = "Remove Policies")][System.String[]]$PolicyIDs,
+        [Parameter(Mandatory = $false, ParameterSetName = "Unsigned Or Supplemental")]
+        [System.String[]]$PolicyIDs,
 
         # https://stackoverflow.com/questions/76143006/how-to-prevent-powershell-validateset-argument-completer-from-suggesting-the-sam/76143269
         [ArgumentCompleter({
@@ -59,7 +70,8 @@ function Remove-WDACConfig {
                 if ($_ -notin [PolicyNamez]::new().GetValidValues()) { throw "Invalid policy name: $_" }
                 $true
             })]
-        [Parameter(Mandatory = $false, ParameterSetName = "Remove Policies")][System.String[]]$PolicyNames,
+        [Parameter(Mandatory = $false, ParameterSetName = "Unsigned Or Supplemental")]
+        [System.String[]]$PolicyNames,
 
         [ValidatePattern('\.exe$')]
         [ValidateScript({ # Setting the minimum version of SignTool that is allowed to be executed as well as other checks
@@ -70,7 +82,7 @@ function Remove-WDACConfig {
                 ((Get-AuthenticodeSignature -FilePath $_).Status -eq 'Valid')
                 ((Get-AuthenticodeSignature -FilePath $_).StatusMessage -eq 'Signature verified.')
             }, ErrorMessage = "The SignTool executable was found but couldn't be verified. Please download the latest Windows SDK to get the newest SignTool executable. Official download link: http://aka.ms/WinSDK")]
-        [parameter(ValueFromPipelineByPropertyName = $true)]
+        [parameter(Mandatory = $false, ParameterSetName = "Signed Base", ValueFromPipelineByPropertyName = $true)]
         [System.String]$SignToolPath,
 
         [Parameter(Mandatory = $false)][Switch]$SkipVersionCheck
@@ -79,6 +91,9 @@ function Remove-WDACConfig {
     begin {
         # Importing resources such as functions by dot-sourcing so that they will run in the same scope and their variables will be usable
         . "$psscriptroot\Resources.ps1"
+
+        # Detecting if Debug switch is used, will do debugging actions based on that
+        $Debug = $PSBoundParameters.Debug.IsPresent
 
         # Stop operation as soon as there is an error, anywhere, unless explicitly specified otherwise
         $ErrorActionPreference = 'Stop'
@@ -100,17 +115,23 @@ function Remove-WDACConfig {
    
                 return [System.String[]]$PolicyIDz
             }
-        }
-        
+        }    
     }
     
     process {
 
-        if ($RemoveSignedPolicies) {
+        if ($SignedBase) {
             foreach ($PolicyPath in $PolicyPaths) {
-            
-                ######################## Sanitize the policy file by removing SupplementalPolicySigners ########################                
                 $xml = [xml](Get-Content $PolicyPath)
+                $PolicyID = $xml.SiPolicy.PolicyID
+                # Prevent users from accidentally attempting to remove policies that aren't even deployed on the system
+                $CurrentPolicyIDs = ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsSystemPolicy -ne "True" }).policyID | ForEach-Object { "{$_}" }
+                Write-Debug -Message "The policy ID of the currently processing xml file is $PolicyID"
+                if ($CurrentPolicyIDs -notcontains $PolicyID) {                                        
+                    Write-Error -Message "The selected policy file isn't deployed on the system." -ErrorAction Stop                    
+                }
+
+                ######################## Sanitize the policy file by removing SupplementalPolicySigners ######################## 
                 $SuppSingerIDs = $xml.SiPolicy.SupplementalPolicySigners.SupplementalPolicySigner.SignerId
                 $PolicyName = ($xml.SiPolicy.Settings.Setting | Where-Object { $_.provider -eq "PolicyInfo" -and $_.valuename -eq "Name" -and $_.key -eq "Information" }).value.string
                 if ($SuppSingerIDs) {
@@ -133,8 +154,7 @@ function Remove-WDACConfig {
                     Write-host "`nNo sanitization required because no SupplementalPolicySigners have been found in $PolicyName policy." -ForegroundColor Green
                 }
                 
-                Set-RuleOption -FilePath $PolicyPath -Option 6       
-                $PolicyID = $xml.SiPolicy.PolicyID
+                Set-RuleOption -FilePath $PolicyPath -Option 6
                 ConvertFrom-CIPolicy $PolicyPath "$PolicyID.cip" | Out-Null
                 
                 # Configure the parameter splat
@@ -156,16 +176,26 @@ function Remove-WDACConfig {
             }
         }
     
-        if ($RemovePolicies) {
+        if ($UnsignedOrSupplemental) {
+
             # If IDs were supplied by user
             foreach ($ID in $PolicyIDs ) {
                 citool --remove-policy "{$ID}" -json
             }
+            
             # If names were supplied by user
+            # Empty array to store Policy IDs based on the input name, this will take care of the situations where multiple policies with the same name are deployed
+            $NameID = @()
             foreach ($PolicyName in $PolicyNames) {                    
-                $NameID = ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.FriendlyName -eq $PolicyName }).PolicyID                                   
-                citool --remove-policy "{$NameID}" -json
-            }      
+                $NameID += ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.FriendlyName -eq $PolicyName }).PolicyID
+            }
+            
+            Write-Debug -Message "The Following policy IDs have been gathered from the supplied policy names and are going to be removed from the system"
+            if ($Debug) { $NameID | Select-Object -Unique | foreach-object { Write-Debug -Message "$_" } }
+            
+            $NameID | Select-Object -Unique | ForEach-Object {
+                citool --remove-policy "{$_}" -json 
+            }     
         }
     } 
    
@@ -174,22 +204,22 @@ function Remove-WDACConfig {
 Removes Signed and unsigned deployed WDAC policies (Windows Defender Application Control)
 
 .LINK
-https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig
+https://github.com/HotCakeX/Harden-Windows-Security/wiki/Remove-WDACConfig
 
 .DESCRIPTION
 Using official Microsoft methods, Removes Signed and unsigned deployed WDAC policies (Windows Defender Application Control)
 
 .COMPONENT
-Windows Defender Application Control
+Windows Defender Application Control, ConfigCI PowerShell module
 
 .FUNCTIONALITY
 Using official Microsoft methods, Removes Signed and unsigned deployed WDAC policies (Windows Defender Application Control)
 
-.PARAMETER RemoveSignedPolicies
-Remove Signed WDAC Policies
+.PARAMETER SignedBase
+Remove Signed Base WDAC Policies
 
-.PARAMETER RemovePolicies
-Removes Unsigned deployed WDAC policies as well as Signed deployed Supplemental WDAC policies
+.PARAMETER UnsignedOrSupplemental
+Remove Unsigned deployed WDAC policies as well as Signed deployed Supplemental WDAC policies
 
 .PARAMETER SkipVersionCheck
 Can be used with any parameter to bypass the online version check - only to be used in rare cases

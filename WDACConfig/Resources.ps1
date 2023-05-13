@@ -1,6 +1,8 @@
 # Stop operation as soon as there is an error, anywhere, unless explicitly specified otherwise
 $ErrorActionPreference = 'Stop'
 
+
+
 # Get the path to SignTool
 function Get-SignTool {
     param(    
@@ -45,6 +47,8 @@ function Get-SignTool {
     }        
 }
 
+
+
 # Make sure the latest version of the module is installed and if not, automatically update it, clean up any old versions
 function Update-self {
     $currentversion = (Test-modulemanifest "$psscriptroot\WDACConfig.psd1").Version.ToString()
@@ -71,6 +75,8 @@ function Update-self {
     }
 }
 
+
+
 # Increase Code Integrity Operational Event Logs size from the default 1MB to user defined size
 function Set-LogSize {
     [CmdletBinding()]
@@ -81,6 +87,8 @@ function Set-LogSize {
     $log.IsEnabled = $true
     $log.SaveChanges()
 }
+
+
 
 # function that takes 2 arrays, one contains file paths and the other contains folder paths. It checks them and shows file paths
 # that are not in any of the folder paths. Performs this check recursively too so works if the filepath is in a sub-directory of a folder path
@@ -134,6 +142,8 @@ function Test-FilePath {
     }
 }
 
+
+
 # Script block that lists every \Device\Harddiskvolume - https://superuser.com/questions/1058217/list-every-device-harddiskvolume
 # These are DriveLetter mappings
 $DirveLettersGlobalRootFixScriptBlock = {
@@ -181,13 +191,21 @@ public static extern uint QueryDosDevice(string lpDeviceName, StringBuilder lpTa
     } while ([PInvoke.Win32Utils]::FindNextVolume([IntPtr] $volumeHandle, $sbVolumeName, $Max));
 }
 
-### ScriptBlock to separately capture FileHashes of deleted files and FilePaths of available files from Event Viewer Audit Logs ####
-# The unsued notice should be ignored, it is being used multiple times throughout the module by dot-sourcing
-$AuditEventLogsProcessingScriptBlock = {
-    # holds FileHashes of unavailable files
-    $DeletedFileHashesArray = @()
-    # holds FilePaths of available files
-    $AvailableFilesPathsArray = @()                        
+
+
+### Function to separately capture FileHashes of deleted files and FilePaths of available files from Event Viewer Audit Logs ####
+Function Get-AuditEventLogsProcessing {
+    param ($Date)
+
+    $DirveLettersGlobalRootFix = Invoke-Command -ScriptBlock $DirveLettersGlobalRootFixScriptBlock
+
+    # Defining a custom object to store and finally return it as results
+    $AuditEventLogsProcessingResults = [PSCustomObject]@{
+        # Defining object properties as arrays
+        AvailableFilesPaths = @()
+        DeletedFileHashes = @()
+    }
+                      
     # Event Viewer Code Integrity logs scan
     foreach ($event in Get-WinEvent -FilterHashtable @{LogName = 'Microsoft-Windows-CodeIntegrity/Operational'; ID = 3076 } -ErrorAction SilentlyContinue | Where-Object { $_.TimeCreated -ge $Date } ) {
         $xml = [xml]$event.toxml()
@@ -200,15 +218,126 @@ $AuditEventLogsProcessingScriptBlock = {
                 $getletter = $DirveLettersGlobalRootFix | Where-Object { $_.devicepath -eq "\Device\HarddiskVolume$hardDiskVolumeNumber" }
                 $usablePath = "$($getletter.DriveLetter)$remainingPath"
                 $_.'File Name' = $_.'File Name' -replace $pattern, $usablePath
-            } <# Check if file is currently on the disk #>
+            } # Check if file is currently on the disk
             if (Test-Path $_.'File Name') {
-                $AvailableFilesPathsArray += $_.'File Name' 
-            } <# If file is not currently on the disk, extract its hashes from event log #>
+                $AuditEventLogsProcessingResults.AvailableFilesPaths += $_.'File Name' 
+            } # If file is not currently on the disk, extract its hashes from event log
             elseif (-NOT (Test-Path $_.'File Name')) {
-                $DeletedFileHashesArray += $_ | Select-Object FileVersion, 'File Name', PolicyGUID, 'SHA256 Hash', 'SHA256 Flat Hash', 'SHA1 Hash', 'SHA1 Flat Hash'
+                $AuditEventLogsProcessingResults.DeletedFileHashes += $_ | Select-Object FileVersion, 'File Name', PolicyGUID, 'SHA256 Hash', 'SHA256 Flat Hash', 'SHA1 Hash', 'SHA1 Flat Hash'
             }
         }
     }
-    # return the results as arrays so they can be used outside of the ScriptBlock
-    return $DeletedFileHashesArray, $AvailableFilesPathsArray
+    # return the results as an object
+    return $AuditEventLogsProcessingResults
 }
+
+
+
+# Creates a policy file and requires 2 parameters to supply the file rules and rule references
+function New-EmptyPolicy {
+    param (
+        $RulesContent,
+        $RuleRefsContent
+    )    
+    $EmptyPolicy = @"
+<?xml version="1.0" encoding="utf-8"?>
+<SiPolicy xmlns="urn:schemas-microsoft-com:sipolicy" PolicyType="Base Policy">
+<VersionEx>10.0.0.0</VersionEx>
+<PlatformID>{2E07F7E4-194C-4D20-B7C9-6F44A6C5A234}</PlatformID>
+<Rules>
+<Rule>
+<Option>Enabled:Unsigned System Integrity Policy</Option>
+</Rule>
+<Rule>
+<Option>Enabled:Audit Mode</Option>
+</Rule>
+<Rule>
+<Option>Enabled:Advanced Boot Options Menu</Option>
+</Rule>
+<Rule>
+<Option>Required:Enforce Store Applications</Option>
+</Rule>
+</Rules>
+<!--EKUS-->
+<EKUs />
+<!--File Rules-->
+<FileRules>
+$RulesContent
+</FileRules>
+<!--Signers-->
+<Signers />
+<!--Driver Signing Scenarios-->
+<SigningScenarios>
+<SigningScenario Value="131" ID="ID_SIGNINGSCENARIO_DRIVERS_1" FriendlyName="Auto generated policy on $(Get-Date -Format 'MM-dd-yyyy')">
+<ProductSigners />
+</SigningScenario>
+<SigningScenario Value="12" ID="ID_SIGNINGSCENARIO_WINDOWS" FriendlyName="Auto generated policy on $(Get-Date -Format 'MM-dd-yyyy')">
+<ProductSigners>
+<FileRulesRef>
+$RuleRefsContent
+</FileRulesRef>
+</ProductSigners>
+</SigningScenario>
+</SigningScenarios>
+<UpdatePolicySigners />
+<CiSigners />
+<HvciOptions>0</HvciOptions>
+<BasePolicyID>{B163125F-E30A-43FC-ABEC-E30B4EE88FA8}</BasePolicyID>
+<PolicyID>{B163125F-E30A-43FC-ABEC-E30B4EE88FA8}</PolicyID>
+</SiPolicy>
+"@
+    return $EmptyPolicy
+}
+
+
+
+# Process the Fallbacks from user input
+Function Get-Fallbacks {
+    param (
+        $Fallbacks
+    )
+    $AssignedFallbacks = @()
+    switch ($Fallbacks) {
+        'Hash' { $AssignedFallbacks += 'Hash' }
+        'FileName' { $AssignedFallbacks += 'FileName' }
+        'SignedVersion' { $AssignedFallbacks += 'SignedVersion' }
+        'Publisher' { $AssignedFallbacks += 'Publisher' }
+        'FilePublisher' { $AssignedFallbacks += 'FilePublisher' }
+        'LeafCertificate' { $AssignedFallbacks += 'LeafCertificate' }
+        'PcaCertificate' { $AssignedFallbacks += 'PcaCertificate' }
+        'RootCertificate' { $AssignedFallbacks += 'RootCertificate' }
+        'WHQL' { $AssignedFallbacks += 'WHQL' }
+        'WHQLPublisher' { $AssignedFallbacks += 'WHQLPublisher' }
+        'WHQLFilePublisher' { $AssignedFallbacks += 'WHQLFilePublisher' }
+        'PFN' { $AssignedFallbacks += 'PFN' }
+        'FilePath' { $AssignedFallbacks += 'FilePath' }
+        'None' { $AssignedFallbacks += 'None' }
+        Default { $AssignedFallbacks += 'Hash' }
+    }
+    return $AssignedFallbacks
+}
+
+
+# Gets the latest Microsoft Recommended block rules, removes its allow all rules and sets HVCI to strict
+$GetBlockRulesSCRIPTBLOCK = {             
+    $MicrosoftRecommendeDriverBlockRules = Invoke-WebRequest -Uri "https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/public/windows/security/threat-protection/windows-defender-application-control/microsoft-recommended-block-rules.md"
+    $MicrosoftRecommendeDriverBlockRules -match "(?s)(?<=``````xml).*(?=``````)" | Out-Null
+    $Rules = $Matches[0]
+
+    $Rules = $Rules -replace '<Allow\sID="ID_ALLOW_A_1"\sFriendlyName="Allow\sKernel\sDrivers"\sFileName="\*".*/>', ''
+    $Rules = $Rules -replace '<Allow\sID="ID_ALLOW_A_2"\sFriendlyName="Allow\sUser\smode\scomponents"\sFileName="\*".*/>', ''
+    $Rules = $Rules -replace '<FileRuleRef\sRuleID="ID_ALLOW_A_1".*/>', ''
+    $Rules = $Rules -replace '<FileRuleRef\sRuleID="ID_ALLOW_A_2".*/>', ''
+
+    $Rules | Out-File '.\Microsoft recommended block rules TEMP.xml'
+    # Removing empty lines from policy file
+    Get-Content '.\Microsoft recommended block rules TEMP.xml' | Where-Object { $_.trim() -ne "" } | Out-File '.\Microsoft recommended block rules.xml'                
+    Remove-Item '.\Microsoft recommended block rules TEMP.xml' -Force
+    Set-RuleOption -FilePath '.\Microsoft recommended block rules.xml' -Option 3 -Delete
+    Set-HVCIOptions -Strict -FilePath '.\Microsoft recommended block rules.xml'
+    [PSCustomObject]@{
+        PolicyFile = 'Microsoft recommended block rules.xml'
+    }
+}
+
+

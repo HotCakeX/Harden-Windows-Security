@@ -20,21 +20,25 @@ function Confirm-WDACConfig {
         $ErrorActionPreference = 'Stop'         
         if (-NOT $SkipVersionCheck) { . Update-self }
 
-        # Script block to show only non-system Supplemental policies
-        $OnlySupplementalPoliciesBLOCK = { Write-host "`nDisplaying non-System Supplemental WDAC Policies:" -ForegroundColor Cyan
-            $SupplementalPolicies = (CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsSystemPolicy -ne "True" } | Where-Object { $_.PolicyID -ne $_.BasePolicyID } ; $SupplementalPolicies           
-            Write-Host "There are currently $(($SupplementalPolicies.count)) Non-system Supplemental policies deployed." -ForegroundColor Green }
         # Script block to show only non-system Base policies
-        $OnlyBasePoliciesBLOCK = { Write-host "`nDisplaying non-System Base WDAC Policies:" -ForegroundColor Cyan
-            $BasePolicies = (CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsSystemPolicy -ne "True" } | Where-Object { $_.PolicyID -eq $_.BasePolicyID } ; $BasePolicies           
-            Write-Host "There are currently $(($BasePolicies.count)) Non-system Base policies deployed." -ForegroundColor Green }
+        $OnlyBasePoliciesBLOCK = {
+            $BasePolicies = (CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsSystemPolicy -ne "True" } | Where-Object { $_.PolicyID -eq $_.BasePolicyID }           
+            Write-Host "`nThere are currently $(($BasePolicies.count)) Non-system Base policies deployed" -ForegroundColor Cyan
+            $BasePolicies
+        }
+        # Script block to show only non-system Supplemental policies
+        $OnlySupplementalPoliciesBLOCK = {
+            $SupplementalPolicies = (CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsSystemPolicy -ne "True" } | Where-Object { $_.PolicyID -ne $_.BasePolicyID }           
+            Write-Host "`nThere are currently $(($SupplementalPolicies.count)) Non-system Supplemental policies deployed`n" -ForegroundColor Cyan
+            $SupplementalPolicies
+        }        
     }
 
     process {
         if ($ListActivePolicies) {
             if ($OnlyBasePolicies) { &$OnlyBasePoliciesBLOCK }
             if ($OnlySupplementalPolicies) { &$OnlySupplementalPoliciesBLOCK }               
-            if (-NOT $OnlyBasePolicies -and -NOT$OnlySupplementalPolicies) { &$OnlyBasePoliciesBLOCK; &$OnlySupplementalPoliciesBLOCK }
+            if (!$OnlyBasePolicies -and !$OnlySupplementalPolicies) { &$OnlyBasePoliciesBLOCK; &$OnlySupplementalPoliciesBLOCK }
         }
         
         if ($VerifyWDACStatus) {
@@ -61,22 +65,22 @@ function Confirm-WDACConfig {
 Show the status of WDAC on the system and lists the current deployed policies and shows details about each of them
 
 .LINK
-https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig
+https://github.com/HotCakeX/Harden-Windows-Security/wiki/Confirm-WDACConfig
 
 .DESCRIPTION
-Using official Microsoft methods, Show the status of WDAC on the system and lists the current deployed policies and shows details about each of them (Windows Defender Application Control)
+Using official Microsoft methods, Show the status of WDAC (Windows Defender Application Control) on the system, list the current deployed policies and show details about each of them.
 
 .COMPONENT
-Windows Defender Application Control
+Windows Defender Application Control, ConfigCI PowerShell module
 
 .FUNCTIONALITY
-Using official Microsoft methods, Show the status of WDAC on the system and lists the current deployed policies and shows details about each of them (Windows Defender Application Control)
-
-.PARAMETER VerifyWDACStatus
-Shows the status of WDAC on the system
+Using official Microsoft methods, Show the status of WDAC (Windows Defender Application Control) on the system, list the current deployed policies and show details about each of them.
 
 .PARAMETER ListActivePolicies
-lists the current deployed policies and shows details about each of them
+Lists the currently deployed policies and shows details about each of them
+
+.PARAMETER VerifyWDACStatus
+Shows the status of WDAC (Windows Defender Application Control) on the system
 
 .PARAMETER $CheckSmartAppControlStatus
 Checks the status of Smart App Control and reports the results on the console

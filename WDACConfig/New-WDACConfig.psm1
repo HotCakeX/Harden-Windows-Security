@@ -11,33 +11,22 @@ function New-WDACConfig {
         [Parameter(Mandatory = $false, ParameterSetName = "Get Block Rules")][Switch]$GetBlockRules,
         [Parameter(Mandatory = $false, ParameterSetName = "Get Driver Block Rules")][Switch]$GetDriverBlockRules,
         [Parameter(Mandatory = $false, ParameterSetName = "Make AllowMSFT With Block Rules")][Switch]$MakeAllowMSFTWithBlockRules,
-        [Parameter(Mandatory = $false, ParameterSetName = "Deploy Latest Driver Block Rules")][Switch]$DeployLatestDriverBlockRules,                                                                                       
+        [Parameter(Mandatory = $false, ParameterSetName = "Deploy Latest Driver Block Rules")][Switch]$DeployLatestDriverBlockRules,
+        [Parameter(Mandatory = $false, ParameterSetName = "Deploy Latest Block Rules")][Switch]$DeployLatestBlockRules,                                                                                       
         [Parameter(Mandatory = $false, ParameterSetName = "Set Auto Update Driver Block Rules")][Switch]$SetAutoUpdateDriverBlockRules,
         [Parameter(Mandatory = $false, ParameterSetName = "Prep MSFT Only Audit")][Switch]$PrepMSFTOnlyAudit,
         [Parameter(Mandatory = $false, ParameterSetName = "Prep Default Windows Audit")][Switch]$PrepDefaultWindowsAudit,        
         [Parameter(Mandatory = $false, ParameterSetName = "Make Policy From Audit Logs")][Switch]$MakePolicyFromAuditLogs,  
         [Parameter(Mandatory = $false, ParameterSetName = "Make Light Policy")][Switch]$MakeLightPolicy,
-        [Parameter(Mandatory = $false, ParameterSetName = "Make Supplemental Policy")][Switch]$MakeSupplementalPolicy,
         [Parameter(Mandatory = $false, ParameterSetName = "Make DefaultWindows With Block Rules")][Switch]$MakeDefaultWindowsWithBlockRules,
-       
-        [ValidateScript({ Test-Path $_ -PathType 'Container' }, ErrorMessage = "The path you selected is not a folder path.")]
-        [parameter(Mandatory = $true, ParameterSetName = "Make Supplemental Policy", ValueFromPipelineByPropertyName = $true)]
-        [System.String]$ScanLocation,
-
-        [parameter(Mandatory = $true, ParameterSetName = "Make Supplemental Policy", ValueFromPipelineByPropertyName = $true)][System.String]$SuppPolicyName,
-        
-        [ValidatePattern('\.xml$')]
-        [ValidateScript({ Test-Path $_ -PathType 'Leaf' }, ErrorMessage = "The path you selected is not a file path.")]
-        [parameter(Mandatory = $true, ParameterSetName = "Make Supplemental Policy", ValueFromPipelineByPropertyName = $true)]
-        [System.String]$PolicyPath,
-          
+         
         [ValidateSet("Allow Microsoft Base", "Default Windows Base")]
-        [Parameter(Mandatory = $true, ParameterSetName = "Make Policy From Audit Logs")][System.String]$BasePolicyType,
+        [Parameter(Mandatory = $true, ParameterSetName = "Make Policy From Audit Logs")]
+        [System.String]$BasePolicyType,
 
         [Parameter(Mandatory = $false, ParameterSetName = "Make AllowMSFT With Block Rules")]
         [Parameter(Mandatory = $false, ParameterSetName = "Make Policy From Audit Logs")]
-        [Parameter(Mandatory = $false, ParameterSetName = "Make Light Policy")]        
-        [parameter(Mandatory = $false, ParameterSetName = "Make Supplemental Policy")]
+        [Parameter(Mandatory = $false, ParameterSetName = "Make Light Policy")]
         [Parameter(Mandatory = $false, ParameterSetName = "Make DefaultWindows With Block Rules")]
         [Switch]$Deployit,
 
@@ -53,35 +42,28 @@ function New-WDACConfig {
         [Parameter(Mandatory = $false, ParameterSetName = "Make DefaultWindows With Block Rules")]
         [Switch]$RequireEVSigners,
 
-        [Parameter(Mandatory = $false, ParameterSetName = "Make Policy From Audit Logs")][Switch]$Debugmode,
-
-        [Parameter(Mandatory = $false, ParameterSetName = "Make Supplemental Policy")]
         [Parameter(Mandatory = $false, ParameterSetName = "Make Policy From Audit Logs")]
         [Switch]$AllowFileNameFallbacks,
         
         [ValidateSet("OriginalFileName", "InternalName", "FileDescription", "ProductName", "PackageFamilyName", "FilePath")]
-        [Parameter(Mandatory = $false, ParameterSetName = "Make Supplemental Policy")]
         [Parameter(Mandatory = $false, ParameterSetName = "Make Policy From Audit Logs")]
         [System.String]$SpecificFileNameLevel,
 
-        [Parameter(Mandatory = $false, ParameterSetName = "Make Policy From Audit Logs")][Switch]$NoDeletedFiles,
+        [Parameter(Mandatory = $false, ParameterSetName = "Make Policy From Audit Logs")]
+        [Switch]$NoDeletedFiles,
 
-        [Parameter(Mandatory = $false, ParameterSetName = "Make Supplemental Policy")]
         [Parameter(Mandatory = $false, ParameterSetName = "Make Policy From Audit Logs")]
         [Switch]$NoUserPEs,
 
-        [Parameter(Mandatory = $false, ParameterSetName = "Make Supplemental Policy")]
         [Parameter(Mandatory = $false, ParameterSetName = "Make Policy From Audit Logs")]
         [Switch]$NoScript,
 
         [ValidateSet([Levelz])]
         [parameter(Mandatory = $false, ParameterSetName = "Make Policy From Audit Logs")]
-        [parameter(Mandatory = $false, ParameterSetName = "Make Supplemental Policy")]
-        [System.String]$Levels,
+        [System.String]$Level = "FilePublisher", # Setting the default value for the Level parameter
 
         [ValidateSet([Fallbackz])]
         [parameter(Mandatory = $false, ParameterSetName = "Make Policy From Audit Logs")]
-        [parameter(Mandatory = $false, ParameterSetName = "Make Supplemental Policy")]
         [System.String[]]$Fallbacks,
 
         # Setting the maxim range to the maximum allowed log size by Windows Event viewer
@@ -98,6 +80,9 @@ function New-WDACConfig {
         # Importing resources such as functions by dot-sourcing so that they will run in the same scope and their variables will be usable
         . "$psscriptroot\Resources.ps1"
 
+        # Detecting if Debug switch is used, will do debugging actions based on that
+        $Debug = $PSBoundParameters.Debug.IsPresent
+
         # argument tab auto-completion and ValidateSet for Fallbacks
         Class Fallbackz : System.Management.Automation.IValidateSetValuesGenerator {
             [System.String[]] GetValidValues() {
@@ -107,33 +92,12 @@ function New-WDACConfig {
             }
         }
 
-        # argument tab auto-completion and ValidateSet for levels
+        # argument tab auto-completion and ValidateSet for level
         Class Levelz : System.Management.Automation.IValidateSetValuesGenerator {
             [System.String[]] GetValidValues() {
                 $Levelz = ('Hash', 'FileName', 'SignedVersion', 'Publisher', 'FilePublisher', 'LeafCertificate', 'PcaCertificate', 'RootCertificate', 'WHQL', 'WHQLPublisher', 'WHQLFilePublisher', 'PFN', 'FilePath', 'None')
        
                 return [System.String[]]$Levelz
-            }
-        }
-        
-        $GetBlockRulesSCRIPTBLOCK = {             
-            $MicrosoftRecommendeDriverBlockRules = Invoke-WebRequest -Uri "https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/public/windows/security/threat-protection/windows-defender-application-control/microsoft-recommended-block-rules.md"
-            $MicrosoftRecommendeDriverBlockRules -match "(?s)(?<=``````xml).*(?=``````)" | Out-Null
-            $Rules = $Matches[0]
-            
-            $Rules = $Rules -replace '<Allow\sID="ID_ALLOW_A_1"\sFriendlyName="Allow\sKernel\sDrivers"\sFileName="\*".*/>', ''
-            $Rules = $Rules -replace '<Allow\sID="ID_ALLOW_A_2"\sFriendlyName="Allow\sUser\smode\scomponents"\sFileName="\*".*/>', ''
-            $Rules = $Rules -replace '<FileRuleRef\sRuleID="ID_ALLOW_A_1".*/>', ''
-            $Rules = $Rules -replace '<FileRuleRef\sRuleID="ID_ALLOW_A_2".*/>', ''
-            
-            $Rules | Out-File 'Microsoft recommended block rules TEMP.xml'
-            # Remove empty lines from the policy file
-            Get-Content 'Microsoft recommended block rules TEMP.xml' | Where-Object { $_.trim() -ne "" } | Out-File 'Microsoft recommended block rules.xml'                
-            Remove-Item 'Microsoft recommended block rules TEMP.xml' -Force
-            Set-RuleOption -FilePath 'Microsoft recommended block rules.xml' -Option 3 -Delete
-            Set-HVCIOptions -Strict -FilePath 'Microsoft recommended block rules.xml'
-            [PSCustomObject]@{
-                PolicyFile = 'Microsoft recommended block rules.xml'
             }
         }
            
@@ -171,7 +135,7 @@ function New-WDACConfig {
             Invoke-Command -ScriptBlock $GetBlockRulesSCRIPTBLOCK | Out-Null                        
             Copy-item -Path "C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml" -Destination "AllowMicrosoft.xml"
             Merge-CIPolicy -PolicyPaths .\AllowMicrosoft.xml, 'Microsoft recommended block rules.xml' -OutputFilePath .\AllowMicrosoftPlusBlockRules.xml | Out-Null     
-            $PolicyID = Set-CIPolicyIdInfo -FilePath .\AllowMicrosoftPlusBlockRules.xml -PolicyName "AllowMicrosoftPlusBlockRules Made On $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID
+            $PolicyID = Set-CIPolicyIdInfo -FilePath .\AllowMicrosoftPlusBlockRules.xml -PolicyName "Allow Microsoft Plus Block Rules - $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID
             $PolicyID = $PolicyID.Substring(11)
             Set-CIPolicyVersion -FilePath .\AllowMicrosoftPlusBlockRules.xml -Version "1.0.0.0"
             @(0, 2, 5, 6, 11, 12, 16, 17, 19, 20) | ForEach-Object { Set-RuleOption -FilePath .\AllowMicrosoftPlusBlockRules.xml -Option $_ }
@@ -215,7 +179,7 @@ function New-WDACConfig {
                 Merge-CIPolicy -PolicyPaths .\DefaultWindows_Enforced.xml, 'Microsoft recommended block rules.xml' -OutputFilePath .\DefaultWindowsPlusBlockRules.xml | Out-Null                         
             }                  
             
-            $PolicyID = Set-CIPolicyIdInfo -FilePath .\DefaultWindowsPlusBlockRules.xml -PolicyName "DefaultWindowsPlusBlockRules Made On $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID
+            $PolicyID = Set-CIPolicyIdInfo -FilePath .\DefaultWindowsPlusBlockRules.xml -PolicyName "Default Windows Plus Block Rules - $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID
             $PolicyID = $PolicyID.Substring(11)
             Set-CIPolicyVersion -FilePath .\DefaultWindowsPlusBlockRules.xml -Version "1.0.0.0"
             @(0, 2, 5, 6, 11, 12, 16, 17, 19, 20) | ForEach-Object { Set-RuleOption -FilePath .\DefaultWindowsPlusBlockRules.xml -Option $_ }
@@ -241,6 +205,7 @@ function New-WDACConfig {
             if ($Deployit -and $MakeDefaultWindowsWithBlockRules) {            
                 CiTool --update-policy "$PolicyID.cip" -json
                 Write-host "`n"
+                Remove-Item -Path "$PolicyID.cip" -Force
             }
             if ($NoCIP)
             { Remove-Item -Path "$PolicyID.cip" -Force }
@@ -257,7 +222,32 @@ function New-WDACConfig {
             Remove-Item .\VulnerableDriverBlockList.zip -Force
             Write-Host "`nSiPolicy.p7b has been deployed and policies refreshed." -ForegroundColor Cyan        
             Invoke-Command -ScriptBlock $DriversBlockListInfoGatheringSCRIPTBLOCK
-        }  
+        }
+        
+        $DeployLatestBlockRulesSCRIPTBLOCK = {
+
+            $MicrosoftRecommendeDriverBlockRules = Invoke-WebRequest -Uri "https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/public/windows/security/threat-protection/windows-defender-application-control/microsoft-recommended-block-rules.md"
+            $MicrosoftRecommendeDriverBlockRules -match "(?s)(?<=``````xml).*(?=``````)" | Out-Null
+            $Matches[0] | Out-File '.\Microsoft recommended driver block rules TEMP.xml'
+
+
+            # Remove empty lines from the policy file
+            Get-Content '.\Microsoft recommended driver block rules TEMP.xml' | Where-Object { $_.trim() -ne "" } | Out-File '.\Microsoft recommended driver block rules.xml'
+            
+            Set-RuleOption -FilePath '.\Microsoft recommended driver block rules.xml' -Option 3 -Delete
+            @(0, 2, 6, 11, 12, 16, 19, 20) | ForEach-Object { Set-RuleOption -FilePath '.\Microsoft recommended driver block rules.xml' -Option $_ }
+            Set-HVCIOptions -Strict -FilePath '.\Microsoft recommended driver block rules.xml'
+
+            Remove-Item -Path '.\Microsoft recommended driver block rules TEMP.xml' -Force
+
+            $PolicyID = Set-CIPolicyIdInfo -FilePath '.\Microsoft recommended driver block rules.xml' -ResetPolicyID
+            $PolicyID = $PolicyID.Substring(11)
+            Set-CIPolicyIdInfo -PolicyName "Microsoft Windows User Mode Policy - Enforced - $(Get-Date -Format 'MM-dd-yyyy')" -FilePath '.\Microsoft recommended driver block rules.xml'
+            ConvertFrom-CIPolicy '.\Microsoft recommended driver block rules.xml' "$PolicyID.cip" | Out-Null
+            CiTool --update-policy "$PolicyID.cip" -json
+            Remove-Item "$PolicyID.cip" -Force
+            Write-host "`nThe Microsoft recommended block rules policy has been deployed in enforced mode." -ForegroundColor Magenta
+        }
 
         $SetAutoUpdateDriverBlockRulesSCRIPTBLOCK = {
             # create a scheduled task that runs every 7 days
@@ -278,7 +268,7 @@ function New-WDACConfig {
         }
 
         $PrepMSFTOnlyAuditSCRIPTBLOCK = {
-            if ($PrepMSFTOnlyAudit -and $LogSize) { . Set-LogSize -LogSize $LogSize }
+            if ($PrepMSFTOnlyAudit -and $LogSize) { Set-LogSize -LogSize $LogSize }
             Copy-item -Path C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml -Destination .\AllowMicrosoft.xml
             Set-RuleOption -FilePath .\AllowMicrosoft.xml -Option 3
             $PolicyID = Set-CIPolicyIdInfo -FilePath .\AllowMicrosoft.xml -ResetPolicyID
@@ -292,12 +282,12 @@ function New-WDACConfig {
         }
 
         $PrepDefaultWindowsAuditSCRIPTBLOCK = {
-            if ($PrepDefaultWindowsAudit -and $LogSize) { . Set-LogSize -LogSize $LogSize }
+            if ($PrepDefaultWindowsAudit -and $LogSize) { Set-LogSize -LogSize $LogSize }
             Copy-item -Path C:\Windows\schemas\CodeIntegrity\ExamplePolicies\DefaultWindows_Audit.xml -Destination .\DefaultWindows_Audit.xml
            
             # Making Sure neither PowerShell core nor WDACConfig module files are added to the Supplemental policy created by -MakePolicyFromAuditLogs parameter
-            # by addibg them first to the deployed Default Windows policy in Audit mode. Because WDACConfig module files don't need to be allowed to run and
-            # PowerShell core files will be added to the DefaultWindows Base policy anyway
+            # by addibg them first to the deployed Default Windows policy in Audit mode. Because WDACConfig module files don't need to be allowed to run since they are *.ps1 and .*psm1 files
+            # And PowerShell core files will be added to the DefaultWindows Base policy anyway
             if (Test-Path "C:\Program Files\PowerShell") {               
                 New-CIPolicy -ScanPath "C:\Program Files\PowerShell" -Level FilePublisher -NoScript -Fallback Hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -FilePath .\AllowPowerShell.xml
                 New-CIPolicy -ScanPath "$psscriptroot" -Level hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -FilePath .\WDACConfigModule.xml
@@ -322,7 +312,7 @@ function New-WDACConfig {
         }
 
         $MakePolicyFromAuditLogsSCRIPTBLOCK = {
-            if ($MakePolicyFromAuditLogs -and $LogSize) { . Set-LogSize -LogSize $LogSize }
+            if ($MakePolicyFromAuditLogs -and $LogSize) { Set-LogSize -LogSize $LogSize }
             # Make sure there is no leftover files from previous operations of this same command
             Remove-Item -Path "$home\WDAC\*" -Recurse -Force -ErrorAction SilentlyContinue
             # Create a working directory in user's folder
@@ -358,69 +348,15 @@ function New-WDACConfig {
 
             ############################### Supplemental Processing ###############################
 
-            $AssignedLevels = $null
-            switch ($Levels) {
-                'Hash' { $AssignedLevels = 'Hash' }
-                'FileName' { $AssignedLevels = 'FileName' }
-                'SignedVersion' { $AssignedLevels = 'SignedVersion' }
-                'Publisher' { $AssignedLevels = 'Publisher' }
-                'FilePublisher' { $AssignedLevels = 'FilePublisher' }
-                'LeafCertificate' { $AssignedLevels = 'LeafCertificate' }
-                'PcaCertificate' { $AssignedLevels = 'PcaCertificate' }
-                'RootCertificate' { $AssignedLevels = 'RootCertificate' }
-                'WHQL' { $AssignedLevels = 'WHQL' }
-                'WHQLPublisher' { $AssignedLevels = 'WHQLPublisher' }
-                'WHQLFilePublisher' { $AssignedLevels = 'WHQLFilePublisher' }
-                'PFN' { $AssignedLevels = 'PFN' }
-                'FilePath' { $AssignedLevels = 'FilePath' }
-                'None' { $AssignedLevels = 'None' }
-                Default { $AssignedLevels = 'FilePublisher' }         
-            }
-  
-            $AssignedFallbacks = @()
-            switch ($Fallbacks) {
-                'Hash' { $AssignedFallbacks += 'Hash' }
-                'FileName' { $AssignedFallbacks += 'FileName' }
-                'SignedVersion' { $AssignedFallbacks += 'SignedVersion' }
-                'Publisher' { $AssignedFallbacks += 'Publisher' }
-                'FilePublisher' { $AssignedFallbacks += 'FilePublisher' }
-                'LeafCertificate' { $AssignedFallbacks += 'LeafCertificate' }
-                'PcaCertificate' { $AssignedFallbacks += 'PcaCertificate' }
-                'RootCertificate' { $AssignedFallbacks += 'RootCertificate' }
-                'WHQL' { $AssignedFallbacks += 'WHQL' }
-                'WHQLPublisher' { $AssignedFallbacks += 'WHQLPublisher' }
-                'WHQLFilePublisher' { $AssignedFallbacks += 'WHQLFilePublisher' }
-                'PFN' { $AssignedFallbacks += 'PFN' }
-                'FilePath' { $AssignedFallbacks += 'FilePath' }
-                'None' { $AssignedFallbacks += 'None' }
-                Default { $AssignedFallbacks += 'Hash' }                
-            }            
-  
             # Produce a policy xml file from event viewer logs
             Write-host "Scanning Windows Event logs and creating a policy file, please wait..." -ForegroundColor Cyan
-              
-            <#  keeping this for historic purposes
-            # Create an array to dynamically feed parameters to New-CIPolicy Cmdlet
-            $PolicyMakerArray = @()
-            $PolicyMakerArray += 'New-CIPolicy -FilePath "AuditLogsPolicy_NoDeletedFiles.xml"'
-            $PolicyMakerArray += "-Audit -Level $AssignedLevels -Fallback $AssignedFallbacks"
-            if ($AllowFileNameFallbacks) { $PolicyMakerArray += "-AllowFileNameFallbacks" }
-            if ($SpecificFileNameLevel) { $PolicyMakerArray += "-SpecificFileNameLevel $SpecificFileNameLevel" }
-            if ($NoScript) { $PolicyMakerArray += "-NoScript" }
-            if (!$NoUserPEs) { $PolicyMakerArray += "-UserPEs" }            
-            $PolicyMakerArray += "-MultiplePolicyFormat -UserWriteablePaths -WarningAction SilentlyContinue"            
-            
-            $PolicyMakerArray = $PolicyMakerArray -Join " " 
-            write-host "The following command is running: `n$PolicyMakerArray" -ForegroundColor Magenta
-            $PolicyMakerArray | Invoke-Expression
-            #>
 
             # Creating a hash table to dynamically add parameters based on user input and pass them to New-Cipolicy cmdlet
             [System.Collections.Hashtable]$PolicyMakerHashTable = @{
                 FilePath             = "AuditLogsPolicy_NoDeletedFiles.xml"
                 Audit                = $true
-                Level                = $AssignedLevels
-                Fallback             = $AssignedFallbacks
+                Level                = $Level
+                Fallback             = $Fallbacks ? (Get-Fallbacks -Fallbacks $Fallbacks) : 'Hash'
                 MultiplePolicyFormat = $true
                 UserWriteablePaths   = $true
                 WarningAction        = 'SilentlyContinue'
@@ -431,14 +367,11 @@ function New-WDACConfig {
             if ($NoScript) { $PolicyMakerHashTable['NoScript'] = $true }        
             if (!$NoUserPEs) { $PolicyMakerHashTable['UserPEs'] = $true } 
 
-            write-host "Generating Supplemental policy with the following specifications:" -ForegroundColor Magenta
+            write-host "`nGenerating Supplemental policy with the following specifications:" -ForegroundColor Magenta
             $PolicyMakerHashTable
             Write-Host "`n"
             # Create the supplemental policy via parameter splatting
             New-CIPolicy @PolicyMakerHashTable
-            
-            # Calling the script block from Resources file that is dot-sourced
-            $DirveLettersGlobalRootFix = Invoke-Command -ScriptBlock $DirveLettersGlobalRootFixScriptBlock       
 
             # Get Event viewer logs for code integrity - check the file path of all of the files in the log, resolve them using the command above - show files that are no longer available on the disk
             $AuditEventLogsDeletedFilesScriptBlock = {
@@ -492,56 +425,9 @@ function New-WDACConfig {
                 }  
                 # Save the the File Rules and File Rule Refs to the Out-File FileRulesAndFileRefs.txt in the current working directory
                 $Rules + $RulesRefs | Out-File FileRulesAndFileRefs.txt
-
-                $EmptyPolicy = @"
-<?xml version="1.0" encoding="utf-8"?>
-<SiPolicy xmlns="urn:schemas-microsoft-com:sipolicy" PolicyType="Base Policy">
-<VersionEx>10.0.0.0</VersionEx>
-<PlatformID>{2E07F7E4-194C-4D20-B7C9-6F44A6C5A234}</PlatformID>
-<Rules>
-<Rule>
-  <Option>Enabled:Unsigned System Integrity Policy</Option>
-</Rule>
-<Rule>
-  <Option>Enabled:Audit Mode</Option>
-</Rule>
-<Rule>
-  <Option>Enabled:Advanced Boot Options Menu</Option>
-</Rule>
-<Rule>
-  <Option>Required:Enforce Store Applications</Option>
-</Rule>
-</Rules>
-<!--EKUS-->
-<EKUs />
-<!--File Rules-->
-<FileRules>
-$Rules
-</FileRules>
-<!--Signers-->
-<Signers />
-<!--Driver Signing Scenarios-->
-<SigningScenarios>
-<SigningScenario Value="131" ID="ID_SIGNINGSCENARIO_DRIVERS_1" FriendlyName="Auto generated policy on $(Get-Date -Format 'MM-dd-yyyy')">
-  <ProductSigners />
-</SigningScenario>
-<SigningScenario Value="12" ID="ID_SIGNINGSCENARIO_WINDOWS" FriendlyName="Auto generated policy on $(Get-Date -Format 'MM-dd-yyyy')">
-  <ProductSigners>
-    <FileRulesRef>
-    $RulesRefs
-    </FileRulesRef>
-    </ProductSigners>
-    </SigningScenario>
-</SigningScenarios>
-<UpdatePolicySigners />
-<CiSigners />
-<HvciOptions>0</HvciOptions>
-<BasePolicyID>{B163125F-E30A-43FC-ABEC-E30B4EE88FA8}</BasePolicyID>
-<PolicyID>{B163125F-E30A-43FC-ABEC-E30B4EE88FA8}</PolicyID>
-</SiPolicy>
-"@
-
-                $EmptyPolicy | Out-File .\DeletedFilesHashes.xml
+                
+                # Put the Rules and RulesRefs in an empty policy file
+                New-EmptyPolicy -RulesContent $Rules -RuleRefsContent $RulesRefs | Out-File .\DeletedFilesHashes.xml
 
                 # Merge the policy file we created at first using Event Viewer logs, with the policy file we created for Hash of the files no longer available on the disk
                 Merge-CIPolicy -PolicyPaths "AuditLogsPolicy_NoDeletedFiles.xml", .\DeletedFilesHashes.xml -OutputFilePath .\SupplementalPolicy.xml | Out-Null
@@ -571,7 +457,7 @@ $Rules
                 SupplementalPolicyGUID = $PolicyID
             }       
 
-            if (-NOT $Debugmode) {
+            if (-NOT $Debug) {
                 Remove-Item -Path "AuditLogsPolicy_NoDeletedFiles.xml" -Force -ErrorAction SilentlyContinue
                 Remove-Item -Path "FileRulesAndFileRefs.txt" -Force -ErrorAction SilentlyContinue
                 Remove-Item -Path "DeletedFilesHashes.xml" -Force -ErrorAction SilentlyContinue
@@ -592,7 +478,7 @@ $Rules
                     }
                 }
                 CiTool --remove-policy "{$IDToRemove}" -json
-                Write-host "System restart required to finish removing the Audit mode Prep policy" -ForegroundColor Green                
+                Write-host "`nSystem restart required to finish removing the Audit mode Prep policy" -ForegroundColor Green                
             }     
         }
 
@@ -608,7 +494,7 @@ $Rules
             if ($RequireEVSigners -and $MakeLightPolicy) {
                 & $RequireEVSignersSCRIPTBLOCK -PolicyPathToEnableEVSigners .\SignedAndReputable.xml
             }
-            $BasePolicyID = Set-CiPolicyIdInfo -FilePath .\SignedAndReputable.xml -ResetPolicyID -PolicyName "SignedAndReputable policy deployed on $(Get-Date -Format 'MM-dd-yyyy')"
+            $BasePolicyID = Set-CiPolicyIdInfo -FilePath .\SignedAndReputable.xml -ResetPolicyID -PolicyName "Signed And Reputable policy - $(Get-Date -Format 'MM-dd-yyyy')"
             $BasePolicyID = $BasePolicyID.Substring(11)        
             Set-CIPolicyVersion -FilePath .\SignedAndReputable.xml -Version "1.0.0.0"
             Set-HVCIOptions -Strict -FilePath .\SignedAndReputable.xml        
@@ -617,8 +503,7 @@ $Rules
             Start-Process -FilePath 'C:\Windows\System32\appidtel.exe' -ArgumentList 'start' -Wait -NoNewWindow
             Start-Process -FilePath 'C:\Windows\System32\sc.exe' -ArgumentList 'config', 'appidsvc', "start= auto" -Wait -NoNewWindow
             if ($Deployit -and $MakeLightPolicy) {
-                CiTool --update-policy "$BasePolicyID.cip" -json
-                Write-host -NoNewline "`nSignedAndReputable.xml policy has been deployed.`n" -ForegroundColor Green            
+                CiTool --update-policy "$BasePolicyID.cip" -json                           
             }
             [PSCustomObject]@{
                 BasePolicyFile = "SignedAndReputable.xml"      
@@ -626,86 +511,6 @@ $Rules
             }       
         }
 
-        $MakeSupplementalPolicySCRIPTBLOCK = {
-
-            $AssignedLevels = $null
-            switch ($Levels) {
-                'Hash' { $AssignedLevels = 'Hash' }
-                'FileName' { $AssignedLevels = 'FileName' }
-                'SignedVersion' { $AssignedLevels = 'SignedVersion' }
-                'Publisher' { $AssignedLevels = 'Publisher' }
-                'FilePublisher' { $AssignedLevels = 'FilePublisher' }
-                'LeafCertificate' { $AssignedLevels = 'LeafCertificate' }
-                'PcaCertificate' { $AssignedLevels = 'PcaCertificate' }
-                'RootCertificate' { $AssignedLevels = 'RootCertificate' }
-                'WHQL' { $AssignedLevels = 'WHQL' }
-                'WHQLPublisher' { $AssignedLevels = 'WHQLPublisher' }
-                'WHQLFilePublisher' { $AssignedLevels = 'WHQLFilePublisher' }
-                'PFN' { $AssignedLevels = 'PFN' }
-                'FilePath' { $AssignedLevels = 'FilePath' }
-                'None' { $AssignedLevels = 'None' }
-                Default { $AssignedLevels = 'FilePublisher' }
-            }
-
-            $AssignedFallbacks = @()
-            switch ($Fallbacks) {
-                'Hash' { $AssignedFallbacks += 'Hash' }
-                'FileName' { $AssignedFallbacks += 'FileName' }
-                'SignedVersion' { $AssignedFallbacks += 'SignedVersion' }
-                'Publisher' { $AssignedFallbacks += 'Publisher' }
-                'FilePublisher' { $AssignedFallbacks += 'FilePublisher' }
-                'LeafCertificate' { $AssignedFallbacks += 'LeafCertificate' }
-                'PcaCertificate' { $AssignedFallbacks += 'PcaCertificate' }
-                'RootCertificate' { $AssignedFallbacks += 'RootCertificate' }
-                'WHQL' { $AssignedFallbacks += 'WHQL' }
-                'WHQLPublisher' { $AssignedFallbacks += 'WHQLPublisher' }
-                'WHQLFilePublisher' { $AssignedFallbacks += 'WHQLFilePublisher' }
-                'PFN' { $AssignedFallbacks += 'PFN' }
-                'FilePath' { $AssignedFallbacks += 'FilePath' }
-                'None' { $AssignedFallbacks += 'None' }
-                Default { $AssignedFallbacks += 'Hash' }
-            }
-            
-            # Creating a hash table to dynamically add parameters based on user input and pass them to New-Cipolicy cmdlet
-            [System.Collections.Hashtable]$PolicyMakerHashTable = @{
-                FilePath             = "SupplementalPolicy$SuppPolicyName.xml"
-                ScanPath             = $ScanLocation
-                Level                = $AssignedLevels
-                Fallback             = $AssignedFallbacks
-                MultiplePolicyFormat = $true
-                UserWriteablePaths   = $true
-            }
-            # Assess user input parameters and add the required parameters to the hash table
-            if ($AllowFileNameFallbacks) { $PolicyMakerHashTable['AllowFileNameFallbacks'] = $true }
-            if ($SpecificFileNameLevel) { $PolicyMakerHashTable['SpecificFileNameLevel'] = $SpecificFileNameLevel }  
-            if ($NoScript) { $PolicyMakerHashTable['NoScript'] = $true }                 
-            if (!$NoUserPEs) { $PolicyMakerHashTable['UserPEs'] = $true } 
-
-            write-host "Generating Supplemental policy with the following specifications:" -ForegroundColor Magenta
-            $PolicyMakerHashTable
-            Write-Host "`n"
-            # Create the supplemental policy via parameter splatting
-            New-CIPolicy @PolicyMakerHashTable           
-            
-            $policyID = Set-CiPolicyIdInfo -FilePath "SupplementalPolicy$SuppPolicyName.xml" -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath -PolicyName "$SuppPolicyName"
-            $policyID = $policyID.Substring(11)
-            Set-CIPolicyVersion -FilePath "SupplementalPolicy$SuppPolicyName.xml" -Version "1.0.0.0"
-            # Make sure policy rule options that don't belong to a Supplemental policy don't exit             
-            @(0, 1, 2, 3, 4, 9, 10, 11, 12, 15, 16, 17, 19, 20) | ForEach-Object {
-                Set-RuleOption -FilePath "SupplementalPolicy$SuppPolicyName.xml" -Option $_ -Delete }        
-            Set-HVCIOptions -Strict -FilePath "SupplementalPolicy$SuppPolicyName.xml"        
-            ConvertFrom-CIPolicy "SupplementalPolicy$SuppPolicyName.xml" "$policyID.cip" | Out-Null
-            [PSCustomObject]@{
-                SupplementalPolicyFile = "SupplementalPolicy$SuppPolicyName.xml"
-                SupplementalPolicyGUID = $PolicyID
-            } 
-            if ($Deployit) {                
-                CiTool --update-policy "$policyID.cip" -json
-                Write-host -NoNewline "`n$policyID.cip for " -ForegroundColor Green;
-                Write-host -NoNewline "$SuppPolicyName" -ForegroundColor Magenta;
-                Write-host " has been deployed." -ForegroundColor Green
-            }    
-        }
         # Script block that is used to add policy rule options 9 and 10 to the base policy
         $TestModeSCRIPTBLOCK = { 
             param([System.String]$PolicyPathToEnableTesting)
@@ -731,11 +536,13 @@ $Rules
             $MicrosoftRecommendeDriverBlockRules = Invoke-WebRequest -Uri "https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/public/windows/security/threat-protection/windows-defender-application-control/microsoft-recommended-driver-block-rules.md"
             $MicrosoftRecommendeDriverBlockRules -match "<VersionEx>(.*)</VersionEx>" | Out-Null
     
-            Write-Host "`nThe current version of Microsoft recommended drivers block list is $($Matches[1])" -ForegroundColor Cyan
+            Write-Host "The current version of Microsoft recommended drivers block list is $($Matches[1])" -ForegroundColor Cyan
         }    
         # Stop operation as soon as there is an error, anywhere, unless explicitly specified otherwise
         $ErrorActionPreference = 'Stop'
-        if (-NOT $SkipVersionCheck) { . Update-self }    
+        if (-NOT $SkipVersionCheck) { . Update-self }
+
+        $DirveLettersGlobalRootFix = Invoke-Command -ScriptBlock $DirveLettersGlobalRootFixScriptBlock
     }
 
     process {
@@ -743,12 +550,12 @@ $Rules
         if ($GetBlockRules) { Invoke-Command -ScriptBlock $GetBlockRulesSCRIPTBLOCK }                                
         if ($GetDriverBlockRules) { Invoke-Command -ScriptBlock $GetDriverBlockRulesSCRIPTBLOCK }   
         if ($MakeAllowMSFTWithBlockRules) { Invoke-Command -ScriptBlock $MakeAllowMSFTWithBlockRulesSCRIPTBLOCK }
-        if ($DeployLatestDriverBlockRules) { Invoke-Command -ScriptBlock $DeployLatestDriverBlockRulesSCRIPTBLOCK }                               
+        if ($DeployLatestDriverBlockRules) { Invoke-Command -ScriptBlock $DeployLatestDriverBlockRulesSCRIPTBLOCK }
+        if ($DeployLatestBlockRules) { Invoke-Command -ScriptBlock $DeployLatestBlockRulesSCRIPTBLOCK }                           
         if ($SetAutoUpdateDriverBlockRules) { Invoke-Command -ScriptBlock $SetAutoUpdateDriverBlockRulesSCRIPTBLOCK }                                
         if ($MakePolicyFromAuditLogs) { Invoke-Command -ScriptBlock $MakePolicyFromAuditLogsSCRIPTBLOCK }                                
         if ($PrepMSFTOnlyAudit) { Invoke-Command -ScriptBlock $PrepMSFTOnlyAuditSCRIPTBLOCK }        
         if ($MakeLightPolicy) { Invoke-Command -ScriptBlock $MakeLightPolicySCRIPTBLOCK }
-        if ($MakeSupplementalPolicy) { Invoke-Command -ScriptBlock $MakeSupplementalPolicySCRIPTBLOCK }
         if ($MakeDefaultWindowsWithBlockRules) { Invoke-Command -ScriptBlock $MakeDefaultWindowsWithBlockRulesSCRIPTBLOCK }
         if ($PrepDefaultWindowsAudit) { Invoke-Command -ScriptBlock $PrepDefaultWindowsAuditSCRIPTBLOCK }
 
@@ -759,13 +566,13 @@ $Rules
 Automate a lot of tasks related to WDAC (Windows Defender Application Control)
 
 .LINK
-https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig
+https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-WDACConfig
 
 .DESCRIPTION
 Using official Microsoft methods, configure and use Windows Defender Application Control
 
 .COMPONENT
-Windows Defender Application Control
+Windows Defender Application Control, ConfigCI PowerShell module
 
 .FUNCTIONALITY
 Automate various tasks related to Windows Defender Application Control (WDAC)
@@ -794,9 +601,6 @@ Make WDAC Policy from Audit event logs that also covers files no longer on disk
 .PARAMETER MakeLightPolicy
 Make WDAC Policy with ISG for Lightly Managed system
 
-.PARAMETER MakeSupplementalPolicy 
-Make a Supplemental policy by scanning a directory    
-
 .PARAMETER MakeDefaultWindowsWithBlockRules
 Make WDAC policy by merging DefaultWindows policy with the recommended block rules
 
@@ -808,14 +612,3 @@ Can be used with any parameter to bypass the online version check - only to be u
 
 # Set PSReadline tab completion to complete menu for easier access to available parameters - Only for the current session
 Set-PSReadlineKeyHandler -Key Tab -Function MenuComplete
-
-# argument tab auto-completion for Policy Paths to show only .xml files and only base policies
-$ArgumentCompleterPolicyPaths = {
-    Get-ChildItem | where-object { $_.extension -like '*.xml' } | ForEach-Object {
-        $xmlitem = [xml](Get-Content $_)
-        $PolicyType = $xmlitem.SiPolicy.PolicyType
-
-        if ($PolicyType -eq "Base Policy") { $_ }
-    } | foreach-object { return "`"$_`"" }
-}
-Register-ArgumentCompleter -CommandName "New-WDACConfig" -ParameterName "PolicyPath" -ScriptBlock $ArgumentCompleterPolicyPaths

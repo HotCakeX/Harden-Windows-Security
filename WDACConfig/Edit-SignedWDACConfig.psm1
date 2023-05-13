@@ -13,13 +13,14 @@ function Edit-SignedWDACConfig {
         [Parameter(Mandatory = $false, ParameterSetName = "Update Base Policy")][Switch]$UpdateBasePolicy,
 
         [ValidatePattern('\.cer$')]
-        [ValidateScript({ Test-Path $_ -PathType 'Leaf' }, ErrorMessage = "The path you selected is not a file path.")]
+        [ValidateScript({ Test-Path $_ -PathType 'Leaf' }, ErrorMessage = "The path you selected is not a file path.")]        
         [Parameter(Mandatory = $true, ParameterSetName = "Allow New Apps Audit Events", ValueFromPipelineByPropertyName = $true)]
         [Parameter(Mandatory = $true, ParameterSetName = "Allow New Apps", ValueFromPipelineByPropertyName = $true)]
         [Parameter(Mandatory = $true, ParameterSetName = "Merge Supplemental Policies", ValueFromPipelineByPropertyName = $true)]
         [Parameter(Mandatory = $true, ParameterSetName = "Update Base Policy", ValueFromPipelineByPropertyName = $true)] 
         [System.String]$CertPath,
 
+        [ValidatePattern('^[a-zA-Z0-9 ]+$', ErrorMessage = "The Supplemental Policy Name can only contain alphanumeric characters.")]
         [Parameter(Mandatory = $true, ParameterSetName = "Allow New Apps Audit Events", ValueFromPipelineByPropertyName = $true)]
         [Parameter(Mandatory = $true, ParameterSetName = "Allow New Apps", ValueFromPipelineByPropertyName = $true)]
         [Parameter(Mandatory = $true, ParameterSetName = "Merge Supplemental Policies", ValueFromPipelineByPropertyName = $true)]       
@@ -28,7 +29,7 @@ function Edit-SignedWDACConfig {
         [ValidatePattern('\.xml$')]
         [ValidateScript({
                 # Validate each Policy file in PolicyPaths parameter to make sure the user isn't accidentally trying to
-                # Edit a Unsigned policy using Edit-SignedWDACConfig cmdlet which is only made for Signed policies
+                # Edit an Unsigned policy using Edit-SignedWDACConfig cmdlet which is only made for Signed policies
                 $_ | ForEach-Object {                   
                     $xmlTest = [xml](Get-Content $_)
                     $RedFlag1 = $xmlTest.SiPolicy.SupplementalPolicySigners.SupplementalPolicySigner.SignerId
@@ -61,7 +62,8 @@ function Edit-SignedWDACConfig {
         [Parameter(Mandatory = $true, ParameterSetName = "Merge Supplemental Policies", ValueFromPipelineByPropertyName = $true)]
         [System.String[]]$SuppPolicyPaths,
 
-        [Parameter(Mandatory = $false, ParameterSetName = "Allow New Apps Audit Events")][Switch]$Debugmode,
+        [Parameter(Mandatory = $false, ParameterSetName = "Merge Supplemental Policies")]
+        [switch]$KeepOldSupplementalPolicies,
 
         # Setting the maxim range to the maximum allowed log size by Windows Event viewer
         [ValidateRange(1024KB, 18014398509481983KB)][Parameter(Mandatory = $false, ParameterSetName = "Allow New Apps Audit Events")]
@@ -97,7 +99,7 @@ function Edit-SignedWDACConfig {
         [ValidateSet([Levelz])]
         [parameter(Mandatory = $false, ParameterSetName = "Allow New Apps Audit Events")]
         [parameter(Mandatory = $false, ParameterSetName = "Allow New Apps")]
-        [System.String]$Levels,
+        [System.String]$Level = "FilePublisher", # Setting the default value for the Level parameter
 
         [ValidateSet([Fallbackz])]
         [parameter(Mandatory = $false, ParameterSetName = "Allow New Apps Audit Events")]
@@ -131,6 +133,9 @@ function Edit-SignedWDACConfig {
         # Importing resources such as functions by dot-sourcing so that they will run in the same scope and their variables will be usable
         . "$psscriptroot\Resources.ps1"
 
+        # Detecting if Debug switch is used, will do debugging actions based on that
+        $Debug = $PSBoundParameters.Debug.IsPresent
+
         # argument tab auto-completion and ValidateSet for Policy names 
         Class BasePolicyNamez : System.Management.Automation.IValidateSetValuesGenerator {
             [System.String[]] GetValidValues() {
@@ -149,7 +154,7 @@ function Edit-SignedWDACConfig {
             }
         }
 
-        # argument tab auto-completion and ValidateSet for levels
+        # argument tab auto-completion and ValidateSet for level
         Class Levelz : System.Management.Automation.IValidateSetValuesGenerator {
             [System.String[]] GetValidValues() {
                 $Levelz = ('Hash', 'FileName', 'SignedVersion', 'Publisher', 'FilePublisher', 'LeafCertificate', 'PcaCertificate', 'RootCertificate', 'WHQL', 'WHQLPublisher', 'WHQLFilePublisher', 'PFN', 'FilePath', 'None')
@@ -158,30 +163,8 @@ function Edit-SignedWDACConfig {
             }
         }
         
-        # Script block to get the latest Microsoft recommended driver block rules
-        $Get_BlockRulesSCRIPTBLOCK = {             
-            $MicrosoftRecommendeDriverBlockRules = Invoke-WebRequest -Uri "https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/public/windows/security/threat-protection/windows-defender-application-control/microsoft-recommended-block-rules.md"
-            $MicrosoftRecommendeDriverBlockRules -match "(?s)(?<=``````xml).*(?=``````)" | Out-Null
-            $Rules = $Matches[0]
-
-            $Rules = $Rules -replace '<Allow\sID="ID_ALLOW_A_1"\sFriendlyName="Allow\sKernel\sDrivers"\sFileName="\*".*/>', ''
-            $Rules = $Rules -replace '<Allow\sID="ID_ALLOW_A_2"\sFriendlyName="Allow\sUser\smode\scomponents"\sFileName="\*".*/>', ''
-            $Rules = $Rules -replace '<FileRuleRef\sRuleID="ID_ALLOW_A_1".*/>', ''
-            $Rules = $Rules -replace '<FileRuleRef\sRuleID="ID_ALLOW_A_2".*/>', ''
-
-            $Rules | Out-File '.\Microsoft recommended block rules TEMP.xml'
-            # Removing empty lines from policy file
-            Get-Content '.\Microsoft recommended block rules TEMP.xml' | Where-Object { $_.trim() -ne "" } | Out-File '.\Microsoft recommended block rules.xml'                
-            Remove-Item '.\Microsoft recommended block rules TEMP.xml' -Force
-            Set-RuleOption -FilePath '.\Microsoft recommended block rules.xml' -Option 3 -Delete
-            Set-HVCIOptions -Strict -FilePath '.\Microsoft recommended block rules.xml'
-            [PSCustomObject]@{
-                PolicyFile = 'Microsoft recommended block rules.xml'
-            }
-        }
-
-        #Re-Deploy Basepolicy in Enforcement mode
-        function Update-BasePolicyToEnforcement {        
+        #Re-Deploy Basepolicy in Enforced mode
+        function Update-BasePolicyToEnforced {        
             Set-RuleOption -FilePath $PolicyPath -Option 6 -Delete
             Set-RuleOption -FilePath $PolicyPath -Option 3 -Delete
             ConvertFrom-CIPolicy $PolicyPath "$PolicyID.cip" | Out-Null            
@@ -200,7 +183,7 @@ function Edit-SignedWDACConfig {
             Rename-Item "$PolicyID.cip.p7" -NewName "$PolicyID.cip" -Force
             CiTool --update-policy ".\$PolicyID.cip" -json
             Remove-Item ".\$PolicyID.cip" -Force
-            Write-host "`n`nThe Base policy with the following details has been Re-Signed and Re-Deployed in Enforcement Mode:" -ForegroundColor Green        
+            Write-host "`n`nThe Base policy with the following details has been Re-Signed and Re-Deployed in Enforced Mode:" -ForegroundColor Green        
             Write-Output "PolicyName = $PolicyName"
             Write-Output "PolicyGUID = $PolicyID`n"
         }
@@ -208,6 +191,8 @@ function Edit-SignedWDACConfig {
         # Stop operation as soon as there is an error, anywhere, unless explicitly specified otherwise
         $ErrorActionPreference = 'Stop'         
         if (-NOT $SkipVersionCheck) { . Update-self }
+
+        $DirveLettersGlobalRootFix = Invoke-Command -ScriptBlock $DirveLettersGlobalRootFixScriptBlock
     }
 
     process {
@@ -215,7 +200,7 @@ function Edit-SignedWDACConfig {
         if ($AllowNewAppsAuditEvents) {
                         
             # Change Code Integrity event logs size
-            if ($AllowNewAppsAuditEvents -and $LogSize) { . Set-LogSize -LogSize $LogSize }
+            if ($AllowNewAppsAuditEvents -and $LogSize) { Set-LogSize -LogSize $LogSize }
             # Make sure there is no leftover from previous runs
             Remove-Item -Path ".\ProgramDir_ScanResults*.xml" -Force -ErrorAction SilentlyContinue
             Remove-Item -Path ".\SupplementalPolicy$SuppPolicyName.xml" -Force -ErrorAction SilentlyContinue
@@ -256,46 +241,7 @@ function Edit-SignedWDACConfig {
                 Write-host "`n`nThe Base policy with the following details has been Re-Signed and Re-Deployed in Audit Mode:" -ForegroundColor Green        
                 Write-Output "PolicyName = $PolicyName"
                 Write-Output "PolicyGUID = $PolicyID"
-
-                ################################### Get the Levels and Fallbacks from User inputs ###################################
-                $AssignedLevels = $null
-                switch ($Levels) {
-                    'Hash' { $AssignedLevels = 'Hash' }
-                    'FileName' { $AssignedLevels = 'FileName' }
-                    'SignedVersion' { $AssignedLevels = 'SignedVersion' }
-                    'Publisher' { $AssignedLevels = 'Publisher' }
-                    'FilePublisher' { $AssignedLevels = 'FilePublisher' }
-                    'LeafCertificate' { $AssignedLevels = 'LeafCertificate' }
-                    'PcaCertificate' { $AssignedLevels = 'PcaCertificate' }
-                    'RootCertificate' { $AssignedLevels = 'RootCertificate' }
-                    'WHQL' { $AssignedLevels = 'WHQL' }
-                    'WHQLPublisher' { $AssignedLevels = 'WHQLPublisher' }
-                    'WHQLFilePublisher' { $AssignedLevels = 'WHQLFilePublisher' }
-                    'PFN' { $AssignedLevels = 'PFN' }
-                    'FilePath' { $AssignedLevels = 'FilePath' }
-                    'None' { $AssignedLevels = 'None' }
-                    Default { $AssignedLevels = 'FilePublisher' }
-                }
-
-                $AssignedFallbacks = @()
-                switch ($Fallbacks) {
-                    'Hash' { $AssignedFallbacks += 'Hash' }
-                    'FileName' { $AssignedFallbacks += 'FileName' }
-                    'SignedVersion' { $AssignedFallbacks += 'SignedVersion' }
-                    'Publisher' { $AssignedFallbacks += 'Publisher' }
-                    'FilePublisher' { $AssignedFallbacks += 'FilePublisher' }
-                    'LeafCertificate' { $AssignedFallbacks += 'LeafCertificate' }
-                    'PcaCertificate' { $AssignedFallbacks += 'PcaCertificate' }
-                    'RootCertificate' { $AssignedFallbacks += 'RootCertificate' }
-                    'WHQL' { $AssignedFallbacks += 'WHQL' }
-                    'WHQLPublisher' { $AssignedFallbacks += 'WHQLPublisher' }
-                    'WHQLFilePublisher' { $AssignedFallbacks += 'WHQLFilePublisher' }
-                    'PFN' { $AssignedFallbacks += 'PFN' }
-                    'FilePath' { $AssignedFallbacks += 'FilePath' }
-                    'None' { $AssignedFallbacks += 'None' }
-                    Default { $AssignedFallbacks += 'Hash' }
-                }
-            
+             
                 ################################### User Interaction ####################################
                 Write-host "`nAudit mode deployed, start installing your programs now" -ForegroundColor Magenta        
                 Write-Host "When you've finished installing programs, Press Enter to start selecting program directories to scan`n" -ForegroundColor Blue
@@ -324,63 +270,67 @@ function Edit-SignedWDACConfig {
 
                     ################################### EventCapturing ################################
 
-                    Write-host "Scanning Windows Event logs and creating a policy file, please wait..." -ForegroundColor Cyan    
+                    Write-host "Scanning Windows Event logs and creating a policy file, please wait..." -ForegroundColor Cyan                    
 
-                    # The notice about variable being assigned and never used should be ignored - it's being dot-sourced from Resources file                    
-                    $DirveLettersGlobalRootFix = Invoke-Command -ScriptBlock $DirveLettersGlobalRootFixScriptBlock
-
-                    # Defining the same arrays that exist in $AuditEventLogsProcessingScriptBlock, outside of it, to store its results separately
-                    $DeletedFileHashesArray = @()
-                    $AvailableFilesPathsArray = @()  
-
-                    # Extracting the array content from inside of the $AuditEventLogsProcessingScriptBlock ScripBlock by assigning each data to a separate array
-                    $DeletedFileHashesArray, $AvailableFilesPathsArray = Invoke-Command -ScriptBlock $AuditEventLogsProcessingScriptBlock
+                    # Extracting the array content from Get-AuditEventLogsProcessing function
+                    $AuditEventLogsProcessingResults = Get-AuditEventLogsProcessing -Date $Date
                             
-                    # Only create policy for files that are available on the disk based on Event viewer logs if there are any
-                    if ($AvailableFilesPathsArray) {
-                        # Create a folder in Temp directory to copy the files that are not included in user-selected program path(s)
-                        # but detected in Event viewer audit logs, scan that folder, and in the end delete it                   
-                        New-Item -Path "$env:TEMP\TemporaryScanFolderForEventViewerFiles" -ItemType Directory | Out-Null
-                        # Using the function to find out which files are not in the user-selected path(s) to only scan those, this prevents duplicate rule creation and double file copying
-                       (. Test-FilePath -FilePath $AvailableFilesPathsArray -DirectoryPath $ProgramsPaths).path | Select-Object -Unique | ForEach-Object {                             
-                            Copy-Item -Path $_ -Destination "$env:TEMP\TemporaryScanFolderForEventViewerFiles\" -ErrorAction SilentlyContinue                       
-                        }
-                     
-                        # Create a policy XML file for available files on the disk
+                    # Only create policy for files that are available on the disk based on Event viewer logs but weren't in user-selected program path(s), if there are any
+                    if ($AuditEventLogsProcessingResults.AvailableFilesPaths) {
 
-                        # Creating a hash table to dynamically add parameters based on user input and pass them to New-Cipolicy cmdlet
-                        [System.Collections.Hashtable]$AvailableFilesOnDiskPolicyMakerHashTable = @{
-                            FilePath             = ".\RulesForFilesNotInUserSelectedPaths.xml"
-                            ScanPath             = "$env:TEMP\TemporaryScanFolderForEventViewerFiles\"
-                            Level                = $AssignedLevels
-                            Fallback             = $AssignedFallbacks
-                            MultiplePolicyFormat = $true
-                            UserWriteablePaths   = $true                            
+                        # Using the function to find out which files are not in the user-selected path(s), if any, to only scan those
+                        # this prevents duplicate rule creation and double file copying
+                        $TestFilePathResults = (Test-FilePath -FilePath $AuditEventLogsProcessingResults.AvailableFilesPaths -DirectoryPath $ProgramsPaths).path | Select-Object -Unique
+                        
+                        Write-Debug -Message "$($TestFilePathResults.count) file(s) have been found in event viewer logs that don't exist in any of the folder paths you selected."
+
+                        # Another check to make sure there were indeed files found in Event viewer logs but weren't in any of the user-selected path(s)
+                        if ($TestFilePathResults) {
+                            # Create a folder in Temp directory to copy the files that are not included in user-selected program path(s)
+                            # but detected in Event viewer audit logs, scan that folder, and in the end delete it                   
+                            New-Item -Path "$env:TEMP\TemporaryScanFolderForEventViewerFiles" -ItemType Directory | Out-Null
+                            
+                            $TestFilePathResults | ForEach-Object {                             
+                                Copy-Item -Path $_ -Destination "$env:TEMP\TemporaryScanFolderForEventViewerFiles\" -ErrorAction SilentlyContinue
+                                Write-Debug -Message "The following file is being copied to the TEMP directory for scanning because it was found in event logs but didn't exist in any of the user-selected paths: $_ "                      
+                            }
+                      
+                            # Create a policy XML file for available files on the disk
+
+                            # Creating a hash table to dynamically add parameters based on user input and pass them to New-Cipolicy cmdlet
+                            [System.Collections.Hashtable]$AvailableFilesOnDiskPolicyMakerHashTable = @{
+                                FilePath             = ".\RulesForFilesNotInUserSelectedPaths.xml"
+                                ScanPath             = "$env:TEMP\TemporaryScanFolderForEventViewerFiles\"
+                                Level                = $Level
+                                Fallback             = $Fallbacks ? (Get-Fallbacks -Fallbacks $Fallbacks) : 'Hash'
+                                MultiplePolicyFormat = $true
+                                UserWriteablePaths   = $true                            
+                            }
+                            # Assess user input parameters and add the required parameters to the hash table
+                            if ($AllowFileNameFallbacks) { $AvailableFilesOnDiskPolicyMakerHashTable['AllowFileNameFallbacks'] = $true }
+                            if ($SpecificFileNameLevel) { $AvailableFilesOnDiskPolicyMakerHashTable['SpecificFileNameLevel'] = $SpecificFileNameLevel }
+                            if ($NoScript) { $AvailableFilesOnDiskPolicyMakerHashTable['NoScript'] = $true }
+                            if (!$NoUserPEs) { $AvailableFilesOnDiskPolicyMakerHashTable['UserPEs'] = $true } 
+                        
+                            # Create the supplemental policy via parameter splatting
+                            New-CIPolicy @AvailableFilesOnDiskPolicyMakerHashTable
+                        
+                            # Add the policy XML file to the array that holds policy XML files
+                            $PolicyXMLFilesArray += ".\RulesForFilesNotInUserSelectedPaths.xml"
+                            # Delete the Temporary folder in the TEMP folder
+                            Remove-Item -Recurse -Path "$env:TEMP\TemporaryScanFolderForEventViewerFiles\" -Force
                         }
-                        # Assess user input parameters and add the required parameters to the hash table
-                        if ($AllowFileNameFallbacks) { $AvailableFilesOnDiskPolicyMakerHashTable['AllowFileNameFallbacks'] = $true }
-                        if ($SpecificFileNameLevel) { $AvailableFilesOnDiskPolicyMakerHashTable['SpecificFileNameLevel'] = $SpecificFileNameLevel }
-                        if ($NoScript) { $AvailableFilesOnDiskPolicyMakerHashTable['NoScript'] = $true }
-                        if (!$NoUserPEs) { $AvailableFilesOnDiskPolicyMakerHashTable['UserPEs'] = $true } 
-                       
-                        # Create the supplemental policy via parameter splatting
-                        New-CIPolicy @AvailableFilesOnDiskPolicyMakerHashTable
-                       
-                        # Add the policy XML file to the array that holds policy XML files
-                        $PolicyXMLFilesArray += ".\RulesForFilesNotInUserSelectedPaths.xml"                                                
-                        # Delete the Temporary folder in the TEMP folder
-                        Remove-Item -Recurse -Path "$env:TEMP\TemporaryScanFolderForEventViewerFiles\" -Force
                     }
                                    
                     # Only create policy for files that are on longer available on the disk if there are any and
                     # if user chose to include deleted files in the final supplemental policy
-                    if ($DeletedFileHashesArray -and $IncludeDeletedFiles) {
+                    if ($AuditEventLogsProcessingResults.DeletedFileHashes -and $IncludeDeletedFiles) {
 
                         # Create File Rules based on hash of the files and store them in the $Rules variable
                         $i = 1
-                        $imax = ($DeletedFileHashesArray).count
+                        $imax = ($AuditEventLogsProcessingResults.DeletedFileHashes).count
                         while ($i -le $imax) {
-                            $DeletedFileHashesArray | ForEach-Object {  
+                            $AuditEventLogsProcessingResults.DeletedFileHashes | ForEach-Object {  
                                 $Rules += Write-Output "`n<Allow ID=`"ID_ALLOW_AA_$i`" FriendlyName=`"$($_.'File Name') SHA256 Hash`" Hash=`"$($_.'SHA256 Hash')`" />"
                                 $Rules += Write-Output "`n<Allow ID=`"ID_ALLOW_AB_$i`" FriendlyName=`"$($_.'File Name') SHA256 Flat Hash`" Hash=`"$($_.'SHA256 Flat Hash')`" />"
                                 $Rules += Write-Output "`n<Allow ID=`"ID_ALLOW_AC_$i`" FriendlyName=`"$($_.'File Name') SHA1 Hash`" Hash=`"$($_.'SHA1 Hash')`" />"
@@ -390,9 +340,9 @@ function Edit-SignedWDACConfig {
                         }
                         # Create File Rule Refs based on the ID of the File Rules above and store them in the $RulesRefs variable
                         $i = 1
-                        $imax = ($DeletedFileHashesArray).count
+                        $imax = ($AuditEventLogsProcessingResults.DeletedFileHashes).count
                         while ($i -le $imax) {
-                            $DeletedFileHashesArray | ForEach-Object { 
+                            $AuditEventLogsProcessingResults.DeletedFileHashes | ForEach-Object { 
                                 $RulesRefs += Write-Output "`n<FileRuleRef RuleID=`"ID_ALLOW_AA_$i`" />"
                                 $RulesRefs += Write-Output "`n<FileRuleRef RuleID=`"ID_ALLOW_AB_$i`" />"
                                 $RulesRefs += Write-Output "`n<FileRuleRef RuleID=`"ID_ALLOW_AC_$i`" />"
@@ -402,55 +352,10 @@ function Edit-SignedWDACConfig {
                         }  
                         # Save the File Rules and File Rule Refs in the FileRulesAndFileRefs.txt in the current working directory for debugging purposes
                         $Rules + $RulesRefs | Out-File FileRulesAndFileRefs.txt
-                        # An empty base policy content
-                        $EmptyPolicy = @"
-<?xml version="1.0" encoding="utf-8"?>
-<SiPolicy xmlns="urn:schemas-microsoft-com:sipolicy" PolicyType="Base Policy">
-<VersionEx>10.0.0.0</VersionEx>
-<PlatformID>{2E07F7E4-194C-4D20-B7C9-6F44A6C5A234}</PlatformID>
-<Rules>
-<Rule>
-<Option>Enabled:Unsigned System Integrity Policy</Option>
-</Rule>
-<Rule>
-<Option>Enabled:Audit Mode</Option>
-</Rule>
-<Rule>
-<Option>Enabled:Advanced Boot Options Menu</Option>
-</Rule>
-<Rule>
-<Option>Required:Enforce Store Applications</Option>
-</Rule>
-</Rules>
-<!--EKUS-->
-<EKUs />
-<!--File Rules-->
-<FileRules>
-$Rules
-</FileRules>
-<!--Signers-->
-<Signers />
-<!--Driver Signing Scenarios-->
-<SigningScenarios>
-<SigningScenario Value="131" ID="ID_SIGNINGSCENARIO_DRIVERS_1" FriendlyName="Auto generated policy on $(Get-Date -Format 'MM-dd-yyyy')">
-<ProductSigners />
-</SigningScenario>
-<SigningScenario Value="12" ID="ID_SIGNINGSCENARIO_WINDOWS" FriendlyName="Auto generated policy on $(Get-Date -Format 'MM-dd-yyyy')">
-<ProductSigners>
-<FileRulesRef>
-$RulesRefs
-</FileRulesRef>
-</ProductSigners>
-</SigningScenario>
-</SigningScenarios>
-<UpdatePolicySigners />
-<CiSigners />
-<HvciOptions>0</HvciOptions>
-<BasePolicyID>{B163125F-E30A-43FC-ABEC-E30B4EE88FA8}</BasePolicyID>
-<PolicyID>{B163125F-E30A-43FC-ABEC-E30B4EE88FA8}</PolicyID>
-</SiPolicy>
-"@                      
-                        $EmptyPolicy | Out-File .\DeletedFileHashesEventsPolicy.xml                    
+
+                        # Put the Rules and RulesRefs in an empty policy file
+                        New-EmptyPolicy -RulesContent $Rules -RuleRefsContent $RulesRefs | Out-File .\DeletedFileHashesEventsPolicy.xml
+           
                         # adding the policy file that consists of rules from audit even logs, to the array
                         $PolicyXMLFilesArray += ".\DeletedFileHashesEventsPolicy.xml"
                     }
@@ -462,8 +367,8 @@ $RulesRefs
                         [System.Collections.Hashtable]$UserInputProgramFoldersPolicyMakerHashTable = @{
                             FilePath             = ".\ProgramDir_ScanResults$($i).xml"
                             ScanPath             = $ProgramsPaths[$i]
-                            Level                = $AssignedLevels
-                            Fallback             = $AssignedFallbacks
+                            Level                = $Level
+                            Fallback             = $Fallbacks ? (Get-Fallbacks -Fallbacks $Fallbacks) : 'Hash'
                             MultiplePolicyFormat = $true
                             UserWriteablePaths   = $true
                         }
@@ -481,7 +386,111 @@ $RulesRefs
                     $ProgramDir_ScanResults = Get-ChildItem ".\" | Where-Object { $_.Name -like 'ProgramDir_ScanResults*.xml' }                
                     foreach ($file in $ProgramDir_ScanResults) {
                         $PolicyXMLFilesArray += $file.FullName
+                    }
+                    
+                    #region Kernel-protected-files-automatic-detection-and-allow-rule-creation                    
+                    # This part takes care of Kernel protected files such as the main executable of the games installed through Xbox app
+                    # For these files, only Kernel can get their hashes, it passes them to event viewer and we take them from event viewer logs
+                    # Any other attempts such as "Get-FileHash" or "Get-AuthenticodeSignature" fail and ConfigCI Module cmdlets totally ignore these files and do not create allow rules for them
+
+                    # Finding the file(s) first and storing them in an array
+                    $ExesWithNoHash = @()
+                    # looping through each user-selected path(s)
+                    foreach ($ProgramsPath in $ProgramsPaths) {
+                        # Making sure the currently processing path has any .exe in it
+                        $AnyAvailableExes = (Get-ChildItem -Recurse -Path $ProgramsPath -Filter "*.exe").FullName
+                        # if any .exe was found then continue testing them
+                        if ($AnyAvailableExes) {
+                            $AnyAvailableExes | ForEach-Object {
+                                $CurrentExeWithNoHash = $_
+                                try {
+                                    # Testing each executable to find the protected ones
+                                    Get-FileHash -Path $CurrentExeWithNoHash -ErrorAction Stop | Out-Null
+                                }
+                                # Making sure only the right file is captured by narrowing down the error type.   
+                                # E.g., when get-filehash can't get a file's hash because its open by another program, the exception is different: System.IO.IOException        
+                                catch [System.UnauthorizedAccessException] {            
+                                    $ExesWithNoHash += $CurrentExeWithNoHash
+                                } 
+                            }
+                        }
+                    }
+                    # Only proceed if any kernel protected file(s) were found in any of the user-selected directory path(s)
+                    if ($ExesWithNoHash) {
+
+                        Write-Debug -Message "The following Kernel protected files detected, creating allow rules for them:`n"
+                        if ($Debug) { $ExesWithNoHash | ForEach-Object { Write-Debug -Message "$_" } }
+                                                         
+                        $KernelProtectedHashesBlock = {
+                            foreach ($event in Get-WinEvent -FilterHashtable @{LogName = 'Microsoft-Windows-CodeIntegrity/Operational'; ID = 3076 } -ErrorAction SilentlyContinue | Where-Object { $_.TimeCreated -ge $Date } ) {
+                                $xml = [xml]$event.toxml()
+                                $xml.event.eventdata.data |
+                                ForEach-Object { $hash = @{} } { $hash[$_.name] = $_.'#text' } { [pscustomobject]$hash } |
+                                ForEach-Object {
+                                    if ($_.'File Name' -match ($pattern = '\\Device\\HarddiskVolume(\d+)\\(.*)$')) {
+                                        $hardDiskVolumeNumber = $Matches[1]
+                                        $remainingPath = $Matches[2]
+                                        $getletter = $DirveLettersGlobalRootFix | Where-Object { $_.devicepath -eq "\Device\HarddiskVolume$hardDiskVolumeNumber" }
+                                        $usablePath = "$($getletter.DriveLetter)$remainingPath"
+                                        $_.'File Name' = $_.'File Name' -replace $pattern, $usablePath
+                                    } # Check if file is currently on the disk
+                                    if (Test-Path $_.'File Name') {
+                                        # Check if the file exits in the $ExesWithNoHash array
+                                        if ($ExesWithNoHash -contains $_.'File Name') {
+                                            $_ | Select-Object FileVersion, 'File Name', PolicyGUID, 'SHA256 Hash', 'SHA256 Flat Hash', 'SHA1 Hash', 'SHA1 Flat Hash'
+                                        }
+                                    }       
+                                }
+                            }
+                        }
+                        $KernelProtectedHashesBlockResults = Invoke-Command -ScriptBlock $KernelProtectedHashesBlock
+
+                        # Only proceed further if any hashes belonging to the detected kernel protected files were found in Event viewer
+                        # If none is found then skip this part, because user didn't run those files/programs when audit mode was turned on in base policy, so no hash was found in audit logs
+                        if ($KernelProtectedHashesBlockResults) {
+
+                            # Create File Rules based on hash of the files and store them in the $Rules variable
+                            $i = 1
+                            $Rules = @()
+                            $imax = ($KernelProtectedHashesBlockResults).count
+                            while ($i -le $imax) {
+                                $KernelProtectedHashesBlockResults | ForEach-Object {  
+                                    $Rules += Write-Output "`n<Allow ID=`"ID_ALLOW_AA_$i`" FriendlyName=`"$($_.'File Name') SHA256 Hash`" Hash=`"$($_.'SHA256 Hash')`" />"
+                                    $Rules += Write-Output "`n<Allow ID=`"ID_ALLOW_AB_$i`" FriendlyName=`"$($_.'File Name') SHA256 Flat Hash`" Hash=`"$($_.'SHA256 Flat Hash')`" />"
+                                    $Rules += Write-Output "`n<Allow ID=`"ID_ALLOW_AC_$i`" FriendlyName=`"$($_.'File Name') SHA1 Hash`" Hash=`"$($_.'SHA1 Hash')`" />"
+                                    $Rules += Write-Output "`n<Allow ID=`"ID_ALLOW_AD_$i`" FriendlyName=`"$($_.'File Name') SHA1 Flat Hash`" Hash=`"$($_.'SHA1 Flat Hash')`" />"
+                                    $i++
+                                }
+                            }
+                            # Create File Rule Refs based on the ID of the File Rules above and store them in the $RulesRefs variable
+                            $i = 1
+                            $RulesRefs = @()
+                            $imax = ($KernelProtectedHashesBlockResults).count
+                            while ($i -le $imax) {
+                                $KernelProtectedHashesBlockResults | ForEach-Object { 
+                                    $RulesRefs += Write-Output "`n<FileRuleRef RuleID=`"ID_ALLOW_AA_$i`" />"
+                                    $RulesRefs += Write-Output "`n<FileRuleRef RuleID=`"ID_ALLOW_AB_$i`" />"
+                                    $RulesRefs += Write-Output "`n<FileRuleRef RuleID=`"ID_ALLOW_AC_$i`" />"
+                                    $RulesRefs += Write-Output "`n<FileRuleRef RuleID=`"ID_ALLOW_AD_$i`" />"
+                                    $i++
+                                }
+                            }  
+                            # Save the File Rules and File Rule Refs in the FileRulesAndFileRefs.txt in the current working directory for debugging purposes
+                            $Rules + $RulesRefs | Out-File KernelProtectedFiles.txt                    
+                            # Put the Rules and RulesRefs in an empty policy file
+                            New-EmptyPolicy -RulesContent $Rules -RuleRefsContent $RulesRefs | Out-File .\KernelProtectedFiles.xml                
+                            # adding the policy file  to the array of xml files
+                            $PolicyXMLFilesArray += ".\KernelProtectedFiles.xml"
+                        }
+                        else {
+                            Write-Warning -Message "The following Kernel protected files detected, but no hash was found for them in Event viewer logs.`nThis means you didn't run those files/programs when Audit mode was turned on.`n"
+                            $ExesWithNoHash | ForEach-Object { Write-Warning -Message "$_" }
+                        }
                     }                    
+                    #endregion Kernel-protected-files-automatic-detection-and-allow-rule-creation
+
+                    Write-Debug -Message "The following policy xml files are going to be merged into the final Supplemental policy and be deployed on the system:"
+                    if ($Debug) { $PolicyXMLFilesArray | ForEach-Object { Write-Debug -Message "$_" } }
 
                     # Merge all of the policy XML files in the array into the final Supplemental policy
                     Merge-CIPolicy -PolicyPaths $PolicyXMLFilesArray -OutputFilePath ".\SupplementalPolicy$SuppPolicyName.xml" | Out-Null 
@@ -490,20 +499,22 @@ $RulesRefs
                 # Exit the operation if user didn't select any folder paths
                 else {                                      
                     Write-Host "`nNo program folder was selected, reverting the changes and quitting...`n" -ForegroundColor Red
-                    # Re-Deploy Basepolicy in Enforcement mode
-                    Update-BasePolicyToEnforcement 
+                    # Re-Deploy Basepolicy in Enforced mode
+                    Update-BasePolicyToEnforced 
                     break
                 }
 
-                if (-NOT $Debugmode) {
+                if (-NOT $Debug) {
                     Remove-Item -Path ".\FileRulesAndFileRefs.txt" -Force -ErrorAction SilentlyContinue
-                    Remove-Item -Path "DeletedFileHashesEventsPolicy.xml" -Force -ErrorAction SilentlyContinue
+                    Remove-Item -Path ".\DeletedFileHashesEventsPolicy.xml" -Force -ErrorAction SilentlyContinue
                     Remove-Item -Path ".\ProgramDir_ScanResults*.xml" -Force  -ErrorAction SilentlyContinue
                     Remove-Item -Path ".\RulesForFilesNotInUserSelectedPaths.xml" -Force -ErrorAction SilentlyContinue
+                    Remove-Item -Path ".\KernelProtectedFiles.xml" -Force -ErrorAction SilentlyContinue
+                    Remove-Item -Path ".\KernelProtectedFiles.txt" -Force -ErrorAction SilentlyContinue
                 }
 
-                # Re-Deploy Basepolicy in Enforcement mode
-                Update-BasePolicyToEnforcement         
+                # Re-Deploy Basepolicy in Enforced mode
+                Update-BasePolicyToEnforced         
 
                 #################### Supplemental-policy-processing-and-deployment ############################
                 
@@ -535,7 +546,7 @@ $RulesRefs
                 CiTool --update-policy ".\$SuppPolicyID.cip" -json
                 Remove-Item ".\$SuppPolicyID.cip" -Force
             
-                Write-host "`nSupplemental policy with the following details has been Signed and Deployed in Enforcement Mode.`n" -ForegroundColor Green
+                Write-host "`nSupplemental policy with the following details has been Signed and Deployed in Enforced Mode.`n" -ForegroundColor Green
                 # create an object to display on the console
                 [PSCustomObject]@{
                     SupplementalPolicyName = $SuppPolicyName
@@ -611,45 +622,8 @@ $RulesRefs
                     Write-Host "Here are the paths you selected:" -ForegroundColor Yellow
                     $ProgramsPaths | ForEach-Object { $_ }
     
-                    #Process Program Folders From User input
-                    
-                    $AssignedLevels = $null
-                    switch ($Levels) {
-                        'Hash' { $AssignedLevels = 'Hash' }
-                        'FileName' { $AssignedLevels = 'FileName' }
-                        'SignedVersion' { $AssignedLevels = 'SignedVersion' }
-                        'Publisher' { $AssignedLevels = 'Publisher' }
-                        'FilePublisher' { $AssignedLevels = 'FilePublisher' }
-                        'LeafCertificate' { $AssignedLevels = 'LeafCertificate' }
-                        'PcaCertificate' { $AssignedLevels = 'PcaCertificate' }
-                        'RootCertificate' { $AssignedLevels = 'RootCertificate' }
-                        'WHQL' { $AssignedLevels = 'WHQL' }
-                        'WHQLPublisher' { $AssignedLevels = 'WHQLPublisher' }
-                        'WHQLFilePublisher' { $AssignedLevels = 'WHQLFilePublisher' }
-                        'PFN' { $AssignedLevels = 'PFN' }
-                        'FilePath' { $AssignedLevels = 'FilePath' }
-                        'None' { $AssignedLevels = 'None' }
-                        Default { $AssignedLevels = 'FilePublisher' }
-                    }
+                    #Process Program Folders From User input                    
 
-                    $AssignedFallbacks = @()
-                    switch ($Fallbacks) {
-                        'Hash' { $AssignedFallbacks += 'Hash' }
-                        'FileName' { $AssignedFallbacks += 'FileName' }
-                        'SignedVersion' { $AssignedFallbacks += 'SignedVersion' }
-                        'Publisher' { $AssignedFallbacks += 'Publisher' }
-                        'FilePublisher' { $AssignedFallbacks += 'FilePublisher' }
-                        'LeafCertificate' { $AssignedFallbacks += 'LeafCertificate' }
-                        'PcaCertificate' { $AssignedFallbacks += 'PcaCertificate' }
-                        'RootCertificate' { $AssignedFallbacks += 'RootCertificate' }
-                        'WHQL' { $AssignedFallbacks += 'WHQL' }
-                        'WHQLPublisher' { $AssignedFallbacks += 'WHQLPublisher' }
-                        'WHQLFilePublisher' { $AssignedFallbacks += 'WHQLFilePublisher' }
-                        'PFN' { $AssignedFallbacks += 'PFN' }
-                        'FilePath' { $AssignedFallbacks += 'FilePath' }
-                        'None' { $AssignedFallbacks += 'None' }
-                        Default { $AssignedFallbacks += 'Hash' }
-                    }
                     # Scan each of the folder paths that user selected
                     for ($i = 0; $i -lt $ProgramsPaths.Count; $i++) {
 
@@ -657,8 +631,8 @@ $RulesRefs
                         [System.Collections.Hashtable]$UserInputProgramFoldersPolicyMakerHashTable = @{
                             FilePath             = ".\ProgramDir_ScanResults$($i).xml"
                             ScanPath             = $ProgramsPaths[$i]
-                            Level                = $AssignedLevels
-                            Fallback             = $AssignedFallbacks
+                            Level                = $Level
+                            Fallback             = $Fallbacks ? (Get-Fallbacks -Fallbacks $Fallbacks) : 'Hash'
                             MultiplePolicyFormat = $true
                             UserWriteablePaths   = $true
                         }
@@ -680,8 +654,8 @@ $RulesRefs
     
                     Merge-CIPolicy -PolicyPaths $PolicyXMLFilesArray -OutputFilePath ".\SupplementalPolicy$SuppPolicyName.xml" | Out-Null                                  
                 
-                    #Re-Deploy-Basepolicy-in-Enforcement-mode
-                    Update-BasePolicyToEnforcement       
+                    #Re-Deploy-Basepolicy-in-Enforced-mode
+                    Update-BasePolicyToEnforced       
     
                     Remove-Item -Path ".\ProgramDir_ScanResults*.xml" -Force 
     
@@ -715,7 +689,7 @@ $RulesRefs
                     CiTool --update-policy ".\$SuppPolicyID.cip" -json
                     Remove-Item ".\$SuppPolicyID.cip" -Force
 
-                    Write-host "`nSupplemental policy with the following details has been Signed and Deployed in Enforcement Mode.`n" -ForegroundColor Green
+                    Write-host "`nSupplemental policy with the following details has been Signed and Deployed in Enforced Mode.`n" -ForegroundColor Green
                                 
                     [PSCustomObject]@{
                         SupplementalPolicyName = $SuppPolicyName
@@ -726,15 +700,14 @@ $RulesRefs
                 # Do this if no program path(s) was selected by user
                 else {
                     Write-Host "`nNo program folder was selected, reverting the changes and quitting...`n" -ForegroundColor Red
-                    #Re-Deploy Basepolicy in Enforcement mode
-                    Update-BasePolicyToEnforcement              
+                    #Re-Deploy Basepolicy in Enforced mode
+                    Update-BasePolicyToEnforced              
                     break
                 }
             } 
         }
 
-        if ($MergeSupplementalPolicies) {
-                        
+        if ($MergeSupplementalPolicies) {                        
             foreach ($PolicyPath in $PolicyPaths) {
                 ############ Input policy verification prior to doing anything ############
                 foreach ($SuppPolicyPath in $SuppPolicyPaths) {                                
@@ -745,12 +718,10 @@ $RulesRefs
                     # Check the type of the user selected Supplemental policy XML files to make sure they are indeed Supplemental policies
                     if ($SupplementalPolicyType -ne "Supplemental Policy") {
                         Write-Error -Message "The Selected XML file with GUID $SupplementalPolicyID isn't a Supplemental Policy."
-                        break
                     }
                     # Check to make sure the user selected Supplemental policy XML files are deployed on the system
                     if ($DeployedPoliciesIDs -notcontains $SupplementalPolicyID) {
                         Write-Error -Message "The Selected Supplemental XML file with GUID $SupplementalPolicyID isn't deployed on the system."
-                        break
                     }
                 }
                 # Perform the merge
@@ -759,14 +730,16 @@ $RulesRefs
                 foreach ($SuppPolicyPath in $SuppPolicyPaths) {                                
                     $Supplementalxml = [xml](Get-Content $SuppPolicyPath)
                     $SupplementalPolicyID = $Supplementalxml.SiPolicy.PolicyID                         
-                    citool --remove-policy $SupplementalPolicyID -json | Out-Null             
+                    citool --remove-policy $SupplementalPolicyID -json | Out-Null
+                    # remove the old policy files unless user chose to keep them
+                    if (!$KeepOldSupplementalPolicies) { Remove-Item -Path $SuppPolicyPath -Force }            
                 }        
                 # Prepare the final merged Supplemental policy for deployment    
                 $SuppPolicyID = Set-CIPolicyIdInfo -FilePath "$SuppPolicyName.xml" -ResetPolicyID -PolicyName "$SuppPolicyName Merged on $(Get-Date -Format 'MM-dd-yyyy')" -BasePolicyToSupplementPath $PolicyPath
                 $SuppPolicyID = $SuppPolicyID.Substring(11)                  
-                Add-SignerRule -FilePath $SuppPolicyPath -CertificatePath $CertPath -Update -User -Kernel
+                Add-SignerRule -FilePath "$SuppPolicyName.xml" -CertificatePath $CertPath -Update -User -Kernel
                 Set-HVCIOptions -Strict -FilePath "$SuppPolicyName.xml"
-                Set-RuleOption -FilePath $SuppPolicyPath -Option 6 -Delete
+                Set-RuleOption -FilePath "$SuppPolicyName.xml" -Option 6 -Delete
                 ConvertFrom-CIPolicy "$SuppPolicyName.xml" "$SuppPolicyID.cip" | Out-Null
                 
                 # Configure the parameter splat
@@ -782,26 +755,27 @@ $RulesRefs
                 Remove-Item ".\$SuppPolicyID.cip" -Force            
                 Rename-Item "$SuppPolicyID.cip.p7" -NewName "$SuppPolicyID.cip" -Force
                 CiTool --update-policy "$SuppPolicyID.cip" -json
+                Remove-Item -Path "$SuppPolicyID.cip" -Force
                 Write-Host "`nThe Signed Supplemental policy $SuppPolicyName has been deployed on the system, replacing the old ones, please restart your system." -ForegroundColor Green                       
             } 
         }
 
         if ($UpdateBasePolicy) {
             # First get the Microsoft recommended driver block rules
-            Invoke-Command -ScriptBlock $Get_BlockRulesSCRIPTBLOCK | Out-Null
+            Invoke-Command -ScriptBlock $GetBlockRulesSCRIPTBLOCK | Out-Null
    
             switch ($NewBasePolicyType) {
                 "AllowMicrosoft_Plus_Block_Rules" {                  
                     Copy-item -Path "C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml" -Destination ".\AllowMicrosoft.xml"
                     Merge-CIPolicy -PolicyPaths .\AllowMicrosoft.xml, '.\Microsoft recommended block rules.xml' -OutputFilePath .\BasePolicy.xml | Out-Null
-                    Set-CIPolicyIdInfo -FilePath .\BasePolicy.xml -PolicyName "AllowMicrosoftPlusBlockRules refreshed On $(Get-Date -Format 'MM-dd-yyyy')"
+                    Set-CIPolicyIdInfo -FilePath .\BasePolicy.xml -PolicyName "Allow Microsoft Plus Block Rules refreshed On $(Get-Date -Format 'MM-dd-yyyy')"
                     @(0, 2, 5, 11, 12, 16, 17, 19, 20) | ForEach-Object { Set-RuleOption -FilePath .\BasePolicy.xml -Option $_ }
                     @(3, 4, 6, 9, 10, 13, 18) | ForEach-Object { Set-RuleOption -FilePath .\BasePolicy.xml -Option $_ -Delete } 
                 }
                 "Lightly_Managed_system_Policy" {                                          
                     Copy-item -Path "C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml" -Destination ".\AllowMicrosoft.xml"
                     Merge-CIPolicy -PolicyPaths .\AllowMicrosoft.xml, '.\Microsoft recommended block rules.xml' -OutputFilePath .\BasePolicy.xml | Out-Null
-                    Set-CIPolicyIdInfo -FilePath .\BasePolicy.xml -PolicyName "SignedAndReputable policy refreshed on $(Get-Date -Format 'MM-dd-yyyy')"
+                    Set-CIPolicyIdInfo -FilePath .\BasePolicy.xml -PolicyName "Signed And Reputable policy refreshed on $(Get-Date -Format 'MM-dd-yyyy')"
                     @(0, 2, 5, 11, 12, 14, 15, 16, 17, 19, 20) | ForEach-Object { Set-RuleOption -FilePath .\BasePolicy.xml -Option $_ }
                     @(3, 4, 6, 9, 10, 13, 18) | ForEach-Object { Set-RuleOption -FilePath .\BasePolicy.xml -Option $_ -Delete }            
                     # Configure required services for ISG authorization
@@ -828,7 +802,7 @@ $RulesRefs
                     else {
                         Merge-CIPolicy -PolicyPaths .\DefaultWindows_Enforced.xml, .\SignTool.xml, '.\Microsoft recommended block rules.xml' -OutputFilePath .\BasePolicy.xml | Out-Null
                     }      
-                    Set-CIPolicyIdInfo -FilePath .\BasePolicy.xml -PolicyName "DefaultWindowsPlusBlockRules refreshed On $(Get-Date -Format 'MM-dd-yyyy')"
+                    Set-CIPolicyIdInfo -FilePath .\BasePolicy.xml -PolicyName "Default Windows Plus Block Rules refreshed On $(Get-Date -Format 'MM-dd-yyyy')"
                     @(0, 2, 5, 11, 12, 16, 17, 19, 20) | ForEach-Object { Set-RuleOption -FilePath .\BasePolicy.xml -Option $_ }
                     @(3, 4, 6, 9, 10, 13, 18) | ForEach-Object { Set-RuleOption -FilePath .\BasePolicy.xml -Option $_ -Delete }
                 }
@@ -900,13 +874,13 @@ $RulesRefs
 Edits Signed WDAC policies deployed on the system (Windows Defender Application Control)
 
 .LINK
-https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig
+https://github.com/HotCakeX/Harden-Windows-Security/wiki/Edit-SignedWDACConfig
 
 .DESCRIPTION
 Using official Microsoft methods, Edits Signed WDAC policies deployed on the system (Windows Defender Application Control)
 
 .COMPONENT
-Windows Defender Application Control
+Windows Defender Application Control, ConfigCI PowerShell module
 
 .FUNCTIONALITY
 Using official Microsoft methods, Edits Signed WDAC policies deployed on the system (Windows Defender Application Control)
@@ -966,7 +940,13 @@ Register-ArgumentCompleter -CommandName "Edit-SignedWDACConfig" -ParameterName "
 
 # argument tab auto-completion for Certificate Path to show only .cer files
 $ArgumentCompleterCertPath = {
-    Get-ChildItem | where-object { $_.extension -like '*.cer' } | foreach-object { return "`"$_`"" }   
+    # Note the use of -Depth 1
+    # Enclosing the $results = ... assignment in (...) also passes the value through.
+    ($results = Get-ChildItem -Depth 2 -Filter *.cer | foreach-object { "`"$_`"" })
+    if (-not $results) {
+        # No results?
+        $null # Dummy response that prevents fallback to the default file-name completion.
+    }   
 }
 Register-ArgumentCompleter -CommandName "Edit-SignedWDACConfig" -ParameterName "CertPath" -ScriptBlock $ArgumentCompleterCertPath
 

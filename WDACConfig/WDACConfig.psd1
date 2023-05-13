@@ -12,7 +12,7 @@
     # RootModule = ""
 
     # Version number of this module.
-    ModuleVersion        = '0.1.2'
+    ModuleVersion        = '0.1.3'
 
     # Supported PSEditions
     CompatiblePSEditions = @("Core")
@@ -38,64 +38,28 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
 🟢 Please see the GitHub page for Full details and everything about the module: https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig
 
 
-🛡️ Here is the list of parameters the module supports
+🛡️ Here is the list of module's cmdlets
 
+✔️ New-WDACConfig: https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-WDACConfig
 
-✔️ New-WDACConfig [-GetBlockRules]
+✔️ New-SupplementalWDACConfig: https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-SupplementalWDACConfig
 
-✔️ New-WDACConfig [-GetDriverBlockRules]
+✔️ Remove-WDACConfig: https://github.com/HotCakeX/Harden-Windows-Security/wiki/Remove-WDACConfig
 
-✔️ New-WDACConfig [-MakeAllowMSFTWithBlockRules] [-Deployit] [-TestMode] [-RequireEVSigners]
+✔️ Edit-WDACConfig: https://github.com/HotCakeX/Harden-Windows-Security/wiki/Edit-WDACConfig
 
-✔️ New-WDACConfig [-DeployLatestDriverBlockRules]
+✔️ Edit-SignedWDACConfig: https://github.com/HotCakeX/Harden-Windows-Security/wiki/Edit-SignedWDACConfig
 
-✔️ New-WDACConfig [-SetAutoUpdateDriverBlockRules]
+✔️ Deploy-SignedWDACConfig: https://github.com/HotCakeX/Harden-Windows-Security/wiki/Deploy-SignedWDACConfig
 
-✔️ New-WDACConfig [-PrepMSFTOnlyAudit] [-LogSize <Int64>]
-
-✔️ New-WDACConfig [-PrepDefaultWindowsAudit] [-LogSize <Int64>]
-
-✔️ New-WDACConfig [-MakePolicyFromAuditLogs] -BasePolicyType <String> [-Deployit] [-TestMode] [-RequireEVSigners] [-Debugmode] [-AllowFileNameFallbacks] [-SpecificFileNameLevel <String>] [-NoDeletedFiles] [-NoUserPEs] [-NoScript] [-Levels <String>] [-Fallbacks <String[]>] [-LogSize <Int64>]
-
-✔️ New-WDACConfig [-MakeLightPolicy] [-Deployit] [-TestMode] [-RequireEVSigners]
-
-✔️ New-WDACConfig [-MakeSupplementalPolicy] -ScanLocation <String> -SuppPolicyName <String> -PolicyPath <String> [-Deployit] [-AllowFileNameFallbacks] [-SpecificFileNameLevel <String>] [-NoUserPEs] [-NoScript] [-Levels <String>] [-Fallbacks <String[]>]
-
-✔️ New-WDACConfig [-MakeDefaultWindowsWithBlockRules] [-Deployit] [-TestMode] [-RequireEVSigners]
-
-✔️ Remove-WDACConfig [-RemoveSignedPolicies] -PolicyPaths <String[]> -CertCN <String> [-SignToolPath <String>] 
-
-✔️ Remove-WDACConfig [-RemovePolicies] [-PolicyIDs <String[]>] [-PolicyNames <String[]>]
-
-✔️ Edit-WDACConfig [-AllowNewAppsAuditEvents] -SuppPolicyName <String> -PolicyPaths <String[]> [-Debugmode] [-Levels <String>] [-Fallbacks <String[]>] [-NoScript] [-NoUserPEs] [-AllowFileNameFallbacks] [-SpecificFileNameLevel <String>] [-LogSize <Int64>] [-IncludeDeletedFiles]
-
-✔️ Edit-WDACConfig [-AllowNewApps] -SuppPolicyName <String> -PolicyPaths <String[]> [-Levels <String>] [-Fallbacks <String[]>] [-NoScript] [-NoUserPEs] [-AllowFileNameFallbacks] [-SpecificFileNameLevel <String>]    
-
-✔️ Edit-WDACConfig [-MergeSupplementalPolicies] -SuppPolicyName <String> -PolicyPaths <String[]> -SuppPolicyPaths <String[]>
-
-✔️ Edit-WDACConfig [-UpdateBasePolicy] -CurrentBasePolicyName <String[]> -NewBasePolicyType <String> [-RequireEVSigners]
-
-✔️ Edit-SignedWDACConfig [-AllowNewAppsAuditEvents] -CertPath <String> -SuppPolicyName <String> -PolicyPaths <String[]> -CertCN <String> [-Debugmode] [-LogSize <Int64>] [-NoScript] [-NoUserPEs] [-AllowFileNameFallbacks] [-SpecificFileNameLevel <String>] [-IncludeDeletedFiles] [-SignToolPath <String>] [-Levels <String>] [-Fallbacks <String[]>]
-
-✔️ Edit-SignedWDACConfig [-AllowNewApps] -CertPath <String> -SuppPolicyName <String> -PolicyPaths <String[]> -CertCN <String> [-NoScript] [-NoUserPEs] [-AllowFileNameFallbacks] [-SpecificFileNameLevel <String>] [-SignToolPath <String>] [-Levels <String>] [-Fallbacks <String[]>]
-
-✔️ Edit-SignedWDACConfig [-MergeSupplementalPolicies] -CertPath <String> -SuppPolicyName <String> -PolicyPaths <String[]> -CertCN <String> -SuppPolicyPaths <String[]> [-SignToolPath <String>]
-
-✔️ Edit-SignedWDACConfig [-UpdateBasePolicy] -CertPath <String> -CertCN <String> -SignToolPath <String> -CurrentBasePolicyName <String[]> -NewBasePolicyType <String> [-RequireEVSigners]
-
-✔️ Deploy-SignedWDACConfig -CertPath <String> -PolicyPaths <String[]> -CertCN <String> [-SignToolPath <String>]
-
-✔️ Confirm-WDACConfig [-ListActivePolicies] [-OnlyBasePolicies] [-OnlySupplementalPolicies]
-
-✔️ Confirm-WDACConfig [-VerifyWDACStatus]
-
-✔️ Confirm-WDACConfig [-CheckSmartAppControlStatus]
+✔️ Confirm-WDACConfig: https://github.com/HotCakeX/Harden-Windows-Security/wiki/Confirm-WDACConfig
 
 
 
 To get help and syntax on PowerShell console, type:
 "Get-Command -Module WDACConfig"
 "Get-Help New-WDACConfig"
+"Get-Help New-SupplementalWDACConfig"
 "Get-Help Remove-WDACConfig"
 "Get-Help Edit-WDACConfig"
 "Get-Help Edit-SignedWDACConfig"
@@ -138,13 +102,13 @@ To get help and syntax on PowerShell console, type:
     # FormatsToProcess = @()
 
     # Modules to import as nested modules of the module specified in RootModule/ModuleToProcess
-    NestedModules        = @("New-WDACConfig.psm1", "Remove-WDACConfig.psm1", "Deploy-SignedWDACConfig.psm1", "Confirm-WDACConfig.psm1", "Edit-WDACConfig.psm1", "Edit-SignedWDACConfig.psm1")
+    NestedModules        = @("New-WDACConfig.psm1", "Remove-WDACConfig.psm1", "Deploy-SignedWDACConfig.psm1", "Confirm-WDACConfig.psm1", "Edit-WDACConfig.psm1", "Edit-SignedWDACConfig.psm1", "New-SupplementalWDACConfig.psm1")
 
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
-    FunctionsToExport    = @("New-WDACConfig", "Remove-WDACConfig", "Deploy-SignedWDACConfig", "Confirm-WDACConfig", "Edit-WDACConfig", "Edit-SignedWDACConfig")
+    FunctionsToExport    = @("New-WDACConfig", "Remove-WDACConfig", "Deploy-SignedWDACConfig", "Confirm-WDACConfig", "Edit-WDACConfig", "Edit-SignedWDACConfig", "New-SupplementalWDACConfig")
 
     # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
-    CmdletsToExport      = @("New-WDACConfig", "Remove-WDACConfig", "Deploy-SignedWDACConfig", "Confirm-WDACConfig", "Edit-WDACConfig", "Edit-SignedWDACConfig")
+    CmdletsToExport      = @("New-WDACConfig", "Remove-WDACConfig", "Deploy-SignedWDACConfig", "Confirm-WDACConfig", "Edit-WDACConfig", "Edit-SignedWDACConfig", "New-SupplementalWDACConfig")
 
     # Variables to export from this module
     VariablesToExport    = '*'
@@ -159,7 +123,7 @@ To get help and syntax on PowerShell console, type:
     # ModuleList = @()
 
     # List of all files packaged with this module
-    FileList             = @('WDACConfig.psd1', 'New-WDACConfig.psm1', 'Deploy-SignedWDACConfig.psm1', 'Remove-WDACConfig.psm1', "Confirm-WDACConfig.psm1", "Edit-WDACConfig.psm1", "Edit-SignedWDACConfig.psm1", "Resources.ps1")
+    FileList             = @('WDACConfig.psd1', 'New-WDACConfig.psm1', 'Deploy-SignedWDACConfig.psm1', 'Remove-WDACConfig.psm1', "Confirm-WDACConfig.psm1", "Edit-WDACConfig.psm1", "Edit-SignedWDACConfig.psm1", "New-SupplementalWDACConfig.psm1", "Resources.ps1")
 
     # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.
     PrivateData          = @{
@@ -180,6 +144,17 @@ To get help and syntax on PowerShell console, type:
 
             # ReleaseNotes of this module
             ReleaseNotes = @"
+
+## Version 0.1.3
+Improved Remove-WDACConfig cmdlet so handle situations where multiple policies with the exact same name are deployed and user is trying to remove them.
+Changed some of the parameter names in Remove-WDACConfig cmdlet to better reflect their jobs and how they are supposed to be used.
+New cmdlet: New-SupplementalWDACConfig: dedicated to making all kinds of supplemental policies only - Removed the Supplemental parameter from New-WDACConfig cmdlet and instead the new cmdlet handles anything related to Supplemental policy creation/deployment.          
+New-SupplementalWDACConfig cmdlet supports AppxPackages, FilePaths with one or more wildcard characters and of course the normal supplemental policy creation with granular levels and fallbacks and more.
+Removed the Debugmode parameter from certain cmdlets and instead now detecting the usage of the default PowerShell -Debug switch and do debugging actions based on that.
+The Edit-WDACConfig and Edit-SignedWDACConfig cmdlets now detect and create allow rules for kernel protected files.
+New parameter for New-WDACConfig: -DeployLatestBlockRules, will deploy the latest Microsoft recommended block rules on the system, as a standalone base policy.
+Implemented a feature to prevent users from accidentally attempting to remove Signed policies that aren't even deployed on the system.
+Plus a LOT of code optimizations.
 
 ## Version 0.1.2
 Made the Get-SignTool function more secure.

@@ -1,6 +1,6 @@
 <#PSScriptInfo
 
-.VERSION 2023.5.9
+.VERSION 2023.5.13
 
 .GUID d435a293-c9ee-4217-8dc1-4ad2318a5770
 
@@ -212,7 +212,7 @@ if (Test-IsAdmin) {
 try {
 
     # Check the current hard-coded version against the latest version online
-    $currentVersion = '2023.5.9'
+    $currentVersion = '2023.5.13'
     try {
         $latestVersion = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Version.txt"
     }
@@ -851,8 +851,7 @@ try {
                     Disable-TlsCipherSuite -Name "TLS_RSA_WITH_AES_256_GCM_SHA384"
                     Disable-TlsCipherSuite -Name "TLS_RSA_WITH_AES_128_GCM_SHA256"
                     Disable-TlsCipherSuite -Name "TLS_RSA_WITH_AES_256_CBC_SHA256" 
-                    Disable-TlsCipherSuite -Name "TLS_RSA_WITH_AES_128_CBC_SHA256"
-                    Disable-TlsCipherSuite -Name "TLS_RSA_WITH_AES_256_CBC_SHA"
+                    Disable-TlsCipherSuite -Name "TLS_RSA_WITH_AES_128_CBC_SHA256"                    
                     Disable-TlsCipherSuite -Name "TLS_RSA_WITH_AES_128_CBC_SHA"
                     Disable-TlsCipherSuite -Name "TLS_PSK_WITH_AES_256_GCM_SHA384" 
                     Disable-TlsCipherSuite -Name "TLS_PSK_WITH_AES_128_GCM_SHA256"
@@ -1135,6 +1134,9 @@ try {
         switch (Select-Option -Options "Yes", "No", "Exit" -Message "`nApply Top Security Measures ? Make sure you've read the GitHub repository") {
             "Yes" {                
                 Write-Progress -Activity 'Top Security Measures' -Status 'Running Top Security Measures section' -PercentComplete 85
+                
+                # This causes the Battle.net to not be able to connect to its servers, even though it's not a very secure cipher suite
+                Disable-TlsCipherSuite -Name "TLS_RSA_WITH_AES_256_CBC_SHA"
                                 
                 # Change current working directory to the LGPO's folder
                 Set-Location "$WorkingDir\LGPO_30"

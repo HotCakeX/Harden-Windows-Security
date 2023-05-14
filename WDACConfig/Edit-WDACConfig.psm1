@@ -50,7 +50,7 @@ function Edit-WDACConfig {
         [ValidateSet([Fallbackz])]
         [parameter(Mandatory = $false, ParameterSetName = "Allow New Apps Audit Events")]
         [parameter(Mandatory = $false, ParameterSetName = "Allow New Apps")]
-        [System.String[]]$Fallbacks,
+        [System.String[]]$Fallbacks = "Hash", # Setting the default value for the Fallbacks parameter
 
         [parameter(Mandatory = $false, ParameterSetName = "Allow New Apps Audit Events")]
         [parameter(Mandatory = $false, ParameterSetName = "Allow New Apps")]
@@ -132,9 +132,9 @@ function Edit-WDACConfig {
             Write-Output "PolicyGUID = $PolicyID`n"
         }
 
-        # Stop operation as soon as there is an error, anywhere, unless explicitly specified otherwise
+        # Stop operation as soon as there is an error anywhere, unless explicitly specified otherwise
         $ErrorActionPreference = 'Stop'         
-        if (-NOT $SkipVersionCheck) { . Update-self }
+        if (-NOT $SkipVersionCheck) { . Update-self }        
 
         $DirveLettersGlobalRootFix = Invoke-Command -ScriptBlock $DirveLettersGlobalRootFixScriptBlock
     }
@@ -203,7 +203,7 @@ function Edit-WDACConfig {
                             FilePath             = ".\ProgramDir_ScanResults$($i).xml"
                             ScanPath             = $ProgramsPaths[$i]
                             Level                = $Level
-                            Fallback             = $Fallbacks ? (Get-Fallbacks -Fallbacks $Fallbacks) : 'Hash'
+                            Fallback             = $Fallbacks
                             MultiplePolicyFormat = $true
                             UserWriteablePaths   = $true
                         }
@@ -233,7 +233,7 @@ function Edit-WDACConfig {
                     #Supplemental-policy-processing-and-deployment
         
                     $SuppPolicyPath = ".\SupplementalPolicy$SuppPolicyName.xml" 
-                    $SuppPolicyID = Set-CIPolicyIdInfo -FilePath $SuppPolicyPath -PolicyName "Supplemental Policy $SuppPolicyName made on $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath
+                    $SuppPolicyID = Set-CIPolicyIdInfo -FilePath $SuppPolicyPath -PolicyName "Supplemental Policy $SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath
                     $SuppPolicyID = $SuppPolicyID.Substring(11)                
     
                     # Make sure policy rule options that don't belong to a Supplemental policy don't exit
@@ -354,7 +354,7 @@ function Edit-WDACConfig {
                                 FilePath             = ".\RulesForFilesNotInUserSelectedPaths.xml"
                                 ScanPath             = "$env:TEMP\TemporaryScanFolderForEventViewerFiles\"
                                 Level                = $Level
-                                Fallback             = $Fallbacks ? (Get-Fallbacks -Fallbacks $Fallbacks) : 'Hash'
+                                Fallback             = $Fallbacks
                                 MultiplePolicyFormat = $true
                                 UserWriteablePaths   = $true                            
                             }
@@ -377,6 +377,8 @@ function Edit-WDACConfig {
                     # Only create policy for files that are on longer available on the disk if there are any and
                     # if user chose to include deleted files in the final supplemental policy
                     if ($AuditEventLogsProcessingResults.DeletedFileHashes -and $IncludeDeletedFiles) {
+
+                        Write-Debug -Message "$($AuditEventLogsProcessingResults.DeletedFileHashes.count) file(s) have been found in event viewer logs that were run during Audit phase but are no longer on the disk."
 
                         # Create File Rules based on hash of the files and store them in the $Rules variable
                         $i = 1
@@ -422,7 +424,7 @@ function Edit-WDACConfig {
                             FilePath             = ".\ProgramDir_ScanResults$($i).xml"
                             ScanPath             = $ProgramsPaths[$i]
                             Level                = $Level
-                            Fallback             = $Fallbacks ? (Get-Fallbacks -Fallbacks $Fallbacks) : 'Hash'
+                            Fallback             = $Fallbacks
                             MultiplePolicyFormat = $true
                             UserWriteablePaths   = $true
                         }
@@ -572,7 +574,7 @@ function Edit-WDACConfig {
                 #################### Supplemental-policy-processing-and-deployment ############################
 
                 $SuppPolicyPath = ".\SupplementalPolicy$SuppPolicyName.xml" 
-                $SuppPolicyID = Set-CIPolicyIdInfo -FilePath $SuppPolicyPath -PolicyName "Supplemental Policy $SuppPolicyName made on $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath
+                $SuppPolicyID = Set-CIPolicyIdInfo -FilePath $SuppPolicyPath -PolicyName "Supplemental Policy $SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath
                 $SuppPolicyID = $SuppPolicyID.Substring(11)
 
                 # Make sure policy rule options that don't belong to a Supplemental policy don't exit
@@ -621,7 +623,7 @@ function Edit-WDACConfig {
                     if (!$KeepOldSupplementalPolicies) { Remove-Item -Path $SuppPolicyPath -Force }        
                 }
                 # Prepare the final merged Supplemental policy for deployment           
-                $SuppPolicyID = Set-CIPolicyIdInfo -FilePath "$SuppPolicyName.xml" -ResetPolicyID -PolicyName "$SuppPolicyName Merged on $(Get-Date -Format 'MM-dd-yyyy')" -BasePolicyToSupplementPath $PolicyPath
+                $SuppPolicyID = Set-CIPolicyIdInfo -FilePath "$SuppPolicyName.xml" -ResetPolicyID -PolicyName "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')" -BasePolicyToSupplementPath $PolicyPath
                 $SuppPolicyID = $SuppPolicyID.Substring(11)
                 Set-HVCIOptions -Strict -FilePath "$SuppPolicyName.xml" 
                 ConvertFrom-CIPolicy "$SuppPolicyName.xml" "$SuppPolicyID.cip" | Out-Null
@@ -734,41 +736,21 @@ While an unsigned WDAC policy is already deployed on the system, rebootlessly tu
 .PARAMETER AllowNewAppsAuditEvents
 While an unsigned WDAC policy is already deployed on the system, rebootlessly turn on Audit mode in it, which will allow you to install a new app that was otherwise getting blocked.
 
-.PARAMETER SkipVersionCheck
-Can be used with any parameter to bypass the online version check - only to be used in rare cases
-
 .PARAMETER MergeSupplementalPolicies
 Merges multiple deployed supplemental policies into 1 single supplemental policy, removes the old ones, deploys the new one. System restart needed to take effect.
 
 .PARAMETER UpdateBasePolicy
 It can rebootlessly change the type of the deployed base policy. It can update the recommended block rules and/or change policy rule options in the deployed base policy.
 
+.PARAMETER SkipVersionCheck
+Can be used with any parameter to bypass the online version check - only to be used in rare cases
+
 #>
 }
 
+# Importing argument completer ScriptBlocks
+. "$psscriptroot\ArgumentCompleters.ps1"
 # Set PSReadline tab completion to complete menu for easier access to available parameters - Only for the current session
 Set-PSReadlineKeyHandler -Key Tab -Function MenuComplete
-
-
-# argument tab auto-completion for Policy Paths to show only .xml files and only base policies
-$ArgumentCompleterPolicyPaths = {
-    Get-ChildItem | where-object { $_.extension -like '*.xml' } | ForEach-Object {
-        $xmlitem = [xml](Get-Content $_)
-        $PolicyType = $xmlitem.SiPolicy.PolicyType
-
-        if ($PolicyType -eq "Base Policy") { $_ }
-    } | foreach-object { return "`"$_`"" }
-}
-Register-ArgumentCompleter -CommandName "Edit-WDACConfig" -ParameterName "PolicyPaths" -ScriptBlock $ArgumentCompleterPolicyPaths
-
-
-# argument tab auto-completion for Supplemental Policy Paths to show only .xml files and only Supplemental policies
-$ArgumentCompleterSuppPolicyPaths = {
-    Get-ChildItem | where-object { $_.extension -like '*.xml' } | ForEach-Object {
-        $xmlitem = [xml](Get-Content $_)
-        $PolicyType = $xmlitem.SiPolicy.PolicyType
-
-        if ($PolicyType -eq "Supplemental Policy") { $_ }
-    } | foreach-object { return "`"$_`"" }
-}
-Register-ArgumentCompleter -CommandName "Edit-WDACConfig" -ParameterName "SuppPolicyPaths" -ScriptBlock $ArgumentCompleterSuppPolicyPaths
+Register-ArgumentCompleter -CommandName "Edit-WDACConfig" -ParameterName "PolicyPaths" -ScriptBlock $ArgumentCompleterPolicyPathsNotAdvanced
+Register-ArgumentCompleter -CommandName "Edit-WDACConfig" -ParameterName "SuppPolicyPaths" -ScriptBlock $ArgumentCompleterSuppPolicyPathsNotAdvanced

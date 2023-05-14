@@ -64,7 +64,7 @@ function New-WDACConfig {
 
         [ValidateSet([Fallbackz])]
         [parameter(Mandatory = $false, ParameterSetName = "Make Policy From Audit Logs")]
-        [System.String[]]$Fallbacks,
+        [System.String[]]$Fallbacks = "Hash", # Setting the default value for the Fallbacks parameter
 
         # Setting the maxim range to the maximum allowed log size by Windows Event viewer
         [ValidateRange(1024KB, 18014398509481983KB)]
@@ -246,6 +246,7 @@ function New-WDACConfig {
             ConvertFrom-CIPolicy '.\Microsoft recommended driver block rules.xml' "$PolicyID.cip" | Out-Null
             CiTool --update-policy "$PolicyID.cip" -json
             Remove-Item "$PolicyID.cip" -Force
+            Remove-Item '.\Microsoft recommended driver block rules.xml' -Force
             Write-host "`nThe Microsoft recommended block rules policy has been deployed in enforced mode." -ForegroundColor Magenta
         }
 
@@ -356,7 +357,7 @@ function New-WDACConfig {
                 FilePath             = "AuditLogsPolicy_NoDeletedFiles.xml"
                 Audit                = $true
                 Level                = $Level
-                Fallback             = $Fallbacks ? (Get-Fallbacks -Fallbacks $Fallbacks) : 'Hash'
+                Fallback             = $Fallbacks
                 MultiplePolicyFormat = $true
                 UserWriteablePaths   = $true
                 WarningAction        = 'SilentlyContinue'
@@ -538,15 +539,14 @@ function New-WDACConfig {
     
             Write-Host "The current version of Microsoft recommended drivers block list is $($Matches[1])" -ForegroundColor Cyan
         }    
-        # Stop operation as soon as there is an error, anywhere, unless explicitly specified otherwise
+        # Stop operation as soon as there is an error anywhere, unless explicitly specified otherwise
         $ErrorActionPreference = 'Stop'
-        if (-NOT $SkipVersionCheck) { . Update-self }
+        if (-NOT $SkipVersionCheck) { . Update-self }        
 
         $DirveLettersGlobalRootFix = Invoke-Command -ScriptBlock $DirveLettersGlobalRootFixScriptBlock
     }
 
     process {
-
         if ($GetBlockRules) { Invoke-Command -ScriptBlock $GetBlockRulesSCRIPTBLOCK }                                
         if ($GetDriverBlockRules) { Invoke-Command -ScriptBlock $GetDriverBlockRulesSCRIPTBLOCK }   
         if ($MakeAllowMSFTWithBlockRules) { Invoke-Command -ScriptBlock $MakeAllowMSFTWithBlockRulesSCRIPTBLOCK }
@@ -558,7 +558,6 @@ function New-WDACConfig {
         if ($MakeLightPolicy) { Invoke-Command -ScriptBlock $MakeLightPolicySCRIPTBLOCK }
         if ($MakeDefaultWindowsWithBlockRules) { Invoke-Command -ScriptBlock $MakeDefaultWindowsWithBlockRulesSCRIPTBLOCK }
         if ($PrepDefaultWindowsAudit) { Invoke-Command -ScriptBlock $PrepDefaultWindowsAuditSCRIPTBLOCK }
-
     }    
   
     <#
@@ -589,26 +588,31 @@ Make WDAC policy by merging AllowMicrosoft policy with the recommended block rul
 .PARAMETER DeployLatestDriverBlockRules
 Automatically download and deploy the latest Microsoft Recommended Driver Block Rules from Microsoft's source
 
+.PARAMETER DeployLatestBlockRules
+Deploys the latest Microsoft recommended (User-mode) block rules on the system as a standalone base policy
+
 .PARAMETER SetAutoUpdateDriverBlockRules
 Make a Scheduled Task that automatically runs every 7 days to download the newest Microsoft Recommended driver block rules
 
 .PARAMETER PrepMSFTOnlyAudit
 Prepare the system for Audit mode using AllowMicrosoft default policy
 
+.PARAMETER PrepDefaultWindowsAudit
+Prepare the system for Audit mode using DefaultWindows policy
+
 .PARAMETER MakePolicyFromAuditLogs
-Make WDAC Policy from Audit event logs that also covers files no longer on disk
+Make a WDAC Policy from Audit event logs that also covers files no longer on disk
 
 .PARAMETER MakeLightPolicy
-Make WDAC Policy with ISG for Lightly Managed system
+Make a WDAC Policy with ISG for Lightly Managed system
 
 .PARAMETER MakeDefaultWindowsWithBlockRules
-Make WDAC policy by merging DefaultWindows policy with the recommended block rules
+Make a WDAC policy by merging DefaultWindows policy with the recommended block rules
 
 .PARAMETER SkipVersionCheck
 Can be used with any parameter to bypass the online version check - only to be used in rare cases
 
 #>
 }
-
 # Set PSReadline tab completion to complete menu for easier access to available parameters - Only for the current session
 Set-PSReadlineKeyHandler -Key Tab -Function MenuComplete

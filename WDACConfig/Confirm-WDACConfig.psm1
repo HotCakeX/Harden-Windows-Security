@@ -16,9 +16,9 @@ function Confirm-WDACConfig {
         # Importing resources such as functions by dot-sourcing so that they will run in the same scope and their variables will be usable
         . "$psscriptroot\Resources.ps1"
 
-        # Stop operation as soon as there is an error, anywhere, unless explicitly specified otherwise
+        # Stop operation as soon as there is an error anywhere, unless explicitly specified otherwise
         $ErrorActionPreference = 'Stop'         
-        if (-NOT $SkipVersionCheck) { . Update-self }
+        if (-NOT $SkipVersionCheck) { . Update-self }        
 
         # Script block to show only non-system Base policies
         $OnlyBasePoliciesBLOCK = {
@@ -82,7 +82,7 @@ Lists the currently deployed policies and shows details about each of them
 .PARAMETER VerifyWDACStatus
 Shows the status of WDAC (Windows Defender Application Control) on the system
 
-.PARAMETER $CheckSmartAppControlStatus
+.PARAMETER CheckSmartAppControlStatus
 Checks the status of Smart App Control and reports the results on the console
 
 .PARAMETER SkipVersionCheck

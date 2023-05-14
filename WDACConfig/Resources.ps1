@@ -1,6 +1,6 @@
-# Stop operation as soon as there is an error, anywhere, unless explicitly specified otherwise
+# Stop operation as soon as there is an error anywhere, unless explicitly specified otherwise
 $ErrorActionPreference = 'Stop'
-
+if (-NOT ([System.Environment]::OSVersion.Version -ge '10.0.22621')) { Write-Error -Message "You're not using Windows 11 22H2, exitting..." }
 
 
 # Get the path to SignTool
@@ -291,33 +291,6 @@ $RuleRefsContent
 
 
 
-# Process the Fallbacks from user input
-Function Get-Fallbacks {
-    param (
-        $Fallbacks
-    )
-    $AssignedFallbacks = @()
-    switch ($Fallbacks) {
-        'Hash' { $AssignedFallbacks += 'Hash' }
-        'FileName' { $AssignedFallbacks += 'FileName' }
-        'SignedVersion' { $AssignedFallbacks += 'SignedVersion' }
-        'Publisher' { $AssignedFallbacks += 'Publisher' }
-        'FilePublisher' { $AssignedFallbacks += 'FilePublisher' }
-        'LeafCertificate' { $AssignedFallbacks += 'LeafCertificate' }
-        'PcaCertificate' { $AssignedFallbacks += 'PcaCertificate' }
-        'RootCertificate' { $AssignedFallbacks += 'RootCertificate' }
-        'WHQL' { $AssignedFallbacks += 'WHQL' }
-        'WHQLPublisher' { $AssignedFallbacks += 'WHQLPublisher' }
-        'WHQLFilePublisher' { $AssignedFallbacks += 'WHQLFilePublisher' }
-        'PFN' { $AssignedFallbacks += 'PFN' }
-        'FilePath' { $AssignedFallbacks += 'FilePath' }
-        'None' { $AssignedFallbacks += 'None' }
-        Default { $AssignedFallbacks += 'Hash' }
-    }
-    return $AssignedFallbacks
-}
-
-
 # Gets the latest Microsoft Recommended block rules, removes its allow all rules and sets HVCI to strict
 $GetBlockRulesSCRIPTBLOCK = {             
     $MicrosoftRecommendeDriverBlockRules = Invoke-WebRequest -Uri "https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/public/windows/security/threat-protection/windows-defender-application-control/microsoft-recommended-block-rules.md"
@@ -339,5 +312,3 @@ $GetBlockRulesSCRIPTBLOCK = {
         PolicyFile = 'Microsoft recommended block rules.xml'
     }
 }
-
-

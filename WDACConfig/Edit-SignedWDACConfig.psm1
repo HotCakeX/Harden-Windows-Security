@@ -104,7 +104,7 @@ function Edit-SignedWDACConfig {
         [ValidateSet([Fallbackz])]
         [parameter(Mandatory = $false, ParameterSetName = "Allow New Apps Audit Events")]
         [parameter(Mandatory = $false, ParameterSetName = "Allow New Apps")]
-        [System.String[]]$Fallbacks,
+        [System.String[]]$Fallbacks = "Hash", # Setting the default value for the Fallbacks parameter
 
         [ValidatePattern('\.exe$')]
         [ValidateScript({ # Setting the minimum version of SignTool that is allowed to be executed as well as other checks
@@ -188,9 +188,9 @@ function Edit-SignedWDACConfig {
             Write-Output "PolicyGUID = $PolicyID`n"
         }
 
-        # Stop operation as soon as there is an error, anywhere, unless explicitly specified otherwise
+        # Stop operation as soon as there is an error anywhere, unless explicitly specified otherwise
         $ErrorActionPreference = 'Stop'         
-        if (-NOT $SkipVersionCheck) { . Update-self }
+        if (-NOT $SkipVersionCheck) { . Update-self }        
 
         $DirveLettersGlobalRootFix = Invoke-Command -ScriptBlock $DirveLettersGlobalRootFixScriptBlock
     }
@@ -302,7 +302,7 @@ function Edit-SignedWDACConfig {
                                 FilePath             = ".\RulesForFilesNotInUserSelectedPaths.xml"
                                 ScanPath             = "$env:TEMP\TemporaryScanFolderForEventViewerFiles\"
                                 Level                = $Level
-                                Fallback             = $Fallbacks ? (Get-Fallbacks -Fallbacks $Fallbacks) : 'Hash'
+                                Fallback             = $Fallbacks
                                 MultiplePolicyFormat = $true
                                 UserWriteablePaths   = $true                            
                             }
@@ -325,6 +325,8 @@ function Edit-SignedWDACConfig {
                     # Only create policy for files that are on longer available on the disk if there are any and
                     # if user chose to include deleted files in the final supplemental policy
                     if ($AuditEventLogsProcessingResults.DeletedFileHashes -and $IncludeDeletedFiles) {
+
+                        Write-Debug -Message "$($AuditEventLogsProcessingResults.DeletedFileHashes.count) file(s) have been found in event viewer logs that were run during Audit phase but are no longer on the disk."
 
                         # Create File Rules based on hash of the files and store them in the $Rules variable
                         $i = 1
@@ -368,7 +370,7 @@ function Edit-SignedWDACConfig {
                             FilePath             = ".\ProgramDir_ScanResults$($i).xml"
                             ScanPath             = $ProgramsPaths[$i]
                             Level                = $Level
-                            Fallback             = $Fallbacks ? (Get-Fallbacks -Fallbacks $Fallbacks) : 'Hash'
+                            Fallback             = $Fallbacks
                             MultiplePolicyFormat = $true
                             UserWriteablePaths   = $true
                         }
@@ -519,7 +521,7 @@ function Edit-SignedWDACConfig {
                 #################### Supplemental-policy-processing-and-deployment ############################
                 
                 $SuppPolicyPath = ".\SupplementalPolicy$SuppPolicyName.xml" 
-                $SuppPolicyID = Set-CIPolicyIdInfo -FilePath $SuppPolicyPath -PolicyName "Supplemental Policy $SuppPolicyName made on $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath
+                $SuppPolicyID = Set-CIPolicyIdInfo -FilePath $SuppPolicyPath -PolicyName "Supplemental Policy $SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath
                 $SuppPolicyID = $SuppPolicyID.Substring(11)
                 Add-SignerRule -FilePath $SuppPolicyPath -CertificatePath $CertPath -Update -User -Kernel
 
@@ -632,7 +634,7 @@ function Edit-SignedWDACConfig {
                             FilePath             = ".\ProgramDir_ScanResults$($i).xml"
                             ScanPath             = $ProgramsPaths[$i]
                             Level                = $Level
-                            Fallback             = $Fallbacks ? (Get-Fallbacks -Fallbacks $Fallbacks) : 'Hash'
+                            Fallback             = $Fallbacks
                             MultiplePolicyFormat = $true
                             UserWriteablePaths   = $true
                         }
@@ -662,7 +664,7 @@ function Edit-SignedWDACConfig {
                     #Supplemental-policy-processing-and-deployment
         
                     $SuppPolicyPath = ".\SupplementalPolicy$SuppPolicyName.xml" 
-                    $SuppPolicyID = Set-CIPolicyIdInfo -FilePath $SuppPolicyPath -PolicyName "Supplemental Policy $SuppPolicyName made on $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath
+                    $SuppPolicyID = Set-CIPolicyIdInfo -FilePath $SuppPolicyPath -PolicyName "Supplemental Policy $SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath
                     $SuppPolicyID = $SuppPolicyID.Substring(11)
                     Add-SignerRule -FilePath $SuppPolicyPath -CertificatePath $CertPath -Update -User -Kernel
     
@@ -735,7 +737,7 @@ function Edit-SignedWDACConfig {
                     if (!$KeepOldSupplementalPolicies) { Remove-Item -Path $SuppPolicyPath -Force }            
                 }        
                 # Prepare the final merged Supplemental policy for deployment    
-                $SuppPolicyID = Set-CIPolicyIdInfo -FilePath "$SuppPolicyName.xml" -ResetPolicyID -PolicyName "$SuppPolicyName Merged on $(Get-Date -Format 'MM-dd-yyyy')" -BasePolicyToSupplementPath $PolicyPath
+                $SuppPolicyID = Set-CIPolicyIdInfo -FilePath "$SuppPolicyName.xml" -ResetPolicyID -PolicyName "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')" -BasePolicyToSupplementPath $PolicyPath
                 $SuppPolicyID = $SuppPolicyID.Substring(11)                  
                 Add-SignerRule -FilePath "$SuppPolicyName.xml" -CertificatePath $CertPath -Update -User -Kernel
                 Set-HVCIOptions -Strict -FilePath "$SuppPolicyName.xml"
@@ -891,80 +893,24 @@ Rebootlessly install new apps/programs when Signed policy is already deployed, u
 .PARAMETER AllowNewApps
 Rebootlessly install new apps/programs when Signed policy is already deployed, scan their directories for new Supplemental policy, Sign and deploy thew Supplemental policy.
 
-.PARAMETER SkipVersionCheck
-Can be used with any parameter to bypass the online version check - only to be used in rare cases
-
 .PARAMETER MergeSupplementalPolicies
 Merges multiple Signed deployed supplemental policies into 1 single supplemental policy, removes the old ones, deploys the new one. System restart needed to take effect.
 
 .PARAMETER UpdateBasePolicy
 It can rebootlessly change the type of the deployed signed base policy. It can update the recommended block rules and/or change policy rule options in the deployed base policy.
 
+.PARAMETER SkipVersionCheck
+Can be used with any parameter to bypass the online version check - only to be used in rare cases
+
 #>
 }
 
+# Importing argument completer ScriptBlocks
+. "$psscriptroot\ArgumentCompleters.ps1"
 # Set PSReadline tab completion to complete menu for easier access to available parameters - Only for the current session
 Set-PSReadlineKeyHandler -Key Tab -Function MenuComplete
-
-# argument tab auto-completion for Certificate common name
-$ArgumentCompleterCertificateCN = {
-     
-    $CNs = (Get-ChildItem -Path 'Cert:\CurrentUser\My').Subject.Substring(3) | Where-Object { $_ -NotLike "*, DC=*" } |
-    ForEach-Object {
-            
-        if ($_ -like "*CN=*") {
-            
-            $_ -match "CN=(?<cn>[^,]+)" | Out-Null
-        
-            return $Matches['cn']
-        }
-        else { return $_ }
-    }   
-    
-    $CNs | foreach-object { return "`"$_`"" }
-}
 Register-ArgumentCompleter -CommandName "Edit-SignedWDACConfig" -ParameterName "CertCN" -ScriptBlock $ArgumentCompleterCertificateCN
-
-
-# argument tab auto-completion for Policy Paths to show only .xml files and only base policies
-$ArgumentCompleterPolicyPaths = {
-    Get-ChildItem | where-object { $_.extension -like '*.xml' } | ForEach-Object {
-        $xmlitem = [xml](Get-Content $_)
-        $PolicyType = $xmlitem.SiPolicy.PolicyType
-
-        if ($PolicyType -eq "Base Policy") { $_ }
-    } | foreach-object { return "`"$_`"" }
-}
-Register-ArgumentCompleter -CommandName "Edit-SignedWDACConfig" -ParameterName "PolicyPaths" -ScriptBlock $ArgumentCompleterPolicyPaths
-
-
-# argument tab auto-completion for Certificate Path to show only .cer files
-$ArgumentCompleterCertPath = {
-    # Note the use of -Depth 1
-    # Enclosing the $results = ... assignment in (...) also passes the value through.
-    ($results = Get-ChildItem -Depth 2 -Filter *.cer | foreach-object { "`"$_`"" })
-    if (-not $results) {
-        # No results?
-        $null # Dummy response that prevents fallback to the default file-name completion.
-    }   
-}
 Register-ArgumentCompleter -CommandName "Edit-SignedWDACConfig" -ParameterName "CertPath" -ScriptBlock $ArgumentCompleterCertPath
-
-
-# argument tab auto-completion for Certificate Path to show only .cer files
-$ArgumentCompleterSignToolPath = {
-    Get-ChildItem | where-object { $_.extension -like '*.exe' } | foreach-object { return "`"$_`"" }
-}
 Register-ArgumentCompleter -CommandName "Edit-SignedWDACConfig" -ParameterName "SignToolPath" -ScriptBlock $ArgumentCompleterSignToolPath
-
-
-# argument tab auto-completion for Supplemental Policy Paths to show only .xml files and only Supplemental policies
-$ArgumentCompleterSuppPolicyPaths = {
-    Get-ChildItem | where-object { $_.extension -like '*.xml' } | ForEach-Object {
-        $xmlitem = [xml](Get-Content $_)
-        $PolicyType = $xmlitem.SiPolicy.PolicyType
-
-        if ($PolicyType -eq "Supplemental Policy") { $_ }
-    } | foreach-object { return "`"$_`"" }
-}
-Register-ArgumentCompleter -CommandName "Edit-SignedWDACConfig" -ParameterName "SuppPolicyPaths" -ScriptBlock $ArgumentCompleterSuppPolicyPaths
+Register-ArgumentCompleter -CommandName "Edit-SignedWDACConfig" -ParameterName "PolicyPaths" -ScriptBlock $ArgumentCompleterPolicyPathsNotAdvanced
+Register-ArgumentCompleter -CommandName "Edit-SignedWDACConfig" -ParameterName "SuppPolicyPaths" -ScriptBlock $ArgumentCompleterSuppPolicyPathsNotAdvanced

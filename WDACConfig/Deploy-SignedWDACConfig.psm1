@@ -43,10 +43,9 @@ function Deploy-SignedWDACConfig {
     begin {
         # Importing resources such as functions by dot-sourcing so that they will run in the same scope and their variables will be usable
         . "$psscriptroot\Resources.ps1"
-
-        # Stop operation as soon as there is an error, anywhere, unless explicitly specified otherwise
-        $ErrorActionPreference = 'Stop'         
-        if (-NOT $SkipVersionCheck) { . Update-self }       
+        # Stop operation as soon as there is an error anywhere, unless explicitly specified otherwise
+        $ErrorActionPreference = 'Stop'        
+        if (-NOT $SkipVersionCheck) { . Update-self }                 
     }
 
     process {
@@ -104,8 +103,17 @@ Windows Defender Application Control, ConfigCI PowerShell module
 .FUNCTIONALITY
 Using official Microsoft methods, Signs and Deploys WDAC policies, accepts signed or unsigned policies and deploys them (Windows Defender Application Control)
 
-.PARAMETER Sign_Deploy_Policies 
-Sign and deploy WDAC policies
+.PARAMETER CertPath
+Path to the certificate .cer file
+
+.PARAMETER PolicyPaths
+Path to the policy xml files that are going to be signed
+
+.PARAMETER CertCN
+Certificate common name
+
+.PARAMETER SignToolPath
+Path to the SignTool.exe - optional parameter
 
 .PARAMETER SkipVersionCheck
 Can be used with any parameter to bypass the online version check - only to be used in rare cases
@@ -113,72 +121,11 @@ Can be used with any parameter to bypass the online version check - only to be u
 #>
 }
 
+# Importing argument completer ScriptBlocks
+. "$psscriptroot\ArgumentCompleters.ps1"
 # Set PSReadline tab completion to complete menu for easier access to available parameters - Only for the current session
 Set-PSReadlineKeyHandler -Key Tab -Function MenuComplete
-
-# argument tab auto-completion for Certificate common name
-$ArgumentCompleterCertificateCN = {
-     
-    $CNs = (Get-ChildItem -Path 'Cert:\CurrentUser\My').Subject.Substring(3) | Where-Object { $_ -NotLike "*, DC=*" } |
-    ForEach-Object {
-            
-        if ($_ -like "*CN=*") {
-            
-            $_ -match "CN=(?<cn>[^,]+)" | Out-Null
-        
-            return $Matches['cn']
-        }
-        else { return $_ }
-    }   
-    
-    $CNs | foreach-object { return "`"$_`"" }
-}
 Register-ArgumentCompleter -CommandName "Deploy-SignedWDACConfig" -ParameterName "CertCN" -ScriptBlock $ArgumentCompleterCertificateCN
-
-
-# argument tab auto-completion for Policy Paths to show only .xml files and only suggest files that haven't been already selected by user 
-# https://stackoverflow.com/questions/76141864/how-to-make-a-powershell-argument-completer-that-only-suggests-files-not-already/76142865
-Register-ArgumentCompleter `
-    -CommandName Deploy-SignedWDACConfig `
-    -ParameterName PolicyPaths `
-    -ScriptBlock {
-    # Get the current command and the already bound parameters
-    param($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameters)
-
-    # Find all string constants in the AST that end in ".xml"
-    $existing = $commandAst.FindAll({ 
-            $args[0] -is [System.Management.Automation.Language.StringConstantExpressionAst] -and 
-            $args[0].Value -like '*.xml' 
-        }, 
-        $false
-    ).Value  
-
-    # Get the xml files in the current directory
-    Get-ChildItem -Filter *.xml | ForEach-Object {
-        # Check if the file is already selected
-        if ($_.FullName -notin $existing) {
-            # Return the file name with quotes
-            "`"$_`""
-        }
-    }
-}
-
-
-# argument tab auto-completion for Certificate Path to show only .cer files
-$ArgumentCompleterCertPath = {
-    # Note the use of -Depth 1
-    # Enclosing the $results = ... assignment in (...) also passes the value through.
-    ($results = Get-ChildItem -Depth 2 -Filter *.cer | foreach-object { "`"$_`"" })
-    if (-not $results) {
-        # No results?
-        $null # Dummy response that prevents fallback to the default file-name completion.
-    }   
-}
+Register-ArgumentCompleter -CommandName "Deploy-SignedWDACConfig" -ParameterName "PolicyPaths" -ScriptBlock $ArgumentCompleterPolicyPaths
 Register-ArgumentCompleter -CommandName "Deploy-SignedWDACConfig" -ParameterName "CertPath" -ScriptBlock $ArgumentCompleterCertPath
-
-
-# argument tab auto-completion for Certificate Path to show only .cer files
-$ArgumentCompleterSignToolPath = {
-    Get-ChildItem | where-object { $_.extension -like '*.exe' } | foreach-object { return "`"$_`"" }
-}
 Register-ArgumentCompleter -CommandName "Deploy-SignedWDACConfig" -ParameterName "SignToolPath" -ScriptBlock $ArgumentCompleterSignToolPath

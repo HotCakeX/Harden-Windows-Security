@@ -60,7 +60,7 @@ function New-SupplementalWDACConfig {
 
         [ValidateSet([Fallbackz])]
         [parameter(Mandatory = $false, ParameterSetName = "Normal")]
-        [System.String[]]$Fallbacks,
+        [System.String[]]$Fallbacks = "Hash",  # Setting the default value for the Fallbacks parameter
        
         [Parameter(Mandatory = $false)][Switch]$SkipVersionCheck    
     )
@@ -87,10 +87,9 @@ function New-SupplementalWDACConfig {
             }
         }
         
-        # Stop operation as soon as there is an error, anywhere, unless explicitly specified otherwise
+        # Stop operation as soon as there is an error anywhere, unless explicitly specified otherwise
         $ErrorActionPreference = 'Stop'
-        if (-NOT $SkipVersionCheck) { . Update-self } 
-        
+        if (-NOT $SkipVersionCheck) { . Update-self }                
     }
 
     process {
@@ -102,7 +101,7 @@ function New-SupplementalWDACConfig {
                 FilePath             = "SupplementalPolicy $SuppPolicyName.xml"
                 ScanPath             = $ScanLocation
                 Level                = $Level
-                Fallback             = $Fallbacks ? (Get-Fallbacks -Fallbacks $Fallbacks) : 'Hash'
+                Fallback             = $Fallbacks
                 MultiplePolicyFormat = $true
                 UserWriteablePaths   = $true
             }
@@ -132,6 +131,7 @@ function New-SupplementalWDACConfig {
             } 
             if ($Deployit) {                
                 CiTool --update-policy "$policyID.cip" -json
+                Remove-Item -Path "$policyID.cip" -Force
                 Write-host -NoNewline "`n$policyID.cip for " -ForegroundColor Green
                 Write-host -NoNewline "$SuppPolicyName" -ForegroundColor Magenta
                 Write-host " has been deployed." -ForegroundColor Green
@@ -265,16 +265,8 @@ Can be used with any parameter to bypass the online version check - only to be u
 #>
 }
 
+# Importing argument completer ScriptBlocks
+. "$psscriptroot\ArgumentCompleters.ps1"
 # Set PSReadline tab completion to complete menu for easier access to available parameters - Only for the current session
 Set-PSReadlineKeyHandler -Key Tab -Function MenuComplete
-
-# argument tab auto-completion for Policy Paths to show only .xml files and only base policies
-$ArgumentCompleterPolicyPaths = {
-    Get-ChildItem | where-object { $_.extension -like '*.xml' } | ForEach-Object {
-        $xmlitem = [xml](Get-Content $_)
-        $PolicyType = $xmlitem.SiPolicy.PolicyType
-
-        if ($PolicyType -eq "Base Policy") { $_ }
-    } | foreach-object { return "`"$_`"" }
-}
-Register-ArgumentCompleter -CommandName "New-SupplementalWDACConfig" -ParameterName "PolicyPath" -ScriptBlock $ArgumentCompleterPolicyPaths
+Register-ArgumentCompleter -CommandName "New-SupplementalWDACConfig" -ParameterName "PolicyPath" -ScriptBlock $ArgumentCompleterPolicyPathsNotAdvanced

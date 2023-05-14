@@ -95,14 +95,14 @@ function Remove-WDACConfig {
         # Detecting if Debug switch is used, will do debugging actions based on that
         $Debug = $PSBoundParameters.Debug.IsPresent
 
-        # Stop operation as soon as there is an error, anywhere, unless explicitly specified otherwise
+        # Stop operation as soon as there is an error anywhere, unless explicitly specified otherwise
         $ErrorActionPreference = 'Stop'
-        if (-NOT $SkipVersionCheck) { . Update-self }
+        if (-NOT $SkipVersionCheck) { . Update-self }        
 
         # argument tab auto-completion and ValidateSet for Policy names 
         Class PolicyNamez : System.Management.Automation.IValidateSetValuesGenerator {
             [System.String[]] GetValidValues() {
-                $PolicyNamez = ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsSystemPolicy -ne "True" }).Friendlyname
+                $PolicyNamez = ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsOnDisk -eq "True" } | Where-Object { $_.IsSystemPolicy -ne "True" }).Friendlyname | Select-Object -Unique
    
                 return [System.String[]]$PolicyNamez
             }
@@ -111,7 +111,7 @@ function Remove-WDACConfig {
         # argument tab auto-completion and ValidateSet for Policy IDs     
         Class PolicyIDz : System.Management.Automation.IValidateSetValuesGenerator {
             [System.String[]] GetValidValues() {
-                $PolicyIDz = ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsSystemPolicy -ne "True" }).policyID
+                $PolicyIDz = ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsOnDisk -eq "True" } | Where-Object { $_.IsSystemPolicy -ne "True" }).policyID
    
                 return [System.String[]]$PolicyIDz
             }
@@ -187,7 +187,7 @@ function Remove-WDACConfig {
             # Empty array to store Policy IDs based on the input name, this will take care of the situations where multiple policies with the same name are deployed
             $NameID = @()
             foreach ($PolicyName in $PolicyNames) {                    
-                $NameID += ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.FriendlyName -eq $PolicyName }).PolicyID
+                $NameID += ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsOnDisk -eq "True" } | Where-Object { $_.FriendlyName -eq $PolicyName }).PolicyID
             }
             
             Write-Debug -Message "The Following policy IDs have been gathered from the supplied policy names and are going to be removed from the system"
@@ -227,66 +227,11 @@ Can be used with any parameter to bypass the online version check - only to be u
 #>
 }
 
+# Importing argument completer ScriptBlocks
+. "$psscriptroot\ArgumentCompleters.ps1"
 # Set PSReadline tab completion to complete menu for easier access to available parameters - Only for the current session
 Set-PSReadlineKeyHandler -Key Tab -Function MenuComplete
-
-# argument tab auto-completion for Certificate common name
-$ArgumentCompleterCertificateCN = {
-     
-    $CNs = (Get-ChildItem -Path 'Cert:\CurrentUser\My').Subject.Substring(3) | Where-Object { $_ -NotLike "*, DC=*" } |
-    ForEach-Object {
-            
-        if ($_ -like "*CN=*") {
-            
-            $_ -match "CN=(?<cn>[^,]+)" | Out-Null
-        
-            return $Matches['cn']
-        }
-        else { return $_ }
-    }   
-    
-    $CNs | foreach-object { return "`"$_`"" }
-}
 Register-ArgumentCompleter -CommandName "Remove-WDACConfig" -ParameterName "CertCN" -ScriptBlock $ArgumentCompleterCertificateCN
-
-
-# argument tab auto-completion for Policy Paths to show only .xml files and only suggest files that haven't been already selected by user 
-# https://stackoverflow.com/questions/76141864/how-to-make-a-powershell-argument-completer-that-only-suggests-files-not-already/76142865
-Register-ArgumentCompleter `
-    -CommandName Remove-WDACConfig `
-    -ParameterName PolicyPaths `
-    -ScriptBlock {
-    # Get the current command and the already bound parameters
-    param($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameters)
-
-    # Find all string constants in the AST that end in ".xml"
-    $existing = $commandAst.FindAll({ 
-            $args[0] -is [System.Management.Automation.Language.StringConstantExpressionAst] -and 
-            $args[0].Value -like '*.xml' 
-        }, 
-        $false
-    ).Value  
-
-    # Get the xml files in the current directory
-    Get-ChildItem -Filter *.xml | ForEach-Object {
-        # Check if the file is already selected
-        if ($_.FullName -notin $existing) {
-            # Return the file name with quotes
-            "`"$_`""
-        }
-    }
-}
-
-
-# argument tab auto-completion for Certificate Path to show only .cer files
-$ArgumentCompleterCertPath = {
-    Get-ChildItem | where-object { $_.extension -like '*.cer' } | foreach-object { return "`"$_`"" }   
-}
+Register-ArgumentCompleter -CommandName "Deploy-SignedWDACConfig" -ParameterName "PolicyPaths" -ScriptBlock $ArgumentCompleterPolicyPaths
 Register-ArgumentCompleter -CommandName "Remove-WDACConfig" -ParameterName "CertPath" -ScriptBlock $ArgumentCompleterCertPath
-
-
-# argument tab auto-completion for Certificate Path to show only .cer files
-$ArgumentCompleterSignToolPath = {
-    Get-ChildItem | where-object { $_.extension -like '*.exe' } | foreach-object { return "`"$_`"" }
-}
 Register-ArgumentCompleter -CommandName "Remove-WDACConfig" -ParameterName "SignToolPath" -ScriptBlock $ArgumentCompleterSignToolPath

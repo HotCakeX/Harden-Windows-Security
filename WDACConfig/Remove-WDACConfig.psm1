@@ -6,8 +6,11 @@ function Remove-WDACConfig {
         PositionalBinding = $false,
         ConfirmImpact = 'High'
     )]
-    Param(        
-        [Parameter(Mandatory = $false, ParameterSetName = "Signed Base")][Switch]$SignedBase,                                                                                            
+    Param(
+        [Alias("S")]        
+        [Parameter(Mandatory = $false, ParameterSetName = "Signed Base")][Switch]$SignedBase,
+        
+        [Alias("U")]
         [Parameter(Mandatory = $false, ParameterSetName = "Unsigned Or Supplemental")][Switch]$UnsignedOrSupplemental,
 
         [ValidatePattern('\.xml$')]
@@ -44,7 +47,7 @@ function Remove-WDACConfig {
                         $args[0] -is [System.Management.Automation.Language.StringConstantExpressionAst]
                     }, 
                     $false
-                ).Value  
+                ).Value
                 Compare-Object -PassThru $candidates $existing | Where-Object SideIndicator -eq '<='
             })]
         [ValidateScript({
@@ -62,7 +65,7 @@ function Remove-WDACConfig {
                         $args[0] -is [System.Management.Automation.Language.StringConstantExpressionAst]
                     }, 
                     $false
-                ).Value  
+                ).Value
           (Compare-Object -PassThru $candidates $existing | Where-Object SideIndicator -eq '<=').
                 ForEach({ if ($_ -match ' ') { "'{0}'" -f $_ } else { $_ } })
             })]
@@ -106,7 +109,7 @@ function Remove-WDACConfig {
    
                 return [System.String[]]$PolicyNamez
             }
-        }   
+        }
 
         # argument tab auto-completion and ValidateSet for Policy IDs     
         Class PolicyIDz : System.Management.Automation.IValidateSetValuesGenerator {
@@ -232,6 +235,6 @@ Can be used with any parameter to bypass the online version check - only to be u
 # Set PSReadline tab completion to complete menu for easier access to available parameters - Only for the current session
 Set-PSReadlineKeyHandler -Key Tab -Function MenuComplete
 Register-ArgumentCompleter -CommandName "Remove-WDACConfig" -ParameterName "CertCN" -ScriptBlock $ArgumentCompleterCertificateCN
-Register-ArgumentCompleter -CommandName "Deploy-SignedWDACConfig" -ParameterName "PolicyPaths" -ScriptBlock $ArgumentCompleterPolicyPaths
+Register-ArgumentCompleter -CommandName "Remove-WDACConfig" -ParameterName "PolicyPaths" -ScriptBlock $ArgumentCompleterPolicyPathsBasePoliciesOnly
 Register-ArgumentCompleter -CommandName "Remove-WDACConfig" -ParameterName "CertPath" -ScriptBlock $ArgumentCompleterCertPath
 Register-ArgumentCompleter -CommandName "Remove-WDACConfig" -ParameterName "SignToolPath" -ScriptBlock $ArgumentCompleterSignToolPath

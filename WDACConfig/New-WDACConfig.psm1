@@ -548,16 +548,17 @@ function New-WDACConfig {
 
     process {
         if ($GetBlockRules) { Invoke-Command -ScriptBlock $GetBlockRulesSCRIPTBLOCK }                                
-        if ($GetDriverBlockRules) { Invoke-Command -ScriptBlock $GetDriverBlockRulesSCRIPTBLOCK }   
-        if ($MakeAllowMSFTWithBlockRules) { Invoke-Command -ScriptBlock $MakeAllowMSFTWithBlockRulesSCRIPTBLOCK }
-        if ($DeployLatestDriverBlockRules) { Invoke-Command -ScriptBlock $DeployLatestDriverBlockRulesSCRIPTBLOCK }
-        if ($DeployLatestBlockRules) { Invoke-Command -ScriptBlock $DeployLatestBlockRulesSCRIPTBLOCK }                           
-        if ($SetAutoUpdateDriverBlockRules) { Invoke-Command -ScriptBlock $SetAutoUpdateDriverBlockRulesSCRIPTBLOCK }                                
-        if ($MakePolicyFromAuditLogs) { Invoke-Command -ScriptBlock $MakePolicyFromAuditLogsSCRIPTBLOCK }                                
-        if ($PrepMSFTOnlyAudit) { Invoke-Command -ScriptBlock $PrepMSFTOnlyAuditSCRIPTBLOCK }        
-        if ($MakeLightPolicy) { Invoke-Command -ScriptBlock $MakeLightPolicySCRIPTBLOCK }
-        if ($MakeDefaultWindowsWithBlockRules) { Invoke-Command -ScriptBlock $MakeDefaultWindowsWithBlockRulesSCRIPTBLOCK }
-        if ($PrepDefaultWindowsAudit) { Invoke-Command -ScriptBlock $PrepDefaultWindowsAuditSCRIPTBLOCK }
+        elseif ($GetDriverBlockRules) { Invoke-Command -ScriptBlock $GetDriverBlockRulesSCRIPTBLOCK }   
+        elseif ($MakeAllowMSFTWithBlockRules) { Invoke-Command -ScriptBlock $MakeAllowMSFTWithBlockRulesSCRIPTBLOCK }
+        elseif ($DeployLatestDriverBlockRules) { Invoke-Command -ScriptBlock $DeployLatestDriverBlockRulesSCRIPTBLOCK }
+        elseif ($DeployLatestBlockRules) { Invoke-Command -ScriptBlock $DeployLatestBlockRulesSCRIPTBLOCK }                           
+        elseif ($SetAutoUpdateDriverBlockRules) { Invoke-Command -ScriptBlock $SetAutoUpdateDriverBlockRulesSCRIPTBLOCK }                                
+        elseif ($MakePolicyFromAuditLogs) { Invoke-Command -ScriptBlock $MakePolicyFromAuditLogsSCRIPTBLOCK }                                
+        elseif ($PrepMSFTOnlyAudit) { Invoke-Command -ScriptBlock $PrepMSFTOnlyAuditSCRIPTBLOCK }        
+        elseif ($MakeLightPolicy) { Invoke-Command -ScriptBlock $MakeLightPolicySCRIPTBLOCK }
+        elseif ($MakeDefaultWindowsWithBlockRules) { Invoke-Command -ScriptBlock $MakeDefaultWindowsWithBlockRulesSCRIPTBLOCK }
+        elseif ($PrepDefaultWindowsAudit) { Invoke-Command -ScriptBlock $PrepDefaultWindowsAuditSCRIPTBLOCK }
+        else { Write-Warning "No parameter was selected." }
     }    
   
     <#

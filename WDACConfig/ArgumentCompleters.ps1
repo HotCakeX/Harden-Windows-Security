@@ -56,23 +56,84 @@ $ArgumentCompleterCertificateCN = {
     $CNs | foreach-object { return "`"$_`"" }
 }
 
-# argument tab auto-completion for PolicyPath Param to show only .xml files with base policy type
-$ArgumentCompleterPolicyPathsNotAdvanced = {
-    Get-ChildItem | where-object { $_.extension -like '*.xml' } | ForEach-Object {
-        $xmlitem = [xml](Get-Content $_)
-        $PolicyType = $xmlitem.SiPolicy.PolicyType
-
-        if ($PolicyType -eq "Base Policy") { $_ }
-    } | foreach-object { return "`"$_`"" }
+# Argument tab auto-completion for installed Appx package names
+$ArgumentCompleterAppxPackageNames = {
+    # Get the current command and the already bound parameters
+    param($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameters)
+    # Get the app package names that match the word to complete
+    Get-AppxPackage -Name *$wordToComplete* | ForEach-Object {
+        "`"$($_.Name)`""
+    }
 }
 
-# argument tab auto-completion for SuppPolicyPaths Param to show only .xml files with Supplemental policy type
-$ArgumentCompleterSuppPolicyPathsNotAdvanced = {
+# argument tab auto-completion for Base Policy Paths to show only .xml files and only suggest files that haven't been already selected by user 
+$ArgumentCompleterPolicyPathsBasePoliciesOnly = {
+    # Get the current command and the already bound parameters
+    param($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameters)
+
+    # Find all string constants in the AST that end in ".xml"
+    $existing = $commandAst.FindAll({ 
+            $args[0] -is [System.Management.Automation.Language.StringConstantExpressionAst] -and 
+            $args[0].Value -like '*.xml' 
+        }, 
+        $false
+    ).Value  
+
+    # Get the xml files in the current directory
     Get-ChildItem | where-object { $_.extension -like '*.xml' } | ForEach-Object {
+
         $xmlitem = [xml](Get-Content $_)
         $PolicyType = $xmlitem.SiPolicy.PolicyType
 
-        if ($PolicyType -eq "Supplemental Policy") { $_ }
-    } | foreach-object { return "`"$_`"" }
+        if ($PolicyType -eq "Base Policy") {
+
+            # Check if the file is already selected
+            if ($_.FullName -notin $existing) {
+                # Return the file name with quotes
+                "`"$_`""
+            }
+        }
+    }
+}
+
+# argument tab auto-completion for Supplemental Policy Paths to show only .xml files and only suggest files that haven't been already selected by user
+$ArgumentCompleterPolicyPathsSupplementalPoliciesOnly = {
+    # Get the current command and the already bound parameters
+    param($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameters)
+
+    # Find all string constants in the AST that end in ".xml"
+    $existing = $commandAst.FindAll({ 
+            $args[0] -is [System.Management.Automation.Language.StringConstantExpressionAst] -and 
+            $args[0].Value -like '*.xml' 
+        }, 
+        $false
+    ).Value  
+
+    # Get the xml files in the current directory
+    Get-ChildItem | where-object { $_.extension -like '*.xml' } | ForEach-Object {
+
+        $xmlitem = [xml](Get-Content $_)
+        $PolicyType = $xmlitem.SiPolicy.PolicyType
+
+        if ($PolicyType -eq "Supplemental Policy") {
+
+            # Check if the file is already selected
+            if ($_.FullName -notin $existing) {
+                # Return the file name with quotes
+                "`"$_`""
+            }
+        }
+    }
+}
+
+# Opens Folder picker GUI so that user can select folders to be processed
+$ArgumentCompleterFolderPathsPicker = {
+    # Load the System.Windows.Forms assembly
+    Add-Type -AssemblyName System.Windows.Forms
+    # non-top-most, works better with window focus
+    $browser = New-Object System.Windows.Forms.FolderBrowserDialog
+    $null = $browser.ShowDialog()
+    # Add quotes around the selected path
+    return "`"$($browser.SelectedPath)`""
 }
 

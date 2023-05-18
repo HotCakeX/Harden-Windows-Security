@@ -8,8 +8,13 @@ function New-SupplementalWDACConfig {
     )]
     Param(
         # Main parameters for position 0
+        [Alias("N")]
         [Parameter(Mandatory = $false, ParameterSetName = "Normal")][Switch]$Normal,
+
+        [Alias("W")]
         [Parameter(Mandatory = $false, ParameterSetName = "FilePath With WildCards")][Switch]$FilePathWildCards,
+
+        [Alias("P")]
         [parameter(mandatory = $false, ParameterSetName = "Installed AppXPackages")][switch]$InstalledAppXPackages,
         
         [parameter(Mandatory = $true, ParameterSetName = "Installed AppXPackages", ValueFromPipelineByPropertyName = $true)]
@@ -23,7 +28,7 @@ function New-SupplementalWDACConfig {
         [parameter(Mandatory = $true, ParameterSetName = "FilePath With WildCards", ValueFromPipelineByPropertyName = $true)]
         [System.String]$WildCardPath,
 
-        [ValidatePattern('^[a-zA-Z0-9 ]+$', ErrorMessage = "The Supplemental Policy Name can only contain alphanumeric characters.")]
+        [ValidatePattern('^[a-zA-Z0-9 ]+$', ErrorMessage = "The Supplemental Policy Name can only contain alphanumeric characters and spaces.")]
         [parameter(Mandatory = $true, ParameterSetName = "Installed AppXPackages", ValueFromPipelineByPropertyName = $true)]
         [parameter(Mandatory = $true, ParameterSetName = "FilePath With WildCards", ValueFromPipelineByPropertyName = $true)]
         [parameter(Mandatory = $true, ParameterSetName = "Normal", ValueFromPipelineByPropertyName = $true)]
@@ -60,7 +65,7 @@ function New-SupplementalWDACConfig {
 
         [ValidateSet([Fallbackz])]
         [parameter(Mandatory = $false, ParameterSetName = "Normal")]
-        [System.String[]]$Fallbacks = "Hash",  # Setting the default value for the Fallbacks parameter
+        [System.String[]]$Fallbacks = "Hash", # Setting the default value for the Fallbacks parameter
        
         [Parameter(Mandatory = $false)][Switch]$SkipVersionCheck    
     )
@@ -93,7 +98,7 @@ function New-SupplementalWDACConfig {
     }
 
     process {
-        # only run this section if the default parameter set is used which means the cmdlet is used without sub-parameters
+        
         if ($Normal) {
             
             # Creating a hash table to dynamically add parameters based on user input and pass them to New-Cipolicy cmdlet
@@ -178,6 +183,7 @@ function New-SupplementalWDACConfig {
         if ($InstalledAppXPackages) {
             do {
                 Get-AppXPackage -Name $PackageName
+                Write-Debug -Message "This is the Selected package name $PackageName"
                 $Question = Read-Host "`nIs this the intended results based on your Installed Appx packages? Enter 1 to continue, Enter 2 to exit"                              
             } until (
                 (($Question -eq 1) -or ($Question -eq 2))
@@ -269,4 +275,6 @@ Can be used with any parameter to bypass the online version check - only to be u
 . "$psscriptroot\ArgumentCompleters.ps1"
 # Set PSReadline tab completion to complete menu for easier access to available parameters - Only for the current session
 Set-PSReadlineKeyHandler -Key Tab -Function MenuComplete
-Register-ArgumentCompleter -CommandName "New-SupplementalWDACConfig" -ParameterName "PolicyPath" -ScriptBlock $ArgumentCompleterPolicyPathsNotAdvanced
+Register-ArgumentCompleter -CommandName "New-SupplementalWDACConfig" -ParameterName "PolicyPath" -ScriptBlock $ArgumentCompleterPolicyPathsBasePoliciesOnly
+Register-ArgumentCompleter -CommandName "New-SupplementalWDACConfig" -ParameterName "PackageName" -ScriptBlock $ArgumentCompleterAppxPackageNames
+Register-ArgumentCompleter -CommandName "New-SupplementalWDACConfig" -ParameterName "ScanLocation" -ScriptBlock $ArgumentCompleterFolderPathsPicker

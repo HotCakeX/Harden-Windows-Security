@@ -7,9 +7,16 @@ function Edit-SignedWDACConfig {
         ConfirmImpact = 'High'
     )]
     Param(
+        [Alias("E")]
         [Parameter(Mandatory = $false, ParameterSetName = "Allow New Apps Audit Events")][Switch]$AllowNewAppsAuditEvents,
+
+        [Alias("A")]
         [Parameter(Mandatory = $false, ParameterSetName = "Allow New Apps")][Switch]$AllowNewApps,
-        [Parameter(Mandatory = $false, ParameterSetName = "Merge Supplemental Policies")][Switch]$MergeSupplementalPolicies,        
+
+        [Alias("M")]
+        [Parameter(Mandatory = $false, ParameterSetName = "Merge Supplemental Policies")][Switch]$MergeSupplementalPolicies,  
+        
+        [Alias("U")]
         [Parameter(Mandatory = $false, ParameterSetName = "Update Base Policy")][Switch]$UpdateBasePolicy,
 
         [ValidatePattern('\.cer$')]
@@ -912,5 +919,5 @@ Set-PSReadlineKeyHandler -Key Tab -Function MenuComplete
 Register-ArgumentCompleter -CommandName "Edit-SignedWDACConfig" -ParameterName "CertCN" -ScriptBlock $ArgumentCompleterCertificateCN
 Register-ArgumentCompleter -CommandName "Edit-SignedWDACConfig" -ParameterName "CertPath" -ScriptBlock $ArgumentCompleterCertPath
 Register-ArgumentCompleter -CommandName "Edit-SignedWDACConfig" -ParameterName "SignToolPath" -ScriptBlock $ArgumentCompleterSignToolPath
-Register-ArgumentCompleter -CommandName "Edit-SignedWDACConfig" -ParameterName "PolicyPaths" -ScriptBlock $ArgumentCompleterPolicyPathsNotAdvanced
-Register-ArgumentCompleter -CommandName "Edit-SignedWDACConfig" -ParameterName "SuppPolicyPaths" -ScriptBlock $ArgumentCompleterSuppPolicyPathsNotAdvanced
+Register-ArgumentCompleter -CommandName "Edit-SignedWDACConfig" -ParameterName "PolicyPaths" -ScriptBlock $ArgumentCompleterPolicyPathsBasePoliciesOnly
+Register-ArgumentCompleter -CommandName "Edit-SignedWDACConfig" -ParameterName "SuppPolicyPaths" -ScriptBlock $ArgumentCompleterPolicyPathsSupplementalPoliciesOnly

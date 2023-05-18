@@ -1,9 +1,14 @@
 #Requires -RunAsAdministrator
 function Confirm-WDACConfig {
     [CmdletBinding()]
-    Param(     
+    Param(
+        [Alias("L")]
         [Parameter(Mandatory = $false, ParameterSetName = "List Active Policies")][Switch]$ListActivePolicies,
+
+        [Alias("V")]
         [Parameter(Mandatory = $false, ParameterSetName = "Verify WDAC Status")][Switch]$VerifyWDACStatus,
+
+        [Alias("S")]
         [Parameter(Mandatory = $false, ParameterSetName = "Check SmartAppControl Status")][Switch]$CheckSmartAppControlStatus,
 
         [Parameter(Mandatory = $false, ParameterSetName = "List Active Policies")][Switch]$OnlyBasePolicies,

@@ -8,7 +8,7 @@
     # RootModule = ""
 
     # Version number of this module.
-    ModuleVersion        = '0.1.4'
+    ModuleVersion        = '0.1.5'
 
     # Supported PSEditions
     CompatiblePSEditions = @("Core")
@@ -50,6 +50,8 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
 
 ✔️ Confirm-WDACConfig: https://github.com/HotCakeX/Harden-Windows-Security/wiki/Confirm-WDACConfig
 
+✔️ New-DenyWDACConfig: https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-DenyWDACConfig
+
 
 
 To get help and syntax on PowerShell console, type:
@@ -61,6 +63,7 @@ To get help and syntax on PowerShell console, type:
 "Get-Help Edit-SignedWDACConfig"
 "Get-Help Deploy-SignedWDACConfig"
 "Get-Help Confirm-WDACConfig"
+"Get-Help New-DenyWDACConfig"
 "@
 
     # Minimum version of the PowerShell engine required by this module
@@ -97,13 +100,13 @@ To get help and syntax on PowerShell console, type:
     # FormatsToProcess = @()
 
     # Modules to import as nested modules of the module specified in RootModule/ModuleToProcess
-    NestedModules        = @("New-WDACConfig.psm1", "Remove-WDACConfig.psm1", "Deploy-SignedWDACConfig.psm1", "Confirm-WDACConfig.psm1", "Edit-WDACConfig.psm1", "Edit-SignedWDACConfig.psm1", "New-SupplementalWDACConfig.psm1")
+    NestedModules        = @("New-WDACConfig.psm1", "Remove-WDACConfig.psm1", "Deploy-SignedWDACConfig.psm1", "Confirm-WDACConfig.psm1", "Edit-WDACConfig.psm1", "Edit-SignedWDACConfig.psm1", "New-SupplementalWDACConfig.psm1", "New-DenyWDACConfig.psm1")
 
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
-    FunctionsToExport    = @("New-WDACConfig", "Remove-WDACConfig", "Deploy-SignedWDACConfig", "Confirm-WDACConfig", "Edit-WDACConfig", "Edit-SignedWDACConfig", "New-SupplementalWDACConfig")
+    FunctionsToExport    = @("New-WDACConfig", "Remove-WDACConfig", "Deploy-SignedWDACConfig", "Confirm-WDACConfig", "Edit-WDACConfig", "Edit-SignedWDACConfig", "New-SupplementalWDACConfig", "New-DenyWDACConfig")
 
     # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
-    CmdletsToExport      = @("New-WDACConfig", "Remove-WDACConfig", "Deploy-SignedWDACConfig", "Confirm-WDACConfig", "Edit-WDACConfig", "Edit-SignedWDACConfig", "New-SupplementalWDACConfig")
+    CmdletsToExport      = @("New-WDACConfig", "Remove-WDACConfig", "Deploy-SignedWDACConfig", "Confirm-WDACConfig", "Edit-WDACConfig", "Edit-SignedWDACConfig", "New-SupplementalWDACConfig", "New-DenyWDACConfig")
 
     # Variables to export from this module
     VariablesToExport    = '*'
@@ -118,7 +121,7 @@ To get help and syntax on PowerShell console, type:
     # ModuleList = @()
 
     # List of all files packaged with this module
-    FileList             = @('WDACConfig.psd1', 'New-WDACConfig.psm1', 'Deploy-SignedWDACConfig.psm1', 'Remove-WDACConfig.psm1', "Confirm-WDACConfig.psm1", "Edit-WDACConfig.psm1", "Edit-SignedWDACConfig.psm1", "New-SupplementalWDACConfig.psm1", "Resources.ps1", "ArgumentCompleters.ps1")
+    FileList             = @('WDACConfig.psd1', 'New-WDACConfig.psm1', 'Deploy-SignedWDACConfig.psm1', 'Remove-WDACConfig.psm1', "Confirm-WDACConfig.psm1", "Edit-WDACConfig.psm1", "Edit-SignedWDACConfig.psm1", "New-SupplementalWDACConfig.psm1", "Resources.ps1", "ArgumentCompleters.ps1", "New-DenyWDACConfig.psm1")
 
     # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.
     PrivateData          = @{
@@ -139,6 +142,11 @@ To get help and syntax on PowerShell console, type:
 
             # ReleaseNotes of this module
             ReleaseNotes = @"
+
+## Version 0.1.5
+Added alias for many parameters for easier access.
+Added new cmdlet: New-DenyWDACConfig for creating base policies with Deny rules. They can be deployed side by side other policies without conflict.
+Added argument completer for many new parameters and improved the previous ones to be smarter in their suggestions.
 
 ## Version 0.1.4
 Code optimization.

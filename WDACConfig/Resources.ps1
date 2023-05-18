@@ -203,7 +203,7 @@ Function Get-AuditEventLogsProcessing {
     $AuditEventLogsProcessingResults = [PSCustomObject]@{
         # Defining object properties as arrays
         AvailableFilesPaths = @()
-        DeletedFileHashes = @()
+        DeletedFileHashes   = @()
     }
                       
     # Event Viewer Code Integrity logs scan
@@ -312,3 +312,53 @@ $GetBlockRulesSCRIPTBLOCK = {
         PolicyFile = 'Microsoft recommended block rules.xml'
     }
 }
+
+
+
+# Creates a policy file that has 2 Allow all rules, for Kernel drivers and User-mode binaries, to be merged with Deny base policies
+function New-AllowAllPolicy {  
+    $AllowAllPolicy = @"
+<?xml version="1.0" encoding="utf-8"?>
+<SiPolicy xmlns="urn:schemas-microsoft-com:sipolicy" PolicyType="Base Policy">
+<VersionEx>10.0.0.0</VersionEx>
+<PlatformID>{2E07F7E4-194C-4D20-B7C9-6F44A6C5A234}</PlatformID>
+<Rules>
+<Rule>
+<Option>Enabled:Unsigned System Integrity Policy</Option>
+</Rule>
+</Rules>
+<!--EKUS-->
+<EKUs />
+<!--File Rules-->
+<FileRules>
+<Allow ID="ID_ALLOW_A_1" FriendlyName="Allow Kernel Drivers" FileName="*" />
+<Allow ID="ID_ALLOW_A_2" FriendlyName="Allow User mode components" FileName="*" />
+</FileRules>
+<!--Signers-->
+<Signers />
+  <SigningScenarios>
+    <SigningScenario Value="131" ID="ID_SIGNINGSCENARIO_DRIVERS_1" FriendlyName="Driver Signing Scenarios">
+      <ProductSigners>
+        <FileRulesRef>
+          <FileRuleRef RuleID="ID_ALLOW_A_1" />
+        </FileRulesRef>
+      </ProductSigners>
+    </SigningScenario>
+    <SigningScenario Value="12" ID="ID_SIGNINGSCENARIO_WINDOWS" FriendlyName="User Mode Signing Scenarios">
+      <ProductSigners>
+        <FileRulesRef>
+          <FileRuleRef RuleID="ID_ALLOW_A_2" />          
+        </FileRulesRef>
+      </ProductSigners>
+    </SigningScenario>
+  </SigningScenarios>
+<UpdatePolicySigners />
+<CiSigners />
+<HvciOptions>0</HvciOptions>
+<BasePolicyID>{B163125F-E30A-43FC-ABEC-E30B4EE88FA8}</BasePolicyID>
+<PolicyID>{B163125F-E30A-43FC-ABEC-E30B4EE88FA8}</PolicyID>
+</SiPolicy>
+"@
+    return $AllowAllPolicy
+}
+

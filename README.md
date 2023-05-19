@@ -484,8 +484,6 @@ If you want to read more: [Demystifying Schannel](https://techcommunity.microsof
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/roratinggem.gif" width="28" alt="Rotating pink gem denoting registry or cmdlet"> Disables the following [weak ciphers](https://github.com/ssllabs/research/wiki/SSL-and-TLS-Deployment-Best-Practices) that are **only available for backward compatibility**: `"DES 56-bit"`,`"RC2 40-bit"`,`"RC2 56-bit"`,`"RC2 128-bit"`,`"RC4 40-bit"`,`"RC4 56-bit"`,`"RC4 64-bit"`,`"RC4 128-bit"`,`"3DES 168-bit (Triple DES 168)"`
 
-- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/roratinggem.gif" width="28" alt="Rotating pink gem denoting registry or cmdlet"> [Configures](https://learn.microsoft.com/en-us/powershell/module/tls/get-tlsecccurve) the cryptographic TLS ECC Curves [to favor](https://learn.microsoft.com/en-us/powershell/module/tls/enable-tlsecccurve) more secure algorithms. By default, the ECC Curves priorities in Windows 11 22H2 are: `curve25519, NistP256, NistP384`. This script changes that to `curve25519, NistP384, NistP256`.
-
 <p align="right"><a href="#menu-back-to-top">💡 (back to categories)</a></p>
 
 <br>

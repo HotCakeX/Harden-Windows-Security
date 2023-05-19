@@ -590,6 +590,8 @@ If you want to read more: [Demystifying Schannel](https://techcommunity.microsof
 
 ### [Device protection in Windows Security gives you one of these 4 hardware scores:](https://support.microsoft.com/en-us/windows/device-protection-in-windows-security-afa11526-de57-b1c5-599f-3a4c6a61c5e2)
 
+[Download Memory integrity scan tool](https://www.microsoft.com/en-us/download/105217)
+
 <ol>
 <li>Standard hardware security not supported</li>
  <ul>
@@ -1080,6 +1082,7 @@ Get-Content <Path-To-File> -stream zone.identifier
 - [Service health status](https://admin.microsoft.com/servicestatus)
 - [Microsoft Defender Threat Intelligence](https://ti.defender.microsoft.com/)
   - [Free community edition vs Premium edition comparison](https://jeffreyappel.nl/how-works-microsoft-defender-threat-intelligence-defender-ti-and-what-is-the-difference-between-free-and-paid/)
+ - [Microsoft Virus Initiative](https://learn.microsoft.com/en-us/microsoft-365/security/intelligence/virus-initiative-criteria)
 
 <p align="right"><a href="#readme-top">💡 (back to top)</a></p>
 

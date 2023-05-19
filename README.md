@@ -67,13 +67,19 @@
 
 ## How To Use<a href="#how-to-use">![HowToUseIcon](https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/HowToUse.png)</a>
 
-#### Using GitHub source (Always up to date)
+#### Using GitHub [source](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden-Windows-Security.ps1) (Always up to date)
 
 ```powershell
 irm 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security.ps1' | iex
 ```
 
-> **Note**  About [Invoke-Expression or iex](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/invoke-expression?view=powershell-7.3).
+#### Using Azure DevOps [source](https://dev.azure.com/SpyNetGirl/_git/Harden-Windows-Security?path=/Harden-Windows-Security.ps1) (Always up to date)
+
+```powershell
+irm 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Harden-Windows-Security.ps1' | iex
+```
+
+> **Note**  About [Invoke-Expression or iex](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/invoke-expression?view=powershell-7.3)
 
 #### Using [PowerShell gallery](https://www.powershellgallery.com/packages/Harden-Windows-Security) (You need to manually update the script whenever a new version is released)
 

@@ -7,7 +7,7 @@
 
 <h4 align="center">
 
- Harden Windows Safely, Securely, only with Official Microsoft methods
+Harden Windows Safely, Securely, only with Official Microsoft methods
 </h4>
 
 <p align="center">
@@ -49,7 +49,7 @@
 
 #### <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/accepted.gif" width= "30" alt="Green icon denoting validation"> Security for Personal users
 
-**Use the PowerShell script [below](#how-to-use) to automatically apply the proactive security measures described in this page.**
+**Use the PowerShell script <a href="#how-to-use"></a> to automatically apply the proactive security measures described in this page.**
 
 #### <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/accepted.gif" width= "30" alt="Green icon denoting validation"> Security for Organizations, Enterprises and Highly secure personal users
 
@@ -241,7 +241,7 @@ From Top to bottom in order:
 
 #### May 9 2023 Windows Boot Manager revocations for Secure Boot changes associated with CVE-2023-24932
 
-<img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/roratinggem.gif" width="28" alt="Rotating pink gem denoting registry or cmdlet"> Automatically applies the security measures [described in the KB5025885 document page](https://support.microsoft.com/en-us/topic/kb5025885-how-to-manage-the-windows-boot-manager-revocations-for-secure-boot-changes-associated-with-cve-2023-24932-41a975df-beb2-40c1-99a3-b3ff139f832d#update5025885).
+<img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/roratinggem.gif" width="28" alt="Rotating pink gem denoting registry or cmdlet"> Automatically applies the security measures [**described in the KB5025885 document page**](https://support.microsoft.com/en-us/topic/kb5025885-how-to-manage-the-windows-boot-manager-revocations-for-secure-boot-changes-associated-with-cve-2023-24932-41a975df-beb2-40c1-99a3-b3ff139f832d#update5025885).
 
 The script checks to make sure [KB5026372](https://support.microsoft.com/en-gb/topic/may-9-2023-kb5026372-os-build-22621-1702-ce93c18e-e819-458f-abcf-dc7154ce7e40) update is installed first. If it's not installed, this category is skipped and a warning is shown suggesting to check for updates and install them.
 

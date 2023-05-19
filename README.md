@@ -67,9 +67,13 @@
 
 ## How To Use<a href="#how-to-use">![HowToUseIcon](https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/HowToUse.png)</a>
 
-There are 3 ways you can use this script. Using GitHub and Azure sources means you'll always use the latest version. When the script is insatlled using PowerShell Gallery source and you run it, if there is a new version available, you will be prompted to update it.
+There are 3 ways you can use this script. Using GitHub and Azure sources means you'll always use the latest version.
+
+When the script is installed using PowerShell Gallery source and you run it, if there is a new version available, you will be prompted to update it.
 
 > **Note**  About [Invoke-Expression or iex](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/invoke-expression?view=powershell-7.3)
+
+<br>
 
 ### <a href="https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden-Windows-Security.ps1"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/SVGs/github.svg"> GitHub source</a>
 

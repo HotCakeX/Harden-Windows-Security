@@ -67,21 +67,23 @@
 
 ## How To Use<a href="#how-to-use">![HowToUseIcon](https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/HowToUse.png)</a>
 
-#### Using GitHub [source](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden-Windows-Security.ps1) (Always up to date)
+There are 3 ways you can use this script. Using GitHub and Azure sources means you'll always use the latest version. When the script is insatlled using PowerShell Gallery source and you run it, if there is a new version available, you will be prompted to update it.
+
+> **Note**  About [Invoke-Expression or iex](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/invoke-expression?view=powershell-7.3)
+
+### <a href="https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden-Windows-Security.ps1"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/SVGs/github.svg"> GitHub source</a>
 
 ```powershell
 irm 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security.ps1' | iex
 ```
 
-#### Using Azure DevOps [source](https://dev.azure.com/SpyNetGirl/_git/Harden-Windows-Security?path=/Harden-Windows-Security.ps1) (Always up to date)
+### <a href="https://dev.azure.com/SpyNetGirl/_git/Harden-Windows-Security?path=/Harden-Windows-Security.ps1"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/SVGs/azure.svg"> Azure DevOps source</a>
 
 ```powershell
 irm 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Harden-Windows-Security.ps1' | iex
 ```
 
-> **Note**  About [Invoke-Expression or iex](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/invoke-expression?view=powershell-7.3)
-
-#### Using [PowerShell gallery](https://www.powershellgallery.com/packages/Harden-Windows-Security) (You need to manually update the script whenever a new version is released)
+### <a href="https://www.powershellgallery.com/packages/Harden-Windows-Security"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/SVGs/powershell.svg"> PowerShell Gallery</a>
 
 ```powershell
 Install-Script -Name Harden-Windows-Security
@@ -89,9 +91,11 @@ Install-Script -Name Harden-Windows-Security
 
 <br>
 
-  ![Animated APNG demonstrating how the Harden Windows Security PowerShell script works](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Harden-Windows-Security-Demo.apng)
+<br>
+
+![Animated APNG demonstrating how the Harden Windows Security PowerShell script works](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Harden-Windows-Security-Demo.apng)
   
-  <br>
+<br>
 
 <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
 
@@ -227,11 +231,12 @@ From Top to bottom in order:
 
 ## May 9 2023 Windows Boot Manager CVE-2023-24932<a href="#may-9-2023-windows-boot-manager-cve-2023-24932"><img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/ExcMark.gif" width="35" alt="Rotating pink gem denoting registry or cmdlet"></a>
 
-<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/4.jpg" alt="An AI generated picture of a cat girl working in a server farm" width="600"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/FwMIuw5aQAM2oXP.png" alt="An AI generated picture of a cat girl working in a server farm" width="600"></p>
 
 <br>
 
 #### May 9 2023 Windows Boot Manager revocations for Secure Boot changes associated with CVE-2023-24932
+
 <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/roratinggem.gif" width="28" alt="Rotating pink gem denoting registry or cmdlet"> Automatically applies the security measures [described in the KB5025885 document page](https://support.microsoft.com/en-us/topic/kb5025885-how-to-manage-the-windows-boot-manager-revocations-for-secure-boot-changes-associated-with-cve-2023-24932-41a975df-beb2-40c1-99a3-b3ff139f832d#update5025885).
 
 The script checks to make sure [KB5026372](https://support.microsoft.com/en-gb/topic/may-9-2023-kb5026372-os-build-22621-1702-ce93c18e-e819-458f-abcf-dc7154ce7e40) update is installed first. If it's not installed, this category is skipped and a warning is shown suggesting to check for updates and install them.
@@ -250,7 +255,7 @@ If the update is installed, the required security measures will be applied. You 
 
 ## Microsoft Security Baselines<a href="#microsoft-security-baselines">![MicrosoftSecurityBaseline](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Microsoft-Security-Baseline.png)</a>
 
-<p align="center"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/ocr.jpg" alt="A woman looking at her Windows laptop, indoor" width="700"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/FwMGoa0aMAAw4-Y.png" alt="An AI generated picture of a cat girl working in a server farm" width="600"></p>
 
 <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> A security baseline is a group of Microsoft-recommended configuration settings that explains their security implications. These settings are based on feedback from Microsoft security engineering teams, product groups, partners, and customers.
 
@@ -905,6 +910,8 @@ You don't need Admin privileges to run this category, because no system-wide cha
 
 ## Trust<a href="#trust">![TrustIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Trust.png)</a>
 
+<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/FwMP8ybaUAAm860.png" alt="An AI generated picture of a cat girl working in a server farm" width="600"></p>
+
 ### How can you 100% trust this repository and know that nothing shady is going on?
 
 This repository uses the simplest possible, yet effective, methods that make it very easy to verify:
@@ -952,6 +959,8 @@ This repository uses the simplest possible, yet effective, methods that make it 
 
 ## Support<a href="#support">![SupportIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Support.png)</a>
 
+<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/FwMF2jGaAAANLDc.png" alt="A beautiful pink laptop Windows 11, located on the table with coffee on the side" width="600"></p>
+
 <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/WebP/Heart%20Microsoft.webp" width="28" alt="If you have any questions, requests, suggestions etc"> If you have any questions, requests, suggestions etc. about this GitHub repository and its content, please open [a new discussion](https://github.com/HotCakeX/Harden-Windows-Security/discussions) or [Issue](https://github.com/HotCakeX/Harden-Windows-Security/issues).
 
 <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/WebP/Ninja%20cat.webp" width="28" alt="Reporting a vulnerability on this GitHub repository"> [Reporting a vulnerability](https://github.com/HotCakeX/Harden-Windows-Security/security/advisories) on this GitHub repository.
@@ -969,6 +978,8 @@ This repository uses the simplest possible, yet effective, methods that make it 
 <br>
 
 ## Security Recommendations<a href="#security-recommendations">![SecurityRecommendationIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/SecurityRecommendation.png)</a>
+
+<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/windows_346558782_611304884275369_8747802428749325762_n.jpg" alt="A beautiful pink laptop Windows 11, located on the table with coffee on the side" width="550"></p>
 
 * <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/RedStar.gif" width="25" alt="Red Star denoting Security Recommendation"> Always download your operation system from [official Microsoft websites](https://www.microsoft.com/en-us/software-download). Right now, Windows 11 is the latest version of Windows, its ISO file can be downloaded from this [official Microsoft server](https://www.microsoft.com/en-us/software-download/windows11). One of the worst things you can do to your own security and privacy is downloading your OS, which is the root of all the active and passive security measures, from a 3rd party website claiming they have the official unmodified files. There are countless bad things that can happen as the result of it such as threat actors embedding malware or backdoors inside the customized OS, or pre-installing customized root CA certificates in your OS so that they can perform TLS termination and view all of your HTTPS and encrypted Internet data in plain clear text, **even if you use VPN.** Having a poisoned and compromised certificate store is the endgame for you, and *that's just the tip of the iceberg.*
   - Refer to [Wiki](https://github.com/HotCakeX/Harden-Windows-Security/wiki) to see [how to create Bootable USB flash drive with no 3rd party tools](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-Bootable-USB-flash-drive-with-no-3rd-party-tools)
@@ -1020,6 +1031,8 @@ Get-Content <Path-To-File> -stream zone.identifier
 <br>
 
 ## Resources<a href="#resources">![ResourcesIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Resources.png)</a>
+
+<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/FwRjYavakAAIKn0.jpg" alt="A beautiful pink laptop Windows 11, located on the table with coffee on the side" width="600"></p>
 
 - [Microsoft.com](https://microsoft.com)
   - [Force firmware code to be measured and attested by Secure Launch](https://www.microsoft.com/en-us/security/blog/2020/09/01/force-firmware-code-to-be-measured-and-attested-by-secure-launch-on-windows-10/)
@@ -1077,10 +1090,22 @@ Using [GPL-2.0 license](https://github.com/HotCakeX/Harden-Windows-Security/blob
 <br>
 
 <p align="center">
-<a href="https://techcommunity.microsoft.com/t5/user/viewprofilepage/user-id/310193">Microsoft Tech Community Profile</a> &nbsp;&middot;&nbsp;
-<a href="https://github.com/HotCakeX">GitHub @HotCakeX</a> &nbsp;&middot;&nbsp;
-<a href="https://steamcommunity.com/id/HotCakeX">Steam @HotCakeX</a> &nbsp;&middot;&nbsp;
-<a href="https://account.xbox.com/en-US/Profile?Gamertag=HottCakeX">Xbox @HottCakeX</a>
+<a href="https://github.com/HotCakeX"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/main/Private/Images/Socials/github.svg">
+<a href="https://www.last.fm/user/HotCakeX"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/main/Private/Images/Socials/lastfm.png">
+<a href="https://1drv.ms/f/s!AtCaUNAJbbvIhuITM8K09FBn-Q9GDw?e=3PAGmg"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/main/Private/Images/Socials/microsoft-onedrive-2019.svg">
+<a href="https://open.spotify.com/user/eypgh60p3zw1duh9lbsbc2mix"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/main/Private/Images/Socials/spotify.svg">
+<a href="https://stackexchange.com/users/27823952/spynet"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/main/Private/Images/Socials/stack-exchange.svg">
+<a href="https://steamcommunity.com/id/HotCakeX"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/main/Private/Images/Socials/steam.svg">
+<a href="https://www.twitch.tv/hot_cakex"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/main/Private/Images/Socials/twitch.svg">
+<a href="https://hotcakex.github.io/"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/main/Private/Images/Socials/website-96.png">
+<a href="https://twitter.com/SpyNetGirl"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/main/Private/Images/Socials/witter.svg">
+<a href="https://account.xbox.com/en-US/Profile?Gamertag=HottCakeX"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/main/Private/Images/Socials/xbox.svg">
+<a href="https://www.youtube.com/@hotcakex"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/main/Private/Images/Socials/youtube.svg">
+<a href="https://www.reddit.com/user/HotCakeXXXXXXXXXXXXX"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/main/Private/Images/Socials/reddit.svg">
+<a href="https://socialclub.rockstargames.com/member/----HotCakeX----/"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/main/Private/Images/Socials/rockstar-social-club.svg">
+<a href="https://club.ubisoft.com/en-US/profile/HotCakeX"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/main/Private/Images/Socials/uplay.svg">
+<a href="https://techcommunity.microsoft.com/t5/user/viewprofilepage/user-id/310193"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/main/Private/Images/Socials/microsoft.png">
+<a href="mailto:spynetgirl@outlook.com"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/main/Private/Images/Socials/outlook.svg">
 </p>
 
 <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="Harden-Windows-Security is a PowerShell script">

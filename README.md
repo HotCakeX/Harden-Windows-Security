@@ -49,7 +49,7 @@ Harden Windows Safely, Securely, only with Official Microsoft methods
 
 #### <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/accepted.gif" width= "30" alt="Green icon denoting validation"> Security for Personal users
 
-**Use the PowerShell script <a href="#how-to-use"></a> to automatically apply the proactive security measures described in this page.**
+**Use the PowerShell script <a href="#how-to-use">below</a> to automatically apply the proactive security measures described in this page.**
 
 #### <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/accepted.gif" width= "30" alt="Green icon denoting validation"> Security for Organizations, Enterprises and Highly secure personal users
 

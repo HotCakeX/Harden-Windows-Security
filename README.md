@@ -819,6 +819,18 @@ In Windows by default, devices will scan daily, automatically download and insta
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/roratinggem.gif" width="28" alt="Rotating pink gem denoting registry or cmdlet"> [Enable Encrypted Client Hello](https://learn.microsoft.com/en-us/deployedge/microsoft-edge-policies#encryptedclienthelloenabled)
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/roratinggem.gif" width="28" alt="Rotating pink gem denoting registry or cmdlet">[Configures a setting that asks users to enter their device password while using password autofill](https://learn.microsoft.com/en-us/DeployEdge/microsoft-edge-policies#primarypasswordsetting)
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/roratinggem.gif" width="28" alt="Rotating pink gem denoting registry or cmdlet">[Restrict exposure of local IP address by WebRTC](https://learn.microsoft.com/en-us/DeployEdge/microsoft-edge-policies#webrtclocalhostiphandling)
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/roratinggem.gif" width="28" alt="Rotating pink gem denoting registry or cmdlet"> [Disables the following weak Cipher Suites](https://learn.microsoft.com/en-us/DeployEdge/microsoft-edge-policies#tlsciphersuitedenylist)
+  - [Site 1 to test TLS in your browser](https://clienttest.ssllabs.com:8443/ssltest/viewMyClient.html)
+  - [Site 2 to test TLS in your browser](https://browserleaks.com/tls)
+
+```
+TLS_RSA_WITH_AES_256_CBC_SHA  Reason: NO Perfect Forward Secrecy, CBC, SHA1
+TLS_RSA_WITH_AES_128_CBC_SHA  Reason: NO Perfect Forward Secrecy, CBC, SHA1
+TLS_RSA_WITH_AES_128_GCM_SHA256  Reason: NO Perfect Forward Secrecy
+TLS_RSA_WITH_AES_256_GCM_SHA384  Reason: NO Perfect Forward Secrecy
+TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA  Reason: CBC, SHA1
+TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA  Reason: CBC, SHA1
+```
 
 <br>
 

@@ -157,7 +157,7 @@ Install-Script -Name Harden-Windows-Security
 |:----:|:-----------------------------:|:----------------------------------------------------------:|
 | 1    | Intel website                 | i7 13700k product page                                     |
 | 2    | Wikipedia                     | providing further information for the reader               |
-| 1    | non-official Github Wiki      | providing further information for the reader about TLS     |
+| 1    | UK National Cyber Security Centre | providing further information for the reader about TLS |
 | 1    | Security.Stackexchange Q&A    | providing logic and reasoning for certain actions          |
 | 1    | state.gov                     | List of State Sponsors of Terrorism                        |
 | 1    | orpa.princeton.edu            | OFAC Sanctioned Countries                                  |
@@ -179,7 +179,7 @@ Install-Script -Name Harden-Windows-Security
 <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/Shiny.gif" width="27" alt="Features Item"> Applying this script makes your PC compliant with Microsoft Security Baselines and Secured-core PC specifications (provided that you use modern hardware that supports the latest Windows security features) - [See what makes a Secured-core PC](https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/oem-highly-secure#what-makes-a-secured-core-pc) - <a href="#device-guard">Check Device Guard category for more details.</a>
 > [Secured-core](https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/oem-highly-secure) – recommended for the most sensitive systems and industries like financial, healthcare, and government agencies. Builds on the previous layers and leverages advanced processor capabilities to provide protection from firmware attacks.
   
-<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/Shiny.gif" width="27" alt="Features Item"> There are 5 items tagged with **#TopSecurity** <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/200iq.gif" width="28" alt="TopSecurity"> that can cause some inconvenience but increase security even further. When you run this script, you will have an option to enable them if you want to. Press `Control + F` and search for `#TopSecurity` on this page to find those security measures.
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/Shiny.gif" width="27" alt="Features Item"> There are 4 items tagged with **#TopSecurity** <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/200iq.gif" width="28" alt="TopSecurity"> that can cause some inconvenience but increase security even further. When you run this script, you will have an option to enable them if you want to. Press `Control + F` and search for `#TopSecurity` on this page to find those security measures.
 
 <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/Shiny.gif" width="27" alt="Features Item"> Since I originally created this repository for myself and people I care about, I always maintain it to the highest possible standard.
 
@@ -469,20 +469,43 @@ Changes made by the script only affect things that use [Schannel SSP](https://le
 
 If you want to read more: [Demystifying Schannel](https://techcommunity.microsoft.com/t5/core-infrastructure-and-security/demystifying-schannel/ba-p/259233)
 
-- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/roratinggem.gif" width="28" alt="Rotating pink gem denoting registry or cmdlet"> Enables `TLS_CHACHA20_POLY1305_SHA256` cipher Suite which is [available but not enabled](https://learn.microsoft.com/en-us/windows/win32/secauthn/tls-cipher-suites-in-windows-11) by default in Windows 11, and sets its priority to highest.
-
-- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/roratinggem.gif" width="28" alt="Rotating pink gem denoting registry or cmdlet"> Enables the following secure Diffie-Hellman based key exchange algorithms which are available in Windows 11 but not enabled by default, [according to this Microsoft Document](https://learn.microsoft.com/en-us/windows/win32/secauthn/tls-cipher-suites-in-windows-11): `"TLS_DHE_RSA_WITH_AES_256_CBC_SHA"`,`"TLS_DHE_RSA_WITH_AES_128_CBC_SHA"`,`"TLS_DHE_RSA_WITH_AES_128_GCM_SHA256"`
-
-- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/roratinggem.gif" width="28" alt="Rotating pink gem denoting registry or cmdlet"> Disables `NULL` ciphers that are **only available for backward compatibility**:`"TLS_RSA_WITH_NULL_SHA256"`,`"TLS_RSA_WITH_NULL_SHA"`,`"TLS_PSK_WITH_NULL_SHA384"`,`"TLS_PSK_WITH_NULL_SHA256"`
-
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/roratinggem.gif" width="28" alt="Rotating pink gem denoting registry or cmdlet"> Disables [MD5 Hashing Algorithm](https://security.stackexchange.com/questions/52461/how-weak-is-md5-as-a-password-hashing-function) that is **only available for backward compatibility**
 
-- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/roratinggem.gif" width="28" alt="Rotating pink gem denoting registry or cmdlet"> Disables the following [weak cipher suites](https://github.com/ssllabs/research/wiki/SSL-and-TLS-Deployment-Best-Practices) that are **only available for backward compatibility**: `"TLS_RSA_WITH_AES_256_GCM_SHA384"`,`"TLS_RSA_WITH_AES_128_GCM_SHA256"`,`"TLS_RSA_WITH_AES_256_CBC_SHA256"`,
-`"TLS_RSA_WITH_AES_128_CBC_SHA256"`,`"TLS_RSA_WITH_AES_256_CBC_SHA"` #TopSecurity <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/200iq.gif" width="28" alt="TopSecurity">,`"TLS_RSA_WITH_AES_128_CBC_SHA"`,
-`"TLS_PSK_WITH_AES_256_GCM_SHA384"`,`"TLS_PSK_WITH_AES_128_GCM_SHA256"`,`"TLS_PSK_WITH_AES_256_CBC_SHA384"`,
-`"TLS_PSK_WITH_AES_128_CBC_SHA256"`
-
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/roratinggem.gif" width="28" alt="Rotating pink gem denoting registry or cmdlet"> Disables the following [weak ciphers](https://github.com/ssllabs/research/wiki/SSL-and-TLS-Deployment-Best-Practices) that are **only available for backward compatibility**: `"DES 56-bit"`,`"RC2 40-bit"`,`"RC2 56-bit"`,`"RC2 128-bit"`,`"RC4 40-bit"`,`"RC4 56-bit"`,`"RC4 64-bit"`,`"RC4 128-bit"`,`"3DES 168-bit (Triple DES 168)"`
+
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Configures the [TLS](https://www.ncsc.gov.uk/guidance/using-tls-to-protect-data) to only use the following secure [cipher suites](https://learn.microsoft.com/en-us/windows/win32/secauthn/tls-cipher-suites-in-windows-11) and in this exact order:
+
+```
+TLS_CHACHA20_POLY1305_SHA256
+TLS_AES_256_GCM_SHA384
+TLS_AES_128_GCM_SHA256
+TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384
+TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384
+TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256
+TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384
+TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256
+TLS_DHE_RSA_WITH_AES_256_GCM_SHA384
+TLS_DHE_RSA_WITH_AES_128_GCM_SHA256
+```
+
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> [Configures](https://learn.microsoft.com/en-us/windows-server/security/tls/manage-tls) TLS ECC Curves to use the following prioritized Curves order:
+
+```
+curve25519
+NistP384
+NistP256
+```
+
+By default, in Windows 11 22H2, the order is this:
+
+```
+curve25519
+NistP256
+NistP384
+```
 
 <p align="right"><a href="#menu-back-to-top">💡 (back to categories)</a></p>
 

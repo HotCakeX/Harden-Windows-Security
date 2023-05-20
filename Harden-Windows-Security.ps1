@@ -1,6 +1,6 @@
 <#PSScriptInfo
 
-.VERSION 2023.5.13
+.VERSION 2023.5.20
 
 .GUID d435a293-c9ee-4217-8dc1-4ad2318a5770
 
@@ -212,7 +212,7 @@ if (Test-IsAdmin) {
 try {
 
     # Check the current hard-coded version against the latest version online
-    $currentVersion = '2023.5.13'
+    $currentVersion = '2023.5.20'
     try {
         $latestVersion = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Version.txt"
     }
@@ -834,47 +834,11 @@ try {
                         ModifyRegistry -path $item.path -key $item.key -value $item.value -type $item.type
                     }
                 }
-                # Enable TLS_CHACHA20_POLY1305_SHA256 Cipher Suite which is available but not enabled by default in Windows 11
-                Enable-TlsCipherSuite -Name "TLS_CHACHA20_POLY1305_SHA256" -Position 0
 
-                # disabling weak cipher suites
-                try {
-                    # Disable NULL Cipher Suites - 1 
-                    Disable-TlsCipherSuite TLS_RSA_WITH_NULL_SHA256
-                    # Disable NULL Cipher Suites - 2
-                    Disable-TlsCipherSuite TLS_RSA_WITH_NULL_SHA
-                    # Disable NULL Cipher Suites - 3
-                    Disable-TlsCipherSuite TLS_PSK_WITH_NULL_SHA384
-                    # Disable NULL Cipher Suites - 4
-                    Disable-TlsCipherSuite TLS_PSK_WITH_NULL_SHA256
-      
-                    Disable-TlsCipherSuite -Name "TLS_RSA_WITH_AES_256_GCM_SHA384"
-                    Disable-TlsCipherSuite -Name "TLS_RSA_WITH_AES_128_GCM_SHA256"
-                    Disable-TlsCipherSuite -Name "TLS_RSA_WITH_AES_256_CBC_SHA256" 
-                    Disable-TlsCipherSuite -Name "TLS_RSA_WITH_AES_128_CBC_SHA256"                    
-                    Disable-TlsCipherSuite -Name "TLS_RSA_WITH_AES_128_CBC_SHA"
-                    Disable-TlsCipherSuite -Name "TLS_PSK_WITH_AES_256_GCM_SHA384" 
-                    Disable-TlsCipherSuite -Name "TLS_PSK_WITH_AES_128_GCM_SHA256"
-                    Disable-TlsCipherSuite -Name "TLS_PSK_WITH_AES_256_CBC_SHA384"
-                    Disable-TlsCipherSuite -Name "TLS_PSK_WITH_AES_128_CBC_SHA256" 
-                }
-                catch {
-                    Write-Host "`nAll weak TLS Cipher Suites have been disabled`n" -ForegroundColor Magenta
-                }
-                # Enabling Diffie–Hellman based key exchange algorithms
-
-                # TLS_DHE_RSA_WITH_AES_128_GCM_SHA256
-                # must be already available by default according to Microsoft Docs but it isn't, on Windows 11 insider dev build 25272
-                # https://learn.microsoft.com/en-us/windows/win32/secauthn/tls-cipher-suites-in-windows-11
-                Enable-TlsCipherSuite -Name "TLS_DHE_RSA_WITH_AES_128_GCM_SHA256"
-
-                # TLS_DHE_RSA_WITH_AES_128_CBC_SHA
-                # Not enabled by default on Windows 11 according to the Microsoft Docs above
-                Enable-TlsCipherSuite -Name "TLS_DHE_RSA_WITH_AES_128_CBC_SHA"
-
-                # TLS_DHE_RSA_WITH_AES_256_CBC_SHA
-                # Not enabled by default on Windows 11 according to the Microsoft Docs above
-                Enable-TlsCipherSuite -Name "TLS_DHE_RSA_WITH_AES_256_CBC_SHA"  
+                # Change current working directory to the LGPO's folder
+                Set-Location "$WorkingDir\LGPO_30"
+                .\LGPO.exe /m "..\Security-Baselines-X\TLS Security\registry.pol"
+               
             } "No" { break }
             "Exit" { &$CleanUp }
         }    
@@ -1133,11 +1097,8 @@ try {
         # ============================================Top Security Measures========================================================
         switch (Select-Option -Options "Yes", "No", "Exit" -Message "`nApply Top Security Measures ? Make sure you've read the GitHub repository") {
             "Yes" {                
-                Write-Progress -Activity 'Top Security Measures' -Status 'Running Top Security Measures section' -PercentComplete 85
-                
-                # This causes the Battle.net to not be able to connect to its servers, even though it's not a very secure cipher suite
-                Disable-TlsCipherSuite -Name "TLS_RSA_WITH_AES_256_CBC_SHA"
-                                
+                Write-Progress -Activity 'Top Security Measures' -Status 'Running Top Security Measures section' -PercentComplete 85  
+
                 # Change current working directory to the LGPO's folder
                 Set-Location "$WorkingDir\LGPO_30"
                 .\LGPO.exe /s "..\Security-Baselines-X\Top Security Measures\GptTmpl.inf"

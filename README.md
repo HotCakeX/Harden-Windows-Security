@@ -161,6 +161,8 @@ Install-Script -Name Harden-Windows-Security
 | 1    | Security.Stackexchange Q&A    | providing logic and reasoning for certain actions          |
 | 1    | state.gov                     | List of State Sponsors of Terrorism                        |
 | 1    | orpa.princeton.edu            | OFAC Sanctioned Countries                                  |
+| 1    | browserleaks.com/tls          | Browser TLS test                                           |
+| 1    | clienttest.ssllabs.com        | Browser TLS test                                           |
 
 </details>
 

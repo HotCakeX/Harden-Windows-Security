@@ -32,6 +32,12 @@ Edge,HKLM:\SOFTWARE\Policies\Microsoft\Edge,AutomaticHttpsDefault,2,DWORD,Automa
 Edge,HKLM:\SOFTWARE\Policies\Microsoft\Edge,EncryptedClientHelloEnabled,1,DWORD,Enable Encrypted Client Hello
 Edge,HKLM:\SOFTWARE\Policies\Microsoft\Edge,PrimaryPasswordSetting,1,DWORD,Configures a setting that asks users to enter their device password while using password autofill
 Edge,HKLM:\SOFTWARE\Policies\Microsoft\Edge,WebRtcLocalhostIpHandling,default_public_interface_only,String,Allow public interface over http default route. This doesn't expose the local IP address when using WebRTC
+Edge,HKLM:\SOFTWARE\Policies\Microsoft\Edge\TLSCipherSuiteDenyList,1,0xc013,String,Disable TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA - (CBC - SHA1)
+Edge,HKLM:\SOFTWARE\Policies\Microsoft\Edge\TLSCipherSuiteDenyList,2,0xc014,String,Disable TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA - (CBC - SHA1)
+Edge,HKLM:\SOFTWARE\Policies\Microsoft\Edge\TLSCipherSuiteDenyList,3,0x0035,String,Disable TLS_RSA_WITH_AES_256_CBC_SHA - (NO PFS - CBC - SHA1)
+Edge,HKLM:\SOFTWARE\Policies\Microsoft\Edge\TLSCipherSuiteDenyList,4,0x002f,String,Disable TLS_RSA_WITH_AES_128_CBC_SHA - (NO PFS - CBC - SHA1)
+Edge,HKLM:\SOFTWARE\Policies\Microsoft\Edge\TLSCipherSuiteDenyList,5,0x009c,String,Disable TLS_RSA_WITH_AES_128_GCM_SHA256 - (NO PFS)
+Edge,HKLM:\SOFTWARE\Policies\Microsoft\Edge\TLSCipherSuiteDenyList,6,0x009d,String,Disable TLS_RSA_WITH_AES_256_GCM_SHA384 - (NO PFS)
 NonAdmin,HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced,HideFileExt,0,DWORD,Show known file extensions in File explorer
 NonAdmin,HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced,Hidden,1,DWORD,Show hidden files and folders and drives toggles the control panel folder options item
 NonAdmin,HKCU:\Control Panel\International\User Profile,HttpAcceptLanguageOptOut,1,DWORD,Disable websites accessing local language list

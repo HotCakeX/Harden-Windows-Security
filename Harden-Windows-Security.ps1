@@ -684,12 +684,19 @@ try {
                         switch (Select-Option -Options "Yes", "No", "Exit" -Message "`nEncrypt $MountPoint drive ?`n") {
                             "Yes" {  
 
-                                # Make sure the non-OS drive that the user selected to be encrypted is not in the middle of any encryption/decryption operation
+                                # Check if the non-OS drive that the user selected to be encrypted is not in the middle of any encryption/decryption operation
                                 if ((Get-BitLockerVolume -MountPoint $MountPoint).EncryptionPercentage -ne "100" -and (Get-BitLockerVolume -MountPoint $MountPoint).EncryptionPercentage -ne "0") {
-                                    $EncryptionPercentageVar = (Get-BitLockerVolume -MountPoint $MountPoint).EncryptionPercentage
-                                    Write-Host "`nPlease wait for Bitlocker to finish encrypting or decrypting drive $MountPoint" -ForegroundColor Magenta
-                                    Write-Host "Drive $MountPoint encryption is currently at $EncryptionPercentageVar percent." -ForegroundColor Magenta
-                                    break
+                                    # Check if the drive isn't already encrypted and locked
+                                    if ((Get-BitLockerVolume -MountPoint $MountPoint).lockstatus -eq 'Locked') {
+                                        Write-Host "`nThe drive $MountPoint is already encrypted and locked." -ForegroundColor Magenta
+                                        break
+                                    }
+                                    else {
+                                        $EncryptionPercentageVar = (Get-BitLockerVolume -MountPoint $MountPoint).EncryptionPercentage
+                                        Write-Host "`nPlease wait for Bitlocker to finish encrypting or decrypting drive $MountPoint" -ForegroundColor Magenta
+                                        Write-Host "Drive $MountPoint encryption is currently at $EncryptionPercentageVar percent." -ForegroundColor Magenta
+                                        break
+                                    }
                                 }   
                         
                                 # Check to see if Bitlocker is already turned on for the user selected drive
@@ -808,13 +815,16 @@ try {
         #endregion Bitlocker-Settings
 
         #region TLS-Security    
-        # ==============================================TLS Security===============================================================    
+        # ==============================================TLS Security===============================================================
+        Write-Host ""
+        Write-Warning -Message "If you use Battle.Net Game client, select no for the next prompt and skip this category, because that client uses an insecure Cipher Suite, TLS_RSA_WITH_AES_256_CBC_SHA, that this script disables thus prevents it from connecting to its servers."
+        Start-Sleep -Seconds 1   
         switch (Select-Option -Options "Yes", "No", "Exit" -Message "`nRun TLS Security category ?") {
             "Yes" {
                 Write-Progress -Activity 'TLS Security' -Status 'Running TLS Security section' -PercentComplete 35
-                                
-                @( # creating these registry keys that have forward slashes in them
-                    'SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\DES 56/56', # DES 56-bit 
+
+                # creating these registry keys that have forward slashes in them                                
+                @( 'SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\DES 56/56', # DES 56-bit 
                     'SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC2 40/128', # RC2 40-bit
                     'SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC2 56/128', # RC2 56-bit
                     'SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC2 128/128', # RC2 128-bit
@@ -825,7 +835,7 @@ try {
                     'SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\Triple DES 168' # 3DES 168-bit (Triple DES 168)
                 ) | ForEach-Object {
 ([Microsoft.Win32.RegistryKey]::OpenRemoteBaseKey([Microsoft.Win32.RegistryHive]::LocalMachine, $env:COMPUTERNAME)).CreateSubKey($_)
-                }
+                } | Out-Null
                 # TLS Registry section
                 Set-Location $WorkingDir
                 $items = Import-Csv '.\Registry.csv' -Delimiter ","
@@ -834,11 +844,9 @@ try {
                         ModifyRegistry -path $item.path -key $item.key -value $item.value -type $item.type
                     }
                 }
-
                 # Change current working directory to the LGPO's folder
                 Set-Location "$WorkingDir\LGPO_30"
-                .\LGPO.exe /m "..\Security-Baselines-X\TLS Security\registry.pol"
-               
+                .\LGPO.exe /m "..\Security-Baselines-X\TLS Security\registry.pol"               
             } "No" { break }
             "Exit" { &$CleanUp }
         }    

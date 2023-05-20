@@ -295,7 +295,7 @@ try {
                 # Download LGPO program from Microsoft servers
                 Invoke-WebRequest -Uri "https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/LGPO.zip" -OutFile ".\LGPO.zip" -ErrorAction Stop
                 # Download the Group Policies of Windows Hardening script from GitHub
-                Invoke-WebRequest -Uri "https://github.com/HotCakeX/Harden-Windows-Security/raw/TLS-Update/Payload/Security-Baselines-X.zip" -OutFile ".\Security-Baselines-X.zip" -ErrorAction Stop         
+                Invoke-WebRequest -Uri "https://github.com/HotCakeX/Harden-Windows-Security/raw/main/Payload/Security-Baselines-X.zip" -OutFile ".\Security-Baselines-X.zip" -ErrorAction Stop         
                 # Download Registry CSV file
                 Invoke-WebRequest -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Payload/Registry.csv" -OutFile ".\Registry.csv" -ErrorAction Stop                
             }

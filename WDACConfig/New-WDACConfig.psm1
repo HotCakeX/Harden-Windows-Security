@@ -86,8 +86,7 @@ function New-WDACConfig {
         # argument tab auto-completion and ValidateSet for Fallbacks
         Class Fallbackz : System.Management.Automation.IValidateSetValuesGenerator {
             [System.String[]] GetValidValues() {
-                $Fallbackz = ('Hash', 'FileName', 'SignedVersion', 'Publisher', 'FilePublisher', 'LeafCertificate', 'PcaCertificate', 'RootCertificate', 'WHQL', 'WHQLPublisher', 'WHQLFilePublisher', 'PFN', 'FilePath', 'None')
-   
+                $Fallbackz = ('Hash', 'FileName', 'SignedVersion', 'Publisher', 'FilePublisher', 'LeafCertificate', 'PcaCertificate', 'RootCertificate', 'WHQL', 'WHQLPublisher', 'WHQLFilePublisher', 'PFN', 'FilePath', 'None')   
                 return [System.String[]]$Fallbackz
             }
         }
@@ -95,35 +94,26 @@ function New-WDACConfig {
         # argument tab auto-completion and ValidateSet for level
         Class Levelz : System.Management.Automation.IValidateSetValuesGenerator {
             [System.String[]] GetValidValues() {
-                $Levelz = ('Hash', 'FileName', 'SignedVersion', 'Publisher', 'FilePublisher', 'LeafCertificate', 'PcaCertificate', 'RootCertificate', 'WHQL', 'WHQLPublisher', 'WHQLFilePublisher', 'PFN', 'FilePath', 'None')
-       
+                $Levelz = ('Hash', 'FileName', 'SignedVersion', 'Publisher', 'FilePublisher', 'LeafCertificate', 'PcaCertificate', 'RootCertificate', 'WHQL', 'WHQLPublisher', 'WHQLFilePublisher', 'PFN', 'FilePath', 'None')       
                 return [System.String[]]$Levelz
             }
         }
            
-        $GetDriverBlockRulesSCRIPTBLOCK = {       
-            $MicrosoftRecommendeDriverBlockRules = Invoke-WebRequest -Uri "https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/public/windows/security/threat-protection/windows-defender-application-control/microsoft-recommended-driver-block-rules.md"
-   
-            $MicrosoftRecommendeDriverBlockRules -match "(?s)(?<=``````xml).*(?=``````)" | Out-Null
-            $DriverRules = $Matches[0]
-
-            $DriverRules = $DriverRules -replace '<Allow\sID="ID_ALLOW_ALL_1"\sFriendlyName=""\sFileName="\*".*/>', ''
-            $DriverRules = $DriverRules -replace '<Allow\sID="ID_ALLOW_ALL_2"\sFriendlyName=""\sFileName="\*".*/>', ''
+        $GetDriverBlockRulesSCRIPTBLOCK = {
+            $DriverRules = (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/public/windows/security/threat-protection/windows-defender-application-control/microsoft-recommended-driver-block-rules.md").Content -replace "(?s).*``````xml(.*)``````.*", '$1'
+            # Remove the unnecessary rules and elements - not using this one because then during the merge there will be error - The reason is that "<FileRuleRef RuleID="ID_ALLOW_ALL_2" />" is the only FileruleRef in the xml and after removing it, the <SigningScenario> element will be empty
+            $DriverRules = $DriverRules -replace '<Allow\sID="ID_ALLOW_ALL_[12]"\sFriendlyName=""\sFileName="\*".*/>', ''
             $DriverRules = $DriverRules -replace '<FileRuleRef\sRuleID="ID_ALLOW_ALL_1".*/>', ''
-
-            # not using this one because then during the merge there will be error - The reason is that "<FileRuleRef RuleID="ID_ALLOW_ALL_2" />" is the only FileruleRef in the xml and after removing it, the <SigningScenario> element will be empty
-            #$DriverRules = $DriverRules -replace '<FileRuleRef\sRuleID="ID_ALLOW_ALL_2".*/>',''
             $DriverRules = $DriverRules -replace '<SigningScenario\sValue="12"\sID="ID_SIGNINGSCENARIO_WINDOWS"\sFriendlyName="Auto\sgenerated\spolicy[\S\s]*<\/SigningScenario>', ''
-
             $DriverRules | Out-File 'Microsoft recommended driver block rules TEMP.xml'
             # Remove empty lines from the policy file
             Get-Content 'Microsoft recommended driver block rules TEMP.xml' | Where-Object { $_.trim() -ne "" } | Out-File 'Microsoft recommended driver block rules.xml'
             Remove-Item 'Microsoft recommended driver block rules TEMP.xml' -Force
             Set-RuleOption -FilePath 'Microsoft recommended driver block rules.xml' -Option 3 -Delete
             Set-HVCIOptions -Strict -FilePath 'Microsoft recommended driver block rules.xml'
-    
+            # Display extra info about the Microsoft Drivers block list
             Invoke-Command -ScriptBlock $DriversBlockListInfoGatheringSCRIPTBLOCK
-
+            # Display the result as object
             [PSCustomObject]@{
                 PolicyFile = "Microsoft recommended driver block rules.xml"
             }        
@@ -141,24 +131,21 @@ function New-WDACConfig {
             @(0, 2, 5, 6, 11, 12, 16, 17, 19, 20) | ForEach-Object { Set-RuleOption -FilePath .\AllowMicrosoftPlusBlockRules.xml -Option $_ }
             @(3, 4, 9, 10, 13, 18) | ForEach-Object { Set-RuleOption -FilePath .\AllowMicrosoftPlusBlockRules.xml -Option $_ -Delete }        
             if ($TestMode -and $MakeAllowMSFTWithBlockRules) {
-                & $TestModeSCRIPTBLOCK -PolicyPathToEnableTesting .\AllowMicrosoftPlusBlockRules.xml
+                9..10 | ForEach-Object { Set-RuleOption -FilePath .\AllowMicrosoftPlusBlockRules.xml -Option $_ }
             }
             if ($RequireEVSigners -and $MakeAllowMSFTWithBlockRules) {
-                & $RequireEVSignersSCRIPTBLOCK -PolicyPathToEnableEVSigners .\AllowMicrosoftPlusBlockRules.xml
+                Set-RuleOption -FilePath .\AllowMicrosoftPlusBlockRules.xml -Option 8
             }        
             Set-HVCIOptions -Strict -FilePath .\AllowMicrosoftPlusBlockRules.xml
             ConvertFrom-CIPolicy .\AllowMicrosoftPlusBlockRules.xml "$PolicyID.cip" | Out-Null   
             # Remove the extra files that were created during module operation and are no longer needed
-            Remove-Item .\AllowMicrosoft.xml -Force
-            Remove-Item 'Microsoft recommended block rules.xml' -Force
-
+            Remove-Item '.\AllowMicrosoft.xml', 'Microsoft recommended block rules.xml' -Force
             [PSCustomObject]@{
                 PolicyFile = "AllowMicrosoftPlusBlockRules.xml"
                 BinaryFile = "$PolicyID.cip"
             }
-
             if ($Deployit -and $MakeAllowMSFTWithBlockRules) {            
-                CiTool --update-policy "$PolicyID.cip" -json
+                CiTool --update-policy "$PolicyID.cip" -json | Out-Null
                 Write-host "`n"
             }
             if ($NoCIP)
@@ -171,7 +158,7 @@ function New-WDACConfig {
             Copy-item -Path "C:\Windows\schemas\CodeIntegrity\ExamplePolicies\DefaultWindows_Enforced.xml" -Destination "DefaultWindows_Enforced.xml"
             # Scan PowerShell core directory and allow its files in the Default Windows base policy so that module can still be used once it's been deployed
             if (Test-Path "C:\Program Files\PowerShell") {
-                Write-Host "Creating allow rules for PowerShell in the DefaultWindows base policy so you can continue using this module after deploying it." -ForegroundColor Blue                    
+                &$WriteLavender "Creating allow rules for PowerShell in the DefaultWindows base policy so you can continue using this module after deploying it."                   
                 New-CIPolicy -ScanPath "C:\Program Files\PowerShell" -Level FilePublisher -NoScript -Fallback Hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -FilePath .\AllowPowerShell.xml
                 Merge-CIPolicy -PolicyPaths .\DefaultWindows_Enforced.xml, .\AllowPowerShell.xml, 'Microsoft recommended block rules.xml' -OutputFilePath .\DefaultWindowsPlusBlockRules.xml | Out-Null
             }
@@ -185,17 +172,16 @@ function New-WDACConfig {
             @(0, 2, 5, 6, 11, 12, 16, 17, 19, 20) | ForEach-Object { Set-RuleOption -FilePath .\DefaultWindowsPlusBlockRules.xml -Option $_ }
             @(3, 4, 9, 10, 13, 18) | ForEach-Object { Set-RuleOption -FilePath .\DefaultWindowsPlusBlockRules.xml -Option $_ -Delete }        
             if ($TestMode -and $MakeDefaultWindowsWithBlockRules) {
-                & $TestModeSCRIPTBLOCK -PolicyPathToEnableTesting .\DefaultWindowsPlusBlockRules.xml
+                9..10 | ForEach-Object { Set-RuleOption -FilePath .\DefaultWindowsPlusBlockRules.xml -Option $_ }
             }
             if ($RequireEVSigners -and $MakeDefaultWindowsWithBlockRules) {
-                & $RequireEVSignersSCRIPTBLOCK -PolicyPathToEnableEVSigners .\DefaultWindowsPlusBlockRules.xml
+                Set-RuleOption -FilePath .\DefaultWindowsPlusBlockRules.xml -Option 8
             }        
             Set-HVCIOptions -Strict -FilePath .\DefaultWindowsPlusBlockRules.xml
             ConvertFrom-CIPolicy .\DefaultWindowsPlusBlockRules.xml "$PolicyID.cip" | Out-Null   
 
             Remove-item .\AllowPowerShell.xml -Force -ErrorAction SilentlyContinue
-            Remove-Item .\DefaultWindows_Enforced.xml -Force
-            Remove-Item 'Microsoft recommended block rules.xml' -Force
+            Remove-Item '.\DefaultWindows_Enforced.xml', 'Microsoft recommended block rules.xml' -Force
 
             [PSCustomObject]@{
                 PolicyFile = "DefaultWindowsPlusBlockRules.xml"
@@ -203,51 +189,38 @@ function New-WDACConfig {
             }
 
             if ($Deployit -and $MakeDefaultWindowsWithBlockRules) {            
-                CiTool --update-policy "$PolicyID.cip" -json
+                CiTool --update-policy "$PolicyID.cip" -json | Out-Null
                 Write-host "`n"
                 Remove-Item -Path "$PolicyID.cip" -Force
             }
-            if ($NoCIP)
-            { Remove-Item -Path "$PolicyID.cip" -Force }
-            
+            if ($NoCIP) { Remove-Item -Path "$PolicyID.cip" -Force }            
         }
 
-        $DeployLatestDriverBlockRulesSCRIPTBLOCK = {        
+        $DeployLatestDriverBlockRulesSCRIPTBLOCK = {
             Invoke-WebRequest -Uri "https://aka.ms/VulnerableDriverBlockList" -OutFile VulnerableDriverBlockList.zip      
             Expand-Archive .\VulnerableDriverBlockList.zip -DestinationPath "VulnerableDriverBlockList" -Force
             Rename-Item .\VulnerableDriverBlockList\SiPolicy_Enforced.p7b -NewName "SiPolicy.p7b" -Force
             Copy-item .\VulnerableDriverBlockList\SiPolicy.p7b -Destination "C:\Windows\System32\CodeIntegrity"
-            citool --refresh -json
-            Remove-Item .\VulnerableDriverBlockList -Recurse -Force
-            Remove-Item .\VulnerableDriverBlockList.zip -Force
-            Write-Host "`nSiPolicy.p7b has been deployed and policies refreshed." -ForegroundColor Cyan        
+            citool --refresh -json | Out-Null           
+            &$WritePink "`nSiPolicy.p7b has been deployed and policies refreshed."            
+            Remove-Item .\VulnerableDriverBlockList* -Recurse -Force                    
             Invoke-Command -ScriptBlock $DriversBlockListInfoGatheringSCRIPTBLOCK
         }
         
         $DeployLatestBlockRulesSCRIPTBLOCK = {
-
-            $MicrosoftRecommendeDriverBlockRules = Invoke-WebRequest -Uri "https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/public/windows/security/threat-protection/windows-defender-application-control/microsoft-recommended-block-rules.md"
-            $MicrosoftRecommendeDriverBlockRules -match "(?s)(?<=``````xml).*(?=``````)" | Out-Null
-            $Matches[0] | Out-File '.\Microsoft recommended driver block rules TEMP.xml'
-
-
+            (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/public/windows/security/threat-protection/windows-defender-application-control/microsoft-recommended-block-rules.md").Content -replace "(?s).*``````xml(.*)``````.*", '$1' | Out-File '.\Microsoft recommended block rules TEMP.xml'
             # Remove empty lines from the policy file
-            Get-Content '.\Microsoft recommended driver block rules TEMP.xml' | Where-Object { $_.trim() -ne "" } | Out-File '.\Microsoft recommended driver block rules.xml'
-            
-            Set-RuleOption -FilePath '.\Microsoft recommended driver block rules.xml' -Option 3 -Delete
-            @(0, 2, 6, 11, 12, 16, 19, 20) | ForEach-Object { Set-RuleOption -FilePath '.\Microsoft recommended driver block rules.xml' -Option $_ }
-            Set-HVCIOptions -Strict -FilePath '.\Microsoft recommended driver block rules.xml'
-
-            Remove-Item -Path '.\Microsoft recommended driver block rules TEMP.xml' -Force
-
-            $PolicyID = Set-CIPolicyIdInfo -FilePath '.\Microsoft recommended driver block rules.xml' -ResetPolicyID
-            $PolicyID = $PolicyID.Substring(11)
-            Set-CIPolicyIdInfo -PolicyName "Microsoft Windows User Mode Policy - Enforced - $(Get-Date -Format 'MM-dd-yyyy')" -FilePath '.\Microsoft recommended driver block rules.xml'
-            ConvertFrom-CIPolicy '.\Microsoft recommended driver block rules.xml' "$PolicyID.cip" | Out-Null
-            CiTool --update-policy "$PolicyID.cip" -json
+            Get-Content '.\Microsoft recommended block rules TEMP.xml' | Where-Object { $_.trim() -ne "" } | Out-File '.\Microsoft recommended block rules.xml'    
+            Set-RuleOption -FilePath '.\Microsoft recommended block rules.xml' -Option 3 -Delete
+            @(0, 2, 6, 11, 12, 16, 19, 20) | ForEach-Object { Set-RuleOption -FilePath '.\Microsoft recommended block rules.xml' -Option $_ }
+            Set-HVCIOptions -Strict -FilePath '.\Microsoft recommended block rules.xml'
+            Remove-Item -Path '.\Microsoft recommended block rules TEMP.xml' -Force
+            $PolicyID = (Set-CIPolicyIdInfo -FilePath '.\Microsoft recommended block rules.xml' -ResetPolicyID).Substring(11)
+            Set-CIPolicyIdInfo -PolicyName "Microsoft Windows User Mode Policy - Enforced - $(Get-Date -Format 'MM-dd-yyyy')" -FilePath '.\Microsoft recommended block rules.xml'
+            ConvertFrom-CIPolicy '.\Microsoft recommended block rules.xml' "$PolicyID.cip" | Out-Null
+            CiTool --update-policy "$PolicyID.cip" -json | Out-Null          
+            &$WriteLavender "`nThe Microsoft recommended block rules policy has been deployed in enforced mode."                
             Remove-Item "$PolicyID.cip" -Force
-            Remove-Item '.\Microsoft recommended driver block rules.xml' -Force
-            Write-host "`nThe Microsoft recommended block rules policy has been deployed in enforced mode." -ForegroundColor Magenta
         }
 
         $SetAutoUpdateDriverBlockRulesSCRIPTBLOCK = {
@@ -276,10 +249,9 @@ function New-WDACConfig {
             $PolicyID = $PolicyID.Substring(11)
             Set-CIPolicyIdInfo -PolicyName "PrepMSFTOnlyAudit" -FilePath .\AllowMicrosoft.xml
             ConvertFrom-CIPolicy .\AllowMicrosoft.xml "$PolicyID.cip" | Out-Null
-            CiTool --update-policy "$PolicyID.cip" -json
-            Remove-Item "AllowMicrosoft.xml" -Force
-            Remove-Item "$PolicyID.cip" -Force
-            Write-host "`nThe default AllowMicrosoft policy has been deployed in Audit mode. No reboot required." -ForegroundColor Magenta     
+            CiTool --update-policy "$PolicyID.cip" -json | Out-Null           
+            &$WriteViolet "`nThe default AllowMicrosoft policy has been deployed in Audit mode. No reboot required."           
+            Remove-Item "AllowMicrosoft.xml", "$PolicyID.cip" -Force                 
         }
 
         $PrepDefaultWindowsAuditSCRIPTBLOCK = {
@@ -294,22 +266,18 @@ function New-WDACConfig {
                 New-CIPolicy -ScanPath "$psscriptroot" -Level hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -FilePath .\WDACConfigModule.xml
                 Merge-CIPolicy -PolicyPaths .\DefaultWindows_Audit.xml, .\AllowPowerShell.xml, .\WDACConfigModule.xml -OutputFilePath .\DefaultWindows_Audit_temp.xml | Out-Null
             } 
-
             Remove-Item DefaultWindows_Audit.xml -Force            
             Rename-Item -Path .\DefaultWindows_Audit_temp.xml -NewName "DefaultWindows_Audit.xml" -Force
-
-            Remove-Item WDACConfigModule.xml -Force
-            Remove-Item AllowPowerShell.xml -Force
+            Remove-Item 'WDACConfigModule.xml', 'AllowPowerShell.xml' -Force
                    
             Set-RuleOption -FilePath .\DefaultWindows_Audit.xml -Option 3
             $PolicyID = Set-CIPolicyIdInfo -FilePath .\DefaultWindows_Audit.xml -ResetPolicyID
             $PolicyID = $PolicyID.Substring(11)
             Set-CIPolicyIdInfo -PolicyName "PrepDefaultWindows" -FilePath .\DefaultWindows_Audit.xml
             ConvertFrom-CIPolicy .\DefaultWindows_Audit.xml "$PolicyID.cip" | Out-Null
-            CiTool --update-policy "$PolicyID.cip" -json
-            Remove-Item "DefaultWindows_Audit.xml" -Force
-            Remove-Item "$PolicyID.cip" -Force
-            Write-host "`nThe defaultWindows policy has been deployed in Audit mode. No reboot required." -ForegroundColor Magenta    
+            CiTool --update-policy "$PolicyID.cip" -json | Out-Null           
+            &$WriteSubtleRainbow "`nThe defaultWindows policy has been deployed in Audit mode. No reboot required."            
+            Remove-Item "DefaultWindows_Audit.xml", "$PolicyID.cip" -Force                
         }
 
         $MakePolicyFromAuditLogsSCRIPTBLOCK = {
@@ -323,7 +291,6 @@ function New-WDACConfig {
             ############################### Base Policy Processing ###############################
 
             switch ($BasePolicyType) {
-
                 "Allow Microsoft Base" {
                     Invoke-Command -ScriptBlock $MakeAllowMSFTWithBlockRulesSCRIPTBLOCK | Out-Null
                     $xml = [xml](Get-Content .\AllowMicrosoftPlusBlockRules.xml)
@@ -338,19 +305,18 @@ function New-WDACConfig {
                     # define the location of the base policy
                     $BasePolicy = "DefaultWindowsPlusBlockRules.xml" 
                 }
-            }          
-  
-            if ($TestMode -and $MakePolicyFromAuditLogs) {
-                & $TestModeSCRIPTBLOCK -PolicyPathToEnableTesting $BasePolicy
             }
-            if ($RequireEVSigners -and $MakePolicyFromAuditLogs) {
-                & $RequireEVSignersSCRIPTBLOCK -PolicyPathToEnableEVSigners $BasePolicy
+            if ($TestMode -and $MakePolicyFromAuditLogs) {
+                9..10 | ForEach-Object { Set-RuleOption -FilePath $BasePolicy -Option $_ }
+            }
+            if ($RequireEVSigners -and $MakePolicyFromAuditLogs) { 
+                Set-RuleOption -FilePath $BasePolicy -Option 8
             }
 
             ############################### Supplemental Processing ###############################
 
             # Produce a policy xml file from event viewer logs
-            Write-host "Scanning Windows Event logs and creating a policy file, please wait..." -ForegroundColor Cyan
+            &$WriteLavender "Scanning Windows Event logs and creating a policy file, please wait..."
 
             # Creating a hash table to dynamically add parameters based on user input and pass them to New-Cipolicy cmdlet
             [System.Collections.Hashtable]$PolicyMakerHashTable = @{
@@ -368,7 +334,7 @@ function New-WDACConfig {
             if ($NoScript) { $PolicyMakerHashTable['NoScript'] = $true }        
             if (!$NoUserPEs) { $PolicyMakerHashTable['UserPEs'] = $true } 
 
-            write-host "`nGenerating Supplemental policy with the following specifications:" -ForegroundColor Magenta
+            &$WriteSubtleRainbow "`nGenerating Supplemental policy with the following specifications:"
             $PolicyMakerHashTable
             Write-Host "`n"
             # Create the supplemental policy via parameter splatting
@@ -384,7 +350,7 @@ function New-WDACConfig {
                         if ($_.'File Name' -match ($pattern = '\\Device\\HarddiskVolume(\d+)\\(.*)$')) {
                             $hardDiskVolumeNumber = $Matches[1]
                             $remainingPath = $Matches[2]
-                            $getletter = $DirveLettersGlobalRootFix | Where-Object { $_.devicepath -eq "\Device\HarddiskVolume$hardDiskVolumeNumber" }
+                            $getletter = $DriveLettersGlobalRootFix | Where-Object { $_.devicepath -eq "\Device\HarddiskVolume$hardDiskVolumeNumber" }
                             $usablePath = "$($getletter.DriveLetter)$remainingPath"
                             $_.'File Name' = $_.'File Name' -replace $pattern, $usablePath
                         }
@@ -400,30 +366,26 @@ function New-WDACConfig {
             # run the following only if there are any event logs for files no longer on the disk and if -NoDeletedFiles switch parameter wasn't used
             if ($DeletedFileHashesArray -and !$NoDeletedFiles) {
 
-                # Create File Rules based on hash of the files no longer available on the disk and store them in the $Rules variable
-                $i = 1
-                $imax = ($DeletedFileHashesArray).count
-                while ($i -le $imax) {
-                    $DeletedFileHashesArray | ForEach-Object {  
-                        $Rules += Write-Output "`n<Allow ID=`"ID_ALLOW_AA_$i`" FriendlyName=`"$($_.'File Name') SHA256 Hash`" Hash=`"$($_.'SHA256 Hash')`" />"
-                        $Rules += Write-Output "`n<Allow ID=`"ID_ALLOW_AB_$i`" FriendlyName=`"$($_.'File Name') SHA256 Flat Hash`" Hash=`"$($_.'SHA256 Flat Hash')`" />"
-                        $Rules += Write-Output "`n<Allow ID=`"ID_ALLOW_AC_$i`" FriendlyName=`"$($_.'File Name') SHA1 Hash`" Hash=`"$($_.'SHA1 Hash')`" />"
-                        $Rules += Write-Output "`n<Allow ID=`"ID_ALLOW_AD_$i`" FriendlyName=`"$($_.'File Name') SHA1 Flat Hash`" Hash=`"$($_.'SHA1 Flat Hash')`" />"
-                        $i++
-                    }
+                # Create File Rules based on hash of the files no longer available on the disk and store them in the $Rules variable                
+                $Rules = @()
+                $DeletedFileHashesArray | ForEach-Object -Begin { $i = 1 } -Process {
+                    $Rules += Write-Output "`n<Allow ID=`"ID_ALLOW_AA_$i`" FriendlyName=`"$($_.'File Name') SHA256 Hash`" Hash=`"$($_.'SHA256 Hash')`" />"
+                    $Rules += Write-Output "`n<Allow ID=`"ID_ALLOW_AB_$i`" FriendlyName=`"$($_.'File Name') SHA256 Flat Hash`" Hash=`"$($_.'SHA256 Flat Hash')`" />"
+                    $Rules += Write-Output "`n<Allow ID=`"ID_ALLOW_AC_$i`" FriendlyName=`"$($_.'File Name') SHA1 Hash`" Hash=`"$($_.'SHA1 Hash')`" />"
+                    $Rules += Write-Output "`n<Allow ID=`"ID_ALLOW_AD_$i`" FriendlyName=`"$($_.'File Name') SHA1 Flat Hash`" Hash=`"$($_.'SHA1 Flat Hash')`" />"
+                    $i++
                 }
-                # Create File Rule Refs based on the ID of the File Rules above and store them in the $RulesRefs variable
-                $i = 1
-                $imax = ($DeletedFileHashesArray).count
-                while ($i -le $imax) {
-                    $DeletedFileHashesArray | ForEach-Object { 
-                        $RulesRefs += Write-Output "`n<FileRuleRef RuleID=`"ID_ALLOW_AA_$i`" />"
-                        $RulesRefs += Write-Output "`n<FileRuleRef RuleID=`"ID_ALLOW_AB_$i`" />"
-                        $RulesRefs += Write-Output "`n<FileRuleRef RuleID=`"ID_ALLOW_AC_$i`" />"
-                        $RulesRefs += Write-Output "`n<FileRuleRef RuleID=`"ID_ALLOW_AD_$i`" />"
-                        $i++
-                    }
-                }  
+
+                # Create File Rule Refs based on the ID of the File Rules above and store them in the $RulesRefs variable                 
+                $RulesRefs = @()
+                $DeletedFileHashesArray | ForEach-Object -Begin { $i = 1 } -Process {
+                    $RulesRefs += Write-Output "`n<FileRuleRef RuleID=`"ID_ALLOW_AA_$i`" />"
+                    $RulesRefs += Write-Output "`n<FileRuleRef RuleID=`"ID_ALLOW_AB_$i`" />"
+                    $RulesRefs += Write-Output "`n<FileRuleRef RuleID=`"ID_ALLOW_AC_$i`" />"
+                    $RulesRefs += Write-Output "`n<FileRuleRef RuleID=`"ID_ALLOW_AD_$i`" />"
+                    $i++
+                }
+
                 # Save the the File Rules and File Rule Refs to the Out-File FileRulesAndFileRefs.txt in the current working directory
                 $Rules + $RulesRefs | Out-File FileRulesAndFileRefs.txt
                 
@@ -459,16 +421,13 @@ function New-WDACConfig {
             }       
 
             if (-NOT $Debug) {
-                Remove-Item -Path "AuditLogsPolicy_NoDeletedFiles.xml" -Force -ErrorAction SilentlyContinue
-                Remove-Item -Path "FileRulesAndFileRefs.txt" -Force -ErrorAction SilentlyContinue
-                Remove-Item -Path "DeletedFilesHashes.xml" -Force -ErrorAction SilentlyContinue
+                Remove-Item -Path "AuditLogsPolicy_NoDeletedFiles.xml", "FileRulesAndFileRefs.txt", "DeletedFilesHashes.xml" -Force -ErrorAction SilentlyContinue
             }
 
             if ($Deployit -and $MakePolicyFromAuditLogs) {            
-                CiTool --update-policy "$BasePolicyID.cip" -json
-                CiTool --update-policy "$policyID.cip" -json
-                Write-host "`nBase policy and Supplemental Policies deployed and activated.`n" -ForegroundColor Green
-                
+                CiTool --update-policy "$BasePolicyID.cip" -json | Out-Null
+                CiTool --update-policy "$policyID.cip" -json | Out-Null               
+                &$WritePink "`nBase policy and Supplemental Policies deployed and activated.`n"               
                 # Get the correct Prep mode Audit policy ID to remove from the system
                 switch ($BasePolicyType) {
                     "Allow Microsoft Base" {
@@ -478,8 +437,8 @@ function New-WDACConfig {
                         $IDToRemove = ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.FriendlyName -eq "PrepDefaultWindows" }).PolicyID
                     }
                 }
-                CiTool --remove-policy "{$IDToRemove}" -json
-                Write-host "`nSystem restart required to finish removing the Audit mode Prep policy" -ForegroundColor Green                
+                CiTool --remove-policy "{$IDToRemove}" -json | Out-Null                
+                &$WriteSubtleRainbow "`nSystem restart required to finish removing the Audit mode Prep policy"
             }     
         }
 
@@ -490,10 +449,10 @@ function New-WDACConfig {
             Rename-Item -Path "AllowMicrosoftPlusBlockRules.xml" -NewName "SignedAndReputable.xml" -Force
             @(14, 15) | ForEach-Object { Set-RuleOption -FilePath .\SignedAndReputable.xml -Option $_ }
             if ($TestMode -and $MakeLightPolicy) {
-                & $TestModeSCRIPTBLOCK -PolicyPathToEnableTesting .\SignedAndReputable.xml
+                9..10 | ForEach-Object { Set-RuleOption -FilePath .\SignedAndReputable.xml -Option $_ }
             }
-            if ($RequireEVSigners -and $MakeLightPolicy) {
-                & $RequireEVSignersSCRIPTBLOCK -PolicyPathToEnableEVSigners .\SignedAndReputable.xml
+            if ($RequireEVSigners -and $MakeLightPolicy) { 
+                Set-RuleOption -FilePath .\SignedAndReputable.xml -Option 8
             }
             $BasePolicyID = Set-CiPolicyIdInfo -FilePath .\SignedAndReputable.xml -ResetPolicyID -PolicyName "Signed And Reputable policy - $(Get-Date -Format 'MM-dd-yyyy')"
             $BasePolicyID = $BasePolicyID.Substring(11)        
@@ -504,61 +463,52 @@ function New-WDACConfig {
             Start-Process -FilePath 'C:\Windows\System32\appidtel.exe' -ArgumentList 'start' -Wait -NoNewWindow
             Start-Process -FilePath 'C:\Windows\System32\sc.exe' -ArgumentList 'config', 'appidsvc', "start= auto" -Wait -NoNewWindow
             if ($Deployit -and $MakeLightPolicy) {
-                CiTool --update-policy "$BasePolicyID.cip" -json                           
-            }
+                CiTool --update-policy "$BasePolicyID.cip" -json | Out-Null                           
+            }            
             [PSCustomObject]@{
                 BasePolicyFile = "SignedAndReputable.xml"      
                 BasePolicyGUID = $BasePolicyID
-            }       
+            }
         }
 
-        # Script block that is used to add policy rule options 9 and 10 to the base policy
-        $TestModeSCRIPTBLOCK = { 
-            param([System.String]$PolicyPathToEnableTesting)
-            @(9, 10) | ForEach-Object { Set-RuleOption -FilePath $PolicyPathToEnableTesting -Option $_ }
-        }
-        # Script block that is used to add Require EV Singers policy rule option to the base policy
-        $RequireEVSignersSCRIPTBLOCK = {
-            param([System.String]$PolicyPathToEnableEVSigners)
-            Set-RuleOption -FilePath $PolicyPathToEnableEVSigners -Option 8
-        }
         # Script block that is used to supply extra information regarding Microsoft recommended driver block rules in commands that use them
         $DriversBlockListInfoGatheringSCRIPTBLOCK = {
             $owner = "MicrosoftDocs"
             $repo = "windows-itpro-docs"
             $path = "windows/security/threat-protection/windows-defender-application-control/microsoft-recommended-driver-block-rules.md"
-
+        
             $apiUrl = "https://api.github.com/repos/$owner/$repo/commits?path=$path"
-            $response = Invoke-RestMethod -Uri $apiUrl -Method Get
+            $response = Invoke-RestMethod $apiUrl
             $date = $response[0].commit.author.date
-
-            Write-Host "`nThe document containing the drivers block list on GitHub was last updated on $date" -ForegroundColor Magenta
-
-            $MicrosoftRecommendeDriverBlockRules = Invoke-WebRequest -Uri "https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/public/windows/security/threat-protection/windows-defender-application-control/microsoft-recommended-driver-block-rules.md"
+        
+            &$WriteLavender "`nThe document containing the drivers block list on GitHub was last updated on $date"
+            $MicrosoftRecommendeDriverBlockRules = Invoke-WebRequest "https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/public/windows/security/threat-protection/windows-defender-application-control/microsoft-recommended-driver-block-rules.md"
             $MicrosoftRecommendeDriverBlockRules -match "<VersionEx>(.*)</VersionEx>" | Out-Null
-    
-            Write-Host "The current version of Microsoft recommended drivers block list is $($Matches[1])" -ForegroundColor Cyan
-        }    
+            &$WriteLavender "The current version of Microsoft recommended drivers block list is $($Matches[1])"
+        }
+
         # Stop operation as soon as there is an error anywhere, unless explicitly specified otherwise
         $ErrorActionPreference = 'Stop'
         if (-NOT $SkipVersionCheck) { . Update-self }        
 
-        $DirveLettersGlobalRootFix = Invoke-Command -ScriptBlock $DirveLettersGlobalRootFixScriptBlock
+        $DriveLettersGlobalRootFix = Invoke-Command -ScriptBlock $DriveLettersGlobalRootFixScriptBlock
     }
 
     process {
-        if ($GetBlockRules) { Invoke-Command -ScriptBlock $GetBlockRulesSCRIPTBLOCK }                                
-        elseif ($GetDriverBlockRules) { Invoke-Command -ScriptBlock $GetDriverBlockRulesSCRIPTBLOCK }   
-        elseif ($MakeAllowMSFTWithBlockRules) { Invoke-Command -ScriptBlock $MakeAllowMSFTWithBlockRulesSCRIPTBLOCK }
-        elseif ($DeployLatestDriverBlockRules) { Invoke-Command -ScriptBlock $DeployLatestDriverBlockRulesSCRIPTBLOCK }
-        elseif ($DeployLatestBlockRules) { Invoke-Command -ScriptBlock $DeployLatestBlockRulesSCRIPTBLOCK }                           
-        elseif ($SetAutoUpdateDriverBlockRules) { Invoke-Command -ScriptBlock $SetAutoUpdateDriverBlockRulesSCRIPTBLOCK }                                
-        elseif ($MakePolicyFromAuditLogs) { Invoke-Command -ScriptBlock $MakePolicyFromAuditLogsSCRIPTBLOCK }                                
-        elseif ($PrepMSFTOnlyAudit) { Invoke-Command -ScriptBlock $PrepMSFTOnlyAuditSCRIPTBLOCK }        
-        elseif ($MakeLightPolicy) { Invoke-Command -ScriptBlock $MakeLightPolicySCRIPTBLOCK }
-        elseif ($MakeDefaultWindowsWithBlockRules) { Invoke-Command -ScriptBlock $MakeDefaultWindowsWithBlockRulesSCRIPTBLOCK }
-        elseif ($PrepDefaultWindowsAudit) { Invoke-Command -ScriptBlock $PrepDefaultWindowsAuditSCRIPTBLOCK }
-        else { Write-Warning "No parameter was selected." }
+        switch ($true) {
+            $GetBlockRules { & $GetBlockRulesSCRIPTBLOCK }
+            $GetDriverBlockRules { & $GetDriverBlockRulesSCRIPTBLOCK }
+            $MakeAllowMSFTWithBlockRules { & $MakeAllowMSFTWithBlockRulesSCRIPTBLOCK }
+            $DeployLatestDriverBlockRules { & $DeployLatestDriverBlockRulesSCRIPTBLOCK }
+            $DeployLatestBlockRules { & $DeployLatestBlockRulesSCRIPTBLOCK }
+            $SetAutoUpdateDriverBlockRules { & $SetAutoUpdateDriverBlockRulesSCRIPTBLOCK }
+            $MakePolicyFromAuditLogs { & $MakePolicyFromAuditLogsSCRIPTBLOCK }
+            $PrepMSFTOnlyAudit { & $PrepMSFTOnlyAuditSCRIPTBLOCK }
+            $MakeLightPolicy { & $MakeLightPolicySCRIPTBLOCK }
+            $MakeDefaultWindowsWithBlockRules { & $MakeDefaultWindowsWithBlockRulesSCRIPTBLOCK }
+            $PrepDefaultWindowsAudit { & $PrepDefaultWindowsAuditSCRIPTBLOCK }
+            default { Write-Warning "No parameter was selected." }
+        }
     }    
   
     <#

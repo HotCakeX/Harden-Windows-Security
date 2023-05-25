@@ -2,19 +2,13 @@
 $ErrorActionPreference = 'Stop'
 if (-NOT ([System.Environment]::OSVersion.Version -ge '10.0.22621')) { Write-Error -Message "You're not using Windows 11 22H2, exitting..." }
 
-
 # Get the path to SignTool
 function Get-SignTool {
     param(    
         [parameter(Mandatory = $false)][System.String]$SignToolExePath
-    )
-    
-    # If Sign tool path was provided by user, return it, validation already happened in the parameter ValidateScript
-    if ($SignToolExePath) {
-        return $SignToolExePath
-    }
-    # If Sign tool path wasn't provided by user, detect it automatically and then validate it here
-    else {
+    ) 
+    # If Sign tool path wasn't provided by parameter, try to detect it automatically, if fails, stop the operation
+    if (!$SignToolExePath) {
         if ($Env:PROCESSOR_ARCHITECTURE -eq "AMD64") {
             if ( Test-Path -Path "C:\Program Files (x86)\Windows Kits\*\bin\*\x64\signtool.exe") {
                 $SignToolExePath = "C:\Program Files (x86)\Windows Kits\*\bin\*\x64\signtool.exe" 
@@ -26,27 +20,32 @@ function Get-SignTool {
         elseif ($Env:PROCESSOR_ARCHITECTURE -eq "ARM64") {
             if (Test-Path -Path "C:\Program Files (x86)\Windows Kits\*\bin\*\arm64\signtool.exe") {
                 $SignToolExePath = "C:\Program Files (x86)\Windows Kits\*\bin\*\arm64\signtool.exe"
-            }
-            # If sign tool path was neither provided by user nor detected on the system, stop the operation and throw error
+            }           
             else {
                 Write-Error -Message "signtool.exe couldn't be found"
             }
         }
-        # Setting the minimum version of SignTool that is allowed to be executed
-        [System.Version]$WindowsSdkVersion = '10.0.22621.755'
+    }
+    try {
+        # Validate the SignTool executable    
+        [System.Version]$WindowsSdkVersion = '10.0.22621.755' # Setting the minimum version of SignTool that is allowed to be executed
         [System.Boolean]$GreenFlag1 = (((get-item -Path $SignToolExePath).VersionInfo).ProductVersionRaw -ge $WindowsSdkVersion)
         [System.Boolean]$GreenFlag2 = (((get-item -Path $SignToolExePath).VersionInfo).FileVersionRaw -ge $WindowsSdkVersion)
         [System.Boolean]$GreenFlag3 = ((get-item -Path $SignToolExePath).VersionInfo).CompanyName -eq 'Microsoft Corporation'
         [System.Boolean]$GreenFlag4 = ((Get-AuthenticodeSignature -FilePath $SignToolExePath).Status -eq 'Valid')
         [System.Boolean]$GreenFlag5 = ((Get-AuthenticodeSignature -FilePath $SignToolExePath).StatusMessage -eq 'Signature verified.')
-        # If any of the 5 checks above fails, the operation stops
-        if (!$GreenFlag1 -or !$GreenFlag2 -or !$GreenFlag3 -or !$GreenFlag4 -or !$GreenFlag5) {
-            Write-Error -Message "The SignTool executable was found but couldn't be verified. Please download the latest Windows SDK to get the newest SignTool executable. Official download link: http://aka.ms/WinSDK"        
-        }
-        return $SignToolExePath        
-    }        
+    }
+    catch {
+        Write-Error "SignTool executable couldn't be verified."
+    }
+    # If any of the 5 checks above fails, the operation stops
+    if (!$GreenFlag1 -or !$GreenFlag2 -or !$GreenFlag3 -or !$GreenFlag4 -or !$GreenFlag5) {
+        Write-Error -Message "The SignTool executable was found but couldn't be verified. Please download the latest Windows SDK to get the newest SignTool executable. Official download link: http://aka.ms/WinSDK"        
+    }
+    else {
+        return $SignToolExePath
+    }       
 }
-
 
 
 # Make sure the latest version of the module is installed and if not, automatically update it, clean up any old versions
@@ -76,7 +75,6 @@ function Update-self {
 }
 
 
-
 # Increase Code Integrity Operational Event Logs size from the default 1MB to user defined size
 function Set-LogSize {
     [CmdletBinding()]
@@ -87,7 +85,6 @@ function Set-LogSize {
     $log.IsEnabled = $true
     $log.SaveChanges()
 }
-
 
 
 # function that takes 2 arrays, one contains file paths and the other contains folder paths. It checks them and shows file paths
@@ -143,10 +140,9 @@ function Test-FilePath {
 }
 
 
-
 # Script block that lists every \Device\Harddiskvolume - https://superuser.com/questions/1058217/list-every-device-harddiskvolume
 # These are DriveLetter mappings
-$DirveLettersGlobalRootFixScriptBlock = {
+$DriveLettersGlobalRootFixScriptBlock = {
     $signature = @'
 [DllImport("kernel32.dll", SetLastError=true)]
 [return: MarshalAs(UnmanagedType.Bool)]
@@ -192,12 +188,11 @@ public static extern uint QueryDosDevice(string lpDeviceName, StringBuilder lpTa
 }
 
 
-
 ### Function to separately capture FileHashes of deleted files and FilePaths of available files from Event Viewer Audit Logs ####
 Function Get-AuditEventLogsProcessing {
     param ($Date)
 
-    $DirveLettersGlobalRootFix = Invoke-Command -ScriptBlock $DirveLettersGlobalRootFixScriptBlock
+    $DriveLettersGlobalRootFix = Invoke-Command -ScriptBlock $DriveLettersGlobalRootFixScriptBlock
 
     # Defining a custom object to store and finally return it as results
     $AuditEventLogsProcessingResults = [PSCustomObject]@{
@@ -215,7 +210,7 @@ Function Get-AuditEventLogsProcessing {
             if ($_.'File Name' -match ($pattern = '\\Device\\HarddiskVolume(\d+)\\(.*)$')) {
                 $hardDiskVolumeNumber = $Matches[1]
                 $remainingPath = $Matches[2]
-                $getletter = $DirveLettersGlobalRootFix | Where-Object { $_.devicepath -eq "\Device\HarddiskVolume$hardDiskVolumeNumber" }
+                $getletter = $DriveLettersGlobalRootFix | Where-Object { $_.devicepath -eq "\Device\HarddiskVolume$hardDiskVolumeNumber" }
                 $usablePath = "$($getletter.DriveLetter)$remainingPath"
                 $_.'File Name' = $_.'File Name' -replace $pattern, $usablePath
             } # Check if file is currently on the disk
@@ -230,7 +225,6 @@ Function Get-AuditEventLogsProcessing {
     # return the results as an object
     return $AuditEventLogsProcessingResults
 }
-
 
 
 # Creates a policy file and requires 2 parameters to supply the file rules and rule references
@@ -290,18 +284,9 @@ $RuleRefsContent
 }
 
 
-
 # Gets the latest Microsoft Recommended block rules, removes its allow all rules and sets HVCI to strict
 $GetBlockRulesSCRIPTBLOCK = {             
-    $MicrosoftRecommendeDriverBlockRules = Invoke-WebRequest -Uri "https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/public/windows/security/threat-protection/windows-defender-application-control/microsoft-recommended-block-rules.md"
-    $MicrosoftRecommendeDriverBlockRules -match "(?s)(?<=``````xml).*(?=``````)" | Out-Null
-    $Rules = $Matches[0]
-
-    $Rules = $Rules -replace '<Allow\sID="ID_ALLOW_A_1"\sFriendlyName="Allow\sKernel\sDrivers"\sFileName="\*".*/>', ''
-    $Rules = $Rules -replace '<Allow\sID="ID_ALLOW_A_2"\sFriendlyName="Allow\sUser\smode\scomponents"\sFileName="\*".*/>', ''
-    $Rules = $Rules -replace '<FileRuleRef\sRuleID="ID_ALLOW_A_1".*/>', ''
-    $Rules = $Rules -replace '<FileRuleRef\sRuleID="ID_ALLOW_A_2".*/>', ''
-
+    $Rules = (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/public/windows/security/threat-protection/windows-defender-application-control/microsoft-recommended-block-rules.md").Content -replace "(?s).*``````xml(.*)``````.*", '$1' -replace '<Allow\sID="ID_ALLOW_A_[12]".*/>|<FileRuleRef\sRuleID="ID_ALLOW_A_[12]".*/>', ''
     $Rules | Out-File '.\Microsoft recommended block rules TEMP.xml'
     # Removing empty lines from policy file
     Get-Content '.\Microsoft recommended block rules TEMP.xml' | Where-Object { $_.trim() -ne "" } | Out-File '.\Microsoft recommended block rules.xml'                
@@ -314,51 +299,26 @@ $GetBlockRulesSCRIPTBLOCK = {
 }
 
 
-
-# Creates a policy file that has 2 Allow all rules, for Kernel drivers and User-mode binaries, to be merged with Deny base policies
-function New-AllowAllPolicy {  
-    $AllowAllPolicy = @"
-<?xml version="1.0" encoding="utf-8"?>
-<SiPolicy xmlns="urn:schemas-microsoft-com:sipolicy" PolicyType="Base Policy">
-<VersionEx>10.0.0.0</VersionEx>
-<PlatformID>{2E07F7E4-194C-4D20-B7C9-6F44A6C5A234}</PlatformID>
-<Rules>
-<Rule>
-<Option>Enabled:Unsigned System Integrity Policy</Option>
-</Rule>
-</Rules>
-<!--EKUS-->
-<EKUs />
-<!--File Rules-->
-<FileRules>
-<Allow ID="ID_ALLOW_A_1" FriendlyName="Allow Kernel Drivers" FileName="*" />
-<Allow ID="ID_ALLOW_A_2" FriendlyName="Allow User mode components" FileName="*" />
-</FileRules>
-<!--Signers-->
-<Signers />
-  <SigningScenarios>
-    <SigningScenario Value="131" ID="ID_SIGNINGSCENARIO_DRIVERS_1" FriendlyName="Driver Signing Scenarios">
-      <ProductSigners>
-        <FileRulesRef>
-          <FileRuleRef RuleID="ID_ALLOW_A_1" />
-        </FileRulesRef>
-      </ProductSigners>
-    </SigningScenario>
-    <SigningScenario Value="12" ID="ID_SIGNINGSCENARIO_WINDOWS" FriendlyName="User Mode Signing Scenarios">
-      <ProductSigners>
-        <FileRulesRef>
-          <FileRuleRef RuleID="ID_ALLOW_A_2" />          
-        </FileRulesRef>
-      </ProductSigners>
-    </SigningScenario>
-  </SigningScenarios>
-<UpdatePolicySigners />
-<CiSigners />
-<HvciOptions>0</HvciOptions>
-<BasePolicyID>{B163125F-E30A-43FC-ABEC-E30B4EE88FA8}</BasePolicyID>
-<PolicyID>{B163125F-E30A-43FC-ABEC-E30B4EE88FA8}</PolicyID>
-</SiPolicy>
-"@
-    return $AllowAllPolicy
+# Function to check Certificate Common name - used mostly to validate values in UserConfigurations.json
+function Confirm-CertCN ([string]$CN) {
+    $certs = foreach ($cert in (Get-ChildItem 'Cert:\CurrentUser\my')) {
+        (($cert.Subject -split "," | Select-Object -First 1) -replace "CN=", "").Trim()
+    }       
+    $certs -contains $CN ? $true : $false
 }
+
+
+# script blocks for custom color writing
+$WriteViolet = { Write-Output "$($PSStyle.Foreground.FromRGB(153,0,255))$($args[0])$($PSStyle.Reset)" }
+$WritePink = { Write-Output "$($PSStyle.Foreground.FromRGB(255,0,230))$($args[0])$($PSStyle.Reset)" }
+$WriteLavender = { Write-Output "$($PSStyle.Foreground.FromRgb(255,179,255))$($args[0])$($PSStyle.Reset)" }
+
+# Define an array of cute RGB colors
+$SubtleCuteColors = @(
+    $PSStyle.Foreground.FromRGB(255, 105, 180) # Hot Pink
+    $PSStyle.Foreground.FromRGB(255, 20, 147)  # Deep Pink
+    $PSStyle.Foreground.FromRGB(199, 21, 133)  # Medium Violet Red
+)
+# script block to write rainbow color text
+$WriteSubtleRainbow = { ($args[0].ToCharArray() | ForEach-Object { "{0}{1}{2}" -f $SubtleCuteColors[(Get-Random $SubtleCuteColors.Count)], $_, $PSStyle.Reset }) -join "" }
 

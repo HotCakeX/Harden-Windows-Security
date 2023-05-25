@@ -1,57 +1,65 @@
 #Requires -RunAsAdministrator
 function Remove-WDACConfig {
-    [CmdletBinding(      
+    [CmdletBinding(
         DefaultParameterSetName = "Signed Base",
         SupportsShouldProcess = $true,
         PositionalBinding = $false,
         ConfirmImpact = 'High'
     )]
     Param(
-        [Alias("S")]        
+        [Alias("S")]
         [Parameter(Mandatory = $false, ParameterSetName = "Signed Base")][Switch]$SignedBase,
-        
         [Alias("U")]
         [Parameter(Mandatory = $false, ParameterSetName = "Unsigned Or Supplemental")][Switch]$UnsignedOrSupplemental,
 
         [ValidatePattern('\.xml$')]
         [ValidateScript({
-                # Validate each Policy file in PolicyPaths parameter to make sure the user isn't accidentally trying to
-                # remove an Unsigned policy
-                $_ | ForEach-Object {                   
+                # Validate each Policy file in PolicyPaths parameter to make sure the user isn't accidentally trying to remove an Unsigned policy
+                $_ | ForEach-Object {
                     $xmlTest = [xml](Get-Content $_)
                     $RedFlag1 = $xmlTest.SiPolicy.SupplementalPolicySigners.SupplementalPolicySigner.SignerId
                     $RedFlag2 = $xmlTest.SiPolicy.UpdatePolicySigners.UpdatePolicySigner.SignerId
-                    if ($RedFlag1 -or $RedFlag2) { return $True }                   
+                    if ($RedFlag1 -or $RedFlag2) { return $True }
                 }
             }, ErrorMessage = "The policy XML file(s) you chose are Unsigned policies. Please use Remove-WDACConfig cmdlet with -UnsignedOrSupplemental parameter instead.")]
         [parameter(Mandatory = $true, ParameterSetName = "Signed Base", ValueFromPipelineByPropertyName = $true)]
         [System.String[]]$PolicyPaths,
-        
+
         [ValidateScript({
-                try {
-                    # TryCatch to show a custom error message instead of saying input is null when personal store is empty 
-                ((Get-ChildItem -ErrorAction Stop -Path 'Cert:\CurrentUser\My').Subject.Substring(3)) -contains $_            
+                $certs = foreach ($cert in (Get-ChildItem 'Cert:\CurrentUser\my')) {
+                (($cert.Subject -split "," | Select-Object -First 1) -replace "CN=", "").Trim()
                 }
-                catch {
-                    Write-Error -Message "A certificate with the provided common name doesn't exist in the personal store of the user certificates."
-                } # this error msg is shown when cert CN is not available in the personal store of the user certs
+                $certs -contains $_
             }, ErrorMessage = "A certificate with the provided common name doesn't exist in the personal store of the user certificates." )]
-        [parameter(Mandatory = $true, ParameterSetName = "Signed Base", ValueFromPipelineByPropertyName = $true)]
+        [parameter(Mandatory = $false, ParameterSetName = "Signed Base", ValueFromPipelineByPropertyName = $true)]
         [System.String]$CertCN,
 
         # https://stackoverflow.com/questions/76143006/how-to-prevent-powershell-validateset-argument-completer-from-suggesting-the-sam/76143269
         [ArgumentCompleter({
                 param($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameters)
-                $candidates = [PolicyIDz]::new().GetValidValues()
-                $existing = $commandAst.FindAll({ 
+
+                # Get a list of policies using the CiTool, excluding system policies and policies that aren't on disk.
+                $policies = (CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsOnDisk -eq "True" } | Where-Object { $_.IsSystemPolicy -ne "True" }
+                # Create a hashtable mapping policy IDs to policy names. This will be used later to check if a policy name already exists.
+                $IDNameMap = @{}
+                foreach ($policy in $policies) {
+                    $IDNameMap[$policy.policyID] = $policy.Friendlyname
+                }
+                # Get the names of existing policies that are already being used in the current command.
+                $existingNames = $fakeBoundParameters['PolicyNames']
+                # Get the policy IDs that are currently being used in the command. This is done by looking at the abstract syntax tree (AST)
+                # of the command and finding all string literals, which are assumed to be policy IDs.
+                $existing = $commandAst.FindAll({
                         $args[0] -is [System.Management.Automation.Language.StringConstantExpressionAst]
-                    }, 
-                    $false
-                ).Value
-                Compare-Object -PassThru $candidates $existing | Where-Object SideIndicator -eq '<='
+                    }, $false).Value
+                # Filter out the policy IDs that are already being used or whose corresponding policy names are already being used.
+                # The resulting list of policy IDs is what will be shown as autocomplete suggestions.
+                $candidates = $policies.policyID | Where-Object { $_ -notin $existing -and $IDNameMap[$_] -notin $existingNames }
+                # Return the candidates.
+                return $candidates
             })]
         [ValidateScript({
-                if ($_ -notin [PolicyIDz]::new().GetValidValues()) { throw "Invalid policy ID: $_" }
+                if ($_ -notin [PolicyIDzx]::new().GetValidValues()) { throw "Invalid policy ID: $_" }
                 $true
             })]
         [Parameter(Mandatory = $false, ParameterSetName = "Unsigned Or Supplemental")]
@@ -59,32 +67,44 @@ function Remove-WDACConfig {
 
         # https://stackoverflow.com/questions/76143006/how-to-prevent-powershell-validateset-argument-completer-from-suggesting-the-sam/76143269
         [ArgumentCompleter({
+                # Define the parameters that this script block will accept.
                 param($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameters)
-                $candidates = [PolicyNamez]::new().GetValidValues()
-                $existing = $commandAst.FindAll({ 
+
+                # Get a list of policies using the CiTool, excluding system policies and policies that aren't on disk.
+                $policies = (CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsOnDisk -eq "True" } | Where-Object { $_.IsSystemPolicy -ne "True" }
+
+                # Create a hashtable mapping policy names to policy IDs. This will be used later to check if a policy ID already exists.
+                $NameIDMap = @{}
+                foreach ($policy in $policies) {
+                    $NameIDMap[$policy.Friendlyname] = $policy.policyID
+                }
+
+                # Get the IDs of existing policies that are already being used in the current command.
+                $existingIDs = $fakeBoundParameters['PolicyIDs']
+
+                # Get the policy names that are currently being used in the command. This is done by looking at the abstract syntax tree (AST)
+                # of the command and finding all string literals, which are assumed to be policy names.
+                $existing = $commandAst.FindAll({
                         $args[0] -is [System.Management.Automation.Language.StringConstantExpressionAst]
-                    }, 
-                    $false
-                ).Value
-          (Compare-Object -PassThru $candidates $existing | Where-Object SideIndicator -eq '<=').
+                    }, $false).Value
+
+                # Filter out the policy names that are already being used or whose corresponding policy IDs are already being used.
+                # The resulting list of policy names is what will be shown as autocomplete suggestions.
+                $candidates = $policies.Friendlyname | Where-Object { $_ -notin $existing -and $NameIDMap[$_] -notin $existingIDs }
+
+                # Additionally, if the policy name contains spaces, it's enclosed in single quotes to ensure it's treated as a single argument.
+                # This is achieved using the Compare-Object cmdlet to compare the existing and candidate values, and outputting the resulting matches.
+                # For each resulting match, it checks if the match contains a space, if so, it's enclosed in single quotes, if not, it's returned as is.
+            (Compare-Object -PassThru $candidates $existing | Where-Object SideIndicator -EQ '<=').
                 ForEach({ if ($_ -match ' ') { "'{0}'" -f $_ } else { $_ } })
             })]
         [ValidateScript({
-                if ($_ -notin [PolicyNamez]::new().GetValidValues()) { throw "Invalid policy name: $_" }
+                if ($_ -notin [PolicyNamezx]::new().GetValidValues()) { throw "Invalid policy name: $_" }
                 $true
             })]
         [Parameter(Mandatory = $false, ParameterSetName = "Unsigned Or Supplemental")]
         [System.String[]]$PolicyNames,
 
-        [ValidatePattern('\.exe$')]
-        [ValidateScript({ # Setting the minimum version of SignTool that is allowed to be executed as well as other checks
-                [System.Version]$WindowsSdkVersion = '10.0.22621.755'
-                (((get-item -Path $_).VersionInfo).ProductVersionRaw -ge $WindowsSdkVersion)
-                (((get-item -Path $_).VersionInfo).FileVersionRaw -ge $WindowsSdkVersion)
-                ((get-item -Path $_).VersionInfo).CompanyName -eq 'Microsoft Corporation'
-                ((Get-AuthenticodeSignature -FilePath $_).Status -eq 'Valid')
-                ((Get-AuthenticodeSignature -FilePath $_).StatusMessage -eq 'Signature verified.')
-            }, ErrorMessage = "The SignTool executable was found but couldn't be verified. Please download the latest Windows SDK to get the newest SignTool executable. Official download link: http://aka.ms/WinSDK")]
         [parameter(Mandatory = $false, ParameterSetName = "Signed Base", ValueFromPipelineByPropertyName = $true)]
         [System.String]$SignToolPath,
 
@@ -95,32 +115,139 @@ function Remove-WDACConfig {
         # Importing resources such as functions by dot-sourcing so that they will run in the same scope and their variables will be usable
         . "$psscriptroot\Resources.ps1"
 
-        # Detecting if Debug switch is used, will do debugging actions based on that
-        $Debug = $PSBoundParameters.Debug.IsPresent
-
         # Stop operation as soon as there is an error anywhere, unless explicitly specified otherwise
         $ErrorActionPreference = 'Stop'
-        if (-NOT $SkipVersionCheck) { . Update-self }        
+        if (-NOT $SkipVersionCheck) { . Update-self }
+        # Detecting if Debug switch is used, will do debugging actions based on that
+        $Debug = $PSBoundParameters.Debug.IsPresent        
 
-        # argument tab auto-completion and ValidateSet for Policy names 
-        Class PolicyNamez : System.Management.Automation.IValidateSetValuesGenerator {
+        #region User-Configurations-Processing-Validation
+        if ($PSCmdlet.ParameterSetName -eq "Signed Base") {
+            # If any of these parameters, that are mandatory for all of the position 0 parameters, isn't supplied by user
+            if (!$SignToolPath -or !$CertPath -or !$CertCN) {
+                # Read User configuration file if it exists
+                $UserConfig = Get-Content -Path "$env:USERPROFILE\.WDACConfig\UserConfigurations.json" -ErrorAction SilentlyContinue   
+                if ($UserConfig) {
+                    # Validate the Json file and read its content to make sure it's not corrupted
+                    try { $UserConfig = $UserConfig | ConvertFrom-Json }
+                    catch {            
+                        Write-Error "User Configuration Json file is corrupted, deleting it..." -ErrorAction Continue
+                        # Calling this function with this parameter automatically does its job and breaks/stops the operation
+                        Set-CommonWDACConfig -DeleteUserConfig         
+                    }                
+                }
+            }
+        
+            # Get SignToolPath from user parameter or user config file or auto-detect it
+            if ($SignToolPath) {
+                $SignToolPathFinal = Get-SignTool -SignToolExePath $SignToolPath
+            } # If it is null, then Get-SignTool will behave the same as if it was called without any arguments.
+            else {
+                $SignToolPathFinal = Get-SignTool -SignToolExePath ($UserConfig.SignToolCustomPath ?? $null)
+            }    
+                
+            # If CertPath parameter wasn't provided by user
+            if (!$CertPath) {
+                if ($UserConfig.CertificatePath) {
+                    # validate user config values for Certificate Path          
+                    if (Test-Path $($UserConfig.CertificatePath)) {
+                        # If the user config values are correct then use them
+                        $CertPath = $UserConfig.CertificatePath
+                    }            
+                    else {
+                        throw "The currently saved value for CertPath in user configurations is invalid."
+                    }
+                }
+                else {
+                    throw "CertPath parameter can't be empty and no valid configuration was found for it."
+                }
+            }
+                        
+            # If CertCN was not provided by user
+            if (!$CertCN) {
+                if ($UserConfig.CertificateCommonName) {
+                    # Check if the value in the User configuration file exists and is valid
+                    if (Confirm-CertCN $($UserConfig.CertificateCommonName)) {
+                        # if it's valid then use it
+                        $CertCN = $UserConfig.CertificateCommonName
+                    }
+                    else {
+                        throw "The currently saved value for CertCN in user configurations is invalid."
+                    }
+                }
+                else {
+                    throw "CertCN parameter can't be empty and no valid configuration was found for it."
+                }
+            } 
+        
+        }
+        #endregion User-Configurations-Processing-Validation
+
+        # ValidateSet for Policy names 
+        Class PolicyNamezx : System.Management.Automation.IValidateSetValuesGenerator {
             [System.String[]] GetValidValues() {
-                $PolicyNamez = ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsOnDisk -eq "True" } | Where-Object { $_.IsSystemPolicy -ne "True" }).Friendlyname | Select-Object -Unique
+                $PolicyNamezx = ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsOnDisk -eq "True" } | Where-Object { $_.IsSystemPolicy -ne "True" }).Friendlyname | Select-Object -Unique
    
-                return [System.String[]]$PolicyNamez
+                return [System.String[]]$PolicyNamezx
             }
         }
 
-        # argument tab auto-completion and ValidateSet for Policy IDs     
-        Class PolicyIDz : System.Management.Automation.IValidateSetValuesGenerator {
+        # ValidateSet for Policy IDs     
+        Class PolicyIDzx : System.Management.Automation.IValidateSetValuesGenerator {
             [System.String[]] GetValidValues() {
-                $PolicyIDz = ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsOnDisk -eq "True" } | Where-Object { $_.IsSystemPolicy -ne "True" }).policyID
+                $PolicyIDzx = ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsOnDisk -eq "True" } | Where-Object { $_.IsSystemPolicy -ne "True" }).policyID
    
-                return [System.String[]]$PolicyIDz
+                return [System.String[]]$PolicyIDzx
             }
         }    
+
+
+        # argument tab auto-completion and ValidateSet for Policy names
+        # Defines the PolicyNamez class that implements the IValidateSetValuesGenerator interface. This class is responsible for generating a list of valid values for the policy names.
+        Class PolicyNamez : System.Management.Automation.IValidateSetValuesGenerator {
+            # Creates a static hashtable to store a mapping of policy IDs to their respective friendly names.
+            static [Hashtable] $IDNameMap = @{}
+
+            # Defines a method to get valid policy names from the policies on disk that aren't system policies.
+            [System.String[]] GetValidValues() {
+                $policies = (CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsOnDisk -eq "True" } | Where-Object { $_.IsSystemPolicy -ne "True" }
+                self::$IDNameMap = @{}
+                foreach ($policy in $policies) {
+                    self::$IDNameMap[$policy.policyID] = $policy.Friendlyname
+                }
+                # Returns an array of unique policy names.
+                return [System.String[]]($policies.Friendlyname | Select-Object -Unique)
+            }
+
+            # Defines a static method to get a policy name by its ID. This method will be used to check if a policy ID is already in use.
+            static [System.String] GetPolicyNameByID($ID) {
+                return self::$IDNameMap[$ID]
+            }
+        }
+
+        # Defines the PolicyIDz class that also implements the IValidateSetValuesGenerator interface. This class is responsible for generating a list of valid values for the policy IDs.
+        Class PolicyIDz : System.Management.Automation.IValidateSetValuesGenerator {
+            # Creates a static hashtable to store a mapping of policy friendly names to their respective IDs.
+            static [Hashtable] $NameIDMap = @{}
+
+            # Defines a method to get valid policy IDs from the policies on disk that aren't system policies.
+            [System.String[]] GetValidValues() {
+                $policies = (CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsOnDisk -eq "True" } | Where-Object { $_.IsSystemPolicy -ne "True" }
+                self::$NameIDMap = @{}
+                foreach ($policy in $policies) {
+                    self::$NameIDMap[$policy.Friendlyname] = $policy.policyID
+                }
+                # Returns an array of unique policy IDs.
+                return [System.String[]]($policies.policyID | Select-Object -Unique)
+            }
+
+            # Defines a static method to get a policy ID by its name. This method will be used to check if a policy name is already in use.
+            static [System.String] GetPolicyIDByName($Name) {
+                return self::$NameIDMap[$Name]
+            }
+        }
     }
-    
+
     process {
 
         if ($SignedBase) {
@@ -130,78 +257,82 @@ function Remove-WDACConfig {
                 # Prevent users from accidentally attempting to remove policies that aren't even deployed on the system
                 $CurrentPolicyIDs = ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsSystemPolicy -ne "True" }).policyID | ForEach-Object { "{$_}" }
                 Write-Debug -Message "The policy ID of the currently processing xml file is $PolicyID"
-                if ($CurrentPolicyIDs -notcontains $PolicyID) {                                        
-                    Write-Error -Message "The selected policy file isn't deployed on the system." -ErrorAction Stop                    
+                if ($CurrentPolicyIDs -notcontains $PolicyID) {
+                    Write-Error -Message "The selected policy file isn't deployed on the system." -ErrorAction Stop
                 }
 
-                ######################## Sanitize the policy file by removing SupplementalPolicySigners ######################## 
+                ######################## Sanitize the policy file by removing SupplementalPolicySigners ########################
                 $SuppSingerIDs = $xml.SiPolicy.SupplementalPolicySigners.SupplementalPolicySigner.SignerId
                 $PolicyName = ($xml.SiPolicy.Settings.Setting | Where-Object { $_.provider -eq "PolicyInfo" -and $_.valuename -eq "Name" -and $_.key -eq "Information" }).value.string
                 if ($SuppSingerIDs) {
-                    Write-host "`n$($SuppSingerIDs.count) SupplementalPolicySigners have been found in $PolicyName policy, removing them now..." -ForegroundColor Yellow    
+                    Write-Host "`n$($SuppSingerIDs.count) SupplementalPolicySigners have been found in $PolicyName policy, removing them now..." -ForegroundColor Yellow
                     $SuppSingerIDs | ForEach-Object {
-                        $PolContent = Get-Content -Raw -Path $PolicyPath        
+                        $PolContent = Get-Content -Raw -Path $PolicyPath
                         $PolContent -match "<Signer ID=`"$_`"[\S\s]*</Signer>" | Out-Null
                         $PolContent = $PolContent -replace $Matches[0], ""
                         Set-Content -Value $PolContent -Path $PolicyPath
                     }
-                    $PolContent -match "<SupplementalPolicySigners>[\S\s]*</SupplementalPolicySigners>" | Out-Null     
+                    $PolContent -match "<SupplementalPolicySigners>[\S\s]*</SupplementalPolicySigners>" | Out-Null
                     $PolContent = $PolContent -replace $Matches[0], ""
                     Set-Content -Value $PolContent -Path $PolicyPath
-                
-                    # remove empty lines from the entire policy file       
-                    (Get-Content -Path $PolicyPath) | Where-Object { $_.trim() -ne "" } | set-content -Path $PolicyPath -Force
-                    Write-host "Policy successfully sanitized and all SupplementalPolicySigners have been removed." -ForegroundColor Green
+
+                    # remove empty lines from the entire policy file
+                    (Get-Content -Path $PolicyPath) | Where-Object { $_.trim() -ne "" } | Set-Content -Path $PolicyPath -Force
+                    Write-Host "Policy successfully sanitized and all SupplementalPolicySigners have been removed." -ForegroundColor Green
                 }
                 else {
-                    Write-host "`nNo sanitization required because no SupplementalPolicySigners have been found in $PolicyName policy." -ForegroundColor Green
+                    Write-Host "`nNo sanitization required because no SupplementalPolicySigners have been found in $PolicyName policy." -ForegroundColor Green
                 }
-                
+
                 Set-RuleOption -FilePath $PolicyPath -Option 6
                 ConvertFrom-CIPolicy $PolicyPath "$PolicyID.cip" | Out-Null
-                
+
                 # Configure the parameter splat
                 $ProcessParams = @{
                     'ArgumentList' = 'sign', '/v' , '/n', "`"$CertCN`"", '/p7', '.', '/p7co', '1.3.6.1.4.1.311.79.1', '/fd', 'certHash', ".\$PolicyID.cip"
-                    'FilePath'     = ($SignToolPath ? (Get-SignTool -SignToolExePath $SignToolPath) : (Get-SignTool))
+                    'FilePath'     = $SignToolPathFinal
                     'NoNewWindow'  = $true
                     'Wait'         = $true
+                    'ErrorAction'  = 'Stop'
                 }
+                if (!$Debug) { $ProcessParams['RedirectStandardOutput'] = "NUL" } 
                 # Sign the files with the specified cert
                 Start-Process @ProcessParams
-            
+
                 Remove-Item ".\$PolicyID.cip" -Force
-                Rename-Item "$PolicyID.cip.p7" -NewName "$PolicyID.cip" -Force  
-                CiTool --update-policy ".\$PolicyID.cip" -json
-                Write-host "`n`nPolicy with the following details has been Re-signed and Re-deployed in Unsigned mode:" -ForegroundColor Green        
+                Rename-Item "$PolicyID.cip.p7" -NewName "$PolicyID.cip" -Force
+                CiTool --update-policy ".\$PolicyID.cip" -json | Out-Null 
+                Write-Host "`n`nPolicy with the following details has been Re-signed and Re-deployed in Unsigned mode.`nPlease restart your system." -ForegroundColor Green
                 Write-Output "PolicyName = $PolicyName"
-                Write-Output "PolicyGUID = $PolicyID`n"           
+                Write-Output "PolicyGUID = $PolicyID`n"
             }
         }
-    
+
         if ($UnsignedOrSupplemental) {
 
             # If IDs were supplied by user
             foreach ($ID in $PolicyIDs ) {
-                citool --remove-policy "{$ID}" -json
+                citool --remove-policy "{$ID}" -json | Out-Null                
+                Write-Host "Policy with the ID $ID has been successfully removed." -ForegroundColor Green                
             }
-            
+
             # If names were supplied by user
             # Empty array to store Policy IDs based on the input name, this will take care of the situations where multiple policies with the same name are deployed
             $NameID = @()
-            foreach ($PolicyName in $PolicyNames) {                    
+            foreach ($PolicyName in $PolicyNames) {
                 $NameID += ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsOnDisk -eq "True" } | Where-Object { $_.FriendlyName -eq $PolicyName }).PolicyID
             }
-            
+
             Write-Debug -Message "The Following policy IDs have been gathered from the supplied policy names and are going to be removed from the system"
-            if ($Debug) { $NameID | Select-Object -Unique | foreach-object { Write-Debug -Message "$_" } }
-            
+            if ($Debug) { $NameID | Select-Object -Unique | ForEach-Object { Write-Debug -Message "$_" } }
+
             $NameID | Select-Object -Unique | ForEach-Object {
-                citool --remove-policy "{$_}" -json 
-            }     
+                citool --remove-policy "{$_}" -json | Out-Null               
+                Write-Host "Policy with the ID $_ has been successfully removed." -ForegroundColor Green                
+            }
         }
-    } 
-   
+    }
+
     <#
 .SYNOPSIS
 Removes Signed and unsigned deployed WDAC policies (Windows Defender Application Control)
@@ -233,7 +364,7 @@ Can be used with any parameter to bypass the online version check - only to be u
 # Importing argument completer ScriptBlocks
 . "$psscriptroot\ArgumentCompleters.ps1"
 # Set PSReadline tab completion to complete menu for easier access to available parameters - Only for the current session
-Set-PSReadlineKeyHandler -Key Tab -Function MenuComplete
+Set-PSReadLineKeyHandler -Key Tab -Function MenuComplete
 Register-ArgumentCompleter -CommandName "Remove-WDACConfig" -ParameterName "CertCN" -ScriptBlock $ArgumentCompleterCertificateCN
 Register-ArgumentCompleter -CommandName "Remove-WDACConfig" -ParameterName "PolicyPaths" -ScriptBlock $ArgumentCompleterPolicyPathsBasePoliciesOnly
 Register-ArgumentCompleter -CommandName "Remove-WDACConfig" -ParameterName "CertPath" -ScriptBlock $ArgumentCompleterCertPath

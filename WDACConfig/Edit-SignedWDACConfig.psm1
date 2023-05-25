@@ -9,29 +9,39 @@ function Edit-SignedWDACConfig {
     Param(
         [Alias("E")]
         [Parameter(Mandatory = $false, ParameterSetName = "Allow New Apps Audit Events")][Switch]$AllowNewAppsAuditEvents,
-
         [Alias("A")]
         [Parameter(Mandatory = $false, ParameterSetName = "Allow New Apps")][Switch]$AllowNewApps,
-
         [Alias("M")]
-        [Parameter(Mandatory = $false, ParameterSetName = "Merge Supplemental Policies")][Switch]$MergeSupplementalPolicies,  
-        
+        [Parameter(Mandatory = $false, ParameterSetName = "Merge Supplemental Policies")][Switch]$MergeSupplementalPolicies,          
         [Alias("U")]
         [Parameter(Mandatory = $false, ParameterSetName = "Update Base Policy")][Switch]$UpdateBasePolicy,
 
-        [ValidatePattern('\.cer$')]
-        [ValidateScript({ Test-Path $_ -PathType 'Leaf' }, ErrorMessage = "The path you selected is not a file path.")]        
-        [Parameter(Mandatory = $true, ParameterSetName = "Allow New Apps Audit Events", ValueFromPipelineByPropertyName = $true)]
-        [Parameter(Mandatory = $true, ParameterSetName = "Allow New Apps", ValueFromPipelineByPropertyName = $true)]
-        [Parameter(Mandatory = $true, ParameterSetName = "Merge Supplemental Policies", ValueFromPipelineByPropertyName = $true)]
-        [Parameter(Mandatory = $true, ParameterSetName = "Update Base Policy", ValueFromPipelineByPropertyName = $true)] 
-        [System.String]$CertPath,
-
-        [ValidatePattern('^[a-zA-Z0-9 ]+$', ErrorMessage = "The Supplemental Policy Name can only contain alphanumeric characters.")]
+        [ValidatePattern('^[a-zA-Z0-9 ]+$', ErrorMessage = "The Supplemental Policy Name can only contain alphanumeric and space characters.")]
         [Parameter(Mandatory = $true, ParameterSetName = "Allow New Apps Audit Events", ValueFromPipelineByPropertyName = $true)]
         [Parameter(Mandatory = $true, ParameterSetName = "Allow New Apps", ValueFromPipelineByPropertyName = $true)]
         [Parameter(Mandatory = $true, ParameterSetName = "Merge Supplemental Policies", ValueFromPipelineByPropertyName = $true)]       
-        [System.String]$SuppPolicyName,        
+        [System.String]$SuppPolicyName,
+
+        [ValidatePattern('\.xml$')]
+        [ValidateScript({ Test-Path $_ -PathType 'Leaf' }, ErrorMessage = "The path you selected is not a file path.")]
+        [Parameter(Mandatory = $true, ParameterSetName = "Merge Supplemental Policies", ValueFromPipelineByPropertyName = $true)]
+        [System.String[]]$SuppPolicyPaths,
+
+        [Parameter(Mandatory = $false, ParameterSetName = "Merge Supplemental Policies")]
+        [switch]$KeepOldSupplementalPolicies,
+
+        [ValidateSet([BasePolicyNamez])]
+        [Parameter(Mandatory = $true, ParameterSetName = "Update Base Policy")]
+        [System.String[]]$CurrentBasePolicyName,
+
+        [ValidateSet("AllowMicrosoft_Plus_Block_Rules", "Lightly_Managed_system_Policy", "DefaultWindows_WithBlockRules")]
+        [Parameter(Mandatory = $true, ParameterSetName = "Update Base Policy")]
+        [System.String]$NewBasePolicyType,
+
+        [ValidatePattern('\.cer$')] # Used by all the entire Cmdlet
+        [ValidateScript({ Test-Path $_ -PathType 'Leaf' }, ErrorMessage = "The path you selected is not a file path.")]
+        [Parameter(Mandatory = $false, ValueFromPipelineByPropertyName = $true)] 
+        [System.String]$CertPath,        
 
         [ValidatePattern('\.xml$')]
         [ValidateScript({
@@ -41,36 +51,32 @@ function Edit-SignedWDACConfig {
                     $xmlTest = [xml](Get-Content $_)
                     $RedFlag1 = $xmlTest.SiPolicy.SupplementalPolicySigners.SupplementalPolicySigner.SignerId
                     $RedFlag2 = $xmlTest.SiPolicy.UpdatePolicySigners.UpdatePolicySigner.SignerId
-                    if ($RedFlag1 -or $RedFlag2) { return $True }                   
+                    $RedFlag3 = $xmlTest.SiPolicy.PolicyID
+                    $CurrentPolicyIDs = ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsSystemPolicy -ne "True" }).policyID | ForEach-Object { "{$_}" }
+                    if ($RedFlag1 -or $RedFlag2) {
+                        if ($CurrentPolicyIDs -contains $RedFlag3) {        
+                            return $True
+                        }
+                        else { throw "The currently selected policy xml file isn't deployed." }
+                    }
+                    # This throw is shown only when User added a Signed policy xml file for Unsigned policy file path property in user configuration file
+                    # Without this, the error shown would be vague: The variable cannot be validated because the value System.String[] is not a valid value for the PolicyPaths variable.
+                    else { throw "The policy xml file in User Configurations for SignedPolicyPath is Unsigned policy." }               
                 }
-            }, ErrorMessage = "The policy XML file(s) you chose are Unsigned policies. Please use Edit-WDACConfig cmdlet to edit Unsigned policies.")]
-        [Parameter(Mandatory = $true, ParameterSetName = "Allow New Apps Audit Events", ValueFromPipelineByPropertyName = $true)]
-        [Parameter(Mandatory = $true, ParameterSetName = "Allow New Apps", ValueFromPipelineByPropertyName = $true)]
-        [Parameter(Mandatory = $true, ParameterSetName = "Merge Supplemental Policies", ValueFromPipelineByPropertyName = $true)]     
+            }, ErrorMessage = "The selected policy xml file is Unsigned. Please use Edit-WDACConfig cmdlet to edit Unsigned policies.")]
+        [Parameter(Mandatory = $false, ParameterSetName = "Allow New Apps Audit Events", ValueFromPipelineByPropertyName = $true)]
+        [Parameter(Mandatory = $false, ParameterSetName = "Allow New Apps", ValueFromPipelineByPropertyName = $true)]
+        [Parameter(Mandatory = $false, ParameterSetName = "Merge Supplemental Policies", ValueFromPipelineByPropertyName = $true)]     
         [System.String[]]$PolicyPaths,
 
         [ValidateScript({
-                try {
-                    # TryCatch to show a custom error message instead of saying input is null when personal store is empty 
-                ((Get-ChildItem -ErrorAction Stop -Path 'Cert:\CurrentUser\My').Subject.Substring(3)) -contains $_            
-                }
-                catch {
-                    Write-Error -Message "A certificate with the provided common name doesn't exist in the personal store of the user certificates."
-                } # this error msg is shown when cert CN is not available in the personal store of the user certs
+                $certs = foreach ($cert in (Get-ChildItem 'Cert:\CurrentUser\my')) {
+                (($cert.Subject -split "," | Select-Object -First 1) -replace "CN=", "").Trim()
+                } 
+                $certs -contains $_
             }, ErrorMessage = "A certificate with the provided common name doesn't exist in the personal store of the user certificates." )]
-        [Parameter(Mandatory = $true, ParameterSetName = "Allow New Apps Audit Events", ValueFromPipelineByPropertyName = $true)]
-        [Parameter(Mandatory = $true, ParameterSetName = "Allow New Apps", ValueFromPipelineByPropertyName = $true)]
-        [Parameter(Mandatory = $true, ParameterSetName = "Merge Supplemental Policies", ValueFromPipelineByPropertyName = $true)]
-        [Parameter(Mandatory = $true, ParameterSetName = "Update Base Policy", ValueFromPipelineByPropertyName = $true)]
+        [Parameter(Mandatory = $false, ValueFromPipelineByPropertyName = $true)] # Used by all the entire Cmdlet
         [System.String]$CertCN,
-
-        [ValidatePattern('\.xml$')]
-        [ValidateScript({ Test-Path $_ -PathType 'Leaf' }, ErrorMessage = "The path you selected is not a file path.")]
-        [Parameter(Mandatory = $true, ParameterSetName = "Merge Supplemental Policies", ValueFromPipelineByPropertyName = $true)]
-        [System.String[]]$SuppPolicyPaths,
-
-        [Parameter(Mandatory = $false, ParameterSetName = "Merge Supplemental Policies")]
-        [switch]$KeepOldSupplementalPolicies,
 
         # Setting the maxim range to the maximum allowed log size by Windows Event viewer
         [ValidateRange(1024KB, 18014398509481983KB)][Parameter(Mandatory = $false, ParameterSetName = "Allow New Apps Audit Events")]
@@ -95,14 +101,6 @@ function Edit-SignedWDACConfig {
 
         [parameter(Mandatory = $false, ParameterSetName = "Allow New Apps Audit Events")][Switch]$IncludeDeletedFiles,
 
-        [ValidateSet([BasePolicyNamez])]
-        [Parameter(Mandatory = $true, ParameterSetName = "Update Base Policy")]
-        [System.String[]]$CurrentBasePolicyName,
-
-        [ValidateSet("AllowMicrosoft_Plus_Block_Rules", "Lightly_Managed_system_Policy", "DefaultWindows_WithBlockRules")]
-        [Parameter(Mandatory = $true, ParameterSetName = "Update Base Policy")]
-        [System.String]$NewBasePolicyType,
-
         [ValidateSet([Levelz])]
         [parameter(Mandatory = $false, ParameterSetName = "Allow New Apps Audit Events")]
         [parameter(Mandatory = $false, ParameterSetName = "Allow New Apps")]
@@ -112,27 +110,14 @@ function Edit-SignedWDACConfig {
         [parameter(Mandatory = $false, ParameterSetName = "Allow New Apps Audit Events")]
         [parameter(Mandatory = $false, ParameterSetName = "Allow New Apps")]
         [System.String[]]$Fallbacks = "Hash", # Setting the default value for the Fallbacks parameter
-
-        [ValidatePattern('\.exe$')]
-        [ValidateScript({ # Setting the minimum version of SignTool that is allowed to be executed as well as other checks
-                [System.Version]$WindowsSdkVersion = '10.0.22621.755'
-                (((get-item -Path $_).VersionInfo).ProductVersionRaw -ge $WindowsSdkVersion)
-                (((get-item -Path $_).VersionInfo).FileVersionRaw -ge $WindowsSdkVersion)
-                ((get-item -Path $_).VersionInfo).CompanyName -eq 'Microsoft Corporation'
-                ((Get-AuthenticodeSignature -FilePath $_).Status -eq 'Valid')
-                ((Get-AuthenticodeSignature -FilePath $_).StatusMessage -eq 'Signature verified.')
-            }, ErrorMessage = "The SignTool executable was found but couldn't be verified. Please download the latest Windows SDK to get the newest SignTool executable. Official download link: http://aka.ms/WinSDK")]
-        [parameter(ValueFromPipelineByPropertyName = $true)]
-        [Parameter(Mandatory = $false, ParameterSetName = "Allow New Apps Audit Events", ValueFromPipelineByPropertyName = $true)]
-        [Parameter(Mandatory = $false, ParameterSetName = "Allow New Apps", ValueFromPipelineByPropertyName = $true)]
-        [Parameter(Mandatory = $false, ParameterSetName = "Merge Supplemental Policies", ValueFromPipelineByPropertyName = $true)]
-        [Parameter(Mandatory = $false, ParameterSetName = "Update Base Policy", ValueFromPipelineByPropertyName = $true)]
+        
+        [Parameter(Mandatory = $false, ValueFromPipelineByPropertyName = $true)] # Used by all the entire Cmdlet
         [System.String]$SignToolPath,
 
         [Parameter(Mandatory = $false, ParameterSetName = "Update Base Policy")]
         [Switch]$RequireEVSigners,
 
-        [Parameter(Mandatory = $false)]
+        [Parameter(Mandatory = $false)] # Used by all the entire Cmdlet
         [Switch]$SkipVersionCheck
     )
 
@@ -140,14 +125,95 @@ function Edit-SignedWDACConfig {
         # Importing resources such as functions by dot-sourcing so that they will run in the same scope and their variables will be usable
         . "$psscriptroot\Resources.ps1"
 
+        # Stop operation as soon as there is an error anywhere, unless explicitly specified otherwise
+        $ErrorActionPreference = 'Stop'         
+        if (-NOT $SkipVersionCheck) { . Update-self } 
+
+        #region User-Configurations-Processing-Validation
+        # If any of these parameters, that are mandatory for all of the position 0 parameters, isn't supplied by user
+        if (!$PolicyPaths -or !$SignToolPath -or !$CertPath -or !$CertCN) {
+            # Read User configuration file if it exists
+            $UserConfig = Get-Content -Path "$env:USERPROFILE\.WDACConfig\UserConfigurations.json" -ErrorAction SilentlyContinue   
+            if ($UserConfig) {
+                # Validate the Json file and read its content to make sure it's not corrupted
+                try { $UserConfig = $UserConfig | ConvertFrom-Json }
+                catch {            
+                    Write-Error "User Configurations Json file is corrupted, deleting it..." -ErrorAction Continue
+                    # Calling this function with this parameter automatically does its job and breaks/stops the operation
+                    Set-CommonWDACConfig -DeleteUserConfig         
+                }                
+            }
+        }
+        
+        # Get SignToolPath from user parameter or user config file or auto-detect it
+        if ($SignToolPath) {
+            $SignToolPathFinal = Get-SignTool -SignToolExePath $SignToolPath
+        } # If it is null, then Get-SignTool will behave the same as if it was called without any arguments.
+        else {
+            $SignToolPathFinal = Get-SignTool -SignToolExePath ($UserConfig.SignToolCustomPath ?? $null)
+        }    
+                
+        # If CertPath parameter wasn't provided by user
+        if (!$CertPath) {
+            if ($UserConfig.CertificatePath) {
+                # validate user config values for Certificate Path          
+                if (Test-Path $($UserConfig.CertificatePath)) {
+                    # If the user config values are correct then use them
+                    $CertPath = $UserConfig.CertificatePath
+                }            
+                else {
+                    throw "The currently saved value for CertPath in user configurations is invalid."
+                }
+            }
+            else {
+                throw "CertPath parameter can't be empty and no valid configuration was found for it."
+            }
+        }
+                        
+        # If CertCN was not provided by user
+        if (!$CertCN) {
+            if ($UserConfig.CertificateCommonName) {
+                # Check if the value in the User configuration file exists and is valid
+                if (Confirm-CertCN $($UserConfig.CertificateCommonName)) {
+                    # if it's valid then use it
+                    $CertCN = $UserConfig.CertificateCommonName
+                }
+                else {
+                    throw "The currently saved value for CertCN in user configurations is invalid."
+                }
+            }
+            else {
+                throw "CertCN parameter can't be empty and no valid configuration was found for it."
+            }
+        } 
+
+        # If PolicyPaths has no values
+        if (!$PolicyPaths) {
+            # make sure the ParameterSet being used has PolicyPaths parameter - Then enforces "mandatory" attribute for the parameter
+            if ($PSCmdlet.ParameterSetName -in "Allow New Apps Audit Events", "Allow New Apps", "Merge Supplemental Policies") {
+                if ($UserConfig.SignedPolicyPath) {
+                    # validate each policyPath read from user config file
+                    if (Test-Path $($UserConfig.SignedPolicyPath)) {
+                        $PolicyPaths = $UserConfig.SignedPolicyPath
+                    }
+                    else {
+                        throw "The currently saved value for SignedPolicyPath in user configurations is invalid."
+                    }           
+                }
+                else {
+                    throw "PolicyPaths parameter can't be empty and no valid configuration was found for SignedPolicyPath."
+                }
+            }
+        }
+        #endregion User-Configurations-Processing-Validation
+
         # Detecting if Debug switch is used, will do debugging actions based on that
         $Debug = $PSBoundParameters.Debug.IsPresent
 
         # argument tab auto-completion and ValidateSet for Policy names 
         Class BasePolicyNamez : System.Management.Automation.IValidateSetValuesGenerator {
             [System.String[]] GetValidValues() {
-                $BasePolicyNamez = ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsSystemPolicy -ne "True" } | Where-Object { $_.PolicyID -eq $_.BasePolicyID }).Friendlyname
-           
+                $BasePolicyNamez = ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsSystemPolicy -ne "True" } | Where-Object { $_.PolicyID -eq $_.BasePolicyID }).Friendlyname           
                 return [System.String[]]$BasePolicyNamez
             }
         }
@@ -155,8 +221,7 @@ function Edit-SignedWDACConfig {
         # argument tab auto-completion and ValidateSet for Fallbacks
         Class Fallbackz : System.Management.Automation.IValidateSetValuesGenerator {
             [System.String[]] GetValidValues() {
-                $Fallbackz = ('Hash', 'FileName', 'SignedVersion', 'Publisher', 'FilePublisher', 'LeafCertificate', 'PcaCertificate', 'RootCertificate', 'WHQL', 'WHQLPublisher', 'WHQLFilePublisher', 'PFN', 'FilePath', 'None')
-   
+                $Fallbackz = ('Hash', 'FileName', 'SignedVersion', 'Publisher', 'FilePublisher', 'LeafCertificate', 'PcaCertificate', 'RootCertificate', 'WHQL', 'WHQLPublisher', 'WHQLFilePublisher', 'PFN', 'FilePath', 'None')   
                 return [System.String[]]$Fallbackz
             }
         }
@@ -164,8 +229,7 @@ function Edit-SignedWDACConfig {
         # argument tab auto-completion and ValidateSet for level
         Class Levelz : System.Management.Automation.IValidateSetValuesGenerator {
             [System.String[]] GetValidValues() {
-                $Levelz = ('Hash', 'FileName', 'SignedVersion', 'Publisher', 'FilePublisher', 'LeafCertificate', 'PcaCertificate', 'RootCertificate', 'WHQL', 'WHQLPublisher', 'WHQLFilePublisher', 'PFN', 'FilePath', 'None')
-       
+                $Levelz = ('Hash', 'FileName', 'SignedVersion', 'Publisher', 'FilePublisher', 'LeafCertificate', 'PcaCertificate', 'RootCertificate', 'WHQL', 'WHQLPublisher', 'WHQLFilePublisher', 'PFN', 'FilePath', 'None')       
                 return [System.String[]]$Levelz
             }
         }
@@ -179,27 +243,24 @@ function Edit-SignedWDACConfig {
             # Configure the parameter splat
             $ProcessParams = @{
                 'ArgumentList' = 'sign', '/v' , '/n', "`"$CertCN`"", '/p7', '.', '/p7co', '1.3.6.1.4.1.311.79.1', '/fd', 'certHash', ".\$PolicyID.cip"
-                'FilePath'     = ($SignToolPath ? (Get-SignTool -SignToolExePath $SignToolPath) : (Get-SignTool))
+                'FilePath'     = $SignToolPathFinal
                 'NoNewWindow'  = $true
                 'Wait'         = $true
+                'ErrorAction'  = 'Stop'
             }
+            if (!$Debug) { $ProcessParams['RedirectStandardOutput'] = "NUL" } 
             # Sign the files with the specified cert
             Start-Process @ProcessParams
 
             Remove-Item ".\$PolicyID.cip" -Force            
             Rename-Item "$PolicyID.cip.p7" -NewName "$PolicyID.cip" -Force
-            CiTool --update-policy ".\$PolicyID.cip" -json
-            Remove-Item ".\$PolicyID.cip" -Force
+            CiTool --update-policy ".\$PolicyID.cip" -json | Out-Null       
             Write-host "`n`nThe Base policy with the following details has been Re-Signed and Re-Deployed in Enforced Mode:" -ForegroundColor Green        
             Write-Output "PolicyName = $PolicyName"
             Write-Output "PolicyGUID = $PolicyID`n"
+            Remove-Item ".\$PolicyID.cip" -Force
         }
-
-        # Stop operation as soon as there is an error anywhere, unless explicitly specified otherwise
-        $ErrorActionPreference = 'Stop'         
-        if (-NOT $SkipVersionCheck) { . Update-self }        
-
-        $DirveLettersGlobalRootFix = Invoke-Command -ScriptBlock $DirveLettersGlobalRootFixScriptBlock
+        $DriveLettersGlobalRootFix = Invoke-Command -ScriptBlock $DriveLettersGlobalRootFixScriptBlock
     }
 
     process {
@@ -234,24 +295,26 @@ function Edit-SignedWDACConfig {
                 # Configure the parameter splat
                 $ProcessParams = @{
                     'ArgumentList' = 'sign', '/v' , '/n', "`"$CertCN`"", '/p7', '.', '/p7co', '1.3.6.1.4.1.311.79.1', '/fd', 'certHash', ".\$PolicyID.cip"
-                    'FilePath'     = ($SignToolPath ? (Get-SignTool -SignToolExePath $SignToolPath) : (Get-SignTool))
+                    'FilePath'     = $SignToolPathFinal
                     'NoNewWindow'  = $true
                     'Wait'         = $true
+                    'ErrorAction'  = 'Stop'
                 }
+                if (!$Debug) { $ProcessParams['RedirectStandardOutput'] = "NUL" } 
                 # Sign the files with the specified cert
                 Start-Process @ProcessParams
             
                 Remove-Item ".\$PolicyID.cip" -Force         
                 Rename-Item "$PolicyID.cip.p7" -NewName "$PolicyID.cip" -Force
-                CiTool --update-policy ".\$PolicyID.cip" -json
-                Remove-Item ".\$PolicyID.cip" -Force
+                CiTool --update-policy ".\$PolicyID.cip" -json | Out-Null         
                 Write-host "`n`nThe Base policy with the following details has been Re-Signed and Re-Deployed in Audit Mode:" -ForegroundColor Green        
                 Write-Output "PolicyName = $PolicyName"
                 Write-Output "PolicyGUID = $PolicyID"
+                Remove-Item ".\$PolicyID.cip" -Force
              
                 ################################### User Interaction ####################################
-                Write-host "`nAudit mode deployed, start installing your programs now" -ForegroundColor Magenta        
-                Write-Host "When you've finished installing programs, Press Enter to start selecting program directories to scan`n" -ForegroundColor Blue
+                &$WritePink "`nAudit mode deployed, start installing your programs now"
+                &$WriteViolet "When you've finished installing programs, Press Enter to start selecting program directories to scan`n"
                 Pause
 
                 # Store the program paths that user browses for in an array
@@ -336,29 +399,23 @@ function Edit-SignedWDACConfig {
                         Write-Debug -Message "$($AuditEventLogsProcessingResults.DeletedFileHashes.count) file(s) have been found in event viewer logs that were run during Audit phase but are no longer on the disk."
 
                         # Create File Rules based on hash of the files and store them in the $Rules variable
-                        $i = 1
-                        $imax = ($AuditEventLogsProcessingResults.DeletedFileHashes).count
-                        while ($i -le $imax) {
-                            $AuditEventLogsProcessingResults.DeletedFileHashes | ForEach-Object {  
-                                $Rules += Write-Output "`n<Allow ID=`"ID_ALLOW_AA_$i`" FriendlyName=`"$($_.'File Name') SHA256 Hash`" Hash=`"$($_.'SHA256 Hash')`" />"
-                                $Rules += Write-Output "`n<Allow ID=`"ID_ALLOW_AB_$i`" FriendlyName=`"$($_.'File Name') SHA256 Flat Hash`" Hash=`"$($_.'SHA256 Flat Hash')`" />"
-                                $Rules += Write-Output "`n<Allow ID=`"ID_ALLOW_AC_$i`" FriendlyName=`"$($_.'File Name') SHA1 Hash`" Hash=`"$($_.'SHA1 Hash')`" />"
-                                $Rules += Write-Output "`n<Allow ID=`"ID_ALLOW_AD_$i`" FriendlyName=`"$($_.'File Name') SHA1 Flat Hash`" Hash=`"$($_.'SHA1 Flat Hash')`" />"
-                                $i++
-                            }
-                        }
+                        $Rules = @()
+                        $AuditEventLogsProcessingResults.DeletedFileHashes | ForEach-Object -Begin { $i = 1 } -Process {
+                            $Rules += Write-Output "`n<Allow ID=`"ID_ALLOW_AA_$i`" FriendlyName=`"$($_.'File Name') SHA256 Hash`" Hash=`"$($_.'SHA256 Hash')`" />"
+                            $Rules += Write-Output "`n<Allow ID=`"ID_ALLOW_AB_$i`" FriendlyName=`"$($_.'File Name') SHA256 Flat Hash`" Hash=`"$($_.'SHA256 Flat Hash')`" />"
+                            $Rules += Write-Output "`n<Allow ID=`"ID_ALLOW_AC_$i`" FriendlyName=`"$($_.'File Name') SHA1 Hash`" Hash=`"$($_.'SHA1 Hash')`" />"
+                            $Rules += Write-Output "`n<Allow ID=`"ID_ALLOW_AD_$i`" FriendlyName=`"$($_.'File Name') SHA1 Flat Hash`" Hash=`"$($_.'SHA1 Flat Hash')`" />"
+                            $i++
+                        }                
                         # Create File Rule Refs based on the ID of the File Rules above and store them in the $RulesRefs variable
-                        $i = 1
-                        $imax = ($AuditEventLogsProcessingResults.DeletedFileHashes).count
-                        while ($i -le $imax) {
-                            $AuditEventLogsProcessingResults.DeletedFileHashes | ForEach-Object { 
-                                $RulesRefs += Write-Output "`n<FileRuleRef RuleID=`"ID_ALLOW_AA_$i`" />"
-                                $RulesRefs += Write-Output "`n<FileRuleRef RuleID=`"ID_ALLOW_AB_$i`" />"
-                                $RulesRefs += Write-Output "`n<FileRuleRef RuleID=`"ID_ALLOW_AC_$i`" />"
-                                $RulesRefs += Write-Output "`n<FileRuleRef RuleID=`"ID_ALLOW_AD_$i`" />"
-                                $i++
-                            }
-                        }  
+                        $RulesRefs = @()
+                        $AuditEventLogsProcessingResults.DeletedFileHashes | ForEach-Object -Begin { $i = 1 } -Process {
+                            $RulesRefs += Write-Output "`n<FileRuleRef RuleID=`"ID_ALLOW_AA_$i`" />"
+                            $RulesRefs += Write-Output "`n<FileRuleRef RuleID=`"ID_ALLOW_AB_$i`" />"
+                            $RulesRefs += Write-Output "`n<FileRuleRef RuleID=`"ID_ALLOW_AC_$i`" />"
+                            $RulesRefs += Write-Output "`n<FileRuleRef RuleID=`"ID_ALLOW_AD_$i`" />"
+                            $i++
+                        }
                         # Save the File Rules and File Rule Refs in the FileRulesAndFileRefs.txt in the current working directory for debugging purposes
                         $Rules + $RulesRefs | Out-File FileRulesAndFileRefs.txt
 
@@ -439,7 +496,7 @@ function Edit-SignedWDACConfig {
                                     if ($_.'File Name' -match ($pattern = '\\Device\\HarddiskVolume(\d+)\\(.*)$')) {
                                         $hardDiskVolumeNumber = $Matches[1]
                                         $remainingPath = $Matches[2]
-                                        $getletter = $DirveLettersGlobalRootFix | Where-Object { $_.devicepath -eq "\Device\HarddiskVolume$hardDiskVolumeNumber" }
+                                        $getletter = $DriveLettersGlobalRootFix | Where-Object { $_.devicepath -eq "\Device\HarddiskVolume$hardDiskVolumeNumber" }
                                         $usablePath = "$($getletter.DriveLetter)$remainingPath"
                                         $_.'File Name' = $_.'File Name' -replace $pattern, $usablePath
                                     } # Check if file is currently on the disk
@@ -459,31 +516,23 @@ function Edit-SignedWDACConfig {
                         if ($KernelProtectedHashesBlockResults) {
 
                             # Create File Rules based on hash of the files and store them in the $Rules variable
-                            $i = 1
                             $Rules = @()
-                            $imax = ($KernelProtectedHashesBlockResults).count
-                            while ($i -le $imax) {
-                                $KernelProtectedHashesBlockResults | ForEach-Object {  
-                                    $Rules += Write-Output "`n<Allow ID=`"ID_ALLOW_AA_$i`" FriendlyName=`"$($_.'File Name') SHA256 Hash`" Hash=`"$($_.'SHA256 Hash')`" />"
-                                    $Rules += Write-Output "`n<Allow ID=`"ID_ALLOW_AB_$i`" FriendlyName=`"$($_.'File Name') SHA256 Flat Hash`" Hash=`"$($_.'SHA256 Flat Hash')`" />"
-                                    $Rules += Write-Output "`n<Allow ID=`"ID_ALLOW_AC_$i`" FriendlyName=`"$($_.'File Name') SHA1 Hash`" Hash=`"$($_.'SHA1 Hash')`" />"
-                                    $Rules += Write-Output "`n<Allow ID=`"ID_ALLOW_AD_$i`" FriendlyName=`"$($_.'File Name') SHA1 Flat Hash`" Hash=`"$($_.'SHA1 Flat Hash')`" />"
-                                    $i++
-                                }
+                            $KernelProtectedHashesBlockResults | ForEach-Object -Begin { $i = 1 } -Process {
+                                $Rules += Write-Output "`n<Allow ID=`"ID_ALLOW_AA_$i`" FriendlyName=`"$($_.'File Name') SHA256 Hash`" Hash=`"$($_.'SHA256 Hash')`" />"
+                                $Rules += Write-Output "`n<Allow ID=`"ID_ALLOW_AB_$i`" FriendlyName=`"$($_.'File Name') SHA256 Flat Hash`" Hash=`"$($_.'SHA256 Flat Hash')`" />"
+                                $Rules += Write-Output "`n<Allow ID=`"ID_ALLOW_AC_$i`" FriendlyName=`"$($_.'File Name') SHA1 Hash`" Hash=`"$($_.'SHA1 Hash')`" />"
+                                $Rules += Write-Output "`n<Allow ID=`"ID_ALLOW_AD_$i`" FriendlyName=`"$($_.'File Name') SHA1 Flat Hash`" Hash=`"$($_.'SHA1 Flat Hash')`" />"
+                                $i++
                             }
                             # Create File Rule Refs based on the ID of the File Rules above and store them in the $RulesRefs variable
-                            $i = 1
                             $RulesRefs = @()
-                            $imax = ($KernelProtectedHashesBlockResults).count
-                            while ($i -le $imax) {
-                                $KernelProtectedHashesBlockResults | ForEach-Object { 
-                                    $RulesRefs += Write-Output "`n<FileRuleRef RuleID=`"ID_ALLOW_AA_$i`" />"
-                                    $RulesRefs += Write-Output "`n<FileRuleRef RuleID=`"ID_ALLOW_AB_$i`" />"
-                                    $RulesRefs += Write-Output "`n<FileRuleRef RuleID=`"ID_ALLOW_AC_$i`" />"
-                                    $RulesRefs += Write-Output "`n<FileRuleRef RuleID=`"ID_ALLOW_AD_$i`" />"
-                                    $i++
-                                }
-                            }  
+                            $KernelProtectedHashesBlockResults | ForEach-Object -Begin { $i = 1 } -Process {
+                                $RulesRefs += Write-Output "`n<FileRuleRef RuleID=`"ID_ALLOW_AA_$i`" />"
+                                $RulesRefs += Write-Output "`n<FileRuleRef RuleID=`"ID_ALLOW_AB_$i`" />"
+                                $RulesRefs += Write-Output "`n<FileRuleRef RuleID=`"ID_ALLOW_AC_$i`" />"
+                                $RulesRefs += Write-Output "`n<FileRuleRef RuleID=`"ID_ALLOW_AD_$i`" />"
+                                $i++
+                            }
                             # Save the File Rules and File Rule Refs in the FileRulesAndFileRefs.txt in the current working directory for debugging purposes
                             $Rules + $RulesRefs | Out-File KernelProtectedFiles.txt                    
                             # Put the Rules and RulesRefs in an empty policy file
@@ -514,12 +563,9 @@ function Edit-SignedWDACConfig {
                 }
 
                 if (-NOT $Debug) {
-                    Remove-Item -Path ".\FileRulesAndFileRefs.txt" -Force -ErrorAction SilentlyContinue
-                    Remove-Item -Path ".\DeletedFileHashesEventsPolicy.xml" -Force -ErrorAction SilentlyContinue
-                    Remove-Item -Path ".\ProgramDir_ScanResults*.xml" -Force  -ErrorAction SilentlyContinue
-                    Remove-Item -Path ".\RulesForFilesNotInUserSelectedPaths.xml" -Force -ErrorAction SilentlyContinue
-                    Remove-Item -Path ".\KernelProtectedFiles.xml" -Force -ErrorAction SilentlyContinue
-                    Remove-Item -Path ".\KernelProtectedFiles.txt" -Force -ErrorAction SilentlyContinue
+                    Remove-Item -Path ".\FileRulesAndFileRefs.txt", ".\DeletedFileHashesEventsPolicy.xml" -Force -ErrorAction SilentlyContinue                  
+                    Remove-Item -Path ".\ProgramDir_ScanResults*.xml", ".\RulesForFilesNotInUserSelectedPaths.xml" -Force -ErrorAction SilentlyContinue
+                    Remove-Item -Path ".\KernelProtectedFiles.txt", ".\KernelProtectedFiles.xml" -Force -ErrorAction SilentlyContinue
                 }
 
                 # Re-Deploy Basepolicy in Enforced mode
@@ -543,24 +589,25 @@ function Edit-SignedWDACConfig {
                 # Configure the parameter splat
                 $ProcessParams = @{
                     'ArgumentList' = 'sign', '/v' , '/n', "`"$CertCN`"", '/p7', '.', '/p7co', '1.3.6.1.4.1.311.79.1', '/fd', 'certHash', ".\$SuppPolicyID.cip"
-                    'FilePath'     = ($SignToolPath ? (Get-SignTool -SignToolExePath $SignToolPath) : (Get-SignTool))
+                    'FilePath'     = $SignToolPathFinal
                     'NoNewWindow'  = $true
                     'Wait'         = $true
+                    'ErrorAction'  = 'Stop'
                 }
+                if (!$Debug) { $ProcessParams['RedirectStandardOutput'] = "NUL" } 
                 # Sign the files with the specified cert
                 Start-Process @ProcessParams
             
                 Remove-Item ".\$SuppPolicyID.cip" -Force            
                 Rename-Item "$SuppPolicyID.cip.p7" -NewName "$SuppPolicyID.cip" -Force
-                CiTool --update-policy ".\$SuppPolicyID.cip" -json
-                Remove-Item ".\$SuppPolicyID.cip" -Force
-            
+                CiTool --update-policy ".\$SuppPolicyID.cip" -json | Out-Null       
                 Write-host "`nSupplemental policy with the following details has been Signed and Deployed in Enforced Mode.`n" -ForegroundColor Green
                 # create an object to display on the console
                 [PSCustomObject]@{
                     SupplementalPolicyName = $SuppPolicyName
                     SupplementalPolicyGUID = $SuppPolicyID
-                }             
+                }  
+                Remove-Item ".\$SuppPolicyID.cip" -Force           
             } 
         }
 
@@ -589,24 +636,26 @@ function Edit-SignedWDACConfig {
                 # Configure the parameter splat
                 $ProcessParams = @{
                     'ArgumentList' = 'sign', '/v' , '/n', "`"$CertCN`"", '/p7', '.', '/p7co', '1.3.6.1.4.1.311.79.1', '/fd', 'certHash', ".\$PolicyID.cip"
-                    'FilePath'     = ($SignToolPath ? (Get-SignTool -SignToolExePath $SignToolPath) : (Get-SignTool))
+                    'FilePath'     = $SignToolPathFinal
                     'NoNewWindow'  = $true
                     'Wait'         = $true
+                    'ErrorAction'  = 'Stop'
                 }
+                if (!$Debug) { $ProcessParams['RedirectStandardOutput'] = "NUL" } 
                 # Sign the files with the specified cert
                 Start-Process @ProcessParams
             
                 Remove-Item ".\$PolicyID.cip" -Force         
                 Rename-Item "$PolicyID.cip.p7" -NewName "$PolicyID.cip" -Force
-                CiTool --update-policy ".\$PolicyID.cip" -json
-                Remove-Item ".\$PolicyID.cip" -Force            
+                CiTool --update-policy ".\$PolicyID.cip" -json | Out-Null                   
                 Write-host "`n`nThe Base policy with the following details has been Re-Signed and Re-Deployed in Audit Mode:" -ForegroundColor Green        
                 Write-Output "PolicyName = $PolicyName"
                 Write-Output "PolicyGUID = $PolicyID"
+                Remove-Item ".\$PolicyID.cip" -Force
     
-                ################################### User Interaction ####################################            
-                Write-host "`nAudit mode deployed, start installing your programs now" -ForegroundColor Magenta    
-                Write-Host "When you've finished installing programs, Press Enter to start selecting program directories to scan`n" -ForegroundColor Blue
+                ################################### User Interaction #################################### 
+                &$WritePink "`nAudit mode deployed, start installing your programs now"
+                &$WriteViolet "When you've finished installing programs, Press Enter to start selecting program directories to scan`n"
                 Pause
                     
                 # Store the program paths that user browses for in an array
@@ -686,25 +735,25 @@ function Edit-SignedWDACConfig {
                     # Configure the parameter splat
                     $ProcessParams = @{
                         'ArgumentList' = 'sign', '/v' , '/n', "`"$CertCN`"", '/p7', '.', '/p7co', '1.3.6.1.4.1.311.79.1', '/fd', 'certHash', ".\$SuppPolicyID.cip"
-                        'FilePath'     = ($SignToolPath ? (Get-SignTool -SignToolExePath $SignToolPath) : (Get-SignTool))
+                        'FilePath'     = $SignToolPathFinal
                         'NoNewWindow'  = $true
                         'Wait'         = $true
+                        'ErrorAction'  = 'Stop'
                     }
+                    if (!$Debug) { $ProcessParams['RedirectStandardOutput'] = "NUL" } 
                     # Sign the files with the specified cert
                     Start-Process @ProcessParams
             
                     Remove-Item ".\$SuppPolicyID.cip" -Force            
                     Rename-Item "$SuppPolicyID.cip.p7" -NewName "$SuppPolicyID.cip" -Force
-                    CiTool --update-policy ".\$SuppPolicyID.cip" -json
-                    Remove-Item ".\$SuppPolicyID.cip" -Force
-
+                    CiTool --update-policy ".\$SuppPolicyID.cip" -json | Out-Null
                     Write-host "`nSupplemental policy with the following details has been Signed and Deployed in Enforced Mode.`n" -ForegroundColor Green
                                 
                     [PSCustomObject]@{
                         SupplementalPolicyName = $SuppPolicyName
                         SupplementalPolicyGUID = $SuppPolicyID
                     }
-
+                    Remove-Item ".\$SuppPolicyID.cip" -Force
                 }            
                 # Do this if no program path(s) was selected by user
                 else {
@@ -754,18 +803,20 @@ function Edit-SignedWDACConfig {
                 # Configure the parameter splat
                 $ProcessParams = @{
                     'ArgumentList' = 'sign', '/v' , '/n', "`"$CertCN`"", '/p7', '.', '/p7co', '1.3.6.1.4.1.311.79.1', '/fd', 'certHash', ".\$SuppPolicyID.cip"
-                    'FilePath'     = ($SignToolPath ? (Get-SignTool -SignToolExePath $SignToolPath) : (Get-SignTool))
+                    'FilePath'     = $SignToolPathFinal
                     'NoNewWindow'  = $true
                     'Wait'         = $true
+                    'ErrorAction'  = 'Stop'
                 }
+                if (!$Debug) { $ProcessParams['RedirectStandardOutput'] = "NUL" } 
                 # Sign the files with the specified cert
                 Start-Process @ProcessParams
             
                 Remove-Item ".\$SuppPolicyID.cip" -Force            
                 Rename-Item "$SuppPolicyID.cip.p7" -NewName "$SuppPolicyID.cip" -Force
-                CiTool --update-policy "$SuppPolicyID.cip" -json
+                CiTool --update-policy "$SuppPolicyID.cip" -json | Out-Null                  
+                Write-Host "`nThe Signed Supplemental policy $SuppPolicyName has been deployed on the system, replacing the old ones.`nSystem Restart Not immediately needed but eventually required to finish the removal of previous individual Supplemental policies." -ForegroundColor Green                       
                 Remove-Item -Path "$SuppPolicyID.cip" -Force
-                Write-Host "`nThe Signed Supplemental policy $SuppPolicyName has been deployed on the system, replacing the old ones, please restart your system." -ForegroundColor Green                       
             } 
         }
 
@@ -795,16 +846,16 @@ function Edit-SignedWDACConfig {
                     Copy-item -Path "C:\Windows\schemas\CodeIntegrity\ExamplePolicies\DefaultWindows_Enforced.xml" -Destination ".\DefaultWindows_Enforced.xml"
                    
                     # Allowing SignTool to be able to run after Default Windows base policy is deployed
-                    Write-Host "`nCreating allow rules for SignTool.exe in the DefaultWindows base policy so you can continue using it after deploying the DefaultWindows base policy." -ForegroundColor Blue
+                    &$WriteViolet "`nCreating allow rules for SignTool.exe in the DefaultWindows base policy so you can continue using it after deploying the DefaultWindows base policy."
                     New-Item -Path "$env:TEMP\TemporarySignToolFile" -ItemType Directory -Force | Out-Null
-                    Copy-Item -Path $($SignToolPath ? (Get-SignTool -SignToolExePath $SignToolPath) : (Get-SignTool)) -Destination "$env:TEMP\TemporarySignToolFile" -Force
+                    Copy-Item -Path $SignToolPathFinal -Destination "$env:TEMP\TemporarySignToolFile" -Force
                     New-CIPolicy -ScanPath "$env:TEMP\TemporarySignToolFile" -Level FilePublisher -Fallback Hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -FilePath .\SignTool.xml
                     # Delete the Temporary folder in the TEMP folder
                     Remove-Item -Recurse -Path "$env:TEMP\TemporarySignToolFile" -Force
                                             
                     # Scan PowerShell core directory and add them to the Default Windows base policy so that the module can be used after it's been deployed
-                    if (Test-Path "C:\Program Files\PowerShell") {
-                        Write-Host "`nCreating allow rules for PowerShell in the DefaultWindows base policy so you can continue using this module after deploying it." -ForegroundColor Blue                    
+                    if (Test-Path "C:\Program Files\PowerShell") {                   
+                        &$WriteViolet "`nCreating allow rules for PowerShell in the DefaultWindows base policy so you can continue using this module after deploying it."
                         New-CIPolicy -ScanPath "C:\Program Files\PowerShell" -Level FilePublisher -NoScript -Fallback Hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -FilePath .\AllowPowerShell.xml                        
                         Merge-CIPolicy -PolicyPaths .\DefaultWindows_Enforced.xml, .\AllowPowerShell.xml, .\SignTool.xml, '.\Microsoft recommended block rules.xml' -OutputFilePath .\BasePolicy.xml | Out-Null
                     }
@@ -820,11 +871,8 @@ function Edit-SignedWDACConfig {
             if ($UpdateBasePolicy -and $RequireEVSigners) { Set-RuleOption -FilePath .\BasePolicy.xml -Option 8 }   
             
             # Remove the extra files create during module operation that are no longer necessary
-            Remove-Item '.\AllowPowerShell.xml' -Force -ErrorAction SilentlyContinue
-            Remove-Item '.\DefaultWindows_Enforced.xml' -Force -ErrorAction SilentlyContinue
-            Remove-Item '.\AllowMicrosoft.xml' -Force -ErrorAction SilentlyContinue
-            Remove-Item '.\Microsoft recommended block rules.xml' -Force     
-            Remove-Item '.\SignTool.xml' -Force -ErrorAction SilentlyContinue 
+            Remove-Item '.\AllowPowerShell.xml', '.\SignTool.xml', '.\AllowMicrosoft.xml', '.\DefaultWindows_Enforced.xml' -Force -ErrorAction SilentlyContinue
+            Remove-Item '.\Microsoft recommended block rules.xml' -Force            
 
             # Get the policy ID of the currently deployed base policy based on the policy name that user selected
             $CurrentID = ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsSystemPolicy -ne "True" } | Where-Object { $_.Friendlyname -eq $CurrentBasePolicyName }).BasePolicyID
@@ -846,35 +894,30 @@ function Edit-SignedWDACConfig {
             # Configure the parameter splat
             $ProcessParams = @{
                 'ArgumentList' = 'sign', '/v' , '/n', "`"$CertCN`"", '/p7', '.', '/p7co', '1.3.6.1.4.1.311.79.1', '/fd', 'certHash', ".\$CurrentID.cip"
-                'FilePath'     = ($SignToolPath ? (Get-SignTool -SignToolExePath $SignToolPath) : (Get-SignTool))
+                'FilePath'     = $SignToolPathFinal
                 'NoNewWindow'  = $true
                 'Wait'         = $true
+                'ErrorAction'  = 'Stop'
             }
+            if (!$Debug) { $ProcessParams['RedirectStandardOutput'] = "NUL" } 
             # Sign the files with the specified cert
             Start-Process @ProcessParams
 
             Remove-Item ".\$CurrentID.cip" -Force            
             Rename-Item "$CurrentID.cip.p7" -NewName "$CurrentID.cip" -Force  
             # Deploy the new base policy with the same GUID on the system
-            CiTool --update-policy "$CurrentID.cip" -json
-            # Remove the policy binary after it's been deployed
-            Remove-Item ".\$CurrentID.cip" -Force
-
+            CiTool --update-policy "$CurrentID.cip" -json | Out-Null
             # Keep the new base policy XML file that was just deployed, in the current directory, so user can keep it for later
-            switch ($NewBasePolicyType) {
-                "AllowMicrosoft_Plus_Block_Rules" {
-                    Remove-Item "AllowMicrosoftPlusBlockRules.xml" -Force -ErrorAction SilentlyContinue
-                    Rename-Item -Path ".\BasePolicy.xml" -NewName "AllowMicrosoftPlusBlockRules.xml" 
-                }
-                "Lightly_Managed_system_Policy" {
-                    Remove-Item "SignedAndReputable.xml" -Force -ErrorAction SilentlyContinue
-                    Rename-Item -Path ".\BasePolicy.xml" -NewName "SignedAndReputable.xml"
-                }
-                "DefaultWindows_WithBlockRules" {
-                    Remove-Item "DefaultWindowsPlusBlockRules.xml" -Force -ErrorAction SilentlyContinue
-                    Rename-Item -Path ".\BasePolicy.xml" -NewName "DefaultWindowsPlusBlockRules.xml" 
-                }
-            }            
+            $PolicyFiles = @{
+                "AllowMicrosoft_Plus_Block_Rules" = "AllowMicrosoftPlusBlockRules.xml"
+                "Lightly_Managed_system_Policy"   = "SignedAndReputable.xml"
+                "DefaultWindows_WithBlockRules"   = "DefaultWindowsPlusBlockRules.xml"
+            }
+            Remove-Item ".\$CurrentID.cip" -Force
+            Remove-Item $PolicyFiles[$NewBasePolicyType] -Force -ErrorAction SilentlyContinue
+            Rename-Item -Path ".\BasePolicy.xml" -NewName $PolicyFiles[$NewBasePolicyType]
+            &$WriteSubtleRainbow "Base Policy has been successfully updated to $NewBasePolicyType"
+            &$WriteLavender "Keep in mind that your previous policy path saved in User Configurations is no longer valid as you just changed your Base policy."
         }
     }    
 

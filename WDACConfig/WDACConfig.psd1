@@ -8,7 +8,7 @@
     # RootModule = ""
 
     # Version number of this module.
-    ModuleVersion        = '0.1.5'
+    ModuleVersion        = '0.1.6'
 
     # Supported PSEditions
     CompatiblePSEditions = @("Core")
@@ -52,6 +52,8 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
 
 ✔️ New-DenyWDACConfig: https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-DenyWDACConfig
 
+✔️ Set-CommonWDACConfig: https://github.com/HotCakeX/Harden-Windows-Security/wiki/Set-CommonWDACConfig
+
 
 
 To get help and syntax on PowerShell console, type:
@@ -64,6 +66,7 @@ To get help and syntax on PowerShell console, type:
 "Get-Help Deploy-SignedWDACConfig"
 "Get-Help Confirm-WDACConfig"
 "Get-Help New-DenyWDACConfig"
+"Get-Help Set-CommonWDACConfig"
 "@
 
     # Minimum version of the PowerShell engine required by this module
@@ -100,13 +103,13 @@ To get help and syntax on PowerShell console, type:
     # FormatsToProcess = @()
 
     # Modules to import as nested modules of the module specified in RootModule/ModuleToProcess
-    NestedModules        = @("New-WDACConfig.psm1", "Remove-WDACConfig.psm1", "Deploy-SignedWDACConfig.psm1", "Confirm-WDACConfig.psm1", "Edit-WDACConfig.psm1", "Edit-SignedWDACConfig.psm1", "New-SupplementalWDACConfig.psm1", "New-DenyWDACConfig.psm1")
+    NestedModules        = @("New-WDACConfig.psm1", "Remove-WDACConfig.psm1", "Deploy-SignedWDACConfig.psm1", "Confirm-WDACConfig.psm1", "Edit-WDACConfig.psm1", "Edit-SignedWDACConfig.psm1", "New-SupplementalWDACConfig.psm1", "New-DenyWDACConfig.psm1", "Set-CommonWDACConfig.psm1")
 
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
-    FunctionsToExport    = @("New-WDACConfig", "Remove-WDACConfig", "Deploy-SignedWDACConfig", "Confirm-WDACConfig", "Edit-WDACConfig", "Edit-SignedWDACConfig", "New-SupplementalWDACConfig", "New-DenyWDACConfig")
+    FunctionsToExport    = @("New-WDACConfig", "Remove-WDACConfig", "Deploy-SignedWDACConfig", "Confirm-WDACConfig", "Edit-WDACConfig", "Edit-SignedWDACConfig", "New-SupplementalWDACConfig", "New-DenyWDACConfig", "Set-CommonWDACConfig")
 
     # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
-    CmdletsToExport      = @("New-WDACConfig", "Remove-WDACConfig", "Deploy-SignedWDACConfig", "Confirm-WDACConfig", "Edit-WDACConfig", "Edit-SignedWDACConfig", "New-SupplementalWDACConfig", "New-DenyWDACConfig")
+    CmdletsToExport      = @("New-WDACConfig", "Remove-WDACConfig", "Deploy-SignedWDACConfig", "Confirm-WDACConfig", "Edit-WDACConfig", "Edit-SignedWDACConfig", "New-SupplementalWDACConfig", "New-DenyWDACConfig", "Set-CommonWDACConfig")
 
     # Variables to export from this module
     VariablesToExport    = '*'
@@ -121,7 +124,7 @@ To get help and syntax on PowerShell console, type:
     # ModuleList = @()
 
     # List of all files packaged with this module
-    FileList             = @('WDACConfig.psd1', 'New-WDACConfig.psm1', 'Deploy-SignedWDACConfig.psm1', 'Remove-WDACConfig.psm1', "Confirm-WDACConfig.psm1", "Edit-WDACConfig.psm1", "Edit-SignedWDACConfig.psm1", "New-SupplementalWDACConfig.psm1", "Resources.ps1", "ArgumentCompleters.ps1", "New-DenyWDACConfig.psm1")
+    FileList             = @('WDACConfig.psd1', 'New-WDACConfig.psm1', 'Deploy-SignedWDACConfig.psm1', 'Remove-WDACConfig.psm1', "Confirm-WDACConfig.psm1", "Edit-WDACConfig.psm1", "Edit-SignedWDACConfig.psm1", "New-SupplementalWDACConfig.psm1", "Resources.ps1", "ArgumentCompleters.ps1", "New-DenyWDACConfig.psm1", "Set-CommonWDACConfig.psm1")
 
     # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.
     PrivateData          = @{
@@ -143,6 +146,12 @@ To get help and syntax on PowerShell console, type:
             # ReleaseNotes of this module
             ReleaseNotes = @"
 
+## Version 0.1.6
+New cmdlet Set-CommonWDACConfig, Use this cmdlet to store the values for common and frequently used parameters so that you won't have to specify them again every time.
+More info about it: https://github.com/HotCakeX/Harden-Windows-Security/wiki/Set-CommonWDACConfig
+Updated the argument completer of Remove-WDACConfig cmdlet to be able cross-reference values between 2 parameters.
+Optimized the overall code and improved a lot of logics.
+
 ## Version 0.1.5
 Added alias for many parameters for easier access.
 Added new cmdlet: New-DenyWDACConfig for creating base policies with Deny rules. They can be deployed side by side other policies without conflict.
@@ -152,22 +161,6 @@ Added argument completer for many new parameters and improved the previous ones 
 Code optimization.
 Implemented a check to make sure Windows 11 22H2 is being used as it's a requirement for this module to run.
 Improved Remove-WDACConfig cmdlet by making the argument completers only show policies that haven't been already deleted, also applied a fix to this cmdlet for when multiple policies with the same name are deployed.   
-
-## Version 0.1.3
-Improved Remove-WDACConfig cmdlet so handle situations where multiple policies with the exact same name are deployed and user is trying to remove them.
-Changed some of the parameter names in Remove-WDACConfig cmdlet to better reflect their jobs and how they are supposed to be used.
-New cmdlet: New-SupplementalWDACConfig: dedicated to making all kinds of supplemental policies only - Removed the Supplemental parameter from New-WDACConfig cmdlet and instead the new cmdlet handles anything related to Supplemental policy creation/deployment.          
-New-SupplementalWDACConfig cmdlet supports AppxPackages, FilePaths with one or more wildcard characters and of course the normal supplemental policy creation with granular levels and fallbacks and more.
-Removed the Debugmode parameter from certain cmdlets and instead now detecting the usage of the default PowerShell -Debug switch and do debugging actions based on that.
-The Edit-WDACConfig and Edit-SignedWDACConfig cmdlets now detect and create allow rules for kernel protected files.
-New parameter for New-WDACConfig: -DeployLatestBlockRules, will deploy the latest Microsoft recommended block rules on the system, as a standalone base policy.
-Implemented a feature to prevent users from accidentally attempting to remove Signed policies that aren't even deployed on the system.
-Plus a LOT of code optimizations.
-
-## Version 0.1.2
-Made the Get-SignTool function more secure.
-Added smarter argument completer to Remove-WDACConfig cmdlet.
-
 
 Full Change log for previous versions are available on Excel online: (Copy and paste the link in your browser if it isn't clickable)
 https://1drv.ms/x/s!AtCaUNAJbbvIhuVPpPeCHSjl75OqBQ?e=qgvzEt

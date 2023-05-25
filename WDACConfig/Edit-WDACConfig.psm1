@@ -9,17 +9,14 @@ function Edit-WDACConfig {
     Param(
         [Alias("E")]
         [Parameter(Mandatory = $false, ParameterSetName = "Allow New Apps Audit Events")][Switch]$AllowNewAppsAuditEvents,
-
         [Alias("A")]
         [Parameter(Mandatory = $false, ParameterSetName = "Allow New Apps")][Switch]$AllowNewApps,
-
         [Alias("M")]
         [Parameter(Mandatory = $false, ParameterSetName = "Merge Supplemental Policies")][Switch]$MergeSupplementalPolicies,
-
         [Alias("U")]
         [Parameter(Mandatory = $false, ParameterSetName = "Update Base Policy")][Switch]$UpdateBasePolicy,
 
-        [ValidatePattern('^[a-zA-Z0-9 ]+$', ErrorMessage = "The Supplemental Policy Name can only contain alphanumeric characters.")]
+        [ValidatePattern('^[a-zA-Z0-9 ]+$', ErrorMessage = "The Supplemental Policy Name can only contain alphanumeric and space characters.")]
         [Parameter(Mandatory = $true, ParameterSetName = "Allow New Apps Audit Events", ValueFromPipelineByPropertyName = $true)]
         [Parameter(Mandatory = $true, ParameterSetName = "Allow New Apps", ValueFromPipelineByPropertyName = $true)]
         [Parameter(Mandatory = $true, ParameterSetName = "Merge Supplemental Policies", ValueFromPipelineByPropertyName = $true)]
@@ -33,12 +30,22 @@ function Edit-WDACConfig {
                     $xmlTest = [xml](Get-Content $_)
                     $RedFlag1 = $xmlTest.SiPolicy.SupplementalPolicySigners.SupplementalPolicySigner.SignerId
                     $RedFlag2 = $xmlTest.SiPolicy.UpdatePolicySigners.UpdatePolicySigner.SignerId
-                    if (!$RedFlag1 -or !$RedFlag2) { return $True }                     
+                    $RedFlag3 = $xmlTest.SiPolicy.PolicyID
+                    $CurrentPolicyIDs = ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsSystemPolicy -ne "True" }).policyID | ForEach-Object { "{$_}" }
+                    if (!$RedFlag1 -and !$RedFlag2) {
+                        if ($CurrentPolicyIDs -contains $RedFlag3) {
+                            return $True 
+                        }
+                        else { throw "The currently selected policy xml file isn't deployed." }
+                    }
+                    # This throw is shown only when User added a Signed policy xml file for Unsigned policy file path property in user configuration file
+                    # Without this, the error shown would be vague: The variable cannot be validated because the value System.String[] is not a valid value for the PolicyPaths variable.
+                    else { throw "The policy xml file in User Configurations for UnsignedPolicyPath is a Signed policy." }                        
                 }
-            }, ErrorMessage = "The policy XML file(s) you chose are Signed policies. Please use Edit-SignedWDACConfig cmdlet to edit Signed policies.")]
-        [Parameter(Mandatory = $true, ParameterSetName = "Allow New Apps Audit Events", ValueFromPipelineByPropertyName = $true)]
-        [Parameter(Mandatory = $true, ParameterSetName = "Allow New Apps", ValueFromPipelineByPropertyName = $true)]
-        [Parameter(Mandatory = $true, ParameterSetName = "Merge Supplemental Policies", ValueFromPipelineByPropertyName = $true)]
+            }, ErrorMessage = "The selected policy xml file is Signed. Please use Edit-SignedWDACConfig cmdlet to edit Signed policies.")]
+        [Parameter(Mandatory = $false, ParameterSetName = "Allow New Apps Audit Events", ValueFromPipelineByPropertyName = $true)]
+        [Parameter(Mandatory = $false, ParameterSetName = "Allow New Apps", ValueFromPipelineByPropertyName = $true)]
+        [Parameter(Mandatory = $false, ParameterSetName = "Merge Supplemental Policies", ValueFromPipelineByPropertyName = $true)]
         [System.String[]]$PolicyPaths,
 
         [ValidatePattern('\.xml$')]
@@ -101,6 +108,41 @@ function Edit-WDACConfig {
         # Detecting if Debug switch is used, will do debugging actions based on that
         $Debug = $PSBoundParameters.Debug.IsPresent
 
+        #region User-Configurations-Processing-Validation
+        # make sure the ParameterSet being used has PolicyPaths parameter - Then enforces "mandatory" attribute for the parameter          
+        if ($PSCmdlet.ParameterSetName -in "Allow New Apps Audit Events", "Allow New Apps", "Merge Supplemental Policies") {
+            # If any of these parameters, that are mandatory for all of the position 0 parameters, isn't supplied by user
+            if (!$PolicyPaths) {
+                # Read User configuration file if it exists
+                $UserConfig = Get-Content -Path "$env:USERPROFILE\.WDACConfig\UserConfigurations.json" -ErrorAction SilentlyContinue   
+                if ($UserConfig) {
+                    # Validate the Json file and read its content to make sure it's not corrupted
+                    try { $UserConfig = $UserConfig | ConvertFrom-Json }
+                    catch {            
+                        Write-Error "User Configuration Json file is corrupted, deleting it..." -ErrorAction Continue
+                        # Calling this function with this parameter automatically does its job and breaks/stops the operation
+                        Set-CommonWDACConfig -DeleteUserConfig         
+                    }                
+                }
+            }
+            # If PolicyPaths has no values
+            if (!$PolicyPaths) {            
+                if ($UserConfig.UnsignedPolicyPath) {
+                    # validate each policyPath read from user config file
+                    if (Test-Path $($UserConfig.UnsignedPolicyPath)) {
+                        $PolicyPaths = $UserConfig.UnsignedPolicyPath
+                    }
+                    else {
+                        throw "The currently saved value for UnsignedPolicyPath in user configurations is invalid."
+                    }           
+                }
+                else {
+                    throw "PolicyPaths parameter can't be empty and no valid configuration was found for UnsignedPolicyPath."
+                }
+            }
+        }        
+        #endregion User-Configurations-Processing-Validation
+
         # argument tab auto-completion and ValidateSet for Policy names 
         Class BasePolicyNamez : System.Management.Automation.IValidateSetValuesGenerator {
             [System.String[]] GetValidValues() {
@@ -132,18 +174,18 @@ function Edit-WDACConfig {
         function Update-BasePolicyToEnforced {        
             Set-RuleOption -FilePath $PolicyPath -Option 3 -Delete
             ConvertFrom-CIPolicy $PolicyPath "$PolicyID.cip" | Out-Null        
-            CiTool --update-policy ".\$PolicyID.cip" -json
-            Remove-Item ".\$PolicyID.cip" -Force
+            CiTool --update-policy ".\$PolicyID.cip" -json | Out-Null        
             Write-host "`n`nThe Base policy with the following details has been Re-Deployed in Enforced Mode:" -ForegroundColor Green        
             Write-Output "PolicyName = $PolicyName"
             Write-Output "PolicyGUID = $PolicyID`n"
+            Remove-Item ".\$PolicyID.cip" -Force
         }
 
         # Stop operation as soon as there is an error anywhere, unless explicitly specified otherwise
         $ErrorActionPreference = 'Stop'         
         if (-NOT $SkipVersionCheck) { . Update-self }        
 
-        $DirveLettersGlobalRootFix = Invoke-Command -ScriptBlock $DirveLettersGlobalRootFixScriptBlock
+        $DriveLettersGlobalRootFix = Invoke-Command -ScriptBlock $DriveLettersGlobalRootFixScriptBlock
     }
 
     process {        
@@ -167,11 +209,11 @@ function Edit-WDACConfig {
                 Remove-Item -Path ".\$PolicyID.cip" -ErrorAction SilentlyContinue
                 Set-RuleOption -FilePath $PolicyPath -Option 3
                 ConvertFrom-CIPolicy $PolicyPath "$PolicyID.cip" | Out-Null
-                CiTool --update-policy ".\$PolicyID.cip" -json
-                Remove-Item ".\$PolicyID.cip" -Force            
+                CiTool --update-policy ".\$PolicyID.cip" -json | Out-Null          
                 Write-host "`n`nThe Base policy with the following details has been Re-Deployed in Audit Mode:" -ForegroundColor Green        
                 Write-Output "PolicyName = $PolicyName"
                 Write-Output "PolicyGUID = $PolicyID"
+                Remove-Item ".\$PolicyID.cip" -Force
     
                 ################################### User Interaction ####################################            
                 Write-host "`nAudit mode deployed, start installing your programs now" -ForegroundColor Magenta    
@@ -250,16 +292,14 @@ function Edit-WDACConfig {
                     Set-CIPolicyVersion -FilePath $SuppPolicyPath -Version "1.0.0.0"            
     
                     ConvertFrom-CIPolicy $SuppPolicyPath "$SuppPolicyID.cip" | Out-Null 
-                    CiTool --update-policy ".\$SuppPolicyID.cip" -json
-                    Remove-Item ".\$SuppPolicyID.cip" -Force
-
+                    CiTool --update-policy ".\$SuppPolicyID.cip" -json | Out-Null
                     Write-host "`nSupplemental policy with the following details has been Deployed in Enforced Mode:" -ForegroundColor Green
-                                
+                    
                     [PSCustomObject]@{
                         SupplementalPolicyName = $SuppPolicyName
                         SupplementalPolicyGUID = $SuppPolicyID
                     }
-
+                    Remove-Item ".\$SuppPolicyID.cip" -Force
                 }            
                 # Do this if no program path(s) was selected by user
                 else {
@@ -295,11 +335,11 @@ function Edit-WDACConfig {
                 Remove-Item -Path ".\$PolicyID.cip" -ErrorAction SilentlyContinue       
                 Set-RuleOption -FilePath $PolicyPath -Option 3
                 ConvertFrom-CIPolicy $PolicyPath "$PolicyID.cip" | Out-Null            
-                CiTool --update-policy ".\$PolicyID.cip" -json
-                Remove-Item ".\$PolicyID.cip" -Force
+                CiTool --update-policy ".\$PolicyID.cip" -json | Out-Null
                 Write-host "`n`nThe Base policy with the following details has been Re-Deployed in Audit Mode:" -ForegroundColor Green        
                 Write-Output "PolicyName = $PolicyName"
-                Write-Output "PolicyGUID = $PolicyID"        
+                Write-Output "PolicyGUID = $PolicyID"
+                Remove-Item ".\$PolicyID.cip" -Force      
              
                 ################################### User Interaction ####################################
                 Write-host "`nAudit mode deployed, start installing your programs now" -ForegroundColor Magenta        
@@ -388,31 +428,23 @@ function Edit-WDACConfig {
                         Write-Debug -Message "$($AuditEventLogsProcessingResults.DeletedFileHashes.count) file(s) have been found in event viewer logs that were run during Audit phase but are no longer on the disk."
 
                         # Create File Rules based on hash of the files and store them in the $Rules variable
-                        $i = 1
                         $Rules = @()
-                        $imax = ($AuditEventLogsProcessingResults.DeletedFileHashes).count
-                        while ($i -le $imax) {
-                            $AuditEventLogsProcessingResults.DeletedFileHashes | ForEach-Object {  
-                                $Rules += Write-Output "`n<Allow ID=`"ID_ALLOW_AA_$i`" FriendlyName=`"$($_.'File Name') SHA256 Hash`" Hash=`"$($_.'SHA256 Hash')`" />"
-                                $Rules += Write-Output "`n<Allow ID=`"ID_ALLOW_AB_$i`" FriendlyName=`"$($_.'File Name') SHA256 Flat Hash`" Hash=`"$($_.'SHA256 Flat Hash')`" />"
-                                $Rules += Write-Output "`n<Allow ID=`"ID_ALLOW_AC_$i`" FriendlyName=`"$($_.'File Name') SHA1 Hash`" Hash=`"$($_.'SHA1 Hash')`" />"
-                                $Rules += Write-Output "`n<Allow ID=`"ID_ALLOW_AD_$i`" FriendlyName=`"$($_.'File Name') SHA1 Flat Hash`" Hash=`"$($_.'SHA1 Flat Hash')`" />"
-                                $i++
-                            }
+                        $AuditEventLogsProcessingResults.DeletedFileHashes | ForEach-Object -Begin { $i = 1 } -Process {
+                            $Rules += Write-Output "`n<Allow ID=`"ID_ALLOW_AA_$i`" FriendlyName=`"$($_.'File Name') SHA256 Hash`" Hash=`"$($_.'SHA256 Hash')`" />"
+                            $Rules += Write-Output "`n<Allow ID=`"ID_ALLOW_AB_$i`" FriendlyName=`"$($_.'File Name') SHA256 Flat Hash`" Hash=`"$($_.'SHA256 Flat Hash')`" />"
+                            $Rules += Write-Output "`n<Allow ID=`"ID_ALLOW_AC_$i`" FriendlyName=`"$($_.'File Name') SHA1 Hash`" Hash=`"$($_.'SHA1 Hash')`" />"
+                            $Rules += Write-Output "`n<Allow ID=`"ID_ALLOW_AD_$i`" FriendlyName=`"$($_.'File Name') SHA1 Flat Hash`" Hash=`"$($_.'SHA1 Flat Hash')`" />"
+                            $i++
                         }
                         # Create File Rule Refs based on the ID of the File Rules above and store them in the $RulesRefs variable
-                        $i = 1
                         $RulesRefs = @()
-                        $imax = ($AuditEventLogsProcessingResults.DeletedFileHashes).count
-                        while ($i -le $imax) {
-                            $AuditEventLogsProcessingResults.DeletedFileHashes | ForEach-Object { 
-                                $RulesRefs += Write-Output "`n<FileRuleRef RuleID=`"ID_ALLOW_AA_$i`" />"
-                                $RulesRefs += Write-Output "`n<FileRuleRef RuleID=`"ID_ALLOW_AB_$i`" />"
-                                $RulesRefs += Write-Output "`n<FileRuleRef RuleID=`"ID_ALLOW_AC_$i`" />"
-                                $RulesRefs += Write-Output "`n<FileRuleRef RuleID=`"ID_ALLOW_AD_$i`" />"
-                                $i++
-                            }
-                        }  
+                        $AuditEventLogsProcessingResults.DeletedFileHashes | ForEach-Object -Begin { $i = 1 } -Process {
+                            $RulesRefs += Write-Output "`n<FileRuleRef RuleID=`"ID_ALLOW_AA_$i`" />"
+                            $RulesRefs += Write-Output "`n<FileRuleRef RuleID=`"ID_ALLOW_AB_$i`" />"
+                            $RulesRefs += Write-Output "`n<FileRuleRef RuleID=`"ID_ALLOW_AC_$i`" />"
+                            $RulesRefs += Write-Output "`n<FileRuleRef RuleID=`"ID_ALLOW_AD_$i`" />"
+                            $i++
+                        }                  
                         # Save the File Rules and File Rule Refs in the FileRulesAndFileRefs.txt in the current working directory for debugging purposes
                         $Rules + $RulesRefs | Out-File FileRulesAndFileRefs.txt                  
 
@@ -493,7 +525,7 @@ function Edit-WDACConfig {
                                     if ($_.'File Name' -match ($pattern = '\\Device\\HarddiskVolume(\d+)\\(.*)$')) {
                                         $hardDiskVolumeNumber = $Matches[1]
                                         $remainingPath = $Matches[2]
-                                        $getletter = $DirveLettersGlobalRootFix | Where-Object { $_.devicepath -eq "\Device\HarddiskVolume$hardDiskVolumeNumber" }
+                                        $getletter = $DriveLettersGlobalRootFix | Where-Object { $_.devicepath -eq "\Device\HarddiskVolume$hardDiskVolumeNumber" }
                                         $usablePath = "$($getletter.DriveLetter)$remainingPath"
                                         $_.'File Name' = $_.'File Name' -replace $pattern, $usablePath
                                     } # Check if file is currently on the disk
@@ -513,31 +545,23 @@ function Edit-WDACConfig {
                         if ($KernelProtectedHashesBlockResults) {
 
                             # Create File Rules based on hash of the files and store them in the $Rules variable
-                            $i = 1
                             $Rules = @()
-                            $imax = ($KernelProtectedHashesBlockResults).count
-                            while ($i -le $imax) {
-                                $KernelProtectedHashesBlockResults | ForEach-Object {  
-                                    $Rules += Write-Output "`n<Allow ID=`"ID_ALLOW_AA_$i`" FriendlyName=`"$($_.'File Name') SHA256 Hash`" Hash=`"$($_.'SHA256 Hash')`" />"
-                                    $Rules += Write-Output "`n<Allow ID=`"ID_ALLOW_AB_$i`" FriendlyName=`"$($_.'File Name') SHA256 Flat Hash`" Hash=`"$($_.'SHA256 Flat Hash')`" />"
-                                    $Rules += Write-Output "`n<Allow ID=`"ID_ALLOW_AC_$i`" FriendlyName=`"$($_.'File Name') SHA1 Hash`" Hash=`"$($_.'SHA1 Hash')`" />"
-                                    $Rules += Write-Output "`n<Allow ID=`"ID_ALLOW_AD_$i`" FriendlyName=`"$($_.'File Name') SHA1 Flat Hash`" Hash=`"$($_.'SHA1 Flat Hash')`" />"
-                                    $i++
-                                }
+                            $KernelProtectedHashesBlockResults | ForEach-Object -Begin { $i = 1 } -Process {
+                                $Rules += Write-Output "`n<Allow ID=`"ID_ALLOW_AA_$i`" FriendlyName=`"$($_.'File Name') SHA256 Hash`" Hash=`"$($_.'SHA256 Hash')`" />"
+                                $Rules += Write-Output "`n<Allow ID=`"ID_ALLOW_AB_$i`" FriendlyName=`"$($_.'File Name') SHA256 Flat Hash`" Hash=`"$($_.'SHA256 Flat Hash')`" />"
+                                $Rules += Write-Output "`n<Allow ID=`"ID_ALLOW_AC_$i`" FriendlyName=`"$($_.'File Name') SHA1 Hash`" Hash=`"$($_.'SHA1 Hash')`" />"
+                                $Rules += Write-Output "`n<Allow ID=`"ID_ALLOW_AD_$i`" FriendlyName=`"$($_.'File Name') SHA1 Flat Hash`" Hash=`"$($_.'SHA1 Flat Hash')`" />"
+                                $i++
                             }
                             # Create File Rule Refs based on the ID of the File Rules above and store them in the $RulesRefs variable
-                            $i = 1
                             $RulesRefs = @()
-                            $imax = ($KernelProtectedHashesBlockResults).count
-                            while ($i -le $imax) {
-                                $KernelProtectedHashesBlockResults | ForEach-Object { 
-                                    $RulesRefs += Write-Output "`n<FileRuleRef RuleID=`"ID_ALLOW_AA_$i`" />"
-                                    $RulesRefs += Write-Output "`n<FileRuleRef RuleID=`"ID_ALLOW_AB_$i`" />"
-                                    $RulesRefs += Write-Output "`n<FileRuleRef RuleID=`"ID_ALLOW_AC_$i`" />"
-                                    $RulesRefs += Write-Output "`n<FileRuleRef RuleID=`"ID_ALLOW_AD_$i`" />"
-                                    $i++
-                                }
-                            }  
+                            $KernelProtectedHashesBlockResults | ForEach-Object -Begin { $i = 1 } -Process {
+                                $RulesRefs += Write-Output "`n<FileRuleRef RuleID=`"ID_ALLOW_AA_$i`" />"
+                                $RulesRefs += Write-Output "`n<FileRuleRef RuleID=`"ID_ALLOW_AB_$i`" />"
+                                $RulesRefs += Write-Output "`n<FileRuleRef RuleID=`"ID_ALLOW_AC_$i`" />"
+                                $RulesRefs += Write-Output "`n<FileRuleRef RuleID=`"ID_ALLOW_AD_$i`" />"
+                                $i++
+                            }
                             # Save the File Rules and File Rule Refs in the FileRulesAndFileRefs.txt in the current working directory for debugging purposes
                             $Rules + $RulesRefs | Out-File KernelProtectedFiles.txt                    
                             # Put the Rules and RulesRefs in an empty policy file
@@ -567,12 +591,9 @@ function Edit-WDACConfig {
                 }
                 # Delete these extra files unless user uses -Debugmode optional parameter
                 if (-NOT $Debug) {
-                    Remove-Item -Path ".\FileRulesAndFileRefs.txt" -Force -ErrorAction SilentlyContinue
-                    Remove-Item -Path ".\DeletedFileHashesEventsPolicy.xml" -Force -ErrorAction SilentlyContinue
-                    Remove-Item -Path ".\ProgramDir_ScanResults*.xml" -Force  -ErrorAction SilentlyContinue
-                    Remove-Item -Path ".\RulesForFilesNotInUserSelectedPaths.xml" -Force -ErrorAction SilentlyContinue
-                    Remove-Item -Path ".\KernelProtectedFiles.xml" -Force -ErrorAction SilentlyContinue
-                    Remove-Item -Path ".\KernelProtectedFiles.txt" -Force -ErrorAction SilentlyContinue
+                    Remove-Item -Path ".\RulesForFilesNotInUserSelectedPaths.xml", ".\ProgramDir_ScanResults*.xml" -Force -ErrorAction SilentlyContinue
+                    Remove-Item -Path ".\KernelProtectedFiles.xml", ".\DeletedFileHashesEventsPolicy.xml" -Force -ErrorAction SilentlyContinue
+                    Remove-Item -Path ".\KernelProtectedFiles.txt", ".\FileRulesAndFileRefs.txt" -Force -ErrorAction SilentlyContinue
                 }
 
                 #Re-Deploy-Basepolicy-in-Enforced-mode
@@ -591,9 +612,9 @@ function Edit-WDACConfig {
                 Set-CIPolicyVersion -FilePath $SuppPolicyPath -Version "1.0.0.0"            
 
                 ConvertFrom-CIPolicy $SuppPolicyPath "$SuppPolicyID.cip" | Out-Null 
-                CiTool --update-policy ".\$SuppPolicyID.cip" -json
-                Remove-Item ".\$SuppPolicyID.cip" -Force            
-                Write-host "`nSupplemental policy with the following details has been Deployed in Enforced Mode:" -ForegroundColor Green
+                CiTool --update-policy ".\$SuppPolicyID.cip" -json | Out-Null     
+                Write-host "`nSupplemental policy with the following details has been Deployed in Enforced Mode:" -ForegroundColor Green     
+                Remove-Item ".\$SuppPolicyID.cip" -Force
                 # create an object to display on the console
                 [PSCustomObject]@{
                     SupplementalPolicyName = $SuppPolicyName
@@ -634,9 +655,9 @@ function Edit-WDACConfig {
                 $SuppPolicyID = $SuppPolicyID.Substring(11)
                 Set-HVCIOptions -Strict -FilePath "$SuppPolicyName.xml" 
                 ConvertFrom-CIPolicy "$SuppPolicyName.xml" "$SuppPolicyID.cip" | Out-Null
-                CiTool --update-policy "$SuppPolicyID.cip" -json
+                CiTool --update-policy "$SuppPolicyID.cip" -json | Out-Null              
+                Write-Host "`nThe Supplemental policy $SuppPolicyName has been deployed on the system, replacing the old ones.`nSystem Restart Not immediately needed but eventually required to finish the removal of previous individual Supplemental policies." -ForegroundColor Green
                 Remove-Item -Path "$SuppPolicyID.cip" -Force
-                Write-Host "`nThe Supplemental policy $SuppPolicyName has been deployed on the system, replacing the old ones, please restart your system." -ForegroundColor Green
             }
         }
 
@@ -685,39 +706,33 @@ function Edit-WDACConfig {
             Set-HVCIOptions -Strict -FilePath .\BasePolicy.xml
             
             # Remove the extra files create during module operation that are no longer necessary
-            Remove-Item .\AllowPowerShell.xml -Force -ErrorAction SilentlyContinue
-            Remove-Item .\DefaultWindows_Enforced.xml -Force -ErrorAction SilentlyContinue
-            Remove-Item .\AllowMicrosoft.xml -Force -ErrorAction SilentlyContinue
+            Remove-Item '.\AllowPowerShell.xml', '.\DefaultWindows_Enforced.xml', '.\AllowMicrosoft.xml' -Force -ErrorAction SilentlyContinue
             Remove-Item '.\Microsoft recommended block rules.xml' -Force
 
             # Get the policy ID of the currently deployed base policy based on the policy name that user selected
             $CurrentID = ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsSystemPolicy -ne "True" } | Where-Object { $_.Friendlyname -eq $CurrentBasePolicyName }).BasePolicyID
             $CurrentID = "{$CurrentID}"
+            Write-Debug -Message "This is the current ID of deployed base policy that is going to be used in the new base policy: $CurrentID"
             [xml]$xml = Get-Content ".\BasePolicy.xml"        
             $xml.SiPolicy.PolicyID = $CurrentID
             $xml.SiPolicy.BasePolicyID = $CurrentID
             $xml.Save(".\BasePolicy.xml")
             ConvertFrom-CIPolicy ".\BasePolicy.xml" "$CurrentID.cip" | Out-Null
             # Deploy the new base policy with the same GUID on the system
-            CiTool --update-policy "$CurrentID.cip" -json
+            CiTool --update-policy "$CurrentID.cip" -json | Out-Null
             # Remove the policy binary after it's been deployed
             Remove-Item "$CurrentID.cip" -Force
             
             # Keep the new base policy XML file that was just deployed, in the current directory, so user can keep it for later 
-            switch ($NewBasePolicyType) {
-                "AllowMicrosoft_Plus_Block_Rules" {
-                    Remove-Item -Path ".\AllowMicrosoftPlusBlockRules.xml" -Force -ErrorAction SilentlyContinue
-                    Rename-Item -Path ".\BasePolicy.xml" -NewName "AllowMicrosoftPlusBlockRules.xml" 
-                }
-                "Lightly_Managed_system_Policy" {
-                    Remove-Item -Path ".\SignedAndReputable.xml" -Force -ErrorAction SilentlyContinue
-                    Rename-Item -Path ".\BasePolicy.xml" -NewName "SignedAndReputable.xml" 
-                }
-                "DefaultWindows_WithBlockRules" {
-                    Remove-Item -Path ".\DefaultWindowsPlusBlockRules.xml" -Force -ErrorAction SilentlyContinue
-                    Rename-Item -Path ".\BasePolicy.xml" -NewName "DefaultWindowsPlusBlockRules.xml" 
-                }
+            $PolicyFiles = @{
+                "AllowMicrosoft_Plus_Block_Rules" = "AllowMicrosoftPlusBlockRules.xml"
+                "Lightly_Managed_system_Policy"   = "SignedAndReputable.xml"
+                "DefaultWindows_WithBlockRules"   = "DefaultWindowsPlusBlockRules.xml"
             }
+            Remove-Item $PolicyFiles[$NewBasePolicyType] -Force -ErrorAction SilentlyContinue
+            Rename-Item -Path ".\BasePolicy.xml" -NewName $PolicyFiles[$NewBasePolicyType] -Force
+            &$WriteSubtleRainbow "Base Policy has been successfully updated to $NewBasePolicyType"
+            &$WriteLavender "Keep in mind that your previous policy path saved in User Configurations is no longer valid as you just changed your Base policy."
         }
     }
 

@@ -10,10 +10,8 @@ function New-SupplementalWDACConfig {
         # Main parameters for position 0
         [Alias("N")]
         [Parameter(Mandatory = $false, ParameterSetName = "Normal")][Switch]$Normal,
-
         [Alias("W")]
         [Parameter(Mandatory = $false, ParameterSetName = "FilePath With WildCards")][Switch]$FilePathWildCards,
-
         [Alias("P")]
         [parameter(mandatory = $false, ParameterSetName = "Installed AppXPackages")][switch]$InstalledAppXPackages,
         
@@ -28,22 +26,16 @@ function New-SupplementalWDACConfig {
         [parameter(Mandatory = $true, ParameterSetName = "FilePath With WildCards", ValueFromPipelineByPropertyName = $true)]
         [System.String]$WildCardPath,
 
-        [ValidatePattern('^[a-zA-Z0-9 ]+$', ErrorMessage = "The Supplemental Policy Name can only contain alphanumeric characters and spaces.")]
-        [parameter(Mandatory = $true, ParameterSetName = "Installed AppXPackages", ValueFromPipelineByPropertyName = $true)]
-        [parameter(Mandatory = $true, ParameterSetName = "FilePath With WildCards", ValueFromPipelineByPropertyName = $true)]
-        [parameter(Mandatory = $true, ParameterSetName = "Normal", ValueFromPipelineByPropertyName = $true)]
+        [ValidatePattern('^[a-zA-Z0-9 ]+$', ErrorMessage = "The Supplemental Policy Name can only contain alphanumeric and space characters.")]
+        [parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true)] # Used by all the entire Cmdlet
         [System.String]$SuppPolicyName,
         
         [ValidatePattern('\.xml$')]
         [ValidateScript({ Test-Path $_ -PathType 'Leaf' }, ErrorMessage = "The path you selected is not a file path.")]
-        [parameter(Mandatory = $true, ParameterSetName = "Normal", ValueFromPipelineByPropertyName = $true)]
-        [parameter(Mandatory = $true, ParameterSetName = "FilePath With WildCards", ValueFromPipelineByPropertyName = $true)]
-        [parameter(Mandatory = $true, ParameterSetName = "Installed AppXPackages", ValueFromPipelineByPropertyName = $true)]        
+        [parameter(Mandatory = $false, ValueFromPipelineByPropertyName = $true)] # Used by all the entire Cmdlet         
         [System.String]$PolicyPath,
 
-        [parameter(Mandatory = $false, ParameterSetName = "Normal")]
-        [parameter(Mandatory = $false, ParameterSetName = "FilePath With WildCards")]
-        [parameter(Mandatory = $false, ParameterSetName = "Installed AppXPackages")]        
+        [parameter(Mandatory = $false)] # Used by all the entire Cmdlet        
         [Switch]$Deployit,
 
         [Parameter(Mandatory = $false, ParameterSetName = "Normal")]
@@ -77,24 +69,53 @@ function New-SupplementalWDACConfig {
         # argument tab auto-completion and ValidateSet for Fallbacks
         Class Fallbackz : System.Management.Automation.IValidateSetValuesGenerator {
             [System.String[]] GetValidValues() {
-                $Fallbackz = ('Hash', 'FileName', 'SignedVersion', 'Publisher', 'FilePublisher', 'LeafCertificate', 'PcaCertificate', 'RootCertificate', 'WHQL', 'WHQLPublisher', 'WHQLFilePublisher', 'PFN', 'FilePath', 'None')
-   
+                $Fallbackz = ('Hash', 'FileName', 'SignedVersion', 'Publisher', 'FilePublisher', 'LeafCertificate', 'PcaCertificate', 'RootCertificate', 'WHQL', 'WHQLPublisher', 'WHQLFilePublisher', 'PFN', 'FilePath', 'None')   
                 return [System.String[]]$Fallbackz
             }
         }
-
         # argument tab auto-completion and ValidateSet for level
         Class Levelz : System.Management.Automation.IValidateSetValuesGenerator {
             [System.String[]] GetValidValues() {
-                $Levelz = ('Hash', 'FileName', 'SignedVersion', 'Publisher', 'FilePublisher', 'LeafCertificate', 'PcaCertificate', 'RootCertificate', 'WHQL', 'WHQLPublisher', 'WHQLFilePublisher', 'PFN', 'FilePath', 'None')
-       
+                $Levelz = ('Hash', 'FileName', 'SignedVersion', 'Publisher', 'FilePublisher', 'LeafCertificate', 'PcaCertificate', 'RootCertificate', 'WHQL', 'WHQLPublisher', 'WHQLFilePublisher', 'PFN', 'FilePath', 'None')       
                 return [System.String[]]$Levelz
             }
         }
         
         # Stop operation as soon as there is an error anywhere, unless explicitly specified otherwise
         $ErrorActionPreference = 'Stop'
-        if (-NOT $SkipVersionCheck) { . Update-self }                
+        if (-NOT $SkipVersionCheck) { . Update-self }
+        
+        #region User-Configurations-Processing-Validation
+        # If any of these parameters, that are mandatory for all of the position 0 parameters, isn't supplied by user
+        if (!$PolicyPath) {
+            # Read User configuration file if it exists
+            $UserConfig = Get-Content -Path "$env:USERPROFILE\.WDACConfig\UserConfigurations.json" -ErrorAction SilentlyContinue   
+            if ($UserConfig) {
+                # Validate the Json file and read its content to make sure it's not corrupted
+                try { $UserConfig = $UserConfig | ConvertFrom-Json }
+                catch {            
+                    Write-Error "User Configuration Json file is corrupted, deleting it..." -ErrorAction Continue
+                    # Calling this function with this parameter automatically does its job and breaks/stops the operation
+                    Set-CommonWDACConfig -DeleteUserConfig         
+                }                
+            }
+        }
+        # If PolicyPaths has no values
+        if (!$PolicyPath) {            
+            if ($UserConfig.UnsignedPolicyPath) {
+                # validate each policyPath read from user config file
+                if (Test-Path $($UserConfig.UnsignedPolicyPath)) {
+                    $PolicyPath = $UserConfig.UnsignedPolicyPath
+                }
+                else {
+                    throw "The currently saved value for UnsignedPolicyPath in user configurations is invalid."
+                }           
+            }
+            else {
+                throw "PolicyPath parameter can't be empty and no valid configuration was found for UnsignedPolicyPath."
+            }
+        }                
+        #endregion User-Configurations-Processing-Validation
     }
 
     process {
@@ -116,7 +137,7 @@ function New-SupplementalWDACConfig {
             if ($NoScript) { $PolicyMakerHashTable['NoScript'] = $true }                 
             if (!$NoUserPEs) { $PolicyMakerHashTable['UserPEs'] = $true } 
 
-            write-host "`nGenerating Supplemental policy with the following specifications:" -ForegroundColor Magenta
+            &$WriteViolet "`nGenerating Supplemental policy with the following specifications:"
             $PolicyMakerHashTable
             Write-Host "`n"
             # Create the supplemental policy via parameter splatting
@@ -135,11 +156,9 @@ function New-SupplementalWDACConfig {
                 SupplementalPolicyGUID = $PolicyID
             } 
             if ($Deployit) {                
-                CiTool --update-policy "$policyID.cip" -json
+                CiTool --update-policy "$policyID.cip" -json | Out-Null
+                &$WritePink "A Supplemental policy with the name $SuppPolicyName has been deployed."
                 Remove-Item -Path "$policyID.cip" -Force
-                Write-host -NoNewline "`n$policyID.cip for " -ForegroundColor Green
-                Write-host -NoNewline "$SuppPolicyName" -ForegroundColor Magenta
-                Write-host " has been deployed." -ForegroundColor Green
             }
         }
         
@@ -172,11 +191,9 @@ function New-SupplementalWDACConfig {
             }
     
             if ($Deployit) {                
-                CiTool --update-policy "$policyID.cip" -json
-                Write-host -NoNewline "`n$policyID.cip for " -ForegroundColor Green
-                Write-host -NoNewline "$SuppPolicyName" -ForegroundColor Magenta
-                Write-host " has been deployed." -ForegroundColor Green
-                Remove-Item -Path "$policyID.cip" -Force
+                CiTool --update-policy "$policyID.cip" -json | Out-Null
+                &$WritePink "A Supplemental policy with the name $SuppPolicyName has been deployed."
+                Remove-Item -Path "$policyID.cip" -Force                
             }
         }
 
@@ -230,14 +247,11 @@ function New-SupplementalWDACConfig {
             }
 
             if ($Deployit) {                
-                CiTool --update-policy "$policyID.cip" -json
-                Write-host -NoNewline "`n$policyID.cip for " -ForegroundColor Green
-                Write-host -NoNewline "$SuppPolicyName" -ForegroundColor Magenta
-                Write-host " has been deployed." -ForegroundColor Green
+                CiTool --update-policy "$policyID.cip" -json | Out-Null
+                &$WritePink "A Supplemental policy with the name $SuppPolicyName has been deployed."
                 Remove-Item -Path "$policyID.cip" -Force
             }
-        }        
-        
+        }
     }    
   
     <#

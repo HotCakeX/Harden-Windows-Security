@@ -4,10 +4,8 @@ function Confirm-WDACConfig {
     Param(
         [Alias("L")]
         [Parameter(Mandatory = $false, ParameterSetName = "List Active Policies")][Switch]$ListActivePolicies,
-
         [Alias("V")]
         [Parameter(Mandatory = $false, ParameterSetName = "Verify WDAC Status")][Switch]$VerifyWDACStatus,
-
         [Alias("S")]
         [Parameter(Mandatory = $false, ParameterSetName = "Check SmartAppControl Status")][Switch]$CheckSmartAppControlStatus,
 
@@ -28,13 +26,13 @@ function Confirm-WDACConfig {
         # Script block to show only non-system Base policies
         $OnlyBasePoliciesBLOCK = {
             $BasePolicies = (CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsSystemPolicy -ne "True" } | Where-Object { $_.PolicyID -eq $_.BasePolicyID }           
-            Write-Host "`nThere are currently $(($BasePolicies.count)) Non-system Base policies deployed" -ForegroundColor Cyan
+            &$WriteLavender "`nThere are currently $(($BasePolicies.count)) Non-system Base policies deployed"
             $BasePolicies
         }
         # Script block to show only non-system Supplemental policies
         $OnlySupplementalPoliciesBLOCK = {
             $SupplementalPolicies = (CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsSystemPolicy -ne "True" } | Where-Object { $_.PolicyID -ne $_.BasePolicyID }           
-            Write-Host "`nThere are currently $(($SupplementalPolicies.count)) Non-system Supplemental policies deployed`n" -ForegroundColor Cyan
+            &$WriteLavender "`nThere are currently $(($SupplementalPolicies.count)) Non-system Supplemental policies deployed`n"
             $SupplementalPolicies
         }        
     }
@@ -48,19 +46,19 @@ function Confirm-WDACConfig {
         
         if ($VerifyWDACStatus) {
             Get-CimInstance -ClassName Win32_DeviceGuard -Namespace root\Microsoft\Windows\DeviceGuard | Select-Object -Property *codeintegrity* | Format-List
-            Write-host "2 -> Enforced`n1 -> Audit mode`n0 -> Disabled/Not running`n" -ForegroundColor Cyan
+            &$WriteLavender "2 -> Enforced`n1 -> Audit mode`n0 -> Disabled/Not running`n"
         }
 
         if ($CheckSmartAppControlStatus) {
             Get-MpComputerStatus | Select-Object -Property SmartAppControlExpiration, SmartAppControlState
             if ((Get-MpComputerStatus).SmartAppControlState -eq "Eval") {
-                Write-Host "Smart App Control is in Evaluation mode.`n"
+                &$WritePink "Smart App Control is in Evaluation mode.`n"
             }
             elseif ((Get-MpComputerStatus).SmartAppControlState -eq "On") {
-                Write-Host "Smart App Control is turned on.`n"
+                &$WritePink "Smart App Control is turned on.`n"
             }
             elseif ((Get-MpComputerStatus).SmartAppControlState -eq "Off") {
-                Write-Host "Smart App Control is turned off.`n"
+                &$WritePink "Smart App Control is turned off.`n"
             }
         }    
     }

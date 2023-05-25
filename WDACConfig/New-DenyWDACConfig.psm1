@@ -10,28 +10,23 @@ function New-DenyWDACConfig {
         # Main parameters for position 0
         [Alias("N")]
         [Parameter(Mandatory = $false, ParameterSetName = "Normal")][Switch]$Normal,
-
         [Alias("D")]
         [Parameter(Mandatory = $false, ParameterSetName = "Drivers")][Switch]$Drivers,
 
         [ValidatePattern('^[a-zA-Z0-9 ]+$', ErrorMessage = "The Supplemental Policy Name can only contain alphanumeric characters and spaces.")]
-        [parameter(Mandatory = $true, ParameterSetName = "Normal", ValueFromPipelineByPropertyName = $true)]
-        [parameter(Mandatory = $true, ParameterSetName = "Drivers", ValueFromPipelineByPropertyName = $true)]        
+        [parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true)] # Used by all the entire Cmdlet        
         [System.String]$PolicyName,
    
         [ValidateScript({ Test-Path $_ -PathType 'Container' }, ErrorMessage = "The path you selected is not a folder path.")]            
-        [parameter(Mandatory = $true, ParameterSetName = "Normal")]
-        [parameter(Mandatory = $true, ParameterSetName = "Drivers")]
+        [parameter(Mandatory = $true)] # Used by all the entire Cmdlet
         [System.String[]]$ScanLocations,
 
         [ValidateSet([Levelz])]
-        [Parameter(Mandatory = $false, ParameterSetName = "Normal")]
-        [Parameter(Mandatory = $false, ParameterSetName = "Drivers")]
+        [Parameter(Mandatory = $false)] # Used by all the entire Cmdlet
         [System.String]$Level = "FilePublisher", # Setting the default value for the Level parameter
 
         [ValidateSet([Fallbackz])]
-        [Parameter(Mandatory = $false, ParameterSetName = "Normal")]
-        [Parameter(Mandatory = $false, ParameterSetName = "Drivers")]
+        [Parameter(Mandatory = $false)] # Used by all the entire Cmdlet
         [System.String[]]$Fallbacks = "Hash", # Setting the default value for the Fallbacks parameter
 
         [Parameter(Mandatory = $false, ParameterSetName = "Normal")]
@@ -47,11 +42,10 @@ function New-DenyWDACConfig {
         [Parameter(Mandatory = $false, ParameterSetName = "Normal")]
         [Switch]$NoScript,
 
-        [Parameter(Mandatory = $false, ParameterSetName = "Normal")]
-        [Parameter(Mandatory = $false, ParameterSetName = "Drivers")]
+        [Parameter(Mandatory = $false)] # Used by all the entire Cmdlet
         [Switch]$Deployit,
         
-        [Parameter(Mandatory = $false)][Switch]$SkipVersionCheck
+        [Parameter(Mandatory = $false)][Switch]$SkipVersionCheck # Used by all the entire Cmdlet
     )
 
     begin {    
@@ -126,10 +120,8 @@ function New-DenyWDACConfig {
             
             }
 
-            # Creating an empty policy that only contains 2 allow rules, going to be merged with the Deny only base policy
-            New-AllowAllPolicy | Out-File '.\AllowAllPolicy.xml'
-            # Adding the AllowAll policy path to the array of policy paths
-            $PolicyXMLFilesArray += '.\AllowAllPolicy.xml'
+            # Adding the AllowAll default policy path to the array of policy paths
+            $PolicyXMLFilesArray += "C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowAll.xml"
             # creating the final Deny base policy from the xml files in the paths array
             Merge-CIPolicy -PolicyPaths $PolicyXMLFilesArray -OutputFilePath ".\DenyPolicy $PolicyName.xml" | Out-Null
                             
@@ -152,15 +144,14 @@ function New-DenyWDACConfig {
             
             if (!$Debug) {
                 Remove-Item -Path ".\ProgramDir_ScanResults*.xml" -Force
-                Remove-Item -Path '.\AllowAllPolicy.xml' -Force
             }
             
             if ($Deployit) {                
-                CiTool --update-policy "$policyID.cip" -json
-                Remove-Item -Path "$policyID.cip" -Force
+                CiTool --update-policy "$policyID.cip" -json | Out-Null               
                 Write-host -NoNewline "`n$policyID.cip for " -ForegroundColor Green
                 Write-host -NoNewline "$PolicyName" -ForegroundColor Magenta
-                Write-host " has been deployed." -ForegroundColor Green
+                Write-host " has been deployed." -ForegroundColor Green                
+                Remove-Item -Path "$policyID.cip" -Force
             }
         }
         # Create Deny base policy for Driver files
@@ -188,16 +179,11 @@ function New-DenyWDACConfig {
                 New-CIPolicy @PolicyMakerHashTable
             
             } -args $ScanLocations, $Level, $Fallbacks
-
-            # Creating an empty policy that only contains 2 allow rules, going to be merged with the Deny only base policy
-            New-AllowAllPolicy | Out-File '.\AllowAllPolicy.xml'
-
-            # Letting the AllowAll policy be first so that its AllowAll rules will be on top of each node for better visibility
-            Merge-CIPolicy -PolicyPaths '.\AllowAllPolicy.xml', ".\DenyPolicy Temp.xml" -OutputFilePath ".\DenyPolicy $PolicyName.xml" | Out-Null
+            
+            # Merging AllowAll default policy with our Deny temp policy
+            Merge-CIPolicy -PolicyPaths "C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowAll.xml", ".\DenyPolicy Temp.xml" -OutputFilePath ".\DenyPolicy $PolicyName.xml" | Out-Null
 
             Remove-Item -Path ".\DenyPolicy Temp.xml" -Force
-            Remove-Item -Path '.\AllowAllPolicy.xml' -Force
-
             $policyID = Set-CiPolicyIdInfo -FilePath "DenyPolicy $PolicyName.xml" -ResetPolicyID -PolicyName "$PolicyName"
             $policyID = $policyID.Substring(11)
             Set-CIPolicyVersion -FilePath "DenyPolicy $PolicyName.xml" -Version "1.0.0.0"
@@ -216,11 +202,11 @@ function New-DenyWDACConfig {
                 DenyPolicyGUID = $PolicyID
             } 
             if ($Deployit) {                
-                CiTool --update-policy "$policyID.cip" -json
-                Remove-Item -Path "$policyID.cip" -Force
+                CiTool --update-policy "$policyID.cip" -json | Out-Null             
                 Write-host -NoNewline "`n$policyID.cip for " -ForegroundColor Green
                 Write-host -NoNewline "$PolicyName" -ForegroundColor Magenta
-                Write-host " has been deployed." -ForegroundColor Green
+                Write-host " has been deployed." -ForegroundColor Green                
+                Remove-Item -Path "$policyID.cip" -Force
             }   
         }
     } 

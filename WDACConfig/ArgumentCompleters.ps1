@@ -39,21 +39,11 @@ $ArgumentCompleterPolicyPaths = {
 }
 
 # argument tab auto-completion for Certificate common name
-$ArgumentCompleterCertificateCN = {
-     
-    $CNs = (Get-ChildItem -Path 'Cert:\CurrentUser\My').Subject.Substring(3) | Where-Object { $_ -NotLike "*, DC=*" } |
-    ForEach-Object {
-            
-        if ($_ -like "*CN=*") {
-            
-            $_ -match "CN=(?<cn>[^,]+)" | Out-Null
-        
-            return $Matches['cn']
-        }
-        else { return $_ }
-    }   
-    
-    $CNs | foreach-object { return "`"$_`"" }
+$ArgumentCompleterCertificateCN = {     
+    $certs = foreach ($cert in (Get-ChildItem 'Cert:\CurrentUser\my')) {
+        (($cert.Subject -split "," | Select-Object -First 1) -replace "CN=", "").Trim()
+    }    
+    $certs | foreach-object { return "`"$_`"" }
 }
 
 # Argument tab auto-completion for installed Appx package names

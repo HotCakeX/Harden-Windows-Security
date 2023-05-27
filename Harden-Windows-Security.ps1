@@ -1,6 +1,6 @@
 <#PSScriptInfo
 
-.VERSION 2023.5.20
+.VERSION 2023.5.27
 
 .GUID d435a293-c9ee-4217-8dc1-4ad2318a5770
 
@@ -212,7 +212,7 @@ if (Test-IsAdmin) {
 try {
 
     # Check the current hard-coded version against the latest version online
-    $currentVersion = '2023.5.20'
+    $currentVersion = '2023.5.27'
     try {
         $latestVersion = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Version.txt"
     }
@@ -318,8 +318,8 @@ try {
         switch (Select-Option -Options "Yes", "No", "Exit" -Message "`nApply May 9 2023 Windows Boot Manager Security measures ? (If you've already run this category, don't need to do it again)") {
             "Yes" {              
 
-                # First make sure the update is installed since the next steps can't run without it
-                if (Get-HotFix -Id 'KB5026372' -ErrorAction SilentlyContinue) { 
+                # First make sure the update is installed by verifying the UBR (Update Build Revision), since the next steps can't run without it
+                if ((Get-ItemPropertyValue "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion" -Name UBR) -ge 1702) { 
         
                     mountvol q: /S
                     xcopy /y C:\Windows\System32\SecureBootUpdates\SKUSiPolicy.p7b q:\EFI\Microsoft\Boot 

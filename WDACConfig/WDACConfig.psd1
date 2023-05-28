@@ -8,7 +8,7 @@
     # RootModule = ""
 
     # Version number of this module.
-    ModuleVersion        = '0.1.6'
+    ModuleVersion        = '0.1.7'
 
     # Supported PSEditions
     CompatiblePSEditions = @("Core")
@@ -146,6 +146,9 @@ To get help and syntax on PowerShell console, type:
             # ReleaseNotes of this module
             ReleaseNotes = @"
 
+## Version 0.1.7
+Made the Edit-WDACConfig and Edit-SignedWDACConfig cmdlets resilient to errors and unexpected problems by improving their logic.
+
 ## Version 0.1.6
 New cmdlet Set-CommonWDACConfig, Use this cmdlet to store the values for common and frequently used parameters so that you won't have to specify them again every time.
 More info about it: https://github.com/HotCakeX/Harden-Windows-Security/wiki/Set-CommonWDACConfig
@@ -156,11 +159,6 @@ Optimized the overall code and improved a lot of logics.
 Added alias for many parameters for easier access.
 Added new cmdlet: New-DenyWDACConfig for creating base policies with Deny rules. They can be deployed side by side other policies without conflict.
 Added argument completer for many new parameters and improved the previous ones to be smarter in their suggestions.
-
-## Version 0.1.4
-Code optimization.
-Implemented a check to make sure Windows 11 22H2 is being used as it's a requirement for this module to run.
-Improved Remove-WDACConfig cmdlet by making the argument completers only show policies that haven't been already deleted, also applied a fix to this cmdlet for when multiple policies with the same name are deployed.   
 
 Full Change log for previous versions are available on Excel online: (Copy and paste the link in your browser if it isn't clickable)
 https://1drv.ms/x/s!AtCaUNAJbbvIhuVPpPeCHSjl75OqBQ?e=qgvzEt

@@ -147,6 +147,7 @@ function New-WDACConfig {
             if ($Deployit -and $MakeAllowMSFTWithBlockRules) {            
                 CiTool --update-policy "$PolicyID.cip" -json | Out-Null
                 Write-host "`n"
+                Remove-Item -Path "$PolicyID.cip" -Force
             }
             if ($NoCIP)
             { Remove-Item -Path "$PolicyID.cip" -Force }

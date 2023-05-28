@@ -124,7 +124,7 @@ function Remove-WDACConfig {
         #region User-Configurations-Processing-Validation
         if ($PSCmdlet.ParameterSetName -eq "Signed Base") {
             # If any of these parameters, that are mandatory for all of the position 0 parameters, isn't supplied by user
-            if (!$SignToolPath -or !$CertPath -or !$CertCN) {
+            if (!$SignToolPath -or !$CertCN) {
                 # Read User configuration file if it exists
                 $UserConfig = Get-Content -Path "$env:USERPROFILE\.WDACConfig\UserConfigurations.json" -ErrorAction SilentlyContinue   
                 if ($UserConfig) {
@@ -144,25 +144,8 @@ function Remove-WDACConfig {
             } # If it is null, then Get-SignTool will behave the same as if it was called without any arguments.
             else {
                 $SignToolPathFinal = Get-SignTool -SignToolExePath ($UserConfig.SignToolCustomPath ?? $null)
-            }    
-                
-            # If CertPath parameter wasn't provided by user
-            if (!$CertPath) {
-                if ($UserConfig.CertificatePath) {
-                    # validate user config values for Certificate Path          
-                    if (Test-Path $($UserConfig.CertificatePath)) {
-                        # If the user config values are correct then use them
-                        $CertPath = $UserConfig.CertificatePath
-                    }            
-                    else {
-                        throw "The currently saved value for CertPath in user configurations is invalid."
-                    }
-                }
-                else {
-                    throw "CertPath parameter can't be empty and no valid configuration was found for it."
-                }
-            }
-                        
+            }            
+                     
             # If CertCN was not provided by user
             if (!$CertCN) {
                 if ($UserConfig.CertificateCommonName) {
@@ -178,8 +161,7 @@ function Remove-WDACConfig {
                 else {
                     throw "CertCN parameter can't be empty and no valid configuration was found for it."
                 }
-            } 
-        
+            }        
         }
         #endregion User-Configurations-Processing-Validation
 
@@ -367,5 +349,4 @@ Can be used with any parameter to bypass the online version check - only to be u
 Set-PSReadLineKeyHandler -Key Tab -Function MenuComplete
 Register-ArgumentCompleter -CommandName "Remove-WDACConfig" -ParameterName "CertCN" -ScriptBlock $ArgumentCompleterCertificateCN
 Register-ArgumentCompleter -CommandName "Remove-WDACConfig" -ParameterName "PolicyPaths" -ScriptBlock $ArgumentCompleterPolicyPathsBasePoliciesOnly
-Register-ArgumentCompleter -CommandName "Remove-WDACConfig" -ParameterName "CertPath" -ScriptBlock $ArgumentCompleterCertPath
 Register-ArgumentCompleter -CommandName "Remove-WDACConfig" -ParameterName "SignToolPath" -ScriptBlock $ArgumentCompleterSignToolPath

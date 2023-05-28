@@ -312,6 +312,7 @@ function Confirm-CertCN ([string]$CN) {
 $WriteViolet = { Write-Output "$($PSStyle.Foreground.FromRGB(153,0,255))$($args[0])$($PSStyle.Reset)" }
 $WritePink = { Write-Output "$($PSStyle.Foreground.FromRGB(255,0,230))$($args[0])$($PSStyle.Reset)" }
 $WriteLavender = { Write-Output "$($PSStyle.Foreground.FromRgb(255,179,255))$($args[0])$($PSStyle.Reset)" }
+$WriteTeaGreen = { Write-Output "$($PSStyle.Foreground.FromRgb(133, 222, 119))$($args[0])$($PSStyle.Reset)" }
 
 # Define an array of cute RGB colors
 $SubtleCuteColors = @(

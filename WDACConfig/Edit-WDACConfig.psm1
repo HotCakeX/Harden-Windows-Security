@@ -105,6 +105,10 @@ function Edit-WDACConfig {
         # Importing resources such as functions by dot-sourcing so that they will run in the same scope and their variables will be usable
         . "$psscriptroot\Resources.ps1"
 
+        # Stop operation as soon as there is an error anywhere, unless explicitly specified otherwise
+        $ErrorActionPreference = 'Stop'         
+        if (-NOT $SkipVersionCheck) { . Update-self } 
+
         # Detecting if Debug switch is used, will do debugging actions based on that
         $Debug = $PSBoundParameters.Debug.IsPresent
 
@@ -155,8 +159,7 @@ function Edit-WDACConfig {
         # argument tab auto-completion and ValidateSet for Fallbacks
         Class Fallbackz : System.Management.Automation.IValidateSetValuesGenerator {
             [System.String[]] GetValidValues() {
-                $Fallbackz = ('Hash', 'FileName', 'SignedVersion', 'Publisher', 'FilePublisher', 'LeafCertificate', 'PcaCertificate', 'RootCertificate', 'WHQL', 'WHQLPublisher', 'WHQLFilePublisher', 'PFN', 'FilePath', 'None')
-   
+                $Fallbackz = ('Hash', 'FileName', 'SignedVersion', 'Publisher', 'FilePublisher', 'LeafCertificate', 'PcaCertificate', 'RootCertificate', 'WHQL', 'WHQLPublisher', 'WHQLFilePublisher', 'PFN', 'FilePath', 'None')   
                 return [System.String[]]$Fallbackz
             }
         }
@@ -164,26 +167,21 @@ function Edit-WDACConfig {
         # argument tab auto-completion and ValidateSet for level
         Class Levelz : System.Management.Automation.IValidateSetValuesGenerator {
             [System.String[]] GetValidValues() {
-                $Levelz = ('Hash', 'FileName', 'SignedVersion', 'Publisher', 'FilePublisher', 'LeafCertificate', 'PcaCertificate', 'RootCertificate', 'WHQL', 'WHQLPublisher', 'WHQLFilePublisher', 'PFN', 'FilePath', 'None')
-       
+                $Levelz = ('Hash', 'FileName', 'SignedVersion', 'Publisher', 'FilePublisher', 'LeafCertificate', 'PcaCertificate', 'RootCertificate', 'WHQL', 'WHQLPublisher', 'WHQLFilePublisher', 'PFN', 'FilePath', 'None')       
                 return [System.String[]]$Levelz
             }
         }
 
         # Redeploy the base policy in Enforced mode
-        function Update-BasePolicyToEnforced {        
-            Set-RuleOption -FilePath $PolicyPath -Option 3 -Delete
-            ConvertFrom-CIPolicy $PolicyPath "$PolicyID.cip" | Out-Null        
-            CiTool --update-policy ".\$PolicyID.cip" -json | Out-Null        
-            Write-host "`n`nThe Base policy with the following details has been Re-Deployed in Enforced Mode:" -ForegroundColor Green        
+        function Update-BasePolicyToEnforced {
+            # Deploy Enforced mode CIP            
+            CiTool --update-policy ".\$PolicyID.cip" -json | Out-Null         
+            &$WriteTeaGreen "`n`nThe Base policy with the following details has been Re-Deployed in Enforced Mode:"       
             Write-Output "PolicyName = $PolicyName"
-            Write-Output "PolicyGUID = $PolicyID`n"
+            Write-Output "PolicyGUID = $PolicyID"
+            # Remove Enforced Mode CIP
             Remove-Item ".\$PolicyID.cip" -Force
-        }
-
-        # Stop operation as soon as there is an error anywhere, unless explicitly specified otherwise
-        $ErrorActionPreference = 'Stop'         
-        if (-NOT $SkipVersionCheck) { . Update-self }        
+        }       
 
         $DriveLettersGlobalRootFix = Invoke-Command -ScriptBlock $DriveLettersGlobalRootFixScriptBlock
     }
@@ -199,45 +197,70 @@ function Edit-WDACConfig {
     
             #Initiate Live Audit Mode
 
-            foreach ($PolicyPath in $PolicyPaths) {            
+            foreach ($PolicyPath in $PolicyPaths) {                
+                # Creating a copy of the original policy in Temp folder so that the original one will be unaffected
+                $PolicyFileName = Split-Path $PolicyPath -Leaf
+                Remove-Item -Path "$env:Temp\$PolicyFileName" -Force -ErrorAction SilentlyContinue # make sure no file with the same name already exists in Temp folder         
+                Copy-Item -Path $PolicyPath -Destination $env:Temp -Force                
+                $PolicyPath = "$env:Temp\$PolicyFileName"
+
                 # defining Base policy
                 $xml = [xml](Get-Content $PolicyPath)            
                 $PolicyID = $xml.SiPolicy.PolicyID
                 $PolicyName = ($xml.SiPolicy.Settings.Setting | Where-Object { $_.provider -eq "PolicyInfo" -and $_.valuename -eq "Name" -and $_.key -eq "Information" }).value.string
     
                 # Remove any cip file if there is any
-                Remove-Item -Path ".\$PolicyID.cip" -ErrorAction SilentlyContinue
-                Set-RuleOption -FilePath $PolicyPath -Option 3
-                ConvertFrom-CIPolicy $PolicyPath "$PolicyID.cip" | Out-Null
-                CiTool --update-policy ".\$PolicyID.cip" -json | Out-Null          
-                Write-host "`n`nThe Base policy with the following details has been Re-Deployed in Audit Mode:" -ForegroundColor Green        
+                Remove-Item -Path ".\*.cip" -Force -ErrorAction SilentlyContinue
+
+                # Create CIP for Audit Mode
+                Set-RuleOption -FilePath $PolicyPath -Option 3 # Add Audit mode policy rule option
+                ConvertFrom-CIPolicy $PolicyPath ".\AuditMode.cip" | Out-Null
+                
+                # Create CIP for Enforced Mode
+                Set-RuleOption -FilePath $PolicyPath -Option 3 -Delete # Remove Audit mode policy rule option
+                ConvertFrom-CIPolicy $PolicyPath ".\EnforcedMode.cip" | Out-Null
+                            
+                # Deploy Audit mode CIP
+                Rename-Item ".\AuditMode.cip" -NewName ".\$PolicyID.cip" -Force
+                CiTool --update-policy ".\$PolicyID.cip" -json | Out-Null         
+                &$WriteTeaGreen "`n`nThe Base policy with the following details has been Re-Deployed in Audit Mode:"      
                 Write-Output "PolicyName = $PolicyName"
                 Write-Output "PolicyGUID = $PolicyID"
+                # Remove Audit Mode CIP
                 Remove-Item ".\$PolicyID.cip" -Force
-    
-                ################################### User Interaction ####################################            
-                Write-host "`nAudit mode deployed, start installing your programs now" -ForegroundColor Magenta    
-                Write-Host "When you've finished installing programs, Press Enter to start selecting program directories to scan`n" -ForegroundColor Blue
-                Pause    
-                
-                # Store the program paths that user browses for in an array
-                $ProgramsPaths = @()
-                Write-host "`nSelect program directories to scan`n" -ForegroundColor Cyan
-                # Showing folder picker GUI to the user for folder path selection
-                do {
-                    [System.Reflection.Assembly]::LoadWithPartialName("System.windows.forms") | Out-Null
-                    $OBJ = New-Object System.Windows.Forms.FolderBrowserDialog
-                    $OBJ.InitialDirectory = "$env:SystemDrive"
-                    $OBJ.Description = $Description
-                    $Spawn = New-Object System.Windows.Forms.Form -Property @{TopMost = $true }
-                    $Show = $OBJ.ShowDialog($Spawn)
-                    If ($Show -eq "OK") { $ProgramsPaths += $OBJ.SelectedPath }
-                    Else { break }
-                }
-                while ($true)
-                
-                # Only proceed if user selected at least 1 folder path
-                if (-NOT ($ProgramsPaths.count -eq 0)) {
+                # Prepare Enforced Mode CIP for Deployment - waiting to be Re-deployed at the right time
+                Rename-Item ".\EnforcedMode.cip" -NewName ".\$PolicyID.cip" -Force    
+
+                # A Try-Catch-Finally block so that if any errors occur, the Base policy will be Re-deployed in enforced mode                
+                Try {
+                    ################################### User Interaction ####################################            
+                    &$WritePink "`nAudit mode deployed, start installing your programs now"
+                    &$WriteViolet "When you've finished installing programs, Press Enter to start selecting program directories to scan`n"
+                    Pause
+
+                    # Store the program paths that user browses for in an array
+                    $ProgramsPaths = @()
+                    Write-host "`nSelect program directories to scan`n" -ForegroundColor Cyan
+                    # Showing folder picker GUI to the user for folder path selection
+                    do {
+                        [System.Reflection.Assembly]::LoadWithPartialName("System.windows.forms") | Out-Null
+                        $OBJ = New-Object System.Windows.Forms.FolderBrowserDialog
+                        $OBJ.InitialDirectory = "$env:SystemDrive"
+                        $OBJ.Description = $Description
+                        $Spawn = New-Object System.Windows.Forms.Form -Property @{TopMost = $true }
+                        $Show = $OBJ.ShowDialog($Spawn)
+                        If ($Show -eq "OK") { $ProgramsPaths += $OBJ.SelectedPath }
+                        Else { break }
+                    }
+                    while ($true)
+
+                    # Make sure User browsed for at least 1 directory
+                    # Exit the operation if user didn't select any folder paths
+                    if ($ProgramsPaths.count -eq 0) {                                      
+                        Write-Host "`nNo program folder was selected, reverting the changes and quitting...`n" -ForegroundColor Red
+                        # Causing break here to stop operation. Finally block will be triggered to Re-Deploy Base policy in Enforced mode
+                        break
+                    }
         
                     Write-Host "Here are the paths you selected:" -ForegroundColor Yellow
                     $ProgramsPaths | ForEach-Object { $_ }
@@ -272,42 +295,54 @@ function Edit-WDACConfig {
                         $PolicyXMLFilesArray += $file.FullName
                     }
     
-                    Merge-CIPolicy -PolicyPaths $PolicyXMLFilesArray -OutputFilePath ".\SupplementalPolicy$SuppPolicyName.xml" | Out-Null                                  
-                
-                    #Re-Deploy-Basepolicy-in-Enforced-mode
-                    Update-BasePolicyToEnforced      
-    
-                    Remove-Item -Path ".\ProgramDir_ScanResults*.xml" -Force 
-    
-                    #Supplemental-policy-processing-and-deployment
-        
-                    $SuppPolicyPath = ".\SupplementalPolicy$SuppPolicyName.xml" 
-                    $SuppPolicyID = Set-CIPolicyIdInfo -FilePath $SuppPolicyPath -PolicyName "Supplemental Policy $SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath
-                    $SuppPolicyID = $SuppPolicyID.Substring(11)                
-    
-                    # Make sure policy rule options that don't belong to a Supplemental policy don't exit
-                    @(0, 1, 2, 3, 4, 8, 9, 10, 11, 12, 15, 16, 17, 19, 20) | ForEach-Object { Set-RuleOption -FilePath $SuppPolicyPath -Option $_ -Delete }
-     
-                    Set-HVCIOptions -Strict -FilePath $SuppPolicyPath             
-                    Set-CIPolicyVersion -FilePath $SuppPolicyPath -Version "1.0.0.0"            
-    
-                    ConvertFrom-CIPolicy $SuppPolicyPath "$SuppPolicyID.cip" | Out-Null 
-                    CiTool --update-policy ".\$SuppPolicyID.cip" -json | Out-Null
-                    Write-host "`nSupplemental policy with the following details has been Deployed in Enforced Mode:" -ForegroundColor Green
+                    Write-Debug -Message "The following policy xml files are going to be merged into the final Supplemental policy and be deployed on the system:"
+                    if ($Debug) { $PolicyXMLFilesArray | ForEach-Object { Write-Debug -Message "$_" } }
                     
-                    [PSCustomObject]@{
-                        SupplementalPolicyName = $SuppPolicyName
-                        SupplementalPolicyGUID = $SuppPolicyID
-                    }
-                    Remove-Item ".\$SuppPolicyID.cip" -Force
-                }            
-                # Do this if no program path(s) was selected by user
-                else {
-                    Write-Host "`nNo program folder was selected, reverting the changes and quitting...`n" -ForegroundColor Magenta
-                    #Re-Deploy-Basepolicy-in-Enforced-mode
-                    Update-BasePolicyToEnforced                 
-                    break
+                    # Merge all of the policy XML files in the array into the final Supplemental policy
+                    Merge-CIPolicy -PolicyPaths $PolicyXMLFilesArray -OutputFilePath ".\SupplementalPolicy$SuppPolicyName.xml" | Out-Null                                  
+       
+                    Remove-Item -Path ".\ProgramDir_ScanResults*.xml" -Force
                 }
+                catch {                    
+                    $_
+                    $_.CategoryInfo
+                    $_.ErrorDetails
+                    $_.Exception
+                    $_.FullyQualifiedErrorId
+                    $_.InvocationInfo
+                    $_.PipelineIterationInfo
+                    $_.PSMessageDetails
+                    $_.ScriptStackTrace
+                    $_.TargetObject
+                }
+                finally {                                          
+                    # Deploy Enforced mode CIP
+                    Write-Debug -Message "Finally Block Running"
+                    Update-BasePolicyToEnforced                                                                        
+                }
+                
+                #################### Supplemental-policy-processing-and-deployment ############################
+        
+                $SuppPolicyPath = ".\SupplementalPolicy$SuppPolicyName.xml" 
+                $SuppPolicyID = Set-CIPolicyIdInfo -FilePath $SuppPolicyPath -PolicyName "Supplemental Policy $SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath
+                $SuppPolicyID = $SuppPolicyID.Substring(11)                
+    
+                # Make sure policy rule options that don't belong to a Supplemental policy don't exit
+                @(0, 1, 2, 3, 4, 8, 9, 10, 11, 12, 15, 16, 17, 19, 20) | ForEach-Object { Set-RuleOption -FilePath $SuppPolicyPath -Option $_ -Delete }
+     
+                Set-HVCIOptions -Strict -FilePath $SuppPolicyPath             
+                Set-CIPolicyVersion -FilePath $SuppPolicyPath -Version "1.0.0.0"            
+    
+                ConvertFrom-CIPolicy $SuppPolicyPath "$SuppPolicyID.cip" | Out-Null 
+                CiTool --update-policy ".\$SuppPolicyID.cip" -json | Out-Null
+                &$WriteTeaGreen "`nSupplemental policy with the following details has been Deployed in Enforced Mode:"
+                # create an object to display on the console
+                [PSCustomObject]@{
+                    SupplementalPolicyName = $SuppPolicyName
+                    SupplementalPolicyGUID = $SuppPolicyID
+                }
+                Remove-Item ".\$SuppPolicyID.cip" -Force
+                Remove-Item -Path $PolicyPath -Force # Remove the policy xml file in Temp folder we created earlier   
             }
         }
 
@@ -325,45 +360,71 @@ function Edit-WDACConfig {
 
             ################################### Initiate Live Audit Mode ###################################
             
-            foreach ($PolicyPath in $PolicyPaths) {            
-                # defining Base policy
+            foreach ($PolicyPath in $PolicyPaths) {                
+                # Creating a copy of the original policy in Temp folder so that the original one will be unaffected
+                $PolicyFileName = Split-Path $PolicyPath -Leaf
+                Remove-Item -Path "$env:Temp\$PolicyFileName" -Force -ErrorAction SilentlyContinue # make sure no file with the same name already exists in Temp folder         
+                Copy-Item -Path $PolicyPath -Destination $env:Temp -Force                
+                $PolicyPath = "$env:Temp\$PolicyFileName"
+                                
+                # Defining Base policy
                 $xml = [xml](Get-Content $PolicyPath)            
                 $PolicyID = $xml.SiPolicy.PolicyID
                 $PolicyName = ($xml.SiPolicy.Settings.Setting | Where-Object { $_.provider -eq "PolicyInfo" -and $_.valuename -eq "Name" -and $_.key -eq "Information" }).value.string
 
-                # Remove any cip file if any
-                Remove-Item -Path ".\$PolicyID.cip" -ErrorAction SilentlyContinue       
-                Set-RuleOption -FilePath $PolicyPath -Option 3
-                ConvertFrom-CIPolicy $PolicyPath "$PolicyID.cip" | Out-Null            
-                CiTool --update-policy ".\$PolicyID.cip" -json | Out-Null
-                Write-host "`n`nThe Base policy with the following details has been Re-Deployed in Audit Mode:" -ForegroundColor Green        
+                # Remove any cip file if there is any
+                Remove-Item -Path ".\*.cip" -Force -ErrorAction SilentlyContinue                
+
+                # Create CIP for Audit Mode
+                Set-RuleOption -FilePath $PolicyPath -Option 3 # Add Audit mode policy rule option
+                ConvertFrom-CIPolicy $PolicyPath ".\AuditMode.cip" | Out-Null
+                 
+                # Create CIP for Enforced Mode
+                Set-RuleOption -FilePath $PolicyPath -Option 3 -Delete # Remove Audit mode policy rule option
+                ConvertFrom-CIPolicy $PolicyPath ".\EnforcedMode.cip" | Out-Null
+                             
+                # Deploy Audit mode CIP
+                Rename-Item ".\AuditMode.cip" -NewName ".\$PolicyID.cip" -Force
+                CiTool --update-policy ".\$PolicyID.cip" -json | Out-Null         
+                &$WriteTeaGreen "`n`nThe Base policy with the following details has been Re-Deployed in Audit Mode:"      
                 Write-Output "PolicyName = $PolicyName"
                 Write-Output "PolicyGUID = $PolicyID"
-                Remove-Item ".\$PolicyID.cip" -Force      
-             
-                ################################### User Interaction ####################################
-                Write-host "`nAudit mode deployed, start installing your programs now" -ForegroundColor Magenta        
-                Write-Host "When you've finished installing programs, Press Enter to start selecting program directories to scan`n" -ForegroundColor Blue
-                Pause
+                # Remove Audit Mode CIP
+                Remove-Item ".\$PolicyID.cip" -Force
+                # Prepare Enforced Mode CIP for Deployment - waiting to be Re-deployed at the right time
+                Rename-Item ".\EnforcedMode.cip" -NewName ".\$PolicyID.cip" -Force
 
-                # Store the program paths that user browses for in an array
-                $ProgramsPaths = @()
-                Write-host "`nSelect program directories to scan`n" -ForegroundColor Cyan
-                # Showing folder picker GUI to the user for folder path selection
-                do {
-                    [System.Reflection.Assembly]::LoadWithPartialName("System.windows.forms") | Out-Null
-                    $OBJ = New-Object System.Windows.Forms.FolderBrowserDialog
-                    $OBJ.InitialDirectory = "$env:SystemDrive"
-                    $OBJ.Description = $Description
-                    $Spawn = New-Object System.Windows.Forms.Form -Property @{TopMost = $true }
-                    $Show = $OBJ.ShowDialog($Spawn)
-                    If ($Show -eq "OK") { $ProgramsPaths += $OBJ.SelectedPath }
-                    Else { break }
-                }
-                while ($true)
+                # A Try-Catch-Finally block so that if any errors occur, the Base policy will be Re-deployed in enforced mode                
+                Try {
+                    ################################### User Interaction ####################################
+                    &$WritePink "`nAudit mode deployed, start installing your programs now"
+                    &$WriteViolet "When you've finished installing programs, Press Enter to start selecting program directories to scan`n"
+                    Pause                 
+
+                    # Store the program paths that user browses for in an array
+                    $ProgramsPaths = @()
+                    Write-host "`nSelect program directories to scan`n" -ForegroundColor Cyan
+                    # Showing folder picker GUI to the user for folder path selection
+                    do {
+                        [System.Reflection.Assembly]::LoadWithPartialName("System.windows.forms") | Out-Null
+                        $OBJ = New-Object System.Windows.Forms.FolderBrowserDialog
+                        $OBJ.InitialDirectory = "$env:SystemDrive"
+                        $OBJ.Description = $Description
+                        $Spawn = New-Object System.Windows.Forms.Form -Property @{TopMost = $true }
+                        $Show = $OBJ.ShowDialog($Spawn)
+                        If ($Show -eq "OK") { $ProgramsPaths += $OBJ.SelectedPath }
+                        Else { break }
+                    }
+                    while ($true)
                 
-                # Make sure User browsed for at least 1 directory
-                if (-NOT ($ProgramsPaths.count -eq 0)) {
+                    # Make sure User browsed for at least 1 directory
+                    # Exit the operation if user didn't select any folder paths
+                    if ($ProgramsPaths.count -eq 0) {                                      
+                        Write-Host "`nNo program folder was selected, reverting the changes and quitting...`n" -ForegroundColor Red
+                        # Causing break here to stop operation. Finally block will be triggered to Re-Deploy Base policy in Enforced mode
+                        break
+                    }
+                    
                     Write-Host "Here are the paths you selected:" -ForegroundColor Yellow
                     $ProgramsPaths | ForEach-Object { $_ }
 
@@ -581,23 +642,31 @@ function Edit-WDACConfig {
 
                     # Merge all of the policy XML files in the array into the final Supplemental policy
                     Merge-CIPolicy -PolicyPaths $PolicyXMLFilesArray -OutputFilePath ".\SupplementalPolicy$SuppPolicyName.xml" | Out-Null     
-                }
-                # Exit the operation if user didn't select any folder paths
-                else {                                      
-                    Write-Host "`nNo program folder was selected, reverting the changes and quitting...`n" -ForegroundColor Red
-                    #Re-Deploy-Basepolicy-in-Enforced-mode
-                    Update-BasePolicyToEnforced
-                    break
-                }
-                # Delete these extra files unless user uses -Debugmode optional parameter
-                if (-NOT $Debug) {
-                    Remove-Item -Path ".\RulesForFilesNotInUserSelectedPaths.xml", ".\ProgramDir_ScanResults*.xml" -Force -ErrorAction SilentlyContinue
-                    Remove-Item -Path ".\KernelProtectedFiles.xml", ".\DeletedFileHashesEventsPolicy.xml" -Force -ErrorAction SilentlyContinue
-                    Remove-Item -Path ".\KernelProtectedFiles.txt", ".\FileRulesAndFileRefs.txt" -Force -ErrorAction SilentlyContinue
-                }
 
-                #Re-Deploy-Basepolicy-in-Enforced-mode
-                Update-BasePolicyToEnforced  
+                    # Delete these extra files unless user uses -Debugmode optional parameter
+                    if (-NOT $Debug) {
+                        Remove-Item -Path ".\RulesForFilesNotInUserSelectedPaths.xml", ".\ProgramDir_ScanResults*.xml" -Force -ErrorAction SilentlyContinue
+                        Remove-Item -Path ".\KernelProtectedFiles.xml", ".\DeletedFileHashesEventsPolicy.xml" -Force -ErrorAction SilentlyContinue
+                        Remove-Item -Path ".\KernelProtectedFiles.txt", ".\FileRulesAndFileRefs.txt" -Force -ErrorAction SilentlyContinue
+                    }
+                }
+                catch {                    
+                    $_
+                    $_.CategoryInfo
+                    $_.ErrorDetails
+                    $_.Exception
+                    $_.FullyQualifiedErrorId
+                    $_.InvocationInfo
+                    $_.PipelineIterationInfo
+                    $_.PSMessageDetails
+                    $_.ScriptStackTrace
+                    $_.TargetObject
+                }
+                finally {                                          
+                    # Deploy Enforced mode CIP
+                    Write-Debug -Message "Finally Block Running"
+                    Update-BasePolicyToEnforced                                                                        
+                }
 
                 #################### Supplemental-policy-processing-and-deployment ############################
 
@@ -613,13 +682,14 @@ function Edit-WDACConfig {
 
                 ConvertFrom-CIPolicy $SuppPolicyPath "$SuppPolicyID.cip" | Out-Null 
                 CiTool --update-policy ".\$SuppPolicyID.cip" -json | Out-Null     
-                Write-host "`nSupplemental policy with the following details has been Deployed in Enforced Mode:" -ForegroundColor Green     
-                Remove-Item ".\$SuppPolicyID.cip" -Force
+                &$WriteTeaGreen "`nSupplemental policy with the following details has been Deployed in Enforced Mode:"     
                 # create an object to display on the console
                 [PSCustomObject]@{
                     SupplementalPolicyName = $SuppPolicyName
                     SupplementalPolicyGUID = $SuppPolicyID
-                }             
+                }    
+                Remove-Item ".\$SuppPolicyID.cip" -Force
+                Remove-Item -Path $PolicyPath -Force # Remove the policy xml file in Temp folder we created earlier         
             }
         }
 
@@ -646,7 +716,7 @@ function Edit-WDACConfig {
                 foreach ($SuppPolicyPath in $SuppPolicyPaths) {                                
                     $Supplementalxml = [xml](Get-Content $SuppPolicyPath)
                     $SupplementalPolicyID = $Supplementalxml.SiPolicy.PolicyID                         
-                    citool --remove-policy $SupplementalPolicyID -json | Out-Null
+                    Citool --remove-policy $SupplementalPolicyID -json | Out-Null
                     # remove the old policy files unless user chose to keep them
                     if (!$KeepOldSupplementalPolicies) { Remove-Item -Path $SuppPolicyPath -Force }        
                 }
@@ -656,7 +726,7 @@ function Edit-WDACConfig {
                 Set-HVCIOptions -Strict -FilePath "$SuppPolicyName.xml" 
                 ConvertFrom-CIPolicy "$SuppPolicyName.xml" "$SuppPolicyID.cip" | Out-Null
                 CiTool --update-policy "$SuppPolicyID.cip" -json | Out-Null              
-                Write-Host "`nThe Supplemental policy $SuppPolicyName has been deployed on the system, replacing the old ones.`nSystem Restart Not immediately needed but eventually required to finish the removal of previous individual Supplemental policies." -ForegroundColor Green
+                &$WriteTeaGreen "`nThe Supplemental policy $SuppPolicyName has been deployed on the system, replacing the old ones.`nSystem Restart Not immediately needed but eventually required to finish the removal of previous individual Supplemental policies."
                 Remove-Item -Path "$SuppPolicyID.cip" -Force
             }
         }

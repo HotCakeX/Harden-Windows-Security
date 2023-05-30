@@ -156,13 +156,17 @@ Install-Script -Name Harden-Windows-Security
 | Link Count| Link                     | Reason                                                     |
 |:----:|:-----------------------------:|:----------------------------------------------------------:|
 | 1    | Intel website                 | i7 13700k product page                                     |
-| 2    | Wikipedia                     | providing further information for the reader               |
-| 1    | UK National Cyber Security Centre | providing further information for the reader about TLS |
-| 1    | Security.Stackexchange Q&A    | providing logic and reasoning for certain actions          |
 | 1    | state.gov                     | List of State Sponsors of Terrorism                        |
 | 1    | orpa.princeton.edu            | OFAC Sanctioned Countries                                  |
-| 1    | browserleaks.com/tls          | Browser TLS test                                           |
-| 1    | clienttest.ssllabs.com        | Browser TLS test                                           |
+| 2    | Wikipedia                     | TLS - providing additional information                     |
+| 1    | UK Cyber Security Centre      | TLS - providing additional information                     |
+| 1    | Security.Stackexchange Q&A    | TLS - providing additional information                     |
+| 1    | browserleaks.com/tls          | TLS - Browser test                                         |
+| 1    | clienttest.ssllabs.com        | TLS - Browser test                                         |
+| 1    | Security.Stackexchange Q&A    | TLS - providing additional information                     |
+| 1    | scanigma.com/knowledge-base   | TLS - providing additional information                     |
+| 1    | cloudflare.com/ssl/reference/ | TLS - providing additional information                     |
+| 1    | github.com/ssllabs/research/  | TLS - providing additional information                     |
 
 </details>
 
@@ -181,7 +185,7 @@ Install-Script -Name Harden-Windows-Security
 <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/Shiny.gif" width="27" alt="Features Item"> Applying this script makes your PC compliant with Microsoft Security Baselines and Secured-core PC specifications (provided that you use modern hardware that supports the latest Windows security features) - [See what makes a Secured-core PC](https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/oem-highly-secure#what-makes-a-secured-core-pc) - <a href="#device-guard">Check Device Guard category for more details.</a>
 > [Secured-core](https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/oem-highly-secure) – recommended for the most sensitive systems and industries like financial, healthcare, and government agencies. Builds on the previous layers and leverages advanced processor capabilities to provide protection from firmware attacks.
   
-<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/Shiny.gif" width="27" alt="Features Item"> There are 4 items tagged with **#TopSecurity** <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/200iq.gif" width="28" alt="TopSecurity"> that can cause some inconvenience but increase security even further. When you run this script, you will have an option to enable them if you want to. Press `Control + F` and search for `#TopSecurity` on this page to find those security measures.
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/Shiny.gif" width="27" alt="Features Item"> There are 5 items tagged with **#TopSecurity** <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/200iq.gif" width="28" alt="TopSecurity"> that can cause some inconvenience but increase security even further. When you run this script, you will have an option to enable them if you want to. Press `Control + F` and search for `#TopSecurity` on this page to find those security measures.
 
 <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/Shiny.gif" width="27" alt="Features Item"> Since I originally created this repository for myself and people I care about, I always maintain it to the highest possible standard.
 
@@ -475,7 +479,7 @@ If you want to read more: [Demystifying Schannel](https://techcommunity.microsof
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/roratinggem.gif" width="28" alt="Rotating pink gem denoting registry or cmdlet"> Disables the following [weak ciphers](https://github.com/ssllabs/research/wiki/SSL-and-TLS-Deployment-Best-Practices) that are **only available for backward compatibility**: `"DES 56-bit"`,`"RC2 40-bit"`,`"RC2 56-bit"`,`"RC2 128-bit"`,`"RC4 40-bit"`,`"RC4 56-bit"`,`"RC4 64-bit"`,`"RC4 128-bit"`,`"3DES 168-bit (Triple DES 168)"`
 
-- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Configures the [TLS](https://www.ncsc.gov.uk/guidance/using-tls-to-protect-data) to only use the following secure [cipher suites](https://learn.microsoft.com/en-us/windows/win32/secauthn/tls-cipher-suites-in-windows-11) and in this exact order:
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Configures the [TLS](https://www.ncsc.gov.uk/guidance/using-tls-to-protect-data) to only use the following secure [cipher suites](https://learn.microsoft.com/en-us/windows/win32/secauthn/tls-cipher-suites-in-windows-11) and in this exact order: [<img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/ExcMark.gif" width="20" alt="Rotating pink gem denoting registry or cmdlet"> ¹](https://developers.cloudflare.com/ssl/reference/cipher-suites/recommendations/) [<img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/ExcMark.gif" width="20" alt="Rotating pink gem denoting registry or cmdlet"> ²](https://scanigma.com/knowledge-base)
 
 ```
 TLS_CHACHA20_POLY1305_SHA256
@@ -485,10 +489,6 @@ TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384
 TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
 TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384
-TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256
-TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384
-TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256
 TLS_DHE_RSA_WITH_AES_256_GCM_SHA384
 TLS_DHE_RSA_WITH_AES_128_GCM_SHA256
 ```
@@ -496,6 +496,7 @@ TLS_DHE_RSA_WITH_AES_128_GCM_SHA256
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> [Configures](https://learn.microsoft.com/en-us/windows-server/security/tls/manage-tls) TLS ECC Curves to use the following prioritized Curves order:
 
 ```
+nistP521
 curve25519
 NistP384
 NistP256
@@ -565,7 +566,7 @@ NistP384
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Changes the [behavior of the elevation prompt for standard users](https://learn.microsoft.com/en-us/windows/security/identity-protection/user-account-control/user-account-control-group-policy-and-registry-key-settings#user-account-control-behavior-of-the-elevation-prompt-for-standard-users) from "prompt for credentials" to "prompt for credentials on the secure desktop".
   - **#TopSecurity** <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/200iq.gif" width="28" alt="TopSecurity"> behavior: Automatically deny all UAC prompts on Standard accounts. **Highly recommended to be used on sensitive critical machines.** Only use Standard account for regular everyday tasks, and if you want to perform administrative tasks such as intalling a program system-wide or changing system settings, completely log out of the Standard account and log into an Administrator account, perform the tasks, then completely log out and log back into the Standard account to continue your work. No [fast user switching](https://learn.microsoft.com/en-us/windows/win32/shell/fast-user-switching) and **absolutely no UAC on Standard accounts.**
 
-- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> *#TopSecurity* <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/200iq.gif" width="28" alt="TopSecurity"> Hides the entry points for [Fast User Switching](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-windowslogon).
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> **#TopSecurity** <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/200iq.gif" width="28" alt="TopSecurity"> Hides the entry points for [Fast User Switching](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-windowslogon).
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/roratinggem.gif" width="28" alt="Rotating pink gem denoting registry or cmdlet"> **(Requires additional confirmation to run):** [Asks for a strong password for the built-in Administrator account and then enables it.](https://github.com/HotCakeX/Harden-Windows-Security/discussions/30#discussioncomment-5627737)
 
@@ -772,6 +773,8 @@ These are configurations that are typically *recommended in High-Risk Environmen
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Enables ["Send optional diagnostic data"](https://learn.microsoft.com/en-us/windows/privacy/windows-diagnostic-data) because it is [required for Smart App Control](https://support.microsoft.com/en-us/topic/what-is-smart-app-control-285ea03d-fa88-4d56-882e-6698afdb7003) to operate and be enabled, and for communication between [Intelligent Security Graph (ISG)](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/use-windows-defender-application-control-with-intelligent-security-graph) and you.
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/roratinggem.gif" width="28" alt="Rotating pink gem denoting registry or cmdlet"> Enables **WinVerifyTrust Signature Validation**, [a security feature related to WinVerifyTrust function that handles Windows Authenticode signature verification for portable executable (PE) files.](https://msrc.microsoft.com/update-guide/vulnerability/CVE-2013-3900)
+
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> [Blocking Untrusted Fonts](https://learn.microsoft.com/en-us/windows/security/threat-protection/block-untrusted-fonts-in-enterprise) <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/200iq.gif" width="28" alt="TopSecurity"> **#TopSecurity**
 
 <p align="right"><a href="#menu-back-to-top">💡 (back to categories)</a></p>
 
@@ -981,7 +984,7 @@ This repository uses the simplest possible, yet effective, methods that make it 
 
 <br>
 
-<!-- Security-Baselines-X-VT:START --><a href='https://www.virustotal.com/gui/file/8211b54effde5640ba75522cb3cdaf28ea9c5035fb42b66669323a03ea85de20'>Virus Total scan results of Security-Baselines-X.zip</a><!-- Security-Baselines-X-VT:END -->
+<!-- Security-Baselines-X-VT:START --><a href='https://www.virustotal.com/gui/file/9e53b56e25d5e30e3277b8be1b3b77967fb70feffa995e6fec9ec6a70c1b3a56'>Virus Total scan results of Security-Baselines-X.zip</a><!-- Security-Baselines-X-VT:END -->
 
 <br>
 

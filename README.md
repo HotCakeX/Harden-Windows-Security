@@ -981,7 +981,7 @@ This repository uses the simplest possible, yet effective, methods that make it 
 
 <br>
 
-<!-- Security-Baselines-X-VT:START --><a href='https://www.virustotal.com/gui/file/8211b54effde5640ba75522cb3cdaf28ea9c5035fb42b66669323a03ea85de20'>Virus Total scan results of Security-Baselines-X.zip</a><!-- Security-Baselines-X-VT:END -->
+<!-- Security-Baselines-X-VT:START --><a href='https://www.virustotal.com/gui/file/ffbfa82b2794e15787a35767bb8c1442d5954c99064dbf4cf0ae9a37f1d5945b'>Virus Total scan results of Security-Baselines-X.zip</a><!-- Security-Baselines-X-VT:END -->
 
 <br>
 

@@ -249,7 +249,7 @@ From Top to bottom in order:
 
 <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/roratinggem.gif" width="28" alt="Rotating pink gem denoting registry or cmdlet"> Automatically applies the security measures [**described in the KB5025885 document page**](https://support.microsoft.com/en-us/topic/kb5025885-how-to-manage-the-windows-boot-manager-revocations-for-secure-boot-changes-associated-with-cve-2023-24932-41a975df-beb2-40c1-99a3-b3ff139f832d#update5025885).
 
-The script checks to make sure [KB5026372](https://support.microsoft.com/en-gb/topic/may-9-2023-kb5026372-os-build-22621-1702-ce93c18e-e819-458f-abcf-dc7154ce7e40) update is installed first. If it's not installed, this category is skipped and a warning is shown suggesting to check for updates and install them.
+The script checks to make sure Update Build Revision of the OS is at least `.1702`, signifying the [KB5026372](https://support.microsoft.com/en-gb/topic/may-9-2023-kb5026372-os-build-22621-1702-ce93c18e-e819-458f-abcf-dc7154ce7e40) update is installed. If Update Build Revision is below `.1702`, this category is skipped and a warning is shown suggesting to check for updates and install them.
 
 If the update is installed, the required security measures will be applied. You will need to restart your device. After restart, wait at least for 5-10 minutes and then restart again, as suggested in the official page.
 
@@ -493,7 +493,7 @@ TLS_DHE_RSA_WITH_AES_256_GCM_SHA384
 TLS_DHE_RSA_WITH_AES_128_GCM_SHA256
 ```
 
-- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> [Configures](https://learn.microsoft.com/en-us/windows-server/security/tls/manage-tls) TLS ECC Curves to use the following prioritized Curves order:
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> [Configures](https://learn.microsoft.com/en-us/windows-server/security/tls/manage-tls) TLS ECC Curves to [use the following](https://github.com/HotCakeX/Harden-Windows-Security/commit/5b5be1fcab8f7bf5d364f48459aecfc54c6eff9d#commitcomment-115982586) prioritized Curves order:
 
 ```
 nistP521

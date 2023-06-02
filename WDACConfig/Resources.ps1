@@ -52,13 +52,20 @@ function Get-SignTool {
 function Update-self {
     $currentversion = (Test-modulemanifest "$psscriptroot\WDACConfig.psd1").Version.ToString()
     try {
+        # First try the GitHub source
         $latestversion = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/WDACConfig/version.txt"
     }
     catch {
-        Write-Error -Message "Couldn't verify if the latest version of the module is installed, please check your Internet connection. You can optionally bypass the online check by using -SkipVersionCheck parameter."
+        try {
+            # If GitHub source is unavailable, use the Azure DevOps source
+            $latestversion = Invoke-RestMethod -Uri "https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/WDACConfig/version.txt"        
+        }
+        catch {        
+            Write-Error -Message "Couldn't verify if the latest version of the module is installed, please check your Internet connection. You can optionally bypass the online check by using -SkipVersionCheck parameter."
+        }
     }
-    if (-NOT ($currentversion -eq $latestversion)) {
-        Write-Host "The currently installed module's version is $currentversion while the latest version is $latestversion - Auto Updating the module now and will run your command after that 💓"
+    if ($currentversion -ne $latestversion) {
+        &$WritePink "The currently installed module's version is $currentversion while the latest version is $latestversion - Auto Updating the module now and will run your command after that 💓"
         Remove-Module -Name WDACConfig -Force
         # Do this if the module was installed properly using Install-moodule cmdlet
         try {
@@ -322,4 +329,32 @@ $SubtleCuteColors = @(
 )
 # script block to write rainbow color text
 $WriteSubtleRainbow = { ($args[0].ToCharArray() | ForEach-Object { "{0}{1}{2}" -f $SubtleCuteColors[(Get-Random $SubtleCuteColors.Count)], $_, $PSStyle.Reset }) -join "" }
+
+
+# Create File Rules based on hash of the files no longer available on the disk and store them in the $Rules variable
+function Get-FileRules {
+    param ($HashesArray)                    
+    $HashesArray | ForEach-Object -Begin { $i = 1 } -Process {
+        $Rules += Write-Output "`n<Allow ID=`"ID_ALLOW_AA_$i`" FriendlyName=`"$($_.'File Name') SHA256 Hash`" Hash=`"$($_.'SHA256 Hash')`" />"
+        $Rules += Write-Output "`n<Allow ID=`"ID_ALLOW_AB_$i`" FriendlyName=`"$($_.'File Name') SHA256 Flat Hash`" Hash=`"$($_.'SHA256 Flat Hash')`" />"
+        $Rules += Write-Output "`n<Allow ID=`"ID_ALLOW_AC_$i`" FriendlyName=`"$($_.'File Name') SHA1 Hash`" Hash=`"$($_.'SHA1 Hash')`" />"
+        $Rules += Write-Output "`n<Allow ID=`"ID_ALLOW_AD_$i`" FriendlyName=`"$($_.'File Name') SHA1 Flat Hash`" Hash=`"$($_.'SHA1 Flat Hash')`" />"
+        $i++
+    }
+    return ($Rules.Trim())
+}
+
+
+# Create File Rule Refs based on the ID of the File Rules above and store them in the $RulesRefs variable
+function Get-RuleRefs {
+    param ($HashesArray)                 
+    $HashesArray | ForEach-Object -Begin { $i = 1 } -Process {
+        $RulesRefs += Write-Output "`n<FileRuleRef RuleID=`"ID_ALLOW_AA_$i`" />"
+        $RulesRefs += Write-Output "`n<FileRuleRef RuleID=`"ID_ALLOW_AB_$i`" />"
+        $RulesRefs += Write-Output "`n<FileRuleRef RuleID=`"ID_ALLOW_AC_$i`" />"
+        $RulesRefs += Write-Output "`n<FileRuleRef RuleID=`"ID_ALLOW_AD_$i`" />"
+        $i++
+    }
+    return ($RulesRefs.Trim())
+}
 

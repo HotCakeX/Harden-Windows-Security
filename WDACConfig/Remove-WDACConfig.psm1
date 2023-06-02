@@ -35,6 +35,7 @@ function Remove-WDACConfig {
         [System.String]$CertCN,
 
         # https://stackoverflow.com/questions/76143006/how-to-prevent-powershell-validateset-argument-completer-from-suggesting-the-sam/76143269
+        # https://stackoverflow.com/questions/76267235/powershell-how-to-cross-reference-parameters-between-2-argument-completers
         [ArgumentCompleter({
                 param($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameters)
 
@@ -66,6 +67,7 @@ function Remove-WDACConfig {
         [System.String[]]$PolicyIDs,
 
         # https://stackoverflow.com/questions/76143006/how-to-prevent-powershell-validateset-argument-completer-from-suggesting-the-sam/76143269
+        # https://stackoverflow.com/questions/76267235/powershell-how-to-cross-reference-parameters-between-2-argument-completers
         [ArgumentCompleter({
                 # Define the parameters that this script block will accept.
                 param($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameters)

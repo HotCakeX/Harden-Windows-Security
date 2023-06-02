@@ -365,33 +365,13 @@ function New-WDACConfig {
             $DeletedFileHashesArray = Invoke-Command -ScriptBlock $AuditEventLogsDeletedFilesScriptBlock
 
             # run the following only if there are any event logs for files no longer on the disk and if -NoDeletedFiles switch parameter wasn't used
-            if ($DeletedFileHashesArray -and !$NoDeletedFiles) {
+            if ($DeletedFileHashesArray -and !$NoDeletedFiles) {                               
 
-                # Create File Rules based on hash of the files no longer available on the disk and store them in the $Rules variable                
-                $Rules = @()
-                $DeletedFileHashesArray | ForEach-Object -Begin { $i = 1 } -Process {
-                    $Rules += Write-Output "`n<Allow ID=`"ID_ALLOW_AA_$i`" FriendlyName=`"$($_.'File Name') SHA256 Hash`" Hash=`"$($_.'SHA256 Hash')`" />"
-                    $Rules += Write-Output "`n<Allow ID=`"ID_ALLOW_AB_$i`" FriendlyName=`"$($_.'File Name') SHA256 Flat Hash`" Hash=`"$($_.'SHA256 Flat Hash')`" />"
-                    $Rules += Write-Output "`n<Allow ID=`"ID_ALLOW_AC_$i`" FriendlyName=`"$($_.'File Name') SHA1 Hash`" Hash=`"$($_.'SHA1 Hash')`" />"
-                    $Rules += Write-Output "`n<Allow ID=`"ID_ALLOW_AD_$i`" FriendlyName=`"$($_.'File Name') SHA1 Flat Hash`" Hash=`"$($_.'SHA1 Flat Hash')`" />"
-                    $i++
-                }
+                # Save the the File Rules and File Rule Refs to the Out-File FileRulesAndFileRefs.txt in the current working directory               
+                (Get-FileRules -HashesArray $DeletedFileHashesArray) + (Get-RuleRefs -HashesArray $DeletedFileHashesArray) | Out-File FileRulesAndFileRefs.txt
 
-                # Create File Rule Refs based on the ID of the File Rules above and store them in the $RulesRefs variable                 
-                $RulesRefs = @()
-                $DeletedFileHashesArray | ForEach-Object -Begin { $i = 1 } -Process {
-                    $RulesRefs += Write-Output "`n<FileRuleRef RuleID=`"ID_ALLOW_AA_$i`" />"
-                    $RulesRefs += Write-Output "`n<FileRuleRef RuleID=`"ID_ALLOW_AB_$i`" />"
-                    $RulesRefs += Write-Output "`n<FileRuleRef RuleID=`"ID_ALLOW_AC_$i`" />"
-                    $RulesRefs += Write-Output "`n<FileRuleRef RuleID=`"ID_ALLOW_AD_$i`" />"
-                    $i++
-                }
-
-                # Save the the File Rules and File Rule Refs to the Out-File FileRulesAndFileRefs.txt in the current working directory
-                $Rules + $RulesRefs | Out-File FileRulesAndFileRefs.txt
-                
-                # Put the Rules and RulesRefs in an empty policy file
-                New-EmptyPolicy -RulesContent $Rules -RuleRefsContent $RulesRefs | Out-File .\DeletedFilesHashes.xml
+                # Put the Rules and RulesRefs in an empty policy file                
+                New-EmptyPolicy -RulesContent (Get-FileRules -HashesArray $DeletedFileHashesArray) -RuleRefsContent (Get-RuleRefs -HashesArray $DeletedFileHashesArray) | Out-File .\DeletedFilesHashes.xml
 
                 # Merge the policy file we created at first using Event Viewer logs, with the policy file we created for Hash of the files no longer available on the disk
                 Merge-CIPolicy -PolicyPaths "AuditLogsPolicy_NoDeletedFiles.xml", .\DeletedFilesHashes.xml -OutputFilePath .\SupplementalPolicy.xml | Out-Null

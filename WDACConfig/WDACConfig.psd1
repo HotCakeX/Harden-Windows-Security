@@ -8,7 +8,7 @@
     # RootModule = ""
 
     # Version number of this module.
-    ModuleVersion        = '0.1.7'
+    ModuleVersion        = '0.1.8'
 
     # Supported PSEditions
     CompatiblePSEditions = @("Core")
@@ -146,6 +146,11 @@ To get help and syntax on PowerShell console, type:
             # ReleaseNotes of this module
             ReleaseNotes = @"
 
+## Version 0.1.8
+Added Enforced mode SnapBack guarantee for the Edit-WDACConfig and Edit-SignedWDACConfig cmdlets so that even in case of power outage or computer crash, the enforcement will be restored.
+Improved the code style for better consistency.
+Added Azure source for version check as the backup endpoint.
+
 ## Version 0.1.7
 Made the Edit-WDACConfig and Edit-SignedWDACConfig cmdlets resilient to errors and unexpected problems by improving their logic.
 
@@ -154,11 +159,6 @@ New cmdlet Set-CommonWDACConfig, Use this cmdlet to store the values for common 
 More info about it: https://github.com/HotCakeX/Harden-Windows-Security/wiki/Set-CommonWDACConfig
 Updated the argument completer of Remove-WDACConfig cmdlet to be able cross-reference values between 2 parameters.
 Optimized the overall code and improved a lot of logics.
-
-## Version 0.1.5
-Added alias for many parameters for easier access.
-Added new cmdlet: New-DenyWDACConfig for creating base policies with Deny rules. They can be deployed side by side other policies without conflict.
-Added argument completer for many new parameters and improved the previous ones to be smarter in their suggestions.
 
 Full Change log for previous versions are available on Excel online: (Copy and paste the link in your browser if it isn't clickable)
 https://1drv.ms/x/s!AtCaUNAJbbvIhuVPpPeCHSjl75OqBQ?e=qgvzEt

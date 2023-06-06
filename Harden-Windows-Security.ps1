@@ -1,6 +1,6 @@
 <#PSScriptInfo
 
-.VERSION 2023.5.27
+.VERSION 2023.6.6
 
 .GUID d435a293-c9ee-4217-8dc1-4ad2318a5770
 
@@ -80,7 +80,7 @@ https://1drv.ms/x/s!AtCaUNAJbbvIhuVQhdMu_Hts7YZ_lA?e=df6H6P
 
 💎 Note: If there are multiple Windows user accounts in your computer, it's recommended to run this script in each of them, without administrator privileges, because Non-admin commands only apply to the current user and are not machine wide.
 
-💎 Note: There are 4 items tagged with #TopSecurity that can cause difficulties. When you run this script, you will have an option to enable them if you want to. You can find all the information about them on GitHub.
+💎 Note: There are 5 items tagged with #TopSecurity that can cause difficulties. When you run this script, you will have an option to enable them if you want to. You can find all the information about them on GitHub.
 
 🏴 If you have any questions, requests, suggestions etc. about this script, please open a new discussion in GitHub:
 
@@ -212,7 +212,7 @@ if (Test-IsAdmin) {
 try {
 
     # Check the current hard-coded version against the latest version online
-    $currentVersion = '2023.5.27'
+    $currentVersion = '2023.6.6'
     try {
         $latestVersion = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Version.txt"
     }
@@ -416,6 +416,9 @@ try {
         
                 # Optimizing Network Protection Performance of Windows Defender - this was off by default on Windows 11 insider build 25247
                 Set-MpPreference -AllowSwitchToAsyncInspection $True
+
+                # Configure whether real-time protection and Security Intelligence Updates are enabled during OOBE
+                Set-MpPreference -oobeEnableRtpAndSigUpdate $True
 
                 # Add OneDrive folders of all user accounts to the Controlled Folder Access for Ransomware Protection
                 Get-ChildItem "C:\Users\*\OneDrive" | ForEach-Object { Add-MpPreference -ControlledFolderAccessProtectedFolders $_ }

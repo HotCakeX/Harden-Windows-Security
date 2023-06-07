@@ -1131,7 +1131,6 @@ Get-Content <Path-To-File> -stream zone.identifier
 - [Microsoft Defender Threat Intelligence](https://ti.defender.microsoft.com/)
   - [Free community edition vs Premium edition comparison](https://jeffreyappel.nl/how-works-microsoft-defender-threat-intelligence-defender-ti-and-what-is-the-difference-between-free-and-paid/)
 - [Microsoft Virus Initiative](https://learn.microsoft.com/en-us/microsoft-365/security/intelligence/virus-initiative-criteria)
-
 - [DART: the Microsoft cybersecurity team we hope you never meet](https://www.microsoft.com/en-us/security/blog/2019/03/25/dart-the-microsoft-cybersecurity-team-we-hope-you-never-meet/)
 
 <p align="right"><a href="#readme-top">💡 (back to top)</a></p>

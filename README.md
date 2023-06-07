@@ -516,6 +516,8 @@ NistP256
 NistP384
 ```
 
+*[Read more in this Wiki post](https://github.com/HotCakeX/Harden-Windows-Security/wiki/About-TLS,-DNS,-Encryption-and-OPSEC-concepts)*
+
 <p align="right"><a href="#menu-back-to-top">💡 (back to categories)</a></p>
 
 <br>
@@ -590,7 +592,7 @@ NistP384
 
 <br>
 
-**Most of the Device Guard and Virtualization-Based Security features are Automatically enabled by default** on capable and modern hardware, this script only checks their status and if needed, enables UEFI lock for them and also proceeds with enabling [**full Secured-Core PC requirements**:](https://www.microsoft.com/en-us/windows/business/windows-11-secured-core-computers)
+**Most of the Device Guard and Virtualization-Based Security features are Automatically enabled by default** on capable and modern hardware, this script only checks their status and if needed, enables UEFI lock for them and also proceeds with enabling [**full Secured-Core PC requirements**](https://www.microsoft.com/en-us/windows/business/windows-11-secured-core-computers). UEFI locked security measures are rooted in **Proof of Physical Presence**.
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> [Makes sure Virtualization-Based Security is Enabled](https://learn.microsoft.com/en-us/windows/security/threat-protection/device-guard/enable-virtualization-based-protection-of-code-integrity)
   - [Validate enabled Windows Defender Device Guard hardware-based security features](https://learn.microsoft.com/en-us/windows/security/threat-protection/device-guard/enable-virtualization-based-protection-of-code-integrity#validate-enabled-windows-defender-device-guard-hardware-based-security-features)
@@ -1129,6 +1131,8 @@ Get-Content <Path-To-File> -stream zone.identifier
 - [Microsoft Defender Threat Intelligence](https://ti.defender.microsoft.com/)
   - [Free community edition vs Premium edition comparison](https://jeffreyappel.nl/how-works-microsoft-defender-threat-intelligence-defender-ti-and-what-is-the-difference-between-free-and-paid/)
 - [Microsoft Virus Initiative](https://learn.microsoft.com/en-us/microsoft-365/security/intelligence/virus-initiative-criteria)
+
+- [DART: the Microsoft cybersecurity team we hope you never meet](https://www.microsoft.com/en-us/security/blog/2019/03/25/dart-the-microsoft-cybersecurity-team-we-hope-you-never-meet/)
 
 <p align="right"><a href="#readme-top">💡 (back to top)</a></p>
 

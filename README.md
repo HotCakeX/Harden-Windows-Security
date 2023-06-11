@@ -60,11 +60,8 @@ Harden Windows Safely, Securely, only with Official Microsoft methods
 <br>
 
 <p align="center">
-<a href="https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Rationale.md">
 <img width="35" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/rainbow%20arrow%202nd%20Variation%20right.gif">
-Read the Rationale behind this GitHub repository
-<img width="35" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/rainbow%20arrow%202nd%20Variation%20left.gif">
-</a>
+<a href="https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Rationale.md"> Read the Rationale behind this GitHub repository </a><img width="35" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/rainbow%20arrow%202nd%20Variation%20left.gif">
 </p>
 
 <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">

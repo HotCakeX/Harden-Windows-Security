@@ -6,7 +6,7 @@ This document explains the rationale and purpose of this GitHub repository and i
 
 ## <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/PNGs/Windows365.png"> Harden Windows Security PowerShell script
 
-This is a general purpose script, it's suitable to be used by everyone, as long as your device is not being managed by a domain controller or Azure Active Directory, because those devices are already controlled in different manner and different set of policies are applied to them.
+This is a general purpose [script](https://github.com/HotCakeX/Harden-Windows-Security), it's suitable to be used by everyone, as long as your device is not being managed by a domain controller or Azure Active Directory, because those devices are already controlled in different manner and different set of policies are applied to them.
 
 Use Harden Windows Security script to secure your personal device. Your device will be secure against the majority of threats.
 
@@ -16,7 +16,7 @@ Harden Windows Security script uses the same security features built into your d
 
 ## <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/PNGs/Windows11.png"> Windows Defender Application Control
 
-Windows Defender Application Control (WDAC) resources are suitable for both personal users as well as enterprises, businesses and highly secure workstations.
+[Windows Defender Application Control (WDAC) resources](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Introduction) are suitable for both personal users as well as enterprises, businesses and highly secure workstations.
 
 When a proper WDAC policy is deployed on your device, it will be secure against 99.999% of the threats, if not 100%, either from the Internet or physical. It's true that there is no absolute security, but then again there is nothing absolute in the universe either, everything, even the most fundamental physical laws, are and have been subject to change and conditions.
 

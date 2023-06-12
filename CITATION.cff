@@ -1,0 +1,55 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: Harden Windows Security
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - orcid: 'https://orcid.org/0009-0000-6616-4938'
+    email: spynetgirl@outlook.com
+    given-names: Violet
+    family-names: Hansen
+    affiliation: Microsoft
+identifiers:
+  - type: url
+    value: >-
+      https://github.com/HotCakeX/Harden-Windows-Security/wiki/Introduction
+    description: ' Windows Defender Application Control Introduction'
+  - type: url
+    value: >-
+      https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-for-Fully-Managed-Devices
+    description: WDAC policy for Fully Managed device - Variant 1
+  - type: url
+    value: >-
+      https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-for-Fully-Managed-Devices-(2nd-variant)
+    description: WDAC policy for Fully managed device - Variant 2
+  - type: url
+    value: >-
+      https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-policy-for-Fully-managed-device---Variant-3
+    description: WDAC policy for Fully managed device - Variant 3
+  - type: url
+    value: >-
+      https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-policy-for-Fully-managed-device---Variant-4
+    description: WDAC policy for Fully managed device Variant 4
+repository-code: 'https://github.com/HotCakeX/Harden-Windows-Security'
+url: 'http://hotcakex.github.io/'
+repository: 'https://github.com/HotCakeX/MSEdgeFeatures'
+abstract: >-
+  Harden Windows Safely, Securely using Official Supported
+  Microsoft methods with proper explanation | Always
+  up-to-date and works with the latest build of Windows
+keywords:
+  - Microsoft
+  - Windows
+  - Windows Defender Application Control
+  - Security
+  - Cyber Security
+  - Bitlocker
+  - Encryption
+  - Operation System Security
+  - App Security
+  - System Security Administration
+license: GPL-2.0

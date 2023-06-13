@@ -18,7 +18,7 @@ Harden Windows Security script uses the same security features built into your d
 
 [Windows Defender Application Control (WDAC) resources](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Introduction) are suitable for both personal users as well as enterprises, businesses and highly secure workstations.
 
-When a proper WDAC policy is deployed on your device, it will be secure against 99.999% of the threats, if not 100%, either from the Internet or physical. It's true that there is no absolute security, but then again there is nothing absolute in the universe either, everything, even the most fundamental physical laws, are and have been subject to change and conditions.
+When a proper WDAC policy is deployed on your device, it will be secure against 99.99% of the threats [¹](), either from the Internet or physical. It's true that there is no absolute security, but then again there is nothing absolute in the universe either, everything, even the most fundamental physical laws, are and have been subject to change and conditions.
 
 <br>
 
@@ -87,5 +87,12 @@ Windows Defender Application Control is not the only security solution for enter
 * Minimize your exposure to 3rd parties. You don’t need any 3rd party AV or EDR. Use 3rd party software only when there is no 1st party solution.
 
 * Use Virtual machines for any questionable or unsafe software. Use Windows Sandbox or Hyper-V VM. Also consider using Virtual machines or Microsoft Defender Application Guard (MDAG) for browsing on highly secure workstations.
+
+<br>
+<br>
+<br>
+<br>
+
+**¹** *For Personal users, this is true when Harden Windows Security script is fully applied too, all categories of it. For other users such as Enterprises, Businesses, Governments, Military etc. This is true only if the rest of the Enterprise-grade security products mentioned are used as well.*
 
 <br>

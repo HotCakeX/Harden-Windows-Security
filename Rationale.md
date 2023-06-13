@@ -100,8 +100,7 @@ Lenovo is another option, [they provide secured-core PCs too](https://www.lenovo
 <br>
 <br>
 <br>
-<br>
 
-###### [**¹**](#-windows-defender-application-control) *For Personal users, this is true only when Harden Windows Security script is fully applied too, all categories of it. For other users such as Enterprises, Businesses, Governments, Military etc. This is true only if the rest of the [Enterprise-grade security products mentioned](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Rationale.md#-what-about-other-enterprise-security-) are used as well.*
+###### [**¹**](#-windows-defender-application-control) *For Personal users, this is true only when Harden Windows Security script is fully applied too, all categories of it. For other users such as Enterprises, Businesses, Governments, Military etc. This is true only if the rest of the [Enterprise-grade security products mentioned](#-what-about-other-enterprise-security-) are used as well.*
 
 <br>

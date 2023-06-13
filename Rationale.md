@@ -93,6 +93,6 @@ Windows Defender Application Control is not the only security solution for enter
 <br>
 <br>
 
-**¹** *For Personal users, this is true when Harden Windows Security script is fully applied too, all categories of it. For other users such as Enterprises, Businesses, Governments, Military etc. This is true only if the rest of the Enterprise-grade security products mentioned are used as well.*
+###### **¹** *For Personal users, this is true when Harden Windows Security script is fully applied too, all categories of it. For other users such as Enterprises, Businesses, Governments, Military etc. This is true only if the rest of the Enterprise-grade security products mentioned are used as well.*
 
 <br>

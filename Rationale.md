@@ -18,7 +18,7 @@ Harden Windows Security script uses the same security features built into your d
 
 [Windows Defender Application Control (WDAC) resources](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Introduction) are suitable for both personal users as well as enterprises, businesses and highly secure workstations.
 
-When a proper WDAC policy is deployed on your device, it will be secure against 99.999% of the threats [¹](#-for-personal-users-this-is-true-only-when-harden-windows-security-script-is-fully-applied-too-all-categories-of-it-for-other-users-such-as-enterprises-businesses-governments-military-etc-this-is-true-only-if-the-rest-of-the-enterprise-grade-security-products-mentioned-are-used-as-well), either from the Internet or physical. It's true that there is no absolute security, but then again there is nothing absolute in the universe either, everything, even the most fundamental physical laws, are and have been subject to change and conditions.
+When a proper WDAC policy is deployed on your device, it will be secure against 99.999% of the threats [¹](#1-for-personal-users-this-is-true-only-when-harden-windows-security-script-is-fully-applied-too-all-categories-of-it-for-other-users-such-as-enterprises-businesses-governments-military-etc-this-is-true-only-if-the-rest-of-the-enterprise-grade-security-products-mentioned-are-used-as-well), either from the Internet or physical. It's true that there is no absolute security, but then again there is nothing absolute in the universe either, everything, even the most fundamental physical laws, are and have been subject to change and conditions.
 
 <br>
 

@@ -89,6 +89,14 @@ Windows Defender Application Control is not the only security solution for enter
 * Use Virtual machines for any questionable or unsafe software. Use Windows Sandbox or Hyper-V VM. Also consider using Virtual machines or Microsoft Defender Application Guard (MDAG) for browsing on highly secure workstations.
 
 <br>
+
+## <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/surface.gif"> Which device to use ?
+
+Use Microsoft Surface products for the best device and firmware security. They support [secured-core PC specifications](https://www.microsoft.com/en-us/windows/business/windows-11-secured-core-computers), the manufacturing process and platform is trusted and secure.
+
+Lenovo is another option, [they provide secured-core PCs too](https://www.lenovo.com/us/en/c/laptops/thinkpad/secured-pc).
+
+<br>
 <br>
 <br>
 <br>

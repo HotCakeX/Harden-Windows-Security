@@ -18,7 +18,7 @@ Harden Windows Security script uses the same security features built into your d
 
 [Windows Defender Application Control (WDAC) resources](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Introduction) are suitable for both personal users as well as enterprises, businesses and highly secure workstations.
 
-When a proper WDAC policy is deployed on your device, it will be secure against 99.99% of the threats [¹](), either from the Internet or physical. It's true that there is no absolute security, but then again there is nothing absolute in the universe either, everything, even the most fundamental physical laws, are and have been subject to change and conditions.
+When a proper WDAC policy is deployed on your device, it will be secure against 99.99% of the threats [¹](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Rationale.md#-for-personal-users-this-is-true-when-harden-windows-security-script-is-fully-applied-too-all-categories-of-it-for-other-users-such-as-enterprises-businesses-governments-military-etc-this-is-true-only-if-the-rest-of-the-enterprise-grade-security-products-mentioned-are-used-as-well), either from the Internet or physical. It's true that there is no absolute security, but then again there is nothing absolute in the universe either, everything, even the most fundamental physical laws, are and have been subject to change and conditions.
 
 <br>
 
@@ -93,6 +93,6 @@ Windows Defender Application Control is not the only security solution for enter
 <br>
 <br>
 
-###### **¹** *For Personal users, this is true when Harden Windows Security script is fully applied too, all categories of it. For other users such as Enterprises, Businesses, Governments, Military etc. This is true only if the rest of the Enterprise-grade security products mentioned are used as well.*
+###### **¹** *For Personal users, this is true when Harden Windows Security script is fully applied too, all categories of it. For other users such as Enterprises, Businesses, Governments, Military etc. This is true only if the rest of the [Enterprise-grade security products mentioned](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Rationale.md#-what-about-other-enterprise-security-) are used as well.*
 
 <br>

@@ -74,7 +74,7 @@ Windows Defender Application Control is not the only security solution for enter
 
 * [SAW](https://www.microsoft.com/insidetrack/blog/improving-security-by-protecting-elevated-privilege-accounts-at-microsoft/) - Secure Admin Workstations
 
-* [List of all Azure security serices for Enterprises, Businesses etc.](https://learn.microsoft.com/en-us/azure/security/fundamentals/services-technologies)
+* [List of all Azure security services for Enterprises, Businesses etc.](https://learn.microsoft.com/en-us/azure/security/fundamentals/services-technologies)
 
 * [**Moot Security Management**](https://mootinc.com/) - Automate your Security Fabric. All in a few seconds. Create Top Secure PAWs and more with the same products mentioned above, automatically, using 1st party solutions. **Suitable for the most sensitive and important tasks.**
 

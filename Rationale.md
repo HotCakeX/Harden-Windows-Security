@@ -123,6 +123,6 @@ Please open a new [issue](https://github.com/HotCakeX/Harden-Windows-Security/is
 <br>
 <br>
 
-###### [**¹**](#-windows-defender-application-control) *For Personal users, this is true only when Harden Windows Security script is fully applied too, all categories of it. For other users such as Enterprises, Businesses, Governments, Military etc. This is true only if the rest of the [Enterprise-grade security products mentioned](#-what-about-other-enterprise-security-) are used as well.*
+###### [**¹**](#-windows-defender-application-control) *For Personal users, this is true only when Harden Windows Security script is fully applied too, all categories of it. For other users such as Enterprises, Businesses, Governments, Military etc. this is true only if the rest of the [Enterprise-grade security products mentioned](#-what-about-other-enterprise-security-) are used as well.*
 
 <br>

@@ -1,6 +1,6 @@
 # <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/PNGs/585563111520600091.png"> Rationale
 
-This document explains the rationale and purpose of this GitHub repository and its content. It describes how it mitigates various threats and how to adjust your expectations for different scenarios and environments.
+This document explains the rationale and purpose of this GitHub repository and its content. It describes how it mitigates various threats and how to adjust your expectations for different scenarios and environments. It also offers additional support materials.
 
 <br>
 
@@ -90,11 +90,33 @@ Windows Defender Application Control is not the only security solution for enter
 
 <br>
 
-## <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/surface.gif"> Which device to use ?
+## <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/surface.gif"> Which device to use ?
 
 Use Microsoft Surface products for the best device and firmware security. They support [secured-core PC specifications](https://www.microsoft.com/en-us/windows/business/windows-11-secured-core-computers), the manufacturing process and platform is trusted and secure.
 
-Lenovo is another option, [they provide secured-core PCs too](https://www.lenovo.com/us/en/c/laptops/thinkpad/secured-pc).
+<br>
+
+## <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/Red%20police%20light.gif"> What to do when there is an attack ?
+
+### You can hire any of these teams
+
+- [DART](https://www.microsoft.com/en-us/security/blog/2019/03/25/dart-the-microsoft-cybersecurity-team-we-hope-you-never-meet/) - The Microsoft Detection and Response Team
+- [CRSP](https://www.microsoft.com/en-us/security/blog/2021/06/09/crsp-the-emergency-team-fighting-cyber-attacks-beside-customers/) - Global Compromise Recovery Security Practice Team - [including Ransomware](https://learn.microsoft.com/en-us/azure/security/fundamentals/ransomware-detect-respond#road-to-recovery)
+
+<br>
+
+### Color breakdown of security teams in organizations
+
+- 🔴 Red - Pen Testers/White Hat Hackers
+- 🔵 Blue - SOC/Data Science/Telemetry Analysis/SIEM Junkies
+- 🟢 Green - Fixers, takes input from blue and red and builds the fixes that are needed for identified blind spots (blue) or vulnerability/risk (red)
+- 🟡 Yellow - Tooling, SWE to build new stuff for all of the above to operate faster and more effectively
+
+<br>
+
+## <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/WhiteGhost.gif"> Any questions or suggestions?
+
+Please open a new [issue](https://github.com/HotCakeX/Harden-Windows-Security/issues) or [discussion](https://github.com/HotCakeX/Harden-Windows-Security/discussions) in the repository.
 
 <br>
 <br>

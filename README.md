@@ -1184,7 +1184,7 @@ Using [GPL-2.0 license](https://github.com/HotCakeX/Harden-Windows-Security/blob
 <a href="https://www.twitch.tv/hot_cakex"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/main/Private/Images/Socials/twitch.svg">
 <a href="https://hotcakex.github.io/"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/main/Private/Images/Socials/website-96.png">
 <a href="https://twitter.com/SpyNetGirl"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/main/Private/Images/Socials/witter.svg">
-<a href="https://account.xbox.com/en-US/Profile?Gamertag=HottCakeX"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/main/Private/Images/Socials/xbox.svg">
+<a href="https://www.xbox.com/en-US/play/user/HottCakeX"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/main/Private/Images/Socials/xbox.svg">
 <a href="https://www.youtube.com/@hotcakex"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/main/Private/Images/Socials/youtube.svg">
 <a href="https://www.reddit.com/user/HotCakeXXXXXXXXXXXXX"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/main/Private/Images/Socials/reddit.svg">
 <a href="https://socialclub.rockstargames.com/member/----HotCakeX----/"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/main/Private/Images/Socials/rockstar-social-club.svg">

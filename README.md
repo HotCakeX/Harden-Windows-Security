@@ -863,7 +863,6 @@ In Windows by default, devices will scan daily, automatically download and insta
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/roratinggem.gif" width="28" alt="Rotating pink gem denoting registry or cmdlet"> [Set DNS over HTTPS template to Cloudflare's](https://learn.microsoft.com/en-us/deployedge/microsoft-edge-policies#dnsoverhttpstemplates)
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/roratinggem.gif" width="28" alt="Rotating pink gem denoting registry or cmdlet"> [Automatic HTTPS upgrade of HTTP connections](https://learn.microsoft.com/en-us/deployedge/microsoft-edge-policies#configure-automatic-https)
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/roratinggem.gif" width="28" alt="Rotating pink gem denoting registry or cmdlet"> [Enable Encrypted Client Hello](https://learn.microsoft.com/en-us/deployedge/microsoft-edge-policies#encryptedclienthelloenabled)
-- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/roratinggem.gif" width="28" alt="Rotating pink gem denoting registry or cmdlet">[Configures a setting that asks users to enter their device password while using password autofill](https://learn.microsoft.com/en-us/DeployEdge/microsoft-edge-policies#primarypasswordsetting)
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/roratinggem.gif" width="28" alt="Rotating pink gem denoting registry or cmdlet">[Restrict exposure of local IP address by WebRTC](https://learn.microsoft.com/en-us/DeployEdge/microsoft-edge-policies#webrtclocalhostiphandling)
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/roratinggem.gif" width="28" alt="Rotating pink gem denoting registry or cmdlet"> [Disables the following weak Cipher Suites](https://learn.microsoft.com/en-us/DeployEdge/microsoft-edge-policies#tlsciphersuitedenylist)
   - [Site 1 to test TLS in your browser](https://clienttest.ssllabs.com:8443/ssltest/viewMyClient.html)
@@ -895,7 +894,7 @@ Some settings require the client to be joined to Windows Server Active Directory
   - [Microsoft Edge Beta channel change log](https://learn.microsoft.com/en-us/deployedge/microsoft-edge-relnote-beta-channel)
   - [Microsoft Edge Mobile stable channel change log](https://learn.microsoft.com/en-us/deployedge/microsoft-edge-relnote-mobile-stable-channel)
   - [Edge Insider for Beta/Dev/Canary channels](https://www.microsoftedgeinsider.com/en-us/)
-  - [Microsoft Edge Security baselines](https://www.microsoft.com/en-us/download/details.aspx?id=55319)
+  - [Microsoft Edge Security baselines](https://www.microsoft.com/en-us/download/details.aspx?id=55319) - Works without ingesting [ADMX policy files](https://www.microsoft.com/en-us/edge/business/download) first.
     - [Reason why the script doesn't use it.](https://github.com/HotCakeX/Harden-Windows-Security/issues/50)
 
 <p align="right"><a href="#menu-back-to-top">💡 (back to categories)</a></p>

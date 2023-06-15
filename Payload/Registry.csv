@@ -30,7 +30,6 @@ Edge,HKLM:\SOFTWARE\Policies\Microsoft\Edge,DnsOverHttpsMode,secure,String,Enabl
 Edge,HKLM:\SOFTWARE\Policies\Microsoft\Edge,DnsOverHttpsTemplates,https://chrome.cloudflare-dns.com/dns-query,String,Set DNS over HTTPS template to Cloudflare's
 Edge,HKLM:\SOFTWARE\Policies\Microsoft\Edge,AutomaticHttpsDefault,2,DWORD,Automatically upgrade HTTP connections to HTTPS
 Edge,HKLM:\SOFTWARE\Policies\Microsoft\Edge,EncryptedClientHelloEnabled,1,DWORD,Enable Encrypted Client Hello
-Edge,HKLM:\SOFTWARE\Policies\Microsoft\Edge,PrimaryPasswordSetting,1,DWORD,Configures a setting that asks users to enter their device password while using password autofill
 Edge,HKLM:\SOFTWARE\Policies\Microsoft\Edge,WebRtcLocalhostIpHandling,default_public_interface_only,String,Allow public interface over http default route. This doesn't expose the local IP address when using WebRTC
 Edge,HKLM:\SOFTWARE\Policies\Microsoft\Edge\TLSCipherSuiteDenyList,1,0xc013,String,Disable TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA - (CBC - SHA1)
 Edge,HKLM:\SOFTWARE\Policies\Microsoft\Edge\TLSCipherSuiteDenyList,2,0xc014,String,Disable TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA - (CBC - SHA1)

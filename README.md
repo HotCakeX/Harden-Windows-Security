@@ -271,7 +271,7 @@ You will need to restart your device once. After restart, wait at least for 5-10
 
 <br>
 
-## Windows Kernel Information Disclosure CVE-2023-32019<a href="#may-9-2023-windows-boot-manager-cve-2023-24932"><img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/ExcMark.gif" width="35" alt="Rotating pink gem denoting registry or cmdlet"></a>
+## Windows Kernel Information Disclosure CVE-2023-32019<a href="#windows-kernel-information-disclosure-cve-2023-32019"><img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/ExcMark.gif" width="35" alt="Rotating pink gem denoting registry or cmdlet"></a>
 
 <p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/FwMP4OraEAA-0AG.png" alt="An AI generated picture of a cat girl working in a server farm" width="600"></p>
 

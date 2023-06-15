@@ -256,11 +256,31 @@ From Top to bottom in order:
 
 <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/roratinggem.gif" width="28" alt="Rotating pink gem denoting registry or cmdlet"> Automatically applies the security measures [**described in the KB5025885 document page**](https://support.microsoft.com/en-us/topic/kb5025885-how-to-manage-the-windows-boot-manager-revocations-for-secure-boot-changes-associated-with-cve-2023-24932-41a975df-beb2-40c1-99a3-b3ff139f832d#update5025885).
 
-The script checks to make sure Update Build Revision of the OS is at least `.1702`, signifying the [KB5026372](https://support.microsoft.com/en-gb/topic/may-9-2023-kb5026372-os-build-22621-1702-ce93c18e-e819-458f-abcf-dc7154ce7e40) update is installed. If Update Build Revision is below `.1702`, this category is skipped and a warning is shown suggesting to check for updates and install them.
+[KB5026372](https://support.microsoft.com/en-gb/topic/may-9-2023-kb5026372-os-build-22621-1702-ce93c18e-e819-458f-abcf-dc7154ce7e40) must be installed, so make sure your OS is fully up to date first.
 
-If the update is installed, the required security measures will be applied. You will need to restart your device. After restart, wait at least for 5-10 minutes and then restart again, as suggested in the official page.
+You will need to restart your device once. After restart, wait at least for 5-10 minutes and then restart again, as suggested in the official page.
 
 [Microsoft Security Response Center post](https://msrc.microsoft.com/update-guide/vulnerability/CVE-2023-24932)
+
+<p align="right"><a href="#readme-top">💡 (back to top)</a></p>
+
+<br>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+
+<br>
+
+## Windows Kernel Information Disclosure CVE-2023-32019<a href="#may-9-2023-windows-boot-manager-cve-2023-24932"><img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/ExcMark.gif" width="35" alt="Rotating pink gem denoting registry or cmdlet"></a>
+
+<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/FwMP4OraEAA-0AG.png" alt="An AI generated picture of a cat girl working in a server farm" width="600"></p>
+
+<br>
+
+<img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/roratinggem.gif" width="28" alt="Rotating pink gem denoting registry or cmdlet"> Automatically applies the security measures [**described in the KB5028407 document page**](https://support.microsoft.com/en-gb/topic/kb5028407-how-to-manage-the-vulnerability-associated-with-cve-2023-32019-bd6ed35f-48b1-41f6-bd19-d2d97270f080).
+
+[KB5027231](https://support.microsoft.com/en-us/topic/june-13-2023-kb5027231-os-build-22621-1848-8f903600-1293-4431-9c6b-736a4049666c) must be installed, so make sure your OS is fully up to date first.
+
+[Microsoft Security Response Center post](https://msrc.microsoft.com/update-guide/vulnerability/CVE-2023-32019)
 
 <p align="right"><a href="#readme-top">💡 (back to top)</a></p>
 
@@ -485,6 +505,9 @@ Refer to this [official documentation about the countermeasures of Bitlocker](ht
 Changes made by this category only affect things that use [Schannel SSP](https://learn.microsoft.com/en-us/windows/win32/secauthn/protocols-in-tls-ssl--schannel-ssp-): that includes IIS web server, built-in inbox Windows apps and some other programs supplied by Microsoft, including Windows network communications, but not 3rd party software that use [portable stacks](https://en.wikipedia.org/wiki/Comparison_of_TLS_implementations#Portability_concerns) like Java, nodejs, python or php.
 
 If you want to read more: [Demystifying Schannel](https://techcommunity.microsoft.com/t5/core-infrastructure-and-security/demystifying-schannel/ba-p/259233)
+
+> **Note**
+The only [known](https://github.com/HotCakeX/Harden-Windows-Security/issues/38) program incompatible with this category is Battle.net game client.
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/roratinggem.gif" width="28" alt="Rotating pink gem denoting registry or cmdlet"> Disables TLS 1 and TLS 1.1 security protocols that only **exist for backward compatibility**. All modern software should and do use `TLS 1.2` and `TLS 1.3`.
 

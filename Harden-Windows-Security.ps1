@@ -1,6 +1,6 @@
 <#PSScriptInfo
 
-.VERSION 2023.6.6
+.VERSION 2023.6.15
 
 .GUID d435a293-c9ee-4217-8dc1-4ad2318a5770
 
@@ -210,11 +210,10 @@ if (Test-IsAdmin) {
 # doing a try-finally block on the entire script so that when CTRL + C is pressed to forcefully exit the script,
 # or break is passed, clean up will still happen for secure exit
 try {
-
     # Check the current hard-coded version against the latest version online
-    $currentVersion = '2023.6.6'
+    [datetime]$currentVersion = '2023.6.15'
     try {
-        $latestVersion = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Version.txt"
+        [datetime]$latestVersion = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Version.txt"
     }
     catch {
         Write-Error "Couldn't verify if the latest version of the script is installed, please check your Internet connection."
@@ -230,16 +229,10 @@ try {
     }
 
     $infomsg = "`r`n" +
-    "#############################################################################################################`r`n" +
-    "###  Make Sure you've completely read what's written in the GitHub repository, before running this script ###`r`n" +
-    "#############################################################################################################`r`n"
+    "############################################################################################################`r`n" +
+    "### Please read the Readme in the GitHub repository: https://github.com/HotCakeX/Harden-Windows-Security ###`r`n" +
+    "############################################################################################################`r`n"
     Write-Host $infomsg -ForegroundColor Cyan
-
-    $infomsg = "`r`n" +
-    "###########################################################################################`r`n" +
-    "###  Link to the GitHub Repository: https://github.com/HotCakeX/Harden-Windows-Security ###`r`n" +
-    "###########################################################################################`r`n"
-    Write-Host $infomsg -ForegroundColor Green
 
     #region RequirementsCheck
     # check if user's OS is Windows Home edition
@@ -288,9 +281,9 @@ try {
         
         Invoke-WithoutProgress { 
             try {                
-                # download Microsoft Security Baselines directly from their servers
+                # Download Microsoft Security Baselines directly from their servers
                 Invoke-WebRequest -Uri "https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/Windows%2011%20version%2022H2%20Security%20Baseline.zip" -OutFile ".\Windows1122H2SecurityBaseline.zip" -ErrorAction Stop
-                # download Microsoft 365 Apps Security Baselines directly from their servers
+                # Download Microsoft 365 Apps Security Baselines directly from their servers
                 Invoke-WebRequest -Uri "https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/Microsoft%20365%20Apps%20for%20Enterprise-2206-FINAL.zip" -OutFile ".\Microsoft365SecurityBaseline2206.zip" -ErrorAction Stop
                 # Download LGPO program from Microsoft servers
                 Invoke-WebRequest -Uri "https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/LGPO.zip" -OutFile ".\LGPO.zip" -ErrorAction Stop
@@ -314,36 +307,39 @@ try {
         Expand-Archive -Path .\Security-Baselines-X.zip -DestinationPath .\Security-Baselines-X\ -Force
 
         #region Windows-Boot-Manager-revocations-for-Secure-Boot   
-        # ============================ May 9 2023 Windows Boot Manager revocations for Secure Boot =================================
-        switch (Select-Option -Options "Yes", "No", "Exit" -Message "`nApply May 9 2023 Windows Boot Manager Security measures ? (If you've already run this category, don't need to do it again)") {
-            "Yes" {              
+        # ============================May 9 2023 Windows Boot Manager revocations for Secure Boot=================================
+        Write-Host ""
+        Write-Warning -Message "Make sure your Windows is fully up to date before running this category."
+        Start-Sleep -Seconds 1
+        switch (Select-Option -Options "Yes", "No", "Exit" -Message "Apply May 9 2023 Windows Boot Manager Security measures ? (If you've already run this category, don't need to do it again)") {
+            "Yes" {        
+                mountvol q: /S
+                xcopy /y C:\Windows\System32\SecureBootUpdates\SKUSiPolicy.p7b q:\EFI\Microsoft\Boot 
+                mountvol q: /D
 
-                # First make sure the update is installed by verifying the UBR (Update Build Revision), since the next steps can't run without it
-                if ((Get-ItemPropertyValue "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion" -Name UBR) -ge 1702) { 
-        
-                    mountvol q: /S
-                    xcopy /y C:\Windows\System32\SecureBootUpdates\SKUSiPolicy.p7b q:\EFI\Microsoft\Boot 
-                    mountvol q: /D
+                reg add HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Secureboot /v AvailableUpdates /t REG_DWORD /d 0x10 /f
 
-                    reg add HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Secureboot /v AvailableUpdates /t REG_DWORD /d 0x10 /f
-
-                    Write-Host "`nThe required security measures have been applied to the system" -ForegroundColor Green
-                    Write-Host "IMPORTANT: Make sure to restart your device once. After restart, wait for at least 5-10 minutes and perform a 2nd restart to finish applying security measures completely.`n" -ForegroundColor Red
-
-                }
-
-                # if the update is not installed, show warning
-                else {
-                    $UpdateWarningMessage = "`nYour OS is missing an important security update.`n" +
-                    "Please open Windows Updates from settings and check for updates to install them.`n"
-                    Write-Warning -Message $UpdateWarningMessage
-                }
-
+                Write-Host "`nThe required security measures have been applied to the system" -ForegroundColor Green
+                Write-Warning "Make sure to restart your device once. After restart, wait for at least 5-10 minutes and perform a 2nd restart to finish applying security measures completely.`n"
             } "No" { break }
             "Exit" { &$CleanUp }
         }    
-        # ============================ End of May 9 2023 Windows Boot Manager revocations for Secure Boot===========================
-        #endregion Windows-Boot-Manager-revocations-for-Secure-Boot 
+        # ============================End of May 9 2023 Windows Boot Manager revocations for Secure Boot===========================
+        #endregion Windows-Boot-Manager-revocations-for-Secure-Boot
+
+        #region Windows-Kernel-CVE-2023-32019-fix-KB5028407
+        # ====================================Windows Kernel CVE-2023-32019 fix KB5028407=========================================
+        Write-Host ""
+        Write-Warning -Message "Make sure your Windows is fully up to date before running this category."
+        Start-Sleep -Seconds 1
+        switch (Select-Option -Options "Yes", "No", "Exit" -Message "Apply Windows Kernel CVE-2023-32019 fix in KB5028407 ?") {
+            "Yes" {
+                ModifyRegistry -path 'HKLM:\SYSTEM\CurrentControlSet\Policies\Microsoft\FeatureManagement\Overrides' -key '4237806220' -value '1' -type 'DWORD'
+            } "No" { break }
+            "Exit" { &$CleanUp }
+        }    
+        # ====================================End of Windows Kernel CVE-2023-32019 fix KB5028407===================================
+        #endregion Windows-Kernel-CVE-2023-32019-fix-KB5028407 
 
         #region Microsoft-Security-Baseline    
         # ================================================Microsoft Security Baseline==============================================
@@ -363,11 +359,11 @@ try {
             } "No" { break }
             "Exit" { &$CleanUp }
         }    
-        # ============================================End of Microsoft Security Baselines==========================================   
+        # ==============================================End of Microsoft Security Baselines============================================   
         #endregion Microsoft-Security-Baseline
 
         #region Overrides-for-Microsoft-Security-Baseline    
-        # ============================================Overrides for Microsoft Security Baseline====================================
+        # ==============================================Overrides for Microsoft Security Baseline======================================
         switch (Select-Option -Options "Yes", "No", "Exit" -Message "`nApply Overrides for Microsoft Security Baseline ?") {
             "Yes" {
                 Write-Progress -Activity 'Overrides for Microsoft Security Baseline' -Status 'Running Overrides for Microsoft Security Baseline section' -PercentComplete 10
@@ -379,7 +375,7 @@ try {
             } "No" { break }
             "Exit" { &$CleanUp }
         }    
-        # ============================================End of Overrides for Microsoft Security Baseline=============================
+        # ================================================End of Overrides for Microsoft Security Baseline=================================
         #endregion Overrides-for-Microsoft-Security-Baseline
 
         #region Microsoft-365-Apps-Security-Baseline
@@ -818,10 +814,7 @@ try {
         #endregion Bitlocker-Settings
 
         #region TLS-Security    
-        # ==============================================TLS Security===============================================================
-        Write-Host ""
-        Write-Warning -Message "If you use Battle.Net Game client, select no for the next prompt and skip this category, because that client uses an insecure Cipher Suite, TLS_RSA_WITH_AES_256_CBC_SHA, that this script disables thus prevents it from connecting to its servers."
-        Start-Sleep -Seconds 1   
+        # ==============================================TLS Security=============================================================== 
         switch (Select-Option -Options "Yes", "No", "Exit" -Message "`nRun TLS Security category ?") {
             "Yes" {
                 Write-Progress -Activity 'TLS Security' -Status 'Running TLS Security section' -PercentComplete 35
@@ -844,7 +837,7 @@ try {
                 $items = Import-Csv '.\Registry.csv' -Delimiter ","
                 foreach ($item in $items) {
                     if ($item.category -eq 'TLS') {
-                        ModifyRegistry -path $item.path -key $item.key -value $item.value -type $item.type
+                        ModifyRegistry -path $item.path -key $item.key -value $item.value -type $item.type | Out-Null
                     }
                 }
                 # Change current working directory to the LGPO's folder

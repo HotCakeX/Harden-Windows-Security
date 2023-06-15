@@ -262,7 +262,7 @@ You will need to restart your device once. After restart, wait at least for 5-10
 
 [Microsoft Security Response Center post](https://msrc.microsoft.com/update-guide/vulnerability/CVE-2023-24932)
 
-<p align="right"><a href="#readme-top">💡 (back to top)</a></p>
+<p align="right"><a href="#menu-back-to-top">💡 (back to categories)</a></p>
 
 <br>
 
@@ -282,7 +282,7 @@ You will need to restart your device once. After restart, wait at least for 5-10
 
 [Microsoft Security Response Center post](https://msrc.microsoft.com/update-guide/vulnerability/CVE-2023-32019)
 
-<p align="right"><a href="#readme-top">💡 (back to top)</a></p>
+<p align="right"><a href="#menu-back-to-top">💡 (back to categories)</a></p>
 
 <br>
 
@@ -508,6 +508,8 @@ If you want to read more: [Demystifying Schannel](https://techcommunity.microsof
 
 > **Note**
 The only [known](https://github.com/HotCakeX/Harden-Windows-Security/issues/38) program incompatible with this category is Battle.net game client.
+
+<br>
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/roratinggem.gif" width="28" alt="Rotating pink gem denoting registry or cmdlet"> Disables TLS 1 and TLS 1.1 security protocols that only **exist for backward compatibility**. All modern software should and do use `TLS 1.2` and `TLS 1.3`.
 

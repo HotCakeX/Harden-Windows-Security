@@ -94,6 +94,12 @@ Windows Defender Application Control is not the only security solution for enter
 
 Use Microsoft Surface products for the best device and firmware security. They support [secured-core PC specifications](https://www.microsoft.com/en-us/windows/business/windows-11-secured-core-computers), the manufacturing process and platform is trusted and secure.
 
+Make sure to use Surface products that support [Device Firmware Configuration Interface (DFCI)](https://learn.microsoft.com/en-us/mem/autopilot/dfci-management). Here is a [list of Surface products](https://learn.microsoft.com/en-us/surface/surface-manage-dfci-guide#dfci-policy-settings-reference-for-surface-devices) that support it.
+
+* [How to use Device Firmware Configuration Interface (DFCI) for Surface Devices with Intune](https://techcommunity.microsoft.com/t5/intune-customer-success/how-to-use-device-firmware-configuration-interface-dfci-for/ba-p/3041293)
+
+* Among other features, devices set up with DFCI can't boot from USB devices and there is no way to bypass the chip level security directly, not even CMOS clear can bypass it, because it uses Non-volitile memory aka flash storage. It sets BIOS cert authentication and the private key is behind the cloud edge inside Intune, not even Microsoft support can get that key.
+
 <br>
 
 ## <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/Red%20police%20light.gif"> What to do when there is an attack ?

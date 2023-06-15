@@ -891,14 +891,12 @@ Some settings require the client to be joined to Windows Server Active Directory
 
 - Useful links:
   - [Microsoft Edge stable channel change log](https://learn.microsoft.com/en-us/deployedge/microsoft-edge-relnote-stable-channel)
-
   - [Microsoft Edge Security updates change log](https://learn.microsoft.com/en-us/deployedge/microsoft-edge-relnotes-security)
-
   - [Microsoft Edge Beta channel change log](https://learn.microsoft.com/en-us/deployedge/microsoft-edge-relnote-beta-channel)
-
   - [Microsoft Edge Mobile stable channel change log](https://learn.microsoft.com/en-us/deployedge/microsoft-edge-relnote-mobile-stable-channel)
-
   - [Edge Insider for Beta/Dev/Canary channels](https://www.microsoftedgeinsider.com/en-us/)
+  - [Microsoft Edge Security baselines](https://www.microsoft.com/en-us/download/details.aspx?id=55319)
+    - [Reason why the script doesn't use it.](https://github.com/HotCakeX/Harden-Windows-Security/issues/50)
 
 <p align="right"><a href="#menu-back-to-top">💡 (back to categories)</a></p>
 

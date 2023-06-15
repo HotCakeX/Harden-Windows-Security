@@ -209,6 +209,7 @@ From Top to bottom in order:
 
 * Commands that require Administrator Privileges (click/tap on each of these to see in-depth info)
   - <a href="#may-9-2023-windows-boot-manager-cve-2023-24932">May 9 2023 Windows Boot Manager CVE-2023-24932</a>
+  - <a href="#windows-kernel-information-disclosure-cve-2023-32019">Windows Kernel Information Disclosure CVE-2023-32019</a>
   - <a href="#microsoft-security-baselines">Microsoft Security Baselines</a>
   - <a href="#microsoft-365-apps-security-baselines">Microsoft 365 Apps Security Baselines</a>
   - <a href="#microsoft-defender">Microsoft Defender</a>

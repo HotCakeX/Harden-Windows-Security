@@ -18,7 +18,7 @@ Harden Windows Security script uses the same security features built into your d
 
 [Windows Defender Application Control (WDAC) resources](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Introduction) are suitable for both personal users as well as enterprises, businesses and highly secure workstations.
 
-When a proper WDAC policy is deployed on your device, it will be secure [against 99.999% of the threats](#note1), either from the Internet or physical. It's true that there is no absolute security, but then again there is nothing absolute in the universe either. Everything, even the most fundamental physical laws, are and have been subject to change and conditions.
+When a proper WDAC policy is deployed on your device, it will be secure against 99.999% of the threats [^1], either from the Internet or physical. It's true that there is no absolute security, but then again there is nothing absolute in the universe either. Everything, even the most fundamental physical laws, are and have been subject to change and conditions.
 
 I've created a PowerShell module called [**WDACConfig**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig), designed with the aim of automating Application and File whitelisting in Windows using Windows Defender Application Control. It's an alternative to [WDAC Wizard](https://webapp-wdac-wizard.azurewebsites.net/) which only has a fraction of the features that WDACConfig module offers.
 
@@ -131,10 +131,7 @@ Make sure to use Surface products that support [Device Firmware Configuration In
 Please open a new [issue](https://github.com/HotCakeX/Harden-Windows-Security/issues) or [discussion](https://github.com/HotCakeX/Harden-Windows-Security/discussions) in the repository.
 
 <br>
-<br>
-<br>
-<br>
 
-###### [**¹**](#note1) *For Personal users, this is true only when Harden Windows Security script is fully applied too, all categories of it. For other users such as Enterprises, Businesses, Governments, Military etc. this is true only if the rest of the [Enterprise-grade security products mentioned](#-what-about-other-enterprise-security-) are used as well.*
+[^1]: *For Personal users, this is true only when Harden Windows Security script is fully applied too, all categories of it. For other users such as Enterprises, Businesses, Governments, Military etc. this is true only if the rest of the [Enterprise-grade security products mentioned](#-what-about-other-enterprise-security-) are used as well.*
 
 <br>

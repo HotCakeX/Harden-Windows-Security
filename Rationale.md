@@ -100,6 +100,8 @@ Make sure to use Surface products that support [Device Firmware Configuration In
 
 * Among other features, devices set up with DFCI can't boot from USB devices and there is no way to bypass the chip level security directly, not even CMOS clear can bypass it, because it uses Non-volatile memory aka flash storage. It sets BIOS cert authentication, and the private key is behind the cloud edge inside Intune, not even Microsoft support can get that key.
 
+* The list of Surface products supporting DFCI might not get updated quickly in that doc but fear not, this is an active project and all new surface devices have this built in, the docs team might be just a little laggy.
+
 <br>
 
 ## <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/Red%20police%20light.gif"> What to do when there is an attack ?

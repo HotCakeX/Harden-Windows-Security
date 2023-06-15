@@ -58,7 +58,7 @@ Windows Defender Application Control is not the only security solution for enter
 
 * [Microsoft Sentinel](https://azure.microsoft.com/en-us/products/microsoft-sentinel/) - Scalable, cloud-native solution that provides SIEM, SOAR and more!
 
-* [Key Vault](https://azure.microsoft.com/en-us/products/key-vault/) - Safeguard cryptographic keys and other secrets used by cloud apps and services
+* [Key Vault](https://azure.microsoft.com/en-us/products/key-vault/) - Safeguard cryptographic keys and other secrets used by cloud apps and services. This [Azure service uses the best products in the world](https://cpl.thalesgroup.com/partners/microsoft) for the job, such as [Thales HSMs](https://cpl.thalesgroup.com/encryption/hardware-security-modules/network-hsms).
 
 * [Microsoft Defender for Cloud](https://azure.microsoft.com/en-us/products/defender-for-cloud) - Protect multicloud and hybrid environments with integrated security from code to cloud
 

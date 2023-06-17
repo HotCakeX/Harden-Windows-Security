@@ -170,7 +170,6 @@ Install-Script -Name Harden-Windows-Security
 | 1    | Security.Stackexchange Q&A    | TLS - providing additional information                     |
 | 1    | browserleaks.com/tls          | TLS - Browser test                                         |
 | 1    | clienttest.ssllabs.com        | TLS - Browser test                                         |
-| 1    | Security.Stackexchange Q&A    | TLS - providing additional information                     |
 | 1    | scanigma.com/knowledge-base   | TLS - providing additional information                     |
 | 1    | cloudflare.com/ssl/reference/ | TLS - providing additional information                     |
 | 1    | github.com/ssllabs/research/  | TLS - providing additional information                     |

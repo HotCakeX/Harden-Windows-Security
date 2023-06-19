@@ -857,8 +857,6 @@ In Windows by default, devices will scan daily, automatically download and insta
 
 <br>
 
-*Edge policies checked until version 114.0.1823.55*
-
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/roratinggem.gif" width="28" alt="Rotating pink gem denoting registry or cmdlet"> [Block 3rd party cookies](https://learn.microsoft.com/en-us/deployedge/microsoft-edge-policies#blockthirdpartycookies) - Recommendatory policy
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/roratinggem.gif" width="28" alt="Rotating pink gem denoting registry or cmdlet"> [Set Edge to use system's DNS over HTTPS](https://learn.microsoft.com/en-us/deployedge/microsoft-edge-policies#control-the-mode-of-dns-over-https)
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/roratinggem.gif" width="28" alt="Rotating pink gem denoting registry or cmdlet"> [Automatic HTTPS upgrade of HTTP connections](https://learn.microsoft.com/en-us/deployedge/microsoft-edge-policies#configure-automatic-https)
@@ -905,6 +903,18 @@ Some settings require the client to be joined to Windows Server Active Directory
   - [Edge Insider for Beta/Dev/Canary channels](https://www.microsoftedgeinsider.com/en-us/)
   - [Microsoft Edge Security baselines](https://www.microsoft.com/en-us/download/details.aspx?id=55319) - Work without ingesting [ADMX policy files](https://www.microsoft.com/en-us/edge/business/download) first - This script includes them
     - [Reason why the script doesn't use it.](https://github.com/HotCakeX/Harden-Windows-Security/issues/50)
+
+<br>
+
+### Notes about MDAG (Microsoft Defender Application Guard)
+
+* When DNS over HTTPS is set by user in Edge settings, Microsoft Defender Application Guard ignores that and connects directly to the Internet without using any DoH configuration.
+
+* If DNS over HTTPS is enforced on Edge by a Group Policy or registry, then MDAG fails to connect to the Internet and shows DNS errors.
+
+* **When DNS over HTTPS settings are set OS wide in Windows settings, both normal Edge and MDAG use the OS DoH settings.** *(This is the behavior set by this script)*
+
+###### Edge policies reviewed until version 114.0.1823.55
 
 <p align="right"><a href="#menu-back-to-top">💡 (back to categories)</a></p>
 

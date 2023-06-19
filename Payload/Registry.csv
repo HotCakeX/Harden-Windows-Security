@@ -26,11 +26,19 @@ Miscellaneous,HKLM:\SYSTEM\ControlSet001\Services\W32Time\TimeProviders\NtpClien
 Miscellaneous,HKLM:\Software\Microsoft\Cryptography\Wintrust\Config,EnableCertPaddingCheck,1,String,WinVerifyTrust Signature Validation
 Miscellaneous,HKLM:\Software\Wow6432Node\Microsoft\Cryptography\Wintrust\Config,EnableCertPaddingCheck,1,String,WinVerifyTrust Signature Validation
 Edge,HKLM:\SOFTWARE\Policies\Microsoft\Edge\Recommended,BlockThirdPartyCookies,1,DWORD,Recommends to block 3rd party cookies
-Edge,HKLM:\SOFTWARE\Policies\Microsoft\Edge,DnsOverHttpsMode,secure,String,Enables Secure DNS without insecure fallback
-Edge,HKLM:\SOFTWARE\Policies\Microsoft\Edge,DnsOverHttpsTemplates,https://chrome.cloudflare-dns.com/dns-query,String,Set DNS over HTTPS template to Cloudflare's
+Edge,HKLM:\SOFTWARE\Policies\Microsoft\Edge,DnsOverHttpsMode,automatic,String,Sets Edge to use system's DNS over HTTPS. This makes MDAG to work properly too
 Edge,HKLM:\SOFTWARE\Policies\Microsoft\Edge,AutomaticHttpsDefault,2,DWORD,Automatically upgrade HTTP connections to HTTPS
 Edge,HKLM:\SOFTWARE\Policies\Microsoft\Edge,EncryptedClientHelloEnabled,1,DWORD,Enable Encrypted Client Hello
 Edge,HKLM:\SOFTWARE\Policies\Microsoft\Edge,WebRtcLocalhostIpHandling,default_public_interface_only,String,Allow public interface over http default route. This doesn't expose the local IP address when using WebRTC
+Edge,HKLM:\SOFTWARE\Policies\Microsoft\Edge,SSLErrorOverrideAllowed,0,DWORD,Prevents users from proceeding from the HTTPS warning page
+Edge,HKLM:\SOFTWARE\Policies\Microsoft\Edge,BasicAuthOverHttpEnabled,0,DWORD,Block Basic authentication for HTTP
+Edge,HKLM:\SOFTWARE\Policies\Microsoft\Edge,WebRtcRespectOsRoutingTableEnabled,1,DWORD,WebRTC will respect the Windows OS routing table rules when making peer to peer connections
+Edge,HKLM:\SOFTWARE\Policies\Microsoft\Edge,RendererAppContainerEnabled,1,DWORD,Launches Renderer processes into an App Container for additional security benefits
+Edge,HKLM:\SOFTWARE\Policies\Microsoft\Edge,PDFSecureMode,1,DWORD,Secure mode and Certificate-based Digital Signature validation in native PDF reader
+Edge,HKLM:\SOFTWARE\Policies\Microsoft\Edge,ExperimentationAndConfigurationServiceControl,2,DWORD,Allow devices using Edge category of the hardening script to receive new features and experimentations like normal devices
+Edge,HKLM:\SOFTWARE\Policies\Microsoft\Edge,AudioSandboxEnabled,1,DWORD,Enforces the audio process to run sandboxed
+Edge,HKLM:\SOFTWARE\Policies\Microsoft\Edge\Recommended,DefaultShareAdditionalOSRegionSetting,2,DWORD,Recommends that the share additional operating system region setting to be set to never.
+Edge,HKLM:\SOFTWARE\Policies\Microsoft\Edge\Recommended,NewPDFReaderEnabled,1,DWORD,Recommends the new Adobe PDF reader be used in Edge for PDFs
 Edge,HKLM:\SOFTWARE\Policies\Microsoft\Edge\TLSCipherSuiteDenyList,1,0xc013,String,Disable TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA - (CBC - SHA1)
 Edge,HKLM:\SOFTWARE\Policies\Microsoft\Edge\TLSCipherSuiteDenyList,2,0xc014,String,Disable TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA - (CBC - SHA1)
 Edge,HKLM:\SOFTWARE\Policies\Microsoft\Edge\TLSCipherSuiteDenyList,3,0x0035,String,Disable TLS_RSA_WITH_AES_256_CBC_SHA - (NO PFS - CBC - SHA1)

@@ -102,18 +102,18 @@ Make sure to use Surface products that support [Device Firmware Configuration In
 
 * [How to use Device Firmware Configuration Interface (DFCI) for Surface Devices with Intune](https://techcommunity.microsoft.com/t5/intune-customer-success/how-to-use-device-firmware-configuration-interface-dfci-for/ba-p/3041293)
 
-* Among other features, devices set up with DFCI can't boot from USB devices and there is no way to bypass the chip level security directly, not even CMOS clear can bypass it, because it uses Non-volatile memory aka flash storage. It sets BIOS cert authentication, and the private key is behind the cloud edge inside Intune, not even Microsoft support can get that key.
+* Among other features, devices set up with DFCI can be set that boot from USB device(s) is disabled and there is no way to bypass the chip level security directly, not even CMOS clear can bypass it, because it uses non-volatile memory aka flash storage. It sets BIOS cert authentication, and the private key is behind the cloud edge inside Intune and not even Microsoft support can get that key.
 
 * The list of Surface products supporting DFCI might not get updated quickly in that doc but fear not, this is an active project and all new surface devices have this built in, the docs team might be just a little laggy.
 
 * Microsoft Surface devices use [Project Mu](https://microsoft.github.io/mu/) for the source code of their firmware.
 
-* Surface devices use certificates instead of password for UEFI. They don't have a reset switch like other devices either. You create and install your own certificate using [Surface Management Toolkit](https://www.microsoft.com/en-us/download/details.aspx?id=46703). You can build a config package that has the certificate in it and install it to the firmware, then the package can't be removed or changed without the signing cert authorizing the change, aka, cert auth, or you can just use DFCI as previously mentioned and not have to worry because the packages are signed with MS's private key and there is no PKI that you have to self host.
+* Surface devices can use certificates instead of password for UEFI. They don't have a reset switch like other devices either. You create and install your own certificate using [Surface Management Toolkit](https://www.microsoft.com/en-us/download/details.aspx?id=46703). You can build a config package that has the certificate in it and install it to the firmware, then the package can't be removed or changed without the signing cert authorizing the change, aka, cert auth, or you can just use DFCI as previously mentioned and not have to worry because the packages are signed with MS's private key and there is no PKI that you have to self host.
 
 <br>
 
 > **Warning**
-> It is important to be aware of [potential hardware backdoors](https://bios-pw.org/) that may compromise the security of your system. Some common OEMs, such as Compaq, Dell, Fujitsu, Hewlett-Packard (HP), Insyde H20, Phoenix, Sony, and Samsung, utilize algorithms based on device serial numbers for password resets. These algorithms allow for master password removal from the firmware, potentially granting unauthorized access to the system. [Read more](https://docs.mootinc.com/Reference/Architecture/Hardware-Selection/#psm-mode)
+> It is important to be aware of [potential hardware backdoors](https://bios-pw.org/) that may compromise the security of your system. Some common OEMs, such as Compaq, Dell, Fujitsu, Hewlett-Packard (HP), Sony, and Samsung, with OEMs that use unmodified Insyde H20, or Phoenix firmwares utilize algorithms based on device serial numbers for password resets. These algorithms allow for master password removal from the firmware, potentially granting unauthorized access to the system. [Read more](https://docs.mootinc.com/Reference/Architecture/Hardware-Selection/#psm-mode)
 
 <br>
 

@@ -106,6 +106,15 @@ Make sure to use Surface products that support [Device Firmware Configuration In
 
 * The list of Surface products supporting DFCI might not get updated quickly in that doc but fear not, this is an active project and all new surface devices have this built in, the docs team might be just a little laggy.
 
+* Microsoft Surface devices use [Project Mu](https://microsoft.github.io/mu/) for the source code of their firmware.
+
+* Surface devices use certificates instead of password for UEFI. They don't have a reset switch like other devices either. You create and install your own certificate using [Surface Management Toolkit](https://www.microsoft.com/en-us/download/details.aspx?id=46703). You can build a config package that has the certificate in it and install it to the firmware, then the package can't be removed or changed without the signing cert authorizing the change, aka, cert auth, or you can just use DFCI as previously mentioned and not have to worry because the packages are signed with MS's private key and there is no PKI that you have to self host.
+
+<br>
+
+> **Warning**
+> It is important to be aware of [potential hardware backdoors](https://bios-pw.org/) that may compromise the security of your system. Some common OEMs, such as Compaq, Dell, Fujitsu, Hewlett-Packard (HP), Insyde H20, Phoenix, Sony, and Samsung, utilize algorithms based on device serial numbers for password resets. These algorithms allow for master password removal from the firmware, potentially granting unauthorized access to the system. [Read more](https://docs.mootinc.com/Reference/Architecture/Hardware-Selection/#psm-mode)
+
 <br>
 
 ## <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/Red%20police%20light.gif"> What to do when there is an attack ?

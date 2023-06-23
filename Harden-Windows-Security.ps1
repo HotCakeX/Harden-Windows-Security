@@ -1,6 +1,6 @@
 <#PSScriptInfo
 
-.VERSION 2023.6.15
+.VERSION 2023.6.23
 
 .GUID d435a293-c9ee-4217-8dc1-4ad2318a5770
 
@@ -115,11 +115,16 @@ function Select-Option {
 
 # Function to modify registry
 function ModifyRegistry {
-    param ($path, $key, $value, $type )
-    If (-NOT (Test-Path $path)) {
-        New-Item -Path $path -Force | Out-Null
+    param ($Path, $Key, $Value, $Type, $Action)
+    If (-NOT (Test-Path $Path)) {
+        New-Item -Path $Path -Force | Out-Null
     }
-    New-ItemProperty -Path $path -Name $key -Value $value -PropertyType $type -Force
+    if ($Action -eq 'AddOrModify') {
+        New-ItemProperty -Path $Path -Name $Key -Value $Value -PropertyType $Type -Force
+    }
+    elseif ($Action -eq 'Delete') {
+        Remove-ItemProperty -Path $Path -Name $Key -Force -ErrorAction SilentlyContinue
+    }
 }
 
 # https://devblogs.microsoft.com/scripting/use-function-to-determine-elevation-of-powershell-console/
@@ -130,10 +135,10 @@ Function Test-IsAdmin {
     $principal.IsInRole([Security.Principal.WindowsBuiltinRole]::Administrator)
 }
 
-# Hiding invoke-webrequest progress because it creates lingering visual effect on PowerShell console for some reason
+# Hiding Invoke-WebRequest progress because it creates lingering visual effect on PowerShell console for some reason
 # https://github.com/PowerShell/PowerShell/issues/14348
 
-# https://stackoverflow.com/questions/18770723/hide-progress-of-invoke-webrequest
+# https://stackoverflow.com/questions/18770723/hide-progress-of-Invoke-WebRequest
 # Create an in-memory module so $ScriptBlock doesn't run in new scope
 $null = New-Module {
     function Invoke-WithoutProgress {
@@ -211,28 +216,28 @@ if (Test-IsAdmin) {
 # or break is passed, clean up will still happen for secure exit
 try {
     # Check the current hard-coded version against the latest version online
-    [datetime]$currentVersion = '2023.6.15'
+    [datetime]$CurrentVersion = '2023.6.23'
     try {
-        [datetime]$latestVersion = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Version.txt"
+        [datetime]$LatestVersion = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Version.txt"
     }
     catch {
         Write-Error "Couldn't verify if the latest version of the script is installed, please check your Internet connection."
         break
     }
-    if ($currentVersion -lt $latestVersion) {
-        Write-Host "The currently installed script's version is $currentVersion while the latest version is $latestVersion" -ForegroundColor Cyan
+    if ($CurrentVersion -lt $LatestVersion) {
+        Write-Host "The currently installed script's version is $CurrentVersion while the latest version is $LatestVersion" -ForegroundColor Cyan
         Write-Host "Please update your script using:" -ForegroundColor Yellow
         Write-Host "Update-Script -Name 'Harden-Windows-Security' -Force" -ForegroundColor Green
         Write-Host "and run it again after that." -ForegroundColor Yellow        
-        Write-host "You can view the change log in here: https://1drv.ms/x/s!AtCaUNAJbbvIhuVQhdMu_Hts7YZ_lA?e=df6H6P" -ForegroundColor Magenta
+        Write-Host "You can view the change log in here: https://1drv.ms/x/s!AtCaUNAJbbvIhuVQhdMu_Hts7YZ_lA?e=df6H6P" -ForegroundColor Magenta
         break
     }
 
-    $infomsg = "`r`n" +
+    $InfoMsg = "`r`n" +
     "############################################################################################################`r`n" +
     "### Please read the Readme in the GitHub repository: https://github.com/HotCakeX/Harden-Windows-Security ###`r`n" +
     "############################################################################################################`r`n"
-    Write-Host $infomsg -ForegroundColor Cyan
+    Write-Host $InfoMsg -ForegroundColor Cyan
 
     #region RequirementsCheck
     # check if user's OS is Windows Home edition
@@ -242,7 +247,7 @@ try {
     }
 
     # check if user's OS is latest version
-    if (-NOT ([System.Environment]::OSVersion.Version -ge '10.0.22621')) {
+    if (-NOT ([System.Environment]::OSVersion.Version -ge [version]'10.0.22621')) {
         Write-Error "You're not using the latest version of Windows, exitting..."
         break
     }
@@ -272,10 +277,10 @@ try {
     Set-Location $WorkingDir
 
     # Clean up script block
-    $CleanUp = { Set-Location $HOME; remove-item -Recurse "$env:TEMP\HardeningXStuff\" -Force; exit }
+    $CleanUp = { Set-Location $HOME; Remove-item -Recurse "$env:TEMP\HardeningXStuff\" -Force; exit }
 
     if (-NOT (Test-IsAdmin))
-    { write-host "Skipping commands that require Administrator privileges" -ForegroundColor Magenta }
+    { Write-Host "Skipping commands that require Administrator privileges" -ForegroundColor Magenta }
     else {
         Write-Progress -Activity 'Initialization' -Status 'Downloading the required files for the script' -PercentComplete 0      
         
@@ -287,10 +292,24 @@ try {
                 Invoke-WebRequest -Uri "https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/Microsoft%20365%20Apps%20for%20Enterprise-2206-FINAL.zip" -OutFile ".\Microsoft365SecurityBaseline2206.zip" -ErrorAction Stop
                 # Download LGPO program from Microsoft servers
                 Invoke-WebRequest -Uri "https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/LGPO.zip" -OutFile ".\LGPO.zip" -ErrorAction Stop
-                # Download the Group Policies of Windows Hardening script from GitHub
-                Invoke-WebRequest -Uri "https://github.com/HotCakeX/Harden-Windows-Security/raw/main/Payload/Security-Baselines-X.zip" -OutFile ".\Security-Baselines-X.zip" -ErrorAction Stop         
-                # Download Registry CSV file
-                Invoke-WebRequest -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Payload/Registry.csv" -OutFile ".\Registry.csv" -ErrorAction Stop                
+                
+                # Download the Group Policies of Windows Hardening script from GitHub or Azure DevOps
+                try {
+                    Invoke-WebRequest -Uri "https://github.com/HotCakeX/Harden-Windows-Security/raw/main/Payload/Security-Baselines-X.zip" -OutFile ".\Security-Baselines-X.zip" -ErrorAction Stop         
+                }
+                catch {
+                    Write-Host "Using Azure DevOps..." -ForegroundColor Yellow
+                    Invoke-WebRequest -Uri "https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/Security-Baselines-X.zip" -OutFile ".\Security-Baselines-X.zip" -ErrorAction Stop
+                }
+                
+                # Download Registry CSV file from GitHub or Azure DevOps
+                try {
+                    Invoke-WebRequest -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Payload/Registry.csv" -OutFile ".\Registry.csv" -ErrorAction Stop                
+                }
+                catch {
+                    Write-Host "Using Azure DevOps..." -ForegroundColor Yellow
+                    Invoke-WebRequest -Uri "https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/Registry.csv" -OutFile ".\Registry.csv" -ErrorAction Stop
+                }
             }
             catch {
                 Write-Error "The required files couldn't be downloaded, Make sure you have Internet connection."
@@ -334,7 +353,7 @@ try {
         Start-Sleep -Seconds 1
         switch (Select-Option -Options "Yes", "No", "Exit" -Message "Apply Windows Kernel CVE-2023-32019 fix in KB5028407 ?") {
             "Yes" {
-                ModifyRegistry -path 'HKLM:\SYSTEM\CurrentControlSet\Policies\Microsoft\FeatureManagement\Overrides' -key '4237806220' -value '1' -type 'DWORD'
+                ModifyRegistry -path 'HKLM:\SYSTEM\CurrentControlSet\Policies\Microsoft\FeatureManagement\Overrides' -key '4237806220' -value '1' -type 'DWORD' -Action 'AddOrModify'
             } "No" { break }
             "Exit" { &$CleanUp }
         }    
@@ -423,7 +442,7 @@ try {
                 switch (Select-Option -Options "Yes", "No", "Exit" -Message "`nTurn on Smart App Control ?") {
                     "Yes" {               
                         if ((Get-MpComputerStatus).SmartAppControlState -eq "Eval") {
-                            ModifyRegistry -path 'HKLM:\SYSTEM\CurrentControlSet\Control\CI\Policy' -key 'VerifiedAndReputablePolicyState' -value '1' -type 'DWORD'
+                            ModifyRegistry -path 'HKLM:\SYSTEM\CurrentControlSet\Control\CI\Policy' -key 'VerifiedAndReputablePolicyState' -value '1' -type 'DWORD' -Action 'AddOrModify'
                         }
                         elseif ((Get-MpComputerStatus).SmartAppControlState -eq "On") {
                             Write-Host "Smart App Control is already turned on, skipping...`n"
@@ -609,8 +628,8 @@ try {
                         if ($KeyProtectors -notcontains 'Tpmpin' -and $KeyProtectors -contains 'recoveryPassword') {            
                             Write-Host "`nTPM and Start up PIN are missing but recovery password is in place, `nAdding TPM and Start up PIN now..." -ForegroundColor Cyan
                             do {
-                                $pin1 = $(write-host "`nEnter a Pin for Bitlocker startup (at least 10 characters)" -ForegroundColor Magenta; Read-Host -AsSecureString)
-                                $pin2 = $(write-host "Confirm your Bitlocker Startup Pin (at least 10 characters)" -ForegroundColor Magenta; Read-Host -AsSecureString)
+                                $pin1 = $(Write-Host "`nEnter a Pin for Bitlocker startup (at least 10 characters)" -ForegroundColor Magenta; Read-Host -AsSecureString)
+                                $pin2 = $(Write-Host "Confirm your Bitlocker Startup Pin (at least 10 characters)" -ForegroundColor Magenta; Read-Host -AsSecureString)
                         
                                 # Compare the PINs and make sure they match
                                 $TheyMatch = Compare-SecureString $pin1 $pin2
@@ -639,8 +658,8 @@ try {
                 else {
                     Write-Host "`nBitlocker is Not enabled for the System Drive, activating now..." -ForegroundColor Yellow    
                     do {
-                        $pin1 = $(write-host "Enter a Pin for Bitlocker startup (at least 10 characters)" -ForegroundColor Magenta; Read-Host -AsSecureString)
-                        $pin2 = $(write-host "Confirm your Bitlocker Startup Pin (at least 10 characters)" -ForegroundColor Magenta; Read-Host -AsSecureString)
+                        $pin1 = $(Write-Host "Enter a Pin for Bitlocker startup (at least 10 characters)" -ForegroundColor Magenta; Read-Host -AsSecureString)
+                        $pin2 = $(Write-Host "Confirm your Bitlocker Startup Pin (at least 10 characters)" -ForegroundColor Magenta; Read-Host -AsSecureString)
       
                         $TheyMatch = Compare-SecureString $pin1 $pin2
             
@@ -728,7 +747,7 @@ try {
                                             "Bitlocker Recovery Password has been added for drive $MountPoint `n" +
                                             "It will be saved in a Text file in $($MountPoint)\Drive $($MountPoint.Remove(1)) recovery password.txt `n" +
                                             "Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which requires authentication to access." 
-                                            write-host $BitLockerMsg -ForegroundColor Yellow
+                                            Write-Host $BitLockerMsg -ForegroundColor Yellow
 
                                             $RecoveryPasswordKeyProtectors | ForEach-Object {
                                                 Remove-BitLockerKeyProtector -MountPoint $MountPoint -KeyProtectorId $_ 
@@ -778,7 +797,7 @@ try {
                                                 "Removing all of them and adding a new one now. Bitlocker Recovery Password has been added for drive $MountPoint `n" +
                                                 "It will be saved in a Text file in $($MountPoint)\Drive $($MountPoint.Remove(1)) recovery password.txt `n" +
                                                 "Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which requires authentication to access." 
-                                                write-host $BitLockerMsg -ForegroundColor Yellow   
+                                                Write-Host $BitLockerMsg -ForegroundColor Yellow   
                                         
                                                 # Delete all Recovery Passwords because there were more than 1
                                                 $RecoveryPasswordKeyProtectors | ForEach-Object {
@@ -834,10 +853,10 @@ try {
                 } | Out-Null
                 # TLS Registry section
                 Set-Location $WorkingDir
-                $items = Import-Csv '.\Registry.csv' -Delimiter ","
-                foreach ($item in $items) {
-                    if ($item.category -eq 'TLS') {
-                        ModifyRegistry -path $item.path -key $item.key -value $item.value -type $item.type | Out-Null
+                $Items = Import-Csv '.\Registry.csv' -Delimiter ","
+                foreach ($Item in $Items) {
+                    if ($Item.category -eq 'TLS') {
+                        ModifyRegistry -path $Item.Path -key $Item.Key -value $Item.Value -type $Item.Type -Action $Item.Action | Out-Null
                     }
                 }
                 # Change current working directory to the LGPO's folder
@@ -993,7 +1012,7 @@ try {
         # ==============================================End of Optional Windows Features===========================================
         #endregion Optional-Windows-Features
 
-        #region Windows-Networking    
+        #region Windows-Networking   
         # ====================================================Windows Networking===================================================
         switch (Select-Option -Options "Yes", "No", "Exit" -Message "`nRun Windows Networking category ?") {
             "Yes" {
@@ -1003,14 +1022,14 @@ try {
                 Set-Location "$WorkingDir\LGPO_30"
                 .\LGPO.exe /m "..\Security-Baselines-X\Windows Networking Policies\registry.pol"
 
-                # disable LMHOSTS lookup protocol on all network adapters
-                ModifyRegistry -path 'HKLM:\SYSTEM\CurrentControlSet\Services\NetBT\Parameters' -key 'EnableLMHOSTS' -value '0' -type 'DWORD'
+                # Disable LMHOSTS lookup protocol on all network adapters
+                ModifyRegistry -path 'HKLM:\SYSTEM\CurrentControlSet\Services\NetBT\Parameters' -key 'EnableLMHOSTS' -value '0' -type 'DWORD' -Action 'AddOrModify'
 
                 # Set the Network Location of all connections to Public
                 Get-NetConnectionProfile | Set-NetConnectionProfile -NetworkCategory Public
             } "No" { break }
             "Exit" { &$CleanUp }
-        }    
+        }
         # =================================================End of Windows Networking===============================================
         #endregion Windows-Networking
 
@@ -1022,10 +1041,10 @@ try {
                                 
                 # Miscellaneous Registry section
                 Set-Location $WorkingDir
-                $items = Import-Csv '.\Registry.csv' -Delimiter ","
-                foreach ($item in $items) {
-                    if ($item.category -eq 'Miscellaneous') {              
-                        ModifyRegistry -path $item.path -key $item.key -value $item.value -type $item.type
+                $Items = Import-Csv '.\Registry.csv' -Delimiter ","
+                foreach ($Item in $Items) {
+                    if ($Item.category -eq 'Miscellaneous') {              
+                        ModifyRegistry -path $Item.Path -key $Item.Key -value $Item.Value -type $Item.Type -Action $Item.Action
                     }
                 }
                 # Change current working directory to the LGPO's folder
@@ -1041,13 +1060,21 @@ try {
                 ForEach-Object { Add-LocalGroupMember -Group "Hyper-V Administrators" -Member $_.Name -ErrorAction SilentlyContinue }
             
                 # Event Viewer custom views are saved in "C:\ProgramData\Microsoft\Event Viewer\Views". files in there can be backed up and restored on new Windows installations.
-                new-item -ItemType Directory -Path "C:\ProgramData\Microsoft\Event Viewer\Views\Hardening Script\" -force | Out-Null                
+                New-Item -ItemType Directory -Path "C:\ProgramData\Microsoft\Event Viewer\Views\Hardening Script\" -force | Out-Null                
                 Invoke-WithoutProgress { 
                     try {
                         Write-Host "Downloading the Custom views for Event Viewer, Please wait..." -ForegroundColor Yellow
-                        invoke-webrequest -Uri "https://github.com/HotCakeX/Harden-Windows-Security/raw/main/Payload/EventViewerCustomViews.zip" -OutFile "$env:TEMP\EventViewerCustomViews.zip" -ErrorAction Stop
+                        
+                        try {
+                            Invoke-WebRequest -Uri "https://github.com/HotCakeX/Harden-Windows-Security/raw/main/Payload/EventViewerCustomViews.zip" -OutFile "$env:TEMP\EventViewerCustomViews.zip" -ErrorAction Stop
+                        }
+                        catch {
+                            Write-Host "Using Azure DevOps..." -ForegroundColor Yellow
+                            Invoke-WebRequest -Uri "https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/EventViewerCustomViews.zip" -OutFile "$env:TEMP\EventViewerCustomViews.zip" -ErrorAction Stop
+                        }
+
                         Expand-Archive -Path "$env:TEMP\EventViewerCustomViews.zip" -DestinationPath "C:\ProgramData\Microsoft\Event Viewer\Views\Hardening Script" -Force
-                        remove-item -Path "$env:TEMP\EventViewerCustomViews.zip" -Force
+                        Remove-item -Path "$env:TEMP\EventViewerCustomViews.zip" -Force
                         Write-Host "`nSuccessfully added Custom Views for Event Viewer" -ForegroundColor Green               
                     }
                     catch {
@@ -1067,7 +1094,7 @@ try {
                 Write-Progress -Activity 'Windows Update Configurations' -Status 'Running Windows Update Configurations section' -PercentComplete 75
 
                 # enable restart notification for Windows update
-                ModifyRegistry -path "HKLM:\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings" -key "RestartNotificationsAllowed2" -value "1" -type 'DWORD'
+                ModifyRegistry -path "HKLM:\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings" -key "RestartNotificationsAllowed2" -value "1" -type 'DWORD' -Action 'AddOrModify'
                 # Change current working directory to the LGPO's folder
                 Set-Location "$WorkingDir\LGPO_30"
                 .\LGPO.exe /m "..\Security-Baselines-X\Windows Update Policies\registry.pol"
@@ -1085,10 +1112,10 @@ try {
 
                 # Edge Browser Configurations registry
                 Set-Location $WorkingDir
-                $items = Import-Csv '.\Registry.csv' -Delimiter ","
-                foreach ($item in $items) {
-                    if ($item.category -eq 'Edge') {
-                        ModifyRegistry -path $item.path -key $item.key -value $item.value -type $item.type
+                $Items = Import-Csv '.\Registry.csv' -Delimiter ","
+                foreach ($Item in $Items) {
+                    if ($Item.category -eq 'Edge') {
+                        ModifyRegistry -path $Item.Path -key $Item.Key -value $Item.Value -type $Item.Type -Action $Item.Action
                     }
                 }
             } "No" { break }
@@ -1128,10 +1155,10 @@ try {
                     Write-Host "sigcheck64.exe couldn't be downloaded from https://live.sysinternals.com" -ForegroundColor Red
                     break
                 }      
-                Write-Host -nonewline "`nListing valid certificates not rooted to the Microsoft Certificate Trust List in the" -ForegroundColor Yellow; write-host " User store`n" -ForegroundColor cyan
+                Write-Host -nonewline "`nListing valid certificates not rooted to the Microsoft Certificate Trust List in the" -ForegroundColor Yellow; Write-Host " User store`n" -ForegroundColor cyan
                 .\sigcheck64.exe -tuv -accepteula -nobanner     
     
-                Write-Host -nonewline "`nListing valid certificates not rooted to the Microsoft Certificate Trust List in the" -ForegroundColor Yellow; write-host " Machine Store`n" -ForegroundColor Blue
+                Write-Host -nonewline "`nListing valid certificates not rooted to the Microsoft Certificate Trust List in the" -ForegroundColor Yellow; Write-Host " Machine Store`n" -ForegroundColor Blue
                 .\sigcheck64.exe -tv -accepteula -nobanner
                 Remove-Item .\sigcheck64.exe -Force
             } "No" { break }
@@ -1190,23 +1217,29 @@ try {
             # Non-Admin Registry section              
             Set-Location $WorkingDir       
             Invoke-WithoutProgress { 
-                # Download Registry CSV file               
-                Invoke-WebRequest -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Payload/Registry.csv" -OutFile ".\Registry.csv"
+                # Download Registry CSV file from GitHub or Azure DevOps
+                try {
+                    Invoke-WebRequest -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Payload/Registry.csv" -OutFile ".\Registry.csv" -ErrorAction Stop                
+                }
+                catch {
+                    Write-Host "Using Azure DevOps..." -ForegroundColor Yellow
+                    Invoke-WebRequest -Uri "https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/Registry.csv" -OutFile ".\Registry.csv" -ErrorAction Stop
+                } 
             }
-            $items = Import-Csv '.\Registry.csv' -Delimiter ","
-            foreach ($item in $items) {
-                if ($item.category -eq 'NonAdmin') {              
-                    ModifyRegistry -path $item.path -key $item.key -value $item.value -type $item.type
+            $Items = Import-Csv '.\Registry.csv' -Delimiter ","
+            foreach ($Item in $Items) {
+                if ($Item.category -eq 'NonAdmin') {              
+                    ModifyRegistry -path $Item.Path -key $Item.Key -value $Item.Value -type $Item.Type -Action $Item.Action
                 }
             }  
 
             # Only suggest restarting the device if Admin related categories were run
             if (Test-IsAdmin) {          
-                $infomsg = "`r`n" +
+                $InfoMsg = "`r`n" +
                 "################################################################################################`r`n" +
                 "###  Please Restart your device to completely apply the security measures and Group Policies ###`r`n" +
                 "################################################################################################`r`n"
-                Write-Host $infomsg -ForegroundColor Cyan
+                Write-Host $InfoMsg -ForegroundColor Cyan
             }
 
         } "No" { &$CleanUp }
@@ -1229,5 +1262,5 @@ finally {
             }
         }
     }
-    Set-Location $HOME; remove-item -Recurse "$env:TEMP\HardeningXStuff\" -Force -ErrorAction SilentlyContinue    
+    Set-Location $HOME; Remove-item -Recurse "$env:TEMP\HardeningXStuff\" -Force -ErrorAction SilentlyContinue    
 }

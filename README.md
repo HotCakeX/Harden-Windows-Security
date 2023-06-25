@@ -914,7 +914,9 @@ Some settings require the client to be joined to Windows Server Active Directory
 
 * **When DNS over HTTPS settings are set OS wide in Windows settings, both normal Edge and MDAG use the OS DoH settings.** *(This is the behavior set by this script)*
 
-###### Edge policies reviewed until version 114.0.1823.55
+  * Use my [WinSecureDNSMgr module](https://github.com/HotCakeX/WinSecureDNSMgr) to easily configure DNS over HTTPS in Windows
+
+###### Edge policies reviewed until version 114.0.1823.58
 
 <p align="right"><a href="#menu-back-to-top">💡 (back to categories)</a></p>
 
@@ -993,17 +995,17 @@ You don't need Admin privileges to run this category, because no system-wide cha
 
 <br>
 
-[PowerShell Gallery mirror](https://www.powershellgallery.com/packages/Harden-Windows-Security/)
+[<img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/WebP/911587042608156732.webp" width="25"> PowerShell Gallery mirror](https://www.powershellgallery.com/packages/Harden-Windows-Security/)
 
-[Azure DevOps Repository](https://dev.azure.com/SpyNetGirl/_git/Harden-Windows-Security)
+[<img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/WebP/911587042608156732.webp" width="25"> Azure DevOps Repository](https://dev.azure.com/SpyNetGirl/_git/Harden-Windows-Security)
 
-[Harden Windows Security website](https://hotcakex.github.io/)
+[<img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/WebP/911587042608156732.webp" width="25"> Harden Windows Security website](https://hotcakex.github.io/)
 
-[Official global IANA IP block for each country](https://hotcakex.github.io/Official-IANA-IP-blocks/)
+[<img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/WebP/911587042608156732.webp" width="25"> Official global IANA IP block for each country](https://hotcakex.github.io/Official-IANA-IP-blocks/)
 
-[Windows Security Blog](https://spynetgirl.github.io/)
+[<img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/WebP/911587042608156732.webp" width="25"> Windows Security Blog](https://spynetgirl.github.io/)
 
-<br>
+[<img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/WebP/911587042608156732.webp" width="25"> WinSecureDNSMgr](https://github.com/HotCakeX/WinSecureDNSMgr)
 
 <br>
 
@@ -1093,7 +1095,7 @@ This repository uses the simplest possible, yet effective, methods that make it 
   - Both Microsoft and Winget check the hash of the files by default, if a program or file is tampered, they will warn you and block the installation, whereas when you manually download a program from a website, you will have to manually verify the file hash with the hash shown on the website, if any.
 
 * <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/RedStar.gif" width="25" alt="Red Star denoting Security Recommendation"> Use Secure DNS; Windows 11 natively supports <a href="https://learn.microsoft.com/en-us/windows-server/networking/dns/doh-client-support">DNS over HTTPS</a> and <a href="https://techcommunity.microsoft.com/t5/networking-blog/dns-over-tls-available-to-windows-insiders/ba-p/3565859">DNS over TLS</a>.
-  - I've created a PowerShell module to use a **DNS over HTTPS server that doesn't have a stable IP address**, on Windows 11, [feel free to check it out](https://github.com/HotCakeX/Set-DynamicIPDoHServer).
+  - Use my [WinSecureDNSMgr module](https://github.com/HotCakeX/WinSecureDNSMgr) to easily configure DNS over HTTPS in Windows
 
 * <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/RedStar.gif" width="25" alt="Red Star denoting Security Recommendation"> Only use Microsoft Edge for browser; It has [the Highest-rated protection against phishing and malware](https://learn.microsoft.com/en-us/deployedge/ms-edge-security-for-business#highest-rated-protection-against-phishing-and-malware), available by default on Windows OS, has tightly integrated valuable Security features such as <a href="https://learn.microsoft.com/en-us/windows/security/threat-protection/microsoft-defender-application-guard/md-app-guard-overview">Microsoft Defender Application Guard</a>, <a href="https://learn.microsoft.com/en-us/windows/security/threat-protection/microsoft-defender-smartscreen/microsoft-defender-smartscreen-overview">Microsoft Defender SmartScreen</a>, <a href="https://support.microsoft.com/en-us/microsoft-edge/enhance-your-security-on-the-web-with-microsoft-edge-b8199f13-b21b-4a08-a806-daed31a1929d">Hardware Enforced Stack Protection</a>, <a href="https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/exploit-protection-reference?view=o365-worldwide#arbitrary-code-guard">Arbitrary Code Guard (ACG)<a/>, <a href="https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/exploit-protection-reference?view=o365-worldwide#control-flow-guard-cfg">Control Flow Guard (CFG)</a>, <a href="https://learn.microsoft.com/en-us/microsoft-edge/web-platform/tracking-prevention">Tracking Prevention</a> and <a href="https://support.microsoft.com/en-us/topic/use-the-microsoft-edge-secure-network-to-protect-your-browsing-885472e2-7847-4d89-befb-c80d3dda6318">Trusted built-in Secure Network feature from Cloudflare</a> just to name a few.
 

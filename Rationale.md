@@ -110,6 +110,8 @@ Make sure to use Surface products that support [Device Firmware Configuration In
 
 * Surface devices can use certificates instead of password for UEFI. They don't have a reset switch like other devices either. You create and install your own certificate using [Surface Management Toolkit](https://www.microsoft.com/en-us/download/details.aspx?id=46703). You can build a config package that has the certificate in it and install it to the firmware, then the package can't be removed or changed without the signing cert authorizing the change, aka, cert auth, or you can just use DFCI as previously mentioned and not have to worry because the packages are signed with MS's private key and there is no PKI that you have to self host.
 
+* Business class Surface devices have dedicated TPM chips.
+
 <br>
 
 > **Warning**

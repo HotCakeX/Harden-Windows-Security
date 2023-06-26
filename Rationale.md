@@ -117,7 +117,7 @@ Make sure to use Surface products that support [Device Firmware Configuration In
 
 <br>
 
-### Protection against BYOVD (Bring Your Own Vulnerable Device) attacks
+### Protection against BYOVD (Bring Your Own Vulnerable Driver) attacks
 
 Secured core PCs provide the hardware that is capable of protecting against BYOVD attacks. It is your responsibility to turn the features on, those include HVCI (Hypervisor-Protected Code Integrity), WDAC (Windows Defender Application Control), ASR (Attack Surface Reduction) rules, Dynamic/static root of trust, firmware that is extensible for revoking drivers.
 

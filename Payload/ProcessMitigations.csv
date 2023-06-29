@@ -25,7 +25,7 @@ PrintDialog.exe,DisableExtensionPoints,Enable,System component hardening
 SystemSettings.exe,DisableExtensionPoints,Enable,System component hardening
 runtimebroker.exe,DisableExtensionPoints,Enable,System component hardening
 C:\Windows\System32\vmcompute.exe,CFG,Enable,System component hardening
-C:\Windows\System32\vmcompute.exe,SuppressExports,System component hardening
+C:\Windows\System32\vmcompute.exe,SuppressExports,Enable,System component hardening
 C:\Windows\System32\vmcompute.exe,StrictCFG,Enable,System component hardening
 C:\windows\system32\vmwp.exe,CFG,Enable,System component hardening
 C:\windows\system32\vmwp.exe,SuppressExports,Enable,System component hardening

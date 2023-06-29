@@ -1,23 +1,23 @@
 ProgramName,Mitigation,Action,Comment
 msedge.exe,DEP,Enable,Maximum possible mitigations for Edge browser. any more than this causes problem
-msedge.exe,EmulateAtlThunks,Enable,
-msedge.exe,BottomUp,Enable,
-msedge.exe,ForceRelocateImages,Enable,
-msedge.exe,RequireInfo,Enable,
-msedge.exe,HighEntropy,Enable,
-msedge.exe,StrictHandle,Enable,
-msedge.exe,DisableExtensionPoints,Enable,
-msedge.exe,CFG,Enable,
-msedge.exe,StrictCFG,Enable,
-msedge.exe,MicrosoftSignedOnly,Enable,
-msedge.exe,AllowStoreSignedBinaries,Enable,
-msedge.exe,EnforceModuleDependencySigning,Enable,
-msedge.exe,DisableNonSystemFonts,Enable,
-msedge.exe,BlockRemoteImageLoads,Enable,
-msedge.exe,BlockLowLabelImageLoads,Enable,
-msedge.exe,SEHOP,Enable,
-msedge.exe,TerminateOnError,Enable,
-msedge.exe,UserShadowStack,Enable,
+msedge.exe,EmulateAtlThunks,Enable,Maximum possible mitigations for Edge browser. any more than this causes problem
+msedge.exe,BottomUp,Enable,Maximum possible mitigations for Edge browser. any more than this causes problem
+msedge.exe,ForceRelocateImages,Enable,Maximum possible mitigations for Edge browser. any more than this causes problem
+msedge.exe,RequireInfo,Enable,Maximum possible mitigations for Edge browser. any more than this causes problem
+msedge.exe,HighEntropy,Enable,Maximum possible mitigations for Edge browser. any more than this causes problem
+msedge.exe,StrictHandle,Enable,Maximum possible mitigations for Edge browser. any more than this causes problem
+msedge.exe,DisableExtensionPoints,Enable,Maximum possible mitigations for Edge browser. any more than this causes problem
+msedge.exe,CFG,Enable,Maximum possible mitigations for Edge browser. any more than this causes problem
+msedge.exe,StrictCFG,Enable,Maximum possible mitigations for Edge browser. any more than this causes problem
+msedge.exe,MicrosoftSignedOnly,Enable,Maximum possible mitigations for Edge browser. any more than this causes problem
+msedge.exe,AllowStoreSignedBinaries,Enable,Maximum possible mitigations for Edge browser. any more than this causes problem
+msedge.exe,EnforceModuleDependencySigning,Enable,Maximum possible mitigations for Edge browser. any more than this causes problem
+msedge.exe,DisableNonSystemFonts,Enable,Maximum possible mitigations for Edge browser. any more than this causes problem
+msedge.exe,BlockRemoteImageLoads,Enable,Maximum possible mitigations for Edge browser. any more than this causes problem
+msedge.exe,BlockLowLabelImageLoads,Enable,Maximum possible mitigations for Edge browser. any more than this causes problem
+msedge.exe,SEHOP,Enable,Maximum possible mitigations for Edge browser. any more than this causes problem
+msedge.exe,TerminateOnError,Enable,Maximum possible mitigations for Edge browser. any more than this causes problem
+msedge.exe,UserShadowStack,Enable,Maximum possible mitigations for Edge browser. any more than this causes problem
 mscorsvw.exe,DisableExtensionPoints,Enable,System component hardening
 ngen.exe,DisableExtensionPoints,Enable,System component hardening
 ngentask.exe,DisableExtensionPoints,Enable,System component hardening
@@ -25,42 +25,42 @@ PrintDialog.exe,DisableExtensionPoints,Enable,System component hardening
 SystemSettings.exe,DisableExtensionPoints,Enable,System component hardening
 runtimebroker.exe,DisableExtensionPoints,Enable,System component hardening
 C:\Windows\System32\vmcompute.exe,CFG,Enable,System component hardening
-C:\Windows\System32\vmcompute.exe,SuppressExports,
-C:\Windows\System32\vmcompute.exe,StrictCFG,Enable,
+C:\Windows\System32\vmcompute.exe,SuppressExports,System component hardening
+C:\Windows\System32\vmcompute.exe,StrictCFG,Enable,System component hardening
 C:\windows\system32\vmwp.exe,CFG,Enable,System component hardening
-C:\windows\system32\vmwp.exe,SuppressExports,Enable,
-C:\windows\system32\vmwp.exe,StrictCFG,Enable,
+C:\windows\system32\vmwp.exe,SuppressExports,Enable,System component hardening
+C:\windows\system32\vmwp.exe,StrictCFG,Enable,System component hardening
 QuickAssist.exe,DisableExtensionPoints,Enable,Hardening Quick Assist 
-QuickAssist.exe,StrictHandle,Enable,
-QuickAssist.exe,BlockDynamicCode,Enable,
-QuickAssist.exe,MicrosoftSignedOnly,Enable,
-QuickAssist.exe,AllowStoreSignedBinaries,Enable,
-QuickAssist.exe,EnforceModuleDependencySigning,Enable,
-QuickAssist.exe,DisableNonSystemFonts,Enable,
-QuickAssist.exe,BlockRemoteImageLoads,Enable,
-QuickAssist.exe,BlockLowLabelImageLoads,Enable,
-QuickAssist.exe,EnableExportAddressFilter,Enable,
-QuickAssist.exe,EnableExportAddressFilterPlus,Enable,
-QuickAssist.exe,EnableImportAddressFilter,Enable,
-QuickAssist.exe,EnableRopStackPivot,Enable,
-QuickAssist.exe,EnableRopCallerCheck,Enable,
-QuickAssist.exe,EnableRopSimExec,Enable,
-QuickAssist.exe,UserShadowStack,Enable,
-QuickAssist.exe,UserShadowStackStrictMode,Enable,
-QuickAssist.exe,AllowThreadsToOptOut,Disable,
+QuickAssist.exe,StrictHandle,Enable,Hardening Quick Assist
+QuickAssist.exe,BlockDynamicCode,Enable,Hardening Quick Assist
+QuickAssist.exe,MicrosoftSignedOnly,Enable,Hardening Quick Assist
+QuickAssist.exe,AllowStoreSignedBinaries,Enable,Hardening Quick Assist
+QuickAssist.exe,EnforceModuleDependencySigning,Enable,Hardening Quick Assist
+QuickAssist.exe,DisableNonSystemFonts,Enable,Hardening Quick Assist
+QuickAssist.exe,BlockRemoteImageLoads,Enable,Hardening Quick Assist
+QuickAssist.exe,BlockLowLabelImageLoads,Enable,Hardening Quick Assist
+QuickAssist.exe,EnableExportAddressFilter,Enable,Hardening Quick Assist
+QuickAssist.exe,EnableExportAddressFilterPlus,Enable,Hardening Quick Assist
+QuickAssist.exe,EnableImportAddressFilter,Enable,Hardening Quick Assist
+QuickAssist.exe,EnableRopStackPivot,Enable,Hardening Quick Assist
+QuickAssist.exe,EnableRopCallerCheck,Enable,Hardening Quick Assist
+QuickAssist.exe,EnableRopSimExec,Enable,Hardening Quick Assist
+QuickAssist.exe,UserShadowStack,Enable,Hardening Quick Assist
+QuickAssist.exe,UserShadowStackStrictMode,Enable,Hardening Quick Assist
+QuickAssist.exe,AllowThreadsToOptOut,Disable,Hardening Quick Assist
 NanaZip.exe,DisableExtensionPoints,Enable,Hardening Nanazip. popular modern fork of 7zip in Microsoft Store
-NanaZip.exe,StrictHandle,Enable,
-NanaZip.exe,BlockDynamicCode,Enable,
-NanaZip.exe,MicrosoftSignedOnly,Enable,
-NanaZip.exe,AllowStoreSignedBinaries,Enable,
-NanaZip.exe,EnforceModuleDependencySigning,Enable,
-NanaZip.exe,DisableNonSystemFonts,Enable,
-NanaZip.exe,BlockRemoteImageLoads,Enable,
-NanaZip.exe,BlockLowLabelImageLoads,Enable,
-NanaZip.exe,EnableExportAddressFilter,Enable,
-NanaZip.exe,EnableExportAddressFilterPlus,Enable,
-NanaZip.exe,EnableImportAddressFilter,Enable,
-NanaZip.exe,EnableRopStackPivot,Enable,
-NanaZip.exe,EnableRopCallerCheck,Enable,
-NanaZip.exe,EnableRopSimExec,Enable,
-NanaZip.exe,UserShadowStack,Enable,
+NanaZip.exe,StrictHandle,Enable,Hardening Nanazip. popular modern fork of 7zip in Microsoft Store
+NanaZip.exe,BlockDynamicCode,Enable,Hardening Nanazip. popular modern fork of 7zip in Microsoft Store
+NanaZip.exe,MicrosoftSignedOnly,Enable,Hardening Nanazip. popular modern fork of 7zip in Microsoft Store
+NanaZip.exe,AllowStoreSignedBinaries,Enable,Hardening Nanazip. popular modern fork of 7zip in Microsoft Store
+NanaZip.exe,EnforceModuleDependencySigning,Enable,Hardening Nanazip. popular modern fork of 7zip in Microsoft Store
+NanaZip.exe,DisableNonSystemFonts,Enable,Hardening Nanazip. popular modern fork of 7zip in Microsoft Store
+NanaZip.exe,BlockRemoteImageLoads,Enable,Hardening Nanazip. popular modern fork of 7zip in Microsoft Store
+NanaZip.exe,BlockLowLabelImageLoads,Enable,Hardening Nanazip. popular modern fork of 7zip in Microsoft Store
+NanaZip.exe,EnableExportAddressFilter,Enable,Hardening Nanazip. popular modern fork of 7zip in Microsoft Store
+NanaZip.exe,EnableExportAddressFilterPlus,Enable,Hardening Nanazip. popular modern fork of 7zip in Microsoft Store
+NanaZip.exe,EnableImportAddressFilter,Enable,Hardening Nanazip. popular modern fork of 7zip in Microsoft Store
+NanaZip.exe,EnableRopStackPivot,Enable,Hardening Nanazip. popular modern fork of 7zip in Microsoft Store
+NanaZip.exe,EnableRopCallerCheck,Enable,Hardening Nanazip. popular modern fork of 7zip in Microsoft Store
+NanaZip.exe,EnableRopSimExec,Enable,Hardening Nanazip. popular modern fork of 7zip in Microsoft Store
+NanaZip.exe,UserShadowStack,Enable,Hardening Nanazip. popular modern fork of 7zip in Microsoft Store

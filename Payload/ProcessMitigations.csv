@@ -1,0 +1,66 @@
+ProgramName,Mitigation,Action,Comment
+msedge.exe,DEP,Enable,Maximum possible mitigations for Edge browser. any more than this causes problem
+msedge.exe,EmulateAtlThunks,Enable,
+msedge.exe,BottomUp,Enable,
+msedge.exe,ForceRelocateImages,Enable,
+msedge.exe,RequireInfo,Enable,
+msedge.exe,HighEntropy,Enable,
+msedge.exe,StrictHandle,Enable,
+msedge.exe,DisableExtensionPoints,Enable,
+msedge.exe,CFG,Enable,
+msedge.exe,StrictCFG,Enable,
+msedge.exe,MicrosoftSignedOnly,Enable,
+msedge.exe,AllowStoreSignedBinaries,Enable,
+msedge.exe,EnforceModuleDependencySigning,Enable,
+msedge.exe,DisableNonSystemFonts,Enable,
+msedge.exe,BlockRemoteImageLoads,Enable,
+msedge.exe,BlockLowLabelImageLoads,Enable,
+msedge.exe,SEHOP,Enable,
+msedge.exe,TerminateOnError,Enable,
+msedge.exe,UserShadowStack,Enable,
+mscorsvw.exe,DisableExtensionPoints,Enable,System component hardening
+ngen.exe,DisableExtensionPoints,Enable,System component hardening
+ngentask.exe,DisableExtensionPoints,Enable,System component hardening
+PrintDialog.exe,DisableExtensionPoints,Enable,System component hardening
+SystemSettings.exe,DisableExtensionPoints,Enable,System component hardening
+runtimebroker.exe,DisableExtensionPoints,Enable,System component hardening
+C:\Windows\System32\vmcompute.exe,CFG,Enable,System component hardening
+C:\Windows\System32\vmcompute.exe,SuppressExports,
+C:\Windows\System32\vmcompute.exe,StrictCFG,Enable,
+C:\windows\system32\vmwp.exe,CFG,Enable,System component hardening
+C:\windows\system32\vmwp.exe,SuppressExports,Enable,
+C:\windows\system32\vmwp.exe,StrictCFG,Enable,
+QuickAssist.exe,DisableExtensionPoints,Enable,Hardening Quick Assist 
+QuickAssist.exe,StrictHandle,Enable,
+QuickAssist.exe,BlockDynamicCode,Enable,
+QuickAssist.exe,MicrosoftSignedOnly,Enable,
+QuickAssist.exe,AllowStoreSignedBinaries,Enable,
+QuickAssist.exe,EnforceModuleDependencySigning,Enable,
+QuickAssist.exe,DisableNonSystemFonts,Enable,
+QuickAssist.exe,BlockRemoteImageLoads,Enable,
+QuickAssist.exe,BlockLowLabelImageLoads,Enable,
+QuickAssist.exe,EnableExportAddressFilter,Enable,
+QuickAssist.exe,EnableExportAddressFilterPlus,Enable,
+QuickAssist.exe,EnableImportAddressFilter,Enable,
+QuickAssist.exe,EnableRopStackPivot,Enable,
+QuickAssist.exe,EnableRopCallerCheck,Enable,
+QuickAssist.exe,EnableRopSimExec,Enable,
+QuickAssist.exe,UserShadowStack,Enable,
+QuickAssist.exe,UserShadowStackStrictMode,Enable,
+QuickAssist.exe,AllowThreadsToOptOut,Disable,
+NanaZip.exe,DisableExtensionPoints,Enable,Hardening Nanazip. popular modern fork of 7zip in Microsoft Store
+NanaZip.exe,StrictHandle,Enable,
+NanaZip.exe,BlockDynamicCode,Enable,
+NanaZip.exe,MicrosoftSignedOnly,Enable,
+NanaZip.exe,AllowStoreSignedBinaries,Enable,
+NanaZip.exe,EnforceModuleDependencySigning,Enable,
+NanaZip.exe,DisableNonSystemFonts,Enable,
+NanaZip.exe,BlockRemoteImageLoads,Enable,
+NanaZip.exe,BlockLowLabelImageLoads,Enable,
+NanaZip.exe,EnableExportAddressFilter,Enable,
+NanaZip.exe,EnableExportAddressFilterPlus,Enable,
+NanaZip.exe,EnableImportAddressFilter,Enable,
+NanaZip.exe,EnableRopStackPivot,Enable,
+NanaZip.exe,EnableRopCallerCheck,Enable,
+NanaZip.exe,EnableRopSimExec,Enable,
+NanaZip.exe,UserShadowStack,Enable,

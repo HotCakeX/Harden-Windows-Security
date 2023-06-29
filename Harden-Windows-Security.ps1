@@ -1,6 +1,6 @@
 <#PSScriptInfo
 
-.VERSION 2023.6.23
+.VERSION 2023.6.29
 
 .GUID d435a293-c9ee-4217-8dc1-4ad2318a5770
 
@@ -216,7 +216,7 @@ if (Test-IsAdmin) {
 # or break is passed, clean up will still happen for secure exit
 try {
     # Check the current hard-coded version against the latest version online
-    [datetime]$CurrentVersion = '2023.6.23'
+    [datetime]$CurrentVersion = '2023.6.29'
     try {
         [datetime]$LatestVersion = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Version.txt"
     }
@@ -309,6 +309,15 @@ try {
                 catch {
                     Write-Host "Using Azure DevOps..." -ForegroundColor Yellow
                     Invoke-WebRequest -Uri "https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/Registry.csv" -OutFile ".\Registry.csv" -ErrorAction Stop
+                }
+
+                # Download Process Mitigations CSV file from GitHub or Azure DevOps
+                try {
+                    Invoke-WebRequest -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Payload/ProcessMitigations.csv" -OutFile ".\ProcessMitigations.csv" -ErrorAction Stop                
+                }
+                catch {
+                    Write-Host "Using Azure DevOps..." -ForegroundColor Yellow
+                    Invoke-WebRequest -Uri "https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/ProcessMitigations.csv" -OutFile ".\ProcessMitigations.csv" -ErrorAction Stop
                 }
             }
             catch {
@@ -438,6 +447,48 @@ try {
                 # Add OneDrive folders of all user accounts to the Controlled Folder Access for Ransomware Protection
                 Get-ChildItem "C:\Users\*\OneDrive" | ForEach-Object { Add-MpPreference -ControlledFolderAccessProtectedFolders $_ }
 
+                # Enable Mandatory ASLR Exploit Protection system-wide
+                Set-processmitigation -System -Enable ForceRelocateImages
+
+                Set-Location $WorkingDir
+
+                # Apply Process Mitigations
+                $ProcessMitigations = Import-Csv 'ProcessMitigations.csv' -Delimiter ","
+
+                # Group the data by ProgramName
+                $GroupedMitigations = $ProcessMitigations | Group-Object ProgramName
+                
+                # Loop through each group
+                foreach ($Group in $GroupedMitigations) {
+                    # Get the program name
+                    $ProgramName = $Group.Name
+                    
+                    # Get the list of mitigations to enable
+                    $EnableMitigations = $Group.Group | Where-Object { $_.Action -eq 'Enable' } | Select-Object -ExpandProperty Mitigation
+                    
+                    # Get the list of mitigations to disable
+                    $DisableMitigations = $Group.Group | Where-Object { $_.Action -eq 'Disable' } | Select-Object -ExpandProperty Mitigation
+                    
+                    # Call the Set-ProcessMitigation cmdlet with the lists of mitigations
+                    if ($null -ne $EnableMitigations) {
+                        if ($null -ne $DisableMitigations) {
+                            Set-ProcessMitigation -Name $ProgramName -Enable $EnableMitigations -Disable $DisableMitigations
+                        }
+                        else {
+                            Set-ProcessMitigation -Name $ProgramName -Enable $EnableMitigations
+                        }
+                    }
+                    elseif ($null -ne $DisableMitigations) {
+                        Set-ProcessMitigation -Name $ProgramName -Disable $DisableMitigations
+                    }
+                    else {
+                        Write-Warning "No mitigations to enable or disable for $ProgramName"
+                    }
+                } 
+
+                # Turn on Data Execution Prevention (DEP) for all applications, including 32-bit programs
+                bcdedit.exe /set "{current}" nx AlwaysOn
+
                 # Try turning on Smart App Control
                 switch (Select-Option -Options "Yes", "No", "Exit" -Message "`nTurn on Smart App Control ?") {
                     "Yes" {               
@@ -453,8 +504,6 @@ try {
                     } "No" { break }
                     "Exit" { &$CleanUp }
                 }
-                # Enable Mandatory ASLR
-                set-processmitigation -System -Enable ForceRelocateImages
 
                 # Create scheduled task for fast weekly Microsoft recommended driver block list update
                 switch (Select-Option -Options "Yes", "No", "Exit" -Message "`nCreate scheduled task for fast weekly Microsoft recommended driver block list update ?") {
@@ -510,15 +559,8 @@ try {
         # ==========================================Bitlocker Settings=============================================================    
         switch (Select-Option -Options "Yes", "No", "Exit" -Message "`nRun Bitlocker category ?") {
             "Yes" {
-                Write-Progress -Activity 'Bitlocker Settings' -Status 'Running Bitlocker Settings section' -PercentComplete 30                     
+                Write-Progress -Activity 'Bitlocker Settings' -Status 'Running Bitlocker Settings section' -PercentComplete 30
 
-                # doing this so Controlled Folder Access won't bitch about powercfg.exe
-                Add-MpPreference -ControlledFolderAccessAllowedApplications "C:\Windows\System32\powercfg.exe"
-                Start-Sleep 5
-                # Set Hibnernate mode to full
-                powercfg /h /type full
-                Start-Sleep 3
-                Remove-MpPreference -ControlledFolderAccessAllowedApplications "C:\Windows\System32\powercfg.exe"
                 # Change current working directory to the LGPO's folder
                 Set-Location "$WorkingDir\LGPO_30"
 
@@ -825,7 +867,15 @@ try {
                             "Exit" { &$CleanUp }
                         }                            
                     }
-                }
+                }                
+                # doing this so Controlled Folder Access won't bitch about powercfg.exe
+                Add-MpPreference -ControlledFolderAccessAllowedApplications "C:\Windows\System32\powercfg.exe"
+                Start-Sleep 5
+                # Set Hibnernate mode to full
+                powercfg /h /type full
+                Start-Sleep 3
+                Remove-MpPreference -ControlledFolderAccessAllowedApplications "C:\Windows\System32\powercfg.exe"
+
             } "No" { break }
             "Exit" { &$CleanUp }
         }    

@@ -390,14 +390,25 @@ Add-MpPreference -ControlledFolderAccessAllowedApplications 'C:\Program Files\Ap
 
 <br>
 
-- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/roratinggem.gif" width="28" alt="Rotating pink gem denoting registry or cmdlet"> Enables [Mandatory ASLR,](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/enable-exploit-protection?view=o365-worldwide) *It might cause compatibility issues* only for some poorly-made 3rd party programs, specially portable ones.
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/roratinggem.gif" width="28" alt="Rotating pink gem denoting registry or cmdlet"> Enables [Mandatory ASLR,](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/enable-exploit-protection?view=o365-worldwide) *It might cause compatibility issues* only for some **poorly-made 3rd party programs**, specially portable ones.
   - You can add Mandatory ASLR override for a trusted program using the PowerShell command below or in the Program Settings section of Exploit Protection in Microsoft Defender app.
     - `Set-ProcessMitigation -Name "C:\TrustedApp.exe" -Disable ForceRelocateImages`
-  - [There are more options for Exploit Protection](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/enable-exploit-protection?view=o365-worldwide) but enabling them requires extensive reviewing by users because mixing them up can cause a lot of compatibility issues.
+
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/roratinggem.gif" width="28" alt="Rotating pink gem denoting registry or cmdlet"> Applies [Exploit Protection/Process Mitigations](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/enable-exploit-protection) from [**this list**](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Payload/ProcessMitigations.csv) to the following programs:
+
+  - All channels of [Microsoft Edge](https://www.microsoft.com/en-us/edge) browser
+  - [Quick Assist](https://learn.microsoft.com/en-us/windows/client-management/client-tools/quick-assist) app
+  - Some System processes, [full list available here.](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Payload/ProcessMitigations.csv)
+  - More apps and processes will be added to the list over time once they are properly validated to be fully compatible.
+
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/roratinggem.gif" width="28" alt="Rotating pink gem denoting registry or cmdlet"> [Turns on Data Execution Prevention](https://learn.microsoft.com/en-us/windows-hardware/drivers/devtest/bcdedit--set) (DEP) for all applications, including 32-bit programs. By default, the output of `BCDEdit /enum "{current}"` (in PowerShell) for the NX bit is `OptIn` but this script sets it to `AlwaysOn`
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Check for the latest virus and spyware security intelligence on startup.
+
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Specifies the maximum depth to scan archive files to the maximum possible value of `4,294,967,295`
+
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> [Defines the maximum size of downloaded files and attachments to be scanned](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/configure-advanced-scan-types-microsoft-defender-antivirus?view=o365-worldwide) and set it to the maximum possible value of `10,000,000 KB` or `10 GB`. [the default is](https://github.com/MicrosoftDocs/microsoft-365-docs/pull/5600) `20480 KB` or `~20MB`
+
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Enforces all features of the [Enhanced Phishing Protection](https://learn.microsoft.com/en-us/windows/security/threat-protection/microsoft-defender-smartscreen/phishing-protection-microsoft-defender-smartscreen?tabs=gpo) in Microsoft Defender SmartScreen.
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/roratinggem.gif" width="28" alt="Rotating pink gem denoting registry or cmdlet"> **(Requires additional confirmation to run):** [Create scheduled task for fast weekly Microsoft recommended driver block list update.](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Fast-and-Automatic-Microsoft-Recommended-Driver-Block-Rules-updates)
@@ -1178,6 +1189,7 @@ Get-Content <Path-To-File> -stream zone.identifier
 - [Microsoft Digital Defense Report](https://www.microsoft.com/en-us/security/business/microsoft-digital-defense-report)
 - [Microsoft Defender for Individuals](https://www.microsoft.com/en-us/microsoft-365/microsoft-defender-for-individuals)
 - [Submit a file for malware analysis](https://www.microsoft.com/en-us/wdsi/filesubmission)
+- [Submit a driver for analysis](https://www.microsoft.com/en-us/wdsi/driversubmission)
 - [Service health status](https://admin.microsoft.com/servicestatus)
 - [Microsoft Defender Threat Intelligence](https://ti.defender.microsoft.com/)
   - [Free community edition vs Premium edition comparison](https://jeffreyappel.nl/how-works-microsoft-defender-threat-intelligence-defender-ti-and-what-is-the-difference-between-free-and-paid/)

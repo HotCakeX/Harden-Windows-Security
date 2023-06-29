@@ -27,8 +27,8 @@ Miscellaneous,HKLM:\Software\Microsoft\Cryptography\Wintrust\Config,EnableCertPa
 Miscellaneous,HKLM:\Software\Wow6432Node\Microsoft\Cryptography\Wintrust\Config,EnableCertPaddingCheck,1,String,AddOrModify,WinVerifyTrust Signature Validation
 Edge,HKLM:\SOFTWARE\Policies\Microsoft\Edge\Recommended,BlockThirdPartyCookies,1,DWORD,AddOrModify,Recommends to block 3rd party cookies
 Edge,HKLM:\SOFTWARE\Policies\Microsoft\Edge,DnsOverHttpsMode,automatic,String,AddOrModify,Sets Edge to use system's DNS over HTTPS. This makes MDAG to work properly too
-Edge,HKLM:\SOFTWARE\Policies\Microsoft\Edge,DnsOverHttpsTemplates,https://chrome.cloudflare-dns.com/dns-query,String,Delete,Set DNS over HTTPS template to Cloudflare's
-Edge,HKLM:\SOFTWARE\Policies\Microsoft\Edge,PrimaryPasswordSetting,1,DWORD,Delete,Configures a setting that asks users to enter their device password while using password autofill
+Edge,HKLM:\SOFTWARE\Policies\Microsoft\Edge,DnsOverHttpsTemplates,https://chrome.cloudflare-dns.com/dns-query,String,Delete,Removes Any DNS over HTTPS set in Edge browser by registry because it prevents MDAG from working properly. See the Readme
+Edge,HKLM:\SOFTWARE\Policies\Microsoft\Edge,PrimaryPasswordSetting,1,DWORD,AddOrModify,Configures a setting that asks users to enter their device password while using password autofill
 Edge,HKLM:\SOFTWARE\Policies\Microsoft\Edge,AutomaticHttpsDefault,2,DWORD,AddOrModify,Automatically upgrade HTTP connections to HTTPS
 Edge,HKLM:\SOFTWARE\Policies\Microsoft\Edge,EncryptedClientHelloEnabled,1,DWORD,AddOrModify,Enable Encrypted Client Hello
 Edge,HKLM:\SOFTWARE\Policies\Microsoft\Edge,WebRtcLocalhostIpHandling,default_public_interface_only,String,AddOrModify,Allow public interface over http default route. This doesn't expose the local IP address when using WebRTC

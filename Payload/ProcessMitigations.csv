@@ -48,19 +48,3 @@ QuickAssist.exe,EnableRopSimExec,Enable,Hardening Quick Assist
 QuickAssist.exe,UserShadowStack,Enable,Hardening Quick Assist
 QuickAssist.exe,UserShadowStackStrictMode,Enable,Hardening Quick Assist
 QuickAssist.exe,AllowThreadsToOptOut,Disable,Hardening Quick Assist
-NanaZip.exe,DisableExtensionPoints,Enable,Hardening Nanazip. popular modern fork of 7zip in Microsoft Store
-NanaZip.exe,StrictHandle,Enable,Hardening Nanazip. popular modern fork of 7zip in Microsoft Store
-NanaZip.exe,BlockDynamicCode,Enable,Hardening Nanazip. popular modern fork of 7zip in Microsoft Store
-NanaZip.exe,MicrosoftSignedOnly,Enable,Hardening Nanazip. popular modern fork of 7zip in Microsoft Store
-NanaZip.exe,AllowStoreSignedBinaries,Enable,Hardening Nanazip. popular modern fork of 7zip in Microsoft Store
-NanaZip.exe,EnforceModuleDependencySigning,Enable,Hardening Nanazip. popular modern fork of 7zip in Microsoft Store
-NanaZip.exe,DisableNonSystemFonts,Enable,Hardening Nanazip. popular modern fork of 7zip in Microsoft Store
-NanaZip.exe,BlockRemoteImageLoads,Enable,Hardening Nanazip. popular modern fork of 7zip in Microsoft Store
-NanaZip.exe,BlockLowLabelImageLoads,Enable,Hardening Nanazip. popular modern fork of 7zip in Microsoft Store
-NanaZip.exe,EnableExportAddressFilter,Enable,Hardening Nanazip. popular modern fork of 7zip in Microsoft Store
-NanaZip.exe,EnableExportAddressFilterPlus,Enable,Hardening Nanazip. popular modern fork of 7zip in Microsoft Store
-NanaZip.exe,EnableImportAddressFilter,Enable,Hardening Nanazip. popular modern fork of 7zip in Microsoft Store
-NanaZip.exe,EnableRopStackPivot,Enable,Hardening Nanazip. popular modern fork of 7zip in Microsoft Store
-NanaZip.exe,EnableRopCallerCheck,Enable,Hardening Nanazip. popular modern fork of 7zip in Microsoft Store
-NanaZip.exe,EnableRopSimExec,Enable,Hardening Nanazip. popular modern fork of 7zip in Microsoft Store
-NanaZip.exe,UserShadowStack,Enable,Hardening Nanazip. popular modern fork of 7zip in Microsoft Store

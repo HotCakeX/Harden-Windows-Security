@@ -145,6 +145,38 @@ For drivers not explicitly mentioned in the Microsoft Recommended Driver Block L
 
 <br>
 
+## For Penetration testing and benchmarking
+
+How to properly perform a pentest and benchmark a system hardened by this repository and make it as close to the real-world scenario as possible:
+
+* Use a physical machine as much as possible, it should have Windows 11 compatible hardware.
+
+* If you can't use a physical machine, use Hyper-V, it properly passes the UEFI lock from the host to the guest VM. Your host (aka physical machine) must have Windows 11 compatible hardware and meet all the hardware security requirements explained in the Readme.
+
+### Attack levels
+
+Here are multiple proposed pentesting levels you can perform. Starting from level 1 (easiest) to level 9 (hardest).
+
+1. Apply all categories of the hardening script except for Smart App Control in Microsoft Defender category. Perform attacks only from the outside. Target system can be using Administrator account. [^3]
+
+2. Apply all categories of the hardening script except for Smart App Control in Microsoft Defender category. Perform attacks from the outside and inside, the user account must be Standard (non-Administrator). [^3]
+
+3. Apply all categories of the hardening script. Perform attacks from the outside and inside, the user account must be Standard. [^3]
+
+4. Apply all categories of the hardening script. Using WDACConfig module, deploy the [Lightly Managed WDAC policy](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-for-Lightly-Managed-Devices), it must be cryptographically signed. Perform attacks from the outside and inside, using Standard user account on the target system. [^2] [^3]
+
+5. Apply all categories of the hardening script. Using WDACConfig module, deploy the [Allow Microsoft WDAC policy](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-policy-for-Fully-managed-device---Variant-3), it must be cryptographically signed. Perform attacks from the outside or inside, using Administrator account on the target system. [^2] [^3]
+
+6. Apply all categories of the hardening script. Using WDACConfig module, deploy the [Default Windows WDAC policy](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-policy-for-Fully-managed-device---Variant-4), it must be cryptographically signed. Perform attacks from the outside or inside, using Administrator account on the target system. [^2] [^3]
+
+7. Repeat level 5, this time using Standard (non-Administrator) account on the target system. [^3]
+
+8. Repeat level 6, this time using Standard (non-Administrator) account on the target system. [^3]
+
+9. Perform penetration test on [Moot security's](https://mootinc.com/) PAW (Privileged Access Workstation).
+
+<br>
+
 ## <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/WhiteGhost.gif"> Any questions or suggestions?
 
 Please open a new [issue](https://github.com/HotCakeX/Harden-Windows-Security/issues) or [discussion](https://github.com/HotCakeX/Harden-Windows-Security/discussions) in the repository.
@@ -152,5 +184,9 @@ Please open a new [issue](https://github.com/HotCakeX/Harden-Windows-Security/is
 <br>
 
 [^1]: *For Personal users, this is true only when Harden Windows Security script is fully applied too, all categories of it. For other users such as Enterprises, Businesses, Governments, Military etc. this is true only if the rest of the [Enterprise-grade security products mentioned](#-what-about-other-enterprise-security-) are used as well.*
+
+[^2]: You can't have private keys of the certificate used to sign the WDAC policy (i.e. you can't simply turn off the signed WDAC policy).
+
+[^3]: If using local Administrator account, it must be passwordless and uses Windows Hello authentication and tied to a Microsoft account that is passwordless and uses MFA with Microsoft Authenticator app, no SMS 2FA. To make it more realistic, the target system's Administrator account **must** be AAD that is also passwordless, uses MFA with Microsoft Authenticator app, no SMS 2FA, uses Conditional access.
 
 <br>

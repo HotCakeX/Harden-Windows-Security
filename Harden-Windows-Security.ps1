@@ -1,6 +1,6 @@
 <#PSScriptInfo
 
-.VERSION 2023.6.29
+.VERSION 2023.6.30
 
 .GUID d435a293-c9ee-4217-8dc1-4ad2318a5770
 
@@ -216,7 +216,7 @@ if (Test-IsAdmin) {
 # or break is passed, clean up will still happen for secure exit
 try {
     # Check the current hard-coded version against the latest version online
-    [datetime]$CurrentVersion = '2023.6.29'
+    [datetime]$CurrentVersion = '2023.6.30'
     try {
         [datetime]$LatestVersion = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Version.txt"
     }
@@ -289,7 +289,7 @@ try {
                 # Download Microsoft Security Baselines directly from their servers
                 Invoke-WebRequest -Uri "https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/Windows%2011%20version%2022H2%20Security%20Baseline.zip" -OutFile ".\Windows1122H2SecurityBaseline.zip" -ErrorAction Stop
                 # Download Microsoft 365 Apps Security Baselines directly from their servers
-                Invoke-WebRequest -Uri "https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/Microsoft%20365%20Apps%20for%20Enterprise-2206-FINAL.zip" -OutFile ".\Microsoft365SecurityBaseline2206.zip" -ErrorAction Stop
+                Invoke-WebRequest -Uri "https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/Microsoft%20365%20Apps%20for%20Enterprise%202306.zip" -OutFile ".\Microsoft365SecurityBaseline2306.zip" -ErrorAction Stop
                 # Download LGPO program from Microsoft servers
                 Invoke-WebRequest -Uri "https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/LGPO.zip" -OutFile ".\LGPO.zip" -ErrorAction Stop
                 
@@ -328,7 +328,7 @@ try {
         # unzip Microsoft Security Baselines file
         Expand-Archive -Path .\Windows1122H2SecurityBaseline.zip -DestinationPath .\ -Force
         # unzip Microsoft 365 Apps Security Baselines file
-        Expand-Archive -Path .\Microsoft365SecurityBaseline2206.zip -DestinationPath .\ -Force
+        Expand-Archive -Path .\Microsoft365SecurityBaseline2306.zip -DestinationPath .\ -Force
         # unzip the LGPO file
         Expand-Archive -Path .\LGPO.zip -DestinationPath .\ -Force
         # unzip the Security-Baselines-X file which contains Windows Hardening script Group Policy Objects
@@ -414,10 +414,10 @@ try {
     
                 Set-Location $WorkingDir
                 # Copy LGPO.exe from its folder to Microsoft Office 365 Apps for Enterprise Security Baseline folder in order to get it ready to be used by PowerShell script
-                Copy-Item -Path ".\LGPO_30\LGPO.exe" -Destination '.\Microsoft 365 Apps for Enterprise-2206-FINAL\Scripts\Tools'
+                Copy-Item -Path ".\LGPO_30\LGPO.exe" -Destination '.\Microsoft 365 Apps for Enterprise 2306\Scripts\Tools'
 
                 # Change directory to the Security Baselines folder
-                Set-Location "$WorkingDir\Microsoft 365 Apps for Enterprise-2206-FINAL\Scripts\"
+                Set-Location "$WorkingDir\Microsoft 365 Apps for Enterprise 2306\Scripts\"
 
                 Write-Host "`nApplying Microsoft 365 Apps Security Baseline" -ForegroundColor Cyan
                 # Run the official PowerShell script included in the Microsoft Security Baseline file we downloaded from Microsoft servers

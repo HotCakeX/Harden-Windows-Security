@@ -1,0 +1,34 @@
+# This is a GitHub action workflow that detects changes to your GitHub repository and syncs it with your Azure DevOps repository
+name: Sync GitHub with Azure DevOps
+on:
+  # Trigger the workflow on push or pull request events
+  push:
+  pull_request:
+jobs:
+  sync:
+    # Run the job on Windows-latest
+    runs-on: windows-latest
+    steps:
+      # Checkout the GitHub repository
+      - name: Checkout GitHub repository
+        uses: actions/checkout@v2
+      # Set up Git credentials using the GitHub and Azure DevOps PATs stored as secrets
+      - name: Set up Git credentials
+        run: |
+          git config --global user.email "spynetgirl@outlook.com"
+          git config --global user.name "HotCakeX"
+          git config --global credential.helper store
+          echo "https://$env:GITHUBREPOPAT@{0}/" -f $env:GITHUB_REPOSITORY | Out-File -FilePath $env:HOME/.git-credentials -Append
+          echo "https://$env:AZUREDEVOPSPAT@{0}/" -f $env:AZURE_DEVOPS_REPOSITORY | Out-File -FilePath $env:HOME/.git-credentials -Append
+        env:
+          GITHUBREPOPAT: ${{ secrets.GITHUBREPOPAT }}
+          AZUREDEVOPSPAT: ${{ secrets.AZUREDEVOPSPAT }}
+          AZURE_DEVOPS_REPOSITORY: https://dev.azure.com/SpyNetGirl/_git/Harden-Windows-Security
+      # Push the changes to the Azure DevOps repository
+      - name: Push to Azure DevOps repository
+        run: |
+          git remote add azure $env:AZURE_DEVOPS_REPOSITORY
+          git push azure $env:GITHUB_REF --force
+        env:
+          GITHUB_REF: ${{ github.ref }}
+          AZURE_DEVOPS_REPOSITORY: https://dev.azure.com/SpyNetGirl/_git/Harden-Windows-Security

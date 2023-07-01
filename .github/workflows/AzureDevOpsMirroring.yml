@@ -1,0 +1,41 @@
+name: Azure DevOps repo mirror
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Push to Azure DevOps
+      shell: pwsh
+      env:
+        GITHUB_PAT: ${{ secrets.GITHUBREPOPAT }}
+        AZURE_DEVOPS_PAT: ${{ secrets.AZUREDEVOPSPAT }}
+      run: |
+        $githubRepoName = "Harden-Windows-Security"
+        $azureDevOpsRepoName = "Harden-Windows-Security"
+
+        $githubRepoUrl = "https://github.com/HotCakeX/$githubRepoName.git"
+        $azureDevOpsRepoUrl = "https://dev.azure.com/SpyNetGirl/_git/$azureDevOpsRepoName"
+
+        # Clone the GitHub repository
+        git clone $githubRepoUrl
+
+        # Change directory to the cloned repository
+        cd $githubRepoName
+
+        # Add the Azure DevOps remote repository
+        git remote add azure $azureDevOpsRepoUrl
+
+        # Authenticate with GitHub and Azure DevOps using PATs
+        git config --global credential.helper store
+        "$env:GITHUB_PAT" | Out-File -FilePath "$env:USERPROFILE\_netrc" -Encoding ascii -Append
+        "$env:AZURE_DEVOPS_PAT" | Out-File -FilePath "$env:USERPROFILE\_netrc" -Encoding ascii -Append
+
+        # Push the code to Azure DevOps
+        git push azure --mirror

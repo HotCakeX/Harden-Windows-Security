@@ -145,6 +145,18 @@ For drivers not explicitly mentioned in the Microsoft Recommended Driver Block L
 
 <br>
 
+## <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/david%20star.gif"> For Penetration testing and benchmarking
+
+How to properly perform a pentest and benchmark a system hardened by this repository and make it as close to the real-world scenario as possible:
+
+* Use a physical machine if possible, it should have Windows 11 certified hardware.
+
+* If you can't use a physical machine, use Hyper-V hypervisor. It properly passes the UEFI lock from the host to the guest VM. Your host (aka physical machine) must have Windows 11 certified hardware and meet all the hardware and UEFI security requirements explained in the Readme. VMs however are prone to side channel attacks, so don't use that attack vector in pentests if you want more realistic results.
+
+* First apply the Harden Windows Security script and then use the [WDACConfig module](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig) to deploy a suitable WDAC policy.
+
+<br>
+
 ## <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/WhiteGhost.gif"> Any questions or suggestions?
 
 Please open a new [issue](https://github.com/HotCakeX/Harden-Windows-Security/issues) or [discussion](https://github.com/HotCakeX/Harden-Windows-Security/discussions) in the repository.

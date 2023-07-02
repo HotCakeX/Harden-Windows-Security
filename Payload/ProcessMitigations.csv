@@ -63,4 +63,4 @@ Acrobat.exe,EnableImportAddressFilter,Enable,Hardening Adobe Acrobat
 Acrobat.exe,EnableRopStackPivot,Enable,Hardening Adobe Acrobat
 Acrobat.exe,EnableRopCallerCheck,Enable,Hardening Adobe Acrobat
 Acrobat.exe,EnableRopSimExec,Enable,Hardening Adobe Acrobat
-Acrobat.exe,UserShadowStackEnable,Hardening Adobe Acrobat
+Acrobat.exe,UserShadowStack,Enable,Hardening Adobe Acrobat

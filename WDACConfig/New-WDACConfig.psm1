@@ -80,6 +80,9 @@ function New-WDACConfig {
         # Importing resources such as functions by dot-sourcing so that they will run in the same scope and their variables will be usable
         . "$psscriptroot\Resources.ps1"
 
+        # Stop operation as soon as there is an error anywhere, unless explicitly specified otherwise
+        $ErrorActionPreference = 'Stop'
+
         # Detecting if Debug switch is used, will do debugging actions based on that
         $Debug = $PSBoundParameters.Debug.IsPresent
 
@@ -338,32 +341,33 @@ function New-WDACConfig {
             &$WriteSubtleRainbow "`nGenerating Supplemental policy with the following specifications:"
             $PolicyMakerHashTable
             Write-Host "`n"
-            # Create the supplemental policy via parameter splatting
+            # Create the supplemental policy via parameter splatting for files in event viewer that are currently on the disk
             New-CIPolicy @PolicyMakerHashTable
 
-            # Get Event viewer logs for code integrity - check the file path of all of the files in the log, resolve them using the command above - show files that are no longer available on the disk
-            $AuditEventLogsDeletedFilesScriptBlock = {
-                foreach ($event in Get-WinEvent -FilterHashtable @{LogName = 'Microsoft-Windows-CodeIntegrity/Operational'; ID = 3076 }) {
-                    $xml = [xml]$event.toxml()
-                    $xml.event.eventdata.data |
-                    ForEach-Object { $hash = @{} } { $hash[$_.name] = $_.'#text' } { [pscustomobject]$hash } |
-                    ForEach-Object {
-                        if ($_.'File Name' -match ($pattern = '\\Device\\HarddiskVolume(\d+)\\(.*)$')) {
-                            $hardDiskVolumeNumber = $Matches[1]
-                            $remainingPath = $Matches[2]
-                            $getletter = $DriveLettersGlobalRootFix | Where-Object { $_.devicepath -eq "\Device\HarddiskVolume$hardDiskVolumeNumber" }
-                            $usablePath = "$($getletter.DriveLetter)$remainingPath"
-                            $_.'File Name' = $_.'File Name' -replace $pattern, $usablePath
-                        }
-                        if (-NOT (Test-Path $_.'File Name')) {
-                            $_ | Select-Object FileVersion, 'File Name', PolicyGUID, 'SHA256 Hash', 'SHA256 Flat Hash', 'SHA1 Hash', 'SHA1 Flat Hash'
+            if (!$NoDeletedFiles) {
+                # Get Event viewer logs for code integrity - check the file path of all of the files in the log, resolve them using the command above - show files that are no longer available on the disk
+                $AuditEventLogsDeletedFilesScriptBlock = {
+                    foreach ($event in Get-WinEvent -FilterHashtable @{LogName = 'Microsoft-Windows-CodeIntegrity/Operational'; ID = 3076 }) {
+                        $xml = [xml]$event.toxml()
+                        $xml.event.eventdata.data |
+                        ForEach-Object { $hash = @{} } { $hash[$_.name] = $_.'#text' } { [pscustomobject]$hash } |
+                        ForEach-Object {
+                            if ($_.'File Name' -match ($pattern = '\\Device\\HarddiskVolume(\d+)\\(.*)$')) {
+                                $hardDiskVolumeNumber = $Matches[1]
+                                $remainingPath = $Matches[2]
+                                $getletter = $DriveLettersGlobalRootFix | Where-Object { $_.devicepath -eq "\Device\HarddiskVolume$hardDiskVolumeNumber" }
+                                $usablePath = "$($getletter.DriveLetter)$remainingPath"
+                                $_.'File Name' = $_.'File Name' -replace $pattern, $usablePath
+                            }
+                            if (-NOT (Test-Path $_.'File Name')) {
+                                $_ | Select-Object FileVersion, 'File Name', PolicyGUID, 'SHA256 Hash', 'SHA256 Flat Hash', 'SHA1 Hash', 'SHA1 Flat Hash'
+                            }
                         }
                     }
                 }
+                # storing the output from the scriptblock above in a variable
+                $DeletedFileHashesArray = Invoke-Command -ScriptBlock $AuditEventLogsDeletedFilesScriptBlock
             }
-            # storing the output from the scriptblock above in a variable
-            $DeletedFileHashesArray = Invoke-Command -ScriptBlock $AuditEventLogsDeletedFilesScriptBlock
-
             # run the following only if there are any event logs for files no longer on the disk and if -NoDeletedFiles switch parameter wasn't used
             if ($DeletedFileHashesArray -and !$NoDeletedFiles) {                               
 
@@ -468,8 +472,6 @@ function New-WDACConfig {
             &$WriteLavender "The current version of Microsoft recommended drivers block list is $($Matches[1])"
         }
 
-        # Stop operation as soon as there is an error anywhere, unless explicitly specified otherwise
-        $ErrorActionPreference = 'Stop'
         if (-NOT $SkipVersionCheck) { . Update-self }        
 
         $DriveLettersGlobalRootFix = Invoke-Command -ScriptBlock $DriveLettersGlobalRootFixScriptBlock

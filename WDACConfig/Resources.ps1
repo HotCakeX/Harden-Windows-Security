@@ -358,3 +358,73 @@ function Get-RuleRefs {
     return ($RulesRefs.Trim())
 }
 
+# Can remove _0 from the ID and SignerId elements of the xml file
+Function Remove-ZerosFromIDs {
+    param(
+        [Parameter(Mandatory = $true)]
+        [ValidateScript({ Test-Path -Path $_ -PathType Leaf })]
+        [string]$filePath
+    )    
+    # Load the xml file
+    [xml]$xml = Get-Content -Path $filePath
+
+    # Get all the elements with ID attribute
+    $elements = $xml.SelectNodes("//*[@ID]")
+
+    # Loop through the elements and replace _0 with empty string in the ID value and SignerId value
+    foreach ($element in $elements) {
+        $element.ID = $element.ID -replace "_0", ""
+        # Check if the element has child elements with SignerId attribute
+        if ($element.HasChildNodes) {
+            # Get the child elements with SignerId attribute
+            $childElements = $element.SelectNodes(".//*[@SignerId]")
+            # Loop through the child elements and replace _0 with empty string in the SignerId value
+            foreach ($childElement in $childElements) {
+                $childElement.SignerId = $childElement.SignerId -replace "_0", ""
+            }
+        }
+    }
+    # Save the modified xml file
+    $xml.Save($filePath)
+}
+
+
+Function Move-UserModeToKernelMode {
+    param(
+        [Parameter(Mandatory = $true)]
+        [ValidateScript({ Test-Path -Path $_ -PathType Leaf })]
+        [string]$filePath
+    ) 
+
+    # Load the XML file as an XmlDocument object
+    $xml = [xml](Get-Content -Path $filePath)
+
+    # Get the SigningScenario nodes as an array
+    $signingScenarios = $xml.SiPolicy.SigningScenarios.SigningScenario
+
+    # Find the SigningScenario node with Value 131 and store it in a variable
+    $signingScenario131 = $signingScenarios | Where-Object { $_.Value -eq "131" }
+
+    # Find the SigningScenario node with Value 12 and store it in a variable
+    $signingScenario12 = $signingScenarios | Where-Object { $_.Value -eq "12" }
+
+    # Get the AllowedSigners nodes from the SigningScenario node with Value 12 as an array
+    $allowedSigners12 = $signingScenario12.ProductSigners.AllowedSigners.AllowedSigner
+
+    # Loop through each AllowedSigner node from the SigningScenario node with Value 12
+    foreach ($allowedSigner in $allowedSigners12) {
+        # Create a new AllowedSigner node and copy the SignerId attribute from the original node
+        # Use the namespace of the parent element when creating the new element
+        $newAllowedSigner = $xml.CreateElement("AllowedSigner", $signingScenario131.NamespaceURI)
+        $newAllowedSigner.SetAttribute("SignerId", $allowedSigner.SignerId)
+
+        # Append the new AllowedSigner node to the AllowedSigners node of the SigningScenario node with Value 131
+        $signingScenario131.ProductSigners.AllowedSigners.AppendChild($newAllowedSigner)
+    }
+
+    # Remove the SigningScenario node with Value 12 from the XML document
+    $xml.SiPolicy.SigningScenarios.RemoveChild($signingScenario12)
+
+    # Save the modified XML document to a new file
+    $xml.Save($filePath)
+}

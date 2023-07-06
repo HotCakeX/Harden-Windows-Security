@@ -358,7 +358,8 @@ function Get-RuleRefs {
     return ($RulesRefs.Trim())
 }
 
-# Can remove _0 from the ID and SignerId elements of the xml file
+
+# Can remove _0 from the ID and SignerId of all the elements in the policy xml file
 Function Remove-ZerosFromIDs {
     param(
         [Parameter(Mandatory = $true)]
@@ -384,6 +385,20 @@ Function Remove-ZerosFromIDs {
             }
         }
     }
+
+    # Get the CiSigners element by name
+    $ciSigners = $xml.SiPolicy.CiSigners
+
+    # Check if the CiSigners element has child elements with SignerId attribute
+    if ($ciSigners.HasChildNodes) {
+        # Get the child elements with SignerId attribute
+        $ciSignersChildren = $ciSigners.ChildNodes
+        # Loop through the child elements and replace _0 with empty string in the SignerId value
+        foreach ($ciSignerChild in $ciSignersChildren) {
+            $ciSignerChild.SignerId = $ciSignerChild.SignerId -replace "_0", ""
+        }
+    }
+
     # Save the modified xml file
     $xml.Save($filePath)
 }

@@ -54,7 +54,7 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
 
 ✔️ Set-CommonWDACConfig: https://github.com/HotCakeX/Harden-Windows-Security/wiki/Set-CommonWDACConfig
 
-✔️ New-KernelModeWDACConfig: https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-KernelModeWDACConfig
+✔️ New-KernelModeWDACConfig: https://github.com/HotCakeX/Harden-Windows-Security/wiki/New%E2%80%90KernelModeWDACConfig
 
 
 To get help and syntax on PowerShell console, type:

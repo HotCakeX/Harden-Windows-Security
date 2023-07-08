@@ -438,9 +438,17 @@ Function Move-UserModeToKernelMode {
             $newAllowedSigner.SetAttribute("SignerId", $allowedSigner.SignerId)
 
             # Append the new AllowedSigner node to the AllowedSigners node of the SigningScenario node with Value 131
-            $signingScenario131.ProductSigners.AllowedSigners.AppendChild($newAllowedSigner)
+            # out-null to prevent console display
+            $signingScenario131.ProductSigners.AllowedSigners.AppendChild($newAllowedSigner) | Out-Null
         }
 
+        # Remove the SigningScenario node with Value 12 from the XML document
+        # out-null to prevent console display
+        $xml.SiPolicy.SigningScenarios.RemoveChild($signingScenario12) | Out-Null
+    }
+
+    # Remove Signing Scenario 12 block only if it exists and has no allowed signers (i.e. is empty)
+    if ($signingScenario12 -and $allowedSigners12.count -eq 0) {
         # Remove the SigningScenario node with Value 12 from the XML document
         $xml.SiPolicy.SigningScenarios.RemoveChild($signingScenario12)
     }

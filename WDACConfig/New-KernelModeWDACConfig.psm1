@@ -41,7 +41,7 @@ function New-KernelModeWDACConfig {
             # Check if either the PrepMode or the AuditAndEnforce parameters were used as well
             if (-not ($PSBoundParameters.ContainsKey("PrepMode") -or $PSBoundParameters.ContainsKey("AuditAndEnforce"))) {
                 # Write an error message
-                Write-Error -Message "You must specify either -PrepMode or -AuditAndEnforce when using -Default from the Default Strict Kernel parameter set." -Category InvalidArgument -TargetObject $Default
+                Write-Error -Message "You must specify either -PrepMode or -AuditAndEnforce when using -Default parameter." -Category InvalidArgument -TargetObject $Default
             }
         }
 
@@ -50,7 +50,7 @@ function New-KernelModeWDACConfig {
             # Check if either the PrepMode or the AuditAndEnforce parameters were used as well
             if (-not ($PSBoundParameters.ContainsKey("PrepMode") -or $PSBoundParameters.ContainsKey("AuditAndEnforce"))) {
                 # Write an error message
-                Write-Error -Message "You must specify either -PrepMode or -AuditAndEnforce when using -NoFlightRoots from the No Flight Roots parameter set." -Category InvalidArgument -TargetObject $NoFlightRoots
+                Write-Error -Message "You must specify either -PrepMode or -AuditAndEnforce when using -NoFlightRoots parameter." -Category InvalidArgument -TargetObject $NoFlightRoots
             }
         }
 
@@ -150,7 +150,7 @@ function New-KernelModeWDACConfig {
                 &$WritePink "Strict Kernel mode policy has been deployed in Enforced mode, please restart your system."
 
                 if (!$Debug) {
-                    Remove-Item -Path '.\Final_DefaultWindows_Enforced_Kernel.xml', ".\$PolicyID.cip" -Force
+                    Remove-Item -Path ".\$PolicyID.cip", '.\DriverFilesScanPolicy.xml' -Force
                 } 
             }
         }
@@ -170,7 +170,7 @@ function New-KernelModeWDACConfig {
                 &$WriteViolet "Strict Kernel mode policy with no flighting root certs has been deployed in Audit mode, please restart your system."
 
                 if (!$Debug) {
-                    Remove-Item -Path .\DefaultWindows_Enforced_Kernel_NoFlights.xml, ".\$PolicyID.cip" -Force
+                    Remove-Item -Path '.\DefaultWindows_Enforced_Kernel_NoFlights.xml', ".\$PolicyID.cip" -Force
                 }                
             }
 
@@ -216,11 +216,10 @@ function New-KernelModeWDACConfig {
                 &$WritePink "Strict Kernel mode policy with no flighting root certs has been deployed in Enforced mode, please restart your system."
 
                 if (!$Debug) {
-                    Remove-Item -Path '.\Final_DefaultWindows_Enforced_Kernel.xml', ".\$PolicyID.cip" -Force
+                    Remove-Item -Path ".\$PolicyID.cip", '.\DriverFilesScanPolicy.xml' -Force
                 } 
             }
         }
-
     }    
   
     <#
@@ -228,7 +227,7 @@ function New-KernelModeWDACConfig {
 Creates Kernel only mode WDAC policy capable of protecting against BYOVD attacks category
 
 .LINK
-https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-WDACConfig
+https://github.com/HotCakeX/Harden-Windows-Security/wiki/New%E2%80%90KernelModeWDACConfig
 
 .DESCRIPTION
 Using official Microsoft methods, configure and use Windows Defender Application Control

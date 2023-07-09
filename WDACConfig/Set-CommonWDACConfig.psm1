@@ -194,7 +194,7 @@ Can be used with any parameter to bypass the online version check - only to be u
 # Set PSReadline tab completion to complete menu for easier access to available parameters - Only for the current session
 Set-PSReadlineKeyHandler -Key Tab -Function MenuComplete
 Register-ArgumentCompleter -CommandName "Set-CommonWDACConfig" -ParameterName "CertCN" -ScriptBlock $ArgumentCompleterCertificateCN
-Register-ArgumentCompleter -CommandName "Set-CommonWDACConfig" -ParameterName "CertPath" -ScriptBlock $ArgumentCompleterCertPath
-Register-ArgumentCompleter -CommandName "Set-CommonWDACConfig" -ParameterName "SignToolPath" -ScriptBlock $ArgumentCompleterFilePathsPicker
+Register-ArgumentCompleter -CommandName "Set-CommonWDACConfig" -ParameterName "CertPath" -ScriptBlock $ArgumentCompleterCerFilePathsPicker
+Register-ArgumentCompleter -CommandName "Set-CommonWDACConfig" -ParameterName "SignToolPath" -ScriptBlock $ArgumentCompleterExeFilePathsPicker
 Register-ArgumentCompleter -CommandName "Set-CommonWDACConfig" -ParameterName "SignedPolicyPath" -ScriptBlock $ArgumentCompleterPolicyPathsBasePoliciesOnly
 Register-ArgumentCompleter -CommandName "Set-CommonWDACConfig" -ParameterName "UnsignedPolicyPath" -ScriptBlock $ArgumentCompleterPolicyPathsBasePoliciesOnly

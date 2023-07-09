@@ -20,6 +20,10 @@ function New-KernelModeWDACConfig {
         [Parameter(Mandatory = $false, ParameterSetName = "Default Strict Kernel")]
         [Parameter(Mandatory = $false, ParameterSetName = "No Flight Roots")]
         [switch]$EVSigners,
+
+        [Parameter(Mandatory = $false, ParameterSetName = "Default Strict Kernel")]
+        [Parameter(Mandatory = $false, ParameterSetName = "No Flight Roots")]
+        [Switch]$Deployit,
         
         [Parameter(Mandatory = $false)][Switch]$SkipVersionCheck    
     )
@@ -93,24 +97,31 @@ function New-KernelModeWDACConfig {
         if ($PSCmdlet.ParameterSetName -eq "Default Strict Kernel" -and $PSBoundParameters.ContainsKey("Default")) {
 
             if ($PrepMode) {
-                Build-PrepModeStrictKernelPolicy -DefaultWindowsKernel  
-                ConvertFrom-CIPolicy .\DefaultWindows_Enforced_Kernel.xml "$PolicyID.cip" | Out-Null
-                CiTool.exe --update-policy "$PolicyID.cip" -json | Out-Null
+                # Build the Audit mode policy
+                Build-PrepModeStrictKernelPolicy -DefaultWindowsKernel
+                
+                # Deploy the policy if Deployit parameter is used
+                if ($Deployit) {
+                    ConvertFrom-CIPolicy .\DefaultWindows_Enforced_Kernel.xml "$PolicyID.cip" | Out-Null
+                    CiTool.exe --update-policy "$PolicyID.cip" -json | Out-Null
+                    &$WriteViolet "Strict Kernel mode policy has been deployed in Audit mode, please restart your system."
+                }
+                else {
+                    &$WriteViolet "Strict Kernel mode Audit policy has been created in the current working directory."
+                }
 
                 # Clear Code Integrity operational before system restart so that after boot it will only have the correct and new logs
                 wevtutil cl 'Microsoft-Windows-CodeIntegrity/Operational'
                 wevtutil cl 'Microsoft-Windows-AppLocker/MSI and Script'
 
-                &$WriteViolet "Strict Kernel mode policy has been deployed in Audit mode, please restart your system."
-
                 if (!$Debug) {
-                    Remove-Item -Path .\DefaultWindows_Enforced_Kernel.xml, ".\$PolicyID.cip" -Force
+                    Remove-Item -Path .\DefaultWindows_Enforced_Kernel.xml, ".\$PolicyID.cip" -Force -ErrorAction SilentlyContinue
                 }                
             }
 
             if ($AuditAndEnforce) {
               
-                powershell.exe {
+                powershell.exe {                    
                     # Scan Event viewer logs for drivers
                     $DriverFilesObj = Get-SystemDriver -Audit
                     # Create a policy xml file from the driver files
@@ -144,13 +155,18 @@ function New-KernelModeWDACConfig {
                 
                 Set-HVCIOptions -Strict -FilePath '.\Final_DefaultWindows_Enforced_Kernel.xml'
           
-                ConvertFrom-CIPolicy '.\Final_DefaultWindows_Enforced_Kernel.xml' "$PolicyID.cip" | Out-Null
-                CiTool.exe --update-policy "$PolicyID.cip" -json | Out-Null
-
-                &$WritePink "Strict Kernel mode policy has been deployed in Enforced mode, please restart your system."
-
+                # Deploy the policy if Deployit parameter is used
+                if ($Deployit) { 
+                    ConvertFrom-CIPolicy '.\Final_DefaultWindows_Enforced_Kernel.xml' "$PolicyID.cip" | Out-Null
+                    CiTool.exe --update-policy "$PolicyID.cip" -json | Out-Null
+                    &$WritePink "Strict Kernel mode policy has been deployed in Enforced mode, please restart your system."
+                }
+                else {
+                    &$WritePink "Strict Kernel mode Enforced policy has been created in the current working directory."
+                }
+              
                 if (!$Debug) {
-                    Remove-Item -Path ".\$PolicyID.cip", '.\DriverFilesScanPolicy.xml' -Force
+                    Remove-Item -Path ".\$PolicyID.cip", '.\DriverFilesScanPolicy.xml' -Force -ErrorAction SilentlyContinue
                 } 
             }
         }
@@ -159,18 +175,25 @@ function New-KernelModeWDACConfig {
         if ($PSCmdlet.ParameterSetName -eq "No Flight Roots" -and $PSBoundParameters.ContainsKey("NoFlightRoots")) {
 
             if ($PrepMode) {
+                # Creating the audit mode policy
                 Build-PrepModeStrictKernelPolicy -DefaultWindowsKernelNoFlights
-                ConvertFrom-CIPolicy .\DefaultWindows_Enforced_Kernel_NoFlights.xml "$PolicyID.cip" | Out-Null
-                CiTool.exe --update-policy "$PolicyID.cip" -json | Out-Null
 
+                # Deploy the policy if Deployit parameter is used
+                if ($Deployit) { 
+                    ConvertFrom-CIPolicy .\DefaultWindows_Enforced_Kernel_NoFlights.xml "$PolicyID.cip" | Out-Null
+                    CiTool.exe --update-policy "$PolicyID.cip" -json | Out-Null
+                    &$WriteViolet "Strict Kernel mode policy with no flighting root certs has been deployed in Audit mode, please restart your system."
+                }
+                else {
+                    &$WriteViolet "Strict Kernel mode Audit policy with no flighting root certs has been created in the current working directory."
+                } 
+                
                 # Clear Code Integrity operational before system restart so that after boot it will only have the correct and new logs
                 wevtutil cl 'Microsoft-Windows-CodeIntegrity/Operational'
                 wevtutil cl 'Microsoft-Windows-AppLocker/MSI and Script'
 
-                &$WriteViolet "Strict Kernel mode policy with no flighting root certs has been deployed in Audit mode, please restart your system."
-
                 if (!$Debug) {
-                    Remove-Item -Path '.\DefaultWindows_Enforced_Kernel_NoFlights.xml', ".\$PolicyID.cip" -Force
+                    Remove-Item -Path '.\DefaultWindows_Enforced_Kernel_NoFlights.xml', ".\$PolicyID.cip" -Force -ErrorAction SilentlyContinue
                 }                
             }
 
@@ -210,13 +233,18 @@ function New-KernelModeWDACConfig {
                 
                 Set-HVCIOptions -Strict -FilePath '.\Final_DefaultWindows_Enforced_Kernel.xml'
           
-                ConvertFrom-CIPolicy '.\Final_DefaultWindows_Enforced_Kernel.xml' "$PolicyID.cip" | Out-Null
-                CiTool.exe --update-policy "$PolicyID.cip" -json | Out-Null
-
-                &$WritePink "Strict Kernel mode policy with no flighting root certs has been deployed in Enforced mode, please restart your system."
+                # Deploy the policy if Deployit parameter is used
+                if ($Deployit) { 
+                    ConvertFrom-CIPolicy '.\Final_DefaultWindows_Enforced_Kernel.xml' "$PolicyID.cip" | Out-Null
+                    CiTool.exe --update-policy "$PolicyID.cip" -json | Out-Null
+                    &$WritePink "Strict Kernel mode policy with no flighting root certs has been deployed in Enforced mode, please restart your system."
+                }
+                else {
+                    &$WritePink "Strict Kernel mode Enforced policy with no flighting root certs has been created in the current working directory."
+                }
 
                 if (!$Debug) {
-                    Remove-Item -Path ".\$PolicyID.cip", '.\DriverFilesScanPolicy.xml' -Force
+                    Remove-Item -Path ".\$PolicyID.cip", '.\DriverFilesScanPolicy.xml' -Force -ErrorAction SilentlyContinue
                 } 
             }
         }
@@ -252,6 +280,9 @@ Deploys the final Kernel mode WDAC policy in Enforced mode
 
 .PARAMETER EVSigners
 Adds EVSigners policy rule option to the deployed policy. Applicable for both Audit and Enforced modes. Drivers not EV (Extended Validation) signed cannot run nor can they be allowed in a Supplemental policy.
+
+.PARAMETER Deployit
+Deploys the selected policy type instead of just creating it
 
 .PARAMETER SkipVersionCheck
 Can be used with any parameter to bypass the online version check - only to be used in rare cases

@@ -127,14 +127,30 @@ $ArgumentCompleterFolderPathsPicker = {
     return "`"$($browser.SelectedPath)`""
 }
 
-# Opens File picker GUI so that user can select an .exe file
-$ArgumentCompleterFilePathsPicker = {
+# Opens File picker GUI so that user can select an .exe file - for SignTool.exe
+$ArgumentCompleterExeFilePathsPicker = {
     # Load the System.Windows.Forms assembly
     Add-Type -AssemblyName System.Windows.Forms
     # Create a new OpenFileDialog object
     $dialog = New-Object System.Windows.Forms.OpenFileDialog
     # Set the filter to show only executable files
     $dialog.Filter = "Executable files (*.exe)|*.exe"
+    # Show the dialog and get the result
+    $result = $dialog.ShowDialog()
+    # If the user clicked OK, return the selected file path
+    if ($result -eq "OK") {
+        return "`"$($dialog.FileName)`""
+    }
+}
+
+# Opens File picker GUI so that user can select a .cer file
+$ArgumentCompleterCerFilePathsPicker = {
+    # Load the System.Windows.Forms assembly
+    Add-Type -AssemblyName System.Windows.Forms
+    # Create a new OpenFileDialog object
+    $dialog = New-Object System.Windows.Forms.OpenFileDialog
+    # Set the filter to show only certificate files
+    $dialog.Filter = "Certificate files (*.cer)|*.cer"
     # Show the dialog and get the result
     $result = $dialog.ShowDialog()
     # If the user clicked OK, return the selected file path

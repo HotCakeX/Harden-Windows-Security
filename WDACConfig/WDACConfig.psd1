@@ -8,7 +8,7 @@
     # RootModule           = ""
 
     # Version number of this module.
-    ModuleVersion        = '0.1.8'
+    ModuleVersion        = '0.1.9'
 
     # Supported PSEditions
     CompatiblePSEditions = @("Core")
@@ -175,7 +175,7 @@ To get help and syntax on PowerShell console, type:
         PSData = @{
 
             # Tags applied to this module. These help with module discovery in online galleries.
-            Tags         = @('WDAC', 'Windows-Defender-Application-Control', 'Windows', 'Security', 'Microsoft', 'Application-Control', 'MDAC', 'Application-Whitelisting')
+            Tags         = @('WDAC', 'Windows-Defender-Application-Control', 'Windows', 'Security', 'Microsoft', 'Application-Control', 'MDAC', 'Application-Whitelisting', 'BYOVD')
 
             # A URL to the license for this module.
             LicenseUri   = 'https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE'
@@ -189,6 +189,11 @@ To get help and syntax on PowerShell console, type:
             # ReleaseNotes of this module
             ReleaseNotes = @"
 
+## Version 0.1.9
+Improved the New-WDACConfig -MakePolicyFromAuditLogs by accounting for situations where event viewer logs don't contain any files that are no longer on the disk even though user chooses to include them.
+Added new functionality and cmdlet New-KernelModeWDACConfig, capable of providing complete protection against all BYOVD (Bring Your Own Vulnerable Driver) scenarios
+Improved the Set-CommonWDACConfig argument completers by showing a file picker GUI when selecting certificates or browsing for custom SignTool.exe path.
+
 ## Version 0.1.8
 Added Enforced mode SnapBack guarantee for the Edit-WDACConfig and Edit-SignedWDACConfig cmdlets so that even in case of power outage or computer crash, the enforcement will be restored.
 Improved the code style for better consistency.
@@ -196,12 +201,6 @@ Added Azure source for version check as the backup endpoint.
 
 ## Version 0.1.7
 Made the Edit-WDACConfig and Edit-SignedWDACConfig cmdlets resilient to errors and unexpected problems by improving their logic.
-
-## Version 0.1.6
-New cmdlet Set-CommonWDACConfig, Use this cmdlet to store the values for common and frequently used parameters so that you won't have to specify them again every time.
-More info about it: https://github.com/HotCakeX/Harden-Windows-Security/wiki/Set-CommonWDACConfig
-Updated the argument completer of Remove-WDACConfig cmdlet to be able cross-reference values between 2 parameters.
-Optimized the overall code and improved a lot of logics.
 
 Full Change log for previous versions are available on Excel online: (Copy and paste the link in your browser if it isn't clickable)
 https://1drv.ms/x/s!AtCaUNAJbbvIhuVPpPeCHSjl75OqBQ?e=qgvzEt

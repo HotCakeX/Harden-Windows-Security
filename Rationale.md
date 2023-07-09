@@ -119,11 +119,11 @@ Make sure to use Surface products that support [Device Firmware Configuration In
 
 <br>
 
-### Protection against BYOVD (Bring Your Own Vulnerable Driver) attacks
+### <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/9935-catkeyboard.gif"> Protection against BYOVD (Bring Your Own Vulnerable Driver) attacks
 
-Secured core PCs provide the hardware that is capable of protecting against BYOVD attacks. It is your responsibility to turn the features on, those include WDAC (Windows Defender Application Control), ASR (Attack Surface Reduction) rules, Dynamic/static root of trust, [firmware](https://learn.microsoft.com/en-us/windows-hardware/drivers/bringup/firmware-attack-surface-reduction) that is extensible for revoking drivers.
+* Secured core PCs provide the hardware that is capable of protecting against BYOVD attacks. It is your responsibility to turn the features on, those include WDAC (Windows Defender Application Control), ASR (Attack Surface Reduction) rules, Dynamic/static root of trust, [firmware](https://learn.microsoft.com/en-us/windows-hardware/drivers/bringup/firmware-attack-surface-reduction) that is extensible for revoking drivers.
 
-For drivers not explicitly mentioned in the Microsoft Recommended Driver Block List, which are the more dynamic side of things, ASR is able to protect against BYOVD, ELAM (Early launch anti-malware), part of the MDAV is also able to do that, all because of the ISG (Intelligent Security Graph).
+* For drivers not explicitly mentioned in the Microsoft Recommended Driver Block List, which are the more dynamic side of things, ASR is able to protect against BYOVD, ELAM (Early launch anti-malware), part of the MDAV is also able to do that, all because of the ISG (Intelligent Security Graph).
 
 <br> 
 

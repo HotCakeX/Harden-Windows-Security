@@ -114,7 +114,7 @@ To get help and syntax on PowerShell console, type:
         "New-SupplementalWDACConfig.psm1",
         "New-DenyWDACConfig.psm1",
         "Set-CommonWDACConfig.psm1",
-        "New-KernelModeWDACConfig")
+        "New-KernelModeWDACConfig.psm1")
 
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
     FunctionsToExport    = @("New-WDACConfig",

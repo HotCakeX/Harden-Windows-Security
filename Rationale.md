@@ -125,6 +125,18 @@ Secured core PCs provide the hardware that is capable of protecting against BYOV
 
 For drivers not explicitly mentioned in the Microsoft Recommended Driver Block List, which are the more dynamic side of things, ASR is able to protect against BYOVD, ELAM (Early launch anti-malware), part of the MDAV is also able to do that, all because of the ISG (Intelligent Security Graph).
 
+<br> 
+
+<p align="center">
+<b>YOUTUBE VIDEO: How to easily protect against BYOVD attack scenarios with WDAC policy in Windows</b><br><br>
+  <a href="https://www.youtube.com/watch?v=SQCo9l2P7uw">
+    <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/YouTubeLogoBYOVD.png" width="500"
+         alt="YOUTUBE VIDEO: How to easily protect against BYOVD attack scenarios with WDAC policy in Windows - Windows Defender">
+  </a>
+  </p>
+
+<br>
+
 <br>
 
 ## <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/Red%20police%20light.gif"> What to do when there is an attack ?

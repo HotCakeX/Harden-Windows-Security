@@ -127,3 +127,19 @@ $ArgumentCompleterFolderPathsPicker = {
     return "`"$($browser.SelectedPath)`""
 }
 
+# Opens File picker GUI so that user can select an .exe file
+$ArgumentCompleterFilePathsPicker = {
+    # Load the System.Windows.Forms assembly
+    Add-Type -AssemblyName System.Windows.Forms
+    # Create a new OpenFileDialog object
+    $dialog = New-Object System.Windows.Forms.OpenFileDialog
+    # Set the filter to show only executable files
+    $dialog.Filter = "Executable files (*.exe)|*.exe"
+    # Show the dialog and get the result
+    $result = $dialog.ShowDialog()
+    # If the user clicked OK, return the selected file path
+    if ($result -eq "OK") {
+        return "`"$($dialog.FileName)`""
+    }
+}
+

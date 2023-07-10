@@ -1200,6 +1200,8 @@ Get-Content <Path-To-File> -stream zone.identifier
   - [Free community edition vs Premium edition comparison](https://jeffreyappel.nl/how-works-microsoft-defender-threat-intelligence-defender-ti-and-what-is-the-difference-between-free-and-paid/)
 - [Microsoft Virus Initiative](https://learn.microsoft.com/en-us/microsoft-365/security/intelligence/virus-initiative-criteria)
 - [Digital Detectives @Microsoft](https://news.microsoft.com/stories/cybercrime/)
+- [Goblin Loot - Great security related website about EDR, Cloud and Microsoft products](https://www.goblinloot.net/)
+
 <p align="right"><a href="#readme-top">💡 (back to top)</a></p>
 
 <br>

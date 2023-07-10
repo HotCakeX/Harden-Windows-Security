@@ -175,8 +175,7 @@ Install-Script -Name Harden-Windows-Security
 | 1    | scanigma.com/knowledge-base   | TLS - providing additional information                     |
 | 1    | cloudflare.com/ssl/reference/ | TLS - providing additional information                     |
 | 1    | github.com/ssllabs/research/  | TLS - providing additional information                     |
-| 1    | Wayback Machine               | TLS - providing additional information                     |
-| 2    | CyberRatings.org Report       | TLS - Browser test report                                  |
+| 1    | Wayback Machine               | Providing additional information about Edge Browser        |
 
 </details>
 

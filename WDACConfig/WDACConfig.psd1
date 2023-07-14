@@ -114,7 +114,8 @@ To get help and syntax on PowerShell console, type:
         "New-SupplementalWDACConfig.psm1",
         "New-DenyWDACConfig.psm1",
         "Set-CommonWDACConfig.psm1",
-        "New-KernelModeWDACConfig.psm1")
+        "New-KernelModeWDACConfig.psm1",
+        "Invoke-WDACSimulation.psm1")
 
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
     FunctionsToExport    = @("New-WDACConfig",
@@ -126,7 +127,8 @@ To get help and syntax on PowerShell console, type:
         "New-SupplementalWDACConfig",
         "New-DenyWDACConfig",
         "Set-CommonWDACConfig",
-        "New-KernelModeWDACConfig")
+        "New-KernelModeWDACConfig",
+        "Invoke-WDACSimulation")
 
     # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
     CmdletsToExport      = @("New-WDACConfig",
@@ -138,7 +140,8 @@ To get help and syntax on PowerShell console, type:
         "New-SupplementalWDACConfig",
         "New-DenyWDACConfig",
         "Set-CommonWDACConfig",
-        "New-KernelModeWDACConfig")
+        "New-KernelModeWDACConfig",
+        "Invoke-WDACSimulation")
 
     # Variables to export from this module
     VariablesToExport    = '*'
@@ -167,7 +170,9 @@ To get help and syntax on PowerShell console, type:
         "Set-CommonWDACConfig.psm1",
         "New-KernelModeWDACConfig.psm1",
         "WDAC Policies\DefaultWindows_Enforced_Kernel.xml",
-        "WDAC Policies\DefaultWindows_Enforced_Kernel_NoFlights.xml")
+        "WDAC Policies\DefaultWindows_Enforced_Kernel_NoFlights.xml",
+        "Invoke-WDACSimulation.psm1",
+        "Resources2.ps1")
 
     # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.
     PrivateData          = @{

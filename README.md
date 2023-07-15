@@ -670,8 +670,6 @@ NistP384
 
 ### [Device protection in Windows Security gives you one of these 4 hardware scores:](https://support.microsoft.com/en-us/windows/device-protection-in-windows-security-afa11526-de57-b1c5-599f-3a4c6a61c5e2)
 
-[Download Memory integrity scan tool](https://www.microsoft.com/en-us/download/105217)
-
 <ol>
 <li>Standard hardware security not supported</li>
  <ul>

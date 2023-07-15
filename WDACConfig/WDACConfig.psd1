@@ -56,6 +56,9 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
 
 ✔️ New-KernelModeWDACConfig: https://github.com/HotCakeX/Harden-Windows-Security/wiki/New%E2%80%90KernelModeWDACConfig
 
+✔️ Get-CommonWDACConfig: https://github.com/HotCakeX/Harden-Windows-Security/wiki/Get-CommonWDACConfig
+
+✔️ Invoke-WDACSimulation: 
 
 To get help and syntax on PowerShell console, type:
 "Get-Command -Module WDACConfig"
@@ -69,6 +72,8 @@ To get help and syntax on PowerShell console, type:
 "Get-Help New-DenyWDACConfig"
 "Get-Help Set-CommonWDACConfig"
 "Get-help New-KernelModeWDACConfig"
+"Get-help Invoke-WDACSimulation"
+"Get-help Get-CommonWDACConfig"
 "@
 
     # Minimum version of the PowerShell engine required by this module

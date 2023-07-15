@@ -196,6 +196,12 @@ Path to the SignTool.exe
 .PARAMETER CertPath
 Path to a .cer certificate file
 
+.PARAMETER StrictKernelPolicyGUID
+GUID of the Strict Kernel mode policy
+
+.PARAMETER StrictKernelNoFlightRootsPolicyGUID
+GUID of the Strict Kernel no Flights root mode policy
+
 .PARAMETER DeleteUserConfig
 Deletes the .WDACConfig directory in User directory and all of the files in it
 

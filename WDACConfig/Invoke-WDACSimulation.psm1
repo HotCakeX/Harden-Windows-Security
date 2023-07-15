@@ -9,10 +9,10 @@ function Invoke-WDACSimulation {
         [ValidateScript({
         (Get-AuthenticodeSignature -FilePath $_).Status -eq 'valid'
             }, ErrorMessage = "The Selected file doesn't have a valid certificate"
-            )]
-        [Parameter(Mandatory = $false)][string]$FilePath,
-        [Parameter(Mandatory = $false)][string]$FolderPath,
-        [Parameter(Mandatory = $true)][string]$XmlFilePath,
+        )]
+        [Parameter(Mandatory = $false)][System.String]$FilePath,
+        [Parameter(Mandatory = $false)][System.String]$FolderPath,
+        [Parameter(Mandatory = $true)][System.String]$XmlFilePath,
 
         [Parameter(Mandatory = $false)][Switch]$SkipVersionCheck # Used by all the entire Cmdlet
     )
@@ -34,18 +34,38 @@ function Invoke-WDACSimulation {
     process {
        
         if ($FolderPath) {
+            # Store the results of the Signed files
+            $SignedResult = @()
+            # Store the results of the Unsigned files
+            $UnSignedResult = @()
+            # Get all of the files that WDAC supports from the user provided directory
+            $CollectedFiles = (Get-ChildItem -Recurse -Path $FolderPath -File -Include "*.sys", "*.exe", "*.com", "*.dll", "*.ocx", "*.msp", "*.mst", "*.msi", "*.js", "*.vbs", "*.ps1", "*.appx").FullName
 
-            $Result = @()
-            (Get-ChildItem -Recurse -Path $FolderPath -File -Include "*.sys", "*.exe", "*.com", "*.dll", "*.ocx", "*.msp", "*.mst", "*.msi", "*.js", "*.vbs", "*.ps1", "*.appx").FullName | Where-Object { (Get-AuthenticodeSignature -FilePath $_).Status -eq 'valid' } | ForEach-Object {
-                $currentObjcc = $_   
-                $Result += Compare-SignerAndCertificate -XmlFilePath $XmlFilePath -SignedFilePath $currentObjcc | Where-Object { $_.CertNameMatch -eq $true }
-            }
+            # Loop through each file
+            $CollectedFiles | ForEach-Object {
+                # If the file is signed and valid
+                if ((Get-AuthenticodeSignature -FilePath $_).Status -eq 'valid') {
+                    $CurrentFile = $_ 
+                    $SignedResult += Compare-SignerAndCertificate -XmlFilePath $XmlFilePath -SignedFilePath $CurrentFile | Where-Object { $_.CertRootMatch -eq $true }
+                }  
+                # If the file is signed and invalid              
+                elseif ((Get-AuthenticodeSignature -FilePath $_).Status -eq 'HashMismatch') {
+                    Write-Warning "The file $CurrentFile is tampered and unsafe to use."
+                }
+                # if the file is Unsigned
+                else {
+                    $SHA256Hash = Get-FileHash -Algorithm SHA256 -Path $CurrentFile
+                    $SHA1Hash = Get-FileHash -Algorithm SHA1 -Path $CurrentFile
+                }
+            
+            }           
         
           
-        
-            $Result = $Result.FilePath | Get-Unique
-            $Result
-            $Result.count
+            # Showing Signed file details
+            &$WriteLavender "The following Signed files are allowed in the policy"
+            $SignedResult = $SignedResult.FilePath | Get-Unique
+            $SignedResult
+            $SignedResult.count
         
         }
 

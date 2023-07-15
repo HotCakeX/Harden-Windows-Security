@@ -251,11 +251,9 @@ function New-DenyWDACConfig {
             $policyID = $policyID.Substring(11)
             Set-CIPolicyVersion -FilePath ".\AppxDenyPolicy $PolicyName.xml" -Version "1.0.0.0"
  
-            #@(0, 2, 5, 6, 11, 12, 16, 17, 19, 20) | ForEach-Object {
             @(0, 2, 6, 11, 12, 16, 17, 19, 20) | ForEach-Object {
                 Set-RuleOption -FilePath ".\AppxDenyPolicy $PolicyName.xml" -Option $_ }
-     
-            #@(3, 4, 9, 10, 13, 18) | ForEach-Object {
+                
             @(3, 4, 8, 9, 10, 13, 14, 15, 18) | ForEach-Object {
                 Set-RuleOption -FilePath ".\AppxDenyPolicy $PolicyName.xml" -Option $_ -Delete }
 
@@ -271,11 +269,8 @@ function New-DenyWDACConfig {
                 CiTool --update-policy "$policyID.cip" -json | Out-Null
                 &$WritePink "A Deny Base policy with the name $PolicyName has been deployed."
                 Remove-Item -Path "$policyID.cip" -Force
-            }
-
-            
+            }            
         }
-
     } 
    
     <#
@@ -299,6 +294,9 @@ Creates a Deny standalone base policy by scanning a directory for files. The bas
 
 .PARAMETER Drivers
 Creates a Deny standalone base policy for drivers only by scanning a directory for driver files. The base policy created by this parameter can be deployed side by side any other base/supplemental policy.
+
+.PARAMETER InstalledAppXPackages
+Creates a Deny standalone base policy for an installed App based on Appx package family names
 
 .PARAMETER SkipVersionCheck
 Can be used with any parameter to bypass the online version check - only to be used in rare cases

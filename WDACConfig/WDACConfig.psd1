@@ -115,7 +115,8 @@ To get help and syntax on PowerShell console, type:
         "New-DenyWDACConfig.psm1",
         "Set-CommonWDACConfig.psm1",
         "New-KernelModeWDACConfig.psm1",
-        "Invoke-WDACSimulation.psm1")
+        "Invoke-WDACSimulation.psm1",
+        "Get-CommonWDACConfig.psm1")
 
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
     FunctionsToExport    = @("New-WDACConfig",
@@ -128,7 +129,8 @@ To get help and syntax on PowerShell console, type:
         "New-DenyWDACConfig",
         "Set-CommonWDACConfig",
         "New-KernelModeWDACConfig",
-        "Invoke-WDACSimulation")
+        "Invoke-WDACSimulation",
+        "Get-CommonWDACConfig")
 
     # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
     CmdletsToExport      = @("New-WDACConfig",
@@ -141,7 +143,8 @@ To get help and syntax on PowerShell console, type:
         "New-DenyWDACConfig",
         "Set-CommonWDACConfig",
         "New-KernelModeWDACConfig",
-        "Invoke-WDACSimulation")
+        "Invoke-WDACSimulation",
+        "Get-CommonWDACConfig")
 
     # Variables to export from this module
     VariablesToExport    = '*'
@@ -172,7 +175,8 @@ To get help and syntax on PowerShell console, type:
         "WDAC Policies\DefaultWindows_Enforced_Kernel.xml",
         "WDAC Policies\DefaultWindows_Enforced_Kernel_NoFlights.xml",
         "Invoke-WDACSimulation.psm1",
-        "Resources2.ps1")
+        "Resources2.ps1",
+        "Get-CommonWDACConfig.psm1")
 
     # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.
     PrivateData          = @{

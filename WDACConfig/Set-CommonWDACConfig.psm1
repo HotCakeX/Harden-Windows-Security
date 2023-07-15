@@ -41,12 +41,14 @@ function Set-CommonWDACConfig {
                 $certs -contains $_
             }, ErrorMessage = "A certificate with the provided common name doesn't exist in the personal store of the user certificates." )]
         [parameter(Mandatory = $false)][System.String]$CertCN,
+
+        [parameter(Mandatory = $false)][System.Guid]$StrictKernelPolicyGUID,
+        [parameter(Mandatory = $false)][System.Guid]$StrictKernelNoFlightRootsPolicyGUID,
         
         [ValidatePattern('\.cer$')]
         [ValidateScript({ Test-Path $_ -PathType 'Leaf' }, ErrorMessage = "The path you selected is not a file path.")]
         [parameter(Mandatory = $false)][System.String]$CertPath,        
         [parameter(Mandatory = $false)][switch]$DeleteUserConfig,
-        [parameter(Mandatory = $false)][switch]$Open,
         [Parameter(Mandatory = $false)][Switch]$SkipVersionCheck
     )
     begin {
@@ -78,14 +80,8 @@ function Set-CommonWDACConfig {
         # Scan the file with Microsoft Defender for anything malicious before it's going to be used
         Start-MpScan -ScanType CustomScan -ScanPath "$env:USERPROFILE\.WDACConfig\UserConfigurations.json"
 
-        if ($Open) {        
-            . "$env:USERPROFILE\.WDACConfig\UserConfigurations.json" 
-            break
-        }
-
         if ($PSBoundParameters.Count -eq 0) {
-            &$WritePink "`nThis is your current WDAC User Configurations: "
-            Get-Content -Path "$env:USERPROFILE\.WDACConfig\UserConfigurations.json" | ConvertFrom-Json | Format-List *
+            Write-Error "No parameter was selected."
             break
         }
 
@@ -101,44 +97,66 @@ function Set-CommonWDACConfig {
 
         # An object to hold the User configurations
         $UserConfigurationsObject = [PSCustomObject]@{
-            SignedPolicyPath      = ""
-            UnsignedPolicyPath    = ""
-            SignToolCustomPath    = ""
-            CertificateCommonName = ""
-            CertificatePath       = ""
+            SignedPolicyPath                    = ""
+            UnsignedPolicyPath                  = ""
+            SignToolCustomPath                  = ""
+            CertificateCommonName               = ""
+            CertificatePath                     = ""
+            StrictKernelPolicyGUID              = ""
+            StrictKernelNoFlightRootsPolicyGUID = ""
         }
     }
     process {
+
         if ($SignedPolicyPath) {
             $UserConfigurationsObject.SignedPolicyPath = $SignedPolicyPath
         }
         else {
             $UserConfigurationsObject.SignedPolicyPath = $CurrentUserConfigurations.SignedPolicyPath
         }
+
         if ($UnsignedPolicyPath) {
             $UserConfigurationsObject.UnsignedPolicyPath = $UnsignedPolicyPath
         }
         else {
             $UserConfigurationsObject.UnsignedPolicyPath = $CurrentUserConfigurations.UnsignedPolicyPath
         }
+
         if ($SignToolPath) {
             $UserConfigurationsObject.SignToolCustomPath = $SignToolPath
         }
         else {
             $UserConfigurationsObject.SignToolCustomPath = $CurrentUserConfigurations.SignToolCustomPath
         }
+
         if ($CertPath) {
             $UserConfigurationsObject.CertificatePath = $CertPath
         }
         else {
             $UserConfigurationsObject.CertificatePath = $CurrentUserConfigurations.CertificatePath
         }
+
         if ($CertCN) {
             $UserConfigurationsObject.CertificateCommonName = $CertCN
-        }
+        }        
         else {
             $UserConfigurationsObject.CertificateCommonName = $CurrentUserConfigurations.CertificateCommonName
         }
+
+        if ($StrictKernelPolicyGUID) {
+            $UserConfigurationsObject.StrictKernelPolicyGUID = $StrictKernelPolicyGUID
+        }
+        else {
+            $UserConfigurationsObject.StrictKernelPolicyGUID = $CurrentUserConfigurations.StrictKernelPolicyGUID
+        }
+
+        if ($StrictKernelNoFlightRootsPolicyGUID) {
+            $UserConfigurationsObject.StrictKernelNoFlightRootsPolicyGUID = $StrictKernelNoFlightRootsPolicyGUID
+        }
+        else {
+            $UserConfigurationsObject.StrictKernelNoFlightRootsPolicyGUID = $CurrentUserConfigurations.StrictKernelNoFlightRootsPolicyGUID
+        }
+
     }
     end {
         # Update the User Configurations file
@@ -180,9 +198,6 @@ Path to a .cer certificate file
 
 .PARAMETER DeleteUserConfig
 Deletes the .WDACConfig directory in User directory and all of the files in it
-
-.PARAMETER Open
-Opens the User Configuration file with the default app assigned to open Json files
 
 .PARAMETER SkipVersionCheck
 Can be used with any parameter to bypass the online version check - only to be used in rare cases

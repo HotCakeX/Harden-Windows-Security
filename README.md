@@ -1233,7 +1233,6 @@ Using [GPL-2.0 license](https://github.com/HotCakeX/Harden-Windows-Security/blob
 <a href="https://techcommunity.microsoft.com/t5/user/viewprofilepage/user-id/310193"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/main/Private/Images/Socials/microsoft.png"></a>
 <a href="mailto:spynetgirl@outlook.com"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/main/Private/Images/Socials/outlook.svg"></a>
 <a href="https://orcid.org/0009-0000-6616-4938"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/main/Private/Images/Socials/orcid_icon.png"></a>
-<a href="https://discordapp.com/users/1057052885235536012"><img width="35" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/discord%20rainbow.gif"></a>
 </p>
 
 <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="Harden-Windows-Security is a PowerShell script">

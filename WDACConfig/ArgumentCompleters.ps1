@@ -159,20 +159,6 @@ $ArgumentCompleterCerFilePathsPicker = {
     }
 }
 
-# Opens File picker GUI so that user can select any file - for WDAC Simulation file picker
-$ArgumentCompleterALLFilePathsPicker = {
-    # Load the System.Windows.Forms assembly
-    Add-Type -AssemblyName System.Windows.Forms
-    # Create a new OpenFileDialog object
-    $dialog = New-Object System.Windows.Forms.OpenFileDialog   
-    # Show the dialog and get the result
-    $result = $dialog.ShowDialog()
-    # If the user clicked OK, return the selected file path
-    if ($result -eq "OK") {
-        return "`"$($dialog.FileName)`""
-    }
-}
-
 # Opens File picker GUI so that user can select a .xml file
 $ArgumentCompleterXmlFilePathsPicker = {
     # Load the System.Windows.Forms assembly

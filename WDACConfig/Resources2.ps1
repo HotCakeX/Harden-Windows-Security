@@ -130,9 +130,9 @@ function Get-AuthenticodeSignatureEx {
     );
 "@
         # Load the System.Security assembly to use the SignedCms class
-        Add-Type -AssemblyName System.Security
+        Add-Type -AssemblyName System.Security -ErrorAction SilentlyContinue
         # Add the Crypt32.dll library functions as a type
-        Add-Type -MemberDefinition $signature -Namespace PKI -Name Crypt32
+        Add-Type -MemberDefinition $signature -Namespace PKI -Name Crypt32 -ErrorAction SilentlyContinue
         # Define some constants for the CryptQueryObject function parameters
         $CERT_QUERY_OBJECT_FILE = 0x1
         $CERT_QUERY_CONTENT_FLAG_PKCS7_SIGNED_EMBED = 0x400
@@ -468,7 +468,6 @@ function Compare-SignerAndCertificate {
         }
         
 
- 
 
 
 
@@ -499,8 +498,6 @@ function Compare-SignerAndCertificate {
 
 
 
-
-
   
     # Loop through each signer in the signer information array again
     foreach ($Signer in $SignerInfo) {
@@ -522,3 +519,94 @@ function Compare-SignerAndCertificate {
   
 }  
   
+
+
+# HASH COMPARISON FUNCTIONS
+
+# Define a function to load an xml file and create an output array of custom objects
+function Get-FileRuleOutput ($xmlPath) {
+
+    # Load the xml file into a variable
+    $xml = [xml](Get-Content -Path $xmlPath)
+
+    # Create an empty array to store the output
+    $OutPutHashInfoProcessing = @()
+
+    # Loop through each file rule in the xml file
+    foreach ($filerule in $xml.SiPolicy.FileRules.Allow) {
+
+        # Extract the hash value from the Hash attribute
+        $hashvalue = $filerule.Hash
+
+        # Extract the hash type from the FriendlyName attribute using regex
+        $hashtype = $filerule.FriendlyName -replace ".* (Hash (Sha1|Sha256|Page Sha1|Page Sha256))$", '$1'
+
+        # Extract the file path from the FriendlyName attribute using regex
+        # $FilePathForHash = $filerule.FriendlyName -replace " (.*) (Hash (Sha1|Sha256|Page Sha1|Page Sha256))$", '$1'
+
+        $FilePathForHash = $filerule.FriendlyName -replace " (Hash (Sha1|Sha256|Page Sha1|Page Sha256))$", ''
+       
+        # Create a custom object with the three properties
+        $object = [PSCustomObject]@{
+            HashValue       = $hashvalue
+            HashType        = $hashtype
+            FilePathForHash = $FilePathForHash
+        }
+
+        # Add the object to the output array if it is not a duplicate hash value
+        if ($OutPutHashInfoProcessing.HashValue -notcontains $hashvalue) {
+            $OutPutHashInfoProcessing += $object
+        }
+    }
+
+    # Return the output array
+    return $OutPutHashInfoProcessing
+}
+
+
+# Define a function to compare two xml files and return an array of objects with a custom property for the comparison result
+function Compare-XmlFiles ($refXmlPath, $tarXmlPath) {
+
+    # Load the reference xml file and create an output array using the Get-FileRuleOutput function
+    $refoutput = Get-FileRuleOutput -xmlPath $refXmlPath
+
+    # Load the target xml file and create an output array using the Get-FileRuleOutput function
+    $taroutput = Get-FileRuleOutput -xmlPath $tarXmlPath
+
+    # make sure they are not empty
+    if ($refoutput -and $taroutput) {
+
+        # Compare the output arrays using the Compare-Object cmdlet with the -Property parameter
+        # Specify the HashValue property as the property to compare
+        # Use the -PassThru parameter to return the original input objects
+        # Use the -IncludeEqual parameter to include the objects that are equal in both arrays
+        $comparison = Compare-Object -ReferenceObject $refoutput -DifferenceObject $taroutput -Property HashValue -PassThru -IncludeEqual
+
+        # Create an empty array to store the output objects
+        $OutPutHashComparison = @()
+
+        # Loop through each object in the comparison array
+        foreach ($object in $comparison) {
+
+            # Create a custom property called Comparison and assign it a value based on the SideIndicator property
+            switch ($object.SideIndicator) {
+                "<=" { $comparison = "Only in reference" }
+                "=>" { $comparison = "Only in target" }
+                "==" { $comparison = "Both" }
+            }
+
+            # Add the Comparison property to the object using the Add-Member cmdlet
+            $object | Add-Member -MemberType NoteProperty -Name Comparison -Value $comparison
+
+            # Add the object to the output array
+            $OutPutHashComparison += $object
+        }
+
+        # Return the output array
+        return $OutPutHashComparison
+
+    }
+}
+
+
+

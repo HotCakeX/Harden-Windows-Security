@@ -929,7 +929,7 @@ Some settings require the client to be joined to Windows Server Active Directory
 
   * Use my [WinSecureDNSMgr module](https://github.com/HotCakeX/WinSecureDNSMgr) to easily configure DNS over HTTPS in Windows
 
-###### Edge policies reviewed until version 114.0.1823.82
+###### Edge policies reviewed until version 115.0.1901.183
 
 <p align="right"><a href="#menu-back-to-top">💡 (back to categories)</a></p>
 

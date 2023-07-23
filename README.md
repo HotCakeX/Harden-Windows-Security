@@ -967,8 +967,8 @@ Some settings require the client to be joined to Windows Server [Active Director
 
 Once you have those Firewall rules added, you can [use this method](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Event-Viewer#how-to-identify-which-windows-firewall-rule-is-responsible-for-a-blocked-packets) to see if any of the blocked connections were from/to those countries.
 
-> **Note**
-Threat actors can use VPN, VPS etc. to mask their originating IP address and location. So don't take this category as the perfect solution for network protection.
+> [!IMPORTANT]\
+> Threat actors can use VPN, VPS etc. to mask their originating IP address and location. So don't take this category as the perfect solution for network protection.
 
 <p align="right"><a href="#menu-back-to-top">💡 (back to categories)</a></p>
 

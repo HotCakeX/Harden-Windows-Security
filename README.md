@@ -79,7 +79,7 @@ There are 3 ways you can use this script. Using GitHub and Azure sources means y
 
 When the script is installed using PowerShell Gallery source and you run it, if there is a new version available, you will be prompted to update it.
 
-> [!NOTE]\
+> [!IMPORTANT]\
 > About [Invoke-Expression or iex](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/invoke-expression?view=powershell-7.3)
 
 ### <a href="https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden-Windows-Security.ps1"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/SVGs/github.svg"> GitHub source</a>
@@ -139,7 +139,7 @@ Install-Script -Name Harden-Windows-Security
 
 <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/verticalshine.gif" width="27" alt="Requirements item"> [Latest available version](https://www.microsoft.com/en-us/software-download/windows11/) of Windows installed.
 
-> [!NOTE]\
+> [!IMPORTANT]\
 > Restart your device after applying the script, [don't use any commands to force Group Policy update](https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2012-R2-and-2012/jj573586(v=ws.11)?redirectedfrom=MSDN#asynchronous-and-synchronous-processing).
 
 <br>

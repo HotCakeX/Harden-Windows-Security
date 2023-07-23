@@ -48,7 +48,7 @@ Also, zero-day vulnerabilities are patched quickly, so keeping your device and O
 
 ## <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/PNGs/StonkUp.png"> What about other Enterprise security ?
 
-<img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Enterprise%20Security%20img.png">
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/534534.png">
 
 <br>
 

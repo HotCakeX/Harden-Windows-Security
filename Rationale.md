@@ -48,7 +48,7 @@ Also, zero-day vulnerabilities are patched quickly, so keeping your device and O
 
 ## <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/PNGs/StonkUp.png"> What about other Enterprise security ?
 
-<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/534534.png" width="600"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/534534.png" width="650"></p>
 
 <br>
 
@@ -114,7 +114,7 @@ Make sure to use Surface products that support [Device Firmware Configuration In
 
 <br>
 
-> **Warning**
+> [!IMPORTANT]\
 > It is important to be aware of [potential hardware backdoors](https://bios-pw.org/) that may compromise the security of your system. Some common OEMs, such as Compaq, Dell, Fujitsu, Hewlett-Packard (HP), Sony, and Samsung, with OEMs that use unmodified Insyde H20, or Phoenix firmwares utilize algorithms based on device serial numbers for password resets. These algorithms allow for master password removal from the firmware, potentially granting unauthorized access to the system. [Read more](https://docs.mootinc.com/Reference/Architecture/Hardware-Selection/#psm-mode)
 
 <br>
@@ -161,11 +161,10 @@ Make sure to use Surface products that support [Device Firmware Configuration In
 
 How to properly perform a pentest and benchmark a system hardened by this repository and make it as close to the real-world scenario as possible:
 
-* Use a physical machine if possible, it should have Windows 11 certified hardware.
+1. Use a physical machine if possible, it should have Windows 11 certified hardware, Standard Windows account.
+   * If you can't use a physical machine, use Hyper-V hypervisor. Your host (aka physical machine) must have Windows 11 certified hardware and meet all the hardware and UEFI security requirements explained in the Readme. VMs however are prone to side channel attacks, so don't use that attack vector in pentests if you want more realistic results.
 
-* If you can't use a physical machine, use Hyper-V hypervisor. It properly passes the UEFI lock from the host to the guest VM. Your host (aka physical machine) must have Windows 11 certified hardware and meet all the hardware and UEFI security requirements explained in the Readme. VMs however are prone to side channel attacks, so don't use that attack vector in pentests if you want more realistic results.
-
-* First apply the Harden Windows Security script and then use the [WDACConfig module](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig) to deploy a suitable WDAC policy.
+2. **First apply the [Harden Windows Security script](https://github.com/HotCakeX/Harden-Windows-Security) *(All categories of it)* and then use the [WDACConfig module](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig) to deploy a suitable [Signed](https://github.com/HotCakeX/Harden-Windows-Security/wiki/How-to-Create-and-Deploy-a-Signed-WDAC-Policy-Windows-Defender-Application-Control#system-behavior) WDAC policy.**
 
 <br>
 

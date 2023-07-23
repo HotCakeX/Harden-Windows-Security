@@ -161,7 +161,7 @@ Make sure to use Surface products that support [Device Firmware Configuration In
 
 How to properly perform a pentest and benchmark a system hardened by this repository and make it as close to the real-world scenario as possible:
 
-1. Use a physical machine if possible, it should have Windows 11 certified hardware, Standard Windows account.
+1. Use a physical machine if possible, it should have Windows 11 certified hardware, [Standard user account](https://learn.microsoft.com/en-us/windows-server/remote/multipoint-services/create-a-standard-user-account).
    * If you can't use a physical machine, use Hyper-V hypervisor. Your host (aka physical machine) must have Windows 11 certified hardware and meet all the hardware and UEFI security requirements explained in the Readme. VMs however are prone to side channel attacks, so don't use that attack vector in pentests if you want more realistic results.
 
 2. **First apply the [Harden Windows Security script](https://github.com/HotCakeX/Harden-Windows-Security) *(All categories of it)* and then use the [WDACConfig module](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig) to deploy a suitable [Signed](https://github.com/HotCakeX/Harden-Windows-Security/wiki/How-to-Create-and-Deploy-a-Signed-WDAC-Policy-Windows-Defender-Application-Control#system-behavior) WDAC policy.**

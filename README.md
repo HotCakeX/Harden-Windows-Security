@@ -462,7 +462,7 @@ Such software behaviors are sometimes seen in legitimate applications. However, 
 
 ## Bitlocker Settings<a href="#bitlocker-settings">![BitlockerIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Bitlocker.png)</a>
 
-<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/fsfds.png" alt="AI generated image" width="550"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/fsfds.png" alt="AI generated image" width="650"></p>
 
 <br>
 

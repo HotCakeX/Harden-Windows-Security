@@ -78,12 +78,12 @@ There are 3 ways you can use this script. Using GitHub and Azure sources means y
 
 When the script is installed using PowerShell Gallery source and you run it, if there is a new version available, you will be prompted to update it.
 
-> [!NOTE]
+> [!NOTE]\
 > About [Invoke-Expression or iex](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/invoke-expression?view=powershell-7.3)
 
 <br>
 
-> [!IMPORTANT]  
+> [!IMPORTANT]
 > test
 
 <br>

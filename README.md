@@ -840,7 +840,7 @@ These are configurations that are typically *recommended in High-Risk Environmen
 
 ## Windows Update Configurations<a href="#windows-update-configurations">![WindowsUpdate](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/WindowsUpdate.png)</a>
 
-<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/MSFTRespond.jpg" alt="A Picture of Microsoft fast response center protect Direct" width="800"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/Windows%20Update.jpg" alt="Windows Update" width="600"></p>
 
 <br>
 

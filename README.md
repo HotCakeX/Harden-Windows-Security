@@ -154,7 +154,7 @@ Install-Script -Name Harden-Windows-Security
   
 <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/Shiny.gif" width="27" alt="Features Item"> Everything is in [plain text](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden-Windows-Security.ps1), nothing hidden, no 3rd party executable or pre-compiled binary is involved.
 
-> [!WARNING]
+> [!WARNING]\
 > For your own security, do not use any other 3rd party tools, programs or scripts that claim to harden Windows or modify it in any way, **unless you can 100% verify it**. [Never trust 3rd party people on the Internet,](https://github.com/HotCakeX/hotcakex.github.io/raw/main/pdfs/Windows%20Ebook-5%20Risk%20Points%20to%20Avoid%20in%20Enterprise%20Security.pdf) always verify their resources and do that after each release. **Keep on reading the features to see why this Harden-Windows-Security script is different and <a href="#Trust">read the Trust section</a> to see how you can 100% Trust it.**
 
 <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/Shiny.gif" width="27" alt="Features Item"> Doesn't remove or disable Windows functionalities against Microsoft's recommendations.
@@ -182,7 +182,7 @@ Install-Script -Name Harden-Windows-Security
 
 <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/Shiny.gif" width="27" alt="Features Item"> The script primarily uses Group policies, **the Microsoft recommended way of configuring Windows**. It also uses PowerShell cmdlets where Group Policies aren't available, and finally uses [a few registry keys](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Payload/Registry.csv) to configure security measures that can neither be configured using Group Policies nor PowerShell cmdlets. This is why the script doesn't break anything or cause unwanted behavior.
 
-> [!WARNING]  
+> [!WARNING]\
 > **Any other 3rd party tool/program/script that claims to modify Windows or harden it, if they don't strictly adhere to the official rules above, they can damage your system, cause unknown problems and bugs.** [How are Group Policies for this script created and maintained?](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Group-Policy#how-are-group-policies-for-this-script-created-and-maintained)
 
 <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/Shiny.gif" width="27" alt="Features Item"> This Readme page lists all of the security measures applied by this script.

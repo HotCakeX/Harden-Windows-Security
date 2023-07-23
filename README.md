@@ -68,7 +68,8 @@ Harden Windows Safely, Securely, only with Official Microsoft methods
 
 <br>
 
-> **Note**  Windows by default is secure and safe, this repository does not imply nor claim otherwise. just like anything, you have to use it wisely and don't compromise yourself with reckless behavior and bad user configuration; Nothing is foolproof. This repository only uses the tools and features that have already been implemented by Microsoft in Windows OS to fine-tune it towards the highest security and locked-down state, using well-documented, supported, recommended and official methods. continue reading for comprehensive info.
+> [!NOTE]\
+> Windows by default is secure and safe, this repository does not imply nor claim otherwise. just like anything, you have to use it wisely and don't compromise yourself with reckless behavior and bad user configuration; Nothing is foolproof. This repository only uses the tools and features that have already been implemented by Microsoft in Windows OS to fine-tune it towards the highest security and locked-down state, using well-documented, supported, recommended and official methods. continue reading for comprehensive info.
 
 <br>
 
@@ -83,7 +84,7 @@ When the script is installed using PowerShell Gallery source and you run it, if 
 
 <br>
 
-> [!IMPORTANT]  
+> [!IMPORTANT]\
 > test
 
 <br>

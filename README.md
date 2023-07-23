@@ -84,11 +84,6 @@ When the script is installed using PowerShell Gallery source and you run it, if 
 
 <br>
 
-> [!IMPORTANT]\
-> test
-
-<br>
-
 ### <a href="https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden-Windows-Security.ps1"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/SVGs/github.svg"> GitHub source</a>
 
 ```powershell
@@ -146,7 +141,7 @@ Install-Script -Name Harden-Windows-Security
 
 <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/verticalshine.gif" width="27" alt="Requirements item"> [Latest available version](https://www.microsoft.com/en-us/software-download/windows11/) of Windows installed.
 
-> **Note**
+> [!NOTE]\
 > Restart your device after applying the script, [don't use any commands to force Group Policy update](https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2012-R2-and-2012/jj573586(v=ws.11)?redirectedfrom=MSDN#asynchronous-and-synchronous-processing).
 
 <br>
@@ -529,8 +524,8 @@ Changes made by this category only affect things that use [Schannel SSP](https:/
 
 If you want to read more: [Demystifying Schannel](https://techcommunity.microsoft.com/t5/core-infrastructure-and-security/demystifying-schannel/ba-p/259233)
 
-> **Note**
-The only [known](https://github.com/HotCakeX/Harden-Windows-Security/issues/38) program incompatible with this category is Battle.net game client.
+> [!NOTE]\
+> The only [known](https://github.com/HotCakeX/Harden-Windows-Security/issues/38) program incompatible with this category is Battle.net game client.
 
 <br>
 

@@ -899,7 +899,7 @@ TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA  Reason: CBC, SHA1
 
 <br>
 
-Some settings require the client to be joined to Windows Server Active Directory/Azure Active Directory, in order to be applied. This script does not use any of them. When those settings are applied using registry, they are ignored by the browser and `edge://policy/` shows an error for them. This is a security measure.
+Some settings require the client to be joined to Windows Server [Active Directory](https://learn.microsoft.com/en-us/deployedge/configure-microsoft-edge#add-the-administrative-template-to-an-individual-computer)/Azure Active Directory, in order to be applied. This script does not use any of them. When those settings are applied using registry, they are ignored by the browser and `edge://policy/` shows an error for them. This is a security measure.
 
 <br>
 
@@ -1019,6 +1019,8 @@ You don't need Admin privileges to run this category, because no system-wide cha
 [<img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/WebP/911587042608156732.webp" width="25"> Windows Security Blog](https://spynetgirl.github.io/)
 
 [<img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/WebP/911587042608156732.webp" width="25"> WinSecureDNSMgr](https://github.com/HotCakeX/WinSecureDNSMgr)
+
+[<img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/WebP/911587042608156732.webp" width="25"> Privacy, Anonymity and Compartmentalization](https://github.com/HotCakeX/Privacy-Anonymity-Compartmentalization)
 
 <br>
 

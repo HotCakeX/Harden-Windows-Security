@@ -462,7 +462,7 @@ Such software behaviors are sometimes seen in legitimate applications. However, 
 
 ## Bitlocker Settings<a href="#bitlocker-settings">![BitlockerIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Bitlocker.png)</a>
 
-<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/fsfds.png" alt="AI generated image" width="650"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/67475474.png" alt="AI generated image" width="650"></p>
 
 <br>
 
@@ -514,7 +514,7 @@ Refer to this [official documentation about the countermeasures of Bitlocker](ht
 
 ## TLS Security<a href="#tls-security">![TLSIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/TLS.png)</a>
 
-<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/54353.png" alt="AI Generated image" width="650"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/453243.png" alt="AI Generated image" width="650"></p>
 
 <br>
 

@@ -1094,6 +1094,13 @@ try {
                             Invoke-WebRequest -Uri "https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/EventViewerCustomViews.zip" -OutFile "$env:TEMP\EventViewerCustomViews.zip" -ErrorAction Stop
                         }
 
+                        # Due to change in event viewer custom log files, making sure no old file names exist
+                        if (Test-Path -Path "C:\ProgramData\Microsoft\Event Viewer\Views\Hardening Script") {
+                            Remove-Item -Path "C:\ProgramData\Microsoft\Event Viewer\Views\Hardening Script" -Recurse -Force
+                        }
+                        # Creating new sub-folder to store the custom views
+                        New-Item -Path "C:\ProgramData\Microsoft\Event Viewer\Views\Hardening Script" -ItemType Directory -Force | Out-Null
+
                         Expand-Archive -Path "$env:TEMP\EventViewerCustomViews.zip" -DestinationPath "C:\ProgramData\Microsoft\Event Viewer\Views\Hardening Script" -Force
                         Remove-item -Path "$env:TEMP\EventViewerCustomViews.zip" -Force
                         Write-Host "`nSuccessfully added Custom Views for Event Viewer" -ForegroundColor Green               

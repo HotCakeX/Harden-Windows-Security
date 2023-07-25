@@ -901,8 +901,10 @@ try {
                 ) | ForEach-Object {
 ([Microsoft.Win32.RegistryKey]::OpenRemoteBaseKey([Microsoft.Win32.RegistryHive]::LocalMachine, $env:COMPUTERNAME)).CreateSubKey($_)
                 } | Out-Null
+
                 # TLS Registry section
                 Set-Location $WorkingDir
+
                 $Items = Import-Csv '.\Registry.csv' -Delimiter ","
                 foreach ($Item in $Items) {
                     if ($Item.category -eq 'TLS') {
@@ -942,39 +944,8 @@ try {
 
                 # Change current working directory to the LGPO's folder
                 Set-Location "$WorkingDir\LGPO_30"
-                .\LGPO.exe /s "..\Security-Baselines-X\User Account Control UAC Policies\GptTmpl.inf" 
-            
-                # built-in Administrator account enablement
-                switch (Select-Option -Options "Yes", "No", "Exit" -Message "`nEnable the built-in Administrator account and set password for it?") {
-                    "Yes" {
-                        # show password policy details
-                        Write-Host "`nHere are the current password & logon restrictions`n"
-                        net accounts
-                        do {
-                            $Password1 = Get-Credential -UserName Administrator -Message "Enter a password for the built-in Administrator account"
-                            #$Password1 = $host.ui.ReadLineAsSecureString()                            
-                            $Password2 = Get-Credential -UserName Administrator -Message "Confirm your password for the built-in Administrator account"
-                            #$Password2 = $host.ui.ReadLineAsSecureString()
-
-                            $TheyMatch = Compare-SecureString $Password1.Password $Password2.Password
-            
-                            if ($TheyMatch) {
-                                Set-LocalUser -Name "Administrator" -Password $Password1.Password
-                            }      
-                            else { Write-Host "the passwords you entered didn't match, try again" -ForegroundColor red }
-                        }      
-                        until ($TheyMatch -and $?)
-
-                        if (-NOT ((Get-LocalUser | Where-Object { $_.name -eq "Administrator" }).enabled)) {
-                            Enable-LocalUser -Name "Administrator"
-                            Write-Host "Enabling Built-in Administrator account.`n" -ForegroundColor Green
-                        }
-                        else {
-                            Write-Host "Built-in Administrator account is already enabled.`n" -ForegroundColor Green
-                        }
-                    } "No" { break }
-                    "Exit" { &$CleanUp }
-                }    
+                .\LGPO.exe /s "..\Security-Baselines-X\User Account Control UAC Policies\GptTmpl.inf"
+   
             } "No" { break }
             "Exit" { &$CleanUp }
         }    
@@ -1111,10 +1082,10 @@ try {
             
                 # Event Viewer custom views are saved in "C:\ProgramData\Microsoft\Event Viewer\Views". files in there can be backed up and restored on new Windows installations.
                 New-Item -ItemType Directory -Path "C:\ProgramData\Microsoft\Event Viewer\Views\Hardening Script\" -force | Out-Null                
+                
                 Invoke-WithoutProgress { 
                     try {
                         Write-Host "Downloading the Custom views for Event Viewer, Please wait..." -ForegroundColor Yellow
-                        
                         try {
                             Invoke-WebRequest -Uri "https://github.com/HotCakeX/Harden-Windows-Security/raw/main/Payload/EventViewerCustomViews.zip" -OutFile "$env:TEMP\EventViewerCustomViews.zip" -ErrorAction Stop
                         }

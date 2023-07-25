@@ -624,8 +624,6 @@ NistP384
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> **#TopSecurity** <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/200iq.gif" width="28" alt="TopSecurity"> Hides the entry points for [Fast User Switching](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-windowslogon).
 
-- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/roratinggem.gif" width="28" alt="Rotating pink gem denoting registry or cmdlet"> **(Requires additional confirmation to run):** [Asks for a strong password for the built-in Administrator account and then enables it.](https://github.com/HotCakeX/Harden-Windows-Security/discussions/30#discussioncomment-5627737)
-
 <p align="right"><a href="#menu-back-to-top">💡 (back to categories)</a></p>
 
 <br>

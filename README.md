@@ -818,9 +818,29 @@ These are configurations that are typically *recommended in High-Risk Environmen
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/roratinggem.gif" width="28" alt="Rotating pink gem denoting registry or cmdlet"> Changes Windows time sync interval from the default every 7 days to every 4 days (= every 345600 seconds)
 
-- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/roratinggem.gif" width="28" alt="Rotating pink gem denoting registry or cmdlet"> Creates custom views for [Windows Event Viewer](https://learn.microsoft.com/en-us/shows/inside/event-viewer) to help keep tabs on important security events: `Attack Surface Reduction Rules`, `Controlled Folder Access`, `Exploit Protection`, `Network Protection`, `MSI and Scripts for WDAC Auditing`, `Sudden Shut down events` (due to power outage) and `Code Integrity Operational`.
-  - [Understand and use attack surface reduction capabilities](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/overview-attack-surface-reduction?view=o365-worldwide)
-  - [Understanding Application Control events](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/event-id-explanations)
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/roratinggem.gif" width="28" alt="Rotating pink gem denoting registry or cmdlet"> Creates custom views for [Windows Event Viewer](https://learn.microsoft.com/en-us/shows/inside/event-viewer) to help keep tabs on important security events:
+
+  - [Attack Surface Reduction Rules](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/overview-attack-surface-reduction?view=o365-worldwide#xml-for-attack-surface-reduction-rule-events)
+
+  - [Controlled Folder Access](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/overview-attack-surface-reduction?view=o365-worldwide#xml-for-controlled-folder-access-events)
+
+  - [Exploit Protection](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/overview-attack-surface-reduction?view=o365-worldwide#xml-for-exploit-protection-events)
+  
+  - [Network Protection](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/overview-attack-surface-reduction?view=o365-worldwide#xml-for-network-protection-events)
+  
+  - [MSI and Scripts for WDAC Auditing (WDAC)](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/event-id-explanations)
+  
+  - Sudden Shut down events (Due to power outage)
+  
+  - [Code Integrity Operational (WDAC)](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/event-id-explanations)
+  
+  - [Restarts (By user or by the System/Apps)](https://learn.microsoft.com/en-us/troubleshoot/windows-server/performance/incorrect-shutdown-reason-code-sel)
+  
+  - Workstation [Locks](https://learn.microsoft.com/en-us/windows/security/threat-protection/auditing/event-4800) and [Unlocks](https://learn.microsoft.com/en-us/windows/security/threat-protection/auditing/event-4801)
+    - [Checks to make sure `Other Logon/Logoff Events` Audit is active](https://learn.microsoft.com/en-us/windows/security/threat-protection/auditing/audit-other-logonlogoff-events)
+  
+  - [Failed Login attempts via PIN at lock screen](https://learn.microsoft.com/en-us/windows/security/threat-protection/auditing/event-4776)
+    - Error/Status code `0xC0000064` indicates wrong PIN entered at lock screen
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Enables ["Send optional diagnostic data"](https://learn.microsoft.com/en-us/windows/privacy/windows-diagnostic-data) because it is [required for Smart App Control](https://support.microsoft.com/en-us/topic/what-is-smart-app-control-285ea03d-fa88-4d56-882e-6698afdb7003) to operate and be enabled, and for communication between [Intelligent Security Graph (ISG)](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/use-windows-defender-application-control-with-intelligent-security-graph) and you.
 

@@ -1079,7 +1079,14 @@ try {
                 # Allow all Windows users to use Hyper-V and Windows Sandbox by adding all Windows users to the "Hyper-V Administrators" security group
                 Get-LocalUser | Where-Object { $_.enabled -EQ "True" } | Select-Object "Name" |
                 ForEach-Object { Add-LocalGroupMember -Group "Hyper-V Administrators" -Member $_.Name -ErrorAction SilentlyContinue }
-            
+                
+                # Makes sure auditing for the "Other Logon/Logoff Events" subcategory under the Logon/Logoff category is enabled, doesn't touch affect any other sub-category
+                # For tracking Lock screen unlocks and locks
+                auditpol /set /subcategory:"Other Logon/Logoff Events" /success:enable /failure:enable
+
+                # Query all Audits status
+                # auditpol /get /category:*
+
                 # Event Viewer custom views are saved in "C:\ProgramData\Microsoft\Event Viewer\Views". files in there can be backed up and restored on new Windows installations.
                 New-Item -ItemType Directory -Path "C:\ProgramData\Microsoft\Event Viewer\Views\Hardening Script\" -force | Out-Null                
                 

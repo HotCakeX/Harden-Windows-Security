@@ -828,9 +828,9 @@ These are configurations that are typically *recommended in High-Risk Environmen
   
   - [Network Protection](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/overview-attack-surface-reduction?view=o365-worldwide#xml-for-network-protection-events)
   
-  - [MSI and Scripts for WDAC Auditing (WDAC)](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/event-id-explanations)
+  - [MSI and Scripts for WDAC Auditing](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/event-id-explanations)
   
-  - Sudden Shut down events (Due to power outage)
+  - Sudden Shut down events (due to power outage)
   
   - [Code Integrity Operational (WDAC)](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/event-id-explanations)
   

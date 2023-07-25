@@ -1,6 +1,6 @@
 <#PSScriptInfo
 
-.VERSION 2023.6.30
+.VERSION 2023.7.25
 
 .GUID d435a293-c9ee-4217-8dc1-4ad2318a5770
 
@@ -216,7 +216,7 @@ if (Test-IsAdmin) {
 # or break is passed, clean up will still happen for secure exit
 try {
     # Check the current hard-coded version against the latest version online
-    [datetime]$CurrentVersion = '2023.6.30'
+    [datetime]$CurrentVersion = '2023.7.25'
     try {
         [datetime]$LatestVersion = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Version.txt"
     }

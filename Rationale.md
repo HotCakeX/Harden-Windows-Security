@@ -119,7 +119,7 @@ Make sure to use Surface products that support [Device Firmware Configuration In
 
 <br>
 
-> [!NOTE]\
+> [!NOTE]\ <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/9935-catkeyboard.gif">
 > If using 3rd party devices, make sure they have [Pluton](https://techcommunity.microsoft.com/t5/microsoft-defender-for-endpoint/defending-against-ransomware-with-microsoft-defender-for/ba-p/3243941) security chip, it addresses security needs like booting an operating system securely **even against firmware threats** and storing sensitive data safely **even against physical attacks**.
 
 <br>

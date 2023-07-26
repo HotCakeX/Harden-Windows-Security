@@ -747,7 +747,7 @@ NistP384
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/roratinggem.gif" width="28" alt="Rotating pink gem denoting registry or cmdlet"> [Uninstalls](https://learn.microsoft.com/en-us/powershell/module/dism/remove-windowscapability) these optional features (Windows Settings -> Apps -> Optional Features):
 
   - Notepad (system): legacy Notepad program. Windows 11 has multi-tabbed modern Notepad app.
-  - VBSCRIPT; a legacy scripting engine component, Microsoft does not recommend using this component unless and until it is really required. It's become uninstallable as an optional features since Windows 11 insider Dev build 25309.
+  - VBSCRIPT; a legacy scripting engine component, Microsoft does not recommend using this component unless and until it is really required. It's become uninstallable as an optional features since Windows 11 insider Dev [build 25309](https://techcommunity.microsoft.com/t5/windows-insider-program/windows-11-insider-dev-build-25309-allows-for-uninstallation-of/m-p/3759739).
   - [Internet Explorer mode for Edge browser](https://learn.microsoft.com/en-us/deployedge/edge-ie-mode); It's only used by a few possible organizations that have very old internal websites.
   - [WMIC](https://learn.microsoft.com/en-us/windows/win32/wmisdk/wmic); old feature that's deprecated, not secure and is in [Microsoft recommended block rules.](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/microsoft-recommended-block-rules)
 
@@ -799,7 +799,7 @@ These are configurations that are typically *recommended in High-Risk Environmen
 
   - By being launched first by the kernel, ELAM is ensured to be launched before any third-party software and is therefore able to detect malware in the boot process and prevent it from initializing. ELAM drivers must be specially signed by Microsoft to ensure they are started by the Windows kernel early in the boot process.
 
-- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Disables location service system wide. Websites and apps won't be able to use your precise location, however they will still be able to detect your location using your IP address.
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Disables location services (Location, Windows Location Provider, Location Scripting) system wide. Websites and apps won't be able to use your precise location, however they will still be able to detect your location using your IP address.
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Enables [`svchost.exe` mitigations.](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-servicecontrolmanager) built-in system services hosted in `svchost.exe` processes will have stricter security policies enabled on them. These stricter security policies include a policy requiring all binaries loaded in these processes to be signed by Microsoft, and a policy disallowing dynamically generated code.
   - Requires Business Windows licenses. e.g., [Windows 11 pro for Workstations](https://www.microsoft.com/en-us/windows/business/windows-11-pro-workstations), [Enterprise](https://www.microsoft.com/en-us/microsoft-365/windows/windows-11-enterprise) or [Education](https://www.microsoft.com/en-us/education/products/windows).
@@ -837,7 +837,7 @@ These are configurations that are typically *recommended in High-Risk Environmen
   - [Restarts (By user or by the System/Apps)](https://learn.microsoft.com/en-us/troubleshoot/windows-server/performance/incorrect-shutdown-reason-code-sel)
   
   - Workstation [Locks](https://learn.microsoft.com/en-us/windows/security/threat-protection/auditing/event-4800) and [Unlocks](https://learn.microsoft.com/en-us/windows/security/threat-protection/auditing/event-4801)
-    - [Checks to make sure `Other Logon/Logoff Events` Audit is active](https://learn.microsoft.com/en-us/windows/security/threat-protection/auditing/audit-other-logonlogoff-events)
+    - [Checks to make sure ***Other Logon/Logoff Events*** Audit is active](https://learn.microsoft.com/en-us/windows/security/threat-protection/auditing/audit-other-logonlogoff-events)
   
   - [Failed Login attempts via PIN at lock screen](https://learn.microsoft.com/en-us/windows/security/threat-protection/auditing/event-4776)
     - Error/Status code `0xC0000064` indicates wrong PIN entered at lock screen
@@ -1070,7 +1070,7 @@ This repository uses the simplest possible, yet effective, methods that make it 
 
   - [ProcessMitigations.csv](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Payload/ProcessMitigations.csv) includes process mitigations data used by this script, viewable in plain text and easily verifiable.
   
-  - [EventViewerCustomViews.zip](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Payload/EventViewerCustomViews.zip) includes XML files, in plain text, easily readable and verifiable. the script downloads and copies them to `C:\ProgramData\Microsoft\Event Viewer\Views` so that when you open [Windows Event Viewer](https://learn.microsoft.com/en-us/host-integration-server/core/windows-event-viewer1), you will find custom views as explained in the <a href="#miscellaneous-configurations">Miscellaneous Configurations</a> category.
+  - [EventViewerCustomViews.zip](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Payload/EventViewerCustomViews.zip) includes XML files, in plain text, easily readable and verifiable. The script downloads and copies them to `C:\ProgramData\Microsoft\Event Viewer\Views` so that when you open [Windows Event Viewer](https://learn.microsoft.com/en-us/host-integration-server/core/windows-event-viewer1), you will find custom views as explained in the <a href="#miscellaneous-configurations">Miscellaneous Configurations</a> category.
   
   - [Security-Baselines-X.zip](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Payload/Security-Baselines-X.zip) includes Group Policies that are used by this script to apply the security measures explained in this page.
 

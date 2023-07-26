@@ -120,7 +120,7 @@ Make sure to use Surface products that support [Device Firmware Configuration In
 <br>
 
 > [!NOTE]\
-> <img width="30" src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/diamond-7.gif"> When buying 3rd party devices, make sure they have the [Pluton](https://techcommunity.microsoft.com/t5/microsoft-defender-for-endpoint/defending-against-ransomware-with-microsoft-defender-for/ba-p/3243941) security chip, it addresses security needs like booting an operating system securely **even against firmware threats** and storing sensitive data safely **even against physical attacks**.
+> <img width="30" src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/diamond-7.gif"> When buying 3rd party devices, make sure they have the [Pluton](https://www.microsoft.com/en-us/security/blog/2020/11/17/meet-the-microsoft-pluton-processor-the-security-chip-designed-for-the-future-of-windows-pcs/) security chip, it [addresses security needs](https://techcommunity.microsoft.com/t5/microsoft-defender-for-endpoint/defending-against-ransomware-with-microsoft-defender-for/ba-p/3243941) like booting an operating system securely **even against firmware threats** and storing sensitive data safely **even against physical attacks**.
 
 <br>
 

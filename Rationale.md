@@ -119,6 +119,11 @@ Make sure to use Surface products that support [Device Firmware Configuration In
 
 <br>
 
+> [!NOTE]\
+> If using 3rd party devices, make sure they have [Pluton](https://techcommunity.microsoft.com/t5/microsoft-defender-for-endpoint/defending-against-ransomware-with-microsoft-defender-for/ba-p/3243941) security chip, it address security needs like booting an operating system securely **even against firmware threats** and storing sensitive data safely **even against physical attacks**.
+
+<br>
+
 ### <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/9935-catkeyboard.gif"> Protection against BYOVD (Bring Your Own Vulnerable Driver) attacks
 
 * Secured core PCs provide the hardware that is capable of protecting against BYOVD attacks. It is your responsibility to turn the features on, those include WDAC (Windows Defender Application Control), ASR (Attack Surface Reduction) rules, Dynamic/static root of trust, [firmware](https://learn.microsoft.com/en-us/windows-hardware/drivers/bringup/firmware-attack-surface-reduction) that is extensible for revoking drivers.

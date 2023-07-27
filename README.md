@@ -485,6 +485,13 @@ Such software behaviors are sometimes seen in legitimate applications. However, 
 
     - Do not mix 3rd party encryption software and tools with Bitlocker. Bitlocker creates a secure end-to-end encrypted ecosystem for your device and its peripherals, this secure ecosystem is backed by things such as software, Virtualization Technology, TPM 2.0 and UEFI firmware, Bitlocker protects your data and entire device against **real-life attacks and threats**. You can encrypt your external SSDs and flash drives with Bitlocker too.
 
+<br>
+
+> [!IMPORTANT]\
+> [AMD Zen 2 or 3 CPUs have a vulnerability in them]((https://github.com/HotCakeX/Harden-Windows-Security/issues/63)), if you use one of them, make sure your Bitlocker Startup PIN is at least 20 characters long.
+
+<br>
+
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Enables or disables [DMA protection from Bitlocker Countermeasures](https://learn.microsoft.com/en-us/windows/security/information-protection/bitlocker/bitlocker-countermeasures#protecting-thunderbolt-and-other-dma-ports) based [on the status](https://github.com/MicrosoftDocs/windows-itpro-docs/issues/6878#issuecomment-742429128) of [Kernel DMA protection](https://learn.microsoft.com/en-us/windows/security/information-protection/kernel-dma-protection-for-thunderbolt). Kernel DMA Protection is [not compatible](https://learn.microsoft.com/en-us/windows/security/information-protection/kernel-dma-protection-for-thunderbolt#system-compatibility) with other BitLocker DMA attacks countermeasures. It is recommended to disable the BitLocker DMA attacks countermeasures if the system supports Kernel DMA Protection (this script does that exactly). Kernel DMA Protection provides higher security bar for the system over the BitLocker DMA attack countermeasures, while maintaining usability of external peripherals. you can check the status of Kernel DMA protection [using this official guide](https://learn.microsoft.com/en-us/windows/security/information-protection/kernel-dma-protection-for-thunderbolt#how-to-check-if-kernel-dma-protection-is-enabled).
   - [Kernel DMA Protection (Memory Access Protection) for OEMs](https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/oem-kernel-dma-protection) page shows the requirements for Kernel DMA Protection. for Intel CPUs, support for requirements such as VT-X and VT-D can be found in each CPU's respective product page. e.g. [Intel i7 13700K](https://ark.intel.com/content/www/us/en/ark/products/230500/intel-core-i713700k-processor-30m-cache-up-to-5-40-ghz.html)
 
@@ -1008,7 +1015,7 @@ You don't need Admin privileges to run this category, because no system-wide cha
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/roratinggem.gif" width="28" alt="Rotating pink gem denoting registry or cmdlet"> Shows hidden files, folders and drives (toggles the control panel folder options item)
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/roratinggem.gif" width="28" alt="Rotating pink gem denoting registry or cmdlet"> Disables websites accessing local language list - good for privacy
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/roratinggem.gif" width="28" alt="Rotating pink gem denoting registry or cmdlet"> Turns off safe search in Windows search, will enable +18 content to appear in searches; essentially toggles the button in: Windows settings > privacy and security > search permissions > safe search
-- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/roratinggem.gif" width="28" alt="Rotating pink gem denoting registry or cmdlet"> prevents showing notifications in Lock screen - this is the same as toggling the button in Windows settings > system > notifications > show notifications in the lock screen
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/roratinggem.gif" width="28" alt="Rotating pink gem denoting registry or cmdlet"> Prevents showing notifications in Lock screen - This is the same as toggling the button in Windows settings > system > notifications > show notifications in the lock screen
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/roratinggem.gif" width="28" alt="Rotating pink gem denoting registry or cmdlet"> Enables Clipboard History and sync with Microsoft Account
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/roratinggem.gif" width="28" alt="Rotating pink gem denoting registry or cmdlet"> Turns on text suggestions when typing on the physical keyboard
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/roratinggem.gif" width="28" alt="Rotating pink gem denoting registry or cmdlet"> Turns on "Multilingual text suggestions" for the current user, toggles the option in Windows settings
@@ -1258,13 +1265,6 @@ Using [MIT License](https://github.com/HotCakeX/Harden-Windows-Security/blob/mai
 
 <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="Harden-Windows-Security is a PowerShell script">
 
-<p align="center"> <a href="#readme-top">
+<p align="right"><a href="#readme-top">💡 (back to top)</a></p>
 
-<img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/AU.png" alt="Flag of Australia">
-<img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/USA.png" alt="Flag of United States">
-<img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/EU.png" alt="Flag of EU">
-<img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/NATO.png" alt="Flag of NATO">
-<img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/UK.png" alt="Flag of United Kingdom">
-<img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Israel.png" alt="Flag of Israel">
-
-</a> </p>
+<br>

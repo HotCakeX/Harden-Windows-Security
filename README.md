@@ -488,7 +488,7 @@ Such software behaviors are sometimes seen in legitimate applications. However, 
 <br>
 
 > [!IMPORTANT]\
-> [AMD Zen 2 or 3 CPUs have a vulnerability in them](https://github.com/HotCakeX/Harden-Windows-Security/issues/63), if you use one of them, make sure your Bitlocker Startup PIN is at least 20 characters long.
+> [AMD Zen 2 and 3 CPUs have a vulnerability in them](https://github.com/HotCakeX/Harden-Windows-Security/issues/63), if you use one of them, make sure your Bitlocker Startup PIN is at least 16 characters long [*(max is 20)*](https://learn.microsoft.com/en-us/windows/security/operating-system-security/data-protection/bitlocker/bitlocker-group-policy-settings#configure-minimum-pin-length-for-startup).
 
 <br>
 

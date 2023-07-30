@@ -75,12 +75,9 @@ Harden Windows Safely, Securely, only with Official Microsoft methods
 
 ## How To Use<a href="#how-to-use">![HowToUseIcon](https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/HowToUse.png)</a>
 
-> [!IMPORTANT]\
-> About [Invoke-Expression or iex](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/invoke-expression?view=powershell-7.3)
+### <a href="https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden-Windows-Security.ps1"><img width="35" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/SVGs/github.svg"> Hardening Script Only</a>
 
-### <a href="https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden-Windows-Security.ps1"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/SVGs/github.svg"> Hardening Script Only</a>
-
-Run the latest version of the Harden Windows Security Script directly from this GitHub repository
+#### Run the latest version of the Harden Windows Security Script [***directly***](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/invoke-expression?view=powershell-7.3) from this GitHub repository
 
 ```powershell
 irm 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security.ps1' | iex
@@ -88,17 +85,18 @@ irm 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Har
 
 <br>
 
-### <a href="https://www.powershellgallery.com/packages/Harden-Windows-Security-Module"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/SVGs/powershell.svg"> Compliance Checking (Security Score) + Hardening</a>
+### <a href="https://www.powershellgallery.com/packages/Harden-Windows-Security-Module"><img width="35" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/SVGs/powershell-pink.svg"> Compliance Checking (Security Score) + Hardening Script</a>
 
-Install the [Harden Windows Security Module](https://www.powershellgallery.com/packages/Harden-Windows-Security-Module) from PowerShell gallery, which offers both hardening and system compliance checking (security score). See how secure your system is!
+#### Install the [Harden Windows Security Module](https://www.powershellgallery.com/packages/Harden-Windows-Security-Module) from PowerShell gallery, it includes:
 
-[More info in the Wiki page](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden%E2%80%90Windows%E2%80%90Security%E2%80%90Module)
+1. Harden Windows Security Script
+2. [System Compliance Checking (security score) - **Click/Tap for More info**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden%E2%80%90Windows%E2%80%90Security%E2%80%90Module)
 
 ```powershell
 Install-Module -Name Harden-Windows-Security-Module -Force
 # Compliance Checking + Security Score
 Confirm-SystemCompliance
-# Hardening
+# Hardening Script
 Protect-WindowsSecurity
 ```
 
@@ -106,12 +104,14 @@ https://github.com/HotCakeX/Harden-Windows-Security/assets/118815227/0fdbd34b-6b
 
 <br>
 
-### <a href="https://www.powershellgallery.com/packages/Harden-Windows-Security"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/SVGs/powershell.svg"> Hardening Script Only</a>
+### <a href="https://www.powershellgallery.com/packages/Harden-Windows-Security"><img width="35" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/SVGs/powershell.svg"> Hardening Script Only</a>
 
-Install only the [Harden Windows Security Script](https://www.powershellgallery.com/packages/Harden-Windows-Security) from PowerShell gallery. When you run it and if there is a new version, you will be notified.
+#### Install only the [Harden Windows Security Script](https://www.powershellgallery.com/packages/Harden-Windows-Security) from PowerShell gallery
+
+* When you run it and if there is a new version, you will be notified.
 
 ```powershell
-Install-Script -Name Harden-Windows-Security
+Install-Script -Name Harden-Windows-Security -Force
 ```
 
 <br>

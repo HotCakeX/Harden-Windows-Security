@@ -41,6 +41,8 @@ https://1drv.ms/x/s!AtCaUNAJbbvIhuVQhdMu_Hts7YZ_lA?e=df6H6P
 
   ⭕ You need to read the GitHub's readme page before running this script: https://github.com/HotCakeX/Harden-Windows-Security
 
+  ⭕ Check out Compliance checking + Security score module: https://www.powershellgallery.com/packages/Harden-Windows-Security-Module/
+  
 💠 Features of this Hardening script:
 
   ✅ Always stays up-to-date with the newest security measures.

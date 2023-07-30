@@ -1099,6 +1099,8 @@ This repository uses the simplest possible, yet effective, methods that make it 
   
   - [Security-Baselines-X.zip](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Payload/Security-Baselines-X.zip) includes Group Policies that are used by this script to apply the security measures explained in this page.
 
+  - [Group-Policies.json](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Payload/Group-Policies.json) Contains the Group Policies logics that the [Harden-Windows-Security-Module](https://github.com/HotCakeX/Harden-Windows-Security/tree/main/Harden-Windows-Security%20Module) uses for Compliance Checking, plain-text, easily verifiable.
+
 - [How is Group Policy used in this PowerShell script?](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Group-Policy#how-is-group-policy-used-in-this-powershell-script)
 - [How are Group Policies for this script created and maintained?](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Group-Policy#how-are-group-policies-for-this-script-created-and-maintained)
 - [How to verify security-baselines-x.zip file and 100% trust it?](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Group-Policy#how-to-verify-security-baselines-xzip-file-and-100-trust-it)

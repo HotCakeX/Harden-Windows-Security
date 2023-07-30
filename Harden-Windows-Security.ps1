@@ -1,6 +1,6 @@
 <#PSScriptInfo
 
-.VERSION 2023.7.25
+.VERSION 2023.7.29
 
 .GUID d435a293-c9ee-4217-8dc1-4ad2318a5770
 
@@ -216,7 +216,7 @@ if (Test-IsAdmin) {
 # or break is passed, clean up will still happen for secure exit
 try {
     # Check the current hard-coded version against the latest version online
-    [datetime]$CurrentVersion = '2023.7.25'
+    [datetime]$CurrentVersion = '2023.7.29'
     try {
         [datetime]$LatestVersion = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Version.txt"
     }
@@ -400,6 +400,10 @@ try {
                 Set-Location "$WorkingDir\LGPO_30"
                 .\LGPO.exe /v /m "..\Security-Baselines-X\Overrides for Microsoft Security Baseline\registry.pol"
                 .\LGPO.exe /v /s "..\Security-Baselines-X\Overrides for Microsoft Security Baseline\GptTmpl.inf"
+            
+                # Re-enables the XblGameSave Standby Task that gets disabled by Microsoft Security Baselines
+                SCHTASKS.EXE /Change /TN \Microsoft\XblGameSave\XblGameSaveTask /Enable
+
             } "No" { break }
             "Exit" { &$CleanUp }
         }    
@@ -443,6 +447,9 @@ try {
 
                 # Configure whether real-time protection and Security Intelligence Updates are enabled during OOBE
                 Set-MpPreference -oobeEnableRtpAndSigUpdate $True
+
+                # Enable Intel Threat Detection Technology
+                Set-MpPreference -IntelTDTEnabled $True
 
                 # Add OneDrive folders of all user accounts to the Controlled Folder Access for Ransomware Protection
                 Get-ChildItem "C:\Users\*\OneDrive" | ForEach-Object { Add-MpPreference -ControlledFolderAccessProtectedFolders $_ }
@@ -1128,7 +1135,7 @@ try {
             "Yes" {
                 Write-Progress -Activity 'Windows Update Configurations' -Status 'Running Windows Update Configurations section' -PercentComplete 75
 
-                # enable restart notification for Windows update
+                # Enable restart notification for Windows update
                 ModifyRegistry -path "HKLM:\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings" -key "RestartNotificationsAllowed2" -value "1" -type 'DWORD' -Action 'AddOrModify'
                 # Change current working directory to the LGPO's folder
                 Set-Location "$WorkingDir\LGPO_30"

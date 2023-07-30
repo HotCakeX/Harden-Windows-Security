@@ -1105,7 +1105,7 @@ This repository uses the simplest possible, yet effective, methods that make it 
 
 <br>
 
-<!-- EventViewer-CustomViews-VT:START --><a href='https://www.virustotal.com/gui/file/863d6adf3c74ec426762444652e04c017261aaad13d3124171574ec9c24281ac'>Virus Total scan results of EventViewerCustomViews.zip</a><!-- EventViewer-CustomViews-VT:END -->
+<!-- EventViewer-CustomViews-VT:START --><a href='https://www.virustotal.com/gui/file/7895f1d4a45f0fe2fdd38d6e7f7a98ef4c83ad4b05c8fcc3aa45f8e3ffe9081d'>Virus Total scan results of EventViewerCustomViews.zip</a><!-- EventViewer-CustomViews-VT:END -->
 
 <br>
 <br>

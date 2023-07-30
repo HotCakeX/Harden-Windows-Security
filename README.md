@@ -75,26 +75,36 @@ Harden Windows Safely, Securely, only with Official Microsoft methods
 
 ## How To Use<a href="#how-to-use">![HowToUseIcon](https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/HowToUse.png)</a>
 
-There are 3 ways you can use this script. Using GitHub and Azure sources means you'll always use the latest version.
-
-When the script is installed using PowerShell Gallery source and you run it, if there is a new version available, you will be prompted to update it.
-
 > [!IMPORTANT]\
 > About [Invoke-Expression or iex](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/invoke-expression?view=powershell-7.3)
 
-### <a href="https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden-Windows-Security.ps1"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/SVGs/github.svg"> GitHub source</a>
+### <a href="https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden-Windows-Security.ps1"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/SVGs/github.svg"> Hardening Script Only</a>
+
+Run the latest version of the Harden Windows Security Script directly from this GitHub repository
 
 ```powershell
 irm 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security.ps1' | iex
 ```
 
-### <a href="https://dev.azure.com/SpyNetGirl/_git/Harden-Windows-Security?path=/Harden-Windows-Security.ps1"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/SVGs/azure.svg"> Azure DevOps source</a>
+<br>
+
+### <a href="https://www.powershellgallery.com/packages/Harden-Windows-Security-Module"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/SVGs/powershell.svg"> Compliance Checking (Security Score) + Hardening</a>
+
+Install the [Harden Windows Security Module](https://www.powershellgallery.com/packages/Harden-Windows-Security-Module) from PowerShell gallery, which offers both hardening and system compliance checking (security score). See how secure your system is!
 
 ```powershell
-irm 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Harden-Windows-Security.ps1' | iex
+Install-Module -Name Harden-Windows-Security-Module -Force
+# Compliance Checking + Security Score
+Confirm-SystemCompliance
+# Hardening
+Protect-WindowsSecurity
 ```
 
-### <a href="https://www.powershellgallery.com/packages/Harden-Windows-Security"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/SVGs/powershell.svg"> PowerShell Gallery</a>
+<br>
+
+### <a href="https://www.powershellgallery.com/packages/Harden-Windows-Security"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/SVGs/powershell.svg"> Hardening Script Only</a>
+
+Install only the [Harden Windows Security Script](https://www.powershellgallery.com/packages/Harden-Windows-Security) from PowerShell gallery. When you run it and if there is a new version, you will be notified.
 
 ```powershell
 Install-Script -Name Harden-Windows-Security
@@ -427,6 +437,8 @@ Add-MpPreference -ControlledFolderAccessAllowedApplications 'C:\Program Files\Ap
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Sets the [default action](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/configure-remediation-microsoft-defender-antivirus) for Severe and High threat levels to Remove, for Medium and Low threat levels to Quarantine.
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/roratinggem.gif" width="28" alt="Rotating pink gem denoting registry or cmdlet"> [Configures](https://learn.microsoft.com/en-us/windows/client-management/mdm/defender-csp#configurationoobeenablertpandsigupdate) real-time protection and Security Intelligence Updates to be enabled during OOBE.
+
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/roratinggem.gif" width="28" alt="Rotating pink gem denoting registry or cmdlet"> [Enables](https://learn.microsoft.com/en-us/windows/client-management/mdm/defender-csp#configurationinteltdtenabled) the [Intel TDT](https://techcommunity.microsoft.com/t5/microsoft-defender-for-endpoint/defending-against-ransomware-with-microsoft-defender-for/ba-p/3243941) (Intel® Threat Detection Technology) integration with Microsoft Defender.
 
 <p align="right"><a href="#menu-back-to-top">💡 (back to categories)</a></p>
 
@@ -848,6 +860,8 @@ These are configurations that are typically *recommended in High-Risk Environmen
   
   - [Failed Login attempts via PIN at lock screen](https://learn.microsoft.com/en-us/windows/security/threat-protection/auditing/event-4776)
     - Error/Status code `0xC0000064` indicates wrong PIN entered at lock screen
+  
+  - USB storage Connects & Disconnects (Flash drives, phones etc.)
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Enables ["Send optional diagnostic data"](https://learn.microsoft.com/en-us/windows/privacy/windows-diagnostic-data) because it is [required for Smart App Control](https://support.microsoft.com/en-us/topic/what-is-smart-app-control-285ea03d-fa88-4d56-882e-6698afdb7003) to operate and be enabled, and for communication between [Intelligent Security Graph (ISG)](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/use-windows-defender-application-control-with-intelligent-security-graph) and you.
 

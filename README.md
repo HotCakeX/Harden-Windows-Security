@@ -92,6 +92,8 @@ irm 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Har
 
 Install the [Harden Windows Security Module](https://www.powershellgallery.com/packages/Harden-Windows-Security-Module) from PowerShell gallery, which offers both hardening and system compliance checking (security score). See how secure your system is!
 
+[More info in the Wiki page](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden%E2%80%90Windows%E2%80%90Security%E2%80%90Module)
+
 ```powershell
 Install-Module -Name Harden-Windows-Security-Module -Force
 # Compliance Checking + Security Score

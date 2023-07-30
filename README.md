@@ -102,6 +102,8 @@ Confirm-SystemCompliance
 Protect-WindowsSecurity
 ```
 
+https://github.com/HotCakeX/Harden-Windows-Security/assets/118815227/0fdbd34b-6bf6-4eae-b081-83b43d60bd0d
+
 <br>
 
 ### <a href="https://www.powershellgallery.com/packages/Harden-Windows-Security"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/SVGs/powershell.svg"> Hardening Script Only</a>

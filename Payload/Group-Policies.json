@@ -53,6 +53,10 @@
 		"12": {
 			"Cat": "Windows Components/File Explorer",
 			"Name": "Show hibernate in the power options menu"
+		},
+		"13": {
+			"Cat": "Windows Components/BitLocker Drive Encryption",
+			"Name": "Disable new DMA devices when this computer is locked"
 		}
 	},
 	"Device Guard": {
@@ -261,7 +265,7 @@
 			"Name": "Configure Automatic Updates"
 		}
 	},
-  "Top Security": {
+	"Top Security": {
 		"1": {
 			"Cat": "System/Logon",
 			"Name": "Hide entry points for Fast User Switching"

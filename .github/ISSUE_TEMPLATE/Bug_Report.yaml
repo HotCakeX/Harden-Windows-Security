@@ -28,3 +28,9 @@ body:
       options:
         - label: Yes, my system meets the requirements
           required: true
+  - type: textarea
+    id: Explanation
+    attributes:
+      label: Explain the bug
+      description: Please explain the bug and be as detailed as possible. 🙏
+      render: shell

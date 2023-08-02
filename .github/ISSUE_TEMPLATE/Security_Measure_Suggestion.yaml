@@ -9,7 +9,7 @@ body:
     attributes:
       value: |
         Thanks for taking the time to suggest a new Security measure!  
-   - type: checkboxes
+  - type: checkboxes
     id: Not-Duplicate
     attributes:
       label: Are you sure the Security measure is not already implemented?

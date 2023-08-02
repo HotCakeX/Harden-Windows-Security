@@ -15,7 +15,7 @@ body:
       label: Are you sure the Security measure is not already implemented?
       description: Please make sure the new Security measure that you are suggesting to be added isn't already implemented in this GitHub repository, Thank you! 😊
       options:
-        - label: Yes, I have checked and the Security measure I'm suggesting to be implemented is not duplicate.
+        - label: Yes, I have checked and the Security measure I'm suggesting to be implemented is not duplicate. 🫡
           required: true
   - type: textarea
     id: Explanation

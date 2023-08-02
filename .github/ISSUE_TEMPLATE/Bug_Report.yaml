@@ -34,3 +34,5 @@ body:
       label: Explain the bug
       description: Please explain the bug and be as detailed as possible. 🙏
       render: shell
+    validations:
+      required: true 

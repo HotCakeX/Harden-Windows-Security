@@ -24,7 +24,7 @@ body:
     id: Requirements
     attributes:
       label: Does your system meet the requirements?
-      description: Depending on which tool your bug belongs to, please make sure you have read their requirements and meet them: [Harden Windows Security Requirements](https://github.com/HotCakeX/Harden-Windows-Security#requirements-), [WDACConfig Requirements](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig#requirements), [Harden Windows Security Module Requirements](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden%E2%80%90Windows%E2%80%90Security%E2%80%90Module#requirements)
+      description: Depending on which tool your bug belongs to, please make sure you have read their requirements and meet them [Harden Windows Security Requirements](https://github.com/HotCakeX/Harden-Windows-Security#requirements-), [WDACConfig Requirements](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig#requirements), [Harden Windows Security Module Requirements](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden%E2%80%90Windows%E2%80%90Security%E2%80%90Module#requirements)
       options:
         - label: Yes, my system meets the requirements
           required: true

@@ -1,264 +1,278 @@
 {
-  "Windows Update": {
-    "4": {
-      "Cat": "Windows Components/Windows Update/Manage end user experience",
-      "Name": "Configure Automatic Updates"
-    },
-    "1": {
-      "Cat": "Windows Components/Windows Update/Manage end user experience",
-      "Name": "Allow updates to be downloaded automatically over metered connections"
-    },
-    "2": {
-      "Cat": "Windows Components/Windows Update/Manage end user experience",
-      "Name": "Enable features introduced via servicing that are off by default"
-    },
-    "3": {
-      "Cat": "Windows Components/Windows Update/Manage end user experience",
-      "Name": "Specify deadlines for automatic updates and restarts"
-    }
-  },
-  "Windows Networking": {
-    "4": {
-      "Cat": "System/Internet Communication Management/Internet Communication settings",
-      "Name": "Turn off printing over HTTP"
-    },
-    "5": {
-      "Cat": "System/Internet Communication Management/Internet Communication settings",
-      "Name": "Turn off downloading of print drivers over HTTP"
-    },
-    "1": {
-      "Cat": "Network/DNS Client",
-      "Name": "Turn off smart multi-homed name resolution"
-    },
-    "2": {
-      "Cat": "Network/DNS Client",
-      "Name": "Turn off multicast name resolution"
-    },
-    "3": {
-      "Cat": "Network/DNS Client",
-      "Name": "Configure NetBIOS settings"
-    }
-  },
-  "LockScreen": {
-    "1": {
-      "Cat": "System/Logon",
-      "Name": "Do not display network selection UI"
-    }
-  },
-  "TLS": {
-    "1": {
-      "Cat": "Network/SSL Configuration Settings",
-      "Name": "ECC Curve Order"
-    },
-    "2": {
-      "Cat": "Network/SSL Configuration Settings",
-      "Name": "SSL Cipher Suite Order"
-    }
-  },
-  "Bitlocker": {
-    "10": {
-      "Cat": "System/Power Management/Sleep Settings",
-      "Name": "Allow standby states (S1-S3) when sleeping (plugged in)"
-    },
-    "8": {
-      "Cat": "Windows Components/BitLocker Drive Encryption/Removable Data Drives",
-      "Name": "Enforce drive encryption type on removable data drives"
-    },
-    "2": {
-      "Cat": "Windows Components/BitLocker Drive Encryption/Operating System Drives",
-      "Name": "Require additional authentication at startup"
-    },
-    "11": {
-      "Cat": "System/Power Management/Sleep Settings",
-      "Name": "Allow standby states (S1-S3) when sleeping (on battery)"
-    },
-    "7": {
-      "Cat": "Windows Components/BitLocker Drive Encryption/Removable Data Drives",
-      "Name": "Allow access to BitLocker-protected removable data drives from earlier versions of Windows"
-    },
-    "3": {
-      "Cat": "Windows Components/BitLocker Drive Encryption",
-      "Name": "Choose drive encryption method and cipher strength (Windows 10 [Version 1511] and later)"
-    },
-    "1": {
-      "Cat": "Windows Components/BitLocker Drive Encryption/Operating System Drives",
-      "Name": "Disallow standard users from changing the PIN or password"
-    },
-    "5": {
-      "Cat": "Windows Components/BitLocker Drive Encryption/Operating System Drives",
-      "Name": "Configure minimum PIN length for startup"
-    },
-    "6": {
-      "Cat": "Windows Components/BitLocker Drive Encryption/Operating System Drives",
-      "Name": "Enforce drive encryption type on operating system drives"
-    },
-    "9": {
-      "Cat": "Windows Components/BitLocker Drive Encryption/Operating System Drives",
-      "Name": "Allow enhanced PINs for startup"
-    },
-    "4": {
-      "Cat": "Windows Components/BitLocker Drive Encryption/Fixed Data Drives",
-      "Name": "Enforce drive encryption type on fixed data drives"
-    },
-    "12": {
-      "Cat": "Windows Components/File Explorer",
-      "Name": "Show hibernate in the power options menu"
-    }
-  },
-  "Miscellaneous": {
-    "4": {
-      "Cat": "Windows Components/Location and Sensors/Windows Location Provider",
-      "Name": "Turn off Windows Location Provider"
-    },
-    "1": {
-      "Cat": "Windows Components/Data Collection and Preview Builds",
-      "Name": "Allow Diagnostic Data"
-    },
-    "2": {
-      "Cat": "Windows Components/Location and Sensors",
-      "Name": "Turn off location"
-    },
-    "6": {
-      "Cat": "System/Early Launch Antimalware",
-      "Name": "Boot-Start Driver Initialization Policy"
-    },
-    "3": {
-      "Cat": "Windows Components/Location and Sensors",
-      "Name": "Turn off location scripting"
-    },
-    "5": {
-      "Cat": "System/Service Control Manager Settings/Security Settings",
-      "Name": "Enable svchost.exe mitigation options"
-    }
-  },
-  "ASR": {
-    "1": {
-      "Cat": "Windows Components/Microsoft Defender Antivirus/Microsoft Defender Exploit Guard/Attack Surface Reduction",
-      "Name": "Configure Attack Surface Reduction rules"
-    }
-  },
-  "Microsoft Defender": {
-    "8": {
-      "Cat": "Windows Components/Microsoft Defender Antivirus/MpEngine",
-      "Name": "Enable file hash computation feature"
-    },
-    "6": {
-      "Cat": "Windows Components/Microsoft Defender Antivirus/Microsoft Defender Exploit Guard/Network Protection",
-      "Name": "Prevent users and apps from accessing dangerous websites"
-    },
-    "18": {
-      "Cat": "Windows Components/Microsoft Defender Antivirus/Scan",
-      "Name": "Turn on e-mail scanning"
-    },
-    "27": {
-      "Cat": "Windows Components/Windows Defender SmartScreen/Enhanced Phishing Protection",
-      "Name": "Notify Password Reuse"
-    },
-    "13": {
-      "Cat": "Windows Components/Microsoft Defender Antivirus/Scan",
-      "Name": "Run full scan on mapped network drives"
-    },
-    "17": {
-      "Cat": "Windows Components/Microsoft Defender Antivirus/Scan",
-      "Name": "Turn on catch-up quick scan"
-    },
-    "24": {
-      "Cat": "Windows Components/Microsoft Defender Antivirus/Security Intelligence Updates",
-      "Name": "Specify the interval to check for security intelligence updates"
-    },
-    "4": {
-      "Cat": "Windows Components/Microsoft Defender Antivirus/MAPS",
-      "Name": "Send file samples when further analysis is required"
-    },
-    "20": {
-      "Cat": "Windows Components/Microsoft Defender Antivirus/Security Intelligence Updates",
-      "Name": "Allows Microsoft Defender Antivirus to update and communicate over a metered connection."
-    },
-    "7": {
-      "Cat": "Windows Components/Microsoft Defender Antivirus/MpEngine",
-      "Name": "Configure extended cloud check"
-    },
-    "26": {
-      "Cat": "Windows Components/Windows Defender SmartScreen/Enhanced Phishing Protection",
-      "Name": "Notify Malicious"
-    },
-    "11": {
-      "Cat": "Windows Components/Microsoft Defender Antivirus/Real-time Protection",
-      "Name": "Define the maximum size of downloaded files and attachments to be scanned"
-    },
-    "10": {
-      "Cat": "Windows Components/Microsoft Defender Antivirus/Quarantine",
-      "Name": "Configure removal of items from Quarantine folder"
-    },
-    "3": {
-      "Cat": "Windows Components/Microsoft Defender Antivirus/MAPS",
-      "Name": "Join Microsoft MAPS"
-    },
-    "25": {
-      "Cat": "Windows Components/Microsoft Defender Antivirus/Threats",
-      "Name": "Specify threat alert levels at which default action should not be taken when detected"
-    },
-    "22": {
-      "Cat": "Windows Components/Microsoft Defender Antivirus/Security Intelligence Updates",
-      "Name": "Define the number of days before spyware security intelligence is considered out of date"
-    },
-    "12": {
-      "Cat": "Windows Components/Microsoft Defender Antivirus/Scan",
-      "Name": "Check for the latest virus and spyware security intelligence before running a scheduled scan"
-    },
-    "5": {
-      "Cat": "Windows Components/Microsoft Defender Antivirus/Microsoft Defender Exploit Guard/Controlled Folder Access",
-      "Name": "Configure Controlled folder access"
-    },
-    "1": {
-      "Cat": "Windows Components/Microsoft Defender Antivirus",
-      "Name": "Configure detection for potentially unwanted applications"
-    },
-    "28": {
-      "Cat": "Windows Components/Windows Defender SmartScreen/Enhanced Phishing Protection",
-      "Name": "Notify Unsafe App"
-    },
-    "29": {
-      "Cat": "Windows Components/Windows Defender SmartScreen/Enhanced Phishing Protection",
-      "Name": "Service Enabled"
-    },
-    "14": {
-      "Cat": "Windows Components/Microsoft Defender Antivirus/Scan",
-      "Name": "Scan network files"
-    },
-    "19": {
-      "Cat": "Windows Components/Microsoft Defender Antivirus/Scan",
-      "Name": "Turn on reparse point scanning"
-    },
-    "15": {
-      "Cat": "Windows Components/Microsoft Defender Antivirus/Scan",
-      "Name": "Scan removable drives"
-    },
-    "16": {
-      "Cat": "Windows Components/Microsoft Defender Antivirus/Scan",
-      "Name": "Specify the maximum depth to scan archive files"
-    },
-    "23": {
-      "Cat": "Windows Components/Microsoft Defender Antivirus/Security Intelligence Updates",
-      "Name": "Define the number of days before virus security intelligence is considered out of date"
-    },
-    "21": {
-      "Cat": "Windows Components/Microsoft Defender Antivirus/Security Intelligence Updates",
-      "Name": "Check for the latest virus and spyware security intelligence on startup"
-    },
-    "2": {
-      "Cat": "Windows Components/Microsoft Defender Antivirus/MAPS",
-      "Name": "Configure the 'Block at First Sight' feature"
-    },
-    "9": {
-      "Cat": "Windows Components/Microsoft Defender Antivirus/MpEngine",
-      "Name": "Select cloud protection level"
-    }
-  },
-  "Device Guard": {
-    "1": {
-      "Cat": "System/Device Guard",
-      "Name": "Turn On Virtualization Based Security"
-    }
-  }
+	"ASR": {
+		"1": {
+			"Cat": "Windows Components/Microsoft Defender Antivirus/Microsoft Defender Exploit Guard/Attack Surface Reduction",
+			"Name": "Configure Attack Surface Reduction rules"
+		}
+	},
+	"Bitlocker": {
+		"1": {
+			"Cat": "Windows Components/BitLocker Drive Encryption/Operating System Drives",
+			"Name": "Disallow standard users from changing the PIN or password"
+		},
+		"2": {
+			"Cat": "Windows Components/BitLocker Drive Encryption/Operating System Drives",
+			"Name": "Require additional authentication at startup"
+		},
+		"3": {
+			"Cat": "Windows Components/BitLocker Drive Encryption",
+			"Name": "Choose drive encryption method and cipher strength (Windows 10 [Version 1511] and later)"
+		},
+		"4": {
+			"Cat": "Windows Components/BitLocker Drive Encryption/Fixed Data Drives",
+			"Name": "Enforce drive encryption type on fixed data drives"
+		},
+		"5": {
+			"Cat": "Windows Components/BitLocker Drive Encryption/Operating System Drives",
+			"Name": "Configure minimum PIN length for startup"
+		},
+		"6": {
+			"Cat": "Windows Components/BitLocker Drive Encryption/Operating System Drives",
+			"Name": "Enforce drive encryption type on operating system drives"
+		},
+		"7": {
+			"Cat": "Windows Components/BitLocker Drive Encryption/Removable Data Drives",
+			"Name": "Allow access to BitLocker-protected removable data drives from earlier versions of Windows"
+		},
+		"8": {
+			"Cat": "Windows Components/BitLocker Drive Encryption/Removable Data Drives",
+			"Name": "Enforce drive encryption type on removable data drives"
+		},
+		"9": {
+			"Cat": "Windows Components/BitLocker Drive Encryption/Operating System Drives",
+			"Name": "Allow enhanced PINs for startup"
+		},
+		"10": {
+			"Cat": "System/Power Management/Sleep Settings",
+			"Name": "Allow standby states (S1-S3) when sleeping (plugged in)"
+		},
+		"11": {
+			"Cat": "System/Power Management/Sleep Settings",
+			"Name": "Allow standby states (S1-S3) when sleeping (on battery)"
+		},
+		"12": {
+			"Cat": "Windows Components/File Explorer",
+			"Name": "Show hibernate in the power options menu"
+		},
+		"13": {
+			"Cat": "Windows Components/BitLocker Drive Encryption",
+			"Name": "Disable new DMA devices when this computer is locked"
+		}
+	},
+	"Device Guard": {
+		"1": {
+			"Cat": "System/Device Guard",
+			"Name": "Turn On Virtualization Based Security"
+		}
+	},
+	"LockScreen": {
+		"1": {
+			"Cat": "System/Logon",
+			"Name": "Do not display network selection UI"
+		}
+	},
+	"Microsoft Defender": {
+		"1": {
+			"Cat": "Windows Components/Microsoft Defender Antivirus",
+			"Name": "Configure detection for potentially unwanted applications"
+		},
+		"2": {
+			"Cat": "Windows Components/Microsoft Defender Antivirus/MAPS",
+			"Name": "Configure the 'Block at First Sight' feature"
+		},
+		"3": {
+			"Cat": "Windows Components/Microsoft Defender Antivirus/MAPS",
+			"Name": "Join Microsoft MAPS"
+		},
+		"4": {
+			"Cat": "Windows Components/Microsoft Defender Antivirus/MAPS",
+			"Name": "Send file samples when further analysis is required"
+		},
+		"5": {
+			"Cat": "Windows Components/Microsoft Defender Antivirus/Microsoft Defender Exploit Guard/Controlled Folder Access",
+			"Name": "Configure Controlled folder access"
+		},
+		"6": {
+			"Cat": "Windows Components/Microsoft Defender Antivirus/Microsoft Defender Exploit Guard/Network Protection",
+			"Name": "Prevent users and apps from accessing dangerous websites"
+		},
+		"7": {
+			"Cat": "Windows Components/Microsoft Defender Antivirus/MpEngine",
+			"Name": "Configure extended cloud check"
+		},
+		"8": {
+			"Cat": "Windows Components/Microsoft Defender Antivirus/MpEngine",
+			"Name": "Enable file hash computation feature"
+		},
+		"9": {
+			"Cat": "Windows Components/Microsoft Defender Antivirus/MpEngine",
+			"Name": "Select cloud protection level"
+		},
+		"10": {
+			"Cat": "Windows Components/Microsoft Defender Antivirus/Quarantine",
+			"Name": "Configure removal of items from Quarantine folder"
+		},
+		"11": {
+			"Cat": "Windows Components/Microsoft Defender Antivirus/Real-time Protection",
+			"Name": "Define the maximum size of downloaded files and attachments to be scanned"
+		},
+		"12": {
+			"Cat": "Windows Components/Microsoft Defender Antivirus/Scan",
+			"Name": "Check for the latest virus and spyware security intelligence before running a scheduled scan"
+		},
+		"13": {
+			"Cat": "Windows Components/Microsoft Defender Antivirus/Scan",
+			"Name": "Run full scan on mapped network drives"
+		},
+		"14": {
+			"Cat": "Windows Components/Microsoft Defender Antivirus/Scan",
+			"Name": "Scan network files"
+		},
+		"15": {
+			"Cat": "Windows Components/Microsoft Defender Antivirus/Scan",
+			"Name": "Scan removable drives"
+		},
+		"16": {
+			"Cat": "Windows Components/Microsoft Defender Antivirus/Scan",
+			"Name": "Specify the maximum depth to scan archive files"
+		},
+		"17": {
+			"Cat": "Windows Components/Microsoft Defender Antivirus/Scan",
+			"Name": "Turn on catch-up quick scan"
+		},
+		"18": {
+			"Cat": "Windows Components/Microsoft Defender Antivirus/Scan",
+			"Name": "Turn on e-mail scanning"
+		},
+		"19": {
+			"Cat": "Windows Components/Microsoft Defender Antivirus/Scan",
+			"Name": "Turn on reparse point scanning"
+		},
+		"20": {
+			"Cat": "Windows Components/Microsoft Defender Antivirus/Security Intelligence Updates",
+			"Name": "Allows Microsoft Defender Antivirus to update and communicate over a metered connection."
+		},
+		"21": {
+			"Cat": "Windows Components/Microsoft Defender Antivirus/Security Intelligence Updates",
+			"Name": "Check for the latest virus and spyware security intelligence on startup"
+		},
+		"22": {
+			"Cat": "Windows Components/Microsoft Defender Antivirus/Security Intelligence Updates",
+			"Name": "Define the number of days before spyware security intelligence is considered out of date"
+		},
+		"23": {
+			"Cat": "Windows Components/Microsoft Defender Antivirus/Security Intelligence Updates",
+			"Name": "Define the number of days before virus security intelligence is considered out of date"
+		},
+		"24": {
+			"Cat": "Windows Components/Microsoft Defender Antivirus/Security Intelligence Updates",
+			"Name": "Specify the interval to check for security intelligence updates"
+		},
+		"25": {
+			"Cat": "Windows Components/Microsoft Defender Antivirus/Threats",
+			"Name": "Specify threat alert levels at which default action should not be taken when detected"
+		},
+		"26": {
+			"Cat": "Windows Components/Windows Defender SmartScreen/Enhanced Phishing Protection",
+			"Name": "Notify Malicious"
+		},
+		"27": {
+			"Cat": "Windows Components/Windows Defender SmartScreen/Enhanced Phishing Protection",
+			"Name": "Notify Password Reuse"
+		},
+		"28": {
+			"Cat": "Windows Components/Windows Defender SmartScreen/Enhanced Phishing Protection",
+			"Name": "Notify Unsafe App"
+		},
+		"29": {
+			"Cat": "Windows Components/Windows Defender SmartScreen/Enhanced Phishing Protection",
+			"Name": "Service Enabled"
+		}
+	},
+	"Miscellaneous": {
+		"1": {
+			"Cat": "Windows Components/Data Collection and Preview Builds",
+			"Name": "Allow Diagnostic Data"
+		},
+		"2": {
+			"Cat": "Windows Components/Location and Sensors",
+			"Name": "Turn off location"
+		},
+		"3": {
+			"Cat": "Windows Components/Location and Sensors",
+			"Name": "Turn off location scripting"
+		},
+		"4": {
+			"Cat": "Windows Components/Location and Sensors/Windows Location Provider",
+			"Name": "Turn off Windows Location Provider"
+		},
+		"5": {
+			"Cat": "System/Service Control Manager Settings/Security Settings",
+			"Name": "Enable svchost.exe mitigation options"
+		},
+		"6": {
+			"Cat": "System/Early Launch Antimalware",
+			"Name": "Boot-Start Driver Initialization Policy"
+		}
+	},
+	"TLS": {
+		"1": {
+			"Cat": "Network/SSL Configuration Settings",
+			"Name": "ECC Curve Order"
+		},
+		"2": {
+			"Cat": "Network/SSL Configuration Settings",
+			"Name": "SSL Cipher Suite Order"
+		}
+	},
+	"Windows Networking": {
+		"1": {
+			"Cat": "Network/DNS Client",
+			"Name": "Turn off smart multi-homed name resolution"
+		},
+		"2": {
+			"Cat": "Network/DNS Client",
+			"Name": "Turn off multicast name resolution"
+		},
+		"3": {
+			"Cat": "Network/DNS Client",
+			"Name": "Configure NetBIOS settings"
+		},
+		"4": {
+			"Cat": "System/Internet Communication Management/Internet Communication settings",
+			"Name": "Turn off printing over HTTP"
+		},
+		"5": {
+			"Cat": "System/Internet Communication Management/Internet Communication settings",
+			"Name": "Turn off downloading of print drivers over HTTP"
+		}
+	},
+	"Windows Update": {
+		"1": {
+			"Cat": "Windows Components/Windows Update/Manage end user experience",
+			"Name": "Allow updates to be downloaded automatically over metered connections"
+		},
+		"2": {
+			"Cat": "Windows Components/Windows Update/Manage end user experience",
+			"Name": "Enable features introduced via servicing that are off by default"
+		},
+		"3": {
+			"Cat": "Windows Components/Windows Update/Manage end user experience",
+			"Name": "Specify deadlines for automatic updates and restarts"
+		},
+		"4": {
+			"Cat": "Windows Components/Windows Update/Manage end user experience",
+			"Name": "Configure Automatic Updates"
+		}
+	},
+	"Top Security": {
+		"1": {
+			"Cat": "System/Logon",
+			"Name": "Hide entry points for Fast User Switching"
+		},
+		"2": {
+			"Cat": "System/Mitigation Options",
+			"Name": "Untrusted Font Blocking"
+		}
+	}
 }

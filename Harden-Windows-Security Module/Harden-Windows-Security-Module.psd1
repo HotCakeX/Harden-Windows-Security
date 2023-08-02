@@ -12,7 +12,7 @@
     # RootModule = ''
 
     # Version number of this module.
-    ModuleVersion        = '0.0.1'
+    ModuleVersion        = '0.0.2'
 
     # Supported PSEditions
     CompatiblePSEditions = @('Core')
@@ -32,16 +32,20 @@
     # Description of the functionality provided by this module
     Description          = @"
 
-This is a PowerShell module for Harden Windows Security script. It offers System Compliance checking in addition to hardening.
-You can check and validate a system to see whether it conforms to the Harden Windows Security guidelines or not.
+✅ This is a PowerShell module for Harden Windows Security script.
+✅ It offers System Compliance checking in addition to hardening.
+✅ You can check and validate a system to see whether it conforms to the Harden Windows Security guidelines or not.
 
-The module generates a nice output on the screen as well as giving users an option to export the results in a CSV file.
+💠 The module generates a nice output on the screen as well as giving users an option to export the results in a CSV file.
 
-If you use the "Protect-WindowsSecurity" Cmdlet, it will download and run the Harden Windows Security PowerShell script from the official repository
+💠 If you use the "Protect-WindowsSecurity" Cmdlet, it will download and run the Harden Windows Security PowerShell script from the official repository
 
-Refer to this GitHub repository for more info: https://github.com/HotCakeX/Harden-Windows-Security
+🟡 Refer to this GitHub repository for more info: https://github.com/HotCakeX/Harden-Windows-Security
 
-Use "get-command -Module Harden-Windows-Security-Module" to see more info after installing the module
+🏴 Module's documentation: https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden%E2%80%90Windows%E2%80%90Security%E2%80%90Module
+
+💎 If you have any questions, requests, suggestions etc. about this module, please open a new Discussion or Issue on GitHub
+
 
 "@
 
@@ -117,10 +121,21 @@ Use "get-command -Module Harden-Windows-Security-Module" to see more info after 
             ProjectUri   = 'https://github.com/HotCakeX/Harden-Windows-Security'
 
             # A URL to an icon representing this module.
-            IconUri      = 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/PowerShellGalleryICONURI.png'
+            IconUri      = 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security%20Module/PowerShell%20Gallery%20Icon/Peach%20Small.png'
 
             # ReleaseNotes of this module
             ReleaseNotes = @"
+
+## Version 0.0.2
+Added self-updating mechanism
+Added all the missing categories such as Optional Windows Features category and Top Security category
+Added Bitlocker DMA protection check
+Fixed the CSV output to stop repeating the headers for each category
+Improved the ASCII arts and their colors
+Added Total number of checks to the output
+Improved the displayed output to include checks that do not output bool value by adding an extra property called Compliant to each item
+Improved the module's PowerShell gallery page (Description, image)
+Added a new optional parameter called "-DetailedDisplay" to show the output in a detailed list instead of the default table format
 
 ## Version 0.0.1
 First release
@@ -147,4 +162,3 @@ First release
     # DefaultCommandPrefix = ''
 
 }
-

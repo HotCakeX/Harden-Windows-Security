@@ -17,3 +17,9 @@ body:
       options:
         - label: Yes, I have checked and the Security measure I'm suggesting to be implemented is not duplicate.
           required: true
+  - type: textarea
+    id: Explanation
+    attributes:
+      label: Explain your new Security measure suggestion
+      description: Please explain your new Security measure suggestion and be as detailed as possible.
+      render: shell

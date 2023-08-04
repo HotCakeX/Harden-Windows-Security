@@ -14,6 +14,10 @@ Harden Windows Security script uses the same security features built into your d
 
 <br>
 
+<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/SecurityBenchmarksComparisonChart.png"></p>
+
+<br>
+
 ## <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/PNGs/Windows11.png"> Windows Defender Application Control
 
 [Windows Defender Application Control (WDAC) resources](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Introduction) are suitable for both personal users as well as enterprises, businesses and highly secure workstations.

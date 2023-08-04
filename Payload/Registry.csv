@@ -51,11 +51,10 @@ NonAdmin,HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced,HideF
 NonAdmin,HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced,Hidden,1,DWORD,AddOrModify,Show hidden files and folders and drives toggles the control panel folder options item
 NonAdmin,HKCU:\Control Panel\International\User Profile,HttpAcceptLanguageOptOut,1,DWORD,AddOrModify,Disable websites accessing local language list
 NonAdmin,HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\SearchSettings,SafeSearchMode,0,DWORD,AddOrModify,turn off safe search in Windows search. from Windows settings > privacy and security > search permissions > safe search
-NonAdmin,HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Notifications\Settings,NOC_GLOBAL_SETTING_ALLOW_TOASTS_ABOVE_LOCK,0,DWORD,AddOrModify,prevent showing notifications in Lock screen - this is the same as toggling the button in Windows settings > system > notifications > show notifications in the lock screen
-NonAdmin,HKCU:\Software\Microsoft\Windows\CurrentVersion\PushNotifications,LockScreenToastEnabled,0,DWORD,AddOrModify,prevent showing notifications in Lock screen 2nd reg key this is the same as toggling the button in Windows settings > system > notifications > show notifications in the lock screen
 NonAdmin,HKCU:\Software\Microsoft\Clipboard,EnableClipboardHistory,1,DWORD,AddOrModify,Enable Clipboard History for the current user
 NonAdmin,HKCU:\Software\Microsoft\Clipboard,CloudClipboardAutomaticUpload,1,DWORD,AddOrModify,2nd commands to enable sync of Clipboard history in Windows between devices
 NonAdmin,HKCU:\Software\Microsoft\Clipboard,EnableCloudClipboard,1,DWORD,AddOrModify,last one to enable Clipboard sync
 NonAdmin,HKCU:\Software\Microsoft\Input\Settings,EnableHwkbTextPrediction,1,DWORD,AddOrModify,turn on Show text suggestions when typing on the physical keyboard for the current user toggles the option in Windows settings
 NonAdmin,HKCU:\Software\Microsoft\Input\Settings,MultilingualEnabled,1,DWORD,AddOrModify,turn on Multilingual text suggestions for the current user toggles the option in Windows settings
 NonAdmin,HKCU:\Control Panel\Accessibility\StickyKeys,Flags,506,String,AddOrModify,turn off sticky key shortcut of pressing shift key 5 time fast
+NonAdmin,HKCU:\Software\Microsoft\Windows\CurrentVersion\Notifications\Settings,NOC_GLOBAL_SETTING_ALLOW_CRITICAL_TOASTS_ABOVE_LOCK,0,DWORD,AddOrModify,Disables show reminders and incoming VoIP calls on the lock screen in Settings > System > Notifications 

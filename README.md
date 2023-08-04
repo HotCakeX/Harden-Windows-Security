@@ -154,7 +154,7 @@ Install-Script -Name Harden-Windows-Security -Force
 <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/verticalshine.gif" width="27" alt="Requirements item"> [Latest available version](https://www.microsoft.com/en-us/software-download/windows11/) of Windows installed.
 
 > [!IMPORTANT]\
-> Restart your device after applying the script, [don't use any commands to force Group Policy update](https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2012-R2-and-2012/jj573586(v=ws.11)?redirectedfrom=MSDN#asynchronous-and-synchronous-processing).
+> Restart your device after applying the script
 
 <br>
 
@@ -247,10 +247,12 @@ From Top to bottom in order:
   - <a href="#country-ip-blocking">Country IP Blocking</a>
   
 * Commands that don't require Administrator Privileges
-  - <a href="#non-admin-commands">Non-Admin Commands that only affect the current user and do not make machine-wide changes</a>
+  - <a href="#non-admin-commands">Non-Admin Commands</a>
 
 </br>
+
 </br>
+
 </br>
 
 <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Indicates the security measure is applied using Group Policies
@@ -517,7 +519,7 @@ Such software behaviors are sometimes seen in legitimate applications. However, 
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> [Requires you to choose a PIN that contains at least 10 characters](https://learn.microsoft.com/en-us/windows/security/information-protection/bitlocker/bitlocker-group-policy-settings#configure-minimum-pin-length-for-startup)
 
-- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Enables Hibernate, adds Hibernate to Start menu's power options and disables Sleep. This feature is only *recommended for High-Risk Environments.*
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> (Only on Physical machines) Enables Hibernate, adds Hibernate to Start menu's power options and disables Sleep. This feature is only *recommended for High-Risk Environments.*
 This is to prevent an **Attacker with skill and lengthy physical access to your computer which is the Worst-case Scenario**
 
   - Attack Scenario: Targeted attack with plenty of time; this attacker will open the case, will solder, and will use sophisticated hardware or software. Of course, [Bitlocker and configurations](https://learn.microsoft.com/en-us/windows/security/information-protection/bitlocker/bitlocker-countermeasures#attacker-with-skill-and-lengthy-physical-access) applied by this script will protect you against that.
@@ -609,8 +611,14 @@ NistP384
 
   - A malicious user might install malware that looks like the standard sign-in dialog box for the Windows operating system and capture a user's password. The attacker can then sign into the compromised account with whatever level of user rights that user has.
 
-- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Enables [a security anti-hammering feature](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/interactive-logon-machine-account-lockout-threshold) that sets a threshold of 6 for the number of failed sign-in attempts that causes the device to be locked by using BitLocker. Sign-in attempts include Windows password or Windows Hello authentication methods. This threshold means, if the specified maximum number of failed sign-in attempts is exceeded, the device will invalidate the Trusted Platform Module (TPM) protector and any other protector except the 48-digit recovery password, and then reboot. During Device Lockout mode, the computer or device only boots into the touch-enabled Windows Recovery Environment (WinRE) until an authorized user enters the recovery password to restore full access.
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Enables [a security anti-hammering feature](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/interactive-logon-machine-account-lockout-threshold) that sets a threshold of **5** for the number of failed sign-in attempts that causes the device to be locked by using BitLocker. Sign-in attempts include Windows password or Windows Hello authentication methods. This threshold means, if the specified maximum number of failed sign-in attempts is exceeded, the device will invalidate the Trusted Platform Module (TPM) protector and any other protector except the 48-digit recovery password, and then reboot. During Device Lockout mode, the computer or device only boots into the touch-enabled Windows Recovery Environment (WinRE) until an authorized user enters the recovery password to restore full access.
   - This script (<a href="#bitlocker-settings">in the Bitlocker category</a>) automatically saves the 48-digit recovery password of each drive in itself, the location of it will also be visible on the PowerShell console when you run it. It is **very important to keep it in a safe and reachable place, e.g. in OneDrive's Personal Vault which requires authentication to access. See [Here](https://www.microsoft.com/en-us/microsoft-365/onedrive/personal-vault) and [Here](https://support.microsoft.com/en-us/office/protect-your-onedrive-files-in-personal-vault-6540ef37-e9bf-4121-a773-56f98dce78c4) for more info about OneDrive's Personal Vault**
+
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Configures account lockout policy: [Account lockout threshold](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/account-lockout-threshold), Sets the number of allowed failed sign-in attempts to **5**. In combination with other policies in this category, this means every 5 failed sign-in attempts will need a full day to pass before 5 more attempts can be made, otherwise Bitlocker will engage, system will be restarted and 48-digit Bitlocker code will be asked. **This policy greatly prevents brute force attempts.**
+
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Configures account lockout policy: Sets [Account lockout duration](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/account-lockout-duration) to **1440 minutes or 1 day**. In combination with other policies in this category, this means every 5 failed sign-in attempts will need a full day to pass before 5 more attempts can be made, otherwise Bitlocker will engage, system will be restarted and 48-digit Bitlocker code will be asked.
+
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Configures account lockout policy: Sets [Reset account lockout counter](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/reset-account-lockout-counter-after) to **1440 minutes or 1 day**. In combination with other policies in this category, this means every 5 failed sign-in attempts will need a full day to pass before 5 more attempts can be made, otherwise Bitlocker will engage, system will be restarted and 48-digit Bitlocker code will be asked.
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> [Hides email address of the Microsoft account on lock screen](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/interactive-logon-display-user-information-when-the-session-is-locked), if your device is in a trusted place like at home then this isn't necessary.
 
@@ -621,6 +629,13 @@ NistP384
   - This feature can be useful to enable if you live in *High-Risk Environments* and you don't want anyone to get any information about your device when it's locked and you're not around.
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> [Don't Display Network Selection UI on Lock Screen](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-windowslogon#dontdisplaynetworkselectionui) (like WIFI Icon); This setting allows you to control whether anyone can interact with available networks UI on the logon screen. Once enabled, the device's network connectivity state cannot be changed without signing into Windows. Suitable for *High-Risk Environments*.
+
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Applies the following [PIN Complexity rules](https://learn.microsoft.com/en-us/windows/security/identity-protection/hello-for-business/hello-manage-in-organization#pin-complexity) to Windows Hello
+
+  - [Must include digits](https://learn.microsoft.com/en-us/windows/client-management/mdm/passportforwork-csp#usertenantidpoliciespincomplexitydigits)
+  - [Expires](https://learn.microsoft.com/en-us/windows/client-management/mdm/passportforwork-csp#usertenantidpoliciespincomplexityexpiration) **every 180 days** (default behavior is to never expire)
+  - [History](https://learn.microsoft.com/en-us/windows/client-management/mdm/passportforwork-csp#usertenantidpoliciespincomplexityhistory) of the **3** most recent selected PINs is preserved to prevent the user from reusing them
+  - [Must include lower-case letters](https://learn.microsoft.com/en-us/windows/client-management/mdm/passportforwork-csp#usertenantidpoliciespincomplexitylowercaseletters)
 
 <p align="right"><a href="#menu-back-to-top">💡 (back to categories)</a></p>
 
@@ -804,6 +819,11 @@ These are configurations that are typically *recommended in High-Risk Environmen
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Disables [Printing over HTTP](https://learn.microsoft.com/en-us/troubleshoot/windows-server/printing/manage-connect-printers-use-web-browser) because HTTP is not encrypted and it's an old feature that's not used anymore.
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> [Turns off downloading of print drivers over HTTP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-connectivity#connectivity-disabledownloadingofprintdriversoverhttp) because HTTP is not encrypted and that method isn't used anymore. [This is the recommended and secure way of downloading printer drivers in Windows 11](https://support.microsoft.com/en-us/windows/download-printer-drivers-in-windows-da9b1460-7299-4cc3-e974-33cf99d86880).
 
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Clears all the entries in [Remotely accessible registry paths](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/network-access-remotely-accessible-registry-paths).
+
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Clears all the entries in [Remotely accessible registry paths and subpaths](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/network-access-remotely-accessible-registry-paths-and-subpaths).
+
+
 <p align="right"><a href="#menu-back-to-top">💡 (back to categories)</a></p>
 
 <br>
@@ -872,6 +892,13 @@ These are configurations that are typically *recommended in High-Risk Environmen
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/roratinggem.gif" width="28" alt="Rotating pink gem denoting registry or cmdlet"> Enables **WinVerifyTrust Signature Validation**, [a security feature related to WinVerifyTrust function that handles Windows Authenticode signature verification for portable executable (PE) files.](https://msrc.microsoft.com/update-guide/vulnerability/CVE-2013-3900)
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> [Blocking Untrusted Fonts](https://learn.microsoft.com/en-us/windows/security/threat-protection/block-untrusted-fonts-in-enterprise) <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/200iq.gif" width="28" alt="TopSecurity"> **#TopSecurity**
+
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Enables [Command line process auditing](https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/component-updates/command-line-process-auditing)
+
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Sets the [Restrict Unauthenticated RPC Clients policy](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-remoteprocedurecall#restrictunauthenticatedrpcclients) to "Authenticated without exceptions"
+
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Enables the [RPC Endpoint Mapper Client Authentication policy](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-remoteprocedurecall#rpcendpointmapperclientauthentication)
+
 
 <p align="right"><a href="#menu-back-to-top">💡 (back to categories)</a></p>
 
@@ -1010,7 +1037,7 @@ Some settings require the client to be joined to Windows Server [Active Director
 
 Once you have those Firewall rules added, you can [use this method](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Event-Viewer#how-to-identify-which-windows-firewall-rule-is-responsible-for-a-blocked-packets) to see if any of the blocked connections were from/to those countries.
 
-> [!IMPORTANT]\
+> [!NOTE]\
 > Threat actors can use VPN, VPS etc. to mask their originating IP address and location. So don't take this category as the perfect solution for network protection.
 
 <p align="right"><a href="#menu-back-to-top">💡 (back to categories)</a></p>
@@ -1033,11 +1060,11 @@ You don't need Admin privileges to run this category, because no system-wide cha
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/roratinggem.gif" width="28" alt="Rotating pink gem denoting registry or cmdlet"> Shows hidden files, folders and drives (toggles the control panel folder options item)
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/roratinggem.gif" width="28" alt="Rotating pink gem denoting registry or cmdlet"> Disables websites accessing local language list - good for privacy
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/roratinggem.gif" width="28" alt="Rotating pink gem denoting registry or cmdlet"> Turns off safe search in Windows search, will enable +18 content to appear in searches; essentially toggles the button in: Windows settings > privacy and security > search permissions > safe search
-- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/roratinggem.gif" width="28" alt="Rotating pink gem denoting registry or cmdlet"> Prevents showing notifications in Lock screen - This is the same as toggling the button in Windows settings > system > notifications > show notifications in the lock screen
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/roratinggem.gif" width="28" alt="Rotating pink gem denoting registry or cmdlet"> Enables Clipboard History and sync with Microsoft Account
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/roratinggem.gif" width="28" alt="Rotating pink gem denoting registry or cmdlet"> Turns on text suggestions when typing on the physical keyboard
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/roratinggem.gif" width="28" alt="Rotating pink gem denoting registry or cmdlet"> Turns on "Multilingual text suggestions" for the current user, toggles the option in Windows settings
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/roratinggem.gif" width="28" alt="Rotating pink gem denoting registry or cmdlet"> Turns off sticky key shortcut of pressing shift key 5 times fast
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/roratinggem.gif" width="28" alt="Rotating pink gem denoting registry or cmdlet"> Disables Show reminders and incoming VoIP calls on the lock screen
 
 <p align="right"><a href="#menu-back-to-top">💡 (back to categories)</a></p>
 
@@ -1249,6 +1276,10 @@ Get-Content <Path-To-File> -stream zone.identifier
 - [Microsoft Virus Initiative](https://learn.microsoft.com/en-us/microsoft-365/security/intelligence/virus-initiative-criteria)
 - [Digital Detectives @Microsoft](https://news.microsoft.com/stories/cybercrime/)
 - [Goblin Loot - Great security related website about EDR, Cloud and Microsoft products](https://www.goblinloot.net/)
+- [Australia's Essential Eight](https://www.cyber.gov.au/resources-business-and-government/essential-cyber-security/essential-eight/essential-eight-assessment-process-guide)
+- [NIST 800-53](https://www.nist.gov/privacy-framework/nist-privacy-framework-and-cybersecurity-framework-nist-special-publication-800-53)
+- [DoD's CMMC](https://learn.microsoft.com/en-us/azure/compliance/offerings/offering-cmmc)
+- [ISO 27001](https://www.iso.org/standard/27001)
 
 <p align="right"><a href="#readme-top">💡 (back to top)</a></p>
 

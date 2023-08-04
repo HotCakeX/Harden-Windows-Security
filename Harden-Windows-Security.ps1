@@ -1,6 +1,6 @@
 <#PSScriptInfo
 
-.VERSION 2023.7.29
+.VERSION 2023.8.4
 
 .GUID d435a293-c9ee-4217-8dc1-4ad2318a5770
 
@@ -82,11 +82,10 @@ https://1drv.ms/x/s!AtCaUNAJbbvIhuVQhdMu_Hts7YZ_lA?e=df6H6P
 
 💎 Note: If there are multiple Windows user accounts in your computer, it's recommended to run this script in each of them, without administrator privileges, because Non-admin commands only apply to the current user and are not machine wide.
 
-💎 Note: There are 5 items tagged with #TopSecurity that can cause difficulties. When you run this script, you will have an option to enable them if you want to. You can find all the information about them on GitHub.
+🟡 Note: There are 5 items tagged with #TopSecurity that can cause difficulties. When you run this script, you will have an option to enable them if you want to. You can find all the information about them on GitHub.
 
-🏴 If you have any questions, requests, suggestions etc. about this script, please open a new discussion in GitHub:
+🏴 If you have any questions, requests, suggestions etc. about this script, please open a new Discussion or Issue on GitHub
 
-🟡 https://github.com/HotCakeX/Harden-Windows-Security/discussions
 
 .EXAMPLE  
 
@@ -218,7 +217,7 @@ if (Test-IsAdmin) {
 # or break is passed, clean up will still happen for secure exit
 try {
     # Check the current hard-coded version against the latest version online
-    [datetime]$CurrentVersion = '2023.7.29'
+    [datetime]$CurrentVersion = '2023.8.4'
     try {
         [datetime]$LatestVersion = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Version.txt"
     }
@@ -400,8 +399,8 @@ try {
 
                 # Change current working directory to the LGPO's folder
                 Set-Location "$WorkingDir\LGPO_30"
-                .\LGPO.exe /v /m "..\Security-Baselines-X\Overrides for Microsoft Security Baseline\registry.pol"
-                .\LGPO.exe /v /s "..\Security-Baselines-X\Overrides for Microsoft Security Baseline\GptTmpl.inf"
+                .\LGPO.exe /m "..\Security-Baselines-X\Overrides for Microsoft Security Baseline\registry.pol"
+                .\LGPO.exe /s "..\Security-Baselines-X\Overrides for Microsoft Security Baseline\GptTmpl.inf"
             
                 # Re-enables the XblGameSave Standby Task that gets disabled by Microsoft Security Baselines
                 SCHTASKS.EXE /Change /TN \Microsoft\XblGameSave\XblGameSaveTask /Enable
@@ -640,6 +639,9 @@ try {
                     .\LGPO.exe /m "..\Security-Baselines-X\Overrides for Microsoft Security Baseline\Bitlocker DMA\Bitlocker DMA Countermeasure ON\Registry.pol"                                                          
                 }
 
+                # Make sure Bitlocker policies are applied before enabling Bitlocker
+                gpupdate /force
+
                 # Set-up Bitlocker encryption for OS Drive with TPMandPIN and recovery password keyprotectors and Verify its implementation            
                 # check, make sure there is no CD/DVD drives in the system, because Bitlocker throws an error when there is
                 $CdDvdCheck = (Get-CimInstance -ClassName Win32_CDROMDrive -Property *).MediaLoaded
@@ -737,6 +739,18 @@ try {
                     Write-Host $BitLockerMsg -ForegroundColor Cyan
 
                     Write-Host "`nBitlocker is now fully and securely enabled for OS drive" -ForegroundColor Green                
+                }
+
+                # Enabling Hibernate after making sure OS drive is property encrypted for holding hibernate data
+                # Making sure the system is not a VM because Hibernate on VM doesn't work and VMs have other/better options than Hibernation
+                if (-NOT ((get-mpComputerStatus).IsVirtualMachine)) {                
+                    # doing this so Controlled Folder Access won't bitch about powercfg.exe
+                    Add-MpPreference -ControlledFolderAccessAllowedApplications "C:\Windows\System32\powercfg.exe"
+                    Start-Sleep 5
+                    # Set Hibnernate mode to full
+                    powercfg /h /type full
+                    Start-Sleep 3
+                    Remove-MpPreference -ControlledFolderAccessAllowedApplications "C:\Windows\System32\powercfg.exe"
                 }
 
                 # Enable Bitlocker for all the other drives
@@ -876,15 +890,8 @@ try {
                             "Exit" { &$CleanUp }
                         }                            
                     }
-                }                
-                # doing this so Controlled Folder Access won't bitch about powercfg.exe
-                Add-MpPreference -ControlledFolderAccessAllowedApplications "C:\Windows\System32\powercfg.exe"
-                Start-Sleep 5
-                # Set Hibnernate mode to full
-                powercfg /h /type full
-                Start-Sleep 3
-                Remove-MpPreference -ControlledFolderAccessAllowedApplications "C:\Windows\System32\powercfg.exe"
-
+                }
+               
             } "No" { break }
             "Exit" { &$CleanUp }
         }    
@@ -938,7 +945,7 @@ try {
                 # Change current working directory to the LGPO's folder
                 Set-Location "$WorkingDir\LGPO_30"
                 .\LGPO.exe /m "..\Security-Baselines-X\Lock Screen Policies\registry.pol"
-                .\LGPO.exe /s "..\Security-Baselines-X\Lock Screen Policies\GptTmpl.inf"        
+                .\LGPO.exe /s "..\Security-Baselines-X\Lock Screen Policies\GptTmpl.inf"
             } "No" { break }
             "Exit" { &$CleanUp }
         }    
@@ -954,7 +961,6 @@ try {
                 # Change current working directory to the LGPO's folder
                 Set-Location "$WorkingDir\LGPO_30"
                 .\LGPO.exe /s "..\Security-Baselines-X\User Account Control UAC Policies\GptTmpl.inf"
-   
             } "No" { break }
             "Exit" { &$CleanUp }
         }    
@@ -1051,6 +1057,7 @@ try {
                 # Change current working directory to the LGPO's folder
                 Set-Location "$WorkingDir\LGPO_30"
                 .\LGPO.exe /m "..\Security-Baselines-X\Windows Networking Policies\registry.pol"
+                .\LGPO.exe /s "..\Security-Baselines-X\Windows Networking Policies\GptTmpl.inf"
 
                 # Disable LMHOSTS lookup protocol on all network adapters
                 ModifyRegistry -path 'HKLM:\SYSTEM\CurrentControlSet\Services\NetBT\Parameters' -key 'EnableLMHOSTS' -value '0' -type 'DWORD' -Action 'AddOrModify'

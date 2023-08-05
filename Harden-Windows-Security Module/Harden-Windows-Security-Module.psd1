@@ -12,7 +12,7 @@
     # RootModule = ''
 
     # Version number of this module.
-    ModuleVersion        = '0.0.2'
+    ModuleVersion        = '0.0.3'
 
     # Supported PSEditions
     CompatiblePSEditions = @('Core')
@@ -112,7 +112,7 @@
         PSData = @{
 
             # Tags applied to this module. These help with module discovery in online galleries.
-            Tags         = @('Harden-Windows-Security', 'Harden', 'Windows', 'Security', 'Compliance', 'Validation', 'Baseline', 'Security-Score')
+            Tags         = @('Harden-Windows-Security', 'Harden', 'Windows', 'Security', 'Compliance', 'Validation', 'Baseline', 'Security-Score', 'Benchmark', 'Group-Policy')
 
             # A URL to the license for this module.
             LicenseUri   = 'https://github.com/HotCakeX/.github/blob/main/LICENSE'
@@ -125,6 +125,10 @@
 
             # ReleaseNotes of this module
             ReleaseNotes = @"
+
+## Version 0.0.3
+Updated the Compliance checks to include changes in the following Harden Windows Security update:
+https://github.com/HotCakeX/Harden-Windows-Security/releases/tag/v2023.08.04
 
 ## Version 0.0.2
 Added self-updating mechanism

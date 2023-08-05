@@ -908,6 +908,26 @@ function Confirm-SystemCompliance {
                 1 {                
                     [bool]$ItemState = ($Item.State -eq 'Enabled') ? $True : $False   
                 }
+                2 {                
+                    [bool]$ItemState = ($Item.State -eq 'Enabled') ? $True : $False   
+                }
+                3 {                
+                    [bool]$ItemState = ($Item.State -eq 'Enabled' `
+                            -and $Item.NumericName -eq 'PIN Expiration' `
+                            -and $Item.NumericState -eq 'Enabled' `
+                            -and $Item.NumericValue -eq '180'
+                    ) ? $True : $False   
+                }
+                4 {                
+                    [bool]$ItemState = ($Item.State -eq 'Enabled' `
+                            -and $Item.NumericName -eq 'PIN History' `
+                            -and $Item.NumericState -eq 'Enabled' `
+                            -and $Item.NumericValue -eq '3'
+                    ) ? $True : $False    
+                }
+                5 {                
+                    [bool]$ItemState = ($Item.State -eq 'Enabled') ? $True : $False   
+                }
             }
             # Create a custom object with 5 properties to store them as nested objects inside the main output object
             $NestedObjectArray += [pscustomobject]@{
@@ -940,7 +960,7 @@ function Confirm-SystemCompliance {
         }
     
         # Create a custom object with 5 properties to store them as nested objects inside the main output object   
-        $IndividualItemResult = [bool]$($SecurityPoliciesIni.'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\MaxDevicePasswordFailedAttempts'] -eq '4,6') ? $True : $False
+        $IndividualItemResult = [bool]$($SecurityPoliciesIni.'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\MaxDevicePasswordFailedAttempts'] -eq '4,5') ? $True : $False
         $NestedObjectArray += [pscustomobject]@{
             Name      = 'Interactive logon: Machine account lockout threshold'
             Value     = $IndividualItemResult
@@ -963,6 +983,36 @@ function Confirm-SystemCompliance {
         $IndividualItemResult = [bool]$($SecurityPoliciesIni.'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\DontDisplayUserName'] -eq '4,1') ? $True : $False
         $NestedObjectArray += [pscustomobject]@{
             Name      = "Interactive logon: Don't display username at sign-in"
+            Value     = $IndividualItemResult
+            Compliant = $IndividualItemResult
+            Category  = $CatName
+            Method    = "Security Group Policy"
+        }
+
+        # Create a custom object with 5 properties to store them as nested objects inside the main output object   
+        $IndividualItemResult = [bool]$($SecurityPoliciesIni.'System Access'['LockoutBadCount'] -eq '5') ? $True : $False
+        $NestedObjectArray += [pscustomobject]@{
+            Name      = "Account lockout threshold"
+            Value     = $IndividualItemResult
+            Compliant = $IndividualItemResult
+            Category  = $CatName
+            Method    = "Security Group Policy"
+        }
+
+        # Create a custom object with 5 properties to store them as nested objects inside the main output object   
+        $IndividualItemResult = [bool]$($SecurityPoliciesIni.'System Access'['LockoutDuration'] -eq '1440') ? $True : $False
+        $NestedObjectArray += [pscustomobject]@{
+            Name      = "Account lockout duration"
+            Value     = $IndividualItemResult
+            Compliant = $IndividualItemResult
+            Category  = $CatName
+            Method    = "Security Group Policy"
+        }
+
+        # Create a custom object with 5 properties to store them as nested objects inside the main output object   
+        $IndividualItemResult = [bool]$($SecurityPoliciesIni.'System Access'['ResetLockoutCount'] -eq '1440') ? $True : $False
+        $NestedObjectArray += [pscustomobject]@{
+            Name      = "Reset account lockout counter after"
             Value     = $IndividualItemResult
             Compliant = $IndividualItemResult
             Category  = $CatName
@@ -1380,6 +1430,26 @@ function Confirm-SystemCompliance {
             Category  = $CatName
             Method    = "Registry Key"
         }
+
+        # Create a custom object with 5 properties to store them as nested objects inside the main output object   
+        $IndividualItemResult = [bool]$($SecurityPoliciesIni.'Registry Values'['MACHINE\System\CurrentControlSet\Control\SecurePipeServers\Winreg\AllowedExactPaths\Machine'] -eq '7,') ? $True : $False
+        $NestedObjectArray += [pscustomobject]@{
+            Name      = 'Network access: Remotely accessible registry paths'
+            Value     = $IndividualItemResult
+            Compliant = $IndividualItemResult
+            Category  = $CatName
+            Method    = "Security Group Policy"
+        }
+
+        # Create a custom object with 5 properties to store them as nested objects inside the main output object   
+        $IndividualItemResult = [bool]$($SecurityPoliciesIni.'Registry Values'['MACHINE\System\CurrentControlSet\Control\SecurePipeServers\Winreg\AllowedPaths\Machine'] -eq '7,') ? $True : $False
+        $NestedObjectArray += [pscustomobject]@{
+            Name      = 'Network access: Remotely accessible registry paths and subpaths'
+            Value     = $IndividualItemResult
+            Compliant = $IndividualItemResult
+            Category  = $CatName
+            Method    = "Security Group Policy"
+        }
     
         # Add the array of custom objects as a property to the $FinalMegaObject object outside the loop
         Add-Member -InputObject $FinalMegaObject -MemberType NoteProperty -Name $CatName -Value $NestedObjectArray -ErrorAction Stop
@@ -1416,6 +1486,19 @@ function Confirm-SystemCompliance {
                             -and $Item.DropDownListName -eq 'Choose the boot-start drivers that can be initialized:' `
                             -and $Item.DropDownListState -eq 'Enabled' `
                             -and $Item.DropDownListValue -eq 'Good only'                
+                    ) ? $True : $False   
+                }
+                7 {
+                    [bool]$ItemState = ($Item.State -eq 'Enabled') ? $True : $False 
+                }
+                8 {
+                    [bool]$ItemState = ($Item.State -eq 'Enabled') ? $True : $False 
+                }
+                9 {
+                    [bool]$ItemState = ($Item.State -eq 'Enabled' `
+                            -and $Item.DropDownListName -eq 'RPC Runtime Unauthenticated Client Restriction to Apply:' `
+                            -and $Item.DropDownListState -eq 'Enabled' `
+                            -and $Item.DropDownListValue -eq 'Authenticated without exceptions'                
                     ) ? $True : $False   
                 }
             }
@@ -2086,7 +2169,7 @@ function Confirm-SystemCompliance {
             #Endregion ASCII-Arts
 
             # Total number of Compliant values not equal to N/A           
-            [int]$TotalNumberOfTrueCompliantValues = 107
+            [int]$TotalNumberOfTrueCompliantValues = 119
                 
             switch ($true) {
                     ($TotalTrueValuesInOutPut -in 1..20) { & $WriteRainbow2 "$WhenValue1To20`nYour compliance score is $TotalTrueValuesInOutPut out of $TotalNumberOfTrueCompliantValues!" }                    

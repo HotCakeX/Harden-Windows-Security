@@ -1280,8 +1280,11 @@ Get-Content <Path-To-File> -stream zone.identifier
 - [Goblin Loot - Great security related website about EDR, Cloud and Microsoft products](https://www.goblinloot.net/)
 - [Australia's Essential Eight](https://www.cyber.gov.au/resources-business-and-government/essential-cyber-security/essential-eight/essential-eight-assessment-process-guide)
 - [NIST 800-53](https://www.nist.gov/privacy-framework/nist-privacy-framework-and-cybersecurity-framework-nist-special-publication-800-53)
-- [DoD's CMMC](https://learn.microsoft.com/en-us/azure/compliance/offerings/offering-cmmc)
+- [DoD's CMMC (Cybersecurity Maturity Model Certification)](https://learn.microsoft.com/en-us/azure/compliance/offerings/offering-cmmc)
 - [ISO 27001](https://www.iso.org/standard/27001)
+- [DoD Cyber Stigs (Security Technical Implementation Guides)](https://public.cyber.mil/stigs/downloads/?_dl_facet_stigs=operating-systems)
+- [HIPPA HITRUST](https://hitrustalliance.net/content/uploads/HITRUST_HIPAA-Guide.pdf)
+- [NIST SP 800-171 Rev. 2 - Protecting Controlled Unclassified Information in Nonfederal Systems and Organizations](https://csrc.nist.gov/pubs/sp/800/171/r2/upd1/final)
 
 <p align="right"><a href="#readme-top">💡 (back to top)</a></p>
 

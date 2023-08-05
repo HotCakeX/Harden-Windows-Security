@@ -69,6 +69,22 @@
 		"1": {
 			"Cat": "System/Logon",
 			"Name": "Do not display network selection UI"
+		},
+		"2": {
+			"Cat": "System/PIN Complexity",
+			"Name": "Require digits"
+		},
+		"3": {
+			"Cat": "System/PIN Complexity",
+			"Name": "Expiration"
+		},
+		"4": {
+			"Cat": "System/PIN Complexity",
+			"Name": "History"
+		},
+		"5": {
+			"Cat": "System/PIN Complexity",
+			"Name": "Require lowercase letters"
 		}
 	},
 	"Microsoft Defender": {
@@ -213,6 +229,18 @@
 		"6": {
 			"Cat": "System/Early Launch Antimalware",
 			"Name": "Boot-Start Driver Initialization Policy"
+		},
+		"7": {
+			"Cat": "System/Audit Process Creation",
+			"Name": "Include command line in process creation events"
+		},
+		"8": {
+			"Cat": "System/Remote Procedure Call",
+			"Name": "Enable RPC Endpoint Mapper Client Authentication"
+		},
+		"9": {
+			"Cat": "System/Remote Procedure Call",
+			"Name": "Restrict Unauthenticated RPC clients"
 		}
 	},
 	"TLS": {

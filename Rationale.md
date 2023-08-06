@@ -6,7 +6,7 @@ This document explains the rationale and purpose of this GitHub repository and i
 
 ## <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/PNGs/Windows365.png"> Harden Windows Security PowerShell script
 
-This is a general purpose [script](https://github.com/HotCakeX/Harden-Windows-Security), it's suitable to be used by everyone, as long as your device is not being managed by a domain controller or Azure Active Directory, because those devices are already controlled in different manner and different set of policies are applied to them.
+This is a general purpose [script](https://github.com/HotCakeX/Harden-Windows-Security), it's suitable to be used by everyone, as long as your device is not being managed by a Domain Controller or [Microsoft Entra ID](https://www.microsoft.com/en-gb/security/business/microsoft-entra), because those devices are already controlled in different manners and different set of policies are applied to them.
 
 Use Harden Windows Security script to secure your personal device. Your device will be secure against the majority of threats.
 
@@ -15,6 +15,14 @@ Harden Windows Security script uses the same security features built into your d
 <br>
 
 <p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/SecurityBenchmarksComparisonChart.png"></p>
+
+> [*The reasoning behind the infographic above*](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Comparison-of-security-benchmarks)
+
+<br>
+
+### Compliance checking is also available <img width="55" src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/animebop.gif">
+
+You can use [Harden Windows Security Module](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden%E2%80%90Windows%E2%80%90Security%E2%80%90Module) to check and confirm that everything from Harden Windows Security script is properly applied.
 
 <br>
 

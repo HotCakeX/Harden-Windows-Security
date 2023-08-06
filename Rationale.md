@@ -20,7 +20,7 @@ Harden Windows Security script uses the same security features built into your d
 
 <br>
 
-### Compliance checking is also available <img width="55" src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/animebop.gif">
+### Compliance checking is also available! <img width="55" src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/animebop.gif">
 
 You can use [Harden Windows Security Module](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden%E2%80%90Windows%E2%80%90Security%E2%80%90Module) to check and confirm that everything from Harden Windows Security script is properly applied.
 

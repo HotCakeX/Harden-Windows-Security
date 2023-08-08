@@ -31,7 +31,7 @@ body:
   - type: textarea
     id: Explanation
     attributes:
-      label: Explain the bug
+      label: Please explain the bug
       description: Please explain the bug and be as detailed as possible. 🙏
     validations:
       required: true 

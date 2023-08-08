@@ -12,7 +12,7 @@ body:
   - type: dropdown
     id: version
     attributes:
-      label: Tools category
+      label: Tools category:
       description: Which category/tool does this bug belong to?
       options:
         - Harden Windows Security Script

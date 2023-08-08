@@ -22,7 +22,6 @@ body:
     attributes:
       label: Explain your new Security measure suggestion
       description: Please explain your new Security measure suggestion and be as detailed as possible. 🙏
-      render: shell
     validations:
       required: true 
       

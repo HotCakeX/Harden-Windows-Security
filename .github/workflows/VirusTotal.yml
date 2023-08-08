@@ -17,4 +17,4 @@ jobs:
         shell: pwsh
         run: |
             
-            ./Workflowstuff/VirusTotal
+            ./.github/Workflowstuff/VirusTotal

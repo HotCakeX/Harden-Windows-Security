@@ -2025,8 +2025,7 @@ function Confirm-SystemCompliance {
             $WriteHotPink = { Write-Output "$($PSStyle.Foreground.FromRGB(255,105,180))$($args[0])$($PSStyle.Reset)" }
             $WriteDeepPink = { Write-Output "$($PSStyle.Foreground.FromRGB(255,20,147))$($args[0])$($PSStyle.Reset)" }
             $WriteMintGreen = { Write-Output "$($PSStyle.Foreground.FromRGB(152,255,152))$($args[0])$($PSStyle.Reset)" }
-            $WriteOrange = { Write-Output "$($PSStyle.Foreground.FromRGB(255,165,0))$($args[0])$($PSStyle.Reset)" }
-            $WriteLime = { Write-Output "$($PSStyle.Foreground.FromRGB(0,255,0))$($args[0])$($PSStyle.Reset)" }
+            $WriteOrange = { Write-Output "$($PSStyle.Foreground.FromRGB(255,165,0))$($args[0])$($PSStyle.Reset)" }            
             $WriteSkyBlue = { Write-Output "$($PSStyle.Foreground.FromRGB(135,206,235))$($args[0])$($PSStyle.Reset)" }
             
             $WriteRainbow1 = { 
@@ -2166,20 +2165,20 @@ function Confirm-SystemCompliance {
             }
             
             # Counting the number of $True Compliant values in the Final Output Object
-            [int]$TotalTrueValuesInOutPut = ($FinalMegaObject.'Microsoft Defender' | ? { $_.Compliant -eq $True }).value.Count + `
-                [int]($FinalMegaObject.ASR | ? { $_.Compliant -eq $True }).value.Count + `
-                [int]($FinalMegaObject.Bitlocker | ? { $_.Compliant -eq $True }).value.Count + `
-                [int]($FinalMegaObject.TLS | ? { $_.Compliant -eq $True }).value.Count + `
-                [int]($FinalMegaObject.LockScreen | ? { $_.Compliant -eq $True }).value.Count + `
-                [int]($FinalMegaObject.UAC | ? { $_.Compliant -eq $True }).value.Count + `
-                [int]($FinalMegaObject.'Device Guard' | ? { $_.Compliant -eq $True }).value.Count + `
-                [int]($FinalMegaObject.'Windows Firewall' | ? { $_.Compliant -eq $True }).value.Count + `
-                [int]($FinalMegaObject.'Optional Windows Features' | ? { $_.Compliant -eq $True }).value.Count + `
-                [int]($FinalMegaObject.'Windows Networking' | ? { $_.Compliant -eq $True }).value.Count + `
-                [int]($FinalMegaObject.Miscellaneous | ? { $_.Compliant -eq $True }).value.Count + `
-                [int]($FinalMegaObject.'Windows Update' | ? { $_.Compliant -eq $True }).value.Count + `
-                [int]($FinalMegaObject.Edge | ? { $_.Compliant -eq $True }).value.Count + `
-                [int]($FinalMegaObject.'Non-Admin' | ? { $_.Compliant -eq $True }).value.Count
+            [int]$TotalTrueValuesInOutPut = ($FinalMegaObject.'Microsoft Defender' | Where-Object { $_.Compliant -eq $True }).value.Count + `
+                [int]($FinalMegaObject.ASR | Where-Object { $_.Compliant -eq $True }).value.Count + `
+                [int]($FinalMegaObject.Bitlocker | Where-Object { $_.Compliant -eq $True }).value.Count + `
+                [int]($FinalMegaObject.TLS | Where-Object { $_.Compliant -eq $True }).value.Count + `
+                [int]($FinalMegaObject.LockScreen | Where-Object { $_.Compliant -eq $True }).value.Count + `
+                [int]($FinalMegaObject.UAC | Where-Object { $_.Compliant -eq $True }).value.Count + `
+                [int]($FinalMegaObject.'Device Guard' | Where-Object { $_.Compliant -eq $True }).value.Count + `
+                [int]($FinalMegaObject.'Windows Firewall' | Where-Object { $_.Compliant -eq $True }).value.Count + `
+                [int]($FinalMegaObject.'Optional Windows Features' | Where-Object { $_.Compliant -eq $True }).value.Count + `
+                [int]($FinalMegaObject.'Windows Networking' | Where-Object { $_.Compliant -eq $True }).value.Count + `
+                [int]($FinalMegaObject.Miscellaneous | Where-Object { $_.Compliant -eq $True }).value.Count + `
+                [int]($FinalMegaObject.'Windows Update' | Where-Object { $_.Compliant -eq $True }).value.Count + `
+                [int]($FinalMegaObject.Edge | Where-Object { $_.Compliant -eq $True }).value.Count + `
+                [int]($FinalMegaObject.'Non-Admin' | Where-Object { $_.Compliant -eq $True }).value.Count
 
 
             #Region ASCII-Arts

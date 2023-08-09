@@ -1006,7 +1006,7 @@ try {
                 .\LGPO.exe /s "..\Security-Baselines-X\Lock Screen Policies\GptTmpl.inf"
 
                 # Apply the Don't display last signed-in policy
-                switch (Select-Option -SubCategory -Options "Yes", "No", "Exit" -Message "`nDon't display last signed-in on logon screen ? Please see GitHub readme for more info!") {
+                switch (Select-Option -SubCategory -Options "Yes", "No", "Exit" -Message "`nDon't display last signed-in on logon screen ?") {
                     "Yes" {
                         .\LGPO.exe /s "..\Security-Baselines-X\Lock Screen Policies\Don't display last signed-in\GptTmpl.inf"                      
                     } "No" { break }
@@ -1014,7 +1014,7 @@ try {
                 }
 
                 # Apply Credential Providers Configurations policy
-                switch (Select-Option -SubCategory -Options "Yes", "No", "Exit" -Message "`nSet Windows Hello PIN as default Credential provider ? Please see GitHub readme for more info!") {
+                switch (Select-Option -SubCategory -Options "Yes", "No", "Exit" -Message "`nSet Windows Hello PIN as the default Credential provider and exclude Password and Smart Card ?") {
                     "Yes" {
                         .\LGPO.exe /m "..\Security-Baselines-X\Lock Screen Policies\Credential Providers Configurations\registry.pol"                      
                     } "No" { break }
@@ -1046,7 +1046,7 @@ try {
                 }
 
                 # Apply the Hide the entry points for Fast User Switching policy
-                switch (Select-Option -SubCategory -Options "Yes", "No", "Exit" -Message "`nHide the entry points for Fast User Switching ? Please see GitHub readme for more info!") {
+                switch (Select-Option -SubCategory -Options "Yes", "No", "Exit" -Message "`nHide the entry points for Fast User Switching ?") {
                     "Yes" {
                         .\LGPO.exe /m "..\Security-Baselines-X\User Account Control UAC Policies\Hides the entry points for Fast User Switching\registry.pol"                      
                     } "No" { break }

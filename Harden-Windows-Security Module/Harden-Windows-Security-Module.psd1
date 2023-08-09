@@ -12,7 +12,7 @@
     # RootModule = ''
 
     # Version number of this module.
-    ModuleVersion        = '0.0.3'
+    ModuleVersion        = '0.0.4'
 
     # Supported PSEditions
     CompatiblePSEditions = @('Core')
@@ -125,6 +125,11 @@
 
             # ReleaseNotes of this module
             ReleaseNotes = @"
+
+## Version 0.0.4
+Updated the Compliance checks to include changes in the following Harden Windows Security update:
+https://github.com/HotCakeX/Harden-Windows-Security/releases/tag/v2023.08.08
+Changed Windows Firewall category from using cmdlets to Group policy xml parsing
 
 ## Version 0.0.3
 Updated the Compliance checks to include changes in the following Harden Windows Security update:

@@ -44,6 +44,8 @@ function Confirm-SystemCompliance {
         [switch]$DetailedDisplay        
     )
     begin {
+
+        Write-Progress -Activity 'Starting' -Status 'Processing...' -PercentComplete 5
        
         # Make sure the latest version of the module is installed and if not, automatically update it, clean up any old versions
         function Update-self {            
@@ -78,19 +80,21 @@ function Confirm-SystemCompliance {
             Write-Error -Message "Confirm-SystemCompliance cmdlet requires Administrator privileges." -ErrorAction Stop
         }
 
+        Write-Progress -Activity 'Checking for updates' -Status 'Processing...' -PercentComplete 10
+
         # Self update the module
         Update-self -ErrorAction Stop
 
         # Stop operation as soon as there is an error anywhere, unless explicitly specified otherwise
         $ErrorActionPreference = 'SilentlyContinue'
         
-        Write-Progress -Activity 'Gathering Security Policy Information' -Status 'Processing...' -PercentComplete 5 
+        Write-Progress -Activity 'Gathering Security Policy Information' -Status 'Processing...' -PercentComplete 15
 
         Secedit /export /cfg .\security_policy.inf | Out-Null
         # Storing the output of the ini file parsing function
         $SecurityPoliciesIni = ConvertFrom-IniFile -IniFile .\security_policy.inf
         
-        Write-Progress -Activity 'Downloading Registry CSV File from GitHub or Azure DevOps' -Status 'Processing...' -PercentComplete 10
+        Write-Progress -Activity 'Downloading Registry CSV File from GitHub or Azure DevOps' -Status 'Processing...' -PercentComplete 20
 
         # Download Registry CSV file from GitHub or Azure DevOps
         try {
@@ -103,7 +107,7 @@ function Confirm-SystemCompliance {
         # Import the registry.csv file as CSV
         $CSVFileContent = Import-Csv -Path ".\Registry.csv"
 
-        Write-Progress -Activity 'Downloading Group-Policies.json file from GitHub' -Status 'Processing...' -PercentComplete 15
+        Write-Progress -Activity 'Downloading Group-Policies.json file from GitHub' -Status 'Processing...' -PercentComplete 25
 
         # Download Group-Policies.json file from GitHub
         try {
@@ -114,10 +118,10 @@ function Confirm-SystemCompliance {
         }
         # Hash table to store Hardening Script's Policy Categories and Names
         # Importing it from the JSON file as hashtable
-        $HashPol = Get-Content -Path ".\Group-Policies.json" -ErrorAction Stop | ConvertFrom-Json -Depth 100 -AsHashtable -ErrorAction Stop
-
-        
-        Write-Progress -Activity 'Gathering Group Policy Information' -Status 'Processing...' -PercentComplete 20
+        # $HashPol = Get-Content -Path ".\Group-Policies.json" -ErrorAction Stop | ConvertFrom-Json -Depth 100 -AsHashtable -ErrorAction Stop
+        $HashPol = Get-Content -Path "E:\Cloned Repositories\Harden-Windows-Security\Payload\Group-Policies.json" -ErrorAction Stop | ConvertFrom-Json -Depth 100 -AsHashtable -ErrorAction Stop
+       
+        Write-Progress -Activity 'Gathering Group Policy Information' -Status 'Processing...' -PercentComplete 30
 
         Gpresult /Scope Computer /x .\GPResult.xml /f
         # Load the xml file into a variable
@@ -157,6 +161,49 @@ function Confirm-SystemCompliance {
             }
         }
 
+
+        # An array to store Group Policy Firewall settings as an object
+        $FirewallPoliciesOutput = @()
+        # Use dot notation to access the Group Policy elements - sometimes the type is q4 or q3 or q7, so using wildcard for the number
+        $FirewallGroupPolicySettings = $GroupPolicyXmlContent.Rsop.ComputerResults.ExtensionData.Extension | Where-Object { $_.type -like 'q*:WindowsFirewallSettings' } 
+
+        $FirewallPoliciesOutput += [PSCustomObject]@{
+
+            GlobalSettingsPolicyVersion      = $FirewallGroupPolicySettings.GlobalSettings.PolicyVersion.Value
+            # Domain profile policies
+            DomainDefaultInboundAction       = $FirewallGroupPolicySettings.DomainProfile.DefaultInboundAction.value
+            DomainDefaultOutboundAction      = $FirewallGroupPolicySettings.DomainProfile.DefaultOutboundAction.value
+            DomainDisableNotifications       = $FirewallGroupPolicySettings.DomainProfile.DisableNotifications.value
+            DomainDoNotAllowExceptions       = $FirewallGroupPolicySettings.DomainProfile.DoNotAllowExceptions.value
+            DomainEnableFirewall             = $FirewallGroupPolicySettings.DomainProfile.EnableFirewall.value
+            DomainLogFilePath                = $FirewallGroupPolicySettings.DomainProfile.LogFilePath.value
+            DomainLogFileSize                = $FirewallGroupPolicySettings.DomainProfile.LogFileSize.value        
+            DomainLogDroppedPackets          = $FirewallGroupPolicySettings.DomainProfile.LogDroppedPackets.value
+            DomainLogSuccessfulConnections   = $FirewallGroupPolicySettings.DomainProfile.LogSuccessfulConnections.value
+            # Public profile policies
+            PublicAllowLocalIPsecPolicyMerge = $FirewallGroupPolicySettings.PublicProfile.AllowLocalIPsecPolicyMerge.value
+            PublicAllowLocalPolicyMerge      = $FirewallGroupPolicySettings.PublicProfile.AllowLocalPolicyMerge.value
+            PublicDefaultInboundAction       = $FirewallGroupPolicySettings.PublicProfile.DefaultInboundAction.value
+            PublicDefaultOutboundAction      = $FirewallGroupPolicySettings.PublicProfile.DefaultOutboundAction.value
+            PublicDisableNotifications       = $FirewallGroupPolicySettings.PublicProfile.DisableNotifications.value
+            PublicDoNotAllowExceptions       = $FirewallGroupPolicySettings.PublicProfile.DoNotAllowExceptions.value
+            PublicEnableFirewall             = $FirewallGroupPolicySettings.PublicProfile.EnableFirewall.value
+            PublicLogFilePath                = $FirewallGroupPolicySettings.PublicProfile.LogFilePath.value
+            PublicLogFileSize                = $FirewallGroupPolicySettings.PublicProfile.LogFileSize.value        
+            PublicLogDroppedPackets          = $FirewallGroupPolicySettings.PublicProfile.LogDroppedPackets.value
+            PublicLogSuccessfulConnections   = $FirewallGroupPolicySettings.PublicProfile.LogSuccessfulConnections.value        
+            # Private profile policies
+            PrivateDefaultInboundAction      = $FirewallGroupPolicySettings.PrivateProfile.DefaultInboundAction.value
+            PrivateDefaultOutboundAction     = $FirewallGroupPolicySettings.PrivateProfile.DefaultOutboundAction.value
+            PrivateDisableNotifications      = $FirewallGroupPolicySettings.PrivateProfile.DisableNotifications.value           
+            PrivateEnableFirewall            = $FirewallGroupPolicySettings.PrivateProfile.EnableFirewall.value
+            PrivateLogFilePath               = $FirewallGroupPolicySettings.PrivateProfile.LogFilePath.value
+            PrivateLogFileSize               = $FirewallGroupPolicySettings.PrivateProfile.LogFileSize.value        
+            PrivateLogDroppedPackets         = $FirewallGroupPolicySettings.PrivateProfile.LogDroppedPackets.value
+            PrivateLogSuccessfulConnections  = $FirewallGroupPolicySettings.PrivateProfile.LogSuccessfulConnections.value
+        }
+
+
         # An array to store each Group Policy "<q6:RegistrySetting>" element as a separate object
         $RegistriesOutput = @()
         # Use dot notation to access the Policy element
@@ -189,7 +236,7 @@ function Confirm-SystemCompliance {
     process {
         
         #Region Microsoft-Defender-Category
-        Write-Progress -Activity 'Validating Microsoft Defender Category' -Status 'Processing...' -PercentComplete 25
+        Write-Progress -Activity 'Validating Microsoft Defender Category' -Status 'Processing...' -PercentComplete 35
         # An array to store the nested custom objects (Results of the foreach loop), inside the main output object
         $NestedObjectArray = @()
         $CatName = "Microsoft Defender"
@@ -462,7 +509,7 @@ function Confirm-SystemCompliance {
         }
     
         # For PowerShell Cmdlet
-        $IndividualItemResult = $((Get-ScheduledTask -TaskPath "\MSFT Driver Block list update\" -TaskName "MSFT Driver Block list update" -ErrorAction SilentlyContinue) ? $true : $false)
+        $IndividualItemResult = $((Get-ScheduledTask -TaskPath "\MSFT Driver Block list update\" -TaskName "MSFT Driver Block list update" -ErrorAction SilentlyContinue) ? $True : $false)
         $NestedObjectArray += [pscustomobject]@{
             Name      = 'Fast weekly Microsoft recommended driver block list update'
             Value     = $IndividualItemResult
@@ -520,7 +567,7 @@ function Confirm-SystemCompliance {
         #EndRegion Microsoft-Defender-Category
     
         #Region Attack-Surface-Reduction-Rules-Category
-        Write-Progress -Activity 'Validating Attack Surface Reduction Rules Category' -Status 'Processing...' -PercentComplete 30
+        Write-Progress -Activity 'Validating Attack Surface Reduction Rules Category' -Status 'Processing...' -PercentComplete 40
         $NestedObjectArray = @()
         $CatName = "ASR"
         # Loop through each nested hash table inside the main Policies hash table and check the item state using a switch statement
@@ -615,7 +662,7 @@ function Confirm-SystemCompliance {
         #EndRegion Attack-Surface-Reduction-Rules-Category
     
         #Region Bitlocker-Category
-        Write-Progress -Activity 'Validating Bitlocker Category' -Status 'Processing...' -PercentComplete 35
+        Write-Progress -Activity 'Validating Bitlocker Category' -Status 'Processing...' -PercentComplete 45
         $NestedObjectArray = @()
         $CatName = "Bitlocker"
 
@@ -794,7 +841,7 @@ function Confirm-SystemCompliance {
         }
     
         # For PowerShell Cmdlet
-        $IndividualItemResult = $($((Get-ItemProperty HKLM:\SYSTEM\CurrentControlSet\Control\Power -name HibernateEnabled).hibernateEnabled) -eq 1 ? $true : $False)
+        $IndividualItemResult = $($((Get-ItemProperty HKLM:\SYSTEM\CurrentControlSet\Control\Power -name HibernateEnabled).hibernateEnabled) -eq 1 ? $True : $False)
         $NestedObjectArray += [pscustomobject]@{
             Name      = 'Hibernate enabled and set to full'
             Value     = $IndividualItemResult
@@ -807,7 +854,7 @@ function Confirm-SystemCompliance {
         #EndRegion Bitlocker-Category
     
         #Region TLS-Category
-        Write-Progress -Activity 'Validating TLS Category' -Status 'Processing...' -PercentComplete 40
+        Write-Progress -Activity 'Validating TLS Category' -Status 'Processing...' -PercentComplete 50
         $NestedObjectArray = @()
         $CatName = "TLS"
         # Loop through each nested hash table inside the main Policies hash table and check the item state using a switch statement
@@ -822,7 +869,7 @@ function Confirm-SystemCompliance {
                     # Loop through the array and compare each element with the expected value
                     foreach ($i in 0..3) {
                         # Use a ternary operator to set the result to false and break the loop if the element does not match
-                        $ItemStateAux = $Item.MultiTextValue.string[$i] -eq $ExpectedOrderAndContent[$i] ? $true :  $false
+                        $ItemStateAux = $Item.MultiTextValue.string[$i] -eq $ExpectedOrderAndContent[$i] ? $True :  $false
                     }
                     # Write-Host "$ItemStateAux" -ForegroundColor Red
     
@@ -898,7 +945,7 @@ function Confirm-SystemCompliance {
         #EndRegion TLS-Category
     
         #Region LockScreen-Category
-        Write-Progress -Activity 'Validating Lock Screen Category' -Status 'Processing...' -PercentComplete 45
+        Write-Progress -Activity 'Validating Lock Screen Category' -Status 'Processing...' -PercentComplete 55
         $NestedObjectArray = @()
         $CatName = "LockScreen"
         # Loop through each nested hash table inside the main Policies hash table and check the item state using a switch statement
@@ -927,6 +974,18 @@ function Confirm-SystemCompliance {
                 }
                 5 {                
                     [bool]$ItemState = ($Item.State -eq 'Enabled') ? $True : $False   
+                }
+                6 {                
+                    [bool]$ItemState = ($Item.State -eq 'Enabled' `
+                            -and $Item.EditTextName -eq 'Exclude the following credential providers:' `
+                            -and $Item.EditTextState -eq 'Enabled' `
+                            -and $item.EditTextValue -eq '{60b78e88-ead8-445c-9cfd-0b87f74ea6cd},{F8A0B131-5F68-486c-8040-7E8FC3C85BB6},{8FD7E19C-3BF7-489B-A72C-846AB3678C96},{1ee7337f-85ac-45e2-a23c-37c753209769},{1b283861-754f-4022-ad47-a5eaaa618894}' ) ? $True : $False   
+                }
+                7 {                
+                    [bool]$ItemState = ($Item.State -eq 'Enabled' `
+                            -and $Item.EditTextName -eq 'Assign the following credential provider as the default credential provider:' `
+                            -and $Item.EditTextState -eq 'Enabled' `
+                            -and $item.EditTextValue -eq '{D6886603-9D2F-4EB2-B667-1971041FA96B}' ) ? $True : $False   
                 }
             }
             # Create a custom object with 5 properties to store them as nested objects inside the main output object
@@ -1018,41 +1077,99 @@ function Confirm-SystemCompliance {
             Category  = $CatName
             Method    = "Security Group Policy"
         }
-    
-        # Add the array of custom objects as a property to the $FinalMegaObject object outside the loop
-        Add-Member -InputObject $FinalMegaObject -MemberType NoteProperty -Name $CatName -Value $NestedObjectArray -ErrorAction Stop
-        #EndRegion LockScreen-Category
-    
-        #Region User-Account-Control-Category
-        Write-Progress -Activity 'Validating User Account Control Category' -Status 'Processing...' -PercentComplete 50
-        $NestedObjectArray = @()
-        $CatName = "UAC" 
 
-        # Create a custom object with 5 properties to store them as nested objects inside the main output object
-        $IndividualItemResult = [bool]$($SecurityPoliciesIni.'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\ConsentPromptBehaviorAdmin'] -eq '4,2') ? $True : $False
+        # Create a custom object with 5 properties to store them as nested objects inside the main output object   
+        $IndividualItemResult = [bool]$($SecurityPoliciesIni.'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\DontDisplayLastUserName'] -eq '4,1') ? $True : $False
         $NestedObjectArray += [pscustomobject]@{
-            Name      = "User Account Control: Behavior of the elevation prompt for administrators in Admin Approval Mode"
+            Name      = "Interactive logon: Don't display last signed-in"
             Value     = $IndividualItemResult
             Compliant = $IndividualItemResult
             Category  = $CatName
             Method    = "Security Group Policy"
         }
     
+        # Add the array of custom objects as a property to the $FinalMegaObject object outside the loop
+        Add-Member -InputObject $FinalMegaObject -MemberType NoteProperty -Name $CatName -Value $NestedObjectArray -ErrorAction Stop
+        #EndRegion LockScreen-Category
+    
+        #Region User-Account-Control-Category
+        Write-Progress -Activity 'Validating User Account Control Category' -Status 'Processing...' -PercentComplete 60
+        $NestedObjectArray = @()
+        $CatName = "UAC" 
+        # Loop through each nested hash table inside the main Policies hash table and check the item state using a switch statement
+        foreach ($Key in $HashPol[$CatName].Keys) {
+            $Item = $PoliciesOutput | Where-object { $_.Name -eq $HashPol[$CatName][$Key].Name -and $_.Category -eq $HashPol[$CatName][$Key].Cat }
+            switch ($Key) {            
+                1 { 
+                    [bool]$ItemState = ($Item.State -eq 'Enabled') ? $True : $False   
+                }                             
+            }
+
+            # Create a custom object with 5 properties to store them as nested objects inside the main output object
+            $NestedObjectArray += [pscustomobject]@{
+                Name      = $HashPol[$CatName][$Key].Name
+                Value     = $ItemState
+                Compliant = $ItemState
+                Category  = $CatName
+                Method    = "Group Policy"                
+            }
+        }
+
+
         # Create a custom object with 5 properties to store them as nested objects inside the main output object
-        $IndividualItemResult = [bool]$($SecurityPoliciesIni.'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\ConsentPromptBehaviorUser'] -eq '4,1') ? $True : $False
+        $IndividualItemResult = [bool]$($SecurityPoliciesIni.'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\ConsentPromptBehaviorAdmin'] -eq '4,2') ? $True : $False
         $NestedObjectArray += [pscustomobject]@{
-            Name      = "User Account Control: Behavior of the elevation prompt for standard users"
+            Name      = "UAC: Behavior of the elevation prompt for administrators in Admin Approval Mode"
             Value     = $IndividualItemResult
             Compliant = $IndividualItemResult
             Category  = $CatName
             Method    = "Security Group Policy"
+        }
+    
+        
+        # This particular policy can have 2 values and they are both acceptable depending on whichever user selects        
+        [string]$ConsentPromptBehaviorUserValue = $SecurityPoliciesIni.'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\ConsentPromptBehaviorUser']
+        # This option is automatically applied when UAC category is run
+        if ($ConsentPromptBehaviorUserValue -eq '4,1') {        
+            $ConsentPromptBehaviorUserCompliance = $true
+            $IndividualItemResult = 'Prompt for credentials on the secure desktop'
+        }
+        # This option prompts for additional confirmation before it's applied
+        elseif ($ConsentPromptBehaviorUserValue -eq '4,0') {
+            $ConsentPromptBehaviorUserCompliance = $true
+            $IndividualItemResult = 'Automatically deny elevation requests'
+        }
+        # If none of them is applied then return false for compliance and N/A for value
+        else {
+            $ConsentPromptBehaviorUserCompliance = $false
+            $IndividualItemResult = 'N/A'
+        }
+
+        # Create a custom object with 5 properties to store them as nested objects inside the main output object
+        $NestedObjectArray += [pscustomobject]@{
+            Name      = "UAC: Behavior of the elevation prompt for standard users"
+            Value     = $IndividualItemResult
+            Compliant = $ConsentPromptBehaviorUserCompliance
+            Category  = $CatName
+            Method    = "Security Group Policy"
         }   
+
+        # Create a custom object with 5 properties to store them as nested objects inside the main output object   
+        $IndividualItemResult = [bool]($($SecurityPoliciesIni.'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\ValidateAdminCodeSignatures'] -eq '4,1') ? $True : $False)
+        $NestedObjectArray += [pscustomobject]@{
+            Name      = 'UAC: Only elevate executables that are signed and validated'
+            Value     = $IndividualItemResult
+            Compliant = $IndividualItemResult
+            Category  = $CatName
+            Method    = "Security Group Policy"
+        }
+                
         # Add the array of custom objects as a property to the $FinalMegaObject object outside the loop
         Add-Member -InputObject $FinalMegaObject -MemberType NoteProperty -Name $CatName -Value $NestedObjectArray -ErrorAction Stop
         #EndRegion User-Account-Control-Category
     
         #Region Device-Guard-Category
-        Write-Progress -Activity 'Validating Device Guard Category' -Status 'Processing...' -PercentComplete 55
+        Write-Progress -Activity 'Validating Device Guard Category' -Status 'Processing...' -PercentComplete 65
         $NestedObjectArray = @()
         $CatName = "Device Guard"
         # Loop through each nested hash table inside the main Policies hash table and check the item state using a switch statement
@@ -1162,70 +1279,172 @@ function Confirm-SystemCompliance {
         #EndRegion Device-Guard-Category
         
         #Region Windows-Firewall-Category
-        Write-Progress -Activity 'Validating Windows Firewall Category' -Status 'Processing...' -PercentComplete 65
+        Write-Progress -Activity 'Validating Windows Firewall Category' -Status 'Processing...' -PercentComplete 70
         $NestedObjectArray = @()
         $CatName = "Windows Firewall"
-    
-        # For Firewall Domain profile - Verifies only the applied Group Policies
-        [pscustomobject]$DomainFilewallProfileDetails = (Get-NetFirewallProfile -Name domain -PolicyStore localhost -ErrorAction Stop)
-        [bool]$Flag1 = $DomainFilewallProfileDetails.DefaultInboundAction -eq 'Block'
-        [bool]$Flag2 = $DomainFilewallProfileDetails.DefaultOutboundAction -eq 'Block'
-        [bool]$Flag3 = $DomainFilewallProfileDetails.AllowInboundRules -eq 'False'
-        [bool]$Flag4 = $DomainFilewallProfileDetails.Enabled -eq $true
-        [bool]$Flag5 = $DomainFilewallProfileDetails.LogFileName -eq '%systemroot%\system32\logfiles\firewall\domainfirewall.log'
-        [bool]$Flag6 = $DomainFilewallProfileDetails.LogMaxSizeKilobytes -eq '32767'
-        [bool]$Flag7 = $DomainFilewallProfileDetails.LogAllowed -eq $true
-        [bool]$Flag8 = $DomainFilewallProfileDetails.LogBlocked -eq $true
+              
     
         # Create a custom object with 5 properties to store them as nested objects inside the main output object
-        $IndividualItemResult = [bool](($Flag1 -and $Flag2 -and $Flag3 -and $Flag4 -and $Flag5 -and $Flag6 -and $Flag7 -and $Flag8) ? $true : $False)
         $NestedObjectArray += [pscustomobject]@{
-            Name      = "Firewall Domain Profile"
-            Value     = $IndividualItemResult
-            Compliant = $IndividualItemResult
-            Category  = $CatName
-            Method    = "Firewall Group Policy"
-        }
-    
-    
-        # For Firewall Private profile - Verifies only the applied Group Policies
-        [pscustomobject]$PrivateFilewallProfileDetails = (Get-NetFirewallProfile -Name Private -PolicyStore localhost -ErrorAction Stop)
-        [bool]$Flag1 = $PrivateFilewallProfileDetails.NotifyOnListen -eq $true
-        [bool]$Flag2 = $PrivateFilewallProfileDetails.Enabled -eq $true
-        [bool]$Flag3 = $PrivateFilewallProfileDetails.LogBlocked -eq $true
-        [bool]$Flag4 = $PrivateFilewallProfileDetails.LogFileName -eq '%systemroot%\system32\logfiles\firewall\privatefirewall.log'
-        [bool]$Flag5 = $PrivateFilewallProfileDetails.LogMaxSizeKilobytes -eq '32767'
-        [bool]$Flag6 = $PrivateFilewallProfileDetails.LogAllowed -eq $true
-    
-        # Create a custom object with 5 properties to store them as nested objects inside the main output object
-        $IndividualItemResult = [bool](($Flag1 -and $Flag2 -and $Flag3 -and $Flag4 -and $Flag5 -and $Flag6) ? $true : $False)
-        $NestedObjectArray += [pscustomobject]@{
-            Name      = "Firewall Private Profile"
-            Value     = $IndividualItemResult
-            Compliant = $IndividualItemResult
-            Category  = $CatName
-            Method    = "Firewall Group Policy"
-        }
-    
-        # For Firewall Public profile - Verifies only the applied Group Policies
-        [pscustomobject]$PublicFilewallProfileDetails = (Get-NetFirewallProfile -Name Public -PolicyStore localhost -ErrorAction Stop)
-        [bool]$Flag1 = $PublicFilewallProfileDetails.NotifyOnListen -eq $true
-        [bool]$Flag2 = $PublicFilewallProfileDetails.Enabled -eq $true
-        [bool]$Flag3 = $PublicFilewallProfileDetails.LogBlocked -eq $true
-        [bool]$Flag4 = $PublicFilewallProfileDetails.LogFileName -eq '%systemroot%\system32\logfiles\firewall\publicfirewall.log'
-        [bool]$Flag5 = $PublicFilewallProfileDetails.LogMaxSizeKilobytes -eq '32767'
-        [bool]$Flag6 = $PublicFilewallProfileDetails.LogAllowed -eq $true        
-    
-        # Create a custom object with 5 properties to store them as nested objects inside the main output object
-        $IndividualItemResult = [bool](($Flag1 -and $Flag2 -and $Flag3 -and $Flag4 -and $Flag5 -and $Flag6) ? $true : $False)
-        $NestedObjectArray += [pscustomobject]@{
-            Name      = "Firewall Public Profile"
-            Value     = $IndividualItemResult
-            Compliant = $IndividualItemResult
+            Name      = "Domain Profile Default Inbound Action"
+            Value     = $FirewallPoliciesOutput.DomainDefaultInboundAction
+            Compliant = [bool]($FirewallPoliciesOutput.DomainDefaultInboundAction -eq $True ? $True : $False)
             Category  = $CatName
             Method    = "Firewall Group Policy"
         }    
     
+        # Create a custom object with 5 properties to store them as nested objects inside the main output object
+        $NestedObjectArray += [pscustomobject]@{
+            Name      = "Domain Profile Default Outbound Action"
+            Value     = $FirewallPoliciesOutput.DomainDefaultOutboundAction
+            Compliant = [bool]($FirewallPoliciesOutput.DomainDefaultOutboundAction -eq $true ? $True : $False)
+            Category  = $CatName
+            Method    = "Firewall Group Policy"
+        }
+
+        # Create a custom object with 5 properties to store them as nested objects inside the main output object
+        $NestedObjectArray += [pscustomobject]@{
+            Name      = "Domain Profile Do Not Allow Exceptions"
+            Value     = $FirewallPoliciesOutput.DomainDoNotAllowExceptions
+            Compliant = [bool]($FirewallPoliciesOutput.DomainDoNotAllowExceptions -eq $true ? $True : $False)
+            Category  = $CatName
+            Method    = "Firewall Group Policy"
+        }
+
+        # Create a custom object with 5 properties to store them as nested objects inside the main output object
+        $NestedObjectArray += [pscustomobject]@{
+            Name      = "Domain Profile Firewall Enabled"
+            Value     = $FirewallPoliciesOutput.DomainEnableFirewall
+            Compliant = [bool]($FirewallPoliciesOutput.DomainEnableFirewall -eq $true ? $True : $False)
+            Category  = $CatName
+            Method    = "Firewall Group Policy"
+        }
+
+        # Create a custom object with 5 properties to store them as nested objects inside the main output object
+        $NestedObjectArray += [pscustomobject]@{
+            Name      = "Domain Profile Log File Path"
+            Value     = $FirewallPoliciesOutput.DomainLogFilePath
+            Compliant = [bool]($FirewallPoliciesOutput.DomainLogFilePath -eq '%systemroot%\system32\logfiles\firewall\domainfirewall.log' ? $True : $False)
+            Category  = $CatName
+            Method    = "Firewall Group Policy"
+        }
+
+        # Create a custom object with 5 properties to store them as nested objects inside the main output object
+        $NestedObjectArray += [pscustomobject]@{
+            Name      = "Domain Profile Log File Size"
+            Value     = $FirewallPoliciesOutput.DomainLogFileSize
+            Compliant = [bool]($FirewallPoliciesOutput.DomainLogFileSize -eq '32767' ? $True : $False)
+            Category  = $CatName
+            Method    = "Firewall Group Policy"
+        }
+
+        # Create a custom object with 5 properties to store them as nested objects inside the main output object
+        $NestedObjectArray += [pscustomobject]@{
+            Name      = "Domain Profile Log Dropped Packets"
+            Value     = $FirewallPoliciesOutput.DomainLogDroppedPackets
+            Compliant = [bool]($FirewallPoliciesOutput.DomainLogDroppedPackets -eq $true ? $True : $False)
+            Category  = $CatName
+            Method    = "Firewall Group Policy"
+        }
+
+        # Create a custom object with 5 properties to store them as nested objects inside the main output object
+        $NestedObjectArray += [pscustomobject]@{
+            Name      = "Domain Profile Log Successful Connections"
+            Value     = $FirewallPoliciesOutput.DomainLogSuccessfulConnections
+            Compliant = [bool]($FirewallPoliciesOutput.DomainLogSuccessfulConnections -eq $true ? $True : $False)
+            Category  = $CatName
+            Method    = "Firewall Group Policy"
+        }
+
+        # Create a custom object with 5 properties to store them as nested objects inside the main output object
+        $NestedObjectArray += [pscustomobject]@{
+            Name      = "Public Profile Disable Notifications"
+            Value     = $FirewallPoliciesOutput.PublicDisableNotifications
+            Compliant = [bool]($FirewallPoliciesOutput.PublicDisableNotifications -eq $false ? $True : $False)
+            Category  = $CatName
+            Method    = "Firewall Group Policy"
+        }
+
+        # Create a custom object with 5 properties to store them as nested objects inside the main output object
+        $NestedObjectArray += [pscustomobject]@{
+            Name      = "Public Profile Enable Firewall"
+            Value     = $FirewallPoliciesOutput.PublicEnableFirewall
+            Compliant = [bool]($FirewallPoliciesOutput.PublicEnableFirewall -eq $true ? $True : $False)
+            Category  = $CatName
+            Method    = "Firewall Group Policy"
+        }
+
+        # Create a custom object with 5 properties to store them as nested objects inside the main output object
+        $NestedObjectArray += [pscustomobject]@{
+            Name      = "Public Profile Log File Path"
+            Value     = $FirewallPoliciesOutput.PublicLogFilePath
+            Compliant = [bool]($FirewallPoliciesOutput.PublicLogFilePath -eq '%systemroot%\system32\logfiles\firewall\publicfirewall.log' ? $True : $False)
+            Category  = $CatName
+            Method    = "Firewall Group Policy"
+        }
+
+        # Create a custom object with 5 properties to store them as nested objects inside the main output object
+        $NestedObjectArray += [pscustomobject]@{
+            Name      = "Public Profile Log File Size"
+            Value     = $FirewallPoliciesOutput.PublicLogFileSize
+            Compliant = [bool]($FirewallPoliciesOutput.PublicLogFileSize -eq '32767' ? $True : $False)
+            Category  = $CatName
+            Method    = "Firewall Group Policy"
+        }
+
+        # Create a custom object with 5 properties to store them as nested objects inside the main output object
+        $NestedObjectArray += [pscustomobject]@{
+            Name      = "Public Profile Log Dropped Packets"
+            Value     = $FirewallPoliciesOutput.PublicLogDroppedPackets
+            Compliant = [bool]($FirewallPoliciesOutput.PublicLogDroppedPackets -eq $true ? $True : $False)
+            Category  = $CatName
+            Method    = "Firewall Group Policy"
+        }
+
+        # Create a custom object with 5 properties to store them as nested objects inside the main output object
+        $NestedObjectArray += [pscustomobject]@{
+            Name      = "Private Profile Disable Notifications"
+            Value     = $FirewallPoliciesOutput.PrivateDisableNotifications
+            Compliant = [bool]($FirewallPoliciesOutput.PrivateDisableNotifications -eq $false ? $True : $False)
+            Category  = $CatName
+            Method    = "Firewall Group Policy"
+        }
+
+        # Create a custom object with 5 properties to store them as nested objects inside the main output object
+        $NestedObjectArray += [pscustomobject]@{
+            Name      = "Private Profile Enable Firewall"
+            Value     = $FirewallPoliciesOutput.PrivateEnableFirewall
+            Compliant = [bool]($FirewallPoliciesOutput.PrivateEnableFirewall -eq $true ? $True : $False)
+            Category  = $CatName
+            Method    = "Firewall Group Policy"
+        }
+
+        # Create a custom object with 5 properties to store them as nested objects inside the main output object
+        $NestedObjectArray += [pscustomobject]@{
+            Name      = "Private Profile Log File Path"
+            Value     = $FirewallPoliciesOutput.PrivateLogFilePath
+            Compliant = [bool]($FirewallPoliciesOutput.PrivateLogFilePath -eq '%systemroot%\system32\logfiles\firewall\privatefirewall.log' ? $True : $False)
+            Category  = $CatName
+            Method    = "Firewall Group Policy"
+        }
+
+        # Create a custom object with 5 properties to store them as nested objects inside the main output object
+        $NestedObjectArray += [pscustomobject]@{
+            Name      = "Private Profile Log File Size"
+            Value     = $FirewallPoliciesOutput.PrivateLogFileSize
+            Compliant = [bool]($FirewallPoliciesOutput.PrivateLogFileSize -eq '32767' ? $True : $False)
+            Category  = $CatName
+            Method    = "Firewall Group Policy"
+        }
+
+        # Create a custom object with 5 properties to store them as nested objects inside the main output object
+        $NestedObjectArray += [pscustomobject]@{
+            Name      = "Private Profile Log Dropped Packets"
+            Value     = $FirewallPoliciesOutput.PrivateLogDroppedPackets
+            Compliant = [bool]($FirewallPoliciesOutput.PrivateLogDroppedPackets -eq $true ? $True : $False)
+            Category  = $CatName
+            Method    = "Firewall Group Policy"
+        }
     
         # Disables Multicast DNS (mDNS) UDP-in Firewall Rules for all 3 Firewall profiles - disables only 3 rules
         $RulesToDisable = get-NetFirewallRule -ErrorAction Stop |
@@ -1234,7 +1453,7 @@ function Confirm-SystemCompliance {
         $RulesTarget = $RulesToDisable | Where-Object { $_.Enabled -eq 'False' }
     
         # Create a custom object with 5 properties to store them as nested objects inside the main output object
-        $IndividualItemResult = [bool](($RulesTarget.count -eq $RulesToDisable.Count) ? $true : $false)
+        $IndividualItemResult = [bool](($RulesTarget.count -eq $RulesToDisable.Count) ? $True : $false)
         $NestedObjectArray += [pscustomobject]@{
             Name      = "Firewall rules disabled for Multicast DNS (mDNS) UDP-in"
             Value     = $IndividualItemResult
@@ -1248,13 +1467,13 @@ function Confirm-SystemCompliance {
         #EndRegion Windows-Firewall-Category
 
         #Region Optional-Windows-Features-Category
-        Write-Progress -Activity 'Validating Optional Windows Features Category' -Status 'Processing...' -PercentComplete 70
+        Write-Progress -Activity 'Validating Optional Windows Features Category' -Status 'Processing...' -PercentComplete 75
         $NestedObjectArray = @()
         $CatName = "Optional Windows Features"
          
         # Disable PowerShell v2 (needs 2 commands)
         [bool]$IndividualItemResult = ((get-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2 -ErrorAction Stop).state -eq 'disabled') `
-            -and [bool]((get-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2Root -ErrorAction Stop).state -eq 'disabled') ? $true : $false
+            -and [bool]((get-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2Root -ErrorAction Stop).state -eq 'disabled') ? $True : $false
       
         # Create a custom object with 5 properties to store them as nested objects inside the main output object
         $NestedObjectArray += [pscustomobject]@{
@@ -1370,7 +1589,7 @@ function Confirm-SystemCompliance {
         #EndRegion Optional-Windows-Features-Category
 
         #Region Windows-Networking-Category
-        Write-Progress -Activity 'Validating Windows Networking Category' -Status 'Processing...' -PercentComplete 75
+        Write-Progress -Activity 'Validating Windows Networking Category' -Status 'Processing...' -PercentComplete 80
         $NestedObjectArray = @()
         $CatName = "Windows Networking"
         # Loop through each nested hash table inside the main Policies hash table and check the item state using a switch statement
@@ -1410,7 +1629,7 @@ function Confirm-SystemCompliance {
     
         # Check network location of all connections to see if they are public
         $Condition = Get-NetConnectionProfile -ErrorAction Stop | ForEach-Object { $_.NetworkCategory -eq 'public' }
-        [bool]$IndividualItemResult = -not ($condition -contains $false) ? $true : $false 
+        [bool]$IndividualItemResult = -not ($condition -contains $false) ? $True : $false 
     
         # Create a custom object with 5 properties to store them as nested objects inside the main output object
         $NestedObjectArray += [pscustomobject]@{
@@ -1456,7 +1675,7 @@ function Confirm-SystemCompliance {
         #EndRegion Windows-Networking-Category
         
         #Region Miscellaneous-Category
-        Write-Progress -Activity 'Validating Miscellaneous Category' -Status 'Processing...' -PercentComplete 80
+        Write-Progress -Activity 'Validating Miscellaneous Category' -Status 'Processing...' -PercentComplete 85
         $NestedObjectArray = @()
         $CatName = "Miscellaneous"
         # Loop through each nested hash table inside the main Policies hash table and check the item state using a switch statement
@@ -1501,6 +1720,13 @@ function Confirm-SystemCompliance {
                             -and $Item.DropDownListValue -eq 'Authenticated without exceptions'                
                     ) ? $True : $False   
                 }
+                10 { 
+                    [bool]$ItemState = ($Item.State -eq 'Enabled' `
+                            -and $Item.DropDownListName -eq 'Mitigation Options' `
+                            -and $Item.DropDownListState -eq 'Enabled' `
+                            -and $Item.DropDownListValue -eq 'Block untrusted fonts and log events'                    
+                    ) ? $True : $False   
+                }   
             }
             # Create a custom object with 5 properties to store them as nested objects inside the main output object
             $NestedObjectArray += [pscustomobject]@{
@@ -1523,7 +1749,7 @@ function Confirm-SystemCompliance {
         }
     
         # Create a custom object with 5 properties to store them as nested objects inside the main output object
-        $IndividualItemResult = [bool](((auditpol /get /subcategory:"Other Logon/Logoff Events" /r | ConvertFrom-Csv -ErrorAction Stop).'Inclusion Setting' -eq 'Success and Failure') ? $true : $False)
+        $IndividualItemResult = [bool](((auditpol /get /subcategory:"Other Logon/Logoff Events" /r | ConvertFrom-Csv -ErrorAction Stop).'Inclusion Setting' -eq 'Success and Failure') ? $True : $False)
         $NestedObjectArray += [pscustomobject]@{
             Name      = "Audit policy for Other Logon/Logoff Events"
             Value     = $IndividualItemResult
@@ -1542,7 +1768,7 @@ function Confirm-SystemCompliance {
         # Set the $MatchHyperVUsers variable to $True only if all enabled user accounts are part of the Hyper-V Security group, if one of them isn't part of the group then returns false
         [bool]$MatchHyperVUsers = $false # initialize the $MatchHyperVUsers variable to false
         for ($i = 0; $i -lt $enabledUsers.Count; $i++) {
-            $MatchHyperVUsers = ($enabledUsers[$i] -ceq $groupMembers[$i]) ? $true : $false
+            $MatchHyperVUsers = ($enabledUsers[$i] -ceq $groupMembers[$i]) ? $True : $false
         }
 
         # Create a custom object with 5 properties to store them as nested objects inside the main output object
@@ -1583,7 +1809,7 @@ function Confirm-SystemCompliance {
         #EndRegion Miscellaneous-Category
     
         #Region Windows-Update-Category
-        Write-Progress -Activity 'Validating Windows Update Category' -Status 'Processing...' -PercentComplete 85
+        Write-Progress -Activity 'Validating Windows Update Category' -Status 'Processing...' -PercentComplete 90
         $NestedObjectArray = @()
         $CatName = "Windows Update"
         # Loop through each nested hash table inside the main Policies hash table and check the item state using a switch statement
@@ -1695,7 +1921,7 @@ function Confirm-SystemCompliance {
         #EndRegion Windows-Update-Category
         
         #Region Edge-Category
-        Write-Progress -Activity 'Validating Edge Browser Category' -Status 'Processing...' -PercentComplete 90
+        Write-Progress -Activity 'Validating Edge Browser Category' -Status 'Processing...' -PercentComplete 95
         $NestedObjectArray = @()
         $CatName = "Edge"    
         $MatchRegistryKeys = @() # initialize the variable to false - an array that is going to hold only bool values
@@ -1727,7 +1953,7 @@ function Confirm-SystemCompliance {
         #EndRegion Edge-Category
         
         #Region Non-Admin-Category
-        Write-Progress -Activity 'Validating Non-Admin Category' -Status 'Processing...' -PercentComplete 95
+        Write-Progress -Activity 'Validating Non-Admin Category' -Status 'Processing...' -PercentComplete 100
         $NestedObjectArray = @()
         $CatName = "Non-Admin"
     
@@ -1758,70 +1984,7 @@ function Confirm-SystemCompliance {
         # Add the array of custom objects as a property to the $FinalMegaObject object outside the loop
         Add-Member -InputObject $FinalMegaObject -MemberType NoteProperty -Name $CatName -Value $NestedObjectArray -ErrorAction Stop
         #EndRegion Non-Admin-Category
-
-        #Region Top-Security-Category
-        Write-Progress -Activity 'Validating Top Security Category' -Status 'Processing...' -PercentComplete 100
-        $NestedObjectArray = @()
-        $CatName = "Top Security"            
-        # Loop through each nested hash table inside the main Policies hash table and check the item state using a switch statement
-        foreach ($Key in $HashPol[$CatName].Keys) {
-            $Item = $PoliciesOutput | Where-object { $_.Name -eq $HashPol[$CatName][$Key].Name -and $_.Category -eq $HashPol[$CatName][$Key].Cat }
-            switch ($Key) {            
-                1 { 
-                    [bool]$ItemState = ($Item.State -eq 'Enabled') ? $True : $False   
-                }
-                2 { 
-                    [bool]$ItemState = ($Item.State -eq 'Enabled' `
-                            -and $Item.DropDownListName -eq 'Mitigation Options' `
-                            -and $Item.DropDownListState -eq 'Enabled' `
-                            -and $Item.DropDownListValue -eq 'Block untrusted fonts and log events'                    
-                    ) ? $True : $False   
-                }                
-            }
-            # Create a custom object with 5 properties to store them as nested objects inside the main output object
-            $NestedObjectArray += [pscustomobject]@{
-                Name      = $HashPol[$CatName][$Key].Name
-                Value     = $ItemState
-                Compliant = $ItemState
-                Category  = $CatName
-                Method    = "Group Policy"                
-            }
-        }
-
-        # Create a custom object with 5 properties to store them as nested objects inside the main output object   
-        $IndividualItemResult = [bool]($($SecurityPoliciesIni.'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\ValidateAdminCodeSignatures'] -eq '4,1') ? $True : $False)
-        $NestedObjectArray += [pscustomobject]@{
-            Name      = 'UAC: Only elevate executables that are signed and validated'
-            Value     = $IndividualItemResult
-            Compliant = $IndividualItemResult
-            Category  = $CatName
-            Method    = "Security Group Policy"
-        }
-
-        # Create a custom object with 5 properties to store them as nested objects inside the main output object   
-        $IndividualItemResult = [bool]($($SecurityPoliciesIni.'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\DontDisplayLastUserName'] -eq '4,1') ? $True : $False)
-        $NestedObjectArray += [pscustomobject]@{
-            Name      = "Interactive logon: Don't display last signed-in"
-            Value     = $IndividualItemResult
-            Compliant = $IndividualItemResult
-            Category  = $CatName
-            Method    = "Security Group Policy"
-        }
-
-        # Create a custom object with 5 properties to store them as nested objects inside the main output object   
-        $IndividualItemResult = [bool]($($SecurityPoliciesIni.'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\ConsentPromptBehaviorUser'] -eq '4,0') ? $True : $False)
-        $NestedObjectArray += [pscustomobject]@{
-            Name      = "User Account Control: Behavior of the elevation prompt for standard users"
-            Value     = $IndividualItemResult
-            Compliant = $IndividualItemResult
-            Category  = $CatName
-            Method    = "Security Group Policy"
-        }
-            
-        # Add the array of custom objects as a property to the $FinalMegaObject object outside the loop
-        Add-Member -InputObject $FinalMegaObject -MemberType NoteProperty -Name $CatName -Value $NestedObjectArray -ErrorAction Stop
-        #EndRegion Top-Security-Category
-    
+   
         if ($ExportToCSV) {
 
             # An array to store the content of each category
@@ -1840,7 +2003,6 @@ function Confirm-SystemCompliance {
             $CsvOutPutFileContent += $FinalMegaObject.'Windows Update'
             $CsvOutPutFileContent += $FinalMegaObject.Edge
             $CsvOutPutFileContent += $FinalMegaObject.'Non-Admin'
-            $CsvOutPutFileContent += $FinalMegaObject.'Top Security'
             # Convert the array to CSV and store it in the Output.CSV file in the current working directory
             $CsvOutPutFileContent | ConvertTo-Csv -ErrorAction Stop | Out-File '.\Output.CSV' -Force -ErrorAction Stop        
         }
@@ -1953,11 +2115,8 @@ function Confirm-SystemCompliance {
                 & $WriteOrange "`n-------------Microsoft Edge Category-------------"
                 $FinalMegaObject.Edge | Format-list * -ErrorAction Stop
     
-                & $WriteLime "`n-------------Non-Admin Category-------------"
-                $FinalMegaObject.'Non-Admin' | Format-list * -ErrorAction Stop  
-            
-                & $WriteSkyBlue "`n-------------Top Security Category-------------"
-                $FinalMegaObject.'Top Security' | Format-list * -ErrorAction Stop
+                & $WriteSkyBlue "`n-------------Non-Admin Category-------------"
+                $FinalMegaObject.'Non-Admin' | Format-list * -ErrorAction Stop
             }
 
             # Show properties that matter in a table
@@ -2002,29 +2161,25 @@ function Confirm-SystemCompliance {
                 & $WriteOrange "`n-------------Microsoft Edge Category-------------"
                 $FinalMegaObject.Edge | Format-Table -AutoSize -Property Name, Compliant, Value -ErrorAction Stop
         
-                & $WriteLime "`n-------------Non-Admin Category-------------"
-                $FinalMegaObject.'Non-Admin' | Format-Table -AutoSize -Property Name, Compliant, Value -ErrorAction Stop  
-                
-                & $WriteSkyBlue "`n-------------Top Security Category-------------"
-                $FinalMegaObject.'Top Security' | Format-Table -AutoSize -Property Name, Compliant, Value -ErrorAction Stop
+                & $WriteSkyBlue "`n-------------Non-Admin Category-------------"
+                $FinalMegaObject.'Non-Admin' | Format-Table -AutoSize -Property Name, Compliant, Value -ErrorAction Stop               
             }
             
             # Counting the number of $True Compliant values in the Final Output Object
-            [int]$TotalTrueValuesInOutPut = ($FinalMegaObject.'Microsoft Defender' | ? { $_.Compliant -eq $true }).value.Count + `
-                [int]($FinalMegaObject.ASR | ? { $_.Compliant -eq $true }).value.Count + `
-                [int]($FinalMegaObject.Bitlocker | ? { $_.Compliant -eq $true }).value.Count + `
-                [int]($FinalMegaObject.TLS | ? { $_.Compliant -eq $true }).value.Count + `
-                [int]($FinalMegaObject.LockScreen | ? { $_.Compliant -eq $true }).value.Count + `
-                [int]($FinalMegaObject.UAC | ? { $_.Compliant -eq $true }).value.Count + `
-                [int]($FinalMegaObject.'Device Guard' | ? { $_.Compliant -eq $true }).value.Count + `
-                [int]($FinalMegaObject.'Windows Firewall' | ? { $_.Compliant -eq $true }).value.Count + `
-                [int]($FinalMegaObject.'Optional Windows Features' | ? { $_.Compliant -eq $true }).value.Count + `
-                [int]($FinalMegaObject.'Windows Networking' | ? { $_.Compliant -eq $true }).value.Count + `
-                [int]($FinalMegaObject.Miscellaneous | ? { $_.Compliant -eq $true }).value.Count + `
-                [int]($FinalMegaObject.'Windows Update' | ? { $_.Compliant -eq $true }).value.Count + `
-                [int]($FinalMegaObject.Edge | ? { $_.Compliant -eq $true }).value.Count + `
-                [int]($FinalMegaObject.'Non-Admin' | ? { $_.Compliant -eq $true }).value.Count + `
-                [int]($FinalMegaObject.'Top Security' | ? { $_.Compliant -eq $true }).value.Count
+            [int]$TotalTrueValuesInOutPut = ($FinalMegaObject.'Microsoft Defender' | ? { $_.Compliant -eq $True }).value.Count + `
+                [int]($FinalMegaObject.ASR | ? { $_.Compliant -eq $True }).value.Count + `
+                [int]($FinalMegaObject.Bitlocker | ? { $_.Compliant -eq $True }).value.Count + `
+                [int]($FinalMegaObject.TLS | ? { $_.Compliant -eq $True }).value.Count + `
+                [int]($FinalMegaObject.LockScreen | ? { $_.Compliant -eq $True }).value.Count + `
+                [int]($FinalMegaObject.UAC | ? { $_.Compliant -eq $True }).value.Count + `
+                [int]($FinalMegaObject.'Device Guard' | ? { $_.Compliant -eq $True }).value.Count + `
+                [int]($FinalMegaObject.'Windows Firewall' | ? { $_.Compliant -eq $True }).value.Count + `
+                [int]($FinalMegaObject.'Optional Windows Features' | ? { $_.Compliant -eq $True }).value.Count + `
+                [int]($FinalMegaObject.'Windows Networking' | ? { $_.Compliant -eq $True }).value.Count + `
+                [int]($FinalMegaObject.Miscellaneous | ? { $_.Compliant -eq $True }).value.Count + `
+                [int]($FinalMegaObject.'Windows Update' | ? { $_.Compliant -eq $True }).value.Count + `
+                [int]($FinalMegaObject.Edge | ? { $_.Compliant -eq $True }).value.Count + `
+                [int]($FinalMegaObject.'Non-Admin' | ? { $_.Compliant -eq $True }).value.Count
 
 
             #Region ASCII-Arts
@@ -2171,17 +2326,14 @@ function Confirm-SystemCompliance {
             # Total number of Compliant values not equal to N/A           
             [int]$TotalNumberOfTrueCompliantValues = 119
                 
-            switch ($true) {
+            switch ($True) {
                     ($TotalTrueValuesInOutPut -in 1..20) { & $WriteRainbow2 "$WhenValue1To20`nYour compliance score is $TotalTrueValuesInOutPut out of $TotalNumberOfTrueCompliantValues!" }                    
                     ($TotalTrueValuesInOutPut -in 21..40) { & $WriteRainbow1 "$WhenValue21To40`nYour compliance score is $TotalTrueValuesInOutPut out of $TotalNumberOfTrueCompliantValues!" }
                     ($TotalTrueValuesInOutPut -in 41..60) { & $WriteRainbow1 "$WhenValue41To60`nYour compliance score is $TotalTrueValuesInOutPut out of $TotalNumberOfTrueCompliantValues!" }
                     ($TotalTrueValuesInOutPut -in 61..80) { & $WriteRainbow2 "$WhenValue61To80`nYour compliance score is $TotalTrueValuesInOutPut out of $TotalNumberOfTrueCompliantValues!" }
                     ($TotalTrueValuesInOutPut -in 81..100) { & $WriteRainbow1 "$WhenValue81To88`nYour compliance score is $TotalTrueValuesInOutPut out of $TotalNumberOfTrueCompliantValues!" }
                     ($TotalTrueValuesInOutPut -gt 100) { & $WriteRainbow2 "$WhenValueAbove88`nYour compliance score is $TotalTrueValuesInOutPut out of $TotalNumberOfTrueCompliantValues!" }
-            }
-            
-            # Display a message to the user letting them know about a possible disambiguation in the results                   
-            &$WritePink "`nNote: The policy 'User Account Control: Behavior of the elevation prompt for standard users' exists in both UAC category and Top Security category, so one of them will always be False and that is expected.`n"
+            } 
         }
     
     } # End of Process Block

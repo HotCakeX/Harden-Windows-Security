@@ -85,6 +85,14 @@
 		"5": {
 			"Cat": "System/PIN Complexity",
 			"Name": "Require lowercase letters"
+		},
+		"6": {
+			"Cat": "System/Logon",
+			"Name": "Exclude credential providers"
+		},
+		"7": {
+			"Cat": "System/Logon",
+			"Name": "Assign a default credential provider"
 		}
 	},
 	"Microsoft Defender": {
@@ -241,6 +249,10 @@
 		"9": {
 			"Cat": "System/Remote Procedure Call",
 			"Name": "Restrict Unauthenticated RPC clients"
+		},
+		"10": {
+			"Cat": "System/Mitigation Options",
+			"Name": "Untrusted Font Blocking"
 		}
 	},
 	"TLS": {
@@ -293,14 +305,10 @@
 			"Name": "Configure Automatic Updates"
 		}
 	},
-	"Top Security": {
+	"UAC": {
 		"1": {
 			"Cat": "System/Logon",
 			"Name": "Hide entry points for Fast User Switching"
-		},
-		"2": {
-			"Cat": "System/Mitigation Options",
-			"Name": "Untrusted Font Blocking"
 		}
 	}
 }

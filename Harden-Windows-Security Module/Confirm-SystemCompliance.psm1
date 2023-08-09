@@ -59,7 +59,7 @@ function Confirm-SystemCompliance {
             }
             
             if ($CurrentVersion -ne $LatestVersion) {
-                Write-Output "$($PSStyle.Foreground.FromRGB(255,105,180))The currently installed module's version is $CurrentVersion while the latest version is $LatestVersion - Auto Updating the module now and will run your command after that 💓$($PSStyle.Reset)"
+                Write-Output "$($PSStyle.Foreground.FromRGB(255,105,180))The currently installed module's version is $CurrentVersion while the latest version is $LatestVersion - Auto Updating the module... 💓$($PSStyle.Reset)"
                 Remove-Module -Name 'Harden-Windows-Security-Module' -Force
                 # Do this if the module was installed properly using Install-moodule cmdlet
                 try {
@@ -71,7 +71,11 @@ function Confirm-SystemCompliance {
                 catch {
                     Install-Module -Name 'Harden-Windows-Security-Module' -RequiredVersion $LatestVersion -Force -ErrorAction Stop
                     Import-Module -Name 'Harden-Windows-Security-Module' -RequiredVersion $LatestVersion -Force -Global -ErrorAction Stop
-                }            
+                }      
+                # Make sure the old versio isn't run after update
+                Write-Output "$($PSStyle.Foreground.FromRGB(152,255,152))Update successful, please run the Confirm-SystemCompliance cmdlet again.$($PSStyle.Reset)"          
+                break
+                return          
             }
         }
 

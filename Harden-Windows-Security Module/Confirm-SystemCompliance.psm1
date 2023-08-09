@@ -111,15 +111,15 @@ function Confirm-SystemCompliance {
 
         # Download Group-Policies.json file from GitHub
         try {
-            Invoke-WebRequest -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Payload/Group-Policies.json" -OutFile ".\Group-Policies.json" -ErrorAction Stop
+            Invoke-WebRequest -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/a38f5fb1e219e31826c772f626df9a2bdc6bb55d/Payload/Group-Policies.json" -OutFile ".\Group-Policies.json" -ErrorAction Stop
         }
         catch {
             Write-Error -Message "Group-Policies.json file couldn't be downloaded, exitting..."  
         }
         # Hash table to store Hardening Script's Policy Categories and Names
         # Importing it from the JSON file as hashtable
-        # $HashPol = Get-Content -Path ".\Group-Policies.json" -ErrorAction Stop | ConvertFrom-Json -Depth 100 -AsHashtable -ErrorAction Stop
-        $HashPol = Get-Content -Path "E:\Cloned Repositories\Harden-Windows-Security\Payload\Group-Policies.json" -ErrorAction Stop | ConvertFrom-Json -Depth 100 -AsHashtable -ErrorAction Stop
+        $HashPol = Get-Content -Path ".\Group-Policies.json" -ErrorAction Stop | ConvertFrom-Json -Depth 100 -AsHashtable -ErrorAction Stop
+       
        
         Write-Progress -Activity 'Gathering Group Policy Information' -Status 'Processing...' -PercentComplete 30
 

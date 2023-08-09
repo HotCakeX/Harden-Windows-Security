@@ -72,7 +72,7 @@ function Confirm-SystemCompliance {
                     Install-Module -Name 'Harden-Windows-Security-Module' -RequiredVersion $LatestVersion -Force -ErrorAction Stop
                     Import-Module -Name 'Harden-Windows-Security-Module' -RequiredVersion $LatestVersion -Force -Global -ErrorAction Stop
                 }      
-                # Make sure the old versio isn't run after update
+                # Make sure the old version isn't run after update
                 Write-Output "$($PSStyle.Foreground.FromRGB(152,255,152))Update successful, please run the Confirm-SystemCompliance cmdlet again.$($PSStyle.Reset)"          
                 break
                 return          

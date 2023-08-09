@@ -1353,7 +1353,7 @@ try {
 
     #region Non-Admin-Commands
     # ====================================================Non-Admin Commands===================================================
-    switch (Select-Option -Options "Yes", "No", "Exit" -Message 'Run Non-Admin category ?') {
+    switch (Select-Option -Options "Yes", "No", "Exit" -Message '`nRun Non-Admin category ?') {
         "Yes" {
             Write-Progress -Activity 'Non-Admin Commands' -Status 'Running Non-Admin Commands section' -PercentComplete 100
             

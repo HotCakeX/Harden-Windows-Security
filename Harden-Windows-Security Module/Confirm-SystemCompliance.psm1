@@ -2324,7 +2324,7 @@ function Confirm-SystemCompliance {
             #Endregion ASCII-Arts
 
             # Total number of Compliant values not equal to N/A           
-            [int]$TotalNumberOfTrueCompliantValues = 119
+            [int]$TotalNumberOfTrueCompliantValues = 135
                 
             switch ($True) {
                     ($TotalTrueValuesInOutPut -in 1..20) { & $WriteRainbow2 "$WhenValue1To20`nYour compliance score is $TotalTrueValuesInOutPut out of $TotalNumberOfTrueCompliantValues!" }                    

@@ -1,6 +1,6 @@
 <#PSScriptInfo
 
-.VERSION 2023.8.4
+.VERSION 2023.8.8
 
 .GUID d435a293-c9ee-4217-8dc1-4ad2318a5770
 
@@ -82,8 +82,6 @@ https://1drv.ms/x/s!AtCaUNAJbbvIhuVQhdMu_Hts7YZ_lA?e=df6H6P
 
 💎 Note: If there are multiple Windows user accounts in your computer, it's recommended to run this script in each of them, without administrator privileges, because Non-admin commands only apply to the current user and are not machine wide.
 
-🟡 Note: There are 5 items tagged with #TopSecurity that can cause difficulties. When you run this script, you will have an option to enable them if you want to. You can find all the information about them on GitHub.
-
 🏴 If you have any questions, requests, suggestions etc. about this script, please open a new Discussion or Issue on GitHub
 
 
@@ -96,17 +94,67 @@ https://1drv.ms/x/s!AtCaUNAJbbvIhuVQhdMu_Hts7YZ_lA?e=df6H6P
 # Change the execution policy temporarily only for the current PowerShell session
 Set-ExecutionPolicy Bypass -Scope Process
 
+# Determining if PowerShell is core to use modern styling
+[bool]$IsCore = $false
+if ([version]$PSVersionTable.PSVersion -ge [version]7.3) {
+    [bool]$IsCore = $True
+}
+
+#Region Custom-colors
+$WriteFuchsia = { Write-Host "$($PSStyle.Foreground.FromRGB(236,68,155))$($args[0])$($PSStyle.Reset)" }
+$WriteOrange = { Write-Host "$($PSStyle.Foreground.FromRGB(255,165,0))$($args[0])$($PSStyle.Reset)" }
+$WriteNeonGreen = { Write-Host "$($PSStyle.Foreground.FromRGB(153,244,67))$($args[0])$($PSStyle.Reset)" }
+$WriteMintGreen = { Write-Host "$($PSStyle.Foreground.FromRGB(152,255,152))$($args[0])$($PSStyle.Reset)" }
+
+$WriteRainbow = { 
+    $text = $args[0]
+    $colors = @(
+        [System.Drawing.Color]::Pink,
+        [System.Drawing.Color]::HotPink,
+        [System.Drawing.Color]::SkyBlue,
+        [System.Drawing.Color]::HotPink,
+        [System.Drawing.Color]::SkyBlue,
+        [System.Drawing.Color]::LightSkyBlue,      
+        [System.Drawing.Color]::LightGreen,
+        [System.Drawing.Color]::Coral,
+        [System.Drawing.Color]::Plum,
+        [System.Drawing.Color]::Gold
+    )
+  
+    $output = ""
+    for ($i = 0; $i -lt $text.Length; $i++) {
+        $color = $colors[$i % $colors.Length]
+        $output += "$($PSStyle.Foreground.FromRGB($color.R, $color.G, $color.B))$($text[$i])$($PSStyle.Reset)"
+    }
+    Write-Output $output
+}
+#EndRegion Custom-colors
+
 #region Functions
 # Questions function
 function Select-Option {
     param(
-        [parameter(Mandatory = $true, Position = 0)][string]$Message,
-        [parameter(Mandatory = $true, Position = 1)][string[]]$Options
+        [parameter(Mandatory = $True)][string]$Message,
+        [parameter(Mandatory = $True)][string[]]$Options,
+        [parameter(Mandatory = $false)][switch]$SubCategory
     )
+
     $Selected = $null
     while ($null -eq $Selected) {
-        Write-Host $Message -ForegroundColor Magenta
-        for ($i = 0; $i -lt $Options.Length; $i++) { Write-Host "$($i+1): $($Options[$i])" }
+
+        # Use this style if showing main categories only
+        if (!$SubCategory) {
+            if ($IsCore) { &$WriteFuchsia $Message } else { Write-Host $Message -ForegroundColor Magenta }
+        }
+        # Use this style if showing sub-categories only that need additional confirmation
+        else {
+            if ($IsCore) { &$WriteOrange $Message } else { Write-Host $Message -ForegroundColor Cyan }
+        }
+
+        for ($i = 0; $i -lt $Options.Length; $i++) {             
+            if ($IsCore) { &$WriteMintGreen "$($i+1): $($Options[$i])" } else { Write-Host "$($i+1): $($Options[$i])" }
+        }
+
         $SelectedIndex = Read-Host "Select an option"
         if ($SelectedIndex -gt 0 -and $SelectedIndex -le $Options.Length) { $Selected = $Options[$SelectedIndex - 1] }
         else { Write-Host "Invalid Option." -ForegroundColor Yellow }
@@ -124,7 +172,7 @@ function ModifyRegistry {
         New-ItemProperty -Path $Path -Name $Key -Value $Value -PropertyType $Type -Force
     }
     elseif ($Action -eq 'Delete') {
-        Remove-ItemProperty -Path $Path -Name $Key -Force -ErrorAction SilentlyContinue
+        Remove-ItemProperty -Path $Path -Name $Key -Force -ErrorAction SilentlyContinue | Out-Null
     }
 }
 
@@ -217,7 +265,7 @@ if (Test-IsAdmin) {
 # or break is passed, clean up will still happen for secure exit
 try {
     # Check the current hard-coded version against the latest version online
-    [datetime]$CurrentVersion = '2023.8.4'
+    [datetime]$CurrentVersion = '2023.8.8'
     try {
         [datetime]$LatestVersion = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Version.txt"
     }
@@ -234,11 +282,20 @@ try {
         break
     }
 
-    $InfoMsg = "`r`n" +
-    "############################################################################################################`r`n" +
-    "### Please read the Readme in the GitHub repository: https://github.com/HotCakeX/Harden-Windows-Security ###`r`n" +
-    "############################################################################################################`r`n"
-    Write-Host $InfoMsg -ForegroundColor Cyan
+    if ($IsCore) { 
+        &$WriteRainbow "`r`n"
+        &$WriteRainbow "############################################################################################################`r`n"
+        &$WriteMintGreen "### Please read the Readme in the GitHub repository: https://github.com/HotCakeX/Harden-Windows-Security ###`r`n"
+        &$WriteRainbow "############################################################################################################`r`n"
+        
+    }
+    else {    
+        $InfoMsg = "`r`n" +
+        "############################################################################################################`r`n" +
+        "### Please read the Readme in the GitHub repository: https://github.com/HotCakeX/Harden-Windows-Security ###`r`n" +
+        "############################################################################################################`r`n"
+        Write-Host $InfoMsg -ForegroundColor Cyan
+    }
 
     #region RequirementsCheck
     # check if user's OS is Windows Home edition
@@ -280,8 +337,9 @@ try {
     # Clean up script block
     $CleanUp = { Set-Location $HOME; Remove-item -Recurse "$env:TEMP\HardeningXStuff\" -Force; exit }
 
-    if (-NOT (Test-IsAdmin))
-    { Write-Host "Skipping commands that require Administrator privileges" -ForegroundColor Magenta }
+    if (-NOT (Test-IsAdmin)) {
+        if ($IsCore) { &$WriteNeonGreen "Skipping commands that require Administrator privileges" } else { Write-Host "Skipping commands that require Administrator privileges" -ForegroundColor Magenta }
+    }
     else {
         Write-Progress -Activity 'Initialization' -Status 'Downloading the required files for the script' -PercentComplete 0      
         
@@ -498,7 +556,7 @@ try {
                 bcdedit.exe /set "{current}" nx AlwaysOn
 
                 # Try turning on Smart App Control
-                switch (Select-Option -Options "Yes", "No", "Exit" -Message "`nTurn on Smart App Control ?") {
+                switch (Select-Option -SubCategory -Options "Yes", "No", "Exit" -Message "`nTurn on Smart App Control ?") {
                     "Yes" {               
                         if ((Get-MpComputerStatus).SmartAppControlState -eq "Eval") {
                             ModifyRegistry -path 'HKLM:\SYSTEM\CurrentControlSet\Control\CI\Policy' -key 'VerifiedAndReputablePolicyState' -value '1' -type 'DWORD' -Action 'AddOrModify'
@@ -514,7 +572,7 @@ try {
                 }
 
                 # Create scheduled task for fast weekly Microsoft recommended driver block list update
-                switch (Select-Option -Options "Yes", "No", "Exit" -Message "`nCreate scheduled task for fast weekly Microsoft recommended driver block list update ?") {
+                switch (Select-Option -SubCategory -Options "Yes", "No", "Exit" -Message "`nCreate scheduled task for fast weekly Microsoft recommended driver block list update ?") {
                     "Yes" { 
                         # create a scheduled task that runs every 7 days
                         if (-NOT (Get-ScheduledTask -TaskName "MSFT Driver Block list update" -ErrorAction SilentlyContinue)) {        
@@ -534,7 +592,7 @@ try {
                     "Exit" { &$CleanUp }
                 }
                 # Set Microsoft Defender engine and platform update channel to beta - Devices in the Windows Insider Program are subscribed to this channel by default.
-                switch (Select-Option -Options "Yes", "No", "Exit" -Message "`nSet Microsoft Defender engine and platform update channel to beta ?") {
+                switch (Select-Option -SubCategory -Options "Yes", "No", "Exit" -Message "`nSet Microsoft Defender engine and platform update channel to beta ?") {
                     "Yes" {             
                         Set-MpPreference -EngineUpdatesChannel beta
                         Set-MpPreference -PlatformUpdatesChannel beta
@@ -764,7 +822,7 @@ try {
                         $MountPoint = $_.MountPoint
 
                         # Prompt for confirmation before encrypting each drive
-                        switch (Select-Option -Options "Yes", "No", "Exit" -Message "`nEncrypt $MountPoint drive ?`n") {
+                        switch (Select-Option -SubCategory -Options "Yes", "No", "Exit" -Message "`nEncrypt $MountPoint drive ?`n") {
                             "Yes" {  
 
                                 # Check if the non-OS drive that the user selected to be encrypted is not in the middle of any encryption/decryption operation
@@ -946,6 +1004,23 @@ try {
                 Set-Location "$WorkingDir\LGPO_30"
                 .\LGPO.exe /m "..\Security-Baselines-X\Lock Screen Policies\registry.pol"
                 .\LGPO.exe /s "..\Security-Baselines-X\Lock Screen Policies\GptTmpl.inf"
+
+                # Apply the Don't display last signed-in policy
+                switch (Select-Option -SubCategory -Options "Yes", "No", "Exit" -Message "`nDon't display last signed-in on logon screen ?") {
+                    "Yes" {
+                        .\LGPO.exe /s "..\Security-Baselines-X\Lock Screen Policies\Don't display last signed-in\GptTmpl.inf"                      
+                    } "No" { break }
+                    "Exit" { &$CleanUp }
+                }
+
+                # Apply Credential Providers Configurations policy
+                switch (Select-Option -SubCategory -Options "Yes", "No", "Exit" -Message "`nSet Windows Hello PIN as the default Credential provider and exclude Password and Smart Card ?") {
+                    "Yes" {
+                        .\LGPO.exe /m "..\Security-Baselines-X\Lock Screen Policies\Credential Providers Configurations\registry.pol"                      
+                    } "No" { break }
+                    "Exit" { &$CleanUp }
+                }
+
             } "No" { break }
             "Exit" { &$CleanUp }
         }    
@@ -961,6 +1036,31 @@ try {
                 # Change current working directory to the LGPO's folder
                 Set-Location "$WorkingDir\LGPO_30"
                 .\LGPO.exe /s "..\Security-Baselines-X\User Account Control UAC Policies\GptTmpl.inf"
+                
+                # Apply the Automatically deny all UAC prompts on Standard accounts policy
+                switch (Select-Option -SubCategory -Options "Yes", "No", "Exit" -Message "`nAutomatically deny all UAC prompts on Standard accounts ?") {
+                    "Yes" {
+                        .\LGPO.exe /s "..\Security-Baselines-X\User Account Control UAC Policies\Automatically deny all UAC prompts on Standard accounts\GptTmpl.inf"                      
+                    } "No" { break }
+                    "Exit" { &$CleanUp }
+                }
+
+                # Apply the Hide the entry points for Fast User Switching policy
+                switch (Select-Option -SubCategory -Options "Yes", "No", "Exit" -Message "`nHide the entry points for Fast User Switching ?") {
+                    "Yes" {
+                        .\LGPO.exe /m "..\Security-Baselines-X\User Account Control UAC Policies\Hides the entry points for Fast User Switching\registry.pol"                      
+                    } "No" { break }
+                    "Exit" { &$CleanUp }
+                }               
+
+                # Apply the Only elevate executables that are signed and validated policy
+                switch (Select-Option -SubCategory -Options "Yes", "No", "Exit" -Message "`nOnly elevate executables that are signed and validated ?") {
+                    "Yes" {
+                        .\LGPO.exe /s "..\Security-Baselines-X\User Account Control UAC Policies\Only elevate executables that are signed and validated\GptTmpl.inf"
+                    } "No" { break }
+                    "Exit" { &$CleanUp }
+                }  
+
             } "No" { break }
             "Exit" { &$CleanUp }
         }    
@@ -1089,6 +1189,14 @@ try {
                 .\LGPO.exe /m "..\Security-Baselines-X\Miscellaneous Policies\registry.pol"
                 .\LGPO.exe /s "..\Security-Baselines-X\Miscellaneous Policies\GptTmpl.inf"
 
+                # Apply the Blocking Untrusted Fonts policy
+                switch (Select-Option -SubCategory -Options "Yes", "No", "Exit" -Message "`nBlock Untrusted Fonts ?") {
+                    "Yes" {
+                        .\LGPO.exe /m "..\Security-Baselines-X\Miscellaneous Policies\Blocking Untrusted Fonts\registry.pol"                      
+                    } "No" { break }
+                    "Exit" { &$CleanUp }
+                }    
+
                 # Enable SMB Encryption - using force to confirm the action
                 Set-SmbServerConfiguration -EncryptData $true -force
                     
@@ -1131,7 +1239,7 @@ try {
                     catch {
                         Write-Host "The required files couldn't be downloaded, Make sure you have Internet connection. Skipping..." -ForegroundColor Red
                     }
-                }
+                }                
             } "No" { break }
             "Exit" { &$CleanUp }
         }    
@@ -1174,23 +1282,7 @@ try {
         } 
         # ====================================================End of Edge Browser Configurations==============================================
         #endregion Edge-Browser-Configurations
-
-        #region Top-Security-Measures    
-        # ============================================Top Security Measures========================================================
-        switch (Select-Option -Options "Yes", "No", "Exit" -Message "`nApply Top Security Measures ? Make sure you've read the GitHub repository") {
-            "Yes" {                
-                Write-Progress -Activity 'Top Security Measures' -Status 'Running Top Security Measures section' -PercentComplete 85  
-
-                # Change current working directory to the LGPO's folder
-                Set-Location "$WorkingDir\LGPO_30"
-                .\LGPO.exe /s "..\Security-Baselines-X\Top Security Measures\GptTmpl.inf"
-                .\LGPO.exe /m "..\Security-Baselines-X\Top Security Measures\registry.pol"
-            } "No" { break }
-            "Exit" { &$CleanUp }
-        }    
-        # ============================================End of Top Security Measures=================================================
-        #endregion Top-Security-Measures
-
+        
         #region Certificate-Checking-Commands    
         # ====================================================Certificate Checking Commands========================================
         switch (Select-Option -Options "Yes", "No", "Exit" -Message "`nRun Certificate Checking category ?") {
@@ -1237,13 +1329,13 @@ try {
                     New-NetFirewallRule -DisplayName "$ListName IP range blocking" -Direction Inbound -Action Block -LocalAddress Any -RemoteAddress $IPList -Description "$ListName IP range blocking" -EdgeTraversalPolicy Block -PolicyStore localhost
                     New-NetFirewallRule -DisplayName "$ListName IP range blocking" -Direction Outbound -Action Block -LocalAddress Any -RemoteAddress $IPList -Description "$ListName IP range blocking" -EdgeTraversalPolicy Block -PolicyStore localhost        
                 }
-                switch (Select-Option -Options "Yes", "No" -Message "Add countries in the State Sponsors of Terrorism list to the Firewall block list?") {
+                switch (Select-Option -SubCategory -Options "Yes", "No" -Message "Add countries in the State Sponsors of Terrorism list to the Firewall block list?") {
                     "Yes" {
                         $StateSponsorsofTerrorism = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/Curated-Lists/StateSponsorsOfTerrorism.txt"
                         BlockCountryIP -IPList $StateSponsorsofTerrorism -ListName "State Sponsors of Terrorism"
                     } "No" { break }
                 }
-                switch (Select-Option -Options "Yes", "No" -Message "Add OFAC Sanctioned Countries to the Firewall block list?") {
+                switch (Select-Option -SubCategory -Options "Yes", "No" -Message "Add OFAC Sanctioned Countries to the Firewall block list?") {
                     "Yes" {
                         $OFACSanctioned = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/Curated-Lists/OFACSanctioned.txt"            
                         BlockCountryIP -IPList $OFACSanctioned -ListName "OFAC Sanctioned Countries"
@@ -1261,7 +1353,7 @@ try {
 
     #region Non-Admin-Commands
     # ====================================================Non-Admin Commands===================================================
-    switch (Select-Option -Options "Yes", "No", "Exit" -Message "`nRun Non-Admin category ?") {
+    switch (Select-Option -Options "Yes", "No", "Exit" -Message '`nRun Non-Admin category ?') {
         "Yes" {
             Write-Progress -Activity 'Non-Admin Commands' -Status 'Running Non-Admin Commands section' -PercentComplete 100
             
@@ -1286,11 +1378,19 @@ try {
 
             # Only suggest restarting the device if Admin related categories were run
             if (Test-IsAdmin) {          
-                $InfoMsg = "`r`n" +
-                "################################################################################################`r`n" +
-                "###  Please Restart your device to completely apply the security measures and Group Policies ###`r`n" +
-                "################################################################################################`r`n"
-                Write-Host $InfoMsg -ForegroundColor Cyan
+                if ($IsCore) { 
+                    &$WriteRainbow "`r`n"
+                    &$WriteRainbow "################################################################################################`r`n"
+                    &$WriteMintGreen "###  Please Restart your device to completely apply the security measures and Group Policies ###`r`n"
+                    &$WriteRainbow "################################################################################################`r`n"
+                }
+                else {    
+                    $InfoMsg = "`r`n" +
+                    "################################################################################################`r`n" +
+                    "###  Please Restart your device to completely apply the security measures and Group Policies ###`r`n" +
+                    "################################################################################################`r`n"
+                    Write-Host $InfoMsg -ForegroundColor Cyan
+                }
             }
 
         } "No" { &$CleanUp }

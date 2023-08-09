@@ -12,7 +12,7 @@
     # RootModule = ''
 
     # Version number of this module.
-    ModuleVersion        = '0.0.6'
+    ModuleVersion        = '0.0.7'
 
     # Supported PSEditions
     CompatiblePSEditions = @('Core')
@@ -125,6 +125,10 @@
 
             # ReleaseNotes of this module
             ReleaseNotes = @"
+
+## Version 0.0.7
+Changed the Hyper-V Administrators security group members detection from using name to SID to make it compatible with non-English system locales.
+Improved the code security and readability by adding explicit types to many variables and using single quotes instead of double quotes wherever possible.
 
 ## Version 0.0.6
 Fixed the URL for Group-Policies.json

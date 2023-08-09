@@ -29,7 +29,7 @@ function ConvertFrom-IniFile {
             continue
         }
     }
-    return [pscustomobject]$IniObject
+    return [PSCustomObject]$IniObject
 }
 
 # Main function that also parses the output of "gpresult /Scope Computer /x GPResult.xml"
@@ -49,16 +49,16 @@ function Confirm-SystemCompliance {
        
         # Make sure the latest version of the module is installed and if not, automatically update it, clean up any old versions
         function Update-self {            
-            $CurrentVersion = (Test-modulemanifest "$psscriptroot\Harden-Windows-Security-Module.psd1" -ErrorAction Stop).Version.ToString()
+            [version]$CurrentVersion = (Test-modulemanifest "$psscriptroot\Harden-Windows-Security-Module.psd1" -ErrorAction Stop).Version
             
             try {             
-                $LatestVersion = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security%20Module/version.txt"             
+                [version]$LatestVersion = Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security%20Module/version.txt'             
             }
             catch {   
                 Write-Error -Message "Couldn't verify if the latest version of the module is installed, please check your Internet connection." -ErrorAction Stop
             }
             
-            if ($CurrentVersion -ne $LatestVersion) {
+            if ($CurrentVersion -lt $LatestVersion) {
                 Write-Output "$($PSStyle.Foreground.FromRGB(255,105,180))The currently installed module's version is $CurrentVersion while the latest version is $LatestVersion - Auto Updating the module... 💓$($PSStyle.Reset)"
                 Remove-Module -Name 'Harden-Windows-Security-Module' -Force
                 # Do this if the module was installed properly using Install-moodule cmdlet
@@ -81,7 +81,7 @@ function Confirm-SystemCompliance {
 
         # Make sure this cmdlet is invoked with Admin privileges
         if (![bool]([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
-            Write-Error -Message "Confirm-SystemCompliance cmdlet requires Administrator privileges." -ErrorAction Stop
+            Write-Error -Message 'Confirm-SystemCompliance cmdlet requires Administrator privileges.' -ErrorAction Stop
         }
 
         Write-Progress -Activity 'Checking for updates' -Status 'Processing...' -PercentComplete 10
@@ -96,43 +96,43 @@ function Confirm-SystemCompliance {
 
         Secedit /export /cfg .\security_policy.inf | Out-Null
         # Storing the output of the ini file parsing function
-        $SecurityPoliciesIni = ConvertFrom-IniFile -IniFile .\security_policy.inf
+        [PSCustomObject]$SecurityPoliciesIni = ConvertFrom-IniFile -IniFile .\security_policy.inf
         
         Write-Progress -Activity 'Downloading Registry CSV File from GitHub or Azure DevOps' -Status 'Processing...' -PercentComplete 20
 
         # Download Registry CSV file from GitHub or Azure DevOps
         try {
-            Invoke-WebRequest -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Payload/Registry.csv" -OutFile ".\Registry.csv" -ErrorAction Stop                
+            Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Payload/Registry.csv' -OutFile '.\Registry.csv' -ErrorAction Stop                
         }
         catch {
-            Write-Host "Using Azure DevOps..." -ForegroundColor Yellow
-            Invoke-WebRequest -Uri "https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/Registry.csv" -OutFile ".\Registry.csv" -ErrorAction Stop
+            Write-Host 'Using Azure DevOps...' -ForegroundColor Yellow
+            Invoke-WebRequest -Uri 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/Registry.csv' -OutFile '.\Registry.csv' -ErrorAction Stop
         }
         # Import the registry.csv file as CSV
-        $CSVFileContent = Import-Csv -Path ".\Registry.csv"
+        [PSCustomObject]$CSVFileContent = Import-Csv -Path '.\Registry.csv'
 
         Write-Progress -Activity 'Downloading Group-Policies.json file from GitHub' -Status 'Processing...' -PercentComplete 25
 
         # Download Group-Policies.json file from GitHub
         try {
-            Invoke-WebRequest -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Payload/Group-Policies.json" -OutFile ".\Group-Policies.json" -ErrorAction Stop
+            Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Payload/Group-Policies.json' -OutFile ".\Group-Policies.json" -ErrorAction Stop
         }
         catch {
             Write-Error -Message "Group-Policies.json file couldn't be downloaded, exitting..."  
         }
         # Hash table to store Hardening Script's Policy Categories and Names
         # Importing it from the JSON file as hashtable        
-        [System.Collections.Specialized.OrderedDictionary]$HashPol = Get-Content -Path ".\Group-Policies.json" -ErrorAction Stop | ConvertFrom-Json -Depth 100 -AsHashtable -ErrorAction Stop
+        [System.Collections.Hashtable]$HashPol = Get-Content -Path '.\Group-Policies.json' -ErrorAction Stop | ConvertFrom-Json -Depth 100 -AsHashtable -ErrorAction Stop
               
         Write-Progress -Activity 'Gathering Group Policy Information' -Status 'Processing...' -PercentComplete 30
 
         Gpresult /Scope Computer /x .\GPResult.xml /f
         # Load the xml file into a variable
-        $GroupPolicyXmlContent = [xml](Get-Content -Path .\GPResult.xml -ErrorAction Stop)
-
+        [System.Xml.XmlDocument]$GroupPolicyXmlContent = Get-Content -Path .\GPResult.xml -ErrorAction Stop
+        
 
         # An array to store each Group Policy "<q6:Policy>" element as a separate object
-        $PoliciesOutput = @()
+        [System.Array]$PoliciesOutput = @()
         # Use dot notation to access the Group Policy elements
         $GroupPolicyXmlContent.Rsop.ComputerResults.ExtensionData.Extension.Policy | Where-Object { $null -ne $_.name } | ForEach-Object {   
             # All the sub-elements of the "<q6:Policy>" that we need to verify
@@ -166,9 +166,9 @@ function Confirm-SystemCompliance {
 
 
         # An array to store Group Policy Firewall settings as an object
-        $FirewallPoliciesOutput = @()
+        [System.Array]$FirewallPoliciesOutput = @()
         # Use dot notation to access the Group Policy elements - sometimes the type is q4 or q3 or q7, so using wildcard for the number
-        $FirewallGroupPolicySettings = $GroupPolicyXmlContent.Rsop.ComputerResults.ExtensionData.Extension | Where-Object { $_.type -like 'q*:WindowsFirewallSettings' } 
+        [System.Xml.XmlLinkedNode]$FirewallGroupPolicySettings = $GroupPolicyXmlContent.Rsop.ComputerResults.ExtensionData.Extension | Where-Object { $_.type -like 'q*:WindowsFirewallSettings' } 
 
         $FirewallPoliciesOutput += [PSCustomObject]@{
 
@@ -208,7 +208,7 @@ function Confirm-SystemCompliance {
 
 
         # An array to store each Group Policy "<q6:RegistrySetting>" element as a separate object
-        $RegistriesOutput = @()
+        [System.Array]$RegistriesOutput = @()
         # Use dot notation to access the Policy element
         $GroupPolicyXmlContent.Rsop.ComputerResults.ExtensionData.Extension.RegistrySetting | Where-Object { $null -ne $_.Value.Name } | ForEach-Object {
     
@@ -225,12 +225,12 @@ function Confirm-SystemCompliance {
    
         # Hash table to store Hardening Script's Registry Policy Categories and Names
         # They are still Group Policies but instead of being in "<q6:Policy>" element they are in "<q6:RegistrySetting>"
-        $HashReg = @{
+        [System.Collections.Hashtable]$HashReg = @{
             # Device Guard
             'Device Guard' = @{
                 1 = @{
-                    KeyPath = "Software\Policies\Microsoft\Windows\System"
-                    Name    = "RunAsPPL"              
+                    KeyPath = 'Software\Policies\Microsoft\Windows\System'
+                    Name    = 'RunAsPPL'        
                 }
             }
         }
@@ -241,8 +241,8 @@ function Confirm-SystemCompliance {
         #Region Microsoft-Defender-Category
         Write-Progress -Activity 'Validating Microsoft Defender Category' -Status 'Processing...' -PercentComplete 35
         # An array to store the nested custom objects (Results of the foreach loop), inside the main output object
-        $NestedObjectArray = @()
-        $CatName = "Microsoft Defender"
+        [System.Array]$NestedObjectArray = @()
+        [String]$CatName = 'Microsoft Defender'
         # Loop through each nested hash table inside the main Policies hash table and check the item state using a switch statement    
         foreach ($Key in $HashPol[$CatName].Keys) {
             # Get the correct object from the PoliciesOutput Object that contains all the group policies in the xml file
@@ -415,53 +415,53 @@ function Confirm-SystemCompliance {
             }
     
             # Create a custom object with 5 properties to store them as nested objects inside the main output object
-            $NestedObjectArray += [pscustomobject]@{
+            $NestedObjectArray += [PSCustomObject]@{
                 Name      = $HashPol[$CatName][$Key].Name
                 Value     = $ItemState
                 Compliant = $ItemState
                 Category  = $CatName
-                Method    = "Group Policy"                
+                Method    = 'Group Policy'                
             }    
         }
     
         # For PowerShell Cmdlet
         $IndividualItemResult = $((Get-MpPreference).AllowSwitchToAsyncInspection)
-        $NestedObjectArray += [pscustomobject]@{
+        $NestedObjectArray += [PSCustomObject]@{
             Name      = 'AllowSwitchToAsyncInspection'
             Value     = $IndividualItemResult
             Compliant = $IndividualItemResult
             Category  = $CatName
-            Method    = "Cmdlet"            
+            Method    = 'Cmdlet'            
         }
     
         # For PowerShell Cmdlet
         $IndividualItemResult = $((Get-MpPreference).oobeEnableRtpAndSigUpdate)
-        $NestedObjectArray += [pscustomobject]@{
+        $NestedObjectArray += [PSCustomObject]@{
             Name      = 'oobeEnableRtpAndSigUpdate'
             Value     = $IndividualItemResult
             Compliant = $IndividualItemResult
             Category  = $CatName
-            Method    = "Cmdlet"            
+            Method    = 'Cmdlet'            
         }
     
         # For PowerShell Cmdlet
         $IndividualItemResult = $((Get-MpPreference).IntelTDTEnabled)
-        $NestedObjectArray += [pscustomobject]@{
+        $NestedObjectArray += [PSCustomObject]@{
             Name      = 'IntelTDTEnabled'
             Value     = $IndividualItemResult
             Compliant = $IndividualItemResult
             Category  = $CatName
-            Method    = "Cmdlet"            
+            Method    = 'Cmdlet'            
         }
     
         # For PowerShell Cmdlet
         $IndividualItemResult = $((Get-ProcessMitigation -System -ErrorAction Stop).aslr.ForceRelocateImages)
-        $NestedObjectArray += [pscustomobject]@{
+        $NestedObjectArray += [PSCustomObject]@{
             Name      = 'Mandatory ASLR'
             Value     = $IndividualItemResult
             Compliant = $IndividualItemResult -eq 'on' ? $True : $false
             Category  = $CatName
-            Method    = "Cmdlet"            
+            Method    = 'Cmdlet'            
         }
     
         # For BCDEDIT NX value verification
@@ -470,13 +470,13 @@ function Confirm-SystemCompliance {
         $bcdOutput = (bcdedit /enum) -join "`n" # collect bcdedit's output as a *single* string
     
         # Initialize the output list.
-        $entries = New-Object System.Collections.Generic.List[pscustomobject] -ErrorAction Stop
+        $entries = New-Object System.Collections.Generic.List[PSCustomObject] -ErrorAction Stop
     
         # Parse bcdedit's output.
     ($bcdOutput -split '(?m)^(.+\n-)-+\n' -ne '').ForEach({
                 if ($_.EndsWith("`n-")) {
                     # entry header 
-                    $entries.Add([pscustomobject] @{ Name = ($_ -split '\n')[0]; Properties = [ordered] @{} })
+                    $entries.Add([PSCustomObject] @{ Name = ($_ -split '\n')[0]; Properties = [ordered] @{} })
                 }
                 else {
                     # block of property-value lines
@@ -494,31 +494,31 @@ function Confirm-SystemCompliance {
     
         # For PowerShell Cmdlet
         $IndividualItemResult = $(($entries | Where-Object { $_.properties.identifier -eq "{current}" }).properties.nx)
-        $NestedObjectArray += [pscustomobject]@{
+        $NestedObjectArray += [PSCustomObject]@{
             Name      = 'BCDEDIT NX Value'
             Value     = $IndividualItemResult
             Compliant = $IndividualItemResult -eq 'AlwaysOn' ? $True : $false   
             Category  = $CatName
-            Method    = "Cmdlet"             
+            Method    = 'Cmdlet'             
         }
     
         # For PowerShell Cmdlet
-        $NestedObjectArray += [pscustomobject]@{
+        $NestedObjectArray += [PSCustomObject]@{
             Name      = 'Smart App Control State'
             Value     = $((Get-MpComputerStatus).SmartAppControlState)
             Compliant = 'N/A'
             Category  = $CatName
-            Method    = "Cmdlet"            
+            Method    = 'Cmdlet'            
         }
     
         # For PowerShell Cmdlet
         $IndividualItemResult = $((Get-ScheduledTask -TaskPath "\MSFT Driver Block list update\" -TaskName "MSFT Driver Block list update" -ErrorAction SilentlyContinue) ? $True : $false)
-        $NestedObjectArray += [pscustomobject]@{
+        $NestedObjectArray += [PSCustomObject]@{
             Name      = 'Fast weekly Microsoft recommended driver block list update'
             Value     = $IndividualItemResult
             Compliant = $IndividualItemResult
             Category  = $CatName
-            Method    = "Cmdlet"           
+            Method    = 'Cmdlet'           
         }
     
     
@@ -531,12 +531,12 @@ function Confirm-SystemCompliance {
             6 = 'Delayed'
         }
         # For PowerShell Cmdlet
-        $NestedObjectArray += [pscustomobject]@{
+        $NestedObjectArray += [PSCustomObject]@{
             Name      = 'Microsoft Defender Platform Updates Channel'
             Value     = $($DefenderPlatformUpdatesChannels[[int](get-mppreference).PlatformUpdatesChannel])
             Compliant = 'N/A'
             Category  = $CatName
-            Method    = "Cmdlet"           
+            Method    = 'Cmdlet'           
         }
     
     
@@ -549,21 +549,21 @@ function Confirm-SystemCompliance {
             6 = 'Delayed'
         }
         # For PowerShell Cmdlet
-        $NestedObjectArray += [pscustomobject]@{
+        $NestedObjectArray += [PSCustomObject]@{
             Name      = 'Microsoft Defender Engine Updates Channel'
             Value     = $($DefenderEngineUpdatesChannels[[int](get-mppreference).EngineUpdatesChannel])
             Compliant = 'N/A'
             Category  = $CatName
-            Method    = "Cmdlet"            
+            Method    = 'Cmdlet'            
         }
     
         # For PowerShell Cmdlet
-        $NestedObjectArray += [pscustomobject]@{
+        $NestedObjectArray += [PSCustomObject]@{
             Name      = 'Controlled Folder Access Exclusions'
-            Value     = [pscustomobject]@{Count = $((Get-MpPreference).ControlledFolderAccessAllowedApplications.count); Programs = $((Get-MpPreference).ControlledFolderAccessAllowedApplications) }
+            Value     = [PSCustomObject]@{Count = $((Get-MpPreference).ControlledFolderAccessAllowedApplications.count); Programs = $((Get-MpPreference).ControlledFolderAccessAllowedApplications) }
             Compliant = 'N/A'
             Category  = $CatName
-            Method    = "Cmdlet"            
+            Method    = 'Cmdlet'            
         }   
         # Add the array of custom objects as a property to the $FinalMegaObject object outside the loop
         Add-Member -InputObject $FinalMegaObject -MemberType NoteProperty -Name $CatName -Value $NestedObjectArray -ErrorAction Stop
@@ -571,59 +571,59 @@ function Confirm-SystemCompliance {
     
         #Region Attack-Surface-Reduction-Rules-Category
         Write-Progress -Activity 'Validating Attack Surface Reduction Rules Category' -Status 'Processing...' -PercentComplete 40
-        $NestedObjectArray = @()
-        $CatName = "ASR"
+        [System.Array]$NestedObjectArray = @()
+        [String]$CatName = 'ASR'
         # Loop through each nested hash table inside the main Policies hash table and check the item state using a switch statement
         foreach ($Key in $HashPol[$CatName].Keys) {
             $Item = $PoliciesOutput | Where-object { $_.Name -eq $HashPol[$CatName][$Key].Name -and $_.Category -eq $HashPol[$CatName][$Key].Cat }
             switch ($Key) {
                 1 {
-                    $1index = $Item.ListBoxValue.element.Name.IndexOf("92E97FA1-2EDF-4476-BDD6-9DD0B4DDDC7B")
+                    $1index = $Item.ListBoxValue.element.Name.IndexOf('92E97FA1-2EDF-4476-BDD6-9DD0B4DDDC7B')
                     $1ListData = $Item.ListBoxValue.element.Data[$1index]                
     
-                    $2index = $Item.ListBoxValue.element.Name.IndexOf("e6db77e5-3df2-4cf1-b95a-636979351e5b")
+                    $2index = $Item.ListBoxValue.element.Name.IndexOf('e6db77e5-3df2-4cf1-b95a-636979351e5b')
                     $2ListData = $Item.ListBoxValue.element.Data[$2index]
     
-                    $3index = $Item.ListBoxValue.element.Name.IndexOf("d1e49aac-8f56-4280-b9ba-993a6d77406c")
+                    $3index = $Item.ListBoxValue.element.Name.IndexOf('d1e49aac-8f56-4280-b9ba-993a6d77406c')
                     $3ListData = $Item.ListBoxValue.element.Data[$3index]                
     
-                    $4index = $Item.ListBoxValue.element.Name.IndexOf("3b576869-a4ec-4529-8536-b80a7769e899")
+                    $4index = $Item.ListBoxValue.element.Name.IndexOf('3b576869-a4ec-4529-8536-b80a7769e899')
                     $4ListData = $Item.ListBoxValue.element.Data[$4index]
     
-                    $5index = $Item.ListBoxValue.element.Name.IndexOf("be9ba2d9-53ea-4cdc-84e5-9b1eeee46550")
+                    $5index = $Item.ListBoxValue.element.Name.IndexOf('be9ba2d9-53ea-4cdc-84e5-9b1eeee46550')
                     $5ListData = $Item.ListBoxValue.element.Data[$5index]
     
-                    $6index = $Item.ListBoxValue.element.Name.IndexOf("75668c1f-73b5-4cf0-bb93-3ecf5cb7cc84")
+                    $6index = $Item.ListBoxValue.element.Name.IndexOf('75668c1f-73b5-4cf0-bb93-3ecf5cb7cc84')
                     $6ListData = $Item.ListBoxValue.element.Data[$6index]
     
-                    $7index = $Item.ListBoxValue.element.Name.IndexOf("56a863a9-875e-4185-98a7-b882c64b5ce5")
+                    $7index = $Item.ListBoxValue.element.Name.IndexOf('56a863a9-875e-4185-98a7-b882c64b5ce5')
                     $7ListData = $Item.ListBoxValue.element.Data[$7index]
     
-                    $8index = $Item.ListBoxValue.element.Name.IndexOf("01443614-cd74-433a-b99e-2ecdc07bfc25")
+                    $8index = $Item.ListBoxValue.element.Name.IndexOf('01443614-cd74-433a-b99e-2ecdc07bfc25')
                     $8ListData = $Item.ListBoxValue.element.Data[$8index]
     
-                    $9index = $Item.ListBoxValue.element.Name.IndexOf("b2b3f03d-6a65-4f7b-a9c7-1c7ef74a9ba4")
+                    $9index = $Item.ListBoxValue.element.Name.IndexOf('b2b3f03d-6a65-4f7b-a9c7-1c7ef74a9ba4')
                     $9ListData = $Item.ListBoxValue.element.Data[$9index]
     
-                    $10index = $Item.ListBoxValue.element.Name.IndexOf("d4f940ab-401b-4efc-aadc-ad5f3c50688a")
+                    $10index = $Item.ListBoxValue.element.Name.IndexOf('d4f940ab-401b-4efc-aadc-ad5f3c50688a')
                     $10ListData = $Item.ListBoxValue.element.Data[$10index]
     
-                    $11index = $Item.ListBoxValue.element.Name.IndexOf("5beb7efe-fd9a-4556-801d-275e5ffc04cc")
+                    $11index = $Item.ListBoxValue.element.Name.IndexOf('5beb7efe-fd9a-4556-801d-275e5ffc04cc')
                     $11ListData = $Item.ListBoxValue.element.Data[$11index]
     
-                    $12index = $Item.ListBoxValue.element.Name.IndexOf("c1db55ab-c21a-4637-bb3f-a12568109d35")
+                    $12index = $Item.ListBoxValue.element.Name.IndexOf('c1db55ab-c21a-4637-bb3f-a12568109d35')
                     $12ListData = $Item.ListBoxValue.element.Data[$12index]
     
-                    $13index = $Item.ListBoxValue.element.Name.IndexOf("9e6c4e1f-7d60-472f-ba1a-a39ef669e4b2")
+                    $13index = $Item.ListBoxValue.element.Name.IndexOf('9e6c4e1f-7d60-472f-ba1a-a39ef669e4b2')
                     $13ListData = $Item.ListBoxValue.element.Data[$13index]
     
-                    $14index = $Item.ListBoxValue.element.Name.IndexOf("7674ba52-37eb-4a4f-a9a1-f0f9a1619a2c")
+                    $14index = $Item.ListBoxValue.element.Name.IndexOf('7674ba52-37eb-4a4f-a9a1-f0f9a1619a2c')
                     $14ListData = $Item.ListBoxValue.element.Data[$14index]
     
-                    $15index = $Item.ListBoxValue.element.Name.IndexOf("26190899-1602-49e8-8b27-eb1d0a1ce869")
+                    $15index = $Item.ListBoxValue.element.Name.IndexOf('26190899-1602-49e8-8b27-eb1d0a1ce869')
                     $15ListData = $Item.ListBoxValue.element.Data[$15index]
     
-                    $16index = $Item.ListBoxValue.element.Name.IndexOf("d3e037e1-3eb8-44c8-a917-57927947596d")
+                    $16index = $Item.ListBoxValue.element.Name.IndexOf('d3e037e1-3eb8-44c8-a917-57927947596d')
                     $16ListData = $Item.ListBoxValue.element.Data[$16index]
                 
                     # Use ternary operator instead of if-else statements
@@ -652,12 +652,12 @@ function Confirm-SystemCompliance {
                 }
             }
             # Create a custom object with 5 properties to store them as nested objects inside the main output object
-            $NestedObjectArray += [pscustomobject]@{
+            $NestedObjectArray += [PSCustomObject]@{
                 Name      = $HashPol[$CatName][$Key].Name
                 Value     = $ItemState
                 Compliant = $ItemState
                 Category  = $CatName
-                Method    = "Group Policy"               
+                Method    = 'Group Policy'               
             }    
         }
         # Add the array of custom objects as a property to the $FinalMegaObject object outside the loop
@@ -666,15 +666,15 @@ function Confirm-SystemCompliance {
     
         #Region Bitlocker-Category
         Write-Progress -Activity 'Validating Bitlocker Category' -Status 'Processing...' -PercentComplete 45
-        $NestedObjectArray = @()
-        $CatName = "Bitlocker"
+        [System.Array]$NestedObjectArray = @()
+        [String]$CatName = 'Bitlocker'
 
 
         # This PowerShell script can be used to find out if the DMA Protection is ON \ OFF.
         # The Script will show this by emitting True \ False for On \ Off respectively.
 
         # bootDMAProtection check - checks for Kernel DMA Protection status in System information or msinfo32
-        $bootDMAProtectionCheck =
+        [string]$BootDMAProtectionCheck =
         @"
   namespace SystemInfo
     {
@@ -718,9 +718,9 @@ function Confirm-SystemCompliance {
       }
     }
 "@
-        Add-Type -TypeDefinition $bootDMAProtectionCheck
+        Add-Type -TypeDefinition $BootDMAProtectionCheck
         # returns true or false depending on whether Kernel DMA Protection is on or off
-        $bootDMAProtection = ([SystemInfo.NativeMethods]::BootDmaCheck()) -ne 0
+        [bool]$BootDMAProtection = ([SystemInfo.NativeMethods]::BootDmaCheck()) -ne 0
   
 
 
@@ -732,19 +732,19 @@ function Confirm-SystemCompliance {
                     [bool]$ItemState = ($Item.State -eq 'Enabled') ? $True : $False   
                 }
                 2 {
-                    $1index = $Item.DropDownListName.IndexOf("Configure TPM startup:")                
+                    $1index = $Item.DropDownListName.IndexOf('Configure TPM startup:')                
                     $1DropDownState = $Item.DropDownListState[$1index]                
                     $1DropDownValue = $Item.DropDownListValue[$1index]
     
-                    $2index = $Item.DropDownListName.IndexOf("Configure TPM startup PIN:")                
+                    $2index = $Item.DropDownListName.IndexOf('Configure TPM startup PIN:')                
                     $2DropDownState = $Item.DropDownListState[$2index]                
                     $2DropDownValue = $Item.DropDownListValue[$2index]
     
-                    $3index = $Item.DropDownListName.IndexOf("Configure TPM startup key:")                
+                    $3index = $Item.DropDownListName.IndexOf('Configure TPM startup key:')                
                     $3DropDownState = $Item.DropDownListState[$3index]                
                     $3DropDownValue = $Item.DropDownListValue[$3index]
     
-                    $4index = $Item.DropDownListName.IndexOf("Configure TPM startup key and PIN:")                
+                    $4index = $Item.DropDownListName.IndexOf('Configure TPM startup key and PIN:')                
                     $4DropDownState = $Item.DropDownListState[$4index]                
                     $4DropDownValue = $Item.DropDownListValue[$4index]
                 
@@ -834,23 +834,23 @@ function Confirm-SystemCompliance {
             }
         
             # Create a custom object with 5 properties to store them as nested objects inside the main output object
-            $NestedObjectArray += [pscustomobject]@{
+            $NestedObjectArray += [PSCustomObject]@{
                 Name      = $HashPol[$CatName][$Key].Name
                 Value     = $ItemState
                 Compliant = $ItemState
                 Category  = $CatName
-                Method    = "Group Policy"                
+                Method    = 'Group Policy'                
             }    
         }
     
         # For PowerShell Cmdlet
         $IndividualItemResult = $($((Get-ItemProperty HKLM:\SYSTEM\CurrentControlSet\Control\Power -name HibernateEnabled).hibernateEnabled) -eq 1 ? $True : $False)
-        $NestedObjectArray += [pscustomobject]@{
+        $NestedObjectArray += [PSCustomObject]@{
             Name      = 'Hibernate enabled and set to full'
             Value     = $IndividualItemResult
             Compliant = $IndividualItemResult
             Category  = $CatName
-            Method    = "Cmdlet"
+            Method    = 'Cmdlet'
         }               
         # Add the array of custom objects as a property to the $FinalMegaObject object outside the loop
         Add-Member -InputObject $FinalMegaObject -MemberType NoteProperty -Name $CatName -Value $NestedObjectArray -ErrorAction Stop
@@ -858,8 +858,8 @@ function Confirm-SystemCompliance {
     
         #Region TLS-Category
         Write-Progress -Activity 'Validating TLS Category' -Status 'Processing...' -PercentComplete 50
-        $NestedObjectArray = @()
-        $CatName = "TLS"
+        [System.Array]$NestedObjectArray = @()
+        [String]$CatName = 'TLS'
         # Loop through each nested hash table inside the main Policies hash table and check the item state using a switch statement
         foreach ($Key in $HashPol[$CatName].Keys) {
             $Item = $PoliciesOutput | Where-object { $_.Name -eq $HashPol[$CatName][$Key].Name -and $_.Category -eq $HashPol[$CatName][$Key].Cat }
@@ -867,7 +867,7 @@ function Confirm-SystemCompliance {
                 1 {
                     # Write-Host "$($Item.MultiTextValue.string)" -ForegroundColor Yellow
                     # Make sure the content and their exact order is present in Group Policy
-                    $ExpectedOrderAndContent = @('nistP521', 'curve25519', 'NistP384', 'NistP256')
+                    [System.Array]$ExpectedOrderAndContent = @('nistP521', 'curve25519', 'NistP384', 'NistP256')
     
                     # Loop through the array and compare each element with the expected value
                     foreach ($i in 0..3) {
@@ -893,12 +893,12 @@ function Confirm-SystemCompliance {
                 }
             }
             # Create a custom object with 5 properties to store them as nested objects inside the main output object
-            $NestedObjectArray += [pscustomobject]@{
+            $NestedObjectArray += [PSCustomObject]@{
                 Name      = $HashPol[$CatName][$Key].Name
                 Value     = $ItemState
                 Compliant = $ItemState
                 Category  = $CatName
-                Method    = "Group Policy"                
+                Method    = 'Group Policy'                
             }
         }
     
@@ -935,12 +935,12 @@ function Confirm-SystemCompliance {
         # Create a custom object with 5 properties to store them as nested objects inside the main output object
         # Make sure the boolean array doesn't contain any $false values
         $IndividualItemResult = ($MatchRegistryKeys -notcontains $false)
-        $NestedObjectArray += [pscustomobject]@{
-            Name      = "Registry Keys All correct"            
+        $NestedObjectArray += [PSCustomObject]@{
+            Name      = 'Registry Keys All correct'            
             Value     = $IndividualItemResult
             Compliant = $IndividualItemResult
             Category  = $CatName
-            Method    = "Registry Keys"
+            Method    = 'Registry Keys'
         }
     
         # Add the array of custom objects as a property to the $FinalMegaObject object outside the loop
@@ -949,8 +949,8 @@ function Confirm-SystemCompliance {
     
         #Region LockScreen-Category
         Write-Progress -Activity 'Validating Lock Screen Category' -Status 'Processing...' -PercentComplete 55
-        $NestedObjectArray = @()
-        $CatName = "LockScreen"
+        [System.Array]$NestedObjectArray = @()
+        [String]$CatName = 'LockScreen'
         # Loop through each nested hash table inside the main Policies hash table and check the item state using a switch statement
         foreach ($Key in $HashPol[$CatName].Keys) {
             $Item = $PoliciesOutput | Where-object { $_.Name -eq $HashPol[$CatName][$Key].Name -and $_.Category -eq $HashPol[$CatName][$Key].Cat }
@@ -992,103 +992,103 @@ function Confirm-SystemCompliance {
                 }
             }
             # Create a custom object with 5 properties to store them as nested objects inside the main output object
-            $NestedObjectArray += [pscustomobject]@{
+            $NestedObjectArray += [PSCustomObject]@{
                 Name      = $HashPol[$CatName][$Key].Name
                 Value     = $ItemState
                 Compliant = $ItemState
                 Category  = $CatName
-                Method    = "Group Policy"                
+                Method    = 'Group Policy'                
             }
         }
     
         # Create a custom object with 5 properties to store them as nested objects inside the main output object
         $IndividualItemResult = [bool]$($SecurityPoliciesIni.'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\InactivityTimeoutSecs'] -eq '4,120') ? $True : $False   
-        $NestedObjectArray += [pscustomobject]@{
+        $NestedObjectArray += [PSCustomObject]@{
             Name      = 'Machine inactivity limit'
             Value     = $IndividualItemResult
             Compliant = $IndividualItemResult
             Category  = $CatName
-            Method    = "Security Group Policy"
+            Method    = 'Security Group Policy'
         }
     
         # Create a custom object with 5 properties to store them as nested objects inside the main output object   
         $IndividualItemResult = [bool]$($SecurityPoliciesIni.'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\DisableCAD'] -eq '4,0') ? $True : $False
-        $NestedObjectArray += [pscustomobject]@{
+        $NestedObjectArray += [PSCustomObject]@{
             Name      = 'Interactive logon: Do not require CTRL+ALT+DEL'
             Value     = $IndividualItemResult
             Compliant = $IndividualItemResult
             Category  = $CatName
-            Method    = "Security Group Policy"
+            Method    = 'Security Group Policy'
         }
     
         # Create a custom object with 5 properties to store them as nested objects inside the main output object   
         $IndividualItemResult = [bool]$($SecurityPoliciesIni.'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\MaxDevicePasswordFailedAttempts'] -eq '4,5') ? $True : $False
-        $NestedObjectArray += [pscustomobject]@{
+        $NestedObjectArray += [PSCustomObject]@{
             Name      = 'Interactive logon: Machine account lockout threshold'
             Value     = $IndividualItemResult
             Compliant = $IndividualItemResult
             Category  = $CatName
-            Method    = "Security Group Policy"
+            Method    = 'Security Group Policy'
         }
     
         # Create a custom object with 5 properties to store them as nested objects inside the main output object   
         $IndividualItemResult = [bool]$($SecurityPoliciesIni.'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\DontDisplayLockedUserId'] -eq '4,4') ? $True : $False
-        $NestedObjectArray += [pscustomobject]@{
+        $NestedObjectArray += [PSCustomObject]@{
             Name      = 'Interactive logon: Display user information when the session is locked'
             Value     = $IndividualItemResult
             Compliant = $IndividualItemResult
             Category  = $CatName
-            Method    = "Security Group Policy"
+            Method    = 'Security Group Policy'
         }
     
         # Create a custom object with 5 properties to store them as nested objects inside the main output object   
         $IndividualItemResult = [bool]$($SecurityPoliciesIni.'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\DontDisplayUserName'] -eq '4,1') ? $True : $False
-        $NestedObjectArray += [pscustomobject]@{
+        $NestedObjectArray += [PSCustomObject]@{
             Name      = "Interactive logon: Don't display username at sign-in"
             Value     = $IndividualItemResult
             Compliant = $IndividualItemResult
             Category  = $CatName
-            Method    = "Security Group Policy"
+            Method    = 'Security Group Policy'
         }
 
         # Create a custom object with 5 properties to store them as nested objects inside the main output object   
         $IndividualItemResult = [bool]$($SecurityPoliciesIni.'System Access'['LockoutBadCount'] -eq '5') ? $True : $False
-        $NestedObjectArray += [pscustomobject]@{
+        $NestedObjectArray += [PSCustomObject]@{
             Name      = "Account lockout threshold"
             Value     = $IndividualItemResult
             Compliant = $IndividualItemResult
             Category  = $CatName
-            Method    = "Security Group Policy"
+            Method    = 'Security Group Policy'
         }
 
         # Create a custom object with 5 properties to store them as nested objects inside the main output object   
         $IndividualItemResult = [bool]$($SecurityPoliciesIni.'System Access'['LockoutDuration'] -eq '1440') ? $True : $False
-        $NestedObjectArray += [pscustomobject]@{
+        $NestedObjectArray += [PSCustomObject]@{
             Name      = "Account lockout duration"
             Value     = $IndividualItemResult
             Compliant = $IndividualItemResult
             Category  = $CatName
-            Method    = "Security Group Policy"
+            Method    = 'Security Group Policy'
         }
 
         # Create a custom object with 5 properties to store them as nested objects inside the main output object   
         $IndividualItemResult = [bool]$($SecurityPoliciesIni.'System Access'['ResetLockoutCount'] -eq '1440') ? $True : $False
-        $NestedObjectArray += [pscustomobject]@{
+        $NestedObjectArray += [PSCustomObject]@{
             Name      = "Reset account lockout counter after"
             Value     = $IndividualItemResult
             Compliant = $IndividualItemResult
             Category  = $CatName
-            Method    = "Security Group Policy"
+            Method    = 'Security Group Policy'
         }
 
         # Create a custom object with 5 properties to store them as nested objects inside the main output object   
         $IndividualItemResult = [bool]$($SecurityPoliciesIni.'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\DontDisplayLastUserName'] -eq '4,1') ? $True : $False
-        $NestedObjectArray += [pscustomobject]@{
+        $NestedObjectArray += [PSCustomObject]@{
             Name      = "Interactive logon: Don't display last signed-in"
             Value     = $IndividualItemResult
             Compliant = $IndividualItemResult
             Category  = $CatName
-            Method    = "Security Group Policy"
+            Method    = 'Security Group Policy'
         }
     
         # Add the array of custom objects as a property to the $FinalMegaObject object outside the loop
@@ -1097,8 +1097,8 @@ function Confirm-SystemCompliance {
     
         #Region User-Account-Control-Category
         Write-Progress -Activity 'Validating User Account Control Category' -Status 'Processing...' -PercentComplete 60
-        $NestedObjectArray = @()
-        $CatName = "UAC" 
+        [System.Array]$NestedObjectArray = @()
+        [String]$CatName = "UAC" 
         # Loop through each nested hash table inside the main Policies hash table and check the item state using a switch statement
         foreach ($Key in $HashPol[$CatName].Keys) {
             $Item = $PoliciesOutput | Where-object { $_.Name -eq $HashPol[$CatName][$Key].Name -and $_.Category -eq $HashPol[$CatName][$Key].Cat }
@@ -1109,24 +1109,24 @@ function Confirm-SystemCompliance {
             }
 
             # Create a custom object with 5 properties to store them as nested objects inside the main output object
-            $NestedObjectArray += [pscustomobject]@{
+            $NestedObjectArray += [PSCustomObject]@{
                 Name      = $HashPol[$CatName][$Key].Name
                 Value     = $ItemState
                 Compliant = $ItemState
                 Category  = $CatName
-                Method    = "Group Policy"                
+                Method    = 'Group Policy'                
             }
         }
 
 
         # Create a custom object with 5 properties to store them as nested objects inside the main output object
         $IndividualItemResult = [bool]$($SecurityPoliciesIni.'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\ConsentPromptBehaviorAdmin'] -eq '4,2') ? $True : $False
-        $NestedObjectArray += [pscustomobject]@{
+        $NestedObjectArray += [PSCustomObject]@{
             Name      = "UAC: Behavior of the elevation prompt for administrators in Admin Approval Mode"
             Value     = $IndividualItemResult
             Compliant = $IndividualItemResult
             Category  = $CatName
-            Method    = "Security Group Policy"
+            Method    = 'Security Group Policy'
         }
     
         
@@ -1149,22 +1149,22 @@ function Confirm-SystemCompliance {
         }
 
         # Create a custom object with 5 properties to store them as nested objects inside the main output object
-        $NestedObjectArray += [pscustomobject]@{
+        $NestedObjectArray += [PSCustomObject]@{
             Name      = "UAC: Behavior of the elevation prompt for standard users"
             Value     = $IndividualItemResult
             Compliant = $ConsentPromptBehaviorUserCompliance
             Category  = $CatName
-            Method    = "Security Group Policy"
+            Method    = 'Security Group Policy'
         }   
 
         # Create a custom object with 5 properties to store them as nested objects inside the main output object   
         $IndividualItemResult = [bool]($($SecurityPoliciesIni.'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\ValidateAdminCodeSignatures'] -eq '4,1') ? $True : $False)
-        $NestedObjectArray += [pscustomobject]@{
+        $NestedObjectArray += [PSCustomObject]@{
             Name      = 'UAC: Only elevate executables that are signed and validated'
             Value     = $IndividualItemResult
             Compliant = $IndividualItemResult
             Category  = $CatName
-            Method    = "Security Group Policy"
+            Method    = 'Security Group Policy'
         }
                 
         # Add the array of custom objects as a property to the $FinalMegaObject object outside the loop
@@ -1173,8 +1173,8 @@ function Confirm-SystemCompliance {
     
         #Region Device-Guard-Category
         Write-Progress -Activity 'Validating Device Guard Category' -Status 'Processing...' -PercentComplete 65
-        $NestedObjectArray = @()
-        $CatName = "Device Guard"
+        [System.Array]$NestedObjectArray = @()
+        [String]$CatName = "Device Guard"
         # Loop through each nested hash table inside the main Policies hash table and check the item state using a switch statement
         foreach ($Key in $HashPol[$CatName].Keys) {
             $Item = $PoliciesOutput | Where-object { $_.Name -eq $HashPol[$CatName][$Key].Name -and $_.Category -eq $HashPol[$CatName][$Key].Cat }
@@ -1249,12 +1249,12 @@ function Confirm-SystemCompliance {
                 }
             }
             # Create a custom object with 5 properties to store them as nested objects inside the main output object
-            $NestedObjectArray += [pscustomobject]@{
+            $NestedObjectArray += [PSCustomObject]@{
                 Name      = $HashPol[$CatName][$Key].Name
                 Value     = $ItemState
                 Compliant = $ItemState
                 Category  = $CatName
-                Method    = "Group Policy"               
+                Method    = 'Group Policy'               
             }    
         }
     
@@ -1269,12 +1269,12 @@ function Confirm-SystemCompliance {
                 }
             }
             # Create a custom object with 5 properties to store them as nested objects inside the main output object
-            $NestedObjectArray += [pscustomobject]@{
+            $NestedObjectArray += [PSCustomObject]@{
                 Name      = $HashReg[$CatName][$Key].Name
                 Value     = $ItemState
                 Compliant = $ItemState
                 Category  = $CatName
-                Method    = "Group Policy"                
+                Method    = 'Group Policy'                
             }    
         }
         # Add the array of custom objects as a property to the $FinalMegaObject object outside the loop
@@ -1283,170 +1283,170 @@ function Confirm-SystemCompliance {
         
         #Region Windows-Firewall-Category
         Write-Progress -Activity 'Validating Windows Firewall Category' -Status 'Processing...' -PercentComplete 70
-        $NestedObjectArray = @()
-        $CatName = "Windows Firewall"
+        [System.Array]$NestedObjectArray = @()
+        [String]$CatName = 'Windows Firewall'
               
     
         # Create a custom object with 5 properties to store them as nested objects inside the main output object
-        $NestedObjectArray += [pscustomobject]@{
+        $NestedObjectArray += [PSCustomObject]@{
             Name      = "Domain Profile Default Inbound Action"
             Value     = $FirewallPoliciesOutput.DomainDefaultInboundAction
             Compliant = [bool]($FirewallPoliciesOutput.DomainDefaultInboundAction -eq $True ? $True : $False)
             Category  = $CatName
-            Method    = "Firewall Group Policy"
+            Method    = 'Firewall Group Policy'
         }    
     
         # Create a custom object with 5 properties to store them as nested objects inside the main output object
-        $NestedObjectArray += [pscustomobject]@{
+        $NestedObjectArray += [PSCustomObject]@{
             Name      = "Domain Profile Default Outbound Action"
             Value     = $FirewallPoliciesOutput.DomainDefaultOutboundAction
             Compliant = [bool]($FirewallPoliciesOutput.DomainDefaultOutboundAction -eq $true ? $True : $False)
             Category  = $CatName
-            Method    = "Firewall Group Policy"
+            Method    = 'Firewall Group Policy'
         }
 
         # Create a custom object with 5 properties to store them as nested objects inside the main output object
-        $NestedObjectArray += [pscustomobject]@{
+        $NestedObjectArray += [PSCustomObject]@{
             Name      = "Domain Profile Do Not Allow Exceptions"
             Value     = $FirewallPoliciesOutput.DomainDoNotAllowExceptions
             Compliant = [bool]($FirewallPoliciesOutput.DomainDoNotAllowExceptions -eq $true ? $True : $False)
             Category  = $CatName
-            Method    = "Firewall Group Policy"
+            Method    = 'Firewall Group Policy'
         }
 
         # Create a custom object with 5 properties to store them as nested objects inside the main output object
-        $NestedObjectArray += [pscustomobject]@{
+        $NestedObjectArray += [PSCustomObject]@{
             Name      = "Domain Profile Firewall Enabled"
             Value     = $FirewallPoliciesOutput.DomainEnableFirewall
             Compliant = [bool]($FirewallPoliciesOutput.DomainEnableFirewall -eq $true ? $True : $False)
             Category  = $CatName
-            Method    = "Firewall Group Policy"
+            Method    = 'Firewall Group Policy'
         }
 
         # Create a custom object with 5 properties to store them as nested objects inside the main output object
-        $NestedObjectArray += [pscustomobject]@{
+        $NestedObjectArray += [PSCustomObject]@{
             Name      = "Domain Profile Log File Path"
             Value     = $FirewallPoliciesOutput.DomainLogFilePath
             Compliant = [bool]($FirewallPoliciesOutput.DomainLogFilePath -eq '%systemroot%\system32\logfiles\firewall\domainfirewall.log' ? $True : $False)
             Category  = $CatName
-            Method    = "Firewall Group Policy"
+            Method    = 'Firewall Group Policy'
         }
 
         # Create a custom object with 5 properties to store them as nested objects inside the main output object
-        $NestedObjectArray += [pscustomobject]@{
+        $NestedObjectArray += [PSCustomObject]@{
             Name      = "Domain Profile Log File Size"
             Value     = $FirewallPoliciesOutput.DomainLogFileSize
             Compliant = [bool]($FirewallPoliciesOutput.DomainLogFileSize -eq '32767' ? $True : $False)
             Category  = $CatName
-            Method    = "Firewall Group Policy"
+            Method    = 'Firewall Group Policy'
         }
 
         # Create a custom object with 5 properties to store them as nested objects inside the main output object
-        $NestedObjectArray += [pscustomobject]@{
+        $NestedObjectArray += [PSCustomObject]@{
             Name      = "Domain Profile Log Dropped Packets"
             Value     = $FirewallPoliciesOutput.DomainLogDroppedPackets
             Compliant = [bool]($FirewallPoliciesOutput.DomainLogDroppedPackets -eq $true ? $True : $False)
             Category  = $CatName
-            Method    = "Firewall Group Policy"
+            Method    = 'Firewall Group Policy'
         }
 
         # Create a custom object with 5 properties to store them as nested objects inside the main output object
-        $NestedObjectArray += [pscustomobject]@{
+        $NestedObjectArray += [PSCustomObject]@{
             Name      = "Domain Profile Log Successful Connections"
             Value     = $FirewallPoliciesOutput.DomainLogSuccessfulConnections
             Compliant = [bool]($FirewallPoliciesOutput.DomainLogSuccessfulConnections -eq $true ? $True : $False)
             Category  = $CatName
-            Method    = "Firewall Group Policy"
+            Method    = 'Firewall Group Policy'
         }
 
         # Create a custom object with 5 properties to store them as nested objects inside the main output object
-        $NestedObjectArray += [pscustomobject]@{
+        $NestedObjectArray += [PSCustomObject]@{
             Name      = "Public Profile Disable Notifications"
             Value     = $FirewallPoliciesOutput.PublicDisableNotifications
             Compliant = [bool]($FirewallPoliciesOutput.PublicDisableNotifications -eq $false ? $True : $False)
             Category  = $CatName
-            Method    = "Firewall Group Policy"
+            Method    = 'Firewall Group Policy'
         }
 
         # Create a custom object with 5 properties to store them as nested objects inside the main output object
-        $NestedObjectArray += [pscustomobject]@{
+        $NestedObjectArray += [PSCustomObject]@{
             Name      = "Public Profile Enable Firewall"
             Value     = $FirewallPoliciesOutput.PublicEnableFirewall
             Compliant = [bool]($FirewallPoliciesOutput.PublicEnableFirewall -eq $true ? $True : $False)
             Category  = $CatName
-            Method    = "Firewall Group Policy"
+            Method    = 'Firewall Group Policy'
         }
 
         # Create a custom object with 5 properties to store them as nested objects inside the main output object
-        $NestedObjectArray += [pscustomobject]@{
+        $NestedObjectArray += [PSCustomObject]@{
             Name      = "Public Profile Log File Path"
             Value     = $FirewallPoliciesOutput.PublicLogFilePath
             Compliant = [bool]($FirewallPoliciesOutput.PublicLogFilePath -eq '%systemroot%\system32\logfiles\firewall\publicfirewall.log' ? $True : $False)
             Category  = $CatName
-            Method    = "Firewall Group Policy"
+            Method    = 'Firewall Group Policy'
         }
 
         # Create a custom object with 5 properties to store them as nested objects inside the main output object
-        $NestedObjectArray += [pscustomobject]@{
+        $NestedObjectArray += [PSCustomObject]@{
             Name      = "Public Profile Log File Size"
             Value     = $FirewallPoliciesOutput.PublicLogFileSize
             Compliant = [bool]($FirewallPoliciesOutput.PublicLogFileSize -eq '32767' ? $True : $False)
             Category  = $CatName
-            Method    = "Firewall Group Policy"
+            Method    = 'Firewall Group Policy'
         }
 
         # Create a custom object with 5 properties to store them as nested objects inside the main output object
-        $NestedObjectArray += [pscustomobject]@{
+        $NestedObjectArray += [PSCustomObject]@{
             Name      = "Public Profile Log Dropped Packets"
             Value     = $FirewallPoliciesOutput.PublicLogDroppedPackets
             Compliant = [bool]($FirewallPoliciesOutput.PublicLogDroppedPackets -eq $true ? $True : $False)
             Category  = $CatName
-            Method    = "Firewall Group Policy"
+            Method    = 'Firewall Group Policy'
         }
 
         # Create a custom object with 5 properties to store them as nested objects inside the main output object
-        $NestedObjectArray += [pscustomobject]@{
+        $NestedObjectArray += [PSCustomObject]@{
             Name      = "Private Profile Disable Notifications"
             Value     = $FirewallPoliciesOutput.PrivateDisableNotifications
             Compliant = [bool]($FirewallPoliciesOutput.PrivateDisableNotifications -eq $false ? $True : $False)
             Category  = $CatName
-            Method    = "Firewall Group Policy"
+            Method    = 'Firewall Group Policy'
         }
 
         # Create a custom object with 5 properties to store them as nested objects inside the main output object
-        $NestedObjectArray += [pscustomobject]@{
+        $NestedObjectArray += [PSCustomObject]@{
             Name      = "Private Profile Enable Firewall"
             Value     = $FirewallPoliciesOutput.PrivateEnableFirewall
             Compliant = [bool]($FirewallPoliciesOutput.PrivateEnableFirewall -eq $true ? $True : $False)
             Category  = $CatName
-            Method    = "Firewall Group Policy"
+            Method    = 'Firewall Group Policy'
         }
 
         # Create a custom object with 5 properties to store them as nested objects inside the main output object
-        $NestedObjectArray += [pscustomobject]@{
+        $NestedObjectArray += [PSCustomObject]@{
             Name      = "Private Profile Log File Path"
             Value     = $FirewallPoliciesOutput.PrivateLogFilePath
             Compliant = [bool]($FirewallPoliciesOutput.PrivateLogFilePath -eq '%systemroot%\system32\logfiles\firewall\privatefirewall.log' ? $True : $False)
             Category  = $CatName
-            Method    = "Firewall Group Policy"
+            Method    = 'Firewall Group Policy'
         }
 
         # Create a custom object with 5 properties to store them as nested objects inside the main output object
-        $NestedObjectArray += [pscustomobject]@{
+        $NestedObjectArray += [PSCustomObject]@{
             Name      = "Private Profile Log File Size"
             Value     = $FirewallPoliciesOutput.PrivateLogFileSize
             Compliant = [bool]($FirewallPoliciesOutput.PrivateLogFileSize -eq '32767' ? $True : $False)
             Category  = $CatName
-            Method    = "Firewall Group Policy"
+            Method    = 'Firewall Group Policy'
         }
 
         # Create a custom object with 5 properties to store them as nested objects inside the main output object
-        $NestedObjectArray += [pscustomobject]@{
+        $NestedObjectArray += [PSCustomObject]@{
             Name      = "Private Profile Log Dropped Packets"
             Value     = $FirewallPoliciesOutput.PrivateLogDroppedPackets
             Compliant = [bool]($FirewallPoliciesOutput.PrivateLogDroppedPackets -eq $true ? $True : $False)
             Category  = $CatName
-            Method    = "Firewall Group Policy"
+            Method    = 'Firewall Group Policy'
         }
     
         # Disables Multicast DNS (mDNS) UDP-in Firewall Rules for all 3 Firewall profiles - disables only 3 rules
@@ -1457,12 +1457,12 @@ function Confirm-SystemCompliance {
     
         # Create a custom object with 5 properties to store them as nested objects inside the main output object
         $IndividualItemResult = [bool](($RulesTarget.count -eq $RulesToDisable.Count) ? $True : $false)
-        $NestedObjectArray += [pscustomobject]@{
+        $NestedObjectArray += [PSCustomObject]@{
             Name      = "Firewall rules disabled for Multicast DNS (mDNS) UDP-in"
             Value     = $IndividualItemResult
             Compliant = $IndividualItemResult            
             Category  = $CatName
-            Method    = "Firewall Group Policy"
+            Method    = 'Firewall Group Policy'
         } 
     
         # Add the array of custom objects as a property to the $FinalMegaObject object outside the loop
@@ -1471,120 +1471,120 @@ function Confirm-SystemCompliance {
 
         #Region Optional-Windows-Features-Category
         Write-Progress -Activity 'Validating Optional Windows Features Category' -Status 'Processing...' -PercentComplete 75
-        $NestedObjectArray = @()
-        $CatName = "Optional Windows Features"
+        [System.Array]$NestedObjectArray = @()
+        [String]$CatName = 'Optional Windows Features'
          
         # Disable PowerShell v2 (needs 2 commands)
         [bool]$IndividualItemResult = ((get-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2 -ErrorAction Stop).state -eq 'disabled') `
             -and [bool]((get-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2Root -ErrorAction Stop).state -eq 'disabled') ? $True : $false
       
         # Create a custom object with 5 properties to store them as nested objects inside the main output object
-        $NestedObjectArray += [pscustomobject]@{
+        $NestedObjectArray += [PSCustomObject]@{
             Name      = "PowerShell v2 is disabled"
             Value     = $IndividualItemResult
             Compliant = $IndividualItemResult
             Category  = $CatName
-            Method    = "Optional Windows Features"
+            Method    = 'Optional Windows Features'
         }
 
         # Create a custom object with 5 properties to store them as nested objects inside the main output object
         $IndividualItemResult = [bool]((get-WindowsOptionalFeature -Online -FeatureName WorkFolders-Client -ErrorAction Stop).state -eq 'disabled')
-        $NestedObjectArray += [pscustomobject]@{
+        $NestedObjectArray += [PSCustomObject]@{
             Name      = "Work Folders client is disabled"
             Value     = $IndividualItemResult
             Compliant = $IndividualItemResult
             Category  = $CatName
-            Method    = "Optional Windows Features"
+            Method    = 'Optional Windows Features'
         }
 
         # Create a custom object with 5 properties to store them as nested objects inside the main output object
         $IndividualItemResult = [bool]((get-WindowsOptionalFeature -Online -FeatureName Printing-Foundation-Features -ErrorAction Stop).state -eq 'disabled')
-        $NestedObjectArray += [pscustomobject]@{
+        $NestedObjectArray += [PSCustomObject]@{
             Name      = "Internet Printing Client is disabled"
             Value     = $IndividualItemResult
             Compliant = $IndividualItemResult
             Category  = $CatName
-            Method    = "Optional Windows Features"
+            Method    = 'Optional Windows Features'
         }
 
         # Create a custom object with 5 properties to store them as nested objects inside the main output object
         $IndividualItemResult = [bool]((get-WindowsOptionalFeature -Online -FeatureName WindowsMediaPlayer -ErrorAction Stop).state -eq 'disabled')
-        $NestedObjectArray += [pscustomobject]@{
+        $NestedObjectArray += [PSCustomObject]@{
             Name      = "Windows Media Player (legacy) is disabled"
             Value     = $IndividualItemResult
             Compliant = $IndividualItemResult
             Category  = $CatName
-            Method    = "Optional Windows Features"
+            Method    = 'Optional Windows Features'
         }
 
         # Create a custom object with 5 properties to store them as nested objects inside the main output object
         $IndividualItemResult = [bool]((get-WindowsOptionalFeature -Online -FeatureName Windows-Defender-ApplicationGuard -ErrorAction Stop).state -eq 'enabled')
-        $NestedObjectArray += [pscustomobject]@{
+        $NestedObjectArray += [PSCustomObject]@{
             Name      = "Microsoft Defender Application Guard is enabled"
             Value     = $IndividualItemResult
             Compliant = $IndividualItemResult
             Category  = $CatName
-            Method    = "Optional Windows Features"
+            Method    = 'Optional Windows Features'
         }
 
         # Create a custom object with 5 properties to store them as nested objects inside the main output object
         $IndividualItemResult = [bool]((get-WindowsOptionalFeature -Online -FeatureName Containers-DisposableClientVM -ErrorAction Stop).state -eq 'enabled')
-        $NestedObjectArray += [pscustomobject]@{
+        $NestedObjectArray += [PSCustomObject]@{
             Name      = "Windows Sandbox is enabled"
             Value     = $IndividualItemResult
             Compliant = $IndividualItemResult
             Category  = $CatName
-            Method    = "Optional Windows Features"
+            Method    = 'Optional Windows Features'
         }
         
         # Create a custom object with 5 properties to store them as nested objects inside the main output object
         $IndividualItemResult = [bool]((get-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -ErrorAction Stop).state -eq 'enabled')
-        $NestedObjectArray += [pscustomobject]@{
+        $NestedObjectArray += [PSCustomObject]@{
             Name      = "Hyper-V is enabled"
             Value     = $IndividualItemResult
             Compliant = $IndividualItemResult
             Category  = $CatName
-            Method    = "Optional Windows Features"
+            Method    = 'Optional Windows Features'
         }
 
         # Create a custom object with 5 properties to store them as nested objects inside the main output object
         $IndividualItemResult = [bool]((get-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform -ErrorAction Stop).state -eq 'enabled')
-        $NestedObjectArray += [pscustomobject]@{
+        $NestedObjectArray += [PSCustomObject]@{
             Name      = "Virtual Machine Platform is enabled"
             Value     = $IndividualItemResult
             Compliant = $IndividualItemResult
             Category  = $CatName
-            Method    = "Optional Windows Features"
+            Method    = 'Optional Windows Features'
         }
 
         # Create a custom object with 5 properties to store them as nested objects inside the main output object
         $IndividualItemResult = [bool]((Get-WindowsCapability -Online -ErrorAction Stop | Where-Object { $_.Name -like '*wmic*' }).state -eq 'NotPresent')
-        $NestedObjectArray += [pscustomobject]@{
+        $NestedObjectArray += [PSCustomObject]@{
             Name      = "WMIC is not present"
             Value     = $IndividualItemResult
             Compliant = $IndividualItemResult
             Category  = $CatName
-            Method    = "Optional Windows Features"
+            Method    = 'Optional Windows Features'
         }
 
         # Create a custom object with 5 properties to store them as nested objects inside the main output object
         $IndividualItemResult = [bool]((Get-WindowsCapability -Online -ErrorAction Stop | Where-Object { $_.Name -like '*Browser.InternetExplorer*' }).state -eq 'NotPresent')
-        $NestedObjectArray += [pscustomobject]@{
+        $NestedObjectArray += [PSCustomObject]@{
             Name      = "Internet Explorer mode functionality for Edge is not present"
             Value     = $IndividualItemResult
             Compliant = $IndividualItemResult            
             Category  = $CatName
-            Method    = "Optional Windows Features"
+            Method    = 'Optional Windows Features'
         }
 
         # Create a custom object with 5 properties to store them as nested objects inside the main output object
         $IndividualItemResult = [bool]((Get-WindowsCapability -Online -ErrorAction Stop | Where-Object { $_.Name -like '*Microsoft.Windows.Notepad.System*' }).state -eq 'NotPresent')
-        $NestedObjectArray += [pscustomobject]@{
+        $NestedObjectArray += [PSCustomObject]@{
             Name      = "Legacy Notepad is not present"
             Value     = $IndividualItemResult
             Compliant = $IndividualItemResult           
             Category  = $CatName
-            Method    = "Optional Windows Features"
+            Method    = 'Optional Windows Features'
         }
     
         # Add the array of custom objects as a property to the $FinalMegaObject object outside the loop
@@ -1593,8 +1593,8 @@ function Confirm-SystemCompliance {
 
         #Region Windows-Networking-Category
         Write-Progress -Activity 'Validating Windows Networking Category' -Status 'Processing...' -PercentComplete 80
-        $NestedObjectArray = @()
-        $CatName = "Windows Networking"
+        [System.Array]$NestedObjectArray = @()
+        [String]$CatName = "Windows Networking"
         # Loop through each nested hash table inside the main Policies hash table and check the item state using a switch statement
         foreach ($Key in $HashPol[$CatName].Keys) {
             $Item = $PoliciesOutput | Where-object { $_.Name -eq $HashPol[$CatName][$Key].Name -and $_.Category -eq $HashPol[$CatName][$Key].Cat }
@@ -1620,12 +1620,12 @@ function Confirm-SystemCompliance {
                 }
             }
             # Create a custom object with 5 properties to store them as nested objects inside the main output object
-            $NestedObjectArray += [pscustomobject]@{
+            $NestedObjectArray += [PSCustomObject]@{
                 Name      = $HashPol[$CatName][$Key].Name
                 Value     = $ItemState
                 Compliant = $ItemState
                 Category  = $CatName
-                Method    = "Group Policy"                
+                Method    = 'Group Policy'                
             }
         }
     
@@ -1635,17 +1635,17 @@ function Confirm-SystemCompliance {
         [bool]$IndividualItemResult = -not ($condition -contains $false) ? $True : $false 
     
         # Create a custom object with 5 properties to store them as nested objects inside the main output object
-        $NestedObjectArray += [pscustomobject]@{
+        $NestedObjectArray += [PSCustomObject]@{
             Name      = "Network Location of all connections set to Public"
             Value     = $IndividualItemResult
             Compliant = $IndividualItemResult
             Category  = $CatName
-            Method    = "Cmdlet"
+            Method    = 'Cmdlet'
         }
     
         # Create a custom object with 5 properties to store them as nested objects inside the main output object
         $IndividualItemResult = [bool]((Get-ItemPropertyValue -Path "HKLM:\SYSTEM\CurrentControlSet\Services\NetBT\Parameters" -Name "EnableLMHOSTS") -eq '0')
-        $NestedObjectArray += [pscustomobject]@{
+        $NestedObjectArray += [PSCustomObject]@{
             Name      = "Disable LMHOSTS lookup protocol on all network adapters"
             Value     = $IndividualItemResult
             Compliant = $IndividualItemResult
@@ -1655,22 +1655,22 @@ function Confirm-SystemCompliance {
 
         # Create a custom object with 5 properties to store them as nested objects inside the main output object   
         $IndividualItemResult = [bool]$($SecurityPoliciesIni.'Registry Values'['MACHINE\System\CurrentControlSet\Control\SecurePipeServers\Winreg\AllowedExactPaths\Machine'] -eq '7,') ? $True : $False
-        $NestedObjectArray += [pscustomobject]@{
+        $NestedObjectArray += [PSCustomObject]@{
             Name      = 'Network access: Remotely accessible registry paths'
             Value     = $IndividualItemResult
             Compliant = $IndividualItemResult
             Category  = $CatName
-            Method    = "Security Group Policy"
+            Method    = 'Security Group Policy'
         }
 
         # Create a custom object with 5 properties to store them as nested objects inside the main output object   
         $IndividualItemResult = [bool]$($SecurityPoliciesIni.'Registry Values'['MACHINE\System\CurrentControlSet\Control\SecurePipeServers\Winreg\AllowedPaths\Machine'] -eq '7,') ? $True : $False
-        $NestedObjectArray += [pscustomobject]@{
+        $NestedObjectArray += [PSCustomObject]@{
             Name      = 'Network access: Remotely accessible registry paths and subpaths'
             Value     = $IndividualItemResult
             Compliant = $IndividualItemResult
             Category  = $CatName
-            Method    = "Security Group Policy"
+            Method    = 'Security Group Policy'
         }
     
         # Add the array of custom objects as a property to the $FinalMegaObject object outside the loop
@@ -1679,8 +1679,8 @@ function Confirm-SystemCompliance {
         
         #Region Miscellaneous-Category
         Write-Progress -Activity 'Validating Miscellaneous Category' -Status 'Processing...' -PercentComplete 85
-        $NestedObjectArray = @()
-        $CatName = "Miscellaneous"
+        [System.Array]$NestedObjectArray = @()
+        [String]$CatName = "Miscellaneous"
         # Loop through each nested hash table inside the main Policies hash table and check the item state using a switch statement
         foreach ($Key in $HashPol[$CatName].Keys) {
             $Item = $PoliciesOutput | Where-object { $_.Name -eq $HashPol[$CatName][$Key].Name -and $_.Category -eq $HashPol[$CatName][$Key].Cat }
@@ -1732,33 +1732,33 @@ function Confirm-SystemCompliance {
                 }   
             }
             # Create a custom object with 5 properties to store them as nested objects inside the main output object
-            $NestedObjectArray += [pscustomobject]@{
+            $NestedObjectArray += [PSCustomObject]@{
                 Name      = $HashPol[$CatName][$Key].Name
                 Value     = $ItemState
                 Compliant = $ItemState
                 Category  = $CatName
-                Method    = "Group Policy"                
+                Method    = 'Group Policy'                
             }
         }
     
         # Create a custom object with 5 properties to store them as nested objects inside the main output object
         $IndividualItemResult = [bool]((Get-SmbServerConfiguration -ErrorAction Stop).encryptdata)
-        $NestedObjectArray += [pscustomobject]@{
+        $NestedObjectArray += [PSCustomObject]@{
             Name      = "SMB Encryption"
             Value     = $IndividualItemResult
             Compliant = $IndividualItemResult
             Category  = $CatName
-            Method    = "Cmdlet"
+            Method    = 'Cmdlet'
         }
     
         # Create a custom object with 5 properties to store them as nested objects inside the main output object
         $IndividualItemResult = [bool](((auditpol /get /subcategory:"Other Logon/Logoff Events" /r | ConvertFrom-Csv -ErrorAction Stop).'Inclusion Setting' -eq 'Success and Failure') ? $True : $False)
-        $NestedObjectArray += [pscustomobject]@{
+        $NestedObjectArray += [PSCustomObject]@{
             Name      = "Audit policy for Other Logon/Logoff Events"
             Value     = $IndividualItemResult
             Compliant = $IndividualItemResult
             Category  = $CatName
-            Method    = "Cmdlet"
+            Method    = 'Cmdlet'
         }
     
 
@@ -1775,12 +1775,12 @@ function Confirm-SystemCompliance {
         }
 
         # Create a custom object with 5 properties to store them as nested objects inside the main output object
-        $NestedObjectArray += [pscustomobject]@{
+        $NestedObjectArray += [PSCustomObject]@{
             Name      = "All users are part of the Hyper-V Administrators group"
             Value     = $MatchHyperVUsers
             Compliant = $MatchHyperVUsers
             Category  = $CatName
-            Method    = "Cmdlet"
+            Method    = 'Cmdlet'
         }
     
     
@@ -1798,13 +1798,13 @@ function Confirm-SystemCompliance {
         }
         # Create a custom object with 5 properties to store them as nested objects inside the main output object
         $IndividualItemResult = [bool]($MatchRegistryKeys -notcontains $false)
-        $NestedObjectArray += [pscustomobject]@{
-            Name      = "Registry Keys All correct"
+        $NestedObjectArray += [PSCustomObject]@{
+            Name      = 'Registry Keys All correct'
             # Make sure the boolean array doesn't contain any $false values
             Value     = $IndividualItemResult
             Compliant = $IndividualItemResult
             Category  = $CatName
-            Method    = "Registry Keys"
+            Method    = 'Registry Keys'
         }
     
         # Add the array of custom objects as a property to the $FinalMegaObject object outside the loop
@@ -1813,8 +1813,8 @@ function Confirm-SystemCompliance {
     
         #Region Windows-Update-Category
         Write-Progress -Activity 'Validating Windows Update Category' -Status 'Processing...' -PercentComplete 90
-        $NestedObjectArray = @()
-        $CatName = "Windows Update"
+        [System.Array]$NestedObjectArray = @()
+        [String]$CatName = 'Windows Update'
         # Loop through each nested hash table inside the main Policies hash table and check the item state using a switch statement
         foreach ($Key in $HashPol[$CatName].Keys) {
             $Item = $PoliciesOutput | Where-object { $_.Name -eq $HashPol[$CatName][$Key].Name -and $_.Category -eq $HashPol[$CatName][$Key].Cat }
@@ -1847,37 +1847,37 @@ function Confirm-SystemCompliance {
                 }
                 4 {
                     # 2 Check boxes with the same name exists, but both of their States and Values are the same that's why this works
-                    $1index = $Item.DropDownListName.IndexOf("Configure automatic updating:")                
+                    $1index = $Item.DropDownListName.IndexOf('Configure automatic updating:')                
                     $1DropDownState = $Item.DropDownListState[$1index]                
                     $1DropDownValue = $Item.DropDownListValue[$1index]
     
-                    $2index = $Item.CheckboxName.IndexOf("Install during automatic maintenance")
+                    $2index = $Item.CheckboxName.IndexOf('Install during automatic maintenance')
                     $2CheckBoxState = $Item.CheckboxState[$2index]
                 
-                    $3index = $Item.DropDownListName.IndexOf("Scheduled install day: ") # Has an extra space in the xml!               
+                    $3index = $Item.DropDownListName.IndexOf('Scheduled install day: ') # Has an extra space in the xml!               
                     $3DropDownState = $Item.DropDownListState[$3index]                
                     $3DropDownValue = $Item.DropDownListValue[$3index]
     
-                    $4index = $Item.DropDownListName.IndexOf("Scheduled install time:")                
+                    $4index = $Item.DropDownListName.IndexOf('Scheduled install time:')                
                     $4DropDownState = $Item.DropDownListState[$4index]                
                     $4DropDownValue = $Item.DropDownListValue[$4index]
     
-                    $5index = $Item.CheckboxName.IndexOf("Every week")
+                    $5index = $Item.CheckboxName.IndexOf('Every week')
                     $5CheckBoxState = $Item.CheckboxState[$5index]
     
-                    $6index = $Item.CheckboxName.IndexOf("First week of the month")
+                    $6index = $Item.CheckboxName.IndexOf('First week of the month')
                     $6CheckBoxState = $Item.CheckboxState[$6index]
     
-                    $7index = $Item.CheckboxName.IndexOf("Second week of the month")
+                    $7index = $Item.CheckboxName.IndexOf('Second week of the month')
                     $7CheckBoxState = $Item.CheckboxState[$7index]
     
-                    $8index = $Item.CheckboxName.IndexOf("Third week of the month")
+                    $8index = $Item.CheckboxName.IndexOf('Third week of the month')
                     $8CheckBoxState = $Item.CheckboxState[$8index]
     
-                    $9index = $Item.CheckboxName.IndexOf("Fourth week of the month")
+                    $9index = $Item.CheckboxName.IndexOf('Fourth week of the month')
                     $9CheckBoxState = $Item.CheckboxState[$9index]
     
-                    $10index = $Item.CheckboxName.IndexOf("Install updates for other Microsoft products")
+                    $10index = $Item.CheckboxName.IndexOf('Install updates for other Microsoft products')
                     $10CheckBoxState = $Item.CheckboxState[$10index]
     
                 
@@ -1900,18 +1900,18 @@ function Confirm-SystemCompliance {
             
             }
             # Create a custom object with 5 properties to store them as nested objects inside the main output object
-            $NestedObjectArray += [pscustomobject]@{
+            $NestedObjectArray += [PSCustomObject]@{
                 Name      = $HashPol[$CatName][$Key].Name
                 Value     = $ItemState
                 Compliant = $ItemState
                 Category  = $CatName
-                Method    = "Group Policy"                
+                Method    = 'Group Policy'                
             }
         }
     
         # Create a custom object with 5 properties to store them as nested objects inside the main output object
         $IndividualItemResult = [bool]((Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings" -Name "RestartNotificationsAllowed2") -eq '1')
-        $NestedObjectArray += [pscustomobject]@{
+        $NestedObjectArray += [PSCustomObject]@{
             Name      = "Enable restart notification for Windows update"
             Value     = $IndividualItemResult
             Compliant = $IndividualItemResult
@@ -1925,8 +1925,8 @@ function Confirm-SystemCompliance {
         
         #Region Edge-Category
         Write-Progress -Activity 'Validating Edge Browser Category' -Status 'Processing...' -PercentComplete 95
-        $NestedObjectArray = @()
-        $CatName = "Edge"    
+        [System.Array]$NestedObjectArray = @()
+        [String]$CatName = "Edge"    
         $MatchRegistryKeys = @() # initialize the variable to false - an array that is going to hold only bool values
         foreach ($Item in $CSVFileContent) {
             if ($Item.category -eq 'Edge' -and $Item.Action -eq 'AddOrModify') {
@@ -1943,12 +1943,12 @@ function Confirm-SystemCompliance {
         # Create a custom object with 5 properties to store them as nested objects inside the main output object
         # Make sure the boolean array doesn't contain any $false values
         $IndividualItemResult = [bool]($MatchRegistryKeys -notcontains $false)
-        $NestedObjectArray += [pscustomobject]@{
-            Name      = "Registry Keys All correct"            
+        $NestedObjectArray += [PSCustomObject]@{
+            Name      = 'Registry Keys All correct'            
             Value     = $IndividualItemResult
             Compliant = $IndividualItemResult
             Category  = $CatName
-            Method    = "Registry Keys"
+            Method    = 'Registry Keys'
         }
     
         # Add the array of custom objects as a property to the $FinalMegaObject object outside the loop
@@ -1957,12 +1957,12 @@ function Confirm-SystemCompliance {
         
         #Region Non-Admin-Category
         Write-Progress -Activity 'Validating Non-Admin Category' -Status 'Processing...' -PercentComplete 100
-        $NestedObjectArray = @()
-        $CatName = "Non-Admin"
+        [System.Array]$NestedObjectArray = @()
+        [String]$CatName = 'Non-Admin'
     
         $MatchRegistryKeys = @() # initialize the variable to false - an array that is going to hold only bool values
         foreach ($Item in $CSVFileContent) {
-            if ($Item.category -eq "NonAdmin" -and $Item.Action -eq 'AddOrModify') {
+            if ($Item.category -eq 'NonAdmin' -and $Item.Action -eq 'AddOrModify') {
                 $path = $Item.Path
                 $key = $Item.Key
                 $value = $Item.value
@@ -1976,12 +1976,12 @@ function Confirm-SystemCompliance {
         # Create a custom object with 5 properties to store them as nested objects inside the main output object
         # Make sure the boolean array doesn't contain any $false values
         $IndividualItemResult = ($MatchRegistryKeys -notcontains $false)
-        $NestedObjectArray += [pscustomobject]@{
-            Name      = "Registry Keys All correct"            
+        $NestedObjectArray += [PSCustomObject]@{
+            Name      = 'Registry Keys All correct'            
             Value     = $IndividualItemResult
             Compliant = $IndividualItemResult
             Category  = $CatName
-            Method    = "Registry Keys"
+            Method    = 'Registry Keys'
         }
     
         # Add the array of custom objects as a property to the $FinalMegaObject object outside the loop
@@ -2017,21 +2017,21 @@ function Confirm-SystemCompliance {
         else {   
 
             #Region Colors
-            $WritePlum = { Write-Output "$($PSStyle.Foreground.FromRGB(221,160,221))$($args[0])$($PSStyle.Reset)" }
-            $WriteOrchid = { Write-Output "$($PSStyle.Foreground.FromRGB(218,112,214))$($args[0])$($PSStyle.Reset)" }
-            $WriteFuchsia = { Write-Output "$($PSStyle.Foreground.FromRGB(255,0,255))$($args[0])$($PSStyle.Reset)" }
-            $WriteMediumOrchid = { Write-Output "$($PSStyle.Foreground.FromRGB(186,85,211))$($args[0])$($PSStyle.Reset)" }
-            $WriteMediumPurple = { Write-Output "$($PSStyle.Foreground.FromRGB(147,112,219))$($args[0])$($PSStyle.Reset)" }
-            $WriteBlueViolet = { Write-Output "$($PSStyle.Foreground.FromRGB(138,43,226))$($args[0])$($PSStyle.Reset)" }
-            $WriteDarkViolet = { Write-Output "$($PSStyle.Foreground.FromRGB(148,0,211))$($args[0])$($PSStyle.Reset)" }
-            $WritePink = { Write-Output "$($PSStyle.Foreground.FromRGB(255,192,203))$($args[0])$($PSStyle.Reset)" }
-            $WriteHotPink = { Write-Output "$($PSStyle.Foreground.FromRGB(255,105,180))$($args[0])$($PSStyle.Reset)" }
-            $WriteDeepPink = { Write-Output "$($PSStyle.Foreground.FromRGB(255,20,147))$($args[0])$($PSStyle.Reset)" }
-            $WriteMintGreen = { Write-Output "$($PSStyle.Foreground.FromRGB(152,255,152))$($args[0])$($PSStyle.Reset)" }
-            $WriteOrange = { Write-Output "$($PSStyle.Foreground.FromRGB(255,165,0))$($args[0])$($PSStyle.Reset)" }            
-            $WriteSkyBlue = { Write-Output "$($PSStyle.Foreground.FromRGB(135,206,235))$($args[0])$($PSStyle.Reset)" }
+            [scriptblock]$WritePlum = { Write-Output "$($PSStyle.Foreground.FromRGB(221,160,221))$($args[0])$($PSStyle.Reset)" }
+            [scriptblock]$WriteOrchid = { Write-Output "$($PSStyle.Foreground.FromRGB(218,112,214))$($args[0])$($PSStyle.Reset)" }
+            [scriptblock]$WriteFuchsia = { Write-Output "$($PSStyle.Foreground.FromRGB(255,0,255))$($args[0])$($PSStyle.Reset)" }
+            [scriptblock]$WriteMediumOrchid = { Write-Output "$($PSStyle.Foreground.FromRGB(186,85,211))$($args[0])$($PSStyle.Reset)" }
+            [scriptblock]$WriteMediumPurple = { Write-Output "$($PSStyle.Foreground.FromRGB(147,112,219))$($args[0])$($PSStyle.Reset)" }
+            [scriptblock]$WriteBlueViolet = { Write-Output "$($PSStyle.Foreground.FromRGB(138,43,226))$($args[0])$($PSStyle.Reset)" }
+            [scriptblock]$WriteDarkViolet = { Write-Output "$($PSStyle.Foreground.FromRGB(148,0,211))$($args[0])$($PSStyle.Reset)" }
+            [scriptblock]$WritePink = { Write-Output "$($PSStyle.Foreground.FromRGB(255,192,203))$($args[0])$($PSStyle.Reset)" }
+            [scriptblock]$WriteHotPink = { Write-Output "$($PSStyle.Foreground.FromRGB(255,105,180))$($args[0])$($PSStyle.Reset)" }
+            [scriptblock]$WriteDeepPink = { Write-Output "$($PSStyle.Foreground.FromRGB(255,20,147))$($args[0])$($PSStyle.Reset)" }
+            [scriptblock]$WriteMintGreen = { Write-Output "$($PSStyle.Foreground.FromRGB(152,255,152))$($args[0])$($PSStyle.Reset)" }
+            [scriptblock]$WriteOrange = { Write-Output "$($PSStyle.Foreground.FromRGB(255,165,0))$($args[0])$($PSStyle.Reset)" }            
+            [scriptblock]$WriteSkyBlue = { Write-Output "$($PSStyle.Foreground.FromRGB(135,206,235))$($args[0])$($PSStyle.Reset)" }
             
-            $WriteRainbow1 = { 
+            [scriptblock]$WriteRainbow1 = { 
                 $text = $args[0]
                 $colors = @(
                     [System.Drawing.Color]::Pink,
@@ -2051,7 +2051,7 @@ function Confirm-SystemCompliance {
                 Write-Output $output
             }          
               
-            $WriteRainbow2 = { 
+            [scriptblock]$WriteRainbow2 = { 
                 $text = $args[0]
                 $colors = @(
                     [System.Drawing.Color]::Pink,
@@ -2185,7 +2185,7 @@ function Confirm-SystemCompliance {
 
 
             #Region ASCII-Arts
-            $WhenValue1To20 = @"
+            [string]$WhenValue1To20 = @"
                 OH
                 
                 N
@@ -2205,7 +2205,7 @@ function Confirm-SystemCompliance {
 "@
                          
                 
-            $WhenValue21To40 = @"
+            [string]$WhenValue21To40 = @"
 
 ‎‏‏‎‏‏‎⣿⣿⣷⡁⢆⠈⠕⢕⢂⢕⢂⢕⢂⢔⢂⢕⢄⠂⣂⠂⠆⢂⢕⢂⢕⢂⢕⢂⢕⢂
 ‎‏‏‎‏‏‎⣿⣿⣿⡷⠊⡢⡹⣦⡑⢂⢕⢂⢕⢂⢕⢂⠕⠔⠌⠝⠛⠶⠶⢶⣦⣄⢂⢕⢂⢕
@@ -2225,7 +2225,7 @@ function Confirm-SystemCompliance {
 "@
          
                 
-            $WhenValue41To60 = @"
+            [string]$WhenValue41To60 = @"
   
             ⣿⡟⠙⠛⠋⠩⠭⣉⡛⢛⠫⠭⠄⠒⠄⠄⠄⠈⠉⠛⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿
             ⣿⡇⠄⠄⠄⠄⣠⠖⠋⣀⡤⠄⠒⠄⠄⠄⠄⠄⠄⠄⠄⠄⣈⡭⠭⠄⠄⠄⠉⠙
@@ -2246,7 +2246,7 @@ function Confirm-SystemCompliance {
                 
                 
                 
-            $WhenValue61To80 = @"
+            [string]$WhenValue61To80 = @"
                 
                 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣴⣿⣿⡷⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
                 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣴⣿⡿⠋⠈⠻⣮⣳⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
@@ -2272,7 +2272,7 @@ function Confirm-SystemCompliance {
 "@
                 
                 
-            $WhenValue81To88 = @"
+            [string]$WhenValue81To88 = @"
                 
                 ⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
                 ⠀⠀⠀⠀⠀⠔⠶⠒⠉⠈⠸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
@@ -2300,7 +2300,7 @@ function Confirm-SystemCompliance {
 "@
                 
                 
-            $WhenValueAbove88 = @"
+            [string]$WhenValueAbove88 = @"
                 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
                 ⠀⠀⠀⠀⠀⠀⠀⢠⣶⣶⣶⣦⣤⣀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣴⣿⠟⠛⢿⣶⡄⠀⢀⣀⣤⣤⣦⣤⡀⠀⠀⠀⠀⠀
                 ⠀⠀⠀⠀⠀⠀⢠⣿⠋⠀⠀⠈⠙⠻⢿⣶⣶⣶⣶⣶⣶⣶⣿⠟⠀⠀⠀⠀⠹⣿⡿⠟⠋⠉⠁⠈⢻⣷⠀⠀⠀⠀⠀
@@ -2342,10 +2342,10 @@ function Confirm-SystemCompliance {
 
     end {
         # Clean up
-        Remove-Item -Path ".\security_policy.inf" -Force -ErrorAction Stop
-        Remove-Item -Path ".\Registry.csv" -Force -ErrorAction Stop
-        Remove-Item -Path ".\Group-Policies.json" -Force -ErrorAction Stop
-        Remove-Item -Path ".\GPResult.xml" -Force -ErrorAction Stop
+        Remove-Item -Path '.\security_policy.inf' -Force -ErrorAction Stop
+        Remove-Item -Path '.\Registry.csv' -Force -ErrorAction Stop
+        Remove-Item -Path '.\Group-Policies.json' -Force -ErrorAction Stop
+        Remove-Item -Path '.\GPResult.xml' -Force -ErrorAction Stop
     }
 
     <#

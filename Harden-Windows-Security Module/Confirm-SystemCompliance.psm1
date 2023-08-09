@@ -121,10 +121,9 @@ function Confirm-SystemCompliance {
             Write-Error -Message "Group-Policies.json file couldn't be downloaded, exitting..."  
         }
         # Hash table to store Hardening Script's Policy Categories and Names
-        # Importing it from the JSON file as hashtable
-        $HashPol = Get-Content -Path ".\Group-Policies.json" -ErrorAction Stop | ConvertFrom-Json -Depth 100 -AsHashtable -ErrorAction Stop
-       
-       
+        # Importing it from the JSON file as hashtable        
+        [System.Collections.Specialized.OrderedDictionary]$HashPol = Get-Content -Path ".\Group-Policies.json" -ErrorAction Stop | ConvertFrom-Json -Depth 100 -AsHashtable -ErrorAction Stop
+              
         Write-Progress -Activity 'Gathering Group Policy Information' -Status 'Processing...' -PercentComplete 30
 
         Gpresult /Scope Computer /x .\GPResult.xml /f
@@ -1763,12 +1762,12 @@ function Confirm-SystemCompliance {
         }
     
 
-        # Checking if all user accounts are part of the Hyper-V security Group
+        # Checking if all user accounts are part of the Hyper-V security Group 
         # Get all the enabled user accounts
-        [string[]]$enabledUsers = (Get-LocalUser -ErrorAction Stop | Where-Object { $_.Enabled -eq "True" }).Name | Sort-Object
-        # Get the members of the Hyper-V Administrators security group
-        [string[]]$groupMembers = (Get-LocalGroupMember -Group "Hyper-V Administrators" -ErrorAction Stop).Name -replace "$($env:COMPUTERNAME)\\" | Sort-Object
-    
+        [string[]]$enabledUsers = (Get-LocalUser -ErrorAction Stop | Where-Object { $_.Enabled -eq 'True' }).Name | Sort-Object
+        # Get the members of the Hyper-V Administrators security group using their SID
+        [string[]]$groupMembers = (Get-LocalGroupMember -SID 'S-1-5-32-578' -ErrorAction Stop).Name -replace "$($env:COMPUTERNAME)\\" | Sort-Object
+
         # Set the $MatchHyperVUsers variable to $True only if all enabled user accounts are part of the Hyper-V Security group, if one of them isn't part of the group then returns false
         [bool]$MatchHyperVUsers = $false # initialize the $MatchHyperVUsers variable to false
         for ($i = 0; $i -lt $enabledUsers.Count; $i++) {

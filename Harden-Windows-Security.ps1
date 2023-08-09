@@ -1200,9 +1200,8 @@ try {
                 # Enable SMB Encryption - using force to confirm the action
                 Set-SmbServerConfiguration -EncryptData $true -force
                     
-                # Allow all Windows users to use Hyper-V and Windows Sandbox by adding all Windows users to the "Hyper-V Administrators" security group
-                Get-LocalUser | Where-Object { $_.enabled -EQ "True" } | Select-Object "Name" |
-                ForEach-Object { Add-LocalGroupMember -Group "Hyper-V Administrators" -Member $_.Name -ErrorAction SilentlyContinue }
+                # Allow all Windows users to use Hyper-V and Windows Sandbox by adding all Windows users to the "Hyper-V Administrators" security group using its SID
+                Get-LocalUser | Where-Object { $_.enabled -EQ 'True' } | ForEach-Object { Add-LocalGroupMember -SID 'S-1-5-32-578' -Member $_.Name -ErrorAction SilentlyContinue }
                 
                 # Makes sure auditing for the "Other Logon/Logoff Events" subcategory under the Logon/Logoff category is enabled, doesn't touch affect any other sub-category
                 # For tracking Lock screen unlocks and locks

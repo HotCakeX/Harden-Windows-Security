@@ -1,6 +1,6 @@
 <#PSScriptInfo
 
-.VERSION 2023.8.4
+.VERSION 2023.8.8
 
 .GUID d435a293-c9ee-4217-8dc1-4ad2318a5770
 
@@ -81,8 +81,6 @@ https://1drv.ms/x/s!AtCaUNAJbbvIhuVQhdMu_Hts7YZ_lA?e=df6H6P
 
 
 💎 Note: If there are multiple Windows user accounts in your computer, it's recommended to run this script in each of them, without administrator privileges, because Non-admin commands only apply to the current user and are not machine wide.
-
-🟡 Note: There are 5 items tagged with #TopSecurity that can cause difficulties. When you run this script, you will have an option to enable them if you want to. You can find all the information about them on GitHub.
 
 🏴 If you have any questions, requests, suggestions etc. about this script, please open a new Discussion or Issue on GitHub
 
@@ -217,7 +215,7 @@ if (Test-IsAdmin) {
 # or break is passed, clean up will still happen for secure exit
 try {
     # Check the current hard-coded version against the latest version online
-    [datetime]$CurrentVersion = '2023.8.4'
+    [datetime]$CurrentVersion = '2023.8.8'
     try {
         [datetime]$LatestVersion = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Version.txt"
     }
@@ -946,6 +944,23 @@ try {
                 Set-Location "$WorkingDir\LGPO_30"
                 .\LGPO.exe /m "..\Security-Baselines-X\Lock Screen Policies\registry.pol"
                 .\LGPO.exe /s "..\Security-Baselines-X\Lock Screen Policies\GptTmpl.inf"
+
+                # Apply the Don't display last signed-in policy
+                switch (Select-Option -Options "Yes", "No", "Exit" -Message "`nDon't display last signed-in on logon screen ? Please see GitHub readme for more info!") {
+                    "Yes" {
+                        .\LGPO.exe /s "..\Security-Baselines-X\Lock Screen Policies\Don't display last signed-in\GptTmpl.inf"                      
+                    } "No" { break }
+                    "Exit" { &$CleanUp }
+                }
+
+                # Apply Credential Providers Configurations policy
+                switch (Select-Option -Options "Yes", "No", "Exit" -Message "`nSet Windows Hello PIN as default Credential provider ? Please see GitHub readme for more info!") {
+                    "Yes" {
+                        .\LGPO.exe /m "..\Security-Baselines-X\Lock Screen Policies\Credential Providers Configurations\registry.pol"                      
+                    } "No" { break }
+                    "Exit" { &$CleanUp }
+                }
+
             } "No" { break }
             "Exit" { &$CleanUp }
         }    
@@ -961,6 +976,31 @@ try {
                 # Change current working directory to the LGPO's folder
                 Set-Location "$WorkingDir\LGPO_30"
                 .\LGPO.exe /s "..\Security-Baselines-X\User Account Control UAC Policies\GptTmpl.inf"
+                
+                # Apply the Automatically deny all UAC prompts on Standard accounts policy
+                switch (Select-Option -Options "Yes", "No", "Exit" -Message "`nAutomatically deny all UAC prompts on Standard accounts ?") {
+                    "Yes" {
+                        .\LGPO.exe /s "..\Security-Baselines-X\User Account Control UAC Policies\Automatically deny all UAC prompts on Standard accounts\GptTmpl.inf"                      
+                    } "No" { break }
+                    "Exit" { &$CleanUp }
+                }
+
+                # Apply the Hide the entry points for Fast User Switching policy
+                switch (Select-Option -Options "Yes", "No", "Exit" -Message "`nHide the entry points for Fast User Switching ? Please see GitHub readme for more info!") {
+                    "Yes" {
+                        .\LGPO.exe /m "..\Security-Baselines-X\User Account Control UAC Policies\Hides the entry points for Fast User Switching\registry.pol"                      
+                    } "No" { break }
+                    "Exit" { &$CleanUp }
+                }               
+
+                # Apply the Only elevate executables that are signed and validated policy
+                switch (Select-Option -Options "Yes", "No", "Exit" -Message "`nOnly elevate executables that are signed and validated ?") {
+                    "Yes" {
+                        .\LGPO.exe /s "..\Security-Baselines-X\User Account Control UAC Policies\Only elevate executables that are signed and validated\GptTmpl.inf"
+                    } "No" { break }
+                    "Exit" { &$CleanUp }
+                }  
+
             } "No" { break }
             "Exit" { &$CleanUp }
         }    
@@ -1089,6 +1129,14 @@ try {
                 .\LGPO.exe /m "..\Security-Baselines-X\Miscellaneous Policies\registry.pol"
                 .\LGPO.exe /s "..\Security-Baselines-X\Miscellaneous Policies\GptTmpl.inf"
 
+                # Apply the Blocking Untrusted Fonts policy
+                switch (Select-Option -Options "Yes", "No", "Exit" -Message "`nBlock Untrusted Fonts ?") {
+                    "Yes" {
+                        .\LGPO.exe /m "..\Security-Baselines-X\Miscellaneous Policies\Blocking Untrusted Fonts\registry.pol"                      
+                    } "No" { break }
+                    "Exit" { &$CleanUp }
+                }    
+
                 # Enable SMB Encryption - using force to confirm the action
                 Set-SmbServerConfiguration -EncryptData $true -force
                     
@@ -1131,7 +1179,7 @@ try {
                     catch {
                         Write-Host "The required files couldn't be downloaded, Make sure you have Internet connection. Skipping..." -ForegroundColor Red
                     }
-                }
+                }                
             } "No" { break }
             "Exit" { &$CleanUp }
         }    
@@ -1174,23 +1222,7 @@ try {
         } 
         # ====================================================End of Edge Browser Configurations==============================================
         #endregion Edge-Browser-Configurations
-
-        #region Top-Security-Measures    
-        # ============================================Top Security Measures========================================================
-        switch (Select-Option -Options "Yes", "No", "Exit" -Message "`nApply Top Security Measures ? Make sure you've read the GitHub repository") {
-            "Yes" {                
-                Write-Progress -Activity 'Top Security Measures' -Status 'Running Top Security Measures section' -PercentComplete 85  
-
-                # Change current working directory to the LGPO's folder
-                Set-Location "$WorkingDir\LGPO_30"
-                .\LGPO.exe /s "..\Security-Baselines-X\Top Security Measures\GptTmpl.inf"
-                .\LGPO.exe /m "..\Security-Baselines-X\Top Security Measures\registry.pol"
-            } "No" { break }
-            "Exit" { &$CleanUp }
-        }    
-        # ============================================End of Top Security Measures=================================================
-        #endregion Top-Security-Measures
-
+        
         #region Certificate-Checking-Commands    
         # ====================================================Certificate Checking Commands========================================
         switch (Select-Option -Options "Yes", "No", "Exit" -Message "`nRun Certificate Checking category ?") {

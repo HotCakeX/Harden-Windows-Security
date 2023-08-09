@@ -12,7 +12,7 @@
     # RootModule = ''
 
     # Version number of this module.
-    ModuleVersion        = '0.0.5'
+    ModuleVersion        = '0.0.6'
 
     # Supported PSEditions
     CompatiblePSEditions = @('Core')
@@ -125,6 +125,9 @@
 
             # ReleaseNotes of this module
             ReleaseNotes = @"
+
+## Version 0.0.6
+Fixed the URL for Group-Policies.json
 
 ## Version 0.0.5
 Small update to improve the auto-updating mechanism

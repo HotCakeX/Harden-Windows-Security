@@ -1,0 +1,190 @@
+Origin,Category,Key,Name,FriendlyName,Type,Value
+"Group Policy","Microsoft Defender",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows\WTDS\Components,ServiceEnabled,Enhanced Phishing Protection,DWORD,1
+"Group Policy","Microsoft Defender",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows\WTDS\Components,NotifyUnsafeApp,Enhanced Phishing Protection: Notify Unsafe App,DWORD,1
+"Group Policy","Microsoft Defender",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows\WTDS\Components,NotifyPasswordReuse,Enhanced Phishing Protection: Notify Password Reuse,DWORD,1
+"Group Policy","Microsoft Defender",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows\WTDS\Components,NotifyMalicious,Enhanced Phishing Protection: Notify Malicious,DWORD,1
+"Group Policy","Microsoft Defender",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows\WTDS\Components,CaptureThreatWindow,Enhanced Phishing Protection: Capture Threat Window,DWORD,1
+"Group Policy","Microsoft Defender",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows Defender,PUAProtection,Detection for potentially unwanted applications,DWORD,1
+"Group Policy","Microsoft Defender",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows Defender\MpEngine,MpBafsExtendedTimeout,Extended cloud check (Seconds),DWORD,50
+"Group Policy","Microsoft Defender",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows Defender\MpEngine,MpCloudBlockLevel,Cloud Block Level,DWORD,6
+"Group Policy","Microsoft Defender",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows Defender\MpEngine,EnableFileHashComputation,File Hash Computation,DWORD,1
+"Group Policy","Microsoft Defender",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows Defender\Quarantine,PurgeItemsAfterDelay,Purge Items After Delay,DWORD,3
+"Group Policy","Microsoft Defender",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows Defender\Real-Time Protection,IOAVMaxSize,Maximum size of downloaded files and attachments to be scanned,DWORD,10000000
+"Group Policy","Microsoft Defender",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows Defender\Scan,CheckForSignaturesBeforeRunningScan,Check For Signatures Before Running Scan,DWORD,1
+"Group Policy","Microsoft Defender",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows Defender\Scan,DisableScanningMappedNetworkDrivesForFullScan,Scanning Mapped Network Drives For Full Scan,DWORD,0
+"Group Policy","Microsoft Defender",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows Defender\Scan,DisableScanningNetworkFiles,Scanning Network Files,DWORD,0
+"Group Policy","Microsoft Defender",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows Defender\Scan,DisableRemovableDriveScanning,Removable Drive Scanning,DWORD,0
+"Group Policy","Microsoft Defender",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows Defender\Scan,DisableCatchupQuickScan,Catchup Quick Scan,DWORD,0
+"Group Policy","Microsoft Defender",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows Defender\Scan,DisableEmailScanning,Email Scanning,DWORD,0
+"Group Policy","Microsoft Defender",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows Defender\Scan,DisableReparsePointScanning,Reparse Point Scanning,DWORD,0
+"Group Policy","Microsoft Defender",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows Defender\Scan,ArchiveMaxDepth,Maximum depth to scan archive files,DWORD,4294967295
+"Group Policy","Microsoft Defender",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows Defender\Signature Updates,SignatureUpdateInterval,interval to check for security intelligence updates,DWORD,3
+"Group Policy","Microsoft Defender",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows Defender\Signature Updates,UpdateOnStartUp,Check for the latest virus and spyware security intelligence on startup,DWORD,1
+"Group Policy","Microsoft Defender",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows Defender\Signature Updates,MeteredConnectionUpdates,Allows Microsoft Defender Antivirus to update over a metered connection,DWORD,1
+"Group Policy","Microsoft Defender",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows Defender\Signature Updates,AVSignatureDue,Define the number of days before virus security intelligence is considered out of date,DWORD,2
+"Group Policy","Microsoft Defender",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows Defender\Signature Updates,ASSignatureDue,Define the number of days before spyware security intelligence is considered out of date,DWORD,2
+"Group Policy","Microsoft Defender",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows Defender\Spynet,DisableBlockAtFirstSeen,Block At First Sight,DWORD,0
+"Group Policy","Microsoft Defender",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows Defender\Spynet,SubmitSamplesConsent,Send file samples when further analysis is required,DWORD,3
+"Group Policy","Microsoft Defender",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows Defender\Spynet,SpynetReporting,Join Microsoft MAPS (aka SpyNet),DWORD,2
+"Group Policy","Microsoft Defender",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows Defender\Threats,Threats_ThreatSeverityDefaultAction,Specify threat alert levels,DWORD,1
+"Group Policy","Microsoft Defender",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows Defender\Threats\ThreatSeverityDefaultAction,5,Severe Threat level default action = Remove,SZ,3
+"Group Policy","Microsoft Defender",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows Defender\Threats\ThreatSeverityDefaultAction,4,High Threat level default action = Remove,SZ,3
+"Group Policy","Microsoft Defender",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows Defender\Threats\ThreatSeverityDefaultAction,2,Medium Threat level default action = Quarantine,SZ,2
+"Group Policy","Microsoft Defender",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows Defender\Threats\ThreatSeverityDefaultAction,1,Low Threat level default action = Quarantine,SZ,2
+"Group Policy","Microsoft Defender",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows Defender\Windows Defender Exploit Guard\Controlled Folder Access,EnableControlledFolderAccess,Enable Controlled Folder Access,DWORD,1
+"Group Policy","Microsoft Defender",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows Defender\Windows Defender Exploit Guard\Network Protection,EnableNetworkProtection,Enable Network Protection,DWORD,1
+"Group Policy","ASR",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows Defender\Windows Defender Exploit Guard\ASR,ExploitGuard_ASR_Rules,Configure Attack Surface Reduction rules,DWORD,1
+"Group Policy","ASR",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows Defender\Windows Defender Exploit Guard\ASR\Rules,56a863a9-875e-4185-98a7-b882c64b5ce5,Block abuse of exploited vulnerable signed drivers,SZ,1
+"Group Policy","ASR",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows Defender\Windows Defender Exploit Guard\ASR\Rules,7674ba52-37eb-4a4f-a9a1-f0f9a1619a2c,Block Adobe Reader from creating child processes,SZ,1
+"Group Policy","ASR",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows Defender\Windows Defender Exploit Guard\ASR\Rules,d4f940ab-401b-4efc-aadc-ad5f3c50688a,Block all Office applications from creating child processes,SZ,1
+"Group Policy","ASR",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows Defender\Windows Defender Exploit Guard\ASR\Rules,9e6c4e1f-7d60-472f-ba1a-a39ef669e4b2,Block credential stealing from the Windows local security authority subsystem (lsass.exe),SZ,1
+"Group Policy","ASR",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows Defender\Windows Defender Exploit Guard\ASR\Rules,be9ba2d9-53ea-4cdc-84e5-9b1eeee46550,Block executable content from email client and webmail,SZ,1
+"Group Policy","ASR",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows Defender\Windows Defender Exploit Guard\ASR\Rules,01443614-cd74-433a-b99e-2ecdc07bfc25,Block executable files from running unless they meet a prevalence; age or trusted list criterion,SZ,1
+"Group Policy","ASR",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows Defender\Windows Defender Exploit Guard\ASR\Rules,5beb7efe-fd9a-4556-801d-275e5ffc04cc,Block execution of potentially obfuscated scripts,SZ,1
+"Group Policy","ASR",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows Defender\Windows Defender Exploit Guard\ASR\Rules,d3e037e1-3eb8-44c8-a917-57927947596d,Block JavaScript or VBScript from launching downloaded executable content,SZ,1
+"Group Policy","ASR",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows Defender\Windows Defender Exploit Guard\ASR\Rules,3b576869-a4ec-4529-8536-b80a7769e899,Block Office applications from creating executable content,SZ,1
+"Group Policy","ASR",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows Defender\Windows Defender Exploit Guard\ASR\Rules,75668c1f-73b5-4cf0-bb93-3ecf5cb7cc84,Block Office applications from injecting code into other processes,SZ,1
+"Group Policy","ASR",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows Defender\Windows Defender Exploit Guard\ASR\Rules,26190899-1602-49e8-8b27-eb1d0a1ce869,Block Office communication application from creating child processes,SZ,1
+"Group Policy","ASR",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows Defender\Windows Defender Exploit Guard\ASR\Rules,e6db77e5-3df2-4cf1-b95a-636979351e5b,Block persistence through WMI event subscription,SZ,1
+"Group Policy","ASR",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows Defender\Windows Defender Exploit Guard\ASR\Rules,d1e49aac-8f56-4280-b9ba-993a6d77406c,Block process creations originating from PSExec and WMI commands,SZ,1
+"Group Policy","ASR",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows Defender\Windows Defender Exploit Guard\ASR\Rules,b2b3f03d-6a65-4f7b-a9c7-1c7ef74a9ba4,Block untrusted and unsigned processes that run from USB,SZ,1
+"Group Policy","ASR",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows Defender\Windows Defender Exploit Guard\ASR\Rules,92e97fa1-2edf-4476-bdd6-9dd0b4dddc7b,Block Win32 API calls from Office macros,SZ,1
+"Group Policy","ASR",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows Defender\Windows Defender Exploit Guard\ASR\Rules,c1db55ab-c21a-4637-bb3f-a12568109d35,Use advanced protection against ransomware,SZ,1
+"Group Policy","Bitlocker",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\FVE,DisallowStandardUserPINReset,Disallow Standard User PIN Reset,DWORD,1
+"Group Policy","Bitlocker",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\FVE,UseAdvancedStartup,Require additional authentication at startup,DWORD,1
+"Group Policy","Bitlocker",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\FVE,EnableBDEWithNoTPM,Don't allow Bitlocker without TPM,DWORD,0
+"Group Policy","Bitlocker",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\FVE,UseTPM,Use TPM,DWORD,2
+"Group Policy","Bitlocker",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\FVE,UseTPMPIN,Use TPM + PIN,DWORD,2
+"Group Policy","Bitlocker",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\FVE,UseTPMKey,Use TPM + key,DWORD,2
+"Group Policy","Bitlocker",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\FVE,UseTPMKeyPIN,Use TPM startup key + PIN,DWORD,2
+"Group Policy","Bitlocker",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\FVE,EncryptionMethodWithXtsOs,Correct Encryption method for OS drive,DWORD,7
+"Group Policy","Bitlocker",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\FVE,EncryptionMethodWithXtsFdv,Correct Encryption method for fixed data drives,DWORD,7
+"Group Policy","Bitlocker",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\FVE,EncryptionMethodWithXtsRdv,Correct Encryption method for removable drives,DWORD,7
+"Group Policy","Bitlocker",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\FVE,UseEnhancedPin,Use Enhanced PIN,DWORD,1
+"Group Policy","Bitlocker",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\FVE,FDVEncryptionType,Full disk encryption for fixed data drives,DWORD,1
+"Group Policy","Bitlocker",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\FVE,OSEncryptionType,Full disk encryption OS drive,DWORD,1
+"Group Policy","Bitlocker",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\FVE,RDVEncryptionType,Full disk encryption removable drives,DWORD,1
+"Group Policy","Bitlocker",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\FVE,RDVDiscoveryVolumeType,Prevent access to BitLocker-protected removable data drives from earlier versions of Windows,SZ,<none>
+"Group Policy","Bitlocker",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\FVE,RDVNoBitLockerToGoReader,Do not install BitLocker To Go Reader on FAT formatted removable drives,DWORD,0
+"Group Policy","Bitlocker",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\FVE,MinimumPIN,Configure minimum PIN length for startup,DWORD,10
+"Group Policy","Bitlocker",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Power\PowerSettings\abfc2519-3608-4c2a-94ea-171b0ed546ab,ACSettingIndex,Disallow standby states (S1-S3) when sleeping (plugged in),DWORD,0
+"Group Policy","Bitlocker",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Power\PowerSettings\abfc2519-3608-4c2a-94ea-171b0ed546ab,DCSettingIndex,Disllow standby states (S1-S3) when sleeping (on battery),DWORD,0
+"Group Policy","Bitlocker",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows\Explorer,ShowHibernateOption,Show Hibernate Option,DWORD,1
+"Group Policy","TLS",HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Cryptography\Configuration\SSL\00010002,Functions,Configure the correct TLS Cipher Suites,SZ,"TLS_CHACHA20_POLY1305_SHA256,TLS_AES_256_GCM_SHA384,TLS_AES_128_GCM_SHA256,TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_DHE_RSA_WITH_AES_256_GCM_SHA384,TLS_DHE_RSA_WITH_AES_128_GCM_SHA256"
+"Registry Keys",TLS,HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.0\Client,DisabledByDefault,Disable TLS 1.0 client,DWORD,1
+"Registry Keys",TLS,HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.0\Client,Enabled,Disable TLS 1.0 client,DWORD,0
+"Registry Keys",TLS,HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.0\Server,DisabledByDefault,Disable TLS 1.0 server,DWORD,1
+"Registry Keys",TLS,HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.0\Server,Enabled,Disable TLS 1.0 server,DWORD,0
+"Registry Keys",TLS,HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.1\Client,DisabledByDefault,Disable TLS 1.1 client,DWORD,1
+"Registry Keys",TLS,HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.1\Client,Enabled,Disable TLS 1.1 client,DWORD,0
+"Registry Keys",TLS,HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.1\Server,DisabledByDefault,Disable TLS 1.1 server,DWORD,1
+"Registry Keys",TLS,HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.1\Server,Enabled,Disable TLS 1.1 server,DWORD,0
+"Registry Keys",TLS,HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\NULL\,Enabled,Disable NULL Cipher Suite,DWORD,0
+"Registry Keys",TLS,HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\DES 56/56,Enabled,Disable 56/56 Cipher Suite,DWORD,0
+"Registry Keys",TLS,HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC2 40/128,Enabled,Disable 40/128 Cipher Suite,DWORD,0
+"Registry Keys",TLS,HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC2 56/128,Enabled,Disable RC2 56/128 Cipher Suite,DWORD,0
+"Registry Keys",TLS,HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC2 128/128,Enabled,Disable RC2 128/128 Cipher Suite,DWORD,0
+"Registry Keys",TLS,HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC4 40/128,Enabled,Disable RC4 40/128 Cipher Suite,DWORD,0
+"Registry Keys",TLS,HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC4 56/128,Enabled,Disable RC4 56/128 Cipher Suite,DWORD,0
+"Registry Keys",TLS,HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC4 64/128,Enabled,Disable RC4 64/128 Cipher Suite,DWORD,0
+"Registry Keys",TLS,HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC4 128/128,Enabled,Disable RC4 128/128 Cipher Suite,DWORD,0
+"Registry Keys",TLS,HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\Triple DES 168,Enabled,Disable Triple DES 168 Cipher Suite,DWORD,0
+"Registry Keys",TLS,HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Hashes\MD5,Enabled,Disable MD5 Hashing Algorithm,DWORD,0
+"Group Policy","LockScreen",HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System,ExcludedCredentialProviders,Excluded Credential Providers,SZ,"{60b78e88-ead8-445c-9cfd-0b87f74ea6cd},{F8A0B131-5F68-486c-8040-7E8FC3C85BB6},{8FD7E19C-3BF7-489B-A72C-846AB3678C96},{1ee7337f-85ac-45e2-a23c-37c753209769},{1b283861-754f-4022-ad47-a5eaaa618894}"
+"Group Policy","LockScreen",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows\System,DefaultCredentialProvider,Set default Credential Provider,SZ,"{D6886603-9D2F-4EB2-B667-1971041FA96B}"
+"Group Policy","LockScreen",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\PassportForWork\PINComplexity,Digits,Require digits in Windows Hello PIN,DWORD,1
+"Group Policy","LockScreen",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\PassportForWork\PINComplexity,LowercaseLetters,Require lower case letters in Windows Hello PIN,DWORD,1
+"Group Policy","LockScreen",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\PassportForWork\PINComplexity,Expiration,Set Expiration for Windows Hello PIN,DWORD,180
+"Group Policy","LockScreen",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\PassportForWork\PINComplexity,History,Save history of Windows Hello PIN,DWORD,3
+"Group Policy","LockScreen",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows\System,DontDisplayNetworkSelectionUI,Don't Display Network Selection UI on lock screen,DWORD,1
+"Group Policy","UAC",HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System,HideFastUserSwitching,Hide Fast User Switching entry points,DWORD,1
+"Group Policy","Device Guard",HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\DeviceGuard,EnableVirtualizationBasedSecurity,Enable Virtualization Based Security,DWORD,1
+"Group Policy","Device Guard",HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\DeviceGuard,RequirePlatformSecurityFeatures,Require Platform Security Features,DWORD,1
+"Group Policy","Device Guard",HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\DeviceGuard,HypervisorEnforcedCodeIntegrity,Hypervisor Enforced Code Integrity,DWORD,1
+"Group Policy","Device Guard",HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\DeviceGuard,HVCIMATRequired,Do not require HVCI MAT (Memory Attribute Table),DWORD,0
+"Group Policy","Device Guard",HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\DeviceGuard,LsaCfgFlags,Credential Guard Configuration,DWORD,1
+"Group Policy","Device Guard",HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\DeviceGuard,ConfigureSystemGuardLaunch,Configure System Guard Launch,DWORD,1
+"Group Policy","Device Guard",HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\DeviceGuard,ConfigureKernelShadowStacksLaunch,Configure Kernel Shadow Stacks Launch,DWORD,1
+"Group Policy","Device Guard",HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System,RunAsPPL,Enable Local Security Authority (LSA) process Protection with UEFI Lock,DWORD,1
+"Group Policy","Windows Firewall",HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall,PolicyVersion,Enable Windows Firewall,DWORD,544
+"Group Policy","Windows Firewall",HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\DomainProfile,EnableFirewall,Enable Windows Firewall for Domain profile,DWORD,1
+"Group Policy","Windows Firewall",HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\DomainProfile,DefaultOutboundAction,Set Default Outbound Action for Domain profile,DWORD,1
+"Group Policy","Windows Firewall",HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\DomainProfile,DefaultInboundAction,Set Default Inbound Action for Domain profile,DWORD,1
+"Group Policy","Windows Firewall",HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\DomainProfile,DoNotAllowExceptions,Block all Domain profile connections,DWORD,1
+"Group Policy","Windows Firewall",HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\DomainProfile\Logging,LogFilePath,Configure Log file path for domain profile,SZ,%systemroot%\system32\logfiles\firewall\domainfirewall.log
+"Group Policy","Windows Firewall",HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\DomainProfile\Logging,LogFileSize,Configure Log file size for domain profile,DWORD,32767
+"Group Policy","Windows Firewall",HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\DomainProfile\Logging,LogDroppedPackets,Log blocked connections for domain profile,DWORD,1
+"Group Policy","Windows Firewall",HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\DomainProfile\Logging,LogSuccessfulConnections,Log successful connections for domain profile,DWORD,1
+"Group Policy","Windows Firewall",HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PrivateProfile,EnableFirewall,Enable Windows Firewall for Private profile,DWORD,1
+"Group Policy","Windows Firewall",HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PrivateProfile,DisableNotifications,Display notifications for Private profile,DWORD,0
+"Group Policy","Windows Firewall",HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PrivateProfile\Logging,LogFileSize,Configure Log file size for Private profile,DWORD,32767
+"Group Policy","Windows Firewall",HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PrivateProfile\Logging,LogDroppedPackets,Log blocked connections for Private profile,DWORD,1
+"Group Policy","Windows Firewall",HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PrivateProfile\Logging,LogFilePath,Configure Log file path for Private profile,SZ,%systemroot%\system32\logfiles\firewall\privatefirewall.log
+"Group Policy","Windows Firewall",HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PublicProfile,EnableFirewall,Enable Windows Firewall for Public profile,DWORD,1
+"Group Policy","Windows Firewall",HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PublicProfile,DisableNotifications,Display notifications for Public profile,DWORD,0
+"Group Policy","Windows Firewall",HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PublicProfile\Logging,LogFileSize,Configure Log file size for Public profile,DWORD,32767
+"Group Policy","Windows Firewall",HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PublicProfile\Logging,LogDroppedPackets,Log blocked connections for Public profile,DWORD,1
+"Group Policy","Windows Firewall",HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PublicProfile\Logging,LogFilePath,Configure Log file path for Public profile,SZ,%systemroot%\system32\logfiles\firewall\publicfirewall.log
+"Group Policy","Windows Networking",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows NT\DNSClient,EnableNetbios,Disable Netbios,DWORD,0
+"Group Policy","Windows Networking",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows NT\DNSClient,DisableSmartNameResolution,Disable Smart Name Resolution,DWORD,1
+"Group Policy","Windows Networking",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows NT\DNSClient,EnableMulticast,Disable Multicast,DWORD,0
+"Group Policy","Windows Networking",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows NT\Printers,DisableHTTPPrinting,Disable HTTP Printing,DWORD,1
+"Group Policy","Windows Networking",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows NT\Printers,DisableWebPnPDownload,Disable Web PnP Download,DWORD,1
+"Group Policy","Miscellaneous",HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\MitigationOptions,MitigationOptions_FontBocking,Block untrusted fonts,SZ,1000000000000
+"Group Policy","Miscellaneous",HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\Audit,ProcessCreationIncludeCmdLine_Enabled,Include command line in process creation events,DWORD,1
+"Group Policy","Miscellaneous",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows\DataCollection,AllowTelemetry,Allow Diagnostic Data (Required for Smart App Control),DWORD,3
+"Group Policy","Miscellaneous",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows\DataCollection,DisableTelemetryOptInSettingsUx,Configure diagnostic data opt-in settings user interface,DWORD,1
+"Group Policy","Miscellaneous",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows\LocationAndSensors,DisableLocation,Disable Location,DWORD,1
+"Group Policy","Miscellaneous",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows\LocationAndSensors,DisableLocationScripting,Disable Location Scripting,DWORD,1
+"Group Policy","Miscellaneous",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows\LocationAndSensors,DisableWindowsLocationProvider,Disable Windows Location Provider,DWORD,1
+"Group Policy","Miscellaneous",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows NT\Rpc,RestrictRemoteClients,RPC Runtime Unauthenticated Client Restriction,DWORD,2
+"Group Policy","Miscellaneous",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows NT\Rpc,EnableAuthEpResolution,Enable RPC Endpoint Mapper Client Authentication,DWORD,1
+"Group Policy","Miscellaneous",HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\SCMConfig,EnableSvchostMitigationPolicy,Enable Svchost Mitigation,DWORD,1
+"Group Policy","Miscellaneous",HKEY_LOCAL_MACHINE\System\CurrentControlSet\Policies\EarlyLaunch,DriverLoadPolicy,Boot-Start Driver Initialization Policy set to Good only,DWORD,8
+"Registry Keys",Miscellaneous,HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Search,EnableFindMyFiles,Enable enhanced search in Window,DWORD,1
+"Registry Keys",Miscellaneous,HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate\ClientStateMedium\{56EB18F8-B008-4CBD-B6D2-8C97FE7E9062},allowautoupdatesmetered,Set Microsoft Edge (Stable) to update over Metered connections,DWORD,1
+"Registry Keys",Miscellaneous,HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate\ClientStateMedium\{2CD8A007-E189-409D-A2C8-9AF4EF3C72AA},allowautoupdatesmetered,Set Microsoft Edge (Beta) to update over Metered connections,DWORD,1
+"Registry Keys",Miscellaneous,HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate\ClientStateMedium\{0D50BFEC-CD6A-4F9A-964C-C7416E3ACB10},allowautoupdatesmetered,Set Microsoft Edge (Dev) to update over Metered connections,DWORD,1
+"Registry Keys",Miscellaneous,HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\W32Time\TimeProviders\NtpClient,SpecialPollInterval,Change Windows time sync interval from every 7 days to every 4 days (= every 345600 seconds),DWORD,345600
+"Registry Keys",Miscellaneous,HKEY_LOCAL_MACHINE\Software\Microsoft\Cryptography\Wintrust\Config,EnableCertPaddingCheck,WinVerifyTrust Signature Validation part 1,String,1
+"Registry Keys",Miscellaneous,HKEY_LOCAL_MACHINE\Software\Wow6432Node\Microsoft\Cryptography\Wintrust\Config,EnableCertPaddingCheck,WinVerifyTrust Signature Validation part 2,String,1
+"Group Policy","Windows Update",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows\WindowsUpdate,AllowAutoWindowsUpdateDownloadOverMeteredNetwork,Allow updates to be downloaded automatically over metered connections,DWORD,1
+"Group Policy","Windows Update",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows\WindowsUpdate,AllowTemporaryEnterpriseFeatureControl,Enable features introduced via servicing that are off by default,DWORD,1
+"Group Policy","Windows Update",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows\WindowsUpdate,SetComplianceDeadline,Specify deadlines for automatic updates and restarts,DWORD,1
+"Group Policy","Windows Update",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows\WindowsUpdate,ConfigureDeadlineForQualityUpdates,Number of days before quality updates are installed on devices automatically,DWORD,0
+"Group Policy","Windows Update",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows\WindowsUpdate,ConfigureDeadlineGracePeriod,Number of grace period days before quality updates are installed on devices automatically,DWORD,1
+"Group Policy","Windows Update",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows\WindowsUpdate,ConfigureDeadlineForFeatureUpdates,Number of days before feature updates are installed on devices automatically,DWORD,0
+"Group Policy","Windows Update",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows\WindowsUpdate,ConfigureDeadlineGracePeriodForFeatureUpdates,Number of grace period days before feature updates are installed on devices automatically,DWORD,1
+"Group Policy","Windows Update",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows\WindowsUpdate\AU,NoAutoUpdate,Set the computer to receive security updates and other important downloads through Windows update,DWORD,0
+"Group Policy","Windows Update",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows\WindowsUpdate\AU,AUOptions,Automatically download updates and install them on maintenance day,DWORD,4
+"Group Policy","Windows Update",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows\WindowsUpdate\AU,AutomaticMaintenanceEnabled,Install updates during automatic maintenance,DWORD,1
+"Group Policy","Windows Update",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows\WindowsUpdate\AU,ScheduledInstallDay,Set scheduled install day to every day,DWORD,0
+"Group Policy","Windows Update",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows\WindowsUpdate\AU,ScheduledInstallTime,Set scheduled install time to any time,DWORD,24
+"Group Policy","Windows Update",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows\WindowsUpdate\AU,AllowMUUpdateService,Install updates for other Microsoft products,DWORD,1
+"Registry Keys",Edge,HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge\Recommended,BlockThirdPartyCookies,Block 3rd party cookies,DWORD,1
+"Registry Keys",Edge,HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge,DnsOverHttpsMode,Set Dns Over Https Mode to use system DoH settings,String,automatic
+"Registry Keys",Edge,HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge,AutomaticHttpsDefault,Automatically upgrade HTTP connections to HTTPS,DWORD,2
+"Registry Keys",Edge,HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge,EncryptedClientHelloEnabled,Enable Encrypted Client Hello,DWORD,1
+"Registry Keys",Edge,HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge,BasicAuthOverHttpEnabled,Block Basic authentication for HTTP,DWORD,0
+"Registry Keys",Edge,HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge,WebRtcRespectOsRoutingTableEnabled,WebRTC will respect the Windows OS routing table rules when making peer to peer connections,DWORD,1
+"Registry Keys",Edge,HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge,RendererAppContainerEnabled,Launches Renderer processes into an App Container for additional security benefits,DWORD,1
+"Registry Keys",Edge,HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge,ExperimentationAndConfigurationServiceControl,Allow Edge to receive new features even after using policies,DWORD,2
+"Registry Keys",Edge,HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge,AudioSandboxEnabled,Enforces the audio process to run sandboxed,DWORD,1
+"Registry Keys",Edge,HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge\Recommended,DefaultShareAdditionalOSRegionSetting,Recommends that the share additional operating system region setting to be set to never,DWORD,2
+"Registry Keys",Edge,HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge\TLSCipherSuiteDenyList,1,Disable TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA - (CBC - SHA1),String,0xc013
+"Registry Keys",Edge,HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge\TLSCipherSuiteDenyList,2,Disable TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA - (CBC - SHA1),String,0xc014
+"Registry Keys",Edge,HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge\TLSCipherSuiteDenyList,3,Disable TLS_RSA_WITH_AES_256_CBC_SHA - (NO PFS - CBC - SHA1),String,0x0035
+"Registry Keys",Edge,HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge\TLSCipherSuiteDenyList,4,Disable TLS_RSA_WITH_AES_128_CBC_SHA - (NO PFS - CBC - SHA1),String,0x002f
+"Registry Keys",Edge,HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge\TLSCipherSuiteDenyList,5,Disable TLS_RSA_WITH_AES_128_GCM_SHA256 - (NO PFS),String,0x009c
+"Registry Keys",Edge,HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge\TLSCipherSuiteDenyList,6,Disable TLS_RSA_WITH_AES_256_GCM_SHA384 - (NO PFS),String,0x009d
+"Registry Keys",Non-Admin,HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced,HideFileExt,Show File extensions,DWORD,0
+"Registry Keys",Non-Admin,HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced,Hidden,Show hidden files,DWORD,1
+"Registry Keys",Non-Admin,HKEY_CURRENT_USER\Control Panel\International\User Profile,HttpAcceptLanguageOptOut,Disable websites accessing local language list,DWORD,1
+"Registry Keys",Non-Admin,HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\SearchSettings,SafeSearchMode,Turn off safe search in Windows search,DWORD,0
+"Registry Keys",Non-Admin,HKEY_CURRENT_USER\Software\Microsoft\Clipboard,EnableClipboardHistory,Enable Clipboard History,DWORD,1
+"Registry Keys",Non-Admin,HKEY_CURRENT_USER\Software\Microsoft\Clipboard,CloudClipboardAutomaticUpload,Enable sync of Clipboard history in Windows between devices,DWORD,1
+"Registry Keys",Non-Admin,HKEY_CURRENT_USER\Software\Microsoft\Clipboard,EnableCloudClipboard,Enable Clipboard sync,DWORD,1
+"Registry Keys",Non-Admin,HKEY_CURRENT_USER\Software\Microsoft\Input\Settings,EnableHwkbTextPrediction,Turn on Show text suggestions when typing on the physical keyboard,DWORD,1
+"Registry Keys",Non-Admin,HKEY_CURRENT_USER\Software\Microsoft\Input\Settings,MultilingualEnabled,Turn on Multilingual text suggestions,DWORD,1
+"Registry Keys",Non-Admin,HKEY_CURRENT_USER\Control Panel\Accessibility\StickyKeys,Flags,Turn off sticky key shortcut of pressing shift key 5 time fast,String,506
+"Registry Keys",Non-Admin,HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Notifications\Settings,NOC_GLOBAL_SETTING_ALLOW_CRITICAL_TOASTS_ABOVE_LOCK,Disables show reminders and incoming VoIP calls on the lock screen,DWORD,0

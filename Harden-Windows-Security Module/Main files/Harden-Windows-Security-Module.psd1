@@ -12,7 +12,7 @@
     # RootModule = ''
 
     # Version number of this module.
-    ModuleVersion        = '0.0.7'
+    ModuleVersion        = '0.0.8'
 
     # Supported PSEditions
     CompatiblePSEditions = @('Core')
@@ -125,6 +125,11 @@
 
             # ReleaseNotes of this module
             ReleaseNotes = @"
+
+## Version 0.0.8
+The compliance checking module now uses registry instead of group policy, this was done because group policies are different in different languages and locales so the old method couldn't be used by users using non-English system locales.
+This also saves about 1000 lines of code, makes compliance checking faster and generates more detailed output.
+Overall it's a very positive change.
 
 ## Version 0.0.7
 Changed the Hyper-V Administrators security group members detection from using name to SID to make it compatible with non-English system locales.

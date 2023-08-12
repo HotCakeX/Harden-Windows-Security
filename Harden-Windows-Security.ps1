@@ -1,6 +1,6 @@
 <#PSScriptInfo
 
-.VERSION 2023.8.8
+.VERSION 2023.8.11
 
 .GUID d435a293-c9ee-4217-8dc1-4ad2318a5770
 
@@ -101,12 +101,12 @@ if ([version]$PSVersionTable.PSVersion -ge [version]7.3) {
 }
 
 #Region Custom-colors
-$WriteFuchsia = { Write-Host "$($PSStyle.Foreground.FromRGB(236,68,155))$($args[0])$($PSStyle.Reset)" }
-$WriteOrange = { Write-Host "$($PSStyle.Foreground.FromRGB(255,165,0))$($args[0])$($PSStyle.Reset)" }
-$WriteNeonGreen = { Write-Host "$($PSStyle.Foreground.FromRGB(153,244,67))$($args[0])$($PSStyle.Reset)" }
-$WriteMintGreen = { Write-Host "$($PSStyle.Foreground.FromRGB(152,255,152))$($args[0])$($PSStyle.Reset)" }
+[scriptblock]$WriteFuchsia = { Write-Host "$($PSStyle.Foreground.FromRGB(236,68,155))$($args[0])$($PSStyle.Reset)" }
+[scriptblock]$WriteOrange = { Write-Host "$($PSStyle.Foreground.FromRGB(255,165,0))$($args[0])$($PSStyle.Reset)" }
+[scriptblock]$WriteNeonGreen = { Write-Host "$($PSStyle.Foreground.FromRGB(153,244,67))$($args[0])$($PSStyle.Reset)" }
+[scriptblock]$WriteMintGreen = { Write-Host "$($PSStyle.Foreground.FromRGB(152,255,152))$($args[0])$($PSStyle.Reset)" }
 
-$WriteRainbow = { 
+[scriptblock]$WriteRainbow = { 
     $text = $args[0]
     $colors = @(
         [System.Drawing.Color]::Pink,
@@ -121,7 +121,7 @@ $WriteRainbow = {
         [System.Drawing.Color]::Gold
     )
   
-    $output = ""
+    $output = ''
     for ($i = 0; $i -lt $text.Length; $i++) {
         $color = $colors[$i % $colors.Length]
         $output += "$($PSStyle.Foreground.FromRGB($color.R, $color.G, $color.B))$($text[$i])$($PSStyle.Reset)"
@@ -155,15 +155,15 @@ function Select-Option {
             if ($IsCore) { &$WriteMintGreen "$($i+1): $($Options[$i])" } else { Write-Host "$($i+1): $($Options[$i])" }
         }
 
-        $SelectedIndex = Read-Host "Select an option"
+        $SelectedIndex = Read-Host 'Select an option'
         if ($SelectedIndex -gt 0 -and $SelectedIndex -le $Options.Length) { $Selected = $Options[$SelectedIndex - 1] }
-        else { Write-Host "Invalid Option." -ForegroundColor Yellow }
+        else { Write-Host 'Invalid Option.' -ForegroundColor Yellow }
     }
     return $Selected
 }
 
 # Function to modify registry
-function ModifyRegistry {
+function Edit-Registry {
     param ($Path, $Key, $Value, $Type, $Action)
     If (-NOT (Test-Path $Path)) {
         New-Item -Path $Path -Force | Out-Null
@@ -252,7 +252,7 @@ if (Test-IsAdmin) {
     # backup the current allowed apps list in Controlled folder access in order to restore them at the end of the script
     # doing this so that when we Add and then Remove PowerShell executables in Controlled folder access exclusions
     # no user customization will be affected
-    $CFAAllowedAppsBackup = (Get-MpPreference).ControlledFolderAccessAllowedApplications
+    [string[]]$CFAAllowedAppsBackup = (Get-MpPreference).ControlledFolderAccessAllowedApplications
 
     # Temporarily allow the currently running PowerShell executables to the Controlled Folder Access allowed apps
     # so that the script can run without interruption. This change is reverted at the end.
@@ -265,9 +265,9 @@ if (Test-IsAdmin) {
 # or break is passed, clean up will still happen for secure exit
 try {
     # Check the current hard-coded version against the latest version online
-    [datetime]$CurrentVersion = '2023.8.8'
+    [datetime]$CurrentVersion = '2023.8.11'
     try {
-        [datetime]$LatestVersion = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Version.txt"
+        [datetime]$LatestVersion = Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Version.txt'
     }
     catch {
         Write-Error "Couldn't verify if the latest version of the script is installed, please check your Internet connection."
@@ -275,10 +275,10 @@ try {
     }
     if ($CurrentVersion -lt $LatestVersion) {
         Write-Host "The currently installed script's version is $CurrentVersion while the latest version is $LatestVersion" -ForegroundColor Cyan
-        Write-Host "Please update your script using:" -ForegroundColor Yellow
+        Write-Host 'Please update your script using:' -ForegroundColor Yellow
         Write-Host "Update-Script -Name 'Harden-Windows-Security' -Force" -ForegroundColor Green
-        Write-Host "and run it again after that." -ForegroundColor Yellow        
-        Write-Host "You can view the change log in here: https://1drv.ms/x/s!AtCaUNAJbbvIhuVQhdMu_Hts7YZ_lA?e=df6H6P" -ForegroundColor Magenta
+        Write-Host 'and run it again after that.' -ForegroundColor Yellow        
+        Write-Host 'You can view the change log in here: https://1drv.ms/x/s!AtCaUNAJbbvIhuVQhdMu_Hts7YZ_lA?e=df6H6P' -ForegroundColor Magenta
         break
     }
 
@@ -290,7 +290,7 @@ try {
         
     }
     else {    
-        $InfoMsg = "`r`n" +
+        [string]$InfoMsg = "`r`n" +
         "############################################################################################################`r`n" +
         "### Please read the Readme in the GitHub repository: https://github.com/HotCakeX/Harden-Windows-Security ###`r`n" +
         "############################################################################################################`r`n"
@@ -299,29 +299,29 @@ try {
 
     #region RequirementsCheck
     # check if user's OS is Windows Home edition
-    if ((Get-CimInstance -ClassName Win32_OperatingSystem).OperatingSystemSKU -eq "101") {
-        Write-Error "Windows Home edition detected, exiting..."
+    if ((Get-CimInstance -ClassName Win32_OperatingSystem).OperatingSystemSKU -eq '101') {
+        Write-Error 'Windows Home edition detected, exiting...'
         break
     }
 
     # check if user's OS is latest version
     if (-NOT ([System.Environment]::OSVersion.Version -ge [version]'10.0.22621')) {
-        Write-Error "You're not using the latest version of Windows, exitting..."
+        Write-Error "You're not using the latest version of the Windows OS, exiting..."
         break
     }
 
     if (Test-IsAdmin) {
         # check to make sure Secure Boot is enabled
         if (-NOT (Confirm-SecureBootUEFI)) {
-            Write-Error "Secure Boot is not enabled, please go to your UEFI settings and enable it and then run the script again."
+            Write-Error 'Secure Boot is not enabled, please go to your UEFI settings and enable it and then run the script again.'
             break    
         }
 
         # check to make sure TPM is available and enabled
-        $TPMFlag1 = (Get-Tpm).tpmpresent
-        $TPMFlag2 = (Get-Tpm).tpmenabled
+        [bool]$TPMFlag1 = (Get-Tpm).tpmpresent
+        [bool]$TPMFlag2 = (Get-Tpm).tpmenabled
         if (!$TPMFlag1 -or !$TPMFlag2) {
-            Write-Error "TPM is not available or enabled, please go to your UEFI settings and enable it and then run the script again."
+            Write-Error 'TPM is not available or enabled, please go to your UEFI settings and enable it and then run the script again.'
             break    
         }
     }
@@ -330,15 +330,15 @@ try {
     # create our working directory
     New-Item -ItemType Directory -Path "$env:TEMP\HardeningXStuff\" -Force | Out-Null
     # working directory assignment
-    $WorkingDir = "$env:TEMP\HardeningXStuff\"
+    [string]$WorkingDir = "$env:TEMP\HardeningXStuff\"
     # change location to the new directory
     Set-Location $WorkingDir
 
     # Clean up script block
-    $CleanUp = { Set-Location $HOME; Remove-item -Recurse "$env:TEMP\HardeningXStuff\" -Force; exit }
+    [scriptblock]$CleanUp = { Set-Location $HOME; Remove-Item -Recurse "$env:TEMP\HardeningXStuff\" -Force; exit }
 
     if (-NOT (Test-IsAdmin)) {
-        if ($IsCore) { &$WriteNeonGreen "Skipping commands that require Administrator privileges" } else { Write-Host "Skipping commands that require Administrator privileges" -ForegroundColor Magenta }
+        if ($IsCore) { &$WriteNeonGreen 'Skipping commands that require Administrator privileges' } else { Write-Host 'Skipping commands that require Administrator privileges' -ForegroundColor Magenta }
     }
     else {
         Write-Progress -Activity 'Initialization' -Status 'Downloading the required files for the script' -PercentComplete 0      
@@ -346,37 +346,37 @@ try {
         Invoke-WithoutProgress { 
             try {                
                 # Download Microsoft Security Baselines directly from their servers
-                Invoke-WebRequest -Uri "https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/Windows%2011%20version%2022H2%20Security%20Baseline.zip" -OutFile ".\Windows1122H2SecurityBaseline.zip" -ErrorAction Stop
+                Invoke-WebRequest -Uri 'https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/Windows%2011%20version%2022H2%20Security%20Baseline.zip' -OutFile '.\Windows1122H2SecurityBaseline.zip' -ErrorAction Stop
                 # Download Microsoft 365 Apps Security Baselines directly from their servers
-                Invoke-WebRequest -Uri "https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/Microsoft%20365%20Apps%20for%20Enterprise%202306.zip" -OutFile ".\Microsoft365SecurityBaseline2306.zip" -ErrorAction Stop
+                Invoke-WebRequest -Uri 'https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/Microsoft%20365%20Apps%20for%20Enterprise%202306.zip' -OutFile '.\Microsoft365SecurityBaseline2306.zip' -ErrorAction Stop
                 # Download LGPO program from Microsoft servers
-                Invoke-WebRequest -Uri "https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/LGPO.zip" -OutFile ".\LGPO.zip" -ErrorAction Stop
+                Invoke-WebRequest -Uri 'https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/LGPO.zip' -OutFile '.\LGPO.zip' -ErrorAction Stop
                 
                 # Download the Group Policies of Windows Hardening script from GitHub or Azure DevOps
                 try {
-                    Invoke-WebRequest -Uri "https://github.com/HotCakeX/Harden-Windows-Security/raw/main/Payload/Security-Baselines-X.zip" -OutFile ".\Security-Baselines-X.zip" -ErrorAction Stop         
+                    Invoke-WebRequest -Uri 'https://github.com/HotCakeX/Harden-Windows-Security/raw/main/Payload/Security-Baselines-X.zip' -OutFile '.\Security-Baselines-X.zip' -ErrorAction Stop         
                 }
                 catch {
-                    Write-Host "Using Azure DevOps..." -ForegroundColor Yellow
-                    Invoke-WebRequest -Uri "https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/Security-Baselines-X.zip" -OutFile ".\Security-Baselines-X.zip" -ErrorAction Stop
+                    Write-Host 'Using Azure DevOps...' -ForegroundColor Yellow
+                    Invoke-WebRequest -Uri 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/Security-Baselines-X.zip' -OutFile '.\Security-Baselines-X.zip' -ErrorAction Stop
                 }
                 
                 # Download Registry CSV file from GitHub or Azure DevOps
                 try {
-                    Invoke-WebRequest -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Payload/Registry.csv" -OutFile ".\Registry.csv" -ErrorAction Stop                
+                    Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Payload/Registry.csv' -OutFile '.\Registry.csv' -ErrorAction Stop                
                 }
                 catch {
-                    Write-Host "Using Azure DevOps..." -ForegroundColor Yellow
-                    Invoke-WebRequest -Uri "https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/Registry.csv" -OutFile ".\Registry.csv" -ErrorAction Stop
+                    Write-Host 'Using Azure DevOps...' -ForegroundColor Yellow
+                    Invoke-WebRequest -Uri 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/Registry.csv' -OutFile '.\Registry.csv' -ErrorAction Stop
                 }
 
                 # Download Process Mitigations CSV file from GitHub or Azure DevOps
                 try {
-                    Invoke-WebRequest -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Payload/ProcessMitigations.csv" -OutFile ".\ProcessMitigations.csv" -ErrorAction Stop                
+                    Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Payload/ProcessMitigations.csv' -OutFile '.\ProcessMitigations.csv' -ErrorAction Stop                
                 }
                 catch {
-                    Write-Host "Using Azure DevOps..." -ForegroundColor Yellow
-                    Invoke-WebRequest -Uri "https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/ProcessMitigations.csv" -OutFile ".\ProcessMitigations.csv" -ErrorAction Stop
+                    Write-Host 'Using Azure DevOps...' -ForegroundColor Yellow
+                    Invoke-WebRequest -Uri 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/ProcessMitigations.csv' -OutFile '.\ProcessMitigations.csv' -ErrorAction Stop
                 }
             }
             catch {
@@ -393,91 +393,74 @@ try {
         # unzip the Security-Baselines-X file which contains Windows Hardening script Group Policy Objects
         Expand-Archive -Path .\Security-Baselines-X.zip -DestinationPath .\Security-Baselines-X\ -Force
 
-        #region Windows-Boot-Manager-revocations-for-Secure-Boot   
-        # ============================May 9 2023 Windows Boot Manager revocations for Secure Boot=================================
-        Write-Host ""
-        Write-Warning -Message "Make sure your Windows is fully up to date before running this category."
+        #region Windows-Boot-Manager-revocations-for-Secure-Boot KB5025885  
+        # ============================May 9 2023 Windows Boot Manager revocations for Secure Boot =================================
+        Write-Host ''
+        Write-Warning -Message 'Make sure your Windows is fully up to date before running this category.'
         Start-Sleep -Seconds 1
-        switch (Select-Option -Options "Yes", "No", "Exit" -Message "Apply May 9 2023 Windows Boot Manager Security measures ? (If you've already run this category, don't need to do it again)") {
-            "Yes" {        
-                mountvol q: /S
-                xcopy /y C:\Windows\System32\SecureBootUpdates\SKUSiPolicy.p7b q:\EFI\Microsoft\Boot 
-                mountvol q: /D
+        switch (Select-Option -Options 'Yes', 'No', 'Exit' -Message "Apply May 9 2023 Windows Boot Manager Security measures ? (If you've already run this category, don't need to do it again)") {
+            'Yes' {
 
-                reg add HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Secureboot /v AvailableUpdates /t REG_DWORD /d 0x10 /f
+                reg add HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Secureboot /v AvailableUpdates /t REG_DWORD /d 0x30 /f
 
                 Write-Host "`nThe required security measures have been applied to the system" -ForegroundColor Green
                 Write-Warning "Make sure to restart your device once. After restart, wait for at least 5-10 minutes and perform a 2nd restart to finish applying security measures completely.`n"
-            } "No" { break }
-            "Exit" { &$CleanUp }
+            } 'No' { break }
+            'Exit' { &$CleanUp }
         }    
         # ============================End of May 9 2023 Windows Boot Manager revocations for Secure Boot===========================
-        #endregion Windows-Boot-Manager-revocations-for-Secure-Boot
-
-        #region Windows-Kernel-CVE-2023-32019-fix-KB5028407
-        # ====================================Windows Kernel CVE-2023-32019 fix KB5028407=========================================
-        Write-Host ""
-        Write-Warning -Message "Make sure your Windows is fully up to date before running this category."
-        Start-Sleep -Seconds 1
-        switch (Select-Option -Options "Yes", "No", "Exit" -Message "Apply Windows Kernel CVE-2023-32019 fix in KB5028407 ?") {
-            "Yes" {
-                ModifyRegistry -path 'HKLM:\SYSTEM\CurrentControlSet\Policies\Microsoft\FeatureManagement\Overrides' -key '4237806220' -value '1' -type 'DWORD' -Action 'AddOrModify'
-            } "No" { break }
-            "Exit" { &$CleanUp }
-        }    
-        # ====================================End of Windows Kernel CVE-2023-32019 fix KB5028407===================================
-        #endregion Windows-Kernel-CVE-2023-32019-fix-KB5028407 
+        #endregion Windows-Boot-Manager-revocations-for-Secure-Boot KB5025885
 
         #region Microsoft-Security-Baseline    
         # ================================================Microsoft Security Baseline==============================================
-        switch (Select-Option -Options "Yes", "No", "Exit" -Message "`nApply Microsoft Security Baseline ?") {
-            "Yes" {
+        switch (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nApply Microsoft Security Baseline ?") {
+            'Yes' {
                 Write-Progress -Activity 'Microsoft Security Baseline' -Status 'Running Microsoft Security Baseline section' -PercentComplete 5
 
                 # Copy LGPO.exe from its folder to Microsoft Security Baseline folder in order to get it ready to be used by PowerShell script
-                Copy-Item -Path ".\LGPO_30\LGPO.exe" -Destination ".\Windows-11-v22H2-Security-Baseline\Scripts\Tools"
+                Copy-Item -Path '.\LGPO_30\LGPO.exe' -Destination '.\Windows-11-v22H2-Security-Baseline\Scripts\Tools'
 
                 # Change directory to the Security Baselines folder
-                Set-Location ".\Windows-11-v22H2-Security-Baseline\Scripts\"
+                Set-Location '.\Windows-11-v22H2-Security-Baseline\Scripts\'
 
                 Write-Host "`nApplying Microsoft Security Baseline" -ForegroundColor Cyan
                 # Run the official PowerShell script included in the Microsoft Security Baseline file we downloaded from Microsoft servers
                 .\Baseline-LocalInstall.ps1 -Win11NonDomainJoined            
-            } "No" { break }
-            "Exit" { &$CleanUp }
+            } 'No' { break }
+            'Exit' { &$CleanUp }
         }    
         # ==============================================End of Microsoft Security Baselines============================================   
         #endregion Microsoft-Security-Baseline
 
         #region Overrides-for-Microsoft-Security-Baseline    
         # ==============================================Overrides for Microsoft Security Baseline======================================
-        switch (Select-Option -Options "Yes", "No", "Exit" -Message "`nApply Overrides for Microsoft Security Baseline ?") {
-            "Yes" {
+        switch (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nApply Overrides for Microsoft Security Baseline ?") {
+            'Yes' {
                 Write-Progress -Activity 'Overrides for Microsoft Security Baseline' -Status 'Running Overrides for Microsoft Security Baseline section' -PercentComplete 10
 
                 # Change current working directory to the LGPO's folder
                 Set-Location "$WorkingDir\LGPO_30"
-                .\LGPO.exe /m "..\Security-Baselines-X\Overrides for Microsoft Security Baseline\registry.pol"
-                .\LGPO.exe /s "..\Security-Baselines-X\Overrides for Microsoft Security Baseline\GptTmpl.inf"
+                .\LGPO.exe /m '..\Security-Baselines-X\Overrides for Microsoft Security Baseline\registry.pol'
+                .\LGPO.exe /s '..\Security-Baselines-X\Overrides for Microsoft Security Baseline\GptTmpl.inf'
             
                 # Re-enables the XblGameSave Standby Task that gets disabled by Microsoft Security Baselines
                 SCHTASKS.EXE /Change /TN \Microsoft\XblGameSave\XblGameSaveTask /Enable
 
-            } "No" { break }
-            "Exit" { &$CleanUp }
+            } 'No' { break }
+            'Exit' { &$CleanUp }
         }    
         # ================================================End of Overrides for Microsoft Security Baseline=================================
         #endregion Overrides-for-Microsoft-Security-Baseline
 
         #region Microsoft-365-Apps-Security-Baseline
         # ================================================Microsoft 365 Apps Security Baseline==============================================
-        switch (Select-Option -Options "Yes", "No", "Exit" -Message "`nApply Microsoft 365 Apps Security Baseline ?") {
-            "Yes" {
+        switch (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nApply Microsoft 365 Apps Security Baseline ?") {
+            'Yes' {
                 Write-Progress -Activity 'Microsoft 365 Apps Security Baseline' -Status 'Running Microsoft 365 Apps Security Baseline section' -PercentComplete 15
     
                 Set-Location $WorkingDir
                 # Copy LGPO.exe from its folder to Microsoft Office 365 Apps for Enterprise Security Baseline folder in order to get it ready to be used by PowerShell script
-                Copy-Item -Path ".\LGPO_30\LGPO.exe" -Destination '.\Microsoft 365 Apps for Enterprise 2306\Scripts\Tools'
+                Copy-Item -Path '.\LGPO_30\LGPO.exe' -Destination '.\Microsoft 365 Apps for Enterprise 2306\Scripts\Tools'
 
                 # Change directory to the Security Baselines folder
                 Set-Location "$WorkingDir\Microsoft 365 Apps for Enterprise 2306\Scripts\"
@@ -485,41 +468,41 @@ try {
                 Write-Host "`nApplying Microsoft 365 Apps Security Baseline" -ForegroundColor Cyan
                 # Run the official PowerShell script included in the Microsoft Security Baseline file we downloaded from Microsoft servers
                 .\Baseline-LocalInstall.ps1           
-            } "No" { break }
-            "Exit" { &$CleanUp }
+            } 'No' { break }
+            'Exit' { &$CleanUp }
         }
         # ================================================End of Microsoft 365 Apps Security Baseline==============================================
         #endregion Microsoft-365-Apps-Security-Baseline
     
         #region Microsoft-Defender
         # ================================================Microsoft Defender=======================================================
-        switch (Select-Option -Options "Yes", "No", "Exit" -Message "`nRun Microsoft Defender category ?") {
-            "Yes" {
+        switch (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Microsoft Defender category ?") {
+            'Yes' {
                 Write-Progress -Activity 'Microsoft Defender' -Status 'Running Microsoft Defender section' -PercentComplete 20
 
                 # Change current working directory to the LGPO's folder
                 Set-Location "$WorkingDir\LGPO_30"
-                .\LGPO.exe /m "..\Security-Baselines-X\Microsoft Defender Policies\registry.pol"
+                .\LGPO.exe /m '..\Security-Baselines-X\Microsoft Defender Policies\registry.pol'
         
                 # Optimizing Network Protection Performance of Windows Defender - this was off by default on Windows 11 insider build 25247
                 Set-MpPreference -AllowSwitchToAsyncInspection $True
 
                 # Configure whether real-time protection and Security Intelligence Updates are enabled during OOBE
-                Set-MpPreference -oobeEnableRtpAndSigUpdate $True
+                Set-MpPreference -OobeEnableRtpAndSigUpdate $True
 
                 # Enable Intel Threat Detection Technology
                 Set-MpPreference -IntelTDTEnabled $True
 
                 # Add OneDrive folders of all user accounts to the Controlled Folder Access for Ransomware Protection
-                Get-ChildItem "C:\Users\*\OneDrive" | ForEach-Object { Add-MpPreference -ControlledFolderAccessProtectedFolders $_ }
+                Get-ChildItem 'C:\Users\*\OneDrive' | ForEach-Object { Add-MpPreference -ControlledFolderAccessProtectedFolders $_ }
 
                 # Enable Mandatory ASLR Exploit Protection system-wide
-                Set-processmitigation -System -Enable ForceRelocateImages
+                Set-ProcessMitigation -System -Enable ForceRelocateImages
 
                 Set-Location $WorkingDir
 
                 # Apply Process Mitigations
-                $ProcessMitigations = Import-Csv 'ProcessMitigations.csv' -Delimiter ","
+                [System.Array]$ProcessMitigations = Import-Csv 'ProcessMitigations.csv' -Delimiter ','
 
                 # Group the data by ProgramName
                 $GroupedMitigations = $ProcessMitigations | Group-Object ProgramName
@@ -553,91 +536,91 @@ try {
                 } 
 
                 # Turn on Data Execution Prevention (DEP) for all applications, including 32-bit programs
-                bcdedit.exe /set "{current}" nx AlwaysOn
+                bcdedit.exe /set '{current}' nx AlwaysOn
 
                 # Try turning on Smart App Control
-                switch (Select-Option -SubCategory -Options "Yes", "No", "Exit" -Message "`nTurn on Smart App Control ?") {
-                    "Yes" {               
-                        if ((Get-MpComputerStatus).SmartAppControlState -eq "Eval") {
-                            ModifyRegistry -path 'HKLM:\SYSTEM\CurrentControlSet\Control\CI\Policy' -key 'VerifiedAndReputablePolicyState' -value '1' -type 'DWORD' -Action 'AddOrModify'
+                switch (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nTurn on Smart App Control ?") {
+                    'Yes' {               
+                        if ((Get-MpComputerStatus).SmartAppControlState -eq 'Eval') {
+                            Edit-Registry -path 'HKLM:\SYSTEM\CurrentControlSet\Control\CI\Policy' -key 'VerifiedAndReputablePolicyState' -value '1' -type 'DWORD' -Action 'AddOrModify'
                         }
-                        elseif ((Get-MpComputerStatus).SmartAppControlState -eq "On") {
+                        elseif ((Get-MpComputerStatus).SmartAppControlState -eq 'On') {
                             Write-Host "Smart App Control is already turned on, skipping...`n"
                         }
-                        elseif ((Get-MpComputerStatus).SmartAppControlState -eq "Off") {
+                        elseif ((Get-MpComputerStatus).SmartAppControlState -eq 'Off') {
                             Write-Host "Smart App Control is turned off. Can't use registry to force enable it.`n"
                         }
-                    } "No" { break }
-                    "Exit" { &$CleanUp }
+                    } 'No' { break }
+                    'Exit' { &$CleanUp }
                 }
 
                 # Create scheduled task for fast weekly Microsoft recommended driver block list update
-                switch (Select-Option -SubCategory -Options "Yes", "No", "Exit" -Message "`nCreate scheduled task for fast weekly Microsoft recommended driver block list update ?") {
-                    "Yes" { 
+                switch (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nCreate scheduled task for fast weekly Microsoft recommended driver block list update ?") {
+                    'Yes' { 
                         # create a scheduled task that runs every 7 days
-                        if (-NOT (Get-ScheduledTask -TaskName "MSFT Driver Block list update" -ErrorAction SilentlyContinue)) {        
+                        if (-NOT (Get-ScheduledTask -TaskName 'MSFT Driver Block list update' -ErrorAction SilentlyContinue)) {        
                             $action = New-ScheduledTaskAction -Execute 'Powershell.exe' `
                                 -Argument '-NoProfile -WindowStyle Hidden -command "& {try {Invoke-WebRequest -Uri "https://aka.ms/VulnerableDriverBlockList" -OutFile VulnerableDriverBlockList.zip -ErrorAction Stop}catch{exit};Expand-Archive .\VulnerableDriverBlockList.zip -DestinationPath "VulnerableDriverBlockList" -Force;Rename-Item .\VulnerableDriverBlockList\SiPolicy_Enforced.p7b -NewName "SiPolicy.p7b" -Force;Copy-Item .\VulnerableDriverBlockList\SiPolicy.p7b -Destination "C:\Windows\System32\CodeIntegrity";citool --refresh -json;Remove-Item .\VulnerableDriverBlockList -Recurse -Force;Remove-Item .\VulnerableDriverBlockList.zip -Force;}"'    
                             $TaskPrincipal = New-ScheduledTaskPrincipal -LogonType S4U -UserId $env:USERNAME -RunLevel Highest
                             # trigger
                             $Time = New-ScheduledTaskTrigger -Once -At (Get-Date).AddHours(1) -RepetitionInterval (New-TimeSpan -Days 7) 
                             # register the task
-                            Register-ScheduledTask -Action $action -Trigger $Time -Principal $TaskPrincipal -TaskPath "MSFT Driver Block list update" -TaskName "MSFT Driver Block list update" -Description "Microsoft Recommended Driver Block List update"
+                            Register-ScheduledTask -Action $action -Trigger $Time -Principal $TaskPrincipal -TaskPath 'MSFT Driver Block list update' -TaskName 'MSFT Driver Block list update' -Description 'Microsoft Recommended Driver Block List update'
                             # define advanced settings for the task
                             $TaskSettings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -Compatibility Win8 -StartWhenAvailable -ExecutionTimeLimit (New-TimeSpan -Minutes 3)
                             # add advanced settings we defined to the task
-                            Set-ScheduledTask -TaskPath "MSFT Driver Block list update" -TaskName "MSFT Driver Block list update" -Settings $TaskSettings 
+                            Set-ScheduledTask -TaskPath 'MSFT Driver Block list update' -TaskName 'MSFT Driver Block list update' -Settings $TaskSettings 
                         }
-                    } "No" { break }
-                    "Exit" { &$CleanUp }
+                    } 'No' { break }
+                    'Exit' { &$CleanUp }
                 }
                 # Set Microsoft Defender engine and platform update channel to beta - Devices in the Windows Insider Program are subscribed to this channel by default.
-                switch (Select-Option -SubCategory -Options "Yes", "No", "Exit" -Message "`nSet Microsoft Defender engine and platform update channel to beta ?") {
-                    "Yes" {             
+                switch (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nSet Microsoft Defender engine and platform update channel to beta ?") {
+                    'Yes' {             
                         Set-MpPreference -EngineUpdatesChannel beta
                         Set-MpPreference -PlatformUpdatesChannel beta
-                    } "No" { break }
-                    "Exit" { &$CleanUp }
+                    } 'No' { break }
+                    'Exit' { &$CleanUp }
                 }            
-            } "No" { break }
-            "Exit" { &$CleanUp }
+            } 'No' { break }
+            'Exit' { &$CleanUp }
         }    
         # ============================================End of Microsoft Defender====================================================    
         #endregion Microsoft-Defender
 
         #region Attack-Surface-Reduction-Rules    
         # =========================================Attack Surface Reduction Rules==================================================
-        switch (Select-Option -Options "Yes", "No", "Exit" -Message "`nRun Attack Surface Reduction Rules category ?") {
-            "Yes" {
+        switch (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Attack Surface Reduction Rules category ?") {
+            'Yes' {
                 Write-Progress -Activity 'Attack Surface Reduction Rules' -Status 'Running Attack Surface Reduction Rules section' -PercentComplete 25
                                 
                 # Change current working directory to the LGPO's folder
                 Set-Location "$WorkingDir\LGPO_30"
                 
-                .\LGPO.exe /m "..\Security-Baselines-X\Attack Surface Reduction Rules Policies\registry.pol"
-            } "No" { break }
-            "Exit" { &$CleanUp }
+                .\LGPO.exe /m '..\Security-Baselines-X\Attack Surface Reduction Rules Policies\registry.pol'
+            } 'No' { break }
+            'Exit' { &$CleanUp }
         }
         # =========================================End of Attack Surface Reduction Rules===========================================
         #endregion Attack-Surface-Reduction-Rules
     
         #region Bitlocker-Settings    
         # ==========================================Bitlocker Settings=============================================================    
-        switch (Select-Option -Options "Yes", "No", "Exit" -Message "`nRun Bitlocker category ?") {
-            "Yes" {
+        switch (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Bitlocker category ?") {
+            'Yes' {
                 Write-Progress -Activity 'Bitlocker Settings' -Status 'Running Bitlocker Settings section' -PercentComplete 30
 
                 # Change current working directory to the LGPO's folder
                 Set-Location "$WorkingDir\LGPO_30"
 
-                .\LGPO.exe /m "..\Security-Baselines-X\Bitlocker Policies\registry.pol"
+                .\LGPO.exe /m '..\Security-Baselines-X\Bitlocker Policies\registry.pol'
 
                 # This PowerShell script can be used to find out if the DMA Protection is ON \ OFF.
                 # The Script will show this by emitting True \ False for On \ Off respectively.
 
                 # bootDMAProtection check - checks for Kernel DMA Protection status in System information or msinfo32
-                $bootDMAProtectionCheck =
-                @"
+                [string]$bootDMAProtectionCheck =
+                @'
   namespace SystemInfo
     {
       using System;
@@ -679,22 +662,22 @@ try {
         }
       }
     }
-"@
+'@
                 Add-Type -TypeDefinition $bootDMAProtectionCheck
                 # returns true or false depending on whether Kernel DMA Protection is on or off
-                $bootDMAProtection = ([SystemInfo.NativeMethods]::BootDmaCheck()) -ne 0
+                [bool]$bootDMAProtection = ([SystemInfo.NativeMethods]::BootDmaCheck()) -ne 0
 
                 # Change current working directory to the LGPO's folder
                 Set-Location "$WorkingDir\LGPO_30"
             
                 # Enables or disables DMA protection from Bitlocker Countermeasures based on the status of Kernel DMA protection.
                 if ($bootDMAProtection) {                 
-                    Write-Host "Kernel DMA protection is enabled on the system, disabling Bitlocker DMA protection." -ForegroundColor Blue
-                    .\LGPO.exe /m "..\Security-Baselines-X\Overrides for Microsoft Security Baseline\Bitlocker DMA\Bitlocker DMA Countermeasure OFF\Registry.pol"                           
+                    Write-Host 'Kernel DMA protection is enabled on the system, disabling Bitlocker DMA protection.' -ForegroundColor Blue
+                    .\LGPO.exe /m '..\Security-Baselines-X\Overrides for Microsoft Security Baseline\Bitlocker DMA\Bitlocker DMA Countermeasure OFF\Registry.pol'                           
                 }
                 else {
-                    Write-Host "Kernel DMA protection is unavailable on the system, enabling Bitlocker DMA protection." -ForegroundColor Blue
-                    .\LGPO.exe /m "..\Security-Baselines-X\Overrides for Microsoft Security Baseline\Bitlocker DMA\Bitlocker DMA Countermeasure ON\Registry.pol"                                                          
+                    Write-Host 'Kernel DMA protection is unavailable on the system, enabling Bitlocker DMA protection.' -ForegroundColor Blue
+                    .\LGPO.exe /m '..\Security-Baselines-X\Overrides for Microsoft Security Baseline\Bitlocker DMA\Bitlocker DMA Countermeasure ON\Registry.pol'                                                          
                 }
 
                 # Make sure Bitlocker policies are applied before enabling Bitlocker
@@ -704,13 +687,13 @@ try {
                 # check, make sure there is no CD/DVD drives in the system, because Bitlocker throws an error when there is
                 $CdDvdCheck = (Get-CimInstance -ClassName Win32_CDROMDrive -Property *).MediaLoaded
                 if ($CdDvdCheck) {
-                    Write-Warning "Remove any CD/DVD drives or mounted images/ISO from the system and run the Bitlocker category again."
+                    Write-Warning 'Remove any CD/DVD drives or mounted images/ISO from the system and run the Bitlocker category again.'
                     # break from the current loop and continue to the next hardening category
                     break
                 }
         
                 # check make sure Bitlocker isn't in the middle of decryption/encryption operation (on System Drive)
-                if ((Get-BitLockerVolume -MountPoint $env:SystemDrive).EncryptionPercentage -ne "100" -and (Get-BitLockerVolume -MountPoint $env:SystemDrive).EncryptionPercentage -ne "0") {
+                if ((Get-BitLockerVolume -MountPoint $env:SystemDrive).EncryptionPercentage -ne '100' -and (Get-BitLockerVolume -MountPoint $env:SystemDrive).EncryptionPercentage -ne '0') {
                     $EncryptionPercentageVar = (Get-BitLockerVolume -MountPoint $env:SystemDrive).EncryptionPercentage
                     Write-Host "`nPlease wait for Bitlocker to finish encrypting or decrypting the Operation System Drive." -ForegroundColor Yellow
                     Write-Host "Drive $env:SystemDrive encryption is currently at $EncryptionPercentageVar percent." -ForegroundColor Yellow
@@ -718,11 +701,11 @@ try {
                 }
                 
                 # check if Bitlocker is enabled for the system drive
-                if ((Get-BitLockerVolume -MountPoint $env:SystemDrive).ProtectionStatus -eq "on") {                                 
+                if ((Get-BitLockerVolume -MountPoint $env:SystemDrive).ProtectionStatus -eq 'on') {                                 
                     $KeyProtectors = (Get-BitLockerVolume -MountPoint $env:SystemDrive).KeyProtector.keyprotectortype
                     # check if TPM+PIN and recovery password are being used with Bitlocker which are the safest settings
                     if ($KeyProtectors -contains 'Tpmpin' -and $KeyProtectors -contains 'recoveryPassword') {        
-                        Write-Host "Bitlocker is fully and securely enabled for the OS drive" -ForegroundColor Green
+                        Write-Host 'Bitlocker is fully and securely enabled for the OS drive' -ForegroundColor Green
                     }
                     else {       
                         # if Bitlocker is using TPM+PIN but not recovery password (for key protectors)
@@ -739,26 +722,26 @@ try {
                         if ($KeyProtectors -notcontains 'Tpmpin' -and $KeyProtectors -contains 'recoveryPassword') {            
                             Write-Host "`nTPM and Start up PIN are missing but recovery password is in place, `nAdding TPM and Start up PIN now..." -ForegroundColor Cyan
                             do {
-                                $pin1 = $(Write-Host "`nEnter a Pin for Bitlocker startup (at least 10 characters)" -ForegroundColor Magenta; Read-Host -AsSecureString)
-                                $pin2 = $(Write-Host "Confirm your Bitlocker Startup Pin (at least 10 characters)" -ForegroundColor Magenta; Read-Host -AsSecureString)
+                                [securestring]$Pin1 = $(Write-Host "`nEnter a Pin for Bitlocker startup (between 10 to 20 characters)" -ForegroundColor Magenta; Read-Host -AsSecureString)
+                                [securestring]$Pin2 = $(Write-Host 'Confirm your Bitlocker Startup Pin (between 10 to 20 characters)' -ForegroundColor Magenta; Read-Host -AsSecureString)
                         
                                 # Compare the PINs and make sure they match
-                                $TheyMatch = Compare-SecureString $pin1 $pin2
-                                # If the PINs match and they are at least 10 characters long
-                                if ( $TheyMatch -and $pin1.Length -ge 10 -and $pin2.Length -ge 10  ) {                  
-                                    $pin = $pin1                  
+                                [bool]$TheyMatch = Compare-SecureString $Pin1 $Pin2
+                                # If the PINs match and they are at least 10 characters long, max 20 characters
+                                if ( $TheyMatch -and ($Pin1.Length -in 10..20) -and ($Pin2.Length -in 10..20) ) {
+                                    [securestring]$Pin = $Pin1                  
                                 }                  
-                                else { Write-Host "The PINs you entered didn't match or they weren't at least 10 characters, try again" -ForegroundColor red }                  
+                                else { Write-Host 'Please ensure that the PINs you entered match, and that they are between 10 to 20 characters.' -ForegroundColor red }                  
                             }
-                            # Repeat this process until the entered PINs match and they are at least 10 characters long            
-                            until ($TheyMatch -and $pin1.Length -ge 10 -and $pin2.Length -ge 10)
+                            # Repeat this process until the entered PINs match and they are at least 10 characters long, max 20 characters           
+                            until ( $TheyMatch -and ($Pin1.Length -in 10..20) -and ($Pin2.Length -in 10..20) )
                  
                             try {
-                                Add-BitLockerKeyProtector -MountPoint $env:SystemDrive -TpmAndPinProtector -Pin $pin -ErrorAction Stop
+                                Add-BitLockerKeyProtector -MountPoint $env:SystemDrive -TpmAndPinProtector -Pin $Pin -ErrorAction Stop
                                 Write-Host "`nPINs matched, enabling TPM and startup PIN now" -ForegroundColor Green
                             }    
                             catch {         
-                                Write-Host "These errors occured, run Bitlocker category again after meeting the requirements" -ForegroundColor Red
+                                Write-Host 'These errors occured, run Bitlocker category again after meeting the requirements' -ForegroundColor Red
                                 $Error
                                 break
                             }
@@ -769,30 +752,30 @@ try {
                 else {
                     Write-Host "`nBitlocker is Not enabled for the System Drive, activating now..." -ForegroundColor Yellow    
                     do {
-                        $pin1 = $(Write-Host "Enter a Pin for Bitlocker startup (at least 10 characters)" -ForegroundColor Magenta; Read-Host -AsSecureString)
-                        $pin2 = $(Write-Host "Confirm your Bitlocker Startup Pin (at least 10 characters)" -ForegroundColor Magenta; Read-Host -AsSecureString)
+                        [securestring]$Pin1 = $(Write-Host 'Enter a Pin for Bitlocker startup (between 10 to 20 characters)' -ForegroundColor Magenta; Read-Host -AsSecureString)
+                        [securestring]$Pin2 = $(Write-Host 'Confirm your Bitlocker Startup Pin (between 10 to 20 characters)' -ForegroundColor Magenta; Read-Host -AsSecureString)
       
-                        $TheyMatch = Compare-SecureString $pin1 $pin2
+                        [bool]$TheyMatch = Compare-SecureString $Pin1 $Pin2
             
-                        if ($TheyMatch -and $pin1.Length -ge 10 -and $pin2.Length -ge 10) {      
-                            $pin = $pin1      
+                        if ( $TheyMatch -and ($Pin1.Length -in 10..20) -and ($Pin2.Length -in 10..20) ) {      
+                            [securestring]$Pin = $Pin1      
                         }      
-                        else { Write-Host "The PINs you entered didn't match or they weren't at least 10 characters, try again" -ForegroundColor red }      
+                        else { Write-Host 'Please ensure that the PINs you entered match, and that they are between 10 to 20 characters.' -ForegroundColor red }      
                     }      
-                    until ($TheyMatch -and $pin1.Length -ge 10 -and $pin2.Length -ge 10)
+                    until ( $TheyMatch -and ($Pin1.Length -in 10..20) -and ($Pin2.Length -in 10..20) )
 
                     try {
-                        Enable-bitlocker -MountPoint $env:SystemDrive -EncryptionMethod XtsAes256 -pin $pin -TpmAndPinProtector -SkipHardwareTest -ErrorAction Stop             
+                        Enable-BitLocker -MountPoint $env:SystemDrive -EncryptionMethod XtsAes256 -Pin $Pin -TpmAndPinProtector -SkipHardwareTest -ErrorAction Stop             
                     }
                     catch {
-                        Write-Host "These errors occured, run Bitlocker category again after meeting the requirements" -ForegroundColor Red
+                        Write-Host 'These errors occured, run Bitlocker category again after meeting the requirements' -ForegroundColor Red
                         $Error
                         break
                     }     
                     Add-BitLockerKeyProtector -MountPoint $env:SystemDrive -RecoveryPasswordProtector *> "$env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt" 
                     Resume-BitLocker -MountPoint $env:SystemDrive
 
-                    $BitLockerMsg = "`nThe recovery password will be saved in a Text file in $env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt `n" +
+                    [string]$BitLockerMsg = "`nThe recovery password will be saved in a Text file in $env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt `n" +
                     "Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which requires authentication to access."
                     Write-Host $BitLockerMsg -ForegroundColor Cyan
 
@@ -801,20 +784,20 @@ try {
 
                 # Enabling Hibernate after making sure OS drive is property encrypted for holding hibernate data
                 # Making sure the system is not a VM because Hibernate on VM doesn't work and VMs have other/better options than Hibernation
-                if (-NOT ((get-mpComputerStatus).IsVirtualMachine)) {                
+                if (-NOT ((Get-MpComputerStatus).IsVirtualMachine)) {                
                     # doing this so Controlled Folder Access won't bitch about powercfg.exe
-                    Add-MpPreference -ControlledFolderAccessAllowedApplications "C:\Windows\System32\powercfg.exe"
+                    Add-MpPreference -ControlledFolderAccessAllowedApplications 'C:\Windows\System32\powercfg.exe'
                     Start-Sleep 5
-                    # Set Hibnernate mode to full
+                    # Set Hibernate mode to full
                     powercfg /h /type full
                     Start-Sleep 3
-                    Remove-MpPreference -ControlledFolderAccessAllowedApplications "C:\Windows\System32\powercfg.exe"
+                    Remove-MpPreference -ControlledFolderAccessAllowedApplications 'C:\Windows\System32\powercfg.exe'
                 }
 
                 # Enable Bitlocker for all the other drives
                 # check if there is any other drive besides OS drive
-                $NonOSVolumes = Get-Volume | Where-Object { $_.DriveType -ne "Removable" } | Where-Object { $_.DriveLetter } -PipelineVariable NonRemovableDrives |
-                foreach-object { Get-BitLockerVolume | Where-Object { $_.volumeType -ne "OperatingSystem" -and $_.MountPoint -eq $($($NonRemovableDrives.DriveLetter) + ":") } }
+                $NonOSVolumes = Get-Volume | Where-Object { $_.DriveType -ne 'Removable' } | Where-Object { $_.DriveLetter } -PipelineVariable NonRemovableDrives |
+                ForEach-Object { Get-BitLockerVolume | Where-Object { $_.volumeType -ne 'OperatingSystem' -and $_.MountPoint -eq $($($NonRemovableDrives.DriveLetter) + ':') } }
 
                 if ($NonOSVolumes) {
                     
@@ -822,11 +805,11 @@ try {
                         $MountPoint = $_.MountPoint
 
                         # Prompt for confirmation before encrypting each drive
-                        switch (Select-Option -SubCategory -Options "Yes", "No", "Exit" -Message "`nEncrypt $MountPoint drive ?`n") {
-                            "Yes" {  
+                        switch (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nEncrypt $MountPoint drive ?`n") {
+                            'Yes' {  
 
                                 # Check if the non-OS drive that the user selected to be encrypted is not in the middle of any encryption/decryption operation
-                                if ((Get-BitLockerVolume -MountPoint $MountPoint).EncryptionPercentage -ne "100" -and (Get-BitLockerVolume -MountPoint $MountPoint).EncryptionPercentage -ne "0") {
+                                if ((Get-BitLockerVolume -MountPoint $MountPoint).EncryptionPercentage -ne '100' -and (Get-BitLockerVolume -MountPoint $MountPoint).EncryptionPercentage -ne '0') {
                                     # Check if the drive isn't already encrypted and locked
                                     if ((Get-BitLockerVolume -MountPoint $MountPoint).lockstatus -eq 'Locked') {
                                         Write-Host "`nThe drive $MountPoint is already encrypted and locked." -ForegroundColor Magenta
@@ -842,7 +825,7 @@ try {
                         
                                 # Check to see if Bitlocker is already turned on for the user selected drive
                                 # if it is, perform multiple checks on its key protectors                        
-                                if ((Get-BitLockerVolume -MountPoint $MountPoint).ProtectionStatus -eq "on") {  
+                                if ((Get-BitLockerVolume -MountPoint $MountPoint).ProtectionStatus -eq 'on') {  
 
                                     # Check 1: if Recovery Password and Auto Unlock key protectors are available on the drive
                                     $KeyProtectors = (Get-BitLockerVolume -MountPoint $MountPoint).KeyProtector.keyprotectortype 
@@ -851,7 +834,7 @@ try {
                                         # Additional Check 1: if there is any External key key protector, try delete all of them and add a new one
                                         # The external key protector that is being used to unlock the drive will not be deleted
                                         $ExternalKeyProtectors = ((Get-BitLockerVolume -MountPoint $MountPoint).KeyProtector |
-                                            Where-Object { $_.keyprotectortype -eq "ExternalKey" }).KeyProtectorId
+                                            Where-Object { $_.keyprotectortype -eq 'ExternalKey' }).KeyProtectorId
 
                                         $ExternalKeyProtectors | ForEach-Object {
                                             # -ErrorAction SilentlyContinue makes sure no error is thrown if the drive only has 1 External key key protector
@@ -862,10 +845,10 @@ try {
 
                                         # Additional Check 2: if there are more than 1 Recovery Password, delete all of them and add a new one
                                         $RecoveryPasswordKeyProtectors = ((Get-BitLockerVolume -MountPoint $MountPoint).KeyProtector |
-                                            Where-Object { $_.keyprotectortype -eq "RecoveryPassword" }).KeyProtectorId
+                                            Where-Object { $_.keyprotectortype -eq 'RecoveryPassword' }).KeyProtectorId
                                         if ($RecoveryPasswordKeyProtectors.Count -gt 1) {
 
-                                            $BitLockerMsg = "`nThere are more than 1 recovery password key protector associated with the drive $mountpoint `n" +
+                                            [string]$BitLockerMsg = "`nThere are more than 1 recovery password key protector associated with the drive $mountpoint `n" +
                                             "Removing all of them and adding a new one now. `n" + 
                                             "Bitlocker Recovery Password has been added for drive $MountPoint `n" +
                                             "It will be saved in a Text file in $($MountPoint)\Drive $($MountPoint.Remove(1)) recovery password.txt `n" +
@@ -876,7 +859,7 @@ try {
                                                 Remove-BitLockerKeyProtector -MountPoint $MountPoint -KeyProtectorId $_ 
                                             }
                                             # Add new Recovery Password key protector after removing the previous ones
-                                            Add-BitLockerKeyProtector -MountPoint $MountPoint -RecoveryPasswordProtector *> "$MountPoint\Drive $($MountPoint.Remove(1)) recovery password.txt";
+                                            Add-BitLockerKeyProtector -MountPoint $MountPoint -RecoveryPasswordProtector *> "$MountPoint\Drive $($MountPoint.Remove(1)) recovery password.txt"
                                         }                                
                                         Write-Host "`nBitlocker is fully and securely enabled for drive $MountPoint" -ForegroundColor Green    
                                     }
@@ -889,7 +872,7 @@ try {
 
                                             # if there is any External key key protector, delete all of them and add a new one
                                             $ExternalKeyProtectors = ((Get-BitLockerVolume -MountPoint $MountPoint).KeyProtector |
-                                                Where-Object { $_.keyprotectortype -eq "ExternalKey" }).KeyProtectorId
+                                                Where-Object { $_.keyprotectortype -eq 'ExternalKey' }).KeyProtectorId
                                             if ($ExternalKeyProtectors) {
                                                 $ExternalKeyProtectors | ForEach-Object {
                                                     Remove-BitLockerKeyProtector -MountPoint $MountPoint -KeyProtectorId $_ -ErrorAction SilentlyContinue 
@@ -897,9 +880,9 @@ try {
                                             }
                                             Enable-BitLockerAutoUnlock -MountPoint $MountPoint
                                             # Add Recovery Password Key protector and save it to a file inside the drive                                            
-                                            Add-BitLockerKeyProtector -MountPoint $MountPoint -RecoveryPasswordProtector *> "$MountPoint\Drive $($MountPoint.Remove(1)) recovery password.txt";
+                                            Add-BitLockerKeyProtector -MountPoint $MountPoint -RecoveryPasswordProtector *> "$MountPoint\Drive $($MountPoint.Remove(1)) recovery password.txt"
                                     
-                                            $BitLockerMsg = "`nDrive $MountPoint is auto-unlocked but doesn't have Recovery Password, adding it now... `n" +
+                                            [string]$BitLockerMsg = "`nDrive $MountPoint is auto-unlocked but doesn't have Recovery Password, adding it now... `n" +
                                             "Bitlocker Recovery Password has been added for drive $MountPoint `n" +
                                             "It will be saved in a Text file in $($MountPoint)\Drive $($MountPoint.Remove(1)) recovery password.txt `n" +
                                             "Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which requires authentication to access."
@@ -912,11 +895,11 @@ try {
                                     
                                             # if there are more than 1 Recovery Password, delete all of them and add a new one
                                             $RecoveryPasswordKeyProtectors = ((Get-BitLockerVolume -MountPoint $MountPoint).KeyProtector |
-                                                Where-Object { $_.keyprotectortype -eq "RecoveryPassword" }).KeyProtectorId
+                                                Where-Object { $_.keyprotectortype -eq 'RecoveryPassword' }).KeyProtectorId
 
                                             if ($RecoveryPasswordKeyProtectors.Count -gt 1) {
 
-                                                $BitLockerMsg = "`nThere are more than 1 recovery password key protector associated with the drive $mountpoint `n" +
+                                                [string]$BitLockerMsg = "`nThere are more than 1 recovery password key protector associated with the drive $mountpoint `n" +
                                                 "Removing all of them and adding a new one now. Bitlocker Recovery Password has been added for drive $MountPoint `n" +
                                                 "It will be saved in a Text file in $($MountPoint)\Drive $($MountPoint.Remove(1)) recovery password.txt `n" +
                                                 "Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which requires authentication to access." 
@@ -927,7 +910,7 @@ try {
                                                     Remove-BitLockerKeyProtector -MountPoint $MountPoint -KeyProtectorId $_ 
                                                 }
                                                 # Add a new Recovery Password
-                                                Add-BitLockerKeyProtector -MountPoint $MountPoint -RecoveryPasswordProtector *> "$MountPoint\Drive $($MountPoint.Remove(1)) recovery password.txt";
+                                                Add-BitLockerKeyProtector -MountPoint $MountPoint -RecoveryPasswordProtector *> "$MountPoint\Drive $($MountPoint.Remove(1)) recovery password.txt"
                                             }                                    
                                         }                      
                                     }
@@ -935,31 +918,31 @@ try {
 
                                 # Do this if Bitlocker isn't turned on at all on the user selected drive
                                 else {
-                                    Enable-BitLocker -MountPoint $MountPoint -RecoveryPasswordProtector *> "$MountPoint\Drive $($MountPoint.Remove(1)) recovery password.txt";
+                                    Enable-BitLocker -MountPoint $MountPoint -RecoveryPasswordProtector *> "$MountPoint\Drive $($MountPoint.Remove(1)) recovery password.txt"
                                     Enable-BitLockerAutoUnlock -MountPoint $MountPoint
 
-                                    $BitLockerMsg = "`nBitlocker has started encrypting drive $MountPoint `n" +
+                                    [string]$BitLockerMsg = "`nBitlocker has started encrypting drive $MountPoint `n" +
                                     "Recovery password will be saved in a Text file in $($MountPoint)\Drive $($MountPoint.Remove(1)) recovery password.txt `n" +
                                     "Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which requires authentication to access."
                                     Write-Host $BitLockerMsg -ForegroundColor Cyan
                                 }                                
 
-                            } "No" { break }
-                            "Exit" { &$CleanUp }
+                            } 'No' { break }
+                            'Exit' { &$CleanUp }
                         }                            
                     }
                 }
                
-            } "No" { break }
-            "Exit" { &$CleanUp }
+            } 'No' { break }
+            'Exit' { &$CleanUp }
         }    
         # ==========================================End of Bitlocker Settings======================================================    
         #endregion Bitlocker-Settings
 
         #region TLS-Security    
         # ==============================================TLS Security=============================================================== 
-        switch (Select-Option -Options "Yes", "No", "Exit" -Message "`nRun TLS Security category ?") {
-            "Yes" {
+        switch (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun TLS Security category ?") {
+            'Yes' {
                 Write-Progress -Activity 'TLS Security' -Status 'Running TLS Security section' -PercentComplete 35
 
                 # creating these registry keys that have forward slashes in them                                
@@ -979,133 +962,133 @@ try {
                 # TLS Registry section
                 Set-Location $WorkingDir
 
-                $Items = Import-Csv '.\Registry.csv' -Delimiter ","
+                [System.Array]$Items = Import-Csv '.\Registry.csv' -Delimiter ','
                 foreach ($Item in $Items) {
                     if ($Item.category -eq 'TLS') {
-                        ModifyRegistry -path $Item.Path -key $Item.Key -value $Item.Value -type $Item.Type -Action $Item.Action | Out-Null
+                        Edit-Registry -path $Item.Path -key $Item.Key -value $Item.Value -type $Item.Type -Action $Item.Action | Out-Null
                     }
                 }
                 # Change current working directory to the LGPO's folder
                 Set-Location "$WorkingDir\LGPO_30"
-                .\LGPO.exe /m "..\Security-Baselines-X\TLS Security\registry.pol"               
-            } "No" { break }
-            "Exit" { &$CleanUp }
+                .\LGPO.exe /m '..\Security-Baselines-X\TLS Security\registry.pol'               
+            } 'No' { break }
+            'Exit' { &$CleanUp }
         }    
         # ==========================================End of TLS Security============================================================
         #endregion TLS-Security
 
         #region Lock-Screen    
         # ==========================================Lock Screen====================================================================
-        switch (Select-Option -Options "Yes", "No", "Exit" -Message "`nRun Lock Screen category ?") {
-            "Yes" {
+        switch (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Lock Screen category ?") {
+            'Yes' {
                 Write-Progress -Activity 'Lock Screen' -Status 'Running Lock Screen section' -PercentComplete 40
                                 
                 # Change current working directory to the LGPO's folder
                 Set-Location "$WorkingDir\LGPO_30"
-                .\LGPO.exe /m "..\Security-Baselines-X\Lock Screen Policies\registry.pol"
-                .\LGPO.exe /s "..\Security-Baselines-X\Lock Screen Policies\GptTmpl.inf"
+                .\LGPO.exe /m '..\Security-Baselines-X\Lock Screen Policies\registry.pol'
+                .\LGPO.exe /s '..\Security-Baselines-X\Lock Screen Policies\GptTmpl.inf'
 
                 # Apply the Don't display last signed-in policy
-                switch (Select-Option -SubCategory -Options "Yes", "No", "Exit" -Message "`nDon't display last signed-in on logon screen ?") {
-                    "Yes" {
+                switch (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nDon't display last signed-in on logon screen ?") {
+                    'Yes' {
                         .\LGPO.exe /s "..\Security-Baselines-X\Lock Screen Policies\Don't display last signed-in\GptTmpl.inf"                      
-                    } "No" { break }
-                    "Exit" { &$CleanUp }
+                    } 'No' { break }
+                    'Exit' { &$CleanUp }
                 }
 
                 # Apply Credential Providers Configurations policy
-                switch (Select-Option -SubCategory -Options "Yes", "No", "Exit" -Message "`nSet Windows Hello PIN as the default Credential provider and exclude Password and Smart Card ?") {
-                    "Yes" {
-                        .\LGPO.exe /m "..\Security-Baselines-X\Lock Screen Policies\Credential Providers Configurations\registry.pol"                      
-                    } "No" { break }
-                    "Exit" { &$CleanUp }
+                switch (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nSet Windows Hello PIN as the default Credential provider and exclude Password and Smart Card ?") {
+                    'Yes' {
+                        .\LGPO.exe /m '..\Security-Baselines-X\Lock Screen Policies\Credential Providers Configurations\registry.pol'                      
+                    } 'No' { break }
+                    'Exit' { &$CleanUp }
                 }
 
-            } "No" { break }
-            "Exit" { &$CleanUp }
+            } 'No' { break }
+            'Exit' { &$CleanUp }
         }    
         # ==========================================End of Lock Screen=============================================================
         #endregion Lock-Screen
 
         #region User-Account-Control
         # ==========================================User Account Control===========================================================
-        switch (Select-Option -Options "Yes", "No", "Exit" -Message "`nRun User Account Control category ?") {
-            "Yes" {
+        switch (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun User Account Control category ?") {
+            'Yes' {
                 Write-Progress -Activity 'User Account Control' -Status 'User Account Control section' -PercentComplete 45
 
                 # Change current working directory to the LGPO's folder
                 Set-Location "$WorkingDir\LGPO_30"
-                .\LGPO.exe /s "..\Security-Baselines-X\User Account Control UAC Policies\GptTmpl.inf"
+                .\LGPO.exe /s '..\Security-Baselines-X\User Account Control UAC Policies\GptTmpl.inf'
                 
                 # Apply the Automatically deny all UAC prompts on Standard accounts policy
-                switch (Select-Option -SubCategory -Options "Yes", "No", "Exit" -Message "`nAutomatically deny all UAC prompts on Standard accounts ?") {
-                    "Yes" {
-                        .\LGPO.exe /s "..\Security-Baselines-X\User Account Control UAC Policies\Automatically deny all UAC prompts on Standard accounts\GptTmpl.inf"                      
-                    } "No" { break }
-                    "Exit" { &$CleanUp }
+                switch (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nAutomatically deny all UAC prompts on Standard accounts ?") {
+                    'Yes' {
+                        .\LGPO.exe /s '..\Security-Baselines-X\User Account Control UAC Policies\Automatically deny all UAC prompts on Standard accounts\GptTmpl.inf'                      
+                    } 'No' { break }
+                    'Exit' { &$CleanUp }
                 }
 
                 # Apply the Hide the entry points for Fast User Switching policy
-                switch (Select-Option -SubCategory -Options "Yes", "No", "Exit" -Message "`nHide the entry points for Fast User Switching ?") {
-                    "Yes" {
-                        .\LGPO.exe /m "..\Security-Baselines-X\User Account Control UAC Policies\Hides the entry points for Fast User Switching\registry.pol"                      
-                    } "No" { break }
-                    "Exit" { &$CleanUp }
+                switch (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nHide the entry points for Fast User Switching ?") {
+                    'Yes' {
+                        .\LGPO.exe /m '..\Security-Baselines-X\User Account Control UAC Policies\Hides the entry points for Fast User Switching\registry.pol'                      
+                    } 'No' { break }
+                    'Exit' { &$CleanUp }
                 }               
 
                 # Apply the Only elevate executables that are signed and validated policy
-                switch (Select-Option -SubCategory -Options "Yes", "No", "Exit" -Message "`nOnly elevate executables that are signed and validated ?") {
-                    "Yes" {
-                        .\LGPO.exe /s "..\Security-Baselines-X\User Account Control UAC Policies\Only elevate executables that are signed and validated\GptTmpl.inf"
-                    } "No" { break }
-                    "Exit" { &$CleanUp }
+                switch (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nOnly elevate executables that are signed and validated ?") {
+                    'Yes' {
+                        .\LGPO.exe /s '..\Security-Baselines-X\User Account Control UAC Policies\Only elevate executables that are signed and validated\GptTmpl.inf'
+                    } 'No' { break }
+                    'Exit' { &$CleanUp }
                 }  
 
-            } "No" { break }
-            "Exit" { &$CleanUp }
+            } 'No' { break }
+            'Exit' { &$CleanUp }
         }    
         # ==========================================End of User Account Control====================================================
         #endregion User-Account-Control
 
         #region Device-Guard    
         # ==========================================Device Guard===================================================================
-        switch (Select-Option -Options "Yes", "No", "Exit" -Message "`nRun Device Guard category ?") {
-            "Yes" {
+        switch (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Device Guard category ?") {
+            'Yes' {
                 Write-Progress -Activity 'Device Guard' -Status 'Running Device Guard section' -PercentComplete 50
                 
                 # Change current working directory to the LGPO's folder
                 Set-Location "$WorkingDir\LGPO_30"
-                .\LGPO.exe /m "..\Security-Baselines-X\Device Guard Policies\registry.pol"
-            } "No" { break }
-            "Exit" { &$CleanUp }
+                .\LGPO.exe /m '..\Security-Baselines-X\Device Guard Policies\registry.pol'
+            } 'No' { break }
+            'Exit' { &$CleanUp }
         }    
         # ==========================================End of Device Guard============================================================
         #endregion Device-Guard
 
         #region Windows-Firewall    
         # ====================================================Windows Firewall=====================================================
-        switch (Select-Option -Options "Yes", "No", "Exit" -Message "`nRun Windows Firewall category ?") {
-            "Yes" {
+        switch (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Windows Firewall category ?") {
+            'Yes' {
                 Write-Progress -Activity 'Windows Firewall' -Status 'Running Windows Firewall section' -PercentComplete 55
                                 
                 # Change current working directory to the LGPO's folder
                 Set-Location "$WorkingDir\LGPO_30"
-                .\LGPO.exe /m "..\Security-Baselines-X\Windows Firewall Policies\registry.pol"
+                .\LGPO.exe /m '..\Security-Baselines-X\Windows Firewall Policies\registry.pol'
 
                 # Disables Multicast DNS (mDNS) UDP-in Firewall Rules for all 3 Firewall profiles - disables only 3 rules
-                get-NetFirewallRule |
-                Where-Object { $_.RuleGroup -eq "@%SystemRoot%\system32\firewallapi.dll,-37302" -and $_.Direction -eq "inbound" } |
+                Get-NetFirewallRule |
+                Where-Object { $_.RuleGroup -eq '@%SystemRoot%\system32\firewallapi.dll,-37302' -and $_.Direction -eq 'inbound' } |
                 ForEach-Object { Disable-NetFirewallRule -DisplayName $_.DisplayName }
-            } "No" { break }
-            "Exit" { &$CleanUp }
+            } 'No' { break }
+            'Exit' { &$CleanUp }
         }    
         # =================================================End of Windows Firewall=================================================
         #endregion Windows-Firewall
 
         #region Optional-Windows-Features    
         # =================================================Optional Windows Features===============================================
-        switch (Select-Option -Options "Yes", "No", "Exit" -Message "`nRun Optional Windows Features category ?") {
-            "Yes" {
+        switch (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Optional Windows Features category ?") {
+            'Yes' {
                 Write-Progress -Activity 'Optional Windows Features' -Status 'Running Optional Windows Features section' -PercentComplete 60
                                 
                 # since PowerShell Core (only if installed from Microsoft Store) has problem with these commands, making sure the built-in PowerShell handles them
@@ -1135,70 +1118,70 @@ try {
             Write-Host "VBSCRIPT has been uninstalled" -ForegroundColor Green}'         
                 # Uninstall Internet Explorer mode functionality for Edge
                 PowerShell.exe 'Get-WindowsCapability -Online | Where-Object { $_.Name -like ''*Browser.InternetExplorer*'' } | remove-WindowsCapability -Online'
-                Write-Host "Internet Explorer mode functionality for Edge has been uninstalled" -ForegroundColor Green
+                Write-Host 'Internet Explorer mode functionality for Edge has been uninstalled' -ForegroundColor Green
                 # Uninstall WMIC
                 PowerShell.exe 'Get-WindowsCapability -Online | Where-Object { $_.Name -like ''*wmic*'' } | remove-WindowsCapability -Online'
-                Write-Host "WMIC has been uninstalled" -ForegroundColor Green
+                Write-Host 'WMIC has been uninstalled' -ForegroundColor Green
                 # Uninstall Legacy Notepad
                 PowerShell.exe 'Get-WindowsCapability -Online | Where-Object { $_.Name -like ''*Microsoft.Windows.Notepad.System*'' } | remove-WindowsCapability -Online'
-                Write-Host "Legacy Notepad has been uninstalled. The modern multi-tabbed Notepad is unaffected." -ForegroundColor Green
-            } "No" { break }
-            "Exit" { &$CleanUp }
+                Write-Host 'Legacy Notepad has been uninstalled. The modern multi-tabbed Notepad is unaffected.' -ForegroundColor Green
+            } 'No' { break }
+            'Exit' { &$CleanUp }
         }    
         # ==============================================End of Optional Windows Features===========================================
         #endregion Optional-Windows-Features
 
         #region Windows-Networking   
         # ====================================================Windows Networking===================================================
-        switch (Select-Option -Options "Yes", "No", "Exit" -Message "`nRun Windows Networking category ?") {
-            "Yes" {
+        switch (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Windows Networking category ?") {
+            'Yes' {
                 Write-Progress -Activity 'Windows Networking' -Status 'Running Windows Networking section' -PercentComplete 65
 
                 # Change current working directory to the LGPO's folder
                 Set-Location "$WorkingDir\LGPO_30"
-                .\LGPO.exe /m "..\Security-Baselines-X\Windows Networking Policies\registry.pol"
-                .\LGPO.exe /s "..\Security-Baselines-X\Windows Networking Policies\GptTmpl.inf"
+                .\LGPO.exe /m '..\Security-Baselines-X\Windows Networking Policies\registry.pol'
+                .\LGPO.exe /s '..\Security-Baselines-X\Windows Networking Policies\GptTmpl.inf'
 
                 # Disable LMHOSTS lookup protocol on all network adapters
-                ModifyRegistry -path 'HKLM:\SYSTEM\CurrentControlSet\Services\NetBT\Parameters' -key 'EnableLMHOSTS' -value '0' -type 'DWORD' -Action 'AddOrModify'
+                Edit-Registry -path 'HKLM:\SYSTEM\CurrentControlSet\Services\NetBT\Parameters' -key 'EnableLMHOSTS' -value '0' -type 'DWORD' -Action 'AddOrModify'
 
                 # Set the Network Location of all connections to Public
                 Get-NetConnectionProfile | Set-NetConnectionProfile -NetworkCategory Public
-            } "No" { break }
-            "Exit" { &$CleanUp }
+            } 'No' { break }
+            'Exit' { &$CleanUp }
         }
         # =================================================End of Windows Networking===============================================
         #endregion Windows-Networking
 
         #region Miscellaneous-Configurations    
         # ==============================================Miscellaneous Configurations===============================================
-        switch (Select-Option -Options "Yes", "No", "Exit" -Message "`nRun Miscellaneous Configurations category ?") {
-            "Yes" {
+        switch (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Miscellaneous Configurations category ?") {
+            'Yes' {
                 Write-Progress -Activity 'Miscellaneous Configurations' -Status 'Running Miscellaneous Configurations section' -PercentComplete 70
                                 
                 # Miscellaneous Registry section
                 Set-Location $WorkingDir
-                $Items = Import-Csv '.\Registry.csv' -Delimiter ","
+                [System.Array]$Items = Import-Csv '.\Registry.csv' -Delimiter ','
                 foreach ($Item in $Items) {
                     if ($Item.category -eq 'Miscellaneous') {              
-                        ModifyRegistry -path $Item.Path -key $Item.Key -value $Item.Value -type $Item.Type -Action $Item.Action
+                        Edit-Registry -path $Item.Path -key $Item.Key -value $Item.Value -type $Item.Type -Action $Item.Action
                     }
                 }
                 # Change current working directory to the LGPO's folder
                 Set-Location "$WorkingDir\LGPO_30"
-                .\LGPO.exe /m "..\Security-Baselines-X\Miscellaneous Policies\registry.pol"
-                .\LGPO.exe /s "..\Security-Baselines-X\Miscellaneous Policies\GptTmpl.inf"
+                .\LGPO.exe /m '..\Security-Baselines-X\Miscellaneous Policies\registry.pol'
+                .\LGPO.exe /s '..\Security-Baselines-X\Miscellaneous Policies\GptTmpl.inf'
 
                 # Apply the Blocking Untrusted Fonts policy
-                switch (Select-Option -SubCategory -Options "Yes", "No", "Exit" -Message "`nBlock Untrusted Fonts ?") {
-                    "Yes" {
-                        .\LGPO.exe /m "..\Security-Baselines-X\Miscellaneous Policies\Blocking Untrusted Fonts\registry.pol"                      
-                    } "No" { break }
-                    "Exit" { &$CleanUp }
+                switch (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nBlock Untrusted Fonts ?") {
+                    'Yes' {
+                        .\LGPO.exe /m '..\Security-Baselines-X\Miscellaneous Policies\Blocking Untrusted Fonts\registry.pol'                      
+                    } 'No' { break }
+                    'Exit' { &$CleanUp }
                 }    
 
                 # Enable SMB Encryption - using force to confirm the action
-                Set-SmbServerConfiguration -EncryptData $true -force
+                Set-SmbServerConfiguration -EncryptData $true -Force
                     
                 # Allow all Windows users to use Hyper-V and Windows Sandbox by adding all Windows users to the "Hyper-V Administrators" security group using its SID
                 Get-LocalUser | Where-Object { $_.enabled -EQ 'True' } | ForEach-Object { Add-LocalGroupMember -SID 'S-1-5-32-578' -Member $_.Name -ErrorAction SilentlyContinue }
@@ -1211,114 +1194,114 @@ try {
                 # auditpol /get /category:*
 
                 # Event Viewer custom views are saved in "C:\ProgramData\Microsoft\Event Viewer\Views". files in there can be backed up and restored on new Windows installations.
-                New-Item -ItemType Directory -Path "C:\ProgramData\Microsoft\Event Viewer\Views\Hardening Script\" -force | Out-Null                
+                New-Item -ItemType Directory -Path 'C:\ProgramData\Microsoft\Event Viewer\Views\Hardening Script\' -Force | Out-Null                
                 
                 Invoke-WithoutProgress { 
                     try {
-                        Write-Host "Downloading the Custom views for Event Viewer, Please wait..." -ForegroundColor Yellow
+                        Write-Host 'Downloading the Custom views for Event Viewer, Please wait...' -ForegroundColor Yellow
                         try {
-                            Invoke-WebRequest -Uri "https://github.com/HotCakeX/Harden-Windows-Security/raw/main/Payload/EventViewerCustomViews.zip" -OutFile "$env:TEMP\EventViewerCustomViews.zip" -ErrorAction Stop
+                            Invoke-WebRequest -Uri 'https://github.com/HotCakeX/Harden-Windows-Security/raw/main/Payload/EventViewerCustomViews.zip' -OutFile "$env:TEMP\EventViewerCustomViews.zip" -ErrorAction Stop
                         }
                         catch {
-                            Write-Host "Using Azure DevOps..." -ForegroundColor Yellow
-                            Invoke-WebRequest -Uri "https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/EventViewerCustomViews.zip" -OutFile "$env:TEMP\EventViewerCustomViews.zip" -ErrorAction Stop
+                            Write-Host 'Using Azure DevOps...' -ForegroundColor Yellow
+                            Invoke-WebRequest -Uri 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/EventViewerCustomViews.zip' -OutFile "$env:TEMP\EventViewerCustomViews.zip" -ErrorAction Stop
                         }
 
                         # Due to change in event viewer custom log files, making sure no old file names exist
-                        if (Test-Path -Path "C:\ProgramData\Microsoft\Event Viewer\Views\Hardening Script") {
-                            Remove-Item -Path "C:\ProgramData\Microsoft\Event Viewer\Views\Hardening Script" -Recurse -Force
+                        if (Test-Path -Path 'C:\ProgramData\Microsoft\Event Viewer\Views\Hardening Script') {
+                            Remove-Item -Path 'C:\ProgramData\Microsoft\Event Viewer\Views\Hardening Script' -Recurse -Force
                         }
                         # Creating new sub-folder to store the custom views
-                        New-Item -Path "C:\ProgramData\Microsoft\Event Viewer\Views\Hardening Script" -ItemType Directory -Force | Out-Null
+                        New-Item -Path 'C:\ProgramData\Microsoft\Event Viewer\Views\Hardening Script' -ItemType Directory -Force | Out-Null
 
-                        Expand-Archive -Path "$env:TEMP\EventViewerCustomViews.zip" -DestinationPath "C:\ProgramData\Microsoft\Event Viewer\Views\Hardening Script" -Force
-                        Remove-item -Path "$env:TEMP\EventViewerCustomViews.zip" -Force
+                        Expand-Archive -Path "$env:TEMP\EventViewerCustomViews.zip" -DestinationPath 'C:\ProgramData\Microsoft\Event Viewer\Views\Hardening Script' -Force
+                        Remove-Item -Path "$env:TEMP\EventViewerCustomViews.zip" -Force
                         Write-Host "`nSuccessfully added Custom Views for Event Viewer" -ForegroundColor Green               
                     }
                     catch {
                         Write-Host "The required files couldn't be downloaded, Make sure you have Internet connection. Skipping..." -ForegroundColor Red
                     }
                 }                
-            } "No" { break }
-            "Exit" { &$CleanUp }
+            } 'No' { break }
+            'Exit' { &$CleanUp }
         }    
         # ============================================End of Miscellaneous Configurations==========================================
         #endregion Miscellaneous-Configurations
  
         #region Windows-Update-Configurations    
         # ====================================================Windows Update Configurations==============================================
-        switch (Select-Option -Options "Yes", "No", "Exit" -Message "`nApply Windows Update Policies ?") {
-            "Yes" {
+        switch (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nApply Windows Update Policies ?") {
+            'Yes' {
                 Write-Progress -Activity 'Windows Update Configurations' -Status 'Running Windows Update Configurations section' -PercentComplete 75
 
                 # Enable restart notification for Windows update
-                ModifyRegistry -path "HKLM:\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings" -key "RestartNotificationsAllowed2" -value "1" -type 'DWORD' -Action 'AddOrModify'
+                Edit-Registry -path 'HKLM:\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings' -key 'RestartNotificationsAllowed2' -value '1' -type 'DWORD' -Action 'AddOrModify'
                 # Change current working directory to the LGPO's folder
                 Set-Location "$WorkingDir\LGPO_30"
-                .\LGPO.exe /m "..\Security-Baselines-X\Windows Update Policies\registry.pol"
-            } "No" { break }
-            "Exit" { &$CleanUp }
+                .\LGPO.exe /m '..\Security-Baselines-X\Windows Update Policies\registry.pol'
+            } 'No' { break }
+            'Exit' { &$CleanUp }
         }    
         # ====================================================End of Windows Update Configurations=======================================
         #endregion Windows-Update-Configurations
 
         #region Edge-Browser-Configurations
         # ====================================================Edge Browser Configurations====================================================
-        switch (Select-Option -Options "Yes", "No", "Exit" -Message "`nApply Edge Browser Configurations ?") {
-            "Yes" {
+        switch (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nApply Edge Browser Configurations ?") {
+            'Yes' {
                 Write-Progress -Activity 'Edge Browser Configurations' -Status 'Running Edge Browser Configurations section' -PercentComplete 80
 
                 # Edge Browser Configurations registry
                 Set-Location $WorkingDir
-                $Items = Import-Csv '.\Registry.csv' -Delimiter ","
+                [System.Array]$Items = Import-Csv '.\Registry.csv' -Delimiter ','
                 foreach ($Item in $Items) {
                     if ($Item.category -eq 'Edge') {
-                        ModifyRegistry -path $Item.Path -key $Item.Key -value $Item.Value -type $Item.Type -Action $Item.Action
+                        Edit-Registry -path $Item.Path -key $Item.Key -value $Item.Value -type $Item.Type -Action $Item.Action
                     }
                 }
-            } "No" { break }
-            "Exit" { &$CleanUp }
+            } 'No' { break }
+            'Exit' { &$CleanUp }
         } 
         # ====================================================End of Edge Browser Configurations==============================================
         #endregion Edge-Browser-Configurations
         
         #region Certificate-Checking-Commands    
         # ====================================================Certificate Checking Commands========================================
-        switch (Select-Option -Options "Yes", "No", "Exit" -Message "`nRun Certificate Checking category ?") {
-            "Yes" {
+        switch (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Certificate Checking category ?") {
+            'Yes' {
                 Write-Progress -Activity 'Certificate Checking Commands' -Status 'Running Certificate Checking Commands section' -PercentComplete 90
                
                 try {
                     Invoke-WithoutProgress {                    
-                        Invoke-WebRequest -Uri "https://live.sysinternals.com/sigcheck64.exe" -OutFile "sigcheck64.exe" -ErrorAction Stop
+                        Invoke-WebRequest -Uri 'https://live.sysinternals.com/sigcheck64.exe' -OutFile 'sigcheck64.exe' -ErrorAction Stop
                     }                
                 }
                 catch {                    
                     Write-Host "sigcheck64.exe couldn't be downloaded from https://live.sysinternals.com" -ForegroundColor Red
                     break
                 }      
-                Write-Host -nonewline "`nListing valid certificates not rooted to the Microsoft Certificate Trust List in the" -ForegroundColor Yellow; Write-Host " User store`n" -ForegroundColor cyan
+                Write-Host -NoNewline "`nListing valid certificates not rooted to the Microsoft Certificate Trust List in the" -ForegroundColor Yellow; Write-Host " User store`n" -ForegroundColor cyan
                 .\sigcheck64.exe -tuv -accepteula -nobanner     
     
-                Write-Host -nonewline "`nListing valid certificates not rooted to the Microsoft Certificate Trust List in the" -ForegroundColor Yellow; Write-Host " Machine Store`n" -ForegroundColor Blue
+                Write-Host -NoNewline "`nListing valid certificates not rooted to the Microsoft Certificate Trust List in the" -ForegroundColor Yellow; Write-Host " Machine Store`n" -ForegroundColor Blue
                 .\sigcheck64.exe -tv -accepteula -nobanner
                 Remove-Item .\sigcheck64.exe -Force
-            } "No" { break }
-            "Exit" { &$CleanUp }
+            } 'No' { break }
+            'Exit' { &$CleanUp }
         }
         # ====================================================End of Certificate Checking Commands=================================
         #endregion Certificate-Checking-Commands
 
         #region Country-IP-Blocking    
         # ====================================================Country IP Blocking==================================================
-        switch (Select-Option -Options "Yes", "No", "Exit" -Message "`nRun Country IP Blocking category ?") {
-            "Yes" {
+        switch (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Country IP Blocking category ?") {
+            'Yes' {
                 Write-Progress -Activity 'Country IP Blocking' -Status 'Running Country IP Blocking section' -PercentComplete 95
 
                 # -RemoteAddress in New-NetFirewallRule accepts array according to Microsoft Docs, 
                 # so we use "[string[]]$IPList = $IPList -split '\r?\n' -ne ''" to convert the IP lists, which is a single multiline string, into an array
-                function BlockCountryIP {
-                    param ($IPList , $ListName)
+                function Block-CountryIP {
+                    param ([string[]]$IPList , [string]$ListName)
                     # deletes previous rules (if any) to get new up-to-date IP ranges from the sources and set new rules               
                     Remove-NetFirewallRule -DisplayName "$ListName IP range blocking" -PolicyStore localhost -ErrorAction SilentlyContinue
                     # converts the list which is in string into array
@@ -1328,22 +1311,22 @@ try {
                     New-NetFirewallRule -DisplayName "$ListName IP range blocking" -Direction Inbound -Action Block -LocalAddress Any -RemoteAddress $IPList -Description "$ListName IP range blocking" -EdgeTraversalPolicy Block -PolicyStore localhost
                     New-NetFirewallRule -DisplayName "$ListName IP range blocking" -Direction Outbound -Action Block -LocalAddress Any -RemoteAddress $IPList -Description "$ListName IP range blocking" -EdgeTraversalPolicy Block -PolicyStore localhost        
                 }
-                switch (Select-Option -SubCategory -Options "Yes", "No" -Message "Add countries in the State Sponsors of Terrorism list to the Firewall block list?") {
-                    "Yes" {
-                        $StateSponsorsofTerrorism = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/Curated-Lists/StateSponsorsOfTerrorism.txt"
-                        BlockCountryIP -IPList $StateSponsorsofTerrorism -ListName "State Sponsors of Terrorism"
-                    } "No" { break }
+                switch (Select-Option -SubCategory -Options 'Yes', 'No' -Message 'Add countries in the State Sponsors of Terrorism list to the Firewall block list?') {
+                    'Yes' {
+                        $StateSponsorsofTerrorism = Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/Curated-Lists/StateSponsorsOfTerrorism.txt'
+                        Block-CountryIP -IPList $StateSponsorsofTerrorism -ListName 'State Sponsors of Terrorism'
+                    } 'No' { break }
                 }
-                switch (Select-Option -SubCategory -Options "Yes", "No" -Message "Add OFAC Sanctioned Countries to the Firewall block list?") {
-                    "Yes" {
-                        $OFACSanctioned = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/Curated-Lists/OFACSanctioned.txt"            
-                        BlockCountryIP -IPList $OFACSanctioned -ListName "OFAC Sanctioned Countries"
-                    } "No" { break }
+                switch (Select-Option -SubCategory -Options 'Yes', 'No' -Message 'Add OFAC Sanctioned Countries to the Firewall block list?') {
+                    'Yes' {
+                        $OFACSanctioned = Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/Curated-Lists/OFACSanctioned.txt'            
+                        Block-CountryIP -IPList $OFACSanctioned -ListName 'OFAC Sanctioned Countries'
+                    } 'No' { break }
                 }
                 # how to query the number of IPs in each rule
                 # (Get-NetFirewallRule -DisplayName "OFAC Sanctioned Countries IP range blocking" -PolicyStore localhost | Get-NetFirewallAddressFilter).RemoteAddress.count
-            } "No" { break }
-            "Exit" { &$CleanUp }
+            } 'No' { break }
+            'Exit' { &$CleanUp }
         }    
         # ====================================================End of Country IP Blocking===========================================
         #endregion Country-IP-Blocking
@@ -1352,8 +1335,8 @@ try {
 
     #region Non-Admin-Commands
     # ====================================================Non-Admin Commands===================================================
-    switch (Select-Option -Options "Yes", "No", "Exit" -Message "`nRun Non-Admin category ?") {
-        "Yes" {
+    switch (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Non-Admin category ?") {
+        'Yes' {
             Write-Progress -Activity 'Non-Admin Commands' -Status 'Running Non-Admin Commands section' -PercentComplete 100
             
             # Non-Admin Registry section              
@@ -1361,17 +1344,17 @@ try {
             Invoke-WithoutProgress { 
                 # Download Registry CSV file from GitHub or Azure DevOps
                 try {
-                    Invoke-WebRequest -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Payload/Registry.csv" -OutFile ".\Registry.csv" -ErrorAction Stop                
+                    Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Payload/Registry.csv' -OutFile '.\Registry.csv' -ErrorAction Stop                
                 }
                 catch {
-                    Write-Host "Using Azure DevOps..." -ForegroundColor Yellow
-                    Invoke-WebRequest -Uri "https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/Registry.csv" -OutFile ".\Registry.csv" -ErrorAction Stop
+                    Write-Host 'Using Azure DevOps...' -ForegroundColor Yellow
+                    Invoke-WebRequest -Uri 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/Registry.csv' -OutFile '.\Registry.csv' -ErrorAction Stop
                 } 
             }
-            $Items = Import-Csv '.\Registry.csv' -Delimiter ","
+            [System.Array]$Items = Import-Csv '.\Registry.csv' -Delimiter ','
             foreach ($Item in $Items) {
                 if ($Item.category -eq 'NonAdmin') {              
-                    ModifyRegistry -path $Item.Path -key $Item.Key -value $Item.Value -type $Item.Type -Action $Item.Action
+                    Edit-Registry -path $Item.Path -key $Item.Key -value $Item.Value -type $Item.Type -Action $Item.Action
                 }
             }  
 
@@ -1384,7 +1367,7 @@ try {
                     &$WriteRainbow "################################################################################################`r`n"
                 }
                 else {    
-                    $InfoMsg = "`r`n" +
+                    [string]$InfoMsg = "`r`n" +
                     "################################################################################################`r`n" +
                     "###  Please Restart your device to completely apply the security measures and Group Policies ###`r`n" +
                     "################################################################################################`r`n"
@@ -1392,8 +1375,8 @@ try {
                 }
             }
 
-        } "No" { &$CleanUp }
-        "Exit" { &$CleanUp }
+        } 'No' { &$CleanUp }
+        'Exit' { &$CleanUp }
     }
     # ====================================================End of Non-Admin Commands============================================
     #endregion Non-Admin-Commands
@@ -1412,5 +1395,5 @@ finally {
             }
         }
     }
-    Set-Location $HOME; Remove-item -Recurse "$env:TEMP\HardeningXStuff\" -Force -ErrorAction SilentlyContinue    
+    Set-Location $HOME; Remove-Item -Recurse "$env:TEMP\HardeningXStuff\" -Force -ErrorAction SilentlyContinue    
 }

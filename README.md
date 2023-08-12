@@ -173,7 +173,7 @@ Install-Script -Name Harden-Windows-Security -Force
 
 <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/Shiny.gif" width="27" alt="Features Item"> Doesn't remove or disable Windows functionalities against Microsoft's recommendations.
   
-<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/Shiny.gif" width="27" alt="Features Item"> All of the links and sources are from official Microsoft websites, straight from the source. No bias, No misinformation and definitely No old obsolete methods. That's why there are no links to 3rd party news websites, forums, made up blogs/articles and such.
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/Shiny.gif" width="27" alt="Features Item"> All of the links and sources are from official Microsoft websites, straight from the source. No bias, No FUD, No misinformation and definitely No old obsolete methods. That's why there are no links to 3rd party news websites, forums, made up blogs/articles, and such.
 
 <details><summary>With the following exceptions</summary>
 
@@ -227,7 +227,6 @@ From Top to bottom in order:
 
 * Commands that require Administrator Privileges (click/tap on each of these to see in-depth info)
   - <a href="#may-9-2023-windows-boot-manager-cve-2023-24932">May 9 2023 Windows Boot Manager CVE-2023-24932</a>
-  - <a href="#windows-kernel-information-disclosure-cve-2023-32019">Windows Kernel Information Disclosure CVE-2023-32019</a>
   - <a href="#microsoft-security-baselines">Microsoft Security Baselines</a>
   - <a href="#microsoft-365-apps-security-baselines">Microsoft 365 Apps Security Baselines</a>
   - <a href="#microsoft-defender">Microsoft Defender</a>
@@ -282,26 +281,6 @@ From Top to bottom in order:
 You will need to restart your device once. After restart, wait at least for 5-10 minutes and then restart again, as suggested in the official page.
 
 [Microsoft Security Response Center post](https://msrc.microsoft.com/update-guide/vulnerability/CVE-2023-24932)
-
-<p align="right"><a href="#menu-back-to-top">💡 (back to categories)</a></p>
-
-<br>
-
-<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
-
-<br>
-
-## Windows Kernel Information Disclosure CVE-2023-32019<a href="#windows-kernel-information-disclosure-cve-2023-32019"><img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/ExcMark.gif" width="35" alt="Rotating pink gem denoting registry or cmdlet"></a>
-
-<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/FwMP4OraEAA-0AG.png" alt="An AI generated picture of a cat girl working in a server farm" width="600"></p>
-
-<br>
-
-<img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/roratinggem.gif" width="28" alt="Rotating pink gem denoting registry or cmdlet"> Automatically applies the security measures [**described in the KB5028407 document page**](https://support.microsoft.com/en-gb/topic/kb5028407-how-to-manage-the-vulnerability-associated-with-cve-2023-32019-bd6ed35f-48b1-41f6-bd19-d2d97270f080).
-
-[KB5027231](https://support.microsoft.com/en-us/topic/june-13-2023-kb5027231-os-build-22621-1848-8f903600-1293-4431-9c6b-736a4049666c) must be installed, so make sure your OS is fully up to date first.
-
-[Microsoft Security Response Center post](https://msrc.microsoft.com/update-guide/vulnerability/CVE-2023-32019)
 
 <p align="right"><a href="#menu-back-to-top">💡 (back to categories)</a></p>
 
@@ -872,7 +851,7 @@ These are configurations that are typically *recommended in High-Risk Environmen
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/roratinggem.gif" width="28" alt="Rotating pink gem denoting registry or cmdlet"> Enables Edge browser (stable/beta/dev channels) to download and install updates on any network, metered or not; because the updates are important and should not be suppressed.
 
-- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/roratinggem.gif" width="28" alt="Rotating pink gem denoting registry or cmdlet"> [Enables all Windows users to use Hyper-V and Windows Sandbox](https://learn.microsoft.com/en-us/archive/blogs/virtual_pc_guy/why-do-you-have-to-elevate-powershell-to-use-hyper-v-cmdlets) by adding all Windows users to the "Hyper-V Administrators" security group. By default, only Administrators can use Hyper-V or Windows Sandbox.
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/roratinggem.gif" width="28" alt="Rotating pink gem denoting registry or cmdlet"> [Enables all Windows users to use Hyper-V and Windows Sandbox](https://learn.microsoft.com/en-us/archive/blogs/virtual_pc_guy/why-do-you-have-to-elevate-powershell-to-use-hyper-v-cmdlets) by adding all Windows users to the "Hyper-V Administrators" security group using its [SID](https://learn.microsoft.com/en-us/windows/win32/secauthz/well-known-sids). By default, only Administrators can use Hyper-V or Windows Sandbox.
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/roratinggem.gif" width="28" alt="Rotating pink gem denoting registry or cmdlet"> Changes Windows time sync interval from the default every 7 days to every 4 days (= every 345600 seconds)
 

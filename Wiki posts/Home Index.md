@@ -2,7 +2,7 @@
 <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/SVG/Welcome%20to%20the%20wiki%202.svg" width="450">
 </div>
 
-# Harden Windows Security GitHub Wiki content
+# [Harden Windows Security GitHub Wiki content](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Wiki%20posts/Home%20Index.md)
 
 ## <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/pinkwings.gif" width="50"> [WDACConfig Module Main](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig)
 

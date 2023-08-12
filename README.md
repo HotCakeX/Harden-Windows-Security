@@ -910,8 +910,6 @@ These are configurations that are typically *recommended in High-Risk Environmen
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Enables [Command line process auditing](https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/component-updates/command-line-process-auditing)
 
-- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Sets the [Restrict Unauthenticated RPC Clients policy](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-remoteprocedurecall#restrictunauthenticatedrpcclients) to "Authenticated without exceptions"
-
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Enables the [RPC Endpoint Mapper Client Authentication policy](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-remoteprocedurecall#rpcendpointmapperclientauthentication)
 
 <p align="right"><a href="#menu-back-to-top">💡 (back to categories)</a></p>

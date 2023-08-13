@@ -291,7 +291,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                     }
                 }
                 catch {
-                    # Show any extra info about any possible error that might've occured                   
+                    # Show any extra info about any possible error that might've occurred                   
                     $_
                     $_.CategoryInfo
                     $_.ErrorDetails

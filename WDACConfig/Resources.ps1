@@ -67,7 +67,7 @@ function Update-self {
     if ($currentversion -ne $latestversion) {
         &$WritePink "The currently installed module's version is $currentversion while the latest version is $latestversion - Auto Updating the module now and will run your command after that 💓"
         Remove-Module -Name WDACConfig -Force
-        # Do this if the module was installed properly using Install-moodule cmdlet
+        # Do this if the module was installed properly using Install-module cmdlet
         try {
             Uninstall-Module -Name WDACConfig -AllVersions -Force -ErrorAction Stop
             Install-Module -Name WDACConfig -RequiredVersion $latestversion -Force              

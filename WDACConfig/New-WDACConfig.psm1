@@ -260,7 +260,7 @@ function New-WDACConfig {
             Copy-Item -Path C:\Windows\schemas\CodeIntegrity\ExamplePolicies\DefaultWindows_Audit.xml -Destination .\DefaultWindows_Audit.xml
            
             # Making Sure neither PowerShell core nor WDACConfig module files are added to the Supplemental policy created by -MakePolicyFromAuditLogs parameter
-            # by addibg them first to the deployed Default Windows policy in Audit mode. Because WDACConfig module files don't need to be allowed to run since they are *.ps1 and .*psm1 files
+            # by adding them first to the deployed Default Windows policy in Audit mode. Because WDACConfig module files don't need to be allowed to run since they are *.ps1 and .*psm1 files
             # And PowerShell core files will be added to the DefaultWindows Base policy anyway
             if (Test-Path 'C:\Program Files\PowerShell') {               
                 New-CIPolicy -ScanPath 'C:\Program Files\PowerShell' -Level FilePublisher -NoScript -Fallback Hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -FilePath .\AllowPowerShell.xml

@@ -238,7 +238,7 @@ function Get-AuthenticodeSignatureEx {
 
 
 
-# Function that shows the details of certificates. E.g, All intermediate cers, Leaf cert or the entire chain, depending on optional switch parameters
+# Function that shows the details of certificates. E.g, All intermediate certs, Leaf cert or the entire chain, depending on optional switch parameters
 function Get-CertificateDetails {
     # Use the param keyword to define the parameters
     param (
@@ -457,7 +457,7 @@ function Compare-SignerAndCertificate {
 
         # if file has nested certificates
         if ($null -ne $NestedCertificate) {
-            # check if both of the file's nested vertificates are available in the Signers in xml policy
+            # check if both of the file's nested certificates are available in the Signers in xml policy
             if ( $CertRootMatchPart1 -eq $true -and $CertRootMatchPart2 -eq $true) {
                 $ComparisonResult.CertRootMatch = $true # meaning all of the TBS values of the double signed file's intermediate certificates exists in the xml file's signers' TBS values
                                                         

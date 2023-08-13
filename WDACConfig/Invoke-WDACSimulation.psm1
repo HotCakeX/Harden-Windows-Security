@@ -97,7 +97,7 @@ function Invoke-WDACSimulation {
                         # if an item with the same don't doesn't already exist in the random temp folder then copy it to the root folder instead of creating a new nested directory inside there
                         Copy-Item -Path $CurrentFilePath -Destination $RandomTempDirPath                    
                     }
-                    # Fllag to tell the next command whether to process unsigned files or not
+                    # Flag to tell the next command whether to process unsigned files or not
                     $global:ProcessThePolicy = $true
                 }
             } 
@@ -175,7 +175,7 @@ function Invoke-WDACSimulation {
                 $FinalComparisonForFilesNotAllowed = Compare-Object -ReferenceObject $($FinalAllowedFilesOutputObject.Filepath) -DifferenceObject $CollectedFiles -PassThru | Where-Object { $_.SideIndicator -eq '=>' }
             }
 
-            # Showing details of files not allwoed by the selected xml policy
+            # Showing details of files not allowed by the selected xml policy
             &$WritePink "`nThere are $($FinalComparisonForFilesNotAllowed.count) files inside the folder you selected that are Not allowed by your xml policy`n"
 
             # Display the final main output array as a table - Not allowed files

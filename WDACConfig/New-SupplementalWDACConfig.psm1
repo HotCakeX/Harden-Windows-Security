@@ -37,9 +37,6 @@ function New-SupplementalWDACConfig {
 
         [parameter(Mandatory = $false)] # Used by all the entire Cmdlet        
         [Switch]$Deployit,
-
-        [Parameter(Mandatory = $false, ParameterSetName = 'Normal')]
-        [Switch]$AllowFileNameFallbacks,
         
         [ValidateSet('OriginalFileName', 'InternalName', 'FileDescription', 'ProductName', 'PackageFamilyName', 'FilePath')]
         [Parameter(Mandatory = $false, ParameterSetName = 'Normal')]
@@ -124,15 +121,15 @@ function New-SupplementalWDACConfig {
             
             # Creating a hash table to dynamically add parameters based on user input and pass them to New-Cipolicy cmdlet
             [System.Collections.Hashtable]$PolicyMakerHashTable = @{
-                FilePath             = "SupplementalPolicy $SuppPolicyName.xml"
-                ScanPath             = $ScanLocation
-                Level                = $Level
-                Fallback             = $Fallbacks
-                MultiplePolicyFormat = $true
-                UserWriteablePaths   = $true
+                FilePath               = "SupplementalPolicy $SuppPolicyName.xml"
+                ScanPath               = $ScanLocation
+                Level                  = $Level
+                Fallback               = $Fallbacks
+                MultiplePolicyFormat   = $true
+                UserWriteablePaths     = $true
+                AllowFileNameFallbacks = $true
             }
             # Assess user input parameters and add the required parameters to the hash table
-            if ($AllowFileNameFallbacks) { $PolicyMakerHashTable['AllowFileNameFallbacks'] = $true }
             if ($SpecificFileNameLevel) { $PolicyMakerHashTable['SpecificFileNameLevel'] = $SpecificFileNameLevel }  
             if ($NoScript) { $PolicyMakerHashTable['NoScript'] = $true }                 
             if (!$NoUserPEs) { $PolicyMakerHashTable['UserPEs'] = $true } 

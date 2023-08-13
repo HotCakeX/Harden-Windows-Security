@@ -89,11 +89,7 @@ function Edit-SignedWDACConfig {
         [parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps Audit Events')]
         [parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps')]
         [Switch]$NoUserPEs,
-
-        [parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps Audit Events')]
-        [parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps')]
-        [Switch]$AllowFileNameFallbacks,
-        
+      
         [ValidateSet('OriginalFileName', 'InternalName', 'FileDescription', 'ProductName', 'PackageFamilyName', 'FilePath')]
         [parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps Audit Events')]
         [parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps')]
@@ -397,15 +393,15 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
 
                             # Creating a hash table to dynamically add parameters based on user input and pass them to New-Cipolicy cmdlet
                             [System.Collections.Hashtable]$AvailableFilesOnDiskPolicyMakerHashTable = @{
-                                FilePath             = '.\RulesForFilesNotInUserSelectedPaths.xml'
-                                ScanPath             = "$env:TEMP\TemporaryScanFolderForEventViewerFiles\"
-                                Level                = $Level
-                                Fallback             = $Fallbacks
-                                MultiplePolicyFormat = $true
-                                UserWriteablePaths   = $true                            
+                                FilePath               = '.\RulesForFilesNotInUserSelectedPaths.xml'
+                                ScanPath               = "$env:TEMP\TemporaryScanFolderForEventViewerFiles\"
+                                Level                  = $Level
+                                Fallback               = $Fallbacks
+                                MultiplePolicyFormat   = $true
+                                UserWriteablePaths     = $true
+                                AllowFileNameFallbacks = $true                             
                             }
-                            # Assess user input parameters and add the required parameters to the hash table
-                            if ($AllowFileNameFallbacks) { $AvailableFilesOnDiskPolicyMakerHashTable['AllowFileNameFallbacks'] = $true }
+                            # Assess user input parameters and add the required parameters to the hash table                            
                             if ($SpecificFileNameLevel) { $AvailableFilesOnDiskPolicyMakerHashTable['SpecificFileNameLevel'] = $SpecificFileNameLevel }
                             if ($NoScript) { $AvailableFilesOnDiskPolicyMakerHashTable['NoScript'] = $true }
                             if (!$NoUserPEs) { $AvailableFilesOnDiskPolicyMakerHashTable['UserPEs'] = $true } 
@@ -444,15 +440,15 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
 
                         # Creating a hash table to dynamically add parameters based on user input and pass them to New-Cipolicy cmdlet
                         [System.Collections.Hashtable]$UserInputProgramFoldersPolicyMakerHashTable = @{
-                            FilePath             = ".\ProgramDir_ScanResults$($i).xml"
-                            ScanPath             = $ProgramsPaths[$i]
-                            Level                = $Level
-                            Fallback             = $Fallbacks
-                            MultiplePolicyFormat = $true
-                            UserWriteablePaths   = $true
+                            FilePath               = ".\ProgramDir_ScanResults$($i).xml"
+                            ScanPath               = $ProgramsPaths[$i]
+                            Level                  = $Level
+                            Fallback               = $Fallbacks
+                            MultiplePolicyFormat   = $true
+                            UserWriteablePaths     = $true
+                            AllowFileNameFallbacks = $true
                         }
-                        # Assess user input parameters and add the required parameters to the hash table
-                        if ($AllowFileNameFallbacks) { $UserInputProgramFoldersPolicyMakerHashTable['AllowFileNameFallbacks'] = $true }
+                        # Assess user input parameters and add the required parameters to the hash table                       
                         if ($SpecificFileNameLevel) { $UserInputProgramFoldersPolicyMakerHashTable['SpecificFileNameLevel'] = $SpecificFileNameLevel }
                         if ($NoScript) { $UserInputProgramFoldersPolicyMakerHashTable['NoScript'] = $true }                      
                         if (!$NoUserPEs) { $UserInputProgramFoldersPolicyMakerHashTable['UserPEs'] = $true } 
@@ -760,15 +756,15 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
 
                     # Creating a hash table to dynamically add parameters based on user input and pass them to New-Cipolicy cmdlet
                     [System.Collections.Hashtable]$UserInputProgramFoldersPolicyMakerHashTable = @{
-                        FilePath             = ".\ProgramDir_ScanResults$($i).xml"
-                        ScanPath             = $ProgramsPaths[$i]
-                        Level                = $Level
-                        Fallback             = $Fallbacks
-                        MultiplePolicyFormat = $true
-                        UserWriteablePaths   = $true
+                        FilePath               = ".\ProgramDir_ScanResults$($i).xml"
+                        ScanPath               = $ProgramsPaths[$i]
+                        Level                  = $Level
+                        Fallback               = $Fallbacks
+                        MultiplePolicyFormat   = $true
+                        UserWriteablePaths     = $true
+                        AllowFileNameFallbacks = $true
                     }
                     # Assess user input parameters and add the required parameters to the hash table
-                    if ($AllowFileNameFallbacks) { $UserInputProgramFoldersPolicyMakerHashTable['AllowFileNameFallbacks'] = $true }
                     if ($SpecificFileNameLevel) { $UserInputProgramFoldersPolicyMakerHashTable['SpecificFileNameLevel'] = $SpecificFileNameLevel }
                     if ($NoScript) { $UserInputProgramFoldersPolicyMakerHashTable['NoScript'] = $true }                      
                     if (!$NoUserPEs) { $UserInputProgramFoldersPolicyMakerHashTable['UserPEs'] = $true } 

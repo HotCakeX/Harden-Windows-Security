@@ -36,10 +36,7 @@ function New-DenyWDACConfig {
         [Parameter(Mandatory = $false, ParameterSetName = 'Normal')]
         [Parameter(Mandatory = $false, ParameterSetName = 'Drivers')]
         [System.String[]]$Fallbacks = 'Hash', # Setting the default value for the Fallbacks parameter
-
-        [Parameter(Mandatory = $false, ParameterSetName = 'Normal')]
-        [Switch]$AllowFileNameFallbacks,
-        
+       
         [ValidateSet('OriginalFileName', 'InternalName', 'FileDescription', 'ProductName', 'PackageFamilyName', 'FilePath')]
         [Parameter(Mandatory = $false, ParameterSetName = 'Normal')]
         [System.String]$SpecificFileNameLevel,
@@ -100,16 +97,16 @@ function New-DenyWDACConfig {
 
                 # Creating a hash table to dynamically add parameters based on user input and pass them to New-Cipolicy cmdlet
                 [System.Collections.Hashtable]$UserInputProgramFoldersPolicyMakerHashTable = @{
-                    FilePath             = ".\ProgramDir_ScanResults$($i).xml"
-                    ScanPath             = $ScanLocations[$i]
-                    Level                = $Level
-                    Fallback             = $Fallbacks
-                    MultiplePolicyFormat = $true
-                    UserWriteablePaths   = $true
-                    Deny                 = $true
+                    FilePath               = ".\ProgramDir_ScanResults$($i).xml"
+                    ScanPath               = $ScanLocations[$i]
+                    Level                  = $Level
+                    Fallback               = $Fallbacks
+                    MultiplePolicyFormat   = $true
+                    UserWriteablePaths     = $true
+                    Deny                   = $true
+                    AllowFileNameFallbacks = $true
                 }
-                # Assess user input parameters and add the required parameters to the hash table
-                if ($AllowFileNameFallbacks) { $UserInputProgramFoldersPolicyMakerHashTable['AllowFileNameFallbacks'] = $true }
+                # Assess user input parameters and add the required parameters to the hash table                
                 if ($SpecificFileNameLevel) { $UserInputProgramFoldersPolicyMakerHashTable['SpecificFileNameLevel'] = $SpecificFileNameLevel }
                 if ($NoScript) { $UserInputProgramFoldersPolicyMakerHashTable['NoScript'] = $true }                      
                 if (!$NoUserPEs) { $UserInputProgramFoldersPolicyMakerHashTable['UserPEs'] = $true } 

@@ -41,10 +41,7 @@ function New-WDACConfig {
         [Parameter(Mandatory = $false, ParameterSetName = 'Make Light Policy')]
         [Parameter(Mandatory = $false, ParameterSetName = 'Make DefaultWindows With Block Rules')]
         [Switch]$RequireEVSigners,
-
-        [Parameter(Mandatory = $false, ParameterSetName = 'Make Policy From Audit Logs')]
-        [Switch]$AllowFileNameFallbacks,
-        
+       
         [ValidateSet('OriginalFileName', 'InternalName', 'FileDescription', 'ProductName', 'PackageFamilyName', 'FilePath')]
         [Parameter(Mandatory = $false, ParameterSetName = 'Make Policy From Audit Logs')]
         [System.String]$SpecificFileNameLevel,
@@ -324,16 +321,16 @@ function New-WDACConfig {
 
             # Creating a hash table to dynamically add parameters based on user input and pass them to New-Cipolicy cmdlet
             [System.Collections.Hashtable]$PolicyMakerHashTable = @{
-                FilePath             = 'AuditLogsPolicy_NoDeletedFiles.xml'
-                Audit                = $true
-                Level                = $Level
-                Fallback             = $Fallbacks
-                MultiplePolicyFormat = $true
-                UserWriteablePaths   = $true
-                WarningAction        = 'SilentlyContinue'
+                FilePath               = 'AuditLogsPolicy_NoDeletedFiles.xml'
+                Audit                  = $true
+                Level                  = $Level
+                Fallback               = $Fallbacks
+                MultiplePolicyFormat   = $true
+                UserWriteablePaths     = $true
+                WarningAction          = 'SilentlyContinue'
+                AllowFileNameFallbacks = $true
             }
             # Assess user input parameters and add the required parameters to the hash table
-            if ($AllowFileNameFallbacks) { $PolicyMakerHashTable['AllowFileNameFallbacks'] = $true }
             if ($SpecificFileNameLevel) { $PolicyMakerHashTable['SpecificFileNameLevel'] = $SpecificFileNameLevel }    
             if ($NoScript) { $PolicyMakerHashTable['NoScript'] = $true }        
             if (!$NoUserPEs) { $PolicyMakerHashTable['UserPEs'] = $true } 

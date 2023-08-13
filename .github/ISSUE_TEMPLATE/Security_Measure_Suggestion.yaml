@@ -1,7 +1,7 @@
 name: New Security Measure Suggestion 🫰
 description: Suggest a new Security Measure to be added
-title: "[New Security Measure Suggestion]: "
-labels: ["New Security Measure Suggestion"]
+title: "[Suggestion]: "
+labels: ["Suggestion"]
 assignees:
   - HotCakeX
 body:
@@ -22,6 +22,7 @@ body:
     attributes:
       label: Please explain your new Security measure suggestion
       description: Please explain your new Security measure suggestion and be as detailed as possible. 🙏
+      placeholder: "I want to suggest..."
     validations:
       required: true 
       

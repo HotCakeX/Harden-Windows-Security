@@ -6,10 +6,10 @@ function Invoke-WDACSimulation {
         ConfirmImpact = 'High'
     )]
     Param(
-        [ValidateScript({ Test-Path $_ -PathType 'Container' }, ErrorMessage = "The path you selected is not a folder path.")] 
+        [ValidateScript({ Test-Path $_ -PathType 'Container' }, ErrorMessage = 'The path you selected is not a folder path.')] 
         [Parameter(Mandatory = $true)][System.String]$FolderPath,
 
-        [ValidateScript({ Test-Path $_ -PathType 'Leaf' }, ErrorMessage = "The path you selected is not a file path.")]
+        [ValidateScript({ Test-Path $_ -PathType 'Leaf' }, ErrorMessage = 'The path you selected is not a file path.')]
         [Parameter(Mandatory = $true)][System.String]$XmlFilePath,
 
         [Parameter(Mandatory = $false)][Switch]$SkipVersionCheck # Used by all the entire Cmdlet
@@ -35,7 +35,7 @@ function Invoke-WDACSimulation {
             # Store the results of the Signed files
             $SignedResult = @()
             # Get all of the files that WDAC supports from the user provided directory
-            $CollectedFiles = (Get-ChildItem -Recurse -Path $FolderPath -File -Include "*.sys", "*.exe", "*.com", "*.dll", "*.ocx", "*.msp", "*.mst", "*.msi", "*.js", "*.vbs", "*.ps1", "*.appx").FullName
+            $CollectedFiles = (Get-ChildItem -Recurse -Path $FolderPath -File -Include '*.sys', '*.exe', '*.com', '*.dll', '*.ocx', '*.msp', '*.mst', '*.msi', '*.js', '*.vbs', '*.ps1', '*.appx').FullName
 
             # Get the path of the Temp folder
             $Temp = [System.IO.Path]::GetTempPath()
@@ -141,7 +141,7 @@ function Invoke-WDACSimulation {
                 # Create a hash table with the file path and source
                 $object = @{
                     FilePath = $path
-                    Source   = "Hash"
+                    Source   = 'Hash'
                 }
                 # Convert the hash table to a PSObject and add it to the output array
                 $FinalAllowedFilesOutputObject += New-Object -TypeName PSObject -Property $object
@@ -152,14 +152,14 @@ function Invoke-WDACSimulation {
                 # Create a hash table with the file path and source
                 $object = @{
                     FilePath = $path
-                    Source   = "Signer"
+                    Source   = 'Signer'
                 }
                 # Convert the hash table to a PSObject and add it to the output array
                 $FinalAllowedFilesOutputObject += New-Object -TypeName PSObject -Property $object
             }            
 
             # Unique number of files allowed by hash
-            $UniqueFilesAllowedByHash = $FinalAllowedFilesOutputObject | Select-Object -Property FilePath, source -Unique | Where-Object { $_.source -eq "hash" }
+            $UniqueFilesAllowedByHash = $FinalAllowedFilesOutputObject | Select-Object -Property FilePath, source -Unique | Where-Object { $_.source -eq 'hash' }
 
             # Showing Signature based allowed file details
             &$WriteLavender "`n$($SignedResult.count) files inside the folder you selected are allowed by your xml policy by Signature"
@@ -221,6 +221,6 @@ Can be used with any parameter to bypass the online version check - only to be u
 # Importing argument completer ScriptBlocks
 . "$psscriptroot\ArgumentCompleters.ps1"
 # Set PSReadline tab completion to complete menu for easier access to available parameters - Only for the current session
-Set-PSReadlineKeyHandler -Key Tab -Function MenuComplete
-Register-ArgumentCompleter -CommandName "Invoke-WDACSimulation" -ParameterName "FolderPath" -ScriptBlock $ArgumentCompleterFolderPathsPicker
-Register-ArgumentCompleter -CommandName "Invoke-WDACSimulation" -ParameterName "XmlFilePath" -ScriptBlock $ArgumentCompleterXmlFilePathsPicker
+Set-PSReadLineKeyHandler -Key Tab -Function MenuComplete
+Register-ArgumentCompleter -CommandName 'Invoke-WDACSimulation' -ParameterName 'FolderPath' -ScriptBlock $ArgumentCompleterFolderPathsPicker
+Register-ArgumentCompleter -CommandName 'Invoke-WDACSimulation' -ParameterName 'XmlFilePath' -ScriptBlock $ArgumentCompleterXmlFilePathsPicker

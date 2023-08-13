@@ -1,13 +1,13 @@
 # argument tab auto-completion for SignToolPath param to show only .exe files in the current directory
 $ArgumentCompleterSignToolPath = {
-    Get-ChildItem | where-object { $_.extension -like '*.exe' } | foreach-object { return "`"$_`"" }
+    Get-ChildItem | Where-Object { $_.extension -like '*.exe' } | ForEach-Object { return "`"$_`"" }
 }
 
 # argument tab auto-completion for CertPath param to show only .cer files in current directory and 2 sub-directories recursively
 $ArgumentCompleterCertPath = {
     # Note the use of -Depth 1
     # Enclosing the $results = ... assignment in (...) also passes the value through.
-    ($results = Get-ChildItem -Depth 2 -Filter *.cer | foreach-object { "`"$_`"" })
+    ($results = Get-ChildItem -Depth 2 -Filter *.cer | ForEach-Object { "`"$_`"" })
     if (-not $results) {
         # No results?
         $null # Dummy response that prevents fallback to the default file-name completion.
@@ -41,9 +41,9 @@ $ArgumentCompleterPolicyPaths = {
 # argument tab auto-completion for Certificate common name
 $ArgumentCompleterCertificateCN = {     
     $certs = foreach ($cert in (Get-ChildItem 'Cert:\CurrentUser\my')) {
-        (($cert.Subject -split "," | Select-Object -First 1) -replace "CN=", "").Trim()
+        (($cert.Subject -split ',' | Select-Object -First 1) -replace 'CN=', '').Trim()
     }    
-    $certs | foreach-object { return "`"$_`"" }
+    $certs | ForEach-Object { return "`"$_`"" }
 }
 
 # Argument tab auto-completion for installed Appx package names
@@ -70,12 +70,12 @@ $ArgumentCompleterPolicyPathsBasePoliciesOnly = {
     ).Value  
 
     # Get the xml files in the current directory
-    Get-ChildItem | where-object { $_.extension -like '*.xml' } | ForEach-Object {
+    Get-ChildItem | Where-Object { $_.extension -like '*.xml' } | ForEach-Object {
 
         $xmlitem = [xml](Get-Content $_)
         $PolicyType = $xmlitem.SiPolicy.PolicyType
 
-        if ($PolicyType -eq "Base Policy") {
+        if ($PolicyType -eq 'Base Policy') {
 
             # Check if the file is already selected
             if ($_.FullName -notin $existing) {
@@ -100,12 +100,12 @@ $ArgumentCompleterPolicyPathsSupplementalPoliciesOnly = {
     ).Value  
 
     # Get the xml files in the current directory
-    Get-ChildItem | where-object { $_.extension -like '*.xml' } | ForEach-Object {
+    Get-ChildItem | Where-Object { $_.extension -like '*.xml' } | ForEach-Object {
 
         $xmlitem = [xml](Get-Content $_)
         $PolicyType = $xmlitem.SiPolicy.PolicyType
 
-        if ($PolicyType -eq "Supplemental Policy") {
+        if ($PolicyType -eq 'Supplemental Policy') {
 
             # Check if the file is already selected
             if ($_.FullName -notin $existing) {
@@ -134,11 +134,11 @@ $ArgumentCompleterExeFilePathsPicker = {
     # Create a new OpenFileDialog object
     $dialog = New-Object System.Windows.Forms.OpenFileDialog
     # Set the filter to show only executable files
-    $dialog.Filter = "Executable files (*.exe)|*.exe"
+    $dialog.Filter = 'Executable files (*.exe)|*.exe'
     # Show the dialog and get the result
     $result = $dialog.ShowDialog()
     # If the user clicked OK, return the selected file path
-    if ($result -eq "OK") {
+    if ($result -eq 'OK') {
         return "`"$($dialog.FileName)`""
     }
 }
@@ -150,11 +150,11 @@ $ArgumentCompleterCerFilePathsPicker = {
     # Create a new OpenFileDialog object
     $dialog = New-Object System.Windows.Forms.OpenFileDialog
     # Set the filter to show only certificate files
-    $dialog.Filter = "Certificate files (*.cer)|*.cer"
+    $dialog.Filter = 'Certificate files (*.cer)|*.cer'
     # Show the dialog and get the result
     $result = $dialog.ShowDialog()
     # If the user clicked OK, return the selected file path
-    if ($result -eq "OK") {
+    if ($result -eq 'OK') {
         return "`"$($dialog.FileName)`""
     }
 }
@@ -166,11 +166,11 @@ $ArgumentCompleterXmlFilePathsPicker = {
     # Create a new OpenFileDialog object
     $dialog = New-Object System.Windows.Forms.OpenFileDialog
     # Set the filter to show only XML files
-    $dialog.Filter = "XML files (*.xml)|*.xml"
+    $dialog.Filter = 'XML files (*.xml)|*.xml'
     # Show the dialog and get the result
     $result = $dialog.ShowDialog()
     # If the user clicked OK, return the selected file path
-    if ($result -eq "OK") {
+    if ($result -eq 'OK') {
         return "`"$($dialog.FileName)`""
     }
 }

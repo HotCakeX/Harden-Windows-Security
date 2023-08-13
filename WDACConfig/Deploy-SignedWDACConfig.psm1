@@ -7,16 +7,16 @@ function Deploy-SignedWDACConfig {
     )]
     Param(
         [ValidatePattern('\.cer$')]
-        [ValidateScript({ Test-Path $_ -PathType 'Leaf' }, ErrorMessage = "The path you selected is not a file path.")]
+        [ValidateScript({ Test-Path $_ -PathType 'Leaf' }, ErrorMessage = 'The path you selected is not a file path.')]
         [parameter(Mandatory = $false)][System.String]$CertPath,
 
         [ValidatePattern('\.xml$')]
-        [ValidateScript({ Test-Path $_ -PathType 'Leaf' }, ErrorMessage = "The path you selected is not a file path.")]
+        [ValidateScript({ Test-Path $_ -PathType 'Leaf' }, ErrorMessage = 'The path you selected is not a file path.')]
         [parameter(Mandatory = $true)][System.String[]]$PolicyPaths,
 
         [ValidateScript({
                 $certs = foreach ($cert in (Get-ChildItem 'Cert:\CurrentUser\my')) {
-                    (($cert.Subject -split "," | Select-Object -First 1) -replace "CN=", "").Trim()
+                    (($cert.Subject -split ',' | Select-Object -First 1) -replace 'CN=', '').Trim()
                 } 
                 $certs -contains $_
             }, ErrorMessage = "A certificate with the provided common name doesn't exist in the personal store of the user certificates." )]
@@ -48,7 +48,7 @@ function Deploy-SignedWDACConfig {
                 # Validate the Json file and read its content to make sure it's not corrupted
                 try { $UserConfig = $UserConfig | ConvertFrom-Json }
                 catch {            
-                    Write-Error "User Configuration Json file is corrupted, deleting it..." -ErrorAction Continue
+                    Write-Error 'User Configuration Json file is corrupted, deleting it...' -ErrorAction Continue
                     # Calling this function with this parameter automatically does its job and breaks/stops the operation
                     Set-CommonWDACConfig -DeleteUserConfig         
                 }                
@@ -72,7 +72,7 @@ function Deploy-SignedWDACConfig {
                     $CertPath = $UserConfig.CertificatePath
                 }            
                 else {
-                    throw "The currently saved value for CertPath in user configurations is invalid."
+                    throw 'The currently saved value for CertPath in user configurations is invalid.'
                 }
             }
             else {
@@ -89,7 +89,7 @@ function Deploy-SignedWDACConfig {
                     $CertCN = $UserConfig.CertificateCommonName
                 }
                 else {
-                    throw "The currently saved value for CertCN in user configurations is invalid."
+                    throw 'The currently saved value for CertCN in user configurations is invalid.'
                 }
             }
             else {
@@ -106,9 +106,9 @@ function Deploy-SignedWDACConfig {
             $xml = [xml](Get-Content $PolicyPath)
             $PolicyType = $xml.SiPolicy.PolicyType
             $PolicyID = $xml.SiPolicy.PolicyID
-            $PolicyName = ($xml.SiPolicy.Settings.Setting | Where-Object { $_.provider -eq "PolicyInfo" -and $_.valuename -eq "Name" -and $_.key -eq "Information" }).value.string
+            $PolicyName = ($xml.SiPolicy.Settings.Setting | Where-Object { $_.provider -eq 'PolicyInfo' -and $_.valuename -eq 'Name' -and $_.key -eq 'Information' }).value.string
             Remove-Item -Path ".\$PolicyID.cip" -ErrorAction SilentlyContinue
-            if ($PolicyType -eq "Supplemental Policy") {          
+            if ($PolicyType -eq 'Supplemental Policy') {          
                 Add-SignerRule -FilePath $PolicyPath -CertificatePath $CertPath -Update -User -Kernel
             }
             else {            
@@ -126,31 +126,31 @@ function Deploy-SignedWDACConfig {
                 'Wait'         = $true
                 'ErrorAction'  = 'Stop'
             }
-            if (!$Debug) { $ProcessParams['RedirectStandardOutput'] = "NUL" } 
+            if (!$Debug) { $ProcessParams['RedirectStandardOutput'] = 'NUL' } 
             # Sign the files with the specified cert
             Start-Process @ProcessParams
 
             Remove-Item ".\$PolicyID.cip" -Force            
             Rename-Item "$PolicyID.cip.p7" -NewName "$PolicyID.cip" -Force
             CiTool --update-policy ".\$PolicyID.cip" -json | Out-Null
-            Write-host "`n`npolicy with the following details has been Signed and Deployed in Enforced Mode:" -ForegroundColor Green        
+            Write-Host "`n`npolicy with the following details has been Signed and Deployed in Enforced Mode:" -ForegroundColor Green        
             Write-Output "PolicyName = $PolicyName"
             Write-Output "PolicyGUID = $PolicyID`n"
             Remove-Item -Path ".\$PolicyID.cip" -Force
 
             # Ask user question about whether or not to add the Signed policy xml file to the User Config Json for easier usage later
-            $userInput = ""
+            $userInput = ''
             while ($userInput -notin 1, 2) {
-                $userInput = $(Write-host "Add the Signed policy xml file path just created to the User Configurations? Please enter 1 to Confirm or 2 to Skip." -ForegroundColor Cyan ; Read-Host) 
+                $userInput = $(Write-Host 'Add the Signed policy xml file path just created to the User Configurations? Please enter 1 to Confirm or 2 to Skip.' -ForegroundColor Cyan ; Read-Host) 
                 if ($userInput -eq 1) {
                     Set-CommonWDACConfig -SignedPolicyPath $PolicyPath
                     &$WriteViolet "Added $PolicyPath to the User Configuration file."             
                 }
                 elseif ($userInput -eq 2) {                    
-                    &$WritePink "Skipping..."                  
+                    &$WritePink 'Skipping...'                  
                 }
                 else {
-                    Write-Warning "Invalid input. Please enter 1 or 2 only."
+                    Write-Warning 'Invalid input. Please enter 1 or 2 only.'
                 }               
             }
         }
@@ -193,8 +193,8 @@ Can be used with any parameter to bypass the online version check - only to be u
 # Importing argument completer ScriptBlocks
 . "$psscriptroot\ArgumentCompleters.ps1"
 # Set PSReadline tab completion to complete menu for easier access to available parameters - Only for the current session
-Set-PSReadlineKeyHandler -Key Tab -Function MenuComplete
-Register-ArgumentCompleter -CommandName "Deploy-SignedWDACConfig" -ParameterName "CertCN" -ScriptBlock $ArgumentCompleterCertificateCN
-Register-ArgumentCompleter -CommandName "Deploy-SignedWDACConfig" -ParameterName "PolicyPaths" -ScriptBlock $ArgumentCompleterPolicyPaths
-Register-ArgumentCompleter -CommandName "Deploy-SignedWDACConfig" -ParameterName "CertPath" -ScriptBlock $ArgumentCompleterCertPath
-Register-ArgumentCompleter -CommandName "Deploy-SignedWDACConfig" -ParameterName "SignToolPath" -ScriptBlock $ArgumentCompleterSignToolPath
+Set-PSReadLineKeyHandler -Key Tab -Function MenuComplete
+Register-ArgumentCompleter -CommandName 'Deploy-SignedWDACConfig' -ParameterName 'CertCN' -ScriptBlock $ArgumentCompleterCertificateCN
+Register-ArgumentCompleter -CommandName 'Deploy-SignedWDACConfig' -ParameterName 'PolicyPaths' -ScriptBlock $ArgumentCompleterPolicyPaths
+Register-ArgumentCompleter -CommandName 'Deploy-SignedWDACConfig' -ParameterName 'CertPath' -ScriptBlock $ArgumentCompleterCertPath
+Register-ArgumentCompleter -CommandName 'Deploy-SignedWDACConfig' -ParameterName 'SignToolPath' -ScriptBlock $ArgumentCompleterSignToolPath

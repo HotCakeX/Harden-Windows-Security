@@ -1,16 +1,16 @@
 #Requires -RunAsAdministrator
 function Remove-WDACConfig {
     [CmdletBinding(
-        DefaultParameterSetName = "Signed Base",
+        DefaultParameterSetName = 'Signed Base',
         SupportsShouldProcess = $true,
         PositionalBinding = $false,
         ConfirmImpact = 'High'
     )]
     Param(
-        [Alias("S")]
-        [Parameter(Mandatory = $false, ParameterSetName = "Signed Base")][Switch]$SignedBase,
-        [Alias("U")]
-        [Parameter(Mandatory = $false, ParameterSetName = "Unsigned Or Supplemental")][Switch]$UnsignedOrSupplemental,
+        [Alias('S')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Signed Base')][Switch]$SignedBase,
+        [Alias('U')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Unsigned Or Supplemental')][Switch]$UnsignedOrSupplemental,
 
         [ValidatePattern('\.xml$')]
         [ValidateScript({
@@ -21,17 +21,17 @@ function Remove-WDACConfig {
                     $RedFlag2 = $xmlTest.SiPolicy.UpdatePolicySigners.UpdatePolicySigner.SignerId
                     if ($RedFlag1 -or $RedFlag2) { return $True }
                 }
-            }, ErrorMessage = "The policy XML file(s) you chose are Unsigned policies. Please use Remove-WDACConfig cmdlet with -UnsignedOrSupplemental parameter instead.")]
-        [parameter(Mandatory = $true, ParameterSetName = "Signed Base", ValueFromPipelineByPropertyName = $true)]
+            }, ErrorMessage = 'The policy XML file(s) you chose are Unsigned policies. Please use Remove-WDACConfig cmdlet with -UnsignedOrSupplemental parameter instead.')]
+        [parameter(Mandatory = $true, ParameterSetName = 'Signed Base', ValueFromPipelineByPropertyName = $true)]
         [System.String[]]$PolicyPaths,
 
         [ValidateScript({
                 $certs = foreach ($cert in (Get-ChildItem 'Cert:\CurrentUser\my')) {
-                (($cert.Subject -split "," | Select-Object -First 1) -replace "CN=", "").Trim()
+                (($cert.Subject -split ',' | Select-Object -First 1) -replace 'CN=', '').Trim()
                 }
                 $certs -contains $_
             }, ErrorMessage = "A certificate with the provided common name doesn't exist in the personal store of the user certificates." )]
-        [parameter(Mandatory = $false, ParameterSetName = "Signed Base", ValueFromPipelineByPropertyName = $true)]
+        [parameter(Mandatory = $false, ParameterSetName = 'Signed Base', ValueFromPipelineByPropertyName = $true)]
         [System.String]$CertCN,
 
         # https://stackoverflow.com/questions/76143006/how-to-prevent-powershell-validateset-argument-completer-from-suggesting-the-sam/76143269
@@ -40,7 +40,7 @@ function Remove-WDACConfig {
                 param($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameters)
 
                 # Get a list of policies using the CiTool, excluding system policies and policies that aren't on disk.
-                $policies = (CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsOnDisk -eq "True" } | Where-Object { $_.IsSystemPolicy -ne "True" }
+                $policies = (CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsOnDisk -eq 'True' } | Where-Object { $_.IsSystemPolicy -ne 'True' }
                 # Create a hashtable mapping policy IDs to policy names. This will be used later to check if a policy name already exists.
                 $IDNameMap = @{}
                 foreach ($policy in $policies) {
@@ -63,7 +63,7 @@ function Remove-WDACConfig {
                 if ($_ -notin [PolicyIDzx]::new().GetValidValues()) { throw "Invalid policy ID: $_" }
                 $true
             })]
-        [Parameter(Mandatory = $false, ParameterSetName = "Unsigned Or Supplemental")]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Unsigned Or Supplemental')]
         [System.String[]]$PolicyIDs,
 
         # https://stackoverflow.com/questions/76143006/how-to-prevent-powershell-validateset-argument-completer-from-suggesting-the-sam/76143269
@@ -73,7 +73,7 @@ function Remove-WDACConfig {
                 param($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameters)
 
                 # Get a list of policies using the CiTool, excluding system policies and policies that aren't on disk.
-                $policies = (CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsOnDisk -eq "True" } | Where-Object { $_.IsSystemPolicy -ne "True" }
+                $policies = (CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsOnDisk -eq 'True' } | Where-Object { $_.IsSystemPolicy -ne 'True' }
 
                 # Create a hashtable mapping policy names to policy IDs. This will be used later to check if a policy ID already exists.
                 $NameIDMap = @{}
@@ -104,10 +104,10 @@ function Remove-WDACConfig {
                 if ($_ -notin [PolicyNamezx]::new().GetValidValues()) { throw "Invalid policy name: $_" }
                 $true
             })]
-        [Parameter(Mandatory = $false, ParameterSetName = "Unsigned Or Supplemental")]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Unsigned Or Supplemental')]
         [System.String[]]$PolicyNames,
 
-        [parameter(Mandatory = $false, ParameterSetName = "Signed Base", ValueFromPipelineByPropertyName = $true)]
+        [parameter(Mandatory = $false, ParameterSetName = 'Signed Base', ValueFromPipelineByPropertyName = $true)]
         [System.String]$SignToolPath,
 
         [Parameter(Mandatory = $false)][Switch]$SkipVersionCheck
@@ -124,7 +124,7 @@ function Remove-WDACConfig {
         $Debug = $PSBoundParameters.Debug.IsPresent        
 
         #region User-Configurations-Processing-Validation
-        if ($PSCmdlet.ParameterSetName -eq "Signed Base") {
+        if ($PSCmdlet.ParameterSetName -eq 'Signed Base') {
             # If any of these parameters, that are mandatory for all of the position 0 parameters, isn't supplied by user
             if (!$SignToolPath -or !$CertCN) {
                 # Read User configuration file if it exists
@@ -133,7 +133,7 @@ function Remove-WDACConfig {
                     # Validate the Json file and read its content to make sure it's not corrupted
                     try { $UserConfig = $UserConfig | ConvertFrom-Json }
                     catch {            
-                        Write-Error "User Configuration Json file is corrupted, deleting it..." -ErrorAction Continue
+                        Write-Error 'User Configuration Json file is corrupted, deleting it...' -ErrorAction Continue
                         # Calling this function with this parameter automatically does its job and breaks/stops the operation
                         Set-CommonWDACConfig -DeleteUserConfig         
                     }                
@@ -157,7 +157,7 @@ function Remove-WDACConfig {
                         $CertCN = $UserConfig.CertificateCommonName
                     }
                     else {
-                        throw "The currently saved value for CertCN in user configurations is invalid."
+                        throw 'The currently saved value for CertCN in user configurations is invalid.'
                     }
                 }
                 else {
@@ -170,7 +170,7 @@ function Remove-WDACConfig {
         # ValidateSet for Policy names 
         Class PolicyNamezx : System.Management.Automation.IValidateSetValuesGenerator {
             [System.String[]] GetValidValues() {
-                $PolicyNamezx = ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsOnDisk -eq "True" } | Where-Object { $_.IsSystemPolicy -ne "True" }).Friendlyname | Select-Object -Unique
+                $PolicyNamezx = ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsOnDisk -eq 'True' } | Where-Object { $_.IsSystemPolicy -ne 'True' }).Friendlyname | Select-Object -Unique
    
                 return [System.String[]]$PolicyNamezx
             }
@@ -179,7 +179,7 @@ function Remove-WDACConfig {
         # ValidateSet for Policy IDs     
         Class PolicyIDzx : System.Management.Automation.IValidateSetValuesGenerator {
             [System.String[]] GetValidValues() {
-                $PolicyIDzx = ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsOnDisk -eq "True" } | Where-Object { $_.IsSystemPolicy -ne "True" }).policyID
+                $PolicyIDzx = ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsOnDisk -eq 'True' } | Where-Object { $_.IsSystemPolicy -ne 'True' }).policyID
    
                 return [System.String[]]$PolicyIDzx
             }
@@ -194,7 +194,7 @@ function Remove-WDACConfig {
 
             # Defines a method to get valid policy names from the policies on disk that aren't system policies.
             [System.String[]] GetValidValues() {
-                $policies = (CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsOnDisk -eq "True" } | Where-Object { $_.IsSystemPolicy -ne "True" }
+                $policies = (CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsOnDisk -eq 'True' } | Where-Object { $_.IsSystemPolicy -ne 'True' }
                 self::$IDNameMap = @{}
                 foreach ($policy in $policies) {
                     self::$IDNameMap[$policy.policyID] = $policy.Friendlyname
@@ -216,7 +216,7 @@ function Remove-WDACConfig {
 
             # Defines a method to get valid policy IDs from the policies on disk that aren't system policies.
             [System.String[]] GetValidValues() {
-                $policies = (CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsOnDisk -eq "True" } | Where-Object { $_.IsSystemPolicy -ne "True" }
+                $policies = (CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsOnDisk -eq 'True' } | Where-Object { $_.IsSystemPolicy -ne 'True' }
                 self::$NameIDMap = @{}
                 foreach ($policy in $policies) {
                     self::$NameIDMap[$policy.Friendlyname] = $policy.policyID
@@ -239,7 +239,7 @@ function Remove-WDACConfig {
                 $xml = [xml](Get-Content $PolicyPath)
                 $PolicyID = $xml.SiPolicy.PolicyID
                 # Prevent users from accidentally attempting to remove policies that aren't even deployed on the system
-                $CurrentPolicyIDs = ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsSystemPolicy -ne "True" }).policyID | ForEach-Object { "{$_}" }
+                $CurrentPolicyIDs = ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsSystemPolicy -ne 'True' }).policyID | ForEach-Object { "{$_}" }
                 Write-Debug -Message "The policy ID of the currently processing xml file is $PolicyID"
                 if ($CurrentPolicyIDs -notcontains $PolicyID) {
                     Write-Error -Message "The selected policy file isn't deployed on the system." -ErrorAction Stop
@@ -247,22 +247,22 @@ function Remove-WDACConfig {
 
                 ######################## Sanitize the policy file by removing SupplementalPolicySigners ########################
                 $SuppSingerIDs = $xml.SiPolicy.SupplementalPolicySigners.SupplementalPolicySigner.SignerId
-                $PolicyName = ($xml.SiPolicy.Settings.Setting | Where-Object { $_.provider -eq "PolicyInfo" -and $_.valuename -eq "Name" -and $_.key -eq "Information" }).value.string
+                $PolicyName = ($xml.SiPolicy.Settings.Setting | Where-Object { $_.provider -eq 'PolicyInfo' -and $_.valuename -eq 'Name' -and $_.key -eq 'Information' }).value.string
                 if ($SuppSingerIDs) {
                     Write-Host "`n$($SuppSingerIDs.count) SupplementalPolicySigners have been found in $PolicyName policy, removing them now..." -ForegroundColor Yellow
                     $SuppSingerIDs | ForEach-Object {
                         $PolContent = Get-Content -Raw -Path $PolicyPath
                         $PolContent -match "<Signer ID=`"$_`"[\S\s]*</Signer>" | Out-Null
-                        $PolContent = $PolContent -replace $Matches[0], ""
+                        $PolContent = $PolContent -replace $Matches[0], ''
                         Set-Content -Value $PolContent -Path $PolicyPath
                     }
-                    $PolContent -match "<SupplementalPolicySigners>[\S\s]*</SupplementalPolicySigners>" | Out-Null
-                    $PolContent = $PolContent -replace $Matches[0], ""
+                    $PolContent -match '<SupplementalPolicySigners>[\S\s]*</SupplementalPolicySigners>' | Out-Null
+                    $PolContent = $PolContent -replace $Matches[0], ''
                     Set-Content -Value $PolContent -Path $PolicyPath
 
                     # remove empty lines from the entire policy file
-                    (Get-Content -Path $PolicyPath) | Where-Object { $_.trim() -ne "" } | Set-Content -Path $PolicyPath -Force
-                    Write-Host "Policy successfully sanitized and all SupplementalPolicySigners have been removed." -ForegroundColor Green
+                    (Get-Content -Path $PolicyPath) | Where-Object { $_.trim() -ne '' } | Set-Content -Path $PolicyPath -Force
+                    Write-Host 'Policy successfully sanitized and all SupplementalPolicySigners have been removed.' -ForegroundColor Green
                 }
                 else {
                     Write-Host "`nNo sanitization required because no SupplementalPolicySigners have been found in $PolicyName policy." -ForegroundColor Green
@@ -279,7 +279,7 @@ function Remove-WDACConfig {
                     'Wait'         = $true
                     'ErrorAction'  = 'Stop'
                 }
-                if (!$Debug) { $ProcessParams['RedirectStandardOutput'] = "NUL" } 
+                if (!$Debug) { $ProcessParams['RedirectStandardOutput'] = 'NUL' } 
                 # Sign the files with the specified cert
                 Start-Process @ProcessParams
 
@@ -304,10 +304,10 @@ function Remove-WDACConfig {
             # Empty array to store Policy IDs based on the input name, this will take care of the situations where multiple policies with the same name are deployed
             $NameID = @()
             foreach ($PolicyName in $PolicyNames) {
-                $NameID += ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsOnDisk -eq "True" } | Where-Object { $_.FriendlyName -eq $PolicyName }).PolicyID
+                $NameID += ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsOnDisk -eq 'True' } | Where-Object { $_.FriendlyName -eq $PolicyName }).PolicyID
             }
 
-            Write-Debug -Message "The Following policy IDs have been gathered from the supplied policy names and are going to be removed from the system"
+            Write-Debug -Message 'The Following policy IDs have been gathered from the supplied policy names and are going to be removed from the system'
             if ($Debug) { $NameID | Select-Object -Unique | ForEach-Object { Write-Debug -Message "$_" } }
 
             $NameID | Select-Object -Unique | ForEach-Object {
@@ -349,6 +349,6 @@ Can be used with any parameter to bypass the online version check - only to be u
 . "$psscriptroot\ArgumentCompleters.ps1"
 # Set PSReadline tab completion to complete menu for easier access to available parameters - Only for the current session
 Set-PSReadLineKeyHandler -Key Tab -Function MenuComplete
-Register-ArgumentCompleter -CommandName "Remove-WDACConfig" -ParameterName "CertCN" -ScriptBlock $ArgumentCompleterCertificateCN
-Register-ArgumentCompleter -CommandName "Remove-WDACConfig" -ParameterName "PolicyPaths" -ScriptBlock $ArgumentCompleterPolicyPathsBasePoliciesOnly
-Register-ArgumentCompleter -CommandName "Remove-WDACConfig" -ParameterName "SignToolPath" -ScriptBlock $ArgumentCompleterSignToolPath
+Register-ArgumentCompleter -CommandName 'Remove-WDACConfig' -ParameterName 'CertCN' -ScriptBlock $ArgumentCompleterCertificateCN
+Register-ArgumentCompleter -CommandName 'Remove-WDACConfig' -ParameterName 'PolicyPaths' -ScriptBlock $ArgumentCompleterPolicyPathsBasePoliciesOnly
+Register-ArgumentCompleter -CommandName 'Remove-WDACConfig' -ParameterName 'SignToolPath' -ScriptBlock $ArgumentCompleterSignToolPath

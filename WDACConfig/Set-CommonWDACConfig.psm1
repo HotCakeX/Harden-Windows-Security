@@ -11,9 +11,9 @@ function Set-CommonWDACConfig {
                     if ($RedFlag1 -or $RedFlag2) {                          
                         return $True                       
                     }                    
-                    else { throw "The selected policy xml file is Unsigned, Please select a Signed policy." }               
+                    else { throw 'The selected policy xml file is Unsigned, Please select a Signed policy.' }               
                 }
-            }, ErrorMessage = "The selected policy xml file is Unsigned, Please select a Signed policy.")]
+            }, ErrorMessage = 'The selected policy xml file is Unsigned, Please select a Signed policy.')]
         [parameter(Mandatory = $false)][System.String]$SignedPolicyPath,
 
         [ValidatePattern('\.xml$')]
@@ -25,18 +25,18 @@ function Set-CommonWDACConfig {
                     if (!$RedFlag1 -and !$RedFlag2) {                      
                         return $True
                     }                   
-                    else { throw "The selected policy xml file is Signed, Please select an Unsigned policy." }                        
+                    else { throw 'The selected policy xml file is Signed, Please select an Unsigned policy.' }                        
                 }
-            }, ErrorMessage = "The selected policy xml file is Signed, Please select an Unsigned policy.")]
+            }, ErrorMessage = 'The selected policy xml file is Signed, Please select an Unsigned policy.')]
         [parameter(Mandatory = $false)][System.String]$UnsignedPolicyPath,
 
         [ValidatePattern('\.exe$')]
-        [ValidateScript({ Test-Path $_ -PathType 'Leaf' }, ErrorMessage = "The path you selected is not a file path.")]
+        [ValidateScript({ Test-Path $_ -PathType 'Leaf' }, ErrorMessage = 'The path you selected is not a file path.')]
         [parameter(Mandatory = $false)][System.String]$SignToolPath,
         
         [ValidateScript({
                 $certs = foreach ($cert in (Get-ChildItem 'Cert:\CurrentUser\my')) {
-            (($cert.Subject -split "," | Select-Object -First 1) -replace "CN=", "").Trim()
+            (($cert.Subject -split ',' | Select-Object -First 1) -replace 'CN=', '').Trim()
                 } 
                 $certs -contains $_
             }, ErrorMessage = "A certificate with the provided common name doesn't exist in the personal store of the user certificates." )]
@@ -46,7 +46,7 @@ function Set-CommonWDACConfig {
         [parameter(Mandatory = $false)][System.Guid]$StrictKernelNoFlightRootsPolicyGUID,
         
         [ValidatePattern('\.cer$')]
-        [ValidateScript({ Test-Path $_ -PathType 'Leaf' }, ErrorMessage = "The path you selected is not a file path.")]
+        [ValidateScript({ Test-Path $_ -PathType 'Leaf' }, ErrorMessage = 'The path you selected is not a file path.')]
         [parameter(Mandatory = $false)][System.String]$CertPath,        
         [parameter(Mandatory = $false)][switch]$DeleteUserConfig,
         [Parameter(Mandatory = $false)][Switch]$SkipVersionCheck
@@ -67,13 +67,13 @@ function Set-CommonWDACConfig {
 
         # Create User configuration file if it doesn't already exist
         if (-NOT (Test-Path -Path "$env:USERPROFILE\.WDACConfig\UserConfigurations.json")) { 
-            New-Item -ItemType File -Path "$env:USERPROFILE\.WDACConfig\" -Name "UserConfigurations.json" -Force -ErrorAction Stop | Out-Null
+            New-Item -ItemType File -Path "$env:USERPROFILE\.WDACConfig\" -Name 'UserConfigurations.json' -Force -ErrorAction Stop | Out-Null
             Write-Debug -Message "The UserConfigurations.json file in \.WDACConfig\ folder has been created because it didn't exist."
         }
 
         if ($DeleteUserConfig) {        
             Remove-Item -Path "$env:USERPROFILE\.WDACConfig\" -Recurse -Force
-            &$WritePink "User Configurations for WDACConfig module have been deleted."
+            &$WritePink 'User Configurations for WDACConfig module have been deleted.'
             break
         }
 
@@ -81,7 +81,7 @@ function Set-CommonWDACConfig {
         Start-MpScan -ScanType CustomScan -ScanPath "$env:USERPROFILE\.WDACConfig\UserConfigurations.json"
 
         if ($PSBoundParameters.Count -eq 0) {
-            Write-Error "No parameter was selected."
+            Write-Error 'No parameter was selected.'
             break
         }
 
@@ -97,13 +97,13 @@ function Set-CommonWDACConfig {
 
         # An object to hold the User configurations
         $UserConfigurationsObject = [PSCustomObject]@{
-            SignedPolicyPath                    = ""
-            UnsignedPolicyPath                  = ""
-            SignToolCustomPath                  = ""
-            CertificateCommonName               = ""
-            CertificatePath                     = ""
-            StrictKernelPolicyGUID              = ""
-            StrictKernelNoFlightRootsPolicyGUID = ""
+            SignedPolicyPath                    = ''
+            UnsignedPolicyPath                  = ''
+            SignToolCustomPath                  = ''
+            CertificateCommonName               = ''
+            CertificatePath                     = ''
+            StrictKernelPolicyGUID              = ''
+            StrictKernelNoFlightRootsPolicyGUID = ''
         }
     }
     process {
@@ -213,9 +213,9 @@ Can be used with any parameter to bypass the online version check - only to be u
 # Importing argument completer ScriptBlocks
 . "$psscriptroot\ArgumentCompleters.ps1"
 # Set PSReadline tab completion to complete menu for easier access to available parameters - Only for the current session
-Set-PSReadlineKeyHandler -Key Tab -Function MenuComplete
-Register-ArgumentCompleter -CommandName "Set-CommonWDACConfig" -ParameterName "CertCN" -ScriptBlock $ArgumentCompleterCertificateCN
-Register-ArgumentCompleter -CommandName "Set-CommonWDACConfig" -ParameterName "CertPath" -ScriptBlock $ArgumentCompleterCerFilePathsPicker
-Register-ArgumentCompleter -CommandName "Set-CommonWDACConfig" -ParameterName "SignToolPath" -ScriptBlock $ArgumentCompleterExeFilePathsPicker
-Register-ArgumentCompleter -CommandName "Set-CommonWDACConfig" -ParameterName "SignedPolicyPath" -ScriptBlock $ArgumentCompleterPolicyPathsBasePoliciesOnly
-Register-ArgumentCompleter -CommandName "Set-CommonWDACConfig" -ParameterName "UnsignedPolicyPath" -ScriptBlock $ArgumentCompleterPolicyPathsBasePoliciesOnly
+Set-PSReadLineKeyHandler -Key Tab -Function MenuComplete
+Register-ArgumentCompleter -CommandName 'Set-CommonWDACConfig' -ParameterName 'CertCN' -ScriptBlock $ArgumentCompleterCertificateCN
+Register-ArgumentCompleter -CommandName 'Set-CommonWDACConfig' -ParameterName 'CertPath' -ScriptBlock $ArgumentCompleterCerFilePathsPicker
+Register-ArgumentCompleter -CommandName 'Set-CommonWDACConfig' -ParameterName 'SignToolPath' -ScriptBlock $ArgumentCompleterExeFilePathsPicker
+Register-ArgumentCompleter -CommandName 'Set-CommonWDACConfig' -ParameterName 'SignedPolicyPath' -ScriptBlock $ArgumentCompleterPolicyPathsBasePoliciesOnly
+Register-ArgumentCompleter -CommandName 'Set-CommonWDACConfig' -ParameterName 'UnsignedPolicyPath' -ScriptBlock $ArgumentCompleterPolicyPathsBasePoliciesOnly

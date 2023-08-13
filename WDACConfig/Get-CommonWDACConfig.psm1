@@ -41,7 +41,7 @@ function Get-CommonWDACConfig {
             $CurrentUserConfigurations = $CurrentUserConfigurations | ConvertFrom-Json
         }
         catch {
-            Write-Warning "The UserConfigurations.json was corrupted, clearing it."
+            Write-Warning 'The UserConfigurations.json was corrupted, clearing it.'
             Set-Content -Path "$env:USERPROFILE\.WDACConfig\UserConfigurations.json" -Value ''
         }        
     }
@@ -108,4 +108,4 @@ Can be used with any parameter to bypass the online version check - only to be u
 #>
 
 # Set PSReadline tab completion to complete menu for easier access to available parameters - Only for the current session
-Set-PSReadlineKeyHandler -Key Tab -Function MenuComplete
+Set-PSReadLineKeyHandler -Key Tab -Function MenuComplete

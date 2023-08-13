@@ -1,63 +1,63 @@
 #Requires -RunAsAdministrator
 function New-SupplementalWDACConfig {
     [CmdletBinding(
-        DefaultParameterSetName = "Normal",
+        DefaultParameterSetName = 'Normal',
         SupportsShouldProcess = $true,
         PositionalBinding = $false,
         ConfirmImpact = 'High'
     )]
     Param(
         # Main parameters for position 0
-        [Alias("N")]
-        [Parameter(Mandatory = $false, ParameterSetName = "Normal")][Switch]$Normal,
-        [Alias("W")]
-        [Parameter(Mandatory = $false, ParameterSetName = "FilePath With WildCards")][Switch]$FilePathWildCards,
-        [Alias("P")]
-        [parameter(mandatory = $false, ParameterSetName = "Installed AppXPackages")][switch]$InstalledAppXPackages,
+        [Alias('N')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Normal')][Switch]$Normal,
+        [Alias('W')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'FilePath With WildCards')][Switch]$FilePathWildCards,
+        [Alias('P')]
+        [parameter(mandatory = $false, ParameterSetName = 'Installed AppXPackages')][switch]$InstalledAppXPackages,
         
-        [parameter(Mandatory = $true, ParameterSetName = "Installed AppXPackages", ValueFromPipelineByPropertyName = $true)]
+        [parameter(Mandatory = $true, ParameterSetName = 'Installed AppXPackages', ValueFromPipelineByPropertyName = $true)]
         [System.String]$PackageName,
 
-        [ValidateScript({ Test-Path $_ -PathType 'Container' }, ErrorMessage = "The path you selected is not a folder path.")] 
-        [parameter(Mandatory = $true, ParameterSetName = "Normal", ValueFromPipelineByPropertyName = $true)]        
+        [ValidateScript({ Test-Path $_ -PathType 'Container' }, ErrorMessage = 'The path you selected is not a folder path.')] 
+        [parameter(Mandatory = $true, ParameterSetName = 'Normal', ValueFromPipelineByPropertyName = $true)]        
         [System.String]$ScanLocation,
 
-        [ValidatePattern("\*", ErrorMessage = "You didn't supply a path that contains wildcard character '*' .")]
-        [parameter(Mandatory = $true, ParameterSetName = "FilePath With WildCards", ValueFromPipelineByPropertyName = $true)]
+        [ValidatePattern('\*', ErrorMessage = "You didn't supply a path that contains wildcard character '*' .")]
+        [parameter(Mandatory = $true, ParameterSetName = 'FilePath With WildCards', ValueFromPipelineByPropertyName = $true)]
         [System.String]$WildCardPath,
 
-        [ValidatePattern('^[a-zA-Z0-9 ]+$', ErrorMessage = "The Supplemental Policy Name can only contain alphanumeric and space characters.")]
+        [ValidatePattern('^[a-zA-Z0-9 ]+$', ErrorMessage = 'The Supplemental Policy Name can only contain alphanumeric and space characters.')]
         [parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true)] # Used by all the entire Cmdlet
         [System.String]$SuppPolicyName,
         
         [ValidatePattern('\.xml$')]
-        [ValidateScript({ Test-Path $_ -PathType 'Leaf' }, ErrorMessage = "The path you selected is not a file path.")]
+        [ValidateScript({ Test-Path $_ -PathType 'Leaf' }, ErrorMessage = 'The path you selected is not a file path.')]
         [parameter(Mandatory = $false, ValueFromPipelineByPropertyName = $true)] # Used by all the entire Cmdlet         
         [System.String]$PolicyPath,
 
         [parameter(Mandatory = $false)] # Used by all the entire Cmdlet        
         [Switch]$Deployit,
 
-        [Parameter(Mandatory = $false, ParameterSetName = "Normal")]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Normal')]
         [Switch]$AllowFileNameFallbacks,
         
-        [ValidateSet("OriginalFileName", "InternalName", "FileDescription", "ProductName", "PackageFamilyName", "FilePath")]
-        [Parameter(Mandatory = $false, ParameterSetName = "Normal")]
+        [ValidateSet('OriginalFileName', 'InternalName', 'FileDescription', 'ProductName', 'PackageFamilyName', 'FilePath')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Normal')]
         [System.String]$SpecificFileNameLevel,
 
-        [Parameter(Mandatory = $false, ParameterSetName = "Normal")]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Normal')]
         [Switch]$NoUserPEs,
 
-        [Parameter(Mandatory = $false, ParameterSetName = "Normal")]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Normal')]
         [Switch]$NoScript,
 
         [ValidateSet([Levelz])]
-        [parameter(Mandatory = $false, ParameterSetName = "Normal")]
-        [System.String]$Level = "FilePublisher", # Setting the default value for the Level parameter
+        [parameter(Mandatory = $false, ParameterSetName = 'Normal')]
+        [System.String]$Level = 'FilePublisher', # Setting the default value for the Level parameter
 
         [ValidateSet([Fallbackz])]
-        [parameter(Mandatory = $false, ParameterSetName = "Normal")]
-        [System.String[]]$Fallbacks = "Hash", # Setting the default value for the Fallbacks parameter
+        [parameter(Mandatory = $false, ParameterSetName = 'Normal')]
+        [System.String[]]$Fallbacks = 'Hash', # Setting the default value for the Fallbacks parameter
        
         [Parameter(Mandatory = $false)][Switch]$SkipVersionCheck    
     )
@@ -94,7 +94,7 @@ function New-SupplementalWDACConfig {
                 # Validate the Json file and read its content to make sure it's not corrupted
                 try { $UserConfig = $UserConfig | ConvertFrom-Json }
                 catch {            
-                    Write-Error "User Configuration Json file is corrupted, deleting it..." -ErrorAction Continue
+                    Write-Error 'User Configuration Json file is corrupted, deleting it...' -ErrorAction Continue
                     # Calling this function with this parameter automatically does its job and breaks/stops the operation
                     Set-CommonWDACConfig -DeleteUserConfig         
                 }                
@@ -108,7 +108,7 @@ function New-SupplementalWDACConfig {
                     $PolicyPath = $UserConfig.UnsignedPolicyPath
                 }
                 else {
-                    throw "The currently saved value for UnsignedPolicyPath in user configurations is invalid."
+                    throw 'The currently saved value for UnsignedPolicyPath in user configurations is invalid.'
                 }           
             }
             else {
@@ -143,9 +143,9 @@ function New-SupplementalWDACConfig {
             # Create the supplemental policy via parameter splatting
             New-CIPolicy @PolicyMakerHashTable           
             
-            $policyID = Set-CiPolicyIdInfo -FilePath "SupplementalPolicy $SuppPolicyName.xml" -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath -PolicyName "$SuppPolicyName"
+            $policyID = Set-CIPolicyIdInfo -FilePath "SupplementalPolicy $SuppPolicyName.xml" -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath -PolicyName "$SuppPolicyName"
             $policyID = $policyID.Substring(11)
-            Set-CIPolicyVersion -FilePath "SupplementalPolicy $SuppPolicyName.xml" -Version "1.0.0.0"
+            Set-CIPolicyVersion -FilePath "SupplementalPolicy $SuppPolicyName.xml" -Version '1.0.0.0'
             # Make sure policy rule options that don't belong to a Supplemental policy don't exit             
             @(0, 1, 2, 3, 4, 9, 10, 11, 12, 15, 16, 17, 19, 20) | ForEach-Object {
                 Set-RuleOption -FilePath "SupplementalPolicy $SuppPolicyName.xml" -Option $_ -Delete }        
@@ -172,9 +172,9 @@ function New-SupplementalWDACConfig {
             } -args $WildCardPath, $SuppPolicyName
 
             # Giving the Supplemental policy the correct properties
-            $policyID = Set-CiPolicyIdInfo -FilePath ".\SupplementalPolicy $SuppPolicyName.xml" -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath -PolicyName "$SuppPolicyName"
+            $policyID = Set-CIPolicyIdInfo -FilePath ".\SupplementalPolicy $SuppPolicyName.xml" -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath -PolicyName "$SuppPolicyName"
             $policyID = $policyID.Substring(11)
-            Set-CIPolicyVersion -FilePath ".\SupplementalPolicy $SuppPolicyName.xml" -Version "1.0.0.0"
+            Set-CIPolicyVersion -FilePath ".\SupplementalPolicy $SuppPolicyName.xml" -Version '1.0.0.0'
             
             # Make sure policy rule options that don't belong to a Supplemental policy don't exit             
             @(0, 1, 2, 3, 4, 9, 10, 11, 12, 15, 16, 17, 19, 20) | ForEach-Object {
@@ -199,7 +199,7 @@ function New-SupplementalWDACConfig {
 
         if ($InstalledAppXPackages) {
             do {
-                Get-AppXPackage -Name $PackageName
+                Get-AppxPackage -Name $PackageName
                 Write-Debug -Message "This is the Selected package name $PackageName"
                 $Question = Read-Host "`nIs this the intended results based on your Installed Appx packages? Enter 1 to continue, Enter 2 to exit"                              
             } until (
@@ -209,7 +209,7 @@ function New-SupplementalWDACConfig {
 
             powershell.exe { 
                 # Get all the packages based on the supplied name
-                $Package = Get-AppXPackage -Name $args[0]
+                $Package = Get-AppxPackage -Name $args[0]
                 # Get package dependencies if any
                 $PackageDependencies = $Package.Dependencies
 
@@ -231,9 +231,9 @@ function New-SupplementalWDACConfig {
 
 
             # Giving the Supplemental policy the correct properties
-            $policyID = Set-CiPolicyIdInfo -FilePath ".\SupplementalPolicy $SuppPolicyName.xml" -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath -PolicyName "$SuppPolicyName"
+            $policyID = Set-CIPolicyIdInfo -FilePath ".\SupplementalPolicy $SuppPolicyName.xml" -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath -PolicyName "$SuppPolicyName"
             $policyID = $policyID.Substring(11)
-            Set-CIPolicyVersion -FilePath ".\SupplementalPolicy $SuppPolicyName.xml" -Version "1.0.0.0"
+            Set-CIPolicyVersion -FilePath ".\SupplementalPolicy $SuppPolicyName.xml" -Version '1.0.0.0'
             
             # Make sure policy rule options that don't belong to a Supplemental policy don't exit             
             @(0, 1, 2, 3, 4, 9, 10, 11, 12, 15, 16, 17, 18, 19, 20) | ForEach-Object {
@@ -288,7 +288,7 @@ Can be used with any parameter to bypass the online version check - only to be u
 # Importing argument completer ScriptBlocks
 . "$psscriptroot\ArgumentCompleters.ps1"
 # Set PSReadline tab completion to complete menu for easier access to available parameters - Only for the current session
-Set-PSReadlineKeyHandler -Key Tab -Function MenuComplete
-Register-ArgumentCompleter -CommandName "New-SupplementalWDACConfig" -ParameterName "PolicyPath" -ScriptBlock $ArgumentCompleterPolicyPathsBasePoliciesOnly
-Register-ArgumentCompleter -CommandName "New-SupplementalWDACConfig" -ParameterName "PackageName" -ScriptBlock $ArgumentCompleterAppxPackageNames
-Register-ArgumentCompleter -CommandName "New-SupplementalWDACConfig" -ParameterName "ScanLocation" -ScriptBlock $ArgumentCompleterFolderPathsPicker
+Set-PSReadLineKeyHandler -Key Tab -Function MenuComplete
+Register-ArgumentCompleter -CommandName 'New-SupplementalWDACConfig' -ParameterName 'PolicyPath' -ScriptBlock $ArgumentCompleterPolicyPathsBasePoliciesOnly
+Register-ArgumentCompleter -CommandName 'New-SupplementalWDACConfig' -ParameterName 'PackageName' -ScriptBlock $ArgumentCompleterAppxPackageNames
+Register-ArgumentCompleter -CommandName 'New-SupplementalWDACConfig' -ParameterName 'ScanLocation' -ScriptBlock $ArgumentCompleterFolderPathsPicker

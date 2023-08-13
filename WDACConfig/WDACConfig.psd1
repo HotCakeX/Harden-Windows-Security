@@ -11,7 +11,7 @@
     ModuleVersion        = '0.2.0'
 
     # Supported PSEditions
-    CompatiblePSEditions = @("Core")
+    CompatiblePSEditions = @('Core')
 
     # ID used to uniquely identify this module
     GUID                 = '79920947-efb5-48c1-a567-5b02ebe74793'
@@ -26,7 +26,7 @@
     Copyright            = '(c) 2023'
 
     # Description of the functionality provided by this module
-    Description          = @"
+    Description          = @'
 
 This is an advanced PowerShell module for WDAC (Windows Defender Application Control) and automates a lot of tasks.
 
@@ -74,7 +74,7 @@ To get help and syntax on PowerShell console, type:
 "Get-help New-KernelModeWDACConfig"
 "Get-help Get-CommonWDACConfig"
 "Get-help Invoke-WDACSimulation"
-"@
+'@
 
     # Minimum version of the PowerShell engine required by this module
     PowerShellVersion    = '7.3.4'
@@ -110,46 +110,46 @@ To get help and syntax on PowerShell console, type:
     # FormatsToProcess = @()
 
     # Modules to import as nested modules of the module specified in RootModule/ModuleToProcess
-    NestedModules        = @("New-WDACConfig.psm1",
-        "Remove-WDACConfig.psm1",
-        "Deploy-SignedWDACConfig.psm1",
-        "Confirm-WDACConfig.psm1",
-        "Edit-WDACConfig.psm1",
-        "Edit-SignedWDACConfig.psm1",
-        "New-SupplementalWDACConfig.psm1",
-        "New-DenyWDACConfig.psm1",
-        "Set-CommonWDACConfig.psm1",
-        "New-KernelModeWDACConfig.psm1",
-        "Invoke-WDACSimulation.psm1",
-        "Get-CommonWDACConfig.psm1")
+    NestedModules        = @('New-WDACConfig.psm1',
+        'Remove-WDACConfig.psm1',
+        'Deploy-SignedWDACConfig.psm1',
+        'Confirm-WDACConfig.psm1',
+        'Edit-WDACConfig.psm1',
+        'Edit-SignedWDACConfig.psm1',
+        'New-SupplementalWDACConfig.psm1',
+        'New-DenyWDACConfig.psm1',
+        'Set-CommonWDACConfig.psm1',
+        'New-KernelModeWDACConfig.psm1',
+        'Invoke-WDACSimulation.psm1',
+        'Get-CommonWDACConfig.psm1')
 
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
-    FunctionsToExport    = @("New-WDACConfig",
-        "Remove-WDACConfig",
-        "Deploy-SignedWDACConfig",
-        "Confirm-WDACConfig",
-        "Edit-WDACConfig",
-        "Edit-SignedWDACConfig",
-        "New-SupplementalWDACConfig",
-        "New-DenyWDACConfig",
-        "Set-CommonWDACConfig",
-        "New-KernelModeWDACConfig",
-        "Invoke-WDACSimulation",
-        "Get-CommonWDACConfig")
+    FunctionsToExport    = @('New-WDACConfig',
+        'Remove-WDACConfig',
+        'Deploy-SignedWDACConfig',
+        'Confirm-WDACConfig',
+        'Edit-WDACConfig',
+        'Edit-SignedWDACConfig',
+        'New-SupplementalWDACConfig',
+        'New-DenyWDACConfig',
+        'Set-CommonWDACConfig',
+        'New-KernelModeWDACConfig',
+        'Invoke-WDACSimulation',
+        'Get-CommonWDACConfig')
 
     # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
-    CmdletsToExport      = @("New-WDACConfig",
-        "Remove-WDACConfig",
-        "Deploy-SignedWDACConfig",
-        "Confirm-WDACConfig",
-        "Edit-WDACConfig",
-        "Edit-SignedWDACConfig",
-        "New-SupplementalWDACConfig",
-        "New-DenyWDACConfig",
-        "Set-CommonWDACConfig",
-        "New-KernelModeWDACConfig",
-        "Invoke-WDACSimulation",
-        "Get-CommonWDACConfig")
+    CmdletsToExport      = @('New-WDACConfig',
+        'Remove-WDACConfig',
+        'Deploy-SignedWDACConfig',
+        'Confirm-WDACConfig',
+        'Edit-WDACConfig',
+        'Edit-SignedWDACConfig',
+        'New-SupplementalWDACConfig',
+        'New-DenyWDACConfig',
+        'Set-CommonWDACConfig',
+        'New-KernelModeWDACConfig',
+        'Invoke-WDACSimulation',
+        'Get-CommonWDACConfig')
 
     # Variables to export from this module
     VariablesToExport    = '*'
@@ -168,20 +168,20 @@ To get help and syntax on PowerShell console, type:
         'New-WDACConfig.psm1',        
         'Deploy-SignedWDACConfig.psm1',
         'Remove-WDACConfig.psm1',
-        "Confirm-WDACConfig.psm1",
-        "Edit-WDACConfig.psm1",
-        "Edit-SignedWDACConfig.psm1",
-        "New-SupplementalWDACConfig.psm1",
-        "Resources.ps1",
-        "ArgumentCompleters.ps1",
-        "New-DenyWDACConfig.psm1",
-        "Set-CommonWDACConfig.psm1",
-        "New-KernelModeWDACConfig.psm1",
-        "WDAC Policies\DefaultWindows_Enforced_Kernel.xml",
-        "WDAC Policies\DefaultWindows_Enforced_Kernel_NoFlights.xml",
-        "Invoke-WDACSimulation.psm1",
-        "Resources2.ps1",
-        "Get-CommonWDACConfig.psm1")
+        'Confirm-WDACConfig.psm1',
+        'Edit-WDACConfig.psm1',
+        'Edit-SignedWDACConfig.psm1',
+        'New-SupplementalWDACConfig.psm1',
+        'Resources.ps1',
+        'ArgumentCompleters.ps1',
+        'New-DenyWDACConfig.psm1',
+        'Set-CommonWDACConfig.psm1',
+        'New-KernelModeWDACConfig.psm1',
+        'WDAC Policies\DefaultWindows_Enforced_Kernel.xml',
+        'WDAC Policies\DefaultWindows_Enforced_Kernel_NoFlights.xml',
+        'Invoke-WDACSimulation.psm1',
+        'Resources2.ps1',
+        'Get-CommonWDACConfig.psm1')
 
     # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.
     PrivateData          = @{
@@ -201,7 +201,7 @@ To get help and syntax on PowerShell console, type:
             IconUri      = 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/WDACConfig/icon.png'
 
             # ReleaseNotes of this module
-            ReleaseNotes = @"
+            ReleaseNotes = @'
 
 ## Version 0.2.0
 1. Added WDAC Simulation using the new Invoke-WDACSimulation Cmdlet
@@ -224,7 +224,7 @@ Added Azure source for version check as the backup endpoint.
 Full Change log for previous versions are available on Excel online: (Copy and paste the link in your browser if it isn't clickable)
 https://1drv.ms/x/s!AtCaUNAJbbvIhuVPpPeCHSjl75OqBQ?e=qgvzEt
 
-"@
+'@
 
             # Prerelease string of this module
             # Prerelease = ''

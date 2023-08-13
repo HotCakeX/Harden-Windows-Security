@@ -1,53 +1,53 @@
 #Requires -RunAsAdministrator       
 function New-DenyWDACConfig {
     [CmdletBinding(      
-        DefaultParameterSetName = "Drivers",
+        DefaultParameterSetName = 'Drivers',
         PositionalBinding = $false,
         SupportsShouldProcess = $true,
         ConfirmImpact = 'High'
     )]
     Param(
         # Main parameters for position 0
-        [Alias("N")]
-        [Parameter(Mandatory = $false, ParameterSetName = "Normal")][Switch]$Normal,
-        [Alias("D")]
-        [Parameter(Mandatory = $false, ParameterSetName = "Drivers")][Switch]$Drivers,
-        [Alias("P")]
-        [parameter(mandatory = $false, ParameterSetName = "Installed AppXPackages")][switch]$InstalledAppXPackages,
+        [Alias('N')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Normal')][Switch]$Normal,
+        [Alias('D')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Drivers')][Switch]$Drivers,
+        [Alias('P')]
+        [parameter(mandatory = $false, ParameterSetName = 'Installed AppXPackages')][switch]$InstalledAppXPackages,
 
-        [parameter(Mandatory = $true, ParameterSetName = "Installed AppXPackages", ValueFromPipelineByPropertyName = $true)]
+        [parameter(Mandatory = $true, ParameterSetName = 'Installed AppXPackages', ValueFromPipelineByPropertyName = $true)]
         [System.String]$PackageName,
 
-        [ValidatePattern('^[a-zA-Z0-9 ]+$', ErrorMessage = "The Supplemental Policy Name can only contain alphanumeric characters and spaces.")]
+        [ValidatePattern('^[a-zA-Z0-9 ]+$', ErrorMessage = 'The Supplemental Policy Name can only contain alphanumeric characters and spaces.')]
         [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true)] # Used by all the entire Cmdlet     
         [System.String]$PolicyName, 
    
-        [ValidateScript({ Test-Path $_ -PathType 'Container' }, ErrorMessage = "The path you selected is not a folder path.")]            
-        [Parameter(Mandatory = $false, ParameterSetName = "Normal")]
-        [Parameter(Mandatory = $false, ParameterSetName = "Drivers")]
+        [ValidateScript({ Test-Path $_ -PathType 'Container' }, ErrorMessage = 'The path you selected is not a folder path.')]            
+        [Parameter(Mandatory = $false, ParameterSetName = 'Normal')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Drivers')]
         [System.String[]]$ScanLocations,
 
         [ValidateSet([Levelz])]
-        [Parameter(Mandatory = $false, ParameterSetName = "Normal")]
-        [Parameter(Mandatory = $false, ParameterSetName = "Drivers")]
-        [System.String]$Level = "FilePublisher", # Setting the default value for the Level parameter
+        [Parameter(Mandatory = $false, ParameterSetName = 'Normal')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Drivers')]
+        [System.String]$Level = 'FilePublisher', # Setting the default value for the Level parameter
 
         [ValidateSet([Fallbackz])]
-        [Parameter(Mandatory = $false, ParameterSetName = "Normal")]
-        [Parameter(Mandatory = $false, ParameterSetName = "Drivers")]
-        [System.String[]]$Fallbacks = "Hash", # Setting the default value for the Fallbacks parameter
+        [Parameter(Mandatory = $false, ParameterSetName = 'Normal')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Drivers')]
+        [System.String[]]$Fallbacks = 'Hash', # Setting the default value for the Fallbacks parameter
 
-        [Parameter(Mandatory = $false, ParameterSetName = "Normal")]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Normal')]
         [Switch]$AllowFileNameFallbacks,
         
-        [ValidateSet("OriginalFileName", "InternalName", "FileDescription", "ProductName", "PackageFamilyName", "FilePath")]
-        [Parameter(Mandatory = $false, ParameterSetName = "Normal")]
+        [ValidateSet('OriginalFileName', 'InternalName', 'FileDescription', 'ProductName', 'PackageFamilyName', 'FilePath')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Normal')]
         [System.String]$SpecificFileNameLevel,
 
-        [Parameter(Mandatory = $false, ParameterSetName = "Normal")]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Normal')]
         [Switch]$NoUserPEs,
 
-        [Parameter(Mandatory = $false, ParameterSetName = "Normal")]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Normal')]
         [Switch]$NoScript,
 
         [Parameter(Mandatory = $false)] # Used by all the entire Cmdlet
@@ -91,7 +91,7 @@ function New-DenyWDACConfig {
         # Create deny supplemental policy for general files, apps etc.
         if ($Normal) {
             # remove any possible files from previous runs
-            Remove-Item -Path ".\ProgramDir_ScanResults*.xml" -Force -ErrorAction SilentlyContinue
+            Remove-Item -Path '.\ProgramDir_ScanResults*.xml' -Force -ErrorAction SilentlyContinue
             # An array to hold the temporary xml files of each user-selected folders
             $PolicyXMLFilesArray = @()
 
@@ -118,24 +118,24 @@ function New-DenyWDACConfig {
                 New-CIPolicy @UserInputProgramFoldersPolicyMakerHashTable
             }            
 
-            Write-Debug -Message "The Deny policy with the following configuration is being created"
+            Write-Debug -Message 'The Deny policy with the following configuration is being created'
             if ($Debug) { $UserInputProgramFoldersPolicyMakerHashTable }
             
             # Merge-cipolicy accept arrays - collecting all the policy files created by scanning user specified folders
-            $ProgramDir_ScanResults = Get-ChildItem ".\" | Where-Object { $_.Name -like 'ProgramDir_ScanResults*.xml' }                
+            $ProgramDir_ScanResults = Get-ChildItem '.\' | Where-Object { $_.Name -like 'ProgramDir_ScanResults*.xml' }                
             foreach ($file in $ProgramDir_ScanResults) {
                 $PolicyXMLFilesArray += $file.FullName
             
             }
 
             # Adding the AllowAll default policy path to the array of policy paths
-            $PolicyXMLFilesArray += "C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowAll.xml"
+            $PolicyXMLFilesArray += 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowAll.xml'
             # creating the final Deny base policy from the xml files in the paths array
             Merge-CIPolicy -PolicyPaths $PolicyXMLFilesArray -OutputFilePath ".\DenyPolicy $PolicyName.xml" | Out-Null
                             
-            $policyID = Set-CiPolicyIdInfo -FilePath "DenyPolicy $PolicyName.xml" -ResetPolicyID -PolicyName "$PolicyName"
+            $policyID = Set-CIPolicyIdInfo -FilePath "DenyPolicy $PolicyName.xml" -ResetPolicyID -PolicyName "$PolicyName"
             $policyID = $policyID.Substring(11)
-            Set-CIPolicyVersion -FilePath "DenyPolicy $PolicyName.xml" -Version "1.0.0.0"
+            Set-CIPolicyVersion -FilePath "DenyPolicy $PolicyName.xml" -Version '1.0.0.0'
             
             @(0, 2, 5, 6, 11, 12, 16, 17, 19, 20) | ForEach-Object {
                 Set-RuleOption -FilePath "DenyPolicy $PolicyName.xml" -Option $_ }
@@ -151,14 +151,14 @@ function New-DenyWDACConfig {
             }
             
             if (!$Debug) {
-                Remove-Item -Path ".\ProgramDir_ScanResults*.xml" -Force
+                Remove-Item -Path '.\ProgramDir_ScanResults*.xml' -Force
             }
             
             if ($Deployit) {                
                 CiTool --update-policy "$policyID.cip" -json | Out-Null               
-                Write-host -NoNewline "`n$policyID.cip for " -ForegroundColor Green
-                Write-host -NoNewline "$PolicyName" -ForegroundColor Magenta
-                Write-host " has been deployed." -ForegroundColor Green                
+                Write-Host -NoNewline "`n$policyID.cip for " -ForegroundColor Green
+                Write-Host -NoNewline "$PolicyName" -ForegroundColor Magenta
+                Write-Host ' has been deployed.' -ForegroundColor Green                
                 Remove-Item -Path "$policyID.cip" -Force
             }
         }
@@ -175,7 +175,7 @@ function New-DenyWDACConfig {
                 }
 
                 [System.Collections.Hashtable]$PolicyMakerHashTable = @{
-                    FilePath             = ".\DenyPolicy Temp.xml"
+                    FilePath             = '.\DenyPolicy Temp.xml'
                     DriverFiles          = $DriverFilesObject
                     Level                = $args[1]
                     Fallback             = $args[2]
@@ -189,12 +189,12 @@ function New-DenyWDACConfig {
             } -args $ScanLocations, $Level, $Fallbacks
             
             # Merging AllowAll default policy with our Deny temp policy
-            Merge-CIPolicy -PolicyPaths "C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowAll.xml", ".\DenyPolicy Temp.xml" -OutputFilePath ".\DenyPolicy $PolicyName.xml" | Out-Null
+            Merge-CIPolicy -PolicyPaths 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowAll.xml', '.\DenyPolicy Temp.xml' -OutputFilePath ".\DenyPolicy $PolicyName.xml" | Out-Null
 
-            Remove-Item -Path ".\DenyPolicy Temp.xml" -Force
-            $policyID = Set-CiPolicyIdInfo -FilePath "DenyPolicy $PolicyName.xml" -ResetPolicyID -PolicyName "$PolicyName"
+            Remove-Item -Path '.\DenyPolicy Temp.xml' -Force
+            $policyID = Set-CIPolicyIdInfo -FilePath "DenyPolicy $PolicyName.xml" -ResetPolicyID -PolicyName "$PolicyName"
             $policyID = $policyID.Substring(11)
-            Set-CIPolicyVersion -FilePath "DenyPolicy $PolicyName.xml" -Version "1.0.0.0"
+            Set-CIPolicyVersion -FilePath "DenyPolicy $PolicyName.xml" -Version '1.0.0.0'
             
             @(0, 2, 5, 6, 11, 12, 16, 17, 19, 20) | ForEach-Object {
                 Set-RuleOption -FilePath "DenyPolicy $PolicyName.xml" -Option $_ }
@@ -211,9 +211,9 @@ function New-DenyWDACConfig {
             } 
             if ($Deployit) {                
                 CiTool --update-policy "$policyID.cip" -json | Out-Null             
-                Write-host -NoNewline "`n$policyID.cip for " -ForegroundColor Green
-                Write-host -NoNewline "$PolicyName" -ForegroundColor Magenta
-                Write-host " has been deployed." -ForegroundColor Green                
+                Write-Host -NoNewline "`n$policyID.cip for " -ForegroundColor Green
+                Write-Host -NoNewline "$PolicyName" -ForegroundColor Magenta
+                Write-Host ' has been deployed.' -ForegroundColor Green                
                 Remove-Item -Path "$policyID.cip" -Force
             }   
         }
@@ -221,7 +221,7 @@ function New-DenyWDACConfig {
         # Creating Deny rule for Appx Packages
         if ($InstalledAppXPackages) {
             do {
-                Get-AppXPackage -Name $PackageName
+                Get-AppxPackage -Name $PackageName
                 Write-Debug -Message "This is the Selected package name $PackageName"
                 $Question = Read-Host "`nIs this the intended results based on your Installed Appx packages? Enter 1 to continue, Enter 2 to exit`n"                              
             } until (
@@ -231,7 +231,7 @@ function New-DenyWDACConfig {
 
             powershell.exe { 
                 # Get all the packages based on the supplied name
-                $Package = Get-AppXPackage -Name $args[0]               
+                $Package = Get-AppxPackage -Name $args[0]               
 
                 # Create rules for each package
                 foreach ($item in $Package) {
@@ -239,17 +239,17 @@ function New-DenyWDACConfig {
                 }
                 
                 # Generate the supplemental policy xml file
-                New-CIPolicy -MultiplePolicyFormat -FilePath ".\AppxDenyPolicyTemp.xml" -Rules $Rules
+                New-CIPolicy -MultiplePolicyFormat -FilePath '.\AppxDenyPolicyTemp.xml' -Rules $Rules
             } -args $PackageName
 
             # Merging AllowAll default policy with our Deny temp policy
-            Merge-CIPolicy -PolicyPaths "C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowAll.xml", ".\AppxDenyPolicyTemp.xml" -OutputFilePath ".\AppxDenyPolicy $PolicyName.xml" | Out-Null
+            Merge-CIPolicy -PolicyPaths 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowAll.xml', '.\AppxDenyPolicyTemp.xml' -OutputFilePath ".\AppxDenyPolicy $PolicyName.xml" | Out-Null
 
             # Removing the temp deny policy
-            Remove-Item -Path ".\AppxDenyPolicyTemp.xml" -Force
-            $policyID = Set-CiPolicyIdInfo -FilePath ".\AppxDenyPolicy $PolicyName.xml" -ResetPolicyID -PolicyName "$PolicyName"
+            Remove-Item -Path '.\AppxDenyPolicyTemp.xml' -Force
+            $policyID = Set-CIPolicyIdInfo -FilePath ".\AppxDenyPolicy $PolicyName.xml" -ResetPolicyID -PolicyName "$PolicyName"
             $policyID = $policyID.Substring(11)
-            Set-CIPolicyVersion -FilePath ".\AppxDenyPolicy $PolicyName.xml" -Version "1.0.0.0"
+            Set-CIPolicyVersion -FilePath ".\AppxDenyPolicy $PolicyName.xml" -Version '1.0.0.0'
  
             @(0, 2, 6, 11, 12, 16, 17, 19, 20) | ForEach-Object {
                 Set-RuleOption -FilePath ".\AppxDenyPolicy $PolicyName.xml" -Option $_ }
@@ -307,6 +307,6 @@ Can be used with any parameter to bypass the online version check - only to be u
 # Importing argument completer ScriptBlocks
 . "$psscriptroot\ArgumentCompleters.ps1"
 # Set PSReadline tab completion to complete menu for easier access to available parameters - Only for the current session
-Set-PSReadlineKeyHandler -Key Tab -Function MenuComplete
-Register-ArgumentCompleter -CommandName "New-DenyWDACConfig" -ParameterName "ScanLocations" -ScriptBlock $ArgumentCompleterFolderPathsPicker
-Register-ArgumentCompleter -CommandName "New-DenyWDACConfig" -ParameterName "PackageName" -ScriptBlock $ArgumentCompleterAppxPackageNames
+Set-PSReadLineKeyHandler -Key Tab -Function MenuComplete
+Register-ArgumentCompleter -CommandName 'New-DenyWDACConfig' -ParameterName 'ScanLocations' -ScriptBlock $ArgumentCompleterFolderPathsPicker
+Register-ArgumentCompleter -CommandName 'New-DenyWDACConfig' -ParameterName 'PackageName' -ScriptBlock $ArgumentCompleterAppxPackageNames

@@ -2,15 +2,15 @@
 function Confirm-WDACConfig {
     [CmdletBinding()]
     Param(
-        [Alias("L")]
-        [Parameter(Mandatory = $false, ParameterSetName = "List Active Policies")][Switch]$ListActivePolicies,
-        [Alias("V")]
-        [Parameter(Mandatory = $false, ParameterSetName = "Verify WDAC Status")][Switch]$VerifyWDACStatus,
-        [Alias("S")]
-        [Parameter(Mandatory = $false, ParameterSetName = "Check SmartAppControl Status")][Switch]$CheckSmartAppControlStatus,
+        [Alias('L')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'List Active Policies')][Switch]$ListActivePolicies,
+        [Alias('V')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Verify WDAC Status')][Switch]$VerifyWDACStatus,
+        [Alias('S')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Check SmartAppControl Status')][Switch]$CheckSmartAppControlStatus,
 
-        [Parameter(Mandatory = $false, ParameterSetName = "List Active Policies")][Switch]$OnlyBasePolicies,
-        [Parameter(Mandatory = $false, ParameterSetName = "List Active Policies")][Switch]$OnlySupplementalPolicies,
+        [Parameter(Mandatory = $false, ParameterSetName = 'List Active Policies')][Switch]$OnlyBasePolicies,
+        [Parameter(Mandatory = $false, ParameterSetName = 'List Active Policies')][Switch]$OnlySupplementalPolicies,
         
         [Parameter(Mandatory = $false)][Switch]$SkipVersionCheck
     )
@@ -25,13 +25,13 @@ function Confirm-WDACConfig {
 
         # Script block to show only non-system Base policies
         $OnlyBasePoliciesBLOCK = {
-            $BasePolicies = (CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsSystemPolicy -ne "True" } | Where-Object { $_.PolicyID -eq $_.BasePolicyID }           
+            $BasePolicies = (CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsSystemPolicy -ne 'True' } | Where-Object { $_.PolicyID -eq $_.BasePolicyID }           
             &$WriteLavender "`nThere are currently $(($BasePolicies.count)) Non-system Base policies deployed"
             $BasePolicies
         }
         # Script block to show only non-system Supplemental policies
         $OnlySupplementalPoliciesBLOCK = {
-            $SupplementalPolicies = (CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsSystemPolicy -ne "True" } | Where-Object { $_.PolicyID -ne $_.BasePolicyID }           
+            $SupplementalPolicies = (CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsSystemPolicy -ne 'True' } | Where-Object { $_.PolicyID -ne $_.BasePolicyID }           
             &$WriteLavender "`nThere are currently $(($SupplementalPolicies.count)) Non-system Supplemental policies deployed`n"
             $SupplementalPolicies
         }        
@@ -51,13 +51,13 @@ function Confirm-WDACConfig {
 
         if ($CheckSmartAppControlStatus) {
             Get-MpComputerStatus | Select-Object -Property SmartAppControlExpiration, SmartAppControlState
-            if ((Get-MpComputerStatus).SmartAppControlState -eq "Eval") {
+            if ((Get-MpComputerStatus).SmartAppControlState -eq 'Eval') {
                 &$WritePink "Smart App Control is in Evaluation mode.`n"
             }
-            elseif ((Get-MpComputerStatus).SmartAppControlState -eq "On") {
+            elseif ((Get-MpComputerStatus).SmartAppControlState -eq 'On') {
                 &$WritePink "Smart App Control is turned on.`n"
             }
-            elseif ((Get-MpComputerStatus).SmartAppControlState -eq "Off") {
+            elseif ((Get-MpComputerStatus).SmartAppControlState -eq 'Off') {
                 &$WritePink "Smart App Control is turned off.`n"
             }
         }    
@@ -95,4 +95,4 @@ Can be used with any parameter to bypass the online version check - only to be u
 }
 
 # Set PSReadline tab completion to complete menu for easier access to available parameters - Only for the current session
-Set-PSReadlineKeyHandler -Key Tab -Function MenuComplete
+Set-PSReadLineKeyHandler -Key Tab -Function MenuComplete

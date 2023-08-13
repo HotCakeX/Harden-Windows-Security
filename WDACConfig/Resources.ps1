@@ -9,17 +9,17 @@ function Get-SignTool {
     ) 
     # If Sign tool path wasn't provided by parameter, try to detect it automatically, if fails, stop the operation
     if (!$SignToolExePath) {
-        if ($Env:PROCESSOR_ARCHITECTURE -eq "AMD64") {
-            if ( Test-Path -Path "C:\Program Files (x86)\Windows Kits\*\bin\*\x64\signtool.exe") {
-                $SignToolExePath = "C:\Program Files (x86)\Windows Kits\*\bin\*\x64\signtool.exe" 
+        if ($Env:PROCESSOR_ARCHITECTURE -eq 'AMD64') {
+            if ( Test-Path -Path 'C:\Program Files (x86)\Windows Kits\*\bin\*\x64\signtool.exe') {
+                $SignToolExePath = 'C:\Program Files (x86)\Windows Kits\*\bin\*\x64\signtool.exe' 
             }
             else {
                 Write-Error -Message "signtool.exe couldn't be found"
             }
         }
-        elseif ($Env:PROCESSOR_ARCHITECTURE -eq "ARM64") {
-            if (Test-Path -Path "C:\Program Files (x86)\Windows Kits\*\bin\*\arm64\signtool.exe") {
-                $SignToolExePath = "C:\Program Files (x86)\Windows Kits\*\bin\*\arm64\signtool.exe"
+        elseif ($Env:PROCESSOR_ARCHITECTURE -eq 'ARM64') {
+            if (Test-Path -Path 'C:\Program Files (x86)\Windows Kits\*\bin\*\arm64\signtool.exe') {
+                $SignToolExePath = 'C:\Program Files (x86)\Windows Kits\*\bin\*\arm64\signtool.exe'
             }           
             else {
                 Write-Error -Message "signtool.exe couldn't be found"
@@ -29,9 +29,9 @@ function Get-SignTool {
     try {
         # Validate the SignTool executable    
         [System.Version]$WindowsSdkVersion = '10.0.22621.755' # Setting the minimum version of SignTool that is allowed to be executed
-        [System.Boolean]$GreenFlag1 = (((get-item -Path $SignToolExePath).VersionInfo).ProductVersionRaw -ge $WindowsSdkVersion)
-        [System.Boolean]$GreenFlag2 = (((get-item -Path $SignToolExePath).VersionInfo).FileVersionRaw -ge $WindowsSdkVersion)
-        [System.Boolean]$GreenFlag3 = ((get-item -Path $SignToolExePath).VersionInfo).CompanyName -eq 'Microsoft Corporation'
+        [System.Boolean]$GreenFlag1 = (((Get-Item -Path $SignToolExePath).VersionInfo).ProductVersionRaw -ge $WindowsSdkVersion)
+        [System.Boolean]$GreenFlag2 = (((Get-Item -Path $SignToolExePath).VersionInfo).FileVersionRaw -ge $WindowsSdkVersion)
+        [System.Boolean]$GreenFlag3 = ((Get-Item -Path $SignToolExePath).VersionInfo).CompanyName -eq 'Microsoft Corporation'
         [System.Boolean]$GreenFlag4 = ((Get-AuthenticodeSignature -FilePath $SignToolExePath).Status -eq 'Valid')
         [System.Boolean]$GreenFlag5 = ((Get-AuthenticodeSignature -FilePath $SignToolExePath).StatusMessage -eq 'Signature verified.')
     }
@@ -50,15 +50,15 @@ function Get-SignTool {
 
 # Make sure the latest version of the module is installed and if not, automatically update it, clean up any old versions
 function Update-self {
-    $currentversion = (Test-modulemanifest "$psscriptroot\WDACConfig.psd1").Version.ToString()
+    $currentversion = (Test-ModuleManifest "$psscriptroot\WDACConfig.psd1").Version.ToString()
     try {
         # First try the GitHub source
-        $latestversion = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/WDACConfig/version.txt"
+        $latestversion = Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/WDACConfig/version.txt'
     }
     catch {
         try {
             # If GitHub source is unavailable, use the Azure DevOps source
-            $latestversion = Invoke-RestMethod -Uri "https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/WDACConfig/version.txt"        
+            $latestversion = Invoke-RestMethod -Uri 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/WDACConfig/version.txt'        
         }
         catch {        
             Write-Error -Message "Couldn't verify if the latest version of the module is installed, please check your Internet connection. You can optionally bypass the online check by using -SkipVersionCheck parameter."
@@ -167,10 +167,10 @@ public static extern bool FindNextVolume(IntPtr hFindVolume, [Out] StringBuilder
 [DllImport("kernel32.dll", SetLastError = true)]
 public static extern uint QueryDosDevice(string lpDeviceName, StringBuilder lpTargetPath, int ucchMax);
 
-'@;
-    Add-Type -ErrorAction SilentlyContinue -MemberDefinition $signature -Name Win32Utils -Namespace PInvoke -Using PInvoke, System.Text;
+'@
+    Add-Type -ErrorAction SilentlyContinue -MemberDefinition $signature -Name Win32Utils -Namespace PInvoke -Using PInvoke, System.Text
 
-    [UInt32] $lpcchReturnLength = 0;
+    [UInt32] $lpcchReturnLength = 0
     [UInt32] $Max = 65535
     $sbVolumeName = New-Object System.Text.StringBuilder($Max, $Max)
     $sbPathName = New-Object System.Text.StringBuilder($Max, $Max)
@@ -178,8 +178,8 @@ public static extern uint QueryDosDevice(string lpDeviceName, StringBuilder lpTa
     [IntPtr] $volumeHandle = [PInvoke.Win32Utils]::FindFirstVolume($sbVolumeName, $Max)
     do {
         $volume = $sbVolumeName.toString()
-        $unused = [PInvoke.Win32Utils]::GetVolumePathNamesForVolumeNameW($volume, $sbMountPoint, $Max, [Ref] $lpcchReturnLength);
-        $ReturnLength = [PInvoke.Win32Utils]::QueryDosDevice($volume.Substring(4, $volume.Length - 1 - 4), $sbPathName, [UInt32] $Max);
+        $unused = [PInvoke.Win32Utils]::GetVolumePathNamesForVolumeNameW($volume, $sbMountPoint, $Max, [Ref] $lpcchReturnLength)
+        $ReturnLength = [PInvoke.Win32Utils]::QueryDosDevice($volume.Substring(4, $volume.Length - 1 - 4), $sbPathName, [UInt32] $Max)
         if ($ReturnLength) {
             $DriveMapping = @{
                 DriveLetter = $sbMountPoint.toString()
@@ -189,9 +189,9 @@ public static extern uint QueryDosDevice(string lpDeviceName, StringBuilder lpTa
             Write-Output (New-Object PSObject -Property $DriveMapping)
         }
         else {
-            Write-Output "No mountpoint found for: " + $volume
+            Write-Output 'No mountpoint found for: ' + $volume
         } 
-    } while ([PInvoke.Win32Utils]::FindNextVolume([IntPtr] $volumeHandle, $sbVolumeName, $Max));
+    } while ([PInvoke.Win32Utils]::FindNextVolume([IntPtr] $volumeHandle, $sbVolumeName, $Max))
 }
 
 
@@ -293,10 +293,10 @@ $RuleRefsContent
 
 # Gets the latest Microsoft Recommended block rules, removes its allow all rules and sets HVCI to strict
 $GetBlockRulesSCRIPTBLOCK = {             
-    $Rules = (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/public/windows/security/threat-protection/windows-defender-application-control/microsoft-recommended-block-rules.md").Content -replace "(?s).*``````xml(.*)``````.*", '$1' -replace '<Allow\sID="ID_ALLOW_A_[12]".*/>|<FileRuleRef\sRuleID="ID_ALLOW_A_[12]".*/>', ''
+    $Rules = (Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/public/windows/security/application-security/application-control/windows-defender-application-control/design/applications-that-can-bypass-wdac.md').Content -replace "(?s).*``````xml(.*)``````.*", '$1' -replace '<Allow\sID="ID_ALLOW_A_[12]".*/>|<FileRuleRef\sRuleID="ID_ALLOW_A_[12]".*/>', ''
     $Rules | Out-File '.\Microsoft recommended block rules TEMP.xml'
     # Removing empty lines from policy file
-    Get-Content '.\Microsoft recommended block rules TEMP.xml' | Where-Object { $_.trim() -ne "" } | Out-File '.\Microsoft recommended block rules.xml'                
+    Get-Content '.\Microsoft recommended block rules TEMP.xml' | Where-Object { $_.trim() -ne '' } | Out-File '.\Microsoft recommended block rules.xml'                
     Remove-Item '.\Microsoft recommended block rules TEMP.xml' -Force
     Set-RuleOption -FilePath '.\Microsoft recommended block rules.xml' -Option 3 -Delete
     Set-HVCIOptions -Strict -FilePath '.\Microsoft recommended block rules.xml'
@@ -309,7 +309,7 @@ $GetBlockRulesSCRIPTBLOCK = {
 # Function to check Certificate Common name - used mostly to validate values in UserConfigurations.json
 function Confirm-CertCN ([string]$CN) {
     $certs = foreach ($cert in (Get-ChildItem 'Cert:\CurrentUser\my')) {
-        (($cert.Subject -split "," | Select-Object -First 1) -replace "CN=", "").Trim()
+        (($cert.Subject -split ',' | Select-Object -First 1) -replace 'CN=', '').Trim()
     }       
     $certs -contains $CN ? $true : $false
 }
@@ -328,7 +328,7 @@ $SubtleCuteColors = @(
     $PSStyle.Foreground.FromRGB(199, 21, 133)  # Medium Violet Red
 )
 # script block to write rainbow color text
-$WriteSubtleRainbow = { ($args[0].ToCharArray() | ForEach-Object { "{0}{1}{2}" -f $SubtleCuteColors[(Get-Random $SubtleCuteColors.Count)], $_, $PSStyle.Reset }) -join "" }
+$WriteSubtleRainbow = { ($args[0].ToCharArray() | ForEach-Object { '{0}{1}{2}' -f $SubtleCuteColors[(Get-Random $SubtleCuteColors.Count)], $_, $PSStyle.Reset }) -join '' }
 
 
 # Create File Rules based on hash of the files no longer available on the disk and store them in the $Rules variable
@@ -370,18 +370,18 @@ Function Remove-ZerosFromIDs {
     [xml]$xml = Get-Content -Path $filePath
 
     # Get all the elements with ID attribute
-    $elements = $xml.SelectNodes("//*[@ID]")
+    $elements = $xml.SelectNodes('//*[@ID]')
 
     # Loop through the elements and replace _0 with empty string in the ID value and SignerId value
     foreach ($element in $elements) {
-        $element.ID = $element.ID -replace "_0", ""
+        $element.ID = $element.ID -replace '_0', ''
         # Check if the element has child elements with SignerId attribute
         if ($element.HasChildNodes) {
             # Get the child elements with SignerId attribute
-            $childElements = $element.SelectNodes(".//*[@SignerId]")
+            $childElements = $element.SelectNodes('.//*[@SignerId]')
             # Loop through the child elements and replace _0 with empty string in the SignerId value
             foreach ($childElement in $childElements) {
-                $childElement.SignerId = $childElement.SignerId -replace "_0", ""
+                $childElement.SignerId = $childElement.SignerId -replace '_0', ''
             }
         }
     }
@@ -395,7 +395,7 @@ Function Remove-ZerosFromIDs {
         $ciSignersChildren = $ciSigners.ChildNodes
         # Loop through the child elements and replace _0 with empty string in the SignerId value
         foreach ($ciSignerChild in $ciSignersChildren) {
-            $ciSignerChild.SignerId = $ciSignerChild.SignerId -replace "_0", ""
+            $ciSignerChild.SignerId = $ciSignerChild.SignerId -replace '_0', ''
         }
     }
 
@@ -420,10 +420,10 @@ Function Move-UserModeToKernelMode {
     $signingScenarios = $xml.SiPolicy.SigningScenarios.SigningScenario
 
     # Find the SigningScenario node with Value 131 and store it in a variable
-    $signingScenario131 = $signingScenarios | Where-Object { $_.Value -eq "131" }
+    $signingScenario131 = $signingScenarios | Where-Object { $_.Value -eq '131' }
 
     # Find the SigningScenario node with Value 12 and store it in a variable
-    $signingScenario12 = $signingScenarios | Where-Object { $_.Value -eq "12" }
+    $signingScenario12 = $signingScenarios | Where-Object { $_.Value -eq '12' }
 
     # Get the AllowedSigners node from the SigningScenario node with Value 12
     $allowedSigners12 = $signingScenario12.ProductSigners.AllowedSigners
@@ -434,8 +434,8 @@ Function Move-UserModeToKernelMode {
         foreach ($allowedSigner in $allowedSigners12.AllowedSigner) {
             # Create a new AllowedSigner node and copy the SignerId attribute from the original node
             # Use the namespace of the parent element when creating the new element
-            $newAllowedSigner = $xml.CreateElement("AllowedSigner", $signingScenario131.NamespaceURI)
-            $newAllowedSigner.SetAttribute("SignerId", $allowedSigner.SignerId)
+            $newAllowedSigner = $xml.CreateElement('AllowedSigner', $signingScenario131.NamespaceURI)
+            $newAllowedSigner.SetAttribute('SignerId', $allowedSigner.SignerId)
 
             # Append the new AllowedSigner node to the AllowedSigners node of the SigningScenario node with Value 131
             # out-null to prevent console display

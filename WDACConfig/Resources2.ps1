@@ -60,19 +60,19 @@ function Get-TBSCertificate {
     
     # Define a hash function based on the algorithm OID
     switch ($AlgorithmOid) {
-        "1.2.840.113549.1.1.4" { $HashFunction = [System.Security.Cryptography.MD5]::Create() }
-        "1.2.840.10040.4.3" { $HashFunction = [System.Security.Cryptography.SHA1]::Create() }
-        "2.16.840.1.101.3.4.3.2" { $HashFunction = [System.Security.Cryptography.SHA256]::Create() }
-        "2.16.840.1.101.3.4.3.3" { $HashFunction = [System.Security.Cryptography.SHA384]::Create() }
-        "2.16.840.1.101.3.4.3.4" { $HashFunction = [System.Security.Cryptography.SHA512]::Create() }
-        "1.2.840.10045.4.1" { $HashFunction = [System.Security.Cryptography.SHA1]::Create() }
-        "1.2.840.10045.4.3.2" { $HashFunction = [System.Security.Cryptography.SHA256]::Create() }
-        "1.2.840.10045.4.3.3" { $HashFunction = [System.Security.Cryptography.SHA384]::Create() }
-        "1.2.840.10045.4.3.4" { $HashFunction = [System.Security.Cryptography.SHA512]::Create() }
-        "1.2.840.113549.1.1.5" { $HashFunction = [System.Security.Cryptography.SHA1]::Create() }
-        "1.2.840.113549.1.1.11" { $HashFunction = [System.Security.Cryptography.SHA256]::Create() }
-        "1.2.840.113549.1.1.12" { $HashFunction = [System.Security.Cryptography.SHA384]::Create() }    
-        "1.2.840.113549.1.1.13" { $HashFunction = [System.Security.Cryptography.SHA512]::Create() }
+        '1.2.840.113549.1.1.4' { $HashFunction = [System.Security.Cryptography.MD5]::Create() }
+        '1.2.840.10040.4.3' { $HashFunction = [System.Security.Cryptography.SHA1]::Create() }
+        '2.16.840.1.101.3.4.3.2' { $HashFunction = [System.Security.Cryptography.SHA256]::Create() }
+        '2.16.840.1.101.3.4.3.3' { $HashFunction = [System.Security.Cryptography.SHA384]::Create() }
+        '2.16.840.1.101.3.4.3.4' { $HashFunction = [System.Security.Cryptography.SHA512]::Create() }
+        '1.2.840.10045.4.1' { $HashFunction = [System.Security.Cryptography.SHA1]::Create() }
+        '1.2.840.10045.4.3.2' { $HashFunction = [System.Security.Cryptography.SHA256]::Create() }
+        '1.2.840.10045.4.3.3' { $HashFunction = [System.Security.Cryptography.SHA384]::Create() }
+        '1.2.840.10045.4.3.4' { $HashFunction = [System.Security.Cryptography.SHA512]::Create() }
+        '1.2.840.113549.1.1.5' { $HashFunction = [System.Security.Cryptography.SHA1]::Create() }
+        '1.2.840.113549.1.1.11' { $HashFunction = [System.Security.Cryptography.SHA256]::Create() }
+        '1.2.840.113549.1.1.12' { $HashFunction = [System.Security.Cryptography.SHA384]::Create() }    
+        '1.2.840.113549.1.1.13' { $HashFunction = [System.Security.Cryptography.SHA512]::Create() }
         default { throw "No handler for algorithm $AlgorithmOid" }
     }
     
@@ -80,7 +80,7 @@ function Get-TBSCertificate {
     $Hash = $HashFunction.ComputeHash($TbsCertificate.ToArray())    
     
     # Convert the hash to a hex string and return it
-    return [System.BitConverter]::ToString($hash) -replace "-", ""
+    return [System.BitConverter]::ToString($hash) -replace '-', ''
 }
 
 
@@ -95,7 +95,7 @@ function Get-AuthenticodeSignatureEx {
     )
     begin {
         # Define the signature of the Crypt32.dll library functions to use
-        $signature = @"
+        $signature = @'
     [DllImport("crypt32.dll", CharSet = CharSet.Auto, SetLastError = true)]
     public static extern bool CryptQueryObject(
         int dwObjectType,
@@ -128,7 +128,7 @@ function Get-AuthenticodeSignatureEx {
         IntPtr hCertStore,
         int dwFlags
     );
-"@
+'@
         # Load the System.Security assembly to use the SignedCms class
         Add-Type -AssemblyName System.Security -ErrorAction SilentlyContinue
         # Add the Crypt32.dll library functions as a type
@@ -143,7 +143,7 @@ function Get-AuthenticodeSignatureEx {
             $retValue = @()
             foreach ($CounterSignerInfos in $Infos.CounterSignerInfos) {                    
                 # Get the signing time attribute from the countersigner info object
-                $sTime = ($CounterSignerInfos.SignedAttributes | Where-Object { $_.Oid.Value -eq "1.2.840.113549.1.9.5" }).Values | `
+                $sTime = ($CounterSignerInfos.SignedAttributes | Where-Object { $_.Oid.Value -eq '1.2.840.113549.1.9.5' }).Values | `
                     Where-Object { $null -ne $_.SigningTime }
                 # Create a custom object with the countersigner certificate and signing time properties
                 $tsObject = New-Object psobject -Property @{
@@ -202,11 +202,11 @@ function Get-AuthenticodeSignatureEx {
                 # Call the helper function to get the timestamps of the countersigners and assign it to the TimeStamps property
                 $Output.TimeStamps = getTimeStamps $Infos 
                 # Check if there is a nested signature attribute in the signer info object by looking for the OID 1.3.6.1.4.1.311.2.4.1
-                $second = $Infos.UnsignedAttributes | Where-Object { $_.Oid.Value -eq "1.3.6.1.4.1.311.2.4.1" }
+                $second = $Infos.UnsignedAttributes | Where-Object { $_.Oid.Value -eq '1.3.6.1.4.1.311.2.4.1' }
                 if ($second) {
                     # If there is a nested signature attribute
                     # Get the value of the nested signature attribute as a raw data byte array
-                    $value = $second.Values | Where-Object { $_.Oid.Value -eq "1.3.6.1.4.1.311.2.4.1" }
+                    $value = $second.Values | Where-Object { $_.Oid.Value -eq '1.3.6.1.4.1.311.2.4.1' }
                     $SignedCms2 = New-Object Security.Cryptography.Pkcs.SignedCms # Create another SignedCms object to decode the nested signature data
                     $SignedCms2.Decode($value.RawData) # Decode the nested signature data and populate the SignedCms object properties
                     $Output | Add-Member -MemberType NoteProperty -Name NestedSignature -Value $null 
@@ -322,12 +322,12 @@ function Get-CertificateDetails {
             TBSValue  = $TbsValue
         }
         # Display the object
-        Write-Output "Leaf Certificate:"
+        Write-Output 'Leaf Certificate:'
         Write-Output $obj    
     }
     else {
         # If none of the switch parameters are present, display a message to inform the user of their options
-        Write-Output "Please specify one of the following switch parameters to get certificate details: -IntermediateOnly, -AllCertificates, or -LeafCertificate."
+        Write-Output 'Please specify one of the following switch parameters to get certificate details: -IntermediateOnly, -AllCertificates, or -LeafCertificate.'
     }
 }
 
@@ -539,12 +539,12 @@ function Get-FileRuleOutput ($xmlPath) {
         $hashvalue = $filerule.Hash
 
         # Extract the hash type from the FriendlyName attribute using regex
-        $hashtype = $filerule.FriendlyName -replace ".* (Hash (Sha1|Sha256|Page Sha1|Page Sha256))$", '$1'
+        $hashtype = $filerule.FriendlyName -replace '.* (Hash (Sha1|Sha256|Page Sha1|Page Sha256))$', '$1'
 
         # Extract the file path from the FriendlyName attribute using regex
         # $FilePathForHash = $filerule.FriendlyName -replace " (.*) (Hash (Sha1|Sha256|Page Sha1|Page Sha256))$", '$1'
 
-        $FilePathForHash = $filerule.FriendlyName -replace " (Hash (Sha1|Sha256|Page Sha1|Page Sha256))$", ''
+        $FilePathForHash = $filerule.FriendlyName -replace ' (Hash (Sha1|Sha256|Page Sha1|Page Sha256))$', ''
        
         # Create a custom object with the three properties
         $object = [PSCustomObject]@{
@@ -590,9 +590,9 @@ function Compare-XmlFiles ($refXmlPath, $tarXmlPath) {
 
             # Create a custom property called Comparison and assign it a value based on the SideIndicator property
             switch ($object.SideIndicator) {
-                "<=" { $comparison = "Only in reference" }
-                "=>" { $comparison = "Only in target" }
-                "==" { $comparison = "Both" }
+                '<=' { $comparison = 'Only in reference' }
+                '=>' { $comparison = 'Only in target' }
+                '==' { $comparison = 'Both' }
             }
 
             # Add the Comparison property to the object using the Add-Member cmdlet

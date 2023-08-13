@@ -149,7 +149,7 @@ function Test-FilePath {
 
 # Script block that lists every \Device\Harddiskvolume - https://superuser.com/questions/1058217/list-every-device-harddiskvolume
 # These are DriveLetter mappings
-$DriveLettersGlobalRootFixScriptBlock = {
+[scriptblock]$DriveLettersGlobalRootFixScriptBlock = {
     $signature = @'
 [DllImport("kernel32.dll", SetLastError=true)]
 [return: MarshalAs(UnmanagedType.Bool)]
@@ -292,7 +292,7 @@ $RuleRefsContent
 
 
 # Gets the latest Microsoft Recommended block rules, removes its allow all rules and sets HVCI to strict
-$GetBlockRulesSCRIPTBLOCK = {             
+[scriptblock]$GetBlockRulesSCRIPTBLOCK = {             
     $Rules = (Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/public/windows/security/application-security/application-control/windows-defender-application-control/design/applications-that-can-bypass-wdac.md').Content -replace "(?s).*``````xml(.*)``````.*", '$1' -replace '<Allow\sID="ID_ALLOW_A_[12]".*/>|<FileRuleRef\sRuleID="ID_ALLOW_A_[12]".*/>', ''
     $Rules | Out-File '.\Microsoft recommended block rules TEMP.xml'
     # Removing empty lines from policy file
@@ -316,19 +316,10 @@ function Confirm-CertCN ([string]$CN) {
 
 
 # script blocks for custom color writing
-$WriteViolet = { Write-Output "$($PSStyle.Foreground.FromRGB(153,0,255))$($args[0])$($PSStyle.Reset)" }
-$WritePink = { Write-Output "$($PSStyle.Foreground.FromRGB(255,0,230))$($args[0])$($PSStyle.Reset)" }
-$WriteLavender = { Write-Output "$($PSStyle.Foreground.FromRgb(255,179,255))$($args[0])$($PSStyle.Reset)" }
-$WriteTeaGreen = { Write-Output "$($PSStyle.Foreground.FromRgb(133, 222, 119))$($args[0])$($PSStyle.Reset)" }
-
-# Define an array of cute RGB colors
-$SubtleCuteColors = @(
-    $PSStyle.Foreground.FromRGB(255, 105, 180) # Hot Pink
-    $PSStyle.Foreground.FromRGB(255, 20, 147)  # Deep Pink
-    $PSStyle.Foreground.FromRGB(199, 21, 133)  # Medium Violet Red
-)
-# script block to write rainbow color text
-$WriteSubtleRainbow = { ($args[0].ToCharArray() | ForEach-Object { '{0}{1}{2}' -f $SubtleCuteColors[(Get-Random $SubtleCuteColors.Count)], $_, $PSStyle.Reset }) -join '' }
+[scriptblock]$WriteViolet = { Write-Output "$($PSStyle.Foreground.FromRGB(153,0,255))$($args[0])$($PSStyle.Reset)" }
+[scriptblock]$WritePink = { Write-Output "$($PSStyle.Foreground.FromRGB(255,0,230))$($args[0])$($PSStyle.Reset)" }
+[scriptblock]$WriteLavender = { Write-Output "$($PSStyle.Foreground.FromRgb(255,179,255))$($args[0])$($PSStyle.Reset)" }
+[scriptblock]$WriteTeaGreen = { Write-Output "$($PSStyle.Foreground.FromRgb(133, 222, 119))$($args[0])$($PSStyle.Reset)" }
 
 
 # Create File Rules based on hash of the files no longer available on the disk and store them in the $Rules variable

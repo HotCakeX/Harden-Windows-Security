@@ -1,10 +1,10 @@
 # argument tab auto-completion for SignToolPath param to show only .exe files in the current directory
-$ArgumentCompleterSignToolPath = {
+[scriptblock]$ArgumentCompleterSignToolPath = {
     Get-ChildItem | Where-Object { $_.extension -like '*.exe' } | ForEach-Object { return "`"$_`"" }
 }
 
 # argument tab auto-completion for CertPath param to show only .cer files in current directory and 2 sub-directories recursively
-$ArgumentCompleterCertPath = {
+[scriptblock]$ArgumentCompleterCertPath = {
     # Note the use of -Depth 1
     # Enclosing the $results = ... assignment in (...) also passes the value through.
     ($results = Get-ChildItem -Depth 2 -Filter *.cer | ForEach-Object { "`"$_`"" })
@@ -16,7 +16,7 @@ $ArgumentCompleterCertPath = {
 
 # argument tab auto-completion for Policy Paths to show only .xml files and only suggest files that haven't been already selected by user 
 # https://stackoverflow.com/questions/76141864/how-to-make-a-powershell-argument-completer-that-only-suggests-files-not-already/76142865
-$ArgumentCompleterPolicyPaths = {
+[scriptblock]$ArgumentCompleterPolicyPaths = {
     # Get the current command and the already bound parameters
     param($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameters)
 
@@ -39,7 +39,7 @@ $ArgumentCompleterPolicyPaths = {
 }
 
 # argument tab auto-completion for Certificate common name
-$ArgumentCompleterCertificateCN = {     
+[scriptblock]$ArgumentCompleterCertificateCN = {     
     $certs = foreach ($cert in (Get-ChildItem 'Cert:\CurrentUser\my')) {
         (($cert.Subject -split ',' | Select-Object -First 1) -replace 'CN=', '').Trim()
     }    
@@ -47,7 +47,7 @@ $ArgumentCompleterCertificateCN = {
 }
 
 # Argument tab auto-completion for installed Appx package names
-$ArgumentCompleterAppxPackageNames = {
+[scriptblock]$ArgumentCompleterAppxPackageNames = {
     # Get the current command and the already bound parameters
     param($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameters)
     # Get the app package names that match the word to complete
@@ -57,7 +57,7 @@ $ArgumentCompleterAppxPackageNames = {
 }
 
 # argument tab auto-completion for Base Policy Paths to show only .xml files and only suggest files that haven't been already selected by user 
-$ArgumentCompleterPolicyPathsBasePoliciesOnly = {
+[scriptblock]$ArgumentCompleterPolicyPathsBasePoliciesOnly = {
     # Get the current command and the already bound parameters
     param($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameters)
 
@@ -87,7 +87,7 @@ $ArgumentCompleterPolicyPathsBasePoliciesOnly = {
 }
 
 # argument tab auto-completion for Supplemental Policy Paths to show only .xml files and only suggest files that haven't been already selected by user
-$ArgumentCompleterPolicyPathsSupplementalPoliciesOnly = {
+[scriptblock]$ArgumentCompleterPolicyPathsSupplementalPoliciesOnly = {
     # Get the current command and the already bound parameters
     param($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameters)
 
@@ -117,7 +117,7 @@ $ArgumentCompleterPolicyPathsSupplementalPoliciesOnly = {
 }
 
 # Opens Folder picker GUI so that user can select folders to be processed
-$ArgumentCompleterFolderPathsPicker = {
+[scriptblock]$ArgumentCompleterFolderPathsPicker = {
     # Load the System.Windows.Forms assembly
     Add-Type -AssemblyName System.Windows.Forms
     # non-top-most, works better with window focus
@@ -128,7 +128,7 @@ $ArgumentCompleterFolderPathsPicker = {
 }
 
 # Opens File picker GUI so that user can select an .exe file - for SignTool.exe
-$ArgumentCompleterExeFilePathsPicker = {
+[scriptblock]$ArgumentCompleterExeFilePathsPicker = {
     # Load the System.Windows.Forms assembly
     Add-Type -AssemblyName System.Windows.Forms
     # Create a new OpenFileDialog object
@@ -144,7 +144,7 @@ $ArgumentCompleterExeFilePathsPicker = {
 }
 
 # Opens File picker GUI so that user can select a .cer file
-$ArgumentCompleterCerFilePathsPicker = {
+[scriptblock]$ArgumentCompleterCerFilePathsPicker = {
     # Load the System.Windows.Forms assembly
     Add-Type -AssemblyName System.Windows.Forms
     # Create a new OpenFileDialog object
@@ -160,7 +160,7 @@ $ArgumentCompleterCerFilePathsPicker = {
 }
 
 # Opens File picker GUI so that user can select a .xml file
-$ArgumentCompleterXmlFilePathsPicker = {
+[scriptblock]$ArgumentCompleterXmlFilePathsPicker = {
     # Load the System.Windows.Forms assembly
     Add-Type -AssemblyName System.Windows.Forms
     # Create a new OpenFileDialog object

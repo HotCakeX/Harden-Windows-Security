@@ -33,7 +33,7 @@ function Invoke-WDACSimulation {
        
         if ($FolderPath) {
             # Store the results of the Signed files
-            $SignedResult = @()
+            [System.Array]$SignedResult = @()
             # Get all of the files that WDAC supports from the user provided directory
             $CollectedFiles = (Get-ChildItem -Recurse -Path $FolderPath -File -Include '*.sys', '*.exe', '*.com', '*.dll', '*.ocx', '*.msp', '*.mst', '*.msi', '*.js', '*.vbs', '*.ps1', '*.appx').FullName
 
@@ -41,10 +41,10 @@ function Invoke-WDACSimulation {
             $Temp = [System.IO.Path]::GetTempPath()
 
             # Generate a random number
-            $Random = Get-Random -Minimum $(Get-Random -Minimum 10 -Maximum 5265) -Maximum $(Get-Random -Minimum 5267 -Maximum 626568)
+            [int]$Random = Get-Random -Minimum $(Get-Random -Minimum 10 -Maximum 5265) -Maximum $(Get-Random -Minimum 5267 -Maximum 626568)
 
             # Create a folder name with the random number
-            $Folder = "RandomFolder$Random"
+            [string]$Folder = "RandomFolder$Random"
 
             # Join the Temp folder path and the folder name
             $RandomTempDirPath = Join-Path -Path $Temp -ChildPath $Folder
@@ -104,7 +104,7 @@ function Invoke-WDACSimulation {
             # if there was any unsigned files, process them
             if ($global:ProcessThePolicy) {
                 # Scan the unsigned files by Hash level in order to get their 4 Authenticode and Page hashes
-                New-CIPolicy -UserWriteablePaths -FilePath "$RandomTempDirPath\outputpolicy.xml" -Level hash -Fallback none -AllowFileNameFallbacks -UserPEs -NoShadowCopy -ScanPath $RandomTempDirPath
+                New-CIPolicy -UserWriteablePaths -FilePath "$RandomTempDirPath\outputpolicy.xml" -Level hash -Fallback none -AllowFileNameFallbacks -UserPEs -ScanPath $RandomTempDirPath
                 
                 # Call the Compare-XmlFiles function with two xml file paths as parameters and store the result in a variable
                 # The result only contains files that exist in both xml files, the temp file from unsigned files and the one selected by the user
@@ -134,12 +134,12 @@ function Invoke-WDACSimulation {
             }
                  
             # Create an empty array to store the output objects
-            $FinalAllowedFilesOutputObject = @()
+            [System.Array]$FinalAllowedFilesOutputObject = @()
 
             # Loop through the first array and create output objects with the file path and source
             foreach ($path in $Hashresults) {
                 # Create a hash table with the file path and source
-                $object = @{
+                [System.Collections.Hashtable]$object = @{
                     FilePath = $path
                     Source   = 'Hash'
                 }
@@ -150,7 +150,7 @@ function Invoke-WDACSimulation {
             # Loop through the second array and create output objects with the file path and source
             foreach ($path in $SignedResult) {
                 # Create a hash table with the file path and source
-                $object = @{
+                [System.Collections.Hashtable]$object = @{
                     FilePath = $path
                     Source   = 'Signer'
                 }

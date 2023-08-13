@@ -140,8 +140,8 @@ function New-SupplementalWDACConfig {
             # Create the supplemental policy via parameter splatting
             New-CIPolicy @PolicyMakerHashTable           
             
-            $policyID = Set-CIPolicyIdInfo -FilePath "SupplementalPolicy $SuppPolicyName.xml" -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath -PolicyName "$SuppPolicyName"
-            $policyID = $policyID.Substring(11)
+            [System.String]$policyID = Set-CIPolicyIdInfo -FilePath "SupplementalPolicy $SuppPolicyName.xml" -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath -PolicyName "$SuppPolicyName"
+            [System.String]$policyID = $policyID.Substring(11)
             Set-CIPolicyVersion -FilePath "SupplementalPolicy $SuppPolicyName.xml" -Version '1.0.0.0'
             # Make sure policy rule options that don't belong to a Supplemental policy don't exit             
             @(0, 1, 2, 3, 4, 9, 10, 11, 12, 15, 16, 17, 19, 20) | ForEach-Object {
@@ -169,8 +169,8 @@ function New-SupplementalWDACConfig {
             } -args $WildCardPath, $SuppPolicyName
 
             # Giving the Supplemental policy the correct properties
-            $policyID = Set-CIPolicyIdInfo -FilePath ".\SupplementalPolicy $SuppPolicyName.xml" -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath -PolicyName "$SuppPolicyName"
-            $policyID = $policyID.Substring(11)
+            [System.String]$policyID = Set-CIPolicyIdInfo -FilePath ".\SupplementalPolicy $SuppPolicyName.xml" -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath -PolicyName "$SuppPolicyName"
+            [System.String]$policyID = $policyID.Substring(11)
             Set-CIPolicyVersion -FilePath ".\SupplementalPolicy $SuppPolicyName.xml" -Version '1.0.0.0'
             
             # Make sure policy rule options that don't belong to a Supplemental policy don't exit             
@@ -228,8 +228,8 @@ function New-SupplementalWDACConfig {
 
 
             # Giving the Supplemental policy the correct properties
-            $policyID = Set-CIPolicyIdInfo -FilePath ".\SupplementalPolicy $SuppPolicyName.xml" -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath -PolicyName "$SuppPolicyName"
-            $policyID = $policyID.Substring(11)
+            [System.String]$policyID = Set-CIPolicyIdInfo -FilePath ".\SupplementalPolicy $SuppPolicyName.xml" -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath -PolicyName "$SuppPolicyName"
+            [System.String]$policyID = $policyID.Substring(11)
             Set-CIPolicyVersion -FilePath ".\SupplementalPolicy $SuppPolicyName.xml" -Version '1.0.0.0'
             
             # Make sure policy rule options that don't belong to a Supplemental policy don't exit             

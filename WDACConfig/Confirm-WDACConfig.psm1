@@ -24,13 +24,13 @@ function Confirm-WDACConfig {
         if (-NOT $SkipVersionCheck) { . Update-self }        
 
         # Script block to show only non-system Base policies
-        $OnlyBasePoliciesBLOCK = {
+        [scriptblock]$OnlyBasePoliciesBLOCK = {
             $BasePolicies = (CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsSystemPolicy -ne 'True' } | Where-Object { $_.PolicyID -eq $_.BasePolicyID }           
             &$WriteLavender "`nThere are currently $(($BasePolicies.count)) Non-system Base policies deployed"
             $BasePolicies
         }
         # Script block to show only non-system Supplemental policies
-        $OnlySupplementalPoliciesBLOCK = {
+        [scriptblock]$OnlySupplementalPoliciesBLOCK = {
             $SupplementalPolicies = (CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsSystemPolicy -ne 'True' } | Where-Object { $_.PolicyID -ne $_.BasePolicyID }           
             &$WriteLavender "`nThere are currently $(($SupplementalPolicies.count)) Non-system Supplemental policies deployed`n"
             $SupplementalPolicies
@@ -52,13 +52,13 @@ function Confirm-WDACConfig {
         if ($CheckSmartAppControlStatus) {
             Get-MpComputerStatus | Select-Object -Property SmartAppControlExpiration, SmartAppControlState
             if ((Get-MpComputerStatus).SmartAppControlState -eq 'Eval') {
-                &$WritePink "Smart App Control is in Evaluation mode.`n"
+                &$WritePink "`nSmart App Control is in Evaluation mode."
             }
             elseif ((Get-MpComputerStatus).SmartAppControlState -eq 'On') {
-                &$WritePink "Smart App Control is turned on.`n"
+                &$WritePink "`nSmart App Control is turned on."
             }
             elseif ((Get-MpComputerStatus).SmartAppControlState -eq 'Off') {
-                &$WritePink "Smart App Control is turned off.`n"
+                &$WritePink "`nSmart App Control is turned off."
             }
         }    
     }

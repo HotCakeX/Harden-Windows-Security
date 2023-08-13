@@ -6,13 +6,13 @@ function Deploy-SignedWDACConfig {
         ConfirmImpact = 'High'
     )]
     Param(
-        [ValidatePattern('\.cer$')]
-        [ValidateScript({ Test-Path $_ -PathType 'Leaf' }, ErrorMessage = 'The path you selected is not a file path.')]
-        [parameter(Mandatory = $false)][System.String]$CertPath,
-
         [ValidatePattern('\.xml$')]
         [ValidateScript({ Test-Path $_ -PathType 'Leaf' }, ErrorMessage = 'The path you selected is not a file path.')]
         [parameter(Mandatory = $true)][System.String[]]$PolicyPaths,
+    
+        [ValidatePattern('\.cer$')]
+        [ValidateScript({ Test-Path $_ -PathType 'Leaf' }, ErrorMessage = 'The path you selected is not a file path.')]
+        [parameter(Mandatory = $false)][System.String]$CertPath,
 
         [ValidateScript({
                 $certs = foreach ($cert in (Get-ChildItem 'Cert:\CurrentUser\my')) {
@@ -104,9 +104,9 @@ function Deploy-SignedWDACConfig {
         foreach ($PolicyPath in $PolicyPaths) {          
                         
             $xml = [xml](Get-Content $PolicyPath)
-            $PolicyType = $xml.SiPolicy.PolicyType
-            $PolicyID = $xml.SiPolicy.PolicyID
-            $PolicyName = ($xml.SiPolicy.Settings.Setting | Where-Object { $_.provider -eq 'PolicyInfo' -and $_.valuename -eq 'Name' -and $_.key -eq 'Information' }).value.string
+            [System.String]$PolicyType = $xml.SiPolicy.PolicyType
+            [System.String]$PolicyID = $xml.SiPolicy.PolicyID
+            [System.String]$PolicyName = ($xml.SiPolicy.Settings.Setting | Where-Object { $_.provider -eq 'PolicyInfo' -and $_.valuename -eq 'Name' -and $_.key -eq 'Information' }).value.string
             Remove-Item -Path ".\$PolicyID.cip" -ErrorAction SilentlyContinue
             if ($PolicyType -eq 'Supplemental Policy') {          
                 Add-SignerRule -FilePath $PolicyPath -CertificatePath $CertPath -Update -User -Kernel
@@ -133,7 +133,7 @@ function Deploy-SignedWDACConfig {
             Remove-Item ".\$PolicyID.cip" -Force            
             Rename-Item "$PolicyID.cip.p7" -NewName "$PolicyID.cip" -Force
             CiTool --update-policy ".\$PolicyID.cip" -json | Out-Null
-            Write-Host "`n`npolicy with the following details has been Signed and Deployed in Enforced Mode:" -ForegroundColor Green        
+            Write-Host "`npolicy with the following details has been Signed and Deployed in Enforced Mode:" -ForegroundColor Green        
             Write-Output "PolicyName = $PolicyName"
             Write-Output "PolicyGUID = $PolicyID`n"
             Remove-Item -Path ".\$PolicyID.cip" -Force

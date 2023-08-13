@@ -237,7 +237,7 @@ function Remove-WDACConfig {
         if ($SignedBase) {
             foreach ($PolicyPath in $PolicyPaths) {
                 $xml = [xml](Get-Content $PolicyPath)
-                $PolicyID = $xml.SiPolicy.PolicyID
+                [System.String]$PolicyID = $xml.SiPolicy.PolicyID
                 # Prevent users from accidentally attempting to remove policies that aren't even deployed on the system
                 $CurrentPolicyIDs = ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsSystemPolicy -ne 'True' }).policyID | ForEach-Object { "{$_}" }
                 Write-Debug -Message "The policy ID of the currently processing xml file is $PolicyID"
@@ -302,7 +302,7 @@ function Remove-WDACConfig {
 
             # If names were supplied by user
             # Empty array to store Policy IDs based on the input name, this will take care of the situations where multiple policies with the same name are deployed
-            $NameID = @()
+            [System.Array]$NameID = @()
             foreach ($PolicyName in $PolicyNames) {
                 $NameID += ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsOnDisk -eq 'True' } | Where-Object { $_.FriendlyName -eq $PolicyName }).PolicyID
             }

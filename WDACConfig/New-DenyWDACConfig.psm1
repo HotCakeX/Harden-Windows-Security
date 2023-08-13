@@ -90,7 +90,7 @@ function New-DenyWDACConfig {
             # remove any possible files from previous runs
             Remove-Item -Path '.\ProgramDir_ScanResults*.xml' -Force -ErrorAction SilentlyContinue
             # An array to hold the temporary xml files of each user-selected folders
-            $PolicyXMLFilesArray = @()
+            [System.Array]$PolicyXMLFilesArray = @()
 
             ######################## Process Program Folders From User input #####################
             for ($i = 0; $i -lt $ScanLocations.Count; $i++) {
@@ -130,8 +130,8 @@ function New-DenyWDACConfig {
             # creating the final Deny base policy from the xml files in the paths array
             Merge-CIPolicy -PolicyPaths $PolicyXMLFilesArray -OutputFilePath ".\DenyPolicy $PolicyName.xml" | Out-Null
                             
-            $policyID = Set-CIPolicyIdInfo -FilePath "DenyPolicy $PolicyName.xml" -ResetPolicyID -PolicyName "$PolicyName"
-            $policyID = $policyID.Substring(11)
+            [System.String]$policyID = Set-CIPolicyIdInfo -FilePath "DenyPolicy $PolicyName.xml" -ResetPolicyID -PolicyName "$PolicyName"
+            [System.String]$policyID = $policyID.Substring(11)
             Set-CIPolicyVersion -FilePath "DenyPolicy $PolicyName.xml" -Version '1.0.0.0'
             
             @(0, 2, 5, 6, 11, 12, 16, 17, 19, 20) | ForEach-Object {
@@ -163,7 +163,7 @@ function New-DenyWDACConfig {
         elseif ($Drivers) {           
 
             powershell.exe {
-                $DriverFilesObject = @()
+                [System.Array]$DriverFilesObject = @()
                 # loop through each user-selected folder paths
                 foreach ($ScanLocation in $args[0]) {
                     # DriverFile object holds the full details of all of the scanned drivers - This scan is greedy, meaning it stores as much information as it can find
@@ -189,8 +189,8 @@ function New-DenyWDACConfig {
             Merge-CIPolicy -PolicyPaths 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowAll.xml', '.\DenyPolicy Temp.xml' -OutputFilePath ".\DenyPolicy $PolicyName.xml" | Out-Null
 
             Remove-Item -Path '.\DenyPolicy Temp.xml' -Force
-            $policyID = Set-CIPolicyIdInfo -FilePath "DenyPolicy $PolicyName.xml" -ResetPolicyID -PolicyName "$PolicyName"
-            $policyID = $policyID.Substring(11)
+            [System.String]$policyID = Set-CIPolicyIdInfo -FilePath "DenyPolicy $PolicyName.xml" -ResetPolicyID -PolicyName "$PolicyName"
+            [System.String]$policyID = $policyID.Substring(11)
             Set-CIPolicyVersion -FilePath "DenyPolicy $PolicyName.xml" -Version '1.0.0.0'
             
             @(0, 2, 5, 6, 11, 12, 16, 17, 19, 20) | ForEach-Object {
@@ -244,8 +244,8 @@ function New-DenyWDACConfig {
 
             # Removing the temp deny policy
             Remove-Item -Path '.\AppxDenyPolicyTemp.xml' -Force
-            $policyID = Set-CIPolicyIdInfo -FilePath ".\AppxDenyPolicy $PolicyName.xml" -ResetPolicyID -PolicyName "$PolicyName"
-            $policyID = $policyID.Substring(11)
+            [System.String]$policyID = Set-CIPolicyIdInfo -FilePath ".\AppxDenyPolicy $PolicyName.xml" -ResetPolicyID -PolicyName "$PolicyName"
+            [System.String]$policyID = $policyID.Substring(11)
             Set-CIPolicyVersion -FilePath ".\AppxDenyPolicy $PolicyName.xml" -Version '1.0.0.0'
  
             @(0, 2, 6, 11, 12, 16, 17, 19, 20) | ForEach-Object {

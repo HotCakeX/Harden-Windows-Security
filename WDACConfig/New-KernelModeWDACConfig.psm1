@@ -150,7 +150,7 @@ function New-KernelModeWDACConfig {
 
                 # Get the Strict Kernel Audit mode policy's GUID to use it for the Enforced mode policy
                 # This will eliminate the need for an extra reboot               
-                $PolicyID = Get-CommonWDACConfig -StrictKernelPolicyGUID
+                [System.String]$PolicyID = Get-CommonWDACConfig -StrictKernelPolicyGUID
                 # Verify the Policy ID in the User Config exists and is valid
                 $ObjectGuid = [System.Guid]::Empty
                 if ([System.Guid]::TryParse($PolicyID, [ref]$ObjectGuid)) {
@@ -160,14 +160,14 @@ function New-KernelModeWDACConfig {
                     Write-Error 'Invalid GUID in User Configs for Audit mode policy'
                 } 
                 
-                $PolicyID = "{$PolicyID}"
+                [System.String]$PolicyID = "{$PolicyID}"
 
                 # Read the xml file as an xml object
                 [xml]$xml = Get-Content -Path '.\Final_DefaultWindows_Enforced_Kernel.xml'
 
                 # Define the new values for PolicyID and BasePolicyID
-                $newPolicyID = $PolicyID
-                $newBasePolicyID = $PolicyID
+                [System.String]$newPolicyID = $PolicyID
+                [System.String]$newBasePolicyID = $PolicyID
 
                 # Replace the old values with the new ones
                 $xml.SiPolicy.PolicyID = $newPolicyID
@@ -254,7 +254,7 @@ function New-KernelModeWDACConfig {
 
                 # Get the Strict Kernel Audit mode policy's GUID to use it for the Enforced mode policy
                 # This will eliminate the need for an extra reboot                
-                $PolicyID = Get-CommonWDACConfig -StrictKernelNoFlightRootsPolicyGUID
+                [System.String]$PolicyID = Get-CommonWDACConfig -StrictKernelNoFlightRootsPolicyGUID
                 # Verify the Policy ID in the User Config exists and is valid
                 $ObjectGuid = [System.Guid]::Empty
                 if ([System.Guid]::TryParse($PolicyID, [ref]$ObjectGuid)) {
@@ -264,14 +264,14 @@ function New-KernelModeWDACConfig {
                     Write-Error 'Invalid GUID in User Configs for Audit mode policy'
                 } 
                 
-                $PolicyID = "{$PolicyID}"
+                [System.String]$PolicyID = "{$PolicyID}"
 
                 # Read the xml file as an xml object
                 [xml]$xml = Get-Content -Path '.\Final_DefaultWindows_Enforced_Kernel.xml'
 
                 # Define the new values for PolicyID and BasePolicyID
-                $newPolicyID = $PolicyID
-                $newBasePolicyID = $PolicyID
+                [System.String]$newPolicyID = $PolicyID
+                [System.String]$newBasePolicyID = $PolicyID
 
                 # Replace the old values with the new ones
                 $xml.SiPolicy.PolicyID = $newPolicyID

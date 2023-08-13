@@ -8,7 +8,7 @@
     # RootModule           = ""
 
     # Version number of this module.
-    ModuleVersion        = '0.2.0'
+    ModuleVersion        = '0.2.1'
 
     # Supported PSEditions
     CompatiblePSEditions = @('Core')
@@ -202,6 +202,11 @@ To get help and syntax on PowerShell console, type:
 
             # ReleaseNotes of this module
             ReleaseNotes = @'
+      
+## Version 0.2.1
+1. Added -AllowFileNameFallbacks parameter by default when creating policies. It's a great parameter that helps include files that do not have an OriginalFileName.
+2. Fixed the Microsoft recommended Block lists URLs in the code because they were changed and had to be updated
+3. Improved code quality (Security, readability, typos in the comments etc.)
 
 ## Version 0.2.0
 1. Added WDAC Simulation using the new Invoke-WDACSimulation Cmdlet
@@ -221,8 +226,7 @@ Added Enforced mode SnapBack guarantee for the Edit-WDACConfig and Edit-SignedWD
 Improved the code style for better consistency.
 Added Azure source for version check as the backup endpoint.
 
-Full Change log for previous versions are available on Excel online: (Copy and paste the link in your browser if it isn't clickable)
-https://1drv.ms/x/s!AtCaUNAJbbvIhuVPpPeCHSjl75OqBQ?e=qgvzEt
+Full Change log available in GitHub releases: https://github.com/HotCakeX/Harden-Windows-Security/releases
 
 '@
 

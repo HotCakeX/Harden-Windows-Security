@@ -99,8 +99,8 @@ function New-WDACConfig {
             }
         }
            
-        $GetDriverBlockRulesSCRIPTBLOCK = {
-            $DriverRules = (Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/public/windows/security/application-security/application-control/windows-defender-application-control/design/microsoft-recommended-driver-block-rules.md').Content -replace "(?s).*``````xml(.*)``````.*", '$1'
+        [scriptblock]$GetDriverBlockRulesSCRIPTBLOCK = {
+            [System.String]$DriverRules = (Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/public/windows/security/application-security/application-control/windows-defender-application-control/design/microsoft-recommended-driver-block-rules.md').Content -replace "(?s).*``````xml(.*)``````.*", '$1'
             # Remove the unnecessary rules and elements - not using this one because then during the merge there will be error - The reason is that "<FileRuleRef RuleID="ID_ALLOW_ALL_2" />" is the only FileruleRef in the xml and after removing it, the <SigningScenario> element will be empty
             $DriverRules = $DriverRules -replace '<Allow\sID="ID_ALLOW_ALL_[12]"\sFriendlyName=""\sFileName="\*".*/>', ''
             $DriverRules = $DriverRules -replace '<FileRuleRef\sRuleID="ID_ALLOW_ALL_1".*/>', ''
@@ -119,14 +119,14 @@ function New-WDACConfig {
             }        
         }
 
-        $MakeAllowMSFTWithBlockRulesSCRIPTBLOCK = {
+        [scriptblock]$MakeAllowMSFTWithBlockRulesSCRIPTBLOCK = {
             param([System.Boolean]$NoCIP)
             # Get the latest Microsoft recommended block rules
             Invoke-Command -ScriptBlock $GetBlockRulesSCRIPTBLOCK | Out-Null                        
             Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml' -Destination 'AllowMicrosoft.xml'
             Merge-CIPolicy -PolicyPaths .\AllowMicrosoft.xml, 'Microsoft recommended block rules.xml' -OutputFilePath .\AllowMicrosoftPlusBlockRules.xml | Out-Null     
-            $PolicyID = Set-CIPolicyIdInfo -FilePath .\AllowMicrosoftPlusBlockRules.xml -PolicyName "Allow Microsoft Plus Block Rules - $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID
-            $PolicyID = $PolicyID.Substring(11)
+            [System.String]$PolicyID = Set-CIPolicyIdInfo -FilePath .\AllowMicrosoftPlusBlockRules.xml -PolicyName "Allow Microsoft Plus Block Rules - $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID
+            [System.String]$PolicyID = $PolicyID.Substring(11)
             Set-CIPolicyVersion -FilePath .\AllowMicrosoftPlusBlockRules.xml -Version '1.0.0.0'
             @(0, 2, 5, 6, 11, 12, 16, 17, 19, 20) | ForEach-Object { Set-RuleOption -FilePath .\AllowMicrosoftPlusBlockRules.xml -Option $_ }
             @(3, 4, 9, 10, 13, 18) | ForEach-Object { Set-RuleOption -FilePath .\AllowMicrosoftPlusBlockRules.xml -Option $_ -Delete }        
@@ -153,7 +153,7 @@ function New-WDACConfig {
             { Remove-Item -Path "$PolicyID.cip" -Force }
         }
         
-        $MakeDefaultWindowsWithBlockRulesSCRIPTBLOCK = {
+        [scriptblock]$MakeDefaultWindowsWithBlockRulesSCRIPTBLOCK = {
             param([System.Boolean]$NoCIP)
             Invoke-Command -ScriptBlock $GetBlockRulesSCRIPTBLOCK | Out-Null                        
             Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\DefaultWindows_Enforced.xml' -Destination 'DefaultWindows_Enforced.xml'
@@ -167,8 +167,8 @@ function New-WDACConfig {
                 Merge-CIPolicy -PolicyPaths .\DefaultWindows_Enforced.xml, 'Microsoft recommended block rules.xml' -OutputFilePath .\DefaultWindowsPlusBlockRules.xml | Out-Null                         
             }                  
             
-            $PolicyID = Set-CIPolicyIdInfo -FilePath .\DefaultWindowsPlusBlockRules.xml -PolicyName "Default Windows Plus Block Rules - $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID
-            $PolicyID = $PolicyID.Substring(11)
+            [System.String]$PolicyID = Set-CIPolicyIdInfo -FilePath .\DefaultWindowsPlusBlockRules.xml -PolicyName "Default Windows Plus Block Rules - $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID
+            [System.String]$PolicyID = $PolicyID.Substring(11)
             Set-CIPolicyVersion -FilePath .\DefaultWindowsPlusBlockRules.xml -Version '1.0.0.0'
             @(0, 2, 5, 6, 11, 12, 16, 17, 19, 20) | ForEach-Object { Set-RuleOption -FilePath .\DefaultWindowsPlusBlockRules.xml -Option $_ }
             @(3, 4, 9, 10, 13, 18) | ForEach-Object { Set-RuleOption -FilePath .\DefaultWindowsPlusBlockRules.xml -Option $_ -Delete }        
@@ -197,7 +197,7 @@ function New-WDACConfig {
             if ($NoCIP) { Remove-Item -Path "$PolicyID.cip" -Force }            
         }
 
-        $DeployLatestDriverBlockRulesSCRIPTBLOCK = {
+        [scriptblock]$DeployLatestDriverBlockRulesSCRIPTBLOCK = {
             Invoke-WebRequest -Uri 'https://aka.ms/VulnerableDriverBlockList' -OutFile VulnerableDriverBlockList.zip      
             Expand-Archive .\VulnerableDriverBlockList.zip -DestinationPath 'VulnerableDriverBlockList' -Force
             Rename-Item .\VulnerableDriverBlockList\SiPolicy_Enforced.p7b -NewName 'SiPolicy.p7b' -Force
@@ -208,7 +208,7 @@ function New-WDACConfig {
             Invoke-Command -ScriptBlock $DriversBlockListInfoGatheringSCRIPTBLOCK
         }
         
-        $DeployLatestBlockRulesSCRIPTBLOCK = {
+        [scriptblock]$DeployLatestBlockRulesSCRIPTBLOCK = {
             (Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/public/windows/security/application-security/application-control/windows-defender-application-control/design/applications-that-can-bypass-wdac.md').Content -replace "(?s).*``````xml(.*)``````.*", '$1' | Out-File '.\Microsoft recommended block rules TEMP.xml'
             # Remove empty lines from the policy file
             Get-Content '.\Microsoft recommended block rules TEMP.xml' | Where-Object { $_.trim() -ne '' } | Out-File '.\Microsoft recommended block rules.xml'    
@@ -216,7 +216,7 @@ function New-WDACConfig {
             @(0, 2, 6, 11, 12, 16, 19, 20) | ForEach-Object { Set-RuleOption -FilePath '.\Microsoft recommended block rules.xml' -Option $_ }
             Set-HVCIOptions -Strict -FilePath '.\Microsoft recommended block rules.xml'
             Remove-Item -Path '.\Microsoft recommended block rules TEMP.xml' -Force
-            $PolicyID = (Set-CIPolicyIdInfo -FilePath '.\Microsoft recommended block rules.xml' -ResetPolicyID).Substring(11)
+            [System.String]$PolicyID = (Set-CIPolicyIdInfo -FilePath '.\Microsoft recommended block rules.xml' -ResetPolicyID).Substring(11)
             Set-CIPolicyIdInfo -PolicyName "Microsoft Windows User Mode Policy - Enforced - $(Get-Date -Format 'MM-dd-yyyy')" -FilePath '.\Microsoft recommended block rules.xml'
             ConvertFrom-CIPolicy '.\Microsoft recommended block rules.xml' "$PolicyID.cip" | Out-Null
             CiTool --update-policy "$PolicyID.cip" -json | Out-Null          
@@ -224,7 +224,7 @@ function New-WDACConfig {
             Remove-Item "$PolicyID.cip" -Force
         }
 
-        $SetAutoUpdateDriverBlockRulesSCRIPTBLOCK = {
+        [scriptblock]$SetAutoUpdateDriverBlockRulesSCRIPTBLOCK = {
             # create a scheduled task that runs every 7 days
             if (-NOT (Get-ScheduledTask -TaskName 'MSFT Driver Block list update' -ErrorAction SilentlyContinue)) {        
                 $action = New-ScheduledTaskAction -Execute 'Powershell.exe' `
@@ -242,12 +242,12 @@ function New-WDACConfig {
             Invoke-Command -ScriptBlock $DriversBlockListInfoGatheringSCRIPTBLOCK
         }
 
-        $PrepMSFTOnlyAuditSCRIPTBLOCK = {
+        [scriptblock]$PrepMSFTOnlyAuditSCRIPTBLOCK = {
             if ($PrepMSFTOnlyAudit -and $LogSize) { Set-LogSize -LogSize $LogSize }
             Copy-Item -Path C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml -Destination .\AllowMicrosoft.xml
             Set-RuleOption -FilePath .\AllowMicrosoft.xml -Option 3
-            $PolicyID = Set-CIPolicyIdInfo -FilePath .\AllowMicrosoft.xml -ResetPolicyID
-            $PolicyID = $PolicyID.Substring(11)
+            [System.String]$PolicyID = Set-CIPolicyIdInfo -FilePath .\AllowMicrosoft.xml -ResetPolicyID
+            [System.String]$PolicyID = $PolicyID.Substring(11)
             Set-CIPolicyIdInfo -PolicyName 'PrepMSFTOnlyAudit' -FilePath .\AllowMicrosoft.xml
             ConvertFrom-CIPolicy .\AllowMicrosoft.xml "$PolicyID.cip" | Out-Null
             CiTool --update-policy "$PolicyID.cip" -json | Out-Null           
@@ -255,7 +255,7 @@ function New-WDACConfig {
             Remove-Item 'AllowMicrosoft.xml', "$PolicyID.cip" -Force                 
         }
 
-        $PrepDefaultWindowsAuditSCRIPTBLOCK = {
+        [scriptblock]$PrepDefaultWindowsAuditSCRIPTBLOCK = {
             if ($PrepDefaultWindowsAudit -and $LogSize) { Set-LogSize -LogSize $LogSize }
             Copy-Item -Path C:\Windows\schemas\CodeIntegrity\ExamplePolicies\DefaultWindows_Audit.xml -Destination .\DefaultWindows_Audit.xml
            
@@ -272,16 +272,16 @@ function New-WDACConfig {
             Remove-Item 'WDACConfigModule.xml', 'AllowPowerShell.xml' -Force
                    
             Set-RuleOption -FilePath .\DefaultWindows_Audit.xml -Option 3
-            $PolicyID = Set-CIPolicyIdInfo -FilePath .\DefaultWindows_Audit.xml -ResetPolicyID
-            $PolicyID = $PolicyID.Substring(11)
+            [System.String]$PolicyID = Set-CIPolicyIdInfo -FilePath .\DefaultWindows_Audit.xml -ResetPolicyID
+            [System.String]$PolicyID = $PolicyID.Substring(11)
             Set-CIPolicyIdInfo -PolicyName 'PrepDefaultWindows' -FilePath .\DefaultWindows_Audit.xml
             ConvertFrom-CIPolicy .\DefaultWindows_Audit.xml "$PolicyID.cip" | Out-Null
             CiTool --update-policy "$PolicyID.cip" -json | Out-Null           
-            &$WriteSubtleRainbow "`nThe defaultWindows policy has been deployed in Audit mode. No reboot required."            
+            &$WriteLavender "`nThe defaultWindows policy has been deployed in Audit mode. No reboot required."            
             Remove-Item 'DefaultWindows_Audit.xml', "$PolicyID.cip" -Force                
         }
 
-        $MakePolicyFromAuditLogsSCRIPTBLOCK = {
+        [scriptblock]$MakePolicyFromAuditLogsSCRIPTBLOCK = {
             if ($MakePolicyFromAuditLogs -and $LogSize) { Set-LogSize -LogSize $LogSize }
             # Make sure there is no leftover files from previous operations of this same command
             Remove-Item -Path "$home\WDAC\*" -Recurse -Force -ErrorAction SilentlyContinue
@@ -335,7 +335,7 @@ function New-WDACConfig {
             if ($NoScript) { $PolicyMakerHashTable['NoScript'] = $true }        
             if (!$NoUserPEs) { $PolicyMakerHashTable['UserPEs'] = $true } 
 
-            &$WriteSubtleRainbow "`nGenerating Supplemental policy with the following specifications:"
+            &$WriteViolet "`nGenerating Supplemental policy with the following specifications:"
             $PolicyMakerHashTable
             Write-Host "`n"
             # Create the supplemental policy via parameter splatting for files in event viewer that are currently on the disk
@@ -343,7 +343,7 @@ function New-WDACConfig {
 
             if (!$NoDeletedFiles) {
                 # Get Event viewer logs for code integrity - check the file path of all of the files in the log, resolve them using the command above - show files that are no longer available on the disk
-                $AuditEventLogsDeletedFilesScriptBlock = {
+                [scriptblock]$AuditEventLogsDeletedFilesScriptBlock = {
                     foreach ($event in Get-WinEvent -FilterHashtable @{LogName = 'Microsoft-Windows-CodeIntegrity/Operational'; ID = 3076 }) {
                         $xml = [xml]$event.toxml()
                         $xml.event.eventdata.data |
@@ -383,8 +383,8 @@ function New-WDACConfig {
             }      
             # Convert the SupplementalPolicy.xml policy file from base policy to supplemental policy of our base policy
             Set-CIPolicyVersion -FilePath 'SupplementalPolicy.xml' -Version '1.0.0.0'
-            $PolicyID = Set-CIPolicyIdInfo -FilePath 'SupplementalPolicy.xml' -PolicyName "Supplemental Policy made from Audit Event Logs on $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID -BasePolicyToSupplementPath $BasePolicy
-            $PolicyID = $PolicyID.Substring(11)        
+            [System.String]$PolicyID = Set-CIPolicyIdInfo -FilePath 'SupplementalPolicy.xml' -PolicyName "Supplemental Policy made from Audit Event Logs on $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID -BasePolicyToSupplementPath $BasePolicy
+            [System.String]$PolicyID = $PolicyID.Substring(11)        
             # Make sure policy rule options that don't belong to a Supplemental policy don't exit
             @(0, 1, 2, 3, 4, 8, 9, 10, 11, 12, 15, 16, 17, 19, 20) | ForEach-Object { Set-RuleOption -FilePath 'SupplementalPolicy.xml' -Option $_ -Delete }
 
@@ -420,11 +420,11 @@ function New-WDACConfig {
                     }
                 }
                 CiTool --remove-policy "{$IDToRemove}" -json | Out-Null                
-                &$WriteSubtleRainbow "`nSystem restart required to finish removing the Audit mode Prep policy"
+                &$WriteLavender "`nSystem restart required to finish removing the Audit mode Prep policy"
             }     
         }
 
-        $MakeLightPolicySCRIPTBLOCK = {
+        [scriptblock]$MakeLightPolicySCRIPTBLOCK = {
             # Delete the any policy with the same name in the current working directory
             Remove-Item -Path 'SignedAndReputable.xml' -Force -ErrorAction SilentlyContinue
             Invoke-Command $MakeAllowMSFTWithBlockRulesSCRIPTBLOCK -ArgumentList $true | Out-Null
@@ -454,19 +454,19 @@ function New-WDACConfig {
         }
 
         # Script block that is used to supply extra information regarding Microsoft recommended driver block rules in commands that use them
-        $DriversBlockListInfoGatheringSCRIPTBLOCK = {
-            $owner = 'MicrosoftDocs'
-            $repo = 'windows-itpro-docs'
-            $path = 'windows/security/application-security/application-control/windows-defender-application-control/design/microsoft-recommended-driver-block-rules.md'
+        [scriptblock]$DriversBlockListInfoGatheringSCRIPTBLOCK = {
+            [System.String]$owner = 'MicrosoftDocs'
+            [System.String]$repo = 'windows-itpro-docs'
+            [System.String]$path = 'windows/security/application-security/application-control/windows-defender-application-control/design/microsoft-recommended-driver-block-rules.md'
         
-            $apiUrl = "https://api.github.com/repos/$owner/$repo/commits?path=$path"
-            $response = Invoke-RestMethod $apiUrl
-            $date = $response[0].commit.author.date
+            [System.String]$ApiUrl = "https://api.github.com/repos/$owner/$repo/commits?path=$path"
+            [System.Array]$Response = Invoke-RestMethod $ApiUrl
+            [datetime]$Date = $Response[0].commit.author.date
         
-            &$WriteLavender "`nThe document containing the drivers block list on GitHub was last updated on $date"
-            $MicrosoftRecommendeDriverBlockRules = Invoke-WebRequest 'https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/public/windows/security/application-security/application-control/windows-defender-application-control/design/microsoft-recommended-driver-block-rules.md'
+            &$WriteLavender "`nThe document containing the drivers block list on GitHub was last updated on $Date"
+            [System.String]$MicrosoftRecommendeDriverBlockRules = (Invoke-WebRequest 'https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/public/windows/security/application-security/application-control/windows-defender-application-control/design/microsoft-recommended-driver-block-rules.md').Content
             $MicrosoftRecommendeDriverBlockRules -match '<VersionEx>(.*)</VersionEx>' | Out-Null
-            &$WriteLavender "The current version of Microsoft recommended drivers block list is $($Matches[1])"
+            &$WritePink "The current version of Microsoft recommended drivers block list is $($Matches[1])"
         }
 
         if (-NOT $SkipVersionCheck) { . Update-self }        

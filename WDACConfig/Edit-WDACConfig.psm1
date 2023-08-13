@@ -189,7 +189,7 @@ function Edit-WDACConfig {
             Remove-Item -Path '.\ProgramDir_ScanResults*.xml' -Force -ErrorAction SilentlyContinue
             Remove-Item -Path ".\SupplementalPolicy$SuppPolicyName.xml" -Force -ErrorAction SilentlyContinue    
             # An empty array that holds the Policy XML files - This array will eventually be used to create the final Supplemental policy
-            $PolicyXMLFilesArray = @()
+            [System.Array]$PolicyXMLFilesArray = @()
     
             #Initiate Live Audit Mode
 
@@ -200,10 +200,10 @@ function Edit-WDACConfig {
                 Copy-Item -Path $PolicyPath -Destination $env:Temp -Force                
                 $PolicyPath = "$env:Temp\$PolicyFileName"
 
-                # defining Base policy
+                # Defining Base policy
                 $xml = [xml](Get-Content $PolicyPath)            
-                $PolicyID = $xml.SiPolicy.PolicyID
-                $PolicyName = ($xml.SiPolicy.Settings.Setting | Where-Object { $_.provider -eq 'PolicyInfo' -and $_.valuename -eq 'Name' -and $_.key -eq 'Information' }).value.string
+                [System.String]$PolicyID = $xml.SiPolicy.PolicyID
+                [System.String]$PolicyName = ($xml.SiPolicy.Settings.Setting | Where-Object { $_.provider -eq 'PolicyInfo' -and $_.valuename -eq 'Name' -and $_.key -eq 'Information' }).value.string
     
                 # Remove any cip file if there is any
                 Remove-Item -Path '.\*.cip' -Force -ErrorAction SilentlyContinue
@@ -267,7 +267,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                     Pause
 
                     # Store the program paths that user browses for in an array
-                    $ProgramsPaths = @()
+                    [System.Array]$ProgramsPaths = @()
                     Write-Host "`nSelect program directories to scan" -ForegroundColor Cyan
                     # Showing folder picker GUI to the user for folder path selection
                     do {
@@ -391,9 +391,9 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
             Remove-Item -Path ".\SupplementalPolicy$SuppPolicyName.xml" -Force -ErrorAction SilentlyContinue
             # Get the current date so that instead of the entire event viewer logs, only audit logs created after running this module will be captured
             # The notice about variable being assigned and never used should be ignored - it's being dot-sourced from Resources file
-            $Date = Get-Date
+            [datetime]$Date = Get-Date
             # An empty array that holds the Policy XML files - This array will eventually be used to create the final Supplemental policy
-            $PolicyXMLFilesArray = @()
+            [System.Array]$PolicyXMLFilesArray = @()
 
             ################################### Initiate Live Audit Mode ###################################
             
@@ -406,8 +406,8 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                                 
                 # Defining Base policy
                 $xml = [xml](Get-Content $PolicyPath)            
-                $PolicyID = $xml.SiPolicy.PolicyID
-                $PolicyName = ($xml.SiPolicy.Settings.Setting | Where-Object { $_.provider -eq 'PolicyInfo' -and $_.valuename -eq 'Name' -and $_.key -eq 'Information' }).value.string
+                [System.String]$PolicyID = $xml.SiPolicy.PolicyID
+                [System.String]$PolicyName = ($xml.SiPolicy.Settings.Setting | Where-Object { $_.provider -eq 'PolicyInfo' -and $_.valuename -eq 'Name' -and $_.key -eq 'Information' }).value.string
 
                 # Remove any cip file if there is any
                 Remove-Item -Path '.\*.cip' -Force -ErrorAction SilentlyContinue                
@@ -450,7 +450,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                     Pause                 
 
                     # Store the program paths that user browses for in an array
-                    $ProgramsPaths = @()
+                    [System.Array]$ProgramsPaths = @()
                     Write-Host "`nSelect program directories to scan`n" -ForegroundColor Cyan
                     # Showing folder picker GUI to the user for folder path selection
                     do {
@@ -584,7 +584,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                     # Any other attempts such as "Get-FileHash" or "Get-AuthenticodeSignature" fail and ConfigCI Module cmdlets totally ignore these files and do not create allow rules for them
 
                     # Finding the file(s) first and storing them in an array
-                    $ExesWithNoHash = @()
+                    [System.Array]$ExesWithNoHash = @()
                     # looping through each user-selected path(s)
                     foreach ($ProgramsPath in $ProgramsPaths) {
                         # Making sure the currently processing path has any .exe in it
@@ -611,7 +611,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                         Write-Debug -Message "The following Kernel protected files detected, creating allow rules for them:`n"
                         if ($Debug) { $ExesWithNoHash | ForEach-Object { Write-Debug -Message "$_" } }
                                                          
-                        $KernelProtectedHashesBlock = {
+                        [scriptblock]$KernelProtectedHashesBlock = {
                             foreach ($event in Get-WinEvent -FilterHashtable @{LogName = 'Microsoft-Windows-CodeIntegrity/Operational'; ID = 3076 } -ErrorAction SilentlyContinue | Where-Object { $_.TimeCreated -ge $Date } ) {
                                 $xml = [xml]$event.toxml()
                                 $xml.event.eventdata.data |
@@ -822,7 +822,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
             }
             Remove-Item $PolicyFiles[$NewBasePolicyType] -Force -ErrorAction SilentlyContinue
             Rename-Item -Path '.\BasePolicy.xml' -NewName $PolicyFiles[$NewBasePolicyType] -Force
-            &$WriteSubtleRainbow "Base Policy has been successfully updated to $NewBasePolicyType"
+            &$WritePink "Base Policy has been successfully updated to $NewBasePolicyType"
             &$WriteLavender 'Keep in mind that your previous policy path saved in User Configurations is no longer valid as you just changed your Base policy.'
         }
     }

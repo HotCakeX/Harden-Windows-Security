@@ -42,13 +42,15 @@ function Set-CommonWDACConfig {
             }, ErrorMessage = "A certificate with the provided common name doesn't exist in the personal store of the user certificates." )]
         [parameter(Mandatory = $false)][System.String]$CertCN,
 
+        [ValidatePattern('\.cer$')]
+        [ValidateScript({ Test-Path $_ -PathType 'Leaf' }, ErrorMessage = 'The path you selected is not a file path.')]
+        [parameter(Mandatory = $false)][System.String]$CertPath, 
+
+        [parameter(Mandatory = $false)][switch]$DeleteUserConfig,
+
         [parameter(Mandatory = $false)][System.Guid]$StrictKernelPolicyGUID,
         [parameter(Mandatory = $false)][System.Guid]$StrictKernelNoFlightRootsPolicyGUID,
         
-        [ValidatePattern('\.cer$')]
-        [ValidateScript({ Test-Path $_ -PathType 'Leaf' }, ErrorMessage = 'The path you selected is not a file path.')]
-        [parameter(Mandatory = $false)][System.String]$CertPath,        
-        [parameter(Mandatory = $false)][switch]$DeleteUserConfig,
         [Parameter(Mandatory = $false)][Switch]$SkipVersionCheck
     )
     begin {

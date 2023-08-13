@@ -33,5 +33,6 @@ body:
     attributes:
       label: Please explain the bug
       description: Please explain the bug and be as detailed as possible. 🙏
+      placeholder: "There is a problem with..."
     validations:
       required: true 

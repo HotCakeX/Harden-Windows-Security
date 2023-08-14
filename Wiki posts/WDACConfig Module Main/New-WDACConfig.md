@@ -211,8 +211,7 @@ It's recommended to use the optional parameter below to increase the log size of
 ![image](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Wiki%20APNGs/New-WDACConfig%20-MakePolicyFromAuditLogs.apng)
 
 ```powershell
-New-WDACConfig [-MakePolicyFromAuditLogs] -BasePolicyType <String> [-Deployit] [-TestMode] [-RequireEVSigners]
-[-AllowFileNameFallbacks] [-SpecificFileNameLevel <String>] [-NoDeletedFiles] [-NoUserPEs] [-NoScript] [-Level
+New-WDACConfig [-MakePolicyFromAuditLogs] -BasePolicyType <String> [-Deployit] [-TestMode] [-RequireEVSigners] [-SpecificFileNameLevel <String>] [-NoDeletedFiles] [-NoUserPEs] [-NoScript] [-Level
 <String>] [-Fallbacks <String[]>] [-LogSize <Int64>]
 ```
 
@@ -224,7 +223,7 @@ Creates a WDAC policy using the Audit event logs generated [for a fully managed 
 
 * `-BasePolicyType <String>`: You need to select between **[Allow Microsoft Base](#new-wdacconfig--makeallowmsftwithblockrules)** and **[Default Windows Base](#new-wdacconfig--makedefaultwindowswithblockrules)**, based on which prep audit mode base policy deployed on the system.
 
-### 12 optional parameters
+### 11 optional parameters
 
 * `-Deployit`: Indicates that the module will automatically remove the WDAC policy deployed using either [-PrepMSFTOnlyAudit](#new-wdacconfig--prepmsftonlyaudit) or [-PrepDefaultWindowsAudit](#new-wdacconfig--prepdefaultwindowsaudit) parameters, then deploys the supplemental policy created from Audit event logs along with the selected base policy type, both in enforced mode.
 
@@ -244,8 +243,6 @@ Creates a WDAC policy using the Audit event logs generated [for a fully managed 
 * `-Levels <String>`: Offers the same official [Levels](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-level) for scanning of event logs. If no level is specified the default, which is set to ***FilePublisher*** in this module, will be used.
 
 * `-Fallbacks <String[]>`: Offers the same official [Fallbacks](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-fallback) for scanning of event logs. If no fallbacks is specified the default, which is set to ***Hash*** in this module, will be used.
-
-* `-AllowFileNameFallbacks`: [More info available on Microsoft Learn](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-allowfilenamefallbacks)
 
 * `-SpecificFileNameLevel`: You can choose one of the following options: "OriginalFileName", "InternalName", "FileDescription", "ProductName", "PackageFamilyName", "FilePath". [More info available on Microsoft Learn](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-specificfilenamelevel)
 

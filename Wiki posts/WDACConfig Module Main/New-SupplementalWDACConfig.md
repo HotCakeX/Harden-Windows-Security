@@ -18,7 +18,7 @@
 
 ```powershell
 New-SupplementalWDACConfig [-Normal] -ScanLocation <String> -SuppPolicyName <String> -PolicyPath <String>
-[-Deployit] [-AllowFileNameFallbacks] [-SpecificFileNameLevel <String>] [-NoUserPEs] [-NoScript] [-Level <String>]
+[-Deployit] [-SpecificFileNameLevel <String>] [-NoUserPEs] [-NoScript] [-Level <String>]
 [-Fallbacks <String[]>]
 ```
 
@@ -36,15 +36,13 @@ Creates a normal Supplemental policy for a base policy.
 
 * `-PolicyPath <String>`: Browse for the xml file of the Base policy this Supplemental policy is going to expand. Supports tab completion by showing only `.xml` files with **Base Policy** Type.
 
-### 7 optional parameters
+### 6 optional parameters
 
 * `-Deployit`: Indicates that the module will automatically deploy the Supplemental policy after creation.
 
 * `-Levels <String>`: Offers the same official [Levels](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-level) for scanning of the specified directory path. If no level is specified the default, which is set to ***FilePublisher*** in this module, will be used.
 
 * `-Fallbacks <String[]>`: Offers the same official [Fallbacks](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-fallback) for scanning of the specified directory path. If no fallbacks is specified the default, which is set to ***Hash*** in this module, will be used.
-
-* `-AllowFileNameFallbacks`: [More info available on Microsoft Learn](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-allowfilenamefallbacks)
 
 * `-SpecificFileNameLevel`: You can choose one of the following options: "OriginalFileName", "InternalName", "FileDescription", "ProductName", "PackageFamilyName", "FilePath". [More info available on Microsoft Learn](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-specificfilenamelevel)
 

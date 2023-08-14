@@ -18,7 +18,7 @@
 
 ```powershell
 Edit-WDACConfig [-AllowNewAppsAuditEvents] -SuppPolicyName <String> -PolicyPaths <String[]> [-Level <String>]
-[-Fallbacks <String[]>] [-NoScript] [-NoUserPEs] [-AllowFileNameFallbacks] [-SpecificFileNameLevel <String>]
+[-Fallbacks <String[]>] [-NoScript] [-NoUserPEs] [-SpecificFileNameLevel <String>]
 [-LogSize <Int64>] [-IncludeDeletedFiles]
 ```
 
@@ -52,7 +52,7 @@ This parameter is specially useful for applications that install files outside o
 
 * `-PolicyPaths <String[]>`: Browse for the xml file of the Base policy this Supplemental policy is going to expand. Supports tab completion by showing only `.xml` files with **Base Policy** Type.
 
-### 9 optional parameters
+### 8 optional parameters
 
 * `-Debug`: Indicates that the module will output these additional files for debugging purposes and also show debug messages on the console:
   - *FileRulesAndFileRefs.txt* - Contains the File Rules and Rule refs for the Hash of the files that no longer exist on the disk.
@@ -65,8 +65,6 @@ This parameter is specially useful for applications that install files outside o
 * `-Levels <String>`: Offers the same official [Levels](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-level) for scanning of the specified directory paths and Event viewer audit logs. The Default value is ***FilePublisher***.
 
 * `-Fallbacks <String[]>`: Offers the same official [Fallbacks](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-fallback) for scanning of the specified directory paths and Event viewer audit logs. The Default value is ***Hash***.
-
-* `-AllowFileNameFallbacks`: [More info available on Microsoft Learn](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-allowfilenamefallbacks)
 
 * `-SpecificFileNameLevel`: You can choose one of the following options: "OriginalFileName", "InternalName", "FileDescription", "ProductName", "PackageFamilyName", "FilePath". [More info available on Microsoft Learn](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-specificfilenamelevel)
 
@@ -88,7 +86,7 @@ This parameter is specially useful for applications that install files outside o
 
 ```powershell
 Edit-WDACConfig [-AllowNewApps] -SuppPolicyName <String> -PolicyPaths <String[]> [-Level <String>] [-Fallbacks
-<String[]>] [-NoScript] [-NoUserPEs] [-AllowFileNameFallbacks] [-SpecificFileNameLevel <String>]
+<String[]>] [-NoScript] [-NoUserPEs] [-SpecificFileNameLevel <String>]
 ```
 
 <br>
@@ -113,13 +111,11 @@ A new supplemental policy will be created, it will be deployed on the system. Th
 
 * `-PolicyPaths <String[]>`: Browse for the xml file of the Base policy this Supplemental policy is going to expand. Supports tab completion by showing only `.xml` files.
 
-### 6 optional parameters
+### 5 optional parameters
 
 * `-Levels <String>`: Offers the same official [Levels](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-level) for scanning of the specified directory paths. If no level is specified the default, which is set to ***FilePublisher*** in this module, will be used.
 
 * `-Fallbacks <String[]>`: Offers the same official [Fallbacks](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-fallback) for scanning of the specified directory paths. If no fallbacks is specified the default, which is set to ***Hash*** in this module, will be used.
-
-* `-AllowFileNameFallbacks`: [More info available on Microsoft Learn](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-allowfilenamefallbacks)
 
 * `-SpecificFileNameLevel`: You can choose one of the following options: "OriginalFileName", "InternalName", "FileDescription", "ProductName", "PackageFamilyName", "FilePath". [More info available on Microsoft Learn](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-specificfilenamelevel)
 

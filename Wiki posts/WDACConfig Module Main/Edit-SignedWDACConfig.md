@@ -17,10 +17,9 @@
 ![image](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Wiki%20APNGs/Edit-SignedWDACConfig%20-AllowNewAppsAuditEvents.apng)
 
 ```powershell
-Edit-SignedWDACConfig [-AllowNewAppsAuditEvents] -CertPath <String> -SuppPolicyName <String> -PolicyPaths
-<String[]> -CertCN <String> [-LogSize <Int64>] [-NoScript] [-NoUserPEs] [-AllowFileNameFallbacks]
-[-SpecificFileNameLevel <String>] [-IncludeDeletedFiles] [-Level <String>] [-Fallbacks <String[]>] [-SignToolPath
-<String>]
+Edit-SignedWDACConfig [-AllowNewAppsAuditEvents] -SuppPolicyName <String> [-CertPath <String>] [-PolicyPaths
+<String[]>] [-CertCN <String>] [-LogSize <Int64>] [-NoScript] [-NoUserPEs] [-SpecificFileNameLevel <String>]
+[-IncludeDeletedFiles] [-Level <String>] [-Fallbacks <String[]>] [-SignToolPath <String>]
 ```
 
 <br>
@@ -53,7 +52,7 @@ This parameter is specially useful for applications that install files outside o
 
 * `-CertCN <String>`: Common name of the certificate used to sign the deployed WDAC policies - Supports argument completion so you don't have to manually enter the Certificate's CN, just make sure the certificate is installed in the personal store of the user certificates, then press TAB to auto complete the name. You can however enter it manually if you want to.
 
-### 10 optional parameters
+### 9 optional parameters
 
 * `-SignToolPath <String>`: [You can use it in 2 different ways](#the-logic-behind--signtoolpath-string-optional-parameter)
 
@@ -68,8 +67,6 @@ This parameter is specially useful for applications that install files outside o
 * `-Fallbacks <String[]>`: Offers the same official [Fallbacks](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-fallback) for scanning of the specified directory paths and Event viewer audit logs. The Default value is ***Hash***.
 
 * `-LogSize <Int64>` - Specifies the log size for ***Microsoft-Windows-CodeIntegrity/Operational*** events. The values must be in the form of `<Digit + Data measurement unit>`. e.g., 2MB, 10MB, 1GB, 1TB. The minimum accepted value is 1MB which is the default.
-
-* `-AllowFileNameFallbacks`: [More info available on Microsoft Learn](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-allowfilenamefallbacks)
 
 * `-SpecificFileNameLevel`: You can choose one of the following options: "OriginalFileName", "InternalName", "FileDescription", "ProductName", "PackageFamilyName", "FilePath". [More info available on Microsoft Learn](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-specificfilenamelevel)
 
@@ -90,9 +87,8 @@ This parameter is specially useful for applications that install files outside o
 ![image](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Wiki%20APNGs/Edit-SignedWDACConfig%20-AllowNewApps.apng)
 
 ```powershell
-Edit-SignedWDACConfig [-AllowNewApps] -CertPath <String> -SuppPolicyName <String> -PolicyPaths <String[]> -CertCN
-<String> [-NoScript] [-NoUserPEs] [-AllowFileNameFallbacks] [-SpecificFileNameLevel <String>] [-Level <String>]
-[-Fallbacks <String[]>] [-SignToolPath <String>]
+Edit-SignedWDACConfig [-AllowNewApps] -SuppPolicyName <String> [-CertPath <String>] [-PolicyPaths <String[]>]
+[-CertCN <String>] [-NoScript] [-NoUserPEs] [-SpecificFileNameLevel <String>] [-Level <String>] [-Fallbacks <String[]>] [-SignToolPath <String>]
 ```
 
 <br>
@@ -121,13 +117,19 @@ A new supplemental policy will be created, it will be signed and deployed on the
 
 * `-CertCN <String>`: Common name of the certificate used to sign the deployed WDAC policies - Supports argument completion so you don't have to manually enter the Certificate's CN, just make sure the certificate is installed in the personal store of the user certificates, then press TAB to auto complete the name. You can however enter it manually if you want to.
 
-### 3 optional parameters
+### 6 optional parameters
 
 * `-SignToolPath <String>`: [You can use it in 2 different ways](#the-logic-behind--signtoolpath-string-optional-parameter)
 
 * `-Levels <String>`: Offers the same official [Levels](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-level) for scanning of the specified directory paths. If no level is specified the default, which is set to ***FilePublisher*** in this module, will be used.
 
 * `-Fallbacks <String[]>`: Offers the same official [Fallbacks](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-fallback) for scanning of the specified directory paths. If no fallbacks is specified the default, which is set to ***Hash*** in this module, will be used.
+
+* `-NoUserPEs`: By default the module includes user PEs in the scans. When you use this switch parameter, they won't be included. [More info available on Microsoft Learn](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-userpes)
+
+* `-NoScript`: [More info available on Microsoft Learn](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-noscript)
+
+* `-SpecificFileNameLevel`: You can choose one of the following options: "OriginalFileName", "InternalName", "FileDescription", "ProductName", "PackageFamilyName", "FilePath". [More info available on Microsoft Learn](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-specificfilenamelevel)
 
 <br>
 

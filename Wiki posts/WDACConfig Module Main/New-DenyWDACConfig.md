@@ -18,7 +18,7 @@
 
 ```powershell
 New-DenyWDACConfig [-Normal] -PolicyName <String> -ScanLocations <String[]> [-Level <String>]
-[-Fallbacks <String[]>] [-AllowFileNameFallbacks] [-SpecificFileNameLevel <String>] [-NoUserPEs]
+[-Fallbacks <String[]>] [-SpecificFileNameLevel <String>] [-NoUserPEs]
 [-NoScript] [-Deployit]
 ```
 
@@ -32,15 +32,13 @@ Creates a Deny base policy by scanning a directory. The base policy will have 2 
 
 - `ScanLocations <String[]>`: Accepts one or more comma separated folder paths. Supports argument completion, when you press tab, folder picker GUI will open allowing you to easily select a folder, you can then add a comma `,` and press tab again to select another folder path or paste a folder path manually, works both ways.
 
-### 7 optional parameters
+### 6 optional parameters
 
 * `-Deployit`: Indicates that the module will automatically deploy the Deny base policy after creation.
 
 * `-Levels <String>`: Offers the same official [Levels](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-level) for scanning of the specified directory path. If no level is specified the default, which is set to ***FilePublisher*** in this module, will be used.
 
 * `-Fallbacks <String[]>`: Offers the same official [Fallbacks](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-fallback) for scanning of the specified directory path. If no fallbacks is specified the default, which is set to ***Hash*** in this module, will be used.
-
-* `-AllowFileNameFallbacks`: [More info available on Microsoft Learn](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-allowfilenamefallbacks)
 
 * `-SpecificFileNameLevel`: You can choose one of the following options: "OriginalFileName", "InternalName", "FileDescription", "ProductName", "PackageFamilyName", "FilePath". [More info available on Microsoft Learn](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-specificfilenamelevel)
 

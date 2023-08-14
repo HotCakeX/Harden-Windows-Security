@@ -54,13 +54,13 @@ This parameter is specially useful for applications that install files outside o
 
 ### 9 optional parameters
 
-* `-SignToolPath <String>`: [You can use it in 2 different ways](#the-logic-behind--signtoolpath-string-optional-parameter)
+* `-SignToolPath <String>`: [You can use it in 2 different ways](#SignToolExplanation)
 
 * `-Debug`: Indicates that the module will output these additional files for debugging purposes and also show debug messages on the console:
-  - *FileRulesAndFileRefs.txt* - Contains the File Rules and Rule refs for the Hash of the files that no longer exist on the disk.
-  - *DeletedFileHashesEventsPolicy.xml* - If `-IncludeDeletedFiles` was used and if there were any files detected that were in audit event logs that are no longer on the disk, this file will include allow rules for them based on their hashes.
-  - *ProgramDir_ScanResults*.xml* - xml policy files for each program path that is selected by user, contains allow rules.
-  - *RulesForFilesNotInUserSelectedPaths.xml* - xml policy file that has allow rules for files that do not reside in any of the user-selected program paths, but have been detected in audit event logs.
+     - *FileRulesAndFileRefs.txt* - Contains the File Rules and Rule refs for the Hash of the files that no longer exist on the disk.
+      - *DeletedFileHashesEventsPolicy.xml* - If `-IncludeDeletedFiles` was used and if there were any files detected that were in audit event logs that are no longer on the disk, this file will include allow rules for them based on their hashes.
+     - *ProgramDir_ScanResults*.xml* - xml policy files for each program path that is selected by user, contains allow rules.
+     - *RulesForFilesNotInUserSelectedPaths.xml* - xml policy file that has allow rules for files that do not reside in any of the user-selected program paths, but have been detected in audit event logs.
 
 * `-Levels <String>`: Offers the same official [Levels](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-level) for scanning of the specified directory paths and Event viewer audit logs. The Default value is ***FilePublisher***.
 
@@ -119,7 +119,7 @@ A new supplemental policy will be created, it will be signed and deployed on the
 
 ### 6 optional parameters
 
-* `-SignToolPath <String>`: [You can use it in 2 different ways](#the-logic-behind--signtoolpath-string-optional-parameter)
+* `-SignToolPath <String>`: [You can use it in 2 different ways](#SignToolExplanation)
 
 * `-Levels <String>`: Offers the same official [Levels](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-level) for scanning of the specified directory paths. If no level is specified the default, which is set to ***FilePublisher*** in this module, will be used.
 
@@ -166,11 +166,9 @@ Merge multiple deployed **Signed** Supplemental policies into 1 and deploy it, r
 
 ### 2 optional parameters
 
-* `-SignToolPath <String>`: [You can use it in 2 different ways](#the-logic-behind--signtoolpath-string-optional-parameter)
+* `-SignToolPath <String>`: [You can use it in 2 different ways](#SignToolExplanation)
 
 * `-KeepOldSupplementalPolicies`: Indicates that the module will not remove the old Supplemental policy xml files after creating and deploying the new merged one.
-
-* `-CertPath <String>`: Path to the certificate `.cer` file. Supports tab completion by showing only `.cer` files.
 
 <br>
 
@@ -199,13 +197,13 @@ It can rebootlessly change the type of the deployed signed base policy. It can u
 
 * `-NewBasePolicyType <String>`: The type of the base policy to deploy. It supports tab completion so just press tab to autofill it. Supports all 3 Base policy types:
 
-  - [AllowMicrosoft_Plus_Block_Rules](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-WDACConfig#new-wdacconfig--makeallowmsftwithblockrules)
+     - [AllowMicrosoft_Plus_Block_Rules](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-WDACConfig#new-wdacconfig--makeallowmsftwithblockrules)
 
-  - [Lightly_Managed_system_Policy](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-WDACConfig#new-wdacconfig--makelightpolicy)
+      - [Lightly_Managed_system_Policy](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-WDACConfig#new-wdacconfig--makelightpolicy)
 
-  - [DefaultWindows_WithBlockRules](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-WDACConfig#new-wdacconfig--makedefaultwindowswithblockrules)
+     - [DefaultWindows_WithBlockRules](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-WDACConfig#new-wdacconfig--makedefaultwindowswithblockrules)
   
-    - > Since the module uses PowerShell and not Windows PowerShell that is pre-installed in Windows, selecting this argument will automatically scan `C:\Program Files\PowerShell` directory and add PowerShell files to the base policy so that you will be able to continue using the module after redeploying the base policy. The scan uses ***FilePublisher*** level and ***Hash*** fallback.
+        - > Since the module uses PowerShell and not Windows PowerShell that is pre-installed in Windows, selecting this argument will automatically scan `C:\Program Files\PowerShell` directory and add PowerShell files to the base policy so that you will be able to continue using the module after redeploying the base policy. The scan uses ***FilePublisher*** level and ***Hash*** fallback.
 
 ### 2 Automatic parameters
 
@@ -215,7 +213,7 @@ It can rebootlessly change the type of the deployed signed base policy. It can u
 
 ### 2 optional parameters
 
-* `-SignToolPath <String>`: [You can use it in 2 different ways](#the-logic-behind--signtoolpath-string-optional-parameter)
+* `-SignToolPath <String>`: [You can use it in 2 different ways](#SignToolExplanation)
 
 * `-RequireEVSigners`: Indicates that the base policy will have [Require EV Signers](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/wdac-wizard-create-base-policy#advanced-policy-rules-description) policy rule option.
 
@@ -225,7 +223,9 @@ It can rebootlessly change the type of the deployed signed base policy. It can u
 
 <br>
 
-### The logic behind `-SignToolPath <String>` optional parameter
+### The logic behind `-SignToolPath <String>` optional parameter 
+
+<a name="SignToolExplanation"></a>
 
 1. If [Windows SDK](https://developer.microsoft.com/en-us/windows/downloads/windows-sdk/) Signing Tools for Desktop Apps components is installed in the default location `C:\Program Files (x86)\Windows Kits`, then `-SignToolPath <String>` parameter isn't necessary.
 

@@ -1,10 +1,13 @@
-#Requires -RunAsAdministrator
+# Stop the execution when there is an error
+$ErrorActionPreference = 'Stop'
+
+# Makes sure this cmdlet is invoked with Admin privileges
+if (![bool]([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
+    Write-Error -Message 'Unprotect-WindowsSecurity cmdlet requires Administrator privileges.' -ErrorAction Stop
+}
 
 # Change the execution policy temporarily only for the current PowerShell session
 Set-ExecutionPolicy Bypass -Scope Process
-
-# Stop the execution when there is an error
-$ErrorActionPreference = 'Stop'
 
 # Custom colors
 [scriptblock]$WriteFuchsia = { Write-Host "$($PSStyle.Foreground.FromRGB(236,68,155))$($args[0])$($PSStyle.Reset)" }

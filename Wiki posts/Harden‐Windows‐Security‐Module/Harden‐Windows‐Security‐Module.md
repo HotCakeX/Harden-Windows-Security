@@ -61,7 +61,7 @@ The module checks for updates every time you run it and updates itself if there 
 Install-Module -Name Harden-Windows-Security-Module -Force
 ```
 
-### Perform Compliance test
+### Perform Compliance check
 
 ```powershell
 Confirm-SystemCompliance

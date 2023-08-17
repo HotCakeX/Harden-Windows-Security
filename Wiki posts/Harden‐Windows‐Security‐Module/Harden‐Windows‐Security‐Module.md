@@ -34,8 +34,8 @@ https://github.com/HotCakeX/Harden-Windows-Security/assets/118815227/0fdbd34b-6b
 
 ## Requirements
 
-* **Administrator privileges for compliance checking and Removing Hardening measures**
-* **Administrator OR Standard user privileges for the Hardening mode, just like the Harden Windows Security script**
+* Administrator privileges for compliance checking and Removing Hardening measures
+* Administrator OR Standard user privileges for the Hardening mode, just like the Harden Windows Security script
 * [PowerShell core version 7.3 and above](https://github.com/PowerShell/PowerShell/releases)
 
 <br>
@@ -98,6 +98,18 @@ Confirm-SystemCompliance [-ExportToCSV] [-ShowAsObjectsOnly] [-DetailedDisplay]
 * `[-ShowAsObjectsOnly]`: Instead of displaying strings on the console, outputs actionable objects and properties. You can use this parameter for when you need to store the output of the function in a variable and use it that way. This provides a very detailed nested object and suppresses the normal string output on the console.
 
 * `[-DetailedDisplay]`: Shows the output on the PowerShell console with more details and in the list format instead of table format
+
+<br>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+
+<br>
+
+## Notes for Unprotect-WindowsSecurity cmdlet
+
+1. Bitlocker Encrypted drives are not decrypted when you invoke this cmdlet.
+
+2. Security features in the [Device Guard category](https://github.com/HotCakeX/Harden-Windows-Security#device-guard) that are activated by UEFI Lock remain enabled even after you execute this cmdlet. UEFI Lock is a security mechanism that prevents malware from disabling crucial security features. UEFI locked security features are based on Proof of Physical Presence. To deactivate them, you need to restart your computer, access the UEFI, disable secure boot, restart again and then you will be able to disable them.
 
 <br>
 

@@ -34,8 +34,8 @@ https://github.com/HotCakeX/Harden-Windows-Security/assets/118815227/0fdbd34b-6b
 
 ## Requirements
 
-* **Administrator privileges for compliance checking**
-* **Administrator OR Standard user privileges for the hardening mode, just like the Harden Windows Security script**
+* **Administrator privileges for compliance checking and Removing Hardening measures**
+* **Administrator OR Standard user privileges for the Hardening mode, just like the Harden Windows Security script**
 * [PowerShell core version 7.3 and above](https://github.com/PowerShell/PowerShell/releases)
 
 <br>
@@ -73,19 +73,25 @@ Confirm-SystemCompliance
 Protect-WindowsSecurity
 ```
 
+### Remove the Hardening measures described in the [Readme](https://github.com/HotCakeX/Harden-Windows-Security)
+
+```powershell
+Unprotect-WindowsSecurity
+```
+
 <br>
 
 <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
 
 <br>
 
-## Available parameters
+## Available parameters for Confirm-SystemCompliance cmdlet
 
 ```powershell
 Confirm-SystemCompliance [-ExportToCSV] [-ShowAsObjectsOnly] [-DetailedDisplay]
 ```
 
-### The module has 3 optional parameters, they can be used together or individually.
+### 3 optional parameters, they can be used together or individually.
 
 * `[-ExportToCSV]`: In addition to displaying the results on the screen, also exports them in a nicely formatted CSV for easier viewing. The CSV is fully compatible with GitHub too so you can upload it to GitHub and view it.
 

@@ -96,8 +96,10 @@ irm 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Har
 Install-Module -Name Harden-Windows-Security-Module -Force
 # Compliance Checking + Security Score
 Confirm-SystemCompliance
-# Hardening Script
+# Harden Windows
 Protect-WindowsSecurity
+# Remove Hardening measures
+Unprotect-WindowsSecurity
 ```
 
 https://github.com/HotCakeX/Harden-Windows-Security/assets/118815227/0fdbd34b-6bf6-4eae-b081-83b43d60bd0d

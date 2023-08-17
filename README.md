@@ -85,12 +85,9 @@ irm 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Har
 
 <br>
 
-### <a href="https://www.powershellgallery.com/packages/Harden-Windows-Security-Module"><img width="35" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/SVGs/powershell-pink.svg"> Compliance Checking (Security Score) + Hardening Script</a>
+### <a href="https://www.powershellgallery.com/packages/Harden-Windows-Security-Module"><img width="35" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/SVGs/powershell-pink.svg"> Compliance Checking + Hardening + Removing Hardening</a>
 
-#### Install the [Harden Windows Security Module](https://www.powershellgallery.com/packages/Harden-Windows-Security-Module) from PowerShell gallery, it includes:
-
-1. Harden Windows Security Script
-2. [System Compliance Checking (security score) - **Click/Tap for More info**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden%E2%80%90Windows%E2%80%90Security%E2%80%90Module)
+#### Install the [Harden Windows Security Module](https://www.powershellgallery.com/packages/Harden-Windows-Security-Module) from PowerShell gallery, [**Click/Tap for Documentation**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden%E2%80%90Windows%E2%80%90Security%E2%80%90Module)
 
 ```powershell
 Install-Module -Name Harden-Windows-Security-Module -Force

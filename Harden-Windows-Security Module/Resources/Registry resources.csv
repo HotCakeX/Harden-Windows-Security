@@ -137,7 +137,6 @@ Origin,Category,Key,Name,FriendlyName,Type,Value
 "Group Policy","Miscellaneous",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows\LocationAndSensors,DisableLocation,Disable Location,DWORD,1
 "Group Policy","Miscellaneous",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows\LocationAndSensors,DisableLocationScripting,Disable Location Scripting,DWORD,1
 "Group Policy","Miscellaneous",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows\LocationAndSensors,DisableWindowsLocationProvider,Disable Windows Location Provider,DWORD,1
-"Group Policy","Miscellaneous",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows NT\Rpc,RestrictRemoteClients,RPC Runtime Unauthenticated Client Restriction,DWORD,1
 "Group Policy","Miscellaneous",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows NT\Rpc,EnableAuthEpResolution,Enable RPC Endpoint Mapper Client Authentication,DWORD,1
 "Group Policy","Miscellaneous",HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\SCMConfig,EnableSvchostMitigationPolicy,Enable Svchost Mitigation,DWORD,1
 "Group Policy","Miscellaneous",HKEY_LOCAL_MACHINE\System\CurrentControlSet\Policies\EarlyLaunch,DriverLoadPolicy,Boot-Start Driver Initialization Policy set to Good only,DWORD,8

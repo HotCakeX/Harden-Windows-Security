@@ -1,4 +1,7 @@
-# To parse the ini file from the output of the "Secedit /export /cfg .\security_policy.inf "
+# Stop operation as soon as there is an error anywhere, unless explicitly specified otherwise
+$ErrorActionPreference = 'Stop'
+        
+# To parse the ini file from the output of the "Secedit /export /cfg .\security_policy.inf"
 function ConvertFrom-IniFile {
     [CmdletBinding()]
     Param ([string]$IniFile)
@@ -49,7 +52,7 @@ function Confirm-SystemCompliance {
        
         # Make sure the latest version of the module is installed and if not, automatically update it, clean up any old versions
         function Update-self {            
-            [version]$CurrentVersion = (Test-modulemanifest "$psscriptroot\Harden-Windows-Security-Module.psd1").Version
+            [version]$CurrentVersion = (Test-ModuleManifest "$psscriptroot\Harden-Windows-Security-Module.psd1").Version
             
             try {             
                 [version]$LatestVersion = Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security%20Module/version.txt'             
@@ -81,17 +84,14 @@ function Confirm-SystemCompliance {
 
         # Makes sure this cmdlet is invoked with Admin privileges
         if (![bool]([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
-            Write-Error -Message 'Confirm-SystemCompliance cmdlet requires Administrator privileges.'
+            Write-Error -Message 'Confirm-SystemCompliance cmdlet requires Administrator privileges.' -ErrorAction Stop
         }
 
         Write-Progress -Activity 'Checking for updates' -Status 'Processing...' -PercentComplete 10
 
         # Self update the module
         Update-self
-
-        # Stop operation as soon as there is an error anywhere, unless explicitly specified otherwise
-        $ErrorActionPreference = 'Stop'
-        
+       
         Write-Progress -Activity 'Gathering Security Policy Information' -Status 'Processing...' -PercentComplete 15
 
         # Get the security group policies
@@ -102,12 +102,19 @@ function Confirm-SystemCompliance {
         
         Write-Progress -Activity 'Downloading Registry CSV File from GitHub' -Status 'Processing...' -PercentComplete 20
         
-        # Import the CSV file       
-        Invoke-WebRequest -Uri "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security%20Module/Resources/Registry%20resources.csv" -OutFile '.\Registry resources.csv'
-        $CSVResource = Import-Csv -Path '.\Registry resources.csv'
+        # Import the CSV file
+        try {       
+            Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security%20Module/Resources/Registry%20resources.csv' -OutFile '.\Registry resources.csv'
+            [System.Array]$CSVResource = Import-Csv -Path '.\Registry resources.csv'
+            # Total number of Compliant values not equal to N/A 
+            [int]$TotalNumberOfTrueCompliantValues = (Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security%20Module/Resources/TotalNumberOfTrueCompliantValues.txt')
+        }
+        catch {
+            Write-Error -Message "Couldn't download the required files, please check your Internet connection." -ErrorAction Stop
+        }
      
         # An object to hold all the initial registry items
-        $AllRegistryItems = @()
+        [System.Array]$AllRegistryItems = @()
 
         # Loop through each row in the CSV file
         foreach ($Row in $CSVResource) {
@@ -202,7 +209,7 @@ function Confirm-SystemCompliance {
         [String]$CatName = 'Microsoft Defender'        
         
         # Process the registry keys for this category based on the selected method and category name, then save the output Custom Object in the Array
-        $NestedObjectArray += [PSCustomObject](Invoke-CategoryProcessing -catname $CatName -Method "Group Policy")       
+        $NestedObjectArray += [PSCustomObject](Invoke-CategoryProcessing -catname $CatName -Method 'Group Policy')       
      
         # For PowerShell Cmdlet
         $IndividualItemResult = $((Get-MpPreference).AllowSwitchToAsyncInspection)
@@ -277,12 +284,12 @@ function Confirm-SystemCompliance {
             })
     
         # For PowerShell Cmdlet
-        $IndividualItemResult = $(($Entries | Where-Object { $_.properties.identifier -eq "{current}" }).properties.nx)
+        $IndividualItemResult = $(($Entries | Where-Object { $_.properties.identifier -eq '{current}' }).properties.nx)
         $NestedObjectArray += [PSCustomObject]@{            
-            FriendlyName = (Get-Culture).name -eq 'en-US' ? 'BCDEDIT NX Value' : "(Not accurate on non-English system languages) - BCDEDIT NX Value"          
+            FriendlyName = (Get-Culture).name -eq 'en-US' ? 'BCDEDIT NX Value' : '(Not accurate on non-English system languages) - BCDEDIT NX Value'          
             Compliant    = $IndividualItemResult -eq 'AlwaysOn' ? $True : $false   
             Value        = $IndividualItemResult           
-            Name         = (Get-Culture).name -eq 'en-US' ? 'BCDEDIT NX Value' : "(Not accurate on non-English system languages) - BCDEDIT NX Value"
+            Name         = (Get-Culture).name -eq 'en-US' ? 'BCDEDIT NX Value' : '(Not accurate on non-English system languages) - BCDEDIT NX Value'
             Category     = $CatName
             Method       = 'Cmdlet'             
         }
@@ -298,7 +305,7 @@ function Confirm-SystemCompliance {
         }
     
         # For PowerShell Cmdlet
-        $IndividualItemResult = $((Get-ScheduledTask -TaskPath "\MSFT Driver Block list update\" -TaskName "MSFT Driver Block list update" -ErrorAction SilentlyContinue) ? $True : $false)
+        $IndividualItemResult = $((Get-ScheduledTask -TaskPath '\MSFT Driver Block list update\' -TaskName 'MSFT Driver Block list update' -ErrorAction SilentlyContinue) ? $True : $false)
         $NestedObjectArray += [PSCustomObject]@{
             FriendlyName = 'Fast weekly Microsoft recommended driver block list update'            
             Compliant    = $IndividualItemResult
@@ -321,7 +328,7 @@ function Confirm-SystemCompliance {
         $NestedObjectArray += [PSCustomObject]@{
             FriendlyName = 'Microsoft Defender Platform Updates Channel'            
             Compliant    = 'N/A'
-            Value        = $($DefenderPlatformUpdatesChannels[[int](get-mppreference).PlatformUpdatesChannel])            
+            Value        = $($DefenderPlatformUpdatesChannels[[int](Get-MpPreference).PlatformUpdatesChannel])            
             Name         = 'Microsoft Defender Platform Updates Channel'
             Category     = $CatName
             Method       = 'Cmdlet'           
@@ -340,7 +347,7 @@ function Confirm-SystemCompliance {
         $NestedObjectArray += [PSCustomObject]@{
             FriendlyName = 'Microsoft Defender Engine Updates Channel'            
             Compliant    = 'N/A'
-            Value        = $($DefenderEngineUpdatesChannels[[int](get-mppreference).EngineUpdatesChannel])            
+            Value        = $($DefenderEngineUpdatesChannels[[int](Get-MpPreference).EngineUpdatesChannel])            
             Name         = 'Microsoft Defender Engine Updates Channel'
             Category     = $CatName
             Method       = 'Cmdlet'            
@@ -365,7 +372,7 @@ function Confirm-SystemCompliance {
         [String]$CatName = 'ASR'
 
         # Process the registry keys for this category based on the selected method and category name, then save the output Custom Object in the Array
-        $NestedObjectArray += [PSCustomObject](Invoke-CategoryProcessing -catname $CatName -Method "Group Policy")
+        $NestedObjectArray += [PSCustomObject](Invoke-CategoryProcessing -catname $CatName -Method 'Group Policy')
                 
         # Add the array of custom objects as a property to the $FinalMegaObject object outside the loop
         Add-Member -InputObject $FinalMegaObject -MemberType NoteProperty -Name $CatName -Value $NestedObjectArray
@@ -381,7 +388,7 @@ function Confirm-SystemCompliance {
 
         # bootDMAProtection check - checks for Kernel DMA Protection status in System information or msinfo32
         [string]$BootDMAProtectionCheck =
-        @"
+        @'
   namespace SystemInfo
     {
       using System;
@@ -423,13 +430,13 @@ function Confirm-SystemCompliance {
         }
       }
     }
-"@
+'@
         Add-Type -TypeDefinition $BootDMAProtectionCheck
         # Returns true or false depending on whether Kernel DMA Protection is on or off
         [bool]$BootDMAProtection = ([SystemInfo.NativeMethods]::BootDmaCheck()) -ne 0    
 
         # Get the status of Bitlocker DMA protection        
-        [int]$BitlockerDMAProtectionStatus = Get-ItemPropertyValue -Path "Registry::HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\FVE" -Name "DisableExternalDMAUnderLock" -ErrorAction SilentlyContinue
+        [int]$BitlockerDMAProtectionStatus = Get-ItemPropertyValue -Path 'Registry::HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\FVE' -Name 'DisableExternalDMAUnderLock' -ErrorAction SilentlyContinue
 
         # Bitlocker DMA counter measure status
         # Returns true if only either Kernel DMA protection is on and Bitlocker DMA protection if off
@@ -438,20 +445,20 @@ function Confirm-SystemCompliance {
 
         # Create a custom object with 5 properties to store them as nested objects inside the main output object
         $NestedObjectArray += [PSCustomObject]@{
-            FriendlyName = "DMA protection"           
+            FriendlyName = 'DMA protection'           
             Compliant    = $ItemState
             Value        = $ItemState            
-            Name         = "DMA protection"
+            Name         = 'DMA protection'
             Category     = $CatName
             Method       = 'Group Policy'                
         }  
 
 
         # Process the registry keys for this category based on the selected method and category name, then save the output Custom Object in the Array
-        $NestedObjectArray += [PSCustomObject](Invoke-CategoryProcessing -catname $CatName -Method "Group Policy")
+        $NestedObjectArray += [PSCustomObject](Invoke-CategoryProcessing -catname $CatName -Method 'Group Policy')
 
         # For PowerShell Cmdlet
-        $IndividualItemResult = $($((Get-ItemProperty HKLM:\SYSTEM\CurrentControlSet\Control\Power -name HibernateEnabled -ErrorAction SilentlyContinue).hibernateEnabled) -eq 1 ? $True : $False)
+        $IndividualItemResult = $($((Get-ItemProperty HKLM:\SYSTEM\CurrentControlSet\Control\Power -Name HibernateEnabled -ErrorAction SilentlyContinue).hibernateEnabled) -eq 1 ? $True : $False)
         $NestedObjectArray += [PSCustomObject]@{
             FriendlyName = 'Hibernate enabled and set to full'            
             Compliant    = $IndividualItemResult
@@ -470,7 +477,7 @@ function Confirm-SystemCompliance {
         [String]$CatName = 'TLS'
         
         # Process the registry keys for this category based on the selected method and category name, then save the output Custom Object in the Array
-        $NestedObjectArray += [PSCustomObject](Invoke-CategoryProcessing -catname $CatName -Method "Group Policy")
+        $NestedObjectArray += [PSCustomObject](Invoke-CategoryProcessing -catname $CatName -Method 'Group Policy')
         
         # ECC Curves
         [System.Array]$ECCCurves = Get-TlsEccCurve
@@ -489,7 +496,7 @@ function Confirm-SystemCompliance {
         }   
 
         # Process the registry keys for this category based on the selected method and category name, then save the output Custom Object in the Array
-        $NestedObjectArray += [PSCustomObject](Invoke-CategoryProcessing -catname $CatName -Method "Registry Keys")
+        $NestedObjectArray += [PSCustomObject](Invoke-CategoryProcessing -catname $CatName -Method 'Registry Keys')
 
         # Add the array of custom objects as a property to the $FinalMegaObject object outside the loop
         Add-Member -InputObject $FinalMegaObject -MemberType NoteProperty -Name $CatName -Value $NestedObjectArray
@@ -500,7 +507,7 @@ function Confirm-SystemCompliance {
         [System.Array]$NestedObjectArray = @()
         [String]$CatName = 'LockScreen'
         
-        $NestedObjectArray += [PSCustomObject](Invoke-CategoryProcessing -catname $CatName -Method "Group Policy")
+        $NestedObjectArray += [PSCustomObject](Invoke-CategoryProcessing -catname $CatName -Method 'Group Policy')
     
         # Process the registry keys for this category based on the selected method and category name, then save the output Custom Object in the Array
         $IndividualItemResult = [bool]$($SecurityPoliciesIni.'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\InactivityTimeoutSecs'] -eq '4,120') ? $True : $False   
@@ -560,10 +567,10 @@ function Confirm-SystemCompliance {
         # Process the registry keys for this category based on the selected method and category name, then save the output Custom Object in the Array   
         $IndividualItemResult = [bool]$($SecurityPoliciesIni.'System Access'['LockoutBadCount'] -eq '5') ? $True : $False
         $NestedObjectArray += [PSCustomObject]@{
-            FriendlyName = "Account lockout threshold"           
+            FriendlyName = 'Account lockout threshold'           
             Compliant    = $IndividualItemResult
             Value        = $IndividualItemResult 
-            Name         = "Account lockout threshold"         
+            Name         = 'Account lockout threshold'         
             Category     = $CatName
             Method       = 'Security Group Policy'
         }
@@ -571,10 +578,10 @@ function Confirm-SystemCompliance {
         # Process the registry keys for this category based on the selected method and category name, then save the output Custom Object in the Array   
         $IndividualItemResult = [bool]$($SecurityPoliciesIni.'System Access'['LockoutDuration'] -eq '1440') ? $True : $False
         $NestedObjectArray += [PSCustomObject]@{
-            FriendlyName = "Account lockout duration"            
+            FriendlyName = 'Account lockout duration'            
             Compliant    = $IndividualItemResult
             Value        = $IndividualItemResult
-            Name         = "Account lockout duration"            
+            Name         = 'Account lockout duration'            
             Category     = $CatName
             Method       = 'Security Group Policy'
         }
@@ -582,10 +589,10 @@ function Confirm-SystemCompliance {
         # Process the registry keys for this category based on the selected method and category name, then save the output Custom Object in the Array   
         $IndividualItemResult = [bool]$($SecurityPoliciesIni.'System Access'['ResetLockoutCount'] -eq '1440') ? $True : $False
         $NestedObjectArray += [PSCustomObject]@{
-            FriendlyName = "Reset account lockout counter after"            
+            FriendlyName = 'Reset account lockout counter after'            
             Compliant    = $IndividualItemResult
             Value        = $IndividualItemResult  
-            Name         = "Reset account lockout counter after"          
+            Name         = 'Reset account lockout counter after'          
             Category     = $CatName
             Method       = 'Security Group Policy'
         }
@@ -608,17 +615,17 @@ function Confirm-SystemCompliance {
         #Region User-Account-Control-Category
         Write-Progress -Activity 'Validating User Account Control Category' -Status 'Processing...' -PercentComplete 60
         [System.Array]$NestedObjectArray = @()
-        [String]$CatName = "UAC" 
+        [String]$CatName = 'UAC' 
 
-        $NestedObjectArray += [PSCustomObject](Invoke-CategoryProcessing -catname $CatName -Method "Group Policy")
+        $NestedObjectArray += [PSCustomObject](Invoke-CategoryProcessing -catname $CatName -Method 'Group Policy')
 
         # Process the registry keys for this category based on the selected method and category name, then save the output Custom Object in the Array
         $IndividualItemResult = [bool]$($SecurityPoliciesIni.'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\ConsentPromptBehaviorAdmin'] -eq '4,2') ? $True : $False
         $NestedObjectArray += [PSCustomObject]@{
-            FriendlyName = "UAC: Behavior of the elevation prompt for administrators in Admin Approval Mode"            
+            FriendlyName = 'UAC: Behavior of the elevation prompt for administrators in Admin Approval Mode'            
             Compliant    = $IndividualItemResult
             Value        = $IndividualItemResult      
-            Name         = "UAC: Behavior of the elevation prompt for administrators in Admin Approval Mode"      
+            Name         = 'UAC: Behavior of the elevation prompt for administrators in Admin Approval Mode'      
             Category     = $CatName
             Method       = 'Security Group Policy'
         }
@@ -644,10 +651,10 @@ function Confirm-SystemCompliance {
 
         # Process the registry keys for this category based on the selected method and category name, then save the output Custom Object in the Array
         $NestedObjectArray += [PSCustomObject]@{
-            FriendlyName = "UAC: Behavior of the elevation prompt for standard users"            
+            FriendlyName = 'UAC: Behavior of the elevation prompt for standard users'            
             Compliant    = $ConsentPromptBehaviorUserCompliance
             Value        = $IndividualItemResult    
-            Name         = "UAC: Behavior of the elevation prompt for standard users"        
+            Name         = 'UAC: Behavior of the elevation prompt for standard users'        
             Category     = $CatName
             Method       = 'Security Group Policy'
         }   
@@ -670,9 +677,9 @@ function Confirm-SystemCompliance {
         #Region Device-Guard-Category
         Write-Progress -Activity 'Validating Device Guard Category' -Status 'Processing...' -PercentComplete 65
         [System.Array]$NestedObjectArray = @()
-        [String]$CatName = "Device Guard"
+        [String]$CatName = 'Device Guard'
  
-        $NestedObjectArray += [PSCustomObject](Invoke-CategoryProcessing -catname $CatName -Method "Group Policy")
+        $NestedObjectArray += [PSCustomObject](Invoke-CategoryProcessing -catname $CatName -Method 'Group Policy')
 
         # Add the array of custom objects as a property to the $FinalMegaObject object outside the loop
         Add-Member -InputObject $FinalMegaObject -MemberType NoteProperty -Name $CatName -Value $NestedObjectArray
@@ -683,7 +690,7 @@ function Confirm-SystemCompliance {
         [System.Array]$NestedObjectArray = @()
         [String]$CatName = 'Windows Firewall'
                   
-        $NestedObjectArray += [PSCustomObject](Invoke-CategoryProcessing -catname $CatName -Method "Group Policy")
+        $NestedObjectArray += [PSCustomObject](Invoke-CategoryProcessing -catname $CatName -Method 'Group Policy')
     
         # Add the array of custom objects as a property to the $FinalMegaObject object outside the loop
         Add-Member -InputObject $FinalMegaObject -MemberType NoteProperty -Name $CatName -Value $NestedObjectArray
@@ -695,92 +702,92 @@ function Confirm-SystemCompliance {
         [String]$CatName = 'Optional Windows Features'
          
         # Disable PowerShell v2 (needs 2 commands)
-        [bool]$IndividualItemResult = ((get-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2).state -eq 'disabled') `
-            -and [bool]((get-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2Root).state -eq 'disabled') ? $True : $false
+        [bool]$IndividualItemResult = ((Get-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2).state -eq 'disabled') `
+            -and [bool]((Get-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2Root).state -eq 'disabled') ? $True : $false
       
         # Process the registry keys for this category based on the selected method and category name, then save the output Custom Object in the Array
         $NestedObjectArray += [PSCustomObject]@{
-            FriendlyName = "PowerShell v2 is disabled"            
+            FriendlyName = 'PowerShell v2 is disabled'            
             Compliant    = $IndividualItemResult
             Value        = $IndividualItemResult  
-            Name         = "PowerShell v2 is disabled"          
+            Name         = 'PowerShell v2 is disabled'          
             Category     = $CatName
             Method       = 'Optional Windows Features'
         }
 
         # Process the registry keys for this category based on the selected method and category name, then save the output Custom Object in the Array
-        [string]$IndividualItemResult = (get-WindowsOptionalFeature -Online -FeatureName WorkFolders-Client).state
+        [string]$IndividualItemResult = (Get-WindowsOptionalFeature -Online -FeatureName WorkFolders-Client).state
         $NestedObjectArray += [PSCustomObject]@{
-            FriendlyName = "Work Folders client is disabled"            
+            FriendlyName = 'Work Folders client is disabled'            
             Compliant    = [bool]($IndividualItemResult -eq 'disabled')
             Value        = $IndividualItemResult            
-            Name         = "Work Folders client is disabled"
+            Name         = 'Work Folders client is disabled'
             Category     = $CatName
             Method       = 'Optional Windows Features'
         }
 
         # Process the registry keys for this category based on the selected method and category name, then save the output Custom Object in the Array
-        [string]$IndividualItemResult = (get-WindowsOptionalFeature -Online -FeatureName Printing-Foundation-Features).state
+        [string]$IndividualItemResult = (Get-WindowsOptionalFeature -Online -FeatureName Printing-Foundation-Features).state
         $NestedObjectArray += [PSCustomObject]@{
-            FriendlyName = "Internet Printing Client is disabled"            
+            FriendlyName = 'Internet Printing Client is disabled'            
             Compliant    = [bool]($IndividualItemResult -eq 'disabled')
             Value        = $IndividualItemResult   
-            Name         = "Internet Printing Client is disabled"         
+            Name         = 'Internet Printing Client is disabled'         
             Category     = $CatName
             Method       = 'Optional Windows Features'
         }
 
         # Process the registry keys for this category based on the selected method and category name, then save the output Custom Object in the Array
-        [string]$IndividualItemResult = (get-WindowsOptionalFeature -Online -FeatureName WindowsMediaPlayer).state
+        [string]$IndividualItemResult = (Get-WindowsOptionalFeature -Online -FeatureName WindowsMediaPlayer).state
         $NestedObjectArray += [PSCustomObject]@{
-            FriendlyName = "Windows Media Player (legacy) is disabled"            
+            FriendlyName = 'Windows Media Player (legacy) is disabled'            
             Compliant    = [bool]($IndividualItemResult -eq 'disabled')
             Value        = $IndividualItemResult  
-            Name         = "Windows Media Player (legacy) is disabled"          
+            Name         = 'Windows Media Player (legacy) is disabled'          
             Category     = $CatName
             Method       = 'Optional Windows Features'
         }
 
         # Process the registry keys for this category based on the selected method and category name, then save the output Custom Object in the Array
-        [string]$IndividualItemResult = (get-WindowsOptionalFeature -Online -FeatureName Windows-Defender-ApplicationGuard).state
+        [string]$IndividualItemResult = (Get-WindowsOptionalFeature -Online -FeatureName Windows-Defender-ApplicationGuard).state
         $NestedObjectArray += [PSCustomObject]@{
-            FriendlyName = "Microsoft Defender Application Guard is enabled"            
+            FriendlyName = 'Microsoft Defender Application Guard is enabled'            
             Compliant    = [bool]($IndividualItemResult -eq 'enabled')
             Value        = $IndividualItemResult 
-            Name         = "Microsoft Defender Application Guard is enabled"           
+            Name         = 'Microsoft Defender Application Guard is enabled'           
             Category     = $CatName
             Method       = 'Optional Windows Features'
         }
 
         # Process the registry keys for this category based on the selected method and category name, then save the output Custom Object in the Array
-        [string]$IndividualItemResult = (get-WindowsOptionalFeature -Online -FeatureName Containers-DisposableClientVM).state
+        [string]$IndividualItemResult = (Get-WindowsOptionalFeature -Online -FeatureName Containers-DisposableClientVM).state
         $NestedObjectArray += [PSCustomObject]@{
-            FriendlyName = "Windows Sandbox is enabled"            
+            FriendlyName = 'Windows Sandbox is enabled'            
             Compliant    = [bool]($IndividualItemResult -eq 'enabled')
             Value        = $IndividualItemResult 
-            Name         = "Windows Sandbox is enabled"           
+            Name         = 'Windows Sandbox is enabled'           
             Category     = $CatName
             Method       = 'Optional Windows Features'
         }
         
         # Process the registry keys for this category based on the selected method and category name, then save the output Custom Object in the Array
-        [string]$IndividualItemResult = (get-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V).state
+        [string]$IndividualItemResult = (Get-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V).state
         $NestedObjectArray += [PSCustomObject]@{
-            FriendlyName = "Hyper-V is enabled"            
+            FriendlyName = 'Hyper-V is enabled'            
             Compliant    = [bool]($IndividualItemResult -eq 'enabled')
             Value        = $IndividualItemResult 
-            Name         = "Hyper-V is enabled"           
+            Name         = 'Hyper-V is enabled'           
             Category     = $CatName
             Method       = 'Optional Windows Features'
         }
 
         # Process the registry keys for this category based on the selected method and category name, then save the output Custom Object in the Array
-        [string]$IndividualItemResult = (get-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform).state
+        [string]$IndividualItemResult = (Get-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform).state
         $NestedObjectArray += [PSCustomObject]@{
-            FriendlyName = "Virtual Machine Platform is enabled"            
+            FriendlyName = 'Virtual Machine Platform is enabled'            
             Compliant    = [bool]($IndividualItemResult -eq 'enabled')
             Value        = $IndividualItemResult 
-            Name         = "Virtual Machine Platform is enabled"           
+            Name         = 'Virtual Machine Platform is enabled'           
             Category     = $CatName
             Method       = 'Optional Windows Features'
         }
@@ -788,10 +795,10 @@ function Confirm-SystemCompliance {
         # Process the registry keys for this category based on the selected method and category name, then save the output Custom Object in the Array
         [string]$IndividualItemResult = (Get-WindowsCapability -Online | Where-Object { $_.Name -like '*wmic*' }).state
         $NestedObjectArray += [PSCustomObject]@{
-            FriendlyName = "WMIC is not present"            
+            FriendlyName = 'WMIC is not present'            
             Compliant    = [bool]($IndividualItemResult -eq 'NotPresent')
             Value        = $IndividualItemResult  
-            Name         = "WMIC is not present"          
+            Name         = 'WMIC is not present'          
             Category     = $CatName
             Method       = 'Optional Windows Features'
         }
@@ -799,10 +806,10 @@ function Confirm-SystemCompliance {
         # Process the registry keys for this category based on the selected method and category name, then save the output Custom Object in the Array
         [string]$IndividualItemResult = (Get-WindowsCapability -Online | Where-Object { $_.Name -like '*Browser.InternetExplorer*' }).state
         $NestedObjectArray += [PSCustomObject]@{
-            FriendlyName = "Internet Explorer mode functionality for Edge is not present"           
+            FriendlyName = 'Internet Explorer mode functionality for Edge is not present'           
             Compliant    = [bool]($IndividualItemResult -eq 'NotPresent')
             Value        = $IndividualItemResult    
-            Name         = "Internet Explorer mode functionality for Edge is not present"                   
+            Name         = 'Internet Explorer mode functionality for Edge is not present'                   
             Category     = $CatName
             Method       = 'Optional Windows Features'
         }
@@ -810,10 +817,10 @@ function Confirm-SystemCompliance {
         # Process the registry keys for this category based on the selected method and category name, then save the output Custom Object in the Array
         [string]$IndividualItemResult = (Get-WindowsCapability -Online | Where-Object { $_.Name -like '*Microsoft.Windows.Notepad.System*' }).state
         $NestedObjectArray += [PSCustomObject]@{
-            FriendlyName = "Legacy Notepad is not present"           
+            FriendlyName = 'Legacy Notepad is not present'           
             Compliant    = [bool]($IndividualItemResult -eq 'NotPresent')
             Value        = $IndividualItemResult   
-            Name         = "Legacy Notepad is not present"                   
+            Name         = 'Legacy Notepad is not present'                   
             Category     = $CatName
             Method       = 'Optional Windows Features'
         }
@@ -825,9 +832,9 @@ function Confirm-SystemCompliance {
         #Region Windows-Networking-Category
         Write-Progress -Activity 'Validating Windows Networking Category' -Status 'Processing...' -PercentComplete 80
         [System.Array]$NestedObjectArray = @()
-        [String]$CatName = "Windows Networking"
+        [String]$CatName = 'Windows Networking'
         
-        $NestedObjectArray += [PSCustomObject](Invoke-CategoryProcessing -catname $CatName -Method "Group Policy")
+        $NestedObjectArray += [PSCustomObject](Invoke-CategoryProcessing -catname $CatName -Method 'Group Policy')
         
         # Check network location of all connections to see if they are public
         $Condition = Get-NetConnectionProfile | ForEach-Object { $_.NetworkCategory -eq 'public' }
@@ -835,23 +842,23 @@ function Confirm-SystemCompliance {
     
         # Process the registry keys for this category based on the selected method and category name, then save the output Custom Object in the Array
         $NestedObjectArray += [PSCustomObject]@{
-            FriendlyName = "Network Location of all connections set to Public"            
+            FriendlyName = 'Network Location of all connections set to Public'            
             Compliant    = $IndividualItemResult
             Value        = $IndividualItemResult
-            Name         = "Network Location of all connections set to Public"          
+            Name         = 'Network Location of all connections set to Public'          
             Category     = $CatName
             Method       = 'Cmdlet'
         }
     
         # Process the registry keys for this category based on the selected method and category name, then save the output Custom Object in the Array
-        $IndividualItemResult = [bool]((Get-ItemPropertyValue -Path "HKLM:\SYSTEM\CurrentControlSet\Services\NetBT\Parameters" -Name "EnableLMHOSTS" -ErrorAction SilentlyContinue) -eq '0')
+        $IndividualItemResult = [bool]((Get-ItemPropertyValue -Path 'HKLM:\SYSTEM\CurrentControlSet\Services\NetBT\Parameters' -Name 'EnableLMHOSTS' -ErrorAction SilentlyContinue) -eq '0')
         $NestedObjectArray += [PSCustomObject]@{
-            FriendlyName = "Disable LMHOSTS lookup protocol on all network adapters"            
+            FriendlyName = 'Disable LMHOSTS lookup protocol on all network adapters'            
             Compliant    = $IndividualItemResult
             Value        = $IndividualItemResult     
-            Name         = "Disable LMHOSTS lookup protocol on all network adapters"       
+            Name         = 'Disable LMHOSTS lookup protocol on all network adapters'       
             Category     = $CatName
-            Method       = "Registry Key"
+            Method       = 'Registry Key'
         }
 
         # Process the registry keys for this category based on the selected method and category name, then save the output Custom Object in the Array   
@@ -883,17 +890,17 @@ function Confirm-SystemCompliance {
         #Region Miscellaneous-Category
         Write-Progress -Activity 'Validating Miscellaneous Category' -Status 'Processing...' -PercentComplete 85
         [System.Array]$NestedObjectArray = @()
-        [String]$CatName = "Miscellaneous"
+        [String]$CatName = 'Miscellaneous'
         
-        $NestedObjectArray += [PSCustomObject](Invoke-CategoryProcessing -catname $CatName -Method "Group Policy")
+        $NestedObjectArray += [PSCustomObject](Invoke-CategoryProcessing -catname $CatName -Method 'Group Policy')
     
         # Process the registry keys for this category based on the selected method and category name, then save the output Custom Object in the Array
         $IndividualItemResult = [bool]((Get-SmbServerConfiguration).encryptdata)
         $NestedObjectArray += [PSCustomObject]@{
-            FriendlyName = "SMB Encryption"           
+            FriendlyName = 'SMB Encryption'           
             Compliant    = $IndividualItemResult
             Value        = $IndividualItemResult
-            Name         = "SMB Encryption"
+            Name         = 'SMB Encryption'
             Category     = $CatName
             Method       = 'Cmdlet'
         }
@@ -901,10 +908,10 @@ function Confirm-SystemCompliance {
         # Process the registry keys for this category based on the selected method and category name, then save the output Custom Object in the Array
         $IndividualItemResult = [bool](((auditpol /get /subcategory:"Other Logon/Logoff Events" /r | ConvertFrom-Csv).'Inclusion Setting' -eq 'Success and Failure') ? $True : $False)
         $NestedObjectArray += [PSCustomObject]@{
-            FriendlyName = (Get-Culture).name -eq 'en-US' ? "Audit policy for Other Logon/Logoff Events" : "(Not accurate on non-English system languages) - Audit policy for Other Logon/Logoff Events"            
+            FriendlyName = (Get-Culture).name -eq 'en-US' ? 'Audit policy for Other Logon/Logoff Events' : '(Not accurate on non-English system languages) - Audit policy for Other Logon/Logoff Events'            
             Compliant    = $IndividualItemResult
             Value        = $IndividualItemResult
-            Name         = (Get-Culture).name -eq 'en-US' ? "Audit policy for Other Logon/Logoff Events" : "(Not accurate on non-English system languages) - Audit policy for Other Logon/Logoff Events"            
+            Name         = (Get-Culture).name -eq 'en-US' ? 'Audit policy for Other Logon/Logoff Events' : '(Not accurate on non-English system languages) - Audit policy for Other Logon/Logoff Events'            
             Category     = $CatName
             Method       = 'Cmdlet'
         }            
@@ -923,15 +930,15 @@ function Confirm-SystemCompliance {
         
         # Process the registry keys for this category based on the selected method and category name, then save the output Custom Object in the Array
         $NestedObjectArray += [PSCustomObject]@{
-            FriendlyName = "All users are part of the Hyper-V Administrators group"            
+            FriendlyName = 'All users are part of the Hyper-V Administrators group'            
             Compliant    = [bool]($MatchHyperVUsers -notcontains $false)
             Value        = [bool]($MatchHyperVUsers -notcontains $false)  
-            Name         = "All users are part of the Hyper-V Administrators group"          
+            Name         = 'All users are part of the Hyper-V Administrators group'          
             Category     = $CatName
             Method       = 'Cmdlet'
         }
         
-        $NestedObjectArray += [PSCustomObject](Invoke-CategoryProcessing -catname $CatName -Method "Registry Keys")
+        $NestedObjectArray += [PSCustomObject](Invoke-CategoryProcessing -catname $CatName -Method 'Registry Keys')
     
         # Add the array of custom objects as a property to the $FinalMegaObject object outside the loop
         Add-Member -InputObject $FinalMegaObject -MemberType NoteProperty -Name $CatName -Value $NestedObjectArray
@@ -942,17 +949,17 @@ function Confirm-SystemCompliance {
         [System.Array]$NestedObjectArray = @()
         [String]$CatName = 'Windows Update'
         
-        $NestedObjectArray += [PSCustomObject](Invoke-CategoryProcessing -catname $CatName -Method "Group Policy")
+        $NestedObjectArray += [PSCustomObject](Invoke-CategoryProcessing -catname $CatName -Method 'Group Policy')
     
         # Process the registry keys for this category based on the selected method and category name, then save the output Custom Object in the Array
-        $IndividualItemResult = [bool]((Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings" -Name "RestartNotificationsAllowed2" -ErrorAction SilentlyContinue) -eq '1')
+        $IndividualItemResult = [bool]((Get-ItemPropertyValue -Path 'HKLM:\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings' -Name 'RestartNotificationsAllowed2' -ErrorAction SilentlyContinue) -eq '1')
         $NestedObjectArray += [PSCustomObject]@{
-            FriendlyName = "Enable restart notification for Windows update"            
+            FriendlyName = 'Enable restart notification for Windows update'            
             Compliant    = $IndividualItemResult
             Value        = $IndividualItemResult 
-            Name         = "Enable restart notification for Windows update"           
+            Name         = 'Enable restart notification for Windows update'           
             Category     = $CatName
-            Method       = "Registry Key"
+            Method       = 'Registry Key'
         }
     
         # Add the array of custom objects as a property to the $FinalMegaObject object outside the loop
@@ -962,9 +969,9 @@ function Confirm-SystemCompliance {
         #Region Edge-Category
         Write-Progress -Activity 'Validating Edge Browser Category' -Status 'Processing...' -PercentComplete 95
         [System.Array]$NestedObjectArray = @()
-        [String]$CatName = "Edge"  
+        [String]$CatName = 'Edge'  
         
-        $NestedObjectArray += [PSCustomObject](Invoke-CategoryProcessing -catname $CatName -Method "Registry Keys")
+        $NestedObjectArray += [PSCustomObject](Invoke-CategoryProcessing -catname $CatName -Method 'Registry Keys')
             
         # Add the array of custom objects as a property to the $FinalMegaObject object outside the loop
         Add-Member -InputObject $FinalMegaObject -MemberType NoteProperty -Name $CatName -Value $NestedObjectArray
@@ -975,32 +982,19 @@ function Confirm-SystemCompliance {
         [System.Array]$NestedObjectArray = @()
         [String]$CatName = 'Non-Admin'
     
-        $NestedObjectArray += [PSCustomObject](Invoke-CategoryProcessing -catname $CatName -Method "Registry Keys")
+        $NestedObjectArray += [PSCustomObject](Invoke-CategoryProcessing -catname $CatName -Method 'Registry Keys')
     
         # Add the array of custom objects as a property to the $FinalMegaObject object outside the loop
         Add-Member -InputObject $FinalMegaObject -MemberType NoteProperty -Name $CatName -Value $NestedObjectArray
         #EndRegion Non-Admin-Category
    
         if ($ExportToCSV) {
-
             # An array to store the content of each category
             $CsvOutPutFileContent = @()
-            $CsvOutPutFileContent += $FinalMegaObject.'Microsoft Defender'
-            $CsvOutPutFileContent += $FinalMegaObject.ASR
-            $CsvOutPutFileContent += $FinalMegaObject.Bitlocker
-            $CsvOutPutFileContent += $FinalMegaObject.TLS
-            $CsvOutPutFileContent += $FinalMegaObject.LockScreen
-            $CsvOutPutFileContent += $FinalMegaObject.UAC
-            $CsvOutPutFileContent += $FinalMegaObject.'Device Guard'
-            $CsvOutPutFileContent += $FinalMegaObject.'Windows Firewall'
-            $CsvOutPutFileContent += $FinalMegaObject.'Optional Windows Features'
-            $CsvOutPutFileContent += $FinalMegaObject.'Windows Networking'
-            $CsvOutPutFileContent += $FinalMegaObject.Miscellaneous
-            $CsvOutPutFileContent += $FinalMegaObject.'Windows Update'
-            $CsvOutPutFileContent += $FinalMegaObject.Edge
-            $CsvOutPutFileContent += $FinalMegaObject.'Non-Admin'
+            # Append the categories in $FinalMegaObject to the array using += operator
+            $CsvOutPutFileContent += $FinalMegaObject.PSObject.Properties.Value
             # Convert the array to CSV and store it in the Output.CSV file in the current working directory
-            $CsvOutPutFileContent | ConvertTo-Csv | Out-File '.\Output.CSV' -Force        
+            $CsvOutPutFileContent | ConvertTo-Csv | Out-File '.\Output.CSV' -Force
         }
         
         if ($ShowAsObjectsOnly) {
@@ -1036,7 +1030,7 @@ function Confirm-SystemCompliance {
                     [System.Drawing.Color]::Pink
                 )
 
-                $output = ""
+                $output = ''
                 for ($i = 0; $i -lt $text.Length; $i++) {
                     $color = $colors[$i % $colors.Length]
                     $output += "$($PSStyle.Foreground.FromRGB($color.R, $color.G, $color.B))$($text[$i])$($PSStyle.Reset)"
@@ -1060,7 +1054,7 @@ function Confirm-SystemCompliance {
                     [System.Drawing.Color]::Gold
                 )
               
-                $output = ""
+                $output = ''
                 for ($i = 0; $i -lt $text.Length; $i++) {
                     $color = $colors[$i % $colors.Length]
                     $output += "$($PSStyle.Foreground.FromRGB($color.R, $color.G, $color.B))$($text[$i])$($PSStyle.Reset)"
@@ -1072,46 +1066,46 @@ function Confirm-SystemCompliance {
             # Show all properties in list
             if ($DetailedDisplay) {
                 & $WritePlum "`n-------------Microsoft Defender Category-------------"
-                $FinalMegaObject.'Microsoft Defender' | Format-list *
+                $FinalMegaObject.'Microsoft Defender' | Format-List *
     
                 & $WriteOrchid "`n-------------Attack Surface Reduction Rules Category-------------"
-                $FinalMegaObject.ASR | Format-list *
+                $FinalMegaObject.ASR | Format-List *
     
                 & $WriteFuchsia "`n-------------Bitlocker Category-------------"
-                $FinalMegaObject.Bitlocker | Format-list *
+                $FinalMegaObject.Bitlocker | Format-List *
     
                 & $WriteMediumOrchid "`n-------------TLS Category-------------"
-                $FinalMegaObject.TLS | Format-list *
+                $FinalMegaObject.TLS | Format-List *
     
                 & $WriteMediumPurple "`n-------------Lock Screen Category-------------"
-                $FinalMegaObject.LockScreen | Format-list *
+                $FinalMegaObject.LockScreen | Format-List *
     
                 & $WriteBlueViolet "`n-------------User Account Control Category-------------"
-                $FinalMegaObject.UAC | Format-list *
+                $FinalMegaObject.UAC | Format-List *
     
                 & $WriteDarkViolet "`n-------------Device Guard Category-------------"
-                $FinalMegaObject.'Device Guard' | Format-list *
+                $FinalMegaObject.'Device Guard' | Format-List *
     
                 & $WritePink "`n-------------Windows Firewall Category-------------"
-                $FinalMegaObject.'Windows Firewall' | Format-list *
+                $FinalMegaObject.'Windows Firewall' | Format-List *
 
                 & $WriteSkyBlue "`n-------------Optional Windows Features Category-------------"
-                $FinalMegaObject.'Optional Windows Features' | Format-list *
+                $FinalMegaObject.'Optional Windows Features' | Format-List *
     
                 & $WriteHotPink "`n-------------Windows Networking Category-------------"
-                $FinalMegaObject.'Windows Networking' | Format-list *
+                $FinalMegaObject.'Windows Networking' | Format-List *
     
                 & $WriteDeepPink "`n-------------Miscellaneous Category-------------"
-                $FinalMegaObject.Miscellaneous | Format-list *
+                $FinalMegaObject.Miscellaneous | Format-List *
     
                 & $WriteMintGreen "`n-------------Windows Update Category-------------"
-                $FinalMegaObject.'Windows Update' | Format-list *
+                $FinalMegaObject.'Windows Update' | Format-List *
     
                 & $WriteOrange "`n-------------Microsoft Edge Category-------------"
-                $FinalMegaObject.Edge | Format-list *
+                $FinalMegaObject.Edge | Format-List *
     
                 & $WriteSkyBlue "`n-------------Non-Admin Category-------------"
-                $FinalMegaObject.'Non-Admin' | Format-list *
+                $FinalMegaObject.'Non-Admin' | Format-List *
             }
 
             # Show properties that matter in a table
@@ -1171,14 +1165,14 @@ function Confirm-SystemCompliance {
             [int]($FinalMegaObject.'Windows Firewall' | Where-Object { $_.Compliant -eq $True }).Count + # 19
             [int]($FinalMegaObject.'Optional Windows Features' | Where-Object { $_.Compliant -eq $True }).Count + # 11
             [int]($FinalMegaObject.'Windows Networking' | Where-Object { $_.Compliant -eq $True }).Count + # 9
-            [int]($FinalMegaObject.Miscellaneous | Where-Object { $_.Compliant -eq $True }).Count + # 21
+            [int]($FinalMegaObject.Miscellaneous | Where-Object { $_.Compliant -eq $True }).Count + # 20
             [int]($FinalMegaObject.'Windows Update' | Where-Object { $_.Compliant -eq $True }).Count + # 14
             [int]($FinalMegaObject.Edge | Where-Object { $_.Compliant -eq $True }).Count + # 16
             [int]($FinalMegaObject.'Non-Admin' | Where-Object { $_.Compliant -eq $True }).Count # 11
 
 
             #Region ASCII-Arts
-            [string]$WhenValue1To20 = @"
+            [string]$WhenValue1To20 = @'
                 OH
                 
                 N
@@ -1195,10 +1189,10 @@ function Confirm-SystemCompliance {
                 　　　 .
                 　　　　.
                 
-"@
+'@
                          
                 
-            [string]$WhenValue21To40 = @"
+            [string]$WhenValue21To40 = @'
 
 ‎‏‏‎‏‏‎⣿⣿⣷⡁⢆⠈⠕⢕⢂⢕⢂⢕⢂⢔⢂⢕⢄⠂⣂⠂⠆⢂⢕⢂⢕⢂⢕⢂⢕⢂
 ‎‏‏‎‏‏‎⣿⣿⣿⡷⠊⡢⡹⣦⡑⢂⢕⢂⢕⢂⢕⢂⠕⠔⠌⠝⠛⠶⠶⢶⣦⣄⢂⢕⢂⢕
@@ -1215,10 +1209,10 @@ function Confirm-SystemCompliance {
 ‎‏‏‎‏‏‎⠨⡂⡀⢑⢕⡅⠂⠄⠉⠛⠻⠿⢿⣿⣿⣿⣿⣿⣿⣿⣿⡿⢋⢔⢕⢕⣿⣿⠠⠈
 ‎‏‏‎‏‏‎⠄⠪⣂⠁⢕⠆⠄⠂⠄⠁⡀⠂⡀⠄⢈⠉⢍⢛⢛⢛⢋⢔⢕⢕⢕⣽⣿⣿⠠⠈
 
-"@
+'@
          
                 
-            [string]$WhenValue41To60 = @"
+            [string]$WhenValue41To60 = @'
   
             ⣿⡟⠙⠛⠋⠩⠭⣉⡛⢛⠫⠭⠄⠒⠄⠄⠄⠈⠉⠛⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿
             ⣿⡇⠄⠄⠄⠄⣠⠖⠋⣀⡤⠄⠒⠄⠄⠄⠄⠄⠄⠄⠄⠄⣈⡭⠭⠄⠄⠄⠉⠙
@@ -1235,11 +1229,11 @@ function Confirm-SystemCompliance {
             ⣿⡿⠰⠄⠄⠄⠄⠄⠄⠄⠄⠈⠉⠩⠔⠒⠉⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠐⠘⣿
             ⣿⠃⠃⠄⠄⠄⠄⠄⠄⣀⢀⠄⠄⡀⡀⢀⣤⣴⣤⣤⣀⣀⠄⠄⠄⠄⠄⠄⠁⢹
 
-"@
+'@
                 
                 
                 
-            [string]$WhenValue61To80 = @"
+            [string]$WhenValue61To80 = @'
                 
                 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣴⣿⣿⡷⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
                 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣴⣿⡿⠋⠈⠻⣮⣳⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
@@ -1262,10 +1256,10 @@ function Confirm-SystemCompliance {
                 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢻⣿⣆⠀⠀⠀⠀⠀⠀⢀⣀⣠⣤⣶⣾⣿⣿⣿⣿⣤⣄⣀⡀⠀⠀⠀⣿
                 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠻⢿⣻⣷⣶⣾⣿⣿⡿⢯⣛⣛⡋⠁⠀⠀⠉⠙⠛⠛⠿⣿⣿⡷⣶⣿
                 
-"@
+'@
                 
                 
-            [string]$WhenValue81To88 = @"
+            [string]$WhenValue81To88 = @'
                 
                 ⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
                 ⠀⠀⠀⠀⠀⠔⠶⠒⠉⠈⠸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
@@ -1290,10 +1284,10 @@ function Confirm-SystemCompliance {
                 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⡄⠀⠀⠀⠈⠷⠧⠾⠀⠀⠀⠻⣦⡴⠏⠀⠀⠀⠀⠀⠀⡀⠀⠀⠀⠀⠀⠀⠀⠀
                 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠁⠀⠀⠀⠀⠈⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
                 
-"@
+'@
                 
                 
-            [string]$WhenValueAbove88 = @"
+            [string]$WhenValueAbove88 = @'
                 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
                 ⠀⠀⠀⠀⠀⠀⠀⢠⣶⣶⣶⣦⣤⣀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣴⣿⠟⠛⢿⣶⡄⠀⢀⣀⣤⣤⣦⣤⡀⠀⠀⠀⠀⠀
                 ⠀⠀⠀⠀⠀⠀⢠⣿⠋⠀⠀⠈⠙⠻⢿⣶⣶⣶⣶⣶⣶⣶⣿⠟⠀⠀⠀⠀⠹⣿⡿⠟⠋⠉⠁⠈⢻⣷⠀⠀⠀⠀⠀
@@ -1315,12 +1309,9 @@ function Confirm-SystemCompliance {
                 ⠀⠀⠀⠀⠀⠀⠀⠀⠈⠙⠛⠛⠛⠛⠉⠀⠹⣿⣶⣤⣤⣷⣿⣧⣴⣾⣿⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
                 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⠻⢦⣭⡽⣯⣡⡴⠟⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
                 
-"@
+'@
             #Endregion ASCII-Arts
-
-            # Total number of Compliant values not equal to N/A           
-            [int]$TotalNumberOfTrueCompliantValues = 229
-                
+                  
             switch ($True) {
                     ($TotalTrueCompliantValuesInOutPut -in 1..40) { & $WriteRainbow2 "$WhenValue1To20`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $TotalNumberOfTrueCompliantValues!" }                    
                     ($TotalTrueCompliantValuesInOutPut -in 41..80) { & $WriteRainbow1 "$WhenValue21To40`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $TotalNumberOfTrueCompliantValues!" }
@@ -1344,7 +1335,7 @@ function Confirm-SystemCompliance {
 Checks the compliance of a system with the Harden Windows Security script guidelines
 
 .LINK
-https://github.com/HotCakeX/Harden-Windows-Security
+https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden%E2%80%90Windows%E2%80%90Security%E2%80%90Module
 
 .DESCRIPTION
 Checks the compliance of a system with the Harden Windows Security script. Checks the applied Group policies, registry keys and PowerShell cmdlets used by the hardening script.
@@ -1379,4 +1370,4 @@ Shows the output on the PowerShell console with more details and in the list for
 }
 
 # Set PSReadline tab completion to complete menu for easier access to available parameters - Only for the current session
-Set-PSReadlineKeyHandler -Key Tab -Function MenuComplete
+Set-PSReadLineKeyHandler -Key Tab -Function MenuComplete

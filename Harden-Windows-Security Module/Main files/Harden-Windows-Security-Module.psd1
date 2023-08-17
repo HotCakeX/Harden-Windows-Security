@@ -12,7 +12,7 @@
     # RootModule = ''
 
     # Version number of this module.
-    ModuleVersion        = '0.0.8'
+    ModuleVersion        = '0.0.9'
 
     # Supported PSEditions
     CompatiblePSEditions = @('Core')
@@ -30,7 +30,7 @@
     Copyright            = '(c) HotCakeX. All rights reserved.'
 
     # Description of the functionality provided by this module
-    Description          = @"
+    Description          = @'
 
 ✅ This is a PowerShell module for Harden Windows Security script.
 ✅ It offers System Compliance checking in addition to hardening.
@@ -47,7 +47,7 @@
 💎 If you have any questions, requests, suggestions etc. about this module, please open a new Discussion or Issue on GitHub
 
 
-"@
+'@
 
     # Minimum version of the PowerShell engine required by this module
     PowerShellVersion    = '7.3.4'
@@ -83,13 +83,13 @@
     # FormatsToProcess = @()
 
     # Modules to import as nested modules of the module specified in RootModule/ModuleToProcess
-    NestedModules        = @('Confirm-SystemCompliance.psm1', 'Protect-WindowsSecurity.psm1')
+    NestedModules        = @('Confirm-SystemCompliance.psm1', 'Protect-WindowsSecurity.psm1', 'Unprotect-WindowsSecurity.psm1')
 
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
-    FunctionsToExport    = @('Confirm-SystemCompliance', 'Protect-WindowsSecurity')
+    FunctionsToExport    = @('Confirm-SystemCompliance', 'Protect-WindowsSecurity', 'Unprotect-WindowsSecurity')
 
     # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
-    CmdletsToExport      = @('Confirm-SystemCompliance', 'Protect-WindowsSecurity')
+    CmdletsToExport      = @('Confirm-SystemCompliance', 'Protect-WindowsSecurity', 'Unprotect-WindowsSecurity')
 
     # Variables to export from this module
     VariablesToExport    = '*'
@@ -104,7 +104,7 @@
     # ModuleList = @()
 
     # List of all files packaged with this module
-    FileList             = @('Harden-Windows-Security-Module.psd1', 'Confirm-SystemCompliance.psm1', 'Protect-WindowsSecurity.psm1')
+    FileList             = @('Harden-Windows-Security-Module.psd1', 'Confirm-SystemCompliance.psm1', 'Protect-WindowsSecurity.psm1', 'Unprotect-WindowsSecurity.psm1')
 
     # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.
     PrivateData          = @{
@@ -124,7 +124,10 @@
             IconUri      = 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security%20Module/PowerShell%20Gallery%20Icon/Peach%20Small.png'
 
             # ReleaseNotes of this module
-            ReleaseNotes = @"
+            ReleaseNotes = @'
+
+## Version 0.0.9
+Added Unprotect-WindowsSecurity cmdlet for removing the protections applied by the Protect-WindowsSecurity cmdlet.
 
 ## Version 0.0.8
 The compliance checking module now uses registry instead of group policy, this was done because group policies are different in different languages and locales so the old method couldn't be used by users using non-English system locales.
@@ -164,7 +167,7 @@ Added a new optional parameter called "-DetailedDisplay" to show the output in a
 ## Version 0.0.1
 First release
 
-"@
+'@
 
             # Prerelease string of this module
             # Prerelease = ''
@@ -180,7 +183,7 @@ First release
     } # End of PrivateData hashtable
 
     # HelpInfo URI of this module
-    HelpInfoURI          = 'https://github.com/HotCakeX/Harden-Windows-Security'
+    HelpInfoURI          = 'https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden%E2%80%90Windows%E2%80%90Security%E2%80%90Module'
 
     # Default prefix for commands exported from this module. Override the default prefix using Import-Module -Prefix.
     # DefaultCommandPrefix = ''

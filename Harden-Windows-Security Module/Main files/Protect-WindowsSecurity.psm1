@@ -4,9 +4,13 @@ Function Protect-WindowsSecurity {
     try {    
         .\Harden-Windows-Security.ps1
     }
+    catch {
+        Write-Error -Message "Couldn't download the required files, please check your Internet connection."
+        [bool]$DontDelete = $true  
+    }
     finally {
         # Will delete the script after it's done when Exit is selected or CTRL + C is pressed
-        Remove-Item -Path .\Harden-Windows-Security.ps1 -Force
+        if (!$DontDelete) { Remove-Item -Path .\Harden-Windows-Security.ps1 -Force }
     }
 
     <#

@@ -344,3 +344,21 @@ Add-Member -InputObject $ParentObject -MemberType NoteProperty -Name Child -Valu
 ```
 
 <br>
+
+## Some best practices for PowerShell code
+
+1. Specify variable types explicitly
+2. Use Single quotes instead of double quotes for strings whenever possible, for example when the string value isn't interpolated.
+
+You can access the settings page of PowerShell extension in VS Code and enable options that automatically apply the aforementioned best practices when you format your code with (CTRL + Shift + F) shortcut.
+
+<br>
+
+## Use CRLF instead of LF for end of line characters
+
+In Visual Studio Code for example, you can see at the bottom right corner whether your end of line sequence is set to CRLF or LF, Windows uses CRLF.
+
+When you upload a PowerShell script to GitHub you need to make sure it's set to CRLF. PowerShell codes that are signed have big signature blocks at the end of them. PowerShell expects CRLF when doing authenticode signatures. You can also add those scripts to a `.gitattribute` config to your repo so that PowerShell files are uploaded with CRLF and not with LF.
+
+<br>
+

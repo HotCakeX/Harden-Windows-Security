@@ -1276,7 +1276,7 @@ Get-Content <Path-To-File> -stream zone.identifier
 - [Security auditing](https://learn.microsoft.com/en-us/windows/security/threat-protection/auditing/security-auditing-overview)
 - [Microsoft SysInternals Sysmon for Windows Event Collection or SIEM](https://learn.microsoft.com/en-us/sysinternals/downloads/sysmon)
 - [Privileged Access Workstations](http://aka.ms/cyberpaw)
-- [Enhanced Security Administrative Environment](http://aka.ms/ESAE)
+- [Enhanced Security Administrative Environment (ESAE)](http://aka.ms/ESAE)
 - [New Zealand 2016 Demystifying the Windows Firewall – Learn how to irritate attackers without crippli](https://youtu.be/InPiE0EOArs)
 - [Download Windows virtual machines ready for development](https://developer.microsoft.com/en-us/windows/downloads/virtual-machines/)
 - [UK National Cyber Security Centre Advice & guidance](https://www.ncsc.gov.uk/section/advice-guidance/all-topics)

@@ -971,7 +971,7 @@ Due to security reasons, many policies cannot be used when you are signed into E
   - [Microsoft Edge Beta channel change log](https://learn.microsoft.com/en-us/deployedge/microsoft-edge-relnote-beta-channel)
   - [Microsoft Edge Mobile stable channel change log](https://learn.microsoft.com/en-us/deployedge/microsoft-edge-relnote-mobile-stable-channel)
   - [Edge Insider for Beta/Dev/Canary channels](https://www.microsoftedgeinsider.com/en-us/)
-  - [Microsoft Edge Security baselines](https://www.microsoft.com/en-us/download/details.aspx?id=55319) - Work without ingesting [ADMX policy files](https://www.microsoft.com/en-us/edge/business/download) first - This script includes them
+  - [Microsoft Edge Security baselines](https://www.microsoft.com/en-us/download/details.aspx?id=55319) - Work without ingesting [ADMX policy files](https://www.microsoft.com/en-us/edge/business/download) first
     - [Reason why the script doesn't use it.](https://github.com/HotCakeX/Harden-Windows-Security/issues/50)
 
 <br>
@@ -986,7 +986,7 @@ Due to security reasons, many policies cannot be used when you are signed into E
 
   * Use my [WinSecureDNSMgr module](https://github.com/HotCakeX/WinSecureDNSMgr) to easily configure DNS over HTTPS in Windows
 
-###### Edge policies reviewed until version 115.0.1901.183
+###### Edge policies reviewed until version 115.0.1901.203
 
 <p align="right"><a href="#menu-back-to-top">💡 (back to categories)</a></p>
 

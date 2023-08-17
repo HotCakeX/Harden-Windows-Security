@@ -147,8 +147,8 @@ try {
 
     [System.Array]$ProcessMitigations = Import-Csv '.\ProcessMitigations.csv' -Delimiter ','
     # Group the data by ProgramName
-    $GroupedMitigations = $ProcessMitigations | Group-Object ProgramName
-    $AllAvailableMitigations = (Get-ItemProperty -Path 'Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\*')
+    [System.Array]$GroupedMitigations = $ProcessMitigations | Group-Object ProgramName
+    [System.Array]$AllAvailableMitigations = (Get-ItemProperty -Path 'Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\*')
     
     Write-Progress -Activity 'Removing Process Mitigations for apps' -Status 'Processing' -PercentComplete 90
    

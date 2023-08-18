@@ -110,6 +110,18 @@ This is an extremely [important security feature](https://learn.microsoft.com/en
 
 <br>
 
+### <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/bandage-bleed.gif" width="30"> Not enabling important Attack Surface Reduction rules
+
+CIS in 18.10.43.6.1.2 (L1) intentionally leaves out very important ASR rules
+
+1. [Use advanced protection against ransomware](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/attack-surface-reduction-rules-reference?view=o365-worldwide#use-advanced-protection-against-ransomware)
+2. [Block executable files from running unless they meet a prevalence, age, or trusted list criterion](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/attack-surface-reduction-rules-reference?view=o365-worldwide#block-executable-files-from-running-unless-they-meet-a-prevalence-age-or-trusted-list-criterion)
+3. [Block process creations originating from PSExec and WMI commands](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/attack-surface-reduction-rules-reference?view=o365-worldwide#block-process-creations-originating-from-psexec-and-wmi-commands)
+
+Rule #2 has the potential to prevent zero-days!
+
+<br>
+
 ### To be continued...
 
 These benchmarks or guidelines have numerous flaws and I have only examined two of them. There are many other benchmarks, standards, guidelines, etc. that may also contain errors or inconsistencies and are totally **unsafe** to implement them.

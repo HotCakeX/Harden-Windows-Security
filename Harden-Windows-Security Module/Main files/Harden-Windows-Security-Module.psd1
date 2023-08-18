@@ -12,7 +12,7 @@
     # RootModule = ''
 
     # Version number of this module.
-    ModuleVersion        = '0.0.9'
+    ModuleVersion        = '0.1.0'
 
     # Supported PSEditions
     CompatiblePSEditions = @('Core')
@@ -125,6 +125,11 @@
 
             # ReleaseNotes of this module
             ReleaseNotes = @'
+
+## Version 0.1.0
+Added TPM check, Secureboot check and Latest Windows version check to the cmdlets of this module
+Windows optional features now use the Windows PowerShell instead of PowerShell core because: https://github.com/PowerShell/PowerShell/issues/13866
+Added hide progress for invoke webrequest and restmethod to prevent lingering progress bar effect on the console
 
 ## Version 0.0.9
 Added Unprotect-WindowsSecurity cmdlet for removing the protections applied by the Protect-WindowsSecurity cmdlet.

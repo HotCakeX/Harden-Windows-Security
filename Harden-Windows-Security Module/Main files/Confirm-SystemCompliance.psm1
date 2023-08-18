@@ -48,14 +48,41 @@ function Confirm-SystemCompliance {
     )
     begin {
 
-        Write-Progress -Activity 'Starting' -Status 'Processing...' -PercentComplete 5
+        Write-Progress -Activity 'Starting' -Status 'Processing...' -PercentComplete 5        
+
+        # Hiding Invoke-WebRequest progress because it creates lingering visual effect on PowerShell console for some reason
+        # https://github.com/PowerShell/PowerShell/issues/14348
+
+        # https://stackoverflow.com/questions/18770723/hide-progress-of-Invoke-WebRequest
+        # Create an in-memory module so $ScriptBlock doesn't run in new scope
+        $null = New-Module {
+            function Invoke-WithoutProgress {
+                [CmdletBinding()]
+                param (
+                    [Parameter(Mandatory)][scriptblock]$ScriptBlock
+                )
+                # Save current progress preference and hide the progress
+                $prevProgressPreference = $global:ProgressPreference
+                $global:ProgressPreference = 'SilentlyContinue'
+                try {
+                    # Run the script block in the scope of the caller of this module function
+                    . $ScriptBlock
+                }
+                finally {
+                    # Restore the original behavior
+                    $global:ProgressPreference = $prevProgressPreference
+                }
+            }
+        }
        
         # Make sure the latest version of the module is installed and if not, automatically update it, clean up any old versions
         function Update-self {            
             [version]$CurrentVersion = (Test-ModuleManifest "$psscriptroot\Harden-Windows-Security-Module.psd1").Version
             
-            try {             
-                [version]$LatestVersion = Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security%20Module/version.txt'             
+            try {
+                Invoke-WithoutProgress {             
+                    [version]$global:LatestVersion = Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security%20Module/version.txt'             
+                }
             }
             catch {   
                 Write-Error -Message "Couldn't verify if the latest version of the module is installed, please check your Internet connection."
@@ -87,6 +114,28 @@ function Confirm-SystemCompliance {
             Write-Error -Message 'Confirm-SystemCompliance cmdlet requires Administrator privileges.' -ErrorAction Stop
         }
 
+        #region RequirementsCheck        
+        # check if user's OS is Windows Home edition
+        if ((Get-CimInstance -ClassName Win32_OperatingSystem).OperatingSystemSKU -eq '101') {
+            Write-Error 'Windows Home edition detected, exiting...'
+            break
+        }
+
+        # check if user's OS is latest version
+        if (-NOT ([System.Environment]::OSVersion.Version -ge [version]'10.0.22621')) {
+            Write-Error "You're not using the latest version of the Windows OS, exiting..."
+            break
+        }
+
+        # check to make sure TPM is available and enabled
+        [bool]$TPMFlag1 = (Get-Tpm).tpmpresent
+        [bool]$TPMFlag2 = (Get-Tpm).tpmenabled
+        if (!$TPMFlag1 -or !$TPMFlag2) {
+            Write-Error 'TPM is not available or enabled, please go to your UEFI settings and enable it and then run the script again.'
+            break    
+        }    
+        #endregion RequirementsCheck
+
         Write-Progress -Activity 'Checking for updates' -Status 'Processing...' -PercentComplete 10
 
         # Self update the module
@@ -103,11 +152,13 @@ function Confirm-SystemCompliance {
         Write-Progress -Activity 'Downloading Registry CSV File from GitHub' -Status 'Processing...' -PercentComplete 20
         
         # Import the CSV file
-        try {       
-            Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security%20Module/Resources/Registry%20resources.csv' -OutFile '.\Registry resources.csv'
-            [System.Array]$CSVResource = Import-Csv -Path '.\Registry resources.csv'
-            # Total number of Compliant values not equal to N/A 
-            [int]$TotalNumberOfTrueCompliantValues = (Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security%20Module/Resources/TotalNumberOfTrueCompliantValues.txt')
+        try {  
+            Invoke-WithoutProgress {     
+                Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security%20Module/Resources/Registry%20resources.csv' -OutFile '.\Registry resources.csv'
+                [System.Array]$global:CSVResource = Import-Csv -Path '.\Registry resources.csv'
+                # Total number of Compliant values not equal to N/A 
+                [int]$global:TotalNumberOfTrueCompliantValues = (Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security%20Module/Resources/TotalNumberOfTrueCompliantValues.txt')
+            }
         }
         catch {
             Write-Error -Message "Couldn't download the required files, please check your Internet connection." -ErrorAction Stop
@@ -701,125 +752,128 @@ function Confirm-SystemCompliance {
         [System.Array]$NestedObjectArray = @()
         [String]$CatName = 'Optional Windows Features'
          
-        # Disable PowerShell v2 (needs 2 commands)
-        [bool]$IndividualItemResult = ((Get-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2).state -eq 'disabled') `
-            -and [bool]((Get-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2Root).state -eq 'disabled') ? $True : $false
-      
-        # Process the registry keys for this category based on the selected method and category name, then save the output Custom Object in the Array
+        # Verify PowerShell v2 is disabled
+        [System.Array]$Results = @()
+        $Results = powershell.exe {
+            [bool]$PowerShell1 = (Get-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2).State -eq 'Disabled'
+            [bool]$PowerShell2 = (Get-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2Root).State -eq 'Disabled'
+            [string]$WorkFoldersClient = (Get-WindowsOptionalFeature -Online -FeatureName WorkFolders-Client).state
+            [string]$InternetPrintingClient = (Get-WindowsOptionalFeature -Online -FeatureName Printing-Foundation-Features).state
+            [string]$WindowsMediaPlayer = (Get-WindowsOptionalFeature -Online -FeatureName WindowsMediaPlayer).state
+            [string]$MDAG = (Get-WindowsOptionalFeature -Online -FeatureName Windows-Defender-ApplicationGuard).state
+            [string]$WindowsSandbox = (Get-WindowsOptionalFeature -Online -FeatureName Containers-DisposableClientVM).state
+            [string]$HyperV = (Get-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V).state
+            [string]$VMPlatform = (Get-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform).state
+            [string]$WMIC = (Get-WindowsCapability -Online | Where-Object { $_.Name -like '*wmic*' }).state
+            [string]$IEMode = (Get-WindowsCapability -Online | Where-Object { $_.Name -like '*Browser.InternetExplorer*' }).state
+            [string]$LegacyNotepad = (Get-WindowsCapability -Online | Where-Object { $_.Name -like '*Microsoft.Windows.Notepad.System*' }).state
+
+            Return $PowerShell1, $PowerShell2, $WorkFoldersClient, $InternetPrintingClient, $WindowsMediaPlayer, $MDAG, $WindowsSandbox, $HyperV, $VMPlatform, $WMIC, $IEMode, $LegacyNotepad
+        } 
         $NestedObjectArray += [PSCustomObject]@{
             FriendlyName = 'PowerShell v2 is disabled'            
-            Compliant    = $IndividualItemResult
-            Value        = $IndividualItemResult  
+            Compliant    = ($Results[0] -and $Results[1]) ? $True : $False
+            Value        = ($Results[0] -and $Results[1]) ? $True : $False 
             Name         = 'PowerShell v2 is disabled'          
             Category     = $CatName
             Method       = 'Optional Windows Features'
         }
 
-        # Process the registry keys for this category based on the selected method and category name, then save the output Custom Object in the Array
-        [string]$IndividualItemResult = (Get-WindowsOptionalFeature -Online -FeatureName WorkFolders-Client).state
+        # Verify Work folders is disabled
         $NestedObjectArray += [PSCustomObject]@{
             FriendlyName = 'Work Folders client is disabled'            
-            Compliant    = [bool]($IndividualItemResult -eq 'disabled')
-            Value        = $IndividualItemResult            
+            Compliant    = [bool]($Results[2] -eq 'Disabled')
+            Value        = [string]$Results[2]         
             Name         = 'Work Folders client is disabled'
             Category     = $CatName
             Method       = 'Optional Windows Features'
         }
 
-        # Process the registry keys for this category based on the selected method and category name, then save the output Custom Object in the Array
-        [string]$IndividualItemResult = (Get-WindowsOptionalFeature -Online -FeatureName Printing-Foundation-Features).state
+        # Verify Internet Printing Client is disabled      
         $NestedObjectArray += [PSCustomObject]@{
             FriendlyName = 'Internet Printing Client is disabled'            
-            Compliant    = [bool]($IndividualItemResult -eq 'disabled')
-            Value        = $IndividualItemResult   
+            Compliant    = [bool]($Results[3] -eq 'Disabled')
+            Value        = [string]$Results[3]   
             Name         = 'Internet Printing Client is disabled'         
             Category     = $CatName
             Method       = 'Optional Windows Features'
         }
 
-        # Process the registry keys for this category based on the selected method and category name, then save the output Custom Object in the Array
-        [string]$IndividualItemResult = (Get-WindowsOptionalFeature -Online -FeatureName WindowsMediaPlayer).state
+        # Verify the old Windows Media Player is disabled    
         $NestedObjectArray += [PSCustomObject]@{
             FriendlyName = 'Windows Media Player (legacy) is disabled'            
-            Compliant    = [bool]($IndividualItemResult -eq 'disabled')
-            Value        = $IndividualItemResult  
+            Compliant    = [bool]($Results[4] -eq 'Disabled')
+            Value        = [string]$Results[4]
             Name         = 'Windows Media Player (legacy) is disabled'          
             Category     = $CatName
             Method       = 'Optional Windows Features'
         }
 
-        # Process the registry keys for this category based on the selected method and category name, then save the output Custom Object in the Array
-        [string]$IndividualItemResult = (Get-WindowsOptionalFeature -Online -FeatureName Windows-Defender-ApplicationGuard).state
+        # Verify MDAG is enabled       
         $NestedObjectArray += [PSCustomObject]@{
             FriendlyName = 'Microsoft Defender Application Guard is enabled'            
-            Compliant    = [bool]($IndividualItemResult -eq 'enabled')
-            Value        = $IndividualItemResult 
+            Compliant    = [bool]($Results[5] -eq 'Enabled')
+            Value        = [string]$Results[5]
             Name         = 'Microsoft Defender Application Guard is enabled'           
             Category     = $CatName
             Method       = 'Optional Windows Features'
         }
 
-        # Process the registry keys for this category based on the selected method and category name, then save the output Custom Object in the Array
-        [string]$IndividualItemResult = (Get-WindowsOptionalFeature -Online -FeatureName Containers-DisposableClientVM).state
+        # Verify Windows Sandbox is enabled   
         $NestedObjectArray += [PSCustomObject]@{
             FriendlyName = 'Windows Sandbox is enabled'            
-            Compliant    = [bool]($IndividualItemResult -eq 'enabled')
-            Value        = $IndividualItemResult 
+            Compliant    = [bool]($Results[6] -eq 'Enabled')
+            Value        = [string]$Results[6]
             Name         = 'Windows Sandbox is enabled'           
             Category     = $CatName
             Method       = 'Optional Windows Features'
         }
         
-        # Process the registry keys for this category based on the selected method and category name, then save the output Custom Object in the Array
-        [string]$IndividualItemResult = (Get-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V).state
+        # Verify Hyper-V is enabled     
         $NestedObjectArray += [PSCustomObject]@{
             FriendlyName = 'Hyper-V is enabled'            
-            Compliant    = [bool]($IndividualItemResult -eq 'enabled')
-            Value        = $IndividualItemResult 
+            Compliant    = [bool]($Results[7] -eq 'Enabled')
+            Value        = [string]$Results[7]
             Name         = 'Hyper-V is enabled'           
             Category     = $CatName
             Method       = 'Optional Windows Features'
         }
 
-        # Process the registry keys for this category based on the selected method and category name, then save the output Custom Object in the Array
-        [string]$IndividualItemResult = (Get-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform).state
+        # Verify Virtual Machine Platform is enabled
         $NestedObjectArray += [PSCustomObject]@{
             FriendlyName = 'Virtual Machine Platform is enabled'            
-            Compliant    = [bool]($IndividualItemResult -eq 'enabled')
-            Value        = $IndividualItemResult 
+            Compliant    = [bool]($Results[8] -eq 'Enabled')
+            Value        = [string]$Results[8]
             Name         = 'Virtual Machine Platform is enabled'           
             Category     = $CatName
             Method       = 'Optional Windows Features'
         }
 
-        # Process the registry keys for this category based on the selected method and category name, then save the output Custom Object in the Array
-        [string]$IndividualItemResult = (Get-WindowsCapability -Online | Where-Object { $_.Name -like '*wmic*' }).state
+        # Verify WMIC is not present
         $NestedObjectArray += [PSCustomObject]@{
             FriendlyName = 'WMIC is not present'            
-            Compliant    = [bool]($IndividualItemResult -eq 'NotPresent')
-            Value        = $IndividualItemResult  
+            Compliant    = [bool]($Results[9] -eq 'NotPresent')
+            Value        = [string]$Results[9] 
             Name         = 'WMIC is not present'          
             Category     = $CatName
             Method       = 'Optional Windows Features'
         }
 
-        # Process the registry keys for this category based on the selected method and category name, then save the output Custom Object in the Array
-        [string]$IndividualItemResult = (Get-WindowsCapability -Online | Where-Object { $_.Name -like '*Browser.InternetExplorer*' }).state
+        # Verify Internet Explorer mode functionality for Edge is not present    
         $NestedObjectArray += [PSCustomObject]@{
             FriendlyName = 'Internet Explorer mode functionality for Edge is not present'           
-            Compliant    = [bool]($IndividualItemResult -eq 'NotPresent')
-            Value        = $IndividualItemResult    
+            Compliant    = [bool]($Results[10] -eq 'NotPresent')
+            Value        = [string]$Results[10]    
             Name         = 'Internet Explorer mode functionality for Edge is not present'                   
             Category     = $CatName
             Method       = 'Optional Windows Features'
         }
 
-        # Process the registry keys for this category based on the selected method and category name, then save the output Custom Object in the Array
-        [string]$IndividualItemResult = (Get-WindowsCapability -Online | Where-Object { $_.Name -like '*Microsoft.Windows.Notepad.System*' }).state
+        # Verify Legacy Notepad is not present        
         $NestedObjectArray += [PSCustomObject]@{
             FriendlyName = 'Legacy Notepad is not present'           
-            Compliant    = [bool]($IndividualItemResult -eq 'NotPresent')
-            Value        = $IndividualItemResult   
+            Compliant    = [bool]($Results[11] -eq 'NotPresent')
+            Value        = [string]$Results[11]  
             Name         = 'Legacy Notepad is not present'                   
             Category     = $CatName
             Method       = 'Optional Windows Features'

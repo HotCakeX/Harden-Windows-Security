@@ -34,9 +34,13 @@ https://github.com/HotCakeX/Harden-Windows-Security/assets/118815227/0fdbd34b-6b
 
 ## Requirements
 
-* Administrator privileges for compliance checking and Removing Hardening measures
-* Administrator OR Standard user privileges for the Hardening mode, just like the Harden Windows Security script
-* [PowerShell core version 7.3 and above](https://github.com/PowerShell/PowerShell/releases)
+[Same requirements](https://github.com/HotCakeX/Harden-Windows-Security#requirements-) as Harden Windows Security script, plus:
+
+* Administrator privileges for `Confirm-SystemCompliance` and `Unprotect-WindowsSecurity`
+* Administrator OR Standard user privileges for `Protect-WindowsSecurity`
+* PowerShell Core version 7.3.4 and above
+     * Get it from the [official GitHub repository](https://github.com/PowerShell/PowerShell/releases)
+     * Or Install it from [Microsoft Store](https://apps.microsoft.com/store/detail/powershell/9MZ1SNWT0N5D)
 
 <br>
 

@@ -102,6 +102,14 @@ Indeed, the corporation that uses the software benefits from it by reporting the
 
 <br>
 
+### <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/bandage-bleed.gif" width="30"> Disabling Cloud Protection!
+
+CIS 18.10.43.5.2 (L2), suggests disabling Cloud Protection of Microsoft Defender. **This is precisely the kind of security measure that Threat Actors and advanced persistent threats (APTs) seek to disable** and then CIS is suggesting to disable it, astonishing.
+
+This is an extremely [important security feature](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/cloud-protection-microsoft-defender-antivirus?view=o365-worldwide) that should never be disabled and there is no rationale that justifies disabling it. This feature also uses the [Intelligent Security Graph (ISG)](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/use-wdac-with-intelligent-security-graph).
+
+<br>
+
 ### To be continued...
 
 These benchmarks or guidelines have numerous flaws and I have only examined two of them. There are many other benchmarks, standards, guidelines, etc. that may also contain errors or inconsistencies and are totally **unsafe** to implement them.

@@ -61,25 +61,51 @@ try {
     [scriptblock]$CleanUp = { Set-Location $HOME; Remove-Item -Recurse "$env:TEMP\HardeningXStuff\" -Force; exit }
 
     Write-Progress -Activity 'Downloading the required files' -Status 'Processing' -PercentComplete 30
+
+    # Hiding Invoke-WebRequest progress because it creates lingering visual effect on PowerShell console for some reason
+    # https://github.com/PowerShell/PowerShell/issues/14348
+
+    # https://stackoverflow.com/questions/18770723/hide-progress-of-Invoke-WebRequest
+    # Create an in-memory module so $ScriptBlock doesn't run in new scope
+    $null = New-Module {
+        function Invoke-WithoutProgress {
+            [CmdletBinding()]
+            param (
+                [Parameter(Mandatory)][scriptblock]$ScriptBlock
+            )
+            # Save current progress preference and hide the progress
+            $prevProgressPreference = $global:ProgressPreference
+            $global:ProgressPreference = 'SilentlyContinue'
+            try {
+                # Run the script block in the scope of the caller of this module function
+                . $ScriptBlock
+            }
+            finally {
+                # Restore the original behavior
+                $global:ProgressPreference = $prevProgressPreference
+            }
+        }
+    }
     
     try {                
-                           
-        # Download Registry CSV file from GitHub or Azure DevOps
-        try {
-            Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Payload/Registry.csv' -OutFile '.\Registry.csv' -ErrorAction Stop                
-        }
-        catch {
-            Write-Host 'Using Azure DevOps...' -ForegroundColor Yellow
-            Invoke-WebRequest -Uri 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/Registry.csv' -OutFile '.\Registry.csv' -ErrorAction Stop
-        }
+        Invoke-WithoutProgress {                   
+            # Download Registry CSV file from GitHub or Azure DevOps
+            try {
+                Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Payload/Registry.csv' -OutFile '.\Registry.csv' -ErrorAction Stop                
+            }
+            catch {
+                Write-Host 'Using Azure DevOps...' -ForegroundColor Yellow
+                Invoke-WebRequest -Uri 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/Registry.csv' -OutFile '.\Registry.csv' -ErrorAction Stop
+            }
 
-        # Download Process Mitigations CSV file from GitHub or Azure DevOps
-        try {
-            Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Payload/ProcessMitigations.csv' -OutFile '.\ProcessMitigations.csv' -ErrorAction Stop                
-        }
-        catch {
-            Write-Host 'Using Azure DevOps...' -ForegroundColor Yellow
-            Invoke-WebRequest -Uri 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/ProcessMitigations.csv' -OutFile '.\ProcessMitigations.csv' -ErrorAction Stop
+            # Download Process Mitigations CSV file from GitHub or Azure DevOps
+            try {
+                Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Payload/ProcessMitigations.csv' -OutFile '.\ProcessMitigations.csv' -ErrorAction Stop                
+            }
+            catch {
+                Write-Host 'Using Azure DevOps...' -ForegroundColor Yellow
+                Invoke-WebRequest -Uri 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/ProcessMitigations.csv' -OutFile '.\ProcessMitigations.csv' -ErrorAction Stop
+            }
         }
     }
     catch {
@@ -109,10 +135,12 @@ try {
 
     Write-Progress -Activity 'Restoring the default Security group policies' -Status 'Processing' -PercentComplete 70
    
-    # Download LGPO program from Microsoft servers
-    Invoke-WebRequest -Uri 'https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/LGPO.zip' -OutFile '.\LGPO.zip' -ErrorAction Stop
-    # Download the default security group policy inf from GitHub repository
-    Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security%20Module/Resources/Default%20Security%20Policy.inf' -OutFile '.\Default Security Policy.inf' -ErrorAction Stop
+    Invoke-WithoutProgress {
+        # Download LGPO program from Microsoft servers
+        Invoke-WebRequest -Uri 'https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/LGPO.zip' -OutFile '.\LGPO.zip' -ErrorAction Stop
+        # Download the default security group policy inf from GitHub repository
+        Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security%20Module/Resources/Default%20Security%20Policy.inf' -OutFile '.\Default Security Policy.inf' -ErrorAction Stop
+    }
     
     # unzip the LGPO file
     Expand-Archive -Path .\LGPO.zip -DestinationPath .\ -Force  

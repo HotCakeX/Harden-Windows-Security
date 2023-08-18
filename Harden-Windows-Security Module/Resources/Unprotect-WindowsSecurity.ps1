@@ -47,6 +47,15 @@ try {
         Write-Error "You're not using the latest version of the Windows OS, exiting..."
         break
     }
+
+    # check to make sure TPM is available and enabled
+    [bool]$TPMFlag1 = (Get-Tpm).tpmpresent
+    [bool]$TPMFlag2 = (Get-Tpm).tpmenabled
+    if (!$TPMFlag1 -or !$TPMFlag2) {
+        Write-Error 'TPM is not available or enabled, please go to your UEFI settings and enable it and then run the script again.'
+        break    
+    }    
+   
      
     # create our working directory
     New-Item -ItemType Directory -Path "$env:TEMP\HardeningXStuff\" -Force | Out-Null
@@ -141,7 +150,7 @@ try {
         # Download the default security group policy inf from GitHub repository
         Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security%20Module/Resources/Default%20Security%20Policy.inf' -OutFile '.\Default Security Policy.inf' -ErrorAction Stop
     }
-    
+
     # unzip the LGPO file
     Expand-Archive -Path .\LGPO.zip -DestinationPath .\ -Force  
     .\'LGPO_30\LGPO.exe' /s '.\Default Security Policy.inf'

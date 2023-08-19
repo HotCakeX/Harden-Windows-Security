@@ -115,6 +115,8 @@ Confirm-SystemCompliance [-ExportToCSV] [-ShowAsObjectsOnly] [-DetailedDisplay]
 
 2. Security features in the [Device Guard category](https://github.com/HotCakeX/Harden-Windows-Security#device-guard) that are activated by UEFI Lock remain enabled even after you execute this cmdlet. UEFI Lock is a security mechanism that prevents malware from disabling crucial security features. UEFI locked security features are based on Proof of Physical Presence. To deactivate them, you need to restart your computer, access the UEFI, disable secure boot, restart again and then you will be able to disable them.
 
+3. Windows optional features that are enabled or disabled by `Protect-WindowsSecurity` cmdlet are not affected.
+
 <br>
 
 <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">

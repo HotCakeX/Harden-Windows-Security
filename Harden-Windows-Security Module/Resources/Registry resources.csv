@@ -90,7 +90,7 @@ Origin,Category,Key,Name,FriendlyName,Type,Value
 "Registry Keys",TLS,HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC4 128/128,Enabled,Disable RC4 128/128 Cipher Suite,DWORD,0
 "Registry Keys",TLS,HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\Triple DES 168,Enabled,Disable Triple DES 168 Cipher Suite,DWORD,0
 "Registry Keys",TLS,HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Hashes\MD5,Enabled,Disable MD5 Hashing Algorithm,DWORD,0
-"Group Policy","LockScreen",HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System,ExcludedCredentialProviders,Excluded Credential Providers,SZ,"{60b78e88-ead8-445c-9cfd-0b87f74ea6cd},{F8A0B131-5F68-486c-8040-7E8FC3C85BB6},{8FD7E19C-3BF7-489B-A72C-846AB3678C96},{1ee7337f-85ac-45e2-a23c-37c753209769},{1b283861-754f-4022-ad47-a5eaaa618894}"
+"Group Policy","LockScreen",HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System,ExcludedCredentialProviders,Excluded Credential Providers,SZ,"{60b78e88-ead8-445c-9cfd-0b87f74ea6cd},{F8A0B131-5F68-486c-8040-7E8FC3C85BB6}"
 "Group Policy","LockScreen",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows\System,DefaultCredentialProvider,Set default Credential Provider,SZ,"{D6886603-9D2F-4EB2-B667-1971041FA96B}"
 "Group Policy","LockScreen",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\PassportForWork\PINComplexity,Digits,Require digits in Windows Hello PIN,DWORD,1
 "Group Policy","LockScreen",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\PassportForWork\PINComplexity,LowercaseLetters,Require lower case letters in Windows Hello PIN,DWORD,1

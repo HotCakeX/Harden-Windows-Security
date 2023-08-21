@@ -130,7 +130,7 @@ try {
 
     Write-Progress -Activity 'Deleting all registry keys created by the hardening script' -Status 'Processing' -PercentComplete 60
      
-    [System.Array]$Items = Import-Csv '.\Registry.csv' -Delimiter ','
+    [System.Object[]]$Items = Import-Csv '.\Registry.csv' -Delimiter ','
     foreach ($Item in $Items) { 
         if (Test-Path -Path $item.path) {       
             Remove-ItemProperty -Path $Item.path -Name $Item.key -Force -ErrorAction SilentlyContinue 
@@ -172,7 +172,9 @@ try {
     Set-MpPreference -AllowSwitchToAsyncInspection $False
     Set-MpPreference -OobeEnableRtpAndSigUpdate $False
     Set-MpPreference -IntelTDTEnabled $False
-    
+    Set-MpPreference -DisableRestorePoint $True
+    Set-MpPreference -PerformanceModeStatus Enabled
+    Set-MpPreference -EnableConvertWarnToBlock $False   
     # Set Microsoft Defender engine and platform update channels to NotConfigured State           
     Set-MpPreference -EngineUpdatesChannel NotConfigured
     Set-MpPreference -PlatformUpdatesChannel NotConfigured
@@ -182,10 +184,10 @@ try {
     
     # Remove Process Mitigations
 
-    [System.Array]$ProcessMitigations = Import-Csv '.\ProcessMitigations.csv' -Delimiter ','
+    [System.Object[]]$ProcessMitigations = Import-Csv '.\ProcessMitigations.csv' -Delimiter ','
     # Group the data by ProgramName
-    [System.Array]$GroupedMitigations = $ProcessMitigations | Group-Object ProgramName
-    [System.Array]$AllAvailableMitigations = (Get-ItemProperty -Path 'Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\*')
+    [System.Object[]]$GroupedMitigations = $ProcessMitigations | Group-Object ProgramName
+    [System.Object[]]$AllAvailableMitigations = (Get-ItemProperty -Path 'Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\*')
     
     Write-Progress -Activity 'Removing Process Mitigations for apps' -Status 'Processing' -PercentComplete 90
    

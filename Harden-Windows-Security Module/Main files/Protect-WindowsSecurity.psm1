@@ -27,7 +27,6 @@ Function Protect-WindowsSecurity {
         }
     }
 
-
     try {
         Invoke-WithoutProgress {
             Invoke-RestMethod 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security.ps1' -OutFile .\Harden-Windows-Security.ps1

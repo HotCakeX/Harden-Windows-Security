@@ -1,5 +1,8 @@
 # Stop operation as soon as there is an error anywhere, unless explicitly specified otherwise
 $ErrorActionPreference = 'Stop'
+
+# Set the progress style
+$PSStyle.Progress.Style = "$($PSStyle.Foreground.FromRGB(255,255,49))$($PSStyle.Blink)"
         
 # To parse the ini file from the output of the "Secedit /export /cfg .\security_policy.inf"
 function ConvertFrom-IniFile {
@@ -155,7 +158,7 @@ function Confirm-SystemCompliance {
         try {  
             Invoke-WithoutProgress {     
                 Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security%20Module/Resources/Registry%20resources.csv' -OutFile '.\Registry resources.csv'
-                [System.Array]$global:CSVResource = Import-Csv -Path '.\Registry resources.csv'
+                [System.Object[]]$global:CSVResource = Import-Csv -Path '.\Registry resources.csv'
                 # Total number of Compliant values not equal to N/A 
                 [int]$global:TotalNumberOfTrueCompliantValues = (Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security%20Module/Resources/TotalNumberOfTrueCompliantValues.txt')
             }
@@ -165,7 +168,7 @@ function Confirm-SystemCompliance {
         }
      
         # An object to hold all the initial registry items
-        [System.Array]$AllRegistryItems = @()
+        [System.Object[]]$AllRegistryItems = @()
 
         # Loop through each row in the CSV file
         foreach ($Row in $CSVResource) {
@@ -191,7 +194,7 @@ function Confirm-SystemCompliance {
             )
 
             # an array to hold the output
-            [System.Array]$output = @()
+            [System.Object[]]$output = @()
         
             foreach ($item in $AllRegistryItems | Where-Object { $_.category -eq $CatName } | Where-Object { $_.Method -eq $Method }) {
         
@@ -256,7 +259,7 @@ function Confirm-SystemCompliance {
         Write-Progress -Activity 'Validating Microsoft Defender Category' -Status 'Processing...' -PercentComplete 35
 
         # An array to store the nested custom objects, inside the main output object
-        [System.Array]$NestedObjectArray = @()        
+        [System.Object[]]$NestedObjectArray = @()        
         [String]$CatName = 'Microsoft Defender'        
         
         # Process the registry keys for this category based on the selected method and category name, then save the output Custom Object in the Array
@@ -412,14 +415,47 @@ function Confirm-SystemCompliance {
             Name         = 'Controlled Folder Access Exclusions'
             Category     = $CatName
             Method       = 'Cmdlet'            
-        }   
+        } 
+        
+        # For PowerShell Cmdlet
+        $IndividualItemResult = $((Get-MpPreference).DisableRestorePoint)
+        $NestedObjectArray += [PSCustomObject]@{
+            FriendlyName = 'Enable Restore Point scanning'
+            Compliant    = ($IndividualItemResult -eq $False)
+            Value        = ($IndividualItemResult -eq $False)   
+            Name         = 'Enable Restore Point scanning'
+            Category     = $CatName
+            Method       = 'Cmdlet'            
+        }
+
+        # For PowerShell Cmdlet
+        $IndividualItemResult = $((Get-MpPreference).PerformanceModeStatus)
+        $NestedObjectArray += [PSCustomObject]@{
+            FriendlyName = 'PerformanceModeStatus'
+            Compliant    = [bool]($IndividualItemResult -eq '0')
+            Value        = $IndividualItemResult   
+            Name         = 'PerformanceModeStatus'         
+            Category     = $CatName
+            Method       = 'Cmdlet'            
+        }
+
+        # For PowerShell Cmdlet
+        $IndividualItemResult = $((Get-MpPreference).EnableConvertWarnToBlock)
+        $NestedObjectArray += [PSCustomObject]@{
+            FriendlyName = 'EnableConvertWarnToBlock'
+            Compliant    = $IndividualItemResult
+            Value        = $IndividualItemResult   
+            Name         = 'EnableConvertWarnToBlock'         
+            Category     = $CatName
+            Method       = 'Cmdlet'            
+        }
         # Add the array of custom objects as a property to the $FinalMegaObject object outside the loop
         Add-Member -InputObject $FinalMegaObject -MemberType NoteProperty -Name $CatName -Value $NestedObjectArray
         #EndRegion Microsoft-Defender-Category
     
         #Region Attack-Surface-Reduction-Rules-Category
         Write-Progress -Activity 'Validating Attack Surface Reduction Rules Category' -Status 'Processing...' -PercentComplete 40
-        [System.Array]$NestedObjectArray = @()
+        [System.Object[]]$NestedObjectArray = @()
         [String]$CatName = 'ASR'
 
         # Process the registry keys for this category based on the selected method and category name, then save the output Custom Object in the Array
@@ -431,7 +467,7 @@ function Confirm-SystemCompliance {
     
         #Region Bitlocker-Category
         Write-Progress -Activity 'Validating Bitlocker Category' -Status 'Processing...' -PercentComplete 45
-        [System.Array]$NestedObjectArray = @()
+        [System.Object[]]$NestedObjectArray = @()
         [String]$CatName = 'Bitlocker'
 
         # This PowerShell script can be used to find out if the DMA Protection is ON \ OFF.
@@ -524,15 +560,15 @@ function Confirm-SystemCompliance {
     
         #Region TLS-Category
         Write-Progress -Activity 'Validating TLS Category' -Status 'Processing...' -PercentComplete 50
-        [System.Array]$NestedObjectArray = @()
+        [System.Object[]]$NestedObjectArray = @()
         [String]$CatName = 'TLS'
         
         # Process the registry keys for this category based on the selected method and category name, then save the output Custom Object in the Array
         $NestedObjectArray += [PSCustomObject](Invoke-CategoryProcessing -catname $CatName -Method 'Group Policy')
         
         # ECC Curves
-        [System.Array]$ECCCurves = Get-TlsEccCurve
-        [System.Array]$list = ('nistP521', 'curve25519', 'NistP384', 'NistP256')
+        [System.Object[]]$ECCCurves = Get-TlsEccCurve
+        [System.Object[]]$list = ('nistP521', 'curve25519', 'NistP384', 'NistP256')
         # Make sure both arrays are completely identical in terms of members and their exact position
         # If this variable is empty that means both arrays are completely identical
         $IndividualItemResult = Compare-Object $ECCCurves $list -SyncWindow 0
@@ -555,7 +591,7 @@ function Confirm-SystemCompliance {
     
         #Region LockScreen-Category
         Write-Progress -Activity 'Validating Lock Screen Category' -Status 'Processing...' -PercentComplete 55
-        [System.Array]$NestedObjectArray = @()
+        [System.Object[]]$NestedObjectArray = @()
         [String]$CatName = 'LockScreen'
         
         $NestedObjectArray += [PSCustomObject](Invoke-CategoryProcessing -catname $CatName -Method 'Group Policy')
@@ -665,7 +701,7 @@ function Confirm-SystemCompliance {
     
         #Region User-Account-Control-Category
         Write-Progress -Activity 'Validating User Account Control Category' -Status 'Processing...' -PercentComplete 60
-        [System.Array]$NestedObjectArray = @()
+        [System.Object[]]$NestedObjectArray = @()
         [String]$CatName = 'UAC' 
 
         $NestedObjectArray += [PSCustomObject](Invoke-CategoryProcessing -catname $CatName -Method 'Group Policy')
@@ -727,7 +763,7 @@ function Confirm-SystemCompliance {
     
         #Region Device-Guard-Category
         Write-Progress -Activity 'Validating Device Guard Category' -Status 'Processing...' -PercentComplete 65
-        [System.Array]$NestedObjectArray = @()
+        [System.Object[]]$NestedObjectArray = @()
         [String]$CatName = 'Device Guard'
  
         $NestedObjectArray += [PSCustomObject](Invoke-CategoryProcessing -catname $CatName -Method 'Group Policy')
@@ -738,7 +774,7 @@ function Confirm-SystemCompliance {
         
         #Region Windows-Firewall-Category
         Write-Progress -Activity 'Validating Windows Firewall Category' -Status 'Processing...' -PercentComplete 70
-        [System.Array]$NestedObjectArray = @()
+        [System.Object[]]$NestedObjectArray = @()
         [String]$CatName = 'Windows Firewall'
                   
         $NestedObjectArray += [PSCustomObject](Invoke-CategoryProcessing -catname $CatName -Method 'Group Policy')
@@ -749,11 +785,11 @@ function Confirm-SystemCompliance {
 
         #Region Optional-Windows-Features-Category
         Write-Progress -Activity 'Validating Optional Windows Features Category' -Status 'Processing...' -PercentComplete 75
-        [System.Array]$NestedObjectArray = @()
+        [System.Object[]]$NestedObjectArray = @()
         [String]$CatName = 'Optional Windows Features'
          
-        # Verify PowerShell v2 is disabled
-        [System.Array]$Results = @()
+        # Windows PowerShell handling Windows optional features verifications
+        [System.Object[]]$Results = @()
         $Results = powershell.exe {
             [bool]$PowerShell1 = (Get-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2).State -eq 'Disabled'
             [bool]$PowerShell2 = (Get-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2Root).State -eq 'Disabled'
@@ -767,9 +803,10 @@ function Confirm-SystemCompliance {
             [string]$WMIC = (Get-WindowsCapability -Online | Where-Object { $_.Name -like '*wmic*' }).state
             [string]$IEMode = (Get-WindowsCapability -Online | Where-Object { $_.Name -like '*Browser.InternetExplorer*' }).state
             [string]$LegacyNotepad = (Get-WindowsCapability -Online | Where-Object { $_.Name -like '*Microsoft.Windows.Notepad.System*' }).state
-
+            # returning the output of the script block as an array
             Return $PowerShell1, $PowerShell2, $WorkFoldersClient, $InternetPrintingClient, $WindowsMediaPlayer, $MDAG, $WindowsSandbox, $HyperV, $VMPlatform, $WMIC, $IEMode, $LegacyNotepad
         } 
+        # Verify PowerShell v2 is disabled
         $NestedObjectArray += [PSCustomObject]@{
             FriendlyName = 'PowerShell v2 is disabled'            
             Compliant    = ($Results[0] -and $Results[1]) ? $True : $False
@@ -885,7 +922,7 @@ function Confirm-SystemCompliance {
 
         #Region Windows-Networking-Category
         Write-Progress -Activity 'Validating Windows Networking Category' -Status 'Processing...' -PercentComplete 80
-        [System.Array]$NestedObjectArray = @()
+        [System.Object[]]$NestedObjectArray = @()
         [String]$CatName = 'Windows Networking'
         
         $NestedObjectArray += [PSCustomObject](Invoke-CategoryProcessing -catname $CatName -Method 'Group Policy')
@@ -943,7 +980,7 @@ function Confirm-SystemCompliance {
         
         #Region Miscellaneous-Category
         Write-Progress -Activity 'Validating Miscellaneous Category' -Status 'Processing...' -PercentComplete 85
-        [System.Array]$NestedObjectArray = @()
+        [System.Object[]]$NestedObjectArray = @()
         [String]$CatName = 'Miscellaneous'
         
         $NestedObjectArray += [PSCustomObject](Invoke-CategoryProcessing -catname $CatName -Method 'Group Policy')
@@ -977,12 +1014,12 @@ function Confirm-SystemCompliance {
         [string[]]$groupMembers = (Get-LocalGroupMember -SID 'S-1-5-32-578').Name -replace "$($env:COMPUTERNAME)\\" | Sort-Object
 
         # Set the $MatchHyperVUsers variable to $True only if all enabled user accounts are part of the Hyper-V Security group, if one of them isn't part of the group then returns false
-        [System.Array]$MatchHyperVUsers = @() # An array of bool values
+        [System.Object[]]$MatchHyperVUsers = @() # An array of bool values
         for ($i = 0; $i -lt $enabledUsers.Count; $i++) {
             $MatchHyperVUsers += ($enabledUsers[$i] -ceq $groupMembers[$i]) ? $True : $false
         }
         
-        # Process the registry keys for this category based on the selected method and category name, then save the output Custom Object in the Array
+        # Saving the results of the Hyper-V administrators members group to the array as an object
         $NestedObjectArray += [PSCustomObject]@{
             FriendlyName = 'All users are part of the Hyper-V Administrators group'            
             Compliant    = [bool]($MatchHyperVUsers -notcontains $false)
@@ -1000,7 +1037,7 @@ function Confirm-SystemCompliance {
     
         #Region Windows-Update-Category
         Write-Progress -Activity 'Validating Windows Update Category' -Status 'Processing...' -PercentComplete 90
-        [System.Array]$NestedObjectArray = @()
+        [System.Object[]]$NestedObjectArray = @()
         [String]$CatName = 'Windows Update'
         
         $NestedObjectArray += [PSCustomObject](Invoke-CategoryProcessing -catname $CatName -Method 'Group Policy')
@@ -1022,7 +1059,7 @@ function Confirm-SystemCompliance {
         
         #Region Edge-Category
         Write-Progress -Activity 'Validating Edge Browser Category' -Status 'Processing...' -PercentComplete 95
-        [System.Array]$NestedObjectArray = @()
+        [System.Object[]]$NestedObjectArray = @()
         [String]$CatName = 'Edge'  
         
         $NestedObjectArray += [PSCustomObject](Invoke-CategoryProcessing -catname $CatName -Method 'Registry Keys')
@@ -1033,7 +1070,7 @@ function Confirm-SystemCompliance {
         
         #Region Non-Admin-Category
         Write-Progress -Activity 'Validating Non-Admin Category' -Status 'Processing...' -PercentComplete 100
-        [System.Array]$NestedObjectArray = @()
+        [System.Object[]]$NestedObjectArray = @()
         [String]$CatName = 'Non-Admin'
     
         $NestedObjectArray += [PSCustomObject](Invoke-CategoryProcessing -catname $CatName -Method 'Registry Keys')
@@ -1058,20 +1095,21 @@ function Confirm-SystemCompliance {
         else {   
 
             #Region Colors
-            [scriptblock]$WritePlum = { Write-Output "$($PSStyle.Foreground.FromRGB(221,160,221))$($args[0])$($PSStyle.Reset)" }
-            [scriptblock]$WriteOrchid = { Write-Output "$($PSStyle.Foreground.FromRGB(218,112,214))$($args[0])$($PSStyle.Reset)" }
-            [scriptblock]$WriteFuchsia = { Write-Output "$($PSStyle.Foreground.FromRGB(255,0,255))$($args[0])$($PSStyle.Reset)" }
-            [scriptblock]$WriteMediumOrchid = { Write-Output "$($PSStyle.Foreground.FromRGB(186,85,211))$($args[0])$($PSStyle.Reset)" }
-            [scriptblock]$WriteMediumPurple = { Write-Output "$($PSStyle.Foreground.FromRGB(147,112,219))$($args[0])$($PSStyle.Reset)" }
-            [scriptblock]$WriteBlueViolet = { Write-Output "$($PSStyle.Foreground.FromRGB(138,43,226))$($args[0])$($PSStyle.Reset)" }
-            [scriptblock]$WriteDarkViolet = { Write-Output "$($PSStyle.Foreground.FromRGB(148,0,211))$($args[0])$($PSStyle.Reset)" }
-            [scriptblock]$WritePink = { Write-Output "$($PSStyle.Foreground.FromRGB(255,192,203))$($args[0])$($PSStyle.Reset)" }
-            [scriptblock]$WriteHotPink = { Write-Output "$($PSStyle.Foreground.FromRGB(255,105,180))$($args[0])$($PSStyle.Reset)" }
-            [scriptblock]$WriteDeepPink = { Write-Output "$($PSStyle.Foreground.FromRGB(255,20,147))$($args[0])$($PSStyle.Reset)" }
-            [scriptblock]$WriteMintGreen = { Write-Output "$($PSStyle.Foreground.FromRGB(152,255,152))$($args[0])$($PSStyle.Reset)" }
-            [scriptblock]$WriteOrange = { Write-Output "$($PSStyle.Foreground.FromRGB(255,165,0))$($args[0])$($PSStyle.Reset)" }            
-            [scriptblock]$WriteSkyBlue = { Write-Output "$($PSStyle.Foreground.FromRGB(135,206,235))$($args[0])$($PSStyle.Reset)" }
-            
+            [scriptblock]$WritePlum = { Write-Output "$($PSStyle.Foreground.FromRGB(221,160,221))$($PSStyle.Reverse)$($args[0])$($PSStyle.Reset)" }
+            [scriptblock]$WriteOrchid = { Write-Output "$($PSStyle.Foreground.FromRGB(218,112,214))$($PSStyle.Reverse)$($args[0])$($PSStyle.Reset)" }
+            [scriptblock]$WriteFuchsia = { Write-Output "$($PSStyle.Foreground.FromRGB(255,0,255))$($PSStyle.Reverse)$($args[0])$($PSStyle.Reset)" }
+            [scriptblock]$WriteMediumOrchid = { Write-Output "$($PSStyle.Foreground.FromRGB(186,85,211))$($PSStyle.Reverse)$($args[0])$($PSStyle.Reset)" }
+            [scriptblock]$WriteMediumPurple = { Write-Output "$($PSStyle.Foreground.FromRGB(147,112,219))$($PSStyle.Reverse)$($args[0])$($PSStyle.Reset)" }
+            [scriptblock]$WriteBlueViolet = { Write-Output "$($PSStyle.Foreground.FromRGB(138,43,226))$($PSStyle.Reverse)$($args[0])$($PSStyle.Reset)" }
+            [scriptblock]$AndroidGreen = { Write-Output "$($PSStyle.Foreground.FromRGB(176,191,26))$($PSStyle.Reverse)$($args[0])$($PSStyle.Reset)" }
+            [scriptblock]$WritePink = { Write-Output "$($PSStyle.Foreground.FromRGB(255,192,203))$($PSStyle.Reverse)$($args[0])$($PSStyle.Reset)" }
+            [scriptblock]$WriteHotPink = { Write-Output "$($PSStyle.Foreground.FromRGB(255,105,180))$($PSStyle.Reverse)$($args[0])$($PSStyle.Reset)" }
+            [scriptblock]$WriteDeepPink = { Write-Output "$($PSStyle.Foreground.FromRGB(255,20,147))$($PSStyle.Reverse)$($args[0])$($PSStyle.Reset)" }
+            [scriptblock]$WriteMintGreen = { Write-Output "$($PSStyle.Foreground.FromRGB(152,255,152))$($PSStyle.Reverse)$($args[0])$($PSStyle.Reset)" }
+            [scriptblock]$WriteOrange = { Write-Output "$($PSStyle.Foreground.FromRGB(255,165,0))$($PSStyle.Reverse)$($args[0])$($PSStyle.Reset)" }            
+            [scriptblock]$WriteSkyBlue = { Write-Output "$($PSStyle.Foreground.FromRGB(135,206,235))$($PSStyle.Reverse)$($args[0])$($PSStyle.Reset)" }
+            [scriptblock]$Daffodil = { Write-Output "$($PSStyle.Foreground.FromRGB(255,255,49))$($PSStyle.Reverse)$($args[0])$($PSStyle.Reset)" }
+
             [scriptblock]$WriteRainbow1 = { 
                 $text = $args[0]
                 $colors = @(
@@ -1119,97 +1157,154 @@ function Confirm-SystemCompliance {
     
             # Show all properties in list
             if ($DetailedDisplay) {
+
+                # Setting the List Format Accent the same color as the category's title
+                $PSStyle.Formatting.FormatAccent = "$($PSStyle.Foreground.FromRGB(221,160,221))"   
                 & $WritePlum "`n-------------Microsoft Defender Category-------------"
                 $FinalMegaObject.'Microsoft Defender' | Format-List *
     
+                # Setting the List Format Accent the same color as the category's title
+                $PSStyle.Formatting.FormatAccent = "$($PSStyle.Foreground.FromRGB(218,112,214))"
                 & $WriteOrchid "`n-------------Attack Surface Reduction Rules Category-------------"
                 $FinalMegaObject.ASR | Format-List *
     
+                # Setting the List Format Accent the same color as the category's title
+                $PSStyle.Formatting.FormatAccent = "$($PSStyle.Foreground.FromRGB(255,0,255))"
                 & $WriteFuchsia "`n-------------Bitlocker Category-------------"
                 $FinalMegaObject.Bitlocker | Format-List *
     
+                # Setting the List Format Accent the same color as the category's title
+                $PSStyle.Formatting.FormatAccent = "$($PSStyle.Foreground.FromRGB(186,85,211))"
                 & $WriteMediumOrchid "`n-------------TLS Category-------------"
                 $FinalMegaObject.TLS | Format-List *
     
+                # Setting the List Format Accent the same color as the category's title
+                $PSStyle.Formatting.FormatAccent = "$($PSStyle.Foreground.FromRGB(147,112,219))"
                 & $WriteMediumPurple "`n-------------Lock Screen Category-------------"
                 $FinalMegaObject.LockScreen | Format-List *
     
+                # Setting the List Format Accent the same color as the category's title
+                $PSStyle.Formatting.FormatAccent = "$($PSStyle.Foreground.FromRGB(138,43,226))"
                 & $WriteBlueViolet "`n-------------User Account Control Category-------------"
                 $FinalMegaObject.UAC | Format-List *
     
-                & $WriteDarkViolet "`n-------------Device Guard Category-------------"
+                # Setting the List Format Accent the same color as the category's title
+                $PSStyle.Formatting.FormatAccent = "$($PSStyle.Foreground.FromRGB(176,191,26))"
+                & $AndroidGreen "`n-------------Device Guard Category-------------"
                 $FinalMegaObject.'Device Guard' | Format-List *
     
+                # Setting the List Format Accent the same color as the category's title
+                $PSStyle.Formatting.FormatAccent = "$($PSStyle.Foreground.FromRGB(255,192,203))"
                 & $WritePink "`n-------------Windows Firewall Category-------------"
                 $FinalMegaObject.'Windows Firewall' | Format-List *
 
+                # Setting the List Format Accent the same color as the category's title
+                $PSStyle.Formatting.FormatAccent = "$($PSStyle.Foreground.FromRGB(135,206,235))"
                 & $WriteSkyBlue "`n-------------Optional Windows Features Category-------------"
                 $FinalMegaObject.'Optional Windows Features' | Format-List *
     
+                # Setting the List Format Accent the same color as the category's title
+                $PSStyle.Formatting.FormatAccent = "$($PSStyle.Foreground.FromRGB(255,105,180))"
                 & $WriteHotPink "`n-------------Windows Networking Category-------------"
                 $FinalMegaObject.'Windows Networking' | Format-List *
     
+                # Setting the List Format Accent the same color as the category's title
+                $PSStyle.Formatting.FormatAccent = "$($PSStyle.Foreground.FromRGB(255,20,147))"
                 & $WriteDeepPink "`n-------------Miscellaneous Category-------------"
                 $FinalMegaObject.Miscellaneous | Format-List *
     
+                # Setting the List Format Accent the same color as the category's title
+                $PSStyle.Formatting.FormatAccent = "$($PSStyle.Foreground.FromRGB(152,255,152))"
                 & $WriteMintGreen "`n-------------Windows Update Category-------------"
                 $FinalMegaObject.'Windows Update' | Format-List *
     
+                # Setting the List Format Accent the same color as the category's title
+                $PSStyle.Formatting.FormatAccent = "$($PSStyle.Foreground.FromRGB(255,165,0))"
                 & $WriteOrange "`n-------------Microsoft Edge Category-------------"
                 $FinalMegaObject.Edge | Format-List *
     
-                & $WriteSkyBlue "`n-------------Non-Admin Category-------------"
+                # Setting the List Format Accent the same color as the category's title
+                $PSStyle.Formatting.FormatAccent = "$($PSStyle.Foreground.FromRGB(255,255,49))"
+                & $Daffodil "`n-------------Non-Admin Category-------------"
                 $FinalMegaObject.'Non-Admin' | Format-List *
             }
 
             # Show properties that matter in a table
             else {
                 
+                # Setting the Table header the same color as the category's title
+                $PSStyle.Formatting.TableHeader = "$($PSStyle.Foreground.FromRGB(221,160,221))"                
                 & $WritePlum "`n-------------Microsoft Defender Category-------------"
                 $FinalMegaObject.'Microsoft Defender' | Format-Table -Property FriendlyName, Compliant, Value -AutoSize 
-        
+                
+                # Setting the Table header the same color as the category's title
+                $PSStyle.Formatting.TableHeader = "$($PSStyle.Foreground.FromRGB(218,112,214))"
                 & $WriteOrchid "`n-------------Attack Surface Reduction Rules Category-------------"
                 $FinalMegaObject.ASR | Format-Table -Property FriendlyName, Compliant, Value -AutoSize 
         
+                # Setting the Table header the same color as the category's title
+                $PSStyle.Formatting.TableHeader = "$($PSStyle.Foreground.FromRGB(255,0,255))"
                 & $WriteFuchsia "`n-------------Bitlocker Category-------------"
                 $FinalMegaObject.Bitlocker | Format-Table -Property FriendlyName, Compliant, Value -AutoSize 
         
+                # Setting the Table header the same color as the category's title
+                $PSStyle.Formatting.TableHeader = "$($PSStyle.Foreground.FromRGB(186,85,211))"
                 & $WriteMediumOrchid "`n-------------TLS Category-------------"
                 $FinalMegaObject.TLS | Format-Table -Property FriendlyName, Compliant, Value -AutoSize 
         
+                # Setting the Table header the same color as the category's title
+                $PSStyle.Formatting.TableHeader = "$($PSStyle.Foreground.FromRGB(147,112,219))"
                 & $WriteMediumPurple "`n-------------Lock Screen Category-------------"
                 $FinalMegaObject.LockScreen | Format-Table -Property FriendlyName, Compliant, Value -AutoSize 
         
+                # Setting the Table header the same color as the category's title
+                $PSStyle.Formatting.TableHeader = "$($PSStyle.Foreground.FromRGB(138,43,226))"
                 & $WriteBlueViolet "`n-------------User Account Control Category-------------"
                 $FinalMegaObject.UAC | Format-Table -Property FriendlyName, Compliant, Value -AutoSize 
         
-                & $WriteDarkViolet "`n-------------Device Guard Category-------------"
+                # Setting the Table header the same color as the category's title
+                $PSStyle.Formatting.TableHeader = "$($PSStyle.Foreground.FromRGB(176,191,26))"
+                & $AndroidGreen "`n-------------Device Guard Category-------------"
                 $FinalMegaObject.'Device Guard' | Format-Table -Property FriendlyName, Compliant, Value -AutoSize 
         
+                # Setting the Table header the same color as the category's title
+                $PSStyle.Formatting.TableHeader = "$($PSStyle.Foreground.FromRGB(255,192,203))"
                 & $WritePink "`n-------------Windows Firewall Category-------------"
                 $FinalMegaObject.'Windows Firewall' | Format-Table -Property FriendlyName, Compliant, Value -AutoSize 
     
+                # Setting the Table header the same color as the category's title
+                $PSStyle.Formatting.TableHeader = "$($PSStyle.Foreground.FromRGB(135,206,235))"
                 & $WriteSkyBlue "`n-------------Optional Windows Features Category-------------"
                 $FinalMegaObject.'Optional Windows Features' | Format-Table -Property FriendlyName, Compliant, Value -AutoSize 
         
+                # Setting the Table header the same color as the category's title
+                $PSStyle.Formatting.TableHeader = "$($PSStyle.Foreground.FromRGB(255,105,180))"
                 & $WriteHotPink "`n-------------Windows Networking Category-------------"
                 $FinalMegaObject.'Windows Networking' | Format-Table -Property FriendlyName, Compliant, Value -AutoSize 
         
+                # Setting the Table header the same color as the category's title
+                $PSStyle.Formatting.TableHeader = "$($PSStyle.Foreground.FromRGB(255,20,147))"
                 & $WriteDeepPink "`n-------------Miscellaneous Category-------------"
                 $FinalMegaObject.Miscellaneous | Format-Table -Property FriendlyName, Compliant, Value -AutoSize 
         
+                # Setting the Table header the same color as the category's title
+                $PSStyle.Formatting.TableHeader = "$($PSStyle.Foreground.FromRGB(152,255,152))"
                 & $WriteMintGreen "`n-------------Windows Update Category-------------"
                 $FinalMegaObject.'Windows Update' | Format-Table -Property FriendlyName, Compliant, Value -AutoSize 
         
+                # Setting the Table header the same color as the category's title
+                $PSStyle.Formatting.TableHeader = "$($PSStyle.Foreground.FromRGB(255,165,0))"
                 & $WriteOrange "`n-------------Microsoft Edge Category-------------"
                 $FinalMegaObject.Edge | Format-Table -Property FriendlyName, Compliant, Value -AutoSize 
         
-                & $WriteSkyBlue "`n-------------Non-Admin Category-------------"
+                # Setting the Table header the same color as the category's title
+                $PSStyle.Formatting.TableHeader = "$($PSStyle.Foreground.FromRGB(255,255,49))"
+                & $Daffodil "`n-------------Non-Admin Category-------------"
                 $FinalMegaObject.'Non-Admin' | Format-Table -Property FriendlyName, Compliant, Value -AutoSize                
             }
             
             # Counting the number of $True Compliant values in the Final Output Object
-            [int]$TotalTrueCompliantValuesInOutPut = ($FinalMegaObject.'Microsoft Defender' | Where-Object { $_.Compliant -eq $True }).Count + # 40
+            [int]$TotalTrueCompliantValuesInOutPut = ($FinalMegaObject.'Microsoft Defender' | Where-Object { $_.Compliant -eq $True }).Count + # 43
             [int]($FinalMegaObject.ASR | Where-Object { $_.Compliant -eq $True }).Count + # 17
             [int]($FinalMegaObject.Bitlocker | Where-Object { $_.Compliant -eq $True }).Count + # 22
             [int]($FinalMegaObject.TLS | Where-Object { $_.Compliant -eq $True }).Count + # 21

@@ -299,7 +299,7 @@ You will need to restart your device once. After restart, wait at least for 5-10
 
 [Optional Overrides for Microsoft Security Baselines](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Overrides-for-Microsoft-Security-Baseline)
 
-<img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Highly recommended to apply these overrides, the script will ask you whether you want to apply them or not.
+<img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Highly recommended to apply these overrides, the script will ask you whether you want to apply them or not. Use Optional Overrides when applying the script on Azure VMs.
 
 <p align="right"><a href="#menu-back-to-top">💡 (back to categories)</a></p>
 
@@ -622,13 +622,12 @@ NistP384
   - [History](https://learn.microsoft.com/en-us/windows/client-management/mdm/passportforwork-csp#usertenantidpoliciespincomplexityhistory) of the **3** most recent selected PINs is preserved to prevent the user from reusing them
   - [Must include lower-case letters](https://learn.microsoft.com/en-us/windows/client-management/mdm/passportforwork-csp#usertenantidpoliciespincomplexitylowercaseletters)
 
-- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/200iq.gif" width="35" alt="Requires Additional Confirmation"> Sets Windows Hello PIN as [the default Credential Provider](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-admx-credentialproviders#defaultcredentialprovider) and [excludes](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-admx-credentialproviders#excludedcredentialproviders) the Credential Providers listed below. We do this because if the "Don't display last signed-in" policy is used, it defaults to Password on logon screen. Smart cards are old and insecure compared to Windows Hello or [WHfB](https://learn.microsoft.com/en-us/windows/security/identity-protection/hello-for-business/), if Microsoft account password sign-in is available it defeats the purpose of having a [local PIN that's tied to a device](https://learn.microsoft.com/en-us/windows/security/identity-protection/hello-for-business/hello-why-pin-is-better-than-password#a-pin-is-tied-to-the-device). **Goes without saying that you shouldn't use this policy if local password or Smart card is the only way you use to log in.** If that's the case then first connect your Windows account to Microsoft account and then use this policy.
-
-  * Smartcard Reader Selection Provider - `{1b283861-754f-4022-ad47-a5eaaa618894}`
-  * Smartcard WinRT Provider - `{1ee7337f-85ac-45e2-a23c-37c753209769}`
-  * Smartcard Credential Provider - `{8FD7E19C-3BF7-489B-A72C-846AB3678C96}`
-  * WLIDCredentialProvider (Microsoft Account Password sign-in) - `{F8A0B131-5F68-486c-8040-7E8FC3C85BB6}`
-  * PasswordProvider - `{60b78e88-ead8-445c-9cfd-0b87f74ea6cd}`
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/200iq.gif" width="35" alt="Requires Additional Confirmation"> Sets Windows Hello PIN as [the default Credential Provider](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-admx-credentialproviders#defaultcredentialprovider) and [excludes](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-admx-credentialproviders#excludedcredentialproviders) the Credential Providers listed below. We do this because if the "Don't display last signed-in" policy is used, it defaults to Password on logon screen.
+    * Remote Desktop Sessions that only accept Username/Password won't work with this policy, so use [Passwordless RDP with Windows Hello for Business](https://learn.microsoft.com/en-us/windows/security/identity-protection/hello-for-business/hello-feature-remote-desktop).
+   * **Goes without saying that you shouldn't use this policy if local password is the only way you use to log in.** If that's the case first connect your Windows account to Microsoft account and then use this policy.
+      1. WLIDCredentialProvider (Microsoft Account Password sign-in) - `{F8A0B131-5F68-486c-8040-7E8FC3C85BB6}`
+      
+      2. PasswordProvider - `{60b78e88-ead8-445c-9cfd-0b87f74ea6cd}`
 
 <p align="right"><a href="#menu-back-to-top">💡 (back to categories)</a></p>
 

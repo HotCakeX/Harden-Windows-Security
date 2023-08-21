@@ -12,7 +12,7 @@
     # RootModule = ''
 
     # Version number of this module.
-    ModuleVersion        = '0.1.0'
+    ModuleVersion        = '0.1.1'
 
     # Supported PSEditions
     CompatiblePSEditions = @('Core')
@@ -50,7 +50,7 @@
 '@
 
     # Minimum version of the PowerShell engine required by this module
-    PowerShellVersion    = '7.3.4'
+    PowerShellVersion    = '7.3.5'
 
     # Name of the PowerShell host required by this module
     # PowerShellHostName = ''
@@ -125,6 +125,11 @@
 
             # ReleaseNotes of this module
             ReleaseNotes = @'
+
+## Version 0.1.1
+Updated confirm-SystemCompliance and Unprotect-WindowsSecurity cmdlets to support changes in the latest Hardening script version: https://github.com/HotCakeX/Harden-Windows-Security/releases/tag/v2023.08.20
+Some minor code improvements and visual upgrades
+Adjusted the Credential providers section checks in lock screen category
 
 ## Version 0.1.0
 Added TPM check, Secureboot check and Latest Windows version check to the cmdlets of this module

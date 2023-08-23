@@ -2,7 +2,7 @@
 <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/SVG/Welcome%20to%20the%20wiki%202.svg" width="450">
 </div>
 
-# [Harden Windows Security GitHub Wiki content](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Wiki%20posts/Home%20Index.md)
+# [Harden Windows Security GitHub Wiki content](https://github.com/HotCakeX/Harden-Windows-Security/wiki)
 
 ## <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/pinkwings.gif" width="50"> [WDACConfig Module Main](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig)
 
@@ -52,6 +52,12 @@
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/bluewings.gif" width="35"> [About TLS, DNS, Encryption and OPSEC concepts](https://github.com/HotCakeX/Harden-Windows-Security/wiki/About-TLS,-DNS,-Encryption-and-OPSEC-concepts)
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/bluewings.gif" width="35"> [Things to do when clean installing Windows](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Things-to-do-when-clean-installing-Windows)
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/bluewings.gif" width="35"> [Comparison of security benchmarks](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Comparison-of-security-benchmarks)
+
+<br>
+
+## <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/greenwings.gif" width="50">  Azure
+
+ - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/greenwings.gif" width="35"> [Clean Source principle, Azure and Privileged Access Workstations](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Clean-Source-principle,-Azure-and-Privileged-Access-Workstations)
 
 <br>
 

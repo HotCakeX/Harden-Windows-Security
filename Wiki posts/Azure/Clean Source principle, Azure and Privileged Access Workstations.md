@@ -86,7 +86,9 @@ For more of a do-it-your-self experience, check out my harden windows security r
 
 ## Azure Confidential Compute 
 
-Unlike Guarded hosts, [Azure confidential](https://azure.microsoft.com/en-us/solutions/confidential-compute/#overview  ) compute VMs use [Intel SGX](https://learn.microsoft.com/en-us/azure/confidential-computing/virtual-machine-solutions-sgx) or [AMD's Secure](https://learn.microsoft.com/en-us/azure/confidential-computing/virtual-machine-solutions-amd) Encrypted Virtualization-Secure Nested Paging, or [SEV-SNP](https://www.amd.com/system/files/documents/sev-tio-whitepaper.pdf).
+[Confidential computing](https://learn.microsoft.com/en-us/azure/confidential-computing/overview) is an industry term defined by the Confidential Computing Consortium (CCC) - a foundation dedicated to defining and accelerating the adoption of confidential computing. The CCC defines confidential computing as: The protection of data in use by performing computations in a hardware-based Trusted Execution Environment (TEE).
+
+Unlike [Guarded hosts](https://learn.microsoft.com/en-us/windows-server/security/guarded-fabric-shielded-vm/guarded-fabric-and-shielded-vms), [Azure confidential](https://azure.microsoft.com/en-us/solutions/confidential-compute/#overview  ) compute VMs use [Intel SGX](https://learn.microsoft.com/en-us/azure/confidential-computing/virtual-machine-solutions-sgx) or [AMD's Secure](https://learn.microsoft.com/en-us/azure/confidential-computing/virtual-machine-solutions-amd) Encrypted Virtualization-Secure Nested Paging, or [SEV-SNP](https://www.amd.com/system/files/documents/sev-tio-whitepaper.pdf).
 
 <br>
 

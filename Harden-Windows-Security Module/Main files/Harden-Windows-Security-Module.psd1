@@ -12,7 +12,7 @@
     # RootModule = ''
 
     # Version number of this module.
-    ModuleVersion        = '0.1.1'
+    ModuleVersion        = '0.1.2'
 
     # Supported PSEditions
     CompatiblePSEditions = @('Core')
@@ -125,6 +125,9 @@
 
             # ReleaseNotes of this module
             ReleaseNotes = @'
+
+## Version 0.1.2
+Added error handling to a few cmdlets to take care of some edge cases
 
 ## Version 0.1.1
 Updated confirm-SystemCompliance and Unprotect-WindowsSecurity cmdlets to support changes in the latest Hardening script version: https://github.com/HotCakeX/Harden-Windows-Security/releases/tag/v2023.08.20

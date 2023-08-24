@@ -359,7 +359,12 @@ function Confirm-SystemCompliance {
         }
     
         # For PowerShell Cmdlet
-        $IndividualItemResult = $((Get-ScheduledTask -TaskPath '\MSFT Driver Block list update\' -TaskName 'MSFT Driver Block list update' -ErrorAction SilentlyContinue) ? $True : $false)
+        try {
+            $IndividualItemResult = $((Get-ScheduledTask -TaskPath '\MSFT Driver Block list update\' -TaskName 'MSFT Driver Block list update' -ErrorAction SilentlyContinue) ? $True : $false)
+        } 
+        catch {
+            # suppress any possible terminating errors
+        }
         $NestedObjectArray += [PSCustomObject]@{
             FriendlyName = 'Fast weekly Microsoft recommended driver block list update'            
             Compliant    = $IndividualItemResult
@@ -522,9 +527,13 @@ function Confirm-SystemCompliance {
         # Returns true or false depending on whether Kernel DMA Protection is on or off
         [bool]$BootDMAProtection = ([SystemInfo.NativeMethods]::BootDmaCheck()) -ne 0    
 
-        # Get the status of Bitlocker DMA protection        
-        [int]$BitlockerDMAProtectionStatus = Get-ItemPropertyValue -Path 'Registry::HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\FVE' -Name 'DisableExternalDMAUnderLock' -ErrorAction SilentlyContinue
-
+        # Get the status of Bitlocker DMA protection 
+        try {       
+            [int]$BitlockerDMAProtectionStatus = Get-ItemPropertyValue -Path 'Registry::HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\FVE' -Name 'DisableExternalDMAUnderLock' -ErrorAction SilentlyContinue
+        } 
+        catch {
+            # -ErrorAction SilentlyContinue wouldn't suppress the error if the path exists but property doesn't, so using try-catch 
+        }
         # Bitlocker DMA counter measure status
         # Returns true if only either Kernel DMA protection is on and Bitlocker DMA protection if off
         # or Kernel DMA protection is off and Bitlocker DMA protection is on
@@ -545,7 +554,12 @@ function Confirm-SystemCompliance {
         $NestedObjectArray += [PSCustomObject](Invoke-CategoryProcessing -catname $CatName -Method 'Group Policy')
 
         # For PowerShell Cmdlet
-        $IndividualItemResult = $($((Get-ItemProperty HKLM:\SYSTEM\CurrentControlSet\Control\Power -Name HibernateEnabled -ErrorAction SilentlyContinue).hibernateEnabled) -eq 1 ? $True : $False)
+        try {
+            $IndividualItemResult = $($((Get-ItemProperty HKLM:\SYSTEM\CurrentControlSet\Control\Power -Name HibernateEnabled -ErrorAction SilentlyContinue).hibernateEnabled) -eq 1 ? $True : $False)
+        } 
+        catch {
+            # suppress the errors if any
+        }
         $NestedObjectArray += [PSCustomObject]@{
             FriendlyName = 'Hibernate enabled and set to full'            
             Compliant    = $IndividualItemResult
@@ -942,7 +956,12 @@ function Confirm-SystemCompliance {
         }
     
         # Process the registry keys for this category based on the selected method and category name, then save the output Custom Object in the Array
-        $IndividualItemResult = [bool]((Get-ItemPropertyValue -Path 'HKLM:\SYSTEM\CurrentControlSet\Services\NetBT\Parameters' -Name 'EnableLMHOSTS' -ErrorAction SilentlyContinue) -eq '0')
+        try {
+            $IndividualItemResult = [bool]((Get-ItemPropertyValue -Path 'HKLM:\SYSTEM\CurrentControlSet\Services\NetBT\Parameters' -Name 'EnableLMHOSTS' -ErrorAction SilentlyContinue) -eq '0')
+        } 
+        catch {
+            # -ErrorAction SilentlyContinue wouldn't suppress the error if the path exists but property doesn't, so using try-catch 
+        }
         $NestedObjectArray += [PSCustomObject]@{
             FriendlyName = 'Disable LMHOSTS lookup protocol on all network adapters'            
             Compliant    = $IndividualItemResult
@@ -1043,7 +1062,12 @@ function Confirm-SystemCompliance {
         $NestedObjectArray += [PSCustomObject](Invoke-CategoryProcessing -catname $CatName -Method 'Group Policy')
     
         # Process the registry keys for this category based on the selected method and category name, then save the output Custom Object in the Array
-        $IndividualItemResult = [bool]((Get-ItemPropertyValue -Path 'HKLM:\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings' -Name 'RestartNotificationsAllowed2' -ErrorAction SilentlyContinue) -eq '1')
+        try {
+            $IndividualItemResult = [bool]((Get-ItemPropertyValue -Path 'HKLM:\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings' -Name 'RestartNotificationsAllowed2' -ErrorAction SilentlyContinue) -eq '1')
+        } 
+        catch {
+            # -ErrorAction SilentlyContinue wouldn't suppress the error if the path exists but property doesn't, so using try-catch 
+        }
         $NestedObjectArray += [PSCustomObject]@{
             FriendlyName = 'Enable restart notification for Windows update'            
             Compliant    = $IndividualItemResult

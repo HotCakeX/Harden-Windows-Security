@@ -50,7 +50,7 @@ First use the Harden Windows Security Module to apply the hardening measures des
 
 These methods will create multiple layers of security; also known as defense in depth. Additionally, you can create [Kernel-level Zero-Trust strategy](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-policy-for-BYOVD-Kernel-mode-only-protection) for your system.
 
-If there will ever be a zero-day vulnerability in one or even some of the security layers, there will still be enough layers left to protect your device. It's impossible to penetrate all of them.
+If there will ever be a zero-day vulnerability in one or even some of the security layers at the same time, there will still be enough layers left to protect your device. It's impossible to penetrate all of them.
 
 Also, zero-day vulnerabilities are patched quickly, so keeping your device and OS up to date, regardless of what OS you use, is one of the most basic security recommendations and best practices you must follow.
 
@@ -152,7 +152,7 @@ Make sure to use Surface products that support [Device Firmware Configuration In
 
 * Secured core PCs provide the hardware that is capable of protecting against BYOVD attacks. It is your responsibility to turn the features on, those include WDAC (Windows Defender Application Control), ASR (Attack Surface Reduction) rules, Dynamic/static root of trust, [firmware](https://learn.microsoft.com/en-us/windows-hardware/drivers/bringup/firmware-attack-surface-reduction) that is extensible for revoking drivers.
 
-* For drivers not explicitly mentioned in the Microsoft Recommended Driver Block List, which are the more dynamic side of things, there are features such as ISG (Intelligent Security Graph) based ASR (Attack Surface Reduction rules) and ELAM (Early launch anti-malware).
+* For drivers not explicitly mentioned in the [Microsoft Recommended Driver Block List](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/microsoft-recommended-driver-block-rules), which are the more dynamic side of things, there are features such as ISG (Intelligent Security Graph) based ASR (Attack Surface Reduction rules) and ELAM (Early launch anti-malware).
 
 * Use [Strict Kernel-mode WDAC policy for complete BYOVD protection](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-policy-for-BYOVD-Kernel-mode-only-protection)
 

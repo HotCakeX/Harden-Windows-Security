@@ -1,19 +1,19 @@
-# WDAC policy for BYOVD Kernel mode only protection
+# WDAC Policy for BYOVD Kernel Mode Only Protection
 
-This scenario involves removing the trust to any Kernel mode driver, whether they are vulnerable or not. It does not affect User-mode binaries or drivers.
+This scenario involves removing the trust to any Kernel mode driver, whether they are vulnerable or not. It does not affect User-mode binaries or drivers. Any 3rd party software/hardware Kernel mode driver will need to be explicitly allowed. This scenario protects against all **BYOVD** scenarios and much more.
 
-Any 3rd party software or hardware Kernel mode driver needs to be explicitly allowed. This scenario protects against all **BYOVD** scenarios and much more.
+Drivers can access the Kernel which is the core of the operating system. Microsoft requires all drivers to be digitally signed:
 
-Drivers can access the Kernel which is the core of the operating system. Microsoft requires all drivers to be digitally signed. BYOVD (Bring Your Own Vulnerable Driver) scenario involves using one of the digitally signed drivers that has a security hole to gain direct access to the core of the OS. **This attack vector applies to all OSes, not just Windows.**
+* Kernel mode Hardware drivers **need** to be signed with an **EV (Extended Validation)** certificate
+* Kernel mode virtual drivers **can** be signed with an standard certificate as well
 
-As you will see below, people who are requesting and acquiring code signing certificates, even for Extended Validation certificates, aren't being [properly verified](https://learn.microsoft.com/en-us/office365/servicedescriptions/office-365-platform-service-description/office-365-us-government/gcc-high-and-dod#background-screening).
+A BYOVD (Bring Your Own Vulnerable Driver) scenario involves exploiting one of the digitally signed drivers that harbors a security flaw to attain direct access to the core of the OS. **This attack vector applies to all OSes, not just Windows.**
+
+People who seek to obtain code signing certificates, even for Extended Validation certificates, are not undergoing [proper verification](https://learn.microsoft.com/en-us/office365/servicedescriptions/office-365-platform-service-description/office-365-us-government/gcc-high-and-dod#background-screening).
 
 * Kernel is the key to your kingdom.
-
 * Do not waste your time playing cat and mouse with threat actors.
-
 * Do not use blacklisting for highly secure workstations, sensitive environments and such; it’s ineffective and insecure for a high security level.
-
 * Whitelisting is the proper answer. This entire document and others in this repository, are exactly for this purpose.
 
 <br> 
@@ -34,7 +34,7 @@ As you will see below, people who are requesting and acquiring code signing cert
 
 <br>
 
-## There are 3 types of Kernel mode drivers that can run on Windows
+## There Are 3 Types of Kernel Mode Drivers That Can Run on Windows
 
 ### Regular drivers
 
@@ -50,12 +50,28 @@ WHQL drivers have a slightly higher security bar than regular Kernel mode driver
 
 ### EV Signed Drivers
 
-EV signed kernel mode drivers are drivers that have been signed with an extended validation (EV) code signing certificate issued by a trusted certificate authority (CA).
+EV signed kernel mode drivers are drivers that have been signed with an extended validation code signing certificate issued by a trusted certificate authority (CA).
 
 EV certificates cost more than regular code signing certificates, they require to be on an HSM (to ensure the private key is stored properly) and CAs issuing them only validate that the company of the person requesting them exists. Anyone can get EV certificate as long as they have a HSM and a company, which is not hard to come by, costs about ~100$ to set up in the US as a resident.
 
 Sometimes the issuing CA also needs you to send in your driver's license and a picture of you holding it, but things like extended background checks, criminal history check, nationality check, or [the proper checks explained in here](https://learn.microsoft.com/en-us/office365/servicedescriptions/office-365-platform-service-description/office-365-us-government/gcc-high-and-dod#background-screening) are not performed.
 
+
+<br>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+
+<br>
+
+## What Is the Solution?
+
+We need to establish a Zero-Trust situation by eliminating the default trust to any signed driver and explicitly authorizing each driver that seeks to access the kernel.
+
+Numerous applications incorporate drivers that interact with the Kernel. Ordinarily, they are unnoticeable, but if you deploy the WDAC policy that we are going to create, in Audit mode, you will be able to observe event logs generated for each of the kernel-mode drivers.
+
+By creating a strict kernel mode WDAC policy, you will have a powerful security feature at your fingertips.
+
+This approach is the kind of future-leading technology you need. You can't afford waiting for analysis to predict malicious behavior or wait for malware to be found and cataloged before something is done about it.
 
 <br>
 
@@ -289,7 +305,7 @@ Remove this item which is for Windows Store EKU
 
 <br>
 
-## How to use and automate this entire process
+## How to Use and Automate This Entire Process
 
 **Use the [WDACConfig module](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New%E2%80%90KernelModeWDACConfig)** to automatically Audit and deploy the Strict Kernel-mode WDAC policies.
 
@@ -305,7 +321,7 @@ Now the Allow all rules that exist in the first policy are neutralized. [Only ap
 
 <br>
 
-## What about User-mode binaries?
+## What About User-mode Binaries?
 
 So far we've only been doing Kernel-mode administration. We can use User-mode WDAC policies as well.
 

@@ -1,27 +1,23 @@
 <h1 align="center">
   <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/PNGs/png-donut-2.png" alt="Big Yummy Donut" width="150">
-  <br>
-  Harden Windows Security
+<br>
+Harden Windows Security | A New Threat to Malware
 </h1>
 <a name="readme-top"></a>
 
-<h4 align="center">
-
-Harden Windows Safely, Securely, only with Official Microsoft methods
-</h4>
+<h3 align="center">
+Harden Windows Safely, Securely, Only With Official Microsoft Methods
+</h3>
 
 <p align="center">
-
   <a href="https://www.powershellgallery.com/packages/Harden-Windows-Security/">
     <img src="https://img.shields.io/powershellgallery/v/Harden-Windows-Security?style=for-the-badge"
          alt="PowerShell Gallery">
   </a>
-
   <a href="https://www.powershellgallery.com/packages/Harden-Windows-Security/">
     <img src="https://img.shields.io/powershellgallery/dt/Harden-Windows-Security?style=for-the-badge"
          alt="PowerShell Gallery Downloads count">
   </a>
-
 </p>
 
 <h6 align="center">

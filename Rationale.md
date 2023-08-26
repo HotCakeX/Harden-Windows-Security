@@ -150,9 +150,7 @@ Make sure to use Surface products that support [Device Firmware Configuration In
 
 ### <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/9935-catkeyboard.gif"> Protection against BYOVD (Bring Your Own Vulnerable Driver) attacks
 
-* Secured core PCs provide the hardware that is capable of protecting against BYOVD attacks. It is your responsibility to turn the features on, those include WDAC (Windows Defender Application Control), ASR (Attack Surface Reduction) rules, Dynamic/static root of trust, [firmware](https://learn.microsoft.com/en-us/windows-hardware/drivers/bringup/firmware-attack-surface-reduction) that is extensible for revoking drivers.
-
-* For drivers not explicitly mentioned in the [Microsoft Recommended Driver Block List](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/microsoft-recommended-driver-block-rules), which are the more dynamic side of things, there are features such as ISG (Intelligent Security Graph) based ASR (Attack Surface Reduction rules) and ELAM (Early launch anti-malware).
+* Secured core PCs provide the hardware that is capable of protecting against BYOVD attacks. It is your responsibility to turn the features on, those include WDAC (Windows Defender Application Control), ASR (Attack Surface Reduction) rules, Dynamic/static root of trust and [firmware](https://learn.microsoft.com/en-us/windows-hardware/drivers/bringup/firmware-attack-surface-reduction) that is extensible for revoking drivers. They are specially useful for drivers not explicitly mentioned in the [Microsoft Recommended Driver Block List](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/microsoft-recommended-driver-block-rules), which are the more dynamic side of things.
 
 * Use [Strict Kernel-mode WDAC policy for complete BYOVD protection](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-policy-for-BYOVD-Kernel-mode-only-protection)
 

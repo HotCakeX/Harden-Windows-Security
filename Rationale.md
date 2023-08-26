@@ -1,28 +1,28 @@
 # <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/PNGs/585563111520600091.png"> Rationale
 
-This document explains the rationale and purpose of this GitHub repository and its content. It describes how it mitigates various threats and how to adjust your expectations for different scenarios and environments. It also offers additional support materials.
+This document provides the justification and objective of this GitHub repository and its contents. It outlines how it addresses various threats and how to adjust your expectations for different scenarios and environments. It also supplies additional resources.
 
 <br>
 
-## <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/PNGs/Windows365.png"> Harden Windows Security PowerShell script
+## <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/PNGs/Windows365.png"> Harden Windows Security Module
 
-This is a general purpose [script](https://github.com/HotCakeX/Harden-Windows-Security), it's suitable to be used by everyone, as long as your device is not being managed by a Domain Controller or [Microsoft Entra ID](https://www.microsoft.com/en-gb/security/business/microsoft-entra), because those devices are already controlled in different manners and different set of policies are applied to them.
+### [The module](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden%E2%80%90Windows%E2%80%90Security%E2%80%90Module) has 3 modes <img width="30" src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/animebop.gif">
 
-Use Harden Windows Security script to secure your personal device. Your device will be secure against the majority of threats.
+1. Applying the hardening measures described in the [Readme](https://github.com/HotCakeX/Harden-Windows-Security)
+2. Checking and Auditing the Compliance of the system with the hardening measures
+3. Removing the hardening measures described in the [Readme](https://github.com/HotCakeX/Harden-Windows-Security)
 
-Harden Windows Security script uses the same security features built into your device and Windows operating system to fine-tune it towards the highest security and locked-down state.
+Use Harden Windows Security module to secure your personal devices against the majority of advanced threats.
+
+The module is suitable to be used by everyone, as long as your device is not managed, for example by a Domain Controller or part of the [Microsoft Entra ID](https://www.microsoft.com/en-gb/security/business/microsoft-entra), because those devices are already controlled in different manners and different set of policies are applied to them.
+
+It uses the same security features built into your device and Windows operating system to fine-tune it towards the highest security and locked-down state.
 
 <br>
 
 <p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/SecurityBenchmarksComparisonChart.png"></p>
 
 > [*The reasoning behind the infographic above*](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Comparison-of-security-benchmarks)
-
-<br>
-
-### Compliance checking is also available! <img width="55" src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/animebop.gif">
-
-You can use [Harden Windows Security Module](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden%E2%80%90Windows%E2%80%90Security%E2%80%90Module) to check and confirm that everything from Harden Windows Security script is properly applied.
 
 <br>
 
@@ -38,17 +38,25 @@ Full details, guides and videos available [here on GitHub](https://github.com/Ho
 
 <br>
 
-## <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/PNGs/350387930319028225.png"> How do you make the right choice?
+## <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/PNGs/350387930319028225.png"> How Do You Make the Right Choice?
 
-For the highest possible security, you should use both the Harden Windows Security script and the WDAC policy on your device if possible.
+First use the Harden Windows Security Module to apply the hardening measures described in the Readme. After applying these hardening measures, your system will be secure against at least ~98% of the threats. These threats aren't the usual computer viruses, they are motivated nation state threat actors.
 
-This will create multiple layers of security; also known as defense in depth. If there will ever be a zero-day vulnerability in one or even some of the security layers, there will still be enough layers left to protect your device. It's impossible to penetrate all of them.
+### If you want even more security and control, you have at least 2 more options:
+
+1. you can either use **Smart App Control**, which deploys an automatic and AI based WDAC policy that uses Intelligent Security Graph to authorize safe and reputable applications and files and blocks unknown and malicious files.
+
+2. Use WDACConfig module to deploy a WDAC policy and have even more control over the operation of the Windows Defender Application Control.
+
+These methods will create multiple layers of security; also known as defense in depth. You have an option to create Kernel-level Zero-Trust strategy for your system (Explained below in the BYOVD section).
+
+If there will ever be a zero-day vulnerability in one or even some of the security layers, there will still be enough layers left to protect your device. It's impossible to penetrate all of them.
 
 Also, zero-day vulnerabilities are patched quickly, so keeping your device and OS up to date, regardless of what OS you use, is one of the most basic security recommendations and best practices you must follow.
 
 <br>
 
-## <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/PNGs/Account.png"> Vulnerabilities such as zero-days are disclosed in 3 different ways
+## <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/PNGs/Account.png"> Vulnerabilities Such as Zero-Days Are Disclosed in 3 Different Ways
 
 1. The vulnerability is disclosed responsibly. It is first communicated with the software developer and company privately so they can have the time to fix and issue updates/patches for the vulnerability before it is disclosed publicly. In this way, people are always safe because all that's needed is to keep your OS and software up to date to receive the latest security patches.
 
@@ -58,19 +66,25 @@ Also, zero-day vulnerabilities are patched quickly, so keeping your device and O
 
 <br>
 
-## <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/PNGs/StonkUp.png"> What about other Enterprise security ?
+## <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/PNGs/StonkUp.png"> What About More Advanced Security at Scale ?
 
 <p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/534534.png" width="650"></p>
 
 <br>
 
-Windows Defender Application Control is not the only security solution for enterprises and businesses; it’s just one piece of the puzzle. There are other necessary ways to secure these devices, such as a wide range of security services that create bulletproof devices for various organizations and use cases:
+To achieve the Highest level of Security **at Scale** for Businesses, Enterprises and Military scenarios, you can use the following services to create impenetrable devices and environments.
+
+As an individual user you can still utilize these features and services, they add an additional layer of protection to your security stack.
 
 * [Microsoft Defender for Endpoint](https://www.microsoft.com/en-us/security/business/endpoint-security/microsoft-defender-endpoint) - Discover and secure endpoint devices across your multiplatform enterprise.
 
+* [Microsoft Security Copilot](https://www.microsoft.com/en-us/security/business/ai-machine-learning/microsoft-security-copilot) - Build a defense so automated that even your intern becomes a cybersecurity expert.
+
 * [Confidential Computing on Azure](https://learn.microsoft.com/en-us/azure/confidential-computing/overview-azure-products) - Protect your highly sensitive data while it's in use
 
-* [Conditional access in Azure AD](https://www.microsoft.com/en-us/security/business/identity-access/azure-active-directory-conditional-access) - Increase protection without compromising productivity
+* [Confidential AI](https://learn.microsoft.com/en-us/azure/confidential-computing/confidential-ai) - Train your data Privately and Securely on the most advanced AI Super computers
+
+* [Microsoft Entra conditional access](https://www.microsoft.com/en-us/security/business/identity-access/microsoft-entra-conditional-access) - Increase protection without compromising productivity
 
 * [Microsoft Sentinel](https://azure.microsoft.com/en-us/products/microsoft-sentinel/) - Scalable, cloud-native solution that provides SIEM, SOAR and more!
 
@@ -78,7 +92,7 @@ Windows Defender Application Control is not the only security solution for enter
 
 * [Microsoft Defender for Cloud](https://azure.microsoft.com/en-us/products/defender-for-cloud) - Protect multicloud and hybrid environments with integrated security from code to cloud
 
-* [Confidential AI](https://learn.microsoft.com/en-us/azure/confidential-computing/confidential-ai) - Train your data Privately and Securely on the most advanced AI Super computers
+* [Microsoft Defender for Cloud Apps]() - Modernize how you secure your apps, protect your data, and elevate your app posture with software as a service (SaaS) security.
 
 * [Microsoft Defender for Identity](https://www.microsoft.com/en-us/security/business/siem-and-xdr/microsoft-defender-for-identity) - Protect your on-premises identities with cloud-powered intelligence.
 
@@ -98,15 +112,13 @@ Windows Defender Application Control is not the only security solution for enter
 
 ## <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/PNGs/673731848341553152.png"> Important Considerations
 
-* Avoid using any 3rd party security solutions when using Harden Windows Security script or Windows Defender Application Control (WDAC). They are neither necessary nor compatible.
+* Avoid using any 3rd party security solutions when using Harden Windows Security module or Windows Defender Application Control (WDAC). 3rd party solutions are weak, incompatible and unnecessary, they also increase your attack surface.
 
-* Minimize your exposure to 3rd parties. You don’t need any 3rd party AV or EDR. Use 3rd party software only when there is no 1st party solution.
-
-* Use Virtual machines for any questionable or unsafe software. Use Windows Sandbox or Hyper-V VM. Also consider using Virtual machines or Microsoft Defender Application Guard (MDAG) for browsing on highly secure workstations.
+* Use Virtual machines for any questionable or unsafe software. Use [Windows Sandbox or Hyper-V VM](https://github.com/HotCakeX/Privacy-Anonymity-Compartmentalization). Also consider using Virtual machines or Microsoft Defender Application Guard (MDAG) for browsing on highly secure workstations.
 
 <br>
 
-## <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/surface.gif"> Which device to use ?
+## <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/surface.gif"> Which Device to Use ?
 
 Use Microsoft Surface products for the best device and firmware security. They support [secured-core PC specifications](https://www.microsoft.com/en-us/windows/business/windows-11-secured-core-computers), the manufacturing process and platform is trusted and secure.
 
@@ -140,7 +152,9 @@ Make sure to use Surface products that support [Device Firmware Configuration In
 
 * Secured core PCs provide the hardware that is capable of protecting against BYOVD attacks. It is your responsibility to turn the features on, those include WDAC (Windows Defender Application Control), ASR (Attack Surface Reduction) rules, Dynamic/static root of trust, [firmware](https://learn.microsoft.com/en-us/windows-hardware/drivers/bringup/firmware-attack-surface-reduction) that is extensible for revoking drivers.
 
-* For drivers not explicitly mentioned in the Microsoft Recommended Driver Block List, which are the more dynamic side of things, ASR is able to protect against BYOVD, ELAM (Early launch anti-malware), part of the MDAV is also able to do that, all because of the ISG (Intelligent Security Graph).
+* For drivers not explicitly mentioned in the Microsoft Recommended Driver Block List, which are the more dynamic side of things, there are features such as ISG (Intelligent Security Graph) based ASR (Attack Surface Reduction rules) and ELAM (Early launch anti-malware).
+
+* Use [Strict Kernel-mode WDAC policy for complete BYOVD protection](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-policy-for-BYOVD-Kernel-mode-only-protection)
 
 <br> 
 

@@ -10,9 +10,7 @@ Harden Windows Safely, Securely, Only With Official Microsoft Methods
 </h3>
 
 <div align="center">
-
-[![PowerShell Gallery Version (including pre-releases)](https://img.shields.io/powershellgallery/v/Harden-Windows-Security-Module?include_prereleases&logo=Github&logoColor=rgb(76%2C%2082%2C%20112)&label=Harden%20Windows%20Security%20Module&labelColor=rgb(233%2C255%2C125)&color=rgb(246%2C%2082%2C%20160))](https://www.powershellgallery.com/packages/Harden-Windows-Security-Module) [![PowerShell Gallery Version (including pre-releases)](https://img.shields.io/powershellgallery/v/WDACConfig?include_prereleases&logo=Github&logoColor=rgb(76%2C%2082%2C%20112)&label=WDACConfig%20Module&labelColor=rgb(233%2C255%2C125)&color=rgb(246%2C%2082%2C%20160))](https://www.powershellgallery.com/packages/WDACConfig) [![PowerShell Gallery Version (including pre-releases)](https://img.shields.io/powershellgallery/v/Harden-Windows-Security?include_prereleases&logo=Github&logoColor=rgb(76%2C%2082%2C%20112)&label=Harden%20Windows%20Security%20Script&labelColor=rgb(233%2C255%2C125)&color=rgb(246%2C%2082%2C%20160))](https://www.powershellgallery.com/packages/Harden-Windows-Security)
-
+<a href="https://www.powershellgallery.com/packages/Harden-Windows-Security-Module"><img src="https://img.shields.io/powershellgallery/v/Harden-Windows-Security-Module?include_prereleases&logo=Github&logoColor=rgb(76%2C%2082%2C%20112)&label=Harden%20Windows%20Security%20Module&labelColor=rgb(233%2C255%2C125)&color=rgb(246%2C%2082%2C%20160)" alt="PowerShell Gallery Version (including pre-releases)"></a> <a href="https://www.powershellgallery.com/packages/WDACConfig"><img src="https://img.shields.io/powershellgallery/v/WDACConfig?include_prereleases&logo=Github&logoColor=rgb(76%2C%2082%2C%20112)&label=WDACConfig%20Module&labelColor=rgb(233%2C255%2C125)&color=rgb(246%2C%2082%2C%20160)" alt="PowerShell Gallery Version (including pre-releases)"></a> <a href="https://www.powershellgallery.com/packages/Harden-Windows-Security"><img src="https://img.shields.io/powershellgallery/v/Harden-Windows-Security?include_prereleases&logo=Github&logoColor=rgb(76%2C%2082%2C%20112)&label=Harden%20Windows%20Security%20Script&labelColor=rgb(233%2C255%2C125)&color=rgb(246%2C%2082%2C%20160)" alt="PowerShell Gallery Version (including pre-releases)"></a>
 </div>
 
 <h6 align="center">
@@ -32,7 +30,6 @@ Harden Windows Safely, Securely, Only With Official Microsoft Methods
   <a href="#resources">Resources</a> •
   <a href="#license">License</a> •
   <a href="https://github.com/HotCakeX/Harden-Windows-Security/wiki">Wiki</a>
-
 </p>
 
 <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">

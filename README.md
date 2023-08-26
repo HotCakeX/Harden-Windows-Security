@@ -9,16 +9,11 @@ Harden Windows Security | A New Threat to Malware
 Harden Windows Safely, Securely, Only With Official Microsoft Methods
 </h3>
 
-<p align="center">
-  <a href="https://www.powershellgallery.com/packages/Harden-Windows-Security/">
-    <img src="https://img.shields.io/powershellgallery/v/Harden-Windows-Security?style=for-the-badge"
-         alt="PowerShell Gallery">
-  </a>
-  <a href="https://www.powershellgallery.com/packages/Harden-Windows-Security/">
-    <img src="https://img.shields.io/powershellgallery/dt/Harden-Windows-Security?style=for-the-badge"
-         alt="PowerShell Gallery Downloads count">
-  </a>
-</p>
+<div align="center">
+
+[![PowerShell Gallery Version (including pre-releases)](https://img.shields.io/powershellgallery/v/Harden-Windows-Security-Module?include_prereleases&logo=Github&logoColor=rgb(76%2C%2082%2C%20112)&label=Harden%20Windows%20Security%20Module&labelColor=rgb(233%2C255%2C125)&color=rgb(246%2C%2082%2C%20160))](https://www.powershellgallery.com/packages/Harden-Windows-Security-Module) [![PowerShell Gallery Version (including pre-releases)](https://img.shields.io/powershellgallery/v/WDACConfig?include_prereleases&logo=Github&logoColor=rgb(76%2C%2082%2C%20112)&label=WDACConfig%20Module&labelColor=rgb(233%2C255%2C125)&color=rgb(246%2C%2082%2C%20160))](https://www.powershellgallery.com/packages/WDACConfig) [![PowerShell Gallery Version (including pre-releases)](https://img.shields.io/powershellgallery/v/Harden-Windows-Security?include_prereleases&logo=Github&logoColor=rgb(76%2C%2082%2C%20112)&label=Harden%20Windows%20Security%20Script&labelColor=rgb(233%2C255%2C125)&color=rgb(246%2C%2082%2C%20160))](https://www.powershellgallery.com/packages/Harden-Windows-Security)
+
+</div>
 
 <h6 align="center">
 
@@ -36,8 +31,7 @@ Harden Windows Safely, Securely, Only With Official Microsoft Methods
   <a href="#security-recommendations">Security Recommendations</a> •
   <a href="#resources">Resources</a> •
   <a href="#license">License</a> •
-  <a href="https://github.com/HotCakeX/Harden-Windows-Security/wiki">Wiki</a> •
-  <a href="https://1drv.ms/x/s!AtCaUNAJbbvIhuVQhdMu_Hts7YZ_lA?e=df6H6P">Full change log in Excel online</a>
+  <a href="https://github.com/HotCakeX/Harden-Windows-Security/wiki">Wiki</a>
 
 </p>
 

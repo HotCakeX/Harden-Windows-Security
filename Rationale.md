@@ -14,7 +14,7 @@ This document provides the justification and objective of this GitHub repository
 
 Use Harden Windows Security module to secure your personal devices against the majority of advanced threats.
 
-The module is suitable to be used by everyone, as long as your device is not managed, for example by a Domain Controller or part of the [Microsoft Entra ID](https://www.microsoft.com/en-gb/security/business/microsoft-entra), because those devices are already controlled in different manners and different set of policies are applied to them.
+The module is suitable to be used by everyone, as long as your device is not managed, for example by a Domain Controller or as part of the [Microsoft Entra ID](https://www.microsoft.com/en-gb/security/business/microsoft-entra), because those devices are already controlled in different manners and different set of policies are applied to them.
 
 It uses the same security features built into your device and Windows operating system to fine-tune it towards the highest security and locked-down state.
 
@@ -44,11 +44,11 @@ First use the Harden Windows Security Module to apply the hardening measures des
 
 ### If you want even more security and control, you have at least 2 more options:
 
-1. you can either use **Smart App Control**, which deploys an automatic and AI based WDAC policy that uses Intelligent Security Graph to authorize safe and reputable applications and files and blocks unknown and malicious files.
+1. you can either use **[Smart App Control](https://learn.microsoft.com/en-us/windows/apps/develop/smart-app-control/overview)**, which deploys an automatic and AI based WDAC policy that uses [Intelligent Security Graph](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/use-wdac-with-intelligent-security-graph) to authorize safe and reputable applications and files and blocks unknown and malicious files.
 
-2. Use WDACConfig module to deploy a WDAC policy and have even more control over the operation of the Windows Defender Application Control.
+2. Use [WDACConfig module](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig) to deploy a WDAC policy and have even more control over the operation of the Windows Defender Application Control.
 
-These methods will create multiple layers of security; also known as defense in depth. You have an option to create Kernel-level Zero-Trust strategy for your system (Explained below in the BYOVD section).
+These methods will create multiple layers of security; also known as defense in depth. Additionally, you can create [Kernel-level Zero-Trust strategy](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-policy-for-BYOVD-Kernel-mode-only-protection) for your system.
 
 If there will ever be a zero-day vulnerability in one or even some of the security layers, there will still be enough layers left to protect your device. It's impossible to penetrate all of them.
 

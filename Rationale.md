@@ -40,7 +40,7 @@ Full details, guides and videos available [here on GitHub](https://github.com/Ho
 
 ## <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/PNGs/350387930319028225.png"> How Do You Make the Right Choice?
 
-First use the Harden Windows Security Module to apply the hardening measures described in the Readme. After applying these hardening measures, your system will be secure against at least ~98% of the threats. These threats aren't the usual computer viruses, they are motivated nation state threat actors.
+First use the Harden Windows Security Module to apply the hardening measures described in the Readme. After applying these hardening measures, your system will be secure against **at least** ~98% of the threats when you use Standard (non-Privileged) account for everyday work. These threats aren't the usual computer viruses, they are ***motivated nation state threat actors.***
 
 ### If you want even more security and control, you have at least 2 more options:
 

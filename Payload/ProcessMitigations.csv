@@ -1,6 +1,5 @@
 ProgramName,Mitigation,Action,Comment
 msedge.exe,DEP,Enable,Maximum possible mitigations for Edge browser. any more than this causes problem
-msedge.exe,EmulateAtlThunks,Enable,Maximum possible mitigations for Edge browser. any more than this causes problem
 msedge.exe,BottomUp,Enable,Maximum possible mitigations for Edge browser. any more than this causes problem
 msedge.exe,ForceRelocateImages,Enable,Maximum possible mitigations for Edge browser. any more than this causes problem
 msedge.exe,RequireInfo,Enable,Maximum possible mitigations for Edge browser. any more than this causes problem
@@ -49,7 +48,6 @@ QuickAssist.exe,UserShadowStack,Enable,Hardening Quick Assist
 QuickAssist.exe,UserShadowStackStrictMode,Enable,Hardening Quick Assist
 QuickAssist.exe,AllowThreadsToOptOut,Disable,Hardening Quick Assist
 Acrobat.exe,DEP,Enable,Hardening Adobe Acrobat
-Acrobat.exe,EmulateAtlThunks,Enable,Hardening Adobe Acrobat
 Acrobat.exe,ForceRelocateImages,Enable,Hardening Adobe Acrobat
 Acrobat.exe,RequireInfo,Enable,Hardening Adobe Acrobat
 Acrobat.exe,StrictHandle,Enable,Hardening Adobe Acrobat
@@ -64,3 +62,83 @@ Acrobat.exe,EnableRopStackPivot,Enable,Hardening Adobe Acrobat
 Acrobat.exe,EnableRopCallerCheck,Enable,Hardening Adobe Acrobat
 Acrobat.exe,EnableRopSimExec,Enable,Hardening Adobe Acrobat
 Acrobat.exe,UserShadowStack,Enable,Hardening Adobe Acrobat
+OneDrive.exe,ForceRelocateImages,Enable,OneDrive Hardening
+OneDrive.exe,RequireInfo,Enable,OneDrive Hardening
+OneDrive.exe,StrictHandle,Enable,OneDrive Hardening
+OneDrive.exe,DisableExtensionPoints,Enable,OneDrive Hardening
+OneDrive.exe,MicrosoftSignedOnly,Enable,OneDrive Hardening
+OneDrive.exe,AllowStoreSignedBinaries,Enable,OneDrive Hardening
+OneDrive.exe,EnforceModuleDependencySigning,Enable,OneDrive Hardening
+OneDrive.exe,EnableImportAddressFilter,Enable,OneDrive Hardening
+OneDrive.exe,EnableRopStackPivot,Enable,OneDrive Hardening
+OneDrive.exe,EnableRopCallerCheck,Enable,OneDrive Hardening
+EXCEL.EXE,ForceRelocateImages,Enable,EXCEL Hardening
+EXCEL.EXE,RequireInfo,Enable,EXCEL Hardening
+EXCEL.EXE,StrictHandle,Enable,EXCEL Hardening
+EXCEL.EXE,DisableExtensionPoints,Enable,EXCEL Hardening
+EXCEL.EXE,MicrosoftSignedOnly,Enable,EXCEL Hardening
+EXCEL.EXE,AllowStoreSignedBinaries,Enable,EXCEL Hardening
+EXCEL.EXE,EnforceModuleDependencySigning,Enable,EXCEL Hardening
+EXCEL.EXE,EnableImportAddressFilter,Enable,EXCEL Hardening
+EXCEL.EXE,EnableRopStackPivot,Enable,EXCEL Hardening
+EXCEL.EXE,EnableRopCallerCheck,Enable,EXCEL Hardening
+MSACCESS.EXE,ForceRelocateImages,Enable,MSACCESS Hardening
+MSACCESS.EXE,RequireInfo,Enable,MSACCESS Hardening
+MSACCESS.EXE,StrictHandle,Enable,MSACCESS Hardening
+MSACCESS.EXE,DisableExtensionPoints,Enable,MSACCESS Hardening
+MSACCESS.EXE,MicrosoftSignedOnly,Enable,MSACCESS Hardening
+MSACCESS.EXE,AllowStoreSignedBinaries,Enable,MSACCESS Hardening
+MSACCESS.EXE,EnforceModuleDependencySigning,Enable,MSACCESS Hardening
+MSACCESS.EXE,EnableImportAddressFilter,Enable,MSACCESS Hardening
+MSACCESS.EXE,EnableRopStackPivot,Enable,MSACCESS Hardening
+MSACCESS.EXE,EnableRopCallerCheck,Enable,MSACCESS Hardening
+MSPUB.EXE,ForceRelocateImages,Enable,MSPUB Hardening
+MSPUB.EXE,RequireInfo,Enable,MSPUB Hardening
+MSPUB.EXE,StrictHandle,Enable,MSPUB Hardening
+MSPUB.EXE,DisableExtensionPoints,Enable,MSPUB Hardening
+MSPUB.EXE,MicrosoftSignedOnly,Enable,MSPUB Hardening
+MSPUB.EXE,AllowStoreSignedBinaries,Enable,MSPUB Hardening
+MSPUB.EXE,EnforceModuleDependencySigning,Enable,MSPUB Hardening
+MSPUB.EXE,EnableImportAddressFilter,Enable,MSPUB Hardening
+MSPUB.EXE,EnableRopStackPivot,Enable,MSPUB Hardening
+MSPUB.EXE,EnableRopCallerCheck,Enable,MSPUB Hardening
+ONENOTE.EXE,ForceRelocateImages,Enable,ONENOTE Hardening
+ONENOTE.EXE,RequireInfo,Enable,ONENOTE Hardening
+ONENOTE.EXE,StrictHandle,Enable,ONENOTE Hardening
+ONENOTE.EXE,DisableExtensionPoints,Enable,ONENOTE Hardening
+ONENOTE.EXE,MicrosoftSignedOnly,Enable,ONENOTE Hardening
+ONENOTE.EXE,AllowStoreSignedBinaries,Enable,ONENOTE Hardening
+ONENOTE.EXE,EnforceModuleDependencySigning,Enable,ONENOTE Hardening
+ONENOTE.EXE,EnableImportAddressFilter,Enable,ONENOTE Hardening
+ONENOTE.EXE,EnableRopStackPivot,Enable,ONENOTE Hardening
+ONENOTE.EXE,EnableRopCallerCheck,Enable,ONENOTE Hardening
+OUTLOOK.EXE,ForceRelocateImages,Enable,OUTLOOK Hardening
+OUTLOOK.EXE,RequireInfo,Enable,OUTLOOK Hardening
+OUTLOOK.EXE,StrictHandle,Enable,OUTLOOK Hardening
+OUTLOOK.EXE,DisableExtensionPoints,Enable,OUTLOOK Hardening
+OUTLOOK.EXE,MicrosoftSignedOnly,Enable,OUTLOOK Hardening
+OUTLOOK.EXE,AllowStoreSignedBinaries,Enable,OUTLOOK Hardening
+OUTLOOK.EXE,EnforceModuleDependencySigning,Enable,OUTLOOK Hardening
+OUTLOOK.EXE,EnableImportAddressFilter,Enable,OUTLOOK Hardening
+OUTLOOK.EXE,EnableRopStackPivot,Enable,OUTLOOK Hardening
+OUTLOOK.EXE,EnableRopCallerCheck,Enable,OUTLOOK Hardening
+POWERPNT.EXE,ForceRelocateImages,Enable,POWERPNT Hardening
+POWERPNT.EXE,RequireInfo,Enable,POWERPNT Hardening
+POWERPNT.EXE,StrictHandle,Enable,POWERPNT Hardening
+POWERPNT.EXE,DisableExtensionPoints,Enable,POWERPNT Hardening
+POWERPNT.EXE,MicrosoftSignedOnly,Enable,POWERPNT Hardening
+POWERPNT.EXE,AllowStoreSignedBinaries,Enable,POWERPNT Hardening
+POWERPNT.EXE,EnforceModuleDependencySigning,Enable,POWERPNT Hardening
+POWERPNT.EXE,EnableImportAddressFilter,Enable,POWERPNT Hardening
+POWERPNT.EXE,EnableRopStackPivot,Enable,POWERPNT Hardening
+POWERPNT.EXE,EnableRopCallerCheck,Enable,POWERPNT Hardening
+WINWORD.EXE,ForceRelocateImages,Enable,WINWORD Hardening
+WINWORD.EXE,RequireInfo,Enable,WINWORD Hardening
+WINWORD.EXE,StrictHandle,Enable,WINWORD Hardening
+WINWORD.EXE,DisableExtensionPoints,Enable,WINWORD Hardening
+WINWORD.EXE,MicrosoftSignedOnly,Enable,WINWORD Hardening
+WINWORD.EXE,AllowStoreSignedBinaries,Enable,WINWORD Hardening
+WINWORD.EXE,EnforceModuleDependencySigning,Enable,WINWORD Hardening
+WINWORD.EXE,EnableImportAddressFilter,Enable,WINWORD Hardening
+WINWORD.EXE,EnableRopStackPivot,Enable,WINWORD Hardening
+WINWORD.EXE,EnableRopCallerCheck,Enable,WINWORD Hardening

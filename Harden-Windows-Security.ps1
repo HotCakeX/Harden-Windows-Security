@@ -517,8 +517,8 @@ try {
                 # Network protection blocks network traffic instead of displaying a warning
                 Set-MpPreference -EnableConvertWarnToBlock $True
 
-                # Add OneDrive folders of all user accounts to the Controlled Folder Access for Ransomware Protection
-                Get-ChildItem 'C:\Users\*\OneDrive' | ForEach-Object { Add-MpPreference -ControlledFolderAccessProtectedFolders $_ }
+                # Add OneDrive folders of all user accounts (personal and work accounts) to the Controlled Folder Access for Ransomware Protection
+                Get-ChildItem 'C:\Users\*\OneDrive*\' -Directory | ForEach-Object { Add-MpPreference -ControlledFolderAccessProtectedFolders $_ }
 
                 # Enable Mandatory ASLR Exploit Protection system-wide
                 Set-ProcessMitigation -System -Enable ForceRelocateImages
@@ -530,8 +530,23 @@ try {
 
                 # Group the data by ProgramName
                 [System.Object[]]$GroupedMitigations = $ProcessMitigations | Group-Object ProgramName
-                
-                # Loop through each group
+                # Get the current process mitigations
+                [System.Object[]]$AllAvailableMitigations = (Get-ItemProperty -Path 'Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\*')
+
+                # Loop through each group to remove the mitigations, this way we apply clean set of mitigations in the next step
+                foreach ($Group in $GroupedMitigations) {    
+                    # To separate the filename from full path of the item in the CSV and then check whether it exists in the system registry
+                    if ($Group.Name -match '\\([^\\]+)$') {
+                        if ($Matches[1] -in $AllAvailableMitigations.pschildname) {
+                            Remove-Item -Path "Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\$($Matches[1])" -Recurse -Force
+                        }        
+                    }
+                    elseif ($Group.Name -in $AllAvailableMitigations.pschildname) {
+                        Remove-Item -Path "Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\$($Group.Name)" -Recurse -Force
+                    }
+                } 
+
+                # Loop through each group to add the mitigations
                 foreach ($Group in $GroupedMitigations) {
                     # Get the program name
                     $ProgramName = $Group.Name
@@ -703,9 +718,6 @@ try {
                     Write-Host 'Kernel DMA protection is unavailable on the system, enabling Bitlocker DMA protection.' -ForegroundColor Blue
                     .\LGPO.exe /m '..\Security-Baselines-X\Overrides for Microsoft Security Baseline\Bitlocker DMA\Bitlocker DMA Countermeasure ON\Registry.pol'                                                          
                 }
-
-                # Make sure Bitlocker policies are applied before enabling Bitlocker
-                gpupdate /force
 
                 # Set-up Bitlocker encryption for OS Drive with TPMandPIN and recovery password keyprotectors and Verify its implementation            
                 # check, make sure there is no CD/DVD drives in the system, because Bitlocker throws an error when there is

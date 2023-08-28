@@ -1,6 +1,6 @@
 <#PSScriptInfo
 
-.VERSION 2023.8.20
+.VERSION 2023.8.28
 
 .GUID d435a293-c9ee-4217-8dc1-4ad2318a5770
 
@@ -92,6 +92,12 @@ Full Change log always available on GitHub: https://github.com/HotCakeX/Harden-W
 
 # Change the execution policy temporarily only for the current PowerShell session
 Set-ExecutionPolicy Bypass -Scope Process
+
+# Defining global script variables
+# Current script's version, the same as the version at the top in the script info section
+[datetime]$CurrentVersion = '2023.8.28'
+# Minimum OS build number required for the hardening measures used in this script
+[decimal]$Requiredbuild = '22621.2215'
 
 # Determining if PowerShell is core to use modern styling
 [bool]$global:IsCore = $false
@@ -272,8 +278,6 @@ if (Test-IsAdmin) {
 # doing a try-finally block on the entire script so that when CTRL + C is pressed to forcefully exit the script,
 # or break is passed, clean up will still happen for secure exit
 try {
-    # Check the current hard-coded version against the latest version online
-    [datetime]$CurrentVersion = '2023.8.20'
     try {
         Invoke-WithoutProgress {   
             [datetime]$global:LatestVersion = Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Version.txt'
@@ -283,12 +287,13 @@ try {
         Write-Error "Couldn't verify if the latest version of the script is installed, please check your Internet connection."
         break
     }
+    # Check the current hard-coded version against the latest version online
     if ($CurrentVersion -lt $LatestVersion) {
         Write-Host "The currently installed script's version is $CurrentVersion while the latest version is $LatestVersion" -ForegroundColor Cyan
         Write-Host 'Please update your script using:' -ForegroundColor Yellow
         Write-Host "Update-Script -Name 'Harden-Windows-Security' -Force" -ForegroundColor Green
         Write-Host 'and run it again after that.' -ForegroundColor Yellow        
-        Write-Host 'You can view the change log in here: https://1drv.ms/x/s!AtCaUNAJbbvIhuVQhdMu_Hts7YZ_lA?e=df6H6P' -ForegroundColor Magenta
+        Write-Host 'You can view the change log on GitHub: https://github.com/HotCakeX/Harden-Windows-Security/releases' -ForegroundColor Magenta
         break
     }
 
@@ -314,16 +319,23 @@ try {
         break
     }
 
-    # check if user's OS is latest version
-    if (-NOT ([System.Environment]::OSVersion.Version -ge [version]'10.0.22621')) {
-        Write-Error "You're not using the latest version of the Windows OS, exiting..."
+    # check if user's OS is the latest build
+    # Get OS build version
+    [decimal]$OSBuild = [System.Environment]::OSVersion.Version.Build
+    # Get Update Build Revision (UBR) number
+    [decimal]$UBR = Get-ItemPropertyValue -Path 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion' -Name 'UBR'
+    # Create full OS build number as seen in Windows Settings
+    [decimal]$FullOSBuild = "$OSBuild.$UBR"
+    # Make sure the current OS build is equal or greater than the required build
+    if (-NOT ($FullOSBuild -ge $Requiredbuild)) {
+        Write-Error "You're not using the latest build of the Windows OS. A minimum build of $Requiredbuild is required but your OS build is $FullOSBuild`nPlease go to Windows Update to install the updates and then try again."
         break
     }
 
     if (Test-IsAdmin) {
         # check to make sure Secure Boot is enabled
         if (-NOT (Confirm-SecureBootUEFI)) {
-            Write-Error 'Secure Boot is not enabled, please go to your UEFI settings and enable it and then run the script again.'
+            Write-Error 'Secure Boot is not enabled, please go to your UEFI settings to enable it and then try again.'
             break    
         }
 
@@ -331,9 +343,21 @@ try {
         [bool]$TPMFlag1 = (Get-Tpm).tpmpresent
         [bool]$TPMFlag2 = (Get-Tpm).tpmenabled
         if (!$TPMFlag1 -or !$TPMFlag2) {
-            Write-Error 'TPM is not available or enabled, please go to your UEFI settings and enable it and then run the script again.'
+            Write-Error 'TPM is not available or enabled, please go to your UEFI settings to enable it and then try again.'
             break    
         }
+
+        # Check to make sure Microsoft Defender is running normally
+        if ((Get-MpComputerStatus).AMRunningMode -eq 'Passive Mode') {
+            Write-Error 'Microsoft Defender is running in Passive Mode, please remove any 3rd party AV and then try again.'
+            break            
+        }
+
+        # Check to make sure Microsoft Defender real time protection is enabled
+        if ((Get-MpComputerStatus).RealTimeProtectionEnabled -eq $false) {
+            Write-Error 'Microsoft Defender Real Time Protection is not enabled, please enable it and then try again.'
+            break            
+        }        
     }
     #endregion RequirementsCheck
 
@@ -351,7 +375,7 @@ try {
         if ($IsCore) { &$WriteNeonGreen 'Skipping commands that require Administrator privileges' } else { Write-Host 'Skipping commands that require Administrator privileges' -ForegroundColor Magenta }
     }
     else {
-        Write-Progress -Activity 'Initialization' -Status 'Downloading the required files for the script' -PercentComplete 0      
+        Write-Progress -Activity 'Initialization' -Status 'Downloading the required files...' -PercentComplete 0      
         
         Invoke-WithoutProgress { 
             try {                
@@ -382,7 +406,7 @@ try {
 
                 # Download Process Mitigations CSV file from GitHub or Azure DevOps
                 try {
-                    Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Payload/ProcessMitigations.csv' -OutFile '.\ProcessMitigations.csv' -ErrorAction Stop                
+                    Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Payload/ProcessMitigations.csv' -OutFile '.\ProcessMitigations.csv' -ErrorAction Stop
                 }
                 catch {
                     Write-Host 'Using Azure DevOps...' -ForegroundColor Yellow
@@ -405,16 +429,13 @@ try {
 
         #region Windows-Boot-Manager-revocations-for-Secure-Boot KB5025885  
         # ============================May 9 2023 Windows Boot Manager revocations for Secure Boot =================================
-        Write-Host ''
-        Write-Warning -Message 'Make sure your Windows is fully up to date before running this category.'
-        Start-Sleep -Seconds 1
-        switch (Select-Option -Options 'Yes', 'No', 'Exit' -Message "Apply May 9 2023 Windows Boot Manager Security measures ? (If you've already run this category, don't need to do it again)") {
+        switch (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nApply May 9 2023 Windows Boot Manager Security measures ? (If you've already run this category, don't need to do it again)") {
             'Yes' {
 
                 reg add HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Secureboot /v AvailableUpdates /t REG_DWORD /d 0x30 /f
 
-                Write-Host "`nThe required security measures have been applied to the system" -ForegroundColor Green
-                Write-Warning "Make sure to restart your device once. After restart, wait for at least 5-10 minutes and perform a 2nd restart to finish applying security measures completely.`n"
+                Write-Host 'The required security measures have been applied to the system' -ForegroundColor Green
+                Write-Warning 'Make sure to restart your device once. After restart, wait for at least 5-10 minutes and perform a 2nd restart to finish applying security measures completely.'
             } 'No' { break }
             'Exit' { &$CleanUp }
         }    
@@ -517,8 +538,8 @@ try {
                 # Network protection blocks network traffic instead of displaying a warning
                 Set-MpPreference -EnableConvertWarnToBlock $True
 
-                # Add OneDrive folders of all user accounts to the Controlled Folder Access for Ransomware Protection
-                Get-ChildItem 'C:\Users\*\OneDrive' | ForEach-Object { Add-MpPreference -ControlledFolderAccessProtectedFolders $_ }
+                # Add OneDrive folders of all user accounts (personal and work accounts) to the Controlled Folder Access for Ransomware Protection
+                Get-ChildItem 'C:\Users\*\OneDrive*\' -Directory | ForEach-Object { Add-MpPreference -ControlledFolderAccessProtectedFolders $_ }
 
                 # Enable Mandatory ASLR Exploit Protection system-wide
                 Set-ProcessMitigation -System -Enable ForceRelocateImages
@@ -530,8 +551,23 @@ try {
 
                 # Group the data by ProgramName
                 [System.Object[]]$GroupedMitigations = $ProcessMitigations | Group-Object ProgramName
-                
-                # Loop through each group
+                # Get the current process mitigations
+                [System.Object[]]$AllAvailableMitigations = (Get-ItemProperty -Path 'Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\*')
+
+                # Loop through each group to remove the mitigations, this way we apply clean set of mitigations in the next step
+                foreach ($Group in $GroupedMitigations) {    
+                    # To separate the filename from full path of the item in the CSV and then check whether it exists in the system registry
+                    if ($Group.Name -match '\\([^\\]+)$') {
+                        if ($Matches[1] -in $AllAvailableMitigations.pschildname) {
+                            Remove-Item -Path "Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\$($Matches[1])" -Recurse -Force
+                        }        
+                    }
+                    elseif ($Group.Name -in $AllAvailableMitigations.pschildname) {
+                        Remove-Item -Path "Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\$($Group.Name)" -Recurse -Force
+                    }
+                } 
+
+                # Loop through each group to add the mitigations
                 foreach ($Group in $GroupedMitigations) {
                     # Get the program name
                     $ProgramName = $Group.Name
@@ -569,10 +605,10 @@ try {
                             Edit-Registry -path 'HKLM:\SYSTEM\CurrentControlSet\Control\CI\Policy' -key 'VerifiedAndReputablePolicyState' -value '1' -type 'DWORD' -Action 'AddOrModify'
                         }
                         elseif ((Get-MpComputerStatus).SmartAppControlState -eq 'On') {
-                            Write-Host "Smart App Control is already turned on, skipping...`n"
+                            Write-Host "Smart App Control is already turned on, skipping...`n" -ForegroundColor Green
                         }
                         elseif ((Get-MpComputerStatus).SmartAppControlState -eq 'Off') {
-                            Write-Host "Smart App Control is turned off. Can't use registry to force enable it.`n"
+                            Write-Host "Smart App Control is turned off and can't be turned back on without reset or clean install.`n" -ForegroundColor Yellow
                         }
                     } 'No' { break }
                     'Exit' { &$CleanUp }
@@ -583,13 +619,13 @@ try {
                     'Yes' { 
                         # create a scheduled task that runs every 7 days
                         if (-NOT (Get-ScheduledTask -TaskName 'MSFT Driver Block list update' -ErrorAction SilentlyContinue)) {        
-                            $action = New-ScheduledTaskAction -Execute 'Powershell.exe' `
+                            $Action = New-ScheduledTaskAction -Execute 'Powershell.exe' `
                                 -Argument '-NoProfile -WindowStyle Hidden -command "& {try {Invoke-WebRequest -Uri "https://aka.ms/VulnerableDriverBlockList" -OutFile VulnerableDriverBlockList.zip -ErrorAction Stop}catch{exit};Expand-Archive .\VulnerableDriverBlockList.zip -DestinationPath "VulnerableDriverBlockList" -Force;Rename-Item .\VulnerableDriverBlockList\SiPolicy_Enforced.p7b -NewName "SiPolicy.p7b" -Force;Copy-Item .\VulnerableDriverBlockList\SiPolicy.p7b -Destination "C:\Windows\System32\CodeIntegrity";citool --refresh -json;Remove-Item .\VulnerableDriverBlockList -Recurse -Force;Remove-Item .\VulnerableDriverBlockList.zip -Force;}"'    
                             $TaskPrincipal = New-ScheduledTaskPrincipal -LogonType S4U -UserId $env:USERNAME -RunLevel Highest
                             # trigger
                             $Time = New-ScheduledTaskTrigger -Once -At (Get-Date).AddHours(1) -RepetitionInterval (New-TimeSpan -Days 7) 
                             # register the task
-                            Register-ScheduledTask -Action $action -Trigger $Time -Principal $TaskPrincipal -TaskPath 'MSFT Driver Block list update' -TaskName 'MSFT Driver Block list update' -Description 'Microsoft Recommended Driver Block List update'
+                            Register-ScheduledTask -Action $Action -Trigger $Time -Principal $TaskPrincipal -TaskPath 'MSFT Driver Block list update' -TaskName 'MSFT Driver Block list update' -Description 'Microsoft Recommended Driver Block List update'
                             # define advanced settings for the task
                             $TaskSettings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -Compatibility Win8 -StartWhenAvailable -ExecutionTimeLimit (New-TimeSpan -Minutes 3)
                             # add advanced settings we defined to the task
@@ -703,9 +739,6 @@ try {
                     Write-Host 'Kernel DMA protection is unavailable on the system, enabling Bitlocker DMA protection.' -ForegroundColor Blue
                     .\LGPO.exe /m '..\Security-Baselines-X\Overrides for Microsoft Security Baseline\Bitlocker DMA\Bitlocker DMA Countermeasure ON\Registry.pol'                                                          
                 }
-
-                # Make sure Bitlocker policies are applied before enabling Bitlocker
-                gpupdate /force
 
                 # Set-up Bitlocker encryption for OS Drive with TPMandPIN and recovery password keyprotectors and Verify its implementation            
                 # check, make sure there is no CD/DVD drives in the system, because Bitlocker throws an error when there is

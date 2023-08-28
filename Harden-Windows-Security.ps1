@@ -328,14 +328,14 @@ try {
     [decimal]$FullOSBuild = "$OSBuild.$UBR"
     # Make sure the current OS build is equal or greater than the required build
     if (-NOT ($FullOSBuild -ge $Requiredbuild)) {
-        Write-Error "You're not using the latest build of the Windows OS. A minimum build of $Requiredbuild is required but your OS build is $FullOSBuild`nexiting..."
+        Write-Error "You're not using the latest build of the Windows OS. A minimum build of $Requiredbuild is required but your OS build is $FullOSBuild`nPlease go to Windows Update to install the updates and then try again."
         break
     }
 
     if (Test-IsAdmin) {
         # check to make sure Secure Boot is enabled
         if (-NOT (Confirm-SecureBootUEFI)) {
-            Write-Error 'Secure Boot is not enabled, please go to your UEFI settings and enable it and then run the script again.'
+            Write-Error 'Secure Boot is not enabled, please go to your UEFI settings to enable it and then try again.'
             break    
         }
 
@@ -343,9 +343,21 @@ try {
         [bool]$TPMFlag1 = (Get-Tpm).tpmpresent
         [bool]$TPMFlag2 = (Get-Tpm).tpmenabled
         if (!$TPMFlag1 -or !$TPMFlag2) {
-            Write-Error 'TPM is not available or enabled, please go to your UEFI settings and enable it and then run the script again.'
+            Write-Error 'TPM is not available or enabled, please go to your UEFI settings to enable it and then try again.'
             break    
         }
+
+        # Check to make sure Microsoft Defender is running normally
+        if ((Get-MpComputerStatus).AMRunningMode -eq 'Passive Mode') {
+            Write-Error 'Microsoft Defender is running in Passive Mode, please remove any 3rd party AV and then try again.'
+            break            
+        }
+
+        # Check to make sure Microsoft Defender real time protection is enabled
+        if ((Get-MpComputerStatus).RealTimeProtectionEnabled -eq $false) {
+            Write-Error 'Microsoft Defender Real Time Protection is not enabled, please enable it and then try again.'
+            break            
+        }        
     }
     #endregion RequirementsCheck
 
@@ -363,7 +375,7 @@ try {
         if ($IsCore) { &$WriteNeonGreen 'Skipping commands that require Administrator privileges' } else { Write-Host 'Skipping commands that require Administrator privileges' -ForegroundColor Magenta }
     }
     else {
-        Write-Progress -Activity 'Initialization' -Status 'Downloading the required files for the script' -PercentComplete 0      
+        Write-Progress -Activity 'Initialization' -Status 'Downloading the required files...' -PercentComplete 0      
         
         Invoke-WithoutProgress { 
             try {                

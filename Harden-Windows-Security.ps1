@@ -391,7 +391,7 @@ try {
                 
                 # Download the Group Policies of Windows Hardening script from GitHub or Azure DevOps
                 try {
-                    Invoke-WebRequest -Uri 'https://github.com/HotCakeX/Harden-Windows-Security/raw/main/Payload/Security-Baselines-X.zip' -OutFile '.\Security-Baselines-X.zip' -ErrorAction Stop         
+                    Invoke-WebRequest -Uri 'https://github.com/HotCakeX/Harden-Windows-Security/raw/Making-optional-diagnostics-data-optional/Payload/Security-Baselines-X.zip' -OutFile '.\Security-Baselines-X.zip' -ErrorAction Stop         
                 }
                 catch {
                     Write-Host 'Using Azure DevOps...' -ForegroundColor Yellow
@@ -601,43 +601,42 @@ try {
                 # Turn on Data Execution Prevention (DEP) for all applications, including 32-bit programs
                 bcdedit.exe /set '{current}' nx AlwaysOn
 
-                # Try turning on Smart App Control
-                switch (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nTurn on Smart App Control ?") {
-                    'Yes' {               
-                        if ((Get-MpComputerStatus).SmartAppControlState -eq 'Eval') {
+                # Suggest turning on Smart App Control only if it's in Eval mode
+                if ((Get-MpComputerStatus).SmartAppControlState -eq 'Eval') {
+                    switch (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nTurn on Smart App Control ?") {
+                        'Yes' {
                             Edit-Registry -path 'HKLM:\SYSTEM\CurrentControlSet\Control\CI\Policy' -key 'VerifiedAndReputablePolicyState' -value '1' -type 'DWORD' -Action 'AddOrModify'
-                        }
-                        elseif ((Get-MpComputerStatus).SmartAppControlState -eq 'On') {
-                            Write-Host "Smart App Control is already turned on, skipping...`n" -ForegroundColor Green
-                        }
-                        elseif ((Get-MpComputerStatus).SmartAppControlState -eq 'Off') {
-                            Write-Host "Smart App Control is turned off and can't be turned back on without reset or clean install.`n" -ForegroundColor Yellow
-                        }
-                        # Let the optional diagnostic data be enabled automatically
-                        $ShouldEnableOptionalDiagnosticData = $True
-                    } 'No' { break }
-                    'Exit' { &$CleanUp }
+                            # Let the optional diagnostic data be enabled automatically
+                            $ShouldEnableOptionalDiagnosticData = $True
+                        } 'No' { break }
+                        'Exit' { &$CleanUp }
+                    }
                 }
 
-                # Create scheduled task for fast weekly Microsoft recommended driver block list update
-                switch (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nCreate scheduled task for fast weekly Microsoft recommended driver block list update ?") {
-                    'Yes' { 
-                        # create a scheduled task that runs every 7 days
-                        if (-NOT (Get-ScheduledTask -TaskName 'MSFT Driver Block list update' -ErrorAction SilentlyContinue)) {        
-                            $Action = New-ScheduledTaskAction -Execute 'Powershell.exe' `
-                                -Argument '-NoProfile -WindowStyle Hidden -command "& {try {Invoke-WebRequest -Uri "https://aka.ms/VulnerableDriverBlockList" -OutFile VulnerableDriverBlockList.zip -ErrorAction Stop}catch{exit};Expand-Archive .\VulnerableDriverBlockList.zip -DestinationPath "VulnerableDriverBlockList" -Force;Rename-Item .\VulnerableDriverBlockList\SiPolicy_Enforced.p7b -NewName "SiPolicy.p7b" -Force;Copy-Item .\VulnerableDriverBlockList\SiPolicy.p7b -Destination "C:\Windows\System32\CodeIntegrity";citool --refresh -json;Remove-Item .\VulnerableDriverBlockList -Recurse -Force;Remove-Item .\VulnerableDriverBlockList.zip -Force;}"'    
-                            $TaskPrincipal = New-ScheduledTaskPrincipal -LogonType S4U -UserId $env:USERNAME -RunLevel Highest
-                            # trigger
-                            $Time = New-ScheduledTaskTrigger -Once -At (Get-Date).AddHours(1) -RepetitionInterval (New-TimeSpan -Days 7) 
-                            # register the task
-                            Register-ScheduledTask -Action $Action -Trigger $Time -Principal $TaskPrincipal -TaskPath 'MSFT Driver Block list update' -TaskName 'MSFT Driver Block list update' -Description 'Microsoft Recommended Driver Block List update'
-                            # define advanced settings for the task
-                            $TaskSettings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -Compatibility Win8 -StartWhenAvailable -ExecutionTimeLimit (New-TimeSpan -Minutes 3)
-                            # add advanced settings we defined to the task
-                            Set-ScheduledTask -TaskPath 'MSFT Driver Block list update' -TaskName 'MSFT Driver Block list update' -Settings $TaskSettings 
-                        }
-                    } 'No' { break }
-                    'Exit' { &$CleanUp }
+                # Get the state of fast weekly Microsoft recommended driver block list update scheduled task
+                [string]$BlockListScheduledTaskState = (Get-ScheduledTask -TaskName 'MSFT Driver Block list update' -ErrorAction SilentlyContinue).State
+                
+                # Create scheduled task for fast weekly Microsoft recommended driver block list update if it doesn't exist or exists but is not Ready/Running
+                if (-NOT (($BlockListScheduledTaskState -eq 'Ready' -or $BlockListScheduledTaskState -eq 'Running'))) {
+                    switch (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nCreate scheduled task for fast weekly Microsoft recommended driver block list update ?") {
+                        'Yes' { 
+                            # create a scheduled task that runs every 7 days
+                            if (-NOT (Get-ScheduledTask -TaskName 'MSFT Driver Block list update' -ErrorAction SilentlyContinue)) {        
+                                $Action = New-ScheduledTaskAction -Execute 'Powershell.exe' `
+                                    -Argument '-NoProfile -WindowStyle Hidden -command "& {try {Invoke-WebRequest -Uri "https://aka.ms/VulnerableDriverBlockList" -OutFile VulnerableDriverBlockList.zip -ErrorAction Stop}catch{exit};Expand-Archive .\VulnerableDriverBlockList.zip -DestinationPath "VulnerableDriverBlockList" -Force;Rename-Item .\VulnerableDriverBlockList\SiPolicy_Enforced.p7b -NewName "SiPolicy.p7b" -Force;Copy-Item .\VulnerableDriverBlockList\SiPolicy.p7b -Destination "C:\Windows\System32\CodeIntegrity";citool --refresh -json;Remove-Item .\VulnerableDriverBlockList -Recurse -Force;Remove-Item .\VulnerableDriverBlockList.zip -Force;}"'    
+                                $TaskPrincipal = New-ScheduledTaskPrincipal -LogonType S4U -UserId $env:USERNAME -RunLevel Highest
+                                # trigger
+                                $Time = New-ScheduledTaskTrigger -Once -At (Get-Date).AddHours(1) -RepetitionInterval (New-TimeSpan -Days 7) 
+                                # register the task
+                                Register-ScheduledTask -Action $Action -Trigger $Time -Principal $TaskPrincipal -TaskPath 'MSFT Driver Block list update' -TaskName 'MSFT Driver Block list update' -Description 'Microsoft Recommended Driver Block List update'
+                                # define advanced settings for the task
+                                $TaskSettings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -Compatibility Win8 -StartWhenAvailable -ExecutionTimeLimit (New-TimeSpan -Minutes 3)
+                                # add advanced settings we defined to the task
+                                Set-ScheduledTask -TaskPath 'MSFT Driver Block list update' -TaskName 'MSFT Driver Block list update' -Settings $TaskSettings 
+                            }                            
+                        } 'No' { break }
+                        'Exit' { &$CleanUp }
+                    }
                 }
                 # Set Microsoft Defender engine and platform update channel to beta - Devices in the Windows Insider Program are subscribed to this channel by default.
                 switch (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nSet Microsoft Defender engine and platform update channel to beta ?") {
@@ -1289,23 +1288,26 @@ try {
                     }
                 } 
                 
-                # Determining if Smart App Control is on or user selected to turn it
+                # If Smart App Control is on or user selected to turn it on then automatically enable optional diagnostic data
                 if (($ShouldEnableOptionalDiagnosticData -eq $True) -or ((Get-MpComputerStatus).SmartAppControlState -eq 'On')) {
                     # Change current working directory to the LGPO's folder
                     Set-Location "$WorkingDir\LGPO_30"
                     .\LGPO.exe /m '..\Security-Baselines-X\Miscellaneous Policies\Optional Diagnostic Data\registry.pol'
                 }
-                else {                
-                    switch (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nEnable Optional Diagnostics Data?" -ExtraMessage 'Required for Smart App Control usage and evaluation, read the GitHub Readme!') {
-                        'Yes' {               
-                            # Change current working directory to the LGPO's folder
-                            Set-Location "$WorkingDir\LGPO_30"
-                            .\LGPO.exe /m '..\Security-Baselines-X\Miscellaneous Policies\Optional Diagnostic Data\registry.pol'
-                        } 'No' { break }
-                        'Exit' { &$CleanUp }
+                else {
+                    # Ask user if they want to turn on optional diagnostic data only if Smart App Control is not already turned off
+                    if (-NOT ((Get-MpComputerStatus).SmartAppControlState -eq 'Off')) {                
+                        switch (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nEnable Optional Diagnostics Data?" -ExtraMessage 'Required for Smart App Control usage and evaluation, read the GitHub Readme!') {
+                            'Yes' {               
+                                # Change current working directory to the LGPO's folder
+                                Set-Location "$WorkingDir\LGPO_30"
+                                .\LGPO.exe /m '..\Security-Baselines-X\Miscellaneous Policies\Optional Diagnostic Data\registry.pol'
+                            } 'No' { break }
+                            'Exit' { &$CleanUp }
+                        }
                     }
                 }
-                
+
             } 'No' { break }
             'Exit' { &$CleanUp }
         }    

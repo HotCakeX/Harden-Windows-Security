@@ -1118,7 +1118,7 @@ try {
                 }               
 
                 # Apply the Only elevate executables that are signed and validated policy
-                switch (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nOnly elevate executables that are signed and validated ?") {
+                switch (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nOnly elevate executables that are signed and validated ?" -ExtraMessage 'Read the GitHub Readme!') {
                     'Yes' {
                         .\LGPO.exe /s '..\Security-Baselines-X\User Account Control UAC Policies\Only elevate executables that are signed and validated\GptTmpl.inf'
                     } 'No' { break }

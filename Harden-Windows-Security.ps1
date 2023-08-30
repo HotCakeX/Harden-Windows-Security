@@ -622,7 +622,7 @@ try {
                 else {
                     # Ask user if they want to turn on optional diagnostic data only if Smart App Control is not already turned off
                     if (-NOT ((Get-MpComputerStatus).SmartAppControlState -eq 'Off')) {                
-                        switch (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nEnable Optional Diagnostic Data?" -ExtraMessage 'Recommended: Required for Smart App Control usage and evaluation, read the GitHub Readme!') {
+                        switch (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nEnable Optional Diagnostic Data ?" -ExtraMessage 'Required for Smart App Control usage and evaluation, read the GitHub Readme!') {
                             'Yes' {               
                                 # Change current working directory to the LGPO's folder
                                 Set-Location "$WorkingDir\LGPO_30"

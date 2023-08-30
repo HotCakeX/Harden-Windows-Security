@@ -1,4 +1,4 @@
-# Harden-Windows-Security-Module
+# Harden Windows Security Module
 
 This module offers rigorous compliance verification and security assessment. It enables you to evaluate the conformity of your system based on the security standards and recommendations of this repository. The module employs various techniques such as Security Policy, PowerShell cmdlet and Registry keys to conduct the checks.
 
@@ -10,7 +10,7 @@ Compliance checking strictly follows the guidelines and security measures of thi
 
 <br>
 
-## How it works
+## How It Works
 
 This module verifies and validates all of the security measures applied by the Harden Windows Security script. It checks registry keys if the script uses Group Policy or registry, PowerShell cmdlets if the script invokes them and Security Group Policy if the script applies them.
 
@@ -22,7 +22,7 @@ The module is compatible with any system locale and language.
 
 <br>
 
-## Quick demo
+## Quick Demo
 
 https://github.com/HotCakeX/Harden-Windows-Security/assets/118815227/0fdbd34b-6bf6-4eae-b081-83b43d60bd0d
 
@@ -38,7 +38,7 @@ https://github.com/HotCakeX/Harden-Windows-Security/assets/118815227/0fdbd34b-6b
 
 * Administrator privileges for `Confirm-SystemCompliance` and `Unprotect-WindowsSecurity`
 * Administrator OR Standard user privileges for `Protect-WindowsSecurity`
-* PowerShell Core version 7.3.4 and above
+* PowerShell Core version 7.3.5 and above
      * Get it from the [official GitHub repository](https://github.com/PowerShell/PowerShell/releases)
      * Or Install it from [Microsoft Store](https://apps.microsoft.com/store/detail/powershell/9MZ1SNWT0N5D)
 
@@ -48,7 +48,7 @@ https://github.com/HotCakeX/Harden-Windows-Security/assets/118815227/0fdbd34b-6b
 
 <br>
 
-## Automatic updates
+## Automatic Updates
 The module checks for updates every time you run it and updates itself if there is a new version available, so you don't have to manually do anything.
 
 <br>
@@ -57,7 +57,7 @@ The module checks for updates every time you run it and updates itself if there 
 
 <br>
 
-## How to install and use
+## How to Install and Use
 
 ### You can install this module from [PowerShell gallery](https://www.powershellgallery.com/packages/Harden-Windows-Security-Module/)
 
@@ -65,7 +65,7 @@ The module checks for updates every time you run it and updates itself if there 
 Install-Module -Name Harden-Windows-Security-Module -Force
 ```
 
-### Perform Compliance check
+### Perform Compliance Check
 
 ```powershell
 Confirm-SystemCompliance
@@ -77,7 +77,7 @@ Confirm-SystemCompliance
 Protect-WindowsSecurity
 ```
 
-### Remove the Hardening measures described in the [Readme](https://github.com/HotCakeX/Harden-Windows-Security)
+### Remove the Hardening Measures Described in The [Readme](https://github.com/HotCakeX/Harden-Windows-Security)
 
 ```powershell
 Unprotect-WindowsSecurity
@@ -89,7 +89,7 @@ Unprotect-WindowsSecurity
 
 <br>
 
-## Available parameters for Confirm-SystemCompliance cmdlet
+## Available Parameters for Confirm-Systemcompliance Cmdlet
 
 ```powershell
 Confirm-SystemCompliance [-ExportToCSV] [-ShowAsObjectsOnly] [-DetailedDisplay]
@@ -109,7 +109,7 @@ Confirm-SystemCompliance [-ExportToCSV] [-ShowAsObjectsOnly] [-DetailedDisplay]
 
 <br>
 
-## Notes for Unprotect-WindowsSecurity cmdlet
+## Notes for Unprotect-Windowssecurity Cmdlet
 
 1. Bitlocker Encrypted drives are not decrypted when you invoke this cmdlet.
 

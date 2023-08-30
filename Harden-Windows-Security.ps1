@@ -1,6 +1,6 @@
 <#PSScriptInfo
 
-.VERSION 2023.8.29
+.VERSION 2023.8.30
 
 .GUID d435a293-c9ee-4217-8dc1-4ad2318a5770
 
@@ -95,7 +95,7 @@ Set-ExecutionPolicy Bypass -Scope Process
 
 # Defining global script variables
 # Current script's version, the same as the version at the top in the script info section
-[datetime]$CurrentVersion = '2023.8.29'
+[datetime]$CurrentVersion = '2023.8.30'
 # Minimum OS build number required for the hardening measures used in this script
 [decimal]$Requiredbuild = '22621.2134'
 
@@ -104,6 +104,9 @@ Set-ExecutionPolicy Bypass -Scope Process
 if ([version]$PSVersionTable.PSVersion -ge [version]7.3) {
     [bool]$global:IsCore = $True
 }
+
+# Defining a global boolean variable to determine whether optional diagnostic data should be enabled for Smart App Control or not
+[bool]$global:ShouldEnableOptionalDiagnosticData = $false
 
 #Region Custom-colors
 [scriptblock]$WriteFuchsia = { Write-Host "$($PSStyle.Foreground.FromRGB(236,68,155))$($args[0])$($PSStyle.Reset)" }
@@ -610,6 +613,8 @@ try {
                         elseif ((Get-MpComputerStatus).SmartAppControlState -eq 'Off') {
                             Write-Host "Smart App Control is turned off and can't be turned back on without reset or clean install.`n" -ForegroundColor Yellow
                         }
+                        # Let the optional diagnostic data be enabled automatically
+                        $ShouldEnableOptionalDiagnosticData = $True
                     } 'No' { break }
                     'Exit' { &$CleanUp }
                 }
@@ -1282,7 +1287,25 @@ try {
                     catch {
                         Write-Host "The required files couldn't be downloaded, Make sure you have Internet connection. Skipping..." -ForegroundColor Red
                     }
-                }                
+                } 
+                
+                # Determining if Smart App Control is on or user selected to turn it
+                if (($ShouldEnableOptionalDiagnosticData -eq $True) -or ((Get-MpComputerStatus).SmartAppControlState -eq 'On')) {
+                    # Change current working directory to the LGPO's folder
+                    Set-Location "$WorkingDir\LGPO_30"
+                    .\LGPO.exe /m '..\Security-Baselines-X\Miscellaneous Policies\Optional Diagnostic Data\registry.pol'
+                }
+                else {                
+                    switch (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nEnable Optional Diagnostics Data?" -ExtraMessage 'Required for Smart App Control usage and evaluation, read the GitHub Readme!') {
+                        'Yes' {               
+                            # Change current working directory to the LGPO's folder
+                            Set-Location "$WorkingDir\LGPO_30"
+                            .\LGPO.exe /m '..\Security-Baselines-X\Miscellaneous Policies\Optional Diagnostic Data\registry.pol'
+                        } 'No' { break }
+                        'Exit' { &$CleanUp }
+                    }
+                }
+                
             } 'No' { break }
             'Exit' { &$CleanUp }
         }    

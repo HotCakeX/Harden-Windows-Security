@@ -1174,38 +1174,205 @@ try {
                                 
                 # since PowerShell Core (only if installed from Microsoft Store) has problem with these commands, making sure the built-in PowerShell handles them
                 # There are Github issues for it already: https://github.com/PowerShell/PowerShell/issues/13866
+
+                powershell.exe {
+
+                    # Disable PowerShell v2 (part 1)       
+                    Write-Host "`nDisabling PowerShellv2 1st part" -ForegroundColor Yellow
+                    if ((Get-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2).state -eq 'enabled') {
+                        Disable-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2 -NoRestart 
+                    }
+                    else {
+                        Write-Host 'PowerShellv2 1st part is already disabled' -ForegroundColor Green 
+                    }
+
+                    # Disable PowerShell v2 (part 2)
+                    Write-Host "`nDisabling PowerShellv2 2nd part" -ForegroundColor Yellow
+                    if ((Get-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2Root).state -eq 'enabled') {
+                        try {
+                            Disable-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2Root -NoRestart -ErrorAction Stop 
+                            # Shows the successful message only if removal process was successful
+                            Write-Host 'PowerShellv2 2nd part was successfully disabled' -ForegroundColor Green
+                        }
+                        catch {
+                            # show error
+                            $_                           
+                        }
+                    }
+                    else {
+                        Write-Host 'PowerShellv2 2nd part is already disabled' -ForegroundColor Green
+                    }
             
-                # Disable PowerShell v2 (needs 2 commands)
-                PowerShell.exe "Write-Host 'Disabling PowerShellv2 1st command' -ForegroundColor Yellow;if((get-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2).state -eq 'enabled'){disable-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2 -norestart}else{Write-Host 'MicrosoftWindowsPowerShellV2 is already disabled' -ForegroundColor Darkgreen}"
-                PowerShell.exe "Write-Host 'Disabling PowerShellv2 2nd command' -ForegroundColor Yellow;if((get-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2Root).state -eq 'enabled'){disable-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2Root -norestart}else{Write-Host 'MicrosoftWindowsPowerShellV2Root is already disabled' -ForegroundColor Darkgreen}"
-                # Disable Work Folders client
-                PowerShell.exe "Write-Host 'Disabling Work Folders' -ForegroundColor Yellow;if((get-WindowsOptionalFeature -Online -FeatureName WorkFolders-Client).state -eq 'enabled'){disable-WindowsOptionalFeature -Online -FeatureName WorkFolders-Client -norestart}else{Write-Host 'WorkFolders-Client is already disabled' -ForegroundColor Darkgreen}"
-                # Disable Internet Printing Client
-                PowerShell.exe "Write-Host 'Disabling Internet Printing Client' -ForegroundColor Yellow;if((get-WindowsOptionalFeature -Online -FeatureName Printing-Foundation-Features).state -eq 'enabled'){disable-WindowsOptionalFeature -Online -FeatureName Printing-Foundation-Features -norestart}else{Write-Host 'Printing-Foundation-Features is already disabled' -ForegroundColor Darkgreen}"
-                # Disable Windows Media Player (legacy)
-                PowerShell.exe "Write-Host 'Disabling Windows Media Player (Legacy)' -ForegroundColor Yellow;if((get-WindowsOptionalFeature -Online -FeatureName WindowsMediaPlayer).state -eq 'enabled'){disable-WindowsOptionalFeature -Online -FeatureName WindowsMediaPlayer -norestart}else{Write-Host 'WindowsMediaPlayer is already disabled' -ForegroundColor Darkgreen}"            
-                # Enable Microsoft Defender Application Guard
-                PowerShell.exe "Write-Host 'Enabling Microsoft Defender Application Guard' -ForegroundColor Yellow;if((get-WindowsOptionalFeature -Online -FeatureName Windows-Defender-ApplicationGuard).state -eq 'disabled'){enable-WindowsOptionalFeature -Online -FeatureName Windows-Defender-ApplicationGuard -norestart}else{Write-Host 'Microsoft-Defender-ApplicationGuard is already enabled' -ForegroundColor Darkgreen}"
-                # Enable Windows Sandbox
-                PowerShell.exe "Write-Host 'Enabling Windows Sandbox' -ForegroundColor Yellow;if((get-WindowsOptionalFeature -Online -FeatureName Containers-DisposableClientVM).state -eq 'disabled'){enable-WindowsOptionalFeature -Online -FeatureName Containers-DisposableClientVM -All -norestart}else{Write-Host 'Containers-DisposableClientVM (Windows Sandbox) is already enabled' -ForegroundColor Darkgreen}"
-                # Enable Hyper-V
-                PowerShell.exe "Write-Host 'Enabling Hyper-V' -ForegroundColor Yellow;if((get-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V).state -eq 'disabled'){enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All -norestart}else{Write-Host 'Microsoft-Hyper-V is already enabled' -ForegroundColor Darkgreen}"
-                # Enable Virtual Machine Platform
-                PowerShell.exe "Write-Host 'Enabling Virtual Machine Platform' -ForegroundColor Yellow;if((get-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform).state -eq 'disabled'){enable-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform -norestart}else{Write-Host 'VirtualMachinePlatform is already enabled' -ForegroundColor Darkgreen}"
+                    # Disable Work Folders client
+                    Write-Host "`nDisabling Work Folders" -ForegroundColor Yellow
+                    if ((Get-WindowsOptionalFeature -Online -FeatureName WorkFolders-Client).state -eq 'enabled') { 
+                        try {
+                            Disable-WindowsOptionalFeature -Online -FeatureName WorkFolders-Client -NoRestart -ErrorAction Stop
+                            # Shows the successful message only if removal process was successful
+                            Write-Host 'Work Folders was successfully disabled' -ForegroundColor Green
+                        }
+                        catch {
+                            #show error
+                            $_
+                        }
+                    }
+                    else { 
+                        Write-Host 'Work Folders is already disabled' -ForegroundColor Green 
+                    }    
+                
+                    # Disable Internet Printing Client
+                    Write-Host "`nDisabling Internet Printing Client" -ForegroundColor Yellow
+                    if ((Get-WindowsOptionalFeature -Online -FeatureName Printing-Foundation-Features).state -eq 'enabled') {
+                        try {
+                            Disable-WindowsOptionalFeature -Online -FeatureName Printing-Foundation-Features -NoRestart -ErrorAction Stop
+                            # Shows the successful message only if removal process was successful
+                            Write-Host 'Internet Printing Client was successfully disabled' -ForegroundColor Green
+                        }
+                        catch {
+                            # show errors
+                            $_
+                        }
+                    }
+                    else {
+                        Write-Host 'Internet Printing Client is already disabled' -ForegroundColor Green 
+                    }
+                
+                    # Disable Windows Media Player (legacy)
+                    Write-Host "`nDisabling Windows Media Player (Legacy)" -ForegroundColor Yellow
+                    if ((Get-WindowsOptionalFeature -Online -FeatureName WindowsMediaPlayer).state -eq 'enabled') {
+                        try {
+                            Disable-WindowsOptionalFeature -Online -FeatureName WindowsMediaPlayer -NoRestart -ErrorAction Stop
+                            # Shows the successful message only if removal process was successful
+                            Write-Host 'Windows Media Player (Legacy) was successfully disabled' -ForegroundColor Green
+                        }
+                        catch {
+                            # show errors
+                            $_
+                        }
+                    }
+                    else {
+                        Write-Host 'Windows Media Player (Legacy) is already disabled' -ForegroundColor Green
+                    }
+                
+                    # Enable Microsoft Defender Application Guard
+                    Write-Host "`nEnabling Microsoft Defender Application Guard" -ForegroundColor Yellow
+                    if ((Get-WindowsOptionalFeature -Online -FeatureName Windows-Defender-ApplicationGuard).state -eq 'disabled') {
+                        try {
+                            Enable-WindowsOptionalFeature -Online -FeatureName Windows-Defender-ApplicationGuard -NoRestart -ErrorAction Stop
+                            # Shows the successful message only if enablement process was successful
+                            Write-Host 'Microsoft Defender Application Guard was successfully enabled' -ForegroundColor Green
+                        }
+                        catch {
+                            # show errors
+                            $_
+                        }
+                    }
+                    else {
+                        Write-Host 'Microsoft Defender Application Guard is already enabled' -ForegroundColor Green 
+                    }
+                
+                    # Enable Windows Sandbox
+                    Write-Host "`nEnabling Windows Sandbox" -ForegroundColor Yellow
+                    if ((Get-WindowsOptionalFeature -Online -FeatureName Containers-DisposableClientVM).state -eq 'disabled') { 
+                        try {
+                            Enable-WindowsOptionalFeature -Online -FeatureName Containers-DisposableClientVM -All -NoRestart -ErrorAction Stop
+                            # Shows the successful message only if enablement process was successful
+                            Write-Host 'Windows Sandbox was successfully enabled' -ForegroundColor Green
+                        }
+                        catch {
+                            # show errors
+                            $_
+                        }
+                    }
+                    else { 
+                        Write-Host 'Windows Sandbox is already enabled' -ForegroundColor Green 
+                    }
+                
+                    # Enable Hyper-V
+                    Write-Host "`nEnabling Hyper-V" -ForegroundColor Yellow
+                    if ((Get-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V).state -eq 'disabled') {
+                        try {
+                            Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All -NoRestart -ErrorAction Stop
+                            # Shows the successful message only if enablement process was successful
+                            Write-Host 'Hyper-V was successfully enabled' -ForegroundColor Green
+                        }
+                        catch {
+                            # show errors
+                            $_
+                        }
+                    }
+                    else {
+                        Write-Host 'Hyper-V is already enabled' -ForegroundColor Green
+                    }
+                
+                    # Enable Virtual Machine Platform
+                    Write-Host "`nEnabling Virtual Machine Platform" -ForegroundColor Yellow
+                    if ((Get-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform).state -eq 'disabled') {
+                        try {
+                            Enable-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform -NoRestart -ErrorAction Stop
+                            # Shows the successful message only if enablement process was successful
+                            Write-Host 'Virtual Machine Platform was successfully enabled' -ForegroundColor Green
+                        }
+                        catch {
+                            # show errors
+                            $_
+                        }
+                    }
+                    else {
+                        Write-Host 'Virtual Machine Platform is already enabled' -ForegroundColor Green
+                    }
             
-                # Uninstall VBScript that is now uninstallable as an optional features since Windows 11 insider Dev build 25309 - Won't do anything in other builds                      
-                PowerShell.exe 'if (Get-WindowsCapability -Online | Where-Object { $_.Name -like ''*VBSCRIPT*'' }){`
-            Get-WindowsCapability -Online | Where-Object { $_.Name -like ''*VBSCRIPT*'' } | remove-WindowsCapability -Online;`
-            Write-Host "VBSCRIPT has been uninstalled" -ForegroundColor Green}'         
-                # Uninstall Internet Explorer mode functionality for Edge
-                PowerShell.exe 'Get-WindowsCapability -Online | Where-Object { $_.Name -like ''*Browser.InternetExplorer*'' } | remove-WindowsCapability -Online'
-                Write-Host 'Internet Explorer mode functionality for Edge has been uninstalled' -ForegroundColor Green
-                # Uninstall WMIC
-                PowerShell.exe 'Get-WindowsCapability -Online | Where-Object { $_.Name -like ''*wmic*'' } | remove-WindowsCapability -Online'
-                Write-Host 'WMIC has been uninstalled' -ForegroundColor Green
-                # Uninstall Legacy Notepad
-                PowerShell.exe 'Get-WindowsCapability -Online | Where-Object { $_.Name -like ''*Microsoft.Windows.Notepad.System*'' } | remove-WindowsCapability -Online'
-                Write-Host 'Legacy Notepad has been uninstalled. The modern multi-tabbed Notepad is unaffected.' -ForegroundColor Green
+                    # Uninstall VBScript that is now uninstallable as an optional features since Windows 11 insider Dev build 25309 - Won't do anything in other builds                      
+                    if (Get-WindowsCapability -Online | Where-Object { $_.Name -like '* VBSCRIPT*' }) {
+                        try {
+                            Write-Host "`nUninstalling VBSCRIPT" -ForegroundColor Yellow
+                            Get-WindowsCapability -Online | Where-Object { $_.Name -like '* VBSCRIPT*' } | Remove-WindowsCapability -Online -ErrorAction Stop
+                            # Shows the successful message only if removal process was successful                                                      
+                            Write-Host 'VBSCRIPT has been uninstalled' -ForegroundColor Green
+                        }
+                        catch {
+                            # show errors
+                            $_
+                        }
+                    }     
+                
+                    # Uninstall Internet Explorer mode functionality for Edge
+                    try {
+                        Write-Host "`nUninstalling Internet Explorer mode functionality for Edge" -ForegroundColor Yellow
+                        Get-WindowsCapability -Online | Where-Object { $_.Name -like '*Browser.InternetExplorer*' } | Remove-WindowsCapability -Online -ErrorAction Stop
+                        # Shows the successful message only if removal process was successful
+                        Write-Host 'Internet Explorer mode functionality for Edge has been uninstalled' -ForegroundColor Green
+                    }
+                    catch {
+                        # show errors
+                        $_
+                    }
+
+                    # Uninstall WMIC
+                    try {
+                        Write-Host "`nUninstalling WMIC" -ForegroundColor Yellow
+                        Get-WindowsCapability -Online | Where-Object { $_.Name -like '*wmic*' } | Remove-WindowsCapability -Online -ErrorAction Stop
+                        # Shows the successful message only if removal process was successful
+                        Write-Host 'WMIC has been uninstalled' -ForegroundColor Green
+                    }
+                    catch {
+                        # show error
+                        $_
+                    }
+
+                    # Uninstall Legacy Notepad
+                    try {
+                        Write-Host "`nUninstalling Legacy Notepad" -ForegroundColor Yellow
+                        Get-WindowsCapability -Online | Where-Object { $_.Name -like '*Microsoft.Windows.Notepad.System*' } | Remove-WindowsCapability -Online -ErrorAction Stop
+                        # Shows the successful message only if removal process was successful
+                        Write-Host 'Legacy Notepad has been uninstalled. The modern multi-tabbed Notepad is unaffected.' -ForegroundColor Green
+                    }
+                    catch {
+                        # show error
+                        $_
+                    }
+                }
+
             } 'No' { break }
             'Exit' { &$CleanUp }
         }    

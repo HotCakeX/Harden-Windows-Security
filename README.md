@@ -56,15 +56,13 @@ Harden Windows Safely, Securely, Only With Official Microsoft Methods
 <br>
 
 > [!NOTE]\
-> Windows by default is secure and safe, this repository does not imply nor claim otherwise. just like anything, you have to use it wisely and don't compromise yourself with reckless behavior and bad user configuration; Nothing is foolproof. This repository only uses the tools and features that have already been implemented by Microsoft in Windows OS to fine-tune it towards the highest security and locked-down state, using well-documented, supported, recommended and official methods. continue reading for comprehensive info.
+> Windows by default is secure and safe, this repository does not imply nor claim otherwise. just like anything, you have to use it wisely and don't compromise yourself with reckless behavior and bad user configuration; Nothing is foolproof. This repository only uses the tools and features that have already been implemented by Microsoft in Windows OS to fine-tune it towards the highest security and locked-down state, using well-documented, supported, recommended and official methods. Continue reading for comprehensive info.
 
 <br>
 
 ## How To Use<a href="#how-to-use">![HowToUseIcon](https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/HowToUse.png)</a>
 
-### <a href="https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden-Windows-Security.ps1"><img width="35" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/SVGs/github.svg"> Hardening Script Only</a>
-
-#### Run the latest version of the Harden Windows Security Script [***directly***](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/invoke-expression?view=powershell-7.3) from this GitHub repository
+### <img width="35" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/SVGs/github.svg"> Apply the Latest Hardening Measures [***directly***](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/invoke-expression?view=powershell-7.3) From This Github Repository
 
 ```powershell
 irm 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security.ps1' | iex
@@ -72,35 +70,44 @@ irm 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Har
 
 <br>
 
-### <a href="https://www.powershellgallery.com/packages/Harden-Windows-Security-Module"><img width="35" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/SVGs/powershell-pink.svg"> Compliance Checking + Hardening + Removing Hardening</a>
+### <img width="35" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/SVGs/powershell-pink.svg"> Install the Harden Windows Security Module from [PowerShell gallery](https://www.powershellgallery.com/packages/Harden-Windows-Security-Module/)
 
-#### Install the [Harden Windows Security Module](https://www.powershellgallery.com/packages/Harden-Windows-Security-Module) from PowerShell gallery, [**Click/Tap for Documentation**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden%E2%80%90Windows%E2%80%90Security%E2%80%90Module)
+[**Check the documentation and How to use**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden%E2%80%90Windows%E2%80%90Security%E2%80%90Module)
+
+<details>
+<summary>
+
+Click/Tap here for commands
 
 ```powershell
-Install-Module -Name Harden-Windows-Security-Module -Force
-# Compliance Checking + Security Score
-Confirm-SystemCompliance
-# Harden Windows
+Install-Module -Name 'Harden-Windows-Security-Module' -Force
+```
+
+</summary>
+
+```powershell
 Protect-WindowsSecurity
-# Remove Hardening measures
+```
+```powershell
+Confirm-SystemCompliance
+```
+```powershell
 Unprotect-WindowsSecurity
 ```
+
+</details>
 
 https://github.com/HotCakeX/Harden-Windows-Security/assets/118815227/0fdbd34b-6bf6-4eae-b081-83b43d60bd0d
 
 <br>
 
-### <a href="https://www.powershellgallery.com/packages/Harden-Windows-Security"><img width="35" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/SVGs/powershell.svg"> Hardening Script Only</a>
-
-#### Install only the [Harden Windows Security Script](https://www.powershellgallery.com/packages/Harden-Windows-Security) from PowerShell gallery
+### <img width="35" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/SVGs/powershell.svg"> Install It as a Standalone Script From [PowerShell gallery](https://www.powershellgallery.com/packages/Harden-Windows-Security/)
 
 * When you run it and if there is a new version, you will be notified.
 
 ```powershell
-Install-Script -Name Harden-Windows-Security -Force
+Install-Script -Name 'Harden-Windows-Security' -Force
 ```
-
-<br>
 
 <br>
 
@@ -135,7 +142,7 @@ Install-Script -Name Harden-Windows-Security -Force
 
 <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/verticalshine.gif" width="27" alt="Requirements item"> Windows editions higher than [Home edition](https://www.microsoft.com/en-us/windows/compare-windows-10-home-vs-pro).
 
-<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/verticalshine.gif" width="27" alt="Requirements item"> No 3rd party antivirus or security solution installed.
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/verticalshine.gif" width="27" alt="Requirements item"> No 3rd party AV installed.
 
 <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/verticalshine.gif" width="27" alt="Requirements item"> [Latest available version](https://www.microsoft.com/en-us/software-download/windows11/) of Windows installed.
 

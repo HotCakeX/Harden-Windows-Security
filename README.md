@@ -70,7 +70,7 @@ irm 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Har
 
 <br>
 
-### <img width="35" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/SVGs/powershell-pink.svg"> Install the Harden Windows Security Module from [PowerShell gallery](https://www.powershellgallery.com/packages/Harden-Windows-Security-Module/)
+### <img width="35" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/SVGs/powershell-pink.svg"> Install the Harden Windows Security Module from [PowerShell Gallery](https://www.powershellgallery.com/packages/Harden-Windows-Security-Module/)
 
 [**Check the documentation and How to use**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden%E2%80%90Windows%E2%80%90Security%E2%80%90Module)
 
@@ -101,7 +101,7 @@ https://github.com/HotCakeX/Harden-Windows-Security/assets/118815227/0fdbd34b-6b
 
 <br>
 
-### <img width="35" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/SVGs/powershell.svg"> Install It as a Standalone Script From [PowerShell gallery](https://www.powershellgallery.com/packages/Harden-Windows-Security/)
+### <img width="35" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/SVGs/powershell.svg"> Install It as a Standalone Script From [PowerShell Gallery](https://www.powershellgallery.com/packages/Harden-Windows-Security/)
 
 * When you run it and if there is a new version, you will be notified.
 

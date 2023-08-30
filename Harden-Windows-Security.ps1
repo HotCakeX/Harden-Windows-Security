@@ -391,7 +391,7 @@ try {
                 
                 # Download the Group Policies of Windows Hardening script from GitHub or Azure DevOps
                 try {
-                    Invoke-WebRequest -Uri 'https://github.com/HotCakeX/Harden-Windows-Security/raw/Making-optional-diagnostics-data-optional/Payload/Security-Baselines-X.zip' -OutFile '.\Security-Baselines-X.zip' -ErrorAction Stop         
+                    Invoke-WebRequest -Uri 'https://github.com/HotCakeX/Harden-Windows-Security/raw/main/Payload/Security-Baselines-X.zip' -OutFile '.\Security-Baselines-X.zip' -ErrorAction Stop         
                 }
                 catch {
                     Write-Host 'Using Azure DevOps...' -ForegroundColor Yellow

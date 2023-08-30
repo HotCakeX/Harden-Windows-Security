@@ -195,6 +195,16 @@ How to properly perform a pentest and benchmark a system hardened by this reposi
 
 2. **First apply the [Harden Windows Security script](https://github.com/HotCakeX/Harden-Windows-Security) *(All categories of it)* and then use the [WDACConfig module](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig) to deploy a suitable [Signed](https://github.com/HotCakeX/Harden-Windows-Security/wiki/How-to-Create-and-Deploy-a-Signed-WDAC-Policy-Windows-Defender-Application-Control#system-behavior) WDAC policy.**
 
+> [!IMPORTANT]\
+> **Always Pay attention to the [Microsoft Security Servicing Criteria for Windows](https://www.microsoft.com/en-us/msrc/windows-security-servicing-criteria), specially the Security boundaries.**
+
+Some penetration testers fall into this trap, assuming it is a vulnerability that they can perform administrative tasks such as disabling security features as Admin. Despite being obvious, we should mention that this is an expected behaviour.Administrators have the power to control the security of a device and can disable security features at their discretion.
+
+Administrators are in control of the security of a device and can disable security features. This is why you need to use a Standard user account when performing a realistic penetration test.
+
+
+Another aspect to consider is the ambiguity in the word "Admin". There are at least two distinct types of Admins: Local Admin and Cloud Admin. For instance, when you are penetration testing a system that leverages enterprise and cloud security such as Microsoft Defender for Endpoint (MDE), Admin access should be regarded as Cloud Admin since those devices use Microsoft Entra ID and lack Local Admin. In this situation, Cloud Admin can effortlessly disable security features, rendering a pentest using Local Admin access utterly pointless. Conversely, when pentesting a system that only relies on personal security features such as Microsoft Defender, then Admin should be treated as Local Admin. In this case, the Admin can also disable any security feature for the same reasons stated above.
+
 <br>
 
 ## <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/WhiteGhost.gif"> Any questions or suggestions?

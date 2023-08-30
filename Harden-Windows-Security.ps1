@@ -1,6 +1,6 @@
 <#PSScriptInfo
 
-.VERSION 2023.8.29
+.VERSION 2023.8.30
 
 .GUID d435a293-c9ee-4217-8dc1-4ad2318a5770
 
@@ -95,7 +95,7 @@ Set-ExecutionPolicy Bypass -Scope Process
 
 # Defining global script variables
 # Current script's version, the same as the version at the top in the script info section
-[datetime]$CurrentVersion = '2023.8.29'
+[datetime]$CurrentVersion = '2023.8.30'
 # Minimum OS build number required for the hardening measures used in this script
 [decimal]$Requiredbuild = '22621.2134'
 
@@ -104,6 +104,9 @@ Set-ExecutionPolicy Bypass -Scope Process
 if ([version]$PSVersionTable.PSVersion -ge [version]7.3) {
     [bool]$global:IsCore = $True
 }
+
+# Defining a global boolean variable to determine whether optional diagnostic data should be enabled for Smart App Control or not
+[bool]$ShouldEnableOptionalDiagnosticData = $false
 
 #Region Custom-colors
 [scriptblock]$WriteFuchsia = { Write-Host "$($PSStyle.Foreground.FromRGB(236,68,155))$($args[0])$($PSStyle.Reset)" }
@@ -598,27 +601,46 @@ try {
                 # Turn on Data Execution Prevention (DEP) for all applications, including 32-bit programs
                 bcdedit.exe /set '{current}' nx AlwaysOn
 
-                # Try turning on Smart App Control
-                switch (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nTurn on Smart App Control ?") {
-                    'Yes' {               
-                        if ((Get-MpComputerStatus).SmartAppControlState -eq 'Eval') {
+                # Suggest turning on Smart App Control only if it's in Eval mode
+                if ((Get-MpComputerStatus).SmartAppControlState -eq 'Eval') {
+                    switch (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nTurn on Smart App Control ?") {
+                        'Yes' {
                             Edit-Registry -path 'HKLM:\SYSTEM\CurrentControlSet\Control\CI\Policy' -key 'VerifiedAndReputablePolicyState' -value '1' -type 'DWORD' -Action 'AddOrModify'
-                        }
-                        elseif ((Get-MpComputerStatus).SmartAppControlState -eq 'On') {
-                            Write-Host "Smart App Control is already turned on, skipping...`n" -ForegroundColor Green
-                        }
-                        elseif ((Get-MpComputerStatus).SmartAppControlState -eq 'Off') {
-                            Write-Host "Smart App Control is turned off and can't be turned back on without reset or clean install.`n" -ForegroundColor Yellow
-                        }
-                    } 'No' { break }
-                    'Exit' { &$CleanUp }
+                            # Let the optional diagnostic data be enabled automatically
+                            $ShouldEnableOptionalDiagnosticData = $True
+                        } 'No' { break }
+                        'Exit' { &$CleanUp }
+                    }
                 }
 
-                # Create scheduled task for fast weekly Microsoft recommended driver block list update
-                switch (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nCreate scheduled task for fast weekly Microsoft recommended driver block list update ?") {
-                    'Yes' { 
-                        # create a scheduled task that runs every 7 days
-                        if (-NOT (Get-ScheduledTask -TaskName 'MSFT Driver Block list update' -ErrorAction SilentlyContinue)) {        
+                # If Smart App Control is on or user selected to turn it on then automatically enable optional diagnostic data
+                if (($ShouldEnableOptionalDiagnosticData -eq $True) -or ((Get-MpComputerStatus).SmartAppControlState -eq 'On')) {
+                    # Change current working directory to the LGPO's folder
+                    Set-Location "$WorkingDir\LGPO_30"
+                    .\LGPO.exe /m '..\Security-Baselines-X\Microsoft Defender Policies\Optional Diagnostic Data\registry.pol'
+                }
+                else {
+                    # Ask user if they want to turn on optional diagnostic data only if Smart App Control is not already turned off
+                    if (-NOT ((Get-MpComputerStatus).SmartAppControlState -eq 'Off')) {                
+                        switch (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nEnable Optional Diagnostic Data ?" -ExtraMessage 'Required for Smart App Control usage and evaluation, read the GitHub Readme!') {
+                            'Yes' {               
+                                # Change current working directory to the LGPO's folder
+                                Set-Location "$WorkingDir\LGPO_30"
+                                .\LGPO.exe /m '..\Security-Baselines-X\Microsoft Defender Policies\Optional Diagnostic Data\registry.pol'
+                            } 'No' { break }
+                            'Exit' { &$CleanUp }
+                        }
+                    }
+                }
+
+                # Get the state of fast weekly Microsoft recommended driver block list update scheduled task
+                [string]$BlockListScheduledTaskState = (Get-ScheduledTask -TaskName 'MSFT Driver Block list update' -TaskPath '\MSFT Driver Block list update\' -ErrorAction SilentlyContinue).State
+                
+                # Create scheduled task for fast weekly Microsoft recommended driver block list update if it doesn't exist or exists but is not Ready/Running
+                if (-NOT (($BlockListScheduledTaskState -eq 'Ready' -or $BlockListScheduledTaskState -eq 'Running'))) {
+                    switch (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nCreate scheduled task for fast weekly Microsoft recommended driver block list update ?") {
+                        'Yes' { 
+                            # create a scheduled task that runs every 7 days     
                             $Action = New-ScheduledTaskAction -Execute 'Powershell.exe' `
                                 -Argument '-NoProfile -WindowStyle Hidden -command "& {try {Invoke-WebRequest -Uri "https://aka.ms/VulnerableDriverBlockList" -OutFile VulnerableDriverBlockList.zip -ErrorAction Stop}catch{exit};Expand-Archive .\VulnerableDriverBlockList.zip -DestinationPath "VulnerableDriverBlockList" -Force;Rename-Item .\VulnerableDriverBlockList\SiPolicy_Enforced.p7b -NewName "SiPolicy.p7b" -Force;Copy-Item .\VulnerableDriverBlockList\SiPolicy.p7b -Destination "C:\Windows\System32\CodeIntegrity";citool --refresh -json;Remove-Item .\VulnerableDriverBlockList -Recurse -Force;Remove-Item .\VulnerableDriverBlockList.zip -Force;}"'    
                             $TaskPrincipal = New-ScheduledTaskPrincipal -LogonType S4U -UserId $env:USERNAME -RunLevel Highest
@@ -629,11 +651,12 @@ try {
                             # define advanced settings for the task
                             $TaskSettings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -Compatibility Win8 -StartWhenAvailable -ExecutionTimeLimit (New-TimeSpan -Minutes 3)
                             # add advanced settings we defined to the task
-                            Set-ScheduledTask -TaskPath 'MSFT Driver Block list update' -TaskName 'MSFT Driver Block list update' -Settings $TaskSettings 
-                        }
-                    } 'No' { break }
-                    'Exit' { &$CleanUp }
+                            Set-ScheduledTask -TaskName 'MSFT Driver Block list update' -TaskPath 'MSFT Driver Block list update' -Settings $TaskSettings 
+                        } 'No' { break }
+                        'Exit' { &$CleanUp }
+                    }
                 }
+
                 # Set Microsoft Defender engine and platform update channel to beta - Devices in the Windows Insider Program are subscribed to this channel by default.
                 switch (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nSet Microsoft Defender engine and platform update channel to beta ?") {
                     'Yes' {             
@@ -641,7 +664,8 @@ try {
                         Set-MpPreference -PlatformUpdatesChannel beta
                     } 'No' { break }
                     'Exit' { &$CleanUp }
-                }            
+                }    
+
             } 'No' { break }
             'Exit' { &$CleanUp }
         }    
@@ -779,7 +803,7 @@ try {
                         if ($KeyProtectors -notcontains 'Tpmpin' -and $KeyProtectors -contains 'recoveryPassword') {            
                             Write-Host "`nTPM and Start up PIN are missing but recovery password is in place, `nAdding TPM and Start up PIN now..." -ForegroundColor Cyan
                             do {
-                                [securestring]$Pin1 = $( if ($IsCore) { &$WritePinkBold "`nEnter a Pin for Bitlocker startup (between 10 to 20 characters)" } else { Write-Host "`nEnter a Pin for Bitlocker startup (between 10 to 20 characters)" -ForegroundColor Magenta }; Read-Host -AsSecureString)
+                                [securestring]$Pin1 = $(if ($IsCore) { &$WritePinkBold "`nEnter a Pin for Bitlocker startup (between 10 to 20 characters)" } else { Write-Host "`nEnter a Pin for Bitlocker startup (between 10 to 20 characters)" -ForegroundColor Magenta }; Read-Host -AsSecureString)
                                 [securestring]$Pin2 = $(if ($IsCore) { &$WritePinkBold 'Confirm your Bitlocker Startup Pin (between 10 to 20 characters)' } else { Write-Host 'Confirm your Bitlocker Startup Pin (between 10 to 20 characters)' -ForegroundColor Magenta }; Read-Host -AsSecureString)
                         
                                 # Compare the PINs and make sure they match
@@ -1094,7 +1118,7 @@ try {
                 }               
 
                 # Apply the Only elevate executables that are signed and validated policy
-                switch (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nOnly elevate executables that are signed and validated ?") {
+                switch (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nOnly elevate executables that are signed and validated ?" -ExtraMessage 'Read the GitHub Readme!') {
                     'Yes' {
                         .\LGPO.exe /s '..\Security-Baselines-X\User Account Control UAC Policies\Only elevate executables that are signed and validated\GptTmpl.inf'
                     } 'No' { break }
@@ -1150,38 +1174,205 @@ try {
                                 
                 # since PowerShell Core (only if installed from Microsoft Store) has problem with these commands, making sure the built-in PowerShell handles them
                 # There are Github issues for it already: https://github.com/PowerShell/PowerShell/issues/13866
+
+                powershell.exe {
+
+                    # Disable PowerShell v2 (part 1)       
+                    Write-Host "`nDisabling PowerShellv2 1st part" -ForegroundColor Yellow
+                    if ((Get-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2).state -eq 'enabled') {
+                        Disable-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2 -NoRestart 
+                    }
+                    else {
+                        Write-Host 'PowerShellv2 1st part is already disabled' -ForegroundColor Green 
+                    }
+
+                    # Disable PowerShell v2 (part 2)
+                    Write-Host "`nDisabling PowerShellv2 2nd part" -ForegroundColor Yellow
+                    if ((Get-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2Root).state -eq 'enabled') {
+                        try {
+                            Disable-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2Root -NoRestart -ErrorAction Stop 
+                            # Shows the successful message only if removal process was successful
+                            Write-Host 'PowerShellv2 2nd part was successfully disabled' -ForegroundColor Green
+                        }
+                        catch {
+                            # show error
+                            $_                           
+                        }
+                    }
+                    else {
+                        Write-Host 'PowerShellv2 2nd part is already disabled' -ForegroundColor Green
+                    }
             
-                # Disable PowerShell v2 (needs 2 commands)
-                PowerShell.exe "Write-Host 'Disabling PowerShellv2 1st command' -ForegroundColor Yellow;if((get-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2).state -eq 'enabled'){disable-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2 -norestart}else{Write-Host 'MicrosoftWindowsPowerShellV2 is already disabled' -ForegroundColor Darkgreen}"
-                PowerShell.exe "Write-Host 'Disabling PowerShellv2 2nd command' -ForegroundColor Yellow;if((get-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2Root).state -eq 'enabled'){disable-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2Root -norestart}else{Write-Host 'MicrosoftWindowsPowerShellV2Root is already disabled' -ForegroundColor Darkgreen}"
-                # Disable Work Folders client
-                PowerShell.exe "Write-Host 'Disabling Work Folders' -ForegroundColor Yellow;if((get-WindowsOptionalFeature -Online -FeatureName WorkFolders-Client).state -eq 'enabled'){disable-WindowsOptionalFeature -Online -FeatureName WorkFolders-Client -norestart}else{Write-Host 'WorkFolders-Client is already disabled' -ForegroundColor Darkgreen}"
-                # Disable Internet Printing Client
-                PowerShell.exe "Write-Host 'Disabling Internet Printing Client' -ForegroundColor Yellow;if((get-WindowsOptionalFeature -Online -FeatureName Printing-Foundation-Features).state -eq 'enabled'){disable-WindowsOptionalFeature -Online -FeatureName Printing-Foundation-Features -norestart}else{Write-Host 'Printing-Foundation-Features is already disabled' -ForegroundColor Darkgreen}"
-                # Disable Windows Media Player (legacy)
-                PowerShell.exe "Write-Host 'Disabling Windows Media Player (Legacy)' -ForegroundColor Yellow;if((get-WindowsOptionalFeature -Online -FeatureName WindowsMediaPlayer).state -eq 'enabled'){disable-WindowsOptionalFeature -Online -FeatureName WindowsMediaPlayer -norestart}else{Write-Host 'WindowsMediaPlayer is already disabled' -ForegroundColor Darkgreen}"            
-                # Enable Microsoft Defender Application Guard
-                PowerShell.exe "Write-Host 'Enabling Microsoft Defender Application Guard' -ForegroundColor Yellow;if((get-WindowsOptionalFeature -Online -FeatureName Windows-Defender-ApplicationGuard).state -eq 'disabled'){enable-WindowsOptionalFeature -Online -FeatureName Windows-Defender-ApplicationGuard -norestart}else{Write-Host 'Microsoft-Defender-ApplicationGuard is already enabled' -ForegroundColor Darkgreen}"
-                # Enable Windows Sandbox
-                PowerShell.exe "Write-Host 'Enabling Windows Sandbox' -ForegroundColor Yellow;if((get-WindowsOptionalFeature -Online -FeatureName Containers-DisposableClientVM).state -eq 'disabled'){enable-WindowsOptionalFeature -Online -FeatureName Containers-DisposableClientVM -All -norestart}else{Write-Host 'Containers-DisposableClientVM (Windows Sandbox) is already enabled' -ForegroundColor Darkgreen}"
-                # Enable Hyper-V
-                PowerShell.exe "Write-Host 'Enabling Hyper-V' -ForegroundColor Yellow;if((get-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V).state -eq 'disabled'){enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All -norestart}else{Write-Host 'Microsoft-Hyper-V is already enabled' -ForegroundColor Darkgreen}"
-                # Enable Virtual Machine Platform
-                PowerShell.exe "Write-Host 'Enabling Virtual Machine Platform' -ForegroundColor Yellow;if((get-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform).state -eq 'disabled'){enable-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform -norestart}else{Write-Host 'VirtualMachinePlatform is already enabled' -ForegroundColor Darkgreen}"
+                    # Disable Work Folders client
+                    Write-Host "`nDisabling Work Folders" -ForegroundColor Yellow
+                    if ((Get-WindowsOptionalFeature -Online -FeatureName WorkFolders-Client).state -eq 'enabled') { 
+                        try {
+                            Disable-WindowsOptionalFeature -Online -FeatureName WorkFolders-Client -NoRestart -ErrorAction Stop
+                            # Shows the successful message only if removal process was successful
+                            Write-Host 'Work Folders was successfully disabled' -ForegroundColor Green
+                        }
+                        catch {
+                            #show error
+                            $_
+                        }
+                    }
+                    else { 
+                        Write-Host 'Work Folders is already disabled' -ForegroundColor Green 
+                    }    
+                
+                    # Disable Internet Printing Client
+                    Write-Host "`nDisabling Internet Printing Client" -ForegroundColor Yellow
+                    if ((Get-WindowsOptionalFeature -Online -FeatureName Printing-Foundation-Features).state -eq 'enabled') {
+                        try {
+                            Disable-WindowsOptionalFeature -Online -FeatureName Printing-Foundation-Features -NoRestart -ErrorAction Stop
+                            # Shows the successful message only if removal process was successful
+                            Write-Host 'Internet Printing Client was successfully disabled' -ForegroundColor Green
+                        }
+                        catch {
+                            # show errors
+                            $_
+                        }
+                    }
+                    else {
+                        Write-Host 'Internet Printing Client is already disabled' -ForegroundColor Green 
+                    }
+                
+                    # Disable Windows Media Player (legacy)
+                    Write-Host "`nDisabling Windows Media Player (Legacy)" -ForegroundColor Yellow
+                    if ((Get-WindowsOptionalFeature -Online -FeatureName WindowsMediaPlayer).state -eq 'enabled') {
+                        try {
+                            Disable-WindowsOptionalFeature -Online -FeatureName WindowsMediaPlayer -NoRestart -ErrorAction Stop
+                            # Shows the successful message only if removal process was successful
+                            Write-Host 'Windows Media Player (Legacy) was successfully disabled' -ForegroundColor Green
+                        }
+                        catch {
+                            # show errors
+                            $_
+                        }
+                    }
+                    else {
+                        Write-Host 'Windows Media Player (Legacy) is already disabled' -ForegroundColor Green
+                    }
+                
+                    # Enable Microsoft Defender Application Guard
+                    Write-Host "`nEnabling Microsoft Defender Application Guard" -ForegroundColor Yellow
+                    if ((Get-WindowsOptionalFeature -Online -FeatureName Windows-Defender-ApplicationGuard).state -eq 'disabled') {
+                        try {
+                            Enable-WindowsOptionalFeature -Online -FeatureName Windows-Defender-ApplicationGuard -NoRestart -ErrorAction Stop
+                            # Shows the successful message only if enablement process was successful
+                            Write-Host 'Microsoft Defender Application Guard was successfully enabled' -ForegroundColor Green
+                        }
+                        catch {
+                            # show errors
+                            $_
+                        }
+                    }
+                    else {
+                        Write-Host 'Microsoft Defender Application Guard is already enabled' -ForegroundColor Green 
+                    }
+                
+                    # Enable Windows Sandbox
+                    Write-Host "`nEnabling Windows Sandbox" -ForegroundColor Yellow
+                    if ((Get-WindowsOptionalFeature -Online -FeatureName Containers-DisposableClientVM).state -eq 'disabled') { 
+                        try {
+                            Enable-WindowsOptionalFeature -Online -FeatureName Containers-DisposableClientVM -All -NoRestart -ErrorAction Stop
+                            # Shows the successful message only if enablement process was successful
+                            Write-Host 'Windows Sandbox was successfully enabled' -ForegroundColor Green
+                        }
+                        catch {
+                            # show errors
+                            $_
+                        }
+                    }
+                    else { 
+                        Write-Host 'Windows Sandbox is already enabled' -ForegroundColor Green 
+                    }
+                
+                    # Enable Hyper-V
+                    Write-Host "`nEnabling Hyper-V" -ForegroundColor Yellow
+                    if ((Get-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V).state -eq 'disabled') {
+                        try {
+                            Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All -NoRestart -ErrorAction Stop
+                            # Shows the successful message only if enablement process was successful
+                            Write-Host 'Hyper-V was successfully enabled' -ForegroundColor Green
+                        }
+                        catch {
+                            # show errors
+                            $_
+                        }
+                    }
+                    else {
+                        Write-Host 'Hyper-V is already enabled' -ForegroundColor Green
+                    }
+                
+                    # Enable Virtual Machine Platform
+                    Write-Host "`nEnabling Virtual Machine Platform" -ForegroundColor Yellow
+                    if ((Get-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform).state -eq 'disabled') {
+                        try {
+                            Enable-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform -NoRestart -ErrorAction Stop
+                            # Shows the successful message only if enablement process was successful
+                            Write-Host 'Virtual Machine Platform was successfully enabled' -ForegroundColor Green
+                        }
+                        catch {
+                            # show errors
+                            $_
+                        }
+                    }
+                    else {
+                        Write-Host 'Virtual Machine Platform is already enabled' -ForegroundColor Green
+                    }
             
-                # Uninstall VBScript that is now uninstallable as an optional features since Windows 11 insider Dev build 25309 - Won't do anything in other builds                      
-                PowerShell.exe 'if (Get-WindowsCapability -Online | Where-Object { $_.Name -like ''*VBSCRIPT*'' }){`
-            Get-WindowsCapability -Online | Where-Object { $_.Name -like ''*VBSCRIPT*'' } | remove-WindowsCapability -Online;`
-            Write-Host "VBSCRIPT has been uninstalled" -ForegroundColor Green}'         
-                # Uninstall Internet Explorer mode functionality for Edge
-                PowerShell.exe 'Get-WindowsCapability -Online | Where-Object { $_.Name -like ''*Browser.InternetExplorer*'' } | remove-WindowsCapability -Online'
-                Write-Host 'Internet Explorer mode functionality for Edge has been uninstalled' -ForegroundColor Green
-                # Uninstall WMIC
-                PowerShell.exe 'Get-WindowsCapability -Online | Where-Object { $_.Name -like ''*wmic*'' } | remove-WindowsCapability -Online'
-                Write-Host 'WMIC has been uninstalled' -ForegroundColor Green
-                # Uninstall Legacy Notepad
-                PowerShell.exe 'Get-WindowsCapability -Online | Where-Object { $_.Name -like ''*Microsoft.Windows.Notepad.System*'' } | remove-WindowsCapability -Online'
-                Write-Host 'Legacy Notepad has been uninstalled. The modern multi-tabbed Notepad is unaffected.' -ForegroundColor Green
+                    # Uninstall VBScript that is now uninstallable as an optional features since Windows 11 insider Dev build 25309 - Won't do anything in other builds                      
+                    if (Get-WindowsCapability -Online | Where-Object { $_.Name -like '* VBSCRIPT*' }) {
+                        try {
+                            Write-Host "`nUninstalling VBSCRIPT" -ForegroundColor Yellow
+                            Get-WindowsCapability -Online | Where-Object { $_.Name -like '* VBSCRIPT*' } | Remove-WindowsCapability -Online -ErrorAction Stop
+                            # Shows the successful message only if removal process was successful                                                      
+                            Write-Host 'VBSCRIPT has been uninstalled' -ForegroundColor Green
+                        }
+                        catch {
+                            # show errors
+                            $_
+                        }
+                    }     
+                
+                    # Uninstall Internet Explorer mode functionality for Edge
+                    try {
+                        Write-Host "`nUninstalling Internet Explorer mode functionality for Edge" -ForegroundColor Yellow
+                        Get-WindowsCapability -Online | Where-Object { $_.Name -like '*Browser.InternetExplorer*' } | Remove-WindowsCapability -Online -ErrorAction Stop
+                        # Shows the successful message only if removal process was successful
+                        Write-Host 'Internet Explorer mode functionality for Edge has been uninstalled' -ForegroundColor Green
+                    }
+                    catch {
+                        # show errors
+                        $_
+                    }
+
+                    # Uninstall WMIC
+                    try {
+                        Write-Host "`nUninstalling WMIC" -ForegroundColor Yellow
+                        Get-WindowsCapability -Online | Where-Object { $_.Name -like '*wmic*' } | Remove-WindowsCapability -Online -ErrorAction Stop
+                        # Shows the successful message only if removal process was successful
+                        Write-Host 'WMIC has been uninstalled' -ForegroundColor Green
+                    }
+                    catch {
+                        # show error
+                        $_
+                    }
+
+                    # Uninstall Legacy Notepad
+                    try {
+                        Write-Host "`nUninstalling Legacy Notepad" -ForegroundColor Yellow
+                        Get-WindowsCapability -Online | Where-Object { $_.Name -like '*Microsoft.Windows.Notepad.System*' } | Remove-WindowsCapability -Online -ErrorAction Stop
+                        # Shows the successful message only if removal process was successful
+                        Write-Host 'Legacy Notepad has been uninstalled. The modern multi-tabbed Notepad is unaffected.' -ForegroundColor Green
+                    }
+                    catch {
+                        # show error
+                        $_
+                    }
+                }
+
             } 'No' { break }
             'Exit' { &$CleanUp }
         }    
@@ -1282,7 +1473,7 @@ try {
                     catch {
                         Write-Host "The required files couldn't be downloaded, Make sure you have Internet connection. Skipping..." -ForegroundColor Red
                     }
-                }                
+                } 
             } 'No' { break }
             'Exit' { &$CleanUp }
         }    

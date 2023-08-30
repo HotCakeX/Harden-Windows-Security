@@ -803,7 +803,7 @@ try {
                         if ($KeyProtectors -notcontains 'Tpmpin' -and $KeyProtectors -contains 'recoveryPassword') {            
                             Write-Host "`nTPM and Start up PIN are missing but recovery password is in place, `nAdding TPM and Start up PIN now..." -ForegroundColor Cyan
                             do {
-                                [securestring]$Pin1 = $( if ($IsCore) { &$WritePinkBold "`nEnter a Pin for Bitlocker startup (between 10 to 20 characters)" } else { Write-Host "`nEnter a Pin for Bitlocker startup (between 10 to 20 characters)" -ForegroundColor Magenta }; Read-Host -AsSecureString)
+                                [securestring]$Pin1 = $(if ($IsCore) { &$WritePinkBold "`nEnter a Pin for Bitlocker startup (between 10 to 20 characters)" } else { Write-Host "`nEnter a Pin for Bitlocker startup (between 10 to 20 characters)" -ForegroundColor Magenta }; Read-Host -AsSecureString)
                                 [securestring]$Pin2 = $(if ($IsCore) { &$WritePinkBold 'Confirm your Bitlocker Startup Pin (between 10 to 20 characters)' } else { Write-Host 'Confirm your Bitlocker Startup Pin (between 10 to 20 characters)' -ForegroundColor Magenta }; Read-Host -AsSecureString)
                         
                                 # Compare the PINs and make sure they match

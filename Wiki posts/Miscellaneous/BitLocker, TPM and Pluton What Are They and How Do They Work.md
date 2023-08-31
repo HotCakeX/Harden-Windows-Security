@@ -2,7 +2,7 @@
 
 # Introduction
 
-The optimal kind of security measures is imperceptible to the user during deployment and usage. Whenever there is a potential delay or difficulty due to a security feature, there is a high probability that users will attempt to circumvent security. This situation is particularly prevalent for data protection, and that is a scenario that organizations need to prevent. Whether intending to encrypt entire volumes, removable devices, or [individual files](https://learn.microsoft.com/en-us/windows/security/operating-system-security/data-protection/personal-data-encryption/), Windows satisfies these requirements by providing streamlined, usable solutions. BitLocker Device Encryption safeguards the system by seamlessly implementing device-wide data encryption.
+The optimal kind of security measure is imperceptible to the user during deployment and usage. Whenever there is a potential delay or difficulty due to a security feature, there is a high probability that users will attempt to circumvent security. This situation is particularly prevalent for data protection, and that is a scenario that organizations need to prevent. Whether intending to encrypt entire volumes, removable devices, or [individual files](https://learn.microsoft.com/en-us/windows/security/operating-system-security/data-protection/personal-data-encryption/), Windows satisfies these requirements by providing streamlined, usable solutions. BitLocker Device Encryption safeguards the system by seamlessly implementing device-wide data encryption.
 
 <br>
 

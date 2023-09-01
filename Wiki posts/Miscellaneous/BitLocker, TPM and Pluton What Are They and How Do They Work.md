@@ -34,17 +34,15 @@ When BitLocker is activated, the disk is constantly encrypted. It is irrelevant 
 
 ## The Power of BitLocker and TPM Against Offline and Side Channel Attacks
 
-Now there is the in-band versus out of band security system paradigm we need to discuss.
+Now there is the in-band versus out of band security system paradigm we need to discuss. For instance, Windows login screen is in-band and TPM is out of band.
 
-Windows login screen is in-band, the TPM is out of band.
+The TPM is used to deter side channel attacks while login screen is to deter brute force/cryptographic attacks. Windows Hello, which is a very robust system, is TPM backed just like BitLocker.
 
-The TPM is used to deter side channel attacks, and login screen is to deter brute force/cryptographic attacks. Windows Hello is a very robust system, and it is TPM backed, BitLocker is also TPM backed. BitLocker is to prevent offline attacks primarily, secondarily it is to prevent data loss.
-
-If you can alter the Windows operating system files while it is offline, it has no means to protect itself. That is why BitLocker exists, it impedes tampering while the system is offline. Most people assume it is used for data loss prevention; in reality the primary defense capability is tampering with OS files.
+BitLocker is to prevent offline attacks primarily, secondarily it is to prevent data loss. If you can alter the Windows operating system files while it is offline, it has no means to protect itself. That is why BitLocker exists to impede tampering while the system is offline. Most people assume it is used for data loss prevention; in reality the primary defense capability is tampering with OS files.
 
 I can guarantee breach into any operating system that has an unencrypted disk, and I don’t have to use any zero days or exploit code.
 
-BitLocker encrypted disk remains encrypted even after Windows Hello authentication. BitLocker is a transparent drive encryption technology operating below the file system level. Drive encryption is always on even after you unlock the OS so your data is always encrypted.
+BitLocker is a transparent drive encryption technology operating below the file system level and BitLocker encrypted disks always remain encrypted even after Windows Hello authentication and unlocking the OS.
 
 <br>
 
@@ -52,9 +50,9 @@ BitLocker encrypted disk remains encrypted even after Windows Hello authenticati
 
 One of the most formidable technologies that is impervious to tampering, jumper cable or other vulnerabilities is [the Pluton chip](https://www.microsoft.com/en-us/security/blog/2020/11/17/meet-the-microsoft-pluton-processor-the-security-chip-designed-for-the-future-of-windows-pcs/). The same technology that has been employed in Xbox to stop even the [most sophisticated physical attacks.](https://www.youtube.com/watch?v=quLa6kzzra0)
 
-Pluton is a dedicated physical chip that runs on [Azure sphere](https://azure.microsoft.com/en-us/products/azure-sphere/) architecture. It is very much out of band, it is technically physically on the same die as the CPU, but the CPU has no control over it at all. It has its own dedicated self-maintaining operating system.
+Pluton is a dedicated physical chip that runs on [Azure sphere](https://azure.microsoft.com/en-us/products/azure-sphere/) architecture. It is very much out of band and is technically physically on the same die as the CPU, but the CPU has no control over it at all because it has its own dedicated self-maintaining operating system.
 
-A firmware based TPM is reliant on the CPU to emulate it, pluton is not dependent on the CPU to emulate it or run it. Pluton is completely self-sufficient. Which implies that it is out of band. dTPM (discrete TPMs) are usually more susceptible than fTPMs (Firmware based TPMs).
+A firmware based TPM is reliant on the CPU to emulate it, Pluton is not dependent on the CPU to emulate it or run it. Pluton is completely self-sufficient which implies that it is out of band. dTPM (discrete TPMs) are usually more susceptible than fTPMs (Firmware based TPMs).
 
 Pluton addresses security needs like booting an operating system securely even against firmware threats and storing sensitive data safely even against physical attacks.
 

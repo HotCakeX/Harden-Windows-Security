@@ -17,7 +17,7 @@ function Get-SignerInfo {
     $Signers = $xml.SiPolicy.Signers.Signer
   
     # Create an empty array to store the output
-    [System.Array]$output = @()
+    [System.Object[]]$output = @()
   
     # Loop through each Signer node and extract the information
     foreach ($signer in $signers) {
@@ -35,6 +35,7 @@ function Get-SignerInfo {
     # Return the output array
     return $output
 }
+
 
 # Function to calculate the TBS of a certificate
 function Get-TBSCertificate {
@@ -140,7 +141,7 @@ function Get-AuthenticodeSignatureEx {
             
         # Define a helper function to get the timestamps of the countersigners
         function getTimeStamps($SignerInfo) {
-            [System.Array]$retValue = @()
+            [System.Object[]]$retValue = @()
             foreach ($CounterSignerInfos in $Infos.CounterSignerInfos) {                    
                 # Get the signing time attribute from the countersigner info object
                 $sTime = ($CounterSignerInfos.SignedAttributes | Where-Object { $_.Oid.Value -eq '1.2.840.113549.1.9.5' }).Values | `
@@ -348,10 +349,10 @@ function Compare-SignerAndCertificate {
     $SignerInfo = Get-SignerInfo -XmlFilePath $XmlFilePath  
    
     # Declare $CertificateDetails as an array
-    [System.Array]$CertificateDetails = @()
+    [System.Object[]]$CertificateDetails = @()
 
     # Declare $NestedCertificateDetails as an array 
-    [System.Array]$NestedCertificateDetails = @()
+    [System.Object[]]$NestedCertificateDetails = @()
 
     # Get the certificate details from the signed file path using the Get-CertificateDetails function with the IntermediateOnly switch parameter
     $CertificateDetails += Get-CertificateDetails -IntermediateOnly -FilePath $SignedFilePath
@@ -369,7 +370,7 @@ function Compare-SignerAndCertificate {
 
   
     # Create an empty array to store the comparison results
-    [System.Array]$ComparisonResults = @()
+    [System.Object[]]$ComparisonResults = @()
   
     # Loop through each signer in the signer information array
     foreach ($Signer in $SignerInfo) {
@@ -479,10 +480,10 @@ function Compare-SignerAndCertificate {
     }
 
     # Declare $LeafCertificateDetails as an array
-    [System.Array]$LeafCertificateDetails = @()
+    [System.Object[]]$LeafCertificateDetails = @()
 
     # Declare $NestedLeafCertificateDetails as an array
-    [System.Array]$NestedLeafCertificateDetails = @()
+    [System.Object[]]$NestedLeafCertificateDetails = @()
   
     # Get the leaf certificate details from the signed file path
     $LeafCertificateDetails += Get-CertificateDetails -LeafCertificate -FilePath $SignedFilePath
@@ -530,7 +531,7 @@ function Get-FileRuleOutput ($xmlPath) {
     $xml = [xml](Get-Content -Path $xmlPath)
 
     # Create an empty array to store the output
-    [System.Array]$OutPutHashInfoProcessing = @()
+    [System.Object[]]$OutPutHashInfoProcessing = @()
 
     # Loop through each file rule in the xml file
     foreach ($filerule in $xml.SiPolicy.FileRules.Allow) {
@@ -583,7 +584,7 @@ function Compare-XmlFiles ($refXmlPath, $tarXmlPath) {
         $comparison = Compare-Object -ReferenceObject $refoutput -DifferenceObject $taroutput -Property HashValue -PassThru -IncludeEqual
 
         # Create an empty array to store the output objects
-        [System.Array]$OutPutHashComparison = @()
+        [System.Object[]]$OutPutHashComparison = @()
 
         # Loop through each object in the comparison array
         foreach ($object in $comparison) {

@@ -33,7 +33,7 @@ function Invoke-WDACSimulation {
        
         if ($FolderPath) {
             # Store the results of the Signed files
-            [System.Array]$SignedResult = @()
+            [System.Object[]]$SignedResult = @()
             # Get all of the files that WDAC supports from the user provided directory
             $CollectedFiles = (Get-ChildItem -Recurse -Path $FolderPath -File -Include '*.sys', '*.exe', '*.com', '*.dll', '*.ocx', '*.msp', '*.mst', '*.msi', '*.js', '*.vbs', '*.ps1', '*.appx').FullName
 
@@ -134,7 +134,7 @@ function Invoke-WDACSimulation {
             }
                  
             # Create an empty array to store the output objects
-            [System.Array]$FinalAllowedFilesOutputObject = @()
+            [System.Object[]]$FinalAllowedFilesOutputObject = @()
 
             # Loop through the first array and create output objects with the file path and source
             foreach ($path in $Hashresults) {

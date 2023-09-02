@@ -189,7 +189,7 @@ function Edit-WDACConfig {
             Remove-Item -Path '.\ProgramDir_ScanResults*.xml' -Force -ErrorAction SilentlyContinue
             Remove-Item -Path ".\SupplementalPolicy$SuppPolicyName.xml" -Force -ErrorAction SilentlyContinue    
             # An empty array that holds the Policy XML files - This array will eventually be used to create the final Supplemental policy
-            [System.Array]$PolicyXMLFilesArray = @()
+            [System.Object[]]$PolicyXMLFilesArray = @()
     
             #Initiate Live Audit Mode
 
@@ -267,7 +267,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                     Pause
 
                     # Store the program paths that user browses for in an array
-                    [System.Array]$ProgramsPaths = @()
+                    [System.Object[]]$ProgramsPaths = @()
                     Write-Host "`nSelect program directories to scan" -ForegroundColor Cyan
                     # Showing folder picker GUI to the user for folder path selection
                     do {
@@ -393,7 +393,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
             # The notice about variable being assigned and never used should be ignored - it's being dot-sourced from Resources file
             [datetime]$Date = Get-Date
             # An empty array that holds the Policy XML files - This array will eventually be used to create the final Supplemental policy
-            [System.Array]$PolicyXMLFilesArray = @()
+            [System.Object[]]$PolicyXMLFilesArray = @()
 
             ################################### Initiate Live Audit Mode ###################################
             
@@ -450,7 +450,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                     Pause                 
 
                     # Store the program paths that user browses for in an array
-                    [System.Array]$ProgramsPaths = @()
+                    [System.Object[]]$ProgramsPaths = @()
                     Write-Host "`nSelect program directories to scan`n" -ForegroundColor Cyan
                     # Showing folder picker GUI to the user for folder path selection
                     do {
@@ -584,7 +584,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                     # Any other attempts such as "Get-FileHash" or "Get-AuthenticodeSignature" fail and ConfigCI Module cmdlets totally ignore these files and do not create allow rules for them
 
                     # Finding the file(s) first and storing them in an array
-                    [System.Array]$ExesWithNoHash = @()
+                    [System.Object[]]$ExesWithNoHash = @()
                     # looping through each user-selected path(s)
                     foreach ($ProgramsPath in $ProgramsPaths) {
                         # Making sure the currently processing path has any .exe in it

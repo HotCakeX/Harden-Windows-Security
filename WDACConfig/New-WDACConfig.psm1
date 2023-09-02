@@ -460,7 +460,7 @@ function New-WDACConfig {
             [System.String]$path = 'windows/security/application-security/application-control/windows-defender-application-control/design/microsoft-recommended-driver-block-rules.md'
         
             [System.String]$ApiUrl = "https://api.github.com/repos/$owner/$repo/commits?path=$path"
-            [System.Array]$Response = Invoke-RestMethod $ApiUrl
+            [System.Object[]]$Response = Invoke-RestMethod $ApiUrl
             [datetime]$Date = $Response[0].commit.author.date
         
             &$WriteLavender "`nThe document containing the drivers block list on GitHub was last updated on $Date"

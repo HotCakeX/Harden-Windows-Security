@@ -1,8 +1,3 @@
-# argument tab auto-completion for SignToolPath param to show only .exe files in the current directory
-[scriptblock]$ArgumentCompleterSignToolPath = {
-    Get-ChildItem | Where-Object { $_.extension -like '*.exe' } | ForEach-Object { return "`"$_`"" }
-}
-
 # argument tab auto-completion for CertPath param to show only .cer files in current directory and 2 sub-directories recursively
 [scriptblock]$ArgumentCompleterCertPath = {
     # Note the use of -Depth 1

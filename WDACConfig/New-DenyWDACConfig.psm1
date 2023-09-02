@@ -90,7 +90,7 @@ function New-DenyWDACConfig {
             # remove any possible files from previous runs
             Remove-Item -Path '.\ProgramDir_ScanResults*.xml' -Force -ErrorAction SilentlyContinue
             # An array to hold the temporary xml files of each user-selected folders
-            [System.Array]$PolicyXMLFilesArray = @()
+            [System.Object[]]$PolicyXMLFilesArray = @()
 
             ######################## Process Program Folders From User input #####################
             for ($i = 0; $i -lt $ScanLocations.Count; $i++) {
@@ -163,7 +163,7 @@ function New-DenyWDACConfig {
         elseif ($Drivers) {           
 
             powershell.exe {
-                [System.Array]$DriverFilesObject = @()
+                [System.Object[]]$DriverFilesObject = @()
                 # loop through each user-selected folder paths
                 foreach ($ScanLocation in $args[0]) {
                     # DriverFile object holds the full details of all of the scanned drivers - This scan is greedy, meaning it stores as much information as it can find

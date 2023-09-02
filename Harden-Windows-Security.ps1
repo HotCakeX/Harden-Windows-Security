@@ -1323,10 +1323,10 @@ try {
                     }
             
                     # Uninstall VBScript that is now uninstallable as an optional features since Windows 11 insider Dev build 25309 - Won't do anything in other builds                      
-                    if (Get-WindowsCapability -Online | Where-Object { $_.Name -like '* VBSCRIPT*' }) {
+                    if (Get-WindowsCapability -Online | Where-Object { $_.Name -like '*VBSCRIPT*' }) {
                         try {
                             Write-Host "`nUninstalling VBSCRIPT" -ForegroundColor Yellow
-                            Get-WindowsCapability -Online | Where-Object { $_.Name -like '* VBSCRIPT*' } | Remove-WindowsCapability -Online -ErrorAction Stop
+                            Get-WindowsCapability -Online | Where-Object { $_.Name -like '*VBSCRIPT*' } | Remove-WindowsCapability -Online -ErrorAction Stop
                             # Shows the successful message only if removal process was successful                                                      
                             Write-Host 'VBSCRIPT has been uninstalled' -ForegroundColor Green
                         }

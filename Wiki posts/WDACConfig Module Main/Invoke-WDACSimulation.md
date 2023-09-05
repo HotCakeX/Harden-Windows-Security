@@ -22,6 +22,8 @@ Invoke-WDACSimulation -FolderPath <string> -XmlFilePath <string>
 
 This cmdlet allows you to simulate a WDAC deployment. Select a folder and a policy xml file, it will show you whether the files in the folder would be allowed or blocked by your WDAC policy if it was actually deployed on a system and those files were run.
 
+You will get a CSV file in the current working directory for the output of the simulation with full details of each file that would be blocked/allowed by the selected policy.
+
 <br>
 
 **Current limitations of this cmdlet that will be fixed in future module version**

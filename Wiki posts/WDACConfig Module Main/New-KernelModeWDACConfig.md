@@ -29,7 +29,7 @@ Before the audit mode phase, make sure you trust all the files and programs inst
 ![image](https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Wiki%20APNGs/New-KernelModeWDACConfig%20-Default%20-PrepMode.apng)
 
 ```powershell
-New-KernelModeWDACConfig [-Default] [-PrepMode] [-AuditAndEnforce] [-EVSigners] [-Deployit]
+New-KernelModeWDACConfig [-Default] [-PrepMode] [-AuditAndEnforce] [-EVSigners] [-Deploy]
 ```
 
 <br>
@@ -66,7 +66,7 @@ Edit-WDACConfig -AllowNewAppsAuditEvents -SuppPolicyName "Kernel mode drivers fo
 
 * `-EVSigners`: Uses EVSigners policy rule option. If you want to use this parameter, make sure you use it for both PrepMode and AuditAndEnforce parameters. [Read more about EV Signers](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-Notes#policies-with-requiredev-signers-rule-option)
 
-* `-Deployit`: Indicates that the policy will be deployed. If you want to deploy the final strict kernel-mode base policy Signed, do not use this parameter with `-AuditAndEnforce`. Instead just create the policy and then use [Deploy-SignedWDACConfig](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Deploy-SignedWDACConfig) cmdlet to deploy it.
+* `-Deploy`: Indicates that the policy will be deployed. If you want to deploy the final strict kernel-mode base policy Signed, do not use this parameter with `-AuditAndEnforce`. Instead just create the policy and then use [Deploy-SignedWDACConfig](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Deploy-SignedWDACConfig) cmdlet to deploy it.
 
 <br>
 
@@ -79,7 +79,7 @@ Edit-WDACConfig -AllowNewAppsAuditEvents -SuppPolicyName "Kernel mode drivers fo
 ![image](https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Wiki%20APNGs/New-KernelModeWDACConfig%20-NoFlightRoots%20-PrepMode.apng)
 
 ```powershell
-New-KernelModeWDACConfig [-NoFlightRoots] [-PrepMode] [-AuditAndEnforce] [-EVSigners] [-Deployit]
+New-KernelModeWDACConfig [-NoFlightRoots] [-PrepMode] [-AuditAndEnforce] [-EVSigners] [-Deploy]
 ```
 
 <br>
@@ -114,4 +114,4 @@ Edit-WDACConfig -AllowNewAppsAuditEvents -SuppPolicyName "Kernel mode drivers fo
 
 * `-EVSigners`: Uses EVSigners policy rule option. If you want to use this parameter, make sure you use it for both PrepMode and AuditAndEnforce parameters. [Read more about EV Signers](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-Notes#policies-with-requiredev-signers-rule-option)
 
-* `-Deployit`: Indicates that the policy will be deployed. If you want to deploy the final strict kernel-mode no flight roots base policy Signed, do not use this parameter with `-AuditAndEnforce`. Instead just create the policy and then use [Deploy-SignedWDACConfig](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Deploy-SignedWDACConfig) cmdlet to deploy it.
+* `-Deploy`: Indicates that the policy will be deployed. If you want to deploy the final strict kernel-mode no flight roots base policy Signed, do not use this parameter with `-AuditAndEnforce`. Instead just create the policy and then use [Deploy-SignedWDACConfig](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Deploy-SignedWDACConfig) cmdlet to deploy it.

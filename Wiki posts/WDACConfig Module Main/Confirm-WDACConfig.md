@@ -22,7 +22,8 @@ Confirm-WDACConfig [-ListActivePolicies] [-OnlyBasePolicies] [-OnlySupplementalP
 
 <br>
 
-Lists the non-System Base and Supplemental WDAC Policies using [CITool](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/operations/citool-commands) and displays their counts.
+Lists the non-System Base and Supplemental WDAC Policies using [CITool](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/operations/citool-commands) and displays their counts.
+
 
 ### Has 2 optional parameter
 

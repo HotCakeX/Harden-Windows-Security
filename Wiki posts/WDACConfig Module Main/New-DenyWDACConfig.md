@@ -19,7 +19,7 @@
 ```powershell
 New-DenyWDACConfig [-Normal] -PolicyName <String> -ScanLocations <String[]> [-Level <String>]
 [-Fallbacks <String[]>] [-SpecificFileNameLevel <String>] [-NoUserPEs]
-[-NoScript] [-Deployit]
+[-NoScript] [-Deploy]
 ```
 
 <br>
@@ -34,7 +34,7 @@ Creates a Deny base policy by scanning a directory. The base policy will have 2 
 
 ### 6 optional parameters
 
-* `-Deployit`: Indicates that the module will automatically deploy the Deny base policy after creation.
+* `-Deploy`: Indicates that the module will automatically deploy the Deny base policy after creation.
 
 * `-Levels <String>`: Offers the same official [Levels](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-level) for scanning of the specified directory path. If no level is specified the default, which is set to ***FilePublisher*** in this module, will be used.
 
@@ -58,7 +58,7 @@ Creates a Deny base policy by scanning a directory. The base policy will have 2 
 
 ```powershell
 New-DenyWDACConfig [-Drivers] -PolicyName <String> -ScanLocations <String[]> [-Level <String>]
-[-Fallbacks <String[]>] [-Deployit]
+[-Fallbacks <String[]>] [-Deploy]
 ```
 
 <br>
@@ -73,7 +73,7 @@ Creates a Deny base policy by scanning a directory, this parameter uses [DriverF
 
 ### 3 optional parameters
 
-* `-Deployit`: Indicates that the module will automatically deploy the Deny base policy after creation.
+* `-Deploy`: Indicates that the module will automatically deploy the Deny base policy after creation.
 
 * `-Levels <String>`: Offers the same official [Levels](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-level) for scanning of the specified directory path. If no level is specified the default, which is set to ***FilePublisher*** in this module, will be used.
 
@@ -90,7 +90,7 @@ Creates a Deny base policy by scanning a directory, this parameter uses [DriverF
 ![image](https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Wiki%20APNGs/New-DenyWDACConfig%20-InstalledAppXPackages.apng)
 
 ```powershell
-New-DenyWDACConfig [-InstalledAppXPackages] -PackageName <String> -PolicyName <String> [-Deployit]
+New-DenyWDACConfig [-InstalledAppXPackages] -PackageName <String> -PolicyName <String> [-Deploy]
 ```
 
 <br>
@@ -105,6 +105,6 @@ Creates a Deny base policy for one or more installed Windows Apps (Appx) based o
 
 ### 1 optional parameters
 
-- `-Deployit`: Indicates that the module will automatically deploy the Deny base policy after creation.
+- `-Deploy`: Indicates that the module will automatically deploy the Deny base policy after creation.
 
 <br>

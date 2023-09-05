@@ -18,7 +18,7 @@
 
 ```powershell
 New-SupplementalWDACConfig [-Normal] -ScanLocation <String> -SuppPolicyName <String> -PolicyPath <String>
-[-Deployit] [-SpecificFileNameLevel <String>] [-NoUserPEs] [-NoScript] [-Level <String>]
+[-Deploy] [-SpecificFileNameLevel <String>] [-NoUserPEs] [-NoScript] [-Level <String>]
 [-Fallbacks <String[]>]
 ```
 
@@ -38,7 +38,7 @@ Creates a normal Supplemental policy for a base policy.
 
 ### 6 optional parameters
 
-* `-Deployit`: Indicates that the module will automatically deploy the Supplemental policy after creation.
+* `-Deploy`: Indicates that the module will automatically deploy the Supplemental policy after creation.
 
 * `-Levels <String>`: Offers the same official [Levels](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-level) for scanning of the specified directory path. If no level is specified the default, which is set to ***FilePublisher*** in this module, will be used.
 
@@ -67,7 +67,7 @@ Creates a normal Supplemental policy for a base policy.
 
 ```powershell
 New-SupplementalWDACConfig [-FilePathWildCards] -WildCardPath <String> -SuppPolicyName <String> -PolicyPath
-<String> [-Deployit]
+<String> [-Deploy]
 ```
 
 <br>
@@ -86,7 +86,7 @@ Creates a Supplemental policy that allows a file path that includes one or more 
 
 ### 1 optional parameter
 
-* `-Deployit`: Indicates that the module will automatically deploy the Supplemental policy after creation.
+* `-Deploy`: Indicates that the module will automatically deploy the Supplemental policy after creation.
 
 ### The outputs of the parameter are
 
@@ -105,7 +105,7 @@ Creates a Supplemental policy that allows a file path that includes one or more 
 
 ```powershell
 New-SupplementalWDACConfig [-InstalledAppXPackages] -PackageName <String> -SuppPolicyName <String> -PolicyPath
-<String> [-Deployit]
+<String> [-Deploy]
 ```
 
 <br>
@@ -126,7 +126,7 @@ More information at [Microsoft Learn](https://learn.microsoft.com/en-us/windows/
 
 ### 1 optional parameter
 
-* `-Deployit`: Indicates that the module will automatically deploy the Supplemental policy after creation.
+* `-Deploy`: Indicates that the module will automatically deploy the Supplemental policy after creation.
 
 ### The outputs of the parameter are
 

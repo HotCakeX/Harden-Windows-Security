@@ -17,8 +17,12 @@
 ![image](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Wiki%20APNGs/Deploy-SignedWDACConfig.apng)
 
 ```powershell
-Deploy-SignedWDACConfig -CertPath <String> -PolicyPaths <String[]> -CertCN <String> [-SignToolPath <String>]
+Deploy-SignedWDACConfig -PolicyPaths <String[]> [-CertPath <String>] [-CertCN <String>] [-SignToolPath <String>] [-Deploy]
 ```
+
+<br>
+
+Creates and signs a `CIP` file that can be either deployed locally using the `-Deploy` parameter or you can deploy the signed policy binary on a different machine using the built-in [Citool](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/operations/citool-commands).
 
 <br>
 
@@ -32,9 +36,11 @@ Deploy-SignedWDACConfig -CertPath <String> -PolicyPaths <String[]> -CertCN <Stri
 
 * `CertCN <String>`: Common name of the certificate - Supports argument completion so you don't have to manually enter the Certificate's CN, just make sure the `-CertPath` is specified and the certificate is installed in the personal store of the user certificates, then press TAB to auto complete the name. You can however enter it manually if you want to.
 
-### 1 optional parameter
+### 2 optional parameter
 
 * `-SignToolPath <String>`: Supports tab completion by showing only `.exe` files.
+
+* `-Deploy`: Deploys the signed policy on the system
 
 ### You can use it in 2 different ways
 

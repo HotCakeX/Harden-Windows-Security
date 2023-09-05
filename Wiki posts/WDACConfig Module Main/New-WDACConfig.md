@@ -17,12 +17,16 @@
 ![image](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Wiki%20APNGs/New-WDACConfig%20-GetBlockRules.apng)
 
 ```powershell
-New-WDACConfig [-GetBlockRules]
+New-WDACConfig [-GetBlockRules] [-Deploy]
 ```
 
 <br>
 
 Creates a WDAC policy file called ***Microsoft recommended block rules.xml*** from [the official source](https://github.com/MicrosoftDocs/windows-itpro-docs/blob/public/windows/security/threat-protection/windows-defender-application-control/microsoft-recommended-block-rules.md) for [Microsoft recommended block rules](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/microsoft-recommended-block-rules), with *AllowAll* rules and audit mode rule option removed. The policy sets [HVCI to strict](https://learn.microsoft.com/en-us/powershell/module/configci/set-hvcioptions).
+
+### 1 optional parameter
+
+* `-Deploy`: Deploys the [latest Microsoft recommended block rules](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/microsoft-recommended-block-rules) (For User Mode binaries). It has the 2 default AllowAll rules so it can be deployed as a standalone base policy. Uses [Strict HVCI](https://learn.microsoft.com/en-us/powershell/module/configci/set-hvcioptions).
 
 <br>
 
@@ -35,12 +39,17 @@ Creates a WDAC policy file called ***Microsoft recommended block rules.xml*** fr
 ![image](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Wiki%20APNGs/New-WDACConfig%20-GetDriverBlockRules.apng)
 
 ```powershell
-New-WDACConfig [-GetDriverBlockRules]
+New-WDACConfig [-GetDriverBlockRules] [-Deploy]
 ```
 
 <br>
 
-Creates a WDAC policy file called ***Microsoft recommended driver block rules.xml*** from [the official source](https://github.com/MicrosoftDocs/windows-itpro-docs/blob/public/windows/security/threat-protection/windows-defender-application-control/microsoft-recommended-driver-block-rules.md) for [Microsoft recommended driver block rules](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/microsoft-recommended-driver-block-rules), with *AllowAll* rules and audit mode rule option removed. The policy sets [HVCI to strict](https://learn.microsoft.com/en-us/powershell/module/configci/set-hvcioptions). Extra information regarding the version and last updated date of [the GitHub document](https://github.com/MicrosoftDocs/windows-itpro-docs/commits/public/windows/security/threat-protection/windows-defender-application-control/microsoft-recommended-driver-block-rules.md) containing block rules will also be displayed.
+Creates a WDAC policy file called ***Microsoft recommended driver block rules.xml*** from [the official source](https://github.com/MicrosoftDocs/windows-itpro-docs/blob/public/windows/security/threat-protection/windows-defender-application-control/microsoft-recommended-driver-block-rules.md) for [Microsoft recommended driver block rules](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/microsoft-recommended-driver-block-rules), with *AllowAll* rules and audit mode rule option removed. The policy sets [HVCI to strict](https://learn.microsoft.com/en-us/powershell/module/configci/set-hvcioptions). Extra information regarding the version and last updated date of [the GitHub document](https://github.com/MicrosoftDocs/windows-itpro-docs/commits/public/windows/security/threat-protection/windows-defender-application-control/microsoft-recommended-driver-block-rules.md) containing block rules will also be displayed.
+
+### 1 optional parameters
+
+* `-Deploy`: With the help of PowerShell, uses [the official method](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/microsoft-recommended-driver-block-rules#steps-to-download-and-apply-the-vulnerable-driver-blocklist-binary) to deploy the latest version of [Microsoft recommended driver block rules](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/microsoft-recommended-driver-block-rules).
+
 
 <br>
 
@@ -53,7 +62,7 @@ Creates a WDAC policy file called ***Microsoft recommended driver block rules.xm
 ![image](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Wiki%20APNGs/New-WDACConfig%20-MakeAllowMSFTWithBlockRules.apng)
 
 ```powershell
-New-WDACConfig [-MakeAllowMSFTWithBlockRules] [-Deployit] [-TestMode] [-RequireEVSigners]
+New-WDACConfig [-MakeAllowMSFTWithBlockRules] [-Deploy] [-TestMode] [-RequireEVSigners]
 ```
 
 <br>
@@ -86,49 +95,13 @@ Calls the [-GetBlockRules](#new-wdacconfig--getblockrules) parameter to get the 
 
 ### 3 optional parameters
 
-* `-Deployit`: Indicates that the module will automatically deploy the ***AllowMicrosoftPlusBlockRules*** policy after creation.
+* `-Deploy`: Indicates that the module will automatically deploy the ***AllowMicrosoftPlusBlockRules*** policy after creation.
 
 * `-TestMode`: Indicates that the created/deployed policy will have ***Enabled:Boot Audit on Failure*** and ***Enabled:Advanced Boot Options Menu*** [policy rule options](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/select-types-of-rules-to-create#table-1-windows-defender-application-control-policy---policy-rule-options).
 
 * `-RequireEVSigners`: Indicates that the created/deployed policy will have [Require EV Signers](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/wdac-wizard-create-base-policy#advanced-policy-rules-description) policy rule option.
 
      - > In addition to being WHQL signed, this rule requires that drivers must have been submitted by a partner that has an Extended Verification (EV) certificate. All Windows 10 and later, or Windows 11 drivers will meet this requirement.
-
-<br>
-
-<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
-
-<br>
-
-## New-WDACConfig -DeployLatestDriverBlockRules
-
-![image](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Wiki%20APNGs/New-WDACConfig%20-DeployLatestDriverBlockRules.apng)
-
-```powershell  
-New-WDACConfig [-DeployLatestDriverBlockRules]
-```  
-
-<br>
-
-With the help of PowerShell, uses [the official method](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/microsoft-recommended-driver-block-rules#steps-to-download-and-apply-the-vulnerable-driver-blocklist-binary) to deploy the latest version of [Microsoft recommended driver block rules](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/microsoft-recommended-driver-block-rules).
-
-<br>
-
-<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
-
-<br>
-
-## New-WDACConfig -DeployLatestBlockRules
-
-![image](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Wiki%20APNGs/New-WDACConfig%20-DeployLatestBlockRules.apng)
-
-```powershell
-New-WDACConfig [-DeployLatestBlockRules]
-```
-
-<br>
-
-Deploys the [latest Microsoft recommended block rules](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/microsoft-recommended-block-rules) (For User Mode binaries). It has the 2 default AllowAll rules so it can be deployed as a standalone base policy. Uses [Strict HVCI](https://learn.microsoft.com/en-us/powershell/module/configci/set-hvcioptions).
 
 <br>
 
@@ -146,7 +119,7 @@ New-WDACConfig [-SetAutoUpdateDriverBlockRules]
 
 <br>
 
-Creates a scheduled task that runs every 7 days to automatically perform [the official method](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/microsoft-recommended-driver-block-rules#steps-to-download-and-apply-the-vulnerable-driver-blocklist-binary) for updating Microsoft recommended driver block rules.
+Creates a scheduled task that runs every 7 days to automatically perform [the official method](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/microsoft-recommended-driver-block-rules#steps-to-download-and-apply-the-vulnerable-driver-blocklist-binary) for updating Microsoft recommended driver block rules.
 
 <br>
 
@@ -159,20 +132,22 @@ Creates a scheduled task that runs every 7 days to automatically perform [the of
 ![image](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Wiki%20APNGs/New-WDACConfig%20-PrepMSFTOnlyAudit.apng)
 
 ```powershell
-New-WDACConfig [-PrepMSFTOnlyAudit] [-LogSize <Int64>]
+New-WDACConfig [-PrepMSFTOnlyAudit] [-Deploy] [-LogSize <Int64>]
 ```
 
 <br>
 
-Prepares the system for generating Audit event logs [for a fully managed device](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-for-Fully-Managed-Devices), by deploying the default AllowMicrosoft policy in Audit mode. No reboot required.
+Creates a WDAC policy using the default AllowMicrosoft policy in Audit mode that once deployed, prepares the system for generating Audit event logs [for a fully managed device](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-for-Fully-Managed-Devices). No reboot required.
 
 After deployment, audit event logs will start to be created for any file that is run but wouldn't be allowed to if the AllowMicrosoft policy was deployed in enforced mode.
 
 It's recommended to use the optional parameter below to increase the log size of Code Integrity events category so that new events won't overwrite the older ones and everything will be captured.
 
-### 1 optional parameter
+### 2 optional parameter
 
-* `-LogSize <Int64>` - Specifies the log size for ***Microsoft-Windows-CodeIntegrity/Operational*** events. The values must be in the form of `<Digit + Data measurement unit>`. e.g., 2MB, 10MB, 1GB, 1TB. The minimum accepted value is 1MB which is the default.
+* `-LogSize <Int64>`: Specifies the log size for ***Microsoft-Windows-CodeIntegrity/Operational*** events. The values must be in the form of `<Digit + Data measurement unit>`. e.g., 2MB, 10MB, 1GB, 1TB. The minimum accepted value is 1MB which is the default.
+
+* `-Deploy`: Deploys the policy instead of just creating it.
 
 <br>
 
@@ -190,7 +165,7 @@ New-WDACConfig [-PrepDefaultWindowsAudit] [-LogSize <Int64>]
 
 <br>
 
-Prepares the system for Default Windows auditing. It will trigger audit logs to be created for any file that is run but is not part of the Windows; Unlike [-PrepMSFTOnlyAudit](#new-wdacconfig--prepmsftonlyaudit) parameter that triggers audit logs for any file that is not signed by Microsoft's trusted root certificate.
+Creates a WDAC policy that once deployed, prepares the system for Default Windows auditing. It will trigger audit logs to be created for any file that is run but is not part of the Windows; Unlike [-PrepMSFTOnlyAudit](#new-wdacconfig--prepmsftonlyaudit) parameter that triggers audit logs for any file that is not signed by Microsoft's trusted root certificate.
 
 This parameter also scans the WDACConfig module files and PowerShell core files, adds them to the Prep audit mode base policy that it deploys, so that the final Supplemental policy generated from Event viewer audit logs won't include those files.
 
@@ -198,7 +173,9 @@ It's recommended to use the optional parameter below to increase the log size of
 
 ### 1 optional parameter
 
-* `-LogSize <Int64>` - Specifies the log size for ***Microsoft-Windows-CodeIntegrity/Operational*** events. The values must be in the form of `<Digit + Data measurement unit>`. e.g., 2MB, 10MB, 1GB, 1TB. The minimum accepted value is 1MB which is the default.
+* `-LogSize <Int64>`: Specifies the log size for ***Microsoft-Windows-CodeIntegrity/Operational*** events. The values must be in the form of `<Digit + Data measurement unit>`. e.g., 2MB, 10MB, 1GB, 1TB. The minimum accepted value is 1MB which is the default.
+
+* `-Deploy`: Deploys the policy instead of just creating it.
 
 <br>
 
@@ -211,7 +188,7 @@ It's recommended to use the optional parameter below to increase the log size of
 ![image](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Wiki%20APNGs/New-WDACConfig%20-MakePolicyFromAuditLogs.apng)
 
 ```powershell
-New-WDACConfig [-MakePolicyFromAuditLogs] -BasePolicyType <String> [-Deployit] [-TestMode] [-RequireEVSigners] [-SpecificFileNameLevel <String>] [-NoDeletedFiles] [-NoUserPEs] [-NoScript] [-Level
+New-WDACConfig [-MakePolicyFromAuditLogs] -BasePolicyType <String> [-Deploy] [-TestMode] [-RequireEVSigners] [-SpecificFileNameLevel <String>] [-NoDeletedFiles] [-NoUserPEs] [-NoScript] [-Level
 <String>] [-Fallbacks <String[]>] [-LogSize <Int64>]
 ```
 
@@ -225,7 +202,7 @@ Creates a WDAC policy using the Audit event logs generated [for a fully managed 
 
 ### 11 optional parameters
 
-* `-Deployit`: Indicates that the module will automatically remove the WDAC policy deployed using either [-PrepMSFTOnlyAudit](#new-wdacconfig--prepmsftonlyaudit) or [-PrepDefaultWindowsAudit](#new-wdacconfig--prepdefaultwindowsaudit) parameters, then deploys the supplemental policy created from Audit event logs along with the selected base policy type, both in enforced mode.
+* `-Deploy`: Indicates that the module will automatically remove the WDAC policy deployed using either [-PrepMSFTOnlyAudit](#new-wdacconfig--prepmsftonlyaudit) or [-PrepDefaultWindowsAudit](#new-wdacconfig--prepdefaultwindowsaudit) parameters, then deploys the supplemental policy created from Audit event logs along with the selected base policy type, both in enforced mode.
 
 * `-TestMode`: Indicates that the created/deployed policy will have ***Enabled:Boot Audit on Failure*** and ***Enabled:Advanced Boot Options Menu*** [policy rule options](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/select-types-of-rules-to-create#table-1-windows-defender-application-control-policy---policy-rule-options).
 
@@ -238,7 +215,7 @@ Creates a WDAC policy using the Audit event logs generated [for a fully managed 
      - *DeletedFilesHashes.xml* - Policy file that contains File Rules and Rule refs for the files that no longer exist on the disk.
      - *AuditLogsPolicy_NoDeletedFiles.xml* - The policy file generated from Audit Event logs based on the specified Level and Fallback parameters.
 
-* `-LogSize <Int64>` - Specifies the log size for ***Microsoft-Windows-CodeIntegrity/Operational*** events. The values must be in the form of `<Digit + Data measurement unit>`. e.g., 2MB, 10MB, 1GB, 1TB. The minimum accepted value is 1MB which is the default.
+* `-LogSize <Int64>`: Specifies the log size for ***Microsoft-Windows-CodeIntegrity/Operational*** events. The values must be in the form of `<Digit + Data measurement unit>`. e.g., 2MB, 10MB, 1GB, 1TB. The minimum accepted value is 1MB which is the default.
 
 * `-Levels <String>`: Offers the same official [Levels](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-level) for scanning of event logs. If no level is specified the default, which is set to ***FilePublisher*** in this module, will be used.
 
@@ -277,7 +254,7 @@ All of the outputs are saved in a folder named "WDAC" inside the current working
 ![image](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Wiki%20APNGs/New-WDACConfig%20-MakeLightPolicy%20-RequireEVSigners.apng)
 
 ```powershell
-New-WDACConfig [-MakeLightPolicy] [-Deployit] [-TestMode] [-RequireEVSigners]
+New-WDACConfig [-MakeLightPolicy] [-Deploy] [-TestMode] [-RequireEVSigners]
 ```
 
 <br>
@@ -295,7 +272,7 @@ Creates a WDAC policy for a [Lightly managed system](https://github.com/HotCakeX
 
 ### 3 optional parameters
 
-* `-Deployit`: Indicates that the module will automatically deploy the ***SignedAndReputable.xml*** policy file after creation.
+* `-Deploy`: Indicates that the module will automatically deploy the ***SignedAndReputable.xml*** policy file after creation.
 
 * `-TestMode`: Indicates that the created/deployed policy will have ***Enabled:Boot Audit on Failure*** and ***Enabled:Advanced Boot Options Menu*** [policy rule options](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/select-types-of-rules-to-create#table-1-windows-defender-application-control-policy---policy-rule-options).
 
@@ -319,7 +296,7 @@ Creates a WDAC policy for a [Lightly managed system](https://github.com/HotCakeX
 ![image](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Wiki%20APNGs/New-WDACConfig%20-MakeDefaultWindowsWithBlockRules.apng)
 
 ```powershell
-New-WDACConfig [-MakeDefaultWindowsWithBlockRules] [-Deployit] [-TestMode] [-RequireEVSigners]
+New-WDACConfig [-MakeDefaultWindowsWithBlockRules] [-Deploy] [-TestMode] [-RequireEVSigners]
 ```
 
 <br>
@@ -339,7 +316,7 @@ Calls the [-GetBlockRules](#new-wdacconfig--getblockrules) parameter to get the 
 
 ### 3 optional parameters
 
-* `-Deployit`: Indicates that the module will automatically deploy the ***DefaultWindowsPlusBlockRules*** policy after creation.
+* `-Deploy`: Indicates that the module will automatically deploy the ***DefaultWindowsPlusBlockRules*** policy after creation.
 
 * `-TestMode`: Indicates that the created/deployed policy will have ***Enabled:Boot Audit on Failure*** and ***Enabled:Advanced Boot Options Menu*** [policy rule options](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/select-types-of-rules-to-create#table-1-windows-defender-application-control-policy---policy-rule-options).
 

@@ -48,7 +48,7 @@ function New-DenyWDACConfig {
         [Switch]$NoScript,
 
         [Parameter(Mandatory = $false)] # Used by all the entire Cmdlet
-        [Switch]$Deployit,
+        [Switch]$Deploy,
         
         [Parameter(Mandatory = $false)][Switch]$SkipVersionCheck # Used by all the entire Cmdlet
     )
@@ -90,7 +90,7 @@ function New-DenyWDACConfig {
             # remove any possible files from previous runs
             Remove-Item -Path '.\ProgramDir_ScanResults*.xml' -Force -ErrorAction SilentlyContinue
             # An array to hold the temporary xml files of each user-selected folders
-            [System.Array]$PolicyXMLFilesArray = @()
+            [System.Object[]]$PolicyXMLFilesArray = @()
 
             ######################## Process Program Folders From User input #####################
             for ($i = 0; $i -lt $ScanLocations.Count; $i++) {
@@ -151,7 +151,7 @@ function New-DenyWDACConfig {
                 Remove-Item -Path '.\ProgramDir_ScanResults*.xml' -Force
             }
             
-            if ($Deployit) {                
+            if ($Deploy) {                
                 CiTool --update-policy "$policyID.cip" -json | Out-Null               
                 Write-Host -NoNewline "`n$policyID.cip for " -ForegroundColor Green
                 Write-Host -NoNewline "$PolicyName" -ForegroundColor Magenta
@@ -163,7 +163,7 @@ function New-DenyWDACConfig {
         elseif ($Drivers) {           
 
             powershell.exe {
-                [System.Array]$DriverFilesObject = @()
+                [System.Object[]]$DriverFilesObject = @()
                 # loop through each user-selected folder paths
                 foreach ($ScanLocation in $args[0]) {
                     # DriverFile object holds the full details of all of the scanned drivers - This scan is greedy, meaning it stores as much information as it can find
@@ -206,7 +206,7 @@ function New-DenyWDACConfig {
                 DenyPolicyFile = "DenyPolicy $PolicyName.xml"
                 DenyPolicyGUID = $PolicyID
             } 
-            if ($Deployit) {                
+            if ($Deploy) {                
                 CiTool --update-policy "$policyID.cip" -json | Out-Null             
                 Write-Host -NoNewline "`n$policyID.cip for " -ForegroundColor Green
                 Write-Host -NoNewline "$PolicyName" -ForegroundColor Magenta
@@ -262,7 +262,7 @@ function New-DenyWDACConfig {
                 DenyPolicyGUID = $PolicyID
             }
             
-            if ($Deployit) {                
+            if ($Deploy) {                
                 CiTool --update-policy "$policyID.cip" -json | Out-Null
                 &$WritePink "A Deny Base policy with the name $PolicyName has been deployed."
                 Remove-Item -Path "$policyID.cip" -Force

@@ -23,7 +23,7 @@ function New-KernelModeWDACConfig {
 
         [Parameter(Mandatory = $false, ParameterSetName = 'Default Strict Kernel')]
         [Parameter(Mandatory = $false, ParameterSetName = 'No Flight Roots')]
-        [Switch]$Deployit,
+        [Switch]$Deploy,
         
         [Parameter(Mandatory = $false)][Switch]$SkipVersionCheck    
     )
@@ -105,26 +105,27 @@ function New-KernelModeWDACConfig {
             if ($PrepMode) {
                 # Build the Audit mode policy
                 Build-PrepModeStrictKernelPolicy -DefaultWindowsKernel
+                # Convert the xml to CIP binary
+                ConvertFrom-CIPolicy .\DefaultWindows_Enforced_Kernel.xml "$PolicyID.cip" | Out-Null
                 
-                # Deploy the policy if Deployit parameter is used
-                if ($Deployit) {
-                    ConvertFrom-CIPolicy .\DefaultWindows_Enforced_Kernel.xml "$PolicyID.cip" | Out-Null
+                # Deploy the policy if Deploy parameter is used and perform additional tasks on the system
+                if ($Deploy) {                    
                     # Set the GUID of the Audit mode policy in the User Configuration file
                     Set-CommonWDACConfig -StrictKernelPolicyGUID $PolicyID | Out-Null
                     CiTool.exe --update-policy "$PolicyID.cip" -json | Out-Null
-                    &$WriteViolet 'Strict Kernel mode policy has been deployed in Audit mode, please restart your system.'
+                    &$WriteHotPink 'Strict Kernel mode policy has been deployed in Audit mode, please restart your system.'
+               
+                    # Clear Code Integrity operational before system restart so that after boot it will only have the correct and new logs
+                    wevtutil cl 'Microsoft-Windows-CodeIntegrity/Operational'
+                    wevtutil cl 'Microsoft-Windows-AppLocker/MSI and Script'
+
+                    if (!$Debug) {
+                        Remove-Item -Path .\DefaultWindows_Enforced_Kernel.xml, ".\$PolicyID.cip" -Force -ErrorAction SilentlyContinue
+                    }
                 }
                 else {
-                    &$WriteViolet 'Strict Kernel mode Audit policy has been created in the current working directory.'
-                }
-
-                # Clear Code Integrity operational before system restart so that after boot it will only have the correct and new logs
-                wevtutil cl 'Microsoft-Windows-CodeIntegrity/Operational'
-                wevtutil cl 'Microsoft-Windows-AppLocker/MSI and Script'
-
-                if (!$Debug) {
-                    Remove-Item -Path .\DefaultWindows_Enforced_Kernel.xml, ".\$PolicyID.cip" -Force -ErrorAction SilentlyContinue
-                }                
+                    &$WriteHotPink 'Strict Kernel mode Audit policy has been created in the current working directory.'
+                }                               
             }
 
             if ($AuditAndEnforce) {
@@ -157,7 +158,7 @@ function New-KernelModeWDACConfig {
                     Write-Debug 'Valid GUID found in User Configs for Audit mode policy'
                 }
                 else {
-                    Write-Error 'Invalid GUID in User Configs for Audit mode policy'
+                    Write-Error 'Invalid or nonexistent GUID in User Configs for Audit mode policy'
                 } 
                 
                 [System.String]$PolicyID = "{$PolicyID}"
@@ -187,8 +188,8 @@ function New-KernelModeWDACConfig {
                 
                 Set-HVCIOptions -Strict -FilePath '.\Final_DefaultWindows_Enforced_Kernel.xml'
           
-                # Deploy the policy if Deployit parameter is used
-                if ($Deployit) { 
+                # Deploy the policy if Deploy parameter is used
+                if ($Deploy) { 
                     ConvertFrom-CIPolicy '.\Final_DefaultWindows_Enforced_Kernel.xml' "$PolicyID.cip" | Out-Null
                     CiTool.exe --update-policy "$PolicyID.cip" -json | Out-Null
                     &$WritePink 'Strict Kernel mode policy has been deployed in Enforced mode, no restart required.'
@@ -209,26 +210,27 @@ function New-KernelModeWDACConfig {
             if ($PrepMode) {
                 # Creating the audit mode policy
                 Build-PrepModeStrictKernelPolicy -DefaultWindowsKernelNoFlights
+                # Convert the xml to CIP binary
+                ConvertFrom-CIPolicy .\DefaultWindows_Enforced_Kernel_NoFlights.xml "$PolicyID.cip" | Out-Null
 
-                # Deploy the policy if Deployit parameter is used
-                if ($Deployit) { 
-                    ConvertFrom-CIPolicy .\DefaultWindows_Enforced_Kernel_NoFlights.xml "$PolicyID.cip" | Out-Null
+                # Deploy the policy if Deploy parameter is used and perform additional tasks on the system
+                if ($Deploy) {                     
                     # Set the GUID of the Audit mode policy in the User Configuration file
                     Set-CommonWDACConfig -StrictKernelNoFlightRootsPolicyGUID $PolicyID | Out-Null
                     CiTool.exe --update-policy "$PolicyID.cip" -json | Out-Null
-                    &$WriteViolet 'Strict Kernel mode policy with no flighting root certs has been deployed in Audit mode, please restart your system.'
+                    &$WriteHotPink 'Strict Kernel mode policy with no flighting root certs has been deployed in Audit mode, please restart your system.'
+                    
+                    # Clear Code Integrity operational before system restart so that after boot it will only have the correct and new logs
+                    wevtutil cl 'Microsoft-Windows-CodeIntegrity/Operational'
+                    wevtutil cl 'Microsoft-Windows-AppLocker/MSI and Script'
+
+                    if (!$Debug) {
+                        Remove-Item -Path '.\DefaultWindows_Enforced_Kernel_NoFlights.xml', ".\$PolicyID.cip" -Force -ErrorAction SilentlyContinue
+                    }  
                 }
                 else {
-                    &$WriteViolet 'Strict Kernel mode Audit policy with no flighting root certs has been created in the current working directory.'
-                } 
-                
-                # Clear Code Integrity operational before system restart so that after boot it will only have the correct and new logs
-                wevtutil cl 'Microsoft-Windows-CodeIntegrity/Operational'
-                wevtutil cl 'Microsoft-Windows-AppLocker/MSI and Script'
-
-                if (!$Debug) {
-                    Remove-Item -Path '.\DefaultWindows_Enforced_Kernel_NoFlights.xml', ".\$PolicyID.cip" -Force -ErrorAction SilentlyContinue
-                }                
+                    &$WriteHotPink 'Strict Kernel mode Audit policy with no flighting root certs has been created in the current working directory.'
+                }             
             }
 
             if ($AuditAndEnforce) {                       
@@ -261,7 +263,7 @@ function New-KernelModeWDACConfig {
                     Write-Debug 'Valid GUID found in User Configs for Audit mode policy'
                 }
                 else {
-                    Write-Error 'Invalid GUID in User Configs for Audit mode policy'
+                    Write-Error 'Invalid or nonexistent GUID in User Configs for Audit mode policy'
                 } 
                 
                 [System.String]$PolicyID = "{$PolicyID}"
@@ -291,19 +293,20 @@ function New-KernelModeWDACConfig {
                 
                 Set-HVCIOptions -Strict -FilePath '.\Final_DefaultWindows_Enforced_Kernel.xml'
           
-                # Deploy the policy if Deployit parameter is used
-                if ($Deployit) { 
+                # Deploy the policy if Deploy parameter is used
+                if ($Deploy) { 
                     ConvertFrom-CIPolicy '.\Final_DefaultWindows_Enforced_Kernel.xml' "$PolicyID.cip" | Out-Null
                     CiTool.exe --update-policy "$PolicyID.cip" -json | Out-Null
                     &$WritePink 'Strict Kernel mode policy with no flighting root certs has been deployed in Enforced mode, no restart required.'
-                }
-                else {
-                    &$WritePink 'Strict Kernel mode Enforced policy with no flighting root certs has been created in the current working directory.'
+                
+                    if (!$Debug) {
+                        Remove-Item -Path ".\$PolicyID.cip", '.\DriverFilesScanPolicy.xml' -Force -ErrorAction SilentlyContinue
+                    } 
                 }
 
-                if (!$Debug) {
-                    Remove-Item -Path ".\$PolicyID.cip", '.\DriverFilesScanPolicy.xml' -Force -ErrorAction SilentlyContinue
-                } 
+                else {
+                    &$WritePink 'Strict Kernel mode Enforced policy with no flighting root certs has been created in the current working directory.'
+                }                
             }
         }
     }    
@@ -339,7 +342,7 @@ Deploys the final Kernel mode WDAC policy in Enforced mode
 .PARAMETER EVSigners
 Adds EVSigners policy rule option to the deployed policy. Applicable for both Audit and Enforced modes. Drivers not EV (Extended Validation) signed cannot run nor can they be allowed in a Supplemental policy.
 
-.PARAMETER Deployit
+.PARAMETER Deploy
 Deploys the selected policy type instead of just creating it
 
 .PARAMETER SkipVersionCheck

@@ -17,7 +17,7 @@ function Get-SignerInfo {
     $Signers = $xml.SiPolicy.Signers.Signer
   
     # Create an empty array to store the output
-    [System.Array]$output = @()
+    [System.Object[]]$output = @()
   
     # Loop through each Signer node and extract the information
     foreach ($signer in $signers) {
@@ -35,6 +35,7 @@ function Get-SignerInfo {
     # Return the output array
     return $output
 }
+
 
 # Function to calculate the TBS of a certificate
 function Get-TBSCertificate {
@@ -140,7 +141,7 @@ function Get-AuthenticodeSignatureEx {
             
         # Define a helper function to get the timestamps of the countersigners
         function getTimeStamps($SignerInfo) {
-            [System.Array]$retValue = @()
+            [System.Object[]]$retValue = @()
             foreach ($CounterSignerInfos in $Infos.CounterSignerInfos) {                    
                 # Get the signing time attribute from the countersigner info object
                 $sTime = ($CounterSignerInfos.SignedAttributes | Where-Object { $_.Oid.Value -eq '1.2.840.113549.1.9.5' }).Values | `
@@ -262,7 +263,13 @@ function Get-CertificateDetails {
     }
   
     # Build the certificate chain
-    $Chain = New-Object System.Security.Cryptography.X509Certificates.X509Chain
+    $Chain = New-Object -TypeName System.Security.Cryptography.X509Certificates.X509Chain
+
+    # Set the chain policy properties
+    $chain.ChainPolicy.RevocationMode = 'NoCheck'
+    $chain.ChainPolicy.RevocationFlag = 'EndCertificateOnly'
+    $chain.ChainPolicy.VerificationFlags = 'NoFlag'
+
     [void]$Chain.Build($Cert)
   
     # Check the value of the switch parameters
@@ -333,7 +340,7 @@ function Get-CertificateDetails {
 
 
 
-# Define a function that takes two file paths as input and compares the output of the Get-SignerInfo and Get-CertificateDetails functions
+# a function that takes WDAC XML policy file path and a Signed file path as inputs and compares the output of the Get-SignerInfo and Get-CertificateDetails functions
 function Compare-SignerAndCertificate {
     param(
         [ValidateScript({ Test-Path $_ -PathType Leaf })]
@@ -341,21 +348,21 @@ function Compare-SignerAndCertificate {
 
         [ValidateScript({ Test-Path $_ -PathType Leaf })]
         [Parameter(Mandatory = $true)] [string]$SignedFilePath
-    )
-  
+    )  
 
     # Get the signer information from the XML file path using the Get-SignerInfo function
     $SignerInfo = Get-SignerInfo -XmlFilePath $XmlFilePath  
    
     # Declare $CertificateDetails as an array
-    [System.Array]$CertificateDetails = @()
+    [System.Object[]]$CertificateDetails = @()
 
     # Declare $NestedCertificateDetails as an array 
-    [System.Array]$NestedCertificateDetails = @()
+    [System.Object[]]$NestedCertificateDetails = @()
 
     # Get the certificate details from the signed file path using the Get-CertificateDetails function with the IntermediateOnly switch parameter
     $CertificateDetails += Get-CertificateDetails -IntermediateOnly -FilePath $SignedFilePath
 
+    # Get the Nested certificate of the signed file, if any
     $ExtraCertificateDetails = Get-AuthenticodeSignatureEx -FilePath $SignedFilePath
 
     $NestedCertificate = ($ExtraCertificateDetails).NestedSignature.SignerCertificate
@@ -365,11 +372,9 @@ function Compare-SignerAndCertificate {
         # append an X509Certificate2 object to the array
         $NestedCertificateDetails += Get-CertificateDetails -IntermediateOnly -X509Certificate2 $NestedCertificate
     }
-
-
   
     # Create an empty array to store the comparison results
-    [System.Array]$ComparisonResults = @()
+    [System.Object[]]$ComparisonResults = @()
   
     # Loop through each signer in the signer information array
     foreach ($Signer in $SignerInfo) {
@@ -393,19 +398,19 @@ function Compare-SignerAndCertificate {
         foreach ($Certificate in $CertificateDetails) {
             # Check if the signer's CertRoot (referring to the TBS value in the xml file which belongs to an intermediate cert of the file)...
             # ...matches the TBSValue of the file's certificate (TBS values of one of the intermediate certificates of the file since -IntermediateOnly parameter is used earlier and that's what FilePublisher level uses)
-            # So this checks to see if the Signer's TBS value in xml matches any of the TBS value(s) of the file's intermediate certificate(s), if yes, that means that file is allowed to run by WDAC engine
+            # So this checks to see if the Signer's TBS value in xml matches any of the TBS value(s) of the file's intermediate certificate(s), if yes, that means that file is allowed to run by the WDAC engine
             if ($Signer.CertRoot -eq $Certificate.TBSValue) {
                 # If yes, assign the certificate properties to the comparison result object and set the CertRootMatch to true
                 $ComparisonResult.CertSubjectCN = $Certificate.SubjectCN
                 $ComparisonResult.CertIssuerCN = $Certificate.IssuerCN
                 $ComparisonResult.CertNotAfter = $Certificate.NotAfter
                 $ComparisonResult.CertTBSValue = $Certificate.TBSValue
-                # if file has nested signature, only set a flag instead of setting the entire property to true
+                # if file has nested signature, only set a flag instead of setting the entire CertRootMatch property to true
                 if ($null -ne $NestedCertificate) {
                     $CertRootMatchPart1 = $true
                 }
                 else {
-                    $ComparisonResult.CertRootMatch = $true # meaning one of the TBS values of the file's intermediate certs is in the xml file signers's TBS values
+                    $ComparisonResult.CertRootMatch = $true # meaning one of the TBS values of the file's intermediate certs is in the xml file signers' TBS values
                 }
 
                 # Check if the signer's Name matches the Intermediate certificate's SubjectCN
@@ -418,11 +423,6 @@ function Compare-SignerAndCertificate {
                 break
             }
         }
-
-
-
-
-
 
         # Nested Certificate TBS processing
         if ($null -ne $NestedCertificate) {
@@ -454,24 +454,16 @@ function Compare-SignerAndCertificate {
         }
 
 
-
         # if file has nested certificates
         if ($null -ne $NestedCertificate) {
             # check if both of the file's nested certificates are available in the Signers in xml policy
             if ( $CertRootMatchPart1 -eq $true -and $CertRootMatchPart2 -eq $true) {
                 $ComparisonResult.CertRootMatch = $true # meaning all of the TBS values of the double signed file's intermediate certificates exists in the xml file's signers' TBS values
-                                                        
             }
             else {
                 $ComparisonResult.CertRootMatch = $false 
             }
-        }
-        
-
-
-
-
-
+        }        
 
         # Add the comparison result object to the comparison results array
         $ComparisonResults += $ComparisonResult
@@ -479,14 +471,13 @@ function Compare-SignerAndCertificate {
     }
 
     # Declare $LeafCertificateDetails as an array
-    [System.Array]$LeafCertificateDetails = @()
+    [System.Object[]]$LeafCertificateDetails = @()
 
     # Declare $NestedLeafCertificateDetails as an array
-    [System.Array]$NestedLeafCertificateDetails = @()
+    [System.Object[]]$NestedLeafCertificateDetails = @()
   
     # Get the leaf certificate details from the signed file path
     $LeafCertificateDetails += Get-CertificateDetails -LeafCertificate -FilePath $SignedFilePath
-
 
     # Store Leaf Certificate details of the 2nd certificate into another array variable if it exists
     if ($null -ne $NestedCertificate) {
@@ -494,11 +485,7 @@ function Compare-SignerAndCertificate {
         $NestedLeafCertificateDetails += Get-CertificateDetails -LeafCertificate -X509Certificate2 $NestedCertificate
     }
 
-
-
-
-
-  
+    
     # Loop through each signer in the signer information array again
     foreach ($Signer in $SignerInfo) {
         # Find the corresponding comparison result object for this signer in the comparison results array
@@ -513,24 +500,20 @@ function Compare-SignerAndCertificate {
             }
         }
     }
-
     # Return the comparison results array
-    return $ComparisonResults
-  
+    return $ComparisonResults  
 }  
   
 
 
-# HASH COMPARISON FUNCTIONS
-
-# Define a function to load an xml file and create an output array of custom objects
+# Define a function to load an xml file and create an output array of custom objects that contain the file rules that are based on file hashes
 function Get-FileRuleOutput ($xmlPath) {
 
     # Load the xml file into a variable
     $xml = [xml](Get-Content -Path $xmlPath)
 
     # Create an empty array to store the output
-    [System.Array]$OutPutHashInfoProcessing = @()
+    [System.Object[]]$OutPutHashInfoProcessing = @()
 
     # Loop through each file rule in the xml file
     foreach ($filerule in $xml.SiPolicy.FileRules.Allow) {
@@ -539,12 +522,10 @@ function Get-FileRuleOutput ($xmlPath) {
         $hashvalue = $filerule.Hash
 
         # Extract the hash type from the FriendlyName attribute using regex
-        $hashtype = $filerule.FriendlyName -replace '.* (Hash (Sha1|Sha256|Page Sha1|Page Sha256))$', '$1'
+        $hashtype = $filerule.FriendlyName -replace '.* (Hash (Sha1|Sha256|Page Sha1|Page Sha256|Authenticode SIP Sha256))$', '$1'
 
         # Extract the file path from the FriendlyName attribute using regex
-        # $FilePathForHash = $filerule.FriendlyName -replace " (.*) (Hash (Sha1|Sha256|Page Sha1|Page Sha256))$", '$1'
-
-        $FilePathForHash = $filerule.FriendlyName -replace ' (Hash (Sha1|Sha256|Page Sha1|Page Sha256))$', ''
+        $FilePathForHash = $filerule.FriendlyName -replace ' (Hash (Sha1|Sha256|Page Sha1|Page Sha256|Authenticode SIP Sha256))$', ''
        
         # Create a custom object with the three properties
         $object = [PSCustomObject]@{
@@ -559,10 +540,15 @@ function Get-FileRuleOutput ($xmlPath) {
         }
     }
 
+    # Only show the Authenticode Hash SHA256
+    $OutPutHashInfoProcessing = $OutPutHashInfoProcessing | Where-Object { $_.hashtype -eq 'Hash Sha256' }
+
     # Return the output array
     return $OutPutHashInfoProcessing
 }
 
+
+<# NOT USED ANYMORE
 
 # Define a function to compare two xml files and return an array of objects with a custom property for the comparison result
 function Compare-XmlFiles ($refXmlPath, $tarXmlPath) {
@@ -583,7 +569,7 @@ function Compare-XmlFiles ($refXmlPath, $tarXmlPath) {
         $comparison = Compare-Object -ReferenceObject $refoutput -DifferenceObject $taroutput -Property HashValue -PassThru -IncludeEqual
 
         # Create an empty array to store the output objects
-        [System.Array]$OutPutHashComparison = @()
+        [System.Object[]]$OutPutHashComparison = @()
 
         # Loop through each object in the comparison array
         foreach ($object in $comparison) {
@@ -607,6 +593,5 @@ function Compare-XmlFiles ($refXmlPath, $tarXmlPath) {
 
     }
 }
-
-
+#>
 

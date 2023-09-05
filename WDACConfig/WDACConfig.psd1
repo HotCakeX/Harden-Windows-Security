@@ -8,7 +8,7 @@
     # RootModule           = ""
 
     # Version number of this module.
-    ModuleVersion        = '0.2.1'
+    ModuleVersion        = '0.2.2'
 
     # Supported PSEditions
     CompatiblePSEditions = @('Core')
@@ -202,29 +202,6 @@ To get help and syntax on PowerShell console, type:
 
             # ReleaseNotes of this module
             ReleaseNotes = @'
-      
-## Version 0.2.1
-1. Added -AllowFileNameFallbacks parameter by default when creating policies. It's a great parameter that helps include files that do not have an OriginalFileName.
-2. Fixed the Microsoft recommended Block lists URLs in the code because they were changed and had to be updated
-3. Improved code quality (Security, readability, typos in the comments etc.)
-
-## Version 0.2.0
-1. Added WDAC Simulation using the new Invoke-WDACSimulation Cmdlet
-2. Added Get-CommonWDACConfig Cmdlet dedicated only to querying the User Configs and reading them. Set-CommonWDACConfig Cmdlet is only for storing User Configurations.
-3. Eliminated the need for an extra reboot in New-KernelModeWDACConfig Cmdlet. From now on, only one reboot is required and that's only during the Audit mode. For deploying the Enforced mode policy, the module replaces the Audit mode policy with the new enforced mode and it instantly becomes operative.
-4. Improved the argument completers of the Set-CommonWDACConfig Cmdlet by showing GUI for file picking.
-5. Added new parameter to the New-DenyWDACConfig Cmdlet for creating deny rule for Windows Appx apps
-6. Improved the parameter usage logic in New-KernelModeWDACConfig Cmdlet
-
-## Version 0.1.9
-Improved the New-WDACConfig -MakePolicyFromAuditLogs by accounting for situations where event viewer logs don't contain any files that are no longer on the disk even though user chooses to include them.
-Added new functionality and cmdlet New-KernelModeWDACConfig, capable of providing complete protection against all BYOVD (Bring Your Own Vulnerable Driver) scenarios
-Improved the Set-CommonWDACConfig argument completers by showing a file picker GUI when selecting certificates or browsing for custom SignTool.exe path.
-
-## Version 0.1.8
-Added Enforced mode SnapBack guarantee for the Edit-WDACConfig and Edit-SignedWDACConfig cmdlets so that even in case of power outage or computer crash, the enforcement will be restored.
-Improved the code style for better consistency.
-Added Azure source for version check as the backup endpoint.
 
 Full Change log available in GitHub releases: https://github.com/HotCakeX/Harden-Windows-Security/releases
 

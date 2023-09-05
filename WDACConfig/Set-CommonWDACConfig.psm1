@@ -81,7 +81,7 @@ function Set-CommonWDACConfig {
 
         # Scan the file with Microsoft Defender for anything malicious before it's going to be used
         Start-MpScan -ScanType CustomScan -ScanPath "$env:USERPROFILE\.WDACConfig\UserConfigurations.json"
-
+        
         if ($PSBoundParameters.Count -eq 0) {
             Write-Error 'No parameter was selected.'
             break

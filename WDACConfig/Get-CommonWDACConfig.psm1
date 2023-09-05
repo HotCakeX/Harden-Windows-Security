@@ -19,6 +19,18 @@ function Get-CommonWDACConfig {
         # Stop operation as soon as there is an error anywhere, unless explicitly specified otherwise
         $ErrorActionPreference = 'Stop'        
         if (-NOT $SkipVersionCheck) { . Update-self }
+
+        # Create User configuration folder if it doesn't already exist
+        if (-NOT (Test-Path -Path "$env:USERPROFILE\.WDACConfig\")) {
+            New-Item -ItemType Directory -Path "$env:USERPROFILE\.WDACConfig\" -Force -ErrorAction Stop | Out-Null
+            Write-Debug -Message "The .WDACConfig folder in current user's folder has been created because it didn't exist."
+        }
+        
+        # Create User configuration file if it doesn't already exist
+        if (-NOT (Test-Path -Path "$env:USERPROFILE\.WDACConfig\UserConfigurations.json")) { 
+            New-Item -ItemType File -Path "$env:USERPROFILE\.WDACConfig\" -Name 'UserConfigurations.json' -Force -ErrorAction Stop | Out-Null
+            Write-Debug -Message "The UserConfigurations.json file in \.WDACConfig\ folder has been created because it didn't exist."
+        }
         
         # Scan the file with Microsoft Defender for anything malicious before it's going to be used
         Start-MpScan -ScanType CustomScan -ScanPath "$env:USERPROFILE\.WDACConfig\UserConfigurations.json"

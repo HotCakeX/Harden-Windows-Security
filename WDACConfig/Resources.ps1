@@ -1,6 +1,6 @@
 # Stop operation as soon as there is an error anywhere, unless explicitly specified otherwise
 $ErrorActionPreference = 'Stop'
-if (-NOT ([System.Environment]::OSVersion.Version -ge '10.0.22621')) { Write-Error -Message "You're not using Windows 11 22H2, exitting..." }
+if (-NOT ([System.Environment]::OSVersion.Version -ge '10.0.22621')) { Write-Error -Message "You're not using Windows 11 22H2, exiting..." }
 
 # Get the path to SignTool
 function Get-SignTool {
@@ -50,34 +50,38 @@ function Get-SignTool {
 
 # Make sure the latest version of the module is installed and if not, automatically update it, clean up any old versions
 function Update-self {
-    $currentversion = (Test-ModuleManifest "$psscriptroot\WDACConfig.psd1").Version.ToString()
+    $CurrentVersion = (Test-ModuleManifest "$psscriptroot\WDACConfig.psd1").Version.ToString()
     try {
         # First try the GitHub source
-        $latestversion = Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/WDACConfig/version.txt'
+        $LatestVersion = Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/WDACConfig/version.txt'
     }
     catch {
         try {
             # If GitHub source is unavailable, use the Azure DevOps source
-            $latestversion = Invoke-RestMethod -Uri 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/WDACConfig/version.txt'        
+            $LatestVersion = Invoke-RestMethod -Uri 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/WDACConfig/version.txt'        
         }
         catch {        
             Write-Error -Message "Couldn't verify if the latest version of the module is installed, please check your Internet connection. You can optionally bypass the online check by using -SkipVersionCheck parameter."
         }
     }
-    if ($currentversion -ne $latestversion) {
-        &$WritePink "The currently installed module's version is $currentversion while the latest version is $latestversion - Auto Updating the module now and will run your command after that 💓"
-        Remove-Module -Name WDACConfig -Force
+    if ($CurrentVersion -lt $LatestVersion) {
+        &$WritePink "The currently installed module's version is $CurrentVersion while the latest version is $LatestVersion - Auto Updating the module... 💓"
+        Remove-Module -Name 'WDACConfig' -Force
         # Do this if the module was installed properly using Install-module cmdlet
         try {
-            Uninstall-Module -Name WDACConfig -AllVersions -Force -ErrorAction Stop
-            Install-Module -Name WDACConfig -RequiredVersion $latestversion -Force              
-            Import-Module -Name WDACConfig -RequiredVersion $latestversion -Force -Global
+            Uninstall-Module -Name 'WDACConfig' -AllVersions -Force -ErrorAction Stop
+            Install-Module -Name 'WDACConfig' -RequiredVersion $LatestVersion -Force              
+            Import-Module -Name 'WDACConfig' -RequiredVersion $LatestVersion -Force -Global
         }
         # Do this if module files/folder was just copied to Documents folder and not properly installed - Should rarely happen
         catch {
-            Install-Module -Name WDACConfig -RequiredVersion $latestversion -Force
-            Import-Module -Name WDACConfig -RequiredVersion $latestversion -Force -Global
-        }            
+            Install-Module -Name 'WDACConfig' -RequiredVersion $LatestVersion -Force
+            Import-Module -Name 'WDACConfig' -RequiredVersion $LatestVersion -Force -Global
+        }    
+        # Make sure the old version isn't run after update
+        Write-Output "$($PSStyle.Foreground.FromRGB(152,255,152))Update successful, please run the cmdlet again.$($PSStyle.Reset)"          
+        break
+        return
     }
 }
 
@@ -316,11 +320,10 @@ function Confirm-CertCN ([string]$CN) {
 
 
 # script blocks for custom color writing
-[scriptblock]$WriteViolet = { Write-Output "$($PSStyle.Foreground.FromRGB(153,0,255))$($args[0])$($PSStyle.Reset)" }
+[scriptblock]$WriteHotPink = { Write-Output "$($PSStyle.Foreground.FromRGB(255,105,180))$($args[0])$($PSStyle.Reset)" }
 [scriptblock]$WritePink = { Write-Output "$($PSStyle.Foreground.FromRGB(255,0,230))$($args[0])$($PSStyle.Reset)" }
 [scriptblock]$WriteLavender = { Write-Output "$($PSStyle.Foreground.FromRgb(255,179,255))$($args[0])$($PSStyle.Reset)" }
 [scriptblock]$WriteTeaGreen = { Write-Output "$($PSStyle.Foreground.FromRgb(133, 222, 119))$($args[0])$($PSStyle.Reset)" }
-
 
 # Create File Rules based on hash of the files no longer available on the disk and store them in the $Rules variable
 function Get-FileRules {
@@ -355,21 +358,21 @@ Function Remove-ZerosFromIDs {
     param(
         [Parameter(Mandatory = $true)]
         [ValidateScript({ Test-Path -Path $_ -PathType Leaf })]
-        [string]$filePath
+        [string]$FilePath
     )    
     # Load the xml file
-    [xml]$xml = Get-Content -Path $filePath
+    [xml]$xml = Get-Content -Path $FilePath
 
     # Get all the elements with ID attribute
-    $elements = $xml.SelectNodes('//*[@ID]')
+    $Elements = $xml.SelectNodes('//*[@ID]')
 
     # Loop through the elements and replace _0 with empty string in the ID value and SignerId value
-    foreach ($element in $elements) {
-        $element.ID = $element.ID -replace '_0', ''
+    foreach ($Element in $Elements) {
+        $Element.ID = $Element.ID -replace '_0', ''
         # Check if the element has child elements with SignerId attribute
-        if ($element.HasChildNodes) {
+        if ($Element.HasChildNodes) {
             # Get the child elements with SignerId attribute
-            $childElements = $element.SelectNodes('.//*[@SignerId]')
+            $childElements = $Element.SelectNodes('.//*[@SignerId]')
             # Loop through the child elements and replace _0 with empty string in the SignerId value
             foreach ($childElement in $childElements) {
                 $childElement.SignerId = $childElement.SignerId -replace '_0', ''
@@ -378,20 +381,20 @@ Function Remove-ZerosFromIDs {
     }
 
     # Get the CiSigners element by name
-    $ciSigners = $xml.SiPolicy.CiSigners
+    $CiSigners = $xml.SiPolicy.CiSigners
 
     # Check if the CiSigners element has child elements with SignerId attribute
-    if ($ciSigners.HasChildNodes) {
+    if ($CiSigners.HasChildNodes) {
         # Get the child elements with SignerId attribute
-        $ciSignersChildren = $ciSigners.ChildNodes
+        $CiSignersChildren = $CiSigners.ChildNodes
         # Loop through the child elements and replace _0 with empty string in the SignerId value
-        foreach ($ciSignerChild in $ciSignersChildren) {
-            $ciSignerChild.SignerId = $ciSignerChild.SignerId -replace '_0', ''
+        foreach ($CiSignerChild in $CiSignersChildren) {
+            $CiSignerChild.SignerId = $CiSignerChild.SignerId -replace '_0', ''
         }
     }
 
     # Save the modified xml file
-    $xml.Save($filePath)
+    $xml.Save($FilePath)
 }
 
 
@@ -401,11 +404,11 @@ Function Move-UserModeToKernelMode {
     param(
         [Parameter(Mandatory = $true)]
         [ValidateScript({ Test-Path -Path $_ -PathType Leaf })]
-        [string]$filePath
+        [string]$FilePath
     ) 
 
     # Load the XML file as an XmlDocument object
-    $xml = [xml](Get-Content -Path $filePath)
+    $xml = [xml](Get-Content -Path $FilePath)
 
     # Get the SigningScenario nodes as an array
     $signingScenarios = $xml.SiPolicy.SigningScenarios.SigningScenario
@@ -417,20 +420,20 @@ Function Move-UserModeToKernelMode {
     $signingScenario12 = $signingScenarios | Where-Object { $_.Value -eq '12' }
 
     # Get the AllowedSigners node from the SigningScenario node with Value 12
-    $allowedSigners12 = $signingScenario12.ProductSigners.AllowedSigners
+    $AllowedSigners12 = $signingScenario12.ProductSigners.AllowedSigners
 
     # Check if the AllowedSigners node has any child nodes
-    if ($allowedSigners12.HasChildNodes) {
+    if ($AllowedSigners12.HasChildNodes) {
         # Loop through each AllowedSigner node from the SigningScenario node with Value 12
-        foreach ($allowedSigner in $allowedSigners12.AllowedSigner) {
+        foreach ($AllowedSigner in $AllowedSigners12.AllowedSigner) {
             # Create a new AllowedSigner node and copy the SignerId attribute from the original node
             # Use the namespace of the parent element when creating the new element
-            $newAllowedSigner = $xml.CreateElement('AllowedSigner', $signingScenario131.NamespaceURI)
-            $newAllowedSigner.SetAttribute('SignerId', $allowedSigner.SignerId)
+            $NewAllowedSigner = $xml.CreateElement('AllowedSigner', $signingScenario131.NamespaceURI)
+            $NewAllowedSigner.SetAttribute('SignerId', $AllowedSigner.SignerId)
 
             # Append the new AllowedSigner node to the AllowedSigners node of the SigningScenario node with Value 131
             # out-null to prevent console display
-            $signingScenario131.ProductSigners.AllowedSigners.AppendChild($newAllowedSigner) | Out-Null
+            $signingScenario131.ProductSigners.AllowedSigners.AppendChild($NewAllowedSigner) | Out-Null
         }
 
         # Remove the SigningScenario node with Value 12 from the XML document
@@ -439,11 +442,11 @@ Function Move-UserModeToKernelMode {
     }
 
     # Remove Signing Scenario 12 block only if it exists and has no allowed signers (i.e. is empty)
-    if ($signingScenario12 -and $allowedSigners12.count -eq 0) {
+    if ($signingScenario12 -and $AllowedSigners12.count -eq 0) {
         # Remove the SigningScenario node with Value 12 from the XML document
         $xml.SiPolicy.SigningScenarios.RemoveChild($signingScenario12)
     }
 
     # Save the modified XML document to a new file
-    $xml.Save($filePath)
+    $xml.Save($FilePath)
 }

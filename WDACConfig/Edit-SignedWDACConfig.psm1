@@ -1,4 +1,4 @@
-#Requires -RunAsAdministrator 
+#Requires -RunAsAdministrator
 function Edit-SignedWDACConfig {
     [CmdletBinding(
         DefaultParameterSetName = 'Allow New Apps Audit Events',
@@ -256,7 +256,7 @@ function Edit-SignedWDACConfig {
             # The notice about variable being assigned and never used should be ignored - it's being dot-sourced from Resources file
             [datetime]$Date = Get-Date
             # An empty array that holds the Policy XML files - This array will eventually be used to create the final Supplemental policy
-            [System.Array]$PolicyXMLFilesArray = @()
+            [System.Object[]]$PolicyXMLFilesArray = @()
 
             ################################### Initiate Live Audit Mode ###################################
 
@@ -331,11 +331,11 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                 Try {                    
                     ################################### User Interaction ####################################
                     &$WritePink "`nAudit mode deployed, start installing your programs now"
-                    &$WriteViolet "When you've finished installing programs, Press Enter to start selecting program directories to scan`n"
+                    &$WriteHotPink "When you've finished installing programs, Press Enter to start selecting program directories to scan`n"
                     Pause
-
+                    
                     # Store the program paths that user browses for in an array
-                    [System.Array]$ProgramsPaths = @()
+                    [System.Object[]]$ProgramsPaths = @()
                     Write-Host "`nSelect program directories to scan" -ForegroundColor Cyan
                     # Showing folder picker GUI to the user for folder path selection
                     do {
@@ -469,7 +469,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                     # Any other attempts such as "Get-FileHash" or "Get-AuthenticodeSignature" fail and ConfigCI Module cmdlets totally ignore these files and do not create allow rules for them
 
                     # Finding the file(s) first and storing them in an array
-                    [System.Array]$ExesWithNoHash = @()
+                    [System.Object[]]$ExesWithNoHash = @()
                     # looping through each user-selected path(s)
                     foreach ($ProgramsPath in $ProgramsPaths) {
                         # Making sure the currently processing path has any .exe in it
@@ -621,7 +621,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
             Remove-Item -Path '.\ProgramDir_ScanResults*.xml' -Force -ErrorAction SilentlyContinue
             Remove-Item -Path ".\SupplementalPolicy$SuppPolicyName.xml" -Force -ErrorAction SilentlyContinue
             # An empty array that holds the Policy XML files - This array will eventually be used to create the final Supplemental policy
-            [System.Array]$PolicyXMLFilesArray = @()
+            [System.Object[]]$PolicyXMLFilesArray = @()
     
             #Initiate Live Audit Mode
     
@@ -696,11 +696,11 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                 Try {
                     ################################### User Interaction #################################### 
                     &$WritePink "`nAudit mode deployed, start installing your programs now"
-                    &$WriteViolet "When you've finished installing programs, Press Enter to start selecting program directories to scan`n"
+                    &$WriteHotPink "When you've finished installing programs, Press Enter to start selecting program directories to scan`n"
                     Pause
                   
                     # Store the program paths that user browses for in an array
-                    [System.Array]$ProgramsPaths = @()
+                    [System.Object[]]$ProgramsPaths = @()
                     Write-Host "`nSelect program directories to scan`n" -ForegroundColor Cyan
                     # Showing folder picker GUI to the user for folder path selection
                     do {
@@ -910,14 +910,12 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                     New-Item -Path "$env:TEMP\TemporarySignToolFile" -ItemType Directory -Force | Out-Null
                     Copy-Item -Path $SignToolPathFinal -Destination "$env:TEMP\TemporarySignToolFile" -Force
                     New-CIPolicy -ScanPath "$env:TEMP\TemporarySignToolFile" -Level FilePublisher -Fallback Hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -AllowFileNameFallbacks -FilePath .\SignTool.xml
-                    # Due to a bug Have to repeat this process twice: https://github.com/MicrosoftDocs/WDAC-Toolkit/issues/278
-                    New-CIPolicy -ScanPath "$env:TEMP\TemporarySignToolFile" -Level FilePublisher -Fallback Hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -AllowFileNameFallbacks -FilePath .\SignTool.xml
                     # Delete the Temporary folder in the TEMP folder
                     if (!$Debug) { Remove-Item -Recurse -Path "$env:TEMP\TemporarySignToolFile" -Force }
                                             
                     # Scan PowerShell core directory and add them to the Default Windows base policy so that the module can be used after it's been deployed
                     if (Test-Path 'C:\Program Files\PowerShell') {                   
-                        &$WriteViolet "`nCreating allow rules for PowerShell in the DefaultWindows base policy so you can continue using this module after deploying it."
+                        &$WriteHotPink "`nCreating allow rules for PowerShell in the DefaultWindows base policy so you can continue using this module after deploying it."
                         New-CIPolicy -ScanPath 'C:\Program Files\PowerShell' -Level FilePublisher -NoScript -Fallback Hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -AllowFileNameFallbacks -FilePath .\AllowPowerShell.xml                        
                         Merge-CIPolicy -PolicyPaths .\DefaultWindows_Enforced.xml, .\AllowPowerShell.xml, .\SignTool.xml, '.\Microsoft recommended block rules.xml' -OutputFilePath .\BasePolicy.xml | Out-Null
                     }
@@ -1024,7 +1022,7 @@ Can be used with any parameter to bypass the online version check - only to be u
 # Set PSReadline tab completion to complete menu for easier access to available parameters - Only for the current session
 Set-PSReadLineKeyHandler -Key Tab -Function MenuComplete
 Register-ArgumentCompleter -CommandName 'Edit-SignedWDACConfig' -ParameterName 'CertCN' -ScriptBlock $ArgumentCompleterCertificateCN
-Register-ArgumentCompleter -CommandName 'Edit-SignedWDACConfig' -ParameterName 'CertPath' -ScriptBlock $ArgumentCompleterCertPath
-Register-ArgumentCompleter -CommandName 'Edit-SignedWDACConfig' -ParameterName 'SignToolPath' -ScriptBlock $ArgumentCompleterSignToolPath
+Register-ArgumentCompleter -CommandName 'Edit-SignedWDACConfig' -ParameterName 'CertPath' -ScriptBlock $ArgumentCompleterCerFilePathsPicker
+Register-ArgumentCompleter -CommandName 'Edit-SignedWDACConfig' -ParameterName 'SignToolPath' -ScriptBlock $ArgumentCompleterExeFilePathsPicker
 Register-ArgumentCompleter -CommandName 'Edit-SignedWDACConfig' -ParameterName 'PolicyPaths' -ScriptBlock $ArgumentCompleterPolicyPathsBasePoliciesOnly
 Register-ArgumentCompleter -CommandName 'Edit-SignedWDACConfig' -ParameterName 'SuppPolicyPaths' -ScriptBlock $ArgumentCompleterPolicyPathsSupplementalPoliciesOnly

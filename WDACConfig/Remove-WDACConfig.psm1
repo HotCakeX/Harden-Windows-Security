@@ -37,6 +37,48 @@ function Remove-WDACConfig {
         # https://stackoverflow.com/questions/76143006/how-to-prevent-powershell-validateset-argument-completer-from-suggesting-the-sam/76143269
         # https://stackoverflow.com/questions/76267235/powershell-how-to-cross-reference-parameters-between-2-argument-completers
         [ArgumentCompleter({
+                # Define the parameters that this script block will accept.
+                param($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameters)
+
+                # Get a list of policies using the CiTool, excluding system policies and policies that aren't on disk.
+                # by adding "| Where-Object { $_.FriendlyName }" we make sure the auto completion works when at least one of the policies doesn't have a friendly name
+                $policies = (CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsOnDisk -eq 'True' } | Where-Object { $_.IsSystemPolicy -ne 'True' } | Where-Object { $_.FriendlyName }
+
+                # Create a hashtable mapping policy names to policy IDs. This will be used later to check if a policy ID already exists.
+                $NameIDMap = @{}
+                foreach ($policy in $policies) {
+                    $NameIDMap[$policy.Friendlyname] = $policy.policyID
+                }
+
+                # Get the IDs of existing policies that are already being used in the current command.
+                $existingIDs = $fakeBoundParameters['PolicyIDs']
+
+                # Get the policy names that are currently being used in the command. This is done by looking at the abstract syntax tree (AST)
+                # of the command and finding all string literals, which are assumed to be policy names.
+                $existing = $commandAst.FindAll({
+                        $args[0] -is [System.Management.Automation.Language.StringConstantExpressionAst]
+                    }, $false).Value
+
+                # Filter out the policy names that are already being used or whose corresponding policy IDs are already being used.
+                # The resulting list of policy names is what will be shown as autocomplete suggestions.
+                $candidates = $policies.Friendlyname | Where-Object { $_ -notin $existing -and $NameIDMap[$_] -notin $existingIDs }
+
+                # Additionally, if the policy name contains spaces, it's enclosed in single quotes to ensure it's treated as a single argument.
+                # This is achieved using the Compare-Object cmdlet to compare the existing and candidate values, and outputting the resulting matches.
+                # For each resulting match, it checks if the match contains a space, if so, it's enclosed in single quotes, if not, it's returned as is.
+        (Compare-Object -PassThru $candidates $existing | Where-Object SideIndicator -EQ '<=').
+                ForEach({ if ($_ -match ' ') { "'{0}'" -f $_ } else { $_ } })
+            })]
+        [ValidateScript({
+                if ($_ -notin [PolicyNamezx]::new().GetValidValues()) { throw "Invalid policy name: $_" }
+                $true
+            })]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Unsigned Or Supplemental')]
+        [System.String[]]$PolicyNames,
+
+        # https://stackoverflow.com/questions/76143006/how-to-prevent-powershell-validateset-argument-completer-from-suggesting-the-sam/76143269
+        # https://stackoverflow.com/questions/76267235/powershell-how-to-cross-reference-parameters-between-2-argument-completers
+        [ArgumentCompleter({
                 param($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameters)
 
                 # Get a list of policies using the CiTool, excluding system policies and policies that aren't on disk.
@@ -64,48 +106,7 @@ function Remove-WDACConfig {
                 $true
             })]
         [Parameter(Mandatory = $false, ParameterSetName = 'Unsigned Or Supplemental')]
-        [System.String[]]$PolicyIDs,
-
-        # https://stackoverflow.com/questions/76143006/how-to-prevent-powershell-validateset-argument-completer-from-suggesting-the-sam/76143269
-        # https://stackoverflow.com/questions/76267235/powershell-how-to-cross-reference-parameters-between-2-argument-completers
-        [ArgumentCompleter({
-                # Define the parameters that this script block will accept.
-                param($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameters)
-
-                # Get a list of policies using the CiTool, excluding system policies and policies that aren't on disk.
-                $policies = (CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsOnDisk -eq 'True' } | Where-Object { $_.IsSystemPolicy -ne 'True' }
-
-                # Create a hashtable mapping policy names to policy IDs. This will be used later to check if a policy ID already exists.
-                $NameIDMap = @{}
-                foreach ($policy in $policies) {
-                    $NameIDMap[$policy.Friendlyname] = $policy.policyID
-                }
-
-                # Get the IDs of existing policies that are already being used in the current command.
-                $existingIDs = $fakeBoundParameters['PolicyIDs']
-
-                # Get the policy names that are currently being used in the command. This is done by looking at the abstract syntax tree (AST)
-                # of the command and finding all string literals, which are assumed to be policy names.
-                $existing = $commandAst.FindAll({
-                        $args[0] -is [System.Management.Automation.Language.StringConstantExpressionAst]
-                    }, $false).Value
-
-                # Filter out the policy names that are already being used or whose corresponding policy IDs are already being used.
-                # The resulting list of policy names is what will be shown as autocomplete suggestions.
-                $candidates = $policies.Friendlyname | Where-Object { $_ -notin $existing -and $NameIDMap[$_] -notin $existingIDs }
-
-                # Additionally, if the policy name contains spaces, it's enclosed in single quotes to ensure it's treated as a single argument.
-                # This is achieved using the Compare-Object cmdlet to compare the existing and candidate values, and outputting the resulting matches.
-                # For each resulting match, it checks if the match contains a space, if so, it's enclosed in single quotes, if not, it's returned as is.
-            (Compare-Object -PassThru $candidates $existing | Where-Object SideIndicator -EQ '<=').
-                ForEach({ if ($_ -match ' ') { "'{0}'" -f $_ } else { $_ } })
-            })]
-        [ValidateScript({
-                if ($_ -notin [PolicyNamezx]::new().GetValidValues()) { throw "Invalid policy name: $_" }
-                $true
-            })]
-        [Parameter(Mandatory = $false, ParameterSetName = 'Unsigned Or Supplemental')]
-        [System.String[]]$PolicyNames,
+        [System.String[]]$PolicyIDs,        
 
         [parameter(Mandatory = $false, ParameterSetName = 'Signed Base', ValueFromPipelineByPropertyName = $true)]
         [System.String]$SignToolPath,
@@ -171,7 +172,6 @@ function Remove-WDACConfig {
         Class PolicyNamezx : System.Management.Automation.IValidateSetValuesGenerator {
             [System.String[]] GetValidValues() {
                 $PolicyNamezx = ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsOnDisk -eq 'True' } | Where-Object { $_.IsSystemPolicy -ne 'True' }).Friendlyname | Select-Object -Unique
-   
                 return [System.String[]]$PolicyNamezx
             }
         }
@@ -302,7 +302,7 @@ function Remove-WDACConfig {
 
             # If names were supplied by user
             # Empty array to store Policy IDs based on the input name, this will take care of the situations where multiple policies with the same name are deployed
-            [System.Array]$NameID = @()
+            [System.Object[]]$NameID = @()
             foreach ($PolicyName in $PolicyNames) {
                 $NameID += ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsOnDisk -eq 'True' } | Where-Object { $_.FriendlyName -eq $PolicyName }).PolicyID
             }
@@ -351,4 +351,4 @@ Can be used with any parameter to bypass the online version check - only to be u
 Set-PSReadLineKeyHandler -Key Tab -Function MenuComplete
 Register-ArgumentCompleter -CommandName 'Remove-WDACConfig' -ParameterName 'CertCN' -ScriptBlock $ArgumentCompleterCertificateCN
 Register-ArgumentCompleter -CommandName 'Remove-WDACConfig' -ParameterName 'PolicyPaths' -ScriptBlock $ArgumentCompleterPolicyPathsBasePoliciesOnly
-Register-ArgumentCompleter -CommandName 'Remove-WDACConfig' -ParameterName 'SignToolPath' -ScriptBlock $ArgumentCompleterSignToolPath
+Register-ArgumentCompleter -CommandName 'Remove-WDACConfig' -ParameterName 'SignToolPath' -ScriptBlock $ArgumentCompleterExeFilePathsPicker

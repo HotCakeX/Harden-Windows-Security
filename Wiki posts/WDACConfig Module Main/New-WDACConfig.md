@@ -160,7 +160,7 @@ It's recommended to use the optional parameter below to increase the log size of
 ![image](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Wiki%20APNGs/New-WDACConfig%20-PrepDefaultWindowsAudit%20-LogSize%2050MB.apng)
 
 ```powershell
-New-WDACConfig [-PrepDefaultWindowsAudit] [-LogSize <Int64>]
+ew-WDACConfig [-PrepDefaultWindowsAudit] [-Deploy] [-LogSize <Int64>]
 ```
 
 <br>
@@ -171,7 +171,7 @@ This parameter also scans the WDACConfig module files and PowerShell core files,
 
 It's recommended to use the optional parameter below to increase the log size of Code Integrity events category so that new events won't overwrite the older ones and everything will be captured.
 
-### 1 optional parameter
+### 2 optional parameter
 
 * `-LogSize <Int64>`: Specifies the log size for ***Microsoft-Windows-CodeIntegrity/Operational*** events. The values must be in the form of `<Digit + Data measurement unit>`. e.g., 2MB, 10MB, 1GB, 1TB. The minimum accepted value is 1MB which is the default.
 

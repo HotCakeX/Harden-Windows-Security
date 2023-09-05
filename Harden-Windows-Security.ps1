@@ -350,17 +350,24 @@ try {
             break    
         }
 
-        # Check to make sure Microsoft Defender is running normally
-        if ((Get-MpComputerStatus).AMRunningMode -eq 'Passive Mode') {
-            Write-Error 'Microsoft Defender is running in Passive Mode, please remove any 3rd party AV and then try again.'
+        # Get the current configuration of the Microsoft Defender
+        $MDAVConfigCurrent = Get-MpComputerStatus       
+        
+        if (-NOT ($MDAVConfigCurrent.AMServiceEnabled -eq $true)) {
+            Write-Error 'Microsoft Defender Anti Malware service is not enabled, please enable it and then try again.'
             break            
-        }
+        } 
 
-        # Check to make sure Microsoft Defender real time protection is enabled
-        if ((Get-MpComputerStatus).RealTimeProtectionEnabled -eq $false) {
-            Write-Error 'Microsoft Defender Real Time Protection is not enabled, please enable it and then try again.'
+        if (-NOT ($MDAVConfigCurrent.AntispywareEnabled -eq $true)) {
+            Write-Error 'Microsoft Defender Anti Spyware is not enabled, please enable it and then try again.'
             break            
-        }        
+        } 
+
+        if (-NOT ($MDAVConfigCurrent.AntivirusEnabled -eq $true)) {
+            Write-Error 'Microsoft Defender Anti Virus is not enabled, please enable it and then try again.'
+            break            
+        } 
+       
     }
     #endregion RequirementsCheck
 

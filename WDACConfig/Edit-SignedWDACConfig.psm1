@@ -331,7 +331,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                 Try {                    
                     ################################### User Interaction ####################################
                     &$WritePink "`nAudit mode deployed, start installing your programs now"
-                    &$WriteViolet "When you've finished installing programs, Press Enter to start selecting program directories to scan`n"
+                    &$WriteHotPink "When you've finished installing programs, Press Enter to start selecting program directories to scan`n"
                     Pause
                     
                     # Store the program paths that user browses for in an array
@@ -696,7 +696,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                 Try {
                     ################################### User Interaction #################################### 
                     &$WritePink "`nAudit mode deployed, start installing your programs now"
-                    &$WriteViolet "When you've finished installing programs, Press Enter to start selecting program directories to scan`n"
+                    &$WriteHotPink "When you've finished installing programs, Press Enter to start selecting program directories to scan`n"
                     Pause
                   
                     # Store the program paths that user browses for in an array
@@ -915,7 +915,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                                             
                     # Scan PowerShell core directory and add them to the Default Windows base policy so that the module can be used after it's been deployed
                     if (Test-Path 'C:\Program Files\PowerShell') {                   
-                        &$WriteViolet "`nCreating allow rules for PowerShell in the DefaultWindows base policy so you can continue using this module after deploying it."
+                        &$WriteHotPink "`nCreating allow rules for PowerShell in the DefaultWindows base policy so you can continue using this module after deploying it."
                         New-CIPolicy -ScanPath 'C:\Program Files\PowerShell' -Level FilePublisher -NoScript -Fallback Hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -AllowFileNameFallbacks -FilePath .\AllowPowerShell.xml                        
                         Merge-CIPolicy -PolicyPaths .\DefaultWindows_Enforced.xml, .\AllowPowerShell.xml, .\SignTool.xml, '.\Microsoft recommended block rules.xml' -OutputFilePath .\BasePolicy.xml | Out-Null
                     }
@@ -1022,7 +1022,7 @@ Can be used with any parameter to bypass the online version check - only to be u
 # Set PSReadline tab completion to complete menu for easier access to available parameters - Only for the current session
 Set-PSReadLineKeyHandler -Key Tab -Function MenuComplete
 Register-ArgumentCompleter -CommandName 'Edit-SignedWDACConfig' -ParameterName 'CertCN' -ScriptBlock $ArgumentCompleterCertificateCN
-Register-ArgumentCompleter -CommandName 'Edit-SignedWDACConfig' -ParameterName 'CertPath' -ScriptBlock $ArgumentCompleterCertPath
+Register-ArgumentCompleter -CommandName 'Edit-SignedWDACConfig' -ParameterName 'CertPath' -ScriptBlock $ArgumentCompleterCerFilePathsPicker
 Register-ArgumentCompleter -CommandName 'Edit-SignedWDACConfig' -ParameterName 'SignToolPath' -ScriptBlock $ArgumentCompleterExeFilePathsPicker
 Register-ArgumentCompleter -CommandName 'Edit-SignedWDACConfig' -ParameterName 'PolicyPaths' -ScriptBlock $ArgumentCompleterPolicyPathsBasePoliciesOnly
 Register-ArgumentCompleter -CommandName 'Edit-SignedWDACConfig' -ParameterName 'SuppPolicyPaths' -ScriptBlock $ArgumentCompleterPolicyPathsSupplementalPoliciesOnly

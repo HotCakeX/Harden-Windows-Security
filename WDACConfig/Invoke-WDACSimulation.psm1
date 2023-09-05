@@ -26,168 +26,210 @@ function Invoke-WDACSimulation {
 
         # Stop operation as soon as there is an error anywhere, unless explicitly specified otherwise
         $ErrorActionPreference = 'Stop'
-        if (-NOT $SkipVersionCheck) { . Update-self }       
+        if (-NOT $SkipVersionCheck) { . Update-self }
     }
     
     process {
-       
+        # For Testing purposes, uncomment these
+        # $FolderPath = ''
+        # $XmlFilePath = ''           
+      
         if ($FolderPath) {
-            # Store the results of the Signed files
+            # Store the processed results of the valid Signed files
             [System.Object[]]$SignedResult = @()
+
+            # File paths of the files allowed by Signer/certificate
+            [System.Object[]]$AllowedSignedFilePaths = @()
+
+            # File paths of the files allowed by Hash
+            [System.Object[]]$AllowedUnsignedFilePaths = @()
+
+            # Stores the final object of all of the results
+            [System.Object[]]$MegaOutputObject = @()
+
+            # File paths of the Signed files with HashMismatch Status
+            [System.Object[]]$SignedHashMismatchFilePaths = @()
+
+            # File paths of the Signed files with a status that doesn't fall into any other category 
+            [System.Object[]]$SignedButUnknownFilePaths = @()
+
+            # Hash Sha256 values of all the file rules based on hash in the supplied xml policy file
+            [System.Object[]]$SHA256HashesFromXML = (Get-FileRuleOutput -xmlPath $XmlFilePath).hashvalue
+                        
             # Get all of the files that WDAC supports from the user provided directory
-            $CollectedFiles = (Get-ChildItem -Recurse -Path $FolderPath -File -Include '*.sys', '*.exe', '*.com', '*.dll', '*.ocx', '*.msp', '*.mst', '*.msi', '*.js', '*.vbs', '*.ps1', '*.appx').FullName
-
-            # Get the path of the Temp folder
-            $Temp = [System.IO.Path]::GetTempPath()
-
-            # Generate a random number
-            [int]$Random = Get-Random -Minimum $(Get-Random -Minimum 10 -Maximum 5265) -Maximum $(Get-Random -Minimum 5267 -Maximum 626568)
-
-            # Create a folder name with the random number
-            [string]$Folder = "RandomFolder$Random"
-
-            # Join the Temp folder path and the folder name
-            $RandomTempDirPath = Join-Path -Path $Temp -ChildPath $Folder
-
-            # Create the folder in the Temp folder
-            [void] (New-Item -Path $RandomTempDirPath -ItemType Directory -Force)
-
-            $global:ProcessThePolicy = $false
-
+            [System.Object[]]$CollectedFiles = (Get-ChildItem -Recurse -Path $FolderPath -File -Include '*.sys', '*.exe', '*.com', '*.dll', '*.ocx', '*.msp', '*.mst', '*.msi', '*.js', '*.vbs', '*.ps1', '*.appx').FullName
+         
             # Loop through each file
             $CollectedFiles | ForEach-Object {
 
                 $CurrentFilePath = $_ 
 
-                # If the file is signed and valid
-                if ((Get-AuthenticodeSignature -FilePath $CurrentFilePath).Status -eq 'valid') { 
-                    # If debug is used show extra info on the console
-                    if ($Debug) {                        
-                        Write-Host "Currently processing signed file: `n$CurrentFilePath" -ForegroundColor Yellow
+                switch ((Get-AuthenticodeSignature -FilePath $CurrentFilePath).Status) {
+
+                    # If the file is signed and valid
+                    'valid' {
+                        # If debug is used show extra info on the console
+                        if ($Debug) {                        
+                            Write-Host "Currently processing signed file: `n$CurrentFilePath" -ForegroundColor Yellow
+                        }
+                        # Use the function in Resources2.ps1 file to process it
+                        $SignedResult += Compare-SignerAndCertificate -XmlFilePath $XmlFilePath -SignedFilePath $CurrentFilePath | Where-Object { $_.CertRootMatch -eq $true }                             
                     }
-                    $SignedResult += Compare-SignerAndCertificate -XmlFilePath $XmlFilePath -SignedFilePath $CurrentFilePath | Where-Object { $_.CertRootMatch -eq $true }                             
-                }  
-                # If the file is signed but invalid              
-                elseif ((Get-AuthenticodeSignature -FilePath $CurrentFilePath).Status -eq 'HashMismatch') {
-                    Write-Warning "The file $CurrentFilePath is tampered and unsafe to use."
-                }        
-                # if the file is Unsigned
-                elseif ((Get-AuthenticodeSignature -FilePath $CurrentFilePath).Status -eq 'NotSigned') {
 
-                    # Get the name of the item that is being copied
-                    # A check to cover situations where multiple files with the same name but in different directories exist in the folder path selected by user
-                    # Storing them in different directories inside the Random Temp directory
-                    $ItemName = Split-Path -Path $CurrentFilePath -Leaf
-
-                    # Check if the item already exists in the destination
-                    if (Test-Path -Path "$RandomTempDirPath\$ItemName") {
-                        # If yes, generate a random number between 1 and 1000
-                        $RandomNumber = Get-Random -Minimum 1 -Maximum 1000
-
-                        # Append the random number to the destination path
-                        $NewRandomTempDirPath = $RandomTempDirPath + "\$RandomNumber"
-
-                        # Create a new folder with the random name
-                        New-Item -Path $NewRandomTempDirPath -ItemType Directory -Force | Out-Null
-
-                        # Copy the item to the destination
-                        Copy-Item -Path $CurrentFilePath -Destination $NewRandomTempDirPath
+                    # If the file is signed but invalid display a warning for it   
+                    'HashMismatch' {
+                        $SignedHashMismatchFilePaths += $CurrentFilePath    
                     }
-                    else {
-                        # if an item with the same don't doesn't already exist in the random temp folder then copy it to the root folder instead of creating a new nested directory inside there
-                        Copy-Item -Path $CurrentFilePath -Destination $RandomTempDirPath                    
+
+                    # if the file is Unsigned, get its hash
+                    'NotSigned' { 
+                     
+                        try {
+                            $CurrentFilePathHash = (Get-AppLockerFileInformation -Path $CurrentFilePath -ErrorAction Stop).hash -replace 'SHA256 0x', ''
+                        }
+                        catch {  
+                            Write-Debug -Message "Get-AppLockerFileInformation failed for the file at $CurrentFilePath, using New-CIPolicyRule cmdlet..."                 
+                            
+                            $CurrentHashOutput = New-CIPolicyRule -Level hash -Fallback none -AllowFileNameFallbacks -UserWriteablePaths -DriverFilePath $CurrentFilePath
+                          
+                            $CurrentFilePathHash = ($CurrentHashOutput | Where-Object { $_.name -like '*Hash Sha256*' }).attributes.hash
+                        }
+                   
+                        if ($CurrentFilePathHash -in $SHA256HashesFromXML) {
+                            $AllowedUnsignedFilePaths += $CurrentFilePath
+                        }
+                            
                     }
-                    # Flag to tell the next command whether to process unsigned files or not
-                    $global:ProcessThePolicy = $true
+                    # if the signature status doesn't fall into any categories
+                    default {
+                        $SignedButUnknownFilePaths += $CurrentFilePath    
+                    }
                 }
-            } 
-            # if there was any unsigned files, process them
-            if ($global:ProcessThePolicy) {
-                # Scan the unsigned files by Hash level in order to get their 4 Authenticode and Page hashes
-                New-CIPolicy -UserWriteablePaths -FilePath "$RandomTempDirPath\outputpolicy.xml" -Level hash -Fallback none -AllowFileNameFallbacks -UserPEs -ScanPath $RandomTempDirPath
-                
-                # Call the Compare-XmlFiles function with two xml file paths as parameters and store the result in a variable
-                # The result only contains files that exist in both xml files, the temp file from unsigned files and the one selected by the user
-                $HashComparisonResult = Compare-XmlFiles -refXmlPath $XmlFilePath -tarXmlPath "$RandomTempDirPath\outputpolicy.xml" | Where-Object { $_.Comparison -eq 'Both' }
-                
-                if ($Debug) {
+            }
+            
+            # File paths of the files allowed by Signer/certificate, Unique
+            [System.Object[]]$AllowedSignedFilePaths = $SignedResult.FilePath | Get-Unique            
 
-                    # Display the result in a table format with four columns: Comparison, HashValue, HashType, and FilePath
-                    $HashComparisonResult | Select-Object -Property FilePathForHash, Comparison | Format-Table -AutoSize
+       
+            if ($AllowedUnsignedFilePaths) {
+                # Loop through the first array and create output objects with the file path and source
+                foreach ($Path in $AllowedUnsignedFilePaths) {
+                    # Create a hash table with the file path and source
+                    [System.Collections.Hashtable]$Object = @{
+                        FilePath   = $Path
+                        Source     = 'Hash'
+                        Permission = 'Allowed'
+                    }
+                    # Convert the hash table to a PSObject and add it to the output array
+                    $MegaOutputObject += New-Object -TypeName PSObject -Property $Object
+                }  
+            }          
 
-                    $HashComparisonResult.Count
+            # For valid Signed files
+            if ($AllowedSignedFilePaths) {
+                # Loop through the second array and create output objects with the file path and source
+                foreach ($Path in $AllowedSignedFilePaths) {
+                    # Create a hash table with the file path and source properties
+                    [System.Collections.Hashtable]$Object = @{
+                        FilePath   = $Path
+                        Source     = 'Signer'
+                        Permission = 'Allowed'
+                    }
+                    # Convert the hash table to a PSObject and add it to the output array
+                    $MegaOutputObject += New-Object -TypeName PSObject -Property $Object
                 }            
             }
 
-            if ($Debug) {
-                Write-Host "this is the random Temp: $RandomTempDirPath" -ForegroundColor Green
+            # For Signed files with mismatch signature status
+            if ($SignedHashMismatchFilePaths) {
+                # Loop through the second array and create output objects with the file path and source
+                foreach ($Path in $SignedHashMismatchFilePaths) {
+                    # Create a hash table with the file path and source properties
+                    [System.Collections.Hashtable]$Object = @{
+                        FilePath   = $Path
+                        Source     = 'Signer'
+                        Permission = 'Not Allowed - Hash Mismatch'
+                    }
+                    # Convert the hash table to a PSObject and add it to the output array
+                    $MegaOutputObject += New-Object -TypeName PSObject -Property $Object
+                }            
             }
-        
-            # File path of the files allowed by Hash
-            $Hashresults = $HashComparisonResult.FilePathForHash
 
-            # Filepath of files allowed by Signer/certificate
-            $SignedResult = $SignedResult.FilePath | Get-Unique            
-
-            if ($Debug) {
-                $SignedResult               
+            # For Signed files with Unknown signature status
+            if ($SignedButUnknownFilePaths) {
+                # Loop through the second array and create output objects with the file path and source
+                foreach ($Path in $SignedButUnknownFilePaths) {
+                    # Create a hash table with the file path and source properties
+                    [System.Collections.Hashtable]$Object = @{
+                        FilePath   = $Path
+                        Source     = 'Signer'
+                        Permission = 'Not Allowed - Expired or unknown'
+                    }
+                    # Convert the hash table to a PSObject and add it to the output array
+                    $MegaOutputObject += New-Object -TypeName PSObject -Property $Object
+                }            
             }
-                 
-            # Create an empty array to store the output objects
-            [System.Object[]]$FinalAllowedFilesOutputObject = @()
 
-            # Loop through the first array and create output objects with the file path and source
-            foreach ($path in $Hashresults) {
-                # Create a hash table with the file path and source
-                [System.Collections.Hashtable]$object = @{
-                    FilePath = $path
-                    Source   = 'Hash'
+            # Unique number of files allowed by hash - used for counting only
+            $UniqueFilesAllowedByHash = $MegaOutputObject | Select-Object -Property FilePath, source, Permission -Unique | Where-Object { $_.source -eq 'hash' }
+
+            # To detect files that are not allowed
+
+            # Check if any supported files were found in the user provided directory and any of them were allowed
+            if ($($MegaOutputObject.Filepath) -and $CollectedFiles) {
+                # Compare the paths of all the supported files that were found in user provided directory with the array of files that were allowed by Signer or hash in the policy
+                # Then save the output to a different array
+                [System.Object[]]$FinalComparisonForFilesNotAllowed = Compare-Object -ReferenceObject $($MegaOutputObject.Filepath) -DifferenceObject $CollectedFiles -PassThru | Where-Object { $_.SideIndicator -eq '=>' }
+            }
+
+            # If there is any files in the user selected directory that is not allowed by the policy
+            if ($FinalComparisonForFilesNotAllowed) {
+
+                foreach ($Path in $FinalComparisonForFilesNotAllowed) {
+                    # Create a hash table with the file path and source properties
+                    [System.Collections.Hashtable]$Object = @{
+                        FilePath   = $Path
+                        Source     = 'N/A'
+                        Permission = 'Not Allowed'
+                    }
+                    # Convert the hash table to a PSObject and add it to the output array
+                    $MegaOutputObject += New-Object -TypeName PSObject -Property $Object
+                }  
+            }
+          
+            # Change the color of the Table header
+            $PSStyle.Formatting.TableHeader = "$($PSStyle.Foreground.FromRGB(255,165,0))"
+
+            # Display the final main output array as a table - allowed files   
+            $MegaOutputObject | Select-Object -Property FilePath,
+            
+            @{
+                Label      = 'Source'
+                Expression =
+                { switch ($_.source) {
+                        { $_ -eq 'Signer' } { $color = "$($PSStyle.Foreground.FromRGB(152,255,152))" } # Use PSStyle to set the color
+                        { $_ -eq 'Hash' } { $color = "$($PSStyle.Foreground.FromRGB(255,255,49))" } # Use PSStyle to set the color
+                        { $_ -eq 'N/A' } { $color = "$($PSStyle.Foreground.FromRGB(255,20,147))" } # Use PSStyle to set the color
+                    }
+                    "$color$($_.source)$($PSStyle.Reset)" # Use PSStyle to reset the color
                 }
-                # Convert the hash table to a PSObject and add it to the output array
-                $FinalAllowedFilesOutputObject += New-Object -TypeName PSObject -Property $object
-            }
-
-            # Loop through the second array and create output objects with the file path and source
-            foreach ($path in $SignedResult) {
-                # Create a hash table with the file path and source
-                [System.Collections.Hashtable]$object = @{
-                    FilePath = $path
-                    Source   = 'Signer'
-                }
-                # Convert the hash table to a PSObject and add it to the output array
-                $FinalAllowedFilesOutputObject += New-Object -TypeName PSObject -Property $object
-            }            
-
-            # Unique number of files allowed by hash
-            $UniqueFilesAllowedByHash = $FinalAllowedFilesOutputObject | Select-Object -Property FilePath, source -Unique | Where-Object { $_.source -eq 'hash' }
-
+            }, Permission -Unique | Sort-Object -Property Permission | Format-Table -Property FilePath, Source, Permission
+            
             # Showing Signature based allowed file details
-            &$WriteLavender "`n$($SignedResult.count) files inside the folder you selected are allowed by your xml policy by Signature"
+            &$WriteLavender "`n$($AllowedSignedFilePaths.count) File(s) Inside the Selected Folder Are Allowed by Signatures by Your Policy."
             
             # Showing Hash based allowed file details
-            &$WriteLavender "`n$($UniqueFilesAllowedByHash.count) files inside the folder you selected are allowed by your xml policy by Hashes"
+            &$WriteLavender "$($UniqueFilesAllowedByHash.count) File(s) Inside the Selected Folder Are Allowed by Hashes by Your Policy.`n"
+                        
+            # Export the output as CSV
+            $MegaOutputObject | Select-Object -Property FilePath, source, Permission -Unique | Sort-Object -Property Permission | Export-Csv -Path .\WDACSimulationOutput.csv -Force
 
-            # Display the final main output array as a table - allowed files
-            $FinalAllowedFilesOutputObject | Select-Object -Property FilePath, source -Unique | Sort-Object | Format-Table
-            
-            if ($($FinalAllowedFilesOutputObject.Filepath) -and $CollectedFiles) {
-          
-                $FinalComparisonForFilesNotAllowed = Compare-Object -ReferenceObject $($FinalAllowedFilesOutputObject.Filepath) -DifferenceObject $CollectedFiles -PassThru | Where-Object { $_.SideIndicator -eq '=>' }
-            }
-
-            # Showing details of files not allowed by the selected xml policy
-            &$WritePink "`nThere are $($FinalComparisonForFilesNotAllowed.count) files inside the folder you selected that are Not allowed by your xml policy`n"
-
-            # Display the final main output array as a table - Not allowed files
-            $FinalComparisonForFilesNotAllowed | Format-Table -AutoSize
-
-            # Invoke-Item -Path $RandomTempDirPath
-            # Pause
-            
-            # Clean up the random temp folder in the end
-            Remove-Item -Path $RandomTempDirPath -Recurse -Force
-
-        }
+            if ($Debug) {
+                Write-Host 'Files that were UNSIGNED' -ForegroundColor Blue
+                $AllowedUnsignedFilePaths
+            }        
+           
+        }        
     }
     
     <#

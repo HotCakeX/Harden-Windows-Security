@@ -48,7 +48,7 @@ function New-DenyWDACConfig {
         [Switch]$NoScript,
 
         [Parameter(Mandatory = $false)] # Used by all the entire Cmdlet
-        [Switch]$Deployit,
+        [Switch]$Deploy,
         
         [Parameter(Mandatory = $false)][Switch]$SkipVersionCheck # Used by all the entire Cmdlet
     )
@@ -151,7 +151,7 @@ function New-DenyWDACConfig {
                 Remove-Item -Path '.\ProgramDir_ScanResults*.xml' -Force
             }
             
-            if ($Deployit) {                
+            if ($Deploy) {                
                 CiTool --update-policy "$policyID.cip" -json | Out-Null               
                 Write-Host -NoNewline "`n$policyID.cip for " -ForegroundColor Green
                 Write-Host -NoNewline "$PolicyName" -ForegroundColor Magenta
@@ -206,7 +206,7 @@ function New-DenyWDACConfig {
                 DenyPolicyFile = "DenyPolicy $PolicyName.xml"
                 DenyPolicyGUID = $PolicyID
             } 
-            if ($Deployit) {                
+            if ($Deploy) {                
                 CiTool --update-policy "$policyID.cip" -json | Out-Null             
                 Write-Host -NoNewline "`n$policyID.cip for " -ForegroundColor Green
                 Write-Host -NoNewline "$PolicyName" -ForegroundColor Magenta
@@ -262,7 +262,7 @@ function New-DenyWDACConfig {
                 DenyPolicyGUID = $PolicyID
             }
             
-            if ($Deployit) {                
+            if ($Deploy) {                
                 CiTool --update-policy "$policyID.cip" -json | Out-Null
                 &$WritePink "A Deny Base policy with the name $PolicyName has been deployed."
                 Remove-Item -Path "$policyID.cip" -Force

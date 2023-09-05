@@ -36,7 +36,7 @@ function New-SupplementalWDACConfig {
         [System.String]$PolicyPath,
 
         [parameter(Mandatory = $false)] # Used by all the entire Cmdlet        
-        [Switch]$Deployit,
+        [Switch]$Deploy,
         
         [ValidateSet('OriginalFileName', 'InternalName', 'FileDescription', 'ProductName', 'PackageFamilyName', 'FilePath')]
         [Parameter(Mandatory = $false, ParameterSetName = 'Normal')]
@@ -134,7 +134,7 @@ function New-SupplementalWDACConfig {
             if ($NoScript) { $PolicyMakerHashTable['NoScript'] = $true }                 
             if (!$NoUserPEs) { $PolicyMakerHashTable['UserPEs'] = $true } 
 
-            &$WriteViolet "`nGenerating Supplemental policy with the following specifications:"
+            &$WriteHotPink "`nGenerating Supplemental policy with the following specifications:"
             $PolicyMakerHashTable
             Write-Host "`n"
             # Create the supplemental policy via parameter splatting
@@ -152,7 +152,7 @@ function New-SupplementalWDACConfig {
                 SupplementalPolicyFile = "SupplementalPolicy $SuppPolicyName.xml"
                 SupplementalPolicyGUID = $PolicyID
             } 
-            if ($Deployit) {                
+            if ($Deploy) {                
                 CiTool --update-policy "$policyID.cip" -json | Out-Null
                 &$WritePink "A Supplemental policy with the name $SuppPolicyName has been deployed."
                 Remove-Item -Path "$policyID.cip" -Force
@@ -187,7 +187,7 @@ function New-SupplementalWDACConfig {
                 SupplementalPolicyGUID = $PolicyID
             }
     
-            if ($Deployit) {                
+            if ($Deploy) {                
                 CiTool --update-policy "$policyID.cip" -json | Out-Null
                 &$WritePink "A Supplemental policy with the name $SuppPolicyName has been deployed."
                 Remove-Item -Path "$policyID.cip" -Force                
@@ -243,7 +243,7 @@ function New-SupplementalWDACConfig {
                 SupplementalPolicyGUID = $PolicyID
             }
 
-            if ($Deployit) {                
+            if ($Deploy) {                
                 CiTool --update-policy "$policyID.cip" -json | Out-Null
                 &$WritePink "A Supplemental policy with the name $SuppPolicyName has been deployed."
                 Remove-Item -Path "$policyID.cip" -Force

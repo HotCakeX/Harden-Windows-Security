@@ -25,7 +25,7 @@ function Deploy-SignedWDACConfig {
         [parameter(Mandatory = $false, ValueFromPipelineByPropertyName = $true)]
         [System.String]$SignToolPath,
 
-        [Parameter(Mandatory = $false)][Switch]$SignOnly,
+        [Parameter(Mandatory = $false)][Switch]$Deploy,
         
         [Parameter(Mandatory = $false)][Switch]$SkipVersionCheck
     )
@@ -135,7 +135,7 @@ function Deploy-SignedWDACConfig {
             Remove-Item ".\$PolicyID.cip" -Force            
             Rename-Item "$PolicyID.cip.p7" -NewName "$PolicyID.cip" -Force
 
-            if (!$SignOnly) {
+            if ($Deploy) {
 
                 CiTool --update-policy ".\$PolicyID.cip" -json | Out-Null
                 Write-Host "`npolicy with the following details has been Signed and Deployed in Enforced Mode:" -ForegroundColor Green        
@@ -149,7 +149,7 @@ function Deploy-SignedWDACConfig {
                     $userInput = $(Write-Host 'Add the Signed policy xml file path just created to the User Configurations? Please enter 1 to Confirm or 2 to Skip.' -ForegroundColor Cyan ; Read-Host) 
                     if ($userInput -eq 1) {
                         Set-CommonWDACConfig -SignedPolicyPath $PolicyPath
-                        &$WriteViolet "Added $PolicyPath to the User Configuration file."             
+                        &$WriteHotPink "Added $PolicyPath to the User Configuration file."             
                     }
                     elseif ($userInput -eq 2) {                    
                         &$WritePink 'Skipping...'                  
@@ -196,8 +196,8 @@ Certificate common name
 .PARAMETER SignToolPath
 Path to the SignTool.exe - optional parameter
 
-.PARAMETER SignOnly
-Indicates that the cmdlet only signs the WDAC policy and will not deploy it to the system. Useful for when you want to deploy it elsewhere.
+.PARAMETER Deploy
+Indicates that the cmdlet will deploy the signed policy on the current system
 
 .PARAMETER SkipVersionCheck
 Can be used with any parameter to bypass the online version check - only to be used in rare cases
@@ -211,5 +211,5 @@ Can be used with any parameter to bypass the online version check - only to be u
 Set-PSReadLineKeyHandler -Key Tab -Function MenuComplete
 Register-ArgumentCompleter -CommandName 'Deploy-SignedWDACConfig' -ParameterName 'CertCN' -ScriptBlock $ArgumentCompleterCertificateCN
 Register-ArgumentCompleter -CommandName 'Deploy-SignedWDACConfig' -ParameterName 'PolicyPaths' -ScriptBlock $ArgumentCompleterPolicyPaths
-Register-ArgumentCompleter -CommandName 'Deploy-SignedWDACConfig' -ParameterName 'CertPath' -ScriptBlock $ArgumentCompleterCertPath
+Register-ArgumentCompleter -CommandName 'Deploy-SignedWDACConfig' -ParameterName 'CertPath' -ScriptBlock $ArgumentCompleterCerFilePathsPicker
 Register-ArgumentCompleter -CommandName 'Deploy-SignedWDACConfig' -ParameterName 'SignToolPath' -ScriptBlock $ArgumentCompleterExeFilePathsPicker

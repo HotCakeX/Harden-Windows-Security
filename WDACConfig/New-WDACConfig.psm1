@@ -7,12 +7,10 @@ function New-WDACConfig {
         ConfirmImpact = 'High'
     )]
     Param(
-        # 11 Main parameters - should be used for position 0
+        # 9 Main parameters - should be used for position 0
         [Parameter(Mandatory = $false, ParameterSetName = 'Get Block Rules')][Switch]$GetBlockRules,
         [Parameter(Mandatory = $false, ParameterSetName = 'Get Driver Block Rules')][Switch]$GetDriverBlockRules,
         [Parameter(Mandatory = $false, ParameterSetName = 'Make AllowMSFT With Block Rules')][Switch]$MakeAllowMSFTWithBlockRules,
-        [Parameter(Mandatory = $false, ParameterSetName = 'Deploy Latest Driver Block Rules')][Switch]$DeployLatestDriverBlockRules,
-        [Parameter(Mandatory = $false, ParameterSetName = 'Deploy Latest Block Rules')][Switch]$DeployLatestBlockRules,                                                                                       
         [Parameter(Mandatory = $false, ParameterSetName = 'Set Auto Update Driver Block Rules')][Switch]$SetAutoUpdateDriverBlockRules,
         [Parameter(Mandatory = $false, ParameterSetName = 'Prep MSFT Only Audit')][Switch]$PrepMSFTOnlyAudit,
         [Parameter(Mandatory = $false, ParameterSetName = 'Prep Default Windows Audit')][Switch]$PrepDefaultWindowsAudit,        
@@ -28,8 +26,12 @@ function New-WDACConfig {
         [Parameter(Mandatory = $false, ParameterSetName = 'Make Policy From Audit Logs')]
         [Parameter(Mandatory = $false, ParameterSetName = 'Make Light Policy')]
         [Parameter(Mandatory = $false, ParameterSetName = 'Make DefaultWindows With Block Rules')]
-        [Switch]$Deployit,
-
+        [Parameter(Mandatory = $false, ParameterSetName = 'Prep MSFT Only Audit')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Prep Default Windows Audit')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Get Block Rules')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Get Driver Block Rules')]
+        [Switch]$Deploy,
+        
         [Parameter(Mandatory = $false, ParameterSetName = 'Make Light Policy')]
         [Parameter(Mandatory = $false, ParameterSetName = 'Make Policy From Audit Logs')]
         [Parameter(Mandatory = $false, ParameterSetName = 'Make AllowMSFT With Block Rules')]
@@ -144,7 +146,7 @@ function New-WDACConfig {
                 PolicyFile = 'AllowMicrosoftPlusBlockRules.xml'
                 BinaryFile = "$PolicyID.cip"
             }
-            if ($Deployit -and $MakeAllowMSFTWithBlockRules) {            
+            if ($Deploy -and $MakeAllowMSFTWithBlockRules) {            
                 CiTool --update-policy "$PolicyID.cip" -json | Out-Null
                 Write-Host "`n"
                 Remove-Item -Path "$PolicyID.cip" -Force
@@ -189,7 +191,7 @@ function New-WDACConfig {
                 BinaryFile = "$PolicyID.cip"
             }
 
-            if ($Deployit -and $MakeDefaultWindowsWithBlockRules) {            
+            if ($Deploy -and $MakeDefaultWindowsWithBlockRules) {            
                 CiTool --update-policy "$PolicyID.cip" -json | Out-Null
                 Write-Host "`n"
                 Remove-Item -Path "$PolicyID.cip" -Force
@@ -250,14 +252,19 @@ function New-WDACConfig {
             [System.String]$PolicyID = $PolicyID.Substring(11)
             Set-CIPolicyIdInfo -PolicyName 'PrepMSFTOnlyAudit' -FilePath .\AllowMicrosoft.xml
             ConvertFrom-CIPolicy .\AllowMicrosoft.xml "$PolicyID.cip" | Out-Null
-            CiTool --update-policy "$PolicyID.cip" -json | Out-Null           
-            &$WriteViolet "`nThe default AllowMicrosoft policy has been deployed in Audit mode. No reboot required."           
-            Remove-Item 'AllowMicrosoft.xml', "$PolicyID.cip" -Force                 
+            if ($Deploy) {
+                CiTool --update-policy "$PolicyID.cip" -json | Out-Null           
+                &$WriteHotPink "`nThe default AllowMicrosoft policy has been deployed in Audit mode. No reboot required."           
+                Remove-Item 'AllowMicrosoft.xml', "$PolicyID.cip" -Force   
+            }
+            else {
+                &$WriteHotPink "`nThe default AllowMicrosoft policy has been created in Audit mode and is ready for deployment."
+            }              
         }
 
         [scriptblock]$PrepDefaultWindowsAuditSCRIPTBLOCK = {
             if ($PrepDefaultWindowsAudit -and $LogSize) { Set-LogSize -LogSize $LogSize }
-            Copy-Item -Path C:\Windows\schemas\CodeIntegrity\ExamplePolicies\DefaultWindows_Audit.xml -Destination .\DefaultWindows_Audit.xml
+            Copy-Item -Path C:\Windows\schemas\CodeIntegrity\ExamplePolicies\DefaultWindows_Audit.xml -Destination .\DefaultWindows_Audit.xml -Force
            
             # Making Sure neither PowerShell core nor WDACConfig module files are added to the Supplemental policy created by -MakePolicyFromAuditLogs parameter
             # by adding them first to the deployed Default Windows policy in Audit mode. Because WDACConfig module files don't need to be allowed to run since they are *.ps1 and .*psm1 files
@@ -266,19 +273,25 @@ function New-WDACConfig {
                 New-CIPolicy -ScanPath 'C:\Program Files\PowerShell' -Level FilePublisher -NoScript -Fallback Hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -FilePath .\AllowPowerShell.xml
                 New-CIPolicy -ScanPath "$psscriptroot" -Level hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -FilePath .\WDACConfigModule.xml
                 Merge-CIPolicy -PolicyPaths .\DefaultWindows_Audit.xml, .\AllowPowerShell.xml, .\WDACConfigModule.xml -OutputFilePath .\DefaultWindows_Audit_temp.xml | Out-Null
+            
+                Remove-Item DefaultWindows_Audit.xml -Force            
+                Rename-Item -Path .\DefaultWindows_Audit_temp.xml -NewName 'DefaultWindows_Audit.xml' -Force
+                Remove-Item 'WDACConfigModule.xml', 'AllowPowerShell.xml' -Force
             } 
-            Remove-Item DefaultWindows_Audit.xml -Force            
-            Rename-Item -Path .\DefaultWindows_Audit_temp.xml -NewName 'DefaultWindows_Audit.xml' -Force
-            Remove-Item 'WDACConfigModule.xml', 'AllowPowerShell.xml' -Force
-                   
+                               
             Set-RuleOption -FilePath .\DefaultWindows_Audit.xml -Option 3
             [System.String]$PolicyID = Set-CIPolicyIdInfo -FilePath .\DefaultWindows_Audit.xml -ResetPolicyID
             [System.String]$PolicyID = $PolicyID.Substring(11)
             Set-CIPolicyIdInfo -PolicyName 'PrepDefaultWindows' -FilePath .\DefaultWindows_Audit.xml
             ConvertFrom-CIPolicy .\DefaultWindows_Audit.xml "$PolicyID.cip" | Out-Null
-            CiTool --update-policy "$PolicyID.cip" -json | Out-Null           
-            &$WriteLavender "`nThe defaultWindows policy has been deployed in Audit mode. No reboot required."            
-            Remove-Item 'DefaultWindows_Audit.xml', "$PolicyID.cip" -Force                
+            if ($Deploy) {
+                CiTool --update-policy "$PolicyID.cip" -json | Out-Null           
+                &$WriteLavender "`nThe defaultWindows policy has been deployed in Audit mode. No reboot required."            
+                Remove-Item 'DefaultWindows_Audit.xml', "$PolicyID.cip" -Force 
+            }
+            else {
+                &$WriteLavender "`nThe defaultWindows policy has been created in Audit mode and is ready for deployment."            
+            }               
         }
 
         [scriptblock]$MakePolicyFromAuditLogsSCRIPTBLOCK = {
@@ -335,7 +348,7 @@ function New-WDACConfig {
             if ($NoScript) { $PolicyMakerHashTable['NoScript'] = $true }        
             if (!$NoUserPEs) { $PolicyMakerHashTable['UserPEs'] = $true } 
 
-            &$WriteViolet "`nGenerating Supplemental policy with the following specifications:"
+            &$WriteHotPink "`nGenerating Supplemental policy with the following specifications:"
             $PolicyMakerHashTable
             Write-Host "`n"
             # Create the supplemental policy via parameter splatting for files in event viewer that are currently on the disk
@@ -406,7 +419,7 @@ function New-WDACConfig {
                 Remove-Item -Path 'AuditLogsPolicy_NoDeletedFiles.xml', 'FileRulesAndFileRefs.txt', 'DeletedFilesHashes.xml' -Force -ErrorAction SilentlyContinue
             }
 
-            if ($Deployit -and $MakePolicyFromAuditLogs) {            
+            if ($Deploy -and $MakePolicyFromAuditLogs) {            
                 CiTool --update-policy "$BasePolicyID.cip" -json | Out-Null
                 CiTool --update-policy "$policyID.cip" -json | Out-Null               
                 &$WritePink "`nBase policy and Supplemental Policies deployed and activated.`n"               
@@ -444,7 +457,7 @@ function New-WDACConfig {
             # Configure required services for ISG authorization
             Start-Process -FilePath 'C:\Windows\System32\appidtel.exe' -ArgumentList 'start' -Wait -NoNewWindow
             Start-Process -FilePath 'C:\Windows\System32\sc.exe' -ArgumentList 'config', 'appidsvc', 'start= auto' -Wait -NoNewWindow
-            if ($Deployit -and $MakeLightPolicy) {
+            if ($Deploy -and $MakeLightPolicy) {
                 CiTool --update-policy "$BasePolicyID.cip" -json | Out-Null                           
             }            
             [PSCustomObject]@{
@@ -475,19 +488,25 @@ function New-WDACConfig {
     }
 
     process {
+
         switch ($true) {
-            $GetBlockRules { & $GetBlockRulesSCRIPTBLOCK }
-            $GetDriverBlockRules { & $GetDriverBlockRulesSCRIPTBLOCK }
-            $MakeAllowMSFTWithBlockRules { & $MakeAllowMSFTWithBlockRulesSCRIPTBLOCK }
-            $DeployLatestDriverBlockRules { & $DeployLatestDriverBlockRulesSCRIPTBLOCK }
-            $DeployLatestBlockRules { & $DeployLatestBlockRulesSCRIPTBLOCK }
-            $SetAutoUpdateDriverBlockRules { & $SetAutoUpdateDriverBlockRulesSCRIPTBLOCK }
-            $MakePolicyFromAuditLogs { & $MakePolicyFromAuditLogsSCRIPTBLOCK }
-            $PrepMSFTOnlyAudit { & $PrepMSFTOnlyAuditSCRIPTBLOCK }
-            $MakeLightPolicy { & $MakeLightPolicySCRIPTBLOCK }
-            $MakeDefaultWindowsWithBlockRules { & $MakeDefaultWindowsWithBlockRulesSCRIPTBLOCK }
-            $PrepDefaultWindowsAudit { & $PrepDefaultWindowsAuditSCRIPTBLOCK }
-            default { Write-Warning 'No parameter was selected.' }
+            # Deploy the latest block rules
+            { $GetBlockRules -and $Deploy } { & $DeployLatestBlockRulesSCRIPTBLOCK; break }
+            # Get the latest block rules
+            $GetBlockRules { & $GetBlockRulesSCRIPTBLOCK; break }
+            # Deploy the latest driver block rules
+            { $GetDriverBlockRules -and $Deploy } { & $DeployLatestDriverBlockRulesSCRIPTBLOCK; break }
+            # Get the latest driver block rules
+            { $GetDriverBlockRules } { & $GetDriverBlockRulesSCRIPTBLOCK; break }
+
+            $SetAutoUpdateDriverBlockRules { & $SetAutoUpdateDriverBlockRulesSCRIPTBLOCK; break }
+            $MakeAllowMSFTWithBlockRules { & $MakeAllowMSFTWithBlockRulesSCRIPTBLOCK; break } 
+            $MakePolicyFromAuditLogs { & $MakePolicyFromAuditLogsSCRIPTBLOCK; break }
+            $PrepMSFTOnlyAudit { & $PrepMSFTOnlyAuditSCRIPTBLOCK; break }
+            $MakeLightPolicy { & $MakeLightPolicySCRIPTBLOCK; break }
+            $MakeDefaultWindowsWithBlockRules { & $MakeDefaultWindowsWithBlockRulesSCRIPTBLOCK; break }
+            $PrepDefaultWindowsAudit { & $PrepDefaultWindowsAuditSCRIPTBLOCK; break }
+            default { Write-Warning 'None of the main parameters were selected.'; break }
         }
     }    
   
@@ -515,12 +534,6 @@ Create Microsoft recommended driver block rules xml policy and remove the allow 
 
 .PARAMETER MakeAllowMSFTWithBlockRules
 Make WDAC policy by merging AllowMicrosoft policy with the recommended block rules
-
-.PARAMETER DeployLatestDriverBlockRules
-Automatically download and deploy the latest Microsoft Recommended Driver Block Rules from Microsoft's source
-
-.PARAMETER DeployLatestBlockRules
-Deploys the latest Microsoft recommended (User-mode) block rules on the system as a standalone base policy
 
 .PARAMETER SetAutoUpdateDriverBlockRules
 Make a Scheduled Task that automatically runs every 7 days to download the newest Microsoft Recommended driver block rules

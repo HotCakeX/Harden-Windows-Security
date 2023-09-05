@@ -1,6 +1,6 @@
 # Stop operation as soon as there is an error anywhere, unless explicitly specified otherwise
 $ErrorActionPreference = 'Stop'
-if (-NOT ([System.Environment]::OSVersion.Version -ge '10.0.22621')) { Write-Error -Message "You're not using Windows 11 22H2, exitting..." }
+if (-NOT ([System.Environment]::OSVersion.Version -ge '10.0.22621')) { Write-Error -Message "You're not using Windows 11 22H2, exiting..." }
 
 # Get the path to SignTool
 function Get-SignTool {
@@ -320,11 +320,10 @@ function Confirm-CertCN ([string]$CN) {
 
 
 # script blocks for custom color writing
-[scriptblock]$WriteViolet = { Write-Output "$($PSStyle.Foreground.FromRGB(153,0,255))$($args[0])$($PSStyle.Reset)" }
+[scriptblock]$WriteHotPink = { Write-Output "$($PSStyle.Foreground.FromRGB(255,105,180))$($args[0])$($PSStyle.Reset)" }
 [scriptblock]$WritePink = { Write-Output "$($PSStyle.Foreground.FromRGB(255,0,230))$($args[0])$($PSStyle.Reset)" }
 [scriptblock]$WriteLavender = { Write-Output "$($PSStyle.Foreground.FromRgb(255,179,255))$($args[0])$($PSStyle.Reset)" }
 [scriptblock]$WriteTeaGreen = { Write-Output "$($PSStyle.Foreground.FromRgb(133, 222, 119))$($args[0])$($PSStyle.Reset)" }
-
 
 # Create File Rules based on hash of the files no longer available on the disk and store them in the $Rules variable
 function Get-FileRules {

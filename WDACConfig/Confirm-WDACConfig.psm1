@@ -1,6 +1,6 @@
 #Requires -RunAsAdministrator
 function Confirm-WDACConfig {
-    [CmdletBinding()]
+    [CmdletBinding(DefaultParameterSetName = 'List Active Policies')]
     Param(
         [Alias('L')]
         [Parameter(Mandatory = $false, ParameterSetName = 'List Active Policies')][Switch]$ListActivePolicies,
@@ -34,7 +34,14 @@ function Confirm-WDACConfig {
             $SupplementalPolicies = (CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsSystemPolicy -ne 'True' } | Where-Object { $_.PolicyID -ne $_.BasePolicyID }           
             &$WriteLavender "`nThere are currently $(($SupplementalPolicies.count)) Non-system Supplemental policies deployed`n"
             $SupplementalPolicies
-        }        
+        } 
+        
+        # If no parameters were passed run all of them
+        if ($PSBoundParameters.Count -eq 0) {
+            $ListActivePolicies = $true
+            $VerifyWDACStatus = $true
+            $CheckSmartAppControlStatus = $true
+        }
     }
 
     process {
@@ -60,7 +67,7 @@ function Confirm-WDACConfig {
             elseif ((Get-MpComputerStatus).SmartAppControlState -eq 'Off') {
                 &$WritePink "`nSmart App Control is turned off."
             }
-        }    
+        }            
     }
     
     <#

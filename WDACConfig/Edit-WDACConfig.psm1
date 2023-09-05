@@ -263,7 +263,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                 Try {
                     ################################### User Interaction ####################################            
                     &$WritePink "`nAudit mode deployed, start installing your programs now"
-                    &$WriteViolet "When you've finished installing programs, Press Enter to start selecting program directories to scan`n"
+                    &$WriteHotPink "When you've finished installing programs, Press Enter to start selecting program directories to scan`n"
                     Pause
 
                     # Store the program paths that user browses for in an array
@@ -446,7 +446,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                 Try {
                     ################################### User Interaction ####################################
                     &$WritePink "`nAudit mode deployed, start installing your programs now"
-                    &$WriteViolet "When you've finished installing programs, Press Enter to start selecting program directories to scan`n"
+                    &$WriteHotPink "When you've finished installing programs, Press Enter to start selecting program directories to scan`n"
                     Pause                 
 
                     # Store the program paths that user browses for in an array

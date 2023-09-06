@@ -145,7 +145,7 @@ WINWORD.EXE,EnableRopCallerCheck,Enable,Word Hardening
 C:\Windows\System32\lsass.exe,DisableExtensionPoints,Enable,lsass hardening
 C:\Windows\System32\lsass.exe,BlockDynamicCode,Enable,lsass hardening
 C:\Windows\System32\lsass.exe,MicrosoftSignedOnly,Enable,lsass hardening
-C:\Windows\System32\lsass.exe,DisallowChildProcessCreationEnable,lsass hardening
+C:\Windows\System32\lsass.exe,DisallowChildProcessCreation,Enable,lsass hardening
 C:\Windows\System32\SmartScreen.exe,DisableExtensionPoints,Enable,Smart Screen process hardening
 C:\Windows\System32\SmartScreen.exe,CFG,Enable,Smart Screen process hardening
 C:\Windows\System32\SmartScreen.exe,StrictCFG,Enable,Smart Screen process hardening

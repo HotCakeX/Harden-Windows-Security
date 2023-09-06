@@ -172,9 +172,20 @@ function Select-Option {
             if ($IsCore) { &$WriteMintGreen "$($i+1): $($Options[$i])" } else { Write-Host "$($i+1): $($Options[$i])" }
         }
 
-        $SelectedIndex = Read-Host 'Select an option'
-        if ($SelectedIndex -gt 0 -and $SelectedIndex -le $Options.Length) { $Selected = $Options[$SelectedIndex - 1] }
-        else { Write-Host 'Invalid Option.' -ForegroundColor Yellow }
+        # Make sure user only inputs a positive integer
+        [int]$SelectedIndex = 0
+        $isValid = [int]::TryParse((Read-Host 'Select an option'), [ref]$SelectedIndex)
+        if ($isValid) {
+            if ($SelectedIndex -gt 0 -and $SelectedIndex -le $Options.Length) { 
+                $Selected = $Options[$SelectedIndex - 1] 
+            }
+            else {                 
+                Write-Warning -Message 'Invalid Option.'
+            }
+        }
+        else {
+            Write-Warning -Message 'Invalid input. Please only enter a positive number.'
+        }  
     }
     return $Selected
 }

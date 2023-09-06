@@ -156,7 +156,6 @@ C:\Windows\System32\WindowsSandbox.exe,ForceRelocateImages,Enable,Windows Sandbo
 C:\Windows\System32\WindowsSandbox.exe,RequireInfo,Enable,Windows Sandbox process
 C:\Windows\System32\WindowsSandbox.exe,StrictHandle,Enable,Windows Sandbox process
 C:\Windows\System32\WindowsSandbox.exe,DisableExtensionPoints,Enable,Windows Sandbox process
-C:\Windows\System32\WindowsSandbox.exe,BlockDynamicCode,Enable,Windows Sandbox process
 C:\Windows\System32\WindowsSandbox.exe,CFG,Enable,Windows Sandbox process
 C:\Windows\System32\WindowsSandbox.exe,StrictCFG,Enable,Windows Sandbox process
 C:\Windows\System32\WindowsSandbox.exe,MicrosoftSignedOnly,Enable,Windows Sandbox process
@@ -169,7 +168,6 @@ C:\Windows\System32\WindowsSandboxClient.exe,ForceRelocateImages,Enable,Windows 
 C:\Windows\System32\WindowsSandboxClient.exe,RequireInfo,Enable,Windows Sandbox process
 C:\Windows\System32\WindowsSandboxClient.exe,StrictHandle,Enable,Windows Sandbox process
 C:\Windows\System32\WindowsSandboxClient.exe,DisableExtensionPoints,Enable,Windows Sandbox process
-C:\Windows\System32\WindowsSandboxClient.exe,BlockDynamicCode,Enable,Windows Sandbox process
 C:\Windows\System32\WindowsSandboxClient.exe,CFG,Enable,Windows Sandbox process
 C:\Windows\System32\WindowsSandboxClient.exe,StrictCFG,Enable,Windows Sandbox process
 C:\Windows\System32\WindowsSandboxClient.exe,MicrosoftSignedOnly,Enable,Windows Sandbox process

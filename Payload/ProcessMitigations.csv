@@ -142,3 +142,49 @@ WINWORD.EXE,EnforceModuleDependencySigning,Enable,Word Hardening
 WINWORD.EXE,EnableImportAddressFilter,Enable,Word Hardening
 WINWORD.EXE,EnableRopStackPivot,Enable,Word Hardening
 WINWORD.EXE,EnableRopCallerCheck,Enable,Word Hardening
+C:\Windows\System32\lsass.exe,DisableExtensionPoints,Enable,lsass hardening
+C:\Windows\System32\lsass.exe,BlockDynamicCode,Enable,lsass hardening
+C:\Windows\System32\lsass.exe,MicrosoftSignedOnly,Enable,lsass hardening
+C:\Windows\System32\lsass.exe,DisallowChildProcessCreationEnable,lsass hardening
+C:\Windows\System32\SmartScreen.exe,DisableExtensionPoints,Enable,Smart Screen process hardening
+C:\Windows\System32\SmartScreen.exe,CFG,Enable,Smart Screen process hardening
+C:\Windows\System32\SmartScreen.exe,StrictCFG,Enable,Smart Screen process hardening
+C:\Windows\System32\SmartScreen.exe,MicrosoftSignedOnly,Enable,Smart Screen process hardening
+C:\Windows\System32\SmartScreen.exe,EnableExportAddressFilterEnable,Smart Screen process hardening
+Regsvr32.exe,BlockDynamicCode,Enable,Register Server Hardening
+Regsvr32.exe,BlockLowLabelImageLoads,Enable,Register Server Hardening
+C:\Windows\System32\WindowsSandbox.exe,ForceRelocateImages,Enable,Windows Sandbox process hardening
+C:\Windows\System32\WindowsSandbox.exe,RequireInfo,Enable,Windows Sandbox process hardening
+C:\Windows\System32\WindowsSandbox.exe,StrictHandle,Enable,Windows Sandbox process hardening
+C:\Windows\System32\WindowsSandbox.exe,DisableExtensionPoints,Enable,Windows Sandbox process hardening
+C:\Windows\System32\WindowsSandbox.exe,BlockDynamicCode,Enable,Windows Sandbox process hardening
+C:\Windows\System32\WindowsSandbox.exe,CFG,Enable,Windows Sandbox process hardening
+C:\Windows\System32\WindowsSandbox.exe,StrictCFG,Enable,Windows Sandbox process hardening
+C:\Windows\System32\WindowsSandbox.exe,MicrosoftSignedOnly,Enable,Windows Sandbox process hardening
+C:\Windows\System32\WindowsSandbox.exe,EnforceModuleDependencySigning,Enable,Windows Sandbox process hardening
+C:\Windows\System32\WindowsSandbox.exe,BlockRemoteImageLoads,Enable,Windows Sandbox process hardening
+C:\Windows\System32\WindowsSandbox.exe,BlockLowLabelImageLoads,Enable,Windows Sandbox process hardening
+C:\Windows\System32\WindowsSandbox.exe,EnableExportAddressFilter,Enable,Windows Sandbox process hardening
+C:\Windows\System32\WindowsSandbox.exe,EnableExportAddressFilterPlus,Enable,Windows Sandbox process hardening
+C:\Windows\System32\WindowsSandboxClient.exe,ForceRelocateImages,Enable,Windows Sandbox process hardening
+C:\Windows\System32\WindowsSandboxClient.exe,RequireInfo,Enable,Windows Sandbox process hardening
+C:\Windows\System32\WindowsSandboxClient.exe,StrictHandle,Enable,Windows Sandbox process hardening
+C:\Windows\System32\WindowsSandboxClient.exe,DisableExtensionPoints,Enable,Windows Sandbox process hardening
+C:\Windows\System32\WindowsSandboxClient.exe,BlockDynamicCode,Enable,Windows Sandbox process hardening
+C:\Windows\System32\WindowsSandboxClient.exe,CFG,Enable,Windows Sandbox process hardening
+C:\Windows\System32\WindowsSandboxClient.exe,StrictCFG,Enable,Windows Sandbox process hardening
+C:\Windows\System32\WindowsSandboxClient.exe,MicrosoftSignedOnly,Enable,Windows Sandbox process hardening
+C:\Windows\System32\WindowsSandboxClient.exe,EnforceModuleDependencySigning,Enable,Windows Sandbox process hardening
+C:\Windows\System32\WindowsSandboxClient.exe,BlockRemoteImageLoads,Enable,Windows Sandbox process hardening
+C:\Windows\System32\WindowsSandboxClient.exe,BlockLowLabelImageLoads,Enable,Windows Sandbox process hardening
+C:\Windows\System32\WindowsSandboxClient.exe,EnableExportAddressFilter,Enable,Windows Sandbox process hardening
+C:\Windows\System32\WindowsSandboxClient.exe,EnableExportAddressFilterPlus,Enable,Windows Sandbox process hardening
+C:\Windows\explorer.exe,ForceRelocateImages,Enable,Explorer hardening
+C:\Windows\explorer.exe,RequireInfo,Enable,Explorer hardening
+C:\Windows\explorer.exe,StrictHandle,Enable,Explorer hardening
+C:\Windows\explorer.exe,DisableExtensionPoints,Enable,Explorer hardening
+C:\Windows\explorer.exe,CFG,Enable,Explorer hardening
+C:\Windows\explorer.exe,StrictCFG,Enable,Explorer hardening
+C:\Windows\explorer.exe,EnableExportAddressFilter,Enable,Explorer hardening
+C:\Windows\explorer.exe,EnableExportAddressFilterPlus,Enable,Explorer hardening
+C:\Windows\explorer.exe,EnableImportAddressFilter,Enable,Explorer hardening

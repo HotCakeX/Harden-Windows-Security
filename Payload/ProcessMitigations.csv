@@ -150,7 +150,7 @@ C:\Windows\System32\SmartScreen.exe,DisableExtensionPoints,Enable,Smart Screen p
 C:\Windows\System32\SmartScreen.exe,CFG,Enable,Smart Screen process hardening
 C:\Windows\System32\SmartScreen.exe,StrictCFG,Enable,Smart Screen process hardening
 C:\Windows\System32\SmartScreen.exe,MicrosoftSignedOnly,Enable,Smart Screen process hardening
-C:\Windows\System32\SmartScreen.exe,EnableExportAddressFilterEnable,Smart Screen process hardening
+C:\Windows\System32\SmartScreen.exe,EnableExportAddressFilter,Enable,Smart Screen process hardening
 Regsvr32.exe,BlockDynamicCode,Enable,Register Server Hardening
 Regsvr32.exe,BlockLowLabelImageLoads,Enable,Register Server Hardening
 C:\Windows\System32\WindowsSandbox.exe,ForceRelocateImages,Enable,Windows Sandbox process hardening

@@ -1,6 +1,6 @@
 <#PSScriptInfo
 
-.VERSION 2023.8.30
+.VERSION 2023.9.05
 
 .GUID d435a293-c9ee-4217-8dc1-4ad2318a5770
 
@@ -95,7 +95,7 @@ Set-ExecutionPolicy Bypass -Scope Process
 
 # Defining global script variables
 # Current script's version, the same as the version at the top in the script info section
-[datetime]$CurrentVersion = '2023.8.30'
+[datetime]$CurrentVersion = '2023.9.05'
 # Minimum OS build number required for the hardening measures used in this script
 [decimal]$Requiredbuild = '22621.2134'
 
@@ -367,7 +367,13 @@ try {
             Write-Error 'Microsoft Defender Anti Virus is not enabled, please enable it and then try again.'
             break            
         } 
-       
+        
+        if ($MDAVConfigCurrent.SmartAppControlState -ne 'On') {
+            if ($MDAVConfigCurrent.AMRunningMode -ne 'Normal') {
+                Write-Error "Microsoft Defender is running in $($MDAVConfigCurrent.AMRunningMode) state, please remove any 3rd party AV and then try again."
+                break
+            }
+        }
     }
     #endregion RequirementsCheck
 

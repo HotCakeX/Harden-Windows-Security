@@ -364,7 +364,7 @@ You will need to restart your device once. After restart, wait at least for 5-10
   - Smart App Control uses [ISG (Intelligent Security Graph)](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/use-windows-defender-application-control-with-intelligent-security-graph#how-does-wdac-work-with-the-isg). The ISG isn't a "list" of apps. Rather, it uses the same vast security intelligence and machine learning analytics that power Microsoft Defender SmartScreen and Microsoft Defender Antivirus to help classify applications as having "known good", "known bad", or "unknown" reputation. This cloud-based AI is based on trillions of signals collected from Windows endpoints and other data sources and processed every 24 hours. As a result, the decision from the cloud can change.
   - [Smart App Control](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/windows-defender-application-control#wdac-and-smart-app-control) can block a program entirely from running or only [some parts of it](https://support.microsoft.com/en-us/topic/smart-app-control-has-blocked-part-of-this-app-0729fff1-48bf-4b25-aa97-632fe55ccca2) in which case your app or program will continue working just fine most of the time. It's improved a lot since it was introduced, and it continues doing so. Consider turning it on after clean installing a new OS and fully updating it.
 
-  - Smart App Control enforces the [Microsoft Recommended Driver Block rules](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/microsoft-recommended-driver-block-rules) and the [Microsoft Recommended Block Rules](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/microsoft-recommended-block-rules)
+  - Smart App Control enforces the [Microsoft Recommended Driver Block rules](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/microsoft-recommended-driver-block-rules) and the [Microsoft Recommended Block Rules](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/applications-that-can-bypass-wdac)
   
   - Once you turn Smart App Control off, it can't be turned on without resetting or reinstalling Windows.
 
@@ -623,7 +623,7 @@ NistP384
      * Remote Desktop Sessions that only accept Username/Password won't work with this policy, so use [Passwordless RDP with Windows Hello for Business](https://learn.microsoft.com/en-us/windows/security/identity-protection/hello-for-business/hello-feature-remote-desktop).
      * **Goes without saying that you shouldn't use this policy if local password is the only way you use to log in.** If that's the case first connect your Windows account to Microsoft account and then use this policy.
      
-          1. WLIDCredentialProvider (Microsoft Account Password sign-in) - `{F8A0B131-5F68-486c-8040-7E8FC3C85BB6}`      
+          1. WLIDCredentialProvider (Windows Live ID) - `{F8A0B131-5F68-486c-8040-7E8FC3C85BB6}`      
           2. PasswordProvider - `{60b78e88-ead8-445c-9cfd-0b87f74ea6cd}`
 
 <p align="right"><a href="#menu-back-to-top">💡 (back to categories)</a></p>
@@ -1301,6 +1301,8 @@ Get-Content <Path-To-File> -stream zone.identifier
 - [HIPPA HITRUST](https://hitrustalliance.net/content/uploads/HITRUST_HIPAA-Guide.pdf)
 - [NIST SP 800-171 Rev. 2 - Protecting Controlled Unclassified Information in Nonfederal Systems and Organizations](https://csrc.nist.gov/pubs/sp/800/171/r2/upd1/final)
 - [Clean source principle](https://learn.microsoft.com/en-us/security/privileged-access-workstations/privileged-access-success-criteria#clean-source-principle)
+- [Windows Message Center](https://learn.microsoft.com/en-us/windows/release-health/windows-message-center)
+- [Deprecated features for Windows client](https://learn.microsoft.com/en-us/windows/whats-new/deprecated-features)
 
 <p align="right"><a href="#readme-top">💡 (back to top)</a></p>
 
@@ -1308,7 +1310,7 @@ Get-Content <Path-To-File> -stream zone.identifier
 
 ## License<a href="#license">![LicenseFreeIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/LicenseFree.png)</a>
 
-Using [MIT License](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE). Free information, because the only mission of this GitHub repository is to give all Windows users accurate, up to date and correct facts and information about how to stay secure and safe in dangerous environments, and to stay not one, but Many steps, ahead of threat actors.
+Using [MIT License](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE). Free information without any paywall or things of that nature. The only mission of this GitHub repository is to give all Windows users accurate, up to date and correct facts and information about how to stay secure and safe in dangerous environments, and to stay not one, but Many steps, ahead of threat actors.
 
 <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="Harden-Windows-Security is a PowerShell script">
 

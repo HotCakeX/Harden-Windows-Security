@@ -17,128 +17,171 @@ msedge.exe,BlockLowLabelImageLoads,Enable,Maximum possible mitigations for Edge 
 msedge.exe,SEHOP,Enable,Maximum possible mitigations for Edge browser. any more than this causes problem
 msedge.exe,TerminateOnError,Enable,Maximum possible mitigations for Edge browser. any more than this causes problem
 msedge.exe,UserShadowStack,Enable,Maximum possible mitigations for Edge browser. any more than this causes problem
-mscorsvw.exe,DisableExtensionPoints,Enable,System component hardening
-ngen.exe,DisableExtensionPoints,Enable,System component hardening
-ngentask.exe,DisableExtensionPoints,Enable,System component hardening
-PrintDialog.exe,DisableExtensionPoints,Enable,System component hardening
-SystemSettings.exe,DisableExtensionPoints,Enable,System component hardening
-runtimebroker.exe,DisableExtensionPoints,Enable,System component hardening
-C:\Windows\System32\vmcompute.exe,CFG,Enable,System component hardening
-C:\Windows\System32\vmcompute.exe,SuppressExports,Enable,System component hardening
-C:\Windows\System32\vmcompute.exe,StrictCFG,Enable,System component hardening
-C:\windows\system32\vmwp.exe,CFG,Enable,System component hardening
-C:\windows\system32\vmwp.exe,SuppressExports,Enable,System component hardening
-C:\windows\system32\vmwp.exe,StrictCFG,Enable,System component hardening
-QuickAssist.exe,DisableExtensionPoints,Enable,Hardening Quick Assist 
-QuickAssist.exe,StrictHandle,Enable,Hardening Quick Assist
-QuickAssist.exe,BlockDynamicCode,Enable,Hardening Quick Assist
-QuickAssist.exe,MicrosoftSignedOnly,Enable,Hardening Quick Assist
-QuickAssist.exe,AllowStoreSignedBinaries,Enable,Hardening Quick Assist
-QuickAssist.exe,EnforceModuleDependencySigning,Enable,Hardening Quick Assist
-QuickAssist.exe,DisableNonSystemFonts,Enable,Hardening Quick Assist
-QuickAssist.exe,BlockRemoteImageLoads,Enable,Hardening Quick Assist
-QuickAssist.exe,BlockLowLabelImageLoads,Enable,Hardening Quick Assist
-QuickAssist.exe,EnableExportAddressFilter,Enable,Hardening Quick Assist
-QuickAssist.exe,EnableExportAddressFilterPlus,Enable,Hardening Quick Assist
-QuickAssist.exe,EnableImportAddressFilter,Enable,Hardening Quick Assist
-QuickAssist.exe,EnableRopStackPivot,Enable,Hardening Quick Assist
-QuickAssist.exe,EnableRopCallerCheck,Enable,Hardening Quick Assist
-QuickAssist.exe,EnableRopSimExec,Enable,Hardening Quick Assist
-QuickAssist.exe,UserShadowStack,Enable,Hardening Quick Assist
-QuickAssist.exe,UserShadowStackStrictMode,Enable,Hardening Quick Assist
-QuickAssist.exe,AllowThreadsToOptOut,Disable,Hardening Quick Assist
-Acrobat.exe,DEP,Enable,Hardening Adobe Acrobat
-Acrobat.exe,ForceRelocateImages,Enable,Hardening Adobe Acrobat
-Acrobat.exe,RequireInfo,Enable,Hardening Adobe Acrobat
-Acrobat.exe,StrictHandle,Enable,Hardening Adobe Acrobat
-Acrobat.exe,EnforceModuleDependencySigning,Enable,Hardening Adobe Acrobat
-Acrobat.exe,DisableNonSystemFonts,Enable,Hardening Adobe Acrobat
-Acrobat.exe,BlockRemoteImageLoads,Enable,Hardening Adobe Acrobat
-Acrobat.exe,BlockLowLabelImageLoads,Enable,Hardening Adobe Acrobat
-Acrobat.exe,EnableExportAddressFilter,Enable,Hardening Adobe Acrobat
-Acrobat.exe,EnableExportAddressFilterPlus,Enable,Hardening Adobe Acrobat
-Acrobat.exe,EnableImportAddressFilter,Enable,Hardening Adobe Acrobat
-Acrobat.exe,EnableRopStackPivot,Enable,Hardening Adobe Acrobat
-Acrobat.exe,EnableRopCallerCheck,Enable,Hardening Adobe Acrobat
-Acrobat.exe,EnableRopSimExec,Enable,Hardening Adobe Acrobat
-Acrobat.exe,UserShadowStack,Enable,Hardening Adobe Acrobat
-OneDrive.exe,ForceRelocateImages,Enable,OneDrive Hardening
-OneDrive.exe,RequireInfo,Enable,OneDrive Hardening
-OneDrive.exe,StrictHandle,Enable,OneDrive Hardening
-OneDrive.exe,DisableExtensionPoints,Enable,OneDrive Hardening
-OneDrive.exe,MicrosoftSignedOnly,Enable,OneDrive Hardening
-OneDrive.exe,AllowStoreSignedBinaries,Enable,OneDrive Hardening
-OneDrive.exe,EnforceModuleDependencySigning,Enable,OneDrive Hardening
-OneDrive.exe,EnableImportAddressFilter,Enable,OneDrive Hardening
-OneDrive.exe,EnableRopStackPivot,Enable,OneDrive Hardening
-OneDrive.exe,EnableRopCallerCheck,Enable,OneDrive Hardening
-EXCEL.EXE,ForceRelocateImages,Enable,Excel Hardening
-EXCEL.EXE,RequireInfo,Enable,Excel Hardening
-EXCEL.EXE,StrictHandle,Enable,Excel Hardening
-EXCEL.EXE,DisableExtensionPoints,Enable,Excel Hardening
-EXCEL.EXE,MicrosoftSignedOnly,Enable,Excel Hardening
-EXCEL.EXE,AllowStoreSignedBinaries,Enable,Excel Hardening
-EXCEL.EXE,EnforceModuleDependencySigning,Enable,Excel Hardening
-EXCEL.EXE,EnableImportAddressFilter,Enable,Excel Hardening
-EXCEL.EXE,EnableRopStackPivot,Enable,Excel Hardening
-EXCEL.EXE,EnableRopCallerCheck,Enable,Excel Hardening
-MSACCESS.EXE,ForceRelocateImages,Enable,Access Hardening
-MSACCESS.EXE,RequireInfo,Enable,Access Hardening
-MSACCESS.EXE,StrictHandle,Enable,Access Hardening
-MSACCESS.EXE,DisableExtensionPoints,Enable,Access Hardening
-MSACCESS.EXE,MicrosoftSignedOnly,Enable,Access Hardening
-MSACCESS.EXE,AllowStoreSignedBinaries,Enable,Access Hardening
-MSACCESS.EXE,EnforceModuleDependencySigning,Enable,Access Hardening
-MSACCESS.EXE,EnableImportAddressFilter,Enable,Access Hardening
-MSACCESS.EXE,EnableRopStackPivot,Enable,Access Hardening
-MSACCESS.EXE,EnableRopCallerCheck,Enable,Access Hardening
-MSPUB.EXE,ForceRelocateImages,Enable,Publisher Hardening
-MSPUB.EXE,RequireInfo,Enable,Publisher Hardening
-MSPUB.EXE,StrictHandle,Enable,Publisher Hardening
-MSPUB.EXE,DisableExtensionPoints,Enable,Publisher Hardening
-MSPUB.EXE,MicrosoftSignedOnly,Enable,Publisher Hardening
-MSPUB.EXE,AllowStoreSignedBinaries,Enable,Publisher Hardening
-MSPUB.EXE,EnforceModuleDependencySigning,Enable,Publisher Hardening
-MSPUB.EXE,EnableImportAddressFilter,Enable,Publisher Hardening
-MSPUB.EXE,EnableRopStackPivot,Enable,Publisher Hardening
-MSPUB.EXE,EnableRopCallerCheck,Enable,Publisher Hardening
-ONENOTE.EXE,ForceRelocateImages,Enable,OneNote Hardening
-ONENOTE.EXE,RequireInfo,Enable,OneNote Hardening
-ONENOTE.EXE,StrictHandle,Enable,OneNote Hardening
-ONENOTE.EXE,DisableExtensionPoints,Enable,OneNote Hardening
-ONENOTE.EXE,MicrosoftSignedOnly,Enable,OneNote Hardening
-ONENOTE.EXE,AllowStoreSignedBinaries,Enable,OneNote Hardening
-ONENOTE.EXE,EnforceModuleDependencySigning,Enable,OneNote Hardening
-ONENOTE.EXE,EnableImportAddressFilter,Enable,OneNote Hardening
-ONENOTE.EXE,EnableRopStackPivot,Enable,OneNote Hardening
-ONENOTE.EXE,EnableRopCallerCheck,Enable,OneNote Hardening
-OUTLOOK.EXE,ForceRelocateImages,Enable,Outlook Hardening
-OUTLOOK.EXE,RequireInfo,Enable,Outlook Hardening
-OUTLOOK.EXE,StrictHandle,Enable,Outlook Hardening
-OUTLOOK.EXE,DisableExtensionPoints,Enable,Outlook Hardening
-OUTLOOK.EXE,MicrosoftSignedOnly,Enable,Outlook Hardening
-OUTLOOK.EXE,AllowStoreSignedBinaries,Enable,Outlook Hardening
-OUTLOOK.EXE,EnforceModuleDependencySigning,Enable,Outlook Hardening
-OUTLOOK.EXE,EnableImportAddressFilter,Enable,Outlook Hardening
-OUTLOOK.EXE,EnableRopStackPivot,Enable,Outlook Hardening
-OUTLOOK.EXE,EnableRopCallerCheck,Enable,Outlook Hardening
-POWERPNT.EXE,ForceRelocateImages,Enable,Power Point Hardening
-POWERPNT.EXE,RequireInfo,Enable,Power Point Hardening
-POWERPNT.EXE,StrictHandle,Enable,Power Point Hardening
-POWERPNT.EXE,DisableExtensionPoints,Enable,Power Point Hardening
-POWERPNT.EXE,MicrosoftSignedOnly,Enable,Power Point Hardening
-POWERPNT.EXE,AllowStoreSignedBinaries,Enable,Power Point Hardening
-POWERPNT.EXE,EnforceModuleDependencySigning,Enable,Power Point Hardening
-POWERPNT.EXE,EnableImportAddressFilter,Enable,Power Point Hardening
-POWERPNT.EXE,EnableRopStackPivot,Enable,Power Point Hardening
-POWERPNT.EXE,EnableRopCallerCheck,Enable,Power Point Hardening
-WINWORD.EXE,ForceRelocateImages,Enable,Word Hardening
-WINWORD.EXE,RequireInfo,Enable,Word Hardening
-WINWORD.EXE,StrictHandle,Enable,Word Hardening
-WINWORD.EXE,DisableExtensionPoints,Enable,Word Hardening
-WINWORD.EXE,MicrosoftSignedOnly,Enable,Word Hardening
-WINWORD.EXE,AllowStoreSignedBinaries,Enable,Word Hardening
-WINWORD.EXE,EnforceModuleDependencySigning,Enable,Word Hardening
-WINWORD.EXE,EnableImportAddressFilter,Enable,Word Hardening
-WINWORD.EXE,EnableRopStackPivot,Enable,Word Hardening
-WINWORD.EXE,EnableRopCallerCheck,Enable,Word Hardening
+mscorsvw.exe,DisableExtensionPoints,Enable,System component
+ngen.exe,DisableExtensionPoints,Enable,System component
+ngentask.exe,DisableExtensionPoints,Enable,System component
+PrintDialog.exe,DisableExtensionPoints,Enable,System component
+SystemSettings.exe,DisableExtensionPoints,Enable,System component
+runtimebroker.exe,DisableExtensionPoints,Enable,System component
+C:\Windows\System32\vmcompute.exe,CFG,Enable,System component
+C:\Windows\System32\vmcompute.exe,SuppressExports,Enable,System component
+C:\Windows\System32\vmcompute.exe,StrictCFG,Enable,System component
+C:\windows\system32\vmwp.exe,CFG,Enable,System component
+C:\windows\system32\vmwp.exe,SuppressExports,Enable,System component
+C:\windows\system32\vmwp.exe,StrictCFG,Enable,System component
+QuickAssist.exe,DisableExtensionPoints,Enable,Quick Assist 
+QuickAssist.exe,StrictHandle,Enable,Quick Assist
+QuickAssist.exe,BlockDynamicCode,Enable,Quick Assist
+QuickAssist.exe,MicrosoftSignedOnly,Enable,Quick Assist
+QuickAssist.exe,AllowStoreSignedBinaries,Enable,Quick Assist
+QuickAssist.exe,EnforceModuleDependencySigning,Enable,Quick Assist
+QuickAssist.exe,DisableNonSystemFonts,Enable,Quick Assist
+QuickAssist.exe,BlockRemoteImageLoads,Enable,Quick Assist
+QuickAssist.exe,BlockLowLabelImageLoads,Enable,Quick Assist
+QuickAssist.exe,EnableExportAddressFilter,Enable,Quick Assist
+QuickAssist.exe,EnableExportAddressFilterPlus,Enable,Quick Assist
+QuickAssist.exe,EnableImportAddressFilter,Enable,Quick Assist
+QuickAssist.exe,EnableRopStackPivot,Enable,Quick Assist
+QuickAssist.exe,EnableRopCallerCheck,Enable,Quick Assist
+QuickAssist.exe,EnableRopSimExec,Enable,Quick Assist
+QuickAssist.exe,UserShadowStack,Enable,Quick Assist
+QuickAssist.exe,UserShadowStackStrictMode,Enable,Quick Assist
+QuickAssist.exe,AllowThreadsToOptOut,Disable,Quick Assist
+Acrobat.exe,DEP,Enable,Adobe Acrobat
+Acrobat.exe,ForceRelocateImages,Enable,Adobe Acrobat
+Acrobat.exe,RequireInfo,Enable,Adobe Acrobat
+Acrobat.exe,StrictHandle,Enable,Adobe Acrobat
+Acrobat.exe,EnforceModuleDependencySigning,Enable,Adobe Acrobat
+Acrobat.exe,DisableNonSystemFonts,Enable,Adobe Acrobat
+Acrobat.exe,BlockRemoteImageLoads,Enable,Adobe Acrobat
+Acrobat.exe,BlockLowLabelImageLoads,Enable,Adobe Acrobat
+Acrobat.exe,EnableExportAddressFilter,Enable,Adobe Acrobat
+Acrobat.exe,EnableExportAddressFilterPlus,Enable,Adobe Acrobat
+Acrobat.exe,EnableImportAddressFilter,Enable,Adobe Acrobat
+Acrobat.exe,EnableRopStackPivot,Enable,Adobe Acrobat
+Acrobat.exe,EnableRopCallerCheck,Enable,Adobe Acrobat
+Acrobat.exe,EnableRopSimExec,Enable,Adobe Acrobat
+Acrobat.exe,UserShadowStack,Enable,Adobe Acrobat
+OneDrive.exe,ForceRelocateImages,Enable,OneDrive
+OneDrive.exe,RequireInfo,Enable,OneDrive
+OneDrive.exe,StrictHandle,Enable,OneDrive
+OneDrive.exe,DisableExtensionPoints,Enable,OneDrive
+OneDrive.exe,MicrosoftSignedOnly,Enable,OneDrive
+OneDrive.exe,AllowStoreSignedBinaries,Enable,OneDrive
+OneDrive.exe,EnforceModuleDependencySigning,Enable,OneDrive
+OneDrive.exe,EnableImportAddressFilter,Enable,OneDrive
+OneDrive.exe,EnableRopStackPivot,Enable,OneDrive
+OneDrive.exe,EnableRopCallerCheck,Enable,OneDrive
+EXCEL.EXE,ForceRelocateImages,Enable,Excel
+EXCEL.EXE,RequireInfo,Enable,Excel
+EXCEL.EXE,StrictHandle,Enable,Excel
+EXCEL.EXE,DisableExtensionPoints,Enable,Excel
+EXCEL.EXE,MicrosoftSignedOnly,Enable,Excel
+EXCEL.EXE,AllowStoreSignedBinaries,Enable,Excel
+EXCEL.EXE,EnforceModuleDependencySigning,Enable,Excel
+EXCEL.EXE,EnableImportAddressFilter,Enable,Excel
+EXCEL.EXE,EnableRopStackPivot,Enable,Excel
+EXCEL.EXE,EnableRopCallerCheck,Enable,Excel
+MSACCESS.EXE,ForceRelocateImages,Enable,Access
+MSACCESS.EXE,RequireInfo,Enable,Access
+MSACCESS.EXE,StrictHandle,Enable,Access
+MSACCESS.EXE,DisableExtensionPoints,Enable,Access
+MSACCESS.EXE,MicrosoftSignedOnly,Enable,Access
+MSACCESS.EXE,AllowStoreSignedBinaries,Enable,Access
+MSACCESS.EXE,EnforceModuleDependencySigning,Enable,Access
+MSACCESS.EXE,EnableImportAddressFilter,Enable,Access
+MSACCESS.EXE,EnableRopStackPivot,Enable,Access
+MSACCESS.EXE,EnableRopCallerCheck,Enable,Access
+MSPUB.EXE,ForceRelocateImages,Enable,Publisher
+MSPUB.EXE,RequireInfo,Enable,Publisher
+MSPUB.EXE,StrictHandle,Enable,Publisher
+MSPUB.EXE,DisableExtensionPoints,Enable,Publisher
+MSPUB.EXE,MicrosoftSignedOnly,Enable,Publisher
+MSPUB.EXE,AllowStoreSignedBinaries,Enable,Publisher
+MSPUB.EXE,EnforceModuleDependencySigning,Enable,Publisher
+MSPUB.EXE,EnableImportAddressFilter,Enable,Publisher
+MSPUB.EXE,EnableRopStackPivot,Enable,Publisher
+MSPUB.EXE,EnableRopCallerCheck,Enable,Publisher
+ONENOTE.EXE,ForceRelocateImages,Enable,OneNote
+ONENOTE.EXE,RequireInfo,Enable,OneNote
+ONENOTE.EXE,StrictHandle,Enable,OneNote
+ONENOTE.EXE,DisableExtensionPoints,Enable,OneNote
+ONENOTE.EXE,MicrosoftSignedOnly,Enable,OneNote
+ONENOTE.EXE,AllowStoreSignedBinaries,Enable,OneNote
+ONENOTE.EXE,EnforceModuleDependencySigning,Enable,OneNote
+ONENOTE.EXE,EnableImportAddressFilter,Enable,OneNote
+ONENOTE.EXE,EnableRopStackPivot,Enable,OneNote
+ONENOTE.EXE,EnableRopCallerCheck,Enable,OneNote
+OUTLOOK.EXE,ForceRelocateImages,Enable,Outlook
+OUTLOOK.EXE,RequireInfo,Enable,Outlook
+OUTLOOK.EXE,StrictHandle,Enable,Outlook
+OUTLOOK.EXE,DisableExtensionPoints,Enable,Outlook
+OUTLOOK.EXE,MicrosoftSignedOnly,Enable,Outlook
+OUTLOOK.EXE,AllowStoreSignedBinaries,Enable,Outlook
+OUTLOOK.EXE,EnforceModuleDependencySigning,Enable,Outlook
+OUTLOOK.EXE,EnableImportAddressFilter,Enable,Outlook
+OUTLOOK.EXE,EnableRopStackPivot,Enable,Outlook
+OUTLOOK.EXE,EnableRopCallerCheck,Enable,Outlook
+POWERPNT.EXE,ForceRelocateImages,Enable,Power Point
+POWERPNT.EXE,RequireInfo,Enable,Power Point
+POWERPNT.EXE,StrictHandle,Enable,Power Point
+POWERPNT.EXE,DisableExtensionPoints,Enable,Power Point
+POWERPNT.EXE,MicrosoftSignedOnly,Enable,Power Point
+POWERPNT.EXE,AllowStoreSignedBinaries,Enable,Power Point
+POWERPNT.EXE,EnforceModuleDependencySigning,Enable,Power Point
+POWERPNT.EXE,EnableImportAddressFilter,Enable,Power Point
+POWERPNT.EXE,EnableRopStackPivot,Enable,Power Point
+POWERPNT.EXE,EnableRopCallerCheck,Enable,Power Point
+WINWORD.EXE,ForceRelocateImages,Enable,Word
+WINWORD.EXE,RequireInfo,Enable,Word
+WINWORD.EXE,StrictHandle,Enable,Word
+WINWORD.EXE,DisableExtensionPoints,Enable,Word
+WINWORD.EXE,MicrosoftSignedOnly,Enable,Word
+WINWORD.EXE,AllowStoreSignedBinaries,Enable,Word
+WINWORD.EXE,EnforceModuleDependencySigning,Enable,Word
+WINWORD.EXE,EnableImportAddressFilter,Enable,Word
+WINWORD.EXE,EnableRopStackPivot,Enable,Word
+WINWORD.EXE,EnableRopCallerCheck,Enable,Word
+C:\Windows\System32\lsass.exe,DisableExtensionPoints,Enable,Local Security Authority Subsystem Service
+C:\Windows\System32\lsass.exe,BlockDynamicCode,Enable,Local Security Authority Subsystem Service
+C:\Windows\System32\lsass.exe,DisallowChildProcessCreation,Enable,Local Security Authority Subsystem Service
+C:\Windows\System32\SmartScreen.exe,DisableExtensionPoints,Enable,Smart Screen process
+C:\Windows\System32\SmartScreen.exe,CFG,Enable,Smart Screen process
+C:\Windows\System32\SmartScreen.exe,StrictCFG,Enable,Smart Screen process
+C:\Windows\System32\SmartScreen.exe,MicrosoftSignedOnly,Enable,Smart Screen process
+C:\Windows\System32\SmartScreen.exe,EnableExportAddressFilter,Enable,Smart Screen process
+Regsvr32.exe,BlockDynamicCode,Enable,Register Server
+Regsvr32.exe,BlockLowLabelImageLoads,Enable,Register Server
+C:\Windows\System32\WindowsSandbox.exe,ForceRelocateImages,Enable,Windows Sandbox process
+C:\Windows\System32\WindowsSandbox.exe,RequireInfo,Enable,Windows Sandbox process
+C:\Windows\System32\WindowsSandbox.exe,StrictHandle,Enable,Windows Sandbox process
+C:\Windows\System32\WindowsSandbox.exe,DisableExtensionPoints,Enable,Windows Sandbox process
+C:\Windows\System32\WindowsSandbox.exe,CFG,Enable,Windows Sandbox process
+C:\Windows\System32\WindowsSandbox.exe,StrictCFG,Enable,Windows Sandbox process
+C:\Windows\System32\WindowsSandbox.exe,MicrosoftSignedOnly,Enable,Windows Sandbox process
+C:\Windows\System32\WindowsSandbox.exe,EnforceModuleDependencySigning,Enable,Windows Sandbox process
+C:\Windows\System32\WindowsSandbox.exe,BlockRemoteImageLoads,Enable,Windows Sandbox process
+C:\Windows\System32\WindowsSandbox.exe,BlockLowLabelImageLoads,Enable,Windows Sandbox process
+C:\Windows\System32\WindowsSandbox.exe,EnableExportAddressFilter,Enable,Windows Sandbox process
+C:\Windows\System32\WindowsSandbox.exe,EnableExportAddressFilterPlus,Enable,Windows Sandbox process
+C:\Windows\System32\WindowsSandboxClient.exe,ForceRelocateImages,Enable,Windows Sandbox process
+C:\Windows\System32\WindowsSandboxClient.exe,RequireInfo,Enable,Windows Sandbox process
+C:\Windows\System32\WindowsSandboxClient.exe,StrictHandle,Enable,Windows Sandbox process
+C:\Windows\System32\WindowsSandboxClient.exe,DisableExtensionPoints,Enable,Windows Sandbox process
+C:\Windows\System32\WindowsSandboxClient.exe,CFG,Enable,Windows Sandbox process
+C:\Windows\System32\WindowsSandboxClient.exe,StrictCFG,Enable,Windows Sandbox process
+C:\Windows\System32\WindowsSandboxClient.exe,MicrosoftSignedOnly,Enable,Windows Sandbox process
+C:\Windows\System32\WindowsSandboxClient.exe,EnforceModuleDependencySigning,Enable,Windows Sandbox process
+C:\Windows\System32\WindowsSandboxClient.exe,BlockRemoteImageLoads,Enable,Windows Sandbox process
+C:\Windows\System32\WindowsSandboxClient.exe,BlockLowLabelImageLoads,Enable,Windows Sandbox process
+C:\Windows\System32\WindowsSandboxClient.exe,EnableExportAddressFilter,Enable,Windows Sandbox process
+C:\Windows\System32\WindowsSandboxClient.exe,EnableExportAddressFilterPlus,Enable,Windows Sandbox process
+C:\Windows\explorer.exe,ForceRelocateImages,Enable,Explorer
+C:\Windows\explorer.exe,RequireInfo,Enable,Explorer
+C:\Windows\explorer.exe,StrictHandle,Enable,Explorer
+C:\Windows\explorer.exe,DisableExtensionPoints,Enable,Explorer
+C:\Windows\explorer.exe,CFG,Enable,Explorer
+C:\Windows\explorer.exe,StrictCFG,Enable,Explorer
+C:\Windows\explorer.exe,EnableExportAddressFilter,Enable,Explorer
+C:\Windows\explorer.exe,EnableExportAddressFilterPlus,Enable,Explorer
+C:\Windows\explorer.exe,EnableImportAddressFilter,Enable,Explorer

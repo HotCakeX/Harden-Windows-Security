@@ -1,6 +1,6 @@
 <#PSScriptInfo
 
-.VERSION 2023.8.30
+.VERSION 2023.9.06
 
 .GUID d435a293-c9ee-4217-8dc1-4ad2318a5770
 
@@ -95,7 +95,7 @@ Set-ExecutionPolicy Bypass -Scope Process
 
 # Defining global script variables
 # Current script's version, the same as the version at the top in the script info section
-[datetime]$CurrentVersion = '2023.8.30'
+[datetime]$CurrentVersion = '2023.9.06'
 # Minimum OS build number required for the hardening measures used in this script
 [decimal]$Requiredbuild = '22621.2134'
 
@@ -172,9 +172,20 @@ function Select-Option {
             if ($IsCore) { &$WriteMintGreen "$($i+1): $($Options[$i])" } else { Write-Host "$($i+1): $($Options[$i])" }
         }
 
-        $SelectedIndex = Read-Host 'Select an option'
-        if ($SelectedIndex -gt 0 -and $SelectedIndex -le $Options.Length) { $Selected = $Options[$SelectedIndex - 1] }
-        else { Write-Host 'Invalid Option.' -ForegroundColor Yellow }
+        # Make sure user only inputs a positive integer
+        [int]$SelectedIndex = 0
+        $isValid = [int]::TryParse((Read-Host 'Select an option'), [ref]$SelectedIndex)
+        if ($isValid) {
+            if ($SelectedIndex -gt 0 -and $SelectedIndex -le $Options.Length) { 
+                $Selected = $Options[$SelectedIndex - 1] 
+            }
+            else {                 
+                Write-Warning -Message 'Invalid Option.'
+            }
+        }
+        else {
+            Write-Warning -Message 'Invalid input. Please only enter a positive number.'
+        }  
     }
     return $Selected
 }
@@ -350,17 +361,30 @@ try {
             break    
         }
 
-        # Check to make sure Microsoft Defender is running normally
-        if ((Get-MpComputerStatus).AMRunningMode -eq 'Passive Mode') {
-            Write-Error 'Microsoft Defender is running in Passive Mode, please remove any 3rd party AV and then try again.'
+        # Get the current configuration of the Microsoft Defender
+        $MDAVConfigCurrent = Get-MpComputerStatus       
+        
+        if (-NOT ($MDAVConfigCurrent.AMServiceEnabled -eq $true)) {
+            Write-Error 'Microsoft Defender Anti Malware service is not enabled, please enable it and then try again.'
             break            
-        }
+        } 
 
-        # Check to make sure Microsoft Defender real time protection is enabled
-        if ((Get-MpComputerStatus).RealTimeProtectionEnabled -eq $false) {
-            Write-Error 'Microsoft Defender Real Time Protection is not enabled, please enable it and then try again.'
+        if (-NOT ($MDAVConfigCurrent.AntispywareEnabled -eq $true)) {
+            Write-Error 'Microsoft Defender Anti Spyware is not enabled, please enable it and then try again.'
             break            
-        }        
+        } 
+
+        if (-NOT ($MDAVConfigCurrent.AntivirusEnabled -eq $true)) {
+            Write-Error 'Microsoft Defender Anti Virus is not enabled, please enable it and then try again.'
+            break            
+        } 
+        
+        if ($MDAVConfigCurrent.SmartAppControlState -ne 'On') {
+            if ($MDAVConfigCurrent.AMRunningMode -ne 'Normal') {
+                Write-Error "Microsoft Defender is running in $($MDAVConfigCurrent.AMRunningMode) state, please remove any 3rd party AV and then try again."
+                break
+            }
+        }
     }
     #endregion RequirementsCheck
 
@@ -1270,6 +1294,11 @@ try {
                     else {
                         Write-Host 'Microsoft Defender Application Guard is already enabled' -ForegroundColor Green 
                     }
+
+                }
+
+                # Need to split the commands in 2 scriptblocks so we don't get "program PowerShell.exe failed to run: The filename or extension is too long" error
+                powershell.exe {
                 
                     # Enable Windows Sandbox
                     Write-Host "`nEnabling Windows Sandbox" -ForegroundColor Yellow
@@ -1323,10 +1352,10 @@ try {
                     }
             
                     # Uninstall VBScript that is now uninstallable as an optional features since Windows 11 insider Dev build 25309 - Won't do anything in other builds                      
-                    if (Get-WindowsCapability -Online | Where-Object { $_.Name -like '* VBSCRIPT*' }) {
-                        try {
-                            Write-Host "`nUninstalling VBSCRIPT" -ForegroundColor Yellow
-                            Get-WindowsCapability -Online | Where-Object { $_.Name -like '* VBSCRIPT*' } | Remove-WindowsCapability -Online -ErrorAction Stop
+                    if (Get-WindowsCapability -Online | Where-Object { $_.Name -like '*VBSCRIPT*' }) {                        
+                        try {  
+                            Write-Host "`nUninstalling VBSCRIPT" -ForegroundColor Yellow                          
+                            Get-WindowsCapability -Online | Where-Object { $_.Name -like '*VBSCRIPT*' } | Remove-WindowsCapability -Online -ErrorAction Stop
                             # Shows the successful message only if removal process was successful                                                      
                             Write-Host 'VBSCRIPT has been uninstalled' -ForegroundColor Green
                         }
@@ -1337,39 +1366,54 @@ try {
                     }     
                 
                     # Uninstall Internet Explorer mode functionality for Edge
-                    try {
-                        Write-Host "`nUninstalling Internet Explorer mode functionality for Edge" -ForegroundColor Yellow
-                        Get-WindowsCapability -Online | Where-Object { $_.Name -like '*Browser.InternetExplorer*' } | Remove-WindowsCapability -Online -ErrorAction Stop
-                        # Shows the successful message only if removal process was successful
-                        Write-Host 'Internet Explorer mode functionality for Edge has been uninstalled' -ForegroundColor Green
+                    Write-Host "`nUninstalling Internet Explorer mode functionality for Edge" -ForegroundColor Yellow
+                    if ((Get-WindowsCapability -Online | Where-Object { $_.Name -like '*Browser.InternetExplorer*' }).state -ne 'NotPresent') {
+                        try {                            
+                            Get-WindowsCapability -Online | Where-Object { $_.Name -like '*Browser.InternetExplorer*' } | Remove-WindowsCapability -Online -ErrorAction Stop
+                            # Shows the successful message only if removal process was successful
+                            Write-Host 'Internet Explorer mode functionality for Edge has been uninstalled' -ForegroundColor Green
+                        }
+                        catch {
+                            # show errors
+                            $_
+                        }
                     }
-                    catch {
-                        # show errors
-                        $_
+                    else {
+                        Write-Host 'Internet Explorer mode functionality for Edge is already uninstalled.' -ForegroundColor Green
                     }
 
-                    # Uninstall WMIC
-                    try {
-                        Write-Host "`nUninstalling WMIC" -ForegroundColor Yellow
-                        Get-WindowsCapability -Online | Where-Object { $_.Name -like '*wmic*' } | Remove-WindowsCapability -Online -ErrorAction Stop
-                        # Shows the successful message only if removal process was successful
-                        Write-Host 'WMIC has been uninstalled' -ForegroundColor Green
+                    # Uninstall WMIC 
+                    Write-Host "`nUninstalling WMIC" -ForegroundColor Yellow
+                    if ((Get-WindowsCapability -Online | Where-Object { $_.Name -like '*wmic*' }).state -ne 'NotPresent') {                   
+                        try {                            
+                            Get-WindowsCapability -Online | Where-Object { $_.Name -like '*wmic*' } | Remove-WindowsCapability -Online -ErrorAction Stop
+                            # Shows the successful message only if removal process was successful
+                            Write-Host 'WMIC has been uninstalled' -ForegroundColor Green
+                        }
+                        catch {
+                            # show error
+                            $_
+                        }
                     }
-                    catch {
-                        # show error
-                        $_
+                    else {
+                        Write-Host 'WMIC is already uninstalled.' -ForegroundColor Green
                     }
 
                     # Uninstall Legacy Notepad
-                    try {
-                        Write-Host "`nUninstalling Legacy Notepad" -ForegroundColor Yellow
-                        Get-WindowsCapability -Online | Where-Object { $_.Name -like '*Microsoft.Windows.Notepad.System*' } | Remove-WindowsCapability -Online -ErrorAction Stop
-                        # Shows the successful message only if removal process was successful
-                        Write-Host 'Legacy Notepad has been uninstalled. The modern multi-tabbed Notepad is unaffected.' -ForegroundColor Green
+                    Write-Host "`nUninstalling Legacy Notepad" -ForegroundColor Yellow
+                    if ((Get-WindowsCapability -Online | Where-Object { $_.Name -like '*Microsoft.Windows.Notepad.System*' }).state -ne 'NotPresent') {
+                        try {                            
+                            Get-WindowsCapability -Online | Where-Object { $_.Name -like '*Microsoft.Windows.Notepad.System*' } | Remove-WindowsCapability -Online -ErrorAction Stop
+                            # Shows the successful message only if removal process was successful
+                            Write-Host 'Legacy Notepad has been uninstalled. The modern multi-tabbed Notepad is unaffected.' -ForegroundColor Green
+                        }
+                        catch {
+                            # show error
+                            $_
+                        }
                     }
-                    catch {
-                        # show error
-                        $_
+                    else {
+                        Write-Host 'Legacy Notepad is already uninstalled.' -ForegroundColor Green
                     }
                 }
 

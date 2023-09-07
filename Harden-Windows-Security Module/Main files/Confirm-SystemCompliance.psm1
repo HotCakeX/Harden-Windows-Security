@@ -474,7 +474,31 @@ function Confirm-SystemCompliance {
             Name         = 'Hibernate enabled and set to full'
             Category     = $CatName
             Method       = 'Cmdlet'
-        }               
+        }
+
+        # OS Drive encryption verifications
+        if ((Get-BitLockerVolume -MountPoint $env:SystemDrive).ProtectionStatus -eq 'on') {                                 
+            [System.Object[]]$KeyProtectors = (Get-BitLockerVolume -MountPoint $env:SystemDrive).KeyProtector.keyprotectortype
+            # check if TPM+PIN and recovery password are being used with Bitlocker which are the safest settings
+            if (($KeyProtectors -contains 'Tpmpin') -and ($KeyProtectors -contains 'RecoveryPassword')) {        
+                $IndividualItemResult = $True
+            }
+            else {
+                $IndividualItemResult = $false
+            }
+        }
+        else {
+            $IndividualItemResult = $false
+        }
+        $NestedObjectArray += [PSCustomObject]@{
+            FriendlyName = 'Secure OS Drive encryption'            
+            Compliant    = $IndividualItemResult
+            Value        = $IndividualItemResult           
+            Name         = 'Secure OS Drive encryption'
+            Category     = $CatName
+            Method       = 'Cmdlet'
+        }  
+
         # Add the array of custom objects as a property to the $FinalMegaObject object outside the loop
         Add-Member -InputObject $FinalMegaObject -MemberType NoteProperty -Name $CatName -Value $NestedObjectArray
         #EndRegion Bitlocker-Category
@@ -1557,9 +1581,9 @@ function Confirm-SystemCompliance {
             }
             
             # Counting the number of $True Compliant values in the Final Output Object
-            [int]$TotalTrueCompliantValuesInOutPut = ($FinalMegaObject.'Microsoft Defender' | Where-Object { $_.Compliant -eq $True }).Count + # 43
+            [int]$TotalTrueCompliantValuesInOutPut = ($FinalMegaObject.'Microsoft Defender' | Where-Object { $_.Compliant -eq $True }).Count + # 49
             [int]($FinalMegaObject.ASR | Where-Object { $_.Compliant -eq $True }).Count + # 17
-            [int]($FinalMegaObject.Bitlocker | Where-Object { $_.Compliant -eq $True }).Count + # 22
+            [int]($FinalMegaObject.Bitlocker | Where-Object { $_.Compliant -eq $True }).Count + # 23
             [int]($FinalMegaObject.TLS | Where-Object { $_.Compliant -eq $True }).Count + # 21
             [int]($FinalMegaObject.LockScreen | Where-Object { $_.Compliant -eq $True }).Count + # 16
             [int]($FinalMegaObject.UAC | Where-Object { $_.Compliant -eq $True }).Count + # 4
@@ -1567,7 +1591,7 @@ function Confirm-SystemCompliance {
             [int]($FinalMegaObject.'Windows Firewall' | Where-Object { $_.Compliant -eq $True }).Count + # 19
             [int]($FinalMegaObject.'Optional Windows Features' | Where-Object { $_.Compliant -eq $True }).Count + # 11
             [int]($FinalMegaObject.'Windows Networking' | Where-Object { $_.Compliant -eq $True }).Count + # 9
-            [int]($FinalMegaObject.Miscellaneous | Where-Object { $_.Compliant -eq $True }).Count + # 20
+            [int]($FinalMegaObject.Miscellaneous | Where-Object { $_.Compliant -eq $True }).Count + # 18
             [int]($FinalMegaObject.'Windows Update' | Where-Object { $_.Compliant -eq $True }).Count + # 14
             [int]($FinalMegaObject.Edge | Where-Object { $_.Compliant -eq $True }).Count + # 16
             [int]($FinalMegaObject.'Non-Admin' | Where-Object { $_.Compliant -eq $True }).Count # 11
@@ -1715,15 +1739,15 @@ function Confirm-SystemCompliance {
             #Endregion ASCII-Arts
 
             # Total number of Compliant values not equal to N/A 
-            [int]$TotalNumberOfTrueCompliantValues = 231
+            [int]$TotalNumberOfTrueCompliantValues = 236
                   
             switch ($True) {
                     ($TotalTrueCompliantValuesInOutPut -in 1..40) { & $WriteRainbow2 "$WhenValue1To20`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $TotalNumberOfTrueCompliantValues!" }                    
                     ($TotalTrueCompliantValuesInOutPut -in 41..80) { & $WriteRainbow1 "$WhenValue21To40`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $TotalNumberOfTrueCompliantValues!" }
-                    ($TotalTrueCompliantValuesInOutPut -in 81..100) { & $WriteRainbow1 "$WhenValue41To60`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $TotalNumberOfTrueCompliantValues!" }
-                    ($TotalTrueCompliantValuesInOutPut -in 101..140) { & $WriteRainbow2 "$WhenValue61To80`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $TotalNumberOfTrueCompliantValues!" }
-                    ($TotalTrueCompliantValuesInOutPut -in 141..180) { & $WriteRainbow1 "$WhenValue81To88`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $TotalNumberOfTrueCompliantValues!" }
-                    ($TotalTrueCompliantValuesInOutPut -gt 180) { & $WriteRainbow2 "$WhenValueAbove88`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $TotalNumberOfTrueCompliantValues!" }
+                    ($TotalTrueCompliantValuesInOutPut -in 81..120) { & $WriteRainbow1 "$WhenValue41To60`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $TotalNumberOfTrueCompliantValues!" }
+                    ($TotalTrueCompliantValuesInOutPut -in 121..160) { & $WriteRainbow2 "$WhenValue61To80`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $TotalNumberOfTrueCompliantValues!" }
+                    ($TotalTrueCompliantValuesInOutPut -in 161..200) { & $WriteRainbow1 "$WhenValue81To88`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $TotalNumberOfTrueCompliantValues!" }
+                    ($TotalTrueCompliantValuesInOutPut -gt 200) { & $WriteRainbow2 "$WhenValueAbove88`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $TotalNumberOfTrueCompliantValues!" }
             } 
         }
     

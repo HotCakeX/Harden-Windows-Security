@@ -152,20 +152,10 @@ function Confirm-SystemCompliance {
         # Storing the output of the ini file parsing function
         [PSCustomObject]$SecurityPoliciesIni = ConvertFrom-IniFile -IniFile .\security_policy.inf
         
-        Write-Progress -Activity 'Downloading Registry CSV File from GitHub' -Status 'Processing...' -PercentComplete 20
+        Write-Progress -Activity 'Importing Registry CSV File' -Status 'Processing...' -PercentComplete 20
         
         # Import the CSV file
-        try {  
-            Invoke-WithoutProgress {     
-                Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security%20Module/Resources/Registry%20resources.csv' -OutFile '.\Registry resources.csv'
-                [System.Object[]]$global:CSVResource = Import-Csv -Path '.\Registry resources.csv'
-                # Total number of Compliant values not equal to N/A 
-                [int]$global:TotalNumberOfTrueCompliantValues = (Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security%20Module/Resources/TotalNumberOfTrueCompliantValues.txt')
-            }
-        }
-        catch {
-            Write-Error -Message "Couldn't download the required files, please check your Internet connection." -ErrorAction Stop
-        }
+        [System.Object[]]$CSVResource = Import-Csv -Path "$psscriptroot\Resources\Registry resources.csv"
      
         # An object to hold all the initial registry items
         [System.Object[]]$AllRegistryItems = @()
@@ -1484,6 +1474,9 @@ function Confirm-SystemCompliance {
                 
 '@
             #Endregion ASCII-Arts
+
+            # Total number of Compliant values not equal to N/A 
+            [int]$TotalNumberOfTrueCompliantValues = 231
                   
             switch ($True) {
                     ($TotalTrueCompliantValuesInOutPut -in 1..40) { & $WriteRainbow2 "$WhenValue1To20`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $TotalNumberOfTrueCompliantValues!" }                    
@@ -1500,7 +1493,6 @@ function Confirm-SystemCompliance {
     end {
         # Clean up
         Remove-Item -Path '.\security_policy.inf' -Force
-        Remove-Item -Path '.\Registry resources.csv' -Force
     }
 
     <#

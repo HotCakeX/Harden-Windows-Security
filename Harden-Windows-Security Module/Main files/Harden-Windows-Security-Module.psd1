@@ -104,7 +104,14 @@
     # ModuleList = @()
 
     # List of all files packaged with this module
-    FileList             = @('Harden-Windows-Security-Module.psd1', 'Confirm-SystemCompliance.psm1', 'Protect-WindowsSecurity.psm1', 'Unprotect-WindowsSecurity.psm1')
+    FileList             = @('Harden-Windows-Security-Module.psd1',
+        'Confirm-SystemCompliance.psm1',
+        'Protect-WindowsSecurity.psm1',
+        'Unprotect-WindowsSecurity.psm1',
+        'Resources\Default Security Policy.inf',
+        'Resources\Registry resources.csv',
+        'Harden-Windows-Security.ps1'
+    )
 
     # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.
     PrivateData          = @{

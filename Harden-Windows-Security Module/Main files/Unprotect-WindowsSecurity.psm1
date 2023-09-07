@@ -1,7 +1,99 @@
 Function Unprotect-WindowsSecurity {
 
     # Stop the execution when there is an error
-    $ErrorActionPreference = 'Stop'
+    $global:ErrorActionPreference = 'Stop'
+
+    # Hiding Invoke-WebRequest progress because it creates lingering visual effect on PowerShell console for some reason
+    # https://github.com/PowerShell/PowerShell/issues/14348
+
+    # https://stackoverflow.com/questions/18770723/hide-progress-of-Invoke-WebRequest
+    # Create an in-memory module so $ScriptBlock doesn't run in new scope
+    $null = New-Module {
+        function Invoke-WithoutProgress {
+            [CmdletBinding()]
+            param (
+                [Parameter(Mandatory)][scriptblock]$ScriptBlock
+            )
+            # Save current progress preference and hide the progress
+            $prevProgressPreference = $global:ProgressPreference
+            $global:ProgressPreference = 'SilentlyContinue'
+            try {
+                # Run the script block in the scope of the caller of this module function
+                . $ScriptBlock
+            }
+            finally {
+                # Restore the original behavior
+                $global:ProgressPreference = $prevProgressPreference
+            }
+        }
+    }
+
+    # Make sure the latest version of the module is installed and if not, automatically update it, clean up any old versions
+    function Update-self {            
+        [version]$CurrentVersion = (Test-ModuleManifest "$psscriptroot\Harden-Windows-Security-Module.psd1").Version
+        
+        try {
+            Invoke-WithoutProgress {             
+                [version]$global:LatestVersion = Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security%20Module/version.txt'             
+            }
+        }
+        catch {   
+            Write-Error -Message "Couldn't verify if the latest version of the module is installed, please check your Internet connection."
+        }
+        
+        if ($CurrentVersion -lt $LatestVersion) {
+            Write-Output "$($PSStyle.Foreground.FromRGB(255,105,180))The currently installed module's version is $CurrentVersion while the latest version is $LatestVersion - Auto Updating the module... 💓$($PSStyle.Reset)"
+            Remove-Module -Name 'Harden-Windows-Security-Module' -Force
+            # Do this if the module was installed properly using Install-moodule cmdlet
+            try {
+
+                # backup the current allowed apps list in Controlled folder access in order to restore them at the end of the script
+                # doing this so that when we Add and then Remove PowerShell executables in Controlled folder access exclusions
+                # no user customization will be affected
+                [string[]]$CFAAllowedAppsBackup = (Get-MpPreference).ControlledFolderAccessAllowedApplications
+            
+                # Temporarily allow the currently running PowerShell executables to the Controlled Folder Access allowed apps
+                # so that the script can run without interruption. This change is reverted at the end.
+                Get-ChildItem -Path "$PSHOME\*.exe" | ForEach-Object {
+                    Add-MpPreference -ControlledFolderAccessAllowedApplications $_.FullName
+                }
+
+                Uninstall-Module -Name 'Harden-Windows-Security-Module' -AllVersions -Force
+                Install-Module -Name 'Harden-Windows-Security-Module' -RequiredVersion $LatestVersion -Force              
+                Import-Module -Name 'Harden-Windows-Security-Module' -RequiredVersion $LatestVersion -Force -Global
+            }
+            # Do this if module files/folder was just copied to Documents folder and not properly installed - Should rarely happen
+            catch {
+                Install-Module -Name 'Harden-Windows-Security-Module' -RequiredVersion $LatestVersion -Force
+                Import-Module -Name 'Harden-Windows-Security-Module' -RequiredVersion $LatestVersion -Force -Global
+            }              
+            finally {
+                # Reverting the PowerShell executables allow listings in Controlled folder access
+                Get-ChildItem -Path "$PSHOME\*.exe" | ForEach-Object {
+                    Remove-MpPreference -ControlledFolderAccessAllowedApplications $_.FullName
+                }
+                # restoring the original Controlled folder access allow list - if user already had added PowerShell executables to the list
+                # they will be restored as well, so user customization will remain intact
+                if ($null -ne $CFAAllowedAppsBackup) { 
+                    $CFAAllowedAppsBackup | ForEach-Object {
+                        Add-MpPreference -ControlledFolderAccessAllowedApplications $_
+                    }
+                }              
+            }
+            # Make sure the old version isn't run after update
+            Write-Output "$($PSStyle.Foreground.FromRGB(152,255,152))Update successful, please run the Unprotect-WindowsSecurity cmdlet again.$($PSStyle.Reset)"          
+            break
+            return          
+        }
+    }
+
+    # Makes sure this cmdlet is invoked with Admin privileges
+    if (![bool]([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
+        Write-Error -Message 'Unprotect-WindowsSecurity cmdlet requires Administrator privileges.' -ErrorAction Stop
+    }
+
+    # Self update the module
+    Update-self
 
     # Custom colors
     [scriptblock]$WriteFuchsia = { Write-Host "$($PSStyle.Foreground.FromRGB(236,68,155))$($args[0])$($PSStyle.Reset)" }
@@ -69,31 +161,6 @@ Function Unprotect-WindowsSecurity {
 
         Write-Progress -Activity 'Downloading the required files' -Status 'Processing' -PercentComplete 30
 
-        # Hiding Invoke-WebRequest progress because it creates lingering visual effect on PowerShell console for some reason
-        # https://github.com/PowerShell/PowerShell/issues/14348
-
-        # https://stackoverflow.com/questions/18770723/hide-progress-of-Invoke-WebRequest
-        # Create an in-memory module so $ScriptBlock doesn't run in new scope
-        $null = New-Module {
-            function Invoke-WithoutProgress {
-                [CmdletBinding()]
-                param (
-                    [Parameter(Mandatory)][scriptblock]$ScriptBlock
-                )
-                # Save current progress preference and hide the progress
-                $prevProgressPreference = $global:ProgressPreference
-                $global:ProgressPreference = 'SilentlyContinue'
-                try {
-                    # Run the script block in the scope of the caller of this module function
-                    . $ScriptBlock
-                }
-                finally {
-                    # Restore the original behavior
-                    $global:ProgressPreference = $prevProgressPreference
-                }
-            }
-        }
-    
         try {                
             Invoke-WithoutProgress {                   
                 # Download Registry CSV file from GitHub or Azure DevOps

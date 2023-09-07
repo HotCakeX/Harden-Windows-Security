@@ -1,6 +1,3 @@
-# Stop operation as soon as there is an error anywhere, unless explicitly specified otherwise
-$ErrorActionPreference = 'Stop'
-
 # Set the progress style
 $PSStyle.Progress.Style = "$($PSStyle.Foreground.FromRGB(255,255,49))$($PSStyle.Blink)"
         
@@ -50,6 +47,9 @@ function Confirm-SystemCompliance {
         [switch]$DetailedDisplay        
     )
     begin {
+
+        # Stop operation as soon as there is an error anywhere, unless explicitly specified otherwise
+        $global:ErrorActionPreference = 'Stop'
 
         Write-Progress -Activity 'Starting' -Status 'Processing...' -PercentComplete 5        
 

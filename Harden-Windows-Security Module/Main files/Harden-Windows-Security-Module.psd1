@@ -12,7 +12,7 @@
     # RootModule = ''
 
     # Version number of this module.
-    ModuleVersion        = '0.1.2'
+    ModuleVersion        = '0.1.1'
 
     # Supported PSEditions
     CompatiblePSEditions = @('Core')
@@ -133,59 +133,7 @@
             # ReleaseNotes of this module
             ReleaseNotes = @'
 
-## Version 0.1.2
-Added error handling to a few cmdlets to take care of some edge cases
-
-## Version 0.1.1
-Updated confirm-SystemCompliance and Unprotect-WindowsSecurity cmdlets to support changes in the latest Hardening script version: https://github.com/HotCakeX/Harden-Windows-Security/releases/tag/v2023.08.20
-Some minor code improvements and visual upgrades
-Adjusted the Credential providers section checks in lock screen category
-
-## Version 0.1.0
-Added TPM check, Secureboot check and Latest Windows version check to the cmdlets of this module
-Windows optional features now use the Windows PowerShell instead of PowerShell core because: https://github.com/PowerShell/PowerShell/issues/13866
-Added hide progress for invoke webrequest and restmethod to prevent lingering progress bar effect on the console
-
-## Version 0.0.9
-Added Unprotect-WindowsSecurity cmdlet for removing the protections applied by the Protect-WindowsSecurity cmdlet.
-
-## Version 0.0.8
-The compliance checking module now uses registry instead of group policy, this was done because group policies are different in different languages and locales so the old method couldn't be used by users using non-English system locales.
-This also saves about 1000 lines of code, makes compliance checking faster and generates more detailed output.
-Overall it's a very positive change.
-
-## Version 0.0.7
-Changed the Hyper-V Administrators security group members detection from using name to SID to make it compatible with non-English system locales.
-Improved the code security and readability by adding explicit types to many variables and using single quotes instead of double quotes wherever possible.
-
-## Version 0.0.6
-Fixed the URL for Group-Policies.json
-
-## Version 0.0.5
-Small update to improve the auto-updating mechanism
-
-## Version 0.0.4
-Updated the Compliance checks to include changes in the following Harden Windows Security update:
-https://github.com/HotCakeX/Harden-Windows-Security/releases/tag/v2023.08.08
-Changed Windows Firewall category from using cmdlets to Group policy xml parsing
-
-## Version 0.0.3
-Updated the Compliance checks to include changes in the following Harden Windows Security update:
-https://github.com/HotCakeX/Harden-Windows-Security/releases/tag/v2023.08.04
-
-## Version 0.0.2
-Added self-updating mechanism
-Added all the missing categories such as Optional Windows Features category and Top Security category
-Added Bitlocker DMA protection check
-Fixed the CSV output to stop repeating the headers for each category
-Improved the ASCII arts and their colors
-Added Total number of checks to the output
-Improved the displayed output to include checks that do not output bool value by adding an extra property called Compliant to each item
-Improved the module's PowerShell gallery page (Description, image)
-Added a new optional parameter called "-DetailedDisplay" to show the output in a detailed list instead of the default table format
-
-## Version 0.0.1
-First release
+Complete detailed release notes available on GitHub releases: https://github.com/HotCakeX/Harden-Windows-Security/releases/
 
 '@
 

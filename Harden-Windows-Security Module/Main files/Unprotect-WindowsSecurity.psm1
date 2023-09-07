@@ -1,100 +1,15 @@
 Function Unprotect-WindowsSecurity {
-
     # Stop the execution when there is an error
     $global:ErrorActionPreference = 'Stop'
 
-    # Hiding Invoke-WebRequest progress because it creates lingering visual effect on PowerShell console for some reason
-    # https://github.com/PowerShell/PowerShell/issues/14348
-
-    # https://stackoverflow.com/questions/18770723/hide-progress-of-Invoke-WebRequest
-    # Create an in-memory module so $ScriptBlock doesn't run in new scope
-    $null = New-Module {
-        function Invoke-WithoutProgress {
-            [CmdletBinding()]
-            param (
-                [Parameter(Mandatory)][scriptblock]$ScriptBlock
-            )
-            # Save current progress preference and hide the progress
-            $prevProgressPreference = $global:ProgressPreference
-            $global:ProgressPreference = 'SilentlyContinue'
-            try {
-                # Run the script block in the scope of the caller of this module function
-                . $ScriptBlock
-            }
-            finally {
-                # Restore the original behavior
-                $global:ProgressPreference = $prevProgressPreference
-            }
-        }
-    }
-
-    # Make sure the latest version of the module is installed and if not, automatically update it, clean up any old versions
-    function Update-self {            
-        [version]$CurrentVersion = (Test-ModuleManifest "$psscriptroot\Harden-Windows-Security-Module.psd1").Version
-        
-        try {
-            Invoke-WithoutProgress {             
-                [version]$global:LatestVersion = Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security%20Module/version.txt'             
-            }
-        }
-        catch {   
-            Write-Error -Message "Couldn't verify if the latest version of the module is installed, please check your Internet connection."
-        }
-        
-        if ($CurrentVersion -lt $LatestVersion) {
-            Write-Output "$($PSStyle.Foreground.FromRGB(255,105,180))The currently installed module's version is $CurrentVersion while the latest version is $LatestVersion - Auto Updating the module... 💓$($PSStyle.Reset)"
-            Remove-Module -Name 'Harden-Windows-Security-Module' -Force
-            # Do this if the module was installed properly using Install-moodule cmdlet
-            try {
-
-                # backup the current allowed apps list in Controlled folder access in order to restore them at the end of the script
-                # doing this so that when we Add and then Remove PowerShell executables in Controlled folder access exclusions
-                # no user customization will be affected
-                [string[]]$CFAAllowedAppsBackup = (Get-MpPreference).ControlledFolderAccessAllowedApplications
-            
-                # Temporarily allow the currently running PowerShell executables to the Controlled Folder Access allowed apps
-                # so that the script can run without interruption. This change is reverted at the end.
-                Get-ChildItem -Path "$PSHOME\*.exe" | ForEach-Object {
-                    Add-MpPreference -ControlledFolderAccessAllowedApplications $_.FullName
-                }
-
-                Uninstall-Module -Name 'Harden-Windows-Security-Module' -AllVersions -Force
-                Install-Module -Name 'Harden-Windows-Security-Module' -RequiredVersion $LatestVersion -Force              
-                Import-Module -Name 'Harden-Windows-Security-Module' -RequiredVersion $LatestVersion -Force -Global
-            }
-            # Do this if module files/folder was just copied to Documents folder and not properly installed - Should rarely happen
-            catch {
-                Install-Module -Name 'Harden-Windows-Security-Module' -RequiredVersion $LatestVersion -Force
-                Import-Module -Name 'Harden-Windows-Security-Module' -RequiredVersion $LatestVersion -Force -Global
-            }              
-            finally {
-                # Reverting the PowerShell executables allow listings in Controlled folder access
-                Get-ChildItem -Path "$PSHOME\*.exe" | ForEach-Object {
-                    Remove-MpPreference -ControlledFolderAccessAllowedApplications $_.FullName
-                }
-                # restoring the original Controlled folder access allow list - if user already had added PowerShell executables to the list
-                # they will be restored as well, so user customization will remain intact
-                if ($null -ne $CFAAllowedAppsBackup) { 
-                    $CFAAllowedAppsBackup | ForEach-Object {
-                        Add-MpPreference -ControlledFolderAccessAllowedApplications $_
-                    }
-                }              
-            }
-            # Make sure the old version isn't run after update
-            Write-Output "$($PSStyle.Foreground.FromRGB(152,255,152))Update successful, please run the Unprotect-WindowsSecurity cmdlet again.$($PSStyle.Reset)"          
-            break
-            return          
-        }
-    }
-
     # Makes sure this cmdlet is invoked with Admin privileges
     if (![bool]([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
-        Write-Error -Message 'Unprotect-WindowsSecurity cmdlet requires Administrator privileges.' -ErrorAction Stop
+        Write-Error -Message 'Unprotect-WindowsSecurity cmdlet requires Administrator privileges.'
     }
 
-    # Self update the module
-    Update-self
-
+    # Import functions
+    . "$psscriptroot\Functions.ps1"
+   
     # Custom colors
     [scriptblock]$WriteFuchsia = { Write-Host "$($PSStyle.Foreground.FromRGB(236,68,155))$($args[0])$($PSStyle.Reset)" }
     [scriptblock]$WriteOrange = { Write-Host "$($PSStyle.Foreground.FromRGB(255,165,0))$($args[0])$($PSStyle.Reset)" }
@@ -107,46 +22,24 @@ Function Unprotect-WindowsSecurity {
 
     # Give user a chance to exit if they accidentally ran this
     Pause
-
-    Write-Progress -Activity 'Backing up Controlled Folder Access exclusion list' -Status 'Processing' -PercentComplete 10
-
-    # backup the current allowed apps list in Controlled folder access in order to restore them at the end of the script
-    # doing this so that when we Add and then Remove PowerShell executables in Controlled folder access exclusions
-    # no user customization will be affected
-    [string[]]$CFAAllowedAppsBackup = (Get-MpPreference).ControlledFolderAccessAllowedApplications
-
-    # Temporarily allow the currently running PowerShell executables to the Controlled Folder Access allowed apps
-    # so that the script can run without interruption. This change is reverted at the end.
-    Get-ChildItem -Path "$PSHOME\*.exe" | ForEach-Object {
-        Add-MpPreference -ControlledFolderAccessAllowedApplications $_.FullName
-    }
-
+    
     # doing a try-finally block on the entire script so that when CTRL + C is pressed to forcefully exit the script,
     # or break is passed, clean up will still happen for secure exit
-    try {
-   
-        #region RequirementsCheck
+    try {  
 
-        # check if user's OS is Windows Home edition
-        if ((Get-CimInstance -ClassName Win32_OperatingSystem).OperatingSystemSKU -eq '101') {
-            Write-Error 'Windows Home edition detected, exiting...'
-            break
+        Write-Progress -Activity 'Backing up Controlled Folder Access exclusion list' -Status 'Processing' -PercentComplete 10
+
+        # backup the current allowed apps list in Controlled folder access in order to restore them at the end of the script
+        # doing this so that when we Add and then Remove PowerShell executables in Controlled folder access exclusions
+        # no user customization will be affected
+        [string[]]$CFAAllowedAppsBackup = (Get-MpPreference).ControlledFolderAccessAllowedApplications
+
+        # Temporarily allow the currently running PowerShell executables to the Controlled Folder Access allowed apps
+        # so that the script can run without interruption. This change is reverted at the end.
+        Get-ChildItem -Path "$PSHOME\*.exe" | ForEach-Object {
+            Add-MpPreference -ControlledFolderAccessAllowedApplications $_.FullName
         }
 
-        # check if user's OS is latest version
-        if (-NOT ([System.Environment]::OSVersion.Version -ge [version]'10.0.22621')) {
-            Write-Error "You're not using the latest version of the Windows OS, exiting..."
-            break
-        }
-
-        # check to make sure TPM is available and enabled
-        [bool]$TPMFlag1 = (Get-Tpm).tpmpresent
-        [bool]$TPMFlag2 = (Get-Tpm).tpmenabled
-        if (!$TPMFlag1 -or !$TPMFlag2) {
-            Write-Error 'TPM is not available or enabled, please go to your UEFI settings to enable it and then try again.'
-            break    
-        }       
-     
         # create our working directory
         New-Item -ItemType Directory -Path "$env:TEMP\HardeningXStuff\" -Force | Out-Null
 
@@ -165,20 +58,20 @@ Function Unprotect-WindowsSecurity {
             Invoke-WithoutProgress {                   
                 # Download Registry CSV file from GitHub or Azure DevOps
                 try {
-                    Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Payload/Registry.csv' -OutFile '.\Registry.csv' -ErrorAction Stop                
+                    Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Payload/Registry.csv' -OutFile '.\Registry.csv'        
                 }
                 catch {
                     Write-Host 'Using Azure DevOps...' -ForegroundColor Yellow
-                    Invoke-WebRequest -Uri 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/Registry.csv' -OutFile '.\Registry.csv' -ErrorAction Stop
+                    Invoke-WebRequest -Uri 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/Registry.csv' -OutFile '.\Registry.csv'
                 }
 
                 # Download Process Mitigations CSV file from GitHub or Azure DevOps
                 try {
-                    Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Payload/ProcessMitigations.csv' -OutFile '.\ProcessMitigations.csv' -ErrorAction Stop                
+                    Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Payload/ProcessMitigations.csv' -OutFile '.\ProcessMitigations.csv'            
                 }
                 catch {
                     Write-Host 'Using Azure DevOps...' -ForegroundColor Yellow
-                    Invoke-WebRequest -Uri 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/ProcessMitigations.csv' -OutFile '.\ProcessMitigations.csv' -ErrorAction Stop
+                    Invoke-WebRequest -Uri 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/ProcessMitigations.csv' -OutFile '.\ProcessMitigations.csv'
                 }
             }
         }
@@ -211,7 +104,7 @@ Function Unprotect-WindowsSecurity {
    
         Invoke-WithoutProgress {
             # Download LGPO program from Microsoft servers
-            Invoke-WebRequest -Uri 'https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/LGPO.zip' -OutFile '.\LGPO.zip' -ErrorAction Stop
+            Invoke-WebRequest -Uri 'https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/LGPO.zip' -OutFile '.\LGPO.zip'
         }
 
         # unzip the LGPO file

@@ -12,7 +12,7 @@
     # RootModule = ''
 
     # Version number of this module.
-    ModuleVersion        = '0.1.1'
+    ModuleVersion        = '0.1.2'
 
     # Supported PSEditions
     CompatiblePSEditions = @('Core')
@@ -110,7 +110,8 @@
         'Unprotect-WindowsSecurity.psm1',
         'Resources\Default Security Policy.inf',
         'Resources\Registry resources.csv',
-        'Harden-Windows-Security.ps1'
+        'Harden-Windows-Security.ps1',
+        'Functions.ps1'
     )
 
     # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.

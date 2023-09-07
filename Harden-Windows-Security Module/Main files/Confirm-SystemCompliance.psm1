@@ -1,9 +1,6 @@
-# Stop operation as soon as there is an error anywhere, unless explicitly specified otherwise
-$ErrorActionPreference = 'Stop'
-
 # Set the progress style
 $PSStyle.Progress.Style = "$($PSStyle.Foreground.FromRGB(255,255,49))$($PSStyle.Blink)"
-        
+
 # To parse the ini file from the output of the "Secedit /export /cfg .\security_policy.inf"
 function ConvertFrom-IniFile {
     [CmdletBinding()]
@@ -50,100 +47,20 @@ function Confirm-SystemCompliance {
         [switch]$DetailedDisplay        
     )
     begin {
+        # Stop operation as soon as there is an error anywhere, unless explicitly specified otherwise
+        $global:ErrorActionPreference = 'Stop'
 
-        Write-Progress -Activity 'Starting' -Status 'Processing...' -PercentComplete 5        
-
-        # Hiding Invoke-WebRequest progress because it creates lingering visual effect on PowerShell console for some reason
-        # https://github.com/PowerShell/PowerShell/issues/14348
-
-        # https://stackoverflow.com/questions/18770723/hide-progress-of-Invoke-WebRequest
-        # Create an in-memory module so $ScriptBlock doesn't run in new scope
-        $null = New-Module {
-            function Invoke-WithoutProgress {
-                [CmdletBinding()]
-                param (
-                    [Parameter(Mandatory)][scriptblock]$ScriptBlock
-                )
-                # Save current progress preference and hide the progress
-                $prevProgressPreference = $global:ProgressPreference
-                $global:ProgressPreference = 'SilentlyContinue'
-                try {
-                    # Run the script block in the scope of the caller of this module function
-                    . $ScriptBlock
-                }
-                finally {
-                    # Restore the original behavior
-                    $global:ProgressPreference = $prevProgressPreference
-                }
-            }
-        }
-       
-        # Make sure the latest version of the module is installed and if not, automatically update it, clean up any old versions
-        function Update-self {            
-            [version]$CurrentVersion = (Test-ModuleManifest "$psscriptroot\Harden-Windows-Security-Module.psd1").Version
-            
-            try {
-                Invoke-WithoutProgress {             
-                    [version]$global:LatestVersion = Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security%20Module/version.txt'             
-                }
-            }
-            catch {   
-                Write-Error -Message "Couldn't verify if the latest version of the module is installed, please check your Internet connection."
-            }
-            
-            if ($CurrentVersion -lt $LatestVersion) {
-                Write-Output "$($PSStyle.Foreground.FromRGB(255,105,180))The currently installed module's version is $CurrentVersion while the latest version is $LatestVersion - Auto Updating the module... 💓$($PSStyle.Reset)"
-                Remove-Module -Name 'Harden-Windows-Security-Module' -Force
-                # Do this if the module was installed properly using Install-moodule cmdlet
-                try {
-                    Uninstall-Module -Name 'Harden-Windows-Security-Module' -AllVersions -Force
-                    Install-Module -Name 'Harden-Windows-Security-Module' -RequiredVersion $LatestVersion -Force              
-                    Import-Module -Name 'Harden-Windows-Security-Module' -RequiredVersion $LatestVersion -Force -Global
-                }
-                # Do this if module files/folder was just copied to Documents folder and not properly installed - Should rarely happen
-                catch {
-                    Install-Module -Name 'Harden-Windows-Security-Module' -RequiredVersion $LatestVersion -Force
-                    Import-Module -Name 'Harden-Windows-Security-Module' -RequiredVersion $LatestVersion -Force -Global
-                }      
-                # Make sure the old version isn't run after update
-                Write-Output "$($PSStyle.Foreground.FromRGB(152,255,152))Update successful, please run the Confirm-SystemCompliance cmdlet again.$($PSStyle.Reset)"          
-                break
-                return          
-            }
-        }
+        Write-Progress -Activity 'Starting' -Status 'Processing...' -PercentComplete 5   
 
         # Makes sure this cmdlet is invoked with Admin privileges
         if (![bool]([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
             Write-Error -Message 'Confirm-SystemCompliance cmdlet requires Administrator privileges.' -ErrorAction Stop
         }
 
-        #region RequirementsCheck        
-        # check if user's OS is Windows Home edition
-        if ((Get-CimInstance -ClassName Win32_OperatingSystem).OperatingSystemSKU -eq '101') {
-            Write-Error 'Windows Home edition detected, exiting...'
-            break
-        }
-
-        # check if user's OS is latest version
-        if (-NOT ([System.Environment]::OSVersion.Version -ge [version]'10.0.22621')) {
-            Write-Error "You're not using the latest version of the Windows OS, exiting..."
-            break
-        }
-
-        # check to make sure TPM is available and enabled
-        [bool]$TPMFlag1 = (Get-Tpm).tpmpresent
-        [bool]$TPMFlag2 = (Get-Tpm).tpmenabled
-        if (!$TPMFlag1 -or !$TPMFlag2) {
-            Write-Error 'TPM is not available or enabled, please go to your UEFI settings and enable it and then run the script again.'
-            break    
-        }    
-        #endregion RequirementsCheck
-
         Write-Progress -Activity 'Checking for updates' -Status 'Processing...' -PercentComplete 10
 
-        # Self update the module
-        Update-self
-       
+        . "$psscriptroot\Functions.ps1"
+           
         Write-Progress -Activity 'Gathering Security Policy Information' -Status 'Processing...' -PercentComplete 15
 
         # Get the security group policies
@@ -152,20 +69,10 @@ function Confirm-SystemCompliance {
         # Storing the output of the ini file parsing function
         [PSCustomObject]$SecurityPoliciesIni = ConvertFrom-IniFile -IniFile .\security_policy.inf
         
-        Write-Progress -Activity 'Downloading Registry CSV File from GitHub' -Status 'Processing...' -PercentComplete 20
+        Write-Progress -Activity 'Importing Registry CSV File' -Status 'Processing...' -PercentComplete 20
         
         # Import the CSV file
-        try {  
-            Invoke-WithoutProgress {     
-                Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security%20Module/Resources/Registry%20resources.csv' -OutFile '.\Registry resources.csv'
-                [System.Object[]]$global:CSVResource = Import-Csv -Path '.\Registry resources.csv'
-                # Total number of Compliant values not equal to N/A 
-                [int]$global:TotalNumberOfTrueCompliantValues = (Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security%20Module/Resources/TotalNumberOfTrueCompliantValues.txt')
-            }
-        }
-        catch {
-            Write-Error -Message "Couldn't download the required files, please check your Internet connection." -ErrorAction Stop
-        }
+        [System.Object[]]$CSVResource = Import-Csv -Path "$psscriptroot\Resources\Registry resources.csv"
      
         # An object to hold all the initial registry items
         [System.Object[]]$AllRegistryItems = @()
@@ -567,7 +474,31 @@ function Confirm-SystemCompliance {
             Name         = 'Hibernate enabled and set to full'
             Category     = $CatName
             Method       = 'Cmdlet'
-        }               
+        }
+
+        # OS Drive encryption verifications
+        if ((Get-BitLockerVolume -MountPoint $env:SystemDrive).ProtectionStatus -eq 'on') {                                 
+            [System.Object[]]$KeyProtectors = (Get-BitLockerVolume -MountPoint $env:SystemDrive).KeyProtector.keyprotectortype
+            # check if TPM+PIN and recovery password are being used with Bitlocker which are the safest settings
+            if (($KeyProtectors -contains 'Tpmpin') -and ($KeyProtectors -contains 'RecoveryPassword')) {        
+                $IndividualItemResult = $True
+            }
+            else {
+                $IndividualItemResult = $false
+            }
+        }
+        else {
+            $IndividualItemResult = $false
+        }
+        $NestedObjectArray += [PSCustomObject]@{
+            FriendlyName = 'Secure OS Drive encryption'            
+            Compliant    = $IndividualItemResult
+            Value        = $IndividualItemResult           
+            Name         = 'Secure OS Drive encryption'
+            Category     = $CatName
+            Method       = 'Cmdlet'
+        }  
+
         # Add the array of custom objects as a property to the $FinalMegaObject object outside the loop
         Add-Member -InputObject $FinalMegaObject -MemberType NoteProperty -Name $CatName -Value $NestedObjectArray
         #EndRegion Bitlocker-Category
@@ -1108,8 +1039,8 @@ function Confirm-SystemCompliance {
             $CsvOutPutFileContent = @()
             # Append the categories in $FinalMegaObject to the array using += operator
             $CsvOutPutFileContent += $FinalMegaObject.PSObject.Properties.Value
-            # Convert the array to CSV and store it in the Output.CSV file in the current working directory
-            $CsvOutPutFileContent | ConvertTo-Csv | Out-File '.\Output.CSV' -Force
+            # Convert the array to a CSV file and store it in the current working directory
+            $CsvOutPutFileContent | ConvertTo-Csv | Out-File '.\Compliance Check Output.CSV' -Force
         }
         
         if ($ShowAsObjectsOnly) {
@@ -1185,72 +1116,226 @@ function Confirm-SystemCompliance {
                 # Setting the List Format Accent the same color as the category's title
                 $PSStyle.Formatting.FormatAccent = "$($PSStyle.Foreground.FromRGB(221,160,221))"   
                 & $WritePlum "`n-------------Microsoft Defender Category-------------"
-                $FinalMegaObject.'Microsoft Defender' | Format-List *
+                $FinalMegaObject.'Microsoft Defender' | Format-List -Property FriendlyName, @{
+                    Label      = 'Compliant'
+                    Expression = 
+                    { switch ($_.Compliant) {
+                            { $_ -eq $true } { $color = "$($PSStyle.Foreground.FromRGB(221,160,221))"; break } # Use PSStyle to set the color
+                            { $_ -eq $false } { $color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
+                            { $_ -eq 'N/A' } { $color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
+                        }
+                        "$color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                    }
+                  
+                }, Value, Name, Category, Method
     
                 # Setting the List Format Accent the same color as the category's title
                 $PSStyle.Formatting.FormatAccent = "$($PSStyle.Foreground.FromRGB(218,112,214))"
                 & $WriteOrchid "`n-------------Attack Surface Reduction Rules Category-------------"
-                $FinalMegaObject.ASR | Format-List *
+                $FinalMegaObject.ASR | Format-List -Property FriendlyName, @{
+                    Label      = 'Compliant'
+                    Expression = 
+                    { switch ($_.Compliant) {
+                            { $_ -eq $true } { $color = "$($PSStyle.Foreground.FromRGB(218,112,214))"; break } # Use PSStyle to set the color
+                            { $_ -eq $false } { $color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
+                            { $_ -eq 'N/A' } { $color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
+                        }
+                        "$color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                    }
+                  
+                }, Value, Name, Category, Method
     
                 # Setting the List Format Accent the same color as the category's title
                 $PSStyle.Formatting.FormatAccent = "$($PSStyle.Foreground.FromRGB(255,0,255))"
                 & $WriteFuchsia "`n-------------Bitlocker Category-------------"
-                $FinalMegaObject.Bitlocker | Format-List *
+                $FinalMegaObject.Bitlocker | Format-List -Property FriendlyName, @{
+                    Label      = 'Compliant'
+                    Expression = 
+                    { switch ($_.Compliant) {
+                            { $_ -eq $true } { $color = "$($PSStyle.Foreground.FromRGB(255,0,255))"; break } # Use PSStyle to set the color
+                            { $_ -eq $false } { $color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
+                            { $_ -eq 'N/A' } { $color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
+                        }
+                        "$color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                    }
+                  
+                }, Value, Name, Category, Method
     
                 # Setting the List Format Accent the same color as the category's title
                 $PSStyle.Formatting.FormatAccent = "$($PSStyle.Foreground.FromRGB(186,85,211))"
                 & $WriteMediumOrchid "`n-------------TLS Category-------------"
-                $FinalMegaObject.TLS | Format-List *
+                $FinalMegaObject.TLS | Format-List -Property FriendlyName, @{
+                    Label      = 'Compliant'
+                    Expression = 
+                    { switch ($_.Compliant) {
+                            { $_ -eq $true } { $color = "$($PSStyle.Foreground.FromRGB(186,85,211))"; break } # Use PSStyle to set the color
+                            { $_ -eq $false } { $color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
+                            { $_ -eq 'N/A' } { $color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
+                        }
+                        "$color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                    }
+                  
+                }, Value, Name, Category, Method
     
                 # Setting the List Format Accent the same color as the category's title
                 $PSStyle.Formatting.FormatAccent = "$($PSStyle.Foreground.FromRGB(147,112,219))"
                 & $WriteMediumPurple "`n-------------Lock Screen Category-------------"
-                $FinalMegaObject.LockScreen | Format-List *
+                $FinalMegaObject.LockScreen | Format-List -Property FriendlyName, @{
+                    Label      = 'Compliant'
+                    Expression = 
+                    { switch ($_.Compliant) {
+                            { $_ -eq $true } { $color = "$($PSStyle.Foreground.FromRGB(147,112,219))"; break } # Use PSStyle to set the color
+                            { $_ -eq $false } { $color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
+                            { $_ -eq 'N/A' } { $color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
+                        }
+                        "$color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                    }
+                  
+                }, Value, Name, Category, Method
     
                 # Setting the List Format Accent the same color as the category's title
                 $PSStyle.Formatting.FormatAccent = "$($PSStyle.Foreground.FromRGB(138,43,226))"
                 & $WriteBlueViolet "`n-------------User Account Control Category-------------"
-                $FinalMegaObject.UAC | Format-List *
+                $FinalMegaObject.UAC | Format-List -Property FriendlyName, @{
+                    Label      = 'Compliant'
+                    Expression = 
+                    { switch ($_.Compliant) {
+                            { $_ -eq $true } { $color = "$($PSStyle.Foreground.FromRGB(138,43,226))"; break } # Use PSStyle to set the color
+                            { $_ -eq $false } { $color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
+                            { $_ -eq 'N/A' } { $color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
+                        }
+                        "$color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                    }
+                  
+                }, Value, Name, Category, Method
     
                 # Setting the List Format Accent the same color as the category's title
                 $PSStyle.Formatting.FormatAccent = "$($PSStyle.Foreground.FromRGB(176,191,26))"
                 & $AndroidGreen "`n-------------Device Guard Category-------------"
-                $FinalMegaObject.'Device Guard' | Format-List *
+                $FinalMegaObject.'Device Guard' | Format-List -Property FriendlyName, @{
+                    Label      = 'Compliant'
+                    Expression = 
+                    { switch ($_.Compliant) {
+                            { $_ -eq $true } { $color = "$($PSStyle.Foreground.FromRGB(176,191,26))"; break } # Use PSStyle to set the color
+                            { $_ -eq $false } { $color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
+                            { $_ -eq 'N/A' } { $color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
+                        }
+                        "$color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                    }
+                  
+                }, Value, Name, Category, Method
     
                 # Setting the List Format Accent the same color as the category's title
                 $PSStyle.Formatting.FormatAccent = "$($PSStyle.Foreground.FromRGB(255,192,203))"
                 & $WritePink "`n-------------Windows Firewall Category-------------"
-                $FinalMegaObject.'Windows Firewall' | Format-List *
+                $FinalMegaObject.'Windows Firewall' | Format-List -Property FriendlyName, @{
+                    Label      = 'Compliant'
+                    Expression = 
+                    { switch ($_.Compliant) {
+                            { $_ -eq $true } { $color = "$($PSStyle.Foreground.FromRGB(255,192,203))"; break } # Use PSStyle to set the color
+                            { $_ -eq $false } { $color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
+                            { $_ -eq 'N/A' } { $color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
+                        }
+                        "$color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                    }
+                  
+                }, Value, Name, Category, Method
 
                 # Setting the List Format Accent the same color as the category's title
                 $PSStyle.Formatting.FormatAccent = "$($PSStyle.Foreground.FromRGB(135,206,235))"
                 & $WriteSkyBlue "`n-------------Optional Windows Features Category-------------"
-                $FinalMegaObject.'Optional Windows Features' | Format-List *
+                $FinalMegaObject.'Optional Windows Features' | Format-List -Property FriendlyName, @{
+                    Label      = 'Compliant'
+                    Expression = 
+                    { switch ($_.Compliant) {
+                            { $_ -eq $true } { $color = "$($PSStyle.Foreground.FromRGB(135,206,235))"; break } # Use PSStyle to set the color
+                            { $_ -eq $false } { $color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
+                            { $_ -eq 'N/A' } { $color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
+                        }
+                        "$color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                    }
+                  
+                }, Value, Name, Category, Method
     
                 # Setting the List Format Accent the same color as the category's title
                 $PSStyle.Formatting.FormatAccent = "$($PSStyle.Foreground.FromRGB(255,105,180))"
                 & $WriteHotPink "`n-------------Windows Networking Category-------------"
-                $FinalMegaObject.'Windows Networking' | Format-List *
+                $FinalMegaObject.'Windows Networking' | Format-List -Property FriendlyName, @{
+                    Label      = 'Compliant'
+                    Expression = 
+                    { switch ($_.Compliant) {
+                            { $_ -eq $true } { $color = "$($PSStyle.Foreground.FromRGB(255,105,180))"; break } # Use PSStyle to set the color
+                            { $_ -eq $false } { $color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
+                            { $_ -eq 'N/A' } { $color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
+                        }
+                        "$color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                    }
+                  
+                }, Value, Name, Category, Method
     
                 # Setting the List Format Accent the same color as the category's title
                 $PSStyle.Formatting.FormatAccent = "$($PSStyle.Foreground.FromRGB(255,20,147))"
                 & $WriteDeepPink "`n-------------Miscellaneous Category-------------"
-                $FinalMegaObject.Miscellaneous | Format-List *
+                $FinalMegaObject.Miscellaneous | Format-List -Property FriendlyName, @{
+                    Label      = 'Compliant'
+                    Expression = 
+                    { switch ($_.Compliant) {
+                            { $_ -eq $true } { $color = "$($PSStyle.Foreground.FromRGB(255,20,147))"; break } # Use PSStyle to set the color
+                            { $_ -eq $false } { $color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
+                            { $_ -eq 'N/A' } { $color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
+                        }
+                        "$color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                    }
+                  
+                }, Value, Name, Category, Method
     
                 # Setting the List Format Accent the same color as the category's title
                 $PSStyle.Formatting.FormatAccent = "$($PSStyle.Foreground.FromRGB(152,255,152))"
                 & $WriteMintGreen "`n-------------Windows Update Category-------------"
-                $FinalMegaObject.'Windows Update' | Format-List *
+                $FinalMegaObject.'Windows Update' | Format-List -Property FriendlyName, @{
+                    Label      = 'Compliant'
+                    Expression = 
+                    { switch ($_.Compliant) {
+                            { $_ -eq $true } { $color = "$($PSStyle.Foreground.FromRGB(152,255,152))"; break } # Use PSStyle to set the color
+                            { $_ -eq $false } { $color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
+                            { $_ -eq 'N/A' } { $color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
+                        }
+                        "$color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                    }
+                  
+                }, Value, Name, Category, Method
     
                 # Setting the List Format Accent the same color as the category's title
                 $PSStyle.Formatting.FormatAccent = "$($PSStyle.Foreground.FromRGB(255,165,0))"
                 & $WriteOrange "`n-------------Microsoft Edge Category-------------"
-                $FinalMegaObject.Edge | Format-List *
+                $FinalMegaObject.Edge | Format-List -Property FriendlyName, @{
+                    Label      = 'Compliant'
+                    Expression = 
+                    { switch ($_.Compliant) {
+                            { $_ -eq $true } { $color = "$($PSStyle.Foreground.FromRGB(255,165,0))"; break } # Use PSStyle to set the color
+                            { $_ -eq $false } { $color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
+                            { $_ -eq 'N/A' } { $color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
+                        }
+                        "$color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                    }
+                  
+                }, Value, Name, Category, Method
     
                 # Setting the List Format Accent the same color as the category's title
                 $PSStyle.Formatting.FormatAccent = "$($PSStyle.Foreground.FromRGB(255,255,49))"
                 & $Daffodil "`n-------------Non-Admin Category-------------"
-                $FinalMegaObject.'Non-Admin' | Format-List *
+                $FinalMegaObject.'Non-Admin' | Format-List -Property FriendlyName, @{
+                    Label      = 'Compliant'
+                    Expression = 
+                    { switch ($_.Compliant) {
+                            { $_ -eq $true } { $color = "$($PSStyle.Foreground.FromRGB(255,255,49))"; break } # Use PSStyle to set the color
+                            { $_ -eq $false } { $color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
+                            { $_ -eq 'N/A' } { $color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
+                        }
+                        "$color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                    }
+                  
+                }, Value, Name, Category, Method
             }
 
             # Show properties that matter in a table
@@ -1259,78 +1344,246 @@ function Confirm-SystemCompliance {
                 # Setting the Table header the same color as the category's title
                 $PSStyle.Formatting.TableHeader = "$($PSStyle.Foreground.FromRGB(221,160,221))"                
                 & $WritePlum "`n-------------Microsoft Defender Category-------------"
-                $FinalMegaObject.'Microsoft Defender' | Format-Table -Property FriendlyName, Compliant, Value -AutoSize 
-                
+                $FinalMegaObject.'Microsoft Defender' | Format-Table -Property FriendlyName, 
+                @{
+                    Label      = 'Compliant'
+                    Expression = 
+                    { switch ($_.Compliant) {
+                            { $_ -eq $true } { $color = "$($PSStyle.Foreground.FromRGB(221,160,221))"; break } # Use PSStyle to set the color
+                            { $_ -eq $false } { $color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
+                            { $_ -eq 'N/A' } { $color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
+                        }
+                        "$color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                    }
+                  
+                } , Value -AutoSize
+ 
                 # Setting the Table header the same color as the category's title
                 $PSStyle.Formatting.TableHeader = "$($PSStyle.Foreground.FromRGB(218,112,214))"
                 & $WriteOrchid "`n-------------Attack Surface Reduction Rules Category-------------"
-                $FinalMegaObject.ASR | Format-Table -Property FriendlyName, Compliant, Value -AutoSize 
+                $FinalMegaObject.ASR | Format-Table -Property FriendlyName, 
+                @{
+                    Label      = 'Compliant'
+                    Expression = 
+                    { switch ($_.Compliant) {
+                            { $_ -eq $true } { $color = "$($PSStyle.Foreground.FromRGB(218,112,214))"; break } # Use PSStyle to set the color
+                            { $_ -eq $false } { $color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
+                            { $_ -eq 'N/A' } { $color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
+                        }
+                        "$color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                    }
+                  
+                } , Value -AutoSize 
         
                 # Setting the Table header the same color as the category's title
                 $PSStyle.Formatting.TableHeader = "$($PSStyle.Foreground.FromRGB(255,0,255))"
                 & $WriteFuchsia "`n-------------Bitlocker Category-------------"
-                $FinalMegaObject.Bitlocker | Format-Table -Property FriendlyName, Compliant, Value -AutoSize 
+                $FinalMegaObject.Bitlocker | Format-Table -Property FriendlyName, 
+                @{
+                    Label      = 'Compliant'
+                    Expression = 
+                    { switch ($_.Compliant) {
+                            { $_ -eq $true } { $color = "$($PSStyle.Foreground.FromRGB(255,0,255))"; break } # Use PSStyle to set the color
+                            { $_ -eq $false } { $color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
+                            { $_ -eq 'N/A' } { $color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
+                        }
+                        "$color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                    }
+                  
+                } , Value -AutoSize 
         
                 # Setting the Table header the same color as the category's title
                 $PSStyle.Formatting.TableHeader = "$($PSStyle.Foreground.FromRGB(186,85,211))"
                 & $WriteMediumOrchid "`n-------------TLS Category-------------"
-                $FinalMegaObject.TLS | Format-Table -Property FriendlyName, Compliant, Value -AutoSize 
+                $FinalMegaObject.TLS | Format-Table -Property FriendlyName, 
+                @{
+                    Label      = 'Compliant'
+                    Expression = 
+                    { switch ($_.Compliant) {
+                            { $_ -eq $true } { $color = "$($PSStyle.Foreground.FromRGB(186,85,211))"; break } # Use PSStyle to set the color
+                            { $_ -eq $false } { $color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
+                            { $_ -eq 'N/A' } { $color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
+                        }
+                        "$color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                    }
+                  
+                } , Value -AutoSize 
         
                 # Setting the Table header the same color as the category's title
                 $PSStyle.Formatting.TableHeader = "$($PSStyle.Foreground.FromRGB(147,112,219))"
                 & $WriteMediumPurple "`n-------------Lock Screen Category-------------"
-                $FinalMegaObject.LockScreen | Format-Table -Property FriendlyName, Compliant, Value -AutoSize 
+                $FinalMegaObject.LockScreen | Format-Table -Property FriendlyName, 
+                @{
+                    Label      = 'Compliant'
+                    Expression = 
+                    { switch ($_.Compliant) {
+                            { $_ -eq $true } { $color = "$($PSStyle.Foreground.FromRGB(147,112,219))"; break } # Use PSStyle to set the color
+                            { $_ -eq $false } { $color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
+                            { $_ -eq 'N/A' } { $color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
+                        }
+                        "$color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                    }
+                  
+                } , Value -AutoSize 
         
                 # Setting the Table header the same color as the category's title
                 $PSStyle.Formatting.TableHeader = "$($PSStyle.Foreground.FromRGB(138,43,226))"
                 & $WriteBlueViolet "`n-------------User Account Control Category-------------"
-                $FinalMegaObject.UAC | Format-Table -Property FriendlyName, Compliant, Value -AutoSize 
+                $FinalMegaObject.UAC | Format-Table -Property FriendlyName, 
+                @{
+                    Label      = 'Compliant'
+                    Expression = 
+                    { switch ($_.Compliant) {
+                            { $_ -eq $true } { $color = "$($PSStyle.Foreground.FromRGB(138,43,226))"; break } # Use PSStyle to set the color
+                            { $_ -eq $false } { $color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
+                            { $_ -eq 'N/A' } { $color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
+                        }
+                        "$color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                    }
+                  
+                } , Value -AutoSize 
         
                 # Setting the Table header the same color as the category's title
                 $PSStyle.Formatting.TableHeader = "$($PSStyle.Foreground.FromRGB(176,191,26))"
                 & $AndroidGreen "`n-------------Device Guard Category-------------"
-                $FinalMegaObject.'Device Guard' | Format-Table -Property FriendlyName, Compliant, Value -AutoSize 
+                $FinalMegaObject.'Device Guard' | Format-Table -Property FriendlyName, 
+                @{
+                    Label      = 'Compliant'
+                    Expression = 
+                    { switch ($_.Compliant) {
+                            { $_ -eq $true } { $color = "$($PSStyle.Foreground.FromRGB(176,191,26))"; break } # Use PSStyle to set the color
+                            { $_ -eq $false } { $color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
+                            { $_ -eq 'N/A' } { $color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
+                        }
+                        "$color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                    }
+                  
+                } , Value -AutoSize 
         
                 # Setting the Table header the same color as the category's title
                 $PSStyle.Formatting.TableHeader = "$($PSStyle.Foreground.FromRGB(255,192,203))"
                 & $WritePink "`n-------------Windows Firewall Category-------------"
-                $FinalMegaObject.'Windows Firewall' | Format-Table -Property FriendlyName, Compliant, Value -AutoSize 
+                $FinalMegaObject.'Windows Firewall' | Format-Table -Property FriendlyName, 
+                @{
+                    Label      = 'Compliant'
+                    Expression = 
+                    { switch ($_.Compliant) {
+                            { $_ -eq $true } { $color = "$($PSStyle.Foreground.FromRGB(255,192,203))"; break } # Use PSStyle to set the color
+                            { $_ -eq $false } { $color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
+                            { $_ -eq 'N/A' } { $color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
+                        }
+                        "$color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                    }
+                  
+                } , Value -AutoSize 
     
                 # Setting the Table header the same color as the category's title
                 $PSStyle.Formatting.TableHeader = "$($PSStyle.Foreground.FromRGB(135,206,235))"
                 & $WriteSkyBlue "`n-------------Optional Windows Features Category-------------"
-                $FinalMegaObject.'Optional Windows Features' | Format-Table -Property FriendlyName, Compliant, Value -AutoSize 
+                $FinalMegaObject.'Optional Windows Features' | Format-Table -Property FriendlyName, 
+                @{
+                    Label      = 'Compliant'
+                    Expression = 
+                    { switch ($_.Compliant) {
+                            { $_ -eq $true } { $color = "$($PSStyle.Foreground.FromRGB(135,206,235))"; break } # Use PSStyle to set the color
+                            { $_ -eq $false } { $color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
+                            { $_ -eq 'N/A' } { $color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
+                        }
+                        "$color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                    }
+                  
+                } , Value -AutoSize 
         
                 # Setting the Table header the same color as the category's title
                 $PSStyle.Formatting.TableHeader = "$($PSStyle.Foreground.FromRGB(255,105,180))"
                 & $WriteHotPink "`n-------------Windows Networking Category-------------"
-                $FinalMegaObject.'Windows Networking' | Format-Table -Property FriendlyName, Compliant, Value -AutoSize 
+                $FinalMegaObject.'Windows Networking' | Format-Table -Property FriendlyName, 
+                @{
+                    Label      = 'Compliant'
+                    Expression = 
+                    { switch ($_.Compliant) {
+                            { $_ -eq $true } { $color = "$($PSStyle.Foreground.FromRGB(255,105,180))"; break } # Use PSStyle to set the color
+                            { $_ -eq $false } { $color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
+                            { $_ -eq 'N/A' } { $color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
+                        }
+                        "$color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                    }
+                  
+                } , Value -AutoSize 
         
                 # Setting the Table header the same color as the category's title
                 $PSStyle.Formatting.TableHeader = "$($PSStyle.Foreground.FromRGB(255,20,147))"
                 & $WriteDeepPink "`n-------------Miscellaneous Category-------------"
-                $FinalMegaObject.Miscellaneous | Format-Table -Property FriendlyName, Compliant, Value -AutoSize 
+                $FinalMegaObject.Miscellaneous | Format-Table -Property FriendlyName, 
+                @{
+                    Label      = 'Compliant'
+                    Expression = 
+                    { switch ($_.Compliant) {
+                            { $_ -eq $true } { $color = "$($PSStyle.Foreground.FromRGB(255,20,147))"; break } # Use PSStyle to set the color
+                            { $_ -eq $false } { $color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
+                            { $_ -eq 'N/A' } { $color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
+                        }
+                        "$color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                    }
+                  
+                } , Value -AutoSize 
         
                 # Setting the Table header the same color as the category's title
                 $PSStyle.Formatting.TableHeader = "$($PSStyle.Foreground.FromRGB(152,255,152))"
                 & $WriteMintGreen "`n-------------Windows Update Category-------------"
-                $FinalMegaObject.'Windows Update' | Format-Table -Property FriendlyName, Compliant, Value -AutoSize 
+                $FinalMegaObject.'Windows Update' | Format-Table -Property FriendlyName, 
+                @{
+                    Label      = 'Compliant'
+                    Expression = 
+                    { switch ($_.Compliant) {
+                            { $_ -eq $true } { $color = "$($PSStyle.Foreground.FromRGB(152,255,152))"; break } # Use PSStyle to set the color
+                            { $_ -eq $false } { $color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
+                            { $_ -eq 'N/A' } { $color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
+                        }
+                        "$color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                    }
+                  
+                } , Value -AutoSize 
         
                 # Setting the Table header the same color as the category's title
                 $PSStyle.Formatting.TableHeader = "$($PSStyle.Foreground.FromRGB(255,165,0))"
                 & $WriteOrange "`n-------------Microsoft Edge Category-------------"
-                $FinalMegaObject.Edge | Format-Table -Property FriendlyName, Compliant, Value -AutoSize 
+                $FinalMegaObject.Edge | Format-Table -Property FriendlyName, 
+                @{
+                    Label      = 'Compliant'
+                    Expression = 
+                    { switch ($_.Compliant) {
+                            { $_ -eq $true } { $color = "$($PSStyle.Foreground.FromRGB(255,165,0))"; break } # Use PSStyle to set the color
+                            { $_ -eq $false } { $color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
+                            { $_ -eq 'N/A' } { $color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
+                        }
+                        "$color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                    }
+                  
+                } , Value -AutoSize 
         
                 # Setting the Table header the same color as the category's title
                 $PSStyle.Formatting.TableHeader = "$($PSStyle.Foreground.FromRGB(255,255,49))"
                 & $Daffodil "`n-------------Non-Admin Category-------------"
-                $FinalMegaObject.'Non-Admin' | Format-Table -Property FriendlyName, Compliant, Value -AutoSize                
+                $FinalMegaObject.'Non-Admin' | Format-Table -Property FriendlyName, 
+                @{
+                    Label      = 'Compliant'
+                    Expression = 
+                    { switch ($_.Compliant) {
+                            { $_ -eq $true } { $color = "$($PSStyle.Foreground.FromRGB(255,255,49))"; break } # Use PSStyle to set the color
+                            { $_ -eq $false } { $color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
+                            { $_ -eq 'N/A' } { $color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
+                        }
+                        "$color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                    }
+                  
+                } , Value -AutoSize                
             }
             
             # Counting the number of $True Compliant values in the Final Output Object
-            [int]$TotalTrueCompliantValuesInOutPut = ($FinalMegaObject.'Microsoft Defender' | Where-Object { $_.Compliant -eq $True }).Count + # 43
+            [int]$TotalTrueCompliantValuesInOutPut = ($FinalMegaObject.'Microsoft Defender' | Where-Object { $_.Compliant -eq $True }).Count + # 49 - 4x(N/A) = 45
             [int]($FinalMegaObject.ASR | Where-Object { $_.Compliant -eq $True }).Count + # 17
-            [int]($FinalMegaObject.Bitlocker | Where-Object { $_.Compliant -eq $True }).Count + # 22
+            [int]($FinalMegaObject.Bitlocker | Where-Object { $_.Compliant -eq $True }).Count + # 23
             [int]($FinalMegaObject.TLS | Where-Object { $_.Compliant -eq $True }).Count + # 21
             [int]($FinalMegaObject.LockScreen | Where-Object { $_.Compliant -eq $True }).Count + # 16
             [int]($FinalMegaObject.UAC | Where-Object { $_.Compliant -eq $True }).Count + # 4
@@ -1338,7 +1591,7 @@ function Confirm-SystemCompliance {
             [int]($FinalMegaObject.'Windows Firewall' | Where-Object { $_.Compliant -eq $True }).Count + # 19
             [int]($FinalMegaObject.'Optional Windows Features' | Where-Object { $_.Compliant -eq $True }).Count + # 11
             [int]($FinalMegaObject.'Windows Networking' | Where-Object { $_.Compliant -eq $True }).Count + # 9
-            [int]($FinalMegaObject.Miscellaneous | Where-Object { $_.Compliant -eq $True }).Count + # 20
+            [int]($FinalMegaObject.Miscellaneous | Where-Object { $_.Compliant -eq $True }).Count + # 18
             [int]($FinalMegaObject.'Windows Update' | Where-Object { $_.Compliant -eq $True }).Count + # 14
             [int]($FinalMegaObject.Edge | Where-Object { $_.Compliant -eq $True }).Count + # 16
             [int]($FinalMegaObject.'Non-Admin' | Where-Object { $_.Compliant -eq $True }).Count # 11
@@ -1484,14 +1737,17 @@ function Confirm-SystemCompliance {
                 
 '@
             #Endregion ASCII-Arts
+
+            # Total number of Compliant values not equal to N/A 
+            [int]$TotalNumberOfTrueCompliantValues = 232
                   
             switch ($True) {
                     ($TotalTrueCompliantValuesInOutPut -in 1..40) { & $WriteRainbow2 "$WhenValue1To20`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $TotalNumberOfTrueCompliantValues!" }                    
                     ($TotalTrueCompliantValuesInOutPut -in 41..80) { & $WriteRainbow1 "$WhenValue21To40`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $TotalNumberOfTrueCompliantValues!" }
-                    ($TotalTrueCompliantValuesInOutPut -in 81..100) { & $WriteRainbow1 "$WhenValue41To60`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $TotalNumberOfTrueCompliantValues!" }
-                    ($TotalTrueCompliantValuesInOutPut -in 101..140) { & $WriteRainbow2 "$WhenValue61To80`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $TotalNumberOfTrueCompliantValues!" }
-                    ($TotalTrueCompliantValuesInOutPut -in 141..180) { & $WriteRainbow1 "$WhenValue81To88`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $TotalNumberOfTrueCompliantValues!" }
-                    ($TotalTrueCompliantValuesInOutPut -gt 180) { & $WriteRainbow2 "$WhenValueAbove88`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $TotalNumberOfTrueCompliantValues!" }
+                    ($TotalTrueCompliantValuesInOutPut -in 81..120) { & $WriteRainbow1 "$WhenValue41To60`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $TotalNumberOfTrueCompliantValues!" }
+                    ($TotalTrueCompliantValuesInOutPut -in 121..160) { & $WriteRainbow2 "$WhenValue61To80`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $TotalNumberOfTrueCompliantValues!" }
+                    ($TotalTrueCompliantValuesInOutPut -in 161..200) { & $WriteRainbow1 "$WhenValue81To88`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $TotalNumberOfTrueCompliantValues!" }
+                    ($TotalTrueCompliantValuesInOutPut -gt 200) { & $WriteRainbow2 "$WhenValueAbove88`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $TotalNumberOfTrueCompliantValues!" }
             } 
         }
     
@@ -1500,7 +1756,6 @@ function Confirm-SystemCompliance {
     end {
         # Clean up
         Remove-Item -Path '.\security_policy.inf' -Force
-        Remove-Item -Path '.\Registry resources.csv' -Force
     }
 
     <#

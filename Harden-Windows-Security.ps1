@@ -379,12 +379,11 @@ try {
             break            
         } 
         
-        if ($MDAVConfigCurrent.SmartAppControlState -ne 'On') {
-            if ($MDAVConfigCurrent.AMRunningMode -ne 'Normal') {
-                Write-Error "Microsoft Defender is running in $($MDAVConfigCurrent.AMRunningMode) state, please remove any 3rd party AV and then try again."
-                break
-            }
+        if ($MDAVConfigCurrent.AMRunningMode -ne 'Normal') {
+            Write-Error "Microsoft Defender is running in $($MDAVConfigCurrent.AMRunningMode) state, please remove any 3rd party AV and then try again."
+            break
         }
+        
     }
     #endregion RequirementsCheck
 

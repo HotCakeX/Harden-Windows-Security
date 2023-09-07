@@ -1039,8 +1039,8 @@ function Confirm-SystemCompliance {
             $CsvOutPutFileContent = @()
             # Append the categories in $FinalMegaObject to the array using += operator
             $CsvOutPutFileContent += $FinalMegaObject.PSObject.Properties.Value
-            # Convert the array to CSV and store it in the Output.CSV file in the current working directory
-            $CsvOutPutFileContent | ConvertTo-Csv | Out-File '.\Output.CSV' -Force
+            # Convert the array to a CSV file and store it in the current working directory
+            $CsvOutPutFileContent | ConvertTo-Csv | Out-File '.\Compliance Check Output.CSV' -Force
         }
         
         if ($ShowAsObjectsOnly) {
@@ -1581,7 +1581,7 @@ function Confirm-SystemCompliance {
             }
             
             # Counting the number of $True Compliant values in the Final Output Object
-            [int]$TotalTrueCompliantValuesInOutPut = ($FinalMegaObject.'Microsoft Defender' | Where-Object { $_.Compliant -eq $True }).Count + # 49
+            [int]$TotalTrueCompliantValuesInOutPut = ($FinalMegaObject.'Microsoft Defender' | Where-Object { $_.Compliant -eq $True }).Count + # 49 - 4x(N/A) = 45
             [int]($FinalMegaObject.ASR | Where-Object { $_.Compliant -eq $True }).Count + # 17
             [int]($FinalMegaObject.Bitlocker | Where-Object { $_.Compliant -eq $True }).Count + # 23
             [int]($FinalMegaObject.TLS | Where-Object { $_.Compliant -eq $True }).Count + # 21
@@ -1739,7 +1739,7 @@ function Confirm-SystemCompliance {
             #Endregion ASCII-Arts
 
             # Total number of Compliant values not equal to N/A 
-            [int]$TotalNumberOfTrueCompliantValues = 236
+            [int]$TotalNumberOfTrueCompliantValues = 232
                   
             switch ($True) {
                     ($TotalTrueCompliantValuesInOutPut -in 1..40) { & $WriteRainbow2 "$WhenValue1To20`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $TotalNumberOfTrueCompliantValues!" }                    

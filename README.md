@@ -1,5 +1,5 @@
 <h1 align="center">
-  <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/donuts.gif" alt="Big Yummy Donut">
+  <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/dripwelcome1.gif" alt="Big Yummy Donut"> <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/donuts.gif" alt="Big Yummy Donut"> <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/dripwelcome2.gif" alt="Big Yummy Donut">
 <br>
 Harden Windows Security | A New Threat to Malware
 </h1>
@@ -38,18 +38,17 @@ Harden Windows Safely, Securely, Only With Official Microsoft Methods
 
 
 
-### <img width="70" src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/colorful-heart.gif"> Access <a href="https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Rationale.md"> Windows Defender Application Control resources 
+### <img width="60" src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/tada-purple.gif"> Access <a href="https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Rationale.md"> Windows Defender Application Control resources </a> on this GitHub repository
 
 
 
-### <img width="70" src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/colorful-heart.gif"> <a href="https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Rationale.md"> WDACConfig module for Windows Defender Application Control (WDAC) management </a> <img width="35" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/rainbow%20arrow%202nd%20Variation%20left.gif">
+### <img width="60" src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/tada-cyan.gif"> Check out <a href="https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Rationale.md"> the WDACConfig module for Windows Defender Application Control (WDAC)  </a>  management 
 
 
 
 
 
-### <img width="70" src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/colorful-heart.gif"> <a href="https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Rationale.md"> Read the Rationale behind this GitHub repository </a> <img width="35" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/rainbow%20arrow%202nd%20Variation%20left.gif">
-
+### <img width="60" src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/colorful-heart.gif"> <a href="https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Rationale.md"> Read the Rationale behind this GitHub repository </a>
 
 
 

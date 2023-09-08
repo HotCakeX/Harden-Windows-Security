@@ -90,7 +90,7 @@ Unprotect-WindowsSecurity
 
 </details>
 
-https://github.com/HotCakeX/Harden-Windows-Security/assets/118815227/0fdbd34b-6bf6-4eae-b081-83b43d60bd0d
+![Animated APNG demonstrating how the Harden Windows Security PowerShell script works](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/APNGs/Harden%20Windows%20Security%20Demo%201.apng)
 
 <br>
 
@@ -106,10 +106,6 @@ Install-Script -Name 'Harden-Windows-Security' -Force
 ```
 
 </details>
-
-<br>
-
-![Animated APNG demonstrating how the Harden Windows Security PowerShell script works](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Harden-Windows-Security-Demo.apng)
   
 <br>
 

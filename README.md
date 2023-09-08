@@ -1,13 +1,13 @@
 <h1 align="center">
-  <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/PNGs/png-donut-2.png" alt="Big Yummy Donut" width="150">
+  <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/donuts.gif" alt="Big Yummy Donut">
 <br>
 Harden Windows Security | A New Threat to Malware
 </h1>
 <a name="readme-top"></a>
 
-<h3 align="center">
+<h2 align="center">
 Harden Windows Safely, Securely, Only With Official Microsoft Methods
-</h3>
+</h2>
 
 <div align="center">
 <a href="https://www.powershellgallery.com/packages/Harden-Windows-Security-Module"><img src="https://img.shields.io/powershellgallery/v/Harden-Windows-Security-Module?include_prereleases&logo=Github&logoColor=rgb(76%2C%2082%2C%20112)&label=Harden%20Windows%20Security%20Module&labelColor=rgb(233%2C255%2C125)&color=rgb(246%2C%2082%2C%20160)" alt="PowerShell Gallery Version (including pre-releases)"></a> <a href="https://www.powershellgallery.com/packages/WDACConfig"><img src="https://img.shields.io/powershellgallery/v/WDACConfig?include_prereleases&logo=Github&logoColor=rgb(76%2C%2082%2C%20112)&label=WDACConfig%20Module&labelColor=rgb(233%2C255%2C125)&color=rgb(246%2C%2082%2C%20160)" alt="PowerShell Gallery Version (including pre-releases)"></a> <a href="https://www.powershellgallery.com/packages/Harden-Windows-Security"><img src="https://img.shields.io/powershellgallery/v/Harden-Windows-Security?include_prereleases&logo=Github&logoColor=rgb(76%2C%2082%2C%20112)&label=Harden%20Windows%20Security%20Script&labelColor=rgb(233%2C255%2C125)&color=rgb(246%2C%2082%2C%20160)" alt="PowerShell Gallery Version (including pre-releases)"></a>
@@ -34,22 +34,25 @@ Harden Windows Safely, Securely, Only With Official Microsoft Methods
 
 <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
 
-#### <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/accepted.gif" width= "30" alt="Green icon denoting validation"> Security for Personal users
 
-**Use the PowerShell script <a href="#how-to-use">below</a> to automatically apply the proactive security measures described in this page.**
 
-#### <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/accepted.gif" width= "30" alt="Green icon denoting validation"> Security for [Organizations, Enterprises](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Rationale.md#-what-about-other-enterprise-security-) and Highly secure personal users
 
-**Refer to [Windows Defender Application Control](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Introduction) resources on this GitHub repository.**
 
-<img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/yellow%20bell%20small.gif" width="36" alt="Yellow bell denoting something important and attention">**Use the [WDACConfig Module](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig) for Advanced Automated WDAC configurations and Application/File whitelisting in Windows.**
+### <img width="70" src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/colorful-heart.gif"> Access <a href="https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Rationale.md"> Windows Defender Application Control resources 
 
-<br>
 
-<p align="center">
-<img width="35" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/rainbow%20arrow%202nd%20Variation%20right.gif">
-<a href="https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Rationale.md"> Read the Rationale behind this GitHub repository </a><img width="35" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/rainbow%20arrow%202nd%20Variation%20left.gif">
-</p>
+
+### <img width="70" src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/colorful-heart.gif"> <a href="https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Rationale.md"> WDACConfig module for Windows Defender Application Control (WDAC) management </a> <img width="35" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/rainbow%20arrow%202nd%20Variation%20left.gif">
+
+
+
+
+
+### <img width="70" src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/colorful-heart.gif"> <a href="https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Rationale.md"> Read the Rationale behind this GitHub repository </a> <img width="35" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/rainbow%20arrow%202nd%20Variation%20left.gif">
+
+
+
+
 
 <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
 

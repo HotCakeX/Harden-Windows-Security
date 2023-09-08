@@ -35,19 +35,14 @@ Harden Windows Safely, Securely, Only With Official Microsoft Methods
 
 <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
 
-
-
 > [!IMPORTANT]\
-> Click/Tap on each of the items below to access them on this GitHub repository
+> Click/Tap on Each of the Items Below to Access Them on This GitHub Repository
 > 
 > ### <img width="50" src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/tada-purple.gif"> <a href="https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Rationale.md"> Windows Defender Application Control Resources </a>
 >
 > ### <img width="50" src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/tada-cyan.gif"> <a href="https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Rationale.md"> The WDACConfig module for Windows Defender Application Control </a>
 >
 > ### <img width="50" src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/colorful-heart.gif"> <a href="https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Rationale.md"> Read the Rationale behind this GitHub repository </a>
-
-
-
 
 <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
 

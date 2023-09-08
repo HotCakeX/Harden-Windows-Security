@@ -33,7 +33,7 @@ Harden Windows Safely, Securely, Only With Official Microsoft Methods
   <a href="https://github.com/HotCakeX/Harden-Windows-Security/wiki">Wiki</a>
 </p>
 
-<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/SVG/SVG%20line%20wave%20blue%20pink%20inverted.svg" width= "300000" alt="horizontal super thin rainbow RGB line">
 
 > [!IMPORTANT]\
 > Click/Tap on Each of the Items Below to Access Them on This GitHub Repository
@@ -44,7 +44,7 @@ Harden Windows Safely, Securely, Only With Official Microsoft Methods
 >
 > ### <img width="50" src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/colorful-heart.gif"> <a href="https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Rationale.md"> Read the Rationale Behind This GitHub Repository </a>
 
-<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/SVG/SVG%20line%20wave%20blue%20pink.svg" width= "300000" alt="horizontal super thin rainbow RGB line">
 
 <br>
 

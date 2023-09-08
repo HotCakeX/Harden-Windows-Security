@@ -38,13 +38,13 @@ Harden Windows Safely, Securely, Only With Official Microsoft Methods
 
 
 > [!IMPORTANT]\
-> Click/Tap on each of the items below to access them
+> Click/Tap on each of the items below to access them on this GitHub repository
 > 
-> * ### <img width="60" src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/tada-purple.gif"> <a href="https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Rationale.md"> Windows Defender Application Control resources </a> on this GitHub repository
+> ### <img width="50" src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/tada-purple.gif"> <a href="https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Rationale.md"> Windows Defender Application Control Resources </a>
 >
-> ### <img width="60" src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/tada-cyan.gif"> Check out <a href="https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Rationale.md"> the WDACConfig module for Windows Defender Application Control (WDAC)  </a>  management 
+> ### <img width="50" src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/tada-cyan.gif"> <a href="https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Rationale.md"> The WDACConfig module for Windows Defender Application Control </a>
 >
-> ### <img width="60" src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/colorful-heart.gif"> <a href="https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Rationale.md"> Read the Rationale behind this GitHub repository </a>
+> ### <img width="50" src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/colorful-heart.gif"> <a href="https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Rationale.md"> Read the Rationale behind this GitHub repository </a>
 
 
 

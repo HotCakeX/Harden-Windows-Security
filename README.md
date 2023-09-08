@@ -38,6 +38,7 @@ Harden Windows Safely, Securely, Only With Official Microsoft Methods
 
 
 > [!IMPORTANT]\
+>  
 > ### <img width="60" src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/tada-purple.gif"> Access <a href="https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Rationale.md"> Windows Defender Application Control resources </a> on this GitHub repository
 >
 > ### <img width="60" src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/tada-cyan.gif"> Check out <a href="https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Rationale.md"> the WDACConfig module for Windows Defender Application Control (WDAC)  </a>  management 

@@ -33,7 +33,7 @@ Harden Windows Safely, Securely, Only With Official Microsoft Methods
   <a href="https://github.com/HotCakeX/Harden-Windows-Security/wiki">Wiki</a>
 </p>
 
-
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
 
 > [!IMPORTANT]\
 > Click/Tap on Each of the Items Below to Access Them on This GitHub Repository

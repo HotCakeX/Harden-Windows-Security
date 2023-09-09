@@ -12,7 +12,7 @@
 
 <br>
 
-### During the PrepModes, [the following event log categories](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/event-id-explanations) are cleared
+### During the PrepModes, [the following event log categories](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/operations/event-id-explanations) are cleared
 
 * Applications and Services logs – Microsoft – Windows – CodeIntegrity – Operational includes events about Application Control policy activation and the control of executables, dlls, and drivers.
 

@@ -22,7 +22,7 @@ Remove-WDACConfig [-SignedBase] -PolicyPaths <String[]> -CertCN <String> [-SignT
 
 <br>
 
-Uses [the official procedure](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/disable-windows-defender-application-control-policies) to Re-Deploy the Signed base WDAC policies with ***Enabled:Unsigned System Integrity Policy*** rule option.
+Uses [the official procedure](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/deployment/disable-wdac-policies) to Re-Deploy the Signed base WDAC policies with ***Enabled:Unsigned System Integrity Policy*** rule option.
 
 ### 1 mandatory parameter
 

@@ -112,7 +112,7 @@ New-SupplementalWDACConfig [-InstalledAppXPackages] -PackageName <String> -SuppP
 
 Creates a Supplemental policy based on the package name of an installed app.
 
-More information at [Microsoft Learn](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/manage-packaged-apps-with-windows-defender-application-control)
+More information at [Microsoft Learn](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/manage-packaged-apps-with-wdac)
 
 ### 2 mandatory parameters
 

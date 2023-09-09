@@ -193,6 +193,6 @@ It can rebootlessly change the type of the deployed base policy. It can update t
 
 ### 1 optional parameter
 
-* `-RequireEVSigners`: Indicates that the base policy will have [Require EV Signers](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/wdac-wizard-create-base-policy#advanced-policy-rules-description) policy rule option.
+* `-RequireEVSigners`: Indicates that the base policy will have [Require EV Signers](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/wdac-wizard-create-base-policy#advanced-policy-rules-description) policy rule option.
 
 <br>

@@ -215,7 +215,7 @@ It can rebootlessly change the type of the deployed signed base policy. It can u
 
 * `-SignToolPath <String>`: <a href="#signtool-bottom">You can use it in 2 different ways<a>
 
-* `-RequireEVSigners`: Indicates that the base policy will have [Require EV Signers](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/wdac-wizard-create-base-policy#advanced-policy-rules-description) policy rule option.
+* `-RequireEVSigners`: Indicates that the base policy will have [Require EV Signers](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/wdac-wizard-create-base-policy#advanced-policy-rules-description) policy rule option.
 
 <br>
 

@@ -4,9 +4,9 @@
 
 * By deploying a **Signed** Windows Defender Application Control policy, a system will be secure and resistant to any form of tampering ([if coupled with Bitlocker and other built-in security features](https://github.com/HotCakeX/Harden-Windows-Security)), in a way that **even the system administrator can't tamper or disable this security policy.**
 
-* The [**only** way for this security feature](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/disable-windows-defender-application-control-policies#removing-wdac-policies) to be turned off, modified, updated or disabled will be to have access to the certificate and certificate's private keys used to sign it.
+* The [**only** way for this security feature](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/deployment/disable-wdac-policies#removing-wdac-policies) to be turned off, modified, updated or disabled will be to have access to the certificate and certificate's private keys used to sign it.
 
-* [Refer to Microsoft's website](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/windows-defender-application-control-design-guide) or [my other wiki posts](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Introduction) If you want to learn about WDAC itself and how to create a customized WDAC for your own environment.
+* [Refer to Microsoft's website](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/wdac-design-guide) or [my other wiki posts](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Introduction) If you want to learn about WDAC itself and how to create a customized WDAC policy for your own environment.
 
 * Always test and deploy your WDAC policy in Audit mode first to make sure it works correctly, before deploying the Signed version of it.
   - The [WDACConfig](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig) module has an optional parameter called `-TestMode` that will deploy the policies with ***Boot Audit on Failure*** and ***Advanced Boot Options Menu*** policy rule options.
@@ -158,7 +158,7 @@ Add-WindowsFeature Adcs-Cert-Authority -IncludeManagementTools
 
 ### Configure the Validity period of the issued certificates on the server
 
-[Microsoft official guide for this](https://learn.microsoft.com/en-us/troubleshoot/windows-server/identity/change-certificates-expiration-date)
+[Microsoft guide for this](https://learn.microsoft.com/en-us/troubleshoot/windows-server/identity/change-certificates-expiration-date)
 
 We Increase the validity period of the certificates issued by the CA to 30 years:
 
@@ -181,7 +181,7 @@ certutil -getreg ca\ValidityPeriodUnits
 ## Follow the official guide to create certificate template and generate the signing certificate
 
 Now open Certification Authority, you can do so by searching for it in Windows search or from Server Manager => Tools.
-Once you open it, you can follow [the official guide from Microsoft](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/create-code-signing-cert-for-windows-defender-application-control) to create the certificate template for WDAC policy signing and then request and create a certificate.
+Once you open it, you can follow [the guide from Microsoft](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/deployment/create-code-signing-cert-for-wdac) to create the certificate template for WDAC policy signing and then request and create a certificate.
 
 <br>
 
@@ -196,9 +196,9 @@ That's why our Hyper-V VM Server needs at least one Virtual Network Adapter.
 
 <br>
 
-The [guide suggests](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/create-code-signing-cert-for-windows-defender-application-control) using a client computer to request and create the certificate but since we are going to use the certificate for non-domain-joined computers and don't need to use the Active Directory, we can perform all of the steps on the same Windows Server VM.
+The [guide suggests](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/deployment/create-code-signing-cert-for-wdac) using a client computer to request and create the certificate but since we are going to use the certificate for non-domain-joined computers and don't need to use the Active Directory, we can perform all of the steps on the same Windows Server VM.
 
-These are some optional ***deviations*** from the [official guide](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/create-code-signing-cert-for-windows-defender-application-control) that **result in creating a successful and more secure certificate** for our WDAC policy signing:
+These are some optional ***deviations*** from the [official guide](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/deployment/create-code-signing-cert-for-wdac) that **result in creating a successful and more secure certificate** for our WDAC policy signing:
 
 * On the Compatibility tab, you can select Windows Server 2016 from the Certification Authority list and select Windows 10 / Windows Server 2016 from the Certificate recipient list.
 
@@ -206,7 +206,7 @@ These are some optional ***deviations*** from the [official guide](https://learn
 
 * On the Cryptography tab, you can set the Provider Category to `Key Storage Provider` [(KSP)](https://learn.microsoft.com/en-us/windows/win32/secgloss/c-gly?redirectedfrom=MSDN#_security_cryptographic_service_provider_gly). Set the Algorithm Name to `RSA`. Set the Minimum key size to `4096`. Set Request hash to `SHA512`.
 
-As the [Microsoft's guide](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/create-code-signing-cert-for-windows-defender-application-control) suggests, you need to go to security tab to verify account access of the user(s) requesting the certificate, **but since we are requesting and creating our certificate on the same CA server, we don't need to change anything there.**
+As the [Microsoft's guide](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/deployment/create-code-signing-cert-for-wdac) suggests, you need to go to security tab to verify account access of the user(s) requesting the certificate, **but since we are requesting and creating our certificate on the same CA server, we don't need to change anything there.**
 
 <br>
 
@@ -249,7 +249,7 @@ After the client machine restarted, use `Other user` option on the lock screen a
 
 Since you are using Administrator account, you can by default use Enhanced session in Hyper-V too.
 
-To request the certificate and enroll it, you can follow [the official Microsoft guide](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/create-code-signing-cert-for-windows-defender-application-control).
+To request the certificate and enroll it, you can follow [the Microsoft guide](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/deployment/create-code-signing-cert-for-wdac).
 
 <br>
 
@@ -265,7 +265,7 @@ You also need to export the certificate **without private key**, in `DER encoded
 
 It is important to keep these 2 files, specially `.pfx` that contains the private key, in a safe place, such as [Azure Key Vault Managed HSM](https://learn.microsoft.com/en-us/azure/key-vault/managed-hsm/overview) or [OneDrive Personal Vault](https://support.microsoft.com/en-us/office/protect-your-onedrive-files-in-personal-vault-6540ef37-e9bf-4121-a773-56f98dce78c4), so that if you delete all the VMs you created, you will be able to continue using the same certificate to sign further WDAC policies and supplemental policies, at least for the next 22 years, before it needs a renewal. As you can see, all of that setup must be done just once ***every few decades.***
 
-The [Personal Information Exchange (.pfx)](https://learn.microsoft.com/en-us/windows-hardware/drivers/install/personal-information-exchange---pfx--files) file has great importance because it contains the Public key and **Private key** of the certificate so anyone who has access to this file [can disable](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/disable-windows-defender-application-control-policies#removing-wdac-policies) the deployed Signed WDAC policy. It should never be shared with anyone outside your circle of trust. It is a password-protected file by nature.
+The [Personal Information Exchange (.pfx)](https://learn.microsoft.com/en-us/windows-hardware/drivers/install/personal-information-exchange---pfx--files) file has great importance because it contains the Public key and **Private key** of the certificate so anyone who has access to this file [can disable](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/deployment/disable-wdac-policies#removing-wdac-policies) the deployed Signed WDAC policy. It should never be shared with anyone outside your circle of trust. It is a password-protected file by nature.
 
 <br>
 
@@ -318,7 +318,7 @@ Remove-WDACConfig [-UnsignedOrSupplemental] [-PolicyIDs <String[]>] [-PolicyName
 
 ### Activation Process
 
-After the signed WDAC policy binary `.cip` is copied to the `EFI` partition as part of the deployment process, and system is restarted oncee, we can see in System Information that WDAC user-mode is being enforced and when you try to install an application not permitted by the deployed policy, it will be successfully blocked. At this point, since we are using UEFI Secure Boot, the **Anti Tampering** protection of the **Signed WDAC** kicks in and starts protecting WDAC policy against any tampering. We need to reboot the system one more time, [to verify everything](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/use-signed-policies-to-protect-windows-defender-application-control-against-tampering#verify-and-deploy-the-signed-policy) and make sure there is no boot failure.
+After the signed WDAC policy binary `.cip` is copied to the `EFI` partition as part of the deployment process, and system is restarted oncee, we can see in System Information that WDAC user-mode is being enforced and when you try to install an application not permitted by the deployed policy, it will be successfully blocked. At this point, since we are using UEFI Secure Boot, the **Anti Tampering** protection of the **Signed WDAC** kicks in and starts protecting WDAC policy against any tampering. We need to reboot the system one more time, [to verify everything](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/deployment/use-signed-policies-to-protect-wdac-against-tampering#verify-and-deploy-the-signed-policy) and make sure there is no boot failure.
 
 Deploying a Signed WDAC policy without restarting is the same as deploying Unsigned policies, because the Signed policy can be easily removed just like an Unsigned policy. So always make sure you restart at least once after deploying a Signed WDAC policy.
 
@@ -346,7 +346,7 @@ Deploying a Signed WDAC policy without restarting is the same as deploying Unsig
 
 ### When we activate Smart App Control
 
-After completely deploying the Signed WDAC policy, if we turn on Smart App Control, which is [a variation of WDAC](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/example-wdac-base-policies), then it will take control of the Windows Defender Application Control User Mode Policy. After turning off Smart App Control, the signed WDAC policy will automatically take the control. So, after deploying the Signed WDAC policy, Smart App Control can either be turned on or turned off, either way, the signed WDAC policy will not be disabled and will turn on as soon as Smart App Control is turned off.
+After completely deploying the Signed WDAC policy, if we turn on Smart App Control, which is [a variation of WDAC](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/example-wdac-base-policies), then it will take control of the Windows Defender Application Control User Mode Policy. After turning off Smart App Control, the signed WDAC policy will automatically take the control. So, after deploying the Signed WDAC policy, Smart App Control can either be turned on or turned off, either way, the signed WDAC policy will not be disabled and will turn on as soon as Smart App Control is turned off.
 
 <br>
 
@@ -410,16 +410,16 @@ then FQDN is: `CAServer.CAServer.com`
 
 ## Resources
 
-* [Use signed policies to protect Windows Defender Application Control against tampering](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/use-signed-policies-to-protect-windows-defender-application-control-against-tampering)
-* [Create a code signing cert for Windows Defender Application Control](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/create-code-signing-cert-for-windows-defender-application-control)
-* [Deploying signed policies](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/deployment/deploy-wdac-policies-with-script#deploying-signed-policies)
+* [Use signed policies to protect Windows Defender Application Control against tampering](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/deployment/use-signed-policies-to-protect-wdac-against-tampering)
+* [Create a code signing cert for Windows Defender Application Control](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/deployment/create-code-signing-cert-for-wdac)
+* [Deploying signed policies](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/deployment/deploy-wdac-policies-with-script#deploying-signed-policies)
 * [WDAC Policy Wizard](https://webapp-wdac-wizard.azurewebsites.net/)
 * [Generate Windows Defender Application Control (WDAC) policies Online](https://schneegans.de/windows/wdac-policy-generator/)
 * [WDAC policy creation - Australian Government](https://desktop.gov.au/blueprint/abac/wdac-policy-creation.html)
-* [Understand Windows Defender Application Control (WDAC) policy rules and file rules](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/select-types-of-rules-to-create)
+* [Understand Windows Defender Application Control (WDAC) policy rules and file rules](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/select-types-of-rules-to-create)
 * [Install Active Directory Domain Services](https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/deploy/install-active-directory-domain-services--level-100-)
 * [Install-AdcsCertificationAuthority](https://learn.microsoft.com/en-us/powershell/module/adcsdeployment/install-adcscertificationauthority)
 * [Install the Certification Authority](https://learn.microsoft.com/en-us/windows-server/networking/core-network-guide/cncg/server-certs/install-the-certification-authority)
 * [Comparison of Standard, Datacenter, and Datacenter: Azure Edition editions of Windows Server 2022](https://learn.microsoft.com/en-us/windows-server/get-started/editions-comparison-windows-server-2022?tabs=full-comparison)
-* [Remove Windows Defender Application Control (WDAC) policies](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/disable-windows-defender-application-control-policies)
+* [Remove Windows Defender Application Control (WDAC) policies](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/deployment/disable-wdac-policies)
 * [Add-SignerRule](https://learn.microsoft.com/en-us/powershell/module/configci/add-signerrule)

@@ -137,7 +137,7 @@ Install-Script -Name 'Harden-Windows-Security' -Force
 <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/verticalshine.gif" width="27" alt="Requirements item"> [Latest available version](https://www.microsoft.com/en-us/software-download/windows11/) of Windows installed.
 
 > [!IMPORTANT]\
-> Restart your device after applying the hardening measure
+> Restart your device after applying the hardening measures
 
 <br>
 

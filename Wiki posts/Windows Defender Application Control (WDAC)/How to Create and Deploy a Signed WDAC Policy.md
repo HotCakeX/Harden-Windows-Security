@@ -9,7 +9,7 @@
 * [Refer to Microsoft's website](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/wdac-design-guide) or [my other wiki posts](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Introduction) If you want to learn about WDAC itself and how to create a customized WDAC policy for your own environment.
 
 * Always test and deploy your WDAC policy in Audit mode first to make sure it works correctly, before deploying the Signed version of it.
-  - The [WDACConfig](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig) module has an optional parameter called `-TestMode` that will deploy the policies with ***Boot Audit on Failure*** and ***Advanced Boot Options Menu*** policy rule options.
+    - The [WDACConfig](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig) module has an optional parameter called `-TestMode` that will deploy the policies with ***Boot Audit on Failure*** and ***Advanced Boot Options Menu*** policy rule options.
 
 * Keep the xml file(s) of the deployed base policy(s) in a safe place, they are needed if you decide to disable the signed deployed WDAC policy later on.
 
@@ -48,7 +48,7 @@ Latest Windows Server, it's free for 180 days for evaluation and comes in ISO an
 
 * [Download Windows Server 2022](https://www.microsoft.com/en-us/evalcenter/evaluate-windows-server-2022) from [Microsoft Evaluation Center](https://www.microsoft.com/en-us/evalcenter)
 * [Download Windows Server insider vNext](https://www.microsoft.com/en-us/software-download/windowsinsiderpreviewserver)
-  - [Insider activation keys](https://techcommunity.microsoft.com/t5/windows-server-insiders/bd-p/WindowsServerInsiders)
+    - [Insider activation keys](https://techcommunity.microsoft.com/t5/windows-server-insiders/bd-p/WindowsServerInsiders)
 
 <br>
 
@@ -111,7 +111,6 @@ $password = ConvertTo-SecureString 'Bing6969' -AsPlainText -Force
 Install-ADDSForest -DomainName CAServer.com -DomainNetbiosName CASERVER0 -SafeModeAdministratorPassword $password -InstallDNS:$false -Force
 ```
 
-<br>
 <br>
 
 ### Using GUI: Install Active Directory Certification Service and set up an Enterprise root CA (Certificate Authority)
@@ -188,7 +187,7 @@ Once you open it, you can follow [the guide from Microsoft](https://learn.micros
 Note that If the Server doesn't have at least 1 network adapter connected to it, then Certificate Templates don't load,
 <details><summary>Screenshot</summary>
 
-![image](https://user-images.githubusercontent.com/118815227/219699959-fdf7b0df-ddae-45f8-ab2e-4381e88cefb0.png)
+<img src="https://user-images.githubusercontent.com/118815227/219699959-fdf7b0df-ddae-45f8-ab2e-4381e88cefb0.png">
 
 </details>
 
@@ -213,9 +212,9 @@ As the [Microsoft's guide](https://learn.microsoft.com/en-us/windows/security/ap
 <details>
 <summary> If we want to use a 2nd PC to do this, as described in Microsoft document (Totally Unnecessary) </summary>
 
-### Additional steps to perform on Windows Server
+<h3> Additional steps to perform on Windows Server </h3>
 
-**If** you are going to create a new user account in "Active Directory Users and Computers" for use on the client VM, in Certification Authority when duplicating the certificate template, go to Security Tab and set the correct permissions for that user account so that it will be able to request and enroll the certificate.
+If you are going to create a new user account in "Active Directory Users and Computers" for use on the client VM, in Certification Authority when duplicating the certificate template, go to Security Tab and set the correct permissions for that user account so that it will be able to request and enroll the certificate.
 
 For instance, since you are the only person who is going to use the Active Directory, you can even give `Full Control` permission to `Authenticated Users` group.
 
@@ -229,7 +228,7 @@ Use the Edit button for DNS server assignment, set it to Manual, toggle the IPv4
 
 <br>
 
-### Steps to perform on Client VM
+<h3> Steps to perform on Client VM </h3>
 
 Make sure the client VM is running the latest version of Windows, and it follows the same prerequisites explained above.
 
@@ -237,7 +236,7 @@ Go to Windows Settings => Network & Internet => Ethernet => in "IP Assignment" s
 
 Now use the Edit button for DNS server assignment, set it to Manual, toggle the IPv4 button and in the Preferred DNS field enter the static IP address of the Windows Server VM, which was `10.10.10.1`. Save everything and exit settings.
 
-Open an elevated PowerShell and [enter this](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/add-computer) to join the Active Directory domain:
+Open an elevated PowerShell and <a href="https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/add-computer">enter this</a> to join the Active Directory domain:
 
 ```powershell
 Add-Computer -DomainName <Domain> -Restart
@@ -249,7 +248,7 @@ After the client machine restarted, use `Other user` option on the lock screen a
 
 Since you are using Administrator account, you can by default use Enhanced session in Hyper-V too.
 
-To request the certificate and enroll it, you can follow [the Microsoft guide](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/deployment/create-code-signing-cert-for-wdac).
+To request the certificate and enroll it, you can follow <a href="https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/deployment/create-code-signing-cert-for-wdac">the Microsoft guide</a>.
 
 <br>
 
@@ -338,7 +337,7 @@ Deploying a Signed WDAC policy without restarting is the same as deploying Unsig
 
 <details><summary>Screenshot of a message after forcefully deleting a Signed WDAC policy from the EFI partition</summary>
 
-![image](https://user-images.githubusercontent.com/118815227/219513251-3722745f-1aa5-4b5c-b4b0-e1a928b786a1.png)
+<img src="https://user-images.githubusercontent.com/118815227/219513251-3722745f-1aa5-4b5c-b4b0-e1a928b786a1.png">
 
 </details>
 

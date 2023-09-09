@@ -2,17 +2,17 @@
 
 ## Microsoft Security Compliance Toolkit
 
-[Official link to download Microsoft Security Compliance Toolkit](https://www.microsoft.com/en-us/download/details.aspx?id=55319)
-
-[Microsoft Security Compliance Toolkit 1.0 - How to use](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-security-configuration-framework/security-compliance-toolkit-10)
-
 This set of tools allows enterprise security administrators to download, analyze, test, edit and store Microsoft-recommended security configuration baselines for Windows and other Microsoft products, while comparing them against **other security configurations**.
 
-Microsoft Security Compliance Toolkit includes multiple files and useful programs, here are the 3 main components that are important to us and are used in this script.
+Microsoft Security Compliance Toolkit includes multiple files and useful programs that are required for the Harden Windows Security Module to operate.
 
-1. <a href="#Microsoft-Security-Baseline">Microsoft Security Baseline</a>
-2. <a href="#LGPO">LGPO</a>
-3. <a href="#Policy-Analyzer">Policy Analyzer</a>
+* [Official link to download Microsoft Security Compliance Toolkit](https://www.microsoft.com/en-us/download/details.aspx?id=55319)
+
+* [Microsoft Security Compliance Toolkit 1.0 - How to use](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-security-configuration-framework/security-compliance-toolkit-10)
+
+<br>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
 
 <br>
 
@@ -30,6 +30,10 @@ When you unzip the Microsoft Security Baseline file, you will find this folder s
 3. **GPOs** – contains GPO objects for different scenarios, these are the actual policies that will be applied.
 4. **Scripts** - contains multiple PowerShell scripts for different scenarios and helps us easily import GPO settings to our system. The most important PowerShell script here is `Baseline-LocalInstall.ps1`.
 5. **Templates** – contains additional Group Policy Object templates that are not available by default on Windows, such as `MSS-legacy.admx`, these are in `ADMX` and `ADML` formats. They will be copied to `C:\Windows\PolicyDefinitions`, where they belong, so that the new Security Baselines GPOs can be interpreted.
+
+<br>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
 
 <br>
 
@@ -55,7 +59,7 @@ Quoting from the PDF file supplied by LGPO:
 
 <br>
 
-### How to manually back up Group Policy Objects from a system using LGPO.exe
+### How to Manually Back up Group Policy Objects From a System Using LGPO.exe
 
 Use this command to back up the currently set local group policies to drive `C`
 
@@ -63,7 +67,7 @@ Use this command to back up the currently set local group policies to drive `C`
 .\LGPO.exe /b C:
 ```
 
-#### How to Import Group Policy Objects from a backup, created using LGPO.exe, to the local system
+#### How to Import Group Policy Objects From a Backup, Created Using LGPO.exe, to the Local System
 
 ```powershell
 .\LGPO.exe /g 'Path to the backup'
@@ -75,9 +79,9 @@ Example:
 .\LGPO.exe /g 'C:\{841474E6-33EC-418C-B884-EA0F7C8195DB}'
 ```
 
-#### How to Import only the settings from a Registry Policy file into Computer (Machine) Configuration
+#### How to Import Only the Settings From a Registry Policy File Into Computer (Machine) Configuration
 
-_(This only contains everything in `Computer (Machine) Configuration -> Administrative Templates` and some policies in `Computer Configuration -> Windows Settings`)_
+*(This only contains everything in Computer (Machine) Configuration -> Administrative Templates and some policies in Computer Configuration -> Windows Settings)*
 
 [Registry Policy File Format](https://learn.microsoft.com/en-us/previous-versions/windows/desktop/policy/registry-policy-file-format)
 
@@ -87,13 +91,17 @@ _(This only contains everything in `Computer (Machine) Configuration -> Administ
 
 #### How to Import only the Security policies file into Computer (Machine) Configuration
 
-_(This only contains everything in Computer (Machine) Configuration -> Windows Settings => Security Settings => everything in the subfolders except for the [Advanced Audit Policy Configuration](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/secpol-advanced-security-audit-policy-settings))_
+*(This only contains everything in Computer (Machine) Configuration -> Windows Settings => Security Settings => everything in the subfolders except for the [Advanced Audit Policy Configuration](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/secpol-advanced-security-audit-policy-settings))*
 
 [Security policy settings](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/security-policy-settings)
 
 ```powershell
 .\LGPO.exe /s ".\GPOX\DomainSysvol\GPO\Machine\microsoft\windows nt\SecEdit\GptTmpl.inf"
 ```
+
+<br>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
 
 <br>
 
@@ -125,38 +133,57 @@ In Policy Analyzer, there is an option called `Compare to Effective State`. Quot
 
 <br>
 
-## How is Group Policy used in this PowerShell script?
-
-1. The PowerShell script downloads the official Microsoft Security Baselines from Microsoft servers and applies them to the system.
-2. It then downloads Group Policies from this GitHub repository, which represent the configurations explained in the main Readme page, and applies them to the system, on top of Microsoft Security Baselines, so where there is a conflict of policy, Hardening script will replace the configurations set by Microsoft Security Baselines.
-3. When running the script, near the end you have an option to apply overrides for Microsoft Security Baseline policies and ease some of the applied retrictions, [you can find the details of those overrides in here.](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Overrides-for-Microsoft-Security-Baseline)
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
 
 <br>
 
-## How are Group Policies for this script created and maintained?
+## How Are Group Policies Used by the Harden Windows Security Module?
 
-### How I created them for the first time
+1. The module downloads the official Microsoft Security Baselines from Microsoft servers and applies them to the system.
+
+2. It then downloads Group Policies from this GitHub repository, which represent the configurations explained in the main Readme page, and applies them to the system, on top of Microsoft Security Baselines, so where there is a conflict of policy, the module will replace the configurations set by Microsoft Security Baselines.
+
+3. When applying the Microsoft Security Baselines, you have the option to apply the optional overrides too, [you can find the details of those overrides in here,](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Overrides-for-Microsoft-Security-Baseline), they are required to be applied if you are using Harden Windows Security Module in Azure VMs and highly recommended in general.
+
+<br>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+
+<br>
+
+## How Are Group Policies for the Module Created and Maintained?
+
+### How I Created Them for the First Time
 
 1. Installed the newest available Windows build on a fresh Hyper-V VM, fully updated it, created a standard checkpoint.
+
 2. Opened Group Policy editor and started applying security measures described in the Readme page.
+
 3. After completing each category, used `LGPO.exe /b C:` to backup Group Policies of the system by creating a full GPO.
+
 4. Then I took only files needed from the backup, `registry.pol` and `GptTmpl.inf` and put them in a zip file, renamed it to `Security-Baselines-X.zip`
 
-### How I maintain them
+### How I Maintain Them
 
 1. As long as the VM is still using the latest available build of Windows, I use the standard checkpoint I had created to revert the VM back to that new state. If there is a newer build of Windows available, I delete that old VM, download the new Windows ISO file from Microsoft servers, then I create a fresh Hyper-V VM using it.
+
 2. I copy the Group Policy files, `registry.pol` or `GptTmpl.inf` to the VM, import them by using `.\LGPO.exe /m "path"` for `registry.pol` files or `.\LGPO.exe /s "path"` for `GptTmpl.inf` files.
-3. Open Group Policy editor and change anything that is needed, once I'm done, I create a full backup of Group Policies of the system using `LGPO.exe /b C:` command, again take out the modified file, either `registry.pol` or `GptTmpl.inf`.
-4. Use `PolicyAnalyzer` to double check everything by comparing the old file with the new one and making sure the correct change is applied.
+
+3. Open Group Policy editor and change anything that is needed, once I'm done, I create a full backup of the Group Policies of the system using `LGPO.exe /b C:` command, again take out the modified file, either `registry.pol` or `GptTmpl.inf`.
+
+4. Use `PolicyAnalyzer` to double check everything by comparing the old file with the new one and making sure the correct changes are applied.
+
 5. Replace the old Group Policy file with the new file and create a new `Security-Baselines-X` to upload to the GitHub repository.
 
 <br>
 
-***
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
 
-### We can use Policy Analyzer for verification and comparison
+<br>
 
-#### To verify the settings are applied correctly by this script
+## We Can Use Policy Analyzer for Verification and Comparison
+
+### To Verify the Settings Are Applied Correctly by The Module
 
 1. Use folder options in Control Panel or File Explorer to show hidden files and folder.
 
@@ -164,19 +191,21 @@ In Policy Analyzer, there is an option called `Compare to Effective State`. Quot
 
 3. Back at the main window, use View/Compare button to view applied Group Policies. The result that you will see is all of the Group Policies that are applied to your system.
 
-Another way to verify the applied Group Policies is to perform the 3 tasks above, what it will give you is the Policy Rules file which is generated from Group Policy state after using the script. If we take this policy rules file to a different machine where we just clean installed Windows and use Policy Analyzer to compare it to the Effective State of the system, we will see what Group Policy settings have changed as a result of using the script.
+Another way to verify the applied Group Policies is to perform the 3 tasks above; What it will give you is the Policy Rules file which is generated from Group Policy state after using the module. If we take this policy rules file to a different machine where we just clean installed Windows and use Policy Analyzer to compare it to the Effective State of the system, we will see what Group Policy settings have changed as a result of using the module.
 
 <br>
 
-Note: At first, when we clean install Windows, the Group Policy folder `C:\Windows\System32\GroupPolicy` is empty, it will get populated with empty folders and a 1kb file that contains only 1 word, when we first open the local Group Policy editor. It will get more populated with actual policies once we start modifying any group policies.
+Note: At first, when we clean install Windows, the Group Policy folder `C:\Windows\System32\GroupPolicy` is empty, it will get populated with empty folders and a `1kb` file that contains only 1 word when we first open the local Group Policy editor. It will get more populated with actual policies once we start modifying any group policies.
 
 <br>
 
-***
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
 
-### How to verify `security-baselines-x.zip` file and 100% trust it?
+<br>
 
-1. Download [the `security-baselines-x.zip` file](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Payload/Security-Baselines-X.zip), extract it.
+## How to verify `security-baselines-x.zip` file and 100% trust it?
+
+1. Download [the security-baselines-x.zip file](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Payload/Security-Baselines-X.zip), extract it.
 2. Open Policy Analyzer, Navigate to Add -> File -> Select either `Add User Configuration (registry.pol)` or `Add Security Template (*.inf)` -> Browser for the folder that was extracted from the `security-baselines-x.zip`, navigate to the category you want.
 3. Select either `.pol` or `.inf` file, Import it, give it a name, save it in `\Documents\PolicyAnalyzer\`
 
@@ -188,7 +217,11 @@ _You can also use [Virus Total website](https://www.virustotal.com/gui/home/uplo
 
 <br>
 
-## Using CSPs, Configuration service providers and provisioning packages (work in progress)
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+
+<br>
+
+## Using Configuration Service Providers (CSPs) and Provisioning Packages (Work in Progress)
 
 This command gets the information about all installed provisioning packages on your system.
 
@@ -221,3 +254,5 @@ gpresult /scope user /v
 We can manually backup and restore Group Policy settings by copying this folder and all of its content:
 
 `C:\Windows\System32\GroupPolicy`
+
+<br>

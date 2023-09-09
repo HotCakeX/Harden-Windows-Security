@@ -17,6 +17,10 @@ Computer Configuration\Administrative Templates\Windows Components\Windows Game 
 
 <br>
 
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+
+<br>
+
 ## 2. Prohibit use of Internet Connection Sharing on your DNS domain network
 
 Determines whether administrators can enable and configure the Internet Connection Sharing (ICS) feature of an Internet connection and if the ICS service can run on the computer.
@@ -45,6 +49,10 @@ Computer Configuration\Administrative Templates\Network\Network Connections\Proh
 
 <br>
 
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+
+<br>
+
 ## 3. Firewall local rule merging
 
 This can prevent Hyper-V default switch from working properly, please see [this forum post on Microsoft Tech Community](https://techcommunity.microsoft.com/t5/microsoft-security-baselines/security-baseline-with-hyper-v-default-switch/m-p/2622890) for more info:
@@ -66,6 +74,10 @@ Computer Configuration\Windows Settings\Security Settings\Windows Defender Firew
 
 <br>
 
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+
+<br>
+
 ## 4. Deny write access to removable drives not protected by Bitlocker
 
 Disabling this policy because it can cause inconvenience and if your flash drive is Bitlocker encrypted, It can't be used as a bootable Windows installation USB flash drive.
@@ -75,6 +87,10 @@ Policy path:
 ```
 Computer Configuration\Administrative Templates\Windows Components\BitLocker Drive Encryption\Removable Data Drives\Deny write access to removable drives not protected by BitLocker
 ```
+
+<br>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
 
 <br>
 
@@ -92,6 +108,10 @@ Computer Configuration\Windows Settings\
 
 <br>
 
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+
+<br>
+
 ## 6. Enable Clipboard and Drive redirection when using Remote Desktop connection
 
 It is necessary when using Hyper-V VM Enhanced session mode and you want to copy items between guest and host OS.
@@ -101,6 +121,10 @@ Policy path:
 ```
 Computer Configuration\Administrative Templates\Windows Components\Remote Desktop Services\Remote Desktop Session Host\Device and Resource Redirection\
 ```
+
+<br>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
 
 <br>
 

@@ -103,9 +103,9 @@ All of the outputs are saved in a folder named "WDAC" inside the current working
 
 <br>
 
-If you don't use the `-Deployit` switch, you can deploy the `.cip` binary files manually using [CITool](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/operations/citool-commands).
+If you don't use the `-Deployit` switch, you can deploy the `.cip` binary files manually using [CITool](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/operations/citool-commands).
 
-[More info on deployment](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/windows-defender-application-control-deployment-guide)
+[More info on deployment](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/deployment/wdac-deployment-guide)
 
 [**Information about how to Sign and Deploy a Signed WDAC policy.**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/How-to-Create-and-Deploy-a-Signed-WDAC-Policy-Windows-Defender-Application-Control)
 

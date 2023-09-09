@@ -22,11 +22,11 @@ New-WDACConfig [-GetBlockRules] [-Deploy]
 
 <br>
 
-Creates a WDAC policy file called ***Microsoft recommended block rules.xml*** from [the official source](https://github.com/MicrosoftDocs/windows-itpro-docs/blob/public/windows/security/threat-protection/windows-defender-application-control/microsoft-recommended-block-rules.md) for [Microsoft recommended block rules](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/microsoft-recommended-block-rules), with *AllowAll* rules and audit mode rule option removed. The policy sets [HVCI to strict](https://learn.microsoft.com/en-us/powershell/module/configci/set-hvcioptions).
+Creates a WDAC policy file called ***Microsoft recommended block rules.xml*** from [the official source](https://github.com/MicrosoftDocs/windows-itpro-docs/blob/public/windows/security/application-security/application-control/windows-defender-application-control/design/applications-that-can-bypass-wdac.md) for [Microsoft recommended block rules](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/applications-that-can-bypass-wdac), with *AllowAll* rules and audit mode rule option removed. The policy sets [HVCI to strict](https://learn.microsoft.com/en-us/powershell/module/configci/set-hvcioptions).
 
 ### 1 optional parameter
 
-* `-Deploy`: Deploys the [latest Microsoft recommended block rules](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/microsoft-recommended-block-rules) (For User Mode binaries). It has the 2 default AllowAll rules so it can be deployed as a standalone base policy. Uses [Strict HVCI](https://learn.microsoft.com/en-us/powershell/module/configci/set-hvcioptions).
+* `-Deploy`: Deploys the [latest Microsoft recommended block rules](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/applications-that-can-bypass-wdac) (For User Mode binaries). It has the 2 default AllowAll rules so it can be deployed as a standalone base policy. Uses [Strict HVCI](https://learn.microsoft.com/en-us/powershell/module/configci/set-hvcioptions).
 
 <br>
 
@@ -44,7 +44,7 @@ New-WDACConfig [-GetDriverBlockRules] [-Deploy]
 
 <br>
 
-Creates a WDAC policy file called ***Microsoft recommended driver block rules.xml*** from [the official source](https://github.com/MicrosoftDocs/windows-itpro-docs/blob/public/windows/security/threat-protection/windows-defender-application-control/microsoft-recommended-driver-block-rules.md) for [Microsoft recommended driver block rules](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/microsoft-recommended-driver-block-rules), with *AllowAll* rules and audit mode rule option removed. The policy sets [HVCI to strict](https://learn.microsoft.com/en-us/powershell/module/configci/set-hvcioptions). Extra information regarding the version and last updated date of [the GitHub document](https://github.com/MicrosoftDocs/windows-itpro-docs/commits/public/windows/security/threat-protection/windows-defender-application-control/microsoft-recommended-driver-block-rules.md) containing block rules will also be displayed.
+Creates a WDAC policy file called ***Microsoft recommended driver block rules.xml*** from [the official source](https://github.com/MicrosoftDocs/windows-itpro-docs/blob/public/windows/security/application-security/application-control/windows-defender-application-control/design/microsoft-recommended-driver-block-rules.md) for [Microsoft recommended driver block rules](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/microsoft-recommended-driver-block-rules), with *AllowAll* rules and audit mode rule option removed. The policy sets [HVCI to strict](https://learn.microsoft.com/en-us/powershell/module/configci/set-hvcioptions). Extra information regarding the version and last updated date of [the GitHub document](https://github.com/MicrosoftDocs/windows-itpro-docs/commits/public/windows/security/application-security/application-control/windows-defender-application-control/design/microsoft-recommended-driver-block-rules.md) containing block rules will also be displayed.
 
 ### 1 optional parameters
 
@@ -67,7 +67,7 @@ New-WDACConfig [-MakeAllowMSFTWithBlockRules] [-Deploy] [-TestMode] [-RequireEVS
 
 <br>
 
-Calls the [-GetBlockRules](#new-wdacconfig--getblockrules) parameter to get the Microsoft recommended block rules, and merges them with [*AllowMicrosoft default policy*](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/example-wdac-base-policies). The Policy uses [strict HVCI](https://learn.microsoft.com/en-us/powershell/module/configci/set-hvcioptions) and has the following [rule options](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/select-types-of-rules-to-create#table-1-windows-defender-application-control-policy---policy-rule-options):
+Calls the [-GetBlockRules](#new-wdacconfig--getblockrules) parameter to get the Microsoft recommended block rules, and merges them with [*AllowMicrosoft default policy*](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/example-wdac-base-policies). The Policy uses [strict HVCI](https://learn.microsoft.com/en-us/powershell/module/configci/set-hvcioptions) and has the following [rule options](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/select-types-of-rules-to-create#table-1-windows-defender-application-control-policy---policy-rule-options:
 
 <br>
 
@@ -97,9 +97,9 @@ Calls the [-GetBlockRules](#new-wdacconfig--getblockrules) parameter to get the 
 
 * `-Deploy`: Indicates that the module will automatically deploy the ***AllowMicrosoftPlusBlockRules*** policy after creation.
 
-* `-TestMode`: Indicates that the created/deployed policy will have ***Enabled:Boot Audit on Failure*** and ***Enabled:Advanced Boot Options Menu*** [policy rule options](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/select-types-of-rules-to-create#table-1-windows-defender-application-control-policy---policy-rule-options).
+* `-TestMode`: Indicates that the created/deployed policy will have ***Enabled:Boot Audit on Failure*** and ***Enabled:Advanced Boot Options Menu*** [policy rule options](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/select-types-of-rules-to-create#table-1-windows-defender-application-control-policy---policy-rule-options.
 
-* `-RequireEVSigners`: Indicates that the created/deployed policy will have [Require EV Signers](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/wdac-wizard-create-base-policy#advanced-policy-rules-description) policy rule option.
+* `-RequireEVSigners`: Indicates that the created/deployed policy will have [Require EV Signers](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/wdac-wizard-create-base-policy#advanced-policy-rules-description) policy rule option.
 
      - > In addition to being WHQL signed, this rule requires that drivers must have been submitted by a partner that has an Extended Verification (EV) certificate. All Windows 10 and later, or Windows 11 drivers will meet this requirement.
 
@@ -204,9 +204,9 @@ Creates a WDAC policy using the Audit event logs generated [for a fully managed 
 
 * `-Deploy`: Indicates that the module will automatically remove the WDAC policy deployed using either [-PrepMSFTOnlyAudit](#new-wdacconfig--prepmsftonlyaudit) or [-PrepDefaultWindowsAudit](#new-wdacconfig--prepdefaultwindowsaudit) parameters, then deploys the supplemental policy created from Audit event logs along with the selected base policy type, both in enforced mode.
 
-* `-TestMode`: Indicates that the created/deployed policy will have ***Enabled:Boot Audit on Failure*** and ***Enabled:Advanced Boot Options Menu*** [policy rule options](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/select-types-of-rules-to-create#table-1-windows-defender-application-control-policy---policy-rule-options).
+* `-TestMode`: Indicates that the created/deployed policy will have ***Enabled:Boot Audit on Failure*** and ***Enabled:Advanced Boot Options Menu*** [policy rule options](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/select-types-of-rules-to-create#table-1-windows-defender-application-control-policy---policy-rule-options.
 
-* `-RequireEVSigners`: Indicates that the created/deployed policy will have [Require EV Signers](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/wdac-wizard-create-base-policy#advanced-policy-rules-description) policy rule option.
+* `-RequireEVSigners`: Indicates that the created/deployed policy will have [Require EV Signers](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/wdac-wizard-create-base-policy#advanced-policy-rules-description) policy rule option.
 
      - > In addition to being WHQL signed, this rule requires that drivers must have been submitted by a partner that has an Extended Verification (EV) certificate. All Windows 10 and later, or Windows 11 drivers will meet this requirement.
 
@@ -259,7 +259,7 @@ New-WDACConfig [-MakeLightPolicy] [-Deploy] [-TestMode] [-RequireEVSigners]
 
 <br>
 
-Creates a WDAC policy for a [Lightly managed system](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-for-Lightly-Managed-Devices). The Policy uses has the same specifications as [-MakeAllowMSFTWithBlockRules](#new-wdacconfig--makeallowmsftwithblockrules), with the following additional [rule options](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/select-types-of-rules-to-create#table-1-windows-defender-application-control-policy---policy-rule-options):
+Creates a WDAC policy for a [Lightly managed system](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-for-Lightly-Managed-Devices). The Policy uses has the same specifications as [-MakeAllowMSFTWithBlockRules](#new-wdacconfig--makeallowmsftwithblockrules), with the following additional [rule options](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/select-types-of-rules-to-create#table-1-windows-defender-application-control-policy---policy-rule-options:
 
 <br>
 
@@ -274,9 +274,9 @@ Creates a WDAC policy for a [Lightly managed system](https://github.com/HotCakeX
 
 * `-Deploy`: Indicates that the module will automatically deploy the ***SignedAndReputable.xml*** policy file after creation.
 
-* `-TestMode`: Indicates that the created/deployed policy will have ***Enabled:Boot Audit on Failure*** and ***Enabled:Advanced Boot Options Menu*** [policy rule options](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/select-types-of-rules-to-create#table-1-windows-defender-application-control-policy---policy-rule-options).
+* `-TestMode`: Indicates that the created/deployed policy will have ***Enabled:Boot Audit on Failure*** and ***Enabled:Advanced Boot Options Menu*** [policy rule options](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/select-types-of-rules-to-create#table-1-windows-defender-application-control-policy---policy-rule-options.
 
-* `-RequireEVSigners`: Indicates that the created/deployed policy will have [Require EV Signers](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/wdac-wizard-create-base-policy#advanced-policy-rules-description) policy rule option.
+* `-RequireEVSigners`: Indicates that the created/deployed policy will have [Require EV Signers](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/wdac-wizard-create-base-policy#advanced-policy-rules-description) policy rule option.
 
      - > In addition to being WHQL signed, this rule requires that drivers must have been submitted by a partner that has an Extended Verification (EV) certificate. All Windows 10 and later, or Windows 11 drivers will meet this requirement.
 
@@ -301,7 +301,7 @@ New-WDACConfig [-MakeDefaultWindowsWithBlockRules] [-Deploy] [-TestMode] [-Requi
 
 <br>
 
-Calls the [-GetBlockRules](#new-wdacconfig--getblockrules) parameter to get the Microsoft recommended block rules, and merges them with [*DefaultWindows_Enforced policy*](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/example-wdac-base-policies). The Policy uses [strict HVCI](https://learn.microsoft.com/en-us/powershell/module/configci/set-hvcioptions) and uses the [same policy rule options as -MakeAllowMSFTWithBlockRules](#new-wdacconfig--makeallowmsftwithblockrules) parameter.
+Calls the [-GetBlockRules](#new-wdacconfig--getblockrules) parameter to get the Microsoft recommended block rules, and merges them with [*DefaultWindows_Enforced policy*](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/example-wdac-base-policies). The Policy uses [strict HVCI](https://learn.microsoft.com/en-us/powershell/module/configci/set-hvcioptions) and uses the [same policy rule options as -MakeAllowMSFTWithBlockRules](#new-wdacconfig--makeallowmsftwithblockrules) parameter.
 
 <br>
 
@@ -318,9 +318,9 @@ Calls the [-GetBlockRules](#new-wdacconfig--getblockrules) parameter to get the 
 
 * `-Deploy`: Indicates that the module will automatically deploy the ***DefaultWindowsPlusBlockRules*** policy after creation.
 
-* `-TestMode`: Indicates that the created/deployed policy will have ***Enabled:Boot Audit on Failure*** and ***Enabled:Advanced Boot Options Menu*** [policy rule options](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/select-types-of-rules-to-create#table-1-windows-defender-application-control-policy---policy-rule-options).
+* `-TestMode`: Indicates that the created/deployed policy will have ***Enabled:Boot Audit on Failure*** and ***Enabled:Advanced Boot Options Menu*** [policy rule options](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/select-types-of-rules-to-create#table-1-windows-defender-application-control-policy---policy-rule-options.
 
-* `-RequireEVSigners`: Indicates that the created/deployed policy will have [Require EV Signers](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/wdac-wizard-create-base-policy#advanced-policy-rules-description) policy rule option.
+* `-RequireEVSigners`: Indicates that the created/deployed policy will have [Require EV Signers](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/wdac-wizard-create-base-policy#advanced-policy-rules-description) policy rule option.
 
      - > In addition to being WHQL signed, this rule requires that drivers must have been submitted by a partner that has an Extended Verification (EV) certificate. All Windows 10 and later, or Windows 11 drivers will meet this requirement.
 

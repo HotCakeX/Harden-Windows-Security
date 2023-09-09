@@ -21,7 +21,7 @@ That will also change/create the `<BasePolicyID>GUID</BasePolicyID>` element in 
 
 ### Verify Policy Rule options
 
-We have to make sure that the supplemental policy does not contain any policy rule options that only work with a base policy. [This chart shows which ones can be used in a supplemental policy.](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/select-types-of-rules-to-create)
+We have to make sure that the supplemental policy does not contain any policy rule options that only work with a base policy. [This chart shows which ones can be used in a supplemental policy.](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/select-types-of-rules-to-create)
 
 <br>
 
@@ -36,7 +36,7 @@ $supplementalPolicyPath = ".\Supplemental_Policy.xml"
 
 <br>
 
-A supplemental policy [can only have these policy rule options](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/select-types-of-rules-to-create):
+A supplemental policy [can only have these policy rule options](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/select-types-of-rules-to-create):
 
 * 5 Enabled:Inherit Default Policy
 * 6 Enabled:Unsigned System Integrity Policy (Default)
@@ -53,7 +53,7 @@ Deny rules are ignored in supplemental policies by WDAC engine. Supplemental pol
 
 **When the base policy has a deny rule for a file and we allow the same file in a supplemental policy, the file will still be blocked, because explicit deny rules have the highest priority.**
 
-**[Rule Precedence](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/select-types-of-rules-to-create#file-rule-precedence-order)**
+**[Rule Precedence](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/select-types-of-rules-to-create#file-rule-precedence-order)**
 
 <br>
 
@@ -137,7 +137,7 @@ In order to specify whether a certificate/singer should be denied/allowed, the I
 </SigningScenarios>
 ```
 
-#### [Guidance on Creating WDAC Deny Policies](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/create-wdac-deny-policy)
+#### [Guidance on Creating WDAC Deny Policies](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/create-wdac-deny-policy)
 
 <br>
 
@@ -170,7 +170,7 @@ Get-CimInstance -ClassName Win32_DeviceGuard -Namespace root\Microsoft\Windows\D
 
 ## Refreshing WDAC Policies
 
-### [Using the built-in CiTool](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/operations/citool-commands)
+### [Using the built-in CiTool](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/operations/citool-commands)
 
 ```powershell
 CITool --refresh
@@ -238,9 +238,9 @@ WDAC forces Allow-list architecture by nature, not deny-list architecture. An em
 
 ### Microsoft recommended block rules
 
-From [Microsoft recommended block rules](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/microsoft-recommended-block-rules) document, copy the WDAC policy XML at the end (you might need to expand that section to view it), use a text editor like [VS Code](https://code.visualstudio.com/) to edit it as recommended:
+From [Microsoft recommended block rules](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/applications-that-can-bypass-wdac) document, copy the WDAC policy XML at the end (you might need to expand that section to view it), use a text editor like [VS Code](https://code.visualstudio.com/) to edit it as recommended:
 
-The blocklist policy includes "Allow all" rules for both kernel and user mode that make it safe to deploy as a standalone WDAC policy. We can even deploy it side-by-side with AllowMicrosoft policy, by keeping its allow rules in place. [Refer to this document about how multiple base policies work.](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/deploy-multiple-windows-defender-application-control-policies)
+The blocklist policy includes "Allow all" rules for both kernel and user mode that make it safe to deploy as a standalone WDAC policy. We can even deploy it side-by-side with AllowMicrosoft policy, by keeping its allow rules in place. [Refer to this document about how multiple base policies work.](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/deploy-multiple-wdac-policies)
 
 "Only applications allowed by both policies (All Base policies) run without generating block events", that means even though the Microsoft recommended block rules have **2 allow all rules**, they don't actually allow everything to run, because the same allow all rules don't exist in the default AllowMicrosoft policy, it only contains explicit allow rules.
 
@@ -264,10 +264,10 @@ If merging into an existing policy that includes an explicit allowlist, you shou
 
 * Deploying Microsoft recommended block rules (Driver or user mode) alone, after removing the allow all rules from them, will cause boot failure, for obvious reasons.
 
-* [How to check the version of Microsoft recommended ***driver*** block rules that are being enforced](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/microsoft-recommended-driver-block-rules)
-  - The version is mentioned in [Code Integrity operational event logs](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/event-id-explanations) with an event ID of `3099` in the General tab.
+* [How to check the version of Microsoft recommended ***driver*** block rules that are being enforced](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/deploy-multiple-wdac-policies)
+  - The version is mentioned in [Code Integrity operational event logs](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/operations/event-id-explanations) with an event ID of `3099` in the General tab.
 
-* We don't need to use the **Recommended Kernel Block Rules** in WDAC when creating a policy because [it's already being enforced by default](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/microsoft-recommended-driver-block-rules#microsoft-vulnerable-driver-blocklist) and if we want to update it more regularly, we can do so [by following this section of the document.](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/microsoft-recommended-driver-block-rules#steps-to-download-and-apply-the-vulnerable-driver-blocklist-binary) Or by [Fast and Automatic Microsoft Recommended Driver Block Rules updates](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Fast-and-Automatic-Microsoft-Recommended-Driver-Block-Rules-updates).
+* We don't need to use the **Recommended Kernel Block Rules** in WDAC when creating a policy because [it's already being enforced by default](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/microsoft-recommended-driver-block-rules#microsoft-vulnerable-driver-blocklist) and if we want to update it more regularly, we can do so [by following this section of the document.](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/microsoft-recommended-driver-block-rules#steps-to-download-and-apply-the-vulnerable-driver-blocklist-binary) Or by [Fast and Automatic Microsoft Recommended Driver Block Rules updates](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Fast-and-Automatic-Microsoft-Recommended-Driver-Block-Rules-updates).
 
 <br>
 
@@ -293,9 +293,9 @@ If merging into an existing policy that includes an explicit allowlist, you shou
 
 * Using [Signtool.exe](https://learn.microsoft.com/en-us/dotnet/framework/tools/signtool-exe) with `-fd certHash` will default to the algorithm used on the signing certificate. For example, if the certificate has `SHA512` hashing algorithm, the file that is being signed will use the same algorithm.
 
-* Sometimes [New-CIPolicy](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy) Cmdlet creates 2 file rules for each driver file, such as `.sys` files. One of them is stored in **Driver signing scenarios** section under `<SigningScenario Value="131" ID="ID_SIGNINGSCENARIO_DRIVERS_1" FriendlyName="">` and the other is stored in **User mode signing scenarios** section under `<SigningScenario Value="12" ID="ID_SIGNINGSCENARIO_WINDOWS" FriendlyName="">`. [More info here](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/select-types-of-rules-to-create#why-does-scan-create-eight-hash-rules-for-certain-xml-files)
+* Sometimes [New-CIPolicy](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy) Cmdlet creates 2 file rules for each driver file, such as `.sys` files. One of them is stored in **Driver signing scenarios** section under `<SigningScenario Value="131" ID="ID_SIGNINGSCENARIO_DRIVERS_1" FriendlyName="">` and the other is stored in **User mode signing scenarios** section under `<SigningScenario Value="12" ID="ID_SIGNINGSCENARIO_WINDOWS" FriendlyName="">`. [More info here](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/select-types-of-rules-to-create#why-does-scan-create-eight-hash-rules-for-certain-xml-files)
 
-* [File rule levels](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/select-types-of-rules-to-create#table-2-windows-defender-application-control-policy---file-rule-levels) and Cmdlets like [New-CiPolicy](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy) only create rules for binaries such as `.dll`, `.sys` and `.exe` files.
+* [File rule levels](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/select-types-of-rules-to-create#table-2-windows-defender-application-control-policy---file-rule-levels) and Cmdlets like [New-CiPolicy](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy) only create rules for binaries such as `.dll`, `.sys` and `.exe` files.
 
 <br>
 
@@ -333,7 +333,7 @@ The rest are less secure and more permissive than the 3 file rule levels mention
 
 P.S FileName relies on the original filename for each binary, which can be [modified.](https://security.stackexchange.com/questions/210843/is-it-possible-to-change-original-filename-of-an-exe)
 
-Find more information in [Microsoft Learn](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/select-types-of-rules-to-create)
+Find more information in [Microsoft Learn](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/select-types-of-rules-to-create)
 
 <br>
 
@@ -367,7 +367,7 @@ Remove-CIPolicyRule -FilePath "DefaultWindows_Enforced.xml" -Id "ID_SIGNER_RT_FL
 
 ## How to remove WDAC policy Refresh tool certificates from default example policies
 
-Starting with Windows 11 22H2, [CITool](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/operations/citool-commands) is available in Windows by default and Refresh tool is no longer needed, so use the commands below to remove the certificates that allow that tool to be executed, **their order of execution is important.**
+Starting with Windows 11 22H2, [CITool](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/operations/citool-commands) is available in Windows by default and Refresh tool is no longer needed, so use the commands below to remove the certificates that allow that tool to be executed, **their order of execution is important.**
 
 * [Remove-CIPolicyRule](https://learn.microsoft.com/en-us/powershell/module/configci/remove-cipolicyrule)
 * [Note](https://github.com/MicrosoftDocs/windows-powershell-docs/issues/3312)
@@ -403,7 +403,7 @@ Get-ChildItem -Recurse -Path "Path\To\a\Folder" -File | ForEach-Object -Parallel
 
 ## About the concurrent deployed WDAC policies limit
 
-The limit as stated in [the official document](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/deploy-multiple-windows-defender-application-control-policies) is 32 active policies on a device at once. That is the total number of Base policies + Supplemental policies + any active system deployed policies.
+The limit as stated in [the official document](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/deploy-multiple-wdac-policies) is 32 active policies on a device at once. That is the total number of Base policies + Supplemental policies + any active system deployed policies.
 
 <br>
 
@@ -427,7 +427,7 @@ This behavior is true for [Lightly managed](https://github.com/HotCakeX/Harden-W
 
 ## CiTool no longer requires GUID.cip naming convention for deployment
 
-Normally, `.cip` files would have to have the same name as the GUID of the xml file they were converted from, but that's no longer necessary. Using [CiTool](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/operations/citool-commands) in Windows 11 build `22621`, they can be deployed with any name, even without a name, and lead to a successful WDAC policy deployment.
+Normally, `.cip` files would have to have the same name as the GUID of the xml file they were converted from, but that's no longer necessary. Using [CiTool](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/operations/citool-commands) in Windows 11 build `22621`, they can be deployed with any name, even without a name, and lead to a successful WDAC policy deployment.
 
 <br>
 
@@ -495,7 +495,7 @@ When you use `-Audit` parameter of ConfigCI cmdlets such as [Get-SystemDriver](h
 1. AppLocker – MSI and Script event log
 2. CodeIntegrity - Operational
 
-[**Explained more in here**](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/event-id-explanations)
+[**Explained more in here**](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/operations/event-id-explanations)
 
 <br>
 

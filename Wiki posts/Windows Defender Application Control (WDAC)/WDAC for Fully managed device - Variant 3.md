@@ -28,7 +28,7 @@ flowchart TD
 
 <br>
 
-*Every time I use the word "App", I'm referring to regular Win32 programs as well as Microsoft Store installed apps; Basically any software that you can run.*
+*Every time I use the word "App", I'm referring to regular Win32 programs as well as Microsoft Store installed apps; Basically, any software that you can run.*
 
 This scenario provides a very high protection level. Using the WDACConfig module, it's very easy to deploy, manage and maintain a system with this configuration.
 
@@ -64,7 +64,7 @@ After deploying the base policy, you can create Supplemental policies to allow o
 
 If you deployed the Allow Microsoft base policy on a system that already had apps installed, you can create Supplemental policy for them using the following syntaxes. **After creating each Supplemental policy, you need to sign and deploy it [using the same Cmdlet we used above.](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Deploy-SignedWDACConfig)**
 
-### Based on signer rules, hashes, file names etc
+### Based on signer rules, hashes, file names etc.
 
 ```powershell
 New-SupplementalWDACConfig -Normal -ScanLocation "C:\Program Files\Program" -SuppPolicyName "App's Name" -PolicyPath "C:\AllowMicrosoftPlusBlockRules.xml"
@@ -131,7 +131,7 @@ Edit-SignedWDACConfig -MergeSupplementalPolicies -CertPath "C:\Certificate.cer" 
 
 <br>
 
-## What to do when there is an update for an allowed app ?
+## What to do when there is an update for an allowed app?
 
 If you've created a Supplemental policy for an app that is already installed and now there is a newer version of that app available, you have multiple options:
 

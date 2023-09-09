@@ -323,7 +323,7 @@ New-CIPolicy -FilePath ".\store.xml" -Rules $Rules
 
 (For User Mode binaries only)
 
-* Hash (Best for any files, specially unsigned files)
+* Hash (Best for any files, especially unsigned files)
 
 * FilePublisher (Best for Signed files)
 

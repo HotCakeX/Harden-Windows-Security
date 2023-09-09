@@ -9,7 +9,7 @@
 ```mermaid
 flowchart TD
     A(Deploy Default Windows base policy) -->B(Identify Important apps that need Supplemental policy)
-    B --> C(Create and Deploy Supplemental polcies for them)
+    B --> C(Create and Deploy Supplemental polices for them)
     C --> D[Another App is getting blocked?]
     D --> E[Is it a normal app?]
     E --> F[Create Supplemental policy based on App's directory]
@@ -30,7 +30,7 @@ flowchart TD
 
 <br>
 
-*Every time I use the word "App", I'm referring to regular Win32 programs as well as Microsoft Store installed apps; Basically any software that you can run.*
+*Every time I use the word "App", I'm referring to regular Win32 programs as well as Microsoft Store installed apps; Basically, any software that you can run.*
 
 This scenario provides a very high protection level. Using the WDACConfig module, it's very easy to deploy, manage and maintain a system with this configuration.
 
@@ -56,7 +56,7 @@ After deploying the base policy, you can create Supplemental policies to allow o
 
 If you deployed the Default Windows base policy on a system that already had apps installed, you can create Supplemental policy for them using the following syntaxes:
 
-### Based on signer rules, hashes, file names etc
+### Based on signer rules, hashes, file names etc.
 
 ```powershell
 New-SupplementalWDACConfig -Normal -ScanLocation "C:\Program Files\Program" -SuppPolicyName "App's Name" -PolicyPath "C:\DefaultWindowsPlusBlockRules.xml" -Deploy
@@ -123,7 +123,7 @@ Edit-WDACConfig -MergeSupplementalPolicies -SuppPolicyName "Merge of Multiple Su
 
 <br>
 
-## What to do when there is an update for an allowed app ?
+## What to do when there is an update for an allowed app?
 
 If you've created a Supplemental policy for an app that is already installed and now there is a newer version of that app available, you have multiple options:
 

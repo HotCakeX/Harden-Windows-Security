@@ -116,11 +116,11 @@ More information at [Microsoft Learn](https://learn.microsoft.com/en-us/windows/
 
 ### 2 mandatory parameters
 
-* `-PackageName`: Enter the [package name](https://learn.microsoft.com/en-us/powershell/module/appx/get-appxpackage) of an installed app. Supports wildcard `*` character. e.g, `*Edge*` or `"*Microsoft*"`.
+* `-PackageName`: Enter the [package name](https://learn.microsoft.com/en-us/powershell/module/appx/get-appxpackage) of an installed app. Supports wildcard `*` character. e.g., `*Edge*` or `"*Microsoft*"`.
 
 * `-SuppPolicyName <String>`: Add a descriptive name for the Supplemental policy. Accepts only alphanumeric and space characters.
 
-### 1 Automatic paremeter
+### 1 Automatic parameter
 
 * `-PolicyPath`: Browse for the xml file of the Base policy this Supplemental policy is going to expand. Supports tab completion by showing only `.xml` files with **Base Policy** Type.
 

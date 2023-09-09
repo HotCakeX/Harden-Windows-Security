@@ -56,7 +56,7 @@ Deploy-SignedWDACConfig -CertPath "C:\Certificate.cer" -PolicyPaths "C:\Users\Ho
 
 * ISG Authorization requires active Internet connection for obvious reasons, to communicate with the global ISG network etc.
 
-* Recommneded to perform a reboot regardless of whether you are deploying signed or unsigned version of the "Signed and Reputable" WDAC base policy.
+* Recommended to perform a reboot regardless of whether you are deploying signed or unsigned version of the "Signed and Reputable" WDAC base policy.
 
 <br>
 
@@ -68,7 +68,7 @@ After finishing deploying the Signed and Reputable base policy, if there is an a
 
 The following commands use the `-Deploy` optional switch parameter, meaning after Supplemental policy creation, they are automatically deployed on the system. If you chose the Signed path, omit it from the commands and instead use the [`Deploy-SignedWDACConfig` Cmdlet](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Deploy-SignedWDACConfig) to Sign and Deploy the Supplemental policy xml files.
 
-### Based on signer rules, hashes, file names etc
+### Based on signer rules, hashes, file names etc.
 
 ```powershell
 New-SupplementalWDACConfig -Normal -ScanLocation "C:\Program Files\Program" -SuppPolicyName "App's Name" -PolicyPath "C:\SignedAndReputable.xml" -Deploy
@@ -179,7 +179,7 @@ Explained more in here:
 
 <br>
 
-## What to do when there is an update for an allowed app ?
+## What to do when there is an update for an allowed app?
 
 If you've created a Supplemental policy for an app that is already installed and now there is a newer version of that app available, you have multiple options:
 

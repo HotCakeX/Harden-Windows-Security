@@ -5,7 +5,7 @@ This scenario involves removing the trust to any Kernel mode driver, whether the
 Drivers can access the Kernel which is the core of the operating system. Microsoft requires all drivers to be digitally signed:
 
 * Kernel mode Hardware drivers **need** to be signed with an **EV (Extended Validation)** certificate
-* Kernel mode virtual drivers **can** be signed with an standard certificate as well
+* Kernel mode virtual drivers **can** be signed with a standard certificate as well
 
 A BYOVD (Bring Your Own Vulnerable Driver) scenario involves exploiting one of the digitally signed drivers that harbors a security flaw to attain direct access to the core of the OS. **This attack vector applies to all OSes, not just Windows.**
 
@@ -323,7 +323,7 @@ Now the Allow all rules that exist in the first policy are neutralized. [Only ap
 
 ## What About User-mode Binaries?
 
-So far we've only been doing Kernel-mode administration. We can use User-mode WDAC policies as well.
+So far, we've only been doing Kernel-mode administration. We can use User-mode WDAC policies as well.
 
 After using those 2 Kernel-mode policies, I deploy a 3rd policy which is going to authorize and validate User-mode binaries too. I choose the [Lightly managed WDAC policy](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-for-Lightly-Managed-Devices) that utilizes [ISG (Intelligent Security Graph)](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/use-wdac-with-intelligent-security-graph). This policy applies to both Kernel and User modes, but since we already know the logic and learned that only applications allowed by all base policies are allowed to run, we're confident that our Strict Kernel-mode base policy is the only one in charge of authorizing and validating Kernel-mode files/drivers. Our User-mode WDAC policy that utilizes ISG validates User-mode binaries only.
 
@@ -349,6 +349,6 @@ Each of the deployed policies (except for the automatically deployed block rules
 
 ## <img width="65" src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/arrow-pink.gif"> Continue reading about important WDAC notes
 
-#### [Important Notes and Tips ](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-Notes) about WDAC policies
+#### [Important Notes and Tips](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-Notes) about WDAC policies
 
 <br>

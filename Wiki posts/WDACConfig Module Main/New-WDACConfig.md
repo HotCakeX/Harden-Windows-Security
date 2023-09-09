@@ -169,7 +169,7 @@ Creates a WDAC policy that once deployed, prepares the system for Default Window
 
 This parameter also scans the WDACConfig module files and PowerShell core files, adds them to the Prep audit mode base policy that it deploys, so that the final Supplemental policy generated from Event viewer audit logs won't include those files.
 
-It's recommended to use the optional parameter below to increase the log size of Code Integrity events category so that new events won't overwrite the older ones and everything will be captured.
+It's recommended to use the optional parameter below to increase the log size of Code Integrity events category so that new events won't overwrite the older ones, and everything will be captured.
 
 ### 2 optional parameter
 
@@ -219,13 +219,13 @@ Creates a WDAC policy using the Audit event logs generated [for a fully managed 
 
 * `-Levels <String>`: Offers the same official [Levels](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-level) for scanning of event logs. If no level is specified the default, which is set to ***FilePublisher*** in this module, will be used.
 
-* `-Fallbacks <String[]>`: Offers the same official [Fallbacks](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-fallback) for scanning of event logs. If no fallbacks is specified the default, which is set to ***Hash*** in this module, will be used.
+* `-Fallbacks <String[]>`: Offers the same official [Fallbacks](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-fallback) for scanning of event logs. If no fallbacks are specified the default, which is set to ***Hash*** in this module, will be used.
 
 * `-SpecificFileNameLevel`: You can choose one of the following options: "OriginalFileName", "InternalName", "FileDescription", "ProductName", "PackageFamilyName", "FilePath". [More info available on Microsoft Learn](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-specificfilenamelevel)
 
 * `-NoDeletedFiles`: Indicates that files that were run during program installations but then were deleted and are no longer on the disk, won't be added to the supplemental policy. This can mean the programs you installed will be allowed to run but installation/reinstallation might not be allowed once the policies are deployed.
 
-* `-NoUserPEs`: By default the module includes user PEs in the scan. When you use this switch parameter, they won't be included. [More info available on Microsoft Learn](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-userpes)
+* `-NoUserPEs`: By default, the module includes user PEs in the scan. When you use this switch parameter, they won't be included. [More info available on Microsoft Learn](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-userpes)
 
 * `-NoScript`: [More info available on Microsoft Learn](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-noscript)
 

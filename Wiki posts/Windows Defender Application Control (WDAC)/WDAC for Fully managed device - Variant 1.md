@@ -95,7 +95,7 @@ New-WDACConfig -MakePolicyFromAuditLogs -BasePolicyType 'Default Windows Base' -
 
 All of the outputs are saved in a folder named "WDAC" inside the current working directory.
 
-**If you use the `-Deployit` optional switch parameter with the commands above, 3 things will automatically happen:**
+**If you use the `-Deploy` optional switch parameter with the commands above, 3 things will automatically happen:**
 
 1. The deployed Prep mode base policy will be removed.
 2. The actual base policy will be deployed depending on whichever you choose.
@@ -103,7 +103,7 @@ All of the outputs are saved in a folder named "WDAC" inside the current working
 
 <br>
 
-If you don't use the `-Deployit` switch, you can deploy the `.cip` binary files manually using [CITool](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/operations/citool-commands).
+If you don't use the `-Deploy` switch, you can deploy the `.cip` binary files manually using [CITool](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/operations/citool-commands).
 
 [More info on deployment](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/deployment/wdac-deployment-guide)
 

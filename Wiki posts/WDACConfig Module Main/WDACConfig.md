@@ -111,4 +111,4 @@ Install-Module -Name WDACConfig -Force
 
 ## Feedback and Feature request
 
-If there are any feedbacks or feature requests regarding this module, please [open a new discussion/issue on GitHub.](https://github.com/HotCakeX/Harden-Windows-Security)
+If there are any feedback or feature requests regarding this module, please [open a new discussion/issue on GitHub.](https://github.com/HotCakeX/Harden-Windows-Security)

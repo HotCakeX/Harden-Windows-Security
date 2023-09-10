@@ -19,7 +19,6 @@ ngen.exe,DisableExtensionPoints,Enable,System component
 ngentask.exe,DisableExtensionPoints,Enable,System component
 PrintDialog.exe,DisableExtensionPoints,Enable,System component
 SystemSettings.exe,DisableExtensionPoints,Enable,System component
-runtimebroker.exe,DisableExtensionPoints,Enable,System component
 C:\Windows\System32\vmcompute.exe,CFG,Enable,System component
 C:\Windows\System32\vmcompute.exe,SuppressExports,Enable,System component
 C:\Windows\System32\vmcompute.exe,StrictCFG,Enable,System component

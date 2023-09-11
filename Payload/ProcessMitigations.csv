@@ -184,7 +184,7 @@ RuntimeBroker.exe,DisableExtensionPoints,Enable,RuntimeBroker - Related to Micro
 RuntimeBroker.exe,CFG,Enable,RuntimeBroker - Related to Microsoft Store apps and their permissions
 RuntimeBroker.exe,StrictCFG,Enable,RuntimeBroker - Related to Microsoft Store apps and their permissions
 RuntimeBroker.exe,EnforceModuleDependencySigning,Enable,RuntimeBroker - Related to Microsoft Store apps and their permissions
-msedgewebview2.exe,DisableExtensionPoints,Enable,Edge WebView 2 - Many compoents use it such as OneDrive;Quick Assist;Teams .etc
-msedgewebview2.exe,CFG,Enable,Edge WebView 2 - Many compoents use it such as OneDrive;Quick Assist;Teams .etc
-msedgewebview2.exe,StrictCFG,Enable,Edge WebView 2 - Many compoents use it such as OneDrive;Quick Assist;Teams .etc
-msedgewebview2.exe,EnforceModuleDependencySigning,Enable,Edge WebView 2 - Many compoents use it such as OneDrive;Quick Assist;Teams .etc
+msedgewebview2.exe,DisableExtensionPoints,Enable,Edge WebView 2 - Many components use it such as OneDrive;Quick Assist;Teams .etc
+msedgewebview2.exe,CFG,Enable,Edge WebView 2 - Many components use it such as OneDrive;Quick Assist;Teams .etc
+msedgewebview2.exe,StrictCFG,Enable,Edge WebView 2 - Many components use it such as OneDrive;Quick Assist;Teams .etc
+msedgewebview2.exe,EnforceModuleDependencySigning,Enable,Edge WebView 2 - Many components use it such as OneDrive;Quick Assist;Teams .etc

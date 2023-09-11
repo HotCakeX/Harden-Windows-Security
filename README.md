@@ -137,7 +137,7 @@ Install-Script -Name 'Harden-Windows-Security' -Force
 <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/verticalshine.gif" width="27" alt="Requirements item"> [Latest available version](https://www.microsoft.com/en-us/software-download/windows11/) of Windows installed.
 
 > [!IMPORTANT]\
-> Restart your device after applying the hardening measures
+> Restart your device after applying the hardening measures.
 
 <br>
 
@@ -1002,7 +1002,7 @@ Due to security reasons, many policies cannot be used when you are signed into E
 
   * Use my [WinSecureDNSMgr module](https://github.com/HotCakeX/WinSecureDNSMgr) to easily configure DNS over HTTPS in Windows
 
-###### Edge policies reviewed until version 115.0.1901.203
+###### Edge policies reviewed until version 116.0.1938.76
 
 <p align="right"><a href="#menu-back-to-top">💡 (back to categories)</a></p>
 

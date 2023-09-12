@@ -1,5 +1,4 @@
 ProgramName,Mitigation,Action,Comment
-msedge.exe,DEP,Enable,Maximum possible mitigations for Edge browser. any more than this causes problem
 msedge.exe,BottomUp,Enable,Maximum possible mitigations for Edge browser. any more than this causes problem
 msedge.exe,ForceRelocateImages,Enable,Maximum possible mitigations for Edge browser. any more than this causes problem
 msedge.exe,RequireInfo,Enable,Maximum possible mitigations for Edge browser. any more than this causes problem
@@ -14,21 +13,18 @@ msedge.exe,EnforceModuleDependencySigning,Enable,Maximum possible mitigations fo
 msedge.exe,DisableNonSystemFonts,Enable,Maximum possible mitigations for Edge browser. any more than this causes problem
 msedge.exe,BlockRemoteImageLoads,Enable,Maximum possible mitigations for Edge browser. any more than this causes problem
 msedge.exe,BlockLowLabelImageLoads,Enable,Maximum possible mitigations for Edge browser. any more than this causes problem
-msedge.exe,SEHOP,Enable,Maximum possible mitigations for Edge browser. any more than this causes problem
-msedge.exe,TerminateOnError,Enable,Maximum possible mitigations for Edge browser. any more than this causes problem
 msedge.exe,UserShadowStack,Enable,Maximum possible mitigations for Edge browser. any more than this causes problem
-mscorsvw.exe,DisableExtensionPoints,Enable,System component
-ngen.exe,DisableExtensionPoints,Enable,System component
-ngentask.exe,DisableExtensionPoints,Enable,System component
-PrintDialog.exe,DisableExtensionPoints,Enable,System component
-SystemSettings.exe,DisableExtensionPoints,Enable,System component
-runtimebroker.exe,DisableExtensionPoints,Enable,System component
-C:\Windows\System32\vmcompute.exe,CFG,Enable,System component
-C:\Windows\System32\vmcompute.exe,SuppressExports,Enable,System component
-C:\Windows\System32\vmcompute.exe,StrictCFG,Enable,System component
-C:\windows\system32\vmwp.exe,CFG,Enable,System component
-C:\windows\system32\vmwp.exe,SuppressExports,Enable,System component
-C:\windows\system32\vmwp.exe,StrictCFG,Enable,System component
+PrintDialog.exe,,,Print component - This is placeholder so the module will remove it because it has incompatibility issue with printing over RDP
+mscorsvw.exe,DisableExtensionPoints,Enable,Microsoft .NET Runtime Optimization Service Worker
+ngen.exe,DisableExtensionPoints,Enable,Native Image Generator .NET code compiler
+ngentask.exe,DisableExtensionPoints,Enable,.NET Framework compiler
+SystemSettings.exe,DisableExtensionPoints,Enable,System Settings
+vmcompute.exe,CFG,Enable,part of the Hyper-V Host Compute Service
+vmcompute.exe,SuppressExports,Enable,part of the Hyper-V Host Compute Service
+vmcompute.exe,StrictCFG,Enable,part of the Hyper-V Host Compute Service
+vmwp.exe,CFG,Enable,Virtual Machine Worker Process
+vmwp.exe,SuppressExports,Enable,Virtual Machine Worker Process
+vmwp.exe,StrictCFG,Enable,Virtual Machine Worker Process
 QuickAssist.exe,DisableExtensionPoints,Enable,Quick Assist 
 QuickAssist.exe,StrictHandle,Enable,Quick Assist
 QuickAssist.exe,BlockDynamicCode,Enable,Quick Assist
@@ -46,8 +42,6 @@ QuickAssist.exe,EnableRopCallerCheck,Enable,Quick Assist
 QuickAssist.exe,EnableRopSimExec,Enable,Quick Assist
 QuickAssist.exe,UserShadowStack,Enable,Quick Assist
 QuickAssist.exe,UserShadowStackStrictMode,Enable,Quick Assist
-QuickAssist.exe,AllowThreadsToOptOut,Disable,Quick Assist
-Acrobat.exe,DEP,Enable,Adobe Acrobat
 Acrobat.exe,ForceRelocateImages,Enable,Adobe Acrobat
 Acrobat.exe,RequireInfo,Enable,Adobe Acrobat
 Acrobat.exe,StrictHandle,Enable,Adobe Acrobat
@@ -142,46 +136,53 @@ WINWORD.EXE,EnforceModuleDependencySigning,Enable,Word
 WINWORD.EXE,EnableImportAddressFilter,Enable,Word
 WINWORD.EXE,EnableRopStackPivot,Enable,Word
 WINWORD.EXE,EnableRopCallerCheck,Enable,Word
-C:\Windows\System32\lsass.exe,DisableExtensionPoints,Enable,Local Security Authority Subsystem Service
-C:\Windows\System32\lsass.exe,BlockDynamicCode,Enable,Local Security Authority Subsystem Service
-C:\Windows\System32\lsass.exe,DisallowChildProcessCreation,Enable,Local Security Authority Subsystem Service
-C:\Windows\System32\SmartScreen.exe,DisableExtensionPoints,Enable,Smart Screen process
-C:\Windows\System32\SmartScreen.exe,CFG,Enable,Smart Screen process
-C:\Windows\System32\SmartScreen.exe,StrictCFG,Enable,Smart Screen process
-C:\Windows\System32\SmartScreen.exe,MicrosoftSignedOnly,Enable,Smart Screen process
-C:\Windows\System32\SmartScreen.exe,EnableExportAddressFilter,Enable,Smart Screen process
-Regsvr32.exe,BlockDynamicCode,Enable,Register Server
+lsass.exe,DisableExtensionPoints,Enable,Local Security Authority Subsystem Service
+lsass.exe,BlockDynamicCode,Enable,Local Security Authority Subsystem Service
+lsass.exe,DisallowChildProcessCreation,Enable,Local Security Authority Subsystem Service
+SmartScreen.exe,DisableExtensionPoints,Enable,Smart Screen process
+SmartScreen.exe,CFG,Enable,Smart Screen process
+SmartScreen.exe,StrictCFG,Enable,Smart Screen process
+SmartScreen.exe,MicrosoftSignedOnly,Enable,Smart Screen process
+SmartScreen.exe,EnableExportAddressFilter,Enable,Smart Screen process
 Regsvr32.exe,BlockLowLabelImageLoads,Enable,Register Server
-C:\Windows\System32\WindowsSandbox.exe,ForceRelocateImages,Enable,Windows Sandbox process
-C:\Windows\System32\WindowsSandbox.exe,RequireInfo,Enable,Windows Sandbox process
-C:\Windows\System32\WindowsSandbox.exe,StrictHandle,Enable,Windows Sandbox process
-C:\Windows\System32\WindowsSandbox.exe,DisableExtensionPoints,Enable,Windows Sandbox process
-C:\Windows\System32\WindowsSandbox.exe,CFG,Enable,Windows Sandbox process
-C:\Windows\System32\WindowsSandbox.exe,StrictCFG,Enable,Windows Sandbox process
-C:\Windows\System32\WindowsSandbox.exe,MicrosoftSignedOnly,Enable,Windows Sandbox process
-C:\Windows\System32\WindowsSandbox.exe,EnforceModuleDependencySigning,Enable,Windows Sandbox process
-C:\Windows\System32\WindowsSandbox.exe,BlockRemoteImageLoads,Enable,Windows Sandbox process
-C:\Windows\System32\WindowsSandbox.exe,BlockLowLabelImageLoads,Enable,Windows Sandbox process
-C:\Windows\System32\WindowsSandbox.exe,EnableExportAddressFilter,Enable,Windows Sandbox process
-C:\Windows\System32\WindowsSandbox.exe,EnableExportAddressFilterPlus,Enable,Windows Sandbox process
-C:\Windows\System32\WindowsSandboxClient.exe,ForceRelocateImages,Enable,Windows Sandbox process
-C:\Windows\System32\WindowsSandboxClient.exe,RequireInfo,Enable,Windows Sandbox process
-C:\Windows\System32\WindowsSandboxClient.exe,StrictHandle,Enable,Windows Sandbox process
-C:\Windows\System32\WindowsSandboxClient.exe,DisableExtensionPoints,Enable,Windows Sandbox process
-C:\Windows\System32\WindowsSandboxClient.exe,CFG,Enable,Windows Sandbox process
-C:\Windows\System32\WindowsSandboxClient.exe,StrictCFG,Enable,Windows Sandbox process
-C:\Windows\System32\WindowsSandboxClient.exe,MicrosoftSignedOnly,Enable,Windows Sandbox process
-C:\Windows\System32\WindowsSandboxClient.exe,EnforceModuleDependencySigning,Enable,Windows Sandbox process
-C:\Windows\System32\WindowsSandboxClient.exe,BlockRemoteImageLoads,Enable,Windows Sandbox process
-C:\Windows\System32\WindowsSandboxClient.exe,BlockLowLabelImageLoads,Enable,Windows Sandbox process
-C:\Windows\System32\WindowsSandboxClient.exe,EnableExportAddressFilter,Enable,Windows Sandbox process
-C:\Windows\System32\WindowsSandboxClient.exe,EnableExportAddressFilterPlus,Enable,Windows Sandbox process
-C:\Windows\explorer.exe,ForceRelocateImages,Enable,Explorer
-C:\Windows\explorer.exe,RequireInfo,Enable,Explorer
-C:\Windows\explorer.exe,StrictHandle,Enable,Explorer
-C:\Windows\explorer.exe,DisableExtensionPoints,Enable,Explorer
-C:\Windows\explorer.exe,CFG,Enable,Explorer
-C:\Windows\explorer.exe,StrictCFG,Enable,Explorer
-C:\Windows\explorer.exe,EnableExportAddressFilter,Enable,Explorer
-C:\Windows\explorer.exe,EnableExportAddressFilterPlus,Enable,Explorer
-C:\Windows\explorer.exe,EnableImportAddressFilter,Enable,Explorer
+WindowsSandbox.exe,ForceRelocateImages,Enable,Windows Sandbox process
+WindowsSandbox.exe,RequireInfo,Enable,Windows Sandbox process
+WindowsSandbox.exe,StrictHandle,Enable,Windows Sandbox process
+WindowsSandbox.exe,DisableExtensionPoints,Enable,Windows Sandbox process
+WindowsSandbox.exe,CFG,Enable,Windows Sandbox process
+WindowsSandbox.exe,StrictCFG,Enable,Windows Sandbox process
+WindowsSandbox.exe,MicrosoftSignedOnly,Enable,Windows Sandbox process
+WindowsSandbox.exe,EnforceModuleDependencySigning,Enable,Windows Sandbox process
+WindowsSandbox.exe,BlockRemoteImageLoads,Enable,Windows Sandbox process
+WindowsSandbox.exe,BlockLowLabelImageLoads,Enable,Windows Sandbox process
+WindowsSandbox.exe,EnableExportAddressFilter,Enable,Windows Sandbox process
+WindowsSandbox.exe,EnableExportAddressFilterPlus,Enable,Windows Sandbox process
+WindowsSandboxClient.exe,ForceRelocateImages,Enable,Windows Sandbox process
+WindowsSandboxClient.exe,RequireInfo,Enable,Windows Sandbox process
+WindowsSandboxClient.exe,StrictHandle,Enable,Windows Sandbox process
+WindowsSandboxClient.exe,DisableExtensionPoints,Enable,Windows Sandbox process
+WindowsSandboxClient.exe,CFG,Enable,Windows Sandbox process
+WindowsSandboxClient.exe,StrictCFG,Enable,Windows Sandbox process
+WindowsSandboxClient.exe,MicrosoftSignedOnly,Enable,Windows Sandbox process
+WindowsSandboxClient.exe,EnforceModuleDependencySigning,Enable,Windows Sandbox process
+WindowsSandboxClient.exe,BlockRemoteImageLoads,Enable,Windows Sandbox process
+WindowsSandboxClient.exe,BlockLowLabelImageLoads,Enable,Windows Sandbox process
+WindowsSandboxClient.exe,EnableExportAddressFilter,Enable,Windows Sandbox process
+WindowsSandboxClient.exe,EnableExportAddressFilterPlus,Enable,Windows Sandbox process
+explorer.exe,ForceRelocateImages,Enable,Explorer
+explorer.exe,RequireInfo,Enable,Explorer
+explorer.exe,StrictHandle,Enable,Explorer
+explorer.exe,DisableExtensionPoints,Enable,Explorer
+explorer.exe,CFG,Enable,Explorer
+explorer.exe,StrictCFG,Enable,Explorer
+explorer.exe,EnableExportAddressFilter,Enable,Explorer
+explorer.exe,EnableExportAddressFilterPlus,Enable,Explorer
+explorer.exe,EnableImportAddressFilter,Enable,Explorer
+RuntimeBroker.exe,DisableExtensionPoints,Enable,RuntimeBroker - Related to Microsoft Store apps and their permissions
+RuntimeBroker.exe,CFG,Enable,RuntimeBroker - Related to Microsoft Store apps and their permissions
+RuntimeBroker.exe,StrictCFG,Enable,RuntimeBroker - Related to Microsoft Store apps and their permissions
+RuntimeBroker.exe,EnforceModuleDependencySigning,Enable,RuntimeBroker - Related to Microsoft Store apps and their permissions
+msedgewebview2.exe,DisableExtensionPoints,Enable,Edge WebView 2 - Many components use it such as OneDrive;Quick Assist;Teams .etc
+msedgewebview2.exe,CFG,Enable,Edge WebView 2 - Many components use it such as OneDrive;Quick Assist;Teams .etc
+msedgewebview2.exe,StrictCFG,Enable,Edge WebView 2 - Many components use it such as OneDrive;Quick Assist;Teams .etc
+msedgewebview2.exe,EnforceModuleDependencySigning,Enable,Edge WebView 2 - Many components use it such as OneDrive;Quick Assist;Teams .etc

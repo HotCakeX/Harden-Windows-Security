@@ -1,6 +1,6 @@
 <#PSScriptInfo
 
-.VERSION 2023.9.06
+.VERSION 2023.9.12
 
 .GUID d435a293-c9ee-4217-8dc1-4ad2318a5770
 
@@ -26,8 +26,6 @@
 
 .RELEASENOTES
 
-Full Change log always available on GitHub: https://github.com/HotCakeX/Harden-Windows-Security/releases
-
 #>
 
 <# 
@@ -37,10 +35,9 @@ Full Change log always available on GitHub: https://github.com/HotCakeX/Harden-W
 
 .DESCRIPTION
 
+  ⭕ You need to read the GitHub's readme page before running this: https://github.com/HotCakeX/Harden-Windows-Security
 
-  ⭕ You need to read the GitHub's readme page before running this script: https://github.com/HotCakeX/Harden-Windows-Security
-
-  ⭕ Check out Compliance checking + Security score module: https://www.powershellgallery.com/packages/Harden-Windows-Security-Module/
+  ⭕ This script is only for users that use the old PowerShell 5.1. It's highly recommended to use new PowerShell versions and the new Harden Windows Security Module that offers hardening + Auditing + Undoing hardening: https://www.powershellgallery.com/packages/Harden-Windows-Security-Module/
   
 💠 Features of this Hardening script:
 
@@ -79,15 +76,15 @@ Full Change log always available on GitHub: https://github.com/HotCakeX/Harden-W
   ✅ Non-Admin Commands that only affect the current user and do not make machine-wide changes.
 
 
-💎 Note: If there are multiple Windows user accounts in your computer, it's recommended to run this script in each of them, without administrator privileges, because Non-admin commands only apply to the current user and are not machine wide.
-
 🏴 If you have any questions, requests, suggestions etc. about this script, please open a new Discussion or Issue on GitHub
 
 
 .EXAMPLE  
 
 .NOTES  
+
     Check out GitHub page for security recommendations: https://github.com/HotCakeX/Harden-Windows-Security
+
 #>
 
 # Change the execution policy temporarily only for the current PowerShell session
@@ -95,7 +92,7 @@ Set-ExecutionPolicy Bypass -Scope Process
 
 # Defining global script variables
 # Current script's version, the same as the version at the top in the script info section
-[datetime]$CurrentVersion = '2023.9.06'
+[datetime]$CurrentVersion = '2023.9.12'
 # Minimum OS build number required for the hardening measures used in this script
 [decimal]$Requiredbuild = '22621.2134'
 
@@ -377,12 +374,13 @@ try {
         if (-NOT ($MDAVConfigCurrent.AntivirusEnabled -eq $true)) {
             Write-Error 'Microsoft Defender Anti Virus is not enabled, please enable it and then try again.'
             break            
-        }         
-       
+        } 
+        
         if ($MDAVConfigCurrent.AMRunningMode -ne 'Normal') {
             Write-Error "Microsoft Defender is running in $($MDAVConfigCurrent.AMRunningMode) state, please remove any 3rd party AV and then try again."
             break
         }
+        
     }
     #endregion RequirementsCheck
 
@@ -615,9 +613,6 @@ try {
                     elseif ($null -ne $DisableMitigations) {
                         Set-ProcessMitigation -Name $ProgramName -Disable $DisableMitigations
                     }
-                    else {
-                        Write-Warning "No mitigations to enable or disable for $ProgramName"
-                    }
                 } 
 
                 # Turn on Data Execution Prevention (DEP) for all applications, including 32-bit programs
@@ -725,7 +720,7 @@ try {
                 # The Script will show this by emitting True \ False for On \ Off respectively.
 
                 # bootDMAProtection check - checks for Kernel DMA Protection status in System information or msinfo32
-                [string]$bootDMAProtectionCheck =
+                [string]$BootDMAProtectionCheck =
                 @'
   namespace SystemInfo
     {
@@ -769,15 +764,15 @@ try {
       }
     }
 '@
-                Add-Type -TypeDefinition $bootDMAProtectionCheck
+                Add-Type -TypeDefinition $BootDMAProtectionCheck
                 # returns true or false depending on whether Kernel DMA Protection is on or off
-                [bool]$bootDMAProtection = ([SystemInfo.NativeMethods]::BootDmaCheck()) -ne 0
+                [bool]$BootDMAProtection = ([SystemInfo.NativeMethods]::BootDmaCheck()) -ne 0
 
                 # Change current working directory to the LGPO's folder
                 Set-Location "$WorkingDir\LGPO_30"
             
                 # Enables or disables DMA protection from Bitlocker Countermeasures based on the status of Kernel DMA protection.
-                if ($bootDMAProtection) {                 
+                if ($BootDMAProtection) {                 
                     Write-Host 'Kernel DMA protection is enabled on the system, disabling Bitlocker DMA protection.' -ForegroundColor Blue
                     .\LGPO.exe /m '..\Security-Baselines-X\Overrides for Microsoft Security Baseline\Bitlocker DMA\Bitlocker DMA Countermeasure OFF\Registry.pol'                           
                 }
@@ -1596,12 +1591,19 @@ try {
                 # so we use "[string[]]$IPList = $IPList -split '\r?\n' -ne ''" to convert the IP lists, which is a single multiline string, into an array
                 function Block-CountryIP {
                     param ([string[]]$IPList , [string]$ListName)
+                    
                     # deletes previous rules (if any) to get new up-to-date IP ranges from the sources and set new rules               
                     Remove-NetFirewallRule -DisplayName "$ListName IP range blocking" -PolicyStore localhost -ErrorAction SilentlyContinue
+                    
                     # converts the list which is in string into array
                     [string[]]$IPList = $IPList -split '\r?\n' -ne ''
+
                     # makes sure the list isn't empty
-                    if ($IPList.count -eq 0) { Write-Host "The IP list was empty, skipping $ListName" -ForegroundColor Yellow ; break }      
+                    if ($IPList.count -eq 0) {
+                        Write-Host "The IP list was empty, skipping $ListName" -ForegroundColor Yellow
+                        break 
+                    }      
+
                     New-NetFirewallRule -DisplayName "$ListName IP range blocking" -Direction Inbound -Action Block -LocalAddress Any -RemoteAddress $IPList -Description "$ListName IP range blocking" -EdgeTraversalPolicy Block -PolicyStore localhost
                     New-NetFirewallRule -DisplayName "$ListName IP range blocking" -Direction Outbound -Action Block -LocalAddress Any -RemoteAddress $IPList -Description "$ListName IP range blocking" -EdgeTraversalPolicy Block -PolicyStore localhost        
                 }
@@ -1621,8 +1623,10 @@ try {
                         Block-CountryIP -IPList $OFACSanctioned -ListName 'OFAC Sanctioned Countries'
                     } 'No' { break }
                 }
+
                 # how to query the number of IPs in each rule
                 # (Get-NetFirewallRule -DisplayName "OFAC Sanctioned Countries IP range blocking" -PolicyStore localhost | Get-NetFirewallAddressFilter).RemoteAddress.count
+            
             } 'No' { break }
             'Exit' { &$CleanUp }
         }    

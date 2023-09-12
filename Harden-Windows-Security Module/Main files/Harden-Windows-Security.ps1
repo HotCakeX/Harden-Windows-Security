@@ -720,7 +720,7 @@ try {
                 # The Script will show this by emitting True \ False for On \ Off respectively.
 
                 # bootDMAProtection check - checks for Kernel DMA Protection status in System information or msinfo32
-                [string]$bootDMAProtectionCheck =
+                [string]$BootDMAProtectionCheck =
                 @'
   namespace SystemInfo
     {
@@ -764,15 +764,15 @@ try {
       }
     }
 '@
-                Add-Type -TypeDefinition $bootDMAProtectionCheck
+                Add-Type -TypeDefinition $BootDMAProtectionCheck
                 # returns true or false depending on whether Kernel DMA Protection is on or off
-                [bool]$bootDMAProtection = ([SystemInfo.NativeMethods]::BootDmaCheck()) -ne 0
+                [bool]$BootDMAProtection = ([SystemInfo.NativeMethods]::BootDmaCheck()) -ne 0
 
                 # Change current working directory to the LGPO's folder
                 Set-Location "$WorkingDir\LGPO_30"
             
                 # Enables or disables DMA protection from Bitlocker Countermeasures based on the status of Kernel DMA protection.
-                if ($bootDMAProtection) {                 
+                if ($BootDMAProtection) {                 
                     Write-Host 'Kernel DMA protection is enabled on the system, disabling Bitlocker DMA protection.' -ForegroundColor Blue
                     .\LGPO.exe /m '..\Security-Baselines-X\Overrides for Microsoft Security Baseline\Bitlocker DMA\Bitlocker DMA Countermeasure OFF\Registry.pol'                           
                 }
@@ -1591,12 +1591,19 @@ try {
                 # so we use "[string[]]$IPList = $IPList -split '\r?\n' -ne ''" to convert the IP lists, which is a single multiline string, into an array
                 function Block-CountryIP {
                     param ([string[]]$IPList , [string]$ListName)
+                    
                     # deletes previous rules (if any) to get new up-to-date IP ranges from the sources and set new rules               
                     Remove-NetFirewallRule -DisplayName "$ListName IP range blocking" -PolicyStore localhost -ErrorAction SilentlyContinue
+                    
                     # converts the list which is in string into array
                     [string[]]$IPList = $IPList -split '\r?\n' -ne ''
+
                     # makes sure the list isn't empty
-                    if ($IPList.count -eq 0) { Write-Host "The IP list was empty, skipping $ListName" -ForegroundColor Yellow ; break }      
+                    if ($IPList.count -eq 0) {
+                        Write-Host "The IP list was empty, skipping $ListName" -ForegroundColor Yellow
+                        break 
+                    }      
+
                     New-NetFirewallRule -DisplayName "$ListName IP range blocking" -Direction Inbound -Action Block -LocalAddress Any -RemoteAddress $IPList -Description "$ListName IP range blocking" -EdgeTraversalPolicy Block -PolicyStore localhost
                     New-NetFirewallRule -DisplayName "$ListName IP range blocking" -Direction Outbound -Action Block -LocalAddress Any -RemoteAddress $IPList -Description "$ListName IP range blocking" -EdgeTraversalPolicy Block -PolicyStore localhost        
                 }
@@ -1616,8 +1623,10 @@ try {
                         Block-CountryIP -IPList $OFACSanctioned -ListName 'OFAC Sanctioned Countries'
                     } 'No' { break }
                 }
+
                 # how to query the number of IPs in each rule
                 # (Get-NetFirewallRule -DisplayName "OFAC Sanctioned Countries IP range blocking" -PolicyStore localhost | Get-NetFirewallAddressFilter).RemoteAddress.count
+            
             } 'No' { break }
             'Exit' { &$CleanUp }
         }    

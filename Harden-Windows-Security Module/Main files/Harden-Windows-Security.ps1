@@ -26,8 +26,6 @@
 
 .RELEASENOTES
 
-Full Change log always available on GitHub: https://github.com/HotCakeX/Harden-Windows-Security/releases
-
 #>
 
 <# 
@@ -84,7 +82,9 @@ Full Change log always available on GitHub: https://github.com/HotCakeX/Harden-W
 .EXAMPLE  
 
 .NOTES  
-    
+
+    Check out GitHub page for security recommendations: https://github.com/HotCakeX/Harden-Windows-Security
+
 #>
 
 # Change the execution policy temporarily only for the current PowerShell session

@@ -17,7 +17,6 @@ msedge.exe,UserShadowStack,Enable,Maximum possible mitigations for Edge browser.
 mscorsvw.exe,DisableExtensionPoints,Enable,Microsoft .NET Runtime Optimization Service Worker
 ngen.exe,DisableExtensionPoints,Enable,Native Image Generator .NET code compiler
 ngentask.exe,DisableExtensionPoints,Enable,.NET Framework compiler
-PrintDialog.exe,DisableExtensionPoints,Enable,Print component
 SystemSettings.exe,DisableExtensionPoints,Enable,System Settings
 vmcompute.exe,CFG,Enable,part of the Hyper-V Host Compute Service
 vmcompute.exe,SuppressExports,Enable,part of the Hyper-V Host Compute Service
@@ -145,7 +144,6 @@ SmartScreen.exe,CFG,Enable,Smart Screen process
 SmartScreen.exe,StrictCFG,Enable,Smart Screen process
 SmartScreen.exe,MicrosoftSignedOnly,Enable,Smart Screen process
 SmartScreen.exe,EnableExportAddressFilter,Enable,Smart Screen process
-Regsvr32.exe,BlockDynamicCode,Enable,Register Server
 Regsvr32.exe,BlockLowLabelImageLoads,Enable,Register Server
 WindowsSandbox.exe,ForceRelocateImages,Enable,Windows Sandbox process
 WindowsSandbox.exe,RequireInfo,Enable,Windows Sandbox process

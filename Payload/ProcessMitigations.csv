@@ -14,6 +14,7 @@ msedge.exe,DisableNonSystemFonts,Enable,Maximum possible mitigations for Edge br
 msedge.exe,BlockRemoteImageLoads,Enable,Maximum possible mitigations for Edge browser. any more than this causes problem
 msedge.exe,BlockLowLabelImageLoads,Enable,Maximum possible mitigations for Edge browser. any more than this causes problem
 msedge.exe,UserShadowStack,Enable,Maximum possible mitigations for Edge browser. any more than this causes problem
+PrintDialog.exe,,,Print component - This is placeholder so the module will remove it
 mscorsvw.exe,DisableExtensionPoints,Enable,Microsoft .NET Runtime Optimization Service Worker
 ngen.exe,DisableExtensionPoints,Enable,Native Image Generator .NET code compiler
 ngentask.exe,DisableExtensionPoints,Enable,.NET Framework compiler
@@ -41,7 +42,6 @@ QuickAssist.exe,EnableRopCallerCheck,Enable,Quick Assist
 QuickAssist.exe,EnableRopSimExec,Enable,Quick Assist
 QuickAssist.exe,UserShadowStack,Enable,Quick Assist
 QuickAssist.exe,UserShadowStackStrictMode,Enable,Quick Assist
-QuickAssist.exe,AllowThreadsToOptOut,Disable,Quick Assist
 Acrobat.exe,ForceRelocateImages,Enable,Adobe Acrobat
 Acrobat.exe,RequireInfo,Enable,Adobe Acrobat
 Acrobat.exe,StrictHandle,Enable,Adobe Acrobat

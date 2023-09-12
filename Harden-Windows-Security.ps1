@@ -432,7 +432,7 @@ try {
 
                 # Download Process Mitigations CSV file from GitHub or Azure DevOps
                 try {
-                    Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Payload/ProcessMitigations.csv' -OutFile '.\ProcessMitigations.csv' -ErrorAction Stop
+                    Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/More-Process-Mitigations/Payload/ProcessMitigations.csv' -OutFile '.\ProcessMitigations.csv' -ErrorAction Stop
                 }
                 catch {
                     Write-Host 'Using Azure DevOps...' -ForegroundColor Yellow
@@ -615,9 +615,6 @@ try {
                     }
                     elseif ($null -ne $DisableMitigations) {
                         Set-ProcessMitigation -Name $ProgramName -Disable $DisableMitigations
-                    }
-                    else {
-                        Write-Warning "No mitigations to enable or disable for $ProgramName"
                     }
                 } 
 

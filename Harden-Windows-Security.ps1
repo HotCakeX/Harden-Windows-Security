@@ -37,10 +37,9 @@ Full Change log always available on GitHub: https://github.com/HotCakeX/Harden-W
 
 .DESCRIPTION
 
+  ⭕ You need to read the GitHub's readme page before running this: https://github.com/HotCakeX/Harden-Windows-Security
 
-  ⭕ You need to read the GitHub's readme page before running this script: https://github.com/HotCakeX/Harden-Windows-Security
-
-  ⭕ Check out Compliance checking + Security score module: https://www.powershellgallery.com/packages/Harden-Windows-Security-Module/
+  ⭕ This script is only for users that use the old PowerShell 5.1. It's highly recommended to use new PowerShell versions and the new Harden Windows Security Module that offers hardening + Auditing + Undoing hardening: https://www.powershellgallery.com/packages/Harden-Windows-Security-Module/
   
 💠 Features of this Hardening script:
 
@@ -79,15 +78,13 @@ Full Change log always available on GitHub: https://github.com/HotCakeX/Harden-W
   ✅ Non-Admin Commands that only affect the current user and do not make machine-wide changes.
 
 
-💎 Note: If there are multiple Windows user accounts in your computer, it's recommended to run this script in each of them, without administrator privileges, because Non-admin commands only apply to the current user and are not machine wide.
-
 🏴 If you have any questions, requests, suggestions etc. about this script, please open a new Discussion or Issue on GitHub
 
 
 .EXAMPLE  
 
 .NOTES  
-    Check out GitHub page for security recommendations: https://github.com/HotCakeX/Harden-Windows-Security
+    
 #>
 
 # Change the execution policy temporarily only for the current PowerShell session

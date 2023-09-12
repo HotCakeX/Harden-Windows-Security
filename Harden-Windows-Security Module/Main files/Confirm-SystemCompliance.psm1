@@ -444,7 +444,7 @@ function Confirm-SystemCompliance {
         # Bitlocker DMA counter measure status
         # Returns true if only either Kernel DMA protection is on and Bitlocker DMA protection if off
         # or Kernel DMA protection is off and Bitlocker DMA protection is on
-        [bool]$ItemState = ($bootDMAProtection -xor ($BitlockerDMAProtectionStatus -eq '1')) ? $True : $False
+        [bool]$ItemState = ($BootDMAProtection -xor ($BitlockerDMAProtectionStatus -eq '1')) ? $True : $False
 
         # Create a custom object with 5 properties to store them as nested objects inside the main output object
         $NestedObjectArray += [PSCustomObject]@{

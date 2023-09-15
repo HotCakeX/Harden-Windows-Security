@@ -173,8 +173,6 @@ explorer.exe,ForceRelocateImages,Enable,Explorer
 explorer.exe,RequireInfo,Enable,Explorer
 explorer.exe,StrictHandle,Enable,Explorer
 explorer.exe,DisableExtensionPoints,Enable,Explorer
-explorer.exe,CFG,Enable,Explorer
-explorer.exe,StrictCFG,Enable,Explorer
 explorer.exe,EnableExportAddressFilter,Enable,Explorer
 explorer.exe,EnableExportAddressFilterPlus,Enable,Explorer
 explorer.exe,EnableImportAddressFilter,Enable,Explorer

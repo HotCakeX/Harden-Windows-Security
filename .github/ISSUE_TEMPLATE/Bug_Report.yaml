@@ -14,10 +14,10 @@ body:
     attributes:
       label: Tools category
       description: Which category/tool does this bug belong to?
-      options:
-        - Harden Windows Security Script
+      options:        
         - Harden Windows Security Module
         - WDACConfig Module
+        - Harden Windows Security Script
     validations:
       required: true 
   - type: checkboxes

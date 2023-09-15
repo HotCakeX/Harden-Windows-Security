@@ -28,6 +28,14 @@ body:
       options:
         - label: Yes, my system meets the requirements 👍
           required: true
+  - type: checkboxes
+    id: Genuine-Windows
+    attributes:
+      label: Is your Windows installation genuine?
+      description: Genuine means you downloaded Windows installation media from the official Microsoft website and it is neither tampered nor modified by any 3rd party tools.
+      options:
+        - label: Yes, I am using genuine Windows installation. 💯
+          required: true
   - type: textarea
     id: Explanation
     attributes:

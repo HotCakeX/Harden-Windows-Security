@@ -34,7 +34,7 @@ flowchart TD
 
 This scenario provides a very high protection level. Using the WDACConfig module, it's very easy to deploy, manage and maintain a system with this configuration.
 
-## Deploy the Default Windows base policy on the system
+## Deploy the Default Windows Base Policy on the System
 
 Start by deploying the Default Windows base policy on the system, which allows only files and apps that come pre-installed in Windows to run and anything else is blocked.
 
@@ -52,7 +52,7 @@ After deploying the base policy, you can create Supplemental policies to allow o
 
 <Br>
 
-## Creating Supplemental policy for apps already installed
+## Creating Supplemental Policy for Apps Already Installed
 
 If you deployed the Default Windows base policy on a system that already had apps installed, you can create Supplemental policy for them using the following syntaxes:
 
@@ -83,7 +83,7 @@ New-SupplementalWDACConfig -InstalledAppXPackages -PackageName "*App's name*" -S
 
 <br>
 
-## Creating Supplemental policy for new app installations or apps already installed
+## Creating Supplemental Policy for New App Installations or Apps Already Installed
 
 If the app you are trying to allow isn't installed and when you try to install it you see a blocked/error message, you can use the following syntaxes to allow them to run and then automatically create Supplemental policy for them.
 
@@ -111,7 +111,7 @@ Edit-WDACConfig -AllowNewApps -SuppPolicyName "App's Name" -PolicyPaths "C:\Defa
 
 <br>
 
-## What to do if you have a lot of Supplemental policies?
+## What to Do if You Have a Lot of Supplemental Policies?
 
 Currently, the limit for the number of policies (Base + Supplemental) that can be deployed on a system at a time is 32. So if you are getting close to that limit, you can merge some or all of your Supplemental policies automatically into 1 using the command below:
 
@@ -123,13 +123,13 @@ Edit-WDACConfig -MergeSupplementalPolicies -SuppPolicyName "Merge of Multiple Su
 
 <br>
 
-## What to do when there is an update for an allowed app?
+## What to Do When There Is an Update for an Allowed App?
 
 If you've created a Supplemental policy for an app that is already installed and now there is a newer version of that app available, you have multiple options:
 
 1. If the Supplemental policy that you created to allow that app is based on FilePath with wildcards, then the app can be updated and no change in policy is required.
 
-2. If the Supplemental policy is based on [PFN (Package Family Name)](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/manage-packaged-apps-with-wdac) of the app, available only for [MSIX](https://learn.microsoft.com/en-us/windows/msix/overview) apps installed through Microsoft Store, then you don't need to take any action and the app will be updated without any issues.
+2. If the Supplemental policy is based on [PFN (Package Family Name)](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/manage-packaged-apps-with-wdac) of the app, available only for apps that use [MSIX](https://learn.microsoft.com/en-us/windows/msix/overview) installers, like some of the modern apps installed through Microsoft Store, then you don't need to take any action and the app will be updated without any issues.
 
 3. If the Supplemental policy is only based on the app's digital signature, which is common for well-made apps, then you don't need to take any further action. As long as the new version of the app has the same digital signature / developer identity, then it will be allowed to run.
 

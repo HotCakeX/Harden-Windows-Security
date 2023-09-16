@@ -43,7 +43,7 @@ New-WDACConfig -MakeLightPolicy
 * [Parameter info](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-WDACConfig#new-wdacconfig--makelightpolicy)
 
 ```powershell
-Deploy-SignedWDACConfig -CertPath "C:\Certificate.cer" -PolicyPaths "C:\Users\HotCakeX\SignedAndReputable.xml" -CertCN "WDAC Certificate"
+Deploy-SignedWDACConfig -CertPath "C:\Certificate.cer" -PolicyPaths "C:\Users\HotCakeX\SignedAndReputable.xml" -CertCN "WDAC Certificate" -Deploy
 ```
 
 * [Cmdlet info](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Deploy-SignedWDACConfig)
@@ -52,9 +52,9 @@ Deploy-SignedWDACConfig -CertPath "C:\Certificate.cer" -PolicyPaths "C:\Users\Ho
 
 * The module creates ***Signed and Reputable WDAC base Policy*** based on [AllowMicrosoft policy template](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/example-wdac-base-policies) with ***ISG*** related [rule options](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/select-types-of-rules-to-create#table-1-windows-defender-application-control-policy---policy-rule-options), then merges [Microsoft recommended block rules](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/applications-that-can-bypass-wdac) with it. We don't merge [Microsoft recommended ***driver*** block rules](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/microsoft-recommended-driver-block-rules) because it is already enabled by default in Windows.
 
-* The module also automatically stars the [Application Identity](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/applocker/configure-the-application-identity-service) (`AppIDSvc`) service required for [ISG Authorization](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/use-wdac-with-intelligent-security-graph#enable-the-necessary-services-to-allow-wdac-to-use-the-isg-correctly-on-the-client) and sets its startup to Automatic. It's a protected service so can't be disabled or modified using Services snap-in.
+* The module also automatically starts the [Application Identity](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/applocker/configure-the-application-identity-service) (`AppIDSvc`) service required for [ISG Authorization](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/use-wdac-with-intelligent-security-graph#enable-the-necessary-services-to-allow-wdac-to-use-the-isg-correctly-on-the-client) and sets its startup mode to Automatic. It's a protected service so can't be disabled or modified using Services snap-in.
 
-* ISG Authorization requires active Internet connection for obvious reasons, to communicate with the global ISG network etc.
+* ISG Authorization requires active Internet connection to communicate with the global ISG network.
 
 * Recommended to perform a reboot regardless of whether you are deploying signed or unsigned version of the "Signed and Reputable" WDAC base policy.
 
@@ -66,7 +66,9 @@ After finishing deploying the Signed and Reputable base policy, if there is an a
 
 ## Creating Supplemental policy for apps already installed
 
-The following commands use the `-Deploy` optional switch parameter, meaning after Supplemental policy creation, they are automatically deployed on the system. If you chose the Signed path, omit it from the commands and instead use the [`Deploy-SignedWDACConfig` Cmdlet](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Deploy-SignedWDACConfig) to Sign and Deploy the Supplemental policy xml files.
+The following commands use the `-Deploy` optional switch parameter, meaning after Supplemental policy creation, they are automatically deployed on the system.
+
+  * If you chose the Signed path, omit it from the commands and instead use the [Deploy-SignedWDACConfig](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Deploy-SignedWDACConfig) cmdlet to Sign and Deploy the Supplemental policy xml files.
 
 ### Based on signer rules, hashes, file names etc.
 
@@ -97,7 +99,7 @@ New-SupplementalWDACConfig -InstalledAppXPackages -PackageName "*App's name*" -S
 
 ## Creating Supplemental policy for new app installations or apps already installed
 
-If the app you are trying to allow isn't installed and when you try to install it you see a blocked/error message, you can use the following syntaxes to allow them to run and then automatically create Supplemental policy for them.
+If the app you are trying to allow isn't installed, and when you try to install it you see a blocked/error message, you can use the following syntaxes to allow them to run and then automatically create Supplemental policy for them.
 
 These methods also work for apps that were installed prior to deploying the "Signed and Reputable" base policy and now you want to allow them to run by creating Supplemental policy for them.
 
@@ -141,7 +143,7 @@ Edit-SignedWDACConfig -AllowNewApps -CertPath "C:\Certificate.cer" -SuppPolicyNa
 
 <br>
 
-## What to do if you have a lot of Supplemental policies?
+## What to Do if You Have a Lot of Supplemental Policies?
 
 Currently, the limit for the number of policies (Base + Supplemental) that can be deployed on a system at a time is 32. So if you are getting close to that limit, you can merge some or all of your Supplemental policies automatically into 1 using the command below:
 
@@ -155,7 +157,7 @@ Edit-WDACConfig -MergeSupplementalPolicies -SuppPolicyName "Merge of Multiple Su
 
 <br>
 
-### Ssigned version
+### Signed version
 
 ```powershell
 Edit-SignedWDACConfig -MergeSupplementalPolicies -CertPath "C:\Certificate.cer" -SuppPolicyName "Merge of Multiple Supplementals" -PolicyPaths "C:\SignedAndReputable.xml" -CertCN "WDAC Certificate" -SuppPolicyPaths "C:\Supplemental policy for App1.xml","C:\Supplemental policy for App 2.xml","C:\Supplemental policy for App 3.xml"
@@ -179,13 +181,13 @@ Explained more in here:
 
 <br>
 
-## What to do when there is an update for an allowed app?
+## What to Do When There Is an Update for an Allowed App?
 
 If you've created a Supplemental policy for an app that is already installed and now there is a newer version of that app available, you have multiple options:
 
 1. If the Supplemental policy that you created to allow that app is based on FilePath with wildcards, then the app can be updated and no change in policy is required.
 
-2. If the Supplemental policy is based on [PFN (Package Family Name)](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/manage-packaged-apps-with-wdac) of the app, available only for [MSIX](https://learn.microsoft.com/en-us/windows/msix/overview) apps installed through Microsoft Store, then you don't need to take any action and the app will be updated without any issues.
+2. If the Supplemental policy is based on [PFN (Package Family Name)](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/manage-packaged-apps-with-wdac) of the app, available only for apps that use [MSIX](https://learn.microsoft.com/en-us/windows/msix/overview) installers, like some of the modern apps installed through Microsoft Store, then you don't need to take any action and the app will be updated without any issues.
 
 3. If the Supplemental policy is only based on the app's digital signature, which is common for well-made apps, then you don't need to take any further action. As long as the new version of the app has the same digital signature / developer identity, then it will be allowed to run.
 

@@ -47,7 +47,7 @@ New-WDACConfig -MakeAllowMSFTWithBlockRules
 Now what we have the policy xml file for the Allow Microsoft base policy, we need to sign and deploy it.
 
 ```powershell
-Deploy-SignedWDACConfig -CertPath "C:\Certificate.cer" -PolicyPaths "C:\AllowMicrosoftPlusBlockRules.xml" -CertCN "WDAC Certificate"
+Deploy-SignedWDACConfig -CertPath "C:\Certificate.cer" -PolicyPaths "C:\AllowMicrosoftPlusBlockRules.xml" -CertCN "WDAC Certificate" -Deploy
 ```
 
 * [Cmdlet info](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Deploy-SignedWDACConfig)

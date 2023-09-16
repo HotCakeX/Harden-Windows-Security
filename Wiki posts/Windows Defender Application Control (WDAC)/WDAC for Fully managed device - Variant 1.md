@@ -40,7 +40,7 @@ There are 2 types of base policies you can choose from.
 ### Deploy the Allow Microsoft Prep mode base policy
 
 ```powershell
-New-WDACConfig -PrepMSFTOnlyAudit -LogSize 10MB
+New-WDACConfig -PrepMSFTOnlyAudit -LogSize 10MB -Deploy
 ```
 
 #### [Parameter Info](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-WDACConfig#new-wdacconfig--prepmsftonlyaudit)
@@ -48,7 +48,7 @@ New-WDACConfig -PrepMSFTOnlyAudit -LogSize 10MB
 ### Deploy the Default Windows Prep mode base policy
 
 ```powershell
-New-WDACConfig -PrepDefaultWindowsAudit -LogSize 10MB
+New-WDACConfig -PrepDefaultWindowsAudit -LogSize 10MB -Deploy
 ```
 
 #### [Parameter Info](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-WDACConfig#new-wdacconfig--prepdefaultwindowsaudit)

@@ -40,7 +40,7 @@ There are 2 types of base policies you can choose from.
 ### Deploy the Allow Microsoft Prep mode base policy
 
 ```powershell
-New-WDACConfig -PrepMSFTOnlyAudit -LogSize 10MB
+New-WDACConfig -PrepMSFTOnlyAudit -LogSize 10MB -Deploy
 ```
 
 #### [Parameter Info](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-WDACConfig#new-wdacconfig--prepmsftonlyaudit)
@@ -48,7 +48,7 @@ New-WDACConfig -PrepMSFTOnlyAudit -LogSize 10MB
 ### Deploy the Default Windows Prep mode base policy
 
 ```powershell
-New-WDACConfig -PrepDefaultWindowsAudit -LogSize 10MB
+New-WDACConfig -PrepDefaultWindowsAudit -LogSize 10MB -Deploy
 ```
 
 #### [Parameter Info](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-WDACConfig#new-wdacconfig--prepdefaultwindowsaudit)
@@ -59,7 +59,7 @@ Depending on whichever of the option you choose, it deploys the base policy in a
 
 <br>
 
-## Generate Audit event logs on the system
+## Generate Audit Event Logs on the System
 
 Install all of the programs that you want to allow in the WDAC policy, on the VM. These are the programs that you want to allow to run and be installed on the target system once you've deployed the WDAC policy.
 
@@ -73,7 +73,7 @@ These event logs are exactly what we need to identify and create Allow rules for
 
 <br>
 
-## Generate Supplemental policy from the Audit event logs
+## Generate Supplemental Policy From the Audit Event Logs
 
 ### If you chose the Allow Microsoft path
 

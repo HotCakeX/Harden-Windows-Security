@@ -296,7 +296,8 @@ Creates a WDAC policy for a [Lightly managed system](https://github.com/HotCakeX
 ![image](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Wiki%20APNGs/New-WDACConfig%20-MakeDefaultWindowsWithBlockRules.apng)
 
 ```powershell
-New-WDACConfig [-MakeDefaultWindowsWithBlockRules] [-Deploy] [-TestMode] [-RequireEVSigners]
+New-WDACConfig [-MakeDefaultWindowsWithBlockRules] [-Deploy] [-IncludeSignTool] [-SignToolPath <String>]
+    [-TestMode] [-RequireEVSigners]
 ```
 
 <br>
@@ -314,7 +315,7 @@ Calls the [-GetBlockRules](#new-wdacconfig--getblockrules) parameter to get the 
 
 <br>
 
-### 3 optional parameters
+### 5 optional parameters
 
 * `-Deploy`: Indicates that the module will automatically deploy the ***DefaultWindowsPlusBlockRules*** policy after creation.
 
@@ -323,5 +324,9 @@ Calls the [-GetBlockRules](#new-wdacconfig--getblockrules) parameter to get the 
 * `-RequireEVSigners`: Indicates that the created/deployed policy will have [Require EV Signers](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/wdac-wizard-create-base-policy#advanced-policy-rules-description) policy rule option.
 
      - > In addition to being WHQL signed, this rule requires that drivers must have been submitted by a partner that has an Extended Verification (EV) certificate. All Windows 10 and later, or Windows 11 drivers will meet this requirement.
+
+* `-IncludeSignTool`: Indicates that the Default Windows policy that is being created must include Allow rules for `SignTool.exe`. This parameter must be used when you intend to Sign and Deploy the Default Windows policy.
+
+* `-SignToolPath <String>`: [How to use it](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Deploy-SignedWDACConfig#you-can-use-it-in-2-different-ways)
 
 <br>

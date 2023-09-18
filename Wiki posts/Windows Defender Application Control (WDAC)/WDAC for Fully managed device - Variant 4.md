@@ -39,7 +39,7 @@ This scenario provides the ultimate protection level. Using the WDACConfig modul
 Start by creating the Default Windows base policy xml file, which allows only files and apps that come pre-installed in Windows to run and anything else is blocked.
 
 ```powershell
-New-WDACConfig -MakeDefaultWindowsWithBlockRules
+New-WDACConfig -MakeDefaultWindowsWithBlockRules -IncludeSignTool
 ```
 
 * [Parameter info](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-WDACConfig#new-wdacconfig--makeallowmsftwithblockrules)

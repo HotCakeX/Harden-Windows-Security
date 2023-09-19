@@ -17,12 +17,9 @@
 
 ### Video Guide
 
-<p align="center">
-  <a href="https://www.youtube.com/watch?v=vlu1HGuYPeg">
-    <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/YouTubeLogoForWDACSigningVideo.jpg" width="700"
-         alt="Creating WDAC policy Code Signing Certificate in Windows Server vNext in 2023 and deploying it">
-  </a>
-  </p>
+<br>
+
+<a href="https://youtu.be/RSYJ64BlS9Y?si=t6TlcYzsMwteG1M9"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/YouTube%20Video%20Thumbnails/With%20YouTube%20play%20button/How%20to%20Create%20and%20Deploy%20a%20Signed%20WDAC%20Policy.png"></a>
 
 <br>
 

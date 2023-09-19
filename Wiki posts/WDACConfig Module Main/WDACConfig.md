@@ -21,37 +21,7 @@ This page is also available [on my website.](https://spynetgirl.github.io/WDACCo
 
 <br>
 
-### VIDEO: How to Configure, Use and Setup **Unsigned** WDAC (Windows Defender Application Control) Automatically using WDACConfig PowerShell module
-
-<br>
-
-<p align="center">
-  <a href="https://youtu.be/Wj3EEiMCqF0">
-    <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/YouTubeLogoWDACUnsignedDemo.png" width="700"
-         alt="YouTube Video showcase Unsigned WDAC Policies">
-  </a>
-  </p>
-
-<br>
-
-***
-
-<br>
-
-### VIDEO: How to Configure, Use and Setup **Signed** WDAC (Windows Defender Application Control) Automatically using WDACConfig PowerShell module
-
-<br>
-
-<p align="center">
-  <a href="https://youtu.be/wAByFp-X-iM">
-    <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/YouTubeLogoWDACSignedDemo.png" width="700"
-         alt="YouTube Video showcase Signed WDAC Policies">
-  </a>
-  </p>
-
-<br>
-
-## How to use it
+## How To Use It
 
 ### Install the module
 
@@ -61,23 +31,32 @@ Install-Module -Name WDACConfig -Force
 
 <br>
 
-**To get help and syntax on PowerShell console, type:**
+## Video Guides
 
-```powershell
-"Get-Command -Module WDACConfig"
-"Get-Help New-WDACConfig"
-"Get-Help New-SupplementalWDACConfig"
-"Get-Help Remove-WDACConfig"
-"Get-Help Edit-WDACConfig"
-"Get-Help Edit-SignedWDACConfig"
-"Get-Help Deploy-SignedWDACConfig"
-"Get-Help Confirm-WDACConfig"
-"Get-Help New-DenyWDACConfig"
-"Get-Help Set-CommonWDACConfig"
-"Get-help New-KernelModeWDACConfig"
-"Get-help Get-CommonWDACConfig"
-"Get-help Invoke-WDACSimulation"
-```
+<br>
+
+<a href="https://youtu.be/RSYJ64BlS9Y?si=t6TlcYzsMwteG1M9"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/YouTube%20Video%20Thumbnails/With%20YouTube%20play%20button/How%20to%20Create%20and%20Deploy%20a%20Signed%20WDAC%20Policy.png"></a>
+
+<br>
+
+<a href="https://youtu.be/KD0zUb2GCyk?si=_g09D0yF5lTN1NLO"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/YouTube%20Video%20Thumbnails/With%20YouTube%20play%20button/WDAC%20policy%20for%20Fully%20Managed%20device%20-%20Variant%201.png"></a>
+<br>
+
+<br>
+
+<a href="https://youtu.be/QpJt255pHDE?si=eLSRkAQXrkHK8SSh"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/YouTube%20Video%20Thumbnails/With%20YouTube%20play%20button/WDAC%20for%20Fully%20Managed%20Devices%20(2nd%20variant).png"></a>
+
+<br>
+
+<a href="https://youtu.be/41_5ntFYghM?si=2PcCXI7gis6UAJh7"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/YouTube%20Video%20Thumbnails/With%20YouTube%20play%20button/WDAC%20policy%20for%20Fully%20managed%20device%20Variant%203.png"></a>
+
+<br>
+
+<a href="https://youtu.be/AgqhcPV9aPY?si=l_2QPbEAKKVhb9z6"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/YouTube%20Video%20Thumbnails/With%20YouTube%20play%20button/WDAC%20policy%20for%20Fully%20managed%20device%20Variant%204.png"></a>
+
+<br>
+
+<a href="https://youtu.be/RgVf4p9ct90?si=mGdVCnqVlUN_FBWR"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/YouTube%20Video%20Thumbnails/With%20YouTube%20play%20button/WDAC%20policy%20for%20Lightly%20managed%20device.png"></a>
 
 <br>
 
@@ -109,6 +88,26 @@ Install-Module -Name WDACConfig -Force
 
 <br>
 
-## Feedback and Feature request
+## To Get Help and Syntax on Powershell Console
+
+```powershell
+"Get-Command -Module WDACConfig"
+"Get-Help New-WDACConfig"
+"Get-Help New-SupplementalWDACConfig"
+"Get-Help Remove-WDACConfig"
+"Get-Help Edit-WDACConfig"
+"Get-Help Edit-SignedWDACConfig"
+"Get-Help Deploy-SignedWDACConfig"
+"Get-Help Confirm-WDACConfig"
+"Get-Help New-DenyWDACConfig"
+"Get-Help Set-CommonWDACConfig"
+"Get-help New-KernelModeWDACConfig"
+"Get-help Get-CommonWDACConfig"
+"Get-help Invoke-WDACSimulation"
+```
+
+<br>
+
+## Feedback and Feature Request
 
 If there are any feedback or feature requests regarding this module, please [open a new discussion/issue on GitHub.](https://github.com/HotCakeX/Harden-Windows-Security)

@@ -26,7 +26,7 @@ flowchart TD
 
 <br>
 
-<img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/3434.gif" width="300000" height="50" alt="Blue gif line break">
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
 
 <br>
 

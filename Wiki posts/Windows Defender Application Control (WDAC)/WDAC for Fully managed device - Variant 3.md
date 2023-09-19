@@ -24,7 +24,15 @@ flowchart TD
     N --> O[New-SupplementalWDACConfig -FilePathWildCards]
 ```
 
----
+<br>
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/3434.gif" width="300000" height="50" alt="Blue gif line break">
+
+<br>
+
+## Video Guide
+
+<a href="https://youtu.be/41_5ntFYghM?si=2PcCXI7gis6UAJh7"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/YouTube%20Video%20Thumbnails/With%20YouTube%20play%20button/WDAC%20policy%20for%20Fully%20managed%20device%20Variant%203.png"></a>
 
 <br>
 

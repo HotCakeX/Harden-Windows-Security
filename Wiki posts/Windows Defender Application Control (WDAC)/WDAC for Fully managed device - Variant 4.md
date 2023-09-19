@@ -26,7 +26,15 @@ flowchart TD
     F --> Q[New-SupplementalWDACConfig -Normal]
 ```
 
----
+<br>
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/3434.gif" width="300000" height="50" alt="Blue gif line break">
+
+<br>
+
+## Video Guide
+
+<a href="https://youtu.be/AgqhcPV9aPY?si=l_2QPbEAKKVhb9z6"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/YouTube%20Video%20Thumbnails/With%20YouTube%20play%20button/WDAC%20policy%20for%20Fully%20managed%20device%20Variant%204.png"></a>
 
 <br>
 
@@ -39,7 +47,7 @@ This scenario provides the ultimate protection level. Using the WDACConfig modul
 Start by creating the Default Windows base policy xml file, which allows only files and apps that come pre-installed in Windows to run and anything else is blocked.
 
 ```powershell
-New-WDACConfig -MakeDefaultWindowsWithBlockRules
+New-WDACConfig -MakeDefaultWindowsWithBlockRules -IncludeSignTool
 ```
 
 * [Parameter info](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-WDACConfig#new-wdacconfig--makeallowmsftwithblockrules)

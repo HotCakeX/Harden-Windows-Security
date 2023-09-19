@@ -41,8 +41,15 @@ function Get-CommonWDACConfig {
         }        
 
         if ($PSBoundParameters.Count -eq 0) {
-            &$WritePink "`nThis is your current WDAC User Configurations: "
-            Get-Content -Path "$env:USERPROFILE\.WDACConfig\UserConfigurations.json" | ConvertFrom-Json | Format-List *
+            # Display this message if User Configuration file is empty
+            if ($null -eq (Get-Content -Path "$env:USERPROFILE\.WDACConfig\UserConfigurations.json")) {
+                &$WritePink "`nYour current WDAC User Configurations is empty."
+            }
+            # Display this message if User Configuration file has content
+            else {
+                &$WritePink "`nThis is your current WDAC User Configurations: "
+                Get-Content -Path "$env:USERPROFILE\.WDACConfig\UserConfigurations.json" | ConvertFrom-Json | Format-List *                
+            }
             break
         }
 

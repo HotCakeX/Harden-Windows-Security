@@ -31,6 +31,12 @@ function New-WDACConfig {
         [Parameter(Mandatory = $false, ParameterSetName = 'Get Block Rules')]
         [Parameter(Mandatory = $false, ParameterSetName = 'Get Driver Block Rules')]
         [Switch]$Deploy,
+
+        [Parameter(Mandatory = $false, ParameterSetName = 'Make DefaultWindows With Block Rules')]
+        [switch]$IncludeSignTool,
+
+        [Parameter(Mandatory = $false, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'Make DefaultWindows With Block Rules')]
+        [System.String]$SignToolPath,
         
         [Parameter(Mandatory = $false, ParameterSetName = 'Make Light Policy')]
         [Parameter(Mandatory = $false, ParameterSetName = 'Make Policy From Audit Logs')]
@@ -71,7 +77,7 @@ function New-WDACConfig {
         [Parameter(Mandatory = $false, ParameterSetName = 'Prep Default Windows Audit')]
         [Parameter(Mandatory = $false, ParameterSetName = 'Make Policy From Audit Logs')]        
         [System.Int64]$LogSize,
-        
+
         [Parameter(Mandatory = $false)][Switch]$SkipVersionCheck    
     )
 
@@ -81,6 +87,31 @@ function New-WDACConfig {
 
         # Stop operation as soon as there is an error anywhere, unless explicitly specified otherwise
         $ErrorActionPreference = 'Stop'
+        
+        #region User-Configurations-Processing-Validation
+        # If User is creating Default Windows policy and including SignTool path
+        if ($IncludeSignTool -and $MakeDefaultWindowsWithBlockRules) {
+            # Read User configuration file if it exists
+            $UserConfig = Get-Content -Path "$env:USERPROFILE\.WDACConfig\UserConfigurations.json" -ErrorAction SilentlyContinue   
+            if ($UserConfig) {
+                # Validate the Json file and read its content to make sure it's not corrupted
+                try { $UserConfig = $UserConfig | ConvertFrom-Json }
+                catch {            
+                    Write-Error 'User Configurations Json file is corrupted, deleting it...' -ErrorAction Continue
+                    # Calling this function with this parameter automatically does its job and breaks/stops the operation
+                    Set-CommonWDACConfig -DeleteUserConfig         
+                }                
+            }  
+        }      
+        
+        # Get SignToolPath from user parameter or user config file or auto-detect it
+        if ($SignToolPath) {
+            $SignToolPathFinal = Get-SignTool -SignToolExePath $SignToolPath
+        } # If it is null, then Get-SignTool will behave the same as if it was called without any arguments.
+        elseif ($IncludeSignTool -and $MakeDefaultWindowsWithBlockRules) {        
+            $SignToolPathFinal = Get-SignTool -SignToolExePath ($UserConfig.SignToolCustomPath ?? $null)
+        }
+        #endregion User-Configurations-Processing-Validation
 
         # Detecting if Debug switch is used, will do debugging actions based on that
         $Debug = $PSBoundParameters.Debug.IsPresent
@@ -122,6 +153,7 @@ function New-WDACConfig {
         }
 
         [scriptblock]$MakeAllowMSFTWithBlockRulesSCRIPTBLOCK = {
+
             param([System.Boolean]$NoCIP)
             # Get the latest Microsoft recommended block rules
             Invoke-Command -ScriptBlock $GetBlockRulesSCRIPTBLOCK | Out-Null                        
@@ -159,15 +191,41 @@ function New-WDACConfig {
             param([System.Boolean]$NoCIP)
             Invoke-Command -ScriptBlock $GetBlockRulesSCRIPTBLOCK | Out-Null                        
             Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\DefaultWindows_Enforced.xml' -Destination 'DefaultWindows_Enforced.xml'
+            
+            [System.Boolean]$global:MergeSignToolPolicy = $false
+
+            if ($SignToolPathFinal) {
+                # Allowing SignTool to be able to run after Default Windows base policy is deployed in Signed scenario
+                &$WriteTeaGreen "`nCreating allow rules for SignTool.exe in the DefaultWindows base policy so you can continue using it after deploying the DefaultWindows base policy."
+                New-Item -Path "$env:TEMP\TemporarySignToolFile" -ItemType Directory -Force | Out-Null
+                Copy-Item -Path $SignToolPathFinal -Destination "$env:TEMP\TemporarySignToolFile" -Force
+                New-CIPolicy -ScanPath "$env:TEMP\TemporarySignToolFile" -Level FilePublisher -Fallback Hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -AllowFileNameFallbacks -FilePath .\SignTool.xml
+                # Delete the Temporary folder in the TEMP folder
+                if (!$Debug) { Remove-Item -Recurse -Path "$env:TEMP\TemporarySignToolFile" -Force } 
+
+                [System.Boolean]$global:MergeSignToolPolicy = $true
+            }           
+            
             # Scan PowerShell core directory and allow its files in the Default Windows base policy so that module can still be used once it's been deployed
             if (Test-Path 'C:\Program Files\PowerShell') {
                 &$WriteLavender 'Creating allow rules for PowerShell in the DefaultWindows base policy so you can continue using this module after deploying it.'                   
                 New-CIPolicy -ScanPath 'C:\Program Files\PowerShell' -Level FilePublisher -NoScript -Fallback Hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -FilePath .\AllowPowerShell.xml
-                Merge-CIPolicy -PolicyPaths .\DefaultWindows_Enforced.xml, .\AllowPowerShell.xml, 'Microsoft recommended block rules.xml' -OutputFilePath .\DefaultWindowsPlusBlockRules.xml | Out-Null
+                
+                if ($global:MergeSignToolPolicy) {
+                    Merge-CIPolicy -PolicyPaths .\DefaultWindows_Enforced.xml, .\AllowPowerShell.xml, 'Microsoft recommended block rules.xml', .\SignTool.xml -OutputFilePath .\DefaultWindowsPlusBlockRules.xml | Out-Null
+                }
+                else {                                
+                    Merge-CIPolicy -PolicyPaths .\DefaultWindows_Enforced.xml, .\AllowPowerShell.xml, 'Microsoft recommended block rules.xml' -OutputFilePath .\DefaultWindowsPlusBlockRules.xml | Out-Null
+                }            
             }
             else {
-                Merge-CIPolicy -PolicyPaths .\DefaultWindows_Enforced.xml, 'Microsoft recommended block rules.xml' -OutputFilePath .\DefaultWindowsPlusBlockRules.xml | Out-Null                         
-            }                  
+                if ($global:MergeSignToolPolicy) {
+                    Merge-CIPolicy -PolicyPaths .\DefaultWindows_Enforced.xml, 'Microsoft recommended block rules.xml', .\SignTool.xml -OutputFilePath .\DefaultWindowsPlusBlockRules.xml | Out-Null
+                }
+                else {
+                    Merge-CIPolicy -PolicyPaths .\DefaultWindows_Enforced.xml, 'Microsoft recommended block rules.xml' -OutputFilePath .\DefaultWindowsPlusBlockRules.xml | Out-Null                         
+                } 
+            }                 
             
             [System.String]$PolicyID = Set-CIPolicyIdInfo -FilePath .\DefaultWindowsPlusBlockRules.xml -PolicyName "Default Windows Plus Block Rules - $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID
             [System.String]$PolicyID = $PolicyID.Substring(11)
@@ -185,6 +243,7 @@ function New-WDACConfig {
 
             Remove-Item .\AllowPowerShell.xml -Force -ErrorAction SilentlyContinue
             Remove-Item '.\DefaultWindows_Enforced.xml', 'Microsoft recommended block rules.xml' -Force
+            if ($global:MergeSignToolPolicy -and !$Debug) { Remove-Item -Path .\SignTool.xml -Force }
 
             [PSCustomObject]@{
                 PolicyFile = 'DefaultWindowsPlusBlockRules.xml'
@@ -508,8 +567,8 @@ function New-WDACConfig {
             $PrepDefaultWindowsAudit { & $PrepDefaultWindowsAuditSCRIPTBLOCK; break }
             default { Write-Warning 'None of the main parameters were selected.'; break }
         }
-    }    
-  
+    } 
+      
     <#
 .SYNOPSIS
 Automate a lot of tasks related to WDAC (Windows Defender Application Control)
@@ -553,10 +612,53 @@ Make a WDAC Policy with ISG for Lightly Managed system
 .PARAMETER MakeDefaultWindowsWithBlockRules
 Make a WDAC policy by merging DefaultWindows policy with the recommended block rules
 
+.PARAMETER BasePolicyType
+Select the Base Policy Type
+
+.PARAMETER Deploy
+Deploys the policy that is being created
+
+.PARAMETER IncludeSignTool
+Indicates that the Default Windows policy that is being created must include Allow rules for SignTool.exe - This parameter must be used when you intend to Sign and Deploy the Default Windows policy.
+
+.PARAMETER SignToolPath
+Path to the SignTool.exe file - Optional
+
+.PARAMETER TestMode
+Indicates that the created/deployed policy will have Enabled:Boot Audit on Failure and Enabled:Advanced Boot Options Menu policy rule options
+
+.PARAMETER RequireEVSigners
+Indicates that the created/deployed policy will have Require EV Signers policy rule option.
+
+.PARAMETER NoDeletedFiles
+Indicates that files that were run during program installations but then were deleted and are no longer on the disk, won't be added to the supplemental policy. This can mean the programs you installed will be allowed to run but installation/reinstallation might not be allowed once the policies are deployed.
+
+.PARAMETER SpecificFileNameLevel
+You can choose one of the following options: "OriginalFileName", "InternalName", "FileDescription", "ProductName", "PackageFamilyName", "FilePath". More info available on Microsoft Learn
+
+.PARAMETER NoUserPEs
+By default, the module includes user PEs in the scan. When you use this switch parameter, they won't be included.
+
+.PARAMETER NoScript
+Won't scan script files
+
+.PARAMETER Level
+Offers the same official Levels for scanning of event logs. If no level is specified the default, which is set to FilePublisher in this module, will be used.
+
+.PARAMETER Fallbacks
+Offers the same official Fallbacks for scanning of event logs. If no fallbacks are specified the default, which is set to Hash in this module, will be used.
+
+.PARAMETER LogSize
+Specifies the log size for Microsoft-Windows-CodeIntegrity/Operational events. The values must be in the form of <Digit + Data measurement unit>. e.g., 2MB, 10MB, 1GB, 1TB. The minimum accepted value is 1MB which is the default.
+
 .PARAMETER SkipVersionCheck
 Can be used with any parameter to bypass the online version check - only to be used in rare cases
 
 #>
 }
+
+# Importing argument completer ScriptBlocks
+. "$psscriptroot\ArgumentCompleters.ps1"
 # Set PSReadline tab completion to complete menu for easier access to available parameters - Only for the current session
 Set-PSReadLineKeyHandler -Key Tab -Function MenuComplete
+Register-ArgumentCompleter -CommandName 'New-WDACConfig' -ParameterName 'SignToolPath' -ScriptBlock $ArgumentCompleterExeFilePathsPicker

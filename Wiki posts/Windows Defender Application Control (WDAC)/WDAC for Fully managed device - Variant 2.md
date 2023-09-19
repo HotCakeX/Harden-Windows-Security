@@ -26,7 +26,15 @@ flowchart TD
     F --> Q[New-SupplementalWDACConfig -Normal]
 ```
 
----
+<br>
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/3434.gif" width="300000" height="50" alt="Blue gif line break">
+
+<br>
+
+## Video Guide
+
+<a href="https://youtu.be/QpJt255pHDE?si=eLSRkAQXrkHK8SSh"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/YouTube%20Video%20Thumbnails/With%20YouTube%20play%20button/WDAC%20for%20Fully%20Managed%20Devices%20(2nd%20variant).png"></a>
 
 <br>
 

@@ -18,6 +18,18 @@ flowchart TD
     C -->|No| E[Create a Supplemental policy for it]    
 ```
 
+<br>
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/3434.gif" width="300000" height="50" alt="Blue gif line break">
+
+<br>
+
+## Video Guide
+
+<a href="https://youtu.be/RgVf4p9ct90?si=mGdVCnqVlUN_FBWR"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/YouTube%20Video%20Thumbnails/With%20YouTube%20play%20button/WDAC%20policy%20for%20Lightly%20managed%20device.png"></a>
+
+<br>
+
 ## Deploy the Signed and Reputable base policy on the system
 
 Start by deploying the Signed and Reputable base policy on the system, which allows only files and apps that are authorized by the [Intelligent Security Graph Authorization](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/use-wdac-with-intelligent-security-graph) which have known good state to run and anything else is blocked.

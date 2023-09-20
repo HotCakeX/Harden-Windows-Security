@@ -12,7 +12,7 @@ The main source for learning PowerShell is Microsoft Learn websites. There are e
 
 <br>
 
-## View all Predictive IntelliSense suggestions based on past history
+## View All Predictive Intellisense Suggestions Based on Past History
 
 Press F2 to see the complete list of the Predictive IntelliSense suggestions as you type on the PowerShell console.
 
@@ -20,17 +20,35 @@ Press F2 to see the complete list of the Predictive IntelliSense suggestions as 
 
 <br>
 
-## Where is the PowerShell command history stored?
+## Where Is the Powershell Command History Stored?
 
 In this directory
 
-`$env:USERPROFILE\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadLine`
+```powershell
+$env:USERPROFILE\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadLine
+```
 
 There is a file called `ConsoleHost_history.txt` and it contains the history of all the commands you've ever typed in PowerShell on your device. If you want to clear it, open the file, delete all of its content. If PowerShell is already open, close and reopen it to see the change.
 
 <br>
 
-## How to clear the automatic error variable in PowerShell
+You can open the file with this command
+
+```powershell
+Invoke-Item -Path "$env:USERPROFILE\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadLine\ConsoleHost_history.txt"
+```
+
+<br>
+
+You can use the following command to set the maximum remembered history to 1
+
+```powershell
+Set-PSReadLineOption -MaximumHistoryCount 1
+```
+
+<br>
+
+## How to Clear the Automatic Error Variable in Powershell
 
 ```powershell
 $error.clear()
@@ -38,7 +56,7 @@ $error.clear()
 
 <br>
 
-## How to get the last error type in PowerShell
+## How to Get the Last Error Type in Powershell
 
 ```powershell
 $Error[0].Exception.GetType().FullName
@@ -46,7 +64,7 @@ $Error[0].Exception.GetType().FullName
 
 <br>
 
-## How to display all environment variables and their values in PowerShell
+## How to Display All Environment Variables and Their Values in Powershell
 
 ```powershell
 gci env:
@@ -58,7 +76,7 @@ gci env:
 
 <br>
 
-## List all MSCs and CPLs for Microsoft Management Console and Control Panels in PowerShell
+## List All MSCs and CPLs for Microsoft Management Console and Control Panels in Powershell
 
 ```powershell
 Get-ChildItem -Path C:\Windows\system32\* -Include *.msc, *.cpl | Sort-Object -Property Extension | Select-Object -Property Name | Format-Wide -Column 2
@@ -66,7 +84,7 @@ Get-ChildItem -Path C:\Windows\system32\* -Include *.msc, *.cpl | Sort-Object -P
 
 <br>
 
-## How to mount the EFI system partition?
+## How to Mount the EFI System Partition?
 
 ```powershell
 mountvol u: /s
@@ -78,7 +96,7 @@ With that command you can mount the EFI partition and assign the letter `U` to i
 
 <br>
 
-## How to check if a file is in use in PowerShell?
+## How to Check if a File Is in Use in Powershell?
 
 Here is an example function that tries to rename files given to it with the same names and if it was successful, it will consider that file not in use.
 
@@ -105,7 +123,7 @@ You can use it like this:
 
 <br>
 
-## Choosing between PowerShell and PowerShell Preview
+## Choosing Between Powershell and Powershell Preview
 
 Use PowerShell Preview if you want to test new features and don't need to call PowerShell with its alias, pwsh, from CMD. If you do need to call it like that, use PowerShell stable.
 
@@ -115,7 +133,7 @@ PowerShell Preview by default doesn't set its `pwsh.exe` available system wide, 
 
 <br>
 
-## Variable types in PowerShell
+## Variable Types in Powershell
 
 PowerShell variables can have types and type accelerator. The following command lists all of the types and their equivalent type accelerators. The fully qualified type names replace implicit with explicit.
 
@@ -125,13 +143,13 @@ PowerShell variables can have types and type accelerator. The following command 
 
 <br>
 
-## Success codes and error codes
+## Success Codes and Error Codes
 
 In PowerShell, or for programming languages in general, 0 = success, 1 or anything else means failure/error.
 
 <br>
 
-## How to get the names and AppIDs of installed apps of the current user in PowerShell?
+## How to Get the Names and AppIDs of Installed Apps of the Current User in Powershell?
 
 ```powershell
 Get-StartApps
@@ -141,7 +159,7 @@ Get-StartApps
 
 <br>
 
-## Difference between Async and Sync
+## Difference Between Async and Sync
 
 Async is faster than Sync
 
@@ -153,7 +171,7 @@ PowerShell supports sync/async commands workflows, also known as parallel.
 
 <br>
 
-## How to enable a disabled event log using PowerShell
+## How to Enable a Disabled Event Log Using Powershell
 
 First we create a new `EventLogConfiguration` object and pass it the name of the log we want to configure, then we set it to enabled and save the changes.
 
@@ -175,7 +193,7 @@ Using the same method we can configure many other options of the log file, just 
 
 <br>
 
-## Find the current user's username in PowerShell
+## Find the Current User’s Username in Powershell
 
 ```powershell
 [Environment]::UserName 
@@ -197,7 +215,7 @@ whoami 
 
 <br>
 
-## How to access properties of an object in PowerShell
+## How to Access Properties of an Object in Powershell
 
 For example, you can first assign the entire object to a variable:
 
@@ -219,7 +237,7 @@ $(Get-MpPreference).puaprotection
 
 <br>
 
-## Dot-sourcing
+## Dot-Sourcing
 
 To dot-source a PowerShell function in the same script file, you can use the dot operator `.` followed by the path of the script file containing the function. The path can be relative or absolute. Here's an example:
 
@@ -241,7 +259,7 @@ The dot operator tells PowerShell to execute the script file in the current scop
 
 <br>
 
-## A custom script to generate random words in PowerShell
+## A Custom Script to Generate Random Words in Powershell
 
 ```powershell
 # Generate four variables with random names
@@ -258,7 +276,7 @@ $TotallyRandomName1, $TotallyRandomName2, $TotallyRandomName3, $TotallyRandomNam
 
 <br>
 
-## How to see all the shared folders and drives
+## How to See All the Shared Folders and Drives
 
 ```powershell
 Get-CimInstance -Class Win32_Share
@@ -280,7 +298,7 @@ net share
 
 <br>
 
-## An example of using -f format operator
+## An Example of Using -F Format Operator
 
 ```powershell
 Write-output("The drivername {0} is vulnerable with a matching SHA256 hash of {1}" -f $Filename, $SHA256)
@@ -290,7 +308,7 @@ Write-output("The drivername {0} is vulnerable with a matching SHA256 hash of {1
 
 <br>
 
-## How to list all of the Positional Parameters of a Cmdlet
+## How to List All of the Positional Parameters of a Cmdlet
 
 In this example we use the 
 
@@ -302,7 +320,7 @@ Select-Object -Property name, position
 
 <br>
 
-## How to get the number of fans and details about them in PowerShell
+## How to Get the Number of Fans and Details About Them in Powershell
 
 ```powershell
 (Get-CimInstance -Namespace root/CIMV2 -ClassName Win32_Fan).count
@@ -313,7 +331,7 @@ Get-CimInstance -Namespace root/CIMV2 -ClassName Win32_Fan
 
 <br>
 
-## How to get the last reboot time in PowerShell
+## How to Get the Last Reboot Time in Powershell
 
 ```powershell
 [datetime](Get-CimInstance -ClassName win32_operatingsystem -ComputerName $_.Name).LastBootUpTime
@@ -321,7 +339,7 @@ Get-CimInstance -Namespace root/CIMV2 -ClassName Win32_Fan
 
 <br>
 
-## How to add a PS custom object to another PS custom object
+## How to Add a PS Custom Object to Another PS Custom Object
 
 You can use the `Add-Member` cmdlet with the `-InputObject` parameter. The `-InputObject` parameter specifies the custom object that you want to add a property to, and the `-Value` parameter specifies the custom object that you want to add as a property. For example, you can use this code to add the `$CustomObject` to another custom object called `$ParentObject`:
 
@@ -345,7 +363,7 @@ Add-Member -InputObject $ParentObject -MemberType NoteProperty -Name Child -Valu
 
 <br>
 
-## Some best practices for PowerShell code
+## Some Best Practices for Powershell Code
 
 1. Specify variable types explicitly
 2. Use Single quotes instead of double quotes for strings whenever possible, for example when the string value isn't interpolated.
@@ -354,11 +372,10 @@ You can access the settings page of PowerShell extension in VS Code and enable o
 
 <br>
 
-## Use CRLF instead of LF for end of line characters
+## Use CRLF Instead of LF for End of Line Characters
 
 In Visual Studio Code for example, you can see at the bottom right corner whether your end of line sequence is set to CRLF or LF, Windows uses CRLF.
 
 When you upload a PowerShell script to GitHub you need to make sure it's set to CRLF. PowerShell codes that are signed have big signature blocks at the end of them. PowerShell expects CRLF when doing authenticode signatures. You can also add those scripts to a `.gitattribute` config to your repo so that PowerShell files are uploaded with CRLF and not with LF.
 
 <br>
-

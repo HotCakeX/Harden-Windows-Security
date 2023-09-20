@@ -10,7 +10,7 @@ The main source for learning PowerShell is Microsoft Learn websites. There are e
 
 <br>
 
-## Pipeline variable
+## Pipeline Variable
 
 `$_`  is the variable for the current value in the pipeline.
 
@@ -18,7 +18,7 @@ The main source for learning PowerShell is Microsoft Learn websites. There are e
 
 <br>
 
-## Filtering with Where-Object
+## Filtering With Where-Object
 
 `?` which is an alias for `Where-Object`, is used to filter all the data given to it.
 
@@ -32,7 +32,7 @@ Get-PSDrive | ?{$_.free -gt 1}
 
 <br>
 
-## Show the properties of an object selectively
+## Show the Properties of an Object Selectively
 
 `Select` or `Select-Object` show the properties that we want to see from an object
 
@@ -48,7 +48,7 @@ Get-PSDrive | ?{$_.free -gt 1} | select root, used, free
 
 <br>
 
-## Looping using ForEach-Object
+## Looping Using Foreach-Object
 
 `ForEach-Object { }`
 
@@ -70,7 +70,7 @@ The parenthesis, `($_.free/1gb )` must be there if we want to modify one of the 
 
 <br>
 
-## To get online help about any Cmdlet
+## To Get Online Help About Any Cmdlet
 
 Opens the webpage for the specified command
 
@@ -92,7 +92,7 @@ Opens a new window showing the full help content and offers other options such a
 
 <br>
 
-## To Query Windows services
+## To Query Windows Services
 
 This gets any Windows service that has the word "Xbox" in it.
 
@@ -136,7 +136,7 @@ Everything is inside a bracket except for -DisplayName, that means it is mandato
 
 <br>
 
-## How to suppress errors in PowerShell
+## How to Suppress Errors in Powershell
 
 ```powershell
 -ErrorAction SilentlyContinue 
@@ -164,7 +164,7 @@ In your PowerShell code, either locally or globally for the entire script, `Writ
 
 <br>
 
-## Get file signature of all the files in a folder
+## Get File Signature of All the Files in a Folder
 
 This will check all of the files in the current directory and show an error for folders, you can add `-ErrorAction SilentlyContinue` to the `Get-AuthenticodeSignature` cmdlet to ignore the errors.
 
@@ -180,7 +180,7 @@ Get-ChildItem -Recurse -File | ForEach-Object -Parallel {Get-AuthenticodeSignatu
 
 <br>
 
-## Write output to a file or string
+## Write Output to a File or String
 
 ```powershell
 > output.txt 
@@ -196,7 +196,7 @@ ipconfig /all > mynetworksettings.txt
 
 <br>
 
-## How to add delay/pause to the execution of Powershell script
+## How to Add Delay/Pause to the Execution of Powershell Script
 
 To sleep a PowerShell script for 5 seconds, you can run the following command
 
@@ -214,7 +214,7 @@ Start-Sleep -Milliseconds 25
 
 <br>
 
-## How to stop/kill a a process or (.exe) executable in Powershell
+## How to Stop/Kill a a Process or (.exe) Executable in Powershell
 
 Using native PowerShell cmdlet
 
@@ -234,13 +234,13 @@ taskkill /IM "photoshop app.exe" /F
 
 <br>
 
-## Automatically answer “yes” to a prompt in Powershell
+## Automatically Answer “Yes” to a Prompt in Powershell
 
 Use `–force` at the end of the command
 
 <br>
 
-## Displays all information in the current access token
+## Displays All Information in the Current Access Token
 
 The command below displays all information in the current access token, including the current user name, security identifiers (SID), privileges, and groups that the current user belongs to.
 
@@ -252,7 +252,7 @@ whoami /all
 
 <br>
 
-## Display all the TCP and UDP ports on which the computer is listening
+## Display All the Tcp and Udp Ports on Which the Computer Is Listening
 
 ```cmd
 netstat -a 
@@ -262,7 +262,7 @@ netstat -a
 
 <br>
 
-## Copy the result of a command to clipboard automatically
+## Copy the Result of a Command to Clipboard Automatically
 
 Add `| clip` at the end the command
 
@@ -280,7 +280,7 @@ rg -i -F URL: | clip
 
 <br>
 
-## How to scan 2 text files for differences and pipe the difference to a third File
+## How to Scan 2 Text Files for Differences and Pipe the Difference to a Third File
 
 ```powershell
 $File1 = "C:\Scripts\Txt1.txt" 
@@ -294,7 +294,7 @@ Compare-Object (get-content $File1) (get-content $File2) | format-list | Out-Fil
 
 <br>
 
-## Difference between Strings and StringLists
+## Difference Between Strings and StringLists
 
 This is Stringlist in PowerShell:
 
@@ -308,7 +308,7 @@ When we define Stringlist in a parameter, then the argument will keep asking for
 
 <br>
 
-## How to run a PowerShell (.ps1) script ?
+## How to Run a Powershell (.PS1) Script ?
 
 * Method 1:
 
@@ -335,7 +335,7 @@ pwsh.exe -File 'Path\To\Folder\OfThe\Script.ps1'
 
 <br>
 
-## Enclosing strings that have a lot of single and double quotation marks
+## Enclosing Strings That Have a Lot of Single and Double Quotation Marks
 
 ```powershell
 $string =@" 
@@ -351,7 +351,7 @@ the markers `@"` and `"@` indicating the beginning and end of the string must be
 
 <br>
 
-## How to find the type of the output of a command in PowerShell?
+## How to Find the Type of the Output of a Command in Powershell?
 
 Using `GetType()`
 
@@ -367,7 +367,7 @@ Examples:
 
 <br>
 
-## Make sure to use Pascal Case for variable names
+## Make Sure to Use Pascal Case for Variable Names
 
 Pascal Case requires variables made from compound words and have the first letter of each appended word written with an uppercase letter.
 
@@ -375,7 +375,7 @@ Example: `$Get-CurrentTime`
 
 <br>
 
-## Some popular resources and cmdlets
+## Some Popular Resources and Cmdlets
 
 * [Out-Null](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/out-null)
 
@@ -474,3 +474,5 @@ Example: `$Get-CurrentTime`
 * [about_Continue](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_continue)
 
 * [Trim Your Strings with PowerShell](https://devblogs.microsoft.com/scripting/trim-your-strings-with-powershell/)
+
+<br>

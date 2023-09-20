@@ -2,6 +2,7 @@ name: New Security Measure Suggestion 🫰
 description: Suggest a new Security Measure to be added
 title: "[Suggestion]: "
 labels: ["Suggestion ⚡"]
+projects: ["Project: Harden Windows Security"]
 assignees:
   - HotCakeX
 body:

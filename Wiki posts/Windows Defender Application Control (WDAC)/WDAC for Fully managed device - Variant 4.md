@@ -50,7 +50,7 @@ Start by creating the Default Windows base policy xml file, which allows only fi
 New-WDACConfig -MakeDefaultWindowsWithBlockRules -IncludeSignTool
 ```
 
-* [Parameter info](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-WDACConfig#new-wdacconfig--makeallowmsftwithblockrules)
+* [Parameter info](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-WDACConfig#new-wdacconfig--makedefaultwindowswithblockrules)
 
 <br>
 

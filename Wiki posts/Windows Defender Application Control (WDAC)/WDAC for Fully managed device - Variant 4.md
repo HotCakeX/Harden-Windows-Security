@@ -1,8 +1,12 @@
 # WDAC policy for Fully managed device - Variant 4
 
+<div align="center">
+
 | Base policy type|Method used|Signed | Protection score 1-5 |
 | :-------------: | :-------------: | :-------------: | :-------------: |
 | Default Windows | [WDACConfig module](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig) | Yes | 5 |
+
+</div>
 
 <br>
 
@@ -42,6 +46,12 @@ flowchart TD
 
 This scenario provides the ultimate protection level. Using the WDACConfig module, it's very easy to deploy, manage and maintain a system with this configuration.
 
+<br>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+
+<br>
+
 ## Deploy the Default Windows Base Policy on the System
 
 Start by creating the Default Windows base policy xml file, which allows only files and apps that come pre-installed in Windows to run and anything else is blocked.
@@ -70,6 +80,10 @@ After deploying the base policy, you can create Supplemental policies to allow o
 
 <br>
 
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+
+<br>
+
 ## Creating Supplemental Policy for Apps Already Installed
 
 If you deployed the Default Windows base policy on a system that already had apps installed, you can create Supplemental policy for them using the following syntaxes. **After creating each Supplemental policy, you need to sign and deploy it [using the same Cmdlet we used above.](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Deploy-SignedWDACConfig)**
@@ -82,6 +96,8 @@ New-SupplementalWDACConfig -Normal -ScanLocation "C:\Program Files\Program" -Sup
 
 * [Parameter info](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-SupplementalWDACConfig#new-supplementalwdacconfig--normal)
 
+<br>
+
 ### Based on File path with one or more wildcard characters
 
 ```powershell
@@ -90,6 +106,8 @@ New-SupplementalWDACConfig -FilePathWildCards -WildCardPath "C:\Program Files\Pr
 ```
 
 * [Parameter info](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-SupplementalWDACConfig#new-supplementalwdacconfig--filepathwildcards)
+
+<br>
 
 ### Based on an installed Windows app's name
 
@@ -101,6 +119,10 @@ New-SupplementalWDACConfig -InstalledAppXPackages -PackageName "*App's name*" -S
 
 <br>
 
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+
+<br>
+
 ## Creating Supplemental Policy for New App Installations or Apps Already Installed
 
 If the app you are trying to allow isn't installed and when you try to install it you see a blocked/error message, you can use the following syntaxes to allow them to run and then automatically create Supplemental policy for them.
@@ -108,8 +130,6 @@ If the app you are trying to allow isn't installed and when you try to install i
 These methods also work for apps that were installed prior to deploying the Default Windows base policy and now you want to allow them to run by creating Supplemental policy for them.
 
 You can create a Supplemental policy for more than 1 app at a time by browsing for multiple apps' install directories using the commands below.
-
-<br>
 
 ### Based on App's install directory and Event viewer logs
 
@@ -119,6 +139,8 @@ Edit-SignedWDACConfig -AllowNewAppsAuditEvents -CertPath "C:\Certificate.cer" -S
 
 * [Parameter info](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Edit-SignedWDACConfig#edit-signedwdacconfig--allownewappsauditevents)
 
+<br>
+
 ### Based on App's install directory only
 
 ```powershell
@@ -126,6 +148,10 @@ Edit-SignedWDACConfig -AllowNewApps -CertPath "C:\Certificate.cer" -SuppPolicyNa
 ```
 
 * [Parameter info](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Edit-SignedWDACConfig#edit-signedwdacconfig--allownewapps)
+
+<br>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
 
 <br>
 
@@ -138,6 +164,10 @@ Edit-SignedWDACConfig -MergeSupplementalPolicies -CertPath "C:\Certificate.cer" 
 ```
 
 * [Parameter info](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Edit-SignedWDACConfig#edit-signedwdacconfig--mergesupplementalpolicies)
+
+<br>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
 
 <br>
 

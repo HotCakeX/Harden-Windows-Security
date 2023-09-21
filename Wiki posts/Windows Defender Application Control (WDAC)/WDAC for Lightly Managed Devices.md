@@ -1,14 +1,14 @@
 # WDAC policy for Lightly managed device
 
+<div align="center">
+
 | Base policy type|Method used|Signed | Protection score 1-5 |
 | :-------------: | :-------------: | :-------------: | :-------------: |
 | [Signed and Reputable (ISG)](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/use-wdac-with-intelligent-security-graph#configuring-isg-authorization-for-your-wdac-policy) | [WDACConfig module](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig) | No / Yes | 3.5 / 4 |
 
----
+</div>
 
-*Every time I use the word "App", I'm referring to regular Win32 programs as well as Microsoft Store installed apps; Basically any software that you can run.*
-
-This scenario provides a high protection level, ***higher if you cryptographically Sign it***. Using the WDACConfig module, it's very easy to deploy, manage and maintain a system with this configuration.
+<br>
 
 ```mermaid
 flowchart TD
@@ -30,13 +30,21 @@ flowchart TD
 
 <br>
 
+*Every time I use the word "App", I'm referring to regular Win32 programs as well as Microsoft Store installed apps; Basically any software that you can run.*
+
+This scenario provides a high protection level, ***higher if you cryptographically Sign it***. Using the WDACConfig module, it's very easy to deploy, manage and maintain a system with this configuration.
+
+<br>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+
+<br>
+
 ## Deploy the Signed and Reputable base policy on the system
 
 Start by deploying the Signed and Reputable base policy on the system, which allows only files and apps that are authorized by the [Intelligent Security Graph Authorization](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/use-wdac-with-intelligent-security-graph) which have known good state to run and anything else is blocked.
 
 ### Unsigned version
-
-<br>
 
 ```powershell
 New-WDACConfig -MakeLightPolicy -Deploy
@@ -76,6 +84,10 @@ After finishing deploying the Signed and Reputable base policy, if there is an a
 
 <br>
 
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+
+<br>
+
 ## Creating Supplemental policy for apps already installed
 
 The following commands use the `-Deploy` optional switch parameter, meaning after Supplemental policy creation, they are automatically deployed on the system.
@@ -90,6 +102,8 @@ New-SupplementalWDACConfig -Normal -ScanLocation "C:\Program Files\Program" -Sup
 
 * [Parameter info](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-SupplementalWDACConfig#new-supplementalwdacconfig--normal)
 
+<br>
+
 ### Based on File path with one or more wildcard characters
 
 ```powershell
@@ -99,6 +113,8 @@ New-SupplementalWDACConfig -FilePathWildCards -WildCardPath "C:\Program Files\Pr
 
 * [Parameter info](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-SupplementalWDACConfig#new-supplementalwdacconfig--filepathwildcards)
 
+<br>
+
 ### Based on an installed Windows app's name
 
 ```powershell
@@ -106,6 +122,10 @@ New-SupplementalWDACConfig -InstalledAppXPackages -PackageName "*App's name*" -S
 ```
 
 * [Parameter info](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-SupplementalWDACConfig#new-supplementalwdacconfig--installedappxpackages)
+
+<br>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
 
 <br>
 
@@ -155,6 +175,10 @@ Edit-SignedWDACConfig -AllowNewApps -CertPath "C:\Certificate.cer" -SuppPolicyNa
 
 <br>
 
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+
+<br>
+
 ## What to Do if You Have a Lot of Supplemental Policies?
 
 Currently, the limit for the number of policies (Base + Supplemental) that can be deployed on a system at a time is 32. So if you are getting close to that limit, you can merge some or all of your Supplemental policies automatically into 1 using the command below:
@@ -179,6 +203,10 @@ Edit-SignedWDACConfig -MergeSupplementalPolicies -CertPath "C:\Certificate.cer" 
 
 <br>
 
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+
+<br>
+
 ## Security Considerations
 
 One of the differences between using **ISG in a WDAC policy** vs using **Smart App Control** (which also use ISG) is that WDAC policy + ISG rule option passes along reputation from app installers to the binaries they write to disk, it can over-authorize files in some cases. For example, if the installer launches the app upon completion, any files the app writes during that first run will also be allowed.
@@ -190,6 +218,10 @@ Explained more in here:
 * [Security considerations with the ISG option](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/use-wdac-with-intelligent-security-graph#security-considerations-with-the-isg-option)
 
 * [Smart app control has blocked part of this app](https://support.microsoft.com/en-us/topic/smart-app-control-has-blocked-part-of-this-app-0729fff1-48bf-4b25-aa97-632fe55ccca2)
+
+<br>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
 
 <br>
 

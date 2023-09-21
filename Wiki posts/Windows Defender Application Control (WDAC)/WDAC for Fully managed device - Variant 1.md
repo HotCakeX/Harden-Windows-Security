@@ -1,8 +1,12 @@
 # WDAC policy for Fully Managed device - Variant 1
 
+<div align="center">
+
 | Base policy type|Method used|Signed | Protection score 1-5 |
 | :-------------: | :-------------: | :-------------: | :-------------: |
 | Allow Microsoft / Default Windows | [WDACConfig module](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig) | No | 4 |
+
+</div>
 
 <br>
 
@@ -22,6 +26,10 @@
 
 <br>
 
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+
+<br>
+
 ## Prepare a Virtual Machine
 
 Install Hyper-V role from optional Windows features if you haven't already.
@@ -32,7 +40,11 @@ Enable-WindowsOptionalFeature -Online -FeatureName Containers-DisposableClientVM
 
 <br>
 
- Download the latest Windows `.ISO` file [from Microsoft website](https://www.microsoft.com/software-download/), create a new VM with it, install Windows and log in. Fully update Windows and then restart to apply the updates. You can create a Hyper-V checkpoint at this point so that you can return back to this clean state later on if you need to.
+Download the latest Windows `.ISO` file [from Microsoft website](https://www.microsoft.com/software-download/), create a new VM with it, install Windows and log in. Fully update Windows and then restart to apply the updates. You can create a Hyper-V checkpoint at this point so that you can return back to this clean state later on if you need to.
+
+<br>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
 
 <br>
 
@@ -40,8 +52,11 @@ Enable-WindowsOptionalFeature -Online -FeatureName Containers-DisposableClientVM
 
 There are 2 types of base policies you can choose from.
 
-1. Allow Microsoft: Allows only files and apps that are signed by Microsoft's trusted root certificate.
+1. Allow Microsoft: Allows only files and apps that are signed by Microsoft's trusted root certificates.
+
 2. Default Windows: Allows only files and apps that come pre-installed by Windows.
+
+<br>
 
 ### Deploy the Allow Microsoft Prep mode base policy
 
@@ -49,7 +64,9 @@ There are 2 types of base policies you can choose from.
 New-WDACConfig -PrepMSFTOnlyAudit -LogSize 10MB -Deploy
 ```
 
-#### [Parameter Info](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-WDACConfig#new-wdacconfig--prepmsftonlyaudit)
+* [Parameter Info](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-WDACConfig#new-wdacconfig--prepmsftonlyaudit)
+
+<br>
 
 ### Deploy the Default Windows Prep mode base policy
 
@@ -57,11 +74,15 @@ New-WDACConfig -PrepMSFTOnlyAudit -LogSize 10MB -Deploy
 New-WDACConfig -PrepDefaultWindowsAudit -LogSize 10MB -Deploy
 ```
 
-#### [Parameter Info](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-WDACConfig#new-wdacconfig--prepdefaultwindowsaudit)
+* [Parameter Info](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-WDACConfig#new-wdacconfig--prepdefaultwindowsaudit)
 
 <br>
 
 Depending on whichever of the option you choose, it deploys the base policy in audit mode. No reboot required.
+
+<br>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
 
 <br>
 
@@ -75,7 +96,11 @@ Install all of the programs that you want to allow in the WDAC policy, on the VM
 
 These event logs are exactly what we need to identify and create Allow rules for the detected files.
 
- Only files that are executed during Prep mode phase generate event logs, so by simply installing a program using its installer, we can't trigger event log generation for each of the components and executables that each program has. So, after installing the programs, run them, use them a bit as you normally would so that all of the programs' components are executed and event logs generated for them.
+Only files that are executed during Prep mode phase generate event logs, so by simply installing a program using its installer, we can't trigger event log generation for each of the components and executables that each program has. So, after installing the programs, run them, use them a bit as you normally would so that all of the programs' components are executed and event logs generated for them.
+
+<br>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
 
 <br>
 
@@ -87,7 +112,9 @@ These event logs are exactly what we need to identify and create Allow rules for
 New-WDACConfig -MakePolicyFromAuditLogs -BasePolicyType 'Allow Microsoft Base' -NoDeletedFiles
 ```
 
-#### [Parameter Info](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-WDACConfig#new-wdacconfig--makepolicyfromauditlogs)
+* [Parameter Info](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-WDACConfig#new-wdacconfig--makepolicyfromauditlogs)
+
+<br>
 
 ### If you chose the Default Windows path
 
@@ -95,7 +122,7 @@ New-WDACConfig -MakePolicyFromAuditLogs -BasePolicyType 'Allow Microsoft Base' -
 New-WDACConfig -MakePolicyFromAuditLogs -BasePolicyType 'Default Windows Base' -NoDeletedFiles
 ```
 
-#### [Parameter Info](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-WDACConfig#new-wdacconfig--makepolicyfromauditlogs)
+* [Parameter Info](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-WDACConfig#new-wdacconfig--makepolicyfromauditlogs)
 
 <br>
 
@@ -114,6 +141,10 @@ If you don't use the `-Deploy` switch, you can deploy the `.cip` binary files ma
 [More info on deployment](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/deployment/wdac-deployment-guide)
 
 [**Information about how to Sign and Deploy a Signed WDAC policy.**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/How-to-Create-and-Deploy-a-Signed-WDAC-Policy-Windows-Defender-Application-Control)
+
+<br>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
 
 <br>
 
@@ -136,7 +167,7 @@ flowchart TD
 
 <br>
 
----
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
 
 <br>
 
@@ -157,3 +188,5 @@ flowchart TD
     F --> O[Edit-WDACConfig -AllowNewApps]
     F --> Q[New-SupplementalWDACConfig -Normal]
 ```
+
+<br>

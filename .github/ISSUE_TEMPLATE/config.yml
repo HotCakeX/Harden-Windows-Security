@@ -1,8 +1,5 @@
 blank_issues_enabled: true
 contact_links:
-  - name: Questions & Discussions
+  - name: Questions & Discussions ✍️
     url: https://github.com/HotCakeX/Harden-Windows-Security/discussions
     about: Please use GitHub discussions for questions and discussions.
-  - name: Report a security vulnerability
-    url: https://github.com/HotCakeX/Harden-Windows-Security/security/advisories/new
-    about: Please report security vulnerabilities here.

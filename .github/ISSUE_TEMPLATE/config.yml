@@ -1,5 +1,5 @@
-blank_issues_enabled: true
+blank_issues_enabled: false
 contact_links:
   - name: Questions & Discussions ✍️
     url: https://github.com/HotCakeX/Harden-Windows-Security/discussions
-    about: Please use GitHub discussions for questions and discussions.
+    about: Please use GitHub discussions for any questions.

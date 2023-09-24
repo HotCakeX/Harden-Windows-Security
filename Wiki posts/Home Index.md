@@ -59,6 +59,7 @@
 ## <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/greenwings.gif" width="50">  Azure
 
  - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/greenwings.gif" width="35"> [Clean Source principle, Azure and Privileged Access Workstations](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Clean-Source-principle,-Azure-and-Privileged-Access-Workstations)
+ - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/greenwings.gif" width="35"> [How to Securely Connect to Azure VMs and Use RDP](https://github.com/HotCakeX/Harden-Windows-Security/wiki/How-to-Securely-Connect-to-Azure-VMs-and-Use-RDP)
 
 <br>
 

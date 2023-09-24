@@ -398,7 +398,6 @@ Set-AzVirtualNetworkGateway -VirtualNetworkGateway $Gateway `
 az network vnet-gateway vpn-client generate --resource-group ResourceGroup1 --name VNGateWay1
 ```
 
-
 <br>
 
 <details>

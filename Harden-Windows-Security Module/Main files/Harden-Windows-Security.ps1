@@ -95,6 +95,9 @@ Set-ExecutionPolicy Bypass -Scope Process
 [datetime]$CurrentVersion = '2023.9.12'
 # Minimum OS build number required for the hardening measures used in this script
 [decimal]$Requiredbuild = '22621.2134'
+# Fetching Temp Directory
+[string]$global:UserTempDirectoryPath = [System.IO.Path]::GetTempPath()
+
 
 # Determining if PowerShell is core to use modern styling
 [bool]$global:IsCore = $false
@@ -385,14 +388,14 @@ try {
     #endregion RequirementsCheck
 
     # create our working directory
-    New-Item -ItemType Directory -Path "$env:TEMP\HardeningXStuff\" -Force | Out-Null
+    New-Item -ItemType Directory -Path "$global:UserTempDirectoryPath\HardeningXStuff\" -Force | Out-Null
     # working directory assignment
-    [string]$WorkingDir = "$env:TEMP\HardeningXStuff\"
+    [string]$WorkingDir = "$global:UserTempDirectoryPath\HardeningXStuff\"
     # change location to the new directory
     Set-Location $WorkingDir
 
     # Clean up script block
-    [scriptblock]$CleanUp = { Set-Location $HOME; Remove-Item -Recurse "$env:TEMP\HardeningXStuff\" -Force; exit }
+    [scriptblock]$CleanUp = { Set-Location $HOME; Remove-Item -Recurse -Path "$global:UserTempDirectoryPath\HardeningXStuff\" -Force; exit }
 
     if (-NOT (Test-IsAdmin)) {
         if ($IsCore) { &$WriteNeonGreen 'Skipping commands that require Administrator privileges' } else { Write-Host 'Skipping commands that require Administrator privileges' -ForegroundColor Magenta }
@@ -1489,11 +1492,11 @@ try {
                     try {
                         Write-Host 'Downloading the Custom views for Event Viewer, Please wait...' -ForegroundColor Yellow
                         try {
-                            Invoke-WebRequest -Uri 'https://github.com/HotCakeX/Harden-Windows-Security/raw/main/Payload/EventViewerCustomViews.zip' -OutFile "$env:TEMP\EventViewerCustomViews.zip" -ErrorAction Stop
+                            Invoke-WebRequest -Uri 'https://github.com/HotCakeX/Harden-Windows-Security/raw/main/Payload/EventViewerCustomViews.zip' -OutFile "$global:UserTempDirectoryPath\EventViewerCustomViews.zip" -ErrorAction Stop
                         }
                         catch {
                             Write-Host 'Using Azure DevOps...' -ForegroundColor Yellow
-                            Invoke-WebRequest -Uri 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/EventViewerCustomViews.zip' -OutFile "$env:TEMP\EventViewerCustomViews.zip" -ErrorAction Stop
+                            Invoke-WebRequest -Uri 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/EventViewerCustomViews.zip' -OutFile "$global:UserTempDirectoryPath\EventViewerCustomViews.zip" -ErrorAction Stop
                         }
 
                         # Due to change in event viewer custom log files, making sure no old file names exist
@@ -1503,8 +1506,8 @@ try {
                         # Creating new sub-folder to store the custom views
                         New-Item -Path 'C:\ProgramData\Microsoft\Event Viewer\Views\Hardening Script' -ItemType Directory -Force | Out-Null
 
-                        Expand-Archive -Path "$env:TEMP\EventViewerCustomViews.zip" -DestinationPath 'C:\ProgramData\Microsoft\Event Viewer\Views\Hardening Script' -Force
-                        Remove-Item -Path "$env:TEMP\EventViewerCustomViews.zip" -Force
+                        Expand-Archive -Path "$global:UserTempDirectoryPath\EventViewerCustomViews.zip" -DestinationPath 'C:\ProgramData\Microsoft\Event Viewer\Views\Hardening Script' -Force
+                        Remove-Item -Path "$global:UserTempDirectoryPath\EventViewerCustomViews.zip" -Force
                         Write-Host "`nSuccessfully added Custom Views for Event Viewer" -ForegroundColor Green               
                     }
                     catch {
@@ -1574,7 +1577,7 @@ try {
     
                 Write-Host -NoNewline "`nListing valid certificates not rooted to the Microsoft Certificate Trust List in the" -ForegroundColor Yellow; Write-Host " Machine Store`n" -ForegroundColor Blue
                 .\sigcheck64.exe -tv -accepteula -nobanner
-                Remove-Item .\sigcheck64.exe -Force
+                Remove-Item -Path .\sigcheck64.exe -Force
             } 'No' { break }
             'Exit' { &$CleanUp }
         }
@@ -1697,5 +1700,5 @@ finally {
             }
         }
     }
-    Set-Location $HOME; Remove-Item -Recurse "$env:TEMP\HardeningXStuff\" -Force -ErrorAction SilentlyContinue    
+    Set-Location $HOME; Remove-Item -Recurse -Path "$global:UserTempDirectoryPath\HardeningXStuff\" -Force -ErrorAction SilentlyContinue    
 }

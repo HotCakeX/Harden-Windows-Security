@@ -379,7 +379,7 @@ function Confirm-SystemCompliance {
         [string[]]$Ids = $DefenderEffectiveStates.AttackSurfaceReductionRules_Ids
         [string[]]$Actions = $DefenderEffectiveStates.AttackSurfaceReductionRules_Actions
 
-        # a hashtable to store the descriptions for each ID
+        # Hashtable to store the descriptions for each ID
         [hashtable]$Descriptions = @{
             '56a863a9-875e-4185-98a7-b882c64b5ce5' = 'Block abuse of exploited vulnerable signed drivers'
             '7674ba52-37eb-4a4f-a9a1-f0f9a1619a2c' = 'Block Adobe Reader from creating child processes'
@@ -399,7 +399,7 @@ function Confirm-SystemCompliance {
             'c1db55ab-c21a-4637-bb3f-a12568109d35' = 'Use advanced protection against ransomware'
         }
 
-        # Loop through the ids and actions arrays and create a custom object
+        # Loop through the ids and actions arrays and create a custom object for each pair
         for ($i = 0; $i -lt $Ids.Length; $i++) {
             $NestedObjectArray += [PSCustomObject]@{
                 FriendlyName = $Descriptions[$Ids[$i]]

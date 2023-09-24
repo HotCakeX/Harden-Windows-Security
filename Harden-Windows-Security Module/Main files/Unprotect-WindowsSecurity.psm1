@@ -2,6 +2,9 @@ Function Unprotect-WindowsSecurity {
     # Stop the execution when there is an error
     $global:ErrorActionPreference = 'Stop'
 
+    # Fetching Temp Directory
+    [string]$global:UserTempDirectoryPath = [System.IO.Path]::GetTempPath()
+
     # Makes sure this cmdlet is invoked with Admin privileges
     if (![bool]([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
         Write-Error -Message 'Unprotect-WindowsSecurity cmdlet requires Administrator privileges.'
@@ -41,16 +44,16 @@ Function Unprotect-WindowsSecurity {
         }
 
         # create our working directory
-        New-Item -ItemType Directory -Path "$env:TEMP\HardeningXStuff\" -Force | Out-Null
+        New-Item -ItemType Directory -Path "$global:UserTempDirectoryPath\HardeningXStuff\" -Force | Out-Null
 
         # working directory assignment
-        [string]$WorkingDir = "$env:TEMP\HardeningXStuff\"
+        [string]$WorkingDir = "$global:UserTempDirectoryPath\HardeningXStuff\"
 
         # change location to the new directory
         Set-Location -Path $WorkingDir
 
         # Clean up script block
-        [scriptblock]$CleanUp = { Set-Location $HOME; Remove-Item -Recurse "$env:TEMP\HardeningXStuff\" -Force; exit }
+        [scriptblock]$CleanUp = { Set-Location $HOME; Remove-Item -Recurse "$global:UserTempDirectoryPath\HardeningXStuff\" -Force; exit }
 
         Write-Progress -Activity 'Downloading the required files' -Status 'Processing' -PercentComplete 30
 
@@ -202,7 +205,7 @@ Function Unprotect-WindowsSecurity {
             }
         }
     
-        Set-Location $HOME; Remove-Item -Recurse "$env:TEMP\HardeningXStuff\" -Force -ErrorAction SilentlyContinue    
+        Set-Location $HOME; Remove-Item -Recurse "$global:UserTempDirectoryPath\HardeningXStuff\" -Force -ErrorAction SilentlyContinue    
   
     }
 

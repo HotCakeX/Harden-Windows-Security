@@ -1156,6 +1156,8 @@ This repository uses the simplest possible, yet effective, methods that make it 
 <br>
 <br>
 
+[![Virus Total](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/VirusTotal.yml/badge.svg)](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/VirusTotal.yml) [![PSScriptAnalyzer](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/powershell.yml/badge.svg)](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/powershell.yml)
+
 *Links above are automatically updated. There is a [GitHub workflow](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/VirusTotal.yml) that automatically detects changes to the files and uploads them to Virus Total website for scanning.*
 
 <p align="right"><a href="#readme-top">💡 (back to top)</a></p>

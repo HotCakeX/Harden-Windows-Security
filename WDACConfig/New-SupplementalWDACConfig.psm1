@@ -283,11 +283,44 @@ Automate various tasks related to Windows Defender Application Control (WDAC)
 .PARAMETER Normal 
 Make a Supplemental policy by scanning a directory, you can optionally use other parameters too to fine tune the scan process
 
-.PARAMETER FilePathWildCards
+.PARAMETER PathWildCards
 Make a Supplemental policy by scanning a directory and creating a wildcard FilePath rules for all of the files inside that directory, recursively
 
 .PARAMETER InstalledAppXPackages
 Make a Supplemental policy based on the Package Family Name of an installed Windows app (Appx)
+
+.PARAMETER PackageName
+Enter the package name of an installed app. Supports wildcard * character. e.g., *Edge* or "*Microsoft*".
+
+.PARAMETER ScanLocation
+The directory or drive that you want to scan for files that will be allowed to run by the Supplemental policy.
+
+.PARAMETER FolderPath
+Path of a folder that you want to allow using wildcards *.
+
+.PARAMETER SuppPolicyName
+Add a descriptive name for the Supplemental policy. Accepts only alphanumeric and space characters.
+
+.PARAMETER PolicyPath
+Browse for the xml file of the Base policy this Supplemental policy is going to expand. Supports tab completion by showing only .xml files with Base Policy Type.
+
+.PARAMETER Deploy
+Indicates that the module will automatically deploy the Supplemental policy after creation.
+
+.PARAMETER SpecificFileNameLevel
+You can choose one of the following options: "OriginalFileName", "InternalName", "FileDescription", "ProductName", "PackageFamilyName", "FilePath"
+
+.PARAMETER NoUserPEs
+By default the module includes user PEs in the scan, but when you use this switch parameter, they won't be included. 
+
+.PARAMETER NoScript
+https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-noscript
+
+.PARAMETER Level
+Offers the same official Levels for scanning of the specified directory path. If no level is specified the default, which is set to FilePublisher in this module, will be used.
+
+.PARAMETER Fallbacks
+Offers the same official Fallbacks for scanning of the specified directory path. If no fallbacks is specified the default, which is set to Hash in this module, will be used.
 
 .PARAMETER SkipVersionCheck
 Can be used with any parameter to bypass the online version check - only to be used in rare cases

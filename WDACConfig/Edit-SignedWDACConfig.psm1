@@ -38,7 +38,7 @@ function Edit-SignedWDACConfig {
         [Parameter(Mandatory = $true, ParameterSetName = 'Update Base Policy')]
         [System.String]$NewBasePolicyType,
 
-        [ValidatePattern('\.cer$')] # Used by all cmdlets
+        [ValidatePattern('\.cer$')] # Used by the entire Cmdlet
         [ValidateScript({ Test-Path $_ -PathType 'Leaf' }, ErrorMessage = 'The path you selected is not a file path.')]
         [Parameter(Mandatory = $false, ValueFromPipelineByPropertyName = $true)] 
         [System.String]$CertPath,        
@@ -76,7 +76,7 @@ function Edit-SignedWDACConfig {
                 } 
                 $certs -contains $_
             }, ErrorMessage = "A certificate with the provided common name doesn't exist in the personal store of the user certificates." )]
-        [Parameter(Mandatory = $false, ValueFromPipelineByPropertyName = $true)] # Used by all cmdlets
+        [Parameter(Mandatory = $false, ValueFromPipelineByPropertyName = $true)] # Used by the entire Cmdlet
         [System.String]$CertCN,
 
         # Setting the maxim range to the maximum allowed log size by Windows Event viewer
@@ -108,13 +108,13 @@ function Edit-SignedWDACConfig {
         [parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps')]
         [System.String[]]$Fallbacks = 'Hash', # Setting the default value for the Fallbacks parameter
         
-        [Parameter(Mandatory = $false, ValueFromPipelineByPropertyName = $true)] # Used by all cmdlets
+        [Parameter(Mandatory = $false, ValueFromPipelineByPropertyName = $true)] # Used by the entire Cmdlet
         [System.String]$SignToolPath,
 
         [Parameter(Mandatory = $false, ParameterSetName = 'Update Base Policy')]
         [Switch]$RequireEVSigners,
 
-        [Parameter(Mandatory = $false)] # Used by all cmdlets
+        [Parameter(Mandatory = $false)] # Used by the entire Cmdlet
         [Switch]$SkipVersionCheck
     )
 

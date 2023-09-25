@@ -27,15 +27,15 @@ function New-SupplementalWDACConfig {
         [System.String]$FolderPath,
 
         [ValidatePattern('^[a-zA-Z0-9 ]+$', ErrorMessage = 'The Supplemental Policy Name can only contain alphanumeric and space characters.')]
-        [parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true)] # Used by all cmdlets
+        [parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true)] # Used by the entire Cmdlet
         [System.String]$SuppPolicyName,
         
         [ValidatePattern('\.xml$')]
         [ValidateScript({ Test-Path $_ -PathType 'Leaf' }, ErrorMessage = 'The path you selected is not a file path.')]
-        [parameter(Mandatory = $false, ValueFromPipelineByPropertyName = $true)] # Used by all cmdlets         
+        [parameter(Mandatory = $false, ValueFromPipelineByPropertyName = $true)] # Used by the entire Cmdlet         
         [System.String]$PolicyPath,
 
-        [parameter(Mandatory = $false)] # Used by all cmdlets        
+        [parameter(Mandatory = $false)] # Used by the entire Cmdlet        
         [Switch]$Deploy,
         
         [ValidateSet('OriginalFileName', 'InternalName', 'FileDescription', 'ProductName', 'PackageFamilyName', 'FilePath')]

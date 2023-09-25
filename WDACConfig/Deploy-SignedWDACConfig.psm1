@@ -9,6 +9,8 @@ function Deploy-SignedWDACConfig {
         [ValidatePattern('\.xml$')]
         [ValidateScript({ Test-Path $_ -PathType 'Leaf' }, ErrorMessage = 'The path you selected is not a file path.')]
         [parameter(Mandatory = $true)][System.String[]]$PolicyPaths,
+
+        [Parameter(Mandatory = $false)][Switch]$Deploy,
     
         [ValidatePattern('\.cer$')]
         [ValidateScript({ Test-Path $_ -PathType 'Leaf' }, ErrorMessage = 'The path you selected is not a file path.')]
@@ -24,8 +26,6 @@ function Deploy-SignedWDACConfig {
 
         [parameter(Mandatory = $false, ValueFromPipelineByPropertyName = $true)]
         [System.String]$SignToolPath,
-
-        [Parameter(Mandatory = $false)][Switch]$Deploy,
         
         [Parameter(Mandatory = $false)][Switch]$SkipVersionCheck
     )
@@ -41,11 +41,14 @@ function Deploy-SignedWDACConfig {
         # Detecting if Debug switch is used, will do debugging actions based on that
         $Debug = $PSBoundParameters.Debug.IsPresent
 
+        # Fetch User account directory path
+        [string]$global:UserAccountDirectoryPath = (Get-CimInstance Win32_UserProfile -Filter "SID = '$([System.Security.Principal.WindowsIdentity]::GetCurrent().User.Value)'").LocalPath
+
         #region User-Configurations-Processing-Validation
         # If any of these parameters, that are mandatory for all of the position 0 parameters, isn't supplied by user
         if (!$SignToolPath -or !$CertPath -or !$CertCN) {
             # Read User configuration file if it exists
-            $UserConfig = Get-Content -Path "$env:USERPROFILE\.WDACConfig\UserConfigurations.json" -ErrorAction SilentlyContinue   
+            $UserConfig = Get-Content -Path "$global:UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json" -ErrorAction SilentlyContinue   
             if ($UserConfig) {
                 # Validate the Json file and read its content to make sure it's not corrupted
                 try { $UserConfig = $UserConfig | ConvertFrom-Json }
@@ -143,20 +146,24 @@ function Deploy-SignedWDACConfig {
                 Write-Output "PolicyGUID = $PolicyID`n"
                 Remove-Item -Path ".\$PolicyID.cip" -Force
 
-                # Ask user question about whether or not to add the Signed policy xml file to the User Config Json for easier usage later
-                $userInput = ''
-                while ($userInput -notin 1, 2) {
-                    $userInput = $(Write-Host 'Add the Signed policy xml file path just created to the User Configurations? Please enter 1 to Confirm or 2 to Skip.' -ForegroundColor Cyan ; Read-Host) 
-                    if ($userInput -eq 1) {
-                        Set-CommonWDACConfig -SignedPolicyPath $PolicyPath
-                        &$WriteHotPink "Added $PolicyPath to the User Configuration file."             
+                # Show the question only for base policies
+                if ($PolicyType -ne 'Supplemental Policy') {
+
+                    # Ask user question about whether or not to add the Signed policy xml file to the User Config Json for easier usage later
+                    $userInput = ''
+                    while ($userInput -notin 1, 2) {
+                        $userInput = $(Write-Host 'Add the Signed policy xml file path just created to the User Configurations? Please enter 1 to Confirm or 2 to Skip.' -ForegroundColor Cyan ; Read-Host) 
+                        if ($userInput -eq 1) {
+                            Set-CommonWDACConfig -SignedPolicyPath $PolicyPath
+                            &$WriteHotPink "Added $PolicyPath to the User Configuration file."             
+                        }
+                        elseif ($userInput -eq 2) {                    
+                            &$WritePink 'Skipping...'                  
+                        }
+                        else {
+                            Write-Warning 'Invalid input. Please enter 1 or 2 only.'
+                        }               
                     }
-                    elseif ($userInput -eq 2) {                    
-                        &$WritePink 'Skipping...'                  
-                    }
-                    else {
-                        Write-Warning 'Invalid input. Please enter 1 or 2 only.'
-                    }               
                 }
             }
 

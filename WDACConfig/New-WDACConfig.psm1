@@ -87,12 +87,18 @@ function New-WDACConfig {
 
         # Stop operation as soon as there is an error anywhere, unless explicitly specified otherwise
         $ErrorActionPreference = 'Stop'
+
+        # Fetching Temp Directory
+        [string]$global:UserTempDirectoryPath = [System.IO.Path]::GetTempPath()
+
+        # Fetch User account directory path
+        [string]$global:UserAccountDirectoryPath = (Get-CimInstance Win32_UserProfile -Filter "SID = '$([System.Security.Principal.WindowsIdentity]::GetCurrent().User.Value)'").LocalPath
         
         #region User-Configurations-Processing-Validation
         # If User is creating Default Windows policy and including SignTool path
         if ($IncludeSignTool -and $MakeDefaultWindowsWithBlockRules) {
             # Read User configuration file if it exists
-            $UserConfig = Get-Content -Path "$env:USERPROFILE\.WDACConfig\UserConfigurations.json" -ErrorAction SilentlyContinue   
+            $UserConfig = Get-Content -Path "$global:UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json" -ErrorAction SilentlyContinue   
             if ($UserConfig) {
                 # Validate the Json file and read its content to make sure it's not corrupted
                 try { $UserConfig = $UserConfig | ConvertFrom-Json }
@@ -197,11 +203,11 @@ function New-WDACConfig {
             if ($SignToolPathFinal) {
                 # Allowing SignTool to be able to run after Default Windows base policy is deployed in Signed scenario
                 &$WriteTeaGreen "`nCreating allow rules for SignTool.exe in the DefaultWindows base policy so you can continue using it after deploying the DefaultWindows base policy."
-                New-Item -Path "$env:TEMP\TemporarySignToolFile" -ItemType Directory -Force | Out-Null
-                Copy-Item -Path $SignToolPathFinal -Destination "$env:TEMP\TemporarySignToolFile" -Force
-                New-CIPolicy -ScanPath "$env:TEMP\TemporarySignToolFile" -Level FilePublisher -Fallback Hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -AllowFileNameFallbacks -FilePath .\SignTool.xml
+                New-Item -Path "$global:UserTempDirectoryPath\TemporarySignToolFile" -ItemType Directory -Force | Out-Null
+                Copy-Item -Path $SignToolPathFinal -Destination "$global:UserTempDirectoryPath\TemporarySignToolFile" -Force
+                New-CIPolicy -ScanPath "$global:UserTempDirectoryPath\TemporarySignToolFile" -Level FilePublisher -Fallback Hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -AllowFileNameFallbacks -FilePath .\SignTool.xml
                 # Delete the Temporary folder in the TEMP folder
-                if (!$Debug) { Remove-Item -Recurse -Path "$env:TEMP\TemporarySignToolFile" -Force } 
+                if (!$Debug) { Remove-Item -Recurse -Path "$global:UserTempDirectoryPath\TemporarySignToolFile" -Force } 
 
                 [System.Boolean]$global:MergeSignToolPolicy = $true
             }           
@@ -264,7 +270,7 @@ function New-WDACConfig {
             Rename-Item .\VulnerableDriverBlockList\SiPolicy_Enforced.p7b -NewName 'SiPolicy.p7b' -Force
             Copy-Item .\VulnerableDriverBlockList\SiPolicy.p7b -Destination 'C:\Windows\System32\CodeIntegrity'
             citool --refresh -json | Out-Null           
-            &$WritePink "`nSiPolicy.p7b has been deployed and policies refreshed."            
+            &$WritePink "SiPolicy.p7b has been deployed and policies refreshed."            
             Remove-Item .\VulnerableDriverBlockList* -Recurse -Force                    
             Invoke-Command -ScriptBlock $DriversBlockListInfoGatheringSCRIPTBLOCK
         }
@@ -281,7 +287,7 @@ function New-WDACConfig {
             Set-CIPolicyIdInfo -PolicyName "Microsoft Windows User Mode Policy - Enforced - $(Get-Date -Format 'MM-dd-yyyy')" -FilePath '.\Microsoft recommended block rules.xml'
             ConvertFrom-CIPolicy '.\Microsoft recommended block rules.xml' "$PolicyID.cip" | Out-Null
             CiTool --update-policy "$PolicyID.cip" -json | Out-Null          
-            &$WriteLavender "`nThe Microsoft recommended block rules policy has been deployed in enforced mode."                
+            &$WriteLavender "The Microsoft recommended block rules policy has been deployed in enforced mode."                
             Remove-Item "$PolicyID.cip" -Force
         }
 
@@ -313,11 +319,11 @@ function New-WDACConfig {
             ConvertFrom-CIPolicy .\AllowMicrosoft.xml "$PolicyID.cip" | Out-Null
             if ($Deploy) {
                 CiTool --update-policy "$PolicyID.cip" -json | Out-Null           
-                &$WriteHotPink "`nThe default AllowMicrosoft policy has been deployed in Audit mode. No reboot required."           
+                &$WriteHotPink "The default AllowMicrosoft policy has been deployed in Audit mode. No reboot required."           
                 Remove-Item 'AllowMicrosoft.xml', "$PolicyID.cip" -Force   
             }
             else {
-                &$WriteHotPink "`nThe default AllowMicrosoft policy has been created in Audit mode and is ready for deployment."
+                &$WriteHotPink "The default AllowMicrosoft policy has been created in Audit mode and is ready for deployment."
             }              
         }
 
@@ -345,11 +351,11 @@ function New-WDACConfig {
             ConvertFrom-CIPolicy .\DefaultWindows_Audit.xml "$PolicyID.cip" | Out-Null
             if ($Deploy) {
                 CiTool --update-policy "$PolicyID.cip" -json | Out-Null           
-                &$WriteLavender "`nThe defaultWindows policy has been deployed in Audit mode. No reboot required."            
+                &$WriteLavender "The defaultWindows policy has been deployed in Audit mode. No reboot required."            
                 Remove-Item 'DefaultWindows_Audit.xml', "$PolicyID.cip" -Force 
             }
             else {
-                &$WriteLavender "`nThe defaultWindows policy has been created in Audit mode and is ready for deployment."            
+                &$WriteLavender "The defaultWindows policy has been created in Audit mode and is ready for deployment."            
             }               
         }
 
@@ -535,7 +541,7 @@ function New-WDACConfig {
             [System.Object[]]$Response = Invoke-RestMethod $ApiUrl
             [datetime]$Date = $Response[0].commit.author.date
         
-            &$WriteLavender "`nThe document containing the drivers block list on GitHub was last updated on $Date"
+            &$WriteLavender "The document containing the drivers block list on GitHub was last updated on $Date"
             [System.String]$MicrosoftRecommendeDriverBlockRules = (Invoke-WebRequest 'https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/public/windows/security/application-security/application-control/windows-defender-application-control/design/microsoft-recommended-driver-block-rules.md').Content
             $MicrosoftRecommendeDriverBlockRules -match '<VersionEx>(.*)</VersionEx>' | Out-Null
             &$WritePink "The current version of Microsoft recommended drivers block list is $($Matches[1])"

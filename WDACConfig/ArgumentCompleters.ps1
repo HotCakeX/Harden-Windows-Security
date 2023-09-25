@@ -171,3 +171,15 @@
         return "`"$($dialog.FileName)`""
     }
 }
+
+# Opens Folder picker GUI so that user can select folders to be processed
+# WildCard file paths
+[scriptblock]$ArgumentCompleterFolderPathsPickerWildCards = {
+    # Load the System.Windows.Forms assembly
+    Add-Type -AssemblyName System.Windows.Forms
+    # non-top-most, works better with window focus
+    $browser = New-Object System.Windows.Forms.FolderBrowserDialog
+    $null = $browser.ShowDialog()
+    # Add quotes around the selected path
+    return "`"$($browser.SelectedPath)\*`""
+}

@@ -61,22 +61,22 @@ Creates a normal Supplemental policy for a base policy.
 
 <br>
 
-## New-SupplementalWDACConfig -FilePathWildCards
+## New-SupplementalWDACConfig -PathWildCards
 
 ![image](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Wiki%20APNGs/New-SupplementalWDACConfig%20-FilePathWildCards.apng)
 
 ```powershell
-New-SupplementalWDACConfig [-FilePathWildCards] -WildCardPath <String> -SuppPolicyName <String> -PolicyPath
-<String> [-Deploy]
+New-SupplementalWDACConfig [-PathWildCards] -FolderPath <String> -SuppPolicyName <String> [-PolicyPath <String>]
+[-Deploy]
 ```
 
 <br>
 
-Creates a Supplemental policy that allows a file path that includes one or more wildcard `*` character in it.
+Creates a Supplemental policy that allows a folder path that includes one or more wildcard `*` character in it.
 
 ### 2 mandatory parameters
 
-* `-WildCardPath`: A file path that includes at least one wildcard `*` character and ends with a `\`.
+* `-FolderPath`: A folder path that includes at least one wildcard `*` character and ends with a `\`. Press TAB to open the folder picker GUI. Once you selected a folder, you will see the path will have `\*` at the end of it. You can modify the selected path by adding/removing wildcards `*` to it before proceeding.
 
 * `-SuppPolicyName <String>`: Add a descriptive name for the Supplemental policy. Accepts only alphanumeric and space characters.
 

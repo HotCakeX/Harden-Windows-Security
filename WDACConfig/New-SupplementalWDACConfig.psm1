@@ -11,7 +11,7 @@ function New-SupplementalWDACConfig {
         [Alias('N')]
         [Parameter(Mandatory = $false, ParameterSetName = 'Normal')][Switch]$Normal,
         [Alias('W')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'FilePath With WildCards')][Switch]$FilePathWildCards,
+        [Parameter(Mandatory = $false, ParameterSetName = 'Folder Path With WildCards')][Switch]$PathWildCards,
         [Alias('P')]
         [parameter(mandatory = $false, ParameterSetName = 'Installed AppXPackages')][switch]$InstalledAppXPackages,
         
@@ -23,19 +23,19 @@ function New-SupplementalWDACConfig {
         [System.String]$ScanLocation,
 
         [ValidatePattern('\*', ErrorMessage = "You didn't supply a path that contains wildcard character '*' .")]
-        [parameter(Mandatory = $true, ParameterSetName = 'FilePath With WildCards', ValueFromPipelineByPropertyName = $true)]
-        [System.String]$WildCardPath,
+        [parameter(Mandatory = $true, ParameterSetName = 'Folder Path With WildCards', ValueFromPipelineByPropertyName = $true)]
+        [System.String]$FolderPath,
 
         [ValidatePattern('^[a-zA-Z0-9 ]+$', ErrorMessage = 'The Supplemental Policy Name can only contain alphanumeric and space characters.')]
-        [parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true)] # Used by all the entire Cmdlet
+        [parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true)] # Used by the entire Cmdlet
         [System.String]$SuppPolicyName,
         
         [ValidatePattern('\.xml$')]
         [ValidateScript({ Test-Path $_ -PathType 'Leaf' }, ErrorMessage = 'The path you selected is not a file path.')]
-        [parameter(Mandatory = $false, ValueFromPipelineByPropertyName = $true)] # Used by all the entire Cmdlet         
+        [parameter(Mandatory = $false, ValueFromPipelineByPropertyName = $true)] # Used by the entire Cmdlet         
         [System.String]$PolicyPath,
 
-        [parameter(Mandatory = $false)] # Used by all the entire Cmdlet        
+        [parameter(Mandatory = $false)] # Used by the entire Cmdlet        
         [Switch]$Deploy,
         
         [ValidateSet('OriginalFileName', 'InternalName', 'FileDescription', 'ProductName', 'PackageFamilyName', 'FilePath')]
@@ -81,12 +81,15 @@ function New-SupplementalWDACConfig {
         # Stop operation as soon as there is an error anywhere, unless explicitly specified otherwise
         $ErrorActionPreference = 'Stop'
         if (-NOT $SkipVersionCheck) { . Update-self }
+
+        # Fetch User account directory path
+        [string]$global:UserAccountDirectoryPath = (Get-CimInstance Win32_UserProfile -Filter "SID = '$([System.Security.Principal.WindowsIdentity]::GetCurrent().User.Value)'").LocalPath
         
         #region User-Configurations-Processing-Validation
         # If any of these parameters, that are mandatory for all of the position 0 parameters, isn't supplied by user
         if (!$PolicyPath) {
             # Read User configuration file if it exists
-            $UserConfig = Get-Content -Path "$env:USERPROFILE\.WDACConfig\UserConfigurations.json" -ErrorAction SilentlyContinue   
+            $UserConfig = Get-Content -Path "$global:UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json" -ErrorAction SilentlyContinue   
             if ($UserConfig) {
                 # Validate the Json file and read its content to make sure it's not corrupted
                 try { $UserConfig = $UserConfig | ConvertFrom-Json }
@@ -113,6 +116,16 @@ function New-SupplementalWDACConfig {
             }
         }                
         #endregion User-Configurations-Processing-Validation
+
+        # Ensure when user selects the -Deploy parameter, the base policy is not signed
+        if ($Deploy) {
+            $xmlTest = [xml](Get-Content $PolicyPath)
+            $RedFlag1 = $xmlTest.SiPolicy.SupplementalPolicySigners.SupplementalPolicySigner.SignerId
+            $RedFlag2 = $xmlTest.SiPolicy.UpdatePolicySigners.UpdatePolicySigner.SignerId
+            if ($RedFlag1 -or $RedFlag2) {            
+                Write-Error -Message 'You are using -Deploy parameter and the selected base policy is Signed. Please use Deploy-SignedWDACConfig to deploy it.'
+            }                     
+        }
     }
 
     process {
@@ -140,7 +153,7 @@ function New-SupplementalWDACConfig {
             # Create the supplemental policy via parameter splatting
             New-CIPolicy @PolicyMakerHashTable           
             
-            [System.String]$policyID = Set-CIPolicyIdInfo -FilePath "SupplementalPolicy $SuppPolicyName.xml" -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath -PolicyName "$SuppPolicyName"
+            [System.String]$policyID = Set-CIPolicyIdInfo -FilePath "SupplementalPolicy $SuppPolicyName.xml" -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath -PolicyName "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')"
             [System.String]$policyID = $policyID.Substring(11)
             Set-CIPolicyVersion -FilePath "SupplementalPolicy $SuppPolicyName.xml" -Version '1.0.0.0'
             # Make sure policy rule options that don't belong to a Supplemental policy don't exit             
@@ -159,17 +172,17 @@ function New-SupplementalWDACConfig {
             }
         }
         
-        if ($FilePathWildCards) {
+        if ($PathWildCards) {
             
             # Using Windows PowerShell to handle serialized data since PowerShell core throws an error
             # Creating the Supplemental policy file
             powershell.exe { 
                 $RulesWildCards = New-CIPolicyRule -FilePathRule $args[0]
                 New-CIPolicy -MultiplePolicyFormat -FilePath ".\SupplementalPolicy $($args[1]).xml" -Rules $RulesWildCards
-            } -args $WildCardPath, $SuppPolicyName
+            } -args $FolderPath, $SuppPolicyName
 
             # Giving the Supplemental policy the correct properties
-            [System.String]$policyID = Set-CIPolicyIdInfo -FilePath ".\SupplementalPolicy $SuppPolicyName.xml" -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath -PolicyName "$SuppPolicyName"
+            [System.String]$policyID = Set-CIPolicyIdInfo -FilePath ".\SupplementalPolicy $SuppPolicyName.xml" -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath -PolicyName "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')"
             [System.String]$policyID = $policyID.Substring(11)
             Set-CIPolicyVersion -FilePath ".\SupplementalPolicy $SuppPolicyName.xml" -Version '1.0.0.0'
             
@@ -228,7 +241,7 @@ function New-SupplementalWDACConfig {
 
 
             # Giving the Supplemental policy the correct properties
-            [System.String]$policyID = Set-CIPolicyIdInfo -FilePath ".\SupplementalPolicy $SuppPolicyName.xml" -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath -PolicyName "$SuppPolicyName"
+            [System.String]$policyID = Set-CIPolicyIdInfo -FilePath ".\SupplementalPolicy $SuppPolicyName.xml" -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath -PolicyName "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')"
             [System.String]$policyID = $policyID.Substring(11)
             Set-CIPolicyVersion -FilePath ".\SupplementalPolicy $SuppPolicyName.xml" -Version '1.0.0.0'
             
@@ -270,11 +283,44 @@ Automate various tasks related to Windows Defender Application Control (WDAC)
 .PARAMETER Normal 
 Make a Supplemental policy by scanning a directory, you can optionally use other parameters too to fine tune the scan process
 
-.PARAMETER FilePathWildCards
+.PARAMETER PathWildCards
 Make a Supplemental policy by scanning a directory and creating a wildcard FilePath rules for all of the files inside that directory, recursively
 
 .PARAMETER InstalledAppXPackages
 Make a Supplemental policy based on the Package Family Name of an installed Windows app (Appx)
+
+.PARAMETER PackageName
+Enter the package name of an installed app. Supports wildcard * character. e.g., *Edge* or "*Microsoft*".
+
+.PARAMETER ScanLocation
+The directory or drive that you want to scan for files that will be allowed to run by the Supplemental policy.
+
+.PARAMETER FolderPath
+Path of a folder that you want to allow using wildcards *.
+
+.PARAMETER SuppPolicyName
+Add a descriptive name for the Supplemental policy. Accepts only alphanumeric and space characters.
+
+.PARAMETER PolicyPath
+Browse for the xml file of the Base policy this Supplemental policy is going to expand. Supports tab completion by showing only .xml files with Base Policy Type.
+
+.PARAMETER Deploy
+Indicates that the module will automatically deploy the Supplemental policy after creation.
+
+.PARAMETER SpecificFileNameLevel
+You can choose one of the following options: "OriginalFileName", "InternalName", "FileDescription", "ProductName", "PackageFamilyName", "FilePath"
+
+.PARAMETER NoUserPEs
+By default the module includes user PEs in the scan, but when you use this switch parameter, they won't be included. 
+
+.PARAMETER NoScript
+https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-noscript
+
+.PARAMETER Level
+Offers the same official Levels for scanning of the specified directory path. If no level is specified the default, which is set to FilePublisher in this module, will be used.
+
+.PARAMETER Fallbacks
+Offers the same official Fallbacks for scanning of the specified directory path. If no fallbacks is specified the default, which is set to Hash in this module, will be used.
 
 .PARAMETER SkipVersionCheck
 Can be used with any parameter to bypass the online version check - only to be used in rare cases
@@ -289,3 +335,4 @@ Set-PSReadLineKeyHandler -Key Tab -Function MenuComplete
 Register-ArgumentCompleter -CommandName 'New-SupplementalWDACConfig' -ParameterName 'PolicyPath' -ScriptBlock $ArgumentCompleterPolicyPathsBasePoliciesOnly
 Register-ArgumentCompleter -CommandName 'New-SupplementalWDACConfig' -ParameterName 'PackageName' -ScriptBlock $ArgumentCompleterAppxPackageNames
 Register-ArgumentCompleter -CommandName 'New-SupplementalWDACConfig' -ParameterName 'ScanLocation' -ScriptBlock $ArgumentCompleterFolderPathsPicker
+Register-ArgumentCompleter -CommandName 'New-SupplementalWDACConfig' -ParameterName 'FolderPath' -ScriptBlock $ArgumentCompleterFolderPathsPickerWildCards

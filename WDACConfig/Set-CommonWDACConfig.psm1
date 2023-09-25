@@ -1,20 +1,22 @@
 #Requires -RunAsAdministrator
 function Set-CommonWDACConfig {
     [CmdletBinding()]
-    Param(
-        [ValidatePattern('\.xml$')]
-        [ValidateScript({               
-                $_ | ForEach-Object {                   
-                    $xmlTest = [xml](Get-Content $_)
-                    $RedFlag1 = $xmlTest.SiPolicy.SupplementalPolicySigners.SupplementalPolicySigner.SignerId
-                    $RedFlag2 = $xmlTest.SiPolicy.UpdatePolicySigners.UpdatePolicySigner.SignerId                    
-                    if ($RedFlag1 -or $RedFlag2) {                          
-                        return $True                       
-                    }                    
-                    else { throw 'The selected policy xml file is Unsigned, Please select a Signed policy.' }               
-                }
-            }, ErrorMessage = 'The selected policy xml file is Unsigned, Please select a Signed policy.')]
-        [parameter(Mandatory = $false)][System.String]$SignedPolicyPath,
+    Param(       
+        [ValidateScript({
+                $certs = foreach ($cert in (Get-ChildItem 'Cert:\CurrentUser\my')) {
+            (($cert.Subject -split ',' | Select-Object -First 1) -replace 'CN=', '').Trim()
+                } 
+                $certs -contains $_
+            }, ErrorMessage = "A certificate with the provided common name doesn't exist in the personal store of the user certificates." )]
+        [parameter(Mandatory = $false)][System.String]$CertCN,
+
+        [ValidatePattern('\.cer$')]
+        [ValidateScript({ Test-Path $_ -PathType 'Leaf' }, ErrorMessage = 'The path you selected is not a file path.')]
+        [parameter(Mandatory = $false)][System.String]$CertPath,
+
+        [ValidatePattern('\.exe$')]
+        [ValidateScript({ Test-Path $_ -PathType 'Leaf' }, ErrorMessage = 'The path you selected is not a file path.')]
+        [parameter(Mandatory = $false)][System.String]$SignToolPath,
 
         [ValidatePattern('\.xml$')]
         [ValidateScript({
@@ -30,25 +32,24 @@ function Set-CommonWDACConfig {
             }, ErrorMessage = 'The selected policy xml file is Signed, Please select an Unsigned policy.')]
         [parameter(Mandatory = $false)][System.String]$UnsignedPolicyPath,
 
-        [ValidatePattern('\.exe$')]
-        [ValidateScript({ Test-Path $_ -PathType 'Leaf' }, ErrorMessage = 'The path you selected is not a file path.')]
-        [parameter(Mandatory = $false)][System.String]$SignToolPath,
-        
-        [ValidateScript({
-                $certs = foreach ($cert in (Get-ChildItem 'Cert:\CurrentUser\my')) {
-            (($cert.Subject -split ',' | Select-Object -First 1) -replace 'CN=', '').Trim()
-                } 
-                $certs -contains $_
-            }, ErrorMessage = "A certificate with the provided common name doesn't exist in the personal store of the user certificates." )]
-        [parameter(Mandatory = $false)][System.String]$CertCN,
-
-        [ValidatePattern('\.cer$')]
-        [ValidateScript({ Test-Path $_ -PathType 'Leaf' }, ErrorMessage = 'The path you selected is not a file path.')]
-        [parameter(Mandatory = $false)][System.String]$CertPath, 
+        [ValidatePattern('\.xml$')]
+        [ValidateScript({               
+                $_ | ForEach-Object {                   
+                    $xmlTest = [xml](Get-Content $_)
+                    $RedFlag1 = $xmlTest.SiPolicy.SupplementalPolicySigners.SupplementalPolicySigner.SignerId
+                    $RedFlag2 = $xmlTest.SiPolicy.UpdatePolicySigners.UpdatePolicySigner.SignerId                    
+                    if ($RedFlag1 -or $RedFlag2) {                          
+                        return $True                       
+                    }                    
+                    else { throw 'The selected policy xml file is Unsigned, Please select a Signed policy.' }               
+                }
+            }, ErrorMessage = 'The selected policy xml file is Unsigned, Please select a Signed policy.')]
+        [parameter(Mandatory = $false)][System.String]$SignedPolicyPath,       
 
         [parameter(Mandatory = $false)][switch]$DeleteUserConfig,
 
         [parameter(Mandatory = $false)][System.Guid]$StrictKernelPolicyGUID,
+
         [parameter(Mandatory = $false)][System.Guid]$StrictKernelNoFlightRootsPolicyGUID,
         
         [Parameter(Mandatory = $false)][Switch]$SkipVersionCheck
@@ -61,26 +62,26 @@ function Set-CommonWDACConfig {
         $ErrorActionPreference = 'Stop'        
         if (-NOT $SkipVersionCheck) { . Update-self }  
 
+        # Fetch User account directory path
+        [string]$global:UserAccountDirectoryPath = (Get-CimInstance Win32_UserProfile -Filter "SID = '$([System.Security.Principal.WindowsIdentity]::GetCurrent().User.Value)'").LocalPath
+
         # Create User configuration folder if it doesn't already exist
-        if (-NOT (Test-Path -Path "$env:USERPROFILE\.WDACConfig\")) {
-            New-Item -ItemType Directory -Path "$env:USERPROFILE\.WDACConfig\" -Force -ErrorAction Stop | Out-Null
+        if (-NOT (Test-Path -Path "$global:UserAccountDirectoryPath\.WDACConfig\")) {
+            New-Item -ItemType Directory -Path "$global:UserAccountDirectoryPath\.WDACConfig\" -Force -ErrorAction Stop | Out-Null
             Write-Debug -Message "The .WDACConfig folder in current user's folder has been created because it didn't exist."
         }
 
         # Create User configuration file if it doesn't already exist
-        if (-NOT (Test-Path -Path "$env:USERPROFILE\.WDACConfig\UserConfigurations.json")) { 
-            New-Item -ItemType File -Path "$env:USERPROFILE\.WDACConfig\" -Name 'UserConfigurations.json' -Force -ErrorAction Stop | Out-Null
+        if (-NOT (Test-Path -Path "$global:UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json")) { 
+            New-Item -ItemType File -Path "$global:UserAccountDirectoryPath\.WDACConfig\" -Name 'UserConfigurations.json' -Force -ErrorAction Stop | Out-Null
             Write-Debug -Message "The UserConfigurations.json file in \.WDACConfig\ folder has been created because it didn't exist."
         }
 
         if ($DeleteUserConfig) {        
-            Remove-Item -Path "$env:USERPROFILE\.WDACConfig\" -Recurse -Force
+            Remove-Item -Path "$global:UserAccountDirectoryPath\.WDACConfig\" -Recurse -Force
             &$WritePink 'User Configurations for WDACConfig module have been deleted.'
             break
-        }
-
-        # Scan the file with Microsoft Defender for anything malicious before it's going to be used
-        Start-MpScan -ScanType CustomScan -ScanPath "$env:USERPROFILE\.WDACConfig\UserConfigurations.json"
+        }       
         
         if ($PSBoundParameters.Count -eq 0) {
             Write-Error 'No parameter was selected.'
@@ -88,13 +89,13 @@ function Set-CommonWDACConfig {
         }
 
         # Read the current user configurations
-        $CurrentUserConfigurations = Get-Content -Path "$env:USERPROFILE\.WDACConfig\UserConfigurations.json"
+        $CurrentUserConfigurations = Get-Content -Path "$global:UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json"
         # If the file exists but is corrupted and has bad values, rewrite it
         try {
             $CurrentUserConfigurations = $CurrentUserConfigurations | ConvertFrom-Json
         }
         catch {
-            Set-Content -Path "$env:USERPROFILE\.WDACConfig\UserConfigurations.json" -Value ''
+            Set-Content -Path "$global:UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json" -Value ''
         }
 
         # An object to hold the User configurations
@@ -162,9 +163,9 @@ function Set-CommonWDACConfig {
     }
     end {
         # Update the User Configurations file
-        $UserConfigurationsObject | ConvertTo-Json | Set-Content "$env:USERPROFILE\.WDACConfig\UserConfigurations.json"                
+        $UserConfigurationsObject | ConvertTo-Json | Set-Content "$global:UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json"                
         &$WritePink "`nThis is your new WDAC User Configurations: "
-        Get-Content -Path "$env:USERPROFILE\.WDACConfig\UserConfigurations.json" | ConvertFrom-Json | Format-List *
+        Get-Content -Path "$global:UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json" | ConvertFrom-Json | Format-List *
     }
 }
 <#

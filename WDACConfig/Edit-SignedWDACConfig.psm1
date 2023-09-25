@@ -38,7 +38,7 @@ function Edit-SignedWDACConfig {
         [Parameter(Mandatory = $true, ParameterSetName = 'Update Base Policy')]
         [System.String]$NewBasePolicyType,
 
-        [ValidatePattern('\.cer$')] # Used by all the entire Cmdlet
+        [ValidatePattern('\.cer$')] # Used by all cmdlets
         [ValidateScript({ Test-Path $_ -PathType 'Leaf' }, ErrorMessage = 'The path you selected is not a file path.')]
         [Parameter(Mandatory = $false, ValueFromPipelineByPropertyName = $true)] 
         [System.String]$CertPath,        
@@ -54,6 +54,7 @@ function Edit-SignedWDACConfig {
                     $RedFlag3 = $xmlTest.SiPolicy.PolicyID
                     $CurrentPolicyIDs = ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsSystemPolicy -ne 'True' }).policyID | ForEach-Object { "{$_}" }
                     if ($RedFlag1 -or $RedFlag2) {
+                        # Ensure the selected base policy xml file is deployed
                         if ($CurrentPolicyIDs -contains $RedFlag3) {        
                             return $True
                         }
@@ -75,7 +76,7 @@ function Edit-SignedWDACConfig {
                 } 
                 $certs -contains $_
             }, ErrorMessage = "A certificate with the provided common name doesn't exist in the personal store of the user certificates." )]
-        [Parameter(Mandatory = $false, ValueFromPipelineByPropertyName = $true)] # Used by all the entire Cmdlet
+        [Parameter(Mandatory = $false, ValueFromPipelineByPropertyName = $true)] # Used by all cmdlets
         [System.String]$CertCN,
 
         # Setting the maxim range to the maximum allowed log size by Windows Event viewer
@@ -107,13 +108,13 @@ function Edit-SignedWDACConfig {
         [parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps')]
         [System.String[]]$Fallbacks = 'Hash', # Setting the default value for the Fallbacks parameter
         
-        [Parameter(Mandatory = $false, ValueFromPipelineByPropertyName = $true)] # Used by all the entire Cmdlet
+        [Parameter(Mandatory = $false, ValueFromPipelineByPropertyName = $true)] # Used by all cmdlets
         [System.String]$SignToolPath,
 
         [Parameter(Mandatory = $false, ParameterSetName = 'Update Base Policy')]
         [Switch]$RequireEVSigners,
 
-        [Parameter(Mandatory = $false)] # Used by all the entire Cmdlet
+        [Parameter(Mandatory = $false)] # Used by all cmdlets
         [Switch]$SkipVersionCheck
     )
 
@@ -125,11 +126,17 @@ function Edit-SignedWDACConfig {
         $ErrorActionPreference = 'Stop'       
         if (-NOT $SkipVersionCheck) { . Update-self } 
 
+        # Fetching Temp Directory
+        [string]$global:UserTempDirectoryPath = [System.IO.Path]::GetTempPath()
+
+        # Fetch User account directory path
+        [string]$global:UserAccountDirectoryPath = (Get-CimInstance Win32_UserProfile -Filter "SID = '$([System.Security.Principal.WindowsIdentity]::GetCurrent().User.Value)'").LocalPath
+
         #region User-Configurations-Processing-Validation
         # If any of these parameters, that are mandatory for all of the position 0 parameters, isn't supplied by user
         if (!$PolicyPaths -or !$SignToolPath -or !$CertPath -or !$CertCN) {
             # Read User configuration file if it exists
-            $UserConfig = Get-Content -Path "$env:USERPROFILE\.WDACConfig\UserConfigurations.json" -ErrorAction SilentlyContinue   
+            $UserConfig = Get-Content -Path "$global:UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json" -ErrorAction SilentlyContinue   
             if ($UserConfig) {
                 # Validate the Json file and read its content to make sure it's not corrupted
                 try { $UserConfig = $UserConfig | ConvertFrom-Json }
@@ -251,7 +258,7 @@ function Edit-SignedWDACConfig {
             if ($AllowNewAppsAuditEvents -and $LogSize) { Set-LogSize -LogSize $LogSize }
             # Make sure there is no leftover from previous runs
             Remove-Item -Path '.\ProgramDir_ScanResults*.xml' -Force -ErrorAction SilentlyContinue
-            Remove-Item -Path ".\SupplementalPolicy$SuppPolicyName.xml" -Force -ErrorAction SilentlyContinue
+            Remove-Item -Path ".\SupplementalPolicy $SuppPolicyName.xml" -Force -ErrorAction SilentlyContinue
             # Get the current date so that instead of the entire event viewer logs, only audit logs created after running this module will be captured
             # The notice about variable being assigned and never used should be ignored - it's being dot-sourced from Resources file
             [datetime]$Date = Get-Date
@@ -263,9 +270,9 @@ function Edit-SignedWDACConfig {
             foreach ($PolicyPath in $PolicyPaths) {
                 # Creating a copy of the original policy in Temp folder so that the original one will be unaffected
                 $PolicyFileName = Split-Path $PolicyPath -Leaf
-                Remove-Item -Path "$env:Temp\$PolicyFileName" -Force -ErrorAction SilentlyContinue # make sure no file with the same name already exists in Temp folder         
-                Copy-Item -Path $PolicyPath -Destination $env:Temp -Force                
-                $PolicyPath = "$env:Temp\$PolicyFileName"
+                Remove-Item -Path "$global:UserTempDirectoryPath\$PolicyFileName" -Force -ErrorAction SilentlyContinue # make sure no file with the same name already exists in Temp folder         
+                Copy-Item -Path $PolicyPath -Destination $global:UserTempDirectoryPath -Force                
+                $PolicyPath = "$global:UserTempDirectoryPath\$PolicyFileName"
 
                 # Defining Base policy
                 $xml = [xml](Get-Content $PolicyPath)            
@@ -313,7 +320,7 @@ function Edit-SignedWDACConfig {
 CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item -Path "$((Get-Location).Path)\$PolicyID.cip" -Force
 "@
                 $command | Out-File 'C:\EnforcedModeSnapBack.ps1'
-                New-ItemProperty -Path $registryPath -Name '*CIPolicySnapBack' -Value "powershell.exe -WindowStyle `"Hidden`" -ExecutionPolicy `"Bypass`" -Command `"& {&`"C:\EnforcedModeSnapBack.ps1`";Remove-Item -Path 'C:\EnforcedModeSnapBack.ps1' -Force}`"" -PropertyType String | Out-Null
+                New-ItemProperty -Path $registryPath -Name '*CIPolicySnapBack' -Value "powershell.exe -WindowStyle `"Hidden`" -ExecutionPolicy `"Bypass`" -Command `"& {&`"C:\EnforcedModeSnapBack.ps1`";Remove-Item -Path 'C:\EnforcedModeSnapBack.ps1' -Force}`"" -PropertyType String -Force | Out-Null
                               
                 # Deploy Audit mode CIP
                 Write-Debug -Message 'Deploying Audit mode CIP'
@@ -381,12 +388,12 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                         if ($TestFilePathResults) {
                             # Create a folder in Temp directory to copy the files that are not included in user-selected program path(s)
                             # but detected in Event viewer audit logs, scan that folder, and in the end delete it                   
-                            New-Item -Path "$env:TEMP\TemporaryScanFolderForEventViewerFiles" -ItemType Directory | Out-Null
+                            New-Item -Path "$global:UserTempDirectoryPath\TemporaryScanFolderForEventViewerFiles" -ItemType Directory | Out-Null
                             
                             Write-Debug -Message "The following file(s) are being copied to the TEMP directory for scanning because they were found in event logs but didn't exist in any of the user-selected paths:"      
                             $TestFilePathResults | ForEach-Object {
                                 Write-Debug -Message "$_"    
-                                Copy-Item -Path $_ -Destination "$env:TEMP\TemporaryScanFolderForEventViewerFiles\" -ErrorAction SilentlyContinue
+                                Copy-Item -Path $_ -Destination "$global:UserTempDirectoryPath\TemporaryScanFolderForEventViewerFiles\" -ErrorAction SilentlyContinue
                             }
                       
                             # Create a policy XML file for available files on the disk
@@ -394,7 +401,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                             # Creating a hash table to dynamically add parameters based on user input and pass them to New-Cipolicy cmdlet
                             [System.Collections.Hashtable]$AvailableFilesOnDiskPolicyMakerHashTable = @{
                                 FilePath               = '.\RulesForFilesNotInUserSelectedPaths.xml'
-                                ScanPath               = "$env:TEMP\TemporaryScanFolderForEventViewerFiles\"
+                                ScanPath               = "$global:UserTempDirectoryPath\TemporaryScanFolderForEventViewerFiles\"
                                 Level                  = $Level
                                 Fallback               = $Fallbacks
                                 MultiplePolicyFormat   = $true
@@ -412,7 +419,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                             # Add the policy XML file to the array that holds policy XML files
                             $PolicyXMLFilesArray += '.\RulesForFilesNotInUserSelectedPaths.xml'
                             # Delete the Temporary folder in the TEMP folder
-                            Remove-Item -Recurse -Path "$env:TEMP\TemporaryScanFolderForEventViewerFiles\" -Force
+                            Remove-Item -Recurse -Path "$global:UserTempDirectoryPath\TemporaryScanFolderForEventViewerFiles\" -Force
                         }
                     }
                                    
@@ -544,7 +551,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                     if ($Debug) { $PolicyXMLFilesArray | ForEach-Object { Write-Debug -Message "$_" } }
 
                     # Merge all of the policy XML files in the array into the final Supplemental policy
-                    Merge-CIPolicy -PolicyPaths $PolicyXMLFilesArray -OutputFilePath ".\SupplementalPolicy$SuppPolicyName.xml" | Out-Null
+                    Merge-CIPolicy -PolicyPaths $PolicyXMLFilesArray -OutputFilePath ".\SupplementalPolicy $SuppPolicyName.xml" | Out-Null
                     
                     # Delete these extra files unless user uses -Debug parameter
                     if (-NOT $Debug) {
@@ -579,8 +586,8 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
 
                 #################### Supplemental-policy-processing-and-deployment ############################
                 
-                $SuppPolicyPath = ".\SupplementalPolicy$SuppPolicyName.xml" 
-                $SuppPolicyID = Set-CIPolicyIdInfo -FilePath $SuppPolicyPath -PolicyName "Supplemental Policy $SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath
+                $SuppPolicyPath = ".\SupplementalPolicy $SuppPolicyName.xml" 
+                $SuppPolicyID = Set-CIPolicyIdInfo -FilePath $SuppPolicyPath -PolicyName "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath
                 $SuppPolicyID = $SuppPolicyID.Substring(11)
                 Add-SignerRule -FilePath $SuppPolicyPath -CertificatePath $CertPath -Update -User -Kernel
 
@@ -619,7 +626,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                         
             # remove any possible files from previous runs
             Remove-Item -Path '.\ProgramDir_ScanResults*.xml' -Force -ErrorAction SilentlyContinue
-            Remove-Item -Path ".\SupplementalPolicy$SuppPolicyName.xml" -Force -ErrorAction SilentlyContinue
+            Remove-Item -Path ".\SupplementalPolicy $SuppPolicyName.xml" -Force -ErrorAction SilentlyContinue
             # An empty array that holds the Policy XML files - This array will eventually be used to create the final Supplemental policy
             [System.Object[]]$PolicyXMLFilesArray = @()
     
@@ -628,9 +635,9 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
             foreach ($PolicyPath in $PolicyPaths) {                
                 # Creating a copy of the original policy in Temp folder so that the original one will be unaffected
                 $PolicyFileName = Split-Path $PolicyPath -Leaf
-                Remove-Item -Path "$env:Temp\$PolicyFileName" -Force -ErrorAction SilentlyContinue # make sure no file with the same name already exists in Temp folder         
-                Copy-Item -Path $PolicyPath -Destination $env:Temp -Force                
-                $PolicyPath = "$env:Temp\$PolicyFileName"
+                Remove-Item -Path "$global:UserTempDirectoryPath\$PolicyFileName" -Force -ErrorAction SilentlyContinue # make sure no file with the same name already exists in Temp folder         
+                Copy-Item -Path $PolicyPath -Destination $global:UserTempDirectoryPath -Force                
+                $PolicyPath = "$global:UserTempDirectoryPath\$PolicyFileName"
 
                 # Defining Base policy
                 $xml = [xml](Get-Content $PolicyPath)            
@@ -678,7 +685,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
 CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item -Path "$((Get-Location).Path)\$PolicyID.cip" -Force
 "@
                 $command | Out-File 'C:\EnforcedModeSnapBack.ps1'
-                New-ItemProperty -Path $registryPath -Name '*CIPolicySnapBack' -Value "powershell.exe -WindowStyle `"Hidden`" -ExecutionPolicy `"Bypass`" -Command `"& {&`"C:\EnforcedModeSnapBack.ps1`";Remove-Item -Path 'C:\EnforcedModeSnapBack.ps1' -Force}`"" -PropertyType String | Out-Null
+                New-ItemProperty -Path $registryPath -Name '*CIPolicySnapBack' -Value "powershell.exe -WindowStyle `"Hidden`" -ExecutionPolicy `"Bypass`" -Command `"& {&`"C:\EnforcedModeSnapBack.ps1`";Remove-Item -Path 'C:\EnforcedModeSnapBack.ps1' -Force}`"" -PropertyType String -Force | Out-Null
                                   
                 # Deploy Audit mode CIP
                 Write-Debug -Message 'Deploying Audit mode CIP'
@@ -783,14 +790,14 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                 if ($Debug) { $PolicyXMLFilesArray | ForEach-Object { Write-Debug -Message "$_" } }
                     
                 # Merge all of the policy XML files in the array into the final Supplemental policy
-                Merge-CIPolicy -PolicyPaths $PolicyXMLFilesArray -OutputFilePath ".\SupplementalPolicy$SuppPolicyName.xml" | Out-Null 
+                Merge-CIPolicy -PolicyPaths $PolicyXMLFilesArray -OutputFilePath ".\SupplementalPolicy $SuppPolicyName.xml" | Out-Null 
                     
                 Remove-Item -Path '.\ProgramDir_ScanResults*.xml' -Force
 
                 #################### Supplemental-policy-processing-and-deployment ############################
         
-                $SuppPolicyPath = ".\SupplementalPolicy$SuppPolicyName.xml" 
-                $SuppPolicyID = Set-CIPolicyIdInfo -FilePath $SuppPolicyPath -PolicyName "Supplemental Policy $SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath
+                $SuppPolicyPath = ".\SupplementalPolicy $SuppPolicyName.xml" 
+                $SuppPolicyID = Set-CIPolicyIdInfo -FilePath $SuppPolicyPath -PolicyName "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath
                 $SuppPolicyID = $SuppPolicyID.Substring(11)
                 Add-SignerRule -FilePath $SuppPolicyPath -CertificatePath $CertPath -Update -User -Kernel
     
@@ -907,11 +914,11 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                    
                     # Allowing SignTool to be able to run after Default Windows base policy is deployed
                     &$WriteTeaGreen "`nCreating allow rules for SignTool.exe in the DefaultWindows base policy so you can continue using it after deploying the DefaultWindows base policy."
-                    New-Item -Path "$env:TEMP\TemporarySignToolFile" -ItemType Directory -Force | Out-Null
-                    Copy-Item -Path $SignToolPathFinal -Destination "$env:TEMP\TemporarySignToolFile" -Force
-                    New-CIPolicy -ScanPath "$env:TEMP\TemporarySignToolFile" -Level FilePublisher -Fallback Hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -AllowFileNameFallbacks -FilePath .\SignTool.xml
+                    New-Item -Path "$global:UserTempDirectoryPath\TemporarySignToolFile" -ItemType Directory -Force | Out-Null
+                    Copy-Item -Path $SignToolPathFinal -Destination "$global:UserTempDirectoryPath\TemporarySignToolFile" -Force
+                    New-CIPolicy -ScanPath "$global:UserTempDirectoryPath\TemporarySignToolFile" -Level FilePublisher -Fallback Hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -AllowFileNameFallbacks -FilePath .\SignTool.xml
                     # Delete the Temporary folder in the TEMP folder
-                    if (!$Debug) { Remove-Item -Recurse -Path "$env:TEMP\TemporarySignToolFile" -Force }
+                    if (!$Debug) { Remove-Item -Recurse -Path "$global:UserTempDirectoryPath\TemporarySignToolFile" -Force }
                                             
                     # Scan PowerShell core directory and add them to the Default Windows base policy so that the module can be used after it's been deployed
                     if (Test-Path 'C:\Program Files\PowerShell') {                   

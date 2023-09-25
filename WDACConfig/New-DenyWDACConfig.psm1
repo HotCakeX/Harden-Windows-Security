@@ -19,7 +19,7 @@ function New-DenyWDACConfig {
         [System.String]$PackageName,
 
         [ValidatePattern('^[a-zA-Z0-9 ]+$', ErrorMessage = 'The Supplemental Policy Name can only contain alphanumeric characters and spaces.')]
-        [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true)] # Used by all the entire Cmdlet     
+        [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true)] # Used by all cmdlets     
         [System.String]$PolicyName, 
    
         [ValidateScript({ Test-Path $_ -PathType 'Container' }, ErrorMessage = 'The path you selected is not a folder path.')]            
@@ -47,10 +47,10 @@ function New-DenyWDACConfig {
         [Parameter(Mandatory = $false, ParameterSetName = 'Normal')]
         [Switch]$NoScript,
 
-        [Parameter(Mandatory = $false)] # Used by all the entire Cmdlet
+        [Parameter(Mandatory = $false)] # Used by all cmdlets
         [Switch]$Deploy,
         
-        [Parameter(Mandatory = $false)][Switch]$SkipVersionCheck # Used by all the entire Cmdlet
+        [Parameter(Mandatory = $false)][Switch]$SkipVersionCheck # Used by all cmdlets
     )
 
     begin {    

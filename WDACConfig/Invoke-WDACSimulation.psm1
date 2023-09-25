@@ -12,7 +12,7 @@ function Invoke-WDACSimulation {
         [ValidateScript({ Test-Path $_ -PathType 'Leaf' }, ErrorMessage = 'The path you selected is not a file path.')]
         [Parameter(Mandatory = $true)][System.String]$XmlFilePath,
 
-        [Parameter(Mandatory = $false)][Switch]$SkipVersionCheck # Used by all the entire Cmdlet
+        [Parameter(Mandatory = $false)][Switch]$SkipVersionCheck # Used by all cmdlets
     )
 
     begin {    

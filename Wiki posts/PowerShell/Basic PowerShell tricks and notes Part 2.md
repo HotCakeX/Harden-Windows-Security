@@ -379,3 +379,40 @@ In Visual Studio Code for example, you can see at the bottom right corner whethe
 When you upload a PowerShell script to GitHub you need to make sure it's set to CRLF. PowerShell codes that are signed have big signature blocks at the end of them. PowerShell expects CRLF when doing authenticode signatures. You can also add those scripts to a `.gitattribute` config to your repo so that PowerShell files are uploaded with CRLF and not with LF.
 
 <br>
+
+## How to Securely Get the Temp Directory's Path
+
+```powershell
+[System.IO.Path]::GetTempPath()
+```
+
+<br>
+
+A less secure way is this
+
+```powershell
+$env:Temp
+```
+
+The problem with the 2nd method is that if the path is long, contains too many spaces or contains non-English characters, it might lead to pattern matching using `~1`.
+
+<br>
+
+## How to Securely Get the User Directory's Path
+
+The Get-CimInstance cmdlet can query the Win32_UserProfile class and filter by the current user’s SID to get the LocalPath property, which is the path of the current user’s profile directory. This method is more accurate than using the environment variable.
+
+```powershell
+(Get-CimInstance Win32_UserProfile -Filter "SID = '$([System.Security.Principal.WindowsIdentity]::GetCurrent().User.Value)'").LocalPath
+```
+
+<br>
+
+A less secure or accurate way is this
+
+```powershell
+$env:USERPROFILE
+```
+
+<br>
+

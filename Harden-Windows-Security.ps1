@@ -1466,11 +1466,8 @@ try {
                         .\LGPO.exe /m '..\Security-Baselines-X\Miscellaneous Policies\Blocking Untrusted Fonts\registry.pol'                      
                     } 'No' { break }
                     'Exit' { &$CleanUp }
-                }    
-
-                # Enable SMB Encryption - using force to confirm the action
-                Set-SmbServerConfiguration -EncryptData $true -Force
-                    
+                }
+                   
                 # Allow all Windows users to use Hyper-V and Windows Sandbox by adding all Windows users to the "Hyper-V Administrators" security group using its SID
                 Get-LocalUser | Where-Object { $_.enabled -eq 'True' } | ForEach-Object { Add-LocalGroupMember -SID 'S-1-5-32-578' -Member $_.Name -ErrorAction SilentlyContinue }
                 

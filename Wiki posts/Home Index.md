@@ -53,6 +53,7 @@
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/bluewings.gif" width="35"> [Things to do when clean installing Windows](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Things-to-do-when-clean-installing-Windows)
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/bluewings.gif" width="35"> [Comparison of security benchmarks](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Comparison-of-security-benchmarks)
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/bluewings.gif" width="35"> [BitLocker, TPM and Pluton | What Are They and How Do They Work](https://github.com/HotCakeX/Harden-Windows-Security/wiki/BitLocker,-TPM-and-Pluton-%7C--What-Are-They-and-How-Do-They-Work)
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/bluewings.gif" width="35"> [How to Detect Changes in User and Local Machine Certificate Stores in Real Time Using PowerShell](https://github.com/HotCakeX/Harden-Windows-Security/wiki/How-to-Detect-Changes-in-User-and-Local-Machine-Certificate-Stores-in-Real-Time-Using-PowerShell)
 
 <br>
 

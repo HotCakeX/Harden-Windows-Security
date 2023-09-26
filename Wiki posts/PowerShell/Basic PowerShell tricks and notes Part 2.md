@@ -416,3 +416,19 @@ $env:USERPROFILE
 
 <br>
 
+## How to Run Multiple Kernel Drivers In PowerShell
+
+If you have a folder full of `.bin` driver files, you can use the following command to create a kernel service and run them one by one.
+
+This can be useful for testing drivers against a deployed WDAC policy.
+
+```powershell
+(Get-ChildItem "C:\drivers").FullName | ForEach-Object -begin {$global:i=1} -Process {
+    sc create "DriverTest$global:i" type=kernel binpath="$_"
+    Start-Sleep -Seconds 1
+    Start-Service -Name "DriverTest$global:i" -ErrorAction SilentlyContinue
+    $global:i++
+}
+```
+
+<br>

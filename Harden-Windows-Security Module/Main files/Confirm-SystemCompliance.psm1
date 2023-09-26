@@ -63,6 +63,9 @@ function Confirm-SystemCompliance {
            
         Write-Progress -Activity 'Gathering Security Policy Information' -Status 'Processing...' -PercentComplete 15
 
+        # Total number of Compliant values not equal to N/A
+        [int]$global:TotalNumberOfTrueCompliantValues = 232 
+
         # Get the security group policies
         Secedit /export /cfg .\security_policy.inf | Out-Null
 
@@ -244,15 +247,20 @@ function Confirm-SystemCompliance {
                 }
             })
     
-        # For PowerShell Cmdlet
-        $IndividualItemResult = $(($Entries | Where-Object { $_.properties.identifier -eq '{current}' }).properties.nx)
-        $NestedObjectArray += [PSCustomObject]@{            
-            FriendlyName = (Get-Culture).name -eq 'en-US' ? 'BCDEDIT NX Value' : '(Not accurate on non-English system languages) - BCDEDIT NX Value'          
-            Compliant    = $IndividualItemResult -eq 'AlwaysOn' ? $True : $false   
-            Value        = $IndividualItemResult           
-            Name         = (Get-Culture).name -eq 'en-US' ? 'BCDEDIT NX Value' : '(Not accurate on non-English system languages) - BCDEDIT NX Value'
-            Category     = $CatName
-            Method       = 'Cmdlet'             
+        # Verify the NX bit - only supports systems with English-US language
+        if ((Get-Culture).name -eq 'en-US') {
+            $IndividualItemResult = $(($Entries | Where-Object { $_.properties.identifier -eq '{current}' }).properties.nx)
+            $NestedObjectArray += [PSCustomObject]@{            
+                FriendlyName = 'BCDEDIT NX Value'          
+                Compliant    = $IndividualItemResult -eq 'AlwaysOn' ? $True : $false   
+                Value        = $IndividualItemResult           
+                Name         = 'BCDEDIT NX Value'
+                Category     = $CatName
+                Method       = 'Cmdlet'             
+            }
+        }
+        else {
+            $global:TotalNumberOfTrueCompliantValues--
         }
     
         # For PowerShell Cmdlet
@@ -498,20 +506,25 @@ function Confirm-SystemCompliance {
         # Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array as custom objects
         $NestedObjectArray += [PSCustomObject](Invoke-CategoryProcessing -catname $CatName -Method 'Group Policy')
 
-        # For PowerShell Cmdlet
-        try {
-            $IndividualItemResult = $($((Get-ItemProperty HKLM:\SYSTEM\CurrentControlSet\Control\Power -Name HibernateEnabled -ErrorAction SilentlyContinue).hibernateEnabled) -eq 1 ? $True : $False)
-        } 
-        catch {
-            # suppress the errors if any
+        # To detect if Hibernate is enabled and set to full
+        if (-NOT ((Get-MpComputerStatus).IsVirtualMachine)) {
+            try {
+                $IndividualItemResult = $($((Get-ItemProperty HKLM:\SYSTEM\CurrentControlSet\Control\Power -Name HibernateEnabled -ErrorAction SilentlyContinue).hibernateEnabled) -eq 1 ? $True : $False)
+            } 
+            catch {
+                # suppress the errors if any
+            }
+            $NestedObjectArray += [PSCustomObject]@{
+                FriendlyName = 'Hibernate enabled and set to full'            
+                Compliant    = $IndividualItemResult
+                Value        = $IndividualItemResult           
+                Name         = 'Hibernate enabled and set to full'
+                Category     = $CatName
+                Method       = 'Cmdlet'
+            }
         }
-        $NestedObjectArray += [PSCustomObject]@{
-            FriendlyName = 'Hibernate enabled and set to full'            
-            Compliant    = $IndividualItemResult
-            Value        = $IndividualItemResult           
-            Name         = 'Hibernate enabled and set to full'
-            Category     = $CatName
-            Method       = 'Cmdlet'
+        else {
+            $global:TotalNumberOfTrueCompliantValues--
         }
 
         # OS Drive encryption verifications
@@ -979,15 +992,20 @@ function Confirm-SystemCompliance {
         # Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array as custom objects
         $NestedObjectArray += [PSCustomObject](Invoke-CategoryProcessing -catname $CatName -Method 'Group Policy')   
         
-        # Verify an Audit policy is enabled
-        $IndividualItemResult = [bool](((auditpol /get /subcategory:"Other Logon/Logoff Events" /r | ConvertFrom-Csv).'Inclusion Setting' -eq 'Success and Failure') ? $True : $False)
-        $NestedObjectArray += [PSCustomObject]@{
-            FriendlyName = (Get-Culture).name -eq 'en-US' ? 'Audit policy for Other Logon/Logoff Events' : '(Not accurate on non-English system languages) - Audit policy for Other Logon/Logoff Events'            
-            Compliant    = $IndividualItemResult
-            Value        = $IndividualItemResult
-            Name         = (Get-Culture).name -eq 'en-US' ? 'Audit policy for Other Logon/Logoff Events' : '(Not accurate on non-English system languages) - Audit policy for Other Logon/Logoff Events'            
-            Category     = $CatName
-            Method       = 'Cmdlet'
+        # Verify an Audit policy is enabled - only supports systems with English-US language
+        if ((Get-Culture).name -eq 'en-US') {
+            $IndividualItemResult = [bool](((auditpol /get /subcategory:"Other Logon/Logoff Events" /r | ConvertFrom-Csv).'Inclusion Setting' -eq 'Success and Failure') ? $True : $False)
+            $NestedObjectArray += [PSCustomObject]@{
+                FriendlyName = 'Audit policy for Other Logon/Logoff Events'
+                Compliant    = $IndividualItemResult
+                Value        = $IndividualItemResult
+                Name         = 'Audit policy for Other Logon/Logoff Events'
+                Category     = $CatName
+                Method       = 'Cmdlet'
+            }
+        }
+        else {
+            $global:TotalNumberOfTrueCompliantValues--
         }            
 
         # Checking if all user accounts are part of the Hyper-V security Group 
@@ -1774,17 +1792,14 @@ function Confirm-SystemCompliance {
                 
 '@
             #Endregion ASCII-Arts
-
-            # Total number of Compliant values not equal to N/A 
-            [int]$TotalNumberOfTrueCompliantValues = 232
-                  
+        
             switch ($True) {
-                    ($TotalTrueCompliantValuesInOutPut -in 1..40) { & $WriteRainbow2 "$WhenValue1To20`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $TotalNumberOfTrueCompliantValues!" }                    
-                    ($TotalTrueCompliantValuesInOutPut -in 41..80) { & $WriteRainbow1 "$WhenValue21To40`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $TotalNumberOfTrueCompliantValues!" }
-                    ($TotalTrueCompliantValuesInOutPut -in 81..120) { & $WriteRainbow1 "$WhenValue41To60`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $TotalNumberOfTrueCompliantValues!" }
-                    ($TotalTrueCompliantValuesInOutPut -in 121..160) { & $WriteRainbow2 "$WhenValue61To80`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $TotalNumberOfTrueCompliantValues!" }
-                    ($TotalTrueCompliantValuesInOutPut -in 161..200) { & $WriteRainbow1 "$WhenValue81To88`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $TotalNumberOfTrueCompliantValues!" }
-                    ($TotalTrueCompliantValuesInOutPut -gt 200) { & $WriteRainbow2 "$WhenValueAbove88`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $TotalNumberOfTrueCompliantValues!" }
+                    ($TotalTrueCompliantValuesInOutPut -in 1..40) { & $WriteRainbow2 "$WhenValue1To20`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $global:TotalNumberOfTrueCompliantValues!" }                    
+                    ($TotalTrueCompliantValuesInOutPut -in 41..80) { & $WriteRainbow1 "$WhenValue21To40`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $global:TotalNumberOfTrueCompliantValues!" }
+                    ($TotalTrueCompliantValuesInOutPut -in 81..120) { & $WriteRainbow1 "$WhenValue41To60`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $global:TotalNumberOfTrueCompliantValues!" }
+                    ($TotalTrueCompliantValuesInOutPut -in 121..160) { & $WriteRainbow2 "$WhenValue61To80`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $global:TotalNumberOfTrueCompliantValues!" }
+                    ($TotalTrueCompliantValuesInOutPut -in 161..200) { & $WriteRainbow1 "$WhenValue81To88`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $global:TotalNumberOfTrueCompliantValues!" }
+                    ($TotalTrueCompliantValuesInOutPut -gt 200) { & $WriteRainbow2 "$WhenValueAbove88`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $global:TotalNumberOfTrueCompliantValues!" }
             } 
         }
     

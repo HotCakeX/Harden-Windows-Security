@@ -177,10 +177,7 @@ Function Unprotect-WindowsSecurity {
         # Enables Multicast DNS (mDNS) UDP-in Firewall Rules for all 3 Firewall profiles
         Get-NetFirewallRule |
         Where-Object { $_.RuleGroup -eq '@%SystemRoot%\system32\firewallapi.dll,-37302' -and $_.Direction -eq 'inbound' } |
-        ForEach-Object { Enable-NetFirewallRule -DisplayName $_.DisplayName }
-    
-        # Disable SMB Encryption - using force to confirm the action
-        Set-SmbServerConfiguration -EncryptData $False -Force                    
+        ForEach-Object { Enable-NetFirewallRule -DisplayName $_.DisplayName }                     
           
         # Remove any custom views added by this script for Event Viewer
         if (Test-Path -Path 'C:\ProgramData\Microsoft\Event Viewer\Views\Hardening Script') {

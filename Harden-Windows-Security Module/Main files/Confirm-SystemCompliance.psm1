@@ -5,7 +5,7 @@ $PSStyle.Progress.Style = "$($PSStyle.Foreground.FromRGB(255,255,49))$($PSStyle.
 function ConvertFrom-IniFile {
     [CmdletBinding()]
     Param ([string]$IniFile)
-            
+
     # Don't prompt to continue if '-Debug' is specified.
     $DebugPreference = 'Continue'
           

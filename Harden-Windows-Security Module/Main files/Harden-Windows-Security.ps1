@@ -1,6 +1,6 @@
 <#PSScriptInfo
 
-.VERSION 2023.9.24
+.VERSION 2023.9.26
 
 .GUID d435a293-c9ee-4217-8dc1-4ad2318a5770
 
@@ -92,7 +92,7 @@ Set-ExecutionPolicy Bypass -Scope Process
 
 # Defining global script variables
 # Current script's version, the same as the version at the top in the script info section
-[datetime]$CurrentVersion = '2023.9.24'
+[datetime]$CurrentVersion = '2023.9.26'
 # Minimum OS build number required for the hardening measures used in this script
 [decimal]$Requiredbuild = '22621.2134'
 # Fetching Temp Directory
@@ -1466,11 +1466,8 @@ try {
                         .\LGPO.exe /m '..\Security-Baselines-X\Miscellaneous Policies\Blocking Untrusted Fonts\registry.pol'                      
                     } 'No' { break }
                     'Exit' { &$CleanUp }
-                }    
-
-                # Enable SMB Encryption - using force to confirm the action
-                Set-SmbServerConfiguration -EncryptData $true -Force
-                    
+                }
+                   
                 # Allow all Windows users to use Hyper-V and Windows Sandbox by adding all Windows users to the "Hyper-V Administrators" security group using its SID
                 Get-LocalUser | Where-Object { $_.enabled -eq 'True' } | ForEach-Object { Add-LocalGroupMember -SID 'S-1-5-32-578' -Member $_.Name -ErrorAction SilentlyContinue }
                 

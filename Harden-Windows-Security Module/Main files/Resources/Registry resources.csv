@@ -131,6 +131,7 @@ Origin,Category,Key,Name,FriendlyName,Type,Value
 "Registry Keys",Miscellaneous,HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\W32Time\TimeProviders\NtpClient,SpecialPollInterval,Change Windows time sync interval from every 7 days to every 4 days (= every 345600 seconds),DWORD,345600
 "Registry Keys",Miscellaneous,HKEY_LOCAL_MACHINE\Software\Microsoft\Cryptography\Wintrust\Config,EnableCertPaddingCheck,WinVerifyTrust Signature Validation part 1,String,1
 "Registry Keys",Miscellaneous,HKEY_LOCAL_MACHINE\Software\Wow6432Node\Microsoft\Cryptography\Wintrust\Config,EnableCertPaddingCheck,WinVerifyTrust Signature Validation part 2,String,1
+"Registry Keys",Miscellaneous,HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters,EncryptData,Enable SMB Encryption,DWORD,1
 "Group Policy","Windows Update",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows\WindowsUpdate,AllowAutoWindowsUpdateDownloadOverMeteredNetwork,Allow updates to be downloaded automatically over metered connections,DWORD,1
 "Group Policy","Windows Update",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows\WindowsUpdate,AllowTemporaryEnterpriseFeatureControl,Enable features introduced via servicing that are off by default,DWORD,1
 "Group Policy","Windows Update",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows\WindowsUpdate,SetComplianceDeadline,Specify deadlines for automatic updates and restarts,DWORD,1

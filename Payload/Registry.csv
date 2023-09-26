@@ -25,6 +25,7 @@ Miscellaneous,HKLM:\SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate\ClientStateMedium\
 Miscellaneous,HKLM:\SYSTEM\ControlSet001\Services\W32Time\TimeProviders\NtpClient,SpecialPollInterval,345600,DWORD,AddOrModify,Change Windows time sync interval from every 7 days to every 4 days (= every 345600 seconds)
 Miscellaneous,HKLM:\Software\Microsoft\Cryptography\Wintrust\Config,EnableCertPaddingCheck,1,String,AddOrModify,WinVerifyTrust Signature Validation
 Miscellaneous,HKLM:\Software\Wow6432Node\Microsoft\Cryptography\Wintrust\Config,EnableCertPaddingCheck,1,String,AddOrModify,WinVerifyTrust Signature Validation
+Miscellaneous,HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters,EncryptData,1,DWORD,AddOrModify,Enable SMB Encryption
 Edge,HKLM:\SOFTWARE\Policies\Microsoft\Edge\Recommended,BlockThirdPartyCookies,1,DWORD,AddOrModify,Recommends to block 3rd party cookies
 Edge,HKLM:\SOFTWARE\Policies\Microsoft\Edge,DnsOverHttpsMode,automatic,String,AddOrModify,Sets Edge to use system's DNS over HTTPS. This makes MDAG to work properly too
 Edge,HKLM:\SOFTWARE\Policies\Microsoft\Edge,DnsOverHttpsTemplates,Any,String,Delete,Removes Any DNS over HTTPS set in Edge browser by registry because it prevents MDAG from working properly. See the Readme

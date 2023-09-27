@@ -347,7 +347,7 @@ Each of the deployed policies (except for the automatically deployed block rules
 
 <br>
 
-## <img width="65" src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/arrow-pink.gif"> Continue reading about important WDAC notes
+## <img width="65" src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/arrow-pink.gif"> [Continue reading about important WDAC notes](#-continue-reading-about-important-wdac-notes)
 
 #### [Important Notes and Tips](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-Notes) about WDAC policies
 

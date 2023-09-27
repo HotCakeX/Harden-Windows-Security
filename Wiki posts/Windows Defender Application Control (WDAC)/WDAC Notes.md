@@ -546,9 +546,9 @@ In the signer below
 
 <br>
 
-## What Does [HVCI option](https://learn.microsoft.com/en-us/powershell/module/configci/set-hvcioptions) Set to Strict Mean?
+## What Does HVCI option Set to Strict Mean?
 
-[HVCI](https://learn.microsoft.com/en-us/windows/security/hardware-security/enable-virtualization-based-protection-of-code-integrity) stands for [Hypervisor-protected Code Integrity](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/introduction-to-device-guard-virtualization-based-security-and-windows-defender-application-control) and it is a feature that uses virtualization-based security (VBS) to protect the Windows kernel from memory attacks. HVCI can be set to different options in a WDAC policy, such as Enabled, DebugMode, or Strict. Setting HVCI to Strict in a WDAC policy provides the highest level of protection for kernel mode code integrity, as it enforces these additional restrictions:
+[HVCI](https://learn.microsoft.com/en-us/windows/security/hardware-security/enable-virtualization-based-protection-of-code-integrity) stands for [Hypervisor-protected Code Integrity](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/introduction-to-device-guard-virtualization-based-security-and-windows-defender-application-control) and it is a feature that uses virtualization-based security (VBS) to protect the Windows kernel from memory attacks. HVCI can be set to different options in a WDAC policy, such as Enabled, DebugMode, or Strict. Setting [HVCI to Strict](https://learn.microsoft.com/en-us/powershell/module/configci/set-hvcioptions) in a WDAC policy provides the highest level of protection for kernel mode code integrity, as it enforces these additional restrictions:
 
 * It prevents unsigned drivers from loading, even if they are allowed by the WDAC policy.
 It prevents drivers that are not compatible with HVCI from loading, even if they are signed and allowed by the WDAC policy.
@@ -563,7 +563,7 @@ It prevents drivers that are not compatible with HVCI from loading, even if they
 
 <br>
 
-## <img width="65" src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/arrow-pink.gif"> Continue reading about BYOVD protection with WDAC
+## <img width="65" src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/arrow-pink.gif"> [Continue reading about BYOVD protection with WDAC](#-continue-reading-about-byovd-protection-with-wdac)
 
 #### [WDAC policy](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-policy-for-BYOVD-Kernel-mode-only-protection) for BYOVD Kernel mode only protection
 

@@ -118,7 +118,7 @@ As an individual user you can still utilize these features and services, they ad
 
 <br>
 
-## <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/surface.gif"> Which Device to Use ?
+## <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/surface.gif"> [Which Device to Use ?](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Rationale.md#-which-device-to-use-)
 
 Use Microsoft Surface products for the best device and firmware security. They support [secured-core PC specifications](https://www.microsoft.com/en-us/windows/business/windows-11-secured-core-computers), the manufacturing process and platform is trusted and secure.
 
@@ -148,7 +148,7 @@ Make sure to use Surface products that support [Device Firmware Configuration In
 
 <br>
 
-### <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/9935-catkeyboard.gif"> Protection against BYOVD (Bring Your Own Vulnerable Driver) attacks
+### <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/9935-catkeyboard.gif"> [Protection against BYOVD (Bring Your Own Vulnerable Driver) attacks](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Rationale.md#-protection-against-byovd-bring-your-own-vulnerable-driver-attacks)
 
 * Secured core PCs provide the hardware that is capable of protecting against BYOVD attacks. It is your responsibility to turn the features on, those include WDAC (Windows Defender Application Control), ASR (Attack Surface Reduction) rules, Dynamic/static root of trust and [firmware](https://learn.microsoft.com/en-us/windows-hardware/drivers/bringup/firmware-attack-surface-reduction) that is extensible for revoking drivers. They are specially useful for drivers not explicitly mentioned in the [Microsoft Recommended Driver Block List](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/microsoft-recommended-driver-block-rules), which are the more dynamic side of things.
 
@@ -168,7 +168,7 @@ Make sure to use Surface products that support [Device Firmware Configuration In
 
 <br>
 
-## <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/Red%20police%20light.gif"> What to do when there is an attack ?
+## <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/Red%20police%20light.gif"> [What to do when there is an attack ?](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Rationale.md#-what-to-do-when-there-is-an-attack-)
 
 ### You can hire any of these teams
 
@@ -186,7 +186,7 @@ Make sure to use Surface products that support [Device Firmware Configuration In
 
 <br>
 
-## <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/david%20star.gif"> For Penetration testing and benchmarking
+## <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/david%20star.gif"> [For Penetration testing and benchmarking](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Rationale.md#-for-penetration-testing-and-benchmarking)
 
 How to properly perform a pentest and benchmark a system hardened by this repository and make it as close to the real-world scenario as possible:
 
@@ -208,7 +208,7 @@ How to properly perform a pentest and benchmark a system hardened by this reposi
 
 <br>
 
-## <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/WhiteGhost.gif"> Any questions or suggestions?
+## <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/WhiteGhost.gif"> [Any questions or suggestions?](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Rationale.md#-any-questions-or-suggestions)
 
 Please open a new [issue](https://github.com/HotCakeX/Harden-Windows-Security/issues) or [discussion](https://github.com/HotCakeX/Harden-Windows-Security/discussions) in the repository.
 

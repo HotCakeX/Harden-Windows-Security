@@ -1,14 +1,16 @@
-<h1 align="center">
-  <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/dripwelcome1.gif" alt="Big Yummy Donut"> <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/donuts.gif" alt="Big Yummy Donut"> <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/dripwelcome2.gif" alt="Big Yummy Donut">
+<div align="center">
+
+![Big Yummy Donut](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/dripwelcome1.gif)![Big Yummy Donut](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/donuts.gif)![Big Yummy Donut](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/dripwelcome2.gif)
+
 <br>
-<br>
-Harden Windows Security | A New Threat to Malware
-</h1>
+
+# Harden Windows Security | A New Threat to Malware
+
 <a name="readme-top"></a>
 
-<h2 align="center">
-Harden Windows Safely, Securely, Only With Official Microsoft Methods
-</h2>
+## Harden Windows Safely, Securely, Only With Official Microsoft Methods
+
+</div>
 
 <div align="center">
 <a href="https://www.powershellgallery.com/packages/Harden-Windows-Security-Module"><img src="https://img.shields.io/powershellgallery/v/Harden-Windows-Security-Module?include_prereleases&logo=Github&logoColor=rgb(76%2C%2082%2C%20112)&label=Harden%20Windows%20Security%20Module&labelColor=rgb(233%2C255%2C125)&color=rgb(246%2C%2082%2C%20160)" alt="PowerShell Gallery Version (including pre-releases)"></a> <a href="https://www.powershellgallery.com/packages/WDACConfig"><img src="https://img.shields.io/powershellgallery/v/WDACConfig?include_prereleases&logo=Github&logoColor=rgb(76%2C%2082%2C%20112)&label=WDACConfig%20Module&labelColor=rgb(233%2C255%2C125)&color=rgb(246%2C%2082%2C%20160)" alt="PowerShell Gallery Version (including pre-releases)"></a>

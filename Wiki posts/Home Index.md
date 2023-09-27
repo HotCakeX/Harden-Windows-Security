@@ -25,7 +25,7 @@
 
 <br>
 
-## <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/yellowwings.gif" width="50"> [Windows Defender Application Control (WDAC)](https://github.com/HotCakeX/Harden-Windows-Security/wiki#-windows-defender-application-control-wdac)
+## <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/yellowwings.gif" width="50"> [Windows Defender Application Control (WDAC)](#-windows-defender-application-control-wdac)
 
  - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/yellowwings.gif" width="35"> [Introduction](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Introduction)
  - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/yellowwings.gif" width="35"> [WDAC for Lightly Managed Devices](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-for-Lightly-Managed-Devices)
@@ -40,7 +40,7 @@
 
 <br>
 
-## <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/bluewings.gif" width="50"> [Miscellaneous](https://github.com/HotCakeX/Harden-Windows-Security/wiki#-miscellaneous)
+## <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/bluewings.gif" width="50"> [Miscellaneous](#-miscellaneous)
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/bluewings.gif" width="35"> [Create Bootable USB flash drive with no 3rd party tools](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-Bootable-USB-flash-drive-with-no-3rd-party-tools)
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/bluewings.gif" width="35"> [Event Viewer](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Event-Viewer)
@@ -58,14 +58,14 @@
 
 <br>
 
-## <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/greenwings.gif" width="50"> [Azure](https://github.com/HotCakeX/Harden-Windows-Security/wiki#-azure)
+## <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/greenwings.gif" width="50"> [Azure](#-azure)
 
  - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/greenwings.gif" width="35"> [Clean Source principle, Azure and Privileged Access Workstations](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Clean-Source-principle,-Azure-and-Privileged-Access-Workstations)
  - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/greenwings.gif" width="35"> [How to Securely Connect to Azure VMs and Use RDP](https://github.com/HotCakeX/Harden-Windows-Security/wiki/How-to-Securely-Connect-to-Azure-VMs-and-Use-RDP)
 
 <br>
 
-## <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/redwings.gif" width="50"> [PowerShell](https://github.com/HotCakeX/Harden-Windows-Security/wiki#-powershell)
+## <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/redwings.gif" width="50"> [PowerShell](#-powershell)
 
  - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/redwings.gif" width="35"> [Basic PowerShell tricks and notes](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Basic-PowerShell-tricks-and-notes)
  - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/redwings.gif" width="35"> [Basic PowerShell tricks and notes Part 2](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Basic-PowerShell-tricks-and-notes-Part-2)

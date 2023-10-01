@@ -32,7 +32,8 @@
   <a href="#security-recommendations">Security Recommendations</a> •
   <a href="#resources">Resources</a> •
   <a href="#license">License</a> •
-  <a href="https://github.com/HotCakeX/Harden-Windows-Security/wiki">Wiki</a>
+  <a href="https://github.com/HotCakeX/Harden-Windows-Security/wiki">Wiki</a> •
+  <a href="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Answers-to-the-Basic-Frequently-Asked-Questions">Basic FAQs</a>
 </p>
 
 <img src="https://raw.githubusercontent.com/HotCakeX/.github/febfcc2b3be66ef0d5ecd74694157622a7fde865/Pictures/SVG/SVG%20line%20wave%20yellow%20pink%20inverted.svg" width= "300000" alt="horizontal super thin rainbow RGB line">

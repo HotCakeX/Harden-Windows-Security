@@ -11,6 +11,8 @@ Here is a screenshot of my Hyper-V VM on Windows 11 with the following [security
 
 ![image](https://user-images.githubusercontent.com/118815227/233047257-c2aece42-dfd7-4f9b-b0e4-4db7938a995c.png)
 
+<br>
+
 When a VM uses TPM, Windows creates 2 certificates in the `Local Machine Certificate Store => Shielded VM Local Certificates => Certificates`
 
 One of them is for encryption and the other one is for signing. They both contain private keys. If these 2 certificates don't exist in that folder in the Local Machine Certificate store of a Hyper-V host, your VM won't be able to start
@@ -57,31 +59,35 @@ You should change the values for `$CertificateLocation` and `$CertificatePasswor
 
 <br>
 
-## How to enable Nested Virtualization for all the VMs on the Hyper-V host
+## How to Enable Nested Virtualization for All the VMs on the Hyper-V Host
 
-Source:
-
-https://learn.microsoft.com/en-us/virtualization/hyper-v-on-windows/user-guide/nested-virtualization
-
-The command is this
+Use the following command to enable Nested Virtualization for a single VM
 
 ```powershell
 Set-VMProcessor -VMName <VMName> -ExposeVirtualizationExtensions $true
 ```
 
-but in order to automatically enable nested virtualization for all VMs, this is how I do it
+<br>
 
-> All of the VMs must be in Off state when enabling nested virtualization
+Use the following command to automatically enable Nested Virtualization for all VMs
 
 ```powershell
 (Get-VM).name | ForEach-Object {Set-VMProcessor -VMName $_ -ExposeVirtualizationExtensions $true}
 ```
 
-This is how to verify nested virtualization is enabled for all of your VMs
+> All of the VMs must be in Off state when enabling nested virtualization for them
+
+<br>
+
+This is how to verify Nested Virtualization is enabled for all of your VMs
 
 ```powershell
 (Get-VM).name | ForEach-Object {get-VMProcessor -VMName $_} | Select-Object -Property VMName,ExposeVirtualizationExtensions
 ```
+
+<br>
+
+* [Source](https://learn.microsoft.com/en-us/virtualization/hyper-v-on-windows/user-guide/nested-virtualization)
 
 <br>
 
@@ -219,7 +225,7 @@ There are three different identifiers: The chosen default OS has identifier {def
 
 <br>
 
-## Some Hyper-V nested virtualization screenshots
+## Some Hyper-v Nested Virtualization Screenshots
 
 To display how optimized and powerful Hyper-V hypervisor is (including any feature that runs on it such as Windows Sandbox, WSL, WSA, MDAG and more), here are some screenshots taken on a very old hardware, hardware that is not even officially supported by Windows 11, yet you can virtualize 5 operation systems nested in each other, and the last nested virtualized OS still has full functionality including direct file copy from host to guest, full Internet connectivity, ability to listen to music, do tasks and so on.
 
@@ -270,3 +276,12 @@ Click/Tap here to see the screenshots
 
 <br>
 
+## Important Hyper-V Related Documents
+
+* [Hyper-V Integration Services](https://learn.microsoft.com/en-us/virtualization/hyper-v-on-windows/reference/integration-services)
+
+* [High Level Overview of Nested Virtualization](https://learn.microsoft.com/en-us/virtualization/hyper-v-on-windows/tlfs/nested-virtualization)
+
+* [Virtual Secure Mode](https://learn.microsoft.com/en-us/virtualization/hyper-v-on-windows/tlfs/vsm)
+
+<br>

@@ -471,7 +471,7 @@ For a Kernel-mode only WDAC policy, only the following EKUs are necessary
 
 <br>
 
-## You Can Merge the Same Policy Xml File With Itself
+## You Can Merge the Same Policy XML File With Itself
 
 In order to automatically remove unnecessary things from a policy file, such as the EKUs mentioned earlier, you can run a command like this:
 
@@ -487,7 +487,7 @@ It essentially merges a policy with itself, adding `_0` to each ID and SingerID 
 
 <br>
 
-## -Audit Parameter of the Configci Cmdlets
+## -Audit Parameter of the ConfigCi Cmdlets
 
 When you use `-Audit` parameter of ConfigCI cmdlets such as [Get-SystemDriver](https://learn.microsoft.com/en-us/powershell/module/configci/get-systemdriver) and [New-CIPolicy](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy), these 2 event logs are scanned
 

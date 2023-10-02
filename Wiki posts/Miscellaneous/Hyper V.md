@@ -101,24 +101,29 @@ Azure confidential computing makes it easier to trust the cloud provider, by red
 
 ### Continue reading
 
-* https://learn.microsoft.com/en-us/azure/confidential-computing/overview-azure-products
+* [Confidential Computing on Azure](https://learn.microsoft.com/en-us/azure/confidential-computing/overview-azure-products)
 
-* https://azure.microsoft.com/en-us/solutions/confidential-compute/
+* [Azure confidential computing](https://azure.microsoft.com/en-us/solutions/confidential-compute/)
 
 <br>
 
 ### Shielded VMs are deprecated concepts
 
-[They are deprecated starting with Windows Server 2022.](https://learn.microsoft.com/en-us/windows-server/get-started/removed-deprecated-features-windows-server-2022#features-were-no-longer-developing). They were prone to modern attacks such as side-channel.
+[They are deprecated starting with Windows Server 2022](https://learn.microsoft.com/en-us/windows-server/get-started/removed-deprecated-features-windows-server-2022#features-were-no-longer-developing). They were prone to modern attacks such as side-channel.
 
 <details>
 <summary>The following details about Shielded VMs are old and no longer valid</summary>
 
 <br>
 
-* Shielded VMs can't be simply moved to another Hyper-V host and used there, nor can they be de-shielded in another host, if the certificate is not in place on the new host. This results in the error "the key protector could not be unwrapped", which is desired.
-* Shielding a VM is for keeping bad actors or malware out of the VM, not for keeping malware inside VM. i.e., Shielding a VM is for keeping the VM secure, not for keeping the host secure.
-* You can use the command below to get details about your Hyper-V host, including checks whether your host runs in local/standalone mode or is part of a [Guarded Fabric](https://learn.microsoft.com/en-us/windows-server/security/guarded-fabric-shielded-vm/guarded-fabric-and-shielded-vms)
+<ul>
+<li><p>Shielded VMs can't be simply moved to another Hyper-V host and used there, nor can they be de-shielded in another host, if the certificate is not in place on the new host. This results in the error "the key protector could not be unwrapped", which is desired.</p>
+</li>
+<li><p>Shielding a VM is for keeping bad actors or malware out of the VM, not for keeping malware inside VM. i.e., Shielding a VM is for keeping the VM secure, not for keeping the host secure.</p>
+</li>
+<li><p>You can use the command below to get details about your Hyper-V host, including checks whether your host runs in local/standalone mode or is part of a <a href="https://learn.microsoft.com/en-us/windows-server/security/guarded-fabric-shielded-vm/guarded-fabric-and-shielded-vms">Guarded Fabric</a></p>
+</li>
+</ul>
 
 ```powershell
 HgsClientConfiguration
@@ -126,13 +131,17 @@ HgsClientConfiguration
 
 <br>
 
-Note that this configuration is for standalone systems. an actual shielded virtual machine is a lot more secure because the host's security and health is properly attested in a Guarded Fabric, using [Host Guardian Service (HGS)](https://learn.microsoft.com/en-us/windows-server/security/guarded-fabric-shielded-vm/guarded-fabric-and-shielded-vms-top-node) on a [Windows Server](https://www.microsoft.com/en-us/windows-server/).
-
-- Here is an official video about the feature and how it protects your VMs:
-
-  - [Introduction to Shielded Virtual Machines in Windows Server 2016 - YouTube](https://www.youtube.com/watch?v=Vp5E1-4Ks8E)
-
-  - [Microsoft Mechanics](https://www.youtube.com/@MSFTMechanics)
+<p>Note that this configuration is for standalone systems. an actual shielded virtual machine is a lot more secure because the host's security and health is properly attested in a Guarded Fabric, using <a href="https://learn.microsoft.com/en-us/windows-server/security/guarded-fabric-shielded-vm/guarded-fabric-and-shielded-vms-top-node">Host Guardian Service (HGS)</a> on a <a href="https://www.microsoft.com/en-us/windows-server/">Windows Server</a>.</p>
+<ul>
+<li><p>Here is an official video about the feature and how it protects your VMs:</p>
+<ul>
+<li><p><a href="https://www.youtube.com/watch?v=Vp5E1-4Ks8E">Introduction to Shielded Virtual Machines in Windows Server 2016 - YouTube</a></p>
+</li>
+<li><p><a href="https://www.youtube.com/@MSFTMechanics">Microsoft Mechanics</a></p>
+</li>
+</ul>
+</li>
+</ul>
 
 </details>
 

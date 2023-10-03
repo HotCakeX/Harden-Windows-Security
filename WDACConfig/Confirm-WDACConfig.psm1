@@ -8,12 +8,47 @@ function Confirm-WDACConfig {
         [Parameter(Mandatory = $false, ParameterSetName = 'Verify WDAC Status')][Switch]$VerifyWDACStatus,
         [Alias('S')]
         [Parameter(Mandatory = $false, ParameterSetName = 'Check SmartAppControl Status')][Switch]$CheckSmartAppControlStatus,
-
-        [Parameter(Mandatory = $false, ParameterSetName = 'List Active Policies')][Switch]$OnlyBasePolicies,
-        [Parameter(Mandatory = $false, ParameterSetName = 'List Active Policies')][Switch]$OnlySupplementalPolicies,
-        
+               
+        [Parameter(Mandatory = $false, DontShow = $true)][Switch]$DummyParameter, # To hide common parameters
         [Parameter(Mandatory = $false)][Switch]$SkipVersionCheck
     )
+    
+    DynamicParam {
+        if ($PSBoundParameters['ListActivePolicies']) {
+           
+            # Add the dynamic parameters to the param dictionary
+            $ParamDictionary = [System.Management.Automation.RuntimeDefinedParameterDictionary]::new()
+           
+            # Create a dynamic parameter for -OnlyBasePolicies
+            $OnlyBasePoliciesDynamicParameter = [System.Management.Automation.ParameterAttribute]@{
+                Mandatory        = $false
+                ParameterSetName = 'List Active Policies'
+                HelpMessage      = 'Only List Base Policies'
+            }    
+
+            $ParamDictionary.Add('OnlyBasePolicies', [System.Management.Automation.RuntimeDefinedParameter]::new(
+                    'OnlyBasePolicies',
+                    [switch],
+                    [System.Management.Automation.ParameterAttribute[]]@($OnlyBasePoliciesDynamicParameter)
+                ))                      
+
+
+            # Create a dynamic parameter for -OnlySupplementalPolicies
+            $OnlySupplementalPoliciesDynamicParameter = [System.Management.Automation.ParameterAttribute]@{
+                Mandatory        = $false
+                ParameterSetName = 'List Active Policies'
+                HelpMessage      = 'Only List Supplemental Policies'
+            }   
+
+            $ParamDictionary.Add('OnlySupplementalPolicies', [System.Management.Automation.RuntimeDefinedParameter]::new(
+                    'OnlySupplementalPolicies',
+                    [switch],
+                    [System.Management.Automation.ParameterAttribute[]]@($OnlySupplementalPoliciesDynamicParameter)
+                ))           
+           
+            return $ParamDictionary
+        }
+    }
 
     begin {
         # Importing resources such as functions by dot-sourcing so that they will run in the same scope and their variables will be usable
@@ -21,7 +56,15 @@ function Confirm-WDACConfig {
 
         # Stop operation as soon as there is an error anywhere, unless explicitly specified otherwise
         $ErrorActionPreference = 'Stop'         
-        if (-NOT $SkipVersionCheck) { . Update-self }        
+        if (-NOT $SkipVersionCheck) { . Update-self }
+
+       
+        # Regular parameters are automatically bound to variables in the function scope
+        # Dynamic parameters however, are only available in the parameter dictionary, which is why we have to access them using $PSBoundParameters 
+        # or assign them manually to another variable in the function's scope
+        $OnlyBasePolicies = $($PSBoundParameters['OnlyBasePolicies'])
+        $OnlySupplementalPolicies = $($PSBoundParameters['OnlySupplementalPolicies']) 
+
 
         # Script block to show only non-system Base policies
         [scriptblock]$OnlyBasePoliciesBLOCK = {
@@ -36,8 +79,8 @@ function Confirm-WDACConfig {
             $SupplementalPolicies
         } 
         
-        # If no parameters were passed run all of them
-        if ($PSBoundParameters.Count -eq 0) {
+        # If no main parameter was passed, run all of them
+        if (!$ListActivePolicies -and !$VerifyWDACStatus -and !$CheckSmartAppControlStatus) {
             $ListActivePolicies = $true
             $VerifyWDACStatus = $true
             $CheckSmartAppControlStatus = $true
@@ -97,6 +140,15 @@ Checks the status of Smart App Control and reports the results on the console
 
 .PARAMETER SkipVersionCheck
 Can be used with any parameter to bypass the online version check - only to be used in rare cases
+
+.EXAMPLE
+Confirm-WDACConfig -ListActivePolicies -OnlyBasePolicies
+
+.EXAMPLE
+Confirm-WDACConfig -ListActivePolicies -OnlySupplementalPolicies
+
+.EXAMPLE
+Confirm-WDACConfig -ListActivePolicies
 
 #> 
 }

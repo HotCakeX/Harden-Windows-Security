@@ -19,11 +19,11 @@ function New-KernelModeWDACConfig {
 
         [Parameter(Mandatory = $false, ParameterSetName = 'Default Strict Kernel')]
         [Parameter(Mandatory = $false, ParameterSetName = 'No Flight Roots')]
-        [switch]$EVSigners,
+        [Switch]$Deploy,
 
         [Parameter(Mandatory = $false, ParameterSetName = 'Default Strict Kernel')]
         [Parameter(Mandatory = $false, ParameterSetName = 'No Flight Roots')]
-        [Switch]$Deploy,
+        [switch]$EVSigners,
         
         [Parameter(Mandatory = $false)][Switch]$SkipVersionCheck    
     )
@@ -64,6 +64,30 @@ function New-KernelModeWDACConfig {
             Write-Error -Message 'You must specify either -PrepMode or -AuditAndEnforce, but not both.' -Category InvalidArgument
         }
 
+        # Function to swap GUIDs in a WDAC policy XML file
+        function Edit-GUIDs {
+            param(
+                [System.String]$PolicyIDInput,
+                [System.String]$PolicyFilePathInput
+            )
+            
+            [System.String]$PolicyID = "{$PolicyIDInput}"
+
+            # Read the xml file as an xml object
+            [xml]$xml = Get-Content -Path $PolicyFilePathInput
+
+            # Define the new values for PolicyID and BasePolicyID
+            [System.String]$newPolicyID = $PolicyID
+            [System.String]$newBasePolicyID = $PolicyID
+
+            # Replace the old values with the new ones
+            $xml.SiPolicy.PolicyID = $newPolicyID
+            $xml.SiPolicy.BasePolicyID = $newBasePolicyID
+
+            # Save the modified xml file
+            $xml.Save($PolicyFilePathInput)        
+        }
+
         # Function to build Audit mode policy only
         function Build-PrepModeStrictKernelPolicy {
             [CmdletBinding()]
@@ -71,30 +95,61 @@ function New-KernelModeWDACConfig {
                 [Parameter(Mandatory = $false)][switch]$DefaultWindowsKernel,
                 [Parameter(Mandatory = $false)][switch]$DefaultWindowsKernelNoFlights
             )
-            if ($DefaultWindowsKernel) {
-                $PolicyPath = "$psscriptroot\WDAC Policies\DefaultWindows_Enforced_Kernel.xml"
-                $PolicyFileName = '.\DefaultWindows_Enforced_Kernel.xml'
-                $PolicyName = 'Strict Kernel mode policy Audit'
-            }
-            if ($DefaultWindowsKernelNoFlights) { 
-                $PolicyPath = "$psscriptroot\WDAC Policies\DefaultWindows_Enforced_Kernel_NoFlights.xml"
-                $PolicyFileName = '.\DefaultWindows_Enforced_Kernel_NoFlights.xml'
-                $PolicyName = 'Strict Kernel No Flights mode policy Audit'
+
+            begin {
+
+                if ($DefaultWindowsKernel) {
+                    $PolicyPath = "$psscriptroot\WDAC Policies\DefaultWindows_Enforced_Kernel.xml"
+                    $PolicyFileName = '.\DefaultWindows_Enforced_Kernel.xml'
+                    $PolicyName = 'Strict Kernel mode policy Audit'
+
+                    # Check if there is a pending Audit mode Kernel mode WDAC policy already available in User Config file
+                    [System.String]$CurrentStrictKernelPolicyGUID = Get-CommonWDACConfig -StrictKernelPolicyGUID
+
+                    If ($CurrentStrictKernelPolicyGUID) {                    
+                        # Check if the pending Audit mode Kernel mode WDAC policy is deployed on the system
+                        [System.String]$CurrentStrictKernelPolicyGUIDConfirmation = ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.PolicyID -eq $CurrentStrictKernelPolicyGUID }).policyID
+                    }
+                }
+
+                if ($DefaultWindowsKernelNoFlights) { 
+                    $PolicyPath = "$psscriptroot\WDAC Policies\DefaultWindows_Enforced_Kernel_NoFlights.xml"
+                    $PolicyFileName = '.\DefaultWindows_Enforced_Kernel_NoFlights.xml'
+                    $PolicyName = 'Strict Kernel No Flights mode policy Audit'
+
+                    # Check if there is a pending Audit mode Kernel mode WDAC No Flight Roots policy already available in User Config file
+                    [System.String]$CurrentStrictKernelNoFlightRootsPolicyGUID = Get-CommonWDACConfig -StrictKernelNoFlightRootsPolicyGUID
+
+                    If ($CurrentStrictKernelNoFlightRootsPolicyGUID) {                    
+                        # Check if the pending Audit mode Kernel mode WDAC No Flight Roots policy is deployed on the system
+                        [System.String]$CurrentStrictKernelPolicyGUIDConfirmation = ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.PolicyID -eq $CurrentStrictKernelNoFlightRootsPolicyGUID }).policyID
+                    }
+                }             
+
             }
 
-            Copy-Item -Path $PolicyPath -Destination "$PolicyFileName" -Force
-            # Setting them to global so they can be accessed outside of this function's scope too
-            $Global:PolicyID = Set-CIPolicyIdInfo -FilePath "$PolicyFileName" -PolicyName "$PolicyName" -ResetPolicyID
-            $Global:PolicyID = $PolicyID.Substring(11)
-            Set-CIPolicyVersion -FilePath "$PolicyFileName" -Version '1.0.0.0'
-            # Setting policy rule options for the audit mode policy
-            @(2, 3, 6, 16, 17, 20) | ForEach-Object { Set-RuleOption -FilePath "$PolicyFileName" -Option $_ }
-            @(0, 4, 8, 9, 10, 11, 12, 13, 14, 15, 18, 19) | ForEach-Object { Set-RuleOption -FilePath "$PolicyFileName" -Option $_ -Delete }
-            # If user chooses to add EVSigners, add it to the policy
-            if ($EVSigners) { Set-RuleOption -FilePath "$PolicyFileName" -Option 8 }
-            # If user chooses to go with no flight root certs then block flight/insider builds in policy rule options
-            if ($DefaultWindowsKernelNoFlights) { Set-RuleOption -FilePath "$PolicyFileName" -Option 4 }        
-            Set-HVCIOptions -Strict -FilePath "$PolicyFileName"           
+            process {
+                Copy-Item -Path $PolicyPath -Destination "$PolicyFileName" -Force
+                # Setting them to global so they can be accessed outside of this function's scope too
+                $Global:PolicyID = Set-CIPolicyIdInfo -FilePath "$PolicyFileName" -PolicyName "$PolicyName" -ResetPolicyID
+                $Global:PolicyID = $PolicyID.Substring(11)
+                Set-CIPolicyVersion -FilePath "$PolicyFileName" -Version '1.0.0.0'
+                # Setting policy rule options for the audit mode policy
+                @(2, 3, 6, 16, 17, 20) | ForEach-Object { Set-RuleOption -FilePath "$PolicyFileName" -Option $_ }
+                @(0, 4, 8, 9, 10, 11, 12, 13, 14, 15, 18, 19) | ForEach-Object { Set-RuleOption -FilePath "$PolicyFileName" -Option $_ -Delete }
+                # If user chooses to add EVSigners, add it to the policy
+                if ($EVSigners) { Set-RuleOption -FilePath "$PolicyFileName" -Option 8 }
+                # If user chooses to go with no flight root certs then block flight/insider builds in policy rule options
+                if ($DefaultWindowsKernelNoFlights) { Set-RuleOption -FilePath "$PolicyFileName" -Option 4 }
+                
+                # Set the already available and deployed GUID as the new PolicyID to prevent deploying duplicate Audit mode policies
+                if ($CurrentStrictKernelPolicyGUIDConfirmation) {
+                    Edit-GUIDs -PolicyIDInput $CurrentStrictKernelPolicyGUIDConfirmation -PolicyFilePathInput "$PolicyFileName"
+                    $Global:PolicyID = $CurrentStrictKernelPolicyGUIDConfirmation
+                }             
+                
+                Set-HVCIOptions -Strict -FilePath "$PolicyFileName"           
+            }
         }
     }
 
@@ -110,6 +165,7 @@ function New-KernelModeWDACConfig {
                 
                 # Deploy the policy if Deploy parameter is used and perform additional tasks on the system
                 if ($Deploy) {                    
+                   
                     # Set the GUID of the Audit mode policy in the User Configuration file
                     Set-CommonWDACConfig -StrictKernelPolicyGUID $PolicyID | Out-Null
                     CiTool.exe --update-policy "$PolicyID.cip" -json | Out-Null
@@ -159,23 +215,10 @@ function New-KernelModeWDACConfig {
                 }
                 else {
                     Write-Error 'Invalid or nonexistent GUID in User Configs for Audit mode policy'
-                } 
-                
-                [System.String]$PolicyID = "{$PolicyID}"
+                }
 
-                # Read the xml file as an xml object
-                [xml]$xml = Get-Content -Path '.\Final_DefaultWindows_Enforced_Kernel.xml'
-
-                # Define the new values for PolicyID and BasePolicyID
-                [System.String]$newPolicyID = $PolicyID
-                [System.String]$newBasePolicyID = $PolicyID
-
-                # Replace the old values with the new ones
-                $xml.SiPolicy.PolicyID = $newPolicyID
-                $xml.SiPolicy.BasePolicyID = $newBasePolicyID
-
-                # Save the modified xml file
-                $xml.Save('.\Final_DefaultWindows_Enforced_Kernel.xml')
+                # Set the GUIDs for the XML policy file
+                Edit-GUIDs -PolicyIDInput $PolicyID -PolicyFilePathInput '.\Final_DefaultWindows_Enforced_Kernel.xml'
 
                 Set-CIPolicyIdInfo -FilePath '.\Final_DefaultWindows_Enforced_Kernel.xml' -PolicyName "Strict Kernel mode policy Enforced - $(Get-Date -Format 'MM-dd-yyyy')"
 
@@ -193,11 +236,13 @@ function New-KernelModeWDACConfig {
                     ConvertFrom-CIPolicy '.\Final_DefaultWindows_Enforced_Kernel.xml' "$PolicyID.cip" | Out-Null
                     CiTool.exe --update-policy "$PolicyID.cip" -json | Out-Null
                     &$WritePink 'Strict Kernel mode policy has been deployed in Enforced mode, no restart required.'
+
+                    # Delete its GUID from User Configurations
+                    Remove-CommonWDACConfig -StrictKernelPolicyGUID | Out-Null
                 }
                 else {
                     &$WritePink 'Strict Kernel mode Enforced policy has been created in the current working directory.'
                 }
-              
                 if (!$Debug) {
                     Remove-Item -Path ".\$PolicyID.cip", '.\DriverFilesScanPolicy.xml' -Force -ErrorAction SilentlyContinue
                 } 
@@ -265,22 +310,9 @@ function New-KernelModeWDACConfig {
                 else {
                     Write-Error 'Invalid or nonexistent GUID in User Configs for Audit mode policy'
                 } 
-                
-                [System.String]$PolicyID = "{$PolicyID}"
 
-                # Read the xml file as an xml object
-                [xml]$xml = Get-Content -Path '.\Final_DefaultWindows_Enforced_Kernel.xml'
-
-                # Define the new values for PolicyID and BasePolicyID
-                [System.String]$newPolicyID = $PolicyID
-                [System.String]$newBasePolicyID = $PolicyID
-
-                # Replace the old values with the new ones
-                $xml.SiPolicy.PolicyID = $newPolicyID
-                $xml.SiPolicy.BasePolicyID = $newBasePolicyID
-
-                # Save the modified xml file
-                $xml.Save('.\Final_DefaultWindows_Enforced_Kernel.xml')
+                # Set the GUIDs for the XML policy file
+                Edit-GUIDs -PolicyIDInput $PolicyID -PolicyFilePathInput '.\Final_DefaultWindows_Enforced_Kernel.xml'
 
                 Set-CIPolicyIdInfo -FilePath '.\Final_DefaultWindows_Enforced_Kernel.xml' -PolicyName "Strict Kernel No Flights mode policy Enforced - $(Get-Date -Format 'MM-dd-yyyy')"
 
@@ -299,14 +331,15 @@ function New-KernelModeWDACConfig {
                     CiTool.exe --update-policy "$PolicyID.cip" -json | Out-Null
                     &$WritePink 'Strict Kernel mode policy with no flighting root certs has been deployed in Enforced mode, no restart required.'
                 
-                    if (!$Debug) {
-                        Remove-Item -Path ".\$PolicyID.cip", '.\DriverFilesScanPolicy.xml' -Force -ErrorAction SilentlyContinue
-                    } 
+                    # Delete its GUID from User Configurations
+                    Remove-CommonWDACConfig -StrictKernelNoFlightRootsPolicyGUID | Out-Null
                 }
-
                 else {
                     &$WritePink 'Strict Kernel mode Enforced policy with no flighting root certs has been created in the current working directory.'
-                }                
+                }                     
+                if (!$Debug) {
+                    Remove-Item -Path ".\$PolicyID.cip", '.\DriverFilesScanPolicy.xml' -Force -ErrorAction SilentlyContinue
+                }            
             }
         }
     }    

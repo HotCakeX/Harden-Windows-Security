@@ -270,7 +270,7 @@ function New-WDACConfig {
             Rename-Item .\VulnerableDriverBlockList\SiPolicy_Enforced.p7b -NewName 'SiPolicy.p7b' -Force
             Copy-Item .\VulnerableDriverBlockList\SiPolicy.p7b -Destination 'C:\Windows\System32\CodeIntegrity'
             citool --refresh -json | Out-Null           
-            &$WritePink "SiPolicy.p7b has been deployed and policies refreshed."            
+            &$WritePink 'SiPolicy.p7b has been deployed and policies refreshed.'            
             Remove-Item .\VulnerableDriverBlockList* -Recurse -Force                    
             Invoke-Command -ScriptBlock $DriversBlockListInfoGatheringSCRIPTBLOCK
         }
@@ -287,7 +287,7 @@ function New-WDACConfig {
             Set-CIPolicyIdInfo -PolicyName "Microsoft Windows User Mode Policy - Enforced - $(Get-Date -Format 'MM-dd-yyyy')" -FilePath '.\Microsoft recommended block rules.xml'
             ConvertFrom-CIPolicy '.\Microsoft recommended block rules.xml' "$PolicyID.cip" | Out-Null
             CiTool --update-policy "$PolicyID.cip" -json | Out-Null          
-            &$WriteLavender "The Microsoft recommended block rules policy has been deployed in enforced mode."                
+            &$WriteLavender 'The Microsoft recommended block rules policy has been deployed in enforced mode.'                
             Remove-Item "$PolicyID.cip" -Force
         }
 
@@ -319,11 +319,11 @@ function New-WDACConfig {
             ConvertFrom-CIPolicy .\AllowMicrosoft.xml "$PolicyID.cip" | Out-Null
             if ($Deploy) {
                 CiTool --update-policy "$PolicyID.cip" -json | Out-Null           
-                &$WriteHotPink "The default AllowMicrosoft policy has been deployed in Audit mode. No reboot required."           
+                &$WriteHotPink 'The default AllowMicrosoft policy has been deployed in Audit mode. No reboot required.'           
                 Remove-Item 'AllowMicrosoft.xml', "$PolicyID.cip" -Force   
             }
             else {
-                &$WriteHotPink "The default AllowMicrosoft policy has been created in Audit mode and is ready for deployment."
+                &$WriteHotPink 'The default AllowMicrosoft policy has been created in Audit mode and is ready for deployment.'
             }              
         }
 
@@ -351,11 +351,11 @@ function New-WDACConfig {
             ConvertFrom-CIPolicy .\DefaultWindows_Audit.xml "$PolicyID.cip" | Out-Null
             if ($Deploy) {
                 CiTool --update-policy "$PolicyID.cip" -json | Out-Null           
-                &$WriteLavender "The defaultWindows policy has been deployed in Audit mode. No reboot required."            
+                &$WriteLavender 'The defaultWindows policy has been deployed in Audit mode. No reboot required.'            
                 Remove-Item 'DefaultWindows_Audit.xml', "$PolicyID.cip" -Force 
             }
             else {
-                &$WriteLavender "The defaultWindows policy has been created in Audit mode and is ready for deployment."            
+                &$WriteLavender 'The defaultWindows policy has been created in Audit mode and is ready for deployment.'            
             }               
         }
 

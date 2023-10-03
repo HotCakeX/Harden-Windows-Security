@@ -38,27 +38,9 @@ function New-KernelModeWDACConfig {
         # Detecting if Debug switch is used, will do debugging actions based on that
         $Debug = $PSBoundParameters.Debug.IsPresent 
 
-        if (-NOT $SkipVersionCheck) { . Update-self }
-    
-        # Check if the Default parameter was used from the Default Strict Kernel parameter set
-        if ($PSCmdlet.ParameterSetName -eq 'Default Strict Kernel' -and $PSBoundParameters.ContainsKey('Default')) {
-            # Check if either the PrepMode or the AuditAndEnforce parameters were used as well
-            if (-not ($PSBoundParameters.ContainsKey('PrepMode') -or $PSBoundParameters.ContainsKey('AuditAndEnforce'))) {
-                # Write an error message
-                Write-Error -Message 'You must specify either -PrepMode or -AuditAndEnforce when using -Default parameter.' -Category InvalidArgument -TargetObject $Default
-            }
-        }
+        if (-NOT $SkipVersionCheck) { . Update-self }                           
 
-        # Check if the NoFlightRoots parameter was used from the No Flight Roots parameter set
-        if ($PSCmdlet.ParameterSetName -eq 'No Flight Roots' -and $PSBoundParameters.ContainsKey('NoFlightRoots')) {
-            # Check if either the PrepMode or the AuditAndEnforce parameters were used as well
-            if (-not ($PSBoundParameters.ContainsKey('PrepMode') -or $PSBoundParameters.ContainsKey('AuditAndEnforce'))) {
-                # Write an error message
-                Write-Error -Message 'You must specify either -PrepMode or -AuditAndEnforce when using -NoFlightRoots parameter.' -Category InvalidArgument -TargetObject $NoFlightRoots
-            }
-        }
-
-        # Check if the PrepMode and AuditAndEnforce parameters are used together
+        # Check if the PrepMode and AuditAndEnforce parameters are used together and ensure one of them is used
         if (-not ($PSBoundParameters.ContainsKey('PrepMode') -xor $PSBoundParameters.ContainsKey('AuditAndEnforce'))) {
             # Write an error message
             Write-Error -Message 'You must specify either -PrepMode or -AuditAndEnforce, but not both.' -Category InvalidArgument
@@ -176,7 +158,7 @@ function New-KernelModeWDACConfig {
                     wevtutil cl 'Microsoft-Windows-AppLocker/MSI and Script'
 
                     if (!$Debug) {
-                        Remove-Item -Path .\DefaultWindows_Enforced_Kernel.xml, ".\$PolicyID.cip" -Force -ErrorAction SilentlyContinue
+                        Remove-Item -Path '.\DefaultWindows_Enforced_Kernel.xml', ".\$PolicyID.cip" -Force -ErrorAction SilentlyContinue
                     }
                 }
                 else {
@@ -185,6 +167,18 @@ function New-KernelModeWDACConfig {
             }
 
             if ($AuditAndEnforce) {
+
+                # Get the Strict Kernel Audit mode policy's GUID to use for the Enforced mode policy
+                # This will eliminate the need for an extra reboot              
+                [System.String]$PolicyID = Get-CommonWDACConfig -StrictKernelPolicyGUID
+                # Verify the Policy ID in the User Config exists and is valid
+                $ObjectGuid = [System.Guid]::Empty
+                if ([System.Guid]::TryParse($PolicyID, [ref]$ObjectGuid)) {
+                    Write-Debug 'Valid GUID found in User Configs for Audit mode policy'
+                }
+                else {
+                    Write-Error 'Invalid or nonexistent GUID in User Configs for Audit mode policy, Use the -PrepMode parameter first.'
+                }
               
                 powershell.exe {                    
                     # Scan Event viewer logs for drivers
@@ -204,18 +198,6 @@ function New-KernelModeWDACConfig {
 
                 # Move all AllowedSigners from Usermode to Kernel mode signing scenario
                 Move-UserModeToKernelMode -FilePath '.\Final_DefaultWindows_Enforced_Kernel.xml' | Out-Null
-
-                # Get the Strict Kernel Audit mode policy's GUID to use it for the Enforced mode policy
-                # This will eliminate the need for an extra reboot               
-                [System.String]$PolicyID = Get-CommonWDACConfig -StrictKernelPolicyGUID
-                # Verify the Policy ID in the User Config exists and is valid
-                $ObjectGuid = [System.Guid]::Empty
-                if ([System.Guid]::TryParse($PolicyID, [ref]$ObjectGuid)) {
-                    Write-Debug 'Valid GUID found in User Configs for Audit mode policy'
-                }
-                else {
-                    Write-Error 'Invalid or nonexistent GUID in User Configs for Audit mode policy'
-                }
 
                 # Set the GUIDs for the XML policy file
                 Edit-GUIDs -PolicyIDInput $PolicyID -PolicyFilePathInput '.\Final_DefaultWindows_Enforced_Kernel.xml'
@@ -278,7 +260,19 @@ function New-KernelModeWDACConfig {
                 }             
             }
 
-            if ($AuditAndEnforce) {                       
+            if ($AuditAndEnforce) {    
+                
+                # Get the Strict Kernel Audit mode policy's GUID to use for the Enforced mode policy
+                # This will eliminate the need for an extra reboot                
+                [System.String]$PolicyID = Get-CommonWDACConfig -StrictKernelNoFlightRootsPolicyGUID
+                # Verify the Policy ID in the User Config exists and is valid
+                $ObjectGuid = [System.Guid]::Empty
+                if ([System.Guid]::TryParse($PolicyID, [ref]$ObjectGuid)) {
+                    Write-Debug 'Valid GUID found in User Configs for Audit mode policy'
+                }
+                else {
+                    Write-Error 'Invalid or nonexistent GUID in User Configs for Audit mode policy, Use the -PrepMode parameter first.'
+                } 
 
                 powershell.exe {
                     # Scan Event viewer logs for drivers
@@ -298,19 +292,7 @@ function New-KernelModeWDACConfig {
 
                 # Move all AllowedSigners from Usermode to Kernel mode signing scenario
                 Move-UserModeToKernelMode -FilePath '.\Final_DefaultWindows_Enforced_Kernel.xml' | Out-Null
-
-                # Get the Strict Kernel Audit mode policy's GUID to use it for the Enforced mode policy
-                # This will eliminate the need for an extra reboot                
-                [System.String]$PolicyID = Get-CommonWDACConfig -StrictKernelNoFlightRootsPolicyGUID
-                # Verify the Policy ID in the User Config exists and is valid
-                $ObjectGuid = [System.Guid]::Empty
-                if ([System.Guid]::TryParse($PolicyID, [ref]$ObjectGuid)) {
-                    Write-Debug 'Valid GUID found in User Configs for Audit mode policy'
-                }
-                else {
-                    Write-Error 'Invalid or nonexistent GUID in User Configs for Audit mode policy'
-                } 
-
+             
                 # Set the GUIDs for the XML policy file
                 Edit-GUIDs -PolicyIDInput $PolicyID -PolicyFilePathInput '.\Final_DefaultWindows_Enforced_Kernel.xml'
 

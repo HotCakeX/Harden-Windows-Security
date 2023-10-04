@@ -439,3 +439,25 @@ This can be useful for testing drivers against a deployed WDAC policy.
 ```
 
 <br>
+
+## How to Run PowerShell Code in CMD/Batch
+
+Example, the code has no double quotes inside it
+
+```powershell
+powershell.exe -Command "$UserSID = [System.Security.Principal.WindowsIdentity]::GetCurrent().user.value;(Get-LocalUser | where-object {$_.SID -eq $UserSID}).name"
+```
+
+<br>
+
+Example, the code has double quotes inside it. We have to escape double quotes with `\"`
+
+```powershell
+powershell.exe -Command "$UserSID = [System.Security.Principal.WindowsIdentity]::GetCurrent().user.value;$UserName = (Get-LocalUser | where-object {$_.SID -eq $UserSID}).name;Get-Process | where-object {$_.path -eq "\"C:\Users\$UserName\AppData\Local\Microsoft\Edge SxS\Application\msedge.exe\""} | ForEach-Object {Stop-Process -Id $_.id -Force -ErrorAction SilentlyContinue}"
+```
+
+<br>
+
+A good related answer from [StackOverflow](https://stackoverflow.com/a/66847929/21243735)
+
+<br>

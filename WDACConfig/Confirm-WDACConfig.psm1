@@ -23,6 +23,10 @@ function Confirm-WDACConfig {
             $OnlyBasePoliciesDynamicParameter = [System.Management.Automation.ParameterAttribute]@{
                 Mandatory        = $false
                 ParameterSetName = 'List Active Policies'
+
+                # To make this parameter available for all parameter sets
+                # ParameterSetName = '__AllParameterSets'
+                
                 HelpMessage      = 'Only List Base Policies'
             }    
 

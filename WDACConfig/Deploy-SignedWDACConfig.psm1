@@ -131,6 +131,7 @@ function Deploy-SignedWDACConfig {
                 'Wait'         = $true
                 'ErrorAction'  = 'Stop'
             }
+            # Hide the SignTool.exe's normal output unless -Debug parameter was used
             if (!$Debug) { $ProcessParams['RedirectStandardOutput'] = 'NUL' } 
             # Sign the files with the specified cert
             Start-Process @ProcessParams

@@ -213,6 +213,13 @@ whoami 
 
 *Most secure way*
 
+Example
+
+```powershell
+$UserSID = [System.Security.Principal.WindowsIdentity]::GetCurrent().user.value
+(Get-LocalUser | where-object {$_.SID -eq $UserSID}).name
+```
+
 <br>
 
 ## How to Access Properties of an Object in Powershell

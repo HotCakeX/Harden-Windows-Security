@@ -64,7 +64,7 @@ function Confirm-SystemCompliance {
         Write-Progress -Activity 'Gathering Security Policy Information' -Status 'Processing...' -PercentComplete 15
 
         # Total number of Compliant values not equal to N/A
-        [int]$global:TotalNumberOfTrueCompliantValues = 232 
+        [int]$global:TotalNumberOfTrueCompliantValues = 231
 
         # Get the security group policies
         Secedit /export /cfg .\security_policy.inf | Out-Null
@@ -1648,7 +1648,7 @@ function Confirm-SystemCompliance {
             [int]($FinalMegaObject.'Windows Networking' | Where-Object { $_.Compliant -eq $True }).Count + # 9
             [int]($FinalMegaObject.Miscellaneous | Where-Object { $_.Compliant -eq $True }).Count + # 18
             [int]($FinalMegaObject.'Windows Update' | Where-Object { $_.Compliant -eq $True }).Count + # 14
-            [int]($FinalMegaObject.Edge | Where-Object { $_.Compliant -eq $True }).Count + # 16
+            [int]($FinalMegaObject.Edge | Where-Object { $_.Compliant -eq $True }).Count + # 15
             [int]($FinalMegaObject.'Non-Admin' | Where-Object { $_.Compliant -eq $True }).Count # 11
 
 

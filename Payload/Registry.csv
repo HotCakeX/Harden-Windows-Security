@@ -35,7 +35,7 @@ Edge,HKLM:\SOFTWARE\Policies\Microsoft\Edge,EncryptedClientHelloEnabled,1,DWORD,
 Edge,HKLM:\SOFTWARE\Policies\Microsoft\Edge,WebRtcLocalhostIpHandling,default_public_interface_only,String,Delete,Allow public interface over http default route. This doesn't expose the local IP address when using WebRTC
 Edge,HKLM:\SOFTWARE\Policies\Microsoft\Edge,SSLErrorOverrideAllowed,0,DWORD,Delete,Prevents users from proceeding from the HTTPS warning page
 Edge,HKLM:\SOFTWARE\Policies\Microsoft\Edge,BasicAuthOverHttpEnabled,0,DWORD,AddOrModify,Block Basic authentication for HTTP
-Edge,HKLM:\SOFTWARE\Policies\Microsoft\Edge,WebRtcRespectOsRoutingTableEnabled,0,DWORD,AddOrModify,Causes problem with Discord Voice Chat in Edge browser - Leads to no route error - when you are using VPN like Mullvad that has tight kill switch feature
+Edge,HKLM:\SOFTWARE\Policies\Microsoft\Edge,WebRtcRespectOsRoutingTableEnabled,0,DWORD,Delete,Causes problem with Discord Voice Chat in Edge browser - Leads to no route error - when you are using VPN like Mullvad that has tight kill switch feature
 Edge,HKLM:\SOFTWARE\Policies\Microsoft\Edge,RendererAppContainerEnabled,1,DWORD,AddOrModify,Launches Renderer processes into an App Container for additional security benefits
 Edge,HKLM:\SOFTWARE\Policies\Microsoft\Edge,PDFSecureMode,1,DWORD,Delete,Secure mode and Certificate-based Digital Signature validation in native PDF reader
 Edge,HKLM:\SOFTWARE\Policies\Microsoft\Edge,ExperimentationAndConfigurationServiceControl,2,DWORD,AddOrModify,Allow devices using Edge category of the hardening script to receive new features and experimentations like normal devices

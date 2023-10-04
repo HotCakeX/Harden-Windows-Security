@@ -9,24 +9,20 @@ function Confirm-WDACConfig {
         [Alias('S')]
         [Parameter(Mandatory = $false, ParameterSetName = 'Check SmartAppControl Status')][Switch]$CheckSmartAppControlStatus,
                
-        [Parameter(Mandatory = $false, DontShow = $true)][Switch]$DummyParameter, # To hide common parameters
-        [Parameter(Mandatory = $false)][Switch]$SkipVersionCheck
+        [Parameter(Mandatory = $false, DontShow = $true)][Switch]$DummyParameter # To hide common parameters
     )
     
     DynamicParam {
+
+        # Add the dynamic parameters to the param dictionary
+        $ParamDictionary = [System.Management.Automation.RuntimeDefinedParameterDictionary]::new()
+
         if ($PSBoundParameters['ListActivePolicies']) {
-           
-            # Add the dynamic parameters to the param dictionary
-            $ParamDictionary = [System.Management.Automation.RuntimeDefinedParameterDictionary]::new()
            
             # Create a dynamic parameter for -OnlyBasePolicies
             $OnlyBasePoliciesDynamicParameter = [System.Management.Automation.ParameterAttribute]@{
                 Mandatory        = $false
-                ParameterSetName = 'List Active Policies'
-
-                # To make this parameter available for all parameter sets
-                # ParameterSetName = '__AllParameterSets'
-                
+                ParameterSetName = 'List Active Policies'                
                 HelpMessage      = 'Only List Base Policies'
             }    
 
@@ -48,27 +44,42 @@ function Confirm-WDACConfig {
                     'OnlySupplementalPolicies',
                     [switch],
                     [System.Management.Automation.ParameterAttribute[]]@($OnlySupplementalPoliciesDynamicParameter)
-                ))           
-           
-            return $ParamDictionary
+                ))
         }
+
+        # Create a dynamic parameter for -SkipVersionCheck, Adding this parameter as dynamic will make it appear at the end of the parameters
+        $SkipVersionCheckDynamicParameter = [System.Management.Automation.ParameterAttribute]@{
+            Mandatory        = $false
+            # To make this parameter available for all parameter sets
+            ParameterSetName = '__AllParameterSets'                
+            HelpMessage      = 'Skip Version Check'
+        }    
+        
+        $ParamDictionary.Add('SkipVersionCheck', [System.Management.Automation.RuntimeDefinedParameter]::new(
+                'SkipVersionCheck',
+                [switch],
+                [System.Management.Automation.ParameterAttribute[]]@($SkipVersionCheckDynamicParameter)
+            ))  
+            
+        return $ParamDictionary
     }
 
     begin {
         # Importing resources such as functions by dot-sourcing so that they will run in the same scope and their variables will be usable
         . "$psscriptroot\Resources.ps1"
 
-        # Stop operation as soon as there is an error anywhere, unless explicitly specified otherwise
-        $ErrorActionPreference = 'Stop'         
-        if (-NOT $SkipVersionCheck) { . Update-self }
 
-       
         # Regular parameters are automatically bound to variables in the function scope
         # Dynamic parameters however, are only available in the parameter dictionary, which is why we have to access them using $PSBoundParameters 
         # or assign them manually to another variable in the function's scope
         $OnlyBasePolicies = $($PSBoundParameters['OnlyBasePolicies'])
         $OnlySupplementalPolicies = $($PSBoundParameters['OnlySupplementalPolicies']) 
+        $SkipVersionCheck = $($PSBoundParameters['SkipVersionCheck']) 
 
+
+        # Stop operation as soon as there is an error anywhere, unless explicitly specified otherwise
+        $ErrorActionPreference = 'Stop'         
+        if (-NOT $SkipVersionCheck) { . Update-self }
 
         # Script block to show only non-system Base policies
         [scriptblock]$OnlyBasePoliciesBLOCK = {

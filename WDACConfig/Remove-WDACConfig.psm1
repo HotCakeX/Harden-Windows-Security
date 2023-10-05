@@ -252,7 +252,7 @@ function Remove-WDACConfig {
                 $SuppSingerIDs = $xml.SiPolicy.SupplementalPolicySigners.SupplementalPolicySigner.SignerId
                 $PolicyName = ($xml.SiPolicy.Settings.Setting | Where-Object { $_.provider -eq 'PolicyInfo' -and $_.valuename -eq 'Name' -and $_.key -eq 'Information' }).value.string
                 if ($SuppSingerIDs) {
-                    Write-Host "`n$($SuppSingerIDs.count) SupplementalPolicySigners have been found in $PolicyName policy, removing them now..." -ForegroundColor Yellow
+                    Write-Debug -Message "`n$($SuppSingerIDs.count) SupplementalPolicySigners have been found in $PolicyName policy, removing them now..."
                     $SuppSingerIDs | ForEach-Object {
                         $PolContent = Get-Content -Raw -Path $PolicyPath
                         $PolContent -match "<Signer ID=`"$_`"[\S\s]*</Signer>" | Out-Null
@@ -265,10 +265,10 @@ function Remove-WDACConfig {
 
                     # remove empty lines from the entire policy file
                     (Get-Content -Path $PolicyPath) | Where-Object { $_.trim() -ne '' } | Set-Content -Path $PolicyPath -Force
-                    Write-Host 'Policy successfully sanitized and all SupplementalPolicySigners have been removed.' -ForegroundColor Green
+                    Write-Debug -Message 'Policy successfully sanitized and all SupplementalPolicySigners have been removed.'
                 }
                 else {
-                    Write-Host "`nNo sanitization required because no SupplementalPolicySigners have been found in $PolicyName policy." -ForegroundColor Green
+                    Write-Debug -Message "`nNo sanitization required because no SupplementalPolicySigners have been found in $PolicyName policy."
                 }
 
                 Set-RuleOption -FilePath $PolicyPath -Option 6
@@ -289,7 +289,7 @@ function Remove-WDACConfig {
                 Remove-Item ".\$PolicyID.cip" -Force
                 Rename-Item "$PolicyID.cip.p7" -NewName "$PolicyID.cip" -Force
                 CiTool --update-policy ".\$PolicyID.cip" -json | Out-Null 
-                Write-Host "`n`nPolicy with the following details has been Re-signed and Re-deployed in Unsigned mode.`nPlease restart your system." -ForegroundColor Green
+                Write-Host "`nPolicy with the following details has been Re-signed and Re-deployed in Unsigned mode.`nPlease restart your system." -ForegroundColor Green
                 Write-Output "PolicyName = $PolicyName"
                 Write-Output "PolicyGUID = $PolicyID`n"
             }

@@ -70,10 +70,8 @@ function Update-self {
 
     # Only check for updates if the last attempt occured more than 10 minutes ago or the User Config file for last update check doesn't exist
     # This prevents the module from constantly doing an update check by fetching the version file from GitHub
-    if (($TimeDiff -gt 5) -or $PerformOnlineUpdateCheck) {
-
-        Write-Host "`n TimeDiff is $TimeDiff, Checking for update" -ForegroundColor Yellow
-
+    if (($TimeDiff -gt 10) -or $PerformOnlineUpdateCheck) {
+        
         $CurrentVersion = (Test-ModuleManifest "$psscriptroot\WDACConfig.psd1").Version.ToString()
         try {
             # First try the GitHub source
@@ -110,10 +108,7 @@ function Update-self {
 
         # Reset the last update timer to the current time
         Set-CommonWDACConfig -LastUpdateCheck $(Get-Date ) | Out-Null
-    }
-    else {
-        Write-Host "`n TimeDiff is $TimeDiff, No update check needed" -ForegroundColor Yellow
-    }
+    }    
 }
 
 

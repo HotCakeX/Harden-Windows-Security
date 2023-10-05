@@ -223,6 +223,10 @@ function New-KernelModeWDACConfig {
                     Remove-CommonWDACConfig -StrictKernelPolicyGUID | Out-Null
                 }
                 else {
+                    # Remove the Audit mode policy from the system
+                    # This step is necessary if user didn't use the -Deploy parameter
+                    # And instead wants to first Sign and then deploy it using the Deploy-SignedWDACConfig cmdlet
+                    CiTool.exe --remove-policy "{$PolicyID}" -json | Out-Null
                     &$WritePink 'Strict Kernel mode Enforced policy has been created in the current working directory.'
                 }
                 if (!$Debug) {
@@ -317,6 +321,10 @@ function New-KernelModeWDACConfig {
                     Remove-CommonWDACConfig -StrictKernelNoFlightRootsPolicyGUID | Out-Null
                 }
                 else {
+                    # Remove the Audit mode policy from the system
+                    # This step is necessary if user didn't use the -Deploy parameter
+                    # And instead wants to first Sign and then deploy it using the Deploy-SignedWDACConfig cmdlet
+                    CiTool.exe --remove-policy "{$PolicyID}" -json | Out-Null
                     &$WritePink 'Strict Kernel mode Enforced policy with no flighting root certs has been created in the current working directory.'
                 }                     
                 if (!$Debug) {

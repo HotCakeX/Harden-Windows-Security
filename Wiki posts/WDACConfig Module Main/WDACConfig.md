@@ -6,7 +6,7 @@ This page is also available [on my website.](https://spynetgirl.github.io/WDACCo
 
 ## Requirements
 
-* [PowerShell 7.3.4 and above](https://github.com/PowerShell/PowerShell/releases)
+* [PowerShell 7.3.6 and above](https://github.com/PowerShell/PowerShell/releases)
 * Windows 11 version 22H2 and above
 * Administrator Privileges
 * Internet Connection
@@ -28,6 +28,26 @@ This page is also available [on my website.](https://spynetgirl.github.io/WDACCo
 ```powershell
 Install-Module -Name WDACConfig -Force
 ```
+
+<br>
+
+## WDACConfig Module's Table of Content
+
+|  Cmdlet Guide  |     Usage      | PowerShell Console Help |
+|    :---:       |     :---:      |          :---:          |
+| [New-WDACConfig](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-WDACConfig) | Mainly for creating and deploying WDAC policies | `Get-Help New-WDACConfig` |
+| [New-SupplementalWDACConfig](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-SupplementalWDACConfig) | To create and deploy Supplemental policies | `Get-Help New-SupplementalWDACConfig` |
+| [Remove-WDACConfig](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Remove-WDACConfig) | To remove deployed WDAC policies | `Get-Help Remove-WDACConfig` |
+| [Edit-WDACConfig](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Edit-WDACConfig) | To edit deployed unsigned WDAC policies | `Get-Help Edit-WDACConfig` |
+| [Edit-SignedWDACConfig](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Edit-SignedWDACConfig) | To edit deployed signed WDAC policies | `Get-Help Edit-SignedWDACConfig` |
+| [Deploy-SignedWDACConfig](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Deploy-SignedWDACConfig) | To sign and deploy WDAC policies | `Get-Help Deploy-SignedWDACConfig` |
+| [Confirm-WDACConfig](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Confirm-WDACConfig) | To confirm deployment and check the status of WDAC policies | `Get-Help Confirm-WDACConfig` |
+| [New-DenyWDACConfig](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-DenyWDACConfig) | To create a deny mode WDAC policy | `Get-Help New-DenyWDACConfig` |
+| [Set-CommonWDACConfig](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Set-CommonWDACConfig) | To add or edit user configurations for common WDACConfig parameters | `Get-Help Set-CommonWDACConfig` |
+| [New-KernelModeWDACConfig](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New%E2%80%90KernelModeWDACConfig)  | To create a Strict Kernel mode WDAC policy for total BYOVD protection | `Get-Help New-KernelModeWDACConfig` |
+| [Get-CommonWDACConfig](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Get-CommonWDACConfig) | To display or fetch user configurations for common WDACConfig parameters | `Get-Help Get-CommonWDACConfig` |
+| [Invoke-WDACSimulation](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Invoke-WDACSimulation) | To simulate a WDAC policy deployment quickly | `Get-Help Invoke-WDACSimulation` |
+| [Remove-CommonWDACConfig](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Remove-CommonWDACConfig) | To remove user configurations for common WDACConfig parameters | `Get-Help Remove-CommonWDACConfig` |
 
 <br>
 
@@ -57,54 +77,6 @@ Install-Module -Name WDACConfig -Force
 <br>
 
 <a href="https://youtu.be/RgVf4p9ct90?si=mGdVCnqVlUN_FBWR"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/YouTube%20Video%20Thumbnails/With%20YouTube%20play%20button/WDAC%20policy%20for%20Lightly%20managed%20device.png"></a>
-
-<br>
-
-## Cmdlets and Guides
-
-* ### [New-WDACConfig](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-WDACConfig)
-
-* ### [New-SupplementalWDACConfig](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-SupplementalWDACConfig)
-
-* ### [Remove-WDACConfig](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Remove-WDACConfig)
-
-* ### [Edit-WDACConfig](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Edit-WDACConfig)
-
-* ### [Edit-SignedWDACConfig](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Edit-SignedWDACConfig)
-
-* ### [Deploy-SignedWDACConfig](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Deploy-SignedWDACConfig)
-
-* ### [Confirm-WDACConfig](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Confirm-WDACConfig)
-
-* ### [New-DenyWDACConfig](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-DenyWDACConfig)
-
-* ### [Set-CommonWDACConfig](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Set-CommonWDACConfig)
-
-* ### [New-KernelModeWDACConfig](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New%E2%80%90KernelModeWDACConfig)
-
-* ### [Get-CommonWDACConfig](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Get-CommonWDACConfig)
-
-* ### [Invoke-WDACSimulation](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Invoke-WDACSimulation)
-
-<br>
-
-## To Get Help and Syntax on Powershell Console
-
-```powershell
-"Get-Command -Module WDACConfig"
-"Get-Help New-WDACConfig"
-"Get-Help New-SupplementalWDACConfig"
-"Get-Help Remove-WDACConfig"
-"Get-Help Edit-WDACConfig"
-"Get-Help Edit-SignedWDACConfig"
-"Get-Help Deploy-SignedWDACConfig"
-"Get-Help Confirm-WDACConfig"
-"Get-Help New-DenyWDACConfig"
-"Get-Help Set-CommonWDACConfig"
-"Get-help New-KernelModeWDACConfig"
-"Get-help Get-CommonWDACConfig"
-"Get-help Invoke-WDACSimulation"
-```
 
 <br>
 

@@ -14,7 +14,7 @@
 
 ## Edit-WDACConfig -AllowNewAppsAuditEvents
 
-![image](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Wiki%20APNGs/Edit-WDACConfig%20-AllowNewAppsAuditEvents.apng)
+![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Edit-WDACConfig/Edit-WDACConfig%20-AllowNewAppsAuditEvents.apng)
 
 ```powershell
 Edit-WDACConfig [-AllowNewAppsAuditEvents] -SuppPolicyName <String> -PolicyPaths <String[]> [-Level <String>]
@@ -82,7 +82,7 @@ This parameter is specially useful for applications that install files outside o
 
 ## Edit-WDACConfig -AllowNewApps
 
-![image](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Wiki%20APNGs/Edit-WDACConfig%20-AllowNewApps.apng)
+![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Edit-WDACConfig/Edit-WDACConfig%20-AllowNewApps.apng)
 
 ```powershell
 Edit-WDACConfig [-AllowNewApps] -SuppPolicyName <String> -PolicyPaths <String[]> [-Level <String>] [-Fallbacks
@@ -131,7 +131,7 @@ A new supplemental policy will be created, it will be deployed on the system. Th
 
 ## Edit-WDACConfig -MergeSupplementalPolicies
 
-![image](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Wiki%20APNGs/Edit-WDACConfig%20-MergeSupplementalPolicies.apng)
+![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Edit-WDACConfig/Edit-WDACConfig%20-MergeSupplementalPolicies.apng)
 
 ```powershell
 Edit-WDACConfig [-MergeSupplementalPolicies] -SuppPolicyName <String> -PolicyPaths <String[]> -SuppPolicyPaths
@@ -164,7 +164,7 @@ Merge multiple deployed Supplemental policies into 1 and deploy it, remove the i
 
 ## Edit-WDACConfig -UpdateBasePolicy
 
-![image](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Wiki%20APNGs/Edit-WDACConfig%20-UpdateBasePolicy.apng)
+![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Edit-WDACConfig/Edit-WDACConfig%20-UpdateBasePolicy.apng)
 
 ```powershell
 Edit-WDACConfig [-UpdateBasePolicy] -CurrentBasePolicyName <String[]> -NewBasePolicyType <String>

@@ -14,7 +14,7 @@
 
 ### [Signs and Deploys a WDAC policy](https://github.com/HotCakeX/Harden-Windows-Security/wiki/How-to-Create-and-Deploy-a-Signed-WDAC-Policy-Windows-Defender-Application-Control)
 
-![image](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Wiki%20APNGs/Deploy-SignedWDACConfig.apng)
+![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Deploy-SignedWDACConfig/Deploy-SignedWDACConfig.apng)
 
 ```powershell
 Deploy-SignedWDACConfig -PolicyPaths <String[]> [-CertPath <String>] [-CertCN <String>] [-SignToolPath <String>] [-Deploy]

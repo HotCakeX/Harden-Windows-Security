@@ -12,7 +12,7 @@
 
 <br>
 
-![image](https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Wiki%20APNGs/Set-CommonWDACConfig.apng)
+![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Set-CommonWDACConfig/Set-CommonWDACConfig.apng)
 
 ```powershell
 Set-CommonWDACConfig [[-SignedPolicyPath] <string>] [[-UnsignedPolicyPath] <string>] [[-SignToolPath] <string>]
@@ -62,6 +62,6 @@ If correct and valid values for the missing parameters exist in User Configurati
 
 * `-StrictKernelPolicyGUID`: GUID of the Strict Kernel mode policy (Mainly used Internally by the module)
 
-* `-StrictKernelNoFlightRootsPolicyGUID`:  GUID of the Strict Kernel no Flights root mode policy (Mainly used Internally by the module)
+* `-StrictKernelNoFlightRootsPolicyGUID`: GUID of the Strict Kernel no Flights root mode policy (Mainly used Internally by the module)
 
 <br>

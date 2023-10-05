@@ -12,7 +12,7 @@
 
 <br>
 
-![image](https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Wiki%20APNGs/Get-CommonWDACConfig.apng)
+![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Get-CommonWDACConfig/Get-CommonWDACConfig.apng)
 
 ```powershell
 Get-CommonWDACConfig [-SignedPolicyPath] [-UnsignedPolicyPath] [-SignToolPath] [-CertCN] [-StrictKernelPolicyGUID]

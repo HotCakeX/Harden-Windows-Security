@@ -26,7 +26,7 @@ Before the audit mode phase, make sure you trust all the files and programs inst
 
 ## New-KernelModeWDACConfig -Default
 
-![image](https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Wiki%20APNGs/New-KernelModeWDACConfig%20-Default%20-PrepMode.apng)
+![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-KernelModeWDACConfig/New-KernelModeWDACConfig%20-Default.apng)
 
 ```powershell
 New-KernelModeWDACConfig [-Default] [-PrepMode] [-AuditAndEnforce] [-EVSigners] [-Deploy]
@@ -76,7 +76,7 @@ Edit-WDACConfig -AllowNewAppsAuditEvents -SuppPolicyName "Kernel mode drivers fo
 
 ## New-KernelModeWDACConfig -NoFlightRoots
 
-![image](https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Wiki%20APNGs/New-KernelModeWDACConfig%20-NoFlightRoots%20-PrepMode.apng)
+![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-KernelModeWDACConfig/New-KernelModeWDACConfig%20-NoFlightRoots.apng)
 
 ```powershell
 New-KernelModeWDACConfig [-NoFlightRoots] [-PrepMode] [-AuditAndEnforce] [-EVSigners] [-Deploy]

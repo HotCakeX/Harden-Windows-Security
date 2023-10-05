@@ -12,7 +12,7 @@
 
 <br>
 
-![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Invoke-WDACSimulation.apng)
+![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Invoke-WDACSimulation/Invoke-WDACSimulation.apng)
 
 ```powershell
 Invoke-WDACSimulation -FolderPath <string> -XmlFilePath <string>

@@ -14,7 +14,7 @@
 
 ## New-SupplementalWDACConfig -Normal
 
-![image](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Wiki%20APNGs/New-SupplementalWDACConfig%20-Normal.apng)
+![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-SupplementalWDACConfig/New-SupplementalWDACConfig%20-Normal.apng)
 
 ```powershell
 New-SupplementalWDACConfig [-Normal] -ScanLocation <String> -SuppPolicyName <String> -PolicyPath <String>
@@ -63,7 +63,7 @@ Creates a normal Supplemental policy for a base policy.
 
 ## New-SupplementalWDACConfig -PathWildCards
 
-![image](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Wiki%20APNGs/New-SupplementalWDACConfig%20-FilePathWildCards.apng)
+![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-SupplementalWDACConfig/New-SupplementalWDACConfig%20-PathWildCards.apng)
 
 ```powershell
 New-SupplementalWDACConfig [-PathWildCards] -FolderPath <String> -SuppPolicyName <String> [-PolicyPath <String>]
@@ -101,7 +101,7 @@ Creates a Supplemental policy that allows a folder path that includes one or mor
 
 ## New-SupplementalWDACConfig -InstalledAppXPackages
 
-![image](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Wiki%20APNGs/New-SupplementalWDACConfig%20-InstalledAppXPackages.apng)
+![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-SupplementalWDACConfig/New-SupplementalWDACConfig%20-InstalledAppXPackages.apng)
 
 ```powershell
 New-SupplementalWDACConfig [-InstalledAppXPackages] -PackageName <String> -SuppPolicyName <String> -PolicyPath

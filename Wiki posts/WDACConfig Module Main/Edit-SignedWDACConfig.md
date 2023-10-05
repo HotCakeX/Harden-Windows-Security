@@ -14,7 +14,7 @@
 
 ## Edit-SignedWDACConfig -AllowNewAppsAuditEvents
 
-![image](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Wiki%20APNGs/Edit-SignedWDACConfig%20-AllowNewAppsAuditEvents.apng)
+![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Edit-SignedWDACConfig/Edit-SignedWDACConfig%20-AllowNewAppsAuditEvents.apng)
 
 ```powershell
 Edit-SignedWDACConfig [-AllowNewAppsAuditEvents] -SuppPolicyName <String> [-CertPath <String>] [-PolicyPaths
@@ -84,7 +84,7 @@ This parameter is specially useful for applications that install files outside o
 
 ## Edit-SignedWDACConfig -AllowNewApps
 
-![image](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Wiki%20APNGs/Edit-SignedWDACConfig%20-AllowNewApps.apng)
+![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Edit-SignedWDACConfig/Edit-SignedWDACConfig%20-AllowNewApps.apng)
 
 ```powershell
 Edit-SignedWDACConfig [-AllowNewApps] -SuppPolicyName <String> [-CertPath <String>] [-PolicyPaths <String[]>]
@@ -139,7 +139,7 @@ A new supplemental policy will be created, it will be signed and deployed on the
 
 ## Edit-SignedWDACConfig -MergeSupplementalPolicies
 
-![image](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Wiki%20APNGs/Edit-SignedWDACConfig%20-MergeSupplementalPolicies.apng)
+![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Edit-SignedWDACConfig/Edit-SignedWDACConfig%20-MergeSupplementalPolicies.apng)
 
 ```powershell
 Edit-SignedWDACConfig [-MergeSupplementalPolicies] -CertPath <String> -SuppPolicyName <String> -PolicyPaths
@@ -178,7 +178,7 @@ Merge multiple deployed **Signed** Supplemental policies into 1 and deploy it, r
 
 ## Edit-SignedWDACConfig -UpdateBasePolicy
 
-![image](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Wiki%20APNGs/Edit-WDACConfig%20-UpdateBasePolicy.apng)
+![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Edit-SignedWDACConfig/Edit-SignedWDACConfig%20-UpdateBasePolicy.apng)
 
 ```powershell
 Edit-SignedWDACConfig [-UpdateBasePolicy] -CertPath <String> -CertCN <String> -CurrentBasePolicyName <String[]>

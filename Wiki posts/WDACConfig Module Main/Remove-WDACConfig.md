@@ -14,7 +14,7 @@
 
 ## Remove-WDACConfig -SignedBase
 
-![image](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Wiki%20APNGs/Remove-WDACConfig%20-RemoveSignedPolicies.apng)
+![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Remove-WDACConfig/Remove-WDACConfig%20-SignedBase.apng)
 
 ```powershell
 Remove-WDACConfig [-SignedBase] -PolicyPaths <String[]> -CertCN <String> [-SignToolPath <String>]
@@ -42,7 +42,7 @@ Uses [the official procedure](https://learn.microsoft.com/en-us/windows/security
 
 ## Remove-WDACConfig -UnsignedOrSupplemental
 
-![image](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Wiki%20APNGs/Remove-WDACConfig%20-UnsignedOrSupplemental.apng)
+![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Remove-WDACConfig/Remove-WDACConfig%20-UnsignedOrSupplemental.apng)
 
 ```powershell
 Remove-WDACConfig [-UnsignedOrSupplemental] [-PolicyIDs <String[]>] [-PolicyNames <String[]>]

@@ -14,7 +14,7 @@
 
 ## New-WDACConfig -GetBlockRules
 
-![image](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Wiki%20APNGs/New-WDACConfig%20-GetBlockRules.apng)
+![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-WDACConfig/New-WDACConfig%20-GetBlockRules.apng)
 
 ```powershell
 New-WDACConfig [-GetBlockRules] [-Deploy]
@@ -36,7 +36,7 @@ Creates a WDAC policy file called ***Microsoft recommended block rules.xml*** fr
 
 ## New-WDACConfig -GetDriverBlockRules
 
-![image](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Wiki%20APNGs/New-WDACConfig%20-GetDriverBlockRules.apng)
+![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-WDACConfig/New-WDACConfig%20-GetDriverBlockRules.apng)
 
 ```powershell
 New-WDACConfig [-GetDriverBlockRules] [-Deploy]
@@ -50,7 +50,6 @@ Creates a WDAC policy file called ***Microsoft recommended driver block rules.xm
 
 * `-Deploy`: With the help of PowerShell, uses [the official method](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/microsoft-recommended-driver-block-rules#steps-to-download-and-apply-the-vulnerable-driver-blocklist-binary) to deploy the latest version of [Microsoft recommended driver block rules](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/microsoft-recommended-driver-block-rules).
 
-
 <br>
 
 <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
@@ -59,7 +58,7 @@ Creates a WDAC policy file called ***Microsoft recommended driver block rules.xm
 
 ## New-WDACConfig -MakeAllowMSFTWithBlockRules
 
-![image](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Wiki%20APNGs/New-WDACConfig%20-MakeAllowMSFTWithBlockRules.apng)
+![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-WDACConfig/New-WDACConfig%20-MakeAllowMSFTWithBlockRules.apng)
 
 ```powershell
 New-WDACConfig [-MakeAllowMSFTWithBlockRules] [-Deploy] [-TestMode] [-RequireEVSigners]
@@ -111,7 +110,7 @@ Calls the [-GetBlockRules](#new-wdacconfig--getblockrules) parameter to get the 
 
 ## New-WDACConfig -SetAutoUpdateDriverBlockRules
 
-![image](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Wiki%20APNGs/New-WDACConfig%20-SetAutoUpdateDriverBlockRules.apng)
+![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-WDACConfig/New-WDACConfig%20-SetAutoUpdateDriverBlockRules.apng)
 
 ```powershell
 New-WDACConfig [-SetAutoUpdateDriverBlockRules]
@@ -129,7 +128,7 @@ Creates a scheduled task that runs every 7 days to automatically perform [the of
 
 ## New-WDACConfig -PrepMSFTOnlyAudit
 
-![image](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Wiki%20APNGs/New-WDACConfig%20-PrepMSFTOnlyAudit.apng)
+![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-WDACConfig/New-WDACConfig%20-PrepMSFTOnlyAudit.apng)
 
 ```powershell
 New-WDACConfig [-PrepMSFTOnlyAudit] [-Deploy] [-LogSize <Int64>]
@@ -157,7 +156,7 @@ It's recommended to use the optional parameter below to increase the log size of
 
 ## New-WDACConfig -PrepDefaultWindowsAudit
 
-![image](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Wiki%20APNGs/New-WDACConfig%20-PrepDefaultWindowsAudit%20-LogSize%2050MB.apng)
+![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-WDACConfig/New-WDACConfig%20-PrepDefaultWindowsAudit.apng)
 
 ```powershell
 ew-WDACConfig [-PrepDefaultWindowsAudit] [-Deploy] [-LogSize <Int64>]
@@ -185,7 +184,7 @@ It's recommended to use the optional parameter below to increase the log size of
 
 ## New-WDACConfig -MakePolicyFromAuditLogs
 
-![image](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Wiki%20APNGs/New-WDACConfig%20-MakePolicyFromAuditLogs.apng)
+![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-WDACConfig/New-WDACConfig%20-MakePolicyFromAuditLogs%20-BasePolicyType%20'Allow%20Microsoft%20Base'.apng)
 
 ```powershell
 New-WDACConfig [-MakePolicyFromAuditLogs] -BasePolicyType <String> [-Deploy] [-TestMode] [-RequireEVSigners] [-SpecificFileNameLevel <String>] [-NoDeletedFiles] [-NoUserPEs] [-NoScript] [-Level
@@ -251,7 +250,7 @@ All of the outputs are saved in a folder named "WDAC" inside the current working
 
 ## New-WDACConfig -MakeLightPolicy
 
-![image](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Wiki%20APNGs/New-WDACConfig%20-MakeLightPolicy%20-RequireEVSigners.apng)
+![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-WDACConfig/New-WDACConfig%20-MakeLightPolicy.apng)
 
 ```powershell
 New-WDACConfig [-MakeLightPolicy] [-Deploy] [-TestMode] [-RequireEVSigners]
@@ -293,7 +292,7 @@ Creates a WDAC policy for a [Lightly managed system](https://github.com/HotCakeX
 
 ## New-WDACConfig -MakeDefaultWindowsWithBlockRules
 
-![image](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Wiki%20APNGs/New-WDACConfig%20-MakeDefaultWindowsWithBlockRules.apng)
+![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-WDACConfig/New-WDACConfig%20-MakeDefaultWindowsWithBlockRules.apng)
 
 ```powershell
 New-WDACConfig [-MakeDefaultWindowsWithBlockRules] [-Deploy] [-IncludeSignTool] [-SignToolPath <String>]

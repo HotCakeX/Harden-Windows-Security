@@ -14,7 +14,7 @@
 
 ## New-DenyWDACConfig -Normal
 
-![image](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Wiki%20APNGs/New-DenyWDACConfig%20-Normal.apng)
+![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-DenyWDACConfig/New-DenyWDACConfig%20-Normal.apng)
 
 ```powershell
 New-DenyWDACConfig [-Normal] -PolicyName <String> -ScanLocations <String[]> [-Level <String>]
@@ -54,7 +54,7 @@ Creates a Deny base policy by scanning a directory. The base policy will have 2 
 
 ## New-DenyWDACConfig -Drivers
 
-![image](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Wiki%20APNGs/New-DenyWDACConfig%20-Drivers.apng)
+![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-DenyWDACConfig/New-DenyWDACConfig%20-Drivers.apng)
 
 ```powershell
 New-DenyWDACConfig [-Drivers] -PolicyName <String> -ScanLocations <String[]> [-Level <String>]
@@ -87,7 +87,7 @@ Creates a Deny base policy by scanning a directory, this parameter uses [DriverF
 
 ## New-DenyWDACConfig -InstalledAppXPackages
 
-![image](https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Wiki%20APNGs/New-DenyWDACConfig%20-InstalledAppXPackages.apng)
+![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-DenyWDACConfig/New-DenyWDACConfig%20-InstalledAppXPackages.apng)
 
 ```powershell
 New-DenyWDACConfig [-InstalledAppXPackages] -PackageName <String> -PolicyName <String> [-Deploy]

@@ -2,23 +2,22 @@
 function Get-CommonWDACConfig {
     [CmdletBinding()]
     Param(       
+        [parameter(Mandatory = $false)][switch]$CertCN,
+        [parameter(Mandatory = $false)][switch]$CertPath,
+        [parameter(Mandatory = $false)][switch]$SignToolPath,
         [parameter(Mandatory = $false)][switch]$SignedPolicyPath,
         [parameter(Mandatory = $false)][switch]$UnsignedPolicyPath,
-        [parameter(Mandatory = $false)][switch]$SignToolPath,
-        [parameter(Mandatory = $false)][switch]$CertCN,
-        [parameter(Mandatory = $false)][switch]$StrictKernelPolicyGUID,
-        [parameter(Mandatory = $false)][switch]$StrictKernelNoFlightRootsPolicyGUID,
-        [parameter(Mandatory = $false)][switch]$CertPath,
+        [parameter(Mandatory = $false, DontShow = $true)][switch]$StrictKernelPolicyGUID, # DontShow prevents common parameters from being displayed too
+        [parameter(Mandatory = $false, DontShow = $true)][switch]$StrictKernelNoFlightRootsPolicyGUID,        
         [parameter(Mandatory = $false)][switch]$Open,
-        [Parameter(Mandatory = $false)][Switch]$SkipVersionCheck
+        [parameter(Mandatory = $false, DontShow = $true)][switch]$LastUpdateCheck
     )
     begin {
         # Importing resources such as functions by dot-sourcing so that they will run in the same scope and their variables will be usable
         . "$psscriptroot\Resources.ps1"
         
         # Stop operation as soon as there is an error anywhere, unless explicitly specified otherwise
-        $ErrorActionPreference = 'Stop'        
-        if (-NOT $SkipVersionCheck) { . Update-self }
+        $ErrorActionPreference = 'Stop'
 
         # Fetch User account directory path
         [string]$global:UserAccountDirectoryPath = (Get-CimInstance Win32_UserProfile -Filter "SID = '$([System.Security.Principal.WindowsIdentity]::GetCurrent().User.Value)'").LocalPath
@@ -77,6 +76,7 @@ function Get-CommonWDACConfig {
             $StrictKernelPolicyGUID.IsPresent { Write-Output $CurrentUserConfigurations.StrictKernelPolicyGUID }            
             $StrictKernelNoFlightRootsPolicyGUID.IsPresent { Write-Output $CurrentUserConfigurations.StrictKernelNoFlightRootsPolicyGUID }
             $CertPath.IsPresent { Write-Output $CurrentUserConfigurations.CertificatePath }
+            $LastUpdateCheck.IsPresent { Write-Output $CurrentUserConfigurations.LastUpdateCheck }
         }
     }
 }
@@ -120,9 +120,6 @@ Shows the GUID of the Strict Kernel mode policy
 
 .PARAMETER StrictKernelNoFlightRootsPolicyGUID
 Shows the GUID of the Strict Kernel no Flights root mode policy
-
-.PARAMETER SkipVersionCheck
-Can be used with any parameter to bypass the online version check - only to be used in rare cases
 
 #>
 

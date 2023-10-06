@@ -1,20 +1,8 @@
 # Edit-SignedWDACConfig available parameters
 
-## Notes
-
-* **Mandatory** parameters indicate you always need to provide values for them.
-
-* **Automatic** parameters indicate that if you used [Set-CommonWDACConfig](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Set-CommonWDACConfig) cmdlet to set default values for them, the module will automatically use them. This saves time and prevents repetitive tasks. However, if no value exists in User Configurations for an Automatic parameter and you didn't explicitly provide a value for that parameter either, then you will see an error asking you to provide value for it. Explicitly providing a value for an Automatic parameter in the command line overrides its default value in User Configurations, meaning the module will ignore the value of the same parameter in the User Configurations file.
-
-* **Optional** parameters indicate that they are not required and without using them the module will automatically run with the optimal settings.
-
-* Many cmdlets and parameters of the module support the PowerShell's built-in `-Debug` switch and when that switch is used, they display extra details and debugging messages on the console, showing you what's happening under the hood.
-
-<br>
-
 ## Edit-SignedWDACConfig -AllowNewAppsAuditEvents
 
-![image](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Wiki%20APNGs/Edit-SignedWDACConfig%20-AllowNewAppsAuditEvents.apng)
+![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Edit-SignedWDACConfig/Edit-SignedWDACConfig%20-AllowNewAppsAuditEvents.apng)
 
 ```powershell
 Edit-SignedWDACConfig [-AllowNewAppsAuditEvents] -SuppPolicyName <String> [-CertPath <String>] [-PolicyPaths
@@ -40,11 +28,11 @@ This parameter is specially useful for applications that install files outside o
 
 **This parameter can also detect and create allow rules for Kernel protected files, such as the executables of games installed using Xbox app. Make sure you run the game while the base policy is deployed in Audit mode, using this parameter, so that it can capture those executables.**
 
-### 1 mandatory parameter
+### 1 Mandatory Parameter
 
 * `-SuppPolicyName <String>`: Add a descriptive name for the Supplemental policy.
 
-### 3 Automatic parameters
+### 3 Automatic Parameters
 
 * `-CertPath <String>`: Path to the certificate `.cer` file. Supports tab completion by showing only `.cer` files.
 
@@ -52,13 +40,13 @@ This parameter is specially useful for applications that install files outside o
 
 * `-CertCN <String>`: Common name of the certificate used to sign the deployed WDAC policies - Supports argument completion so you don't have to manually enter the Certificate's CN, just make sure the certificate is installed in the personal store of the user certificates, then press TAB to auto complete the name. You can however enter it manually if you want to.
 
-### 9 optional parameters
+### 9 Optional Parameters
 
-* `-SignToolPath <String>`: <a href="#signtool-bottom">You can use it in 2 different ways<a>
+* `-SignToolPath <String>`: Press TAB to open the file picker GUI and browse for SignTool.exe. [You can use it in 2 different ways](#signtool-bottom)
 
 * `-Debug`: Indicates that the module will output these additional files for debugging purposes and also show debug messages on the console:
      - *FileRulesAndFileRefs.txt* - Contains the File Rules and Rule refs for the Hash of the files that no longer exist on the disk.
-      - *DeletedFileHashesEventsPolicy.xml* - If `-IncludeDeletedFiles` was used and if there were any files detected that were in audit event logs that are no longer on the disk, this file will include allow rules for them based on their hashes.
+     - *DeletedFileHashesEventsPolicy.xml* - If `-IncludeDeletedFiles` was used and if there were any files detected that were in audit event logs that are no longer on the disk, this file will include allow rules for them based on their hashes.
      - *ProgramDir_ScanResults*.xml* - xml policy files for each program path that is selected by user, contains allow rules.
      - *RulesForFilesNotInUserSelectedPaths.xml* - xml policy file that has allow rules for files that do not reside in any of the user-selected program paths, but have been detected in audit event logs.
 
@@ -84,7 +72,7 @@ This parameter is specially useful for applications that install files outside o
 
 ## Edit-SignedWDACConfig -AllowNewApps
 
-![image](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Wiki%20APNGs/Edit-SignedWDACConfig%20-AllowNewApps.apng)
+![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Edit-SignedWDACConfig/Edit-SignedWDACConfig%20-AllowNewApps.apng)
 
 ```powershell
 Edit-SignedWDACConfig [-AllowNewApps] -SuppPolicyName <String> [-CertPath <String>] [-PolicyPaths <String[]>]
@@ -105,11 +93,11 @@ While a Signed Windows Defender Application Control (WDAC) policy is already dep
 
 A new supplemental policy will be created, it will be signed and deployed on the system. The base policy that was initially set to Audit mode will also revert back to enforced mode. The entire process happens without the need for reboot. If something like a power outage occurs during the time Audit mode is deployed, on the next reboot, the enforced mode base policy will be automatically deployed.
 
-### 1 mandatory parameter
+### 1 Mandatory Parameter
 
 * `-SuppPolicyName <String>`: Add a descriptive name for the Supplemental policy.
 
-### 3 Automatic parameters
+### 3 Automatic Parameters
 
 * `-CertPath <String>`: Path to the certificate `.cer` file. Supports tab completion by showing only `.cer` files.
 
@@ -117,9 +105,9 @@ A new supplemental policy will be created, it will be signed and deployed on the
 
 * `-CertCN <String>`: Common name of the certificate used to sign the deployed WDAC policies - Supports argument completion so you don't have to manually enter the Certificate's CN, just make sure the certificate is installed in the personal store of the user certificates, then press TAB to auto complete the name. You can however enter it manually if you want to.
 
-### 6 optional parameters
+### 6 Optional Parameters
 
-* `-SignToolPath <String>`: <a href="#signtool-bottom">You can use it in 2 different ways<a>
+* `-SignToolPath <String>`: Press TAB to open the file picker GUI and browse for SignTool.exe. [You can use it in 2 different ways](#signtool-bottom)
 
 * `-Levels <String>`: Offers the same official [Levels](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-level) for scanning of the specified directory paths. If no level is specified the default, which is set to ***FilePublisher*** in this module, will be used.
 
@@ -139,7 +127,7 @@ A new supplemental policy will be created, it will be signed and deployed on the
 
 ## Edit-SignedWDACConfig -MergeSupplementalPolicies
 
-![image](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Wiki%20APNGs/Edit-SignedWDACConfig%20-MergeSupplementalPolicies.apng)
+![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Edit-SignedWDACConfig/Edit-SignedWDACConfig%20-MergeSupplementalPolicies.apng)
 
 ```powershell
 Edit-SignedWDACConfig [-MergeSupplementalPolicies] -CertPath <String> -SuppPolicyName <String> -PolicyPaths
@@ -164,9 +152,9 @@ Merge multiple deployed **Signed** Supplemental policies into 1 and deploy it, r
 
 * `-CertPath <String>`: Path to the certificate `.cer` file. Supports tab completion by showing only `.cer` files.
 
-### 2 optional parameters
+### 2 Optional Parameters
 
-* `-SignToolPath <String>`: <a href="#signtool-bottom">You can use it in 2 different ways<a>
+* `-SignToolPath <String>`: Press TAB to open the file picker GUI and browse for SignTool.exe. [You can use it in 2 different ways](#signtool-bottom)
 
 * `-KeepOldSupplementalPolicies`: Indicates that the module will not remove the old Supplemental policy xml files after creating and deploying the new merged one.
 
@@ -178,7 +166,7 @@ Merge multiple deployed **Signed** Supplemental policies into 1 and deploy it, r
 
 ## Edit-SignedWDACConfig -UpdateBasePolicy
 
-![image](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Wiki%20APNGs/Edit-WDACConfig%20-UpdateBasePolicy.apng)
+![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Edit-SignedWDACConfig/Edit-SignedWDACConfig%20-UpdateBasePolicy.apng)
 
 ```powershell
 Edit-SignedWDACConfig [-UpdateBasePolicy] -CertPath <String> -CertCN <String> -CurrentBasePolicyName <String[]>
@@ -191,7 +179,7 @@ It can rebootlessly change the type of the deployed signed base policy. It can u
 
 **Hint:** When switching from a more permissive base policy type to a more restrictive one, make sure your Supplemental policies will continue to work. E.g., if your current base policy type is *Allow Microsoft* and the one you are switching to is *Default Windows*, there *might* be files that will get blocked as a result of this switch if you created a Supplemental policy using Event viewer capturing. That's simply because they were allowed by the more permissive *Allow Microsoft* policy type so they didn't trigger audit logs thus weren't needed to be included in the Supplemental policy. You will need to update those Supplemental policies if that happens by deleting and recreating them, no immediate reboot required.
 
-### 2 mandatory parameters
+### 2 Mandatory Parameters
 
 * `-CurrentBasePolicyName <String[]>`: The name of the currently deployed base policy. It supports tab completion so just press tab to autofill it.
 
@@ -199,21 +187,21 @@ It can rebootlessly change the type of the deployed signed base policy. It can u
 
      - [AllowMicrosoft_Plus_Block_Rules](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-WDACConfig#new-wdacconfig--makeallowmsftwithblockrules)
 
-      - [Lightly_Managed_system_Policy](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-WDACConfig#new-wdacconfig--makelightpolicy)
+     - [Lightly_Managed_system_Policy](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-WDACConfig#new-wdacconfig--makelightpolicy)
 
      - [DefaultWindows_WithBlockRules](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-WDACConfig#new-wdacconfig--makedefaultwindowswithblockrules)
   
         - > Since the module uses PowerShell and not Windows PowerShell that is pre-installed in Windows, selecting this argument will automatically scan `C:\Program Files\PowerShell` directory and add PowerShell files to the base policy so that you will be able to continue using the module after redeploying the base policy. The scan uses ***FilePublisher*** level and ***Hash*** fallback.
 
-### 2 Automatic parameters
+### 2 Automatic Parameters
 
 * `-CertPath <String>`: Path to the certificate `.cer` file used to sign the deployed base policy. Supports tab completion by showing only `.cer` files.
 
 * `-CertCN <String>`: Common name of the certificate used to sign the deployed base WDAC policy - Supports argument completion so you don't have to manually enter the Certificate's CN, just make sure the certificate is installed in the personal store of the user certificates, then press TAB to auto complete the name. You can however enter it manually if you want to.
 
-### 2 optional parameters
+### 2 Optional Parameters
 
-* `-SignToolPath <String>`: <a href="#signtool-bottom">You can use it in 2 different ways<a>
+* `-SignToolPath <String>`: Press TAB to open the file picker GUI and browse for SignTool.exe. [You can use it in 2 different ways](#signtool-bottom)
 
 * `-RequireEVSigners`: Indicates that the base policy will have [Require EV Signers](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/wdac-wizard-create-base-policy#advanced-policy-rules-description) policy rule option.
 
@@ -223,12 +211,24 @@ It can rebootlessly change the type of the deployed signed base policy. It can u
 
 <br>
 
+## Notes
+
+* **Mandatory** parameters indicate you always need to provide values for them.
+
+* **Automatic** parameters indicate that if you used [Set-CommonWDACConfig](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Set-CommonWDACConfig) cmdlet to set default values for them, the module will automatically use them. This saves time and prevents repetitive tasks. However, if no value exists in User Configurations for an Automatic parameter and you didn't explicitly provide a value for that parameter either, then you will see an error asking you to provide value for it. Explicitly providing a value for an Automatic parameter in the command line overrides its default value in User Configurations, meaning the module will ignore the value of the same parameter in the User Configurations file.
+
+* **Optional** parameters indicate that they are not required and without using them the module will automatically run with the optimal settings.
+
+* Many cmdlets and parameters of the module support the PowerShell's built-in `-Debug` switch and when that switch is used, they display extra details and debugging messages on the console, showing you what's happening under the hood.
+
+<br>
+
 ### The logic behind `-SignToolPath <String>` optional parameter 
 
 <a name="signtool-bottom"></a>
 
 1. If [Windows SDK](https://developer.microsoft.com/en-us/windows/downloads/windows-sdk/) Signing Tools for Desktop Apps components is installed in the default location `C:\Program Files (x86)\Windows Kits`, then `-SignToolPath <String>` parameter isn't necessary.
 
-2. If Windows SDK Signing Tools for Desktop Apps components is not installed in the default location or you want to manually browse for the `signtool.exe`, then make sure you use the `-SignToolPath <String>` parameter.
+2. If Windows SDK Signing Tools for Desktop Apps components is not installed in the default location or you want to manually browse for the `signtool.exe`, then make sure you either specify its path using `Set-CommonWDACConfig -SignToolPath` or use the `-SignToolPath <String>` parameter.
 
 <br>

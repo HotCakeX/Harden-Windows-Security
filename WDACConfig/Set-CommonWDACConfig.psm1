@@ -44,15 +44,13 @@ function Set-CommonWDACConfig {
                     else { throw 'The selected policy xml file is Unsigned, Please select a Signed policy.' }               
                 }
             }, ErrorMessage = 'The selected policy xml file is Unsigned, Please select a Signed policy.')]
-        [parameter(Mandatory = $false)][System.String]$SignedPolicyPath,       
+        [parameter(Mandatory = $false)][System.String]$SignedPolicyPath,
 
-        [parameter(Mandatory = $false)][switch]$DeleteUserConfig,
+        [parameter(Mandatory = $false, DontShow = $true)][System.Guid]$StrictKernelPolicyGUID, # DontShow prevents common parameters from being displayed too
 
-        [parameter(Mandatory = $false)][System.Guid]$StrictKernelPolicyGUID,
+        [parameter(Mandatory = $false, DontShow = $true)][System.Guid]$StrictKernelNoFlightRootsPolicyGUID,
 
-        [parameter(Mandatory = $false)][System.Guid]$StrictKernelNoFlightRootsPolicyGUID,
-        
-        [Parameter(Mandatory = $false)][Switch]$SkipVersionCheck
+        [parameter(Mandatory = $false, DontShow = $true)][datetime]$LastUpdateCheck
     )
     begin {
         # Importing resources such as functions by dot-sourcing so that they will run in the same scope and their variables will be usable
@@ -60,7 +58,6 @@ function Set-CommonWDACConfig {
         
         # Stop operation as soon as there is an error anywhere, unless explicitly specified otherwise
         $ErrorActionPreference = 'Stop'        
-        if (-NOT $SkipVersionCheck) { . Update-self }  
 
         # Fetch User account directory path
         [string]$global:UserAccountDirectoryPath = (Get-CimInstance Win32_UserProfile -Filter "SID = '$([System.Security.Principal.WindowsIdentity]::GetCurrent().User.Value)'").LocalPath
@@ -75,13 +72,7 @@ function Set-CommonWDACConfig {
         if (-NOT (Test-Path -Path "$global:UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json")) { 
             New-Item -ItemType File -Path "$global:UserAccountDirectoryPath\.WDACConfig\" -Name 'UserConfigurations.json' -Force -ErrorAction Stop | Out-Null
             Write-Debug -Message "The UserConfigurations.json file in \.WDACConfig\ folder has been created because it didn't exist."
-        }
-
-        if ($DeleteUserConfig) {        
-            Remove-Item -Path "$global:UserAccountDirectoryPath\.WDACConfig\" -Recurse -Force
-            &$WritePink 'User Configurations for WDACConfig module have been deleted.'
-            break
-        }       
+        }      
         
         if ($PSBoundParameters.Count -eq 0) {
             Write-Error 'No parameter was selected.'
@@ -107,6 +98,7 @@ function Set-CommonWDACConfig {
             CertificatePath                     = ''
             StrictKernelPolicyGUID              = ''
             StrictKernelNoFlightRootsPolicyGUID = ''
+            LastUpdateCheck                     = ''
         }
     }
     process {
@@ -160,6 +152,12 @@ function Set-CommonWDACConfig {
             $UserConfigurationsObject.StrictKernelNoFlightRootsPolicyGUID = $CurrentUserConfigurations.StrictKernelNoFlightRootsPolicyGUID
         }
 
+        if ($LastUpdateCheck) {
+            $UserConfigurationsObject.LastUpdateCheck = $LastUpdateCheck
+        }
+        else {
+            $UserConfigurationsObject.LastUpdateCheck = $CurrentUserConfigurations.LastUpdateCheck
+        }
     }
     end {
         # Update the User Configurations file
@@ -170,19 +168,19 @@ function Set-CommonWDACConfig {
 }
 <#
 .SYNOPSIS
-Add/Remove/Change common values for parameters used by WDACConfig module
+Add/Change common values for parameters used by WDACConfig module
 
 .LINK
 https://github.com/HotCakeX/Harden-Windows-Security/wiki/Set-CommonWDACConfig
 
 .DESCRIPTION
-Add/Remove/Change common values for parameters used by WDACConfig module so that you won't have to provide values for those repetitive parameters each time you need to use the WDACConfig module cmdlets.
+Add/Change common values for parameters used by WDACConfig module so that you won't have to provide values for those repetitive parameters each time you need to use the WDACConfig module cmdlets.
 
 .COMPONENT
 Windows Defender Application Control, ConfigCI PowerShell module, WDACConfig module
 
 .FUNCTIONALITY
-Add/Remove/Change common values for parameters used by WDACConfig module so that you won't have to provide values for those repetitive parameters each time you need to use the WDACConfig module cmdlets.
+Add/Change common values for parameters used by WDACConfig module so that you won't have to provide values for those repetitive parameters each time you need to use the WDACConfig module cmdlets.
 
 .PARAMETER SignedPolicyPath
 Path to a Signed WDAC xml policy
@@ -204,12 +202,6 @@ GUID of the Strict Kernel mode policy
 
 .PARAMETER StrictKernelNoFlightRootsPolicyGUID
 GUID of the Strict Kernel no Flights root mode policy
-
-.PARAMETER DeleteUserConfig
-Deletes the .WDACConfig directory in User directory and all of the files in it
-
-.PARAMETER SkipVersionCheck
-Can be used with any parameter to bypass the online version check - only to be used in rare cases
 
 #>
 

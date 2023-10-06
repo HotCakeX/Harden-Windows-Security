@@ -104,20 +104,37 @@ function Deploy-SignedWDACConfig {
         #endregion User-Configurations-Processing-Validation     
     }
 
-    process {
-
+    process {        
         foreach ($PolicyPath in $PolicyPaths) {          
-                        
+            
+            # Gather policy details
             $xml = [xml](Get-Content $PolicyPath)
             [System.String]$PolicyType = $xml.SiPolicy.PolicyType
             [System.String]$PolicyID = $xml.SiPolicy.PolicyID
             [System.String]$PolicyName = ($xml.SiPolicy.Settings.Setting | Where-Object { $_.provider -eq 'PolicyInfo' -and $_.valuename -eq 'Name' -and $_.key -eq 'Information' }).value.string
+            [System.String[]]$PolicyRuleOptions = $xml.SiPolicy.Rules.Rule.Option
+
+            # Remove the .CIP file of the same policy being signed and deployed if any in the current working directory
             Remove-Item -Path ".\$PolicyID.cip" -ErrorAction SilentlyContinue
-            if ($PolicyType -eq 'Supplemental Policy') {          
-                Add-SignerRule -FilePath $PolicyPath -CertificatePath $CertPath -Update -User -Kernel
+            
+            # Ensure -Supplemental is not used when the policy type is supplemental
+            if ($PolicyType -eq 'Supplemental Policy') {
+                # Make sure -User is not added if the UMCI policy rule option doesn't exist in the policy, typically for Strict kernel mode policies
+                if ('Enabled:UMCI' -in $PolicyRuleOptions) {          
+                    Add-SignerRule -FilePath $PolicyPath -CertificatePath $CertPath -Update -User -Kernel
+                }
+                else {
+                    Add-SignerRule -FilePath $PolicyPath -CertificatePath $CertPath -Update -Kernel
+                }
             }
-            else {            
-                Add-SignerRule -FilePath $PolicyPath -CertificatePath $CertPath -Update -User -Kernel -Supplemental
+            else {
+                # Make sure -User is not added if the UMCI policy rule option doesn't exist in the policy, typically for Strict kernel mode policies
+                if ('Enabled:UMCI' -in $PolicyRuleOptions) {            
+                    Add-SignerRule -FilePath $PolicyPath -CertificatePath $CertPath -Update -User -Kernel -Supplemental
+                }
+                else {
+                    Add-SignerRule -FilePath $PolicyPath -CertificatePath $CertPath -Update -Kernel -Supplemental
+                }
             }
             Set-HVCIOptions -Strict -FilePath $PolicyPath
             Set-RuleOption -FilePath $PolicyPath -Option 6 -Delete
@@ -131,6 +148,7 @@ function Deploy-SignedWDACConfig {
                 'Wait'         = $true
                 'ErrorAction'  = 'Stop'
             }
+            # Hide the SignTool.exe's normal output unless -Debug parameter was used
             if (!$Debug) { $ProcessParams['RedirectStandardOutput'] = 'NUL' } 
             # Sign the files with the specified cert
             Start-Process @ProcessParams
@@ -146,8 +164,32 @@ function Deploy-SignedWDACConfig {
                 Write-Output "PolicyGUID = $PolicyID`n"
                 Remove-Item -Path ".\$PolicyID.cip" -Force
 
-                # Show the question only for base policies
-                if ($PolicyType -ne 'Supplemental Policy') {
+                #region Detecting Strict Kernel mode policy and removing it from User Configs
+                if ('Enabled:UMCI' -notin $PolicyRuleOptions) {
+
+                    [System.String]$StrictKernelPolicyGUID = Get-CommonWDACConfig -StrictKernelPolicyGUID
+                    [System.String]$StrictKernelNoFlightRootsPolicyGUID = Get-CommonWDACConfig -StrictKernelNoFlightRootsPolicyGUID
+                    
+                    if (($PolicyName -like '*Strict Kernel mode policy Enforced*')) {
+                        if ($StrictKernelPolicyGUID) {                            
+                            if ($($PolicyID.TrimStart('{').TrimEnd('}')) -eq $StrictKernelPolicyGUID) {
+                                Remove-CommonWDACConfig -StrictKernelPolicyGUID | Out-Null
+                            }                            
+                        }
+                    }
+                    
+                    elseif (($PolicyName -like '*Strict Kernel No Flights mode policy Enforced*')) {
+                        if ($StrictKernelNoFlightRootsPolicyGUID) {                           
+                            if ($($PolicyID.TrimStart('{').TrimEnd('}')) -eq $StrictKernelNoFlightRootsPolicyGUID) {
+                                Remove-CommonWDACConfig -StrictKernelNoFlightRootsPolicyGUID | Out-Null
+                            }                            
+                        }
+                    }
+                }
+                #endregion Detecting Strict Kernel mode policy and removing it from User Configs
+           
+                # Show the question only for base policies. Don't show it for Strict kernel mode policies
+                if (($PolicyType -ne 'Supplemental Policy') -and ($PolicyName -notlike '*Strict Kernel*')) {
 
                     # Ask user question about whether or not to add the Signed policy xml file to the User Config Json for easier usage later
                     $userInput = ''

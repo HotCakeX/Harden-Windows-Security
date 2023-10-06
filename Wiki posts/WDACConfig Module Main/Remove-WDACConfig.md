@@ -1,20 +1,8 @@
 # Remove-WDACConfig available parameters
 
-## Notes
-
-* **Mandatory** parameters indicate you always need to provide values for them.
-
-* **Automatic** parameters indicate that if you used [Set-CommonWDACConfig](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Set-CommonWDACConfig) cmdlet to set default values for them, the module will automatically use them. This saves time and prevents repetitive tasks. However, if no value exists in User Configurations for an Automatic parameter and you didn't explicitly provide a value for that parameter either, then you will see an error asking you to provide value for it. Explicitly providing a value for an Automatic parameter in the command line overrides its default value in User Configurations, meaning the module will ignore the value of the same parameter in the User Configurations file.
-
-* **Optional** parameters indicate that they are not required and without using them the module will automatically run with the optimal settings.
-
-* Many cmdlets and parameters of the module support the PowerShell's built-in `-Debug` switch and when that switch is used, they display extra details and debugging messages on the console, showing you what's happening under the hood.
-
-<br>
-
 ## Remove-WDACConfig -SignedBase
 
-![image](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Wiki%20APNGs/Remove-WDACConfig%20-RemoveSignedPolicies.apng)
+![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Remove-WDACConfig/Remove-WDACConfig%20-SignedBase.apng)
 
 ```powershell
 Remove-WDACConfig [-SignedBase] -PolicyPaths <String[]> -CertCN <String> [-SignToolPath <String>]
@@ -24,13 +12,13 @@ Remove-WDACConfig [-SignedBase] -PolicyPaths <String[]> -CertCN <String> [-SignT
 
 Uses [the official procedure](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/deployment/disable-wdac-policies) to Re-Deploy the Signed base WDAC policies with ***Enabled:Unsigned System Integrity Policy*** rule option.
 
-### 1 mandatory parameter
+### 1 Mandatory Parameter
 
 * `-PolicyPaths <String[]`: Path to xml file(s) of the currently deployed policy that you want to remove, can be multiple. Supports tab completion by showing only `.xml` files.
 
-### 2 Automatic parameters
+### 2 Automatic Parameters
 
-* `-SignToolPath <String>`: [You can use it in 2 different ways](#the-logic-behind--signtoolpath-string-optional-parameter)
+* `-SignToolPath <String>`: Press TAB to open the file picker GUI and browse for SignTool.exe. [You can use it in 2 different ways](#the-logic-behind--signtoolpath-string-optional-parameter)
 
 * `-CertCN <String>`: Common name of the certificate used to sign the deployed WDAC policies - Supports argument completion so you don't have to manually enter the Certificate's CN, just make sure the certificate is installed in the personal store of the user certificates, then press TAB to auto complete the name. You can however enter it manually if you want to.
 
@@ -42,7 +30,7 @@ Uses [the official procedure](https://learn.microsoft.com/en-us/windows/security
 
 ## Remove-WDACConfig -UnsignedOrSupplemental
 
-![image](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Wiki%20APNGs/Remove-WDACConfig%20-UnsignedOrSupplemental.apng)
+![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Remove-WDACConfig/Remove-WDACConfig%20-UnsignedOrSupplemental.apng)
 
 ```powershell
 Remove-WDACConfig [-UnsignedOrSupplemental] [-PolicyIDs <String[]>] [-PolicyNames <String[]>]
@@ -52,7 +40,7 @@ Remove-WDACConfig [-UnsignedOrSupplemental] [-PolicyIDs <String[]>] [-PolicyName
 
 Removes Unsigned deployed WDAC policies as well as [Signed deployed Supplemental WDAC policies](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-Notes#removing-supplemental-policies)
 
-### 2 parameters
+### 2 Parameters
 
 * `-PolicyIDs <String[]>`
 * `-PolicyNames <String[]>`
@@ -71,8 +59,26 @@ For example, you can specify 2 policies by IDs and 3 policies by names, and it w
 
 <br>
 
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+
+<br>
+
+## Notes
+
+* **Mandatory** parameters indicate you always need to provide values for them.
+
+* **Automatic** parameters indicate that if you used [Set-CommonWDACConfig](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Set-CommonWDACConfig) cmdlet to set default values for them, the module will automatically use them. This saves time and prevents repetitive tasks. However, if no value exists in User Configurations for an Automatic parameter and you didn't explicitly provide a value for that parameter either, then you will see an error asking you to provide value for it. Explicitly providing a value for an Automatic parameter in the command line overrides its default value in User Configurations, meaning the module will ignore the value of the same parameter in the User Configurations file.
+
+* **Optional** parameters indicate that they are not required and without using them the module will automatically run with the optimal settings.
+
+* Many cmdlets and parameters of the module support the PowerShell's built-in `-Debug` switch and when that switch is used, they display extra details and debugging messages on the console, showing you what's happening under the hood.
+
+<br>
+
 ### The logic behind `-SignToolPath <String>` optional parameter
 
 1. If [Windows SDK](https://developer.microsoft.com/en-us/windows/downloads/windows-sdk/) Signing Tools for Desktop Apps components is installed in the default location `C:\Program Files (x86)\Windows Kits`, then `-SignToolPath <String>` parameter isn't necessary.
 
-2. If Windows SDK Signing Tools for Desktop Apps components is not installed in the default location or you want to manually browse for the `signtool.exe`, then make sure you use the `-SignToolPath <String>` parameter.
+2. If Windows SDK Signing Tools for Desktop Apps components is not installed in the default location or you want to manually browse for the `signtool.exe`, then make sure you either specify its path using `Set-CommonWDACConfig -SignToolPath` or use the `-SignToolPath <String>` parameter.
+
+<br>

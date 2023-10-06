@@ -8,7 +8,7 @@
     # RootModule           = ""
 
     # Version number of this module.
-    ModuleVersion        = '0.2.4'
+    ModuleVersion        = '0.2.5'
 
     # Supported PSEditions
     CompatiblePSEditions = @('Core')
@@ -60,6 +60,8 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
 
 ✔️ Invoke-WDACSimulation: https://github.com/HotCakeX/Harden-Windows-Security/wiki/Invoke-WDACSimulation
 
+✔️ Remove-CommonWDACConfig: https://github.com/HotCakeX/Harden-Windows-Security/wiki/Remove-CommonWDACConfig
+
 To get help and syntax on PowerShell console, type:
 "Get-Command -Module WDACConfig"
 "Get-Help New-WDACConfig"
@@ -71,13 +73,14 @@ To get help and syntax on PowerShell console, type:
 "Get-Help Confirm-WDACConfig"
 "Get-Help New-DenyWDACConfig"
 "Get-Help Set-CommonWDACConfig"
-"Get-help New-KernelModeWDACConfig"
-"Get-help Get-CommonWDACConfig"
-"Get-help Invoke-WDACSimulation"
+"Get-Help New-KernelModeWDACConfig"
+"Get-Help Get-CommonWDACConfig"
+"Get-Help Invoke-WDACSimulation"
+"Get-Help Remove-CommonWDACConfig"
 '@
 
     # Minimum version of the PowerShell engine required by this module
-    PowerShellVersion    = '7.3.4'
+    PowerShellVersion    = '7.3.6'
 
     # Name of the PowerShell host required by this module
     # PowerShellHostName = ''
@@ -121,7 +124,8 @@ To get help and syntax on PowerShell console, type:
         'Set-CommonWDACConfig.psm1',
         'New-KernelModeWDACConfig.psm1',
         'Invoke-WDACSimulation.psm1',
-        'Get-CommonWDACConfig.psm1')
+        'Get-CommonWDACConfig.psm1',
+        'Remove-CommonWDACConfig.psm1')
 
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
     FunctionsToExport    = @('New-WDACConfig',
@@ -135,7 +139,8 @@ To get help and syntax on PowerShell console, type:
         'Set-CommonWDACConfig',
         'New-KernelModeWDACConfig',
         'Invoke-WDACSimulation',
-        'Get-CommonWDACConfig')
+        'Get-CommonWDACConfig',
+        'Remove-CommonWDACConfig')
 
     # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
     CmdletsToExport      = @('New-WDACConfig',
@@ -149,7 +154,8 @@ To get help and syntax on PowerShell console, type:
         'Set-CommonWDACConfig',
         'New-KernelModeWDACConfig',
         'Invoke-WDACSimulation',
-        'Get-CommonWDACConfig')
+        'Get-CommonWDACConfig',
+        'Remove-CommonWDACConfig')
 
     # Variables to export from this module
     VariablesToExport    = '*'
@@ -181,7 +187,8 @@ To get help and syntax on PowerShell console, type:
         'WDAC Policies\DefaultWindows_Enforced_Kernel_NoFlights.xml',
         'Invoke-WDACSimulation.psm1',
         'Resources2.ps1',
-        'Get-CommonWDACConfig.psm1')
+        'Get-CommonWDACConfig.psm1',
+        'Remove-CommonWDACConfig.psm1')
 
     # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.
     PrivateData          = @{
@@ -189,7 +196,7 @@ To get help and syntax on PowerShell console, type:
         PSData = @{
 
             # Tags applied to this module. These help with module discovery in online galleries.
-            Tags         = @('WDAC', 'Windows-Defender-Application-Control', 'Windows', 'Security', 'Microsoft', 'Application-Control', 'MDAC', 'Application-Whitelisting', 'BYOVD')
+            Tags         = @('WDAC', 'Windows-Defender-Application-Control', 'Windows', 'Security', 'Microsoft', 'Application-Control', 'App-Control-for-Business', 'Application-Whitelisting', 'BYOVD')
 
             # A URL to the license for this module.
             LicenseUri   = 'https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE'

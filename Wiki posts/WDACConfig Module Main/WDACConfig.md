@@ -14,7 +14,7 @@ This page is also available [on my website.](https://spynetgirl.github.io/WDACCo
 
 * PowerShell 7.3.6 and above  
   
-  * Install from [GitHub](https://github.com/PowerShell/PowerShell/releases/latest) or [Microsoft Store](https://www.microsoft.com/store/productid/9MZ1SNWT0N5D)
+    * Install from [GitHub](https://github.com/PowerShell/PowerShell/releases/latest) or [Microsoft Store](https://www.microsoft.com/store/productid/9MZ1SNWT0N5D)
 
 * Windows 11 version 22H2 and above
 * Administrator Privileges
@@ -32,7 +32,7 @@ This page is also available [on my website.](https://spynetgirl.github.io/WDACCo
 
 * Checks for new version periodically and updates itself automatically when necessary.
 
-  - Update check can be skipped with `-SkipVersionCheck`.
+    - Update check can be skipped with `-SkipVersionCheck`.
 
 * Actively trying to design it with [Microsoft Security Development Lifesycle (SDL)](https://www.microsoft.com/en-us/securityengineering/sdl/) guidelines in mind.
 

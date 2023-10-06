@@ -42,11 +42,11 @@ This parameter is specially useful for applications that install files outside o
 
 ### 9 Optional Parameters
 
-* `-SignToolPath <String>`: Press TAB to open the file picker GUI and browse for SignTool.exe. <a href="#signtool-bottom">You can use it in 2 different ways<a>
+* `-SignToolPath <String>`: Press TAB to open the file picker GUI and browse for SignTool.exe. [You can use it in 2 different ways](#signtool-bottom)
 
 * `-Debug`: Indicates that the module will output these additional files for debugging purposes and also show debug messages on the console:
      - *FileRulesAndFileRefs.txt* - Contains the File Rules and Rule refs for the Hash of the files that no longer exist on the disk.
-      - *DeletedFileHashesEventsPolicy.xml* - If `-IncludeDeletedFiles` was used and if there were any files detected that were in audit event logs that are no longer on the disk, this file will include allow rules for them based on their hashes.
+     - *DeletedFileHashesEventsPolicy.xml* - If `-IncludeDeletedFiles` was used and if there were any files detected that were in audit event logs that are no longer on the disk, this file will include allow rules for them based on their hashes.
      - *ProgramDir_ScanResults*.xml* - xml policy files for each program path that is selected by user, contains allow rules.
      - *RulesForFilesNotInUserSelectedPaths.xml* - xml policy file that has allow rules for files that do not reside in any of the user-selected program paths, but have been detected in audit event logs.
 
@@ -107,7 +107,7 @@ A new supplemental policy will be created, it will be signed and deployed on the
 
 ### 6 Optional Parameters
 
-* `-SignToolPath <String>`: Press TAB to open the file picker GUI and browse for SignTool.exe. <a href="#signtool-bottom">You can use it in 2 different ways<a>
+* `-SignToolPath <String>`: Press TAB to open the file picker GUI and browse for SignTool.exe. [You can use it in 2 different ways](#signtool-bottom)
 
 * `-Levels <String>`: Offers the same official [Levels](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-level) for scanning of the specified directory paths. If no level is specified the default, which is set to ***FilePublisher*** in this module, will be used.
 
@@ -154,7 +154,7 @@ Merge multiple deployed **Signed** Supplemental policies into 1 and deploy it, r
 
 ### 2 Optional Parameters
 
-* `-SignToolPath <String>`: Press TAB to open the file picker GUI and browse for SignTool.exe. <a href="#signtool-bottom">You can use it in 2 different ways<a>
+* `-SignToolPath <String>`: Press TAB to open the file picker GUI and browse for SignTool.exe. [You can use it in 2 different ways](#signtool-bottom)
 
 * `-KeepOldSupplementalPolicies`: Indicates that the module will not remove the old Supplemental policy xml files after creating and deploying the new merged one.
 
@@ -201,7 +201,7 @@ It can rebootlessly change the type of the deployed signed base policy. It can u
 
 ### 2 Optional Parameters
 
-* `-SignToolPath <String>`: Press TAB to open the file picker GUI and browse for SignTool.exe. <a href="#signtool-bottom">You can use it in 2 different ways<a>
+* `-SignToolPath <String>`: Press TAB to open the file picker GUI and browse for SignTool.exe. [You can use it in 2 different ways](#signtool-bottom)
 
 * `-RequireEVSigners`: Indicates that the base policy will have [Require EV Signers](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/wdac-wizard-create-base-policy#advanced-policy-rules-description) policy rule option.
 

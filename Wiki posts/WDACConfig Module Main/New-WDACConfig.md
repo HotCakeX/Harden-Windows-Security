@@ -73,13 +73,6 @@ Calls the [-GetBlockRules](#new-wdacconfig--getblockrules) parameter to get the 
 
 <br>
 
-### The outputs of the parameter are
-
-* **AllowMicrosoftPlusBlockRules.xml** policy file
-* **{GUID}.cip** for the policy above
-
-<br>
-
 ### 3 Optional Parameters
 
 * `-Deploy`: Indicates that the module will automatically deploy the ***AllowMicrosoftPlusBlockRules*** policy after creation.
@@ -89,6 +82,13 @@ Calls the [-GetBlockRules](#new-wdacconfig--getblockrules) parameter to get the 
 * `-RequireEVSigners`: Indicates that the created/deployed policy will have [Require EV Signers](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/wdac-wizard-create-base-policy#advanced-policy-rules-description) policy rule option.
 
      - > In addition to being WHQL signed, this rule requires that drivers must have been submitted by a partner that has an Extended Verification (EV) certificate. All Windows 10 and later, or Windows 11 drivers will meet this requirement.
+
+<br>
+
+### The outputs of the parameter are
+
+* **AllowMicrosoftPlusBlockRules.xml** policy file
+* **{GUID}.cip** for the policy above
 
 <br>
 

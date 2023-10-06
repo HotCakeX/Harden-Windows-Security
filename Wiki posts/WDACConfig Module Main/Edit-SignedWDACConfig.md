@@ -28,11 +28,11 @@ This parameter is specially useful for applications that install files outside o
 
 **This parameter can also detect and create allow rules for Kernel protected files, such as the executables of games installed using Xbox app. Make sure you run the game while the base policy is deployed in Audit mode, using this parameter, so that it can capture those executables.**
 
-### 1 mandatory parameter
+### 1 Mandatory Parameter
 
 * `-SuppPolicyName <String>`: Add a descriptive name for the Supplemental policy.
 
-### 3 Automatic parameters
+### 3 Automatic Parameters
 
 * `-CertPath <String>`: Path to the certificate `.cer` file. Supports tab completion by showing only `.cer` files.
 
@@ -40,9 +40,9 @@ This parameter is specially useful for applications that install files outside o
 
 * `-CertCN <String>`: Common name of the certificate used to sign the deployed WDAC policies - Supports argument completion so you don't have to manually enter the Certificate's CN, just make sure the certificate is installed in the personal store of the user certificates, then press TAB to auto complete the name. You can however enter it manually if you want to.
 
-### 9 optional parameters
+### 9 Optional Parameters
 
-* `-SignToolPath <String>`: <a href="#signtool-bottom">You can use it in 2 different ways<a>
+* `-SignToolPath <String>`: Press TAB to open the file picker GUI and browse for SignTool.exe. <a href="#signtool-bottom">You can use it in 2 different ways<a>
 
 * `-Debug`: Indicates that the module will output these additional files for debugging purposes and also show debug messages on the console:
      - *FileRulesAndFileRefs.txt* - Contains the File Rules and Rule refs for the Hash of the files that no longer exist on the disk.
@@ -93,11 +93,11 @@ While a Signed Windows Defender Application Control (WDAC) policy is already dep
 
 A new supplemental policy will be created, it will be signed and deployed on the system. The base policy that was initially set to Audit mode will also revert back to enforced mode. The entire process happens without the need for reboot. If something like a power outage occurs during the time Audit mode is deployed, on the next reboot, the enforced mode base policy will be automatically deployed.
 
-### 1 mandatory parameter
+### 1 Mandatory Parameter
 
 * `-SuppPolicyName <String>`: Add a descriptive name for the Supplemental policy.
 
-### 3 Automatic parameters
+### 3 Automatic Parameters
 
 * `-CertPath <String>`: Path to the certificate `.cer` file. Supports tab completion by showing only `.cer` files.
 
@@ -105,9 +105,9 @@ A new supplemental policy will be created, it will be signed and deployed on the
 
 * `-CertCN <String>`: Common name of the certificate used to sign the deployed WDAC policies - Supports argument completion so you don't have to manually enter the Certificate's CN, just make sure the certificate is installed in the personal store of the user certificates, then press TAB to auto complete the name. You can however enter it manually if you want to.
 
-### 6 optional parameters
+### 6 Optional Parameters
 
-* `-SignToolPath <String>`: <a href="#signtool-bottom">You can use it in 2 different ways<a>
+* `-SignToolPath <String>`: Press TAB to open the file picker GUI and browse for SignTool.exe. <a href="#signtool-bottom">You can use it in 2 different ways<a>
 
 * `-Levels <String>`: Offers the same official [Levels](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-level) for scanning of the specified directory paths. If no level is specified the default, which is set to ***FilePublisher*** in this module, will be used.
 
@@ -152,9 +152,9 @@ Merge multiple deployed **Signed** Supplemental policies into 1 and deploy it, r
 
 * `-CertPath <String>`: Path to the certificate `.cer` file. Supports tab completion by showing only `.cer` files.
 
-### 2 optional parameters
+### 2 Optional Parameters
 
-* `-SignToolPath <String>`: <a href="#signtool-bottom">You can use it in 2 different ways<a>
+* `-SignToolPath <String>`: Press TAB to open the file picker GUI and browse for SignTool.exe. <a href="#signtool-bottom">You can use it in 2 different ways<a>
 
 * `-KeepOldSupplementalPolicies`: Indicates that the module will not remove the old Supplemental policy xml files after creating and deploying the new merged one.
 
@@ -179,7 +179,7 @@ It can rebootlessly change the type of the deployed signed base policy. It can u
 
 **Hint:** When switching from a more permissive base policy type to a more restrictive one, make sure your Supplemental policies will continue to work. E.g., if your current base policy type is *Allow Microsoft* and the one you are switching to is *Default Windows*, there *might* be files that will get blocked as a result of this switch if you created a Supplemental policy using Event viewer capturing. That's simply because they were allowed by the more permissive *Allow Microsoft* policy type so they didn't trigger audit logs thus weren't needed to be included in the Supplemental policy. You will need to update those Supplemental policies if that happens by deleting and recreating them, no immediate reboot required.
 
-### 2 mandatory parameters
+### 2 Mandatory Parameters
 
 * `-CurrentBasePolicyName <String[]>`: The name of the currently deployed base policy. It supports tab completion so just press tab to autofill it.
 
@@ -187,21 +187,21 @@ It can rebootlessly change the type of the deployed signed base policy. It can u
 
      - [AllowMicrosoft_Plus_Block_Rules](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-WDACConfig#new-wdacconfig--makeallowmsftwithblockrules)
 
-      - [Lightly_Managed_system_Policy](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-WDACConfig#new-wdacconfig--makelightpolicy)
+     - [Lightly_Managed_system_Policy](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-WDACConfig#new-wdacconfig--makelightpolicy)
 
      - [DefaultWindows_WithBlockRules](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-WDACConfig#new-wdacconfig--makedefaultwindowswithblockrules)
   
         - > Since the module uses PowerShell and not Windows PowerShell that is pre-installed in Windows, selecting this argument will automatically scan `C:\Program Files\PowerShell` directory and add PowerShell files to the base policy so that you will be able to continue using the module after redeploying the base policy. The scan uses ***FilePublisher*** level and ***Hash*** fallback.
 
-### 2 Automatic parameters
+### 2 Automatic Parameters
 
 * `-CertPath <String>`: Path to the certificate `.cer` file used to sign the deployed base policy. Supports tab completion by showing only `.cer` files.
 
 * `-CertCN <String>`: Common name of the certificate used to sign the deployed base WDAC policy - Supports argument completion so you don't have to manually enter the Certificate's CN, just make sure the certificate is installed in the personal store of the user certificates, then press TAB to auto complete the name. You can however enter it manually if you want to.
 
-### 2 optional parameters
+### 2 Optional Parameters
 
-* `-SignToolPath <String>`: <a href="#signtool-bottom">You can use it in 2 different ways<a>
+* `-SignToolPath <String>`: Press TAB to open the file picker GUI and browse for SignTool.exe. <a href="#signtool-bottom">You can use it in 2 different ways<a>
 
 * `-RequireEVSigners`: Indicates that the base policy will have [Require EV Signers](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/wdac-wizard-create-base-policy#advanced-policy-rules-description) policy rule option.
 

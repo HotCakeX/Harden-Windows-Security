@@ -27,7 +27,7 @@ All of the applicable cmdlets of the module automatically check the User Configu
 
 <br>
 
-## An example
+## An Example
 
 Instead of specifying all of the parameters for `Edit-SignedWDACConfig` cmdlet like this:
 

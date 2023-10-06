@@ -5,28 +5,29 @@
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Deploy-SignedWDACConfig/Deploy-SignedWDACConfig.apng)
 
 ```powershell
-Deploy-SignedWDACConfig -PolicyPaths <String[]> [-CertPath <String>] [-CertCN <String>] [-SignToolPath <String>] [-Deploy]
+Deploy-SignedWDACConfig -PolicyPaths <String[]> [-Deploy] [-CertPath <String>] [-CertCN <String>] [-SignToolPath
+<String>]
 ```
 
 <br>
 
-Creates and signs a `CIP` file that can be either deployed locally using the `-Deploy` parameter or you can deploy the signed policy binary on a different machine using the built-in [Citool](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/operations/citool-commands).
+Creates and signs a `.CIP` file that can be either deployed locally using the `-Deploy` parameter or you can deploy the signed policy binary on a different machine later using the built-in [Citool](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/operations/citool-commands).
 
 <br>
 
 ### 1 Mandatory Parameter
 
-* `-PolicyPaths <String[]>`: Accepts multiple policies; it can Sign and Deploy multiple policies at the same time. Supports tab completion by showing only `.xml` files with **Base Policy** Type.
+* `-PolicyPaths <String[]>`: Accepts multiple policies; it can Sign and Deploy multiple policies at the same time. Supports tab completion by showing only `.xml` files in the current working directory.
 
-### 2 Automatic parameters
+### 2 Automatic Parameters
 
-* `-CertPath <String>`: Path to the certificate `.cer` file. Supports tab completion by showing only `.cer` files.
+* `-CertPath <String>`: Path to the certificate `.cer` file. Press TAB to open the file picker GUI and browse for a `.cer` file.
 
 * `CertCN <String>`: Common name of the certificate - Supports argument completion so you don't have to manually enter the Certificate's CN, just make sure the `-CertPath` is specified and the certificate is installed in the personal store of the user certificates, then press TAB to auto complete the name. You can however enter it manually if you want to.
 
 ### 2 Optional Parameters
 
-* `-SignToolPath <String>`: Supports tab completion by showing only `.exe` files.
+* `-SignToolPath <String>`: Press TAB to open the file picker GUI and browse for SignTool.exe
 
 * `-Deploy`: Deploys the signed policy on the system
 

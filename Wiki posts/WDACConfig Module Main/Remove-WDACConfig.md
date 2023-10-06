@@ -18,7 +18,7 @@ Uses [the official procedure](https://learn.microsoft.com/en-us/windows/security
 
 ### 2 Automatic Parameters
 
-* `-SignToolPath <String>`: [You can use it in 2 different ways](#the-logic-behind--signtoolpath-string-optional-parameter)
+* `-SignToolPath <String>`: Press TAB to open the file picker GUI and browse for SignTool.exe. [You can use it in 2 different ways](#the-logic-behind--signtoolpath-string-optional-parameter)
 
 * `-CertCN <String>`: Common name of the certificate used to sign the deployed WDAC policies - Supports argument completion so you don't have to manually enter the Certificate's CN, just make sure the certificate is installed in the personal store of the user certificates, then press TAB to auto complete the name. You can however enter it manually if you want to.
 

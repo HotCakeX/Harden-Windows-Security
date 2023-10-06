@@ -6,6 +6,10 @@ This page is also available [on my website.](https://spynetgirl.github.io/WDACCo
 
 <br>
 
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+
+<br>
+
 ## Requirements
 
 * PowerShell 7.3.6 and above  
@@ -15,6 +19,10 @@ This page is also available [on my website.](https://spynetgirl.github.io/WDACCo
 * Windows 11 version 22H2 and above
 * Administrator Privileges
 * Internet Connection (for periodic update checks)
+
+<br>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
 
 <br>
 
@@ -34,13 +42,19 @@ This page is also available [on my website.](https://spynetgirl.github.io/WDACCo
 
 <br>
 
-## How To Use It
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
 
-### Install the module
+<br>
+
+## Install The Module
 
 ```powershell
 Install-Module -Name WDACConfig -Force
 ```
+
+<br>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
 
 <br>
 
@@ -90,6 +104,10 @@ Install-Module -Name WDACConfig -Force
 <br>
 
 <a href="https://youtu.be/RgVf4p9ct90?si=mGdVCnqVlUN_FBWR"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/YouTube%20Video%20Thumbnails/With%20YouTube%20play%20button/WDAC%20policy%20for%20Lightly%20managed%20device.png"></a>
+
+<br>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
 
 <br>
 

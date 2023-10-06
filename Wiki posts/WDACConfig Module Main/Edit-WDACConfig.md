@@ -185,6 +185,10 @@ It can rebootlessly change the type of the deployed base policy. It can update t
 
 <br>
 
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+
+<br>
+
 ## Notes
 
 * **Mandatory** parameters indicate you always need to provide values for them.

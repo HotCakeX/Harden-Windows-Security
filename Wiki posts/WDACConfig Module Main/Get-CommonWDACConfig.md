@@ -15,8 +15,7 @@
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Get-CommonWDACConfig/Get-CommonWDACConfig.apng)
 
 ```powershell
-Get-CommonWDACConfig [-SignedPolicyPath] [-UnsignedPolicyPath] [-SignToolPath] [-CertCN] [-StrictKernelPolicyGUID]
-[-StrictKernelNoFlightRootsPolicyGUID] [-CertPath] [-Open]
+Get-CommonWDACConfig [-CertCN] [-CertPath] [-SignToolPath] [-SignedPolicyPath] [-UnsignedPolicyPath] [-Open] [-LastUpdateCheck]
 ```
 
 <br>
@@ -27,22 +26,21 @@ All of the applicable cmdlets of the module automatically check the User Configu
 
 <br>
 
-### 8 optional parameters
-
-* `-SignedPolicyPath <String>`: Displays the path to the xml file of a Signed policy.
-
-* `-UnSignedPolicyPath <String>`: Displays the path to the xml file of an Unsigned policy.
-
-* `-SignToolPath`: Displays the path to the SignTool executable.
+### 7 Optional Parameters
 
 * `-CertCN`: Displays the Common Name of an installed certificate.
 
 * `-CertPath`: Displays the path to a certificate `.cer` file.
 
+* `-SignToolPath`: Displays the path to the SignTool executable.
+
+* `-SignedPolicyPath <String>`: Displays the path to the xml file of a Signed policy.
+
+* `-UnSignedPolicyPath <String>`: Displays the path to the xml file of an Unsigned policy.
+
 * `-Open`: Opens the User Config Json file in the default editor.
+by the module)
 
-* `-StrictKernelPolicyGUID`: Displays the GUID of the Strict Kernel mode policy (Mainly used Internally by the module)
-
-* `-StrictKernelNoFlightRootsPolicyGUID`: Displays the GUID of the Strict Kernel no Flights root mode policy (Mainly used Internally by the module)
+* `-LastUpdateCheck`: Displays the last time online update check was performed.
 
 <br>

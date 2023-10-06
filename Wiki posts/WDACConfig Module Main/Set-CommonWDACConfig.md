@@ -15,9 +15,8 @@
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Set-CommonWDACConfig/Set-CommonWDACConfig.apng)
 
 ```powershell
-Set-CommonWDACConfig [[-SignedPolicyPath] <string>] [[-UnsignedPolicyPath] <string>] [[-SignToolPath] <string>]
-[[-CertCN] <string>] [[-StrictKernelPolicyGUID] <guid>] [[-StrictKernelNoFlightRootsPolicyGUID] <guid>]
-[[-CertPath] <string>] [-DeleteUserConfig] 
+Set-CommonWDACConfig [[-CertCN] <string>] [[-CertPath] <string>] [[-SignToolPath] <string>] [[-UnsignedPolicyPath]
+<string>] [[-SignedPolicyPath] <string>]
 ```
 
 <br>
@@ -46,22 +45,16 @@ If correct and valid values for the missing parameters exist in User Configurati
 
 <br>
 
-### 8 optional parameters
-
-* `-SignedPolicyPath <String>`: Path to the xml file of a Signed policy. Supports tab completion by showing only the base policies in the current working directory.
-
-* `-UnSignedPolicyPath <String>`: Path to the xml file of an Unsigned policy. Supports tab completion by showing only the base policies in the current working directory.
-
-* `-SignToolPath`: Path to the SignTool executable. Supports tab completion by opening a file picker dialog GUI to help you select your `.exe` SignTool executable easily.
+### 5 Optional Parameters
 
 * `-CertCN`: Common Name of an installed certificate. Supports argument completion so you don't have to manually enter the Certificate's CN, just make sure the certificate is installed in the personal store of the user certificates, then press TAB to auto complete the name. You can however enter it manually if you want to.
 
 * `-CertPath`: Path to a certificate `.cer` file. Support tab completion by opening a file picker dialog GUI to help you select your `.cer` certificate file easily.
 
-* `-DeleteUserConfig`: Deletes the `.WDACConfig` folder in User directory and everything in it.
+* `-SignToolPath`: Path to the SignTool executable. Supports tab completion by opening a file picker dialog GUI to help you select your `.exe` SignTool executable easily.
 
-* `-StrictKernelPolicyGUID`: GUID of the Strict Kernel mode policy (Mainly used Internally by the module)
+* `-UnSignedPolicyPath <String>`: Path to the xml file of an Unsigned policy. Supports tab completion by showing only the base policies in the current working directory.
 
-* `-StrictKernelNoFlightRootsPolicyGUID`: GUID of the Strict Kernel no Flights root mode policy (Mainly used Internally by the module)
+* `-SignedPolicyPath <String>`: Path to the xml file of a Signed policy. Supports tab completion by showing only the base policies in the current working directory.
 
 <br>

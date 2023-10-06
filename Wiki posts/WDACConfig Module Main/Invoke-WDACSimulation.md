@@ -1,17 +1,5 @@
 # Invoke-WDACSimulation available parameters
 
-## Notes
-
-* **Mandatory** parameters indicate you always need to provide values for them.
-
-* **Automatic** parameters indicate that if you used [Set-CommonWDACConfig](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Set-CommonWDACConfig) cmdlet to set default values for them, the module will automatically use them. This saves time and prevents repetitive tasks. However, if no value exists in User Configurations for an Automatic parameter and you didn't explicitly provide a value for that parameter either, then you will see an error asking you to provide value for it. Explicitly providing a value for an Automatic parameter in the command line overrides its default value in User Configurations, meaning the module will ignore the value of the same parameter in the User Configurations file.
-
-* **Optional** parameters indicate that they are not required and without using them the module will automatically run with the optimal settings.
-
-* Many cmdlets and parameters of the module support the PowerShell's built-in `-Debug` switch and when that switch is used, they display extra details and debugging messages on the console, showing you what's happening under the hood.
-
-<br>
-
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Invoke-WDACSimulation/Invoke-WDACSimulation.apng)
 
 ```powershell
@@ -32,11 +20,9 @@ You will get a CSV file in the current working directory for the output of the s
 
 2. In some edge cases, WDAC cmdlets such as `New-CiPolicy` create hash rules for a digitally valid signed file instead of creating Signer rules which are based on file's digital signature. In such cases, if there is a Signer in the Signers section of the xml policy that matches the details of this specific signed file (Intermediate certificate + TBS + Leaf cert's CN), `Invoke-WDACSimulation` cmdlet shows that the file is allowed by Signer instead of hash, which is not true.
 
-*This is the newest addition to the WDACConfig module.*
-
 <br>
 
-### 2 mandatory parameters
+### 2 Mandatory Parameters
 
 * `-FolderPath <string>`: Path to a folder. Supports argument tab completion, select the parameter then press TAB to open the Folder picker GUI.
 
@@ -48,10 +34,16 @@ You will get a CSV file in the current working directory for the output of the s
 
 <br>
 
-#### External Licenses
+## Notes
 
-A small part of this cmdlet's code includes Vadims Podāns's code for nested certificate calculation of double signed files.
-1. https://www.sysadmins.lv/disclaimer.aspx
-2. https://www.sysadmins.lv/blog-en/reading-multiple-signatures-from-signed-file-with-powershell.aspx
+* **Mandatory** parameters indicate you always need to provide values for them.
+
+* **Automatic** parameters indicate that if you used [Set-CommonWDACConfig](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Set-CommonWDACConfig) cmdlet to set default values for them, the module will automatically use them. This saves time and prevents repetitive tasks. However, if no value exists in User Configurations for an Automatic parameter and you didn't explicitly provide a value for that parameter either, then you will see an error asking you to provide value for it. Explicitly providing a value for an Automatic parameter in the command line overrides its default value in User Configurations, meaning the module will ignore the value of the same parameter in the User Configurations file.
+
+* **Optional** parameters indicate that they are not required and without using them the module will automatically run with the optimal settings.
+
+* Many cmdlets and parameters of the module support the PowerShell's built-in `-Debug` switch and when that switch is used, they display extra details and debugging messages on the console, showing you what's happening under the hood.
+
+* A small part of this cmdlet's code includes [Vadims Podāns's]((https://www.sysadmins.lv/disclaimer.aspx)) code for [nested certificate calculation](https://www.sysadmins.lv/blog-en/reading-multiple-signatures-from-signed-file-with-powershell.aspx) of double signed files.
 
 <br>

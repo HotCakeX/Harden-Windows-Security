@@ -1,17 +1,5 @@
 # New-DenyWDACConfig available parameters
 
-## Notes
-
-* **Mandatory** parameters indicate you always need to provide values for them.
-
-* **Automatic** parameters indicate that if you used [Set-CommonWDACConfig](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Set-CommonWDACConfig) cmdlet to set default values for them, the module will automatically use them. This saves time and prevents repetitive tasks. However, if no value exists in User Configurations for an Automatic parameter and you didn't explicitly provide a value for that parameter either, then you will see an error asking you to provide value for it. Explicitly providing a value for an Automatic parameter in the command line overrides its default value in User Configurations, meaning the module will ignore the value of the same parameter in the User Configurations file.
-
-* **Optional** parameters indicate that they are not required and without using them the module will automatically run with the optimal settings.
-
-* Many cmdlets and parameters of the module support the PowerShell's built-in `-Debug` switch and when that switch is used, they display extra details and debugging messages on the console, showing you what's happening under the hood.
-
-<br>
-
 ## New-DenyWDACConfig -Normal
 
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-DenyWDACConfig/New-DenyWDACConfig%20-Normal.apng)
@@ -26,13 +14,13 @@ New-DenyWDACConfig [-Normal] -PolicyName <String> -ScanLocations <String[]> [-Le
 
 Creates a Deny base policy by scanning a directory. The base policy will have 2 allow all rules, meaning it can be deployed as a standalone base policy, side-by-side any other Base/Supplemental policies.
 
-### 2 mandatory parameters
+### 2 Mandatory Parameters
 
 - `-PolicyName <String>`: Add a descriptive name for the Deny base policy. Accepts only alphanumeric and space characters.
 
 - `ScanLocations <String[]>`: Accepts one or more comma separated folder paths. Supports argument completion, when you press tab, folder picker GUI will open allowing you to easily select a folder, you can then add a comma `,` and press tab again to select another folder path or paste a folder path manually, works both ways.
 
-### 6 optional parameters
+### 6 Optional Parameters
 
 * `-Deploy`: Indicates that the module will automatically deploy the Deny base policy after creation.
 
@@ -65,13 +53,13 @@ New-DenyWDACConfig [-Drivers] -PolicyName <String> -ScanLocations <String[]> [-L
 
 Creates a Deny base policy by scanning a directory, this parameter uses [DriverFile objects](https://learn.microsoft.com/en-us/powershell/module/configci/get-systemdriver) so it's best suitable for driver files. The base policy will have 2 allow all rules, meaning it can be deployed as a standalone base policy, side-by-side any other Base/Supplemental policies.
 
-### 2 mandatory parameters
+### 2 Mandatory Parameters
 
 - `-PolicyName <String>`: Add a descriptive name for the Deny base policy. Accepts only alphanumeric and space characters.
 
 - `ScanLocations <String[]>`: Accepts one or more comma separated folder paths. Supports argument completion, when you press tab, folder picker GUI will open allowing you to easily select a folder, you can then add a comma `,` and press tab again to select another folder path or paste a folder path manually, works both ways.
 
-### 3 optional parameters
+### 3 Optional Parameters
 
 * `-Deploy`: Indicates that the module will automatically deploy the Deny base policy after creation.
 
@@ -97,14 +85,26 @@ New-DenyWDACConfig [-InstalledAppXPackages] -PackageName <String> -PolicyName <S
 
 Creates a Deny base policy for one or more installed Windows Apps (Appx) based on their PFN (Package Family Name). The base policy will have 2 allow all rules, meaning it can be deployed as a standalone base policy, side-by-side any other Base/Supplemental policies.
 
-### 2 mandatory parameters
+### 2 Mandatory Parameters
 
 - `-PackageName <String>`: Enter the [package name](https://learn.microsoft.com/en-us/powershell/module/appx/get-appxpackage) of an installed app. Supports wildcard `*` character. e.g, `*Edge*` or `"*Microsoft*"`.
 
 - ` -PolicyName <String>`: Add a descriptive name for the Deny base policy. Accepts only alphanumeric and space characters.
 
-### 1 optional parameters
+### 1 Optional Parameter
 
 - `-Deploy`: Indicates that the module will automatically deploy the Deny base policy after creation.
+
+<br>
+
+## Notes
+
+* **Mandatory** parameters indicate you always need to provide values for them.
+
+* **Automatic** parameters indicate that if you used [Set-CommonWDACConfig](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Set-CommonWDACConfig) cmdlet to set default values for them, the module will automatically use them. This saves time and prevents repetitive tasks. However, if no value exists in User Configurations for an Automatic parameter and you didn't explicitly provide a value for that parameter either, then you will see an error asking you to provide value for it. Explicitly providing a value for an Automatic parameter in the command line overrides its default value in User Configurations, meaning the module will ignore the value of the same parameter in the User Configurations file.
+
+* **Optional** parameters indicate that they are not required and without using them the module will automatically run with the optimal settings.
+
+* Many cmdlets and parameters of the module support the PowerShell's built-in `-Debug` switch and when that switch is used, they display extra details and debugging messages on the console, showing you what's happening under the hood.
 
 <br>

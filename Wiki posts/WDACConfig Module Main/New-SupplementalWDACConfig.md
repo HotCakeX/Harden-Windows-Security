@@ -1,17 +1,5 @@
 # New-SupplementalWDACConfig available parameters
 
-## Notes
-
-* **Mandatory** parameters indicate you always need to provide values for them.
-
-* **Automatic** parameters indicate that if you used [Set-CommonWDACConfig](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Set-CommonWDACConfig) cmdlet to set default values for them, the module will automatically use them. This saves time and prevents repetitive tasks. However, if no value exists in User Configurations for an Automatic parameter and you didn't explicitly provide a value for that parameter either, then you will see an error asking you to provide value for it. Explicitly providing a value for an Automatic parameter in the command line overrides its default value in User Configurations, meaning the module will ignore the value of the same parameter in the User Configurations file.
-
-* **Optional** parameters indicate that they are not required and without using them the module will automatically run with the optimal settings.
-
-* Many cmdlets and parameters of the module support the PowerShell's built-in `-Debug` switch and when that switch is used, they display extra details and debugging messages on the console, showing you what's happening under the hood.
-
-<br>
-
 ## New-SupplementalWDACConfig -Normal
 
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-SupplementalWDACConfig/New-SupplementalWDACConfig%20-Normal.apng)
@@ -26,7 +14,7 @@ New-SupplementalWDACConfig [-Normal] -ScanLocation <String> -SuppPolicyName <Str
 
 Creates a normal Supplemental policy for a base policy.
 
-### 2 mandatory parameters
+### 2 Mandatory Parameters
 
 * `-ScanLocation <String>`: The directory or drive that you want to scan for files that will be allowed to run by the Supplemental policy.
 
@@ -36,7 +24,7 @@ Creates a normal Supplemental policy for a base policy.
 
 * `-PolicyPath <String>`: Browse for the xml file of the Base policy this Supplemental policy is going to expand. Supports tab completion by showing only `.xml` files with **Base Policy** Type.
 
-### 6 optional parameters
+### 6 Optional Parameters
 
 * `-Deploy`: Indicates that the module will automatically deploy the Supplemental policy after creation.
 
@@ -74,17 +62,17 @@ New-SupplementalWDACConfig [-PathWildCards] -FolderPath <String> -SuppPolicyName
 
 Creates a Supplemental policy that allows a folder path that includes one or more wildcard `*` character in it.
 
-### 2 mandatory parameters
+### 2 Mandatory Parameters
 
 * `-FolderPath`: A folder path that includes at least one wildcard `*` character and ends with a `\`. Press TAB to open the folder picker GUI. Once you selected a folder, you will see the path will have `\*` at the end of it. You can modify the selected path by adding/removing wildcards `*` to it before proceeding.
 
 * `-SuppPolicyName <String>`: Add a descriptive name for the Supplemental policy. Accepts only alphanumeric and space characters.
 
-### 1 Automatic parameter
+### 1 Automatic Parameter
 
 * `-PolicyPath`: Browse for the xml file of the Base policy this Supplemental policy is going to expand. Supports tab completion by showing only `.xml` files with **Base Policy** Type.
 
-### 1 optional parameter
+### 1 Optional Parameter
 
 * `-Deploy`: Indicates that the module will automatically deploy the Supplemental policy after creation.
 
@@ -114,17 +102,17 @@ Creates a Supplemental policy based on the package name of an installed app.
 
 More information at [Microsoft Learn](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/manage-packaged-apps-with-wdac)
 
-### 2 mandatory parameters
+### 2 Mandatory Parameters
 
 * `-PackageName`: Enter the [package name](https://learn.microsoft.com/en-us/powershell/module/appx/get-appxpackage) of an installed app. Supports wildcard `*` character. e.g., `*Edge*` or `"*Microsoft*"`.
 
 * `-SuppPolicyName <String>`: Add a descriptive name for the Supplemental policy. Accepts only alphanumeric and space characters.
 
-### 1 Automatic parameter
+### 1 Automatic Parameter
 
 * `-PolicyPath`: Browse for the xml file of the Base policy this Supplemental policy is going to expand. Supports tab completion by showing only `.xml` files with **Base Policy** Type.
 
-### 1 optional parameter
+### 1 Optional Parameter
 
 * `-Deploy`: Indicates that the module will automatically deploy the Supplemental policy after creation.
 
@@ -132,5 +120,17 @@ More information at [Microsoft Learn](https://learn.microsoft.com/en-us/windows/
 
 * ***SupplementalPolicy`<Custom Name>`.xml***
 * ***{GUID}.cip***
+
+<br>
+
+## Notes
+
+* **Mandatory** parameters indicate you always need to provide values for them.
+
+* **Automatic** parameters indicate that if you used [Set-CommonWDACConfig](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Set-CommonWDACConfig) cmdlet to set default values for them, the module will automatically use them. This saves time and prevents repetitive tasks. However, if no value exists in User Configurations for an Automatic parameter and you didn't explicitly provide a value for that parameter either, then you will see an error asking you to provide value for it. Explicitly providing a value for an Automatic parameter in the command line overrides its default value in User Configurations, meaning the module will ignore the value of the same parameter in the User Configurations file.
+
+* **Optional** parameters indicate that they are not required and without using them the module will automatically run with the optimal settings.
+
+* Many cmdlets and parameters of the module support the PowerShell's built-in `-Debug` switch and when that switch is used, they display extra details and debugging messages on the console, showing you what's happening under the hood.
 
 <br>

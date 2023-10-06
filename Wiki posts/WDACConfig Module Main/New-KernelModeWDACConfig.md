@@ -1,29 +1,5 @@
 # New-KernelModeWDACConfig available parameters
 
-## Notes
-
-* **Mandatory** parameters indicate you always need to provide values for them.
-
-* **Automatic** parameters indicate that if you used [Set-CommonWDACConfig](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Set-CommonWDACConfig) cmdlet to set default values for them, the module will automatically use them. This saves time and prevents repetitive tasks. However, if no value exists in User Configurations for an Automatic parameter and you didn't explicitly provide a value for that parameter either, then you will see an error asking you to provide value for it. Explicitly providing a value for an Automatic parameter in the command line overrides its default value in User Configurations, meaning the module will ignore the value of the same parameter in the User Configurations file.
-
-* **Optional** parameters indicate that they are not required and without using them the module will automatically run with the optimal settings.
-
-* Many cmdlets and parameters of the module support the PowerShell's built-in `-Debug` switch and when that switch is used, they display extra details and debugging messages on the console, showing you what's happening under the hood.
-
-<br>
-
-### During the PrepModes, [the following event log categories](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/operations/event-id-explanations) are cleared
-
-* Applications and Services logs – Microsoft – Windows – CodeIntegrity – Operational includes events about Application Control policy activation and the control of executables, dlls, and drivers.
-
-* Applications and Services logs – Microsoft – Windows – AppLocker – MSI and Script includes events about the control of MSI installers, scripts, and COM objects.
-
-This behavior is required so that the audit phase will have the correct logs to scan and add to the base policy for allow listing. This behavior can be changed/improved in a future module update.
-
-Before the audit mode phase, make sure you trust all the files and programs installed on your system, otherwise you risk allow listing vulnerable or malicious drivers in your policy.
-
-<br>
-
 ## New-KernelModeWDACConfig -Default
 
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-KernelModeWDACConfig/New-KernelModeWDACConfig%20-Default.apng)
@@ -58,7 +34,7 @@ Edit-WDACConfig -AllowNewAppsAuditEvents -SuppPolicyName "Kernel mode drivers fo
 
 <br>
 
-### 4 optional parameter
+### 4 Optional Parameters
 
 * `-PrepMode`: Deploys the Strict Kernel-mode WDAC policy in Audit mode, preparing the system for an Audit.
 
@@ -106,7 +82,7 @@ Edit-WDACConfig -AllowNewAppsAuditEvents -SuppPolicyName "Kernel mode drivers fo
 
 <br>
 
-### 4 optional parameter
+### 4 Optional Parameters
 
 * `-PrepMode`: Deploys the Strict Kernel-mode WDAC policy in Audit mode, preparing the system for an Audit.
 
@@ -115,3 +91,29 @@ Edit-WDACConfig -AllowNewAppsAuditEvents -SuppPolicyName "Kernel mode drivers fo
 * `-EVSigners`: Uses EVSigners policy rule option. If you want to use this parameter, make sure you use it for both PrepMode and AuditAndEnforce parameters. [Read more about EV Signers](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-Notes#policies-with-requiredev-signers-rule-option)
 
 * `-Deploy`: Indicates that the policy will be deployed. If you want to deploy the final strict kernel-mode no flight roots base policy Signed, do not use this parameter with `-AuditAndEnforce`. Instead just create the policy and then use [Deploy-SignedWDACConfig](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Deploy-SignedWDACConfig) cmdlet to deploy it.
+
+<br>
+
+## Notes
+
+* **Mandatory** parameters indicate you always need to provide values for them.
+
+* **Automatic** parameters indicate that if you used [Set-CommonWDACConfig](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Set-CommonWDACConfig) cmdlet to set default values for them, the module will automatically use them. This saves time and prevents repetitive tasks. However, if no value exists in User Configurations for an Automatic parameter and you didn't explicitly provide a value for that parameter either, then you will see an error asking you to provide value for it. Explicitly providing a value for an Automatic parameter in the command line overrides its default value in User Configurations, meaning the module will ignore the value of the same parameter in the User Configurations file.
+
+* **Optional** parameters indicate that they are not required and without using them the module will automatically run with the optimal settings.
+
+* Many cmdlets and parameters of the module support the PowerShell's built-in `-Debug` switch and when that switch is used, they display extra details and debugging messages on the console, showing you what's happening under the hood.
+
+<br>
+
+### During the PrepModes, [the following event log categories](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/operations/event-id-explanations) are cleared
+
+* Applications and Services logs – Microsoft – Windows – CodeIntegrity – Operational includes events about Application Control policy activation and the control of executables, dlls, and drivers.
+
+* Applications and Services logs – Microsoft – Windows – AppLocker – MSI and Script includes events about the control of MSI installers, scripts, and COM objects.
+
+This behavior is required so that the audit phase will have the correct logs to scan and add to the base policy for allow listing. This behavior can be changed/improved in a future module update.
+
+Before the audit mode phase, make sure you trust all the files and programs installed on your system, otherwise you risk allow listing vulnerable or malicious drivers in your policy.
+
+<br>

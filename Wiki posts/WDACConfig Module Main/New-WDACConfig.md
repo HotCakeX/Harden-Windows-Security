@@ -1,17 +1,5 @@
 # New-WDACConfig available parameters
 
-## Notes
-
-* **Mandatory** parameters indicate you always need to provide values for them.
-
-* **Automatic** parameters indicate that if you used [Set-CommonWDACConfig](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Set-CommonWDACConfig) cmdlet to set default values for them, the module will automatically use them. This saves time and prevents repetitive tasks. However, if no value exists in User Configurations for an Automatic parameter and you didn't explicitly provide a value for that parameter either, then you will see an error asking you to provide value for it. Explicitly providing a value for an Automatic parameter in the command line overrides its default value in User Configurations, meaning the module will ignore the value of the same parameter in the User Configurations file.
-
-* **Optional** parameters indicate that they are not required and without using them the module will automatically run with the optimal settings.
-
-* Many cmdlets and parameters of the module support the PowerShell's built-in `-Debug` switch and when that switch is used, they display extra details and debugging messages on the console, showing you what's happening under the hood.
-
-<br>
-
 ## New-WDACConfig -GetBlockRules
 
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-WDACConfig/New-WDACConfig%20-GetBlockRules.apng)
@@ -24,7 +12,7 @@ New-WDACConfig [-GetBlockRules] [-Deploy]
 
 Creates a WDAC policy file called ***Microsoft recommended block rules.xml*** from [the official source](https://github.com/MicrosoftDocs/windows-itpro-docs/blob/public/windows/security/application-security/application-control/windows-defender-application-control/design/applications-that-can-bypass-wdac.md) for [Microsoft recommended block rules](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/applications-that-can-bypass-wdac), with *AllowAll* rules and audit mode rule option removed. The policy sets [HVCI to strict](https://learn.microsoft.com/en-us/powershell/module/configci/set-hvcioptions).
 
-### 1 optional parameter
+### 1 Optional Parameter
 
 * `-Deploy`: Deploys the [latest Microsoft recommended block rules](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/applications-that-can-bypass-wdac) (For User Mode binaries). It has the 2 default AllowAll rules so it can be deployed as a standalone base policy. Uses [Strict HVCI](https://learn.microsoft.com/en-us/powershell/module/configci/set-hvcioptions).
 
@@ -46,7 +34,7 @@ New-WDACConfig [-GetDriverBlockRules] [-Deploy]
 
 Creates a WDAC policy file called ***Microsoft recommended driver block rules.xml*** from [the official source](https://github.com/MicrosoftDocs/windows-itpro-docs/blob/public/windows/security/application-security/application-control/windows-defender-application-control/design/microsoft-recommended-driver-block-rules.md) for [Microsoft recommended driver block rules](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/microsoft-recommended-driver-block-rules), with *AllowAll* rules and audit mode rule option removed. The policy sets [HVCI to strict](https://learn.microsoft.com/en-us/powershell/module/configci/set-hvcioptions). Extra information regarding the version and last updated date of [the GitHub document](https://github.com/MicrosoftDocs/windows-itpro-docs/commits/public/windows/security/application-security/application-control/windows-defender-application-control/design/microsoft-recommended-driver-block-rules.md) containing block rules will also be displayed.
 
-### 1 optional parameters
+### 1 Optional Parameter
 
 * `-Deploy`: With the help of PowerShell, uses [the official method](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/microsoft-recommended-driver-block-rules#steps-to-download-and-apply-the-vulnerable-driver-blocklist-binary) to deploy the latest version of [Microsoft recommended driver block rules](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/microsoft-recommended-driver-block-rules).
 
@@ -92,7 +80,7 @@ Calls the [-GetBlockRules](#new-wdacconfig--getblockrules) parameter to get the 
 
 <br>
 
-### 3 optional parameters
+### 3 Optional Parameters
 
 * `-Deploy`: Indicates that the module will automatically deploy the ***AllowMicrosoftPlusBlockRules*** policy after creation.
 
@@ -142,7 +130,7 @@ After deployment, audit event logs will start to be created for any file that is
 
 It's recommended to use the optional parameter below to increase the log size of Code Integrity events category so that new events won't overwrite the older ones and everything will be captured.
 
-### 2 optional parameter
+### 2 Optional Parameters
 
 * `-LogSize <Int64>`: Specifies the log size for ***Microsoft-Windows-CodeIntegrity/Operational*** events. The values must be in the form of `<Digit + Data measurement unit>`. e.g., 2MB, 10MB, 1GB, 1TB. The minimum accepted value is 1MB which is the default.
 
@@ -170,7 +158,7 @@ This parameter also scans the WDACConfig module files and PowerShell core files,
 
 It's recommended to use the optional parameter below to increase the log size of Code Integrity events category so that new events won't overwrite the older ones, and everything will be captured.
 
-### 2 optional parameter
+### 2 Optional Parameters
 
 * `-LogSize <Int64>`: Specifies the log size for ***Microsoft-Windows-CodeIntegrity/Operational*** events. The values must be in the form of `<Digit + Data measurement unit>`. e.g., 2MB, 10MB, 1GB, 1TB. The minimum accepted value is 1MB which is the default.
 
@@ -195,11 +183,11 @@ New-WDACConfig [-MakePolicyFromAuditLogs] -BasePolicyType <String> [-Deploy] [-T
 
 Creates a WDAC policy using the Audit event logs generated [for a fully managed device](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-for-Fully-Managed-Devices).
 
-### 1 mandatory parameter
+### 1 Mandatory Parameter
 
 * `-BasePolicyType <String>`: You need to select between **[Allow Microsoft Base](#new-wdacconfig--makeallowmsftwithblockrules)** and **[Default Windows Base](#new-wdacconfig--makedefaultwindowswithblockrules)**, based on which prep audit mode base policy deployed on the system.
 
-### 11 optional parameters
+### 11 Optional Parameters
 
 * `-Deploy`: Indicates that the module will automatically remove the WDAC policy deployed using either [-PrepMSFTOnlyAudit](#new-wdacconfig--prepmsftonlyaudit) or [-PrepDefaultWindowsAudit](#new-wdacconfig--prepdefaultwindowsaudit) parameters, then deploys the supplemental policy created from Audit event logs along with the selected base policy type, both in enforced mode.
 
@@ -269,7 +257,7 @@ Creates a WDAC policy for a [Lightly managed system](https://github.com/HotCakeX
 
 <br>
 
-### 3 optional parameters
+### 3 Optional Parameters
 
 * `-Deploy`: Indicates that the module will automatically deploy the ***SignedAndReputable.xml*** policy file after creation.
 
@@ -307,14 +295,7 @@ Calls the [-GetBlockRules](#new-wdacconfig--getblockrules) parameter to get the 
 
 > Since the module uses PowerShell and not Windows PowerShell that is pre-installed in Windows, this parameter will automatically scan `C:\Program Files\PowerShell` directory and add PowerShell files to the ***DefaultWindowsPlusBlockRules.xml*** policy file so that you will be able to continue using the module after deploying the policy. The scan uses ***FilePublisher*** level and ***Hash*** fallback.
 
-### The outputs of the parameter are
-
-* ***DefaultWindowsPlusBlockRules.xml*** policy file
-* ***{GUID}.cip*** for the policy above
-
-<br>
-
-### 5 optional parameters
+### 5 Optional Parameters
 
 * `-Deploy`: Indicates that the module will automatically deploy the ***DefaultWindowsPlusBlockRules*** policy after creation.
 
@@ -327,5 +308,24 @@ Calls the [-GetBlockRules](#new-wdacconfig--getblockrules) parameter to get the 
 * `-IncludeSignTool`: Indicates that the Default Windows policy that is being created must include Allow rules for `SignTool.exe`. This parameter must be used when you intend to Sign and Deploy the Default Windows policy.
 
 * `-SignToolPath <String>`: [How to use it](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Deploy-SignedWDACConfig#you-can-use-it-in-2-different-ways)
+
+<br>
+
+### The outputs of the parameter are
+
+* ***DefaultWindowsPlusBlockRules.xml*** policy file
+* ***{GUID}.cip*** for the policy above
+
+<br>
+
+## Notes
+
+* **Mandatory** parameters indicate you always need to provide values for them.
+
+* **Automatic** parameters indicate that if you used [Set-CommonWDACConfig](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Set-CommonWDACConfig) cmdlet to set default values for them, the module will automatically use them. This saves time and prevents repetitive tasks. However, if no value exists in User Configurations for an Automatic parameter and you didn't explicitly provide a value for that parameter either, then you will see an error asking you to provide value for it. Explicitly providing a value for an Automatic parameter in the command line overrides its default value in User Configurations, meaning the module will ignore the value of the same parameter in the User Configurations file.
+
+* **Optional** parameters indicate that they are not required and without using them the module will automatically run with the optimal settings.
+
+* Many cmdlets and parameters of the module support the PowerShell's built-in `-Debug` switch and when that switch is used, they display extra details and debugging messages on the console, showing you what's happening under the hood.
 
 <br>

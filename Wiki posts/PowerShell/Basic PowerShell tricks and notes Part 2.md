@@ -171,6 +171,12 @@ PowerShell supports sync/async commands workflows, also known as parallel.
 
 <br>
 
+A comment under this [answer](https://stackoverflow.com/a/748189):
+
+Oddly enough "Synchronously" means "using the same clock" so when two instructions are synchronous they use the same clock and must happen one after the other. "Asynchronous" means "not using the same clock" so the instructions are not concerned with being in step with each other. That's why it looks backwards, the term is not referring to the instructions relationship to each other. It's referring to each instructions relationship to the clock.
+
+<br>
+
 ## How to Enable a Disabled Event Log Using Powershell
 
 First we create a new `EventLogConfiguration` object and pass it the name of the log we want to configure, then we set it to enabled and save the changes.

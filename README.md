@@ -93,7 +93,7 @@ Unprotect-WindowsSecurity
 
 </details>
 
-![Animated APNG demonstrating how the Harden Windows Security PowerShell module works](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/APNGs/Harden%20Windows%20Security%20Demo%201.gif)
+![Animated APNG demonstrating how the Harden Windows Security PowerShell module works](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/APNGs/Harden%20Windows%20Security%20Demo%201.apng)
 
 <br>
 

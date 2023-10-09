@@ -1317,7 +1317,7 @@ Get-Content <Path-To-File> -stream zone.identifier
 - [Microsoft Zero Trust](https://aka.ms/zerotrust)
 - [Understanding malware & other threats, phrases](https://learn.microsoft.com/en-us/microsoft-365/security/intelligence/understanding-malware)
 - [Malware naming](https://learn.microsoft.com/en-us/microsoft-365/security/intelligence/malware-naming)
-- [Microsoft Digital Defense Report](https://www.microsoft.com/en-us/security/business/microsoft-digital-defense-report)
+- [Microsoft Digital Defense Report](https://aka.ms/mddr)
 - [Microsoft Defender for Individuals](https://www.microsoft.com/en-us/microsoft-365/microsoft-defender-for-individuals)
 - [Submit a file for malware analysis](https://www.microsoft.com/en-us/wdsi/filesubmission)
 - [Submit a driver for analysis](https://www.microsoft.com/en-us/wdsi/driversubmission)

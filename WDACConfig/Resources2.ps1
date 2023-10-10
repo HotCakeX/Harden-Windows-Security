@@ -1,9 +1,7 @@
-$FilePath = 'C:\Program Files\obs-studio\obs-plugins\64bit\aja-output-ui.dll'
-$SignedFilePath = 'C:\Program Files\obs-studio\obs-plugins\64bit\aja-output-ui.dll'
-
-
-$FilePath = 'C:\Program Files\Mullvad VPN\resources\mullvad-split-tunnel.sys'
-$SignedFilePath = 'C:\Program Files\Mullvad VPN\resources\mullvad-split-tunnel.sys'
+# For testing purposes
+#$FilePath = ''
+#$SignedFilePath = ''
+#$XmlFilePath = ''
 
 
 # Defining a custom object to store the signer information
@@ -245,8 +243,7 @@ function Get-AuthenticodeSignatureEx {
 
 
 
-
-# Define a function to get all the certificates from a signed file or a certificate object and output a Collection
+# A function to get all the certificates from a signed file or a certificate object and output a Collection
 function Get-SignedFileCertificates {
     param (
         # Define two sets of parameters, one for the FilePath and one for the CertObject
@@ -273,6 +270,8 @@ function Get-SignedFileCertificates {
     return $CertCollection
 }
 
+
+# A function to detect Root, Intermediate and Leaf certificates
 function Get-CertificateDetails {
     param (
         [Parameter(ParameterSetName = 'Based on File Path', Mandatory = $true)]
@@ -317,13 +316,21 @@ function Get-CertificateDetails {
         $chain.ChainPolicy.VerificationFlags = 'NoFlag'
 
         [void]$Chain.Build($Cert)      
-
+        
         # If AllCertificates is present, loop through all chain elements and display all certificates
         foreach ($Element in $Chain.ChainElements) {
             # Create a custom object with the certificate properties
+
             # Extract the data after CN= in the subject and issuer properties
-            $SubjectCN = ($Element.Certificate.Subject -split '(?:^|,)CN=|,')[1]
-            $IssuerCN = ($Element.Certificate.Issuer -split '(?:^|,)CN=|,')[1]
+            # When a common name contains a comma ',' then it will automatically be wrapped around double quotes. E.g., "Skylum Software USA, Inc."
+            # The methods below are conditional regex. Different patterns are used based on the availability of at least one double quote in the CN field, indicating that it had comma in it so it had been enclosed with double quotes by system
+
+            $Element.Certificate.Subject -match 'CN=(?<InitialRegexTest2>.*?),.*' | Out-Null
+            $SubjectCN = $matches['InitialRegexTest2'] -like '*"*' ? ($Element.Certificate.Subject -split 'CN="(.+?)"')[1] : $matches['InitialRegexTest2']
+            
+            $Element.Certificate.Issuer -match 'CN=(?<InitialRegexTest3>.*?),.*' | Out-Null
+            $IssuerCN = $matches['InitialRegexTest3'] -like '*"*' ? ($Element.Certificate.Issuer -split 'CN="(.+?)"')[1] : $matches['InitialRegexTest3']
+            
             # Get the TBS value of the certificate using the Get-TBSCertificate function
             $TbsValue = Get-TBSCertificate -cert $Element.Certificate
             # Create a custom object with the extracted properties and the TBS value
@@ -337,8 +344,17 @@ function Get-CertificateDetails {
     }
 
     if ($FilePath) {
-        [string]$TestAgainst = (Get-AuthenticodeSignature -FilePath $FilePath).SignerCertificate.Subject -replace 'CN=(.*?),.*', '$1'
-    
+
+        # The reason the commented code below is not used is because some files such as C:\Windows\System32\xcopy.exe or d3dcompiler_47.dll that are signed by Microsoft report a different Leaf certificate common name when queried using Get-AuthenticodeSignature
+        # (Get-AuthenticodeSignature -FilePath $FilePath).SignerCertificate.Subject -match 'CN=(?<InitialRegexTest4>.*?),.*' | Out-Null
+
+        $CertificateUsingAlternativeMethod = [System.Security.Cryptography.X509Certificates.X509Certificate]::CreateFromSignedFile($FilePath)
+        $CertificateUsingAlternativeMethod.Subject -match 'CN=(?<InitialRegexTest4>.*?),.*' | Out-Null
+
+        
+        [string]$TestAgainst = $matches['InitialRegexTest4'] -like '*"*' ? ((Get-AuthenticodeSignature -FilePath $FilePath).SignerCertificate.Subject -split 'CN="(.+?)"')[1] : $matches['InitialRegexTest4']
+         
+
         if ($IntermediateOnly) {
 
             $FinalObj = $Obj | 
@@ -512,7 +528,7 @@ function Compare-SignerAndCertificate {
     [System.Object[]]$ComparisonResults = @()
 
     # Get the certificate details from the signed file path using the Get-CertificateDetails function with the -IntermediateOnly parameter
-    $CertificateDetails += Get-CertificateDetails -IntermediateOnly -FilePath $SignedFilePath
+    $CertificateDetails = Get-CertificateDetails -IntermediateOnly -FilePath $SignedFilePath
     
     # Get the Nested certificate of the signed file, if any
     $ExtraCertificateDetails = Get-AuthenticodeSignatureEx -FilePath $SignedFilePath
@@ -522,12 +538,30 @@ function Compare-SignerAndCertificate {
     
     if ($null -ne $NestedCertificate) {
 
-        # First get the CN of the leaf certificate of the nested Certificate
-        $LeafCNOfTheNestedCertificate = $NestedCertificate.Subject -replace 'CN=(.*?),.*', '$1'
-
+        # First get the CN of the leaf certificate of the nested Certificate      
+        $NestedCertificate.Subject -match 'CN=(?<InitialRegexTest1>.*?),.*' | Out-Null
+        $LeafCNOfTheNestedCertificate = $matches['InitialRegexTest1'] -like '*"*' ? ($NestedCertificate.Subject -split 'CN="(.+?)"')[1] : $matches['InitialRegexTest1']
+            
         # Send the nested certificate along with its Leaf certificate's CN to the Get-CertificateDetails function with -IntermediateOnly parameter in order to only get the intermediate certificates of the Nested certificate
-        $NestedCertificateDetails += Get-CertificateDetails -IntermediateOnly -X509Certificate2 $NestedCertificate -LeafCNOfTheNestedCertificate $LeafCNOfTheNestedCertificate 
-    } 
+        $NestedCertificateDetails = Get-CertificateDetails -IntermediateOnly -X509Certificate2 $NestedCertificate -LeafCNOfTheNestedCertificate $LeafCNOfTheNestedCertificate 
+    }
+
+
+    # Declare $LeafCertificateDetails as an array
+    [System.Object[]]$LeafCertificateDetails = @()
+
+    # Declare $NestedLeafCertificateDetails as an array
+    [System.Object[]]$NestedLeafCertificateDetails = @()
+  
+    # Get the leaf certificate details of the Main Certificate from the signed file path
+    $LeafCertificateDetails = Get-CertificateDetails -LeafCertificate -FilePath $SignedFilePath
+
+    # Get the leaf certificate details of the Nested Certificate from the signed file path, if it exists
+    if ($null -ne $NestedCertificate) {
+        # append an X509Certificate2 object to the array
+        $NestedLeafCertificateDetails = Get-CertificateDetails -LeafCertificate -X509Certificate2 $NestedCertificate -LeafCNOfTheNestedCertificate $LeafCNOfTheNestedCertificate
+    }
+
   
     # Loop through each signer in the signer information array
     foreach ($Signer in $SignerInfo) {
@@ -574,6 +608,19 @@ function Compare-SignerAndCertificate {
                     # Set the CertNameMatch to true
                     $ComparisonResult.CertNameMatch = $true # this should naturally be always true like the CertRootMatch because this is the CN of the same cert that has its TBS value in the xml file in signers
                 }
+
+
+                # Check if the signer's CertPublisher (aka Leaf Certificate's CN used in the xml policy) matches the leaf certificate's SubjectCN (of the file)
+                if ($Signer.CertPublisher -eq $LeafCertificateDetails.SubjectCN) {
+
+                    # if the signed file has nested certificate, only set a flag instead of setting the entire CertPublisherMatch property to true
+                    if ($null -ne $NestedCertificate) {
+                        $CertPublisherMatchPart1 = $true                    
+                    }
+                    else {                        
+                        $ComparisonResult.CertPublisherMatch = $true      
+                    }
+                }
   
                 # Break out of the inner loop whether we found a match for this signer or not
                 break
@@ -605,6 +652,13 @@ function Compare-SignerAndCertificate {
                         # Set the CertNameMatch to true
                         $ComparisonResult.CertNameMatch = $true # this should naturally be always true like the CertRootMatch because this is the CN of the same cert that has its TBS value in the xml file in signers
                     }
+
+
+                    # Check if the signer's CertPublisher (aka Leaf Certificate's CN used in the xml policy) matches the leaf certificate's SubjectCN (of the file)
+                    if ($Signer.CertPublisher -eq $LeafCNOfTheNestedCertificate) {
+                        # If yes, set the CertPublisherMatch to true for this comparison result object 
+                        $CertPublisherMatchPart2 = $true      
+                    }
   
                     # Break out of the inner loop whether we found a match for this signer or not
                     break
@@ -613,61 +667,37 @@ function Compare-SignerAndCertificate {
         }
 
 
-        # if file has nested certificates
+        # if the signed file has nested certificate
         if ($null -ne $NestedCertificate) {
-            # check if both of the file's nested certificates are available in the Signers in xml policy
+
+            # check if both of the file's certificates (Nested and Main) are available in the Signers in xml policy
             if (($CertRootMatchPart1 -eq $true) -and ($CertRootMatchPart2 -eq $true)) {
                 $ComparisonResult.CertRootMatch = $true # meaning all of the TBS values of the double signed file's intermediate certificates exists in the xml file's signers' TBS values
             }
             else {
                 $ComparisonResult.CertRootMatch = $false 
             }
-        }        
+                      
+            # check if Lean certificate CN of both of the file's certificates (Nested and Main) are available in the Signers in xml policy
+            if (($CertPublisherMatchPart1 -eq $true) -and ($CertPublisherMatchPart2 -eq $true)) {
+                $ComparisonResult.CertPublisherMatch = $true 
+            }
+            else {
+                $ComparisonResult.CertPublisherMatch = $false 
+            }
 
+        }
+    
         # Add the comparison result object to the comparison results array
         $ComparisonResults += $ComparisonResult
   
     }
 
-    # Declare $LeafCertificateDetails as an array
-    [System.Object[]]$LeafCertificateDetails = @()
-
-    # Declare $NestedLeafCertificateDetails as an array
-    [System.Object[]]$NestedLeafCertificateDetails = @()
-  
-    # Get the leaf certificate details of the Main Certificate from the signed file path
-    $LeafCertificateDetails += Get-CertificateDetails -LeafCertificate -FilePath $SignedFilePath
-
-    # Get the leaf certificate details of the Nested Certificate from the signed file path, if it exists
-    if ($null -ne $NestedCertificate) {
-        # append an X509Certificate2 object to the array
-        $NestedLeafCertificateDetails += Get-CertificateDetails -LeafCertificate -X509Certificate2 $NestedCertificate -LeafCNOfTheNestedCertificate $LeafCNOfTheNestedCertificate
-    }
-
     
-    # Loop through each signer in the signer information array again
-    foreach ($Signer in $SignerInfo) {
-
-        # Find the corresponding comparison result object for this signer in the comparison results array
-        $ComparisonResult = $ComparisonResults | Where-Object { $_.SignerID -eq $Signer.ID }
- 
-        # Loop through each item in the leaf certificate details array of the Main certificate
-        foreach ($LeafCertificate in $LeafCertificateDetails) {            
-            # Check if the signer's CertPublisher (aka Leaf Certificate's CN used in the xml policy) matches the leaf certificate's SubjectCN (of the file)
-            if ($Signer.CertPublisher -eq $LeafCertificate.SubjectCN) {
-                # If yes, set the CertPublisherMatch to true for this comparison result object 
-                $ComparisonResult.CertPublisherMatch = $true      
-            }
-        }
-    }
     # Return the comparison results array
     return $ComparisonResults  
 }  
 
-
-# Compare-SignerAndCertificate -XmlFilePath .\OBS.xml -SignedFilePath 'C:\Program Files\Mullvad VPN\resources\mullvad-split-tunnel.sys' | Where-Object { $_.CertRootMatch -eq $true }
-
-Compare-SignerAndCertificate -XmlFilePath .\mullvad.xml -SignedFilePath 'C:\Program Files\Mullvad VPN\resources\mullvad-split-tunnel.sys' | Where-Object { $_.CertRootMatch -eq $true }
 
 
 

@@ -89,7 +89,7 @@ function Invoke-WDACSimulation {
                         Write-Host "Currently processing signed file: `n$CurrentFilePath" -ForegroundColor Yellow
                     }
                     # Use the function in Resources2.ps1 file to process it
-                    $SignedResult += Compare-SignerAndCertificate -XmlFilePath $XmlFilePath -SignedFilePath $CurrentFilePath | Where-Object { $_.CertRootMatch -eq $true }                             
+                    $SignedResult += Compare-SignerAndCertificate -XmlFilePath $XmlFilePath -SignedFilePath $CurrentFilePath | Where-Object { ($_.CertRootMatch -eq $true) -and ($_.CertNameMatch -eq $true) -and ($_.CertPublisherMatch -eq $true) }
                     
                 }
                 # If the file is signed but invalid display a warning for it

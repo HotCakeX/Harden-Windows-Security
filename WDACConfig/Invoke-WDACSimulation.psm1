@@ -80,25 +80,26 @@ function Invoke-WDACSimulation {
                 if ($CurrentFilePathHash -in $SHA256HashesFromXML) {
                     $AllowedUnsignedFilePaths += $CurrentFilePath
                 }
-                # If the file is signed and valid
-                elseif ((Get-AuthenticodeSignature -FilePath $CurrentFilePath).Status -eq 'valid') {                        
-                        
-                    # If debug is used show extra info on the console
-                    if ($Debug) {                        
-                        Write-Host "Currently processing signed file: `n$CurrentFilePath" -ForegroundColor Yellow
-                    }
-                    # Use the function in Resources2.ps1 file to process it
-                    $SignedResult += Compare-SignerAndCertificate -XmlFilePath $XmlFilePath -SignedFilePath $CurrentFilePath | Where-Object { ($_.CertRootMatch -eq $true) -and ($_.CertNameMatch -eq $true) -and ($_.CertPublisherMatch -eq $true) }
+                else {                                 
                     
-                }
-                # If the file is signed but invalid display a warning for it
-                elseif ((Get-AuthenticodeSignature -FilePath $CurrentFilePath).Status -eq 'HashMismatch') {                  
-                    $SignedHashMismatchFilePaths += $CurrentFilePath    
-                }             
-                # if the signature status doesn't fall into any categories
-                else {               
-                    $SignedButUnknownFilePaths += $CurrentFilePath                    
-                }                
+                    switch ((Get-AuthenticodeSignature -FilePath $CurrentFilePath).Status) {
+                        # If the file is signed and valid
+                        'valid' {  
+                            # If debug is used show extra info on the console
+                            if ($Debug) {                        
+                                Write-Host "Currently processing signed file: `n$CurrentFilePath" -ForegroundColor Yellow
+                            }
+                            # Use the function in Resources2.ps1 file to process it
+                            $SignedResult += Compare-SignerAndCertificate -XmlFilePath $XmlFilePath -SignedFilePath $CurrentFilePath | Where-Object { ($_.CertRootMatch -eq $true) -and ($_.CertNameMatch -eq $true) -and ($_.CertPublisherMatch -eq $true) }
+                            break
+                        }
+                        'HashMismatch' {                  
+                            $SignedHashMismatchFilePaths += $CurrentFilePath
+                            break 
+                        } 
+                        default { $SignedButUnknownFilePaths += $CurrentFilePath; break }
+                    }                  
+                }              
             }
             
             # File paths of the files allowed by Signer/certificate, Unique

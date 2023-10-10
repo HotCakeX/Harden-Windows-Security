@@ -571,7 +571,7 @@ It prevents drivers that are not compatible with HVCI from loading, even if they
 
 * A file can have only one leaf certificate at the beginning of the chain. The leaf certificate is the one that belongs to the file itself and contains its public key and other information. Having more than one leaf certificate would imply that there are multiple files with different identities and keys, which is not possible.
 
-* leaf, intermediate and root are the only types of certificates a file can have in a certificate chain. There are other types of certificates that are not part of a chain, such as self-signed certificates or wildcard certificates, but they are not relevant to WDAC policies.
+* Leaf, intermediate and root are the only types of certificates a file can have in a certificate chain. There are other types of certificates that are not part of a chain, such as self-signed certificates or wildcard certificates, but they are not relevant to WDAC policies.
 
 <br>
 

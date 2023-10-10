@@ -2,8 +2,7 @@
 function Invoke-WDACSimulation {
     [CmdletBinding(
         PositionalBinding = $false,
-        SupportsShouldProcess = $true,
-        ConfirmImpact = 'High'
+        SupportsShouldProcess = $true
     )]
     Param(
         [ValidateScript({ Test-Path $_ -PathType 'Container' }, ErrorMessage = 'The path you selected is not a folder path.')] 
@@ -30,7 +29,7 @@ function Invoke-WDACSimulation {
     }
     
     process {
-        # For Testing purposes, uncomment these
+        # For Testing purposes
         # $FolderPath = ''
         # $XmlFilePath = ''
       
@@ -62,10 +61,10 @@ function Invoke-WDACSimulation {
             # Loop through each file
             $CollectedFiles | ForEach-Object {
 
-                $CurrentFilePath = $_ 
-
+                $CurrentFilePath = $_
 
                 # Check see if the file's hash exists in the XML file regardless of whether it's signed or not
+                # This is because WDAC policies sometimes have hash rules for signed files too
                 try {
                     $CurrentFilePathHash = (Get-AppLockerFileInformation -Path $CurrentFilePath -ErrorAction Stop).hash -replace 'SHA256 0x', ''
                 }
@@ -95,9 +94,7 @@ function Invoke-WDACSimulation {
                 # If the file is signed but invalid display a warning for it
                 elseif ((Get-AuthenticodeSignature -FilePath $CurrentFilePath).Status -eq 'HashMismatch') {                  
                     $SignedHashMismatchFilePaths += $CurrentFilePath    
-                }
-                # if the file is Unsigned, get its hash
-                # 'NotSigned' {  }
+                }             
                 # if the signature status doesn't fall into any categories
                 else {               
                     $SignedButUnknownFilePaths += $CurrentFilePath                    

@@ -563,6 +563,22 @@ It prevents drivers that are not compatible with HVCI from loading, even if they
 
 <br>
 
+## About Certificates and Certificate Chains
+
+* A file can have only one root certificate at the end of the chain. The root certificate is always self-signed by the CA itself (meaning its IssuerCN and SubjectCN are the same) and it is the ultimate source of trust for the chain that validates it. Having more than one root certificate would imply that there are multiple chains of trust for the same file, which is not possible.
+
+* A file can have more than 1 intermediate certificate and there is no definitive limit for it, but in practice, it is recommended to keep the certificate chain as short as possible.
+
+* A file can have only one leaf certificate at the beginning of the chain. The leaf certificate is the one that belongs to the file itself and contains its public key and other information. Having more than one leaf certificate would imply that there are multiple files with different identities and keys, which is not possible.
+
+* Leaf, intermediate and root are the only types of certificates a file can have in a certificate chain. There are other types of certificates that are not part of a chain, such as self-signed certificates or wildcard certificates, but they are not relevant to WDAC policies.
+
+<br>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+
+<br>
+
 ## <img width="65" src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/arrow-pink.gif"> [Continue reading about BYOVD protection with WDAC](#-continue-reading-about-byovd-protection-with-wdac)
 
 #### [WDAC policy](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-policy-for-BYOVD-Kernel-mode-only-protection) for BYOVD Kernel mode only protection

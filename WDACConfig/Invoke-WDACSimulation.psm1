@@ -2,8 +2,7 @@
 function Invoke-WDACSimulation {
     [CmdletBinding(
         PositionalBinding = $false,
-        SupportsShouldProcess = $true,
-        ConfirmImpact = 'High'
+        SupportsShouldProcess = $true
     )]
     Param(
         [ValidateScript({ Test-Path $_ -PathType 'Container' }, ErrorMessage = 'The path you selected is not a folder path.')] 
@@ -30,9 +29,9 @@ function Invoke-WDACSimulation {
     }
     
     process {
-        # For Testing purposes, uncomment these
+        # For Testing purposes
         # $FolderPath = ''
-        # $XmlFilePath = ''           
+        # $XmlFilePath = ''
       
         if ($FolderPath) {
             # Store the processed results of the valid Signed files
@@ -58,53 +57,49 @@ function Invoke-WDACSimulation {
                         
             # Get all of the files that WDAC supports from the user provided directory
             [System.Object[]]$CollectedFiles = (Get-ChildItem -Recurse -Path $FolderPath -File -Include '*.sys', '*.exe', '*.com', '*.dll', '*.ocx', '*.msp', '*.mst', '*.msi', '*.js', '*.vbs', '*.ps1', '*.appx').FullName
-         
+                     
             # Loop through each file
             $CollectedFiles | ForEach-Object {
 
-                $CurrentFilePath = $_ 
+                $CurrentFilePath = $_
 
-                switch ((Get-AuthenticodeSignature -FilePath $CurrentFilePath).Status) {
-
-                    # If the file is signed and valid
-                    'valid' {
-                        # If debug is used show extra info on the console
-                        if ($Debug) {                        
-                            Write-Host "Currently processing signed file: `n$CurrentFilePath" -ForegroundColor Yellow
-                        }
-                        # Use the function in Resources2.ps1 file to process it
-                        $SignedResult += Compare-SignerAndCertificate -XmlFilePath $XmlFilePath -SignedFilePath $CurrentFilePath | Where-Object { $_.CertRootMatch -eq $true }                             
-                    }
-
-                    # If the file is signed but invalid display a warning for it   
-                    'HashMismatch' {
-                        $SignedHashMismatchFilePaths += $CurrentFilePath    
-                    }
-
-                    # if the file is Unsigned, get its hash
-                    'NotSigned' { 
-                     
-                        try {
-                            $CurrentFilePathHash = (Get-AppLockerFileInformation -Path $CurrentFilePath -ErrorAction Stop).hash -replace 'SHA256 0x', ''
-                        }
-                        catch {  
-                            Write-Debug -Message "Get-AppLockerFileInformation failed for the file at $CurrentFilePath, using New-CIPolicyRule cmdlet..."                 
-                            
-                            $CurrentHashOutput = New-CIPolicyRule -Level hash -Fallback none -AllowFileNameFallbacks -UserWriteablePaths -DriverFilePath $CurrentFilePath
-                          
-                            $CurrentFilePathHash = ($CurrentHashOutput | Where-Object { $_.name -like '*Hash Sha256*' }).attributes.hash
-                        }
-                   
-                        if ($CurrentFilePathHash -in $SHA256HashesFromXML) {
-                            $AllowedUnsignedFilePaths += $CurrentFilePath
-                        }
-                            
-                    }
-                    # if the signature status doesn't fall into any categories
-                    default {
-                        $SignedButUnknownFilePaths += $CurrentFilePath    
-                    }
+                # Check see if the file's hash exists in the XML file regardless of whether it's signed or not
+                # This is because WDAC policies sometimes have hash rules for signed files too
+                try {
+                    $CurrentFilePathHash = (Get-AppLockerFileInformation -Path $CurrentFilePath -ErrorAction Stop).hash -replace 'SHA256 0x', ''
                 }
+                catch {  
+                    Write-Debug -Message "Get-AppLockerFileInformation failed for the file at $CurrentFilePath, using New-CIPolicyRule cmdlet..."                 
+                    
+                    $CurrentHashOutput = New-CIPolicyRule -Level hash -Fallback none -AllowFileNameFallbacks -UserWriteablePaths -DriverFilePath $CurrentFilePath
+                  
+                    $CurrentFilePathHash = ($CurrentHashOutput | Where-Object { $_.name -like '*Hash Sha256*' }).attributes.hash
+                }
+           
+                # if the file's hash exists in the XML file
+                if ($CurrentFilePathHash -in $SHA256HashesFromXML) {
+                    $AllowedUnsignedFilePaths += $CurrentFilePath
+                }
+                else {                                 
+                    
+                    switch ((Get-AuthenticodeSignature -FilePath $CurrentFilePath).Status) {
+                        # If the file is signed and valid
+                        'valid' {  
+                            # If debug is used show extra info on the console
+                            if ($Debug) {                        
+                                Write-Host "Currently processing signed file: `n$CurrentFilePath" -ForegroundColor Yellow
+                            }
+                            # Use the function in Resources2.ps1 file to process it
+                            $SignedResult += Compare-SignerAndCertificate -XmlFilePath $XmlFilePath -SignedFilePath $CurrentFilePath | Where-Object { ($_.CertRootMatch -eq $true) -and ($_.CertNameMatch -eq $true) -and ($_.CertPublisherMatch -eq $true) }
+                            break
+                        }
+                        'HashMismatch' {                  
+                            $SignedHashMismatchFilePaths += $CurrentFilePath
+                            break 
+                        } 
+                        default { $SignedButUnknownFilePaths += $CurrentFilePath; break }
+                    }                  
+                }              
             }
             
             # File paths of the files allowed by Signer/certificate, Unique

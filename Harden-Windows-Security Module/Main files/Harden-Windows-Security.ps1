@@ -1,6 +1,6 @@
 <#PSScriptInfo
 
-.VERSION 2023.9.26
+.VERSION 2023.10.12
 
 .GUID d435a293-c9ee-4217-8dc1-4ad2318a5770
 
@@ -92,7 +92,7 @@ Set-ExecutionPolicy Bypass -Scope Process
 
 # Defining global script variables
 # Current script's version, the same as the version at the top in the script info section
-[datetime]$CurrentVersion = '2023.9.26'
+[datetime]$CurrentVersion = '2023.10.12'
 # Minimum OS build number required for the hardening measures used in this script
 [decimal]$Requiredbuild = '22621.2134'
 # Fetching Temp Directory
@@ -1200,7 +1200,13 @@ try {
                     # Disable PowerShell v2 (part 1)       
                     Write-Host "`nDisabling PowerShellv2 1st part" -ForegroundColor Yellow
                     if ((Get-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2).state -eq 'enabled') {
-                        Disable-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2 -NoRestart 
+                        try {
+                            Disable-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2 -NoRestart -ErrorAction Stop
+                        }
+                        catch {
+                            # show error
+                            $_                           
+                        }
                     }
                     else {
                         Write-Host 'PowerShellv2 1st part is already disabled' -ForegroundColor Green 
@@ -1210,7 +1216,7 @@ try {
                     Write-Host "`nDisabling PowerShellv2 2nd part" -ForegroundColor Yellow
                     if ((Get-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2Root).state -eq 'enabled') {
                         try {
-                            Disable-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2Root -NoRestart -ErrorAction Stop 
+                            Disable-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2Root -NoRestart -ErrorAction Stop
                             # Shows the successful message only if removal process was successful
                             Write-Host 'PowerShellv2 2nd part was successfully disabled' -ForegroundColor Green
                         }
@@ -1238,7 +1244,7 @@ try {
                     }
                     else { 
                         Write-Host 'Work Folders is already disabled' -ForegroundColor Green 
-                    }    
+                    }
                 
                     # Disable Internet Printing Client
                     Write-Host "`nDisabling Internet Printing Client" -ForegroundColor Yellow
@@ -1255,23 +1261,23 @@ try {
                     }
                     else {
                         Write-Host 'Internet Printing Client is already disabled' -ForegroundColor Green 
-                    }
-                
-                    # Disable Windows Media Player (legacy)
-                    Write-Host "`nDisabling Windows Media Player (Legacy)" -ForegroundColor Yellow
-                    if ((Get-WindowsOptionalFeature -Online -FeatureName WindowsMediaPlayer).state -eq 'enabled') {
-                        try {
-                            Disable-WindowsOptionalFeature -Online -FeatureName WindowsMediaPlayer -NoRestart -ErrorAction Stop
+                    }                
+
+                    # Uninstall Windows Media Player (legacy)
+                    Write-Host "`nUninstalling Windows Media Player (legacy)" -ForegroundColor Yellow
+                    if ((Get-WindowsCapability -Online | Where-Object { $_.Name -like '*Media.WindowsMediaPlayer*' }).state -ne 'NotPresent') {
+                        try {                            
+                            Get-WindowsCapability -Online | Where-Object { $_.Name -like '*Media.WindowsMediaPlayer*' } | Remove-WindowsCapability -Online -ErrorAction Stop
                             # Shows the successful message only if removal process was successful
-                            Write-Host 'Windows Media Player (Legacy) was successfully disabled' -ForegroundColor Green
+                            Write-Host 'Windows Media Player (legacy) has been uninstalled.' -ForegroundColor Green
                         }
                         catch {
-                            # show errors
+                            # show error
                             $_
                         }
                     }
                     else {
-                        Write-Host 'Windows Media Player (Legacy) is already disabled' -ForegroundColor Green
+                        Write-Host 'Windows Media Player (legacy) is already uninstalled.' -ForegroundColor Green
                     }
                 
                     # Enable Microsoft Defender Application Guard
@@ -1411,6 +1417,40 @@ try {
                     else {
                         Write-Host 'Legacy Notepad is already uninstalled.' -ForegroundColor Green
                     }
+
+                    # Uninstall WordPad
+                    Write-Host "`nUninstalling WordPad" -ForegroundColor Yellow
+                    if ((Get-WindowsCapability -Online | Where-Object { $_.Name -like '*Microsoft.Windows.WordPad*' }).state -ne 'NotPresent') {
+                        try {                            
+                            Get-WindowsCapability -Online | Where-Object { $_.Name -like '*Microsoft.Windows.WordPad*' } | Remove-WindowsCapability -Online -ErrorAction Stop
+                            # Shows the successful message only if removal process was successful
+                            Write-Host 'WordPad has been uninstalled.' -ForegroundColor Green
+                        }
+                        catch {
+                            # show error
+                            $_
+                        }
+                    }
+                    else {
+                        Write-Host 'WordPad is already uninstalled.' -ForegroundColor Green
+                    }   
+
+                    # Uninstall PowerShell ISE
+                    Write-Host "`nUninstalling PowerShell ISE" -ForegroundColor Yellow
+                    if ((Get-WindowsCapability -Online | Where-Object { $_.Name -like '*Microsoft.Windows.PowerShell.ISE*' }).state -ne 'NotPresent') {
+                        try {                            
+                            Get-WindowsCapability -Online | Where-Object { $_.Name -like '*Microsoft.Windows.PowerShell.ISE*' } | Remove-WindowsCapability -Online -ErrorAction Stop
+                            # Shows the successful message only if removal process was successful
+                            Write-Host 'PowerShell ISE has been uninstalled.' -ForegroundColor Green
+                        }
+                        catch {
+                            # show error
+                            $_
+                        }
+                    }
+                    else {
+                        Write-Host 'PowerShell ISE is already uninstalled.' -ForegroundColor Green
+                    }                    
                 }
 
             } 'No' { break }

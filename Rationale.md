@@ -78,7 +78,7 @@ As an individual user you can still utilize these features and services, they ad
 
 * [Microsoft Defender for Endpoint](https://www.microsoft.com/en-us/security/business/endpoint-security/microsoft-defender-endpoint) - Discover and secure endpoint devices across your multiplatform enterprise.
 
-* [Microsoft Security Copilot](https://www.microsoft.com/en-us/security/business/ai-machine-learning/microsoft-security-copilot) - Build a defense so automated that even your intern becomes a cybersecurity expert.
+* [Microsoft Security Copilot](https://www.microsoft.com/en-us/security/business/ai-machine-learning/microsoft-security-copilot) - Build a defense [so automated](https://learn.microsoft.com/en-us/security-copilot/microsoft-security-copilot) that even your intern becomes a cybersecurity expert.
 
 * [Confidential Computing on Azure](https://learn.microsoft.com/en-us/azure/confidential-computing/overview-azure-products) - Protect your highly sensitive data while it's in use
 

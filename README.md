@@ -784,33 +784,37 @@ NistP384
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> The module [disables](https://learn.microsoft.com/en-us/powershell/module/dism/disable-windowsoptionalfeature) the following rarely used features in [Windows optional features](https://learn.microsoft.com/en-us/windows/application-management/add-apps-and-features#use-windows-powershell-to-disable-specific-features) (Control Panel):
 
-    - PowerShell v2; because it's old and doesn't support [AMSI](https://devblogs.microsoft.com/powershell/powershell-the-blue-team/#antimalware-scan-interface-integration).
+    - PowerShell v2: because it's old and doesn't support [AMSI](https://devblogs.microsoft.com/powershell/powershell-the-blue-team/#antimalware-scan-interface-integration).
     
-    - Work Folders client; not used when your computer is not part of a domain or enterprise network.
+    - Work Folders client: not used when your computer is not part of a domain or enterprise network.
     
-    - Internet Printing Client; used in combination with IIS web server, [old feature](https://learn.microsoft.com/en-us/troubleshoot/windows-server/printing/manage-connect-printers-use-web-browser), can be disabled without causing problems further down the road.
+    - Internet Printing Client: used in combination with IIS web server, [old feature](https://learn.microsoft.com/en-us/troubleshoot/windows-server/printing/manage-connect-printers-use-web-browser), can be disabled without causing problems further down the road.
     
-    - Windows Media Player (legacy); isn't needed anymore, [Windows 11 has a modern media player app](https://blogs.windows.com/windows-insider/2021/11/16/new-media-player-for-windows-11-begins-rolling-out-to-windows-insiders/).
+    - Windows Media Player (legacy): isn't needed anymore, [Windows 11 has a modern media player app](https://blogs.windows.com/windows-insider/2021/11/16/new-media-player-for-windows-11-begins-rolling-out-to-windows-insiders/).
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> [Uninstalls](https://learn.microsoft.com/en-us/powershell/module/dism/remove-windowscapability) these optional features (Windows Settings -> Apps -> Optional Features):
 
     - Notepad (system): legacy Notepad program. Windows 11 has multi-tabbed modern Notepad app.
     
-    - VBSCRIPT; a legacy scripting engine component, Microsoft does not recommend using this component unless and until it is really required. It's become uninstallable as an optional features since Windows 11 insider Dev [build 25309](https://techcommunity.microsoft.com/t5/windows-insider-program/windows-11-insider-dev-build-25309-allows-for-uninstallation-of/m-p/3759739).
+    - VBSCRIPT: a legacy [deprecated](https://learn.microsoft.com/en-us/windows/whats-new/deprecated-features) scripting engine component, [Microsoft does not recommend](https://techcommunity.microsoft.com/t5/windows-insider-program/windows-11-insider-dev-build-25309-allows-for-uninstallation-of/m-p/3759739) using this component unless and until it is really required.
     
-    - [Internet Explorer mode for Edge browser](https://learn.microsoft.com/en-us/deployedge/edge-ie-mode); It's only used by a few possible organizations that have very old internal websites.
+    - [Internet Explorer mode for Edge browser](https://learn.microsoft.com/en-us/deployedge/edge-ie-mode): It's only used by a few possible organizations that have very old internal websites.
     
-    - [WMIC](https://learn.microsoft.com/en-us/windows/win32/wmisdk/wmic); old feature that's deprecated, not secure and is in [Microsoft recommended block rules.](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/applications-that-can-bypass-wdac)
+    - [WMIC](https://learn.microsoft.com/en-us/windows/win32/wmisdk/wmic): Old and [deprecated](https://learn.microsoft.com/en-us/windows/whats-new/deprecated-features), not secure and is in [Microsoft recommended block rules.](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/applications-that-can-bypass-wdac)
+
+    - WordPad: Old and [deprecated](https://learn.microsoft.com/en-us/windows/whats-new/deprecated-features). None of the new features of Word documents are supported in it. Recommneded to use [Word Online](https://www.microsoft.com/en-us/microsoft-365/free-office-online-for-the-web), Notepad or M365 Word.
+
+    - [PowerShell ISE](https://learn.microsoft.com/en-us/powershell/scripting/windows-powershell/ise/introducing-the-windows-powershell-ise): Old PowerShell environment that doesn't support versions above 5.1. Highly recommended to use [Visual Studio Code](https://apps.microsoft.com/detail/visual-studio-code/XP9KHM4BK9FZ7Q) for PowerShell usage and [learning](https://github.com/HotCakeX/Harden-Windows-Security/wiki#-powershell). You can even replicate the [ISE experience in Visual Studio Code](https://learn.microsoft.com/en-us/powershell/scripting/dev-cross-plat/vscode/how-to-replicate-the-ise-experience-in-vscode). You can access [Visual Studio Code online in your browser](https://vscode.dev/) without the need to install anything. 
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> [Enables](https://learn.microsoft.com/en-us/powershell/module/dism/enable-windowsoptionalfeature) these optional features (Control Panel):
 
-    - [Microsoft Defender Application Guard](https://learn.microsoft.com/en-us/windows/security/application-security/application-isolation/microsoft-defender-application-guard/md-app-guard-overview); which is a safe Environment to open untrusted websites. - [System Requirements](https://learn.microsoft.com/en-us/windows/security/application-security/application-isolation/microsoft-defender-application-guard/reqs-md-app-guard) - [Frequently asked questions](https://learn.microsoft.com/en-us/windows/security/application-security/application-isolation/microsoft-defender-application-guard/faq-md-app-guard) - Its behavior regarding [DNS over HTTPS in Edge](#notes-about-mdag-microsoft-defender-application-guard)
+    - [Microsoft Defender Application Guard](https://learn.microsoft.com/en-us/windows/security/application-security/application-isolation/microsoft-defender-application-guard/md-app-guard-overview): which is a safe Environment to open untrusted websites. - [System Requirements](https://learn.microsoft.com/en-us/windows/security/application-security/application-isolation/microsoft-defender-application-guard/reqs-md-app-guard) - [Frequently asked questions](https://learn.microsoft.com/en-us/windows/security/application-security/application-isolation/microsoft-defender-application-guard/faq-md-app-guard) - Its behavior regarding [DNS over HTTPS in Edge](#notes-about-mdag-microsoft-defender-application-guard)
     
-    - [Windows Sandbox](https://learn.microsoft.com/en-us/windows/security/application-security/application-isolation/windows-sandbox/windows-sandbox-overview); install, test and use programs in a disposable virtual operation system, completely separate from your  main OS
+    - [Windows Sandbox](https://learn.microsoft.com/en-us/windows/security/application-security/application-isolation/windows-sandbox/windows-sandbox-overview): install, test and use programs in a disposable virtual operation system, completely separate from your  main OS
     
-    - Hyper-V; a great hybrid hypervisor (Type 1 and Type 2) to run virtual machines on. [check out this Hyper-V Wiki page](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Hyper-V)
+    - Hyper-V: a great hybrid hypervisor (Type 1 and Type 2) to run virtual machines on. [check out this Hyper-V Wiki page](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Hyper-V)
     
-    - Virtual Machine Platform; required for [Android subsystem or WSA (Windows subsystem for Android)](https://learn.microsoft.com/en-us/windows/android/wsa/). If it's disabled, it will be automatically enabled either way when you try to install WSA from Store app
+    - Virtual Machine Platform: required for [Android subsystem or WSA (Windows subsystem for Android)](https://learn.microsoft.com/en-us/windows/android/wsa/). If it's disabled, it will be automatically enabled either way when you try to install WSA from Store app
 
 <p align="right"><a href="#menu-back-to-top">💡 (back to categories)</a></p>
 
@@ -1127,7 +1131,7 @@ This repository uses the simplest possible, yet effective, methods that make it 
 
 - Change log history is present on GitHub. *(Despite some of my awkward documentation typos)*
 
-- You can open the file in [Visual Studio Code](https://code.visualstudio.com/)/[Visual Studio Code Web](https://vscode.dev/), and view the module files in a nice easy to read environment, it's well formatted and indented.
+- You can open the files in [**Visual Studio Code**](https://code.visualstudio.com/) / [**Visual Studio Code Web**](https://vscode.dev/) / [**GitHub CodeSpace**](https://github.com/codespaces/new?skip_quickstart=true&machine=standardLinux32gb&repo=569233100&ref=main&geo=EuropeWest), and view the module files in a nice easy to read environment, it's well formatted and indented.
 
 - Commits are verified either with my GPG key or SSH key and [Vigilant mode](https://docs.github.com/en/authentication/managing-commit-signature-verification/displaying-verification-statuses-for-all-of-your-commits) is turned on in my GitHub account.
 

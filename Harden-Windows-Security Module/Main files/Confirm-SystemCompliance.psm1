@@ -64,7 +64,7 @@ function Confirm-SystemCompliance {
         Write-Progress -Activity 'Gathering Security Policy Information' -Status 'Processing...' -PercentComplete 15
 
         # Total number of Compliant values not equal to N/A
-        [int]$global:TotalNumberOfTrueCompliantValues = 231
+        [int]$global:TotalNumberOfTrueCompliantValues = 233
 
         # Get the security group policies
         Secedit /export /cfg .\security_policy.inf | Out-Null
@@ -795,7 +795,7 @@ function Confirm-SystemCompliance {
             [bool]$PowerShell2 = (Get-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2Root).State -eq 'Disabled'
             [string]$WorkFoldersClient = (Get-WindowsOptionalFeature -Online -FeatureName WorkFolders-Client).state
             [string]$InternetPrintingClient = (Get-WindowsOptionalFeature -Online -FeatureName Printing-Foundation-Features).state
-            [string]$WindowsMediaPlayer = (Get-WindowsOptionalFeature -Online -FeatureName WindowsMediaPlayer).state
+            [string]$WindowsMediaPlayer = (Get-WindowsCapability -Online | Where-Object { $_.Name -like '*Media.WindowsMediaPlayer*' }).state
             [string]$MDAG = (Get-WindowsOptionalFeature -Online -FeatureName Windows-Defender-ApplicationGuard).state
             [string]$WindowsSandbox = (Get-WindowsOptionalFeature -Online -FeatureName Containers-DisposableClientVM).state
             [string]$HyperV = (Get-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V).state
@@ -803,9 +803,11 @@ function Confirm-SystemCompliance {
             [string]$WMIC = (Get-WindowsCapability -Online | Where-Object { $_.Name -like '*wmic*' }).state
             [string]$IEMode = (Get-WindowsCapability -Online | Where-Object { $_.Name -like '*Browser.InternetExplorer*' }).state
             [string]$LegacyNotepad = (Get-WindowsCapability -Online | Where-Object { $_.Name -like '*Microsoft.Windows.Notepad.System*' }).state
+            [string]$LegacyWordPad = (Get-WindowsCapability -Online | Where-Object { $_.Name -like '*Microsoft.Windows.WordPad*' }).state
+            [string]$PowerShellISE = (Get-WindowsCapability -Online | Where-Object { $_.Name -like '*Microsoft.Windows.PowerShell.ISE*' }).state
             # returning the output of the script block as an array
-            Return $PowerShell1, $PowerShell2, $WorkFoldersClient, $InternetPrintingClient, $WindowsMediaPlayer, $MDAG, $WindowsSandbox, $HyperV, $VMPlatform, $WMIC, $IEMode, $LegacyNotepad
-        } 
+            Return $PowerShell1, $PowerShell2, $WorkFoldersClient, $InternetPrintingClient, $WindowsMediaPlayer, $MDAG, $WindowsSandbox, $HyperV, $VMPlatform, $WMIC, $IEMode, $LegacyNotepad, $LegacyWordPad, $PowerShellISE
+        }
         # Verify PowerShell v2 is disabled
         $NestedObjectArray += [PSCustomObject]@{
             FriendlyName = 'PowerShell v2 is disabled'            
@@ -839,7 +841,7 @@ function Confirm-SystemCompliance {
         # Verify the old Windows Media Player is disabled    
         $NestedObjectArray += [PSCustomObject]@{
             FriendlyName = 'Windows Media Player (legacy) is disabled'            
-            Compliant    = [bool]($Results[4] -eq 'Disabled')
+            Compliant    = [bool]($Results[4] -eq 'NotPresent')
             Value        = [string]$Results[4]
             Name         = 'Windows Media Player (legacy) is disabled'          
             Category     = $CatName
@@ -912,6 +914,26 @@ function Confirm-SystemCompliance {
             Compliant    = [bool]($Results[11] -eq 'NotPresent')
             Value        = [string]$Results[11]  
             Name         = 'Legacy Notepad is not present'                   
+            Category     = $CatName
+            Method       = 'Optional Windows Features'
+        }
+        
+        # Verify Legacy WordPad is not present        
+        $NestedObjectArray += [PSCustomObject]@{
+            FriendlyName = 'WordPad is not present'           
+            Compliant    = [bool]($Results[12] -eq 'NotPresent')
+            Value        = [string]$Results[12]  
+            Name         = 'WordPad is not present'                   
+            Category     = $CatName
+            Method       = 'Optional Windows Features'
+        }
+
+        # Verify PowerShell ISE is not present        
+        $NestedObjectArray += [PSCustomObject]@{
+            FriendlyName = 'PowerShell ISE is not present'           
+            Compliant    = [bool]($Results[13] -eq 'NotPresent')
+            Value        = [string]$Results[13]  
+            Name         = 'PowerShell ISE is not present'                   
             Category     = $CatName
             Method       = 'Optional Windows Features'
         }
@@ -1644,7 +1666,7 @@ function Confirm-SystemCompliance {
             [int]($FinalMegaObject.UAC | Where-Object { $_.Compliant -eq $True }).Count + # 4
             [int]($FinalMegaObject.'Device Guard' | Where-Object { $_.Compliant -eq $True }).Count + # 8
             [int]($FinalMegaObject.'Windows Firewall' | Where-Object { $_.Compliant -eq $True }).Count + # 19
-            [int]($FinalMegaObject.'Optional Windows Features' | Where-Object { $_.Compliant -eq $True }).Count + # 11
+            [int]($FinalMegaObject.'Optional Windows Features' | Where-Object { $_.Compliant -eq $True }).Count + # 13
             [int]($FinalMegaObject.'Windows Networking' | Where-Object { $_.Compliant -eq $True }).Count + # 9
             [int]($FinalMegaObject.Miscellaneous | Where-Object { $_.Compliant -eq $True }).Count + # 18
             [int]($FinalMegaObject.'Windows Update' | Where-Object { $_.Compliant -eq $True }).Count + # 14

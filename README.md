@@ -23,16 +23,16 @@
 </h6>
 
 <p align="center">
-  <a href="#hardening-Categories">Hardening Categories</a> <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/cool-colours.gif" width="15" alt="rotating colorful thing">
-  <a href="#how-to-use">How To Use</a> <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/cool-colours.gif" width="15" alt="rotating colorful thing">
-  <a href="#features">Features</a> <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/cool-colours.gif" width="15" alt="rotating colorful thing">
-  <a href="#related">Related</a> <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/cool-colours.gif" width="15" alt="rotating colorful thing">
-  <a href="#Trust">Trust</a> <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/cool-colours.gif" width="15" alt="rotating colorful thing">
-  <a href="#support">Support</a> <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/cool-colours.gif" width="15" alt="rotating colorful thing">
-  <a href="#security-recommendations"><b>Security Recommendations</b></a> <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/cool-colours.gif" width="15" alt="rotating colorful thing">
-  <a href="#resources">Resources</a> <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/cool-colours.gif" width="15" alt="rotating colorful thing">
-  <a href="#license">License</a> <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/cool-colours.gif" width="15" alt="rotating colorful thing">
-  <a href="https://github.com/HotCakeX/Harden-Windows-Security/wiki"><b>Wiki</b></a> <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/cool-colours.gif" width="15" alt="rotating colorful thing">
+  <a href="#hardening-Categories">Hardening Categories</a> <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/cool-colours.gif" width="12" alt="rotating colorful thing">
+  <a href="#how-to-use">How To Use</a> <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/cool-colours.gif" width="12" alt="rotating colorful thing">
+  <a href="#features">Features</a> <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/cool-colours.gif" width="12" alt="rotating colorful thing">
+  <a href="#related">Related</a> <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/cool-colours.gif" width="12" alt="rotating colorful thing">
+  <a href="#Trust">Trust</a> <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/cool-colours.gif" width="12" alt="rotating colorful thing">
+  <a href="#support">Support</a> <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/cool-colours.gif" width="12" alt="rotating colorful thing">
+  <a href="#security-recommendations"><b>Security Recommendations</b></a> <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/cool-colours.gif" width="12" alt="rotating colorful thing">
+  <a href="#resources">Resources</a> <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/cool-colours.gif" width="12" alt="rotating colorful thing">
+  <a href="#license">License</a> <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/cool-colours.gif" width="12" alt="rotating colorful thing">
+  <a href="https://github.com/HotCakeX/Harden-Windows-Security/wiki"><b>Wiki</b></a> <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/cool-colours.gif" width="12" alt="rotating colorful thing">
   <a href="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Answers-to-the-Basic-Frequently-Asked-Questions"><b>Basic FAQs</b></a>
 </p>
 

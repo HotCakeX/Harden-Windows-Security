@@ -150,7 +150,7 @@ Install-Script -Name 'Harden-Windows-Security' -Force
 
 ## Features <a href="#features">![FeaturesIcon](https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Features.png)</a>
 
-<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/Shiny.gif" width="27" alt="Features Item"> Everything always stays up-to-date with the newest proactive security measures.
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/Shiny.gif" width="27" alt="Features Item"> Everything always stays up-to-date with the newest proactive security measures that are industry standards and scalable.
   
 <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/Shiny.gif" width="27" alt="Features Item"> Everything is in [plain text](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden-Windows-Security.ps1), nothing hidden, no 3rd party executable or pre-compiled binary is involved.
 

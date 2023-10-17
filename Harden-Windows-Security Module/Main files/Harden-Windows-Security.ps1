@@ -277,10 +277,15 @@ function Compare-SecureString {
 #endregion functions
 
 if (Test-IsAdmin) {
+
+    # Get the current configurations and preferences of the Microsoft Defender
+    $MDAVConfigCurrent = Get-MpComputerStatus
+    $MDAVPreferencesCurrent = Get-MpPreference
+
     # backup the current allowed apps list in Controlled folder access in order to restore them at the end of the script
     # doing this so that when we Add and then Remove PowerShell executables in Controlled folder access exclusions
     # no user customization will be affected
-    [string[]]$CFAAllowedAppsBackup = (Get-MpPreference).ControlledFolderAccessAllowedApplications
+    [string[]]$CFAAllowedAppsBackup = $MDAVPreferencesCurrent.ControlledFolderAccessAllowedApplications    
 
     # Temporarily allow the currently running PowerShell executables to the Controlled Folder Access allowed apps
     # so that the script can run without interruption. This change is reverted at the end.
@@ -360,9 +365,6 @@ try {
             Write-Error 'TPM is not available or enabled, please go to your UEFI settings to enable it and then try again.'
             break    
         }
-
-        # Get the current configuration of the Microsoft Defender
-        $MDAVConfigCurrent = Get-MpComputerStatus       
         
         if (-NOT ($MDAVConfigCurrent.AMServiceEnabled -eq $true)) {
             Write-Error 'Microsoft Defender Anti Malware service is not enabled, please enable it and then try again.'
@@ -677,14 +679,17 @@ try {
                     }
                 }
 
-                # Set Microsoft Defender engine and platform update channel to beta - Devices in the Windows Insider Program are subscribed to this channel by default.
-                switch (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nSet Microsoft Defender engine and platform update channel to beta ?") {
-                    'Yes' {             
-                        Set-MpPreference -EngineUpdatesChannel beta
-                        Set-MpPreference -PlatformUpdatesChannel beta
-                    } 'No' { break }
-                    'Exit' { &$CleanUp }
-                }    
+                # Only show this prompt if Engine and Platform update channels are not already set to Beta
+                if ( ($MDAVPreferencesCurrent.EngineUpdatesChannel -ne '2') -or ($MDAVPreferencesCurrent.PlatformUpdatesChannel -ne '2') ) {
+                    # Set Microsoft Defender engine and platform update channel to beta - Devices in the Windows Insider Program are subscribed to this channel by default.
+                    switch (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nSet Microsoft Defender engine and platform update channel to beta ?") {
+                        'Yes' {             
+                            Set-MpPreference -EngineUpdatesChannel beta
+                            Set-MpPreference -PlatformUpdatesChannel beta
+                        } 'No' { break }
+                        'Exit' { &$CleanUp }
+                    }    
+                }
 
             } 'No' { break }
             'Exit' { &$CleanUp }

@@ -44,7 +44,9 @@ function Confirm-SystemCompliance {
         [parameter(Mandatory = $false)]        
         [switch]$ShowAsObjectsOnly,
         [parameter(Mandatory = $false)]        
-        [switch]$DetailedDisplay        
+        [switch]$DetailedDisplay,
+        [Parameter(Mandatory = $false, DontShow = $True)] # To hide PowerShell common parameters that clutter parameter auto completion menu
+        $DummyParam        
     )
     begin {
         # Stop operation as soon as there is an error anywhere, unless explicitly specified otherwise

@@ -1,6 +1,6 @@
 <#PSScriptInfo
 
-.VERSION 2023.10.12
+.VERSION 2023.10.17
 
 .GUID d435a293-c9ee-4217-8dc1-4ad2318a5770
 
@@ -41,7 +41,7 @@
   
 💠 Features of this Hardening script:
 
-  ✅ Always stays up-to-date with the newest security measures.
+  ✅ Everything always stays up-to-date with the newest proactive security measures that are industry standards and scalable.
   ✅ Everything is in plain text, nothing hidden, no 3rd party executable or pre-compiled binary is involved.
   ✅ Doesn't remove or disable Windows functionalities against Microsoft's recommendations.
   ✅ The script primarily uses Group policies, the Microsoft recommended way of configuring Windows. It also uses PowerShell cmdlets where Group Policies aren't available, and finally uses a few registry keys to configure security measures that can neither be configured using Group Policies nor PowerShell cmdlets. This is why the script doesn't break anything or cause unwanted behavior.
@@ -92,7 +92,7 @@ Set-ExecutionPolicy Bypass -Scope Process
 
 # Defining global script variables
 # Current script's version, the same as the version at the top in the script info section
-[datetime]$CurrentVersion = '2023.10.12'
+[datetime]$CurrentVersion = '2023.10.17'
 # Minimum OS build number required for the hardening measures used in this script
 [decimal]$Requiredbuild = '22621.2134'
 # Fetching Temp Directory
@@ -277,10 +277,15 @@ function Compare-SecureString {
 #endregion functions
 
 if (Test-IsAdmin) {
+
+    # Get the current configurations and preferences of the Microsoft Defender
+    $MDAVConfigCurrent = Get-MpComputerStatus
+    $MDAVPreferencesCurrent = Get-MpPreference
+
     # backup the current allowed apps list in Controlled folder access in order to restore them at the end of the script
     # doing this so that when we Add and then Remove PowerShell executables in Controlled folder access exclusions
     # no user customization will be affected
-    [string[]]$CFAAllowedAppsBackup = (Get-MpPreference).ControlledFolderAccessAllowedApplications
+    [string[]]$CFAAllowedAppsBackup = $MDAVPreferencesCurrent.ControlledFolderAccessAllowedApplications    
 
     # Temporarily allow the currently running PowerShell executables to the Controlled Folder Access allowed apps
     # so that the script can run without interruption. This change is reverted at the end.
@@ -360,9 +365,6 @@ try {
             Write-Error 'TPM is not available or enabled, please go to your UEFI settings to enable it and then try again.'
             break    
         }
-
-        # Get the current configuration of the Microsoft Defender
-        $MDAVConfigCurrent = Get-MpComputerStatus       
         
         if (-NOT ($MDAVConfigCurrent.AMServiceEnabled -eq $true)) {
             Write-Error 'Microsoft Defender Anti Malware service is not enabled, please enable it and then try again.'
@@ -677,14 +679,17 @@ try {
                     }
                 }
 
-                # Set Microsoft Defender engine and platform update channel to beta - Devices in the Windows Insider Program are subscribed to this channel by default.
-                switch (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nSet Microsoft Defender engine and platform update channel to beta ?") {
-                    'Yes' {             
-                        Set-MpPreference -EngineUpdatesChannel beta
-                        Set-MpPreference -PlatformUpdatesChannel beta
-                    } 'No' { break }
-                    'Exit' { &$CleanUp }
-                }    
+                # Only show this prompt if Engine and Platform update channels are not already set to Beta
+                if ( ($MDAVPreferencesCurrent.EngineUpdatesChannel -ne '2') -or ($MDAVPreferencesCurrent.PlatformUpdatesChannel -ne '2') ) {
+                    # Set Microsoft Defender engine and platform update channel to beta - Devices in the Windows Insider Program are subscribed to this channel by default.
+                    switch (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nSet Microsoft Defender engine and platform update channel to beta ?") {
+                        'Yes' {             
+                            Set-MpPreference -EngineUpdatesChannel beta
+                            Set-MpPreference -PlatformUpdatesChannel beta
+                        } 'No' { break }
+                        'Exit' { &$CleanUp }
+                    }    
+                }
 
             } 'No' { break }
             'Exit' { &$CleanUp }

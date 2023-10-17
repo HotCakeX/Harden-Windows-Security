@@ -1,4 +1,11 @@
 Function Unprotect-WindowsSecurity {
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory = $false)]
+        [switch]$OnlyProcessMitigations,
+        [Parameter(Mandatory = $false, DontShow = $True)] # To hide PowerShell common parameters that clutter parameter auto completion menu
+        $DummyParam
+    )
     # Stop the execution when there is an error
     $global:ErrorActionPreference = 'Stop'
 
@@ -18,13 +25,16 @@ Function Unprotect-WindowsSecurity {
     [scriptblock]$WriteOrange = { Write-Host "$($PSStyle.Foreground.FromRGB(255,165,0))$($args[0])$($PSStyle.Reset)" }
     [scriptblock]$WriteMintGreen = { Write-Host "$($PSStyle.Foreground.FromRGB(152,255,152))$($args[0])$($PSStyle.Reset)" }
 
-    &$WriteOrange "`r`n"
-    &$WriteOrange "###############################################################################################`r`n"
-    &$WriteMintGreen "## This will remove all of the hardening measures applied by Protect-WindowsSecurity cmdlet ##`r`n"
-    &$WriteOrange "###############################################################################################`r`n"
+    # Only run this if -OnlyProcessMitigations parameter is passed
+    if (!$OnlyProcessMitigations) {
+        &$WriteOrange "`r`n"
+        &$WriteOrange "###############################################################################################`r`n"
+        &$WriteMintGreen "## This Will Remove the Hardening Measures Applied by Protect-WindowsSecurity Cmdlet ##`r`n"
+        &$WriteOrange "###############################################################################################`r`n"
 
-    # Give user a chance to exit if they accidentally ran this
-    Pause
+        # Give user a chance to exit if they accidentally ran this
+        Pause
+    }
     
     # doing a try-finally block on the entire script so that when CTRL + C is pressed to forcefully exit the script,
     # or break is passed, clean up will still happen for secure exit
@@ -83,58 +93,62 @@ Function Unprotect-WindowsSecurity {
             &$CleanUp   
         }
 
-        Write-Progress -Activity 'Deleting all group policies' -Status 'Processing' -PercentComplete 45
+        # Only run this if -OnlyProcessMitigations parameter is NOT passed
+        if (!$OnlyProcessMitigations) {
 
-        if (Test-Path -Path 'C:\Windows\System32\GroupPolicy') {
-            Remove-Item -Path 'C:\Windows\System32\GroupPolicy' -Recurse -Force
-        }
+            Write-Progress -Activity 'Deleting all group policies' -Status 'Processing' -PercentComplete 45
 
-        Write-Progress -Activity 'Deleting all the registry keys created by the Protect-WindowsSecurity cmdlet' -Status 'Processing' -PercentComplete 60
+            if (Test-Path -Path 'C:\Windows\System32\GroupPolicy') {
+                Remove-Item -Path 'C:\Windows\System32\GroupPolicy' -Recurse -Force
+            }
+
+            Write-Progress -Activity 'Deleting all the registry keys created by the Protect-WindowsSecurity cmdlet' -Status 'Processing' -PercentComplete 60
      
-        [System.Object[]]$Items = Import-Csv '.\Registry.csv' -Delimiter ','
-        foreach ($Item in $Items) { 
-            if (Test-Path -Path $item.path) {       
-                Remove-ItemProperty -Path $Item.path -Name $Item.key -Force -ErrorAction SilentlyContinue 
-            }    
-        } 
+            [System.Object[]]$Items = Import-Csv '.\Registry.csv' -Delimiter ','
+            foreach ($Item in $Items) { 
+                if (Test-Path -Path $item.path) {       
+                    Remove-ItemProperty -Path $Item.path -Name $Item.key -Force -ErrorAction SilentlyContinue 
+                }    
+            } 
 
-        # To completely remove the Edge policy since only its sub-keys are removed by the command above
-        Remove-Item -Path 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge\TLSCipherSuiteDenyList' -Force -Recurse -ErrorAction SilentlyContinue
+            # To completely remove the Edge policy since only its sub-keys are removed by the command above
+            Remove-Item -Path 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge\TLSCipherSuiteDenyList' -Force -Recurse -ErrorAction SilentlyContinue
     
-        # Restore Security group policies back to their default states
+            # Restore Security group policies back to their default states
 
-        Write-Progress -Activity 'Restoring the default Security group policies' -Status 'Processing' -PercentComplete 70
+            Write-Progress -Activity 'Restoring the default Security group policies' -Status 'Processing' -PercentComplete 70
    
-        Invoke-WithoutProgress {
-            # Download LGPO program from Microsoft servers
-            Invoke-WebRequest -Uri 'https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/LGPO.zip' -OutFile '.\LGPO.zip'
-        }
+            Invoke-WithoutProgress {
+                # Download LGPO program from Microsoft servers
+                Invoke-WebRequest -Uri 'https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/LGPO.zip' -OutFile '.\LGPO.zip'
+            }
 
-        # unzip the LGPO file
-        Expand-Archive -Path .\LGPO.zip -DestinationPath .\ -Force  
-        .\'LGPO_30\LGPO.exe' /s "$psscriptroot\Resources\Default Security Policy.inf"
+            # unzip the LGPO file
+            Expand-Archive -Path .\LGPO.zip -DestinationPath .\ -Force  
+            .\'LGPO_30\LGPO.exe' /s "$psscriptroot\Resources\Default Security Policy.inf"
         
-        # Enable LMHOSTS lookup protocol on all network adapters again
-        Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Services\NetBT\Parameters' -Name 'EnableLMHOSTS' -Value '1' -Type DWord
+            # Enable LMHOSTS lookup protocol on all network adapters again
+            Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Services\NetBT\Parameters' -Name 'EnableLMHOSTS' -Value '1' -Type DWord
 
-        # Disable restart notification for Windows update
-        Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings' -Name 'RestartNotificationsAllowed2' -Value '0' -Type DWord
+            # Disable restart notification for Windows update
+            Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings' -Name 'RestartNotificationsAllowed2' -Value '0' -Type DWord
 
-        # Re-enables the XblGameSave Standby Task that gets disabled by Microsoft Security Baselines
-        SCHTASKS.EXE /Change /TN \Microsoft\XblGameSave\XblGameSaveTask /Enable | Out-Null
+            # Re-enables the XblGameSave Standby Task that gets disabled by Microsoft Security Baselines
+            SCHTASKS.EXE /Change /TN \Microsoft\XblGameSave\XblGameSaveTask /Enable | Out-Null
 
-        Write-Progress -Activity 'Restoring Microsoft Defender configurations back to their default states' -Status 'Processing' -PercentComplete 80
+            Write-Progress -Activity 'Restoring Microsoft Defender configs back to their default states' -Status 'Processing' -PercentComplete 80
    
-        # Disable the advanced new security features of the Microsoft Defender
-        Set-MpPreference -AllowSwitchToAsyncInspection $False
-        Set-MpPreference -OobeEnableRtpAndSigUpdate $False
-        Set-MpPreference -IntelTDTEnabled $False
-        Set-MpPreference -DisableRestorePoint $True
-        Set-MpPreference -PerformanceModeStatus Enabled
-        Set-MpPreference -EnableConvertWarnToBlock $False   
-        # Set Microsoft Defender engine and platform update channels to NotConfigured State           
-        Set-MpPreference -EngineUpdatesChannel NotConfigured
-        Set-MpPreference -PlatformUpdatesChannel NotConfigured
+            # Disable the advanced new security features of the Microsoft Defender
+            Set-MpPreference -AllowSwitchToAsyncInspection $False
+            Set-MpPreference -OobeEnableRtpAndSigUpdate $False
+            Set-MpPreference -IntelTDTEnabled $False
+            Set-MpPreference -DisableRestorePoint $True
+            Set-MpPreference -PerformanceModeStatus Enabled
+            Set-MpPreference -EnableConvertWarnToBlock $False   
+            # Set Microsoft Defender engine and platform update channels to NotConfigured State           
+            Set-MpPreference -EngineUpdatesChannel NotConfigured
+            Set-MpPreference -PlatformUpdatesChannel NotConfigured
+        }
 
         # Disable Mandatory ASLR
         Set-ProcessMitigation -System -Disable ForceRelocateImages
@@ -159,29 +173,34 @@ Function Unprotect-WindowsSecurity {
             elseif ($Group.Name -in $AllAvailableMitigations.pschildname) {
                 Remove-Item -Path "Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\$($Group.Name)" -Recurse -Force
             }
-        } 
+        }        
+
+        # Only run this if -OnlyProcessMitigations parameter is NOT passed        
+        if (!$OnlyProcessMitigations) {
     
-        # Set Data Execution Prevention (DEP) back to its default value
-        bcdedit.exe /set '{current}' nx OptIn | Out-Null
+            # Set Data Execution Prevention (DEP) back to its default value
+            bcdedit.exe /set '{current}' nx OptIn | Out-Null
          
-        # Remove the scheduled task that keeps the Microsoft recommended driver block rules updated
+            # Remove the scheduled task that keeps the Microsoft recommended driver block rules updated
 
-        # Define the name and path of the task
-        [string]$taskName = 'MSFT Driver Block list update'
-        [string]$taskPath = '\MSFT Driver Block list update\'
+            # Define the name and path of the task
+            [string]$taskName = 'MSFT Driver Block list update'
+            [string]$taskPath = '\MSFT Driver Block list update\'
 
-        if (Get-ScheduledTask -TaskName $taskName -TaskPath $taskPath -ErrorAction SilentlyContinue) {
-            Unregister-ScheduledTask -TaskName $taskName -TaskPath $taskPath -Confirm:$false | Out-Null
-        }       
+            if (Get-ScheduledTask -TaskName $taskName -TaskPath $taskPath -ErrorAction SilentlyContinue) {
+                Unregister-ScheduledTask -TaskName $taskName -TaskPath $taskPath -Confirm:$false | Out-Null
+            }       
 
-        # Enables Multicast DNS (mDNS) UDP-in Firewall Rules for all 3 Firewall profiles
-        Get-NetFirewallRule |
-        Where-Object { $_.RuleGroup -eq '@%SystemRoot%\system32\firewallapi.dll,-37302' -and $_.Direction -eq 'inbound' } |
-        ForEach-Object { Enable-NetFirewallRule -DisplayName $_.DisplayName }                     
+            # Enables Multicast DNS (mDNS) UDP-in Firewall Rules for all 3 Firewall profiles
+            Get-NetFirewallRule |
+            Where-Object { $_.RuleGroup -eq '@%SystemRoot%\system32\firewallapi.dll,-37302' -and $_.Direction -eq 'inbound' } |
+            ForEach-Object { Enable-NetFirewallRule -DisplayName $_.DisplayName }                     
           
-        # Remove any custom views added by this script for Event Viewer
-        if (Test-Path -Path 'C:\ProgramData\Microsoft\Event Viewer\Views\Hardening Script') {
-            Remove-Item -Path 'C:\ProgramData\Microsoft\Event Viewer\Views\Hardening Script' -Recurse -Force
+            # Remove any custom views added by this script for Event Viewer
+            if (Test-Path -Path 'C:\ProgramData\Microsoft\Event Viewer\Views\Hardening Script') {
+                Remove-Item -Path 'C:\ProgramData\Microsoft\Event Viewer\Views\Hardening Script' -Recurse -Force
+            }
+
         }
 
         Write-Progress -Activity 'Complete' -Status 'Complete' -PercentComplete 100   
@@ -222,5 +241,11 @@ PowerShell
 .FUNCTIONALITY
 Removes the hardening measures applied by Protect-WindowsSecurity cmdlet
 
+.PARAMETER OnlyProcessMitigations
+Only removes the Process Mitigations / Exploit Protection settings and doesn't change anything else
+
 #> 
 }
+
+# Set PSReadline tab completion to complete menu for easier access to available parameters - Only for the current session
+Set-PSReadLineKeyHandler -Key Tab -Function MenuComplete

@@ -2,7 +2,7 @@
 
 This module offers rigorous compliance verification and security assessment. It enables you to evaluate the conformity of your system based on the security standards and recommendations of this repository. The module employs various techniques such as Security Policy, PowerShell cmdlet and Registry keys to conduct the checks.
 
-Compliance checking strictly follows the guidelines and security measures of this GitHub repository. Any minor deviation from them will result in a `$false` value for the corresponding check.
+Compliance checking strictly follows the guidelines and security measures of this GitHub repository. Any minor deviation from them will result in a `false` value for the corresponding check.
 
 <br>
 
@@ -62,7 +62,7 @@ The module checks for updates every time you run it and updates itself if there 
 ### You can install this module from [PowerShell gallery](https://www.powershellgallery.com/packages/Harden-Windows-Security-Module/)
 
 ```powershell
-Install-Module -Name Harden-Windows-Security-Module -Force
+Install-Module -Name 'Harden-Windows-Security-Module' -Force
 ```
 
 ### Perform Compliance Check
@@ -89,13 +89,13 @@ Unprotect-WindowsSecurity
 
 <br>
 
-## Available Parameters for Confirm-Systemcompliance Cmdlet
+## Available Parameters for Confirm-SystemCompliance Cmdlet
 
 ```powershell
 Confirm-SystemCompliance [-ExportToCSV] [-ShowAsObjectsOnly] [-DetailedDisplay]
 ```
 
-### 3 optional parameters, they can be used together or individually.
+### 3 Optional Parameters, They Can Be Used Together or Individually.
 
 * `[-ExportToCSV]`: In addition to displaying the results on the screen, also exports them in a nicely formatted CSV for easier viewing. The CSV is fully compatible with GitHub too so you can upload it to GitHub and view it.
 
@@ -109,7 +109,23 @@ Confirm-SystemCompliance [-ExportToCSV] [-ShowAsObjectsOnly] [-DetailedDisplay]
 
 <br>
 
-## Notes for Unprotect-Windowssecurity Cmdlet
+## Available Parameters for Unprotect-WindowsSecurity Cmdlet
+
+```powershell
+Unprotect-WindowsSecurity [-OnlyProcessMitigations]
+```
+
+### 1 Optional Parameter
+
+* `[-OnlyProcessMitigations]`: Indicates that the cmdlet will only remove Process Mitigations (Exploit Protection) settings and doesn't change anything else.
+
+<br>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+
+<br>
+
+## Notes for Unprotect-WindowsSecurity Cmdlet
 
 1. Bitlocker Encrypted drives are not decrypted when you invoke this cmdlet.
 

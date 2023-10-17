@@ -41,7 +41,7 @@
   
 💠 Features of this Hardening script:
 
-  ✅ Always stays up-to-date with the newest security measures.
+  ✅ Everything always stays up-to-date with the newest proactive security measures that are industry standards and scalable.
   ✅ Everything is in plain text, nothing hidden, no 3rd party executable or pre-compiled binary is involved.
   ✅ Doesn't remove or disable Windows functionalities against Microsoft's recommendations.
   ✅ The script primarily uses Group policies, the Microsoft recommended way of configuring Windows. It also uses PowerShell cmdlets where Group Policies aren't available, and finally uses a few registry keys to configure security measures that can neither be configured using Group Policies nor PowerShell cmdlets. This is why the script doesn't break anything or cause unwanted behavior.

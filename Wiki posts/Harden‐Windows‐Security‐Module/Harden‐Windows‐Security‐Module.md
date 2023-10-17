@@ -34,7 +34,7 @@ https://github.com/HotCakeX/Harden-Windows-Security/assets/118815227/0fdbd34b-6b
 
 ## Requirements
 
-[Same requirements](https://github.com/HotCakeX/Harden-Windows-Security#requirements-) as Harden Windows Security script, plus:
+[Same requirements as described on the Readme](https://github.com/HotCakeX/Harden-Windows-Security#requirements-), plus:
 
 * Administrator privileges for `Confirm-SystemCompliance` and `Unprotect-WindowsSecurity`
 * Administrator OR Standard user privileges for `Protect-WindowsSecurity`

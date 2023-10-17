@@ -2,7 +2,7 @@
 
 This module offers rigorous compliance verification and security assessment. It enables you to evaluate the conformity of your system based on the security standards and recommendations of this repository. The module employs various techniques such as Security Policy, PowerShell cmdlet and Registry keys to conduct the checks.
 
-Compliance checking strictly follows the guidelines and security measures of this GitHub repository. Any minor deviation from them will result in a `$false` value for the corresponding check.
+Compliance checking strictly follows the guidelines and security measures of this GitHub repository. Any minor deviation from them will result in a `false` value for the corresponding check.
 
 <br>
 

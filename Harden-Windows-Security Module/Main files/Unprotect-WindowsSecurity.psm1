@@ -29,7 +29,7 @@ Function Unprotect-WindowsSecurity {
     if (!$OnlyProcessMitigations) {
         &$WriteOrange "`r`n"
         &$WriteOrange "###############################################################################################`r`n"
-        &$WriteMintGreen "## This will remove the hardening measures applied by Protect-WindowsSecurity cmdlet ##`r`n"
+        &$WriteMintGreen "## This Will Remove the Hardening Measures Applied by Protect-WindowsSecurity Cmdlet ##`r`n"
         &$WriteOrange "###############################################################################################`r`n"
 
         # Give user a chance to exit if they accidentally ran this
@@ -136,7 +136,7 @@ Function Unprotect-WindowsSecurity {
             # Re-enables the XblGameSave Standby Task that gets disabled by Microsoft Security Baselines
             SCHTASKS.EXE /Change /TN \Microsoft\XblGameSave\XblGameSaveTask /Enable | Out-Null
 
-            Write-Progress -Activity 'Restoring Microsoft Defender configurations back to their default states' -Status 'Processing' -PercentComplete 80
+            Write-Progress -Activity 'Restoring Microsoft Defender configs back to their default states' -Status 'Processing' -PercentComplete 80
    
             # Disable the advanced new security features of the Microsoft Defender
             Set-MpPreference -AllowSwitchToAsyncInspection $False
@@ -150,34 +150,30 @@ Function Unprotect-WindowsSecurity {
             Set-MpPreference -PlatformUpdatesChannel NotConfigured
         }
 
-        # Only run this if -OnlyProcessMitigations parameter is passed
-        if ($OnlyProcessMitigations) {
-
-            # Disable Mandatory ASLR
-            Set-ProcessMitigation -System -Disable ForceRelocateImages
+        # Disable Mandatory ASLR
+        Set-ProcessMitigation -System -Disable ForceRelocateImages
     
-            # Remove Process Mitigations
+        # Remove Process Mitigations
 
-            [System.Object[]]$ProcessMitigations = Import-Csv '.\ProcessMitigations.csv' -Delimiter ','
-            # Group the data by ProgramName
-            [System.Object[]]$GroupedMitigations = $ProcessMitigations | Group-Object ProgramName
-            [System.Object[]]$AllAvailableMitigations = (Get-ItemProperty -Path 'Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\*')
+        [System.Object[]]$ProcessMitigations = Import-Csv '.\ProcessMitigations.csv' -Delimiter ','
+        # Group the data by ProgramName
+        [System.Object[]]$GroupedMitigations = $ProcessMitigations | Group-Object ProgramName
+        [System.Object[]]$AllAvailableMitigations = (Get-ItemProperty -Path 'Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\*')
     
-            Write-Progress -Activity 'Removing Process Mitigations for apps' -Status 'Processing' -PercentComplete 90
+        Write-Progress -Activity 'Removing Process Mitigations for apps' -Status 'Processing' -PercentComplete 90
    
-            # Loop through each group
-            foreach ($Group in $GroupedMitigations) {    
-                # To separate the filename from full path of the item in the CSV and then check whether it exists in the system registry
-                if ($Group.Name -match '\\([^\\]+)$') {
-                    if ($Matches[1] -in $AllAvailableMitigations.pschildname) {
-                        Remove-Item -Path "Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\$($Matches[1])" -Recurse -Force
-                    }        
-                }
-                elseif ($Group.Name -in $AllAvailableMitigations.pschildname) {
-                    Remove-Item -Path "Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\$($Group.Name)" -Recurse -Force
-                }
+        # Loop through each group
+        foreach ($Group in $GroupedMitigations) {    
+            # To separate the filename from full path of the item in the CSV and then check whether it exists in the system registry
+            if ($Group.Name -match '\\([^\\]+)$') {
+                if ($Matches[1] -in $AllAvailableMitigations.pschildname) {
+                    Remove-Item -Path "Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\$($Matches[1])" -Recurse -Force
+                }        
             }
-        }
+            elseif ($Group.Name -in $AllAvailableMitigations.pschildname) {
+                Remove-Item -Path "Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\$($Group.Name)" -Recurse -Force
+            }
+        }        
 
         # Only run this if -OnlyProcessMitigations parameter is NOT passed        
         if (!$OnlyProcessMitigations) {

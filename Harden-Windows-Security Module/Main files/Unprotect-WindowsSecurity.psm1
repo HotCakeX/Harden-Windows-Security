@@ -241,6 +241,9 @@ PowerShell
 .FUNCTIONALITY
 Removes the hardening measures applied by Protect-WindowsSecurity cmdlet
 
+.PARAMETER OnlyProcessMitigations
+Only removes the Process Mitigations / Exploit Protection settings and doesn't change anything else
+
 #> 
 }
 

@@ -169,13 +169,6 @@ WindowsSandboxClient.exe,BlockRemoteImageLoads,Enable,Windows Sandbox process
 WindowsSandboxClient.exe,BlockLowLabelImageLoads,Enable,Windows Sandbox process
 WindowsSandboxClient.exe,EnableExportAddressFilter,Enable,Windows Sandbox process
 WindowsSandboxClient.exe,EnableExportAddressFilterPlus,Enable,Windows Sandbox process
-explorer.exe,ForceRelocateImages,Enable,Explorer
-explorer.exe,RequireInfo,Enable,Explorer
-explorer.exe,StrictHandle,Enable,Explorer
-explorer.exe,DisableExtensionPoints,Enable,Explorer
-explorer.exe,EnableExportAddressFilter,Enable,Explorer
-explorer.exe,EnableExportAddressFilterPlus,Enable,Explorer
-explorer.exe,EnableImportAddressFilter,Enable,Explorer
 RuntimeBroker.exe,DisableExtensionPoints,Enable,RuntimeBroker - Related to Microsoft Store apps and their permissions
 RuntimeBroker.exe,CFG,Enable,RuntimeBroker - Related to Microsoft Store apps and their permissions
 RuntimeBroker.exe,StrictCFG,Enable,RuntimeBroker - Related to Microsoft Store apps and their permissions

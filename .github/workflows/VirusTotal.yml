@@ -6,8 +6,7 @@ on:
     # Add these lines to filter by branches and tags
     branches:
       - main
-    tags-ignore:
-      - '*'
+
   workflow_dispatch:
 
 jobs:

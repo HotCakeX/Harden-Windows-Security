@@ -3,11 +3,8 @@ on:
   push:
     paths:
       - Payload/**
-    # To filter by branches
-    branches:
-      - main
   workflow_dispatch:
-  
+
 jobs:
   build:
     name: Run Script

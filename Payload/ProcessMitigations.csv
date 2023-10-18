@@ -15,7 +15,13 @@ msedge.exe,BlockRemoteImageLoads,Enable,Maximum possible mitigations for Edge br
 msedge.exe,BlockLowLabelImageLoads,Enable,Maximum possible mitigations for Edge browser. any more than this causes problem
 msedge.exe,UserShadowStack,Enable,Maximum possible mitigations for Edge browser. any more than this causes problem
 PrintDialog.exe,,,Print component - This is placeholder so the module will remove it because it has incompatibility issue with printing over RDP
-Explorer.exe,,,File Explorer - This is placeholder so the module will remove it because it has incompatibility issue
+explorer.exe,ForceRelocateImages,Enable,Explorer
+explorer.exe,RequireInfo,Enable,Explorer
+explorer.exe,StrictHandle,Enable,Explorer
+explorer.exe,DisableExtensionPoints,Enable,Explorer
+explorer.exe,EnableExportAddressFilter,Enable,Explorer
+explorer.exe,EnableExportAddressFilterPlus,Enable,Explorer
+explorer.exe,EnableImportAddressFilter,Enable,Explorer
 mscorsvw.exe,DisableExtensionPoints,Enable,Microsoft .NET Runtime Optimization Service Worker
 ngen.exe,DisableExtensionPoints,Enable,Native Image Generator .NET code compiler
 ngentask.exe,DisableExtensionPoints,Enable,.NET Framework compiler

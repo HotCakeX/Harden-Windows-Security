@@ -3,7 +3,7 @@ on:
   push:
     paths:
       - Payload/**
-    # Add these lines to filter by branches and tags
+    # To filter by branches
     branches:
       - main
   workflow_dispatch:

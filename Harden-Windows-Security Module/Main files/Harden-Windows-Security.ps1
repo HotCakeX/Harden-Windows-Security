@@ -403,57 +403,94 @@ try {
         if ($IsCore) { &$WriteNeonGreen 'Skipping commands that require Administrator privileges' } else { Write-Host 'Skipping commands that require Administrator privileges' -ForegroundColor Magenta }
     }
     else {
-        Write-Progress -Activity 'Initialization' -Status 'Downloading the required files...' -PercentComplete 0      
-        
-        Invoke-WithoutProgress { 
-            try {                
-                # Download Microsoft Security Baselines directly from their servers
-                Invoke-WebRequest -Uri 'https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/Windows%2011%20version%2022H2%20Security%20Baseline.zip' -OutFile '.\Windows1122H2SecurityBaseline.zip' -ErrorAction Stop
-                # Download Microsoft 365 Apps Security Baselines directly from their servers
-                Invoke-WebRequest -Uri 'https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/Microsoft%20365%20Apps%20for%20Enterprise%202306.zip' -OutFile '.\Microsoft365SecurityBaseline2306.zip' -ErrorAction Stop
-                # Download LGPO program from Microsoft servers
-                Invoke-WebRequest -Uri 'https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/LGPO.zip' -OutFile '.\LGPO.zip' -ErrorAction Stop
-                
-                # Download the Group Policies of Windows Hardening script from GitHub or Azure DevOps
-                try {
-                    Invoke-WebRequest -Uri 'https://github.com/HotCakeX/Harden-Windows-Security/raw/main/Payload/Security-Baselines-X.zip' -OutFile '.\Security-Baselines-X.zip' -ErrorAction Stop         
-                }
-                catch {
-                    Write-Host 'Using Azure DevOps...' -ForegroundColor Yellow
-                    Invoke-WebRequest -Uri 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/Security-Baselines-X.zip' -OutFile '.\Security-Baselines-X.zip' -ErrorAction Stop
-                }
-                
-                # Download Registry CSV file from GitHub or Azure DevOps
-                try {
-                    Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Payload/Registry.csv' -OutFile '.\Registry.csv' -ErrorAction Stop                
-                }
-                catch {
-                    Write-Host 'Using Azure DevOps...' -ForegroundColor Yellow
-                    Invoke-WebRequest -Uri 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/Registry.csv' -OutFile '.\Registry.csv' -ErrorAction Stop
-                }
+        Write-Progress -Activity 'Initialization' -Status 'Downloading the required files...' -PercentComplete 0 
 
-                # Download Process Mitigations CSV file from GitHub or Azure DevOps
-                try {
-                    Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Payload/ProcessMitigations.csv' -OutFile '.\ProcessMitigations.csv' -ErrorAction Stop
-                }
-                catch {
-                    Write-Host 'Using Azure DevOps...' -ForegroundColor Yellow
-                    Invoke-WebRequest -Uri 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/ProcessMitigations.csv' -OutFile '.\ProcessMitigations.csv' -ErrorAction Stop
-                }
+        try {  
+                          
+            # Create an array of files to download
+            $Files = @(
+                # System.Net.WebClient requires absolute path instead of relative one      
+                @{url = 'https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/Windows%2011%20version%2022H2%20Security%20Baseline.zip'; path = "$WorkingDir\Windows1122H2SecurityBaseline.zip"; tag = 'Microsoft1' }
+                @{url = 'https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/Microsoft%20365%20Apps%20for%20Enterprise%202306.zip'; path = "$WorkingDir\Microsoft365SecurityBaseline2306.zip"; tag = 'Microsoft2' }
+                @{url = 'https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/LGPO.zip'; path = "$WorkingDir\LGPO.zip"; tag = 'Microsoft3' }
+                @{url = 'https://github.com/HotCakeX/Harden-Windows-Security/raw/main/Payload/Security-Baselines-X.zip'; path = "$WorkingDir\Security-Baselines-X.zip"; tag = 'Security-Baselines-X' }
+                @{url = 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Payload/Registry.csv'; path = "$WorkingDir\Registry.csv"; tag = 'Registry' }
+                @{url = 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Payload/ProcessMitigations.csv'; path = "$WorkingDir\ProcessMitigations.csv"; tag = 'ProcessMitigations' }
+                @{url = 'https://github.com/HotCakeX/Harden-Windows-Security/raw/main/Payload/EventViewerCustomViews.zip'; path = "$WorkingDir\EventViewerCustomViews.zip"; tag = 'EventViewerCustomViews' }
+            )
+        
+            # Start a job for each file download    
+            $Jobs = foreach ($File in $Files) {              
+                
+                Start-Job -ErrorAction Stop -ScriptBlock {
+        
+                    param($Url, $Path, $Tag)
+                    # Create a WebClient object
+                    $wc = New-Object System.Net.WebClient
+                    try {
+                        # Try to download the file from the original URL
+                        $wc.DownloadFile($Url, $Path)
+                    }
+                    catch {
+                        # a switch for when the original URLs are failing and provide Alt URL
+                        switch ($Tag) {                                                        
+                            'Security-Baselines-X' {
+                                Write-Host 'Using Azure DevOps for Security-Baselines-X.zip' -ForegroundColor Yellow
+                                $AltURL = 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/Security-Baselines-X.zip'
+                                $wc.DownloadFile($AltURL, $Path)
+                                break
+                            }        
+                            'Registry' {
+                                Write-Host 'Using Azure DevOps for Registry.csv' -ForegroundColor Yellow
+                                $AltURL = 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/Registry.csv'
+                                $wc.DownloadFile($AltURL, $Path)
+                                break
+                            }        
+                            'ProcessMitigations' {                            
+                                Write-Host 'Using Azure DevOps for ProcessMitigations.CSV' -ForegroundColor Yellow
+                                $AltURL = 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/ProcessMitigations.csv'
+                                $wc.DownloadFile($AltURL, $Path)
+                                break
+                            } 
+                            'EventViewerCustomViews' {
+                                Write-Host 'Using Azure DevOps for EventViewerCustomViews.zip' -ForegroundColor Yellow
+                                $AltURL = 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/EventViewerCustomViews.zip'
+                                $wc.DownloadFile($AltURL, $Path)
+                                break
+                            }       
+                            default {
+                                # Write an error if any other URL fails and stop the script
+                                Write-Error $_
+                            }
+                        }                
+                    }            
+                } -ArgumentList $File.url, $File.path, $File.tag
+            } 
+            # Wait until all jobs are completed
+            while ($Jobs | Where-Object { $_.State -ne 'Completed' }) {
+                Start-Sleep -Seconds 1
             }
-            catch {
-                Write-Error "The required files couldn't be downloaded, Make sure you have Internet connection."
-                &$CleanUp   
-            }
+        
+            # Receive the output or errors of each job and remove the job
+            foreach ($Job in $Jobs) {
+                Receive-Job -Job $Job -ErrorAction Stop
+                Remove-Job -Job $Job -ErrorAction Stop
+            }       
+               
         }
+        catch {
+            Write-Error "The required files couldn't be downloaded, Make sure you have Internet connection."
+            &$CleanUp   
+        }        
+
         # unzip Microsoft Security Baselines file
-        Expand-Archive -Path .\Windows1122H2SecurityBaseline.zip -DestinationPath .\ -Force
+        Expand-Archive -Path .\Windows1122H2SecurityBaseline.zip -DestinationPath .\ -Force -ErrorAction Stop
         # unzip Microsoft 365 Apps Security Baselines file
-        Expand-Archive -Path .\Microsoft365SecurityBaseline2306.zip -DestinationPath .\ -Force
+        Expand-Archive -Path .\Microsoft365SecurityBaseline2306.zip -DestinationPath .\ -Force -ErrorAction Stop
         # unzip the LGPO file
-        Expand-Archive -Path .\LGPO.zip -DestinationPath .\ -Force
+        Expand-Archive -Path .\LGPO.zip -DestinationPath .\ -Force -ErrorAction Stop
         # unzip the Security-Baselines-X file which contains Windows Hardening script Group Policy Objects
-        Expand-Archive -Path .\Security-Baselines-X.zip -DestinationPath .\Security-Baselines-X\ -Force
+        Expand-Archive -Path .\Security-Baselines-X.zip -DestinationPath .\Security-Baselines-X\ -Force -ErrorAction Stop
 
         #region Windows-Boot-Manager-revocations-for-Secure-Boot KB5025885  
         # ============================May 9 2023 Windows Boot Manager revocations for Secure Boot =================================
@@ -1529,33 +1566,16 @@ try {
 
                 # Event Viewer custom views are saved in "C:\ProgramData\Microsoft\Event Viewer\Views". files in there can be backed up and restored on new Windows installations.
                 New-Item -ItemType Directory -Path 'C:\ProgramData\Microsoft\Event Viewer\Views\Hardening Script\' -Force | Out-Null                
+
+                # Due to change in event viewer custom log files, making sure no old file names exist
+                if (Test-Path -Path 'C:\ProgramData\Microsoft\Event Viewer\Views\Hardening Script') {
+                    Remove-Item -Path 'C:\ProgramData\Microsoft\Event Viewer\Views\Hardening Script' -Recurse -Force
+                }
+                # Creating new sub-folder to store the custom views
+                New-Item -Path 'C:\ProgramData\Microsoft\Event Viewer\Views\Hardening Script' -ItemType Directory -Force | Out-Null
+
+                Expand-Archive -Path "$WorkingDir\EventViewerCustomViews.zip" -DestinationPath 'C:\ProgramData\Microsoft\Event Viewer\Views\Hardening Script' -Force -ErrorAction Stop
                 
-                Invoke-WithoutProgress { 
-                    try {
-                        Write-Host 'Downloading the Custom views for Event Viewer, Please wait...' -ForegroundColor Yellow
-                        try {
-                            Invoke-WebRequest -Uri 'https://github.com/HotCakeX/Harden-Windows-Security/raw/main/Payload/EventViewerCustomViews.zip' -OutFile "$global:UserTempDirectoryPath\EventViewerCustomViews.zip" -ErrorAction Stop
-                        }
-                        catch {
-                            Write-Host 'Using Azure DevOps...' -ForegroundColor Yellow
-                            Invoke-WebRequest -Uri 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/EventViewerCustomViews.zip' -OutFile "$global:UserTempDirectoryPath\EventViewerCustomViews.zip" -ErrorAction Stop
-                        }
-
-                        # Due to change in event viewer custom log files, making sure no old file names exist
-                        if (Test-Path -Path 'C:\ProgramData\Microsoft\Event Viewer\Views\Hardening Script') {
-                            Remove-Item -Path 'C:\ProgramData\Microsoft\Event Viewer\Views\Hardening Script' -Recurse -Force
-                        }
-                        # Creating new sub-folder to store the custom views
-                        New-Item -Path 'C:\ProgramData\Microsoft\Event Viewer\Views\Hardening Script' -ItemType Directory -Force | Out-Null
-
-                        Expand-Archive -Path "$global:UserTempDirectoryPath\EventViewerCustomViews.zip" -DestinationPath 'C:\ProgramData\Microsoft\Event Viewer\Views\Hardening Script' -Force
-                        Remove-Item -Path "$global:UserTempDirectoryPath\EventViewerCustomViews.zip" -Force
-                        Write-Host "`nSuccessfully added Custom Views for Event Viewer" -ForegroundColor Green               
-                    }
-                    catch {
-                        Write-Host "The required files couldn't be downloaded, Make sure you have Internet connection. Skipping..." -ForegroundColor Red
-                    }
-                } 
             } 'No' { break }
             'Exit' { &$CleanUp }
         }    

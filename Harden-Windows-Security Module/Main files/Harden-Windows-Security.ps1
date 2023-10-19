@@ -468,7 +468,7 @@ try {
             } 
             # Wait until all jobs are completed
             while ($Jobs | Where-Object { $_.State -ne 'Completed' }) {
-                Start-Sleep -Seconds 1
+                Start-Sleep -Milliseconds 700
             }
         
             # Receive the output or errors of each job and remove the job
@@ -478,8 +478,9 @@ try {
             }       
                
         }
-        catch {
+        catch {            
             Write-Error "The required files couldn't be downloaded, Make sure you have Internet connection."
+            foreach ($Job in $Jobs) { Remove-Job -Job $Job -ErrorAction Stop }   
             &$CleanUp   
         }        
 

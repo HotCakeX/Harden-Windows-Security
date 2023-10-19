@@ -416,6 +416,7 @@ try {
                 @{url = 'https://github.com/HotCakeX/Harden-Windows-Security/raw/main/Payload/Security-Baselines-X.zip'; path = "$WorkingDir\Security-Baselines-X.zip"; tag = 'Security-Baselines-X' }
                 @{url = 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Payload/Registry.csv'; path = "$WorkingDir\Registry.csv"; tag = 'Registry' }
                 @{url = 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Payload/ProcessMitigations.csv'; path = "$WorkingDir\ProcessMitigations.csv"; tag = 'ProcessMitigations' }
+                @{url = 'https://github.com/HotCakeX/Harden-Windows-Security/raw/main/Payload/EventViewerCustomViews.zip'; path = "$WorkingDir\EventViewerCustomViews.zip"; tag = 'EventViewerCustomViews' }
             )
         
             # Start a job for each file download    
@@ -450,7 +451,13 @@ try {
                                 $AltURL = 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/ProcessMitigations.csv'
                                 $wc.DownloadFile($AltURL, $Path)
                                 break
-                            }        
+                            } 
+                            'EventViewerCustomViews' {
+                                Write-Host 'Using Azure DevOps for EventViewerCustomViews.zip' -ForegroundColor Yellow
+                                $AltURL = 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/EventViewerCustomViews.zip'
+                                $wc.DownloadFile($AltURL, $Path)
+                                break
+                            }       
                             default {
                                 # Write an error if any other URL fails and stop the script
                                 Write-Error $_
@@ -477,13 +484,13 @@ try {
         }        
 
         # unzip Microsoft Security Baselines file
-        Expand-Archive -Path .\Windows1122H2SecurityBaseline.zip -DestinationPath .\ -Force
+        Expand-Archive -Path .\Windows1122H2SecurityBaseline.zip -DestinationPath .\ -Force -ErrorAction Stop
         # unzip Microsoft 365 Apps Security Baselines file
-        Expand-Archive -Path .\Microsoft365SecurityBaseline2306.zip -DestinationPath .\ -Force
+        Expand-Archive -Path .\Microsoft365SecurityBaseline2306.zip -DestinationPath .\ -Force -ErrorAction Stop
         # unzip the LGPO file
-        Expand-Archive -Path .\LGPO.zip -DestinationPath .\ -Force
+        Expand-Archive -Path .\LGPO.zip -DestinationPath .\ -Force -ErrorAction Stop
         # unzip the Security-Baselines-X file which contains Windows Hardening script Group Policy Objects
-        Expand-Archive -Path .\Security-Baselines-X.zip -DestinationPath .\Security-Baselines-X\ -Force
+        Expand-Archive -Path .\Security-Baselines-X.zip -DestinationPath .\Security-Baselines-X\ -Force -ErrorAction Stop
 
         #region Windows-Boot-Manager-revocations-for-Secure-Boot KB5025885  
         # ============================May 9 2023 Windows Boot Manager revocations for Secure Boot =================================
@@ -1559,33 +1566,17 @@ try {
 
                 # Event Viewer custom views are saved in "C:\ProgramData\Microsoft\Event Viewer\Views". files in there can be backed up and restored on new Windows installations.
                 New-Item -ItemType Directory -Path 'C:\ProgramData\Microsoft\Event Viewer\Views\Hardening Script\' -Force | Out-Null                
+
+                # Due to change in event viewer custom log files, making sure no old file names exist
+                if (Test-Path -Path 'C:\ProgramData\Microsoft\Event Viewer\Views\Hardening Script') {
+                    Remove-Item -Path 'C:\ProgramData\Microsoft\Event Viewer\Views\Hardening Script' -Recurse -Force
+                }
+                # Creating new sub-folder to store the custom views
+                New-Item -Path 'C:\ProgramData\Microsoft\Event Viewer\Views\Hardening Script' -ItemType Directory -Force | Out-Null
+
+                Expand-Archive -Path "$WorkingDir\EventViewerCustomViews.zip" -DestinationPath 'C:\ProgramData\Microsoft\Event Viewer\Views\Hardening Script' -Force -ErrorAction Stop
+                Write-Host "`nSuccessfully added Custom Views for Event Viewer" -ForegroundColor Green
                 
-                Invoke-WithoutProgress { 
-                    try {
-                        Write-Host 'Downloading the Custom views for Event Viewer, Please wait...' -ForegroundColor Yellow
-                        try {
-                            Invoke-WebRequest -Uri 'https://github.com/HotCakeX/Harden-Windows-Security/raw/main/Payload/EventViewerCustomViews.zip' -OutFile "$global:UserTempDirectoryPath\EventViewerCustomViews.zip" -ErrorAction Stop
-                        }
-                        catch {
-                            Write-Host 'Using Azure DevOps...' -ForegroundColor Yellow
-                            Invoke-WebRequest -Uri 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/EventViewerCustomViews.zip' -OutFile "$global:UserTempDirectoryPath\EventViewerCustomViews.zip" -ErrorAction Stop
-                        }
-
-                        # Due to change in event viewer custom log files, making sure no old file names exist
-                        if (Test-Path -Path 'C:\ProgramData\Microsoft\Event Viewer\Views\Hardening Script') {
-                            Remove-Item -Path 'C:\ProgramData\Microsoft\Event Viewer\Views\Hardening Script' -Recurse -Force
-                        }
-                        # Creating new sub-folder to store the custom views
-                        New-Item -Path 'C:\ProgramData\Microsoft\Event Viewer\Views\Hardening Script' -ItemType Directory -Force | Out-Null
-
-                        Expand-Archive -Path "$global:UserTempDirectoryPath\EventViewerCustomViews.zip" -DestinationPath 'C:\ProgramData\Microsoft\Event Viewer\Views\Hardening Script' -Force
-                        Remove-Item -Path "$global:UserTempDirectoryPath\EventViewerCustomViews.zip" -Force
-                        Write-Host "`nSuccessfully added Custom Views for Event Viewer" -ForegroundColor Green               
-                    }
-                    catch {
-                        Write-Host "The required files couldn't be downloaded, Make sure you have Internet connection. Skipping..." -ForegroundColor Red
-                    }
-                } 
             } 'No' { break }
             'Exit' { &$CleanUp }
         }    

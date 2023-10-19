@@ -405,18 +405,17 @@ try {
     else {
         Write-Progress -Activity 'Initialization' -Status 'Downloading the required files...' -PercentComplete 0 
 
-        try {   
-            # System.Net.WebClient requires absolute path instead of relative one
-            $CurrentPath = (Get-Location).path
-        
+        try {  
+                          
             # Create an array of files to download
             $Files = @(
-                @{url = 'https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/Windows%2011%20version%2022H2%20Security%20Baseline.zip'; path = "$CurrentPath\Windows1122H2SecurityBaseline.zip"; tag = 'Microsoft1' }
-                @{url = 'https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/Microsoft%20365%20Apps%20for%20Enterprise%202306.zip'; path = "$CurrentPath\Microsoft365SecurityBaseline2306.zip"; tag = 'Microsoft2' }
-                @{url = 'https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/LGPO.zip'; path = "$CurrentPath\LGPO.zip"; tag = 'Microsoft3' }
-                @{url = 'https://github.com/HotCakeX/Harden-Windows-Security/raw/main/Payload/Security-Baselines-X.zip'; path = "$CurrentPath\Security-Baselines-X.zip"; tag = 'Security-Baselines-X' }
-                @{url = 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Payload/Registry.csv'; path = "$CurrentPath\Registry.csv"; tag = 'Registry' }
-                @{url = 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Payload/ProcessMitigations.csv'; path = "$CurrentPath\ProcessMitigations.csv"; tag = 'ProcessMitigations' }
+                # System.Net.WebClient requires absolute path instead of relative one      
+                @{url = 'https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/Windows%2011%20version%2022H2%20Security%20Baseline.zip'; path = "$WorkingDir\Windows1122H2SecurityBaseline.zip"; tag = 'Microsoft1' }
+                @{url = 'https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/Microsoft%20365%20Apps%20for%20Enterprise%202306.zip'; path = "$WorkingDir\Microsoft365SecurityBaseline2306.zip"; tag = 'Microsoft2' }
+                @{url = 'https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/LGPO.zip'; path = "$WorkingDir\LGPO.zip"; tag = 'Microsoft3' }
+                @{url = 'https://github.com/HotCakeX/Harden-Windows-Security/raw/main/Payload/Security-Baselines-X.zip'; path = "$WorkingDir\Security-Baselines-X.zip"; tag = 'Security-Baselines-X' }
+                @{url = 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Payload/Registry.csv'; path = "$WorkingDir\Registry.csv"; tag = 'Registry' }
+                @{url = 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Payload/ProcessMitigations.csv'; path = "$WorkingDir\ProcessMitigations.csv"; tag = 'ProcessMitigations' }
             )
         
             # Start a job for each file download    
@@ -433,29 +432,25 @@ try {
                     }
                     catch {
                         # a switch for when the original URLs are failing and provide Alt URL
-                        switch ($Tag) {
-                            
+                        switch ($Tag) {                                                        
                             'Security-Baselines-X' {
                                 Write-Host 'Using Azure DevOps for Security-Baselines-X.zip' -ForegroundColor Yellow
                                 $AltURL = 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/Security-Baselines-X.zip'
                                 $wc.DownloadFile($AltURL, $Path)
                                 break
-                            }
-        
+                            }        
                             'Registry' {
                                 Write-Host 'Using Azure DevOps for Registry.csv' -ForegroundColor Yellow
                                 $AltURL = 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/Registry.csv'
                                 $wc.DownloadFile($AltURL, $Path)
                                 break
-                            }
-        
+                            }        
                             'ProcessMitigations' {                            
                                 Write-Host 'Using Azure DevOps for ProcessMitigations.CSV' -ForegroundColor Yellow
                                 $AltURL = 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/ProcessMitigations.csv'
                                 $wc.DownloadFile($AltURL, $Path)
                                 break
-                            }
-        
+                            }        
                             default {
                                 # Write an error if any other URL fails and stop the script
                                 Write-Error $_
@@ -479,8 +474,7 @@ try {
         catch {
             Write-Error "The required files couldn't be downloaded, Make sure you have Internet connection."
             &$CleanUp   
-        }
-        
+        }        
 
         # unzip Microsoft Security Baselines file
         Expand-Archive -Path .\Windows1122H2SecurityBaseline.zip -DestinationPath .\ -Force

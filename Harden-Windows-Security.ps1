@@ -1575,7 +1575,6 @@ try {
                 New-Item -Path 'C:\ProgramData\Microsoft\Event Viewer\Views\Hardening Script' -ItemType Directory -Force | Out-Null
 
                 Expand-Archive -Path "$WorkingDir\EventViewerCustomViews.zip" -DestinationPath 'C:\ProgramData\Microsoft\Event Viewer\Views\Hardening Script' -Force -ErrorAction Stop
-                Write-Host "`nSuccessfully added Custom Views for Event Viewer" -ForegroundColor Green
                 
             } 'No' { break }
             'Exit' { &$CleanUp }

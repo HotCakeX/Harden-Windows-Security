@@ -57,3 +57,23 @@ You can use the Group-Object cmdlet to group the objects by the property you wan
 You can find more information about the Group-Object cmdlet and its parameters in [this article](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/group-object).
 
 <br>
+
+## Install Big Powershell Modules System Wide
+
+Modules such as [Az](https://www.powershellgallery.com/packages/AZ/) or [Microsoft.Graph.Beta](https://www.powershellgallery.com/packages/Microsoft.Graph.Beta/) are big, can have thousands of files and take more than 1GB space after installation.
+
+By default modules are installed in the Documents directory and when you use OneDrive, everything in there is synced automatically.
+
+You can install such modules system wide so that they won't be stored in the `Documents\PowerShell` directory and instead will be stored in `C:\Program Files\PowerShell\Modules` (for PowerShell core). This will also improve security since Administrator privileges will be required to change module files.
+
+To do this, you need to use the `-Scope AllUsers` parameter.
+
+```powershell
+Install-Module Az -Scope AllUsers
+
+Install-Module Microsoft.Graph.Beta -Scope AllUsers
+```
+
+* [Parameter Info](https://learn.microsoft.com/en-us/powershell/module/powershellget/install-module)
+
+<br>

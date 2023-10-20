@@ -100,9 +100,9 @@ Unprotect-WindowsSecurity
 <details>
 <summary>Old PowerShell v5.1 users that want to install as script</summary>
 
-### <img width="35" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/SVGs/powershell.svg"> Install It as a Standalone Script From [PowerShell Gallery](https://www.powershellgallery.com/packages/Harden-Windows-Security/)
+### <img width="35" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/SVGs/powershell.svg"> Install It as a Standalone Script From <a href="https://www.powershellgallery.com/packages/Harden-Windows-Security/">PowerShell Gallery</a>
 
-* When you run it and if there is a new version, you will be notified.
+<em> When you run it and if there is a new version, you will be notified. </em>
 
 ```powershell
 Install-Script -Name 'Harden-Windows-Security' -Force

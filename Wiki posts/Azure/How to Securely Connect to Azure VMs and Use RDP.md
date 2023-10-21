@@ -132,7 +132,7 @@ We need a resource group first because we're going to need a few components: Azu
 <details>
 
 <summary>
-Screenshots <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/Camera%20snap.png" width="35" altt="Camera icon indicating that this section can be expanded">
+Screenshots <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/Camera%20snap.png" width="35" alt="Camera icon indicating that this section can be expanded">
 </summary>
 
 <br>

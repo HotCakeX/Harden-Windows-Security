@@ -184,7 +184,7 @@ Once you open it, you can follow [the guide from Microsoft](https://learn.micros
 Note that If the Server doesn't have at least 1 network adapter connected to it, then Certificate Templates don't load,
 <details><summary>Screenshot</summary>
 
-<img src="https://user-images.githubusercontent.com/118815227/219699959-fdf7b0df-ddae-45f8-ab2e-4381e88cefb0.png">
+<img src="https://user-images.githubusercontent.com/118815227/219699959-fdf7b0df-ddae-45f8-ab2e-4381e88cefb0.png" alt="Screenshot of the error message showing that Hyper-V VM Server needs at least one Virtual Network Adapter.">
 
 </details>
 
@@ -334,7 +334,7 @@ Deploying a Signed WDAC policy without restarting is the same as deploying Unsig
 
 <details><summary>Screenshot of a message after forcefully deleting a Signed WDAC policy from the EFI partition</summary>
 
-<img src="https://user-images.githubusercontent.com/118815227/219513251-3722745f-1aa5-4b5c-b4b0-e1a928b786a1.png">
+<img src="https://user-images.githubusercontent.com/118815227/219513251-3722745f-1aa5-4b5c-b4b0-e1a928b786a1.png" alt="Screenshot of a message after forcefully deleting a Signed WDAC policy from the EFI partition">
 
 </details>
 

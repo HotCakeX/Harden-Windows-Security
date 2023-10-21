@@ -275,7 +275,7 @@ Screenshots <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pi
 
 <br>
 
-<img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/Wiki%20How%20to%20Securely%20Connect%20to%20Azure%20VMs%20and%20Use%20RDP/VM2.png">
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/Wiki%20How%20to%20Securely%20Connect%20to%20Azure%20VMs%20and%20Use%20RDP/VM2.png" alt="Using VMs and showing the successful connection of point to site connection using Azure Virtual Gateway - 2">
 
 <br>
 

@@ -52,7 +52,7 @@ $objects | Group-Object -Property RandomNumber | ForEach-Object { $_.Group[0] } 
 
 <br>
 
-You can use the Group-Object cmdlet to group the objects by the property you want to filter, and then select the first object from each group. This way, you will get one object for each "RandomNumber" property with all the properties intact. Using other methods such as `Get-Unique` or `Select-Object -Unique` won't work in this particular case.
+You can use the Group-Object cmdlet to group the objects by the property you want to filter, and then select the first object from each group. This way, you will get one object for each "RandomNumber" property ***with all the properties intact.*** Using other methods such as `Get-Unique` or `Select-Object -Unique` won't work in this particular case.
 
 You can find more information about the Group-Object cmdlet and its parameters in [this article](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/group-object).
 

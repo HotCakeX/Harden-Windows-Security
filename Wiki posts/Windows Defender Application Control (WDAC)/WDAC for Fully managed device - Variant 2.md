@@ -38,7 +38,7 @@ flowchart TD
 
 ## Video Guide
 
-<a href="https://youtu.be/QpJt255pHDE?si=eLSRkAQXrkHK8SSh"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/YouTube%20Video%20Thumbnails/With%20YouTube%20play%20button/WDAC%20for%20Fully%20Managed%20Devices%20(2nd%20variant).png"></a>
+<a href="https://youtu.be/QpJt255pHDE?si=eLSRkAQXrkHK8SSh"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/YouTube%20Video%20Thumbnails/With%20YouTube%20play%20button/WDAC%20for%20Fully%20Managed%20Devices%20(2nd%20variant).png" alt="WDAC policy for Fully managed device - Variant 2 YouTube Guide"></a>
 
 <br>
 

@@ -82,28 +82,27 @@ Install-Module -Name WDACConfig -Force
 
 <br>
 
-<a href="https://youtu.be/RSYJ64BlS9Y?si=t6TlcYzsMwteG1M9"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/YouTube%20Video%20Thumbnails/With%20YouTube%20play%20button/How%20to%20Create%20and%20Deploy%20a%20Signed%20WDAC%20Policy.png"></a>
+<a href="https://youtu.be/RSYJ64BlS9Y?si=t6TlcYzsMwteG1M9"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/YouTube%20Video%20Thumbnails/With%20YouTube%20play%20button/How%20to%20Create%20and%20Deploy%20a%20Signed%20WDAC%20Policy.png" alt="Create and Deploy Signed WDAC Windows Defender Policy YouTube Guide"></a>
 
 <br>
 
-<a href="https://youtu.be/KD0zUb2GCyk?si=_g09D0yF5lTN1NLO"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/YouTube%20Video%20Thumbnails/With%20YouTube%20play%20button/WDAC%20policy%20for%20Fully%20Managed%20device%20-%20Variant%201.png"></a>
-<br>
+<a href="https://youtu.be/KD0zUb2GCyk?si=_g09D0yF5lTN1NLO"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/YouTube%20Video%20Thumbnails/With%20YouTube%20play%20button/WDAC%20policy%20for%20Fully%20Managed%20device%20-%20Variant%201.png" alt="WDAC policy for Fully Managed device - Variant 1 YouTube Guide"></a>
 
 <br>
 
-<a href="https://youtu.be/QpJt255pHDE?si=eLSRkAQXrkHK8SSh"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/YouTube%20Video%20Thumbnails/With%20YouTube%20play%20button/WDAC%20for%20Fully%20Managed%20Devices%20(2nd%20variant).png"></a>
+<a href="https://youtu.be/QpJt255pHDE?si=eLSRkAQXrkHK8SSh"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/YouTube%20Video%20Thumbnails/With%20YouTube%20play%20button/WDAC%20for%20Fully%20Managed%20Devices%20(2nd%20variant).png" alt="WDAC policy for Fully managed device - Variant 2 YouTube Guide"></a>
 
 <br>
 
-<a href="https://youtu.be/41_5ntFYghM?si=2PcCXI7gis6UAJh7"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/YouTube%20Video%20Thumbnails/With%20YouTube%20play%20button/WDAC%20policy%20for%20Fully%20managed%20device%20Variant%203.png"></a>
+<a href="https://youtu.be/41_5ntFYghM?si=2PcCXI7gis6UAJh7"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/YouTube%20Video%20Thumbnails/With%20YouTube%20play%20button/WDAC%20policy%20for%20Fully%20managed%20device%20Variant%203.png" alt="WDAC policy for Fully managed device - Variant 3 YouTube Guide"></a>
 
 <br>
 
-<a href="https://youtu.be/AgqhcPV9aPY?si=l_2QPbEAKKVhb9z6"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/YouTube%20Video%20Thumbnails/With%20YouTube%20play%20button/WDAC%20policy%20for%20Fully%20managed%20device%20Variant%204.png"></a>
+<a href="https://youtu.be/AgqhcPV9aPY?si=l_2QPbEAKKVhb9z6"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/YouTube%20Video%20Thumbnails/With%20YouTube%20play%20button/WDAC%20policy%20for%20Fully%20managed%20device%20Variant%204.png" alt="WDAC policy for Fully managed device - Variant 4 YouTube Guide"></a>
 
 <br>
 
-<a href="https://youtu.be/RgVf4p9ct90?si=mGdVCnqVlUN_FBWR"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/YouTube%20Video%20Thumbnails/With%20YouTube%20play%20button/WDAC%20policy%20for%20Lightly%20managed%20device.png"></a>
+<a href="https://youtu.be/RgVf4p9ct90?si=mGdVCnqVlUN_FBWR"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/YouTube%20Video%20Thumbnails/With%20YouTube%20play%20button/WDAC%20policy%20for%20Lightly%20managed%20device.png" alt="WDAC policy for Lightly managed device YouTube Guide"></a>
 
 <br>
 
@@ -114,3 +113,5 @@ Install-Module -Name WDACConfig -Force
 ## Feedback and Feature Request
 
 If there are any feedback or feature requests regarding this module, please [open a new discussion/issue on GitHub.](https://github.com/HotCakeX/Harden-Windows-Security)
+
+<br>

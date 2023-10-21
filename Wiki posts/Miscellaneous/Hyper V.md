@@ -248,32 +248,32 @@ To display how optimized and powerful Hyper-V hypervisor is (including any featu
 <details>
 
 <summary>
-<img width="30" src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/diamond-7.gif">
+<img width="30" src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/diamond-7.gif" alt="Diamond spinning 1 gif">
 Click/Tap here to see the screenshots
-<img width="30" src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/diamond-7.gif">
+<img width="30" src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/diamond-7.gif" alt="Diamond spinning 2 gif">
 </summary>
 
 <br>
 
-<img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/Hyper-V%20Nested%20Virtualization/1%20(1).png">
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/Hyper-V%20Nested%20Virtualization/1%20(1).png" alt="Hyper-V nested virtualization on a very old and weak hardware - 1">
 
 <br>
 
 <br>
 
-<img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/Hyper-V%20Nested%20Virtualization/1%20(2).png">
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/Hyper-V%20Nested%20Virtualization/1%20(2).png" alt="Hyper-V nested virtualization on a very old and weak hardware - 2">
 
 <br>
 
 <br>
 
-<img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/Hyper-V%20Nested%20Virtualization/1%20(3).png">
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/Hyper-V%20Nested%20Virtualization/1%20(3).png" alt="Hyper-V nested virtualization on a very old and weak hardware - 3">
 
 <br>
 
 <br>
 
-<img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/Hyper-V%20Nested%20Virtualization/1%20(4).png">
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/Hyper-V%20Nested%20Virtualization/1%20(4).png" alt="Hyper-V nested virtualization on a very old and weak hardware - 4">
 
 </details>
 

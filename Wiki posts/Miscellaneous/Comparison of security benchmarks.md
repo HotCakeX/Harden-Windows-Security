@@ -1,4 +1,4 @@
-# [Comparison of security benchmarks](#comparison-of-security-benchmarks-) <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/lovelybat.gif" width="50">
+# [Comparison of security benchmarks](#comparison-of-security-benchmarks-) <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/lovelybat.gif" width="50" alt="Comparison of security benchmarks">
 
 I conducted a thorough analysis of some of the prominent security benchmarks/guidelines for my GitHub repository and I discovered some fascinating insights. By analysis, I mean that I examined every single recommendation in them and compared them with my own suggestions and Microsoft Security Baselines.
 
@@ -8,9 +8,9 @@ For my reviews I used the latest available version of each benchmark.
 
 <br>
 
-## [Some of the Pitfalls of Relying on Third-Party Benchmarks](#some-of-the-pitfalls-of-relying-on-third-party-benchmarks-) <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/whyme.gif" width="50">
+## [Some of the Pitfalls of Relying on Third-Party Benchmarks](#some-of-the-pitfalls-of-relying-on-third-party-benchmarks-) <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/whyme.gif" width="50" alt="Small Gif image for the section named Some of the Pitfalls of Relying on Third-Party Benchmarks">
 
-### <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/bandage-bleed.gif" width="30"> [Clipboard sharing from guest to host !](#-clipboard-sharing-from-guest-to-host-)
+### <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/bandage-bleed.gif" width="30" alt="Small Gif for Clipboard sharing from guest to host section"> [Clipboard sharing from guest to host !](#-clipboard-sharing-from-guest-to-host-)
 
 CIS 18.10.44.5 (L1) recommends allowing clipboard operation from an isolated session to the host, i.e. guest to host redirection, which is a highly insecure and irrational suggestion!
 
@@ -27,7 +27,7 @@ indeed that functionality may often be necessary from an operational standpoint*
 
 <br>
 
-### <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/bandage-bleed.gif" width="30"> [Renaming built-in administrator and guest accounts !](#-renaming-built-in-administrator-and-guest-accounts-)
+### <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/bandage-bleed.gif" width="30" alt="Small gif for Renaming built-in administrator and guest accounts section"> [Renaming built-in administrator and guest accounts !](#-renaming-built-in-administrator-and-guest-accounts-)
 
 Both CIS and STIG suggest altering the name of the built-in administrator and guest accounts as a security measure.
 
@@ -56,7 +56,7 @@ $searcher.FindAll() | Where-Object { $_.Sid -Like "*-500" } | Select-Object SamA
 
 <br>
 
-### <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/bandage-bleed.gif" width="30"> [Disabling Windows Hello PIN and using traditional passwords instead !](#-disabling-windows-hello-pin-and-using-traditional-passwords-instead-)
+### <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/bandage-bleed.gif" width="30" alt="Small gif for Disabling Windows Hello PIN and using traditional passwords instead section"> [Disabling Windows Hello PIN and using traditional passwords instead !](#-disabling-windows-hello-pin-and-using-traditional-passwords-instead-)
 
 These benchmarks recommend disabling Windows Hello PIN and opting for passwords instead. Stig V-253423 and CIS 18.9.27.4.
 
@@ -81,7 +81,7 @@ The benchmarks/guidelines seem to be uninformed of the fact that Windows allows 
 
 <br>
 
-### <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/bandage-bleed.gif" width="30"> [Bad configuration for Early Launch Anti Malware](#-bad-configuration-for-early-launch-anti-malware)
+### <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/bandage-bleed.gif" width="30" alt="Small gif for Bad configuration for Early Launch Anti Malware section"> [Bad configuration for Early Launch Anti Malware](#-bad-configuration-for-early-launch-anti-malware)
 
 CIS in 18.9.13.1
 
@@ -92,7 +92,7 @@ That's not even a recommendation, that's the default value! If you use [Harden W
 
 <br>
 
-### <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/bandage-bleed.gif" width="30"> [Disabling Windows Error reporting !](#-disabling-windows-error-reporting-)
+### <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/bandage-bleed.gif" width="30" alt="Disabling Windows Error reporting"> [Disabling Windows Error reporting !](#-disabling-windows-error-reporting-)
 
 Their rationale is:
 
@@ -102,7 +102,7 @@ Indeed, the corporation that uses the software benefits from it by reporting the
 
 <br>
 
-### <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/bandage-bleed.gif" width="30"> [Disabling Cloud Protection!](#-disabling-cloud-protection)
+### <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/bandage-bleed.gif" width="30" alt="Disabling Cloud Protection"> [Disabling Cloud Protection!](#-disabling-cloud-protection)
 
 CIS 18.10.43.5.2 (L2), suggests disabling Cloud Protection of Microsoft Defender. **This is precisely the kind of security measure that Threat Actors and advanced persistent threats (APTs) seek to disable** and then CIS is suggesting to disable it, astonishing.
 
@@ -110,7 +110,7 @@ This is an extremely [important security feature](https://learn.microsoft.com/en
 
 <br>
 
-### <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/bandage-bleed.gif" width="30"> [Not enabling important Attack Surface Reduction rules](#-not-enabling-important-attack-surface-reduction-rules)
+### <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/bandage-bleed.gif" width="30" alt="Not enabling important Attack Surface Reduction rules"> [Not enabling important Attack Surface Reduction rules](#-not-enabling-important-attack-surface-reduction-rules)
 
 CIS in 18.10.43.6.1.2 (L1) intentionally leaves out very important ASR rules
 
@@ -128,7 +128,7 @@ These benchmarks or guidelines have numerous flaws and I have only examined two 
 
 <br>
 
-## [Aspects that are lacking](#aspects-that-are-lacking-) <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/gothwink.gif" width="50">
+## [Aspects that are lacking](#aspects-that-are-lacking-) <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/gothwink.gif" width="50" alt="Aspects that are lacking">
 
 The benchmarks omit many new security features that the [Harden Windows Security script](https://github.com/HotCakeX/Harden-Windows-Security) implements.
 
@@ -155,7 +155,7 @@ The benchmarks/guidelines suggest using application control or whitelisting, but
 <br>
 
 <p align="center">
-<img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/thankyou.gif">
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/thankyou.gif" alt="Thank You Gif">
 </p>
 
 <br>

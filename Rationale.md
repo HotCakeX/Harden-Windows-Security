@@ -1,12 +1,12 @@
-# <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/PNGs/585563111520600091.png"> Rationale
+# <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/PNGs/585563111520600091.png" alt="Emoji of a Windows eatting moomoo"> Rationale
 
 This document provides the justification and objective of this GitHub repository and its contents. It outlines how it addresses various threats and how to adjust your expectations for different scenarios and environments. It also supplies additional resources.
 
 <br>
 
-## <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/PNGs/Windows365.png"> Harden Windows Security Module
+## <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/PNGs/Windows365.png" alt="Windows modern logo"> Harden Windows Security Module
 
-### [The module](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden%E2%80%90Windows%E2%80%90Security%E2%80%90Module) has 3 modes <img width="30" src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/animebop.gif">
+### [The module](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden%E2%80%90Windows%E2%80%90Security%E2%80%90Module) has 3 modes <img width="30" src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/animebop.gif" alt="head shaking girl">
 
 1. Applying the hardening measures described in the [Readme](https://github.com/HotCakeX/Harden-Windows-Security)
 2. Checking and Auditing the Compliance of the system with the hardening measures
@@ -20,13 +20,13 @@ It uses the same security features built into your device and Windows operating 
 
 <br>
 
-<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/SecurityBenchmarksComparisonChart.png"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/SecurityBenchmarksComparisonChart.png" alt="Infographic of comparison of security benchmarks"></p>
 
 > [*The reasoning behind the infographic above*](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Comparison-of-security-benchmarks)
 
 <br>
 
-## <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/PNGs/Windows11.png"> Windows Defender Application Control
+## <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/PNGs/Windows11.png" alt="Modern Windows 11 logo"> Windows Defender Application Control
 
 [Windows Defender Application Control (WDAC) resources](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Introduction) are suitable for both personal users as well as enterprises, businesses and highly secure workstations.
 
@@ -38,7 +38,7 @@ Full details, guides and videos available [here on GitHub](https://github.com/Ho
 
 <br>
 
-## <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/PNGs/350387930319028225.png"> How Do You Make the Right Choice?
+## <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/PNGs/350387930319028225.png" alt="Microsoft Zune logo"> How Do You Make the Right Choice?
 
 First use the Harden Windows Security Module to apply the hardening measures described in the Readme. After applying these hardening measures, your system will be secure against **at least** ~98% of the threats when you use Standard (non-Privileged) account for everyday work. These threats aren't the usual computer viruses, they are ***motivated nation state threat actors.***
 
@@ -56,7 +56,7 @@ Also, zero-day vulnerabilities are patched quickly, so keeping your device and O
 
 <br>
 
-## <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/PNGs/Account.png"> Vulnerabilities Such as Zero-Days Are Disclosed in 3 Different Ways
+## <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/PNGs/Account.png" alt="Microsoft Identity logo"> Vulnerabilities Such as Zero-Days Are Disclosed in 3 Different Ways
 
 1. The vulnerability is disclosed responsibly. It is first communicated with the software developer and company privately so they can have the time to fix and issue updates/patches for the vulnerability before it is disclosed publicly. In this way, people are always safe because all that's needed is to keep your OS and software up to date to receive the latest security patches.
 
@@ -66,9 +66,9 @@ Also, zero-day vulnerabilities are patched quickly, so keeping your device and O
 
 <br>
 
-## <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/PNGs/StonkUp.png"> What About More Advanced Security at Scale ?
+## <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/PNGs/StonkUp.png" alt="Stonks up"> What About More Advanced Security at Scale ?
 
-<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/534534.png" width="650"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/534534.png" width="650" alt="AI generated image of a girl"></p>
 
 <br>
 
@@ -110,7 +110,7 @@ As an individual user you can still utilize these features and services, they ad
 
 <br>
 
-## <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/PNGs/673731848341553152.png"> Important Considerations
+## <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/PNGs/673731848341553152.png" alt="head patting"> Important Considerations
 
 * Avoid using any 3rd party security solutions when using Harden Windows Security module or Windows Defender Application Control (WDAC). 3rd party solutions are weak, incompatible and unnecessary, they also increase your attack surface.
 
@@ -118,7 +118,7 @@ As an individual user you can still utilize these features and services, they ad
 
 <br>
 
-## <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/surface.gif"> [Which Device to Use ?](#-which-device-to-use-)
+## <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/surface.gif" alt="Surface device gif"> [Which Device to Use ?](#-which-device-to-use-)
 
 Use Microsoft Surface products for the best device and firmware security. They support [secured-core PC specifications](https://www.microsoft.com/en-us/windows/business/windows-11-secured-core-computers), the manufacturing process and platform is trusted and secure.
 
@@ -139,16 +139,16 @@ Make sure to use Surface products that support [Device Firmware Configuration In
 <br>
 
 > [!IMPORTANT]\
-> <img width="30" src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/blue.gif"> It is important to be aware of [potential hardware backdoors](https://bios-pw.org/) that may compromise the security of your system. Some common OEMs, such as Compaq, Dell, Fujitsu, Hewlett-Packard (HP), Sony, and Samsung, with OEMs that use unmodified Insyde H20, or Phoenix firmwares utilize algorithms based on device serial numbers for password resets. These algorithms allow for master password removal from the firmware, potentially granting unauthorized access to the system. [Read more](https://docs.mootinc.com/Reference/Architecture/Hardware-Selection/#psm-mode)
+> <img width="30" src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/blue.gif" alt="Attention gif"> It is important to be aware of [potential hardware backdoors](https://bios-pw.org/) that may compromise the security of your system. Some common OEMs, such as Compaq, Dell, Fujitsu, Hewlett-Packard (HP), Sony, and Samsung, with OEMs that use unmodified Insyde H20, or Phoenix firmwares utilize algorithms based on device serial numbers for password resets. These algorithms allow for master password removal from the firmware, potentially granting unauthorized access to the system. [Read more](https://docs.mootinc.com/Reference/Architecture/Hardware-Selection/#psm-mode)
 
 <br>
 
 > [!NOTE]\
-> <img width="30" src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/diamond-7.gif"> When buying 3rd party devices, make sure they have the [Pluton](https://www.microsoft.com/en-us/security/blog/2020/11/17/meet-the-microsoft-pluton-processor-the-security-chip-designed-for-the-future-of-windows-pcs/) security chip, it [addresses security needs](https://techcommunity.microsoft.com/t5/microsoft-defender-for-endpoint/defending-against-ransomware-with-microsoft-defender-for/ba-p/3243941) like booting an operating system securely **even against firmware threats** and storing sensitive data safely **even against physical attacks**.
+> <img width="30" src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/diamond-7.gif" alt="rotating diamond gif"> When buying 3rd party devices, make sure they have the [Pluton](https://www.microsoft.com/en-us/security/blog/2020/11/17/meet-the-microsoft-pluton-processor-the-security-chip-designed-for-the-future-of-windows-pcs/) security chip, it [addresses security needs](https://techcommunity.microsoft.com/t5/microsoft-defender-for-endpoint/defending-against-ransomware-with-microsoft-defender-for/ba-p/3243941) like booting an operating system securely **even against firmware threats** and storing sensitive data safely **even against physical attacks**.
 
 <br>
 
-### <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/9935-catkeyboard.gif"> [Protection against BYOVD (Bring Your Own Vulnerable Driver) attacks](#-protection-against-byovd-bring-your-own-vulnerable-driver-attacks)
+### <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/9935-catkeyboard.gif" alt="BYOVD device gif animated"> [Protection against BYOVD (Bring Your Own Vulnerable Driver) attacks](#-protection-against-byovd-bring-your-own-vulnerable-driver-attacks)
 
 * Secured core PCs provide the hardware that is capable of protecting against BYOVD attacks. It is your responsibility to turn the features on, those include WDAC (Windows Defender Application Control), ASR (Attack Surface Reduction) rules, Dynamic/static root of trust and [firmware](https://learn.microsoft.com/en-us/windows-hardware/drivers/bringup/firmware-attack-surface-reduction) that is extensible for revoking drivers. They are specially useful for drivers not explicitly mentioned in the [Microsoft Recommended Driver Block List](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/microsoft-recommended-driver-block-rules), which are the more dynamic side of things.
 
@@ -168,7 +168,7 @@ Make sure to use Surface products that support [Device Firmware Configuration In
 
 <br>
 
-## <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/Red%20police%20light.gif"> [What to do when there is an attack ?](#-what-to-do-when-there-is-an-attack-)
+## <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/Red%20police%20light.gif" alt="Alert gif for what to do when under attack"> [What to do when there is an attack ?](#-what-to-do-when-there-is-an-attack-)
 
 ### You can hire any of these teams
 
@@ -186,7 +186,7 @@ Make sure to use Surface products that support [Device Firmware Configuration In
 
 <br>
 
-## <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/david%20star.gif"> [For Penetration testing and benchmarking](#-for-penetration-testing-and-benchmarking)
+## <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/david%20star.gif" alt="icon for For Penetration testing and benchmarking section"> [For Penetration testing and benchmarking](#-for-penetration-testing-and-benchmarking)
 
 How to properly perform a pentest and benchmark a system hardened by this repository and make it as close to the real-world scenario as possible:
 
@@ -208,7 +208,7 @@ How to properly perform a pentest and benchmark a system hardened by this reposi
 
 <br>
 
-## <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/WhiteGhost.gif"> [Any questions or suggestions?](#-any-questions-or-suggestions)
+## <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/WhiteGhost.gif" alt="Ghost emoji"> [Any questions or suggestions?](#-any-questions-or-suggestions)
 
 Please open a new [issue](https://github.com/HotCakeX/Harden-Windows-Security/issues) or [discussion](https://github.com/HotCakeX/Harden-Windows-Security/discussions) in the repository.
 

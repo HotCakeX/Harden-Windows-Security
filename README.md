@@ -41,11 +41,11 @@
 > [!IMPORTANT]\
 > Click/Tap on Each of the Items Below to Access Them on This GitHub Repository
 > 
-> ### <img width="50" src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/tada-cyan.gif"> <a href="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Introduction"> Windows Defender Application Control Resources </a>
+> ### <img width="50" src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/tada-cyan.gif" alt="Indicator for Windows Defender Application Control Resources"> <a href="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Introduction"> Windows Defender Application Control Resources </a>
 >
-> ### <img width="50" src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/tada-purple.gif"> <a href="https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig"> The WDACConfig Module for Windows Defender Application Control </a>
+> ### <img width="50" src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/tada-purple.gif" alt="Indicator for The WDACConfig Module for Windows Defender Application Control"> <a href="https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig"> The WDACConfig Module for Windows Defender Application Control </a>
 >
-> ### <img width="50" src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/colorful-heart.gif"> <a href="https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Rationale.md"> Read the Rationale Behind This GitHub Repository </a>
+> ### <img width="50" src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/colorful-heart.gif"> <a href="https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Rationale.md" alt="Indicator for the Rationale Behind This GitHub Repository"> Read the Rationale Behind This GitHub Repository </a>
 
 <img src="https://raw.githubusercontent.com/HotCakeX/.github/febfcc2b3be66ef0d5ecd74694157622a7fde865/Pictures/SVG/SVG%20line%20wave%20yellow%20pink.svg" width= "300000" alt="horizontal super thin rainbow RGB line">
 
@@ -58,7 +58,7 @@
 
 ## How To Use<a href="#how-to-use">![HowToUseIcon](https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/HowToUse.png)</a>
 
-### <img width="35" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/SVGs/github.svg"> Apply the Latest Hardening Measures [***directly***](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/invoke-expression?view=powershell-7.3) From This Github Repository
+### <img width="35" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/SVGs/github.svg" alt="GitHub logo SVG"> Apply the Latest Hardening Measures [***directly***](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/invoke-expression?view=powershell-7.3) From This Github Repository
 
 ```powershell
 irm 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security.ps1' | iex
@@ -66,7 +66,7 @@ irm 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Har
 
 <br>
 
-### <img width="35" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/SVGs/powershell-pink.svg"> Install the Harden Windows Security Module from [PowerShell Gallery](https://www.powershellgallery.com/packages/Harden-Windows-Security-Module/)
+### <img width="35" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/SVGs/powershell-pink.svg" alt="PowerShell icon Pink"> Install the Harden Windows Security Module from [PowerShell Gallery](https://www.powershellgallery.com/packages/Harden-Windows-Security-Module/)
 
 [**Check the documentation and How to use**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden%E2%80%90Windows%E2%80%90Security%E2%80%90Module)
 
@@ -100,7 +100,7 @@ Unprotect-WindowsSecurity
 <details>
 <summary>Old PowerShell v5.1 users that want to install as script</summary>
 
-### <img width="35" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/SVGs/powershell.svg"> Install It as a Standalone Script From <a href="https://www.powershellgallery.com/packages/Harden-Windows-Security/">PowerShell Gallery</a>
+### <img width="35" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/SVGs/powershell.svg" alt="PowerShell icon Blue"> Install It as a Standalone Script From <a href="https://www.powershellgallery.com/packages/Harden-Windows-Security/">PowerShell Gallery</a>
 
 <em> When you run it and if there is a new version, you will be notified. </em>
 
@@ -1103,17 +1103,17 @@ You don't need Admin privileges to run this category, because no system-wide cha
 
 <br>
 
-<img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/WebP/911587042608156732.webp" width="25"> [Azure DevOps Repository (mirror)](https://dev.azure.com/SpyNetGirl/_git/Harden-Windows-Security)
+<img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/WebP/911587042608156732.webp" width="25" alt="Azure DevOps Repository (mirror) bullet list item"> [Azure DevOps Repository (mirror)](https://dev.azure.com/SpyNetGirl/_git/Harden-Windows-Security)
 
-<img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/WebP/911587042608156732.webp" width="25"> [Harden Windows Security website](https://hotcakex.github.io/)
+<img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/WebP/911587042608156732.webp" width="25" alt="Harden Windows Security website bullet list item"> [Harden Windows Security website](https://hotcakex.github.io/)
 
-<img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/WebP/911587042608156732.webp" width="25"> [Official global IANA IP block for each country](https://hotcakex.github.io/Official-IANA-IP-blocks/)
+<img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/WebP/911587042608156732.webp" width="25" alt="Official global IANA IP block for each country bullet list item"> [Official global IANA IP block for each country](https://hotcakex.github.io/Official-IANA-IP-blocks/)
 
-<img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/WebP/911587042608156732.webp" width="25"> [Windows Security Blog](https://spynetgirl.github.io/)
+<img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/WebP/911587042608156732.webp" width="25" alt="Windows Security Blog bullet list item"> [Windows Security Blog](https://spynetgirl.github.io/)
 
-<img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/WebP/911587042608156732.webp" width="25"> [WinSecureDNSMgr](https://github.com/HotCakeX/WinSecureDNSMgr)
+<img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/WebP/911587042608156732.webp" width="25" alt="WinSecureDNSMgr bullet list item"> [WinSecureDNSMgr](https://github.com/HotCakeX/WinSecureDNSMgr)
 
-<img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/WebP/911587042608156732.webp" width="25"> [Privacy, Anonymity and Compartmentalization](https://github.com/HotCakeX/Privacy-Anonymity-Compartmentalization)
+<img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/WebP/911587042608156732.webp" width="25" alt="Privacy, Anonymity and Compartmentalization bullet list item"> [Privacy, Anonymity and Compartmentalization](https://github.com/HotCakeX/Privacy-Anonymity-Compartmentalization)
 
 <br>
 
@@ -1355,27 +1355,27 @@ Using [MIT License](https://github.com/HotCakeX/Harden-Windows-Security/blob/mai
 <br>
 
 <p align="center">
-<a href="https://github.com/HotCakeX"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/main/Private/Images/Socials/github.svg"></a>
-<a href="https://www.last.fm/user/HotCakeX"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/main/Private/Images/Socials/lastfm.png"></a>
-<a href="https://1drv.ms/f/s!AtCaUNAJbbvIhuITM8K09FBn-Q9GDw?e=3PAGmg"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/main/Private/Images/Socials/microsoft-onedrive-2019.svg"></a>
-<a href="https://open.spotify.com/user/eypgh60p3zw1duh9lbsbc2mix"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/main/Private/Images/Socials/spotify.svg"></a>
-<a href="https://stackexchange.com/users/27823952/spynet"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/main/Private/Images/Socials/stack-exchange.svg"></a>
-<a href="https://steamcommunity.com/id/HotCakeX"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/main/Private/Images/Socials/steam.svg"></a>
-<a href="https://www.twitch.tv/hot_cakex"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/main/Private/Images/Socials/twitch.svg"></a>
-<a href="https://hotcakex.github.io/"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/main/Private/Images/Socials/website-96.png"></a>
-<a href="https://twitter.com/CyberCakeX"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/main/Private/Images/Socials/witter.svg"></a>
-<a href="https://www.xbox.com/en-US/play/user/HottCakeX"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/main/Private/Images/Socials/xbox.svg"></a>
-<a href="https://www.youtube.com/@hotcakex"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/main/Private/Images/Socials/youtube.svg"></a>
-<a href="https://www.reddit.com/user/HotCakeXXXXXXXXXXXXX"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/main/Private/Images/Socials/reddit.svg"></a>
-<a href="https://socialclub.rockstargames.com/member/----HotCakeX----/"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/main/Private/Images/Socials/rockstar-social-club.svg"></a>
-<a href="https://club.ubisoft.com/en-US/profile/HotCakeX"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/main/Private/Images/Socials/uplay.svg"></a>
-<a href="https://techcommunity.microsoft.com/t5/user/viewprofilepage/user-id/310193"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/main/Private/Images/Socials/microsoft.png"></a>
-<a href="mailto:spynetgirl@outlook.com"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/main/Private/Images/Socials/outlook.svg"></a>
-<a href="https://orcid.org/0009-0000-6616-4938"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/main/Private/Images/Socials/orcid_icon.png"></a>
-<a href="https://spynetgirl.medium.com/"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/e0759dbc5b10c7ff9c10d09a49639e40ec780151/Private/Images/Socials/medium.svg"></a>
-<a href="https://bsky.app/profile/hotcakex.bsky.social"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/main/Private/Images/Socials/Bsky.png"></a>
-<a href="https://infosec.exchange/@SpyNetGirl"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/dbfa543cdc9496c4258dd3bf6ea11caac277aadf/Private/Images/Socials/mastodonicon.svg"></a>
-<a href="https://www.facebook.com/VioletCakeX"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/main/Private/Images/Socials/Facebook.svg"></a>
+<a href="https://github.com/HotCakeX"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/main/Private/Images/Socials/github.svg" alt="GitHub profile and icon"></a>
+<a href="https://www.last.fm/user/HotCakeX"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/main/Private/Images/Socials/lastfm.png" alt="Lastfm profile and icon"></a>
+<a href="https://1drv.ms/f/s!AtCaUNAJbbvIhuITM8K09FBn-Q9GDw?e=3PAGmg"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/main/Private/Images/Socials/microsoft-onedrive-2019.svg" alt="OneDrive album profile and icon"></a>
+<a href="https://open.spotify.com/user/eypgh60p3zw1duh9lbsbc2mix"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/main/Private/Images/Socials/spotify.svg" alt="Spotify profile and icon"></a>
+<a href="https://stackexchange.com/users/27823952/spynet"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/main/Private/Images/Socials/stack-exchange.svg" alt="StackExchange profile and icon"></a>
+<a href="https://steamcommunity.com/id/HotCakeX"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/main/Private/Images/Socials/steam.svg" alt="Steam profile and icon"></a>
+<a href="https://www.twitch.tv/hot_cakex"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/main/Private/Images/Socials/twitch.svg" alt="Twitch profile and icon"></a>
+<a href="https://hotcakex.github.io/"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/main/Private/Images/Socials/website-96.png" alt="Website and icon"></a>
+<a href="https://twitter.com/CyberCakeX"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/main/Private/Images/Socials/witter.svg" alt="Twitter profile and icon"></a>
+<a href="https://www.xbox.com/en-US/play/user/HottCakeX"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/main/Private/Images/Socials/xbox.svg" alt="Xbox profile and icon"></a>
+<a href="https://www.youtube.com/@hotcakex"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/main/Private/Images/Socials/youtube.svg" alt="YouTube profile and icon"></a>
+<a href="https://www.reddit.com/user/HotCakeXXXXXXXXXXXXX"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/main/Private/Images/Socials/reddit.svg" alt="Reddit profile and icon"></a>
+<a href="https://socialclub.rockstargames.com/member/----HotCakeX----/"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/main/Private/Images/Socials/rockstar-social-club.svg" alt="Rockstar Social Club profile and icon"></a>
+<a href="https://club.ubisoft.com/en-US/profile/HotCakeX"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/main/Private/Images/Socials/uplay.svg" alt="Uplay profile and icon"></a>
+<a href="https://techcommunity.microsoft.com/t5/user/viewprofilepage/user-id/310193"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/main/Private/Images/Socials/microsoft.png" alt="Microsoft Tech Community profile and icon"></a>
+<a href="mailto:spynetgirl@outlook.com"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/main/Private/Images/Socials/outlook.svg" alt="OutLook Email address and icon"></a>
+<a href="https://orcid.org/0009-0000-6616-4938"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/main/Private/Images/Socials/orcid_icon.png" alt="Orcid profile and icon"></a>
+<a href="https://spynetgirl.medium.com/"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/e0759dbc5b10c7ff9c10d09a49639e40ec780151/Private/Images/Socials/medium.svg" alt="Medium profile and icon"></a>
+<a href="https://bsky.app/profile/hotcakex.bsky.social"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/main/Private/Images/Socials/Bsky.png" alt="BlueSky profile and icon"></a>
+<a href="https://infosec.exchange/@SpyNetGirl"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/dbfa543cdc9496c4258dd3bf6ea11caac277aadf/Private/Images/Socials/mastodonicon.svg" alt="Mastadon profile and icon"></a>
+<a href="https://www.facebook.com/VioletCakeX"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/main/Private/Images/Socials/Facebook.svg" alt="Facebook profile and icon"></a>
 </p>
 
 <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="Harden-Windows-Security is a PowerShell module">

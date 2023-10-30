@@ -1,9 +1,4 @@
 ProgramName,Mitigation,Action,Comment
-msedge.exe,BottomUp,Enable,Maximum possible mitigations for Edge browser. any more than this causes problem
-msedge.exe,ForceRelocateImages,Enable,Maximum possible mitigations for Edge browser. any more than this causes problem
-msedge.exe,RequireInfo,Enable,Maximum possible mitigations for Edge browser. any more than this causes problem
-msedge.exe,HighEntropy,Enable,Maximum possible mitigations for Edge browser. any more than this causes problem
-msedge.exe,StrictHandle,Enable,Maximum possible mitigations for Edge browser. any more than this causes problem
 msedge.exe,DisableExtensionPoints,Enable,Maximum possible mitigations for Edge browser. any more than this causes problem
 msedge.exe,CFG,Enable,Maximum possible mitigations for Edge browser. any more than this causes problem
 msedge.exe,StrictCFG,Enable,Maximum possible mitigations for Edge browser. any more than this causes problem

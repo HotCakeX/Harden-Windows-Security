@@ -1,6 +1,6 @@
 <#PSScriptInfo
 
-.VERSION 2023.10.19
+.VERSION 2023.10.30
 
 .GUID d435a293-c9ee-4217-8dc1-4ad2318a5770
 
@@ -92,7 +92,7 @@ Set-ExecutionPolicy Bypass -Scope Process
 
 # Defining global script variables
 # Current script's version, the same as the version at the top in the script info section
-[datetime]$CurrentVersion = '2023.10.19'
+[datetime]$CurrentVersion = '2023.10.30'
 # Minimum OS build number required for the hardening measures used in this script
 [decimal]$Requiredbuild = '22621.2134'
 # Fetching Temp Directory
@@ -942,8 +942,7 @@ try {
                 
                 # Get the list of non OS volumes
                 [System.Object[]]$NonOSBitLockerVolumes = Get-BitLockerVolume | Where-Object {
-    ($_.volumeType -ne 'OperatingSystem')   # -and 
-                    # ($_.VolumeStatus -ne 'FullyEncrypted')
+    ($_.volumeType -ne 'OperatingSystem')
                 }
 
                 # Get all the volumes and filter out removable ones

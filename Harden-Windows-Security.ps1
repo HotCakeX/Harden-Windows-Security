@@ -938,15 +938,40 @@ try {
                     Remove-MpPreference -ControlledFolderAccessAllowedApplications 'C:\Windows\System32\powercfg.exe'
                 }
 
-                # Enable Bitlocker for all the other drives
-                # check if there is any other drive besides OS drive
-                $NonOSVolumes = Get-Volume | Where-Object { $_.DriveType -ne 'Removable' } | Where-Object { $_.DriveLetter } -PipelineVariable NonRemovableDrives |
-                ForEach-Object { Get-BitLockerVolume | Where-Object { $_.volumeType -ne 'OperatingSystem' -and $_.MountPoint -eq $($($NonRemovableDrives.DriveLetter) + ':') } }
+                #region Non-OS-BitLocker-Drives-Detection
+                
+                # Get the list of non OS volumes
+                [System.Object[]]$NonOSBitLockerVolumes = Get-BitLockerVolume | Where-Object {
+    ($_.volumeType -ne 'OperatingSystem')   # -and 
+                    # ($_.VolumeStatus -ne 'FullyEncrypted')
+                }
 
-                if ($NonOSVolumes) {
-                    
-                    $NonOSVolumes | Sort-Object | ForEach-Object {
-                        $MountPoint = $_.MountPoint
+                # Get all the volumes and filter out removable ones
+                [System.Object[]]$RemovableVolumes = Get-Volume |
+                Where-Object { $_.DriveType -eq 'Removable' } |
+                Where-Object { $_.DriveLetter }
+
+                # Check if there is any removable volumes
+                if ($RemovableVolumes) {
+
+                    # Get the letters of all the removable volumes
+                    [System.String[]]$RemovableVolumesLetters = foreach ($RemovableVolume in $RemovableVolumes) {
+                        $(($RemovableVolume).DriveLetter + ':' )
+                    }
+
+                    # Filter out removable drives from BitLocker volumes to process
+                    $NonOSBitLockerVolumes = $NonOSBitLockerVolumes | Where-Object {
+    ($_.MountPoint -notin $RemovableVolumesLetters)
+                    }
+
+                }
+                #endregion Non-OS-BitLocker-Drives-Detection
+
+                # Check if there is any non-OS volumes
+                if ($NonOSBitLockerVolumes) {    
+
+                    # Loop through each non-OS volume and prompt for encryption
+                    foreach ($MountPoint in $($NonOSBitLockerVolumes | Sort-Object).MountPoint) {
 
                         # Prompt for confirmation before encrypting each drive
                         switch (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nEncrypt $MountPoint drive ?`n") {
@@ -1005,7 +1030,7 @@ try {
                                             # Add new Recovery Password key protector after removing the previous ones
                                             Add-BitLockerKeyProtector -MountPoint $MountPoint -RecoveryPasswordProtector *> "$MountPoint\Drive $($MountPoint.Remove(1)) recovery password.txt"
                                         }                                
-                                        Write-Host "`nBitlocker is fully and securely enabled for drive $MountPoint" -ForegroundColor Green    
+                                        Write-Host "`nBitlocker is already fully and securely enabled for drive $MountPoint" -ForegroundColor Green    
                                     }
                                     
                                     # This happens if the drive has either Recovery Password or Auto Unlock key protector missing
@@ -1069,7 +1094,7 @@ try {
                                     "Recovery password will be saved in a Text file in $($MountPoint)\Drive $($MountPoint.Remove(1)) recovery password.txt `n" +
                                     "Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which requires authentication to access."
                                     Write-Host $BitLockerMsg -ForegroundColor Cyan
-                                }                                
+                                }
 
                             } 'No' { break }
                             'Exit' { &$CleanUp }

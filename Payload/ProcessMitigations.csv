@@ -5,7 +5,7 @@ msedge.exe,StrictCFG,Enable,Edge All Channels - In strict mode all binaries load
 msedge.exe,MicrosoftSignedOnly,Enable,Edge All Channels - (a.k.a Code integrity guard) ensures that all binaries loaded into a process are digitally signed by Microsoft.
 msedge.exe,AllowStoreSignedBinaries,Enable,Edge All Channels - Applications that are distributed by the Microsoft Store are digitally signed by the Microsoft Store and adding this configuration allows binaries that have gone through the store certification process to be loaded by the application.
 msedge.exe,EnforceModuleDependencySigning,Enable,Edge All Channels - helps protect against attacks that attempt to substitute code for dlls that are statically linked by Windows binaries.
-msedge.exe,BlockRemoteImageLoads,Enable,Edge All Channels - Block remote images prevent the application from loading images from remote devices.
+msedge.exe,BlockRemoteImageLoads,Enable,Edge All Channels - Prevents the application from loading images from remote devices.
 msedge.exe,BlockLowLabelImageLoads,Enable,Edge All Channels - prevents the application from loading files that are untrusted typically because they've been downloaded from the internet from a sandboxed browser.
 msedge.exe,UserShadowStack,Enable,Edge All Channels - user-mode Hardware-enforced Stack Protection is enabled for the process in compatibility mode. This means that the CPU verifies function return addresses at runtime by employing a shadow stack mechanism if supported by the hardware. In compatibility mode only shadow stack violations occurring in modules that are considered compatible with shadow stacks (CETCOMPAT) are fatal. For a module to be considered CETCOMPAT it needs to be either compiled with CETCOMPAT for binaries or marked using SetProcessDynamicEnforcedCetCompatibleRanges for dynamic code.
 msedge.exe,UserShadowStackStrictMode,Enable,Edge All Channels - All shadow stack violations are fatal - No compatibility mode - See https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-process_mitigation_user_shadow_stack_policy
@@ -27,7 +27,7 @@ QuickAssist.exe,MicrosoftSignedOnly,Enable,Quick Assist - (a.k.a Code integrity 
 QuickAssist.exe,AllowStoreSignedBinaries,Enable,Quick Assist - Applications that are distributed by the Microsoft Store are digitally signed by the Microsoft Store and adding this configuration allows binaries that have gone through the store certification process to be loaded by the application.
 QuickAssist.exe,EnforceModuleDependencySigning,Enable,Quick Assist - helps protect against attacks that attempt to substitute code for dlls that are statically linked by Windows binaries.
 QuickAssist.exe,DisableNonSystemFonts,Enable,Quick Assist - Only fonts that are installed into the windows\fonts directory will be loaded for processing by GDI.
-QuickAssist.exe,BlockRemoteImageLoads,Enable,Quick Assist - Block remote images prevent the application from loading images from remote devices.
+QuickAssist.exe,BlockRemoteImageLoads,Enable,Quick Assist - Prevents the application from loading images from remote devices.
 QuickAssist.exe,BlockLowLabelImageLoads,Enable,Quick Assist - prevents the application from loading files that are untrusted typically because they've been downloaded from the internet from a sandboxed browser.
 QuickAssist.exe,EnableExportAddressFilter,Enable,Quick Assist - mitigates the risk of malicious code looking at the export address table of all loaded modules to find modules that contain useful APIs for their attack.
 QuickAssist.exe,EnableExportAddressFilterPlus,Enable,Quick Assist - (.a.k.a) EAF+ adds protections for other commonly attacked modules by expanding the support of EAF
@@ -41,7 +41,7 @@ Acrobat.exe,RequireInfo,Enable,Adobe Acrobat - This option blocks the loading of
 Acrobat.exe,StrictHandle,Enable,Adobe Acrobat - A mitigation that helps protect against an attacker using an existing handle to access a protected object.
 Acrobat.exe,EnforceModuleDependencySigning,Enable,Adobe Acrobat - helps protect against attacks that attempt to substitute code for dlls that are statically linked by Windows binaries.
 Acrobat.exe,DisableNonSystemFonts,Enable,Adobe Acrobat - Only fonts that are installed into the windows\fonts directory will be loaded for processing by GDI.
-Acrobat.exe,BlockRemoteImageLoads,Enable,Adobe Acrobat - Block remote images prevent the application from loading images from remote devices.
+Acrobat.exe,BlockRemoteImageLoads,Enable,Adobe Acrobat - Prevents the application from loading images from remote devices.
 Acrobat.exe,BlockLowLabelImageLoads,Enable,Adobe Acrobat - prevents the application from loading files that are untrusted typically because they've been downloaded from the internet from a sandboxed browser.
 Acrobat.exe,EnableRopStackPivot,Enable,Adobe Acrobat - helps protect against the Stack Pivot attack; a ROP attack where an attacker creates a fake stack in heap memory and then tricks the application into returning into the fake stack that controls the flow of execution.
 Acrobat.exe,EnableRopCallerCheck,Enable,Adobe Acrobat - a mitigation for return-oriented programming (ROP) techniques that validates that sensitive APIs were called from a valid caller.
@@ -116,7 +116,7 @@ WindowsSandbox.exe,CFG,Enable,Windows Sandbox process - Enabled by default Syste
 WindowsSandbox.exe,StrictCFG,Enable,Windows Sandbox process - In strict mode all binaries loaded into the process must be compiled for Control Flow Guard (or have no executable code in them - such as resource dlls) in order to be loaded.
 WindowsSandbox.exe,MicrosoftSignedOnly,Enable,Windows Sandbox process - (a.k.a Code integrity guard) ensures that all binaries loaded into a process are digitally signed by Microsoft.
 WindowsSandbox.exe,EnforceModuleDependencySigning,Enable,Windows Sandbox process - helps protect against attacks that attempt to substitute code for dlls that are statically linked by Windows binaries.
-WindowsSandbox.exe,BlockRemoteImageLoads,Enable,Windows Sandbox process - Block remote images prevent the application from loading images from remote devices.
+WindowsSandbox.exe,BlockRemoteImageLoads,Enable,Windows Sandbox process - Prevents the application from loading images from remote devices.
 WindowsSandbox.exe,BlockLowLabelImageLoads,Enable,Windows Sandbox process - prevents the application from loading files that are untrusted typically because they've been downloaded from the internet from a sandboxed browser.
 WindowsSandbox.exe,EnableExportAddressFilter,Enable,Windows Sandbox process - mitigates the risk of malicious code looking at the export address table of all loaded modules to find modules that contain useful APIs for their attack.
 WindowsSandbox.exe,EnableExportAddressFilterPlus,Enable,Windows Sandbox process - (.a.k.a) EAF+ adds protections for other commonly attacked modules by expanding the support of EAF
@@ -126,7 +126,7 @@ WindowsSandboxClient.exe,CFG,Enable,Windows Sandbox process - Enabled by default
 WindowsSandboxClient.exe,StrictCFG,Enable,Windows Sandbox process - In strict mode all binaries loaded into the process must be compiled for Control Flow Guard (or have no executable code in them - such as resource dlls) in order to be loaded.
 WindowsSandboxClient.exe,MicrosoftSignedOnly,Enable,Windows Sandbox process - (a.k.a Code integrity guard) ensures that all binaries loaded into a process are digitally signed by Microsoft.
 WindowsSandboxClient.exe,EnforceModuleDependencySigning,Enable,Windows Sandbox process - helps protect against attacks that attempt to substitute code for dlls that are statically linked by Windows binaries.
-WindowsSandboxClient.exe,BlockRemoteImageLoads,Enable,Windows Sandbox process - Block remote images prevent the application from loading images from remote devices.
+WindowsSandboxClient.exe,BlockRemoteImageLoads,Enable,Windows Sandbox process - Prevents the application from loading images from remote devices.
 WindowsSandboxClient.exe,BlockLowLabelImageLoads,Enable,Windows Sandbox process - prevents the application from loading files that are untrusted typically because they've been downloaded from the internet from a sandboxed browser.
 WindowsSandboxClient.exe,EnableExportAddressFilter,Enable,Windows Sandbox process - mitigates the risk of malicious code looking at the export address table of all loaded modules to find modules that contain useful APIs for their attack.
 WindowsSandboxClient.exe,EnableExportAddressFilterPlus,Enable,Windows Sandbox process - (.a.k.a) EAF+ adds protections for other commonly attacked modules by expanding the support of EAF

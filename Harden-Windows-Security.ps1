@@ -1,6 +1,6 @@
 <#PSScriptInfo
 
-.VERSION 2023.10.30
+.VERSION 2023.11.1
 
 .GUID d435a293-c9ee-4217-8dc1-4ad2318a5770
 
@@ -92,7 +92,7 @@ Set-ExecutionPolicy Bypass -Scope Process
 
 # Defining global script variables
 # Current script's version, the same as the version at the top in the script info section
-[datetime]$CurrentVersion = '2023.10.30'
+[datetime]$CurrentVersion = '2023.11.1'
 # Minimum OS build number required for the hardening measures used in this script
 [decimal]$Requiredbuild = '22621.2134'
 # Fetching Temp Directory

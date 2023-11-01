@@ -8,7 +8,7 @@ Origin,Category,Key,Name,FriendlyName,Type,Value
 "Group Policy","Microsoft Defender",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows Defender\MpEngine,MpBafsExtendedTimeout,Extended cloud check (Seconds),DWORD,50
 "Group Policy","Microsoft Defender",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows Defender\MpEngine,MpCloudBlockLevel,Cloud Block Level,DWORD,6
 "Group Policy","Microsoft Defender",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows Defender\MpEngine,EnableFileHashComputation,File Hash Computation,DWORD,1
-"Group Policy","Microsoft Defender",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows Defender\Quarantine,PurgeItemsAfterDelay,Purge Items After Delay,DWORD,3
+"Group Policy","Microsoft Defender",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows Defender\Quarantine,PurgeItemsAfterDelay,Purge Items After Delay,DWORD,1
 "Group Policy","Microsoft Defender",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows Defender\Real-Time Protection,IOAVMaxSize,Maximum size of downloaded files and attachments to be scanned,DWORD,10000000
 "Group Policy","Microsoft Defender",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows Defender\Scan,CheckForSignaturesBeforeRunningScan,Check For Signatures Before Running Scan,DWORD,1
 "Group Policy","Microsoft Defender",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows Defender\Scan,DisableScanningMappedNetworkDrivesForFullScan,Scanning Mapped Network Drives For Full Scan,DWORD,0

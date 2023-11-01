@@ -410,8 +410,8 @@ try {
             # Create an array of files to download
             [System.Object[]]$Files = @(
                 # System.Net.WebClient requires absolute path instead of relative one      
-                @{url = 'https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/Windows%2011%20v23H2%20Security%20Baseline.zip'; path = "$WorkingDir\Windows1122H2SecurityBaseline.zip"; tag = 'Microsoft1' }
-                @{url = 'https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/Microsoft%20365%20Apps%20for%20Enterprise%202306.zip'; path = "$WorkingDir\Microsoft365SecurityBaseline2306.zip"; tag = 'Microsoft2' }
+                @{url = 'https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/Windows%2011%20v23H2%20Security%20Baseline.zip'; path = "$WorkingDir\MicrosoftSecurityBaseline.zip"; tag = 'Microsoft1' }
+                @{url = 'https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/Microsoft%20365%20Apps%20for%20Enterprise%202306.zip'; path = "$WorkingDir\Microsoft365SecurityBaseline.zip"; tag = 'Microsoft2' }
                 @{url = 'https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/LGPO.zip'; path = "$WorkingDir\LGPO.zip"; tag = 'Microsoft3' }
                 @{url = 'https://github.com/HotCakeX/Harden-Windows-Security/raw/main/Payload/Security-Baselines-X.zip'; path = "$WorkingDir\Security-Baselines-X.zip"; tag = 'Security-Baselines-X' }
                 @{url = 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Payload/Registry.csv'; path = "$WorkingDir\Registry.csv"; tag = 'Registry' }
@@ -485,13 +485,18 @@ try {
         }        
 
         # unzip Microsoft Security Baselines file
-        Expand-Archive -Path .\Windows1122H2SecurityBaseline.zip -DestinationPath .\ -Force -ErrorAction Stop
+        Expand-Archive -Path .\MicrosoftSecurityBaseline.zip -DestinationPath .\MicrosoftSecurityBaseline -Force -ErrorAction Stop
         # unzip Microsoft 365 Apps Security Baselines file
-        Expand-Archive -Path .\Microsoft365SecurityBaseline2306.zip -DestinationPath .\ -Force -ErrorAction Stop
+        Expand-Archive -Path .\Microsoft365SecurityBaseline.zip -DestinationPath .\Microsoft365SecurityBaseline -Force -ErrorAction Stop
         # unzip the LGPO file
         Expand-Archive -Path .\LGPO.zip -DestinationPath .\ -Force -ErrorAction Stop
         # unzip the Security-Baselines-X file which contains Windows Hardening script Group Policy Objects
         Expand-Archive -Path .\Security-Baselines-X.zip -DestinationPath .\Security-Baselines-X\ -Force -ErrorAction Stop
+
+        # capturing the Microsoft Security Baselines extracted path in a variable using wildcard and storing it in a variable so that we won't need to change anything in the code other than the download link when they are updated
+        [string]$MicrosoftSecurityBaselinePath = (Get-ChildItem -Path '.\MicrosoftSecurityBaseline\*\').FullName
+        # capturing the Microsoft 365 Security Baselines extracted path in a variable using wildcard and storing it in a variable so that we won't need to change anything in the code other than the download link when they are updated
+        [string]$Microsoft365SecurityBaselinePath = (Get-ChildItem -Path '.\Microsoft365SecurityBaseline\*\').FullName
 
         #region Windows-Boot-Manager-revocations-for-Secure-Boot KB5025885  
         # ============================May 9 2023 Windows Boot Manager revocations for Secure Boot =================================
@@ -515,10 +520,10 @@ try {
                 Write-Progress -Activity 'Microsoft Security Baseline' -Status 'Running Microsoft Security Baseline section' -PercentComplete 5
 
                 # Copy LGPO.exe from its folder to Microsoft Security Baseline folder in order to get it ready to be used by PowerShell script
-                Copy-Item -Path '.\LGPO_30\LGPO.exe' -Destination '.\Windows-11-v22H2-Security-Baseline\Scripts\Tools'
+                Copy-Item -Path '.\LGPO_30\LGPO.exe' -Destination "$MicrosoftSecurityBaselinePath\Scripts\Tools"
 
                 # Change directory to the Security Baselines folder
-                Set-Location '.\Windows-11-v22H2-Security-Baseline\Scripts\'
+                Set-Location "$MicrosoftSecurityBaselinePath\Scripts\"
 
                 Write-Host "`nApplying Microsoft Security Baseline" -ForegroundColor Cyan
                 # Run the official PowerShell script included in the Microsoft Security Baseline file we downloaded from Microsoft servers
@@ -528,10 +533,10 @@ try {
                 Write-Progress -Activity 'Microsoft Security Baseline' -Status 'Running Microsoft Security Baseline section' -PercentComplete 5
 
                 # Copy LGPO.exe from its folder to Microsoft Security Baseline folder in order to get it ready to be used by PowerShell script
-                Copy-Item -Path '.\LGPO_30\LGPO.exe' -Destination '.\Windows-11-v22H2-Security-Baseline\Scripts\Tools'
+                Copy-Item -Path '.\LGPO_30\LGPO.exe' -Destination "$MicrosoftSecurityBaselinePath\Scripts\Tools"
 
                 # Change directory to the Security Baselines folder
-                Set-Location '.\Windows-11-v22H2-Security-Baseline\Scripts\'
+                Set-Location "$MicrosoftSecurityBaselinePath\Scripts\"
 
                 Write-Host "`nApplying Microsoft Security Baseline" -ForegroundColor Cyan
                 # Run the official PowerShell script included in the Microsoft Security Baseline file we downloaded from Microsoft servers
@@ -562,10 +567,10 @@ try {
     
                 Set-Location $WorkingDir
                 # Copy LGPO.exe from its folder to Microsoft Office 365 Apps for Enterprise Security Baseline folder in order to get it ready to be used by PowerShell script
-                Copy-Item -Path '.\LGPO_30\LGPO.exe' -Destination '.\Microsoft 365 Apps for Enterprise 2306\Scripts\Tools'
+                Copy-Item -Path '.\LGPO_30\LGPO.exe' -Destination "$Microsoft365SecurityBaselinePath\Scripts\Tools"
 
-                # Change directory to the Security Baselines folder
-                Set-Location "$WorkingDir\Microsoft 365 Apps for Enterprise 2306\Scripts\"
+                # Change directory to the M365 Security Baselines folder
+                Set-Location "$Microsoft365SecurityBaselinePath\Scripts\"
 
                 Write-Host "`nApplying Microsoft 365 Apps Security Baseline" -ForegroundColor Cyan
                 # Run the official PowerShell script included in the Microsoft Security Baseline file we downloaded from Microsoft servers

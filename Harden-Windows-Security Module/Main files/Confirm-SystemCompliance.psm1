@@ -278,7 +278,7 @@ function Confirm-SystemCompliance {
         # For PowerShell Cmdlet
         try {
             $IndividualItemResult = $((Get-ScheduledTask -TaskPath '\MSFT Driver Block list update\' -TaskName 'MSFT Driver Block list update' -ErrorAction SilentlyContinue) ? $True : $false)
-        } 
+        }
         catch {
             # suppress any possible terminating errors
         }
@@ -384,41 +384,54 @@ function Confirm-SystemCompliance {
         $NestedObjectArray += [PSCustomObject](Invoke-CategoryProcessing -catname $CatName -Method 'Group Policy')
             
         
-        # Individual ASR rules verification        
+        # Individual ASR rules verification    
         $DefenderEffectiveStates = Get-MpPreference
-        [string[]]$Ids = $DefenderEffectiveStates.AttackSurfaceReductionRules_Ids
+        # Converting to lower case because some IDs can be in upper case and result in inaccurate comparison
+        [string[]]$Ids = ($DefenderEffectiveStates.AttackSurfaceReductionRules_Ids).tolower()
         [string[]]$Actions = $DefenderEffectiveStates.AttackSurfaceReductionRules_Actions
 
         # Hashtable to store the descriptions for each ID
-        [hashtable]$Descriptions = @{
-            '56a863a9-875e-4185-98a7-b882c64b5ce5' = 'Block abuse of exploited vulnerable signed drivers'
+        [hashtable]$ASRsTable = @{    
+            '26190899-1602-49e8-8b27-eb1d0a1ce869' = 'Block Office communication application from creating child processes'
+            'd1e49aac-8f56-4280-b9ba-993a6d77406c' = 'Block process creations originating from PSExec and WMI commands'
+            'b2b3f03d-6a65-4f7b-a9c7-1c7ef74a9ba4' = 'Block untrusted and unsigned processes that run from USB'
+            '92e97fa1-2edf-4476-bdd6-9dd0b4dddc7b' = 'Block Win32 API calls from Office macros'
             '7674ba52-37eb-4a4f-a9a1-f0f9a1619a2c' = 'Block Adobe Reader from creating child processes'
+            '3b576869-a4ec-4529-8536-b80a7769e899' = 'Block Office applications from creating executable content'
             'd4f940ab-401b-4efc-aadc-ad5f3c50688a' = 'Block all Office applications from creating child processes'
             '9e6c4e1f-7d60-472f-ba1a-a39ef669e4b2' = 'Block credential stealing from the Windows local security authority subsystem (lsass.exe)'
             'be9ba2d9-53ea-4cdc-84e5-9b1eeee46550' = 'Block executable content from email client and webmail'
             '01443614-cd74-433a-b99e-2ecdc07bfc25' = 'Block executable files from running unless they meet a prevalence; age or trusted list criterion'
             '5beb7efe-fd9a-4556-801d-275e5ffc04cc' = 'Block execution of potentially obfuscated scripts'
-            'd3e037e1-3eb8-44c8-a917-57927947596d' = 'Block JavaScript or VBScript from launching downloaded executable content'
-            '3b576869-a4ec-4529-8536-b80a7769e899' = 'Block Office applications from creating executable content'
-            '75668c1f-73b5-4cf0-bb93-3ecf5cb7cc84' = 'Block Office applications from injecting code into other processes'
-            '26190899-1602-49e8-8b27-eb1d0a1ce869' = 'Block Office communication application from creating child processes'
             'e6db77e5-3df2-4cf1-b95a-636979351e5b' = 'Block persistence through WMI event subscription'
-            'd1e49aac-8f56-4280-b9ba-993a6d77406c' = 'Block process creations originating from PSExec and WMI commands'
-            'b2b3f03d-6a65-4f7b-a9c7-1c7ef74a9ba4' = 'Block untrusted and unsigned processes that run from USB'
-            '92e97fa1-2edf-4476-bdd6-9dd0b4dddc7b' = 'Block Win32 API calls from Office macros'
+            '75668c1f-73b5-4cf0-bb93-3ecf5cb7cc84' = 'Block Office applications from injecting code into other processes'
+            '56a863a9-875e-4185-98a7-b882c64b5ce5' = 'Block abuse of exploited vulnerable signed drivers'
             'c1db55ab-c21a-4637-bb3f-a12568109d35' = 'Use advanced protection against ransomware'
+            'd3e037e1-3eb8-44c8-a917-57927947596d' = 'Block JavaScript or VBScript from launching downloaded executable content'
         }
 
-        # Loop through the ids and actions arrays and create a custom object for each pair
-        for ($i = 0; $i -lt $Ids.Length; $i++) {
+        # Loop over each ID in the hashtable
+        foreach ($Name in $ASRsTable.Keys) {
+
+            # Check if the current ID is present in the $Ids array
+            if ($Ids -icontains $Name) {
+                # If yes, use the index of the ID in the array to access the action value
+                $Action = $Actions[$Ids.IndexOf($Name)]
+            }
+            else {
+                # If no, assign a default action value of 0
+                $Action = 0
+            }
+
+            # Create a custom object with properties
             $NestedObjectArray += [PSCustomObject]@{
-                FriendlyName = $Descriptions[$Ids[$i]]
-                Compliant    = [bool]($Actions[$i] -eq '1')
-                Value        = $Actions[$i]   
-                Name         = $Ids[$i]         
+                FriendlyName = $ASRsTable[$name]
+                Compliant    = [bool]($Action -eq 1) # Compare action value with 1 and cast to boolean
+                Value        = $Action   
+                Name         = $Name       
                 Category     = $CatName
                 Method       = 'Cmdlet'  
-            }
+            }        
         }
 
         # Add the array of custom objects as a property to the $FinalMegaObject object outside the loop
@@ -485,7 +498,7 @@ function Confirm-SystemCompliance {
         # Get the status of Bitlocker DMA protection 
         try {       
             [int]$BitlockerDMAProtectionStatus = Get-ItemPropertyValue -Path 'Registry::HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\FVE' -Name 'DisableExternalDMAUnderLock' -ErrorAction SilentlyContinue
-        } 
+        }
         catch {
             # -ErrorAction SilentlyContinue wouldn't suppress the error if the path exists but property doesn't, so using try-catch 
         }
@@ -512,7 +525,7 @@ function Confirm-SystemCompliance {
         if (-NOT ((Get-MpComputerStatus).IsVirtualMachine)) {
             try {
                 $IndividualItemResult = $($((Get-ItemProperty HKLM:\SYSTEM\CurrentControlSet\Control\Power -Name HibernateEnabled -ErrorAction SilentlyContinue).hibernateEnabled) -eq 1 ? $True : $False)
-            } 
+            }
             catch {
                 # suppress the errors if any
             }
@@ -969,7 +982,7 @@ function Confirm-SystemCompliance {
         # Verify a Security setting using registry
         try {
             $IndividualItemResult = [bool]((Get-ItemPropertyValue -Path 'HKLM:\SYSTEM\CurrentControlSet\Services\NetBT\Parameters' -Name 'EnableLMHOSTS' -ErrorAction SilentlyContinue) -eq '0')
-        } 
+        }
         catch {
             # -ErrorAction SilentlyContinue wouldn't suppress the error if the path exists but property doesn't, so using try-catch 
         }
@@ -1072,7 +1085,7 @@ function Confirm-SystemCompliance {
         # Verify a Security setting using registry
         try {
             $IndividualItemResult = [bool]((Get-ItemPropertyValue -Path 'HKLM:\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings' -Name 'RestartNotificationsAllowed2' -ErrorAction SilentlyContinue) -eq '1')
-        } 
+        }
         catch {
             # -ErrorAction SilentlyContinue wouldn't suppress the error if the path exists but property doesn't, so using try-catch 
         }

@@ -1,6 +1,6 @@
 <#PSScriptInfo
 
-.VERSION 2023.11.3
+.VERSION 2023.11.4
 
 .GUID d435a293-c9ee-4217-8dc1-4ad2318a5770
 
@@ -91,14 +91,11 @@ Set-ExecutionPolicy Bypass -Scope Process
 
 # Defining global script variables
 # Current script's version, the same as the version at the top in the script info section
-[datetime]$CurrentVersion = '2023.11.3'
-Set-Variable -Name 'CurrentVersion' -Option 'ReadOnly'
+[datetime]$CurrentVersion = '2023.11.4'
 # Minimum OS build number required for the hardening measures used in this script
 [decimal]$Requiredbuild = '22621.2134'
-Set-Variable -Name 'Requiredbuild' -Option 'ReadOnly'
 # Fetching Temp Directory
 [string]$global:UserTempDirectoryPath = [System.IO.Path]::GetTempPath()
-Set-Variable -Name 'UserTempDirectoryPath' -Option 'ReadOnly'
 
 # Determining if PowerShell is core to use modern styling
 [bool]$global:IsCore = $false
@@ -280,10 +277,7 @@ function Compare-SecureString {
 if (Test-IsAdmin) {
 
     # Get the current configurations and preferences of the Microsoft Defender
-    # $MDAVConfigCurrent = Get-MpComputerStatus
     New-Variable -Name 'MDAVConfigCurrent' -Value (Get-MpComputerStatus) -Option 'Constant'
-
-    # $MDAVPreferencesCurrent = Get-MpPreference
     New-Variable -Name 'MDAVPreferencesCurrent' -Value (Get-MpPreference) -Option 'Constant'
     
     # backup the current allowed apps list in Controlled folder access in order to restore them at the end of the script
@@ -551,8 +545,8 @@ try {
 
                 # Change current working directory to the LGPO's folder
                 Set-Location "$WorkingDir\LGPO_30"
-                .\LGPO.exe /m '..\Security-Baselines-X\Overrides for Microsoft Security Baseline\registry.pol'
-                .\LGPO.exe /s '..\Security-Baselines-X\Overrides for Microsoft Security Baseline\GptTmpl.inf'
+                .\LGPO.exe /q /m '..\Security-Baselines-X\Overrides for Microsoft Security Baseline\registry.pol'
+                .\LGPO.exe /q /s '..\Security-Baselines-X\Overrides for Microsoft Security Baseline\GptTmpl.inf'
             
                 # Re-enables the XblGameSave Standby Task that gets disabled by Microsoft Security Baselines
                 SCHTASKS.EXE /Change /TN \Microsoft\XblGameSave\XblGameSaveTask /Enable            
@@ -593,7 +587,7 @@ try {
 
                 # Change current working directory to the LGPO's folder
                 Set-Location "$WorkingDir\LGPO_30"
-                .\LGPO.exe /m '..\Security-Baselines-X\Microsoft Defender Policies\registry.pol'
+                .\LGPO.exe /q /m '..\Security-Baselines-X\Microsoft Defender Policies\registry.pol'
         
                 # Optimizing Network Protection Performance of Windows Defender
                 Set-MpPreference -AllowSwitchToAsyncInspection $True
@@ -686,7 +680,7 @@ try {
                 if (($ShouldEnableOptionalDiagnosticData -eq $True) -or ((Get-MpComputerStatus).SmartAppControlState -eq 'On')) {
                     # Change current working directory to the LGPO's folder
                     Set-Location "$WorkingDir\LGPO_30"
-                    .\LGPO.exe /m '..\Security-Baselines-X\Microsoft Defender Policies\Optional Diagnostic Data\registry.pol'
+                    .\LGPO.exe /q /m '..\Security-Baselines-X\Microsoft Defender Policies\Optional Diagnostic Data\registry.pol'
                 }
                 else {
                     # Ask user if they want to turn on optional diagnostic data only if Smart App Control is not already turned off
@@ -695,7 +689,7 @@ try {
                             'Yes' {               
                                 # Change current working directory to the LGPO's folder
                                 Set-Location "$WorkingDir\LGPO_30"
-                                .\LGPO.exe /m '..\Security-Baselines-X\Microsoft Defender Policies\Optional Diagnostic Data\registry.pol'
+                                .\LGPO.exe /q /m '..\Security-Baselines-X\Microsoft Defender Policies\Optional Diagnostic Data\registry.pol'
                             } 'No' { break }
                             'Exit' { &$CleanUp }
                         }
@@ -753,7 +747,7 @@ try {
                 # Change current working directory to the LGPO's folder
                 Set-Location "$WorkingDir\LGPO_30"
                 
-                .\LGPO.exe /m '..\Security-Baselines-X\Attack Surface Reduction Rules Policies\registry.pol'
+                .\LGPO.exe /q /m '..\Security-Baselines-X\Attack Surface Reduction Rules Policies\registry.pol'
             } 'No' { break }
             'Exit' { &$CleanUp }
         }
@@ -769,7 +763,7 @@ try {
                 # Change current working directory to the LGPO's folder
                 Set-Location "$WorkingDir\LGPO_30"
 
-                .\LGPO.exe /m '..\Security-Baselines-X\Bitlocker Policies\registry.pol'
+                .\LGPO.exe /q /m '..\Security-Baselines-X\Bitlocker Policies\registry.pol'
 
                 # This PowerShell script can be used to find out if the DMA Protection is ON \ OFF.
                 # The Script will show this by emitting True \ False for On \ Off respectively.
@@ -829,11 +823,11 @@ try {
                 # Enables or disables DMA protection from Bitlocker Countermeasures based on the status of Kernel DMA protection.
                 if ($BootDMAProtection) {                 
                     Write-Host 'Kernel DMA protection is enabled on the system, disabling Bitlocker DMA protection.' -ForegroundColor Blue
-                    .\LGPO.exe /m '..\Security-Baselines-X\Overrides for Microsoft Security Baseline\Bitlocker DMA\Bitlocker DMA Countermeasure OFF\Registry.pol'                           
+                    .\LGPO.exe /q /m '..\Security-Baselines-X\Overrides for Microsoft Security Baseline\Bitlocker DMA\Bitlocker DMA Countermeasure OFF\Registry.pol'                           
                 }
                 else {
                     Write-Host 'Kernel DMA protection is unavailable on the system, enabling Bitlocker DMA protection.' -ForegroundColor Blue
-                    .\LGPO.exe /m '..\Security-Baselines-X\Overrides for Microsoft Security Baseline\Bitlocker DMA\Bitlocker DMA Countermeasure ON\Registry.pol'                                                          
+                    .\LGPO.exe /q /m '..\Security-Baselines-X\Overrides for Microsoft Security Baseline\Bitlocker DMA\Bitlocker DMA Countermeasure ON\Registry.pol'                                                          
                 }
 
                 # Set-up Bitlocker encryption for OS Drive with TPMandPIN and recovery password keyprotectors and Verify its implementation            
@@ -982,7 +976,7 @@ try {
                     foreach ($MountPoint in $($NonOSBitLockerVolumes | Sort-Object).MountPoint) {
 
                         # Prompt for confirmation before encrypting each drive
-                        switch (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nEncrypt $MountPoint drive ?`n") {
+                        switch (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nEncrypt $MountPoint drive ?") {
                             'Yes' {  
 
                                 # Check if the non-OS drive that the user selected to be encrypted is not in the middle of any encryption/decryption operation
@@ -1018,7 +1012,7 @@ try {
                                             # and it's being used to unlock the drive
                                             Remove-BitLockerKeyProtector -MountPoint $MountPoint -KeyProtectorId $_ -ErrorAction SilentlyContinue                                            
                                         }
-                                        Enable-BitLockerAutoUnlock -MountPoint $MountPoint
+                                        Enable-BitLockerAutoUnlock -MountPoint $MountPoint | Out-Null
 
                                         # Additional Check 2: if there are more than 1 Recovery Password, delete all of them and add a new one
                                         $RecoveryPasswordKeyProtectors = ((Get-BitLockerVolume -MountPoint $MountPoint).KeyProtector |
@@ -1055,7 +1049,7 @@ try {
                                                     Remove-BitLockerKeyProtector -MountPoint $MountPoint -KeyProtectorId $_ -ErrorAction SilentlyContinue 
                                                 }
                                             }
-                                            Enable-BitLockerAutoUnlock -MountPoint $MountPoint
+                                            Enable-BitLockerAutoUnlock -MountPoint $MountPoint | Out-Null
                                             # Add Recovery Password Key protector and save it to a file inside the drive                                            
                                             Add-BitLockerKeyProtector -MountPoint $MountPoint -RecoveryPasswordProtector *> "$MountPoint\Drive $($MountPoint.Remove(1)) recovery password.txt"
                                     
@@ -1068,7 +1062,7 @@ try {
 
                                         # Check 3: If the selected drive has Recovery Password key protector but doesn't have Auto Unlock enabled
                                         if ($KeyProtectors -contains 'RecoveryPassword' -and $KeyProtectors -notcontains 'ExternalKey') {
-                                            Enable-BitLockerAutoUnlock -MountPoint $MountPoint
+                                            Enable-BitLockerAutoUnlock -MountPoint $MountPoint | Out-Null
                                     
                                             # if there are more than 1 Recovery Password, delete all of them and add a new one
                                             $RecoveryPasswordKeyProtectors = ((Get-BitLockerVolume -MountPoint $MountPoint).KeyProtector |
@@ -1147,7 +1141,7 @@ try {
                 }
                 # Change current working directory to the LGPO's folder
                 Set-Location "$WorkingDir\LGPO_30"
-                .\LGPO.exe /m '..\Security-Baselines-X\TLS Security\registry.pol'               
+                .\LGPO.exe /q /m '..\Security-Baselines-X\TLS Security\registry.pol'               
             } 'No' { break }
             'Exit' { &$CleanUp }
         }    
@@ -1162,13 +1156,13 @@ try {
                                 
                 # Change current working directory to the LGPO's folder
                 Set-Location "$WorkingDir\LGPO_30"
-                .\LGPO.exe /m '..\Security-Baselines-X\Lock Screen Policies\registry.pol'
-                .\LGPO.exe /s '..\Security-Baselines-X\Lock Screen Policies\GptTmpl.inf'
+                .\LGPO.exe /q /m '..\Security-Baselines-X\Lock Screen Policies\registry.pol'
+                .\LGPO.exe /q /s '..\Security-Baselines-X\Lock Screen Policies\GptTmpl.inf'
 
                 # Apply the Don't display last signed-in policy
                 switch (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nDon't display last signed-in on logon screen ?" -ExtraMessage 'Read the GitHub Readme!') {
                     'Yes' {
-                        .\LGPO.exe /s "..\Security-Baselines-X\Lock Screen Policies\Don't display last signed-in\GptTmpl.inf"                      
+                        .\LGPO.exe /q /s "..\Security-Baselines-X\Lock Screen Policies\Don't display last signed-in\GptTmpl.inf"                      
                     } 'No' { break }
                     'Exit' { &$CleanUp }
                 }
@@ -1176,7 +1170,7 @@ try {
                 # Apply Credential Providers Configurations policy
                 switch (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nSet Windows Hello PIN as the default Credential provider and exclude Password and Smart Card ?" -ExtraMessage 'Read the GitHub Readme!') {
                     'Yes' {
-                        .\LGPO.exe /m '..\Security-Baselines-X\Lock Screen Policies\Credential Providers Configurations\registry.pol'                      
+                        .\LGPO.exe /q /m '..\Security-Baselines-X\Lock Screen Policies\Credential Providers Configurations\registry.pol'                      
                     } 'No' { break }
                     'Exit' { &$CleanUp }
                 }
@@ -1195,12 +1189,12 @@ try {
 
                 # Change current working directory to the LGPO's folder
                 Set-Location "$WorkingDir\LGPO_30"
-                .\LGPO.exe /s '..\Security-Baselines-X\User Account Control UAC Policies\GptTmpl.inf'
+                .\LGPO.exe /q /s '..\Security-Baselines-X\User Account Control UAC Policies\GptTmpl.inf'
                 
                 # Apply the Automatically deny all UAC prompts on Standard accounts policy
                 switch (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nAutomatically deny all UAC prompts on Standard accounts ?") {
                     'Yes' {
-                        .\LGPO.exe /s '..\Security-Baselines-X\User Account Control UAC Policies\Automatically deny all UAC prompts on Standard accounts\GptTmpl.inf'                      
+                        .\LGPO.exe /q /s '..\Security-Baselines-X\User Account Control UAC Policies\Automatically deny all UAC prompts on Standard accounts\GptTmpl.inf'                      
                     } 'No' { break }
                     'Exit' { &$CleanUp }
                 }
@@ -1208,7 +1202,7 @@ try {
                 # Apply the Hide the entry points for Fast User Switching policy
                 switch (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nHide the entry points for Fast User Switching ?" -ExtraMessage 'Read the GitHub Readme!') {
                     'Yes' {
-                        .\LGPO.exe /m '..\Security-Baselines-X\User Account Control UAC Policies\Hides the entry points for Fast User Switching\registry.pol'                      
+                        .\LGPO.exe /q /m '..\Security-Baselines-X\User Account Control UAC Policies\Hides the entry points for Fast User Switching\registry.pol'                      
                     } 'No' { break }
                     'Exit' { &$CleanUp }
                 }               
@@ -1216,7 +1210,7 @@ try {
                 # Apply the Only elevate executables that are signed and validated policy
                 switch (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nOnly elevate executables that are signed and validated ?" -ExtraMessage 'Read the GitHub Readme!') {
                     'Yes' {
-                        .\LGPO.exe /s '..\Security-Baselines-X\User Account Control UAC Policies\Only elevate executables that are signed and validated\GptTmpl.inf'
+                        .\LGPO.exe /q /s '..\Security-Baselines-X\User Account Control UAC Policies\Only elevate executables that are signed and validated\GptTmpl.inf'
                     } 'No' { break }
                     'Exit' { &$CleanUp }
                 }  
@@ -1235,7 +1229,7 @@ try {
                                 
                 # Change current working directory to the LGPO's folder
                 Set-Location "$WorkingDir\LGPO_30"
-                .\LGPO.exe /m '..\Security-Baselines-X\Windows Firewall Policies\registry.pol'
+                .\LGPO.exe /q /m '..\Security-Baselines-X\Windows Firewall Policies\registry.pol'
 
                 # Disables Multicast DNS (mDNS) UDP-in Firewall Rules for all 3 Firewall profiles - disables only 3 rules
                 Get-NetFirewallRule |
@@ -1528,8 +1522,8 @@ try {
 
                 # Change current working directory to the LGPO's folder
                 Set-Location "$WorkingDir\LGPO_30"
-                .\LGPO.exe /m '..\Security-Baselines-X\Windows Networking Policies\registry.pol'
-                .\LGPO.exe /s '..\Security-Baselines-X\Windows Networking Policies\GptTmpl.inf'
+                .\LGPO.exe /q /m '..\Security-Baselines-X\Windows Networking Policies\registry.pol'
+                .\LGPO.exe /q /s '..\Security-Baselines-X\Windows Networking Policies\GptTmpl.inf'
 
                 # Disable LMHOSTS lookup protocol on all network adapters
                 Edit-Registry -path 'HKLM:\SYSTEM\CurrentControlSet\Services\NetBT\Parameters' -key 'EnableLMHOSTS' -value '0' -type 'DWORD' -Action 'AddOrModify'
@@ -1558,13 +1552,13 @@ try {
                 }
                 # Change current working directory to the LGPO's folder
                 Set-Location "$WorkingDir\LGPO_30"
-                .\LGPO.exe /m '..\Security-Baselines-X\Miscellaneous Policies\registry.pol'
-                .\LGPO.exe /s '..\Security-Baselines-X\Miscellaneous Policies\GptTmpl.inf'
+                .\LGPO.exe /q /m '..\Security-Baselines-X\Miscellaneous Policies\registry.pol'
+                .\LGPO.exe /q /s '..\Security-Baselines-X\Miscellaneous Policies\GptTmpl.inf'
 
                 # Apply the Blocking Untrusted Fonts policy
                 switch (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nBlock Untrusted Fonts ?") {
                     'Yes' {
-                        .\LGPO.exe /m '..\Security-Baselines-X\Miscellaneous Policies\Blocking Untrusted Fonts\registry.pol'                      
+                        .\LGPO.exe /q /m '..\Security-Baselines-X\Miscellaneous Policies\Blocking Untrusted Fonts\registry.pol'                      
                     } 'No' { break }
                     'Exit' { &$CleanUp }
                 }
@@ -1611,7 +1605,7 @@ try {
                 Edit-Registry -path 'HKLM:\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings' -key 'RestartNotificationsAllowed2' -value '1' -type 'DWORD' -Action 'AddOrModify'
                 # Change current working directory to the LGPO's folder
                 Set-Location "$WorkingDir\LGPO_30"
-                .\LGPO.exe /m '..\Security-Baselines-X\Windows Update Policies\registry.pol'
+                .\LGPO.exe /q /m '..\Security-Baselines-X\Windows Update Policies\registry.pol'
             } 'No' { break }
             'Exit' { &$CleanUp }
         }    

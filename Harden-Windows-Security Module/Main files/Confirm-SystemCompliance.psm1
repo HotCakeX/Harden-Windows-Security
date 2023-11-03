@@ -385,10 +385,12 @@ function Confirm-SystemCompliance {
             
         
         # Individual ASR rules verification    
-        $DefenderEffectiveStates = Get-MpPreference
-        # Converting to lower case because some IDs can be in upper case and result in inaccurate comparison
-        [string[]]$Ids = ($DefenderEffectiveStates.AttackSurfaceReductionRules_Ids).tolower()
+        $DefenderEffectiveStates = Get-MpPreference        
+        [string[]]$Ids = $DefenderEffectiveStates.AttackSurfaceReductionRules_Ids
         [string[]]$Actions = $DefenderEffectiveStates.AttackSurfaceReductionRules_Actions
+
+        # If $Ids variable is not empty, convert them to lower case because some IDs can be in upper case and result in inaccurate comparison
+        if ($Ids) { $Ids = $Ids.tolower() }
 
         # Hashtable to store the descriptions for each ID
         [hashtable]$ASRsTable = @{    
@@ -413,10 +415,17 @@ function Confirm-SystemCompliance {
         # Loop over each ID in the hashtable
         foreach ($Name in $ASRsTable.Keys) {
 
-            # Check if the current ID is present in the $Ids array
-            if ($Ids -icontains $Name) {
-                # If yes, use the index of the ID in the array to access the action value
-                $Action = $Actions[$Ids.IndexOf($Name)]
+            # Check if the $Ids array is not empty and current ID is present in the $Ids array
+            if ($Ids -and $Ids -icontains $Name) {
+                # If yes, check if the $Actions array is not empty
+                if ($Actions) {
+                    # If yes, use the index of the ID in the array to access the action value
+                    $Action = $Actions[$Ids.IndexOf($Name)]
+                }
+                else {
+                    # If no, assign a default action value of 0
+                    $Action = 0
+                }
             }
             else {
                 # If no, assign a default action value of 0

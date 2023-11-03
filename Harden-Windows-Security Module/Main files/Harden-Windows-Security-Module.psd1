@@ -60,7 +60,6 @@ Harden Windows Safely, Securely, only with Official Microsoft methods
   ✅ TLS Security
   ✅ Lock Screen
   ✅ UAC (User Account Control)
-  ✅ Device Guard
   ✅ Windows Firewall
   ✅ Optional Windows Features
   ✅ Windows Networking

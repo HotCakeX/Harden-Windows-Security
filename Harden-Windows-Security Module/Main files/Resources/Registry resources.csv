@@ -8,7 +8,7 @@ Origin,Category,Key,Name,FriendlyName,Type,Value
 "Group Policy","Microsoft Defender",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows Defender\MpEngine,MpBafsExtendedTimeout,Extended cloud check (Seconds),DWORD,50
 "Group Policy","Microsoft Defender",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows Defender\MpEngine,MpCloudBlockLevel,Cloud Block Level,DWORD,6
 "Group Policy","Microsoft Defender",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows Defender\MpEngine,EnableFileHashComputation,File Hash Computation,DWORD,1
-"Group Policy","Microsoft Defender",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows Defender\Quarantine,PurgeItemsAfterDelay,Purge Items After Delay,DWORD,3
+"Group Policy","Microsoft Defender",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows Defender\Quarantine,PurgeItemsAfterDelay,Purge Items After Delay,DWORD,1
 "Group Policy","Microsoft Defender",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows Defender\Real-Time Protection,IOAVMaxSize,Maximum size of downloaded files and attachments to be scanned,DWORD,10000000
 "Group Policy","Microsoft Defender",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows Defender\Scan,CheckForSignaturesBeforeRunningScan,Check For Signatures Before Running Scan,DWORD,1
 "Group Policy","Microsoft Defender",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows Defender\Scan,DisableScanningMappedNetworkDrivesForFullScan,Scanning Mapped Network Drives For Full Scan,DWORD,0
@@ -87,11 +87,11 @@ Origin,Category,Key,Name,FriendlyName,Type,Value
 "Group Policy","Device Guard",HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\DeviceGuard,EnableVirtualizationBasedSecurity,Enable Virtualization Based Security,DWORD,1
 "Group Policy","Device Guard",HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\DeviceGuard,RequirePlatformSecurityFeatures,Require Platform Security Features,DWORD,1
 "Group Policy","Device Guard",HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\DeviceGuard,HypervisorEnforcedCodeIntegrity,Hypervisor Enforced Code Integrity,DWORD,1
-"Group Policy","Device Guard",HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\DeviceGuard,HVCIMATRequired,Do not require HVCI MAT (Memory Attribute Table),DWORD,0
+"Group Policy","Device Guard",HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\DeviceGuard,HVCIMATRequired,Require HVCI MAT (Memory Attribute Table),DWORD,1
 "Group Policy","Device Guard",HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\DeviceGuard,LsaCfgFlags,Credential Guard Configuration,DWORD,1
 "Group Policy","Device Guard",HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\DeviceGuard,ConfigureSystemGuardLaunch,Configure System Guard Launch,DWORD,1
 "Group Policy","Device Guard",HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\DeviceGuard,ConfigureKernelShadowStacksLaunch,Configure Kernel Shadow Stacks Launch,DWORD,1
-"Group Policy","Device Guard",HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System,RunAsPPL,Enable Local Security Authority (LSA) process Protection with UEFI Lock,DWORD,1
+"Group Policy","Device Guard",HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa,RunAsPPL,Enable Local Security Authority (LSA) process Protection with UEFI Lock,DWORD,1
 "Group Policy","Windows Firewall",HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall,PolicyVersion,Enable Windows Firewall,DWORD,544
 "Group Policy","Windows Firewall",HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\DomainProfile,EnableFirewall,Enable Windows Firewall for Domain profile,DWORD,1
 "Group Policy","Windows Firewall",HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\DomainProfile,DefaultOutboundAction,Set Default Outbound Action for Domain profile,DWORD,1

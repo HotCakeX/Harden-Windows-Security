@@ -1,6 +1,6 @@
 <#PSScriptInfo
 
-.VERSION 2023.10.19
+.VERSION 2023.11.3
 
 .GUID d435a293-c9ee-4217-8dc1-4ad2318a5770
 
@@ -63,7 +63,6 @@
   ✅ TLS Security
   ✅ Lock Screen
   ✅ UAC (User Account Control)
-  ✅ Device Guard
   ✅ Windows Firewall
   ✅ Optional Windows Features
   ✅ Windows Networking
@@ -92,12 +91,14 @@ Set-ExecutionPolicy Bypass -Scope Process
 
 # Defining global script variables
 # Current script's version, the same as the version at the top in the script info section
-[datetime]$CurrentVersion = '2023.10.19'
+[datetime]$CurrentVersion = '2023.11.3'
+Set-Variable -Name 'CurrentVersion' -Option 'ReadOnly'
 # Minimum OS build number required for the hardening measures used in this script
 [decimal]$Requiredbuild = '22621.2134'
+Set-Variable -Name 'Requiredbuild' -Option 'ReadOnly'
 # Fetching Temp Directory
 [string]$global:UserTempDirectoryPath = [System.IO.Path]::GetTempPath()
-
+Set-Variable -Name 'UserTempDirectoryPath' -Option 'ReadOnly'
 
 # Determining if PowerShell is core to use modern styling
 [bool]$global:IsCore = $false
@@ -279,9 +280,12 @@ function Compare-SecureString {
 if (Test-IsAdmin) {
 
     # Get the current configurations and preferences of the Microsoft Defender
-    $MDAVConfigCurrent = Get-MpComputerStatus
-    $MDAVPreferencesCurrent = Get-MpPreference
+    # $MDAVConfigCurrent = Get-MpComputerStatus
+    New-Variable -Name 'MDAVConfigCurrent' -Value (Get-MpComputerStatus) -Option 'Constant'
 
+    # $MDAVPreferencesCurrent = Get-MpPreference
+    New-Variable -Name 'MDAVPreferencesCurrent' -Value (Get-MpPreference) -Option 'Constant'
+    
     # backup the current allowed apps list in Controlled folder access in order to restore them at the end of the script
     # doing this so that when we Add and then Remove PowerShell executables in Controlled folder access exclusions
     # no user customization will be affected
@@ -410,10 +414,10 @@ try {
             # Create an array of files to download
             [System.Object[]]$Files = @(
                 # System.Net.WebClient requires absolute path instead of relative one      
-                @{url = 'https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/Windows%2011%20version%2022H2%20Security%20Baseline.zip'; path = "$WorkingDir\Windows1122H2SecurityBaseline.zip"; tag = 'Microsoft1' }
-                @{url = 'https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/Microsoft%20365%20Apps%20for%20Enterprise%202306.zip'; path = "$WorkingDir\Microsoft365SecurityBaseline2306.zip"; tag = 'Microsoft2' }
+                @{url = 'https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/Windows%2011%20v23H2%20Security%20Baseline.zip'; path = "$WorkingDir\MicrosoftSecurityBaseline.zip"; tag = 'Microsoft1' }
+                @{url = 'https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/Microsoft%20365%20Apps%20for%20Enterprise%202306.zip'; path = "$WorkingDir\Microsoft365SecurityBaseline.zip"; tag = 'Microsoft2' }
                 @{url = 'https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/LGPO.zip'; path = "$WorkingDir\LGPO.zip"; tag = 'Microsoft3' }
-                @{url = 'https://github.com/HotCakeX/Harden-Windows-Security/raw/main/Payload/Security-Baselines-X.zip'; path = "$WorkingDir\Security-Baselines-X.zip"; tag = 'Security-Baselines-X' }
+                @{url = 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Payload/Security-Baselines-X.zip'; path = "$WorkingDir\Security-Baselines-X.zip"; tag = 'Security-Baselines-X' }
                 @{url = 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Payload/Registry.csv'; path = "$WorkingDir\Registry.csv"; tag = 'Registry' }
                 @{url = 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Payload/ProcessMitigations.csv'; path = "$WorkingDir\ProcessMitigations.csv"; tag = 'ProcessMitigations' }
                 @{url = 'https://github.com/HotCakeX/Harden-Windows-Security/raw/main/Payload/EventViewerCustomViews.zip'; path = "$WorkingDir\EventViewerCustomViews.zip"; tag = 'EventViewerCustomViews' }
@@ -485,13 +489,18 @@ try {
         }        
 
         # unzip Microsoft Security Baselines file
-        Expand-Archive -Path .\Windows1122H2SecurityBaseline.zip -DestinationPath .\ -Force -ErrorAction Stop
+        Expand-Archive -Path .\MicrosoftSecurityBaseline.zip -DestinationPath .\MicrosoftSecurityBaseline -Force -ErrorAction Stop
         # unzip Microsoft 365 Apps Security Baselines file
-        Expand-Archive -Path .\Microsoft365SecurityBaseline2306.zip -DestinationPath .\ -Force -ErrorAction Stop
+        Expand-Archive -Path .\Microsoft365SecurityBaseline.zip -DestinationPath .\Microsoft365SecurityBaseline -Force -ErrorAction Stop
         # unzip the LGPO file
         Expand-Archive -Path .\LGPO.zip -DestinationPath .\ -Force -ErrorAction Stop
         # unzip the Security-Baselines-X file which contains Windows Hardening script Group Policy Objects
         Expand-Archive -Path .\Security-Baselines-X.zip -DestinationPath .\Security-Baselines-X\ -Force -ErrorAction Stop
+
+        # capturing the Microsoft Security Baselines extracted path in a variable using wildcard and storing it in a variable so that we won't need to change anything in the code other than the download link when they are updated
+        [string]$MicrosoftSecurityBaselinePath = (Get-ChildItem -Path '.\MicrosoftSecurityBaseline\*\').FullName
+        # capturing the Microsoft 365 Security Baselines extracted path in a variable using wildcard and storing it in a variable so that we won't need to change anything in the code other than the download link when they are updated
+        [string]$Microsoft365SecurityBaselinePath = (Get-ChildItem -Path '.\Microsoft365SecurityBaseline\*\').FullName
 
         #region Windows-Boot-Manager-revocations-for-Secure-Boot KB5025885  
         # ============================May 9 2023 Windows Boot Manager revocations for Secure Boot =================================
@@ -515,10 +524,10 @@ try {
                 Write-Progress -Activity 'Microsoft Security Baseline' -Status 'Running Microsoft Security Baseline section' -PercentComplete 5
 
                 # Copy LGPO.exe from its folder to Microsoft Security Baseline folder in order to get it ready to be used by PowerShell script
-                Copy-Item -Path '.\LGPO_30\LGPO.exe' -Destination '.\Windows-11-v22H2-Security-Baseline\Scripts\Tools'
+                Copy-Item -Path '.\LGPO_30\LGPO.exe' -Destination "$MicrosoftSecurityBaselinePath\Scripts\Tools"
 
                 # Change directory to the Security Baselines folder
-                Set-Location '.\Windows-11-v22H2-Security-Baseline\Scripts\'
+                Set-Location "$MicrosoftSecurityBaselinePath\Scripts\"
 
                 Write-Host "`nApplying Microsoft Security Baseline" -ForegroundColor Cyan
                 # Run the official PowerShell script included in the Microsoft Security Baseline file we downloaded from Microsoft servers
@@ -528,10 +537,10 @@ try {
                 Write-Progress -Activity 'Microsoft Security Baseline' -Status 'Running Microsoft Security Baseline section' -PercentComplete 5
 
                 # Copy LGPO.exe from its folder to Microsoft Security Baseline folder in order to get it ready to be used by PowerShell script
-                Copy-Item -Path '.\LGPO_30\LGPO.exe' -Destination '.\Windows-11-v22H2-Security-Baseline\Scripts\Tools'
+                Copy-Item -Path '.\LGPO_30\LGPO.exe' -Destination "$MicrosoftSecurityBaselinePath\Scripts\Tools"
 
                 # Change directory to the Security Baselines folder
-                Set-Location '.\Windows-11-v22H2-Security-Baseline\Scripts\'
+                Set-Location "$MicrosoftSecurityBaselinePath\Scripts\"
 
                 Write-Host "`nApplying Microsoft Security Baseline" -ForegroundColor Cyan
                 # Run the official PowerShell script included in the Microsoft Security Baseline file we downloaded from Microsoft servers
@@ -562,10 +571,10 @@ try {
     
                 Set-Location $WorkingDir
                 # Copy LGPO.exe from its folder to Microsoft Office 365 Apps for Enterprise Security Baseline folder in order to get it ready to be used by PowerShell script
-                Copy-Item -Path '.\LGPO_30\LGPO.exe' -Destination '.\Microsoft 365 Apps for Enterprise 2306\Scripts\Tools'
+                Copy-Item -Path '.\LGPO_30\LGPO.exe' -Destination "$Microsoft365SecurityBaselinePath\Scripts\Tools"
 
-                # Change directory to the Security Baselines folder
-                Set-Location "$WorkingDir\Microsoft 365 Apps for Enterprise 2306\Scripts\"
+                # Change directory to the M365 Security Baselines folder
+                Set-Location "$Microsoft365SecurityBaselinePath\Scripts\"
 
                 Write-Host "`nApplying Microsoft 365 Apps Security Baseline" -ForegroundColor Cyan
                 # Run the official PowerShell script included in the Microsoft Security Baseline file we downloaded from Microsoft servers
@@ -938,15 +947,39 @@ try {
                     Remove-MpPreference -ControlledFolderAccessAllowedApplications 'C:\Windows\System32\powercfg.exe'
                 }
 
-                # Enable Bitlocker for all the other drives
-                # check if there is any other drive besides OS drive
-                $NonOSVolumes = Get-Volume | Where-Object { $_.DriveType -ne 'Removable' } | Where-Object { $_.DriveLetter } -PipelineVariable NonRemovableDrives |
-                ForEach-Object { Get-BitLockerVolume | Where-Object { $_.volumeType -ne 'OperatingSystem' -and $_.MountPoint -eq $($($NonRemovableDrives.DriveLetter) + ':') } }
+                #region Non-OS-BitLocker-Drives-Detection
+                
+                # Get the list of non OS volumes
+                [System.Object[]]$NonOSBitLockerVolumes = Get-BitLockerVolume | Where-Object {
+    ($_.volumeType -ne 'OperatingSystem')
+                }
 
-                if ($NonOSVolumes) {
-                    
-                    $NonOSVolumes | Sort-Object | ForEach-Object {
-                        $MountPoint = $_.MountPoint
+                # Get all the volumes and filter out removable ones
+                [System.Object[]]$RemovableVolumes = Get-Volume |
+                Where-Object { $_.DriveType -eq 'Removable' } |
+                Where-Object { $_.DriveLetter }
+
+                # Check if there is any removable volumes
+                if ($RemovableVolumes) {
+
+                    # Get the letters of all the removable volumes
+                    [System.String[]]$RemovableVolumesLetters = foreach ($RemovableVolume in $RemovableVolumes) {
+                        $(($RemovableVolume).DriveLetter + ':' )
+                    }
+
+                    # Filter out removable drives from BitLocker volumes to process
+                    $NonOSBitLockerVolumes = $NonOSBitLockerVolumes | Where-Object {
+    ($_.MountPoint -notin $RemovableVolumesLetters)
+                    }
+
+                }
+                #endregion Non-OS-BitLocker-Drives-Detection
+
+                # Check if there is any non-OS volumes
+                if ($NonOSBitLockerVolumes) {    
+
+                    # Loop through each non-OS volume and prompt for encryption
+                    foreach ($MountPoint in $($NonOSBitLockerVolumes | Sort-Object).MountPoint) {
 
                         # Prompt for confirmation before encrypting each drive
                         switch (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nEncrypt $MountPoint drive ?`n") {
@@ -1005,7 +1038,7 @@ try {
                                             # Add new Recovery Password key protector after removing the previous ones
                                             Add-BitLockerKeyProtector -MountPoint $MountPoint -RecoveryPasswordProtector *> "$MountPoint\Drive $($MountPoint.Remove(1)) recovery password.txt"
                                         }                                
-                                        Write-Host "`nBitlocker is fully and securely enabled for drive $MountPoint" -ForegroundColor Green    
+                                        Write-Host "`nBitlocker is already fully and securely enabled for drive $MountPoint" -ForegroundColor Green    
                                     }
                                     
                                     # This happens if the drive has either Recovery Password or Auto Unlock key protector missing
@@ -1069,7 +1102,7 @@ try {
                                     "Recovery password will be saved in a Text file in $($MountPoint)\Drive $($MountPoint.Remove(1)) recovery password.txt `n" +
                                     "Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which requires authentication to access."
                                     Write-Host $BitLockerMsg -ForegroundColor Cyan
-                                }                                
+                                }
 
                             } 'No' { break }
                             'Exit' { &$CleanUp }
@@ -1193,21 +1226,6 @@ try {
         }    
         # ==========================================End of User Account Control====================================================
         #endregion User-Account-Control
-
-        #region Device-Guard    
-        # ==========================================Device Guard===================================================================
-        switch (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Device Guard category ?") {
-            'Yes' {
-                Write-Progress -Activity 'Device Guard' -Status 'Running Device Guard section' -PercentComplete 50
-                
-                # Change current working directory to the LGPO's folder
-                Set-Location "$WorkingDir\LGPO_30"
-                .\LGPO.exe /m '..\Security-Baselines-X\Device Guard Policies\registry.pol'
-            } 'No' { break }
-            'Exit' { &$CleanUp }
-        }    
-        # ==========================================End of Device Guard============================================================
-        #endregion Device-Guard
 
         #region Windows-Firewall    
         # ====================================================Windows Firewall=====================================================

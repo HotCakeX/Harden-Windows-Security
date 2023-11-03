@@ -12,7 +12,7 @@
   # RootModule = ''
 
   # Version number of this module.
-  ModuleVersion        = '0.2.0'
+  ModuleVersion        = '0.2.1'
 
   # Supported PSEditions
   CompatiblePSEditions = @('Core')
@@ -60,7 +60,6 @@ Harden Windows Safely, Securely, only with Official Microsoft methods
   ✅ TLS Security
   ✅ Lock Screen
   ✅ UAC (User Account Control)
-  ✅ Device Guard
   ✅ Windows Firewall
   ✅ Optional Windows Features
   ✅ Windows Networking

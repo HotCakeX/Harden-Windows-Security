@@ -1,6 +1,6 @@
 <#PSScriptInfo
 
-.VERSION 2023.11.1
+.VERSION 2023.11.3
 
 .GUID d435a293-c9ee-4217-8dc1-4ad2318a5770
 
@@ -63,7 +63,6 @@
   ✅ TLS Security
   ✅ Lock Screen
   ✅ UAC (User Account Control)
-  ✅ Device Guard
   ✅ Windows Firewall
   ✅ Optional Windows Features
   ✅ Windows Networking
@@ -92,12 +91,14 @@ Set-ExecutionPolicy Bypass -Scope Process
 
 # Defining global script variables
 # Current script's version, the same as the version at the top in the script info section
-[datetime]$CurrentVersion = '2023.11.1'
+[datetime]$CurrentVersion = '2023.11.3'
+Set-Variable -Name 'CurrentVersion' -Option 'ReadOnly'
 # Minimum OS build number required for the hardening measures used in this script
 [decimal]$Requiredbuild = '22621.2134'
+Set-Variable -Name 'Requiredbuild' -Option 'ReadOnly'
 # Fetching Temp Directory
 [string]$global:UserTempDirectoryPath = [System.IO.Path]::GetTempPath()
-
+Set-Variable -Name 'UserTempDirectoryPath' -Option 'ReadOnly'
 
 # Determining if PowerShell is core to use modern styling
 [bool]$global:IsCore = $false
@@ -279,9 +280,12 @@ function Compare-SecureString {
 if (Test-IsAdmin) {
 
     # Get the current configurations and preferences of the Microsoft Defender
-    $MDAVConfigCurrent = Get-MpComputerStatus
-    $MDAVPreferencesCurrent = Get-MpPreference
+    # $MDAVConfigCurrent = Get-MpComputerStatus
+    New-Variable -Name 'MDAVConfigCurrent' -Value (Get-MpComputerStatus) -Option 'Constant'
 
+    # $MDAVPreferencesCurrent = Get-MpPreference
+    New-Variable -Name 'MDAVPreferencesCurrent' -Value (Get-MpPreference) -Option 'Constant'
+    
     # backup the current allowed apps list in Controlled folder access in order to restore them at the end of the script
     # doing this so that when we Add and then Remove PowerShell executables in Controlled folder access exclusions
     # no user customization will be affected
@@ -413,7 +417,7 @@ try {
                 @{url = 'https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/Windows%2011%20v23H2%20Security%20Baseline.zip'; path = "$WorkingDir\MicrosoftSecurityBaseline.zip"; tag = 'Microsoft1' }
                 @{url = 'https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/Microsoft%20365%20Apps%20for%20Enterprise%202306.zip'; path = "$WorkingDir\Microsoft365SecurityBaseline.zip"; tag = 'Microsoft2' }
                 @{url = 'https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/LGPO.zip'; path = "$WorkingDir\LGPO.zip"; tag = 'Microsoft3' }
-                @{url = 'https://github.com/HotCakeX/Harden-Windows-Security/raw/main/Payload/Security-Baselines-X.zip'; path = "$WorkingDir\Security-Baselines-X.zip"; tag = 'Security-Baselines-X' }
+                @{url = 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Payload/Security-Baselines-X.zip'; path = "$WorkingDir\Security-Baselines-X.zip"; tag = 'Security-Baselines-X' }
                 @{url = 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Payload/Registry.csv'; path = "$WorkingDir\Registry.csv"; tag = 'Registry' }
                 @{url = 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Payload/ProcessMitigations.csv'; path = "$WorkingDir\ProcessMitigations.csv"; tag = 'ProcessMitigations' }
                 @{url = 'https://github.com/HotCakeX/Harden-Windows-Security/raw/main/Payload/EventViewerCustomViews.zip'; path = "$WorkingDir\EventViewerCustomViews.zip"; tag = 'EventViewerCustomViews' }
@@ -1222,21 +1226,6 @@ try {
         }    
         # ==========================================End of User Account Control====================================================
         #endregion User-Account-Control
-
-        #region Device-Guard    
-        # ==========================================Device Guard===================================================================
-        switch (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Device Guard category ?") {
-            'Yes' {
-                Write-Progress -Activity 'Device Guard' -Status 'Running Device Guard section' -PercentComplete 50
-                
-                # Change current working directory to the LGPO's folder
-                Set-Location "$WorkingDir\LGPO_30"
-                .\LGPO.exe /m '..\Security-Baselines-X\Device Guard Policies\registry.pol'
-            } 'No' { break }
-            'Exit' { &$CleanUp }
-        }    
-        # ==========================================End of Device Guard============================================================
-        #endregion Device-Guard
 
         #region Windows-Firewall    
         # ====================================================Windows Firewall=====================================================

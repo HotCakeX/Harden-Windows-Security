@@ -1,6 +1,12 @@
 # Optional overrides for Microsoft Security Baseline
 
-Here are the overrides that can be **optionally** applied by the script to bring back the functionalities that are disabled as the result of applying Microsoft Security Baseline for Windows 11 22H2
+Since Microsoft Security Baselines are geared towards Enterprise level security, some functionalities that home users might require are disabled. Use the following overrides in the Harden Windows Security script and/or module to bring back those functionalities. **Some of these are necessary when using the module and/or script in Azure VMs.**
+
+All of the features and functionalities listed below are enabled by default in Windows.
+
+<br>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
 
 <br>
 
@@ -37,7 +43,7 @@ Note: Internet Connection Sharing is only available when two or more network con
 
 Note: When the "Prohibit access to properties of a LAN connection," "Ability to change properties of an all user remote access connection," or "Prohibit changing properties of a private remote access connection" settings are set to deny access to the Connection Properties dialog box, the Advanced tab for the connection is blocked.
 
-Note: Nonadministrators are already prohibited from configuring Internet Connection Sharing, regardless of this setting.
+Note: Non-administrators are already prohibited from configuring Internet Connection Sharing, regardless of this setting.
 
 Note: Disabling this setting does not prevent Wireless Hosted Networking from using the ICS service for DHCP services. To prevent the ICS service from running, on the Network Permissions tab in the network's policy properties, select the "Don't use hosted networks" check box.
 
@@ -78,9 +84,9 @@ Computer Configuration\Windows Settings\Security Settings\Windows Defender Firew
 
 <br>
 
-## 4. Deny write access to removable drives not protected by Bitlocker
+## 4. Deny write access to removable drives not protected by BitLocker
 
-Disabling this policy because it can cause inconvenience and if your flash drive is Bitlocker encrypted, It can't be used as a bootable Windows installation USB flash drive.
+Disabling this policy because it can cause inconvenience and if your flash drive is BitLocker encrypted, it can't be used as a bootable Windows installation USB flash drive.
 
 Policy path:
 
@@ -130,6 +136,6 @@ Computer Configuration\Administrative Templates\Windows Components\Remote Deskto
 
 ## 7. Enable the XblGameSave Standby Task
 
-The scheduled task is disabled as a result of applying the Microsoft Security Baselines. The Harden Windows Security script in the [Optional Overrides category](https://github.com/HotCakeX/Harden-Windows-Security#microsoft-security-baselines) enables it again and sets its status back to the default state. The task syncs Xbox game saves on PC.
+The scheduled task is disabled as a result of applying the Microsoft Security Baselines. Using the optional overrides, it will be enabled and its status will be set back to the default state. The task syncs Xbox game saves on PC.
 
 <br>

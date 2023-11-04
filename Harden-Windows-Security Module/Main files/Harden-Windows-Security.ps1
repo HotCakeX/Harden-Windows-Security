@@ -93,7 +93,7 @@ Set-ExecutionPolicy Bypass -Scope Process
 # Current script's version, the same as the version at the top in the script info section
 [datetime]$CurrentVersion = '2023.11.4'
 # Minimum OS build number required for the hardening measures used in this script
-[decimal]$Requiredbuild = '22621.2134'
+[decimal]$Requiredbuild = '22621.2428'
 # Fetching Temp Directory
 [string]$global:UserTempDirectoryPath = [System.IO.Path]::GetTempPath()
 

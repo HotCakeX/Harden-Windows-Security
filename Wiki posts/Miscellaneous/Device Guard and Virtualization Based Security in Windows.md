@@ -6,7 +6,7 @@
 
 **Most of the Device Guard and Virtualization-Based Security features are Automatically enabled by default** on capable and modern hardware. The rest of them will be enabled and configured to the most secure state after you apply the **Microsoft Security Baselines 23H2 or later**.
 
-The [Harden Windows Security Module](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden%E2%80%90Windows%E2%80%90Security%E2%80%90Module) has a feature that is accessible through `confirm-SystemCompliance` cmdlet. It will let you to scan your system and verify the implementations of the Device Guard policies.
+The [Harden Windows Security Module](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden%E2%80%90Windows%E2%80%90Security%E2%80%90Module) has a feature that is accessible through `confirm-SystemCompliance` cmdlet. It will let you scan your system and verify the implementations of the Device Guard policies.
 
 * [**Check out Secured-Core PC requirements**](https://www.microsoft.com/en-us/windows/business/windows-11-secured-core-computers).
 
@@ -14,7 +14,9 @@ The [Harden Windows Security Module](https://github.com/HotCakeX/Harden-Windows-
 
 ## About UEFI Lock
 
-UEFI locked security measures are rooted in **Proof of Physical Presence**. The Following policies are included in Device Guard
+UEFI locked security measures are rooted in **Proof of Physical Presence** and they can't be disabled by modifying Group Policy, registry keys or other Administrative tasks.
+
+The only way to disable UEFI locked security measures is to have physical access to the computer, reboot and access the UEFI settings, supply the credentials to access the UEFI, turn off Secure Boot, reboot the system and then you will be able to disable those security measures with Administrator privileges.
 
 <br>
 

@@ -133,3 +133,17 @@ Computer Configuration\Administrative Templates\Windows Components\Remote Deskto
 The scheduled task is disabled as a result of applying the Microsoft Security Baselines. The Harden Windows Security script in the [Optional Overrides category](https://github.com/HotCakeX/Harden-Windows-Security#microsoft-security-baselines) enables it again and sets its status back to the default state. The task syncs Xbox game saves on PC.
 
 <br>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+
+<br>
+
+## 8. Enable Microsoft Defender exclusion lists to be visible to Local Admins
+
+This [policy](https://learn.microsoft.com/en-us/windows/client-management/mdm/defender-csp#configurationhideexclusionsfromlocaladmins) is located in the following Group Policy path
+
+```
+Computer Configuration\Administrative Templates\Windows Components\Microsoft Defender Antivirus\Control whether or not exclusions are visible to Local Admins
+```
+
+<br>

@@ -1,6 +1,6 @@
 <#PSScriptInfo
 
-.VERSION 2023.11.4
+.VERSION 2023.11.6
 
 .GUID d435a293-c9ee-4217-8dc1-4ad2318a5770
 
@@ -10,7 +10,7 @@
 
 .COPYRIGHT 2023
 
-.TAGS Windows Hardening Security Bitlocker Defender Firewall Edge Protection Baseline TLS UAC Encryption
+.TAGS Windows Hardening Security BitLocker Defender Firewall Edge Protection Baseline TLS UAC Encryption
 
 .LICENSEURI https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 
@@ -59,7 +59,7 @@
   ✅ Microsoft 365 Apps Security Baselines
   ✅ Microsoft Defender
   ✅ Attack surface reduction rules
-  ✅ Bitlocker Settings
+  ✅ BitLocker Settings
   ✅ TLS Security
   ✅ Lock Screen
   ✅ UAC (User Account Control)
@@ -91,9 +91,9 @@ Set-ExecutionPolicy Bypass -Scope Process
 
 # Defining global script variables
 # Current script's version, the same as the version at the top in the script info section
-[datetime]$CurrentVersion = '2023.11.4'
+[datetime]$CurrentVersion = '2023.11.6'
 # Minimum OS build number required for the hardening measures used in this script
-[decimal]$Requiredbuild = '22621.2134'
+[decimal]$Requiredbuild = '22621.2428'
 # Fetching Temp Directory
 [string]$global:UserTempDirectoryPath = [System.IO.Path]::GetTempPath()
 
@@ -668,7 +668,7 @@ try {
                 if ((Get-MpComputerStatus).SmartAppControlState -eq 'Eval') {
                     switch (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nTurn on Smart App Control ?") {
                         'Yes' {
-                            Edit-Registry -path 'HKLM:\SYSTEM\CurrentControlSet\Control\CI\Policy' -key 'VerifiedAndReputablePolicyState' -value '1' -type 'DWORD' -Action 'AddOrModify'
+                            Edit-Registry -path 'HKLM:\SYSTEM\CurrentControlSet\Control\CI\Policy' -key 'VerifiedAndReputablePolicyState' -value '1' -type 'DWORD' -Action 'AddOrModify' | Out-Null
                             # Let the optional diagnostic data be enabled automatically
                             $ShouldEnableOptionalDiagnosticData = $True
                         } 'No' { break }
@@ -702,11 +702,13 @@ try {
                 # Create scheduled task for fast weekly Microsoft recommended driver block list update if it doesn't exist or exists but is not Ready/Running
                 if (-NOT (($BlockListScheduledTaskState -eq 'Ready' -or $BlockListScheduledTaskState -eq 'Running'))) {
                     switch (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nCreate scheduled task for fast weekly Microsoft recommended driver block list update ?") {
-                        'Yes' { 
+                        'Yes' {
+                            # Get the SID of the SYSTEM account. It is a well-known SID, but still querying it, going to use it to create the scheduled task
+                            $SYSTEMSID = New-Object System.Security.Principal.SecurityIdentifier([System.Security.Principal.WellKnownSidType]::LocalSystemSid, $null)
                             # create a scheduled task that runs every 7 days     
                             $Action = New-ScheduledTaskAction -Execute 'Powershell.exe' `
                                 -Argument '-NoProfile -WindowStyle Hidden -command "& {try {Invoke-WebRequest -Uri "https://aka.ms/VulnerableDriverBlockList" -OutFile VulnerableDriverBlockList.zip -ErrorAction Stop}catch{exit};Expand-Archive .\VulnerableDriverBlockList.zip -DestinationPath "VulnerableDriverBlockList" -Force;Rename-Item .\VulnerableDriverBlockList\SiPolicy_Enforced.p7b -NewName "SiPolicy.p7b" -Force;Copy-Item .\VulnerableDriverBlockList\SiPolicy.p7b -Destination "C:\Windows\System32\CodeIntegrity";citool --refresh -json;Remove-Item .\VulnerableDriverBlockList -Recurse -Force;Remove-Item .\VulnerableDriverBlockList.zip -Force;}"'    
-                            $TaskPrincipal = New-ScheduledTaskPrincipal -LogonType S4U -UserId $env:USERNAME -RunLevel Highest
+                            $TaskPrincipal = New-ScheduledTaskPrincipal -LogonType S4U -UserId $($SYSTEMSID.Value) -RunLevel Highest
                             # trigger
                             $Time = New-ScheduledTaskTrigger -Once -At (Get-Date).AddHours(1) -RepetitionInterval (New-TimeSpan -Days 7) 
                             # register the task
@@ -889,7 +891,7 @@ try {
                             }    
                             catch {         
                                 Write-Host 'These errors occured, run Bitlocker category again after meeting the requirements' -ForegroundColor Red
-                                $Error
+                                $_
                                 break
                             }
                         }     
@@ -912,21 +914,20 @@ try {
                     until ( $TheyMatch -and ($Pin1.Length -in 10..20) -and ($Pin2.Length -in 10..20) )
 
                     try {
-                        Enable-BitLocker -MountPoint $env:SystemDrive -EncryptionMethod XtsAes256 -Pin $Pin -TpmAndPinProtector -SkipHardwareTest -ErrorAction Stop             
+                        Enable-BitLocker -MountPoint $env:SystemDrive -EncryptionMethod XtsAes256 -Pin $Pin -TpmAndPinProtector -SkipHardwareTest -ErrorAction Stop | Out-Null    
                     }
                     catch {
                         Write-Host 'These errors occured, run Bitlocker category again after meeting the requirements' -ForegroundColor Red
-                        $Error
+                        $_
                         break
                     }     
                     Add-BitLockerKeyProtector -MountPoint $env:SystemDrive -RecoveryPasswordProtector *> "$env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt" 
-                    Resume-BitLocker -MountPoint $env:SystemDrive
+                    Resume-BitLocker -MountPoint $env:SystemDrive | Out-Null
 
-                    [string]$BitLockerMsg = "`nThe recovery password will be saved in a Text file in $env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt `n" +
+                    Write-Host "`nBitlocker is now fully and securely enabled for OS drive" -ForegroundColor Green
+                    [string]$BitLockerMsg = "The recovery password will be saved in a Text file in $env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt `n" +
                     "Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which requires authentication to access."
-                    Write-Host $BitLockerMsg -ForegroundColor Cyan
-
-                    Write-Host "`nBitlocker is now fully and securely enabled for OS drive" -ForegroundColor Green                
+                    Write-Host $BitLockerMsg -ForegroundColor Cyan                                    
                 }
 
                 # Enabling Hibernate after making sure OS drive is property encrypted for holding hibernate data
@@ -1090,12 +1091,13 @@ try {
                                 # Do this if Bitlocker isn't turned on at all on the user selected drive
                                 else {
                                     Enable-BitLocker -MountPoint $MountPoint -RecoveryPasswordProtector *> "$MountPoint\Drive $($MountPoint.Remove(1)) recovery password.txt"
-                                    Enable-BitLockerAutoUnlock -MountPoint $MountPoint
+                                    Enable-BitLockerAutoUnlock -MountPoint $MountPoint | Out-Null
 
-                                    [string]$BitLockerMsg = "`nBitlocker has started encrypting drive $MountPoint `n" +
-                                    "Recovery password will be saved in a Text file in $($MountPoint)\Drive $($MountPoint.Remove(1)) recovery password.txt `n" +
+                                    [string]$BitLockerMsg1 = "`nBitLocker has started encrypting drive $MountPoint"
+                                    [string]$BitLockerMsg2 = "Recovery password will be saved in a Text file in $($MountPoint)\Drive $($MountPoint.Remove(1)) recovery password.txt `n" +
                                     "Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which requires authentication to access."
-                                    Write-Host $BitLockerMsg -ForegroundColor Cyan
+                                    Write-Host $BitLockerMsg1 -ForegroundColor Green
+                                    Write-Host $BitLockerMsg2 -ForegroundColor Cyan
                                 }
 
                             } 'No' { break }
@@ -1165,15 +1167,7 @@ try {
                         .\LGPO.exe /q /s "..\Security-Baselines-X\Lock Screen Policies\Don't display last signed-in\GptTmpl.inf"                      
                     } 'No' { break }
                     'Exit' { &$CleanUp }
-                }
-
-                # Apply Credential Providers Configurations policy
-                switch (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nSet Windows Hello PIN as the default Credential provider and exclude Password and Smart Card ?" -ExtraMessage 'Read the GitHub Readme!') {
-                    'Yes' {
-                        .\LGPO.exe /q /m '..\Security-Baselines-X\Lock Screen Policies\Credential Providers Configurations\registry.pol'                      
-                    } 'No' { break }
-                    'Exit' { &$CleanUp }
-                }
+                }              
 
             } 'No' { break }
             'Exit' { &$CleanUp }
@@ -1526,7 +1520,7 @@ try {
                 .\LGPO.exe /q /s '..\Security-Baselines-X\Windows Networking Policies\GptTmpl.inf'
 
                 # Disable LMHOSTS lookup protocol on all network adapters
-                Edit-Registry -path 'HKLM:\SYSTEM\CurrentControlSet\Services\NetBT\Parameters' -key 'EnableLMHOSTS' -value '0' -type 'DWORD' -Action 'AddOrModify'
+                Edit-Registry -path 'HKLM:\SYSTEM\CurrentControlSet\Services\NetBT\Parameters' -key 'EnableLMHOSTS' -value '0' -type 'DWORD' -Action 'AddOrModify' | Out-Null
 
                 # Set the Network Location of all connections to Public
                 Get-NetConnectionProfile | Set-NetConnectionProfile -NetworkCategory Public
@@ -1547,7 +1541,7 @@ try {
                 [System.Object[]]$Items = Import-Csv '.\Registry.csv' -Delimiter ','
                 foreach ($Item in $Items) {
                     if ($Item.category -eq 'Miscellaneous') {              
-                        Edit-Registry -path $Item.Path -key $Item.Key -value $Item.Value -type $Item.Type -Action $Item.Action
+                        Edit-Registry -path $Item.Path -key $Item.Key -value $Item.Value -type $Item.Type -Action $Item.Action | Out-Null
                     }
                 }
                 # Change current working directory to the LGPO's folder
@@ -1602,7 +1596,7 @@ try {
                 Write-Progress -Activity 'Windows Update Configurations' -Status 'Running Windows Update Configurations section' -PercentComplete 75
 
                 # Enable restart notification for Windows update
-                Edit-Registry -path 'HKLM:\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings' -key 'RestartNotificationsAllowed2' -value '1' -type 'DWORD' -Action 'AddOrModify'
+                Edit-Registry -path 'HKLM:\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings' -key 'RestartNotificationsAllowed2' -value '1' -type 'DWORD' -Action 'AddOrModify' | Out-Null
                 # Change current working directory to the LGPO's folder
                 Set-Location "$WorkingDir\LGPO_30"
                 .\LGPO.exe /q /m '..\Security-Baselines-X\Windows Update Policies\registry.pol'
@@ -1623,7 +1617,7 @@ try {
                 [System.Object[]]$Items = Import-Csv '.\Registry.csv' -Delimiter ','
                 foreach ($Item in $Items) {
                     if ($Item.category -eq 'Edge') {
-                        Edit-Registry -path $Item.Path -key $Item.Key -value $Item.Value -type $Item.Type -Action $Item.Action
+                        Edit-Registry -path $Item.Path -key $Item.Key -value $Item.Value -type $Item.Type -Action $Item.Action | Out-Null
                     }
                 }
             } 'No' { break }
@@ -1734,7 +1728,7 @@ try {
             [System.Object[]]$Items = Import-Csv '.\Registry.csv' -Delimiter ','
             foreach ($Item in $Items) {
                 if ($Item.category -eq 'NonAdmin') {              
-                    Edit-Registry -path $Item.Path -key $Item.Key -value $Item.Value -type $Item.Type -Action $Item.Action
+                    Edit-Registry -path $Item.Path -key $Item.Key -value $Item.Value -type $Item.Type -Action $Item.Action | Out-Null
                 }
             }  
 

@@ -930,7 +930,7 @@ Due to security reasons, many policies cannot be used when you are signed into E
 
   * Use my [WinSecureDNSMgr module](https://github.com/HotCakeX/WinSecureDNSMgr) to easily configure DNS over HTTPS in Windows
 
-###### Edge policies reviewed until version 117.0.2045.31
+###### Edge policies reviewed until version 119.0.2151.44
 
 <p align="right"><a href="#menu-back-to-top">💡 (back to categories)</a></p>
 

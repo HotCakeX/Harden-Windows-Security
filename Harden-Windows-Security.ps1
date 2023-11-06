@@ -1167,15 +1167,7 @@ try {
                         .\LGPO.exe /q /s "..\Security-Baselines-X\Lock Screen Policies\Don't display last signed-in\GptTmpl.inf"                      
                     } 'No' { break }
                     'Exit' { &$CleanUp }
-                }
-
-                # Apply Credential Providers Configurations policy
-                switch (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nSet Windows Hello PIN as the default Credential provider and exclude Password and Smart Card ?" -ExtraMessage 'Read the GitHub Readme!') {
-                    'Yes' {
-                        .\LGPO.exe /q /m '..\Security-Baselines-X\Lock Screen Policies\Credential Providers Configurations\registry.pol'                      
-                    } 'No' { break }
-                    'Exit' { &$CleanUp }
-                }
+                }              
 
             } 'No' { break }
             'Exit' { &$CleanUp }

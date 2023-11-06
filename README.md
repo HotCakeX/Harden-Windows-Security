@@ -289,7 +289,7 @@ You will need to restart your device once. After restart, wait at least for 5-10
 
 [Optional Overrides for Microsoft Security Baselines](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Overrides-for-Microsoft-Security-Baseline)
 
-<img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Highly recommended to apply these overrides, the script and module will ask you whether you want to apply them or not. Use Optional Overrides when applying the hardening measures on Azure VMs.
+<img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> **Highly recommended** to apply these overrides, the script and module will ask you whether you want to apply them or not. Use Optional Overrides when applying the hardening measures on Azure VMs.
 
 <p align="right"><a href="#menu-back-to-top">💡 (back to categories)</a></p>
 

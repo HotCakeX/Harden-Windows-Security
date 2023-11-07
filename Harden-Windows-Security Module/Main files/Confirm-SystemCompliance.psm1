@@ -546,7 +546,7 @@ function Confirm-SystemCompliance {
                 # suppress the errors if any
             }
             $NestedObjectArray += [PSCustomObject]@{
-                FriendlyName = 'Hibernate enabled and set to full'            
+                FriendlyName = 'Hibernate is enabled and set to full'           
                 Compliant    = ($IndividualItemResult1 -and $IndividualItemResult2)
                 Value        = ($IndividualItemResult1 -and $IndividualItemResult2)          
                 Name         = 'Hibernate is enabled and set to full'

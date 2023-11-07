@@ -979,7 +979,7 @@ try {
                         Remove-MpPreference -ControlledFolderAccessAllowedApplications 'C:\Windows\System32\powercfg.exe'
                     }
                     else {
-                        Write-Host 'Hibernate is already set to full.' -ForegroundColor Green
+                        Write-Host 'Hibernate is already set to full.' -ForegroundColor Magenta
                     }
                 }
 

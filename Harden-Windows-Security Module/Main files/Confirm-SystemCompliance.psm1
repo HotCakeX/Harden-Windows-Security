@@ -147,11 +147,11 @@ function Confirm-SystemCompliance {
                 $output += [PSCustomObject]@{
                     # Category     = $item.category
                     # Key          = $item.key
-                    #  Name         = $item.name
+                    # Name         = $item.name
                     # KeyExists    = $keyExists
                     # ValueMatches = $valueMatches
                     # Type         = $item.type
-                    #  Value        = $item.value
+                    # Value        = $item.value
                     
                     FriendlyName = $item.FriendlyName
                     Compliant    = $valueMatches
@@ -572,7 +572,71 @@ function Confirm-SystemCompliance {
             Name         = 'Secure OS Drive encryption'
             Category     = $CatName
             Method       = 'Cmdlet'
-        }  
+        }
+
+        #region Non-OS-Drive-BitLocker-Drives-Encryption-Verification                
+        # Get the list of non OS volumes
+        [System.Object[]]$NonOSBitLockerVolumes = Get-BitLockerVolume | Where-Object {
+                    ($_.volumeType -ne 'OperatingSystem')
+        }
+                
+        # Get all the volumes and filter out removable ones
+        [System.Object[]]$RemovableVolumes = Get-Volume |
+        Where-Object { $_.DriveType -eq 'Removable' } |
+        Where-Object { $_.DriveLetter }
+                
+        # Check if there is any removable volumes
+        if ($RemovableVolumes) {
+                
+            # Get the letters of all the removable volumes
+            [System.String[]]$RemovableVolumesLetters = foreach ($RemovableVolume in $RemovableVolumes) {
+                $(($RemovableVolume).DriveLetter + ':' )
+            }
+                
+            # Filter out removable drives from BitLocker volumes to process
+            $NonOSBitLockerVolumes = $NonOSBitLockerVolumes | Where-Object {
+                    ($_.MountPoint -notin $RemovableVolumesLetters)
+            }                
+        }
+
+        # Check if there is any non-OS volumes
+        if ($NonOSBitLockerVolumes) {    
+
+            # Loop through each non-OS volume and verify their encryption
+            foreach ($MountPoint in $($NonOSBitLockerVolumes | Sort-Object).MountPoint) {
+
+                # Increase the number of available compliant values for each non-OS drive that was found
+                $global:TotalNumberOfTrueCompliantValues++
+
+                if ((Get-BitLockerVolume -MountPoint $MountPoint).ProtectionStatus -eq 'on') {  
+
+                    # Check 1: if Recovery Password and Auto Unlock key protectors are available on the drive
+                    [System.Object[]]$KeyProtectors = (Get-BitLockerVolume -MountPoint $MountPoint).KeyProtector.keyprotectortype 
+                    if ($KeyProtectors -contains 'RecoveryPassword' -and $KeyProtectors -contains 'ExternalKey') {
+                                                                        
+                        $NestedObjectArray += [PSCustomObject]@{
+                            FriendlyName = "Secure Drive $MountPoint encryption"            
+                            Compliant    = $True
+                            Value        = 'Encrypted'         
+                            Name         = "Secure Drive $MountPoint encryption"
+                            Category     = $CatName
+                            Method       = 'Cmdlet'
+                        }
+                    }
+                }
+                else {
+                    $NestedObjectArray += [PSCustomObject]@{
+                        FriendlyName = "Secure Drive $MountPoint encryption"            
+                        Compliant    = $false
+                        Value        = 'Not properly encrypted'         
+                        Name         = "Secure Drive $MountPoint encryption"
+                        Category     = $CatName
+                        Method       = 'Cmdlet'
+                    }                    
+                }
+            }
+        }
+        #endregion Non-OS-Drive-BitLocker-Drives-Encryption-Verification
 
         # Add the array of custom objects as a property to the $FinalMegaObject object outside the loop
         Add-Member -InputObject $FinalMegaObject -MemberType NoteProperty -Name $CatName -Value $NestedObjectArray
@@ -1684,7 +1748,7 @@ function Confirm-SystemCompliance {
             # Counting the number of $True Compliant values in the Final Output Object
             [int]$TotalTrueCompliantValuesInOutPut = ($FinalMegaObject.'Microsoft Defender' | Where-Object { $_.Compliant -eq $True }).Count + # 49 - 4x(N/A) = 45
             [int]($FinalMegaObject.ASR | Where-Object { $_.Compliant -eq $True }).Count + # 17
-            [int]($FinalMegaObject.Bitlocker | Where-Object { $_.Compliant -eq $True }).Count + # 23
+            [int]($FinalMegaObject.Bitlocker | Where-Object { $_.Compliant -eq $True }).Count + # 23 + Number of Non-OS drives which are dynamicly increased
             [int]($FinalMegaObject.TLS | Where-Object { $_.Compliant -eq $True }).Count + # 21
             [int]($FinalMegaObject.LockScreen | Where-Object { $_.Compliant -eq $True }).Count + # 14
             [int]($FinalMegaObject.UAC | Where-Object { $_.Compliant -eq $True }).Count + # 4

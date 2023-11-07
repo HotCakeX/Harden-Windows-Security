@@ -72,8 +72,8 @@ function Confirm-SystemCompliance {
         Secedit /export /cfg .\security_policy.inf | Out-Null
 
         # Get the current configurations and preferences of the Microsoft Defender
-        New-Variable -Name 'MDAVConfigCurrent' -Value (Get-MpComputerStatus) -Option 'Constant'
-        New-Variable -Name 'MDAVPreferencesCurrent' -Value (Get-MpPreference) -Option 'Constant'
+        New-Variable -Name 'MDAVConfigCurrent' -Value (Get-MpComputerStatus) -Force
+        New-Variable -Name 'MDAVPreferencesCurrent' -Value (Get-MpPreference) -Force
 
         # Storing the output of the ini file parsing function
         [PSCustomObject]$SecurityPoliciesIni = ConvertFrom-IniFile -IniFile .\security_policy.inf
@@ -539,16 +539,17 @@ function Confirm-SystemCompliance {
         # To detect if Hibernate is enabled and set to full
         if (-NOT ($MDAVConfigCurrent.IsVirtualMachine)) {
             try {
-                $IndividualItemResult = $($((Get-ItemProperty HKLM:\SYSTEM\CurrentControlSet\Control\Power -Name HibernateEnabled -ErrorAction SilentlyContinue).hibernateEnabled) -eq 1 ? $True : $False)
+                $IndividualItemResult1 = $($((Get-ItemProperty 'HKLM:\SYSTEM\CurrentControlSet\Control\Power' -Name 'HibernateEnabled' -ErrorAction SilentlyContinue).hibernateEnabled) -eq 1 ? $True : $False)
+                $IndividualItemResult2 = $($((Get-ItemProperty 'HKLM:\SYSTEM\CurrentControlSet\Control\Power' -Name 'HiberFileType' -ErrorAction SilentlyContinue).HiberFileType) -eq 2 ? $True : $False)
             }
             catch {
                 # suppress the errors if any
             }
             $NestedObjectArray += [PSCustomObject]@{
                 FriendlyName = 'Hibernate enabled and set to full'            
-                Compliant    = $IndividualItemResult
-                Value        = $IndividualItemResult           
-                Name         = 'Hibernate enabled and set to full'
+                Compliant    = ($IndividualItemResult1 -and $IndividualItemResult2)
+                Value        = ($IndividualItemResult1 -and $IndividualItemResult2)          
+                Name         = 'Hibernate is enabled and set to full'
                 Category     = $CatName
                 Method       = 'Cmdlet'
             }

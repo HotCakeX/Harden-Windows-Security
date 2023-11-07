@@ -71,6 +71,10 @@ function Confirm-SystemCompliance {
         # Get the security group policies
         Secedit /export /cfg .\security_policy.inf | Out-Null
 
+        # Get the current configurations and preferences of the Microsoft Defender
+        New-Variable -Name 'MDAVConfigCurrent' -Value (Get-MpComputerStatus) -Option 'Constant'
+        New-Variable -Name 'MDAVPreferencesCurrent' -Value (Get-MpPreference) -Option 'Constant'
+
         # Storing the output of the ini file parsing function
         [PSCustomObject]$SecurityPoliciesIni = ConvertFrom-IniFile -IniFile .\security_policy.inf
         
@@ -178,7 +182,7 @@ function Confirm-SystemCompliance {
         $NestedObjectArray += [PSCustomObject](Invoke-CategoryProcessing -catname $CatName -Method 'Group Policy')       
      
         # For PowerShell Cmdlet
-        $IndividualItemResult = $((Get-MpPreference).AllowSwitchToAsyncInspection)
+        $IndividualItemResult = $MDAVPreferencesCurrent.AllowSwitchToAsyncInspection
         $NestedObjectArray += [PSCustomObject]@{
             FriendlyName = 'AllowSwitchToAsyncInspection'            
             Compliant    = $IndividualItemResult
@@ -189,7 +193,7 @@ function Confirm-SystemCompliance {
         }
     
         # For PowerShell Cmdlet
-        $IndividualItemResult = $((Get-MpPreference).oobeEnableRtpAndSigUpdate)
+        $IndividualItemResult = $MDAVPreferencesCurrent.oobeEnableRtpAndSigUpdate
         $NestedObjectArray += [PSCustomObject]@{
             FriendlyName = 'oobeEnableRtpAndSigUpdate'            
             Compliant    = $IndividualItemResult
@@ -200,7 +204,7 @@ function Confirm-SystemCompliance {
         }
     
         # For PowerShell Cmdlet
-        $IndividualItemResult = $((Get-MpPreference).IntelTDTEnabled)
+        $IndividualItemResult = $MDAVPreferencesCurrent.IntelTDTEnabled
         $NestedObjectArray += [PSCustomObject]@{
             FriendlyName = 'IntelTDTEnabled'
             Compliant    = $IndividualItemResult
@@ -269,7 +273,7 @@ function Confirm-SystemCompliance {
         $NestedObjectArray += [PSCustomObject]@{
             FriendlyName = 'Smart App Control State'            
             Compliant    = 'N/A'
-            Value        = $((Get-MpComputerStatus).SmartAppControlState)            
+            Value        = $MDAVConfigCurrent.SmartAppControlState        
             Name         = 'Smart App Control State'
             Category     = $CatName
             Method       = 'Cmdlet'            
@@ -304,7 +308,7 @@ function Confirm-SystemCompliance {
         $NestedObjectArray += [PSCustomObject]@{
             FriendlyName = 'Microsoft Defender Platform Updates Channel'            
             Compliant    = 'N/A'
-            Value        = $($DefenderPlatformUpdatesChannels[[int](Get-MpPreference).PlatformUpdatesChannel])            
+            Value        = $($DefenderPlatformUpdatesChannels[[int]($MDAVPreferencesCurrent).PlatformUpdatesChannel])            
             Name         = 'Microsoft Defender Platform Updates Channel'
             Category     = $CatName
             Method       = 'Cmdlet'           
@@ -323,7 +327,7 @@ function Confirm-SystemCompliance {
         $NestedObjectArray += [PSCustomObject]@{
             FriendlyName = 'Microsoft Defender Engine Updates Channel'            
             Compliant    = 'N/A'
-            Value        = $($DefenderEngineUpdatesChannels[[int](Get-MpPreference).EngineUpdatesChannel])            
+            Value        = $($DefenderEngineUpdatesChannels[[int]($MDAVPreferencesCurrent).EngineUpdatesChannel])            
             Name         = 'Microsoft Defender Engine Updates Channel'
             Category     = $CatName
             Method       = 'Cmdlet'            
@@ -333,14 +337,17 @@ function Confirm-SystemCompliance {
         $NestedObjectArray += [PSCustomObject]@{
             FriendlyName = 'Controlled Folder Access Exclusions'            
             Compliant    = 'N/A'
-            Value        = [PSCustomObject]@{Count = $((Get-MpPreference).ControlledFolderAccessAllowedApplications.count); Programs = $((Get-MpPreference).ControlledFolderAccessAllowedApplications) }
+            Value        = [PSCustomObject]@{
+                Count    = $MDAVPreferencesCurrent.ControlledFolderAccessAllowedApplications.count
+                Programs = $MDAVPreferencesCurrent.ControlledFolderAccessAllowedApplications         
+            }
             Name         = 'Controlled Folder Access Exclusions'
             Category     = $CatName
             Method       = 'Cmdlet'            
         } 
         
         # For PowerShell Cmdlet
-        $IndividualItemResult = $((Get-MpPreference).DisableRestorePoint)
+        $IndividualItemResult = $MDAVPreferencesCurrent.DisableRestorePoint
         $NestedObjectArray += [PSCustomObject]@{
             FriendlyName = 'Enable Restore Point scanning'
             Compliant    = ($IndividualItemResult -eq $False)
@@ -351,7 +358,7 @@ function Confirm-SystemCompliance {
         }
 
         # For PowerShell Cmdlet
-        $IndividualItemResult = $((Get-MpPreference).PerformanceModeStatus)
+        $IndividualItemResult = $MDAVPreferencesCurrent.PerformanceModeStatus
         $NestedObjectArray += [PSCustomObject]@{
             FriendlyName = 'PerformanceModeStatus'
             Compliant    = [bool]($IndividualItemResult -eq '0')
@@ -362,7 +369,7 @@ function Confirm-SystemCompliance {
         }
 
         # For PowerShell Cmdlet
-        $IndividualItemResult = $((Get-MpPreference).EnableConvertWarnToBlock)
+        $IndividualItemResult = $MDAVPreferencesCurrent.EnableConvertWarnToBlock
         $NestedObjectArray += [PSCustomObject]@{
             FriendlyName = 'EnableConvertWarnToBlock'
             Compliant    = $IndividualItemResult
@@ -384,10 +391,9 @@ function Confirm-SystemCompliance {
         $NestedObjectArray += [PSCustomObject](Invoke-CategoryProcessing -catname $CatName -Method 'Group Policy')
             
         
-        # Individual ASR rules verification    
-        $DefenderEffectiveStates = Get-MpPreference        
-        [string[]]$Ids = $DefenderEffectiveStates.AttackSurfaceReductionRules_Ids
-        [string[]]$Actions = $DefenderEffectiveStates.AttackSurfaceReductionRules_Actions
+        # Individual ASR rules verification      
+        [string[]]$Ids = $MDAVPreferencesCurrent.AttackSurfaceReductionRules_Ids
+        [string[]]$Actions = $MDAVPreferencesCurrent.AttackSurfaceReductionRules_Actions
 
         # If $Ids variable is not empty, convert them to lower case because some IDs can be in upper case and result in inaccurate comparison
         if ($Ids) { $Ids = $Ids.tolower() }
@@ -531,7 +537,7 @@ function Confirm-SystemCompliance {
         $NestedObjectArray += [PSCustomObject](Invoke-CategoryProcessing -catname $CatName -Method 'Group Policy')
 
         # To detect if Hibernate is enabled and set to full
-        if (-NOT ((Get-MpComputerStatus).IsVirtualMachine)) {
+        if (-NOT ($MDAVConfigCurrent.IsVirtualMachine)) {
             try {
                 $IndividualItemResult = $($((Get-ItemProperty HKLM:\SYSTEM\CurrentControlSet\Control\Power -Name HibernateEnabled -ErrorAction SilentlyContinue).hibernateEnabled) -eq 1 ? $True : $False)
             }

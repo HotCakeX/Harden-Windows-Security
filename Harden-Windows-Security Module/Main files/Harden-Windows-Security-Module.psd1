@@ -81,7 +81,7 @@ Harden Windows Safely, Securely, only with Official Microsoft methods
 '@
 
   # Minimum version of the PowerShell engine required by this module
-  PowerShellVersion    = '7.3.5'
+  PowerShellVersion    = '7.3.8'
 
   # Name of the PowerShell host required by this module
   # PowerShellHostName = ''

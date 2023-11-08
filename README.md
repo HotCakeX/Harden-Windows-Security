@@ -563,7 +563,7 @@ NistP384
 NistP256
 ```
 
-* By default, in [Windows 11 22H2](https://learn.microsoft.com/en-us/windows/win32/secauthn/tls-elliptic-curves-in-windows-10-1607-and-later), the order is this:
+* By default, [in Windows](https://learn.microsoft.com/en-us/windows/win32/secauthn/tls-elliptic-curves-in-windows-10-1607-and-later), the order is this:
 
 ```
 curve25519

@@ -615,11 +615,12 @@ function Confirm-SystemCompliance {
                 # Increase the number of available compliant values for each non-OS drive that was found
                 $global:TotalNumberOfTrueCompliantValues++
 
-                if ((Get-BitLockerVolume -MountPoint $MountPoint).ProtectionStatus -eq 'on') {  
+                # If status is unknown, that means the non-OS volume is encrypted and locked, if it's on then it's on
+                if ((Get-BitLockerVolume -MountPoint $MountPoint).ProtectionStatus -in 'on', 'Unknown') {  
 
                     # Check 1: if Recovery Password and Auto Unlock key protectors are available on the drive
                     [System.Object[]]$KeyProtectors = (Get-BitLockerVolume -MountPoint $MountPoint).KeyProtector.keyprotectortype 
-                    if ($KeyProtectors -contains 'RecoveryPassword' -and $KeyProtectors -contains 'ExternalKey') {
+                    if (($KeyProtectors -contains 'RecoveryPassword') -or ($KeyProtectors -contains 'Password')) {
                                                                         
                         $NestedObjectArray += [PSCustomObject]@{
                             FriendlyName = "Secure Drive $MountPoint encryption"            

@@ -631,12 +631,22 @@ function Confirm-SystemCompliance {
                             Method       = 'Cmdlet'
                         }
                     }
+                    else {
+                        $NestedObjectArray += [PSCustomObject]@{
+                            FriendlyName = "Secure Drive $MountPoint encryption"            
+                            Compliant    = $false
+                            Value        = 'Not properly encrypted'         
+                            Name         = "Secure Drive $MountPoint encryption"
+                            Category     = $CatName
+                            Method       = 'Cmdlet'
+                        }   
+                    }
                 }
                 else {
                     $NestedObjectArray += [PSCustomObject]@{
                         FriendlyName = "Secure Drive $MountPoint encryption"            
                         Compliant    = $false
-                        Value        = 'Not properly encrypted'         
+                        Value        = 'Not encrypted'         
                         Name         = "Secure Drive $MountPoint encryption"
                         Category     = $CatName
                         Method       = 'Cmdlet'

@@ -1,6 +1,6 @@
 <#PSScriptInfo
 
-.VERSION 2023.11.6
+.VERSION 2023.11.8
 
 .GUID d435a293-c9ee-4217-8dc1-4ad2318a5770
 
@@ -91,7 +91,7 @@ Set-ExecutionPolicy Bypass -Scope Process
 
 # Defining global script variables
 # Current script's version, the same as the version at the top in the script info section
-[datetime]$CurrentVersion = '2023.11.6'
+[datetime]$CurrentVersion = '2023.11.8'
 # Minimum OS build number required for the hardening measures used in this script
 [decimal]$Requiredbuild = '22621.2428'
 # Fetching Temp Directory
@@ -549,7 +549,6 @@ try {
                 # Change directory to the Security Baselines folder
                 Set-Location "$MicrosoftSecurityBaselinePath\Scripts\"
 
-                Write-Host "`nApplying Microsoft Security Baseline" -ForegroundColor Cyan
                 # Run the official PowerShell script included in the Microsoft Security Baseline file we downloaded from Microsoft servers
                 .\Baseline-LocalInstall.ps1 -Win11NonDomainJoined            
             } 
@@ -561,7 +560,6 @@ try {
                 # Change directory to the Security Baselines folder
                 Set-Location "$MicrosoftSecurityBaselinePath\Scripts\"
 
-                Write-Host "`nApplying Microsoft Security Baseline" -ForegroundColor Cyan
                 # Run the official PowerShell script included in the Microsoft Security Baseline file we downloaded from Microsoft servers
                 .\Baseline-LocalInstall.ps1 -Win11NonDomainJoined
 
@@ -595,7 +593,6 @@ try {
                 # Change directory to the M365 Security Baselines folder
                 Set-Location "$Microsoft365SecurityBaselinePath\Scripts\"
 
-                Write-Host "`nApplying Microsoft 365 Apps Security Baseline" -ForegroundColor Cyan
                 # Run the official PowerShell script included in the Microsoft Security Baseline file we downloaded from Microsoft servers
                 .\Baseline-LocalInstall.ps1           
             } 'No' { break }
@@ -907,7 +904,7 @@ try {
                                 # If the PINs match and they are at least 10 characters long, max 20 characters
                                 if ( $TheyMatch -and ($Pin1.Length -in 10..20) -and ($Pin2.Length -in 10..20) ) {
                                     [securestring]$Pin = $Pin1                  
-                                }                  
+                                }
                                 else { Write-Host 'Please ensure that the PINs you entered match, and that they are between 10 to 20 characters.' -ForegroundColor red }                  
                             }
                             # Repeat this process until the entered PINs match and they are at least 10 characters long, max 20 characters           
@@ -916,7 +913,7 @@ try {
                             try {
                                 Add-BitLockerKeyProtector -MountPoint $env:SystemDrive -TpmAndPinProtector -Pin $Pin -ErrorAction Stop
                                 Write-Host "`nPINs matched, enabling TPM and startup PIN now" -ForegroundColor Green
-                            }    
+                            }
                             catch {         
                                 Write-Host 'These errors occured, run Bitlocker category again after meeting the requirements' -ForegroundColor Red
                                 $_
@@ -936,7 +933,7 @@ try {
             
                         if ( $TheyMatch -and ($Pin1.Length -in 10..20) -and ($Pin2.Length -in 10..20) ) {      
                             [securestring]$Pin = $Pin1      
-                        }      
+                        }
                         else { Write-Host 'Please ensure that the PINs you entered match, and that they are between 10 to 20 characters.' -ForegroundColor red }      
                     }      
                     until ( $TheyMatch -and ($Pin1.Length -in 10..20) -and ($Pin2.Length -in 10..20) )

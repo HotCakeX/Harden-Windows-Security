@@ -38,7 +38,7 @@ https://github.com/HotCakeX/Harden-Windows-Security/assets/118815227/0fdbd34b-6b
 
 * Administrator privileges for `Confirm-SystemCompliance` and `Unprotect-WindowsSecurity`
 * Administrator OR Standard user privileges for `Protect-WindowsSecurity`
-* PowerShell Core version 7.3.5 and above
+* PowerShell Core latest version
      * Get it from the [official GitHub repository](https://github.com/PowerShell/PowerShell/releases)
      * Or Install it from [Microsoft Store](https://apps.microsoft.com/store/detail/powershell/9MZ1SNWT0N5D)
 

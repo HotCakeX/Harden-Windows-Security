@@ -14,7 +14,7 @@ Function Unprotect-WindowsSecurity {
 
     # Makes sure this cmdlet is invoked with Admin privileges
     if (![bool]([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
-        Write-Error -Message 'Unprotect-WindowsSecurity cmdlet requires Administrator privileges.'
+        Throw [System.Security.AccessControl.PrivilegeNotHeldException] 'Administrator'
     }
 
     # Import functions

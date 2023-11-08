@@ -56,7 +56,7 @@ function Confirm-SystemCompliance {
 
         # Makes sure this cmdlet is invoked with Admin privileges
         if (![bool]([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
-            Write-Error -Message 'Confirm-SystemCompliance cmdlet requires Administrator privileges.' -ErrorAction Stop
+            Throw [System.Security.AccessControl.PrivilegeNotHeldException] 'Administrator'
         }
 
         Write-Progress -Activity 'Checking for updates' -Status 'Processing...' -PercentComplete 10
@@ -70,6 +70,10 @@ function Confirm-SystemCompliance {
 
         # Get the security group policies
         Secedit /export /cfg .\security_policy.inf | Out-Null
+
+        # Get the current configurations and preferences of the Microsoft Defender
+        New-Variable -Name 'MDAVConfigCurrent' -Value (Get-MpComputerStatus) -Force
+        New-Variable -Name 'MDAVPreferencesCurrent' -Value (Get-MpPreference) -Force
 
         # Storing the output of the ini file parsing function
         [PSCustomObject]$SecurityPoliciesIni = ConvertFrom-IniFile -IniFile .\security_policy.inf
@@ -147,11 +151,11 @@ function Confirm-SystemCompliance {
                 $output += [PSCustomObject]@{
                     # Category     = $item.category
                     # Key          = $item.key
-                    #  Name         = $item.name
+                    # Name         = $item.name
                     # KeyExists    = $keyExists
                     # ValueMatches = $valueMatches
                     # Type         = $item.type
-                    #  Value        = $item.value
+                    # Value        = $item.value
                     
                     FriendlyName = $item.FriendlyName
                     Compliant    = $valueMatches
@@ -178,7 +182,7 @@ function Confirm-SystemCompliance {
         $NestedObjectArray += [PSCustomObject](Invoke-CategoryProcessing -catname $CatName -Method 'Group Policy')       
      
         # For PowerShell Cmdlet
-        $IndividualItemResult = $((Get-MpPreference).AllowSwitchToAsyncInspection)
+        $IndividualItemResult = $MDAVPreferencesCurrent.AllowSwitchToAsyncInspection
         $NestedObjectArray += [PSCustomObject]@{
             FriendlyName = 'AllowSwitchToAsyncInspection'            
             Compliant    = $IndividualItemResult
@@ -189,7 +193,7 @@ function Confirm-SystemCompliance {
         }
     
         # For PowerShell Cmdlet
-        $IndividualItemResult = $((Get-MpPreference).oobeEnableRtpAndSigUpdate)
+        $IndividualItemResult = $MDAVPreferencesCurrent.oobeEnableRtpAndSigUpdate
         $NestedObjectArray += [PSCustomObject]@{
             FriendlyName = 'oobeEnableRtpAndSigUpdate'            
             Compliant    = $IndividualItemResult
@@ -200,7 +204,7 @@ function Confirm-SystemCompliance {
         }
     
         # For PowerShell Cmdlet
-        $IndividualItemResult = $((Get-MpPreference).IntelTDTEnabled)
+        $IndividualItemResult = $MDAVPreferencesCurrent.IntelTDTEnabled
         $NestedObjectArray += [PSCustomObject]@{
             FriendlyName = 'IntelTDTEnabled'
             Compliant    = $IndividualItemResult
@@ -269,7 +273,7 @@ function Confirm-SystemCompliance {
         $NestedObjectArray += [PSCustomObject]@{
             FriendlyName = 'Smart App Control State'            
             Compliant    = 'N/A'
-            Value        = $((Get-MpComputerStatus).SmartAppControlState)            
+            Value        = $MDAVConfigCurrent.SmartAppControlState        
             Name         = 'Smart App Control State'
             Category     = $CatName
             Method       = 'Cmdlet'            
@@ -304,7 +308,7 @@ function Confirm-SystemCompliance {
         $NestedObjectArray += [PSCustomObject]@{
             FriendlyName = 'Microsoft Defender Platform Updates Channel'            
             Compliant    = 'N/A'
-            Value        = $($DefenderPlatformUpdatesChannels[[int](Get-MpPreference).PlatformUpdatesChannel])            
+            Value        = $($DefenderPlatformUpdatesChannels[[int]($MDAVPreferencesCurrent).PlatformUpdatesChannel])            
             Name         = 'Microsoft Defender Platform Updates Channel'
             Category     = $CatName
             Method       = 'Cmdlet'           
@@ -323,7 +327,7 @@ function Confirm-SystemCompliance {
         $NestedObjectArray += [PSCustomObject]@{
             FriendlyName = 'Microsoft Defender Engine Updates Channel'            
             Compliant    = 'N/A'
-            Value        = $($DefenderEngineUpdatesChannels[[int](Get-MpPreference).EngineUpdatesChannel])            
+            Value        = $($DefenderEngineUpdatesChannels[[int]($MDAVPreferencesCurrent).EngineUpdatesChannel])            
             Name         = 'Microsoft Defender Engine Updates Channel'
             Category     = $CatName
             Method       = 'Cmdlet'            
@@ -333,14 +337,17 @@ function Confirm-SystemCompliance {
         $NestedObjectArray += [PSCustomObject]@{
             FriendlyName = 'Controlled Folder Access Exclusions'            
             Compliant    = 'N/A'
-            Value        = [PSCustomObject]@{Count = $((Get-MpPreference).ControlledFolderAccessAllowedApplications.count); Programs = $((Get-MpPreference).ControlledFolderAccessAllowedApplications) }
+            Value        = [PSCustomObject]@{
+                Count    = $MDAVPreferencesCurrent.ControlledFolderAccessAllowedApplications.count
+                Programs = $MDAVPreferencesCurrent.ControlledFolderAccessAllowedApplications         
+            }
             Name         = 'Controlled Folder Access Exclusions'
             Category     = $CatName
             Method       = 'Cmdlet'            
         } 
         
         # For PowerShell Cmdlet
-        $IndividualItemResult = $((Get-MpPreference).DisableRestorePoint)
+        $IndividualItemResult = $MDAVPreferencesCurrent.DisableRestorePoint
         $NestedObjectArray += [PSCustomObject]@{
             FriendlyName = 'Enable Restore Point scanning'
             Compliant    = ($IndividualItemResult -eq $False)
@@ -351,7 +358,7 @@ function Confirm-SystemCompliance {
         }
 
         # For PowerShell Cmdlet
-        $IndividualItemResult = $((Get-MpPreference).PerformanceModeStatus)
+        $IndividualItemResult = $MDAVPreferencesCurrent.PerformanceModeStatus
         $NestedObjectArray += [PSCustomObject]@{
             FriendlyName = 'PerformanceModeStatus'
             Compliant    = [bool]($IndividualItemResult -eq '0')
@@ -362,7 +369,7 @@ function Confirm-SystemCompliance {
         }
 
         # For PowerShell Cmdlet
-        $IndividualItemResult = $((Get-MpPreference).EnableConvertWarnToBlock)
+        $IndividualItemResult = $MDAVPreferencesCurrent.EnableConvertWarnToBlock
         $NestedObjectArray += [PSCustomObject]@{
             FriendlyName = 'EnableConvertWarnToBlock'
             Compliant    = $IndividualItemResult
@@ -384,10 +391,9 @@ function Confirm-SystemCompliance {
         $NestedObjectArray += [PSCustomObject](Invoke-CategoryProcessing -catname $CatName -Method 'Group Policy')
             
         
-        # Individual ASR rules verification    
-        $DefenderEffectiveStates = Get-MpPreference        
-        [string[]]$Ids = $DefenderEffectiveStates.AttackSurfaceReductionRules_Ids
-        [string[]]$Actions = $DefenderEffectiveStates.AttackSurfaceReductionRules_Actions
+        # Individual ASR rules verification      
+        [string[]]$Ids = $MDAVPreferencesCurrent.AttackSurfaceReductionRules_Ids
+        [string[]]$Actions = $MDAVPreferencesCurrent.AttackSurfaceReductionRules_Actions
 
         # If $Ids variable is not empty, convert them to lower case because some IDs can be in upper case and result in inaccurate comparison
         if ($Ids) { $Ids = $Ids.tolower() }
@@ -531,18 +537,19 @@ function Confirm-SystemCompliance {
         $NestedObjectArray += [PSCustomObject](Invoke-CategoryProcessing -catname $CatName -Method 'Group Policy')
 
         # To detect if Hibernate is enabled and set to full
-        if (-NOT ((Get-MpComputerStatus).IsVirtualMachine)) {
+        if (-NOT ($MDAVConfigCurrent.IsVirtualMachine)) {
             try {
-                $IndividualItemResult = $($((Get-ItemProperty HKLM:\SYSTEM\CurrentControlSet\Control\Power -Name HibernateEnabled -ErrorAction SilentlyContinue).hibernateEnabled) -eq 1 ? $True : $False)
+                $IndividualItemResult1 = $($((Get-ItemProperty 'HKLM:\SYSTEM\CurrentControlSet\Control\Power' -Name 'HibernateEnabled' -ErrorAction SilentlyContinue).hibernateEnabled) -eq 1 ? $True : $False)
+                $IndividualItemResult2 = $($((Get-ItemProperty 'HKLM:\SYSTEM\CurrentControlSet\Control\Power' -Name 'HiberFileType' -ErrorAction SilentlyContinue).HiberFileType) -eq 2 ? $True : $False)
             }
             catch {
                 # suppress the errors if any
             }
             $NestedObjectArray += [PSCustomObject]@{
-                FriendlyName = 'Hibernate enabled and set to full'            
-                Compliant    = $IndividualItemResult
-                Value        = $IndividualItemResult           
-                Name         = 'Hibernate enabled and set to full'
+                FriendlyName = 'Hibernate is enabled and set to full'           
+                Compliant    = ($IndividualItemResult1 -and $IndividualItemResult2)
+                Value        = ($IndividualItemResult1 -and $IndividualItemResult2)          
+                Name         = 'Hibernate is enabled and set to full'
                 Category     = $CatName
                 Method       = 'Cmdlet'
             }
@@ -572,7 +579,82 @@ function Confirm-SystemCompliance {
             Name         = 'Secure OS Drive encryption'
             Category     = $CatName
             Method       = 'Cmdlet'
-        }  
+        }
+
+        #region Non-OS-Drive-BitLocker-Drives-Encryption-Verification                
+        # Get the list of non OS volumes
+        [System.Object[]]$NonOSBitLockerVolumes = Get-BitLockerVolume | Where-Object {
+                    ($_.volumeType -ne 'OperatingSystem')
+        }
+                
+        # Get all the volumes and filter out removable ones
+        [System.Object[]]$RemovableVolumes = Get-Volume |
+        Where-Object { $_.DriveType -eq 'Removable' } |
+        Where-Object { $_.DriveLetter }
+                
+        # Check if there is any removable volumes
+        if ($RemovableVolumes) {
+                
+            # Get the letters of all the removable volumes
+            [System.String[]]$RemovableVolumesLetters = foreach ($RemovableVolume in $RemovableVolumes) {
+                $(($RemovableVolume).DriveLetter + ':' )
+            }
+                
+            # Filter out removable drives from BitLocker volumes to process
+            $NonOSBitLockerVolumes = $NonOSBitLockerVolumes | Where-Object {
+                    ($_.MountPoint -notin $RemovableVolumesLetters)
+            }                
+        }
+
+        # Check if there is any non-OS volumes
+        if ($NonOSBitLockerVolumes) {    
+
+            # Loop through each non-OS volume and verify their encryption
+            foreach ($MountPoint in $($NonOSBitLockerVolumes | Sort-Object).MountPoint) {
+
+                # Increase the number of available compliant values for each non-OS drive that was found
+                $global:TotalNumberOfTrueCompliantValues++
+
+                # If status is unknown, that means the non-OS volume is encrypted and locked, if it's on then it's on
+                if ((Get-BitLockerVolume -MountPoint $MountPoint).ProtectionStatus -in 'on', 'Unknown') {  
+
+                    # Check 1: if Recovery Password and Auto Unlock key protectors are available on the drive
+                    [System.Object[]]$KeyProtectors = (Get-BitLockerVolume -MountPoint $MountPoint).KeyProtector.keyprotectortype 
+                    if (($KeyProtectors -contains 'RecoveryPassword') -or ($KeyProtectors -contains 'Password')) {
+                                                                        
+                        $NestedObjectArray += [PSCustomObject]@{
+                            FriendlyName = "Secure Drive $MountPoint encryption"            
+                            Compliant    = $True
+                            Value        = 'Encrypted'         
+                            Name         = "Secure Drive $MountPoint encryption"
+                            Category     = $CatName
+                            Method       = 'Cmdlet'
+                        }
+                    }
+                    else {
+                        $NestedObjectArray += [PSCustomObject]@{
+                            FriendlyName = "Secure Drive $MountPoint encryption"            
+                            Compliant    = $false
+                            Value        = 'Not properly encrypted'         
+                            Name         = "Secure Drive $MountPoint encryption"
+                            Category     = $CatName
+                            Method       = 'Cmdlet'
+                        }   
+                    }
+                }
+                else {
+                    $NestedObjectArray += [PSCustomObject]@{
+                        FriendlyName = "Secure Drive $MountPoint encryption"            
+                        Compliant    = $false
+                        Value        = 'Not encrypted'         
+                        Name         = "Secure Drive $MountPoint encryption"
+                        Category     = $CatName
+                        Method       = 'Cmdlet'
+                    }                    
+                }
+            }
+        }
+        #endregion Non-OS-Drive-BitLocker-Drives-Encryption-Verification
 
         # Add the array of custom objects as a property to the $FinalMegaObject object outside the loop
         Add-Member -InputObject $FinalMegaObject -MemberType NoteProperty -Name $CatName -Value $NestedObjectArray
@@ -1684,7 +1766,7 @@ function Confirm-SystemCompliance {
             # Counting the number of $True Compliant values in the Final Output Object
             [int]$TotalTrueCompliantValuesInOutPut = ($FinalMegaObject.'Microsoft Defender' | Where-Object { $_.Compliant -eq $True }).Count + # 49 - 4x(N/A) = 45
             [int]($FinalMegaObject.ASR | Where-Object { $_.Compliant -eq $True }).Count + # 17
-            [int]($FinalMegaObject.Bitlocker | Where-Object { $_.Compliant -eq $True }).Count + # 23
+            [int]($FinalMegaObject.Bitlocker | Where-Object { $_.Compliant -eq $True }).Count + # 23 + Number of Non-OS drives which are dynamicly increased
             [int]($FinalMegaObject.TLS | Where-Object { $_.Compliant -eq $True }).Count + # 21
             [int]($FinalMegaObject.LockScreen | Where-Object { $_.Compliant -eq $True }).Count + # 14
             [int]($FinalMegaObject.UAC | Where-Object { $_.Compliant -eq $True }).Count + # 4

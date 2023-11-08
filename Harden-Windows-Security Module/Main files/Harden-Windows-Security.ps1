@@ -1,6 +1,6 @@
 <#PSScriptInfo
 
-.VERSION 2023.11.6
+.VERSION 2023.11.8
 
 .GUID d435a293-c9ee-4217-8dc1-4ad2318a5770
 
@@ -91,11 +91,13 @@ Set-ExecutionPolicy Bypass -Scope Process
 
 # Defining global script variables
 # Current script's version, the same as the version at the top in the script info section
-[datetime]$CurrentVersion = '2023.11.6'
+[datetime]$CurrentVersion = '2023.11.8'
 # Minimum OS build number required for the hardening measures used in this script
 [decimal]$Requiredbuild = '22621.2428'
 # Fetching Temp Directory
 [string]$global:UserTempDirectoryPath = [System.IO.Path]::GetTempPath()
+# The total number of the main categories for the parent/main progress bar to render
+[System.Int64]$TotalMainSteps = 18
 
 # Determining if PowerShell is core to use modern styling
 [bool]$global:IsCore = $false
@@ -171,8 +173,8 @@ function Select-Option {
         }
 
         # Make sure user only inputs a positive integer
-        [int]$SelectedIndex = 0
-        $isValid = [int]::TryParse((Read-Host 'Select an option'), [ref]$SelectedIndex)
+        [System.Int64]$SelectedIndex = 0
+        $isValid = [System.Int64]::TryParse((Read-Host 'Select an option'), [ref]$SelectedIndex)
         if ($isValid) {
             if ($SelectedIndex -gt 0 -and $SelectedIndex -le $Options.Length) { 
                 $Selected = $Options[$SelectedIndex - 1] 
@@ -277,8 +279,8 @@ function Compare-SecureString {
 if (Test-IsAdmin) {
 
     # Get the current configurations and preferences of the Microsoft Defender
-    New-Variable -Name 'MDAVConfigCurrent' -Value (Get-MpComputerStatus) -Option 'Constant'
-    New-Variable -Name 'MDAVPreferencesCurrent' -Value (Get-MpPreference) -Option 'Constant'
+    New-Variable -Name 'MDAVConfigCurrent' -Value (Get-MpComputerStatus) -Force
+    New-Variable -Name 'MDAVPreferencesCurrent' -Value (Get-MpPreference) -Force
     
     # backup the current allowed apps list in Controlled folder access in order to restore them at the end of the script
     # doing this so that when we Add and then Remove PowerShell executables in Controlled folder access exclusions
@@ -395,33 +397,47 @@ try {
     Set-Location $WorkingDir
 
     # Clean up script block
-    [scriptblock]$CleanUp = { Set-Location $HOME; Remove-Item -Recurse -Path "$global:UserTempDirectoryPath\HardeningXStuff\" -Force; exit }
+    [scriptblock]$CleanUp = {
+        Set-Location $HOME
+        Remove-Item -Recurse -Path "$global:UserTempDirectoryPath\HardeningXStuff\" -Force
+        # Disable progress bars
+        0..5 | ForEach-Object { Write-Progress -Id $_ -Activity 'Done' -Completed }
+        exit 
+    }
 
     if (-NOT (Test-IsAdmin)) {
         if ($IsCore) { &$WriteNeonGreen 'Skipping commands that require Administrator privileges' } else { Write-Host 'Skipping commands that require Administrator privileges' -ForegroundColor Magenta }
     }
-    else {
-        Write-Progress -Activity 'Initialization' -Status 'Downloading the required files...' -PercentComplete 0 
-
-        try {  
-                          
+    else {   
+        
+        [System.Int64]$CurrentMainStep = 0
+        Write-Progress -Id 0 -Activity 'Downloading the required files' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete 1
+            
+        try {
+                                 
             # Create an array of files to download
             [System.Object[]]$Files = @(
                 # System.Net.WebClient requires absolute path instead of relative one      
-                @{url = 'https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/Windows%2011%20v23H2%20Security%20Baseline.zip'; path = "$WorkingDir\MicrosoftSecurityBaseline.zip"; tag = 'Microsoft1' }
-                @{url = 'https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/Microsoft%20365%20Apps%20for%20Enterprise%202306.zip'; path = "$WorkingDir\Microsoft365SecurityBaseline.zip"; tag = 'Microsoft2' }
-                @{url = 'https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/LGPO.zip'; path = "$WorkingDir\LGPO.zip"; tag = 'Microsoft3' }
+                @{url = 'https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/Windows%2011%20v23H2%20Security%20Baseline.zip'; path = "$WorkingDir\MicrosoftSecurityBaseline.zip"; tag = 'MicrosoftSecurityBaseline' }
+                @{url = 'https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/Microsoft%20365%20Apps%20for%20Enterprise%202306.zip'; path = "$WorkingDir\Microsoft365SecurityBaseline.zip"; tag = 'Microsoft365SecurityBaseline' }
+                @{url = 'https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/LGPO.zip'; path = "$WorkingDir\LGPO.zip"; tag = 'LGPO' }
                 @{url = 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Payload/Security-Baselines-X.zip'; path = "$WorkingDir\Security-Baselines-X.zip"; tag = 'Security-Baselines-X' }
                 @{url = 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Payload/Registry.csv'; path = "$WorkingDir\Registry.csv"; tag = 'Registry' }
                 @{url = 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Payload/ProcessMitigations.csv'; path = "$WorkingDir\ProcessMitigations.csv"; tag = 'ProcessMitigations' }
                 @{url = 'https://github.com/HotCakeX/Harden-Windows-Security/raw/main/Payload/EventViewerCustomViews.zip'; path = "$WorkingDir\EventViewerCustomViews.zip"; tag = 'EventViewerCustomViews' }
             )
-        
+                    
+            # Get the total number of files to download
+            [System.Int64]$TotalRequiredFiles = $Files.Count
+                    
+            # Initialize a counter for the progress bar
+            [System.Int64]$RequiredFilesCounter = 0
+                        
             # Start a job for each file download    
             [System.Object[]]$Jobs = foreach ($File in $Files) {              
-                
+                                
                 Start-Job -ErrorAction Stop -ScriptBlock {
-        
+                        
                     param($Url, $Path, $Tag)
                     # Create a WebClient object
                     [System.Net.WebClient]$WC = New-Object System.Net.WebClient
@@ -463,24 +479,31 @@ try {
                         }                
                     }            
                 } -ArgumentList $File.url, $File.path, $File.tag
+                        
+                # Increment the counter by one
+                $RequiredFilesCounter++
+                        
+                # Write the progress of the download jobs
+                Write-Progress -Id 1 -ParentId 0 -Activity "Downloading $($file.tag)" -Status "$RequiredFilesCounter of $TotalRequiredFiles" -PercentComplete ($RequiredFilesCounter / $TotalRequiredFiles * 100)
             } 
             # Wait until all jobs are completed
             while ($Jobs | Where-Object { $_.State -ne 'Completed' }) {
                 Start-Sleep -Milliseconds 700
             }
-        
+                        
             # Receive the output or errors of each job and remove the job
             foreach ($Job in $Jobs) {
                 Receive-Job -Job $Job -ErrorAction Stop
                 Remove-Job -Job $Job -ErrorAction Stop
             }       
-               
+                         
+            Write-Progress -Id 1 -ParentId 0 -Activity 'Downloading files completed.' -Completed
         }
         catch {            
             Write-Error "The required files couldn't be downloaded, Make sure you have Internet connection."
             foreach ($Job in $Jobs) { Remove-Job -Job $Job -ErrorAction Stop }   
-            &$CleanUp   
-        }        
+            &$CleanUp
+        }  
 
         # unzip Microsoft Security Baselines file
         Expand-Archive -Path .\MicrosoftSecurityBaseline.zip -DestinationPath .\MicrosoftSecurityBaseline -Force -ErrorAction Stop
@@ -498,8 +521,10 @@ try {
 
         #region Windows-Boot-Manager-revocations-for-Secure-Boot KB5025885  
         # ============================May 9 2023 Windows Boot Manager revocations for Secure Boot =================================
+        $CurrentMainStep++
         switch (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nApply May 9 2023 Windows Boot Manager Security measures ? (If you've already run this category, don't need to do it again)") {
-            'Yes' {
+            'Yes' {                
+                Write-Progress -Id 0 -Activity 'Windows Boot Manager revocations for Secure Boot' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
 
                 reg add HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Secureboot /v AvailableUpdates /t REG_DWORD /d 0x30 /f
 
@@ -513,34 +538,31 @@ try {
 
         #region Microsoft-Security-Baseline    
         # ================================================Microsoft Security Baseline==============================================
+        $CurrentMainStep++
         switch (Select-Option -Options 'Yes', 'Yes, With the Optional Overrides (Recommended)' , 'No', 'Exit' -Message "`nApply Microsoft Security Baseline ?") {
-            'Yes' {
-                Write-Progress -Activity 'Microsoft Security Baseline' -Status 'Running Microsoft Security Baseline section' -PercentComplete 5
-
+            'Yes' {  
+                Write-Progress -Id 0 -Activity 'Microsoft Security Baseline' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+                         
                 # Copy LGPO.exe from its folder to Microsoft Security Baseline folder in order to get it ready to be used by PowerShell script
                 Copy-Item -Path '.\LGPO_30\LGPO.exe' -Destination "$MicrosoftSecurityBaselinePath\Scripts\Tools"
 
                 # Change directory to the Security Baselines folder
                 Set-Location "$MicrosoftSecurityBaselinePath\Scripts\"
 
-                Write-Host "`nApplying Microsoft Security Baseline" -ForegroundColor Cyan
                 # Run the official PowerShell script included in the Microsoft Security Baseline file we downloaded from Microsoft servers
                 .\Baseline-LocalInstall.ps1 -Win11NonDomainJoined            
             } 
             'Yes, With the Optional Overrides (Recommended)' {            
-                Write-Progress -Activity 'Microsoft Security Baseline' -Status 'Running Microsoft Security Baseline section' -PercentComplete 5
-
+                
                 # Copy LGPO.exe from its folder to Microsoft Security Baseline folder in order to get it ready to be used by PowerShell script
                 Copy-Item -Path '.\LGPO_30\LGPO.exe' -Destination "$MicrosoftSecurityBaselinePath\Scripts\Tools"
 
                 # Change directory to the Security Baselines folder
                 Set-Location "$MicrosoftSecurityBaselinePath\Scripts\"
 
-                Write-Host "`nApplying Microsoft Security Baseline" -ForegroundColor Cyan
                 # Run the official PowerShell script included in the Microsoft Security Baseline file we downloaded from Microsoft servers
                 .\Baseline-LocalInstall.ps1 -Win11NonDomainJoined
 
-                Write-Progress -Activity 'Overrides for Microsoft Security Baseline' -Status 'Running Overrides for Microsoft Security Baseline section' -PercentComplete 10
                 Start-Sleep -Seconds 1
 
                 # Change current working directory to the LGPO's folder
@@ -559,10 +581,11 @@ try {
        
         #region Microsoft-365-Apps-Security-Baseline
         # ================================================Microsoft 365 Apps Security Baseline==============================================
+        $CurrentMainStep++
         switch (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nApply Microsoft 365 Apps Security Baseline ?") {
-            'Yes' {
-                Write-Progress -Activity 'Microsoft 365 Apps Security Baseline' -Status 'Running Microsoft 365 Apps Security Baseline section' -PercentComplete 15
-    
+            'Yes' {    
+                Write-Progress -Id 0 -Activity 'Microsoft 365 Apps Security Baseline' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+                
                 Set-Location $WorkingDir
                 # Copy LGPO.exe from its folder to Microsoft Office 365 Apps for Enterprise Security Baseline folder in order to get it ready to be used by PowerShell script
                 Copy-Item -Path '.\LGPO_30\LGPO.exe' -Destination "$Microsoft365SecurityBaselinePath\Scripts\Tools"
@@ -570,7 +593,6 @@ try {
                 # Change directory to the M365 Security Baselines folder
                 Set-Location "$Microsoft365SecurityBaselinePath\Scripts\"
 
-                Write-Host "`nApplying Microsoft 365 Apps Security Baseline" -ForegroundColor Cyan
                 # Run the official PowerShell script included in the Microsoft Security Baseline file we downloaded from Microsoft servers
                 .\Baseline-LocalInstall.ps1           
             } 'No' { break }
@@ -581,10 +603,11 @@ try {
     
         #region Microsoft-Defender
         # ================================================Microsoft Defender=======================================================
+        $CurrentMainStep++
         switch (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Microsoft Defender category ?") {
-            'Yes' {
-                Write-Progress -Activity 'Microsoft Defender' -Status 'Running Microsoft Defender section' -PercentComplete 20
-
+            'Yes' {  
+                Write-Progress -Id 0 -Activity 'Microsoft Defender' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+                
                 # Change current working directory to the LGPO's folder
                 Set-Location "$WorkingDir\LGPO_30"
                 .\LGPO.exe /q /m '..\Security-Baselines-X\Microsoft Defender Policies\registry.pol'
@@ -742,10 +765,11 @@ try {
 
         #region Attack-Surface-Reduction-Rules    
         # =========================================Attack Surface Reduction Rules==================================================
+        $CurrentMainStep++
         switch (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Attack Surface Reduction Rules category ?") {
-            'Yes' {
-                Write-Progress -Activity 'Attack Surface Reduction Rules' -Status 'Running Attack Surface Reduction Rules section' -PercentComplete 25
-                                
+            'Yes' {  
+                Write-Progress -Id 0 -Activity 'Attack Surface Reduction Rules' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+                                 
                 # Change current working directory to the LGPO's folder
                 Set-Location "$WorkingDir\LGPO_30"
                 
@@ -758,10 +782,11 @@ try {
     
         #region Bitlocker-Settings    
         # ==========================================Bitlocker Settings=============================================================    
+        $CurrentMainStep++
         switch (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Bitlocker category ?") {
-            'Yes' {
-                Write-Progress -Activity 'Bitlocker Settings' -Status 'Running Bitlocker Settings section' -PercentComplete 30
-
+            'Yes' {   
+                Write-Progress -Id 0 -Activity 'Bitlocker Settings' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+                
                 # Change current working directory to the LGPO's folder
                 Set-Location "$WorkingDir\LGPO_30"
 
@@ -879,7 +904,7 @@ try {
                                 # If the PINs match and they are at least 10 characters long, max 20 characters
                                 if ( $TheyMatch -and ($Pin1.Length -in 10..20) -and ($Pin2.Length -in 10..20) ) {
                                     [securestring]$Pin = $Pin1                  
-                                }                  
+                                }
                                 else { Write-Host 'Please ensure that the PINs you entered match, and that they are between 10 to 20 characters.' -ForegroundColor red }                  
                             }
                             # Repeat this process until the entered PINs match and they are at least 10 characters long, max 20 characters           
@@ -888,7 +913,7 @@ try {
                             try {
                                 Add-BitLockerKeyProtector -MountPoint $env:SystemDrive -TpmAndPinProtector -Pin $Pin -ErrorAction Stop
                                 Write-Host "`nPINs matched, enabling TPM and startup PIN now" -ForegroundColor Green
-                            }    
+                            }
                             catch {         
                                 Write-Host 'These errors occured, run Bitlocker category again after meeting the requirements' -ForegroundColor Red
                                 $_
@@ -908,7 +933,7 @@ try {
             
                         if ( $TheyMatch -and ($Pin1.Length -in 10..20) -and ($Pin2.Length -in 10..20) ) {      
                             [securestring]$Pin = $Pin1      
-                        }      
+                        }
                         else { Write-Host 'Please ensure that the PINs you entered match, and that they are between 10 to 20 characters.' -ForegroundColor red }      
                     }      
                     until ( $TheyMatch -and ($Pin1.Length -in 10..20) -and ($Pin2.Length -in 10..20) )
@@ -932,14 +957,27 @@ try {
 
                 # Enabling Hibernate after making sure OS drive is property encrypted for holding hibernate data
                 # Making sure the system is not a VM because Hibernate on VM doesn't work and VMs have other/better options than Hibernation
-                if (-NOT ((Get-MpComputerStatus).IsVirtualMachine)) {                
-                    # doing this so Controlled Folder Access won't bitch about powercfg.exe
-                    Add-MpPreference -ControlledFolderAccessAllowedApplications 'C:\Windows\System32\powercfg.exe'
-                    Start-Sleep 5
-                    # Set Hibernate mode to full
-                    powercfg /h /type full
-                    Start-Sleep 3
-                    Remove-MpPreference -ControlledFolderAccessAllowedApplications 'C:\Windows\System32\powercfg.exe'
+                if (-NOT ((Get-MpComputerStatus).IsVirtualMachine)) {
+
+                    # Check to see if Hibernate is already set to full and HiberFileType is set to 2 which is Full, 1 is Reduced
+                    try {
+                        [System.Int64]$HiberFileType = Get-ItemPropertyValue -Path 'Registry::HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Power' -Name 'HiberFileType' -ErrorAction SilentlyContinue
+                    }
+                    catch {
+                        # Do nothing if the key doesn't exist
+                    }
+                    if ($HiberFileType -and $HiberFileType -ne 2) {            
+                        # doing this so Controlled Folder Access won't bitch about powercfg.exe
+                        Add-MpPreference -ControlledFolderAccessAllowedApplications 'C:\Windows\System32\powercfg.exe'
+                        Start-Sleep 5
+                        # Set Hibernate mode to full
+                        powercfg /h /type full
+                        Start-Sleep 3
+                        Remove-MpPreference -ControlledFolderAccessAllowedApplications 'C:\Windows\System32\powercfg.exe'
+                    }
+                    else {
+                        Write-Host 'Hibernate is already set to full.' -ForegroundColor Magenta
+                    }
                 }
 
                 #region Non-OS-BitLocker-Drives-Detection
@@ -1114,10 +1152,11 @@ try {
 
         #region TLS-Security    
         # ==============================================TLS Security=============================================================== 
+        $CurrentMainStep++
         switch (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun TLS Security category ?") {
-            'Yes' {
-                Write-Progress -Activity 'TLS Security' -Status 'Running TLS Security section' -PercentComplete 35
-
+            'Yes' {  
+                Write-Progress -Id 0 -Activity 'TLS Security' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+                
                 # creating these registry keys that have forward slashes in them                                
                 @( 'SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\DES 56/56', # DES 56-bit 
                     'SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC2 40/128', # RC2 40-bit
@@ -1152,10 +1191,11 @@ try {
 
         #region Lock-Screen    
         # ==========================================Lock Screen====================================================================
+        $CurrentMainStep++
         switch (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Lock Screen category ?") {
-            'Yes' {
-                Write-Progress -Activity 'Lock Screen' -Status 'Running Lock Screen section' -PercentComplete 40
-                                
+            'Yes' {  
+                Write-Progress -Id 0 -Activity 'Lock Screen' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+                                         
                 # Change current working directory to the LGPO's folder
                 Set-Location "$WorkingDir\LGPO_30"
                 .\LGPO.exe /q /m '..\Security-Baselines-X\Lock Screen Policies\registry.pol'
@@ -1164,7 +1204,11 @@ try {
                 # Apply the Don't display last signed-in policy
                 switch (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nDon't display last signed-in on logon screen ?" -ExtraMessage 'Read the GitHub Readme!') {
                     'Yes' {
+                        Write-Progress -Id 2 -ParentId 0 -Activity 'Lock Screen' -Status "Applying the Don't display last signed-in policy" -PercentComplete 50
+               
                         .\LGPO.exe /q /s "..\Security-Baselines-X\Lock Screen Policies\Don't display last signed-in\GptTmpl.inf"                      
+                   
+                        Write-Progress -Id 2 -Activity "Applying the Don't display last signed-in policy" -Completed
                     } 'No' { break }
                     'Exit' { &$CleanUp }
                 }              
@@ -1177,10 +1221,11 @@ try {
 
         #region User-Account-Control
         # ==========================================User Account Control===========================================================
+        $CurrentMainStep++
         switch (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun User Account Control category ?") {
-            'Yes' {
-                Write-Progress -Activity 'User Account Control' -Status 'User Account Control section' -PercentComplete 45
-
+            'Yes' {  
+                Write-Progress -Id 0 -Activity 'User Account Control' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+                        
                 # Change current working directory to the LGPO's folder
                 Set-Location "$WorkingDir\LGPO_30"
                 .\LGPO.exe /q /s '..\Security-Baselines-X\User Account Control UAC Policies\GptTmpl.inf'
@@ -1188,7 +1233,11 @@ try {
                 # Apply the Automatically deny all UAC prompts on Standard accounts policy
                 switch (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nAutomatically deny all UAC prompts on Standard accounts ?") {
                     'Yes' {
+                        Write-Progress -Id 3 -ParentId 0 -Activity 'User Account Control' -Status 'Automatically deny all UAC prompts on Standard accounts policy' -PercentComplete 50
+               
                         .\LGPO.exe /q /s '..\Security-Baselines-X\User Account Control UAC Policies\Automatically deny all UAC prompts on Standard accounts\GptTmpl.inf'                      
+                        
+                        Write-Progress -Id 3 -Activity 'Automatically deny all UAC prompts on Standard accounts policy' -Completed
                     } 'No' { break }
                     'Exit' { &$CleanUp }
                 }
@@ -1196,7 +1245,11 @@ try {
                 # Apply the Hide the entry points for Fast User Switching policy
                 switch (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nHide the entry points for Fast User Switching ?" -ExtraMessage 'Read the GitHub Readme!') {
                     'Yes' {
+                        Write-Progress -Id 4 -ParentId 0 -Activity 'User Account Control' -Status 'Hide the entry points for Fast User Switching policy' -PercentComplete 50
+
                         .\LGPO.exe /q /m '..\Security-Baselines-X\User Account Control UAC Policies\Hides the entry points for Fast User Switching\registry.pol'                      
+                    
+                        Write-Progress -Id 4 -Activity 'Hide the entry points for Fast User Switching policy' -Completed
                     } 'No' { break }
                     'Exit' { &$CleanUp }
                 }               
@@ -1204,7 +1257,11 @@ try {
                 # Apply the Only elevate executables that are signed and validated policy
                 switch (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nOnly elevate executables that are signed and validated ?" -ExtraMessage 'Read the GitHub Readme!') {
                     'Yes' {
+                        Write-Progress -Id 5 -ParentId 0 -Activity 'User Account Control' -Status 'Only elevate executables that are signed and validated' -PercentComplete 50
+
                         .\LGPO.exe /q /s '..\Security-Baselines-X\User Account Control UAC Policies\Only elevate executables that are signed and validated\GptTmpl.inf'
+                  
+                        Write-Progress -Id 5 -Activity 'Only elevate executables that are signed and validated' -Completed
                     } 'No' { break }
                     'Exit' { &$CleanUp }
                 }  
@@ -1217,10 +1274,11 @@ try {
 
         #region Windows-Firewall    
         # ====================================================Windows Firewall=====================================================
+        $CurrentMainStep++
         switch (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Windows Firewall category ?") {
-            'Yes' {
-                Write-Progress -Activity 'Windows Firewall' -Status 'Running Windows Firewall section' -PercentComplete 55
-                                
+            'Yes' {    
+                Write-Progress -Id 0 -Activity 'Windows Firewall' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+                                        
                 # Change current working directory to the LGPO's folder
                 Set-Location "$WorkingDir\LGPO_30"
                 .\LGPO.exe /q /m '..\Security-Baselines-X\Windows Firewall Policies\registry.pol'
@@ -1237,10 +1295,11 @@ try {
 
         #region Optional-Windows-Features    
         # =================================================Optional Windows Features===============================================
+        $CurrentMainStep++
         switch (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Optional Windows Features category ?") {
-            'Yes' {
-                Write-Progress -Activity 'Optional Windows Features' -Status 'Running Optional Windows Features section' -PercentComplete 60
-                                
+            'Yes' {    
+                Write-Progress -Id 0 -Activity 'Optional Windows Features' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+                                        
                 # since PowerShell Core (only if installed from Microsoft Store) has problem with these commands, making sure the built-in PowerShell handles them
                 # There are Github issues for it already: https://github.com/PowerShell/PowerShell/issues/13866
 
@@ -1510,10 +1569,11 @@ try {
 
         #region Windows-Networking   
         # ====================================================Windows Networking===================================================
+        $CurrentMainStep++
         switch (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Windows Networking category ?") {
-            'Yes' {
-                Write-Progress -Activity 'Windows Networking' -Status 'Running Windows Networking section' -PercentComplete 65
-
+            'Yes' { 
+                Write-Progress -Id 0 -Activity 'Windows Networking' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+              
                 # Change current working directory to the LGPO's folder
                 Set-Location "$WorkingDir\LGPO_30"
                 .\LGPO.exe /q /m '..\Security-Baselines-X\Windows Networking Policies\registry.pol'
@@ -1532,10 +1592,11 @@ try {
 
         #region Miscellaneous-Configurations    
         # ==============================================Miscellaneous Configurations===============================================
+        $CurrentMainStep++
         switch (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Miscellaneous Configurations category ?") {
-            'Yes' {
-                Write-Progress -Activity 'Miscellaneous Configurations' -Status 'Running Miscellaneous Configurations section' -PercentComplete 70
-                                
+            'Yes' {   
+                Write-Progress -Id 0 -Activity 'Miscellaneous Configurations' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+                                      
                 # Miscellaneous Registry section
                 Set-Location $WorkingDir
                 [System.Object[]]$Items = Import-Csv '.\Registry.csv' -Delimiter ','
@@ -1591,10 +1652,11 @@ try {
  
         #region Windows-Update-Configurations    
         # ====================================================Windows Update Configurations==============================================
+        $CurrentMainStep++
         switch (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nApply Windows Update Policies ?") {
             'Yes' {
-                Write-Progress -Activity 'Windows Update Configurations' -Status 'Running Windows Update Configurations section' -PercentComplete 75
-
+                Write-Progress -Id 0 -Activity 'Windows Update Configurations' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+                      
                 # Enable restart notification for Windows update
                 Edit-Registry -path 'HKLM:\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings' -key 'RestartNotificationsAllowed2' -value '1' -type 'DWORD' -Action 'AddOrModify' | Out-Null
                 # Change current working directory to the LGPO's folder
@@ -1608,10 +1670,11 @@ try {
 
         #region Edge-Browser-Configurations
         # ====================================================Edge Browser Configurations====================================================
+        $CurrentMainStep++
         switch (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nApply Edge Browser Configurations ?") {
-            'Yes' {
-                Write-Progress -Activity 'Edge Browser Configurations' -Status 'Running Edge Browser Configurations section' -PercentComplete 80
-
+            'Yes' {   
+                Write-Progress -Id 0 -Activity 'Edge Browser Configurations' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+                     
                 # Edge Browser Configurations registry
                 Set-Location $WorkingDir
                 [System.Object[]]$Items = Import-Csv '.\Registry.csv' -Delimiter ','
@@ -1628,10 +1691,11 @@ try {
         
         #region Certificate-Checking-Commands    
         # ====================================================Certificate Checking Commands========================================
+        $CurrentMainStep++
         switch (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Certificate Checking category ?") {
-            'Yes' {
-                Write-Progress -Activity 'Certificate Checking Commands' -Status 'Running Certificate Checking Commands section' -PercentComplete 90
-               
+            'Yes' {    
+                Write-Progress -Id 0 -Activity 'Certificate Checking Commands' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+                      
                 try {
                     Invoke-WithoutProgress {                    
                         Invoke-WebRequest -Uri 'https://live.sysinternals.com/sigcheck64.exe' -OutFile 'sigcheck64.exe' -ErrorAction Stop
@@ -1655,10 +1719,11 @@ try {
 
         #region Country-IP-Blocking    
         # ====================================================Country IP Blocking==================================================
+        $CurrentMainStep++
         switch (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Country IP Blocking category ?") {
-            'Yes' {
-                Write-Progress -Activity 'Country IP Blocking' -Status 'Running Country IP Blocking section' -PercentComplete 95
-
+            'Yes' {    
+                Write-Progress -Id 0 -Activity 'Country IP Blocking' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+              
                 # -RemoteAddress in New-NetFirewallRule accepts array according to Microsoft Docs, 
                 # so we use "[string[]]$IPList = $IPList -split '\r?\n' -ne ''" to convert the IP lists, which is a single multiline string, into an array
                 function Block-CountryIP {
@@ -1711,8 +1776,9 @@ try {
     # ====================================================Non-Admin Commands===================================================
     switch (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Non-Admin category ?") {
         'Yes' {
-            Write-Progress -Activity 'Non-Admin Commands' -Status 'Running Non-Admin Commands section' -PercentComplete 100
-            
+            $CurrentMainStep = $TotalMainSteps
+            Write-Progress -Id 0 -Activity 'Non-Admin category' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+    
             # Non-Admin Registry section              
             Set-Location $WorkingDir       
             Invoke-WithoutProgress { 
@@ -1756,6 +1822,9 @@ try {
     #endregion Non-Admin-Commands
 }
 finally {
+    # Disable progress bars
+    0..5 | ForEach-Object { Write-Progress -Id $_ -Activity 'Done' -Completed }
+
     if (Test-IsAdmin) {
         # Reverting the PowerShell executables allow listings in Controlled folder access
         Get-ChildItem -Path "$PSHOME\*.exe" | ForEach-Object {

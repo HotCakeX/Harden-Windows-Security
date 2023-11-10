@@ -12,11 +12,11 @@ This page is also available [on my website.](https://spynetgirl.github.io/WDACCo
 
 ## Requirements
 
-* PowerShell 7.3.6 and above  
+* PowerShell Core latest version  
   
     * Install from [GitHub](https://github.com/PowerShell/PowerShell/releases/latest) or [Microsoft Store](https://www.microsoft.com/store/productid/9MZ1SNWT0N5D)
 
-* Windows 11 version 22H2 and above
+* Windows 11 latest version
 * Administrator Privileges
 * Internet Connection (for periodic update checks)
 
@@ -49,7 +49,7 @@ This page is also available [on my website.](https://spynetgirl.github.io/WDACCo
 ## Install The Module
 
 ```powershell
-Install-Module -Name WDACConfig -Force
+Install-Module -Name 'WDACConfig' -Force
 ```
 
 <br>

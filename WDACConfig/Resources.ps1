@@ -2,7 +2,7 @@
 $ErrorActionPreference = 'Stop'
 
 # Minimum required OS build number
-[decimal]$Requiredbuild = '22622.2428'
+[decimal]$Requiredbuild = '22621.2428'
 # Get OS build version
 [decimal]$OSBuild = [System.Environment]::OSVersion.Version.Build
 # Get Update Build Revision (UBR) number

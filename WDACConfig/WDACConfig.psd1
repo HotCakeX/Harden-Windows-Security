@@ -8,7 +8,7 @@
     # RootModule           = ""
 
     # Version number of this module.
-    ModuleVersion        = '0.2.6'
+    ModuleVersion        = '0.2.7'
 
     # Supported PSEditions
     CompatiblePSEditions = @('Core')
@@ -80,7 +80,7 @@ To get help and syntax on PowerShell console, type:
 '@
 
     # Minimum version of the PowerShell engine required by this module
-    PowerShellVersion    = '7.3.6'
+    PowerShellVersion    = '7.3.9'
 
     # Name of the PowerShell host required by this module
     # PowerShellHostName = ''

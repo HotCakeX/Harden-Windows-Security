@@ -1,6 +1,18 @@
 # Stop operation as soon as there is an error anywhere, unless explicitly specified otherwise
 $ErrorActionPreference = 'Stop'
-if (-NOT ([System.Environment]::OSVersion.Version -ge '10.0.22621')) { Write-Error -Message "You're not using Windows 11 22H2, exiting..." }
+
+# Minimum required OS build number
+[decimal]$Requiredbuild = '22622.2428'
+# Get OS build version
+[decimal]$OSBuild = [System.Environment]::OSVersion.Version.Build
+# Get Update Build Revision (UBR) number
+[decimal]$UBR = Get-ItemPropertyValue -Path 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion' -Name 'UBR'
+# Create full OS build number as seen in Windows Settings
+[decimal]$FullOSBuild = "$OSBuild.$UBR"
+# Make sure the current OS build is equal or greater than the required build number
+if (-NOT ($FullOSBuild -ge $Requiredbuild)) {
+    Throw [System.PlatformNotSupportedException] "You are not using the latest build of the Windows OS. A minimum build of $Requiredbuild is required but your OS build is $FullOSBuild`nPlease go to Windows Update to install the updates and then try again."
+}
 
 # Get the path to SignTool
 function Get-SignTool {
@@ -14,15 +26,15 @@ function Get-SignTool {
                 $SignToolExePath = 'C:\Program Files (x86)\Windows Kits\*\bin\*\x64\signtool.exe' 
             }
             else {
-                Write-Error -Message "signtool.exe couldn't be found"
+                Throw [System.IO.FileNotFoundException] 'signtool.exe could not be found'
             }
         }
         elseif ($Env:PROCESSOR_ARCHITECTURE -eq 'ARM64') {
             if (Test-Path -Path 'C:\Program Files (x86)\Windows Kits\*\bin\*\arm64\signtool.exe') {
                 $SignToolExePath = 'C:\Program Files (x86)\Windows Kits\*\bin\*\arm64\signtool.exe'
-            }           
+            }
             else {
-                Write-Error -Message "signtool.exe couldn't be found"
+                Throw [System.IO.FileNotFoundException] 'signtool.exe could not be found'
             }
         }
     }
@@ -36,11 +48,11 @@ function Get-SignTool {
         [System.Boolean]$GreenFlag5 = ((Get-AuthenticodeSignature -FilePath $SignToolExePath).StatusMessage -eq 'Signature verified.')
     }
     catch {
-        Write-Error "SignTool executable couldn't be verified."
+        Throw [System.Security.VerificationException] 'SignTool executable could not be verified.'
     }
     # If any of the 5 checks above fails, the operation stops
     if (!$GreenFlag1 -or !$GreenFlag2 -or !$GreenFlag3 -or !$GreenFlag4 -or !$GreenFlag5) {
-        Write-Error -Message "The SignTool executable was found but couldn't be verified. Please download the latest Windows SDK to get the newest SignTool executable. Official download link: http://aka.ms/WinSDK"        
+        Throw [System.Security.VerificationException] 'The SignTool executable was found but could not be verified. Please download the latest Windows SDK to get the newest SignTool executable. Official download link: http://aka.ms/WinSDK'     
     }
     else {
         return $SignToolExePath
@@ -82,8 +94,8 @@ function Update-self {
                 # If GitHub source is unavailable, use the Azure DevOps source
                 $LatestVersion = Invoke-RestMethod -Uri 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/WDACConfig/version.txt'        
             }
-            catch {        
-                Write-Error -Message "Couldn't verify if the latest version of the module is installed, please check your Internet connection. You can optionally bypass the online check by using -SkipVersionCheck parameter."
+            catch {
+                Throw [System.Security.VerificationException] 'Could not verify if the latest version of the module is installed, please check your Internet connection. You can optionally bypass the online check by using -SkipVersionCheck parameter.'
             }
         }
         if ($CurrentVersion -lt $LatestVersion) {
@@ -116,11 +128,11 @@ function Update-self {
 function Set-LogSize {
     [CmdletBinding()]
     param ([System.Int64]$LogSize)        
-    $logName = 'Microsoft-Windows-CodeIntegrity/Operational'
-    $log = New-Object System.Diagnostics.Eventing.Reader.EventLogConfiguration $logName
-    $log.MaximumSizeInBytes = $LogSize
-    $log.IsEnabled = $true
-    $log.SaveChanges()
+    [System.String]$LogName = 'Microsoft-Windows-CodeIntegrity/Operational'
+    $Log = New-Object System.Diagnostics.Eventing.Reader.EventLogConfiguration $LogName
+    $Log.MaximumSizeInBytes = $LogSize
+    $Log.IsEnabled = $true
+    $Log.SaveChanges()
 }
 
 
@@ -142,7 +154,7 @@ function Test-FilePath {
             $FileFullPath = Resolve-Path $file
 
             # Initialize a variable to store the result
-            $Result = $false
+            [bool]$Result = $false
 
             # Loop through each directory path
             foreach ($directory in $DirectoryPath) {
@@ -240,8 +252,8 @@ Function Get-AuditEventLogsProcessing {
                       
     # Event Viewer Code Integrity logs scan
     foreach ($event in Get-WinEvent -FilterHashtable @{LogName = 'Microsoft-Windows-CodeIntegrity/Operational'; ID = 3076 } -ErrorAction SilentlyContinue | Where-Object { $_.TimeCreated -ge $Date } ) {
-        $xml = [xml]$event.toxml()
-        $xml.event.eventdata.data |
+        $Xml = [xml]$event.toxml()
+        $Xml.event.eventdata.data |
         ForEach-Object { $hash = @{} } { $hash[$_.name] = $_.'#text' } { [pscustomobject]$hash } |
         ForEach-Object {
             if ($_.'File Name' -match ($pattern = '\\Device\\HarddiskVolume(\d+)\\(.*)$')) {
@@ -270,7 +282,7 @@ function New-EmptyPolicy {
         $RulesContent,
         $RuleRefsContent
     )    
-    $EmptyPolicy = @"
+    [System.String]$EmptyPolicy = @"
 <?xml version="1.0" encoding="utf-8"?>
 <SiPolicy xmlns="urn:schemas-microsoft-com:sipolicy" PolicyType="Base Policy">
 <VersionEx>10.0.0.0</VersionEx>
@@ -337,7 +349,7 @@ $RuleRefsContent
 
 
 # Function to check Certificate Common name - used mostly to validate values in UserConfigurations.json
-function Confirm-CertCN ([string]$CN) {
+function Confirm-CertCN ([System.String]$CN) {
     $certs = foreach ($cert in (Get-ChildItem 'Cert:\CurrentUser\my')) {
         (($cert.Subject -split ',' | Select-Object -First 1) -replace 'CN=', '').Trim()
     }       
@@ -384,13 +396,13 @@ Function Remove-ZerosFromIDs {
     param(
         [Parameter(Mandatory = $true)]
         [ValidateScript({ Test-Path -Path $_ -PathType Leaf })]
-        [string]$FilePath
+        [System.String]$FilePath
     )    
     # Load the xml file
-    [xml]$xml = Get-Content -Path $FilePath
+    [xml]$Xml = Get-Content -Path $FilePath
 
     # Get all the elements with ID attribute
-    $Elements = $xml.SelectNodes('//*[@ID]')
+    $Elements = $Xml.SelectNodes('//*[@ID]')
 
     # Loop through the elements and replace _0 with empty string in the ID value and SignerId value
     foreach ($Element in $Elements) {
@@ -407,7 +419,7 @@ Function Remove-ZerosFromIDs {
     }
 
     # Get the CiSigners element by name
-    $CiSigners = $xml.SiPolicy.CiSigners
+    $CiSigners = $Xml.SiPolicy.CiSigners
 
     # Check if the CiSigners element has child elements with SignerId attribute
     if ($CiSigners.HasChildNodes) {
@@ -420,7 +432,7 @@ Function Remove-ZerosFromIDs {
     }
 
     # Save the modified xml file
-    $xml.Save($FilePath)
+    $Xml.Save($FilePath)
 }
 
 
@@ -430,14 +442,14 @@ Function Move-UserModeToKernelMode {
     param(
         [Parameter(Mandatory = $true)]
         [ValidateScript({ Test-Path -Path $_ -PathType Leaf })]
-        [string]$FilePath
+        [System.String]$FilePath
     ) 
 
     # Load the XML file as an XmlDocument object
-    $xml = [xml](Get-Content -Path $FilePath)
+    $Xml = [xml](Get-Content -Path $FilePath)
 
     # Get the SigningScenario nodes as an array
-    $signingScenarios = $xml.SiPolicy.SigningScenarios.SigningScenario
+    $signingScenarios = $Xml.SiPolicy.SigningScenarios.SigningScenario
 
     # Find the SigningScenario node with Value 131 and store it in a variable
     $signingScenario131 = $signingScenarios | Where-Object { $_.Value -eq '131' }
@@ -454,7 +466,7 @@ Function Move-UserModeToKernelMode {
         foreach ($AllowedSigner in $AllowedSigners12.AllowedSigner) {
             # Create a new AllowedSigner node and copy the SignerId attribute from the original node
             # Use the namespace of the parent element when creating the new element
-            $NewAllowedSigner = $xml.CreateElement('AllowedSigner', $signingScenario131.NamespaceURI)
+            $NewAllowedSigner = $Xml.CreateElement('AllowedSigner', $signingScenario131.NamespaceURI)
             $NewAllowedSigner.SetAttribute('SignerId', $AllowedSigner.SignerId)
 
             # Append the new AllowedSigner node to the AllowedSigners node of the SigningScenario node with Value 131
@@ -464,15 +476,15 @@ Function Move-UserModeToKernelMode {
 
         # Remove the SigningScenario node with Value 12 from the XML document
         # out-null to prevent console display
-        $xml.SiPolicy.SigningScenarios.RemoveChild($signingScenario12) | Out-Null
+        $Xml.SiPolicy.SigningScenarios.RemoveChild($signingScenario12) | Out-Null
     }
 
     # Remove Signing Scenario 12 block only if it exists and has no allowed signers (i.e. is empty)
     if ($signingScenario12 -and $AllowedSigners12.count -eq 0) {
         # Remove the SigningScenario node with Value 12 from the XML document
-        $xml.SiPolicy.SigningScenarios.RemoveChild($signingScenario12)
+        $Xml.SiPolicy.SigningScenarios.RemoveChild($signingScenario12)
     }
 
     # Save the modified XML document to a new file
-    $xml.Save($FilePath)
+    $Xml.Save($FilePath)
 }

@@ -125,7 +125,7 @@ Function Unprotect-WindowsSecurity {
 
             # unzip the LGPO file
             Expand-Archive -Path .\LGPO.zip -DestinationPath .\ -Force  
-            .\'LGPO_30\LGPO.exe' /s "$psscriptroot\Resources\Default Security Policy.inf"
+            .\'LGPO_30\LGPO.exe' /q /s "$psscriptroot\Resources\Default Security Policy.inf"
         
             # Enable LMHOSTS lookup protocol on all network adapters again
             Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Services\NetBT\Parameters' -Name 'EnableLMHOSTS' -Value '1' -Type DWord

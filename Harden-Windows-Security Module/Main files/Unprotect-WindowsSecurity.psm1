@@ -29,7 +29,7 @@ Function Unprotect-WindowsSecurity {
     if (!$OnlyProcessMitigations) {
         &$WriteOrange "`r`n"
         &$WriteOrange "###############################################################################################`r`n"
-        &$WriteMintGreen "## This Will Remove the Hardening Measures Applied by Protect-WindowsSecurity Cmdlet ##`r`n"
+        &$WriteMintGreen "## This Will Remove the Hardening Measures Applied by the Protect-WindowsSecurity Cmdlet ##`r`n"
         &$WriteOrange "###############################################################################################`r`n"
 
         # Give user a chance to exit if they accidentally ran this

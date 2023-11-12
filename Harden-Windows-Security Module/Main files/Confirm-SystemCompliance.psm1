@@ -66,7 +66,7 @@ function Confirm-SystemCompliance {
         Write-Progress -Activity 'Gathering Security Policy Information' -Status 'Processing...' -PercentComplete 15
 
         # Total number of Compliant values not equal to N/A
-        [int]$global:TotalNumberOfTrueCompliantValues = 231
+        [int]$global:TotalNumberOfTrueCompliantValues = 230
 
         # Get the security group policies
         Secedit /export /cfg .\security_policy.inf | Out-Null
@@ -1766,7 +1766,7 @@ function Confirm-SystemCompliance {
             # Counting the number of $True Compliant values in the Final Output Object
             [int]$TotalTrueCompliantValuesInOutPut = ($FinalMegaObject.'Microsoft Defender' | Where-Object { $_.Compliant -eq $True }).Count + # 49 - 4x(N/A) = 45
             [int]($FinalMegaObject.ASR | Where-Object { $_.Compliant -eq $True }).Count + # 17
-            [int]($FinalMegaObject.Bitlocker | Where-Object { $_.Compliant -eq $True }).Count + # 23 + Number of Non-OS drives which are dynamicly increased
+            [int]($FinalMegaObject.Bitlocker | Where-Object { $_.Compliant -eq $True }).Count + # 22 + Number of Non-OS drives which are dynamicly increased
             [int]($FinalMegaObject.TLS | Where-Object { $_.Compliant -eq $True }).Count + # 21
             [int]($FinalMegaObject.LockScreen | Where-Object { $_.Compliant -eq $True }).Count + # 14
             [int]($FinalMegaObject.UAC | Where-Object { $_.Compliant -eq $True }).Count + # 4

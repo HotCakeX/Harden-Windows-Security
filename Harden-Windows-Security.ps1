@@ -95,7 +95,7 @@ Set-ExecutionPolicy Bypass -Scope Process
 # Minimum OS build number required for the hardening measures used in this script
 [decimal]$Requiredbuild = '22621.2428'
 # Fetching Temp Directory
-[string]$global:UserTempDirectoryPath = [System.IO.Path]::GetTempPath()
+[System.String]$global:UserTempDirectoryPath = [System.IO.Path]::GetTempPath()
 # The total number of the main categories for the parent/main progress bar to render
 [System.Int64]$TotalMainSteps = 18
 
@@ -145,10 +145,10 @@ if ([version]$PSVersionTable.PSVersion -ge [version]7.3) {
 # Questions function
 function Select-Option {
     param(
-        [parameter(Mandatory = $True)][string]$Message, # Contains the main prompt message
+        [parameter(Mandatory = $True)][System.String]$Message, # Contains the main prompt message
         [parameter(Mandatory = $True)][string[]]$Options,
         [parameter(Mandatory = $false)][switch]$SubCategory,
-        [parameter(Mandatory = $false)][string]$ExtraMessage # Contains any extra notes for sub-categories
+        [parameter(Mandatory = $false)][System.String]$ExtraMessage # Contains any extra notes for sub-categories
     )
 
     $Selected = $null
@@ -324,7 +324,7 @@ try {
         
     }
     else {    
-        [string]$InfoMsg = "`r`n" +
+        [System.String]$InfoMsg = "`r`n" +
         "############################################################################################################`r`n" +
         "### Please read the Readme in the GitHub repository: https://github.com/HotCakeX/Harden-Windows-Security ###`r`n" +
         "############################################################################################################`r`n"
@@ -392,7 +392,7 @@ try {
     # create our working directory
     New-Item -ItemType Directory -Path "$global:UserTempDirectoryPath\HardeningXStuff\" -Force | Out-Null
     # working directory assignment
-    [string]$WorkingDir = "$global:UserTempDirectoryPath\HardeningXStuff\"
+    [System.String]$WorkingDir = "$global:UserTempDirectoryPath\HardeningXStuff\"
     # change location to the new directory
     Set-Location $WorkingDir
 
@@ -515,9 +515,9 @@ try {
         Expand-Archive -Path .\Security-Baselines-X.zip -DestinationPath .\Security-Baselines-X\ -Force -ErrorAction Stop
 
         # capturing the Microsoft Security Baselines extracted path in a variable using wildcard and storing it in a variable so that we won't need to change anything in the code other than the download link when they are updated
-        [string]$MicrosoftSecurityBaselinePath = (Get-ChildItem -Path '.\MicrosoftSecurityBaseline\*\').FullName
+        [System.String]$MicrosoftSecurityBaselinePath = (Get-ChildItem -Path '.\MicrosoftSecurityBaseline\*\').FullName
         # capturing the Microsoft 365 Security Baselines extracted path in a variable using wildcard and storing it in a variable so that we won't need to change anything in the code other than the download link when they are updated
-        [string]$Microsoft365SecurityBaselinePath = (Get-ChildItem -Path '.\Microsoft365SecurityBaseline\*\').FullName
+        [System.String]$Microsoft365SecurityBaselinePath = (Get-ChildItem -Path '.\Microsoft365SecurityBaseline\*\').FullName
 
         #region Windows-Boot-Manager-revocations-for-Secure-Boot KB5025885  
         # ============================May 9 2023 Windows Boot Manager revocations for Secure Boot =================================
@@ -720,7 +720,7 @@ try {
                 }
 
                 # Get the state of fast weekly Microsoft recommended driver block list update scheduled task
-                [string]$BlockListScheduledTaskState = (Get-ScheduledTask -TaskName 'MSFT Driver Block list update' -TaskPath '\MSFT Driver Block list update\' -ErrorAction SilentlyContinue).State
+                [System.String]$BlockListScheduledTaskState = (Get-ScheduledTask -TaskName 'MSFT Driver Block list update' -TaskPath '\MSFT Driver Block list update\' -ErrorAction SilentlyContinue).State
                 
                 # Create scheduled task for fast weekly Microsoft recommended driver block list update if it doesn't exist or exists but is not Ready/Running
                 if (-NOT (($BlockListScheduledTaskState -eq 'Ready' -or $BlockListScheduledTaskState -eq 'Running'))) {
@@ -796,7 +796,7 @@ try {
                 # The Script will show this by emitting True \ False for On \ Off respectively.
 
                 # bootDMAProtection check - checks for Kernel DMA Protection status in System information or msinfo32
-                [string]$BootDMAProtectionCheck =
+                [System.String]$BootDMAProtectionCheck =
                 @'
   namespace SystemInfo
     {
@@ -875,8 +875,11 @@ try {
                 }
                 
                 # check if Bitlocker is enabled for the system drive
-                if ((Get-BitLockerVolume -MountPoint $env:SystemDrive).ProtectionStatus -eq 'on') {                                 
+                if ((Get-BitLockerVolume -MountPoint $env:SystemDrive).ProtectionStatus -eq 'on') {  
+
+                    # Get the key protectors of the OS Drive
                     [System.Object[]]$KeyProtectors = (Get-BitLockerVolume -MountPoint $env:SystemDrive).KeyProtector.keyprotectortype
+                    
                     # check if TPM+PIN and recovery password are being used with Bitlocker which are the safest settings
                     if ($KeyProtectors -contains 'Tpmpin' -and $KeyProtectors -contains 'recoveryPassword') {        
                         Write-Host 'Bitlocker is fully and securely enabled for the OS drive' -ForegroundColor Green
@@ -885,8 +888,8 @@ try {
                         # if Bitlocker is using TPM+PIN but not recovery password (for key protectors)
                         if ($KeyProtectors -contains 'Tpmpin' -and $KeyProtectors -notcontains 'recoveryPassword') {
 
-                            $BitLockerMsg = "`nTPM and Startup Pin are available but the recovery password is missing, adding it now... `n" +
-                            "The recovery password will be saved in a Text file in $env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt"
+                            [System.String]$BitLockerMsg = "`nTPM and Startup Pin are available but the recovery password is missing, adding it now... `n" +
+                            "The recovery password will be saved in a text file in '$env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt'"
                             Write-Host $BitLockerMsg -ForegroundColor Yellow
 
                             Add-BitLockerKeyProtector -MountPoint $env:SystemDrive -RecoveryPasswordProtector *> "$env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt"
@@ -950,9 +953,9 @@ try {
                     Resume-BitLocker -MountPoint $env:SystemDrive | Out-Null
 
                     Write-Host "`nBitlocker is now fully and securely enabled for OS drive" -ForegroundColor Green
-                    [string]$BitLockerMsg = "The recovery password will be saved in a Text file in $env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt `n" +
+                    [System.String]$BitLockerMsg = "The recovery password will be saved in a text file in '$env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt' `n" +
                     "Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which requires authentication to access."
-                    Write-Host $BitLockerMsg -ForegroundColor Cyan                                    
+                    Write-Host $BitLockerMsg -ForegroundColor Cyan                               
                 }
 
                 # Enabling Hibernate after making sure OS drive is property encrypted for holding hibernate data
@@ -1058,10 +1061,10 @@ try {
                                             Where-Object { $_.keyprotectortype -eq 'RecoveryPassword' }).KeyProtectorId
                                         if ($RecoveryPasswordKeyProtectors.Count -gt 1) {
 
-                                            [string]$BitLockerMsg = "`nThere are more than 1 recovery password key protector associated with the drive $mountpoint `n" +
+                                            [System.String]$BitLockerMsg = "`nThere are more than 1 recovery password key protector associated with the drive $mountpoint `n" +
                                             "Removing all of them and adding a new one now. `n" + 
                                             "Bitlocker Recovery Password has been added for drive $MountPoint `n" +
-                                            "It will be saved in a Text file in $($MountPoint)\Drive $($MountPoint.Remove(1)) recovery password.txt `n" +
+                                            "It will be saved in a text file in '$($MountPoint)\Drive $($MountPoint.Remove(1)) recovery password.txt' `n" +
                                             "Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which requires authentication to access." 
                                             Write-Host $BitLockerMsg -ForegroundColor Yellow
 
@@ -1092,9 +1095,9 @@ try {
                                             # Add Recovery Password Key protector and save it to a file inside the drive                                            
                                             Add-BitLockerKeyProtector -MountPoint $MountPoint -RecoveryPasswordProtector *> "$MountPoint\Drive $($MountPoint.Remove(1)) recovery password.txt"
                                     
-                                            [string]$BitLockerMsg = "`nDrive $MountPoint is auto-unlocked but doesn't have Recovery Password, adding it now... `n" +
+                                            [System.String]$BitLockerMsg = "`nDrive $MountPoint is auto-unlocked but doesn't have Recovery Password, adding it now... `n" +
                                             "Bitlocker Recovery Password has been added for drive $MountPoint `n" +
-                                            "It will be saved in a Text file in $($MountPoint)\Drive $($MountPoint.Remove(1)) recovery password.txt `n" +
+                                            "It will be saved in a text file in '$($MountPoint)\Drive $($MountPoint.Remove(1)) recovery password.txt' `n" +
                                             "Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which requires authentication to access."
                                             Write-Host $BitLockerMsg -ForegroundColor Cyan
                                         }
@@ -1109,9 +1112,9 @@ try {
 
                                             if ($RecoveryPasswordKeyProtectors.Count -gt 1) {
 
-                                                [string]$BitLockerMsg = "`nThere are more than 1 recovery password key protector associated with the drive $mountpoint `n" +
+                                                [System.String]$BitLockerMsg = "`nThere are more than 1 recovery password key protector associated with the drive $mountpoint `n" +
                                                 "Removing all of them and adding a new one now. Bitlocker Recovery Password has been added for drive $MountPoint `n" +
-                                                "It will be saved in a Text file in $($MountPoint)\Drive $($MountPoint.Remove(1)) recovery password.txt `n" +
+                                                "It will be saved in a text file in '$($MountPoint)\Drive $($MountPoint.Remove(1)) recovery password.txt' `n" +
                                                 "Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which requires authentication to access." 
                                                 Write-Host $BitLockerMsg -ForegroundColor Yellow   
                                         
@@ -1131,8 +1134,8 @@ try {
                                     Enable-BitLocker -MountPoint $MountPoint -RecoveryPasswordProtector *> "$MountPoint\Drive $($MountPoint.Remove(1)) recovery password.txt"
                                     Enable-BitLockerAutoUnlock -MountPoint $MountPoint | Out-Null
 
-                                    [string]$BitLockerMsg1 = "`nBitLocker has started encrypting drive $MountPoint"
-                                    [string]$BitLockerMsg2 = "Recovery password will be saved in a Text file in $($MountPoint)\Drive $($MountPoint.Remove(1)) recovery password.txt `n" +
+                                    [System.String]$BitLockerMsg1 = "`nBitLocker has started encrypting drive $MountPoint"
+                                    [System.String]$BitLockerMsg2 = "Recovery password will be saved in a text file in '$($MountPoint)\Drive $($MountPoint.Remove(1)) recovery password.txt' `n" +
                                     "Make sure to keep it in a safe place, e.g. in OneDrive's Personal Vault which requires authentication to access."
                                     Write-Host $BitLockerMsg1 -ForegroundColor Green
                                     Write-Host $BitLockerMsg2 -ForegroundColor Cyan
@@ -1727,7 +1730,7 @@ try {
                 # -RemoteAddress in New-NetFirewallRule accepts array according to Microsoft Docs, 
                 # so we use "[string[]]$IPList = $IPList -split '\r?\n' -ne ''" to convert the IP lists, which is a single multiline string, into an array
                 function Block-CountryIP {
-                    param ([string[]]$IPList , [string]$ListName)
+                    param ([string[]]$IPList , [System.String]$ListName)
                     
                     # deletes previous rules (if any) to get new up-to-date IP ranges from the sources and set new rules               
                     Remove-NetFirewallRule -DisplayName "$ListName IP range blocking" -PolicyStore localhost -ErrorAction SilentlyContinue
@@ -1807,7 +1810,7 @@ try {
                     &$WriteRainbow "################################################################################################`r`n"
                 }
                 else {    
-                    [string]$InfoMsg = "`r`n" +
+                    [System.String]$InfoMsg = "`r`n" +
                     "################################################################################################`r`n" +
                     "###  Please Restart your device to completely apply the security measures and Group Policies ###`r`n" +
                     "################################################################################################`r`n"

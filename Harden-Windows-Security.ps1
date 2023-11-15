@@ -167,9 +167,9 @@ function Edit-Registry {
 # https://devblogs.microsoft.com/scripting/use-function-to-determine-elevation-of-powershell-console/
 # Function to test if current session has administrator privileges
 Function Test-IsAdmin {
-    $identity = [Security.Principal.WindowsIdentity]::GetCurrent()
-    $principal = New-Object Security.Principal.WindowsPrincipal $identity
-    $principal.IsInRole([Security.Principal.WindowsBuiltinRole]::Administrator)
+    $Identity = [Security.Principal.WindowsIdentity]::GetCurrent()
+    $Principal = New-Object Security.Principal.WindowsPrincipal $Identity
+    $Principal.IsInRole([Security.Principal.WindowsBuiltinRole]::Administrator)
 }
 
 # Hiding Invoke-WebRequest progress because it creates lingering visual effect on PowerShell console for some reason
@@ -181,10 +181,11 @@ $null = New-Module {
     function Invoke-WithoutProgress {
         [CmdletBinding()]
         param (
-            [Parameter(Mandatory)][scriptblock]$ScriptBlock
+            [Parameter(Mandatory = $true)]
+            [scriptblock]$ScriptBlock
         )
         # Save current progress preference and hide the progress
-        $prevProgressPreference = $global:ProgressPreference
+        [System.Management.Automation.ActionPreference]$PrevProgressPreference = $global:ProgressPreference
         $global:ProgressPreference = 'SilentlyContinue'
         try {
             # Run the script block in the scope of the caller of this module function
@@ -192,7 +193,7 @@ $null = New-Module {
         }
         finally {
             # Restore the original behavior
-            $global:ProgressPreference = $prevProgressPreference
+            $global:ProgressPreference = $PrevProgressPreference
         }
     }
 }
@@ -205,20 +206,20 @@ https://stackoverflow.com/questions/48809012/compare-two-credentials-in-powershe
 #>
 function Compare-SecureString {
     param(
-        [Security.SecureString] $secureString1,
-        [Security.SecureString] $secureString2
+        [Security.SecureString]$SecureString1,
+        [Security.SecureString]$SecureString2
     )
     try {
-        $bstr1 = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($secureString1)
-        $bstr2 = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($secureString2)
-        $length1 = [Runtime.InteropServices.Marshal]::ReadInt32($bstr1, -4)
-        $length2 = [Runtime.InteropServices.Marshal]::ReadInt32($bstr2, -4)
-        if ( $length1 -ne $length2 ) {
+        $Bstr1 = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($SecureString1)
+        $Bstr2 = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($SecureString2)
+        $Length1 = [Runtime.InteropServices.Marshal]::ReadInt32($Bstr1, -4)
+        $Length2 = [Runtime.InteropServices.Marshal]::ReadInt32($Bstr2, -4)
+        if ( $Length1 -ne $Length2 ) {
             return $false
         }
-        for ( $i = 0; $i -lt $length1; ++$i ) {
-            $b1 = [Runtime.InteropServices.Marshal]::ReadByte($bstr1, $i)
-            $b2 = [Runtime.InteropServices.Marshal]::ReadByte($bstr2, $i)
+        for ( $i = 0; $i -lt $Length1; ++$i ) {
+            $b1 = [Runtime.InteropServices.Marshal]::ReadByte($Bstr1, $i)
+            $b2 = [Runtime.InteropServices.Marshal]::ReadByte($Bstr2, $i)
             if ( $b1 -ne $b2 ) {
                 return $false
             }
@@ -226,11 +227,11 @@ function Compare-SecureString {
         return $true
     }
     finally {
-        if ( $bstr1 -ne [IntPtr]::Zero ) {
-            [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($bstr1)
+        if ( $Bstr1 -ne [IntPtr]::Zero ) {
+            [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($Bstr1)
         }
-        if ( $bstr2 -ne [IntPtr]::Zero ) {
-            [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($bstr2)
+        if ( $Bstr2 -ne [IntPtr]::Zero ) {
+            [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($Bstr2)
         }
     }
 }

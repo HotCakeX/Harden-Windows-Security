@@ -559,27 +559,50 @@ function Confirm-SystemCompliance {
         }
 
         # OS Drive encryption verifications
+        # Check if BitLocker is on for the OS Drive
         if ((Get-BitLockerVolume -MountPoint $env:SystemDrive).ProtectionStatus -eq 'on') {                                 
-            [System.Object[]]$KeyProtectors = (Get-BitLockerVolume -MountPoint $env:SystemDrive).KeyProtector.keyprotectortype
-            # check if TPM+PIN and recovery password are being used with Bitlocker which are the safest settings
+           
+           # Get the key protectors of the OS Drive
+            [System.String[]]$KeyProtectors = (Get-BitLockerVolume -MountPoint $env:SystemDrive).KeyProtector.keyprotectortype
+           
+            # Check if TPM+PIN and recovery password are being used - Normal encryption level
             if (($KeyProtectors -contains 'Tpmpin') -and ($KeyProtectors -contains 'RecoveryPassword')) {        
-                $IndividualItemResult = $True
+            
+                $NestedObjectArray += [PSCustomObject]@{
+                FriendlyName = 'Secure OS Drive encryption'            
+                Compliant    = $True
+                Value        = 'Normal Encryption Level'          
+                Name         = 'Secure OS Drive encryption'
+                Category     = $CatName
+                Method       = 'Cmdlet'
+        
+                }
             }
-            else {
-                $IndividualItemResult = $false
+            
+            # Check if TPM+PIN+StartupKey and recovery password are being used - Enhanced encryption level
+            elseif (($KeyProtectors -contains 'TpmPinStartupKey') -and ($KeyProtectors -contains 'RecoveryPassword')) {        
+            
+                $NestedObjectArray += [PSCustomObject]@{
+                FriendlyName = 'Secure OS Drive encryption'            
+                Compliant    = $True
+                Value        = 'Enhanced Encryption Level'          
+                Name         = 'Secure OS Drive encryption'
+                Category     = $CatName
+                Method       = 'Cmdlet'
+        
+                }
             }
-        }
+
         else {
-            $IndividualItemResult = $false
-        }
-        $NestedObjectArray += [PSCustomObject]@{
+            $NestedObjectArray += [PSCustomObject]@{
             FriendlyName = 'Secure OS Drive encryption'            
-            Compliant    = $IndividualItemResult
-            Value        = $IndividualItemResult           
+            Compliant    = $false
+            Value        = $false    
             Name         = 'Secure OS Drive encryption'
             Category     = $CatName
             Method       = 'Cmdlet'
-        }
+            }
+        }        
 
         #region Non-OS-Drive-BitLocker-Drives-Encryption-Verification                
         # Get the list of non OS volumes
@@ -618,7 +641,7 @@ function Confirm-SystemCompliance {
                 # If status is unknown, that means the non-OS volume is encrypted and locked, if it's on then it's on
                 if ((Get-BitLockerVolume -MountPoint $MountPoint).ProtectionStatus -in 'on', 'Unknown') {  
 
-                    # Check 1: if Recovery Password and Auto Unlock key protectors are available on the drive
+                    # Check 1: if Recovery Password or Auto Unlock key protectors are available on the drive
                     [System.Object[]]$KeyProtectors = (Get-BitLockerVolume -MountPoint $MountPoint).KeyProtector.keyprotectortype 
                     if (($KeyProtectors -contains 'RecoveryPassword') -or ($KeyProtectors -contains 'Password')) {
                                                                         

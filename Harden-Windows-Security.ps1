@@ -1970,6 +1970,26 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                     }                    
                 }
 
+                powershell.exe {
+
+                    # Uninstall Steps Recorder
+                    Write-Host "`nUninstalling Steps Recorder" -ForegroundColor Yellow
+                    if ((Get-WindowsCapability -Online | Where-Object { $_.Name -like '*App.StepsRecorder*' }).state -ne 'NotPresent') {
+                        try {                            
+                            Get-WindowsCapability -Online | Where-Object { $_.Name -like '*App.StepsRecorder*' } | Remove-WindowsCapability -Online -ErrorAction Stop
+                            # Shows the successful message only if removal process was successful
+                            Write-Host 'Steps Recorder has been uninstalled.' -ForegroundColor Green
+                        }
+                        catch {
+                            # show error
+                            $_
+                        }
+                    }
+                    else {
+                        Write-Host 'Steps Recorder is already uninstalled.' -ForegroundColor Green
+                    }                    
+                }
+
             } 'No' { break }
             'Exit' { &$CleanUp }
         }    

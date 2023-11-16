@@ -934,8 +934,9 @@ function Confirm-SystemCompliance {
             [string]$LegacyNotepad = (Get-WindowsCapability -Online | Where-Object { $_.Name -like '*Microsoft.Windows.Notepad.System*' }).state
             [string]$LegacyWordPad = (Get-WindowsCapability -Online | Where-Object { $_.Name -like '*Microsoft.Windows.WordPad*' }).state
             [string]$PowerShellISE = (Get-WindowsCapability -Online | Where-Object { $_.Name -like '*Microsoft.Windows.PowerShell.ISE*' }).state
+            [string]$StepsRecorder = (Get-WindowsCapability -Online | Where-Object { $_.Name -like '*App.StepsRecorder*' }).state
             # returning the output of the script block as an array
-            Return $PowerShell1, $PowerShell2, $WorkFoldersClient, $InternetPrintingClient, $WindowsMediaPlayer, $MDAG, $WindowsSandbox, $HyperV, $VMPlatform, $WMIC, $IEMode, $LegacyNotepad, $LegacyWordPad, $PowerShellISE
+            Return $PowerShell1, $PowerShell2, $WorkFoldersClient, $InternetPrintingClient, $WindowsMediaPlayer, $MDAG, $WindowsSandbox, $HyperV, $VMPlatform, $WMIC, $IEMode, $LegacyNotepad, $LegacyWordPad, $PowerShellISE, $StepsRecorder
         }
         # Verify PowerShell v2 is disabled
         $NestedObjectArray += [PSCustomObject]@{
@@ -1063,6 +1064,16 @@ function Confirm-SystemCompliance {
             Compliant    = [bool]($Results[13] -eq 'NotPresent')
             Value        = [string]$Results[13]  
             Name         = 'PowerShell ISE is not present'                   
+            Category     = $CatName
+            Method       = 'Optional Windows Features'
+        }
+
+        # Verify Steps Recorder is not present        
+        $NestedObjectArray += [PSCustomObject]@{
+            FriendlyName = 'Steps Recorder is not present'           
+            Compliant    = [bool]($Results[14] -eq 'NotPresent')
+            Value        = [string]$Results[14]  
+            Name         = 'Steps Recorder is not present'                   
             Category     = $CatName
             Method       = 'Optional Windows Features'
         }

@@ -244,7 +244,7 @@ Function Write-SmartText {
     param (
         [Parameter(Mandatory = $True)]
         [Alias('C')]
-        [ValidateSet('Fuchsia', 'Orange', 'NeonGreen', 'MintGreen', 'PinkBoldBlink', 'PinkBold', 'Rainbow' , 'Gold')]
+        [ValidateSet('Fuchsia', 'Orange', 'NeonGreen', 'MintGreen', 'PinkBoldBlink', 'PinkBold', 'Rainbow' , 'Gold', 'TeaGreenNoNewLine', 'LavenderNoNewLine', 'PinkNoNewLine', 'VioletNoNewLine', 'Violet', 'Pink')]
         [System.String]$CustomColor,
 
         [Parameter(Mandatory = $True)]
@@ -279,7 +279,13 @@ Function Write-SmartText {
                 'MintGreen' { Write-Host "$($PSStyle.Foreground.FromRGB(152,255,152))$InputText$($PSStyle.Reset)"; break }
                 'PinkBoldBlink' { Write-Host "$($PSStyle.Foreground.FromRgb(255,192,203))$($PSStyle.Bold)$($PSStyle.Blink)$InputText$($PSStyle.Reset)"; break }
                 'PinkBold' { Write-Host "$($PSStyle.Foreground.FromRgb(255,192,203))$($PSStyle.Bold)$($PSStyle.Reverse)$InputText$($PSStyle.Reset)"; break }
-                'Gold' { Write-Host "$($PSStyle.Foreground.FromRgb(255,215,0))$($PSStyle.Bold)$($PSStyle.Reverse)$InputText$($PSStyle.Reset)"; break }
+                'Gold' { Write-Host "$($PSStyle.Foreground.FromRgb(255,215,0))$InputText$($PSStyle.Reset)"; break }
+                'VioletNoNewLine' { Write-Host "$($PSStyle.Foreground.FromRGB(153,0,255))$InputText$($PSStyle.Reset)" -NoNewline }
+                'PinkNoNewLine' { Write-Host "$($PSStyle.Foreground.FromRGB(255,0,230))$InputText$($PSStyle.Reset)" -NoNewline }
+                'Violet' { Write-Host "$($PSStyle.Foreground.FromRGB(153,0,255))$InputText$($PSStyle.Reset)" -NoNewline }
+                'Pink' { Write-Host "$($PSStyle.Foreground.FromRGB(255,0,230))$InputText$($PSStyle.Reset)" -NoNewline }
+                'LavenderNoNewLine' { Write-Host "$($PSStyle.Foreground.FromRgb(255,179,255))$InputText$($PSStyle.Reset)" -NoNewline }
+                'TeaGreenNoNewLine' { Write-Host "$($PSStyle.Foreground.FromRgb(133, 222, 119))$InputText$($PSStyle.Reset)" -NoNewline }
                 'Rainbow' {
                     $colors = @(
                         [System.Drawing.Color]::Pink,
@@ -810,7 +816,7 @@ try {
         #region Bitlocker-Settings    
         # ==========================================Bitlocker Settings=============================================================    
         $CurrentMainStep++
-        switch (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Bitlocker category ?") {
+        :BitLockerCategoryLabel switch (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Bitlocker category ?") {
             'Yes' {   
                 Write-Progress -Id 0 -Activity 'Bitlocker Settings' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
                 
@@ -889,8 +895,8 @@ try {
                 $CdDvdCheck = (Get-CimInstance -ClassName Win32_CDROMDrive -Property *).MediaLoaded
                 if ($CdDvdCheck) {
                     Write-Warning 'Remove any CD/DVD drives or mounted images/ISO from the system and run the Bitlocker category again.'
-                    # break from the current loop and continue to the next hardening category
-                    break
+                    # break from the entire BitLocker category and continue to the next category
+                    break BitLockerCategoryLabel
                 }
         
                 # check make sure Bitlocker isn't in the middle of decryption/encryption operation (on System Drive)
@@ -898,7 +904,8 @@ try {
                     $EncryptionPercentageVar = (Get-BitLockerVolume -MountPoint $env:SystemDrive).EncryptionPercentage
                     Write-Host "`nPlease wait for Bitlocker to finish encrypting or decrypting the Operation System Drive." -ForegroundColor Yellow
                     Write-Host "Drive $env:SystemDrive encryption is currently at $EncryptionPercentageVar percent." -ForegroundColor Yellow
-                    break
+                    # break from the entire BitLocker category and continue to the next category
+                    break BitLockerCategoryLabel
                 }
                 
                 # A script block that generates recovery code just like the Windows does
@@ -927,33 +934,116 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                     
 "@
                 }
-                
-                # check if Bitlocker is enabled for the system drive
-                if ((Get-BitLockerVolume -MountPoint $env:SystemDrive).ProtectionStatus -eq 'on') {
 
-                    # Get the key protectors of the OS Drive
-                    [System.Object[]]$KeyProtectorsOSDrive = (Get-BitLockerVolume -MountPoint $env:SystemDrive).KeyProtector
-                    # Get the key protector types of the OS Drive
-                    [System.String[]]$KeyProtectorTypesOSDrive = $KeyProtectorsOSDrive.keyprotectortype
+                switch (Select-Option -SubCategory -Options 'Normal: TPM + Startup PIN + Recovery Password', 'Enhanced: TPM + Startup PIN + Startup Key + Recovery Password', 'Skip encryptions altogether', 'Exit' -Message "`nPlease select your desired security level" -ExtraMessage "If you are not sure, refer to the BitLocker category in the GitHub Readme`n") {
+                    'Normal: TPM + Startup PIN + Recovery Password' {
                 
-                    # check if TPM + PIN + recovery password are being used as key protectors for the OS Drive
-                    if ($KeyProtectorTypesOSDrive -contains 'Tpmpin' -and $KeyProtectorTypesOSDrive -contains 'recoveryPassword') {
+                        # check if Bitlocker is enabled for the system drive with Normal security level
+                        if ((Get-BitLockerVolume -MountPoint $env:SystemDrive).ProtectionStatus -eq 'on') {
 
-                        Write-SmartText -C MintGreen -G Green -I 'Bitlocker is already fully and securely enabled for the OS drive'
+                            # Get the key protectors of the OS Drive
+                            [System.Object[]]$KeyProtectorsOSDrive = (Get-BitLockerVolume -MountPoint $env:SystemDrive).KeyProtector
+                            # Get the key protector types of the OS Drive
+                            [System.String[]]$KeyProtectorTypesOSDrive = $KeyProtectorsOSDrive.keyprotectortype
                 
-                        Write-SmartText -C Fuchsia -GenericColor Magenta -I 'Here is your 48-digits recovery password for the OS drive in case you were looking for it:'
-                        Write-SmartText -C Rainbow -GenericColor Yellow -I "$(($KeyProtectorsOSDrive | Where-Object { $_.keyprotectortype -eq 'RecoveryPassword' }).RecoveryPassword)"
+                            # check if TPM + PIN + recovery password are being used as key protectors for the OS Drive
+                            if ($KeyProtectorTypesOSDrive -contains 'Tpmpin' -and $KeyProtectorTypesOSDrive -contains 'recoveryPassword') {
+
+                                Write-SmartText -C MintGreen -G Green -I 'Bitlocker is already enabled for the OS drive with Normal security level.'
                 
-                    }
-                    else {
-                        # if Bitlocker is using TPM + PIN but not recovery password (for key protectors)
-                        if ($KeyProtectorTypesOSDrive -contains 'Tpmpin' -and $KeyProtectorTypesOSDrive -notcontains 'recoveryPassword') {
+                                Write-SmartText -C Fuchsia -GenericColor Magenta -I 'Here is your 48-digits recovery password for the OS drive in case you were looking for it:'
+                                Write-SmartText -C Rainbow -GenericColor Yellow -I "$(($KeyProtectorsOSDrive | Where-Object { $_.keyprotectortype -eq 'RecoveryPassword' }).RecoveryPassword)"
                 
-                            [System.String]$BitLockerMsg = "`nTPM and Startup PIN are available but the recovery password is missing, adding it now... `n" +
-                            "It will be saved in a text file in '$env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt'"
-                            Write-Host $BitLockerMsg -ForegroundColor Yellow
+                            }
+                            else {
+
+                                # If the OS Drive doesn't have recovery password key protector
+                                if ($KeyProtectorTypesOSDrive -notcontains 'recoveryPassword') {
                 
-                            # Add RecoveryPasswordProtector key protector to the OS drive
+                                    [System.String]$BitLockerMsg = "`nThe recovery password is missing, adding it now... `n" +
+                                    "It will be saved in a text file in '$env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt'"
+                                    Write-Host $BitLockerMsg -ForegroundColor Yellow
+                
+                                    # Add RecoveryPasswordProtector key protector to the OS drive
+                                    Add-BitLockerKeyProtector -MountPoint $env:SystemDrive -RecoveryPasswordProtector *> $null
+                
+                                    # Get the new key protectors of the OS Drive after adding RecoveryPasswordProtector to it
+                                    [System.Object[]]$KeyProtectorsOSDrive = (Get-BitLockerVolume -MountPoint $env:SystemDrive).KeyProtector
+                
+                                    # Backup the recovery code of the OS drive in a file
+                                    New-Item -Path "$env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt" -Value $(&$RecoveryPasswordContentGenerator $KeyProtectorsOSDrive) -ItemType File -Force | Out-Null
+                 
+                                }
+
+                                # If the OS Drive doesn't have (TPM + PIN) key protector
+                                if ($KeyProtectorTypesOSDrive -notcontains 'Tpmpin') {
+                 
+                                    Write-Host "`nTPM and Start up PIN are missing, adding them now..." -ForegroundColor Cyan
+                
+                                    do { 
+                                        [securestring]$Pin1 = $(Write-SmartText -C PinkBold -G Magenta -I "`nEnter a Pin for Bitlocker startup (between 10 to 20 characters)"; Read-Host -AsSecureString)
+                                        [securestring]$Pin2 = $(Write-SmartText -C PinkBold -G Magenta -I 'Confirm your Bitlocker Startup Pin (between 10 to 20 characters)'; Read-Host -AsSecureString)
+                
+                                        # Compare the PINs and make sure they match
+                                        [bool]$TheyMatch = Compare-SecureString $Pin1 $Pin2
+                                        # If the PINs match and they are at least 10 characters long, max 20 characters
+                                        if ( $TheyMatch -and ($Pin1.Length -in 10..20) -and ($Pin2.Length -in 10..20) ) {
+                                            [securestring]$Pin = $Pin1
+                                        }
+                                        else { Write-Host 'Please ensure that the PINs you entered match, and that they are between 10 to 20 characters.' -ForegroundColor red }
+                                    }
+                                    # Repeat this process until the entered PINs match and they are at least 10 characters long, max 20 characters 
+                                    until ( $TheyMatch -and ($Pin1.Length -in 10..20) -and ($Pin2.Length -in 10..20) )
+                 
+                                    try {
+                                        # Add TPM + PIN key protectors to the OS Drive
+                                        Add-BitLockerKeyProtector -MountPoint $env:SystemDrive -TpmAndPinProtector -Pin $Pin -ErrorAction Stop | Out-Null
+                                        Write-SmartText -C MintGreen -G Green -I "`nPINs matched, enabling TPM and startup PIN now`n"
+                                    }
+                                    catch { 
+                                        Write-Host 'These errors occured, run Bitlocker category again after meeting the requirements' -ForegroundColor Red
+                                        $_
+                                        break BitLockerCategoryLabel
+                                    }
+
+                                    # Get the key protectors of the OS Drive
+                                    [System.Object[]]$KeyProtectorsOSDrive = (Get-BitLockerVolume -MountPoint $env:SystemDrive).KeyProtector
+                 
+                                    # Backup the recovery code of the OS drive in a file just in case - This is for when the disk is automatically encrypted and using TPM + Recovery code by default
+                                    New-Item -Path "$env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt" -Value $(&$RecoveryPasswordContentGenerator $KeyProtectorsOSDrive) -ItemType File -Force | Out-Null
+                 
+                                    Write-Host "The recovery password was backed up in a text file in '$env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt'" -ForegroundColor Cyan
+                
+                                } 
+                            } 
+                        }
+
+                        # Do this if Bitlocker is not enabled for the OS drive at all
+                        else {
+                            Write-Host "`nBitlocker is not enabled for the OS Drive, activating it now..." -ForegroundColor Yellow
+                            do {
+                                [securestring]$Pin1 = $(Write-SmartText -C PinkBold -G Magenta -I 'Enter a Pin for Bitlocker startup (between 10 to 20 characters)'; Read-Host -AsSecureString)
+                                [securestring]$Pin2 = $(Write-SmartText -C PinkBold -G Magenta -I 'Confirm your Bitlocker Startup Pin (between 10 to 20 characters)'; Read-Host -AsSecureString)
+                
+                                [bool]$TheyMatch = Compare-SecureString $Pin1 $Pin2
+                
+                                if ( $TheyMatch -and ($Pin1.Length -in 10..20) -and ($Pin2.Length -in 10..20) ) {
+                                    [securestring]$Pin = $Pin1
+                                }
+                                else { Write-Host 'Please ensure that the PINs you entered match, and that they are between 10 to 20 characters.' -ForegroundColor red }
+                            }
+                            until ( $TheyMatch -and ($Pin1.Length -in 10..20) -and ($Pin2.Length -in 10..20) )
+                
+                            try {
+                                # Enable BitLocker for the OS Drive with TPM + PIN key protectors
+                                Enable-BitLocker -MountPoint $env:SystemDrive -EncryptionMethod 'XtsAes256' -Pin $Pin -TpmAndPinProtector -SkipHardwareTest -ErrorAction Stop *> $null
+                            }
+                            catch {
+                                Write-Host 'These errors occured, run Bitlocker category again after meeting the requirements' -ForegroundColor Red
+                                $_
+                                break BitLockerCategoryLabel
+                            } 
+                            # Add recovery password key protector to the OS Drive
                             Add-BitLockerKeyProtector -MountPoint $env:SystemDrive -RecoveryPasswordProtector *> $null
                 
                             # Get the new key protectors of the OS Drive after adding RecoveryPasswordProtector to it
@@ -961,25 +1051,115 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 
                             # Backup the recovery code of the OS drive in a file
                             New-Item -Path "$env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt" -Value $(&$RecoveryPasswordContentGenerator $KeyProtectorsOSDrive) -ItemType File -Force | Out-Null
-                 
-                        }
-                        # if Bitlocker is using recovery password but not TPM + PIN as key protectors for the OS Drive
-                        elseif ($KeyProtectorTypesOSDrive -notcontains 'Tpmpin' -and $KeyProtectorTypesOSDrive -contains 'recoveryPassword') {
-                 
-                            Write-Host "`nTPM and Start up PIN are missing but recovery password is in place`nAdding TPM and Start up PIN now..." -ForegroundColor Cyan
                 
+                            Resume-BitLocker -MountPoint $env:SystemDrive | Out-Null
+                
+                            Write-SmartText -C MintGreen -G Green -I "`nBitlocker is now enabled for the OS drive with Normal security level." 
+                            Write-Host "The recovery password will be saved in a text file in '$env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt'" -ForegroundColor Cyan
+                        }
+
+                    }
+                    'Enhanced: TPM + Startup PIN + Startup Key + Recovery Password' {
+              
+                        # check if Bitlocker is enabled for the system drive with Enhanced security level
+                        if ((Get-BitLockerVolume -MountPoint $env:SystemDrive).ProtectionStatus -eq 'on') {
+
                             # Get the key protectors of the OS Drive
                             [System.Object[]]$KeyProtectorsOSDrive = (Get-BitLockerVolume -MountPoint $env:SystemDrive).KeyProtector
-                 
-                            # Backup the recovery code of the OS drive in a file just in case - This is for when the disk is automatically encrypted and using TPM + Recovery code by default
-                            New-Item -Path "$env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt" -Value $(&$RecoveryPasswordContentGenerator $KeyProtectorsOSDrive) -ItemType File -Force | Out-Null
-                 
-                            Write-Host "The recovery password was backed up in a text file in '$env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt'" -ForegroundColor Cyan
+                            # Get the key protector types of the OS Drive
+                            [System.String[]]$KeyProtectorTypesOSDrive = $KeyProtectorsOSDrive.keyprotectortype
                 
+                            # check if TPM + PIN + recovery password are being used as key protectors for the OS Drive
+                            if ($KeyProtectorTypesOSDrive -contains 'TpmAndPinAndStartupKeyProtector' -and $KeyProtectorTypesOSDrive -contains 'recoveryPassword') {
+
+                                Write-SmartText -C MintGreen -G Green -I 'Bitlocker is already enabled for the OS drive with Enhanced security level.'
+                
+                                Write-SmartText -C Fuchsia -GenericColor Magenta -I 'Here is your 48-digits recovery password for the OS drive in case you were looking for it:'
+                                Write-SmartText -C Rainbow -GenericColor Yellow -I "$(($KeyProtectorsOSDrive | Where-Object { $_.keyprotectortype -eq 'RecoveryPassword' }).RecoveryPassword)"
+                
+                            }
+                            else {
+
+                                # If the OS Drive doesn't have recovery password key protector
+                                if ($KeyProtectorTypesOSDrive -notcontains 'recoveryPassword') {
+                
+                                    [System.String]$BitLockerMsg = "`nThe recovery password is missing, adding it now... `n" +
+                                    "It will be saved in a text file in '$env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt'"
+                                    Write-Host $BitLockerMsg -ForegroundColor Yellow
+                
+                                    # Add RecoveryPasswordProtector key protector to the OS drive
+                                    Add-BitLockerKeyProtector -MountPoint $env:SystemDrive -RecoveryPasswordProtector *> $null
+                
+                                    # Get the new key protectors of the OS Drive after adding RecoveryPasswordProtector to it
+                                    [System.Object[]]$KeyProtectorsOSDrive = (Get-BitLockerVolume -MountPoint $env:SystemDrive).KeyProtector
+                
+                                    # Backup the recovery code of the OS drive in a file
+                                    New-Item -Path "$env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt" -Value $(&$RecoveryPasswordContentGenerator $KeyProtectorsOSDrive) -ItemType File -Force | Out-Null
+                 
+                                }
+
+                                # If the OS Drive doesn't have (TpmAndPinAndStartupKeyProtector) key protector
+                                if ($KeyProtectorTypesOSDrive -notcontains 'TpmAndPinAndStartupKeyProtector') {
+                                    
+                                    Write-SmartText -C Violet -G Cyan -I "`nTpm And Pin And StartupKey Protector is missing from the OS Drive, adding it now`n"
+
+                                    # Check if the OS drive has TpmPinStartupKey key protector and if it does remove it
+                                    # Otherwise when trying to add TpmAndPinAndStartupKeyProtector to it there will be an error saying they both can't exist at the same time
+                                    if ($KeyProtectorTypesOSDrive -contains 'TpmPinStartupKey') {                                      
+
+                                        (Get-BitLockerVolume -MountPoint $env:SystemDrive).KeyProtector |
+                                        Where-Object { $_.keyprotectortype -eq 'TpmPinStartupKey' } |
+                                        ForEach-Object { Remove-BitLockerKeyProtector -MountPoint $env:SystemDrive -KeyProtectorId $_.KeyProtectorId | Out-Null }
+                                    
+                                    }
+
+                                    do { 
+                                        [securestring]$Pin1 = $(Write-SmartText -C PinkBold -G Magenta -I "`nEnter a Pin for Bitlocker startup (between 10 to 20 characters)"; Read-Host -AsSecureString)
+                                        [securestring]$Pin2 = $(Write-SmartText -C PinkBold -G Magenta -I 'Confirm your Bitlocker Startup Pin (between 10 to 20 characters)'; Read-Host -AsSecureString)
+                
+                                        # Compare the PINs and make sure they match
+                                        [bool]$TheyMatch = Compare-SecureString $Pin1 $Pin2
+                                        # If the PINs match and they are at least 10 characters long, max 20 characters
+                                        if ( $TheyMatch -and ($Pin1.Length -in 10..20) -and ($Pin2.Length -in 10..20) ) {
+                                            [securestring]$Pin = $Pin1
+                                        }
+                                        else { Write-Host 'Please ensure that the PINs you entered match, and that they are between 10 to 20 characters.' -ForegroundColor red }
+                                    }
+                                    # Repeat this process until the entered PINs match and they are at least 10 characters long, max 20 characters 
+                                    until ( $TheyMatch -and ($Pin1.Length -in 10..20) -and ($Pin2.Length -in 10..20) )
+                 
+                                    Write-SmartText -C MintGreen -G Green -I "`nPINs matched, enabling TPM, Startup PIN and Startup Key protector now`n"
+                                    
+                                    try {
+                                        # Add TpmAndPinAndStartupKeyProtector to the OS Drive
+                                        Add-BitLockerKeyProtector -MountPoint $env:SystemDrive -TpmAndPinAndStartupKeyProtector -StartupKeyPath (Get-AvailableRemovableDrives) -Pin $Pin -ErrorAction Stop | Out-Null                                       
+                                    }
+                                    catch { 
+                                        Write-Error -Message 'There was a problem adding Startup Key to the removable drive, try ejecting and reinserting the flash drive into your device and run this category again.'
+                                        $_
+                                        break BitLockerCategoryLabel
+                                    }
+                                    
+                                    # Get the key protectors of the OS Drive
+                                    [System.Object[]]$KeyProtectorsOSDrive = (Get-BitLockerVolume -MountPoint $env:SystemDrive).KeyProtector
+                 
+                                    # Backup the recovery code of the OS drive in a file just in case - This is for when the disk is automatically encrypted and using TPM + Recovery code by default
+                                    New-Item -Path "$env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt" -Value $(&$RecoveryPasswordContentGenerator $KeyProtectorsOSDrive) -ItemType File -Force | Out-Null
+                 
+                                    Write-Host "The recovery password was backed up in a text file in '$env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt'" -ForegroundColor Cyan
+                
+                                }                                
+                            } 
+                        }
+
+                        # Do this if Bitlocker is not enabled for the OS drive at all
+                        else {
+                            Write-Host "`nBitlocker is not enabled for the OS Drive, activating it now..." -ForegroundColor Yellow
+                                                    
                             do { 
                                 [securestring]$Pin1 = $(Write-SmartText -C PinkBold -G Magenta -I "`nEnter a Pin for Bitlocker startup (between 10 to 20 characters)"; Read-Host -AsSecureString)
                                 [securestring]$Pin2 = $(Write-SmartText -C PinkBold -G Magenta -I 'Confirm your Bitlocker Startup Pin (between 10 to 20 characters)'; Read-Host -AsSecureString)
-                
+        
                                 # Compare the PINs and make sure they match
                                 [bool]$TheyMatch = Compare-SecureString $Pin1 $Pin2
                                 # If the PINs match and they are at least 10 characters long, max 20 characters
@@ -990,58 +1170,36 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                             }
                             # Repeat this process until the entered PINs match and they are at least 10 characters long, max 20 characters 
                             until ( $TheyMatch -and ($Pin1.Length -in 10..20) -and ($Pin2.Length -in 10..20) )
-                 
+         
+                            Write-SmartText -C MintGreen -G Green -I "`nPINs matched, enabling TPM, Startup PIN and Startup Key protector now`n"
+                            
                             try {
-                                # Add TPM + PIN key protectors to the OS Drive
-                                Add-BitLockerKeyProtector -MountPoint $env:SystemDrive -TpmAndPinProtector -Pin $Pin -ErrorAction Stop | Out-Null
-                                Write-SmartText -C MintGreen -G Green -I "`nPINs matched, enabling TPM and startup PIN now"
+                                # Add TpmAndPinAndStartupKeyProtector to the OS Drive
+                                Enable-BitLocker -MountPoint $env:SystemDrive -EncryptionMethod 'XtsAes256' -TpmAndPinAndStartupKeyProtector -StartupKeyPath (Get-AvailableRemovableDrives) -Pin $Pin -SkipHardwareTest -ErrorAction Stop *> $null
                             }
                             catch { 
-                                Write-Host 'These errors occured, run Bitlocker category again after meeting the requirements' -ForegroundColor Red
+                                Write-Error -Message 'There was a problem adding Startup Key to the removable drive, try ejecting and reinserting the flash drive into your device and run this category again.'
                                 $_
-                                break
+                                break BitLockerCategoryLabel
                             }
-                        } 
-                    } 
-                }
-                # Do this if Bitlocker is not enabled for the OS drive
-                else {
-                    Write-Host "`nBitlocker is not enabled for the OS Drive, activating it now..." -ForegroundColor Yellow
-                    do {
-                        [securestring]$Pin1 = $(Write-SmartText -C PinkBold -G Magenta -I 'Enter a Pin for Bitlocker startup (between 10 to 20 characters)'; Read-Host -AsSecureString)
-                        [securestring]$Pin2 = $(Write-SmartText -C PinkBold -G Magenta -I 'Confirm your Bitlocker Startup Pin (between 10 to 20 characters)'; Read-Host -AsSecureString)
+                            
+                            # Add recovery password key protector to the OS Drive
+                            Add-BitLockerKeyProtector -MountPoint $env:SystemDrive -RecoveryPasswordProtector *> $null
                 
-                        [bool]$TheyMatch = Compare-SecureString $Pin1 $Pin2
+                            # Get the new key protectors of the OS Drive after adding RecoveryPasswordProtector to it
+                            [System.Object[]]$KeyProtectorsOSDrive = (Get-BitLockerVolume -MountPoint $env:SystemDrive).KeyProtector
                 
-                        if ( $TheyMatch -and ($Pin1.Length -in 10..20) -and ($Pin2.Length -in 10..20) ) {
-                            [securestring]$Pin = $Pin1
+                            # Backup the recovery code of the OS drive in a file
+                            New-Item -Path "$env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt" -Value $(&$RecoveryPasswordContentGenerator $KeyProtectorsOSDrive) -ItemType File -Force | Out-Null
+                
+                            Resume-BitLocker -MountPoint $env:SystemDrive | Out-Null
+                
+                            Write-SmartText -C MintGreen -G Green -I "`nBitlocker is now enabled for the OS drive with Enhanced security level." 
+                            Write-Host "The recovery password will be saved in a text file in '$env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt'" -ForegroundColor Cyan
                         }
-                        else { Write-Host 'Please ensure that the PINs you entered match, and that they are between 10 to 20 characters.' -ForegroundColor red }
                     }
-                    until ( $TheyMatch -and ($Pin1.Length -in 10..20) -and ($Pin2.Length -in 10..20) )
-                
-                    try {
-                        # Enable BitLocker for the OS Drive with TPM + PIN key protectors
-                        Enable-BitLocker -MountPoint $env:SystemDrive -EncryptionMethod 'XtsAes256' -Pin $Pin -TpmAndPinProtector -SkipHardwareTest -ErrorAction Stop *> $null
-                    }
-                    catch {
-                        Write-Host 'These errors occured, run Bitlocker category again after meeting the requirements' -ForegroundColor Red
-                        $_
-                        break
-                    } 
-                    # Add recovery password key protector to the OS Drive
-                    Add-BitLockerKeyProtector -MountPoint $env:SystemDrive -RecoveryPasswordProtector *> $null
-                
-                    # Get the new key protectors of the OS Drive after adding RecoveryPasswordProtector to it
-                    [System.Object[]]$KeyProtectorsOSDrive = (Get-BitLockerVolume -MountPoint $env:SystemDrive).KeyProtector
-                
-                    # Backup the recovery code of the OS drive in a file
-                    New-Item -Path "$env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt" -Value $(&$RecoveryPasswordContentGenerator $KeyProtectorsOSDrive) -ItemType File -Force | Out-Null
-                
-                    Resume-BitLocker -MountPoint $env:SystemDrive | Out-Null
-                
-                    Write-SmartText -C MintGreen -G Green -I "`nBitlocker is now fully and securely enabled for OS drive" 
-                    Write-Host "The recovery password will be saved in a text file in '$env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt'" -ForegroundColor Cyan
+                    'Skip encryptions altogether' { break BitLockerCategoryLabel } # Exit the entire BitLocker category, only
+                    'Exit' { &$CleanUp }
                 }
 
                 # Enabling Hibernate after making sure OS drive is property encrypted for holding hibernate data
@@ -1065,7 +1223,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                         Remove-MpPreference -ControlledFolderAccessAllowedApplications 'C:\Windows\System32\powercfg.exe'
                     }
                     else {
-                        Write-Host 'Hibernate is already set to full.' -ForegroundColor Magenta
+                        Write-SmartText -C Pink -G Magenta -I "`nHibernate is already set to full.`n"
                     }
                 }
 
@@ -1137,7 +1295,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                                         ForEach-Object {
                                             # -ErrorAction SilentlyContinue makes sure no error is thrown if the drive only has 1 External key key protector
                                             # and it's being used to unlock the drive
-                                            Remove-BitLockerKeyProtector -MountPoint $MountPoint -KeyProtectorId $_ -ErrorAction SilentlyContinue
+                                            Remove-BitLockerKeyProtector -MountPoint $MountPoint -KeyProtectorId $_ -ErrorAction SilentlyContinue | Out-Null
                                         }
                 
                                         # Renew the External key of the selected Non-OS Drive
@@ -1156,7 +1314,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 
                                             # Remove all of the recovery password key protectors of the selected Non-OS Drive
                                             $RecoveryPasswordKeyProtectors | ForEach-Object {
-                                                Remove-BitLockerKeyProtector -MountPoint $MountPoint -KeyProtectorId $_ 
+                                                Remove-BitLockerKeyProtector -MountPoint $MountPoint -KeyProtectorId $_ | Out-Null
                                             }
                 
                                             # Add a new Recovery Password key protector after removing all of the previous ones
@@ -1169,7 +1327,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                                             New-Item -Path "$MountPoint\Drive $($MountPoint.Remove(1)) recovery password.txt" -Value $(&$RecoveryPasswordContentGenerator $KeyProtectorsNonOS) -ItemType File -Force | Out-Null
                 
                                         }
-                                        Write-SmartText -C MintGreen -G Green -I "`nBitlocker is already fully and securely enabled for drive $MountPoint"
+                                        Write-SmartText -C MintGreen -G Green -I "`nBitlocker is already securely enabled for drive $MountPoint"
 
                                         # Get the new key protectors of the Non-OS Drive after adding RecoveryPasswordProtector to it
                                         # Just to simply display it on the console for the user
@@ -1190,7 +1348,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                                         ForEach-Object {
                                             # -ErrorAction SilentlyContinue makes sure no error is thrown if the drive only has 1 External key key protector
                                             # and it's being used to unlock the drive
-                                            Remove-BitLockerKeyProtector -MountPoint $MountPoint -KeyProtectorId $_ -ErrorAction SilentlyContinue
+                                            Remove-BitLockerKeyProtector -MountPoint $MountPoint -KeyProtectorId $_ -ErrorAction SilentlyContinue | Out-Null
                                         }
                 
                                         # Renew the External key of the selected Non-OS Drive
@@ -1229,7 +1387,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 
                                             # Delete all Recovery Passwords because there were more than 1
                                             $RecoveryPasswordKeyProtectors | ForEach-Object {
-                                                Remove-BitLockerKeyProtector -MountPoint $MountPoint -KeyProtectorId $_ 
+                                                Remove-BitLockerKeyProtector -MountPoint $MountPoint -KeyProtectorId $_ | Out-Null
                                             }
                 
                                             # Add a new Recovery Password

@@ -1199,7 +1199,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                             [System.String[]]$KeyProtectorTypesOSDrive = $KeyProtectorsOSDrive.keyprotectortype
                 
                             # check if TPM + PIN + recovery password are being used as key protectors for the OS Drive
-                            if ($KeyProtectorTypesOSDrive -contains 'TpmAndPinAndStartupKeyProtector' -and $KeyProtectorTypesOSDrive -contains 'recoveryPassword') {
+                            if ($KeyProtectorTypesOSDrive -contains 'TpmPinStartupKey' -and $KeyProtectorTypesOSDrive -contains 'recoveryPassword') {
 
                                 Write-SmartText -C MintGreen -G Green -I 'Bitlocker is already enabled for the OS drive with Enhanced security level.'
                 
@@ -1227,20 +1227,20 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                  
                                 }
 
-                                # If the OS Drive doesn't have (TpmAndPinAndStartupKeyProtector) key protector
-                                if ($KeyProtectorTypesOSDrive -notcontains 'TpmAndPinAndStartupKeyProtector') {
+                                # If the OS Drive doesn't have (TpmPinStartupKey) key protector
+                                if ($KeyProtectorTypesOSDrive -notcontains 'TpmPinStartupKey') {
                                     
                                     Write-SmartText -C Violet -G Cyan -I "`nTpm And Pin And StartupKey Protector is missing from the OS Drive, adding it now`n"
 
-                                    # Check if the OS drive has TpmPinStartupKey key protector and if it does remove it
-                                    # Otherwise when trying to add TpmAndPinAndStartupKeyProtector to it there will be an error saying they both can't exist at the same time
-                                    if ($KeyProtectorTypesOSDrive -contains 'TpmPinStartupKey') {                                      
+                                    # Check if the OS drive has ExternalKey key protector and if it does remove it
+                                    # It's the standalone Startup Key protector which isn't secure on its own for the OS Drive
+                                    if ($KeyProtectorTypesOSDrive -contains 'ExternalKey') {                                      
 
                                         (Get-BitLockerVolume -MountPoint $env:SystemDrive).KeyProtector |
-                                        Where-Object { $_.keyprotectortype -eq 'TpmPinStartupKey' } |
+                                        Where-Object { $_.keyprotectortype -eq 'ExternalKey' } |
                                         ForEach-Object { Remove-BitLockerKeyProtector -MountPoint $env:SystemDrive -KeyProtectorId $_.KeyProtectorId | Out-Null }
                                     
-                                    }
+                                    }                                    
 
                                     do { 
                                         [securestring]$Pin1 = $(Write-SmartText -C PinkBold -G Magenta -I "`nEnter a Pin for Bitlocker startup (between 10 to 20 characters)"; Read-Host -AsSecureString)

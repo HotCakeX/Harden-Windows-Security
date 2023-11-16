@@ -317,6 +317,135 @@ Function Write-SmartText {
         }
     }
 }
+
+# Function to get a removable drive to be used by BitLocker category
+function Get-AvailableRemovableDrives {   
+   
+    # Grab the list of volumes that are removable and have drive letter, display their size in GBs instead of Bytes
+    [System.Object[]]$AvailableRemovableDrives = Get-Volume | Where-Object { $_.DriveLetter -and $_.DriveType -eq 'Removable' } |
+    Sort-Object -Property DriveLetter |
+    Select-Object DriveLetter, FileSystemType, DriveType, @{Name = 'Size'; Expression = { '{0:N2}' -f ($_.Size / 1GB) + ' GB' } }
+    
+   
+    if (!$AvailableRemovableDrives) {
+        do {
+            switch (Select-Option -Options 'Check for removable flash drives again', 'Skip encryptions altogether', 'Exit' -Message "`nNo removable flash drives found. Please insert a USB flash drive") {
+                'Check for removable flash drives again' {
+                    [System.Object[]]$AvailableRemovableDrives = Get-Volume | Where-Object { $_.DriveLetter -and $_.DriveType -eq 'Removable' } |
+                    Sort-Object -Property DriveLetter |
+                    Select-Object DriveLetter, FileSystemType, DriveType, @{Name = 'Size'; Expression = { '{0:N2}' -f ($_.Size / 1GB) + ' GB' } }
+                }
+                'Skip encryptions altogether' { break BitLockerCategoryLabel }
+                'Exit' { &$CleanUp }
+            }
+        }
+        until ($AvailableRemovableDrives)
+    }
+
+    # Initialize the maximum length variables but make sure the column widths are at least as wide as their titles such as 'DriveLetter' or 'FileSystemType' etc.
+    [int]$DriveLetterLength = 10
+    [int]$FileSystemTypeLength = 13
+    [int]$DriveTypeLength = 8
+    [int]$SizeLength = 3
+    
+    # Loop through each element in the array
+    foreach ($drive in $AvailableRemovableDrives) {
+        # Compare the length of the current element with the maximum length and update if needed
+        if ($drive.DriveLetter.Length -gt $DriveLetterLength) {
+            $DriveLetterLength = $drive.DriveLetter.Length
+        }
+        if ($drive.FileSystemType.Length -gt $FileSystemTypeLength) {
+            $FileSystemTypeLength = $drive.FileSystemType.Length
+        }
+        if ($drive.DriveType.Length -gt $DriveTypeLength) {
+            $DriveTypeLength = $drive.DriveType.Length
+        }
+        if (($drive.Size | Measure-Object -Character).Characters -gt $SizeLength) {
+            # The method below is used to calculate size of the string that consists only number, but since it now has "GB" in it, it's no longer needed
+            # $SizeLength = ($drive.Size | Measure-Object -Character).Characters
+            $SizeLength = $drive.Size.Length       
+        }
+    }
+           
+    # Add 3 to each maximum length for spacing
+    $DriveLetterLength += 3
+    $FileSystemTypeLength += 3
+    $DriveTypeLength += 3
+    $SizeLength += 3
+    
+    # Creating a heading for the columns
+    # Write the index of the drive
+    Write-SmartText -C LavenderNoNewLine -G Blue -I ('{0,-4}' -f '#')
+    # Write the name of the drive
+    Write-SmartText -C TeaGreenNoNewLine -G Yellow -I ("|{0,-$DriveLetterLength}" -f 'DriveLetter')
+    # Write the File System Type of the drive
+    Write-SmartText -C PinkNoNewLine -G Magenta -I ("|{0,-$FileSystemTypeLength}" -f 'FileSystemType')
+    # Write the Drive Type of the drive
+    Write-SmartText -C VioletNoNewLine -G Green -I ("|{0,-$DriveTypeLength}" -f 'DriveType')
+    # Write the Size of the drive
+    Write-SmartText -C Gold -G Cyan ("|{0,-$SizeLength}" -f 'Size')   
+
+    # Loop through the drives and display them in a table with colors
+    for ($i = 0; $i -lt $AvailableRemovableDrives.Count; $i++) {
+        # Write the index of the drive
+        Write-SmartText -C LavenderNoNewLine -G Blue -I ('{0,-4}' -f ($i + 1))
+        # Write the name of the drive
+        Write-SmartText -C TeaGreenNoNewLine -G Yellow -I ("|{0,-$DriveLetterLength}" -f $AvailableRemovableDrives[$i].DriveLetter)
+        # Write the File System Type of the drive
+        Write-SmartText -C PinkNoNewLine -G Magenta -I ("|{0,-$FileSystemTypeLength}" -f $AvailableRemovableDrives[$i].FileSystemType)
+        # Write the Drive Type of the drive
+        Write-SmartText -C VioletNoNewLine -G Green -I ("|{0,-$DriveTypeLength}" -f $AvailableRemovableDrives[$i].DriveType)
+        # Write the Size of the drive
+        Write-SmartText -C Gold -G Cyan ("|{0,-$SizeLength}" -f $AvailableRemovableDrives[$i].Size)
+    }
+
+    # Get the max count of available network drives and add 1 to it, assign the number as exit value to break the loop when selected
+    [int]$ExitCodeRemovableDriveSelection = $AvailableRemovableDrives.Count + 1
+
+    # Write an exit option at the end of the table
+    Write-Host ('{0,-4}' -f "$ExitCodeRemovableDriveSelection") -NoNewline -ForegroundColor DarkRed
+    Write-Host '|Skip encryptions altogether' -ForegroundColor DarkRed
+
+    # A function to validate the user input
+    function Confirm-Choice {
+        param([string]$Choice)
+        # Initialize a flag to indicate if the input is valid or not
+        [bool]$IsValid = $false
+        # Initialize a variable to store the parsed integer value
+        [int]$ParsedChoice = 0
+        # Try to parse the input as an integer
+        # If the parsing succeeded, check if the input is within the range
+        if ([int]::TryParse($Choice, [ref]$ParsedChoice)) {
+            if ($ParsedChoice -in 1..$ExitCodeRemovableDriveSelection) {
+                $IsValid = $true
+                break        
+            }
+        }
+        # Return the flag value
+        return $IsValid
+    }
+    
+    # Prompt the user to enter the number of the drive they want to select, or exit value to exit, until they enter a valid input
+    do {
+        # Read the user input as a string
+        [string]$Choice = $(Write-Host "Enter the number of the drive you want to select or press $ExitCodeRemovableDriveSelection to Cancel" -ForegroundColor cyan; Read-Host)
+        
+        # Check if the input is valid using the Confirm-Choice function
+        if (-not (Confirm-Choice $Choice)) {
+            # Write an error message in red if invalid
+            Write-Host "Invalid input. Please enter a number between 1 and $ExitCodeRemovableDriveSelection." -ForegroundColor Red
+        }
+    } while (-not (Confirm-Choice $Choice)) 
+
+    # Check if the user entered the exit value to break out of the loop
+    if ($Choice -eq $ExitCodeRemovableDriveSelection) {
+        break BitLockerCategoryLabel
+    }
+    else {
+        # Get the selected drive from the array and display it
+        return ($($AvailableRemovableDrives[$Choice - 1]).DriveLetter + ':')
+    }            
+}
 #endregion functions
 
 if (Test-IsAdmin) {
@@ -1070,7 +1199,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                             [System.String[]]$KeyProtectorTypesOSDrive = $KeyProtectorsOSDrive.keyprotectortype
                 
                             # check if TPM + PIN + recovery password are being used as key protectors for the OS Drive
-                            if ($KeyProtectorTypesOSDrive -contains 'TpmAndPinAndStartupKeyProtector' -and $KeyProtectorTypesOSDrive -contains 'recoveryPassword') {
+                            if ($KeyProtectorTypesOSDrive -contains 'TpmPinStartupKey' -and $KeyProtectorTypesOSDrive -contains 'recoveryPassword') {
 
                                 Write-SmartText -C MintGreen -G Green -I 'Bitlocker is already enabled for the OS drive with Enhanced security level.'
                 
@@ -1098,20 +1227,20 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                  
                                 }
 
-                                # If the OS Drive doesn't have (TpmAndPinAndStartupKeyProtector) key protector
-                                if ($KeyProtectorTypesOSDrive -notcontains 'TpmAndPinAndStartupKeyProtector') {
+                                # If the OS Drive doesn't have (TpmPinStartupKey) key protector
+                                if ($KeyProtectorTypesOSDrive -notcontains 'TpmPinStartupKey') {
                                     
                                     Write-SmartText -C Violet -G Cyan -I "`nTpm And Pin And StartupKey Protector is missing from the OS Drive, adding it now`n"
 
-                                    # Check if the OS drive has TpmPinStartupKey key protector and if it does remove it
-                                    # Otherwise when trying to add TpmAndPinAndStartupKeyProtector to it there will be an error saying they both can't exist at the same time
-                                    if ($KeyProtectorTypesOSDrive -contains 'TpmPinStartupKey') {                                      
+                                    # Check if the OS drive has ExternalKey key protector and if it does remove it
+                                    # It's the standalone Startup Key protector which isn't secure on its own for the OS Drive
+                                    if ($KeyProtectorTypesOSDrive -contains 'ExternalKey') {                                      
 
                                         (Get-BitLockerVolume -MountPoint $env:SystemDrive).KeyProtector |
-                                        Where-Object { $_.keyprotectortype -eq 'TpmPinStartupKey' } |
+                                        Where-Object { $_.keyprotectortype -eq 'ExternalKey' } |
                                         ForEach-Object { Remove-BitLockerKeyProtector -MountPoint $env:SystemDrive -KeyProtectorId $_.KeyProtectorId | Out-Null }
                                     
-                                    }
+                                    }                                    
 
                                     do { 
                                         [securestring]$Pin1 = $(Write-SmartText -C PinkBold -G Magenta -I "`nEnter a Pin for Bitlocker startup (between 10 to 20 characters)"; Read-Host -AsSecureString)

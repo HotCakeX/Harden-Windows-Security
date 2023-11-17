@@ -1902,7 +1902,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 powershell.exe {
                 
                     # Enable Windows Sandbox
-                    Write-Host "`nEnabling Windows Sandbox" -ForegroundColor Yellow
+                    Write-Host 'Enabling Windows Sandbox' -ForegroundColor Yellow
                     if ((Get-WindowsOptionalFeature -Online -FeatureName Containers-DisposableClientVM).state -eq 'disabled') { 
                         try {
                             Enable-WindowsOptionalFeature -Online -FeatureName Containers-DisposableClientVM -All -NoRestart -ErrorAction Stop
@@ -2053,9 +2053,10 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 }
 
                 powershell.exe {
+                    # The first Write-host after PowerShell.exe script block doesn't need the extra `n because it automatically has an extra new line
 
                     # Uninstall Steps Recorder
-                    Write-Host "`nUninstalling Steps Recorder" -ForegroundColor Yellow
+                    Write-Host 'Uninstalling Steps Recorder' -ForegroundColor Yellow
                     if ((Get-WindowsCapability -Online | Where-Object { $_.Name -like '*App.StepsRecorder*' }).state -ne 'NotPresent') {
                         try {                            
                             Get-WindowsCapability -Online | Where-Object { $_.Name -like '*App.StepsRecorder*' } | Remove-WindowsCapability -Online -ErrorAction Stop

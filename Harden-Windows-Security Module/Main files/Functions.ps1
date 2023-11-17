@@ -3,45 +3,18 @@ $global:ErrorActionPreference = 'Stop'
 
 # Function to test if current session has administrator privileges
 Function Test-IsAdmin {
-    $identity = [Security.Principal.WindowsIdentity]::GetCurrent()
-    $principal = New-Object Security.Principal.WindowsPrincipal $identity
-    $principal.IsInRole([Security.Principal.WindowsBuiltinRole]::Administrator)
+    $Identity = [Security.Principal.WindowsIdentity]::GetCurrent()
+    $Principal = New-Object Security.Principal.WindowsPrincipal $Identity
+    $Principal.IsInRole([Security.Principal.WindowsBuiltinRole]::Administrator)
 }
-
-# Hiding Invoke-WebRequest progress because it creates lingering visual effect on PowerShell console for some reason
-# https://github.com/PowerShell/PowerShell/issues/14348
-
-# https://stackoverflow.com/questions/18770723/hide-progress-of-Invoke-WebRequest
-# Create an in-memory module so $ScriptBlock doesn't run in new scope
-$null = New-Module {
-    function Invoke-WithoutProgress {
-        [CmdletBinding()]
-        param (
-            [Parameter(Mandatory)][scriptblock]$ScriptBlock
-        )
-        # Save current progress preference and hide the progress
-        $prevProgressPreference = $global:ProgressPreference
-        $global:ProgressPreference = 'SilentlyContinue'
-        try {
-            # Run the script block in the scope of the caller of this module function
-            . $ScriptBlock
-        }
-        finally {
-            # Restore the original behavior
-            $global:ProgressPreference = $prevProgressPreference
-        }
-    }
-} 
 
 # Make sure the latest version of the module is installed and if not, automatically update it, clean up any old versions
 function Update-self {   
 
-    [version]$CurrentVersion = (Test-ModuleManifest "$psscriptroot\Harden-Windows-Security-Module.psd1").Version
+    [System.Version]$CurrentVersion = (Test-ModuleManifest -Path "$psscriptroot\Harden-Windows-Security-Module.psd1").Version
         
     try {
-        Invoke-WithoutProgress {             
-            [version]$global:LatestVersion = Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security%20Module/version.txt'             
-        }
+        [System.Version]$global:LatestVersion = Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security%20Module/version.txt' -ProgressAction SilentlyContinue     
     }
     catch {   
         Write-Error -Message "Couldn't verify if the latest version of the module is installed, please check your Internet connection."
@@ -114,17 +87,17 @@ if ((Get-CimInstance -ClassName Win32_OperatingSystem).OperatingSystemSKU -eq '1
 }
 
 # check if user's OS is latest version
-if (-NOT ([System.Environment]::OSVersion.Version -ge [version]'10.0.22621')) {
+if (-NOT ([System.Environment]::OSVersion.Version -ge [System.Version]'10.0.22621')) {
     Write-Error "You're not using the latest version of the Windows OS, exiting..."
     break
 }
 
 if (Test-IsAdmin) {
     # check to make sure TPM is available and enabled
-    [bool]$TPMFlag1 = (Get-Tpm).tpmpresent
-    [bool]$TPMFlag2 = (Get-Tpm).tpmenabled
+    [System.Boolean]$TPMFlag1 = (Get-Tpm).tpmpresent
+    [System.Boolean]$TPMFlag2 = (Get-Tpm).tpmenabled
     if (!$TPMFlag1 -or !$TPMFlag2) {
-        Write-Error 'TPM is not available or enabled, please go to your UEFI settings to enable it and then try again.'
+        Write-Error -Message 'TPM is not available or enabled, please go to your UEFI settings to enable it and then try again.'
         break    
     }
 }

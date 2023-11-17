@@ -604,6 +604,16 @@ function Confirm-SystemCompliance {
                 }
             }        
         }
+        else {
+            $NestedObjectArray += [PSCustomObject]@{
+                FriendlyName = 'Secure OS Drive encryption'            
+                Compliant    = $false
+                Value        = $false    
+                Name         = 'Secure OS Drive encryption'
+                Category     = $CatName
+                Method       = 'Cmdlet'
+            }
+        }
         #region Non-OS-Drive-BitLocker-Drives-Encryption-Verification                
         # Get the list of non OS volumes
         [System.Object[]]$NonOSBitLockerVolumes = Get-BitLockerVolume | Where-Object {

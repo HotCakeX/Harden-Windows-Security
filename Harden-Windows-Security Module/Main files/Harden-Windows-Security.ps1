@@ -370,13 +370,13 @@ function Get-AvailableRemovableDrives {
                     ForEach-Object {
 
                         # Prepare to create an extremely random file name
-                        [System.String]$Path = "$($_.DriveLetter + ':')\$(New-Guid).$(Get-Random -Maximum 400)"
+                        [System.String]$ExtremelyRandomPath = "$($_.DriveLetter + ':')\$(New-Guid).$(Get-Random -Maximum 400)"
 
                         try {
                             # Create a test file on the drive to make sure it's not write-protected
-                            New-Item -Path $Path -ItemType File -Value 'test' -Force -ErrorAction Stop | Out-Null
+                            New-Item -Path $ExtremelyRandomPath -ItemType File -Value 'test' -Force -ErrorAction Stop | Out-Null
                             # If the drive wasn't write-protected then delete the test file
-                            Remove-Item -Path $Path -Force
+                            Remove-Item -Path $ExtremelyRandomPath -Force
                             # Add the drive to the list only if it's writable
                             $AvailableRemovableDrives += $_
                         }

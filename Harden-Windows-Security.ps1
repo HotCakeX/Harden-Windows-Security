@@ -86,6 +86,8 @@
 
 #>
 
+[string]$CurrentExecutionPolicy = Get-ExecutionPolicy -Scope Process
+
 # Change the execution policy temporarily only for the current PowerShell session
 # Unrestricted is more secure than Bypass because if a script is code signed then tampered, you will see an error, but in bypass mode, no code sign tamper detection happens
 Set-ExecutionPolicy -ExecutionPolicy 'Unrestricted' -Scope Process -Force
@@ -2353,6 +2355,9 @@ finally {
 
     # Restore the title of the PowerShell back to what it was prior to running the script/module
     $Host.UI.RawUI.WindowTitle = $CurrentPowerShellTitle
+
+    # Set the execution policy back to what it was prior to running the script
+    Set-ExecutionPolicy -ExecutionPolicy "$CurrentExecutionPolicy" -Scope Process -Force
 
     if (Test-IsAdmin) {
         # Reverting the PowerShell executables allow listings in Controlled folder access

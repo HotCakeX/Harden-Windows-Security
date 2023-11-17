@@ -87,19 +87,26 @@
 #>
 
 # Change the execution policy temporarily only for the current PowerShell session
-Set-ExecutionPolicy Bypass -Scope Process
+# Unrestricted is more secure than Bypass because if a script is code signed then tampered, you will see an error, but in bypass mode, no code sign tamper detection happens
+Set-ExecutionPolicy -ExecutionPolicy 'Unrestricted' -Scope Process -Force
+
+# Get the current title of the PowerShell
+[string]$CurrentPowerShellTitle = $Host.UI.RawUI.WindowTitle
+
+# Change the title of the Windows Terminal for PowerShell tab
+$Host.UI.RawUI.WindowTitle = '❤️‍🔥Harden Windows Security❤️‍🔥'
 
 # Defining global script variables
 # Current script's version, the same as the version at the top in the script info section
-[datetime]$CurrentVersion = '2023.11.17'
+[System.DateTime]$CurrentVersion = '2023.11.17'
 # Minimum OS build number required for the hardening measures used in this script
-[decimal]$Requiredbuild = '22621.2428'
+[System.Decimal]$Requiredbuild = '22621.2428'
 # Fetching Temp Directory
 [System.String]$global:UserTempDirectoryPath = [System.IO.Path]::GetTempPath()
 # The total number of the main categories for the parent/main progress bar to render
 [System.Int64]$TotalMainSteps = 18
 # Defining a global boolean variable to determine whether optional diagnostic data should be enabled for Smart App Control or not
-[bool]$ShouldEnableOptionalDiagnosticData = $false
+[System.Boolean]$ShouldEnableOptionalDiagnosticData = $false
 
 #region Functions
 # Questions function
@@ -107,7 +114,7 @@ function Select-Option {
     param(
         [parameter(Mandatory = $True)][System.String]$Message, # Contains the main prompt message
         [parameter(Mandatory = $True)][System.String[]]$Options,
-        [parameter(Mandatory = $false)][switch]$SubCategory,
+        [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SubCategory,
         [parameter(Mandatory = $false)][System.String]$ExtraMessage # Contains any extra notes for sub-categories
     )
 
@@ -254,68 +261,65 @@ Function Write-SmartText {
 
         [parameter(Mandatory = $True)]
         [Alias('I')]
-        [System.String]$InputText
-    )
+        [System.String]$InputText,
 
-    begin {
-        
-        # Determining if PowerShell is core to use modern styling
-        [bool]$IsCore = $false
-        if ([version]$PSVersionTable.PSVersion -ge [version]7.3) {
-            [bool]$IsCore = $True
-        }
-
-    }
-
-    process {
+        [parameter(Mandatory = $false)]
+        [Alias('N')]
+        [System.Management.Automation.SwitchParameter]$NoNewLineLegacy # Only used with Legacy colors to write them on the same line, used by the function that gets the removable drives for BitLocker Enhanced security level encryption
+    )  
      
-        # Check if the current PowerShell is Core using the global variable
-        if ($IsCore) {
+    # Determining if PowerShell edition is Core to use modern styling
+    if ($PSVersionTable.PSEdition -eq 'Core') {
 
-            switch ($CustomColor) {
-                'Fuchsia' { Write-Host "$($PSStyle.Foreground.FromRGB(236,68,155))$InputText$($PSStyle.Reset)"; break }
-                'Orange' { Write-Host "$($PSStyle.Foreground.FromRGB(255,165,0))$InputText$($PSStyle.Reset)"; break }
-                'NeonGreen' { Write-Host "$($PSStyle.Foreground.FromRGB(153,244,67))$InputText$($PSStyle.Reset)"; break }
-                'MintGreen' { Write-Host "$($PSStyle.Foreground.FromRGB(152,255,152))$InputText$($PSStyle.Reset)"; break }
-                'PinkBoldBlink' { Write-Host "$($PSStyle.Foreground.FromRgb(255,192,203))$($PSStyle.Bold)$($PSStyle.Blink)$InputText$($PSStyle.Reset)"; break }
-                'PinkBold' { Write-Host "$($PSStyle.Foreground.FromRgb(255,192,203))$($PSStyle.Bold)$($PSStyle.Reverse)$InputText$($PSStyle.Reset)"; break }
-                'Gold' { Write-Host "$($PSStyle.Foreground.FromRgb(255,215,0))$InputText$($PSStyle.Reset)"; break }
-                'VioletNoNewLine' { Write-Host "$($PSStyle.Foreground.FromRGB(153,0,255))$InputText$($PSStyle.Reset)" -NoNewline }
-                'PinkNoNewLine' { Write-Host "$($PSStyle.Foreground.FromRGB(255,0,230))$InputText$($PSStyle.Reset)" -NoNewline }
-                'Violet' { Write-Host "$($PSStyle.Foreground.FromRGB(153,0,255))$InputText$($PSStyle.Reset)" -NoNewline }
-                'Pink' { Write-Host "$($PSStyle.Foreground.FromRGB(255,0,230))$InputText$($PSStyle.Reset)" -NoNewline }
-                'LavenderNoNewLine' { Write-Host "$($PSStyle.Foreground.FromRgb(255,179,255))$InputText$($PSStyle.Reset)" -NoNewline }
-                'TeaGreenNoNewLine' { Write-Host "$($PSStyle.Foreground.FromRgb(133, 222, 119))$InputText$($PSStyle.Reset)" -NoNewline }
-                'Rainbow' {
-                    $colors = @(
-                        [System.Drawing.Color]::Pink,
-                        [System.Drawing.Color]::HotPink,
-                        [System.Drawing.Color]::SkyBlue,
-                        [System.Drawing.Color]::HotPink,
-                        [System.Drawing.Color]::SkyBlue,
-                        [System.Drawing.Color]::LightSkyBlue,      
-                        [System.Drawing.Color]::LightGreen,
-                        [System.Drawing.Color]::Coral,
-                        [System.Drawing.Color]::Plum,
-                        [System.Drawing.Color]::Gold
-                    )
+        switch ($CustomColor) {
+            'Fuchsia' { Write-Host "$($PSStyle.Foreground.FromRGB(236,68,155))$InputText$($PSStyle.Reset)"; break }
+            'Orange' { Write-Host "$($PSStyle.Foreground.FromRGB(255,165,0))$InputText$($PSStyle.Reset)"; break }
+            'NeonGreen' { Write-Host "$($PSStyle.Foreground.FromRGB(153,244,67))$InputText$($PSStyle.Reset)"; break }
+            'MintGreen' { Write-Host "$($PSStyle.Foreground.FromRGB(152,255,152))$InputText$($PSStyle.Reset)"; break }
+            'PinkBoldBlink' { Write-Host "$($PSStyle.Foreground.FromRgb(255,192,203))$($PSStyle.Bold)$($PSStyle.Blink)$InputText$($PSStyle.Reset)"; break }
+            'PinkBold' { Write-Host "$($PSStyle.Foreground.FromRgb(255,192,203))$($PSStyle.Bold)$($PSStyle.Reverse)$InputText$($PSStyle.Reset)"; break }
+            'Gold' { Write-Host "$($PSStyle.Foreground.FromRgb(255,215,0))$InputText$($PSStyle.Reset)"; break }
+            'VioletNoNewLine' { Write-Host "$($PSStyle.Foreground.FromRGB(153,0,255))$InputText$($PSStyle.Reset)" -NoNewline; break }
+            'PinkNoNewLine' { Write-Host "$($PSStyle.Foreground.FromRGB(255,0,230))$InputText$($PSStyle.Reset)" -NoNewline; break }
+            'Violet' { Write-Host "$($PSStyle.Foreground.FromRGB(153,0,255))$InputText$($PSStyle.Reset)" -NoNewline; break }
+            'Pink' { Write-Host "$($PSStyle.Foreground.FromRGB(255,0,230))$InputText$($PSStyle.Reset)" -NoNewline; break }
+            'LavenderNoNewLine' { Write-Host "$($PSStyle.Foreground.FromRgb(255,179,255))$InputText$($PSStyle.Reset)" -NoNewline; break }
+            'TeaGreenNoNewLine' { Write-Host "$($PSStyle.Foreground.FromRgb(133, 222, 119))$InputText$($PSStyle.Reset)" -NoNewline; break }
+            'Rainbow' {
+                $colors = @(
+                    [System.Drawing.Color]::Pink,
+                    [System.Drawing.Color]::HotPink,
+                    [System.Drawing.Color]::SkyBlue,
+                    [System.Drawing.Color]::HotPink,
+                    [System.Drawing.Color]::SkyBlue,
+                    [System.Drawing.Color]::LightSkyBlue,      
+                    [System.Drawing.Color]::LightGreen,
+                    [System.Drawing.Color]::Coral,
+                    [System.Drawing.Color]::Plum,
+                    [System.Drawing.Color]::Gold
+                )
   
-                    $output = ''
-                    for ($i = 0; $i -lt $InputText.Length; $i++) {
-                        $color = $colors[$i % $colors.Length]
-                        $output += "$($PSStyle.Foreground.FromRGB($color.R, $color.G, $color.B))$($PSStyle.Blink)$($InputText[$i])$($PSStyle.BlinkOff)$($PSStyle.Reset)"
-                    }
-                    Write-Output $output
-                    break
+                $output = ''
+                for ($i = 0; $i -lt $InputText.Length; $i++) {
+                    $color = $colors[$i % $colors.Length]
+                    $output += "$($PSStyle.Foreground.FromRGB($color.R, $color.G, $color.B))$($PSStyle.Blink)$($InputText[$i])$($PSStyle.BlinkOff)$($PSStyle.Reset)"
                 }
-
-                Default { Throw 'Unspecified Color' }
+                Write-Output $output
+                break
             }
+
+            Default { Throw 'Unspecified Color' }
+        }
+    }
+    else {
+        if ($NoNewLineLegacy) {
+            Write-Host $InputText -ForegroundColor $GenericColor -NoNewline
         }
         else {
             Write-Host $InputText -ForegroundColor $GenericColor
         }
     }
+    
 }
 
 # Function to get a removable drive to be used by BitLocker category
@@ -375,26 +379,26 @@ function Get-AvailableRemovableDrives {
     
     # Creating a heading for the columns
     # Write the index of the drive
-    Write-SmartText -C LavenderNoNewLine -G Blue -I ('{0,-4}' -f '#')
+    Write-SmartText -C LavenderNoNewLine -G Blue -N -I ('{0,-4}' -f '#')
     # Write the name of the drive
-    Write-SmartText -C TeaGreenNoNewLine -G Yellow -I ("|{0,-$DriveLetterLength}" -f 'DriveLetter')
+    Write-SmartText -C TeaGreenNoNewLine -G Yellow -N -I ("|{0,-$DriveLetterLength}" -f 'DriveLetter')
     # Write the File System Type of the drive
-    Write-SmartText -C PinkNoNewLine -G Magenta -I ("|{0,-$FileSystemTypeLength}" -f 'FileSystemType')
+    Write-SmartText -C PinkNoNewLine -G Magenta -N -I ("|{0,-$FileSystemTypeLength}" -f 'FileSystemType')
     # Write the Drive Type of the drive
-    Write-SmartText -C VioletNoNewLine -G Green -I ("|{0,-$DriveTypeLength}" -f 'DriveType')
+    Write-SmartText -C VioletNoNewLine -G Green -N -I ("|{0,-$DriveTypeLength}" -f 'DriveType')
     # Write the Size of the drive
     Write-SmartText -C Gold -G Cyan ("|{0,-$SizeLength}" -f 'Size')   
 
     # Loop through the drives and display them in a table with colors
     for ($i = 0; $i -lt $AvailableRemovableDrives.Count; $i++) {
         # Write the index of the drive
-        Write-SmartText -C LavenderNoNewLine -G Blue -I ('{0,-4}' -f ($i + 1))
+        Write-SmartText -C LavenderNoNewLine -N -G Blue -I ('{0,-4}' -f ($i + 1))
         # Write the name of the drive
-        Write-SmartText -C TeaGreenNoNewLine -G Yellow -I ("|{0,-$DriveLetterLength}" -f $AvailableRemovableDrives[$i].DriveLetter)
+        Write-SmartText -C TeaGreenNoNewLine -N -G Yellow -I ("|{0,-$DriveLetterLength}" -f $AvailableRemovableDrives[$i].DriveLetter)
         # Write the File System Type of the drive
-        Write-SmartText -C PinkNoNewLine -G Magenta -I ("|{0,-$FileSystemTypeLength}" -f $AvailableRemovableDrives[$i].FileSystemType)
+        Write-SmartText -C PinkNoNewLine -N -G Magenta -I ("|{0,-$FileSystemTypeLength}" -f $AvailableRemovableDrives[$i].FileSystemType)
         # Write the Drive Type of the drive
-        Write-SmartText -C VioletNoNewLine -G Green -I ("|{0,-$DriveTypeLength}" -f $AvailableRemovableDrives[$i].DriveType)
+        Write-SmartText -C VioletNoNewLine -N -G Green -I ("|{0,-$DriveTypeLength}" -f $AvailableRemovableDrives[$i].DriveType)
         # Write the Size of the drive
         Write-SmartText -C Gold -G Cyan ("|{0,-$SizeLength}" -f $AvailableRemovableDrives[$i].Size)
     }
@@ -410,7 +414,7 @@ function Get-AvailableRemovableDrives {
     function Confirm-Choice {
         param([string]$Choice)
         # Initialize a flag to indicate if the input is valid or not
-        [bool]$IsValid = $false
+        [System.Boolean]$IsValid = $false
         # Initialize a variable to store the parsed integer value
         [System.Int64]$ParsedChoice = 0
         # Try to parse the input as an integer
@@ -471,7 +475,7 @@ if (Test-IsAdmin) {
 try {
     try {
         Invoke-WithoutProgress {   
-            [datetime]$global:LatestVersion = Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Version.txt'
+            [System.DateTime]$global:LatestVersion = Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Version.txt'
         }
     }
     catch {
@@ -492,6 +496,9 @@ try {
     Write-SmartText -CustomColor Rainbow -GenericColor Cyan -InputText "############################################################################################################`r`n"
     Write-SmartText -CustomColor MintGreen -GenericColor Cyan -InputText "### Please read the Readme in the GitHub repository: https://github.com/HotCakeX/Harden-Windows-Security ###`r`n"
     Write-SmartText -CustomColor Rainbow -GenericColor Cyan -InputText "############################################################################################################`r`n"
+    
+    # Show a prompt to the user if they're using the old PowerShell
+    if ($PSVersionTable.PSEdition -eq 'Desktop') { Write-Host "You're using old PowerShell. Use the new PowerShell Core for much better styling and performance:`nhttps://apps.microsoft.com/detail/powershell/9MZ1SNWT0N5D" -ForegroundColor Yellow }
 
     #region RequirementsCheck
     # check if user's OS is Windows Home edition
@@ -502,11 +509,11 @@ try {
 
     # check if user's OS is the latest build
     # Get OS build version
-    [decimal]$OSBuild = [System.Environment]::OSVersion.Version.Build
+    [System.Decimal]$OSBuild = [System.Environment]::OSVersion.Version.Build
     # Get Update Build Revision (UBR) number
-    [decimal]$UBR = Get-ItemPropertyValue -Path 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion' -Name 'UBR'
+    [System.Decimal]$UBR = Get-ItemPropertyValue -Path 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion' -Name 'UBR'
     # Create full OS build number as seen in Windows Settings
-    [decimal]$FullOSBuild = "$OSBuild.$UBR"
+    [System.Decimal]$FullOSBuild = "$OSBuild.$UBR"
     # Make sure the current OS build is equal or greater than the required build
     if (-NOT ($FullOSBuild -ge $Requiredbuild)) {
         Write-Error "You're not using the latest build of the Windows OS. A minimum build of $Requiredbuild is required but your OS build is $FullOSBuild`nPlease go to Windows Update to install the updates and then try again."
@@ -521,8 +528,8 @@ try {
         }
 
         # check to make sure TPM is available and enabled
-        [bool]$TPMFlag1 = (Get-Tpm).tpmpresent
-        [bool]$TPMFlag2 = (Get-Tpm).tpmenabled
+        [System.Boolean]$TPMFlag1 = (Get-Tpm).tpmpresent
+        [System.Boolean]$TPMFlag2 = (Get-Tpm).tpmenabled
         if (!$TPMFlag1 -or !$TPMFlag2) {
             Write-Error 'TPM is not available or enabled, please go to your UEFI settings to enable it and then try again.'
             break    
@@ -563,7 +570,7 @@ try {
         Set-Location $HOME
         Remove-Item -Recurse -Path "$global:UserTempDirectoryPath\HardeningXStuff\" -Force
         # Disable progress bars
-        0..5 | ForEach-Object { Write-Progress -Id $_ -Activity 'Done' -Completed }
+        0..6 | ForEach-Object { Write-Progress -Id $_ -Activity 'Done' -Completed }
         exit 
     }
 
@@ -574,7 +581,8 @@ try {
         
         [System.Int64]$CurrentMainStep = 0
         Write-Progress -Id 0 -Activity 'Downloading the required files' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete 1
-            
+        # Change the title of the Windows Terminal for PowerShell tab
+        $Host.UI.RawUI.WindowTitle = 'Downloading'
         try {
                                  
             # Create an array of files to download
@@ -684,6 +692,10 @@ try {
         #region Windows-Boot-Manager-revocations-for-Secure-Boot KB5025885  
         # ============================May 9 2023 Windows Boot Manager revocations for Secure Boot =================================
         $CurrentMainStep++
+
+        # Change the title of the Windows Terminal for PowerShell tab
+        $Host.UI.RawUI.WindowTitle = '🫶 Category 0'
+                        
         switch (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nApply May 9 2023 Windows Boot Manager Security measures ? (If you've already run this category, don't need to do it again)") {
             'Yes' {                
                 Write-Progress -Id 0 -Activity 'Windows Boot Manager revocations for Secure Boot' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
@@ -701,10 +713,14 @@ try {
         #region Microsoft-Security-Baseline    
         # ================================================Microsoft Security Baseline==============================================
         $CurrentMainStep++
+        
+        # Change the title of the Windows Terminal for PowerShell tab
+        $Host.UI.RawUI.WindowTitle = 'Security Baselines'         
+        
         :MicrosoftSecurityBaselinesCategoryLabel switch (Select-Option -Options 'Yes', 'Yes, With the Optional Overrides (Recommended)' , 'No', 'Exit' -Message "`nApply Microsoft Security Baseline ?") {
             'Yes' {  
                 Write-Progress -Id 0 -Activity 'Microsoft Security Baseline' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
-                         
+                
                 # Copy LGPO.exe from its folder to Microsoft Security Baseline folder in order to get it ready to be used by PowerShell script
                 Copy-Item -Path '.\LGPO_30\LGPO.exe' -Destination "$MicrosoftSecurityBaselinePath\Scripts\Tools"
 
@@ -744,6 +760,10 @@ try {
         #region Microsoft-365-Apps-Security-Baseline
         # ================================================Microsoft 365 Apps Security Baseline==============================================
         $CurrentMainStep++
+        
+        # Change the title of the Windows Terminal for PowerShell tab
+        $Host.UI.RawUI.WindowTitle = 'M365 Apps Security'
+        
         :Microsoft365AppsSecurityBaselinesCategoryLabel switch (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nApply Microsoft 365 Apps Security Baseline ?") {
             'Yes' {    
                 Write-Progress -Id 0 -Activity 'Microsoft 365 Apps Security Baseline' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
@@ -766,6 +786,10 @@ try {
         #region Microsoft-Defender
         # ================================================Microsoft Defender=======================================================
         $CurrentMainStep++
+       
+        # Change the title of the Windows Terminal for PowerShell tab
+        $Host.UI.RawUI.WindowTitle = 'MSFT Defender'
+       
         switch (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Microsoft Defender category ?") {
             'Yes' {  
                 Write-Progress -Id 0 -Activity 'Microsoft Defender' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
@@ -847,7 +871,7 @@ try {
                 } 
 
                 # Turn on Data Execution Prevention (DEP) for all applications, including 32-bit programs
-                bcdedit.exe /set '{current}' nx AlwaysOn
+                bcdedit.exe /set '{current}' nx AlwaysOn | Out-Null
 
                 # Suggest turning on Smart App Control only if it's in Eval mode
                 if ((Get-MpComputerStatus).SmartAppControlState -eq 'Eval') {
@@ -937,6 +961,10 @@ try {
         #region Attack-Surface-Reduction-Rules    
         # =========================================Attack Surface Reduction Rules==================================================
         $CurrentMainStep++
+        
+        # Change the title of the Windows Terminal for PowerShell tab
+        $Host.UI.RawUI.WindowTitle = 'ASR Rules'
+        
         :ASRRulesCategoryLabel switch (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Attack Surface Reduction Rules category ?") {
             'Yes' {  
                 Write-Progress -Id 0 -Activity 'Attack Surface Reduction Rules' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
@@ -954,6 +982,10 @@ try {
         #region Bitlocker-Settings    
         # ==========================================Bitlocker Settings=============================================================    
         $CurrentMainStep++
+       
+        # Change the title of the Windows Terminal for PowerShell tab
+        $Host.UI.RawUI.WindowTitle = 'BitLocker'
+       
         :BitLockerCategoryLabel switch (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Bitlocker category ?") {
             'Yes' {   
                 Write-Progress -Id 0 -Activity 'Bitlocker Settings' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
@@ -1013,7 +1045,7 @@ try {
 '@
                 Add-Type -TypeDefinition $BootDMAProtectionCheck
                 # returns true or false depending on whether Kernel DMA Protection is on or off
-                [bool]$BootDMAProtection = ([SystemInfo.NativeMethods]::BootDmaCheck()) -ne 0
+                [System.Boolean]$BootDMAProtection = ([SystemInfo.NativeMethods]::BootDmaCheck()) -ne 0
 
                 # Change current working directory to the LGPO's folder
                 Set-Location "$WorkingDir\LGPO_30"
@@ -1073,7 +1105,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
 "@
                 }
 
-                switch (Select-Option -SubCategory -Options 'Normal: TPM + Startup PIN + Recovery Password', 'Enhanced: TPM + Startup PIN + Startup Key + Recovery Password', 'Skip encryptions altogether', 'Exit' -Message "`nPlease select your desired security level" -ExtraMessage "If you are not sure, refer to the BitLocker category in the GitHub Readme`n") {
+                :OSDriveEncryptionLabel switch (Select-Option -SubCategory -Options 'Normal: TPM + Startup PIN + Recovery Password', 'Enhanced: TPM + Startup PIN + Startup Key + Recovery Password', 'Skip encryptions altogether', 'Exit' -Message "`nPlease select your desired security level" -ExtraMessage "If you are not sure, refer to the BitLocker category in the GitHub Readme`n") {
                     'Normal: TPM + Startup PIN + Recovery Password' {
                 
                         # check if Bitlocker is enabled for the system drive with Normal security level
@@ -1083,6 +1115,14 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                             [System.Object[]]$KeyProtectorsOSDrive = (Get-BitLockerVolume -MountPoint $env:SystemDrive).KeyProtector
                             # Get the key protector types of the OS Drive
                             [System.String[]]$KeyProtectorTypesOSDrive = $KeyProtectorsOSDrive.keyprotectortype
+
+                            if ($KeyProtectorTypesOSDrive -contains 'TpmPinStartupKey' -and $KeyProtectorTypesOSDrive -contains 'recoveryPassword') {
+                                
+                                switch (Select-Option -SubCategory -Options 'Yes', 'Skip OS Drive' , 'Exit' -Message "`nThe OS Drive is already encrypted with Enhanced Security level." -ExtraMessage "Are you sure you want to change it to Normal Security level?`n" ) {
+                                    'Skip OS Drive' { break OSDriveEncryptionLabel }
+                                    'Exit' { &$CleanUp }           
+                                }
+                            }
                 
                             # check if TPM + PIN + recovery password are being used as key protectors for the OS Drive
                             if ($KeyProtectorTypesOSDrive -contains 'Tpmpin' -and $KeyProtectorTypesOSDrive -contains 'recoveryPassword') {
@@ -1123,7 +1163,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                                         [securestring]$Pin2 = $(Write-SmartText -C PinkBold -G Magenta -I 'Confirm your Bitlocker Startup Pin (between 10 to 20 characters)'; Read-Host -AsSecureString)
                 
                                         # Compare the PINs and make sure they match
-                                        [bool]$TheyMatch = Compare-SecureString $Pin1 $Pin2
+                                        [System.Boolean]$TheyMatch = Compare-SecureString $Pin1 $Pin2
                                         # If the PINs match and they are at least 10 characters long, max 20 characters
                                         if ( $TheyMatch -and ($Pin1.Length -in 10..20) -and ($Pin2.Length -in 10..20) ) {
                                             [securestring]$Pin = $Pin1
@@ -1163,7 +1203,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                                 [securestring]$Pin1 = $(Write-SmartText -C PinkBold -G Magenta -I 'Enter a Pin for Bitlocker startup (between 10 to 20 characters)'; Read-Host -AsSecureString)
                                 [securestring]$Pin2 = $(Write-SmartText -C PinkBold -G Magenta -I 'Confirm your Bitlocker Startup Pin (between 10 to 20 characters)'; Read-Host -AsSecureString)
                 
-                                [bool]$TheyMatch = Compare-SecureString $Pin1 $Pin2
+                                [System.Boolean]$TheyMatch = Compare-SecureString $Pin1 $Pin2
                 
                                 if ( $TheyMatch -and ($Pin1.Length -in 10..20) -and ($Pin2.Length -in 10..20) ) {
                                     [securestring]$Pin = $Pin1
@@ -1239,7 +1279,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                                 # If the OS Drive doesn't have (TpmPinStartupKey) key protector
                                 if ($KeyProtectorTypesOSDrive -notcontains 'TpmPinStartupKey') {
                                     
-                                    Write-SmartText -C Violet -G Cyan -I "`nTpm And Pin And StartupKey Protector is missing from the OS Drive, adding it now`n"
+                                    Write-SmartText -C Violet -G Cyan -I "`nTpm And Pin And StartupKey Protector is missing from the OS Drive, adding it now"
 
                                     # Check if the OS drive has ExternalKey key protector and if it does remove it
                                     # It's the standalone Startup Key protector which isn't secure on its own for the OS Drive
@@ -1256,7 +1296,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                                         [securestring]$Pin2 = $(Write-SmartText -C PinkBold -G Magenta -I 'Confirm your Bitlocker Startup Pin (between 10 to 20 characters)'; Read-Host -AsSecureString)
                 
                                         # Compare the PINs and make sure they match
-                                        [bool]$TheyMatch = Compare-SecureString $Pin1 $Pin2
+                                        [System.Boolean]$TheyMatch = Compare-SecureString $Pin1 $Pin2
                                         # If the PINs match and they are at least 10 characters long, max 20 characters
                                         if ( $TheyMatch -and ($Pin1.Length -in 10..20) -and ($Pin2.Length -in 10..20) ) {
                                             [securestring]$Pin = $Pin1
@@ -1299,7 +1339,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                                 [securestring]$Pin2 = $(Write-SmartText -C PinkBold -G Magenta -I 'Confirm your Bitlocker Startup Pin (between 10 to 20 characters)'; Read-Host -AsSecureString)
         
                                 # Compare the PINs and make sure they match
-                                [bool]$TheyMatch = Compare-SecureString $Pin1 $Pin2
+                                [System.Boolean]$TheyMatch = Compare-SecureString $Pin1 $Pin2
                                 # If the PINs match and they are at least 10 characters long, max 20 characters
                                 if ( $TheyMatch -and ($Pin1.Length -in 10..20) -and ($Pin2.Length -in 10..20) ) {
                                     [securestring]$Pin = $Pin1
@@ -1351,14 +1391,24 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                     catch {
                         # Do nothing if the key doesn't exist
                     }
-                    if ($HiberFileType -ne 2) {            
+                    if ($HiberFileType -ne 2) {
+                        
+                        Write-Progress -Id 6 -ParentId 0 -Activity 'Hibernate' -Status 'Setting Hibernate file size to full' -PercentComplete 50
+
                         # doing this so Controlled Folder Access won't bitch about powercfg.exe
                         Add-MpPreference -ControlledFolderAccessAllowedApplications 'C:\Windows\System32\powercfg.exe'
+
                         Start-Sleep 5
+
                         # Set Hibernate mode to full
-                        powercfg /h /type full
+                        powercfg /h /type full | Out-Null
+
                         Start-Sleep 3
+
                         Remove-MpPreference -ControlledFolderAccessAllowedApplications 'C:\Windows\System32\powercfg.exe'
+                    
+                        Write-Progress -Id 6 -Activity 'Setting Hibernate file size to full' -Completed
+
                     }
                     else {
                         Write-SmartText -C Pink -G Magenta -I "`nHibernate is already set to full.`n"
@@ -1571,6 +1621,10 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
         #region TLS-Security    
         # ==============================================TLS Security=============================================================== 
         $CurrentMainStep++
+       
+        # Change the title of the Windows Terminal for PowerShell tab
+        $Host.UI.RawUI.WindowTitle = 'TLS'
+       
         switch (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun TLS Security category ?") {
             'Yes' {  
                 Write-Progress -Id 0 -Activity 'TLS Security' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
@@ -1610,6 +1664,10 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
         #region Lock-Screen    
         # ==========================================Lock Screen====================================================================
         $CurrentMainStep++
+       
+        # Change the title of the Windows Terminal for PowerShell tab
+        $Host.UI.RawUI.WindowTitle = 'Lock Screen'
+       
         switch (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Lock Screen category ?") {
             'Yes' {  
                 Write-Progress -Id 0 -Activity 'Lock Screen' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
@@ -1640,6 +1698,10 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
         #region User-Account-Control
         # ==========================================User Account Control===========================================================
         $CurrentMainStep++
+      
+        # Change the title of the Windows Terminal for PowerShell tab
+        $Host.UI.RawUI.WindowTitle = 'UAC'
+      
         switch (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun User Account Control category ?") {
             'Yes' {  
                 Write-Progress -Id 0 -Activity 'User Account Control' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
@@ -1693,6 +1755,10 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
         #region Windows-Firewall    
         # ====================================================Windows Firewall=====================================================
         $CurrentMainStep++
+        
+        # Change the title of the Windows Terminal for PowerShell tab
+        $Host.UI.RawUI.WindowTitle = '🔥 Firewall'
+        
         switch (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Windows Firewall category ?") {
             'Yes' {    
                 Write-Progress -Id 0 -Activity 'Windows Firewall' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
@@ -1714,6 +1780,10 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
         #region Optional-Windows-Features    
         # =================================================Optional Windows Features===============================================
         $CurrentMainStep++
+       
+        # Change the title of the Windows Terminal for PowerShell tab
+        $Host.UI.RawUI.WindowTitle = 'Optional Features'
+       
         switch (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Optional Windows Features category ?") {
             'Yes' {    
                 Write-Progress -Id 0 -Activity 'Optional Windows Features' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
@@ -2008,6 +2078,10 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
         #region Windows-Networking   
         # ====================================================Windows Networking===================================================
         $CurrentMainStep++
+       
+        # Change the title of the Windows Terminal for PowerShell tab
+        $Host.UI.RawUI.WindowTitle = 'Networking'
+
         switch (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Windows Networking category ?") {
             'Yes' { 
                 Write-Progress -Id 0 -Activity 'Windows Networking' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
@@ -2031,6 +2105,10 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
         #region Miscellaneous-Configurations    
         # ==============================================Miscellaneous Configurations===============================================
         $CurrentMainStep++
+       
+        # Change the title of the Windows Terminal for PowerShell tab
+        $Host.UI.RawUI.WindowTitle = 'Miscellaneous'
+
         switch (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Miscellaneous Configurations category ?") {
             'Yes' {   
                 Write-Progress -Id 0 -Activity 'Miscellaneous Configurations' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
@@ -2063,7 +2141,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 # For tracking Lock screen unlocks and locks
                 # auditpol /set /subcategory:"Other Logon/Logoff Events" /success:enable /failure:enable
                 # Using GUID
-                auditpol /set /subcategory:"{0CCE921C-69AE-11D9-BED3-505054503030}" /success:enable /failure:enable
+                auditpol /set /subcategory:"{0CCE921C-69AE-11D9-BED3-505054503030}" /success:enable /failure:enable | Out-Null
                 
                 # Query all Audits status
                 # auditpol /get /category:*
@@ -2091,6 +2169,10 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
         #region Windows-Update-Configurations    
         # ====================================================Windows Update Configurations==============================================
         $CurrentMainStep++
+       
+        # Change the title of the Windows Terminal for PowerShell tab
+        $Host.UI.RawUI.WindowTitle = 'Windows Update'
+
         switch (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nApply Windows Update Policies ?") {
             'Yes' {
                 Write-Progress -Id 0 -Activity 'Windows Update Configurations' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
@@ -2109,6 +2191,10 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
         #region Edge-Browser-Configurations
         # ====================================================Edge Browser Configurations====================================================
         $CurrentMainStep++
+        
+        # Change the title of the Windows Terminal for PowerShell tab
+        $Host.UI.RawUI.WindowTitle = 'Edge'
+
         switch (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nApply Edge Browser Configurations ?") {
             'Yes' {   
                 Write-Progress -Id 0 -Activity 'Edge Browser Configurations' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
@@ -2130,6 +2216,10 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
         #region Certificate-Checking-Commands    
         # ====================================================Certificate Checking Commands========================================
         $CurrentMainStep++
+        
+        # Change the title of the Windows Terminal for PowerShell tab
+        $Host.UI.RawUI.WindowTitle = 'Certificates'
+
         switch (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Certificate Checking category ?") {
             'Yes' {    
                 Write-Progress -Id 0 -Activity 'Certificate Checking Commands' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
@@ -2158,6 +2248,10 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
         #region Country-IP-Blocking    
         # ====================================================Country IP Blocking==================================================
         $CurrentMainStep++
+        
+        # Change the title of the Windows Terminal for PowerShell tab
+        $Host.UI.RawUI.WindowTitle = 'Country IPs'
+        
         switch (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Country IP Blocking category ?") {
             'Yes' {    
                 Write-Progress -Id 0 -Activity 'Country IP Blocking' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
@@ -2212,6 +2306,9 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
 
     #region Non-Admin-Commands
     # ====================================================Non-Admin Commands===================================================
+    # Change the title of the Windows Terminal for PowerShell tab
+    $Host.UI.RawUI.WindowTitle = 'Non-Admins'
+    
     switch (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Non-Admin category ?") {
         'Yes' {
             $CurrentMainStep = $TotalMainSteps
@@ -2252,7 +2349,10 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
 }
 finally {
     # Disable progress bars
-    0..5 | ForEach-Object { Write-Progress -Id $_ -Activity 'Done' -Completed }
+    0..6 | ForEach-Object { Write-Progress -Id $_ -Activity 'Done' -Completed }
+
+    # Restore the title of the PowerShell back to what it was prior to running the script/module
+    $Host.UI.RawUI.WindowTitle = $CurrentPowerShellTitle
 
     if (Test-IsAdmin) {
         # Reverting the PowerShell executables allow listings in Controlled folder access

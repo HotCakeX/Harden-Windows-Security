@@ -86,6 +86,7 @@
 
 #>
 
+# Get the execution policy for the current process
 [string]$CurrentExecutionPolicy = Get-ExecutionPolicy -Scope Process
 
 # Change the execution policy temporarily only for the current PowerShell session
@@ -137,14 +138,14 @@ function Select-Option {
             }
         }
 
-        for ($i = 0; $i -lt $Options.Length; $i++) {             
-            Write-SmartText -C MintGreen -G White -I "$($i+1): $($Options[$i])"
+        for ($I = 0; $I -lt $Options.Length; $I++) {             
+            Write-SmartText -C MintGreen -G White -I "$($I+1): $($Options[$I])"
         }
 
         # Make sure user only inputs a positive integer
         [System.Int64]$SelectedIndex = 0
-        $isValid = [System.Int64]::TryParse((Read-Host 'Select an option'), [ref]$SelectedIndex)
-        if ($isValid) {
+        $IsValid = [System.Int64]::TryParse((Read-Host 'Select an option'), [ref]$SelectedIndex)
+        if ($IsValid) {
             if ($SelectedIndex -gt 0 -and $SelectedIndex -le $Options.Length) { 
                 $Selected = $Options[$SelectedIndex - 1] 
             }
@@ -161,12 +162,12 @@ function Select-Option {
 
 # Function to modify registry
 function Edit-Registry {
-    param ($Path, $Key, $Value, $Type, $Action)
-    If (-NOT (Test-Path $Path)) {
+    param ([System.String]$Path, [System.String]$Key, [System.String]$Value, [System.String]$Type, [System.String]$Action)
+    If (-NOT (Test-Path -Path $Path)) {
         New-Item -Path $Path -Force | Out-Null
     }
     if ($Action -eq 'AddOrModify') {
-        New-ItemProperty -Path $Path -Name $Key -Value $Value -PropertyType $Type -Force
+        New-ItemProperty -Path $Path -Name $Key -Value $Value -PropertyType $Type -Force | Out-Null
     }
     elseif ($Action -eq 'Delete') {
         Remove-ItemProperty -Path $Path -Name $Key -Force -ErrorAction SilentlyContinue | Out-Null
@@ -226,10 +227,10 @@ function Compare-SecureString {
         if ( $Length1 -ne $Length2 ) {
             return $false
         }
-        for ( $i = 0; $i -lt $Length1; ++$i ) {
-            $b1 = [Runtime.InteropServices.Marshal]::ReadByte($Bstr1, $i)
-            $b2 = [Runtime.InteropServices.Marshal]::ReadByte($Bstr2, $i)
-            if ( $b1 -ne $b2 ) {
+        for ( $I = 0; $I -lt $Length1; ++$I ) {
+            $B1 = [Runtime.InteropServices.Marshal]::ReadByte($Bstr1, $I)
+            $B2 = [Runtime.InteropServices.Marshal]::ReadByte($Bstr2, $I)
+            if ( $B1 -ne $B2 ) {
                 return $false
             }
         }
@@ -288,7 +289,7 @@ Function Write-SmartText {
             'LavenderNoNewLine' { Write-Host "$($PSStyle.Foreground.FromRgb(255,179,255))$InputText$($PSStyle.Reset)" -NoNewline; break }
             'TeaGreenNoNewLine' { Write-Host "$($PSStyle.Foreground.FromRgb(133, 222, 119))$InputText$($PSStyle.Reset)" -NoNewline; break }
             'Rainbow' {
-                $colors = @(
+                $Colors = @(
                     [System.Drawing.Color]::Pink,
                     [System.Drawing.Color]::HotPink,
                     [System.Drawing.Color]::SkyBlue,
@@ -301,12 +302,12 @@ Function Write-SmartText {
                     [System.Drawing.Color]::Gold
                 )
   
-                $output = ''
-                for ($i = 0; $i -lt $InputText.Length; $i++) {
-                    $color = $colors[$i % $colors.Length]
-                    $output += "$($PSStyle.Foreground.FromRGB($color.R, $color.G, $color.B))$($PSStyle.Blink)$($InputText[$i])$($PSStyle.BlinkOff)$($PSStyle.Reset)"
+                $Output = ''
+                for ($I = 0; $I -lt $InputText.Length; $I++) {
+                    $Color = $Colors[$I % $Colors.Length]
+                    $Output += "$($PSStyle.Foreground.FromRGB($Color.R, $Color.G, $Color.B))$($PSStyle.Blink)$($InputText[$I])$($PSStyle.BlinkOff)$($PSStyle.Reset)"
                 }
-                Write-Output $output
+                Write-Output $Output
                 break
             }
 
@@ -392,17 +393,17 @@ function Get-AvailableRemovableDrives {
     Write-SmartText -C Gold -G Cyan ("|{0,-$SizeLength}" -f 'Size')   
 
     # Loop through the drives and display them in a table with colors
-    for ($i = 0; $i -lt $AvailableRemovableDrives.Count; $i++) {
+    for ($I = 0; $I -lt $AvailableRemovableDrives.Count; $I++) {
         # Write the index of the drive
-        Write-SmartText -C LavenderNoNewLine -N -G Blue -I ('{0,-4}' -f ($i + 1))
+        Write-SmartText -C LavenderNoNewLine -N -G Blue -I ('{0,-4}' -f ($I + 1))
         # Write the name of the drive
-        Write-SmartText -C TeaGreenNoNewLine -N -G Yellow -I ("|{0,-$DriveLetterLength}" -f $AvailableRemovableDrives[$i].DriveLetter)
+        Write-SmartText -C TeaGreenNoNewLine -N -G Yellow -I ("|{0,-$DriveLetterLength}" -f $AvailableRemovableDrives[$I].DriveLetter)
         # Write the File System Type of the drive
-        Write-SmartText -C PinkNoNewLine -N -G Magenta -I ("|{0,-$FileSystemTypeLength}" -f $AvailableRemovableDrives[$i].FileSystemType)
+        Write-SmartText -C PinkNoNewLine -N -G Magenta -I ("|{0,-$FileSystemTypeLength}" -f $AvailableRemovableDrives[$I].FileSystemType)
         # Write the Drive Type of the drive
-        Write-SmartText -C VioletNoNewLine -N -G Green -I ("|{0,-$DriveTypeLength}" -f $AvailableRemovableDrives[$i].DriveType)
+        Write-SmartText -C VioletNoNewLine -N -G Green -I ("|{0,-$DriveTypeLength}" -f $AvailableRemovableDrives[$I].DriveType)
         # Write the Size of the drive
-        Write-SmartText -C Gold -G Cyan ("|{0,-$SizeLength}" -f $AvailableRemovableDrives[$i].Size)
+        Write-SmartText -C Gold -G Cyan ("|{0,-$SizeLength}" -f $AvailableRemovableDrives[$I].Size)
     }
 
     # Get the max count of available network drives and add 1 to it, assign the number as exit value to break the loop when selected
@@ -500,7 +501,7 @@ try {
     Write-SmartText -CustomColor Rainbow -GenericColor Cyan -InputText "############################################################################################################`r`n"
     
     # Show a prompt to the user if they're using the old PowerShell
-    if ($PSVersionTable.PSEdition -eq 'Desktop') { Write-Host "You're using old PowerShell. Use the new PowerShell Core for much better styling and performance:`nhttps://apps.microsoft.com/detail/powershell/9MZ1SNWT0N5D" -ForegroundColor Yellow }
+    if ($PSVersionTable.PSEdition -eq 'Desktop') { Write-Host "You're using old PowerShell. Please use the new PowerShell Core for much better styling and performance:`nhttps://apps.microsoft.com/detail/powershell/9MZ1SNWT0N5D" -ForegroundColor Yellow }
 
     #region RequirementsCheck
     # check if user's OS is Windows Home edition
@@ -879,7 +880,7 @@ try {
                 if ((Get-MpComputerStatus).SmartAppControlState -eq 'Eval') {
                     switch (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nTurn on Smart App Control ?") {
                         'Yes' {
-                            Edit-Registry -path 'HKLM:\SYSTEM\CurrentControlSet\Control\CI\Policy' -key 'VerifiedAndReputablePolicyState' -value '1' -type 'DWORD' -Action 'AddOrModify' | Out-Null
+                            Edit-Registry -path 'HKLM:\SYSTEM\CurrentControlSet\Control\CI\Policy' -key 'VerifiedAndReputablePolicyState' -value '1' -type 'DWORD' -Action 'AddOrModify'
                             # Let the optional diagnostic data be enabled automatically
                             $ShouldEnableOptionalDiagnosticData = $True
                         } 'No' { break }
@@ -1651,7 +1652,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 [System.Object[]]$Items = Import-Csv '.\Registry.csv' -Delimiter ','
                 foreach ($Item in $Items) {
                     if ($Item.category -eq 'TLS') {
-                        Edit-Registry -path $Item.Path -key $Item.Key -value $Item.Value -type $Item.Type -Action $Item.Action | Out-Null
+                        Edit-Registry -path $Item.Path -key $Item.Key -value $Item.Value -type $Item.Type -Action $Item.Action
                     }
                 }
                 # Change current working directory to the LGPO's folder
@@ -2094,7 +2095,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 .\LGPO.exe /q /s '..\Security-Baselines-X\Windows Networking Policies\GptTmpl.inf'
 
                 # Disable LMHOSTS lookup protocol on all network adapters
-                Edit-Registry -path 'HKLM:\SYSTEM\CurrentControlSet\Services\NetBT\Parameters' -key 'EnableLMHOSTS' -value '0' -type 'DWORD' -Action 'AddOrModify' | Out-Null
+                Edit-Registry -path 'HKLM:\SYSTEM\CurrentControlSet\Services\NetBT\Parameters' -key 'EnableLMHOSTS' -value '0' -type 'DWORD' -Action 'AddOrModify'
 
                 # Set the Network Location of all connections to Public
                 Get-NetConnectionProfile | Set-NetConnectionProfile -NetworkCategory Public
@@ -2120,7 +2121,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 [System.Object[]]$Items = Import-Csv '.\Registry.csv' -Delimiter ','
                 foreach ($Item in $Items) {
                     if ($Item.category -eq 'Miscellaneous') {              
-                        Edit-Registry -path $Item.Path -key $Item.Key -value $Item.Value -type $Item.Type -Action $Item.Action | Out-Null
+                        Edit-Registry -path $Item.Path -key $Item.Key -value $Item.Value -type $Item.Type -Action $Item.Action
                     }
                 }
                 # Change current working directory to the LGPO's folder
@@ -2180,7 +2181,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 Write-Progress -Id 0 -Activity 'Windows Update Configurations' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
                       
                 # Enable restart notification for Windows update
-                Edit-Registry -path 'HKLM:\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings' -key 'RestartNotificationsAllowed2' -value '1' -type 'DWORD' -Action 'AddOrModify' | Out-Null
+                Edit-Registry -path 'HKLM:\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings' -key 'RestartNotificationsAllowed2' -value '1' -type 'DWORD' -Action 'AddOrModify'
                 # Change current working directory to the LGPO's folder
                 Set-Location "$WorkingDir\LGPO_30"
                 .\LGPO.exe /q /m '..\Security-Baselines-X\Windows Update Policies\registry.pol'
@@ -2206,7 +2207,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 [System.Object[]]$Items = Import-Csv '.\Registry.csv' -Delimiter ','
                 foreach ($Item in $Items) {
                     if ($Item.category -eq 'Edge') {
-                        Edit-Registry -path $Item.Path -key $Item.Key -value $Item.Value -type $Item.Type -Action $Item.Action | Out-Null
+                        Edit-Registry -path $Item.Path -key $Item.Key -value $Item.Value -type $Item.Type -Action $Item.Action
                     }
                 }
             } 'No' { break }
@@ -2331,7 +2332,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
             [System.Object[]]$Items = Import-Csv '.\Registry.csv' -Delimiter ','
             foreach ($Item in $Items) {
                 if ($Item.category -eq 'NonAdmin') {              
-                    Edit-Registry -path $Item.Path -key $Item.Key -value $Item.Value -type $Item.Type -Action $Item.Action | Out-Null
+                    Edit-Registry -path $Item.Path -key $Item.Key -value $Item.Value -type $Item.Type -Action $Item.Action
                 }
             }  
 

@@ -328,19 +328,71 @@ Function Write-SmartText {
 # Function to get a removable drive to be used by BitLocker category
 function Get-AvailableRemovableDrives {   
    
-    # Grab the list of volumes that are removable and have drive letter, display their size in GBs instead of Bytes
-    [System.Object[]]$AvailableRemovableDrives = Get-Volume | Where-Object { $_.DriveLetter -and $_.DriveType -eq 'Removable' } |
-    Sort-Object -Property DriveLetter |
-    Select-Object DriveLetter, FileSystemType, DriveType, @{Name = 'Size'; Expression = { '{0:N2}' -f ($_.Size / 1GB) + ' GB' } }
-    
-   
+    # An empty array of objects that holds the final removable drives list
+    [System.Object[]]$AvailableRemovableDrives = @()
+
+    Get-Volume | Where-Object { $_.DriveLetter -and $_.DriveType -eq 'Removable' } |
+    ForEach-Object {
+
+        # Prepare to create an extremely random file name
+        [System.String]$Path = "$($_.DriveLetter + ':')\$(New-Guid).$(Get-Random -Maximum 400)"
+
+        try {
+            # Create a test file on the drive to make sure it's not write-protected
+            New-Item -Path $Path -ItemType File -Value 'test' -Force -ErrorAction Stop | Out-Null
+            # If the drive wasn't write-protected then delete the test file
+            Remove-Item -Path $Path -Force
+            # Add the drive to the list only if it's writable
+            $AvailableRemovableDrives += $_
+        }
+        catch {
+            # Drive is write protected, do nothing
+        }
+
+    }
+
+    # If there is any Writable removable drives, sort and prepare them and then add them to the array
+    if ($AvailableRemovableDrives) {
+        $AvailableRemovableDrives = $AvailableRemovableDrives | Sort-Object -Property DriveLetter |
+        Select-Object DriveLetter, FileSystemType, DriveType, @{Name = 'Size'; Expression = { '{0:N2}' -f ($_.Size / 1GB) + ' GB' } }
+
+    }
+       
     if (!$AvailableRemovableDrives) {
         do {
-            switch (Select-Option -Options 'Check for removable flash drives again', 'Skip encryptions altogether', 'Exit' -Message "`nNo removable flash drives found. Please insert a USB flash drive") {
+            switch (Select-Option -Options 'Check for removable flash drives again', 'Skip encryptions altogether', 'Exit' -Message "`nNo removable writable flash drives found. Please insert a USB flash drive. If it's already attached to the system, try ejecting it and inserting it back in.") {
                 'Check for removable flash drives again' {
-                    [System.Object[]]$AvailableRemovableDrives = Get-Volume | Where-Object { $_.DriveLetter -and $_.DriveType -eq 'Removable' } |
-                    Sort-Object -Property DriveLetter |
-                    Select-Object DriveLetter, FileSystemType, DriveType, @{Name = 'Size'; Expression = { '{0:N2}' -f ($_.Size / 1GB) + ' GB' } }
+                
+                    # An empty array of objects that holds the final removable drives list
+                    [System.Object[]]$AvailableRemovableDrives = @()
+
+                    Get-Volume | Where-Object { $_.DriveLetter -and $_.DriveType -eq 'Removable' } |
+                    ForEach-Object {
+
+                        # Prepare to create an extremely random file name
+                        [System.String]$Path = "$($_.DriveLetter + ':')\$(New-Guid).$(Get-Random -Maximum 400)"
+
+                        try {
+                            # Create a test file on the drive to make sure it's not write-protected
+                            New-Item -Path $Path -ItemType File -Value 'test' -Force -ErrorAction Stop | Out-Null
+                            # If the drive wasn't write-protected then delete the test file
+                            Remove-Item -Path $Path -Force
+                            # Add the drive to the list only if it's writable
+                            $AvailableRemovableDrives += $_
+                        }
+                        catch {
+                            # Drive is write protected, do nothing
+                        }
+
+                    }
+
+                    # If there is any Writable removable drives, sort and prepare them and then add them to the array
+                    if ($AvailableRemovableDrives) {
+                        $AvailableRemovableDrives = $AvailableRemovableDrives | Sort-Object -Property DriveLetter |
+                        Select-Object DriveLetter, FileSystemType, DriveType, @{Name = 'Size'; Expression = { '{0:N2}' -f ($_.Size / 1GB) + ' GB' } }
+
+                    }
+                                   
                 }
                 'Skip encryptions altogether' { break BitLockerCategoryLabel } # Breaks from the BitLocker category and won't process Non-OS Drives
                 'Exit' { &$CleanUp }
@@ -1316,7 +1368,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                                         Add-BitLockerKeyProtector -MountPoint $env:SystemDrive -TpmAndPinAndStartupKeyProtector -StartupKeyPath (Get-AvailableRemovableDrives) -Pin $Pin -ErrorAction Stop | Out-Null                                       
                                     }
                                     catch { 
-                                        Write-Error -Message 'There was a problem adding Startup Key to the removable drive, try ejecting and reinserting the flash drive into your device and run this category again.'
+                                        Write-Host 'There was a problem adding Startup Key to the removable drive, try ejecting and reinserting the flash drive into your device and run this category again.' -ForegroundColor Red
                                         $_
                                         break BitLockerCategoryLabel
                                     }
@@ -1359,7 +1411,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                                 Enable-BitLocker -MountPoint $env:SystemDrive -EncryptionMethod 'XtsAes256' -TpmAndPinAndStartupKeyProtector -StartupKeyPath (Get-AvailableRemovableDrives) -Pin $Pin -SkipHardwareTest -ErrorAction Stop *> $null
                             }
                             catch { 
-                                Write-Error -Message 'There was a problem adding Startup Key to the removable drive, try ejecting and reinserting the flash drive into your device and run this category again.'
+                                Write-Host 'There was a problem adding Startup Key to the removable drive, try ejecting and reinserting the flash drive into your device and run this category again.' -ForegroundColor Red
                                 $_
                                 break BitLockerCategoryLabel
                             }

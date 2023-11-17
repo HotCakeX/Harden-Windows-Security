@@ -1331,7 +1331,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                     'Exit' { &$CleanUp }
                 }
 
-                # Enabling Hibernate after making sure OS drive is property encrypted for holding hibernate data
+                # Setting Hibernate file size to full after making sure OS drive is property encrypted for holding hibernate data
                 # Making sure the system is not a VM because Hibernate on VM doesn't work and VMs have other/better options than Hibernation
                 if (-NOT ((Get-MpComputerStatus).IsVirtualMachine)) {
 
@@ -1342,7 +1342,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                     catch {
                         # Do nothing if the key doesn't exist
                     }
-                    if ($HiberFileType -and $HiberFileType -ne 2) {            
+                    if ($HiberFileType -ne 2) {            
                         # doing this so Controlled Folder Access won't bitch about powercfg.exe
                         Add-MpPreference -ControlledFolderAccessAllowedApplications 'C:\Windows\System32\powercfg.exe'
                         Start-Sleep 5

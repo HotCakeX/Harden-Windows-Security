@@ -539,17 +539,16 @@ function Confirm-SystemCompliance {
         # To detect if Hibernate is enabled and set to full
         if (-NOT ($MDAVConfigCurrent.IsVirtualMachine)) {
             try {
-                $IndividualItemResult1 = $($((Get-ItemProperty 'HKLM:\SYSTEM\CurrentControlSet\Control\Power' -Name 'HibernateEnabled' -ErrorAction SilentlyContinue).hibernateEnabled) -eq 1 ? $True : $False)
-                $IndividualItemResult2 = $($((Get-ItemProperty 'HKLM:\SYSTEM\CurrentControlSet\Control\Power' -Name 'HiberFileType' -ErrorAction SilentlyContinue).HiberFileType) -eq 2 ? $True : $False)
+                $IndividualItemResult = $($((Get-ItemProperty 'HKLM:\SYSTEM\CurrentControlSet\Control\Power' -Name 'HiberFileType' -ErrorAction SilentlyContinue).HiberFileType) -eq 2 ? $True : $False)
             }
             catch {
                 # suppress the errors if any
             }
             $NestedObjectArray += [PSCustomObject]@{
-                FriendlyName = 'Hibernate is enabled and set to full'           
-                Compliant    = ($IndividualItemResult1 -and $IndividualItemResult2)
-                Value        = ($IndividualItemResult1 -and $IndividualItemResult2)          
-                Name         = 'Hibernate is enabled and set to full'
+                FriendlyName = 'Hibernate is set to full'           
+                Compliant    = [bool]($IndividualItemResult)
+                Value        = [bool]($IndividualItemResult)
+                Name         = 'Hibernate is set to full'
                 Category     = $CatName
                 Method       = 'Cmdlet'
             }

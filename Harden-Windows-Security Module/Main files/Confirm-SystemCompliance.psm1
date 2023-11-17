@@ -565,13 +565,13 @@ function Confirm-SystemCompliance {
             # Get the key protectors of the OS Drive
             [System.String[]]$KeyProtectors = (Get-BitLockerVolume -MountPoint $env:SystemDrive).KeyProtector.keyprotectortype
            
-            # Check if TPM+PIN and recovery password are being used - Normal encryption level
+            # Check if TPM+PIN and recovery password are being used - Normal Security level
             if (($KeyProtectors -contains 'Tpmpin') -and ($KeyProtectors -contains 'RecoveryPassword')) {        
             
                 $NestedObjectArray += [PSCustomObject]@{
                     FriendlyName = 'Secure OS Drive encryption'            
                     Compliant    = $True
-                    Value        = 'Normal Encryption Level'          
+                    Value        = 'Normal Security Level'          
                     Name         = 'Secure OS Drive encryption'
                     Category     = $CatName
                     Method       = 'Cmdlet'
@@ -579,13 +579,13 @@ function Confirm-SystemCompliance {
                 }
             }
             
-            # Check if TPM+PIN+StartupKey and recovery password are being used - Enhanced encryption level
+            # Check if TPM+PIN+StartupKey and recovery password are being used - Enhanced security level
             elseif (($KeyProtectors -contains 'TpmPinStartupKey') -and ($KeyProtectors -contains 'RecoveryPassword')) {        
             
                 $NestedObjectArray += [PSCustomObject]@{
                     FriendlyName = 'Secure OS Drive encryption'            
                     Compliant    = $True
-                    Value        = 'Enhanced Encryption Level'          
+                    Value        = 'Enhanced Security Level'          
                     Name         = 'Secure OS Drive encryption'
                     Category     = $CatName
                     Method       = 'Cmdlet'

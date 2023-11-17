@@ -335,7 +335,7 @@ function Get-AvailableRemovableDrives {
                     Sort-Object -Property DriveLetter |
                     Select-Object DriveLetter, FileSystemType, DriveType, @{Name = 'Size'; Expression = { '{0:N2}' -f ($_.Size / 1GB) + ' GB' } }
                 }
-                'Skip encryptions altogether' { break BitLockerCategoryLabel }
+                'Skip encryptions altogether' { break BitLockerCategoryLabel } # Breaks from the BitLocker category and won't process Non-OS Drives
                 'Exit' { &$CleanUp }
             }
         }
@@ -343,10 +343,10 @@ function Get-AvailableRemovableDrives {
     }
 
     # Initialize the maximum length variables but make sure the column widths are at least as wide as their titles such as 'DriveLetter' or 'FileSystemType' etc.
-    [int]$DriveLetterLength = 10
-    [int]$FileSystemTypeLength = 13
-    [int]$DriveTypeLength = 8
-    [int]$SizeLength = 3
+    [System.Int64]$DriveLetterLength = 10
+    [System.Int64]$FileSystemTypeLength = 13
+    [System.Int64]$DriveTypeLength = 8
+    [System.Int64]$SizeLength = 3
     
     # Loop through each element in the array
     foreach ($drive in $AvailableRemovableDrives) {
@@ -400,7 +400,7 @@ function Get-AvailableRemovableDrives {
     }
 
     # Get the max count of available network drives and add 1 to it, assign the number as exit value to break the loop when selected
-    [int]$ExitCodeRemovableDriveSelection = $AvailableRemovableDrives.Count + 1
+    [System.Int64]$ExitCodeRemovableDriveSelection = $AvailableRemovableDrives.Count + 1
 
     # Write an exit option at the end of the table
     Write-Host ('{0,-4}' -f "$ExitCodeRemovableDriveSelection") -NoNewline -ForegroundColor DarkRed
@@ -412,10 +412,10 @@ function Get-AvailableRemovableDrives {
         # Initialize a flag to indicate if the input is valid or not
         [bool]$IsValid = $false
         # Initialize a variable to store the parsed integer value
-        [int]$ParsedChoice = 0
+        [System.Int64]$ParsedChoice = 0
         # Try to parse the input as an integer
         # If the parsing succeeded, check if the input is within the range
-        if ([int]::TryParse($Choice, [ref]$ParsedChoice)) {
+        if ([System.Int64]::TryParse($Choice, [ref]$ParsedChoice)) {
             if ($ParsedChoice -in 1..$ExitCodeRemovableDriveSelection) {
                 $IsValid = $true
                 break        
@@ -554,7 +554,7 @@ try {
     # create our working directory
     New-Item -ItemType Directory -Path "$global:UserTempDirectoryPath\HardeningXStuff\" -Force | Out-Null
     # working directory assignment
-    [System.String]$WorkingDir = "$global:UserTempDirectoryPath\HardeningXStuff\"
+    [System.IO.DirectoryInfo]$WorkingDir = "$global:UserTempDirectoryPath\HardeningXStuff\"
     # change location to the new directory
     Set-Location $WorkingDir
 
@@ -701,7 +701,7 @@ try {
         #region Microsoft-Security-Baseline    
         # ================================================Microsoft Security Baseline==============================================
         $CurrentMainStep++
-        switch (Select-Option -Options 'Yes', 'Yes, With the Optional Overrides (Recommended)' , 'No', 'Exit' -Message "`nApply Microsoft Security Baseline ?") {
+        :MicrosoftSecurityBaselinesCategoryLabel switch (Select-Option -Options 'Yes', 'Yes, With the Optional Overrides (Recommended)' , 'No', 'Exit' -Message "`nApply Microsoft Security Baseline ?") {
             'Yes' {  
                 Write-Progress -Id 0 -Activity 'Microsoft Security Baseline' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
                          
@@ -735,7 +735,7 @@ try {
                 # Re-enables the XblGameSave Standby Task that gets disabled by Microsoft Security Baselines
                 SCHTASKS.EXE /Change /TN \Microsoft\XblGameSave\XblGameSaveTask /Enable            
             }
-            'No' { break }
+            'No' { break MicrosoftSecurityBaselinesCategoryLabel }
             'Exit' { &$CleanUp }
         }    
         # ==============================================End of Microsoft Security Baselines============================================   
@@ -744,7 +744,7 @@ try {
         #region Microsoft-365-Apps-Security-Baseline
         # ================================================Microsoft 365 Apps Security Baseline==============================================
         $CurrentMainStep++
-        switch (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nApply Microsoft 365 Apps Security Baseline ?") {
+        :Microsoft365AppsSecurityBaselinesCategoryLabel switch (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nApply Microsoft 365 Apps Security Baseline ?") {
             'Yes' {    
                 Write-Progress -Id 0 -Activity 'Microsoft 365 Apps Security Baseline' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
                 
@@ -757,7 +757,7 @@ try {
 
                 # Run the official PowerShell script included in the Microsoft Security Baseline file we downloaded from Microsoft servers
                 .\Baseline-LocalInstall.ps1           
-            } 'No' { break }
+            } 'No' { break Microsoft365AppsSecurityBaselinesCategoryLabel }
             'Exit' { &$CleanUp }
         }
         # ================================================End of Microsoft 365 Apps Security Baseline==============================================
@@ -888,20 +888,29 @@ try {
                 if (-NOT (($BlockListScheduledTaskState -eq 'Ready' -or $BlockListScheduledTaskState -eq 'Running'))) {
                     switch (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nCreate scheduled task for fast weekly Microsoft recommended driver block list update ?") {
                         'Yes' {
+
                             # Get the SID of the SYSTEM account. It is a well-known SID, but still querying it, going to use it to create the scheduled task
-                            $SYSTEMSID = New-Object System.Security.Principal.SecurityIdentifier([System.Security.Principal.WellKnownSidType]::LocalSystemSid, $null)
-                            # create a scheduled task that runs every 7 days     
-                            $Action = New-ScheduledTaskAction -Execute 'Powershell.exe' `
+                            [System.Security.Principal.SecurityIdentifier]$SYSTEMSID = New-Object System.Security.Principal.SecurityIdentifier([System.Security.Principal.WellKnownSidType]::LocalSystemSid, $null)
+                           
+                            # Create a scheduled task action, this defines how to download and install the latest Microsoft Recommended Driver Block Rules   
+                            [Microsoft.Management.Infrastructure.CimInstance]$Action = New-ScheduledTaskAction -Execute 'Powershell.exe' `
                                 -Argument '-NoProfile -WindowStyle Hidden -command "& {try {Invoke-WebRequest -Uri "https://aka.ms/VulnerableDriverBlockList" -OutFile VulnerableDriverBlockList.zip -ErrorAction Stop}catch{exit};Expand-Archive .\VulnerableDriverBlockList.zip -DestinationPath "VulnerableDriverBlockList" -Force;Rename-Item .\VulnerableDriverBlockList\SiPolicy_Enforced.p7b -NewName "SiPolicy.p7b" -Force;Copy-Item .\VulnerableDriverBlockList\SiPolicy.p7b -Destination "C:\Windows\System32\CodeIntegrity";citool --refresh -json;Remove-Item .\VulnerableDriverBlockList -Recurse -Force;Remove-Item .\VulnerableDriverBlockList.zip -Force;}"'    
-                            $TaskPrincipal = New-ScheduledTaskPrincipal -LogonType S4U -UserId $($SYSTEMSID.Value) -RunLevel Highest
-                            # trigger
-                            $Time = New-ScheduledTaskTrigger -Once -At (Get-Date).AddHours(1) -RepetitionInterval (New-TimeSpan -Days 7) 
-                            # register the task
+                            
+                            # Create a scheduled task principal and assign the SYSTEM account's SID to it so that the task will run under its context
+                            [Microsoft.Management.Infrastructure.CimInstance]$TaskPrincipal = New-ScheduledTaskPrincipal -LogonType S4U -UserId $($SYSTEMSID.Value) -RunLevel Highest
+                            
+                            # Create a trigger for the scheduled task. The task will first run one hour after its creation and from then on will run every 7 days, indefinitely
+                            [Microsoft.Management.Infrastructure.CimInstance]$Time = New-ScheduledTaskTrigger -Once -At (Get-Date).AddHours(1) -RepetitionInterval (New-TimeSpan -Days 7) 
+                            
+                            # Register the scheduled task
                             Register-ScheduledTask -Action $Action -Trigger $Time -Principal $TaskPrincipal -TaskPath 'MSFT Driver Block list update' -TaskName 'MSFT Driver Block list update' -Description 'Microsoft Recommended Driver Block List update'
-                            # define advanced settings for the task
-                            $TaskSettings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -Compatibility Win8 -StartWhenAvailable -ExecutionTimeLimit (New-TimeSpan -Minutes 3)
-                            # add advanced settings we defined to the task
+                            
+                            # Define advanced settings for the scheduled task
+                            [Microsoft.Management.Infrastructure.CimInstance]$TaskSettings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -Compatibility 'Win8' -StartWhenAvailable -ExecutionTimeLimit (New-TimeSpan -Minutes 3) -RestartCount 4 -RestartInterval (New-TimeSpan -Hours 6) -RunOnlyIfNetworkAvailable
+                            
+                            # Add the advanced settings we defined above to the scheduled task
                             Set-ScheduledTask -TaskName 'MSFT Driver Block list update' -TaskPath 'MSFT Driver Block list update' -Settings $TaskSettings 
+                        
                         } 'No' { break }
                         'Exit' { &$CleanUp }
                     }
@@ -928,7 +937,7 @@ try {
         #region Attack-Surface-Reduction-Rules    
         # =========================================Attack Surface Reduction Rules==================================================
         $CurrentMainStep++
-        switch (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Attack Surface Reduction Rules category ?") {
+        :ASRRulesCategoryLabel switch (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Attack Surface Reduction Rules category ?") {
             'Yes' {  
                 Write-Progress -Id 0 -Activity 'Attack Surface Reduction Rules' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
                                  
@@ -936,7 +945,7 @@ try {
                 Set-Location "$WorkingDir\LGPO_30"
                 
                 .\LGPO.exe /q /m '..\Security-Baselines-X\Attack Surface Reduction Rules Policies\registry.pol'
-            } 'No' { break }
+            } 'No' { break ASRRulesCategoryLabel }
             'Exit' { &$CleanUp }
         }
         # =========================================End of Attack Surface Reduction Rules===========================================

@@ -1181,27 +1181,31 @@ function Confirm-SystemCompliance {
         }            
 
         # Checking if all user accounts are part of the Hyper-V security Group 
-        # Get all the enabled user accounts
-        [System.String[]]$enabledUsers = (Get-LocalUser | Where-Object { $_.Enabled -eq 'True' }).Name | Sort-Object
+        # Get all the enabled user account SIDs
+        [System.Security.Principal.SecurityIdentifier[]]$EnabledUsers = (Get-LocalUser | Where-Object { $_.Enabled -eq 'True' }).SID
         # Get the members of the Hyper-V Administrators security group using their SID
-        [System.String[]]$groupMembers = (Get-LocalGroupMember -SID 'S-1-5-32-578').Name -replace "$($env:COMPUTERNAME)\\" | Sort-Object
+        [System.Security.Principal.SecurityIdentifier[]]$GroupMembers = (Get-LocalGroupMember -SID 'S-1-5-32-578').SID
 
-        # Set the $MatchHyperVUsers variable to $True only if all enabled user accounts are part of the Hyper-V Security group, if one of them isn't part of the group then returns false
-        [System.Object[]]$MatchHyperVUsers = @() # An array of bool values
-        for ($i = 0; $i -lt $enabledUsers.Count; $i++) {
-            $MatchHyperVUsers += ($enabledUsers[$i] -ceq $groupMembers[$i]) ? $True : $false
+        # Make sure the arrays are not empty
+        if (($null -ne $EnabledUsers) -and ($null -ne $GroupMembers)) {
+            # only outputs data if there is a difference, so when it returns $false it means both arrays are equal
+            $IndividualItemResult = [System.Boolean](-NOT (Compare-Object -ReferenceObject $EnabledUsers -DifferenceObject $GroupMembers) )
         }
-        
+        else {
+            # if either of the arrays are null or empty then return false
+            [System.Boolean]$IndividualItemResult = $false
+        }
+
         # Saving the results of the Hyper-V administrators members group to the array as an object
         $NestedObjectArray += [PSCustomObject]@{
             FriendlyName = 'All users are part of the Hyper-V Administrators group'            
-            Compliant    = [System.Boolean]($MatchHyperVUsers -notcontains $false)
-            Value        = [System.Boolean]($MatchHyperVUsers -notcontains $false)  
+            Compliant    = $IndividualItemResult
+            Value        = $IndividualItemResult
             Name         = 'All users are part of the Hyper-V Administrators group'          
             Category     = $CatName
             Method       = 'Cmdlet'
         }
-        
+
         # Process items in Registry resources.csv file with "Registry Keys" origin and add them to the $NestedObjectArray array as custom objects
         $NestedObjectArray += [PSCustomObject](Invoke-CategoryProcessing -catname $CatName -Method 'Registry Keys')
     

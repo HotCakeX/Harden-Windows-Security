@@ -1,6 +1,6 @@
 <#PSScriptInfo
 
-.VERSION 2023.11.17
+.VERSION 2023.11.18
 
 .GUID d435a293-c9ee-4217-8dc1-4ad2318a5770
 
@@ -101,7 +101,7 @@ $Host.UI.RawUI.WindowTitle = '❤️‍🔥Harden Windows Security❤️‍🔥'
 
 # Defining global script variables
 # Current script's version, the same as the version at the top in the script info section
-[System.DateTime]$CurrentVersion = '2023.11.17'
+[System.DateTime]$CurrentVersion = '2023.11.18'
 # Minimum OS build number required for the hardening measures used in this script
 [System.Decimal]$Requiredbuild = '22621.2428'
 # Fetching Temp Directory
@@ -2191,7 +2191,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 }
                    
                 # Allow all Windows users to use Hyper-V and Windows Sandbox by adding all Windows users to the "Hyper-V Administrators" security group using its SID
-                Get-LocalUser | Where-Object { $_.enabled -eq 'True' } | ForEach-Object { Add-LocalGroupMember -SID 'S-1-5-32-578' -Member $_.Name -ErrorAction SilentlyContinue }
+                Get-LocalUser | Where-Object { $_.enabled -eq 'True' } | ForEach-Object { Add-LocalGroupMember -SID 'S-1-5-32-578' -Member "$($_.SID)" -ErrorAction SilentlyContinue }
                 
                 # Makes sure auditing for the "Other Logon/Logoff Events" subcategory under the Logon/Logoff category is enabled, doesn't touch affect any other sub-category
                 # For tracking Lock screen unlocks and locks

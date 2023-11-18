@@ -560,6 +560,7 @@ function Confirm-SystemCompliance {
 
         # OS Drive encryption verifications
         # Check if BitLocker is on for the OS Drive
+        # The ProtectionStatus remains off while the drive is encrypting or decrypting
         if ((Get-BitLockerVolume -MountPoint $env:SystemDrive).ProtectionStatus -eq 'on') {                                 
            
             # Get the key protectors of the OS Drive

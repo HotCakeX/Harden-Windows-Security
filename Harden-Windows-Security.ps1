@@ -538,6 +538,7 @@ try {
         break
     }
     # Check the current hard-coded version against the latest version online
+    # the messages can technically only be seen if installing the script in standalone mode using old Windows PowerShell
     if ($CurrentVersion -lt $LatestVersion) {
         Write-Host "The currently installed script's version is $CurrentVersion while the latest version is $LatestVersion" -ForegroundColor Cyan
         Write-Host 'Please update your script using:' -ForegroundColor Yellow
@@ -558,58 +559,59 @@ try {
     #region RequirementsCheck
     # check if user's OS is Windows Home edition
     if ((Get-CimInstance -ClassName Win32_OperatingSystem).OperatingSystemSKU -eq '101') {
-        Write-Error 'Windows Home edition detected, exiting...'
+        Write-Error -Message 'Windows Home edition detected, exiting...'
         break
     }
 
     # check if user's OS is the latest build
     # Get OS build version
     [System.Decimal]$OSBuild = [System.Environment]::OSVersion.Version.Build
+
     # Get Update Build Revision (UBR) number
     [System.Decimal]$UBR = Get-ItemPropertyValue -Path 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion' -Name 'UBR'
+
     # Create full OS build number as seen in Windows Settings
     [System.Decimal]$FullOSBuild = "$OSBuild.$UBR"
+
     # Make sure the current OS build is equal or greater than the required build
     if (-NOT ($FullOSBuild -ge $Requiredbuild)) {
-        Write-Error "You're not using the latest build of the Windows OS. A minimum build of $Requiredbuild is required but your OS build is $FullOSBuild`nPlease go to Windows Update to install the updates and then try again."
+        Write-Error -Message "You're not using the latest build of the Windows OS. A minimum build of $Requiredbuild is required but your OS build is $FullOSBuild`nPlease go to Windows Update to install the updates and then try again."
         break
     }
 
     if (Test-IsAdmin) {
         # check to make sure Secure Boot is enabled
         if (-NOT (Confirm-SecureBootUEFI)) {
-            Write-Error 'Secure Boot is not enabled, please go to your UEFI settings to enable it and then try again.'
+            Write-Error -Message 'Secure Boot is not enabled, please go to your UEFI settings to enable it and then try again.'
             break    
         }
 
         # check to make sure TPM is available and enabled
-        [System.Boolean]$TPMFlag1 = (Get-Tpm).tpmpresent
-        [System.Boolean]$TPMFlag2 = (Get-Tpm).tpmenabled
-        if (!$TPMFlag1 -or !$TPMFlag2) {
-            Write-Error 'TPM is not available or enabled, please go to your UEFI settings to enable it and then try again.'
-            break    
+        [System.Object]$TPM = Get-Tpm
+        if (-not ($TPM.tpmpresent -and $TPM.tpmenabled)) {
+            Write-Error -Message 'TPM is not available or enabled, please enable it in UEFI settings and try again.'
+            break
         }
         
         if (-NOT ($MDAVConfigCurrent.AMServiceEnabled -eq $true)) {
-            Write-Error 'Microsoft Defender Anti Malware service is not enabled, please enable it and then try again.'
+            Write-Error -Message 'Microsoft Defender Anti Malware service is not enabled, please enable it and then try again.'
             break            
         } 
 
         if (-NOT ($MDAVConfigCurrent.AntispywareEnabled -eq $true)) {
-            Write-Error 'Microsoft Defender Anti Spyware is not enabled, please enable it and then try again.'
+            Write-Error -Message 'Microsoft Defender Anti Spyware is not enabled, please enable it and then try again.'
             break            
         } 
 
         if (-NOT ($MDAVConfigCurrent.AntivirusEnabled -eq $true)) {
-            Write-Error 'Microsoft Defender Anti Virus is not enabled, please enable it and then try again.'
+            Write-Error -Message 'Microsoft Defender Anti Virus is not enabled, please enable it and then try again.'
             break            
         } 
-        
+
         if ($MDAVConfigCurrent.AMRunningMode -ne 'Normal') {
-            Write-Error "Microsoft Defender is running in $($MDAVConfigCurrent.AMRunningMode) state, please remove any 3rd party AV and then try again."
+            Write-Error -Message "Microsoft Defender is running in $($MDAVConfigCurrent.AMRunningMode) state, please remove any 3rd party AV and then try again."
             break
-        }
-        
+        }        
     }
     #endregion RequirementsCheck
 
@@ -1685,18 +1687,19 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 Write-Progress -Id 0 -Activity 'TLS Security' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
                 
                 # creating these registry keys that have forward slashes in them                                
-                @( 'SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\DES 56/56', # DES 56-bit 
-                    'SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC2 40/128', # RC2 40-bit
-                    'SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC2 56/128', # RC2 56-bit
-                    'SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC2 128/128', # RC2 128-bit
-                    'SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC4 40/128', # RC4 40-bit
-                    'SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC4 56/128', # RC4 56-bit
-                    'SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC4 64/128', # RC4 64-bit
-                    'SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC4 128/128', # RC4 128-bit
-                    'SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\Triple DES 168' # 3DES 168-bit (Triple DES 168)
+                @(
+                    'DES 56/56', # DES 56-bit
+                    'RC2 40/128', # RC2 40-bit
+                    'RC2 56/128', # RC2 56-bit
+                    'RC2 128/128', # RC2 128-bit
+                    'RC4 40/128', # RC4 40-bit
+                    'RC4 56/128', # RC4 56-bit
+                    'RC4 64/128', # RC4 64-bit
+                    'RC4 128/128', # RC4 128-bit
+                    'Triple DES 168' # 3DES 168-bit (Triple DES 168)
                 ) | ForEach-Object {
-([Microsoft.Win32.RegistryKey]::OpenRemoteBaseKey([Microsoft.Win32.RegistryHive]::LocalMachine, $env:COMPUTERNAME)).CreateSubKey($_)
-                } | Out-Null
+                    [Microsoft.Win32.RegistryKey]::OpenRemoteBaseKey([Microsoft.Win32.RegistryHive]::LocalMachine, $env:COMPUTERNAME).CreateSubKey("SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\$_") | Out-Null
+                }
 
                 # TLS Registry section
                 Set-Location $WorkingDir

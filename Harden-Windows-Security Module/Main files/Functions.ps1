@@ -78,7 +78,7 @@ function Update-self {
 # Self update the module
 Update-self
 
-# Requirements Check
+#Region Requirements-Check
 
 # check if user's OS is Windows Home edition
 if ((Get-CimInstance -ClassName Win32_OperatingSystem).OperatingSystemSKU -eq '101') {
@@ -86,18 +86,32 @@ if ((Get-CimInstance -ClassName Win32_OperatingSystem).OperatingSystemSKU -eq '1
     break
 }
 
-# check if user's OS is latest version
-if (-NOT ([System.Environment]::OSVersion.Version -ge [System.Version]'10.0.22621')) {
-    Write-Error "You're not using the latest version of the Windows OS, exiting..."
+# Check if user's OS is the latest build
+# Minimum OS build number required for the hardening measures used in this script
+[System.Decimal]$Requiredbuild = '22621.2428'
+
+# Get OS build version
+[System.Decimal]$OSBuild = [System.Environment]::OSVersion.Version.Build
+
+# Get Update Build Revision (UBR) number
+[System.Decimal]$UBR = Get-ItemPropertyValue -Path 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion' -Name 'UBR'
+
+# Create full OS build number as seen in Windows Settings
+[System.Decimal]$FullOSBuild = "$OSBuild.$UBR"
+
+# Make sure the current OS build is equal or greater than the required build
+if (-NOT ($FullOSBuild -ge $Requiredbuild)) {
+    Write-Error -Message "You're not using the latest build of the Windows OS. A minimum build of $Requiredbuild is required but your OS build is $FullOSBuild`nPlease go to Windows Update to install the updates and then try again."
     break
 }
 
 if (Test-IsAdmin) {
     # check to make sure TPM is available and enabled
-    [System.Boolean]$TPMFlag1 = (Get-Tpm).tpmpresent
-    [System.Boolean]$TPMFlag2 = (Get-Tpm).tpmenabled
-    if (!$TPMFlag1 -or !$TPMFlag2) {
-        Write-Error -Message 'TPM is not available or enabled, please go to your UEFI settings to enable it and then try again.'
-        break    
+    $TPM = Get-Tpm
+    if (-not ($TPM.tpmpresent -and $TPM.tpmenabled)) {
+        Write-Error -Message 'TPM is not available or enabled, please enable it in UEFI settings and try again.'
+        break
     }
 }
+
+#Endregion Requirements-Check

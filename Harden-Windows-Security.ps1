@@ -1127,8 +1127,8 @@ try {
                 }
         
                 # check make sure Bitlocker isn't in the middle of decryption/encryption operation (on System Drive)
-                if ((Get-BitLockerVolume -MountPoint $env:SystemDrive).EncryptionPercentage -ne '100' -and (Get-BitLockerVolume -MountPoint $env:SystemDrive).EncryptionPercentage -ne '0') {
-                    $EncryptionPercentageVar = (Get-BitLockerVolume -MountPoint $env:SystemDrive).EncryptionPercentage
+                if ((Get-BitLockerVolume -ErrorAction SilentlyContinue -MountPoint $env:SystemDrive).EncryptionPercentage -ne '100' -and (Get-BitLockerVolume -ErrorAction SilentlyContinue -MountPoint $env:SystemDrive).EncryptionPercentage -ne '0') {
+                    $EncryptionPercentageVar = (Get-BitLockerVolume -ErrorAction SilentlyContinue -MountPoint $env:SystemDrive).EncryptionPercentage
                     Write-Host "`nPlease wait for Bitlocker to finish encrypting or decrypting the Operation System Drive." -ForegroundColor Yellow
                     Write-Host "Drive $env:SystemDrive encryption is currently at $EncryptionPercentageVar percent." -ForegroundColor Yellow
                     # break from the entire BitLocker category and continue to the next category
@@ -1166,10 +1166,10 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                     'Normal: TPM + Startup PIN + Recovery Password' {
                 
                         # check if Bitlocker is enabled for the system drive with Normal security level
-                        if ((Get-BitLockerVolume -MountPoint $env:SystemDrive).ProtectionStatus -eq 'on') {
+                        if ((Get-BitLockerVolume -ErrorAction SilentlyContinue -MountPoint $env:SystemDrive).ProtectionStatus -eq 'on') {
 
                             # Get the key protectors of the OS Drive
-                            [System.Object[]]$KeyProtectorsOSDrive = (Get-BitLockerVolume -MountPoint $env:SystemDrive).KeyProtector
+                            [System.Object[]]$KeyProtectorsOSDrive = (Get-BitLockerVolume -ErrorAction SilentlyContinue -MountPoint $env:SystemDrive).KeyProtector
                             # Get the key protector types of the OS Drive
                             [System.String[]]$KeyProtectorTypesOSDrive = $KeyProtectorsOSDrive.keyprotectortype
 
@@ -1203,7 +1203,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                                     Add-BitLockerKeyProtector -MountPoint $env:SystemDrive -RecoveryPasswordProtector *> $null
                 
                                     # Get the new key protectors of the OS Drive after adding RecoveryPasswordProtector to it
-                                    [System.Object[]]$KeyProtectorsOSDrive = (Get-BitLockerVolume -MountPoint $env:SystemDrive).KeyProtector
+                                    [System.Object[]]$KeyProtectorsOSDrive = (Get-BitLockerVolume -ErrorAction SilentlyContinue -MountPoint $env:SystemDrive).KeyProtector
                 
                                     # Backup the recovery code of the OS drive in a file
                                     New-Item -Path "$env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt" -Value $(&$RecoveryPasswordContentGenerator $KeyProtectorsOSDrive) -ItemType File -Force | Out-Null
@@ -1242,7 +1242,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                                     }
 
                                     # Get the key protectors of the OS Drive
-                                    [System.Object[]]$KeyProtectorsOSDrive = (Get-BitLockerVolume -MountPoint $env:SystemDrive).KeyProtector
+                                    [System.Object[]]$KeyProtectorsOSDrive = (Get-BitLockerVolume -ErrorAction SilentlyContinue -MountPoint $env:SystemDrive).KeyProtector
                  
                                     # Backup the recovery code of the OS drive in a file just in case - This is for when the disk is automatically encrypted and using TPM + Recovery code by default
                                     New-Item -Path "$env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt" -Value $(&$RecoveryPasswordContentGenerator $KeyProtectorsOSDrive) -ItemType File -Force | Out-Null
@@ -1282,7 +1282,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                             Add-BitLockerKeyProtector -MountPoint $env:SystemDrive -RecoveryPasswordProtector *> $null
                 
                             # Get the new key protectors of the OS Drive after adding RecoveryPasswordProtector to it
-                            [System.Object[]]$KeyProtectorsOSDrive = (Get-BitLockerVolume -MountPoint $env:SystemDrive).KeyProtector
+                            [System.Object[]]$KeyProtectorsOSDrive = (Get-BitLockerVolume -ErrorAction SilentlyContinue -MountPoint $env:SystemDrive).KeyProtector
                 
                             # Backup the recovery code of the OS drive in a file
                             New-Item -Path "$env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt" -Value $(&$RecoveryPasswordContentGenerator $KeyProtectorsOSDrive) -ItemType File -Force | Out-Null
@@ -1297,10 +1297,10 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                     'Enhanced: TPM + Startup PIN + Startup Key + Recovery Password' {
               
                         # check if Bitlocker is enabled for the system drive with Enhanced security level
-                        if ((Get-BitLockerVolume -MountPoint $env:SystemDrive).ProtectionStatus -eq 'on') {
+                        if ((Get-BitLockerVolume -ErrorAction SilentlyContinue -MountPoint $env:SystemDrive).ProtectionStatus -eq 'on') {
 
                             # Get the key protectors of the OS Drive
-                            [System.Object[]]$KeyProtectorsOSDrive = (Get-BitLockerVolume -MountPoint $env:SystemDrive).KeyProtector
+                            [System.Object[]]$KeyProtectorsOSDrive = (Get-BitLockerVolume -ErrorAction SilentlyContinue -MountPoint $env:SystemDrive).KeyProtector
                             # Get the key protector types of the OS Drive
                             [System.String[]]$KeyProtectorTypesOSDrive = $KeyProtectorsOSDrive.keyprotectortype
                 
@@ -1326,7 +1326,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                                     Add-BitLockerKeyProtector -MountPoint $env:SystemDrive -RecoveryPasswordProtector *> $null
                 
                                     # Get the new key protectors of the OS Drive after adding RecoveryPasswordProtector to it
-                                    [System.Object[]]$KeyProtectorsOSDrive = (Get-BitLockerVolume -MountPoint $env:SystemDrive).KeyProtector
+                                    [System.Object[]]$KeyProtectorsOSDrive = (Get-BitLockerVolume -ErrorAction SilentlyContinue -MountPoint $env:SystemDrive).KeyProtector
                 
                                     # Backup the recovery code of the OS drive in a file
                                     New-Item -Path "$env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt" -Value $(&$RecoveryPasswordContentGenerator $KeyProtectorsOSDrive) -ItemType File -Force | Out-Null
@@ -1342,7 +1342,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                                     # It's the standalone Startup Key protector which isn't secure on its own for the OS Drive
                                     if ($KeyProtectorTypesOSDrive -contains 'ExternalKey') {                                      
 
-                                        (Get-BitLockerVolume -MountPoint $env:SystemDrive).KeyProtector |
+                                        (Get-BitLockerVolume -ErrorAction SilentlyContinue -MountPoint $env:SystemDrive).KeyProtector |
                                         Where-Object { $_.keyprotectortype -eq 'ExternalKey' } |
                                         ForEach-Object { Remove-BitLockerKeyProtector -MountPoint $env:SystemDrive -KeyProtectorId $_.KeyProtectorId | Out-Null }
                                     
@@ -1376,7 +1376,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                                     }
                                     
                                     # Get the key protectors of the OS Drive
-                                    [System.Object[]]$KeyProtectorsOSDrive = (Get-BitLockerVolume -MountPoint $env:SystemDrive).KeyProtector
+                                    [System.Object[]]$KeyProtectorsOSDrive = (Get-BitLockerVolume -ErrorAction SilentlyContinue -MountPoint $env:SystemDrive).KeyProtector
                  
                                     # Backup the recovery code of the OS drive in a file just in case - This is for when the disk is automatically encrypted and using TPM + Recovery code by default
                                     New-Item -Path "$env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt" -Value $(&$RecoveryPasswordContentGenerator $KeyProtectorsOSDrive) -ItemType File -Force | Out-Null
@@ -1422,7 +1422,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                             Add-BitLockerKeyProtector -MountPoint $env:SystemDrive -RecoveryPasswordProtector *> $null
                 
                             # Get the new key protectors of the OS Drive after adding RecoveryPasswordProtector to it
-                            [System.Object[]]$KeyProtectorsOSDrive = (Get-BitLockerVolume -MountPoint $env:SystemDrive).KeyProtector
+                            [System.Object[]]$KeyProtectorsOSDrive = (Get-BitLockerVolume -ErrorAction SilentlyContinue -MountPoint $env:SystemDrive).KeyProtector
                 
                             # Backup the recovery code of the OS drive in a file
                             New-Item -Path "$env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt" -Value $(&$RecoveryPasswordContentGenerator $KeyProtectorsOSDrive) -ItemType File -Force | Out-Null
@@ -1475,8 +1475,10 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 #region Non-OS-BitLocker-Drives-Detection
                 
                 # Get the list of non OS volumes
-                [System.Object[]]$NonOSBitLockerVolumes = Get-BitLockerVolume |
-                Where-Object { ($_.volumeType -ne 'OperatingSystem') }
+                # Using -ErrorAction SilentlyContinue because after running the Microsoft Security baseline category, if there is a flash drive attached to the device, you "might" see this error: Device Id: \\?\Volume{83196d59-0000-0000-0000-107d00000000}\ does not have a corresponding volume.
+                # It only suppresses Non-terminating errors
+                [System.Object[]]$NonOSBitLockerVolumes = Get-BitLockerVolume -ErrorAction SilentlyContinue |
+                Where-Object { $_.volumeType -ne 'OperatingSystem' }
 
                 # Get all the volumes and filter out removable ones
                 [System.Object[]]$RemovableVolumes = Get-Volume |
@@ -1509,14 +1511,14 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                             'Yes' {
                 
                                 # Check if the non-OS drive that the user selected to be encrypted is not in the middle of any encryption/decryption operation
-                                if ((Get-BitLockerVolume -MountPoint $MountPoint).EncryptionPercentage -ne '100' -and (Get-BitLockerVolume -MountPoint $MountPoint).EncryptionPercentage -ne '0') {
+                                if ((Get-BitLockerVolume -ErrorAction SilentlyContinue -MountPoint $MountPoint).EncryptionPercentage -ne '100' -and (Get-BitLockerVolume -ErrorAction SilentlyContinue -MountPoint $MountPoint).EncryptionPercentage -ne '0') {
                                     # Check if the drive isn't already encrypted and locked
-                                    if ((Get-BitLockerVolume -MountPoint $MountPoint).lockstatus -eq 'Locked') {
+                                    if ((Get-BitLockerVolume -ErrorAction SilentlyContinue -MountPoint $MountPoint).lockstatus -eq 'Locked') {
                                         Write-Host "`nThe drive $MountPoint is already encrypted and locked." -ForegroundColor Magenta
                                         break
                                     }
                                     else {
-                                        $EncryptionPercentageVar = (Get-BitLockerVolume -MountPoint $MountPoint).EncryptionPercentage
+                                        $EncryptionPercentageVar = (Get-BitLockerVolume -ErrorAction SilentlyContinue -MountPoint $MountPoint).EncryptionPercentage
                                         Write-Host "`nPlease wait for Bitlocker to finish encrypting or decrypting drive $MountPoint" -ForegroundColor Magenta
                                         Write-Host "Drive $MountPoint encryption is currently at $EncryptionPercentageVar percent." -ForegroundColor Magenta
                                         break
@@ -1525,17 +1527,17 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 
                                 # Check to see if Bitlocker is already turned on for the user selected drive
                                 # if it is, perform multiple checks on its key protectors
-                                if ((Get-BitLockerVolume -MountPoint $MountPoint).ProtectionStatus -eq 'on') {
+                                if ((Get-BitLockerVolume -ErrorAction SilentlyContinue -MountPoint $MountPoint).ProtectionStatus -eq 'on') {
                 
                                     # Get the key protector types of the Non-OS Drive
-                                    [System.String[]]$KeyProtectorTypesNonOS = (Get-BitLockerVolume -MountPoint $MountPoint).KeyProtector.keyprotectortype
+                                    [System.String[]]$KeyProtectorTypesNonOS = (Get-BitLockerVolume -ErrorAction SilentlyContinue -MountPoint $MountPoint).KeyProtector.keyprotectortype
                 
                                     # If Recovery Password and Auto Unlock key protectors are available on the drive
                                     if ($KeyProtectorTypesNonOS -contains 'RecoveryPassword' -and $KeyProtectorTypesNonOS -contains 'ExternalKey') {
                 
                                         # Additional Check 1: if there are more than 1 ExternalKey key protector, try delete all of them and add a new one
                                         # The external key protector that is being used to unlock the drive will not be deleted
-                                        ((Get-BitLockerVolume -MountPoint $MountPoint).KeyProtector |
+                                        ((Get-BitLockerVolume -ErrorAction SilentlyContinue -MountPoint $MountPoint).KeyProtector |
                                         Where-Object { $_.keyprotectortype -eq 'ExternalKey' }).KeyProtectorId |
                                         ForEach-Object {
                                             # -ErrorAction SilentlyContinue makes sure no error is thrown if the drive only has 1 External key key protector
@@ -1547,7 +1549,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                                         Enable-BitLockerAutoUnlock -MountPoint $MountPoint | Out-Null
                 
                                         # Additional Check 2: if there are more than 1 Recovery Password, delete all of them and add a new one
-                                        [System.String[]]$RecoveryPasswordKeyProtectors = ((Get-BitLockerVolume -MountPoint $MountPoint).KeyProtector |
+                                        [System.String[]]$RecoveryPasswordKeyProtectors = ((Get-BitLockerVolume -ErrorAction SilentlyContinue -MountPoint $MountPoint).KeyProtector |
                                             Where-Object { $_.keyprotectortype -eq 'RecoveryPassword' }).KeyProtectorId
                 
                                         if ($RecoveryPasswordKeyProtectors.Count -gt 1) {
@@ -1566,7 +1568,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                                             Add-BitLockerKeyProtector -MountPoint $MountPoint -RecoveryPasswordProtector *> $null
                  
                                             # Get the new key protectors of the Non-OS Drive after adding RecoveryPasswordProtector to it
-                                            [System.Object[]]$KeyProtectorsNonOS = (Get-BitLockerVolume -MountPoint $MountPoint).KeyProtector
+                                            [System.Object[]]$KeyProtectorsNonOS = (Get-BitLockerVolume -ErrorAction SilentlyContinue -MountPoint $MountPoint).KeyProtector
                 
                                             # Backup the recovery code of the Non-OS drive in a file
                                             New-Item -Path "$MountPoint\Drive $($MountPoint.Remove(1)) recovery password.txt" -Value $(&$RecoveryPasswordContentGenerator $KeyProtectorsNonOS) -ItemType File -Force | Out-Null
@@ -1576,7 +1578,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
 
                                         # Get the new key protectors of the Non-OS Drive after adding RecoveryPasswordProtector to it
                                         # Just to simply display it on the console for the user
-                                        [System.Object[]]$KeyProtectorsNonOS = (Get-BitLockerVolume -MountPoint $MountPoint).KeyProtector
+                                        [System.Object[]]$KeyProtectorsNonOS = (Get-BitLockerVolume -ErrorAction SilentlyContinue -MountPoint $MountPoint).KeyProtector
                 
                                         Write-SmartText -C Fuchsia -GenericColor Magenta -I "Here is your 48-digits recovery password for drive $MountPoint in case you were looking for it:"
                                         Write-SmartText -C Rainbow -GenericColor Yellow -I "$(($KeyProtectorsNonOS | Where-Object { $_.keyprotectortype -eq 'RecoveryPassword' }).RecoveryPassword)"
@@ -1588,7 +1590,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 
                                         # if there are more than 1 ExternalKey key protector, try delete all of them and add a new one
                                         # The external key protector that is being used to unlock the drive will not be deleted
-                                        ((Get-BitLockerVolume -MountPoint $MountPoint).KeyProtector |
+                                        ((Get-BitLockerVolume -ErrorAction SilentlyContinue -MountPoint $MountPoint).KeyProtector |
                                         Where-Object { $_.keyprotectortype -eq 'ExternalKey' }).KeyProtectorId |
                                         ForEach-Object {
                                             # -ErrorAction SilentlyContinue makes sure no error is thrown if the drive only has 1 External key key protector
@@ -1603,7 +1605,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                                         Add-BitLockerKeyProtector -MountPoint $MountPoint -RecoveryPasswordProtector *> $null
                 
                                         # Get the new key protectors of the Non-OS Drive after adding RecoveryPasswordProtector to it
-                                        [System.Object[]]$KeyProtectorsNonOS = (Get-BitLockerVolume -MountPoint $MountPoint).KeyProtector
+                                        [System.Object[]]$KeyProtectorsNonOS = (Get-BitLockerVolume -ErrorAction SilentlyContinue -MountPoint $MountPoint).KeyProtector
                 
                                         # Backup the recovery code of the Non-OS drive in a file
                                         New-Item -Path "$MountPoint\Drive $($MountPoint.Remove(1)) recovery password.txt" -Value $(&$RecoveryPasswordContentGenerator $KeyProtectorsNonOS) -ItemType File -Force | Out-Null
@@ -1620,7 +1622,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                                         Enable-BitLockerAutoUnlock -MountPoint $MountPoint | Out-Null
                 
                                         # if there are more than 1 Recovery Password, delete all of them and add a new one
-                                        [System.String[]]$RecoveryPasswordKeyProtectors = ((Get-BitLockerVolume -MountPoint $MountPoint).KeyProtector |
+                                        [System.String[]]$RecoveryPasswordKeyProtectors = ((Get-BitLockerVolume -ErrorAction SilentlyContinue -MountPoint $MountPoint).KeyProtector |
                                             Where-Object { $_.keyprotectortype -eq 'RecoveryPassword' }).KeyProtectorId
                 
                                         if ($RecoveryPasswordKeyProtectors.Count -gt 1) {
@@ -1639,7 +1641,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                                             Add-BitLockerKeyProtector -MountPoint $MountPoint -RecoveryPasswordProtector *> $null
                 
                                             # Get the new key protectors of the Non-OS Drive after adding RecoveryPasswordProtector to it
-                                            [System.Object[]]$KeyProtectorsNonOS = (Get-BitLockerVolume -MountPoint $MountPoint).KeyProtector
+                                            [System.Object[]]$KeyProtectorsNonOS = (Get-BitLockerVolume -ErrorAction SilentlyContinue -MountPoint $MountPoint).KeyProtector
                 
                                             # Backup the recovery code of the Non-OS drive in a file
                                             New-Item -Path "$MountPoint\Drive $($MountPoint.Remove(1)) recovery password.txt" -Value $(&$RecoveryPasswordContentGenerator $KeyProtectorsNonOS) -ItemType File -Force | Out-Null
@@ -1656,7 +1658,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                                     Enable-BitLockerAutoUnlock -MountPoint $MountPoint | Out-Null
                 
                                     # Get the new key protectors of the Non-OS Drive after adding RecoveryPasswordProtector to it
-                                    [System.Object[]]$KeyProtectorsNonOS = (Get-BitLockerVolume -MountPoint $MountPoint).KeyProtector
+                                    [System.Object[]]$KeyProtectorsNonOS = (Get-BitLockerVolume -ErrorAction SilentlyContinue -MountPoint $MountPoint).KeyProtector
                 
                                     # Backup the recovery code of the Non-OS drive in a file
                                     New-Item -Path "$MountPoint\Drive $($MountPoint.Remove(1)) recovery password.txt" -Value $(&$RecoveryPasswordContentGenerator $KeyProtectorsNonOS) -ItemType File -Force | Out-Null

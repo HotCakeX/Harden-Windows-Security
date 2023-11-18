@@ -29,7 +29,7 @@ Function Unprotect-WindowsSecurity {
     if (!$OnlyProcessMitigations) {
         &$WriteOrange "`r`n"
         &$WriteOrange "###############################################################################################`r`n"
-        &$WriteMintGreen "## This Will Remove the Hardening Measures Applied by Protect-WindowsSecurity Cmdlet ##`r`n"
+        &$WriteMintGreen "## This Will Remove the Hardening Measures Applied by the Protect-WindowsSecurity Cmdlet ##`r`n"
         &$WriteOrange "###############################################################################################`r`n"
 
         # Give user a chance to exit if they accidentally ran this
@@ -67,25 +67,23 @@ Function Unprotect-WindowsSecurity {
 
         Write-Progress -Activity 'Downloading the required files' -Status 'Processing' -PercentComplete 30
 
-        try {                
-            Invoke-WithoutProgress {                   
-                # Download Registry CSV file from GitHub or Azure DevOps
-                try {
-                    Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Payload/Registry.csv' -OutFile '.\Registry.csv'        
-                }
-                catch {
-                    Write-Host 'Using Azure DevOps...' -ForegroundColor Yellow
-                    Invoke-WebRequest -Uri 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/Registry.csv' -OutFile '.\Registry.csv'
-                }
+        try {
+            # Download Registry CSV file from GitHub or Azure DevOps
+            try {
+                Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Payload/Registry.csv' -OutFile '.\Registry.csv' -ProgressAction SilentlyContinue
+            }
+            catch {
+                Write-Host 'Using Azure DevOps...' -ForegroundColor Yellow
+                Invoke-WebRequest -Uri 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/Registry.csv' -OutFile '.\Registry.csv' -ProgressAction SilentlyContinue
+            }
 
-                # Download Process Mitigations CSV file from GitHub or Azure DevOps
-                try {
-                    Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Payload/ProcessMitigations.csv' -OutFile '.\ProcessMitigations.csv'            
-                }
-                catch {
-                    Write-Host 'Using Azure DevOps...' -ForegroundColor Yellow
-                    Invoke-WebRequest -Uri 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/ProcessMitigations.csv' -OutFile '.\ProcessMitigations.csv'
-                }
+            # Download Process Mitigations CSV file from GitHub or Azure DevOps
+            try {
+                Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Payload/ProcessMitigations.csv' -OutFile '.\ProcessMitigations.csv' -ProgressAction SilentlyContinue 
+            }
+            catch {
+                Write-Host 'Using Azure DevOps...' -ForegroundColor Yellow
+                Invoke-WebRequest -Uri 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/ProcessMitigations.csv' -OutFile '.\ProcessMitigations.csv' -ProgressAction SilentlyContinue
             }
         }
         catch {
@@ -117,15 +115,13 @@ Function Unprotect-WindowsSecurity {
             # Restore Security group policies back to their default states
 
             Write-Progress -Activity 'Restoring the default Security group policies' -Status 'Processing' -PercentComplete 70
-   
-            Invoke-WithoutProgress {
-                # Download LGPO program from Microsoft servers
-                Invoke-WebRequest -Uri 'https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/LGPO.zip' -OutFile '.\LGPO.zip'
-            }
-
+               
+            # Download LGPO program from Microsoft servers
+            Invoke-WebRequest -Uri 'https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/LGPO.zip' -OutFile '.\LGPO.zip' -ProgressAction SilentlyContinue
+            
             # unzip the LGPO file
             Expand-Archive -Path .\LGPO.zip -DestinationPath .\ -Force  
-            .\'LGPO_30\LGPO.exe' /s "$psscriptroot\Resources\Default Security Policy.inf"
+            .\'LGPO_30\LGPO.exe' /q /s "$psscriptroot\Resources\Default Security Policy.inf"
         
             # Enable LMHOSTS lookup protocol on all network adapters again
             Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Services\NetBT\Parameters' -Name 'EnableLMHOSTS' -Value '1' -Type DWord

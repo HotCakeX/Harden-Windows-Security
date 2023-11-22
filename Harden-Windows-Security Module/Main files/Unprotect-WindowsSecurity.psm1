@@ -199,6 +199,9 @@ Function Unprotect-WindowsSecurity {
 
         }
 
+        # Set a tattooed Group policy for Svchost.exe process mitigations back to disabled state
+        Set-ItemProperty -Path 'Registry::\HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SCMConfig' -Name 'EnableSvchostMitigationPolicy' -Value '0' -Force -Type 'DWord' -ErrorAction SilentlyContinue
+
         Write-Progress -Activity 'Complete' -Status 'Complete' -PercentComplete 100   
 
         &$WriteFuchsia 'Operation Completed, please restart your computer.'

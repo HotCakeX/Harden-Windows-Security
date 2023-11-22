@@ -224,52 +224,18 @@ function Confirm-SystemCompliance {
             Name         = 'Mandatory ASLR'
             Category     = $CatName
             Method       = 'Cmdlet'            
+        } 
+    
+        # Verify the NX bit as shown in bcdedit /enum or Get-BcdEntry, info about numbers and values correlation: https://learn.microsoft.com/en-us/previous-versions/windows/desktop/bcd/bcdosloader-nxpolicy
+        $NestedObjectArray += [PSCustomObject]@{            
+            FriendlyName = 'Boot Configuration Data (BCD) No-eXecute (NX) Value'
+            Compliant    = (((Get-BcdEntry).elements | Where-Object { $_.name -eq 'nx' }).value -eq '3')
+            Value        = (((Get-BcdEntry).elements | Where-Object { $_.name -eq 'nx' }).value -eq '3')           
+            Name         = 'Boot Configuration Data (BCD) No-eXecute (NX) Value'
+            Category     = $CatName
+            Method       = 'Cmdlet'     
         }
-    
-        # For BCDEDIT NX value verification
-        # IMPORTANT: bcdedit /enum requires an ELEVATED session.
-        # Answer by mklement0: https://stackoverflow.com/a/50949849
-        $BcdOutput = (bcdedit /enum) -join "`n" # collect bcdedit's output as a *single* string
-    
-        # Initialize the output list.
-        $Entries = New-Object System.Collections.Generic.List[PSCustomObject]
-    
-        # Parse bcdedit's output.
-    ($BcdOutput -split '(?m)^(.+\n-)-+\n' -ne '').ForEach({
-                if ($_.EndsWith("`n-")) {
-                    # entry header 
-                    $Entries.Add([PSCustomObject] @{ Name = ($_ -split '\n')[0]; Properties = [ordered] @{} })
-                }
-                else {
-                    # block of property-value lines
-    ($_ -split '\n' -ne '').ForEach({
-                            $propAndVal = $_ -split '\s+', 2 # split line into property name and value
-                            if ($propAndVal[0] -ne '') {
-                                # [start of] new property; initialize list of values
-                                $currProp = $propAndVal[0]
-                                $Entries[-1].Properties[$currProp] = New-Object Collections.Generic.List[System.String]
-                            }
-                            $Entries[-1].Properties[$currProp].Add($propAndVal[1]) # add the value
-                        })
-                }
-            })
-    
-        # Verify the NX bit - only supports systems with English-US language
-        if ((Get-Culture).name -eq 'en-US') {
-            $IndividualItemResult = $(($Entries | Where-Object { $_.properties.identifier -eq '{current}' }).properties.nx)
-            $NestedObjectArray += [PSCustomObject]@{            
-                FriendlyName = 'BCDEDIT NX Value'          
-                Compliant    = $IndividualItemResult -eq 'AlwaysOn' ? $True : $false   
-                Value        = $IndividualItemResult           
-                Name         = 'BCDEDIT NX Value'
-                Category     = $CatName
-                Method       = 'Cmdlet'             
-            }
-        }
-        else {
-            $global:TotalNumberOfTrueCompliantValues--
-        }
-    
+            
         # For PowerShell Cmdlet
         $NestedObjectArray += [PSCustomObject]@{
             FriendlyName = 'Smart App Control State'            

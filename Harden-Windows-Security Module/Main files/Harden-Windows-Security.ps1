@@ -928,7 +928,10 @@ try {
                 } 
 
                 # Turn on Data Execution Prevention (DEP) for all applications, including 32-bit programs
-                bcdedit.exe /set '{current}' nx AlwaysOn | Out-Null
+                # Old method
+                # bcdedit.exe /set '{current}' nx AlwaysOn | Out-Null 
+                # New method using PowerShell cmdlets added in Windows 11
+                Set-BcdElement -Element 'nx' -Type 'Integer' -Value '3'
 
                 # Suggest turning on Smart App Control only if it's in Eval mode
                 if ((Get-MpComputerStatus).SmartAppControlState -eq 'Eval') {

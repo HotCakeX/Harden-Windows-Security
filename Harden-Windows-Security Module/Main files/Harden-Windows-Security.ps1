@@ -667,7 +667,7 @@ try {
                                 
                 Start-Job -ErrorAction Stop -ScriptBlock {
                         
-                    param($Url, $Path, $Tag)
+                    param([System.Uri]$Url, [System.IO.FileInfo]$Path, [System.String]$Tag)
                     # Create a WebClient object
                     [System.Net.WebClient]$WC = New-Object System.Net.WebClient
                     try {
@@ -679,25 +679,25 @@ try {
                         switch ($Tag) {                                                        
                             'Security-Baselines-X' {
                                 Write-Host 'Using Azure DevOps for Security-Baselines-X.zip' -ForegroundColor Yellow
-                                $AltURL = 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/Security-Baselines-X.zip'
+                                [System.Uri]$AltURL = 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/Security-Baselines-X.zip'
                                 $WC.DownloadFile($AltURL, $Path)
                                 break
                             }        
                             'Registry' {
                                 Write-Host 'Using Azure DevOps for Registry.csv' -ForegroundColor Yellow
-                                $AltURL = 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/Registry.csv'
+                                [System.Uri]$AltURL = 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/Registry.csv'
                                 $WC.DownloadFile($AltURL, $Path)
                                 break
                             }        
                             'ProcessMitigations' {                            
                                 Write-Host 'Using Azure DevOps for ProcessMitigations.CSV' -ForegroundColor Yellow
-                                $AltURL = 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/ProcessMitigations.csv'
+                                [System.Uri]$AltURL = 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/ProcessMitigations.csv'
                                 $WC.DownloadFile($AltURL, $Path)
                                 break
                             } 
                             'EventViewerCustomViews' {
                                 Write-Host 'Using Azure DevOps for EventViewerCustomViews.zip' -ForegroundColor Yellow
-                                $AltURL = 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/EventViewerCustomViews.zip'
+                                [System.Uri]$AltURL = 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/EventViewerCustomViews.zip'
                                 $WC.DownloadFile($AltURL, $Path)
                                 break
                             }       
@@ -808,7 +808,7 @@ try {
                 .\LGPO.exe /q /s '..\Security-Baselines-X\Overrides for Microsoft Security Baseline\GptTmpl.inf'
             
                 # Re-enables the XblGameSave Standby Task that gets disabled by Microsoft Security Baselines
-                SCHTASKS.EXE /Change /TN \Microsoft\XblGameSave\XblGameSaveTask /Enable            
+                SCHTASKS.EXE /Change /TN \Microsoft\XblGameSave\XblGameSaveTask /Enable    
             }
             'No' { break MicrosoftSecurityBaselinesCategoryLabel }
             'Exit' { &$CleanUp }

@@ -106,7 +106,7 @@ if (-NOT ($FullOSBuild -ge $Requiredbuild)) {
 
 if (Test-IsAdmin) {
     # check to make sure TPM is available and enabled
-    $TPM = Get-Tpm
+    [System.Object]$TPM = Get-Tpm
     if (-not ($TPM.tpmpresent -and $TPM.tpmenabled)) {
         Write-Error -Message 'TPM is not available or enabled, please enable it in UEFI settings and try again.'
         break

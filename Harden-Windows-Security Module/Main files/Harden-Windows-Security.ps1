@@ -520,9 +520,11 @@ if (Test-IsAdmin) {
 
     # Temporarily allow the currently running PowerShell executables to the Controlled Folder Access allowed apps
     # so that the script can run without interruption. This change is reverted at the end.
-    Get-ChildItem -Path "$PSHOME\*.exe" | ForEach-Object {
-        Add-MpPreference -ControlledFolderAccessAllowedApplications $_.FullName
+    # Adding powercfg.exe so Controlled Folder Access won't complain about it in BitLocker category when setting hibernate file size to full
+    foreach ($FilePath in (((Get-ChildItem -Path "$PSHOME\*.exe" -File).FullName) + 'C:\Windows\System32\powercfg.exe')) {
+        Add-MpPreference -ControlledFolderAccessAllowedApplications $FilePath
     }
+    
 }
 
 # doing a try-finally block on the entire script so that when CTRL + C is pressed to forcefully exit the script,
@@ -742,9 +744,9 @@ try {
         Expand-Archive -Path .\Security-Baselines-X.zip -DestinationPath .\Security-Baselines-X\ -Force -ErrorAction Stop
 
         # capturing the Microsoft Security Baselines extracted path in a variable using wildcard and storing it in a variable so that we won't need to change anything in the code other than the download link when they are updated
-        [System.String]$MicrosoftSecurityBaselinePath = (Get-ChildItem -Path '.\MicrosoftSecurityBaseline\*\').FullName
+        [System.String]$MicrosoftSecurityBaselinePath = (Get-ChildItem -Directory -Path '.\MicrosoftSecurityBaseline\*\').FullName
         # capturing the Microsoft 365 Security Baselines extracted path in a variable using wildcard and storing it in a variable so that we won't need to change anything in the code other than the download link when they are updated
-        [System.String]$Microsoft365SecurityBaselinePath = (Get-ChildItem -Path '.\Microsoft365SecurityBaseline\*\').FullName
+        [System.String]$Microsoft365SecurityBaselinePath = (Get-ChildItem -Directory -Path '.\Microsoft365SecurityBaseline\*\').FullName
 
         #region Windows-Boot-Manager-revocations-for-Secure-Boot KB5025885  
         # ============================May 9 2023 Windows Boot Manager revocations for Secure Boot =================================
@@ -1454,21 +1456,11 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                     if ($HiberFileType -ne 2) {
                         
                         Write-Progress -Id 6 -ParentId 0 -Activity 'Hibernate' -Status 'Setting Hibernate file size to full' -PercentComplete 50
-
-                        # doing this so Controlled Folder Access won't bitch about powercfg.exe
-                        Add-MpPreference -ControlledFolderAccessAllowedApplications 'C:\Windows\System32\powercfg.exe'
-
-                        Start-Sleep 5
-
+                       
                         # Set Hibernate mode to full
-                        powercfg /h /type full | Out-Null
-
-                        Start-Sleep 3
-
-                        Remove-MpPreference -ControlledFolderAccessAllowedApplications 'C:\Windows\System32\powercfg.exe'
-                    
+                        &'C:\Windows\System32\powercfg.exe' /h /type full | Out-Null
+                   
                         Write-Progress -Id 6 -Activity 'Setting Hibernate file size to full' -Completed
-
                     }
                     else {
                         Write-SmartText -C Pink -G Magenta -I "`nHibernate is already set to full.`n"
@@ -2411,27 +2403,28 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
     #endregion Non-Admin-Commands
 }
 finally {
+
+    if (Test-IsAdmin) {
+        # Reverting the PowerShell executables and powercfg.exe allow listings in Controlled folder access
+        foreach ($FilePath in (((Get-ChildItem -Path "$PSHOME\*.exe" -File).FullName) + 'C:\Windows\System32\powercfg.exe')) {
+            Remove-MpPreference -ControlledFolderAccessAllowedApplications $FilePath
+        }
+
+        # restoring the original Controlled folder access allow list - if user already had added PowerShell executables to the list
+        # they will be restored as well, so user customization will remain intact
+        if ($null -ne $CFAAllowedAppsBackup) { 
+            Set-MpPreference -ControlledFolderAccessAllowedApplications $CFAAllowedAppsBackup
+        }
+    }
+
+    Set-Location $HOME; Remove-Item -Recurse -Path "$global:UserTempDirectoryPath\HardeningXStuff\" -Force -ErrorAction SilentlyContinue    
+
     # Disable progress bars
     0..6 | ForEach-Object { Write-Progress -Id $_ -Activity 'Done' -Completed }
 
     # Restore the title of the PowerShell back to what it was prior to running the script/module
     $Host.UI.RawUI.WindowTitle = $CurrentPowerShellTitle
-
+      
     # Set the execution policy back to what it was prior to running the script
     Set-ExecutionPolicy -ExecutionPolicy "$CurrentExecutionPolicy" -Scope Process -Force
-
-    if (Test-IsAdmin) {
-        # Reverting the PowerShell executables allow listings in Controlled folder access
-        Get-ChildItem -Path "$PSHOME\*.exe" | ForEach-Object {
-            Remove-MpPreference -ControlledFolderAccessAllowedApplications $_.FullName
-        }
-        # restoring the original Controlled folder access allow list - if user already had added PowerShell executables to the list
-        # they will be restored as well, so user customization will remain intact
-        if ($null -ne $CFAAllowedAppsBackup) { 
-            $CFAAllowedAppsBackup | ForEach-Object {
-                Add-MpPreference -ControlledFolderAccessAllowedApplications $_
-            }
-        }
-    }
-    Set-Location $HOME; Remove-Item -Recurse -Path "$global:UserTempDirectoryPath\HardeningXStuff\" -Force -ErrorAction SilentlyContinue    
 }

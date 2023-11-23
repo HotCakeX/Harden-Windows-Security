@@ -183,9 +183,10 @@ function Confirm-SystemCompliance {
 
             # Temporarily allow the currently running PowerShell executables to the Controlled Folder Access allowed apps
             # so that the script can run without interruption. This change is reverted at the end.
-            Get-ChildItem -Path "$PSHOME\*.exe" | ForEach-Object {
-                Add-MpPreference -ControlledFolderAccessAllowedApplications $_.FullName
+            foreach ($FilePath in (Get-ChildItem -Path "$PSHOME\*.exe" -File).FullName) {
+                Add-MpPreference -ControlledFolderAccessAllowedApplications $FilePath
             }
+
             # Give the Defender internals time to process the updated exclusions list
             Start-Sleep -Seconds '3'
         
@@ -1966,17 +1967,15 @@ function Confirm-SystemCompliance {
         }
 
         finally {
-
             # Reverting the PowerShell executables allow listings in Controlled folder access
-            Get-ChildItem -Path "$PSHOME\*.exe" | ForEach-Object {
-                Remove-MpPreference -ControlledFolderAccessAllowedApplications $_.FullName
+            foreach ($FilePath in (Get-ChildItem -Path "$PSHOME\*.exe" -File).FullName) {
+                Remove-MpPreference -ControlledFolderAccessAllowedApplications $FilePath
             }
+    
             # restoring the original Controlled folder access allow list - if user already had added PowerShell executables to the list
             # they will be restored as well, so user customization will remain intact
             if ($null -ne $CFAAllowedAppsBackup) { 
-                $CFAAllowedAppsBackup | ForEach-Object {
-                    Add-MpPreference -ControlledFolderAccessAllowedApplications $_
-                }
+                Set-MpPreference -ControlledFolderAccessAllowedApplications $CFAAllowedAppsBackup
             }
         }
     

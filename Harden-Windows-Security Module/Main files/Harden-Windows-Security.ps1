@@ -1,6 +1,6 @@
 <#PSScriptInfo
 
-.VERSION 2023.11.18
+.VERSION 2023.11.23
 
 .GUID d435a293-c9ee-4217-8dc1-4ad2318a5770
 
@@ -101,7 +101,7 @@ $Host.UI.RawUI.WindowTitle = '❤️‍🔥Harden Windows Security❤️‍🔥'
 
 # Defining global script variables
 # Current script's version, the same as the version at the top in the script info section
-[System.DateTime]$CurrentVersion = '2023.11.18'
+[System.DateTime]$CurrentVersion = '2023.11.23'
 # Minimum OS build number required for the hardening measures used in this script
 [System.Decimal]$Requiredbuild = '22621.2428'
 # Fetching Temp Directory

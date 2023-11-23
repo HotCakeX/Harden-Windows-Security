@@ -130,7 +130,7 @@ Add these new sections to the end of your `.gitconfig` file. It's usually locate
 and add this to the `[user]` section to define your SSH public key, it's a direct path to that file.
 
 ```
-signingkey = "Path/To/SSH/SSHKey.pub
+signingkey = "Path/To/SSH/SSHKey.pub"
 ```
 
 **You must replace all of the normal backward slashes `\` to forward slash `/` in your path, otherwise GitHub desktop throws an error.**

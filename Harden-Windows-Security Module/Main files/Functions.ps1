@@ -3,8 +3,8 @@ $global:ErrorActionPreference = 'Stop'
 
 # Function to test if current session has administrator privileges
 Function Test-IsAdmin {
-    $Identity = [Security.Principal.WindowsIdentity]::GetCurrent()
-    $Principal = New-Object Security.Principal.WindowsPrincipal $Identity
+    [System.Security.Principal.WindowsIdentity]$Identity = [Security.Principal.WindowsIdentity]::GetCurrent()
+    [System.Security.Principal.WindowsPrincipal]$Principal = New-Object -TypeName 'Security.Principal.WindowsPrincipal' -ArgumentList $Identity
     $Principal.IsInRole([Security.Principal.WindowsBuiltinRole]::Administrator)
 }
 
@@ -32,12 +32,12 @@ function Update-self {
                 # backup the current allowed apps list in Controlled folder access in order to restore them at the end of the script
                 # doing this so that when we Add and then Remove PowerShell executables in Controlled folder access exclusions
                 # no user customization will be affected
-                [string[]]$CFAAllowedAppsBackup = (Get-MpPreference).ControlledFolderAccessAllowedApplications
+                [System.String[]]$CFAAllowedAppsBackup = (Get-MpPreference).ControlledFolderAccessAllowedApplications
         
                 # Temporarily allow the currently running PowerShell executables to the Controlled Folder Access allowed apps
                 # so that the script can run without interruption. This change is reverted at the end.
-                Get-ChildItem -Path "$PSHOME\*.exe" | ForEach-Object {
-                    Add-MpPreference -ControlledFolderAccessAllowedApplications $_.FullName
+                foreach ($FilePath in (Get-ChildItem -Path "$PSHOME\*.exe" -File).FullNam) {
+                    Add-MpPreference -ControlledFolderAccessAllowedApplications $FilePath
                 }
 
                 # Do this if the module was installed properly using Install-moodule cmdlet
@@ -52,16 +52,15 @@ function Update-self {
             }
             finally {
                 # Reverting the PowerShell executables allow listings in Controlled folder access
-                Get-ChildItem -Path "$PSHOME\*.exe" | ForEach-Object {
-                    Remove-MpPreference -ControlledFolderAccessAllowedApplications $_.FullName
+                foreach ($FilePath in (Get-ChildItem -Path "$PSHOME\*.exe" -File).FullName) {
+                    Remove-MpPreference -ControlledFolderAccessAllowedApplications $FilePath
                 }
+
                 # restoring the original Controlled folder access allow list - if user already had added PowerShell executables to the list
                 # they will be restored as well, so user customization will remain intact
                 if ($null -ne $CFAAllowedAppsBackup) { 
-                    $CFAAllowedAppsBackup | ForEach-Object {
-                        Add-MpPreference -ControlledFolderAccessAllowedApplications $_
-                    }
-                }         
+                    Set-MpPreference -ControlledFolderAccessAllowedApplications $CFAAllowedAppsBackup
+                }
             }                 
             # Make sure the old version isn't run after update
             Write-Output "$($PSStyle.Foreground.FromRGB(152,255,152))Update successful, please run the cmdlet again.$($PSStyle.Reset)"          
@@ -94,7 +93,7 @@ if ((Get-CimInstance -ClassName Win32_OperatingSystem).OperatingSystemSKU -eq '1
 [System.Decimal]$OSBuild = [System.Environment]::OSVersion.Version.Build
 
 # Get Update Build Revision (UBR) number
-[System.Decimal]$UBR = Get-ItemPropertyValue -Path 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion' -Name 'UBR'
+[System.Decimal]$UBR = Get-ItemPropertyValue -Path 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion' -Name 'UBR'
 
 # Create full OS build number as seen in Windows Settings
 [System.Decimal]$FullOSBuild = "$OSBuild.$UBR"
@@ -107,7 +106,7 @@ if (-NOT ($FullOSBuild -ge $Requiredbuild)) {
 
 if (Test-IsAdmin) {
     # check to make sure TPM is available and enabled
-    $TPM = Get-Tpm
+    [System.Object]$TPM = Get-Tpm
     if (-not ($TPM.tpmpresent -and $TPM.tpmenabled)) {
         Write-Error -Message 'TPM is not available or enabled, please enable it in UEFI settings and try again.'
         break

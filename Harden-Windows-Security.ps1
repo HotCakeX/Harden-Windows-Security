@@ -1,6 +1,6 @@
 <#PSScriptInfo
 
-.VERSION 2023.11.18
+.VERSION 2023.11.23
 
 .GUID d435a293-c9ee-4217-8dc1-4ad2318a5770
 
@@ -87,21 +87,21 @@
 #>
 
 # Get the execution policy for the current process
-[string]$CurrentExecutionPolicy = Get-ExecutionPolicy -Scope Process
+[System.String]$CurrentExecutionPolicy = Get-ExecutionPolicy -Scope Process
 
 # Change the execution policy temporarily only for the current PowerShell session
 # Unrestricted is more secure than Bypass because if a script is code signed then tampered, you will see an error, but in bypass mode, no code sign tamper detection happens
 Set-ExecutionPolicy -ExecutionPolicy 'Unrestricted' -Scope Process -Force
 
 # Get the current title of the PowerShell
-[string]$CurrentPowerShellTitle = $Host.UI.RawUI.WindowTitle
+[System.String]$CurrentPowerShellTitle = $Host.UI.RawUI.WindowTitle
 
 # Change the title of the Windows Terminal for PowerShell tab
 $Host.UI.RawUI.WindowTitle = '❤️‍🔥Harden Windows Security❤️‍🔥'
 
 # Defining global script variables
 # Current script's version, the same as the version at the top in the script info section
-[System.DateTime]$CurrentVersion = '2023.11.18'
+[System.DateTime]$CurrentVersion = '2023.11.23'
 # Minimum OS build number required for the hardening measures used in this script
 [System.Decimal]$Requiredbuild = '22621.2428'
 # Fetching Temp Directory
@@ -177,8 +177,8 @@ function Edit-Registry {
 # https://devblogs.microsoft.com/scripting/use-function-to-determine-elevation-of-powershell-console/
 # Function to test if current session has administrator privileges
 Function Test-IsAdmin {
-    $Identity = [Security.Principal.WindowsIdentity]::GetCurrent()
-    $Principal = New-Object Security.Principal.WindowsPrincipal $Identity
+    [System.Security.Principal.WindowsIdentity]$Identity = [Security.Principal.WindowsIdentity]::GetCurrent()
+    [System.Security.Principal.WindowsPrincipal]$Principal = New-Object -TypeName 'Security.Principal.WindowsPrincipal' -ArgumentList $Identity
     $Principal.IsInRole([Security.Principal.WindowsBuiltinRole]::Administrator)
 }
 
@@ -284,12 +284,12 @@ Function Write-SmartText {
             'Gold' { Write-Host "$($PSStyle.Foreground.FromRgb(255,215,0))$InputText$($PSStyle.Reset)"; break }
             'VioletNoNewLine' { Write-Host "$($PSStyle.Foreground.FromRGB(153,0,255))$InputText$($PSStyle.Reset)" -NoNewline; break }
             'PinkNoNewLine' { Write-Host "$($PSStyle.Foreground.FromRGB(255,0,230))$InputText$($PSStyle.Reset)" -NoNewline; break }
-            'Violet' { Write-Host "$($PSStyle.Foreground.FromRGB(153,0,255))$InputText$($PSStyle.Reset)" -NoNewline; break }
-            'Pink' { Write-Host "$($PSStyle.Foreground.FromRGB(255,0,230))$InputText$($PSStyle.Reset)" -NoNewline; break }
+            'Violet' { Write-Host "$($PSStyle.Foreground.FromRGB(153,0,255))$InputText$($PSStyle.Reset)"; break }
+            'Pink' { Write-Host "$($PSStyle.Foreground.FromRGB(255,0,230))$InputText$($PSStyle.Reset)"; break }
             'LavenderNoNewLine' { Write-Host "$($PSStyle.Foreground.FromRgb(255,179,255))$InputText$($PSStyle.Reset)" -NoNewline; break }
             'TeaGreenNoNewLine' { Write-Host "$($PSStyle.Foreground.FromRgb(133, 222, 119))$InputText$($PSStyle.Reset)" -NoNewline; break }
             'Rainbow' {
-                $Colors = @(
+                [System.Object[]]$Colors = @(
                     [System.Drawing.Color]::Pink,
                     [System.Drawing.Color]::HotPink,
                     [System.Drawing.Color]::SkyBlue,
@@ -302,7 +302,7 @@ Function Write-SmartText {
                     [System.Drawing.Color]::Gold
                 )
   
-                $Output = ''
+                [System.String]$Output = ''
                 for ($I = 0; $I -lt $InputText.Length; $I++) {
                     $Color = $Colors[$I % $Colors.Length]
                     $Output += "$($PSStyle.Foreground.FromRGB($Color.R, $Color.G, $Color.B))$($PSStyle.Blink)$($InputText[$I])$($PSStyle.BlinkOff)$($PSStyle.Reset)"
@@ -467,7 +467,7 @@ function Get-AvailableRemovableDrives {
 
     # A function to validate the user input
     function Confirm-Choice {
-        param([string]$Choice)
+        param([System.String]$Choice)
         # Initialize a flag to indicate if the input is valid or not
         [System.Boolean]$IsValid = $false
         # Initialize a variable to store the parsed integer value
@@ -487,7 +487,7 @@ function Get-AvailableRemovableDrives {
     # Prompt the user to enter the number of the drive they want to select, or exit value to exit, until they enter a valid input
     do {
         # Read the user input as a string
-        [string]$Choice = $(Write-Host "Enter the number of the drive you want to select or press $ExitCodeRemovableDriveSelection to Cancel" -ForegroundColor cyan; Read-Host)
+        [System.String]$Choice = $(Write-Host "Enter the number of the drive you want to select or press $ExitCodeRemovableDriveSelection to Cancel" -ForegroundColor cyan; Read-Host)
         
         # Check if the input is valid using the Confirm-Choice function
         if (-not (Confirm-Choice $Choice)) {
@@ -520,9 +520,11 @@ if (Test-IsAdmin) {
 
     # Temporarily allow the currently running PowerShell executables to the Controlled Folder Access allowed apps
     # so that the script can run without interruption. This change is reverted at the end.
-    Get-ChildItem -Path "$PSHOME\*.exe" | ForEach-Object {
-        Add-MpPreference -ControlledFolderAccessAllowedApplications $_.FullName
+    # Adding powercfg.exe so Controlled Folder Access won't complain about it in BitLocker category when setting hibernate file size to full
+    foreach ($FilePath in (((Get-ChildItem -Path "$PSHOME\*.exe" -File).FullName) + 'C:\Windows\System32\powercfg.exe')) {
+        Add-MpPreference -ControlledFolderAccessAllowedApplications $FilePath
     }
+    
 }
 
 # doing a try-finally block on the entire script so that when CTRL + C is pressed to forcefully exit the script,
@@ -568,7 +570,7 @@ try {
     [System.Decimal]$OSBuild = [System.Environment]::OSVersion.Version.Build
 
     # Get Update Build Revision (UBR) number
-    [System.Decimal]$UBR = Get-ItemPropertyValue -Path 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion' -Name 'UBR'
+    [System.Decimal]$UBR = Get-ItemPropertyValue -Path 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion' -Name 'UBR'
 
     # Create full OS build number as seen in Windows Settings
     [System.Decimal]$FullOSBuild = "$OSBuild.$UBR"
@@ -665,7 +667,7 @@ try {
                                 
                 Start-Job -ErrorAction Stop -ScriptBlock {
                         
-                    param($Url, $Path, $Tag)
+                    param([System.Uri]$Url, [System.IO.FileInfo]$Path, [System.String]$Tag)
                     # Create a WebClient object
                     [System.Net.WebClient]$WC = New-Object System.Net.WebClient
                     try {
@@ -677,25 +679,25 @@ try {
                         switch ($Tag) {                                                        
                             'Security-Baselines-X' {
                                 Write-Host 'Using Azure DevOps for Security-Baselines-X.zip' -ForegroundColor Yellow
-                                $AltURL = 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/Security-Baselines-X.zip'
+                                [System.Uri]$AltURL = 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/Security-Baselines-X.zip'
                                 $WC.DownloadFile($AltURL, $Path)
                                 break
                             }        
                             'Registry' {
                                 Write-Host 'Using Azure DevOps for Registry.csv' -ForegroundColor Yellow
-                                $AltURL = 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/Registry.csv'
+                                [System.Uri]$AltURL = 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/Registry.csv'
                                 $WC.DownloadFile($AltURL, $Path)
                                 break
                             }        
                             'ProcessMitigations' {                            
                                 Write-Host 'Using Azure DevOps for ProcessMitigations.CSV' -ForegroundColor Yellow
-                                $AltURL = 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/ProcessMitigations.csv'
+                                [System.Uri]$AltURL = 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/ProcessMitigations.csv'
                                 $WC.DownloadFile($AltURL, $Path)
                                 break
                             } 
                             'EventViewerCustomViews' {
                                 Write-Host 'Using Azure DevOps for EventViewerCustomViews.zip' -ForegroundColor Yellow
-                                $AltURL = 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/EventViewerCustomViews.zip'
+                                [System.Uri]$AltURL = 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/EventViewerCustomViews.zip'
                                 $WC.DownloadFile($AltURL, $Path)
                                 break
                             }       
@@ -742,9 +744,9 @@ try {
         Expand-Archive -Path .\Security-Baselines-X.zip -DestinationPath .\Security-Baselines-X\ -Force -ErrorAction Stop
 
         # capturing the Microsoft Security Baselines extracted path in a variable using wildcard and storing it in a variable so that we won't need to change anything in the code other than the download link when they are updated
-        [System.String]$MicrosoftSecurityBaselinePath = (Get-ChildItem -Path '.\MicrosoftSecurityBaseline\*\').FullName
+        [System.String]$MicrosoftSecurityBaselinePath = (Get-ChildItem -Directory -Path '.\MicrosoftSecurityBaseline\*\').FullName
         # capturing the Microsoft 365 Security Baselines extracted path in a variable using wildcard and storing it in a variable so that we won't need to change anything in the code other than the download link when they are updated
-        [System.String]$Microsoft365SecurityBaselinePath = (Get-ChildItem -Path '.\Microsoft365SecurityBaseline\*\').FullName
+        [System.String]$Microsoft365SecurityBaselinePath = (Get-ChildItem -Directory -Path '.\Microsoft365SecurityBaseline\*\').FullName
 
         #region Windows-Boot-Manager-revocations-for-Secure-Boot KB5025885  
         # ============================May 9 2023 Windows Boot Manager revocations for Secure Boot =================================
@@ -806,7 +808,7 @@ try {
                 .\LGPO.exe /q /s '..\Security-Baselines-X\Overrides for Microsoft Security Baseline\GptTmpl.inf'
             
                 # Re-enables the XblGameSave Standby Task that gets disabled by Microsoft Security Baselines
-                SCHTASKS.EXE /Change /TN \Microsoft\XblGameSave\XblGameSaveTask /Enable            
+                SCHTASKS.EXE /Change /TN \Microsoft\XblGameSave\XblGameSaveTask /Enable    
             }
             'No' { break MicrosoftSecurityBaselinesCategoryLabel }
             'Exit' { &$CleanUp }
@@ -887,18 +889,18 @@ try {
                 # Group the data by ProgramName
                 [System.Object[]]$GroupedMitigations = $ProcessMitigations | Group-Object ProgramName
                 # Get the current process mitigations
-                [System.Object[]]$AllAvailableMitigations = (Get-ItemProperty -Path 'Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\*')
+                [System.Object[]]$AllAvailableMitigations = (Get-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\*')
 
                 # Loop through each group to remove the mitigations, this way we apply clean set of mitigations in the next step
                 foreach ($Group in $GroupedMitigations) {    
                     # To separate the filename from full path of the item in the CSV and then check whether it exists in the system registry
                     if ($Group.Name -match '\\([^\\]+)$') {
                         if ($Matches[1] -in $AllAvailableMitigations.pschildname) {
-                            Remove-Item -Path "Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\$($Matches[1])" -Recurse -Force
+                            Remove-Item -Path "Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\$($Matches[1])" -Recurse -Force
                         }        
                     }
                     elseif ($Group.Name -in $AllAvailableMitigations.pschildname) {
-                        Remove-Item -Path "Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\$($Group.Name)" -Recurse -Force
+                        Remove-Item -Path "Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\$($Group.Name)" -Recurse -Force
                     }
                 } 
 
@@ -928,13 +930,16 @@ try {
                 } 
 
                 # Turn on Data Execution Prevention (DEP) for all applications, including 32-bit programs
-                bcdedit.exe /set '{current}' nx AlwaysOn | Out-Null
+                # Old method
+                # bcdedit.exe /set '{current}' nx AlwaysOn | Out-Null 
+                # New method using PowerShell cmdlets added in Windows 11
+                Set-BcdElement -Element 'nx' -Type 'Integer' -Value '3'
 
                 # Suggest turning on Smart App Control only if it's in Eval mode
                 if ((Get-MpComputerStatus).SmartAppControlState -eq 'Eval') {
                     switch (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nTurn on Smart App Control ?") {
                         'Yes' {
-                            Edit-Registry -path 'HKLM:\SYSTEM\CurrentControlSet\Control\CI\Policy' -key 'VerifiedAndReputablePolicyState' -value '1' -type 'DWORD' -Action 'AddOrModify'
+                            Edit-Registry -path 'Registry::HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\CI\Policy' -key 'VerifiedAndReputablePolicyState' -value '1' -type 'DWORD' -Action 'AddOrModify'
                             # Let the optional diagnostic data be enabled automatically
                             $ShouldEnableOptionalDiagnosticData = $True
                         } 'No' { break }
@@ -1168,6 +1173,14 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                         # check if Bitlocker is enabled for the system drive with Normal security level
                         if ((Get-BitLockerVolume -ErrorAction SilentlyContinue -MountPoint $env:SystemDrive).ProtectionStatus -eq 'on') {
 
+                            # Get the OS Drive's encryption method
+                            [System.String]$EncryptionMethodOSDrive = (Get-BitLockerVolume -ErrorAction SilentlyContinue -MountPoint $env:SystemDrive).EncryptionMethod
+
+                            # Check OS Drive's encryption method and display a warning if it's not the most secure one
+                            if ($EncryptionMethodOSDrive -ine 'XtsAes256') {
+                                Write-Warning -Message "The OS Drive is encrypted with the less secure '$EncryptionMethodOSDrive' encryption method instead of 'XtsAes256'"
+                            }
+
                             # Get the key protectors of the OS Drive
                             [System.Object[]]$KeyProtectorsOSDrive = (Get-BitLockerVolume -ErrorAction SilentlyContinue -MountPoint $env:SystemDrive).KeyProtector
                             # Get the key protector types of the OS Drive
@@ -1298,6 +1311,14 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
               
                         # check if Bitlocker is enabled for the system drive with Enhanced security level
                         if ((Get-BitLockerVolume -ErrorAction SilentlyContinue -MountPoint $env:SystemDrive).ProtectionStatus -eq 'on') {
+
+                            # Get the OS Drive's encryption method
+                            [System.String]$EncryptionMethodOSDrive = (Get-BitLockerVolume -ErrorAction SilentlyContinue -MountPoint $env:SystemDrive).EncryptionMethod
+
+                            # Check OS Drive's encryption method and display a warning if it's not the most secure one
+                            if ($EncryptionMethodOSDrive -ine 'XtsAes256') {
+                                Write-Warning -Message "The OS Drive is encrypted with the less secure '$EncryptionMethodOSDrive' encryption method instead of 'XtsAes256'"
+                            }
 
                             # Get the key protectors of the OS Drive
                             [System.Object[]]$KeyProtectorsOSDrive = (Get-BitLockerVolume -ErrorAction SilentlyContinue -MountPoint $env:SystemDrive).KeyProtector
@@ -1451,21 +1472,11 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                     if ($HiberFileType -ne 2) {
                         
                         Write-Progress -Id 6 -ParentId 0 -Activity 'Hibernate' -Status 'Setting Hibernate file size to full' -PercentComplete 50
-
-                        # doing this so Controlled Folder Access won't bitch about powercfg.exe
-                        Add-MpPreference -ControlledFolderAccessAllowedApplications 'C:\Windows\System32\powercfg.exe'
-
-                        Start-Sleep 5
-
+                       
                         # Set Hibernate mode to full
-                        powercfg /h /type full | Out-Null
-
-                        Start-Sleep 3
-
-                        Remove-MpPreference -ControlledFolderAccessAllowedApplications 'C:\Windows\System32\powercfg.exe'
-                    
+                        &'C:\Windows\System32\powercfg.exe' /h /type full | Out-Null
+                   
                         Write-Progress -Id 6 -Activity 'Setting Hibernate file size to full' -Completed
-
                     }
                     else {
                         Write-SmartText -C Pink -G Magenta -I "`nHibernate is already set to full.`n"
@@ -1529,6 +1540,14 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                                 # if it is, perform multiple checks on its key protectors
                                 if ((Get-BitLockerVolume -ErrorAction SilentlyContinue -MountPoint $MountPoint).ProtectionStatus -eq 'on') {
                 
+                                    # Get the OS Drive's encryption method
+                                    [System.String]$EncryptionMethodNonOSDrive = (Get-BitLockerVolume -ErrorAction SilentlyContinue -MountPoint $MountPoint).EncryptionMethod
+
+                                    # Check OS Drive's encryption method and display a warning if it's not the most secure one
+                                    if ($EncryptionMethodNonOSDrive -ine 'XtsAes256') {
+                                        Write-Warning -Message "Drive $MountPoint is encrypted with the less secure '$EncryptionMethodNonOSDrive' encryption method instead of 'XtsAes256'"
+                                    }
+
                                     # Get the key protector types of the Non-OS Drive
                                     [System.String[]]$KeyProtectorTypesNonOS = (Get-BitLockerVolume -ErrorAction SilentlyContinue -MountPoint $MountPoint).KeyProtector.keyprotectortype
                 
@@ -2152,7 +2171,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 .\LGPO.exe /q /s '..\Security-Baselines-X\Windows Networking Policies\GptTmpl.inf'
 
                 # Disable LMHOSTS lookup protocol on all network adapters
-                Edit-Registry -path 'HKLM:\SYSTEM\CurrentControlSet\Services\NetBT\Parameters' -key 'EnableLMHOSTS' -value '0' -type 'DWORD' -Action 'AddOrModify'
+                Edit-Registry -path 'Registry::HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\NetBT\Parameters' -key 'EnableLMHOSTS' -value '0' -type 'DWORD' -Action 'AddOrModify'
 
                 # Set the Network Location of all connections to Public
                 Get-NetConnectionProfile | Set-NetConnectionProfile -NetworkCategory Public
@@ -2238,7 +2257,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 Write-Progress -Id 0 -Activity 'Windows Update Configurations' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
                       
                 # Enable restart notification for Windows update
-                Edit-Registry -path 'HKLM:\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings' -key 'RestartNotificationsAllowed2' -value '1' -type 'DWORD' -Action 'AddOrModify'
+                Edit-Registry -path 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings' -key 'RestartNotificationsAllowed2' -value '1' -type 'DWORD' -Action 'AddOrModify'
                 # Change current working directory to the LGPO's folder
                 Set-Location "$WorkingDir\LGPO_30"
                 .\LGPO.exe /q /m '..\Security-Baselines-X\Windows Update Policies\registry.pol'
@@ -2408,27 +2427,28 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
     #endregion Non-Admin-Commands
 }
 finally {
+
+    if (Test-IsAdmin) {
+        # Reverting the PowerShell executables and powercfg.exe allow listings in Controlled folder access
+        foreach ($FilePath in (((Get-ChildItem -Path "$PSHOME\*.exe" -File).FullName) + 'C:\Windows\System32\powercfg.exe')) {
+            Remove-MpPreference -ControlledFolderAccessAllowedApplications $FilePath
+        }
+
+        # restoring the original Controlled folder access allow list - if user already had added PowerShell executables to the list
+        # they will be restored as well, so user customization will remain intact
+        if ($null -ne $CFAAllowedAppsBackup) { 
+            Set-MpPreference -ControlledFolderAccessAllowedApplications $CFAAllowedAppsBackup
+        }
+    }
+
+    Set-Location $HOME; Remove-Item -Recurse -Path "$global:UserTempDirectoryPath\HardeningXStuff\" -Force -ErrorAction SilentlyContinue    
+
     # Disable progress bars
     0..6 | ForEach-Object { Write-Progress -Id $_ -Activity 'Done' -Completed }
 
     # Restore the title of the PowerShell back to what it was prior to running the script/module
     $Host.UI.RawUI.WindowTitle = $CurrentPowerShellTitle
-
+      
     # Set the execution policy back to what it was prior to running the script
     Set-ExecutionPolicy -ExecutionPolicy "$CurrentExecutionPolicy" -Scope Process -Force
-
-    if (Test-IsAdmin) {
-        # Reverting the PowerShell executables allow listings in Controlled folder access
-        Get-ChildItem -Path "$PSHOME\*.exe" | ForEach-Object {
-            Remove-MpPreference -ControlledFolderAccessAllowedApplications $_.FullName
-        }
-        # restoring the original Controlled folder access allow list - if user already had added PowerShell executables to the list
-        # they will be restored as well, so user customization will remain intact
-        if ($null -ne $CFAAllowedAppsBackup) { 
-            $CFAAllowedAppsBackup | ForEach-Object {
-                Add-MpPreference -ControlledFolderAccessAllowedApplications $_
-            }
-        }
-    }
-    Set-Location $HOME; Remove-Item -Recurse -Path "$global:UserTempDirectoryPath\HardeningXStuff\" -Force -ErrorAction SilentlyContinue    
 }

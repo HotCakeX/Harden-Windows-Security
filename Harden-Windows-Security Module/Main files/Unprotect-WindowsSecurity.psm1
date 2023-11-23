@@ -10,7 +10,7 @@ Function Unprotect-WindowsSecurity {
     $global:ErrorActionPreference = 'Stop'
 
     # Fetching Temp Directory
-    [string]$global:UserTempDirectoryPath = [System.IO.Path]::GetTempPath()
+    [System.String]$global:UserTempDirectoryPath = [System.IO.Path]::GetTempPath()
 
     # Makes sure this cmdlet is invoked with Admin privileges
     if (![bool]([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
@@ -45,19 +45,21 @@ Function Unprotect-WindowsSecurity {
         # backup the current allowed apps list in Controlled folder access in order to restore them at the end of the script
         # doing this so that when we Add and then Remove PowerShell executables in Controlled folder access exclusions
         # no user customization will be affected
-        [string[]]$CFAAllowedAppsBackup = (Get-MpPreference).ControlledFolderAccessAllowedApplications
+        [System.String[]]$CFAAllowedAppsBackup = (Get-MpPreference).ControlledFolderAccessAllowedApplications
 
         # Temporarily allow the currently running PowerShell executables to the Controlled Folder Access allowed apps
         # so that the script can run without interruption. This change is reverted at the end.
-        Get-ChildItem -Path "$PSHOME\*.exe" | ForEach-Object {
-            Add-MpPreference -ControlledFolderAccessAllowedApplications $_.FullName
+        foreach ($FilePath in (Get-ChildItem -Path "$PSHOME\*.exe" -File).FullName) {
+            Add-MpPreference -ControlledFolderAccessAllowedApplications $FilePath
         }
+
+        Start-Sleep -Seconds 3
 
         # create our working directory
         New-Item -ItemType Directory -Path "$global:UserTempDirectoryPath\HardeningXStuff\" -Force | Out-Null
 
         # working directory assignment
-        [string]$WorkingDir = "$global:UserTempDirectoryPath\HardeningXStuff\"
+        [System.IO.DirectoryInfo]$WorkingDir = "$global:UserTempDirectoryPath\HardeningXStuff\"
 
         # change location to the new directory
         Set-Location -Path $WorkingDir
@@ -124,10 +126,10 @@ Function Unprotect-WindowsSecurity {
             .\'LGPO_30\LGPO.exe' /q /s "$psscriptroot\Resources\Default Security Policy.inf"
         
             # Enable LMHOSTS lookup protocol on all network adapters again
-            Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Services\NetBT\Parameters' -Name 'EnableLMHOSTS' -Value '1' -Type DWord
+            Set-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\NetBT\Parameters' -Name 'EnableLMHOSTS' -Value '1' -Type DWord
 
             # Disable restart notification for Windows update
-            Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings' -Name 'RestartNotificationsAllowed2' -Value '0' -Type DWord
+            Set-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings' -Name 'RestartNotificationsAllowed2' -Value '0' -Type DWord
 
             # Re-enables the XblGameSave Standby Task that gets disabled by Microsoft Security Baselines
             SCHTASKS.EXE /Change /TN \Microsoft\XblGameSave\XblGameSaveTask /Enable | Out-Null
@@ -154,7 +156,7 @@ Function Unprotect-WindowsSecurity {
         [System.Object[]]$ProcessMitigations = Import-Csv '.\ProcessMitigations.csv' -Delimiter ','
         # Group the data by ProgramName
         [System.Object[]]$GroupedMitigations = $ProcessMitigations | Group-Object ProgramName
-        [System.Object[]]$AllAvailableMitigations = (Get-ItemProperty -Path 'Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\*')
+        [System.Object[]]$AllAvailableMitigations = (Get-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\*')
     
         Write-Progress -Activity 'Removing Process Mitigations for apps' -Status 'Processing' -PercentComplete 90
    
@@ -163,11 +165,11 @@ Function Unprotect-WindowsSecurity {
             # To separate the filename from full path of the item in the CSV and then check whether it exists in the system registry
             if ($Group.Name -match '\\([^\\]+)$') {
                 if ($Matches[1] -in $AllAvailableMitigations.pschildname) {
-                    Remove-Item -Path "Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\$($Matches[1])" -Recurse -Force
+                    Remove-Item -Path "Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\$($Matches[1])" -Recurse -Force
                 }        
             }
             elseif ($Group.Name -in $AllAvailableMitigations.pschildname) {
-                Remove-Item -Path "Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\$($Group.Name)" -Recurse -Force
+                Remove-Item -Path "Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\$($Group.Name)" -Recurse -Force
             }
         }        
 
@@ -175,13 +177,13 @@ Function Unprotect-WindowsSecurity {
         if (!$OnlyProcessMitigations) {
     
             # Set Data Execution Prevention (DEP) back to its default value
-            bcdedit.exe /set '{current}' nx OptIn | Out-Null
+            Set-BcdElement -Element 'nx' -Type 'Integer' -Value '0'
          
             # Remove the scheduled task that keeps the Microsoft recommended driver block rules updated
 
             # Define the name and path of the task
-            [string]$taskName = 'MSFT Driver Block list update'
-            [string]$taskPath = '\MSFT Driver Block list update\'
+            [System.String]$taskName = 'MSFT Driver Block list update'
+            [System.String]$taskPath = '\MSFT Driver Block list update\'
 
             if (Get-ScheduledTask -TaskName $taskName -TaskPath $taskPath -ErrorAction SilentlyContinue) {
                 Unregister-ScheduledTask -TaskName $taskName -TaskPath $taskPath -Confirm:$false | Out-Null
@@ -199,26 +201,26 @@ Function Unprotect-WindowsSecurity {
 
         }
 
+        # Set a tattooed Group policy for Svchost.exe process mitigations back to disabled state
+        Set-ItemProperty -Path 'Registry::\HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SCMConfig' -Name 'EnableSvchostMitigationPolicy' -Value '0' -Force -Type 'DWord' -ErrorAction SilentlyContinue
+
         Write-Progress -Activity 'Complete' -Status 'Complete' -PercentComplete 100   
 
         &$WriteFuchsia 'Operation Completed, please restart your computer.'
     }
     finally {
-
         # Reverting the PowerShell executables allow listings in Controlled folder access
-        Get-ChildItem -Path "$PSHOME\*.exe" | ForEach-Object {
-            Remove-MpPreference -ControlledFolderAccessAllowedApplications $_.FullName
+        foreach ($FilePath in (Get-ChildItem -Path "$PSHOME\*.exe" -File).FullName) {
+            Remove-MpPreference -ControlledFolderAccessAllowedApplications $FilePath
         }
+
         # restoring the original Controlled folder access allow list - if user already had added PowerShell executables to the list
         # they will be restored as well, so user customization will remain intact
         if ($null -ne $CFAAllowedAppsBackup) { 
-            $CFAAllowedAppsBackup | ForEach-Object {
-                Add-MpPreference -ControlledFolderAccessAllowedApplications $_
-            }
+            Set-MpPreference -ControlledFolderAccessAllowedApplications $CFAAllowedAppsBackup
         }
     
         Set-Location $HOME; Remove-Item -Recurse "$global:UserTempDirectoryPath\HardeningXStuff\" -Force -ErrorAction SilentlyContinue    
-  
     }
 
     <#

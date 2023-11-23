@@ -10,7 +10,7 @@ Function Unprotect-WindowsSecurity {
     $global:ErrorActionPreference = 'Stop'
 
     # Fetching Temp Directory
-    [string]$global:UserTempDirectoryPath = [System.IO.Path]::GetTempPath()
+    [System.String]$global:UserTempDirectoryPath = [System.IO.Path]::GetTempPath()
 
     # Makes sure this cmdlet is invoked with Admin privileges
     if (![bool]([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
@@ -45,7 +45,7 @@ Function Unprotect-WindowsSecurity {
         # backup the current allowed apps list in Controlled folder access in order to restore them at the end of the script
         # doing this so that when we Add and then Remove PowerShell executables in Controlled folder access exclusions
         # no user customization will be affected
-        [string[]]$CFAAllowedAppsBackup = (Get-MpPreference).ControlledFolderAccessAllowedApplications
+        [System.String[]]$CFAAllowedAppsBackup = (Get-MpPreference).ControlledFolderAccessAllowedApplications
 
         # Temporarily allow the currently running PowerShell executables to the Controlled Folder Access allowed apps
         # so that the script can run without interruption. This change is reverted at the end.
@@ -57,7 +57,7 @@ Function Unprotect-WindowsSecurity {
         New-Item -ItemType Directory -Path "$global:UserTempDirectoryPath\HardeningXStuff\" -Force | Out-Null
 
         # working directory assignment
-        [string]$WorkingDir = "$global:UserTempDirectoryPath\HardeningXStuff\"
+        [System.String]$WorkingDir = "$global:UserTempDirectoryPath\HardeningXStuff\"
 
         # change location to the new directory
         Set-Location -Path $WorkingDir
@@ -180,8 +180,8 @@ Function Unprotect-WindowsSecurity {
             # Remove the scheduled task that keeps the Microsoft recommended driver block rules updated
 
             # Define the name and path of the task
-            [string]$taskName = 'MSFT Driver Block list update'
-            [string]$taskPath = '\MSFT Driver Block list update\'
+            [System.String]$taskName = 'MSFT Driver Block list update'
+            [System.String]$taskPath = '\MSFT Driver Block list update\'
 
             if (Get-ScheduledTask -TaskName $taskName -TaskPath $taskPath -ErrorAction SilentlyContinue) {
                 Unregister-ScheduledTask -TaskName $taskName -TaskPath $taskPath -Confirm:$false | Out-Null

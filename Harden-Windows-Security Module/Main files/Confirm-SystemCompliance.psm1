@@ -179,7 +179,7 @@ function Confirm-SystemCompliance {
             # backup the current allowed apps list in Controlled folder access in order to restore them at the end of the script
             # doing this so that when we Add and then Remove PowerShell executables in Controlled folder access exclusions
             # no user customization will be affected
-            [string[]]$CFAAllowedAppsBackup = (Get-MpPreference).ControlledFolderAccessAllowedApplications
+            [System.String[]]$CFAAllowedAppsBackup = (Get-MpPreference).ControlledFolderAccessAllowedApplications
 
             # Temporarily allow the currently running PowerShell executables to the Controlled Folder Access allowed apps
             # so that the script can run without interruption. This change is reverted at the end.

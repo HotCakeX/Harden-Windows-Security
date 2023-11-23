@@ -87,14 +87,14 @@
 #>
 
 # Get the execution policy for the current process
-[string]$CurrentExecutionPolicy = Get-ExecutionPolicy -Scope Process
+[System.String]$CurrentExecutionPolicy = Get-ExecutionPolicy -Scope Process
 
 # Change the execution policy temporarily only for the current PowerShell session
 # Unrestricted is more secure than Bypass because if a script is code signed then tampered, you will see an error, but in bypass mode, no code sign tamper detection happens
 Set-ExecutionPolicy -ExecutionPolicy 'Unrestricted' -Scope Process -Force
 
 # Get the current title of the PowerShell
-[string]$CurrentPowerShellTitle = $Host.UI.RawUI.WindowTitle
+[System.String]$CurrentPowerShellTitle = $Host.UI.RawUI.WindowTitle
 
 # Change the title of the Windows Terminal for PowerShell tab
 $Host.UI.RawUI.WindowTitle = '❤️‍🔥Harden Windows Security❤️‍🔥'
@@ -177,8 +177,8 @@ function Edit-Registry {
 # https://devblogs.microsoft.com/scripting/use-function-to-determine-elevation-of-powershell-console/
 # Function to test if current session has administrator privileges
 Function Test-IsAdmin {
-    $Identity = [Security.Principal.WindowsIdentity]::GetCurrent()
-    $Principal = New-Object Security.Principal.WindowsPrincipal $Identity
+    [System.Security.Principal.WindowsIdentity]$Identity = [Security.Principal.WindowsIdentity]::GetCurrent()
+    [System.Security.Principal.WindowsPrincipal]$Principal = New-Object -TypeName 'Security.Principal.WindowsPrincipal' -ArgumentList $Identity
     $Principal.IsInRole([Security.Principal.WindowsBuiltinRole]::Administrator)
 }
 
@@ -467,7 +467,7 @@ function Get-AvailableRemovableDrives {
 
     # A function to validate the user input
     function Confirm-Choice {
-        param([string]$Choice)
+        param([System.String]$Choice)
         # Initialize a flag to indicate if the input is valid or not
         [System.Boolean]$IsValid = $false
         # Initialize a variable to store the parsed integer value
@@ -487,7 +487,7 @@ function Get-AvailableRemovableDrives {
     # Prompt the user to enter the number of the drive they want to select, or exit value to exit, until they enter a valid input
     do {
         # Read the user input as a string
-        [string]$Choice = $(Write-Host "Enter the number of the drive you want to select or press $ExitCodeRemovableDriveSelection to Cancel" -ForegroundColor cyan; Read-Host)
+        [System.String]$Choice = $(Write-Host "Enter the number of the drive you want to select or press $ExitCodeRemovableDriveSelection to Cancel" -ForegroundColor cyan; Read-Host)
         
         # Check if the input is valid using the Confirm-Choice function
         if (-not (Confirm-Choice $Choice)) {

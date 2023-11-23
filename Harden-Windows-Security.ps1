@@ -1173,6 +1173,14 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                         # check if Bitlocker is enabled for the system drive with Normal security level
                         if ((Get-BitLockerVolume -ErrorAction SilentlyContinue -MountPoint $env:SystemDrive).ProtectionStatus -eq 'on') {
 
+                            # Get the OS Drive's encryption method
+                            [System.String]$EncryptionMethodOSDrive = (Get-BitLockerVolume -ErrorAction SilentlyContinue -MountPoint $env:SystemDrive).EncryptionMethod
+
+                            # Check OS Drive's encryption method and display a warning if it's not the most secure one
+                            if ($EncryptionMethodOSDrive -ine 'XtsAes256') {
+                                Write-Warning -Message "The OS Drive is encrypted with the less secure '$EncryptionMethodOSDrive' encryption method instead of 'XtsAes256'"
+                            }
+
                             # Get the key protectors of the OS Drive
                             [System.Object[]]$KeyProtectorsOSDrive = (Get-BitLockerVolume -ErrorAction SilentlyContinue -MountPoint $env:SystemDrive).KeyProtector
                             # Get the key protector types of the OS Drive
@@ -1303,6 +1311,14 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
               
                         # check if Bitlocker is enabled for the system drive with Enhanced security level
                         if ((Get-BitLockerVolume -ErrorAction SilentlyContinue -MountPoint $env:SystemDrive).ProtectionStatus -eq 'on') {
+
+                            # Get the OS Drive's encryption method
+                            [System.String]$EncryptionMethodOSDrive = (Get-BitLockerVolume -ErrorAction SilentlyContinue -MountPoint $env:SystemDrive).EncryptionMethod
+
+                            # Check OS Drive's encryption method and display a warning if it's not the most secure one
+                            if ($EncryptionMethodOSDrive -ine 'XtsAes256') {
+                                Write-Warning -Message "The OS Drive is encrypted with the less secure '$EncryptionMethodOSDrive' encryption method instead of 'XtsAes256'"
+                            }
 
                             # Get the key protectors of the OS Drive
                             [System.Object[]]$KeyProtectorsOSDrive = (Get-BitLockerVolume -ErrorAction SilentlyContinue -MountPoint $env:SystemDrive).KeyProtector
@@ -1524,6 +1540,14 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                                 # if it is, perform multiple checks on its key protectors
                                 if ((Get-BitLockerVolume -ErrorAction SilentlyContinue -MountPoint $MountPoint).ProtectionStatus -eq 'on') {
                 
+                                    # Get the OS Drive's encryption method
+                                    [System.String]$EncryptionMethodNonOSDrive = (Get-BitLockerVolume -ErrorAction SilentlyContinue -MountPoint $MountPoint).EncryptionMethod
+
+                                    # Check OS Drive's encryption method and display a warning if it's not the most secure one
+                                    if ($EncryptionMethodNonOSDrive -ine 'XtsAes256') {
+                                        Write-Warning -Message "Drive $MountPoint is encrypted with the less secure '$EncryptionMethodNonOSDrive' encryption method instead of 'XtsAes256'"
+                                    }
+
                                     # Get the key protector types of the Non-OS Drive
                                     [System.String[]]$KeyProtectorTypesNonOS = (Get-BitLockerVolume -ErrorAction SilentlyContinue -MountPoint $MountPoint).KeyProtector.keyprotectortype
                 

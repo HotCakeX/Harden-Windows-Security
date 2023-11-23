@@ -524,7 +524,7 @@ function Confirm-SystemCompliance {
             # To detect if Hibernate is enabled and set to full
             if (-NOT ($MDAVConfigCurrent.IsVirtualMachine)) {
                 try {
-                    $IndividualItemResult = $($((Get-ItemProperty 'HKLM:\SYSTEM\CurrentControlSet\Control\Power' -Name 'HiberFileType' -ErrorAction SilentlyContinue).HiberFileType) -eq 2 ? $True : $False)
+                    $IndividualItemResult = $($((Get-ItemProperty 'Registry::HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Power' -Name 'HiberFileType' -ErrorAction SilentlyContinue).HiberFileType) -eq 2 ? $True : $False)
                 }
                 catch {
                     # suppress the errors if any
@@ -1101,7 +1101,7 @@ function Confirm-SystemCompliance {
     
             # Verify a Security setting using registry
             try {
-                $IndividualItemResult = [System.Boolean]((Get-ItemPropertyValue -Path 'HKLM:\SYSTEM\CurrentControlSet\Services\NetBT\Parameters' -Name 'EnableLMHOSTS' -ErrorAction SilentlyContinue) -eq '0')
+                $IndividualItemResult = [System.Boolean]((Get-ItemPropertyValue -Path 'Registry::HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\NetBT\Parameters' -Name 'EnableLMHOSTS' -ErrorAction SilentlyContinue) -eq '0')
             }
             catch {
                 # -ErrorAction SilentlyContinue wouldn't suppress the error if the path exists but property doesn't, so using try-catch 
@@ -1208,7 +1208,7 @@ function Confirm-SystemCompliance {
     
             # Verify a Security setting using registry
             try {
-                $IndividualItemResult = [System.Boolean]((Get-ItemPropertyValue -Path 'HKLM:\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings' -Name 'RestartNotificationsAllowed2' -ErrorAction SilentlyContinue) -eq '1')
+                $IndividualItemResult = [System.Boolean]((Get-ItemPropertyValue -Path 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings' -Name 'RestartNotificationsAllowed2' -ErrorAction SilentlyContinue) -eq '1')
             }
             catch {
                 # -ErrorAction SilentlyContinue wouldn't suppress the error if the path exists but property doesn't, so using try-catch 
@@ -1303,7 +1303,7 @@ function Confirm-SystemCompliance {
               
                 [scriptblock]$WriteRainbow2 = { 
                     $text = $args[0]
-                    $colors = @(
+                    [System.Object[]]$colors = @(
                         [System.Drawing.Color]::Pink,
                         [System.Drawing.Color]::HotPink,
                         [System.Drawing.Color]::SkyBlue,
@@ -1317,7 +1317,7 @@ function Confirm-SystemCompliance {
                         [System.Drawing.Color]::Gold
                     )
               
-                    $Output = ''
+                    [System.String]$Output = ''
                     for ($i = 0; $i -lt $text.Length; $i++) {
                         $color = $colors[$i % $colors.Length]
                         $Output += "$($PSStyle.Foreground.FromRGB($color.R, $color.G, $color.B))$($text[$i])$($PSStyle.Reset)"

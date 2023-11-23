@@ -53,11 +53,13 @@ Function Unprotect-WindowsSecurity {
             Add-MpPreference -ControlledFolderAccessAllowedApplications $FilePath
         }
 
+        Start-Sleep -Seconds 3
+
         # create our working directory
         New-Item -ItemType Directory -Path "$global:UserTempDirectoryPath\HardeningXStuff\" -Force | Out-Null
 
         # working directory assignment
-        [System.String]$WorkingDir = "$global:UserTempDirectoryPath\HardeningXStuff\"
+        [System.IO.DirectoryInfo]$WorkingDir = "$global:UserTempDirectoryPath\HardeningXStuff\"
 
         # change location to the new directory
         Set-Location -Path $WorkingDir
@@ -124,10 +126,10 @@ Function Unprotect-WindowsSecurity {
             .\'LGPO_30\LGPO.exe' /q /s "$psscriptroot\Resources\Default Security Policy.inf"
         
             # Enable LMHOSTS lookup protocol on all network adapters again
-            Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Services\NetBT\Parameters' -Name 'EnableLMHOSTS' -Value '1' -Type DWord
+            Set-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\NetBT\Parameters' -Name 'EnableLMHOSTS' -Value '1' -Type DWord
 
             # Disable restart notification for Windows update
-            Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings' -Name 'RestartNotificationsAllowed2' -Value '0' -Type DWord
+            Set-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings' -Name 'RestartNotificationsAllowed2' -Value '0' -Type DWord
 
             # Re-enables the XblGameSave Standby Task that gets disabled by Microsoft Security Baselines
             SCHTASKS.EXE /Change /TN \Microsoft\XblGameSave\XblGameSaveTask /Enable | Out-Null
@@ -154,7 +156,7 @@ Function Unprotect-WindowsSecurity {
         [System.Object[]]$ProcessMitigations = Import-Csv '.\ProcessMitigations.csv' -Delimiter ','
         # Group the data by ProgramName
         [System.Object[]]$GroupedMitigations = $ProcessMitigations | Group-Object ProgramName
-        [System.Object[]]$AllAvailableMitigations = (Get-ItemProperty -Path 'Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\*')
+        [System.Object[]]$AllAvailableMitigations = (Get-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\*')
     
         Write-Progress -Activity 'Removing Process Mitigations for apps' -Status 'Processing' -PercentComplete 90
    
@@ -163,11 +165,11 @@ Function Unprotect-WindowsSecurity {
             # To separate the filename from full path of the item in the CSV and then check whether it exists in the system registry
             if ($Group.Name -match '\\([^\\]+)$') {
                 if ($Matches[1] -in $AllAvailableMitigations.pschildname) {
-                    Remove-Item -Path "Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\$($Matches[1])" -Recurse -Force
+                    Remove-Item -Path "Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\$($Matches[1])" -Recurse -Force
                 }        
             }
             elseif ($Group.Name -in $AllAvailableMitigations.pschildname) {
-                Remove-Item -Path "Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\$($Group.Name)" -Recurse -Force
+                Remove-Item -Path "Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\$($Group.Name)" -Recurse -Force
             }
         }        
 
@@ -175,7 +177,7 @@ Function Unprotect-WindowsSecurity {
         if (!$OnlyProcessMitigations) {
     
             # Set Data Execution Prevention (DEP) back to its default value
-            bcdedit.exe /set '{current}' nx OptIn | Out-Null
+            Set-BcdElement -Element 'nx' -Type 'Integer' -Value '0'
          
             # Remove the scheduled task that keeps the Microsoft recommended driver block rules updated
 

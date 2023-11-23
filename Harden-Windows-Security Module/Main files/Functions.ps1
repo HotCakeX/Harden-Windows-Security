@@ -93,7 +93,7 @@ if ((Get-CimInstance -ClassName Win32_OperatingSystem).OperatingSystemSKU -eq '1
 [System.Decimal]$OSBuild = [System.Environment]::OSVersion.Version.Build
 
 # Get Update Build Revision (UBR) number
-[System.Decimal]$UBR = Get-ItemPropertyValue -Path 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion' -Name 'UBR'
+[System.Decimal]$UBR = Get-ItemPropertyValue -Path 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion' -Name 'UBR'
 
 # Create full OS build number as seen in Windows Settings
 [System.Decimal]$FullOSBuild = "$OSBuild.$UBR"

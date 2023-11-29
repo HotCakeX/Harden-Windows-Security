@@ -16,7 +16,7 @@ function Remove-WDACConfig {
         [ValidateScript({
                 # Validate each Policy file in PolicyPaths parameter to make sure the user isn't accidentally trying to remove an Unsigned policy
                 $_ | ForEach-Object {
-                    $xmlTest = [xml](Get-Content $_)
+                    $xmlTest = [System.Xml.XmlDocument](Get-Content $_)
                     $RedFlag1 = $xmlTest.SiPolicy.SupplementalPolicySigners.SupplementalPolicySigner.SignerId
                     $RedFlag2 = $xmlTest.SiPolicy.UpdatePolicySigners.UpdatePolicySigner.SignerId
                     if ($RedFlag1 -or $RedFlag2) { return $True }
@@ -239,7 +239,7 @@ function Remove-WDACConfig {
 
         if ($SignedBase) {
             foreach ($PolicyPath in $PolicyPaths) {
-                $xml = [xml](Get-Content $PolicyPath)
+                $xml = [System.Xml.XmlDocument](Get-Content $PolicyPath)
                 [System.String]$PolicyID = $xml.SiPolicy.PolicyID
                 # Prevent users from accidentally attempting to remove policies that aren't even deployed on the system
                 $CurrentPolicyIDs = ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsSystemPolicy -ne 'True' }).policyID | ForEach-Object { "{$_}" }

@@ -119,7 +119,7 @@ function New-SupplementalWDACConfig {
 
         # Ensure when user selects the -Deploy parameter, the base policy is not signed
         if ($Deploy) {
-            $xmlTest = [xml](Get-Content $PolicyPath)
+            $xmlTest = [System.Xml.XmlDocument](Get-Content $PolicyPath)
             $RedFlag1 = $xmlTest.SiPolicy.SupplementalPolicySigners.SupplementalPolicySigner.SignerId
             $RedFlag2 = $xmlTest.SiPolicy.UpdatePolicySigners.UpdatePolicySigner.SignerId
             if ($RedFlag1 -or $RedFlag2) {            

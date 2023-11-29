@@ -375,14 +375,14 @@ function New-WDACConfig {
             switch ($BasePolicyType) {
                 'Allow Microsoft Base' {
                     Invoke-Command -ScriptBlock $MakeAllowMSFTWithBlockRulesSCRIPTBLOCK | Out-Null
-                    $xml = [xml](Get-Content .\AllowMicrosoftPlusBlockRules.xml)
+                    $xml = [System.Xml.XmlDocument](Get-Content .\AllowMicrosoftPlusBlockRules.xml)
                     $BasePolicyID = $xml.SiPolicy.PolicyID
                     # define the location of the base policy
                     $BasePolicy = 'AllowMicrosoftPlusBlockRules.xml' 
                 }
                 'Default Windows Base' {
                     Invoke-Command -ScriptBlock $MakeDefaultWindowsWithBlockRulesSCRIPTBLOCK | Out-Null
-                    $xml = [xml](Get-Content .\DefaultWindowsPlusBlockRules.xml)
+                    $xml = [System.Xml.XmlDocument](Get-Content .\DefaultWindowsPlusBlockRules.xml)
                     $BasePolicyID = $xml.SiPolicy.PolicyID
                     # define the location of the base policy
                     $BasePolicy = 'DefaultWindowsPlusBlockRules.xml' 
@@ -426,9 +426,9 @@ function New-WDACConfig {
                 # Get Event viewer logs for code integrity - check the file path of all of the files in the log, resolve them using the command above - show files that are no longer available on the disk
                 [scriptblock]$AuditEventLogsDeletedFilesScriptBlock = {
                     foreach ($event in Get-WinEvent -FilterHashtable @{LogName = 'Microsoft-Windows-CodeIntegrity/Operational'; ID = 3076 }) {
-                        $xml = [xml]$event.toxml()
+                        $xml = [System.Xml.XmlDocument]$event.toxml()
                         $xml.event.eventdata.data |
-                        ForEach-Object { $hash = @{} } { $hash[$_.name] = $_.'#text' } { [pscustomobject]$hash } |
+                        ForEach-Object { $Hash = @{} } { $hash[$_.name] = $_.'#text' } { [pscustomobject]$hash } |
                         ForEach-Object {
                             if ($_.'File Name' -match ($pattern = '\\Device\\HarddiskVolume(\d+)\\(.*)$')) {
                                 $hardDiskVolumeNumber = $Matches[1]

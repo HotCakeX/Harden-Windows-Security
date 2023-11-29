@@ -56,7 +56,7 @@ function New-KernelModeWDACConfig {
             [System.String]$PolicyID = "{$PolicyIDInput}"
 
             # Read the xml file as an xml object
-            [xml]$xml = Get-Content -Path $PolicyFilePathInput
+            [System.Xml.XmlDocument]$xml = Get-Content -Path $PolicyFilePathInput
 
             # Define the new values for PolicyID and BasePolicyID
             [System.String]$newPolicyID = $PolicyID

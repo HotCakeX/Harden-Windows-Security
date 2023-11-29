@@ -19,7 +19,7 @@ function Get-SignerInfo {
     )
   
     # Load the XML file and select the Signer nodes
-    $xml = [xml](Get-Content $XmlFilePath)
+    $xml = [System.Xml.XmlDocument](Get-Content $XmlFilePath)
     $Signers = $xml.SiPolicy.Signers.Signer
   
     # Create an empty array to store the output
@@ -705,7 +705,7 @@ function Compare-SignerAndCertificate {
 function Get-FileRuleOutput ($xmlPath) {
 
     # Load the xml file into a variable
-    $xml = [xml](Get-Content -Path $xmlPath)
+    $xml = [System.Xml.XmlDocument](Get-Content -Path $xmlPath)
 
     # Create an empty array to store the output
     [System.Object[]]$OutPutHashInfoProcessing = @()

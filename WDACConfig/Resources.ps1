@@ -257,40 +257,68 @@ public static extern uint QueryDosDevice(string lpDeviceName, StringBuilder lpTa
 
 ### Function to separately capture FileHashes of deleted files and FilePaths of available files from Event Viewer Audit Logs ####
 Function Get-AuditEventLogsProcessing {
-    param ([System.DateTime]$Date)
+    param (
+        [System.DateTime]$Date
+    )
 
-    $DriveLettersGlobalRootFix = Invoke-Command -ScriptBlock $DriveLettersGlobalRootFixScriptBlock
+    begin {
+        # Get the results of the local disks from the script block
+        [System.Object[]]$DriveLettersGlobalRootFix = Invoke-Command -ScriptBlock $DriveLettersGlobalRootFixScriptBlock
 
-    # Defining a custom object to store and finally return it as results
-    $AuditEventLogsProcessingResults = [PSCustomObject]@{
-        # Defining object properties as arrays
-        AvailableFilesPaths = @()
-        DeletedFileHashes   = @()
+        # Defining a custom object to store the results and return it at the end
+        $AuditEventLogsProcessingResults = [PSCustomObject]@{
+            # Defining object properties as arrays that store file paths
+            AvailableFilesPaths = [System.IO.FileInfo[]]@()
+            DeletedFileHashes   = [System.IO.FileInfo[]]@()
+        }
     }
+
+    process {
                       
-    # Event Viewer Code Integrity logs scan
-    foreach ($event in Get-WinEvent -FilterHashtable @{LogName = 'Microsoft-Windows-CodeIntegrity/Operational'; ID = 3076 } -ErrorAction SilentlyContinue | Where-Object { $_.TimeCreated -ge $Date } ) {
-        $Xml = [xml]$event.toxml()
-        $Xml.event.eventdata.data |
-        ForEach-Object { $hash = @{} } { $hash[$_.name] = $_.'#text' } { [pscustomobject]$hash } |
-        ForEach-Object {
-            if ($_.'File Name' -match ($pattern = '\\Device\\HarddiskVolume(\d+)\\(.*)$')) {
-                $hardDiskVolumeNumber = $Matches[1]
-                $remainingPath = $Matches[2]
-                $getletter = $DriveLettersGlobalRootFix | Where-Object { $_.devicepath -eq "\Device\HarddiskVolume$hardDiskVolumeNumber" }
-                $usablePath = "$($getletter.DriveLetter)$remainingPath"
-                $_.'File Name' = $_.'File Name' -replace $pattern, $usablePath
-            } # Check if file is currently on the disk
-            if (Test-Path -Path $_.'File Name') {
-                $AuditEventLogsProcessingResults.AvailableFilesPaths += $_.'File Name' 
-            } # If file is not currently on the disk, extract its hashes from event log
-            elseif (-NOT (Test-Path -Path $_.'File Name')) {
-                $AuditEventLogsProcessingResults.DeletedFileHashes += $_ | Select-Object FileVersion, 'File Name', PolicyGUID, 'SHA256 Hash', 'SHA256 Flat Hash', 'SHA1 Hash', 'SHA1 Flat Hash'
+        # Event Viewer Code Integrity logs scan
+        foreach ($event in Get-WinEvent -FilterHashtable @{LogName = 'Microsoft-Windows-CodeIntegrity/Operational'; ID = 3076 } -ErrorAction SilentlyContinue | Where-Object { $_.TimeCreated -ge $Date } ) {
+        
+            $Xml = [System.Xml.XmlDocument]$event.toxml()
+        
+            $Xml.event.eventdata.data | ForEach-Object {
+                # Begin
+                $Hash = @{} 
+            } {
+                # Process
+                $Hash[$_.name] = $_.'#text'
+            } { 
+                # End
+                [pscustomobject]$Hash
+            } | ForEach-Object {
+
+                # Define the regex pattern
+                [System.String]$Pattern = '\\Device\\HarddiskVolume(\d+)\\(.*)$'
+            
+                if ($_.'File Name' -match $Pattern) {
+                    [System.Int64]$HardDiskVolumeNumber = $Matches[1]
+                    [System.String]$RemainingPath = $Matches[2]
+                    [PSCustomObject]$GetLetter = $DriveLettersGlobalRootFix | Where-Object { $_.devicepath -eq "\Device\HarddiskVolume$HardDiskVolumeNumber" }
+                    [System.IO.FileInfo]$UsablePath = "$($GetLetter.DriveLetter)$RemainingPath"
+                    $_.'File Name' = $_.'File Name' -replace $Pattern, $UsablePath
+                }
+
+                # Check if the file is currently on the disk
+                if (Test-Path -Path $_.'File Name') {
+                    $AuditEventLogsProcessingResults.AvailableFilesPaths += $_.'File Name' 
+                }
+            
+                # If the file is not currently on the disk, extract its hashes from event log
+                else {
+                    $AuditEventLogsProcessingResults.DeletedFileHashes += $_ | Select-Object FileVersion, 'File Name', PolicyGUID, 'SHA256 Hash', 'SHA256 Flat Hash', 'SHA1 Hash', 'SHA1 Flat Hash'
+                }
             }
         }
     }
-    # return the results as an object
-    return $AuditEventLogsProcessingResults
+
+    end {
+        # return the results as an object
+        return $AuditEventLogsProcessingResults
+    }
 }
 
 
@@ -417,7 +445,7 @@ Function Remove-ZerosFromIDs {
         [System.String]$FilePath
     )    
     # Load the xml file
-    [xml]$Xml = Get-Content -Path $FilePath
+    [System.Xml.XmlDocument]$Xml = Get-Content -Path $FilePath
 
     # Get all the elements with ID attribute
     $Elements = $Xml.SelectNodes('//*[@ID]')
@@ -464,7 +492,7 @@ Function Move-UserModeToKernelMode {
     ) 
 
     # Load the XML file as an XmlDocument object
-    $Xml = [xml](Get-Content -Path $FilePath)
+    $Xml = [System.Xml.XmlDocument](Get-Content -Path $FilePath)
 
     # Get the SigningScenario nodes as an array
     $signingScenarios = $Xml.SiPolicy.SigningScenarios.SigningScenario

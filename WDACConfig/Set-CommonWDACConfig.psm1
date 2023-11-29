@@ -50,7 +50,7 @@ function Set-CommonWDACConfig {
 
         [parameter(Mandatory = $false, DontShow = $true)][System.Guid]$StrictKernelNoFlightRootsPolicyGUID,
 
-        [parameter(Mandatory = $false, DontShow = $true)][datetime]$LastUpdateCheck
+        [parameter(Mandatory = $false, DontShow = $true)][System.DateTime]$LastUpdateCheck
     )
     begin {
         # Importing resources such as functions by dot-sourcing so that they will run in the same scope and their variables will be usable

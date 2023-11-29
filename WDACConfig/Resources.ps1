@@ -2,13 +2,13 @@
 $ErrorActionPreference = 'Stop'
 
 # Minimum required OS build number
-[decimal]$Requiredbuild = '22621.2428'
+[System.Decimal]$Requiredbuild = '22621.2428'
 # Get OS build version
-[decimal]$OSBuild = [System.Environment]::OSVersion.Version.Build
+[System.Decimal]$OSBuild = [System.Environment]::OSVersion.Version.Build
 # Get Update Build Revision (UBR) number
-[decimal]$UBR = Get-ItemPropertyValue -Path 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion' -Name 'UBR'
+[System.Decimal]$UBR = Get-ItemPropertyValue -Path 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion' -Name 'UBR'
 # Create full OS build number as seen in Windows Settings
-[decimal]$FullOSBuild = "$OSBuild.$UBR"
+[System.Decimal]$FullOSBuild = "$OSBuild.$UBR"
 # Make sure the current OS build is equal or greater than the required build number
 if (-NOT ($FullOSBuild -ge $Requiredbuild)) {
     Throw [System.PlatformNotSupportedException] "You are not using the latest build of the Windows OS. A minimum build of $Requiredbuild is required but your OS build is $FullOSBuild`nPlease go to Windows Update to install the updates and then try again."
@@ -65,34 +65,34 @@ function Update-self {
 
     try {
         # Get the last update check time
-        [Datetime]$UserConfigDate = Get-CommonWDACConfig -LastUpdateCheck
+        [System.DateTime]$UserConfigDate = Get-CommonWDACConfig -LastUpdateCheck
     }
     catch {
         # If the User Config file doesn't exist then set this flag to perform online update check
-        [bool]$PerformOnlineUpdateCheck = $true 
+        [System.Boolean]$PerformOnlineUpdateCheck = $true 
     }
 
     # Ensure these are run only if the User Config file exists and contains a date for last update check
     if (!$PerformOnlineUpdateCheck) {
         # Get the current time
-        [Datetime]$CurrentDateTime = Get-Date
+        [System.DateTime]$CurrentDateTime = Get-Date
         # Calculate the minutes elapsed since the last online update check
-        [int]$TimeDiff = ($CurrentDateTime - $UserConfigDate).TotalMinutes
+        [System.Int64]$TimeDiff = ($CurrentDateTime - $UserConfigDate).TotalMinutes
     }
 
     # Only check for updates if the last attempt occured more than 10 minutes ago or the User Config file for last update check doesn't exist
     # This prevents the module from constantly doing an update check by fetching the version file from GitHub
     if (($TimeDiff -gt 10) -or $PerformOnlineUpdateCheck) {
         
-        $CurrentVersion = (Test-ModuleManifest "$psscriptroot\WDACConfig.psd1").Version.ToString()
+        [System.Version]$CurrentVersion = (Test-ModuleManifest "$psscriptroot\WDACConfig.psd1").Version.ToString()
         try {
             # First try the GitHub source
-            $LatestVersion = Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/WDACConfig/version.txt'
+            [System.Version]$LatestVersion = Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/WDACConfig/version.txt' -ProgressAction SilentlyContinue
         }
         catch {
             try {
                 # If GitHub source is unavailable, use the Azure DevOps source
-                $LatestVersion = Invoke-RestMethod -Uri 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/WDACConfig/version.txt'        
+                [System.Version]$LatestVersion = Invoke-RestMethod -Uri 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/WDACConfig/version.txt' -ProgressAction SilentlyContinue    
             }
             catch {
                 Throw [System.Security.VerificationException] 'Could not verify if the latest version of the module is installed, please check your Internet connection. You can optionally bypass the online check by using -SkipVersionCheck parameter.'
@@ -129,7 +129,7 @@ function Set-LogSize {
     [CmdletBinding()]
     param ([System.Int64]$LogSize)        
     [System.String]$LogName = 'Microsoft-Windows-CodeIntegrity/Operational'
-    $Log = New-Object System.Diagnostics.Eventing.Reader.EventLogConfiguration $LogName
+    [System.Diagnostics.Eventing.Reader.EventLogConfiguration]$Log = New-Object System.Diagnostics.Eventing.Reader.EventLogConfiguration $LogName
     $Log.MaximumSizeInBytes = $LogSize
     $Log.IsEnabled = $true
     $Log.SaveChanges()
@@ -149,19 +149,19 @@ function Test-FilePath {
     # Loop through each file path
     foreach ($file in $FilePath) {
         # Check if the file path is valid
-        if (Test-Path $file -PathType 'Leaf') {
+        if (Test-Path -Path $file -PathType 'Leaf') {
             # Get the full path of the file
-            $FileFullPath = Resolve-Path $file
+            $FileFullPath = Resolve-Path -Path $file
 
             # Initialize a variable to store the result
-            [bool]$Result = $false
+            [System.Boolean]$Result = $false
 
             # Loop through each directory path
-            foreach ($directory in $DirectoryPath) {
+            foreach ($Directory in $DirectoryPath) {
                 # Check if the directory path is valid
-                if (Test-Path $directory -PathType 'Container') {
+                if (Test-Path -Path $Directory -PathType 'Container') {
                     # Get the full path of the directory
-                    $DirectoryFullPath = Resolve-Path $directory
+                    $DirectoryFullPath = Resolve-Path -Path $Directory
 
                     # Check if the file path starts with the directory path
                     if ($FileFullPath -like "$DirectoryFullPath\*") {
@@ -172,7 +172,7 @@ function Test-FilePath {
                 }
                 else {
                     # The directory path is not valid
-                    Write-Warning "The directory path '$directory' is not valid."
+                    Write-Warning "The directory path '$Directory' is not valid."
                 }
             }
 
@@ -191,8 +191,11 @@ function Test-FilePath {
 
 # Script block that lists every \Device\Harddiskvolume - https://superuser.com/questions/1058217/list-every-device-harddiskvolume
 # These are DriveLetter mappings
+# Define a script block that fixes the drive letters in the global root namespace
 [scriptblock]$DriveLettersGlobalRootFixScriptBlock = {
-    $signature = @'
+
+    # Import the kernel32.dll functions using P/Invoke
+    [System.String]$Signature = @'
 [DllImport("kernel32.dll", SetLastError=true)]
 [return: MarshalAs(UnmanagedType.Bool)]
 public static extern bool GetVolumePathNamesForVolumeNameW([MarshalAs(UnmanagedType.LPWStr)] string lpszVolumeName,
@@ -210,36 +213,51 @@ public static extern bool FindNextVolume(IntPtr hFindVolume, [Out] StringBuilder
 public static extern uint QueryDosDevice(string lpDeviceName, StringBuilder lpTargetPath, int ucchMax);
 
 '@
-    Add-Type -ErrorAction SilentlyContinue -MemberDefinition $signature -Name Win32Utils -Namespace PInvoke -Using PInvoke, System.Text
+    # Add the signature to the current session as a new type
+    Add-Type -ErrorAction SilentlyContinue -MemberDefinition $Signature -Name 'Win32Utils' -Namespace 'PInvoke' -Using PInvoke, System.Text
 
-    [UInt32] $lpcchReturnLength = 0
-    [UInt32] $Max = 65535
-    $sbVolumeName = New-Object System.Text.StringBuilder($Max, $Max)
-    $sbPathName = New-Object System.Text.StringBuilder($Max, $Max)
-    $sbMountPoint = New-Object System.Text.StringBuilder($Max, $Max)
-    [IntPtr] $volumeHandle = [PInvoke.Win32Utils]::FindFirstVolume($sbVolumeName, $Max)
+    # Initialize some variables for storing the volume names, paths, and mount points
+    [System.UInt32]$lpcchReturnLength = 0
+    [System.UInt32]$Max = 65535
+    [System.Text.StringBuilder]$SbVolumeName = New-Object -TypeName System.Text.StringBuilder($Max, $Max)
+    [System.Text.StringBuilder]$SbPathName = New-Object -TypeName System.Text.StringBuilder($Max, $Max)
+    [System.Text.StringBuilder]$SbMountPoint = New-Object -TypeName System.Text.StringBuilder($Max, $Max)
+    
+    # Find the first volume in the system and get a handle to it
+    [System.IntPtr]$VolumeHandle = [PInvoke.Win32Utils]::FindFirstVolume($SbVolumeName, $Max)
+   
+    # Loop through all the volumes in the system
     do {
-        $volume = $sbVolumeName.toString()
-        $unused = [PInvoke.Win32Utils]::GetVolumePathNamesForVolumeNameW($volume, $sbMountPoint, $Max, [Ref] $lpcchReturnLength)
-        $ReturnLength = [PInvoke.Win32Utils]::QueryDosDevice($volume.Substring(4, $volume.Length - 1 - 4), $sbPathName, [UInt32] $Max)
+        # Get the volume name as a string
+        [System.String]$Volume = $SbVolumeName.toString()
+        # Get the mount point for the volume, if any
+        [System.Boolean]$unused = [PInvoke.Win32Utils]::GetVolumePathNamesForVolumeNameW($Volume, $SbMountPoint, $Max, [System.Management.Automation.PSReference]$lpcchReturnLength)
+        # Get the device path for the volume, if any
+        [System.UInt32]$ReturnLength = [PInvoke.Win32Utils]::QueryDosDevice($Volume.Substring(4, $Volume.Length - 1 - 4), $SbPathName, [System.UInt32]$Max)
+       
+        # If the device path is found, create a custom object with the drive mapping information
         if ($ReturnLength) {
-            $DriveMapping = @{
-                DriveLetter = $sbMountPoint.toString()
-                VolumeName  = $volume
-                DevicePath  = $sbPathName.ToString()
+            [System.Collections.Hashtable]$DriveMapping = @{
+                DriveLetter = $SbMountPoint.toString()
+                VolumeName  = $Volume
+                DevicePath  = $SbPathName.ToString()
             }
-            Write-Output (New-Object PSObject -Property $DriveMapping)
+            # Write the custom object to the output stream
+            Write-Output (New-Object -TypeName PSObject -Property $DriveMapping)
         }
         else {
-            Write-Output 'No mountpoint found for: ' + $volume
+            # If no device path is found, write a message to the output stream
+            Write-Output 'No mountpoint found for: ' + $Volume
         } 
-    } while ([PInvoke.Win32Utils]::FindNextVolume([IntPtr] $volumeHandle, $sbVolumeName, $Max))
+        # Find the next volume in the system and repeat the loop
+    } while ([PInvoke.Win32Utils]::FindNextVolume([System.IntPtr]$VolumeHandle, $SbVolumeName, $Max))
+
 }
 
 
 ### Function to separately capture FileHashes of deleted files and FilePaths of available files from Event Viewer Audit Logs ####
 Function Get-AuditEventLogsProcessing {
-    param ($Date)
+    param ([System.DateTime]$Date)
 
     $DriveLettersGlobalRootFix = Invoke-Command -ScriptBlock $DriveLettersGlobalRootFixScriptBlock
 
@@ -263,10 +281,10 @@ Function Get-AuditEventLogsProcessing {
                 $usablePath = "$($getletter.DriveLetter)$remainingPath"
                 $_.'File Name' = $_.'File Name' -replace $pattern, $usablePath
             } # Check if file is currently on the disk
-            if (Test-Path $_.'File Name') {
+            if (Test-Path -Path $_.'File Name') {
                 $AuditEventLogsProcessingResults.AvailableFilesPaths += $_.'File Name' 
             } # If file is not currently on the disk, extract its hashes from event log
-            elseif (-NOT (Test-Path $_.'File Name')) {
+            elseif (-NOT (Test-Path -Path $_.'File Name')) {
                 $AuditEventLogsProcessingResults.DeletedFileHashes += $_ | Select-Object FileVersion, 'File Name', PolicyGUID, 'SHA256 Hash', 'SHA256 Flat Hash', 'SHA1 Hash', 'SHA1 Flat Hash'
             }
         }
@@ -335,7 +353,7 @@ $RuleRefsContent
 
 # Gets the latest Microsoft Recommended block rules, removes its allow all rules and sets HVCI to strict
 [scriptblock]$GetBlockRulesSCRIPTBLOCK = {             
-    $Rules = (Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/public/windows/security/application-security/application-control/windows-defender-application-control/design/applications-that-can-bypass-wdac.md').Content -replace "(?s).*``````xml(.*)``````.*", '$1' -replace '<Allow\sID="ID_ALLOW_A_[12]".*/>|<FileRuleRef\sRuleID="ID_ALLOW_A_[12]".*/>', ''
+    $Rules = (Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/public/windows/security/application-security/application-control/windows-defender-application-control/design/applications-that-can-bypass-wdac.md' -ProgressAction SilentlyContinue).Content -replace "(?s).*``````xml(.*)``````.*", '$1' -replace '<Allow\sID="ID_ALLOW_A_[12]".*/>|<FileRuleRef\sRuleID="ID_ALLOW_A_[12]".*/>', ''
     $Rules | Out-File '.\Microsoft recommended block rules TEMP.xml'
     # Removing empty lines from policy file
     Get-Content '.\Microsoft recommended block rules TEMP.xml' | Where-Object { $_.trim() -ne '' } | Out-File '.\Microsoft recommended block rules.xml'                

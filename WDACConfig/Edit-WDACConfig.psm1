@@ -398,7 +398,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
             Remove-Item -Path ".\SupplementalPolicy $SuppPolicyName.xml" -Force -ErrorAction SilentlyContinue
             # Get the current date so that instead of the entire event viewer logs, only audit logs created after running this module will be captured
             # The notice about variable being assigned and never used should be ignored - it's being dot-sourced from Resources file
-            [datetime]$Date = Get-Date
+            [System.DateTime]$Date = Get-Date
             # An empty array that holds the Policy XML files - This array will eventually be used to create the final Supplemental policy
             [System.Object[]]$PolicyXMLFilesArray = @()
 

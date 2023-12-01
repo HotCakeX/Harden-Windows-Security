@@ -186,7 +186,7 @@ function New-WDACConfig {
             }
             if ($Deploy -and $MakeAllowMSFTWithBlockRules) {            
                 CiTool --update-policy "$PolicyID.cip" -json | Out-Null
-                Write-Host "`n"
+                Write-Host -Object "`n"
                 Remove-Item -Path "$PolicyID.cip" -Force
             }
             if ($NoCIP)
@@ -258,7 +258,7 @@ function New-WDACConfig {
 
             if ($Deploy -and $MakeDefaultWindowsWithBlockRules) {            
                 CiTool --update-policy "$PolicyID.cip" -json | Out-Null
-                Write-Host "`n"
+                Write-Host -Object "`n"
                 Remove-Item -Path "$PolicyID.cip" -Force
             }
             if ($NoCIP) { Remove-Item -Path "$PolicyID.cip" -Force }            
@@ -418,7 +418,7 @@ function New-WDACConfig {
 
             &$WriteHotPink "`nGenerating Supplemental policy with the following specifications:"
             $PolicyMakerHashTable
-            Write-Host "`n"
+            Write-Host -Object "`n"
             # Create the supplemental policy via parameter splatting for files in event viewer that are currently on the disk
             New-CIPolicy @PolicyMakerHashTable
 

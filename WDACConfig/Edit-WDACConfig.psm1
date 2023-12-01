@@ -275,7 +275,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
 
                     # Store the program paths that user browses for in an array
                     [System.Object[]]$ProgramsPaths = @()
-                    Write-Host "`nSelect program directories to scan" -ForegroundColor Cyan
+                    Write-Host -Object "`nSelect program directories to scan" -ForegroundColor Cyan
                     # Showing folder picker GUI to the user for folder path selection
                     do {
                         [System.Reflection.Assembly]::LoadWithPartialName('System.windows.forms') | Out-Null
@@ -292,7 +292,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                     # Make sure User browsed for at least 1 directory
                     # Exit the operation if user didn't select any folder paths
                     if ($ProgramsPaths.count -eq 0) {                                      
-                        Write-Host "`nNo program folder was selected, reverting the changes and quitting...`n" -ForegroundColor Red
+                        Write-Host -Object "`nNo program folder was selected, reverting the changes and quitting...`n" -ForegroundColor Red
                         # Causing break here to stop operation. Finally block will be triggered to Re-Deploy Base policy in Enforced mode
                         break
                     }
@@ -327,7 +327,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                     # Remove-Item -Path 'c:\EnforcedModeSnapBack.cmd' -Force                
                 }
                 
-                Write-Host "`nHere are the paths you selected:" -ForegroundColor Yellow
+                Write-Host -Object "`nHere are the paths you selected:" -ForegroundColor Yellow
                 $ProgramsPaths | ForEach-Object -Process { $_ }
     
                 #Process Program Folders From User input                    
@@ -458,7 +458,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
 
                     # Store the program paths that user browses for in an array
                     [System.Object[]]$ProgramsPaths = @()
-                    Write-Host "`nSelect program directories to scan`n" -ForegroundColor Cyan
+                    Write-Host -Object "`nSelect program directories to scan`n" -ForegroundColor Cyan
                     # Showing folder picker GUI to the user for folder path selection
                     do {
                         [System.Reflection.Assembly]::LoadWithPartialName('System.windows.forms') | Out-Null
@@ -475,17 +475,17 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                     # Make sure User browsed for at least 1 directory
                     # Exit the operation if user didn't select any folder paths
                     if ($ProgramsPaths.count -eq 0) {                                      
-                        Write-Host "`nNo program folder was selected, reverting the changes and quitting...`n" -ForegroundColor Red
+                        Write-Host -Object "`nNo program folder was selected, reverting the changes and quitting...`n" -ForegroundColor Red
                         # Causing break here to stop operation. Finally block will be triggered to Re-Deploy Base policy in Enforced mode
                         break
                     }
                     
-                    Write-Host 'Here are the paths you selected:' -ForegroundColor Yellow
+                    Write-Host -Object 'Here are the paths you selected:' -ForegroundColor Yellow
                     $ProgramsPaths | ForEach-Object -Process { $_ }
 
                     ################################### EventCapturing ################################
 
-                    Write-Host 'Scanning Windows Event logs and creating a policy file, please wait...' -ForegroundColor Cyan    
+                    Write-Host -Object 'Scanning Windows Event logs and creating a policy file, please wait...' -ForegroundColor Cyan    
 
                     # Extracting the array content from Get-AuditEventLogsProcessing function
                     $AuditEventLogsProcessingResults = Get-AuditEventLogsProcessing -Date $Date
@@ -785,7 +785,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                     Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\DefaultWindows_Enforced.xml' -Destination '.\DefaultWindows_Enforced.xml'
                     # Scan PowerShell core directory and add them to the Default Windows base policy so that the module can be used after it's been deployed
                     if (Test-Path 'C:\Program Files\PowerShell') {
-                        Write-Host 'Creating allow rules for PowerShell in the DefaultWindows base policy so you can continue using this module after deploying it.' -ForegroundColor Blue                    
+                        Write-Host -Object 'Creating allow rules for PowerShell in the DefaultWindows base policy so you can continue using this module after deploying it.' -ForegroundColor Blue                    
                         New-CIPolicy -ScanPath 'C:\Program Files\PowerShell' -Level FilePublisher -NoScript -Fallback Hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -FilePath .\AllowPowerShell.xml
                         Merge-CIPolicy -PolicyPaths .\DefaultWindows_Enforced.xml, .\AllowPowerShell.xml, '.\Microsoft recommended block rules.xml' -OutputFilePath .\BasePolicy.xml | Out-Null
                     }

@@ -343,7 +343,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                     
                     # Store the program paths that user browses for in an array
                     [System.Object[]]$ProgramsPaths = @()
-                    Write-Host "`nSelect program directories to scan" -ForegroundColor Cyan
+                    Write-Host -Object "`nSelect program directories to scan" -ForegroundColor Cyan
                     # Showing folder picker GUI to the user for folder path selection
                     do {
                         [System.Reflection.Assembly]::LoadWithPartialName('System.windows.forms') | Out-Null
@@ -360,17 +360,17 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                     # Make sure User browsed for at least 1 directory
                     # Exit the operation if user didn't select any folder paths
                     if ($ProgramsPaths.count -eq 0) {                                      
-                        Write-Host "`nNo program folder was selected, reverting the changes and quitting...`n" -ForegroundColor Red
+                        Write-Host -Object "`nNo program folder was selected, reverting the changes and quitting...`n" -ForegroundColor Red
                         # Causing break here to stop operation. Finally block will be triggered to Re-Deploy Base policy in Enforced mode
                         break
                     }
                     
-                    Write-Host 'Here are the paths you selected:' -ForegroundColor Yellow
+                    Write-Host -Object 'Here are the paths you selected:' -ForegroundColor Yellow
                     $ProgramsPaths | ForEach-Object -Process { $_ }
 
                     ################################### EventCapturing ################################
 
-                    Write-Host 'Scanning Windows Event logs and creating a policy file, please wait...' -ForegroundColor Cyan                    
+                    Write-Host -Object 'Scanning Windows Event logs and creating a policy file, please wait...' -ForegroundColor Cyan                    
 
                     # Extracting the array content from Get-AuditEventLogsProcessing function
                     $AuditEventLogsProcessingResults = Get-AuditEventLogsProcessing -Date $Date
@@ -708,7 +708,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                   
                     # Store the program paths that user browses for in an array
                     [System.Object[]]$ProgramsPaths = @()
-                    Write-Host "`nSelect program directories to scan`n" -ForegroundColor Cyan
+                    Write-Host -Object "`nSelect program directories to scan`n" -ForegroundColor Cyan
                     # Showing folder picker GUI to the user for folder path selection
                     do {
                         [System.Reflection.Assembly]::LoadWithPartialName('System.windows.forms') | Out-Null
@@ -725,7 +725,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                     # Make sure User browsed for at least 1 directory
                     # Exit the operation if user didn't select any folder paths
                     if ($ProgramsPaths.count -eq 0) {                                      
-                        Write-Host "`nNo program folder was selected, reverting the changes and quitting...`n" -ForegroundColor Red
+                        Write-Host -Object "`nNo program folder was selected, reverting the changes and quitting...`n" -ForegroundColor Red
                         # Causing break here to stop operation. Finally block will be triggered to Re-Deploy Base policy in Enforced mode
                         break
                     }
@@ -753,7 +753,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                     Remove-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce' -Name '*CIPolicySnapBack' -Force                                        
                 }
         
-                Write-Host "`nHere are the paths you selected:" -ForegroundColor Yellow
+                Write-Host -Object "`nHere are the paths you selected:" -ForegroundColor Yellow
                 $ProgramsPaths | ForEach-Object -Process { $_ }
     
                 #Process Program Folders From User input                    

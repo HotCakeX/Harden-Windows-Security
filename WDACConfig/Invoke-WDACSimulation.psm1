@@ -87,7 +87,7 @@ function Invoke-WDACSimulation {
                         'valid' {  
                             # If debug is used show extra info on the console
                             if ($Debug) {                        
-                                Write-Host "Currently processing signed file: `n$CurrentFilePath" -ForegroundColor Yellow
+                                Write-Host -Object "Currently processing signed file: `n$CurrentFilePath" -ForegroundColor Yellow
                             }
                             # Use the function in Resources2.ps1 file to process it
                             $SignedResult += Compare-SignerAndCertificate -XmlFilePath $XmlFilePath -SignedFilePath $CurrentFilePath | Where-Object -FilterScript { ($_.CertRootMatch -eq $true) -and ($_.CertNameMatch -eq $true) -and ($_.CertPublisherMatch -eq $true) }
@@ -220,7 +220,7 @@ function Invoke-WDACSimulation {
             $MegaOutputObject | Select-Object -Property FilePath, source, Permission -Unique | Sort-Object -Property Permission | Export-Csv -Path .\WDACSimulationOutput.csv -Force
 
             if ($Debug) {
-                Write-Host 'Files that were UNSIGNED' -ForegroundColor Blue
+                Write-Host -Object 'Files that were UNSIGNED' -ForegroundColor Blue
                 $AllowedUnsignedFilePaths
             }        
            

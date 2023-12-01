@@ -289,7 +289,7 @@ function Remove-WDACConfig {
                 Remove-Item -Path ".\$PolicyID.cip" -Force
                 Rename-Item -Path "$PolicyID.cip.p7" -NewName "$PolicyID.cip" -Force
                 CiTool --update-policy ".\$PolicyID.cip" -json | Out-Null 
-                Write-Host "`nPolicy with the following details has been Re-signed and Re-deployed in Unsigned mode.`nPlease restart your system." -ForegroundColor Green
+                Write-Host -Object "`nPolicy with the following details has been Re-signed and Re-deployed in Unsigned mode.`nPlease restart your system." -ForegroundColor Green
                 Write-Output -InputObject "PolicyName = $PolicyName"
                 Write-Output -InputObject "PolicyGUID = $PolicyID`n"
             }
@@ -300,7 +300,7 @@ function Remove-WDACConfig {
             # If IDs were supplied by user
             foreach ($ID in $PolicyIDs ) {
                 citool --remove-policy "{$ID}" -json | Out-Null                
-                Write-Host "Policy with the ID $ID has been successfully removed." -ForegroundColor Green                
+                Write-Host -Object "Policy with the ID $ID has been successfully removed." -ForegroundColor Green                
             }
 
             # If names were supplied by user
@@ -315,7 +315,7 @@ function Remove-WDACConfig {
 
             $NameID | Select-Object -Unique | ForEach-Object -Process {
                 citool --remove-policy "{$_}" -json | Out-Null               
-                Write-Host "Policy with the ID $_ has been successfully removed." -ForegroundColor Green                
+                Write-Host -Object "Policy with the ID $_ has been successfully removed." -ForegroundColor Green                
             }
         }
     }

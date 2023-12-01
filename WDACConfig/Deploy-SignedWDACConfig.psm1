@@ -159,7 +159,7 @@ function Deploy-SignedWDACConfig {
             if ($Deploy) {
 
                 CiTool --update-policy ".\$PolicyID.cip" -json | Out-Null
-                Write-Host "`npolicy with the following details has been Signed and Deployed in Enforced Mode:" -ForegroundColor Green        
+                Write-Host -Object "`npolicy with the following details has been Signed and Deployed in Enforced Mode:" -ForegroundColor Green        
                 Write-Output -InputObject "PolicyName = $PolicyName"
                 Write-Output -InputObject "PolicyGUID = $PolicyID`n"
                 Remove-Item -Path ".\$PolicyID.cip" -Force
@@ -194,7 +194,7 @@ function Deploy-SignedWDACConfig {
                     # Ask user question about whether or not to add the Signed policy xml file to the User Config Json for easier usage later
                     $userInput = ''
                     while ($userInput -notin 1, 2) {
-                        $userInput = $(Write-Host 'Add the Signed policy xml file path just created to the User Configurations? Please enter 1 to Confirm or 2 to Skip.' -ForegroundColor Cyan ; Read-Host) 
+                        $userInput = $(Write-Host -Object 'Add the Signed policy xml file path just created to the User Configurations? Please enter 1 to Confirm or 2 to Skip.' -ForegroundColor Cyan ; Read-Host) 
                         if ($userInput -eq 1) {
                             Set-CommonWDACConfig -SignedPolicyPath $PolicyPath
                             &$WriteHotPink "Added $PolicyPath to the User Configuration file."             
@@ -210,7 +210,7 @@ function Deploy-SignedWDACConfig {
             }
 
             else {            
-                Write-Host "`npolicy with the following details has been Signed and is ready for deployment:" -ForegroundColor Green
+                Write-Host -Object "`npolicy with the following details has been Signed and is ready for deployment:" -ForegroundColor Green
                 Write-Output -InputObject "PolicyName = $PolicyName"
                 Write-Output -InputObject "PolicyGUID = $PolicyID`n"
             }

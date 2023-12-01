@@ -149,7 +149,7 @@ function New-SupplementalWDACConfig {
 
             &$WriteHotPink "`nGenerating Supplemental policy with the following specifications:"
             $PolicyMakerHashTable
-            Write-Host "`n"
+            Write-Host -Object "`n"
             # Create the supplemental policy via parameter splatting
             New-CIPolicy @PolicyMakerHashTable           
             

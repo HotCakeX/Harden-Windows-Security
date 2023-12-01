@@ -153,9 +153,9 @@ function New-DenyWDACConfig {
             
             if ($Deploy) {                
                 CiTool --update-policy "$policyID.cip" -json | Out-Null               
-                Write-Host -NoNewline "`n$policyID.cip for " -ForegroundColor Green
-                Write-Host -NoNewline "$PolicyName" -ForegroundColor Magenta
-                Write-Host ' has been deployed.' -ForegroundColor Green                
+                Write-Host -NoNewline -Object "`n$policyID.cip for " -ForegroundColor Green
+                Write-Host -NoNewline -Object "$PolicyName" -ForegroundColor Magenta
+                Write-Host -Object ' has been deployed.' -ForegroundColor Green                
                 Remove-Item -Path "$policyID.cip" -Force
             }
         }
@@ -208,9 +208,9 @@ function New-DenyWDACConfig {
             } 
             if ($Deploy) {                
                 CiTool --update-policy "$policyID.cip" -json | Out-Null             
-                Write-Host -NoNewline "`n$policyID.cip for " -ForegroundColor Green
-                Write-Host -NoNewline "$PolicyName" -ForegroundColor Magenta
-                Write-Host ' has been deployed.' -ForegroundColor Green                
+                Write-Host -NoNewline -Object "`n$policyID.cip for " -ForegroundColor Green
+                Write-Host -NoNewline -Object "$PolicyName" -ForegroundColor Magenta
+                Write-Host -Object ' has been deployed.' -ForegroundColor Green                
                 Remove-Item -Path "$policyID.cip" -Force
             }   
         }

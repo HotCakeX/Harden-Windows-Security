@@ -16,14 +16,14 @@ if (-NOT ($FullOSBuild -ge $Requiredbuild)) {
 
 # Get the path to SignTool
 function Get-SignTool {
-    param(    
+    param(
         [parameter(Mandatory = $false)][System.String]$SignToolExePath
-    ) 
+    )
     # If Sign tool path wasn't provided by parameter, try to detect it automatically, if fails, stop the operation
     if (!$SignToolExePath) {
         if ($Env:PROCESSOR_ARCHITECTURE -eq 'AMD64') {
             if ( Test-Path -Path 'C:\Program Files (x86)\Windows Kits\*\bin\*\x64\signtool.exe') {
-                $SignToolExePath = 'C:\Program Files (x86)\Windows Kits\*\bin\*\x64\signtool.exe' 
+                $SignToolExePath = 'C:\Program Files (x86)\Windows Kits\*\bin\*\x64\signtool.exe'
             }
             else {
                 Throw [System.IO.FileNotFoundException] 'signtool.exe could not be found'
@@ -39,7 +39,7 @@ function Get-SignTool {
         }
     }
     try {
-        # Validate the SignTool executable    
+        # Validate the SignTool executable
         [System.Version]$WindowsSdkVersion = '10.0.22621.755' # Setting the minimum version of SignTool that is allowed to be executed
         [System.Boolean]$GreenFlag1 = (((Get-Item -Path $SignToolExePath).VersionInfo).ProductVersionRaw -ge $WindowsSdkVersion)
         [System.Boolean]$GreenFlag2 = (((Get-Item -Path $SignToolExePath).VersionInfo).FileVersionRaw -ge $WindowsSdkVersion)
@@ -52,11 +52,11 @@ function Get-SignTool {
     }
     # If any of the 5 checks above fails, the operation stops
     if (!$GreenFlag1 -or !$GreenFlag2 -or !$GreenFlag3 -or !$GreenFlag4 -or !$GreenFlag5) {
-        Throw [System.Security.VerificationException] 'The SignTool executable was found but could not be verified. Please download the latest Windows SDK to get the newest SignTool executable. Official download link: http://aka.ms/WinSDK'     
+        Throw [System.Security.VerificationException] 'The SignTool executable was found but could not be verified. Please download the latest Windows SDK to get the newest SignTool executable. Official download link: http://aka.ms/WinSDK'
     }
     else {
         return $SignToolExePath
-    }       
+    }
 }
 
 
@@ -69,7 +69,7 @@ function Update-self {
     }
     catch {
         # If the User Config file doesn't exist then set this flag to perform online update check
-        [System.Boolean]$PerformOnlineUpdateCheck = $true 
+        [System.Boolean]$PerformOnlineUpdateCheck = $true
     }
 
     # Ensure these are run only if the User Config file exists and contains a date for last update check
@@ -83,7 +83,7 @@ function Update-self {
     # Only check for updates if the last attempt occured more than 10 minutes ago or the User Config file for last update check doesn't exist
     # This prevents the module from constantly doing an update check by fetching the version file from GitHub
     if (($TimeDiff -gt 10) -or $PerformOnlineUpdateCheck) {
-        
+
         [System.Version]$CurrentVersion = (Test-ModuleManifest "$psscriptroot\WDACConfig.psd1").Version.ToString()
         try {
             # First try the GitHub source
@@ -92,7 +92,7 @@ function Update-self {
         catch {
             try {
                 # If GitHub source is unavailable, use the Azure DevOps source
-                [System.Version]$LatestVersion = Invoke-RestMethod -Uri 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/WDACConfig/version.txt' -ProgressAction SilentlyContinue    
+                [System.Version]$LatestVersion = Invoke-RestMethod -Uri 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/WDACConfig/version.txt' -ProgressAction SilentlyContinue
             }
             catch {
                 Throw [System.Security.VerificationException] 'Could not verify if the latest version of the module is installed, please check your Internet connection. You can optionally bypass the online check by using -SkipVersionCheck parameter.'
@@ -104,30 +104,30 @@ function Update-self {
             # Do this if the module was installed properly using Install-module cmdlet
             try {
                 Uninstall-Module -Name 'WDACConfig' -AllVersions -Force -ErrorAction Stop
-                Install-Module -Name 'WDACConfig' -RequiredVersion $LatestVersion -Force              
+                Install-Module -Name 'WDACConfig' -RequiredVersion $LatestVersion -Force
                 Import-Module -Name 'WDACConfig' -RequiredVersion $LatestVersion -Force -Global
             }
             # Do this if module files/folder was just copied to Documents folder and not properly installed - Should rarely happen
             catch {
                 Install-Module -Name 'WDACConfig' -RequiredVersion $LatestVersion -Force
                 Import-Module -Name 'WDACConfig' -RequiredVersion $LatestVersion -Force -Global
-            }    
+            }
             # Make sure the old version isn't run after update
-            Write-Output "$($PSStyle.Foreground.FromRGB(152,255,152))Update successful, please run the cmdlet again.$($PSStyle.Reset)"          
+            Write-Output "$($PSStyle.Foreground.FromRGB(152,255,152))Update successful, please run the cmdlet again.$($PSStyle.Reset)"
             break
             return
         }
 
         # Reset the last update timer to the current time
         Set-CommonWDACConfig -LastUpdateCheck $(Get-Date ) | Out-Null
-    }    
+    }
 }
 
 
 # Increase Code Integrity Operational Event Logs size from the default 1MB to user defined size
 function Set-LogSize {
     [CmdletBinding()]
-    param ([System.Int64]$LogSize)        
+    param ([System.Int64]$LogSize)
     [System.String]$LogName = 'Microsoft-Windows-CodeIntegrity/Operational'
     [System.Diagnostics.Eventing.Reader.EventLogConfiguration]$Log = New-Object System.Diagnostics.Eventing.Reader.EventLogConfiguration $LogName
     $Log.MaximumSizeInBytes = $LogSize
@@ -192,14 +192,14 @@ function Test-FilePath {
 # Script block that lists every \Device\Harddiskvolume - https://superuser.com/questions/1058217/list-every-device-harddiskvolume
 # These are DriveLetter mappings
 # Define a script block that fixes the drive letters in the global root namespace
-[scriptblock]$DriveLettersGlobalRootFixScriptBlock = {
+[System.Management.Automation.ScriptBlock]$DriveLettersGlobalRootFixScriptBlock = {
 
     # Import the kernel32.dll functions using P/Invoke
     [System.String]$Signature = @'
 [DllImport("kernel32.dll", SetLastError=true)]
 [return: MarshalAs(UnmanagedType.Bool)]
 public static extern bool GetVolumePathNamesForVolumeNameW([MarshalAs(UnmanagedType.LPWStr)] string lpszVolumeName,
-[MarshalAs(UnmanagedType.LPWStr)] [Out] StringBuilder lpszVolumeNamePaths, uint cchBuferLength, 
+[MarshalAs(UnmanagedType.LPWStr)] [Out] StringBuilder lpszVolumeNamePaths, uint cchBuferLength,
 ref UInt32 lpcchReturnLength);
 
 [DllImport("kernel32.dll", SetLastError = true)]
@@ -222,10 +222,10 @@ public static extern uint QueryDosDevice(string lpDeviceName, StringBuilder lpTa
     [System.Text.StringBuilder]$SbVolumeName = New-Object -TypeName System.Text.StringBuilder($Max, $Max)
     [System.Text.StringBuilder]$SbPathName = New-Object -TypeName System.Text.StringBuilder($Max, $Max)
     [System.Text.StringBuilder]$SbMountPoint = New-Object -TypeName System.Text.StringBuilder($Max, $Max)
-    
+
     # Find the first volume in the system and get a handle to it
     [System.IntPtr]$VolumeHandle = [PInvoke.Win32Utils]::FindFirstVolume($SbVolumeName, $Max)
-   
+
     # Loop through all the volumes in the system
     do {
         # Get the volume name as a string
@@ -234,7 +234,7 @@ public static extern uint QueryDosDevice(string lpDeviceName, StringBuilder lpTa
         [System.Boolean]$unused = [PInvoke.Win32Utils]::GetVolumePathNamesForVolumeNameW($Volume, $SbMountPoint, $Max, [System.Management.Automation.PSReference]$lpcchReturnLength)
         # Get the device path for the volume, if any
         [System.UInt32]$ReturnLength = [PInvoke.Win32Utils]::QueryDosDevice($Volume.Substring(4, $Volume.Length - 1 - 4), $SbPathName, [System.UInt32]$Max)
-       
+
         # If the device path is found, create a custom object with the drive mapping information
         if ($ReturnLength) {
             [System.Collections.Hashtable]$DriveMapping = @{
@@ -248,7 +248,7 @@ public static extern uint QueryDosDevice(string lpDeviceName, StringBuilder lpTa
         else {
             # If no device path is found, write a message to the output stream
             Write-Output 'No mountpoint found for: ' + $Volume
-        } 
+        }
         # Find the next volume in the system and repeat the loop
     } while ([PInvoke.Win32Utils]::FindNextVolume([System.IntPtr]$VolumeHandle, $SbVolumeName, $Max))
 
@@ -274,39 +274,36 @@ Function Get-AuditEventLogsProcessing {
     }
 
     process {
-                      
+
         # Event Viewer Code Integrity logs scan
-        foreach ($event in Get-WinEvent -FilterHashtable @{LogName = 'Microsoft-Windows-CodeIntegrity/Operational'; ID = 3076 } -ErrorAction SilentlyContinue | Where-Object { $_.TimeCreated -ge $Date } ) {
-        
+        foreach ($event in Get-WinEvent -FilterHashtable @{LogName = 'Microsoft-Windows-CodeIntegrity/Operational'; ID = 3076 } -ErrorAction SilentlyContinue | Where-Object -FilterScript { $_.TimeCreated -ge $Date } ) {
+
             $Xml = [System.Xml.XmlDocument]$event.toxml()
-        
-            $Xml.event.eventdata.data | ForEach-Object {
-                # Begin
-                $Hash = @{} 
-            } {
-                # Process
+
+            $Xml.event.eventdata.data | ForEach-Object -Begin {
+                $Hash = @{}
+            } -Process {
                 $Hash[$_.name] = $_.'#text'
-            } { 
-                # End
+            } -End {
                 [pscustomobject]$Hash
             } | ForEach-Object {
 
                 # Define the regex pattern
                 [System.String]$Pattern = '\\Device\\HarddiskVolume(\d+)\\(.*)$'
-            
+
                 if ($_.'File Name' -match $Pattern) {
                     [System.Int64]$HardDiskVolumeNumber = $Matches[1]
                     [System.String]$RemainingPath = $Matches[2]
-                    [PSCustomObject]$GetLetter = $DriveLettersGlobalRootFix | Where-Object { $_.devicepath -eq "\Device\HarddiskVolume$HardDiskVolumeNumber" }
+                    [PSCustomObject]$GetLetter = $DriveLettersGlobalRootFix | Where-Object -FilterScript { $_.devicepath -eq "\Device\HarddiskVolume$HardDiskVolumeNumber" }
                     [System.IO.FileInfo]$UsablePath = "$($GetLetter.DriveLetter)$RemainingPath"
                     $_.'File Name' = $_.'File Name' -replace $Pattern, $UsablePath
                 }
 
                 # Check if the file is currently on the disk
                 if (Test-Path -Path $_.'File Name') {
-                    $AuditEventLogsProcessingResults.AvailableFilesPaths += $_.'File Name' 
+                    $AuditEventLogsProcessingResults.AvailableFilesPaths += $_.'File Name'
                 }
-            
+
                 # If the file is not currently on the disk, extract its hashes from event log
                 else {
                     $AuditEventLogsProcessingResults.DeletedFileHashes += $_ | Select-Object FileVersion, 'File Name', PolicyGUID, 'SHA256 Hash', 'SHA256 Flat Hash', 'SHA1 Hash', 'SHA1 Flat Hash'
@@ -327,7 +324,7 @@ function New-EmptyPolicy {
     param (
         $RulesContent,
         $RuleRefsContent
-    )    
+    )
     [System.String]$EmptyPolicy = @"
 <?xml version="1.0" encoding="utf-8"?>
 <SiPolicy xmlns="urn:schemas-microsoft-com:sipolicy" PolicyType="Base Policy">
@@ -380,12 +377,12 @@ $RuleRefsContent
 
 
 # Gets the latest Microsoft Recommended block rules, removes its allow all rules and sets HVCI to strict
-[scriptblock]$GetBlockRulesSCRIPTBLOCK = {             
-    $Rules = (Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/public/windows/security/application-security/application-control/windows-defender-application-control/design/applications-that-can-bypass-wdac.md' -ProgressAction SilentlyContinue).Content -replace "(?s).*``````xml(.*)``````.*", '$1' -replace '<Allow\sID="ID_ALLOW_A_[12]".*/>|<FileRuleRef\sRuleID="ID_ALLOW_A_[12]".*/>', ''
+[System.Management.Automation.ScriptBlock]$GetBlockRulesSCRIPTBLOCK = {
+    [System.String]$Rules = (Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/public/windows/security/application-security/application-control/windows-defender-application-control/design/applications-that-can-bypass-wdac.md' -ProgressAction SilentlyContinue).Content -replace "(?s).*``````xml(.*)``````.*", '$1' -replace '<Allow\sID="ID_ALLOW_A_[12]".*/>|<FileRuleRef\sRuleID="ID_ALLOW_A_[12]".*/>', ''
     $Rules | Out-File '.\Microsoft recommended block rules TEMP.xml'
     # Removing empty lines from policy file
-    Get-Content '.\Microsoft recommended block rules TEMP.xml' | Where-Object { $_.trim() -ne '' } | Out-File '.\Microsoft recommended block rules.xml'                
-    Remove-Item '.\Microsoft recommended block rules TEMP.xml' -Force
+    Get-Content -Path '.\Microsoft recommended block rules TEMP.xml' | Where-Object -FilterScript { $_.trim() -ne '' } | Out-File -FilePath '.\Microsoft recommended block rules.xml'
+    Remove-Item -Path '.\Microsoft recommended block rules TEMP.xml' -Force
     Set-RuleOption -FilePath '.\Microsoft recommended block rules.xml' -Option 3 -Delete
     Set-HVCIOptions -Strict -FilePath '.\Microsoft recommended block rules.xml'
     [PSCustomObject]@{
@@ -398,20 +395,20 @@ $RuleRefsContent
 function Confirm-CertCN ([System.String]$CN) {
     $certs = foreach ($cert in (Get-ChildItem 'Cert:\CurrentUser\my')) {
         (($cert.Subject -split ',' | Select-Object -First 1) -replace 'CN=', '').Trim()
-    }       
+    }
     $certs -contains $CN ? $true : $false
 }
 
 
 # script blocks for custom color writing
-[scriptblock]$WriteHotPink = { Write-Output "$($PSStyle.Foreground.FromRGB(255,105,180))$($args[0])$($PSStyle.Reset)" }
-[scriptblock]$WritePink = { Write-Output "$($PSStyle.Foreground.FromRGB(255,0,230))$($args[0])$($PSStyle.Reset)" }
-[scriptblock]$WriteLavender = { Write-Output "$($PSStyle.Foreground.FromRgb(255,179,255))$($args[0])$($PSStyle.Reset)" }
-[scriptblock]$WriteTeaGreen = { Write-Output "$($PSStyle.Foreground.FromRgb(133, 222, 119))$($args[0])$($PSStyle.Reset)" }
+[System.Management.Automation.ScriptBlock]$WriteHotPink = { Write-Output "$($PSStyle.Foreground.FromRGB(255,105,180))$($args[0])$($PSStyle.Reset)" }
+[System.Management.Automation.ScriptBlock]$WritePink = { Write-Output "$($PSStyle.Foreground.FromRGB(255,0,230))$($args[0])$($PSStyle.Reset)" }
+[System.Management.Automation.ScriptBlock]$WriteLavender = { Write-Output "$($PSStyle.Foreground.FromRgb(255,179,255))$($args[0])$($PSStyle.Reset)" }
+[System.Management.Automation.ScriptBlock]$WriteTeaGreen = { Write-Output "$($PSStyle.Foreground.FromRgb(133, 222, 119))$($args[0])$($PSStyle.Reset)" }
 
 # Create File Rules based on hash of the files no longer available on the disk and store them in the $Rules variable
 function Get-FileRules {
-    param ($HashesArray)                    
+    param ($HashesArray)
     $HashesArray | ForEach-Object -Begin { $i = 1 } -Process {
         $Rules += Write-Output "`n<Allow ID=`"ID_ALLOW_AA_$i`" FriendlyName=`"$($_.'File Name') SHA256 Hash`" Hash=`"$($_.'SHA256 Hash')`" />"
         $Rules += Write-Output "`n<Allow ID=`"ID_ALLOW_AB_$i`" FriendlyName=`"$($_.'File Name') SHA256 Flat Hash`" Hash=`"$($_.'SHA256 Flat Hash')`" />"
@@ -425,7 +422,7 @@ function Get-FileRules {
 
 # Create File Rule Refs based on the ID of the File Rules above and store them in the $RulesRefs variable
 function Get-RuleRefs {
-    param ($HashesArray)                 
+    param ($HashesArray)
     $HashesArray | ForEach-Object -Begin { $i = 1 } -Process {
         $RulesRefs += Write-Output "`n<FileRuleRef RuleID=`"ID_ALLOW_AA_$i`" />"
         $RulesRefs += Write-Output "`n<FileRuleRef RuleID=`"ID_ALLOW_AB_$i`" />"
@@ -443,7 +440,7 @@ Function Remove-ZerosFromIDs {
         [Parameter(Mandatory = $true)]
         [ValidateScript({ Test-Path -Path $_ -PathType Leaf })]
         [System.String]$FilePath
-    )    
+    )
     # Load the xml file
     [System.Xml.XmlDocument]$Xml = Get-Content -Path $FilePath
 
@@ -489,7 +486,7 @@ Function Move-UserModeToKernelMode {
         [Parameter(Mandatory = $true)]
         [ValidateScript({ Test-Path -Path $_ -PathType Leaf })]
         [System.String]$FilePath
-    ) 
+    )
 
     # Load the XML file as an XmlDocument object
     $Xml = [System.Xml.XmlDocument](Get-Content -Path $FilePath)
@@ -498,10 +495,10 @@ Function Move-UserModeToKernelMode {
     $signingScenarios = $Xml.SiPolicy.SigningScenarios.SigningScenario
 
     # Find the SigningScenario node with Value 131 and store it in a variable
-    $signingScenario131 = $signingScenarios | Where-Object { $_.Value -eq '131' }
+    $signingScenario131 = $signingScenarios | Where-Object -FilterScript { $_.Value -eq '131' }
 
     # Find the SigningScenario node with Value 12 and store it in a variable
-    $signingScenario12 = $signingScenarios | Where-Object { $_.Value -eq '12' }
+    $signingScenario12 = $signingScenarios | Where-Object -FilterScript { $_.Value -eq '12' }
 
     # Get the AllowedSigners node from the SigningScenario node with Value 12
     $AllowedSigners12 = $signingScenario12.ProductSigners.AllowedSigners

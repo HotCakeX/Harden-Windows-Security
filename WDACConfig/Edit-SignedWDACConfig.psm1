@@ -503,7 +503,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                         Write-Debug -Message "The following Kernel protected files detected, creating allow rules for them:`n"
                         if ($Debug) { $ExesWithNoHash | ForEach-Object { Write-Debug -Message "$_" } }
                                                          
-                        [scriptblock]$KernelProtectedHashesBlock = {
+                        [System.Management.Automation.ScriptBlock]$KernelProtectedHashesBlock = {
                             foreach ($event in Get-WinEvent -FilterHashtable @{LogName = 'Microsoft-Windows-CodeIntegrity/Operational'; ID = 3076 } -ErrorAction SilentlyContinue | Where-Object { $_.TimeCreated -ge $Date } ) {
                                 $xml = [System.Xml.XmlDocument]$event.toxml()
                                 $xml.event.eventdata.data |

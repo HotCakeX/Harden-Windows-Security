@@ -11,20 +11,20 @@ class Signer {
     [string]$CertRoot
     [string]$CertPublisher
 }
-  
+
 # Function that takes an XML file path as input and returns an array of Signer objects
 function Get-SignerInfo {
     param(
         [Parameter(Mandatory = $true)][string]$XmlFilePath
     )
-  
+
     # Load the XML file and select the Signer nodes
     $xml = [System.Xml.XmlDocument](Get-Content $XmlFilePath)
     $Signers = $xml.SiPolicy.Signers.Signer
-  
+
     # Create an empty array to store the output
     [System.Object[]]$output = @()
-  
+
     # Loop through each Signer node and extract the information
     foreach ($signer in $signers) {
         # Create a new Signer object and assign the properties
@@ -33,11 +33,11 @@ function Get-SignerInfo {
         $SignerObj.Name = $signer.Name
         $SignerObj.CertRoot = $signer.CertRoot.Value
         $SignerObj.CertPublisher = $signer.CertPublisher.Value
-  
+
         # Add the Signer object to the output array
         $output += $SignerObj
     }
-  
+
     # Return the output array
     return $output
 }
@@ -45,25 +45,25 @@ function Get-SignerInfo {
 # Function to calculate the TBS of a certificate
 function Get-TBSCertificate {
     param ($Cert)
-    
+
     # Get the raw data of the certificate
     $RawData = $Cert.RawData
-    
+
     # Create an ASN.1 reader to parse the certificate
     $AsnReader = New-Object System.Formats.Asn1.AsnReader -ArgumentList $RawData, ([System.Formats.Asn1.AsnEncodingRules]::DER)
-    
+
     # Read the certificate sequence
     $Certificate = $AsnReader.ReadSequence()
-    
+
     # Read the TBS (To be signed) value of the certificate
     $TbsCertificate = $Certificate.ReadEncodedValue()
-    
+
     # Read the signature algorithm sequence
     $SignatureAlgorithm = $Certificate.ReadSequence()
-    
+
     # Read the algorithm OID of the signature
     $AlgorithmOid = $SignatureAlgorithm.ReadObjectIdentifier()
-    
+
     # Define a hash function based on the algorithm OID
     switch ($AlgorithmOid) {
         '1.2.840.113549.1.1.4' { $HashFunction = [System.Security.Cryptography.MD5]::Create() }
@@ -77,14 +77,14 @@ function Get-TBSCertificate {
         '1.2.840.10045.4.3.4' { $HashFunction = [System.Security.Cryptography.SHA512]::Create() }
         '1.2.840.113549.1.1.5' { $HashFunction = [System.Security.Cryptography.SHA1]::Create() }
         '1.2.840.113549.1.1.11' { $HashFunction = [System.Security.Cryptography.SHA256]::Create() }
-        '1.2.840.113549.1.1.12' { $HashFunction = [System.Security.Cryptography.SHA384]::Create() }    
+        '1.2.840.113549.1.1.12' { $HashFunction = [System.Security.Cryptography.SHA384]::Create() }
         '1.2.840.113549.1.1.13' { $HashFunction = [System.Security.Cryptography.SHA512]::Create() }
         default { throw "No handler for algorithm $AlgorithmOid" }
     }
-    
+
     # Compute the hash of the TBS value using the hash function
-    $Hash = $HashFunction.ComputeHash($TbsCertificate.ToArray())    
-    
+    $Hash = $HashFunction.ComputeHash($TbsCertificate.ToArray())
+
     # Convert the hash to a hex string and return it
     return [System.BitConverter]::ToString($hash) -replace '-', ''
 }
@@ -142,11 +142,11 @@ function Get-AuthenticodeSignatureEx {
         $CERT_QUERY_OBJECT_FILE = 0x1
         $CERT_QUERY_CONTENT_FLAG_PKCS7_SIGNED_EMBED = 0x400
         $CERT_QUERY_FORMAT_FLAG_BINARY = 0x2
-            
+
         # Define a helper function to get the timestamps of the countersigners
         function getTimeStamps($SignerInfo) {
             [System.Object[]]$retValue = @()
-            foreach ($CounterSignerInfos in $Infos.CounterSignerInfos) {                    
+            foreach ($CounterSignerInfos in $Infos.CounterSignerInfos) {
                 # Get the signing time attribute from the countersigner info object
                 $sTime = ($CounterSignerInfos.SignedAttributes | Where-Object { $_.Oid.Value -eq '1.2.840.113549.1.9.5' }).Values | `
                     Where-Object { $null -ne $_.SigningTime }
@@ -205,7 +205,7 @@ function Get-AuthenticodeSignatureEx {
                 $Output | Add-Member -MemberType NoteProperty -Name TimeStamps -Value $null
                 $Output | Add-Member -MemberType NoteProperty -Name DigestAlgorithm -Value $Infos.DigestAlgorithm.FriendlyName
                 # Call the helper function to get the timestamps of the countersigners and assign it to the TimeStamps property
-                $Output.TimeStamps = getTimeStamps $Infos 
+                $Output.TimeStamps = getTimeStamps $Infos
                 # Check if there is a nested signature attribute in the signer info object by looking for the OID 1.3.6.1.4.1.311.2.4.1
                 $second = $Infos.UnsignedAttributes | Where-Object { $_.Oid.Value -eq '1.3.6.1.4.1.311.2.4.1' }
                 if ($second) {
@@ -214,7 +214,7 @@ function Get-AuthenticodeSignatureEx {
                     $value = $second.Values | Where-Object { $_.Oid.Value -eq '1.3.6.1.4.1.311.2.4.1' }
                     $SignedCms2 = New-Object Security.Cryptography.Pkcs.SignedCms # Create another SignedCms object to decode the nested signature data
                     $SignedCms2.Decode($value.RawData) # Decode the nested signature data and populate the SignedCms object properties
-                    $Output | Add-Member -MemberType NoteProperty -Name NestedSignature -Value $null 
+                    $Output | Add-Member -MemberType NoteProperty -Name NestedSignature -Value $null
                     $Infos = $SignedCms2.SignerInfos[0] # Get the first signer info object from the nested signature SignedCms object
                     # Create a custom object with some properties of the nested signature, such as signer certificate, digest algorithm and timestamps
                     $nested = New-Object psobject -Property @{
@@ -249,7 +249,7 @@ function Get-SignedFileCertificates {
         # Define two sets of parameters, one for the FilePath and one for the CertObject
         [Parameter()]
         [string]$FilePath,
-        [Parameter(ValueFromPipeline = $true)]       
+        [Parameter(ValueFromPipeline = $true)]
         [System.Security.Cryptography.X509Certificates.X509Certificate2]$X509Certificate2
     )
 
@@ -278,11 +278,11 @@ function Get-CertificateDetails {
         [System.String]$FilePath,
 
         [Parameter(ParameterSetName = 'Based on Certificate', Mandatory = $true)]
-        $X509Certificate2,    
+        $X509Certificate2,
 
-        [Parameter(ParameterSetName = 'Based on Certificate')]    
-        [System.String]$LeafCNOfTheNestedCertificate, # This is used only for when -X509Certificate2 parameter is used, so that we can filter out the Leaf certificate and only get the Intermediate certificates at the end of this function     
-        
+        [Parameter(ParameterSetName = 'Based on Certificate')]
+        [System.String]$LeafCNOfTheNestedCertificate, # This is used only for when -X509Certificate2 parameter is used, so that we can filter out the Leaf certificate and only get the Intermediate certificates at the end of this function
+
         [Parameter(ParameterSetName = 'Based on File Path')]
         [Parameter(ParameterSetName = 'Based on Certificate')]
         [switch]$IntermediateOnly,
@@ -306,7 +306,7 @@ function Get-CertificateDetails {
 
     # Loop through each certificate in the collection and call this function recursively with the certificate object as an input
     foreach ($Cert in $CertCollection) {
-                      
+
         # Build the certificate chain
         $Chain = New-Object -TypeName System.Security.Cryptography.X509Certificates.X509Chain
 
@@ -315,8 +315,8 @@ function Get-CertificateDetails {
         $chain.ChainPolicy.RevocationFlag = 'EndCertificateOnly'
         $chain.ChainPolicy.VerificationFlags = 'NoFlag'
 
-        [void]$Chain.Build($Cert)      
-        
+        [void]$Chain.Build($Cert)
+
         # If AllCertificates is present, loop through all chain elements and display all certificates
         foreach ($Element in $Chain.ChainElements) {
             # Create a custom object with the certificate properties
@@ -327,10 +327,10 @@ function Get-CertificateDetails {
 
             $Element.Certificate.Subject -match 'CN=(?<InitialRegexTest2>.*?),.*' | Out-Null
             $SubjectCN = $matches['InitialRegexTest2'] -like '*"*' ? ($Element.Certificate.Subject -split 'CN="(.+?)"')[1] : $matches['InitialRegexTest2']
-            
+
             $Element.Certificate.Issuer -match 'CN=(?<InitialRegexTest3>.*?),.*' | Out-Null
             $IssuerCN = $matches['InitialRegexTest3'] -like '*"*' ? ($Element.Certificate.Issuer -split 'CN="(.+?)"')[1] : $matches['InitialRegexTest3']
-            
+
             # Get the TBS value of the certificate using the Get-TBSCertificate function
             $TbsValue = Get-TBSCertificate -cert $Element.Certificate
             # Create a custom object with the extracted properties and the TBS value
@@ -338,9 +338,9 @@ function Get-CertificateDetails {
                 SubjectCN = $SubjectCN
                 IssuerCN  = $IssuerCN
                 NotAfter  = $element.Certificate.NotAfter
-                TBSValue  = $TbsValue                
-            }           
-        }  
+                TBSValue  = $TbsValue
+            }
+        }
     }
 
     if ($FilePath) {
@@ -351,13 +351,13 @@ function Get-CertificateDetails {
         $CertificateUsingAlternativeMethod = [System.Security.Cryptography.X509Certificates.X509Certificate]::CreateFromSignedFile($FilePath)
         $CertificateUsingAlternativeMethod.Subject -match 'CN=(?<InitialRegexTest4>.*?),.*' | Out-Null
 
-        
+
         [string]$TestAgainst = $matches['InitialRegexTest4'] -like '*"*' ? ((Get-AuthenticodeSignature -FilePath $FilePath).SignerCertificate.Subject -split 'CN="(.+?)"')[1] : $matches['InitialRegexTest4']
-         
+
 
         if ($IntermediateOnly) {
 
-            $FinalObj = $Obj | 
+            $FinalObj = $Obj |
             Where-Object { $_.SubjectCN -ne $_.IssuerCN } | # To omit Root certificate from the result
             Where-Object { $_.SubjectCN -ne $TestAgainst } | # To omit the Leaf certificate
             Group-Object -Property TBSValue | ForEach-Object { $_.Group[0] } # To make sure the output values are unique based on TBSValue property
@@ -366,8 +366,8 @@ function Get-CertificateDetails {
 
         }
         elseif ($LeafCertificate) {
-    
-            $FinalObj = $Obj | 
+
+            $FinalObj = $Obj |
             Where-Object { $_.SubjectCN -ne $_.IssuerCN } | # To omit Root certificate from the result
             Where-Object { $_.SubjectCN -eq $TestAgainst } | # To get the Leaf certificate
             Group-Object -Property TBSValue | ForEach-Object { $_.Group[0] } # To make sure the output values are unique based on TBSValue property
@@ -375,30 +375,30 @@ function Get-CertificateDetails {
             return $FinalObj
         }
 
-    } 
+    }
     # If nested certificate is being processed and X509Certificate2 object is passed
     elseif ($X509Certificate2) {
-    
+
         if ($IntermediateOnly) {
 
-            $FinalObj = $Obj | 
-            Where-Object { $_.SubjectCN -ne $_.IssuerCN } | # To omit Root certificate from the result            
+            $FinalObj = $Obj |
+            Where-Object { $_.SubjectCN -ne $_.IssuerCN } | # To omit Root certificate from the result
             Where-Object { $_.SubjectCN -ne $LeafCNOfTheNestedCertificate } | # To omit the Leaf certificate
             Group-Object -Property TBSValue | ForEach-Object { $_.Group[0] } # To make sure the output values are unique based on TBSValue property
 
             return $FinalObj
 
-        }  
+        }
         elseif ($LeafCertificate) {
 
-            $FinalObj = $Obj | 
+            $FinalObj = $Obj |
             Where-Object { $_.SubjectCN -ne $_.IssuerCN } | # To omit Root certificate from the result
             Where-Object { $_.SubjectCN -eq $LeafCNOfTheNestedCertificate } | # To get the Leaf certificate
             Group-Object -Property TBSValue | ForEach-Object { $_.Group[0] } # To make sure the output values are unique based on TBSValue property
 
             return $FinalObj
 
-        }        
+        }
     }
 }
 
@@ -414,7 +414,7 @@ function Get-CertificateDetails {
         [Parameter()]
         [ValidateScript({ Test-Path $_ -PathType Leaf })]
         [string]$FilePath,
-        $X509Certificate2,  
+        $X509Certificate2,
         [switch]$IntermediateOnly,
         [switch]$AllCertificates,
         [switch]$LeafCertificate
@@ -428,7 +428,7 @@ function Get-CertificateDetails {
     elseif ($X509Certificate2) {
         $Cert = $X509Certificate2
     }
-  
+
     # Build the certificate chain
     $Chain = New-Object -TypeName System.Security.Cryptography.X509Certificates.X509Chain
 
@@ -438,7 +438,7 @@ function Get-CertificateDetails {
     $chain.ChainPolicy.VerificationFlags = 'NoFlag'
 
     [void]$Chain.Build($Cert)
-  
+
     # Check the value of the switch parameters
     if ($IntermediateOnly) {
         # If IntermediateOnly is present, loop through the chain elements and display only the intermediate certificates
@@ -497,7 +497,7 @@ function Get-CertificateDetails {
         }
         # Display the object
         Write-Output 'Leaf Certificate:'
-        Write-Output $obj    
+        Write-Output $obj
     }
     else {
         # If none of the switch parameters are present, display a message to inform the user of their options
@@ -513,11 +513,11 @@ function Compare-SignerAndCertificate {
     param(
         [Parameter(Mandatory = $true)][string]$XmlFilePath,
         [Parameter(Mandatory = $true)] [string]$SignedFilePath
-    )  
+    )
 
     # Get the signer information from the XML file path using the Get-SignerInfo function
-    $SignerInfo = Get-SignerInfo -XmlFilePath $XmlFilePath  
-   
+    $SignerInfo = Get-SignerInfo -XmlFilePath $XmlFilePath
+
     # An array to store the details of the main certificate of the signed file
     [System.Object[]]$CertificateDetails = @()
 
@@ -529,21 +529,21 @@ function Compare-SignerAndCertificate {
 
     # Get the certificate details from the signed file path using the Get-CertificateDetails function with the -IntermediateOnly parameter
     $CertificateDetails = Get-CertificateDetails -IntermediateOnly -FilePath $SignedFilePath
-    
+
     # Get the Nested certificate of the signed file, if any
     $ExtraCertificateDetails = Get-AuthenticodeSignatureEx -FilePath $SignedFilePath
 
     # Extract it from the nested property
     $NestedCertificate = ($ExtraCertificateDetails).NestedSignature.SignerCertificate
-    
+
     if ($null -ne $NestedCertificate) {
 
-        # First get the CN of the leaf certificate of the nested Certificate      
+        # First get the CN of the leaf certificate of the nested Certificate
         $NestedCertificate.Subject -match 'CN=(?<InitialRegexTest1>.*?),.*' | Out-Null
         $LeafCNOfTheNestedCertificate = $matches['InitialRegexTest1'] -like '*"*' ? ($NestedCertificate.Subject -split 'CN="(.+?)"')[1] : $matches['InitialRegexTest1']
-            
+
         # Send the nested certificate along with its Leaf certificate's CN to the Get-CertificateDetails function with -IntermediateOnly parameter in order to only get the intermediate certificates of the Nested certificate
-        $NestedCertificateDetails = Get-CertificateDetails -IntermediateOnly -X509Certificate2 $NestedCertificate -LeafCNOfTheNestedCertificate $LeafCNOfTheNestedCertificate 
+        $NestedCertificateDetails = Get-CertificateDetails -IntermediateOnly -X509Certificate2 $NestedCertificate -LeafCNOfTheNestedCertificate $LeafCNOfTheNestedCertificate
     }
 
 
@@ -552,7 +552,7 @@ function Compare-SignerAndCertificate {
 
     # Declare $NestedLeafCertificateDetails as an array
     [System.Object[]]$NestedLeafCertificateDetails = @()
-  
+
     # Get the leaf certificate details of the Main Certificate from the signed file path
     $LeafCertificateDetails = Get-CertificateDetails -LeafCertificate -FilePath $SignedFilePath
 
@@ -562,7 +562,7 @@ function Compare-SignerAndCertificate {
         $NestedLeafCertificateDetails = Get-CertificateDetails -LeafCertificate -X509Certificate2 $NestedCertificate -LeafCNOfTheNestedCertificate $LeafCNOfTheNestedCertificate
     }
 
-  
+
     # Loop through each signer in the signer information array
     foreach ($Signer in $SignerInfo) {
         # Create a custom object to store the comparison result for this signer
@@ -580,7 +580,7 @@ function Compare-SignerAndCertificate {
             CertPublisherMatch  = $false
             FilePath            = $SignedFilePath # Add the file path to the object
         }
-  
+
         # Loop through each certificate in the certificate details array of the Main Cert
         foreach ($Certificate in $CertificateDetails) {
 
@@ -604,7 +604,7 @@ function Compare-SignerAndCertificate {
                 }
 
                 # Check if the signer's name (Referring to the one in the XML file) matches the Intermediate certificate's SubjectCN
-                if ($Signer.Name -eq $Certificate.SubjectCN) {                    
+                if ($Signer.Name -eq $Certificate.SubjectCN) {
                     # Set the CertNameMatch to true
                     $ComparisonResult.CertNameMatch = $true # this should naturally be always true like the CertRootMatch because this is the CN of the same cert that has its TBS value in the xml file in signers
                 }
@@ -615,13 +615,13 @@ function Compare-SignerAndCertificate {
 
                     # if the signed file has nested certificate, only set a flag instead of setting the entire CertPublisherMatch property to true
                     if ($null -ne $NestedCertificate) {
-                        $CertPublisherMatchPart1 = $true                    
+                        $CertPublisherMatchPart1 = $true
                     }
-                    else {                        
-                        $ComparisonResult.CertPublisherMatch = $true      
+                    else {
+                        $ComparisonResult.CertPublisherMatch = $true
                     }
                 }
-  
+
                 # Break out of the inner loop whether we found a match for this signer or not
                 break
             }
@@ -642,9 +642,9 @@ function Compare-SignerAndCertificate {
                     $ComparisonResult.CertSubjectCN = $Certificate.SubjectCN
                     $ComparisonResult.CertIssuerCN = $Certificate.IssuerCN
                     $ComparisonResult.CertNotAfter = $Certificate.NotAfter
-                    $ComparisonResult.CertTBSValue = $Certificate.TBSValue   
+                    $ComparisonResult.CertTBSValue = $Certificate.TBSValue
 
-                    # When file has nested signature, only set a flag instead of setting the entire property to true             
+                    # When file has nested signature, only set a flag instead of setting the entire property to true
                     $CertRootMatchPart2 = $true
 
                     # Check if the signer's Name matches the Intermediate certificate's SubjectCN
@@ -656,10 +656,10 @@ function Compare-SignerAndCertificate {
 
                     # Check if the signer's CertPublisher (aka Leaf Certificate's CN used in the xml policy) matches the leaf certificate's SubjectCN (of the file)
                     if ($Signer.CertPublisher -eq $LeafCNOfTheNestedCertificate) {
-                        # If yes, set the CertPublisherMatch to true for this comparison result object 
-                        $CertPublisherMatchPart2 = $true      
+                        # If yes, set the CertPublisherMatch to true for this comparison result object
+                        $CertPublisherMatchPart2 = $true
                     }
-  
+
                     # Break out of the inner loop whether we found a match for this signer or not
                     break
                 }
@@ -675,28 +675,28 @@ function Compare-SignerAndCertificate {
                 $ComparisonResult.CertRootMatch = $true # meaning all of the TBS values of the double signed file's intermediate certificates exists in the xml file's signers' TBS values
             }
             else {
-                $ComparisonResult.CertRootMatch = $false 
+                $ComparisonResult.CertRootMatch = $false
             }
-                      
+
             # check if Lean certificate CN of both of the file's certificates (Nested and Main) are available in the Signers in xml policy
             if (($CertPublisherMatchPart1 -eq $true) -and ($CertPublisherMatchPart2 -eq $true)) {
-                $ComparisonResult.CertPublisherMatch = $true 
+                $ComparisonResult.CertPublisherMatch = $true
             }
             else {
-                $ComparisonResult.CertPublisherMatch = $false 
+                $ComparisonResult.CertPublisherMatch = $false
             }
 
         }
-    
+
         # Add the comparison result object to the comparison results array
         $ComparisonResults += $ComparisonResult
-  
+
     }
 
-    
+
     # Return the comparison results array
-    return $ComparisonResults  
-}  
+    return $ComparisonResults
+}
 
 
 
@@ -721,7 +721,7 @@ function Get-FileRuleOutput ($xmlPath) {
 
         # Extract the file path from the FriendlyName attribute using regex
         $FilePathForHash = $filerule.FriendlyName -replace ' (Hash (Sha1|Sha256|Page Sha1|Page Sha256|Authenticode SIP Sha256))$', ''
-       
+
         # Create a custom object with the three properties
         $object = [PSCustomObject]@{
             HashValue       = $hashvalue

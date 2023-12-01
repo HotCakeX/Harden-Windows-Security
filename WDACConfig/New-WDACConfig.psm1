@@ -138,7 +138,7 @@ function New-WDACConfig {
             }
         }
            
-        [scriptblock]$GetDriverBlockRulesSCRIPTBLOCK = {
+        [System.Management.Automation.ScriptBlock]$GetDriverBlockRulesSCRIPTBLOCK = {
             [System.String]$DriverRules = (Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/public/windows/security/application-security/application-control/windows-defender-application-control/design/microsoft-recommended-driver-block-rules.md' -ProgressAction SilentlyContinue).Content -replace "(?s).*``````xml(.*)``````.*", '$1'
             # Remove the unnecessary rules and elements - not using this one because then during the merge there will be error - The reason is that "<FileRuleRef RuleID="ID_ALLOW_ALL_2" />" is the only FileruleRef in the xml and after removing it, the <SigningScenario> element will be empty
             $DriverRules = $DriverRules -replace '<Allow\sID="ID_ALLOW_ALL_[12]"\sFriendlyName=""\sFileName="\*".*/>', ''
@@ -158,7 +158,7 @@ function New-WDACConfig {
             }        
         }
 
-        [scriptblock]$MakeAllowMSFTWithBlockRulesSCRIPTBLOCK = {
+        [System.Management.Automation.ScriptBlock]$MakeAllowMSFTWithBlockRulesSCRIPTBLOCK = {
 
             param([System.Boolean]$NoCIP)
             # Get the latest Microsoft recommended block rules
@@ -193,7 +193,7 @@ function New-WDACConfig {
             { Remove-Item -Path "$PolicyID.cip" -Force }
         }
         
-        [scriptblock]$MakeDefaultWindowsWithBlockRulesSCRIPTBLOCK = {
+        [System.Management.Automation.ScriptBlock]$MakeDefaultWindowsWithBlockRulesSCRIPTBLOCK = {
             param([System.Boolean]$NoCIP)
             Invoke-Command -ScriptBlock $GetBlockRulesSCRIPTBLOCK | Out-Null                        
             Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\DefaultWindows_Enforced.xml' -Destination 'DefaultWindows_Enforced.xml'
@@ -264,7 +264,7 @@ function New-WDACConfig {
             if ($NoCIP) { Remove-Item -Path "$PolicyID.cip" -Force }            
         }
 
-        [scriptblock]$DeployLatestDriverBlockRulesSCRIPTBLOCK = {
+        [System.Management.Automation.ScriptBlock]$DeployLatestDriverBlockRulesSCRIPTBLOCK = {
             Invoke-WebRequest -Uri 'https://aka.ms/VulnerableDriverBlockList' -OutFile VulnerableDriverBlockList.zip -ProgressAction SilentlyContinue
             Expand-Archive .\VulnerableDriverBlockList.zip -DestinationPath 'VulnerableDriverBlockList' -Force
             Rename-Item .\VulnerableDriverBlockList\SiPolicy_Enforced.p7b -NewName 'SiPolicy.p7b' -Force
@@ -275,7 +275,7 @@ function New-WDACConfig {
             Invoke-Command -ScriptBlock $DriversBlockListInfoGatheringSCRIPTBLOCK
         }
         
-        [scriptblock]$DeployLatestBlockRulesSCRIPTBLOCK = {
+        [System.Management.Automation.ScriptBlock]$DeployLatestBlockRulesSCRIPTBLOCK = {
             (Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/public/windows/security/application-security/application-control/windows-defender-application-control/design/applications-that-can-bypass-wdac.md' -ProgressAction SilentlyContinue).Content -replace "(?s).*``````xml(.*)``````.*", '$1' | Out-File '.\Microsoft recommended block rules TEMP.xml'
             # Remove empty lines from the policy file
             Get-Content '.\Microsoft recommended block rules TEMP.xml' | Where-Object { $_.trim() -ne '' } | Out-File '.\Microsoft recommended block rules.xml'    
@@ -291,7 +291,7 @@ function New-WDACConfig {
             Remove-Item "$PolicyID.cip" -Force
         }
 
-        [scriptblock]$SetAutoUpdateDriverBlockRulesSCRIPTBLOCK = {
+        [System.Management.Automation.ScriptBlock]$SetAutoUpdateDriverBlockRulesSCRIPTBLOCK = {
             # create a scheduled task that runs every 7 days
             if (-NOT (Get-ScheduledTask -TaskName 'MSFT Driver Block list update' -TaskPath '\MSFT Driver Block list update\' -ErrorAction SilentlyContinue)) {        
                 # Get the SID of the SYSTEM account. It is a well-known SID, but still querying it, going to use it to create the scheduled task
@@ -312,7 +312,7 @@ function New-WDACConfig {
             Invoke-Command -ScriptBlock $DriversBlockListInfoGatheringSCRIPTBLOCK
         }
 
-        [scriptblock]$PrepMSFTOnlyAuditSCRIPTBLOCK = {
+        [System.Management.Automation.ScriptBlock]$PrepMSFTOnlyAuditSCRIPTBLOCK = {
             if ($PrepMSFTOnlyAudit -and $LogSize) { Set-LogSize -LogSize $LogSize }
             Copy-Item -Path C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml -Destination .\AllowMicrosoft.xml
             Set-RuleOption -FilePath .\AllowMicrosoft.xml -Option 3
@@ -330,7 +330,7 @@ function New-WDACConfig {
             }              
         }
 
-        [scriptblock]$PrepDefaultWindowsAuditSCRIPTBLOCK = {
+        [System.Management.Automation.ScriptBlock]$PrepDefaultWindowsAuditSCRIPTBLOCK = {
             if ($PrepDefaultWindowsAudit -and $LogSize) { Set-LogSize -LogSize $LogSize }
             Copy-Item -Path C:\Windows\schemas\CodeIntegrity\ExamplePolicies\DefaultWindows_Audit.xml -Destination .\DefaultWindows_Audit.xml -Force
            
@@ -362,7 +362,7 @@ function New-WDACConfig {
             }               
         }
 
-        [scriptblock]$MakePolicyFromAuditLogsSCRIPTBLOCK = {
+        [System.Management.Automation.ScriptBlock]$MakePolicyFromAuditLogsSCRIPTBLOCK = {
             if ($MakePolicyFromAuditLogs -and $LogSize) { Set-LogSize -LogSize $LogSize }
             # Make sure there is no leftover files from previous operations of this same command
             Remove-Item -Path "$home\WDAC\*" -Recurse -Force -ErrorAction SilentlyContinue
@@ -424,7 +424,7 @@ function New-WDACConfig {
 
             if (!$NoDeletedFiles) {
                 # Get Event viewer logs for code integrity - check the file path of all of the files in the log, resolve them using the command above - show files that are no longer available on the disk
-                [scriptblock]$AuditEventLogsDeletedFilesScriptBlock = {
+                [System.Management.Automation.ScriptBlock]$AuditEventLogsDeletedFilesScriptBlock = {
                     foreach ($event in Get-WinEvent -FilterHashtable @{LogName = 'Microsoft-Windows-CodeIntegrity/Operational'; ID = 3076 }) {
                         $xml = [System.Xml.XmlDocument]$event.toxml()
                         $xml.event.eventdata.data |
@@ -505,7 +505,7 @@ function New-WDACConfig {
             }     
         }
 
-        [scriptblock]$MakeLightPolicySCRIPTBLOCK = {
+        [System.Management.Automation.ScriptBlock]$MakeLightPolicySCRIPTBLOCK = {
             # Delete the any policy with the same name in the current working directory
             Remove-Item -Path 'SignedAndReputable.xml' -Force -ErrorAction SilentlyContinue
             Invoke-Command $MakeAllowMSFTWithBlockRulesSCRIPTBLOCK -ArgumentList $true | Out-Null
@@ -535,7 +535,7 @@ function New-WDACConfig {
         }
 
         # Script block that is used to supply extra information regarding Microsoft recommended driver block rules in commands that use them
-        [scriptblock]$DriversBlockListInfoGatheringSCRIPTBLOCK = {
+        [System.Management.Automation.ScriptBlock]$DriversBlockListInfoGatheringSCRIPTBLOCK = {
             [System.String]$owner = 'MicrosoftDocs'
             [System.String]$repo = 'windows-itpro-docs'
             [System.String]$path = 'windows/security/application-security/application-control/windows-defender-application-control/design/microsoft-recommended-driver-block-rules.md'

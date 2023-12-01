@@ -1,6 +1,6 @@
 <#
 # argument tab auto-completion for CertPath param to show only .cer files in current directory and 2 sub-directories recursively
-[scriptblock]$ArgumentCompleterCertPath = {
+[System.Management.Automation.ScriptBlock]$ArgumentCompleterCertPath = {
     # Note the use of -Depth 1
     # Enclosing the $results = ... assignment in (...) also passes the value through.
     ($results = Get-ChildItem -Depth 2 -Filter *.cer | ForEach-Object { "`"$_`"" })
@@ -13,7 +13,7 @@
 
 # argument tab auto-completion for Policy Paths to show only .xml files and only suggest files that haven't been already selected by user 
 # https://stackoverflow.com/questions/76141864/how-to-make-a-powershell-argument-completer-that-only-suggests-files-not-already/76142865
-[scriptblock]$ArgumentCompleterPolicyPaths = {
+[System.Management.Automation.ScriptBlock]$ArgumentCompleterPolicyPaths = {
     # Get the current command and the already bound parameters
     param($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameters)
 
@@ -26,7 +26,7 @@
     ).Value  
 
     # Get the xml files in the current directory
-    Get-ChildItem -Filter *.xml | ForEach-Object {
+    Get-ChildItem -File -Filter *.xml | ForEach-Object {
         # Check if the file is already selected
         if ($_.FullName -notin $existing) {
             # Return the file name with quotes
@@ -36,15 +36,15 @@
 }
 
 # argument tab auto-completion for Certificate common name
-[scriptblock]$ArgumentCompleterCertificateCN = {     
-    $certs = foreach ($cert in (Get-ChildItem 'Cert:\CurrentUser\my')) {
+[System.Management.Automation.ScriptBlock]$ArgumentCompleterCertificateCN = {     
+    $certs = foreach ($cert in (Get-ChildItem -Path 'Cert:\CurrentUser\my')) {
         (($cert.Subject -split ',' | Select-Object -First 1) -replace 'CN=', '').Trim()
     }    
     $certs | ForEach-Object { return "`"$_`"" }
 }
 
 # Argument tab auto-completion for installed Appx package names
-[scriptblock]$ArgumentCompleterAppxPackageNames = {
+[System.Management.Automation.ScriptBlock]$ArgumentCompleterAppxPackageNames = {
     # Get the current command and the already bound parameters
     param($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameters)
     # Get the app package names that match the word to complete
@@ -54,7 +54,7 @@
 }
 
 # argument tab auto-completion for Base Policy Paths to show only .xml files and only suggest files that haven't been already selected by user 
-[scriptblock]$ArgumentCompleterPolicyPathsBasePoliciesOnly = {
+[System.Management.Automation.ScriptBlock]$ArgumentCompleterPolicyPathsBasePoliciesOnly = {
     # Get the current command and the already bound parameters
     param($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameters)
 
@@ -67,7 +67,7 @@
     ).Value  
 
     # Get the xml files in the current directory
-    Get-ChildItem | Where-Object { $_.extension -like '*.xml' } | ForEach-Object {
+    Get-ChildItem -File | Where-Object { $_.extension -like '*.xml' } | ForEach-Object {
 
         $xmlitem = [System.Xml.XmlDocument](Get-Content $_)
         $PolicyType = $xmlitem.SiPolicy.PolicyType
@@ -84,7 +84,7 @@
 }
 
 # argument tab auto-completion for Supplemental Policy Paths to show only .xml files and only suggest files that haven't been already selected by user
-[scriptblock]$ArgumentCompleterPolicyPathsSupplementalPoliciesOnly = {
+[System.Management.Automation.ScriptBlock]$ArgumentCompleterPolicyPathsSupplementalPoliciesOnly = {
     # Get the current command and the already bound parameters
     param($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameters)
 
@@ -97,7 +97,7 @@
     ).Value  
 
     # Get the xml files in the current directory
-    Get-ChildItem | Where-Object { $_.extension -like '*.xml' } | ForEach-Object {
+    Get-ChildItem -File | Where-Object { $_.extension -like '*.xml' } | ForEach-Object {
 
         $xmlitem = [System.Xml.XmlDocument](Get-Content $_)
         $PolicyType = $xmlitem.SiPolicy.PolicyType
@@ -114,7 +114,7 @@
 }
 
 # Opens Folder picker GUI so that user can select folders to be processed
-[scriptblock]$ArgumentCompleterFolderPathsPicker = {
+[System.Management.Automation.ScriptBlock]$ArgumentCompleterFolderPathsPicker = {
     # Load the System.Windows.Forms assembly
     Add-Type -AssemblyName System.Windows.Forms
     # non-top-most, works better with window focus
@@ -125,7 +125,7 @@
 }
 
 # Opens File picker GUI so that user can select an .exe file - for SignTool.exe
-[scriptblock]$ArgumentCompleterExeFilePathsPicker = {
+[System.Management.Automation.ScriptBlock]$ArgumentCompleterExeFilePathsPicker = {
     # Load the System.Windows.Forms assembly
     Add-Type -AssemblyName System.Windows.Forms
     # Create a new OpenFileDialog object
@@ -141,7 +141,7 @@
 }
 
 # Opens File picker GUI so that user can select a .cer file
-[scriptblock]$ArgumentCompleterCerFilePathsPicker = {
+[System.Management.Automation.ScriptBlock]$ArgumentCompleterCerFilePathsPicker = {
     # Load the System.Windows.Forms assembly
     Add-Type -AssemblyName System.Windows.Forms
     # Create a new OpenFileDialog object
@@ -157,7 +157,7 @@
 }
 
 # Opens File picker GUI so that user can select a .xml file
-[scriptblock]$ArgumentCompleterXmlFilePathsPicker = {
+[System.Management.Automation.ScriptBlock]$ArgumentCompleterXmlFilePathsPicker = {
     # Load the System.Windows.Forms assembly
     Add-Type -AssemblyName System.Windows.Forms
     # Create a new OpenFileDialog object
@@ -174,7 +174,7 @@
 
 # Opens Folder picker GUI so that user can select folders to be processed
 # WildCard file paths
-[scriptblock]$ArgumentCompleterFolderPathsPickerWildCards = {
+[System.Management.Automation.ScriptBlock]$ArgumentCompleterFolderPathsPickerWildCards = {
     # Load the System.Windows.Forms assembly
     Add-Type -AssemblyName System.Windows.Forms
     # non-top-most, works better with window focus

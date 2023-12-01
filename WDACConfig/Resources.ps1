@@ -113,7 +113,7 @@ function Update-self {
                 Import-Module -Name 'WDACConfig' -RequiredVersion $LatestVersion -Force -Global
             }
             # Make sure the old version isn't run after update
-            Write-Output "$($PSStyle.Foreground.FromRGB(152,255,152))Update successful, please run the cmdlet again.$($PSStyle.Reset)"
+            Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(152,255,152))Update successful, please run the cmdlet again.$($PSStyle.Reset)"
             break
             return
         }
@@ -178,7 +178,7 @@ function Test-FilePath {
 
             # Output the file path if it is not inside any of the directory paths
             if (-not $Result) {
-                Write-Output $FileFullPath
+                Write-Output -InputObject $FileFullPath
             }
         }
         else {
@@ -243,11 +243,11 @@ public static extern uint QueryDosDevice(string lpDeviceName, StringBuilder lpTa
                 DevicePath  = $SbPathName.ToString()
             }
             # Write the custom object to the output stream
-            Write-Output (New-Object -TypeName PSObject -Property $DriveMapping)
+            Write-Output -InputObject (New-Object -TypeName PSObject -Property $DriveMapping)
         }
         else {
             # If no device path is found, write a message to the output stream
-            Write-Output 'No mountpoint found for: ' + $Volume
+            Write-Output -InputObject 'No mountpoint found for: ' + $Volume
         }
         # Find the next volume in the system and repeat the loop
     } while ([PInvoke.Win32Utils]::FindNextVolume([System.IntPtr]$VolumeHandle, $SbVolumeName, $Max))
@@ -395,19 +395,19 @@ function Confirm-CertCN ([System.String]$CN) {
 
 
 # script blocks for custom color writing
-[System.Management.Automation.ScriptBlock]$WriteHotPink = { Write-Output "$($PSStyle.Foreground.FromRGB(255,105,180))$($args[0])$($PSStyle.Reset)" }
-[System.Management.Automation.ScriptBlock]$WritePink = { Write-Output "$($PSStyle.Foreground.FromRGB(255,0,230))$($args[0])$($PSStyle.Reset)" }
-[System.Management.Automation.ScriptBlock]$WriteLavender = { Write-Output "$($PSStyle.Foreground.FromRgb(255,179,255))$($args[0])$($PSStyle.Reset)" }
-[System.Management.Automation.ScriptBlock]$WriteTeaGreen = { Write-Output "$($PSStyle.Foreground.FromRgb(133, 222, 119))$($args[0])$($PSStyle.Reset)" }
+[System.Management.Automation.ScriptBlock]$WriteHotPink = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(255,105,180))$($args[0])$($PSStyle.Reset)" }
+[System.Management.Automation.ScriptBlock]$WritePink = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(255,0,230))$($args[0])$($PSStyle.Reset)" }
+[System.Management.Automation.ScriptBlock]$WriteLavender = { Write-Output -InputObject "$($PSStyle.Foreground.FromRgb(255,179,255))$($args[0])$($PSStyle.Reset)" }
+[System.Management.Automation.ScriptBlock]$WriteTeaGreen = { Write-Output -InputObject "$($PSStyle.Foreground.FromRgb(133, 222, 119))$($args[0])$($PSStyle.Reset)" }
 
 # Create File Rules based on hash of the files no longer available on the disk and store them in the $Rules variable
 function Get-FileRules {
     param ($HashesArray)
     $HashesArray | ForEach-Object -Begin { $i = 1 } -Process {
-        $Rules += Write-Output "`n<Allow ID=`"ID_ALLOW_AA_$i`" FriendlyName=`"$($_.'File Name') SHA256 Hash`" Hash=`"$($_.'SHA256 Hash')`" />"
-        $Rules += Write-Output "`n<Allow ID=`"ID_ALLOW_AB_$i`" FriendlyName=`"$($_.'File Name') SHA256 Flat Hash`" Hash=`"$($_.'SHA256 Flat Hash')`" />"
-        $Rules += Write-Output "`n<Allow ID=`"ID_ALLOW_AC_$i`" FriendlyName=`"$($_.'File Name') SHA1 Hash`" Hash=`"$($_.'SHA1 Hash')`" />"
-        $Rules += Write-Output "`n<Allow ID=`"ID_ALLOW_AD_$i`" FriendlyName=`"$($_.'File Name') SHA1 Flat Hash`" Hash=`"$($_.'SHA1 Flat Hash')`" />"
+        $Rules += Write-Output -InputObject "`n<Allow ID=`"ID_ALLOW_AA_$i`" FriendlyName=`"$($_.'File Name') SHA256 Hash`" Hash=`"$($_.'SHA256 Hash')`" />"
+        $Rules += Write-Output -InputObject "`n<Allow ID=`"ID_ALLOW_AB_$i`" FriendlyName=`"$($_.'File Name') SHA256 Flat Hash`" Hash=`"$($_.'SHA256 Flat Hash')`" />"
+        $Rules += Write-Output -InputObject "`n<Allow ID=`"ID_ALLOW_AC_$i`" FriendlyName=`"$($_.'File Name') SHA1 Hash`" Hash=`"$($_.'SHA1 Hash')`" />"
+        $Rules += Write-Output -InputObject "`n<Allow ID=`"ID_ALLOW_AD_$i`" FriendlyName=`"$($_.'File Name') SHA1 Flat Hash`" Hash=`"$($_.'SHA1 Flat Hash')`" />"
         $i++
     }
     return ($Rules.Trim())
@@ -418,10 +418,10 @@ function Get-FileRules {
 function Get-RuleRefs {
     param ($HashesArray)
     $HashesArray | ForEach-Object -Begin { $i = 1 } -Process {
-        $RulesRefs += Write-Output "`n<FileRuleRef RuleID=`"ID_ALLOW_AA_$i`" />"
-        $RulesRefs += Write-Output "`n<FileRuleRef RuleID=`"ID_ALLOW_AB_$i`" />"
-        $RulesRefs += Write-Output "`n<FileRuleRef RuleID=`"ID_ALLOW_AC_$i`" />"
-        $RulesRefs += Write-Output "`n<FileRuleRef RuleID=`"ID_ALLOW_AD_$i`" />"
+        $RulesRefs += Write-Output -InputObject "`n<FileRuleRef RuleID=`"ID_ALLOW_AA_$i`" />"
+        $RulesRefs += Write-Output -InputObject "`n<FileRuleRef RuleID=`"ID_ALLOW_AB_$i`" />"
+        $RulesRefs += Write-Output -InputObject "`n<FileRuleRef RuleID=`"ID_ALLOW_AC_$i`" />"
+        $RulesRefs += Write-Output -InputObject "`n<FileRuleRef RuleID=`"ID_ALLOW_AD_$i`" />"
         $i++
     }
     return ($RulesRefs.Trim())

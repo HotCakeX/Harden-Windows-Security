@@ -272,7 +272,7 @@ function Remove-WDACConfig {
                 }
 
                 Set-RuleOption -FilePath $PolicyPath -Option 6
-                ConvertFrom-CIPolicy $PolicyPath "$PolicyID.cip" | Out-Null
+                ConvertFrom-CIPolicy -XmlFilePath $PolicyPath -BinaryFilePath "$PolicyID.cip" | Out-Null
 
                 # Configure the parameter splat
                 $ProcessParams = @{
@@ -290,8 +290,8 @@ function Remove-WDACConfig {
                 Rename-Item "$PolicyID.cip.p7" -NewName "$PolicyID.cip" -Force
                 CiTool --update-policy ".\$PolicyID.cip" -json | Out-Null 
                 Write-Host "`nPolicy with the following details has been Re-signed and Re-deployed in Unsigned mode.`nPlease restart your system." -ForegroundColor Green
-                Write-Output "PolicyName = $PolicyName"
-                Write-Output "PolicyGUID = $PolicyID`n"
+                Write-Output -InputObject "PolicyName = $PolicyName"
+                Write-Output -InputObject "PolicyGUID = $PolicyID`n"
             }
         }
 

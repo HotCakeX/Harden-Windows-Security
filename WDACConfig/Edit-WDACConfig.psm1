@@ -180,8 +180,8 @@ function Edit-WDACConfig {
             # Deploy Enforced mode CIP            
             CiTool --update-policy ".\$PolicyID.cip" -json | Out-Null         
             &$WriteTeaGreen "`nThe Base policy with the following details has been Re-Deployed in Enforced Mode:"       
-            Write-Output "PolicyName = $PolicyName"
-            Write-Output "PolicyGUID = $PolicyID"
+            Write-Output -InputObject "PolicyName = $PolicyName"
+            Write-Output -InputObject "PolicyGUID = $PolicyID"
             # Remove Enforced Mode CIP
             Remove-Item ".\$PolicyID.cip" -Force
         }       
@@ -217,11 +217,11 @@ function Edit-WDACConfig {
 
                 # Create CIP for Audit Mode
                 Set-RuleOption -FilePath $PolicyPath -Option 3 # Add Audit mode policy rule option
-                ConvertFrom-CIPolicy $PolicyPath '.\AuditMode.cip' | Out-Null
+                ConvertFrom-CIPolicy -XmlFilePath $PolicyPath -BinaryFilePath '.\AuditMode.cip' | Out-Null
                 
                 # Create CIP for Enforced Mode
                 Set-RuleOption -FilePath $PolicyPath -Option 3 -Delete # Remove Audit mode policy rule option
-                ConvertFrom-CIPolicy $PolicyPath '.\EnforcedMode.cip' | Out-Null               
+                ConvertFrom-CIPolicy -XmlFilePath $PolicyPath -BinaryFilePath '.\EnforcedMode.cip' | Out-Null               
 
                 ################# Snap back guarantee #################
                 Write-Debug -Message 'Creating Enforced Mode SnapBack guarantee'
@@ -259,8 +259,8 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                 Rename-Item '.\AuditMode.cip' -NewName ".\$PolicyID.cip" -Force
                 CiTool --update-policy ".\$PolicyID.cip" -json | Out-Null         
                 &$WriteTeaGreen "`nThe Base policy with the following details has been Re-Deployed in Audit Mode:"      
-                Write-Output "PolicyName = $PolicyName"
-                Write-Output "PolicyGUID = $PolicyID"
+                Write-Output -InputObject "PolicyName = $PolicyName"
+                Write-Output -InputObject "PolicyGUID = $PolicyID"
                 # Remove Audit Mode CIP
                 Remove-Item ".\$PolicyID.cip" -Force
                 # Prepare Enforced Mode CIP for Deployment - waiting to be Re-deployed at the right time
@@ -380,12 +380,12 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                 Set-HVCIOptions -Strict -FilePath $SuppPolicyPath             
                 Set-CIPolicyVersion -FilePath $SuppPolicyPath -Version '1.0.0.0'            
 
-                ConvertFrom-CIPolicy $SuppPolicyPath "$SuppPolicyID.cip" | Out-Null 
+                ConvertFrom-CIPolicy -XmlFilePath $SuppPolicyPath -BinaryFilePath "$SuppPolicyID.cip" | Out-Null 
                 CiTool --update-policy ".\$SuppPolicyID.cip" -json | Out-Null
                 &$WriteTeaGreen "`nSupplemental policy with the following details has been Deployed in Enforced Mode:"
-                Write-Output "SupplementalPolicyName = $SuppPolicyName"
-                Write-Output "SupplementalPolicyGUID = $SuppPolicyID"
-                Remove-Item ".\$SuppPolicyID.cip" -Force
+                Write-Output -InputObject "SupplementalPolicyName = $SuppPolicyName"
+                Write-Output -InputObject "SupplementalPolicyGUID = $SuppPolicyID"
+                Remove-Item -Path ".\$SuppPolicyID.cip" -Force
                 Remove-Item -Path $PolicyPath -Force # Remove the policy xml file in Temp folder we created earlier   
             }
         }
@@ -421,11 +421,11 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
 
                 # Create CIP for Audit Mode
                 Set-RuleOption -FilePath $PolicyPath -Option 3 # Add Audit mode policy rule option
-                ConvertFrom-CIPolicy $PolicyPath '.\AuditMode.cip' | Out-Null
+                ConvertFrom-CIPolicy -XmlFilePath $PolicyPath -BinaryFilePath '.\AuditMode.cip' | Out-Null
                  
                 # Create CIP for Enforced Mode
                 Set-RuleOption -FilePath $PolicyPath -Option 3 -Delete # Remove Audit mode policy rule option
-                ConvertFrom-CIPolicy $PolicyPath '.\EnforcedMode.cip' | Out-Null
+                ConvertFrom-CIPolicy -XmlFilePath $PolicyPath -BinaryFilePath '.\EnforcedMode.cip' | Out-Null
                              
                 ################# Snap back guarantee #################
                 Write-Debug -Message 'Creating Enforced Mode SnapBack guarantee'
@@ -442,8 +442,8 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                 Rename-Item '.\AuditMode.cip' -NewName ".\$PolicyID.cip" -Force
                 CiTool --update-policy ".\$PolicyID.cip" -json | Out-Null         
                 &$WriteTeaGreen "`nThe Base policy with the following details has been Re-Deployed in Audit Mode:"      
-                Write-Output "PolicyName = $PolicyName"
-                Write-Output "PolicyGUID = $PolicyID"
+                Write-Output -InputObject "PolicyName = $PolicyName"
+                Write-Output -InputObject "PolicyGUID = $PolicyID"
                 # Remove Audit Mode CIP
                 Remove-Item ".\$PolicyID.cip" -Force
                 # Prepare Enforced Mode CIP for Deployment - waiting to be Re-deployed at the right time
@@ -711,11 +711,11 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                 Set-HVCIOptions -Strict -FilePath $SuppPolicyPath             
                 Set-CIPolicyVersion -FilePath $SuppPolicyPath -Version '1.0.0.0'            
 
-                ConvertFrom-CIPolicy $SuppPolicyPath "$SuppPolicyID.cip" | Out-Null 
+                ConvertFrom-CIPolicy -XmlFilePath $SuppPolicyPath -BinaryFilePath "$SuppPolicyID.cip" | Out-Null 
                 CiTool --update-policy ".\$SuppPolicyID.cip" -json | Out-Null     
                 &$WriteTeaGreen "`nSupplemental policy with the following details has been Deployed in Enforced Mode:"
-                Write-Output "SupplementalPolicyName = $SuppPolicyName"
-                Write-Output "SupplementalPolicyGUID = $SuppPolicyID"
+                Write-Output -InputObject "SupplementalPolicyName = $SuppPolicyName"
+                Write-Output -InputObject "SupplementalPolicyGUID = $SuppPolicyID"
                 Remove-Item ".\$SuppPolicyID.cip" -Force
                 Remove-Item -Path $PolicyPath -Force # Remove the policy xml file in Temp folder we created earlier         
             }
@@ -752,7 +752,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                 $SuppPolicyID = Set-CIPolicyIdInfo -FilePath "$SuppPolicyName.xml" -ResetPolicyID -PolicyName "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')" -BasePolicyToSupplementPath $PolicyPath
                 $SuppPolicyID = $SuppPolicyID.Substring(11)
                 Set-HVCIOptions -Strict -FilePath "$SuppPolicyName.xml" 
-                ConvertFrom-CIPolicy "$SuppPolicyName.xml" "$SuppPolicyID.cip" | Out-Null
+                ConvertFrom-CIPolicy -XmlFilePath "$SuppPolicyName.xml" -BinaryFilePath "$SuppPolicyID.cip" | Out-Null
                 CiTool --update-policy "$SuppPolicyID.cip" -json | Out-Null              
                 &$WriteTeaGreen "`nThe Supplemental policy $SuppPolicyName has been deployed on the system, replacing the old ones.`nSystem Restart Not immediately needed but eventually required to finish the removal of previous individual Supplemental policies."
                 Remove-Item -Path "$SuppPolicyID.cip" -Force
@@ -815,7 +815,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
             $xml.SiPolicy.PolicyID = $CurrentID
             $xml.SiPolicy.BasePolicyID = $CurrentID
             $xml.Save('.\BasePolicy.xml')
-            ConvertFrom-CIPolicy '.\BasePolicy.xml' "$CurrentID.cip" | Out-Null
+            ConvertFrom-CIPolicy -XmlFilePath '.\BasePolicy.xml' -BinaryFilePath "$CurrentID.cip" | Out-Null
             # Deploy the new base policy with the same GUID on the system
             CiTool --update-policy "$CurrentID.cip" -json | Out-Null
             # Remove the policy binary after it's been deployed

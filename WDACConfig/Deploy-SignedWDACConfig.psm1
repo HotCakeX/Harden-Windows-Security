@@ -138,7 +138,7 @@ function Deploy-SignedWDACConfig {
             }
             Set-HVCIOptions -Strict -FilePath $PolicyPath
             Set-RuleOption -FilePath $PolicyPath -Option 6 -Delete
-            ConvertFrom-CIPolicy $PolicyPath "$PolicyID.cip" | Out-Null            
+            ConvertFrom-CIPolicy -XmlFilePath $PolicyPath -BinaryFilePath "$PolicyID.cip" | Out-Null            
 
             # Configure the parameter splat
             $ProcessParams = @{
@@ -160,8 +160,8 @@ function Deploy-SignedWDACConfig {
 
                 CiTool --update-policy ".\$PolicyID.cip" -json | Out-Null
                 Write-Host "`npolicy with the following details has been Signed and Deployed in Enforced Mode:" -ForegroundColor Green        
-                Write-Output "PolicyName = $PolicyName"
-                Write-Output "PolicyGUID = $PolicyID`n"
+                Write-Output -InputObject "PolicyName = $PolicyName"
+                Write-Output -InputObject "PolicyGUID = $PolicyID`n"
                 Remove-Item -Path ".\$PolicyID.cip" -Force
 
                 #region Detecting Strict Kernel mode policy and removing it from User Configs
@@ -211,8 +211,8 @@ function Deploy-SignedWDACConfig {
 
             else {            
                 Write-Host "`npolicy with the following details has been Signed and is ready for deployment:" -ForegroundColor Green
-                Write-Output "PolicyName = $PolicyName"
-                Write-Output "PolicyGUID = $PolicyID`n"
+                Write-Output -InputObject "PolicyName = $PolicyName"
+                Write-Output -InputObject "PolicyGUID = $PolicyID`n"
             }
         }
     }

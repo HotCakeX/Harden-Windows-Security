@@ -69,14 +69,14 @@ function Get-CommonWDACConfig {
     end {
         # Use a switch statement to check which parameter is present and output the corresponding value from the json file
         switch ($true) {
-            $SignedPolicyPath.IsPresent { Write-Output $CurrentUserConfigurations.SignedPolicyPath }
-            $UnsignedPolicyPath.IsPresent { Write-Output $CurrentUserConfigurations.UnsignedPolicyPath }
-            $SignToolPath.IsPresent { Write-Output $CurrentUserConfigurations.SignToolCustomPath }
-            $CertCN.IsPresent { Write-Output $CurrentUserConfigurations.CertificateCommonName }
-            $StrictKernelPolicyGUID.IsPresent { Write-Output $CurrentUserConfigurations.StrictKernelPolicyGUID }            
-            $StrictKernelNoFlightRootsPolicyGUID.IsPresent { Write-Output $CurrentUserConfigurations.StrictKernelNoFlightRootsPolicyGUID }
-            $CertPath.IsPresent { Write-Output $CurrentUserConfigurations.CertificatePath }
-            $LastUpdateCheck.IsPresent { Write-Output $CurrentUserConfigurations.LastUpdateCheck }
+            $SignedPolicyPath.IsPresent { Write-Output -InputObject $CurrentUserConfigurations.SignedPolicyPath }
+            $UnsignedPolicyPath.IsPresent { Write-Output -InputObject $CurrentUserConfigurations.UnsignedPolicyPath }
+            $SignToolPath.IsPresent { Write-Output -InputObject $CurrentUserConfigurations.SignToolCustomPath }
+            $CertCN.IsPresent { Write-Output -InputObject $CurrentUserConfigurations.CertificateCommonName }
+            $StrictKernelPolicyGUID.IsPresent { Write-Output -InputObject $CurrentUserConfigurations.StrictKernelPolicyGUID }            
+            $StrictKernelNoFlightRootsPolicyGUID.IsPresent { Write-Output -InputObject $CurrentUserConfigurations.StrictKernelNoFlightRootsPolicyGUID }
+            $CertPath.IsPresent { Write-Output -InputObject $CurrentUserConfigurations.CertificatePath }
+            $LastUpdateCheck.IsPresent { Write-Output -InputObject $CurrentUserConfigurations.LastUpdateCheck }
         }
     }
 }

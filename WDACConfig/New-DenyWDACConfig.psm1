@@ -141,7 +141,7 @@ function New-DenyWDACConfig {
                 Set-RuleOption -FilePath "DenyPolicy $PolicyName.xml" -Option $_ -Delete }        
             
             Set-HVCIOptions -Strict -FilePath "DenyPolicy $PolicyName.xml"        
-            ConvertFrom-CIPolicy "DenyPolicy $PolicyName.xml" "$policyID.cip" | Out-Null
+            ConvertFrom-CIPolicy -XmlFilePath "DenyPolicy $PolicyName.xml" -BinaryFilePath "$policyID.cip" | Out-Null
             [PSCustomObject]@{
                 DenyPolicyFile = "DenyPolicy $PolicyName.xml"
                 DenyPolicyGUID = $PolicyID
@@ -200,7 +200,7 @@ function New-DenyWDACConfig {
                 Set-RuleOption -FilePath "DenyPolicy $PolicyName.xml" -Option $_ -Delete }
            
             Set-HVCIOptions -Strict -FilePath "DenyPolicy $PolicyName.xml"        
-            ConvertFrom-CIPolicy "DenyPolicy $PolicyName.xml" "$policyID.cip" | Out-Null
+            ConvertFrom-CIPolicy -XmlFilePath "DenyPolicy $PolicyName.xml" -BinaryFilePath "$policyID.cip" | Out-Null
             
             [PSCustomObject]@{
                 DenyPolicyFile = "DenyPolicy $PolicyName.xml"
@@ -255,7 +255,7 @@ function New-DenyWDACConfig {
                 Set-RuleOption -FilePath ".\AppxDenyPolicy $PolicyName.xml" -Option $_ -Delete }
 
             Set-HVCIOptions -Strict -FilePath ".\AppxDenyPolicy $PolicyName.xml"        
-            ConvertFrom-CIPolicy ".\AppxDenyPolicy $PolicyName.xml" "$policyID.cip" | Out-Null
+            ConvertFrom-CIPolicy -XmlFilePath ".\AppxDenyPolicy $PolicyName.xml" -BinaryFilePath "$policyID.cip" | Out-Null
            
             [PSCustomObject]@{
                 DenyPolicyFile = ".\AppxDenyPolicy $PolicyName.xml"

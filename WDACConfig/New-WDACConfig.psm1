@@ -177,7 +177,7 @@ function New-WDACConfig {
                 Set-RuleOption -FilePath .\AllowMicrosoftPlusBlockRules.xml -Option 8
             }        
             Set-HVCIOptions -Strict -FilePath .\AllowMicrosoftPlusBlockRules.xml
-            ConvertFrom-CIPolicy .\AllowMicrosoftPlusBlockRules.xml "$PolicyID.cip" | Out-Null   
+            ConvertFrom-CIPolicy -XmlFilePath .\AllowMicrosoftPlusBlockRules. -BinaryFilePath "$PolicyID.cip" | Out-Null   
             # Remove the extra files that were created during module operation and are no longer needed
             Remove-Item '.\AllowMicrosoft.xml', 'Microsoft recommended block rules.xml' -Force
             [PSCustomObject]@{
@@ -245,7 +245,7 @@ function New-WDACConfig {
                 Set-RuleOption -FilePath .\DefaultWindowsPlusBlockRules.xml -Option 8
             }        
             Set-HVCIOptions -Strict -FilePath .\DefaultWindowsPlusBlockRules.xml
-            ConvertFrom-CIPolicy .\DefaultWindowsPlusBlockRules.xml "$PolicyID.cip" | Out-Null   
+            ConvertFrom-CIPolicy -XmlFilePath .\DefaultWindowsPlusBlockRules.xml -BinaryFilePath "$PolicyID.cip" | Out-Null   
 
             Remove-Item .\AllowPowerShell.xml -Force -ErrorAction SilentlyContinue
             Remove-Item '.\DefaultWindows_Enforced.xml', 'Microsoft recommended block rules.xml' -Force
@@ -285,7 +285,7 @@ function New-WDACConfig {
             Remove-Item -Path '.\Microsoft recommended block rules TEMP.xml' -Force
             [System.String]$PolicyID = (Set-CIPolicyIdInfo -FilePath '.\Microsoft recommended block rules.xml' -ResetPolicyID).Substring(11)
             Set-CIPolicyIdInfo -PolicyName "Microsoft Windows User Mode Policy - Enforced - $(Get-Date -Format 'MM-dd-yyyy')" -FilePath '.\Microsoft recommended block rules.xml'
-            ConvertFrom-CIPolicy '.\Microsoft recommended block rules.xml' "$PolicyID.cip" | Out-Null
+            ConvertFrom-CIPolicy -XmlFilePath '.\Microsoft recommended block rules.xml' -BinaryFilePath "$PolicyID.cip" | Out-Null
             CiTool --update-policy "$PolicyID.cip" -json | Out-Null          
             &$WriteLavender 'The Microsoft recommended block rules policy has been deployed in enforced mode.'                
             Remove-Item "$PolicyID.cip" -Force
@@ -319,7 +319,7 @@ function New-WDACConfig {
             [System.String]$PolicyID = Set-CIPolicyIdInfo -FilePath .\AllowMicrosoft.xml -ResetPolicyID
             [System.String]$PolicyID = $PolicyID.Substring(11)
             Set-CIPolicyIdInfo -PolicyName 'PrepMSFTOnlyAudit' -FilePath .\AllowMicrosoft.xml
-            ConvertFrom-CIPolicy .\AllowMicrosoft.xml "$PolicyID.cip" | Out-Null
+            ConvertFrom-CIPolicy -XmlFilePath .\AllowMicrosoft.xml -BinaryFilePath "$PolicyID.cip" | Out-Null
             if ($Deploy) {
                 CiTool --update-policy "$PolicyID.cip" -json | Out-Null           
                 &$WriteHotPink 'The default AllowMicrosoft policy has been deployed in Audit mode. No reboot required.'           
@@ -351,7 +351,7 @@ function New-WDACConfig {
             [System.String]$PolicyID = Set-CIPolicyIdInfo -FilePath .\DefaultWindows_Audit.xml -ResetPolicyID
             [System.String]$PolicyID = $PolicyID.Substring(11)
             Set-CIPolicyIdInfo -PolicyName 'PrepDefaultWindows' -FilePath .\DefaultWindows_Audit.xml
-            ConvertFrom-CIPolicy .\DefaultWindows_Audit.xml "$PolicyID.cip" | Out-Null
+            ConvertFrom-CIPolicy -XmlFilePath .\DefaultWindows_Audit.xml -BinaryFilePath "$PolicyID.cip" | Out-Null
             if ($Deploy) {
                 CiTool --update-policy "$PolicyID.cip" -json | Out-Null           
                 &$WriteLavender 'The defaultWindows policy has been deployed in Audit mode. No reboot required.'            
@@ -472,7 +472,7 @@ function New-WDACConfig {
             # Set the hypervisor Code Integrity option for Supplemental policy to Strict        
             Set-HVCIOptions -Strict -FilePath 'SupplementalPolicy.xml'
             # convert the Supplemental Policy file to .cip binary file
-            ConvertFrom-CIPolicy 'SupplementalPolicy.xml' "$policyID.cip" | Out-Null
+            ConvertFrom-CIPolicy -XmlFilePath 'SupplementalPolicy.xml' -BinaryFilePath "$policyID.cip" | Out-Null
 
             [PSCustomObject]@{
                 BasePolicyFile = $BasePolicy    
@@ -521,7 +521,7 @@ function New-WDACConfig {
             $BasePolicyID = $BasePolicyID.Substring(11)        
             Set-CIPolicyVersion -FilePath .\SignedAndReputable.xml -Version '1.0.0.0'
             Set-HVCIOptions -Strict -FilePath .\SignedAndReputable.xml        
-            ConvertFrom-CIPolicy .\SignedAndReputable.xml "$BasePolicyID.cip" | Out-Null
+            ConvertFrom-CIPolicy -XmlFilePath .\SignedAndReputable.xml -BinaryFilePath "$BasePolicyID.cip" | Out-Null
             # Configure required services for ISG authorization
             Start-Process -FilePath 'C:\Windows\System32\appidtel.exe' -ArgumentList 'start' -Wait -NoNewWindow
             Start-Process -FilePath 'C:\Windows\System32\sc.exe' -ArgumentList 'config', 'appidsvc', 'start= auto' -Wait -NoNewWindow

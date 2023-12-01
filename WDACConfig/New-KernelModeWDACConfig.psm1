@@ -143,7 +143,7 @@ function New-KernelModeWDACConfig {
                 # Build the Audit mode policy
                 Build-PrepModeStrictKernelPolicy -DefaultWindowsKernel
                 # Convert the xml to CIP binary
-                ConvertFrom-CIPolicy .\DefaultWindows_Enforced_Kernel.xml "$PolicyID.cip" | Out-Null
+                ConvertFrom-CIPolicy -XmlFilePath .\DefaultWindows_Enforced_Kernel.xml -BinaryFilePath "$PolicyID.cip" | Out-Null
                 
                 # Deploy the policy if Deploy parameter is used and perform additional tasks on the system
                 if ($Deploy) {                    
@@ -215,7 +215,7 @@ function New-KernelModeWDACConfig {
           
                 # Deploy the policy if Deploy parameter is used
                 if ($Deploy) { 
-                    ConvertFrom-CIPolicy '.\Final_DefaultWindows_Enforced_Kernel.xml' "$PolicyID.cip" | Out-Null
+                    ConvertFrom-CIPolicy -XmlFilePath '.\Final_DefaultWindows_Enforced_Kernel.xml' -BinaryFilePath "$PolicyID.cip" | Out-Null
                     CiTool.exe --update-policy "$PolicyID.cip" -json | Out-Null
                     &$WritePink 'Strict Kernel mode policy has been deployed in Enforced mode, no restart required.'
 
@@ -242,7 +242,7 @@ function New-KernelModeWDACConfig {
                 # Creating the audit mode policy
                 Build-PrepModeStrictKernelPolicy -DefaultWindowsKernelNoFlights
                 # Convert the xml to CIP binary
-                ConvertFrom-CIPolicy .\DefaultWindows_Enforced_Kernel_NoFlights.xml "$PolicyID.cip" | Out-Null
+                ConvertFrom-CIPolicy -XmlFilePath .\DefaultWindows_Enforced_Kernel_NoFlights.xml -BinaryFilePath "$PolicyID.cip" | Out-Null
 
                 # Deploy the policy if Deploy parameter is used and perform additional tasks on the system
                 if ($Deploy) {                     
@@ -313,7 +313,7 @@ function New-KernelModeWDACConfig {
           
                 # Deploy the policy if Deploy parameter is used
                 if ($Deploy) { 
-                    ConvertFrom-CIPolicy '.\Final_DefaultWindows_Enforced_Kernel.xml' "$PolicyID.cip" | Out-Null
+                    ConvertFrom-CIPolicy -XmlFilePath '.\Final_DefaultWindows_Enforced_Kernel.xml' -BinaryFilePath "$PolicyID.cip" | Out-Null
                     CiTool.exe --update-policy "$PolicyID.cip" -json | Out-Null
                     &$WritePink 'Strict Kernel mode policy with no flighting root certs has been deployed in Enforced mode, no restart required.'
                 

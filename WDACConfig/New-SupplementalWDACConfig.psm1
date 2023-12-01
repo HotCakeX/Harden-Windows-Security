@@ -160,7 +160,7 @@ function New-SupplementalWDACConfig {
             @(0, 1, 2, 3, 4, 9, 10, 11, 12, 15, 16, 17, 19, 20) | ForEach-Object -Process {
                 Set-RuleOption -FilePath "SupplementalPolicy $SuppPolicyName.xml" -Option $_ -Delete }        
             Set-HVCIOptions -Strict -FilePath "SupplementalPolicy $SuppPolicyName.xml"        
-            ConvertFrom-CIPolicy "SupplementalPolicy $SuppPolicyName.xml" "$policyID.cip" | Out-Null
+            ConvertFrom-CIPolicy -XmlFilePath "SupplementalPolicy $SuppPolicyName.xml" -BinaryFilePath "$policyID.cip" | Out-Null
             [PSCustomObject]@{
                 SupplementalPolicyFile = "SupplementalPolicy $SuppPolicyName.xml"
                 SupplementalPolicyGUID = $PolicyID
@@ -194,7 +194,7 @@ function New-SupplementalWDACConfig {
             Set-RuleOption -FilePath ".\SupplementalPolicy $SuppPolicyName.xml" -Option 18
             
             Set-HVCIOptions -Strict -FilePath ".\SupplementalPolicy $SuppPolicyName.xml"        
-            ConvertFrom-CIPolicy ".\SupplementalPolicy $SuppPolicyName.xml" "$policyID.cip" | Out-Null
+            ConvertFrom-CIPolicy -XmlFilePath ".\SupplementalPolicy $SuppPolicyName.xml" -BinaryFilePath "$policyID.cip" | Out-Null
             [PSCustomObject]@{
                 SupplementalPolicyFile = ".\SupplementalPolicy $SuppPolicyName.xml"
                 SupplementalPolicyGUID = $PolicyID
@@ -250,7 +250,7 @@ function New-SupplementalWDACConfig {
                 Set-RuleOption -FilePath ".\SupplementalPolicy $SuppPolicyName.xml" -Option $_ -Delete }             
             
             Set-HVCIOptions -Strict -FilePath ".\SupplementalPolicy $SuppPolicyName.xml"        
-            ConvertFrom-CIPolicy ".\SupplementalPolicy $SuppPolicyName.xml" "$policyID.cip" | Out-Null
+            ConvertFrom-CIPolicy -XmlFilePath ".\SupplementalPolicy $SuppPolicyName.xml" -BinaryFilePath "$policyID.cip" | Out-Null
             [PSCustomObject]@{
                 SupplementalPolicyFile = ".\SupplementalPolicy $SuppPolicyName.xml"
                 SupplementalPolicyGUID = $PolicyID

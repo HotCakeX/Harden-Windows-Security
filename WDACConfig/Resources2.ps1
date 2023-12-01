@@ -458,7 +458,7 @@ function Get-CertificateDetails {
                 TBSValue  = $TbsValue
             }
             # Display the object
-            Write-Output $Obj
+            Write-Output -InputObject $Obj
         }
     }
     elseif ($AllCertificates) {
@@ -478,7 +478,7 @@ function Get-CertificateDetails {
                 TBSValue  = $TbsValue
             }
             # Display the object
-            Write-Output $obj
+            Write-Output -InputObject $obj
         }
     }
     elseif ($LeafCertificate) {
@@ -496,12 +496,12 @@ function Get-CertificateDetails {
             TBSValue  = $TbsValue
         }
         # Display the object
-        Write-Output 'Leaf Certificate:'
-        Write-Output $obj
+        Write-Output -InputObject 'Leaf Certificate:'
+        Write-Output -InputObject $obj
     }
     else {
         # If none of the switch parameters are present, display a message to inform the user of their options
-        Write-Output 'Please specify one of the following switch parameters to get certificate details: -IntermediateOnly, -AllCertificates, or -LeafCertificate.'
+        Write-Output -InputObject 'Please specify one of the following switch parameters to get certificate details: -IntermediateOnly, -AllCertificates, or -LeafCertificate.'
     }
 }
 

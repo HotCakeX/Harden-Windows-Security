@@ -7,13 +7,13 @@ function Deploy-SignedWDACConfig {
     )]
     Param(
         [ValidatePattern('\.xml$')]
-        [ValidateScript({ Test-Path $_ -PathType 'Leaf' }, ErrorMessage = 'The path you selected is not a file path.')]
+        [ValidateScript({ Test-Path -Path $_ -PathType 'Leaf' }, ErrorMessage = 'The path you selected is not a file path.')]
         [parameter(Mandatory = $true)][System.String[]]$PolicyPaths,
 
         [Parameter(Mandatory = $false)][Switch]$Deploy,
     
         [ValidatePattern('\.cer$')]
-        [ValidateScript({ Test-Path $_ -PathType 'Leaf' }, ErrorMessage = 'The path you selected is not a file path.')]
+        [ValidateScript({ Test-Path -Path $_ -PathType 'Leaf' }, ErrorMessage = 'The path you selected is not a file path.')]
         [parameter(Mandatory = $false)][System.String]$CertPath,
 
         [ValidateScript({
@@ -72,7 +72,7 @@ function Deploy-SignedWDACConfig {
         if (!$CertPath) {
             if ($UserConfig.CertificatePath) {
                 # validate user config values for Certificate Path          
-                if (Test-Path $($UserConfig.CertificatePath)) {
+                if (Test-Path -Path $($UserConfig.CertificatePath)) {
                     # If the user config values are correct then use them
                     $CertPath = $UserConfig.CertificatePath
                 }            

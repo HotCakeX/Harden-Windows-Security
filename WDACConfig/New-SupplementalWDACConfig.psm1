@@ -18,7 +18,7 @@ function New-SupplementalWDACConfig {
         [parameter(Mandatory = $true, ParameterSetName = 'Installed AppXPackages', ValueFromPipelineByPropertyName = $true)]
         [System.String]$PackageName,
 
-        [ValidateScript({ Test-Path $_ -PathType 'Container' }, ErrorMessage = 'The path you selected is not a folder path.')] 
+        [ValidateScript({ Test-Path -Path $_ -PathType 'Container' }, ErrorMessage = 'The path you selected is not a folder path.')] 
         [parameter(Mandatory = $true, ParameterSetName = 'Normal', ValueFromPipelineByPropertyName = $true)]        
         [System.String]$ScanLocation,
 
@@ -31,7 +31,7 @@ function New-SupplementalWDACConfig {
         [System.String]$SuppPolicyName,
         
         [ValidatePattern('\.xml$')]
-        [ValidateScript({ Test-Path $_ -PathType 'Leaf' }, ErrorMessage = 'The path you selected is not a file path.')]
+        [ValidateScript({ Test-Path -Path $_ -PathType 'Leaf' }, ErrorMessage = 'The path you selected is not a file path.')]
         [parameter(Mandatory = $false, ValueFromPipelineByPropertyName = $true)] # Used by the entire Cmdlet         
         [System.String]$PolicyPath,
 
@@ -104,7 +104,7 @@ function New-SupplementalWDACConfig {
         if (!$PolicyPath) {            
             if ($UserConfig.UnsignedPolicyPath) {
                 # validate each policyPath read from user config file
-                if (Test-Path $($UserConfig.UnsignedPolicyPath)) {
+                if (Test-Path -Path $($UserConfig.UnsignedPolicyPath)) {
                     $PolicyPath = $UserConfig.UnsignedPolicyPath
                 }
                 else {

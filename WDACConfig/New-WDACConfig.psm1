@@ -213,7 +213,7 @@ function New-WDACConfig {
             }           
             
             # Scan PowerShell core directory and allow its files in the Default Windows base policy so that module can still be used once it's been deployed
-            if (Test-Path 'C:\Program Files\PowerShell') {
+            if (Test-Path -Path 'C:\Program Files\PowerShell') {
                 &$WriteLavender 'Creating allow rules for PowerShell in the DefaultWindows base policy so you can continue using this module after deploying it.'                   
                 New-CIPolicy -ScanPath 'C:\Program Files\PowerShell' -Level FilePublisher -NoScript -Fallback Hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -FilePath .\AllowPowerShell.xml
                 
@@ -337,7 +337,7 @@ function New-WDACConfig {
             # Making Sure neither PowerShell core nor WDACConfig module files are added to the Supplemental policy created by -MakePolicyFromAuditLogs parameter
             # by adding them first to the deployed Default Windows policy in Audit mode. Because WDACConfig module files don't need to be allowed to run since they are *.ps1 and .*psm1 files
             # And PowerShell core files will be added to the DefaultWindows Base policy anyway
-            if (Test-Path 'C:\Program Files\PowerShell') {               
+            if (Test-Path -Path 'C:\Program Files\PowerShell') {               
                 New-CIPolicy -ScanPath 'C:\Program Files\PowerShell' -Level FilePublisher -NoScript -Fallback Hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -FilePath .\AllowPowerShell.xml
                 New-CIPolicy -ScanPath "$psscriptroot" -Level hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -FilePath .\WDACConfigModule.xml
                 Merge-CIPolicy -PolicyPaths .\DefaultWindows_Audit.xml, .\AllowPowerShell.xml, .\WDACConfigModule.xml -OutputFilePath .\DefaultWindows_Audit_temp.xml | Out-Null
@@ -437,7 +437,7 @@ function New-WDACConfig {
                                 $usablePath = "$($getletter.DriveLetter)$remainingPath"
                                 $_.'File Name' = $_.'File Name' -replace $pattern, $usablePath
                             }
-                            if (-NOT (Test-Path $_.'File Name')) {
+                            if (-NOT (Test-Path -Path $_.'File Name')) {
                                 $_ | Select-Object FileVersion, 'File Name', PolicyGUID, 'SHA256 Hash', 'SHA256 Flat Hash', 'SHA1 Hash', 'SHA1 Flat Hash'
                             }
                         }

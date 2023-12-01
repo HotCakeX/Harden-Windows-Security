@@ -5,10 +5,10 @@ function Invoke-WDACSimulation {
         SupportsShouldProcess = $true
     )]
     Param(
-        [ValidateScript({ Test-Path $_ -PathType 'Container' }, ErrorMessage = 'The path you selected is not a folder path.')] 
+        [ValidateScript({ Test-Path -Path $_ -PathType 'Container' }, ErrorMessage = 'The path you selected is not a folder path.')] 
         [Parameter(Mandatory = $true)][System.String]$FolderPath,
 
-        [ValidateScript({ Test-Path $_ -PathType 'Leaf' }, ErrorMessage = 'The path you selected is not a file path.')]
+        [ValidateScript({ Test-Path -Path $_ -PathType 'Leaf' }, ErrorMessage = 'The path you selected is not a file path.')]
         [Parameter(Mandatory = $true)][System.String]$XmlFilePath,
 
         [Parameter(Mandatory = $false)][Switch]$SkipVersionCheck # Used by the entire Cmdlet

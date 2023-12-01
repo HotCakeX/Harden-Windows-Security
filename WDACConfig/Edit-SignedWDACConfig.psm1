@@ -23,7 +23,7 @@ function Edit-SignedWDACConfig {
         [System.String]$SuppPolicyName,
 
         [ValidatePattern('\.xml$')]
-        [ValidateScript({ Test-Path $_ -PathType 'Leaf' }, ErrorMessage = 'The path you selected is not a file path.')]
+        [ValidateScript({ Test-Path -Path $_ -PathType 'Leaf' }, ErrorMessage = 'The path you selected is not a file path.')]
         [Parameter(Mandatory = $true, ParameterSetName = 'Merge Supplemental Policies', ValueFromPipelineByPropertyName = $true)]
         [System.String[]]$SuppPolicyPaths,
 
@@ -39,7 +39,7 @@ function Edit-SignedWDACConfig {
         [System.String]$NewBasePolicyType,
 
         [ValidatePattern('\.cer$')] # Used by the entire Cmdlet
-        [ValidateScript({ Test-Path $_ -PathType 'Leaf' }, ErrorMessage = 'The path you selected is not a file path.')]
+        [ValidateScript({ Test-Path -Path $_ -PathType 'Leaf' }, ErrorMessage = 'The path you selected is not a file path.')]
         [Parameter(Mandatory = $false, ValueFromPipelineByPropertyName = $true)] 
         [System.String]$CertPath,        
 
@@ -160,7 +160,7 @@ function Edit-SignedWDACConfig {
         if (!$CertPath) {
             if ($UserConfig.CertificatePath) {
                 # validate user config values for Certificate Path          
-                if (Test-Path $($UserConfig.CertificatePath)) {
+                if (Test-Path -Path $($UserConfig.CertificatePath)) {
                     # If the user config values are correct then use them
                     $CertPath = $UserConfig.CertificatePath
                 }            
@@ -196,7 +196,7 @@ function Edit-SignedWDACConfig {
             if ($PSCmdlet.ParameterSetName -in 'Allow New Apps Audit Events', 'Allow New Apps', 'Merge Supplemental Policies') {
                 if ($UserConfig.SignedPolicyPath) {
                     # validate each policyPath read from user config file
-                    if (Test-Path $($UserConfig.SignedPolicyPath)) {
+                    if (Test-Path -Path $($UserConfig.SignedPolicyPath)) {
                         $PolicyPaths = $UserConfig.SignedPolicyPath
                     }
                     else {
@@ -516,7 +516,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                                         $usablePath = "$($getletter.DriveLetter)$remainingPath"
                                         $_.'File Name' = $_.'File Name' -replace $pattern, $usablePath
                                     } # Check if file is currently on the disk
-                                    if (Test-Path $_.'File Name') {
+                                    if (Test-Path -Path $_.'File Name') {
                                         # Check if the file exits in the $ExesWithNoHash array
                                         if ($ExesWithNoHash -contains $_.'File Name') {
                                             $_ | Select-Object FileVersion, 'File Name', PolicyGUID, 'SHA256 Hash', 'SHA256 Flat Hash', 'SHA1 Hash', 'SHA1 Flat Hash'
@@ -921,7 +921,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                     if (!$Debug) { Remove-Item -Recurse -Path "$global:UserTempDirectoryPath\TemporarySignToolFile" -Force }
                                             
                     # Scan PowerShell core directory and add them to the Default Windows base policy so that the module can be used after it's been deployed
-                    if (Test-Path 'C:\Program Files\PowerShell') {                   
+                    if (Test-Path -Path 'C:\Program Files\PowerShell') {                   
                         &$WriteHotPink "`nCreating allow rules for PowerShell in the DefaultWindows base policy so you can continue using this module after deploying it."
                         New-CIPolicy -ScanPath 'C:\Program Files\PowerShell' -Level FilePublisher -NoScript -Fallback Hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -AllowFileNameFallbacks -FilePath .\AllowPowerShell.xml                        
                         Merge-CIPolicy -PolicyPaths .\DefaultWindows_Enforced.xml, .\AllowPowerShell.xml, .\SignTool.xml, '.\Microsoft recommended block rules.xml' -OutputFilePath .\BasePolicy.xml | Out-Null

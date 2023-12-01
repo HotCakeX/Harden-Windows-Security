@@ -50,7 +50,7 @@ function Edit-WDACConfig {
         [System.String[]]$PolicyPaths,
 
         [ValidatePattern('\.xml$')]
-        [ValidateScript({ Test-Path $_ -PathType 'Leaf' }, ErrorMessage = 'The path you selected is not a file path.')]      
+        [ValidateScript({ Test-Path -Path $_ -PathType 'Leaf' }, ErrorMessage = 'The path you selected is not a file path.')]      
         [Parameter(Mandatory = $true, ParameterSetName = 'Merge Supplemental Policies', ValueFromPipelineByPropertyName = $true)]
         [System.String[]]$SuppPolicyPaths,
 
@@ -136,7 +136,7 @@ function Edit-WDACConfig {
             if (!$PolicyPaths) {            
                 if ($UserConfig.UnsignedPolicyPath) {
                     # validate each policyPath read from user config file
-                    if (Test-Path $($UserConfig.UnsignedPolicyPath)) {
+                    if (Test-Path -Path $($UserConfig.UnsignedPolicyPath)) {
                         $PolicyPaths = $UserConfig.UnsignedPolicyPath
                     }
                     else {
@@ -631,7 +631,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                                         $usablePath = "$($getletter.DriveLetter)$remainingPath"
                                         $_.'File Name' = $_.'File Name' -replace $pattern, $usablePath
                                     } # Check if file is currently on the disk
-                                    if (Test-Path $_.'File Name') {
+                                    if (Test-Path -Path $_.'File Name') {
                                         # Check if the file exits in the $ExesWithNoHash array
                                         if ($ExesWithNoHash -contains $_.'File Name') {
                                             $_ | Select-Object FileVersion, 'File Name', PolicyGUID, 'SHA256 Hash', 'SHA256 Flat Hash', 'SHA1 Hash', 'SHA1 Flat Hash'
@@ -784,7 +784,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                 'DefaultWindows_WithBlockRules' {                                            
                     Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\DefaultWindows_Enforced.xml' -Destination '.\DefaultWindows_Enforced.xml'
                     # Scan PowerShell core directory and add them to the Default Windows base policy so that the module can be used after it's been deployed
-                    if (Test-Path 'C:\Program Files\PowerShell') {
+                    if (Test-Path -Path 'C:\Program Files\PowerShell') {
                         Write-Host -Object 'Creating allow rules for PowerShell in the DefaultWindows base policy so you can continue using this module after deploying it.' -ForegroundColor Blue                    
                         New-CIPolicy -ScanPath 'C:\Program Files\PowerShell' -Level FilePublisher -NoScript -Fallback Hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -FilePath .\AllowPowerShell.xml
                         Merge-CIPolicy -PolicyPaths .\DefaultWindows_Enforced.xml, .\AllowPowerShell.xml, '.\Microsoft recommended block rules.xml' -OutputFilePath .\BasePolicy.xml | Out-Null

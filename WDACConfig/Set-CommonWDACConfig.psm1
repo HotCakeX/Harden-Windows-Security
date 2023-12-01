@@ -11,11 +11,11 @@ function Set-CommonWDACConfig {
         [parameter(Mandatory = $false)][System.String]$CertCN,
 
         [ValidatePattern('\.cer$')]
-        [ValidateScript({ Test-Path $_ -PathType 'Leaf' }, ErrorMessage = 'The path you selected is not a file path.')]
+        [ValidateScript({ Test-Path -Path $_ -PathType 'Leaf' }, ErrorMessage = 'The path you selected is not a file path.')]
         [parameter(Mandatory = $false)][System.String]$CertPath,
 
         [ValidatePattern('\.exe$')]
-        [ValidateScript({ Test-Path $_ -PathType 'Leaf' }, ErrorMessage = 'The path you selected is not a file path.')]
+        [ValidateScript({ Test-Path -Path $_ -PathType 'Leaf' }, ErrorMessage = 'The path you selected is not a file path.')]
         [parameter(Mandatory = $false)][System.String]$SignToolPath,
 
         [ValidatePattern('\.xml$')]

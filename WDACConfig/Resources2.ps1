@@ -412,7 +412,7 @@ function Get-CertificateDetails {
     param (
         # Make the FilePath parameter mandatory and validate that it is a valid file path
         [Parameter()]
-        [ValidateScript({ Test-Path $_ -PathType Leaf })]
+        [ValidateScript({ Test-Path -Path $_ -PathType Leaf })]
         [string]$FilePath,
         $X509Certificate2,
         [switch]$IntermediateOnly,

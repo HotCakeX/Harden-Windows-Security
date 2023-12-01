@@ -153,7 +153,7 @@ function Deploy-SignedWDACConfig {
             # Sign the files with the specified cert
             Start-Process @ProcessParams
 
-            Remove-Item ".\$PolicyID.cip" -Force            
+            Remove-Item -Path ".\$PolicyID.cip" -Force            
             Rename-Item "$PolicyID.cip.p7" -NewName "$PolicyID.cip" -Force
 
             if ($Deploy) {

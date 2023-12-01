@@ -183,7 +183,7 @@ function Edit-WDACConfig {
             Write-Output -InputObject "PolicyName = $PolicyName"
             Write-Output -InputObject "PolicyGUID = $PolicyID"
             # Remove Enforced Mode CIP
-            Remove-Item ".\$PolicyID.cip" -Force
+            Remove-Item -Path ".\$PolicyID.cip" -Force
         }       
 
         $DriveLettersGlobalRootFix = Invoke-Command -ScriptBlock $DriveLettersGlobalRootFixScriptBlock
@@ -262,9 +262,9 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                 Write-Output -InputObject "PolicyName = $PolicyName"
                 Write-Output -InputObject "PolicyGUID = $PolicyID"
                 # Remove Audit Mode CIP
-                Remove-Item ".\$PolicyID.cip" -Force
+                Remove-Item -Path ".\$PolicyID.cip" -Force
                 # Prepare Enforced Mode CIP for Deployment - waiting to be Re-deployed at the right time
-                Rename-Item '.\EnforcedMode.cip' -NewName ".\$PolicyID.cip" -Force     
+                Rename-Item -Path '.\EnforcedMode.cip' -NewName ".\$PolicyID.cip" -Force     
                 
                 # A Try-Catch-Finally block so that if any errors occur, the Base policy will be Re-deployed in enforced mode                
                 Try {
@@ -445,9 +445,9 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                 Write-Output -InputObject "PolicyName = $PolicyName"
                 Write-Output -InputObject "PolicyGUID = $PolicyID"
                 # Remove Audit Mode CIP
-                Remove-Item ".\$PolicyID.cip" -Force
+                Remove-Item -Path ".\$PolicyID.cip" -Force
                 # Prepare Enforced Mode CIP for Deployment - waiting to be Re-deployed at the right time
-                Rename-Item '.\EnforcedMode.cip' -NewName ".\$PolicyID.cip" -Force
+                Rename-Item -Path '.\EnforcedMode.cip' -NewName ".\$PolicyID.cip" -Force
 
                 # A Try-Catch-Finally block so that if any errors occur, the Base policy will be Re-deployed in enforced mode                
                 Try {
@@ -716,7 +716,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                 &$WriteTeaGreen "`nSupplemental policy with the following details has been Deployed in Enforced Mode:"
                 Write-Output -InputObject "SupplementalPolicyName = $SuppPolicyName"
                 Write-Output -InputObject "SupplementalPolicyGUID = $SuppPolicyID"
-                Remove-Item ".\$SuppPolicyID.cip" -Force
+                Remove-Item -Path ".\$SuppPolicyID.cip" -Force
                 Remove-Item -Path $PolicyPath -Force # Remove the policy xml file in Temp folder we created earlier         
             }
         }
@@ -804,8 +804,8 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
             Set-HVCIOptions -Strict -FilePath .\BasePolicy.xml
             
             # Remove the extra files create during module operation that are no longer necessary
-            Remove-Item '.\AllowPowerShell.xml', '.\DefaultWindows_Enforced.xml', '.\AllowMicrosoft.xml' -Force -ErrorAction SilentlyContinue
-            Remove-Item '.\Microsoft recommended block rules.xml' -Force
+            Remove-Item -Path '.\AllowPowerShell.xml', '.\DefaultWindows_Enforced.xml', '.\AllowMicrosoft.xml' -Force -ErrorAction SilentlyContinue
+            Remove-Item -Path '.\Microsoft recommended block rules.xml' -Force
 
             # Get the policy ID of the currently deployed base policy based on the policy name that user selected
             $CurrentID = ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { $_.IsSystemPolicy -ne 'True' } | Where-Object -FilterScript { $_.Friendlyname -eq $CurrentBasePolicyName }).BasePolicyID
@@ -819,7 +819,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
             # Deploy the new base policy with the same GUID on the system
             CiTool --update-policy "$CurrentID.cip" -json | Out-Null
             # Remove the policy binary after it's been deployed
-            Remove-Item "$CurrentID.cip" -Force
+            Remove-Item -Path "$CurrentID.cip" -Force
             
             # Keep the new base policy XML file that was just deployed, in the current directory, so user can keep it for later 
             $PolicyFiles = @{
@@ -827,7 +827,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                 'Lightly_Managed_system_Policy'   = 'SignedAndReputable.xml'
                 'DefaultWindows_WithBlockRules'   = 'DefaultWindowsPlusBlockRules.xml'
             }
-            Remove-Item $PolicyFiles[$NewBasePolicyType] -Force -ErrorAction SilentlyContinue
+            Remove-Item -Path $PolicyFiles[$NewBasePolicyType] -Force -ErrorAction SilentlyContinue
             Rename-Item -Path '.\BasePolicy.xml' -NewName $PolicyFiles[$NewBasePolicyType] -Force
             &$WritePink "Base Policy has been successfully updated to $NewBasePolicyType"
             &$WriteLavender 'Keep in mind that your previous policy path saved in User Configurations is no longer valid as you just changed your Base policy.'

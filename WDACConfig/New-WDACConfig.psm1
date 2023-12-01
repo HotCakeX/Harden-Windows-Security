@@ -146,8 +146,8 @@ function New-WDACConfig {
             $DriverRules = $DriverRules -replace '<SigningScenario\sValue="12"\sID="ID_SIGNINGSCENARIO_WINDOWS"\sFriendlyName="Auto\sgenerated\spolicy[\S\s]*<\/SigningScenario>', ''
             $DriverRules | Out-File 'Microsoft recommended driver block rules TEMP.xml'
             # Remove empty lines from the policy file
-            Get-Content 'Microsoft recommended driver block rules TEMP.xml' | Where-Object -FilterScript { $_.trim() -ne '' } | Out-File 'Microsoft recommended driver block rules.xml'
-            Remove-Item 'Microsoft recommended driver block rules TEMP.xml' -Force
+            Get-Content -Path 'Microsoft recommended driver block rules TEMP.xml' | Where-Object -FilterScript { $_.trim() -ne '' } | Out-File 'Microsoft recommended driver block rules.xml'
+            Remove-Item -Path 'Microsoft recommended driver block rules TEMP.xml' -Force
             Set-RuleOption -FilePath 'Microsoft recommended driver block rules.xml' -Option 3 -Delete
             Set-HVCIOptions -Strict -FilePath 'Microsoft recommended driver block rules.xml'
             # Display extra info about the Microsoft Drivers block list
@@ -179,7 +179,7 @@ function New-WDACConfig {
             Set-HVCIOptions -Strict -FilePath .\AllowMicrosoftPlusBlockRules.xml
             ConvertFrom-CIPolicy -XmlFilePath .\AllowMicrosoftPlusBlockRules. -BinaryFilePath "$PolicyID.cip" | Out-Null   
             # Remove the extra files that were created during module operation and are no longer needed
-            Remove-Item '.\AllowMicrosoft.xml', 'Microsoft recommended block rules.xml' -Force
+            Remove-Item -Path '.\AllowMicrosoft.xml', 'Microsoft recommended block rules.xml' -Force
             [PSCustomObject]@{
                 PolicyFile = 'AllowMicrosoftPlusBlockRules.xml'
                 BinaryFile = "$PolicyID.cip"
@@ -247,8 +247,8 @@ function New-WDACConfig {
             Set-HVCIOptions -Strict -FilePath .\DefaultWindowsPlusBlockRules.xml
             ConvertFrom-CIPolicy -XmlFilePath .\DefaultWindowsPlusBlockRules.xml -BinaryFilePath "$PolicyID.cip" | Out-Null   
 
-            Remove-Item .\AllowPowerShell.xml -Force -ErrorAction SilentlyContinue
-            Remove-Item '.\DefaultWindows_Enforced.xml', 'Microsoft recommended block rules.xml' -Force
+            Remove-Item -Path .\AllowPowerShell.xml -Force -ErrorAction SilentlyContinue
+            Remove-Item -Path '.\DefaultWindows_Enforced.xml', 'Microsoft recommended block rules.xml' -Force
             if ($global:MergeSignToolPolicy -and !$Debug) { Remove-Item -Path .\SignTool.xml -Force }
 
             [PSCustomObject]@{
@@ -266,12 +266,12 @@ function New-WDACConfig {
 
         [System.Management.Automation.ScriptBlock]$DeployLatestDriverBlockRulesSCRIPTBLOCK = {
             Invoke-WebRequest -Uri 'https://aka.ms/VulnerableDriverBlockList' -OutFile VulnerableDriverBlockList.zip -ProgressAction SilentlyContinue
-            Expand-Archive .\VulnerableDriverBlockList.zip -DestinationPath 'VulnerableDriverBlockList' -Force
-            Rename-Item .\VulnerableDriverBlockList\SiPolicy_Enforced.p7b -NewName 'SiPolicy.p7b' -Force
-            Copy-Item .\VulnerableDriverBlockList\SiPolicy.p7b -Destination 'C:\Windows\System32\CodeIntegrity'
+            Expand-Archive -Path .\VulnerableDriverBlockList.zip -DestinationPath 'VulnerableDriverBlockList' -Force
+            Rename-Item -Path .\VulnerableDriverBlockList\SiPolicy_Enforced.p7b -NewName 'SiPolicy.p7b' -Force
+            Copy-Item -Path .\VulnerableDriverBlockList\SiPolicy.p7b -Destination 'C:\Windows\System32\CodeIntegrity'
             citool --refresh -json | Out-Null           
             &$WritePink 'SiPolicy.p7b has been deployed and policies refreshed.'            
-            Remove-Item .\VulnerableDriverBlockList* -Recurse -Force                    
+            Remove-Item -Path .\VulnerableDriverBlockList* -Recurse -Force                    
             Invoke-Command -ScriptBlock $DriversBlockListInfoGatheringSCRIPTBLOCK
         }
         
@@ -288,7 +288,7 @@ function New-WDACConfig {
             ConvertFrom-CIPolicy -XmlFilePath '.\Microsoft recommended block rules.xml' -BinaryFilePath "$PolicyID.cip" | Out-Null
             CiTool --update-policy "$PolicyID.cip" -json | Out-Null          
             &$WriteLavender 'The Microsoft recommended block rules policy has been deployed in enforced mode.'                
-            Remove-Item "$PolicyID.cip" -Force
+            Remove-Item -Path "$PolicyID.cip" -Force
         }
 
         [System.Management.Automation.ScriptBlock]$SetAutoUpdateDriverBlockRulesSCRIPTBLOCK = {
@@ -323,7 +323,7 @@ function New-WDACConfig {
             if ($Deploy) {
                 CiTool --update-policy "$PolicyID.cip" -json | Out-Null           
                 &$WriteHotPink 'The default AllowMicrosoft policy has been deployed in Audit mode. No reboot required.'           
-                Remove-Item 'AllowMicrosoft.xml', "$PolicyID.cip" -Force   
+                Remove-Item -Path 'AllowMicrosoft.xml', "$PolicyID.cip" -Force   
             }
             else {
                 &$WriteHotPink 'The default AllowMicrosoft policy has been created in Audit mode and is ready for deployment.'
@@ -342,9 +342,9 @@ function New-WDACConfig {
                 New-CIPolicy -ScanPath "$psscriptroot" -Level hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -FilePath .\WDACConfigModule.xml
                 Merge-CIPolicy -PolicyPaths .\DefaultWindows_Audit.xml, .\AllowPowerShell.xml, .\WDACConfigModule.xml -OutputFilePath .\DefaultWindows_Audit_temp.xml | Out-Null
             
-                Remove-Item DefaultWindows_Audit.xml -Force            
+                Remove-Item -Path DefaultWindows_Audit.xml -Force            
                 Rename-Item -Path .\DefaultWindows_Audit_temp.xml -NewName 'DefaultWindows_Audit.xml' -Force
-                Remove-Item 'WDACConfigModule.xml', 'AllowPowerShell.xml' -Force
+                Remove-Item -Path 'WDACConfigModule.xml', 'AllowPowerShell.xml' -Force
             } 
                                
             Set-RuleOption -FilePath .\DefaultWindows_Audit.xml -Option 3
@@ -355,7 +355,7 @@ function New-WDACConfig {
             if ($Deploy) {
                 CiTool --update-policy "$PolicyID.cip" -json | Out-Null           
                 &$WriteLavender 'The defaultWindows policy has been deployed in Audit mode. No reboot required.'            
-                Remove-Item 'DefaultWindows_Audit.xml', "$PolicyID.cip" -Force 
+                Remove-Item -Path 'DefaultWindows_Audit.xml', "$PolicyID.cip" -Force 
             }
             else {
                 &$WriteLavender 'The defaultWindows policy has been created in Audit mode and is ready for deployment.'            

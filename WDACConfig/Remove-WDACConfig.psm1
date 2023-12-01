@@ -286,7 +286,7 @@ function Remove-WDACConfig {
                 # Sign the files with the specified cert
                 Start-Process @ProcessParams
 
-                Remove-Item ".\$PolicyID.cip" -Force
+                Remove-Item -Path ".\$PolicyID.cip" -Force
                 Rename-Item "$PolicyID.cip.p7" -NewName "$PolicyID.cip" -Force
                 CiTool --update-policy ".\$PolicyID.cip" -json | Out-Null 
                 Write-Host "`nPolicy with the following details has been Re-signed and Re-deployed in Unsigned mode.`nPlease restart your system." -ForegroundColor Green

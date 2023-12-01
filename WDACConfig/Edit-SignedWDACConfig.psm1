@@ -48,7 +48,7 @@ function Edit-SignedWDACConfig {
                 # Validate each Policy file in PolicyPaths parameter to make sure the user isn't accidentally trying to
                 # Edit an Unsigned policy using Edit-SignedWDACConfig cmdlet which is only made for Signed policies
                 $_ | ForEach-Object -Process {                   
-                    $xmlTest = [System.Xml.XmlDocument](Get-Content $_)
+                    $xmlTest = [System.Xml.XmlDocument](Get-Content -Path $_)
                     $RedFlag1 = $xmlTest.SiPolicy.SupplementalPolicySigners.SupplementalPolicySigner.SignerId
                     $RedFlag2 = $xmlTest.SiPolicy.UpdatePolicySigners.UpdatePolicySigner.SignerId
                     $RedFlag3 = $xmlTest.SiPolicy.PolicyID
@@ -275,7 +275,7 @@ function Edit-SignedWDACConfig {
                 $PolicyPath = "$global:UserTempDirectoryPath\$PolicyFileName"
 
                 # Defining Base policy
-                $xml = [System.Xml.XmlDocument](Get-Content $PolicyPath)            
+                $xml = [System.Xml.XmlDocument](Get-Content -Path $PolicyPath)            
                 [System.String]$PolicyID = $xml.SiPolicy.PolicyID
                 [System.String]$PolicyName = ($xml.SiPolicy.Settings.Setting | Where-Object -FilterScript { $_.provider -eq 'PolicyInfo' -and $_.valuename -eq 'Name' -and $_.key -eq 'Information' }).value.string
             
@@ -640,7 +640,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                 $PolicyPath = "$global:UserTempDirectoryPath\$PolicyFileName"
 
                 # Defining Base policy
-                $xml = [System.Xml.XmlDocument](Get-Content $PolicyPath)            
+                $xml = [System.Xml.XmlDocument](Get-Content -Path $PolicyPath)            
                 [System.String]$PolicyID = $xml.SiPolicy.PolicyID
                 [System.String]$PolicyName = ($xml.SiPolicy.Settings.Setting | Where-Object -FilterScript { $_.provider -eq 'PolicyInfo' -and $_.valuename -eq 'Name' -and $_.key -eq 'Information' }).value.string
     
@@ -836,7 +836,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
             foreach ($PolicyPath in $PolicyPaths) {
                 ############ Input policy verification prior to doing anything ############
                 foreach ($SuppPolicyPath in $SuppPolicyPaths) {                                
-                    $Supplementalxml = [System.Xml.XmlDocument](Get-Content $SuppPolicyPath)
+                    $Supplementalxml = [System.Xml.XmlDocument](Get-Content -Path $SuppPolicyPath)
                     $SupplementalPolicyID = $Supplementalxml.SiPolicy.PolicyID
                     $SupplementalPolicyType = $Supplementalxml.SiPolicy.PolicyType
                     $DeployedPoliciesIDs = (CiTool -lp -json | ConvertFrom-Json).Policies.PolicyID | ForEach-Object -Process { return "{$_}" }         
@@ -853,7 +853,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                 Merge-CIPolicy -PolicyPaths $SuppPolicyPaths -OutputFilePath "$SuppPolicyName.xml" | Out-Null
                 # Delete the deployed Supplemental policies that user selected from the system because we're going to deploy the new merged policy that contains all of them
                 foreach ($SuppPolicyPath in $SuppPolicyPaths) {                                
-                    $Supplementalxml = [System.Xml.XmlDocument](Get-Content $SuppPolicyPath)
+                    $Supplementalxml = [System.Xml.XmlDocument](Get-Content -Path $SuppPolicyPath)
                     $SupplementalPolicyID = $Supplementalxml.SiPolicy.PolicyID                         
                     Citool --remove-policy $SupplementalPolicyID -json | Out-Null
                     # remove the old policy files unless user chose to keep them
@@ -948,7 +948,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
             $CurrentID = "{$CurrentID}"
             Remove-Item -Path ".\$CurrentID.cip" -Force -ErrorAction SilentlyContinue
 
-            [System.Xml.XmlDocument]$xml = Get-Content '.\BasePolicy.xml'        
+            [System.Xml.XmlDocument]$xml = Get-Content -Path '.\BasePolicy.xml'        
             $xml.SiPolicy.PolicyID = $CurrentID
             $xml.SiPolicy.BasePolicyID = $CurrentID
             $xml.Save('.\BasePolicy.xml')

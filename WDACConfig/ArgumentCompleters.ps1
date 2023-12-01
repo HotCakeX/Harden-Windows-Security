@@ -3,7 +3,7 @@
 [System.Management.Automation.ScriptBlock]$ArgumentCompleterCertPath = {
     # Note the use of -Depth 1
     # Enclosing the $results = ... assignment in (...) also passes the value through.
-    ($results = Get-ChildItem -Depth 2 -Filter *.cer | ForEach-Object { "`"$_`"" })
+    ($results = Get-ChildItem -Depth 2 -Filter *.cer | ForEach-Object -Process { "`"$_`"" })
     if (-not $results) {
         # No results?
         $null # Dummy response that prevents fallback to the default file-name completion.
@@ -67,9 +67,9 @@
     ).Value  
 
     # Get the xml files in the current directory
-    Get-ChildItem -File | Where-Object -FilterScript { $_.extension -like '*.xml' } | ForEach-Object {
+    Get-ChildItem -File | Where-Object -FilterScript { $_.extension -like '*.xml' } | ForEach-Object -Process {
 
-        $xmlitem = [System.Xml.XmlDocument](Get-Content $_)
+        $xmlitem = [System.Xml.XmlDocument](Get-Content -Path $_)
         $PolicyType = $xmlitem.SiPolicy.PolicyType
 
         if ($PolicyType -eq 'Base Policy') {
@@ -99,7 +99,7 @@
     # Get the xml files in the current directory
     Get-ChildItem -File | Where-Object -FilterScript { $_.extension -like '*.xml' } | ForEach-Object -Process {
 
-        $xmlitem = [System.Xml.XmlDocument](Get-Content $_)
+        $xmlitem = [System.Xml.XmlDocument](Get-Content -Path $_)
         $PolicyType = $xmlitem.SiPolicy.PolicyType
 
         if ($PolicyType -eq 'Supplemental Policy') {

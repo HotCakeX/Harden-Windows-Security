@@ -108,7 +108,7 @@ function Deploy-SignedWDACConfig {
         foreach ($PolicyPath in $PolicyPaths) {          
             
             # Gather policy details
-            $xml = [System.Xml.XmlDocument](Get-Content $PolicyPath)
+            $xml = [System.Xml.XmlDocument](Get-Content -Path $PolicyPath)
             [System.String]$PolicyType = $xml.SiPolicy.PolicyType
             [System.String]$PolicyID = $xml.SiPolicy.PolicyID
             [System.String]$PolicyName = ($xml.SiPolicy.Settings.Setting | Where-Object -FilterScript { $_.provider -eq 'PolicyInfo' -and $_.valuename -eq 'Name' -and $_.key -eq 'Information' }).value.string

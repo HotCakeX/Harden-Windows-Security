@@ -278,7 +278,7 @@ function New-WDACConfig {
         [System.Management.Automation.ScriptBlock]$DeployLatestBlockRulesSCRIPTBLOCK = {
             (Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/public/windows/security/application-security/application-control/windows-defender-application-control/design/applications-that-can-bypass-wdac.md' -ProgressAction SilentlyContinue).Content -replace "(?s).*``````xml(.*)``````.*", '$1' | Out-File '.\Microsoft recommended block rules TEMP.xml'
             # Remove empty lines from the policy file
-            Get-Content '.\Microsoft recommended block rules TEMP.xml' | Where-Object -FilterScript { $_.trim() -ne '' } | Out-File '.\Microsoft recommended block rules.xml'    
+            Get-Content -Path '.\Microsoft recommended block rules TEMP.xml' | Where-Object -FilterScript { $_.trim() -ne '' } | Out-File '.\Microsoft recommended block rules.xml'    
             Set-RuleOption -FilePath '.\Microsoft recommended block rules.xml' -Option 3 -Delete
             @(0, 2, 6, 11, 12, 16, 19, 20) | ForEach-Object -Process { Set-RuleOption -FilePath '.\Microsoft recommended block rules.xml' -Option $_ }
             Set-HVCIOptions -Strict -FilePath '.\Microsoft recommended block rules.xml'
@@ -375,14 +375,14 @@ function New-WDACConfig {
             switch ($BasePolicyType) {
                 'Allow Microsoft Base' {
                     Invoke-Command -ScriptBlock $MakeAllowMSFTWithBlockRulesSCRIPTBLOCK | Out-Null
-                    $xml = [System.Xml.XmlDocument](Get-Content .\AllowMicrosoftPlusBlockRules.xml)
+                    $xml = [System.Xml.XmlDocument](Get-Content -Path .\AllowMicrosoftPlusBlockRules.xml)
                     $BasePolicyID = $xml.SiPolicy.PolicyID
                     # define the location of the base policy
                     $BasePolicy = 'AllowMicrosoftPlusBlockRules.xml' 
                 }
                 'Default Windows Base' {
                     Invoke-Command -ScriptBlock $MakeDefaultWindowsWithBlockRulesSCRIPTBLOCK | Out-Null
-                    $xml = [System.Xml.XmlDocument](Get-Content .\DefaultWindowsPlusBlockRules.xml)
+                    $xml = [System.Xml.XmlDocument](Get-Content -Path .\DefaultWindowsPlusBlockRules.xml)
                     $BasePolicyID = $xml.SiPolicy.PolicyID
                     # define the location of the base policy
                     $BasePolicy = 'DefaultWindowsPlusBlockRules.xml' 

@@ -19,7 +19,7 @@ function Get-SignerInfo {
     )
 
     # Load the XML file and select the Signer nodes
-    $xml = [System.Xml.XmlDocument](Get-Content $XmlFilePath)
+    $xml = [System.Xml.XmlDocument](Get-Content -Path $XmlFilePath)
     $Signers = $xml.SiPolicy.Signers.Signer
 
     # Create an empty array to store the output

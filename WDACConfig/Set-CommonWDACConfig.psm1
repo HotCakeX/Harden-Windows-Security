@@ -21,7 +21,7 @@ function Set-CommonWDACConfig {
         [ValidatePattern('\.xml$')]
         [ValidateScript({
                 $_ | ForEach-Object -Process {                   
-                    $xmlTest = [System.Xml.XmlDocument](Get-Content $_)
+                    $xmlTest = [System.Xml.XmlDocument](Get-Content -Path $_)
                     $RedFlag1 = $xmlTest.SiPolicy.SupplementalPolicySigners.SupplementalPolicySigner.SignerId
                     $RedFlag2 = $xmlTest.SiPolicy.UpdatePolicySigners.UpdatePolicySigner.SignerId                   
                     if (!$RedFlag1 -and !$RedFlag2) {                      
@@ -35,7 +35,7 @@ function Set-CommonWDACConfig {
         [ValidatePattern('\.xml$')]
         [ValidateScript({               
                 $_ | ForEach-Object -Process {                   
-                    $xmlTest = [System.Xml.XmlDocument](Get-Content $_)
+                    $xmlTest = [System.Xml.XmlDocument](Get-Content -Path $_)
                     $RedFlag1 = $xmlTest.SiPolicy.SupplementalPolicySigners.SupplementalPolicySigner.SignerId
                     $RedFlag2 = $xmlTest.SiPolicy.UpdatePolicySigners.UpdatePolicySigner.SignerId                    
                     if ($RedFlag1 -or $RedFlag2) {                          

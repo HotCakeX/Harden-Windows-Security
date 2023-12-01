@@ -16,7 +16,7 @@ function Remove-WDACConfig {
         [ValidateScript({
                 # Validate each Policy file in PolicyPaths parameter to make sure the user isn't accidentally trying to remove an Unsigned policy
                 $_ | ForEach-Object -Process {
-                    $xmlTest = [System.Xml.XmlDocument](Get-Content $_)
+                    $xmlTest = [System.Xml.XmlDocument](Get-Content -Path $_)
                     $RedFlag1 = $xmlTest.SiPolicy.SupplementalPolicySigners.SupplementalPolicySigner.SignerId
                     $RedFlag2 = $xmlTest.SiPolicy.UpdatePolicySigners.UpdatePolicySigner.SignerId
                     if ($RedFlag1 -or $RedFlag2) { return $True }
@@ -239,7 +239,7 @@ function Remove-WDACConfig {
 
         if ($SignedBase) {
             foreach ($PolicyPath in $PolicyPaths) {
-                $xml = [System.Xml.XmlDocument](Get-Content $PolicyPath)
+                $xml = [System.Xml.XmlDocument](Get-Content -Path $PolicyPath)
                 [System.String]$PolicyID = $xml.SiPolicy.PolicyID
                 # Prevent users from accidentally attempting to remove policies that aren't even deployed on the system
                 $CurrentPolicyIDs = ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { $_.IsSystemPolicy -ne 'True' }).policyID | ForEach-Object -Process { "{$_}" }
@@ -254,7 +254,7 @@ function Remove-WDACConfig {
                 if ($SuppSingerIDs) {
                     Write-Debug -Message "`n$($SuppSingerIDs.count) SupplementalPolicySigners have been found in $PolicyName policy, removing them now..."
                     $SuppSingerIDs | ForEach-Object -Process {
-                        $PolContent = Get-Content -Raw -Path $PolicyPath
+                        $PolContent = Get-Content -Path -Raw -Path $PolicyPath
                         $PolContent -match "<Signer ID=`"$_`"[\S\s]*</Signer>" | Out-Null
                         $PolContent = $PolContent -replace $Matches[0], ''
                         Set-Content -Value $PolContent -Path $PolicyPath

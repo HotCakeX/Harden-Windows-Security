@@ -8,15 +8,15 @@ function New-WDACConfig {
     )]
     Param(
         # 9 Main parameters - should be used for position 0
-        [Parameter(Mandatory = $false, ParameterSetName = 'Get Block Rules')][Switch]$GetBlockRules,
-        [Parameter(Mandatory = $false, ParameterSetName = 'Get Driver Block Rules')][Switch]$GetDriverBlockRules,
-        [Parameter(Mandatory = $false, ParameterSetName = 'Make AllowMSFT With Block Rules')][Switch]$MakeAllowMSFTWithBlockRules,
-        [Parameter(Mandatory = $false, ParameterSetName = 'Set Auto Update Driver Block Rules')][Switch]$SetAutoUpdateDriverBlockRules,
-        [Parameter(Mandatory = $false, ParameterSetName = 'Prep MSFT Only Audit')][Switch]$PrepMSFTOnlyAudit,
-        [Parameter(Mandatory = $false, ParameterSetName = 'Prep Default Windows Audit')][Switch]$PrepDefaultWindowsAudit,        
-        [Parameter(Mandatory = $false, ParameterSetName = 'Make Policy From Audit Logs')][Switch]$MakePolicyFromAuditLogs,  
-        [Parameter(Mandatory = $false, ParameterSetName = 'Make Light Policy')][Switch]$MakeLightPolicy,
-        [Parameter(Mandatory = $false, ParameterSetName = 'Make DefaultWindows With Block Rules')][Switch]$MakeDefaultWindowsWithBlockRules,
+        [Parameter(Mandatory = $false, ParameterSetName = 'Get Block Rules')][System.Management.Automation.SwitchParameter]$GetBlockRules,
+        [Parameter(Mandatory = $false, ParameterSetName = 'Get Driver Block Rules')][System.Management.Automation.SwitchParameter]$GetDriverBlockRules,
+        [Parameter(Mandatory = $false, ParameterSetName = 'Make AllowMSFT With Block Rules')][System.Management.Automation.SwitchParameter]$MakeAllowMSFTWithBlockRules,
+        [Parameter(Mandatory = $false, ParameterSetName = 'Set Auto Update Driver Block Rules')][System.Management.Automation.SwitchParameter]$SetAutoUpdateDriverBlockRules,
+        [Parameter(Mandatory = $false, ParameterSetName = 'Prep MSFT Only Audit')][System.Management.Automation.SwitchParameter]$PrepMSFTOnlyAudit,
+        [Parameter(Mandatory = $false, ParameterSetName = 'Prep Default Windows Audit')][System.Management.Automation.SwitchParameter]$PrepDefaultWindowsAudit,        
+        [Parameter(Mandatory = $false, ParameterSetName = 'Make Policy From Audit Logs')][System.Management.Automation.SwitchParameter]$MakePolicyFromAuditLogs,  
+        [Parameter(Mandatory = $false, ParameterSetName = 'Make Light Policy')][System.Management.Automation.SwitchParameter]$MakeLightPolicy,
+        [Parameter(Mandatory = $false, ParameterSetName = 'Make DefaultWindows With Block Rules')][System.Management.Automation.SwitchParameter]$MakeDefaultWindowsWithBlockRules,
          
         [ValidateSet('Allow Microsoft Base', 'Default Windows Base')]
         [Parameter(Mandatory = $true, ParameterSetName = 'Make Policy From Audit Logs')]
@@ -30,10 +30,10 @@ function New-WDACConfig {
         [Parameter(Mandatory = $false, ParameterSetName = 'Prep Default Windows Audit')]
         [Parameter(Mandatory = $false, ParameterSetName = 'Get Block Rules')]
         [Parameter(Mandatory = $false, ParameterSetName = 'Get Driver Block Rules')]
-        [Switch]$Deploy,
+        [System.Management.Automation.SwitchParameter]$Deploy,
 
         [Parameter(Mandatory = $false, ParameterSetName = 'Make DefaultWindows With Block Rules')]
-        [switch]$IncludeSignTool,
+        [System.Management.Automation.SwitchParameter]$IncludeSignTool,
 
         [Parameter(Mandatory = $false, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'Make DefaultWindows With Block Rules')]
         [System.String]$SignToolPath,
@@ -42,26 +42,26 @@ function New-WDACConfig {
         [Parameter(Mandatory = $false, ParameterSetName = 'Make Policy From Audit Logs')]
         [Parameter(Mandatory = $false, ParameterSetName = 'Make AllowMSFT With Block Rules')]
         [Parameter(Mandatory = $false, ParameterSetName = 'Make DefaultWindows With Block Rules')]
-        [Switch]$TestMode,
+        [System.Management.Automation.SwitchParameter]$TestMode,
         
         [Parameter(Mandatory = $false, ParameterSetName = 'Make AllowMSFT With Block Rules')]
         [Parameter(Mandatory = $false, ParameterSetName = 'Make Policy From Audit Logs')]
         [Parameter(Mandatory = $false, ParameterSetName = 'Make Light Policy')]
         [Parameter(Mandatory = $false, ParameterSetName = 'Make DefaultWindows With Block Rules')]
-        [Switch]$RequireEVSigners,
+        [System.Management.Automation.SwitchParameter]$RequireEVSigners,
        
         [ValidateSet('OriginalFileName', 'InternalName', 'FileDescription', 'ProductName', 'PackageFamilyName', 'FilePath')]
         [Parameter(Mandatory = $false, ParameterSetName = 'Make Policy From Audit Logs')]
         [System.String]$SpecificFileNameLevel,
 
         [Parameter(Mandatory = $false, ParameterSetName = 'Make Policy From Audit Logs')]
-        [Switch]$NoDeletedFiles,
+        [System.Management.Automation.SwitchParameter]$NoDeletedFiles,
 
         [Parameter(Mandatory = $false, ParameterSetName = 'Make Policy From Audit Logs')]
-        [Switch]$NoUserPEs,
+        [System.Management.Automation.SwitchParameter]$NoUserPEs,
 
         [Parameter(Mandatory = $false, ParameterSetName = 'Make Policy From Audit Logs')]
-        [Switch]$NoScript,
+        [System.Management.Automation.SwitchParameter]$NoScript,
 
         [ValidateSet([Levelz])]
         [parameter(Mandatory = $false, ParameterSetName = 'Make Policy From Audit Logs')]
@@ -78,7 +78,7 @@ function New-WDACConfig {
         [Parameter(Mandatory = $false, ParameterSetName = 'Make Policy From Audit Logs')]        
         [System.Int64]$LogSize,
 
-        [Parameter(Mandatory = $false)][Switch]$SkipVersionCheck    
+        [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SkipVersionCheck    
     )
 
     begin {
@@ -89,10 +89,10 @@ function New-WDACConfig {
         $ErrorActionPreference = 'Stop'
 
         # Fetching Temp Directory
-        [string]$global:UserTempDirectoryPath = [System.IO.Path]::GetTempPath()
+        [System.String]$global:UserTempDirectoryPath = [System.IO.Path]::GetTempPath()
 
         # Fetch User account directory path
-        [string]$global:UserAccountDirectoryPath = (Get-CimInstance Win32_UserProfile -Filter "SID = '$([System.Security.Principal.WindowsIdentity]::GetCurrent().User.Value)'").LocalPath
+        [System.String]$global:UserAccountDirectoryPath = (Get-CimInstance Win32_UserProfile -Filter "SID = '$([System.Security.Principal.WindowsIdentity]::GetCurrent().User.Value)'").LocalPath
         
         #region User-Configurations-Processing-Validation
         # If User is creating Default Windows policy and including SignTool path

@@ -2,14 +2,14 @@
 function Remove-CommonWDACConfig {
     [CmdletBinding()]
     Param(       
-        [parameter(Mandatory = $false)][switch]$CertCN,       
-        [parameter(Mandatory = $false)][switch]$CertPath,       
-        [parameter(Mandatory = $false)][switch]$SignToolPath,        
-        [parameter(Mandatory = $false)][switch]$UnsignedPolicyPath,
-        [parameter(Mandatory = $false)][switch]$SignedPolicyPath,        
-        [parameter(Mandatory = $false)][switch]$StrictKernelPolicyGUID, 
-        [parameter(Mandatory = $false)][switch]$StrictKernelNoFlightRootsPolicyGUID,
-        [parameter(Mandatory = $false, DontShow = $true)][switch]$LastUpdateCheck # DontShow prevents common parameters from being displayed too
+        [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$CertCN,       
+        [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$CertPath,       
+        [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SignToolPath,        
+        [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$UnsignedPolicyPath,
+        [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SignedPolicyPath,        
+        [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$StrictKernelPolicyGUID, 
+        [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$StrictKernelNoFlightRootsPolicyGUID,
+        [parameter(Mandatory = $false, DontShow = $true)][System.Management.Automation.SwitchParameter]$LastUpdateCheck # DontShow prevents common parameters from being displayed too
     )
     begin {
         # Importing resources such as functions by dot-sourcing so that they will run in the same scope and their variables will be usable
@@ -19,7 +19,7 @@ function Remove-CommonWDACConfig {
         $ErrorActionPreference = 'Stop'        
 
         # Fetch User account directory path
-        [string]$global:UserAccountDirectoryPath = (Get-CimInstance Win32_UserProfile -Filter "SID = '$([System.Security.Principal.WindowsIdentity]::GetCurrent().User.Value)'").LocalPath
+        [System.String]$global:UserAccountDirectoryPath = (Get-CimInstance Win32_UserProfile -Filter "SID = '$([System.Security.Principal.WindowsIdentity]::GetCurrent().User.Value)'").LocalPath
 
         # Create User configuration folder if it doesn't already exist
         if (-NOT (Test-Path -Path "$global:UserAccountDirectoryPath\.WDACConfig\")) {

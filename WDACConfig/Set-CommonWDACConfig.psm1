@@ -60,7 +60,7 @@ function Set-CommonWDACConfig {
         $ErrorActionPreference = 'Stop'        
 
         # Fetch User account directory path
-        [string]$global:UserAccountDirectoryPath = (Get-CimInstance Win32_UserProfile -Filter "SID = '$([System.Security.Principal.WindowsIdentity]::GetCurrent().User.Value)'").LocalPath
+        [System.String]$global:UserAccountDirectoryPath = (Get-CimInstance Win32_UserProfile -Filter "SID = '$([System.Security.Principal.WindowsIdentity]::GetCurrent().User.Value)'").LocalPath
 
         # Create User configuration folder if it doesn't already exist
         if (-NOT (Test-Path -Path "$global:UserAccountDirectoryPath\.WDACConfig\")) {

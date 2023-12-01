@@ -9,11 +9,11 @@ function New-SupplementalWDACConfig {
     Param(
         # Main parameters for position 0
         [Alias('N')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'Normal')][Switch]$Normal,
+        [Parameter(Mandatory = $false, ParameterSetName = 'Normal')][System.Management.Automation.SwitchParameter]$Normal,
         [Alias('W')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'Folder Path With WildCards')][Switch]$PathWildCards,
+        [Parameter(Mandatory = $false, ParameterSetName = 'Folder Path With WildCards')][System.Management.Automation.SwitchParameter]$PathWildCards,
         [Alias('P')]
-        [parameter(mandatory = $false, ParameterSetName = 'Installed AppXPackages')][switch]$InstalledAppXPackages,
+        [parameter(mandatory = $false, ParameterSetName = 'Installed AppXPackages')][System.Management.Automation.SwitchParameter]$InstalledAppXPackages,
         
         [parameter(Mandatory = $true, ParameterSetName = 'Installed AppXPackages', ValueFromPipelineByPropertyName = $true)]
         [System.String]$PackageName,
@@ -36,17 +36,17 @@ function New-SupplementalWDACConfig {
         [System.String]$PolicyPath,
 
         [parameter(Mandatory = $false)] # Used by the entire Cmdlet        
-        [Switch]$Deploy,
+        [System.Management.Automation.SwitchParameter]$Deploy,
         
         [ValidateSet('OriginalFileName', 'InternalName', 'FileDescription', 'ProductName', 'PackageFamilyName', 'FilePath')]
         [Parameter(Mandatory = $false, ParameterSetName = 'Normal')]
         [System.String]$SpecificFileNameLevel,
 
         [Parameter(Mandatory = $false, ParameterSetName = 'Normal')]
-        [Switch]$NoUserPEs,
+        [System.Management.Automation.SwitchParameter]$NoUserPEs,
 
         [Parameter(Mandatory = $false, ParameterSetName = 'Normal')]
-        [Switch]$NoScript,
+        [System.Management.Automation.SwitchParameter]$NoScript,
 
         [ValidateSet([Levelz])]
         [parameter(Mandatory = $false, ParameterSetName = 'Normal')]
@@ -56,7 +56,7 @@ function New-SupplementalWDACConfig {
         [parameter(Mandatory = $false, ParameterSetName = 'Normal')]
         [System.String[]]$Fallbacks = 'Hash', # Setting the default value for the Fallbacks parameter
        
-        [Parameter(Mandatory = $false)][Switch]$SkipVersionCheck    
+        [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SkipVersionCheck    
     )
 
     begin {
@@ -83,7 +83,7 @@ function New-SupplementalWDACConfig {
         if (-NOT $SkipVersionCheck) { . Update-self }
 
         # Fetch User account directory path
-        [string]$global:UserAccountDirectoryPath = (Get-CimInstance Win32_UserProfile -Filter "SID = '$([System.Security.Principal.WindowsIdentity]::GetCurrent().User.Value)'").LocalPath
+        [System.String]$global:UserAccountDirectoryPath = (Get-CimInstance Win32_UserProfile -Filter "SID = '$([System.Security.Principal.WindowsIdentity]::GetCurrent().User.Value)'").LocalPath
         
         #region User-Configurations-Processing-Validation
         # If any of these parameters, that are mandatory for all of the position 0 parameters, isn't supplied by user

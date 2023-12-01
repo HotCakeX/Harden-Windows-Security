@@ -8,13 +8,13 @@ function Edit-SignedWDACConfig {
     )]
     Param(
         [Alias('E')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps Audit Events')][Switch]$AllowNewAppsAuditEvents,
+        [Parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps Audit Events')][System.Management.Automation.SwitchParameter]$AllowNewAppsAuditEvents,
         [Alias('A')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps')][Switch]$AllowNewApps,
+        [Parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps')][System.Management.Automation.SwitchParameter]$AllowNewApps,
         [Alias('M')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'Merge Supplemental Policies')][Switch]$MergeSupplementalPolicies,          
+        [Parameter(Mandatory = $false, ParameterSetName = 'Merge Supplemental Policies')][System.Management.Automation.SwitchParameter]$MergeSupplementalPolicies,          
         [Alias('U')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'Update Base Policy')][Switch]$UpdateBasePolicy,
+        [Parameter(Mandatory = $false, ParameterSetName = 'Update Base Policy')][System.Management.Automation.SwitchParameter]$UpdateBasePolicy,
 
         [ValidatePattern('^[a-zA-Z0-9 ]+$', ErrorMessage = 'The Supplemental Policy Name can only contain alphanumeric and space characters.')]
         [Parameter(Mandatory = $true, ParameterSetName = 'Allow New Apps Audit Events', ValueFromPipelineByPropertyName = $true)]
@@ -28,7 +28,7 @@ function Edit-SignedWDACConfig {
         [System.String[]]$SuppPolicyPaths,
 
         [Parameter(Mandatory = $false, ParameterSetName = 'Merge Supplemental Policies')]
-        [switch]$KeepOldSupplementalPolicies,
+        [System.Management.Automation.SwitchParameter]$KeepOldSupplementalPolicies,
 
         [ValidateSet([BasePolicyNamez])]
         [Parameter(Mandatory = $true, ParameterSetName = 'Update Base Policy')]
@@ -85,18 +85,18 @@ function Edit-SignedWDACConfig {
 
         [parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps Audit Events')]
         [parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps')]
-        [Switch]$NoScript,
+        [System.Management.Automation.SwitchParameter]$NoScript,
 
         [parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps Audit Events')]
         [parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps')]
-        [Switch]$NoUserPEs,
+        [System.Management.Automation.SwitchParameter]$NoUserPEs,
       
         [ValidateSet('OriginalFileName', 'InternalName', 'FileDescription', 'ProductName', 'PackageFamilyName', 'FilePath')]
         [parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps Audit Events')]
         [parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps')]
         [System.String]$SpecificFileNameLevel,
 
-        [parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps Audit Events')][Switch]$IncludeDeletedFiles,
+        [parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps Audit Events')][System.Management.Automation.SwitchParameter]$IncludeDeletedFiles,
 
         [ValidateSet([Levelz])]
         [parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps Audit Events')]
@@ -112,10 +112,10 @@ function Edit-SignedWDACConfig {
         [System.String]$SignToolPath,
 
         [Parameter(Mandatory = $false, ParameterSetName = 'Update Base Policy')]
-        [Switch]$RequireEVSigners,
+        [System.Management.Automation.SwitchParameter]$RequireEVSigners,
 
         [Parameter(Mandatory = $false)] # Used by the entire Cmdlet
-        [Switch]$SkipVersionCheck
+        [System.Management.Automation.SwitchParameter]$SkipVersionCheck
     )
 
     begin {
@@ -127,10 +127,10 @@ function Edit-SignedWDACConfig {
         if (-NOT $SkipVersionCheck) { . Update-self } 
 
         # Fetching Temp Directory
-        [string]$global:UserTempDirectoryPath = [System.IO.Path]::GetTempPath()
+        [System.String]$global:UserTempDirectoryPath = [System.IO.Path]::GetTempPath()
 
         # Fetch User account directory path
-        [string]$global:UserAccountDirectoryPath = (Get-CimInstance Win32_UserProfile -Filter "SID = '$([System.Security.Principal.WindowsIdentity]::GetCurrent().User.Value)'").LocalPath
+        [System.String]$global:UserAccountDirectoryPath = (Get-CimInstance Win32_UserProfile -Filter "SID = '$([System.Security.Principal.WindowsIdentity]::GetCurrent().User.Value)'").LocalPath
 
         #region User-Configurations-Processing-Validation
         # If any of these parameters, that are mandatory for all of the position 0 parameters, isn't supplied by user

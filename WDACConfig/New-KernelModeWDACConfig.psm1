@@ -6,26 +6,26 @@ function New-KernelModeWDACConfig {
         ConfirmImpact = 'High'
     )]
     Param(       
-        [Parameter(Mandatory = $false, ParameterSetName = 'Default Strict Kernel')][switch]$Default,
-        [Parameter(Mandatory = $false, ParameterSetName = 'No Flight Roots')][switch]$NoFlightRoots,
+        [Parameter(Mandatory = $false, ParameterSetName = 'Default Strict Kernel')][System.Management.Automation.SwitchParameter]$Default,
+        [Parameter(Mandatory = $false, ParameterSetName = 'No Flight Roots')][System.Management.Automation.SwitchParameter]$NoFlightRoots,
 
         [Parameter(Mandatory = $false, ParameterSetName = 'Default Strict Kernel')]
         [Parameter(Mandatory = $false, ParameterSetName = 'No Flight Roots')]
-        [switch]$PrepMode,
+        [System.Management.Automation.SwitchParameter]$PrepMode,
 
         [Parameter(Mandatory = $false, ParameterSetName = 'Default Strict Kernel')]
         [Parameter(Mandatory = $false, ParameterSetName = 'No Flight Roots')]
-        [switch]$AuditAndEnforce,
+        [System.Management.Automation.SwitchParameter]$AuditAndEnforce,
 
         [Parameter(Mandatory = $false, ParameterSetName = 'Default Strict Kernel')]
         [Parameter(Mandatory = $false, ParameterSetName = 'No Flight Roots')]
-        [Switch]$Deploy,
+        [System.Management.Automation.SwitchParameter]$Deploy,
 
         [Parameter(Mandatory = $false, ParameterSetName = 'Default Strict Kernel')]
         [Parameter(Mandatory = $false, ParameterSetName = 'No Flight Roots')]
-        [switch]$EVSigners,
+        [System.Management.Automation.SwitchParameter]$EVSigners,
         
-        [Parameter(Mandatory = $false)][Switch]$SkipVersionCheck    
+        [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SkipVersionCheck    
     )
 
     begin {
@@ -74,8 +74,8 @@ function New-KernelModeWDACConfig {
         function Build-PrepModeStrictKernelPolicy {
             [CmdletBinding()]
             param (
-                [Parameter(Mandatory = $false)][switch]$DefaultWindowsKernel,
-                [Parameter(Mandatory = $false)][switch]$DefaultWindowsKernelNoFlights
+                [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$DefaultWindowsKernel,
+                [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$DefaultWindowsKernelNoFlights
             )
 
             begin {

@@ -8,9 +8,9 @@ function Remove-WDACConfig {
     )]
     Param(
         [Alias('S')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'Signed Base')][Switch]$SignedBase,
+        [Parameter(Mandatory = $false, ParameterSetName = 'Signed Base')][System.Management.Automation.SwitchParameter]$SignedBase,
         [Alias('U')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'Unsigned Or Supplemental')][Switch]$UnsignedOrSupplemental,
+        [Parameter(Mandatory = $false, ParameterSetName = 'Unsigned Or Supplemental')][System.Management.Automation.SwitchParameter]$UnsignedOrSupplemental,
 
         [ValidatePattern('\.xml$')]
         [ValidateScript({
@@ -111,7 +111,7 @@ function Remove-WDACConfig {
         [parameter(Mandatory = $false, ParameterSetName = 'Signed Base', ValueFromPipelineByPropertyName = $true)]
         [System.String]$SignToolPath,
 
-        [Parameter(Mandatory = $false)][Switch]$SkipVersionCheck
+        [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SkipVersionCheck
     )
 
     begin {
@@ -125,7 +125,7 @@ function Remove-WDACConfig {
         $Debug = $PSBoundParameters.Debug.IsPresent     
         
         # Fetch User account directory path
-        [string]$global:UserAccountDirectoryPath = (Get-CimInstance Win32_UserProfile -Filter "SID = '$([System.Security.Principal.WindowsIdentity]::GetCurrent().User.Value)'").LocalPath
+        [System.String]$global:UserAccountDirectoryPath = (Get-CimInstance Win32_UserProfile -Filter "SID = '$([System.Security.Principal.WindowsIdentity]::GetCurrent().User.Value)'").LocalPath
 
         #region User-Configurations-Processing-Validation
         if ($PSCmdlet.ParameterSetName -eq 'Signed Base') {
@@ -193,7 +193,7 @@ function Remove-WDACConfig {
         # Defines the PolicyNamez class that implements the IValidateSetValuesGenerator interface. This class is responsible for generating a list of valid values for the policy names.
         Class PolicyNamez : System.Management.Automation.IValidateSetValuesGenerator {
             # Creates a static hashtable to store a mapping of policy IDs to their respective friendly names.
-            static [Hashtable] $IDNameMap = @{}
+            static [System.Collections.Hashtable] $IDNameMap = @{}
 
             # Defines a method to get valid policy names from the policies on disk that aren't system policies.
             [System.String[]] GetValidValues() {
@@ -215,7 +215,7 @@ function Remove-WDACConfig {
         # Defines the PolicyIDz class that also implements the IValidateSetValuesGenerator interface. This class is responsible for generating a list of valid values for the policy IDs.
         Class PolicyIDz : System.Management.Automation.IValidateSetValuesGenerator {
             # Creates a static hashtable to store a mapping of policy friendly names to their respective IDs.
-            static [Hashtable] $NameIDMap = @{}
+            static [System.Collections.Hashtable] $NameIDMap = @{}
 
             # Defines a method to get valid policy IDs from the policies on disk that aren't system policies.
             [System.String[]] GetValidValues() {

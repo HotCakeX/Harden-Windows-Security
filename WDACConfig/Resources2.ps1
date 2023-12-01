@@ -6,16 +6,16 @@
 
 # Defining a custom object to store the signer information
 class Signer {
-    [string]$ID
-    [string]$Name
-    [string]$CertRoot
-    [string]$CertPublisher
+    [System.String]$ID
+    [System.String]$Name
+    [System.String]$CertRoot
+    [System.String]$CertPublisher
 }
 
 # Function that takes an XML file path as input and returns an array of Signer objects
 function Get-SignerInfo {
     param(
-        [Parameter(Mandatory = $true)][string]$XmlFilePath
+        [Parameter(Mandatory = $true)][System.String]$XmlFilePath
     )
 
     # Load the XML file and select the Signer nodes
@@ -96,7 +96,7 @@ function Get-AuthenticodeSignatureEx {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
-        [String[]]$FilePath # The path of the file(s) to get the signature of
+        [System.String[]]$FilePath # The path of the file(s) to get the signature of
     )
     begin {
         # Define the signature of the Crypt32.dll library functions to use
@@ -248,7 +248,7 @@ function Get-SignedFileCertificates {
     param (
         # Define two sets of parameters, one for the FilePath and one for the CertObject
         [Parameter()]
-        [string]$FilePath,
+        [System.String]$FilePath,
         [Parameter(ValueFromPipeline = $true)]
         [System.Security.Cryptography.X509Certificates.X509Certificate2]$X509Certificate2
     )
@@ -285,11 +285,11 @@ function Get-CertificateDetails {
 
         [Parameter(ParameterSetName = 'Based on File Path')]
         [Parameter(ParameterSetName = 'Based on Certificate')]
-        [switch]$IntermediateOnly,
+        [System.Management.Automation.SwitchParameter]$IntermediateOnly,
 
         [Parameter(ParameterSetName = 'Based on File Path')]
         [Parameter(ParameterSetName = 'Based on Certificate')]
-        [switch]$LeafCertificate
+        [System.Management.Automation.SwitchParameter]$LeafCertificate
     )
 
     # An array to hold objects
@@ -352,7 +352,7 @@ function Get-CertificateDetails {
         $CertificateUsingAlternativeMethod.Subject -match 'CN=(?<InitialRegexTest4>.*?),.*' | Out-Null
 
 
-        [string]$TestAgainst = $matches['InitialRegexTest4'] -like '*"*' ? ((Get-AuthenticodeSignature -FilePath $FilePath).SignerCertificate.Subject -split 'CN="(.+?)"')[1] : $matches['InitialRegexTest4']
+        [System.String]$TestAgainst = $matches['InitialRegexTest4'] -like '*"*' ? ((Get-AuthenticodeSignature -FilePath $FilePath).SignerCertificate.Subject -split 'CN="(.+?)"')[1] : $matches['InitialRegexTest4']
 
 
         if ($IntermediateOnly) {
@@ -413,11 +413,11 @@ function Get-CertificateDetails {
         # Make the FilePath parameter mandatory and validate that it is a valid file path
         [Parameter()]
         [ValidateScript({ Test-Path -Path $_ -PathType Leaf })]
-        [string]$FilePath,
+        [System.String]$FilePath,
         $X509Certificate2,
-        [switch]$IntermediateOnly,
-        [switch]$AllCertificates,
-        [switch]$LeafCertificate
+        [System.Management.Automation.SwitchParameter]$IntermediateOnly,
+        [System.Management.Automation.SwitchParameter]$AllCertificates,
+        [System.Management.Automation.SwitchParameter]$LeafCertificate
     )
 
     if ($FilePath) {
@@ -511,8 +511,8 @@ function Get-CertificateDetails {
 # a function that takes WDAC XML policy file path and a Signed file path as inputs and compares the output of the Get-SignerInfo and Get-CertificateDetails functions
 function Compare-SignerAndCertificate {
     param(
-        [Parameter(Mandatory = $true)][string]$XmlFilePath,
-        [Parameter(Mandatory = $true)] [string]$SignedFilePath
+        [Parameter(Mandatory = $true)][System.String]$XmlFilePath,
+        [Parameter(Mandatory = $true)] [System.String]$SignedFilePath
     )
 
     # Get the signer information from the XML file path using the Get-SignerInfo function

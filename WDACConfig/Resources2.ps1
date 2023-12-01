@@ -165,7 +165,7 @@ function Get-AuthenticodeSignatureEx {
     }
     process {
         # For each file path, get the authenticode signature using the built-in cmdlet
-        Get-AuthenticodeSignature $FilePath | ForEach-Object {
+        Get-AuthenticodeSignature $FilePath | ForEach-Object -Process {
             $Output = $_ # Store the output object in a variable
             if ($null -ne $Output.SignerCertificate) {
                 # If the output object has a signer certificate property
@@ -360,7 +360,7 @@ function Get-CertificateDetails {
             $FinalObj = $Obj |
             Where-Object { $_.SubjectCN -ne $_.IssuerCN } | # To omit Root certificate from the result
             Where-Object { $_.SubjectCN -ne $TestAgainst } | # To omit the Leaf certificate
-            Group-Object -Property TBSValue | ForEach-Object { $_.Group[0] } # To make sure the output values are unique based on TBSValue property
+            Group-Object -Property TBSValue | ForEach-Object -Process { $_.Group[0] } # To make sure the output values are unique based on TBSValue property
 
             return $FinalObj
 
@@ -370,7 +370,7 @@ function Get-CertificateDetails {
             $FinalObj = $Obj |
             Where-Object { $_.SubjectCN -ne $_.IssuerCN } | # To omit Root certificate from the result
             Where-Object { $_.SubjectCN -eq $TestAgainst } | # To get the Leaf certificate
-            Group-Object -Property TBSValue | ForEach-Object { $_.Group[0] } # To make sure the output values are unique based on TBSValue property
+            Group-Object -Property TBSValue | ForEach-Object -Process { $_.Group[0] } # To make sure the output values are unique based on TBSValue property
 
             return $FinalObj
         }
@@ -384,7 +384,7 @@ function Get-CertificateDetails {
             $FinalObj = $Obj |
             Where-Object { $_.SubjectCN -ne $_.IssuerCN } | # To omit Root certificate from the result
             Where-Object { $_.SubjectCN -ne $LeafCNOfTheNestedCertificate } | # To omit the Leaf certificate
-            Group-Object -Property TBSValue | ForEach-Object { $_.Group[0] } # To make sure the output values are unique based on TBSValue property
+            Group-Object -Property TBSValue | ForEach-Object -Process { $_.Group[0] } # To make sure the output values are unique based on TBSValue property
 
             return $FinalObj
 
@@ -394,7 +394,7 @@ function Get-CertificateDetails {
             $FinalObj = $Obj |
             Where-Object { $_.SubjectCN -ne $_.IssuerCN } | # To omit Root certificate from the result
             Where-Object { $_.SubjectCN -eq $LeafCNOfTheNestedCertificate } | # To get the Leaf certificate
-            Group-Object -Property TBSValue | ForEach-Object { $_.Group[0] } # To make sure the output values are unique based on TBSValue property
+            Group-Object -Property TBSValue | ForEach-Object -Process { $_.Group[0] } # To make sure the output values are unique based on TBSValue property
 
             return $FinalObj
 

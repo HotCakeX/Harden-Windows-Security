@@ -157,7 +157,7 @@ function New-SupplementalWDACConfig {
             [System.String]$policyID = $policyID.Substring(11)
             Set-CIPolicyVersion -FilePath "SupplementalPolicy $SuppPolicyName.xml" -Version '1.0.0.0'
             # Make sure policy rule options that don't belong to a Supplemental policy don't exit             
-            @(0, 1, 2, 3, 4, 9, 10, 11, 12, 15, 16, 17, 19, 20) | ForEach-Object {
+            @(0, 1, 2, 3, 4, 9, 10, 11, 12, 15, 16, 17, 19, 20) | ForEach-Object -Process {
                 Set-RuleOption -FilePath "SupplementalPolicy $SuppPolicyName.xml" -Option $_ -Delete }        
             Set-HVCIOptions -Strict -FilePath "SupplementalPolicy $SuppPolicyName.xml"        
             ConvertFrom-CIPolicy "SupplementalPolicy $SuppPolicyName.xml" "$policyID.cip" | Out-Null
@@ -187,7 +187,7 @@ function New-SupplementalWDACConfig {
             Set-CIPolicyVersion -FilePath ".\SupplementalPolicy $SuppPolicyName.xml" -Version '1.0.0.0'
             
             # Make sure policy rule options that don't belong to a Supplemental policy don't exit             
-            @(0, 1, 2, 3, 4, 9, 10, 11, 12, 15, 16, 17, 19, 20) | ForEach-Object {
+            @(0, 1, 2, 3, 4, 9, 10, 11, 12, 15, 16, 17, 19, 20) | ForEach-Object -Process {
                 Set-RuleOption -FilePath ".\SupplementalPolicy $SuppPolicyName.xml" -Option $_ -Delete }
                   
             # Adding policy rule option 18 Disabled:Runtime FilePath Rule Protection
@@ -246,7 +246,7 @@ function New-SupplementalWDACConfig {
             Set-CIPolicyVersion -FilePath ".\SupplementalPolicy $SuppPolicyName.xml" -Version '1.0.0.0'
             
             # Make sure policy rule options that don't belong to a Supplemental policy don't exit             
-            @(0, 1, 2, 3, 4, 9, 10, 11, 12, 15, 16, 17, 18, 19, 20) | ForEach-Object {
+            @(0, 1, 2, 3, 4, 9, 10, 11, 12, 15, 16, 17, 18, 19, 20) | ForEach-Object -Process {
                 Set-RuleOption -FilePath ".\SupplementalPolicy $SuppPolicyName.xml" -Option $_ -Delete }             
             
             Set-HVCIOptions -Strict -FilePath ".\SupplementalPolicy $SuppPolicyName.xml"        

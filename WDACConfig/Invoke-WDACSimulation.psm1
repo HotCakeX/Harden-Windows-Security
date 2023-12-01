@@ -59,7 +59,7 @@ function Invoke-WDACSimulation {
             [System.Object[]]$CollectedFiles = (Get-ChildItem -Recurse -Path $FolderPath -File -Include '*.sys', '*.exe', '*.com', '*.dll', '*.ocx', '*.msp', '*.mst', '*.msi', '*.js', '*.vbs', '*.ps1', '*.appx').FullName
                      
             # Loop through each file
-            $CollectedFiles | ForEach-Object {
+            $CollectedFiles | ForEach-Object -Process {
 
                 $CurrentFilePath = $_
 

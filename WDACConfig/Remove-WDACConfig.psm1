@@ -15,7 +15,7 @@ function Remove-WDACConfig {
         [ValidatePattern('\.xml$')]
         [ValidateScript({
                 # Validate each Policy file in PolicyPaths parameter to make sure the user isn't accidentally trying to remove an Unsigned policy
-                $_ | ForEach-Object {
+                $_ | ForEach-Object -Process {
                     $xmlTest = [System.Xml.XmlDocument](Get-Content $_)
                     $RedFlag1 = $xmlTest.SiPolicy.SupplementalPolicySigners.SupplementalPolicySigner.SignerId
                     $RedFlag2 = $xmlTest.SiPolicy.UpdatePolicySigners.UpdatePolicySigner.SignerId
@@ -242,7 +242,7 @@ function Remove-WDACConfig {
                 $xml = [System.Xml.XmlDocument](Get-Content $PolicyPath)
                 [System.String]$PolicyID = $xml.SiPolicy.PolicyID
                 # Prevent users from accidentally attempting to remove policies that aren't even deployed on the system
-                $CurrentPolicyIDs = ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsSystemPolicy -ne 'True' }).policyID | ForEach-Object { "{$_}" }
+                $CurrentPolicyIDs = ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsSystemPolicy -ne 'True' }).policyID | ForEach-Object -Process { "{$_}" }
                 Write-Debug -Message "The policy ID of the currently processing xml file is $PolicyID"
                 if ($CurrentPolicyIDs -notcontains $PolicyID) {
                     Write-Error -Message "The selected policy file isn't deployed on the system." -ErrorAction Stop
@@ -253,7 +253,7 @@ function Remove-WDACConfig {
                 $PolicyName = ($xml.SiPolicy.Settings.Setting | Where-Object { $_.provider -eq 'PolicyInfo' -and $_.valuename -eq 'Name' -and $_.key -eq 'Information' }).value.string
                 if ($SuppSingerIDs) {
                     Write-Debug -Message "`n$($SuppSingerIDs.count) SupplementalPolicySigners have been found in $PolicyName policy, removing them now..."
-                    $SuppSingerIDs | ForEach-Object {
+                    $SuppSingerIDs | ForEach-Object -Process {
                         $PolContent = Get-Content -Raw -Path $PolicyPath
                         $PolContent -match "<Signer ID=`"$_`"[\S\s]*</Signer>" | Out-Null
                         $PolContent = $PolContent -replace $Matches[0], ''
@@ -311,9 +311,9 @@ function Remove-WDACConfig {
             }
 
             Write-Debug -Message 'The Following policy IDs have been gathered from the supplied policy names and are going to be removed from the system'
-            if ($Debug) { $NameID | Select-Object -Unique | ForEach-Object { Write-Debug -Message "$_" } }
+            if ($Debug) { $NameID | Select-Object -Unique | ForEach-Object -Process { Write-Debug -Message "$_" } }
 
-            $NameID | Select-Object -Unique | ForEach-Object {
+            $NameID | Select-Object -Unique | ForEach-Object -Process {
                 citool --remove-policy "{$_}" -json | Out-Null               
                 Write-Host "Policy with the ID $_ has been successfully removed." -ForegroundColor Green                
             }

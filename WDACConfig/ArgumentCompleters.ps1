@@ -26,7 +26,7 @@
     ).Value  
 
     # Get the xml files in the current directory
-    Get-ChildItem -File -Filter *.xml | ForEach-Object {
+    Get-ChildItem -File -Filter *.xml | ForEach-Object -Process {
         # Check if the file is already selected
         if ($_.FullName -notin $existing) {
             # Return the file name with quotes
@@ -40,7 +40,7 @@
     $certs = foreach ($cert in (Get-ChildItem -Path 'Cert:\CurrentUser\my')) {
         (($cert.Subject -split ',' | Select-Object -First 1) -replace 'CN=', '').Trim()
     }    
-    $certs | ForEach-Object { return "`"$_`"" }
+    $certs | ForEach-Object -Process { return "`"$_`"" }
 }
 
 # Argument tab auto-completion for installed Appx package names
@@ -48,7 +48,7 @@
     # Get the current command and the already bound parameters
     param($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameters)
     # Get the app package names that match the word to complete
-    Get-AppxPackage -Name *$wordToComplete* | ForEach-Object {
+    Get-AppxPackage -Name *$wordToComplete* | ForEach-Object -Process {
         "`"$($_.Name)`""
     }
 }
@@ -97,7 +97,7 @@
     ).Value  
 
     # Get the xml files in the current directory
-    Get-ChildItem -File | Where-Object { $_.extension -like '*.xml' } | ForEach-Object {
+    Get-ChildItem -File | Where-Object { $_.extension -like '*.xml' } | ForEach-Object -Process {
 
         $xmlitem = [System.Xml.XmlDocument](Get-Content $_)
         $PolicyType = $xmlitem.SiPolicy.PolicyType

@@ -26,12 +26,12 @@ function Edit-WDACConfig {
         [ValidateScript({
                 # Validate each Policy file in PolicyPaths parameter to make sure the user isn't accidentally trying to
                 # Edit a Signed policy using Edit-WDACConfig cmdlet which is only made for Unsigned policies
-                $_ | ForEach-Object {                   
+                $_ | ForEach-Object -Process {                   
                     $xmlTest = [System.Xml.XmlDocument](Get-Content $_)
                     $RedFlag1 = $xmlTest.SiPolicy.SupplementalPolicySigners.SupplementalPolicySigner.SignerId
                     $RedFlag2 = $xmlTest.SiPolicy.UpdatePolicySigners.UpdatePolicySigner.SignerId
                     $RedFlag3 = $xmlTest.SiPolicy.PolicyID
-                    $CurrentPolicyIDs = ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsSystemPolicy -ne 'True' }).policyID | ForEach-Object { "{$_}" }
+                    $CurrentPolicyIDs = ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsSystemPolicy -ne 'True' }).policyID | ForEach-Object -Process { "{$_}" }
                     if (!$RedFlag1 -and !$RedFlag2) {
                         # Ensure the selected base policy xml file is deployed
                         if ($CurrentPolicyIDs -contains $RedFlag3) {
@@ -328,7 +328,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                 }
                 
                 Write-Host "`nHere are the paths you selected:" -ForegroundColor Yellow
-                $ProgramsPaths | ForEach-Object { $_ }
+                $ProgramsPaths | ForEach-Object -Process { $_ }
     
                 #Process Program Folders From User input                    
           
@@ -361,7 +361,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                 }
     
                 Write-Debug -Message 'The following policy xml files are going to be merged into the final Supplemental policy and be deployed on the system:'
-                if ($Debug) { $PolicyXMLFilesArray | ForEach-Object { Write-Debug -Message "$_" } }
+                if ($Debug) { $PolicyXMLFilesArray | ForEach-Object -Process { Write-Debug -Message "$_" } }
                     
                 # Merge all of the policy XML files in the array into the final Supplemental policy
                 Merge-CIPolicy -PolicyPaths $PolicyXMLFilesArray -OutputFilePath ".\SupplementalPolicy $SuppPolicyName.xml" | Out-Null                                  
@@ -375,7 +375,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                 $SuppPolicyID = $SuppPolicyID.Substring(11)                
     
                 # Make sure policy rule options that don't belong to a Supplemental policy don't exit
-                @(0, 1, 2, 3, 4, 8, 9, 10, 11, 12, 15, 16, 17, 19, 20) | ForEach-Object { Set-RuleOption -FilePath $SuppPolicyPath -Option $_ -Delete }
+                @(0, 1, 2, 3, 4, 8, 9, 10, 11, 12, 15, 16, 17, 19, 20) | ForEach-Object -Process { Set-RuleOption -FilePath $SuppPolicyPath -Option $_ -Delete }
      
                 Set-HVCIOptions -Strict -FilePath $SuppPolicyPath             
                 Set-CIPolicyVersion -FilePath $SuppPolicyPath -Version '1.0.0.0'            
@@ -481,7 +481,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                     }
                     
                     Write-Host 'Here are the paths you selected:' -ForegroundColor Yellow
-                    $ProgramsPaths | ForEach-Object { $_ }
+                    $ProgramsPaths | ForEach-Object -Process { $_ }
 
                     ################################### EventCapturing ################################
 
@@ -506,7 +506,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                             New-Item -Path "$global:UserTempDirectoryPath\TemporaryScanFolderForEventViewerFiles" -ItemType Directory | Out-Null
                             
                             Write-Debug -Message "The following file(s) are being copied to the TEMP directory for scanning because they were found in event logs but didn't exist in any of the user-selected paths:"      
-                            $TestFilePathResults | ForEach-Object {
+                            $TestFilePathResults | ForEach-Object -Process {
                                 Write-Debug -Message "$_"    
                                 Copy-Item -Path $_ -Destination "$global:UserTempDirectoryPath\TemporaryScanFolderForEventViewerFiles\" -ErrorAction SilentlyContinue
                             }
@@ -543,7 +543,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                     if ($AuditEventLogsProcessingResults.DeletedFileHashes -and $IncludeDeletedFiles) {
 
                         Write-Debug -Message "$($AuditEventLogsProcessingResults.DeletedFileHashes.count) file(s) have been found in event viewer logs that were run during Audit phase but are no longer on the disk, they are as follows:"
-                        $AuditEventLogsProcessingResults.DeletedFileHashes | ForEach-Object {
+                        $AuditEventLogsProcessingResults.DeletedFileHashes | ForEach-Object -Process {
                             Write-Debug -Message "$($_.'File Name')"
                         }
                        
@@ -598,7 +598,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                         $AnyAvailableExes = (Get-ChildItem -Recurse -Path $ProgramsPath -Filter '*.exe').FullName
                         # if any .exe was found then continue testing them
                         if ($AnyAvailableExes) {
-                            $AnyAvailableExes | ForEach-Object {
+                            $AnyAvailableExes | ForEach-Object -Process {
                                 $CurrentExeWithNoHash = $_
                                 try {
                                     # Testing each executable to find the protected ones
@@ -616,14 +616,14 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                     if ($ExesWithNoHash) {
 
                         Write-Debug -Message "The following Kernel protected files detected, creating allow rules for them:`n"
-                        if ($Debug) { $ExesWithNoHash | ForEach-Object { Write-Debug -Message "$_" } }
+                        if ($Debug) { $ExesWithNoHash | ForEach-Object -Process { Write-Debug -Message "$_" } }
                                                          
                         [System.Management.Automation.ScriptBlock]$KernelProtectedHashesBlock = {
                             foreach ($event in Get-WinEvent -FilterHashtable @{LogName = 'Microsoft-Windows-CodeIntegrity/Operational'; ID = 3076 } -ErrorAction SilentlyContinue | Where-Object { $_.TimeCreated -ge $Date } ) {
                                 $xml = [System.Xml.XmlDocument]$event.toxml()
                                 $xml.event.eventdata.data |
-                                ForEach-Object { $Hash = @{} } { $hash[$_.name] = $_.'#text' } { [pscustomobject]$hash } |
-                                ForEach-Object {
+                                ForEach-Object -Begin { $Hash = @{} } -Process { $hash[$_.name] = $_.'#text' } -End { [pscustomobject]$hash } |
+                                ForEach-Object -Process {
                                     if ($_.'File Name' -match ($pattern = '\\Device\\HarddiskVolume(\d+)\\(.*)$')) {
                                         $hardDiskVolumeNumber = $Matches[1]
                                         $remainingPath = $Matches[2]
@@ -657,13 +657,13 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                         }
                         else {
                             Write-Warning -Message "The following Kernel protected files detected, but no hash was found for them in Event viewer logs.`nThis means you didn't run those files/programs when Audit mode was turned on.`n"
-                            $ExesWithNoHash | ForEach-Object { Write-Warning -Message "$_" }
+                            $ExesWithNoHash | ForEach-Object -Process { Write-Warning -Message "$_" }
                         }
                     }                    
                     #endregion Kernel-protected-files-automatic-detection-and-allow-rule-creation
 
                     Write-Debug -Message 'The following policy xml files are going to be merged into the final Supplemental policy and be deployed on the system:'
-                    if ($Debug) { $PolicyXMLFilesArray | ForEach-Object { Write-Debug -Message "$_" } }
+                    if ($Debug) { $PolicyXMLFilesArray | ForEach-Object -Process { Write-Debug -Message "$_" } }
 
                     # Merge all of the policy XML files in the array into the final Supplemental policy
                     Merge-CIPolicy -PolicyPaths $PolicyXMLFilesArray -OutputFilePath ".\SupplementalPolicy $SuppPolicyName.xml" | Out-Null     
@@ -706,7 +706,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                 $SuppPolicyID = $SuppPolicyID.Substring(11)
 
                 # Make sure policy rule options that don't belong to a Supplemental policy don't exit
-                @(0, 1, 2, 3, 4, 8, 9, 10, 11, 12, 15, 16, 17, 19, 20) | ForEach-Object { Set-RuleOption -FilePath $SuppPolicyPath -Option $_ -Delete }
+                @(0, 1, 2, 3, 4, 8, 9, 10, 11, 12, 15, 16, 17, 19, 20) | ForEach-Object -Process { Set-RuleOption -FilePath $SuppPolicyPath -Option $_ -Delete }
      
                 Set-HVCIOptions -Strict -FilePath $SuppPolicyPath             
                 Set-CIPolicyVersion -FilePath $SuppPolicyPath -Version '1.0.0.0'            
@@ -728,7 +728,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                     $Supplementalxml = [System.Xml.XmlDocument](Get-Content $SuppPolicyPath)
                     $SupplementalPolicyID = $Supplementalxml.SiPolicy.PolicyID
                     $SupplementalPolicyType = $Supplementalxml.SiPolicy.PolicyType
-                    $DeployedPoliciesIDs = (CiTool -lp -json | ConvertFrom-Json).Policies.PolicyID | ForEach-Object { return "{$_}" }         
+                    $DeployedPoliciesIDs = (CiTool -lp -json | ConvertFrom-Json).Policies.PolicyID | ForEach-Object -Process { return "{$_}" }         
                     # Check the type of the user selected Supplemental policy XML files to make sure they are indeed Supplemental policies
                     if ($SupplementalPolicyType -ne 'Supplemental Policy') {
                         Write-Error -Message "The Selected XML file with GUID $SupplementalPolicyID isn't a Supplemental Policy."
@@ -768,15 +768,15 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                     Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml' -Destination '.\AllowMicrosoft.xml'
                     Merge-CIPolicy -PolicyPaths .\AllowMicrosoft.xml, '.\Microsoft recommended block rules.xml' -OutputFilePath .\BasePolicy.xml | Out-Null
                     Set-CIPolicyIdInfo -FilePath .\BasePolicy.xml -PolicyName "Allow Microsoft Plus Block Rules refreshed On $(Get-Date -Format 'MM-dd-yyyy')"
-                    @(0, 2, 5, 6, 11, 12, 16, 17, 19, 20) | ForEach-Object { Set-RuleOption -FilePath .\BasePolicy.xml -Option $_ }
-                    @(3, 4, 9, 10, 13, 18) | ForEach-Object { Set-RuleOption -FilePath .\BasePolicy.xml -Option $_ -Delete } 
+                    @(0, 2, 5, 6, 11, 12, 16, 17, 19, 20) | ForEach-Object -Process { Set-RuleOption -FilePath .\BasePolicy.xml -Option $_ }
+                    @(3, 4, 9, 10, 13, 18) | ForEach-Object -Process { Set-RuleOption -FilePath .\BasePolicy.xml -Option $_ -Delete } 
                 }
                 'Lightly_Managed_system_Policy' {                                          
                     Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml' -Destination '.\AllowMicrosoft.xml'
                     Merge-CIPolicy -PolicyPaths .\AllowMicrosoft.xml, '.\Microsoft recommended block rules.xml' -OutputFilePath .\BasePolicy.xml | Out-Null
                     Set-CIPolicyIdInfo -FilePath .\BasePolicy.xml -PolicyName "Signed And Reputable policy refreshed on $(Get-Date -Format 'MM-dd-yyyy')"
-                    @(0, 2, 5, 6, 11, 12, 14, 15, 16, 17, 19, 20) | ForEach-Object { Set-RuleOption -FilePath .\BasePolicy.xml -Option $_ }
-                    @(3, 4, 9, 10, 13, 18) | ForEach-Object { Set-RuleOption -FilePath .\BasePolicy.xml -Option $_ -Delete }            
+                    @(0, 2, 5, 6, 11, 12, 14, 15, 16, 17, 19, 20) | ForEach-Object -Process { Set-RuleOption -FilePath .\BasePolicy.xml -Option $_ }
+                    @(3, 4, 9, 10, 13, 18) | ForEach-Object -Process { Set-RuleOption -FilePath .\BasePolicy.xml -Option $_ -Delete }            
                     # Configure required services for ISG authorization
                     Start-Process -FilePath 'C:\Windows\System32\appidtel.exe' -ArgumentList 'start' -Wait -NoNewWindow
                     Start-Process -FilePath 'C:\Windows\System32\sc.exe' -ArgumentList 'config', 'appidsvc', 'start= auto' -Wait -NoNewWindow
@@ -793,8 +793,8 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                         Merge-CIPolicy -PolicyPaths .\DefaultWindows_Enforced.xml, '.\Microsoft recommended block rules.xml' -OutputFilePath .\BasePolicy.xml | Out-Null
                     }     
                     Set-CIPolicyIdInfo -FilePath .\BasePolicy.xml -PolicyName "Default Windows Plus Block Rules refreshed On $(Get-Date -Format 'MM-dd-yyyy')"
-                    @(0, 2, 5, 6, 11, 12, 16, 17, 19, 20) | ForEach-Object { Set-RuleOption -FilePath .\BasePolicy.xml -Option $_ }
-                    @(3, 4, 9, 10, 13, 18) | ForEach-Object { Set-RuleOption -FilePath .\BasePolicy.xml -Option $_ -Delete }
+                    @(0, 2, 5, 6, 11, 12, 16, 17, 19, 20) | ForEach-Object -Process { Set-RuleOption -FilePath .\BasePolicy.xml -Option $_ }
+                    @(3, 4, 9, 10, 13, 18) | ForEach-Object -Process { Set-RuleOption -FilePath .\BasePolicy.xml -Option $_ -Delete }
                 }
             }
 

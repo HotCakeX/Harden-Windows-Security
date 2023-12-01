@@ -134,10 +134,10 @@ function New-DenyWDACConfig {
             [System.String]$policyID = $policyID.Substring(11)
             Set-CIPolicyVersion -FilePath "DenyPolicy $PolicyName.xml" -Version '1.0.0.0'
             
-            @(0, 2, 5, 6, 11, 12, 16, 17, 19, 20) | ForEach-Object {
+            @(0, 2, 5, 6, 11, 12, 16, 17, 19, 20) | ForEach-Object -Process {
                 Set-RuleOption -FilePath "DenyPolicy $PolicyName.xml" -Option $_ }
                 
-            @(3, 4, 9, 10, 13, 18) | ForEach-Object {
+            @(3, 4, 9, 10, 13, 18) | ForEach-Object -Process {
                 Set-RuleOption -FilePath "DenyPolicy $PolicyName.xml" -Option $_ -Delete }        
             
             Set-HVCIOptions -Strict -FilePath "DenyPolicy $PolicyName.xml"        
@@ -193,10 +193,10 @@ function New-DenyWDACConfig {
             [System.String]$policyID = $policyID.Substring(11)
             Set-CIPolicyVersion -FilePath "DenyPolicy $PolicyName.xml" -Version '1.0.0.0'
             
-            @(0, 2, 5, 6, 11, 12, 16, 17, 19, 20) | ForEach-Object {
+            @(0, 2, 5, 6, 11, 12, 16, 17, 19, 20) | ForEach-Object -Process {
                 Set-RuleOption -FilePath "DenyPolicy $PolicyName.xml" -Option $_ }
                 
-            @(3, 4, 9, 10, 13, 18) | ForEach-Object {
+            @(3, 4, 9, 10, 13, 18) | ForEach-Object -Process {
                 Set-RuleOption -FilePath "DenyPolicy $PolicyName.xml" -Option $_ -Delete }
            
             Set-HVCIOptions -Strict -FilePath "DenyPolicy $PolicyName.xml"        
@@ -248,10 +248,10 @@ function New-DenyWDACConfig {
             [System.String]$policyID = $policyID.Substring(11)
             Set-CIPolicyVersion -FilePath ".\AppxDenyPolicy $PolicyName.xml" -Version '1.0.0.0'
  
-            @(0, 2, 6, 11, 12, 16, 17, 19, 20) | ForEach-Object {
+            @(0, 2, 6, 11, 12, 16, 17, 19, 20) | ForEach-Object -Process {
                 Set-RuleOption -FilePath ".\AppxDenyPolicy $PolicyName.xml" -Option $_ }
                 
-            @(3, 4, 8, 9, 10, 13, 14, 15, 18) | ForEach-Object {
+            @(3, 4, 8, 9, 10, 13, 14, 15, 18) | ForEach-Object -Process {
                 Set-RuleOption -FilePath ".\AppxDenyPolicy $PolicyName.xml" -Option $_ -Delete }
 
             Set-HVCIOptions -Strict -FilePath ".\AppxDenyPolicy $PolicyName.xml"        

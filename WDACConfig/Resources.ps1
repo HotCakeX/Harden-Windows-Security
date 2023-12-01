@@ -280,13 +280,7 @@ Function Get-AuditEventLogsProcessing {
 
             $Xml = [System.Xml.XmlDocument]$event.toxml()
 
-            $Xml.event.eventdata.data | ForEach-Object -Begin {
-                $Hash = @{}
-            } -Process {
-                $Hash[$_.name] = $_.'#text'
-            } -End {
-                [pscustomobject]$Hash
-            } | ForEach-Object {
+            $Xml.event.eventdata.data | ForEach-Object -Begin { $Hash = @{} } -Process { $Hash[$_.name] = $_.'#text' } -End { [pscustomobject]$Hash } | ForEach-Object -Process {
 
                 # Define the regex pattern
                 [System.String]$Pattern = '\\Device\\HarddiskVolume(\d+)\\(.*)$'

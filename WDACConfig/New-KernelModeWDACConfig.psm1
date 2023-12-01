@@ -117,8 +117,8 @@ function New-KernelModeWDACConfig {
                 $Global:PolicyID = $PolicyID.Substring(11)
                 Set-CIPolicyVersion -FilePath "$PolicyFileName" -Version '1.0.0.0'
                 # Setting policy rule options for the audit mode policy
-                @(2, 3, 6, 16, 17, 20) | ForEach-Object { Set-RuleOption -FilePath "$PolicyFileName" -Option $_ }
-                @(0, 4, 8, 9, 10, 11, 12, 13, 14, 15, 18, 19) | ForEach-Object { Set-RuleOption -FilePath "$PolicyFileName" -Option $_ -Delete }
+                @(2, 3, 6, 16, 17, 20) | ForEach-Object -Process { Set-RuleOption -FilePath "$PolicyFileName" -Option $_ }
+                @(0, 4, 8, 9, 10, 11, 12, 13, 14, 15, 18, 19) | ForEach-Object -Process { Set-RuleOption -FilePath "$PolicyFileName" -Option $_ -Delete }
                 # If user chooses to add EVSigners, add it to the policy
                 if ($EVSigners) { Set-RuleOption -FilePath "$PolicyFileName" -Option 8 }
                 # If user chooses to go with no flight root certs then block flight/insider builds in policy rule options
@@ -206,8 +206,8 @@ function New-KernelModeWDACConfig {
 
                 Set-CIPolicyVersion -FilePath '.\Final_DefaultWindows_Enforced_Kernel.xml' -Version '1.0.0.0'
                 # Setting policy rule options for the final Enforced mode policy
-                @(2, 6, 16, 17, 20) | ForEach-Object { Set-RuleOption -FilePath '.\Final_DefaultWindows_Enforced_Kernel.xml' -Option $_ }
-                @(0, 3, 4, 8, 9, 10, 11, 12, 13, 14, 15, 18, 19) | ForEach-Object { Set-RuleOption -FilePath '.\Final_DefaultWindows_Enforced_Kernel.xml' -Option $_ -Delete }
+                @(2, 6, 16, 17, 20) | ForEach-Object -Process { Set-RuleOption -FilePath '.\Final_DefaultWindows_Enforced_Kernel.xml' -Option $_ }
+                @(0, 3, 4, 8, 9, 10, 11, 12, 13, 14, 15, 18, 19) | ForEach-Object -Process { Set-RuleOption -FilePath '.\Final_DefaultWindows_Enforced_Kernel.xml' -Option $_ -Delete }
 
                 if ($EVSigners) { Set-RuleOption -FilePath '.\Final_DefaultWindows_Enforced_Kernel.xml' -Option 8 }
                 
@@ -304,8 +304,8 @@ function New-KernelModeWDACConfig {
 
                 Set-CIPolicyVersion -FilePath '.\Final_DefaultWindows_Enforced_Kernel.xml' -Version '1.0.0.0'
                 # Setting policy rule options for the final Enforced mode policy
-                @(2, 4, 6, 16, 17, 20) | ForEach-Object { Set-RuleOption -FilePath '.\Final_DefaultWindows_Enforced_Kernel.xml' -Option $_ }
-                @(0, 3, 8, 9, 10, 11, 12, 13, 14, 15, 18, 19) | ForEach-Object { Set-RuleOption -FilePath '.\Final_DefaultWindows_Enforced_Kernel.xml' -Option $_ -Delete }
+                @(2, 4, 6, 16, 17, 20) | ForEach-Object -Process { Set-RuleOption -FilePath '.\Final_DefaultWindows_Enforced_Kernel.xml' -Option $_ }
+                @(0, 3, 8, 9, 10, 11, 12, 13, 14, 15, 18, 19) | ForEach-Object -Process { Set-RuleOption -FilePath '.\Final_DefaultWindows_Enforced_Kernel.xml' -Option $_ -Delete }
 
                 if ($EVSigners) { Set-RuleOption -FilePath '.\Final_DefaultWindows_Enforced_Kernel.xml' -Option 8 }
                 

@@ -168,10 +168,10 @@ function New-WDACConfig {
             [System.String]$PolicyID = Set-CIPolicyIdInfo -FilePath .\AllowMicrosoftPlusBlockRules.xml -PolicyName "Allow Microsoft Plus Block Rules - $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID
             [System.String]$PolicyID = $PolicyID.Substring(11)
             Set-CIPolicyVersion -FilePath .\AllowMicrosoftPlusBlockRules.xml -Version '1.0.0.0'
-            @(0, 2, 5, 6, 11, 12, 16, 17, 19, 20) | ForEach-Object { Set-RuleOption -FilePath .\AllowMicrosoftPlusBlockRules.xml -Option $_ }
-            @(3, 4, 9, 10, 13, 18) | ForEach-Object { Set-RuleOption -FilePath .\AllowMicrosoftPlusBlockRules.xml -Option $_ -Delete }        
+            @(0, 2, 5, 6, 11, 12, 16, 17, 19, 20) | ForEach-Object -Process { Set-RuleOption -FilePath .\AllowMicrosoftPlusBlockRules.xml -Option $_ }
+            @(3, 4, 9, 10, 13, 18) | ForEach-Object -Process { Set-RuleOption -FilePath .\AllowMicrosoftPlusBlockRules.xml -Option $_ -Delete }        
             if ($TestMode -and $MakeAllowMSFTWithBlockRules) {
-                9..10 | ForEach-Object { Set-RuleOption -FilePath .\AllowMicrosoftPlusBlockRules.xml -Option $_ }
+                9..10 | ForEach-Object -Process { Set-RuleOption -FilePath .\AllowMicrosoftPlusBlockRules.xml -Option $_ }
             }
             if ($RequireEVSigners -and $MakeAllowMSFTWithBlockRules) {
                 Set-RuleOption -FilePath .\AllowMicrosoftPlusBlockRules.xml -Option 8
@@ -236,10 +236,10 @@ function New-WDACConfig {
             [System.String]$PolicyID = Set-CIPolicyIdInfo -FilePath .\DefaultWindowsPlusBlockRules.xml -PolicyName "Default Windows Plus Block Rules - $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID
             [System.String]$PolicyID = $PolicyID.Substring(11)
             Set-CIPolicyVersion -FilePath .\DefaultWindowsPlusBlockRules.xml -Version '1.0.0.0'
-            @(0, 2, 5, 6, 11, 12, 16, 17, 19, 20) | ForEach-Object { Set-RuleOption -FilePath .\DefaultWindowsPlusBlockRules.xml -Option $_ }
-            @(3, 4, 9, 10, 13, 18) | ForEach-Object { Set-RuleOption -FilePath .\DefaultWindowsPlusBlockRules.xml -Option $_ -Delete }        
+            @(0, 2, 5, 6, 11, 12, 16, 17, 19, 20) | ForEach-Object -Process { Set-RuleOption -FilePath .\DefaultWindowsPlusBlockRules.xml -Option $_ }
+            @(3, 4, 9, 10, 13, 18) | ForEach-Object -Process { Set-RuleOption -FilePath .\DefaultWindowsPlusBlockRules.xml -Option $_ -Delete }        
             if ($TestMode -and $MakeDefaultWindowsWithBlockRules) {
-                9..10 | ForEach-Object { Set-RuleOption -FilePath .\DefaultWindowsPlusBlockRules.xml -Option $_ }
+                9..10 | ForEach-Object -Process { Set-RuleOption -FilePath .\DefaultWindowsPlusBlockRules.xml -Option $_ }
             }
             if ($RequireEVSigners -and $MakeDefaultWindowsWithBlockRules) {
                 Set-RuleOption -FilePath .\DefaultWindowsPlusBlockRules.xml -Option 8
@@ -280,7 +280,7 @@ function New-WDACConfig {
             # Remove empty lines from the policy file
             Get-Content '.\Microsoft recommended block rules TEMP.xml' | Where-Object { $_.trim() -ne '' } | Out-File '.\Microsoft recommended block rules.xml'    
             Set-RuleOption -FilePath '.\Microsoft recommended block rules.xml' -Option 3 -Delete
-            @(0, 2, 6, 11, 12, 16, 19, 20) | ForEach-Object { Set-RuleOption -FilePath '.\Microsoft recommended block rules.xml' -Option $_ }
+            @(0, 2, 6, 11, 12, 16, 19, 20) | ForEach-Object -Process { Set-RuleOption -FilePath '.\Microsoft recommended block rules.xml' -Option $_ }
             Set-HVCIOptions -Strict -FilePath '.\Microsoft recommended block rules.xml'
             Remove-Item -Path '.\Microsoft recommended block rules TEMP.xml' -Force
             [System.String]$PolicyID = (Set-CIPolicyIdInfo -FilePath '.\Microsoft recommended block rules.xml' -ResetPolicyID).Substring(11)
@@ -389,7 +389,7 @@ function New-WDACConfig {
                 }
             }
             if ($TestMode -and $MakePolicyFromAuditLogs) {
-                9..10 | ForEach-Object { Set-RuleOption -FilePath $BasePolicy -Option $_ }
+                9..10 | ForEach-Object -Process { Set-RuleOption -FilePath $BasePolicy -Option $_ }
             }
             if ($RequireEVSigners -and $MakePolicyFromAuditLogs) { 
                 Set-RuleOption -FilePath $BasePolicy -Option 8
@@ -428,8 +428,8 @@ function New-WDACConfig {
                     foreach ($event in Get-WinEvent -FilterHashtable @{LogName = 'Microsoft-Windows-CodeIntegrity/Operational'; ID = 3076 }) {
                         $xml = [System.Xml.XmlDocument]$event.toxml()
                         $xml.event.eventdata.data |
-                        ForEach-Object { $Hash = @{} } { $hash[$_.name] = $_.'#text' } { [pscustomobject]$hash } |
-                        ForEach-Object {
+                        ForEach-Object -Begin { $Hash = @{} } -Process { $hash[$_.name] = $_.'#text' } -End { [pscustomobject]$hash } |
+                        ForEach-Object -Process {
                             if ($_.'File Name' -match ($pattern = '\\Device\\HarddiskVolume(\d+)\\(.*)$')) {
                                 $hardDiskVolumeNumber = $Matches[1]
                                 $remainingPath = $Matches[2]
@@ -467,7 +467,7 @@ function New-WDACConfig {
             [System.String]$PolicyID = Set-CIPolicyIdInfo -FilePath 'SupplementalPolicy.xml' -PolicyName "Supplemental Policy made from Audit Event Logs on $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID -BasePolicyToSupplementPath $BasePolicy
             [System.String]$PolicyID = $PolicyID.Substring(11)        
             # Make sure policy rule options that don't belong to a Supplemental policy don't exit
-            @(0, 1, 2, 3, 4, 8, 9, 10, 11, 12, 15, 16, 17, 19, 20) | ForEach-Object { Set-RuleOption -FilePath 'SupplementalPolicy.xml' -Option $_ -Delete }
+            @(0, 1, 2, 3, 4, 8, 9, 10, 11, 12, 15, 16, 17, 19, 20) | ForEach-Object -Process { Set-RuleOption -FilePath 'SupplementalPolicy.xml' -Option $_ -Delete }
 
             # Set the hypervisor Code Integrity option for Supplemental policy to Strict        
             Set-HVCIOptions -Strict -FilePath 'SupplementalPolicy.xml'
@@ -510,9 +510,9 @@ function New-WDACConfig {
             Remove-Item -Path 'SignedAndReputable.xml' -Force -ErrorAction SilentlyContinue
             Invoke-Command $MakeAllowMSFTWithBlockRulesSCRIPTBLOCK -ArgumentList $true | Out-Null
             Rename-Item -Path 'AllowMicrosoftPlusBlockRules.xml' -NewName 'SignedAndReputable.xml' -Force
-            @(14, 15) | ForEach-Object { Set-RuleOption -FilePath .\SignedAndReputable.xml -Option $_ }
+            @(14, 15) | ForEach-Object -Process { Set-RuleOption -FilePath .\SignedAndReputable.xml -Option $_ }
             if ($TestMode -and $MakeLightPolicy) {
-                9..10 | ForEach-Object { Set-RuleOption -FilePath .\SignedAndReputable.xml -Option $_ }
+                9..10 | ForEach-Object -Process { Set-RuleOption -FilePath .\SignedAndReputable.xml -Option $_ }
             }
             if ($RequireEVSigners -and $MakeLightPolicy) { 
                 Set-RuleOption -FilePath .\SignedAndReputable.xml -Option 8

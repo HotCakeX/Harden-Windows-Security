@@ -309,8 +309,8 @@ function Edit-SignedWDACConfig {
                     # After creating signed .p7 files for each CIP, remove the old Unsigned ones
                     Remove-Item -Path $_ -Force
                 }  
-                Rename-Item '.\EnforcedModeTemp.cip.p7' -NewName '.\EnforcedMode.cip' -Force
-                Rename-Item '.\AuditModeTemp.cip.p7' -NewName '.\AuditMode.cip' -Force
+                Rename-Item -Path '.\EnforcedModeTemp.cip.p7' -NewName '.\EnforcedMode.cip' -Force
+                Rename-Item -Path '.\AuditModeTemp.cip.p7' -NewName '.\AuditMode.cip' -Force
 
                 ################# Snap back guarantee #################
                 Write-Debug -Message 'Creating Enforced Mode SnapBack guarantee'
@@ -324,7 +324,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                               
                 # Deploy Audit mode CIP
                 Write-Debug -Message 'Deploying Audit mode CIP'
-                Rename-Item '.\AuditMode.cip' -NewName ".\$PolicyID.cip" -Force
+                Rename-Item -Path '.\AuditMode.cip' -NewName ".\$PolicyID.cip" -Force
                 CiTool --update-policy ".\$PolicyID.cip" -json | Out-Null         
                 &$WriteTeaGreen "`nThe Base policy with the following details has been Re-Signed and Re-Deployed in Audit Mode:"      
                 Write-Output -InputObject "PolicyName = $PolicyName"
@@ -674,8 +674,8 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                     # After creating signed .p7 files for each CIP, remove the old Unsigned ones
                     Remove-Item -Path $_ -Force
                 }  
-                Rename-Item '.\EnforcedModeTemp.cip.p7' -NewName '.\EnforcedMode.cip' -Force
-                Rename-Item '.\AuditModeTemp.cip.p7' -NewName '.\AuditMode.cip' -Force
+                Rename-Item -Path '.\EnforcedModeTemp.cip.p7' -NewName '.\EnforcedMode.cip' -Force
+                Rename-Item -Path '.\AuditModeTemp.cip.p7' -NewName '.\AuditMode.cip' -Force
 
                 ################# Snap back guarantee #################
                 Write-Debug -Message 'Creating Enforced Mode SnapBack guarantee'
@@ -689,7 +689,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                                   
                 # Deploy Audit mode CIP
                 Write-Debug -Message 'Deploying Audit mode CIP'
-                Rename-Item '.\AuditMode.cip' -NewName ".\$PolicyID.cip" -Force
+                Rename-Item -Path '.\AuditMode.cip' -NewName ".\$PolicyID.cip" -Force
                 CiTool --update-policy ".\$PolicyID.cip" -json | Out-Null         
                 &$WriteTeaGreen "`nThe Base policy with the following details has been Re-Signed and Re-Deployed in Audit Mode:"        
                 Write-Output -InputObject "PolicyName = $PolicyName"

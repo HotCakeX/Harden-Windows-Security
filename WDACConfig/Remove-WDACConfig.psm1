@@ -287,7 +287,7 @@ function Remove-WDACConfig {
                 Start-Process @ProcessParams
 
                 Remove-Item -Path ".\$PolicyID.cip" -Force
-                Rename-Item "$PolicyID.cip.p7" -NewName "$PolicyID.cip" -Force
+                Rename-Item -Path "$PolicyID.cip.p7" -NewName "$PolicyID.cip" -Force
                 CiTool --update-policy ".\$PolicyID.cip" -json | Out-Null 
                 Write-Host "`nPolicy with the following details has been Re-signed and Re-deployed in Unsigned mode.`nPlease restart your system." -ForegroundColor Green
                 Write-Output -InputObject "PolicyName = $PolicyName"

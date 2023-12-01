@@ -256,7 +256,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                           
                 # Deploy Audit mode CIP
                 Write-Debug -Message 'Deploying Audit mode CIP'
-                Rename-Item '.\AuditMode.cip' -NewName ".\$PolicyID.cip" -Force
+                Rename-Item -Path '.\AuditMode.cip' -NewName ".\$PolicyID.cip" -Force
                 CiTool --update-policy ".\$PolicyID.cip" -json | Out-Null         
                 &$WriteTeaGreen "`nThe Base policy with the following details has been Re-Deployed in Audit Mode:"      
                 Write-Output -InputObject "PolicyName = $PolicyName"
@@ -439,7 +439,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
 
                 # Deploy Audit mode CIP
                 Write-Debug -Message 'Deploying Audit mode CIP'
-                Rename-Item '.\AuditMode.cip' -NewName ".\$PolicyID.cip" -Force
+                Rename-Item -Path '.\AuditMode.cip' -NewName ".\$PolicyID.cip" -Force
                 CiTool --update-policy ".\$PolicyID.cip" -json | Out-Null         
                 &$WriteTeaGreen "`nThe Base policy with the following details has been Re-Deployed in Audit Mode:"      
                 Write-Output -InputObject "PolicyName = $PolicyName"

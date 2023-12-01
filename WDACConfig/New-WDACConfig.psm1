@@ -460,7 +460,7 @@ function New-WDACConfig {
             }
             # do this only if there are no event logs detected with files no longer on the disk, so we use the policy file created earlier using Audit even logs
             else {
-                Rename-Item 'AuditLogsPolicy_NoDeletedFiles.xml' -NewName 'SupplementalPolicy.xml' -Force
+                Rename-Item -Path 'AuditLogsPolicy_NoDeletedFiles.xml' -NewName 'SupplementalPolicy.xml' -Force
             }      
             # Convert the SupplementalPolicy.xml policy file from base policy to supplemental policy of our base policy
             Set-CIPolicyVersion -FilePath 'SupplementalPolicy.xml' -Version '1.0.0.0'

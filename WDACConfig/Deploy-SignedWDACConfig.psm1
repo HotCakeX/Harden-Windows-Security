@@ -154,7 +154,7 @@ function Deploy-SignedWDACConfig {
             Start-Process @ProcessParams
 
             Remove-Item -Path ".\$PolicyID.cip" -Force            
-            Rename-Item "$PolicyID.cip.p7" -NewName "$PolicyID.cip" -Force
+            Rename-Item -Path "$PolicyID.cip.p7" -NewName "$PolicyID.cip" -Force
 
             if ($Deploy) {
 

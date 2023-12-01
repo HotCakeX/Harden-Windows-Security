@@ -71,7 +71,7 @@ function Edit-SignedWDACConfig {
         [System.String[]]$PolicyPaths,
 
         [ValidateScript({
-                $certs = foreach ($cert in (Get-ChildItem 'Cert:\CurrentUser\my')) {
+                $certs = foreach ($cert in (Get-ChildItem -Path 'Cert:\CurrentUser\my')) {
                 (($cert.Subject -split ',' | Select-Object -First 1) -replace 'CN=', '').Trim()
                 } 
                 $certs -contains $_
@@ -465,7 +465,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                     }            
 
                     # merge-cipolicy accept arrays - collecting all the policy files created by scanning user specified folders
-                    $ProgramDir_ScanResults = Get-ChildItem '.\' | Where-Object -FilterScript { $_.Name -like 'ProgramDir_ScanResults*.xml' }                
+                    $ProgramDir_ScanResults = Get-ChildItem -Path '.\' | Where-Object -FilterScript { $_.Name -like 'ProgramDir_ScanResults*.xml' }                
                     foreach ($file in $ProgramDir_ScanResults) {
                         $PolicyXMLFilesArray += $file.FullName
                     }
@@ -781,7 +781,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                 }            
     
                 # merge-cipolicy accept arrays - collecting all the policy files created by scanning user specified folders
-                $ProgramDir_ScanResults = Get-ChildItem '.\' | Where-Object -FilterScript { $_.Name -like 'ProgramDir_ScanResults*.xml' }                
+                $ProgramDir_ScanResults = Get-ChildItem -Path '.\' | Where-Object -FilterScript { $_.Name -like 'ProgramDir_ScanResults*.xml' }                
                 foreach ($file in $ProgramDir_ScanResults) {
                     $PolicyXMLFilesArray += $file.FullName
                 }

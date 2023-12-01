@@ -17,7 +17,7 @@ function Deploy-SignedWDACConfig {
         [parameter(Mandatory = $false)][System.String]$CertPath,
 
         [ValidateScript({
-                $certs = foreach ($cert in (Get-ChildItem 'Cert:\CurrentUser\my')) {
+                $certs = foreach ($cert in (Get-ChildItem -Path 'Cert:\CurrentUser\my')) {
                     (($cert.Subject -split ',' | Select-Object -First 1) -replace 'CN=', '').Trim()
                 } 
                 $certs -contains $_

@@ -119,7 +119,7 @@ function New-DenyWDACConfig {
             if ($Debug) { $UserInputProgramFoldersPolicyMakerHashTable }
             
             # Merge-cipolicy accept arrays - collecting all the policy files created by scanning user specified folders
-            $ProgramDir_ScanResults = Get-ChildItem '.\' | Where-Object -FilterScript { $_.Name -like 'ProgramDir_ScanResults*.xml' }                
+            $ProgramDir_ScanResults = Get-ChildItem -Path '.\' | Where-Object -FilterScript { $_.Name -like 'ProgramDir_ScanResults*.xml' }                
             foreach ($file in $ProgramDir_ScanResults) {
                 $PolicyXMLFilesArray += $file.FullName
             

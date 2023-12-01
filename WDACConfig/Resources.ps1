@@ -387,7 +387,7 @@ $RuleRefsContent
 
 # Function to check Certificate Common name - used mostly to validate values in UserConfigurations.json
 function Confirm-CertCN ([System.String]$CN) {
-    $certs = foreach ($cert in (Get-ChildItem 'Cert:\CurrentUser\my')) {
+    $certs = foreach ($cert in (Get-ChildItem -Path 'Cert:\CurrentUser\my')) {
         (($cert.Subject -split ',' | Select-Object -First 1) -replace 'CN=', '').Trim()
     }
     $certs -contains $CN ? $true : $false

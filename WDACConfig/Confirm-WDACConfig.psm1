@@ -83,13 +83,13 @@ function Confirm-WDACConfig {
 
         # Script block to show only non-system Base policies
         [System.Management.Automation.ScriptBlock]$OnlyBasePoliciesBLOCK = {
-            $BasePolicies = (CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsSystemPolicy -ne 'True' } | Where-Object { $_.PolicyID -eq $_.BasePolicyID }           
+            $BasePolicies = (CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { $_.IsSystemPolicy -ne 'True' } | Where-Object -FilterScript { $_.PolicyID -eq $_.BasePolicyID }           
             &$WriteLavender "`nThere are currently $(($BasePolicies.count)) Non-system Base policies deployed"
             $BasePolicies
         }
         # Script block to show only non-system Supplemental policies
         [System.Management.Automation.ScriptBlock]$OnlySupplementalPoliciesBLOCK = {
-            $SupplementalPolicies = (CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsSystemPolicy -ne 'True' } | Where-Object { $_.PolicyID -ne $_.BasePolicyID }           
+            $SupplementalPolicies = (CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { $_.IsSystemPolicy -ne 'True' } | Where-Object -FilterScript { $_.PolicyID -ne $_.BasePolicyID }           
             &$WriteLavender "`nThere are currently $(($SupplementalPolicies.count)) Non-system Supplemental policies deployed`n"
             $SupplementalPolicies
         } 

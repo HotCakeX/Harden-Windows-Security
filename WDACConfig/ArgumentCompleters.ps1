@@ -67,7 +67,7 @@
     ).Value  
 
     # Get the xml files in the current directory
-    Get-ChildItem -File | Where-Object { $_.extension -like '*.xml' } | ForEach-Object {
+    Get-ChildItem -File | Where-Object -FilterScript { $_.extension -like '*.xml' } | ForEach-Object {
 
         $xmlitem = [System.Xml.XmlDocument](Get-Content $_)
         $PolicyType = $xmlitem.SiPolicy.PolicyType
@@ -97,7 +97,7 @@
     ).Value  
 
     # Get the xml files in the current directory
-    Get-ChildItem -File | Where-Object { $_.extension -like '*.xml' } | ForEach-Object -Process {
+    Get-ChildItem -File | Where-Object -FilterScript { $_.extension -like '*.xml' } | ForEach-Object -Process {
 
         $xmlitem = [System.Xml.XmlDocument](Get-Content $_)
         $PolicyType = $xmlitem.SiPolicy.PolicyType

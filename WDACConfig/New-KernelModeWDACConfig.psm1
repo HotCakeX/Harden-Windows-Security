@@ -90,7 +90,7 @@ function New-KernelModeWDACConfig {
 
                     If ($CurrentStrictKernelPolicyGUID) {                    
                         # Check if the pending Audit mode Kernel mode WDAC policy is deployed on the system
-                        [System.String]$CurrentStrictKernelPolicyGUIDConfirmation = ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.PolicyID -eq $CurrentStrictKernelPolicyGUID }).policyID
+                        [System.String]$CurrentStrictKernelPolicyGUIDConfirmation = ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { $_.PolicyID -eq $CurrentStrictKernelPolicyGUID }).policyID
                     }
                 }
 
@@ -104,7 +104,7 @@ function New-KernelModeWDACConfig {
 
                     If ($CurrentStrictKernelNoFlightRootsPolicyGUID) {                    
                         # Check if the pending Audit mode Kernel mode WDAC No Flight Roots policy is deployed on the system
-                        [System.String]$CurrentStrictKernelPolicyGUIDConfirmation = ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.PolicyID -eq $CurrentStrictKernelNoFlightRootsPolicyGUID }).policyID
+                        [System.String]$CurrentStrictKernelPolicyGUIDConfirmation = ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { $_.PolicyID -eq $CurrentStrictKernelNoFlightRootsPolicyGUID }).policyID
                     }
                 }             
 

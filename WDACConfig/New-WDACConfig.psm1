@@ -146,7 +146,7 @@ function New-WDACConfig {
             $DriverRules = $DriverRules -replace '<SigningScenario\sValue="12"\sID="ID_SIGNINGSCENARIO_WINDOWS"\sFriendlyName="Auto\sgenerated\spolicy[\S\s]*<\/SigningScenario>', ''
             $DriverRules | Out-File 'Microsoft recommended driver block rules TEMP.xml'
             # Remove empty lines from the policy file
-            Get-Content 'Microsoft recommended driver block rules TEMP.xml' | Where-Object { $_.trim() -ne '' } | Out-File 'Microsoft recommended driver block rules.xml'
+            Get-Content 'Microsoft recommended driver block rules TEMP.xml' | Where-Object -FilterScript { $_.trim() -ne '' } | Out-File 'Microsoft recommended driver block rules.xml'
             Remove-Item 'Microsoft recommended driver block rules TEMP.xml' -Force
             Set-RuleOption -FilePath 'Microsoft recommended driver block rules.xml' -Option 3 -Delete
             Set-HVCIOptions -Strict -FilePath 'Microsoft recommended driver block rules.xml'
@@ -278,7 +278,7 @@ function New-WDACConfig {
         [System.Management.Automation.ScriptBlock]$DeployLatestBlockRulesSCRIPTBLOCK = {
             (Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/public/windows/security/application-security/application-control/windows-defender-application-control/design/applications-that-can-bypass-wdac.md' -ProgressAction SilentlyContinue).Content -replace "(?s).*``````xml(.*)``````.*", '$1' | Out-File '.\Microsoft recommended block rules TEMP.xml'
             # Remove empty lines from the policy file
-            Get-Content '.\Microsoft recommended block rules TEMP.xml' | Where-Object { $_.trim() -ne '' } | Out-File '.\Microsoft recommended block rules.xml'    
+            Get-Content '.\Microsoft recommended block rules TEMP.xml' | Where-Object -FilterScript { $_.trim() -ne '' } | Out-File '.\Microsoft recommended block rules.xml'    
             Set-RuleOption -FilePath '.\Microsoft recommended block rules.xml' -Option 3 -Delete
             @(0, 2, 6, 11, 12, 16, 19, 20) | ForEach-Object -Process { Set-RuleOption -FilePath '.\Microsoft recommended block rules.xml' -Option $_ }
             Set-HVCIOptions -Strict -FilePath '.\Microsoft recommended block rules.xml'
@@ -433,7 +433,7 @@ function New-WDACConfig {
                             if ($_.'File Name' -match ($pattern = '\\Device\\HarddiskVolume(\d+)\\(.*)$')) {
                                 $hardDiskVolumeNumber = $Matches[1]
                                 $remainingPath = $Matches[2]
-                                $getletter = $DriveLettersGlobalRootFix | Where-Object { $_.devicepath -eq "\Device\HarddiskVolume$hardDiskVolumeNumber" }
+                                $getletter = $DriveLettersGlobalRootFix | Where-Object -FilterScript { $_.devicepath -eq "\Device\HarddiskVolume$hardDiskVolumeNumber" }
                                 $usablePath = "$($getletter.DriveLetter)$remainingPath"
                                 $_.'File Name' = $_.'File Name' -replace $pattern, $usablePath
                             }
@@ -494,10 +494,10 @@ function New-WDACConfig {
                 # Get the correct Prep mode Audit policy ID to remove from the system
                 switch ($BasePolicyType) {
                     'Allow Microsoft Base' {
-                        $IDToRemove = ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.FriendlyName -eq 'PrepMSFTOnlyAudit' }).PolicyID
+                        $IDToRemove = ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { $_.FriendlyName -eq 'PrepMSFTOnlyAudit' }).PolicyID
                     }
                     'Default Windows Base' {
-                        $IDToRemove = ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.FriendlyName -eq 'PrepDefaultWindows' }).PolicyID
+                        $IDToRemove = ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { $_.FriendlyName -eq 'PrepDefaultWindows' }).PolicyID
                     }
                 }
                 CiTool --remove-policy "{$IDToRemove}" -json | Out-Null                

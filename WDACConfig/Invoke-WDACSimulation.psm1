@@ -73,7 +73,7 @@ function Invoke-WDACSimulation {
                     
                     $CurrentHashOutput = New-CIPolicyRule -Level hash -Fallback none -AllowFileNameFallbacks -UserWriteablePaths -DriverFilePath $CurrentFilePath
                   
-                    $CurrentFilePathHash = ($CurrentHashOutput | Where-Object { $_.name -like '*Hash Sha256*' }).attributes.hash
+                    $CurrentFilePathHash = ($CurrentHashOutput | Where-Object -FilterScript { $_.name -like '*Hash Sha256*' }).attributes.hash
                 }
            
                 # if the file's hash exists in the XML file
@@ -90,7 +90,7 @@ function Invoke-WDACSimulation {
                                 Write-Host "Currently processing signed file: `n$CurrentFilePath" -ForegroundColor Yellow
                             }
                             # Use the function in Resources2.ps1 file to process it
-                            $SignedResult += Compare-SignerAndCertificate -XmlFilePath $XmlFilePath -SignedFilePath $CurrentFilePath | Where-Object { ($_.CertRootMatch -eq $true) -and ($_.CertNameMatch -eq $true) -and ($_.CertPublisherMatch -eq $true) }
+                            $SignedResult += Compare-SignerAndCertificate -XmlFilePath $XmlFilePath -SignedFilePath $CurrentFilePath | Where-Object -FilterScript { ($_.CertRootMatch -eq $true) -and ($_.CertNameMatch -eq $true) -and ($_.CertPublisherMatch -eq $true) }
                             break
                         }
                         'HashMismatch' {                  
@@ -166,7 +166,7 @@ function Invoke-WDACSimulation {
             }
 
             # Unique number of files allowed by hash - used for counting only
-            $UniqueFilesAllowedByHash = $MegaOutputObject | Select-Object -Property FilePath, source, Permission -Unique | Where-Object { $_.source -eq 'hash' }
+            $UniqueFilesAllowedByHash = $MegaOutputObject | Select-Object -Property FilePath, source, Permission -Unique | Where-Object -FilterScript { $_.source -eq 'hash' }
 
             # To detect files that are not allowed
 
@@ -174,7 +174,7 @@ function Invoke-WDACSimulation {
             if ($($MegaOutputObject.Filepath) -and $CollectedFiles) {
                 # Compare the paths of all the supported files that were found in user provided directory with the array of files that were allowed by Signer or hash in the policy
                 # Then save the output to a different array
-                [System.Object[]]$FinalComparisonForFilesNotAllowed = Compare-Object -ReferenceObject $($MegaOutputObject.Filepath) -DifferenceObject $CollectedFiles -PassThru | Where-Object { $_.SideIndicator -eq '=>' }
+                [System.Object[]]$FinalComparisonForFilesNotAllowed = Compare-Object -ReferenceObject $($MegaOutputObject.Filepath) -DifferenceObject $CollectedFiles -PassThru | Where-Object -FilterScript { $_.SideIndicator -eq '=>' }
             }
 
             # If there is any files in the user selected directory that is not allowed by the policy

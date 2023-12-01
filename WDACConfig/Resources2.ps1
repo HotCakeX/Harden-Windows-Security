@@ -148,8 +148,8 @@ function Get-AuthenticodeSignatureEx {
             [System.Object[]]$retValue = @()
             foreach ($CounterSignerInfos in $Infos.CounterSignerInfos) {
                 # Get the signing time attribute from the countersigner info object
-                $sTime = ($CounterSignerInfos.SignedAttributes | Where-Object { $_.Oid.Value -eq '1.2.840.113549.1.9.5' }).Values | `
-                    Where-Object { $null -ne $_.SigningTime }
+                $sTime = ($CounterSignerInfos.SignedAttributes | Where-Object -FilterScript { $_.Oid.Value -eq '1.2.840.113549.1.9.5' }).Values | `
+                    Where-Object -FilterScript { $null -ne $_.SigningTime }
                 # Create a custom object with the countersigner certificate and signing time properties
                 $tsObject = New-Object psobject -Property @{
                     Certificate = $CounterSignerInfos.Certificate
@@ -207,11 +207,11 @@ function Get-AuthenticodeSignatureEx {
                 # Call the helper function to get the timestamps of the countersigners and assign it to the TimeStamps property
                 $Output.TimeStamps = getTimeStamps $Infos
                 # Check if there is a nested signature attribute in the signer info object by looking for the OID 1.3.6.1.4.1.311.2.4.1
-                $second = $Infos.UnsignedAttributes | Where-Object { $_.Oid.Value -eq '1.3.6.1.4.1.311.2.4.1' }
+                $second = $Infos.UnsignedAttributes | Where-Object -FilterScript { $_.Oid.Value -eq '1.3.6.1.4.1.311.2.4.1' }
                 if ($second) {
                     # If there is a nested signature attribute
                     # Get the value of the nested signature attribute as a raw data byte array
-                    $value = $second.Values | Where-Object { $_.Oid.Value -eq '1.3.6.1.4.1.311.2.4.1' }
+                    $value = $second.Values | Where-Object -FilterScript { $_.Oid.Value -eq '1.3.6.1.4.1.311.2.4.1' }
                     $SignedCms2 = New-Object Security.Cryptography.Pkcs.SignedCms # Create another SignedCms object to decode the nested signature data
                     $SignedCms2.Decode($value.RawData) # Decode the nested signature data and populate the SignedCms object properties
                     $Output | Add-Member -MemberType NoteProperty -Name NestedSignature -Value $null
@@ -297,11 +297,11 @@ function Get-CertificateDetails {
 
     if ($FilePath) {
         # Get all the certificates from the file path using the Get-SignedFileCertificates function
-        $CertCollection = Get-SignedFileCertificates -FilePath $FilePath | Where-Object { $_.EnhancedKeyUsageList.FriendlyName -ne 'Time Stamping' }
+        $CertCollection = Get-SignedFileCertificates -FilePath $FilePath | Where-Object -FilterScript { $_.EnhancedKeyUsageList.FriendlyName -ne 'Time Stamping' }
     }
     else {
-        # The "| Where-Object {$_ -ne 0}" part is used to filter the output coming from Get-AuthenticodeSignatureEx function that gets nested certificate
-        $CertCollection = Get-SignedFileCertificates -X509Certificate2 $X509Certificate2 | Where-Object { $_.EnhancedKeyUsageList.FriendlyName -ne 'Time Stamping' } | Where-Object { $_ -ne 0 }
+        # The "| Where-Object -FilterScript {$_ -ne 0}" part is used to filter the output coming from Get-AuthenticodeSignatureEx function that gets nested certificate
+        $CertCollection = Get-SignedFileCertificates -X509Certificate2 $X509Certificate2 | Where-Object -FilterScript { $_.EnhancedKeyUsageList.FriendlyName -ne 'Time Stamping' } | Where-Object -FilterScript { $_ -ne 0 }
     }
 
     # Loop through each certificate in the collection and call this function recursively with the certificate object as an input
@@ -358,8 +358,8 @@ function Get-CertificateDetails {
         if ($IntermediateOnly) {
 
             $FinalObj = $Obj |
-            Where-Object { $_.SubjectCN -ne $_.IssuerCN } | # To omit Root certificate from the result
-            Where-Object { $_.SubjectCN -ne $TestAgainst } | # To omit the Leaf certificate
+            Where-Object -FilterScript { $_.SubjectCN -ne $_.IssuerCN } | # To omit Root certificate from the result
+            Where-Object -FilterScript { $_.SubjectCN -ne $TestAgainst } | # To omit the Leaf certificate
             Group-Object -Property TBSValue | ForEach-Object -Process { $_.Group[0] } # To make sure the output values are unique based on TBSValue property
 
             return $FinalObj
@@ -368,8 +368,8 @@ function Get-CertificateDetails {
         elseif ($LeafCertificate) {
 
             $FinalObj = $Obj |
-            Where-Object { $_.SubjectCN -ne $_.IssuerCN } | # To omit Root certificate from the result
-            Where-Object { $_.SubjectCN -eq $TestAgainst } | # To get the Leaf certificate
+            Where-Object -FilterScript { $_.SubjectCN -ne $_.IssuerCN } | # To omit Root certificate from the result
+            Where-Object -FilterScript { $_.SubjectCN -eq $TestAgainst } | # To get the Leaf certificate
             Group-Object -Property TBSValue | ForEach-Object -Process { $_.Group[0] } # To make sure the output values are unique based on TBSValue property
 
             return $FinalObj
@@ -382,8 +382,8 @@ function Get-CertificateDetails {
         if ($IntermediateOnly) {
 
             $FinalObj = $Obj |
-            Where-Object { $_.SubjectCN -ne $_.IssuerCN } | # To omit Root certificate from the result
-            Where-Object { $_.SubjectCN -ne $LeafCNOfTheNestedCertificate } | # To omit the Leaf certificate
+            Where-Object -FilterScript { $_.SubjectCN -ne $_.IssuerCN } | # To omit Root certificate from the result
+            Where-Object -FilterScript { $_.SubjectCN -ne $LeafCNOfTheNestedCertificate } | # To omit the Leaf certificate
             Group-Object -Property TBSValue | ForEach-Object -Process { $_.Group[0] } # To make sure the output values are unique based on TBSValue property
 
             return $FinalObj
@@ -392,8 +392,8 @@ function Get-CertificateDetails {
         elseif ($LeafCertificate) {
 
             $FinalObj = $Obj |
-            Where-Object { $_.SubjectCN -ne $_.IssuerCN } | # To omit Root certificate from the result
-            Where-Object { $_.SubjectCN -eq $LeafCNOfTheNestedCertificate } | # To get the Leaf certificate
+            Where-Object -FilterScript { $_.SubjectCN -ne $_.IssuerCN } | # To omit Root certificate from the result
+            Where-Object -FilterScript { $_.SubjectCN -eq $LeafCNOfTheNestedCertificate } | # To get the Leaf certificate
             Group-Object -Property TBSValue | ForEach-Object -Process { $_.Group[0] } # To make sure the output values are unique based on TBSValue property
 
             return $FinalObj
@@ -736,7 +736,7 @@ function Get-FileRuleOutput ($xmlPath) {
     }
 
     # Only show the Authenticode Hash SHA256
-    $OutPutHashInfoProcessing = $OutPutHashInfoProcessing | Where-Object { $_.hashtype -eq 'Hash Sha256' }
+    $OutPutHashInfoProcessing = $OutPutHashInfoProcessing | Where-Object -FilterScript { $_.hashtype -eq 'Hash Sha256' }
 
     # Return the output array
     return $OutPutHashInfoProcessing

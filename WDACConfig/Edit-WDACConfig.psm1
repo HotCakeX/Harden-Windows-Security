@@ -31,7 +31,7 @@ function Edit-WDACConfig {
                     $RedFlag1 = $xmlTest.SiPolicy.SupplementalPolicySigners.SupplementalPolicySigner.SignerId
                     $RedFlag2 = $xmlTest.SiPolicy.UpdatePolicySigners.UpdatePolicySigner.SignerId
                     $RedFlag3 = $xmlTest.SiPolicy.PolicyID
-                    $CurrentPolicyIDs = ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsSystemPolicy -ne 'True' }).policyID | ForEach-Object -Process { "{$_}" }
+                    $CurrentPolicyIDs = ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { $_.IsSystemPolicy -ne 'True' }).policyID | ForEach-Object -Process { "{$_}" }
                     if (!$RedFlag1 -and !$RedFlag2) {
                         # Ensure the selected base policy xml file is deployed
                         if ($CurrentPolicyIDs -contains $RedFlag3) {
@@ -153,7 +153,7 @@ function Edit-WDACConfig {
         # argument tab auto-completion and ValidateSet for Policy names 
         Class BasePolicyNamez : System.Management.Automation.IValidateSetValuesGenerator {
             [System.String[]] GetValidValues() {
-                $BasePolicyNamez = ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsSystemPolicy -ne 'True' } | Where-Object { $_.PolicyID -eq $_.BasePolicyID }).Friendlyname
+                $BasePolicyNamez = ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { $_.IsSystemPolicy -ne 'True' } | Where-Object -FilterScript { $_.PolicyID -eq $_.BasePolicyID }).Friendlyname
            
                 return [System.String[]]$BasePolicyNamez
             }
@@ -210,7 +210,7 @@ function Edit-WDACConfig {
                 # Defining Base policy
                 $xml = [System.Xml.XmlDocument](Get-Content $PolicyPath)            
                 [System.String]$PolicyID = $xml.SiPolicy.PolicyID
-                [System.String]$PolicyName = ($xml.SiPolicy.Settings.Setting | Where-Object { $_.provider -eq 'PolicyInfo' -and $_.valuename -eq 'Name' -and $_.key -eq 'Information' }).value.string
+                [System.String]$PolicyName = ($xml.SiPolicy.Settings.Setting | Where-Object -FilterScript { $_.provider -eq 'PolicyInfo' -and $_.valuename -eq 'Name' -and $_.key -eq 'Information' }).value.string
     
                 # Remove any cip file if there is any
                 Remove-Item -Path '.\*.cip' -Force -ErrorAction SilentlyContinue
@@ -355,7 +355,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                 }            
     
                 # merge-cipolicy accept arrays - collecting all the policy files created by scanning user specified folders
-                $ProgramDir_ScanResults = Get-ChildItem '.\' | Where-Object { $_.Name -like 'ProgramDir_ScanResults*.xml' }                
+                $ProgramDir_ScanResults = Get-ChildItem '.\' | Where-Object -FilterScript { $_.Name -like 'ProgramDir_ScanResults*.xml' }                
                 foreach ($file in $ProgramDir_ScanResults) {
                     $PolicyXMLFilesArray += $file.FullName
                 }
@@ -414,7 +414,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                 # Defining Base policy
                 $xml = [System.Xml.XmlDocument](Get-Content $PolicyPath)            
                 [System.String]$PolicyID = $xml.SiPolicy.PolicyID
-                [System.String]$PolicyName = ($xml.SiPolicy.Settings.Setting | Where-Object { $_.provider -eq 'PolicyInfo' -and $_.valuename -eq 'Name' -and $_.key -eq 'Information' }).value.string
+                [System.String]$PolicyName = ($xml.SiPolicy.Settings.Setting | Where-Object -FilterScript { $_.provider -eq 'PolicyInfo' -and $_.valuename -eq 'Name' -and $_.key -eq 'Information' }).value.string
 
                 # Remove any cip file if there is any
                 Remove-Item -Path '.\*.cip' -Force -ErrorAction SilentlyContinue                
@@ -580,7 +580,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                     }            
 
                     # Merge-cipolicy accept arrays - collecting all the policy files created by scanning user specified folders
-                    $ProgramDir_ScanResults = Get-ChildItem '.\' | Where-Object { $_.Name -like 'ProgramDir_ScanResults*.xml' }                
+                    $ProgramDir_ScanResults = Get-ChildItem '.\' | Where-Object -FilterScript { $_.Name -like 'ProgramDir_ScanResults*.xml' }                
                     foreach ($file in $ProgramDir_ScanResults) {
                         $PolicyXMLFilesArray += $file.FullName
                     }
@@ -619,7 +619,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                         if ($Debug) { $ExesWithNoHash | ForEach-Object -Process { Write-Debug -Message "$_" } }
                                                          
                         [System.Management.Automation.ScriptBlock]$KernelProtectedHashesBlock = {
-                            foreach ($event in Get-WinEvent -FilterHashtable @{LogName = 'Microsoft-Windows-CodeIntegrity/Operational'; ID = 3076 } -ErrorAction SilentlyContinue | Where-Object { $_.TimeCreated -ge $Date } ) {
+                            foreach ($event in Get-WinEvent -FilterHashtable @{LogName = 'Microsoft-Windows-CodeIntegrity/Operational'; ID = 3076 } -ErrorAction SilentlyContinue | Where-Object -FilterScript { $_.TimeCreated -ge $Date } ) {
                                 $xml = [System.Xml.XmlDocument]$event.toxml()
                                 $xml.event.eventdata.data |
                                 ForEach-Object -Begin { $Hash = @{} } -Process { $hash[$_.name] = $_.'#text' } -End { [pscustomobject]$hash } |
@@ -627,7 +627,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                                     if ($_.'File Name' -match ($pattern = '\\Device\\HarddiskVolume(\d+)\\(.*)$')) {
                                         $hardDiskVolumeNumber = $Matches[1]
                                         $remainingPath = $Matches[2]
-                                        $getletter = $DriveLettersGlobalRootFix | Where-Object { $_.devicepath -eq "\Device\HarddiskVolume$hardDiskVolumeNumber" }
+                                        $getletter = $DriveLettersGlobalRootFix | Where-Object -FilterScript { $_.devicepath -eq "\Device\HarddiskVolume$hardDiskVolumeNumber" }
                                         $usablePath = "$($getletter.DriveLetter)$remainingPath"
                                         $_.'File Name' = $_.'File Name' -replace $pattern, $usablePath
                                     } # Check if file is currently on the disk
@@ -808,7 +808,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
             Remove-Item '.\Microsoft recommended block rules.xml' -Force
 
             # Get the policy ID of the currently deployed base policy based on the policy name that user selected
-            $CurrentID = ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object { $_.IsSystemPolicy -ne 'True' } | Where-Object { $_.Friendlyname -eq $CurrentBasePolicyName }).BasePolicyID
+            $CurrentID = ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { $_.IsSystemPolicy -ne 'True' } | Where-Object -FilterScript { $_.Friendlyname -eq $CurrentBasePolicyName }).BasePolicyID
             $CurrentID = "{$CurrentID}"
             Write-Debug -Message "This is the current ID of deployed base policy that is going to be used in the new base policy: $CurrentID"
             [System.Xml.XmlDocument]$xml = Get-Content '.\BasePolicy.xml'        

@@ -1,0 +1,31 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"powershell.codeFormatting.autoCorrectAliases": true,
+		"powershell.codeFormatting.avoidSemicolonsAsLineTerminators": true,
+		"powershell.codeFormatting.trimWhitespaceAroundPipe": true,
+		"powershell.codeFormatting.useConstantStrings": true,
+		"powershell.codeFormatting.useCorrectCasing": true,
+		"powershell.codeFormatting.whitespaceBetweenParameters": true
+	},
+	"extensions": {
+		"recommendations": [
+			"ms-vscode.powershell"
+		]
+	},
+	"launch": {
+		"version": "0.2.0",
+		"configurations": [
+			{
+				"name": "Debug",
+				"request": "launch",
+				"type": "PowerShell",
+				"script": "${workspaceFolder}/Utilities/Invoke-WDACConfig.ps1"
+			}
+		]
+	}
+}

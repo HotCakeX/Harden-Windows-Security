@@ -28,7 +28,7 @@ function Remove-WDACConfig {
         [ValidateScript({
                 [System.String[]]$Certificates = foreach ($Cert in (Get-ChildItem -Path 'Cert:\CurrentUser\my')) {
                 (($Cert.Subject -split ',' | Select-Object -First 1) -replace 'CN=', '').Trim()
-                } 
+                }
                 $Certificates -contains $_
             }, ErrorMessage = "A certificate with the provided common name doesn't exist in the personal store of the user certificates." )]
         [parameter(Mandatory = $false, ParameterSetName = 'Signed Base', ValueFromPipelineByPropertyName = $true)]
@@ -106,7 +106,7 @@ function Remove-WDACConfig {
                 $true
             })]
         [Parameter(Mandatory = $false, ParameterSetName = 'Unsigned Or Supplemental')]
-        [System.String[]]$PolicyIDs,        
+        [System.String[]]$PolicyIDs,
 
         [parameter(Mandatory = $false, ParameterSetName = 'Signed Base', ValueFromPipelineByPropertyName = $true)]
         [System.String]$SignToolPath,
@@ -122,8 +122,8 @@ function Remove-WDACConfig {
         $ErrorActionPreference = 'Stop'
         if (-NOT $SkipVersionCheck) { . Update-self }
         # Detecting if Debug switch is used, will do debugging actions based on that
-        $Debug = $PSBoundParameters.Debug.IsPresent     
-        
+        $Debug = $PSBoundParameters.Debug.IsPresent
+
         # Fetch User account directory path
         [System.String]$global:UserAccountDirectoryPath = (Get-CimInstance Win32_UserProfile -Filter "SID = '$([System.Security.Principal.WindowsIdentity]::GetCurrent().User.Value)'").LocalPath
 
@@ -132,26 +132,26 @@ function Remove-WDACConfig {
             # If any of these parameters, that are mandatory for all of the position 0 parameters, isn't supplied by user
             if (!$SignToolPath -or !$CertCN) {
                 # Read User configuration file if it exists
-                $UserConfig = Get-Content -Path "$global:UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json" -ErrorAction SilentlyContinue   
+                $UserConfig = Get-Content -Path "$global:UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json" -ErrorAction SilentlyContinue
                 if ($UserConfig) {
                     # Validate the Json file and read its content to make sure it's not corrupted
                     try { $UserConfig = $UserConfig | ConvertFrom-Json }
-                    catch {            
+                    catch {
                         Write-Error 'User Configuration Json file is corrupted, deleting it...' -ErrorAction Continue
                         # Calling this function with this parameter automatically does its job and breaks/stops the operation
-                        Set-CommonWDACConfig -DeleteUserConfig         
-                    }                
+                        Set-CommonWDACConfig -DeleteUserConfig
+                    }
                 }
             }
-        
+
             # Get SignToolPath from user parameter or user config file or auto-detect it
             if ($SignToolPath) {
                 $SignToolPathFinal = Get-SignTool -SignToolExePath $SignToolPath
             } # If it is null, then Get-SignTool will behave the same as if it was called without any arguments.
             else {
                 $SignToolPathFinal = Get-SignTool -SignToolExePath ($UserConfig.SignToolCustomPath ?? $null)
-            }            
-                     
+            }
+
             # If CertCN was not provided by user
             if (!$CertCN) {
                 if ($UserConfig.CertificateCommonName) {
@@ -167,11 +167,11 @@ function Remove-WDACConfig {
                 else {
                     throw "CertCN parameter can't be empty and no valid configuration was found for it."
                 }
-            }        
+            }
         }
         #endregion User-Configurations-Processing-Validation
 
-        # ValidateSet for Policy names 
+        # ValidateSet for Policy names
         Class PolicyNamezx : System.Management.Automation.IValidateSetValuesGenerator {
             [System.String[]] GetValidValues() {
                 $PolicyNamezx = ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { $_.IsOnDisk -eq 'True' } | Where-Object -FilterScript { $_.IsSystemPolicy -ne 'True' }).Friendlyname | Select-Object -Unique
@@ -179,14 +179,14 @@ function Remove-WDACConfig {
             }
         }
 
-        # ValidateSet for Policy IDs     
+        # ValidateSet for Policy IDs
         Class PolicyIDzx : System.Management.Automation.IValidateSetValuesGenerator {
             [System.String[]] GetValidValues() {
                 $PolicyIDzx = ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { $_.IsOnDisk -eq 'True' } | Where-Object -FilterScript { $_.IsSystemPolicy -ne 'True' }).policyID
-   
+
                 return [System.String[]]$PolicyIDzx
             }
-        }    
+        }
 
 
         # argument tab auto-completion and ValidateSet for Policy names
@@ -282,13 +282,13 @@ function Remove-WDACConfig {
                     'Wait'         = $true
                     'ErrorAction'  = 'Stop'
                 }
-                if (!$Debug) { $ProcessParams['RedirectStandardOutput'] = 'NUL' } 
+                if (!$Debug) { $ProcessParams['RedirectStandardOutput'] = 'NUL' }
                 # Sign the files with the specified cert
                 Start-Process @ProcessParams
 
                 Remove-Item -Path ".\$PolicyID.cip" -Force
                 Rename-Item -Path "$PolicyID.cip.p7" -NewName "$PolicyID.cip" -Force
-                CiTool --update-policy ".\$PolicyID.cip" -json | Out-Null 
+                CiTool --update-policy ".\$PolicyID.cip" -json | Out-Null
                 Write-Host -Object "`nPolicy with the following details has been Re-signed and Re-deployed in Unsigned mode.`nPlease restart your system." -ForegroundColor Green
                 Write-Output -InputObject "PolicyName = $PolicyName"
                 Write-Output -InputObject "PolicyGUID = $PolicyID`n"
@@ -299,8 +299,8 @@ function Remove-WDACConfig {
 
             # If IDs were supplied by user
             foreach ($ID in $PolicyIDs ) {
-                citool --remove-policy "{$ID}" -json | Out-Null                
-                Write-Host -Object "Policy with the ID $ID has been successfully removed." -ForegroundColor Green                
+                citool --remove-policy "{$ID}" -json | Out-Null
+                Write-Host -Object "Policy with the ID $ID has been successfully removed." -ForegroundColor Green
             }
 
             # If names were supplied by user
@@ -314,8 +314,8 @@ function Remove-WDACConfig {
             if ($Debug) { $NameID | Select-Object -Unique | ForEach-Object -Process { Write-Debug -Message "$_" } }
 
             $NameID | Select-Object -Unique | ForEach-Object -Process {
-                citool --remove-policy "{$_}" -json | Out-Null               
-                Write-Host -Object "Policy with the ID $_ has been successfully removed." -ForegroundColor Green                
+                citool --remove-policy "{$_}" -json | Out-Null
+                Write-Host -Object "Policy with the ID $_ has been successfully removed." -ForegroundColor Green
             }
         }
     }

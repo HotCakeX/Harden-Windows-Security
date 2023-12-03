@@ -171,7 +171,7 @@ To get help and syntax on PowerShell console, type:
 
     # List of all files packaged with this module
     FileList             = @('WDACConfig.psd1',
-        'New-WDACConfig.psm1',        
+        'New-WDACConfig.psm1',
         'Deploy-SignedWDACConfig.psm1',
         'Remove-WDACConfig.psm1',
         'Confirm-WDACConfig.psm1',

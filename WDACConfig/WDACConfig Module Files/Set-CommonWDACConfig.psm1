@@ -1,11 +1,11 @@
 #Requires -RunAsAdministrator
 function Set-CommonWDACConfig {
     [CmdletBinding()]
-    Param(       
+    Param(
         [ValidateScript({
             [System.String[]]$Certificates = foreach ($cert in (Get-ChildItem -Path 'Cert:\CurrentUser\my')) {
             (($cert.Subject -split ',' | Select-Object -First 1) -replace 'CN=', '').Trim()
-                } 
+                }
                 $Certificates -contains $_
             }, ErrorMessage = "A certificate with the provided common name doesn't exist in the personal store of the user certificates." )]
         [parameter(Mandatory = $false)][System.String]$CertCN,
@@ -20,28 +20,28 @@ function Set-CommonWDACConfig {
 
         [ValidatePattern('\.xml$')]
         [ValidateScript({
-                $_ | ForEach-Object -Process {                   
+                $_ | ForEach-Object -Process {
                     $xmlTest = [System.Xml.XmlDocument](Get-Content -Path $_)
                     $RedFlag1 = $xmlTest.SiPolicy.SupplementalPolicySigners.SupplementalPolicySigner.SignerId
-                    $RedFlag2 = $xmlTest.SiPolicy.UpdatePolicySigners.UpdatePolicySigner.SignerId                   
-                    if (!$RedFlag1 -and !$RedFlag2) {                      
+                    $RedFlag2 = $xmlTest.SiPolicy.UpdatePolicySigners.UpdatePolicySigner.SignerId
+                    if (!$RedFlag1 -and !$RedFlag2) {
                         return $True
-                    }                   
-                    else { throw 'The selected policy xml file is Signed, Please select an Unsigned policy.' }                        
+                    }
+                    else { throw 'The selected policy xml file is Signed, Please select an Unsigned policy.' }
                 }
             }, ErrorMessage = 'The selected policy xml file is Signed, Please select an Unsigned policy.')]
         [parameter(Mandatory = $false)][System.String]$UnsignedPolicyPath,
 
         [ValidatePattern('\.xml$')]
-        [ValidateScript({               
-                $_ | ForEach-Object -Process {                   
+        [ValidateScript({
+                $_ | ForEach-Object -Process {
                     $xmlTest = [System.Xml.XmlDocument](Get-Content -Path $_)
                     $RedFlag1 = $xmlTest.SiPolicy.SupplementalPolicySigners.SupplementalPolicySigner.SignerId
-                    $RedFlag2 = $xmlTest.SiPolicy.UpdatePolicySigners.UpdatePolicySigner.SignerId                    
-                    if ($RedFlag1 -or $RedFlag2) {                          
-                        return $True                       
-                    }                    
-                    else { throw 'The selected policy xml file is Unsigned, Please select a Signed policy.' }               
+                    $RedFlag2 = $xmlTest.SiPolicy.UpdatePolicySigners.UpdatePolicySigner.SignerId
+                    if ($RedFlag1 -or $RedFlag2) {
+                        return $True
+                    }
+                    else { throw 'The selected policy xml file is Unsigned, Please select a Signed policy.' }
                 }
             }, ErrorMessage = 'The selected policy xml file is Unsigned, Please select a Signed policy.')]
         [parameter(Mandatory = $false)][System.String]$SignedPolicyPath,
@@ -55,9 +55,9 @@ function Set-CommonWDACConfig {
     begin {
         # Importing resources such as functions by dot-sourcing so that they will run in the same scope and their variables will be usable
         . "$psscriptroot\Resources.ps1"
-        
+
         # Stop operation as soon as there is an error anywhere, unless explicitly specified otherwise
-        $ErrorActionPreference = 'Stop'        
+        $ErrorActionPreference = 'Stop'
 
         # Fetch User account directory path
         [System.String]$global:UserAccountDirectoryPath = (Get-CimInstance Win32_UserProfile -Filter "SID = '$([System.Security.Principal.WindowsIdentity]::GetCurrent().User.Value)'").LocalPath
@@ -69,11 +69,11 @@ function Set-CommonWDACConfig {
         }
 
         # Create User configuration file if it doesn't already exist
-        if (-NOT (Test-Path -Path "$global:UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json")) { 
+        if (-NOT (Test-Path -Path "$global:UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json")) {
             New-Item -ItemType File -Path "$global:UserAccountDirectoryPath\.WDACConfig\" -Name 'UserConfigurations.json' -Force -ErrorAction Stop | Out-Null
             Write-Debug -Message "The UserConfigurations.json file in \.WDACConfig\ folder has been created because it didn't exist."
-        }      
-        
+        }
+
         if ($PSBoundParameters.Count -eq 0) {
             Write-Error 'No parameter was selected.'
             break
@@ -133,7 +133,7 @@ function Set-CommonWDACConfig {
 
         if ($CertCN) {
             $UserConfigurationsObject.CertificateCommonName = $CertCN
-        }        
+        }
         else {
             $UserConfigurationsObject.CertificateCommonName = $CurrentUserConfigurations.CertificateCommonName
         }
@@ -161,7 +161,7 @@ function Set-CommonWDACConfig {
     }
     end {
         # Update the User Configurations file
-        $UserConfigurationsObject | ConvertTo-Json | Set-Content "$global:UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json"                
+        $UserConfigurationsObject | ConvertTo-Json | Set-Content "$global:UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json"
         &$WritePink "`nThis is your new WDAC User Configurations: "
         Get-Content -Path "$global:UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json" | ConvertFrom-Json | Format-List *
     }

@@ -19,7 +19,7 @@ function Deploy-SignedWDACConfig {
         [ValidateScript({
             [System.String[]]$Certificates = foreach ($Cert in (Get-ChildItem -Path 'Cert:\CurrentUser\my')) {
                 (($Cert.Subject -split ',' | Select-Object -First 1) -replace 'CN=', '').Trim()
-                } 
+                }
                 $Certificates -contains $_
             }, ErrorMessage = "A certificate with the provided common name doesn't exist in the personal store of the user certificates." )]
         [parameter(Mandatory = $false, ValueFromPipelineByPropertyName = $true)][System.String]$CertCN,

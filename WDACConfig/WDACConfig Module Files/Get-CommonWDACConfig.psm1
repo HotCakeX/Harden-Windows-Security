@@ -1,21 +1,21 @@
 #Requires -RunAsAdministrator
 function Get-CommonWDACConfig {
     [CmdletBinding()]
-    Param(       
+    Param(
         [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$CertCN,
         [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$CertPath,
         [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SignToolPath,
         [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SignedPolicyPath,
         [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$UnsignedPolicyPath,
         [parameter(Mandatory = $false, DontShow = $true)][System.Management.Automation.SwitchParameter]$StrictKernelPolicyGUID, # DontShow prevents common parameters from being displayed too
-        [parameter(Mandatory = $false, DontShow = $true)][System.Management.Automation.SwitchParameter]$StrictKernelNoFlightRootsPolicyGUID,        
+        [parameter(Mandatory = $false, DontShow = $true)][System.Management.Automation.SwitchParameter]$StrictKernelNoFlightRootsPolicyGUID,
         [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$Open,
         [parameter(Mandatory = $false, DontShow = $true)][System.Management.Automation.SwitchParameter]$LastUpdateCheck
     )
     begin {
         # Importing resources such as functions by dot-sourcing so that they will run in the same scope and their variables will be usable
         . "$psscriptroot\Resources.ps1"
-        
+
         # Stop operation as soon as there is an error anywhere, unless explicitly specified otherwise
         $ErrorActionPreference = 'Stop'
 
@@ -27,17 +27,17 @@ function Get-CommonWDACConfig {
             New-Item -ItemType Directory -Path "$global:UserAccountDirectoryPath\.WDACConfig\" -Force -ErrorAction Stop | Out-Null
             Write-Debug -Message "The .WDACConfig folder in current user's folder has been created because it didn't exist."
         }
-        
+
         # Create User configuration file if it doesn't already exist
-        if (-NOT (Test-Path -Path "$global:UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json")) { 
+        if (-NOT (Test-Path -Path "$global:UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json")) {
             New-Item -ItemType File -Path "$global:UserAccountDirectoryPath\.WDACConfig\" -Name 'UserConfigurations.json' -Force -ErrorAction Stop | Out-Null
             Write-Debug -Message "The UserConfigurations.json file in \.WDACConfig\ folder has been created because it didn't exist."
         }
-                
-        if ($Open) {        
+
+        if ($Open) {
             . "$global:UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json"
             break
-        }        
+        }
 
         if ($PSBoundParameters.Count -eq 0) {
             # Display this message if User Configuration file is empty
@@ -47,7 +47,7 @@ function Get-CommonWDACConfig {
             # Display this message if User Configuration file has content
             else {
                 &$WritePink "`nThis is your current WDAC User Configurations: "
-                Get-Content -Path "$global:UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json" | ConvertFrom-Json | Format-List *                
+                Get-Content -Path "$global:UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json" | ConvertFrom-Json | Format-List *
             }
             break
         }
@@ -61,7 +61,7 @@ function Get-CommonWDACConfig {
         catch {
             Write-Warning 'The UserConfigurations.json was corrupted, clearing it.'
             Set-Content -Path "$global:UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json" -Value ''
-        }        
+        }
     }
 
     process {}
@@ -73,7 +73,7 @@ function Get-CommonWDACConfig {
             $UnsignedPolicyPath.IsPresent { Write-Output -InputObject $CurrentUserConfigurations.UnsignedPolicyPath }
             $SignToolPath.IsPresent { Write-Output -InputObject $CurrentUserConfigurations.SignToolCustomPath }
             $CertCN.IsPresent { Write-Output -InputObject $CurrentUserConfigurations.CertificateCommonName }
-            $StrictKernelPolicyGUID.IsPresent { Write-Output -InputObject $CurrentUserConfigurations.StrictKernelPolicyGUID }            
+            $StrictKernelPolicyGUID.IsPresent { Write-Output -InputObject $CurrentUserConfigurations.StrictKernelPolicyGUID }
             $StrictKernelNoFlightRootsPolicyGUID.IsPresent { Write-Output -InputObject $CurrentUserConfigurations.StrictKernelNoFlightRootsPolicyGUID }
             $CertPath.IsPresent { Write-Output -InputObject $CurrentUserConfigurations.CertificatePath }
             $LastUpdateCheck.IsPresent { Write-Output -InputObject $CurrentUserConfigurations.LastUpdateCheck }

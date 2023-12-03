@@ -21,12 +21,12 @@ function Edit-WDACConfig {
         [Parameter(Mandatory = $true, ParameterSetName = 'Allow New Apps', ValueFromPipelineByPropertyName = $true)]
         [Parameter(Mandatory = $true, ParameterSetName = 'Merge Supplemental Policies', ValueFromPipelineByPropertyName = $true)]
         [System.String]$SuppPolicyName,
-        
+
         [ValidatePattern('\.xml$')]
         [ValidateScript({
                 # Validate each Policy file in PolicyPaths parameter to make sure the user isn't accidentally trying to
                 # Edit a Signed policy using Edit-WDACConfig cmdlet which is only made for Unsigned policies
-                $_ | ForEach-Object -Process {                   
+                $_ | ForEach-Object -Process {
                     $xmlTest = [System.Xml.XmlDocument](Get-Content -Path $_)
                     $RedFlag1 = $xmlTest.SiPolicy.SupplementalPolicySigners.SupplementalPolicySigner.SignerId
                     $RedFlag2 = $xmlTest.SiPolicy.UpdatePolicySigners.UpdatePolicySigner.SignerId
@@ -35,13 +35,13 @@ function Edit-WDACConfig {
                     if (!$RedFlag1 -and !$RedFlag2) {
                         # Ensure the selected base policy xml file is deployed
                         if ($CurrentPolicyIDs -contains $RedFlag3) {
-                            return $True 
+                            return $True
                         }
                         else { throw "The currently selected policy xml file isn't deployed." }
                     }
                     # This throw is shown only when User added a Signed policy xml file for Unsigned policy file path property in user configuration file
                     # Without this, the error shown would be vague: The variable cannot be validated because the value System.String[] is not a valid value for the PolicyPaths variable.
-                    else { throw 'The policy xml file in User Configurations for UnsignedPolicyPath is a Signed policy.' }                        
+                    else { throw 'The policy xml file in User Configurations for UnsignedPolicyPath is a Signed policy.' }
                 }
             }, ErrorMessage = 'The selected policy xml file is Signed. Please use Edit-SignedWDACConfig cmdlet to edit Signed policies.')]
         [Parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps Audit Events', ValueFromPipelineByPropertyName = $true)]
@@ -50,7 +50,7 @@ function Edit-WDACConfig {
         [System.String[]]$PolicyPaths,
 
         [ValidatePattern('\.xml$')]
-        [ValidateScript({ Test-Path -Path $_ -PathType 'Leaf' }, ErrorMessage = 'The path you selected is not a file path.')]      
+        [ValidateScript({ Test-Path -Path $_ -PathType 'Leaf' }, ErrorMessage = 'The path you selected is not a file path.')]
         [Parameter(Mandatory = $true, ParameterSetName = 'Merge Supplemental Policies', ValueFromPipelineByPropertyName = $true)]
         [System.String[]]$SuppPolicyPaths,
 
@@ -74,7 +74,7 @@ function Edit-WDACConfig {
         [parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps Audit Events')]
         [parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps')]
         [System.Management.Automation.SwitchParameter]$NoUserPEs,
-       
+
         [ValidateSet('OriginalFileName', 'InternalName', 'FileDescription', 'ProductName', 'PackageFamilyName', 'FilePath')]
         [parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps Audit Events')]
         [parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps')]
@@ -103,8 +103,8 @@ function Edit-WDACConfig {
         . "$psscriptroot\Resources.ps1"
 
         # Stop operation as soon as there is an error anywhere, unless explicitly specified otherwise
-        $ErrorActionPreference = 'Stop'         
-        if (-NOT $SkipVersionCheck) { . Update-self } 
+        $ErrorActionPreference = 'Stop'
+        if (-NOT $SkipVersionCheck) { . Update-self }
 
         # Fetching Temp Directory
         [System.String]$global:UserTempDirectoryPath = [System.IO.Path]::GetTempPath()
@@ -116,24 +116,24 @@ function Edit-WDACConfig {
         $Debug = $PSBoundParameters.Debug.IsPresent
 
         #region User-Configurations-Processing-Validation
-        # make sure the ParameterSet being used has PolicyPaths parameter - Then enforces "mandatory" attribute for the parameter          
+        # make sure the ParameterSet being used has PolicyPaths parameter - Then enforces "mandatory" attribute for the parameter
         if ($PSCmdlet.ParameterSetName -in 'Allow New Apps Audit Events', 'Allow New Apps', 'Merge Supplemental Policies') {
             # If any of these parameters, that are mandatory for all of the position 0 parameters, isn't supplied by user
             if (!$PolicyPaths) {
                 # Read User configuration file if it exists
-                $UserConfig = Get-Content -Path "$global:UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json" -ErrorAction SilentlyContinue   
+                $UserConfig = Get-Content -Path "$global:UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json" -ErrorAction SilentlyContinue
                 if ($UserConfig) {
                     # Validate the Json file and read its content to make sure it's not corrupted
                     try { $UserConfig = $UserConfig | ConvertFrom-Json }
-                    catch {            
+                    catch {
                         Write-Error 'User Configuration Json file is corrupted, deleting it...' -ErrorAction Continue
                         # Calling this function with this parameter automatically does its job and breaks/stops the operation
-                        Set-CommonWDACConfig -DeleteUserConfig         
-                    }                
+                        Set-CommonWDACConfig -DeleteUserConfig
+                    }
                 }
             }
             # If PolicyPaths has no values
-            if (!$PolicyPaths) {            
+            if (!$PolicyPaths) {
                 if ($UserConfig.UnsignedPolicyPath) {
                     # validate each policyPath read from user config file
                     if (Test-Path -Path $($UserConfig.UnsignedPolicyPath)) {
@@ -141,20 +141,20 @@ function Edit-WDACConfig {
                     }
                     else {
                         throw 'The currently saved value for UnsignedPolicyPath in user configurations is invalid.'
-                    }           
+                    }
                 }
                 else {
                     throw "PolicyPaths parameter can't be empty and no valid configuration was found for UnsignedPolicyPath."
                 }
             }
-        }        
+        }
         #endregion User-Configurations-Processing-Validation
 
-        # argument tab auto-completion and ValidateSet for Policy names 
+        # argument tab auto-completion and ValidateSet for Policy names
         Class BasePolicyNamez : System.Management.Automation.IValidateSetValuesGenerator {
             [System.String[]] GetValidValues() {
                 $BasePolicyNamez = ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { $_.IsSystemPolicy -ne 'True' } | Where-Object -FilterScript { $_.PolicyID -eq $_.BasePolicyID }).Friendlyname
-           
+
                 return [System.String[]]$BasePolicyNamez
             }
         }
@@ -162,7 +162,7 @@ function Edit-WDACConfig {
         # argument tab auto-completion and ValidateSet for Fallbacks
         Class Fallbackz : System.Management.Automation.IValidateSetValuesGenerator {
             [System.String[]] GetValidValues() {
-                $Fallbackz = ('Hash', 'FileName', 'SignedVersion', 'Publisher', 'FilePublisher', 'LeafCertificate', 'PcaCertificate', 'RootCertificate', 'WHQL', 'WHQLPublisher', 'WHQLFilePublisher', 'PFN', 'FilePath', 'None')   
+                $Fallbackz = ('Hash', 'FileName', 'SignedVersion', 'Publisher', 'FilePublisher', 'LeafCertificate', 'PcaCertificate', 'RootCertificate', 'WHQL', 'WHQLPublisher', 'WHQLFilePublisher', 'PFN', 'FilePath', 'None')
                 return [System.String[]]$Fallbackz
             }
         }
@@ -170,70 +170,70 @@ function Edit-WDACConfig {
         # argument tab auto-completion and ValidateSet for level
         Class Levelz : System.Management.Automation.IValidateSetValuesGenerator {
             [System.String[]] GetValidValues() {
-                $Levelz = ('Hash', 'FileName', 'SignedVersion', 'Publisher', 'FilePublisher', 'LeafCertificate', 'PcaCertificate', 'RootCertificate', 'WHQL', 'WHQLPublisher', 'WHQLFilePublisher', 'PFN', 'FilePath', 'None')       
+                $Levelz = ('Hash', 'FileName', 'SignedVersion', 'Publisher', 'FilePublisher', 'LeafCertificate', 'PcaCertificate', 'RootCertificate', 'WHQL', 'WHQLPublisher', 'WHQLFilePublisher', 'PFN', 'FilePath', 'None')
                 return [System.String[]]$Levelz
             }
         }
 
         # Redeploy the base policy in Enforced mode
         function Update-BasePolicyToEnforced {
-            # Deploy Enforced mode CIP            
-            CiTool --update-policy ".\$PolicyID.cip" -json | Out-Null         
-            &$WriteTeaGreen "`nThe Base policy with the following details has been Re-Deployed in Enforced Mode:"       
+            # Deploy Enforced mode CIP
+            CiTool --update-policy ".\$PolicyID.cip" -json | Out-Null
+            &$WriteTeaGreen "`nThe Base policy with the following details has been Re-Deployed in Enforced Mode:"
             Write-Output -InputObject "PolicyName = $PolicyName"
             Write-Output -InputObject "PolicyGUID = $PolicyID"
             # Remove Enforced Mode CIP
             Remove-Item -Path ".\$PolicyID.cip" -Force
-        }       
+        }
 
         $DriveLettersGlobalRootFix = Invoke-Command -ScriptBlock $DriveLettersGlobalRootFixScriptBlock
     }
 
-    process {        
+    process {
 
         if ($AllowNewApps) {
             # remove any possible files from previous runs
             Remove-Item -Path '.\ProgramDir_ScanResults*.xml' -Force -ErrorAction SilentlyContinue
-            Remove-Item -Path ".\SupplementalPolicy $SuppPolicyName.xml" -Force -ErrorAction SilentlyContinue    
+            Remove-Item -Path ".\SupplementalPolicy $SuppPolicyName.xml" -Force -ErrorAction SilentlyContinue
             # An empty array that holds the Policy XML files - This array will eventually be used to create the final Supplemental policy
             [System.Object[]]$PolicyXMLFilesArray = @()
-    
+
             #Initiate Live Audit Mode
 
-            foreach ($PolicyPath in $PolicyPaths) {                
+            foreach ($PolicyPath in $PolicyPaths) {
                 # Creating a copy of the original policy in Temp folder so that the original one will be unaffected
                 $PolicyFileName = Split-Path $PolicyPath -Leaf
-                Remove-Item -Path "$global:UserTempDirectoryPath\$PolicyFileName" -Force -ErrorAction SilentlyContinue # make sure no file with the same name already exists in Temp folder         
-                Copy-Item -Path $PolicyPath -Destination $global:UserTempDirectoryPath -Force                
+                Remove-Item -Path "$global:UserTempDirectoryPath\$PolicyFileName" -Force -ErrorAction SilentlyContinue # make sure no file with the same name already exists in Temp folder
+                Copy-Item -Path $PolicyPath -Destination $global:UserTempDirectoryPath -Force
                 $PolicyPath = "$global:UserTempDirectoryPath\$PolicyFileName"
 
                 # Defining Base policy
-                $xml = [System.Xml.XmlDocument](Get-Content -Path $PolicyPath)            
+                $xml = [System.Xml.XmlDocument](Get-Content -Path $PolicyPath)
                 [System.String]$PolicyID = $xml.SiPolicy.PolicyID
                 [System.String]$PolicyName = ($xml.SiPolicy.Settings.Setting | Where-Object -FilterScript { $_.provider -eq 'PolicyInfo' -and $_.valuename -eq 'Name' -and $_.key -eq 'Information' }).value.string
-    
+
                 # Remove any cip file if there is any
                 Remove-Item -Path '.\*.cip' -Force -ErrorAction SilentlyContinue
 
                 # Create CIP for Audit Mode
                 Set-RuleOption -FilePath $PolicyPath -Option 3 # Add Audit mode policy rule option
                 ConvertFrom-CIPolicy -XmlFilePath $PolicyPath -BinaryFilePath '.\AuditMode.cip' | Out-Null
-                
+
                 # Create CIP for Enforced Mode
                 Set-RuleOption -FilePath $PolicyPath -Option 3 -Delete # Remove Audit mode policy rule option
-                ConvertFrom-CIPolicy -XmlFilePath $PolicyPath -BinaryFilePath '.\EnforcedMode.cip' | Out-Null               
+                ConvertFrom-CIPolicy -XmlFilePath $PolicyPath -BinaryFilePath '.\EnforcedMode.cip' | Out-Null
 
                 ################# Snap back guarantee #################
                 Write-Debug -Message 'Creating Enforced Mode SnapBack guarantee'
 
                 <#
-                # CMD and Scheduled Task Method                
+                # CMD and Scheduled Task Method
                 $taskAction = New-ScheduledTaskAction -Execute 'cmd.exe' -Argument '/c c:\EnforcedModeSnapBack.cmd'
                 $taskTrigger = New-ScheduledTaskTrigger -AtLogOn
                 $principal = New-ScheduledTaskPrincipal -GroupId 'BUILTIN\Administrators' -RunLevel Highest
                 $TaskSettings = New-ScheduledTaskSettingsSet -Hidden -Compatibility Win8 -DontStopIfGoingOnBatteries -Priority 0 -AllowStartIfOnBatteries
                 Register-ScheduledTask -TaskName 'EnforcedModeSnapBack' -Action $taskAction -Trigger $taskTrigger -Principal $principal -Settings $TaskSettings -Force | Out-Null
-                 
+
                 Set-Content -Force "c:\EnforcedModeSnapBack.cmd" -Value @"
 REM Deploying the Enforced Mode SnapBack CI Policy
 CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json
@@ -243,32 +243,32 @@ REM Deleting the CI Policy file
 del /f /q "$((Get-Location).Path)\$PolicyID.cip"
 REM Deleting this CMD file itself
 del "%~f0"
-"@          
+"@
 #>
                 # PowerShell and RunOnce Method
-                
+
                 $registryPath = 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce'
                 $command = @"
 CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item -Path "$((Get-Location).Path)\$PolicyID.cip" -Force
 "@
                 $command | Out-File 'C:\EnforcedModeSnapBack.ps1'
                 New-ItemProperty -Path $registryPath -Name '*CIPolicySnapBack' -Value "powershell.exe -WindowStyle `"Hidden`" -ExecutionPolicy `"Bypass`" -Command `"& {&`"C:\EnforcedModeSnapBack.ps1`";Remove-Item -Path 'C:\EnforcedModeSnapBack.ps1' -Force}`"" -PropertyType String -Force | Out-Null
-                          
+
                 # Deploy Audit mode CIP
                 Write-Debug -Message 'Deploying Audit mode CIP'
                 Rename-Item -Path '.\AuditMode.cip' -NewName ".\$PolicyID.cip" -Force
-                CiTool --update-policy ".\$PolicyID.cip" -json | Out-Null         
-                &$WriteTeaGreen "`nThe Base policy with the following details has been Re-Deployed in Audit Mode:"      
+                CiTool --update-policy ".\$PolicyID.cip" -json | Out-Null
+                &$WriteTeaGreen "`nThe Base policy with the following details has been Re-Deployed in Audit Mode:"
                 Write-Output -InputObject "PolicyName = $PolicyName"
                 Write-Output -InputObject "PolicyGUID = $PolicyID"
                 # Remove Audit Mode CIP
                 Remove-Item -Path ".\$PolicyID.cip" -Force
                 # Prepare Enforced Mode CIP for Deployment - waiting to be Re-deployed at the right time
-                Rename-Item -Path '.\EnforcedMode.cip' -NewName ".\$PolicyID.cip" -Force     
-                
-                # A Try-Catch-Finally block so that if any errors occur, the Base policy will be Re-deployed in enforced mode                
+                Rename-Item -Path '.\EnforcedMode.cip' -NewName ".\$PolicyID.cip" -Force
+
+                # A Try-Catch-Finally block so that if any errors occur, the Base policy will be Re-deployed in enforced mode
                 Try {
-                    ################################### User Interaction ####################################            
+                    ################################### User Interaction ####################################
                     &$WritePink "`nAudit mode deployed, start installing your programs now"
                     &$WriteHotPink "When you've finished installing programs, Press Enter to start selecting program directories to scan`n"
                     Pause
@@ -291,14 +291,14 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
 
                     # Make sure User browsed for at least 1 directory
                     # Exit the operation if user didn't select any folder paths
-                    if ($ProgramsPaths.count -eq 0) {                                      
+                    if ($ProgramsPaths.count -eq 0) {
                         Write-Host -Object "`nNo program folder was selected, reverting the changes and quitting...`n" -ForegroundColor Red
                         # Causing break here to stop operation. Finally block will be triggered to Re-Deploy Base policy in Enforced mode
                         break
                     }
                 }
                 catch {
-                    # Show any extra info about any possible error that might've occurred                   
+                    # Show any extra info about any possible error that might've occurred
                     $_
                     $_.CategoryInfo
                     $_.ErrorDetails
@@ -310,28 +310,28 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                     $_.ScriptStackTrace
                     $_.TargetObject
                 }
-                finally {                                          
+                finally {
                     # Deploy Enforced mode CIP
                     Write-Debug -Message 'Finally Block Running'
-                    Update-BasePolicyToEnforced                                        
-                    
+                    Update-BasePolicyToEnforced
+
                     # Enforced Mode Snapback removal after base policy has already been successfully re-enforced
                     Write-Debug -Message 'Removing the SnapBack guarantee because the base policy has been successfully re-enforced'
-                    
+
                     # For PowerShell Method
-                    Remove-Item -Path 'C:\EnforcedModeSnapBack.ps1' -Force                     
+                    Remove-Item -Path 'C:\EnforcedModeSnapBack.ps1' -Force
                     Remove-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce' -Name '*CIPolicySnapBack' -Force
-                                        
+
                     # For CMD Method
                     # Unregister-ScheduledTask -TaskName 'EnforcedModeSnapBack' -Confirm:$false
-                    # Remove-Item -Path 'c:\EnforcedModeSnapBack.cmd' -Force                
+                    # Remove-Item -Path 'c:\EnforcedModeSnapBack.cmd' -Force
                 }
-                
+
                 Write-Host -Object "`nHere are the paths you selected:" -ForegroundColor Yellow
                 $ProgramsPaths | ForEach-Object -Process { $_ }
-    
-                #Process Program Folders From User input                    
-          
+
+                #Process Program Folders From User input
+
                 # Scan each of the folder paths that user selected
                 for ($i = 0; $i -lt $ProgramsPaths.Count; $i++) {
 
@@ -345,48 +345,48 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                         UserWriteablePaths     = $true
                         AllowFileNameFallbacks = $true
                     }
-                    # Assess user input parameters and add the required parameters to the hash table                   
+                    # Assess user input parameters and add the required parameters to the hash table
                     if ($SpecificFileNameLevel) { $UserInputProgramFoldersPolicyMakerHashTable['SpecificFileNameLevel'] = $SpecificFileNameLevel }
-                    if ($NoScript) { $UserInputProgramFoldersPolicyMakerHashTable['NoScript'] = $true }                      
-                    if (!$NoUserPEs) { $UserInputProgramFoldersPolicyMakerHashTable['UserPEs'] = $true } 
+                    if ($NoScript) { $UserInputProgramFoldersPolicyMakerHashTable['NoScript'] = $true }
+                    if (!$NoUserPEs) { $UserInputProgramFoldersPolicyMakerHashTable['UserPEs'] = $true }
 
                     # Create the supplemental policy via parameter splatting
                     New-CIPolicy @UserInputProgramFoldersPolicyMakerHashTable
-                }            
-    
+                }
+
                 # merge-cipolicy accept arrays - collecting all the policy files created by scanning user specified folders
-                $ProgramDir_ScanResults = Get-ChildItem -Path '.\' | Where-Object -FilterScript { $_.Name -like 'ProgramDir_ScanResults*.xml' }                
+                $ProgramDir_ScanResults = Get-ChildItem -Path '.\' | Where-Object -FilterScript { $_.Name -like 'ProgramDir_ScanResults*.xml' }
                 foreach ($file in $ProgramDir_ScanResults) {
                     $PolicyXMLFilesArray += $file.FullName
                 }
-    
+
                 Write-Debug -Message 'The following policy xml files are going to be merged into the final Supplemental policy and be deployed on the system:'
                 if ($Debug) { $PolicyXMLFilesArray | ForEach-Object -Process { Write-Debug -Message "$_" } }
-                    
+
                 # Merge all of the policy XML files in the array into the final Supplemental policy
-                Merge-CIPolicy -PolicyPaths $PolicyXMLFilesArray -OutputFilePath ".\SupplementalPolicy $SuppPolicyName.xml" | Out-Null                                  
-       
+                Merge-CIPolicy -PolicyPaths $PolicyXMLFilesArray -OutputFilePath ".\SupplementalPolicy $SuppPolicyName.xml" | Out-Null
+
                 Remove-Item -Path '.\ProgramDir_ScanResults*.xml' -Force
-                
+
                 #################### Supplemental-policy-processing-and-deployment ############################
-        
-                $SuppPolicyPath = ".\SupplementalPolicy $SuppPolicyName.xml" 
+
+                $SuppPolicyPath = ".\SupplementalPolicy $SuppPolicyName.xml"
                 $SuppPolicyID = Set-CIPolicyIdInfo -FilePath $SuppPolicyPath -PolicyName "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath
-                $SuppPolicyID = $SuppPolicyID.Substring(11)                
-    
+                $SuppPolicyID = $SuppPolicyID.Substring(11)
+
                 # Make sure policy rule options that don't belong to a Supplemental policy don't exit
                 @(0, 1, 2, 3, 4, 8, 9, 10, 11, 12, 15, 16, 17, 19, 20) | ForEach-Object -Process { Set-RuleOption -FilePath $SuppPolicyPath -Option $_ -Delete }
-     
-                Set-HVCIOptions -Strict -FilePath $SuppPolicyPath             
-                Set-CIPolicyVersion -FilePath $SuppPolicyPath -Version '1.0.0.0'            
 
-                ConvertFrom-CIPolicy -XmlFilePath $SuppPolicyPath -BinaryFilePath "$SuppPolicyID.cip" | Out-Null 
+                Set-HVCIOptions -Strict -FilePath $SuppPolicyPath
+                Set-CIPolicyVersion -FilePath $SuppPolicyPath -Version '1.0.0.0'
+
+                ConvertFrom-CIPolicy -XmlFilePath $SuppPolicyPath -BinaryFilePath "$SuppPolicyID.cip" | Out-Null
                 CiTool --update-policy ".\$SuppPolicyID.cip" -json | Out-Null
                 &$WriteTeaGreen "`nSupplemental policy with the following details has been Deployed in Enforced Mode:"
                 Write-Output -InputObject "SupplementalPolicyName = $SuppPolicyName"
                 Write-Output -InputObject "SupplementalPolicyGUID = $SuppPolicyID"
                 Remove-Item -Path ".\$SuppPolicyID.cip" -Force
-                Remove-Item -Path $PolicyPath -Force # Remove the policy xml file in Temp folder we created earlier   
+                Remove-Item -Path $PolicyPath -Force # Remove the policy xml file in Temp folder we created earlier
             }
         }
 
@@ -403,33 +403,33 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
             [System.Object[]]$PolicyXMLFilesArray = @()
 
             ################################### Initiate Live Audit Mode ###################################
-            
-            foreach ($PolicyPath in $PolicyPaths) {                
+
+            foreach ($PolicyPath in $PolicyPaths) {
                 # Creating a copy of the original policy in Temp folder so that the original one will be unaffected
                 $PolicyFileName = Split-Path $PolicyPath -Leaf
-                Remove-Item -Path "$global:UserTempDirectoryPath\$PolicyFileName" -Force -ErrorAction SilentlyContinue # make sure no file with the same name already exists in Temp folder         
-                Copy-Item -Path $PolicyPath -Destination $global:UserTempDirectoryPath -Force                
+                Remove-Item -Path "$global:UserTempDirectoryPath\$PolicyFileName" -Force -ErrorAction SilentlyContinue # make sure no file with the same name already exists in Temp folder
+                Copy-Item -Path $PolicyPath -Destination $global:UserTempDirectoryPath -Force
                 $PolicyPath = "$global:UserTempDirectoryPath\$PolicyFileName"
-                                
+
                 # Defining Base policy
-                $xml = [System.Xml.XmlDocument](Get-Content -Path $PolicyPath)            
+                $xml = [System.Xml.XmlDocument](Get-Content -Path $PolicyPath)
                 [System.String]$PolicyID = $xml.SiPolicy.PolicyID
                 [System.String]$PolicyName = ($xml.SiPolicy.Settings.Setting | Where-Object -FilterScript { $_.provider -eq 'PolicyInfo' -and $_.valuename -eq 'Name' -and $_.key -eq 'Information' }).value.string
 
                 # Remove any cip file if there is any
-                Remove-Item -Path '.\*.cip' -Force -ErrorAction SilentlyContinue                
+                Remove-Item -Path '.\*.cip' -Force -ErrorAction SilentlyContinue
 
                 # Create CIP for Audit Mode
                 Set-RuleOption -FilePath $PolicyPath -Option 3 # Add Audit mode policy rule option
                 ConvertFrom-CIPolicy -XmlFilePath $PolicyPath -BinaryFilePath '.\AuditMode.cip' | Out-Null
-                 
+
                 # Create CIP for Enforced Mode
                 Set-RuleOption -FilePath $PolicyPath -Option 3 -Delete # Remove Audit mode policy rule option
                 ConvertFrom-CIPolicy -XmlFilePath $PolicyPath -BinaryFilePath '.\EnforcedMode.cip' | Out-Null
-                             
+
                 ################# Snap back guarantee #################
                 Write-Debug -Message 'Creating Enforced Mode SnapBack guarantee'
-               
+
                 $registryPath = 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce'
                 $command = @"
 CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item -Path "$((Get-Location).Path)\$PolicyID.cip" -Force
@@ -440,8 +440,8 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                 # Deploy Audit mode CIP
                 Write-Debug -Message 'Deploying Audit mode CIP'
                 Rename-Item -Path '.\AuditMode.cip' -NewName ".\$PolicyID.cip" -Force
-                CiTool --update-policy ".\$PolicyID.cip" -json | Out-Null         
-                &$WriteTeaGreen "`nThe Base policy with the following details has been Re-Deployed in Audit Mode:"      
+                CiTool --update-policy ".\$PolicyID.cip" -json | Out-Null
+                &$WriteTeaGreen "`nThe Base policy with the following details has been Re-Deployed in Audit Mode:"
                 Write-Output -InputObject "PolicyName = $PolicyName"
                 Write-Output -InputObject "PolicyGUID = $PolicyID"
                 # Remove Audit Mode CIP
@@ -449,12 +449,12 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                 # Prepare Enforced Mode CIP for Deployment - waiting to be Re-deployed at the right time
                 Rename-Item -Path '.\EnforcedMode.cip' -NewName ".\$PolicyID.cip" -Force
 
-                # A Try-Catch-Finally block so that if any errors occur, the Base policy will be Re-deployed in enforced mode                
+                # A Try-Catch-Finally block so that if any errors occur, the Base policy will be Re-deployed in enforced mode
                 Try {
                     ################################### User Interaction ####################################
                     &$WritePink "`nAudit mode deployed, start installing your programs now"
                     &$WriteHotPink "When you've finished installing programs, Press Enter to start selecting program directories to scan`n"
-                    Pause                 
+                    Pause
 
                     # Store the program paths that user browses for in an array
                     [System.Object[]]$ProgramsPaths = @()
@@ -471,21 +471,21 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                         Else { break }
                     }
                     while ($true)
-                
+
                     # Make sure User browsed for at least 1 directory
                     # Exit the operation if user didn't select any folder paths
-                    if ($ProgramsPaths.count -eq 0) {                                      
+                    if ($ProgramsPaths.count -eq 0) {
                         Write-Host -Object "`nNo program folder was selected, reverting the changes and quitting...`n" -ForegroundColor Red
                         # Causing break here to stop operation. Finally block will be triggered to Re-Deploy Base policy in Enforced mode
                         break
                     }
-                    
+
                     Write-Host -Object 'Here are the paths you selected:' -ForegroundColor Yellow
                     $ProgramsPaths | ForEach-Object -Process { $_ }
 
                     ################################### EventCapturing ################################
 
-                    Write-Host -Object 'Scanning Windows Event logs and creating a policy file, please wait...' -ForegroundColor Cyan    
+                    Write-Host -Object 'Scanning Windows Event logs and creating a policy file, please wait...' -ForegroundColor Cyan
 
                     # Extracting the array content from Get-AuditEventLogsProcessing function
                     $AuditEventLogsProcessingResults = Get-AuditEventLogsProcessing -Date $Date
@@ -496,21 +496,21 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                         # Using the function to find out which files are not in the user-selected path(s), if any, to only scan those
                         # this prevents duplicate rule creation and double file copying
                         $TestFilePathResults = (Test-FilePath -FilePath $AuditEventLogsProcessingResults.AvailableFilesPaths -DirectoryPath $ProgramsPaths).path | Select-Object -Unique
-                        
+
                         Write-Debug -Message "$($TestFilePathResults.count) file(s) have been found in event viewer logs that don't exist in any of the folder paths you selected."
 
                         # Another check to make sure there were indeed files found in Event viewer logs but weren't in any of the user-selected path(s)
                         if ($TestFilePathResults) {
                             # Create a folder in Temp directory to copy the files that are not included in user-selected program path(s)
-                            # but detected in Event viewer audit logs, scan that folder, and in the end delete it                   
+                            # but detected in Event viewer audit logs, scan that folder, and in the end delete it
                             New-Item -Path "$global:UserTempDirectoryPath\TemporaryScanFolderForEventViewerFiles" -ItemType Directory | Out-Null
-                            
-                            Write-Debug -Message "The following file(s) are being copied to the TEMP directory for scanning because they were found in event logs but didn't exist in any of the user-selected paths:"      
+
+                            Write-Debug -Message "The following file(s) are being copied to the TEMP directory for scanning because they were found in event logs but didn't exist in any of the user-selected paths:"
                             $TestFilePathResults | ForEach-Object -Process {
-                                Write-Debug -Message "$_"    
+                                Write-Debug -Message "$_"
                                 Copy-Item -Path $_ -Destination "$global:UserTempDirectoryPath\TemporaryScanFolderForEventViewerFiles\" -ErrorAction SilentlyContinue
                             }
-                      
+
                             # Create a policy XML file for available files on the disk
 
                             # Creating a hash table to dynamically add parameters based on user input and pass them to New-Cipolicy cmdlet
@@ -520,24 +520,24 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                                 Level                  = $Level
                                 Fallback               = $Fallbacks
                                 MultiplePolicyFormat   = $true
-                                UserWriteablePaths     = $true 
-                                AllowFileNameFallbacks = $true                           
+                                UserWriteablePaths     = $true
+                                AllowFileNameFallbacks = $true
                             }
-                            # Assess user input parameters and add the required parameters to the hash table                            
+                            # Assess user input parameters and add the required parameters to the hash table
                             if ($SpecificFileNameLevel) { $AvailableFilesOnDiskPolicyMakerHashTable['SpecificFileNameLevel'] = $SpecificFileNameLevel }
                             if ($NoScript) { $AvailableFilesOnDiskPolicyMakerHashTable['NoScript'] = $true }
-                            if (!$NoUserPEs) { $AvailableFilesOnDiskPolicyMakerHashTable['UserPEs'] = $true } 
-                        
+                            if (!$NoUserPEs) { $AvailableFilesOnDiskPolicyMakerHashTable['UserPEs'] = $true }
+
                             # Create the supplemental policy via parameter splatting
                             New-CIPolicy @AvailableFilesOnDiskPolicyMakerHashTable
-                        
+
                             # Add the policy XML file to the array that holds policy XML files
                             $PolicyXMLFilesArray += '.\RulesForFilesNotInUserSelectedPaths.xml'
                             # Delete the Temporary folder in the TEMP folder
                             Remove-Item -Recurse -Path "$global:UserTempDirectoryPath\TemporaryScanFolderForEventViewerFiles\" -Force
                         }
                     }
-                                    
+
                     # Only create policy for files that are on longer available on the disk if there are any and
                     # if user chose to include deleted files in the final supplemental policy
                     if ($AuditEventLogsProcessingResults.DeletedFileHashes -and $IncludeDeletedFiles) {
@@ -546,17 +546,17 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                         $AuditEventLogsProcessingResults.DeletedFileHashes | ForEach-Object -Process {
                             Write-Debug -Message "$($_.'File Name')"
                         }
-                       
-                        # Save the File Rules and File Rule Refs in the FileRulesAndFileRefs.txt in the current working directory for debugging purposes               
+
+                        # Save the File Rules and File Rule Refs in the FileRulesAndFileRefs.txt in the current working directory for debugging purposes
                         ((Get-FileRules -HashesArray $AuditEventLogsProcessingResults.DeletedFileHashes) + (Get-RuleRefs -HashesArray $AuditEventLogsProcessingResults.DeletedFileHashes)).Trim() | Out-File FileRulesAndFileRefs.txt
 
-                        # Put the Rules and RulesRefs in an empty policy file                
+                        # Put the Rules and RulesRefs in an empty policy file
                         New-EmptyPolicy -RulesContent (Get-FileRules -HashesArray $AuditEventLogsProcessingResults.DeletedFileHashes) -RuleRefsContent (Get-RuleRefs -HashesArray $AuditEventLogsProcessingResults.DeletedFileHashes) | Out-File .\DeletedFileHashesEventsPolicy.xml
-                
+
                         # adding the policy file that consists of rules from audit even logs, to the array
                         $PolicyXMLFilesArray += '.\DeletedFileHashesEventsPolicy.xml'
                     }
-                                      
+
                     ######################## Process Program Folders From User input #####################
                     for ($i = 0; $i -lt $ProgramsPaths.Count; $i++) {
 
@@ -570,22 +570,22 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                             UserWriteablePaths     = $true
                             AllowFileNameFallbacks = $true
                         }
-                        # Assess user input parameters and add the required parameters to the hash table                        
+                        # Assess user input parameters and add the required parameters to the hash table
                         if ($SpecificFileNameLevel) { $UserInputProgramFoldersPolicyMakerHashTable['SpecificFileNameLevel'] = $SpecificFileNameLevel }
-                        if ($NoScript) { $UserInputProgramFoldersPolicyMakerHashTable['NoScript'] = $true }                      
-                        if (!$NoUserPEs) { $UserInputProgramFoldersPolicyMakerHashTable['UserPEs'] = $true } 
+                        if ($NoScript) { $UserInputProgramFoldersPolicyMakerHashTable['NoScript'] = $true }
+                        if (!$NoUserPEs) { $UserInputProgramFoldersPolicyMakerHashTable['UserPEs'] = $true }
 
                         # Create the supplemental policy via parameter splatting
                         New-CIPolicy @UserInputProgramFoldersPolicyMakerHashTable
-                    }            
+                    }
 
                     # Merge-cipolicy accept arrays - collecting all the policy files created by scanning user specified folders
-                    $ProgramDir_ScanResults = Get-ChildItem -Path '.\' | Where-Object -FilterScript { $_.Name -like 'ProgramDir_ScanResults*.xml' }                
+                    $ProgramDir_ScanResults = Get-ChildItem -Path '.\' | Where-Object -FilterScript { $_.Name -like 'ProgramDir_ScanResults*.xml' }
                     foreach ($file in $ProgramDir_ScanResults) {
                         $PolicyXMLFilesArray += $file.FullName
                     }
-                    
-                    #region Kernel-protected-files-automatic-detection-and-allow-rule-creation                    
+
+                    #region Kernel-protected-files-automatic-detection-and-allow-rule-creation
                     # This part takes care of Kernel protected files such as the main executable of the games installed through Xbox app
                     # For these files, only Kernel can get their hashes, it passes them to event viewer and we take them from event viewer logs
                     # Any other attempts such as "Get-FileHash" or "Get-AuthenticodeSignature" fail and ConfigCI Module cmdlets totally ignore these files and do not create allow rules for them
@@ -604,11 +604,11 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                                     # Testing each executable to find the protected ones
                                     Get-FileHash -Path $CurrentExeWithNoHash -ErrorAction Stop | Out-Null
                                 }
-                                # Making sure only the right file is captured by narrowing down the error type.   
-                                # E.g., when get-filehash can't get a file's hash because its open by another program, the exception is different: System.IO.IOException        
-                                catch [System.UnauthorizedAccessException] {            
+                                # Making sure only the right file is captured by narrowing down the error type.
+                                # E.g., when get-filehash can't get a file's hash because its open by another program, the exception is different: System.IO.IOException
+                                catch [System.UnauthorizedAccessException] {
                                     $ExesWithNoHash += $CurrentExeWithNoHash
-                                } 
+                                }
                             }
                         }
                     }
@@ -617,7 +617,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
 
                         Write-Debug -Message "The following Kernel protected files detected, creating allow rules for them:`n"
                         if ($Debug) { $ExesWithNoHash | ForEach-Object -Process { Write-Debug -Message "$_" } }
-                                                         
+
                         [System.Management.Automation.ScriptBlock]$KernelProtectedHashesBlock = {
                             foreach ($event in Get-WinEvent -FilterHashtable @{LogName = 'Microsoft-Windows-CodeIntegrity/Operational'; ID = 3076 } -ErrorAction SilentlyContinue | Where-Object -FilterScript { $_.TimeCreated -ge $Date } ) {
                                 $xml = [System.Xml.XmlDocument]$event.toxml()
@@ -636,7 +636,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                                         if ($ExesWithNoHash -contains $_.'File Name') {
                                             $_ | Select-Object FileVersion, 'File Name', PolicyGUID, 'SHA256 Hash', 'SHA256 Flat Hash', 'SHA1 Hash', 'SHA1 Flat Hash'
                                         }
-                                    }       
+                                    }
                                 }
                             }
                         }
@@ -646,10 +646,10 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                         # If none is found then skip this part, because user didn't run those files/programs when audit mode was turned on in base policy, so no hash was found in audit logs
                         if ($KernelProtectedHashesBlockResults) {
 
-                            # Save the File Rules and File Rule Refs in the FileRulesAndFileRefs.txt in the current working directory for debugging purposes               
+                            # Save the File Rules and File Rule Refs in the FileRulesAndFileRefs.txt in the current working directory for debugging purposes
                             (Get-FileRules -HashesArray $KernelProtectedHashesBlockResults) + (Get-RuleRefs -HashesArray $KernelProtectedHashesBlockResults) | Out-File KernelProtectedFiles.txt
 
-                            # Put the Rules and RulesRefs in an empty policy file                
+                            # Put the Rules and RulesRefs in an empty policy file
                             New-EmptyPolicy -RulesContent (Get-FileRules -HashesArray $KernelProtectedHashesBlockResults) -RuleRefsContent (Get-RuleRefs -HashesArray $KernelProtectedHashesBlockResults) | Out-File .\KernelProtectedFiles.xml
 
                             # adding the policy file  to the array of xml files
@@ -659,14 +659,14 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                             Write-Warning -Message "The following Kernel protected files detected, but no hash was found for them in Event viewer logs.`nThis means you didn't run those files/programs when Audit mode was turned on.`n"
                             $ExesWithNoHash | ForEach-Object -Process { Write-Warning -Message "$_" }
                         }
-                    }                    
+                    }
                     #endregion Kernel-protected-files-automatic-detection-and-allow-rule-creation
 
                     Write-Debug -Message 'The following policy xml files are going to be merged into the final Supplemental policy and be deployed on the system:'
                     if ($Debug) { $PolicyXMLFilesArray | ForEach-Object -Process { Write-Debug -Message "$_" } }
 
                     # Merge all of the policy XML files in the array into the final Supplemental policy
-                    Merge-CIPolicy -PolicyPaths $PolicyXMLFilesArray -OutputFilePath ".\SupplementalPolicy $SuppPolicyName.xml" | Out-Null     
+                    Merge-CIPolicy -PolicyPaths $PolicyXMLFilesArray -OutputFilePath ".\SupplementalPolicy $SuppPolicyName.xml" | Out-Null
 
                     # Delete these extra files unless user uses -Debug parameter
                     if (-NOT $Debug) {
@@ -677,7 +677,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                 }
                 # Unlike AllowNewApps parameter, AllowNewAppsAuditEvents parameter performs Event viewer scanning and kernel protected files detection
                 # So the base policy enforced mode snap back can't happen any sooner than this point
-                catch {                    
+                catch {
                     $_
                     $_.CategoryInfo
                     $_.ErrorDetails
@@ -689,46 +689,46 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                     $_.ScriptStackTrace
                     $_.TargetObject
                 }
-                finally {                                          
+                finally {
                     # Deploy Enforced mode CIP
                     Write-Debug -Message 'Finally Block Running'
-                    Update-BasePolicyToEnforced                    
+                    Update-BasePolicyToEnforced
                     # Enforced Mode Snapback removal after base policy has already been successfully re-enforced
                     Write-Debug -Message 'Removing the SnapBack guarantee because the base policy has been successfully re-enforced'
-                    Remove-Item -Path 'C:\EnforcedModeSnapBack.ps1' -Force                     
-                    Remove-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce' -Name '*CIPolicySnapBack' -Force                                        
+                    Remove-Item -Path 'C:\EnforcedModeSnapBack.ps1' -Force
+                    Remove-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce' -Name '*CIPolicySnapBack' -Force
                 }
 
                 #################### Supplemental-policy-processing-and-deployment ############################
 
-                $SuppPolicyPath = ".\SupplementalPolicy $SuppPolicyName.xml" 
+                $SuppPolicyPath = ".\SupplementalPolicy $SuppPolicyName.xml"
                 $SuppPolicyID = Set-CIPolicyIdInfo -FilePath $SuppPolicyPath -PolicyName "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath
                 $SuppPolicyID = $SuppPolicyID.Substring(11)
 
                 # Make sure policy rule options that don't belong to a Supplemental policy don't exit
                 @(0, 1, 2, 3, 4, 8, 9, 10, 11, 12, 15, 16, 17, 19, 20) | ForEach-Object -Process { Set-RuleOption -FilePath $SuppPolicyPath -Option $_ -Delete }
-     
-                Set-HVCIOptions -Strict -FilePath $SuppPolicyPath             
-                Set-CIPolicyVersion -FilePath $SuppPolicyPath -Version '1.0.0.0'            
 
-                ConvertFrom-CIPolicy -XmlFilePath $SuppPolicyPath -BinaryFilePath "$SuppPolicyID.cip" | Out-Null 
-                CiTool --update-policy ".\$SuppPolicyID.cip" -json | Out-Null     
+                Set-HVCIOptions -Strict -FilePath $SuppPolicyPath
+                Set-CIPolicyVersion -FilePath $SuppPolicyPath -Version '1.0.0.0'
+
+                ConvertFrom-CIPolicy -XmlFilePath $SuppPolicyPath -BinaryFilePath "$SuppPolicyID.cip" | Out-Null
+                CiTool --update-policy ".\$SuppPolicyID.cip" -json | Out-Null
                 &$WriteTeaGreen "`nSupplemental policy with the following details has been Deployed in Enforced Mode:"
                 Write-Output -InputObject "SupplementalPolicyName = $SuppPolicyName"
                 Write-Output -InputObject "SupplementalPolicyGUID = $SuppPolicyID"
                 Remove-Item -Path ".\$SuppPolicyID.cip" -Force
-                Remove-Item -Path $PolicyPath -Force # Remove the policy xml file in Temp folder we created earlier         
+                Remove-Item -Path $PolicyPath -Force # Remove the policy xml file in Temp folder we created earlier
             }
         }
 
-        if ($MergeSupplementalPolicies) {        
-            foreach ($PolicyPath in $PolicyPaths) {            
+        if ($MergeSupplementalPolicies) {
+            foreach ($PolicyPath in $PolicyPaths) {
                 ############ Input policy verification prior to doing anything ############
-                foreach ($SuppPolicyPath in $SuppPolicyPaths) {                                
+                foreach ($SuppPolicyPath in $SuppPolicyPaths) {
                     $Supplementalxml = [System.Xml.XmlDocument](Get-Content -Path $SuppPolicyPath)
                     $SupplementalPolicyID = $Supplementalxml.SiPolicy.PolicyID
                     $SupplementalPolicyType = $Supplementalxml.SiPolicy.PolicyType
-                    $DeployedPoliciesIDs = (CiTool -lp -json | ConvertFrom-Json).Policies.PolicyID | ForEach-Object -Process { return "{$_}" }         
+                    $DeployedPoliciesIDs = (CiTool -lp -json | ConvertFrom-Json).Policies.PolicyID | ForEach-Object -Process { return "{$_}" }
                     # Check the type of the user selected Supplemental policy XML files to make sure they are indeed Supplemental policies
                     if ($SupplementalPolicyType -ne 'Supplemental Policy') {
                         Write-Error -Message "The Selected XML file with GUID $SupplementalPolicyID isn't a Supplemental Policy."
@@ -741,68 +741,68 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                 # Perform the merge
                 Merge-CIPolicy -PolicyPaths $SuppPolicyPaths -OutputFilePath "$SuppPolicyName.xml" | Out-Null
                 # Delete the deployed Supplemental policies that user selected from the system because we're going to deploy the new merged policy that contains all of them
-                foreach ($SuppPolicyPath in $SuppPolicyPaths) {                                
+                foreach ($SuppPolicyPath in $SuppPolicyPaths) {
                     $Supplementalxml = [System.Xml.XmlDocument](Get-Content -Path $SuppPolicyPath)
-                    $SupplementalPolicyID = $Supplementalxml.SiPolicy.PolicyID                         
+                    $SupplementalPolicyID = $Supplementalxml.SiPolicy.PolicyID
                     Citool --remove-policy $SupplementalPolicyID -json | Out-Null
                     # remove the old policy files unless user chose to keep them
-                    if (!$KeepOldSupplementalPolicies) { Remove-Item -Path $SuppPolicyPath -Force }        
+                    if (!$KeepOldSupplementalPolicies) { Remove-Item -Path $SuppPolicyPath -Force }
                 }
-                # Prepare the final merged Supplemental policy for deployment           
+                # Prepare the final merged Supplemental policy for deployment
                 $SuppPolicyID = Set-CIPolicyIdInfo -FilePath "$SuppPolicyName.xml" -ResetPolicyID -PolicyName "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')" -BasePolicyToSupplementPath $PolicyPath
                 $SuppPolicyID = $SuppPolicyID.Substring(11)
-                Set-HVCIOptions -Strict -FilePath "$SuppPolicyName.xml" 
+                Set-HVCIOptions -Strict -FilePath "$SuppPolicyName.xml"
                 ConvertFrom-CIPolicy -XmlFilePath "$SuppPolicyName.xml" -BinaryFilePath "$SuppPolicyID.cip" | Out-Null
-                CiTool --update-policy "$SuppPolicyID.cip" -json | Out-Null              
+                CiTool --update-policy "$SuppPolicyID.cip" -json | Out-Null
                 &$WriteTeaGreen "`nThe Supplemental policy $SuppPolicyName has been deployed on the system, replacing the old ones.`nSystem Restart Not immediately needed but eventually required to finish the removal of previous individual Supplemental policies."
                 Remove-Item -Path "$SuppPolicyID.cip" -Force
             }
         }
 
-        if ($UpdateBasePolicy) {     
+        if ($UpdateBasePolicy) {
             # First get the Microsoft recommended driver block rules
-            Invoke-Command -ScriptBlock $GetBlockRulesSCRIPTBLOCK | Out-Null            
-   
+            Invoke-Command -ScriptBlock $GetBlockRulesSCRIPTBLOCK | Out-Null
+
             switch ($NewBasePolicyType) {
-                'AllowMicrosoft_Plus_Block_Rules' {                      
+                'AllowMicrosoft_Plus_Block_Rules' {
                     Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml' -Destination '.\AllowMicrosoft.xml'
                     Merge-CIPolicy -PolicyPaths .\AllowMicrosoft.xml, '.\Microsoft recommended block rules.xml' -OutputFilePath .\BasePolicy.xml | Out-Null
                     Set-CIPolicyIdInfo -FilePath .\BasePolicy.xml -PolicyName "Allow Microsoft Plus Block Rules refreshed On $(Get-Date -Format 'MM-dd-yyyy')"
                     @(0, 2, 5, 6, 11, 12, 16, 17, 19, 20) | ForEach-Object -Process { Set-RuleOption -FilePath .\BasePolicy.xml -Option $_ }
-                    @(3, 4, 9, 10, 13, 18) | ForEach-Object -Process { Set-RuleOption -FilePath .\BasePolicy.xml -Option $_ -Delete } 
+                    @(3, 4, 9, 10, 13, 18) | ForEach-Object -Process { Set-RuleOption -FilePath .\BasePolicy.xml -Option $_ -Delete }
                 }
-                'Lightly_Managed_system_Policy' {                                          
+                'Lightly_Managed_system_Policy' {
                     Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml' -Destination '.\AllowMicrosoft.xml'
                     Merge-CIPolicy -PolicyPaths .\AllowMicrosoft.xml, '.\Microsoft recommended block rules.xml' -OutputFilePath .\BasePolicy.xml | Out-Null
                     Set-CIPolicyIdInfo -FilePath .\BasePolicy.xml -PolicyName "Signed And Reputable policy refreshed on $(Get-Date -Format 'MM-dd-yyyy')"
                     @(0, 2, 5, 6, 11, 12, 14, 15, 16, 17, 19, 20) | ForEach-Object -Process { Set-RuleOption -FilePath .\BasePolicy.xml -Option $_ }
-                    @(3, 4, 9, 10, 13, 18) | ForEach-Object -Process { Set-RuleOption -FilePath .\BasePolicy.xml -Option $_ -Delete }            
+                    @(3, 4, 9, 10, 13, 18) | ForEach-Object -Process { Set-RuleOption -FilePath .\BasePolicy.xml -Option $_ -Delete }
                     # Configure required services for ISG authorization
                     Start-Process -FilePath 'C:\Windows\System32\appidtel.exe' -ArgumentList 'start' -Wait -NoNewWindow
                     Start-Process -FilePath 'C:\Windows\System32\sc.exe' -ArgumentList 'config', 'appidsvc', 'start= auto' -Wait -NoNewWindow
                 }
-                'DefaultWindows_WithBlockRules' {                                            
+                'DefaultWindows_WithBlockRules' {
                     Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\DefaultWindows_Enforced.xml' -Destination '.\DefaultWindows_Enforced.xml'
                     # Scan PowerShell core directory and add them to the Default Windows base policy so that the module can be used after it's been deployed
                     if (Test-Path -Path 'C:\Program Files\PowerShell') {
-                        Write-Host -Object 'Creating allow rules for PowerShell in the DefaultWindows base policy so you can continue using this module after deploying it.' -ForegroundColor Blue                    
+                        Write-Host -Object 'Creating allow rules for PowerShell in the DefaultWindows base policy so you can continue using this module after deploying it.' -ForegroundColor Blue
                         New-CIPolicy -ScanPath 'C:\Program Files\PowerShell' -Level FilePublisher -NoScript -Fallback Hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -FilePath .\AllowPowerShell.xml
                         Merge-CIPolicy -PolicyPaths .\DefaultWindows_Enforced.xml, .\AllowPowerShell.xml, '.\Microsoft recommended block rules.xml' -OutputFilePath .\BasePolicy.xml | Out-Null
                     }
                     else {
                         Merge-CIPolicy -PolicyPaths .\DefaultWindows_Enforced.xml, '.\Microsoft recommended block rules.xml' -OutputFilePath .\BasePolicy.xml | Out-Null
-                    }     
+                    }
                     Set-CIPolicyIdInfo -FilePath .\BasePolicy.xml -PolicyName "Default Windows Plus Block Rules refreshed On $(Get-Date -Format 'MM-dd-yyyy')"
                     @(0, 2, 5, 6, 11, 12, 16, 17, 19, 20) | ForEach-Object -Process { Set-RuleOption -FilePath .\BasePolicy.xml -Option $_ }
                     @(3, 4, 9, 10, 13, 18) | ForEach-Object -Process { Set-RuleOption -FilePath .\BasePolicy.xml -Option $_ -Delete }
                 }
             }
 
-            if ($UpdateBasePolicy -and $RequireEVSigners) { Set-RuleOption -FilePath .\BasePolicy.xml -Option 8 }    
+            if ($UpdateBasePolicy -and $RequireEVSigners) { Set-RuleOption -FilePath .\BasePolicy.xml -Option 8 }
 
             Set-CIPolicyVersion -FilePath .\BasePolicy.xml -Version '1.0.0.1'
             Set-HVCIOptions -Strict -FilePath .\BasePolicy.xml
-            
+
             # Remove the extra files create during module operation that are no longer necessary
             Remove-Item -Path '.\AllowPowerShell.xml', '.\DefaultWindows_Enforced.xml', '.\AllowMicrosoft.xml' -Force -ErrorAction SilentlyContinue
             Remove-Item -Path '.\Microsoft recommended block rules.xml' -Force
@@ -811,7 +811,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
             $CurrentID = ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { $_.IsSystemPolicy -ne 'True' } | Where-Object -FilterScript { $_.Friendlyname -eq $CurrentBasePolicyName }).BasePolicyID
             $CurrentID = "{$CurrentID}"
             Write-Debug -Message "This is the current ID of deployed base policy that is going to be used in the new base policy: $CurrentID"
-            [System.Xml.XmlDocument]$xml = Get-Content -Path '.\BasePolicy.xml'        
+            [System.Xml.XmlDocument]$xml = Get-Content -Path '.\BasePolicy.xml'
             $xml.SiPolicy.PolicyID = $CurrentID
             $xml.SiPolicy.BasePolicyID = $CurrentID
             $xml.Save('.\BasePolicy.xml')
@@ -820,8 +820,8 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
             CiTool --update-policy "$CurrentID.cip" -json | Out-Null
             # Remove the policy binary after it's been deployed
             Remove-Item -Path "$CurrentID.cip" -Force
-            
-            # Keep the new base policy XML file that was just deployed, in the current directory, so user can keep it for later 
+
+            # Keep the new base policy XML file that was just deployed, in the current directory, so user can keep it for later
             $PolicyFiles = @{
                 'AllowMicrosoft_Plus_Block_Rules' = 'AllowMicrosoftPlusBlockRules.xml'
                 'Lightly_Managed_system_Policy'   = 'SignedAndReputable.xml'

@@ -1,22 +1,22 @@
 #Requires -RunAsAdministrator
 function Remove-CommonWDACConfig {
     [CmdletBinding()]
-    Param(       
-        [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$CertCN,       
-        [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$CertPath,       
-        [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SignToolPath,        
+    Param(
+        [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$CertCN,
+        [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$CertPath,
+        [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SignToolPath,
         [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$UnsignedPolicyPath,
-        [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SignedPolicyPath,        
-        [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$StrictKernelPolicyGUID, 
+        [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SignedPolicyPath,
+        [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$StrictKernelPolicyGUID,
         [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$StrictKernelNoFlightRootsPolicyGUID,
         [parameter(Mandatory = $false, DontShow = $true)][System.Management.Automation.SwitchParameter]$LastUpdateCheck # DontShow prevents common parameters from being displayed too
     )
     begin {
         # Importing resources such as functions by dot-sourcing so that they will run in the same scope and their variables will be usable
         . "$psscriptroot\Resources.ps1"
-        
+
         # Stop operation as soon as there is an error anywhere, unless explicitly specified otherwise
-        $ErrorActionPreference = 'Stop'        
+        $ErrorActionPreference = 'Stop'
 
         # Fetch User account directory path
         [System.String]$global:UserAccountDirectoryPath = (Get-CimInstance Win32_UserProfile -Filter "SID = '$([System.Security.Principal.WindowsIdentity]::GetCurrent().User.Value)'").LocalPath
@@ -28,11 +28,11 @@ function Remove-CommonWDACConfig {
         }
 
         # Create User configuration file if it doesn't already exist
-        if (-NOT (Test-Path -Path "$global:UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json")) { 
+        if (-NOT (Test-Path -Path "$global:UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json")) {
             New-Item -ItemType File -Path "$global:UserAccountDirectoryPath\.WDACConfig\" -Name 'UserConfigurations.json' -Force -ErrorAction Stop | Out-Null
             Write-Debug -Message "The UserConfigurations.json file in \.WDACConfig\ folder has been created because it didn't exist."
         }
-         
+
         # Delete the entire User Configs if a more specific parameter wasn't used
         if ($PSBoundParameters.Count -eq 0) {
             Remove-Item -Path "$global:UserAccountDirectoryPath\.WDACConfig\" -Recurse -Force
@@ -93,7 +93,7 @@ function Remove-CommonWDACConfig {
 
         if ($CertCN) {
             $UserConfigurationsObject.CertificateCommonName = ''
-        }        
+        }
         else {
             $UserConfigurationsObject.CertificateCommonName = $CurrentUserConfigurations.CertificateCommonName
         }
@@ -121,7 +121,7 @@ function Remove-CommonWDACConfig {
     }
     end {
         # Update the User Configurations file
-        $UserConfigurationsObject | ConvertTo-Json | Set-Content "$global:UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json"                
+        $UserConfigurationsObject | ConvertTo-Json | Set-Content "$global:UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json"
         &$WritePink "`nThis is your new WDAC User Configurations: "
         Get-Content -Path "$global:UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json" | ConvertFrom-Json | Format-List *
     }

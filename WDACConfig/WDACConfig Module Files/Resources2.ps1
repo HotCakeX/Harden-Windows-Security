@@ -1,9 +1,3 @@
-# For testing purposes
-#$FilePath = ''
-#$SignedFilePath = ''
-#$XmlFilePath = ''
-
-
 # Defining a custom object to store the signer information
 class Signer {
     [System.String]$ID
@@ -17,29 +11,31 @@ function Get-SignerInfo {
     param(
         [Parameter(Mandatory = $true)][System.String]$XmlFilePath
     )
+    process {
+        # Load the XML file and select the Signer nodes
+        $Xml = [System.Xml.XmlDocument](Get-Content -Path $XmlFilePath)
+        [System.Object[]]$Signers = $Xml.SiPolicy.Signers.Signer
 
-    # Load the XML file and select the Signer nodes
-    $xml = [System.Xml.XmlDocument](Get-Content -Path $XmlFilePath)
-    $Signers = $xml.SiPolicy.Signers.Signer
+        # Create an empty array to store the output
+        [Signer[]]$Output = @()
 
-    # Create an empty array to store the output
-    [System.Object[]]$output = @()
+        # Loop through each Signer node and extract the information
+        foreach ($Signer in $Signers) {
+            # Create a new Signer object and assign the properties
+            [Signer]$SignerObj = [Signer]::new()
+            $SignerObj.ID = $Signer.ID
+            $SignerObj.Name = $Signer.Name
+            $SignerObj.CertRoot = $Signer.CertRoot.Value
+            $SignerObj.CertPublisher = $Signer.CertPublisher.Value
 
-    # Loop through each Signer node and extract the information
-    foreach ($signer in $signers) {
-        # Create a new Signer object and assign the properties
-        $SignerObj = [Signer]::new()
-        $SignerObj.ID = $signer.ID
-        $SignerObj.Name = $signer.Name
-        $SignerObj.CertRoot = $signer.CertRoot.Value
-        $SignerObj.CertPublisher = $signer.CertPublisher.Value
-
-        # Add the Signer object to the output array
-        $output += $SignerObj
+            # Add the Signer object to the output array
+            $Output += $SignerObj
+        }
     }
-
-    # Return the output array
-    return $output
+    end {
+        # Return the output array
+        return $Output
+    }
 }
 
 # Function to calculate the TBS of a certificate
@@ -89,18 +85,30 @@ function Get-TBSCertificate {
     return [System.BitConverter]::ToString($hash) -replace '-', ''
 }
 
-# Helps get the 2nd aka nested signer/signature of the dual signed files
-# https://www.sysadmins.lv/blog-en/reading-multiple-signatures-from-signed-file-with-powershell.aspx
-# https://www.sysadmins.lv/disclaimer.aspx
 function Get-AuthenticodeSignatureEx {
+    <#
+    .SYNOPSIS
+        Helps to get the 2nd aka nested signer/signature of the dual signed files
+    .NOTES
+        This function is used in a very minimum capacity by the WDACConfig module
+    .LINK
+        https://www.sysadmins.lv/blog-en/reading-multiple-signatures-from-signed-file-with-powershell.aspx
+        https://www.sysadmins.lv/disclaimer.aspx
+    .PARAMETER FilePath
+        The path of the file(s) to get the signature of
+    #>
+
     [CmdletBinding()]
+
     param(
         [Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
-        [System.String[]]$FilePath # The path of the file(s) to get the signature of
+        [System.String[]]$FilePath
     )
+
     begin {
+
         # Define the signature of the Crypt32.dll library functions to use
-        $signature = @'
+        [System.String]$Signature = @'
     [DllImport("crypt32.dll", CharSet = CharSet.Auto, SetLastError = true)]
     public static extern bool CryptQueryObject(
         int dwObjectType,
@@ -134,48 +142,60 @@ function Get-AuthenticodeSignatureEx {
         int dwFlags
     );
 '@
+
         # Load the System.Security assembly to use the SignedCms class
-        Add-Type -AssemblyName System.Security -ErrorAction SilentlyContinue
+        Add-Type -AssemblyName 'System.Security' -ErrorAction SilentlyContinue
         # Add the Crypt32.dll library functions as a type
-        Add-Type -MemberDefinition $signature -Namespace PKI -Name Crypt32 -ErrorAction SilentlyContinue
+        Add-Type -MemberDefinition $Signature -Namespace 'PKI' -Name 'Crypt32' -ErrorAction SilentlyContinue
+                
         # Define some constants for the CryptQueryObject function parameters
-        $CERT_QUERY_OBJECT_FILE = 0x1
-        $CERT_QUERY_CONTENT_FLAG_PKCS7_SIGNED_EMBED = 0x400
-        $CERT_QUERY_FORMAT_FLAG_BINARY = 0x2
+        [System.Int16]$CERT_QUERY_OBJECT_FILE = 0x1
+        [System.Int32]$CERT_QUERY_CONTENT_FLAG_PKCS7_SIGNED_EMBED = 0x400
+        [System.Int16]$CERT_QUERY_FORMAT_FLAG_BINARY = 0x2
 
         # Define a helper function to get the timestamps of the countersigners
-        function getTimeStamps($SignerInfo) {
-            [System.Object[]]$retValue = @()
+        function Get-TimeStamps {
+            param (
+                $SignerInfo
+            )
+
+            [System.Object[]]$RetValue = @()
+            
             foreach ($CounterSignerInfos in $Infos.CounterSignerInfos) {
                 # Get the signing time attribute from the countersigner info object
-                $sTime = ($CounterSignerInfos.SignedAttributes | Where-Object -FilterScript { $_.Oid.Value -eq '1.2.840.113549.1.9.5' }).Values | `
+                $STime = ($CounterSignerInfos.SignedAttributes | Where-Object -FilterScript { $_.Oid.Value -eq '1.2.840.113549.1.9.5' }).Values | `
                     Where-Object -FilterScript { $null -ne $_.SigningTime }
                 # Create a custom object with the countersigner certificate and signing time properties
-                $tsObject = New-Object psobject -Property @{
+                $TsObject = New-Object psobject -Property @{
                     Certificate = $CounterSignerInfos.Certificate
-                    SigningTime = $sTime.SigningTime.ToLocalTime()
+                    SigningTime = $STime.SigningTime.ToLocalTime()
                 }
                 # Add the custom object to the return value array
-                $retValue += $tsObject
+                $RetValue += $TsObject
             }
             # Return the array of custom objects with countersigner info
-            $retValue
+            $RetValue
 
         }
     }
     process {
         # For each file path, get the authenticode signature using the built-in cmdlet
         Get-AuthenticodeSignature $FilePath | ForEach-Object -Process {
-            $Output = $_ # Store the output object in a variable
+
+            # Store the output object in a variable
+            [System.Management.Automation.Signature]$Output = $_
+           
             if ($null -ne $Output.SignerCertificate) {
+
                 # If the output object has a signer certificate property
                 # Initialize some variables to store the output parameters of the CryptQueryObject function
-                $pdwMsgAndCertEncodingType = 0
-                $pdwContentType = 0
-                $pdwFormatType = 0
-                [IntPtr]$phCertStore = [IntPtr]::Zero
-                [IntPtr]$phMsg = [IntPtr]::Zero
-                [IntPtr]$ppvContext = [IntPtr]::Zero
+                [System.Int64]$PdwMsgAndCertEncodingType = 0
+                [System.Int64]$PdwContentType = 0
+                [System.Int64]$PdwFormatType = 0
+                [System.IntPtr]$PhCertStore = [System.IntPtr]::Zero
+                [System.IntPtr]$PhMsg = [System.IntPtr]::Zero
+                [System.IntPtr]$PpvContext = [System.IntPtr]::Zero
+                
                 # Call the CryptQueryObject function to get the handle of the PKCS #7 message from the file path
                 $return = [PKI.Crypt32]::CryptQueryObject(
                     $CERT_QUERY_OBJECT_FILE,
@@ -190,46 +210,74 @@ function Get-AuthenticodeSignatureEx {
                     [ref]$phMsg,
                     [ref]$ppvContext
                 )
-                if (!$return) { return } # If the function fails, return nothing
-                $pcbData = 0 # Initialize a variable to store the size of the PKCS #7 message data
+                # If the function fails, return nothing
+                if (!$return) { return } 
+                                
+                # Initialize a variable to store the size of the PKCS #7 message data
+                [System.Int64]$PcbData = 0 
+                
                 # Call the CryptMsgGetParam function to get the size of the PKCS #7 message data
                 $return = [PKI.Crypt32]::CryptMsgGetParam($phMsg, 29, 0, $null, [ref]$pcbData)
-                if (!$return) { return } # If the function fails, return nothing
-                $pvData = New-Object byte[] -ArgumentList $pcbData # Create a byte array to store the PKCS #7 message data
+               
+                # If the function fails, return nothing
+                if (!$return) { return }
+
+                # Create a byte array to store the PKCS #7 message data
+                $pvData = New-Object -TypeName 'System.Byte[]' -ArgumentList $pcbData 
+                
                 # Call the CryptMsgGetParam function again to get the PKCS #7 message data
-                $return = [PKI.Crypt32]::CryptMsgGetParam($phMsg, 29, 0, $pvData, [ref]$pcbData)
-                $SignedCms = New-Object Security.Cryptography.Pkcs.SignedCms # Create a SignedCms object to decode the PKCS #7 message data
-                $SignedCms.Decode($pvData) # Decode the PKCS #7 message data and populate the SignedCms object properties
-                $Infos = $SignedCms.SignerInfos[0] # Get the first signer info object from the SignedCms object
+                $Return = [PKI.Crypt32]::CryptMsgGetParam($PhMsg, 29, 0, $PvData, [System.Management.Automation.PSReference]$PcbData)
+               
+                # Create a SignedCms object to decode the PKCS #7 message data
+                [System.Security.Cryptography.Pkcs.SignedCms]$SignedCms = New-Object -TypeName 'Security.Cryptography.Pkcs.SignedCms' 
+                
+                # Decode the PKCS #7 message data and populate the SignedCms object properties
+                $SignedCms.Decode($PvData) 
+                
+                # Get the first signer info object from the SignedCms object
+                $Infos = $SignedCms.SignerInfos[0]
+                
                 # Add some properties to the output object, such as TimeStamps, DigestAlgorithm and NestedSignature
                 $Output | Add-Member -MemberType NoteProperty -Name TimeStamps -Value $null
                 $Output | Add-Member -MemberType NoteProperty -Name DigestAlgorithm -Value $Infos.DigestAlgorithm.FriendlyName
+                
                 # Call the helper function to get the timestamps of the countersigners and assign it to the TimeStamps property
-                $Output.TimeStamps = getTimeStamps $Infos
+                $Output.TimeStamps = Get-TimeStamps -SignerInfo $Infos
+                
                 # Check if there is a nested signature attribute in the signer info object by looking for the OID 1.3.6.1.4.1.311.2.4.1
                 $second = $Infos.UnsignedAttributes | Where-Object -FilterScript { $_.Oid.Value -eq '1.3.6.1.4.1.311.2.4.1' }
-                if ($second) {
-                    # If there is a nested signature attribute
+                
+                if ($Second) {
+
+                    # If there is a nested signature attribute                    
                     # Get the value of the nested signature attribute as a raw data byte array
-                    $value = $second.Values | Where-Object -FilterScript { $_.Oid.Value -eq '1.3.6.1.4.1.311.2.4.1' }
-                    $SignedCms2 = New-Object Security.Cryptography.Pkcs.SignedCms # Create another SignedCms object to decode the nested signature data
-                    $SignedCms2.Decode($value.RawData) # Decode the nested signature data and populate the SignedCms object properties
+                    $value = $Second.Values | Where-Object -FilterScript { $_.Oid.Value -eq '1.3.6.1.4.1.311.2.4.1' }
+                    
+                    # Create another SignedCms object to decode the nested signature data
+                    [System.Security.Cryptography.Pkcs.SignedCms]$SignedCms2 = New-Object -TypeName 'Security.Cryptography.Pkcs.SignedCms' 
+
+                    # Decode the nested signature data and populate the SignedCms object properties
+                    $SignedCms2.Decode($value.RawData) 
                     $Output | Add-Member -MemberType NoteProperty -Name NestedSignature -Value $null
-                    $Infos = $SignedCms2.SignerInfos[0] # Get the first signer info object from the nested signature SignedCms object
+                    
+                    # Get the first signer info object from the nested signature SignedCms object
+                    $Infos = $SignedCms2.SignerInfos[0]
+                    
                     # Create a custom object with some properties of the nested signature, such as signer certificate, digest algorithm and timestamps
-                    $nested = New-Object psobject -Property @{
+                    $Nested = New-Object -TypeName 'psobject' -Property @{
                         SignerCertificate = $Infos.Certificate
                         DigestAlgorithm   = $Infos.DigestAlgorithm.FriendlyName
-                        TimeStamps        = getTimeStamps $Infos
+                        TimeStamps        = Get-TimeStamps -SignerInfo $Infos
                     }
                     # Assign the custom object to the NestedSignature property of the output object
-                    $Output.NestedSignature = $nested
+                    $Output.NestedSignature = $Nested
                 }
                 # Return the output object with the added properties
                 $Output
+
                 # Close the handles of the PKCS #7 message and the certificate store
-                [void][PKI.Crypt32]::CryptMsgClose($phMsg)
-                [void][PKI.Crypt32]::CertCloseStore($phCertStore, 0)
+                [void][PKI.Crypt32]::CryptMsgClose($PhMsg)
+                [void][PKI.Crypt32]::CertCloseStore($PhCertStore, 0)
             }
             else {
                 # If the output object does not have a signer certificate property
@@ -241,38 +289,55 @@ function Get-AuthenticodeSignatureEx {
     end {}
 }
 
-
-
-# A function to get all the certificates from a signed file or a certificate object and output a Collection
 function Get-SignedFileCertificates {
+    <#
+    .SYNOPSIS
+        A function to get all the certificates from a signed file or a certificate object and output a Collection
+    .PARAMETER FilePath
+        Optional parameter, the function will get all the certificates from this file if this parameter is used
+    .PARAMETER X509Certificate2
+        Optional parameter, the function will get all the certificates from this certificate object if this parameter is used
+    .INPUTS
+        System.String
+        System.Security.Cryptography.X509Certificates.X509Certificate2
+    .OUTPUTS
+        System.Security.Cryptography.X509Certificates.X509Certificate2Collection
+    #>
     param (
-        # Define two sets of parameters, one for the FilePath and one for the CertObject
         [Parameter()]
         [System.String]$FilePath,
         [Parameter(ValueFromPipeline = $true)]
         [System.Security.Cryptography.X509Certificates.X509Certificate2]$X509Certificate2
     )
 
-    # Create an X509Certificate2Collection object
-    $CertCollection = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2Collection
-
-    # Check which parameter set is used
-    if ($FilePath) {
-        # If the FilePath parameter is used, import all the certificates from the file
-        $CertCollection.Import($FilePath, $null, 'DefaultKeySet')
-    }
-    elseif ($X509Certificate2) {
-        # If the CertObject parameter is used, add the certificate object to the collection
-        $CertCollection.Add($X509Certificate2)
+    begin {
+        # Create an X509Certificate2Collection object
+        [System.Security.Cryptography.X509Certificates.X509Certificate2Collection]$CertCollection = New-Object -TypeName System.Security.Cryptography.X509Certificates.X509Certificate2Collection
     }
 
-    # Return the collection
-    return $CertCollection
+    process {
+        # Check which parameter set is used
+        if ($FilePath) {
+            # If the FilePath parameter is used, import all the certificates from the file
+            $CertCollection.Import($FilePath, $null, 'DefaultKeySet')
+        }
+        elseif ($X509Certificate2) {
+            # If the CertObject parameter is used, add the certificate object to the collection
+            $CertCollection.Add($X509Certificate2)
+        }
+    }
+
+    end {
+        # Return the collection
+        return $CertCollection
+    }
 }
 
-
-# A function to detect Root, Intermediate and Leaf certificates
 function Get-CertificateDetails {
+    <#
+    .SYNOPSIS
+        A function to detect Root, Intermediate and Leaf certificates
+    #>
     param (
         [Parameter(ParameterSetName = 'Based on File Path', Mandatory = $true)]
         [System.String]$FilePath,
@@ -402,121 +467,18 @@ function Get-CertificateDetails {
     }
 }
 
-
-
-<#
-
-# Function that shows the details of certificates. E.g, All intermediate certs, Leaf cert or the entire chain, depending on optional switch parameters
-function Get-CertificateDetails {
-    # Use the param keyword to define the parameters
-    param (
-        # Make the FilePath parameter mandatory and validate that it is a valid file path
-        [Parameter()]
-        [ValidateScript({ Test-Path -Path $_ -PathType Leaf })]
-        [System.String]$FilePath,
-        $X509Certificate2,
-        [System.Management.Automation.SwitchParameter]$IntermediateOnly,
-        [System.Management.Automation.SwitchParameter]$AllCertificates,
-        [System.Management.Automation.SwitchParameter]$LeafCertificate
-    )
-
-    if ($FilePath) {
-        # Get the certificate from the file path
-        $Cert = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2 $FilePath
-    }
-    # if file path isn't used and instead a X509Certificate2 is provided then assign it directly to the $Cert variable
-    elseif ($X509Certificate2) {
-        $Cert = $X509Certificate2
-    }
-
-    # Build the certificate chain
-    $Chain = New-Object -TypeName System.Security.Cryptography.X509Certificates.X509Chain
-
-    # Set the chain policy properties
-    $chain.ChainPolicy.RevocationMode = 'NoCheck'
-    $chain.ChainPolicy.RevocationFlag = 'EndCertificateOnly'
-    $chain.ChainPolicy.VerificationFlags = 'NoFlag'
-
-    [void]$Chain.Build($Cert)
-
-    # Check the value of the switch parameters
-    if ($IntermediateOnly) {
-        # If IntermediateOnly is present, loop through the chain elements and display only the intermediate certificates
-        for ($i = 1; $i -lt $Chain.ChainElements.Count - 1; $i++) {
-            # Create a custom object with the certificate properties
-            $Element = $Chain.ChainElements[$i]
-            # Extract the data after CN= in the subject and issuer properties
-            $SubjectCN = ($Element.Certificate.Subject -split '(?:^|,)CN=|,')[1]
-            $IssuerCN = ($Element.Certificate.Issuer -split '(?:^|,)CN=|,')[1]
-            # Get the TBS value of the certificate using the Get-TBSCertificate function
-            $TbsValue = Get-TBSCertificate -cert $Element.Certificate
-            # Create a custom object with the extracted properties and the TBS value
-            $Obj = [pscustomobject]@{
-                SubjectCN = $SubjectCN
-                IssuerCN  = $issuerCN
-                NotAfter  = $Element.Certificate.NotAfter
-                TBSValue  = $TbsValue
-            }
-            # Display the object
-            Write-Output -InputObject $Obj
-        }
-    }
-    elseif ($AllCertificates) {
-        # If AllCertificates is present, loop through all chain elements and display all certificates
-        foreach ($Element in $Chain.ChainElements) {
-            # Create a custom object with the certificate properties
-            # Extract the data after CN= in the subject and issuer properties
-            $SubjectCN = ($Element.Certificate.Subject -split '(?:^|,)CN=|,')[1]
-            $IssuerCN = ($Element.Certificate.Issuer -split '(?:^|,)CN=|,')[1]
-            # Get the TBS value of the certificate using the Get-TBSCertificate function
-            $TbsValue = Get-TBSCertificate -cert $Element.Certificate
-            # Create a custom object with the extracted properties and the TBS value
-            $Obj = [pscustomobject]@{
-                SubjectCN = $SubjectCN
-                IssuerCN  = $IssuerCN
-                NotAfter  = $element.Certificate.NotAfter
-                TBSValue  = $TbsValue
-            }
-            # Display the object
-            Write-Output -InputObject $obj
-        }
-    }
-    elseif ($LeafCertificate) {
-        # If LeafCertificate is present, create a custom object with the leaf certificate properties
-        # Extract the data after CN= in the subject and issuer properties
-        $SubjectCN = ($Chain.ChainElements[0].Certificate.Subject -split '(?:^|,)CN=|,')[1]
-        $IssuerCN = ($Chain.ChainElements[0].Certificate.Issuer -split '(?:^|,)CN=|,')[1]
-        # Get the TBS value of the certificate using the Get-TBSCertificate function
-        $TbsValue = Get-TBSCertificate -cert $Chain.ChainElements[0].Certificate
-        # Create a custom object with the extracted properties and the TBS value
-        $Obj = [pscustomobject]@{
-            SubjectCN = $SubjectCN
-            IssuerCN  = $IssuerCN
-            NotAfter  = $Chain.ChainElements[0].Certificate.NotAfter
-            TBSValue  = $TbsValue
-        }
-        # Display the object
-        Write-Output -InputObject 'Leaf Certificate:'
-        Write-Output -InputObject $obj
-    }
-    else {
-        # If none of the switch parameters are present, display a message to inform the user of their options
-        Write-Output -InputObject 'Please specify one of the following switch parameters to get certificate details: -IntermediateOnly, -AllCertificates, or -LeafCertificate.'
-    }
-}
-
-#>
-
-
-# a function that takes WDAC XML policy file path and a Signed file path as inputs and compares the output of the Get-SignerInfo and Get-CertificateDetails functions
 function Compare-SignerAndCertificate {
+    <#
+    .SYNOPSIS
+        a function that takes WDAC XML policy file path and a Signed file path as inputs and compares the output of the Get-SignerInfo and Get-CertificateDetails functions
+    #>
     param(
         [Parameter(Mandatory = $true)][System.String]$XmlFilePath,
         [Parameter(Mandatory = $true)] [System.String]$SignedFilePath
     )
 
     # Get the signer information from the XML file path using the Get-SignerInfo function
-    $SignerInfo = Get-SignerInfo -XmlFilePath $XmlFilePath
+    [Signer[]]$SignerInfo = Get-SignerInfo -XmlFilePath $XmlFilePath
 
     # An array to store the details of the main certificate of the signed file
     [System.Object[]]$CertificateDetails = @()
@@ -528,7 +490,7 @@ function Compare-SignerAndCertificate {
     [System.Object[]]$ComparisonResults = @()
 
     # Get the certificate details from the signed file path using the Get-CertificateDetails function with the -IntermediateOnly parameter
-    $CertificateDetails = Get-CertificateDetails -IntermediateOnly -FilePath $SignedFilePath
+    [System.Object[]]$CertificateDetails = Get-CertificateDetails -IntermediateOnly -FilePath $SignedFilePath
 
     # Get the Nested certificate of the signed file, if any
     $ExtraCertificateDetails = Get-AuthenticodeSignatureEx -FilePath $SignedFilePath
@@ -546,7 +508,6 @@ function Compare-SignerAndCertificate {
         $NestedCertificateDetails = Get-CertificateDetails -IntermediateOnly -X509Certificate2 $NestedCertificate -LeafCNOfTheNestedCertificate $LeafCNOfTheNestedCertificate
     }
 
-
     # Declare $LeafCertificateDetails as an array
     [System.Object[]]$LeafCertificateDetails = @()
 
@@ -561,7 +522,6 @@ function Compare-SignerAndCertificate {
         # append an X509Certificate2 object to the array
         $NestedLeafCertificateDetails = Get-CertificateDetails -LeafCertificate -X509Certificate2 $NestedCertificate -LeafCNOfTheNestedCertificate $LeafCNOfTheNestedCertificate
     }
-
 
     # Loop through each signer in the signer information array
     foreach ($Signer in $SignerInfo) {
@@ -685,108 +645,56 @@ function Compare-SignerAndCertificate {
             else {
                 $ComparisonResult.CertPublisherMatch = $false
             }
-
         }
 
         # Add the comparison result object to the comparison results array
         $ComparisonResults += $ComparisonResult
-
     }
-
 
     # Return the comparison results array
     return $ComparisonResults
 }
 
-
-
-
-# Define a function to load an xml file and create an output array of custom objects that contain the file rules that are based on file hashes
-function Get-FileRuleOutput ($xmlPath) {
+function Get-FileRuleOutput ($XmlPath) {
+    <#
+    .SYNOPSIS
+        a function to load an xml file and create an output array of custom objects that contain the file rules that are based on file hashes
+    #>
 
     # Load the xml file into a variable
-    $xml = [System.Xml.XmlDocument](Get-Content -Path $xmlPath)
+    $Xml = [System.Xml.XmlDocument](Get-Content -Path $XmlPath)
 
     # Create an empty array to store the output
-    [System.Object[]]$OutPutHashInfoProcessing = @()
+    [System.Object[]]$OutputHashInfoProcessing = @()
 
     # Loop through each file rule in the xml file
-    foreach ($filerule in $xml.SiPolicy.FileRules.Allow) {
+    foreach ($FileRule in $Xml.SiPolicy.FileRules.Allow) {
 
         # Extract the hash value from the Hash attribute
-        $hashvalue = $filerule.Hash
+        [System.String]$hashvalue = $FileRule.Hash
 
         # Extract the hash type from the FriendlyName attribute using regex
-        $hashtype = $filerule.FriendlyName -replace '.* (Hash (Sha1|Sha256|Page Sha1|Page Sha256|Authenticode SIP Sha256))$', '$1'
+        [System.String]$HashType = $FileRule.FriendlyName -replace '.* (Hash (Sha1|Sha256|Page Sha1|Page Sha256|Authenticode SIP Sha256))$', '$1'
 
         # Extract the file path from the FriendlyName attribute using regex
-        $FilePathForHash = $filerule.FriendlyName -replace ' (Hash (Sha1|Sha256|Page Sha1|Page Sha256|Authenticode SIP Sha256))$', ''
+        [System.IO.FileInfo]$FilePathForHash = $FileRule.FriendlyName -replace ' (Hash (Sha1|Sha256|Page Sha1|Page Sha256|Authenticode SIP Sha256))$', ''
 
         # Create a custom object with the three properties
-        $object = [PSCustomObject]@{
+        $Object = [PSCustomObject]@{
             HashValue       = $hashvalue
-            HashType        = $hashtype
+            HashType        = $HashType
             FilePathForHash = $FilePathForHash
         }
 
         # Add the object to the output array if it is not a duplicate hash value
-        if ($OutPutHashInfoProcessing.HashValue -notcontains $hashvalue) {
-            $OutPutHashInfoProcessing += $object
+        if ($OutputHashInfoProcessing.HashValue -notcontains $hashvalue) {
+            $OutputHashInfoProcessing += $Object
         }
     }
 
     # Only show the Authenticode Hash SHA256
-    $OutPutHashInfoProcessing = $OutPutHashInfoProcessing | Where-Object -FilterScript { $_.hashtype -eq 'Hash Sha256' }
+    $OutputHashInfoProcessing = $OutputHashInfoProcessing | Where-Object -FilterScript { $_.hashtype -eq 'Hash Sha256' }
 
     # Return the output array
-    return $OutPutHashInfoProcessing
+    return $OutputHashInfoProcessing
 }
-
-
-<# NOT USED ANYMORE
-
-# Define a function to compare two xml files and return an array of objects with a custom property for the comparison result
-function Compare-XmlFiles ($refXmlPath, $tarXmlPath) {
-
-    # Load the reference xml file and create an output array using the Get-FileRuleOutput function
-    $refoutput = Get-FileRuleOutput -xmlPath $refXmlPath
-
-    # Load the target xml file and create an output array using the Get-FileRuleOutput function
-    $taroutput = Get-FileRuleOutput -xmlPath $tarXmlPath
-
-    # make sure they are not empty
-    if ($refoutput -and $taroutput) {
-
-        # Compare the output arrays using the Compare-Object cmdlet with the -Property parameter
-        # Specify the HashValue property as the property to compare
-        # Use the -PassThru parameter to return the original input objects
-        # Use the -IncludeEqual parameter to include the objects that are equal in both arrays
-        $comparison = Compare-Object -ReferenceObject $refoutput -DifferenceObject $taroutput -Property HashValue -PassThru -IncludeEqual
-
-        # Create an empty array to store the output objects
-        [System.Object[]]$OutPutHashComparison = @()
-
-        # Loop through each object in the comparison array
-        foreach ($object in $comparison) {
-
-            # Create a custom property called Comparison and assign it a value based on the SideIndicator property
-            switch ($object.SideIndicator) {
-                '<=' { $comparison = 'Only in reference' }
-                '=>' { $comparison = 'Only in target' }
-                '==' { $comparison = 'Both' }
-            }
-
-            # Add the Comparison property to the object using the Add-Member cmdlet
-            $object | Add-Member -MemberType NoteProperty -Name Comparison -Value $comparison
-
-            # Add the object to the output array
-            $OutPutHashComparison += $object
-        }
-
-        # Return the output array
-        return $OutPutHashComparison
-
-    }
-}
-#>
-

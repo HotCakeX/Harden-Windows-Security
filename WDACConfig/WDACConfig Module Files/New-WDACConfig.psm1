@@ -177,7 +177,7 @@ function New-WDACConfig {
                 Set-RuleOption -FilePath .\AllowMicrosoftPlusBlockRules.xml -Option 8
             }        
             Set-HVCIOptions -Strict -FilePath .\AllowMicrosoftPlusBlockRules.xml
-            ConvertFrom-CIPolicy -XmlFilePath .\AllowMicrosoftPlusBlockRules. -BinaryFilePath "$PolicyID.cip" | Out-Null   
+            ConvertFrom-CIPolicy -XmlFilePath .\AllowMicrosoftPlusBlockRules.xml -BinaryFilePath "$PolicyID.cip" | Out-Null   
             # Remove the extra files that were created during module operation and are no longer needed
             Remove-Item -Path '.\AllowMicrosoft.xml', 'Microsoft recommended block rules.xml' -Force
             [PSCustomObject]@{

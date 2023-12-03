@@ -3,10 +3,10 @@ function Set-CommonWDACConfig {
     [CmdletBinding()]
     Param(       
         [ValidateScript({
-                $certs = foreach ($cert in (Get-ChildItem -Path 'Cert:\CurrentUser\my')) {
+            [System.String[]]$Certificates = foreach ($cert in (Get-ChildItem -Path 'Cert:\CurrentUser\my')) {
             (($cert.Subject -split ',' | Select-Object -First 1) -replace 'CN=', '').Trim()
                 } 
-                $certs -contains $_
+                $Certificates -contains $_
             }, ErrorMessage = "A certificate with the provided common name doesn't exist in the personal store of the user certificates." )]
         [parameter(Mandatory = $false)][System.String]$CertCN,
 

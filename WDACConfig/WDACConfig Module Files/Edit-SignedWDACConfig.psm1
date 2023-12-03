@@ -71,10 +71,10 @@ function Edit-SignedWDACConfig {
         [System.String[]]$PolicyPaths,
 
         [ValidateScript({
-                $certs = foreach ($cert in (Get-ChildItem -Path 'Cert:\CurrentUser\my')) {
+                [System.String[]]$Certificates = foreach ($cert in (Get-ChildItem -Path 'Cert:\CurrentUser\my')) {
                 (($cert.Subject -split ',' | Select-Object -First 1) -replace 'CN=', '').Trim()
                 } 
-                $certs -contains $_
+                $Certificates -contains $_
             }, ErrorMessage = "A certificate with the provided common name doesn't exist in the personal store of the user certificates." )]
         [Parameter(Mandatory = $false, ValueFromPipelineByPropertyName = $true)] # Used by the entire Cmdlet
         [System.String]$CertCN,
@@ -177,7 +177,7 @@ function Edit-SignedWDACConfig {
         if (!$CertCN) {
             if ($UserConfig.CertificateCommonName) {
                 # Check if the value in the User configuration file exists and is valid
-                if (Confirm-CertCN $($UserConfig.CertificateCommonName)) {
+                if (Confirm-CertCN -CN $($UserConfig.CertificateCommonName)) {
                     # if it's valid then use it
                     $CertCN = $UserConfig.CertificateCommonName
                 }

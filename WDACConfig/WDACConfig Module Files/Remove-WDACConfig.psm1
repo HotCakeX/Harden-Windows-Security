@@ -26,10 +26,10 @@ function Remove-WDACConfig {
         [System.String[]]$PolicyPaths,
 
         [ValidateScript({
-                $certs = foreach ($cert in (Get-ChildItem -Path 'Cert:\CurrentUser\my')) {
-                (($cert.Subject -split ',' | Select-Object -First 1) -replace 'CN=', '').Trim()
-                }
-                $certs -contains $_
+                [System.String[]]$Certificates = foreach ($Cert in (Get-ChildItem -Path 'Cert:\CurrentUser\my')) {
+                (($Cert.Subject -split ',' | Select-Object -First 1) -replace 'CN=', '').Trim()
+                } 
+                $Certificates -contains $_
             }, ErrorMessage = "A certificate with the provided common name doesn't exist in the personal store of the user certificates." )]
         [parameter(Mandatory = $false, ParameterSetName = 'Signed Base', ValueFromPipelineByPropertyName = $true)]
         [System.String]$CertCN,
@@ -156,7 +156,7 @@ function Remove-WDACConfig {
             if (!$CertCN) {
                 if ($UserConfig.CertificateCommonName) {
                     # Check if the value in the User configuration file exists and is valid
-                    if (Confirm-CertCN $($UserConfig.CertificateCommonName)) {
+                    if (Confirm-CertCN -CN $($UserConfig.CertificateCommonName)) {
                         # if it's valid then use it
                         $CertCN = $UserConfig.CertificateCommonName
                     }

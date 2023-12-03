@@ -579,88 +579,88 @@ function New-WDACConfig {
 
     <#
 .SYNOPSIS
-Automate a lot of tasks related to WDAC (Windows Defender Application Control)
+    Automate a lot of tasks related to WDAC (Windows Defender Application Control)
 
 .LINK
-https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-WDACConfig
+    https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-WDACConfig
 
 .DESCRIPTION
-Using official Microsoft methods, configure and use Windows Defender Application Control
+    Using official Microsoft methods, configure and use Windows Defender Application Control
 
 .COMPONENT
-Windows Defender Application Control, ConfigCI PowerShell module
+    Windows Defender Application Control, ConfigCI PowerShell module
 
 .FUNCTIONALITY
-Automate various tasks related to Windows Defender Application Control (WDAC)
+    Automate various tasks related to Windows Defender Application Control (WDAC)
 
 .PARAMETER GetBlockRules
-Create Microsoft recommended block rules xml policy and remove the allow rules
+    Create Microsoft recommended block rules xml policy and remove the allow rules
 
 .PARAMETER GetDriverBlockRules
-Create Microsoft recommended driver block rules xml policy and remove the allow rules
+    Create Microsoft recommended driver block rules xml policy and remove the allow rules
 
 .PARAMETER MakeAllowMSFTWithBlockRules
-Make WDAC policy by merging AllowMicrosoft policy with the recommended block rules
+    Make WDAC policy by merging AllowMicrosoft policy with the recommended block rules
 
 .PARAMETER SetAutoUpdateDriverBlockRules
-Make a Scheduled Task that automatically runs every 7 days to download the newest Microsoft Recommended driver block rules
+    Make a Scheduled Task that automatically runs every 7 days to download the newest Microsoft Recommended driver block rules
 
 .PARAMETER PrepMSFTOnlyAudit
-Prepare the system for Audit mode using AllowMicrosoft default policy
+    Prepare the system for Audit mode using AllowMicrosoft default policy
 
 .PARAMETER PrepDefaultWindowsAudit
-Prepare the system for Audit mode using DefaultWindows policy
+    Prepare the system for Audit mode using DefaultWindows policy
 
 .PARAMETER MakePolicyFromAuditLogs
-Make a WDAC Policy from Audit event logs that also covers files no longer on disk
+    Make a WDAC Policy from Audit event logs that also covers files no longer on disk
 
 .PARAMETER MakeLightPolicy
-Make a WDAC Policy with ISG for Lightly Managed system
+    Make a WDAC Policy with ISG for Lightly Managed system
 
 .PARAMETER MakeDefaultWindowsWithBlockRules
-Make a WDAC policy by merging DefaultWindows policy with the recommended block rules
+    Make a WDAC policy by merging DefaultWindows policy with the recommended block rules
 
 .PARAMETER BasePolicyType
-Select the Base Policy Type
+    Select the Base Policy Type
 
 .PARAMETER Deploy
-Deploys the policy that is being created
+    Deploys the policy that is being created
 
 .PARAMETER IncludeSignTool
-Indicates that the Default Windows policy that is being created must include Allow rules for SignTool.exe - This parameter must be used when you intend to Sign and Deploy the Default Windows policy.
+    Indicates that the Default Windows policy that is being created must include Allow rules for SignTool.exe - This parameter must be used when you intend to Sign and Deploy the Default Windows policy.
 
 .PARAMETER SignToolPath
-Path to the SignTool.exe file - Optional
+    Path to the SignTool.exe file - Optional
 
 .PARAMETER TestMode
-Indicates that the created/deployed policy will have Enabled:Boot Audit on Failure and Enabled:Advanced Boot Options Menu policy rule options
+    Indicates that the created/deployed policy will have Enabled:Boot Audit on Failure and Enabled:Advanced Boot Options Menu policy rule options
 
 .PARAMETER RequireEVSigners
-Indicates that the created/deployed policy will have Require EV Signers policy rule option.
+    Indicates that the created/deployed policy will have Require EV Signers policy rule option.
 
 .PARAMETER NoDeletedFiles
-Indicates that files that were run during program installations but then were deleted and are no longer on the disk, won't be added to the supplemental policy. This can mean the programs you installed will be allowed to run but installation/reinstallation might not be allowed once the policies are deployed.
+    Indicates that files that were run during program installations but then were deleted and are no longer on the disk, won't be added to the supplemental policy. This can mean the programs you installed will be allowed to run but installation/reinstallation might not be allowed once the policies are deployed.
 
 .PARAMETER SpecificFileNameLevel
-You can choose one of the following options: "OriginalFileName", "InternalName", "FileDescription", "ProductName", "PackageFamilyName", "FilePath". More info available on Microsoft Learn
+    You can choose one of the following options: "OriginalFileName", "InternalName", "FileDescription", "ProductName", "PackageFamilyName", "FilePath". More info available on Microsoft Learn
 
 .PARAMETER NoUserPEs
-By default, the module includes user PEs in the scan. When you use this switch parameter, they won't be included.
+    By default, the module includes user PEs in the scan. When you use this switch parameter, they won't be included.
 
 .PARAMETER NoScript
-Won't scan script files
+    Won't scan script files
 
 .PARAMETER Level
-Offers the same official Levels for scanning of event logs. If no level is specified the default, which is set to FilePublisher in this module, will be used.
+    Offers the same official Levels for scanning of event logs. If no level is specified the default, which is set to FilePublisher in this module, will be used.
 
 .PARAMETER Fallbacks
-Offers the same official Fallbacks for scanning of event logs. If no fallbacks are specified the default, which is set to Hash in this module, will be used.
+    Offers the same official Fallbacks for scanning of event logs. If no fallbacks are specified the default, which is set to Hash in this module, will be used.
 
 .PARAMETER LogSize
-Specifies the log size for Microsoft-Windows-CodeIntegrity/Operational events. The values must be in the form of <Digit + Data measurement unit>. e.g., 2MB, 10MB, 1GB, 1TB. The minimum accepted value is 1MB which is the default.
+    Specifies the log size for Microsoft-Windows-CodeIntegrity/Operational events. The values must be in the form of <Digit + Data measurement unit>. e.g., 2MB, 10MB, 1GB, 1TB. The minimum accepted value is 1MB which is the default.
 
 .PARAMETER SkipVersionCheck
-Can be used with any parameter to bypass the online version check - only to be used in rare cases
+    Can be used with any parameter to bypass the online version check - only to be used in rare cases
 
 #>
 }

@@ -10,7 +10,7 @@ function Invoke-WDACSimulation {
         [ValidateScript({ Test-Path -Path $_ -PathType 'Leaf' }, ErrorMessage = 'The path you selected is not a file path.')]
         [Parameter(Mandatory = $true)][System.String]$XmlFilePath,
 
-        [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SkipVersionCheck # Used by the entire Cmdlet
+        [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SkipVersionCheck
     )
 
     begin {
@@ -228,28 +228,29 @@ function Invoke-WDACSimulation {
 
     <#
 .SYNOPSIS
-Simulates the deployment of the WDAC policy
+    Simulates the deployment of the WDAC policy
 
 .LINK
-https://github.com/HotCakeX/Harden-Windows-Security/wiki/Invoke-WDACSimulation
+    https://github.com/HotCakeX/Harden-Windows-Security/wiki/Invoke-WDACSimulation
 
 .DESCRIPTION
-Simulates the deployment of the WDAC policy by analyzing a folder and checking which of the files in the folder are allowed by a user selected policy xml file
+    Simulates the deployment of the WDAC policy by analyzing a folder and checking which of the files in the folder are allowed by a user selected policy xml file
 
 .COMPONENT
-Windows Defender Application Control, ConfigCI PowerShell module
+    Windows Defender Application Control, ConfigCI PowerShell module
 
 .FUNCTIONALITY
-Simulates the deployment of the WDAC policy
+    Simulates the deployment of the WDAC policy
 
 .PARAMETER FolderPath
-Provide path to a folder where you want WDAC simulation to take place
+    Provide path to a folder where you want WDAC simulation to take place
 
 .PARAMETER XmlFilePath
-Provide path to a policy xml file that you want the cmdlet to simulate its deployment and running files against it
+    Provide path to a policy xml file that you want the cmdlet to simulate its deployment and running files against it
 
 .PARAMETER SkipVersionCheck
-Can be used with any parameter to bypass the online version check - only to be used in rare cases
+    Can be used with any parameter to bypass the online version check - only to be used in rare cases
+    It is used by the entire Cmdlet.
 
 #>
 }

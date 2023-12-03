@@ -321,28 +321,28 @@ function Remove-WDACConfig {
 
     <#
 .SYNOPSIS
-Removes Signed and unsigned deployed WDAC policies (Windows Defender Application Control)
+    Removes Signed and unsigned deployed WDAC policies (Windows Defender Application Control)
 
 .LINK
-https://github.com/HotCakeX/Harden-Windows-Security/wiki/Remove-WDACConfig
+    https://github.com/HotCakeX/Harden-Windows-Security/wiki/Remove-WDACConfig
 
 .DESCRIPTION
-Using official Microsoft methods, Removes Signed and unsigned deployed WDAC policies (Windows Defender Application Control)
+    Using official Microsoft methods, Removes Signed and unsigned deployed WDAC policies (Windows Defender Application Control)
 
 .COMPONENT
-Windows Defender Application Control, ConfigCI PowerShell module
+    Windows Defender Application Control, ConfigCI PowerShell module
 
 .FUNCTIONALITY
-Using official Microsoft methods, Removes Signed and unsigned deployed WDAC policies (Windows Defender Application Control)
+    Using official Microsoft methods, Removes Signed and unsigned deployed WDAC policies (Windows Defender Application Control)
 
 .PARAMETER SignedBase
-Remove Signed Base WDAC Policies
+    Remove Signed Base WDAC Policies
 
 .PARAMETER UnsignedOrSupplemental
-Remove Unsigned deployed WDAC policies as well as Signed deployed Supplemental WDAC policies
+    Remove Unsigned deployed WDAC policies as well as Signed deployed Supplemental WDAC policies
 
 .PARAMETER SkipVersionCheck
-Can be used with any parameter to bypass the online version check - only to be used in rare cases
+    Can be used with any parameter to bypass the online version check - only to be used in rare cases
 
 #>
 }

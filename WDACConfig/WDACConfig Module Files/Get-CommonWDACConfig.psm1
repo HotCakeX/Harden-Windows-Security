@@ -82,43 +82,43 @@ function Get-CommonWDACConfig {
 
 <#
 .SYNOPSIS
-Query and Read common values for parameters used by WDACConfig module
+    Query and Read common values for parameters used by WDACConfig module
 
 .LINK
-https://github.com/HotCakeX/Harden-Windows-Security/wiki/Get-CommonWDACConfig
+    https://github.com/HotCakeX/Harden-Windows-Security/wiki/Get-CommonWDACConfig
 
 .DESCRIPTION
-Reads and gets the values from the User Config Json file, used by the module internally and also to display the values on the console for the user
+    Reads and gets the values from the User Config Json file, used by the module internally and also to display the values on the console for the user
 
 .COMPONENT
-Windows Defender Application Control, ConfigCI PowerShell module, WDACConfig module
+    Windows Defender Application Control, ConfigCI PowerShell module, WDACConfig module
 
 .FUNCTIONALITY
-Reads and gets the values from the User Config Json file, used by the module internally and also to display the values on the console for the user
+    Reads and gets the values from the User Config Json file, used by the module internally and also to display the values on the console for the user
 
 .PARAMETER SignedPolicyPath
-Shows the path to a Signed WDAC xml policy
+    Shows the path to a Signed WDAC xml policy
 
 .PARAMETER UnsignedPolicyPath
-Shows the  path to an Unsigned WDAC xml policy
+    Shows the  path to an Unsigned WDAC xml policy
 
 .PARAMETER CertCN
-Shows the certificate common name
+    Shows the certificate common name
 
 .PARAMETER SignToolPath
-Shows the  path to the SignTool.exe
+    Shows the  path to the SignTool.exe
 
 .PARAMETER CertPath
-Shows the path to a .cer certificate file
+    Shows the path to a .cer certificate file
 
 .PARAMETER Open
-Opens the User Configuration file with the default app assigned to open Json files
+    Opens the User Configuration file with the default app assigned to open Json files
 
 .PARAMETER StrictKernelPolicyGUID
-Shows the GUID of the Strict Kernel mode policy
+    Shows the GUID of the Strict Kernel mode policy
 
 .PARAMETER StrictKernelNoFlightRootsPolicyGUID
-Shows the GUID of the Strict Kernel no Flights root mode policy
+    Shows the GUID of the Strict Kernel no Flights root mode policy
 
 #>
 

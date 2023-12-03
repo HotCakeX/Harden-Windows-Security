@@ -37,7 +37,7 @@ function Edit-SignedWDACConfig {
         [Parameter(Mandatory = $true, ParameterSetName = 'Update Base Policy')]
         [System.String]$NewBasePolicyType,
 
-        [ValidatePattern('\.cer$')] # Used by the entire Cmdlet
+        [ValidatePattern('\.cer$')]
         [ValidateScript({ Test-Path -Path $_ -PathType 'Leaf' }, ErrorMessage = 'The path you selected is not a file path.')]
         [Parameter(Mandatory = $false, ValueFromPipelineByPropertyName = $true)]
         [System.String]$CertPath,
@@ -75,10 +75,9 @@ function Edit-SignedWDACConfig {
                 }
                 $Certificates -contains $_
             }, ErrorMessage = "A certificate with the provided common name doesn't exist in the personal store of the user certificates." )]
-        [Parameter(Mandatory = $false, ValueFromPipelineByPropertyName = $true)] # Used by the entire Cmdlet
+        [Parameter(Mandatory = $false, ValueFromPipelineByPropertyName = $true)]
         [System.String]$CertCN,
 
-        # Setting the maxim range to the maximum allowed log size by Windows Event viewer
         [ValidateRange(1024KB, 18014398509481983KB)][Parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps Audit Events')]
         [System.Int64]$LogSize,
 
@@ -100,20 +99,20 @@ function Edit-SignedWDACConfig {
         [ValidateSet([Levelz])]
         [parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps Audit Events')]
         [parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps')]
-        [System.String]$Level = 'FilePublisher', # Setting the default value for the Level parameter
+        [System.String]$Level = 'FilePublisher',
 
         [ValidateSet([Fallbackz])]
         [parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps Audit Events')]
         [parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps')]
-        [System.String[]]$Fallbacks = 'Hash', # Setting the default value for the Fallbacks parameter
+        [System.String[]]$Fallbacks = 'Hash',
 
-        [Parameter(Mandatory = $false, ValueFromPipelineByPropertyName = $true)] # Used by the entire Cmdlet
+        [Parameter(Mandatory = $false, ValueFromPipelineByPropertyName = $true)]
         [System.String]$SignToolPath,
 
         [Parameter(Mandatory = $false, ParameterSetName = 'Update Base Policy')]
         [System.Management.Automation.SwitchParameter]$RequireEVSigners,
 
-        [Parameter(Mandatory = $false)] # Used by the entire Cmdlet
+        [Parameter(Mandatory = $false)]
         [System.Management.Automation.SwitchParameter]$SkipVersionCheck
     )
 
@@ -991,34 +990,52 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
 
     <#
 .SYNOPSIS
-Edits Signed WDAC policies deployed on the system (Windows Defender Application Control)
+    Edits Signed WDAC policies deployed on the system (Windows Defender Application Control)
 
 .LINK
-https://github.com/HotCakeX/Harden-Windows-Security/wiki/Edit-SignedWDACConfig
+    https://github.com/HotCakeX/Harden-Windows-Security/wiki/Edit-SignedWDACConfig
 
 .DESCRIPTION
-Using official Microsoft methods, Edits Signed WDAC policies deployed on the system (Windows Defender Application Control)
+    Using official Microsoft methods, Edits Signed WDAC policies deployed on the system (Windows Defender Application Control)
 
 .COMPONENT
-Windows Defender Application Control, ConfigCI PowerShell module
+    Windows Defender Application Control, ConfigCI PowerShell module
 
 .FUNCTIONALITY
-Using official Microsoft methods, Edits Signed WDAC policies deployed on the system (Windows Defender Application Control)
+    Using official Microsoft methods, Edits Signed WDAC policies deployed on the system (Windows Defender Application Control)
 
 .PARAMETER AllowNewAppsAuditEvents
-Rebootlessly install new apps/programs when Signed policy is already deployed, use audit events to capture installation files, scan their directories for new Supplemental policy, Sign and deploy thew Supplemental policy.
+    Rebootlessly install new apps/programs when Signed policy is already deployed, use audit events to capture installation files, scan their directories for new Supplemental policy, Sign and deploy thew Supplemental policy.
 
 .PARAMETER AllowNewApps
-Rebootlessly install new apps/programs when Signed policy is already deployed, scan their directories for new Supplemental policy, Sign and deploy thew Supplemental policy.
+    Rebootlessly install new apps/programs when Signed policy is already deployed, scan their directories for new Supplemental policy, Sign and deploy thew Supplemental policy.
 
 .PARAMETER MergeSupplementalPolicies
-Merges multiple Signed deployed supplemental policies into 1 single supplemental policy, removes the old ones, deploys the new one. System restart needed to take effect.
+    Merges multiple Signed deployed supplemental policies into 1 single supplemental policy, removes the old ones, deploys the new one. System restart needed to take effect.
 
 .PARAMETER UpdateBasePolicy
-It can rebootlessly change the type of the deployed signed base policy. It can update the recommended block rules and/or change policy rule options in the deployed base policy.
+    It can rebootlessly change the type of the deployed signed base policy. It can update the recommended block rules and/or change policy rule options in the deployed base policy.
 
 .PARAMETER SkipVersionCheck
-Can be used with any parameter to bypass the online version check - only to be used in rare cases
+    Can be used with any parameter to bypass the online version check - only to be used in rare cases
+    It is used by the entire Cmdlet.
+
+.PARAMETER LogSize
+    The log size to set for Code Integrity/Operational event logs
+    The accepted values are between 1024 KB and 18014398509481983 KB
+    The max range is the maximum allowed log size by Windows Event viewer
+
+.PARAMETER CertCN
+    Common name of the certificate used to sign the deployed Signed WDAC policy
+    It is Used by the entire Cmdlet
+
+.PARAMETER Level
+    The level that determines how the selected folder will be scanned.
+    The default value for it is FilePublisher.
+
+.PARAMETER Fallbacks
+    The fallback level(s) that determine how the selected folder will be scanned.
+    The default value for it is Hash.
 
 #>
 }

@@ -127,40 +127,40 @@ function Remove-CommonWDACConfig {
 }
 <#
 .SYNOPSIS
-Removes common values for parameters used by WDACConfig module
+    Removes common values for parameters used by WDACConfig module
 
 .LINK
-https://github.com/HotCakeX/Harden-Windows-Security/wiki/Remove-CommonWDACConfig
+    https://github.com/HotCakeX/Harden-Windows-Security/wiki/Remove-CommonWDACConfig
 
 .DESCRIPTION
-Removes common values for parameters used by WDACConfig module from the User Configurations JSON file. If you don't use it with any parameters, then all User Configs will be deleted.
+    Removes common values for parameters used by WDACConfig module from the User Configurations JSON file. If you don't use it with any parameters, then all User Configs will be deleted.
 
 .COMPONENT
-Windows Defender Application Control, ConfigCI PowerShell module, WDACConfig module
+    Windows Defender Application Control, ConfigCI PowerShell module, WDACConfig module
 
 .FUNCTIONALITY
-Removes common values for parameters used by WDACConfig module from the User Configurations JSON file. If you don't use it with any parameters, then all User Configs will be deleted.
+    Removes common values for parameters used by WDACConfig module from the User Configurations JSON file. If you don't use it with any parameters, then all User Configs will be deleted.
 
 .PARAMETER SignedPolicyPath
-Removes the SignedPolicyPath from User Configs
+    Removes the SignedPolicyPath from User Configs
 
 .PARAMETER UnsignedPolicyPath
-Removes the UnsignedPolicyPath from User Configs
+    Removes the UnsignedPolicyPath from User Configs
 
 .PARAMETER CertCN
-Removes the CertCN from User Configs
+    Removes the CertCN from User Configs
 
 .PARAMETER SignToolPath
-Removes the SignToolPath from User Configs
+    Removes the SignToolPath from User Configs
 
 .PARAMETER CertPath
-Removes the CertPath from User Configs
+    Removes the CertPath from User Configs
 
 .PARAMETER StrictKernelPolicyGUID
-Removes the StrictKernelPolicyGUID from User Configs
+    Removes the StrictKernelPolicyGUID from User Configs
 
 .PARAMETER StrictKernelNoFlightRootsPolicyGUID
-Removes the StrictKernelNoFlightRootsPolicyGUID from User Configs
+    Removes the StrictKernelNoFlightRootsPolicyGUID from User Configs
 
 #>
 # Set PSReadline tab completion to complete menu for easier access to available parameters - Only for the current session

@@ -18,7 +18,7 @@ function New-DenyWDACConfig {
         [System.String]$PackageName,
 
         [ValidatePattern('^[a-zA-Z0-9 ]+$', ErrorMessage = 'The Supplemental Policy Name can only contain alphanumeric characters and spaces.')]
-        [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true)] # Used by the entire Cmdlet
+        [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true)]
         [System.String]$PolicyName,
 
         [ValidateScript({ Test-Path -Path $_ -PathType 'Container' }, ErrorMessage = 'The path you selected is not a folder path.')]
@@ -29,12 +29,12 @@ function New-DenyWDACConfig {
         [ValidateSet([Levelz])]
         [Parameter(Mandatory = $false, ParameterSetName = 'Normal')]
         [Parameter(Mandatory = $false, ParameterSetName = 'Drivers')]
-        [System.String]$Level = 'FilePublisher', # Setting the default value for the Level parameter
+        [System.String]$Level = 'FilePublisher',
 
         [ValidateSet([Fallbackz])]
         [Parameter(Mandatory = $false, ParameterSetName = 'Normal')]
         [Parameter(Mandatory = $false, ParameterSetName = 'Drivers')]
-        [System.String[]]$Fallbacks = 'Hash', # Setting the default value for the Fallbacks parameter
+        [System.String[]]$Fallbacks = 'Hash',
 
         [ValidateSet('OriginalFileName', 'InternalName', 'FileDescription', 'ProductName', 'PackageFamilyName', 'FilePath')]
         [Parameter(Mandatory = $false, ParameterSetName = 'Normal')]
@@ -46,10 +46,10 @@ function New-DenyWDACConfig {
         [Parameter(Mandatory = $false, ParameterSetName = 'Normal')]
         [System.Management.Automation.SwitchParameter]$NoScript,
 
-        [Parameter(Mandatory = $false)] # Used by the entire Cmdlet
+        [Parameter(Mandatory = $false)]
         [System.Management.Automation.SwitchParameter]$Deploy,
 
-        [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SkipVersionCheck # Used by the entire Cmdlet
+        [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SkipVersionCheck
     )
 
     begin {
@@ -271,32 +271,46 @@ function New-DenyWDACConfig {
 
     <#
 .SYNOPSIS
-Creates Deny base policies (Windows Defender Application Control)
+    Creates Deny base policies (Windows Defender Application Control)
 
 .LINK
-https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-DenyWDACConfig
+    https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-DenyWDACConfig
 
 .DESCRIPTION
-Using official Microsoft methods to create Deny base policies (Windows Defender Application Control)
+    Using official Microsoft methods to create Deny base policies (Windows Defender Application Control)
 
 .COMPONENT
-Windows Defender Application Control, ConfigCI PowerShell module
+    Windows Defender Application Control, ConfigCI PowerShell module
 
 .FUNCTIONALITY
-Using official Microsoft methods, Removes Signed and unsigned deployed WDAC policies (Windows Defender Application Control)
+    Using official Microsoft methods, Removes Signed and unsigned deployed WDAC policies (Windows Defender Application Control)
+
+.PARAMETER PolicyName
+    It's used by the entire Cmdlet. It is the name of the base policy that will be created.
 
 .PARAMETER Normal
-Creates a Deny standalone base policy by scanning a directory for files. The base policy created by this parameter can be deployed side by side any other base/supplemental policy.
+    Creates a Deny standalone base policy by scanning a directory for files. The base policy created by this parameter can be deployed side by side any other base/supplemental policy.
+
+.PARAMETER Level
+    The level that determines how the selected folder will be scanned.
+    The default value for it is FilePublisher.
+
+.PARAMETER Fallbacks
+    The fallback level(s) that determine how the selected folder will be scanned.
+    The default value for it is Hash.
+
+.PARAMETER Deploy
+    It's used by the entire Cmdlet. Indicates that the created Base deny policy will be deployed on the system.
 
 .PARAMETER Drivers
-Creates a Deny standalone base policy for drivers only by scanning a directory for driver files. The base policy created by this parameter can be deployed side by side any other base/supplemental policy.
+    Creates a Deny standalone base policy for drivers only by scanning a directory for driver files. The base policy created by this parameter can be deployed side by side any other base/supplemental policy.
 
 .PARAMETER InstalledAppXPackages
-Creates a Deny standalone base policy for an installed App based on Appx package family names
+    Creates a Deny standalone base policy for an installed App based on Appx package family names
 
 .PARAMETER SkipVersionCheck
-Can be used with any parameter to bypass the online version check - only to be used in rare cases
-
+    Can be used with any parameter to bypass the online version check - only to be used in rare cases
+    It's used by the entire Cmdlet.
 #>
 }
 

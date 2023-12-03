@@ -126,40 +126,41 @@ function Confirm-WDACConfig {
 
     <#
 .SYNOPSIS
-Show the status of WDAC on the system and lists the current deployed policies and shows details about each of them
+    Shows the status of WDAC on the system, lists the currently deployed policies and shows the details about each of them.
+    It can also show the status of Smart App Control.
 
 .LINK
-https://github.com/HotCakeX/Harden-Windows-Security/wiki/Confirm-WDACConfig
+    https://github.com/HotCakeX/Harden-Windows-Security/wiki/Confirm-WDACConfig
 
 .DESCRIPTION
-Using official Microsoft methods, Show the status of WDAC (Windows Defender Application Control) on the system, list the current deployed policies and show details about each of them.
+    Using official Microsoft methods, Show the status of WDAC (Windows Defender Application Control) on the system, list the current deployed policies and show details about each of them.
 
 .COMPONENT
-Windows Defender Application Control, ConfigCI PowerShell module
+    Windows Defender Application Control, ConfigCI PowerShell module
 
 .FUNCTIONALITY
-Using official Microsoft methods, Show the status of WDAC (Windows Defender Application Control) on the system, list the current deployed policies and show details about each of them.
+    Using official Microsoft methods, Show the status of WDAC (Windows Defender Application Control) on the system, list the current deployed policies and show details about each of them.
 
 .PARAMETER ListActivePolicies
-Lists the currently deployed policies and shows details about each of them
+    Lists the currently deployed policies and shows details about each of them
 
 .PARAMETER VerifyWDACStatus
-Shows the status of WDAC (Windows Defender Application Control) on the system
+    Shows the status of WDAC (Windows Defender Application Control) on the system
 
 .PARAMETER CheckSmartAppControlStatus
-Checks the status of Smart App Control and reports the results on the console
+    Checks the status of Smart App Control and reports the results on the console
 
 .PARAMETER SkipVersionCheck
-Can be used with any parameter to bypass the online version check - only to be used in rare cases
+    Can be used with any parameter to bypass the online version check - only to be used in rare cases
 
 .EXAMPLE
-Confirm-WDACConfig -ListActivePolicies -OnlyBasePolicies
+    Confirm-WDACConfig -ListActivePolicies -OnlyBasePolicies
 
 .EXAMPLE
-Confirm-WDACConfig -ListActivePolicies -OnlySupplementalPolicies
+    Confirm-WDACConfig -ListActivePolicies -OnlySupplementalPolicies
 
 .EXAMPLE
-Confirm-WDACConfig -ListActivePolicies
+    Confirm-WDACConfig -ListActivePolicies
 
 #>
 }

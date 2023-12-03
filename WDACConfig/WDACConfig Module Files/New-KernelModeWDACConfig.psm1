@@ -173,10 +173,10 @@ function New-KernelModeWDACConfig {
                 # Verify the Policy ID in the User Config exists and is valid
                 $ObjectGuid = [System.Guid]::Empty
                 if ([System.Guid]::TryParse($PolicyID, [ref]$ObjectGuid)) {
-                    Write-Debug 'Valid GUID found in User Configs for Audit mode policy'
+                    Write-Debug -Message 'Valid GUID found in User Configs for Audit mode policy'
                 }
                 else {
-                    Write-Error 'Invalid or nonexistent GUID in User Configs for Audit mode policy, Use the -PrepMode parameter first.'
+                    Write-Error -Message 'Invalid or nonexistent GUID in User Configs for Audit mode policy, Use the -PrepMode parameter first.'
                 }
 
                 powershell.exe {
@@ -271,10 +271,10 @@ function New-KernelModeWDACConfig {
                 # Verify the Policy ID in the User Config exists and is valid
                 $ObjectGuid = [System.Guid]::Empty
                 if ([System.Guid]::TryParse($PolicyID, [ref]$ObjectGuid)) {
-                    Write-Debug 'Valid GUID found in User Configs for Audit mode policy'
+                    Write-Debug -Message 'Valid GUID found in User Configs for Audit mode policy'
                 }
                 else {
-                    Write-Error 'Invalid or nonexistent GUID in User Configs for Audit mode policy, Use the -PrepMode parameter first.'
+                    Write-Error -Message 'Invalid or nonexistent GUID in User Configs for Audit mode policy, Use the -PrepMode parameter first.'
                 }
 
                 powershell.exe {

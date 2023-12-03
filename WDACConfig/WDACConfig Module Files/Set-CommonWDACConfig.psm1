@@ -74,7 +74,7 @@ function Set-CommonWDACConfig {
         }
 
         if ($PSBoundParameters.Count -eq 0) {
-            Write-Error 'No parameter was selected.'
+            Write-Error -Message 'No parameter was selected.'
             break
         }
 

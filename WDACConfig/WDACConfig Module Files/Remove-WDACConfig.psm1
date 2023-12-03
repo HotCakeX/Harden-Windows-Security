@@ -136,7 +136,7 @@ function Remove-WDACConfig {
                     # Validate the Json file and read its content to make sure it's not corrupted
                     try { $UserConfig = $UserConfig | ConvertFrom-Json }
                     catch {
-                        Write-Error 'User Configuration Json file is corrupted, deleting it...' -ErrorAction Continue
+                        Write-Error -Message 'User Configuration Json file is corrupted, deleting it...' -ErrorAction Continue
                         # Calling this function with this parameter automatically does its job and breaks/stops the operation
                         Set-CommonWDACConfig -DeleteUserConfig
                     }

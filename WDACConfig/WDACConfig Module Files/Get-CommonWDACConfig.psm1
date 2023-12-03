@@ -1,4 +1,3 @@
-#Requires -RunAsAdministrator
 function Get-CommonWDACConfig {
     [CmdletBinding()]
     Param(

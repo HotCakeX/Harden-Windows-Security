@@ -1,4 +1,3 @@
-#Requires -RunAsAdministrator
 function Remove-CommonWDACConfig {
     [CmdletBinding()]
     Param(

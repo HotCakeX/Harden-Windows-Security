@@ -1,4 +1,3 @@
-#Requires -RunAsAdministrator
 function Invoke-WDACSimulation {
     [CmdletBinding(
         PositionalBinding = $false,

@@ -1,4 +1,3 @@
-#Requires -RunAsAdministrator
 function Deploy-SignedWDACConfig {
     [CmdletBinding(
         SupportsShouldProcess = $true,

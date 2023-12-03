@@ -1,4 +1,3 @@
-#Requires -RunAsAdministrator
 function Confirm-WDACConfig {
     [CmdletBinding(DefaultParameterSetName = 'List Active Policies')]
     Param(

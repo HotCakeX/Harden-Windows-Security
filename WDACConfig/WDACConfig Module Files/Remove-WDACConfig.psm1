@@ -1,4 +1,3 @@
-#Requires -RunAsAdministrator
 function Remove-WDACConfig {
     [CmdletBinding(
         DefaultParameterSetName = 'Signed Base',

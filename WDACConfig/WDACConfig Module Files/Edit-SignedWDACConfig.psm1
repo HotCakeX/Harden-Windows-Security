@@ -1,4 +1,3 @@
-#Requires -RunAsAdministrator
 function Edit-SignedWDACConfig {
     [CmdletBinding(
         DefaultParameterSetName = 'Allow New Apps Audit Events',

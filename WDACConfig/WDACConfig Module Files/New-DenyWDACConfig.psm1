@@ -1,4 +1,3 @@
-#Requires -RunAsAdministrator
 function New-DenyWDACConfig {
     [CmdletBinding(
         DefaultParameterSetName = 'Drivers',

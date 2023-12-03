@@ -1,4 +1,3 @@
-#Requires -RunAsAdministrator
 function New-KernelModeWDACConfig {
     [CmdletBinding(
         SupportsShouldProcess = $true,

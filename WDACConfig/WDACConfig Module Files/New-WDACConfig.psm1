@@ -1,4 +1,3 @@
-#Requires -RunAsAdministrator
 function New-WDACConfig {
     [CmdletBinding(
         DefaultParameterSetName = 'Get Block Rules',

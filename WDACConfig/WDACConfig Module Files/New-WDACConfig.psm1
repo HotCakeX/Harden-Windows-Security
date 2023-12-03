@@ -138,7 +138,7 @@ function New-WDACConfig {
         }
 
         [System.Management.Automation.ScriptBlock]$GetDriverBlockRulesSCRIPTBLOCK = {
-            [System.String]$DriverRules = (Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/public/windows/security/application-security/application-control/windows-defender-application-control/design/microsoft-recommended-driver-block-rules.md' -ProgressAction SilentlyContinue).Content -replace "(?s).*``````xml(.*)``````.*", '$1'
+            [System.String]$DriverRules = (Invoke-WebRequest -Uri $MSFTRecommendeDriverBlockRulesURL -ProgressAction SilentlyContinue).Content -replace "(?s).*``````xml(.*)``````.*", '$1'
             # Remove the unnecessary rules and elements - not using this one because then during the merge there will be error - The reason is that "<FileRuleRef RuleID="ID_ALLOW_ALL_2" />" is the only FileruleRef in the xml and after removing it, the <SigningScenario> element will be empty
             $DriverRules = $DriverRules -replace '<Allow\sID="ID_ALLOW_ALL_[12]"\sFriendlyName=""\sFileName="\*".*/>', ''
             $DriverRules = $DriverRules -replace '<FileRuleRef\sRuleID="ID_ALLOW_ALL_1".*/>', ''
@@ -275,7 +275,7 @@ function New-WDACConfig {
         }
 
         [System.Management.Automation.ScriptBlock]$DeployLatestBlockRulesSCRIPTBLOCK = {
-            (Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/public/windows/security/application-security/application-control/windows-defender-application-control/design/applications-that-can-bypass-wdac.md' -ProgressAction SilentlyContinue).Content -replace "(?s).*``````xml(.*)``````.*", '$1' | Out-File '.\Microsoft recommended block rules TEMP.xml'
+            (Invoke-WebRequest -Uri $MSFTRecommendeBlockRulesURL -ProgressAction SilentlyContinue).Content -replace "(?s).*``````xml(.*)``````.*", '$1' | Out-File '.\Microsoft recommended block rules TEMP.xml'
             # Remove empty lines from the policy file
             Get-Content -Path '.\Microsoft recommended block rules TEMP.xml' | Where-Object -FilterScript { $_.trim() -ne '' } | Out-File '.\Microsoft recommended block rules.xml'
             Set-RuleOption -FilePath '.\Microsoft recommended block rules.xml' -Option 3 -Delete
@@ -544,7 +544,7 @@ function New-WDACConfig {
             [System.DateTime]$Date = $Response[0].commit.author.date
 
             &$WriteLavender "The document containing the drivers block list on GitHub was last updated on $Date"
-            [System.String]$MicrosoftRecommendeDriverBlockRules = (Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/public/windows/security/application-security/application-control/windows-defender-application-control/design/microsoft-recommended-driver-block-rules.md' -ProgressAction SilentlyContinue).Content
+            [System.String]$MicrosoftRecommendeDriverBlockRules = (Invoke-WebRequest -Uri $MSFTRecommendeDriverBlockRulesURL -ProgressAction SilentlyContinue).Content
             $MicrosoftRecommendeDriverBlockRules -match '<VersionEx>(.*)</VersionEx>' | Out-Null
             &$WritePink "The current version of Microsoft recommended drivers block list is $($Matches[1])"
         }

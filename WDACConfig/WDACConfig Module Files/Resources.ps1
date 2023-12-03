@@ -372,7 +372,7 @@ $RuleRefsContent
 
 # Gets the latest Microsoft Recommended block rules, removes its allow all rules and sets HVCI to strict
 [System.Management.Automation.ScriptBlock]$GetBlockRulesSCRIPTBLOCK = {
-    [System.String]$Rules = (Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/public/windows/security/application-security/application-control/windows-defender-application-control/design/applications-that-can-bypass-wdac.md' -ProgressAction SilentlyContinue).Content -replace "(?s).*``````xml(.*)``````.*", '$1' -replace '<Allow\sID="ID_ALLOW_A_[12]".*/>|<FileRuleRef\sRuleID="ID_ALLOW_A_[12]".*/>', ''
+    [System.String]$Rules = (Invoke-WebRequest -Uri $MSFTRecommendeBlockRulesURL -ProgressAction SilentlyContinue).Content -replace "(?s).*``````xml(.*)``````.*", '$1' -replace '<Allow\sID="ID_ALLOW_A_[12]".*/>|<FileRuleRef\sRuleID="ID_ALLOW_A_[12]".*/>', ''
     $Rules | Out-File '.\Microsoft recommended block rules TEMP.xml'
     # Removing empty lines from policy file
     Get-Content -Path '.\Microsoft recommended block rules TEMP.xml' | Where-Object -FilterScript { $_.trim() -ne '' } | Out-File -FilePath '.\Microsoft recommended block rules.xml'

@@ -527,7 +527,7 @@ function Compare-SignerAndCertificate {
     # An array to store the final comparison results of this function
     [System.Object[]]$ComparisonResults = @()
 
-    # Get the intermediate certificate details of the Primary certficiate from the signed file using the Get-CertificateDetails function
+    # Get the intermediate certificate(s) details of the Primary certficiate from the signed file using the Get-CertificateDetails function
     [System.Object[]]$PrimaryCertificateIntermediateDetails = Get-CertificateDetails -IntermediateOnly -FilePath $SignedFilePath
 
     # Get the Nested (Secondary) certificate of the signed file, if any
@@ -546,14 +546,8 @@ function Compare-SignerAndCertificate {
         $NestedCertificateDetails = Get-CertificateDetails -IntermediateOnly -X509Certificate2 $NestedCertificate -LeafCNOfTheNestedCertificate $LeafCNOfTheNestedCertificate
     }
 
-    # An array to store the details of the Primary certificate's Leaf certificate of the signed file
-    [System.Object[]]$LeafCertificateDetails = @()
-
-    # An array to store the details of the Nested (Secondary) certificate's Leaf certificate of the signed file
-    [System.Object[]]$NestedLeafCertificateDetails = @()
-
     # Get the leaf certificate details of the Main Certificate from the signed file path
-    [System.Object[]]$LeafCertificateDetails = Get-CertificateDetails -LeafCertificate -FilePath $SignedFilePath
+    [System.Object]$LeafCertificateDetails = Get-CertificateDetails -LeafCertificate -FilePath $SignedFilePath
 
     # Get the leaf certificate details of the Nested Certificate from the signed file path, if it exists
     if ($null -ne $NestedCertificate) {
@@ -585,7 +579,10 @@ function Compare-SignerAndCertificate {
             # Check if the signer's CertRoot (referring to the TBS value in the xml file which belongs to an intermediate cert of the file)...
             # ...matches the TBSValue of the file's certificate (TBS values of one of the intermediate certificates of the file since -IntermediateOnly parameter is used earlier and that's what FilePublisher level uses)
             # So this checks to see if the Signer's TBS value in xml matches any of the TBS value(s) of the file's intermediate certificate(s), if it does, that means that file is allowed to run by the WDAC engine
-            if ($Signer.CertRoot -eq $Certificate.TBSValue) {
+            
+            # Or if the Signer's CertRoot matches the TBS value of the file's primary certificate's Leaf Certificate
+            # This can happen with other rules than FilePublisher etc.
+            if (($Signer.CertRoot -eq $Certificate.TBSValue) -or ($Signer.CertRoot -eq $LeafCertificateDetails.TBSValue)) {
 
                 # Assign the certificate properties to the comparison result object and set the CertRootMatch to true based on further conditions
                 $ComparisonResult.CertSubjectCN = $Certificate.SubjectCN
@@ -598,11 +595,12 @@ function Compare-SignerAndCertificate {
                     $CertRootMatchPart1 = $true
                 }
                 else {
-                    $ComparisonResult.CertRootMatch = $true # meaning one of the TBS values of the file's intermediate certs is in the xml file signers' TBS values
+                    # meaning one of the TBS values of the file's intermediate certs or File's Primary Leaf Certificate's TBS value is in the xml file signers' TBS values
+                    $ComparisonResult.CertRootMatch = $true
                 }
 
-                # Check if the signer's name (Referring to the one in the XML file) matches the Intermediate certificate's SubjectCN
-                if ($Signer.Name -eq $Certificate.SubjectCN) {
+                # Check if the signer's name (Referring to the one in the XML file) matches the Intermediate certificate's SubjectCN or Leaf Certificate's SubjectCN
+                if (($Signer.Name -eq $Certificate.SubjectCN) -or ($Signer.Name -eq $LeafCertificateDetails.SubjectCN)) {
                     # Set the CertNameMatch to true
                     $ComparisonResult.CertNameMatch = $true # this should naturally be always true like the CertRootMatch because this is the CN of the same cert that has its TBS value in the xml file in signers
                 }

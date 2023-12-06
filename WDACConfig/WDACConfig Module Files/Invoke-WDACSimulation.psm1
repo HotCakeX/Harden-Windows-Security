@@ -67,38 +67,42 @@ function Invoke-WDACSimulation {
 
                 # Check see if the file's hash exists in the XML file regardless of whether it's signed or not
                 # This is because WDAC policies sometimes have hash rules for signed files too
+                # So here we prioritize being authorized by file hash over being authorized by Signature
                 try {
                     Write-Verbose -Message 'Using Get-AppLockerFileInformation to retrieve the hashes of the file'
                     [System.String]$CurrentFilePathHash = (Get-AppLockerFileInformation -Path $CurrentFilePath -ErrorAction Stop).hash -replace 'SHA256 0x', ''
                 }
                 catch {
                     Write-Verbose -Message 'Get-AppLockerFileInformation failed, using New-CIPolicyRule cmdlet...'
-                    $CurrentHashOutput = New-CIPolicyRule -Level hash -Fallback none -AllowFileNameFallbacks -UserWriteablePaths -DriverFilePath $CurrentFilePath
+                    [System.Collections.ArrayList]$CurrentHashOutput = New-CIPolicyRule -Level hash -Fallback none -AllowFileNameFallbacks -UserWriteablePaths -DriverFilePath $CurrentFilePath
                     [System.String]$CurrentFilePathHash = ($CurrentHashOutput | Where-Object -FilterScript { $_.name -like '*Hash Sha256*' }).attributes.hash
                 }
 
-                # if the file's hash exists in the XML file
+                # if the file's hash exists in the XML file then add the file's path to the allowed files and do not check anymore that whether the file is signed or not
                 if ($CurrentFilePathHash -in $SHA256HashesFromXML) {
+                    Write-Verbose -Message 'Hash of the file exists in the supplied XML file'
                     $AllowedUnsignedFilePaths += $CurrentFilePath
                 }
+                # If the file's hash does not exist in the supplied XML file, then check its signature
                 else {
-
+                    # Get the status of file's signature
                     switch ((Get-AuthenticodeSignature -FilePath $CurrentFilePath).Status) {
                         # If the file is signed and valid
                         'valid' {
-                            # If debug is used show extra info on the console
-                            if ($Debug) {
-                                Write-Host -Object "Currently processing signed file: `n$CurrentFilePath" -ForegroundColor Yellow
-                            }
                             # Use the function in Resources2.ps1 file to process it
+                            Write-Verbose -Message 'The file is allowed by its signature'
                             $SignedResult += Compare-SignerAndCertificate -XmlFilePath $XmlFilePath -SignedFilePath $CurrentFilePath | Where-Object -FilterScript { ($_.CertRootMatch -eq $true) -and ($_.CertNameMatch -eq $true) -and ($_.CertPublisherMatch -eq $true) }
                             break
                         }
+                        # If the file is signed but is tampered
                         'HashMismatch' {
+                            Write-Warning -Message 'The file has hash mismatch, it is most likely tampered.'
                             $SignedHashMismatchFilePaths += $CurrentFilePath
                             break
                         }
+                        # If the file is signed but has unknown signature status
                         default {
+                            Write-Verbose -Message 'The file has unknown signature status'
                             $SignedButUnknownFilePaths += $CurrentFilePath
                             break 
                         }
@@ -111,6 +115,7 @@ function Invoke-WDACSimulation {
 
             if ($AllowedUnsignedFilePaths) {
                 # Loop through the first array and create output objects with the file path and source
+                Write-Verbose -Message 'Looping through the array of files allowed by hash'
                 foreach ($Path in $AllowedUnsignedFilePaths) {
                     # Create a hash table with the file path and source
                     [System.Collections.Hashtable]$Object = @{
@@ -126,6 +131,7 @@ function Invoke-WDACSimulation {
             # For valid Signed files
             if ($AllowedSignedFilePaths) {
                 # Loop through the second array and create output objects with the file path and source
+                Write-Verbose -Message 'Looping through the array of files allowed by valid signature'
                 foreach ($Path in $AllowedSignedFilePaths) {
                     # Create a hash table with the file path and source properties
                     [System.Collections.Hashtable]$Object = @{
@@ -140,6 +146,7 @@ function Invoke-WDACSimulation {
 
             # For Signed files with mismatch signature status
             if ($SignedHashMismatchFilePaths) {
+                Write-Verbose -Message 'Looping through the array of signed files with hash mismatch'
                 # Loop through the second array and create output objects with the file path and source
                 foreach ($Path in $SignedHashMismatchFilePaths) {
                     # Create a hash table with the file path and source properties
@@ -155,6 +162,7 @@ function Invoke-WDACSimulation {
 
             # For Signed files with Unknown signature status
             if ($SignedButUnknownFilePaths) {
+                Write-Verbose -Message 'Looping through the array of files with unknown signature status'
                 # Loop through the second array and create output objects with the file path and source
                 foreach ($Path in $SignedButUnknownFilePaths) {
                     # Create a hash table with the file path and source properties
@@ -173,16 +181,16 @@ function Invoke-WDACSimulation {
 
             # To detect files that are not allowed
 
-            # Check if any supported files were found in the user provided directory and any of them were allowed
+            # Check if any supported files were found in the user provided directory and any of them was processed by signer or was allowed by hash
             if ($($MegaOutputObject.Filepath) -and $CollectedFiles) {
-                # Compare the paths of all the supported files that were found in user provided directory with the array of files that were allowed by Signer or hash in the policy
+                # Compare the paths of all of the supported files found in user provided directory with the array of files that were processed by Signer or allowed by hash in the policy
                 # Then save the output to a different array
                 [System.Object[]]$FinalComparisonForFilesNotAllowed = Compare-Object -ReferenceObject $($MegaOutputObject.Filepath) -DifferenceObject $CollectedFiles -PassThru | Where-Object -FilterScript { $_.SideIndicator -eq '=>' }
             }
 
-            # If there is any files in the user selected directory that is not allowed by the policy
+            # If there are any files in the user selected directory that is not allowed by the policy
             if ($FinalComparisonForFilesNotAllowed) {
-
+                Write-Verbose -Message 'Looping through the array of files not allowed by the policy'
                 foreach ($Path in $FinalComparisonForFilesNotAllowed) {
                     # Create a hash table with the file path and source properties
                     [System.Collections.Hashtable]$Object = @{
@@ -221,11 +229,6 @@ function Invoke-WDACSimulation {
 
             # Export the output as CSV
             $MegaOutputObject | Select-Object -Property FilePath, source, Permission -Unique | Sort-Object -Property Permission | Export-Csv -Path .\WDACSimulationOutput.csv -Force
-
-            if ($Debug) {
-                Write-Host -Object 'Files that were UNSIGNED' -ForegroundColor Blue
-                $AllowedUnsignedFilePaths
-            }
         }
     }
 

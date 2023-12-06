@@ -209,7 +209,7 @@ function Edit-SignedWDACConfig {
         #endregion User-Configurations-Processing-Validation
 
         # Detecting if Debug switch is used, will do debugging actions based on that
-        $Debug = $PSBoundParameters.Debug.IsPresent
+        $PSBoundParameters.Debug.IsPresent ? ([System.Boolean]$Debug = $true) : ([System.Boolean]$Debug = $false) | Out-Null
 
         # argument tab auto-completion and ValidateSet for Policy names
         Class BasePolicyNamez : System.Management.Automation.IValidateSetValuesGenerator {

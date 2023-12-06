@@ -111,7 +111,7 @@ function Edit-WDACConfig {
         [System.String]$global:UserAccountDirectoryPath = (Get-CimInstance Win32_UserProfile -Filter "SID = '$([System.Security.Principal.WindowsIdentity]::GetCurrent().User.Value)'").LocalPath
 
         # Detecting if Debug switch is used, will do debugging actions based on that
-        $Debug = $PSBoundParameters.Debug.IsPresent
+        $PSBoundParameters.Debug.IsPresent ? ([System.Boolean]$Debug = $true) : ([System.Boolean]$Debug = $false) | Out-Null
 
         #region User-Configurations-Processing-Validation
         # make sure the ParameterSet being used has PolicyPaths parameter - Then enforces "mandatory" attribute for the parameter

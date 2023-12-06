@@ -5,10 +5,10 @@ function Invoke-WDACSimulation {
     )]
     Param(
         [ValidateScript({ Test-Path -Path $_ -PathType 'Container' }, ErrorMessage = 'The path you selected is not a folder path.')]
-        [Parameter(Mandatory = $true)][System.String]$FolderPath,
+        [Parameter(Mandatory = $true)][System.IO.DirectoryInfo]$FolderPath,
 
         [ValidateScript({ Test-Path -Path $_ -PathType 'Leaf' }, ErrorMessage = 'The path you selected is not a file path.')]
-        [Parameter(Mandatory = $true)][System.String]$XmlFilePath,
+        [Parameter(Mandatory = $true)][System.IO.FileInfo]$XmlFilePath,
 
         [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SkipVersionCheck
     )
@@ -20,7 +20,7 @@ function Invoke-WDACSimulation {
         . "$psscriptroot\Resources.ps1"
 
         # Detecting if Debug switch is used, will do debugging actions based on that
-        $Debug = $PSBoundParameters.Debug.IsPresent
+        $PSBoundParameters.Debug.IsPresent ? ([System.Boolean]$Debug = $true) : ([System.Boolean]$Debug = $false) | Out-Null
 
         # Stop operation as soon as there is an error anywhere, unless explicitly specified otherwise
         $ErrorActionPreference = 'Stop'
@@ -28,9 +28,6 @@ function Invoke-WDACSimulation {
     }
 
     process {
-        # For Testing purposes
-        # $FolderPath = ''
-        # $XmlFilePath = ''
 
         if ($FolderPath) {
             # Store the processed results of the valid Signed files
@@ -54,25 +51,26 @@ function Invoke-WDACSimulation {
             # Hash Sha256 values of all the file rules based on hash in the supplied xml policy file
             [System.Object[]]$SHA256HashesFromXML = (Get-FileRuleOutput -xmlPath $XmlFilePath).hashvalue
 
-            # Get all of the files that WDAC supports from the user provided directory
+            # Get all of the file paths of the files that WDAC supports, from the user provided directory
             [System.Object[]]$CollectedFiles = (Get-ChildItem -Recurse -Path $FolderPath -File -Include '*.sys', '*.exe', '*.com', '*.dll', '*.ocx', '*.msp', '*.mst', '*.msi', '*.js', '*.vbs', '*.ps1', '*.appx').FullName
 
-            # Loop through each file
-            $CollectedFiles | ForEach-Object -Process {
+            # Make sure the selected directory contains files with the supported extensions
+            if (!$CollectedFiles) { Throw 'There are no files in the selected directory that are supported by the WDAC engine.' }
 
-                $CurrentFilePath = $_
+            # Loop through each file
+            foreach ($CurrentFilePath in $CollectedFiles) {
 
                 # Check see if the file's hash exists in the XML file regardless of whether it's signed or not
                 # This is because WDAC policies sometimes have hash rules for signed files too
                 try {
-                    $CurrentFilePathHash = (Get-AppLockerFileInformation -Path $CurrentFilePath -ErrorAction Stop).hash -replace 'SHA256 0x', ''
+                    [System.String]$CurrentFilePathHash = (Get-AppLockerFileInformation -Path $CurrentFilePath -ErrorAction Stop).hash -replace 'SHA256 0x', ''
                 }
                 catch {
                     Write-Debug -Message "Get-AppLockerFileInformation failed for the file at $CurrentFilePath, using New-CIPolicyRule cmdlet..."
 
                     $CurrentHashOutput = New-CIPolicyRule -Level hash -Fallback none -AllowFileNameFallbacks -UserWriteablePaths -DriverFilePath $CurrentFilePath
 
-                    $CurrentFilePathHash = ($CurrentHashOutput | Where-Object -FilterScript { $_.name -like '*Hash Sha256*' }).attributes.hash
+                    [System.String]$CurrentFilePathHash = ($CurrentHashOutput | Where-Object -FilterScript { $_.name -like '*Hash Sha256*' }).attributes.hash
                 }
 
                 # if the file's hash exists in the XML file
@@ -103,7 +101,6 @@ function Invoke-WDACSimulation {
 
             # File paths of the files allowed by Signer/certificate, Unique
             [System.Object[]]$AllowedSignedFilePaths = $SignedResult.FilePath | Get-Unique
-
 
             if ($AllowedUnsignedFilePaths) {
                 # Loop through the first array and create output objects with the file path and source
@@ -222,7 +219,6 @@ function Invoke-WDACSimulation {
                 Write-Host -Object 'Files that were UNSIGNED' -ForegroundColor Blue
                 $AllowedUnsignedFilePaths
             }
-
         }
     }
 
@@ -251,6 +247,12 @@ function Invoke-WDACSimulation {
 .PARAMETER SkipVersionCheck
     Can be used with any parameter to bypass the online version check - only to be used in rare cases
     It is used by the entire Cmdlet.
+
+.INPUTS
+    System.IO.FileInfo
+    System.IO.DirectoryInfo
+.OUTPUTS
+    System.Object[]
 
 #>
 }

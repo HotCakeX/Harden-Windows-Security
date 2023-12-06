@@ -38,7 +38,7 @@ function Deploy-SignedWDACConfig {
         if (-NOT $SkipVersionCheck) { . Update-self }
 
         # Detecting if Debug switch is used, will do debugging actions based on that
-        $Debug = $PSBoundParameters.Debug.IsPresent
+        $PSBoundParameters.Debug.IsPresent ? ([System.Boolean]$Debug = $true) : ([System.Boolean]$Debug = $false) | Out-Null
 
         # Fetch User account directory path
         [System.String]$global:UserAccountDirectoryPath = (Get-CimInstance Win32_UserProfile -Filter "SID = '$([System.Security.Principal.WindowsIdentity]::GetCurrent().User.Value)'").LocalPath

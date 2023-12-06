@@ -119,7 +119,7 @@ function New-WDACConfig {
         #endregion User-Configurations-Processing-Validation
 
         # Detecting if Debug switch is used, will do debugging actions based on that
-        $Debug = $PSBoundParameters.Debug.IsPresent
+        $PSBoundParameters.Debug.IsPresent ? ([System.Boolean]$Debug = $true) : ([System.Boolean]$Debug = $false) | Out-Null
 
         # argument tab auto-completion and ValidateSet for Fallbacks
         Class Fallbackz : System.Management.Automation.IValidateSetValuesGenerator {

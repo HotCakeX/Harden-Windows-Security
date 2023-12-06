@@ -22,9 +22,9 @@ function Invoke-WDACSimulation {
         $ErrorActionPreference = 'Stop'
         if (-NOT $SkipVersionCheck) { . Update-self }
 
-        # The total number of the steps for the progress bar to render
-        [System.Int64]$TotalSteps = 4
-        [System.Int64]$CurrentStep = 0        
+        # The total number of the main steps for the progress bar to render
+        [System.Int16]$TotalSteps = 4
+        [System.Int16]$CurrentStep = 0        
     }
 
     process {
@@ -65,67 +65,81 @@ function Invoke-WDACSimulation {
         # Make sure the selected directory contains files with the supported extensions
         if (!$CollectedFiles) { Throw 'There are no files in the selected directory that are supported by the WDAC engine.' }
 
-        # Loop through each file
-        Write-Verbose -Message 'Looping through each supported file'
-       
-        $CurrentStep++
-        Write-Progress -Id 0 -Activity 'Looping through each supported file' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-       
-        # The total number of the steps for the progress bar to render
-        $TotalSteps += $CollectedFiles.Count
-       
-        foreach ($CurrentFilePath in $CollectedFiles) {
+        try {
 
-            Write-Verbose -Message "Processing file: $CurrentFilePath"
-
+            # Loop through each file
+            Write-Verbose -Message 'Looping through each supported file'
+       
             $CurrentStep++
-            Write-Progress -Id 0 -Activity "Processing file $CurrentStep/$TotalSteps" -Status "$CurrentFilePath" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+            Write-Progress -Id 0 -Activity 'Looping through each supported file' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
        
-            # Check see if the file's hash exists in the XML file regardless of whether it's signed or not
-            # This is because WDAC policies sometimes have hash rules for signed files too
-            # So here we prioritize being authorized by file hash over being authorized by Signature
-            try {
-                Write-Verbose -Message 'Using Get-AppLockerFileInformation to retrieve the hashes of the file'
-                [System.String]$CurrentFilePathHash = (Get-AppLockerFileInformation -Path $CurrentFilePath -ErrorAction Stop).hash -replace 'SHA256 0x', ''
-            }
-            catch {
-                Write-Verbose -Message 'Get-AppLockerFileInformation failed, using New-CIPolicyRule cmdlet...'
-                [System.Collections.ArrayList]$CurrentHashOutput = New-CIPolicyRule -Level hash -Fallback none -AllowFileNameFallbacks -UserWriteablePaths -DriverFilePath $CurrentFilePath
-                [System.String]$CurrentFilePathHash = ($CurrentHashOutput | Where-Object -FilterScript { $_.name -like '*Hash Sha256*' }).attributes.hash
-            }
+            # The total number of the sub steps for the progress bar to render
+            [System.Int64]$TotalSubSteps = $CollectedFiles.Count
+            [System.Int64]$CurrentSubStep = 0
+       
+            foreach ($CurrentFilePath in $CollectedFiles) {
 
-            # if the file's hash exists in the XML file then add the file's path to the allowed files and do not check anymore that whether the file is signed or not
-            if ($CurrentFilePathHash -in $SHA256HashesFromXML) {
-                Write-Verbose -Message 'Hash of the file exists in the supplied XML file'
-                $AllowedUnsignedFilePaths += $CurrentFilePath
-            }
-            # If the file's hash does not exist in the supplied XML file, then check its signature
-            else {
-                # Get the status of file's signature
-                switch ((Get-AuthenticodeSignature -FilePath $CurrentFilePath).Status) {
-                    # If the file is signed and valid
-                    'valid' {
-                        # Use the function in Resources2.ps1 file to process it
-                        Write-Verbose -Message 'The file is signed and has valid signature'
-                        $SignedResult += Compare-SignerAndCertificate -XmlFilePath $XmlFilePath -SignedFilePath $CurrentFilePath | Where-Object -FilterScript { ($_.CertRootMatch -eq $true) -and ($_.CertNameMatch -eq $true) -and ($_.CertPublisherMatch -eq $true) }
-                        break
-                    }
-                    # If the file is signed but is tampered
-                    'HashMismatch' {
-                        Write-Warning -Message 'The file has hash mismatch, it is most likely tampered.'
-                        $SignedHashMismatchFilePaths += $CurrentFilePath
-                        break
-                    }
-                    # If the file is signed but has unknown signature status
-                    default {
-                        Write-Verbose -Message 'The file has unknown signature status'
-                        $SignedButUnknownFilePaths += $CurrentFilePath
-                        break
-                    }
+                Write-Verbose -Message "Processing file: $CurrentFilePath"
+
+                $CurrentSubStep++
+                Write-Progress -Id 1 -ParentId 0 -Activity "Processing file $CurrentSubStep/$TotalSubSteps" -Status "$CurrentFilePath" -PercentComplete ($CurrentSubStep / $TotalSubSteps * 100)
+       
+                # Check see if the file's hash exists in the XML file regardless of whether it's signed or not
+                # This is because WDAC policies sometimes have hash rules for signed files too
+                # So here we prioritize being authorized by file hash over being authorized by Signature
+                try {
+                    Write-Verbose -Message 'Using Get-AppLockerFileInformation to retrieve the hashes of the file'
+                    [System.String]$CurrentFilePathHash = (Get-AppLockerFileInformation -Path $CurrentFilePath -ErrorAction Stop).hash -replace 'SHA256 0x', ''
                 }
+                catch {
+                    Write-Verbose -Message 'Get-AppLockerFileInformation failed, using New-CIPolicyRule cmdlet...'
+                    [System.Collections.ArrayList]$CurrentHashOutput = New-CIPolicyRule -Level hash -Fallback none -AllowFileNameFallbacks -UserWriteablePaths -DriverFilePath $CurrentFilePath
+                    [System.String]$CurrentFilePathHash = ($CurrentHashOutput | Where-Object -FilterScript { $_.name -like '*Hash Sha256*' }).attributes.hash
+                }
+
+                # if the file's hash exists in the XML file then add the file's path to the allowed files and do not check anymore that whether the file is signed or not
+                if ($CurrentFilePathHash -in $SHA256HashesFromXML) {
+                    Write-Verbose -Message 'Hash of the file exists in the supplied XML file'
+                    $AllowedUnsignedFilePaths += $CurrentFilePath
+                }
+                # If the file's hash does not exist in the supplied XML file, then check its signature
+                else {
+                    # Get the status of file's signature
+                    switch ((Get-AuthenticodeSignature -FilePath $CurrentFilePath).Status) {
+                        # If the file is signed and valid
+                        'valid' {
+                            # Use the function in Resources2.ps1 file to process it
+                            Write-Verbose -Message 'The file is signed and has valid signature'
+                            $SignedResult += Compare-SignerAndCertificate -XmlFilePath $XmlFilePath -SignedFilePath $CurrentFilePath | Where-Object -FilterScript { ($_.CertRootMatch -eq $true) -and ($_.CertNameMatch -eq $true) -and ($_.CertPublisherMatch -eq $true) }
+                            break
+                        }
+                        # If the file is signed but is tampered
+                        'HashMismatch' {
+                            Write-Warning -Message 'The file has hash mismatch, it is most likely tampered.'
+                            $SignedHashMismatchFilePaths += $CurrentFilePath
+                            break
+                        }
+                        # If the file is signed but has unknown signature status
+                        default {
+                            Write-Verbose -Message 'The file has unknown signature status'
+                            $SignedButUnknownFilePaths += $CurrentFilePath
+                            break
+                        }
+                    }
+                }          
             }
         }
-
+        catch {
+            # Complete the main progress bar because there was an error
+            Write-Progress -Id 0 -Activity 'WDAC Simulation interrupted.' -Completed
+            # Throw whatever error that was encountered
+            throw $_
+        }
+        finally {
+            # Complete the nested progress bar whether there was an error or not
+            Write-Progress -Id 1 -Activity 'All of the files have been processed.' -Completed
+        }
+       
         $CurrentStep++
         Write-Progress -Id 0 -Activity 'Preparing the output' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 

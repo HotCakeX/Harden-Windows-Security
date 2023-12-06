@@ -217,105 +217,97 @@ function Get-AuthenticodeSignatureEx {
             # Store the output object in a variable
             [System.Management.Automation.Signature]$Output = $_
            
-            if ($null -ne $Output.SignerCertificate) {
-
-                # If the output object has a signer certificate property
-                # Initialize some variables to store the output parameters of the CryptQueryObject function
-                [System.Int64]$PdwMsgAndCertEncodingType = 0
-                [System.Int64]$PdwContentType = 0
-                [System.Int64]$PdwFormatType = 0
-                [System.IntPtr]$PhCertStore = [System.IntPtr]::Zero
-                [System.IntPtr]$PhMsg = [System.IntPtr]::Zero
-                [System.IntPtr]$PpvContext = [System.IntPtr]::Zero
+            # If the output object has a signer certificate property
+            # Initialize some variables to store the output parameters of the CryptQueryObject function
+            [System.Int64]$PdwMsgAndCertEncodingType = 0
+            [System.Int64]$PdwContentType = 0
+            [System.Int64]$PdwFormatType = 0
+            [System.IntPtr]$PhCertStore = [System.IntPtr]::Zero
+            [System.IntPtr]$PhMsg = [System.IntPtr]::Zero
+            [System.IntPtr]$PpvContext = [System.IntPtr]::Zero
                 
-                # Call the CryptQueryObject function to get the handle of the PKCS #7 message from the file path
-                $Return = [PKI.Crypt32]::CryptQueryObject(
-                    $CERT_QUERY_OBJECT_FILE,
-                    $Output.Path,
-                    $CERT_QUERY_CONTENT_FLAG_PKCS7_SIGNED_EMBED,
-                    $CERT_QUERY_FORMAT_FLAG_BINARY,
-                    0,
-                    [ref]$pdwMsgAndCertEncodingType,
-                    [ref]$pdwContentType,
-                    [ref]$pdwFormatType,
-                    [ref]$phCertStore,
-                    [ref]$phMsg,
-                    [ref]$ppvContext
-                )
-                # If the function fails, return nothing
-                if (!$Return) { return } 
+            # Call the CryptQueryObject function to get the handle of the PKCS #7 message from the file path
+            $Return = [PKI.Crypt32]::CryptQueryObject(
+                $CERT_QUERY_OBJECT_FILE,
+                $Output.Path,
+                $CERT_QUERY_CONTENT_FLAG_PKCS7_SIGNED_EMBED,
+                $CERT_QUERY_FORMAT_FLAG_BINARY,
+                0,
+                [ref]$pdwMsgAndCertEncodingType,
+                [ref]$pdwContentType,
+                [ref]$pdwFormatType,
+                [ref]$phCertStore,
+                [ref]$phMsg,
+                [ref]$ppvContext
+            )
+            # If the function fails, return nothing
+            if (!$Return) { return } 
                                 
-                # Initialize a variable to store the size of the PKCS #7 message data
-                [System.Int64]$PcbData = 0 
+            # Initialize a variable to store the size of the PKCS #7 message data
+            [System.Int64]$PcbData = 0 
                 
-                # Call the CryptMsgGetParam function to get the size of the PKCS #7 message data
-                $Return = [PKI.Crypt32]::CryptMsgGetParam($phMsg, 29, 0, $null, [ref]$pcbData)
+            # Call the CryptMsgGetParam function to get the size of the PKCS #7 message data
+            $Return = [PKI.Crypt32]::CryptMsgGetParam($phMsg, 29, 0, $null, [ref]$pcbData)
                
-                # If the function fails, return nothing
-                if (!$Return) { return }
+            # If the function fails, return nothing
+            if (!$Return) { return }
 
-                # Create a byte array to store the PKCS #7 message data
-                $pvData = New-Object -TypeName 'System.Byte[]' -ArgumentList $pcbData 
+            # Create a byte array to store the PKCS #7 message data
+            $pvData = New-Object -TypeName 'System.Byte[]' -ArgumentList $pcbData 
                 
-                # Call the CryptMsgGetParam function again to get the PKCS #7 message data
-                $Return = [PKI.Crypt32]::CryptMsgGetParam($PhMsg, 29, 0, $PvData, [System.Management.Automation.PSReference]$PcbData)
+            # Call the CryptMsgGetParam function again to get the PKCS #7 message data
+            $Return = [PKI.Crypt32]::CryptMsgGetParam($PhMsg, 29, 0, $PvData, [System.Management.Automation.PSReference]$PcbData)
                
-                # Create a SignedCms object to decode the PKCS #7 message data
-                [System.Security.Cryptography.Pkcs.SignedCms]$SignedCms = New-Object -TypeName 'Security.Cryptography.Pkcs.SignedCms' 
+            # Create a SignedCms object to decode the PKCS #7 message data
+            [System.Security.Cryptography.Pkcs.SignedCms]$SignedCms = New-Object -TypeName 'Security.Cryptography.Pkcs.SignedCms' 
                 
-                # Decode the PKCS #7 message data and populate the SignedCms object properties
-                $SignedCms.Decode($PvData) 
+            # Decode the PKCS #7 message data and populate the SignedCms object properties
+            $SignedCms.Decode($PvData) 
                 
-                # Get the first signer info object from the SignedCms object
-                $Infos = $SignedCms.SignerInfos[0]
+            # Get the first signer info object from the SignedCms object
+            $Infos = $SignedCms.SignerInfos[0]
                 
-                # Add some properties to the output object, such as TimeStamps, DigestAlgorithm and NestedSignature
-                $Output | Add-Member -MemberType NoteProperty -Name TimeStamps -Value $null
-                $Output | Add-Member -MemberType NoteProperty -Name DigestAlgorithm -Value $Infos.DigestAlgorithm.FriendlyName
+            # Add some properties to the output object, such as TimeStamps, DigestAlgorithm and NestedSignature
+            $Output | Add-Member -MemberType NoteProperty -Name TimeStamps -Value $null
+            $Output | Add-Member -MemberType NoteProperty -Name DigestAlgorithm -Value $Infos.DigestAlgorithm.FriendlyName
                 
-                # Call the helper function to get the timestamps of the countersigners and assign it to the TimeStamps property
-                $Output.TimeStamps = Get-TimeStamps -SignerInfo $Infos
+            # Call the helper function to get the timestamps of the countersigners and assign it to the TimeStamps property
+            $Output.TimeStamps = Get-TimeStamps -SignerInfo $Infos
                 
-                # Check if there is a nested signature attribute in the signer info object by looking for the OID 1.3.6.1.4.1.311.2.4.1
-                $second = $Infos.UnsignedAttributes | Where-Object -FilterScript { $_.Oid.Value -eq '1.3.6.1.4.1.311.2.4.1' }
+            # Check if there is a nested signature attribute in the signer info object by looking for the OID 1.3.6.1.4.1.311.2.4.1
+            $second = $Infos.UnsignedAttributes | Where-Object -FilterScript { $_.Oid.Value -eq '1.3.6.1.4.1.311.2.4.1' }
                 
-                if ($Second) {
+            if ($Second) {
 
-                    # If there is a nested signature attribute                    
-                    # Get the value of the nested signature attribute as a raw data byte array
-                    $value = $Second.Values | Where-Object -FilterScript { $_.Oid.Value -eq '1.3.6.1.4.1.311.2.4.1' }
+                # If there is a nested signature attribute                    
+                # Get the value of the nested signature attribute as a raw data byte array
+                $value = $Second.Values | Where-Object -FilterScript { $_.Oid.Value -eq '1.3.6.1.4.1.311.2.4.1' }
                     
-                    # Create another SignedCms object to decode the nested signature data
-                    [System.Security.Cryptography.Pkcs.SignedCms]$SignedCms2 = New-Object -TypeName 'Security.Cryptography.Pkcs.SignedCms' 
+                # Create another SignedCms object to decode the nested signature data
+                [System.Security.Cryptography.Pkcs.SignedCms]$SignedCms2 = New-Object -TypeName 'Security.Cryptography.Pkcs.SignedCms' 
 
-                    # Decode the nested signature data and populate the SignedCms object properties
-                    $SignedCms2.Decode($value.RawData) 
-                    $Output | Add-Member -MemberType NoteProperty -Name NestedSignature -Value $null
+                # Decode the nested signature data and populate the SignedCms object properties
+                $SignedCms2.Decode($value.RawData) 
+                $Output | Add-Member -MemberType NoteProperty -Name NestedSignature -Value $null
                     
-                    # Get the first signer info object from the nested signature SignedCms object
-                    $Infos = $SignedCms2.SignerInfos[0]
+                # Get the first signer info object from the nested signature SignedCms object
+                $Infos = $SignedCms2.SignerInfos[0]
                     
-                    # Create a custom object with some properties of the nested signature, such as signer certificate, digest algorithm and timestamps
-                    $Nested = New-Object -TypeName 'psobject' -Property @{
-                        SignerCertificate = $Infos.Certificate
-                        DigestAlgorithm   = $Infos.DigestAlgorithm.FriendlyName
-                        TimeStamps        = Get-TimeStamps -SignerInfo $Infos
-                    }
-                    # Assign the custom object to the NestedSignature property of the output object
-                    $Output.NestedSignature = $Nested
+                # Create a custom object with some properties of the nested signature, such as signer certificate, digest algorithm and timestamps
+                $Nested = New-Object -TypeName 'psobject' -Property @{
+                    SignerCertificate = $Infos.Certificate
+                    DigestAlgorithm   = $Infos.DigestAlgorithm.FriendlyName
+                    TimeStamps        = Get-TimeStamps -SignerInfo $Infos
                 }
-                # Return the output object with the added properties
-                $Output
+                # Assign the custom object to the NestedSignature property of the output object
+                $Output.NestedSignature = $Nested
+            }
+            # Return the output object with the added properties
+            $Output
 
-                # Close the handles of the PKCS #7 message and the certificate store
-                [void][PKI.Crypt32]::CryptMsgClose($PhMsg)
-                [void][PKI.Crypt32]::CertCloseStore($PhCertStore, 0)
-            }
-            else {
-                # If the output object does not have a signer certificate property
-                # Return the output object as it is
-                $Output
-            }
+            # Close the handles of the PKCS #7 message and the certificate store
+            [void][PKI.Crypt32]::CryptMsgClose($PhMsg)
+            [void][PKI.Crypt32]::CertCloseStore($PhCertStore, 0)
         }
     }
     end {}

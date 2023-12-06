@@ -118,7 +118,7 @@ function Get-AuthenticodeSignatureEx {
     .SYNOPSIS
         Helps to get the 2nd aka nested signer/signature of the dual signed files
     .NOTES
-        This function is used in a very minimum capacity by the WDACConfig module
+        This function is used in a very minimum capacity by the WDACConfig module and it's modified to meet the WDACConfig's requirements
     .LINK
         https://www.sysadmins.lv/blog-en/reading-multiple-signatures-from-signed-file-with-powershell.aspx
         https://www.sysadmins.lv/disclaimer.aspx
@@ -179,7 +179,7 @@ function Get-AuthenticodeSignatureEx {
         Add-Type -AssemblyName 'System.Security' -ErrorAction SilentlyContinue -Verbose:$false
         # Add the Crypt32.dll library functions as a type
         Add-Type -MemberDefinition $Signature -Namespace 'PKI' -Name 'Crypt32' -ErrorAction SilentlyContinue -Verbose:$false
-                
+
         # Define some constants for the CryptQueryObject function parameters
         [System.Int16]$CERT_QUERY_OBJECT_FILE = 0x1
         [System.Int32]$CERT_QUERY_CONTENT_FLAG_PKCS7_SIGNED_EMBED = 0x400
@@ -192,7 +192,7 @@ function Get-AuthenticodeSignatureEx {
             )
 
             [System.Object[]]$RetValue = @()
-            
+
             foreach ($CounterSignerInfos in $Infos.CounterSignerInfos) {
                 # Get the signing time attribute from the countersigner info object
                 $STime = ($CounterSignerInfos.SignedAttributes | Where-Object -FilterScript { $_.Oid.Value -eq '1.2.840.113549.1.9.5' }).Values | `
@@ -212,12 +212,8 @@ function Get-AuthenticodeSignatureEx {
     }
     process {
         # For each file path, get the authenticode signature using the built-in cmdlet
-        Get-AuthenticodeSignature $FilePath | ForEach-Object -Process {
+        foreach ($Output in Get-AuthenticodeSignature $FilePath) {
 
-            # Store the output object in a variable
-            [System.Management.Automation.Signature]$Output = $_
-           
-            # If the output object has a signer certificate property
             # Initialize some variables to store the output parameters of the CryptQueryObject function
             [System.Int64]$PdwMsgAndCertEncodingType = 0
             [System.Int64]$PdwContentType = 0
@@ -225,7 +221,7 @@ function Get-AuthenticodeSignatureEx {
             [System.IntPtr]$PhCertStore = [System.IntPtr]::Zero
             [System.IntPtr]$PhMsg = [System.IntPtr]::Zero
             [System.IntPtr]$PpvContext = [System.IntPtr]::Zero
-                
+
             # Call the CryptQueryObject function to get the handle of the PKCS #7 message from the file path
             $Return = [PKI.Crypt32]::CryptQueryObject(
                 $CERT_QUERY_OBJECT_FILE,
@@ -241,58 +237,58 @@ function Get-AuthenticodeSignatureEx {
                 [ref]$ppvContext
             )
             # If the function fails, return nothing
-            if (!$Return) { return } 
-                                
+            if (!$Return) { return }
+
             # Initialize a variable to store the size of the PKCS #7 message data
-            [System.Int64]$PcbData = 0 
-                
+            [System.Int64]$PcbData = 0
+
             # Call the CryptMsgGetParam function to get the size of the PKCS #7 message data
-            $Return = [PKI.Crypt32]::CryptMsgGetParam($phMsg, 29, 0, $null, [ref]$pcbData)
-               
+            $Return = [PKI.Crypt32]::CryptMsgGetParam($phMsg, 29, 0, $null, [ref]$PcbData)
+
             # If the function fails, return nothing
             if (!$Return) { return }
 
             # Create a byte array to store the PKCS #7 message data
-            $pvData = New-Object -TypeName 'System.Byte[]' -ArgumentList $pcbData 
-                
+            $PvData = New-Object -TypeName 'System.Byte[]' -ArgumentList $PcbData
+
             # Call the CryptMsgGetParam function again to get the PKCS #7 message data
             $Return = [PKI.Crypt32]::CryptMsgGetParam($PhMsg, 29, 0, $PvData, [System.Management.Automation.PSReference]$PcbData)
-               
+
             # Create a SignedCms object to decode the PKCS #7 message data
-            [System.Security.Cryptography.Pkcs.SignedCms]$SignedCms = New-Object -TypeName 'Security.Cryptography.Pkcs.SignedCms' 
-                
+            [System.Security.Cryptography.Pkcs.SignedCms]$SignedCms = New-Object -TypeName 'Security.Cryptography.Pkcs.SignedCms'
+
             # Decode the PKCS #7 message data and populate the SignedCms object properties
-            $SignedCms.Decode($PvData) 
-                
+            $SignedCms.Decode($PvData)
+
             # Get the first signer info object from the SignedCms object
             $Infos = $SignedCms.SignerInfos[0]
-                
+
             # Add some properties to the output object, such as TimeStamps, DigestAlgorithm and NestedSignature
             $Output | Add-Member -MemberType NoteProperty -Name TimeStamps -Value $null
             $Output | Add-Member -MemberType NoteProperty -Name DigestAlgorithm -Value $Infos.DigestAlgorithm.FriendlyName
-                
+
             # Call the helper function to get the timestamps of the countersigners and assign it to the TimeStamps property
             $Output.TimeStamps = Get-TimeStamps -SignerInfo $Infos
-                
+
             # Check if there is a nested signature attribute in the signer info object by looking for the OID 1.3.6.1.4.1.311.2.4.1
             $second = $Infos.UnsignedAttributes | Where-Object -FilterScript { $_.Oid.Value -eq '1.3.6.1.4.1.311.2.4.1' }
-                
+
             if ($Second) {
 
-                # If there is a nested signature attribute                    
+                # If there is a nested signature attribute
                 # Get the value of the nested signature attribute as a raw data byte array
                 $value = $Second.Values | Where-Object -FilterScript { $_.Oid.Value -eq '1.3.6.1.4.1.311.2.4.1' }
-                    
+
                 # Create another SignedCms object to decode the nested signature data
-                [System.Security.Cryptography.Pkcs.SignedCms]$SignedCms2 = New-Object -TypeName 'Security.Cryptography.Pkcs.SignedCms' 
+                [System.Security.Cryptography.Pkcs.SignedCms]$SignedCms2 = New-Object -TypeName 'Security.Cryptography.Pkcs.SignedCms'
 
                 # Decode the nested signature data and populate the SignedCms object properties
-                $SignedCms2.Decode($value.RawData) 
+                $SignedCms2.Decode($value.RawData)
                 $Output | Add-Member -MemberType NoteProperty -Name NestedSignature -Value $null
-                    
+
                 # Get the first signer info object from the nested signature SignedCms object
                 $Infos = $SignedCms2.SignerInfos[0]
-                    
+
                 # Create a custom object with some properties of the nested signature, such as signer certificate, digest algorithm and timestamps
                 $Nested = New-Object -TypeName 'psobject' -Property @{
                     SignerCertificate = $Infos.Certificate
@@ -571,7 +567,7 @@ function Compare-SignerAndCertificate {
             # Check if the signer's CertRoot (referring to the TBS value in the xml file which belongs to an intermediate cert of the file)...
             # ...matches the TBSValue of the file's certificate (TBS values of one of the intermediate certificates of the file since -IntermediateOnly parameter is used earlier and that's what FilePublisher level uses)
             # So this checks to see if the Signer's TBS value in xml matches any of the TBS value(s) of the file's intermediate certificate(s), if it does, that means that file is allowed to run by the WDAC engine
-            
+
             # Or if the Signer's CertRoot matches the TBS value of the file's primary certificate's Leaf Certificate
             # This can happen with other rules than FilePublisher etc.
             if (($Signer.CertRoot -eq $Certificate.TBSValue) -or ($Signer.CertRoot -eq $LeafCertificateDetails.TBSValue)) {

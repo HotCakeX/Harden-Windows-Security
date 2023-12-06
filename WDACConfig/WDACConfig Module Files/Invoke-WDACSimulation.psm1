@@ -98,7 +98,7 @@ function Invoke-WDACSimulation {
                     default {
                         Write-Verbose -Message 'The file has unknown signature status'
                         $SignedButUnknownFilePaths += $CurrentFilePath
-                        break 
+                        break
                     }
                 }
             }

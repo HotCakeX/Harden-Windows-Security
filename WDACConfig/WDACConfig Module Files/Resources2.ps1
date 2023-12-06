@@ -53,7 +53,7 @@ function Get-SignerInfo {
 function Get-TBSCertificate {
     <#
     .SYNOPSIS
-        Function to calculate the TBS of a certificate
+        Function to calculate the TBS value of a certificate
     .INPUTS
         System.Security.Cryptography.X509Certificates.X509Certificate2
     .OUTPUTS
@@ -362,6 +362,16 @@ function Get-CertificateDetails {
         System.Management.Automation.SwitchParameter
     .OUTPUTS
         System.Object[]
+    .PARAMETER FilePath
+        Path to a signed file
+    .PARAMETER X509Certificate2
+        An X509Certificate2 object
+    .PARAMETER IntermediateOnly
+        Indicates that the function will only return the Intermediate certificate details
+    .PARAMETER LeafCertificate
+        Indicates that the function will only return the Leaf certificate details
+    .PARAMETER LeafCNOfTheNestedCertificate
+        This is used only for when -X509Certificate2 parameter is used, so that we can filter out the Leaf certificate and only get the Intermediate certificates at the end of this function
     #>
     param (
         [Parameter(ParameterSetName = 'Based on File Path', Mandatory = $true)]
@@ -371,7 +381,7 @@ function Get-CertificateDetails {
         $X509Certificate2,
 
         [Parameter(ParameterSetName = 'Based on Certificate')]
-        [System.String]$LeafCNOfTheNestedCertificate, # This is used only for when -X509Certificate2 parameter is used, so that we can filter out the Leaf certificate and only get the Intermediate certificates at the end of this function
+        [System.String]$LeafCNOfTheNestedCertificate,
 
         [Parameter(ParameterSetName = 'Based on File Path')]
         [Parameter(ParameterSetName = 'Based on Certificate')]
@@ -497,6 +507,10 @@ function Compare-SignerAndCertificate {
         System.String
     .OUTPUTS
         System.Object[]
+    .PARAMETER XmlFilePath
+        Path to a WDAC XML file
+    .PARAMETER SignedFilePath
+        Path to a signed file
     #>
     param(
         [Parameter(Mandatory = $true)][System.String]$XmlFilePath,

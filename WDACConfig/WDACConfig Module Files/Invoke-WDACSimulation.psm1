@@ -84,7 +84,7 @@ function Invoke-WDACSimulation {
                     # If the file is signed and valid
                     'valid' {
                         # Use the function in Resources2.ps1 file to process it
-                        Write-Verbose -Message 'The file is allowed by its signature'
+                        Write-Verbose -Message 'The file is signed and has valid signature'
                         $SignedResult += Compare-SignerAndCertificate -XmlFilePath $XmlFilePath -SignedFilePath $CurrentFilePath | Where-Object -FilterScript { ($_.CertRootMatch -eq $true) -and ($_.CertNameMatch -eq $true) -and ($_.CertPublisherMatch -eq $true) }
                         break
                     }

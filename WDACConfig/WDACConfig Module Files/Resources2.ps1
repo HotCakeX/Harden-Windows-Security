@@ -518,8 +518,8 @@ function Compare-SignerAndCertificate {
     # Get the signer information from the XML file path using the Get-SignerInfo function
     [Signer[]]$SignerInfo = Get-SignerInfo -XmlFilePath $XmlFilePath
 
-    # An array to store the details of the main certificate of the signed file
-    [System.Object[]]$CertificateDetails = @()
+    # An array to store the details of the Primary certificate's Intermediate certificate(s) of the signed file
+    [System.Object[]]$PrimaryCertificateIntermediateDetails = @()
 
     # An array to store the details of the Nested certificate of the signed file
     [System.Object[]]$NestedCertificateDetails = @()
@@ -527,13 +527,13 @@ function Compare-SignerAndCertificate {
     # An array to store the final comparison results of this function
     [System.Object[]]$ComparisonResults = @()
 
-    # Get the certificate details from the signed file path using the Get-CertificateDetails function with the -IntermediateOnly parameter
-    [System.Object[]]$CertificateDetails = Get-CertificateDetails -IntermediateOnly -FilePath $SignedFilePath
+    # Get the intermediate certificate details of the Primary certficiate from the signed file using the Get-CertificateDetails function
+    [System.Object[]]$PrimaryCertificateIntermediateDetails = Get-CertificateDetails -IntermediateOnly -FilePath $SignedFilePath
 
-    # Get the Nested certificate of the signed file, if any
+    # Get the Nested (Secondary) certificate of the signed file, if any
     [System.Management.Automation.Signature]$ExtraCertificateDetails = Get-AuthenticodeSignatureEx -FilePath $SignedFilePath
 
-    # Extract it from the nested property
+    # Extract the Nested (Secondary) certificate from the nested property
     $NestedCertificate = ($ExtraCertificateDetails).NestedSignature.SignerCertificate
 
     if ($null -ne $NestedCertificate) {
@@ -546,10 +546,10 @@ function Compare-SignerAndCertificate {
         $NestedCertificateDetails = Get-CertificateDetails -IntermediateOnly -X509Certificate2 $NestedCertificate -LeafCNOfTheNestedCertificate $LeafCNOfTheNestedCertificate
     }
 
-    # Declare $LeafCertificateDetails as an array
+    # An array to store the details of the Primary certificate's Leaf certificate of the signed file
     [System.Object[]]$LeafCertificateDetails = @()
 
-    # Declare $NestedLeafCertificateDetails as an array
+    # An array to store the details of the Nested (Secondary) certificate's Leaf certificate of the signed file
     [System.Object[]]$NestedLeafCertificateDetails = @()
 
     # Get the leaf certificate details of the Main Certificate from the signed file path
@@ -580,7 +580,7 @@ function Compare-SignerAndCertificate {
         }
 
         # Loop through each certificate in the certificate details array of the Main Cert
-        foreach ($Certificate in $CertificateDetails) {
+        foreach ($Certificate in $PrimaryCertificateIntermediateDetails) {
 
             # Check if the signer's CertRoot (referring to the TBS value in the xml file which belongs to an intermediate cert of the file)...
             # ...matches the TBSValue of the file's certificate (TBS values of one of the intermediate certificates of the file since -IntermediateOnly parameter is used earlier and that's what FilePublisher level uses)

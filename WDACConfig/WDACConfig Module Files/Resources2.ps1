@@ -100,7 +100,7 @@ function Get-TBSCertificate {
         '1.2.840.113549.1.1.13' { $HashFunction = [System.Security.Cryptography.SHA512]::Create() ; break }
         # sha-1WithRSAEncryption
         '1.3.14.3.2.29' { $HashFunction = [System.Security.Cryptography.SHA1]::Create() ; break }
-        default { Write-Error -Message "No handler for algorithm $AlgorithmOid" -ErrorAction Continue }
+        default { throw "No handler for algorithm $AlgorithmOid" }
     }
 
     # Compute the hash of the TBS value using the hash function

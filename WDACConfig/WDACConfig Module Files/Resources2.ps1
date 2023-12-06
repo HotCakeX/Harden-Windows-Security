@@ -6,14 +6,26 @@ class Signer {
     [System.String]$CertPublisher
 }
 
-# Function that takes an XML file path as input and returns an array of Signer objects
 function Get-SignerInfo {
+    <#
+    .SYNOPSIS
+        Function that takes an XML file path as input and returns an array of Signer objects
+    .INPUTS
+        System.IO.FileInfo
+    .OUTPUTS
+        Signer[]
+    .PARAMETER XmlFilePath
+        The XML file path that the user selected for WDAC simulation.
+    #>
     param(
-        [Parameter(Mandatory = $true)][System.String]$XmlFilePath
+        [Parameter(Mandatory = $true)][System.IO.FileInfo]$XmlFilePath
     )
-    process {
-        # Load the XML file and select the Signer nodes
+    begin {
+        # Load the XML file
         $Xml = [System.Xml.XmlDocument](Get-Content -Path $XmlFilePath)
+    }
+    process {
+        # Select the Signer nodes
         [System.Object[]]$Signers = $Xml.SiPolicy.Signers.Signer
 
         # Create an empty array to store the output
@@ -38,51 +50,65 @@ function Get-SignerInfo {
     }
 }
 
-# Function to calculate the TBS of a certificate
 function Get-TBSCertificate {
-    param ($Cert)
+    <#
+    .SYNOPSIS
+        Function to calculate the TBS of a certificate
+    .INPUTS
+        System.Security.Cryptography.X509Certificates.X509Certificate2
+    .OUTPUTS
+        System.String
+    .PARAMETER Cert
+        The certificate that is going to be used to retrieve its TBS value
+    #>
+    param (
+        [System.Security.Cryptography.X509Certificates.X509Certificate2]$Cert
+    )
 
     # Get the raw data of the certificate
-    $RawData = $Cert.RawData
+    [System.Byte[]]$RawData = $Cert.RawData
 
     # Create an ASN.1 reader to parse the certificate
-    $AsnReader = New-Object System.Formats.Asn1.AsnReader -ArgumentList $RawData, ([System.Formats.Asn1.AsnEncodingRules]::DER)
+    [System.Formats.Asn1.AsnReader]$AsnReader = New-Object -TypeName System.Formats.Asn1.AsnReader -ArgumentList $RawData, ([System.Formats.Asn1.AsnEncodingRules]::DER)
 
     # Read the certificate sequence
-    $Certificate = $AsnReader.ReadSequence()
+    [System.Formats.Asn1.AsnReader]$Certificate = $AsnReader.ReadSequence()
 
     # Read the TBS (To be signed) value of the certificate
     $TbsCertificate = $Certificate.ReadEncodedValue()
 
     # Read the signature algorithm sequence
-    $SignatureAlgorithm = $Certificate.ReadSequence()
+    [System.Formats.Asn1.AsnReader]$SignatureAlgorithm = $Certificate.ReadSequence()
 
     # Read the algorithm OID of the signature
-    $AlgorithmOid = $SignatureAlgorithm.ReadObjectIdentifier()
+    [System.String]$AlgorithmOid = $SignatureAlgorithm.ReadObjectIdentifier()
 
     # Define a hash function based on the algorithm OID
     switch ($AlgorithmOid) {
-        '1.2.840.113549.1.1.4' { $HashFunction = [System.Security.Cryptography.MD5]::Create() }
-        '1.2.840.10040.4.3' { $HashFunction = [System.Security.Cryptography.SHA1]::Create() }
-        '2.16.840.1.101.3.4.3.2' { $HashFunction = [System.Security.Cryptography.SHA256]::Create() }
-        '2.16.840.1.101.3.4.3.3' { $HashFunction = [System.Security.Cryptography.SHA384]::Create() }
-        '2.16.840.1.101.3.4.3.4' { $HashFunction = [System.Security.Cryptography.SHA512]::Create() }
-        '1.2.840.10045.4.1' { $HashFunction = [System.Security.Cryptography.SHA1]::Create() }
-        '1.2.840.10045.4.3.2' { $HashFunction = [System.Security.Cryptography.SHA256]::Create() }
-        '1.2.840.10045.4.3.3' { $HashFunction = [System.Security.Cryptography.SHA384]::Create() }
-        '1.2.840.10045.4.3.4' { $HashFunction = [System.Security.Cryptography.SHA512]::Create() }
-        '1.2.840.113549.1.1.5' { $HashFunction = [System.Security.Cryptography.SHA1]::Create() }
-        '1.2.840.113549.1.1.11' { $HashFunction = [System.Security.Cryptography.SHA256]::Create() }
-        '1.2.840.113549.1.1.12' { $HashFunction = [System.Security.Cryptography.SHA384]::Create() }
-        '1.2.840.113549.1.1.13' { $HashFunction = [System.Security.Cryptography.SHA512]::Create() }
+        '1.2.840.113549.1.1.4' { $HashFunction = [System.Security.Cryptography.MD5]::Create() ; break }
+        '1.2.840.10040.4.3' { $HashFunction = [System.Security.Cryptography.SHA1]::Create() ; break }
+        '2.16.840.1.101.3.4.3.2' { $HashFunction = [System.Security.Cryptography.SHA256]::Create(); break }
+        '2.16.840.1.101.3.4.3.3' { $HashFunction = [System.Security.Cryptography.SHA384]::Create() ; break }
+        '2.16.840.1.101.3.4.3.4' { $HashFunction = [System.Security.Cryptography.SHA512]::Create() ; break }
+        '1.2.840.10045.4.1' { $HashFunction = [System.Security.Cryptography.SHA1]::Create() ; break }
+        '1.2.840.10045.4.3.2' { $HashFunction = [System.Security.Cryptography.SHA256]::Create() ; break }
+        '1.2.840.10045.4.3.3' { $HashFunction = [System.Security.Cryptography.SHA384]::Create() ; break }
+        '1.2.840.10045.4.3.4' { $HashFunction = [System.Security.Cryptography.SHA512]::Create() ; break }
+        '1.2.840.113549.1.1.5' { $HashFunction = [System.Security.Cryptography.SHA1]::Create() ; break }
+        '1.2.840.113549.1.1.11' { $HashFunction = [System.Security.Cryptography.SHA256]::Create() ; break }
+        '1.2.840.113549.1.1.12' { $HashFunction = [System.Security.Cryptography.SHA384]::Create() ; break }
+        '1.2.840.113549.1.1.13' { $HashFunction = [System.Security.Cryptography.SHA512]::Create() ; break }
         default { throw "No handler for algorithm $AlgorithmOid" }
     }
 
     # Compute the hash of the TBS value using the hash function
-    $Hash = $HashFunction.ComputeHash($TbsCertificate.ToArray())
+    [System.Byte[]]$Hash = $HashFunction.ComputeHash($TbsCertificate.ToArray())
 
-    # Convert the hash to a hex string and return it
-    return [System.BitConverter]::ToString($hash) -replace '-', ''
+    # Convert the hash to a hex string
+    [System.String]$HexStringOutput = [System.BitConverter]::ToString($Hash) -replace '-', ''
+
+    # Return the output
+    return $HexStringOutput
 }
 
 function Get-AuthenticodeSignatureEx {
@@ -96,6 +122,10 @@ function Get-AuthenticodeSignatureEx {
         https://www.sysadmins.lv/disclaimer.aspx
     .PARAMETER FilePath
         The path of the file(s) to get the signature of
+    .INPUTS
+        System.String[]
+    .OUTPUTS
+        System.Management.Automation.Signature
     #>
 
     [CmdletBinding()]
@@ -197,7 +227,7 @@ function Get-AuthenticodeSignatureEx {
                 [System.IntPtr]$PpvContext = [System.IntPtr]::Zero
                 
                 # Call the CryptQueryObject function to get the handle of the PKCS #7 message from the file path
-                $return = [PKI.Crypt32]::CryptQueryObject(
+                $Return = [PKI.Crypt32]::CryptQueryObject(
                     $CERT_QUERY_OBJECT_FILE,
                     $Output.Path,
                     $CERT_QUERY_CONTENT_FLAG_PKCS7_SIGNED_EMBED,
@@ -211,16 +241,16 @@ function Get-AuthenticodeSignatureEx {
                     [ref]$ppvContext
                 )
                 # If the function fails, return nothing
-                if (!$return) { return } 
+                if (!$Return) { return } 
                                 
                 # Initialize a variable to store the size of the PKCS #7 message data
                 [System.Int64]$PcbData = 0 
                 
                 # Call the CryptMsgGetParam function to get the size of the PKCS #7 message data
-                $return = [PKI.Crypt32]::CryptMsgGetParam($phMsg, 29, 0, $null, [ref]$pcbData)
+                $Return = [PKI.Crypt32]::CryptMsgGetParam($phMsg, 29, 0, $null, [ref]$pcbData)
                
                 # If the function fails, return nothing
-                if (!$return) { return }
+                if (!$Return) { return }
 
                 # Create a byte array to store the PKCS #7 message data
                 $pvData = New-Object -TypeName 'System.Byte[]' -ArgumentList $pcbData 
@@ -337,6 +367,11 @@ function Get-CertificateDetails {
     <#
     .SYNOPSIS
         A function to detect Root, Intermediate and Leaf certificates
+    .INPUTS
+        System.String
+        System.Management.Automation.SwitchParameter
+    .OUTPUTS
+        System.Object[]
     #>
     param (
         [Parameter(ParameterSetName = 'Based on File Path', Mandatory = $true)]
@@ -373,7 +408,7 @@ function Get-CertificateDetails {
     foreach ($Cert in $CertCollection) {
 
         # Build the certificate chain
-        $Chain = New-Object -TypeName System.Security.Cryptography.X509Certificates.X509Chain
+        [System.Security.Cryptography.X509Certificates.X509Chain]$Chain = New-Object -TypeName System.Security.Cryptography.X509Certificates.X509Chain
 
         # Set the chain policy properties
         $chain.ChainPolicy.RevocationMode = 'NoCheck'
@@ -391,13 +426,13 @@ function Get-CertificateDetails {
             # The methods below are conditional regex. Different patterns are used based on the availability of at least one double quote in the CN field, indicating that it had comma in it so it had been enclosed with double quotes by system
 
             $Element.Certificate.Subject -match 'CN=(?<InitialRegexTest2>.*?),.*' | Out-Null
-            $SubjectCN = $matches['InitialRegexTest2'] -like '*"*' ? ($Element.Certificate.Subject -split 'CN="(.+?)"')[1] : $matches['InitialRegexTest2']
+            [System.String]$SubjectCN = $matches['InitialRegexTest2'] -like '*"*' ? ($Element.Certificate.Subject -split 'CN="(.+?)"')[1] : $matches['InitialRegexTest2']
 
             $Element.Certificate.Issuer -match 'CN=(?<InitialRegexTest3>.*?),.*' | Out-Null
-            $IssuerCN = $matches['InitialRegexTest3'] -like '*"*' ? ($Element.Certificate.Issuer -split 'CN="(.+?)"')[1] : $matches['InitialRegexTest3']
+            [System.String]$IssuerCN = $matches['InitialRegexTest3'] -like '*"*' ? ($Element.Certificate.Issuer -split 'CN="(.+?)"')[1] : $matches['InitialRegexTest3']
 
             # Get the TBS value of the certificate using the Get-TBSCertificate function
-            $TbsValue = Get-TBSCertificate -cert $Element.Certificate
+            [System.String]$TbsValue = Get-TBSCertificate -cert $Element.Certificate
             # Create a custom object with the extracted properties and the TBS value
             $Obj += [pscustomobject]@{
                 SubjectCN = $SubjectCN
@@ -413,12 +448,10 @@ function Get-CertificateDetails {
         # The reason the commented code below is not used is because some files such as C:\Windows\System32\xcopy.exe or d3dcompiler_47.dll that are signed by Microsoft report a different Leaf certificate common name when queried using Get-AuthenticodeSignature
         # (Get-AuthenticodeSignature -FilePath $FilePath).SignerCertificate.Subject -match 'CN=(?<InitialRegexTest4>.*?),.*' | Out-Null
 
-        $CertificateUsingAlternativeMethod = [System.Security.Cryptography.X509Certificates.X509Certificate]::CreateFromSignedFile($FilePath)
+        [System.Security.Cryptography.X509Certificates.X509Certificate]$CertificateUsingAlternativeMethod = [System.Security.Cryptography.X509Certificates.X509Certificate]::CreateFromSignedFile($FilePath)
         $CertificateUsingAlternativeMethod.Subject -match 'CN=(?<InitialRegexTest4>.*?),.*' | Out-Null
 
-
         [System.String]$TestAgainst = $matches['InitialRegexTest4'] -like '*"*' ? ((Get-AuthenticodeSignature -FilePath $FilePath).SignerCertificate.Subject -split 'CN="(.+?)"')[1] : $matches['InitialRegexTest4']
-
 
         if ($IntermediateOnly) {
 
@@ -427,7 +460,7 @@ function Get-CertificateDetails {
             Where-Object -FilterScript { $_.SubjectCN -ne $TestAgainst } | # To omit the Leaf certificate
             Group-Object -Property TBSValue | ForEach-Object -Process { $_.Group[0] } # To make sure the output values are unique based on TBSValue property
 
-            return $FinalObj
+            return [System.Object[]]$FinalObj
 
         }
         elseif ($LeafCertificate) {
@@ -437,7 +470,7 @@ function Get-CertificateDetails {
             Where-Object -FilterScript { $_.SubjectCN -eq $TestAgainst } | # To get the Leaf certificate
             Group-Object -Property TBSValue | ForEach-Object -Process { $_.Group[0] } # To make sure the output values are unique based on TBSValue property
 
-            return $FinalObj
+            return [System.Object[]]$FinalObj
         }
 
     }
@@ -451,7 +484,7 @@ function Get-CertificateDetails {
             Where-Object -FilterScript { $_.SubjectCN -ne $LeafCNOfTheNestedCertificate } | # To omit the Leaf certificate
             Group-Object -Property TBSValue | ForEach-Object -Process { $_.Group[0] } # To make sure the output values are unique based on TBSValue property
 
-            return $FinalObj
+            return [System.Object[]]$FinalObj
 
         }
         elseif ($LeafCertificate) {
@@ -461,8 +494,7 @@ function Get-CertificateDetails {
             Where-Object -FilterScript { $_.SubjectCN -eq $LeafCNOfTheNestedCertificate } | # To get the Leaf certificate
             Group-Object -Property TBSValue | ForEach-Object -Process { $_.Group[0] } # To make sure the output values are unique based on TBSValue property
 
-            return $FinalObj
-
+            return [System.Object[]]$FinalObj
         }
     }
 }
@@ -471,10 +503,14 @@ function Compare-SignerAndCertificate {
     <#
     .SYNOPSIS
         a function that takes WDAC XML policy file path and a Signed file path as inputs and compares the output of the Get-SignerInfo and Get-CertificateDetails functions
+    .INPUTS
+        System.String
+    .OUTPUTS
+        System.Object[]
     #>
     param(
         [Parameter(Mandatory = $true)][System.String]$XmlFilePath,
-        [Parameter(Mandatory = $true)] [System.String]$SignedFilePath
+        [Parameter(Mandatory = $true)][System.String]$SignedFilePath
     )
 
     # Get the signer information from the XML file path using the Get-SignerInfo function
@@ -493,7 +529,7 @@ function Compare-SignerAndCertificate {
     [System.Object[]]$CertificateDetails = Get-CertificateDetails -IntermediateOnly -FilePath $SignedFilePath
 
     # Get the Nested certificate of the signed file, if any
-    $ExtraCertificateDetails = Get-AuthenticodeSignatureEx -FilePath $SignedFilePath
+    [System.Management.Automation.Signature]$ExtraCertificateDetails = Get-AuthenticodeSignatureEx -FilePath $SignedFilePath
 
     # Extract it from the nested property
     $NestedCertificate = ($ExtraCertificateDetails).NestedSignature.SignerCertificate
@@ -515,7 +551,7 @@ function Compare-SignerAndCertificate {
     [System.Object[]]$NestedLeafCertificateDetails = @()
 
     # Get the leaf certificate details of the Main Certificate from the signed file path
-    $LeafCertificateDetails = Get-CertificateDetails -LeafCertificate -FilePath $SignedFilePath
+    [System.Object[]]$LeafCertificateDetails = Get-CertificateDetails -LeafCertificate -FilePath $SignedFilePath
 
     # Get the leaf certificate details of the Nested Certificate from the signed file path, if it exists
     if ($null -ne $NestedCertificate) {
@@ -569,7 +605,6 @@ function Compare-SignerAndCertificate {
                     $ComparisonResult.CertNameMatch = $true # this should naturally be always true like the CertRootMatch because this is the CN of the same cert that has its TBS value in the xml file in signers
                 }
 
-
                 # Check if the signer's CertPublisher (aka Leaf Certificate's CN used in the xml policy) matches the leaf certificate's SubjectCN (of the file)
                 if ($Signer.CertPublisher -eq $LeafCertificateDetails.SubjectCN) {
 
@@ -613,7 +648,6 @@ function Compare-SignerAndCertificate {
                         $ComparisonResult.CertNameMatch = $true # this should naturally be always true like the CertRootMatch because this is the CN of the same cert that has its TBS value in the xml file in signers
                     }
 
-
                     # Check if the signer's CertPublisher (aka Leaf Certificate's CN used in the xml policy) matches the leaf certificate's SubjectCN (of the file)
                     if ($Signer.CertPublisher -eq $LeafCNOfTheNestedCertificate) {
                         # If yes, set the CertPublisherMatch to true for this comparison result object
@@ -625,7 +659,6 @@ function Compare-SignerAndCertificate {
                 }
             }
         }
-
 
         # if the signed file has nested certificate
         if ($null -ne $NestedCertificate) {
@@ -648,18 +681,28 @@ function Compare-SignerAndCertificate {
         }
 
         # Add the comparison result object to the comparison results array
-        $ComparisonResults += $ComparisonResult
+        [System.Object[]]$ComparisonResults += $ComparisonResult
     }
 
     # Return the comparison results array
     return $ComparisonResults
 }
 
-function Get-FileRuleOutput ($XmlPath) {
+function Get-FileRuleOutput {
     <#
     .SYNOPSIS
         a function to load an xml file and create an output array of custom objects that contain the file rules that are based on file hashes
+    .PARAMETER XmlPath
+        Path to the XML file that user selected for WDAC simulation
+    .INPUTS
+        System.IO.FileInfo
+    .OUTPUTS
+        System.Object[]
     #>
+    param(
+        [parameter(Mandatory = $true)]
+        [System.IO.FileInfo]$XmlPath
+    )
 
     # Load the xml file into a variable
     $Xml = [System.Xml.XmlDocument](Get-Content -Path $XmlPath)
@@ -671,7 +714,7 @@ function Get-FileRuleOutput ($XmlPath) {
     foreach ($FileRule in $Xml.SiPolicy.FileRules.Allow) {
 
         # Extract the hash value from the Hash attribute
-        [System.String]$hashvalue = $FileRule.Hash
+        [System.String]$Hashvalue = $FileRule.Hash
 
         # Extract the hash type from the FriendlyName attribute using regex
         [System.String]$HashType = $FileRule.FriendlyName -replace '.* (Hash (Sha1|Sha256|Page Sha1|Page Sha256|Authenticode SIP Sha256))$', '$1'
@@ -681,19 +724,19 @@ function Get-FileRuleOutput ($XmlPath) {
 
         # Create a custom object with the three properties
         $Object = [PSCustomObject]@{
-            HashValue       = $hashvalue
+            HashValue       = $Hashvalue
             HashType        = $HashType
             FilePathForHash = $FilePathForHash
         }
 
         # Add the object to the output array if it is not a duplicate hash value
-        if ($OutputHashInfoProcessing.HashValue -notcontains $hashvalue) {
+        if ($OutputHashInfoProcessing.HashValue -notcontains $Hashvalue) {
             $OutputHashInfoProcessing += $Object
         }
     }
 
     # Only show the Authenticode Hash SHA256
-    $OutputHashInfoProcessing = $OutputHashInfoProcessing | Where-Object -FilterScript { $_.hashtype -eq 'Hash Sha256' }
+    [System.Object[]]$OutputHashInfoProcessing = $OutputHashInfoProcessing | Where-Object -FilterScript { $_.hashtype -eq 'Hash Sha256' }
 
     # Return the output array
     return $OutputHashInfoProcessing

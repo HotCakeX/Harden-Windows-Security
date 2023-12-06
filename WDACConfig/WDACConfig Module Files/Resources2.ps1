@@ -174,9 +174,9 @@ function Get-AuthenticodeSignatureEx {
 '@
 
         # Load the System.Security assembly to use the SignedCms class
-        Add-Type -AssemblyName 'System.Security' -ErrorAction SilentlyContinue
+        Add-Type -AssemblyName 'System.Security' -ErrorAction SilentlyContinue -Verbose:$false
         # Add the Crypt32.dll library functions as a type
-        Add-Type -MemberDefinition $Signature -Namespace 'PKI' -Name 'Crypt32' -ErrorAction SilentlyContinue
+        Add-Type -MemberDefinition $Signature -Namespace 'PKI' -Name 'Crypt32' -ErrorAction SilentlyContinue -Verbose:$false
                 
         # Define some constants for the CryptQueryObject function parameters
         [System.Int16]$CERT_QUERY_OBJECT_FILE = 0x1

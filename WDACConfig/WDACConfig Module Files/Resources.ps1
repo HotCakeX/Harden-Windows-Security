@@ -214,7 +214,7 @@ public static extern uint QueryDosDevice(string lpDeviceName, StringBuilder lpTa
 
 '@
     # Add the signature to the current session as a new type
-    Add-Type -ErrorAction SilentlyContinue -MemberDefinition $Signature -Name 'Win32Utils' -Namespace 'PInvoke' -Using PInvoke, System.Text
+    Add-Type -ErrorAction SilentlyContinue -MemberDefinition $Signature -Name 'Win32Utils' -Namespace 'PInvoke' -Using PInvoke, System.Text  -Verbose:$false
 
     # Initialize some variables for storing the volume names, paths, and mount points
     [System.UInt32]$lpcchReturnLength = 0

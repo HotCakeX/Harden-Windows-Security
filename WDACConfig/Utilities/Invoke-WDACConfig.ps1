@@ -4,7 +4,7 @@
 [System.String]$ScriptFilePath = ($MyInvocation.MyCommand.path | Split-Path -Parent)
 
 # Import the module into the current scope using the relative path of the module itself
-Import-Module -FullyQualifiedName "$ScriptFilePath\..\WDACConfig Module Files\WDACConfig.psd1"
+Import-Module -FullyQualifiedName "$ScriptFilePath\..\WDACConfig Module Files\WDACConfig.psd1" -Force
 
 # Uncomment and replace with any cmdlet of the WDACConfig module that is going to be debugged
-# Confirm-WDACConfig
+Invoke-WDACSimulation -FolderPath '' -XmlFilePath '' -Verbose

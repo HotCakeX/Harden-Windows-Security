@@ -34,42 +34,46 @@ function Invoke-WDACSimulation {
             [System.Object[]]$SignedResult = @()
 
             # File paths of the files allowed by Signer/certificate
-            [System.Object[]]$AllowedSignedFilePaths = @()
+            [System.IO.FileInfo[]]$AllowedSignedFilePaths = @()
 
             # File paths of the files allowed by Hash
-            [System.Object[]]$AllowedUnsignedFilePaths = @()
+            [System.IO.FileInfo[]]$AllowedUnsignedFilePaths = @()
 
             # Stores the final object of all of the results
             [System.Object[]]$MegaOutputObject = @()
 
             # File paths of the Signed files with HashMismatch Status
-            [System.Object[]]$SignedHashMismatchFilePaths = @()
+            [System.IO.FileInfo[]]$SignedHashMismatchFilePaths = @()
 
             # File paths of the Signed files with a status that doesn't fall into any other category
-            [System.Object[]]$SignedButUnknownFilePaths = @()
+            [System.IO.FileInfo[]]$SignedButUnknownFilePaths = @()
 
             # Hash Sha256 values of all the file rules based on hash in the supplied xml policy file
-            [System.Object[]]$SHA256HashesFromXML = (Get-FileRuleOutput -xmlPath $XmlFilePath).hashvalue
+            Write-Verbose -Message 'Getting the Hash Sha256 values of all the file rules based on hash in the supplied xml policy file'
+            [System.String[]]$SHA256HashesFromXML = (Get-FileRuleOutput -xmlPath $XmlFilePath).hashvalue
 
             # Get all of the file paths of the files that WDAC supports, from the user provided directory
-            [System.Object[]]$CollectedFiles = (Get-ChildItem -Recurse -Path $FolderPath -File -Include '*.sys', '*.exe', '*.com', '*.dll', '*.ocx', '*.msp', '*.mst', '*.msi', '*.js', '*.vbs', '*.ps1', '*.appx').FullName
+            Write-Verbose -Message 'Getting all of the file paths of the files that WDAC supports, from the user provided directory'
+            [System.IO.FileInfo[]]$CollectedFiles = (Get-ChildItem -Recurse -Path $FolderPath -File -Include '*.sys', '*.exe', '*.com', '*.dll', '*.ocx', '*.msp', '*.mst', '*.msi', '*.js', '*.vbs', '*.ps1', '*.appx').FullName
 
             # Make sure the selected directory contains files with the supported extensions
             if (!$CollectedFiles) { Throw 'There are no files in the selected directory that are supported by the WDAC engine.' }
 
             # Loop through each file
+            Write-Verbose -Message 'Looping through each supported file'
             foreach ($CurrentFilePath in $CollectedFiles) {
+
+                Write-Verbose -Message "Processing file: $CurrentFilePath"
 
                 # Check see if the file's hash exists in the XML file regardless of whether it's signed or not
                 # This is because WDAC policies sometimes have hash rules for signed files too
                 try {
+                    Write-Verbose -Message 'Using Get-AppLockerFileInformation to retrieve the hashes of the file'
                     [System.String]$CurrentFilePathHash = (Get-AppLockerFileInformation -Path $CurrentFilePath -ErrorAction Stop).hash -replace 'SHA256 0x', ''
                 }
                 catch {
-                    Write-Debug -Message "Get-AppLockerFileInformation failed for the file at $CurrentFilePath, using New-CIPolicyRule cmdlet..."
-
+                    Write-Verbose -Message 'Get-AppLockerFileInformation failed, using New-CIPolicyRule cmdlet...'
                     $CurrentHashOutput = New-CIPolicyRule -Level hash -Fallback none -AllowFileNameFallbacks -UserWriteablePaths -DriverFilePath $CurrentFilePath
-
                     [System.String]$CurrentFilePathHash = ($CurrentHashOutput | Where-Object -FilterScript { $_.name -like '*Hash Sha256*' }).attributes.hash
                 }
 
@@ -94,7 +98,10 @@ function Invoke-WDACSimulation {
                             $SignedHashMismatchFilePaths += $CurrentFilePath
                             break
                         }
-                        default { $SignedButUnknownFilePaths += $CurrentFilePath; break }
+                        default {
+                            $SignedButUnknownFilePaths += $CurrentFilePath
+                            break 
+                        }
                     }
                 }
             }

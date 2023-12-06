@@ -521,11 +521,10 @@ function Compare-SignerAndCertificate {
     # Get the Nested (Secondary) certificate of the signed file, if any
     [System.Management.Automation.Signature]$ExtraCertificateDetails = Get-AuthenticodeSignatureEx -FilePath $SignedFilePath
 
-    # Extract the Nested (Secondary) certificate from the nested property
+    # Extract the Nested (Secondary) certificate from the nested property, if any
     $NestedCertificate = ($ExtraCertificateDetails).NestedSignature.SignerCertificate
 
-    if ($null -ne $NestedCertificate) {
-
+    if ($null -ne [System.Security.Cryptography.X509Certificates.X509Certificate2]$NestedCertificate) {
         # First get the CN of the leaf certificate of the nested Certificate
         $NestedCertificate.Subject -match 'CN=(?<InitialRegexTest1>.*?),.*' | Out-Null
         $LeafCNOfTheNestedCertificate = $matches['InitialRegexTest1'] -like '*"*' ? ($NestedCertificate.Subject -split 'CN="(.+?)"')[1] : $matches['InitialRegexTest1']

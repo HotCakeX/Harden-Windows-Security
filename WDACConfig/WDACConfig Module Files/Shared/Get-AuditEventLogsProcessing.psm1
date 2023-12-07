@@ -61,3 +61,6 @@ Function Get-AuditEventLogsProcessing {
         return $AuditEventLogsProcessingResults
     }
 }
+
+# Export external facing functions only, prevent internal functions from getting exported
+Export-ModuleMember -Function 'Get-AuditEventLogsProcessing' -Verbose:$false

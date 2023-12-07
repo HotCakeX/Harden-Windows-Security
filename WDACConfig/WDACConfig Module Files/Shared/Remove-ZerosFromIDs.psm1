@@ -44,3 +44,6 @@ Function Remove-ZerosFromIDs {
     # Save the modified xml file
     $Xml.Save($FilePath)
 }
+
+# Export external facing functions only, prevent internal functions from getting exported
+Export-ModuleMember -Function 'Remove-ZerosFromIDs' -Verbose:$false

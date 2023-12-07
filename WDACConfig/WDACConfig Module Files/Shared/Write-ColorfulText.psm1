@@ -61,3 +61,6 @@ Function Write-ColorfulText {
         Default { Throw 'Unspecified Color' }
     }
 }
+
+# Export external facing functions only, prevent internal functions from getting exported
+Export-ModuleMember -Function 'Write-ColorfulText' -Verbose:$false

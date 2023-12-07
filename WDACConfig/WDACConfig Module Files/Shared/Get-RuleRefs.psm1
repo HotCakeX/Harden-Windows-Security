@@ -1,4 +1,4 @@
-function Get-RuleRefs {
+Function Get-RuleRefs {
     <#
     .SYNOPSIS
         Create File Rule Refs based on the ID of the File Rules above and store them in the $RulesRefs variable
@@ -13,3 +13,6 @@ function Get-RuleRefs {
     }
     return ($RulesRefs.Trim())
 }
+
+# Export external facing functions only, prevent internal functions from getting exported
+Export-ModuleMember -Function 'Get-RuleRefs' -Verbose:$false

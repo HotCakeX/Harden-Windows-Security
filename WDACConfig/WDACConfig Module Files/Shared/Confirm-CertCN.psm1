@@ -15,3 +15,6 @@ Function Confirm-CertCN {
     }
     return [System.Boolean]($Certificates -contains $CN ? $true : $false)
 }
+
+# Export external facing functions only, prevent internal functions from getting exported
+Export-ModuleMember -Function 'Confirm-CertCN' -Verbose:$false

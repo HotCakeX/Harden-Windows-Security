@@ -166,25 +166,42 @@ To get help and syntax on PowerShell console, type:
     # ModuleList = @()
 
     # List of all files packaged with this module
-    FileList             = @('WDACConfig.psd1',
+    FileList             = @(
+        'WDACConfig.psd1',
+        'WDACConfig.psm1',
+        'Preloader.ps1',
         'Core\New-WDACConfig.psm1',
         'Core\Deploy-SignedWDACConfig.psm1',
         'Core\Remove-WDACConfig.psm1',
         'Core\Confirm-WDACConfig.psm1',
         'Core\Edit-WDACConfig.psm1',
         'Core\Edit-SignedWDACConfig.psm1',
-        'Core\New-SupplementalWDACConfig.psm1',
-        'Resources\Resources.ps1',
-        'Resources\ArgumentCompleters.ps1',
+        'Core\New-SupplementalWDACConfig.psm1',        
         'Core\New-DenyWDACConfig.psm1',
         'Core\Set-CommonWDACConfig.psm1',
         'Core\New-KernelModeWDACConfig.psm1',
+        'Core\Invoke-WDACSimulation.psm1',
+        'Core\Get-CommonWDACConfig.psm1',
+        'Core\Remove-CommonWDACConfig.psm1',
+        'Resources\Resources2.ps1',
+        'Resources\ArgumentCompleters.ps1'
         'Resources\WDAC Policies\DefaultWindows_Enforced_Kernel.xml',
         'Resources\WDAC Policies\DefaultWindows_Enforced_Kernel_NoFlights.xml',
-        'Core\Invoke-WDACSimulation.psm1',
-        'Resources\Resources2.ps1',
-        'Core\Get-CommonWDACConfig.psm1',
-        'Core\Remove-CommonWDACConfig.psm1')
+        'Shared\Confirm-CertCN.psm1',
+        'Shared\Get-AuditEventLogsProcessing.psm1',
+        'Shared\Get-BlockRulesMeta.psm1',
+        'Shared\Get-FileRules.psm1',
+        'Shared\Get-GlobalRootDrives.psm1',
+        'Shared\Get-RuleRefs.psm1',
+        'Shared\Get-SignTool.psm1',
+        'Shared\Move-UserModeToKernelMode.psm1',
+        'Shared\New-EmptyPolicy.psm1',
+        'Shared\Remove-ZerosFromIDs.psm1',
+        'Shared\Set-LogSize.psm1',
+        'Shared\Test-FilePath.psm1',
+        'Shared\Update-self.psm1',
+        'Shared\Write-ColorfulText.psm1'
+    )
 
     # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.
     PrivateData          = @{

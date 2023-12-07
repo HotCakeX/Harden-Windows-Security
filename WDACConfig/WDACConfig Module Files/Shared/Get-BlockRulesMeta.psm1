@@ -18,3 +18,6 @@ Function Get-BlockRulesMeta {
         PolicyFile = 'Microsoft recommended block rules.xml'
     }
 }
+
+# Export external facing functions only, prevent internal functions from getting exported
+Export-ModuleMember -Function 'Get-BlockRulesMeta' -Verbose:$false

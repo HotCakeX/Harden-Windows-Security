@@ -1,4 +1,4 @@
-function Update-self {
+Function Update-self {
     <#
     .SYNOPSIS
         Make sure the latest version of the module is installed and if not, automatically update it, clean up any old versions
@@ -67,3 +67,6 @@ function Update-self {
         Set-CommonWDACConfig -LastUpdateCheck $(Get-Date ) | Out-Null
     }
 }
+
+# Export external facing functions only, prevent internal functions from getting exported
+Export-ModuleMember -Function 'Update-self' -Verbose:$false

@@ -1,4 +1,4 @@
-function New-EmptyPolicy {
+Function New-EmptyPolicy {
     <#
     .SYNOPSIS
         Creates a policy file and requires 2 parameters to supply the file rules and rule references
@@ -56,3 +56,6 @@ $RuleRefsContent
 "@
     return $EmptyPolicy
 }
+
+# Export external facing functions only, prevent internal functions from getting exported
+Export-ModuleMember -Function 'New-EmptyPolicy' -Verbose:$false

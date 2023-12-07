@@ -1,4 +1,4 @@
-function Set-LogSize {
+Function Set-LogSize {
     <#
     .SYNOPSIS
         Increase Code Integrity Operational Event Logs size from the default 1MB to user defined size
@@ -19,3 +19,6 @@ function Set-LogSize {
     $Log.IsEnabled = $true
     $Log.SaveChanges()
 }
+
+# Export external facing functions only, prevent internal functions from getting exported
+Export-ModuleMember -Function 'Set-LogSize' -Verbose:$false

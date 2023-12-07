@@ -53,3 +53,6 @@ Function Move-UserModeToKernelMode {
     # Save the modified XML document to a new file
     $Xml.Save($FilePath)
 }
+
+# Export external facing functions only, prevent internal functions from getting exported
+Export-ModuleMember -Function 'Move-UserModeToKernelMode' -Verbose:$false

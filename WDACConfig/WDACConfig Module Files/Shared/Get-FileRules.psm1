@@ -1,4 +1,4 @@
-function Get-FileRules {
+Function Get-FileRules {
     <#
     .SYNOPSIS
         Create File Rules based on hash of the files no longer available on the disk and store them in the $Rules variable
@@ -13,3 +13,6 @@ function Get-FileRules {
     }
     return ($Rules.Trim())
 }
+
+# Export external facing functions only, prevent internal functions from getting exported
+Export-ModuleMember -Function 'Get-FileRules' -Verbose:$false

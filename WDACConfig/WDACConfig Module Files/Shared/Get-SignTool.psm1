@@ -1,4 +1,4 @@
-function Get-SignTool {
+Function Get-SignTool {
     <#
     .SYNOPSIS
         Gets the path to SignTool.exe and verifies it to make sure it's not tampered
@@ -51,3 +51,6 @@ function Get-SignTool {
         return $SignToolExePath
     }
 }
+
+# Export external facing functions only, prevent internal functions from getting exported
+Export-ModuleMember -Function 'Get-SignTool' -Verbose:$false

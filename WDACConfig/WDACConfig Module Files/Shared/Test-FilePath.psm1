@@ -53,3 +53,6 @@ Function Test-FilePath {
         }
     }
 }
+
+# Export external facing functions only, prevent internal functions from getting exported
+Export-ModuleMember -Function 'Test-FilePath' -Verbose:$false

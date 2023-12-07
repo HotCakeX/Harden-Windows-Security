@@ -1,4 +1,4 @@
-function Get-GlobalRootDrives {
+Function Get-GlobalRootDrives {
     <#
     .SYNOPSIS
         A function that gets the DriveLetter mappings in the global root namespace
@@ -70,3 +70,6 @@ public static extern uint QueryDosDevice(string lpDeviceName, StringBuilder lpTa
     } while ([PInvoke.Win32Utils]::FindNextVolume([System.IntPtr]$VolumeHandle, $SbVolumeName, $Max))
 
 }
+
+# Export external facing functions only, prevent internal functions from getting exported
+Export-ModuleMember -Function 'Get-GlobalRootDrives' -Verbose:$false

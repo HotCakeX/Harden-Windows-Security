@@ -287,7 +287,7 @@ Function Get-AuditEventLogsProcessing {
     )
 
     begin {
-        # Get the results of the local disks from the script block
+        # Get the local disks mappings
         [System.Object[]]$DriveLettersGlobalRootFix = Get-GlobalRootDrives
 
         # Defining a custom object to store the results and return it at the end

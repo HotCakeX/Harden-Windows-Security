@@ -81,9 +81,17 @@ function New-WDACConfig {
     )
 
     begin {
-        # Importing resources such as functions by dot-sourcing so that they will run in the same scope and their variables will be usable
-        . "$ModuleRootPath\Resources\Resources.ps1"
-
+        # Importing the required sub-modules
+        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Update-self.psm1" -Force -Verbose:$false
+        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Get-SignTool.psm1" -Force -Verbose:$false
+        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Get-GlobalRootDrives.psm1" -Force -Verbose:$false
+        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Write-ColorfulText.psm1" -Force -Verbose:$false
+        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Set-LogSize.psm1" -Force -Verbose:$false
+        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\New-EmptyPolicy.psm1" -Force -Verbose:$false
+        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Get-RuleRefs.psm1" -Force -Verbose:$false
+        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Get-FileRules.psm1" -Force -Verbose:$false
+        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Get-BlockRulesMeta.psm1" -Force -Verbose:$false
+       
         #region User-Configurations-Processing-Validation
         # If User is creating Default Windows policy and including SignTool path
         if ($IncludeSignTool -and $MakeDefaultWindowsWithBlockRules) {
@@ -540,7 +548,7 @@ function New-WDACConfig {
             Write-ColorfulText -Color Pink -InputText "The current version of Microsoft recommended drivers block list is $($Matches[1])"
         }
 
-        if (-NOT $SkipVersionCheck) { . Update-self }
+        if (-NOT $SkipVersionCheck) { Update-self }
 
         [System.Object[]]$DriveLettersGlobalRootFix = Get-GlobalRootDrives
     }

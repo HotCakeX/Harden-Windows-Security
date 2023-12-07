@@ -542,7 +542,7 @@ function New-WDACConfig {
 
         if (-NOT $SkipVersionCheck) { . Update-self }
 
-        $DriveLettersGlobalRootFix = Invoke-Command -ScriptBlock $DriveLettersGlobalRootFixScriptBlock
+        [System.Object[]]$DriveLettersGlobalRootFix = Get-GlobalRootDrives
     }
 
     process {

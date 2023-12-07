@@ -237,7 +237,7 @@ function Edit-SignedWDACConfig {
             # Remove Enforced Mode CIP
             Remove-Item -Path ".\$PolicyID.cip" -Force
         }
-        $DriveLettersGlobalRootFix = Invoke-Command -ScriptBlock $DriveLettersGlobalRootFixScriptBlock
+        [System.Object[]]$DriveLettersGlobalRootFix = Get-GlobalRootDrives
     }
 
     process {

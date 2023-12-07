@@ -200,11 +200,18 @@ function Test-FilePath {
     }
 }
 
-
-# Script block that lists every \Device\Harddiskvolume - https://superuser.com/questions/1058217/list-every-device-harddiskvolume
-# These are DriveLetter mappings
-# Define a script block that fixes the drive letters in the global root namespace
-[System.Management.Automation.ScriptBlock]$DriveLettersGlobalRootFixScriptBlock = {
+function Get-GlobalRootDrives {
+    <#
+    .SYNOPSIS
+        A function that gets the DriveLetter mappings in the global root namespace
+        And fixes these: \Device\Harddiskvolume
+    .LINK
+        https://superuser.com/questions/1058217/list-every-device-harddiskvolume
+    .INPUTS
+        System.Void
+    .OUTPUTS
+        System.Objects[]
+    #>
 
     # Import the kernel32.dll functions using P/Invoke
     [System.String]$Signature = @'
@@ -281,7 +288,7 @@ Function Get-AuditEventLogsProcessing {
 
     begin {
         # Get the results of the local disks from the script block
-        [System.Object[]]$DriveLettersGlobalRootFix = Invoke-Command -ScriptBlock $DriveLettersGlobalRootFixScriptBlock
+        [System.Object[]]$DriveLettersGlobalRootFix = Get-GlobalRootDrives
 
         # Defining a custom object to store the results and return it at the end
         $AuditEventLogsProcessingResults = [PSCustomObject]@{

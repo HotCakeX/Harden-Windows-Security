@@ -176,7 +176,7 @@ function Edit-WDACConfig {
             Remove-Item -Path ".\$PolicyID.cip" -Force
         }
 
-        $DriveLettersGlobalRootFix = Invoke-Command -ScriptBlock $DriveLettersGlobalRootFixScriptBlock
+        [System.Object[]]$DriveLettersGlobalRootFix = Get-GlobalRootDrives
     }
 
     process {

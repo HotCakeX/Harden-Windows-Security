@@ -20,7 +20,7 @@ function Invoke-WDACSimulation {
         # Importing the required sub-modules
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Update-self.psm1" -Force -Verbose:$false
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Write-ColorfulText.psm1" -Force -Verbose:$false
-        
+
         if (-NOT $SkipVersionCheck) { Update-self }
 
         # The total number of the main steps for the progress bar to render

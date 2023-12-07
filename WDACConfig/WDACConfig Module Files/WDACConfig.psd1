@@ -176,7 +176,7 @@ To get help and syntax on PowerShell console, type:
         'Core\Confirm-WDACConfig.psm1',
         'Core\Edit-WDACConfig.psm1',
         'Core\Edit-SignedWDACConfig.psm1',
-        'Core\New-SupplementalWDACConfig.psm1',        
+        'Core\New-SupplementalWDACConfig.psm1',
         'Core\New-DenyWDACConfig.psm1',
         'Core\Set-CommonWDACConfig.psm1',
         'Core\New-KernelModeWDACConfig.psm1',

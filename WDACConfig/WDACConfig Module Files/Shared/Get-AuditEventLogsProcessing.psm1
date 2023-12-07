@@ -14,7 +14,7 @@ Function Get-AuditEventLogsProcessing {
     begin {
         # Importing the required sub-modules
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Get-GlobalRootDrives.psm1" -Force -Verbose:$false
-        
+
         # Get the local disks mappings
         [System.Object[]]$DriveLettersGlobalRootFix = Get-GlobalRootDrives
 

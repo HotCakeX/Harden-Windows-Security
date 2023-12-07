@@ -42,13 +42,13 @@ Function Write-ColorfulText {
                 [System.Drawing.Color]::SkyBlue,
                 [System.Drawing.Color]::HotPink,
                 [System.Drawing.Color]::SkyBlue,
-                [System.Drawing.Color]::LightSkyBlue,      
+                [System.Drawing.Color]::LightSkyBlue,
                 [System.Drawing.Color]::LightGreen,
                 [System.Drawing.Color]::Coral,
                 [System.Drawing.Color]::Plum,
                 [System.Drawing.Color]::Gold
             )
-  
+
             [System.String]$Output = ''
             for ($I = 0; $I -lt $InputText.Length; $I++) {
                 $Color = $Colors[$I % $Colors.Length]

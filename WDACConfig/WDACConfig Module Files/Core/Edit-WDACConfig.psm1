@@ -108,7 +108,7 @@ function Edit-WDACConfig {
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Get-RuleRefs.psm1" -Force -Verbose:$false
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Get-FileRules.psm1" -Force -Verbose:$false
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Get-BlockRulesMeta.psm1" -Force -Verbose:$false
-        
+
         if (-NOT $SkipVersionCheck) { Update-self }
 
         # Detecting if Debug switch is used, will do debugging actions based on that

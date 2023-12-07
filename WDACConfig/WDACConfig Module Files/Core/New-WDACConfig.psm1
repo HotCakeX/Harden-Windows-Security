@@ -91,7 +91,7 @@ function New-WDACConfig {
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Get-RuleRefs.psm1" -Force -Verbose:$false
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Get-FileRules.psm1" -Force -Verbose:$false
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Get-BlockRulesMeta.psm1" -Force -Verbose:$false
-       
+
         #region User-Configurations-Processing-Validation
         # If User is creating Default Windows policy and including SignTool path
         if ($IncludeSignTool -and $MakeDefaultWindowsWithBlockRules) {

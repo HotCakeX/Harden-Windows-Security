@@ -155,7 +155,7 @@ function Set-CommonWDACConfig {
     end {
         # Update the User Configurations file
         $UserConfigurationsObject | ConvertTo-Json | Set-Content "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json"
-        &$WritePink "`nThis is your new WDAC User Configurations: "
+        Write-ColorfulText -Color Pink -InputText "`nThis is your new WDAC User Configurations: "
         Get-Content -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json" | ConvertFrom-Json | Format-List *
     }
 }

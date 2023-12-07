@@ -192,7 +192,7 @@ function New-WDACConfig {
 
             if ($SignToolPathFinal) {
                 # Allowing SignTool to be able to run after Default Windows base policy is deployed in Signed scenario
-                &$WriteTeaGreen "`nCreating allow rules for SignTool.exe in the DefaultWindows base policy so you can continue using it after deploying the DefaultWindows base policy."
+                Write-ColorfulText -Color TeaGreen -InputText "`nCreating allow rules for SignTool.exe in the DefaultWindows base policy so you can continue using it after deploying the DefaultWindows base policy."
                 New-Item -Path "$UserTempDirectoryPath\TemporarySignToolFile" -ItemType Directory -Force | Out-Null
                 Copy-Item -Path $SignToolPathFinal -Destination "$UserTempDirectoryPath\TemporarySignToolFile" -Force
                 New-CIPolicy -ScanPath "$UserTempDirectoryPath\TemporarySignToolFile" -Level FilePublisher -Fallback Hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -AllowFileNameFallbacks -FilePath .\SignTool.xml
@@ -204,7 +204,7 @@ function New-WDACConfig {
 
             # Scan PowerShell core directory and allow its files in the Default Windows base policy so that module can still be used once it's been deployed
             if (Test-Path -Path 'C:\Program Files\PowerShell') {
-                &$WriteLavender 'Creating allow rules for PowerShell in the DefaultWindows base policy so you can continue using this module after deploying it.'
+                Write-ColorfulText -Color Lavender -InputText 'Creating allow rules for PowerShell in the DefaultWindows base policy so you can continue using this module after deploying it.'
                 New-CIPolicy -ScanPath 'C:\Program Files\PowerShell' -Level FilePublisher -NoScript -Fallback Hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -FilePath .\AllowPowerShell.xml
 
                 if ($global:MergeSignToolPolicy) {
@@ -260,7 +260,7 @@ function New-WDACConfig {
             Rename-Item -Path .\VulnerableDriverBlockList\SiPolicy_Enforced.p7b -NewName 'SiPolicy.p7b' -Force
             Copy-Item -Path .\VulnerableDriverBlockList\SiPolicy.p7b -Destination 'C:\Windows\System32\CodeIntegrity'
             citool --refresh -json | Out-Null
-            &$WritePink 'SiPolicy.p7b has been deployed and policies refreshed.'
+            Write-ColorfulText -Color Pink -InputText 'SiPolicy.p7b has been deployed and policies refreshed.'
             Remove-Item -Path .\VulnerableDriverBlockList* -Recurse -Force
             Invoke-Command -ScriptBlock $DriversBlockListInfoGatheringSCRIPTBLOCK
         }
@@ -277,7 +277,7 @@ function New-WDACConfig {
             Set-CIPolicyIdInfo -PolicyName "Microsoft Windows User Mode Policy - Enforced - $(Get-Date -Format 'MM-dd-yyyy')" -FilePath '.\Microsoft recommended block rules.xml'
             ConvertFrom-CIPolicy -XmlFilePath '.\Microsoft recommended block rules.xml' -BinaryFilePath "$PolicyID.cip" | Out-Null
             CiTool --update-policy "$PolicyID.cip" -json | Out-Null
-            &$WriteLavender 'The Microsoft recommended block rules policy has been deployed in enforced mode.'
+            Write-ColorfulText -Color Lavender -InputText 'The Microsoft recommended block rules policy has been deployed in enforced mode.'
             Remove-Item -Path "$PolicyID.cip" -Force
         }
 
@@ -312,11 +312,11 @@ function New-WDACConfig {
             ConvertFrom-CIPolicy -XmlFilePath .\AllowMicrosoft.xml -BinaryFilePath "$PolicyID.cip" | Out-Null
             if ($Deploy) {
                 CiTool --update-policy "$PolicyID.cip" -json | Out-Null
-                &$WriteHotPink 'The default AllowMicrosoft policy has been deployed in Audit mode. No reboot required.'
+                Write-ColorfulText -Color HotPink -InputText 'The default AllowMicrosoft policy has been deployed in Audit mode. No reboot required.'
                 Remove-Item -Path 'AllowMicrosoft.xml', "$PolicyID.cip" -Force
             }
             else {
-                &$WriteHotPink 'The default AllowMicrosoft policy has been created in Audit mode and is ready for deployment.'
+                Write-ColorfulText -Color HotPink -InputText 'The default AllowMicrosoft policy has been created in Audit mode and is ready for deployment.'
             }
         }
 
@@ -344,11 +344,11 @@ function New-WDACConfig {
             ConvertFrom-CIPolicy -XmlFilePath .\DefaultWindows_Audit.xml -BinaryFilePath "$PolicyID.cip" | Out-Null
             if ($Deploy) {
                 CiTool --update-policy "$PolicyID.cip" -json | Out-Null
-                &$WriteLavender 'The defaultWindows policy has been deployed in Audit mode. No reboot required.'
+                Write-ColorfulText -Color Lavender -InputText 'The defaultWindows policy has been deployed in Audit mode. No reboot required.'
                 Remove-Item -Path 'DefaultWindows_Audit.xml', "$PolicyID.cip" -Force
             }
             else {
-                &$WriteLavender 'The defaultWindows policy has been created in Audit mode and is ready for deployment.'
+                Write-ColorfulText -Color Lavender -InputText 'The defaultWindows policy has been created in Audit mode and is ready for deployment.'
             }
         }
 
@@ -388,7 +388,7 @@ function New-WDACConfig {
             ############################### Supplemental Processing ###############################
 
             # Produce a policy xml file from event viewer logs
-            &$WriteLavender 'Scanning Windows Event logs and creating a policy file, please wait...'
+            Write-ColorfulText -Color Lavender -InputText 'Scanning Windows Event logs and creating a policy file, please wait...'
 
             # Creating a hash table to dynamically add parameters based on user input and pass them to New-Cipolicy cmdlet
             [System.Collections.Hashtable]$PolicyMakerHashTable = @{
@@ -406,7 +406,7 @@ function New-WDACConfig {
             if ($NoScript) { $PolicyMakerHashTable['NoScript'] = $true }
             if (!$NoUserPEs) { $PolicyMakerHashTable['UserPEs'] = $true }
 
-            &$WriteHotPink "`nGenerating Supplemental policy with the following specifications:"
+            Write-ColorfulText -Color HotPink -InputText "`nGenerating Supplemental policy with the following specifications:"
             $PolicyMakerHashTable
             Write-Host -Object "`n"
             # Create the supplemental policy via parameter splatting for files in event viewer that are currently on the disk
@@ -480,7 +480,7 @@ function New-WDACConfig {
             if ($Deploy -and $MakePolicyFromAuditLogs) {
                 CiTool --update-policy "$BasePolicyID.cip" -json | Out-Null
                 CiTool --update-policy "$policyID.cip" -json | Out-Null
-                &$WritePink "`nBase policy and Supplemental Policies deployed and activated.`n"
+                Write-ColorfulText -Color Pink -InputText "`nBase policy and Supplemental Policies deployed and activated.`n"
                 # Get the correct Prep mode Audit policy ID to remove from the system
                 switch ($BasePolicyType) {
                     'Allow Microsoft Base' {
@@ -491,7 +491,7 @@ function New-WDACConfig {
                     }
                 }
                 CiTool --remove-policy "{$IDToRemove}" -json | Out-Null
-                &$WriteLavender "`nSystem restart required to finish removing the Audit mode Prep policy"
+                Write-ColorfulText -Color Lavender -InputText "`nSystem restart required to finish removing the Audit mode Prep policy"
             }
         }
 
@@ -534,10 +534,10 @@ function New-WDACConfig {
             [System.Object[]]$Response = Invoke-RestMethod -Uri $ApiUrl -ProgressAction SilentlyContinue
             [System.DateTime]$Date = $Response[0].commit.author.date
 
-            &$WriteLavender "The document containing the drivers block list on GitHub was last updated on $Date"
+            Write-ColorfulText -Color Lavender -InputText "The document containing the drivers block list on GitHub was last updated on $Date"
             [System.String]$MicrosoftRecommendeDriverBlockRules = (Invoke-WebRequest -Uri $MSFTRecommendeDriverBlockRulesURL -ProgressAction SilentlyContinue).Content
             $MicrosoftRecommendeDriverBlockRules -match '<VersionEx>(.*)</VersionEx>' | Out-Null
-            &$WritePink "The current version of Microsoft recommended drivers block list is $($Matches[1])"
+            Write-ColorfulText -Color Pink -InputText "The current version of Microsoft recommended drivers block list is $($Matches[1])"
         }
 
         if (-NOT $SkipVersionCheck) { . Update-self }

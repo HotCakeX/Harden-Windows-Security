@@ -169,7 +169,7 @@ function Edit-WDACConfig {
         function Update-BasePolicyToEnforced {
             # Deploy Enforced mode CIP
             CiTool --update-policy ".\$PolicyID.cip" -json | Out-Null
-            &$WriteTeaGreen "`nThe Base policy with the following details has been Re-Deployed in Enforced Mode:"
+            Write-ColorfulText -Color TeaGreen -InputText "`nThe Base policy with the following details has been Re-Deployed in Enforced Mode:"
             Write-Output -InputObject "PolicyName = $PolicyName"
             Write-Output -InputObject "PolicyGUID = $PolicyID"
             # Remove Enforced Mode CIP
@@ -248,7 +248,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                 Write-Debug -Message 'Deploying Audit mode CIP'
                 Rename-Item -Path '.\AuditMode.cip' -NewName ".\$PolicyID.cip" -Force
                 CiTool --update-policy ".\$PolicyID.cip" -json | Out-Null
-                &$WriteTeaGreen "`nThe Base policy with the following details has been Re-Deployed in Audit Mode:"
+                Write-ColorfulText -Color TeaGreen -InputText "`nThe Base policy with the following details has been Re-Deployed in Audit Mode:"
                 Write-Output -InputObject "PolicyName = $PolicyName"
                 Write-Output -InputObject "PolicyGUID = $PolicyID"
                 # Remove Audit Mode CIP
@@ -259,8 +259,8 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                 # A Try-Catch-Finally block so that if any errors occur, the Base policy will be Re-deployed in enforced mode
                 Try {
                     ################################### User Interaction ####################################
-                    &$WritePink "`nAudit mode deployed, start installing your programs now"
-                    &$WriteHotPink "When you've finished installing programs, Press Enter to start selecting program directories to scan`n"
+                    Write-ColorfulText -Color Pink -InputText "`nAudit mode deployed, start installing your programs now"
+                    Write-ColorfulText -Color HotPink -InputText "When you've finished installing programs, Press Enter to start selecting program directories to scan`n"
                     Pause
 
                     # Store the program paths that user browses for in an array
@@ -372,7 +372,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
 
                 ConvertFrom-CIPolicy -XmlFilePath $SuppPolicyPath -BinaryFilePath "$SuppPolicyID.cip" | Out-Null
                 CiTool --update-policy ".\$SuppPolicyID.cip" -json | Out-Null
-                &$WriteTeaGreen "`nSupplemental policy with the following details has been Deployed in Enforced Mode:"
+                Write-ColorfulText -Color TeaGreen -InputText "`nSupplemental policy with the following details has been Deployed in Enforced Mode:"
                 Write-Output -InputObject "SupplementalPolicyName = $SuppPolicyName"
                 Write-Output -InputObject "SupplementalPolicyGUID = $SuppPolicyID"
                 Remove-Item -Path ".\$SuppPolicyID.cip" -Force
@@ -431,7 +431,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                 Write-Debug -Message 'Deploying Audit mode CIP'
                 Rename-Item -Path '.\AuditMode.cip' -NewName ".\$PolicyID.cip" -Force
                 CiTool --update-policy ".\$PolicyID.cip" -json | Out-Null
-                &$WriteTeaGreen "`nThe Base policy with the following details has been Re-Deployed in Audit Mode:"
+                Write-ColorfulText -Color TeaGreen -InputText "`nThe Base policy with the following details has been Re-Deployed in Audit Mode:"
                 Write-Output -InputObject "PolicyName = $PolicyName"
                 Write-Output -InputObject "PolicyGUID = $PolicyID"
                 # Remove Audit Mode CIP
@@ -442,8 +442,8 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                 # A Try-Catch-Finally block so that if any errors occur, the Base policy will be Re-deployed in enforced mode
                 Try {
                     ################################### User Interaction ####################################
-                    &$WritePink "`nAudit mode deployed, start installing your programs now"
-                    &$WriteHotPink "When you've finished installing programs, Press Enter to start selecting program directories to scan`n"
+                    Write-ColorfulText -Color Pink -InputText "`nAudit mode deployed, start installing your programs now"
+                    Write-ColorfulText -Color HotPink -InputText "When you've finished installing programs, Press Enter to start selecting program directories to scan`n"
                     Pause
 
                     # Store the program paths that user browses for in an array
@@ -703,7 +703,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
 
                 ConvertFrom-CIPolicy -XmlFilePath $SuppPolicyPath -BinaryFilePath "$SuppPolicyID.cip" | Out-Null
                 CiTool --update-policy ".\$SuppPolicyID.cip" -json | Out-Null
-                &$WriteTeaGreen "`nSupplemental policy with the following details has been Deployed in Enforced Mode:"
+                Write-ColorfulText -Color TeaGreen -InputText "`nSupplemental policy with the following details has been Deployed in Enforced Mode:"
                 Write-Output -InputObject "SupplementalPolicyName = $SuppPolicyName"
                 Write-Output -InputObject "SupplementalPolicyGUID = $SuppPolicyID"
                 Remove-Item -Path ".\$SuppPolicyID.cip" -Force
@@ -744,7 +744,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                 Set-HVCIOptions -Strict -FilePath "$SuppPolicyName.xml"
                 ConvertFrom-CIPolicy -XmlFilePath "$SuppPolicyName.xml" -BinaryFilePath "$SuppPolicyID.cip" | Out-Null
                 CiTool --update-policy "$SuppPolicyID.cip" -json | Out-Null
-                &$WriteTeaGreen "`nThe Supplemental policy $SuppPolicyName has been deployed on the system, replacing the old ones.`nSystem Restart Not immediately needed but eventually required to finish the removal of previous individual Supplemental policies."
+                Write-ColorfulText -Color TeaGreen -InputText "`nThe Supplemental policy $SuppPolicyName has been deployed on the system, replacing the old ones.`nSystem Restart Not immediately needed but eventually required to finish the removal of previous individual Supplemental policies."
                 Remove-Item -Path "$SuppPolicyID.cip" -Force
             }
         }
@@ -819,8 +819,8 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
             }
             Remove-Item -Path $PolicyFiles[$NewBasePolicyType] -Force -ErrorAction SilentlyContinue
             Rename-Item -Path '.\BasePolicy.xml' -NewName $PolicyFiles[$NewBasePolicyType] -Force
-            &$WritePink "Base Policy has been successfully updated to $NewBasePolicyType"
-            &$WriteLavender 'Keep in mind that your previous policy path saved in User Configurations is no longer valid as you just changed your Base policy.'
+            Write-ColorfulText -Color Pink -InputText "Base Policy has been successfully updated to $NewBasePolicyType"
+            Write-ColorfulText -Color Lavender -InputText 'Keep in mind that your previous policy path saved in User Configurations is no longer valid as you just changed your Base policy.'
         }
     }
 

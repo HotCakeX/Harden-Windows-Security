@@ -191,10 +191,10 @@ function Deploy-SignedWDACConfig {
                         $userInput = $(Write-Host -Object 'Add the Signed policy xml file path just created to the User Configurations? Please enter 1 to Confirm or 2 to Skip.' -ForegroundColor Cyan ; Read-Host)
                         if ($userInput -eq 1) {
                             Set-CommonWDACConfig -SignedPolicyPath $PolicyPath
-                            &$WriteHotPink "Added $PolicyPath to the User Configuration file."
+                            Write-ColorfulText -Color HotPink -InputText "Added $PolicyPath to the User Configuration file."
                         }
                         elseif ($userInput -eq 2) {
-                            &$WritePink 'Skipping...'
+                            Write-ColorfulText -Color Pink -InputText 'Skipping...'
                         }
                         else {
                             Write-Warning 'Invalid input. Please enter 1 or 2 only.'

@@ -261,7 +261,7 @@ function New-DenyWDACConfig {
 
             if ($Deploy) {
                 CiTool --update-policy "$policyID.cip" -json | Out-Null
-                &$WritePink "A Deny Base policy with the name $PolicyName has been deployed."
+                Write-ColorfulText -Color Pink -InputText "A Deny Base policy with the name $PolicyName has been deployed."
                 Remove-Item -Path "$policyID.cip" -Force
             }
         }

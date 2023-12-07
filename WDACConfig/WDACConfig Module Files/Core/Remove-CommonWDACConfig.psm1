@@ -29,7 +29,7 @@ function Remove-CommonWDACConfig {
         # Delete the entire User Configs if a more specific parameter wasn't used
         if ($PSBoundParameters.Count -eq 0) {
             Remove-Item -Path "$UserAccountDirectoryPath\.WDACConfig\" -Recurse -Force
-            &$WritePink 'User Configurations for WDACConfig module have been deleted.'
+            Write-ColorfulText -Color Pink -InputText 'User Configurations for WDACConfig module have been deleted.'
             break
         }
 
@@ -115,7 +115,7 @@ function Remove-CommonWDACConfig {
     end {
         # Update the User Configurations file
         $UserConfigurationsObject | ConvertTo-Json | Set-Content "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json"
-        &$WritePink "`nThis is your new WDAC User Configurations: "
+        Write-ColorfulText -Color Pink -InputText "`nThis is your new WDAC User Configurations: "
         Get-Content -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json" | ConvertFrom-Json | Format-List *
     }
 }

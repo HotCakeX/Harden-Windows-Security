@@ -141,7 +141,7 @@ function New-SupplementalWDACConfig {
             if ($NoScript) { $PolicyMakerHashTable['NoScript'] = $true }
             if (!$NoUserPEs) { $PolicyMakerHashTable['UserPEs'] = $true }
 
-            &$WriteHotPink "`nGenerating Supplemental policy with the following specifications:"
+            Write-ColorfulText -Color HotPink -InputText "`nGenerating Supplemental policy with the following specifications:"
             $PolicyMakerHashTable
             Write-Host -Object "`n"
             # Create the supplemental policy via parameter splatting
@@ -161,7 +161,7 @@ function New-SupplementalWDACConfig {
             }
             if ($Deploy) {
                 CiTool --update-policy "$policyID.cip" -json | Out-Null
-                &$WritePink "A Supplemental policy with the name $SuppPolicyName has been deployed."
+                Write-ColorfulText -Color Pink -InputText "A Supplemental policy with the name $SuppPolicyName has been deployed."
                 Remove-Item -Path "$policyID.cip" -Force
             }
         }
@@ -196,7 +196,7 @@ function New-SupplementalWDACConfig {
 
             if ($Deploy) {
                 CiTool --update-policy "$policyID.cip" -json | Out-Null
-                &$WritePink "A Supplemental policy with the name $SuppPolicyName has been deployed."
+                Write-ColorfulText -Color Pink -InputText "A Supplemental policy with the name $SuppPolicyName has been deployed."
                 Remove-Item -Path "$policyID.cip" -Force
             }
         }
@@ -252,7 +252,7 @@ function New-SupplementalWDACConfig {
 
             if ($Deploy) {
                 CiTool --update-policy "$policyID.cip" -json | Out-Null
-                &$WritePink "A Supplemental policy with the name $SuppPolicyName has been deployed."
+                Write-ColorfulText -Color Pink -InputText "A Supplemental policy with the name $SuppPolicyName has been deployed."
                 Remove-Item -Path "$policyID.cip" -Force
             }
         }

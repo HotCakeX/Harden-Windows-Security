@@ -147,7 +147,7 @@ function New-KernelModeWDACConfig {
                     # Set the GUID of the Audit mode policy in the User Configuration file
                     Set-CommonWDACConfig -StrictKernelPolicyGUID $PolicyID | Out-Null
                     CiTool.exe --update-policy "$PolicyID.cip" -json | Out-Null
-                    &$WriteHotPink 'Strict Kernel mode policy has been deployed in Audit mode, please restart your system.'
+                    Write-ColorfulText -Color HotPink -InputText 'Strict Kernel mode policy has been deployed in Audit mode, please restart your system.'
 
                     # Clear Code Integrity operational before system restart so that after boot it will only have the correct and new logs
                     wevtutil cl 'Microsoft-Windows-CodeIntegrity/Operational'
@@ -158,7 +158,7 @@ function New-KernelModeWDACConfig {
                     }
                 }
                 else {
-                    &$WriteHotPink 'Strict Kernel mode Audit policy has been created in the current working directory.'
+                    Write-ColorfulText -Color HotPink -InputText 'Strict Kernel mode Audit policy has been created in the current working directory.'
                 }
             }
 
@@ -213,7 +213,7 @@ function New-KernelModeWDACConfig {
                 if ($Deploy) {
                     ConvertFrom-CIPolicy -XmlFilePath '.\Final_DefaultWindows_Enforced_Kernel.xml' -BinaryFilePath "$PolicyID.cip" | Out-Null
                     CiTool.exe --update-policy "$PolicyID.cip" -json | Out-Null
-                    &$WritePink 'Strict Kernel mode policy has been deployed in Enforced mode, no restart required.'
+                    Write-ColorfulText -Color Pink -InputText 'Strict Kernel mode policy has been deployed in Enforced mode, no restart required.'
 
                     # Delete its GUID from User Configurations
                     Remove-CommonWDACConfig -StrictKernelPolicyGUID | Out-Null
@@ -223,7 +223,7 @@ function New-KernelModeWDACConfig {
                     # This step is necessary if user didn't use the -Deploy parameter
                     # And instead wants to first Sign and then deploy it using the Deploy-SignedWDACConfig cmdlet
                     CiTool.exe --remove-policy "{$PolicyID}" -json | Out-Null
-                    &$WritePink 'Strict Kernel mode Enforced policy has been created in the current working directory.'
+                    Write-ColorfulText -Color Pink -InputText 'Strict Kernel mode Enforced policy has been created in the current working directory.'
                 }
                 if (!$Debug) {
                     Remove-Item -Path ".\$PolicyID.cip", '.\DriverFilesScanPolicy.xml' -Force -ErrorAction SilentlyContinue
@@ -245,7 +245,7 @@ function New-KernelModeWDACConfig {
                     # Set the GUID of the Audit mode policy in the User Configuration file
                     Set-CommonWDACConfig -StrictKernelNoFlightRootsPolicyGUID $PolicyID | Out-Null
                     CiTool.exe --update-policy "$PolicyID.cip" -json | Out-Null
-                    &$WriteHotPink 'Strict Kernel mode policy with no flighting root certs has been deployed in Audit mode, please restart your system.'
+                    Write-ColorfulText -Color HotPink -InputText 'Strict Kernel mode policy with no flighting root certs has been deployed in Audit mode, please restart your system.'
 
                     # Clear Code Integrity operational before system restart so that after boot it will only have the correct and new logs
                     wevtutil cl 'Microsoft-Windows-CodeIntegrity/Operational'
@@ -256,7 +256,7 @@ function New-KernelModeWDACConfig {
                     }
                 }
                 else {
-                    &$WriteHotPink 'Strict Kernel mode Audit policy with no flighting root certs has been created in the current working directory.'
+                    Write-ColorfulText -Color HotPink -InputText 'Strict Kernel mode Audit policy with no flighting root certs has been created in the current working directory.'
                 }
             }
 
@@ -311,7 +311,7 @@ function New-KernelModeWDACConfig {
                 if ($Deploy) {
                     ConvertFrom-CIPolicy -XmlFilePath '.\Final_DefaultWindows_Enforced_Kernel.xml' -BinaryFilePath "$PolicyID.cip" | Out-Null
                     CiTool.exe --update-policy "$PolicyID.cip" -json | Out-Null
-                    &$WritePink 'Strict Kernel mode policy with no flighting root certs has been deployed in Enforced mode, no restart required.'
+                    Write-ColorfulText -Color Pink -InputText 'Strict Kernel mode policy with no flighting root certs has been deployed in Enforced mode, no restart required.'
 
                     # Delete its GUID from User Configurations
                     Remove-CommonWDACConfig -StrictKernelNoFlightRootsPolicyGUID | Out-Null
@@ -321,7 +321,7 @@ function New-KernelModeWDACConfig {
                     # This step is necessary if user didn't use the -Deploy parameter
                     # And instead wants to first Sign and then deploy it using the Deploy-SignedWDACConfig cmdlet
                     CiTool.exe --remove-policy "{$PolicyID}" -json | Out-Null
-                    &$WritePink 'Strict Kernel mode Enforced policy with no flighting root certs has been created in the current working directory.'
+                    Write-ColorfulText -Color Pink -InputText 'Strict Kernel mode Enforced policy with no flighting root certs has been created in the current working directory.'
                 }
                 if (!$Debug) {
                     Remove-Item -Path ".\$PolicyID.cip", '.\DriverFilesScanPolicy.xml' -Force -ErrorAction SilentlyContinue

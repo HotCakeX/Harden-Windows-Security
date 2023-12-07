@@ -35,11 +35,11 @@ function Get-CommonWDACConfig {
         if ($PSBoundParameters.Count -eq 0) {
             # Display this message if User Configuration file is empty
             if ($null -eq (Get-Content -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json")) {
-                &$WritePink "`nYour current WDAC User Configurations is empty."
+                Write-ColorfulText -Color Pink -InputText "`nYour current WDAC User Configurations is empty."
             }
             # Display this message if User Configuration file has content
             else {
-                &$WritePink "`nThis is your current WDAC User Configurations: "
+                Write-ColorfulText -Color Pink -InputText "`nThis is your current WDAC User Configurations: "
                 Get-Content -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json" | ConvertFrom-Json | Format-List *
             }
             break

@@ -255,10 +255,10 @@ function Invoke-WDACSimulation {
         }, Permission -Unique | Sort-Object -Property Permission | Format-Table -Property FilePath, Source, Permission
 
         # Showing Signature based allowed file details
-        &$WriteLavender "`n$($AllowedSignedFilePaths.count) File(s) Inside the Selected Folder Are Allowed by Signatures by Your Policy."
+        Write-ColorfulText -Color Lavender -InputText "`n$($AllowedSignedFilePaths.count) File(s) Inside the Selected Folder Are Allowed by Signatures by Your Policy."
 
         # Showing Hash based allowed file details
-        &$WriteLavender "$($UniqueFilesAllowedByHash.count) File(s) Inside the Selected Folder Are Allowed by Hashes by Your Policy.`n"
+        Write-ColorfulText -Color Lavender -InputText "$($UniqueFilesAllowedByHash.count) File(s) Inside the Selected Folder Are Allowed by Hashes by Your Policy.`n"
 
         # Export the output as CSV
         $MegaOutputObject | Select-Object -Property FilePath, source, Permission -Unique | Sort-Object -Property Permission | Export-Csv -Path .\WDACSimulationOutput.csv -Force

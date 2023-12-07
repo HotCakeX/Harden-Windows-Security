@@ -155,7 +155,7 @@ function Deploy-SignedWDACConfig {
 
             if ($Deploy) {
 
-                CiTool --update-policy ".\$PolicyID.cip" -json | Out-Null
+                &'C:\Windows\System32\CiTool.exe' --update-policy ".\$PolicyID.cip" -json | Out-Null
                 Write-Host -Object "`npolicy with the following details has been Signed and Deployed in Enforced Mode:" -ForegroundColor Green
                 Write-Output -InputObject "PolicyName = $PolicyName"
                 Write-Output -InputObject "PolicyGUID = $PolicyID`n"

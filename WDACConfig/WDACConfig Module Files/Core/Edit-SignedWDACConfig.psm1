@@ -51,7 +51,7 @@ function Edit-SignedWDACConfig {
                     $RedFlag1 = $xmlTest.SiPolicy.SupplementalPolicySigners.SupplementalPolicySigner.SignerId
                     $RedFlag2 = $xmlTest.SiPolicy.UpdatePolicySigners.UpdatePolicySigner.SignerId
                     $RedFlag3 = $xmlTest.SiPolicy.PolicyID
-                    $CurrentPolicyIDs = ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { $_.IsSystemPolicy -ne 'True' }).policyID | ForEach-Object -Process { "{$_}" }
+                    $CurrentPolicyIDs = ((&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { $_.IsSystemPolicy -ne 'True' }).policyID | ForEach-Object -Process { "{$_}" }
                     if ($RedFlag1 -or $RedFlag2) {
                         # Ensure the selected base policy xml file is deployed
                         if ($CurrentPolicyIDs -contains $RedFlag3) {
@@ -217,7 +217,7 @@ function Edit-SignedWDACConfig {
         # argument tab auto-completion and ValidateSet for Policy names
         Class BasePolicyNamez : System.Management.Automation.IValidateSetValuesGenerator {
             [System.String[]] GetValidValues() {
-                $BasePolicyNamez = ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { $_.IsSystemPolicy -ne 'True' } | Where-Object -FilterScript { $_.PolicyID -eq $_.BasePolicyID }).Friendlyname
+                $BasePolicyNamez = ((&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { $_.IsSystemPolicy -ne 'True' } | Where-Object -FilterScript { $_.PolicyID -eq $_.BasePolicyID }).Friendlyname
                 return [System.String[]]$BasePolicyNamez
             }
         }
@@ -241,7 +241,7 @@ function Edit-SignedWDACConfig {
         #Re-Deploy Basepolicy in Enforced mode
         function Update-BasePolicyToEnforced {
             # Deploy Enforced mode CIP
-            CiTool --update-policy ".\$PolicyID.cip" -json | Out-Null
+            &'C:\Windows\System32\CiTool.exe' --update-policy ".\$PolicyID.cip" -json | Out-Null
             Write-ColorfulText -Color TeaGreen -InputText "`nThe Base policy with the following details has been Re-Signed and Re-Deployed in Enforced Mode:"
             Write-Output -InputObject "PolicyName = $PolicyName"
             Write-Output -InputObject "PolicyGUID = $PolicyID"
@@ -326,7 +326,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                 # Deploy Audit mode CIP
                 Write-Debug -Message 'Deploying Audit mode CIP'
                 Rename-Item -Path '.\AuditMode.cip' -NewName ".\$PolicyID.cip" -Force
-                CiTool --update-policy ".\$PolicyID.cip" -json | Out-Null
+                &'C:\Windows\System32\CiTool.exe' --update-policy ".\$PolicyID.cip" -json | Out-Null
                 Write-ColorfulText -Color TeaGreen -InputText "`nThe Base policy with the following details has been Re-Signed and Re-Deployed in Audit Mode:"
                 Write-Output -InputObject "PolicyName = $PolicyName"
                 Write-Output -InputObject "PolicyGUID = $PolicyID"
@@ -614,7 +614,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
 
                 Remove-Item -Path ".\$SuppPolicyID.cip" -Force
                 Rename-Item -Path "$SuppPolicyID.cip.p7" -NewName "$SuppPolicyID.cip" -Force
-                CiTool --update-policy ".\$SuppPolicyID.cip" -json | Out-Null
+                &'C:\Windows\System32\CiTool.exe' --update-policy ".\$SuppPolicyID.cip" -json | Out-Null
                 Write-ColorfulText -Color TeaGreen -InputText "`nSupplemental policy with the following details has been Signed and Deployed in Enforced Mode:"
                 Write-Output -InputObject "SupplementalPolicyName = $SuppPolicyName"
                 Write-Output -InputObject "SupplementalPolicyGUID = $SuppPolicyID"
@@ -691,7 +691,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                 # Deploy Audit mode CIP
                 Write-Debug -Message 'Deploying Audit mode CIP'
                 Rename-Item -Path '.\AuditMode.cip' -NewName ".\$PolicyID.cip" -Force
-                CiTool --update-policy ".\$PolicyID.cip" -json | Out-Null
+                &'C:\Windows\System32\CiTool.exe' --update-policy ".\$PolicyID.cip" -json | Out-Null
                 Write-ColorfulText -Color TeaGreen -InputText "`nThe Base policy with the following details has been Re-Signed and Re-Deployed in Audit Mode:"
                 Write-Output -InputObject "PolicyName = $PolicyName"
                 Write-Output -InputObject "PolicyGUID = $PolicyID"
@@ -824,7 +824,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
 
                 Remove-Item -Path ".\$SuppPolicyID.cip" -Force
                 Rename-Item -Path "$SuppPolicyID.cip.p7" -NewName "$SuppPolicyID.cip" -Force
-                CiTool --update-policy ".\$SuppPolicyID.cip" -json | Out-Null
+                &'C:\Windows\System32\CiTool.exe' --update-policy ".\$SuppPolicyID.cip" -json | Out-Null
                 Write-ColorfulText -Color TeaGreen -InputText "`nSupplemental policy with the following details has been Signed and Deployed in Enforced Mode:"
                 Write-Output -InputObject "SupplementalPolicyName = $SuppPolicyName"
                 Write-Output -InputObject "SupplementalPolicyGUID = $SuppPolicyID"
@@ -840,7 +840,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                     $Supplementalxml = [System.Xml.XmlDocument](Get-Content -Path $SuppPolicyPath)
                     $SupplementalPolicyID = $Supplementalxml.SiPolicy.PolicyID
                     $SupplementalPolicyType = $Supplementalxml.SiPolicy.PolicyType
-                    $DeployedPoliciesIDs = (CiTool -lp -json | ConvertFrom-Json).Policies.PolicyID | ForEach-Object -Process { return "{$_}" }
+                    $DeployedPoliciesIDs = (&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies.PolicyID | ForEach-Object -Process { return "{$_}" }
                     # Check the type of the user selected Supplemental policy XML files to make sure they are indeed Supplemental policies
                     if ($SupplementalPolicyType -ne 'Supplemental Policy') {
                         Write-Error -Message "The Selected XML file with GUID $SupplementalPolicyID isn't a Supplemental Policy."
@@ -856,7 +856,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                 foreach ($SuppPolicyPath in $SuppPolicyPaths) {
                     $Supplementalxml = [System.Xml.XmlDocument](Get-Content -Path $SuppPolicyPath)
                     $SupplementalPolicyID = $Supplementalxml.SiPolicy.PolicyID
-                    Citool --remove-policy $SupplementalPolicyID -json | Out-Null
+                    &'C:\Windows\System32\CiTool.exe' --remove-policy $SupplementalPolicyID -json | Out-Null
                     # remove the old policy files unless user chose to keep them
                     if (!$KeepOldSupplementalPolicies) { Remove-Item -Path $SuppPolicyPath -Force }
                 }
@@ -882,7 +882,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
 
                 Remove-Item -Path ".\$SuppPolicyID.cip" -Force
                 Rename-Item -Path "$SuppPolicyID.cip.p7" -NewName "$SuppPolicyID.cip" -Force
-                CiTool --update-policy "$SuppPolicyID.cip" -json | Out-Null
+                &'C:\Windows\System32\CiTool.exe' --update-policy "$SuppPolicyID.cip" -json | Out-Null
                 Write-ColorfulText -Color TeaGreen -InputText "`nThe Signed Supplemental policy $SuppPolicyName has been deployed on the system, replacing the old ones.`nSystem Restart Not immediately needed but eventually required to finish the removal of previous individual Supplemental policies."
                 Remove-Item -Path "$SuppPolicyID.cip" -Force
             }
@@ -945,7 +945,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
             }
 
             # Get the policy ID of the currently deployed base policy based on the policy name that user selected
-            $CurrentID = ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { $_.IsSystemPolicy -ne 'True' } | Where-Object -FilterScript { $_.Friendlyname -eq $CurrentBasePolicyName }).BasePolicyID
+            $CurrentID = ((&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { $_.IsSystemPolicy -ne 'True' } | Where-Object -FilterScript { $_.Friendlyname -eq $CurrentBasePolicyName }).BasePolicyID
             $CurrentID = "{$CurrentID}"
             Remove-Item -Path ".\$CurrentID.cip" -Force -ErrorAction SilentlyContinue
 
@@ -976,7 +976,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
             Remove-Item -Path ".\$CurrentID.cip" -Force
             Rename-Item -Path "$CurrentID.cip.p7" -NewName "$CurrentID.cip" -Force
             # Deploy the new base policy with the same GUID on the system
-            CiTool --update-policy "$CurrentID.cip" -json | Out-Null
+            &'C:\Windows\System32\CiTool.exe' --update-policy "$CurrentID.cip" -json | Out-Null
             # Keep the new base policy XML file that was just deployed, in the current directory, so user can keep it for later
             $PolicyFiles = @{
                 'AllowMicrosoft_Plus_Block_Rules' = 'AllowMicrosoftPlusBlockRules.xml'

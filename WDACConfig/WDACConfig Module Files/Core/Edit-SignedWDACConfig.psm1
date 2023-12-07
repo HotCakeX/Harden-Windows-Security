@@ -878,8 +878,8 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
         }
 
         if ($UpdateBasePolicy) {
-            # First get the Microsoft recommended driver block rules
-            Invoke-Command -ScriptBlock $GetBlockRulesSCRIPTBLOCK | Out-Null
+            # First get the Microsoft recommended block rules
+            Get-BlockRulesMeta | Out-Null
 
             switch ($NewBasePolicyType) {
                 'AllowMicrosoft_Plus_Block_Rules' {

@@ -152,7 +152,7 @@ function New-WDACConfig {
 
             param([System.Boolean]$NoCIP)
             # Get the latest Microsoft recommended block rules
-            Invoke-Command -ScriptBlock $GetBlockRulesSCRIPTBLOCK | Out-Null
+            Get-BlockRulesMeta | Out-Null
             Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml' -Destination 'AllowMicrosoft.xml'
             Merge-CIPolicy -PolicyPaths .\AllowMicrosoft.xml, 'Microsoft recommended block rules.xml' -OutputFilePath .\AllowMicrosoftPlusBlockRules.xml | Out-Null
             [System.String]$PolicyID = Set-CIPolicyIdInfo -FilePath .\AllowMicrosoftPlusBlockRules.xml -PolicyName "Allow Microsoft Plus Block Rules - $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID
@@ -185,7 +185,7 @@ function New-WDACConfig {
 
         [System.Management.Automation.ScriptBlock]$MakeDefaultWindowsWithBlockRulesSCRIPTBLOCK = {
             param([System.Boolean]$NoCIP)
-            Invoke-Command -ScriptBlock $GetBlockRulesSCRIPTBLOCK | Out-Null
+            Get-BlockRulesMeta | Out-Null
             Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\DefaultWindows_Enforced.xml' -Destination 'DefaultWindows_Enforced.xml'
 
             [System.Boolean]$global:MergeSignToolPolicy = $false
@@ -551,7 +551,7 @@ function New-WDACConfig {
             # Deploy the latest block rules
             { $GetBlockRules -and $Deploy } { & $DeployLatestBlockRulesSCRIPTBLOCK; break }
             # Get the latest block rules
-            $GetBlockRules { & $GetBlockRulesSCRIPTBLOCK; break }
+            $GetBlockRules { Get-BlockRulesMeta ; break }
             # Deploy the latest driver block rules
             { $GetDriverBlockRules -and $Deploy } { & $DeployLatestDriverBlockRulesSCRIPTBLOCK; break }
             # Get the latest driver block rules

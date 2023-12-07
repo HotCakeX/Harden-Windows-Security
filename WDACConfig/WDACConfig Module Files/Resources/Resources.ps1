@@ -396,9 +396,15 @@ $RuleRefsContent
     return $EmptyPolicy
 }
 
-
-# Gets the latest Microsoft Recommended block rules, removes its allow all rules and sets HVCI to strict
-[System.Management.Automation.ScriptBlock]$GetBlockRulesSCRIPTBLOCK = {
+Function Get-BlockRulesMeta {
+    <#
+    .SYNOPSIS
+        Gets the latest Microsoft Recommended block rules, removes its allow all rules and sets HVCI to strict
+    .INPUTS
+        System.Void
+    .OUTPUTS
+        PSCustomObject
+    #>
     [System.String]$Rules = (Invoke-WebRequest -Uri $MSFTRecommendeBlockRulesURL -ProgressAction SilentlyContinue).Content -replace "(?s).*``````xml(.*)``````.*", '$1' -replace '<Allow\sID="ID_ALLOW_A_[12]".*/>|<FileRuleRef\sRuleID="ID_ALLOW_A_[12]".*/>', ''
     $Rules | Out-File '.\Microsoft recommended block rules TEMP.xml'
     # Removing empty lines from policy file
@@ -406,11 +412,10 @@ $RuleRefsContent
     Remove-Item -Path '.\Microsoft recommended block rules TEMP.xml' -Force
     Set-RuleOption -FilePath '.\Microsoft recommended block rules.xml' -Option 3 -Delete
     Set-HVCIOptions -Strict -FilePath '.\Microsoft recommended block rules.xml'
-    [PSCustomObject]@{
+    return [PSCustomObject]@{
         PolicyFile = 'Microsoft recommended block rules.xml'
     }
 }
-
 
 function Confirm-CertCN {
     <#

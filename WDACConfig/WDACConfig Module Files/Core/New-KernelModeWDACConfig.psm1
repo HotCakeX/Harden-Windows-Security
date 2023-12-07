@@ -44,8 +44,12 @@ function New-KernelModeWDACConfig {
             Write-Error -Message 'You must specify either -PrepMode or -AuditAndEnforce, but not both.' -Category InvalidArgument
         }
 
-        # Function to swap GUIDs in a WDAC policy XML file
-        function Edit-GUIDs {
+        # 
+        Function Edit-GUIDs {
+            <#
+            .SYNOPSIS
+                Function to swap GUIDs in a WDAC policy XML file
+            #>
             param(
                 [System.String]$PolicyIDInput,
                 [System.String]$PolicyFilePathInput
@@ -68,8 +72,11 @@ function New-KernelModeWDACConfig {
             $xml.Save($PolicyFilePathInput)
         }
 
-        # Function to build Audit mode policy only
-        function Build-PrepModeStrictKernelPolicy {
+        Function Build-PrepModeStrictKernelPolicy {
+            <#
+            .SYNOPSIS
+                Function to build Audit mode policy only
+            #>
             [CmdletBinding()]
             param (
                 [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$DefaultWindowsKernel,
@@ -152,8 +159,8 @@ function New-KernelModeWDACConfig {
                     Write-ColorfulText -Color HotPink -InputText 'Strict Kernel mode policy has been deployed in Audit mode, please restart your system.'
 
                     # Clear Code Integrity operational before system restart so that after boot it will only have the correct and new logs
-                    wevtutil cl 'Microsoft-Windows-CodeIntegrity/Operational'
-                    wevtutil cl 'Microsoft-Windows-AppLocker/MSI and Script'
+                    &'C:\Windows\System32\wevtutil.exe' cl 'Microsoft-Windows-CodeIntegrity/Operational'
+                    &'C:\Windows\System32\wevtutil.exe' cl 'Microsoft-Windows-AppLocker/MSI and Script'
 
                     if (!$Debug) {
                         Remove-Item -Path '.\DefaultWindows_Enforced_Kernel.xml', ".\$PolicyID.cip" -Force -ErrorAction SilentlyContinue
@@ -250,8 +257,8 @@ function New-KernelModeWDACConfig {
                     Write-ColorfulText -Color HotPink -InputText 'Strict Kernel mode policy with no flighting root certs has been deployed in Audit mode, please restart your system.'
 
                     # Clear Code Integrity operational before system restart so that after boot it will only have the correct and new logs
-                    wevtutil cl 'Microsoft-Windows-CodeIntegrity/Operational'
-                    wevtutil cl 'Microsoft-Windows-AppLocker/MSI and Script'
+                    &'C:\Windows\System32\wevtutil.exe' cl 'Microsoft-Windows-CodeIntegrity/Operational'
+                    &'C:\Windows\System32\wevtutil.exe' cl 'Microsoft-Windows-AppLocker/MSI and Script'
 
                     if (!$Debug) {
                         Remove-Item -Path '.\DefaultWindows_Enforced_Kernel_NoFlights.xml', ".\$PolicyID.cip" -Force -ErrorAction SilentlyContinue

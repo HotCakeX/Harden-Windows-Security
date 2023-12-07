@@ -196,7 +196,6 @@ To get help and syntax on PowerShell console, type:
         'Shared\Get-SignTool.psm1',
         'Shared\Move-UserModeToKernelMode.psm1',
         'Shared\New-EmptyPolicy.psm1',
-        'Shared\Remove-ZerosFromIDs.psm1',
         'Shared\Set-LogSize.psm1',
         'Shared\Test-FilePath.psm1',
         'Shared\Update-self.psm1',

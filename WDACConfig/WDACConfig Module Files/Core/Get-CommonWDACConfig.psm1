@@ -15,48 +15,45 @@ function Get-CommonWDACConfig {
         # Importing resources such as functions by dot-sourcing so that they will run in the same scope and their variables will be usable
         . "$ModuleRootPath\Resources\Resources.ps1"
 
-        # Fetch User account directory path
-        [System.String]$global:UserAccountDirectoryPath = (Get-CimInstance Win32_UserProfile -Filter "SID = '$([System.Security.Principal.WindowsIdentity]::GetCurrent().User.Value)'").LocalPath
-
         # Create User configuration folder if it doesn't already exist
-        if (-NOT (Test-Path -Path "$global:UserAccountDirectoryPath\.WDACConfig\")) {
-            New-Item -ItemType Directory -Path "$global:UserAccountDirectoryPath\.WDACConfig\" -Force -ErrorAction Stop | Out-Null
+        if (-NOT (Test-Path -Path "$UserAccountDirectoryPath\.WDACConfig\")) {
+            New-Item -ItemType Directory -Path "$UserAccountDirectoryPath\.WDACConfig\" -Force -ErrorAction Stop | Out-Null
             Write-Debug -Message "The .WDACConfig folder in current user's folder has been created because it didn't exist."
         }
 
         # Create User configuration file if it doesn't already exist
-        if (-NOT (Test-Path -Path "$global:UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json")) {
-            New-Item -ItemType File -Path "$global:UserAccountDirectoryPath\.WDACConfig\" -Name 'UserConfigurations.json' -Force -ErrorAction Stop | Out-Null
+        if (-NOT (Test-Path -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json")) {
+            New-Item -ItemType File -Path "$UserAccountDirectoryPath\.WDACConfig\" -Name 'UserConfigurations.json' -Force -ErrorAction Stop | Out-Null
             Write-Debug -Message "The UserConfigurations.json file in \.WDACConfig\ folder has been created because it didn't exist."
         }
 
         if ($Open) {
-            . "$global:UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json"
+            . "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json"
             break
         }
 
         if ($PSBoundParameters.Count -eq 0) {
             # Display this message if User Configuration file is empty
-            if ($null -eq (Get-Content -Path "$global:UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json")) {
+            if ($null -eq (Get-Content -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json")) {
                 &$WritePink "`nYour current WDAC User Configurations is empty."
             }
             # Display this message if User Configuration file has content
             else {
                 &$WritePink "`nThis is your current WDAC User Configurations: "
-                Get-Content -Path "$global:UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json" | ConvertFrom-Json | Format-List *
+                Get-Content -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json" | ConvertFrom-Json | Format-List *
             }
             break
         }
 
         # Read the current user configurations
-        [PSCustomObject]$CurrentUserConfigurations = Get-Content -Path "$global:UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json"
+        [PSCustomObject]$CurrentUserConfigurations = Get-Content -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json"
         # If the file exists but is corrupted and has bad values, rewrite it
         try {
             $CurrentUserConfigurations = $CurrentUserConfigurations | ConvertFrom-Json
         }
         catch {
             Write-Warning 'The UserConfigurations.json was corrupted, clearing it.'
-            Set-Content -Path "$global:UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json" -Value ''
+            Set-Content -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json" -Value ''
         }
     }
 

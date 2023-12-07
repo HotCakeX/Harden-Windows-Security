@@ -84,14 +84,11 @@ function New-WDACConfig {
         # Importing resources such as functions by dot-sourcing so that they will run in the same scope and their variables will be usable
         . "$ModuleRootPath\Resources\Resources.ps1"
 
-        # Fetch User account directory path
-        [System.String]$global:UserAccountDirectoryPath = (Get-CimInstance Win32_UserProfile -Filter "SID = '$([System.Security.Principal.WindowsIdentity]::GetCurrent().User.Value)'").LocalPath
-
         #region User-Configurations-Processing-Validation
         # If User is creating Default Windows policy and including SignTool path
         if ($IncludeSignTool -and $MakeDefaultWindowsWithBlockRules) {
             # Read User configuration file if it exists
-            $UserConfig = Get-Content -Path "$global:UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json" -ErrorAction SilentlyContinue
+            $UserConfig = Get-Content -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json" -ErrorAction SilentlyContinue
             if ($UserConfig) {
                 # Validate the Json file and read its content to make sure it's not corrupted
                 try { $UserConfig = $UserConfig | ConvertFrom-Json }

@@ -2,7 +2,7 @@ function Set-CommonWDACConfig {
     [CmdletBinding()]
     Param(
         [ValidateScript({
-            [System.String[]]$Certificates = foreach ($cert in (Get-ChildItem -Path 'Cert:\CurrentUser\my')) {
+                [System.String[]]$Certificates = foreach ($cert in (Get-ChildItem -Path 'Cert:\CurrentUser\my')) {
             (($cert.Subject -split ',' | Select-Object -First 1) -replace 'CN=', '').Trim()
                 }
                 $Certificates -contains $_
@@ -55,18 +55,15 @@ function Set-CommonWDACConfig {
         # Importing resources such as functions by dot-sourcing so that they will run in the same scope and their variables will be usable
         . "$ModuleRootPath\Resources\Resources.ps1"
 
-        # Fetch User account directory path
-        [System.String]$global:UserAccountDirectoryPath = (Get-CimInstance Win32_UserProfile -Filter "SID = '$([System.Security.Principal.WindowsIdentity]::GetCurrent().User.Value)'").LocalPath
-
         # Create User configuration folder if it doesn't already exist
-        if (-NOT (Test-Path -Path "$global:UserAccountDirectoryPath\.WDACConfig\")) {
-            New-Item -ItemType Directory -Path "$global:UserAccountDirectoryPath\.WDACConfig\" -Force -ErrorAction Stop | Out-Null
+        if (-NOT (Test-Path -Path "$UserAccountDirectoryPath\.WDACConfig\")) {
+            New-Item -ItemType Directory -Path "$UserAccountDirectoryPath\.WDACConfig\" -Force -ErrorAction Stop | Out-Null
             Write-Debug -Message "The .WDACConfig folder in current user's folder has been created because it didn't exist."
         }
 
         # Create User configuration file if it doesn't already exist
-        if (-NOT (Test-Path -Path "$global:UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json")) {
-            New-Item -ItemType File -Path "$global:UserAccountDirectoryPath\.WDACConfig\" -Name 'UserConfigurations.json' -Force -ErrorAction Stop | Out-Null
+        if (-NOT (Test-Path -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json")) {
+            New-Item -ItemType File -Path "$UserAccountDirectoryPath\.WDACConfig\" -Name 'UserConfigurations.json' -Force -ErrorAction Stop | Out-Null
             Write-Debug -Message "The UserConfigurations.json file in \.WDACConfig\ folder has been created because it didn't exist."
         }
 
@@ -76,13 +73,13 @@ function Set-CommonWDACConfig {
         }
 
         # Read the current user configurations
-        $CurrentUserConfigurations = Get-Content -Path "$global:UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json"
+        $CurrentUserConfigurations = Get-Content -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json"
         # If the file exists but is corrupted and has bad values, rewrite it
         try {
             $CurrentUserConfigurations = $CurrentUserConfigurations | ConvertFrom-Json
         }
         catch {
-            Set-Content -Path "$global:UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json" -Value ''
+            Set-Content -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json" -Value ''
         }
 
         # An object to hold the User configurations
@@ -157,9 +154,9 @@ function Set-CommonWDACConfig {
     }
     end {
         # Update the User Configurations file
-        $UserConfigurationsObject | ConvertTo-Json | Set-Content "$global:UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json"
+        $UserConfigurationsObject | ConvertTo-Json | Set-Content "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json"
         &$WritePink "`nThis is your new WDAC User Configurations: "
-        Get-Content -Path "$global:UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json" | ConvertFrom-Json | Format-List *
+        Get-Content -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json" | ConvertFrom-Json | Format-List *
     }
 }
 <#

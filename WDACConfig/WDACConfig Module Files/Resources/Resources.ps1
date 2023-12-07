@@ -1,5 +1,14 @@
-# Get the path to SignTool
 function Get-SignTool {
+    <#
+    .SYNOPSIS
+        Gets the path to SignTool.exe and verifies it to make sure it's not tampered
+    .PARAMETER SignToolExePath
+        Path to the SignTool.exe
+    .INPUTS
+        System.String
+    .OUTPUTS
+        System.String
+    #>
     param(
         [parameter(Mandatory = $false)][System.String]$SignToolExePath
     )
@@ -43,9 +52,15 @@ function Get-SignTool {
     }
 }
 
-
-# Make sure the latest version of the module is installed and if not, automatically update it, clean up any old versions
 function Update-self {
+    <#
+    .SYNOPSIS
+        Make sure the latest version of the module is installed and if not, automatically update it, clean up any old versions
+    .INPUTS
+        System.Void
+    .OUTPUTS
+        System.Void
+    #>
 
     try {
         # Get the last update check time
@@ -107,9 +122,11 @@ function Update-self {
     }
 }
 
-
-# Increase Code Integrity Operational Event Logs size from the default 1MB to user defined size
 function Set-LogSize {
+    <#
+    .SYNOPSIS
+        Increase Code Integrity Operational Event Logs size from the default 1MB to user defined size
+    #>
     [CmdletBinding()]
     param ([System.Int64]$LogSize)
     [System.String]$LogName = 'Microsoft-Windows-CodeIntegrity/Operational'
@@ -119,10 +136,13 @@ function Set-LogSize {
     $Log.SaveChanges()
 }
 
-
-# function that takes 2 arrays, one contains file paths and the other contains folder paths. It checks them and shows file paths
-# that are not in any of the folder paths. Performs this check recursively too so works if the filepath is in a sub-directory of a folder path
 function Test-FilePath {
+    <#
+    .SYNOPSIS
+        function that takes 2 arrays, one contains file paths and the other contains folder paths. It checks them and shows file paths
+        that are not in any of the folder paths. Performs this check recursively too so works if the filepath is in a sub-directory of a folder path
+
+    #>
     param (
         [Parameter(Mandatory = $true)]
         [System.String[]]$FilePath,
@@ -198,7 +218,7 @@ public static extern uint QueryDosDevice(string lpDeviceName, StringBuilder lpTa
 
 '@
     # Add the signature to the current session as a new type
-    Add-Type -ErrorAction SilentlyContinue -MemberDefinition $Signature -Name 'Win32Utils' -Namespace 'PInvoke' -Using PInvoke, System.Text  -Verbose:$false
+    Add-Type -ErrorAction SilentlyContinue -MemberDefinition $Signature -Name 'Win32Utils' -Namespace 'PInvoke' -Using PInvoke, System.Text -Verbose:$false
 
     # Initialize some variables for storing the volume names, paths, and mount points
     [System.UInt32]$lpcchReturnLength = 0
@@ -238,9 +258,11 @@ public static extern uint QueryDosDevice(string lpDeviceName, StringBuilder lpTa
 
 }
 
-
-### Function to separately capture FileHashes of deleted files and FilePaths of available files from Event Viewer Audit Logs ####
 Function Get-AuditEventLogsProcessing {
+    <#
+    .SYNOPSIS
+        Function to separately capture FileHashes of deleted files and FilePaths of available files from Event Viewer Audit Logs
+    #>
     param (
         [System.DateTime]$Date
     )
@@ -296,9 +318,11 @@ Function Get-AuditEventLogsProcessing {
     }
 }
 
-
-# Creates a policy file and requires 2 parameters to supply the file rules and rule references
 function New-EmptyPolicy {
+    <#
+    .SYNOPSIS
+        Creates a policy file and requires 2 parameters to supply the file rules and rule references
+    #>
     param (
         $RulesContent,
         $RuleRefsContent
@@ -394,8 +418,11 @@ function Confirm-CertCN {
 [System.Management.Automation.ScriptBlock]$WriteLavender = { Write-Output -InputObject "$($PSStyle.Foreground.FromRgb(255,179,255))$($args[0])$($PSStyle.Reset)" }
 [System.Management.Automation.ScriptBlock]$WriteTeaGreen = { Write-Output -InputObject "$($PSStyle.Foreground.FromRgb(133, 222, 119))$($args[0])$($PSStyle.Reset)" }
 
-# Create File Rules based on hash of the files no longer available on the disk and store them in the $Rules variable
 function Get-FileRules {
+    <#
+    .SYNOPSIS
+        Create File Rules based on hash of the files no longer available on the disk and store them in the $Rules variable
+    #>
     param ($HashesArray)
     $HashesArray | ForEach-Object -Begin { $i = 1 } -Process {
         $Rules += Write-Output -InputObject "`n<Allow ID=`"ID_ALLOW_AA_$i`" FriendlyName=`"$($_.'File Name') SHA256 Hash`" Hash=`"$($_.'SHA256 Hash')`" />"
@@ -407,9 +434,11 @@ function Get-FileRules {
     return ($Rules.Trim())
 }
 
-
-# Create File Rule Refs based on the ID of the File Rules above and store them in the $RulesRefs variable
 function Get-RuleRefs {
+    <#
+    .SYNOPSIS
+        Create File Rule Refs based on the ID of the File Rules above and store them in the $RulesRefs variable
+    #>
     param ($HashesArray)
     $HashesArray | ForEach-Object -Begin { $i = 1 } -Process {
         $RulesRefs += Write-Output -InputObject "`n<FileRuleRef RuleID=`"ID_ALLOW_AA_$i`" />"
@@ -421,9 +450,11 @@ function Get-RuleRefs {
     return ($RulesRefs.Trim())
 }
 
-
-# Can remove _0 from the ID and SignerId of all the elements in the policy xml file
 Function Remove-ZerosFromIDs {
+    <#
+    .SYNOPSIS
+        Can remove _0 from the ID and SignerId of all the elements in the policy xml file
+    #>
     param(
         [Parameter(Mandatory = $true)]
         [ValidateScript({ Test-Path -Path $_ -PathType Leaf })]
@@ -466,10 +497,12 @@ Function Remove-ZerosFromIDs {
     $Xml.Save($FilePath)
 }
 
-
-# Moves all User mode AllowedSigners in the User mode signing scenario to the Kernel mode signing scenario and then
-# deletes the entire User mode signing scenario block
 Function Move-UserModeToKernelMode {
+    <#
+    .SYNOPSIS
+        Moves all User mode AllowedSigners in the User mode signing scenario to the Kernel mode signing scenario and then
+        deletes the entire User mode signing scenario block
+    #>
     param(
         [Parameter(Mandatory = $true)]
         [ValidateScript({ Test-Path -Path $_ -PathType Leaf })]

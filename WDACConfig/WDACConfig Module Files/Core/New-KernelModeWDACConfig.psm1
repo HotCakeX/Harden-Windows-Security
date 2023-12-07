@@ -44,7 +44,7 @@ function New-KernelModeWDACConfig {
             Write-Error -Message 'You must specify either -PrepMode or -AuditAndEnforce, but not both.' -Category InvalidArgument
         }
 
-        # 
+        #
         Function Edit-GUIDs {
             <#
             .SYNOPSIS

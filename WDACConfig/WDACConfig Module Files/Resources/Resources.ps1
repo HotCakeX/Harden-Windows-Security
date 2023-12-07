@@ -406,9 +406,9 @@ Function Get-BlockRulesMeta {
         PSCustomObject
     #>
     [System.String]$Rules = (Invoke-WebRequest -Uri $MSFTRecommendeBlockRulesURL -ProgressAction SilentlyContinue).Content -replace "(?s).*``````xml(.*)``````.*", '$1' -replace '<Allow\sID="ID_ALLOW_A_[12]".*/>|<FileRuleRef\sRuleID="ID_ALLOW_A_[12]".*/>', ''
-    $Rules | Out-File '.\Microsoft recommended block rules TEMP.xml'
+    $Rules | Out-File -FilePath '.\Microsoft recommended block rules TEMP.xml' -Force
     # Removing empty lines from policy file
-    Get-Content -Path '.\Microsoft recommended block rules TEMP.xml' | Where-Object -FilterScript { $_.trim() -ne '' } | Out-File -FilePath '.\Microsoft recommended block rules.xml'
+    Get-Content -Path '.\Microsoft recommended block rules TEMP.xml' | Where-Object -FilterScript { $_.trim() -ne '' } | Out-File -FilePath '.\Microsoft recommended block rules.xml' -Force
     Remove-Item -Path '.\Microsoft recommended block rules TEMP.xml' -Force
     Set-RuleOption -FilePath '.\Microsoft recommended block rules.xml' -Option 3 -Delete
     Set-HVCIOptions -Strict -FilePath '.\Microsoft recommended block rules.xml'

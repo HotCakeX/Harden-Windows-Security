@@ -126,9 +126,17 @@ function Set-LogSize {
     <#
     .SYNOPSIS
         Increase Code Integrity Operational Event Logs size from the default 1MB to user defined size
+    .INPUTS
+        System.Int64
+    .OUTPUTS
+        System.Void
+    .PARAMETER LogSize
+        Size of the Code Integrity Operational Event Log
     #>
     [CmdletBinding()]
-    param ([System.Int64]$LogSize)
+    param (
+        [System.Int64]$LogSize
+    )
     [System.String]$LogName = 'Microsoft-Windows-CodeIntegrity/Operational'
     [System.Diagnostics.Eventing.Reader.EventLogConfiguration]$Log = New-Object System.Diagnostics.Eventing.Reader.EventLogConfiguration $LogName
     $Log.MaximumSizeInBytes = $LogSize
@@ -262,6 +270,10 @@ Function Get-AuditEventLogsProcessing {
     <#
     .SYNOPSIS
         Function to separately capture FileHashes of deleted files and FilePaths of available files from Event Viewer Audit Logs
+    .INPUTS
+        System.DateTime
+    .OUTPUTS
+        PSCustomObject
     #>
     param (
         [System.DateTime]$Date

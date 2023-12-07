@@ -22,7 +22,7 @@ function Invoke-WDACSimulation {
 
         # The total number of the main steps for the progress bar to render
         [System.Int16]$TotalSteps = 4
-        [System.Int16]$CurrentStep = 0        
+        [System.Int16]$CurrentStep = 0
     }
 
     process {
@@ -46,7 +46,7 @@ function Invoke-WDACSimulation {
 
         # Hash Sha256 values of all the file rules based on hash in the supplied xml policy file
         Write-Verbose -Message 'Getting the Sha256 Hash values of all the file rules based on hash in the supplied xml policy file'
-       
+
         $CurrentStep++
         Write-Progress -Id 0 -Activity 'Getting the Sha256 Hash values from the XML file' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
@@ -54,7 +54,7 @@ function Invoke-WDACSimulation {
 
         # Get all of the file paths of the files that WDAC supports, from the user provided directory
         Write-Verbose -Message 'Getting all of the file paths of the files that WDAC supports, from the user provided directory'
-        
+
         $CurrentStep++
         Write-Progress -Id 0 -Activity "Getting the supported files' paths" -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
@@ -67,21 +67,21 @@ function Invoke-WDACSimulation {
 
             # Loop through each file
             Write-Verbose -Message 'Looping through each supported file'
-       
+
             $CurrentStep++
             Write-Progress -Id 0 -Activity 'Looping through each supported file' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-       
+
             # The total number of the sub steps for the progress bar to render
             [System.Int64]$TotalSubSteps = $CollectedFiles.Count
             [System.Int64]$CurrentSubStep = 0
-       
+
             foreach ($CurrentFilePath in $CollectedFiles) {
 
                 Write-Verbose -Message "Processing file: $CurrentFilePath"
 
                 $CurrentSubStep++
                 Write-Progress -Id 1 -ParentId 0 -Activity "Processing file $CurrentSubStep/$TotalSubSteps" -Status "$CurrentFilePath" -PercentComplete ($CurrentSubStep / $TotalSubSteps * 100)
-       
+
                 # Check see if the file's hash exists in the XML file regardless of whether it's signed or not
                 # This is because WDAC policies sometimes have hash rules for signed files too
                 # So here we prioritize being authorized by file hash over being authorized by Signature
@@ -124,7 +124,7 @@ function Invoke-WDACSimulation {
                             break
                         }
                     }
-                }          
+                }
             }
         }
         catch {
@@ -137,7 +137,7 @@ function Invoke-WDACSimulation {
             # Complete the nested progress bar whether there was an error or not
             Write-Progress -Id 1 -Activity 'All of the files have been processed.' -Completed
         }
-       
+
         $CurrentStep++
         Write-Progress -Id 0 -Activity 'Preparing the output' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
@@ -262,7 +262,7 @@ function Invoke-WDACSimulation {
 
         # Export the output as CSV
         $MegaOutputObject | Select-Object -Property FilePath, source, Permission -Unique | Sort-Object -Property Permission | Export-Csv -Path .\WDACSimulationOutput.csv -Force
-       
+
         Write-Progress -Id 0 -Activity 'WDAC Simulation completed.' -Completed
     }
 

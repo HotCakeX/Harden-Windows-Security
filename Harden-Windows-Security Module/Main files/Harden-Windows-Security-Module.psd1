@@ -12,7 +12,7 @@
   # RootModule = ''
 
   # Version number of this module.
-  ModuleVersion        = '0.2.4'
+  ModuleVersion        = '0.2.6'
 
   # Supported PSEditions
   CompatiblePSEditions = @('Core')
@@ -81,7 +81,7 @@ Harden Windows Safely, Securely, only with Official Microsoft methods
 '@
 
   # Minimum version of the PowerShell engine required by this module
-  PowerShellVersion    = '7.3.8'
+  PowerShellVersion    = '7.4.0'
 
   # Name of the PowerShell host required by this module
   # PowerShellHostName = ''

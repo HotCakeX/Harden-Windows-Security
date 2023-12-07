@@ -47,9 +47,8 @@ Origin,Category,Key,Name,FriendlyName,Type,Value
 "Group Policy","Bitlocker",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\FVE,EncryptionMethodWithXtsFdv,Correct Encryption method for fixed data drives,DWORD,7
 "Group Policy","Bitlocker",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\FVE,EncryptionMethodWithXtsRdv,Correct Encryption method for removable drives,DWORD,7
 "Group Policy","Bitlocker",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\FVE,UseEnhancedPin,Use Enhanced PIN,DWORD,1
-"Group Policy","Bitlocker",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\FVE,FDVEncryptionType,Full disk encryption for fixed data drives,DWORD,1
-"Group Policy","Bitlocker",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\FVE,OSEncryptionType,Full disk encryption OS drive,DWORD,1
-"Group Policy","Bitlocker",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\FVE,RDVEncryptionType,Full disk encryption removable drives,DWORD,1
+"Group Policy","Bitlocker",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\FVE,OSEncryptionType,Full disk encryption for OS drive,DWORD,1
+"Group Policy","Bitlocker",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\FVE,RDVEncryptionType,Full disk encryption for removable drives,DWORD,1
 "Group Policy","Bitlocker",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\FVE,RDVDiscoveryVolumeType,Prevent access to BitLocker-protected removable data drives from earlier versions of Windows,SZ,<none>
 "Group Policy","Bitlocker",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\FVE,RDVNoBitLockerToGoReader,Do not install BitLocker To Go Reader on FAT formatted removable drives,DWORD,0
 "Group Policy","Bitlocker",HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\FVE,MinimumPIN,Configure minimum PIN length for startup,DWORD,10

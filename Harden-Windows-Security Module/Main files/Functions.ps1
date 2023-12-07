@@ -3,45 +3,18 @@ $global:ErrorActionPreference = 'Stop'
 
 # Function to test if current session has administrator privileges
 Function Test-IsAdmin {
-    $identity = [Security.Principal.WindowsIdentity]::GetCurrent()
-    $principal = New-Object Security.Principal.WindowsPrincipal $identity
-    $principal.IsInRole([Security.Principal.WindowsBuiltinRole]::Administrator)
+    [System.Security.Principal.WindowsIdentity]$Identity = [Security.Principal.WindowsIdentity]::GetCurrent()
+    [System.Security.Principal.WindowsPrincipal]$Principal = New-Object -TypeName 'Security.Principal.WindowsPrincipal' -ArgumentList $Identity
+    $Principal.IsInRole([Security.Principal.WindowsBuiltinRole]::Administrator)
 }
-
-# Hiding Invoke-WebRequest progress because it creates lingering visual effect on PowerShell console for some reason
-# https://github.com/PowerShell/PowerShell/issues/14348
-
-# https://stackoverflow.com/questions/18770723/hide-progress-of-Invoke-WebRequest
-# Create an in-memory module so $ScriptBlock doesn't run in new scope
-$null = New-Module {
-    function Invoke-WithoutProgress {
-        [CmdletBinding()]
-        param (
-            [Parameter(Mandatory)][scriptblock]$ScriptBlock
-        )
-        # Save current progress preference and hide the progress
-        $prevProgressPreference = $global:ProgressPreference
-        $global:ProgressPreference = 'SilentlyContinue'
-        try {
-            # Run the script block in the scope of the caller of this module function
-            . $ScriptBlock
-        }
-        finally {
-            # Restore the original behavior
-            $global:ProgressPreference = $prevProgressPreference
-        }
-    }
-} 
 
 # Make sure the latest version of the module is installed and if not, automatically update it, clean up any old versions
 function Update-self {   
 
-    [version]$CurrentVersion = (Test-ModuleManifest "$psscriptroot\Harden-Windows-Security-Module.psd1").Version
+    [System.Version]$CurrentVersion = (Test-ModuleManifest -Path "$psscriptroot\Harden-Windows-Security-Module.psd1").Version
         
     try {
-        Invoke-WithoutProgress {             
-            [version]$global:LatestVersion = Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security%20Module/version.txt'             
-        }
+        [System.Version]$global:LatestVersion = Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security%20Module/version.txt' -ProgressAction SilentlyContinue     
     }
     catch {   
         Write-Error -Message "Couldn't verify if the latest version of the module is installed, please check your Internet connection."
@@ -59,12 +32,12 @@ function Update-self {
                 # backup the current allowed apps list in Controlled folder access in order to restore them at the end of the script
                 # doing this so that when we Add and then Remove PowerShell executables in Controlled folder access exclusions
                 # no user customization will be affected
-                [string[]]$CFAAllowedAppsBackup = (Get-MpPreference).ControlledFolderAccessAllowedApplications
+                [System.String[]]$CFAAllowedAppsBackup = (Get-MpPreference).ControlledFolderAccessAllowedApplications
         
                 # Temporarily allow the currently running PowerShell executables to the Controlled Folder Access allowed apps
                 # so that the script can run without interruption. This change is reverted at the end.
-                Get-ChildItem -Path "$PSHOME\*.exe" | ForEach-Object {
-                    Add-MpPreference -ControlledFolderAccessAllowedApplications $_.FullName
+                foreach ($FilePath in (Get-ChildItem -Path "$PSHOME\*.exe" -File).FullNam) {
+                    Add-MpPreference -ControlledFolderAccessAllowedApplications $FilePath
                 }
 
                 # Do this if the module was installed properly using Install-moodule cmdlet
@@ -79,16 +52,15 @@ function Update-self {
             }
             finally {
                 # Reverting the PowerShell executables allow listings in Controlled folder access
-                Get-ChildItem -Path "$PSHOME\*.exe" | ForEach-Object {
-                    Remove-MpPreference -ControlledFolderAccessAllowedApplications $_.FullName
+                foreach ($FilePath in (Get-ChildItem -Path "$PSHOME\*.exe" -File).FullName) {
+                    Remove-MpPreference -ControlledFolderAccessAllowedApplications $FilePath
                 }
+
                 # restoring the original Controlled folder access allow list - if user already had added PowerShell executables to the list
                 # they will be restored as well, so user customization will remain intact
                 if ($null -ne $CFAAllowedAppsBackup) { 
-                    $CFAAllowedAppsBackup | ForEach-Object {
-                        Add-MpPreference -ControlledFolderAccessAllowedApplications $_
-                    }
-                }         
+                    Set-MpPreference -ControlledFolderAccessAllowedApplications $CFAAllowedAppsBackup
+                }
             }                 
             # Make sure the old version isn't run after update
             Write-Output "$($PSStyle.Foreground.FromRGB(152,255,152))Update successful, please run the cmdlet again.$($PSStyle.Reset)"          
@@ -105,7 +77,7 @@ function Update-self {
 # Self update the module
 Update-self
 
-# Requirements Check
+#Region Requirements-Check
 
 # check if user's OS is Windows Home edition
 if ((Get-CimInstance -ClassName Win32_OperatingSystem).OperatingSystemSKU -eq '101') {
@@ -113,18 +85,32 @@ if ((Get-CimInstance -ClassName Win32_OperatingSystem).OperatingSystemSKU -eq '1
     break
 }
 
-# check if user's OS is latest version
-if (-NOT ([System.Environment]::OSVersion.Version -ge [version]'10.0.22621')) {
-    Write-Error "You're not using the latest version of the Windows OS, exiting..."
+# Check if user's OS is the latest build
+# Minimum OS build number required for the hardening measures used in this script
+[System.Decimal]$Requiredbuild = '22621.2428'
+
+# Get OS build version
+[System.Decimal]$OSBuild = [System.Environment]::OSVersion.Version.Build
+
+# Get Update Build Revision (UBR) number
+[System.Decimal]$UBR = Get-ItemPropertyValue -Path 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion' -Name 'UBR'
+
+# Create full OS build number as seen in Windows Settings
+[System.Decimal]$FullOSBuild = "$OSBuild.$UBR"
+
+# Make sure the current OS build is equal or greater than the required build
+if (-NOT ($FullOSBuild -ge $Requiredbuild)) {
+    Write-Error -Message "You're not using the latest build of the Windows OS. A minimum build of $Requiredbuild is required but your OS build is $FullOSBuild`nPlease go to Windows Update to install the updates and then try again."
     break
 }
 
 if (Test-IsAdmin) {
     # check to make sure TPM is available and enabled
-    [bool]$TPMFlag1 = (Get-Tpm).tpmpresent
-    [bool]$TPMFlag2 = (Get-Tpm).tpmenabled
-    if (!$TPMFlag1 -or !$TPMFlag2) {
-        Write-Error 'TPM is not available or enabled, please go to your UEFI settings to enable it and then try again.'
-        break    
+    [System.Object]$TPM = Get-Tpm
+    if (-not ($TPM.tpmpresent -and $TPM.tpmenabled)) {
+        Write-Error -Message 'TPM is not available or enabled, please enable it in UEFI settings and try again.'
+        break
     }
 }
+
+#Endregion Requirements-Check

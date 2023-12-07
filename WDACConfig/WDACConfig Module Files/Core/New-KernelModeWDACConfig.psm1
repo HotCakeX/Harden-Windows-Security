@@ -31,9 +31,6 @@ function New-KernelModeWDACConfig {
         # Importing resources such as functions by dot-sourcing so that they will run in the same scope and their variables will be usable
         . "$ModuleRootPath\Resources\Resources.ps1"
 
-        # Stop operation as soon as there is an error anywhere, unless explicitly specified otherwise
-        $ErrorActionPreference = 'Stop'
-
         # Detecting if Debug switch is used, will do debugging actions based on that
         $PSBoundParameters.Debug.IsPresent ? ([System.Boolean]$Debug = $true) : ([System.Boolean]$Debug = $false) | Out-Null
 
@@ -372,5 +369,3 @@ function New-KernelModeWDACConfig {
 
 #>
 }
-# Set PSReadline tab completion to complete menu for easier access to available parameters - Only for the current session
-Set-PSReadLineKeyHandler -Key Tab -Function MenuComplete

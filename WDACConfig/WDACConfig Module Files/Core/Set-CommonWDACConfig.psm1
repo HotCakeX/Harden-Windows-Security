@@ -55,9 +55,6 @@ function Set-CommonWDACConfig {
         # Importing resources such as functions by dot-sourcing so that they will run in the same scope and their variables will be usable
         . "$ModuleRootPath\Resources\Resources.ps1"
 
-        # Stop operation as soon as there is an error anywhere, unless explicitly specified otherwise
-        $ErrorActionPreference = 'Stop'
-
         # Fetch User account directory path
         [System.String]$global:UserAccountDirectoryPath = (Get-CimInstance Win32_UserProfile -Filter "SID = '$([System.Security.Principal.WindowsIdentity]::GetCurrent().User.Value)'").LocalPath
 
@@ -206,8 +203,6 @@ function Set-CommonWDACConfig {
 
 # Importing argument completer ScriptBlocks
 . "$ModuleRootPath\Resources\ArgumentCompleters.ps1"
-# Set PSReadline tab completion to complete menu for easier access to available parameters - Only for the current session
-Set-PSReadLineKeyHandler -Key Tab -Function MenuComplete
 Register-ArgumentCompleter -CommandName 'Set-CommonWDACConfig' -ParameterName 'CertCN' -ScriptBlock $ArgumentCompleterCertificateCN
 Register-ArgumentCompleter -CommandName 'Set-CommonWDACConfig' -ParameterName 'CertPath' -ScriptBlock $ArgumentCompleterCerFilePathsPicker
 Register-ArgumentCompleter -CommandName 'Set-CommonWDACConfig' -ParameterName 'SignToolPath' -ScriptBlock $ArgumentCompleterExeFilePathsPicker

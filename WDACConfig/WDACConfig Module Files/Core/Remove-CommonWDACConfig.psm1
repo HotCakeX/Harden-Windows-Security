@@ -14,9 +14,6 @@ function Remove-CommonWDACConfig {
         # Importing resources such as functions by dot-sourcing so that they will run in the same scope and their variables will be usable
         . "$ModuleRootPath\Resources\Resources.ps1"
 
-        # Stop operation as soon as there is an error anywhere, unless explicitly specified otherwise
-        $ErrorActionPreference = 'Stop'
-
         # Fetch User account directory path
         [System.String]$global:UserAccountDirectoryPath = (Get-CimInstance Win32_UserProfile -Filter "SID = '$([System.Security.Principal.WindowsIdentity]::GetCurrent().User.Value)'").LocalPath
 
@@ -163,5 +160,3 @@ function Remove-CommonWDACConfig {
     Removes the StrictKernelNoFlightRootsPolicyGUID from User Configs
 
 #>
-# Set PSReadline tab completion to complete menu for easier access to available parameters - Only for the current session
-Set-PSReadLineKeyHandler -Key Tab -Function MenuComplete

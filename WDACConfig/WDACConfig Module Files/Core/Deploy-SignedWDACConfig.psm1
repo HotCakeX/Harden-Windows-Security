@@ -33,8 +33,6 @@ function Deploy-SignedWDACConfig {
         # Importing resources such as functions by dot-sourcing so that they will run in the same scope and their variables will be usable
         . "$ModuleRootPath\Resources\Resources.ps1"
 
-        # Stop operation as soon as there is an error anywhere, unless explicitly specified otherwise
-        $ErrorActionPreference = 'Stop'
         if (-NOT $SkipVersionCheck) { . Update-self }
 
         # Detecting if Debug switch is used, will do debugging actions based on that
@@ -255,8 +253,6 @@ function Deploy-SignedWDACConfig {
 
 # Importing argument completer ScriptBlocks
 . "$ModuleRootPath\Resources\ArgumentCompleters.ps1"
-# Set PSReadline tab completion to complete menu for easier access to available parameters - Only for the current session
-Set-PSReadLineKeyHandler -Key Tab -Function MenuComplete
 Register-ArgumentCompleter -CommandName 'Deploy-SignedWDACConfig' -ParameterName 'CertCN' -ScriptBlock $ArgumentCompleterCertificateCN
 Register-ArgumentCompleter -CommandName 'Deploy-SignedWDACConfig' -ParameterName 'PolicyPaths' -ScriptBlock $ArgumentCompleterPolicyPaths
 Register-ArgumentCompleter -CommandName 'Deploy-SignedWDACConfig' -ParameterName 'CertPath' -ScriptBlock $ArgumentCompleterCerFilePathsPicker

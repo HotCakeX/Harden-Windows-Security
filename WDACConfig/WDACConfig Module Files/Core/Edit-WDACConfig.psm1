@@ -102,9 +102,6 @@ function Edit-WDACConfig {
 
         if (-NOT $SkipVersionCheck) { . Update-self }
 
-        # Fetching Temp Directory
-        [System.String]$global:UserTempDirectoryPath = [System.IO.Path]::GetTempPath()
-
         # Fetch User account directory path
         [System.String]$global:UserAccountDirectoryPath = (Get-CimInstance Win32_UserProfile -Filter "SID = '$([System.Security.Principal.WindowsIdentity]::GetCurrent().User.Value)'").LocalPath
 
@@ -199,9 +196,9 @@ function Edit-WDACConfig {
             foreach ($PolicyPath in $PolicyPaths) {
                 # Creating a copy of the original policy in Temp folder so that the original one will be unaffected
                 $PolicyFileName = Split-Path $PolicyPath -Leaf
-                Remove-Item -Path "$global:UserTempDirectoryPath\$PolicyFileName" -Force -ErrorAction SilentlyContinue # make sure no file with the same name already exists in Temp folder
-                Copy-Item -Path $PolicyPath -Destination $global:UserTempDirectoryPath -Force
-                $PolicyPath = "$global:UserTempDirectoryPath\$PolicyFileName"
+                Remove-Item -Path "$UserTempDirectoryPath\$PolicyFileName" -Force -ErrorAction SilentlyContinue # make sure no file with the same name already exists in Temp folder
+                Copy-Item -Path $PolicyPath -Destination $UserTempDirectoryPath -Force
+                $PolicyPath = "$UserTempDirectoryPath\$PolicyFileName"
 
                 # Defining Base policy
                 $xml = [System.Xml.XmlDocument](Get-Content -Path $PolicyPath)
@@ -403,9 +400,9 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
             foreach ($PolicyPath in $PolicyPaths) {
                 # Creating a copy of the original policy in Temp folder so that the original one will be unaffected
                 $PolicyFileName = Split-Path $PolicyPath -Leaf
-                Remove-Item -Path "$global:UserTempDirectoryPath\$PolicyFileName" -Force -ErrorAction SilentlyContinue # make sure no file with the same name already exists in Temp folder
-                Copy-Item -Path $PolicyPath -Destination $global:UserTempDirectoryPath -Force
-                $PolicyPath = "$global:UserTempDirectoryPath\$PolicyFileName"
+                Remove-Item -Path "$UserTempDirectoryPath\$PolicyFileName" -Force -ErrorAction SilentlyContinue # make sure no file with the same name already exists in Temp folder
+                Copy-Item -Path $PolicyPath -Destination $UserTempDirectoryPath -Force
+                $PolicyPath = "$UserTempDirectoryPath\$PolicyFileName"
 
                 # Defining Base policy
                 $xml = [System.Xml.XmlDocument](Get-Content -Path $PolicyPath)
@@ -499,12 +496,12 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                         if ($TestFilePathResults) {
                             # Create a folder in Temp directory to copy the files that are not included in user-selected program path(s)
                             # but detected in Event viewer audit logs, scan that folder, and in the end delete it
-                            New-Item -Path "$global:UserTempDirectoryPath\TemporaryScanFolderForEventViewerFiles" -ItemType Directory | Out-Null
+                            New-Item -Path "$UserTempDirectoryPath\TemporaryScanFolderForEventViewerFiles" -ItemType Directory | Out-Null
 
                             Write-Debug -Message "The following file(s) are being copied to the TEMP directory for scanning because they were found in event logs but didn't exist in any of the user-selected paths:"
                             $TestFilePathResults | ForEach-Object -Process {
                                 Write-Debug -Message "$_"
-                                Copy-Item -Path $_ -Destination "$global:UserTempDirectoryPath\TemporaryScanFolderForEventViewerFiles\" -ErrorAction SilentlyContinue
+                                Copy-Item -Path $_ -Destination "$UserTempDirectoryPath\TemporaryScanFolderForEventViewerFiles\" -ErrorAction SilentlyContinue
                             }
 
                             # Create a policy XML file for available files on the disk
@@ -512,7 +509,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                             # Creating a hash table to dynamically add parameters based on user input and pass them to New-Cipolicy cmdlet
                             [System.Collections.Hashtable]$AvailableFilesOnDiskPolicyMakerHashTable = @{
                                 FilePath               = '.\RulesForFilesNotInUserSelectedPaths.xml'
-                                ScanPath               = "$global:UserTempDirectoryPath\TemporaryScanFolderForEventViewerFiles\"
+                                ScanPath               = "$UserTempDirectoryPath\TemporaryScanFolderForEventViewerFiles\"
                                 Level                  = $Level
                                 Fallback               = $Fallbacks
                                 MultiplePolicyFormat   = $true
@@ -530,7 +527,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                             # Add the policy XML file to the array that holds policy XML files
                             $PolicyXMLFilesArray += '.\RulesForFilesNotInUserSelectedPaths.xml'
                             # Delete the Temporary folder in the TEMP folder
-                            Remove-Item -Recurse -Path "$global:UserTempDirectoryPath\TemporaryScanFolderForEventViewerFiles\" -Force
+                            Remove-Item -Recurse -Path "$UserTempDirectoryPath\TemporaryScanFolderForEventViewerFiles\" -Force
                         }
                     }
 

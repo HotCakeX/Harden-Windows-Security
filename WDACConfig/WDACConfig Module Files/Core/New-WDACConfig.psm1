@@ -84,9 +84,6 @@ function New-WDACConfig {
         # Importing resources such as functions by dot-sourcing so that they will run in the same scope and their variables will be usable
         . "$ModuleRootPath\Resources\Resources.ps1"
 
-        # Fetching Temp Directory
-        [System.String]$global:UserTempDirectoryPath = [System.IO.Path]::GetTempPath()
-
         # Fetch User account directory path
         [System.String]$global:UserAccountDirectoryPath = (Get-CimInstance Win32_UserProfile -Filter "SID = '$([System.Security.Principal.WindowsIdentity]::GetCurrent().User.Value)'").LocalPath
 
@@ -199,11 +196,11 @@ function New-WDACConfig {
             if ($SignToolPathFinal) {
                 # Allowing SignTool to be able to run after Default Windows base policy is deployed in Signed scenario
                 &$WriteTeaGreen "`nCreating allow rules for SignTool.exe in the DefaultWindows base policy so you can continue using it after deploying the DefaultWindows base policy."
-                New-Item -Path "$global:UserTempDirectoryPath\TemporarySignToolFile" -ItemType Directory -Force | Out-Null
-                Copy-Item -Path $SignToolPathFinal -Destination "$global:UserTempDirectoryPath\TemporarySignToolFile" -Force
-                New-CIPolicy -ScanPath "$global:UserTempDirectoryPath\TemporarySignToolFile" -Level FilePublisher -Fallback Hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -AllowFileNameFallbacks -FilePath .\SignTool.xml
+                New-Item -Path "$UserTempDirectoryPath\TemporarySignToolFile" -ItemType Directory -Force | Out-Null
+                Copy-Item -Path $SignToolPathFinal -Destination "$UserTempDirectoryPath\TemporarySignToolFile" -Force
+                New-CIPolicy -ScanPath "$UserTempDirectoryPath\TemporarySignToolFile" -Level FilePublisher -Fallback Hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -AllowFileNameFallbacks -FilePath .\SignTool.xml
                 # Delete the Temporary folder in the TEMP folder
-                if (!$Debug) { Remove-Item -Recurse -Path "$global:UserTempDirectoryPath\TemporarySignToolFile" -Force }
+                if (!$Debug) { Remove-Item -Recurse -Path "$UserTempDirectoryPath\TemporarySignToolFile" -Force }
 
                 [System.Boolean]$global:MergeSignToolPolicy = $true
             }

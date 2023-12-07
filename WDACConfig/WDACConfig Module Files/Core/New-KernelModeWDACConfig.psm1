@@ -79,7 +79,7 @@ function New-KernelModeWDACConfig {
             begin {
 
                 if ($DefaultWindowsKernel) {
-                    $PolicyPath = "$ModuleRootPath\WDAC Policies\DefaultWindows_Enforced_Kernel.xml"
+                    $PolicyPath = "$ModuleRootPath\Resources\WDAC Policies\DefaultWindows_Enforced_Kernel.xml"
                     $PolicyFileName = '.\DefaultWindows_Enforced_Kernel.xml'
                     $PolicyName = 'Strict Kernel mode policy Audit'
 
@@ -93,7 +93,7 @@ function New-KernelModeWDACConfig {
                 }
 
                 if ($DefaultWindowsKernelNoFlights) {
-                    $PolicyPath = "$ModuleRootPath\WDAC Policies\DefaultWindows_Enforced_Kernel_NoFlights.xml"
+                    $PolicyPath = "$ModuleRootPath\Resources\WDAC Policies\DefaultWindows_Enforced_Kernel_NoFlights.xml"
                     $PolicyFileName = '.\DefaultWindows_Enforced_Kernel_NoFlights.xml'
                     $PolicyName = 'Strict Kernel No Flights mode policy Audit'
 
@@ -186,7 +186,7 @@ function New-KernelModeWDACConfig {
                 }
 
                 # Build the same policy again after restart, do not trust the policy xml file made before restart
-                Copy-Item -Path "$ModuleRootPath\WDAC Policies\DefaultWindows_Enforced_Kernel.xml" -Destination .\DefaultWindows_Enforced_Kernel.xml -Force
+                Copy-Item -Path "$ModuleRootPath\Resources\WDAC Policies\DefaultWindows_Enforced_Kernel.xml" -Destination .\DefaultWindows_Enforced_Kernel.xml -Force
 
                 # Merge the base policy with the policy made from driver files to deploy it as one
                 Merge-CIPolicy -PolicyPaths '.\DefaultWindows_Enforced_Kernel.xml', '.\DriverFilesScanPolicy.xml' -OutputFilePath '.\Final_DefaultWindows_Enforced_Kernel.xml' | Out-Null
@@ -284,7 +284,7 @@ function New-KernelModeWDACConfig {
                 }
 
                 # Build the same policy again after restart, do not trust the policy xml file made before restart
-                Copy-Item -Path "$ModuleRootPath\WDAC Policies\DefaultWindows_Enforced_Kernel_NoFlights.xml" -Destination '.\DefaultWindows_Enforced_Kernel_NoFlights.xml' -Force
+                Copy-Item -Path "$ModuleRootPath\Resources\WDAC Policies\DefaultWindows_Enforced_Kernel_NoFlights.xml" -Destination '.\DefaultWindows_Enforced_Kernel_NoFlights.xml' -Force
 
                 # Merge the base policy with the policy made from driver files to deploy it as one
                 Merge-CIPolicy -PolicyPaths '.\DefaultWindows_Enforced_Kernel_NoFlights.xml', '.\DriverFilesScanPolicy.xml' -OutputFilePath '.\Final_DefaultWindows_Enforced_Kernel.xml' | Out-Null

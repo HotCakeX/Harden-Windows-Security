@@ -9,3 +9,12 @@ try {
 catch {
     Throw 'Could not set the required global variables.'
 }
+
+# A constant variable that is automatically imported in the caller's environment and used to detect the main module's root directory
+# Create it only if it's not already present, helps when user tries to import the module over and over again without closing the PowerShell session
+try {
+    Get-Variable -Name 'ModuleRootPath' -ErrorAction Stop | Out-Null
+}
+catch {
+    New-Variable -Name 'ModuleRootPath' -Value ($PSScriptRoot) -Option 'Constant' -Scope 'Global'
+}

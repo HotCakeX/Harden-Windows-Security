@@ -12,7 +12,7 @@ function Remove-CommonWDACConfig {
     )
     begin {
         # Importing resources such as functions by dot-sourcing so that they will run in the same scope and their variables will be usable
-        . "$psscriptroot\Resources.ps1"
+        . "$ModuleRootPath\Resources\Resources.ps1"
 
         # Stop operation as soon as there is an error anywhere, unless explicitly specified otherwise
         $ErrorActionPreference = 'Stop'

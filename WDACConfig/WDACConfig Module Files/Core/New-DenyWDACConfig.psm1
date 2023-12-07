@@ -55,7 +55,7 @@ function New-DenyWDACConfig {
     begin {
 
         # Importing resources such as functions by dot-sourcing so that they will run in the same scope and their variables will be usable
-        . "$psscriptroot\Resources.ps1"
+        . "$ModuleRootPath\Resources\Resources.ps1"
 
         # Detecting if Debug switch is used, will do debugging actions based on that
         $PSBoundParameters.Debug.IsPresent ? ([System.Boolean]$Debug = $true) : ([System.Boolean]$Debug = $false) | Out-Null
@@ -315,7 +315,7 @@ function New-DenyWDACConfig {
 }
 
 # Importing argument completer ScriptBlocks
-. "$psscriptroot\ArgumentCompleters.ps1"
+. "$ModuleRootPath\Resources\ArgumentCompleters.ps1"
 # Set PSReadline tab completion to complete menu for easier access to available parameters - Only for the current session
 Set-PSReadLineKeyHandler -Key Tab -Function MenuComplete
 Register-ArgumentCompleter -CommandName 'New-DenyWDACConfig' -ParameterName 'ScanLocations' -ScriptBlock $ArgumentCompleterFolderPathsPicker

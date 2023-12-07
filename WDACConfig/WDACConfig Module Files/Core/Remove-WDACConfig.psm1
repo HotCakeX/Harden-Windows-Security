@@ -115,7 +115,7 @@ function Remove-WDACConfig {
 
     begin {
         # Importing resources such as functions by dot-sourcing so that they will run in the same scope and their variables will be usable
-        . "$psscriptroot\Resources.ps1"
+        . "$ModuleRootPath\Resources\Resources.ps1"
 
         # Stop operation as soon as there is an error anywhere, unless explicitly specified otherwise
         $ErrorActionPreference = 'Stop'
@@ -348,7 +348,7 @@ function Remove-WDACConfig {
 }
 
 # Importing argument completer ScriptBlocks
-. "$psscriptroot\ArgumentCompleters.ps1"
+. "$ModuleRootPath\Resources\ArgumentCompleters.ps1"
 # Set PSReadline tab completion to complete menu for easier access to available parameters - Only for the current session
 Set-PSReadLineKeyHandler -Key Tab -Function MenuComplete
 Register-ArgumentCompleter -CommandName 'Remove-WDACConfig' -ParameterName 'CertCN' -ScriptBlock $ArgumentCompleterCertificateCN

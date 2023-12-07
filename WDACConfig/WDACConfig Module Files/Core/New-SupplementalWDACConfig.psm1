@@ -60,7 +60,7 @@ function New-SupplementalWDACConfig {
 
     begin {
         # Importing resources such as functions by dot-sourcing so that they will run in the same scope and their variables will be usable
-        . "$psscriptroot\Resources.ps1"
+        . "$ModuleRootPath\Resources\Resources.ps1"
 
         # argument tab auto-completion and ValidateSet for Fallbacks
         Class Fallbackz : System.Management.Automation.IValidateSetValuesGenerator {
@@ -333,7 +333,7 @@ function New-SupplementalWDACConfig {
 }
 
 # Importing argument completer ScriptBlocks
-. "$psscriptroot\ArgumentCompleters.ps1"
+. "$ModuleRootPath\Resources\ArgumentCompleters.ps1"
 # Set PSReadline tab completion to complete menu for easier access to available parameters - Only for the current session
 Set-PSReadLineKeyHandler -Key Tab -Function MenuComplete
 Register-ArgumentCompleter -CommandName 'New-SupplementalWDACConfig' -ParameterName 'PolicyPath' -ScriptBlock $ArgumentCompleterPolicyPathsBasePoliciesOnly

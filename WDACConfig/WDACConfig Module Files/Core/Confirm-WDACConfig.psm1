@@ -64,8 +64,8 @@ function Confirm-WDACConfig {
 
     begin {
         # Importing resources such as functions by dot-sourcing so that they will run in the same scope and their variables will be usable
-        . "$psscriptroot\Resources.ps1"
-
+        . "$ModuleRootPath\Resources\Resources.ps1"
+        
         # Regular parameters are automatically bound to variables in the function scope
         # Dynamic parameters however, are only available in the parameter dictionary, which is why we have to access them using $PSBoundParameters
         # or assign them manually to another variable in the function's scope

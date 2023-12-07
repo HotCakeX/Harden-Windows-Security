@@ -16,9 +16,12 @@ function Invoke-WDACSimulation {
     begin {
         # Importing resources such as functions by dot-sourcing so that they will run in the same scope and their variables will be usable
         . "$ModuleRootPath\Resources\Resources2.ps1"
-        . "$ModuleRootPath\Resources\Resources.ps1"
 
-        if (-NOT $SkipVersionCheck) { . Update-self }
+        # Importing the required sub-modules
+        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Update-self.psm1" -Force -Verbose:$false
+        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Write-ColorfulText.psm1" -Force -Verbose:$false
+        
+        if (-NOT $SkipVersionCheck) { Update-self }
 
         # The total number of the main steps for the progress bar to render
         [System.Int16]$TotalSteps = 4

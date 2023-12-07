@@ -83,7 +83,7 @@ function Update-self {
     # This prevents the module from constantly doing an update check by fetching the version file from GitHub
     if (($TimeDiff -gt 10) -or $PerformOnlineUpdateCheck) {
 
-        [System.Version]$CurrentVersion = (Test-ModuleManifest "$ModuleRootPath\WDACConfig.psd1").Version.ToString()
+        [System.Version]$CurrentVersion = (Test-ModuleManifest -Path "$ModuleRootPath\WDACConfig.psd1").Version.ToString()
         try {
             # First try the GitHub source
             [System.Version]$LatestVersion = Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/WDACConfig/version.txt' -ProgressAction SilentlyContinue
@@ -138,7 +138,7 @@ function Set-LogSize {
         [System.Int64]$LogSize
     )
     [System.String]$LogName = 'Microsoft-Windows-CodeIntegrity/Operational'
-    [System.Diagnostics.Eventing.Reader.EventLogConfiguration]$Log = New-Object System.Diagnostics.Eventing.Reader.EventLogConfiguration $LogName
+    [System.Diagnostics.Eventing.Reader.EventLogConfiguration]$Log = New-Object -TypeName System.Diagnostics.Eventing.Reader.EventLogConfiguration -ArgumentList $LogName
     $Log.MaximumSizeInBytes = $LogSize
     $Log.IsEnabled = $true
     $Log.SaveChanges()

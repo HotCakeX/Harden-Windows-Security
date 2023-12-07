@@ -149,7 +149,7 @@ function New-DenyWDACConfig {
             }
 
             if ($Deploy) {
-                CiTool --update-policy "$policyID.cip" -json | Out-Null
+                &'C:\Windows\System32\CiTool.exe' --update-policy "$policyID.cip" -json | Out-Null
                 Write-Host -NoNewline -Object "`n$policyID.cip for " -ForegroundColor Green
                 Write-Host -NoNewline -Object "$PolicyName" -ForegroundColor Magenta
                 Write-Host -Object ' has been deployed.' -ForegroundColor Green
@@ -204,7 +204,7 @@ function New-DenyWDACConfig {
                 DenyPolicyGUID = $PolicyID
             }
             if ($Deploy) {
-                CiTool --update-policy "$policyID.cip" -json | Out-Null
+                &'C:\Windows\System32\CiTool.exe' --update-policy "$policyID.cip" -json | Out-Null
                 Write-Host -NoNewline -Object "`n$policyID.cip for " -ForegroundColor Green
                 Write-Host -NoNewline -Object "$PolicyName" -ForegroundColor Magenta
                 Write-Host -Object ' has been deployed.' -ForegroundColor Green
@@ -260,7 +260,7 @@ function New-DenyWDACConfig {
             }
 
             if ($Deploy) {
-                CiTool --update-policy "$policyID.cip" -json | Out-Null
+                &'C:\Windows\System32\CiTool.exe' --update-policy "$policyID.cip" -json | Out-Null
                 Write-ColorfulText -Color Pink -InputText "A Deny Base policy with the name $PolicyName has been deployed."
                 Remove-Item -Path "$policyID.cip" -Force
             }

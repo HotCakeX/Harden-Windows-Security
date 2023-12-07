@@ -161,7 +161,7 @@ function New-SupplementalWDACConfig {
                 SupplementalPolicyGUID = $PolicyID
             }
             if ($Deploy) {
-                CiTool --update-policy "$policyID.cip" -json | Out-Null
+                &'C:\Windows\System32\CiTool.exe' --update-policy "$policyID.cip" -json | Out-Null
                 Write-ColorfulText -Color Pink -InputText "A Supplemental policy with the name $SuppPolicyName has been deployed."
                 Remove-Item -Path "$policyID.cip" -Force
             }
@@ -196,7 +196,7 @@ function New-SupplementalWDACConfig {
             }
 
             if ($Deploy) {
-                CiTool --update-policy "$policyID.cip" -json | Out-Null
+                &'C:\Windows\System32\CiTool.exe' --update-policy "$policyID.cip" -json | Out-Null
                 Write-ColorfulText -Color Pink -InputText "A Supplemental policy with the name $SuppPolicyName has been deployed."
                 Remove-Item -Path "$policyID.cip" -Force
             }
@@ -252,7 +252,7 @@ function New-SupplementalWDACConfig {
             }
 
             if ($Deploy) {
-                CiTool --update-policy "$policyID.cip" -json | Out-Null
+                &'C:\Windows\System32\CiTool.exe' --update-policy "$policyID.cip" -json | Out-Null
                 Write-ColorfulText -Color Pink -InputText "A Supplemental policy with the name $SuppPolicyName has been deployed."
                 Remove-Item -Path "$policyID.cip" -Force
             }

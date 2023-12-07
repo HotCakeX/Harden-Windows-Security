@@ -183,7 +183,7 @@ function New-WDACConfig {
                 BinaryFile = "$PolicyID.cip"
             }
             if ($Deploy -and $MakeAllowMSFTWithBlockRules) {
-                CiTool --update-policy "$PolicyID.cip" -json | Out-Null
+                &'C:\Windows\System32\CiTool.exe' --update-policy "$PolicyID.cip" -json | Out-Null
                 Write-Host -Object "`n"
                 Remove-Item -Path "$PolicyID.cip" -Force
             }
@@ -255,7 +255,7 @@ function New-WDACConfig {
             }
 
             if ($Deploy -and $MakeDefaultWindowsWithBlockRules) {
-                CiTool --update-policy "$PolicyID.cip" -json | Out-Null
+                &'C:\Windows\System32\CiTool.exe' --update-policy "$PolicyID.cip" -json | Out-Null
                 Write-Host -Object "`n"
                 Remove-Item -Path "$PolicyID.cip" -Force
             }
@@ -267,7 +267,7 @@ function New-WDACConfig {
             Expand-Archive -Path .\VulnerableDriverBlockList.zip -DestinationPath 'VulnerableDriverBlockList' -Force
             Rename-Item -Path .\VulnerableDriverBlockList\SiPolicy_Enforced.p7b -NewName 'SiPolicy.p7b' -Force
             Copy-Item -Path .\VulnerableDriverBlockList\SiPolicy.p7b -Destination 'C:\Windows\System32\CodeIntegrity'
-            citool --refresh -json | Out-Null
+            &'C:\Windows\System32\CiTool.exe' --refresh -json | Out-Null
             Write-ColorfulText -Color Pink -InputText 'SiPolicy.p7b has been deployed and policies refreshed.'
             Remove-Item -Path .\VulnerableDriverBlockList* -Recurse -Force
             Invoke-Command -ScriptBlock $DriversBlockListInfoGatheringSCRIPTBLOCK
@@ -284,7 +284,7 @@ function New-WDACConfig {
             [System.String]$PolicyID = (Set-CIPolicyIdInfo -FilePath '.\Microsoft recommended block rules.xml' -ResetPolicyID).Substring(11)
             Set-CIPolicyIdInfo -PolicyName "Microsoft Windows User Mode Policy - Enforced - $(Get-Date -Format 'MM-dd-yyyy')" -FilePath '.\Microsoft recommended block rules.xml'
             ConvertFrom-CIPolicy -XmlFilePath '.\Microsoft recommended block rules.xml' -BinaryFilePath "$PolicyID.cip" | Out-Null
-            CiTool --update-policy "$PolicyID.cip" -json | Out-Null
+            &'C:\Windows\System32\CiTool.exe' --update-policy "$PolicyID.cip" -json | Out-Null
             Write-ColorfulText -Color Lavender -InputText 'The Microsoft recommended block rules policy has been deployed in enforced mode.'
             Remove-Item -Path "$PolicyID.cip" -Force
         }
@@ -319,7 +319,7 @@ function New-WDACConfig {
             Set-CIPolicyIdInfo -PolicyName 'PrepMSFTOnlyAudit' -FilePath .\AllowMicrosoft.xml
             ConvertFrom-CIPolicy -XmlFilePath .\AllowMicrosoft.xml -BinaryFilePath "$PolicyID.cip" | Out-Null
             if ($Deploy) {
-                CiTool --update-policy "$PolicyID.cip" -json | Out-Null
+                &'C:\Windows\System32\CiTool.exe' --update-policy "$PolicyID.cip" -json | Out-Null
                 Write-ColorfulText -Color HotPink -InputText 'The default AllowMicrosoft policy has been deployed in Audit mode. No reboot required.'
                 Remove-Item -Path 'AllowMicrosoft.xml', "$PolicyID.cip" -Force
             }
@@ -351,7 +351,7 @@ function New-WDACConfig {
             Set-CIPolicyIdInfo -PolicyName 'PrepDefaultWindows' -FilePath .\DefaultWindows_Audit.xml
             ConvertFrom-CIPolicy -XmlFilePath .\DefaultWindows_Audit.xml -BinaryFilePath "$PolicyID.cip" | Out-Null
             if ($Deploy) {
-                CiTool --update-policy "$PolicyID.cip" -json | Out-Null
+                &'C:\Windows\System32\CiTool.exe' --update-policy "$PolicyID.cip" -json | Out-Null
                 Write-ColorfulText -Color Lavender -InputText 'The defaultWindows policy has been deployed in Audit mode. No reboot required.'
                 Remove-Item -Path 'DefaultWindows_Audit.xml', "$PolicyID.cip" -Force
             }
@@ -486,19 +486,19 @@ function New-WDACConfig {
             }
 
             if ($Deploy -and $MakePolicyFromAuditLogs) {
-                CiTool --update-policy "$BasePolicyID.cip" -json | Out-Null
-                CiTool --update-policy "$policyID.cip" -json | Out-Null
+                &'C:\Windows\System32\CiTool.exe' --update-policy "$BasePolicyID.cip" -json | Out-Null
+                &'C:\Windows\System32\CiTool.exe' --update-policy "$policyID.cip" -json | Out-Null
                 Write-ColorfulText -Color Pink -InputText "`nBase policy and Supplemental Policies deployed and activated.`n"
                 # Get the correct Prep mode Audit policy ID to remove from the system
                 switch ($BasePolicyType) {
                     'Allow Microsoft Base' {
-                        $IDToRemove = ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { $_.FriendlyName -eq 'PrepMSFTOnlyAudit' }).PolicyID
+                        $IDToRemove = ((&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { $_.FriendlyName -eq 'PrepMSFTOnlyAudit' }).PolicyID
                     }
                     'Default Windows Base' {
-                        $IDToRemove = ((CiTool -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { $_.FriendlyName -eq 'PrepDefaultWindows' }).PolicyID
+                        $IDToRemove = ((&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { $_.FriendlyName -eq 'PrepDefaultWindows' }).PolicyID
                     }
                 }
-                CiTool --remove-policy "{$IDToRemove}" -json | Out-Null
+                &'C:\Windows\System32\CiTool.exe' --remove-policy "{$IDToRemove}" -json | Out-Null
                 Write-ColorfulText -Color Lavender -InputText "`nSystem restart required to finish removing the Audit mode Prep policy"
             }
         }
@@ -524,7 +524,7 @@ function New-WDACConfig {
             Start-Process -FilePath 'C:\Windows\System32\appidtel.exe' -ArgumentList 'start' -Wait -NoNewWindow
             Start-Process -FilePath 'C:\Windows\System32\sc.exe' -ArgumentList 'config', 'appidsvc', 'start= auto' -Wait -NoNewWindow
             if ($Deploy -and $MakeLightPolicy) {
-                CiTool --update-policy "$BasePolicyID.cip" -json | Out-Null
+                &'C:\Windows\System32\CiTool.exe' --update-policy "$BasePolicyID.cip" -json | Out-Null
             }
             [PSCustomObject]@{
                 BasePolicyFile = 'SignedAndReputable.xml'

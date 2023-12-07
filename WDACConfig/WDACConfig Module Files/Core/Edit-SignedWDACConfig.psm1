@@ -314,7 +314,7 @@ function Edit-SignedWDACConfig {
                 Rename-Item -Path '.\AuditModeTemp.cip.p7' -NewName '.\AuditMode.cip' -Force
 
                 ################# Snap back guarantee #################
-                Write-Debug -Message 'Creating Enforced Mode SnapBack guarantee'
+                Write-Verbose -Message 'Creating Enforced Mode SnapBack guarantee'
 
                 $registryPath = 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce'
                 $command = @"
@@ -324,7 +324,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                 New-ItemProperty -Path $registryPath -Name '*CIPolicySnapBack' -Value "powershell.exe -WindowStyle `"Hidden`" -ExecutionPolicy `"Bypass`" -Command `"& {&`"C:\EnforcedModeSnapBack.ps1`";Remove-Item -Path 'C:\EnforcedModeSnapBack.ps1' -Force}`"" -PropertyType String -Force | Out-Null
 
                 # Deploy Audit mode CIP
-                Write-Debug -Message 'Deploying Audit mode CIP'
+                Write-Verbose -Message 'Deploying Audit mode CIP'
                 Rename-Item -Path '.\AuditMode.cip' -NewName ".\$PolicyID.cip" -Force
                 &'C:\Windows\System32\CiTool.exe' --update-policy ".\$PolicyID.cip" -json | Out-Null
                 Write-ColorfulText -Color TeaGreen -InputText "`nThe Base policy with the following details has been Re-Signed and Re-Deployed in Audit Mode:"
@@ -383,7 +383,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                         # this prevents duplicate rule creation and double file copying
                         $TestFilePathResults = (Test-FilePath -FilePath $AuditEventLogsProcessingResults.AvailableFilesPaths -DirectoryPath $ProgramsPaths).path | Select-Object -Unique
 
-                        Write-Debug -Message "$($TestFilePathResults.count) file(s) have been found in event viewer logs that don't exist in any of the folder paths you selected."
+                        Write-Verbose -Message "$($TestFilePathResults.count) file(s) have been found in event viewer logs that don't exist in any of the folder paths you selected."
 
                         # Another check to make sure there were indeed files found in Event viewer logs but weren't in any of the user-selected path(s)
                         if ($TestFilePathResults) {
@@ -391,9 +391,9 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                             # but detected in Event viewer audit logs, scan that folder, and in the end delete it
                             New-Item -Path "$UserTempDirectoryPath\TemporaryScanFolderForEventViewerFiles" -ItemType Directory | Out-Null
 
-                            Write-Debug -Message "The following file(s) are being copied to the TEMP directory for scanning because they were found in event logs but didn't exist in any of the user-selected paths:"
+                            Write-Verbose -Message "The following file(s) are being copied to the TEMP directory for scanning because they were found in event logs but didn't exist in any of the user-selected paths:"
                             $TestFilePathResults | ForEach-Object -Process {
-                                Write-Debug -Message "$_"
+                                Write-Verbose -Message "$_"
                                 Copy-Item -Path $_ -Destination "$UserTempDirectoryPath\TemporaryScanFolderForEventViewerFiles\" -ErrorAction SilentlyContinue
                             }
 
@@ -428,9 +428,9 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                     # if user chose to include deleted files in the final supplemental policy
                     if ($AuditEventLogsProcessingResults.DeletedFileHashes -and $IncludeDeletedFiles) {
 
-                        Write-Debug -Message "$($AuditEventLogsProcessingResults.DeletedFileHashes.count) file(s) have been found in event viewer logs that were run during Audit phase but are no longer on the disk, they are as follows:"
+                        Write-Verbose -Message "$($AuditEventLogsProcessingResults.DeletedFileHashes.count) file(s) have been found in event viewer logs that were run during Audit phase but are no longer on the disk, they are as follows:"
                         $AuditEventLogsProcessingResults.DeletedFileHashes | ForEach-Object -Process {
-                            Write-Debug -Message "$($_.'File Name')"
+                            Write-Verbose -Message "$($_.'File Name')"
                         }
 
                         # Save the File Rules and File Rule Refs in the FileRulesAndFileRefs.txt in the current working directory for debugging purposes
@@ -501,8 +501,8 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                     # Only proceed if any kernel protected file(s) were found in any of the user-selected directory path(s)
                     if ($ExesWithNoHash) {
 
-                        Write-Debug -Message "The following Kernel protected files detected, creating allow rules for them:`n"
-                        if ($Debug) { $ExesWithNoHash | ForEach-Object -Process { Write-Debug -Message "$_" } }
+                        Write-Verbose -Message "The following Kernel protected files detected, creating allow rules for them:`n"
+                        $ExesWithNoHash | ForEach-Object -Process { Write-Verbose -Message "$_" }
 
                         [System.Management.Automation.ScriptBlock]$KernelProtectedHashesBlock = {
                             foreach ($event in Get-WinEvent -FilterHashtable @{LogName = 'Microsoft-Windows-CodeIntegrity/Operational'; ID = 3076 } -ErrorAction SilentlyContinue | Where-Object -FilterScript { $_.TimeCreated -ge $Date } ) {
@@ -548,8 +548,8 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                     }
                     #endregion Kernel-protected-files-automatic-detection-and-allow-rule-creation
 
-                    Write-Debug -Message 'The following policy xml files are going to be merged into the final Supplemental policy and be deployed on the system:'
-                    if ($Debug) { $PolicyXMLFilesArray | ForEach-Object -Process { Write-Debug -Message "$_" } }
+                    Write-Verbose -Message 'The following policy xml files are going to be merged into the final Supplemental policy and be deployed on the system:'
+                    $PolicyXMLFilesArray | ForEach-Object -Process { Write-Verbose -Message "$_" }
 
                     # Merge all of the policy XML files in the array into the final Supplemental policy
                     Merge-CIPolicy -PolicyPaths $PolicyXMLFilesArray -OutputFilePath ".\SupplementalPolicy $SuppPolicyName.xml" | Out-Null
@@ -577,10 +577,10 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                 }
                 finally {
                     # Deploy Enforced mode CIP
-                    Write-Debug -Message 'Finally Block Running'
+                    Write-Verbose -Message 'Finally Block Running'
                     Update-BasePolicyToEnforced
                     # Enforced Mode Snapback removal after base policy has already been successfully re-enforced
-                    Write-Debug -Message 'Removing the SnapBack guarantee because the base policy has been successfully re-enforced'
+                    Write-Verbose -Message 'Removing the SnapBack guarantee because the base policy has been successfully re-enforced'
                     Remove-Item -Path 'C:\EnforcedModeSnapBack.ps1' -Force
                     Remove-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce' -Name '*CIPolicySnapBack' -Force
                 }
@@ -679,7 +679,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                 Rename-Item -Path '.\AuditModeTemp.cip.p7' -NewName '.\AuditMode.cip' -Force
 
                 ################# Snap back guarantee #################
-                Write-Debug -Message 'Creating Enforced Mode SnapBack guarantee'
+                Write-Verbose -Message 'Creating Enforced Mode SnapBack guarantee'
 
                 $registryPath = 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce'
                 $command = @"
@@ -689,7 +689,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                 New-ItemProperty -Path $registryPath -Name '*CIPolicySnapBack' -Value "powershell.exe -WindowStyle `"Hidden`" -ExecutionPolicy `"Bypass`" -Command `"& {&`"C:\EnforcedModeSnapBack.ps1`";Remove-Item -Path 'C:\EnforcedModeSnapBack.ps1' -Force}`"" -PropertyType String -Force | Out-Null
 
                 # Deploy Audit mode CIP
-                Write-Debug -Message 'Deploying Audit mode CIP'
+                Write-Verbose -Message 'Deploying Audit mode CIP'
                 Rename-Item -Path '.\AuditMode.cip' -NewName ".\$PolicyID.cip" -Force
                 &'C:\Windows\System32\CiTool.exe' --update-policy ".\$PolicyID.cip" -json | Out-Null
                 Write-ColorfulText -Color TeaGreen -InputText "`nThe Base policy with the following details has been Re-Signed and Re-Deployed in Audit Mode:"
@@ -746,10 +746,10 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                 }
                 finally {
                     # Deploy Enforced mode CIP
-                    Write-Debug -Message 'Finally Block Running'
+                    Write-Verbose -Message 'Finally Block Running'
                     Update-BasePolicyToEnforced
                     # Enforced Mode Snapback removal after base policy has already been successfully re-enforced
-                    Write-Debug -Message 'Removing the SnapBack guarantee because the base policy has been successfully re-enforced'
+                    Write-Verbose -Message 'Removing the SnapBack guarantee because the base policy has been successfully re-enforced'
                     Remove-Item -Path 'C:\EnforcedModeSnapBack.ps1' -Force
                     Remove-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce' -Name '*CIPolicySnapBack' -Force
                 }
@@ -787,8 +787,8 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                     $PolicyXMLFilesArray += $file.FullName
                 }
 
-                Write-Debug -Message 'The following policy xml files are going to be merged into the final Supplemental policy and be deployed on the system:'
-                if ($Debug) { $PolicyXMLFilesArray | ForEach-Object -Process { Write-Debug -Message "$_" } }
+                Write-Verbose -Message 'The following policy xml files are going to be merged into the final Supplemental policy and be deployed on the system:'
+                $PolicyXMLFilesArray | ForEach-Object -Process { Write-Verbose -Message "$_" }
 
                 # Merge all of the policy XML files in the array into the final Supplemental policy
                 Merge-CIPolicy -PolicyPaths $PolicyXMLFilesArray -OutputFilePath ".\SupplementalPolicy $SuppPolicyName.xml" | Out-Null

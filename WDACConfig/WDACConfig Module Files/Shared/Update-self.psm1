@@ -8,6 +8,9 @@ Function Update-self {
         System.Void
     #>
 
+    # Importing the required sub-modules
+    Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Write-ColorfulText.psm1" -Force -Verbose:$false
+       
     try {
         # Get the last update check time
         [System.DateTime]$UserConfigDate = Get-CommonWDACConfig -LastUpdateCheck

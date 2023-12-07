@@ -12,9 +12,9 @@ function Get-CommonWDACConfig {
         [parameter(Mandatory = $false, DontShow = $true)][System.Management.Automation.SwitchParameter]$LastUpdateCheck
     )
     begin {
-        # Importing resources such as functions by dot-sourcing so that they will run in the same scope and their variables will be usable
-        . "$ModuleRootPath\Resources\Resources.ps1"
-
+        # Importing the required sub-modules
+        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Write-ColorfulText.psm1" -Force -Verbose:$false
+       
         # Create User configuration folder if it doesn't already exist
         if (-NOT (Test-Path -Path "$UserAccountDirectoryPath\.WDACConfig\")) {
             New-Item -ItemType Directory -Path "$UserAccountDirectoryPath\.WDACConfig\" -Force -ErrorAction Stop | Out-Null
@@ -40,7 +40,7 @@ function Get-CommonWDACConfig {
             # Display this message if User Configuration file has content
             else {
                 Write-ColorfulText -Color Pink -InputText "`nThis is your current WDAC User Configurations: "
-                Get-Content -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json" | ConvertFrom-Json | Format-List *
+                Get-Content -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json" | ConvertFrom-Json | Format-List -Property *
             }
             break
         }

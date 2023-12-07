@@ -11,9 +11,9 @@ function Remove-CommonWDACConfig {
         [parameter(Mandatory = $false, DontShow = $true)][System.Management.Automation.SwitchParameter]$LastUpdateCheck # DontShow prevents common parameters from being displayed too
     )
     begin {
-        # Importing resources such as functions by dot-sourcing so that they will run in the same scope and their variables will be usable
-        . "$ModuleRootPath\Resources\Resources.ps1"
-
+        # Importing the required sub-modules
+        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Write-ColorfulText.psm1" -Force -Verbose:$false
+    
         # Create User configuration folder if it doesn't already exist
         if (-NOT (Test-Path -Path "$UserAccountDirectoryPath\.WDACConfig\")) {
             New-Item -ItemType Directory -Path "$UserAccountDirectoryPath\.WDACConfig\" -Force -ErrorAction Stop | Out-Null
@@ -35,6 +35,7 @@ function Remove-CommonWDACConfig {
 
         # Read the current user configurations
         $CurrentUserConfigurations = Get-Content -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json"
+        
         # If the file exists but is corrupted and has bad values, rewrite it
         try {
             $CurrentUserConfigurations = $CurrentUserConfigurations | ConvertFrom-Json
@@ -114,9 +115,9 @@ function Remove-CommonWDACConfig {
     }
     end {
         # Update the User Configurations file
-        $UserConfigurationsObject | ConvertTo-Json | Set-Content "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json"
+        $UserConfigurationsObject | ConvertTo-Json | Set-Content -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json"
         Write-ColorfulText -Color Pink -InputText "`nThis is your new WDAC User Configurations: "
-        Get-Content -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json" | ConvertFrom-Json | Format-List *
+        Get-Content -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json" | ConvertFrom-Json | Format-List -Property *
     }
 }
 <#

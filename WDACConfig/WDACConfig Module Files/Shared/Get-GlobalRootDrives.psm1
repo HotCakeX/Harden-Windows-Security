@@ -10,7 +10,6 @@ Function Get-GlobalRootDrives {
     .OUTPUTS
         System.Objects[]
     #>
-
     [CmdletBinding()]
     param ()
 

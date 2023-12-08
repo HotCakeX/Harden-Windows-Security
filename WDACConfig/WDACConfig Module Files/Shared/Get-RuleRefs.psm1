@@ -3,9 +3,7 @@ Function Get-RuleRefs {
     .SYNOPSIS
         Create File Rule Refs based on the ID of the File Rules above and store them in the $RulesRefs variable
     #>
-
     [CmdletBinding()]
-
     param ($HashesArray)
     $HashesArray | ForEach-Object -Begin { $i = 1 } -Process {
         $RulesRefs += Write-Output -InputObject "`n<FileRuleRef RuleID=`"ID_ALLOW_AA_$i`" />"

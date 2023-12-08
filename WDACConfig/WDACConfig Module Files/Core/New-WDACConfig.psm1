@@ -136,7 +136,7 @@ Function New-WDACConfig {
                 return [System.String[]]$Levelz
             }
         }
-        
+
         Function Get-DriverBlockRules {
             <#
             .SYNOPSIS
@@ -156,21 +156,21 @@ Function New-WDACConfig {
             if ($Deploy) {
                 Write-Verbose -Message 'Downloading the Microsoft Recommended Driver Block List archive'
                 Invoke-WebRequest -Uri 'https://aka.ms/VulnerableDriverBlockList' -OutFile VulnerableDriverBlockList.zip -ProgressAction SilentlyContinue
-                
+
                 Write-Verbose -Message 'Expanding the Block list archive'
                 Expand-Archive -Path .\VulnerableDriverBlockList.zip -DestinationPath 'VulnerableDriverBlockList' -Force
-                
+
                 Write-Verbose -Message 'Renaming the block list file to SiPolicy.p7b'
                 Rename-Item -Path .\VulnerableDriverBlockList\SiPolicy_Enforced.p7b -NewName 'SiPolicy.p7b' -Force
-                
+
                 Write-Verbose -Message 'Copying the new block list to the CodeIntegrity folder, replacing any old ones'
                 Copy-Item -Path .\VulnerableDriverBlockList\SiPolicy.p7b -Destination 'C:\Windows\System32\CodeIntegrity' -Force
-                
+
                 Write-Verbose -Message 'Refreshing the system WDAC policies using CiTool.exe'
                 &'C:\Windows\System32\CiTool.exe' --refresh -json | Out-Null
-                
+
                 Write-ColorfulText -Color Pink -InputText 'SiPolicy.p7b has been deployed and policies refreshed.'
-                
+
                 Write-Verbose -Message 'Cleaning up'
                 Remove-Item -Path .\VulnerableDriverBlockList* -Recurse -Force
 
@@ -181,34 +181,34 @@ Function New-WDACConfig {
                 # Downloading the latest Microsoft Recommended Driver Block Rules from the official source
                 Write-Verbose -Message 'Downloading the latest Microsoft Recommended Driver Block Rules from the official source'
                 [System.String]$DriverRules = (Invoke-WebRequest -Uri $MSFTRecommendeDriverBlockRulesURL -ProgressAction SilentlyContinue).Content -replace "(?s).*``````xml(.*)``````.*", '$1'
-            
+
                 # Remove the unnecessary rules and elements - not using this one because then during the merge there will be error - The reason is that "<FileRuleRef RuleID="ID_ALLOW_ALL_2" />" is the only FileruleRef in the xml and after removing it, the <SigningScenario> element will be empty
                 Write-Verbose -Message 'Removing the allow all rules and rule refs from the policy'
                 $DriverRules = $DriverRules -replace '<Allow\sID="ID_ALLOW_ALL_[12]"\sFriendlyName=""\sFileName="\*".*/>', ''
                 $DriverRules = $DriverRules -replace '<FileRuleRef\sRuleID="ID_ALLOW_ALL_1".*/>', ''
                 $DriverRules = $DriverRules -replace '<SigningScenario\sValue="12"\sID="ID_SIGNINGSCENARIO_WINDOWS"\sFriendlyName="Auto\sgenerated\spolicy[\S\s]*<\/SigningScenario>', ''
-            
+
                 # Output the XML content to a file
                 Write-Verbose -Message 'Creating XML policy file'
                 $DriverRules | Out-File -FilePath 'Microsoft recommended driver block rules TEMP.xml' -Force
-            
+
                 # Remove empty lines from the policy file
                 Write-Verbose -Message 'Removing the empty lines from the policy XML file'
                 Get-Content -Path 'Microsoft recommended driver block rules TEMP.xml' | Where-Object -FilterScript { $_.trim() -ne '' } | Out-File -FilePath 'Microsoft recommended driver block rules.xml' -Force
-            
+
                 Write-Verbose -Message 'Removing the temp XML file'
                 Remove-Item -Path 'Microsoft recommended driver block rules TEMP.xml' -Force
-            
+
                 Write-Verbose -Message 'Removing the Audit mode policy rule option'
                 Set-RuleOption -FilePath 'Microsoft recommended driver block rules.xml' -Option 3 -Delete
-            
+
                 Write-Verbose -Message 'Setting the HVCI option to strict'
                 Set-HVCIOptions -Strict -FilePath 'Microsoft recommended driver block rules.xml'
-            
+
                 # Display extra info about the Microsoft recommended Drivers block list
                 Write-Verbose -Message 'Displaying extra info about the Microsoft recommended Drivers block list'
                 Invoke-Command -ScriptBlock $DriversBlockListInfoGatheringSCRIPTBLOCK
-            
+
                 # Display the result as object
                 [PSCustomObject]@{
                     PolicyFile = 'Microsoft recommended driver block rules.xml'

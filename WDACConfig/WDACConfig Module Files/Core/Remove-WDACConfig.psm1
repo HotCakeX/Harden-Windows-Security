@@ -246,14 +246,14 @@ Function Remove-WDACConfig {
 
             Write-Verbose -Message 'Looping over each selected policy XML file'
             foreach ($PolicyPath in $PolicyPaths) {
-                
+
                 # Convert the XML file into an XML object
                 Write-Verbose -Message 'Converting the XML file to an XML object'
                 $xml = [System.Xml.XmlDocument](Get-Content -Path $PolicyPath)
-                
+
                 # Extract the Policy ID from the XML object
                 Write-Verbose -Message 'Extracting the Policy ID from the XML object'
-                [System.String]$PolicyID = $xml.SiPolicy.PolicyID                
+                [System.String]$PolicyID = $xml.SiPolicy.PolicyID
                 Write-Verbose -Message "The policy ID of the currently processing xml file is $PolicyID"
 
                 # Prevent users from accidentally attempting to remove policies that aren't even deployed on the system
@@ -265,15 +265,15 @@ Function Remove-WDACConfig {
 
                 # Sanitize the policy file by removing SupplementalPolicySigners from it
                 Write-Verbose -Message 'Sanitizing the XML policy file by removing SupplementalPolicySigners from it'
-               
+
                 # Extracting the SupplementalPolicySigner ID from the selected XML policy file, if any
                 $SuppSingerIDs = $xml.SiPolicy.SupplementalPolicySigners.SupplementalPolicySigner.SignerId
                 # Extracting the policy name from the selected XML policy file
                 $PolicyName = ($xml.SiPolicy.Settings.Setting | Where-Object -FilterScript { $_.provider -eq 'PolicyInfo' -and $_.valuename -eq 'Name' -and $_.key -eq 'Information' }).value.string
-               
+
                 if ($SuppSingerIDs) {
                     Write-Verbose -Message "`n$($SuppSingerIDs.count) SupplementalPolicySigners have been found in $PolicyName policy, removing them now..."
-                    
+
                     # Looping over each SupplementalPolicySigner and removing it
                     $SuppSingerIDs | ForEach-Object -Process {
                         $PolContent = Get-Content -Path -Raw -Path $PolicyPath
@@ -318,11 +318,11 @@ Function Remove-WDACConfig {
                 Remove-Item -Path ".\$PolicyID.cip" -Force
                 # Fixing the extension name of the newly signed CIP file
                 Rename-Item -Path "$PolicyID.cip.p7" -NewName "$PolicyID.cip" -Force
-                
+
                 # Deploying the newly signed CIP file
                 Write-Verbose -Message 'Deploying the newly signed CIP file'
                 &'C:\Windows\System32\CiTool.exe' --update-policy ".\$PolicyID.cip" -json | Out-Null
-                
+
                 Write-Host -Object "`nPolicy with the following details has been Re-signed and Re-deployed in Unsigned mode.`nPlease restart your system." -ForegroundColor Green
                 Write-Output -InputObject "PolicyName = $PolicyName"
                 Write-Output -InputObject "PolicyGUID = $PolicyID`n"
@@ -380,7 +380,7 @@ Function Remove-WDACConfig {
 .PARAMETER SkipVersionCheck
     Can be used with any parameter to bypass the online version check - only to be used in rare cases
 
-.INPUTS    
+.INPUTS
     System.String
     System.String[]
 

@@ -10,7 +10,6 @@ Function Get-SignTool {
         System.String
     #>
     [CmdletBinding()]
-
     param(
         [parameter(Mandatory = $false)][System.String]$SignToolExePath
     )

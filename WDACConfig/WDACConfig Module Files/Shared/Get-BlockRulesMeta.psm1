@@ -9,7 +9,7 @@ Function Get-BlockRulesMeta {
     #>
     [CmdletBinding()]
     param ()
-    
+
     [System.String]$Rules = (Invoke-WebRequest -Uri $MSFTRecommendeBlockRulesURL -ProgressAction SilentlyContinue).Content -replace "(?s).*``````xml(.*)``````.*", '$1' -replace '<Allow\sID="ID_ALLOW_A_[12]".*/>|<FileRuleRef\sRuleID="ID_ALLOW_A_[12]".*/>', ''
     $Rules | Out-File -FilePath '.\Microsoft recommended block rules TEMP.xml' -Force
     # Removing empty lines from policy file

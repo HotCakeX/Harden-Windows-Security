@@ -75,7 +75,7 @@ Function Set-CommonWDACConfig {
         # Trying to read the current user configurations
         Write-Verbose -Message 'Trying to read the current user configurations'
         [System.Object[]]$CurrentUserConfigurations = Get-Content -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json"
-        
+
         # If the file exists but is corrupted and has bad values, rewrite it
         try {
             $CurrentUserConfigurations = $CurrentUserConfigurations | ConvertFrom-Json
@@ -178,7 +178,7 @@ Function Set-CommonWDACConfig {
         Write-Verbose -Message 'Saving the changes'
         $UserConfigurationsObject | ConvertTo-Json | Set-Content -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json"
         Write-ColorfulText -Color Pink -InputText "`nThis is your new WDAC User Configurations: "
-        
+
         Write-Verbose -Message 'Displaying the current user configurations'
         Get-Content -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json" | ConvertFrom-Json | Format-List -Property *
     }

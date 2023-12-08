@@ -217,12 +217,15 @@ Function New-WDACConfig {
             }
         }
 
-        [System.Management.Automation.ScriptBlock]$MakeAllowMSFTWithBlockRulesSCRIPTBLOCK = {
 
-            param([System.Boolean]$NoCIP)
+        Function Build-AllowMSFTWithBlockRules {
+            [CmdletBinding()]
+            param(
+                [System.Boolean]$NoCIP
+            )
             # Get the latest Microsoft recommended block rules
             Get-BlockRulesMeta -Verbose:$Verbose | Out-Null
-            Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml' -Destination 'AllowMicrosoft.xml'
+            Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml' -Destination 'AllowMicrosoft.xml' -Force
             Merge-CIPolicy -PolicyPaths .\AllowMicrosoft.xml, 'Microsoft recommended block rules.xml' -OutputFilePath .\AllowMicrosoftPlusBlockRules.xml | Out-Null
             [System.String]$PolicyID = Set-CIPolicyIdInfo -FilePath .\AllowMicrosoftPlusBlockRules.xml -PolicyName "Allow Microsoft Plus Block Rules - $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID
             [System.String]$PolicyID = $PolicyID.Substring(11)
@@ -255,7 +258,7 @@ Function New-WDACConfig {
         [System.Management.Automation.ScriptBlock]$MakeDefaultWindowsWithBlockRulesSCRIPTBLOCK = {
             param([System.Boolean]$NoCIP)
             Get-BlockRulesMeta -Verbose:$Verbose | Out-Null
-            Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\DefaultWindows_Enforced.xml' -Destination 'DefaultWindows_Enforced.xml'
+            Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\DefaultWindows_Enforced.xml' -Destination 'DefaultWindows_Enforced.xml' -Force
 
             [System.Boolean]$global:MergeSignToolPolicy = $false
 
@@ -362,7 +365,7 @@ Function New-WDACConfig {
 
         [System.Management.Automation.ScriptBlock]$PrepMSFTOnlyAuditSCRIPTBLOCK = {
             if ($PrepMSFTOnlyAudit -and $LogSize) { Set-LogSize -LogSize $LogSize -Verbose:$Verbose }
-            Copy-Item -Path C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml -Destination .\AllowMicrosoft.xml
+            Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml' -Destination .\AllowMicrosoft.xml -Force
             Set-RuleOption -FilePath .\AllowMicrosoft.xml -Option 3
             [System.String]$PolicyID = Set-CIPolicyIdInfo -FilePath .\AllowMicrosoft.xml -ResetPolicyID
             [System.String]$PolicyID = $PolicyID.Substring(11)
@@ -380,7 +383,7 @@ Function New-WDACConfig {
 
         [System.Management.Automation.ScriptBlock]$PrepDefaultWindowsAuditSCRIPTBLOCK = {
             if ($PrepDefaultWindowsAudit -and $LogSize) { Set-LogSize -LogSize $LogSize -Verbose:$Verbose }
-            Copy-Item -Path C:\Windows\schemas\CodeIntegrity\ExamplePolicies\DefaultWindows_Audit.xml -Destination .\DefaultWindows_Audit.xml -Force
+            Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\DefaultWindows_Audit.xml' -Destination .\DefaultWindows_Audit.xml -Force
 
             # Making Sure neither PowerShell core nor WDACConfig module files are added to the Supplemental policy created by -MakePolicyFromAuditLogs parameter
             # by adding them first to the deployed Default Windows policy in Audit mode. Because WDACConfig module files don't need to be allowed to run since they are *.ps1 and .*psm1 files
@@ -422,7 +425,7 @@ Function New-WDACConfig {
 
             switch ($BasePolicyType) {
                 'Allow Microsoft Base' {
-                    Invoke-Command -ScriptBlock $MakeAllowMSFTWithBlockRulesSCRIPTBLOCK | Out-Null
+                    Build-AllowMSFTWithBlockRules | Out-Null
                     $xml = [System.Xml.XmlDocument](Get-Content -Path .\AllowMicrosoftPlusBlockRules.xml)
                     $BasePolicyID = $xml.SiPolicy.PolicyID
                     # define the location of the base policy
@@ -556,7 +559,7 @@ Function New-WDACConfig {
         [System.Management.Automation.ScriptBlock]$MakeLightPolicySCRIPTBLOCK = {
             # Delete the any policy with the same name in the current working directory
             Remove-Item -Path 'SignedAndReputable.xml' -Force -ErrorAction SilentlyContinue
-            Invoke-Command -ScriptBlock $MakeAllowMSFTWithBlockRulesSCRIPTBLOCK -ArgumentList $true | Out-Null
+            Build-AllowMSFTWithBlockRules -NoCIP $true
             Rename-Item -Path 'AllowMicrosoftPlusBlockRules.xml' -NewName 'SignedAndReputable.xml' -Force
             @(14, 15) | ForEach-Object -Process { Set-RuleOption -FilePath .\SignedAndReputable.xml -Option $_ }
             if ($TestMode -and $MakeLightPolicy) {
@@ -620,7 +623,7 @@ Function New-WDACConfig {
             { $GetDriverBlockRules } { Get-DriverBlockRules -Deploy:$Deploy ; break }
 
             $SetAutoUpdateDriverBlockRules { & $SetAutoUpdateDriverBlockRulesSCRIPTBLOCK; break }
-            $MakeAllowMSFTWithBlockRules { & $MakeAllowMSFTWithBlockRulesSCRIPTBLOCK; break }
+            $MakeAllowMSFTWithBlockRules { Build-AllowMSFTWithBlockRules ; break }
             $MakePolicyFromAuditLogs { & $MakePolicyFromAuditLogsSCRIPTBLOCK; break }
             $PrepMSFTOnlyAudit { & $PrepMSFTOnlyAuditSCRIPTBLOCK; break }
             $MakeLightPolicy { & $MakeLightPolicySCRIPTBLOCK; break }

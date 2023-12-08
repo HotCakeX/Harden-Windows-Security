@@ -280,6 +280,8 @@ Function New-WDACConfig {
                 Write-Verbose -Message 'Deploying the AllowMicrosoftPlusBlockRules.xml policy'
                 &'C:\Windows\System32\CiTool.exe' --update-policy "$PolicyID.cip" -json | Out-Null
                 Write-Host -Object "`n"
+
+                Write-Verbose -Message 'Removing the generated .CIP binary file after deploying it'
                 Remove-Item -Path "$PolicyID.cip" -Force
             }
            
@@ -289,72 +291,126 @@ Function New-WDACConfig {
             }
         }
 
-        [System.Management.Automation.ScriptBlock]$MakeDefaultWindowsWithBlockRulesSCRIPTBLOCK = {
-            
+        Function Build-DefaultWindowsWithBlockRules {
+            <#
+            .SYNOPSIS
+                A helper function that downloads the latest Microsoft recommended block rules
+                and merges them with the DefaultWindows_Enforced template policy.
+                It can also deploy the policy on the system.
+            .INPUTS
+                System.Void
+            .OUTPUTS
+                System.String
+            #>
+            [CmdletBinding()]
+            param()
+                    
+            Write-Verbose -Message 'Getting the latest Microsoft recommended block rules'
             Get-BlockRulesMeta -Verbose:$Verbose | Out-Null
+                    
+            Write-Verbose -Message 'Copying the DefaultWindows_Enforced.xml from Windows directory to the current working directory'
             Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\DefaultWindows_Enforced.xml' -Destination 'DefaultWindows_Enforced.xml' -Force
-
-            [System.Boolean]$global:MergeSignToolPolicy = $false
-
+        
+            # Setting a flag for Scanning the SignTool.exe and merging it with the final base policy
+            [System.Boolean]$MergeSignToolPolicy = $false
+        
             if ($SignToolPathFinal) {
                 # Allowing SignTool to be able to run after Default Windows base policy is deployed in Signed scenario
                 Write-ColorfulText -Color TeaGreen -InputText "`nCreating allow rules for SignTool.exe in the DefaultWindows base policy so you can continue using it after deploying the DefaultWindows base policy."
+                        
+                Write-Verbose -Message 'Creating a new temporary directory in the temp directory'
                 New-Item -Path "$UserTempDirectoryPath\TemporarySignToolFile" -ItemType Directory -Force | Out-Null
+                        
+                Write-Verbose -Message 'Copying the SignTool.exe to the newly created directory in the temp directory'
                 Copy-Item -Path $SignToolPathFinal -Destination "$UserTempDirectoryPath\TemporarySignToolFile" -Force
+                        
+                Write-Verbose -Message 'Scanning the SignTool.exe in the temp directory and generating the SignTool.xml policy'
                 New-CIPolicy -ScanPath "$UserTempDirectoryPath\TemporarySignToolFile" -Level FilePublisher -Fallback Hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -AllowFileNameFallbacks -FilePath .\SignTool.xml
+                        
                 # Delete the Temporary folder in the TEMP folder
-                if (!$Debug) { Remove-Item -Recurse -Path "$UserTempDirectoryPath\TemporarySignToolFile" -Force }
-
-                [System.Boolean]$global:MergeSignToolPolicy = $true
+                if (!$Debug) { 
+                    Write-Verbose -Message 'Debug parameter was not used, removing the files created in the temp directory'
+                    Remove-Item -Recurse -Path "$UserTempDirectoryPath\TemporarySignToolFile" -Force
+                }
+        
+                # Setting the flag to true so that the SignTool.xml file will be merged with the final policy
+                [System.Boolean]$MergeSignToolPolicy = $true
             }
-
+        
             # Scan PowerShell core directory and allow its files in the Default Windows base policy so that module can still be used once it's been deployed
             if (Test-Path -Path 'C:\Program Files\PowerShell') {
+                        
                 Write-ColorfulText -Color Lavender -InputText 'Creating allow rules for PowerShell in the DefaultWindows base policy so you can continue using this module after deploying it.'
                 New-CIPolicy -ScanPath 'C:\Program Files\PowerShell' -Level FilePublisher -NoScript -Fallback Hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -FilePath .\AllowPowerShell.xml
-
-                if ($global:MergeSignToolPolicy) {
+        
+                if ($MergeSignToolPolicy) {
+                    Write-Verbose -Message 'Merging the policy files, including SignTool.xml, to create the final DefaultWindowsPlusBlockRules.xml policy'
                     Merge-CIPolicy -PolicyPaths .\DefaultWindows_Enforced.xml, .\AllowPowerShell.xml, 'Microsoft recommended block rules.xml', .\SignTool.xml -OutputFilePath .\DefaultWindowsPlusBlockRules.xml | Out-Null
                 }
                 else {
+                    Write-Verbose -Message 'Merging the policy files to create the final DefaultWindowsPlusBlockRules.xml policy'
                     Merge-CIPolicy -PolicyPaths .\DefaultWindows_Enforced.xml, .\AllowPowerShell.xml, 'Microsoft recommended block rules.xml' -OutputFilePath .\DefaultWindowsPlusBlockRules.xml | Out-Null
                 }
             }
             else {
-                if ($global:MergeSignToolPolicy) {
+                if ($MergeSignToolPolicy) {
+                    Write-Verbose -Message 'Merging the policy files, including SignTool.xml, to create the final DefaultWindowsPlusBlockRules.xml policy'
                     Merge-CIPolicy -PolicyPaths .\DefaultWindows_Enforced.xml, 'Microsoft recommended block rules.xml', .\SignTool.xml -OutputFilePath .\DefaultWindowsPlusBlockRules.xml | Out-Null
                 }
                 else {
+                    Write-Verbose -Message 'Merging the policy files to create the final DefaultWindowsPlusBlockRules.xml policy'
                     Merge-CIPolicy -PolicyPaths .\DefaultWindows_Enforced.xml, 'Microsoft recommended block rules.xml' -OutputFilePath .\DefaultWindowsPlusBlockRules.xml | Out-Null
                 }
             }
-
+        
+            Write-Verbose -Message 'Resetting the policy ID and setting a name for DefaultWindowsPlusBlockRules.xml'
             [System.String]$PolicyID = Set-CIPolicyIdInfo -FilePath .\DefaultWindowsPlusBlockRules.xml -PolicyName "Default Windows Plus Block Rules - $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID
             [System.String]$PolicyID = $PolicyID.Substring(11)
+                    
+            Write-Verbose -Message 'Setting the version of DefaultWindowsPlusBlockRules.xml policy to 1.0.0.0'
             Set-CIPolicyVersion -FilePath .\DefaultWindowsPlusBlockRules.xml -Version '1.0.0.0'
+                    
+            Write-Verbose -Message 'Configuring the policy rule options'
             @(0, 2, 5, 6, 11, 12, 16, 17, 19, 20) | ForEach-Object -Process { Set-RuleOption -FilePath .\DefaultWindowsPlusBlockRules.xml -Option $_ }
             @(3, 4, 9, 10, 13, 18) | ForEach-Object -Process { Set-RuleOption -FilePath .\DefaultWindowsPlusBlockRules.xml -Option $_ -Delete }
+                    
             if ($TestMode -and $MakeDefaultWindowsWithBlockRules) {
+                Write-Verbose -Message 'Setting "Boot Audit on Failure" and "Advanced Boot Options Menu" policy rule options for the DefaultWindowsPlusBlockRules.xml policy because TestMode parameter was used'
                 9..10 | ForEach-Object -Process { Set-RuleOption -FilePath .\DefaultWindowsPlusBlockRules.xml -Option $_ }
             }
+                    
             if ($RequireEVSigners -and $MakeDefaultWindowsWithBlockRules) {
+                Write-Verbose -Message 'Setting "Required:EV Signers" policy rule option for the DefaultWindowsPlusBlockRules.xml policy because RequireEVSigners parameter was used'
                 Set-RuleOption -FilePath .\DefaultWindowsPlusBlockRules.xml -Option 8
             }
+                   
+            Write-Verbose -Message 'Setting HVCI to Strict'
             Set-HVCIOptions -Strict -FilePath .\DefaultWindowsPlusBlockRules.xml
+                   
+            Write-Verbose -Message 'Converting the DefaultWindowsPlusBlockRules.xml policy file to .CIP binary'
             ConvertFrom-CIPolicy -XmlFilePath .\DefaultWindowsPlusBlockRules.xml -BinaryFilePath "$PolicyID.cip" | Out-Null
-
+        
+            Write-Verbose -Message 'Removing the extra files that were created during module operation and are no longer needed'
             Remove-Item -Path .\AllowPowerShell.xml -Force -ErrorAction SilentlyContinue
             Remove-Item -Path '.\DefaultWindows_Enforced.xml', 'Microsoft recommended block rules.xml' -Force
-            if ($global:MergeSignToolPolicy -and !$Debug) { Remove-Item -Path .\SignTool.xml -Force }
-
+                    
+            if ($MergeSignToolPolicy -and !$Debug) {
+                Write-Verbose -Message 'Deleting SignTool.xml'
+                Remove-Item -Path .\SignTool.xml -Force 
+            }
+        
+            Write-Verbose -Message 'Displaying the output'
             [PSCustomObject]@{
                 PolicyFile = 'DefaultWindowsPlusBlockRules.xml'
                 BinaryFile = "$PolicyID.cip"
             }
-
+        
             if ($Deploy -and $MakeDefaultWindowsWithBlockRules) {
+                Write-Verbose -Message 'Deploying the DefaultWindowsPlusBlockRules.xml policy'
                 &'C:\Windows\System32\CiTool.exe' --update-policy "$PolicyID.cip" -json | Out-Null
                 Write-Host -Object "`n"
+        
+                Write-Verbose -Message 'Removing the generated .CIP binary file after deploying it'
                 Remove-Item -Path "$PolicyID.cip" -Force
             }
         }
@@ -465,7 +521,7 @@ Function New-WDACConfig {
                     $BasePolicy = 'AllowMicrosoftPlusBlockRules.xml'
                 }
                 'Default Windows Base' {
-                    Invoke-Command -ScriptBlock $MakeDefaultWindowsWithBlockRulesSCRIPTBLOCK | Out-Null
+                    Build-DefaultWindowsWithBlockRules | Out-Null
                     $xml = [System.Xml.XmlDocument](Get-Content -Path .\DefaultWindowsPlusBlockRules.xml)
                     $BasePolicyID = $xml.SiPolicy.PolicyID
                     # define the location of the base policy
@@ -660,7 +716,7 @@ Function New-WDACConfig {
             $MakePolicyFromAuditLogs { & $MakePolicyFromAuditLogsSCRIPTBLOCK; break }
             $PrepMSFTOnlyAudit { & $PrepMSFTOnlyAuditSCRIPTBLOCK; break }
             $MakeLightPolicy { & $MakeLightPolicySCRIPTBLOCK; break }
-            $MakeDefaultWindowsWithBlockRules { & $MakeDefaultWindowsWithBlockRulesSCRIPTBLOCK; break }
+            $MakeDefaultWindowsWithBlockRules { Build-DefaultWindowsWithBlockRules ; break }
             $PrepDefaultWindowsAudit { & $PrepDefaultWindowsAuditSCRIPTBLOCK; break }
             default { Write-Warning 'None of the main parameters were selected.'; break }
         }

@@ -12,18 +12,19 @@ Function Remove-CommonWDACConfig {
     )
     begin {
         # Importing the required sub-modules
+        Write-Verbose -Message 'Importing the required sub-modules'
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Write-ColorfulText.psm1" -Force -Verbose:$false
 
         # Create User configuration folder if it doesn't already exist
         if (-NOT (Test-Path -Path "$UserAccountDirectoryPath\.WDACConfig\")) {
             New-Item -ItemType Directory -Path "$UserAccountDirectoryPath\.WDACConfig\" -Force -ErrorAction Stop | Out-Null
-            Write-Debug -Message "The .WDACConfig folder in current user's folder has been created because it didn't exist."
+            Write-Verbose -Message "The .WDACConfig folder in current user's folder has been created because it didn't exist."
         }
 
         # Create User configuration file if it doesn't already exist
         if (-NOT (Test-Path -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json")) {
             New-Item -ItemType File -Path "$UserAccountDirectoryPath\.WDACConfig\" -Name 'UserConfigurations.json' -Force -ErrorAction Stop | Out-Null
-            Write-Debug -Message "The UserConfigurations.json file in \.WDACConfig\ folder has been created because it didn't exist."
+            Write-Verbose -Message "The UserConfigurations.json file in \.WDACConfig\ folder has been created because it didn't exist."
         }
 
         # Delete the entire User Configs if a more specific parameter wasn't used
@@ -34,7 +35,7 @@ Function Remove-CommonWDACConfig {
         }
 
         # Read the current user configurations
-        $CurrentUserConfigurations = Get-Content -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json"
+        [System.Object[]]$CurrentUserConfigurations = Get-Content -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json"
 
         # If the file exists but is corrupted and has bad values, rewrite it
         try {
@@ -58,6 +59,7 @@ Function Remove-CommonWDACConfig {
     }
     process {
         if ($SignedPolicyPath) {
+            Write-Verbose -Message 'Removing the SignedPolicyPath'
             $UserConfigurationsObject.SignedPolicyPath = ''
         }
         else {
@@ -65,6 +67,7 @@ Function Remove-CommonWDACConfig {
         }
 
         if ($UnsignedPolicyPath) {
+            Write-Verbose -Message 'Removing the UnsignedPolicyPath'
             $UserConfigurationsObject.UnsignedPolicyPath = ''
         }
         else {
@@ -72,6 +75,7 @@ Function Remove-CommonWDACConfig {
         }
 
         if ($SignToolPath) {
+            Write-Verbose -Message 'Removing the SignToolPath'
             $UserConfigurationsObject.SignToolCustomPath = ''
         }
         else {
@@ -79,6 +83,7 @@ Function Remove-CommonWDACConfig {
         }
 
         if ($CertPath) {
+            Write-Verbose -Message 'Removing the CertPath'
             $UserConfigurationsObject.CertificatePath = ''
         }
         else {
@@ -86,6 +91,7 @@ Function Remove-CommonWDACConfig {
         }
 
         if ($CertCN) {
+            Write-Verbose -Message 'Removing the CertCN'
             $UserConfigurationsObject.CertificateCommonName = ''
         }
         else {
@@ -93,6 +99,7 @@ Function Remove-CommonWDACConfig {
         }
 
         if ($StrictKernelPolicyGUID) {
+            Write-Verbose -Message 'Removing the StrictKernelPolicyGUID'
             $UserConfigurationsObject.StrictKernelPolicyGUID = ''
         }
         else {
@@ -100,6 +107,7 @@ Function Remove-CommonWDACConfig {
         }
 
         if ($StrictKernelNoFlightRootsPolicyGUID) {
+            Write-Verbose -Message 'Removing the StrictKernelNoFlightRootsPolicyGUID'
             $UserConfigurationsObject.StrictKernelNoFlightRootsPolicyGUID = ''
         }
         else {
@@ -107,6 +115,7 @@ Function Remove-CommonWDACConfig {
         }
 
         if ($LastUpdateCheck) {
+            Write-Verbose -Message 'Removing the LastUpdateCheck'
             $UserConfigurationsObject.LastUpdateCheck = ''
         }
         else {
@@ -115,9 +124,8 @@ Function Remove-CommonWDACConfig {
     }
     end {
         # Update the User Configurations file
+        Write-Verbose -Message 'Saving the changes'
         $UserConfigurationsObject | ConvertTo-Json | Set-Content -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json"
-        Write-ColorfulText -Color Pink -InputText "`nThis is your new WDAC User Configurations: "
-        Get-Content -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json" | ConvertFrom-Json | Format-List -Property *
     }
 }
 <#

@@ -597,8 +597,10 @@ Function New-WDACConfig {
             Write-ColorfulText -Color Pink -InputText "The current version of Microsoft recommended drivers block list is $($Matches[1])"
         }
 
-        # if -SkipVersionCheck wasn't passed, run the updater and hide its output
-        if (-NOT $SkipVersionCheck) { Update-self *> $null }
+        # if -SkipVersionCheck wasn't passed, run the updater
+        # Redirecting the Update-Self function's information Stream to $null because Write-Host
+        # Used by Write-ColorfulText outputs to both information stream and host console
+        if (-NOT $SkipVersionCheck) { Update-self -Verbose:$Verbose 6> $null }
 
         [System.Object[]]$DriveLettersGlobalRootFix = Get-GlobalRootDrives
     }

@@ -75,8 +75,10 @@ Function Confirm-WDACConfig {
         [System.Management.Automation.SwitchParameter]$OnlySupplementalPolicies = $($PSBoundParameters['OnlySupplementalPolicies'])
         [System.Management.Automation.SwitchParameter]$SkipVersionCheck = $($PSBoundParameters['SkipVersionCheck'])
 
-        # if -SkipVersionCheck wasn't passed, run the updater and hide its output
-        if (-NOT $SkipVersionCheck) { Update-self *> $null }
+        # if -SkipVersionCheck wasn't passed, run the updater
+        # Redirecting the Update-Self function's information Stream to $null because Write-Host
+        # Used by Write-ColorfulText outputs to both information stream and host console
+        if (-NOT $SkipVersionCheck) { Update-self -Verbose:$Verbose 6> $null }
 
         # Script block to show only non-system Base policies
         [System.Management.Automation.ScriptBlock]$OnlyBasePoliciesBLOCK = {

@@ -15,6 +15,7 @@ Function Update-self {
 
     try {
         # Get the last update check time
+        Write-Verbose -Message 'Getting the last update check time'
         [System.DateTime]$UserConfigDate = Get-CommonWDACConfig -LastUpdateCheck
     }
     catch {

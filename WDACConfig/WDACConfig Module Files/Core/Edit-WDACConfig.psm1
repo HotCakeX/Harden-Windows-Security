@@ -110,8 +110,10 @@ Function Edit-WDACConfig {
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Get-FileRules.psm1" -Force -Verbose:$false
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Get-BlockRulesMeta.psm1" -Force -Verbose:$false
 
-        # if -SkipVersionCheck wasn't passed, run the updater and hide its output
-        if (-NOT $SkipVersionCheck) { Update-self *> $null }
+        # if -SkipVersionCheck wasn't passed, run the updater
+        # Redirecting the Update-Self function's information Stream to $null because Write-Host
+        # Used by Write-ColorfulText outputs to both information stream and host console
+        if (-NOT $SkipVersionCheck) { Update-self -Verbose:$Verbose 6> $null }
 
         # Detecting if Debug switch is used, will do debugging actions based on that
         $PSBoundParameters.Debug.IsPresent ? ([System.Boolean]$Debug = $true) : ([System.Boolean]$Debug = $false) | Out-Null

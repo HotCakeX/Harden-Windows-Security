@@ -233,24 +233,24 @@ Function New-WDACConfig {
             # Get the latest Microsoft recommended block rules
             Write-Verbose -Message 'Getting the latest Microsoft recommended block rules'
             Get-BlockRulesMeta -Verbose:$Verbose | Out-Null
-            
+
             Write-Verbose -Message 'Copying the AllowMicrosoft.xml from Windows directory to the current working directory'
             Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml' -Destination 'AllowMicrosoft.xml' -Force
-            
+
             Write-Verbose -Message 'Merging the AllowMicrosoft.xml with Microsoft Recommended Block rules.xml'
             Merge-CIPolicy -PolicyPaths .\AllowMicrosoft.xml, 'Microsoft recommended block rules.xml' -OutputFilePath .\AllowMicrosoftPlusBlockRules.xml | Out-Null
-           
+
             Write-Verbose -Message 'Resetting the policy ID and setting a name for AllowMicrosoftPlusBlockRules.xml'
             [System.String]$PolicyID = Set-CIPolicyIdInfo -FilePath .\AllowMicrosoftPlusBlockRules.xml -PolicyName "Allow Microsoft Plus Block Rules - $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID
             [System.String]$PolicyID = $PolicyID.Substring(11)
-            
+
             Write-Verbose -Message 'Setting AllowMicrosoftPlusBlockRules.xml policy version to 1.0.0.0'
             Set-CIPolicyVersion -FilePath .\AllowMicrosoftPlusBlockRules.xml -Version '1.0.0.0'
-            
+
             Write-Verbose -Message 'Configuring the policy rule options'
             @(0, 2, 5, 6, 11, 12, 16, 17, 19, 20) | ForEach-Object -Process { Set-RuleOption -FilePath .\AllowMicrosoftPlusBlockRules.xml -Option $_ }
             @(3, 4, 9, 10, 13, 18) | ForEach-Object -Process { Set-RuleOption -FilePath .\AllowMicrosoftPlusBlockRules.xml -Option $_ -Delete }
-            
+
             if ($TestMode -and $MakeAllowMSFTWithBlockRules) {
                 Write-Verbose -Message 'Setting "Boot Audit on Failure" and "Advanced Boot Options Menu" policy rule options for the AllowMicrosoftPlusBlockRules.xml policy because TestMode parameter was used'
                 9..10 | ForEach-Object -Process { Set-RuleOption -FilePath .\AllowMicrosoftPlusBlockRules.xml -Option $_ }
@@ -259,23 +259,23 @@ Function New-WDACConfig {
                 Write-Verbose -Message 'Setting "Required:EV Signers" policy rule option for the AllowMicrosoftPlusBlockRules.xml policy because RequireEVSigners parameter was used'
                 Set-RuleOption -FilePath .\AllowMicrosoftPlusBlockRules.xml -Option 8
             }
-            
+
             Write-Verbose -Message 'Setting HVCI to Strict'
             Set-HVCIOptions -Strict -FilePath .\AllowMicrosoftPlusBlockRules.xml
 
             Write-Verbose -Message 'Converting the AllowMicrosoftPlusBlockRules.xml policy file to .CIP binary'
             ConvertFrom-CIPolicy -XmlFilePath .\AllowMicrosoftPlusBlockRules.xml -BinaryFilePath "$PolicyID.cip" | Out-Null
-            
+
             # Remove the extra files that were created during module operation and are no longer needed
             Write-Verbose -Message 'Removing the extra files that were created during module operation and are no longer needed'
             Remove-Item -Path '.\AllowMicrosoft.xml', 'Microsoft recommended block rules.xml' -Force
-            
+
             Write-Verbose -Message 'Displaying the outout'
             [PSCustomObject]@{
                 PolicyFile = 'AllowMicrosoftPlusBlockRules.xml'
                 BinaryFile = "$PolicyID.cip"
             }
-            
+
             if ($Deploy -and $MakeAllowMSFTWithBlockRules) {
                 Write-Verbose -Message 'Deploying the AllowMicrosoftPlusBlockRules.xml policy'
                 &'C:\Windows\System32\CiTool.exe' --update-policy "$PolicyID.cip" -json | Out-Null
@@ -284,7 +284,7 @@ Function New-WDACConfig {
                 Write-Verbose -Message 'Removing the generated .CIP binary file after deploying it'
                 Remove-Item -Path "$PolicyID.cip" -Force
             }
-           
+
             if ($NoCIP) {
                 Write-Verbose -Message 'Removing the generated .CIP binary file because -NoCIP parameter was used'
                 Remove-Item -Path "$PolicyID.cip" -Force
@@ -304,45 +304,45 @@ Function New-WDACConfig {
             #>
             [CmdletBinding()]
             param()
-                    
+
             Write-Verbose -Message 'Getting the latest Microsoft recommended block rules'
             Get-BlockRulesMeta -Verbose:$Verbose | Out-Null
-                    
+
             Write-Verbose -Message 'Copying the DefaultWindows_Enforced.xml from Windows directory to the current working directory'
             Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\DefaultWindows_Enforced.xml' -Destination 'DefaultWindows_Enforced.xml' -Force
-        
+
             # Setting a flag for Scanning the SignTool.exe and merging it with the final base policy
             [System.Boolean]$MergeSignToolPolicy = $false
-        
+
             if ($SignToolPathFinal) {
                 # Allowing SignTool to be able to run after Default Windows base policy is deployed in Signed scenario
                 Write-ColorfulText -Color TeaGreen -InputText "`nCreating allow rules for SignTool.exe in the DefaultWindows base policy so you can continue using it after deploying the DefaultWindows base policy."
-                        
+
                 Write-Verbose -Message 'Creating a new temporary directory in the temp directory'
                 New-Item -Path "$UserTempDirectoryPath\TemporarySignToolFile" -ItemType Directory -Force | Out-Null
-                        
+
                 Write-Verbose -Message 'Copying the SignTool.exe to the newly created directory in the temp directory'
                 Copy-Item -Path $SignToolPathFinal -Destination "$UserTempDirectoryPath\TemporarySignToolFile" -Force
-                        
+
                 Write-Verbose -Message 'Scanning the SignTool.exe in the temp directory and generating the SignTool.xml policy'
                 New-CIPolicy -ScanPath "$UserTempDirectoryPath\TemporarySignToolFile" -Level FilePublisher -Fallback Hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -AllowFileNameFallbacks -FilePath .\SignTool.xml
-                        
+
                 # Delete the Temporary folder in the TEMP folder
-                if (!$Debug) { 
+                if (!$Debug) {
                     Write-Verbose -Message 'Debug parameter was not used, removing the files created in the temp directory'
                     Remove-Item -Recurse -Path "$UserTempDirectoryPath\TemporarySignToolFile" -Force
                 }
-        
+
                 # Setting the flag to true so that the SignTool.xml file will be merged with the final policy
                 $MergeSignToolPolicy = $true
             }
-        
+
             # Scan PowerShell core directory and allow its files in the Default Windows base policy so that module can still be used once it's been deployed
             if (Test-Path -Path 'C:\Program Files\PowerShell') {
-                        
+
                 Write-ColorfulText -Color Lavender -InputText 'Creating allow rules for PowerShell in the DefaultWindows base policy so you can continue using this module after deploying it.'
                 New-CIPolicy -ScanPath 'C:\Program Files\PowerShell' -Level FilePublisher -NoScript -Fallback Hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -FilePath .\AllowPowerShell.xml
-        
+
                 if ($MergeSignToolPolicy) {
                     Write-Verbose -Message 'Merging the policy files, including SignTool.xml, to create the final DefaultWindowsPlusBlockRules.xml policy'
                     Merge-CIPolicy -PolicyPaths .\DefaultWindows_Enforced.xml, .\AllowPowerShell.xml, 'Microsoft recommended block rules.xml', .\SignTool.xml -OutputFilePath .\DefaultWindowsPlusBlockRules.xml | Out-Null
@@ -362,54 +362,54 @@ Function New-WDACConfig {
                     Merge-CIPolicy -PolicyPaths .\DefaultWindows_Enforced.xml, 'Microsoft recommended block rules.xml' -OutputFilePath .\DefaultWindowsPlusBlockRules.xml | Out-Null
                 }
             }
-        
+
             Write-Verbose -Message 'Resetting the policy ID and setting a name for DefaultWindowsPlusBlockRules.xml'
             [System.String]$PolicyID = Set-CIPolicyIdInfo -FilePath .\DefaultWindowsPlusBlockRules.xml -PolicyName "Default Windows Plus Block Rules - $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID
             [System.String]$PolicyID = $PolicyID.Substring(11)
-                    
+
             Write-Verbose -Message 'Setting the version of DefaultWindowsPlusBlockRules.xml policy to 1.0.0.0'
             Set-CIPolicyVersion -FilePath .\DefaultWindowsPlusBlockRules.xml -Version '1.0.0.0'
-                    
+
             Write-Verbose -Message 'Configuring the policy rule options'
             @(0, 2, 5, 6, 11, 12, 16, 17, 19, 20) | ForEach-Object -Process { Set-RuleOption -FilePath .\DefaultWindowsPlusBlockRules.xml -Option $_ }
             @(3, 4, 9, 10, 13, 18) | ForEach-Object -Process { Set-RuleOption -FilePath .\DefaultWindowsPlusBlockRules.xml -Option $_ -Delete }
-                    
+
             if ($TestMode -and $MakeDefaultWindowsWithBlockRules) {
                 Write-Verbose -Message 'Setting "Boot Audit on Failure" and "Advanced Boot Options Menu" policy rule options for the DefaultWindowsPlusBlockRules.xml policy because TestMode parameter was used'
                 9..10 | ForEach-Object -Process { Set-RuleOption -FilePath .\DefaultWindowsPlusBlockRules.xml -Option $_ }
             }
-                    
+
             if ($RequireEVSigners -and $MakeDefaultWindowsWithBlockRules) {
                 Write-Verbose -Message 'Setting "Required:EV Signers" policy rule option for the DefaultWindowsPlusBlockRules.xml policy because RequireEVSigners parameter was used'
                 Set-RuleOption -FilePath .\DefaultWindowsPlusBlockRules.xml -Option 8
             }
-                   
+
             Write-Verbose -Message 'Setting HVCI to Strict'
             Set-HVCIOptions -Strict -FilePath .\DefaultWindowsPlusBlockRules.xml
-                   
+
             Write-Verbose -Message 'Converting the DefaultWindowsPlusBlockRules.xml policy file to .CIP binary'
             ConvertFrom-CIPolicy -XmlFilePath .\DefaultWindowsPlusBlockRules.xml -BinaryFilePath "$PolicyID.cip" | Out-Null
-        
+
             Write-Verbose -Message 'Removing the extra files that were created during module operation and are no longer needed'
             Remove-Item -Path .\AllowPowerShell.xml -Force -ErrorAction SilentlyContinue
             Remove-Item -Path '.\DefaultWindows_Enforced.xml', 'Microsoft recommended block rules.xml' -Force
-                    
+
             if ($MergeSignToolPolicy -and !$Debug) {
                 Write-Verbose -Message 'Deleting SignTool.xml'
-                Remove-Item -Path .\SignTool.xml -Force 
+                Remove-Item -Path .\SignTool.xml -Force
             }
-        
+
             Write-Verbose -Message 'Displaying the output'
             [PSCustomObject]@{
                 PolicyFile = 'DefaultWindowsPlusBlockRules.xml'
                 BinaryFile = "$PolicyID.cip"
             }
-        
+
             if ($Deploy -and $MakeDefaultWindowsWithBlockRules) {
                 Write-Verbose -Message 'Deploying the DefaultWindowsPlusBlockRules.xml policy'
                 &'C:\Windows\System32\CiTool.exe' --update-policy "$PolicyID.cip" -json | Out-Null
                 Write-Host -Object "`n"
-        
+
                 Write-Verbose -Message 'Removing the generated .CIP binary file after deploying it'
                 Remove-Item -Path "$PolicyID.cip" -Force
             }
@@ -430,7 +430,7 @@ Function New-WDACConfig {
             Write-ColorfulText -Color Lavender -InputText 'The Microsoft recommended block rules policy has been deployed in enforced mode.'
             Remove-Item -Path "$PolicyID.cip" -Force
         }
-        
+
         Function Set-AutoUpdateDriverBlockRules {
             <#
             .SYNOPSIS
@@ -455,25 +455,25 @@ Function New-WDACConfig {
                 Write-Verbose -Message "Creating the MSFT Driver Block list update task because its state is neither Running nor Ready, it's $BlockListScheduledTaskState"
                 # Get the SID of the SYSTEM account. It is a well-known SID, but still querying it, going to use it to create the scheduled task
                 [System.Security.Principal.SecurityIdentifier]$SYSTEMSID = New-Object -TypeName System.Security.Principal.SecurityIdentifier([System.Security.Principal.WellKnownSidType]::LocalSystemSid, $null)
-                           
-                # Create a scheduled task action, this defines how to download and install the latest Microsoft Recommended Driver Block Rules   
+
+                # Create a scheduled task action, this defines how to download and install the latest Microsoft Recommended Driver Block Rules
                 [Microsoft.Management.Infrastructure.CimInstance]$Action = New-ScheduledTaskAction -Execute 'Powershell.exe' `
-                    -Argument '-NoProfile -WindowStyle Hidden -command "& {try {Invoke-WebRequest -Uri "https://aka.ms/VulnerableDriverBlockList" -OutFile VulnerableDriverBlockList.zip -ErrorAction Stop}catch{exit};Expand-Archive .\VulnerableDriverBlockList.zip -DestinationPath "VulnerableDriverBlockList" -Force;Rename-Item .\VulnerableDriverBlockList\SiPolicy_Enforced.p7b -NewName "SiPolicy.p7b" -Force;Copy-Item .\VulnerableDriverBlockList\SiPolicy.p7b -Destination "C:\Windows\System32\CodeIntegrity";citool --refresh -json;Remove-Item .\VulnerableDriverBlockList -Recurse -Force;Remove-Item .\VulnerableDriverBlockList.zip -Force;}"'    
-                            
+                    -Argument '-NoProfile -WindowStyle Hidden -command "& {try {Invoke-WebRequest -Uri "https://aka.ms/VulnerableDriverBlockList" -OutFile VulnerableDriverBlockList.zip -ErrorAction Stop}catch{exit};Expand-Archive .\VulnerableDriverBlockList.zip -DestinationPath "VulnerableDriverBlockList" -Force;Rename-Item .\VulnerableDriverBlockList\SiPolicy_Enforced.p7b -NewName "SiPolicy.p7b" -Force;Copy-Item .\VulnerableDriverBlockList\SiPolicy.p7b -Destination "C:\Windows\System32\CodeIntegrity";citool --refresh -json;Remove-Item .\VulnerableDriverBlockList -Recurse -Force;Remove-Item .\VulnerableDriverBlockList.zip -Force;}"'
+
                 # Create a scheduled task principal and assign the SYSTEM account's SID to it so that the task will run under its context
                 [Microsoft.Management.Infrastructure.CimInstance]$TaskPrincipal = New-ScheduledTaskPrincipal -LogonType S4U -UserId $($SYSTEMSID.Value) -RunLevel Highest
-                            
+
                 # Create a trigger for the scheduled task. The task will first run one hour after its creation and from then on will run every 7 days, indefinitely
-                [Microsoft.Management.Infrastructure.CimInstance]$Time = New-ScheduledTaskTrigger -Once -At (Get-Date).AddHours(1) -RepetitionInterval (New-TimeSpan -Days 7) 
-                            
+                [Microsoft.Management.Infrastructure.CimInstance]$Time = New-ScheduledTaskTrigger -Once -At (Get-Date).AddHours(1) -RepetitionInterval (New-TimeSpan -Days 7)
+
                 # Register the scheduled task. If the task's state is disabled, it will be overwritten with a new task that is enabled
                 Register-ScheduledTask -Action $Action -Trigger $Time -Principal $TaskPrincipal -TaskPath 'MSFT Driver Block list update' -TaskName 'MSFT Driver Block list update' -Description 'Microsoft Recommended Driver Block List update' -Force
-                            
+
                 # Define advanced settings for the scheduled task
                 [Microsoft.Management.Infrastructure.CimInstance]$TaskSettings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -Compatibility 'Win8' -StartWhenAvailable -ExecutionTimeLimit (New-TimeSpan -Minutes 3) -RestartCount 4 -RestartInterval (New-TimeSpan -Hours 6) -RunOnlyIfNetworkAvailable
-                            
+
                 # Add the advanced settings we defined above to the scheduled task
-                Set-ScheduledTask -TaskName 'MSFT Driver Block list update' -TaskPath 'MSFT Driver Block list update' -Settings $TaskSettings 
+                Set-ScheduledTask -TaskName 'MSFT Driver Block list update' -TaskPath 'MSFT Driver Block list update' -Settings $TaskSettings
             }
 
             Write-Verbose -Message 'Displaying extra info about the Microsoft recommended Drivers block list'

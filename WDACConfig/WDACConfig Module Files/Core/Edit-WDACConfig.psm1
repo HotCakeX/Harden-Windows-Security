@@ -192,7 +192,7 @@ Function Edit-WDACConfig {
             Remove-Item -Path ".\$PolicyID.cip" -Force
         }
 
-        [System.Object[]]$DriveLettersGlobalRootFix = Get-GlobalRootDrives
+        [System.Object[]]$DriveLettersGlobalRootFix = Get-GlobalRootDrives -Verbose:$Verbose
     }
 
     process {
@@ -398,7 +398,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
 
         if ($AllowNewAppsAuditEvents) {
             # Change Code Integrity event logs size
-            if ($AllowNewAppsAuditEvents -and $LogSize) { Set-LogSize -LogSize $LogSize }
+            if ($AllowNewAppsAuditEvents -and $LogSize) { Set-LogSize -LogSize $LogSize -Verbose:$Verbose }
             # Make sure there is no leftover from previous runs
             Remove-Item -Path '.\ProgramDir_ScanResults*.xml' -Force -ErrorAction SilentlyContinue
             Remove-Item -Path ".\SupplementalPolicy $SuppPolicyName.xml" -Force -ErrorAction SilentlyContinue
@@ -494,14 +494,14 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                     Write-Host -Object 'Scanning Windows Event logs and creating a policy file, please wait...' -ForegroundColor Cyan
 
                     # Extracting the array content from Get-AuditEventLogsProcessing function
-                    $AuditEventLogsProcessingResults = Get-AuditEventLogsProcessing -Date $Date
+                    $AuditEventLogsProcessingResults = Get-AuditEventLogsProcessing -Date $Date -Verbose:$Verbose
 
                     # Only create policy for files that are available on the disk based on Event viewer logs but weren't in user-selected program path(s), if there are any
                     if ($AuditEventLogsProcessingResults.AvailableFilesPaths) {
 
                         # Using the function to find out which files are not in the user-selected path(s), if any, to only scan those
                         # this prevents duplicate rule creation and double file copying
-                        $TestFilePathResults = (Test-FilePath -FilePath $AuditEventLogsProcessingResults.AvailableFilesPaths -DirectoryPath $ProgramsPaths).path | Select-Object -Unique
+                        $TestFilePathResults = (Test-FilePath -FilePath $AuditEventLogsProcessingResults.AvailableFilesPaths -DirectoryPath $ProgramsPaths -Verbose:$Verbose).path | Select-Object -Unique
 
                         Write-Verbose -Message "$($TestFilePathResults.count) file(s) have been found in event viewer logs that don't exist in any of the folder paths you selected."
 
@@ -554,10 +554,10 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                         }
 
                         # Save the File Rules and File Rule Refs in the FileRulesAndFileRefs.txt in the current working directory for debugging purposes
-                        ((Get-FileRules -HashesArray $AuditEventLogsProcessingResults.DeletedFileHashes) + (Get-RuleRefs -HashesArray $AuditEventLogsProcessingResults.DeletedFileHashes)).Trim() | Out-File -FilePath FileRulesAndFileRefs.txt -Force
+                        ((Get-FileRules -HashesArray $AuditEventLogsProcessingResults.DeletedFileHashes -Verbose:$Verbose) + (Get-RuleRefs -HashesArray $AuditEventLogsProcessingResults.DeletedFileHashes -Verbose:$Verbose)).Trim() | Out-File -FilePath FileRulesAndFileRefs.txt -Force
 
                         # Put the Rules and RulesRefs in an empty policy file
-                        New-EmptyPolicy -RulesContent (Get-FileRules -HashesArray $AuditEventLogsProcessingResults.DeletedFileHashes) -RuleRefsContent (Get-RuleRefs -HashesArray $AuditEventLogsProcessingResults.DeletedFileHashes) | Out-File -FilePath .\DeletedFileHashesEventsPolicy.xml -Force
+                        New-EmptyPolicy -RulesContent (Get-FileRules -HashesArray $AuditEventLogsProcessingResults.DeletedFileHashes -Verbose:$Verbose) -RuleRefsContent (Get-RuleRefs -HashesArray $AuditEventLogsProcessingResults.DeletedFileHashes -Verbose:$Verbose) -Verbose:$Verbose | Out-File -FilePath .\DeletedFileHashesEventsPolicy.xml -Force
 
                         # adding the policy file that consists of rules from audit even logs, to the array
                         $PolicyXMLFilesArray += '.\DeletedFileHashesEventsPolicy.xml'
@@ -653,10 +653,10 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                         if ($KernelProtectedHashesBlockResults) {
 
                             # Save the File Rules and File Rule Refs in the FileRulesAndFileRefs.txt in the current working directory for debugging purposes
-                            (Get-FileRules -HashesArray $KernelProtectedHashesBlockResults) + (Get-RuleRefs -HashesArray $KernelProtectedHashesBlockResults) | Out-File -FilePath KernelProtectedFiles.txt -Force
+                            (Get-FileRules -HashesArray $KernelProtectedHashesBlockResults -Verbose:$Verbose) + (Get-RuleRefs -HashesArray $KernelProtectedHashesBlockResults -Verbose:$Verbose) | Out-File -FilePath KernelProtectedFiles.txt -Force
 
                             # Put the Rules and RulesRefs in an empty policy file
-                            New-EmptyPolicy -RulesContent (Get-FileRules -HashesArray $KernelProtectedHashesBlockResults) -RuleRefsContent (Get-RuleRefs -HashesArray $KernelProtectedHashesBlockResults) | Out-File -FilePath .\KernelProtectedFiles.xml -Force
+                            New-EmptyPolicy -RulesContent (Get-FileRules -HashesArray $KernelProtectedHashesBlockResults -Verbose:$Verbose) -RuleRefsContent (Get-RuleRefs -HashesArray $KernelProtectedHashesBlockResults -Verbose:$Verbose) -Verbose:$Verbose | Out-File -FilePath .\KernelProtectedFiles.xml -Force
 
                             # adding the policy file  to the array of xml files
                             $PolicyXMLFilesArray += '.\KernelProtectedFiles.xml'
@@ -767,7 +767,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
 
         if ($UpdateBasePolicy) {
             # First get the Microsoft recommended block rules
-            Get-BlockRulesMeta | Out-Null
+            Get-BlockRulesMeta -Verbose:$Verbose | Out-Null
 
             switch ($NewBasePolicyType) {
                 'AllowMicrosoft_Plus_Block_Rules' {

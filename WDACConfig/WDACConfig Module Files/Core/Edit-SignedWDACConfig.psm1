@@ -245,8 +245,18 @@ Function Edit-SignedWDACConfig {
             }
         }
 
-        #Re-Deploy Basepolicy in Enforced mode
         function Update-BasePolicyToEnforced {
+            <#
+            .SYNOPSIS
+                Re-Deploy Basepolicy in Enforced mode
+            .INPUTS
+                System.Void
+            .OUTPUTS
+                System.String
+            #>
+            [CmdletBinding()]
+            param()
+
             # Deploy Enforced mode CIP
             &'C:\Windows\System32\CiTool.exe' --update-policy ".\$PolicyID.cip" -json | Out-Null
             Write-ColorfulText -Color TeaGreen -InputText "`nThe Base policy with the following details has been Re-Signed and Re-Deployed in Enforced Mode:"

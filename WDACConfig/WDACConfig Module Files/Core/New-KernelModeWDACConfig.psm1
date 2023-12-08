@@ -56,6 +56,7 @@ Function New-KernelModeWDACConfig {
             .SYNOPSIS
                 Function to swap GUIDs in a WDAC policy XML file
             #>
+            [CmdletBinding()]
             param(
                 [System.String]$PolicyIDInput,
                 [System.String]$PolicyFilePathInput
@@ -208,7 +209,7 @@ Function New-KernelModeWDACConfig {
                 Remove-Item -Path '.\DefaultWindows_Enforced_Kernel.xml' -Force
 
                 # Move all AllowedSigners from Usermode to Kernel mode signing scenario
-                Move-UserModeToKernelMode -FilePath '.\Final_DefaultWindows_Enforced_Kernel.xml' | Out-Null
+                Move-UserModeToKernelMode -FilePath '.\Final_DefaultWindows_Enforced_Kernel.xml' -Verbose:$Verbose | Out-Null
 
                 # Set the GUIDs for the XML policy file
                 Edit-GUIDs -PolicyIDInput $PolicyID -PolicyFilePathInput '.\Final_DefaultWindows_Enforced_Kernel.xml'
@@ -306,7 +307,7 @@ Function New-KernelModeWDACConfig {
                 Remove-Item -Path '.\DefaultWindows_Enforced_Kernel_NoFlights.xml' -Force
 
                 # Move all AllowedSigners from Usermode to Kernel mode signing scenario
-                Move-UserModeToKernelMode -FilePath '.\Final_DefaultWindows_Enforced_Kernel.xml' | Out-Null
+                Move-UserModeToKernelMode -FilePath '.\Final_DefaultWindows_Enforced_Kernel.xml' -Verbose:$Verbose | Out-Null
 
                 # Set the GUIDs for the XML policy file
                 Edit-GUIDs -PolicyIDInput $PolicyID -PolicyFilePathInput '.\Final_DefaultWindows_Enforced_Kernel.xml'

@@ -111,10 +111,10 @@ Function New-WDACConfig {
 
         # Get SignToolPath from user parameter or user config file or auto-detect it
         if ($SignToolPath) {
-            $SignToolPathFinal = Get-SignTool -SignToolExePath $SignToolPath
+            $SignToolPathFinal = Get-SignTool -SignToolExePath $SignToolPath -Verbose:$Verbose
         } # If it is null, then Get-SignTool will behave the same as if it was called without any arguments.
         elseif ($IncludeSignTool -and $MakeDefaultWindowsWithBlockRules) {
-            $SignToolPathFinal = Get-SignTool -SignToolExePath ($UserConfig.SignToolCustomPath ?? $null)
+            $SignToolPathFinal = Get-SignTool -SignToolExePath ($UserConfig.SignToolCustomPath ?? $null) -Verbose:$Verbose
         }
         #endregion User-Configurations-Processing-Validation
 
@@ -149,6 +149,7 @@ Function New-WDACConfig {
             .PARAMETER Deploy
                 Indicates that the function will deploy the latest Microsoft recommended drivers block list
             #>
+            [CmdletBinding()]
             param (
                 [System.Management.Automation.SwitchParameter]$Deploy
             )
@@ -220,7 +221,7 @@ Function New-WDACConfig {
 
             param([System.Boolean]$NoCIP)
             # Get the latest Microsoft recommended block rules
-            Get-BlockRulesMeta | Out-Null
+            Get-BlockRulesMeta -Verbose:$Verbose | Out-Null
             Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml' -Destination 'AllowMicrosoft.xml'
             Merge-CIPolicy -PolicyPaths .\AllowMicrosoft.xml, 'Microsoft recommended block rules.xml' -OutputFilePath .\AllowMicrosoftPlusBlockRules.xml | Out-Null
             [System.String]$PolicyID = Set-CIPolicyIdInfo -FilePath .\AllowMicrosoftPlusBlockRules.xml -PolicyName "Allow Microsoft Plus Block Rules - $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID
@@ -253,7 +254,7 @@ Function New-WDACConfig {
 
         [System.Management.Automation.ScriptBlock]$MakeDefaultWindowsWithBlockRulesSCRIPTBLOCK = {
             param([System.Boolean]$NoCIP)
-            Get-BlockRulesMeta | Out-Null
+            Get-BlockRulesMeta -Verbose:$Verbose | Out-Null
             Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\DefaultWindows_Enforced.xml' -Destination 'DefaultWindows_Enforced.xml'
 
             [System.Boolean]$global:MergeSignToolPolicy = $false
@@ -360,7 +361,7 @@ Function New-WDACConfig {
         }
 
         [System.Management.Automation.ScriptBlock]$PrepMSFTOnlyAuditSCRIPTBLOCK = {
-            if ($PrepMSFTOnlyAudit -and $LogSize) { Set-LogSize -LogSize $LogSize }
+            if ($PrepMSFTOnlyAudit -and $LogSize) { Set-LogSize -LogSize $LogSize -Verbose:$Verbose }
             Copy-Item -Path C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml -Destination .\AllowMicrosoft.xml
             Set-RuleOption -FilePath .\AllowMicrosoft.xml -Option 3
             [System.String]$PolicyID = Set-CIPolicyIdInfo -FilePath .\AllowMicrosoft.xml -ResetPolicyID
@@ -378,7 +379,7 @@ Function New-WDACConfig {
         }
 
         [System.Management.Automation.ScriptBlock]$PrepDefaultWindowsAuditSCRIPTBLOCK = {
-            if ($PrepDefaultWindowsAudit -and $LogSize) { Set-LogSize -LogSize $LogSize }
+            if ($PrepDefaultWindowsAudit -and $LogSize) { Set-LogSize -LogSize $LogSize -Verbose:$Verbose }
             Copy-Item -Path C:\Windows\schemas\CodeIntegrity\ExamplePolicies\DefaultWindows_Audit.xml -Destination .\DefaultWindows_Audit.xml -Force
 
             # Making Sure neither PowerShell core nor WDACConfig module files are added to the Supplemental policy created by -MakePolicyFromAuditLogs parameter
@@ -410,7 +411,7 @@ Function New-WDACConfig {
         }
 
         [System.Management.Automation.ScriptBlock]$MakePolicyFromAuditLogsSCRIPTBLOCK = {
-            if ($MakePolicyFromAuditLogs -and $LogSize) { Set-LogSize -LogSize $LogSize }
+            if ($MakePolicyFromAuditLogs -and $LogSize) { Set-LogSize -LogSize $LogSize -Verbose:$Verbose }
             # Make sure there is no leftover files from previous operations of this same command
             Remove-Item -Path "$home\WDAC\*" -Recurse -Force -ErrorAction SilentlyContinue
             # Create a working directory in user's folder
@@ -497,10 +498,10 @@ Function New-WDACConfig {
             if ($DeletedFileHashesArray -and !$NoDeletedFiles) {
 
                 # Save the the File Rules and File Rule Refs to the Out-File FileRulesAndFileRefs.txt in the current working directory
-                (Get-FileRules -HashesArray $DeletedFileHashesArray) + (Get-RuleRefs -HashesArray $DeletedFileHashesArray) | Out-File -FilePath FileRulesAndFileRefs.txt -Force
+                (Get-FileRules -HashesArray $DeletedFileHashesArray -Verbose:$Verbose) + (Get-RuleRefs -HashesArray $DeletedFileHashesArray -Verbose:$Verbose) | Out-File -FilePath FileRulesAndFileRefs.txt -Force
 
                 # Put the Rules and RulesRefs in an empty policy file
-                New-EmptyPolicy -RulesContent (Get-FileRules -HashesArray $DeletedFileHashesArray) -RuleRefsContent (Get-RuleRefs -HashesArray $DeletedFileHashesArray) | Out-File -FilePath .\DeletedFilesHashes.xml -Force
+                New-EmptyPolicy -RulesContent (Get-FileRules -HashesArray $DeletedFileHashesArray -Verbose:$Verbose) -RuleRefsContent (Get-RuleRefs -HashesArray $DeletedFileHashesArray -Verbose:$Verbose) -Verbose:$Verbose | Out-File -FilePath .\DeletedFilesHashes.xml -Force
 
                 # Merge the policy file we created at first using Event Viewer logs, with the policy file we created for Hash of the files no longer available on the disk
                 Merge-CIPolicy -PolicyPaths 'AuditLogsPolicy_NoDeletedFiles.xml', .\DeletedFilesHashes.xml -OutputFilePath .\SupplementalPolicy.xml | Out-Null
@@ -605,7 +606,7 @@ Function New-WDACConfig {
         # Used by Write-ColorfulText outputs to both information stream and host console
         if (-NOT $SkipVersionCheck) { Update-self -Verbose:$Verbose 6> $null }
 
-        [System.Object[]]$DriveLettersGlobalRootFix = Get-GlobalRootDrives
+        [System.Object[]]$DriveLettersGlobalRootFix = Get-GlobalRootDrives -Verbose:$Verbose
     }
 
     process {
@@ -614,7 +615,7 @@ Function New-WDACConfig {
             # Deploy the latest block rules
             { $GetBlockRules -and $Deploy } { & $DeployLatestBlockRulesSCRIPTBLOCK; break }
             # Get the latest block rules
-            $GetBlockRules { Get-BlockRulesMeta ; break }
+            $GetBlockRules { Get-BlockRulesMeta -Verbose:$Verbose ; break }
             # Get the latest driver block rules and Deploy them if New-WDACConfig -GetDriverBlockRules was called with -Deploy parameter
             { $GetDriverBlockRules } { Get-DriverBlockRules -Deploy:$Deploy ; break }
 

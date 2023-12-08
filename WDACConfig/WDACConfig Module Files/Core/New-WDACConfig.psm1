@@ -136,7 +136,6 @@ Function New-WDACConfig {
                 return [System.String[]]$Levelz
             }
         }
-
         Function Get-DriverBlockRules {
             <#
             .SYNOPSIS
@@ -217,46 +216,81 @@ Function New-WDACConfig {
             }
         }
 
-
         Function Build-AllowMSFTWithBlockRules {
+            <#
+            .SYNOPSIS
+                A helper function that downloads the latest Microsoft recommended block rules
+                and merges them with the Allow Microsoft template policy.
+                It can also deploy the policy on the system.
+            .PARAMETER NoCIP
+                Indicates that the created .CIP binary file must be deleted at the end.
+                It's usually used when calling this function from other functions that don't need the .CIP output of this function.
+            #>
             [CmdletBinding()]
             param(
-                [System.Boolean]$NoCIP
+                [System.Management.Automation.SwitchParameter]$NoCIP
             )
             # Get the latest Microsoft recommended block rules
+            Write-Verbose -Message 'Getting the latest Microsoft recommended block rules'
             Get-BlockRulesMeta -Verbose:$Verbose | Out-Null
+            
+            Write-Verbose -Message 'Copying the AllowMicrosoft.xml from Windows directory to the current working directory'
             Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml' -Destination 'AllowMicrosoft.xml' -Force
+            
+            Write-Verbose -Message 'Merging the AllowMicrosoft.xml with Microsoft Recommended Block rules.xml'
             Merge-CIPolicy -PolicyPaths .\AllowMicrosoft.xml, 'Microsoft recommended block rules.xml' -OutputFilePath .\AllowMicrosoftPlusBlockRules.xml | Out-Null
+           
+            Write-Verbose -Message 'Resetting the policy ID and setting a name for AllowMicrosoftPlusBlockRules.xml'
             [System.String]$PolicyID = Set-CIPolicyIdInfo -FilePath .\AllowMicrosoftPlusBlockRules.xml -PolicyName "Allow Microsoft Plus Block Rules - $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID
             [System.String]$PolicyID = $PolicyID.Substring(11)
+            
+            Write-Verbose -Message 'Setting AllowMicrosoftPlusBlockRules.xml policy version to 1.0.0.0'
             Set-CIPolicyVersion -FilePath .\AllowMicrosoftPlusBlockRules.xml -Version '1.0.0.0'
+            
+            Write-Verbose -Message 'Configuring the policy rule options'
             @(0, 2, 5, 6, 11, 12, 16, 17, 19, 20) | ForEach-Object -Process { Set-RuleOption -FilePath .\AllowMicrosoftPlusBlockRules.xml -Option $_ }
             @(3, 4, 9, 10, 13, 18) | ForEach-Object -Process { Set-RuleOption -FilePath .\AllowMicrosoftPlusBlockRules.xml -Option $_ -Delete }
+            
             if ($TestMode -and $MakeAllowMSFTWithBlockRules) {
+                Write-Verbose -Message 'Setting "Boot Audit on Failure" and "Advanced Boot Options Menu" policy rule options for the AllowMicrosoftPlusBlockRules.xml policy because TestMode parameter was used'
                 9..10 | ForEach-Object -Process { Set-RuleOption -FilePath .\AllowMicrosoftPlusBlockRules.xml -Option $_ }
             }
             if ($RequireEVSigners -and $MakeAllowMSFTWithBlockRules) {
+                Write-Verbose -Message 'Setting "Required:EV Signers" policy rule option for the AllowMicrosoftPlusBlockRules.xml policy because RequireEVSigners parameter was used'
                 Set-RuleOption -FilePath .\AllowMicrosoftPlusBlockRules.xml -Option 8
             }
+            
+            Write-Verbose -Message 'Setting HVCI to Strict'
             Set-HVCIOptions -Strict -FilePath .\AllowMicrosoftPlusBlockRules.xml
+
+            Write-Verbose -Message 'Converting the AllowMicrosoftPlusBlockRules.xml policy file to .CIP binary'
             ConvertFrom-CIPolicy -XmlFilePath .\AllowMicrosoftPlusBlockRules.xml -BinaryFilePath "$PolicyID.cip" | Out-Null
+            
             # Remove the extra files that were created during module operation and are no longer needed
+            Write-Verbose -Message 'Removing the extra files that were created during module operation and are no longer needed'
             Remove-Item -Path '.\AllowMicrosoft.xml', 'Microsoft recommended block rules.xml' -Force
+            
+            Write-Verbose -Message 'Displaying the outout'
             [PSCustomObject]@{
                 PolicyFile = 'AllowMicrosoftPlusBlockRules.xml'
                 BinaryFile = "$PolicyID.cip"
             }
+            
             if ($Deploy -and $MakeAllowMSFTWithBlockRules) {
+                Write-Verbose -Message 'Deploying the AllowMicrosoftPlusBlockRules.xml policy'
                 &'C:\Windows\System32\CiTool.exe' --update-policy "$PolicyID.cip" -json | Out-Null
                 Write-Host -Object "`n"
                 Remove-Item -Path "$PolicyID.cip" -Force
             }
-            if ($NoCIP)
-            { Remove-Item -Path "$PolicyID.cip" -Force }
+           
+            if ($NoCIP) {
+                Write-Verbose -Message 'Removing the generated .CIP binary file because -NoCIP parameter was used'
+                Remove-Item -Path "$PolicyID.cip" -Force
+            }
         }
 
         [System.Management.Automation.ScriptBlock]$MakeDefaultWindowsWithBlockRulesSCRIPTBLOCK = {
-            param([System.Boolean]$NoCIP)
+            
             Get-BlockRulesMeta -Verbose:$Verbose | Out-Null
             Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\DefaultWindows_Enforced.xml' -Destination 'DefaultWindows_Enforced.xml' -Force
 
@@ -323,7 +357,6 @@ Function New-WDACConfig {
                 Write-Host -Object "`n"
                 Remove-Item -Path "$PolicyID.cip" -Force
             }
-            if ($NoCIP) { Remove-Item -Path "$PolicyID.cip" -Force }
         }
 
         [System.Management.Automation.ScriptBlock]$DeployLatestBlockRulesSCRIPTBLOCK = {
@@ -559,7 +592,7 @@ Function New-WDACConfig {
         [System.Management.Automation.ScriptBlock]$MakeLightPolicySCRIPTBLOCK = {
             # Delete the any policy with the same name in the current working directory
             Remove-Item -Path 'SignedAndReputable.xml' -Force -ErrorAction SilentlyContinue
-            Build-AllowMSFTWithBlockRules -NoCIP $true
+            Build-AllowMSFTWithBlockRules -NoCIP
             Rename-Item -Path 'AllowMicrosoftPlusBlockRules.xml' -NewName 'SignedAndReputable.xml' -Force
             @(14, 15) | ForEach-Object -Process { Set-RuleOption -FilePath .\SignedAndReputable.xml -Option $_ }
             if ($TestMode -and $MakeLightPolicy) {

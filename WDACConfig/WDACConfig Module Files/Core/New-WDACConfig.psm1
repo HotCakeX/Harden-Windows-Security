@@ -334,7 +334,7 @@ Function New-WDACConfig {
                 }
         
                 # Setting the flag to true so that the SignTool.xml file will be merged with the final policy
-                [System.Boolean]$MergeSignToolPolicy = $true
+                $MergeSignToolPolicy = $true
             }
         
             # Scan PowerShell core directory and allow its files in the Default Windows base policy so that module can still be used once it's been deployed

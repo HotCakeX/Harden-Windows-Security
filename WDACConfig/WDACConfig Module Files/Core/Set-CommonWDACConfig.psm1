@@ -53,18 +53,19 @@ function Set-CommonWDACConfig {
     )
     begin {
         # Importing the required sub-modules
+        Write-Verbose -Message 'Importing the required sub-modules'
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Write-ColorfulText.psm1" -Force -Verbose:$false
 
         # Create User configuration folder if it doesn't already exist
         if (-NOT (Test-Path -Path "$UserAccountDirectoryPath\.WDACConfig\")) {
             New-Item -ItemType Directory -Path "$UserAccountDirectoryPath\.WDACConfig\" -Force -ErrorAction Stop | Out-Null
-            Write-Debug -Message "The .WDACConfig folder in current user's folder has been created because it didn't exist."
+            Write-Verbose -Message "The .WDACConfig folder in current user's folder has been created because it didn't exist."
         }
 
         # Create User configuration file if it doesn't already exist
         if (-NOT (Test-Path -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json")) {
             New-Item -ItemType File -Path "$UserAccountDirectoryPath\.WDACConfig\" -Name 'UserConfigurations.json' -Force -ErrorAction Stop | Out-Null
-            Write-Debug -Message "The UserConfigurations.json file in \.WDACConfig\ folder has been created because it didn't exist."
+            Write-Verbose -Message "The UserConfigurations.json file in \.WDACConfig\ folder has been created because it didn't exist."
         }
 
         if ($PSBoundParameters.Count -eq 0) {

@@ -7,6 +7,7 @@ Function Confirm-CertCN {
     .OUTPUTS
         System.Boolean
     #>
+    [CmdletBinding()]
     param (
         [System.String]$CN
     )

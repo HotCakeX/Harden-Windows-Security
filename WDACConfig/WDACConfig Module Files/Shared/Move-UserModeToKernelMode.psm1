@@ -4,6 +4,7 @@ Function Move-UserModeToKernelMode {
         Moves all User mode AllowedSigners in the User mode signing scenario to the Kernel mode signing scenario and then
         deletes the entire User mode signing scenario block
     #>
+    [CmdletBinding()]
     param(
         [Parameter(Mandatory = $true)]
         [ValidateScript({ Test-Path -Path $_ -PathType Leaf })]

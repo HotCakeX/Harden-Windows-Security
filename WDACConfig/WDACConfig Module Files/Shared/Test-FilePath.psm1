@@ -5,6 +5,7 @@ Function Test-FilePath {
         that are not in any of the folder paths. Performs this check recursively too so works if the filepath is in a sub-directory of a folder path
 
     #>
+    [CmdletBinding()]
     param (
         [Parameter(Mandatory = $true)]
         [System.String[]]$FilePath,

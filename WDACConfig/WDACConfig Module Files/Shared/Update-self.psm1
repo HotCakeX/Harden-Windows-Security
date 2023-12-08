@@ -7,6 +7,8 @@ Function Update-self {
     .OUTPUTS
         System.Void
     #>
+    [CmdletBinding()]
+    param()
 
     # Importing the required sub-modules
     Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Write-ColorfulText.psm1" -Force -Verbose:$false

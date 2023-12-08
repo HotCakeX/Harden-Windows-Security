@@ -3,6 +3,7 @@ Function New-EmptyPolicy {
     .SYNOPSIS
         Creates a policy file and requires 2 parameters to supply the file rules and rule references
     #>
+    [CmdletBinding()]
     param (
         $RulesContent,
         $RuleRefsContent

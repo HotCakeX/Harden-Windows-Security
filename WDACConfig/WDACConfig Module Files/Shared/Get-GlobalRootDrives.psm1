@@ -11,6 +11,9 @@ Function Get-GlobalRootDrives {
         System.Objects[]
     #>
 
+    [CmdletBinding()]
+    param ()
+
     # Import the kernel32.dll functions using P/Invoke
     [System.String]$Signature = @'
 [DllImport("kernel32.dll", SetLastError=true)]

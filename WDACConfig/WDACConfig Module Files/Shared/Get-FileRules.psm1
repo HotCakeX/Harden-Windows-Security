@@ -3,6 +3,8 @@ Function Get-FileRules {
     .SYNOPSIS
         Create File Rules based on hash of the files no longer available on the disk and store them in the $Rules variable
     #>
+    [CmdletBinding()]
+
     param ($HashesArray)
     $HashesArray | ForEach-Object -Begin { $i = 1 } -Process {
         $Rules += Write-Output -InputObject "`n<Allow ID=`"ID_ALLOW_AA_$i`" FriendlyName=`"$($_.'File Name') SHA256 Hash`" Hash=`"$($_.'SHA256 Hash')`" />"

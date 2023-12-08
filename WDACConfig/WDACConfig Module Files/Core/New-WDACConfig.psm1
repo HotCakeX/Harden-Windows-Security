@@ -652,7 +652,7 @@ Function New-WDACConfig {
             Write-ColorfulText -Color HotPink -InputText "`nGenerating Supplemental policy with the following specifications:"
             $PolicyMakerHashTable
             Write-Host -Object "`n"
-            
+
             # Create the supplemental policy via parameter splatting for files in event viewer that are currently on the disk
             New-CIPolicy @PolicyMakerHashTable
 
@@ -758,12 +758,31 @@ Function New-WDACConfig {
             }
         }
 
-        [System.Management.Automation.ScriptBlock]$MakeLightPolicySCRIPTBLOCK = {
-            # Delete the any policy with the same name in the current working directory
+        Function Build-LightPolicy {
+            <#
+            .SYNOPSIS
+                A helper function that created SignedAndReputable WDAC policy
+                which is based on AllowMicrosoft template policy.
+                It includes Microsoft Recommended Block rules.
+                It uses ISG to authorize files with good reputation.
+            .INPUTS
+                System.Void
+            .OUTPUTS
+                System.Void
+            #>
+
+            # Delete any policy with the same name in the current working directory
             Remove-Item -Path 'SignedAndReputable.xml' -Force -ErrorAction SilentlyContinue
+
+            Write-Verbose -Message 'Calling Build-AllowMSFTWithBlockRules function to create AllowMicrosoftPlusBlockRules.xml policy'
             Build-AllowMSFTWithBlockRules -NoCIP
+
+            Write-Verbose -Message 'Renaming AllowMicrosoftPlusBlockRules.xml to SignedAndReputable.xml'
             Rename-Item -Path 'AllowMicrosoftPlusBlockRules.xml' -NewName 'SignedAndReputable.xml' -Force
+           
+            Write-Verbose -Message 'Setting the policy rule options for the SignedAndReputable.xml policy'
             @(14, 15) | ForEach-Object -Process { Set-RuleOption -FilePath .\SignedAndReputable.xml -Option $_ }
+            
             if ($TestMode -and $MakeLightPolicy) {
                 Write-Verbose -Message 'Setting "Boot Audit on Failure" and "Advanced Boot Options Menu" policy rule options because TestMode parameter was used'
                 9..10 | ForEach-Object -Process { Set-RuleOption -FilePath .\SignedAndReputable.xml -Option $_ }
@@ -772,17 +791,31 @@ Function New-WDACConfig {
                 Write-Verbose -Message 'Setting "Required:EV Signers" policy rule option because RequireEVSigners parameter was used'
                 Set-RuleOption -FilePath .\SignedAndReputable.xml -Option 8
             }
+           
+            Write-Verbose -Message 'Resetting the policy ID and setting a name for SignedAndReputable.xml'
             $BasePolicyID = Set-CIPolicyIdInfo -FilePath .\SignedAndReputable.xml -ResetPolicyID -PolicyName "Signed And Reputable policy - $(Get-Date -Format 'MM-dd-yyyy')"
             $BasePolicyID = $BasePolicyID.Substring(11)
+            
+            Write-Verbose -Message 'Setting the version of SignedAndReputable.xml policy to 1.0.0.0'
             Set-CIPolicyVersion -FilePath .\SignedAndReputable.xml -Version '1.0.0.0'
+           
+            Write-Verbose -Message 'Setting HVCI to Strict'
             Set-HVCIOptions -Strict -FilePath .\SignedAndReputable.xml
+
+            Write-Verbose -Message 'Converting SignedAndReputable.xml policy to .CIP binary'
             ConvertFrom-CIPolicy -XmlFilePath .\SignedAndReputable.xml -BinaryFilePath "$BasePolicyID.cip" | Out-Null
+            
             # Configure required services for ISG authorization
+            Write-Verbose -Message 'Configuring required services for ISG authorization'
             Start-Process -FilePath 'C:\Windows\System32\appidtel.exe' -ArgumentList 'start' -Wait -NoNewWindow
             Start-Process -FilePath 'C:\Windows\System32\sc.exe' -ArgumentList 'config', 'appidsvc', 'start= auto' -Wait -NoNewWindow
+            
             if ($Deploy -and $MakeLightPolicy) {
+                Write-Verbose -Message 'Deploying the SignedAndReputable.xml policy'
                 &'C:\Windows\System32\CiTool.exe' --update-policy "$BasePolicyID.cip" -json | Out-Null
             }
+
+            Write-Verbose -Message 'Displaying the output'
             [PSCustomObject]@{
                 BasePolicyFile = 'SignedAndReputable.xml'
                 BasePolicyGUID = $BasePolicyID
@@ -830,7 +863,7 @@ Function New-WDACConfig {
             $MakeAllowMSFTWithBlockRules { Build-AllowMSFTWithBlockRules ; break }
             $MakePolicyFromAuditLogs { Build-PolicyFromAuditLogs ; break }
             $PrepMSFTOnlyAudit { Build-MSFTOnlyAudit ; break }
-            $MakeLightPolicy { & $MakeLightPolicySCRIPTBLOCK; break }
+            $MakeLightPolicy { Build-LightPolicy ; break }
             $MakeDefaultWindowsWithBlockRules { Build-DefaultWindowsWithBlockRules ; break }
             $PrepDefaultWindowsAudit { & $PrepDefaultWindowsAuditSCRIPTBLOCK; break }
             default { Write-Warning 'None of the main parameters were selected.'; break }

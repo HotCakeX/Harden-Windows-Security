@@ -415,10 +415,23 @@ Function New-WDACConfig {
             }
         }
 
-        [System.Management.Automation.ScriptBlock]$DeployLatestBlockRulesSCRIPTBLOCK = {
+        Function Deploy-LatestBlockRules {
+            <#
+            .SYNOPSIS
+                A helper function that downloads the latest Microsoft recommended block rules
+            .INPUTS
+                System.Void
+            .OUTPUTS
+                System.String
+            #>
+
+            Write-Verbose -Message 'Downloading the latest Microsoft recommended block rules and creating Microsoft recommended block rules TEMP.xml'
             (Invoke-WebRequest -Uri $MSFTRecommendeBlockRulesURL -ProgressAction SilentlyContinue).Content -replace "(?s).*``````xml(.*)``````.*", '$1' | Out-File -FilePath '.\Microsoft recommended block rules TEMP.xml' -Force
+            
             # Remove empty lines from the policy file
+            Write-Verbose -Message 'Removing any empty lines from the Temp policy file and generating the Microsoft recommended block rules.xml'
             Get-Content -Path '.\Microsoft recommended block rules TEMP.xml' | Where-Object -FilterScript { $_.trim() -ne '' } | Out-File -FilePath '.\Microsoft recommended block rules.xml' -Force
+            
             Set-RuleOption -FilePath '.\Microsoft recommended block rules.xml' -Option 3 -Delete
             @(0, 2, 6, 11, 12, 16, 19, 20) | ForEach-Object -Process { Set-RuleOption -FilePath '.\Microsoft recommended block rules.xml' -Option $_ }
             Set-HVCIOptions -Strict -FilePath '.\Microsoft recommended block rules.xml'
@@ -733,7 +746,7 @@ Function New-WDACConfig {
 
         switch ($true) {
             # Deploy the latest block rules
-            { $GetBlockRules -and $Deploy } { & $DeployLatestBlockRulesSCRIPTBLOCK; break }
+            { $GetBlockRules -and $Deploy } { Deploy-LatestBlockRules ; break }
             # Get the latest block rules
             $GetBlockRules { Get-BlockRulesMeta -Verbose:$Verbose ; break }
             # Get the latest driver block rules and Deploy them if New-WDACConfig -GetDriverBlockRules was called with -Deploy parameter

@@ -136,24 +136,83 @@ Function New-WDACConfig {
                 return [System.String[]]$Levelz
             }
         }
+        
+        Function Get-DriverBlockRules {
+            <#
+            .SYNOPSIS
+                Gets the latest Microsoft Recommended Driver Block rules and processes them
+                Can optionally deploy them
+            .INPUTS
+                System.Void
+            .OUTPUTS
+                PSCustomObject
+            .PARAMETER Deploy
+                Indicates that the function will deploy the latest Microsoft recommended drivers block list
+            #>
+            param (
+                [System.Management.Automation.SwitchParameter]$Deploy
+            )
 
-        [System.Management.Automation.ScriptBlock]$GetDriverBlockRulesSCRIPTBLOCK = {
-            [System.String]$DriverRules = (Invoke-WebRequest -Uri $MSFTRecommendeDriverBlockRulesURL -ProgressAction SilentlyContinue).Content -replace "(?s).*``````xml(.*)``````.*", '$1'
-            # Remove the unnecessary rules and elements - not using this one because then during the merge there will be error - The reason is that "<FileRuleRef RuleID="ID_ALLOW_ALL_2" />" is the only FileruleRef in the xml and after removing it, the <SigningScenario> element will be empty
-            $DriverRules = $DriverRules -replace '<Allow\sID="ID_ALLOW_ALL_[12]"\sFriendlyName=""\sFileName="\*".*/>', ''
-            $DriverRules = $DriverRules -replace '<FileRuleRef\sRuleID="ID_ALLOW_ALL_1".*/>', ''
-            $DriverRules = $DriverRules -replace '<SigningScenario\sValue="12"\sID="ID_SIGNINGSCENARIO_WINDOWS"\sFriendlyName="Auto\sgenerated\spolicy[\S\s]*<\/SigningScenario>', ''
-            $DriverRules | Out-File -FilePath 'Microsoft recommended driver block rules TEMP.xml' -Force
-            # Remove empty lines from the policy file
-            Get-Content -Path 'Microsoft recommended driver block rules TEMP.xml' | Where-Object -FilterScript { $_.trim() -ne '' } | Out-File -FilePath 'Microsoft recommended driver block rules.xml' -Force
-            Remove-Item -Path 'Microsoft recommended driver block rules TEMP.xml' -Force
-            Set-RuleOption -FilePath 'Microsoft recommended driver block rules.xml' -Option 3 -Delete
-            Set-HVCIOptions -Strict -FilePath 'Microsoft recommended driver block rules.xml'
-            # Display extra info about the Microsoft Drivers block list
-            Invoke-Command -ScriptBlock $DriversBlockListInfoGatheringSCRIPTBLOCK
-            # Display the result as object
-            [PSCustomObject]@{
-                PolicyFile = 'Microsoft recommended driver block rules.xml'
+            if ($Deploy) {
+                Write-Verbose -Message 'Downloading the Microsoft Recommended Driver Block List archive'
+                Invoke-WebRequest -Uri 'https://aka.ms/VulnerableDriverBlockList' -OutFile VulnerableDriverBlockList.zip -ProgressAction SilentlyContinue
+                
+                Write-Verbose -Message 'Expanding the Block list archive'
+                Expand-Archive -Path .\VulnerableDriverBlockList.zip -DestinationPath 'VulnerableDriverBlockList' -Force
+                
+                Write-Verbose -Message 'Renaming the block list file to SiPolicy.p7b'
+                Rename-Item -Path .\VulnerableDriverBlockList\SiPolicy_Enforced.p7b -NewName 'SiPolicy.p7b' -Force
+                
+                Write-Verbose -Message 'Copying the new block list to the CodeIntegrity folder, replacing any old ones'
+                Copy-Item -Path .\VulnerableDriverBlockList\SiPolicy.p7b -Destination 'C:\Windows\System32\CodeIntegrity' -Force
+                
+                Write-Verbose -Message 'Refreshing the system WDAC policies using CiTool.exe'
+                &'C:\Windows\System32\CiTool.exe' --refresh -json | Out-Null
+                
+                Write-ColorfulText -Color Pink -InputText 'SiPolicy.p7b has been deployed and policies refreshed.'
+                
+                Write-Verbose -Message 'Cleaning up'
+                Remove-Item -Path .\VulnerableDriverBlockList* -Recurse -Force
+
+                Write-Verbose -Message 'Displaying extra info about the Microsoft recommended Drivers block list'
+                Invoke-Command -ScriptBlock $DriversBlockListInfoGatheringSCRIPTBLOCK
+            }
+            else {
+                # Downloading the latest Microsoft Recommended Driver Block Rules from the official source
+                Write-Verbose -Message 'Downloading the latest Microsoft Recommended Driver Block Rules from the official source'
+                [System.String]$DriverRules = (Invoke-WebRequest -Uri $MSFTRecommendeDriverBlockRulesURL -ProgressAction SilentlyContinue).Content -replace "(?s).*``````xml(.*)``````.*", '$1'
+            
+                # Remove the unnecessary rules and elements - not using this one because then during the merge there will be error - The reason is that "<FileRuleRef RuleID="ID_ALLOW_ALL_2" />" is the only FileruleRef in the xml and after removing it, the <SigningScenario> element will be empty
+                Write-Verbose -Message 'Removing the allow all rules and rule refs from the policy'
+                $DriverRules = $DriverRules -replace '<Allow\sID="ID_ALLOW_ALL_[12]"\sFriendlyName=""\sFileName="\*".*/>', ''
+                $DriverRules = $DriverRules -replace '<FileRuleRef\sRuleID="ID_ALLOW_ALL_1".*/>', ''
+                $DriverRules = $DriverRules -replace '<SigningScenario\sValue="12"\sID="ID_SIGNINGSCENARIO_WINDOWS"\sFriendlyName="Auto\sgenerated\spolicy[\S\s]*<\/SigningScenario>', ''
+            
+                # Output the XML content to a file
+                Write-Verbose -Message 'Creating XML policy file'
+                $DriverRules | Out-File -FilePath 'Microsoft recommended driver block rules TEMP.xml' -Force
+            
+                # Remove empty lines from the policy file
+                Write-Verbose -Message 'Removing the empty lines from the policy XML file'
+                Get-Content -Path 'Microsoft recommended driver block rules TEMP.xml' | Where-Object -FilterScript { $_.trim() -ne '' } | Out-File -FilePath 'Microsoft recommended driver block rules.xml' -Force
+            
+                Write-Verbose -Message 'Removing the temp XML file'
+                Remove-Item -Path 'Microsoft recommended driver block rules TEMP.xml' -Force
+            
+                Write-Verbose -Message 'Removing the Audit mode policy rule option'
+                Set-RuleOption -FilePath 'Microsoft recommended driver block rules.xml' -Option 3 -Delete
+            
+                Write-Verbose -Message 'Setting the HVCI option to strict'
+                Set-HVCIOptions -Strict -FilePath 'Microsoft recommended driver block rules.xml'
+            
+                # Display extra info about the Microsoft recommended Drivers block list
+                Write-Verbose -Message 'Displaying extra info about the Microsoft recommended Drivers block list'
+                Invoke-Command -ScriptBlock $DriversBlockListInfoGatheringSCRIPTBLOCK
+            
+                # Display the result as object
+                [PSCustomObject]@{
+                    PolicyFile = 'Microsoft recommended driver block rules.xml'
+                }
             }
         }
 
@@ -261,17 +320,6 @@ Function New-WDACConfig {
                 Remove-Item -Path "$PolicyID.cip" -Force
             }
             if ($NoCIP) { Remove-Item -Path "$PolicyID.cip" -Force }
-        }
-
-        [System.Management.Automation.ScriptBlock]$DeployLatestDriverBlockRulesSCRIPTBLOCK = {
-            Invoke-WebRequest -Uri 'https://aka.ms/VulnerableDriverBlockList' -OutFile VulnerableDriverBlockList.zip -ProgressAction SilentlyContinue
-            Expand-Archive -Path .\VulnerableDriverBlockList.zip -DestinationPath 'VulnerableDriverBlockList' -Force
-            Rename-Item -Path .\VulnerableDriverBlockList\SiPolicy_Enforced.p7b -NewName 'SiPolicy.p7b' -Force
-            Copy-Item -Path .\VulnerableDriverBlockList\SiPolicy.p7b -Destination 'C:\Windows\System32\CodeIntegrity'
-            &'C:\Windows\System32\CiTool.exe' --refresh -json | Out-Null
-            Write-ColorfulText -Color Pink -InputText 'SiPolicy.p7b has been deployed and policies refreshed.'
-            Remove-Item -Path .\VulnerableDriverBlockList* -Recurse -Force
-            Invoke-Command -ScriptBlock $DriversBlockListInfoGatheringSCRIPTBLOCK
         }
 
         [System.Management.Automation.ScriptBlock]$DeployLatestBlockRulesSCRIPTBLOCK = {
@@ -561,10 +609,8 @@ Function New-WDACConfig {
             { $GetBlockRules -and $Deploy } { & $DeployLatestBlockRulesSCRIPTBLOCK; break }
             # Get the latest block rules
             $GetBlockRules { Get-BlockRulesMeta ; break }
-            # Deploy the latest driver block rules
-            { $GetDriverBlockRules -and $Deploy } { & $DeployLatestDriverBlockRulesSCRIPTBLOCK; break }
-            # Get the latest driver block rules
-            { $GetDriverBlockRules } { & $GetDriverBlockRulesSCRIPTBLOCK; break }
+            # Get the latest driver block rules and Deploy them if New-WDACConfig -GetDriverBlockRules was called with -Deploy parameter
+            { $GetDriverBlockRules } { Get-DriverBlockRules -Deploy:$Deploy ; break }
 
             $SetAutoUpdateDriverBlockRules { & $SetAutoUpdateDriverBlockRulesSCRIPTBLOCK; break }
             $MakeAllowMSFTWithBlockRules { & $MakeAllowMSFTWithBlockRulesSCRIPTBLOCK; break }

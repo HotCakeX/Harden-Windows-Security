@@ -505,6 +505,8 @@ Function New-WDACConfig {
             .OUTPUTS
                 System.Void
             #>
+            [CmdletBinding()]
+            param()
 
             if ($PrepMSFTOnlyAudit -and $LogSize) {
                 Write-Verbose -Message 'Changing the Log size of Code Integrity Operational event log'
@@ -550,6 +552,8 @@ Function New-WDACConfig {
             .OUTPUTS
                 System.Void
             #>
+            [CmdletBinding()]
+            param()
         
             if ($PrepDefaultWindowsAudit -and $LogSize) {
                 Write-Verbose -Message 'Changing the Log size of Code Integrity Operational event log'
@@ -619,7 +623,9 @@ Function New-WDACConfig {
             .OUTPUTS
                 System.Void
             #>
-        
+            [CmdletBinding()]
+            param()
+            
             if ($MakePolicyFromAuditLogs -and $LogSize) {
                 Write-Verbose -Message 'Changing the Log size of Code Integrity Operational event log'
                 Set-LogSize -LogSize $LogSize -Verbose:$Verbose
@@ -806,6 +812,8 @@ Function New-WDACConfig {
             .OUTPUTS
                 System.Void
             #>
+            [CmdletBinding()]
+            param()
 
             # Delete any policy with the same name in the current working directory
             Remove-Item -Path 'SignedAndReputable.xml' -Force -ErrorAction SilentlyContinue

@@ -64,13 +64,12 @@ Function New-WDACConfig {
 
         [ValidateSet([Levelz])]
         [parameter(Mandatory = $false, ParameterSetName = 'Make Policy From Audit Logs')]
-        [System.String]$Level = 'FilePublisher', # Setting the default value for the Level parameter
+        [System.String]$Level = 'FilePublisher',
 
         [ValidateSet([Fallbackz])]
         [parameter(Mandatory = $false, ParameterSetName = 'Make Policy From Audit Logs')]
-        [System.String[]]$Fallbacks = 'Hash', # Setting the default value for the Fallbacks parameter
+        [System.String[]]$Fallbacks = 'Hash',
 
-        # Setting the maxim range to the maximum allowed log size by Windows Event viewer
         [ValidateRange(1024KB, 18014398509481983KB)]
         [Parameter(Mandatory = $false, ParameterSetName = 'Prep MSFT Only Audit')]
         [Parameter(Mandatory = $false, ParameterSetName = 'Prep Default Windows Audit')]
@@ -995,10 +994,15 @@ Function New-WDACConfig {
 
 .PARAMETER LogSize
     Specifies the log size for Microsoft-Windows-CodeIntegrity/Operational events. The values must be in the form of <Digit + Data measurement unit>. e.g., 2MB, 10MB, 1GB, 1TB. The minimum accepted value is 1MB which is the default.
+    The maximum range is the maximum allowed log size by Windows Event viewer
 
 .PARAMETER SkipVersionCheck
     Can be used with any parameter to bypass the online version check - only to be used in rare cases
 
+.INPUTS
+    System.Int64
+    System.String[]
+    System.String
 #>
 }
 

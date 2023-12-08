@@ -1057,6 +1057,10 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
     The fallback level(s) that determine how the selected folder will be scanned.
     The default value for it is Hash.
 
+.INPUTS
+    System.Int64
+    System.String
+    System.String[]
 #>
 }
 

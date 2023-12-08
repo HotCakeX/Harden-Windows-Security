@@ -115,4 +115,9 @@ Function Get-CommonWDACConfig {
 .PARAMETER StrictKernelNoFlightRootsPolicyGUID
     Shows the GUID of the Strict Kernel no Flights root mode policy
 
+.INPUTS
+    System.Void
+
+.OUTPUTS
+    System.Object[]
 #>

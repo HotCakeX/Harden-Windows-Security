@@ -885,6 +885,10 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
     The accepted values are between 1024 KB and 18014398509481983 KB
     The max range is the maximum allowed log size by Windows Event viewer
 
+.INPUTS
+    System.Int64
+    System.String[]
+    System.String
 #>
 }
 

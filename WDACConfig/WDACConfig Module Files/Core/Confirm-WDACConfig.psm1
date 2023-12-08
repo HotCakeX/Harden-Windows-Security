@@ -168,5 +168,11 @@ Function Confirm-WDACConfig {
 .EXAMPLE
     Confirm-WDACConfig -ListActivePolicies
 
+.INPUTS
+    System.Void
+
+.OUTPUTS
+    System.String
+    System.Object
 #>
 }

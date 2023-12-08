@@ -316,6 +316,10 @@ Function New-DenyWDACConfig {
 .PARAMETER SkipVersionCheck
     Can be used with any parameter to bypass the online version check - only to be used in rare cases
     It's used by the entire Cmdlet.
+
+.INPUTS
+    System.String[]
+    System.String
 #>
 }
 

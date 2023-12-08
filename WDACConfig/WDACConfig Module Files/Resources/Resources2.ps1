@@ -6,7 +6,7 @@ class Signer {
     [System.String]$CertPublisher
 }
 
-function Get-SignerInfo {
+Function Get-SignerInfo {
     <#
     .SYNOPSIS
         Function that takes an XML file path as input and returns an array of Signer objects
@@ -17,6 +17,7 @@ function Get-SignerInfo {
     .PARAMETER XmlFilePath
         The XML file path that the user selected for WDAC simulation.
     #>
+    [CmdletBinding()]
     param(
         [Parameter(Mandatory = $true)][System.IO.FileInfo]$XmlFilePath
     )
@@ -50,7 +51,7 @@ function Get-SignerInfo {
     }
 }
 
-function Get-TBSCertificate {
+Function Get-TBSCertificate {
     <#
     .SYNOPSIS
         Function to calculate the TBS value of a certificate
@@ -61,6 +62,7 @@ function Get-TBSCertificate {
     .PARAMETER Cert
         The certificate that is going to be used to retrieve its TBS value
     #>
+    [CmdletBinding()]
     param (
         [System.Security.Cryptography.X509Certificates.X509Certificate2]$Cert
     )
@@ -113,7 +115,7 @@ function Get-TBSCertificate {
     return $HexStringOutput
 }
 
-function Get-AuthenticodeSignatureEx {
+Function Get-AuthenticodeSignatureEx {
     <#
     .SYNOPSIS
         Helps to get the 2nd aka nested signer/signature of the dual signed files
@@ -129,9 +131,7 @@ function Get-AuthenticodeSignatureEx {
     .OUTPUTS
         System.Management.Automation.Signature
     #>
-
     [CmdletBinding()]
-
     param(
         [Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
         [System.String[]]$FilePath
@@ -309,7 +309,7 @@ function Get-AuthenticodeSignatureEx {
     end {}
 }
 
-function Get-SignedFileCertificates {
+Function Get-SignedFileCertificates {
     <#
     .SYNOPSIS
         A function to get all the certificates from a signed file or a certificate object and output a Collection
@@ -323,6 +323,7 @@ function Get-SignedFileCertificates {
     .OUTPUTS
         System.Security.Cryptography.X509Certificates.X509Certificate2Collection
     #>
+    [CmdletBinding()]
     param (
         [Parameter()]
         [System.String]$FilePath,
@@ -353,7 +354,7 @@ function Get-SignedFileCertificates {
     }
 }
 
-function Get-CertificateDetails {
+Function Get-CertificateDetails {
     <#
     .SYNOPSIS
         A function to detect Root, Intermediate and Leaf certificates
@@ -373,6 +374,7 @@ function Get-CertificateDetails {
     .PARAMETER LeafCNOfTheNestedCertificate
         This is used only for when -X509Certificate2 parameter is used, so that we can filter out the Leaf certificate and only get the Intermediate certificates at the end of this function
     #>
+    [CmdletBinding()]
     param (
         [Parameter(ParameterSetName = 'Based on File Path', Mandatory = $true)]
         [System.String]$FilePath,
@@ -499,7 +501,7 @@ function Get-CertificateDetails {
     }
 }
 
-function Compare-SignerAndCertificate {
+Function Compare-SignerAndCertificate {
     <#
     .SYNOPSIS
         a function that takes WDAC XML policy file path and a Signed file path as inputs and compares the output of the Get-SignerInfo and Get-CertificateDetails functions
@@ -512,6 +514,7 @@ function Compare-SignerAndCertificate {
     .PARAMETER SignedFilePath
         Path to a signed file
     #>
+    [CmdletBinding()]
     param(
         [Parameter(Mandatory = $true)][System.String]$XmlFilePath,
         [Parameter(Mandatory = $true)][System.String]$SignedFilePath
@@ -689,7 +692,7 @@ function Compare-SignerAndCertificate {
     return $ComparisonResults
 }
 
-function Get-FileRuleOutput {
+Function Get-FileRuleOutput {
     <#
     .SYNOPSIS
         a function to load an xml file and create an output array of custom objects that contain the file rules that are based on file hashes
@@ -700,6 +703,7 @@ function Get-FileRuleOutput {
     .OUTPUTS
         System.Object[]
     #>
+    [CmdletBinding()]
     param(
         [parameter(Mandatory = $true)]
         [System.IO.FileInfo]$XmlPath

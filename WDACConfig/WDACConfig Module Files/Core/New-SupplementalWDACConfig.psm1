@@ -1,4 +1,4 @@
-function New-SupplementalWDACConfig {
+Function New-SupplementalWDACConfig {
     [CmdletBinding(
         DefaultParameterSetName = 'Normal',
         SupportsShouldProcess = $true,

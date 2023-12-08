@@ -1,4 +1,4 @@
-function Remove-CommonWDACConfig {
+Function Remove-CommonWDACConfig {
     [CmdletBinding()]
     Param(
         [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$CertCN,

@@ -1,4 +1,4 @@
-function Set-CommonWDACConfig {
+Function Set-CommonWDACConfig {
     [CmdletBinding()]
     Param(
         [ValidateScript({

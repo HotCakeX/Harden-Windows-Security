@@ -1,4 +1,4 @@
-function Edit-SignedWDACConfig {
+Function Edit-SignedWDACConfig {
     [CmdletBinding(
         DefaultParameterSetName = 'Allow New Apps Audit Events',
         SupportsShouldProcess = $true,

@@ -1,4 +1,4 @@
-function Confirm-WDACConfig {
+Function Confirm-WDACConfig {
     [CmdletBinding(DefaultParameterSetName = 'List Active Policies')]
     Param(
         [Alias('L')]

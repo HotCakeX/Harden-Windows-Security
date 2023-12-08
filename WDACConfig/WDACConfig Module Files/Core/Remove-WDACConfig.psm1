@@ -1,4 +1,4 @@
-function Remove-WDACConfig {
+Function Remove-WDACConfig {
     [CmdletBinding(
         DefaultParameterSetName = 'Signed Base',
         SupportsShouldProcess = $true,

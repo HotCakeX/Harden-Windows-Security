@@ -1,4 +1,4 @@
-function Invoke-WDACSimulation {
+Function Invoke-WDACSimulation {
     [CmdletBinding(
         PositionalBinding = $false,
         SupportsShouldProcess = $true

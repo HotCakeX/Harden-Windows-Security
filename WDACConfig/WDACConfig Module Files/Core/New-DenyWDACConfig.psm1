@@ -1,4 +1,4 @@
-function New-DenyWDACConfig {
+Function New-DenyWDACConfig {
     [CmdletBinding(
         DefaultParameterSetName = 'Drivers',
         PositionalBinding = $false,

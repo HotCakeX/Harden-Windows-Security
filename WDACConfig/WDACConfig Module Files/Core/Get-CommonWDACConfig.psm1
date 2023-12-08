@@ -1,4 +1,4 @@
-function Get-CommonWDACConfig {
+Function Get-CommonWDACConfig {
     [CmdletBinding()]
     Param(
         [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$CertCN,

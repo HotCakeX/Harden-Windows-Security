@@ -1,4 +1,4 @@
-function New-WDACConfig {
+Function New-WDACConfig {
     [CmdletBinding(
         DefaultParameterSetName = 'Get Block Rules',
         SupportsShouldProcess = $true,

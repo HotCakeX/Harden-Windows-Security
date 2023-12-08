@@ -1,4 +1,4 @@
-function Deploy-SignedWDACConfig {
+Function Deploy-SignedWDACConfig {
     [CmdletBinding(
         SupportsShouldProcess = $true,
         PositionalBinding = $false,

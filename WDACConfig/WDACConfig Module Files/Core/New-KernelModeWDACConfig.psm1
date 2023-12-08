@@ -1,4 +1,4 @@
-function New-KernelModeWDACConfig {
+Function New-KernelModeWDACConfig {
     [CmdletBinding(
         SupportsShouldProcess = $true,
         PositionalBinding = $false,

@@ -20,6 +20,7 @@ Function Update-self {
     }
     catch {
         # If the User Config file doesn't exist then set this flag to perform online update check
+        Write-Verbose -Message 'No LastUpdateCheck was found in the user configurations, will perform online update check'
         [System.Boolean]$PerformOnlineUpdateCheck = $true
     }
 
@@ -34,6 +35,8 @@ Function Update-self {
     # Only check for updates if the last attempt occured more than 10 minutes ago or the User Config file for last update check doesn't exist
     # This prevents the module from constantly doing an update check by fetching the version file from GitHub
     if (($TimeDiff -gt 10) -or $PerformOnlineUpdateCheck) {
+
+        Write-Verbose -Message 'Performing online update check'
 
         [System.Version]$CurrentVersion = (Test-ModuleManifest -Path "$ModuleRootPath\WDACConfig.psd1").Version.ToString()
         try {
@@ -70,7 +73,8 @@ Function Update-self {
         }
 
         # Reset the last update timer to the current time
-        Set-CommonWDACConfig -LastUpdateCheck $(Get-Date ) | Out-Null
+        Write-Verbose -Message 'Resetting the last update timer to the current time'
+        Set-CommonWDACConfig -LastUpdateCheck $(Get-Date) | Out-Null
     }
 }
 

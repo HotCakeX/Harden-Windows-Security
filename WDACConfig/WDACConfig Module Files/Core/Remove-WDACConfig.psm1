@@ -376,6 +376,12 @@ function Remove-WDACConfig {
 .PARAMETER SkipVersionCheck
     Can be used with any parameter to bypass the online version check - only to be used in rare cases
 
+.INPUTS    
+    System.String
+    System.String[]
+
+.OUTPUTS
+    System.String
 #>
 }
 

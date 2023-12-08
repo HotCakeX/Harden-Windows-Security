@@ -430,25 +430,53 @@ Function New-WDACConfig {
             Write-ColorfulText -Color Lavender -InputText 'The Microsoft recommended block rules policy has been deployed in enforced mode.'
             Remove-Item -Path "$PolicyID.cip" -Force
         }
+        
+        Function Set-AutoUpdateDriverBlockRules {
+            <#
+            .SYNOPSIS
+                A helper function that creates a scheduled task to keep the Microsoft Recommended Driver Block rules
+                In Windows up to date quickly ahead of its official release schedule. It does this by downloading and applying
+                The latest block list every 7 days on the system.
+            .INPUTS
+                System.Void
+            .OUTPUTS
+                System.Void
+            #>
+            [CmdletBinding()]
+            param()
 
-        [System.Management.Automation.ScriptBlock]$SetAutoUpdateDriverBlockRulesSCRIPTBLOCK = {
-            # create a scheduled task that runs every 7 days
-            if (-NOT (Get-ScheduledTask -TaskName 'MSFT Driver Block list update' -TaskPath '\MSFT Driver Block list update\' -ErrorAction SilentlyContinue)) {
+            # Get the state of fast weekly Microsoft recommended driver block list update scheduled task
+            Write-Verbose -Message 'Getting the state of MSFT Driver Block list update Scheduled task'
+            [System.String]$BlockListScheduledTaskState = (Get-ScheduledTask -TaskName 'MSFT Driver Block list update' -TaskPath '\MSFT Driver Block list update\' -ErrorAction SilentlyContinue).State
+
+            # Create scheduled task for fast weekly Microsoft recommended driver block list update if it doesn't exist or exists but is not Ready/Running
+            if (-NOT (($BlockListScheduledTaskState -eq 'Ready' -or $BlockListScheduledTaskState -eq 'Running'))) {
+
+                Write-Verbose -Message "Creating the MSFT Driver Block list update task because its state is neither Running nor Ready, it's $BlockListScheduledTaskState"
                 # Get the SID of the SYSTEM account. It is a well-known SID, but still querying it, going to use it to create the scheduled task
-                $SYSTEMSID = New-Object System.Security.Principal.SecurityIdentifier([System.Security.Principal.WellKnownSidType]::LocalSystemSid, $null)
-                # create a scheduled task that runs every 7 days
-                $Action = New-ScheduledTaskAction -Execute 'Powershell.exe' `
-                    -Argument '-NoProfile -WindowStyle Hidden -command "& {try {Invoke-WebRequest -Uri "https://aka.ms/VulnerableDriverBlockList" -OutFile VulnerableDriverBlockList.zip -ErrorAction Stop}catch{exit};Expand-Archive .\VulnerableDriverBlockList.zip -DestinationPath "VulnerableDriverBlockList" -Force;Rename-Item .\VulnerableDriverBlockList\SiPolicy_Enforced.p7b -NewName "SiPolicy.p7b" -Force;Copy-Item .\VulnerableDriverBlockList\SiPolicy.p7b -Destination "C:\Windows\System32\CodeIntegrity";citool --refresh -json;Remove-Item .\VulnerableDriverBlockList -Recurse -Force;Remove-Item .\VulnerableDriverBlockList.zip -Force;}"'
-                $TaskPrincipal = New-ScheduledTaskPrincipal -LogonType S4U -UserId $($SYSTEMSID.Value) -RunLevel Highest
-                # trigger
-                $Time = New-ScheduledTaskTrigger -Once -At (Get-Date).AddHours(1) -RepetitionInterval (New-TimeSpan -Days 7)
-                # register the task
-                Register-ScheduledTask -Action $Action -Trigger $Time -Principal $TaskPrincipal -TaskPath 'MSFT Driver Block list update' -TaskName 'MSFT Driver Block list update' -Description 'Microsoft Recommended Driver Block List update'
-                # define advanced settings for the task
-                $TaskSettings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -Compatibility Win8 -StartWhenAvailable -ExecutionTimeLimit (New-TimeSpan -Minutes 3)
-                # add advanced settings we defined to the task
-                Set-ScheduledTask -TaskName 'MSFT Driver Block list update' -TaskPath 'MSFT Driver Block list update' -Settings $TaskSettings
+                [System.Security.Principal.SecurityIdentifier]$SYSTEMSID = New-Object -TypeName System.Security.Principal.SecurityIdentifier([System.Security.Principal.WellKnownSidType]::LocalSystemSid, $null)
+                           
+                # Create a scheduled task action, this defines how to download and install the latest Microsoft Recommended Driver Block Rules   
+                [Microsoft.Management.Infrastructure.CimInstance]$Action = New-ScheduledTaskAction -Execute 'Powershell.exe' `
+                    -Argument '-NoProfile -WindowStyle Hidden -command "& {try {Invoke-WebRequest -Uri "https://aka.ms/VulnerableDriverBlockList" -OutFile VulnerableDriverBlockList.zip -ErrorAction Stop}catch{exit};Expand-Archive .\VulnerableDriverBlockList.zip -DestinationPath "VulnerableDriverBlockList" -Force;Rename-Item .\VulnerableDriverBlockList\SiPolicy_Enforced.p7b -NewName "SiPolicy.p7b" -Force;Copy-Item .\VulnerableDriverBlockList\SiPolicy.p7b -Destination "C:\Windows\System32\CodeIntegrity";citool --refresh -json;Remove-Item .\VulnerableDriverBlockList -Recurse -Force;Remove-Item .\VulnerableDriverBlockList.zip -Force;}"'    
+                            
+                # Create a scheduled task principal and assign the SYSTEM account's SID to it so that the task will run under its context
+                [Microsoft.Management.Infrastructure.CimInstance]$TaskPrincipal = New-ScheduledTaskPrincipal -LogonType S4U -UserId $($SYSTEMSID.Value) -RunLevel Highest
+                            
+                # Create a trigger for the scheduled task. The task will first run one hour after its creation and from then on will run every 7 days, indefinitely
+                [Microsoft.Management.Infrastructure.CimInstance]$Time = New-ScheduledTaskTrigger -Once -At (Get-Date).AddHours(1) -RepetitionInterval (New-TimeSpan -Days 7) 
+                            
+                # Register the scheduled task. If the task's state is disabled, it will be overwritten with a new task that is enabled
+                Register-ScheduledTask -Action $Action -Trigger $Time -Principal $TaskPrincipal -TaskPath 'MSFT Driver Block list update' -TaskName 'MSFT Driver Block list update' -Description 'Microsoft Recommended Driver Block List update' -Force
+                            
+                # Define advanced settings for the scheduled task
+                [Microsoft.Management.Infrastructure.CimInstance]$TaskSettings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -Compatibility 'Win8' -StartWhenAvailable -ExecutionTimeLimit (New-TimeSpan -Minutes 3) -RestartCount 4 -RestartInterval (New-TimeSpan -Hours 6) -RunOnlyIfNetworkAvailable
+                            
+                # Add the advanced settings we defined above to the scheduled task
+                Set-ScheduledTask -TaskName 'MSFT Driver Block list update' -TaskPath 'MSFT Driver Block list update' -Settings $TaskSettings 
             }
+
+            Write-Verbose -Message 'Displaying extra info about the Microsoft recommended Drivers block list'
             Invoke-Command -ScriptBlock $DriversBlockListInfoGatheringSCRIPTBLOCK
         }
 
@@ -711,7 +739,7 @@ Function New-WDACConfig {
             # Get the latest driver block rules and Deploy them if New-WDACConfig -GetDriverBlockRules was called with -Deploy parameter
             { $GetDriverBlockRules } { Get-DriverBlockRules -Deploy:$Deploy ; break }
 
-            $SetAutoUpdateDriverBlockRules { & $SetAutoUpdateDriverBlockRulesSCRIPTBLOCK; break }
+            $SetAutoUpdateDriverBlockRules { Set-AutoUpdateDriverBlockRules ; break }
             $MakeAllowMSFTWithBlockRules { Build-AllowMSFTWithBlockRules ; break }
             $MakePolicyFromAuditLogs { & $MakePolicyFromAuditLogsSCRIPTBLOCK; break }
             $PrepMSFTOnlyAudit { & $PrepMSFTOnlyAuditSCRIPTBLOCK; break }

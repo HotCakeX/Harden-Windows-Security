@@ -37,7 +37,8 @@ Function Deploy-SignedWDACConfig {
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Confirm-CertCN.psm1" -Force -Verbose:$false
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Write-ColorfulText.psm1" -Force -Verbose:$false
 
-        if (-NOT $SkipVersionCheck) { Update-self }
+        # if -SkipVersionCheck wasn't passed, run the updater and hide its output
+        if (-NOT $SkipVersionCheck) { Update-self *> $null }
 
         # Detecting if Debug switch is used, will do debugging actions based on that
         $PSBoundParameters.Debug.IsPresent ? ([System.Boolean]$Debug = $true) : ([System.Boolean]$Debug = $false) | Out-Null

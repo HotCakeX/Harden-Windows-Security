@@ -37,7 +37,8 @@ Function New-KernelModeWDACConfig {
         # Detecting if Debug switch is used, will do debugging actions based on that
         $PSBoundParameters.Debug.IsPresent ? ([System.Boolean]$Debug = $true) : ([System.Boolean]$Debug = $false) | Out-Null
 
-        if (-NOT $SkipVersionCheck) { Update-self }
+        # if -SkipVersionCheck wasn't passed, run the updater and hide its output
+        if (-NOT $SkipVersionCheck) { Update-self *> $null }
 
         # Check if the PrepMode and AuditAndEnforce parameters are used together and ensure one of them is used
         if (-not ($PSBoundParameters.ContainsKey('PrepMode') -xor $PSBoundParameters.ContainsKey('AuditAndEnforce'))) {

@@ -75,7 +75,8 @@ Function Confirm-WDACConfig {
         [System.Management.Automation.SwitchParameter]$OnlySupplementalPolicies = $($PSBoundParameters['OnlySupplementalPolicies'])
         [System.Management.Automation.SwitchParameter]$SkipVersionCheck = $($PSBoundParameters['SkipVersionCheck'])
 
-        if (-NOT $SkipVersionCheck) { Update-self }
+        # if -SkipVersionCheck wasn't passed, run the updater and hide its output
+        if (-NOT $SkipVersionCheck) { Update-self *> $null }
 
         # Script block to show only non-system Base policies
         [System.Management.Automation.ScriptBlock]$OnlyBasePoliciesBLOCK = {

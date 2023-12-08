@@ -22,7 +22,8 @@ Function Invoke-WDACSimulation {
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Update-self.psm1" -Force -Verbose:$false
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Write-ColorfulText.psm1" -Force -Verbose:$false
 
-        if (-NOT $SkipVersionCheck) { Update-self }
+        # if -SkipVersionCheck wasn't passed, run the updater and hide its output
+        if (-NOT $SkipVersionCheck) { Update-self *> $null }
 
         # The total number of the main steps for the progress bar to render
         [System.Int16]$TotalSteps = 4

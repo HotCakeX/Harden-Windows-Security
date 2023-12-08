@@ -79,7 +79,8 @@ Function New-SupplementalWDACConfig {
             }
         }
 
-        if (-NOT $SkipVersionCheck) { . Update-self }
+        # if -SkipVersionCheck wasn't passed, run the updater and hide its output
+        if (-NOT $SkipVersionCheck) { Update-self *> $null }
 
         #region User-Configurations-Processing-Validation
         # If any of these parameters, that are mandatory for all of the position 0 parameters, isn't supplied by user

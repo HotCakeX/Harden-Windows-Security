@@ -66,10 +66,10 @@ Function Deploy-SignedWDACConfig {
 
         # Get SignToolPath from user parameter or user config file or auto-detect it
         if ($SignToolPath) {
-            $SignToolPathFinal = Get-SignTool -SignToolExePath $SignToolPath
+            $SignToolPathFinal = Get-SignTool -SignToolExePath $SignToolPath -Verbose:$Verbose
         } # If it is null, then Get-SignTool will behave the same as if it was called without any arguments.
         else {
-            $SignToolPathFinal = Get-SignTool -SignToolExePath ($UserConfig.SignToolCustomPath ?? $null)
+            $SignToolPathFinal = Get-SignTool -SignToolExePath ($UserConfig.SignToolCustomPath ?? $null) -Verbose:$Verbose
         }
 
         # If CertPath parameter wasn't provided by user
@@ -93,7 +93,7 @@ Function Deploy-SignedWDACConfig {
         if (!$CertCN) {
             if ($UserConfig.CertificateCommonName) {
                 # Check if the value in the User configuration file exists and is valid
-                if (Confirm-CertCN -CN $($UserConfig.CertificateCommonName)) {
+                if (Confirm-CertCN -CN $($UserConfig.CertificateCommonName) -Verbose:$Verbose) {
                     # if it's valid then use it
                     $CertCN = $UserConfig.CertificateCommonName
                 }

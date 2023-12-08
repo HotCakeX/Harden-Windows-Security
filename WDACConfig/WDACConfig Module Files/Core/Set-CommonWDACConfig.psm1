@@ -69,17 +69,19 @@ function Set-CommonWDACConfig {
         }
 
         if ($PSBoundParameters.Count -eq 0) {
-            Write-Error -Message 'No parameter was selected.'
-            break
+            Throw 'No parameter was selected.'
         }
 
-        # Read the current user configurations
-        $CurrentUserConfigurations = Get-Content -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json"
+        # Trying to read the current user configurations
+        Write-Verbose -Message 'Trying to read the current user configurations'
+        [System.Object[]]$CurrentUserConfigurations = Get-Content -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json"
+        
         # If the file exists but is corrupted and has bad values, rewrite it
         try {
             $CurrentUserConfigurations = $CurrentUserConfigurations | ConvertFrom-Json
         }
         catch {
+            Write-Verbose -Message 'The user configurations file exists but is corrupted and has bad values, rewriting it'
             Set-Content -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json" -Value ''
         }
 
@@ -97,66 +99,87 @@ function Set-CommonWDACConfig {
     }
     process {
 
+        Write-Verbose -Message 'Processing each user configuration property'
+
         if ($SignedPolicyPath) {
+            Write-Verbose -Message 'Saving the supplied Signed Policy path in user configurations.'
             $UserConfigurationsObject.SignedPolicyPath = $SignedPolicyPath
         }
         else {
+            Write-Verbose -Message 'No changes to the Signed Policy path property was detected.'
             $UserConfigurationsObject.SignedPolicyPath = $CurrentUserConfigurations.SignedPolicyPath
         }
 
         if ($UnsignedPolicyPath) {
+            Write-Verbose -Message 'Saving the supplied Unsigned Policy path in user configurations.'
             $UserConfigurationsObject.UnsignedPolicyPath = $UnsignedPolicyPath
         }
         else {
+            Write-Verbose -Message 'No changes to the Unsigned Policy path property was detected.'
             $UserConfigurationsObject.UnsignedPolicyPath = $CurrentUserConfigurations.UnsignedPolicyPath
         }
 
         if ($SignToolPath) {
+            Write-Verbose -Message 'Saving the supplied SignTool path in user configurations.'
             $UserConfigurationsObject.SignToolCustomPath = $SignToolPath
         }
         else {
+            Write-Verbose -Message 'No changes to the Signtool path property was detected.'
             $UserConfigurationsObject.SignToolCustomPath = $CurrentUserConfigurations.SignToolCustomPath
         }
 
         if ($CertPath) {
+            Write-Verbose -Message 'Saving the supplied Certificate path in user configurations.'
             $UserConfigurationsObject.CertificatePath = $CertPath
         }
         else {
+            Write-Verbose -Message 'No changes to the Certificate path property was detected.'
             $UserConfigurationsObject.CertificatePath = $CurrentUserConfigurations.CertificatePath
         }
 
         if ($CertCN) {
+            Write-Verbose -Message 'Saving the supplied Certificate common name in user configurations.'
             $UserConfigurationsObject.CertificateCommonName = $CertCN
         }
         else {
+            Write-Verbose -Message 'No changes to the Certificate common name property was detected.'
             $UserConfigurationsObject.CertificateCommonName = $CurrentUserConfigurations.CertificateCommonName
         }
 
         if ($StrictKernelPolicyGUID) {
+            Write-Verbose -Message 'Saving the supplied Strict Kernel policy GUID in user configurations.'
             $UserConfigurationsObject.StrictKernelPolicyGUID = $StrictKernelPolicyGUID
         }
         else {
+            Write-Verbose -Message 'No changes to the Strict Kernel policy GUID property was detected.'
             $UserConfigurationsObject.StrictKernelPolicyGUID = $CurrentUserConfigurations.StrictKernelPolicyGUID
         }
 
         if ($StrictKernelNoFlightRootsPolicyGUID) {
+            Write-Verbose -Message 'Saving the supplied Strict Kernel NoFlightRoot policy GUID in user configurations.'
             $UserConfigurationsObject.StrictKernelNoFlightRootsPolicyGUID = $StrictKernelNoFlightRootsPolicyGUID
         }
         else {
+            Write-Verbose -Message 'No changes to the Strict Kernel NoFlightRoot policy GUID property was detected.'
             $UserConfigurationsObject.StrictKernelNoFlightRootsPolicyGUID = $CurrentUserConfigurations.StrictKernelNoFlightRootsPolicyGUID
         }
 
         if ($LastUpdateCheck) {
+            Write-Verbose -Message 'Saving the supplied Last Update Check in user configurations.'
             $UserConfigurationsObject.LastUpdateCheck = $LastUpdateCheck
         }
         else {
+            Write-Verbose -Message 'No changes to the Last Update Check property was detected.'
             $UserConfigurationsObject.LastUpdateCheck = $CurrentUserConfigurations.LastUpdateCheck
         }
     }
     end {
         # Update the User Configurations file
+        Write-Verbose -Message 'Saving the changes'
         $UserConfigurationsObject | ConvertTo-Json | Set-Content -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json"
         Write-ColorfulText -Color Pink -InputText "`nThis is your new WDAC User Configurations: "
+        
+        Write-Verbose -Message 'Displaying the current user configurations'
         Get-Content -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json" | ConvertFrom-Json | Format-List -Property *
     }
 }
@@ -197,6 +220,13 @@ function Set-CommonWDACConfig {
 .PARAMETER StrictKernelNoFlightRootsPolicyGUID
     GUID of the Strict Kernel no Flights root mode policy
 
+.INPUTS
+    System.DateTime
+    System.Guid
+    System.String
+
+.OUTPUTS
+    System.Object[]
 #>
 
 # Importing argument completer ScriptBlocks

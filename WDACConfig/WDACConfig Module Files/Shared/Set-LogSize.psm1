@@ -13,6 +13,7 @@ Function Set-LogSize {
     param (
         [System.Int64]$LogSize
     )
+    Write-Verbose -Message "Setting 'Microsoft-Windows-CodeIntegrity/Operational' log size to $LogSize"
     [System.String]$LogName = 'Microsoft-Windows-CodeIntegrity/Operational'
     [System.Diagnostics.Eventing.Reader.EventLogConfiguration]$Log = New-Object -TypeName System.Diagnostics.Eventing.Reader.EventLogConfiguration -ArgumentList $LogName
     $Log.MaximumSizeInBytes = $LogSize

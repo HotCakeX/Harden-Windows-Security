@@ -493,15 +493,42 @@ Function New-WDACConfig {
             Invoke-Command -ScriptBlock $DriversBlockListInfoGatheringSCRIPTBLOCK
         }
 
-        [System.Management.Automation.ScriptBlock]$PrepMSFTOnlyAuditSCRIPTBLOCK = {
-            if ($PrepMSFTOnlyAudit -and $LogSize) { Set-LogSize -LogSize $LogSize -Verbose:$Verbose }
+        Function Build-MSFTOnlyAudit {
+            <#
+            .SYNOPSIS
+                A helper function that creates a WDAC policy based on AllowMicrosoft template policy.
+                It has audit policy rule option.
+                It can also call the Set-LogSize function to modify the size of Code Integrity Operational event log
+                It uses the $LogSize variable available in the New-WDACConfig's scope to do that.
+            .INPUTS
+                System.Void
+            .OUTPUTS
+                System.Void
+            #>
+
+            if ($PrepMSFTOnlyAudit -and $LogSize) {
+                Write-Verbose -Message 'Changing the Log size of Code Integrity Operational event log'
+                Set-LogSize -LogSize $LogSize -Verbose:$Verbose
+            }
+            
+            Write-Verbose -Message 'Copying AllowMicrosoft.xml from Windows directory to the current working directory'
             Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml' -Destination .\AllowMicrosoft.xml -Force
+            
+            Write-Verbose -Message 'Enabling Audit mode'
             Set-RuleOption -FilePath .\AllowMicrosoft.xml -Option 3
+
+            Write-Verbose -Message 'Resetting the Policy ID'
             [System.String]$PolicyID = Set-CIPolicyIdInfo -FilePath .\AllowMicrosoft.xml -ResetPolicyID
             [System.String]$PolicyID = $PolicyID.Substring(11)
+
+            Write-Verbose -Message 'Assigning "PrepMSFTOnlyAudit" as the policy name'
             Set-CIPolicyIdInfo -PolicyName 'PrepMSFTOnlyAudit' -FilePath .\AllowMicrosoft.xml
+
+            Write-Verbose -Message 'Converting AllowMicrosoft.xml to .CIP Binary'
             ConvertFrom-CIPolicy -XmlFilePath .\AllowMicrosoft.xml -BinaryFilePath "$PolicyID.cip" | Out-Null
+            
             if ($Deploy) {
+                Write-Verbose -Message 'Deploying the AllowMicrosoft.xml policy on the system'
                 &'C:\Windows\System32\CiTool.exe' --update-policy "$PolicyID.cip" -json | Out-Null
                 Write-ColorfulText -Color HotPink -InputText 'The default AllowMicrosoft policy has been deployed in Audit mode. No reboot required.'
                 Remove-Item -Path 'AllowMicrosoft.xml', "$PolicyID.cip" -Force
@@ -755,7 +782,7 @@ Function New-WDACConfig {
             $SetAutoUpdateDriverBlockRules { Set-AutoUpdateDriverBlockRules ; break }
             $MakeAllowMSFTWithBlockRules { Build-AllowMSFTWithBlockRules ; break }
             $MakePolicyFromAuditLogs { & $MakePolicyFromAuditLogsSCRIPTBLOCK; break }
-            $PrepMSFTOnlyAudit { & $PrepMSFTOnlyAuditSCRIPTBLOCK; break }
+            $PrepMSFTOnlyAudit { Build-MSFTOnlyAudit ; break }
             $MakeLightPolicy { & $MakeLightPolicySCRIPTBLOCK; break }
             $MakeDefaultWindowsWithBlockRules { Build-DefaultWindowsWithBlockRules ; break }
             $PrepDefaultWindowsAudit { & $PrepDefaultWindowsAuditSCRIPTBLOCK; break }

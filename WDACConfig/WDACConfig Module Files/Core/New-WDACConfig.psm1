@@ -538,34 +538,70 @@ Function New-WDACConfig {
             }
         }
 
-        [System.Management.Automation.ScriptBlock]$PrepDefaultWindowsAuditSCRIPTBLOCK = {
+        Function Build-DefaultWindowsAudit {
+            <#
+            .SYNOPSIS
+                A helper function that creates a WDAC policy based on DefaultWindows template policy.
+                It has audit policy rule option.
+                It can also call the Set-LogSize function to modify the size of Code Integrity Operational event log
+                It uses the $LogSize variable available in the New-WDACConfig's scope to do that.
+            .INPUTS
+                System.Void
+            .OUTPUTS
+                System.Void
+            #>
+        
             if ($PrepDefaultWindowsAudit -and $LogSize) {
                 Write-Verbose -Message 'Changing the Log size of Code Integrity Operational event log'
                 Set-LogSize -LogSize $LogSize -Verbose:$Verbose
             }
+
+            Write-Verbose -Message 'Copying DefaultWindows_Audit.xml from Windows directory to the current working directory'
             Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\DefaultWindows_Audit.xml' -Destination .\DefaultWindows_Audit.xml -Force
 
             # Making Sure neither PowerShell core nor WDACConfig module files are added to the Supplemental policy created by -MakePolicyFromAuditLogs parameter
             # by adding them first to the deployed Default Windows policy in Audit mode. Because WDACConfig module files don't need to be allowed to run since they are *.ps1 and .*psm1 files
             # And PowerShell core files will be added to the DefaultWindows Base policy anyway
             if (Test-Path -Path 'C:\Program Files\PowerShell') {
+                Write-Verbose -Message 'Scanning PowerShell core directory and creating a policy file'
                 New-CIPolicy -ScanPath 'C:\Program Files\PowerShell' -Level FilePublisher -NoScript -Fallback Hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -FilePath .\AllowPowerShell.xml
+                
+                Write-Verbose -Message 'Scanning WDACConfig module directory and creating a policy file' 
                 New-CIPolicy -ScanPath "$ModuleRootPath" -Level hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -FilePath .\WDACConfigModule.xml
+                
+                Write-Verbose -Message 'Merging the policy files for PowerShell core and WDACConfig module with the DefaultWindows_Audit.xml policy file'
                 Merge-CIPolicy -PolicyPaths .\DefaultWindows_Audit.xml, .\AllowPowerShell.xml, .\WDACConfigModule.xml -OutputFilePath .\DefaultWindows_Audit_temp.xml | Out-Null
 
+                Write-Verbose -Message 'removing DefaultWindows_Audit.xml policy'
                 Remove-Item -Path DefaultWindows_Audit.xml -Force
+
+                Write-Verbose -Message 'Renaming DefaultWindows_Audit_temp.xml to DefaultWindows_Audit.xml'
                 Rename-Item -Path .\DefaultWindows_Audit_temp.xml -NewName 'DefaultWindows_Audit.xml' -Force
+                
+                Write-Verbose -Message 'Removing AllowPowerShell.xml and WDACConfigModule.xml policies'
                 Remove-Item -Path 'WDACConfigModule.xml', 'AllowPowerShell.xml' -Force
             }
 
+            Write-Verbose -Message 'Enabling Audit mode'
             Set-RuleOption -FilePath .\DefaultWindows_Audit.xml -Option 3
+
+            Write-Verbose -Message 'Resetting the Policy ID'
             [System.String]$PolicyID = Set-CIPolicyIdInfo -FilePath .\DefaultWindows_Audit.xml -ResetPolicyID
             [System.String]$PolicyID = $PolicyID.Substring(11)
+
+            Write-Verbose -Message 'Assigning "PrepDefaultWindowsAudit" as the policy name'
             Set-CIPolicyIdInfo -PolicyName 'PrepDefaultWindows' -FilePath .\DefaultWindows_Audit.xml
+            
+            Write-Verbose -Message 'Converting DefaultWindows_Audit.xml to .CIP Binary'
             ConvertFrom-CIPolicy -XmlFilePath .\DefaultWindows_Audit.xml -BinaryFilePath "$PolicyID.cip" | Out-Null
+            
             if ($Deploy) {
+                Write-Verbose -Message 'Deploying the DefaultWindows_Audit.xml policy on the system'
                 &'C:\Windows\System32\CiTool.exe' --update-policy "$PolicyID.cip" -json | Out-Null
+                
                 Write-ColorfulText -Color Lavender -InputText 'The defaultWindows policy has been deployed in Audit mode. No reboot required.'
+                
+                Write-Verbose -Message 'Removing the generated .CIP files'
                 Remove-Item -Path 'DefaultWindows_Audit.xml', "$PolicyID.cip" -Force
             }
             else {
@@ -865,7 +901,7 @@ Function New-WDACConfig {
             $PrepMSFTOnlyAudit { Build-MSFTOnlyAudit ; break }
             $MakeLightPolicy { Build-LightPolicy ; break }
             $MakeDefaultWindowsWithBlockRules { Build-DefaultWindowsWithBlockRules ; break }
-            $PrepDefaultWindowsAudit { & $PrepDefaultWindowsAuditSCRIPTBLOCK; break }
+            $PrepDefaultWindowsAudit { Build-DefaultWindowsAudit ; break }
             default { Write-Warning 'None of the main parameters were selected.'; break }
         }
     }

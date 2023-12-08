@@ -13,6 +13,9 @@ Function Get-SignTool {
     param(
         [parameter(Mandatory = $false)][System.String]$SignToolExePath
     )
+    # Importing the $PSDefaultParameterValues to the current session, prior to everything else
+    . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
+    
     # If Sign tool path wasn't provided by parameter, try to detect it automatically, if fails, stop the operation
     if (!$SignToolExePath) {
         if ($Env:PROCESSOR_ARCHITECTURE -eq 'AMD64') {
@@ -54,4 +57,4 @@ Function Get-SignTool {
 }
 
 # Export external facing functions only, prevent internal functions from getting exported
-Export-ModuleMember -Function 'Get-SignTool' -Verbose:$false
+Export-ModuleMember -Function 'Get-SignTool'

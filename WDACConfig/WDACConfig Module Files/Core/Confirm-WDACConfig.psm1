@@ -63,10 +63,12 @@ Function Confirm-WDACConfig {
     }
 
     begin {
+        # Importing the $PSDefaultParameterValues to the current session, prior to everything else
+        . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
         # Importing the required sub-modules
         Write-Verbose -Message 'Importing the required sub-modules'
-        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Update-self.psm1" -Force -Verbose:$false
-        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Write-ColorfulText.psm1" -Force -Verbose:$false
+        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Update-self.psm1" -Force
+        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Write-ColorfulText.psm1" -Force
 
         # Regular parameters are automatically bound to variables in the function scope
         # Dynamic parameters however, are only available in the parameter dictionary, which is why we have to access them using $PSBoundParameters

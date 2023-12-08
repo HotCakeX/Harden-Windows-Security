@@ -183,6 +183,7 @@ To get help and syntax on PowerShell console, type:
         'Core\Invoke-WDACSimulation.psm1',
         'Core\Get-CommonWDACConfig.psm1',
         'Core\Remove-CommonWDACConfig.psm1',
+        'CoreExt\PSDefaultParameterValues.ps1',
         'Resources\Resources2.ps1',
         'Resources\ArgumentCompleters.ps1'
         'Resources\WDAC Policies\DefaultWindows_Enforced_Kernel.xml',

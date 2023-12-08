@@ -20,6 +20,9 @@ Function Write-ColorfulText {
         [Alias('I')]
         [System.String]$InputText
     )
+    # Importing the $PSDefaultParameterValues to the current session, prior to everything else
+    . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
+    
     switch ($Color) {
         'Fuchsia' { Write-Host "$($PSStyle.Foreground.FromRGB(236,68,155))$InputText$($PSStyle.Reset)"; break }
         'Orange' { Write-Host "$($PSStyle.Foreground.FromRGB(255,165,0))$InputText$($PSStyle.Reset)"; break }
@@ -63,4 +66,4 @@ Function Write-ColorfulText {
 }
 
 # Export external facing functions only, prevent internal functions from getting exported
-Export-ModuleMember -Function 'Write-ColorfulText' -Verbose:$false
+Export-ModuleMember -Function 'Write-ColorfulText'

@@ -9,6 +9,8 @@ Function Get-BlockRulesMeta {
     #>
     [CmdletBinding()]
     param ()
+    # Importing the $PSDefaultParameterValues to the current session, prior to everything else
+    . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
     [System.String]$Rules = (Invoke-WebRequest -Uri $MSFTRecommendeBlockRulesURL -ProgressAction SilentlyContinue).Content -replace "(?s).*``````xml(.*)``````.*", '$1' -replace '<Allow\sID="ID_ALLOW_A_[12]".*/>|<FileRuleRef\sRuleID="ID_ALLOW_A_[12]".*/>', ''
     $Rules | Out-File -FilePath '.\Microsoft recommended block rules TEMP.xml' -Force
@@ -23,4 +25,4 @@ Function Get-BlockRulesMeta {
 }
 
 # Export external facing functions only, prevent internal functions from getting exported
-Export-ModuleMember -Function 'Get-BlockRulesMeta' -Verbose:$false
+Export-ModuleMember -Function 'Get-BlockRulesMeta'

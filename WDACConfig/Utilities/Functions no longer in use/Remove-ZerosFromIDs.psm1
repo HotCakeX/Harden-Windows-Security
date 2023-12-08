@@ -46,4 +46,4 @@ Function Remove-ZerosFromIDs {
 }
 
 # Export external facing functions only, prevent internal functions from getting exported
-Export-ModuleMember -Function 'Remove-ZerosFromIDs' -Verbose:$false
+Export-ModuleMember -Function 'Remove-ZerosFromIDs'

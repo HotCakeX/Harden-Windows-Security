@@ -13,8 +13,10 @@ Function Get-AuditEventLogsProcessing {
     )
 
     begin {
+        # Importing the $PSDefaultParameterValues to the current session, prior to everything else
+        . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
         # Importing the required sub-modules
-        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Get-GlobalRootDrives.psm1" -Force -Verbose:$false
+        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Get-GlobalRootDrives.psm1" -Force
 
         # Get the local disks mappings
         [System.Object[]]$DriveLettersGlobalRootFix = Get-GlobalRootDrives
@@ -67,4 +69,4 @@ Function Get-AuditEventLogsProcessing {
 }
 
 # Export external facing functions only, prevent internal functions from getting exported
-Export-ModuleMember -Function 'Get-AuditEventLogsProcessing' -Verbose:$false
+Export-ModuleMember -Function 'Get-AuditEventLogsProcessing'

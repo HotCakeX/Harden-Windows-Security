@@ -11,6 +11,9 @@ Function Confirm-CertCN {
     param (
         [System.String]$CN
     )
+    # Importing the $PSDefaultParameterValues to the current session, prior to everything else
+    . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
+    
     [System.String[]]$Certificates = foreach ($cert in (Get-ChildItem -Path 'Cert:\CurrentUser\my')) {
         (($cert.Subject -split ',' | Select-Object -First 1) -replace 'CN=', '').Trim()
     }
@@ -18,4 +21,4 @@ Function Confirm-CertCN {
 }
 
 # Export external facing functions only, prevent internal functions from getting exported
-Export-ModuleMember -Function 'Confirm-CertCN' -Verbose:$false
+Export-ModuleMember -Function 'Confirm-CertCN'

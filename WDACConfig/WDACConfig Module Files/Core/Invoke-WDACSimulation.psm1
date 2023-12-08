@@ -14,13 +14,15 @@ Function Invoke-WDACSimulation {
     )
 
     begin {
+        # Importing the $PSDefaultParameterValues to the current session, prior to everything else
+        . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
         # Importing resources such as functions by dot-sourcing so that they will run in the same scope and their variables will be usable
         . "$ModuleRootPath\Resources\Resources2.ps1"
 
         # Importing the required sub-modules
         Write-Verbose -Message 'Importing the required sub-modules'
-        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Update-self.psm1" -Force -Verbose:$false
-        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Write-ColorfulText.psm1" -Force -Verbose:$false
+        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Update-self.psm1" -Force
+        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Write-ColorfulText.psm1" -Force
 
         # Detecting if Verbose switch is used
         $PSBoundParameters.Verbose.IsPresent ? ([System.Boolean]$Verbose = $true) : ([System.Boolean]$Verbose = $false) | Out-Null

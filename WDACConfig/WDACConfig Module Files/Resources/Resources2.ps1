@@ -1,3 +1,6 @@
+# Importing the $PSDefaultParameterValues to the current session, prior to everything else
+. "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
+
 # Defining a custom object to store the signer information
 class Signer {
     [System.String]$ID
@@ -176,9 +179,9 @@ Function Get-AuthenticodeSignatureEx {
 '@
 
         # Load the System.Security assembly to use the SignedCms class
-        Add-Type -AssemblyName 'System.Security' -ErrorAction SilentlyContinue -Verbose:$false
+        Add-Type -AssemblyName 'System.Security' -ErrorAction SilentlyContinue
         # Add the Crypt32.dll library functions as a type
-        Add-Type -MemberDefinition $Signature -Namespace 'PKI' -Name 'Crypt32' -ErrorAction SilentlyContinue -Verbose:$false
+        Add-Type -MemberDefinition $Signature -Namespace 'PKI' -Name 'Crypt32' -ErrorAction SilentlyContinue
 
         # Define some constants for the CryptQueryObject function parameters
         [System.Int16]$CERT_QUERY_OBJECT_FILE = 0x1

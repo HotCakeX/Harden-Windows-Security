@@ -12,6 +12,8 @@ Function Test-FilePath {
         [Parameter(Mandatory = $true)]
         [System.String[]]$DirectoryPath
     )
+    # Importing the $PSDefaultParameterValues to the current session, prior to everything else
+    . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
     # Loop through each file path
     foreach ($file in $FilePath) {
@@ -56,4 +58,4 @@ Function Test-FilePath {
 }
 
 # Export external facing functions only, prevent internal functions from getting exported
-Export-ModuleMember -Function 'Test-FilePath' -Verbose:$false
+Export-ModuleMember -Function 'Test-FilePath'

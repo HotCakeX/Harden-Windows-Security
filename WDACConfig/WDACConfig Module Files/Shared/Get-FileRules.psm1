@@ -5,6 +5,9 @@ Function Get-FileRules {
     #>
     [CmdletBinding()]
     param ($HashesArray)
+    # Importing the $PSDefaultParameterValues to the current session, prior to everything else
+    . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
+    
     $HashesArray | ForEach-Object -Begin { $i = 1 } -Process {
         $Rules += Write-Output -InputObject "`n<Allow ID=`"ID_ALLOW_AA_$i`" FriendlyName=`"$($_.'File Name') SHA256 Hash`" Hash=`"$($_.'SHA256 Hash')`" />"
         $Rules += Write-Output -InputObject "`n<Allow ID=`"ID_ALLOW_AB_$i`" FriendlyName=`"$($_.'File Name') SHA256 Flat Hash`" Hash=`"$($_.'SHA256 Flat Hash')`" />"
@@ -16,4 +19,4 @@ Function Get-FileRules {
 }
 
 # Export external facing functions only, prevent internal functions from getting exported
-Export-ModuleMember -Function 'Get-FileRules' -Verbose:$false
+Export-ModuleMember -Function 'Get-FileRules'

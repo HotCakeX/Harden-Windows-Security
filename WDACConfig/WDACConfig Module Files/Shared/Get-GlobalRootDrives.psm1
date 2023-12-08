@@ -12,6 +12,8 @@ Function Get-GlobalRootDrives {
     #>
     [CmdletBinding()]
     param ()
+    # Importing the $PSDefaultParameterValues to the current session, prior to everything else
+    . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
     # Import the kernel32.dll functions using P/Invoke
     [System.String]$Signature = @'
@@ -33,7 +35,7 @@ public static extern uint QueryDosDevice(string lpDeviceName, StringBuilder lpTa
 
 '@
     # Add the signature to the current session as a new type
-    Add-Type -ErrorAction SilentlyContinue -MemberDefinition $Signature -Name 'Win32Utils' -Namespace 'PInvoke' -Using PInvoke, System.Text -Verbose:$false
+    Add-Type -ErrorAction SilentlyContinue -MemberDefinition $Signature -Name 'Win32Utils' -Namespace 'PInvoke' -Using PInvoke, System.Text
 
     # Initialize some variables for storing the volume names, paths, and mount points
     [System.UInt32]$lpcchReturnLength = 0
@@ -74,4 +76,4 @@ public static extern uint QueryDosDevice(string lpDeviceName, StringBuilder lpTa
 }
 
 # Export external facing functions only, prevent internal functions from getting exported
-Export-ModuleMember -Function 'Get-GlobalRootDrives' -Verbose:$false
+Export-ModuleMember -Function 'Get-GlobalRootDrives'

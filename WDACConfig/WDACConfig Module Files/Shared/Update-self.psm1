@@ -9,9 +9,10 @@ Function Update-self {
     #>
     [CmdletBinding()]
     param()
-
+    # Importing the $PSDefaultParameterValues to the current session, prior to everything else
+    . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
     # Importing the required sub-modules
-    Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Write-ColorfulText.psm1" -Force -Verbose:$false
+    Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Write-ColorfulText.psm1" -Force
 
     try {
         # Get the last update check time
@@ -79,4 +80,4 @@ Function Update-self {
 }
 
 # Export external facing functions only, prevent internal functions from getting exported
-Export-ModuleMember -Function 'Update-self' -Verbose:$false
+Export-ModuleMember -Function 'Update-self'

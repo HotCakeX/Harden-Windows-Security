@@ -5,6 +5,9 @@ Function Get-RuleRefs {
     #>
     [CmdletBinding()]
     param ($HashesArray)
+    # Importing the $PSDefaultParameterValues to the current session, prior to everything else
+    . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
+    
     $HashesArray | ForEach-Object -Begin { $i = 1 } -Process {
         $RulesRefs += Write-Output -InputObject "`n<FileRuleRef RuleID=`"ID_ALLOW_AA_$i`" />"
         $RulesRefs += Write-Output -InputObject "`n<FileRuleRef RuleID=`"ID_ALLOW_AB_$i`" />"
@@ -16,4 +19,4 @@ Function Get-RuleRefs {
 }
 
 # Export external facing functions only, prevent internal functions from getting exported
-Export-ModuleMember -Function 'Get-RuleRefs' -Verbose:$false
+Export-ModuleMember -Function 'Get-RuleRefs'

@@ -539,7 +539,10 @@ Function New-WDACConfig {
         }
 
         [System.Management.Automation.ScriptBlock]$PrepDefaultWindowsAuditSCRIPTBLOCK = {
-            if ($PrepDefaultWindowsAudit -and $LogSize) { Set-LogSize -LogSize $LogSize -Verbose:$Verbose }
+            if ($PrepDefaultWindowsAudit -and $LogSize) {
+                Write-Verbose -Message 'Changing the Log size of Code Integrity Operational event log'
+                Set-LogSize -LogSize $LogSize -Verbose:$Verbose
+            }
             Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\DefaultWindows_Audit.xml' -Destination .\DefaultWindows_Audit.xml -Force
 
             # Making Sure neither PowerShell core nor WDACConfig module files are added to the Supplemental policy created by -MakePolicyFromAuditLogs parameter
@@ -570,18 +573,35 @@ Function New-WDACConfig {
             }
         }
 
-        [System.Management.Automation.ScriptBlock]$MakePolicyFromAuditLogsSCRIPTBLOCK = {
-            if ($MakePolicyFromAuditLogs -and $LogSize) { Set-LogSize -LogSize $LogSize -Verbose:$Verbose }
+        Function Build-PolicyFromAuditLogs {
+            <#
+            .SYNOPSIS
+                A helper function that creates 2 WDAC policies. A bas policy from one of the standard templates
+                and a Supplemental policy based on the Code Integrity Operational audit logs
+            .INPUTS
+                System.Void
+            .OUTPUTS
+                System.Void
+            #>
+        
+            if ($MakePolicyFromAuditLogs -and $LogSize) {
+                Write-Verbose -Message 'Changing the Log size of Code Integrity Operational event log'
+                Set-LogSize -LogSize $LogSize -Verbose:$Verbose
+            }
+
             # Make sure there is no leftover files from previous operations of this same command
+            Write-Verbose -Message 'Make sure there is no leftover files from previous operations of this same command'
             Remove-Item -Path "$home\WDAC\*" -Recurse -Force -ErrorAction SilentlyContinue
+           
             # Create a working directory in user's folder
+            Write-Verbose -Message 'Create a working directory in user folder'
             New-Item -Type Directory -Path "$home\WDAC" -Force | Out-Null
             Set-Location "$home\WDAC"
 
-            ############################### Base Policy Processing ###############################
-
+            #Region Base-Policy-Processing
             switch ($BasePolicyType) {
                 'Allow Microsoft Base' {
+                    Write-Verbose -Message 'Creating Allow Microsoft Base policy'
                     Build-AllowMSFTWithBlockRules | Out-Null
                     $xml = [System.Xml.XmlDocument](Get-Content -Path .\AllowMicrosoftPlusBlockRules.xml)
                     $BasePolicyID = $xml.SiPolicy.PolicyID
@@ -589,6 +609,7 @@ Function New-WDACConfig {
                     $BasePolicy = 'AllowMicrosoftPlusBlockRules.xml'
                 }
                 'Default Windows Base' {
+                    Write-Verbose -Message 'Creating Default Windows Base policy'
                     Build-DefaultWindowsWithBlockRules | Out-Null
                     $xml = [System.Xml.XmlDocument](Get-Content -Path .\DefaultWindowsPlusBlockRules.xml)
                     $BasePolicyID = $xml.SiPolicy.PolicyID
@@ -596,15 +617,19 @@ Function New-WDACConfig {
                     $BasePolicy = 'DefaultWindowsPlusBlockRules.xml'
                 }
             }
+
             if ($TestMode -and $MakePolicyFromAuditLogs) {
+                Write-Verbose -Message 'Setting "Boot Audit on Failure" and "Advanced Boot Options Menu" policy rule options because TestMode parameter was used'
                 9..10 | ForEach-Object -Process { Set-RuleOption -FilePath $BasePolicy -Option $_ }
             }
+
             if ($RequireEVSigners -and $MakePolicyFromAuditLogs) {
+                Write-Verbose -Message 'Setting "Required:EV Signers" policy rule option because RequireEVSigners parameter was used'
                 Set-RuleOption -FilePath $BasePolicy -Option 8
             }
+            #Endregion Base-Policy-Processing
 
-            ############################### Supplemental Processing ###############################
-
+            #Region Supplemental-Policy-Processing
             # Produce a policy xml file from event viewer logs
             Write-ColorfulText -Color Lavender -InputText 'Scanning Windows Event logs and creating a policy file, please wait...'
 
@@ -627,6 +652,7 @@ Function New-WDACConfig {
             Write-ColorfulText -Color HotPink -InputText "`nGenerating Supplemental policy with the following specifications:"
             $PolicyMakerHashTable
             Write-Host -Object "`n"
+            
             # Create the supplemental policy via parameter splatting for files in event viewer that are currently on the disk
             New-CIPolicy @PolicyMakerHashTable
 
@@ -670,17 +696,28 @@ Function New-WDACConfig {
             else {
                 Rename-Item -Path 'AuditLogsPolicy_NoDeletedFiles.xml' -NewName 'SupplementalPolicy.xml' -Force
             }
-            # Convert the SupplementalPolicy.xml policy file from base policy to supplemental policy of our base policy
+
+            Write-Verbose -Message 'Setting the version for SupplementalPolicy.xml policy to 1.0.0.0'
             Set-CIPolicyVersion -FilePath 'SupplementalPolicy.xml' -Version '1.0.0.0'
+            
+            # Convert the SupplementalPolicy.xml policy file from base policy to supplemental policy of our base policy
+            Write-Verbose -Message 'Convert the SupplementalPolicy.xml policy file from base policy to supplemental policy of our base policy'
             [System.String]$PolicyID = Set-CIPolicyIdInfo -FilePath 'SupplementalPolicy.xml' -PolicyName "Supplemental Policy made from Audit Event Logs on $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID -BasePolicyToSupplementPath $BasePolicy
             [System.String]$PolicyID = $PolicyID.Substring(11)
+            
             # Make sure policy rule options that don't belong to a Supplemental policy don't exit
+            Write-Verbose -Message 'Setting the policy rule options for the Supplemental policy by making sure policy rule options that do not belong to a Supplemental policy do not exit'
             @(0, 1, 2, 3, 4, 8, 9, 10, 11, 12, 15, 16, 17, 19, 20) | ForEach-Object -Process { Set-RuleOption -FilePath 'SupplementalPolicy.xml' -Option $_ -Delete }
 
             # Set the hypervisor Code Integrity option for Supplemental policy to Strict
+            Write-Verbose -Message 'Setting HVCI to strict for SupplementalPolicy.xml'
             Set-HVCIOptions -Strict -FilePath 'SupplementalPolicy.xml'
+
             # convert the Supplemental Policy file to .cip binary file
+            Write-Verbose -Message 'Converting SupplementalPolicy.xml policy to .CIP binary'
             ConvertFrom-CIPolicy -XmlFilePath 'SupplementalPolicy.xml' -BinaryFilePath "$policyID.cip" | Out-Null
+
+            #Endregion Supplemental-Policy-Processing
 
             [PSCustomObject]@{
                 BasePolicyFile = $BasePolicy
@@ -696,18 +733,26 @@ Function New-WDACConfig {
             }
 
             if ($Deploy -and $MakePolicyFromAuditLogs) {
+
+                Write-Verbose -Message 'Deploying the Base policy and Supplemental policy'
                 &'C:\Windows\System32\CiTool.exe' --update-policy "$BasePolicyID.cip" -json | Out-Null
                 &'C:\Windows\System32\CiTool.exe' --update-policy "$policyID.cip" -json | Out-Null
+                
                 Write-ColorfulText -Color Pink -InputText "`nBase policy and Supplemental Policies deployed and activated.`n"
+                
                 # Get the correct Prep mode Audit policy ID to remove from the system
+                Write-Verbose -Message 'Getting the correct Prep mode Audit policy ID to remove from the system'
                 switch ($BasePolicyType) {
                     'Allow Microsoft Base' {
+                        Write-Verbose -Message 'Going to remove the AllowMicrosoft policy from the system because Allow Microsoft Base was used'
                         $IDToRemove = ((&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { $_.FriendlyName -eq 'PrepMSFTOnlyAudit' }).PolicyID
                     }
                     'Default Windows Base' {
+                        Write-Verbose -Message 'Going to remove the DefaultWindows policy from the system because Default Windows Base was used'
                         $IDToRemove = ((&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { $_.FriendlyName -eq 'PrepDefaultWindows' }).PolicyID
                     }
                 }
+
                 &'C:\Windows\System32\CiTool.exe' --remove-policy "{$IDToRemove}" -json | Out-Null
                 Write-ColorfulText -Color Lavender -InputText "`nSystem restart required to finish removing the Audit mode Prep policy"
             }
@@ -720,9 +765,11 @@ Function New-WDACConfig {
             Rename-Item -Path 'AllowMicrosoftPlusBlockRules.xml' -NewName 'SignedAndReputable.xml' -Force
             @(14, 15) | ForEach-Object -Process { Set-RuleOption -FilePath .\SignedAndReputable.xml -Option $_ }
             if ($TestMode -and $MakeLightPolicy) {
+                Write-Verbose -Message 'Setting "Boot Audit on Failure" and "Advanced Boot Options Menu" policy rule options because TestMode parameter was used'
                 9..10 | ForEach-Object -Process { Set-RuleOption -FilePath .\SignedAndReputable.xml -Option $_ }
             }
             if ($RequireEVSigners -and $MakeLightPolicy) {
+                Write-Verbose -Message 'Setting "Required:EV Signers" policy rule option because RequireEVSigners parameter was used'
                 Set-RuleOption -FilePath .\SignedAndReputable.xml -Option 8
             }
             $BasePolicyID = Set-CIPolicyIdInfo -FilePath .\SignedAndReputable.xml -ResetPolicyID -PolicyName "Signed And Reputable policy - $(Get-Date -Format 'MM-dd-yyyy')"
@@ -781,7 +828,7 @@ Function New-WDACConfig {
 
             $SetAutoUpdateDriverBlockRules { Set-AutoUpdateDriverBlockRules ; break }
             $MakeAllowMSFTWithBlockRules { Build-AllowMSFTWithBlockRules ; break }
-            $MakePolicyFromAuditLogs { & $MakePolicyFromAuditLogsSCRIPTBLOCK; break }
+            $MakePolicyFromAuditLogs { Build-PolicyFromAuditLogs ; break }
             $PrepMSFTOnlyAudit { Build-MSFTOnlyAudit ; break }
             $MakeLightPolicy { & $MakeLightPolicySCRIPTBLOCK; break }
             $MakeDefaultWindowsWithBlockRules { Build-DefaultWindowsWithBlockRules ; break }

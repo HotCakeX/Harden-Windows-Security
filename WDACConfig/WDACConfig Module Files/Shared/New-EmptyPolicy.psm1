@@ -10,7 +10,7 @@ Function New-EmptyPolicy {
     )
     # Importing the $PSDefaultParameterValues to the current session, prior to everything else
     . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
-    
+
     [System.String]$EmptyPolicy = @"
 <?xml version="1.0" encoding="utf-8"?>
 <SiPolicy xmlns="urn:schemas-microsoft-com:sipolicy" PolicyType="Base Policy">

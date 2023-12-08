@@ -428,11 +428,11 @@ Function New-WDACConfig {
 
             Write-Verbose -Message 'Downloading the latest Microsoft recommended block rules and creating Microsoft recommended block rules TEMP.xml'
             (Invoke-WebRequest -Uri $MSFTRecommendeBlockRulesURL -ProgressAction SilentlyContinue).Content -replace "(?s).*``````xml(.*)``````.*", '$1' | Out-File -FilePath '.\Microsoft recommended block rules TEMP.xml' -Force
-            
+
             # Remove empty lines from the policy file
             Write-Verbose -Message 'Removing any empty lines from the Temp policy file and generating the Microsoft recommended block rules.xml'
             Get-Content -Path '.\Microsoft recommended block rules TEMP.xml' | Where-Object -FilterScript { $_.trim() -ne '' } | Out-File -FilePath '.\Microsoft recommended block rules.xml' -Force
-            
+
             Set-RuleOption -FilePath '.\Microsoft recommended block rules.xml' -Option 3 -Delete
             @(0, 2, 6, 11, 12, 16, 19, 20) | ForEach-Object -Process { Set-RuleOption -FilePath '.\Microsoft recommended block rules.xml' -Option $_ }
             Set-HVCIOptions -Strict -FilePath '.\Microsoft recommended block rules.xml'
@@ -513,10 +513,10 @@ Function New-WDACConfig {
                 Write-Verbose -Message 'Changing the Log size of Code Integrity Operational event log'
                 Set-LogSize -LogSize $LogSize -Verbose:$Verbose
             }
-            
+
             Write-Verbose -Message 'Copying AllowMicrosoft.xml from Windows directory to the current working directory'
             Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml' -Destination .\AllowMicrosoft.xml -Force
-            
+
             Write-Verbose -Message 'Enabling Audit mode'
             Set-RuleOption -FilePath .\AllowMicrosoft.xml -Option 3
 
@@ -529,7 +529,7 @@ Function New-WDACConfig {
 
             Write-Verbose -Message 'Converting AllowMicrosoft.xml to .CIP Binary'
             ConvertFrom-CIPolicy -XmlFilePath .\AllowMicrosoft.xml -BinaryFilePath "$PolicyID.cip" | Out-Null
-            
+
             if ($Deploy) {
                 Write-Verbose -Message 'Deploying the AllowMicrosoft.xml policy on the system'
                 &'C:\Windows\System32\CiTool.exe' --update-policy "$PolicyID.cip" -json | Out-Null
@@ -555,7 +555,7 @@ Function New-WDACConfig {
             #>
             [CmdletBinding()]
             param()
-        
+
             if ($PrepDefaultWindowsAudit -and $LogSize) {
                 Write-Verbose -Message 'Changing the Log size of Code Integrity Operational event log'
                 Set-LogSize -LogSize $LogSize -Verbose:$Verbose
@@ -570,10 +570,10 @@ Function New-WDACConfig {
             if (Test-Path -Path 'C:\Program Files\PowerShell') {
                 Write-Verbose -Message 'Scanning PowerShell core directory and creating a policy file'
                 New-CIPolicy -ScanPath 'C:\Program Files\PowerShell' -Level FilePublisher -NoScript -Fallback Hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -FilePath .\AllowPowerShell.xml
-                
-                Write-Verbose -Message 'Scanning WDACConfig module directory and creating a policy file' 
+
+                Write-Verbose -Message 'Scanning WDACConfig module directory and creating a policy file'
                 New-CIPolicy -ScanPath "$ModuleRootPath" -Level hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -FilePath .\WDACConfigModule.xml
-                
+
                 Write-Verbose -Message 'Merging the policy files for PowerShell core and WDACConfig module with the DefaultWindows_Audit.xml policy file'
                 Merge-CIPolicy -PolicyPaths .\DefaultWindows_Audit.xml, .\AllowPowerShell.xml, .\WDACConfigModule.xml -OutputFilePath .\DefaultWindows_Audit_temp.xml | Out-Null
 
@@ -582,7 +582,7 @@ Function New-WDACConfig {
 
                 Write-Verbose -Message 'Renaming DefaultWindows_Audit_temp.xml to DefaultWindows_Audit.xml'
                 Rename-Item -Path .\DefaultWindows_Audit_temp.xml -NewName 'DefaultWindows_Audit.xml' -Force
-                
+
                 Write-Verbose -Message 'Removing AllowPowerShell.xml and WDACConfigModule.xml policies'
                 Remove-Item -Path 'WDACConfigModule.xml', 'AllowPowerShell.xml' -Force
             }
@@ -596,16 +596,16 @@ Function New-WDACConfig {
 
             Write-Verbose -Message 'Assigning "PrepDefaultWindowsAudit" as the policy name'
             Set-CIPolicyIdInfo -PolicyName 'PrepDefaultWindows' -FilePath .\DefaultWindows_Audit.xml
-            
+
             Write-Verbose -Message 'Converting DefaultWindows_Audit.xml to .CIP Binary'
             ConvertFrom-CIPolicy -XmlFilePath .\DefaultWindows_Audit.xml -BinaryFilePath "$PolicyID.cip" | Out-Null
-            
+
             if ($Deploy) {
                 Write-Verbose -Message 'Deploying the DefaultWindows_Audit.xml policy on the system'
                 &'C:\Windows\System32\CiTool.exe' --update-policy "$PolicyID.cip" -json | Out-Null
-                
+
                 Write-ColorfulText -Color Lavender -InputText 'The defaultWindows policy has been deployed in Audit mode. No reboot required.'
-                
+
                 Write-Verbose -Message 'Removing the generated .CIP files'
                 Remove-Item -Path 'DefaultWindows_Audit.xml', "$PolicyID.cip" -Force
             }
@@ -626,7 +626,7 @@ Function New-WDACConfig {
             #>
             [CmdletBinding()]
             param()
-            
+
             if ($MakePolicyFromAuditLogs -and $LogSize) {
                 Write-Verbose -Message 'Changing the Log size of Code Integrity Operational event log'
                 Set-LogSize -LogSize $LogSize -Verbose:$Verbose
@@ -635,7 +635,7 @@ Function New-WDACConfig {
             # Make sure there is no leftover files from previous operations of this same command
             Write-Verbose -Message 'Make sure there is no leftover files from previous operations of this same command'
             Remove-Item -Path "$home\WDAC\*" -Recurse -Force -ErrorAction SilentlyContinue
-           
+
             # Create a working directory in user's folder
             Write-Verbose -Message 'Create a working directory in user folder'
             New-Item -Type Directory -Path "$home\WDAC" -Force | Out-Null
@@ -742,12 +742,12 @@ Function New-WDACConfig {
 
             Write-Verbose -Message 'Setting the version for SupplementalPolicy.xml policy to 1.0.0.0'
             Set-CIPolicyVersion -FilePath 'SupplementalPolicy.xml' -Version '1.0.0.0'
-            
+
             # Convert the SupplementalPolicy.xml policy file from base policy to supplemental policy of our base policy
             Write-Verbose -Message 'Convert the SupplementalPolicy.xml policy file from base policy to supplemental policy of our base policy'
             [System.String]$PolicyID = Set-CIPolicyIdInfo -FilePath 'SupplementalPolicy.xml' -PolicyName "Supplemental Policy made from Audit Event Logs on $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID -BasePolicyToSupplementPath $BasePolicy
             [System.String]$PolicyID = $PolicyID.Substring(11)
-            
+
             # Make sure policy rule options that don't belong to a Supplemental policy don't exit
             Write-Verbose -Message 'Setting the policy rule options for the Supplemental policy by making sure policy rule options that do not belong to a Supplemental policy do not exit'
             @(0, 1, 2, 3, 4, 8, 9, 10, 11, 12, 15, 16, 17, 19, 20) | ForEach-Object -Process { Set-RuleOption -FilePath 'SupplementalPolicy.xml' -Option $_ -Delete }
@@ -780,9 +780,9 @@ Function New-WDACConfig {
                 Write-Verbose -Message 'Deploying the Base policy and Supplemental policy'
                 &'C:\Windows\System32\CiTool.exe' --update-policy "$BasePolicyID.cip" -json | Out-Null
                 &'C:\Windows\System32\CiTool.exe' --update-policy "$policyID.cip" -json | Out-Null
-                
+
                 Write-ColorfulText -Color Pink -InputText "`nBase policy and Supplemental Policies deployed and activated.`n"
-                
+
                 # Get the correct Prep mode Audit policy ID to remove from the system
                 Write-Verbose -Message 'Getting the correct Prep mode Audit policy ID to remove from the system'
                 switch ($BasePolicyType) {
@@ -824,10 +824,10 @@ Function New-WDACConfig {
 
             Write-Verbose -Message 'Renaming AllowMicrosoftPlusBlockRules.xml to SignedAndReputable.xml'
             Rename-Item -Path 'AllowMicrosoftPlusBlockRules.xml' -NewName 'SignedAndReputable.xml' -Force
-           
+
             Write-Verbose -Message 'Setting the policy rule options for the SignedAndReputable.xml policy'
             @(14, 15) | ForEach-Object -Process { Set-RuleOption -FilePath .\SignedAndReputable.xml -Option $_ }
-            
+
             if ($TestMode -and $MakeLightPolicy) {
                 Write-Verbose -Message 'Setting "Boot Audit on Failure" and "Advanced Boot Options Menu" policy rule options because TestMode parameter was used'
                 9..10 | ForEach-Object -Process { Set-RuleOption -FilePath .\SignedAndReputable.xml -Option $_ }
@@ -836,25 +836,25 @@ Function New-WDACConfig {
                 Write-Verbose -Message 'Setting "Required:EV Signers" policy rule option because RequireEVSigners parameter was used'
                 Set-RuleOption -FilePath .\SignedAndReputable.xml -Option 8
             }
-           
+
             Write-Verbose -Message 'Resetting the policy ID and setting a name for SignedAndReputable.xml'
             $BasePolicyID = Set-CIPolicyIdInfo -FilePath .\SignedAndReputable.xml -ResetPolicyID -PolicyName "Signed And Reputable policy - $(Get-Date -Format 'MM-dd-yyyy')"
             $BasePolicyID = $BasePolicyID.Substring(11)
-            
+
             Write-Verbose -Message 'Setting the version of SignedAndReputable.xml policy to 1.0.0.0'
             Set-CIPolicyVersion -FilePath .\SignedAndReputable.xml -Version '1.0.0.0'
-           
+
             Write-Verbose -Message 'Setting HVCI to Strict'
             Set-HVCIOptions -Strict -FilePath .\SignedAndReputable.xml
 
             Write-Verbose -Message 'Converting SignedAndReputable.xml policy to .CIP binary'
             ConvertFrom-CIPolicy -XmlFilePath .\SignedAndReputable.xml -BinaryFilePath "$BasePolicyID.cip" | Out-Null
-            
+
             # Configure required services for ISG authorization
             Write-Verbose -Message 'Configuring required services for ISG authorization'
             Start-Process -FilePath 'C:\Windows\System32\appidtel.exe' -ArgumentList 'start' -Wait -NoNewWindow
             Start-Process -FilePath 'C:\Windows\System32\sc.exe' -ArgumentList 'config', 'appidsvc', 'start= auto' -Wait -NoNewWindow
-            
+
             if ($Deploy -and $MakeLightPolicy) {
                 Write-Verbose -Message 'Deploying the SignedAndReputable.xml policy'
                 &'C:\Windows\System32\CiTool.exe' --update-policy "$BasePolicyID.cip" -json | Out-Null

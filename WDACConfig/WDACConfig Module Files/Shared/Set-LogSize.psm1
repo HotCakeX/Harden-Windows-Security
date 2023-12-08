@@ -15,7 +15,7 @@ Function Set-LogSize {
     )
     # Importing the $PSDefaultParameterValues to the current session, prior to everything else
     . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
-    
+
     Write-Verbose -Message "Setting 'Microsoft-Windows-CodeIntegrity/Operational' log size to $LogSize"
     [System.String]$LogName = 'Microsoft-Windows-CodeIntegrity/Operational'
     [System.Diagnostics.Eventing.Reader.EventLogConfiguration]$Log = New-Object -TypeName System.Diagnostics.Eventing.Reader.EventLogConfiguration -ArgumentList $LogName

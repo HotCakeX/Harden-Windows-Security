@@ -13,7 +13,7 @@ Function Confirm-CertCN {
     )
     # Importing the $PSDefaultParameterValues to the current session, prior to everything else
     . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
-    
+
     [System.String[]]$Certificates = foreach ($cert in (Get-ChildItem -Path 'Cert:\CurrentUser\my')) {
         (($cert.Subject -split ',' | Select-Object -First 1) -replace 'CN=', '').Trim()
     }

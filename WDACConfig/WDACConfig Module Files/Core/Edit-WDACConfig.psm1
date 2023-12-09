@@ -324,16 +324,7 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
                 }
                 catch {
                     # Show any extra info about any possible error that might've occurred
-                    $_
-                    $_.CategoryInfo
-                    $_.ErrorDetails
-                    $_.Exception
-                    $_.FullyQualifiedErrorId
-                    $_.InvocationInfo
-                    $_.PipelineIterationInfo
-                    $_.PSMessageDetails
-                    $_.ScriptStackTrace
-                    $_.TargetObject
+                    Throw $_
                 }
                 finally {
                     # Deploy Enforced mode CIP
@@ -683,13 +674,13 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
                     Write-Verbose -Message 'Checking for Kernel protected files'
 
                     # Finding the file(s) first and storing them in an array
-                    [System.Object[]]$ExesWithNoHash = @()
+                    [System.String[]]$ExesWithNoHash = @()
                     
                     # looping through each user-selected path(s)
                     foreach ($ProgramsPath in $ProgramsPaths) {
 
                         # Making sure the currently processing path has any .exe in it
-                        $AnyAvailableExes = (Get-ChildItem -File -Recurse -Path $ProgramsPath -Filter '*.exe').FullName
+                        [System.String[]]$AnyAvailableExes = (Get-ChildItem -File -Recurse -Path $ProgramsPath -Filter '*.exe').FullName
                         
                         # if any .exe was found then continue testing them
                         if ($AnyAvailableExes) {
@@ -710,7 +701,7 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
                     # Only proceed if any kernel protected file(s) were found in any of the user-selected directory path(s)
                     if ($ExesWithNoHash) {
 
-                        Write-Verbose -Message "The following Kernel protected files detected, creating allow rules for them:`n"
+                        Write-Verbose -Message 'The following Kernel protected files detected, creating allow rules for them:'
                         $ExesWithNoHash | ForEach-Object -Process { Write-Verbose -Message "$_" }
 
                         [System.Management.Automation.ScriptBlock]$KernelProtectedHashesBlock = {
@@ -773,16 +764,7 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
                 # Unlike AllowNewApps parameter, AllowNewAppsAuditEvents parameter performs Event viewer scanning and kernel protected files detection
                 # So the base policy enforced mode snap back can't happen any sooner than this point
                 catch {
-                    $_
-                    $_.CategoryInfo
-                    $_.ErrorDetails
-                    $_.Exception
-                    $_.FullyQualifiedErrorId
-                    $_.InvocationInfo
-                    $_.PipelineIterationInfo
-                    $_.PSMessageDetails
-                    $_.ScriptStackTrace
-                    $_.TargetObject
+                    Throw $_
                 }
                 finally {
                     # Deploy Enforced mode CIP
@@ -793,7 +775,6 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
                     Write-Verbose -Message 'Removing the SnapBack guarantee because the base policy has been successfully re-enforced'
                     Remove-Item -Path 'C:\EnforcedModeSnapBack.ps1' -Force
                     Remove-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce' -Name '*CIPolicySnapBack' -Force
-                
                 }
 
                 #Region Supplemental-policy-processing-and-deployment
@@ -830,7 +811,7 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
                
                 # Remove the policy xml file in Temp folder we created earlier
                 Remove-Item -Path $PolicyPath -Force
-            
+
                 #Endregion Supplemental-policy-processing-and-deployment
             }
         }

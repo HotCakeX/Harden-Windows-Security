@@ -114,8 +114,6 @@ Function Remove-WDACConfig {
     )
 
     begin {
-        # Importing the $PSDefaultParameterValues to the current session, prior to everything else
-        . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
         # Importing the required sub-modules
         Write-Verbose -Message 'Importing the required sub-modules'
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Update-self.psm1" -Force

@@ -52,6 +52,9 @@ Function Set-CommonWDACConfig {
         [parameter(Mandatory = $false, DontShow = $true)][System.DateTime]$LastUpdateCheck
     )
     begin {
+        # Importing the $PSDefaultParameterValues to the current session, prior to everything else
+        . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
+       
         # Importing the required sub-modules
         Write-Verbose -Message 'Importing the required sub-modules'
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Write-ColorfulText.psm1" -Force

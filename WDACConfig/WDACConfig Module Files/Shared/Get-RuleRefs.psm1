@@ -2,9 +2,16 @@ Function Get-RuleRefs {
     <#
     .SYNOPSIS
         Create File Rule Refs based on the ID of the File Rules above and store them in the $RulesRefs variable
+    .INPUTS
+        System.Object[]
+    .OUTPUTS
+        System.String
     #>
     [CmdletBinding()]
-    param ($HashesArray)
+    param (
+        [parameter(Mandatory = $true)]
+        [System.Object[]]$HashesArray
+    )
     # Importing the $PSDefaultParameterValues to the current session, prior to everything else
     . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
@@ -15,7 +22,7 @@ Function Get-RuleRefs {
         $RulesRefs += Write-Output -InputObject "`n<FileRuleRef RuleID=`"ID_ALLOW_AD_$i`" />"
         $i++
     }
-    return ($RulesRefs.Trim())
+    return [System.String]($RulesRefs.Trim())
 }
 
 # Export external facing functions only, prevent internal functions from getting exported

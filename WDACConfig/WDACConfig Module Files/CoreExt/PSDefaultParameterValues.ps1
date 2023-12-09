@@ -26,4 +26,3 @@ $PSDefaultParameterValues = @{
     'Update-self:Verbose'                  = $Verbose
     'Write-ColorfulText:Verbose'           = $Verbose
 }
-

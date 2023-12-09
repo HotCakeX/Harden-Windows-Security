@@ -59,6 +59,12 @@ Function New-SupplementalWDACConfig {
     )
 
     begin {
+        # Detecting if Verbose switch is used
+        $PSBoundParameters.Verbose.IsPresent ? ([System.Boolean]$Verbose = $true) : ([System.Boolean]$Verbose = $false) | Out-Null
+
+        # Importing the $PSDefaultParameterValues to the current session, prior to everything else
+        . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
+       
         # Importing the required sub-modules
         Write-Verbose -Message 'Importing the required sub-modules'
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Update-self.psm1" -Force
@@ -78,9 +84,6 @@ Function New-SupplementalWDACConfig {
                 return [System.String[]]$Levelz
             }
         }
-
-        # Detecting if Verbose switch is used
-        $PSBoundParameters.Verbose.IsPresent ? ([System.Boolean]$Verbose = $true) : ([System.Boolean]$Verbose = $false) | Out-Null
 
         # if -SkipVersionCheck wasn't passed, run the updater
         # Redirecting the Update-Self function's information Stream to $null because Write-Host

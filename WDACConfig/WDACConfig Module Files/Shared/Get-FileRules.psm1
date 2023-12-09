@@ -2,9 +2,16 @@ Function Get-FileRules {
     <#
     .SYNOPSIS
         Create File Rules based on hash of the files no longer available on the disk and store them in the $Rules variable
+    .INPUTS
+        System.Object[]
+    .OUTPUTS
+        System.String
     #>
     [CmdletBinding()]
-    param ($HashesArray)
+    param (
+        [parameter(Mandatory = $true)]
+        [System.Object[]]$HashesArray
+    )
     # Importing the $PSDefaultParameterValues to the current session, prior to everything else
     . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
@@ -15,7 +22,7 @@ Function Get-FileRules {
         $Rules += Write-Output -InputObject "`n<Allow ID=`"ID_ALLOW_AD_$i`" FriendlyName=`"$($_.'File Name') SHA1 Flat Hash`" Hash=`"$($_.'SHA1 Flat Hash')`" />"
         $i++
     }
-    return ($Rules.Trim())
+    return [System.String]($Rules.Trim())
 }
 
 # Export external facing functions only, prevent internal functions from getting exported

@@ -495,11 +495,13 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                     # Any other attempts such as "Get-FileHash" or "Get-AuthenticodeSignature" fail and ConfigCI Module cmdlets totally ignore these files and do not create allow rules for them
 
                     # Finding the file(s) first and storing them in an array
-                    [System.Object[]]$ExesWithNoHash = @()
+                    [System.String[]]$ExesWithNoHash = @()
+
                     # looping through each user-selected path(s)
                     foreach ($ProgramsPath in $ProgramsPaths) {
+
                         # Making sure the currently processing path has any .exe in it
-                        $AnyAvailableExes = (Get-ChildItem -Recurse -Path $ProgramsPath -Filter '*.exe').FullName
+                        [System.String[]]$AnyAvailableExes = (Get-ChildItem -Recurse -Path $ProgramsPath -Filter '*.exe').FullName
                         # if any .exe was found then continue testing them
                         if ($AnyAvailableExes) {
                             $AnyAvailableExes | ForEach-Object -Process {
@@ -582,21 +584,13 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                 # Unlike AllowNewApps parameter, AllowNewAppsAuditEvents parameter performs Event viewer scanning and kernel protected files detection
                 # So the base policy enforced mode snap back can't happen any sooner than this point
                 catch {
-                    $_
-                    $_.CategoryInfo
-                    $_.ErrorDetails
-                    $_.Exception
-                    $_.FullyQualifiedErrorId
-                    $_.InvocationInfo
-                    $_.PipelineIterationInfo
-                    $_.PSMessageDetails
-                    $_.ScriptStackTrace
-                    $_.TargetObject
+                    Throw $_
                 }
                 finally {
                     # Deploy Enforced mode CIP
                     Write-Verbose -Message 'Finally Block Running'
                     Update-BasePolicyToEnforced
+                    
                     # Enforced Mode Snapback removal after base policy has already been successfully re-enforced
                     Write-Verbose -Message 'Removing the SnapBack guarantee because the base policy has been successfully re-enforced'
                     Remove-Item -Path 'C:\EnforcedModeSnapBack.ps1' -Force
@@ -751,16 +745,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                 }
                 catch {
                     # Show any extra info about any possible error that might've occurred
-                    $_
-                    $_.CategoryInfo
-                    $_.ErrorDetails
-                    $_.Exception
-                    $_.FullyQualifiedErrorId
-                    $_.InvocationInfo
-                    $_.PipelineIterationInfo
-                    $_.PSMessageDetails
-                    $_.ScriptStackTrace
-                    $_.TargetObject
+                    Throw $_
                 }
                 finally {
                     # Deploy Enforced mode CIP

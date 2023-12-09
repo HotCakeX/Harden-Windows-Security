@@ -118,7 +118,7 @@ Function Edit-WDACConfig {
         # if -SkipVersionCheck wasn't passed, run the updater
         # Redirecting the Update-Self function's information Stream to $null because Write-Host
         # Used by Write-ColorfulText outputs to both information stream and host console
-        if (-NOT $SkipVersionCheck) { Update-self -Verbose:$Verbose 6> $null }
+        if (-NOT $SkipVersionCheck) { Update-self 6> $null }
 
         # Detecting if Debug switch is used, will do debugging actions based on that
         $PSBoundParameters.Debug.IsPresent ? ([System.Boolean]$Debug = $true) : ([System.Boolean]$Debug = $false) | Out-Null
@@ -440,7 +440,7 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
             # Change Code Integrity event logs size
             if ($AllowNewAppsAuditEvents -and $LogSize) {
                 Write-Verbose -Message 'Changing Code Integrity event logs size'
-                Set-LogSize -LogSize $LogSize -Verbose:$Verbose
+                Set-LogSize -LogSize $LogSize
             }
             
             # Make sure there is no leftover from previous runs
@@ -555,7 +555,7 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
                     Write-Host -Object 'Scanning Windows Event logs and creating a policy file, please wait...' -ForegroundColor Cyan
 
                     # Extracting the array content from Get-AuditEventLogsProcessing function
-                    $AuditEventLogsProcessingResults = Get-AuditEventLogsProcessing -Date $Date -Verbose:$Verbose
+                    $AuditEventLogsProcessingResults = Get-AuditEventLogsProcessing -Date $Date
 
                     # Only create policy for files that are available on the disk (based on Event viewer logs)
                     # but weren't in user-selected program path(s), if there are any
@@ -563,7 +563,7 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
 
                         # Using the function to find out which files are not in the user-selected path(s), if any, to only scan those by first copying them to another directory
                         # this prevents duplicate rule creation and double file copying
-                        $TestFilePathResults = (Test-FilePath -FilePath $AuditEventLogsProcessingResults.AvailableFilesPaths -DirectoryPath $ProgramsPaths -Verbose:$Verbose).path | Select-Object -Unique
+                        $TestFilePathResults = (Test-FilePath -FilePath $AuditEventLogsProcessingResults.AvailableFilesPaths -DirectoryPath $ProgramsPaths).path | Select-Object -Unique
 
                         Write-Verbose -Message "$($TestFilePathResults.count) file(s) have been found in event viewer logs that don't exist in any of the folder paths you selected."
 
@@ -622,8 +622,8 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
                         }
 
                         Write-Verbose -Message 'Creating FuleRules and RuleRefs for files that are no longer available on the disk but were detected in event viewer logs'
-                        $FileRulesHashesResults = Get-FileRules -HashesArray $AuditEventLogsProcessingResults.DeletedFileHashes -Verbose:$Verbose
-                        $RuleRefsHashesResults = (Get-RuleRefs -HashesArray $AuditEventLogsProcessingResults.DeletedFileHashes -Verbose:$Verbose).Trim()
+                        $FileRulesHashesResults = Get-FileRules -HashesArray $AuditEventLogsProcessingResults.DeletedFileHashes
+                        $RuleRefsHashesResults = (Get-RuleRefs -HashesArray $AuditEventLogsProcessingResults.DeletedFileHashes).Trim()
                         
                         # Save the File Rules and File Rule Refs in the FileRulesAndFileRefs.txt in the current working directory for debugging purposes
                         Write-Verbose -Message 'Saving the File Rules and File Rule Refs in the FileRulesAndFileRefs.txt in the current working directory for debugging purposes'
@@ -631,7 +631,7 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
 
                         # Put the Rules and RulesRefs in an empty policy file
                         Write-Verbose -Message 'Putting the Rules and RulesRefs in an empty policy file'
-                        New-EmptyPolicy -RulesContent $FileRulesHashesResults -RuleRefsContent $RuleRefsHashesResults -Verbose:$Verbose | Out-File -FilePath .\DeletedFileHashesEventsPolicy.xml -Force
+                        New-EmptyPolicy -RulesContent $FileRulesHashesResults -RuleRefsContent $RuleRefsHashesResults | Out-File -FilePath .\DeletedFileHashesEventsPolicy.xml -Force
 
                         # adding the policy file that consists of rules from audit even logs, to the array
                         Write-Verbose -Message 'Adding the policy file (DeletedFileHashesEventsPolicy.xml) that consists of rules from audit even logs, to the array of XML files'
@@ -720,7 +720,7 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
                                     if ($_.'File Name' -match ($pattern = '\\Device\\HarddiskVolume(\d+)\\(.*)$')) {
                                         $hardDiskVolumeNumber = $Matches[1]
                                         $remainingPath = $Matches[2]
-                                        $getletter = Get-GlobalRootDrives -Verbose:$Verbose | Where-Object -FilterScript { $_.devicepath -eq "\Device\HarddiskVolume$hardDiskVolumeNumber" }
+                                        $getletter = Get-GlobalRootDrives | Where-Object -FilterScript { $_.devicepath -eq "\Device\HarddiskVolume$hardDiskVolumeNumber" }
                                         $usablePath = "$($getletter.DriveLetter)$remainingPath"
                                         $_.'File Name' = $_.'File Name' -replace $pattern, $usablePath
                                     } # Check if file is currently on the disk
@@ -740,10 +740,10 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
                         if ($KernelProtectedHashesBlockResults) {
 
                             # Save the File Rules and File Rule Refs in the FileRulesAndFileRefs.txt in the current working directory for debugging purposes
-                            (Get-FileRules -HashesArray $KernelProtectedHashesBlockResults -Verbose:$Verbose) + (Get-RuleRefs -HashesArray $KernelProtectedHashesBlockResults -Verbose:$Verbose) | Out-File -FilePath KernelProtectedFiles.txt -Force
+                            (Get-FileRules -HashesArray $KernelProtectedHashesBlockResults) + (Get-RuleRefs -HashesArray $KernelProtectedHashesBlockResults) | Out-File -FilePath KernelProtectedFiles.txt -Force
 
                             # Put the Rules and RulesRefs in an empty policy file
-                            New-EmptyPolicy -RulesContent (Get-FileRules -HashesArray $KernelProtectedHashesBlockResults -Verbose:$Verbose) -RuleRefsContent (Get-RuleRefs -HashesArray $KernelProtectedHashesBlockResults -Verbose:$Verbose) -Verbose:$Verbose | Out-File -FilePath .\KernelProtectedFiles.xml -Force
+                            New-EmptyPolicy -RulesContent (Get-FileRules -HashesArray $KernelProtectedHashesBlockResults) -RuleRefsContent (Get-RuleRefs -HashesArray $KernelProtectedHashesBlockResults) | Out-File -FilePath .\KernelProtectedFiles.xml -Force
 
                             # adding the policy file  to the array of xml files
                             $PolicyXMLFilesArray += '.\KernelProtectedFiles.xml'
@@ -863,7 +863,7 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
 
         if ($UpdateBasePolicy) {
             # First get the Microsoft recommended block rules
-            Get-BlockRulesMeta -Verbose:$Verbose | Out-Null
+            Get-BlockRulesMeta | Out-Null
 
             switch ($NewBasePolicyType) {
                 'AllowMicrosoft_Plus_Block_Rules' {

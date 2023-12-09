@@ -81,7 +81,7 @@ Function New-WDACConfig {
 
     begin {
         # Importing the $PSDefaultParameterValues to the current session, prior to everything else
-        . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
+      #  . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
         # Importing the required sub-modules
         Write-Verbose -Message 'Importing the required sub-modules'
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Update-self.psm1" -Force
@@ -112,10 +112,10 @@ Function New-WDACConfig {
 
         # Get SignToolPath from user parameter or user config file or auto-detect it
         if ($SignToolPath) {
-            $SignToolPathFinal = Get-SignTool -SignToolExePath $SignToolPath -Verbose:$Verbose
+            $SignToolPathFinal = Get-SignTool -SignToolExePath $SignToolPath
         } # If it is null, then Get-SignTool will behave the same as if it was called without any arguments.
         elseif ($IncludeSignTool -and $MakeDefaultWindowsWithBlockRules) {
-            $SignToolPathFinal = Get-SignTool -SignToolExePath ($UserConfig.SignToolCustomPath ?? $null) -Verbose:$Verbose
+            $SignToolPathFinal = Get-SignTool -SignToolExePath ($UserConfig.SignToolCustomPath ?? $null)
         }
         #endregion User-Configurations-Processing-Validation
 
@@ -235,7 +235,7 @@ Function New-WDACConfig {
             )
             # Get the latest Microsoft recommended block rules
             Write-Verbose -Message 'Getting the latest Microsoft recommended block rules'
-            Get-BlockRulesMeta -Verbose:$Verbose | Out-Null
+            Get-BlockRulesMeta | Out-Null
 
             Write-Verbose -Message 'Copying the AllowMicrosoft.xml from Windows directory to the current working directory'
             Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml' -Destination 'AllowMicrosoft.xml' -Force
@@ -307,7 +307,7 @@ Function New-WDACConfig {
             param()
 
             Write-Verbose -Message 'Getting the latest Microsoft recommended block rules'
-            Get-BlockRulesMeta -Verbose:$Verbose | Out-Null
+            Get-BlockRulesMeta | Out-Null
 
             Write-Verbose -Message 'Copying the DefaultWindows_Enforced.xml from Windows directory to the current working directory'
             Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\DefaultWindows_Enforced.xml' -Destination 'DefaultWindows_Enforced.xml' -Force
@@ -511,7 +511,7 @@ Function New-WDACConfig {
 
             if ($PrepMSFTOnlyAudit -and $LogSize) {
                 Write-Verbose -Message 'Changing the Log size of Code Integrity Operational event log'
-                Set-LogSize -LogSize $LogSize -Verbose:$Verbose
+                Set-LogSize -LogSize $LogSize
             }
 
             Write-Verbose -Message 'Copying AllowMicrosoft.xml from Windows directory to the current working directory'
@@ -558,7 +558,7 @@ Function New-WDACConfig {
 
             if ($PrepDefaultWindowsAudit -and $LogSize) {
                 Write-Verbose -Message 'Changing the Log size of Code Integrity Operational event log'
-                Set-LogSize -LogSize $LogSize -Verbose:$Verbose
+                Set-LogSize -LogSize $LogSize
             }
 
             Write-Verbose -Message 'Copying DefaultWindows_Audit.xml from Windows directory to the current working directory'
@@ -629,7 +629,7 @@ Function New-WDACConfig {
 
             if ($MakePolicyFromAuditLogs -and $LogSize) {
                 Write-Verbose -Message 'Changing the Log size of Code Integrity Operational event log'
-                Set-LogSize -LogSize $LogSize -Verbose:$Verbose
+                Set-LogSize -LogSize $LogSize
             }
 
             # Make sure there is no leftover files from previous operations of this same command
@@ -710,7 +710,7 @@ Function New-WDACConfig {
                             if ($_.'File Name' -match ($pattern = '\\Device\\HarddiskVolume(\d+)\\(.*)$')) {
                                 $hardDiskVolumeNumber = $Matches[1]
                                 $remainingPath = $Matches[2]
-                                $getletter = Get-GlobalRootDrives -Verbose:$Verbose | Where-Object -FilterScript { $_.devicepath -eq "\Device\HarddiskVolume$hardDiskVolumeNumber" }
+                                $getletter = Get-GlobalRootDrives | Where-Object -FilterScript { $_.devicepath -eq "\Device\HarddiskVolume$hardDiskVolumeNumber" }
                                 $usablePath = "$($getletter.DriveLetter)$remainingPath"
                                 $_.'File Name' = $_.'File Name' -replace $pattern, $usablePath
                             }
@@ -727,10 +727,10 @@ Function New-WDACConfig {
             if ($DeletedFileHashesArray -and !$NoDeletedFiles) {
 
                 # Save the the File Rules and File Rule Refs to the Out-File FileRulesAndFileRefs.txt in the current working directory
-                (Get-FileRules -HashesArray $DeletedFileHashesArray -Verbose:$Verbose) + (Get-RuleRefs -HashesArray $DeletedFileHashesArray -Verbose:$Verbose) | Out-File -FilePath FileRulesAndFileRefs.txt -Force
+                (Get-FileRules -HashesArray $DeletedFileHashesArray) + (Get-RuleRefs -HashesArray $DeletedFileHashesArray) | Out-File -FilePath FileRulesAndFileRefs.txt -Force
 
                 # Put the Rules and RulesRefs in an empty policy file
-                New-EmptyPolicy -RulesContent (Get-FileRules -HashesArray $DeletedFileHashesArray -Verbose:$Verbose) -RuleRefsContent (Get-RuleRefs -HashesArray $DeletedFileHashesArray -Verbose:$Verbose) -Verbose:$Verbose | Out-File -FilePath .\DeletedFilesHashes.xml -Force
+                New-EmptyPolicy -RulesContent (Get-FileRules -HashesArray $DeletedFileHashesArray) -RuleRefsContent (Get-RuleRefs -HashesArray $DeletedFileHashesArray) | Out-File -FilePath .\DeletedFilesHashes.xml -Force
 
                 # Merge the policy file we created at first using Event Viewer logs, with the policy file we created for Hash of the files no longer available on the disk
                 Merge-CIPolicy -PolicyPaths 'AuditLogsPolicy_NoDeletedFiles.xml', .\DeletedFilesHashes.xml -OutputFilePath .\SupplementalPolicy.xml | Out-Null
@@ -884,7 +884,7 @@ Function New-WDACConfig {
         # if -SkipVersionCheck wasn't passed, run the updater
         # Redirecting the Update-Self function's information Stream to $null because Write-Host
         # Used by Write-ColorfulText outputs to both information stream and host console
-        if (-NOT $SkipVersionCheck) { Update-self -Verbose:$Verbose 6> $null }
+        if (-NOT $SkipVersionCheck) { Update-self 6> $null }
     }
 
     process {
@@ -893,7 +893,7 @@ Function New-WDACConfig {
             # Deploy the latest block rules
             { $GetBlockRules -and $Deploy } { Deploy-LatestBlockRules ; break }
             # Get the latest block rules
-            $GetBlockRules { Get-BlockRulesMeta -Verbose:$Verbose ; break }
+            $GetBlockRules { Get-BlockRulesMeta ; break }
             # Get the latest driver block rules and Deploy them if New-WDACConfig -GetDriverBlockRules was called with -Deploy parameter
             { $GetDriverBlockRules } { Get-DriverBlockRules -Deploy:$Deploy ; break }
 

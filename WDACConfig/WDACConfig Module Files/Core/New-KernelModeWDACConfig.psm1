@@ -45,7 +45,7 @@ Function New-KernelModeWDACConfig {
         # if -SkipVersionCheck wasn't passed, run the updater
         # Redirecting the Update-Self function's information Stream to $null because Write-Host
         # Used by Write-ColorfulText outputs to both information stream and host console
-        if (-NOT $SkipVersionCheck) { Update-self -Verbose:$Verbose 6> $null }
+        if (-NOT $SkipVersionCheck) { Update-self 6> $null }
 
         # Check if the PrepMode and AuditAndEnforce parameters are used together and ensure one of them is used
         if (-not ($PSBoundParameters.ContainsKey('PrepMode') -xor $PSBoundParameters.ContainsKey('AuditAndEnforce'))) {
@@ -211,7 +211,7 @@ Function New-KernelModeWDACConfig {
                 Remove-Item -Path '.\DefaultWindows_Enforced_Kernel.xml' -Force
 
                 # Move all AllowedSigners from Usermode to Kernel mode signing scenario
-                Move-UserModeToKernelMode -FilePath '.\Final_DefaultWindows_Enforced_Kernel.xml' -Verbose:$Verbose | Out-Null
+                Move-UserModeToKernelMode -FilePath '.\Final_DefaultWindows_Enforced_Kernel.xml' | Out-Null
 
                 # Set the GUIDs for the XML policy file
                 Edit-GUIDs -PolicyIDInput $PolicyID -PolicyFilePathInput '.\Final_DefaultWindows_Enforced_Kernel.xml'
@@ -309,7 +309,7 @@ Function New-KernelModeWDACConfig {
                 Remove-Item -Path '.\DefaultWindows_Enforced_Kernel_NoFlights.xml' -Force
 
                 # Move all AllowedSigners from Usermode to Kernel mode signing scenario
-                Move-UserModeToKernelMode -FilePath '.\Final_DefaultWindows_Enforced_Kernel.xml' -Verbose:$Verbose | Out-Null
+                Move-UserModeToKernelMode -FilePath '.\Final_DefaultWindows_Enforced_Kernel.xml' | Out-Null
 
                 # Set the GUIDs for the XML policy file
                 Edit-GUIDs -PolicyIDInput $PolicyID -PolicyFilePathInput '.\Final_DefaultWindows_Enforced_Kernel.xml'

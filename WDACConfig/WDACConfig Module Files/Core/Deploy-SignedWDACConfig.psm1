@@ -45,7 +45,7 @@ Function Deploy-SignedWDACConfig {
         # if -SkipVersionCheck wasn't passed, run the updater
         # Redirecting the Update-Self function's information Stream to $null because Write-Host
         # Used by Write-ColorfulText outputs to both information stream and host console
-        if (-NOT $SkipVersionCheck) { Update-self -Verbose:$Verbose 6> $null }
+        if (-NOT $SkipVersionCheck) { Update-self 6> $null }
 
         # Detecting if Debug switch is used, will do debugging actions based on that
         $PSBoundParameters.Debug.IsPresent ? ([System.Boolean]$Debug = $true) : ([System.Boolean]$Debug = $false) | Out-Null
@@ -68,10 +68,10 @@ Function Deploy-SignedWDACConfig {
 
         # Get SignToolPath from user parameter or user config file or auto-detect it
         if ($SignToolPath) {
-            $SignToolPathFinal = Get-SignTool -SignToolExePath $SignToolPath -Verbose:$Verbose
+            $SignToolPathFinal = Get-SignTool -SignToolExePath $SignToolPath
         } # If it is null, then Get-SignTool will behave the same as if it was called without any arguments.
         else {
-            $SignToolPathFinal = Get-SignTool -SignToolExePath ($UserConfig.SignToolCustomPath ?? $null) -Verbose:$Verbose
+            $SignToolPathFinal = Get-SignTool -SignToolExePath ($UserConfig.SignToolCustomPath ?? $null)
         }
 
         # If CertPath parameter wasn't provided by user
@@ -95,7 +95,7 @@ Function Deploy-SignedWDACConfig {
         if (!$CertCN) {
             if ($UserConfig.CertificateCommonName) {
                 # Check if the value in the User configuration file exists and is valid
-                if (Confirm-CertCN -CN $($UserConfig.CertificateCommonName) -Verbose:$Verbose) {
+                if (Confirm-CertCN -CN $($UserConfig.CertificateCommonName)) {
                     # if it's valid then use it
                     $CertCN = $UserConfig.CertificateCommonName
                 }

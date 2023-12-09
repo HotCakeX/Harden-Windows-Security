@@ -30,7 +30,7 @@ Function Invoke-WDACSimulation {
         # if -SkipVersionCheck wasn't passed, run the updater
         # Redirecting the Update-Self function's information Stream to $null because Write-Host
         # Used by Write-ColorfulText outputs to both information stream and host console
-        if (-NOT $SkipVersionCheck) { Update-self -Verbose:$Verbose 6> $null }
+        if (-NOT $SkipVersionCheck) { Update-self 6> $null }
 
         # The total number of the main steps for the progress bar to render
         [System.Int16]$TotalSteps = 4

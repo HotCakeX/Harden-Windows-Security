@@ -250,9 +250,9 @@ Function Edit-SignedWDACConfig {
         function Update-BasePolicyToEnforced {
             <#
             .SYNOPSIS
-                Re-Deploy Basepolicy in Enforced mode
+                A helper function used to redeploy the base policy in Enforced mode
             .INPUTS
-                None. You cannot pipe objects to this function.
+                None. This function uses the global variables $PolicyName and $PolicyID
             .OUTPUTS
                 System.String
             #>

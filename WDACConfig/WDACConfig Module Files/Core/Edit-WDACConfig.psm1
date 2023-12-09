@@ -187,7 +187,14 @@ Function Edit-WDACConfig {
             <#
             .SYNOPSIS
                 A helper function used to redeploy the base policy in Enforced mode
+            .INPUTS
+                None. This function uses the global variables $PolicyName and $PolicyID
+            .OUTPUTS
+                System.String
             #>
+            [CmdletBinding()]
+            param()
+
             # Deploy Enforced mode CIP
             &'C:\Windows\System32\CiTool.exe' --update-policy '.\EnforcedMode.cip' -json | Out-Null
             Write-ColorfulText -Color TeaGreen -InputText "`nThe Base policy with the following details has been Re-Deployed in Enforced Mode:"

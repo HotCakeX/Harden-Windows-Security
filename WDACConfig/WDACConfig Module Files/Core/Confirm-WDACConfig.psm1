@@ -171,8 +171,7 @@ Function Confirm-WDACConfig {
     Confirm-WDACConfig -ListActivePolicies
 
 .INPUTS
-    System.Void
-
+    None. You cannot pipe objects to this function.
 .OUTPUTS
     System.String
     System.Object

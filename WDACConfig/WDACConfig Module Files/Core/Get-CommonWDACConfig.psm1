@@ -118,7 +118,7 @@ Function Get-CommonWDACConfig {
     Shows the GUID of the Strict Kernel no Flights root mode policy
 
 .INPUTS
-    System.Void
+    None. You cannot pipe objects to this function.
 
 .OUTPUTS
     System.Object[]

@@ -3,7 +3,7 @@ Function Update-self {
     .SYNOPSIS
         Make sure the latest version of the module is installed and if not, automatically update it, clean up any old versions
     .INPUTS
-        System.Void
+        None. You cannot pipe objects to this function.
     .OUTPUTS
         System.Void
     #>

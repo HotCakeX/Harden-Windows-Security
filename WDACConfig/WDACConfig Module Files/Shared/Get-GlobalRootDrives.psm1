@@ -6,7 +6,7 @@ Function Get-GlobalRootDrives {
     .LINK
         https://superuser.com/questions/1058217/list-every-device-harddiskvolume
     .INPUTS
-        System.Void
+        None. You cannot pipe objects to this function.
     .OUTPUTS
         System.Objects[]
     #>

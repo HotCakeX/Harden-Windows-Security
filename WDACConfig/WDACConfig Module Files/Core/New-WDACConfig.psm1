@@ -143,9 +143,9 @@ Function New-WDACConfig {
                 Gets the latest Microsoft Recommended Driver Block rules and processes them
                 Can optionally deploy them
             .INPUTS
-                System.Void
+                None. You cannot pipe objects to this function.
             .OUTPUTS
-                PSCustomObject
+                System.String
             .PARAMETER Deploy
                 Indicates that the function will deploy the latest Microsoft recommended drivers block list
             #>
@@ -211,9 +211,7 @@ Function New-WDACConfig {
                 Invoke-Command -ScriptBlock $DriversBlockListInfoGatheringSCRIPTBLOCK
 
                 # Display the result as object
-                [PSCustomObject]@{
-                    PolicyFile = 'Microsoft recommended driver block rules.xml'
-                }
+                Write-Output -InputObject 'PolicyFile = Microsoft recommended driver block rules.xml'
             }
         }
 
@@ -299,7 +297,7 @@ Function New-WDACConfig {
                 and merges them with the DefaultWindows_Enforced template policy.
                 It can also deploy the policy on the system.
             .INPUTS
-                System.Void
+                None. You cannot pipe objects to this function.
             .OUTPUTS
                 System.String
             #>
@@ -421,7 +419,7 @@ Function New-WDACConfig {
             .SYNOPSIS
                 A helper function that downloads the latest Microsoft recommended block rules
             .INPUTS
-                System.Void
+                None. You cannot pipe objects to this function.
             .OUTPUTS
                 System.String
             #>
@@ -452,7 +450,7 @@ Function New-WDACConfig {
                 In Windows up to date quickly ahead of its official release schedule. It does this by downloading and applying
                 The latest block list every 7 days on the system.
             .INPUTS
-                System.Void
+                None. You cannot pipe objects to this function.
             .OUTPUTS
                 System.Void
             #>
@@ -502,7 +500,7 @@ Function New-WDACConfig {
                 It can also call the Set-LogSize function to modify the size of Code Integrity Operational event log
                 It uses the $LogSize variable available in the New-WDACConfig's scope to do that.
             .INPUTS
-                System.Void
+                None. You cannot pipe objects to this function.
             .OUTPUTS
                 System.Void
             #>
@@ -549,7 +547,7 @@ Function New-WDACConfig {
                 It can also call the Set-LogSize function to modify the size of Code Integrity Operational event log
                 It uses the $LogSize variable available in the New-WDACConfig's scope to do that.
             .INPUTS
-                System.Void
+                None. You cannot pipe objects to this function.
             .OUTPUTS
                 System.Void
             #>
@@ -620,7 +618,7 @@ Function New-WDACConfig {
                 A helper function that creates 2 WDAC policies. A bas policy from one of the standard templates
                 and a Supplemental policy based on the Code Integrity Operational audit logs
             .INPUTS
-                System.Void
+                None. You cannot pipe objects to this function.
             .OUTPUTS
                 System.Void
             #>
@@ -809,7 +807,7 @@ Function New-WDACConfig {
                 It includes Microsoft Recommended Block rules.
                 It uses ISG to authorize files with good reputation.
             .INPUTS
-                System.Void
+                None. You cannot pipe objects to this function.
             .OUTPUTS
                 System.Void
             #>

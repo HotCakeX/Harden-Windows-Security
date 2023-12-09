@@ -3,7 +3,7 @@ Function Get-BlockRulesMeta {
     .SYNOPSIS
         Gets the latest Microsoft Recommended block rules, removes its allow all rules and sets HVCI to strict
     .INPUTS
-        System.Void
+        None. You cannot pipe objects to this function.
     .OUTPUTS
         PSCustomObject
     #>

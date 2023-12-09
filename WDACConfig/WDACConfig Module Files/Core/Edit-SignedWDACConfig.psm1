@@ -252,7 +252,7 @@ Function Edit-SignedWDACConfig {
             .SYNOPSIS
                 Re-Deploy Basepolicy in Enforced mode
             .INPUTS
-                System.Void
+                None. You cannot pipe objects to this function.
             .OUTPUTS
                 System.String
             #>

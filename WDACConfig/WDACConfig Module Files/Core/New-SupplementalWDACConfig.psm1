@@ -165,10 +165,10 @@ Function New-SupplementalWDACConfig {
                 Set-RuleOption -FilePath "SupplementalPolicy $SuppPolicyName.xml" -Option $_ -Delete }
             Set-HVCIOptions -Strict -FilePath "SupplementalPolicy $SuppPolicyName.xml"
             ConvertFrom-CIPolicy -XmlFilePath "SupplementalPolicy $SuppPolicyName.xml" -BinaryFilePath "$policyID.cip" | Out-Null
-            [PSCustomObject]@{
-                SupplementalPolicyFile = "SupplementalPolicy $SuppPolicyName.xml"
-                SupplementalPolicyGUID = $PolicyID
-            }
+
+            Write-Output -InputObject "SupplementalPolicyFile = SupplementalPolicy $SuppPolicyName.xml"
+            Write-Output -InputObject "SupplementalPolicyGUID = $PolicyID"
+            
             if ($Deploy) {
                 &'C:\Windows\System32\CiTool.exe' --update-policy "$policyID.cip" -json | Out-Null
                 Write-ColorfulText -Color Pink -InputText "A Supplemental policy with the name $SuppPolicyName has been deployed."
@@ -199,10 +199,9 @@ Function New-SupplementalWDACConfig {
 
             Set-HVCIOptions -Strict -FilePath ".\SupplementalPolicy $SuppPolicyName.xml"
             ConvertFrom-CIPolicy -XmlFilePath ".\SupplementalPolicy $SuppPolicyName.xml" -BinaryFilePath "$policyID.cip" | Out-Null
-            [PSCustomObject]@{
-                SupplementalPolicyFile = ".\SupplementalPolicy $SuppPolicyName.xml"
-                SupplementalPolicyGUID = $PolicyID
-            }
+           
+            Write-Output -InputObject "SupplementalPolicyFile = SupplementalPolicy $SuppPolicyName.xml"
+            Write-Output -InputObject "SupplementalPolicyGUID = $PolicyID"
 
             if ($Deploy) {
                 &'C:\Windows\System32\CiTool.exe' --update-policy "$policyID.cip" -json | Out-Null
@@ -255,10 +254,9 @@ Function New-SupplementalWDACConfig {
 
             Set-HVCIOptions -Strict -FilePath ".\SupplementalPolicy $SuppPolicyName.xml"
             ConvertFrom-CIPolicy -XmlFilePath ".\SupplementalPolicy $SuppPolicyName.xml" -BinaryFilePath "$policyID.cip" | Out-Null
-            [PSCustomObject]@{
-                SupplementalPolicyFile = ".\SupplementalPolicy $SuppPolicyName.xml"
-                SupplementalPolicyGUID = $PolicyID
-            }
+
+            Write-Output -InputObject "SupplementalPolicyFile = SupplementalPolicy $SuppPolicyName.xml"
+            Write-Output -InputObject "SupplementalPolicyGUID = $PolicyID"
 
             if ($Deploy) {
                 &'C:\Windows\System32\CiTool.exe' --update-policy "$policyID.cip" -json | Out-Null

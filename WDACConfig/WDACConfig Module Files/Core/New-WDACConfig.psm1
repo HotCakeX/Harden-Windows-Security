@@ -143,7 +143,7 @@ Function New-WDACConfig {
                 Gets the latest Microsoft Recommended Driver Block rules and processes them
                 Can optionally deploy them
             .INPUTS
-                None. You cannot pipe objects to this function.
+                System.Management.Automation.SwitchParameter
             .OUTPUTS
                 System.String
             .PARAMETER Deploy
@@ -224,6 +224,10 @@ Function New-WDACConfig {
             .PARAMETER NoCIP
                 Indicates that the created .CIP binary file must be deleted at the end.
                 It's usually used when calling this function from other functions that don't need the .CIP output of this function.
+            .INPUTS
+                System.Management.Automation.SwitchParameter
+            .OUTPUTS
+                System.String
             #>
             [CmdletBinding()]
             param(
@@ -270,10 +274,8 @@ Function New-WDACConfig {
             Remove-Item -Path '.\AllowMicrosoft.xml', 'Microsoft recommended block rules.xml' -Force
 
             Write-Verbose -Message 'Displaying the outout'
-            [PSCustomObject]@{
-                PolicyFile = 'AllowMicrosoftPlusBlockRules.xml'
-                BinaryFile = "$PolicyID.cip"
-            }
+            Write-Output -InputObject 'PolicyFile = AllowMicrosoftPlusBlockRules.xml'
+            Write-Output -InputObject "BinaryFile = $PolicyID.cip"
 
             if ($Deploy -and $MakeAllowMSFTWithBlockRules) {
                 Write-Verbose -Message 'Deploying the AllowMicrosoftPlusBlockRules.xml policy'
@@ -399,10 +401,8 @@ Function New-WDACConfig {
             }
 
             Write-Verbose -Message 'Displaying the output'
-            [PSCustomObject]@{
-                PolicyFile = 'DefaultWindowsPlusBlockRules.xml'
-                BinaryFile = "$PolicyID.cip"
-            }
+            Write-Output -InputObject 'PolicyFile = DefaultWindowsPlusBlockRules.xml'
+            Write-Output -InputObject "BinaryFile = $PolicyID.cip"
 
             if ($Deploy -and $MakeDefaultWindowsWithBlockRules) {
                 Write-Verbose -Message 'Deploying the DefaultWindowsPlusBlockRules.xml policy'
@@ -423,6 +423,8 @@ Function New-WDACConfig {
             .OUTPUTS
                 System.String
             #>
+            [CmdletBinding()]
+            param()
 
             Write-Verbose -Message 'Downloading the latest Microsoft recommended block rules and creating Microsoft recommended block rules TEMP.xml'
             (Invoke-WebRequest -Uri $MSFTRecommendeBlockRulesURL -ProgressAction SilentlyContinue).Content -replace "(?s).*``````xml(.*)``````.*", '$1' | Out-File -FilePath '.\Microsoft recommended block rules TEMP.xml' -Force
@@ -620,7 +622,7 @@ Function New-WDACConfig {
             .INPUTS
                 None. You cannot pipe objects to this function.
             .OUTPUTS
-                System.Void
+                System.String
             #>
             [CmdletBinding()]
             param()
@@ -760,14 +762,11 @@ Function New-WDACConfig {
 
             #Endregion Supplemental-Policy-Processing
 
-            [PSCustomObject]@{
-                BasePolicyFile = $BasePolicy
-                BasePolicyGUID = $BasePolicyID
-            }
-            [PSCustomObject]@{
-                SupplementalPolicyFile = 'SupplementalPolicy.xml'
-                SupplementalPolicyGUID = $PolicyID
-            }
+            Write-Output -InputObject "BasePolicyFile = $BasePolicy"
+            Write-Output -InputObject "BasePolicyGUID = $BasePolicyID"
+           
+            Write-Output -InputObject 'SupplementalPolicyFile = SupplementalPolicy.xml'
+            Write-Output -InputObject "SupplementalPolicyGUID = $PolicyID"
 
             if (-NOT $Debug) {
                 Remove-Item -Path 'AuditLogsPolicy_NoDeletedFiles.xml', 'FileRulesAndFileRefs.txt', 'DeletedFilesHashes.xml' -Force -ErrorAction SilentlyContinue
@@ -809,7 +808,7 @@ Function New-WDACConfig {
             .INPUTS
                 None. You cannot pipe objects to this function.
             .OUTPUTS
-                System.Void
+                System.String
             #>
             [CmdletBinding()]
             param()
@@ -859,10 +858,8 @@ Function New-WDACConfig {
             }
 
             Write-Verbose -Message 'Displaying the output'
-            [PSCustomObject]@{
-                BasePolicyFile = 'SignedAndReputable.xml'
-                BasePolicyGUID = $BasePolicyID
-            }
+            Write-Output -InputObject 'BasePolicyFile = SignedAndReputable.xml'
+            Write-Output -InputObject "BasePolicyGUID = $BasePolicyID"
         }
 
         # Script block that is used to supply extra information regarding Microsoft recommended driver block rules in commands that use them

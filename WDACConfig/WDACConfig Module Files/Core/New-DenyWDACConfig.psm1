@@ -148,10 +148,9 @@ Function New-DenyWDACConfig {
 
             Set-HVCIOptions -Strict -FilePath "DenyPolicy $PolicyName.xml"
             ConvertFrom-CIPolicy -XmlFilePath "DenyPolicy $PolicyName.xml" -BinaryFilePath "$policyID.cip" | Out-Null
-            [PSCustomObject]@{
-                DenyPolicyFile = "DenyPolicy $PolicyName.xml"
-                DenyPolicyGUID = $PolicyID
-            }
+
+            Write-Output -InputObject "DenyPolicyFile = DenyPolicy $PolicyName.xml"
+            Write-Output -InputObject "DenyPolicyGUID = $PolicyID"
 
             if (!$Debug) {
                 Remove-Item -Path '.\ProgramDir_ScanResults*.xml' -Force
@@ -208,10 +207,9 @@ Function New-DenyWDACConfig {
             Set-HVCIOptions -Strict -FilePath "DenyPolicy $PolicyName.xml"
             ConvertFrom-CIPolicy -XmlFilePath "DenyPolicy $PolicyName.xml" -BinaryFilePath "$policyID.cip" | Out-Null
 
-            [PSCustomObject]@{
-                DenyPolicyFile = "DenyPolicy $PolicyName.xml"
-                DenyPolicyGUID = $PolicyID
-            }
+            Write-Output -InputObject "DenyPolicyFile = DenyPolicy $PolicyName.xml"
+            Write-Output -InputObject "DenyPolicyGUID = $PolicyID"
+
             if ($Deploy) {
                 &'C:\Windows\System32\CiTool.exe' --update-policy "$policyID.cip" -json | Out-Null
                 Write-Host -NoNewline -Object "`n$policyID.cip for " -ForegroundColor Green
@@ -263,10 +261,8 @@ Function New-DenyWDACConfig {
             Set-HVCIOptions -Strict -FilePath ".\AppxDenyPolicy $PolicyName.xml"
             ConvertFrom-CIPolicy -XmlFilePath ".\AppxDenyPolicy $PolicyName.xml" -BinaryFilePath "$policyID.cip" | Out-Null
 
-            [PSCustomObject]@{
-                DenyPolicyFile = ".\AppxDenyPolicy $PolicyName.xml"
-                DenyPolicyGUID = $PolicyID
-            }
+            Write-Output -InputObject "DenyPolicyFile = AppxDenyPolicy $PolicyName.xml"
+            Write-Output -InputObject "DenyPolicyGUID = $PolicyID"
 
             if ($Deploy) {
                 &'C:\Windows\System32\CiTool.exe' --update-policy "$policyID.cip" -json | Out-Null

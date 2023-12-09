@@ -199,8 +199,8 @@ Function Edit-WDACConfig {
             # Deploy Enforced mode CIP
             &'C:\Windows\System32\CiTool.exe' --update-policy '.\EnforcedMode.cip' -json | Out-Null
             Write-ColorfulText -Color TeaGreen -InputText 'The Base policy with the following details has been Re-Deployed in Enforced Mode:'
-            Write-Output -InputObject "PolicyName = $PolicyName"
-            Write-Output -InputObject "PolicyGUID = $PolicyID"
+            Write-Host -Object "PolicyName = $PolicyName"
+            Write-Host -Object "PolicyGUID = $PolicyID"
             # Remove Enforced Mode CIP
             Remove-Item -Path '.\EnforcedMode.cip' -Force
         }
@@ -325,7 +325,7 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
                     # Make sure User browsed for at least 1 directory
                     # Exit the operation if user didn't select any folder paths
                     if ($ProgramsPaths.count -eq 0) {
-                        Write-Host -Object "`nNo program folder was selected, reverting the changes and quitting...`n" -ForegroundColor Red
+                        Write-Host -Object 'No program folder was selected, reverting the changes and quitting...' -ForegroundColor Red
                         # Causing break here to stop operation. Finally block will be triggered to Re-Deploy Base policy in Enforced mode
                         break
                     }

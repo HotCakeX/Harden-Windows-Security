@@ -75,9 +75,7 @@ Function Get-CommonWDACConfig {
             $LastUpdateCheck.IsPresent { Write-Output -InputObject $CurrentUserConfigurations.LastUpdateCheck }
         }
     }
-}
-
-<#
+    <#
 .SYNOPSIS
     Query and Read common values for parameters used by WDACConfig module
 
@@ -122,4 +120,5 @@ Function Get-CommonWDACConfig {
 
 .OUTPUTS
     System.Object[]
-#>
+#>    
+}

@@ -129,8 +129,7 @@ Function Remove-CommonWDACConfig {
         Write-Verbose -Message 'Saving the changes'
         $UserConfigurationsObject | ConvertTo-Json | Set-Content -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json"
     }
-}
-<#
+    <#
 .SYNOPSIS
     Removes common values for parameters used by WDACConfig module
 
@@ -167,4 +166,5 @@ Function Remove-CommonWDACConfig {
 .PARAMETER StrictKernelNoFlightRootsPolicyGUID
     Removes the StrictKernelNoFlightRootsPolicyGUID from User Configs
 
-#>
+#>    
+}

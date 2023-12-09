@@ -184,8 +184,7 @@ Function Set-CommonWDACConfig {
         Write-Verbose -Message 'Displaying the current user configurations'
         Get-Content -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json" | ConvertFrom-Json | Format-List -Property *
     }
-}
-<#
+    <#
 .SYNOPSIS
     Add/Change common values for parameters used by WDACConfig module
 
@@ -229,7 +228,8 @@ Function Set-CommonWDACConfig {
 
 .OUTPUTS
     System.Object[]
-#>
+#>    
+}
 
 # Importing argument completer ScriptBlocks
 . "$ModuleRootPath\Resources\ArgumentCompleters.ps1"

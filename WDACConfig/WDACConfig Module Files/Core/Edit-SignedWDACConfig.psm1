@@ -262,9 +262,9 @@ Function Edit-SignedWDACConfig {
 
             # Deploy Enforced mode CIP
             &'C:\Windows\System32\CiTool.exe' --update-policy ".\$PolicyID.cip" -json | Out-Null
-            Write-ColorfulText -Color TeaGreen -InputText "`nThe Base policy with the following details has been Re-Signed and Re-Deployed in Enforced Mode:"
-            Write-Output -InputObject "PolicyName = $PolicyName"
-            Write-Output -InputObject "PolicyGUID = $PolicyID"
+            Write-ColorfulText -Color TeaGreen -InputText 'The Base policy with the following details has been Re-Signed and Re-Deployed in Enforced Mode:'
+            Write-Host -Object "PolicyName = $PolicyName"
+            Write-Host -Object "PolicyGUID = $PolicyID"
             # Remove Enforced Mode CIP
             Remove-Item -Path ".\$PolicyID.cip" -Force
         }
@@ -346,7 +346,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                 Write-Verbose -Message 'Deploying Audit mode CIP'
                 Rename-Item -Path '.\AuditMode.cip' -NewName ".\$PolicyID.cip" -Force
                 &'C:\Windows\System32\CiTool.exe' --update-policy ".\$PolicyID.cip" -json | Out-Null
-                Write-ColorfulText -Color TeaGreen -InputText "`nThe Base policy with the following details has been Re-Signed and Re-Deployed in Audit Mode:"
+                Write-ColorfulText -Color TeaGreen -InputText 'The Base policy with the following details has been Re-Signed and Re-Deployed in Audit Mode:'
                 Write-Output -InputObject "PolicyName = $PolicyName"
                 Write-Output -InputObject "PolicyGUID = $PolicyID"
                 # Remove Audit Mode CIP
@@ -357,13 +357,13 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                 # A Try-Catch-Finally block so that if any errors occur, the Base policy will be Re-deployed in enforced mode
                 Try {
                     ################################### User Interaction ####################################
-                    Write-ColorfulText -Color Pink -InputText "`nAudit mode deployed, start installing your programs now"
-                    Write-ColorfulText -Color HotPink -InputText "When you've finished installing programs, Press Enter to start selecting program directories to scan`n"
+                    Write-ColorfulText -Color Pink -InputText 'Audit mode deployed, start installing your programs now'
+                    Write-ColorfulText -Color HotPink -InputText 'When you have finished installing programs, Press Enter to start selecting program directories to scan'
                     Pause
 
                     # Store the program paths that user browses for in an array
                     [System.Object[]]$ProgramsPaths = @()
-                    Write-Host -Object "`nSelect program directories to scan" -ForegroundColor Cyan
+                    Write-Host -Object 'Select program directories to scan' -ForegroundColor Cyan
                     # Showing folder picker GUI to the user for folder path selection
                     do {
                         [System.Reflection.Assembly]::LoadWithPartialName('System.windows.forms') | Out-Null
@@ -380,7 +380,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                     # Make sure User browsed for at least 1 directory
                     # Exit the operation if user didn't select any folder paths
                     if ($ProgramsPaths.count -eq 0) {
-                        Write-Host -Object "`nNo program folder was selected, reverting the changes and quitting...`n" -ForegroundColor Red
+                        Write-Host -Object 'No program folder was selected, reverting the changes and quitting...' -ForegroundColor Red
                         # Causing break here to stop operation. Finally block will be triggered to Re-Deploy Base policy in Enforced mode
                         break
                     }
@@ -522,7 +522,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                     # Only proceed if any kernel protected file(s) were found in any of the user-selected directory path(s)
                     if ($ExesWithNoHash) {
 
-                        Write-Verbose -Message "The following Kernel protected files detected, creating allow rules for them:`n"
+                        Write-Verbose -Message 'The following Kernel protected files detected, creating allow rules for them:'
                         $ExesWithNoHash | ForEach-Object -Process { Write-Verbose -Message "$_" }
 
                         [System.Management.Automation.ScriptBlock]$KernelProtectedHashesBlock = {
@@ -563,7 +563,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                             $PolicyXMLFilesArray += '.\KernelProtectedFiles.xml'
                         }
                         else {
-                            Write-Warning -Message "The following Kernel protected files detected, but no hash was found for them in Event viewer logs.`nThis means you didn't run those files/programs when Audit mode was turned on.`n"
+                            Write-Warning -Message "The following Kernel protected files detected, but no hash was found for them in Event viewer logs.`nThis means you didn't run those files/programs when Audit mode was turned on."
                             $ExesWithNoHash | ForEach-Object -Process { Write-Warning -Message "$_" }
                         }
                     }
@@ -628,7 +628,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                 Remove-Item -Path ".\$SuppPolicyID.cip" -Force
                 Rename-Item -Path "$SuppPolicyID.cip.p7" -NewName "$SuppPolicyID.cip" -Force
                 &'C:\Windows\System32\CiTool.exe' --update-policy ".\$SuppPolicyID.cip" -json | Out-Null
-                Write-ColorfulText -Color TeaGreen -InputText "`nSupplemental policy with the following details has been Signed and Deployed in Enforced Mode:"
+                Write-ColorfulText -Color TeaGreen -InputText 'Supplemental policy with the following details has been Signed and Deployed in Enforced Mode:'
                 Write-Output -InputObject "SupplementalPolicyName = $SuppPolicyName"
                 Write-Output -InputObject "SupplementalPolicyGUID = $SuppPolicyID"
                 Remove-Item -Path ".\$SuppPolicyID.cip" -Force
@@ -705,7 +705,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                 Write-Verbose -Message 'Deploying Audit mode CIP'
                 Rename-Item -Path '.\AuditMode.cip' -NewName ".\$PolicyID.cip" -Force
                 &'C:\Windows\System32\CiTool.exe' --update-policy ".\$PolicyID.cip" -json | Out-Null
-                Write-ColorfulText -Color TeaGreen -InputText "`nThe Base policy with the following details has been Re-Signed and Re-Deployed in Audit Mode:"
+                Write-ColorfulText -Color TeaGreen -InputText 'The Base policy with the following details has been Re-Signed and Re-Deployed in Audit Mode:'
                 Write-Output -InputObject "PolicyName = $PolicyName"
                 Write-Output -InputObject "PolicyGUID = $PolicyID"
                 # Remove Audit Mode CIP
@@ -716,13 +716,13 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                 # A Try-Catch-Finally block so that if any errors occur, the Base policy will be Re-deployed in enforced mode
                 Try {
                     ################################### User Interaction ####################################
-                    Write-ColorfulText -Color Pink -InputText "`nAudit mode deployed, start installing your programs now"
-                    Write-ColorfulText -Color HotPink -InputText "When you've finished installing programs, Press Enter to start selecting program directories to scan`n"
+                    Write-ColorfulText -Color Pink -InputText 'Audit mode deployed, start installing your programs now'
+                    Write-ColorfulText -Color HotPink -InputText 'When you have finished installing programs, Press Enter to start selecting program directories to scan'
                     Pause
 
                     # Store the program paths that user browses for in an array
                     [System.Object[]]$ProgramsPaths = @()
-                    Write-Host -Object "`nSelect program directories to scan`n" -ForegroundColor Cyan
+                    Write-Host -Object 'Select program directories to scan' -ForegroundColor Cyan
                     # Showing folder picker GUI to the user for folder path selection
                     do {
                         [System.Reflection.Assembly]::LoadWithPartialName('System.windows.forms') | Out-Null
@@ -739,7 +739,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                     # Make sure User browsed for at least 1 directory
                     # Exit the operation if user didn't select any folder paths
                     if ($ProgramsPaths.count -eq 0) {
-                        Write-Host -Object "`nNo program folder was selected, reverting the changes and quitting...`n" -ForegroundColor Red
+                        Write-Host -Object 'No program folder was selected, reverting the changes and quitting...' -ForegroundColor Red
                         # Causing break here to stop operation. Finally block will be triggered to Re-Deploy Base policy in Enforced mode
                         break
                     }
@@ -758,7 +758,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                     Remove-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce' -Name '*CIPolicySnapBack' -Force
                 }
 
-                Write-Host -Object "`nHere are the paths you selected:" -ForegroundColor Yellow
+                Write-Host -Object 'Here are the paths you selected:' -ForegroundColor Yellow
                 $ProgramsPaths | ForEach-Object -Process { $_ }
 
                 #Process Program Folders From User input
@@ -829,7 +829,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                 Remove-Item -Path ".\$SuppPolicyID.cip" -Force
                 Rename-Item -Path "$SuppPolicyID.cip.p7" -NewName "$SuppPolicyID.cip" -Force
                 &'C:\Windows\System32\CiTool.exe' --update-policy ".\$SuppPolicyID.cip" -json | Out-Null
-                Write-ColorfulText -Color TeaGreen -InputText "`nSupplemental policy with the following details has been Signed and Deployed in Enforced Mode:"
+                Write-ColorfulText -Color TeaGreen -InputText 'Supplemental policy with the following details has been Signed and Deployed in Enforced Mode:'
                 Write-Output -InputObject "SupplementalPolicyName = $SuppPolicyName"
                 Write-Output -InputObject "SupplementalPolicyGUID = $SuppPolicyID"
                 Remove-Item -Path ".\$SuppPolicyID.cip" -Force
@@ -887,7 +887,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                 Remove-Item -Path ".\$SuppPolicyID.cip" -Force
                 Rename-Item -Path "$SuppPolicyID.cip.p7" -NewName "$SuppPolicyID.cip" -Force
                 &'C:\Windows\System32\CiTool.exe' --update-policy "$SuppPolicyID.cip" -json | Out-Null
-                Write-ColorfulText -Color TeaGreen -InputText "`nThe Signed Supplemental policy $SuppPolicyName has been deployed on the system, replacing the old ones.`nSystem Restart Not immediately needed but eventually required to finish the removal of previous individual Supplemental policies."
+                Write-ColorfulText -Color TeaGreen -InputText "The Signed Supplemental policy $SuppPolicyName has been deployed on the system, replacing the old ones.`nSystem Restart Not immediately needed but eventually required to finish the removal of previous individual Supplemental policies."
                 Remove-Item -Path "$SuppPolicyID.cip" -Force
             }
         }
@@ -918,7 +918,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                     Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\DefaultWindows_Enforced.xml' -Destination '.\DefaultWindows_Enforced.xml' -Force
 
                     # Allowing SignTool to be able to run after Default Windows base policy is deployed
-                    Write-ColorfulText -Color TeaGreen -InputText "`nCreating allow rules for SignTool.exe in the DefaultWindows base policy so you can continue using it after deploying the DefaultWindows base policy."
+                    Write-ColorfulText -Color TeaGreen -InputText 'Creating allow rules for SignTool.exe in the DefaultWindows base policy so you can continue using it after deploying the DefaultWindows base policy.'
                     New-Item -Path "$UserTempDirectoryPath\TemporarySignToolFile" -ItemType Directory -Force | Out-Null
                     Copy-Item -Path $SignToolPathFinal -Destination "$UserTempDirectoryPath\TemporarySignToolFile" -Force
                     New-CIPolicy -ScanPath "$UserTempDirectoryPath\TemporarySignToolFile" -Level FilePublisher -Fallback Hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -AllowFileNameFallbacks -FilePath .\SignTool.xml
@@ -927,7 +927,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
 
                     # Scan PowerShell core directory and add them to the Default Windows base policy so that the module can be used after it's been deployed
                     if (Test-Path -Path 'C:\Program Files\PowerShell') {
-                        Write-ColorfulText -Color HotPink -InputText "`nCreating allow rules for PowerShell in the DefaultWindows base policy so you can continue using this module after deploying it."
+                        Write-ColorfulText -Color HotPink -InputText 'Creating allow rules for PowerShell in the DefaultWindows base policy so you can continue using this module after deploying it.'
                         New-CIPolicy -ScanPath 'C:\Program Files\PowerShell' -Level FilePublisher -NoScript -Fallback Hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -AllowFileNameFallbacks -FilePath .\AllowPowerShell.xml
                         Merge-CIPolicy -PolicyPaths .\DefaultWindows_Enforced.xml, .\AllowPowerShell.xml, .\SignTool.xml, '.\Microsoft recommended block rules.xml' -OutputFilePath .\BasePolicy.xml | Out-Null
                     }

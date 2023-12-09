@@ -710,7 +710,7 @@ Function New-WDACConfig {
                             if ($_.'File Name' -match ($pattern = '\\Device\\HarddiskVolume(\d+)\\(.*)$')) {
                                 $hardDiskVolumeNumber = $Matches[1]
                                 $remainingPath = $Matches[2]
-                                $getletter = $DriveLettersGlobalRootFix | Where-Object -FilterScript { $_.devicepath -eq "\Device\HarddiskVolume$hardDiskVolumeNumber" }
+                                $getletter = Get-GlobalRootDrives -Verbose:$Verbose | Where-Object -FilterScript { $_.devicepath -eq "\Device\HarddiskVolume$hardDiskVolumeNumber" }
                                 $usablePath = "$($getletter.DriveLetter)$remainingPath"
                                 $_.'File Name' = $_.'File Name' -replace $pattern, $usablePath
                             }
@@ -890,8 +890,6 @@ Function New-WDACConfig {
         # Redirecting the Update-Self function's information Stream to $null because Write-Host
         # Used by Write-ColorfulText outputs to both information stream and host console
         if (-NOT $SkipVersionCheck) { Update-self -Verbose:$Verbose 6> $null }
-
-        [System.Object[]]$DriveLettersGlobalRootFix = Get-GlobalRootDrives -Verbose:$Verbose
     }
 
     process {

@@ -267,7 +267,6 @@ Function Edit-SignedWDACConfig {
             # Remove Enforced Mode CIP
             Remove-Item -Path ".\$PolicyID.cip" -Force
         }
-        [System.Object[]]$DriveLettersGlobalRootFix = Get-GlobalRootDrives -Verbose:$Verbose
     }
 
     process {
@@ -532,7 +531,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                                     if ($_.'File Name' -match ($pattern = '\\Device\\HarddiskVolume(\d+)\\(.*)$')) {
                                         $hardDiskVolumeNumber = $Matches[1]
                                         $remainingPath = $Matches[2]
-                                        $getletter = $DriveLettersGlobalRootFix | Where-Object -FilterScript { $_.devicepath -eq "\Device\HarddiskVolume$hardDiskVolumeNumber" }
+                                        $getletter = Get-GlobalRootDrives -Verbose:$Verbose | Where-Object -FilterScript { $_.devicepath -eq "\Device\HarddiskVolume$hardDiskVolumeNumber" }
                                         $usablePath = "$($getletter.DriveLetter)$remainingPath"
                                         $_.'File Name' = $_.'File Name' -replace $pattern, $usablePath
                                     } # Check if file is currently on the disk

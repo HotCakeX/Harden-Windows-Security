@@ -8,4 +8,5 @@ $PSDefaultParameterValues = @{
     'Import-Module:Verbose'         = $false
     'Export-ModuleMember:Verbose'   = $false
     'Add-Type:Verbose'              = $false
+    'Get-WinEvent:Verbose'          = $false
 }

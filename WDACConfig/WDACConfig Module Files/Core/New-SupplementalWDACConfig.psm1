@@ -21,7 +21,7 @@ Function New-SupplementalWDACConfig {
         [parameter(Mandatory = $true, ParameterSetName = 'Normal', ValueFromPipelineByPropertyName = $true)]
         [System.String]$ScanLocation,
 
-        [ValidatePattern('\*', ErrorMessage = "You didn't supply a path that contains wildcard character '*' .")]
+        [ValidatePattern('\*', ErrorMessage = 'You did not supply a path that contains wildcard character (*) .')]
         [parameter(Mandatory = $true, ParameterSetName = 'Folder Path With WildCards', ValueFromPipelineByPropertyName = $true)]
         [System.String]$FolderPath,
 
@@ -116,7 +116,7 @@ Function New-SupplementalWDACConfig {
                 }
             }
             else {
-                throw "PolicyPath parameter can't be empty and no valid configuration was found for UnsignedPolicyPath."
+                throw 'PolicyPath parameter cannot be empty and no valid configuration was found for UnsignedPolicyPath.'
             }
         }
         #endregion User-Configurations-Processing-Validation

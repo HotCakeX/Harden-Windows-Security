@@ -87,7 +87,7 @@ Function Deploy-SignedWDACConfig {
                 }
             }
             else {
-                throw "CertPath parameter can't be empty and no valid configuration was found for it."
+                throw 'CertPath parameter cannot be empty and no valid configuration was found for it.'
             }
         }
 
@@ -104,7 +104,7 @@ Function Deploy-SignedWDACConfig {
                 }
             }
             else {
-                throw "CertCN parameter can't be empty and no valid configuration was found for it."
+                throw 'CertCN parameter cannot be empty and no valid configuration was found for it.'
             }
         }
         #endregion User-Configurations-Processing-Validation

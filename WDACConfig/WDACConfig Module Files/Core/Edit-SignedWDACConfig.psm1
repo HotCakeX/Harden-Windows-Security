@@ -179,7 +179,7 @@ Function Edit-SignedWDACConfig {
                 }
             }
             else {
-                throw "CertPath parameter can't be empty and no valid configuration was found for it."
+                throw 'CertPath parameter cannot be empty and no valid configuration was found for it.'
             }
         }
 
@@ -196,7 +196,7 @@ Function Edit-SignedWDACConfig {
                 }
             }
             else {
-                throw "CertCN parameter can't be empty and no valid configuration was found for it."
+                throw 'CertCN parameter cannot be empty and no valid configuration was found for it.'
             }
         }
 
@@ -214,7 +214,7 @@ Function Edit-SignedWDACConfig {
                     }
                 }
                 else {
-                    throw "PolicyPaths parameter can't be empty and no valid configuration was found for SignedPolicyPath."
+                    throw 'PolicyPaths parameter cannot be empty and no valid configuration was found for SignedPolicyPath.'
                 }
             }
         }
@@ -409,7 +409,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                             # but detected in Event viewer audit logs, scan that folder, and in the end delete it
                             New-Item -Path "$UserTempDirectoryPath\TemporaryScanFolderForEventViewerFiles" -ItemType Directory | Out-Null
 
-                            Write-Verbose -Message "The following file(s) are being copied to the TEMP directory for scanning because they were found in event logs but didn't exist in any of the user-selected paths:"
+                            Write-Verbose -Message 'The following file(s) are being copied to the TEMP directory for scanning because they were found in event logs but did not exist in any of the user-selected paths:'
                             $TestFilePathResults | ForEach-Object -Process {
                                 Write-Verbose -Message "$_"
                                 Copy-Item -Path $_ -Destination "$UserTempDirectoryPath\TemporaryScanFolderForEventViewerFiles\" -ErrorAction SilentlyContinue

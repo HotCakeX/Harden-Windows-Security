@@ -152,7 +152,7 @@ Function Edit-WDACConfig {
                     }
                 }
                 else {
-                    throw "PolicyPaths parameter can't be empty and no valid configuration was found for UnsignedPolicyPath."
+                    throw 'PolicyPaths parameter cannot be empty and no valid configuration was found for UnsignedPolicyPath.'
                 }
             }
         }
@@ -574,7 +574,7 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
                             # but detected in Event viewer audit logs, scan that folder, and in the end delete it
                             New-Item -Path "$UserTempDirectoryPath\TemporaryScanFolderForEventViewerFiles" -ItemType Directory -Force | Out-Null
 
-                            Write-Verbose -Message "The following file(s) are being copied to the TEMP directory for scanning because they were found in event logs but didn't exist in any of the user-selected paths:"
+                            Write-Verbose -Message 'The following file(s) are being copied to the TEMP directory for scanning because they were found in event logs but did not exist in any of the user-selected paths:'
                             $TestFilePathResults | ForEach-Object -Process {
                                 Write-Verbose -Message "$_"
                                 Copy-Item -Path $_ -Destination "$UserTempDirectoryPath\TemporaryScanFolderForEventViewerFiles\" -Force -ErrorAction SilentlyContinue

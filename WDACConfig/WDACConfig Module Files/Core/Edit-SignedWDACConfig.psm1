@@ -611,7 +611,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                 $SuppPolicyID = $SuppPolicyID.Substring(11)
                 Add-SignerRule -FilePath $SuppPolicyPath -CertificatePath $CertPath -Update -User -Kernel
 
-                # Make sure policy rule options that don't belong to a Supplemental policy don't exit
+                # Make sure policy rule options that don't belong to a Supplemental policy don't exist
                 @(0, 1, 2, 3, 4, 6, 8, 9, 10, 11, 12, 15, 16, 17, 19, 20) | ForEach-Object -Process { Set-RuleOption -FilePath $SuppPolicyPath -Option $_ -Delete }
 
                 Set-HVCIOptions -Strict -FilePath $SuppPolicyPath
@@ -821,7 +821,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                 $SuppPolicyID = $SuppPolicyID.Substring(11)
                 Add-SignerRule -FilePath $SuppPolicyPath -CertificatePath $CertPath -Update -User -Kernel
 
-                # Make sure policy rule options that don't belong to a Supplemental policy don't exit
+                # Make sure policy rule options that don't belong to a Supplemental policy don't exist
                 @(0, 1, 2, 3, 4, 6, 8, 9, 10, 11, 12, 15, 16, 17, 19, 20) | ForEach-Object -Process { Set-RuleOption -FilePath $SuppPolicyPath -Option $_ -Delete }
 
                 Set-HVCIOptions -Strict -FilePath $SuppPolicyPath

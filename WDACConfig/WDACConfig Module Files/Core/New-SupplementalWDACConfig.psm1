@@ -160,7 +160,7 @@ Function New-SupplementalWDACConfig {
             [System.String]$policyID = Set-CIPolicyIdInfo -FilePath "SupplementalPolicy $SuppPolicyName.xml" -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath -PolicyName "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')"
             [System.String]$policyID = $policyID.Substring(11)
             Set-CIPolicyVersion -FilePath "SupplementalPolicy $SuppPolicyName.xml" -Version '1.0.0.0'
-            # Make sure policy rule options that don't belong to a Supplemental policy don't exit
+            # Make sure policy rule options that don't belong to a Supplemental policy don't exist
             @(0, 1, 2, 3, 4, 9, 10, 11, 12, 15, 16, 17, 19, 20) | ForEach-Object -Process {
                 Set-RuleOption -FilePath "SupplementalPolicy $SuppPolicyName.xml" -Option $_ -Delete }
             Set-HVCIOptions -Strict -FilePath "SupplementalPolicy $SuppPolicyName.xml"
@@ -190,7 +190,7 @@ Function New-SupplementalWDACConfig {
             [System.String]$policyID = $policyID.Substring(11)
             Set-CIPolicyVersion -FilePath ".\SupplementalPolicy $SuppPolicyName.xml" -Version '1.0.0.0'
 
-            # Make sure policy rule options that don't belong to a Supplemental policy don't exit
+            # Make sure policy rule options that don't belong to a Supplemental policy don't exist
             @(0, 1, 2, 3, 4, 9, 10, 11, 12, 15, 16, 17, 19, 20) | ForEach-Object -Process {
                 Set-RuleOption -FilePath ".\SupplementalPolicy $SuppPolicyName.xml" -Option $_ -Delete }
 
@@ -249,7 +249,7 @@ Function New-SupplementalWDACConfig {
             [System.String]$policyID = $policyID.Substring(11)
             Set-CIPolicyVersion -FilePath ".\SupplementalPolicy $SuppPolicyName.xml" -Version '1.0.0.0'
 
-            # Make sure policy rule options that don't belong to a Supplemental policy don't exit
+            # Make sure policy rule options that don't belong to a Supplemental policy don't exist
             @(0, 1, 2, 3, 4, 9, 10, 11, 12, 15, 16, 17, 18, 19, 20) | ForEach-Object -Process {
                 Set-RuleOption -FilePath ".\SupplementalPolicy $SuppPolicyName.xml" -Option $_ -Delete }
 

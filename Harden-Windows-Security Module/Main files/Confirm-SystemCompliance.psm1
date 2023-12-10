@@ -113,7 +113,7 @@ function Confirm-SystemCompliance {
             # an array to hold the output
             [System.Object[]]$Output = @()
 
-            foreach ($Item in $AllRegistryItems | Where-Object { $_.category -eq $CatName } | Where-Object { $_.Method -eq $Method }) {
+            foreach ($Item in $AllRegistryItems | Where-Object -FilterScript { $_.category -eq $CatName } | Where-Object -FilterScript { $_.Method -eq $Method }) {
 
                 # Initialize a flag to indicate if the key exists
                 [System.Boolean]$keyExists = $false
@@ -247,8 +247,8 @@ function Confirm-SystemCompliance {
             # Verify the NX bit as shown in bcdedit /enum or Get-BcdEntry, info about numbers and values correlation: https://learn.microsoft.com/en-us/previous-versions/windows/desktop/bcd/bcdosloader-nxpolicy
             $NestedObjectArray += [PSCustomObject]@{
                 FriendlyName = 'Boot Configuration Data (BCD) No-eXecute (NX) Value'
-                Compliant    = (((Get-BcdEntry).elements | Where-Object { $_.name -eq 'nx' }).value -eq '3')
-                Value        = (((Get-BcdEntry).elements | Where-Object { $_.name -eq 'nx' }).value -eq '3')
+                Compliant    = (((Get-BcdEntry).elements | Where-Object -FilterScript { $_.name -eq 'nx' }).value -eq '3')
+                Value        = (((Get-BcdEntry).elements | Where-Object -FilterScript { $_.name -eq 'nx' }).value -eq '3')
                 Name         = 'Boot Configuration Data (BCD) No-eXecute (NX) Value'
                 Category     = $CatName
                 Method       = 'Cmdlet'
@@ -601,14 +601,14 @@ function Confirm-SystemCompliance {
             }
             #region Non-OS-Drive-BitLocker-Drives-Encryption-Verification
             # Get the list of non OS volumes
-            [System.Object[]]$NonOSBitLockerVolumes = Get-BitLockerVolume | Where-Object {
+            [System.Object[]]$NonOSBitLockerVolumes = Get-BitLockerVolume | Where-Object -FilterScript {
                     ($_.volumeType -ne 'OperatingSystem')
             }
 
             # Get all the volumes and filter out removable ones
             [System.Object[]]$RemovableVolumes = Get-Volume |
-            Where-Object { $_.DriveType -eq 'Removable' } |
-            Where-Object { $_.DriveLetter }
+            Where-Object -FilterScript { $_.DriveType -eq 'Removable' } |
+            Where-Object -FilterScript { $_.DriveLetter }
 
             # Check if there is any removable volumes
             if ($RemovableVolumes) {
@@ -619,7 +619,7 @@ function Confirm-SystemCompliance {
                 }
 
                 # Filter out removable drives from BitLocker volumes to process
-                $NonOSBitLockerVolumes = $NonOSBitLockerVolumes | Where-Object {
+                $NonOSBitLockerVolumes = $NonOSBitLockerVolumes | Where-Object -FilterScript {
                     ($_.MountPoint -notin $RemovableVolumesLetters)
                 }
             }
@@ -919,17 +919,17 @@ function Confirm-SystemCompliance {
                 [System.Boolean]$PowerShell2 = (Get-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2Root).State -eq 'Disabled'
                 [System.String]$WorkFoldersClient = (Get-WindowsOptionalFeature -Online -FeatureName WorkFolders-Client).state
                 [System.String]$InternetPrintingClient = (Get-WindowsOptionalFeature -Online -FeatureName Printing-Foundation-Features).state
-                [System.String]$WindowsMediaPlayer = (Get-WindowsCapability -Online | Where-Object { $_.Name -like '*Media.WindowsMediaPlayer*' }).state
+                [System.String]$WindowsMediaPlayer = (Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like '*Media.WindowsMediaPlayer*' }).state
                 [System.String]$MDAG = (Get-WindowsOptionalFeature -Online -FeatureName Windows-Defender-ApplicationGuard).state
                 [System.String]$WindowsSandbox = (Get-WindowsOptionalFeature -Online -FeatureName Containers-DisposableClientVM).state
                 [System.String]$HyperV = (Get-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V).state
                 [System.String]$VMPlatform = (Get-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform).state
-                [System.String]$WMIC = (Get-WindowsCapability -Online | Where-Object { $_.Name -like '*wmic*' }).state
-                [System.String]$IEMode = (Get-WindowsCapability -Online | Where-Object { $_.Name -like '*Browser.InternetExplorer*' }).state
-                [System.String]$LegacyNotepad = (Get-WindowsCapability -Online | Where-Object { $_.Name -like '*Microsoft.Windows.Notepad.System*' }).state
-                [System.String]$LegacyWordPad = (Get-WindowsCapability -Online | Where-Object { $_.Name -like '*Microsoft.Windows.WordPad*' }).state
-                [System.String]$PowerShellISE = (Get-WindowsCapability -Online | Where-Object { $_.Name -like '*Microsoft.Windows.PowerShell.ISE*' }).state
-                [System.String]$StepsRecorder = (Get-WindowsCapability -Online | Where-Object { $_.Name -like '*App.StepsRecorder*' }).state
+                [System.String]$WMIC = (Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like '*wmic*' }).state
+                [System.String]$IEMode = (Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like '*Browser.InternetExplorer*' }).state
+                [System.String]$LegacyNotepad = (Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like '*Microsoft.Windows.Notepad.System*' }).state
+                [System.String]$LegacyWordPad = (Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like '*Microsoft.Windows.WordPad*' }).state
+                [System.String]$PowerShellISE = (Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like '*Microsoft.Windows.PowerShell.ISE*' }).state
+                [System.String]$StepsRecorder = (Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like '*App.StepsRecorder*' }).state
                 # returning the output of the script block as an array
                 Return $PowerShell1, $PowerShell2, $WorkFoldersClient, $InternetPrintingClient, $WindowsMediaPlayer, $MDAG, $WindowsSandbox, $HyperV, $VMPlatform, $WMIC, $IEMode, $LegacyNotepad, $LegacyWordPad, $PowerShellISE, $StepsRecorder
             }
@@ -1086,7 +1086,7 @@ function Confirm-SystemCompliance {
             $NestedObjectArray += [PSCustomObject](Invoke-CategoryProcessing -catname $CatName -Method 'Group Policy')
 
             # Check network location of all connections to see if they are public
-            $Condition = Get-NetConnectionProfile | ForEach-Object { $_.NetworkCategory -eq 'public' }
+            $Condition = Get-NetConnectionProfile | ForEach-Object -Process { $_.NetworkCategory -eq 'public' }
             [System.Boolean]$IndividualItemResult = -not ($condition -contains $false) ? $True : $false
 
             # Verify a Security setting using Cmdlet
@@ -1167,7 +1167,7 @@ function Confirm-SystemCompliance {
 
             # Checking if all user accounts are part of the Hyper-V security Group
             # Get all the enabled user account SIDs
-            [System.Security.Principal.SecurityIdentifier[]]$EnabledUsers = (Get-LocalUser | Where-Object { $_.Enabled -eq 'True' }).SID
+            [System.Security.Principal.SecurityIdentifier[]]$EnabledUsers = (Get-LocalUser | Where-Object -FilterScript { $_.Enabled -eq 'True' }).SID
             # Get the members of the Hyper-V Administrators security group using their SID
             [System.Security.Principal.SecurityIdentifier[]]$GroupMembers = (Get-LocalGroupMember -SID 'S-1-5-32-578').SID
 
@@ -1797,20 +1797,20 @@ function Confirm-SystemCompliance {
                 }
 
                 # Counting the number of $True Compliant values in the Final Output Object
-                [System.Int64]$TotalTrueCompliantValuesInOutPut = ($FinalMegaObject.'Microsoft Defender' | Where-Object { $_.Compliant -eq $True }).Count + # 49 - 4x(N/A) = 45
-                [System.Int64]($FinalMegaObject.ASR | Where-Object { $_.Compliant -eq $True }).Count + # 17
-                [System.Int64]($FinalMegaObject.Bitlocker | Where-Object { $_.Compliant -eq $True }).Count + # 22 + Number of Non-OS drives which are dynamicly increased
-                [System.Int64]($FinalMegaObject.TLS | Where-Object { $_.Compliant -eq $True }).Count + # 21
-                [System.Int64]($FinalMegaObject.LockScreen | Where-Object { $_.Compliant -eq $True }).Count + # 14
-                [System.Int64]($FinalMegaObject.UAC | Where-Object { $_.Compliant -eq $True }).Count + # 4
-                [System.Int64]($FinalMegaObject.'Device Guard' | Where-Object { $_.Compliant -eq $True }).Count + # 8
-                [System.Int64]($FinalMegaObject.'Windows Firewall' | Where-Object { $_.Compliant -eq $True }).Count + # 19
-                [System.Int64]($FinalMegaObject.'Optional Windows Features' | Where-Object { $_.Compliant -eq $True }).Count + # 14
-                [System.Int64]($FinalMegaObject.'Windows Networking' | Where-Object { $_.Compliant -eq $True }).Count + # 9
-                [System.Int64]($FinalMegaObject.Miscellaneous | Where-Object { $_.Compliant -eq $True }).Count + # 18
-                [System.Int64]($FinalMegaObject.'Windows Update' | Where-Object { $_.Compliant -eq $True }).Count + # 14
-                [System.Int64]($FinalMegaObject.Edge | Where-Object { $_.Compliant -eq $True }).Count + # 15
-                [System.Int64]($FinalMegaObject.'Non-Admin' | Where-Object { $_.Compliant -eq $True }).Count # 11
+                [System.Int64]$TotalTrueCompliantValuesInOutPut = ($FinalMegaObject.'Microsoft Defender' | Where-Object -FilterScript { $_.Compliant -eq $True }).Count + # 49 - 4x(N/A) = 45
+                [System.Int64]($FinalMegaObject.ASR | Where-Object -FilterScript { $_.Compliant -eq $True }).Count + # 17
+                [System.Int64]($FinalMegaObject.Bitlocker | Where-Object -FilterScript { $_.Compliant -eq $True }).Count + # 22 + Number of Non-OS drives which are dynamicly increased
+                [System.Int64]($FinalMegaObject.TLS | Where-Object -FilterScript { $_.Compliant -eq $True }).Count + # 21
+                [System.Int64]($FinalMegaObject.LockScreen | Where-Object -FilterScript { $_.Compliant -eq $True }).Count + # 14
+                [System.Int64]($FinalMegaObject.UAC | Where-Object -FilterScript { $_.Compliant -eq $True }).Count + # 4
+                [System.Int64]($FinalMegaObject.'Device Guard' | Where-Object -FilterScript { $_.Compliant -eq $True }).Count + # 8
+                [System.Int64]($FinalMegaObject.'Windows Firewall' | Where-Object -FilterScript { $_.Compliant -eq $True }).Count + # 19
+                [System.Int64]($FinalMegaObject.'Optional Windows Features' | Where-Object -FilterScript { $_.Compliant -eq $True }).Count + # 14
+                [System.Int64]($FinalMegaObject.'Windows Networking' | Where-Object -FilterScript { $_.Compliant -eq $True }).Count + # 9
+                [System.Int64]($FinalMegaObject.Miscellaneous | Where-Object -FilterScript { $_.Compliant -eq $True }).Count + # 18
+                [System.Int64]($FinalMegaObject.'Windows Update' | Where-Object -FilterScript { $_.Compliant -eq $True }).Count + # 14
+                [System.Int64]($FinalMegaObject.Edge | Where-Object -FilterScript { $_.Compliant -eq $True }).Count + # 15
+                [System.Int64]($FinalMegaObject.'Non-Admin' | Where-Object -FilterScript { $_.Compliant -eq $True }).Count # 11
 
 
                 #Region ASCII-Arts
@@ -2003,7 +2003,7 @@ Gpresult, Secedit, PowerShell, Registry
 Uses Gpresult and Secedit to first export the effective Group policies and Security policies, then goes through them and checks them against the Harden Windows Security's guidelines.
 
 .EXAMPLE
-($result.Microsoft Defender | Where-Object {$_.name -eq 'Controlled Folder Access Exclusions'}).value.programs
+($result.Microsoft Defender | Where-Object -FilterScript {$_.name -eq 'Controlled Folder Access Exclusions'}).value.programs
 
 # Do this to get the Controlled Folder Access Programs list when using ShowAsObjectsOnly optional parameter to output an object
 

@@ -531,16 +531,21 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
                         New-CIPolicy @UserInputProgramFoldersPolicyMakerHashTable
                     }
 
-                    # merge-cipolicy accept arrays - collecting all the policy files created by scanning user specified folders
-                    $ProgramDir_ScanResults = Get-ChildItem -Path '.\' | Where-Object -FilterScript { $_.Name -like 'ProgramDir_ScanResults*.xml' }
+                    # Merge-Cipolicy accepts arrays - collecting all the policy files created by scanning user specified folders
+                    Write-Verbose -Message 'Collecting all the policy files created by scanning user specified folders'
+
+                    [System.IO.FileInfo[]]$ProgramDir_ScanResults = Get-ChildItem -File -Path '.\' -Filter 'ProgramDir_ScanResults*.xml'
                     foreach ($file in $ProgramDir_ScanResults) {
                         $PolicyXMLFilesArray += $file.FullName
                     }
+                    #Endregion Process-Program-Folders-From-User-input                 
 
                     #region Kernel-protected-files-automatic-detection-and-allow-rule-creation
                     # This part takes care of Kernel protected files such as the main executable of the games installed through Xbox app
                     # For these files, only Kernel can get their hashes, it passes them to event viewer and we take them from event viewer logs
                     # Any other attempts such as "Get-FileHash" or "Get-AuthenticodeSignature" fail and ConfigCI Module cmdlets totally ignore these files and do not create allow rules for them
+
+                    Write-Verbose -Message 'Checking for Kernel protected files'
 
                     # Finding the file(s) first and storing them in an array
                     [System.String[]]$ExesWithNoHash = @()
@@ -549,23 +554,25 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
                     foreach ($ProgramsPath in $ProgramsPaths) {
 
                         # Making sure the currently processing path has any .exe in it
-                        [System.String[]]$AnyAvailableExes = (Get-ChildItem -Recurse -Path $ProgramsPath -Filter '*.exe').FullName
+                        [System.String[]]$AnyAvailableExes = (Get-ChildItem -File -Recurse -Path $ProgramsPath -Filter '*.exe').FullName
+    
                         # if any .exe was found then continue testing them
                         if ($AnyAvailableExes) {
-                            $AnyAvailableExes | ForEach-Object -Process {
-                                $CurrentExeWithNoHash = $_
+                            foreach ($Exe in $AnyAvailableExes) {
                                 try {
                                     # Testing each executable to find the protected ones
-                                    Get-FileHash -Path $CurrentExeWithNoHash -ErrorAction Stop | Out-Null
+                                    Get-FileHash -Path $Exe -ErrorAction Stop | Out-Null
                                 }
+                                # If the executable is protected, it will throw an exception and the script will continue to the next one
                                 # Making sure only the right file is captured by narrowing down the error type.
                                 # E.g., when get-filehash can't get a file's hash because its open by another program, the exception is different: System.IO.IOException
                                 catch [System.UnauthorizedAccessException] {
-                                    $ExesWithNoHash += $CurrentExeWithNoHash
+                                    $ExesWithNoHash += $Exe
                                 }
                             }
-                        }
+                        }                        
                     }
+
                     # Only proceed if any kernel protected file(s) were found in any of the user-selected directory path(s)
                     if ($ExesWithNoHash) {
 
@@ -594,12 +601,13 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
                                 }
                             }
                         }
+
                         $KernelProtectedHashesBlockResults = Invoke-Command -ScriptBlock $KernelProtectedHashesBlock
 
                         # Only proceed further if any hashes belonging to the detected kernel protected files were found in Event viewer
                         # If none is found then skip this part, because user didn't run those files/programs when audit mode was turned on in base policy, so no hash was found in audit logs
                         if ($KernelProtectedHashesBlockResults) {
-
+                            
                             # Save the File Rules and File Rule Refs in the FileRulesAndFileRefs.txt in the current working directory for debugging purposes
                             (Get-FileRules -HashesArray $KernelProtectedHashesBlockResults) + (Get-RuleRefs -HashesArray $KernelProtectedHashesBlockResults) | Out-File -FilePath KernelProtectedFiles.txt -Force
 
@@ -607,7 +615,7 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
                             New-EmptyPolicy -RulesContent (Get-FileRules -HashesArray $KernelProtectedHashesBlockResults) -RuleRefsContent (Get-RuleRefs -HashesArray $KernelProtectedHashesBlockResults) | Out-File -FilePath .\KernelProtectedFiles.xml -Force
 
                             # adding the policy file  to the array of xml files
-                            $PolicyXMLFilesArray += '.\KernelProtectedFiles.xml'
+                            $PolicyXMLFilesArray += '.\KernelProtectedFiles.xml'                            
                         }
                         else {
                             Write-Warning -Message "The following Kernel protected files detected, but no hash was found for them in Event viewer logs.`nThis means you didn't run those files/programs when Audit mode was turned on."
@@ -621,12 +629,12 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
 
                     # Merge all of the policy XML files in the array into the final Supplemental policy
                     Merge-CIPolicy -PolicyPaths $PolicyXMLFilesArray -OutputFilePath ".\SupplementalPolicy $SuppPolicyName.xml" | Out-Null
-
+                    
                     # Delete these extra files unless user uses -Debug parameter
                     if (-NOT $Debug) {
-                        Remove-Item -Path '.\FileRulesAndFileRefs.txt', '.\DeletedFileHashesEventsPolicy.xml' -Force -ErrorAction SilentlyContinue
-                        Remove-Item -Path '.\ProgramDir_ScanResults*.xml', '.\RulesForFilesNotInUserSelectedPaths.xml' -Force -ErrorAction SilentlyContinue
-                        Remove-Item -Path '.\KernelProtectedFiles.txt', '.\KernelProtectedFiles.xml' -Force -ErrorAction SilentlyContinue
+                        Remove-Item -Path '.\RulesForFilesNotInUserSelectedPaths.xml', '.\ProgramDir_ScanResults*.xml' -Force -ErrorAction SilentlyContinue
+                        Remove-Item -Path '.\KernelProtectedFiles.xml', '.\DeletedFileHashesEventsPolicy.xml' -Force -ErrorAction SilentlyContinue
+                        Remove-Item -Path '.\KernelProtectedFiles.txt', '.\FileRulesAndFileRefs.txt' -Force -ErrorAction SilentlyContinue
                     }
                 }
                 # Unlike AllowNewApps parameter, AllowNewAppsAuditEvents parameter performs Event viewer scanning and kernel protected files detection
@@ -643,23 +651,33 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
                     Write-Verbose -Message 'Removing the SnapBack guarantee because the base policy has been successfully re-enforced'
                     Remove-Item -Path 'C:\EnforcedModeSnapBack.ps1' -Force
                     Remove-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce' -Name '*CIPolicySnapBack' -Force
-                }
+                }               
 
-                #################### Supplemental-policy-processing-and-deployment ############################
+                #Region Supplemental-policy-processing-and-deployment
 
-                $SuppPolicyPath = ".\SupplementalPolicy $SuppPolicyName.xml"
-                $SuppPolicyID = Set-CIPolicyIdInfo -FilePath $SuppPolicyPath -PolicyName "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath
+                Write-Verbose -Message 'Supplemental policy processing and deployment'
+                [System.String]$SuppPolicyPath = ".\SupplementalPolicy $SuppPolicyName.xml"
+
+                Write-Verbose -Message 'Converting the policy to a Supplemental policy type and resetting its ID'
+                [System.String]$SuppPolicyID = Set-CIPolicyIdInfo -FilePath $SuppPolicyPath -PolicyName "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath
                 $SuppPolicyID = $SuppPolicyID.Substring(11)
+
+                Write-Verbose -Message 'Adding signer rule to the Supplemental policy'
                 Add-SignerRule -FilePath $SuppPolicyPath -CertificatePath $CertPath -Update -User -Kernel
 
                 # Make sure policy rule options that don't belong to a Supplemental policy don't exist
+                Write-Verbose -Message 'Making sure policy rule options that do not belong to a Supplemental policy do not exist'
                 @(0, 1, 2, 3, 4, 6, 8, 9, 10, 11, 12, 15, 16, 17, 19, 20) | ForEach-Object -Process { Set-RuleOption -FilePath $SuppPolicyPath -Option $_ -Delete }
 
+                Write-Verbose -Message 'Setting HVCI to Strict'
                 Set-HVCIOptions -Strict -FilePath $SuppPolicyPath
-                Set-CIPolicyVersion -FilePath $SuppPolicyPath -Version '1.0.0.0'
 
+                Write-Verbose -Message 'Setting the Supplemental policy version to 1.0.0.0'
+                Set-CIPolicyVersion -FilePath $SuppPolicyPath -Version '1.0.0.0'               
+
+                Write-Verbose -Message 'Convert the Supplemental policy to a CIP file'
                 ConvertFrom-CIPolicy -XmlFilePath $SuppPolicyPath -BinaryFilePath "$SuppPolicyID.cip" | Out-Null
-
+               
                 # Configure the parameter splat
                 $ProcessParams = @{
                     'ArgumentList' = 'sign', '/v' , '/n', "`"$CertCN`"", '/p7', '.', '/p7co', '1.3.6.1.4.1.311.79.1', '/fd', 'certHash', ".\$SuppPolicyID.cip"
@@ -667,19 +685,35 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
                     'NoNewWindow'  = $true
                     'Wait'         = $true
                     'ErrorAction'  = 'Stop'
-                } # Only show the output of SignTool if Debug switch is used
+                } 
+                # Only show the output of SignTool if Debug switch is used
                 if (!$Debug) { $ProcessParams['RedirectStandardOutput'] = 'NUL' }
+
                 # Sign the files with the specified cert
+                Write-Verbose -Message 'Signing the Supplemental policy with the specified cert'
                 Start-Process @ProcessParams
 
+                Write-Verbose -Message 'Removing the unsigned Supplemental policy file'
                 Remove-Item -Path ".\$SuppPolicyID.cip" -Force
+
+                Write-Verbose -Message 'Renaming the signed Supplemental policy file to remove the .p7 extension'
                 Rename-Item -Path "$SuppPolicyID.cip.p7" -NewName "$SuppPolicyID.cip" -Force
+
+                Write-Verbose -Message 'Deploying the Supplemental policy'
                 &'C:\Windows\System32\CiTool.exe' --update-policy ".\$SuppPolicyID.cip" -json | Out-Null
+
+
                 Write-ColorfulText -Color TeaGreen -InputText 'Supplemental policy with the following details has been Signed and Deployed in Enforced Mode:'
                 Write-Output -InputObject "SupplementalPolicyName = $SuppPolicyName"
                 Write-Output -InputObject "SupplementalPolicyGUID = $SuppPolicyID"
+
+                Write-Verbose -Message 'Removing the signed Supplemental policy CIP file after deployment'
                 Remove-Item -Path ".\$SuppPolicyID.cip" -Force
-                Remove-Item -Path $PolicyPath -Force # Remove the policy xml file in Temp folder we created earlier
+               
+                # Remove the policy xml file in Temp folder we created earlier
+                Remove-Item -Path $PolicyPath -Force
+
+                #Endregion Supplemental-policy-processing-and-deployment
             }
         }
 

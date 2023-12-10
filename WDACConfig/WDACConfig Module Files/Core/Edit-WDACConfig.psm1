@@ -667,7 +667,7 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
                         New-CIPolicy @UserInputProgramFoldersPolicyMakerHashTable
                     }
                     
-                    # Merge-cipolicy accepts arrays - collecting all the policy files created by scanning user specified folders
+                    # Merge-Cipolicy accepts arrays - collecting all the policy files created by scanning user specified folders
                     Write-Verbose -Message 'Collecting all the policy files created by scanning user specified folders'
 
                     [System.IO.FileInfo[]]$ProgramDir_ScanResults = Get-ChildItem -File -Path '.\' -Filter 'ProgramDir_ScanResults*.xml'
@@ -708,6 +708,7 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
                             }
                         }                        
                     }
+
                     # Only proceed if any kernel protected file(s) were found in any of the user-selected directory path(s)
                     if ($ExesWithNoHash) {
 
@@ -736,6 +737,7 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
                                 }
                             }
                         }
+                        
                         $KernelProtectedHashesBlockResults = Invoke-Command -ScriptBlock $KernelProtectedHashesBlock
 
                         # Only proceed further if any hashes belonging to the detected kernel protected files were found in Event viewer

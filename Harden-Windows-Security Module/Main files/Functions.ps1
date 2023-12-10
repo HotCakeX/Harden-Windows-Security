@@ -21,7 +21,7 @@ function Update-self {
     }
 
     if ($CurrentVersion -lt $LatestVersion) {
-        Write-Output "$($PSStyle.Foreground.FromRGB(255,105,180))The currently installed module's version is $CurrentVersion while the latest version is $LatestVersion - Auto Updating the module... 💓$($PSStyle.Reset)"
+        Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(255,105,180))The currently installed module's version is $CurrentVersion while the latest version is $LatestVersion - Auto Updating the module... 💓$($PSStyle.Reset)"
 
         # Only attempt to auto update the module if running as Admin, because Controlled Folder Access exclusion modification requires Admin privs
         if (Test-IsAdmin) {
@@ -63,7 +63,7 @@ function Update-self {
                 }
             }
             # Make sure the old version isn't run after update
-            Write-Output "$($PSStyle.Foreground.FromRGB(152,255,152))Update successful, please run the cmdlet again.$($PSStyle.Reset)"
+            Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(152,255,152))Update successful, please run the cmdlet again.$($PSStyle.Reset)"
             break
             return
         }

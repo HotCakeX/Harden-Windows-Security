@@ -21,9 +21,9 @@ Function Unprotect-WindowsSecurity {
     . "$psscriptroot\Functions.ps1"
 
     # Custom colors
-    [scriptblock]$WriteFuchsia = { Write-Host "$($PSStyle.Foreground.FromRGB(236,68,155))$($args[0])$($PSStyle.Reset)" }
-    [scriptblock]$WriteOrange = { Write-Host "$($PSStyle.Foreground.FromRGB(255,165,0))$($args[0])$($PSStyle.Reset)" }
-    [scriptblock]$WriteMintGreen = { Write-Host "$($PSStyle.Foreground.FromRGB(152,255,152))$($args[0])$($PSStyle.Reset)" }
+    [scriptblock]$WriteFuchsia = { Write-Host -Object "$($PSStyle.Foreground.FromRGB(236,68,155))$($args[0])$($PSStyle.Reset)" }
+    [scriptblock]$WriteOrange = { Write-Host -Object "$($PSStyle.Foreground.FromRGB(255,165,0))$($args[0])$($PSStyle.Reset)" }
+    [scriptblock]$WriteMintGreen = { Write-Host -Object "$($PSStyle.Foreground.FromRGB(152,255,152))$($args[0])$($PSStyle.Reset)" }
 
     # Only run this if -OnlyProcessMitigations parameter is passed
     if (!$OnlyProcessMitigations) {
@@ -75,7 +75,7 @@ Function Unprotect-WindowsSecurity {
                 Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Payload/Registry.csv' -OutFile '.\Registry.csv' -ProgressAction SilentlyContinue
             }
             catch {
-                Write-Host 'Using Azure DevOps...' -ForegroundColor Yellow
+                Write-Host -Object 'Using Azure DevOps...' -ForegroundColor Yellow
                 Invoke-WebRequest -Uri 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/Registry.csv' -OutFile '.\Registry.csv' -ProgressAction SilentlyContinue
             }
 
@@ -84,7 +84,7 @@ Function Unprotect-WindowsSecurity {
                 Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Payload/ProcessMitigations.csv' -OutFile '.\ProcessMitigations.csv' -ProgressAction SilentlyContinue
             }
             catch {
-                Write-Host 'Using Azure DevOps...' -ForegroundColor Yellow
+                Write-Host -Object 'Using Azure DevOps...' -ForegroundColor Yellow
                 Invoke-WebRequest -Uri 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/ProcessMitigations.csv' -OutFile '.\ProcessMitigations.csv' -ProgressAction SilentlyContinue
             }
         }

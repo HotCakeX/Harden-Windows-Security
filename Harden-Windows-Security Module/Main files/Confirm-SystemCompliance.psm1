@@ -1266,20 +1266,20 @@ function Confirm-SystemCompliance {
             else {
 
                 #Region Colors
-                [scriptblock]$WritePlum = { Write-Output "$($PSStyle.Foreground.FromRGB(221,160,221))$($PSStyle.Reverse)$($args[0])$($PSStyle.Reset)" }
-                [scriptblock]$WriteOrchid = { Write-Output "$($PSStyle.Foreground.FromRGB(218,112,214))$($PSStyle.Reverse)$($args[0])$($PSStyle.Reset)" }
-                [scriptblock]$WriteFuchsia = { Write-Output "$($PSStyle.Foreground.FromRGB(255,0,255))$($PSStyle.Reverse)$($args[0])$($PSStyle.Reset)" }
-                [scriptblock]$WriteMediumOrchid = { Write-Output "$($PSStyle.Foreground.FromRGB(186,85,211))$($PSStyle.Reverse)$($args[0])$($PSStyle.Reset)" }
-                [scriptblock]$WriteMediumPurple = { Write-Output "$($PSStyle.Foreground.FromRGB(147,112,219))$($PSStyle.Reverse)$($args[0])$($PSStyle.Reset)" }
-                [scriptblock]$WriteBlueViolet = { Write-Output "$($PSStyle.Foreground.FromRGB(138,43,226))$($PSStyle.Reverse)$($args[0])$($PSStyle.Reset)" }
-                [scriptblock]$AndroidGreen = { Write-Output "$($PSStyle.Foreground.FromRGB(176,191,26))$($PSStyle.Reverse)$($args[0])$($PSStyle.Reset)" }
-                [scriptblock]$WritePink = { Write-Output "$($PSStyle.Foreground.FromRGB(255,192,203))$($PSStyle.Reverse)$($args[0])$($PSStyle.Reset)" }
-                [scriptblock]$WriteHotPink = { Write-Output "$($PSStyle.Foreground.FromRGB(255,105,180))$($PSStyle.Reverse)$($args[0])$($PSStyle.Reset)" }
-                [scriptblock]$WriteDeepPink = { Write-Output "$($PSStyle.Foreground.FromRGB(255,20,147))$($PSStyle.Reverse)$($args[0])$($PSStyle.Reset)" }
-                [scriptblock]$WriteMintGreen = { Write-Output "$($PSStyle.Foreground.FromRGB(152,255,152))$($PSStyle.Reverse)$($args[0])$($PSStyle.Reset)" }
-                [scriptblock]$WriteOrange = { Write-Output "$($PSStyle.Foreground.FromRGB(255,165,0))$($PSStyle.Reverse)$($args[0])$($PSStyle.Reset)" }
-                [scriptblock]$WriteSkyBlue = { Write-Output "$($PSStyle.Foreground.FromRGB(135,206,235))$($PSStyle.Reverse)$($args[0])$($PSStyle.Reset)" }
-                [scriptblock]$Daffodil = { Write-Output "$($PSStyle.Foreground.FromRGB(255,255,49))$($PSStyle.Reverse)$($args[0])$($PSStyle.Reset)" }
+                [scriptblock]$WritePlum = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(221,160,221))$($PSStyle.Reverse)$($args[0])$($PSStyle.Reset)" }
+                [scriptblock]$WriteOrchid = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(218,112,214))$($PSStyle.Reverse)$($args[0])$($PSStyle.Reset)" }
+                [scriptblock]$WriteFuchsia = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(255,0,255))$($PSStyle.Reverse)$($args[0])$($PSStyle.Reset)" }
+                [scriptblock]$WriteMediumOrchid = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(186,85,211))$($PSStyle.Reverse)$($args[0])$($PSStyle.Reset)" }
+                [scriptblock]$WriteMediumPurple = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(147,112,219))$($PSStyle.Reverse)$($args[0])$($PSStyle.Reset)" }
+                [scriptblock]$WriteBlueViolet = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(138,43,226))$($PSStyle.Reverse)$($args[0])$($PSStyle.Reset)" }
+                [scriptblock]$AndroidGreen = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(176,191,26))$($PSStyle.Reverse)$($args[0])$($PSStyle.Reset)" }
+                [scriptblock]$WritePink = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(255,192,203))$($PSStyle.Reverse)$($args[0])$($PSStyle.Reset)" }
+                [scriptblock]$WriteHotPink = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(255,105,180))$($PSStyle.Reverse)$($args[0])$($PSStyle.Reset)" }
+                [scriptblock]$WriteDeepPink = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(255,20,147))$($PSStyle.Reverse)$($args[0])$($PSStyle.Reset)" }
+                [scriptblock]$WriteMintGreen = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(152,255,152))$($PSStyle.Reverse)$($args[0])$($PSStyle.Reset)" }
+                [scriptblock]$WriteOrange = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(255,165,0))$($PSStyle.Reverse)$($args[0])$($PSStyle.Reset)" }
+                [scriptblock]$WriteSkyBlue = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(135,206,235))$($PSStyle.Reverse)$($args[0])$($PSStyle.Reset)" }
+                [scriptblock]$Daffodil = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(255,255,49))$($PSStyle.Reverse)$($args[0])$($PSStyle.Reset)" }
 
                 [scriptblock]$WriteRainbow1 = {
                     $text = $args[0]

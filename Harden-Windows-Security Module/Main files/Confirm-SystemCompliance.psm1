@@ -1,8 +1,14 @@
 # Set the progress style
 $PSStyle.Progress.Style = "$($PSStyle.Foreground.FromRGB(255,255,49))$($PSStyle.Blink)"
-
-# To parse the ini file from the output of the "Secedit /export /cfg .\security_policy.inf"
 function ConvertFrom-IniFile {
+    <#
+    .SYNOPSIS
+        A function to parse the ini file from the output of the "Secedit /export /cfg .\security_policy.inf"
+    .INPUTS
+        System.String
+    .OUTPUTS
+        PSCustomObject
+    #>
     [CmdletBinding()]
     Param ([System.String]$IniFile)
 
@@ -36,7 +42,6 @@ function ConvertFrom-IniFile {
     return [PSCustomObject]$IniObject
 }
 
-# Main function
 function Confirm-SystemCompliance {
     [CmdletBinding()]
     param (
@@ -46,7 +51,7 @@ function Confirm-SystemCompliance {
         [System.Management.Automation.SwitchParameter]$ShowAsObjectsOnly,
         [parameter(Mandatory = $false)]
         [System.Management.Automation.SwitchParameter]$DetailedDisplay,
-        [Parameter(Mandatory = $false, DontShow = $True)] # To hide PowerShell common parameters that clutter parameter auto completion menu
+        [Parameter(Mandatory = $false, DontShow = $True)]
         $DummyParam
     )
     begin {
@@ -1988,39 +1993,48 @@ function Confirm-SystemCompliance {
 
     <#
 .SYNOPSIS
-Checks the compliance of a system with the Harden Windows Security script guidelines
+    Checks the compliance of a system with the Harden Windows Security script guidelines
 
 .LINK
-https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden%E2%80%90Windows%E2%80%90Security%E2%80%90Module
+    https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden%E2%80%90Windows%E2%80%90Security%E2%80%90Module
 
 .DESCRIPTION
-Checks the compliance of a system with the Harden Windows Security script. Checks the applied Group policies, registry keys and PowerShell cmdlets used by the hardening script.
+    Checks the compliance of a system with the Harden Windows Security script. Checks the applied Group policies, registry keys and PowerShell cmdlets used by the hardening script.
 
 .COMPONENT
-Gpresult, Secedit, PowerShell, Registry
+    Gpresult, Secedit, PowerShell, Registry
 
 .FUNCTIONALITY
-Uses Gpresult and Secedit to first export the effective Group policies and Security policies, then goes through them and checks them against the Harden Windows Security's guidelines.
+    Uses Gpresult and Secedit to first export the effective Group policies and Security policies, then goes through them and checks them against the Harden Windows Security's guidelines.
 
 .EXAMPLE
-($result.Microsoft Defender | Where-Object -FilterScript {$_.name -eq 'Controlled Folder Access Exclusions'}).value.programs
+    ($result.Microsoft Defender | Where-Object -FilterScript {$_.name -eq 'Controlled Folder Access Exclusions'}).value.programs
 
-# Do this to get the Controlled Folder Access Programs list when using ShowAsObjectsOnly optional parameter to output an object
+    Do this to get the Controlled Folder Access Programs list when using ShowAsObjectsOnly optional parameter to output an object
 
 .EXAMPLE
-$result.Microsoft Defender
+    $result.Microsoft Defender
 
-# Do this to only see the result for the Microsoft Defender category when using ShowAsObjectsOnly optional parameter to output an object
+    Do this to only see the result for the Microsoft Defender category when using ShowAsObjectsOnly optional parameter to output an object
 
 .PARAMETER ExportToCSV
-Export the output to a CSV file in the current working directory
+    Export the output to a CSV file in the current working directory
 
 .PARAMETER ShowAsObjectsOnly
-Returns a nested object instead of writing strings on the PowerShell console, it can be assigned to a variable
+    Returns a nested object instead of writing strings on the PowerShell console, it can be assigned to a variable
 
 .PARAMETER DetailedDisplay
-Shows the output on the PowerShell console with more details and in the list format instead of table format
+    Shows the output on the PowerShell console with more details and in the list format instead of table format
 
+.PARAMETER DummyParam
+    To hide PowerShell common parameters that clutter parameter auto completion menu
+
+.INPUTS
+    System.Management.Automation.SwitchParameter
+
+.OUTPUTS
+    System.String
+    System.Object[]
 #>
 
 }

@@ -307,7 +307,7 @@ Function Write-SmartText {
                     $Color = $Colors[$I % $Colors.Length]
                     $Output += "$($PSStyle.Foreground.FromRGB($Color.R, $Color.G, $Color.B))$($PSStyle.Blink)$($InputText[$I])$($PSStyle.BlinkOff)$($PSStyle.Reset)"
                 }
-                Write-Output $Output
+                Write-Output -InputObject $Output
                 break
             }
 
@@ -316,10 +316,10 @@ Function Write-SmartText {
     }
     else {
         if ($NoNewLineLegacy) {
-            Write-Host $InputText -ForegroundColor $GenericColor -NoNewline
+            Write-Host -Object $InputText -ForegroundColor $GenericColor -NoNewline
         }
         else {
-            Write-Host $InputText -ForegroundColor $GenericColor
+            Write-Host -Object $InputText -ForegroundColor $GenericColor
         }
     }
     
@@ -331,8 +331,8 @@ function Get-AvailableRemovableDrives {
     # An empty array of objects that holds the final removable drives list
     [System.Object[]]$AvailableRemovableDrives = @()
 
-    Get-Volume | Where-Object { $_.DriveLetter -and $_.DriveType -eq 'Removable' } |
-    ForEach-Object {
+    Get-Volume | Where-Object -FilterScript { $_.DriveLetter -and $_.DriveType -eq 'Removable' } |
+    ForEach-Object -Process {
 
         # Prepare to create an extremely random file name
         [System.String]$Path = "$($_.DriveLetter + ':')\$(New-Guid).$(Get-Random -Maximum 400)"
@@ -366,8 +366,8 @@ function Get-AvailableRemovableDrives {
                     # An empty array of objects that holds the final removable drives list
                     [System.Object[]]$AvailableRemovableDrives = @()
 
-                    Get-Volume | Where-Object { $_.DriveLetter -and $_.DriveType -eq 'Removable' } |
-                    ForEach-Object {
+                    Get-Volume | Where-Object -FilterScript { $_.DriveLetter -and $_.DriveType -eq 'Removable' } |
+                    ForEach-Object -Process {
 
                         # Prepare to create an extremely random file name
                         [System.String]$ExtremelyRandomPath = "$($_.DriveLetter + ':')\$(New-Guid).$(Get-Random -Maximum 400)"
@@ -629,7 +629,7 @@ try {
         Set-Location $HOME
         Remove-Item -Recurse -Path "$global:UserTempDirectoryPath\HardeningXStuff\" -Force
         # Disable progress bars
-        0..6 | ForEach-Object { Write-Progress -Id $_ -Activity 'Done' -Completed }
+        0..6 | ForEach-Object -Process { Write-Progress -Id $_ -Activity 'Done' -Completed }
         exit 
     }
 
@@ -716,7 +716,7 @@ try {
                 Write-Progress -Id 1 -ParentId 0 -Activity "Downloading $($file.tag)" -Status "$RequiredFilesCounter of $TotalRequiredFiles" -PercentComplete ($RequiredFilesCounter / $TotalRequiredFiles * 100)
             } 
             # Wait until all jobs are completed
-            while ($Jobs | Where-Object { $_.State -ne 'Completed' }) {
+            while ($Jobs | Where-Object -FilterScript { $_.State -ne 'Completed' }) {
                 Start-Sleep -Milliseconds 700
             }
                         
@@ -876,7 +876,7 @@ try {
                 Set-MpPreference -EnableConvertWarnToBlock $True
 
                 # Add OneDrive folders of all user accounts (personal and work accounts) to the Controlled Folder Access for Ransomware Protection
-                Get-ChildItem 'C:\Users\*\OneDrive*\' -Directory | ForEach-Object { Add-MpPreference -ControlledFolderAccessProtectedFolders $_ }
+                Get-ChildItem 'C:\Users\*\OneDrive*\' -Directory | ForEach-Object -Process { Add-MpPreference -ControlledFolderAccessProtectedFolders $_ }
 
                 # Enable Mandatory ASLR Exploit Protection system-wide
                 Set-ProcessMitigation -System -Enable ForceRelocateImages
@@ -910,10 +910,10 @@ try {
                     $ProgramName = $Group.Name
                     
                     # Get the list of mitigations to enable
-                    $EnableMitigations = $Group.Group | Where-Object { $_.Action -eq 'Enable' } | Select-Object -ExpandProperty Mitigation
+                    $EnableMitigations = $Group.Group | Where-Object -FilterScript { $_.Action -eq 'Enable' } | Select-Object -ExpandProperty Mitigation
                     
                     # Get the list of mitigations to disable
-                    $DisableMitigations = $Group.Group | Where-Object { $_.Action -eq 'Disable' } | Select-Object -ExpandProperty Mitigation
+                    $DisableMitigations = $Group.Group | Where-Object -FilterScript { $_.Action -eq 'Disable' } | Select-Object -ExpandProperty Mitigation
                     
                     # Call the Set-ProcessMitigation cmdlet with the lists of mitigations
                     if ($null -ne $EnableMitigations) {
@@ -1151,13 +1151,13 @@ To verify that this is the correct recovery key, compare the start of the follow
 
 Identifier:
 
-        $(($KeyProtectorsInputFromScriptBlock | Where-Object { $_.keyprotectortype -eq 'RecoveryPassword' }).KeyProtectorId.Trim('{', '}'))              
+        $(($KeyProtectorsInputFromScriptBlock | Where-Object -FilterScript { $_.keyprotectortype -eq 'RecoveryPassword' }).KeyProtectorId.Trim('{', '}'))              
 
 If the above identifier matches the one displayed by your PC, then use the following key to unlock your drive.
 
 Recovery Key:
 
-        $(($KeyProtectorsInputFromScriptBlock | Where-Object { $_.keyprotectortype -eq 'RecoveryPassword' }).RecoveryPassword)                            
+        $(($KeyProtectorsInputFromScriptBlock | Where-Object -FilterScript { $_.keyprotectortype -eq 'RecoveryPassword' }).RecoveryPassword)                            
 
 If the above identifier doesn't match the one displayed by your PC, then this isn't the right key to unlock your drive.
 Try another recovery key, or refer to https://learn.microsoft.com/en-us/windows/security/operating-system-security/data-protection/bitlocker/recovery-overview for additional assistance.
@@ -1200,7 +1200,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                                 Write-SmartText -C MintGreen -G Green -I 'Bitlocker is already enabled for the OS drive with Normal security level.'
                 
                                 Write-SmartText -C Fuchsia -GenericColor Magenta -I 'Here is your 48-digits recovery password for the OS drive in case you were looking for it:'
-                                Write-SmartText -C Rainbow -GenericColor Yellow -I "$(($KeyProtectorsOSDrive | Where-Object { $_.keyprotectortype -eq 'RecoveryPassword' }).RecoveryPassword)"
+                                Write-SmartText -C Rainbow -GenericColor Yellow -I "$(($KeyProtectorsOSDrive | Where-Object -FilterScript { $_.keyprotectortype -eq 'RecoveryPassword' }).RecoveryPassword)"
                 
                             }
                             else {
@@ -1210,7 +1210,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 
                                     [System.String]$BitLockerMsg = "`nThe recovery password is missing, adding it now... `n" +
                                     "It will be saved in a text file in '$env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt'"
-                                    Write-Host $BitLockerMsg -ForegroundColor Yellow
+                                    Write-Host -Object $BitLockerMsg -ForegroundColor Yellow
                 
                                     # Add RecoveryPasswordProtector key protector to the OS drive
                                     Add-BitLockerKeyProtector -MountPoint $env:SystemDrive -RecoveryPasswordProtector *> $null
@@ -1331,7 +1331,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                                 Write-SmartText -C MintGreen -G Green -I 'Bitlocker is already enabled for the OS drive with Enhanced security level.'
                 
                                 Write-SmartText -C Fuchsia -GenericColor Magenta -I 'Here is your 48-digits recovery password for the OS drive in case you were looking for it:'
-                                Write-SmartText -C Rainbow -GenericColor Yellow -I "$(($KeyProtectorsOSDrive | Where-Object { $_.keyprotectortype -eq 'RecoveryPassword' }).RecoveryPassword)"
+                                Write-SmartText -C Rainbow -GenericColor Yellow -I "$(($KeyProtectorsOSDrive | Where-Object -FilterScript { $_.keyprotectortype -eq 'RecoveryPassword' }).RecoveryPassword)"
                 
                             }
                             else {
@@ -1341,7 +1341,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 
                                     [System.String]$BitLockerMsg = "`nThe recovery password is missing, adding it now... `n" +
                                     "It will be saved in a text file in '$env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt'"
-                                    Write-Host $BitLockerMsg -ForegroundColor Yellow
+                                    Write-Host -Object $BitLockerMsg -ForegroundColor Yellow
                 
                                     # Add RecoveryPasswordProtector key protector to the OS drive
                                     Add-BitLockerKeyProtector -MountPoint $env:SystemDrive -RecoveryPasswordProtector *> $null
@@ -1364,8 +1364,8 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                                     if ($KeyProtectorTypesOSDrive -contains 'ExternalKey') {                                      
 
                                         (Get-BitLockerVolume -ErrorAction SilentlyContinue -MountPoint $env:SystemDrive).KeyProtector |
-                                        Where-Object { $_.keyprotectortype -eq 'ExternalKey' } |
-                                        ForEach-Object { Remove-BitLockerKeyProtector -MountPoint $env:SystemDrive -KeyProtectorId $_.KeyProtectorId | Out-Null }
+                                        Where-Object -FilterScript { $_.keyprotectortype -eq 'ExternalKey' } |
+                                        ForEach-Object -Process { Remove-BitLockerKeyProtector -MountPoint $env:SystemDrive -KeyProtectorId $_.KeyProtectorId | Out-Null }
                                     
                                     }                                    
 
@@ -1489,12 +1489,12 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 # Using -ErrorAction SilentlyContinue because after running the Microsoft Security baseline category, if there is a flash drive attached to the device, you "might" see this error: Device Id: \\?\Volume{83196d59-0000-0000-0000-107d00000000}\ does not have a corresponding volume.
                 # It only suppresses Non-terminating errors
                 [System.Object[]]$NonOSBitLockerVolumes = Get-BitLockerVolume -ErrorAction SilentlyContinue |
-                Where-Object { $_.volumeType -ne 'OperatingSystem' }
+                Where-Object -FilterScript { $_.volumeType -ne 'OperatingSystem' }
 
                 # Get all the volumes and filter out removable ones
                 [System.Object[]]$RemovableVolumes = Get-Volume |
-                Where-Object { $_.DriveType -eq 'Removable' } |
-                Where-Object { $_.DriveLetter }
+                Where-Object -FilterScript { $_.DriveType -eq 'Removable' } |
+                Where-Object -FilterScript { $_.DriveLetter }
 
                 # Check if there is any removable volumes
                 if ($RemovableVolumes) {
@@ -1506,7 +1506,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
 
                     # Filter out removable drives from BitLocker volumes to process
                     $NonOSBitLockerVolumes = $NonOSBitLockerVolumes |
-                    Where-Object { ($_.MountPoint -notin $RemovableVolumesLetters) }
+                    Where-Object -FilterScript { ($_.MountPoint -notin $RemovableVolumesLetters) }
 
                 }
                 #endregion Non-OS-BitLocker-Drives-Detection
@@ -1557,8 +1557,8 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                                         # Additional Check 1: if there are more than 1 ExternalKey key protector, try delete all of them and add a new one
                                         # The external key protector that is being used to unlock the drive will not be deleted
                                         ((Get-BitLockerVolume -ErrorAction SilentlyContinue -MountPoint $MountPoint).KeyProtector |
-                                        Where-Object { $_.keyprotectortype -eq 'ExternalKey' }).KeyProtectorId |
-                                        ForEach-Object {
+                                        Where-Object -FilterScript { $_.keyprotectortype -eq 'ExternalKey' }).KeyProtectorId |
+                                        ForEach-Object -Process {
                                             # -ErrorAction SilentlyContinue makes sure no error is thrown if the drive only has 1 External key key protector
                                             # and it's being used to unlock the drive
                                             Remove-BitLockerKeyProtector -MountPoint $MountPoint -KeyProtectorId $_ -ErrorAction SilentlyContinue | Out-Null
@@ -1569,17 +1569,17 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 
                                         # Additional Check 2: if there are more than 1 Recovery Password, delete all of them and add a new one
                                         [System.String[]]$RecoveryPasswordKeyProtectors = ((Get-BitLockerVolume -ErrorAction SilentlyContinue -MountPoint $MountPoint).KeyProtector |
-                                            Where-Object { $_.keyprotectortype -eq 'RecoveryPassword' }).KeyProtectorId
+                                            Where-Object -FilterScript { $_.keyprotectortype -eq 'RecoveryPassword' }).KeyProtectorId
                 
                                         if ($RecoveryPasswordKeyProtectors.Count -gt 1) {
                 
                                             [System.String]$BitLockerMsg = "`nThere are more than 1 recovery password key protector associated with the drive $mountpoint `n" +
                                             "Removing all of them and adding a new one. `n" + 
                                             "It will be saved in a text file in '$($MountPoint)\Drive $($MountPoint.Remove(1)) recovery password.txt'"
-                                            Write-Host $BitLockerMsg -ForegroundColor Yellow
+                                            Write-Host -Object $BitLockerMsg -ForegroundColor Yellow
                 
                                             # Remove all of the recovery password key protectors of the selected Non-OS Drive
-                                            $RecoveryPasswordKeyProtectors | ForEach-Object {
+                                            $RecoveryPasswordKeyProtectors | ForEach-Object -Process {
                                                 Remove-BitLockerKeyProtector -MountPoint $MountPoint -KeyProtectorId $_ | Out-Null
                                             }
                 
@@ -1600,7 +1600,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                                         [System.Object[]]$KeyProtectorsNonOS = (Get-BitLockerVolume -ErrorAction SilentlyContinue -MountPoint $MountPoint).KeyProtector
                 
                                         Write-SmartText -C Fuchsia -GenericColor Magenta -I "Here is your 48-digits recovery password for drive $MountPoint in case you were looking for it:"
-                                        Write-SmartText -C Rainbow -GenericColor Yellow -I "$(($KeyProtectorsNonOS | Where-Object { $_.keyprotectortype -eq 'RecoveryPassword' }).RecoveryPassword)"
+                                        Write-SmartText -C Rainbow -GenericColor Yellow -I "$(($KeyProtectorsNonOS | Where-Object -FilterScript { $_.keyprotectortype -eq 'RecoveryPassword' }).RecoveryPassword)"
                 
                                     }
                  
@@ -1610,8 +1610,8 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                                         # if there are more than 1 ExternalKey key protector, try delete all of them and add a new one
                                         # The external key protector that is being used to unlock the drive will not be deleted
                                         ((Get-BitLockerVolume -ErrorAction SilentlyContinue -MountPoint $MountPoint).KeyProtector |
-                                        Where-Object { $_.keyprotectortype -eq 'ExternalKey' }).KeyProtectorId |
-                                        ForEach-Object {
+                                        Where-Object -FilterScript { $_.keyprotectortype -eq 'ExternalKey' }).KeyProtectorId |
+                                        ForEach-Object -Process {
                                             # -ErrorAction SilentlyContinue makes sure no error is thrown if the drive only has 1 External key key protector
                                             # and it's being used to unlock the drive
                                             Remove-BitLockerKeyProtector -MountPoint $MountPoint -KeyProtectorId $_ -ErrorAction SilentlyContinue | Out-Null
@@ -1631,7 +1631,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 
                                         [System.String]$BitLockerMsg = "`nDrive $MountPoint is auto-unlocked but doesn't have Recovery Password, adding it now... `n" +
                                         "It will be saved in a text file in '$($MountPoint)\Drive $($MountPoint.Remove(1)) recovery password.txt'"
-                                        Write-Host $BitLockerMsg -ForegroundColor Cyan
+                                        Write-Host -Object $BitLockerMsg -ForegroundColor Cyan
                                     }
                 
                                     # Check 3: If the selected drive has Recovery Password key protector but doesn't have Auto Unlock enabled
@@ -1642,17 +1642,17 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 
                                         # if there are more than 1 Recovery Password, delete all of them and add a new one
                                         [System.String[]]$RecoveryPasswordKeyProtectors = ((Get-BitLockerVolume -ErrorAction SilentlyContinue -MountPoint $MountPoint).KeyProtector |
-                                            Where-Object { $_.keyprotectortype -eq 'RecoveryPassword' }).KeyProtectorId
+                                            Where-Object -FilterScript { $_.keyprotectortype -eq 'RecoveryPassword' }).KeyProtectorId
                 
                                         if ($RecoveryPasswordKeyProtectors.Count -gt 1) {
                 
                                             [System.String]$BitLockerMsg = "`nThere are more than 1 recovery password key protector associated with the drive $mountpoint `n" +
                                             'Removing all of them and adding a new one.' +
                                             "It will be saved in a text file in '$($MountPoint)\Drive $($MountPoint.Remove(1)) recovery password.txt'"
-                                            Write-Host $BitLockerMsg -ForegroundColor Yellow
+                                            Write-Host -Object $BitLockerMsg -ForegroundColor Yellow
                 
                                             # Delete all Recovery Passwords because there were more than 1
-                                            $RecoveryPasswordKeyProtectors | ForEach-Object {
+                                            $RecoveryPasswordKeyProtectors | ForEach-Object -Process {
                                                 Remove-BitLockerKeyProtector -MountPoint $MountPoint -KeyProtectorId $_ | Out-Null
                                             }
                 
@@ -1718,7 +1718,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                     'RC4 64/128', # RC4 64-bit
                     'RC4 128/128', # RC4 128-bit
                     'Triple DES 168' # 3DES 168-bit (Triple DES 168)
-                ) | ForEach-Object {
+                ) | ForEach-Object -Process {
                     [Microsoft.Win32.RegistryKey]::OpenRemoteBaseKey([Microsoft.Win32.RegistryHive]::LocalMachine, $env:COMPUTERNAME).CreateSubKey("SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\$_") | Out-Null
                 }
 
@@ -1848,8 +1848,8 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
 
                 # Disables Multicast DNS (mDNS) UDP-in Firewall Rules for all 3 Firewall profiles - disables only 3 rules
                 Get-NetFirewallRule |
-                Where-Object { $_.RuleGroup -eq '@%SystemRoot%\system32\firewallapi.dll,-37302' -and $_.Direction -eq 'inbound' } |
-                ForEach-Object { Disable-NetFirewallRule -DisplayName $_.DisplayName }
+                Where-Object -FilterScript { $_.RuleGroup -eq '@%SystemRoot%\system32\firewallapi.dll,-37302' -and $_.Direction -eq 'inbound' } |
+                ForEach-Object -Process { Disable-NetFirewallRule -DisplayName $_.DisplayName }
             } 'No' { break }
             'Exit' { &$CleanUp }
         }    
@@ -1940,9 +1940,9 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
 
                     # Uninstall Windows Media Player (legacy)
                     Write-Host -Object "`nUninstalling Windows Media Player (legacy)" -ForegroundColor Yellow
-                    if ((Get-WindowsCapability -Online | Where-Object { $_.Name -like '*Media.WindowsMediaPlayer*' }).state -ne 'NotPresent') {
+                    if ((Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like '*Media.WindowsMediaPlayer*' }).state -ne 'NotPresent') {
                         try {                            
-                            Get-WindowsCapability -Online | Where-Object { $_.Name -like '*Media.WindowsMediaPlayer*' } | Remove-WindowsCapability -Online -ErrorAction Stop
+                            Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like '*Media.WindowsMediaPlayer*' } | Remove-WindowsCapability -Online -ErrorAction Stop
                             # Shows the successful message only if removal process was successful
                             Write-Host -Object 'Windows Media Player (legacy) has been uninstalled.' -ForegroundColor Green
                         }
@@ -2029,10 +2029,10 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                     }
             
                     # Uninstall VBScript that is now uninstallable as an optional features since Windows 11 insider Dev build 25309 - Won't do anything in other builds                      
-                    if (Get-WindowsCapability -Online | Where-Object { $_.Name -like '*VBSCRIPT*' }) {                        
+                    if (Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like '*VBSCRIPT*' }) {                        
                         try {  
                             Write-Host -Object "`nUninstalling VBSCRIPT" -ForegroundColor Yellow                          
-                            Get-WindowsCapability -Online | Where-Object { $_.Name -like '*VBSCRIPT*' } | Remove-WindowsCapability -Online -ErrorAction Stop
+                            Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like '*VBSCRIPT*' } | Remove-WindowsCapability -Online -ErrorAction Stop
                             # Shows the successful message only if removal process was successful                                                      
                             Write-Host -Object 'VBSCRIPT has been uninstalled' -ForegroundColor Green
                         }
@@ -2044,9 +2044,9 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 
                     # Uninstall Internet Explorer mode functionality for Edge
                     Write-Host -Object "`nUninstalling Internet Explorer mode functionality for Edge" -ForegroundColor Yellow
-                    if ((Get-WindowsCapability -Online | Where-Object { $_.Name -like '*Browser.InternetExplorer*' }).state -ne 'NotPresent') {
+                    if ((Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like '*Browser.InternetExplorer*' }).state -ne 'NotPresent') {
                         try {                            
-                            Get-WindowsCapability -Online | Where-Object { $_.Name -like '*Browser.InternetExplorer*' } | Remove-WindowsCapability -Online -ErrorAction Stop
+                            Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like '*Browser.InternetExplorer*' } | Remove-WindowsCapability -Online -ErrorAction Stop
                             # Shows the successful message only if removal process was successful
                             Write-Host -Object 'Internet Explorer mode functionality for Edge has been uninstalled' -ForegroundColor Green
                         }
@@ -2061,9 +2061,9 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
 
                     # Uninstall WMIC 
                     Write-Host -Object "`nUninstalling WMIC" -ForegroundColor Yellow
-                    if ((Get-WindowsCapability -Online | Where-Object { $_.Name -like '*wmic*' }).state -ne 'NotPresent') {                   
+                    if ((Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like '*wmic*' }).state -ne 'NotPresent') {                   
                         try {                            
-                            Get-WindowsCapability -Online | Where-Object { $_.Name -like '*wmic*' } | Remove-WindowsCapability -Online -ErrorAction Stop
+                            Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like '*wmic*' } | Remove-WindowsCapability -Online -ErrorAction Stop
                             # Shows the successful message only if removal process was successful
                             Write-Host -Object 'WMIC has been uninstalled' -ForegroundColor Green
                         }
@@ -2078,9 +2078,9 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
 
                     # Uninstall Legacy Notepad
                     Write-Host -Object "`nUninstalling Legacy Notepad" -ForegroundColor Yellow
-                    if ((Get-WindowsCapability -Online | Where-Object { $_.Name -like '*Microsoft.Windows.Notepad.System*' }).state -ne 'NotPresent') {
+                    if ((Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like '*Microsoft.Windows.Notepad.System*' }).state -ne 'NotPresent') {
                         try {                            
-                            Get-WindowsCapability -Online | Where-Object { $_.Name -like '*Microsoft.Windows.Notepad.System*' } | Remove-WindowsCapability -Online -ErrorAction Stop
+                            Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like '*Microsoft.Windows.Notepad.System*' } | Remove-WindowsCapability -Online -ErrorAction Stop
                             # Shows the successful message only if removal process was successful
                             Write-Host -Object 'Legacy Notepad has been uninstalled. The modern multi-tabbed Notepad is unaffected.' -ForegroundColor Green
                         }
@@ -2095,9 +2095,9 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
 
                     # Uninstall WordPad
                     Write-Host -Object "`nUninstalling WordPad" -ForegroundColor Yellow
-                    if ((Get-WindowsCapability -Online | Where-Object { $_.Name -like '*Microsoft.Windows.WordPad*' }).state -ne 'NotPresent') {
+                    if ((Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like '*Microsoft.Windows.WordPad*' }).state -ne 'NotPresent') {
                         try {                            
-                            Get-WindowsCapability -Online | Where-Object { $_.Name -like '*Microsoft.Windows.WordPad*' } | Remove-WindowsCapability -Online -ErrorAction Stop
+                            Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like '*Microsoft.Windows.WordPad*' } | Remove-WindowsCapability -Online -ErrorAction Stop
                             # Shows the successful message only if removal process was successful
                             Write-Host -Object 'WordPad has been uninstalled.' -ForegroundColor Green
                         }
@@ -2112,9 +2112,9 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
 
                     # Uninstall PowerShell ISE
                     Write-Host -Object "`nUninstalling PowerShell ISE" -ForegroundColor Yellow
-                    if ((Get-WindowsCapability -Online | Where-Object { $_.Name -like '*Microsoft.Windows.PowerShell.ISE*' }).state -ne 'NotPresent') {
+                    if ((Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like '*Microsoft.Windows.PowerShell.ISE*' }).state -ne 'NotPresent') {
                         try {                            
-                            Get-WindowsCapability -Online | Where-Object { $_.Name -like '*Microsoft.Windows.PowerShell.ISE*' } | Remove-WindowsCapability -Online -ErrorAction Stop
+                            Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like '*Microsoft.Windows.PowerShell.ISE*' } | Remove-WindowsCapability -Online -ErrorAction Stop
                             # Shows the successful message only if removal process was successful
                             Write-Host -Object 'PowerShell ISE has been uninstalled.' -ForegroundColor Green
                         }
@@ -2132,9 +2132,9 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                     
                     # Uninstall Steps Recorder
                     Write-Host -Object "`nUninstalling Steps Recorder" -ForegroundColor Yellow
-                    if ((Get-WindowsCapability -Online | Where-Object { $_.Name -like '*App.StepsRecorder*' }).state -ne 'NotPresent') {
+                    if ((Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like '*App.StepsRecorder*' }).state -ne 'NotPresent') {
                         try {                            
-                            Get-WindowsCapability -Online | Where-Object { $_.Name -like '*App.StepsRecorder*' } | Remove-WindowsCapability -Online -ErrorAction Stop
+                            Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like '*App.StepsRecorder*' } | Remove-WindowsCapability -Online -ErrorAction Stop
                             # Shows the successful message only if removal process was successful
                             Write-Host -Object 'Steps Recorder has been uninstalled.' -ForegroundColor Green
                         }
@@ -2214,7 +2214,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 }
                    
                 # Allow all Windows users to use Hyper-V and Windows Sandbox by adding all Windows users to the "Hyper-V Administrators" security group using its SID
-                Get-LocalUser | Where-Object { $_.enabled -eq 'True' } | ForEach-Object { Add-LocalGroupMember -SID 'S-1-5-32-578' -Member "$($_.SID)" -ErrorAction SilentlyContinue }
+                Get-LocalUser | Where-Object -FilterScript { $_.enabled -eq 'True' } | ForEach-Object -Process { Add-LocalGroupMember -SID 'S-1-5-32-578' -Member "$($_.SID)" -ErrorAction SilentlyContinue }
                 
                 # Makes sure auditing for the "Other Logon/Logoff Events" subcategory under the Logon/Logoff category is enabled, doesn't touch affect any other sub-category
                 # For tracking Lock screen unlocks and locks
@@ -2444,7 +2444,7 @@ finally {
     Set-Location $HOME; Remove-Item -Recurse -Path "$global:UserTempDirectoryPath\HardeningXStuff\" -Force -ErrorAction SilentlyContinue    
 
     # Disable progress bars
-    0..6 | ForEach-Object { Write-Progress -Id $_ -Activity 'Done' -Completed }
+    0..6 | ForEach-Object -Process { Write-Progress -Id $_ -Activity 'Done' -Completed }
 
     # Restore the title of the PowerShell back to what it was prior to running the script/module
     $Host.UI.RawUI.WindowTitle = $CurrentPowerShellTitle

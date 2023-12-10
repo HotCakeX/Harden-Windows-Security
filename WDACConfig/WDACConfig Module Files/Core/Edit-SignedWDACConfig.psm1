@@ -261,59 +261,75 @@ Function Edit-SignedWDACConfig {
             param()
 
             # Deploy Enforced mode CIP
-            &'C:\Windows\System32\CiTool.exe' --update-policy ".\$PolicyID.cip" -json | Out-Null
+            &'C:\Windows\System32\CiTool.exe' --update-policy '.\EnforcedMode.cip' -json | Out-Null
             Write-ColorfulText -Color TeaGreen -InputText 'The Base policy with the following details has been Re-Signed and Re-Deployed in Enforced Mode:'
             Write-Host -Object "PolicyName = $PolicyName"
             Write-Host -Object "PolicyGUID = $PolicyID"
             # Remove Enforced Mode CIP
-            Remove-Item -Path ".\$PolicyID.cip" -Force
-        }
+            Remove-Item -Path '.\EnforcedMode.cip' -Force
+        }        
     }
 
     process {
 
         if ($AllowNewAppsAuditEvents) {
-
             # Change Code Integrity event logs size
-            if ($AllowNewAppsAuditEvents -and $LogSize) { Set-LogSize -LogSize $LogSize }
+            if ($AllowNewAppsAuditEvents -and $LogSize) {
+                Write-Verbose -Message 'Changing Code Integrity event logs size'
+                Set-LogSize -LogSize $LogSize
+            }
+
             # Make sure there is no leftover from previous runs
+            Write-Verbose -Message 'Removing any possible files from previous runs'
             Remove-Item -Path '.\ProgramDir_ScanResults*.xml' -Force -ErrorAction SilentlyContinue
             Remove-Item -Path ".\SupplementalPolicy $SuppPolicyName.xml" -Force -ErrorAction SilentlyContinue
+                      
             # Get the current date so that instead of the entire event viewer logs, only audit logs created after running this module will be captured
-            # The notice about variable being assigned and never used should be ignored - it's being dot-sourced from Resources file
+            Write-Verbose -Message 'Getting the current date'
             [System.DateTime]$Date = Get-Date
+            
             # An empty array that holds the Policy XML files - This array will eventually be used to create the final Supplemental policy
             [System.Object[]]$PolicyXMLFilesArray = @()
 
-            ################################### Initiate Live Audit Mode ###################################
+            #Initiate Live Audit Mode
 
             foreach ($PolicyPath in $PolicyPaths) {
                 # Creating a copy of the original policy in Temp folder so that the original one will be unaffected
-                $PolicyFileName = Split-Path $PolicyPath -Leaf
-                Remove-Item -Path "$UserTempDirectoryPath\$PolicyFileName" -Force -ErrorAction SilentlyContinue # make sure no file with the same name already exists in Temp folder
+                Write-Verbose -Message 'Creating a copy of the original policy in Temp folder so that the original one will be unaffected'
+                # Get the policy file name
+                [System.String]$PolicyFileName = Split-Path $PolicyPath -Leaf
+                # make sure no file with the same name already exists in Temp folder
+                Remove-Item -Path "$UserTempDirectoryPath\$PolicyFileName" -Force -ErrorAction SilentlyContinue
                 Copy-Item -Path $PolicyPath -Destination $UserTempDirectoryPath -Force
-                $PolicyPath = "$UserTempDirectoryPath\$PolicyFileName"
+                [System.String]$PolicyPath = "$UserTempDirectoryPath\$PolicyFileName"
 
-                # Defining Base policy
+                Write-Verbose -Message 'Retrieving the Base policy name and ID'
                 $xml = [System.Xml.XmlDocument](Get-Content -Path $PolicyPath)
                 [System.String]$PolicyID = $xml.SiPolicy.PolicyID
                 [System.String]$PolicyName = ($xml.SiPolicy.Settings.Setting | Where-Object -FilterScript { $_.provider -eq 'PolicyInfo' -and $_.valuename -eq 'Name' -and $_.key -eq 'Information' }).value.string
 
                 # Remove any cip file if there is any
+                Write-Verbose -Message 'Removing any cip file if there is any in the current working directory'
                 Remove-Item -Path '.\*.cip' -Force -ErrorAction SilentlyContinue
-
+ 
+                Write-Verbose -Message 'Creating Audit Mode CIP'
+                # Remove Unsigned policy rule option
+                Set-RuleOption -FilePath $PolicyPath -Option 6 -Delete
+                # Add Audit mode policy rule option
+                Set-RuleOption -FilePath $PolicyPath -Option 3
                 # Create CIP for Audit Mode
-                Set-RuleOption -FilePath $PolicyPath -Option 6 -Delete # Remove Unsigned policy rule option
-                Set-RuleOption -FilePath $PolicyPath -Option 3 # Add Audit mode policy rule option
-                ConvertFrom-CIPolicy -XmlFilePath $PolicyPath -BinaryFilePath '.\AuditModeTemp.cip' | Out-Null
+                ConvertFrom-CIPolicy -XmlFilePath $PolicyPath -BinaryFilePath '.\AuditMode.cip' | Out-Null
 
+                Write-Verbose -Message 'Creating Enforced Mode CIP'
+                # Remove Unsigned policy rule option
+                Set-RuleOption -FilePath $PolicyPath -Option 6 -Delete 
+                # Remove Audit mode policy rule option
+                Set-RuleOption -FilePath $PolicyPath -Option 3 -Delete
                 # Create CIP for Enforced Mode
-                Set-RuleOption -FilePath $PolicyPath -Option 6 -Delete # Remove Unsigned policy rule option
-                Set-RuleOption -FilePath $PolicyPath -Option 3 -Delete # Remove Audit mode policy rule option
-                ConvertFrom-CIPolicy -XmlFilePath $PolicyPath -BinaryFilePath '.\EnforcedModeTemp.cip' | Out-Null
+                ConvertFrom-CIPolicy -XmlFilePath $PolicyPath -BinaryFilePath '.\EnforcedMode.cip' | Out-Null
 
                 # Sign both CIPs
-                '.\AuditModeTemp.cip', '.\EnforcedModeTemp.cip' | ForEach-Object -Process {
+                '.\AuditMode.cip', '.\EnforcedMode.cip' | ForEach-Object -Process {
                     # Configure the parameter splat
                     $ProcessParams = @{
                         'ArgumentList' = 'sign', '/v' , '/n', "`"$CertCN`"", '/p7', '.', '/p7co', '1.3.6.1.4.1.311.79.1', '/fd', 'certHash', "`"$_`""
@@ -329,8 +345,14 @@ Function Edit-SignedWDACConfig {
                     # After creating signed .p7 files for each CIP, remove the old Unsigned ones
                     Remove-Item -Path $_ -Force
                 }
-                Rename-Item -Path '.\EnforcedModeTemp.cip.p7' -NewName '.\EnforcedMode.cip' -Force
-                Rename-Item -Path '.\AuditModeTemp.cip.p7' -NewName '.\AuditMode.cip' -Force
+
+                Write-Verbose -Message 'Removing the unsigned CIPs'
+                Remove-Item -Path '.\EnforcedMode.cip' -Force
+                Remove-Item -Path '.\AuditMode.cip' -Force    
+                
+                Write-Verbose -Message 'Renaming the signed CIPs to remove the .p7 extension'
+                Rename-Item -Path '.\EnforcedMode.cip.p7' -NewName '.\EnforcedMode.cip' -Force
+                Rename-Item -Path '.\AuditMode.cip.p7' -NewName '.\AuditMode.cip' -Force
 
                 ################# Snap back guarantee #################
                 Write-Verbose -Message 'Creating Enforced Mode SnapBack guarantee'

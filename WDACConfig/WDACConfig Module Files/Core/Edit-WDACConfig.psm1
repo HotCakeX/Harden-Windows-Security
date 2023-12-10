@@ -223,7 +223,7 @@ Function Edit-WDACConfig {
                 # Creating a copy of the original policy in Temp folder so that the original one will be unaffected
                 Write-Verbose -Message 'Creating a copy of the original policy in Temp folder so that the original one will be unaffected'
                 # Get the policy file name
-                [System.String]$PolicyFileName = Split-Path $PolicyPath -Leaf
+                [System.String]$PolicyFileName = Split-Path -Path $PolicyPath -Leaf
                 # make sure no file with the same name already exists in Temp folder
                 Remove-Item -Path "$UserTempDirectoryPath\$PolicyFileName" -Force -ErrorAction SilentlyContinue
                 Copy-Item -Path $PolicyPath -Destination $UserTempDirectoryPath -Force
@@ -378,7 +378,7 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
                     New-CIPolicy @UserInputProgramFoldersPolicyMakerHashTable
                 }
 
-                # merge-cipolicy accepts arrays - collecting all the policy files created by scanning user specified folders
+                # Merge-CiPolicy accepts arrays - collecting all the policy files created by scanning user specified folders
                 Write-Verbose -Message 'Collecting all the policy files created by scanning user specified folders'
 
                 [System.IO.FileInfo[]]$ProgramDir_ScanResults = Get-ChildItem -File -Path '.\' -Filter 'ProgramDir_ScanResults*.xml'
@@ -462,7 +462,7 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
                 # Creating a copy of the original policy in Temp folder so that the original one will be unaffected
                 Write-Verbose -Message 'Creating a copy of the original policy in Temp folder so that the original one will be unaffected'
                 # Get the policy file name
-                [System.String]$PolicyFileName = Split-Path $PolicyPath -Leaf
+                [System.String]$PolicyFileName = Split-Path -Path $PolicyPath -Leaf
                 # make sure no file with the same name already exists in Temp folder
                 Remove-Item -Path "$UserTempDirectoryPath\$PolicyFileName" -Force -ErrorAction SilentlyContinue
                 Copy-Item -Path $PolicyPath -Destination $UserTempDirectoryPath -Force
@@ -667,7 +667,7 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
                         New-CIPolicy @UserInputProgramFoldersPolicyMakerHashTable
                     }
 
-                    # Merge-Cipolicy accepts arrays - collecting all the policy files created by scanning user specified folders
+                    # Merge-CiPolicy accepts arrays - collecting all the policy files created by scanning user specified folders
                     Write-Verbose -Message 'Collecting all the policy files created by scanning user specified folders'
 
                     [System.IO.FileInfo[]]$ProgramDir_ScanResults = Get-ChildItem -File -Path '.\' -Filter 'ProgramDir_ScanResults*.xml'

@@ -41,7 +41,7 @@ Function Test-FilePath {
                 }
                 else {
                     # The directory path is not valid
-                    Write-Warning "The directory path '$Directory' is not valid."
+                    Write-Warning -Message "The directory path '$Directory' is not valid."
                 }
             }
 
@@ -52,7 +52,7 @@ Function Test-FilePath {
         }
         else {
             # The file path is not valid
-            Write-Warning "The file path '$file' is not valid."
+            Write-Warning -Message "The file path '$file' is not valid."
         }
     }
 }

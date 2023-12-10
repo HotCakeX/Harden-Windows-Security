@@ -55,7 +55,7 @@ Function Get-CommonWDACConfig {
             $CurrentUserConfigurations = $CurrentUserConfigurations | ConvertFrom-Json
         }
         catch {
-            Write-Warning 'The UserConfigurations.json was corrupted, clearing it.'
+            Write-Warning -Message 'The UserConfigurations.json was corrupted, clearing it.'
             Set-Content -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json" -Value ''
         }
     }

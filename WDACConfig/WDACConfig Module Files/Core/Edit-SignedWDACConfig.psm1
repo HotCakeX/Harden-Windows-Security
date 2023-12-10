@@ -47,10 +47,10 @@ Function Edit-SignedWDACConfig {
                 # Validate each Policy file in PolicyPaths parameter to make sure the user isn't accidentally trying to
                 # Edit an Unsigned policy using Edit-SignedWDACConfig cmdlet which is only made for Signed policies
                 $_ | ForEach-Object -Process {
-                    $xmlTest = [System.Xml.XmlDocument](Get-Content -Path $_)
-                    $RedFlag1 = $xmlTest.SiPolicy.SupplementalPolicySigners.SupplementalPolicySigner.SignerId
-                    $RedFlag2 = $xmlTest.SiPolicy.UpdatePolicySigners.UpdatePolicySigner.SignerId
-                    $RedFlag3 = $xmlTest.SiPolicy.PolicyID
+                    $XmlTest = [System.Xml.XmlDocument](Get-Content -Path $_)
+                    $RedFlag1 = $XmlTest.SiPolicy.SupplementalPolicySigners.SupplementalPolicySigner.SignerId
+                    $RedFlag2 = $XmlTest.SiPolicy.UpdatePolicySigners.UpdatePolicySigner.SignerId
+                    $RedFlag3 = $XmlTest.SiPolicy.PolicyID
                     $CurrentPolicyIDs = ((&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { $_.IsSystemPolicy -ne 'True' }).policyID | ForEach-Object -Process { "{$_}" }
                     if ($RedFlag1 -or $RedFlag2) {
                         # Ensure the selected base policy xml file is deployed
@@ -294,9 +294,9 @@ Function Edit-SignedWDACConfig {
                 [System.String]$PolicyPath = "$UserTempDirectoryPath\$PolicyFileName"
 
                 Write-Verbose -Message 'Retrieving the Base policy name and ID'
-                $xml = [System.Xml.XmlDocument](Get-Content -Path $PolicyPath)
-                [System.String]$PolicyID = $xml.SiPolicy.PolicyID
-                [System.String]$PolicyName = ($xml.SiPolicy.Settings.Setting | Where-Object -FilterScript { $_.provider -eq 'PolicyInfo' -and $_.valuename -eq 'Name' -and $_.key -eq 'Information' }).value.string
+                $Xml = [System.Xml.XmlDocument](Get-Content -Path $PolicyPath)
+                [System.String]$PolicyID = $Xml.SiPolicy.PolicyID
+                [System.String]$PolicyName = ($Xml.SiPolicy.Settings.Setting | Where-Object -FilterScript { $_.provider -eq 'PolicyInfo' -and $_.valuename -eq 'Name' -and $_.key -eq 'Information' }).value.string
 
                 # Remove any cip file if there is any
                 Write-Verbose -Message 'Removing any cip file if there is any in the current working directory'
@@ -559,9 +559,9 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
                 [System.String]$PolicyPath = "$UserTempDirectoryPath\$PolicyFileName"
 
                 Write-Verbose -Message 'Retrieving the Base policy name and ID'
-                $xml = [System.Xml.XmlDocument](Get-Content -Path $PolicyPath)
-                [System.String]$PolicyID = $xml.SiPolicy.PolicyID
-                [System.String]$PolicyName = ($xml.SiPolicy.Settings.Setting | Where-Object -FilterScript { $_.provider -eq 'PolicyInfo' -and $_.valuename -eq 'Name' -and $_.key -eq 'Information' }).value.string
+                $Xml = [System.Xml.XmlDocument](Get-Content -Path $PolicyPath)
+                [System.String]$PolicyID = $Xml.SiPolicy.PolicyID
+                [System.String]$PolicyName = ($Xml.SiPolicy.Settings.Setting | Where-Object -FilterScript { $_.provider -eq 'PolicyInfo' -and $_.valuename -eq 'Name' -and $_.key -eq 'Information' }).value.string
 
                 # Remove any cip file if there is any
                 Write-Verbose -Message 'Removing any cip file if there is any in the current working directory'
@@ -836,8 +836,8 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
 
                         [System.Management.Automation.ScriptBlock]$KernelProtectedHashesBlock = {
                             foreach ($event in Get-WinEvent -FilterHashtable @{LogName = 'Microsoft-Windows-CodeIntegrity/Operational'; ID = 3076 } -ErrorAction SilentlyContinue | Where-Object -FilterScript { $_.TimeCreated -ge $Date } ) {
-                                $xml = [System.Xml.XmlDocument]$event.toxml()
-                                $xml.event.eventdata.data |
+                                $Xml = [System.Xml.XmlDocument]$event.toxml()
+                                $Xml.event.eventdata.data |
                                 ForEach-Object -Begin { $Hash = @{} } -Process { $hash[$_.name] = $_.'#text' } -End { [pscustomobject]$hash } |
                                 ForEach-Object -Process {
                                     if ($_.'File Name' -match ($pattern = '\\Device\\HarddiskVolume(\d+)\\(.*)$')) {
@@ -1087,10 +1087,10 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
             $CurrentID = "{$CurrentID}"
             Remove-Item -Path ".\$CurrentID.cip" -Force -ErrorAction SilentlyContinue
 
-            [System.Xml.XmlDocument]$xml = Get-Content -Path '.\BasePolicy.xml'
-            $xml.SiPolicy.PolicyID = $CurrentID
-            $xml.SiPolicy.BasePolicyID = $CurrentID
-            $xml.Save('.\BasePolicy.xml')
+            [System.Xml.XmlDocument]$Xml = Get-Content -Path '.\BasePolicy.xml'
+            $Xml.SiPolicy.PolicyID = $CurrentID
+            $Xml.SiPolicy.BasePolicyID = $CurrentID
+            $Xml.Save('.\BasePolicy.xml')
 
             Add-SignerRule -FilePath .\BasePolicy.xml -CertificatePath $CertPath -Update -User -Kernel -Supplemental
 

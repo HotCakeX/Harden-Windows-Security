@@ -650,16 +650,16 @@ Function New-WDACConfig {
                 'Allow Microsoft Base' {
                     Write-Verbose -Message 'Creating Allow Microsoft Base policy'
                     Build-AllowMSFTWithBlockRules | Out-Null
-                    $xml = [System.Xml.XmlDocument](Get-Content -Path .\AllowMicrosoftPlusBlockRules.xml)
-                    $BasePolicyID = $xml.SiPolicy.PolicyID
+                    $Xml = [System.Xml.XmlDocument](Get-Content -Path .\AllowMicrosoftPlusBlockRules.xml)
+                    $BasePolicyID = $Xml.SiPolicy.PolicyID
                     # define the location of the base policy
                     $BasePolicy = 'AllowMicrosoftPlusBlockRules.xml'
                 }
                 'Default Windows Base' {
                     Write-Verbose -Message 'Creating Default Windows Base policy'
                     Build-DefaultWindowsWithBlockRules | Out-Null
-                    $xml = [System.Xml.XmlDocument](Get-Content -Path .\DefaultWindowsPlusBlockRules.xml)
-                    $BasePolicyID = $xml.SiPolicy.PolicyID
+                    $Xml = [System.Xml.XmlDocument](Get-Content -Path .\DefaultWindowsPlusBlockRules.xml)
+                    $BasePolicyID = $Xml.SiPolicy.PolicyID
                     # define the location of the base policy
                     $BasePolicy = 'DefaultWindowsPlusBlockRules.xml'
                 }
@@ -707,8 +707,8 @@ Function New-WDACConfig {
                 # Get Event viewer logs for code integrity - check the file path of all of the files in the log, resolve them using the command above - show files that are no longer available on the disk
                 [System.Management.Automation.ScriptBlock]$AuditEventLogsDeletedFilesScriptBlock = {
                     foreach ($event in Get-WinEvent -FilterHashtable @{LogName = 'Microsoft-Windows-CodeIntegrity/Operational'; ID = 3076 }) {
-                        $xml = [System.Xml.XmlDocument]$event.toxml()
-                        $xml.event.eventdata.data |
+                        $Xml = [System.Xml.XmlDocument]$event.toxml()
+                        $Xml.event.eventdata.data |
                         ForEach-Object -Begin { $Hash = @{} } -Process { $hash[$_.name] = $_.'#text' } -End { [pscustomobject]$hash } |
                         ForEach-Object -Process {
                             if ($_.'File Name' -match ($pattern = '\\Device\\HarddiskVolume(\d+)\\(.*)$')) {
@@ -762,7 +762,7 @@ Function New-WDACConfig {
 
             # convert the Supplemental Policy file to .cip binary file
             Write-Verbose -Message 'Converting SupplementalPolicy.xml policy to .CIP binary'
-            ConvertFrom-CIPolicy -XmlFilePath 'SupplementalPolicy.xml' -BinaryFilePath "$policyID.cip" | Out-Null
+            ConvertFrom-CIPolicy -XmlFilePath 'SupplementalPolicy.xml' -BinaryFilePath "$PolicyID.cip" | Out-Null
 
             #Endregion Supplemental-Policy-Processing
 
@@ -780,7 +780,7 @@ Function New-WDACConfig {
 
                 Write-Verbose -Message 'Deploying the Base policy and Supplemental policy'
                 &'C:\Windows\System32\CiTool.exe' --update-policy "$BasePolicyID.cip" -json | Out-Null
-                &'C:\Windows\System32\CiTool.exe' --update-policy "$policyID.cip" -json | Out-Null
+                &'C:\Windows\System32\CiTool.exe' --update-policy "$PolicyID.cip" -json | Out-Null
 
                 Write-ColorfulText -Color Pink -InputText "`nBase policy and Supplemental Policies deployed and activated.`n"
 
@@ -905,7 +905,7 @@ Function New-WDACConfig {
             $MakeLightPolicy { Build-LightPolicy ; break }
             $MakeDefaultWindowsWithBlockRules { Build-DefaultWindowsWithBlockRules ; break }
             $PrepDefaultWindowsAudit { Build-DefaultWindowsAudit ; break }
-            default { Write-Warning 'None of the main parameters were selected.'; break }
+            default { Write-Warning -Message 'None of the main parameters were selected.'; break }
         }
     }
 

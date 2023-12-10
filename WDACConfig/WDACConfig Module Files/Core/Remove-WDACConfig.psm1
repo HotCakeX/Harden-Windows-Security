@@ -15,9 +15,9 @@ Function Remove-WDACConfig {
         [ValidateScript({
                 # Validate each Policy file in PolicyPaths parameter to make sure the user isn't accidentally trying to remove an Unsigned policy
                 $_ | ForEach-Object -Process {
-                    $xmlTest = [System.Xml.XmlDocument](Get-Content -Path $_)
-                    $RedFlag1 = $xmlTest.SiPolicy.SupplementalPolicySigners.SupplementalPolicySigner.SignerId
-                    $RedFlag2 = $xmlTest.SiPolicy.UpdatePolicySigners.UpdatePolicySigner.SignerId
+                    $XmlTest = [System.Xml.XmlDocument](Get-Content -Path $_)
+                    $RedFlag1 = $XmlTest.SiPolicy.SupplementalPolicySigners.SupplementalPolicySigner.SignerId
+                    $RedFlag2 = $XmlTest.SiPolicy.UpdatePolicySigners.UpdatePolicySigner.SignerId
                     if ($RedFlag1 -or $RedFlag2) { return $True }
                 }
             }, ErrorMessage = 'The policy XML file(s) you chose are Unsigned policies. Please use Remove-WDACConfig cmdlet with -UnsignedOrSupplemental parameter instead.')]
@@ -252,11 +252,11 @@ Function Remove-WDACConfig {
 
                 # Convert the XML file into an XML object
                 Write-Verbose -Message 'Converting the XML file to an XML object'
-                $xml = [System.Xml.XmlDocument](Get-Content -Path $PolicyPath)
+                $Xml = [System.Xml.XmlDocument](Get-Content -Path $PolicyPath)
 
                 # Extract the Policy ID from the XML object
                 Write-Verbose -Message 'Extracting the Policy ID from the XML object'
-                [System.String]$PolicyID = $xml.SiPolicy.PolicyID
+                [System.String]$PolicyID = $Xml.SiPolicy.PolicyID
                 Write-Verbose -Message "The policy ID of the currently processing xml file is $PolicyID"
 
                 # Prevent users from accidentally attempting to remove policies that aren't even deployed on the system
@@ -270,9 +270,9 @@ Function Remove-WDACConfig {
                 Write-Verbose -Message 'Sanitizing the XML policy file by removing SupplementalPolicySigners from it'
 
                 # Extracting the SupplementalPolicySigner ID from the selected XML policy file, if any
-                $SuppSingerIDs = $xml.SiPolicy.SupplementalPolicySigners.SupplementalPolicySigner.SignerId
+                $SuppSingerIDs = $Xml.SiPolicy.SupplementalPolicySigners.SupplementalPolicySigner.SignerId
                 # Extracting the policy name from the selected XML policy file
-                $PolicyName = ($xml.SiPolicy.Settings.Setting | Where-Object -FilterScript { $_.provider -eq 'PolicyInfo' -and $_.valuename -eq 'Name' -and $_.key -eq 'Information' }).value.string
+                $PolicyName = ($Xml.SiPolicy.Settings.Setting | Where-Object -FilterScript { $_.provider -eq 'PolicyInfo' -and $_.valuename -eq 'Name' -and $_.key -eq 'Information' }).value.string
 
                 if ($SuppSingerIDs) {
                     Write-Verbose -Message "`n$($SuppSingerIDs.count) SupplementalPolicySigners have been found in $PolicyName policy, removing them now..."

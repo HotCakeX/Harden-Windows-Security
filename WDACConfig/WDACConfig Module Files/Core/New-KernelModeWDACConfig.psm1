@@ -68,18 +68,18 @@ Function New-KernelModeWDACConfig {
             [System.String]$PolicyID = "{$PolicyIDInput}"
 
             # Read the xml file as an xml object
-            [System.Xml.XmlDocument]$xml = Get-Content -Path $PolicyFilePathInput
+            [System.Xml.XmlDocument]$Xml = Get-Content -Path $PolicyFilePathInput
 
             # Define the new values for PolicyID and BasePolicyID
             [System.String]$newPolicyID = $PolicyID
             [System.String]$newBasePolicyID = $PolicyID
 
             # Replace the old values with the new ones
-            $xml.SiPolicy.PolicyID = $newPolicyID
-            $xml.SiPolicy.BasePolicyID = $newBasePolicyID
+            $Xml.SiPolicy.PolicyID = $newPolicyID
+            $Xml.SiPolicy.BasePolicyID = $newBasePolicyID
 
             # Save the modified xml file
-            $xml.Save($PolicyFilePathInput)
+            $Xml.Save($PolicyFilePathInput)
         }
 
         Function Build-PrepModeStrictKernelPolicy {

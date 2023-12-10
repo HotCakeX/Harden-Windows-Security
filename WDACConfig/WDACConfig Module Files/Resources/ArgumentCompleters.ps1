@@ -72,8 +72,8 @@
     # Get the xml files in the current directory
     Get-ChildItem -File | Where-Object -FilterScript { $_.extension -like '*.xml' } | ForEach-Object -Process {
 
-        $XMLItem = [System.Xml.XmlDocument](Get-Content -Path $_)
-        $PolicyType = $XMLItem.SiPolicy.PolicyType
+        $XmlItem = [System.Xml.XmlDocument](Get-Content -Path $_)
+        $PolicyType = $XmlItem.SiPolicy.PolicyType
 
         if ($PolicyType -eq 'Base Policy') {
 
@@ -102,8 +102,8 @@
     # Get the xml files in the current directory
     Get-ChildItem -File | Where-Object -FilterScript { $_.extension -like '*.xml' } | ForEach-Object -Process {
 
-        $XMLItem = [System.Xml.XmlDocument](Get-Content -Path $_)
-        $PolicyType = $XMLItem.SiPolicy.PolicyType
+        $XmlItem = [System.Xml.XmlDocument](Get-Content -Path $_)
+        $PolicyType = $XmlItem.SiPolicy.PolicyType
 
         if ($PolicyType -eq 'Supplemental Policy') {
 

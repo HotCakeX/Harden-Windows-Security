@@ -20,9 +20,9 @@ Function Set-CommonWDACConfig {
         [ValidatePattern('\.xml$')]
         [ValidateScript({
                 $_ | ForEach-Object -Process {
-                    $xmlTest = [System.Xml.XmlDocument](Get-Content -Path $_)
-                    $RedFlag1 = $xmlTest.SiPolicy.SupplementalPolicySigners.SupplementalPolicySigner.SignerId
-                    $RedFlag2 = $xmlTest.SiPolicy.UpdatePolicySigners.UpdatePolicySigner.SignerId
+                    $XmlTest = [System.Xml.XmlDocument](Get-Content -Path $_)
+                    $RedFlag1 = $XmlTest.SiPolicy.SupplementalPolicySigners.SupplementalPolicySigner.SignerId
+                    $RedFlag2 = $XmlTest.SiPolicy.UpdatePolicySigners.UpdatePolicySigner.SignerId
                     if (!$RedFlag1 -and !$RedFlag2) {
                         return $True
                     }
@@ -34,9 +34,9 @@ Function Set-CommonWDACConfig {
         [ValidatePattern('\.xml$')]
         [ValidateScript({
                 $_ | ForEach-Object -Process {
-                    $xmlTest = [System.Xml.XmlDocument](Get-Content -Path $_)
-                    $RedFlag1 = $xmlTest.SiPolicy.SupplementalPolicySigners.SupplementalPolicySigner.SignerId
-                    $RedFlag2 = $xmlTest.SiPolicy.UpdatePolicySigners.UpdatePolicySigner.SignerId
+                    $XmlTest = [System.Xml.XmlDocument](Get-Content -Path $_)
+                    $RedFlag1 = $XmlTest.SiPolicy.SupplementalPolicySigners.SupplementalPolicySigner.SignerId
+                    $RedFlag2 = $XmlTest.SiPolicy.UpdatePolicySigners.UpdatePolicySigner.SignerId
                     if ($RedFlag1 -or $RedFlag2) {
                         return $True
                     }

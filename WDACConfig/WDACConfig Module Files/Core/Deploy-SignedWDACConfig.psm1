@@ -115,11 +115,11 @@ Function Deploy-SignedWDACConfig {
         foreach ($PolicyPath in $PolicyPaths) {
 
             # Gather policy details
-            $xml = [System.Xml.XmlDocument](Get-Content -Path $PolicyPath)
-            [System.String]$PolicyType = $xml.SiPolicy.PolicyType
-            [System.String]$PolicyID = $xml.SiPolicy.PolicyID
-            [System.String]$PolicyName = ($xml.SiPolicy.Settings.Setting | Where-Object -FilterScript { $_.provider -eq 'PolicyInfo' -and $_.valuename -eq 'Name' -and $_.key -eq 'Information' }).value.string
-            [System.String[]]$PolicyRuleOptions = $xml.SiPolicy.Rules.Rule.Option
+            $Xml = [System.Xml.XmlDocument](Get-Content -Path $PolicyPath)
+            [System.String]$PolicyType = $Xml.SiPolicy.PolicyType
+            [System.String]$PolicyID = $Xml.SiPolicy.PolicyID
+            [System.String]$PolicyName = ($Xml.SiPolicy.Settings.Setting | Where-Object -FilterScript { $_.provider -eq 'PolicyInfo' -and $_.valuename -eq 'Name' -and $_.key -eq 'Information' }).value.string
+            [System.String[]]$PolicyRuleOptions = $Xml.SiPolicy.Rules.Rule.Option
 
             # Remove the .CIP file of the same policy being signed and deployed if any in the current working directory
             Remove-Item -Path ".\$PolicyID.cip" -ErrorAction SilentlyContinue
@@ -199,18 +199,18 @@ Function Deploy-SignedWDACConfig {
                 if (($PolicyType -ne 'Supplemental Policy') -and ($PolicyName -notlike '*Strict Kernel*')) {
 
                     # Ask user question about whether or not to add the Signed policy xml file to the User Config Json for easier usage later
-                    $userInput = ''
-                    while ($userInput -notin 1, 2) {
-                        $userInput = $(Write-Host -Object 'Add the Signed policy xml file path just created to the User Configurations? Please enter 1 to Confirm or 2 to Skip.' -ForegroundColor Cyan ; Read-Host)
-                        if ($userInput -eq 1) {
+                    $UserInput = ''
+                    while ($UserInput -notin 1, 2) {
+                        $UserInput = $(Write-Host -Object 'Add the Signed policy xml file path just created to the User Configurations? Please enter 1 to Confirm or 2 to Skip.' -ForegroundColor Cyan ; Read-Host)
+                        if ($UserInput -eq 1) {
                             Set-CommonWDACConfig -SignedPolicyPath $PolicyPath
                             Write-ColorfulText -Color HotPink -InputText "Added $PolicyPath to the User Configuration file."
                         }
-                        elseif ($userInput -eq 2) {
+                        elseif ($UserInput -eq 2) {
                             Write-ColorfulText -Color Pink -InputText 'Skipping...'
                         }
                         else {
-                            Write-Warning 'Invalid input. Please enter 1 or 2 only.'
+                            Write-Warning -Message 'Invalid input. Please enter 1 or 2 only.'
                         }
                     }
                 }

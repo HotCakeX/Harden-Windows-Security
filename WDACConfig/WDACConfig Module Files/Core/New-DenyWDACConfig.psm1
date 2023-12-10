@@ -135,8 +135,8 @@ Function New-DenyWDACConfig {
             # creating the final Deny base policy from the xml files in the paths array
             Merge-CIPolicy -PolicyPaths $PolicyXMLFilesArray -OutputFilePath ".\DenyPolicy $PolicyName.xml" | Out-Null
 
-            [System.String]$policyID = Set-CIPolicyIdInfo -FilePath "DenyPolicy $PolicyName.xml" -ResetPolicyID -PolicyName "$PolicyName"
-            [System.String]$policyID = $policyID.Substring(11)
+            [System.String]$PolicyID = Set-CIPolicyIdInfo -FilePath "DenyPolicy $PolicyName.xml" -ResetPolicyID -PolicyName "$PolicyName"
+            [System.String]$PolicyID = $PolicyID.Substring(11)
             Set-CIPolicyVersion -FilePath "DenyPolicy $PolicyName.xml" -Version '1.0.0.0'
 
             @(0, 2, 5, 6, 11, 12, 16, 17, 19, 20) | ForEach-Object -Process {
@@ -146,7 +146,7 @@ Function New-DenyWDACConfig {
                 Set-RuleOption -FilePath "DenyPolicy $PolicyName.xml" -Option $_ -Delete }
 
             Set-HVCIOptions -Strict -FilePath "DenyPolicy $PolicyName.xml"
-            ConvertFrom-CIPolicy -XmlFilePath "DenyPolicy $PolicyName.xml" -BinaryFilePath "$policyID.cip" | Out-Null
+            ConvertFrom-CIPolicy -XmlFilePath "DenyPolicy $PolicyName.xml" -BinaryFilePath "$PolicyID.cip" | Out-Null
 
             Write-Output -InputObject "DenyPolicyFile = DenyPolicy $PolicyName.xml"
             Write-Output -InputObject "DenyPolicyGUID = $PolicyID"
@@ -156,11 +156,11 @@ Function New-DenyWDACConfig {
             }
 
             if ($Deploy) {
-                &'C:\Windows\System32\CiTool.exe' --update-policy "$policyID.cip" -json | Out-Null
-                Write-Host -NoNewline -Object "`n$policyID.cip for " -ForegroundColor Green
+                &'C:\Windows\System32\CiTool.exe' --update-policy "$PolicyID.cip" -json | Out-Null
+                Write-Host -NoNewline -Object "`n$PolicyID.cip for " -ForegroundColor Green
                 Write-Host -NoNewline -Object "$PolicyName" -ForegroundColor Magenta
                 Write-Host -Object ' has been deployed.' -ForegroundColor Green
-                Remove-Item -Path "$policyID.cip" -Force
+                Remove-Item -Path "$PolicyID.cip" -Force
             }
         }
         # Create Deny base policy for Driver files
@@ -193,8 +193,8 @@ Function New-DenyWDACConfig {
             Merge-CIPolicy -PolicyPaths 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowAll.xml', '.\DenyPolicy Temp.xml' -OutputFilePath ".\DenyPolicy $PolicyName.xml" | Out-Null
 
             Remove-Item -Path '.\DenyPolicy Temp.xml' -Force
-            [System.String]$policyID = Set-CIPolicyIdInfo -FilePath "DenyPolicy $PolicyName.xml" -ResetPolicyID -PolicyName "$PolicyName"
-            [System.String]$policyID = $policyID.Substring(11)
+            [System.String]$PolicyID = Set-CIPolicyIdInfo -FilePath "DenyPolicy $PolicyName.xml" -ResetPolicyID -PolicyName "$PolicyName"
+            [System.String]$PolicyID = $PolicyID.Substring(11)
             Set-CIPolicyVersion -FilePath "DenyPolicy $PolicyName.xml" -Version '1.0.0.0'
 
             @(0, 2, 5, 6, 11, 12, 16, 17, 19, 20) | ForEach-Object -Process {
@@ -204,17 +204,17 @@ Function New-DenyWDACConfig {
                 Set-RuleOption -FilePath "DenyPolicy $PolicyName.xml" -Option $_ -Delete }
 
             Set-HVCIOptions -Strict -FilePath "DenyPolicy $PolicyName.xml"
-            ConvertFrom-CIPolicy -XmlFilePath "DenyPolicy $PolicyName.xml" -BinaryFilePath "$policyID.cip" | Out-Null
+            ConvertFrom-CIPolicy -XmlFilePath "DenyPolicy $PolicyName.xml" -BinaryFilePath "$PolicyID.cip" | Out-Null
 
             Write-Output -InputObject "DenyPolicyFile = DenyPolicy $PolicyName.xml"
             Write-Output -InputObject "DenyPolicyGUID = $PolicyID"
 
             if ($Deploy) {
-                &'C:\Windows\System32\CiTool.exe' --update-policy "$policyID.cip" -json | Out-Null
-                Write-Host -NoNewline -Object "`n$policyID.cip for " -ForegroundColor Green
+                &'C:\Windows\System32\CiTool.exe' --update-policy "$PolicyID.cip" -json | Out-Null
+                Write-Host -NoNewline -Object "`n$PolicyID.cip for " -ForegroundColor Green
                 Write-Host -NoNewline -Object "$PolicyName" -ForegroundColor Magenta
                 Write-Host -Object ' has been deployed.' -ForegroundColor Green
-                Remove-Item -Path "$policyID.cip" -Force
+                Remove-Item -Path "$PolicyID.cip" -Force
             }
         }
 
@@ -234,8 +234,8 @@ Function New-DenyWDACConfig {
                 $Package = Get-AppxPackage -Name $args[0]
 
                 # Create rules for each package
-                foreach ($item in $Package) {
-                    $Rules += New-CIPolicyRule -Deny -Package $item
+                foreach ($Item in $Package) {
+                    $Rules += New-CIPolicyRule -Deny -Package $Item
                 }
 
                 # Generate the supplemental policy xml file
@@ -247,8 +247,8 @@ Function New-DenyWDACConfig {
 
             # Removing the temp deny policy
             Remove-Item -Path '.\AppxDenyPolicyTemp.xml' -Force
-            [System.String]$policyID = Set-CIPolicyIdInfo -FilePath ".\AppxDenyPolicy $PolicyName.xml" -ResetPolicyID -PolicyName "$PolicyName"
-            [System.String]$policyID = $policyID.Substring(11)
+            [System.String]$PolicyID = Set-CIPolicyIdInfo -FilePath ".\AppxDenyPolicy $PolicyName.xml" -ResetPolicyID -PolicyName "$PolicyName"
+            [System.String]$PolicyID = $PolicyID.Substring(11)
             Set-CIPolicyVersion -FilePath ".\AppxDenyPolicy $PolicyName.xml" -Version '1.0.0.0'
 
             @(0, 2, 6, 11, 12, 16, 17, 19, 20) | ForEach-Object -Process {
@@ -258,15 +258,15 @@ Function New-DenyWDACConfig {
                 Set-RuleOption -FilePath ".\AppxDenyPolicy $PolicyName.xml" -Option $_ -Delete }
 
             Set-HVCIOptions -Strict -FilePath ".\AppxDenyPolicy $PolicyName.xml"
-            ConvertFrom-CIPolicy -XmlFilePath ".\AppxDenyPolicy $PolicyName.xml" -BinaryFilePath "$policyID.cip" | Out-Null
+            ConvertFrom-CIPolicy -XmlFilePath ".\AppxDenyPolicy $PolicyName.xml" -BinaryFilePath "$PolicyID.cip" | Out-Null
 
             Write-Output -InputObject "DenyPolicyFile = AppxDenyPolicy $PolicyName.xml"
             Write-Output -InputObject "DenyPolicyGUID = $PolicyID"
 
             if ($Deploy) {
-                &'C:\Windows\System32\CiTool.exe' --update-policy "$policyID.cip" -json | Out-Null
+                &'C:\Windows\System32\CiTool.exe' --update-policy "$PolicyID.cip" -json | Out-Null
                 Write-ColorfulText -Color Pink -InputText "A Deny Base policy with the name $PolicyName has been deployed."
-                Remove-Item -Path "$policyID.cip" -Force
+                Remove-Item -Path "$PolicyID.cip" -Force
             }
         }
     }

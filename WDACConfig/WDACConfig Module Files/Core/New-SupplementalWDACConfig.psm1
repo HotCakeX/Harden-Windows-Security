@@ -124,9 +124,9 @@ Function New-SupplementalWDACConfig {
 
         # Ensure when user selects the -Deploy parameter, the base policy is not signed
         if ($Deploy) {
-            $xmlTest = [System.Xml.XmlDocument](Get-Content -Path $PolicyPath)
-            $RedFlag1 = $xmlTest.SiPolicy.SupplementalPolicySigners.SupplementalPolicySigner.SignerId
-            $RedFlag2 = $xmlTest.SiPolicy.UpdatePolicySigners.UpdatePolicySigner.SignerId
+            $XmlTest = [System.Xml.XmlDocument](Get-Content -Path $PolicyPath)
+            $RedFlag1 = $XmlTest.SiPolicy.SupplementalPolicySigners.SupplementalPolicySigner.SignerId
+            $RedFlag2 = $XmlTest.SiPolicy.UpdatePolicySigners.UpdatePolicySigner.SignerId
             if ($RedFlag1 -or $RedFlag2) {
                 Write-Error -Message 'You are using -Deploy parameter and the selected base policy is Signed. Please use Deploy-SignedWDACConfig to deploy it.'
             }
@@ -158,22 +158,22 @@ Function New-SupplementalWDACConfig {
             # Create the supplemental policy via parameter splatting
             New-CIPolicy @PolicyMakerHashTable
 
-            [System.String]$policyID = Set-CIPolicyIdInfo -FilePath "SupplementalPolicy $SuppPolicyName.xml" -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath -PolicyName "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')"
-            [System.String]$policyID = $policyID.Substring(11)
+            [System.String]$PolicyID = Set-CIPolicyIdInfo -FilePath "SupplementalPolicy $SuppPolicyName.xml" -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath -PolicyName "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')"
+            [System.String]$PolicyID = $PolicyID.Substring(11)
             Set-CIPolicyVersion -FilePath "SupplementalPolicy $SuppPolicyName.xml" -Version '1.0.0.0'
             # Make sure policy rule options that don't belong to a Supplemental policy don't exist
             @(0, 1, 2, 3, 4, 9, 10, 11, 12, 15, 16, 17, 19, 20) | ForEach-Object -Process {
                 Set-RuleOption -FilePath "SupplementalPolicy $SuppPolicyName.xml" -Option $_ -Delete }
             Set-HVCIOptions -Strict -FilePath "SupplementalPolicy $SuppPolicyName.xml"
-            ConvertFrom-CIPolicy -XmlFilePath "SupplementalPolicy $SuppPolicyName.xml" -BinaryFilePath "$policyID.cip" | Out-Null
+            ConvertFrom-CIPolicy -XmlFilePath "SupplementalPolicy $SuppPolicyName.xml" -BinaryFilePath "$PolicyID.cip" | Out-Null
 
             Write-Output -InputObject "SupplementalPolicyFile = SupplementalPolicy $SuppPolicyName.xml"
             Write-Output -InputObject "SupplementalPolicyGUID = $PolicyID"
 
             if ($Deploy) {
-                &'C:\Windows\System32\CiTool.exe' --update-policy "$policyID.cip" -json | Out-Null
+                &'C:\Windows\System32\CiTool.exe' --update-policy "$PolicyID.cip" -json | Out-Null
                 Write-ColorfulText -Color Pink -InputText "A Supplemental policy with the name $SuppPolicyName has been deployed."
-                Remove-Item -Path "$policyID.cip" -Force
+                Remove-Item -Path "$PolicyID.cip" -Force
             }
         }
 
@@ -187,8 +187,8 @@ Function New-SupplementalWDACConfig {
             } -args $FolderPath, $SuppPolicyName
 
             # Giving the Supplemental policy the correct properties
-            [System.String]$policyID = Set-CIPolicyIdInfo -FilePath ".\SupplementalPolicy $SuppPolicyName.xml" -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath -PolicyName "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')"
-            [System.String]$policyID = $policyID.Substring(11)
+            [System.String]$PolicyID = Set-CIPolicyIdInfo -FilePath ".\SupplementalPolicy $SuppPolicyName.xml" -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath -PolicyName "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')"
+            [System.String]$PolicyID = $PolicyID.Substring(11)
             Set-CIPolicyVersion -FilePath ".\SupplementalPolicy $SuppPolicyName.xml" -Version '1.0.0.0'
 
             # Make sure policy rule options that don't belong to a Supplemental policy don't exist
@@ -199,15 +199,15 @@ Function New-SupplementalWDACConfig {
             Set-RuleOption -FilePath ".\SupplementalPolicy $SuppPolicyName.xml" -Option 18
 
             Set-HVCIOptions -Strict -FilePath ".\SupplementalPolicy $SuppPolicyName.xml"
-            ConvertFrom-CIPolicy -XmlFilePath ".\SupplementalPolicy $SuppPolicyName.xml" -BinaryFilePath "$policyID.cip" | Out-Null
+            ConvertFrom-CIPolicy -XmlFilePath ".\SupplementalPolicy $SuppPolicyName.xml" -BinaryFilePath "$PolicyID.cip" | Out-Null
 
             Write-Output -InputObject "SupplementalPolicyFile = SupplementalPolicy $SuppPolicyName.xml"
             Write-Output -InputObject "SupplementalPolicyGUID = $PolicyID"
 
             if ($Deploy) {
-                &'C:\Windows\System32\CiTool.exe' --update-policy "$policyID.cip" -json | Out-Null
+                &'C:\Windows\System32\CiTool.exe' --update-policy "$PolicyID.cip" -json | Out-Null
                 Write-ColorfulText -Color Pink -InputText "A Supplemental policy with the name $SuppPolicyName has been deployed."
-                Remove-Item -Path "$policyID.cip" -Force
+                Remove-Item -Path "$PolicyID.cip" -Force
             }
         }
 
@@ -228,14 +228,14 @@ Function New-SupplementalWDACConfig {
                 $PackageDependencies = $Package.Dependencies
 
                 # Create rules for each package
-                foreach ($item in $Package) {
-                    $Rules += New-CIPolicyRule -Package $item
+                foreach ($Item in $Package) {
+                    $Rules += New-CIPolicyRule -Package $Item
                 }
 
                 # Create rules for each pacakge dependency, if any
                 if ($PackageDependencies) {
-                    foreach ($item in $PackageDependencies) {
-                        $Rules += New-CIPolicyRule -Package $item
+                    foreach ($Item in $PackageDependencies) {
+                        $Rules += New-CIPolicyRule -Package $Item
                     }
                 }
 
@@ -245,8 +245,8 @@ Function New-SupplementalWDACConfig {
 
 
             # Giving the Supplemental policy the correct properties
-            [System.String]$policyID = Set-CIPolicyIdInfo -FilePath ".\SupplementalPolicy $SuppPolicyName.xml" -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath -PolicyName "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')"
-            [System.String]$policyID = $policyID.Substring(11)
+            [System.String]$PolicyID = Set-CIPolicyIdInfo -FilePath ".\SupplementalPolicy $SuppPolicyName.xml" -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath -PolicyName "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')"
+            [System.String]$PolicyID = $PolicyID.Substring(11)
             Set-CIPolicyVersion -FilePath ".\SupplementalPolicy $SuppPolicyName.xml" -Version '1.0.0.0'
 
             # Make sure policy rule options that don't belong to a Supplemental policy don't exist
@@ -254,15 +254,15 @@ Function New-SupplementalWDACConfig {
                 Set-RuleOption -FilePath ".\SupplementalPolicy $SuppPolicyName.xml" -Option $_ -Delete }
 
             Set-HVCIOptions -Strict -FilePath ".\SupplementalPolicy $SuppPolicyName.xml"
-            ConvertFrom-CIPolicy -XmlFilePath ".\SupplementalPolicy $SuppPolicyName.xml" -BinaryFilePath "$policyID.cip" | Out-Null
+            ConvertFrom-CIPolicy -XmlFilePath ".\SupplementalPolicy $SuppPolicyName.xml" -BinaryFilePath "$PolicyID.cip" | Out-Null
 
             Write-Output -InputObject "SupplementalPolicyFile = SupplementalPolicy $SuppPolicyName.xml"
             Write-Output -InputObject "SupplementalPolicyGUID = $PolicyID"
 
             if ($Deploy) {
-                &'C:\Windows\System32\CiTool.exe' --update-policy "$policyID.cip" -json | Out-Null
+                &'C:\Windows\System32\CiTool.exe' --update-policy "$PolicyID.cip" -json | Out-Null
                 Write-ColorfulText -Color Pink -InputText "A Supplemental policy with the name $SuppPolicyName has been deployed."
-                Remove-Item -Path "$policyID.cip" -Force
+                Remove-Item -Path "$PolicyID.cip" -Force
             }
         }
     }

@@ -64,7 +64,7 @@ Function New-SupplementalWDACConfig {
 
         # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
-       
+
         # Importing the required sub-modules
         Write-Verbose -Message 'Importing the required sub-modules'
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Update-self.psm1" -Force
@@ -169,7 +169,7 @@ Function New-SupplementalWDACConfig {
 
             Write-Output -InputObject "SupplementalPolicyFile = SupplementalPolicy $SuppPolicyName.xml"
             Write-Output -InputObject "SupplementalPolicyGUID = $PolicyID"
-            
+
             if ($Deploy) {
                 &'C:\Windows\System32\CiTool.exe' --update-policy "$policyID.cip" -json | Out-Null
                 Write-ColorfulText -Color Pink -InputText "A Supplemental policy with the name $SuppPolicyName has been deployed."
@@ -200,7 +200,7 @@ Function New-SupplementalWDACConfig {
 
             Set-HVCIOptions -Strict -FilePath ".\SupplementalPolicy $SuppPolicyName.xml"
             ConvertFrom-CIPolicy -XmlFilePath ".\SupplementalPolicy $SuppPolicyName.xml" -BinaryFilePath "$policyID.cip" | Out-Null
-           
+
             Write-Output -InputObject "SupplementalPolicyFile = SupplementalPolicy $SuppPolicyName.xml"
             Write-Output -InputObject "SupplementalPolicyGUID = $PolicyID"
 

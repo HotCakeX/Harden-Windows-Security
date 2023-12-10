@@ -122,7 +122,7 @@ Function Edit-SignedWDACConfig {
 
         # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
-       
+
         # Importing the required sub-modules
         Write-Verbose -Message 'Importing the required sub-modules'
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Update-self.psm1" -Force
@@ -267,7 +267,7 @@ Function Edit-SignedWDACConfig {
             Write-Host -Object "PolicyGUID = $PolicyID"
             # Remove Enforced Mode CIP
             Remove-Item -Path '.\EnforcedMode.cip' -Force
-        }        
+        }
     }
 
     process {
@@ -484,11 +484,11 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
             Write-Verbose -Message 'Removing any possible files from previous runs'
             Remove-Item -Path '.\ProgramDir_ScanResults*.xml' -Force -ErrorAction SilentlyContinue
             Remove-Item -Path ".\SupplementalPolicy $SuppPolicyName.xml" -Force -ErrorAction SilentlyContinue
-                      
+
             # Get the current date so that instead of the entire event viewer logs, only audit logs created after running this module will be captured
             Write-Verbose -Message 'Getting the current date'
             [System.DateTime]$Date = Get-Date
-            
+
             # An empty array that holds the Policy XML files - This array will eventually be used to create the final Supplemental policy
             [System.Object[]]$PolicyXMLFilesArray = @()
 
@@ -512,7 +512,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
                 # Remove any cip file if there is any
                 Write-Verbose -Message 'Removing any cip file if there is any in the current working directory'
                 Remove-Item -Path '.\*.cip' -Force -ErrorAction SilentlyContinue
- 
+
                 Write-Verbose -Message 'Creating Audit Mode CIP'
                 # Remove Unsigned policy rule option
                 Set-RuleOption -FilePath $PolicyPath -Option 6 -Delete
@@ -523,7 +523,7 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
 
                 Write-Verbose -Message 'Creating Enforced Mode CIP'
                 # Remove Unsigned policy rule option
-                Set-RuleOption -FilePath $PolicyPath -Option 6 -Delete 
+                Set-RuleOption -FilePath $PolicyPath -Option 6 -Delete
                 # Remove Audit mode policy rule option
                 Set-RuleOption -FilePath $PolicyPath -Option 3 -Delete
                 # Create CIP for Enforced Mode
@@ -549,8 +549,8 @@ CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json; Remove-Item
 
                 Write-Verbose -Message 'Removing the unsigned CIPs'
                 Remove-Item -Path '.\EnforcedMode.cip' -Force
-                Remove-Item -Path '.\AuditMode.cip' -Force    
-                
+                Remove-Item -Path '.\AuditMode.cip' -Force
+
                 Write-Verbose -Message 'Renaming the signed CIPs to remove the .p7 extension'
                 Rename-Item -Path '.\EnforcedMode.cip.p7' -NewName '.\EnforcedMode.cip' -Force
                 Rename-Item -Path '.\AuditMode.cip.p7' -NewName '.\AuditMode.cip' -Force
@@ -572,7 +572,7 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
                 Write-Verbose -Message 'Deploying the Audit mode CIP'
                 # Deploy the Audit mode CIP
                 &'C:\Windows\System32\CiTool.exe' --update-policy '.\AuditMode.cip' -json | Out-Null
-                
+
                 Write-Output -InputObject "PolicyName = $PolicyName"
                 Write-Output -InputObject "PolicyGUID = $PolicyID"
 
@@ -590,7 +590,7 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
                     # Store the program paths that user browses for in an array
                     [System.IO.DirectoryInfo[]]$ProgramsPaths = @()
                     Write-Host -Object 'Select program directories to scan' -ForegroundColor Cyan
-                   
+
                     # Showing folder picker GUI to the user for folder path selection
                     do {
                         [System.Reflection.Assembly]::LoadWithPartialName('System.windows.forms') | Out-Null
@@ -692,11 +692,11 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
                         Write-Verbose -Message 'Creating FuleRules and RuleRefs for files that are no longer available on the disk but were detected in event viewer logs'
                         [System.String]$FileRulesHashesResults = Get-FileRules -HashesArray $AuditEventLogsProcessingResults.DeletedFileHashes
                         [System.String]$RuleRefsHashesResults = (Get-RuleRefs -HashesArray $AuditEventLogsProcessingResults.DeletedFileHashes).Trim()
-                        
+
                         # Save the File Rules and File Rule Refs in the FileRulesAndFileRefs.txt in the current working directory for debugging purposes
                         Write-Verbose -Message 'Saving the File Rules and File Rule Refs in the FileRulesAndFileRefs.txt in the current working directory for debugging purposes'
                         $FileRulesHashesResults + $RuleRefsHashesResults | Out-File -FilePath FileRulesAndFileRefs.txt -Force
-                                               
+
                         # Put the Rules and RulesRefs in an empty policy file
                         Write-Verbose -Message 'Putting the Rules and RulesRefs in an empty policy file'
                         New-EmptyPolicy -RulesContent $FileRulesHashesResults -RuleRefsContent $RuleRefsHashesResults | Out-File -FilePath .\DeletedFileHashesEventsPolicy.xml -Force
@@ -709,7 +709,7 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
 
                     #Region Process-Program-Folders-From-User-input
                     Write-Verbose -Message 'Scanning each of the folder paths that user selected'
-                     
+
                     for ($i = 0; $i -lt $ProgramsPaths.Count; $i++) {
 
                         # Creating a hash table to dynamically add parameters based on user input and pass them to New-Cipolicy cmdlet
@@ -739,7 +739,7 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
                     foreach ($file in $ProgramDir_ScanResults) {
                         $PolicyXMLFilesArray += $file.FullName
                     }
-                    #Endregion Process-Program-Folders-From-User-input                 
+                    #Endregion Process-Program-Folders-From-User-input
 
                     #region Kernel-protected-files-automatic-detection-and-allow-rule-creation
                     # This part takes care of Kernel protected files such as the main executable of the games installed through Xbox app
@@ -756,7 +756,7 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
 
                         # Making sure the currently processing path has any .exe in it
                         [System.String[]]$AnyAvailableExes = (Get-ChildItem -File -Recurse -Path $ProgramsPath -Filter '*.exe').FullName
-    
+
                         # if any .exe was found then continue testing them
                         if ($AnyAvailableExes) {
                             foreach ($Exe in $AnyAvailableExes) {
@@ -771,7 +771,7 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
                                     $ExesWithNoHash += $Exe
                                 }
                             }
-                        }                        
+                        }
                     }
 
                     # Only proceed if any kernel protected file(s) were found in any of the user-selected directory path(s)
@@ -808,7 +808,7 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
                         # Only proceed further if any hashes belonging to the detected kernel protected files were found in Event viewer
                         # If none is found then skip this part, because user didn't run those files/programs when audit mode was turned on in base policy, so no hash was found in audit logs
                         if ($KernelProtectedHashesBlockResults) {
-                            
+
                             # Save the File Rules and File Rule Refs in the FileRulesAndFileRefs.txt in the current working directory for debugging purposes
                             (Get-FileRules -HashesArray $KernelProtectedHashesBlockResults) + (Get-RuleRefs -HashesArray $KernelProtectedHashesBlockResults) | Out-File -FilePath KernelProtectedFiles.txt -Force
 
@@ -816,7 +816,7 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
                             New-EmptyPolicy -RulesContent (Get-FileRules -HashesArray $KernelProtectedHashesBlockResults) -RuleRefsContent (Get-RuleRefs -HashesArray $KernelProtectedHashesBlockResults) | Out-File -FilePath .\KernelProtectedFiles.xml -Force
 
                             # adding the policy file  to the array of xml files
-                            $PolicyXMLFilesArray += '.\KernelProtectedFiles.xml'                            
+                            $PolicyXMLFilesArray += '.\KernelProtectedFiles.xml'
                         }
                         else {
                             Write-Warning -Message "The following Kernel protected files detected, but no hash was found for them in Event viewer logs.`nThis means you didn't run those files/programs when Audit mode was turned on."
@@ -830,7 +830,7 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
 
                     # Merge all of the policy XML files in the array into the final Supplemental policy
                     Merge-CIPolicy -PolicyPaths $PolicyXMLFilesArray -OutputFilePath ".\SupplementalPolicy $SuppPolicyName.xml" | Out-Null
-                    
+
                     # Delete these extra files unless user uses -Debug parameter
                     if (-NOT $Debug) {
                         Remove-Item -Path '.\RulesForFilesNotInUserSelectedPaths.xml', '.\ProgramDir_ScanResults*.xml' -Force -ErrorAction SilentlyContinue
@@ -847,12 +847,12 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
                     # Deploy Enforced mode CIP
                     Write-Verbose -Message 'Finally Block Running'
                     Update-BasePolicyToEnforced
-                    
+
                     # Enforced Mode Snapback removal after base policy has already been successfully re-enforced
                     Write-Verbose -Message 'Removing the SnapBack guarantee because the base policy has been successfully re-enforced'
                     Remove-Item -Path 'C:\EnforcedModeSnapBack.ps1' -Force
                     Remove-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce' -Name '*CIPolicySnapBack' -Force
-                }               
+                }
 
                 #Region Supplemental-policy-processing-and-deployment
 
@@ -874,11 +874,11 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
                 Set-HVCIOptions -Strict -FilePath $SuppPolicyPath
 
                 Write-Verbose -Message 'Setting the Supplemental policy version to 1.0.0.0'
-                Set-CIPolicyVersion -FilePath $SuppPolicyPath -Version '1.0.0.0'               
+                Set-CIPolicyVersion -FilePath $SuppPolicyPath -Version '1.0.0.0'
 
                 Write-Verbose -Message 'Convert the Supplemental policy to a CIP file'
                 ConvertFrom-CIPolicy -XmlFilePath $SuppPolicyPath -BinaryFilePath "$SuppPolicyID.cip" | Out-Null
-               
+
                 # Configure the parameter splat
                 $ProcessParams = @{
                     'ArgumentList' = 'sign', '/v' , '/n', "`"$CertCN`"", '/p7', '.', '/p7co', '1.3.6.1.4.1.311.79.1', '/fd', 'certHash', ".\$SuppPolicyID.cip"
@@ -886,7 +886,7 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
                     'NoNewWindow'  = $true
                     'Wait'         = $true
                     'ErrorAction'  = 'Stop'
-                } 
+                }
                 # Only show the output of SignTool if Debug switch is used
                 if (!$Debug) { $ProcessParams['RedirectStandardOutput'] = 'NUL' }
 
@@ -910,7 +910,7 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
 
                 Write-Verbose -Message 'Removing the signed Supplemental policy CIP file after deployment'
                 Remove-Item -Path ".\$SuppPolicyID.cip" -Force
-               
+
                 # Remove the policy xml file in Temp folder we created earlier
                 Remove-Item -Path $PolicyPath -Force
 

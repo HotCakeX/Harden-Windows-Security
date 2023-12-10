@@ -19,7 +19,7 @@ Function Invoke-WDACSimulation {
 
         # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
-       
+
         # Importing resources such as functions by dot-sourcing so that they will run in the same scope and their variables will be usable
         . "$ModuleRootPath\Resources\Resources2.ps1"
 

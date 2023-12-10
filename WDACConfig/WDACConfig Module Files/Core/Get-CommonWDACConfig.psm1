@@ -120,5 +120,5 @@ Function Get-CommonWDACConfig {
 
 .OUTPUTS
     System.Object[]
-#>    
+#>
 }

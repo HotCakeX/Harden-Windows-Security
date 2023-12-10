@@ -85,7 +85,7 @@ Function New-WDACConfig {
 
         # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
-       
+
         # Importing the required sub-modules
         Write-Verbose -Message 'Importing the required sub-modules'
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Update-self.psm1" -Force
@@ -768,7 +768,7 @@ Function New-WDACConfig {
 
             Write-Output -InputObject "BasePolicyFile = $BasePolicy"
             Write-Output -InputObject "BasePolicyGUID = $BasePolicyID"
-           
+
             Write-Output -InputObject 'SupplementalPolicyFile = SupplementalPolicy.xml'
             Write-Output -InputObject "SupplementalPolicyGUID = $PolicyID"
 

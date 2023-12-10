@@ -166,5 +166,5 @@ Function Remove-CommonWDACConfig {
 .PARAMETER StrictKernelNoFlightRootsPolicyGUID
     Removes the StrictKernelNoFlightRootsPolicyGUID from User Configs
 
-#>    
+#>
 }

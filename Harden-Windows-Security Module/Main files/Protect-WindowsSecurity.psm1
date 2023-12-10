@@ -7,19 +7,24 @@ Function Protect-WindowsSecurity {
 
     <#
 .SYNOPSIS
-Applies the hardening measures
+    Applies the hardening measures
 
 .LINK
-https://github.com/HotCakeX/Harden-Windows-Security
+    https://github.com/HotCakeX/Harden-Windows-Security
 
 .DESCRIPTION
-Applies the hardening measures
+    Applies the hardening measures
 
 .COMPONENT
-PowerShell
+    PowerShell
 
 .FUNCTIONALITY
-Applies the hardening measures
+    Applies the hardening measures
 
+.INPUTS
+    None
+    
+.OUTPUTS
+    System.Void
 #>
 }

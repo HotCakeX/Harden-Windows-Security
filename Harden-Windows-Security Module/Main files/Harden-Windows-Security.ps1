@@ -194,6 +194,10 @@ Function Test-IsAdmin {
         Function to test if current session has administrator privileges
     .LINK
         https://devblogs.microsoft.com/scripting/use-function-to-determine-elevation-of-powershell-console/
+    .INPUTS
+        None
+    .OUTPUTS
+        System.Boolean
     #>
     [System.Security.Principal.WindowsIdentity]$Identity = [Security.Principal.WindowsIdentity]::GetCurrent()
     [System.Security.Principal.WindowsPrincipal]$Principal = New-Object -TypeName 'Security.Principal.WindowsPrincipal' -ArgumentList $Identity

@@ -1,15 +1,27 @@
 # Stop the execution when there is an error
 $global:ErrorActionPreference = 'Stop'
 
-# Function to test if current session has administrator privileges
 Function Test-IsAdmin {
+    <#
+    .SYNOPSIS
+        Function to test if current session has administrator privileges
+    .INPUTS
+        None
+    .OUTPUTS
+        System.Boolean
+    #>
     [System.Security.Principal.WindowsIdentity]$Identity = [Security.Principal.WindowsIdentity]::GetCurrent()
     [System.Security.Principal.WindowsPrincipal]$Principal = New-Object -TypeName 'Security.Principal.WindowsPrincipal' -ArgumentList $Identity
     $Principal.IsInRole([Security.Principal.WindowsBuiltinRole]::Administrator)
 }
 
-# Make sure the latest version of the module is installed and if not, automatically update it, clean up any old versions
 function Update-self {
+    <#
+    .SYNOPSIS
+        Make sure the latest version of the module is installed and if not, automatically update it, clean up any old versions
+    .INPUTS
+        None
+    #>
 
     [System.Version]$CurrentVersion = (Test-ModuleManifest -Path "$psscriptroot\Harden-Windows-Security-Module.psd1").Version
 

@@ -884,10 +884,10 @@ try {
                 Set-Location -Path $WorkingDir
 
                 # Apply Process Mitigations
-                [System.Object[]]$ProcessMitigations = Import-Csv 'ProcessMitigations.csv' -Delimiter ','
+                [System.Object[]]$ProcessMitigations = Import-Csv -Path 'ProcessMitigations.csv' -Delimiter ','
 
                 # Group the data by ProgramName
-                [System.Object[]]$GroupedMitigations = $ProcessMitigations | Group-Object ProgramName
+                [System.Object[]]$GroupedMitigations = $ProcessMitigations | Group-Object -Property ProgramName
                 # Get the current process mitigations
                 [System.Object[]]$AllAvailableMitigations = (Get-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\*')
 
@@ -1725,7 +1725,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 # TLS Registry section
                 Set-Location -Path $WorkingDir
 
-                [System.Object[]]$Items = Import-Csv '.\Registry.csv' -Delimiter ','
+                [System.Object[]]$Items = Import-Csv -Path '.\Registry.csv' -Delimiter ','
                 foreach ($Item in $Items) {
                     if ($Item.category -eq 'TLS') {
                         Edit-Registry -path $Item.Path -key $Item.Key -value $Item.Value -type $Item.Type -Action $Item.Action
@@ -2194,7 +2194,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
 
                 # Miscellaneous Registry section
                 Set-Location -Path $WorkingDir
-                [System.Object[]]$Items = Import-Csv '.\Registry.csv' -Delimiter ','
+                [System.Object[]]$Items = Import-Csv -Path '.\Registry.csv' -Delimiter ','
                 foreach ($Item in $Items) {
                     if ($Item.category -eq 'Miscellaneous') {
                         Edit-Registry -path $Item.Path -key $Item.Key -value $Item.Value -type $Item.Type -Action $Item.Action
@@ -2280,7 +2280,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
 
                 # Edge Browser Configurations registry
                 Set-Location -Path $WorkingDir
-                [System.Object[]]$Items = Import-Csv '.\Registry.csv' -Delimiter ','
+                [System.Object[]]$Items = Import-Csv -Path '.\Registry.csv' -Delimiter ','
                 foreach ($Item in $Items) {
                     if ($Item.category -eq 'Edge') {
                         Edit-Registry -path $Item.Path -key $Item.Key -value $Item.Value -type $Item.Type -Action $Item.Action
@@ -2405,7 +2405,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                     Invoke-WebRequest -Uri 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/Registry.csv' -OutFile '.\Registry.csv' -ErrorAction Stop
                 }
             }
-            [System.Object[]]$Items = Import-Csv '.\Registry.csv' -Delimiter ','
+            [System.Object[]]$Items = Import-Csv -Path '.\Registry.csv' -Delimiter ','
             foreach ($Item in $Items) {
                 if ($Item.category -eq 'NonAdmin') {
                     Edit-Registry -path $Item.Path -key $Item.Key -value $Item.Value -type $Item.Type -Action $Item.Action

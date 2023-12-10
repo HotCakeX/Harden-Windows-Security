@@ -104,7 +104,7 @@ Function Unprotect-WindowsSecurity {
 
             Write-Progress -Activity 'Deleting all the registry keys created by the Protect-WindowsSecurity cmdlet' -Status 'Processing' -PercentComplete 60
 
-            [System.Object[]]$Items = Import-Csv '.\Registry.csv' -Delimiter ','
+            [System.Object[]]$Items = Import-Csv -Path '.\Registry.csv' -Delimiter ','
             foreach ($Item in $Items) {
                 if (Test-Path -Path $item.path) {
                     Remove-ItemProperty -Path $Item.path -Name $Item.key -Force -ErrorAction SilentlyContinue
@@ -153,9 +153,9 @@ Function Unprotect-WindowsSecurity {
 
         # Remove Process Mitigations
 
-        [System.Object[]]$ProcessMitigations = Import-Csv '.\ProcessMitigations.csv' -Delimiter ','
+        [System.Object[]]$ProcessMitigations = Import-Csv -Path '.\ProcessMitigations.csv' -Delimiter ','
         # Group the data by ProgramName
-        [System.Object[]]$GroupedMitigations = $ProcessMitigations | Group-Object ProgramName
+        [System.Object[]]$GroupedMitigations = $ProcessMitigations | Group-Object -Property ProgramName
         [System.Object[]]$AllAvailableMitigations = (Get-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\*')
 
         Write-Progress -Activity 'Removing Process Mitigations for apps' -Status 'Processing' -PercentComplete 90
@@ -220,7 +220,7 @@ Function Unprotect-WindowsSecurity {
             Set-MpPreference -ControlledFolderAccessAllowedApplications $CFAAllowedAppsBackup
         }
 
-        Set-Location -Path $HOME; Remove-Item -Recurse "$global:UserTempDirectoryPath\HardeningXStuff\" -Force -ErrorAction SilentlyContinue
+        Set-Location -Path $HOME; Remove-Item -Recurse -Path "$global:UserTempDirectoryPath\HardeningXStuff\" -Force -ErrorAction SilentlyContinue
     }
 
     <#

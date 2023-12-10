@@ -65,7 +65,7 @@ Function Unprotect-WindowsSecurity {
         Set-Location -Path $WorkingDir
 
         # Clean up script block
-        [scriptblock]$CleanUp = { Set-Location $HOME; Remove-Item -Recurse "$global:UserTempDirectoryPath\HardeningXStuff\" -Force; exit }
+        [scriptblock]$CleanUp = { Set-Location -Path $HOME; Remove-Item -Recurse "$global:UserTempDirectoryPath\HardeningXStuff\" -Force; exit }
 
         Write-Progress -Activity 'Downloading the required files' -Status 'Processing' -PercentComplete 30
 
@@ -220,7 +220,7 @@ Function Unprotect-WindowsSecurity {
             Set-MpPreference -ControlledFolderAccessAllowedApplications $CFAAllowedAppsBackup
         }
 
-        Set-Location $HOME; Remove-Item -Recurse "$global:UserTempDirectoryPath\HardeningXStuff\" -Force -ErrorAction SilentlyContinue
+        Set-Location -Path $HOME; Remove-Item -Recurse "$global:UserTempDirectoryPath\HardeningXStuff\" -Force -ErrorAction SilentlyContinue
     }
 
     <#

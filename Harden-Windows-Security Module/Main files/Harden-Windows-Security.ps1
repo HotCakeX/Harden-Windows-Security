@@ -622,11 +622,11 @@ try {
     # working directory assignment
     [System.IO.DirectoryInfo]$WorkingDir = "$global:UserTempDirectoryPath\HardeningXStuff\"
     # change location to the new directory
-    Set-Location $WorkingDir
+    Set-Location -Path $WorkingDir
 
     # Clean up script block
     [scriptblock]$CleanUp = {
-        Set-Location $HOME
+        Set-Location -Path $HOME
         Remove-Item -Recurse -Path "$global:UserTempDirectoryPath\HardeningXStuff\" -Force
         # Disable progress bars
         0..6 | ForEach-Object -Process { Write-Progress -Id $_ -Activity 'Done' -Completed }
@@ -669,7 +669,7 @@ try {
 
                     param([System.Uri]$Url, [System.IO.FileInfo]$Path, [System.String]$Tag)
                     # Create a WebClient object
-                    [System.Net.WebClient]$WC = New-Object System.Net.WebClient
+                    [System.Net.WebClient]$WC = New-Object -TypeName System.Net.WebClient
                     try {
                         # Try to download the file from the original URL
                         $WC.DownloadFile($Url, $Path)
@@ -784,7 +784,7 @@ try {
                 Copy-Item -Path '.\LGPO_30\LGPO.exe' -Destination "$MicrosoftSecurityBaselinePath\Scripts\Tools"
 
                 # Change directory to the Security Baselines folder
-                Set-Location "$MicrosoftSecurityBaselinePath\Scripts\"
+                Set-Location -Path "$MicrosoftSecurityBaselinePath\Scripts\"
 
                 # Run the official PowerShell script included in the Microsoft Security Baseline file we downloaded from Microsoft servers
                 .\Baseline-LocalInstall.ps1 -Win11NonDomainJoined
@@ -795,7 +795,7 @@ try {
                 Copy-Item -Path '.\LGPO_30\LGPO.exe' -Destination "$MicrosoftSecurityBaselinePath\Scripts\Tools"
 
                 # Change directory to the Security Baselines folder
-                Set-Location "$MicrosoftSecurityBaselinePath\Scripts\"
+                Set-Location -Path "$MicrosoftSecurityBaselinePath\Scripts\"
 
                 # Run the official PowerShell script included in the Microsoft Security Baseline file we downloaded from Microsoft servers
                 .\Baseline-LocalInstall.ps1 -Win11NonDomainJoined
@@ -803,7 +803,7 @@ try {
                 Start-Sleep -Seconds 1
 
                 # Change current working directory to the LGPO's folder
-                Set-Location "$WorkingDir\LGPO_30"
+                Set-Location -Path "$WorkingDir\LGPO_30"
                 .\LGPO.exe /q /m '..\Security-Baselines-X\Overrides for Microsoft Security Baseline\registry.pol'
                 .\LGPO.exe /q /s '..\Security-Baselines-X\Overrides for Microsoft Security Baseline\GptTmpl.inf'
 
@@ -827,12 +827,12 @@ try {
             'Yes' {
                 Write-Progress -Id 0 -Activity 'Microsoft 365 Apps Security Baseline' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
 
-                Set-Location $WorkingDir
+                Set-Location -Path $WorkingDir
                 # Copy LGPO.exe from its folder to Microsoft Office 365 Apps for Enterprise Security Baseline folder in order to get it ready to be used by PowerShell script
                 Copy-Item -Path '.\LGPO_30\LGPO.exe' -Destination "$Microsoft365SecurityBaselinePath\Scripts\Tools"
 
                 # Change directory to the M365 Security Baselines folder
-                Set-Location "$Microsoft365SecurityBaselinePath\Scripts\"
+                Set-Location -Path "$Microsoft365SecurityBaselinePath\Scripts\"
 
                 # Run the official PowerShell script included in the Microsoft Security Baseline file we downloaded from Microsoft servers
                 .\Baseline-LocalInstall.ps1
@@ -854,7 +854,7 @@ try {
                 Write-Progress -Id 0 -Activity 'Microsoft Defender' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
 
                 # Change current working directory to the LGPO's folder
-                Set-Location "$WorkingDir\LGPO_30"
+                Set-Location -Path "$WorkingDir\LGPO_30"
                 .\LGPO.exe /q /m '..\Security-Baselines-X\Microsoft Defender Policies\registry.pol'
 
                 # Optimizing Network Protection Performance of Windows Defender
@@ -881,7 +881,7 @@ try {
                 # Enable Mandatory ASLR Exploit Protection system-wide
                 Set-ProcessMitigation -System -Enable ForceRelocateImages
 
-                Set-Location $WorkingDir
+                Set-Location -Path $WorkingDir
 
                 # Apply Process Mitigations
                 [System.Object[]]$ProcessMitigations = Import-Csv 'ProcessMitigations.csv' -Delimiter ','
@@ -950,7 +950,7 @@ try {
                 # If Smart App Control is on or user selected to turn it on then automatically enable optional diagnostic data
                 if (($ShouldEnableOptionalDiagnosticData -eq $True) -or ((Get-MpComputerStatus).SmartAppControlState -eq 'On')) {
                     # Change current working directory to the LGPO's folder
-                    Set-Location "$WorkingDir\LGPO_30"
+                    Set-Location -Path "$WorkingDir\LGPO_30"
                     .\LGPO.exe /q /m '..\Security-Baselines-X\Microsoft Defender Policies\Optional Diagnostic Data\registry.pol'
                 }
                 else {
@@ -959,7 +959,7 @@ try {
                         switch (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nEnable Optional Diagnostic Data ?" -ExtraMessage 'Required for Smart App Control usage and evaluation, read the GitHub Readme!') {
                             'Yes' {
                                 # Change current working directory to the LGPO's folder
-                                Set-Location "$WorkingDir\LGPO_30"
+                                Set-Location -Path "$WorkingDir\LGPO_30"
                                 .\LGPO.exe /q /m '..\Security-Baselines-X\Microsoft Defender Policies\Optional Diagnostic Data\registry.pol'
                             } 'No' { break }
                             'Exit' { &$CleanUp }
@@ -976,7 +976,7 @@ try {
                         'Yes' {
 
                             # Get the SID of the SYSTEM account. It is a well-known SID, but still querying it, going to use it to create the scheduled task
-                            [System.Security.Principal.SecurityIdentifier]$SYSTEMSID = New-Object System.Security.Principal.SecurityIdentifier([System.Security.Principal.WellKnownSidType]::LocalSystemSid, $null)
+                            [System.Security.Principal.SecurityIdentifier]$SYSTEMSID = New-Object -TypeName System.Security.Principal.SecurityIdentifier([System.Security.Principal.WellKnownSidType]::LocalSystemSid, $null)
 
                             # Create a scheduled task action, this defines how to download and install the latest Microsoft Recommended Driver Block Rules
                             [Microsoft.Management.Infrastructure.CimInstance]$Action = New-ScheduledTaskAction -Execute 'Powershell.exe' `
@@ -989,7 +989,7 @@ try {
                             [Microsoft.Management.Infrastructure.CimInstance]$Time = New-ScheduledTaskTrigger -Once -At (Get-Date).AddHours(1) -RepetitionInterval (New-TimeSpan -Days 7)
 
                             # Register the scheduled task
-                            Register-ScheduledTask -Action $Action -Trigger $Time -Principal $TaskPrincipal -TaskPath 'MSFT Driver Block list update' -TaskName 'MSFT Driver Block list update' -Description 'Microsoft Recommended Driver Block List update'
+                            Register-ScheduledTask -Action $Action -Trigger $Time -Principal $TaskPrincipal -TaskPath 'MSFT Driver Block list update' -TaskName 'MSFT Driver Block list update' -Description 'Microsoft Recommended Driver Block List update' -Force
 
                             # Define advanced settings for the scheduled task
                             [Microsoft.Management.Infrastructure.CimInstance]$TaskSettings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -Compatibility 'Win8' -StartWhenAvailable -ExecutionTimeLimit (New-TimeSpan -Minutes 3) -RestartCount 4 -RestartInterval (New-TimeSpan -Hours 6) -RunOnlyIfNetworkAvailable
@@ -1032,7 +1032,7 @@ try {
                 Write-Progress -Id 0 -Activity 'Attack Surface Reduction Rules' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
 
                 # Change current working directory to the LGPO's folder
-                Set-Location "$WorkingDir\LGPO_30"
+                Set-Location -Path "$WorkingDir\LGPO_30"
 
                 .\LGPO.exe /q /m '..\Security-Baselines-X\Attack Surface Reduction Rules Policies\registry.pol'
             } 'No' { break ASRRulesCategoryLabel }
@@ -1053,7 +1053,7 @@ try {
                 Write-Progress -Id 0 -Activity 'Bitlocker Settings' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
 
                 # Change current working directory to the LGPO's folder
-                Set-Location "$WorkingDir\LGPO_30"
+                Set-Location -Path "$WorkingDir\LGPO_30"
 
                 .\LGPO.exe /q /m '..\Security-Baselines-X\Bitlocker Policies\registry.pol'
 
@@ -1110,7 +1110,7 @@ try {
                 [System.Boolean]$BootDMAProtection = ([SystemInfo.NativeMethods]::BootDmaCheck()) -ne 0
 
                 # Change current working directory to the LGPO's folder
-                Set-Location "$WorkingDir\LGPO_30"
+                Set-Location -Path "$WorkingDir\LGPO_30"
 
                 # Enables or disables DMA protection from Bitlocker Countermeasures based on the status of Kernel DMA protection.
                 if ($BootDMAProtection) {
@@ -1723,7 +1723,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 }
 
                 # TLS Registry section
-                Set-Location $WorkingDir
+                Set-Location -Path $WorkingDir
 
                 [System.Object[]]$Items = Import-Csv '.\Registry.csv' -Delimiter ','
                 foreach ($Item in $Items) {
@@ -1732,7 +1732,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                     }
                 }
                 # Change current working directory to the LGPO's folder
-                Set-Location "$WorkingDir\LGPO_30"
+                Set-Location -Path "$WorkingDir\LGPO_30"
                 .\LGPO.exe /q /m '..\Security-Baselines-X\TLS Security\registry.pol'
             } 'No' { break }
             'Exit' { &$CleanUp }
@@ -1752,7 +1752,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 Write-Progress -Id 0 -Activity 'Lock Screen' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
 
                 # Change current working directory to the LGPO's folder
-                Set-Location "$WorkingDir\LGPO_30"
+                Set-Location -Path "$WorkingDir\LGPO_30"
                 .\LGPO.exe /q /m '..\Security-Baselines-X\Lock Screen Policies\registry.pol'
                 .\LGPO.exe /q /s '..\Security-Baselines-X\Lock Screen Policies\GptTmpl.inf'
 
@@ -1786,7 +1786,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 Write-Progress -Id 0 -Activity 'User Account Control' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
 
                 # Change current working directory to the LGPO's folder
-                Set-Location "$WorkingDir\LGPO_30"
+                Set-Location -Path "$WorkingDir\LGPO_30"
                 .\LGPO.exe /q /s '..\Security-Baselines-X\User Account Control UAC Policies\GptTmpl.inf'
 
                 # Apply the Automatically deny all UAC prompts on Standard accounts policy
@@ -1843,7 +1843,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 Write-Progress -Id 0 -Activity 'Windows Firewall' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
 
                 # Change current working directory to the LGPO's folder
-                Set-Location "$WorkingDir\LGPO_30"
+                Set-Location -Path "$WorkingDir\LGPO_30"
                 .\LGPO.exe /q /m '..\Security-Baselines-X\Windows Firewall Policies\registry.pol'
 
                 # Disables Multicast DNS (mDNS) UDP-in Firewall Rules for all 3 Firewall profiles - disables only 3 rules
@@ -2166,7 +2166,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 Write-Progress -Id 0 -Activity 'Windows Networking' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
 
                 # Change current working directory to the LGPO's folder
-                Set-Location "$WorkingDir\LGPO_30"
+                Set-Location -Path "$WorkingDir\LGPO_30"
                 .\LGPO.exe /q /m '..\Security-Baselines-X\Windows Networking Policies\registry.pol'
                 .\LGPO.exe /q /s '..\Security-Baselines-X\Windows Networking Policies\GptTmpl.inf'
 
@@ -2193,7 +2193,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 Write-Progress -Id 0 -Activity 'Miscellaneous Configurations' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
 
                 # Miscellaneous Registry section
-                Set-Location $WorkingDir
+                Set-Location -Path $WorkingDir
                 [System.Object[]]$Items = Import-Csv '.\Registry.csv' -Delimiter ','
                 foreach ($Item in $Items) {
                     if ($Item.category -eq 'Miscellaneous') {
@@ -2201,7 +2201,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                     }
                 }
                 # Change current working directory to the LGPO's folder
-                Set-Location "$WorkingDir\LGPO_30"
+                Set-Location -Path "$WorkingDir\LGPO_30"
                 .\LGPO.exe /q /m '..\Security-Baselines-X\Miscellaneous Policies\registry.pol'
                 .\LGPO.exe /q /s '..\Security-Baselines-X\Miscellaneous Policies\GptTmpl.inf'
 
@@ -2259,7 +2259,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 # Enable restart notification for Windows update
                 Edit-Registry -path 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings' -key 'RestartNotificationsAllowed2' -value '1' -type 'DWORD' -Action 'AddOrModify'
                 # Change current working directory to the LGPO's folder
-                Set-Location "$WorkingDir\LGPO_30"
+                Set-Location -Path "$WorkingDir\LGPO_30"
                 .\LGPO.exe /q /m '..\Security-Baselines-X\Windows Update Policies\registry.pol'
             } 'No' { break }
             'Exit' { &$CleanUp }
@@ -2279,7 +2279,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 Write-Progress -Id 0 -Activity 'Edge Browser Configurations' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
 
                 # Edge Browser Configurations registry
-                Set-Location $WorkingDir
+                Set-Location -Path $WorkingDir
                 [System.Object[]]$Items = Import-Csv '.\Registry.csv' -Delimiter ','
                 foreach ($Item in $Items) {
                     if ($Item.category -eq 'Edge') {
@@ -2394,7 +2394,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
             Write-Progress -Id 0 -Activity 'Non-Admin category' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
 
             # Non-Admin Registry section
-            Set-Location $WorkingDir
+            Set-Location -Path $WorkingDir
             Invoke-WithoutProgress {
                 # Download Registry CSV file from GitHub or Azure DevOps
                 try {
@@ -2441,7 +2441,7 @@ finally {
         }
     }
 
-    Set-Location $HOME; Remove-Item -Recurse -Path "$global:UserTempDirectoryPath\HardeningXStuff\" -Force -ErrorAction SilentlyContinue
+    Set-Location -Path $HOME; Remove-Item -Recurse -Path "$global:UserTempDirectoryPath\HardeningXStuff\" -Force -ErrorAction SilentlyContinue
 
     # Disable progress bars
     0..6 | ForEach-Object -Process { Write-Progress -Id $_ -Activity 'Done' -Completed }

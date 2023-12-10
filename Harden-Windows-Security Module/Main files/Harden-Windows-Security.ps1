@@ -77,13 +77,10 @@
 
 🏴 If you have any questions, requests, suggestions etc. about this script, please open a new Discussion or Issue on GitHub
 
-
 .EXAMPLE
 
 .NOTES
-
     Check out GitHub page for security recommendations: https://github.com/HotCakeX/Harden-Windows-Security
-
 #>
 
 # Get the execution policy for the current process
@@ -112,13 +109,23 @@ $Host.UI.RawUI.WindowTitle = '❤️‍🔥Harden Windows Security❤️‍🔥'
 [System.Boolean]$ShouldEnableOptionalDiagnosticData = $false
 
 #region Functions
-# Questions function
 function Select-Option {
+    <#
+    .synopsis
+        Function to show a prompt to the user to select an option from a list of options
+    .INPUTS
+        System.String
+        System.Management.Automation.SwitchParameter
+    .PARAMETER Message
+        Contains the main prompt message
+    .PARAMETER ExtraMessage
+        Contains any extra notes for sub-categories
+    #>
     param(
-        [parameter(Mandatory = $True)][System.String]$Message, # Contains the main prompt message
+        [parameter(Mandatory = $True)][System.String]$Message,
         [parameter(Mandatory = $True)][System.String[]]$Options,
         [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SubCategory,
-        [parameter(Mandatory = $false)][System.String]$ExtraMessage # Contains any extra notes for sub-categories
+        [parameter(Mandatory = $false)][System.String]$ExtraMessage
     )
 
     $Selected = $null
@@ -160,8 +167,15 @@ function Select-Option {
     return $Selected
 }
 
-# Function to modify registry
 function Edit-Registry {
+    <#
+    .SYNOPSIS
+        Function to modify registry
+    .INPUTS
+        System.String
+    .OUTPUTS
+        System.Void
+    #>
     param ([System.String]$Path, [System.String]$Key, [System.String]$Value, [System.String]$Type, [System.String]$Action)
     If (-NOT (Test-Path -Path $Path)) {
         New-Item -Path $Path -Force | Out-Null
@@ -174,25 +188,37 @@ function Edit-Registry {
     }
 }
 
-# https://devblogs.microsoft.com/scripting/use-function-to-determine-elevation-of-powershell-console/
-# Function to test if current session has administrator privileges
 Function Test-IsAdmin {
+    <#
+    .SYNOPSIS
+        Function to test if current session has administrator privileges
+    .LINK
+        https://devblogs.microsoft.com/scripting/use-function-to-determine-elevation-of-powershell-console/
+    #>
     [System.Security.Principal.WindowsIdentity]$Identity = [Security.Principal.WindowsIdentity]::GetCurrent()
     [System.Security.Principal.WindowsPrincipal]$Principal = New-Object -TypeName 'Security.Principal.WindowsPrincipal' -ArgumentList $Identity
     $Principal.IsInRole([Security.Principal.WindowsBuiltinRole]::Administrator)
 }
 
-# Hiding Invoke-WebRequest progress because it creates lingering visual effect on PowerShell console for some reason
-# https://github.com/PowerShell/PowerShell/issues/14348
-
-# https://stackoverflow.com/questions/18770723/hide-progress-of-Invoke-WebRequest
 # Create an in-memory module so $ScriptBlock doesn't run in new scope
 $null = New-Module {
     function Invoke-WithoutProgress {
+        <#
+        .SYNOPSIS
+            Hiding Invoke-WebRequest progress because it creates lingering visual effect on PowerShell console for some reason
+        .LINK
+            https://github.com/PowerShell/PowerShell/issues/14348
+        .LINK
+            https://stackoverflow.com/questions/18770723/hide-progress-of-Invoke-WebRequest
+        .INPUTS
+            System.Management.Automation.ScriptBlock
+        .OUTPUTS
+            System.Void
+        #>
         [CmdletBinding()]
         param (
             [Parameter(Mandatory = $true)]
-            [scriptblock]$ScriptBlock
+            [System.Management.Automation.ScriptBlock]$ScriptBlock
         )
         # Save current progress preference and hide the progress
         [System.Management.Automation.ActionPreference]$PrevProgressPreference = $global:ProgressPreference
@@ -208,13 +234,20 @@ $null = New-Module {
     }
 }
 
-<#
-https://stackoverflow.com/questions/48809012/compare-two-credentials-in-powershell
-
- Safely compares two SecureString objects without decrypting them.
- Outputs $true if they are equal, or $false otherwise.
-#>
 function Compare-SecureString {
+    <#
+    .SYNOPSIS
+        Safely compares two SecureString objects without decrypting them.
+        Outputs $true if they are equal, or $false otherwise.
+    .LINK
+        https://stackoverflow.com/questions/48809012/compare-two-credentials-in-powershell
+    .INPUTS
+        System.Security.SecureString
+    .PARAMETER SecureString1
+        First secure string
+    .PARAMETER SecureString2
+        Second secure string to compare with the first secure string
+    #>
     param(
         [Security.SecureString]$SecureString1,
         [Security.SecureString]$SecureString2
@@ -246,8 +279,24 @@ function Compare-SecureString {
     }
 }
 
-# Function to write colorful text based on PS edition
 Function Write-SmartText {
+    <#
+    .SYNOPSIS
+        Function to write colorful text based on PS edition
+    .INPUTS
+        System.String
+        System.Management.Automation.SwitchParameter
+    .OUTPUTS
+        System.String
+    .PARAMETER CustomColor
+        The custom color to use to display the text, uses PSStyle
+    .PARAMETER GenericColor
+        The generic color to use to display the text, uses Write-Host and legacy colors
+    .PARAMETER InputText
+        The text to display in the selected color
+    .PARAMETER NoNewLineLegacy
+        Only used with Legacy colors to write them on the same line, used by the function that gets the removable drives for BitLocker Enhanced security level encryption
+    #>
     [CmdletBinding()]
     [Alias('WST')]
 
@@ -268,7 +317,7 @@ Function Write-SmartText {
 
         [parameter(Mandatory = $false)]
         [Alias('N')]
-        [System.Management.Automation.SwitchParameter]$NoNewLineLegacy # Only used with Legacy colors to write them on the same line, used by the function that gets the removable drives for BitLocker Enhanced security level encryption
+        [System.Management.Automation.SwitchParameter]$NoNewLineLegacy
     )
 
     # Determining if PowerShell edition is Core to use modern styling
@@ -322,11 +371,15 @@ Function Write-SmartText {
             Write-Host -Object $InputText -ForegroundColor $GenericColor
         }
     }
-
 }
 
-# Function to get a removable drive to be used by BitLocker category
 function Get-AvailableRemovableDrives {
+    <#
+    .SYNOPSIS
+        Function to get a removable drive to be used by BitLocker category
+    .INPUTS
+        None. You cannot pipe objects to this function
+    #>
 
     # An empty array of objects that holds the final removable drives list
     [System.Object[]]$AvailableRemovableDrives = @()
@@ -465,9 +518,19 @@ function Get-AvailableRemovableDrives {
     Write-Host ('{0,-4}' -f "$ExitCodeRemovableDriveSelection") -NoNewline -ForegroundColor DarkRed
     Write-Host -Object '|Skip encryptions altogether' -ForegroundColor DarkRed
 
-    # A function to validate the user input
     function Confirm-Choice {
-        param([System.String]$Choice)
+        <#
+        .SYNOPSIS
+            A function to validate the user input
+        .INPUTS
+            System.String
+        .OUTPUTS
+            System.Boolean
+        #>
+        param(
+            [System.String]$Choice
+        )
+
         # Initialize a flag to indicate if the input is valid or not
         [System.Boolean]$IsValid = $false
         # Initialize a variable to store the parsed integer value
@@ -505,6 +568,43 @@ function Get-AvailableRemovableDrives {
         return ($($AvailableRemovableDrives[$Choice - 1]).DriveLetter + ':')
     }
 }
+
+function Block-CountryIP {
+    <#
+    .SYNOPSIS
+        A function that gets a list of IP addresses and a name for them, then adds those IP addresses in the firewall block rules
+    .NOTES
+        -RemoteAddress in New-NetFirewallRule accepts array according to Microsoft Docs,
+        so we use "[System.String[]]$IPList = $IPList -split '\r?\n' -ne ''" to convert the IP lists, which is a single multiline string, into an array
+
+        how to query the number of IPs in each rule
+        (Get-NetFirewallRule -DisplayName "OFAC Sanctioned Countries IP range blocking" -PolicyStore localhost | Get-NetFirewallAddressFilter).RemoteAddress.count
+    .INPUTS
+        System.String
+        System.String[]
+    .OUTPUTS
+        System.Void
+        #>
+    param (
+        [System.String[]]$IPList,
+        [System.String]$ListName
+    )
+
+    # deletes previous rules (if any) to get new up-to-date IP ranges from the sources and set new rules
+    Remove-NetFirewallRule -DisplayName "$ListName IP range blocking" -PolicyStore localhost -ErrorAction SilentlyContinue
+
+    # converts the list which is in string into array
+    [System.String[]]$IPList = $IPList -split '\r?\n' -ne ''
+
+    # makes sure the list isn't empty
+    if ($IPList.count -eq 0) {
+        Write-Host -Object "The IP list was empty, skipping $ListName" -ForegroundColor Yellow
+        break
+    }
+
+    New-NetFirewallRule -DisplayName "$ListName IP range blocking" -Direction Inbound -Action Block -LocalAddress Any -RemoteAddress $IPList -Description "$ListName IP range blocking" -EdgeTraversalPolicy Block -PolicyStore localhost
+    New-NetFirewallRule -DisplayName "$ListName IP range blocking" -Direction Outbound -Action Block -LocalAddress Any -RemoteAddress $IPList -Description "$ListName IP range blocking" -EdgeTraversalPolicy Block -PolicyStore localhost
+}
 #endregion functions
 
 if (Test-IsAdmin) {
@@ -527,8 +627,8 @@ if (Test-IsAdmin) {
 
 }
 
-# doing a try-finally block on the entire script so that when CTRL + C is pressed to forcefully exit the script,
-# or break is passed, clean up will still happen for secure exit
+# doing a try-catch-finally block on the entire script so that when CTRL + C is pressed to forcefully exit the script,
+# or break is passed, clean up will still happen for secure exit. Any errors that happens will be thrown
 try {
     try {
         Invoke-WithoutProgress {
@@ -536,8 +636,7 @@ try {
         }
     }
     catch {
-        Write-Error "Couldn't verify if the latest version of the script is installed, please check your Internet connection."
-        break
+        Throw 'Could not verify if the latest version of the script is installed, please check your Internet connection.'
     }
     # Check the current hard-coded version against the latest version online
     # the messages can technically only be seen if installing the script in standalone mode using old Windows PowerShell
@@ -561,8 +660,7 @@ try {
     #region RequirementsCheck
     # check if user's OS is Windows Home edition
     if ((Get-CimInstance -ClassName Win32_OperatingSystem).OperatingSystemSKU -eq '101') {
-        Write-Error -Message 'Windows Home edition detected, exiting...'
-        break
+        Throw 'Windows Home edition detected, exiting...'
     }
 
     # check if user's OS is the latest build
@@ -577,42 +675,35 @@ try {
 
     # Make sure the current OS build is equal or greater than the required build
     if (-NOT ($FullOSBuild -ge $Requiredbuild)) {
-        Write-Error -Message "You're not using the latest build of the Windows OS. A minimum build of $Requiredbuild is required but your OS build is $FullOSBuild`nPlease go to Windows Update to install the updates and then try again."
-        break
+        Throw "You're not using the latest build of the Windows OS. A minimum build of $Requiredbuild is required but your OS build is $FullOSBuild`nPlease go to Windows Update to install the updates and then try again."
     }
 
     if (Test-IsAdmin) {
         # check to make sure Secure Boot is enabled
         if (-NOT (Confirm-SecureBootUEFI)) {
-            Write-Error -Message 'Secure Boot is not enabled, please go to your UEFI settings to enable it and then try again.'
-            break
+            Throw 'Secure Boot is not enabled, please go to your UEFI settings to enable it and then try again.'
         }
 
         # check to make sure TPM is available and enabled
         [System.Object]$TPM = Get-Tpm
         if (-not ($TPM.tpmpresent -and $TPM.tpmenabled)) {
-            Write-Error -Message 'TPM is not available or enabled, please enable it in UEFI settings and try again.'
-            break
+            Throw 'TPM is not available or enabled, please enable it in UEFI settings and try again.'
         }
 
         if (-NOT ($MDAVConfigCurrent.AMServiceEnabled -eq $true)) {
-            Write-Error -Message 'Microsoft Defender Anti Malware service is not enabled, please enable it and then try again.'
-            break
+            Throw 'Microsoft Defender Anti Malware service is not enabled, please enable it and then try again.'
         }
 
         if (-NOT ($MDAVConfigCurrent.AntispywareEnabled -eq $true)) {
-            Write-Error -Message 'Microsoft Defender Anti Spyware is not enabled, please enable it and then try again.'
-            break
+            Throw 'Microsoft Defender Anti Spyware is not enabled, please enable it and then try again.'
         }
 
         if (-NOT ($MDAVConfigCurrent.AntivirusEnabled -eq $true)) {
-            Write-Error -Message 'Microsoft Defender Anti Virus is not enabled, please enable it and then try again.'
-            break
+            Throw 'Microsoft Defender Anti Virus is not enabled, please enable it and then try again.'
         }
 
         if ($MDAVConfigCurrent.AMRunningMode -ne 'Normal') {
-            Write-Error -Message "Microsoft Defender is running in $($MDAVConfigCurrent.AMRunningMode) state, please remove any 3rd party AV and then try again."
-            break
+            Throw "Microsoft Defender is running in $($MDAVConfigCurrent.AMRunningMode) state, please remove any 3rd party AV and then try again."
         }
     }
     #endregion RequirementsCheck
@@ -625,7 +716,7 @@ try {
     Set-Location -Path $WorkingDir
 
     # Clean up script block
-    [scriptblock]$CleanUp = {
+    [System.Management.Automation.ScriptBlock]$CleanUp = {
         Set-Location -Path $HOME
         Remove-Item -Recurse -Path "$global:UserTempDirectoryPath\HardeningXStuff\" -Force
         # Disable progress bars
@@ -729,7 +820,7 @@ try {
             Write-Progress -Id 1 -ParentId 0 -Activity 'Downloading files completed.' -Completed
         }
         catch {
-            Write-Error "The required files couldn't be downloaded, Make sure you have Internet connection."
+            Write-Error 'The required files could not be downloaded, Make sure you have Internet connection.' -ErrorAction Continue
             foreach ($Job in $Jobs) { Remove-Job -Job $Job -ErrorAction Stop }
             &$CleanUp
         }
@@ -762,7 +853,7 @@ try {
                 reg add HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Secureboot /v AvailableUpdates /t REG_DWORD /d 0x30 /f
 
                 Write-Host -Object 'The required security measures have been applied to the system' -ForegroundColor Green
-                Write-Warning 'Make sure to restart your device once. After restart, wait for at least 5-10 minutes and perform a 2nd restart to finish applying security measures completely.'
+                Write-Warning -Message 'Make sure to restart your device once. After restart, wait for at least 5-10 minutes and perform a 2nd restart to finish applying security measures completely.'
             } 'No' { break }
             'Exit' { &$CleanUp }
         }
@@ -1126,7 +1217,7 @@ try {
                 # check, make sure there is no CD/DVD drives in the system, because Bitlocker throws an error when there is
                 $CdDvdCheck = (Get-CimInstance -ClassName Win32_CDROMDrive -Property *).MediaLoaded
                 if ($CdDvdCheck) {
-                    Write-Warning 'Remove any CD/DVD drives or mounted images/ISO from the system and run the Bitlocker category again.'
+                    Write-Warning -Message 'Remove any CD/DVD drives or mounted images/ISO from the system and run the Bitlocker category again.'
                     # break from the entire BitLocker category and continue to the next category
                     break BitLockerCategoryLabel
                 }
@@ -1141,7 +1232,7 @@ try {
                 }
 
                 # A script block that generates recovery code just like the Windows does
-                [scriptblock]$RecoveryPasswordContentGenerator = {
+                [System.Management.Automation.ScriptBlock]$RecoveryPasswordContentGenerator = {
                     param ([System.Object[]]$KeyProtectorsInputFromScriptBlock)
 
                     return @"
@@ -2335,26 +2426,6 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
             'Yes' {
                 Write-Progress -Id 0 -Activity 'Country IP Blocking' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
 
-                # -RemoteAddress in New-NetFirewallRule accepts array according to Microsoft Docs,
-                # so we use "[System.String[]]$IPList = $IPList -split '\r?\n' -ne ''" to convert the IP lists, which is a single multiline string, into an array
-                function Block-CountryIP {
-                    param ([System.String[]]$IPList , [System.String]$ListName)
-
-                    # deletes previous rules (if any) to get new up-to-date IP ranges from the sources and set new rules
-                    Remove-NetFirewallRule -DisplayName "$ListName IP range blocking" -PolicyStore localhost -ErrorAction SilentlyContinue
-
-                    # converts the list which is in string into array
-                    [System.String[]]$IPList = $IPList -split '\r?\n' -ne ''
-
-                    # makes sure the list isn't empty
-                    if ($IPList.count -eq 0) {
-                        Write-Host -Object "The IP list was empty, skipping $ListName" -ForegroundColor Yellow
-                        break
-                    }
-
-                    New-NetFirewallRule -DisplayName "$ListName IP range blocking" -Direction Inbound -Action Block -LocalAddress Any -RemoteAddress $IPList -Description "$ListName IP range blocking" -EdgeTraversalPolicy Block -PolicyStore localhost
-                    New-NetFirewallRule -DisplayName "$ListName IP range blocking" -Direction Outbound -Action Block -LocalAddress Any -RemoteAddress $IPList -Description "$ListName IP range blocking" -EdgeTraversalPolicy Block -PolicyStore localhost
-                }
                 switch (Select-Option -SubCategory -Options 'Yes', 'No' -Message 'Add countries in the State Sponsors of Terrorism list to the Firewall block list?') {
                     'Yes' {
                         Invoke-WithoutProgress {
@@ -2370,11 +2441,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                         }
                         Block-CountryIP -IPList $OFACSanctioned -ListName 'OFAC Sanctioned Countries'
                     } 'No' { break }
-                }
-
-                # how to query the number of IPs in each rule
-                # (Get-NetFirewallRule -DisplayName "OFAC Sanctioned Countries IP range blocking" -PolicyStore localhost | Get-NetFirewallAddressFilter).RemoteAddress.count
-
+                }               
             } 'No' { break }
             'Exit' { &$CleanUp }
         }
@@ -2425,6 +2492,10 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
     }
     # ====================================================End of Non-Admin Commands============================================
     #endregion Non-Admin-Commands
+}
+catch {
+    # Throw whatever error that occured
+    Throw $_
 }
 finally {
 

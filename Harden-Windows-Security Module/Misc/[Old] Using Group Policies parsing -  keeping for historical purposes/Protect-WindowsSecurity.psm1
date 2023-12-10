@@ -1,7 +1,7 @@
 Function Protect-WindowsSecurity {
-    
+
     Invoke-RestMethod 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security.ps1' -OutFile .\Harden-Windows-Security.ps1
-    try {    
+    try {
         .\Harden-Windows-Security.ps1
     }
     finally {
@@ -25,5 +25,5 @@ PowerShell
 .FUNCTIONALITY
 Downloads and runs the Harden Windows Security PowerShell script from the official repository
 
-#> 
+#>
 }

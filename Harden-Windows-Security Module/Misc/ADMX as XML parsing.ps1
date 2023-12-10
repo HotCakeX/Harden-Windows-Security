@@ -17,7 +17,7 @@ foreach ($policy in $xmlContent.policyDefinitions.policies.policy) {
         # Check if the policy's class is class="Machine"
         if ($policy.class -eq "Machine") {
             # Add HKEY_LOCAL_MACHINE to the beginning of the key
-            $key = "HKLM:\" + $policy.key            
+            $key = "HKLM:\" + $policy.key
         }
         else {
             # Use the key as it is
@@ -28,13 +28,13 @@ foreach ($policy in $xmlContent.policyDefinitions.policies.policy) {
         $result = [PSCustomObject]@{
             Category     = "Microsoft Defender"
             RegistryKey  = $key
-            RegistryName = $policy.valueName            
+            RegistryName = $policy.valueName
         }
 
         # Check if the registry key exists and get its value
-        try {          
+        try {
             $regValue = Get-ItemPropertyValue -Path $key -Name $policy.valueName -ErrorAction Stop
-           
+
             # Add the value as a property of the PSCustomObject
             $result | Add-Member -MemberType NoteProperty -Name 'RegValue' -Value $regValue
         }

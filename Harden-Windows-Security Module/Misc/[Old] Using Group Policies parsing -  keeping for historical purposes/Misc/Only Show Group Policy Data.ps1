@@ -6,7 +6,7 @@ $GroupPolicyXmlContent = [xml](Get-Content -Path ".\GPResult.xml" -ErrorAction S
 # An array to store each Group Policy "<q6:Policy>" element as a separate object
 $PoliciesOutput = @()
 # Use dot notation to access the Group Policy elements
-$GroupPolicyXmlContent.Rsop.ComputerResults.ExtensionData.Extension.Policy | Where-Object { $null -ne $_.name } | ForEach-Object {   
+$GroupPolicyXmlContent.Rsop.ComputerResults.ExtensionData.Extension.Policy | Where-Object { $null -ne $_.name } | ForEach-Object {
     # All the sub-elements of the "<q6:Policy>" that we need to verify
     $PoliciesOutput += [PSCustomObject]@{
         Name                 = $_.Name
@@ -43,7 +43,7 @@ $GroupPolicyXmlContent.Rsop.ComputerResults.ExtensionData.Extension.Policy | Whe
 # An array to store Group Policy Firewall settings as an object
 $FirewallPoliciesOutput = @()
 # Use dot notation to access the Group Policy elements - sometimes the type is q4 or q3 or q7, so using wildcard for the number
-$FirewallGroupPolicySettings = $GroupPolicyXmlContent.Rsop.ComputerResults.ExtensionData.Extension | Where-Object { $_.type -like 'q*:WindowsFirewallSettings' } 
+$FirewallGroupPolicySettings = $GroupPolicyXmlContent.Rsop.ComputerResults.ExtensionData.Extension | Where-Object { $_.type -like 'q*:WindowsFirewallSettings' }
 
 $FirewallPoliciesOutput += [PSCustomObject]@{
     GlobalSettingsPolicyVersion      = $FirewallGroupPolicySettings.GlobalSettings.PolicyVersion.Value
@@ -54,10 +54,10 @@ $FirewallPoliciesOutput += [PSCustomObject]@{
     DomainDoNotAllowExceptions       = $FirewallGroupPolicySettings.DomainProfile.DoNotAllowExceptions.value
     DomainEnableFirewall             = $FirewallGroupPolicySettings.DomainProfile.EnableFirewall.value
     DomainLogFilePath                = $FirewallGroupPolicySettings.DomainProfile.LogFilePath.value
-    DomainLogFileSize                = $FirewallGroupPolicySettings.DomainProfile.LogFileSize.value        
+    DomainLogFileSize                = $FirewallGroupPolicySettings.DomainProfile.LogFileSize.value
     DomainLogDroppedPackets          = $FirewallGroupPolicySettings.DomainProfile.LogDroppedPackets.value
     DomainLogSuccessfulConnections   = $FirewallGroupPolicySettings.DomainProfile.LogSuccessfulConnections.value
-        
+
     PublicAllowLocalIPsecPolicyMerge = $FirewallGroupPolicySettings.PublicProfile.AllowLocalIPsecPolicyMerge.value
     PublicAllowLocalPolicyMerge      = $FirewallGroupPolicySettings.PublicProfile.AllowLocalPolicyMerge.value
     PublicDefaultInboundAction       = $FirewallGroupPolicySettings.PublicProfile.DefaultInboundAction.value
@@ -66,9 +66,9 @@ $FirewallPoliciesOutput += [PSCustomObject]@{
     PublicDoNotAllowExceptions       = $FirewallGroupPolicySettings.PublicProfile.DoNotAllowExceptions.value
     PublicEnableFirewall             = $FirewallGroupPolicySettings.PublicProfile.EnableFirewall.value
     PublicLogFilePath                = $FirewallGroupPolicySettings.PublicProfile.LogFilePath.value
-    PublicLogFileSize                = $FirewallGroupPolicySettings.PublicProfile.LogFileSize.value        
+    PublicLogFileSize                = $FirewallGroupPolicySettings.PublicProfile.LogFileSize.value
     PublicLogDroppedPackets          = $FirewallGroupPolicySettings.PublicProfile.LogDroppedPackets.value
-    PublicLogSuccessfulConnections   = $FirewallGroupPolicySettings.PublicProfile.LogSuccessfulConnections.value        
+    PublicLogSuccessfulConnections   = $FirewallGroupPolicySettings.PublicProfile.LogSuccessfulConnections.value
 
     #PrivateAllowLocalIPsecPolicyMerge = $FirewallGroupPolicySettings.PrivateProfile.AllowLocalIPsecPolicyMerge.value
     # PrivateAllowLocalPolicyMerge      = $FirewallGroupPolicySettings.PrivateProfile.AllowLocalPolicyMerge.value
@@ -78,11 +78,11 @@ $FirewallPoliciesOutput += [PSCustomObject]@{
     #  PrivateDoNotAllowExceptions       = $FirewallGroupPolicySettings.PrivateProfile.DoNotAllowExceptions.value
     PrivateEnableFirewall            = $FirewallGroupPolicySettings.PrivateProfile.EnableFirewall.value
     PrivateLogFilePath               = $FirewallGroupPolicySettings.PrivateProfile.LogFilePath.value
-    PrivateLogFileSize               = $FirewallGroupPolicySettings.PrivateProfile.LogFileSize.value        
+    PrivateLogFileSize               = $FirewallGroupPolicySettings.PrivateProfile.LogFileSize.value
     PrivateLogDroppedPackets         = $FirewallGroupPolicySettings.PrivateProfile.LogDroppedPackets.value
     PrivateLogSuccessfulConnections  = $FirewallGroupPolicySettings.PrivateProfile.LogSuccessfulConnections.value
 }
 
 
 # Shows the Group Policies Firewall settings/policies
-$FirewallPoliciesOutput         
+$FirewallPoliciesOutput

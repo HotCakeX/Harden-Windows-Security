@@ -125,11 +125,9 @@ Function New-DenyWDACConfig {
             Write-Debug -Message 'The Deny policy with the following configuration is being created'
             if ($Debug) { $UserInputProgramFoldersPolicyMakerHashTable }
 
-            # Merge-cipolicy accept arrays - collecting all the policy files created by scanning user specified folders
-            $ProgramDir_ScanResults = Get-ChildItem -Path '.\' | Where-Object -FilterScript { $_.Name -like 'ProgramDir_ScanResults*.xml' }
-            foreach ($file in $ProgramDir_ScanResults) {
+            # Merge-CiPolicy accepts arrays - collecting all the policy files created by scanning user specified folders
+            foreach ($file in (Get-ChildItem -File -Path '.\' -Filter 'ProgramDir_ScanResults*.xml')) {
                 $PolicyXMLFilesArray += $file.FullName
-
             }
 
             # Adding the AllowAll default policy path to the array of policy paths

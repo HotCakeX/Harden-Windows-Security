@@ -381,8 +381,7 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
                 # Merge-CiPolicy accepts arrays - collecting all the policy files created by scanning user specified folders
                 Write-Verbose -Message 'Collecting all the policy files created by scanning user specified folders'
 
-                [System.IO.FileInfo[]]$ProgramDir_ScanResults = Get-ChildItem -File -Path '.\' -Filter 'ProgramDir_ScanResults*.xml'
-                foreach ($file in $ProgramDir_ScanResults) {
+                foreach ($file in (Get-ChildItem -File -Path '.\' -Filter 'ProgramDir_ScanResults*.xml')) {
                     $PolicyXMLFilesArray += $file.FullName
                 }
 
@@ -670,8 +669,7 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
                     # Merge-CiPolicy accepts arrays - collecting all the policy files created by scanning user specified folders
                     Write-Verbose -Message 'Collecting all the policy files created by scanning user specified folders'
 
-                    [System.IO.FileInfo[]]$ProgramDir_ScanResults = Get-ChildItem -File -Path '.\' -Filter 'ProgramDir_ScanResults*.xml'
-                    foreach ($file in $ProgramDir_ScanResults) {
+                    foreach ($file in (Get-ChildItem -File -Path '.\' -Filter 'ProgramDir_ScanResults*.xml')) {
                         $PolicyXMLFilesArray += $file.FullName
                     }
                     #Endregion Process-Program-Folders-From-User-input

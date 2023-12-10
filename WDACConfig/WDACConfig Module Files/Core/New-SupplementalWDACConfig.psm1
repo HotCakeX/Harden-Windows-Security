@@ -181,7 +181,7 @@ Function New-SupplementalWDACConfig {
 
             # Using Windows PowerShell to handle serialized data since PowerShell core throws an error
             # Creating the Supplemental policy file
-            powershell.exe {
+            powershell.exe -Command {
                 $RulesWildCards = New-CIPolicyRule -FilePathRule $args[0]
                 New-CIPolicy -MultiplePolicyFormat -FilePath ".\SupplementalPolicy $($args[1]).xml" -Rules $RulesWildCards
             } -args $FolderPath, $SuppPolicyName
@@ -215,13 +215,13 @@ Function New-SupplementalWDACConfig {
             do {
                 Get-AppxPackage -Name $PackageName
                 Write-Debug -Message "This is the Selected package name $PackageName"
-                $Question = Read-Host "`nIs this the intended results based on your Installed Appx packages? Enter 1 to continue, Enter 2 to exit"
+                $Question = Read-Host -Prompt "`nIs this the intended results based on your Installed Appx packages? Enter 1 to continue, Enter 2 to exit"
             } until (
                 (($Question -eq 1) -or ($Question -eq 2))
             )
             if ($Question -eq 2) { break }
 
-            powershell.exe {
+            powershell.exe -Command {
                 # Get all the packages based on the supplied name
                 $Package = Get-AppxPackage -Name $args[0]
                 # Get package dependencies if any

@@ -195,7 +195,7 @@ Function New-KernelModeWDACConfig {
                     Write-Error -Message 'Invalid or nonexistent GUID in User Configs for Audit mode policy, Use the -PrepMode parameter first.'
                 }
 
-                powershell.exe {
+                powershell.exe -Command {
                     # Scan Event viewer logs for drivers
                     $DriverFilesObj = Get-SystemDriver -Audit
                     # Create a policy xml file from the driver files

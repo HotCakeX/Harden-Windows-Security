@@ -166,7 +166,7 @@ Function New-DenyWDACConfig {
         # Create Deny base policy for Driver files
         elseif ($Drivers) {
 
-            powershell.exe {
+            powershell.exe -Command {
                 [System.Object[]]$DriverFilesObject = @()
                 # loop through each user-selected folder paths
                 foreach ($ScanLocation in $args[0]) {
@@ -223,13 +223,13 @@ Function New-DenyWDACConfig {
             do {
                 Get-AppxPackage -Name $PackageName
                 Write-Debug -Message "This is the Selected package name $PackageName"
-                $Question = Read-Host "`nIs this the intended results based on your Installed Appx packages? Enter 1 to continue, Enter 2 to exit`n"
+                $Question = Read-Host -Prompt "`nIs this the intended results based on your Installed Appx packages? Enter 1 to continue, Enter 2 to exit`n"
             } until (
                 (($Question -eq 1) -or ($Question -eq 2))
             )
             if ($Question -eq 2) { break }
 
-            powershell.exe {
+            powershell.exe -Command {
                 # Get all the packages based on the supplied name
                 $Package = Get-AppxPackage -Name $args[0]
 

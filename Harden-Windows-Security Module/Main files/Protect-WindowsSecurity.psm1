@@ -1,7 +1,7 @@
-Function Protect-WindowsSecurity { 
+Function Protect-WindowsSecurity {
     # Import functions
-    . "$psscriptroot\Functions.ps1"    
-            
+    . "$psscriptroot\Functions.ps1"
+
     # Apply the hardening measures from the local file
     & "$psscriptroot\Harden-Windows-Security.ps1"
 
@@ -21,5 +21,5 @@ PowerShell
 .FUNCTIONALITY
 Applies the hardening measures
 
-#> 
+#>
 }

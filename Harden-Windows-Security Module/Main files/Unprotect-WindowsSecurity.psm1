@@ -19,7 +19,7 @@ Function Unprotect-WindowsSecurity {
 
     # Import functions
     . "$psscriptroot\Functions.ps1"
-   
+
     # Custom colors
     [scriptblock]$WriteFuchsia = { Write-Host "$($PSStyle.Foreground.FromRGB(236,68,155))$($args[0])$($PSStyle.Reset)" }
     [scriptblock]$WriteOrange = { Write-Host "$($PSStyle.Foreground.FromRGB(255,165,0))$($args[0])$($PSStyle.Reset)" }
@@ -35,10 +35,10 @@ Function Unprotect-WindowsSecurity {
         # Give user a chance to exit if they accidentally ran this
         Pause
     }
-    
+
     # doing a try-finally block on the entire script so that when CTRL + C is pressed to forcefully exit the script,
     # or break is passed, clean up will still happen for secure exit
-    try {  
+    try {
 
         Write-Progress -Activity 'Backing up Controlled Folder Access exclusion list' -Status 'Processing' -PercentComplete 10
 
@@ -81,7 +81,7 @@ Function Unprotect-WindowsSecurity {
 
             # Download Process Mitigations CSV file from GitHub or Azure DevOps
             try {
-                Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Payload/ProcessMitigations.csv' -OutFile '.\ProcessMitigations.csv' -ProgressAction SilentlyContinue 
+                Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Payload/ProcessMitigations.csv' -OutFile '.\ProcessMitigations.csv' -ProgressAction SilentlyContinue
             }
             catch {
                 Write-Host 'Using Azure DevOps...' -ForegroundColor Yellow
@@ -90,7 +90,7 @@ Function Unprotect-WindowsSecurity {
         }
         catch {
             Write-Error "The required files couldn't be downloaded, Make sure you have Internet connection."
-            &$CleanUp   
+            &$CleanUp
         }
 
         # Only run this if -OnlyProcessMitigations parameter is NOT passed
@@ -103,28 +103,28 @@ Function Unprotect-WindowsSecurity {
             }
 
             Write-Progress -Activity 'Deleting all the registry keys created by the Protect-WindowsSecurity cmdlet' -Status 'Processing' -PercentComplete 60
-     
+
             [System.Object[]]$Items = Import-Csv '.\Registry.csv' -Delimiter ','
-            foreach ($Item in $Items) { 
-                if (Test-Path -Path $item.path) {       
-                    Remove-ItemProperty -Path $Item.path -Name $Item.key -Force -ErrorAction SilentlyContinue 
-                }    
-            } 
+            foreach ($Item in $Items) {
+                if (Test-Path -Path $item.path) {
+                    Remove-ItemProperty -Path $Item.path -Name $Item.key -Force -ErrorAction SilentlyContinue
+                }
+            }
 
             # To completely remove the Edge policy since only its sub-keys are removed by the command above
             Remove-Item -Path 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge\TLSCipherSuiteDenyList' -Force -Recurse -ErrorAction SilentlyContinue
-    
+
             # Restore Security group policies back to their default states
 
             Write-Progress -Activity 'Restoring the default Security group policies' -Status 'Processing' -PercentComplete 70
-               
+
             # Download LGPO program from Microsoft servers
             Invoke-WebRequest -Uri 'https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/LGPO.zip' -OutFile '.\LGPO.zip' -ProgressAction SilentlyContinue
-            
+
             # unzip the LGPO file
-            Expand-Archive -Path .\LGPO.zip -DestinationPath .\ -Force  
+            Expand-Archive -Path .\LGPO.zip -DestinationPath .\ -Force
             .\'LGPO_30\LGPO.exe' /q /s "$psscriptroot\Resources\Default Security Policy.inf"
-        
+
             # Enable LMHOSTS lookup protocol on all network adapters again
             Set-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\NetBT\Parameters' -Name 'EnableLMHOSTS' -Value '1' -Type DWord
 
@@ -135,50 +135,50 @@ Function Unprotect-WindowsSecurity {
             SCHTASKS.EXE /Change /TN \Microsoft\XblGameSave\XblGameSaveTask /Enable | Out-Null
 
             Write-Progress -Activity 'Restoring Microsoft Defender configs back to their default states' -Status 'Processing' -PercentComplete 80
-   
+
             # Disable the advanced new security features of the Microsoft Defender
             Set-MpPreference -AllowSwitchToAsyncInspection $False
             Set-MpPreference -OobeEnableRtpAndSigUpdate $False
             Set-MpPreference -IntelTDTEnabled $False
             Set-MpPreference -DisableRestorePoint $True
             Set-MpPreference -PerformanceModeStatus Enabled
-            Set-MpPreference -EnableConvertWarnToBlock $False   
-            # Set Microsoft Defender engine and platform update channels to NotConfigured State           
+            Set-MpPreference -EnableConvertWarnToBlock $False
+            # Set Microsoft Defender engine and platform update channels to NotConfigured State
             Set-MpPreference -EngineUpdatesChannel NotConfigured
             Set-MpPreference -PlatformUpdatesChannel NotConfigured
         }
 
         # Disable Mandatory ASLR
         Set-ProcessMitigation -System -Disable ForceRelocateImages
-    
+
         # Remove Process Mitigations
 
         [System.Object[]]$ProcessMitigations = Import-Csv '.\ProcessMitigations.csv' -Delimiter ','
         # Group the data by ProgramName
         [System.Object[]]$GroupedMitigations = $ProcessMitigations | Group-Object ProgramName
         [System.Object[]]$AllAvailableMitigations = (Get-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\*')
-    
+
         Write-Progress -Activity 'Removing Process Mitigations for apps' -Status 'Processing' -PercentComplete 90
-   
+
         # Loop through each group
-        foreach ($Group in $GroupedMitigations) {    
+        foreach ($Group in $GroupedMitigations) {
             # To separate the filename from full path of the item in the CSV and then check whether it exists in the system registry
             if ($Group.Name -match '\\([^\\]+)$') {
                 if ($Matches[1] -in $AllAvailableMitigations.pschildname) {
                     Remove-Item -Path "Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\$($Matches[1])" -Recurse -Force
-                }        
+                }
             }
             elseif ($Group.Name -in $AllAvailableMitigations.pschildname) {
                 Remove-Item -Path "Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\$($Group.Name)" -Recurse -Force
             }
-        }        
+        }
 
-        # Only run this if -OnlyProcessMitigations parameter is NOT passed        
+        # Only run this if -OnlyProcessMitigations parameter is NOT passed
         if (!$OnlyProcessMitigations) {
-    
+
             # Set Data Execution Prevention (DEP) back to its default value
             Set-BcdElement -Element 'nx' -Type 'Integer' -Value '0'
-         
+
             # Remove the scheduled task that keeps the Microsoft recommended driver block rules updated
 
             # Define the name and path of the task
@@ -187,13 +187,13 @@ Function Unprotect-WindowsSecurity {
 
             if (Get-ScheduledTask -TaskName $taskName -TaskPath $taskPath -ErrorAction SilentlyContinue) {
                 Unregister-ScheduledTask -TaskName $taskName -TaskPath $taskPath -Confirm:$false | Out-Null
-            }       
+            }
 
             # Enables Multicast DNS (mDNS) UDP-in Firewall Rules for all 3 Firewall profiles
             Get-NetFirewallRule |
             Where-Object { $_.RuleGroup -eq '@%SystemRoot%\system32\firewallapi.dll,-37302' -and $_.Direction -eq 'inbound' } |
-            ForEach-Object { Enable-NetFirewallRule -DisplayName $_.DisplayName }                     
-          
+            ForEach-Object { Enable-NetFirewallRule -DisplayName $_.DisplayName }
+
             # Remove any custom views added by this script for Event Viewer
             if (Test-Path -Path 'C:\ProgramData\Microsoft\Event Viewer\Views\Hardening Script') {
                 Remove-Item -Path 'C:\ProgramData\Microsoft\Event Viewer\Views\Hardening Script' -Recurse -Force
@@ -204,7 +204,7 @@ Function Unprotect-WindowsSecurity {
         # Set a tattooed Group policy for Svchost.exe process mitigations back to disabled state
         Set-ItemProperty -Path 'Registry::\HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SCMConfig' -Name 'EnableSvchostMitigationPolicy' -Value '0' -Force -Type 'DWord' -ErrorAction SilentlyContinue
 
-        Write-Progress -Activity 'Complete' -Status 'Complete' -PercentComplete 100   
+        Write-Progress -Activity 'Complete' -Status 'Complete' -PercentComplete 100
 
         &$WriteFuchsia 'Operation Completed, please restart your computer.'
     }
@@ -216,11 +216,11 @@ Function Unprotect-WindowsSecurity {
 
         # restoring the original Controlled folder access allow list - if user already had added PowerShell executables to the list
         # they will be restored as well, so user customization will remain intact
-        if ($null -ne $CFAAllowedAppsBackup) { 
+        if ($null -ne $CFAAllowedAppsBackup) {
             Set-MpPreference -ControlledFolderAccessAllowedApplications $CFAAllowedAppsBackup
         }
-    
-        Set-Location $HOME; Remove-Item -Recurse "$global:UserTempDirectoryPath\HardeningXStuff\" -Force -ErrorAction SilentlyContinue    
+
+        Set-Location $HOME; Remove-Item -Recurse "$global:UserTempDirectoryPath\HardeningXStuff\" -Force -ErrorAction SilentlyContinue
     }
 
     <#
@@ -242,7 +242,7 @@ Removes the hardening measures applied by Protect-WindowsSecurity cmdlet
 .PARAMETER OnlyProcessMitigations
 Only removes the Process Mitigations / Exploit Protection settings and doesn't change anything else
 
-#> 
+#>
 }
 
 # Set PSReadline tab completion to complete menu for easier access to available parameters - Only for the current session

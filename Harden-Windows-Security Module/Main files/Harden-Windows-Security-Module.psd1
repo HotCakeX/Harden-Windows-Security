@@ -77,7 +77,7 @@ Harden Windows Safely, Securely, only with Official Microsoft methods
 🏴 If you have any questions, requests, suggestions etc. about this script, please open a new Discussion or Issue on GitHub
 
 🟡 The module generates a nice output on the screen as well as giving users an option to export the results in a CSV file.
- 
+
 '@
 
   # Minimum version of the PowerShell engine required by this module

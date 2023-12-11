@@ -98,7 +98,7 @@ Function New-WDACConfig {
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Get-FileRules.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Get-BlockRulesMeta.psm1" -Force
 
-        #region User-Configurations-Processing-Validation
+        # Region User-Configurations-Processing-Validation
         # If User is creating Default Windows policy and including SignTool path
         if ($IncludeSignTool -and $MakeDefaultWindowsWithBlockRules) {
             # Read User configuration file if it exists
@@ -121,7 +121,7 @@ Function New-WDACConfig {
         elseif ($IncludeSignTool -and $MakeDefaultWindowsWithBlockRules) {
             $SignToolPathFinal = Get-SignTool -SignToolExePath ($UserConfig.SignToolCustomPath ?? $null)
         }
-        #endregion User-Configurations-Processing-Validation
+        # Endregion User-Configurations-Processing-Validation
 
         # Detecting if Debug switch is used, will do debugging actions based on that
         $PSBoundParameters.Debug.IsPresent ? ([System.Boolean]$Debug = $true) : ([System.Boolean]$Debug = $false) | Out-Null
@@ -645,7 +645,7 @@ Function New-WDACConfig {
             New-Item -Type Directory -Path "$home\WDAC" -Force | Out-Null
             Set-Location "$home\WDAC"
 
-            #Region Base-Policy-Processing
+            # Region Base-Policy-Processing
             switch ($BasePolicyType) {
                 'Allow Microsoft Base' {
                     Write-Verbose -Message 'Creating Allow Microsoft Base policy'
@@ -674,9 +674,9 @@ Function New-WDACConfig {
                 Write-Verbose -Message 'Setting "Required:EV Signers" policy rule option because RequireEVSigners parameter was used'
                 Set-RuleOption -FilePath $BasePolicy -Option 8
             }
-            #Endregion Base-Policy-Processing
+            # Endregion Base-Policy-Processing
 
-            #Region Supplemental-Policy-Processing
+            # Region Supplemental-Policy-Processing
             # Produce a policy xml file from event viewer logs
             Write-ColorfulText -Color Lavender -InputText 'Scanning Windows Event logs and creating a policy file, please wait...'
 
@@ -764,7 +764,7 @@ Function New-WDACConfig {
             Write-Verbose -Message 'Converting SupplementalPolicy.xml policy to .CIP binary'
             ConvertFrom-CIPolicy -XmlFilePath 'SupplementalPolicy.xml' -BinaryFilePath "$PolicyID.cip" | Out-Null
 
-            #Endregion Supplemental-Policy-Processing
+            # Endregion Supplemental-Policy-Processing
 
             Write-Output -InputObject "BasePolicyFile = $BasePolicy"
             Write-Output -InputObject "BasePolicyGUID = $BasePolicyID"

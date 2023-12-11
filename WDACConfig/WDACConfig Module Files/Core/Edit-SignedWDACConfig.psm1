@@ -143,7 +143,7 @@ Function Edit-SignedWDACConfig {
         # Used by Write-ColorfulText outputs to both information stream and host console
         if (-NOT $SkipVersionCheck) { Update-self 6> $null }
 
-        #region User-Configurations-Processing-Validation
+        # Region User-Configurations-Processing-Validation
         # If any of these parameters, that are mandatory for all of the position 0 parameters, isn't supplied by user
         if (!$PolicyPaths -or !$SignToolPath -or !$CertPath -or !$CertCN) {
             # Read User configuration file if it exists
@@ -219,7 +219,7 @@ Function Edit-SignedWDACConfig {
                 }
             }
         }
-        #endregion User-Configurations-Processing-Validation
+        # Endregion User-Configurations-Processing-Validation
 
         # Detecting if Debug switch is used, will do debugging actions based on that
         $PSBoundParameters.Debug.IsPresent ? ([System.Boolean]$Debug = $true) : ([System.Boolean]$Debug = $false) | Out-Null
@@ -344,7 +344,7 @@ Function Edit-SignedWDACConfig {
                 Rename-Item -Path '.\EnforcedMode.cip.p7' -NewName '.\EnforcedMode.cip' -Force
                 Rename-Item -Path '.\AuditMode.cip.p7' -NewName '.\AuditMode.cip' -Force
 
-                #Region Snap-Back-Guarantee
+                # Region Snap-Back-Guarantee
                 Write-Verbose -Message 'Creating Enforced Mode SnapBack guarantee'
 
                 # Defining the registry path for RunOnce key
@@ -368,11 +368,11 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
 
                 # Remove the Audit Mode CIP
                 Remove-Item -Path '.\AuditMode.cip' -Force
-                #Endregion Snap-Back-Guarantee
+                # Endregion Snap-Back-Guarantee
 
                 # A Try-Catch-Finally block so that if any errors occur, the Base policy will be Re-deployed in enforced mode
                 Try {
-                    #Region User-Interaction
+                    # Region User-Interaction
                     Write-ColorfulText -Color Pink -InputText 'Audit mode deployed, start installing your programs now'
                     Write-ColorfulText -Color HotPink -InputText 'When you have finished installing programs, Press Enter to start selecting program directories to scan'
                     Pause
@@ -393,7 +393,7 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
                         Else { break }
                     }
                     while ($true)
-                    #Endregion User-Interaction
+                    # Endregion User-Interaction
 
                     # Make sure User browsed for at least 1 directory
                     # Exit the operation if user didn't select any folder paths
@@ -464,7 +464,7 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
                 Write-Verbose -Message 'Removing the ProgramDir_ScanResults* xml files'
                 Remove-Item -Path '.\ProgramDir_ScanResults*.xml' -Force
 
-                #Region Supplemental-policy-processing-and-deployment
+                # Region Supplemental-policy-processing-and-deployment
                 Write-Verbose -Message 'Supplemental policy processing and deployment'
 
                 Write-Verbose -Message 'Getting the path of the Supplemental policy'
@@ -523,7 +523,7 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
                 # Remove the policy xml file in Temp folder we created earlier
                 Remove-Item -Path $PolicyPath -Force
 
-                #Endregion Supplemental-policy-processing-and-deployment
+                # Endregion Supplemental-policy-processing-and-deployment
             }
         }
 
@@ -609,7 +609,7 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
                 Rename-Item -Path '.\EnforcedMode.cip.p7' -NewName '.\EnforcedMode.cip' -Force
                 Rename-Item -Path '.\AuditMode.cip.p7' -NewName '.\AuditMode.cip' -Force
 
-                #Region Snap-Back-Guarantee
+                # Region Snap-Back-Guarantee
                 Write-Verbose -Message 'Creating Enforced Mode SnapBack guarantee'
 
                 # Defining the registry path for RunOnce key
@@ -633,11 +633,11 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
 
                 # Remove the Audit Mode CIP
                 Remove-Item -Path '.\AuditMode.cip' -Force
-                #Endregion Snap-Back-Guarantee
+                # Endregion Snap-Back-Guarantee
 
                 # A Try-Catch-Finally block so that if any errors occur, the Base policy will be Re-deployed in enforced mode
                 Try {
-                    #Region User-Interaction
+                    # Region User-Interaction
                     Write-ColorfulText -Color Pink -InputText 'Audit mode deployed, start installing your programs now'
                     Write-ColorfulText -Color HotPink -InputText 'When you have finished installing programs, Press Enter to start selecting program directories to scan'
                     Pause
@@ -658,7 +658,7 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
                         Else { break }
                     }
                     while ($true)
-                    #Endregion User-Interaction
+                    # Endregion User-Interaction
 
                     # Make sure User browsed for at least 1 directory
                     # Exit the operation if user didn't select any folder paths
@@ -671,7 +671,7 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
                     Write-Host -Object 'Here are the paths you selected:' -ForegroundColor Yellow
                     $ProgramsPaths | ForEach-Object -Process { $_.FullName }
 
-                    #Region EventCapturing
+                    # Region EventCapturing
 
                     Write-Host -Object 'Scanning Windows Event logs and creating a policy file, please wait...' -ForegroundColor Cyan
 
@@ -760,9 +760,9 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
                         Write-Verbose -Message 'Adding the policy file (DeletedFileHashesEventsPolicy.xml) that consists of rules from audit even logs, to the array of XML files'
                         $PolicyXMLFilesArray += '.\DeletedFileHashesEventsPolicy.xml'
                     }
-                    #Endregion EventCapturing
+                    # Endregion EventCapturing
 
-                    #Region Process-Program-Folders-From-User-input
+                    # Region Process-Program-Folders-From-User-input
                     Write-Verbose -Message 'Scanning each of the folder paths that user selected'
 
                     for ($i = 0; $i -lt $ProgramsPaths.Count; $i++) {
@@ -793,9 +793,9 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
                     foreach ($file in (Get-ChildItem -File -Path '.\' -Filter 'ProgramDir_ScanResults*.xml')) {
                         $PolicyXMLFilesArray += $file.FullName
                     }
-                    #Endregion Process-Program-Folders-From-User-input
+                    # Endregion Process-Program-Folders-From-User-input
 
-                    #region Kernel-protected-files-automatic-detection-and-allow-rule-creation
+                    # Region Kernel-protected-files-automatic-detection-and-allow-rule-creation
                     # This part takes care of Kernel protected files such as the main executable of the games installed through Xbox app
                     # For these files, only Kernel can get their hashes, it passes them to event viewer and we take them from event viewer logs
                     # Any other attempts such as "Get-FileHash" or "Get-AuthenticodeSignature" fail and ConfigCI Module cmdlets totally ignore these files and do not create allow rules for them
@@ -877,7 +877,7 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
                             $ExesWithNoHash | ForEach-Object -Process { Write-Warning -Message "$_" }
                         }
                     }
-                    #endregion Kernel-protected-files-automatic-detection-and-allow-rule-creation
+                    # Endregion Kernel-protected-files-automatic-detection-and-allow-rule-creation
 
                     Write-Verbose -Message 'The following policy xml files are going to be merged into the final Supplemental policy and be deployed on the system:'
                     $PolicyXMLFilesArray | ForEach-Object -Process { Write-Verbose -Message "$_" }
@@ -908,7 +908,7 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
                     Remove-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce' -Name '*CIPolicySnapBack' -Force
                 }
 
-                #Region Supplemental-policy-processing-and-deployment
+                # Region Supplemental-policy-processing-and-deployment
 
                 Write-Verbose -Message 'Supplemental policy processing and deployment'
                 [System.String]$SuppPolicyPath = ".\SupplementalPolicy $SuppPolicyName.xml"
@@ -967,13 +967,14 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
                 # Remove the policy xml file in Temp folder we created earlier
                 Remove-Item -Path $PolicyPath -Force
 
-                #Endregion Supplemental-policy-processing-and-deployment
+                # Endregion Supplemental-policy-processing-and-deployment
             }
         }
 
         if ($MergeSupplementalPolicies) {
             foreach ($PolicyPath in $PolicyPaths) {
-                ############ Input policy verification prior to doing anything ############
+               
+                # Region Input-policy-verification
                 foreach ($SuppPolicyPath in $SuppPolicyPaths) {
                     $Supplementalxml = [System.Xml.XmlDocument](Get-Content -Path $SuppPolicyPath)
                     $SupplementalPolicyID = $Supplementalxml.SiPolicy.PolicyID
@@ -988,6 +989,8 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
                         Write-Error -Message "The Selected Supplemental XML file with GUID $SupplementalPolicyID isn't deployed on the system."
                     }
                 }
+                # Endregion Input-policy-verification
+
                 # Perform the merge
                 Merge-CIPolicy -PolicyPaths $SuppPolicyPaths -OutputFilePath "$SuppPolicyName.xml" | Out-Null
                 # Delete the deployed Supplemental policies that user selected from the system because we're going to deploy the new merged policy that contains all of them

@@ -871,6 +871,9 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
                             $ExesWithNoHash | ForEach-Object -Process { Write-Warning -Message "$_" }
                         }
                     }
+                    else {
+                        Write-Verbose -Message 'No Kernel protected files in the user selected paths were detected.'
+                    }
                     #Endregion Kernel-protected-files-automatic-detection-and-allow-rule-creation
 
                     Write-Verbose -Message 'The following policy xml files are going to be merged into the final Supplemental policy and be deployed on the system:'

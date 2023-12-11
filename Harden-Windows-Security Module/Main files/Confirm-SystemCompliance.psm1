@@ -1092,7 +1092,7 @@ function Confirm-SystemCompliance {
 
             # Check network location of all connections to see if they are public
             $Condition = Get-NetConnectionProfile | ForEach-Object -Process { $_.NetworkCategory -eq 'public' }
-            [System.Boolean]$IndividualItemResult = -not ($condition -contains $false) ? $True : $false
+            [System.Boolean]$IndividualItemResult = -NOT ($condition -contains $false) ? $True : $false
 
             # Verify a Security setting using Cmdlet
             $NestedObjectArray += [PSCustomObject]@{

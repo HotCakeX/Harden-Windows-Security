@@ -557,11 +557,11 @@ function Get-AvailableRemovableDrives {
         [System.String]$Choice = $(Write-Host -Object "Enter the number of the drive you want to select or press $ExitCodeRemovableDriveSelection to Cancel" -ForegroundColor cyan; Read-Host)
 
         # Check if the input is valid using the Confirm-Choice function
-        if (-not (Confirm-Choice $Choice)) {
+        if (-NOT (Confirm-Choice $Choice)) {
             # Write an error message in red if invalid
             Write-Host -Object "Invalid input. Please enter a number between 1 and $ExitCodeRemovableDriveSelection." -ForegroundColor Red
         }
-    } while (-not (Confirm-Choice $Choice))
+    } while (-NOT (Confirm-Choice $Choice))
 
     # Check if the user entered the exit value to break out of the loop
     if ($Choice -eq $ExitCodeRemovableDriveSelection) {
@@ -690,7 +690,7 @@ try {
 
         # check to make sure TPM is available and enabled
         [System.Object]$TPM = Get-Tpm
-        if (-not ($TPM.tpmpresent -and $TPM.tpmenabled)) {
+        if (-NOT ($TPM.tpmpresent -and $TPM.tpmenabled)) {
             Throw 'TPM is not available or enabled, please enable it in UEFI settings and try again.'
         }
 

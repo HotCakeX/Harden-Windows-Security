@@ -1632,7 +1632,7 @@ function Confirm-SystemCompliance {
 
         # Check network location of all connections to see if they are public
         $Condition = Get-NetConnectionProfile -ErrorAction Stop | ForEach-Object { $_.NetworkCategory -eq 'public' }
-        [bool]$IndividualItemResult = -not ($condition -contains $false) ? $True : $false
+        [bool]$IndividualItemResult = -NOT ($condition -contains $false) ? $True : $false
 
         # Create a custom object with 5 properties to store them as nested objects inside the main output object
         $NestedObjectArray += [PSCustomObject]@{

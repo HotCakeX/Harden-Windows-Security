@@ -10,7 +10,7 @@ Function Unprotect-WindowsSecurity {
     $global:ErrorActionPreference = 'Stop'
 
     # Fetching Temp Directory
-    [System.String]$global:UserTempDirectoryPath = [System.IO.Path]::GetTempPath()
+    [System.String]$global:CurrentUserTempDirectoryPath = [System.IO.Path]::GetTempPath()
 
     # Makes sure this cmdlet is invoked with Admin privileges
     if (![bool]([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
@@ -56,16 +56,16 @@ Function Unprotect-WindowsSecurity {
         Start-Sleep -Seconds 3
 
         # create our working directory
-        New-Item -ItemType Directory -Path "$global:UserTempDirectoryPath\HardeningXStuff\" -Force | Out-Null
+        New-Item -ItemType Directory -Path "$global:CurrentUserTempDirectoryPath\HardeningXStuff\" -Force | Out-Null
 
         # working directory assignment
-        [System.IO.DirectoryInfo]$WorkingDir = "$global:UserTempDirectoryPath\HardeningXStuff\"
+        [System.IO.DirectoryInfo]$WorkingDir = "$global:CurrentUserTempDirectoryPath\HardeningXStuff\"
 
         # change location to the new directory
         Set-Location -Path $WorkingDir
 
         # Clean up script block
-        [scriptblock]$CleanUp = { Set-Location -Path $HOME; Remove-Item -Recurse "$global:UserTempDirectoryPath\HardeningXStuff\" -Force; exit }
+        [scriptblock]$CleanUp = { Set-Location -Path $HOME; Remove-Item -Recurse "$global:CurrentUserTempDirectoryPath\HardeningXStuff\" -Force; exit }
 
         Write-Progress -Activity 'Downloading the required files' -Status 'Processing' -PercentComplete 30
 
@@ -220,7 +220,7 @@ Function Unprotect-WindowsSecurity {
             Set-MpPreference -ControlledFolderAccessAllowedApplications $CFAAllowedAppsBackup
         }
 
-        Set-Location -Path $HOME; Remove-Item -Recurse -Path "$global:UserTempDirectoryPath\HardeningXStuff\" -Force -ErrorAction SilentlyContinue
+        Set-Location -Path $HOME; Remove-Item -Recurse -Path "$global:CurrentUserTempDirectoryPath\HardeningXStuff\" -Force -ErrorAction SilentlyContinue
     }
 
     <#

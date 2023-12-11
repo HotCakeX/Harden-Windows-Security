@@ -102,7 +102,7 @@ $Host.UI.RawUI.WindowTitle = '❤️‍🔥Harden Windows Security❤️‍🔥'
 # Minimum OS build number required for the hardening measures used in this script
 [System.Decimal]$Requiredbuild = '22621.2428'
 # Fetching Temp Directory
-[System.String]$global:UserTempDirectoryPath = [System.IO.Path]::GetTempPath()
+[System.String]$global:CurrentUserTempDirectoryPath = [System.IO.Path]::GetTempPath()
 # The total number of the main categories for the parent/main progress bar to render
 [System.Int64]$TotalMainSteps = 18
 # Defining a global boolean variable to determine whether optional diagnostic data should be enabled for Smart App Control or not
@@ -713,16 +713,16 @@ try {
     #endregion RequirementsCheck
 
     # create our working directory
-    New-Item -ItemType Directory -Path "$global:UserTempDirectoryPath\HardeningXStuff\" -Force | Out-Null
+    New-Item -ItemType Directory -Path "$global:CurrentUserTempDirectoryPath\HardeningXStuff\" -Force | Out-Null
     # working directory assignment
-    [System.IO.DirectoryInfo]$WorkingDir = "$global:UserTempDirectoryPath\HardeningXStuff\"
+    [System.IO.DirectoryInfo]$WorkingDir = "$global:CurrentUserTempDirectoryPath\HardeningXStuff\"
     # change location to the new directory
     Set-Location -Path $WorkingDir
 
     # Clean up script block
     [System.Management.Automation.ScriptBlock]$CleanUp = {
         Set-Location -Path $HOME
-        Remove-Item -Recurse -Path "$global:UserTempDirectoryPath\HardeningXStuff\" -Force
+        Remove-Item -Recurse -Path "$global:CurrentUserTempDirectoryPath\HardeningXStuff\" -Force
         # Disable progress bars
         0..6 | ForEach-Object -Process { Write-Progress -Id $_ -Activity 'Done' -Completed }
         exit
@@ -2516,7 +2516,7 @@ finally {
         }
     }
 
-    Set-Location -Path $HOME; Remove-Item -Recurse -Path "$global:UserTempDirectoryPath\HardeningXStuff\" -Force -ErrorAction SilentlyContinue
+    Set-Location -Path $HOME; Remove-Item -Recurse -Path "$global:CurrentUserTempDirectoryPath\HardeningXStuff\" -Force -ErrorAction SilentlyContinue
 
     # Disable progress bars
     0..6 | ForEach-Object -Process { Write-Progress -Id $_ -Activity 'Done' -Completed }

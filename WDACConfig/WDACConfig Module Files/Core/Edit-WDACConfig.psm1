@@ -254,20 +254,23 @@ Function Edit-WDACConfig {
                 Write-Verbose -Message 'Creating Enforced Mode SnapBack guarantee'
 
                 <#
-                # CMD and Scheduled Task Method
-                $taskAction = New-ScheduledTaskAction -Execute 'cmd.exe' -Argument '/c c:\EnforcedModeSnapBack.cmd'
-                $taskTrigger = New-ScheduledTaskTrigger -AtLogOn
-                $principal = New-ScheduledTaskPrincipal -GroupId 'BUILTIN\Administrators' -RunLevel Highest
-                $TaskSettings = New-ScheduledTaskSettingsSet -Hidden -Compatibility Win8 -DontStopIfGoingOnBatteries -Priority 0 -AllowStartIfOnBatteries
-                Register-ScheduledTask -TaskName 'EnforcedModeSnapBack' -Action $taskAction -Trigger $taskTrigger -Principal $principal -Settings $TaskSettings -Force | Out-Null
+# CMD and Scheduled Task Method
+$taskAction = New-ScheduledTaskAction -Execute 'cmd.exe' -Argument '/c C:\EnforcedModeSnapBack.cmd'
+$taskTrigger = New-ScheduledTaskTrigger -AtLogOn
+# Run the task under the system account
+$principal = New-ScheduledTaskPrincipal -UserId 'S-1-5-18' -RunLevel Highest
+# Run the task with the highest priority
+$TaskSettings = New-ScheduledTaskSettingsSet -Hidden -Compatibility Win8 -DontStopIfGoingOnBatteries -Priority 0 -AllowStartIfOnBatteries
+# Register the task
+Register-ScheduledTask -TaskName 'EnforcedModeSnapBack' -Action $taskAction -Trigger $taskTrigger -Principal $principal -Settings $TaskSettings -Force | Out-Null
 
-                Set-Content -Force "c:\EnforcedModeSnapBack.cmd" -Value @"
+Set-Content -Force 'C:\EnforcedModeSnapBack.cmd' -Value @"
 REM Deploying the Enforced Mode SnapBack CI Policy
-CiTool --update-policy "$((Get-Location).Path)\$PolicyID.cip" -json
+CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json
 REM Deleting the Scheduled task responsible for running this CMD file
 schtasks /Delete /TN EnforcedModeSnapBack /F
 REM Deleting the CI Policy file
-del /f /q "$((Get-Location).Path)\$PolicyID.cip"
+del /f /q "$((Get-Location).Path)\EnforcedMode.cip"
 REM Deleting this CMD file itself
 del "%~f0"
 "@

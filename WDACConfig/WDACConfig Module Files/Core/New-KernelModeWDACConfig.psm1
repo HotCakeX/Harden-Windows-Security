@@ -352,41 +352,31 @@ Function New-KernelModeWDACConfig {
     <#
 .SYNOPSIS
     Creates Kernel only mode WDAC policy capable of protecting against BYOVD attacks category
-
 .LINK
     https://github.com/HotCakeX/Harden-Windows-Security/wiki/New%E2%80%90KernelModeWDACConfig
-
 .DESCRIPTION
     Using official Microsoft methods, configure and use Windows Defender Application Control
-
 .COMPONENT
     Windows Defender Application Control, ConfigCI PowerShell module
-
 .FUNCTIONALITY
     Creates Kernel only mode WDAC policy capable of protecting against BYOVD attacks category
-
 .PARAMETER Default
     Creates the strict Kernel mode WDAC policy based off of the default Windows WDAC example policy.
-
 .PARAMETER NoFlightRoots
     Creates the strict Kernel mode WDAC policy based off of the default Windows WDAC example policy, doesn't allow flighting/insider builds.
-
 .PARAMETER PrepMode
     Deploys the Kernel mode WDAC policy in Audit mode so that you can restart your system and start capturing any blocked drivers to be automatically allowed.
-
 .PARAMETER AuditAndEnforce
     Deploys the final Kernel mode WDAC policy in Enforced mode
-
 .PARAMETER EVSigners
     Adds EVSigners policy rule option to the deployed policy. Applicable for both Audit and Enforced modes. Drivers not EV (Extended Validation) signed cannot run nor can they be allowed in a Supplemental policy.
-
 .PARAMETER Deploy
     Deploys the selected policy type instead of just creating it
-
 .PARAMETER SkipVersionCheck
     Can be used with any parameter to bypass the online version check - only to be used in rare cases
-
 .INPUTS
     System.Management.Automation.SwitchParameter
+.OUTPUTS
+    System.String
 #>
 }

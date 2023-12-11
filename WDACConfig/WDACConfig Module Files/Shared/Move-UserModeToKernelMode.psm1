@@ -3,6 +3,10 @@ Function Move-UserModeToKernelMode {
     .SYNOPSIS
         Moves all User mode AllowedSigners in the User mode signing scenario to the Kernel mode signing scenario and then
         deletes the entire User mode signing scenario block
+    .INPUTS
+        System.String
+    .OUTPUTS
+        System.Void
     #>
     [CmdletBinding()]
     param(

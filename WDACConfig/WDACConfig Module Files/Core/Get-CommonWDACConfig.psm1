@@ -6,7 +6,7 @@ Function Get-CommonWDACConfig {
         [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SignToolPath,
         [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SignedPolicyPath,
         [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$UnsignedPolicyPath,
-        [parameter(Mandatory = $false, DontShow = $true)][System.Management.Automation.SwitchParameter]$StrictKernelPolicyGUID, # DontShow prevents common parameters from being displayed too
+        [parameter(Mandatory = $false, DontShow = $true)][System.Management.Automation.SwitchParameter]$StrictKernelPolicyGUID,
         [parameter(Mandatory = $false, DontShow = $true)][System.Management.Automation.SwitchParameter]$StrictKernelNoFlightRootsPolicyGUID,
         [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$Open,
         [parameter(Mandatory = $false, DontShow = $true)][System.Management.Automation.SwitchParameter]$LastUpdateCheck
@@ -78,46 +78,32 @@ Function Get-CommonWDACConfig {
     <#
 .SYNOPSIS
     Query and Read common values for parameters used by WDACConfig module
-
 .LINK
     https://github.com/HotCakeX/Harden-Windows-Security/wiki/Get-CommonWDACConfig
-
 .DESCRIPTION
     Reads and gets the values from the User Config Json file, used by the module internally and also to display the values on the console for the user
-
 .COMPONENT
     Windows Defender Application Control, ConfigCI PowerShell module, WDACConfig module
-
 .FUNCTIONALITY
     Reads and gets the values from the User Config Json file, used by the module internally and also to display the values on the console for the user
-
 .PARAMETER SignedPolicyPath
     Shows the path to a Signed WDAC xml policy
-
 .PARAMETER UnsignedPolicyPath
     Shows the  path to an Unsigned WDAC xml policy
-
 .PARAMETER CertCN
     Shows the certificate common name
-
 .PARAMETER SignToolPath
     Shows the  path to the SignTool.exe
-
 .PARAMETER CertPath
     Shows the path to a .cer certificate file
-
 .PARAMETER Open
     Opens the User Configuration file with the default app assigned to open Json files
-
 .PARAMETER StrictKernelPolicyGUID
     Shows the GUID of the Strict Kernel mode policy
-
 .PARAMETER StrictKernelNoFlightRootsPolicyGUID
     Shows the GUID of the Strict Kernel no Flights root mode policy
-
 .INPUTS
     System.Management.Automation.SwitchParameter
-
 .OUTPUTS
     System.Object[]
 #>

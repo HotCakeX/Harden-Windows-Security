@@ -188,45 +188,32 @@ Function Set-CommonWDACConfig {
     <#
 .SYNOPSIS
     Add/Change common values for parameters used by WDACConfig module
-
 .LINK
     https://github.com/HotCakeX/Harden-Windows-Security/wiki/Set-CommonWDACConfig
-
 .DESCRIPTION
     Add/Change common values for parameters used by WDACConfig module so that you won't have to provide values for those repetitive parameters each time you need to use the WDACConfig module cmdlets.
-
 .COMPONENT
     Windows Defender Application Control, ConfigCI PowerShell module, WDACConfig module
-
 .FUNCTIONALITY
     Add/Change common values for parameters used by WDACConfig module so that you won't have to provide values for those repetitive parameters each time you need to use the WDACConfig module cmdlets.
-
 .PARAMETER SignedPolicyPath
     Path to a Signed WDAC xml policy
-
 .PARAMETER UnsignedPolicyPath
     Path to an Unsigned WDAC xml policy
-
 .PARAMETER CertCN
     Certificate common name
-
 .PARAMETER SignToolPath
     Path to the SignTool.exe
-
 .PARAMETER CertPath
     Path to a .cer certificate file
-
 .PARAMETER StrictKernelPolicyGUID
     GUID of the Strict Kernel mode policy
-
 .PARAMETER StrictKernelNoFlightRootsPolicyGUID
     GUID of the Strict Kernel no Flights root mode policy
-
 .INPUTS
     System.DateTime
     System.Guid
     System.String
-
 .OUTPUTS
     System.Object[]
 #>

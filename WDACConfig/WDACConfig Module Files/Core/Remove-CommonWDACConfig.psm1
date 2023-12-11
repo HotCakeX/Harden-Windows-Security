@@ -8,7 +8,7 @@ Function Remove-CommonWDACConfig {
         [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SignedPolicyPath,
         [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$StrictKernelPolicyGUID,
         [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$StrictKernelNoFlightRootsPolicyGUID,
-        [parameter(Mandatory = $false, DontShow = $true)][System.Management.Automation.SwitchParameter]$LastUpdateCheck # DontShow prevents common parameters from being displayed too
+        [parameter(Mandatory = $false, DontShow = $true)][System.Management.Automation.SwitchParameter]$LastUpdateCheck
     )
     begin {
         # Importing the $PSDefaultParameterValues to the current session, prior to everything else
@@ -132,39 +132,33 @@ Function Remove-CommonWDACConfig {
     <#
 .SYNOPSIS
     Removes common values for parameters used by WDACConfig module
-
 .LINK
     https://github.com/HotCakeX/Harden-Windows-Security/wiki/Remove-CommonWDACConfig
-
 .DESCRIPTION
     Removes common values for parameters used by WDACConfig module from the User Configurations JSON file. If you don't use it with any parameters, then all User Configs will be deleted.
-
 .COMPONENT
     Windows Defender Application Control, ConfigCI PowerShell module, WDACConfig module
-
 .FUNCTIONALITY
     Removes common values for parameters used by WDACConfig module from the User Configurations JSON file. If you don't use it with any parameters, then all User Configs will be deleted.
-
 .PARAMETER SignedPolicyPath
     Removes the SignedPolicyPath from User Configs
-
 .PARAMETER UnsignedPolicyPath
     Removes the UnsignedPolicyPath from User Configs
-
 .PARAMETER CertCN
     Removes the CertCN from User Configs
-
 .PARAMETER SignToolPath
     Removes the SignToolPath from User Configs
-
 .PARAMETER CertPath
     Removes the CertPath from User Configs
-
 .PARAMETER StrictKernelPolicyGUID
     Removes the StrictKernelPolicyGUID from User Configs
-
 .PARAMETER StrictKernelNoFlightRootsPolicyGUID
     Removes the StrictKernelNoFlightRootsPolicyGUID from User Configs
-
+.PARAMETER LastUpdateCheck
+    Using DontShow for this parameter which prevents common parameters from being displayed too
+.INPUTS
+    System.Management.Automation.SwitchParameter
+.OUTPUTS
+    System.String
 #>
 }

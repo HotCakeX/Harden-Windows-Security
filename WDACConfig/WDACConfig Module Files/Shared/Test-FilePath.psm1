@@ -3,7 +3,10 @@ Function Test-FilePath {
     .SYNOPSIS
         function that takes 2 arrays, one contains file paths and the other contains folder paths. It checks them and shows file paths
         that are not in any of the folder paths. Performs this check recursively too so works if the filepath is in a sub-directory of a folder path
-
+    .INPUTS
+        System.String[]
+    .OUTPUTS
+        System.String[]
     #>
     [CmdletBinding()]
     param (

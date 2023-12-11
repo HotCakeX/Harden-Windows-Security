@@ -282,35 +282,28 @@ Function Invoke-WDACSimulation {
     <#
 .SYNOPSIS
     Simulates the deployment of the WDAC policy.
-
 .LINK
     https://github.com/HotCakeX/Harden-Windows-Security/wiki/Invoke-WDACSimulation
-
 .DESCRIPTION
     Simulates the deployment of the WDAC policy by analyzing a folder and checking which of the files in the folder are allowed by a user selected policy xml file
-
 .COMPONENT
     Windows Defender Application Control, ConfigCI PowerShell module
-
 .FUNCTIONALITY
     Simulates the deployment of the WDAC policy
-
 .PARAMETER FolderPath
     Provide path to a folder where you want WDAC simulation to take place
-
 .PARAMETER XmlFilePath
     Provide path to a policy xml file that you want the cmdlet to simulate its deployment and running files against it
-
 .PARAMETER SkipVersionCheck
     Can be used with any parameter to bypass the online version check - only to be used in rare cases
     It is used by the entire Cmdlet.
-
 .INPUTS
     System.IO.FileInfo
     System.IO.DirectoryInfo
+    System.Management.Automation.SwitchParameter
 .OUTPUTS
     System.Object[]
-
+    System.String
 #>
 }
 

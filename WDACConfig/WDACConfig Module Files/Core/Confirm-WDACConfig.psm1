@@ -8,7 +8,7 @@ Function Confirm-WDACConfig {
         [Alias('S')]
         [Parameter(Mandatory = $false, ParameterSetName = 'Check SmartAppControl Status')][System.Management.Automation.SwitchParameter]$CheckSmartAppControlStatus,
 
-        [Parameter(Mandatory = $false, DontShow = $true)][System.Management.Automation.SwitchParameter]$DummyParameter # To hide common parameters
+        [Parameter(Mandatory = $false, DontShow = $true)][System.Management.Automation.SwitchParameter]$DummyParameter
     )
 
     DynamicParam {
@@ -137,40 +137,30 @@ Function Confirm-WDACConfig {
 .SYNOPSIS
     Shows the status of WDAC on the system, lists the currently deployed policies and shows the details about each of them.
     It can also show the status of Smart App Control.
-
 .LINK
     https://github.com/HotCakeX/Harden-Windows-Security/wiki/Confirm-WDACConfig
-
 .DESCRIPTION
     Using official Microsoft methods, Show the status of WDAC (Windows Defender Application Control) on the system, list the current deployed policies and show details about each of them.
-
 .COMPONENT
     Windows Defender Application Control, ConfigCI PowerShell module
-
 .FUNCTIONALITY
     Using official Microsoft methods, Show the status of WDAC (Windows Defender Application Control) on the system, list the current deployed policies and show details about each of them.
-
 .PARAMETER ListActivePolicies
     Lists the currently deployed policies and shows details about each of them
-
 .PARAMETER VerifyWDACStatus
     Shows the status of WDAC (Windows Defender Application Control) on the system
-
 .PARAMETER CheckSmartAppControlStatus
     Checks the status of Smart App Control and reports the results on the console
-
 .PARAMETER SkipVersionCheck
     Can be used with any parameter to bypass the online version check - only to be used in rare cases
-
+.PARAMETER DummyParameter
+    To hide the common parameters
 .EXAMPLE
     Confirm-WDACConfig -ListActivePolicies -OnlyBasePolicies
-
 .EXAMPLE
     Confirm-WDACConfig -ListActivePolicies -OnlySupplementalPolicies
-
 .EXAMPLE
     Confirm-WDACConfig -ListActivePolicies
-
 .INPUTS
     System.Management.Automation.SwitchParameter
 .OUTPUTS

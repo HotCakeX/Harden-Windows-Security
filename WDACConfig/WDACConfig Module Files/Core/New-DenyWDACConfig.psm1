@@ -274,48 +274,38 @@ Function New-DenyWDACConfig {
     <#
 .SYNOPSIS
     Creates Deny base policies (Windows Defender Application Control)
-
 .LINK
     https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-DenyWDACConfig
-
 .DESCRIPTION
     Using official Microsoft methods to create Deny base policies (Windows Defender Application Control)
-
 .COMPONENT
     Windows Defender Application Control, ConfigCI PowerShell module
-
 .FUNCTIONALITY
     Using official Microsoft methods, Removes Signed and unsigned deployed WDAC policies (Windows Defender Application Control)
-
 .PARAMETER PolicyName
     It's used by the entire Cmdlet. It is the name of the base policy that will be created.
-
 .PARAMETER Normal
     Creates a Deny standalone base policy by scanning a directory for files. The base policy created by this parameter can be deployed side by side any other base/supplemental policy.
-
 .PARAMETER Level
     The level that determines how the selected folder will be scanned.
     The default value for it is FilePublisher.
-
 .PARAMETER Fallbacks
     The fallback level(s) that determine how the selected folder will be scanned.
     The default value for it is Hash.
-
 .PARAMETER Deploy
     It's used by the entire Cmdlet. Indicates that the created Base deny policy will be deployed on the system.
-
 .PARAMETER Drivers
     Creates a Deny standalone base policy for drivers only by scanning a directory for driver files. The base policy created by this parameter can be deployed side by side any other base/supplemental policy.
-
 .PARAMETER InstalledAppXPackages
     Creates a Deny standalone base policy for an installed App based on Appx package family names
-
 .PARAMETER SkipVersionCheck
     Can be used with any parameter to bypass the online version check - only to be used in rare cases
     It's used by the entire Cmdlet.
-
 .INPUTS
     System.String[]
+    System.String
+    System.Management.Automation.SwitchParameter
+.OUTPUTS
     System.String
 #>
 }

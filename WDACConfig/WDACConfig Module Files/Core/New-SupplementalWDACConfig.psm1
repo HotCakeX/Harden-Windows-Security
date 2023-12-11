@@ -270,71 +270,54 @@ Function New-SupplementalWDACConfig {
     <#
 .SYNOPSIS
     Automate a lot of tasks related to WDAC (Windows Defender Application Control)
-
 .LINK
     https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-SupplementalWDACConfig
-
 .DESCRIPTION
     Using official Microsoft methods, configure and use Windows Defender Application Control
-
 .COMPONENT
     Windows Defender Application Control, ConfigCI PowerShell module
-
 .FUNCTIONALITY
     Automate various tasks related to Windows Defender Application Control (WDAC)
-
 .PARAMETER Normal
     Make a Supplemental policy by scanning a directory, you can optionally use other parameters too to fine tune the scan process
-
 .PARAMETER PathWildCards
     Make a Supplemental policy by scanning a directory and creating a wildcard FilePath rules for all of the files inside that directory, recursively
-
 .PARAMETER InstalledAppXPackages
     Make a Supplemental policy based on the Package Family Name of an installed Windows app (Appx)
-
 .PARAMETER PackageName
     Enter the package name of an installed app. Supports wildcard * character. e.g., *Edge* or "*Microsoft*".
-
 .PARAMETER ScanLocation
     The directory or drive that you want to scan for files that will be allowed to run by the Supplemental policy.
-
 .PARAMETER FolderPath
     Path of a folder that you want to allow using wildcards *.
-
 .PARAMETER SuppPolicyName
     Add a descriptive name for the Supplemental policy. Accepts only alphanumeric and space characters.
     It is used by the entire Cmdlet.
-
 .PARAMETER PolicyPath
     Browse for the xml file of the Base policy this Supplemental policy is going to expand. Supports tab completion by showing only .xml files with Base Policy Type.
     It is used by the entire Cmdlet.
-
 .PARAMETER Deploy
     Indicates that the module will automatically deploy the Supplemental policy after creation.
     It is used by the entire Cmdlet.
-
 .PARAMETER SpecificFileNameLevel
     You can choose one of the following options: "OriginalFileName", "InternalName", "FileDescription", "ProductName", "PackageFamilyName", "FilePath"
-
 .PARAMETER NoUserPEs
     By default the module includes user PEs in the scan, but when you use this switch parameter, they won't be included.
-
 .PARAMETER NoScript
     Refer to this page for more info: https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-noscript
-
 .PARAMETER Level
     The level that determines how the selected folder will be scanned.
     The default value for it is FilePublisher.
-
 .PARAMETER Fallbacks
     The fallback level(s) that determine how the selected folder will be scanned.
     The default value for it is Hash.
-
 .PARAMETER SkipVersionCheck
     Can be used with any parameter to bypass the online version check - only to be used in rare cases
-
 .INPUTS
     System.String[]
+    System.String
+    System.Management.Automation.SwitchParameter
+.OUTPUTS
     System.String
 #>
 }

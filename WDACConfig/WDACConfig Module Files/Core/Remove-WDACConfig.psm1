@@ -33,8 +33,6 @@ Function Remove-WDACConfig {
         [parameter(Mandatory = $false, ParameterSetName = 'Signed Base', ValueFromPipelineByPropertyName = $true)]
         [System.String]$CertCN,
 
-        # https://stackoverflow.com/questions/76143006/how-to-prevent-powershell-validateset-argument-completer-from-suggesting-the-sam/76143269
-        # https://stackoverflow.com/questions/76267235/powershell-how-to-cross-reference-parameters-between-2-argument-completers
         [ArgumentCompleter({
                 # Define the parameters that this script block will accept.
                 param($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameters)
@@ -74,9 +72,7 @@ Function Remove-WDACConfig {
             })]
         [Parameter(Mandatory = $false, ParameterSetName = 'Unsigned Or Supplemental')]
         [System.String[]]$PolicyNames,
-
-        # https://stackoverflow.com/questions/76143006/how-to-prevent-powershell-validateset-argument-completer-from-suggesting-the-sam/76143269
-        # https://stackoverflow.com/questions/76267235/powershell-how-to-cross-reference-parameters-between-2-argument-completers
+        
         [ArgumentCompleter({
                 param($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameters)
 
@@ -361,32 +357,38 @@ Function Remove-WDACConfig {
     <#
 .SYNOPSIS
     Removes Signed and unsigned deployed WDAC policies (Windows Defender Application Control)
-
 .LINK
     https://github.com/HotCakeX/Harden-Windows-Security/wiki/Remove-WDACConfig
-
 .DESCRIPTION
     Using official Microsoft methods, Removes Signed and unsigned deployed WDAC policies (Windows Defender Application Control)
-
 .COMPONENT
     Windows Defender Application Control, ConfigCI PowerShell module
-
 .FUNCTIONALITY
     Using official Microsoft methods, Removes Signed and unsigned deployed WDAC policies (Windows Defender Application Control)
-
+.PARAMETER PolicyNames
+    Names of the deployed policies to be removed
+    https://stackoverflow.com/questions/76143006/how-to-prevent-powershell-validateset-argument-completer-from-suggesting-the-sam/76143269
+    https://stackoverflow.com/questions/76267235/powershell-how-to-cross-reference-parameters-between-2-argument-completers
+.PARAMETER PolicyIDs
+    IDs of the deployed policies to be removed
+    https://stackoverflow.com/questions/76143006/how-to-prevent-powershell-validateset-argument-completer-from-suggesting-the-sam/76143269
+    https://stackoverflow.com/questions/76267235/powershell-how-to-cross-reference-parameters-between-2-argument-completers
 .PARAMETER SignedBase
     Remove Signed Base WDAC Policies
-
+.PARAMETER PolicyPaths
+    Path to the XML policy file(s) of the deployed policies to be removed
+.PARAMETER CertCN
+    Certificate common name to be used to sign the policy file(s) that are going to be removed in unsigned mode
+.PARAMETER SignToolPath
+    Path to the SignTool.exe
 .PARAMETER UnsignedOrSupplemental
     Remove Unsigned deployed WDAC policies as well as Signed deployed Supplemental WDAC policies
-
 .PARAMETER SkipVersionCheck
     Can be used with any parameter to bypass the online version check - only to be used in rare cases
-
 .INPUTS
     System.String
     System.String[]
-
+    System.Management.Automation.SwitchParameter
 .OUTPUTS
     System.String
 #>

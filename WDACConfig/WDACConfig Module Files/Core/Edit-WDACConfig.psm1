@@ -942,51 +942,41 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
     <#
 .SYNOPSIS
     Edits Unsigned WDAC policies deployed on the system
-
 .LINK
     https://github.com/HotCakeX/Harden-Windows-Security/wiki/Edit-WDACConfig
-
 .DESCRIPTION
     Using official Microsoft methods, Edits non-signed WDAC policies deployed on the system
-
 .COMPONENT
     Windows Defender Application Control, ConfigCI PowerShell module
-
 .FUNCTIONALITY
     Using official Microsoft methods, Edits non-signed WDAC policies deployed on the system
-
 .PARAMETER AllowNewApps
     While an unsigned WDAC policy is already deployed on the system, rebootlessly turn on Audit mode in it, which will allow you to install a new app that was otherwise getting blocked.
-
 .PARAMETER AllowNewAppsAuditEvents
     While an unsigned WDAC policy is already deployed on the system, rebootlessly turn on Audit mode in it, which will allow you to install a new app that was otherwise getting blocked.
-
 .PARAMETER MergeSupplementalPolicies
     Merges multiple deployed supplemental policies into 1 single supplemental policy, removes the old ones, deploys the new one. System restart needed to take effect.
-
 .PARAMETER UpdateBasePolicy
     It can rebootlessly change the type of the deployed base policy. It can update the recommended block rules and/or change policy rule options in the deployed base policy.
-
 .PARAMETER SkipVersionCheck
     Can be used with any parameter to bypass the online version check - only to be used in rare cases
     It is used by the entire Cmdlet.
-
 .PARAMETER Level
     The level that determines how the selected folder will be scanned.
     The default value for it is FilePublisher.
-
 .PARAMETER Fallbacks
     The fallback level(s) that determine how the selected folder will be scanned.
     The default value for it is Hash.
-
 .PARAMETER LogSize
     The log size to set for Code Integrity/Operational event logs
     The accepted values are between 1024 KB and 18014398509481983 KB
     The max range is the maximum allowed log size by Windows Event viewer
-
 .INPUTS
     System.Int64
     System.String[]
+    System.String
+    System.Management.Automation.SwitchParameter
+.OUTPUTS
     System.String
 #>
 }

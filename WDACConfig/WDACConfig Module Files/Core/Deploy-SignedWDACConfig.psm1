@@ -227,40 +227,32 @@ Function Deploy-SignedWDACConfig {
     <#
 .SYNOPSIS
     Signs and Deploys WDAC policies, accepts signed or unsigned policies and deploys them
-
 .LINK
     https://github.com/HotCakeX/Harden-Windows-Security/wiki/Deploy-SignedWDACConfig
-
 .DESCRIPTION
     Using official Microsoft methods, Signs and Deploys WDAC policies, accepts signed or unsigned policies and deploys them (Windows Defender Application Control)
-
 .COMPONENT
     Windows Defender Application Control, ConfigCI PowerShell module
-
 .FUNCTIONALITY
     Using official Microsoft methods, Signs and Deploys WDAC policies, accepts signed or unsigned policies and deploys them (Windows Defender Application Control)
-
 .PARAMETER CertPath
     Path to the certificate .cer file
-
 .PARAMETER PolicyPaths
     Path to the policy xml files that are going to be signed
-
 .PARAMETER CertCN
     Certificate common name
-
 .PARAMETER SignToolPath
     Path to the SignTool.exe - optional parameter
-
 .PARAMETER Deploy
     Indicates that the cmdlet will deploy the signed policy on the current system
-
 .PARAMETER SkipVersionCheck
     Can be used with any parameter to bypass the online version check - only to be used in rare cases
-
 .INPUTS
     System.String
     System.String[]
+    System.Management.Automation.SwitchParameter
+.OUTPUTS
+    System.String
 #>
 }
 

@@ -128,7 +128,7 @@ Function Remove-WDACConfig {
         # Used by Write-ColorfulText outputs to both information stream and host console
         if (-NOT $SkipVersionCheck) { Update-self 6> $null }
 
-        # Region User-Configurations-Processing-Validation
+        #Region User-Configurations-Processing-Validation
 
         Write-Verbose -Message 'Validating and processing user configurations'
 
@@ -173,7 +173,7 @@ Function Remove-WDACConfig {
                 }
             }
         }
-        # Endregion User-Configurations-Processing-Validation
+        #Endregion User-Configurations-Processing-Validation
 
         # ValidateSet for Policy names
         Class PolicyNamezx : System.Management.Automation.IValidateSetValuesGenerator {

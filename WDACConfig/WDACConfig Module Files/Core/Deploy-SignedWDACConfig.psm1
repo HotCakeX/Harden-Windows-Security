@@ -51,7 +51,7 @@ Function Deploy-SignedWDACConfig {
         # Detecting if Debug switch is used, will do debugging actions based on that
         $PSBoundParameters.Debug.IsPresent ? ([System.Boolean]$Debug = $true) : ([System.Boolean]$Debug = $false) | Out-Null
 
-        # Region User-Configurations-Processing-Validation
+        #Region User-Configurations-Processing-Validation
         # If any of these parameters, that are mandatory for all of the position 0 parameters, isn't supplied by user
         if (!$SignToolPath -or !$CertPath -or !$CertCN) {
             # Read User configuration file if it exists
@@ -108,7 +108,7 @@ Function Deploy-SignedWDACConfig {
                 throw 'CertCN parameter cannot be empty and no valid configuration was found for it.'
             }
         }
-        # Endregion User-Configurations-Processing-Validation
+        #Endregion User-Configurations-Processing-Validation
     }
 
     process {
@@ -171,7 +171,7 @@ Function Deploy-SignedWDACConfig {
                 Write-Output -InputObject "PolicyGUID = $PolicyID`n"
                 Remove-Item -Path ".\$PolicyID.cip" -Force
 
-                # Region Detecting Strict Kernel mode policy and removing it from User Configs
+                #Region Detecting Strict Kernel mode policy and removing it from User Configs
                 if ('Enabled:UMCI' -notin $PolicyRuleOptions) {
 
                     [System.String]$StrictKernelPolicyGUID = Get-CommonWDACConfig -StrictKernelPolicyGUID
@@ -193,7 +193,7 @@ Function Deploy-SignedWDACConfig {
                         }
                     }
                 }
-                # Endregion Detecting Strict Kernel mode policy and removing it from User Configs
+                #Endregion Detecting Strict Kernel mode policy and removing it from User Configs
 
                 # Show the question only for base policies. Don't show it for Strict kernel mode policies
                 if (($PolicyType -ne 'Supplemental Policy') -and ($PolicyName -notlike '*Strict Kernel*')) {

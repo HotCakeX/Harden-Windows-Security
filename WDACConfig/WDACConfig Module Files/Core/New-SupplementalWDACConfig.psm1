@@ -90,7 +90,7 @@ Function New-SupplementalWDACConfig {
         # Used by Write-ColorfulText outputs to both information stream and host console
         if (-NOT $SkipVersionCheck) { Update-self 6> $null }
 
-        # Region User-Configurations-Processing-Validation
+        #Region User-Configurations-Processing-Validation
         # If any of these parameters, that are mandatory for all of the position 0 parameters, isn't supplied by user
         if (!$PolicyPath) {
             # Read User configuration file if it exists
@@ -120,7 +120,7 @@ Function New-SupplementalWDACConfig {
                 throw 'PolicyPath parameter cannot be empty and no valid configuration was found for UnsignedPolicyPath.'
             }
         }
-        # Endregion User-Configurations-Processing-Validation
+        #Endregion User-Configurations-Processing-Validation
 
         # Ensure when user selects the -Deploy parameter, the base policy is not signed
         if ($Deploy) {

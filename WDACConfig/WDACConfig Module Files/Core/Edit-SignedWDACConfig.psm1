@@ -1000,22 +1000,42 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
                 }
                 #Endregion Input-policy-verification
 
-                # Perform the merge
+                Write-Verbose -Message 'Merging the Supplemental policies into a single policy file'
                 Merge-CIPolicy -PolicyPaths $SuppPolicyPaths -OutputFilePath "$SuppPolicyName.xml" | Out-Null
-                # Delete the deployed Supplemental policies that user selected from the system because we're going to deploy the new merged policy that contains all of them
+                
+                # Remove the deployed Supplemental policies that user selected from the system, because we're going to deploy the new merged policy that contains all of them
+                Write-Verbose -Message 'Removing the deployed Supplemental policies that user selected from the system'
                 foreach ($SuppPolicyPath in $SuppPolicyPaths) {
+
+                    # Get the policy ID of the currently selected Supplemental policy
                     $Supplementalxml = [System.Xml.XmlDocument](Get-Content -Path $SuppPolicyPath)
-                    $SupplementalPolicyID = $Supplementalxml.SiPolicy.PolicyID
+                    [System.String]$SupplementalPolicyID = $Supplementalxml.SiPolicy.PolicyID
+                    
+                    Write-Verbose -Message "Removing policy with ID: $SupplementalPolicyID"
                     &'C:\Windows\System32\CiTool.exe' --remove-policy $SupplementalPolicyID -json | Out-Null
+                    
                     # remove the old policy files unless user chose to keep them
-                    if (!$KeepOldSupplementalPolicies) { Remove-Item -Path $SuppPolicyPath -Force }
+                    if (!$KeepOldSupplementalPolicies) {
+                        Write-Verbose -Message "Removing the old policy file: $SuppPolicyPath"
+                        Remove-Item -Path $SuppPolicyPath -Force
+                    }
                 }
-                # Prepare the final merged Supplemental policy for deployment
+
+                Write-Verbose -Message 'Preparing the final merged Supplemental policy for deployment'
+                Write-Verbose -Message 'Converting the policy to a Supplemental policy type and resetting its ID'
                 $SuppPolicyID = Set-CIPolicyIdInfo -FilePath "$SuppPolicyName.xml" -ResetPolicyID -PolicyName "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')" -BasePolicyToSupplementPath $PolicyPath
                 $SuppPolicyID = $SuppPolicyID.Substring(11)
+                
+                Write-Verbose -Message 'Adding signer rules to the Supplemental policy'
                 Add-SignerRule -FilePath "$SuppPolicyName.xml" -CertificatePath $CertPath -Update -User -Kernel
+                
+                Write-Verbose -Message 'Setting HVCI to Strict'
                 Set-HVCIOptions -Strict -FilePath "$SuppPolicyName.xml"
+                
+                Write-Verbose -Message 'Removing the Unsigned mode policy rule option'
                 Set-RuleOption -FilePath "$SuppPolicyName.xml" -Option 6 -Delete
+                
+                Write-Verbose -Message 'Converting the Supplemental policy to a CIP file'
                 ConvertFrom-CIPolicy -XmlFilePath "$SuppPolicyName.xml" -BinaryFilePath "$SuppPolicyID.cip" | Out-Null
 
                 # Configure the parameter splat
@@ -1027,66 +1047,132 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
                     'ErrorAction'  = 'Stop'
                 } # Only show the output of SignTool if Debug switch is used
                 if (!$Debug) { $ProcessParams['RedirectStandardOutput'] = 'NUL' }
+                
                 # Sign the files with the specified cert
+                Write-Verbose -Message 'Signing the Supplemental policy with the specified cert'
                 Start-Process @ProcessParams
 
+                Write-Verbose -Message 'Removing the unsigned Supplemental policy file'
                 Remove-Item -Path ".\$SuppPolicyID.cip" -Force
+
+                Write-Verbose -Message 'Renaming the signed Supplemental policy file to remove the .p7 extension'
                 Rename-Item -Path "$SuppPolicyID.cip.p7" -NewName "$SuppPolicyID.cip" -Force
+                
+                Write-Verbose -Message 'Deploying the Supplemental policy'
                 &'C:\Windows\System32\CiTool.exe' --update-policy "$SuppPolicyID.cip" -json | Out-Null
+                
                 Write-ColorfulText -Color TeaGreen -InputText "The Signed Supplemental policy $SuppPolicyName has been deployed on the system, replacing the old ones.`nSystem Restart Not immediately needed but eventually required to finish the removal of previous individual Supplemental policies."
+                
+                Write-Verbose -Message 'Removing the signed Supplemental policy CIP file after deployment'
                 Remove-Item -Path "$SuppPolicyID.cip" -Force
             }
         }
 
         if ($UpdateBasePolicy) {
-            # First get the Microsoft recommended block rules
+
+            Write-Verbose -Message 'Getting the Microsoft recommended block rules by calling the Get-BlockRulesMeta function'
             Get-BlockRulesMeta | Out-Null
 
+            Write-Verbose -Message 'Determining the type of the new base policy'
             switch ($NewBasePolicyType) {
+
                 'AllowMicrosoft_Plus_Block_Rules' {
+                    Write-Verbose -Message 'The new base policy type is AllowMicrosoft_Plus_Block_Rules'
+                    
+                    Write-Verbose -Message 'Copying the AllowMicrosoft.xml template policy file to the current working directory'
                     Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml' -Destination '.\AllowMicrosoft.xml' -Force
+                    
+                    Write-Verbose -Message 'Merging the AllowMicrosoft.xml and Microsoft recommended block rules into a single policy file'
                     Merge-CIPolicy -PolicyPaths .\AllowMicrosoft.xml, '.\Microsoft recommended block rules.xml' -OutputFilePath .\BasePolicy.xml | Out-Null
+                    
+                    Write-Verbose -Message 'Setting the policy name'
                     Set-CIPolicyIdInfo -FilePath .\BasePolicy.xml -PolicyName "Allow Microsoft Plus Block Rules refreshed On $(Get-Date -Format 'MM-dd-yyyy')"
+                    
+                    Write-Verbose -Message 'Setting the policy rule options'
                     @(0, 2, 5, 11, 12, 16, 17, 19, 20) | ForEach-Object -Process { Set-RuleOption -FilePath .\BasePolicy.xml -Option $_ }
+                    
+                    Write-Verbose -Message 'Removing the unnecessary policy rule options'
                     @(3, 4, 6, 9, 10, 13, 18) | ForEach-Object -Process { Set-RuleOption -FilePath .\BasePolicy.xml -Option $_ -Delete }
                 }
+
                 'Lightly_Managed_system_Policy' {
+                    Write-Verbose -Message 'The new base policy type is Lightly_Managed_system_Policy'
+                    
+                    Write-Verbose -Message 'Copying the AllowMicrosoft.xml template policy file to the current working directory'
                     Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml' -Destination '.\AllowMicrosoft.xml' -Force
+                   
+                    Write-Verbose -Message 'Merging the AllowMicrosoft.xml and Microsoft recommended block rules into a single policy file'
                     Merge-CIPolicy -PolicyPaths .\AllowMicrosoft.xml, '.\Microsoft recommended block rules.xml' -OutputFilePath .\BasePolicy.xml | Out-Null
+                    
+                    Write-Verbose -Message 'Setting the policy name'
                     Set-CIPolicyIdInfo -FilePath .\BasePolicy.xml -PolicyName "Signed And Reputable policy refreshed on $(Get-Date -Format 'MM-dd-yyyy')"
+                    
+                    Write-Verbose -Message 'Setting the policy rule options'
                     @(0, 2, 5, 11, 12, 14, 15, 16, 17, 19, 20) | ForEach-Object -Process { Set-RuleOption -FilePath .\BasePolicy.xml -Option $_ }
+                    
+                    Write-Verbose -Message 'Removing the unnecessary policy rule options'
                     @(3, 4, 6, 9, 10, 13, 18) | ForEach-Object -Process { Set-RuleOption -FilePath .\BasePolicy.xml -Option $_ -Delete }
+                    
                     # Configure required services for ISG authorization
+                    Write-Verbose -Message 'Configuring required services for ISG authorization'
                     Start-Process -FilePath 'C:\Windows\System32\appidtel.exe' -ArgumentList 'start' -Wait -NoNewWindow
                     Start-Process -FilePath 'C:\Windows\System32\sc.exe' -ArgumentList 'config', 'appidsvc', 'start= auto' -Wait -NoNewWindow
                 }
+
                 'DefaultWindows_WithBlockRules' {
+                    Write-Verbose -Message 'The new base policy type is DefaultWindows_WithBlockRules'
+                    
+                    Write-Verbose -Message 'Copying the DefaultWindows.xml template policy file to the current working directory'
                     Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\DefaultWindows_Enforced.xml' -Destination '.\DefaultWindows_Enforced.xml' -Force
 
                     # Allowing SignTool to be able to run after Default Windows base policy is deployed
                     Write-ColorfulText -Color TeaGreen -InputText 'Creating allow rules for SignTool.exe in the DefaultWindows base policy so you can continue using it after deploying the DefaultWindows base policy.'
+                    
+                    Write-Verbose -Message 'Creating a new folder in the TEMP directory to copy SignTool.exe to it'
                     New-Item -Path "$UserTempDirectoryPath\TemporarySignToolFile" -ItemType Directory -Force | Out-Null
+                    
+                    Write-Verbose -Message 'Copying SignTool.exe to the folder in the TEMP directory'
                     Copy-Item -Path $SignToolPathFinal -Destination "$UserTempDirectoryPath\TemporarySignToolFile" -Force
+                    
+                    Write-Verbose -Message 'Scanning the folder in the TEMP directory to create a policy for SignTool.exe'
                     New-CIPolicy -ScanPath "$UserTempDirectoryPath\TemporarySignToolFile" -Level FilePublisher -Fallback Hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -AllowFileNameFallbacks -FilePath .\SignTool.xml
+                    
                     # Delete the Temporary folder in the TEMP folder
-                    if (!$Debug) { Remove-Item -Recurse -Path "$UserTempDirectoryPath\TemporarySignToolFile" -Force }
+                    if (!$Debug) {
+                        Write-Verbose -Message 'Deleting the Temporary folder in the TEMP directory'
+                        Remove-Item -Recurse -Path "$UserTempDirectoryPath\TemporarySignToolFile" -Force
+                    }
 
-                    # Scan PowerShell core directory and add them to the Default Windows base policy so that the module can be used after it's been deployed
                     if (Test-Path -Path 'C:\Program Files\PowerShell') {
+                        Write-Verbose -Message 'Scanning the PowerShell core directory '
+                        
                         Write-ColorfulText -Color HotPink -InputText 'Creating allow rules for PowerShell in the DefaultWindows base policy so you can continue using this module after deploying it.'
                         New-CIPolicy -ScanPath 'C:\Program Files\PowerShell' -Level FilePublisher -NoScript -Fallback Hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -AllowFileNameFallbacks -FilePath .\AllowPowerShell.xml
+                        
+                        Write-Verbose -Message 'Merging the DefaultWindows.xml, AllowPowerShell.xml, SignTool.xml and Microsoft recommended block rules into a single policy file'
                         Merge-CIPolicy -PolicyPaths .\DefaultWindows_Enforced.xml, .\AllowPowerShell.xml, .\SignTool.xml, '.\Microsoft recommended block rules.xml' -OutputFilePath .\BasePolicy.xml | Out-Null
                     }
                     else {
+                        Write-Verbose -Message 'Not including the PowerShell core directory in the policy'
+                        Write-Verbose -Message 'Merging the DefaultWindows.xml, SignTool.xml and Microsoft recommended block rules into a single policy file'
                         Merge-CIPolicy -PolicyPaths .\DefaultWindows_Enforced.xml, .\SignTool.xml, '.\Microsoft recommended block rules.xml' -OutputFilePath .\BasePolicy.xml | Out-Null
                     }
+
+                    Write-Verbose -Message 'Setting the policy name'
                     Set-CIPolicyIdInfo -FilePath .\BasePolicy.xml -PolicyName "Default Windows Plus Block Rules refreshed On $(Get-Date -Format 'MM-dd-yyyy')"
+                    
+                    Write-Verbose -Message 'Setting the policy rule options'
                     @(0, 2, 5, 11, 12, 16, 17, 19, 20) | ForEach-Object -Process { Set-RuleOption -FilePath .\BasePolicy.xml -Option $_ }
+                    
+                    Write-Verbose -Message 'Removing the unnecessary policy rule options'
                     @(3, 4, 6, 9, 10, 13, 18) | ForEach-Object -Process { Set-RuleOption -FilePath .\BasePolicy.xml -Option $_ -Delete }
                 }
             }
 
-            if ($UpdateBasePolicy -and $RequireEVSigners) { Set-RuleOption -FilePath .\BasePolicy.xml -Option 8 }
+            if ($UpdateBasePolicy -and $RequireEVSigners) {
+                Write-Verbose -Message 'Adding the EV Signers rule option to the base policy'
+                Set-RuleOption -FilePath .\BasePolicy.xml -Option 8
+            }
 
             # Remove the extra files create during module operation that are no longer necessary
             if (!$Debug) {
@@ -1094,21 +1180,33 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
                 Remove-Item -Path '.\Microsoft recommended block rules.xml' -Force
             }
 
-            # Get the policy ID of the currently deployed base policy based on the policy name that user selected
-            $CurrentID = ((&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { $_.IsSystemPolicy -ne 'True' } | Where-Object -FilterScript { $_.Friendlyname -eq $CurrentBasePolicyName }).BasePolicyID
+            Write-Verbose -Message 'Getting the policy ID of the currently deployed base policy based on the policy name that user selected'
+            [System.String]$CurrentID = ((&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { $_.IsSystemPolicy -ne 'True' } | Where-Object -FilterScript { $_.Friendlyname -eq $CurrentBasePolicyName }).BasePolicyID
             $CurrentID = "{$CurrentID}"
+
+            Write-Verbose -Message 'Making sure there is not a .CIP file with the same name as the current base policy ID in the current working directory'
             Remove-Item -Path ".\$CurrentID.cip" -Force -ErrorAction SilentlyContinue
 
+            Write-Verbose -Message 'Reading the current base policy XML file'
             [System.Xml.XmlDocument]$Xml = Get-Content -Path '.\BasePolicy.xml'
+            
+            Write-Verbose -Message 'Setting the policy ID and Base policy ID to the current base policy ID in the generated XML file'
             $Xml.SiPolicy.PolicyID = $CurrentID
             $Xml.SiPolicy.BasePolicyID = $CurrentID
+
+            Write-Verbose -Message 'Saving the updated XML file'
             $Xml.Save('.\BasePolicy.xml')
 
+            Write-Verbose -Message 'Adding signer rules to the base policy'
             Add-SignerRule -FilePath .\BasePolicy.xml -CertificatePath $CertPath -Update -User -Kernel -Supplemental
 
+            Write-Verbose -Message 'Setting the policy version to 1.0.0.1'
             Set-CIPolicyVersion -FilePath .\BasePolicy.xml -Version '1.0.0.1'
+
+            Write-Verbose -Message 'Setting HVCI to Strict'
             Set-HVCIOptions -Strict -FilePath .\BasePolicy.xml
 
+            Write-Verbose -Message 'Converting the base policy to a CIP file'
             ConvertFrom-CIPolicy -XmlFilePath '.\BasePolicy.xml' -BinaryFilePath "$CurrentID.cip" | Out-Null
 
             # Configure the parameter splat
@@ -1120,20 +1218,31 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
                 'ErrorAction'  = 'Stop'
             } # Only show the output of SignTool if Debug switch is used
             if (!$Debug) { $ProcessParams['RedirectStandardOutput'] = 'NUL' }
+
             # Sign the files with the specified cert
+            Write-Verbose -Message 'Signing the base policy with the specified cert'
             Start-Process @ProcessParams
 
+            Write-Verbose -Message 'Removing the unsigned base policy file'
             Remove-Item -Path ".\$CurrentID.cip" -Force
+
+            Write-Verbose -Message 'Renaming the signed base policy file to remove the .p7 extension'
             Rename-Item -Path "$CurrentID.cip.p7" -NewName "$CurrentID.cip" -Force
-            # Deploy the new base policy with the same GUID on the system
+            
+            Write-Verbose -Message 'Deploying the new base policy with the same GUID on the system'
             &'C:\Windows\System32\CiTool.exe' --update-policy "$CurrentID.cip" -json | Out-Null
+            
             # Keep the new base policy XML file that was just deployed, in the current directory, so user can keep it for later
-            $PolicyFiles = @{
+            # Defining a hashtable that contains the policy names and their corresponding XML file names
+            [System.Collections.Hashtable]$PolicyFiles = @{
                 'AllowMicrosoft_Plus_Block_Rules' = 'AllowMicrosoftPlusBlockRules.xml'
                 'Lightly_Managed_system_Policy'   = 'SignedAndReputable.xml'
                 'DefaultWindows_WithBlockRules'   = 'DefaultWindowsPlusBlockRules.xml'
             }
+
+            Write-Verbose -Message 'Removing the signed base policy CIP file after deployment'
             Remove-Item -Path ".\$CurrentID.cip" -Force
+            
             Remove-Item -Path $PolicyFiles[$NewBasePolicyType] -Force -ErrorAction SilentlyContinue
             Rename-Item -Path '.\BasePolicy.xml' -NewName $PolicyFiles[$NewBasePolicyType]
             Write-ColorfulText -Color Pink -InputText "Base Policy has been successfully updated to $NewBasePolicyType"

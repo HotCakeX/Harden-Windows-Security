@@ -927,7 +927,7 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
             Remove-Item -Path "$CurrentID.cip" -Force
 
             # Keep the new base policy XML file that was just deployed, in the current directory, so user can keep it for later
-            $PolicyFiles = @{
+            [System.Collections.Hashtable]$PolicyFiles = @{
                 'AllowMicrosoft_Plus_Block_Rules' = 'AllowMicrosoftPlusBlockRules.xml'
                 'Lightly_Managed_system_Policy'   = 'SignedAndReputable.xml'
                 'DefaultWindows_WithBlockRules'   = 'DefaultWindowsPlusBlockRules.xml'

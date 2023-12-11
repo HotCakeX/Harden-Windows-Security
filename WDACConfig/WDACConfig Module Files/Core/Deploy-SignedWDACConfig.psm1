@@ -114,37 +114,51 @@ Function Deploy-SignedWDACConfig {
     process {
         foreach ($PolicyPath in $PolicyPaths) {
 
-            # Gather policy details
+            Write-Verbose -Message "Gathering policy details from: $PolicyPath"
             $Xml = [System.Xml.XmlDocument](Get-Content -Path $PolicyPath)
             [System.String]$PolicyType = $Xml.SiPolicy.PolicyType
             [System.String]$PolicyID = $Xml.SiPolicy.PolicyID
             [System.String]$PolicyName = ($Xml.SiPolicy.Settings.Setting | Where-Object -FilterScript { $_.provider -eq 'PolicyInfo' -and $_.valuename -eq 'Name' -and $_.key -eq 'Information' }).value.string
             [System.String[]]$PolicyRuleOptions = $Xml.SiPolicy.Rules.Rule.Option
 
-            # Remove the .CIP file of the same policy being signed and deployed if any in the current working directory
+            Write-Verbose -Message 'Removing any existing .CIP file of the same policy being signed and deployed if any in the current working directory'
             Remove-Item -Path ".\$PolicyID.cip" -ErrorAction SilentlyContinue
 
-            # Ensure -Supplemental is not used when the policy type is supplemental
+            Write-Verbose -Message 'Checking if the policy type is Supplemental and if so, removing the -Supplemental parameter from the SignerRule command'
             if ($PolicyType -eq 'Supplemental Policy') {
+
+                Write-Verbose -Message 'Policy type is Supplemental'
+                
                 # Make sure -User is not added if the UMCI policy rule option doesn't exist in the policy, typically for Strict kernel mode policies
                 if ('Enabled:UMCI' -in $PolicyRuleOptions) {
                     Add-SignerRule -FilePath $PolicyPath -CertificatePath $CertPath -Update -User -Kernel
                 }
                 else {
+                    Write-Verbose -Message 'UMCI policy rule option does not exist in the policy, typically for Strict kernel mode policies'
                     Add-SignerRule -FilePath $PolicyPath -CertificatePath $CertPath -Update -Kernel
                 }
             }
             else {
+
+                Write-Verbose -Message 'Policy type is Base'
+
                 # Make sure -User is not added if the UMCI policy rule option doesn't exist in the policy, typically for Strict kernel mode policies
                 if ('Enabled:UMCI' -in $PolicyRuleOptions) {
                     Add-SignerRule -FilePath $PolicyPath -CertificatePath $CertPath -Update -User -Kernel -Supplemental
                 }
                 else {
+                    Write-Verbose -Message 'UMCI policy rule option does not exist in the policy, typically for Strict kernel mode policies'
                     Add-SignerRule -FilePath $PolicyPath -CertificatePath $CertPath -Update -Kernel -Supplemental
                 }
             }
+
+            Write-Verbose -Message 'Setting HVCI to Strict'
             Set-HVCIOptions -Strict -FilePath $PolicyPath
+
+            Write-Verbose -Message 'Removing the Unsigned mode option from the policy rules'
             Set-RuleOption -FilePath $PolicyPath -Option 6 -Delete
+
+            Write-Verbose -Message 'Converting the policy to .CIP file'
             ConvertFrom-CIPolicy -XmlFilePath $PolicyPath -BinaryFilePath "$PolicyID.cip" | Out-Null
 
             # Configure the parameter splat
@@ -157,18 +171,27 @@ Function Deploy-SignedWDACConfig {
             }
             # Hide the SignTool.exe's normal output unless -Debug parameter was used
             if (!$Debug) { $ProcessParams['RedirectStandardOutput'] = 'NUL' }
+
             # Sign the files with the specified cert
+            Write-Verbose -Message 'Signing the policy with the specified certificate'
             Start-Process @ProcessParams
 
+            Write-Verbose -Message 'Making sure a .CIP file with the same name is not present in the current working directory'
             Remove-Item -Path ".\$PolicyID.cip" -Force
+
+            Write-Verbose -Message 'Renaming the .p7 file to .cip'
             Rename-Item -Path "$PolicyID.cip.p7" -NewName "$PolicyID.cip" -Force
 
             if ($Deploy) {
 
+                Write-Verbose -Message 'Deploying the policy'
                 &'C:\Windows\System32\CiTool.exe' --update-policy ".\$PolicyID.cip" -json | Out-Null
+                
                 Write-Host -Object "`npolicy with the following details has been Signed and Deployed in Enforced Mode:" -ForegroundColor Green
                 Write-Output -InputObject "PolicyName = $PolicyName"
                 Write-Output -InputObject "PolicyGUID = $PolicyID`n"
+
+                Write-Verbose -Message 'Removing the .CIP file after deployment'
                 Remove-Item -Path ".\$PolicyID.cip" -Force
 
                 #Region Detecting Strict Kernel mode policy and removing it from User Configs
@@ -178,16 +201,26 @@ Function Deploy-SignedWDACConfig {
                     [System.String]$StrictKernelNoFlightRootsPolicyGUID = Get-CommonWDACConfig -StrictKernelNoFlightRootsPolicyGUID
 
                     if (($PolicyName -like '*Strict Kernel mode policy Enforced*')) {
+
+                        Write-Verbose -Message 'The deployed policy is Strict Kernel mode'
+
                         if ($StrictKernelPolicyGUID) {
                             if ($($PolicyID.TrimStart('{').TrimEnd('}')) -eq $StrictKernelPolicyGUID) {
+
+                                Write-Verbose -Message 'Removing the GUID of the deployed Strict Kernel mode policy from the User Configs'
                                 Remove-CommonWDACConfig -StrictKernelPolicyGUID | Out-Null
                             }
                         }
                     }
 
                     elseif (($PolicyName -like '*Strict Kernel No Flights mode policy Enforced*')) {
+                       
+                        Write-Verbose -Message 'The deployed policy is Strict Kernel No Flights mode'
+                       
                         if ($StrictKernelNoFlightRootsPolicyGUID) {
                             if ($($PolicyID.TrimStart('{').TrimEnd('}')) -eq $StrictKernelNoFlightRootsPolicyGUID) {
+                                
+                                Write-Verbose -Message 'Removing the GUID of the deployed Strict Kernel No Flights mode policy from the User Configs'
                                 Remove-CommonWDACConfig -StrictKernelNoFlightRootsPolicyGUID | Out-Null
                             }
                         }
@@ -195,7 +228,7 @@ Function Deploy-SignedWDACConfig {
                 }
                 #Endregion Detecting Strict Kernel mode policy and removing it from User Configs
 
-                # Show the question only for base policies. Don't show it for Strict kernel mode policies
+                # Show the question only for base policies. Don't show it for Strict kernel mode policies either
                 if (($PolicyType -ne 'Supplemental Policy') -and ($PolicyName -notlike '*Strict Kernel*')) {
 
                     # Ask user question about whether or not to add the Signed policy xml file to the User Config Json for easier usage later

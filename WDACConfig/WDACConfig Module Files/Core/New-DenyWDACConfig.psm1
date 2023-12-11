@@ -92,14 +92,17 @@ Function New-DenyWDACConfig {
     }
 
     process {
+
         # Create deny supplemental policy for general files, apps etc.
         if ($Normal) {
-            # remove any possible files from previous runs
+
+            Write-Verbose -Message 'Removing any possible files from previous runs'
             Remove-Item -Path '.\ProgramDir_ScanResults*.xml' -Force -ErrorAction SilentlyContinue
+            
             # An array to hold the temporary xml files of each user-selected folders
             [System.Object[]]$PolicyXMLFilesArray = @()
 
-            ######################## Process Program Folders From User input #####################
+            Write-Verbose -Message 'Processing Program Folders From User input'
             for ($i = 0; $i -lt $ScanLocations.Count; $i++) {
 
                 # Creating a hash table to dynamically add parameters based on user input and pass them to New-Cipolicy cmdlet
@@ -119,33 +122,44 @@ Function New-DenyWDACConfig {
                 if (!$NoUserPEs) { $UserInputProgramFoldersPolicyMakerHashTable['UserPEs'] = $true }
 
                 # Create the supplemental policy via parameter splatting
+                Write-Verbose -Message "Currently scanning and creating a deny policy for the folder: $($ScanLocations[$i])"
                 New-CIPolicy @UserInputProgramFoldersPolicyMakerHashTable
             }
 
-            Write-Debug -Message 'The Deny policy with the following configuration is being created'
-            if ($Debug) { $UserInputProgramFoldersPolicyMakerHashTable }
+            Write-ColorfulText -Color Pink -InputText 'The Deny policy with the following configuration is being created'
+            $UserInputProgramFoldersPolicyMakerHashTable
 
             # Merge-CiPolicy accepts arrays - collecting all the policy files created by scanning user specified folders
+            Write-Verbose -Message 'Collecting all the policy files created by scanning user specified folders'
             foreach ($file in (Get-ChildItem -File -Path '.\' -Filter 'ProgramDir_ScanResults*.xml')) {
                 $PolicyXMLFilesArray += $file.FullName
             }
 
-            # Adding the AllowAll default policy path to the array of policy paths
+            Write-Verbose -Message 'Adding the AllowAll default template policy path to the array of policy paths to merge'
             $PolicyXMLFilesArray += 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowAll.xml'
-            # creating the final Deny base policy from the xml files in the paths array
+            
+            Write-Verbose -Message 'Creating the final Deny base policy from the xml files in the paths array'
             Merge-CIPolicy -PolicyPaths $PolicyXMLFilesArray -OutputFilePath ".\DenyPolicy $PolicyName.xml" | Out-Null
 
+            Write-Verbose -Message 'Assigning a name and resetting the policy ID'
             [System.String]$PolicyID = Set-CIPolicyIdInfo -FilePath "DenyPolicy $PolicyName.xml" -ResetPolicyID -PolicyName "$PolicyName"
             [System.String]$PolicyID = $PolicyID.Substring(11)
+            
+            Write-Verbose -Message 'Setting the policy version to 1.0.0.0'
             Set-CIPolicyVersion -FilePath "DenyPolicy $PolicyName.xml" -Version '1.0.0.0'
 
+            Write-Verbose -Message 'Setting the policy rule options'
             @(0, 2, 5, 6, 11, 12, 16, 17, 19, 20) | ForEach-Object -Process {
                 Set-RuleOption -FilePath "DenyPolicy $PolicyName.xml" -Option $_ }
 
+            Write-Verbose -Message 'Deleting the unnecessary policy rule options'
             @(3, 4, 9, 10, 13, 18) | ForEach-Object -Process {
                 Set-RuleOption -FilePath "DenyPolicy $PolicyName.xml" -Option $_ -Delete }
 
+            Write-Verbose -Message 'Setting the HVCI to Strict'
             Set-HVCIOptions -Strict -FilePath "DenyPolicy $PolicyName.xml"
+            
+            Write-Verbose -Message 'Converting the policy XML to .CIP'
             ConvertFrom-CIPolicy -XmlFilePath "DenyPolicy $PolicyName.xml" -BinaryFilePath "$PolicyID.cip" | Out-Null
 
             Write-Output -InputObject "DenyPolicyFile = DenyPolicy $PolicyName.xml"
@@ -156,15 +170,20 @@ Function New-DenyWDACConfig {
             }
 
             if ($Deploy) {
+                Write-Verbose -Message 'Deploying the policy'
                 &'C:\Windows\System32\CiTool.exe' --update-policy "$PolicyID.cip" -json | Out-Null
+               
                 Write-Host -NoNewline -Object "`n$PolicyID.cip for " -ForegroundColor Green
                 Write-Host -NoNewline -Object "$PolicyName" -ForegroundColor Magenta
                 Write-Host -Object ' has been deployed.' -ForegroundColor Green
+                
+                Write-Verbose -Message 'Removing the .CIP file after deployment'
                 Remove-Item -Path "$PolicyID.cip" -Force
             }
         }
+
         # Create Deny base policy for Driver files
-        elseif ($Drivers) {
+        if ($Drivers) {
 
             powershell.exe -Command {
                 [System.Object[]]$DriverFilesObject = @()

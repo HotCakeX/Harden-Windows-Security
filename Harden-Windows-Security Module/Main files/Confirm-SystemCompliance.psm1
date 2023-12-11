@@ -67,6 +67,7 @@ function Confirm-SystemCompliance {
 
         Write-Progress -Activity 'Checking for updates' -Status 'Processing...' -PercentComplete 10
 
+        # Running the functions.ps1 file in the current scope
         . "$psscriptroot\Functions.ps1"
 
         Write-Progress -Activity 'Gathering Security Policy Information' -Status 'Processing...' -PercentComplete 15
@@ -579,7 +580,6 @@ function Confirm-SystemCompliance {
                         Name         = 'Secure OS Drive encryption'
                         Category     = $CatName
                         Method       = 'Cmdlet'
-
                     }
                 }
 
@@ -1994,49 +1994,36 @@ function Confirm-SystemCompliance {
     <#
 .SYNOPSIS
     Checks the compliance of a system with the Harden Windows Security script guidelines
-
 .LINK
     https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden%E2%80%90Windows%E2%80%90Security%E2%80%90Module
-
 .DESCRIPTION
     Checks the compliance of a system with the Harden Windows Security script. Checks the applied Group policies, registry keys and PowerShell cmdlets used by the hardening script.
-
 .COMPONENT
     Gpresult, Secedit, PowerShell, Registry
-
 .FUNCTIONALITY
     Uses Gpresult and Secedit to first export the effective Group policies and Security policies, then goes through them and checks them against the Harden Windows Security's guidelines.
-
 .EXAMPLE
     ($result.Microsoft Defender | Where-Object -FilterScript {$_.name -eq 'Controlled Folder Access Exclusions'}).value.programs
 
     Do this to get the Controlled Folder Access Programs list when using ShowAsObjectsOnly optional parameter to output an object
-
 .EXAMPLE
     $result.Microsoft Defender
 
     Do this to only see the result for the Microsoft Defender category when using ShowAsObjectsOnly optional parameter to output an object
-
 .PARAMETER ExportToCSV
     Export the output to a CSV file in the current working directory
-
 .PARAMETER ShowAsObjectsOnly
     Returns a nested object instead of writing strings on the PowerShell console, it can be assigned to a variable
-
 .PARAMETER DetailedDisplay
     Shows the output on the PowerShell console with more details and in the list format instead of table format
-
 .PARAMETER DummyParam
     To hide PowerShell common parameters that clutter parameter auto completion menu
-
 .INPUTS
     System.Management.Automation.SwitchParameter
-
 .OUTPUTS
     System.String
     System.Object[]
 #>
-
 }
 
 # Set PSReadline tab completion to complete menu for easier access to available parameters - Only for the current session

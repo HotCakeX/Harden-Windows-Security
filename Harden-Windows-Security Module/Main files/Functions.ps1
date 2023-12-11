@@ -29,7 +29,7 @@ function Update-self {
         [System.Version]$global:LatestVersion = Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security%20Module/version.txt' -ProgressAction SilentlyContinue
     }
     catch {
-        Write-Error -Message "Couldn't verify if the latest version of the module is installed, please check your Internet connection."
+        Write-Error -Message 'Could not verify if the latest version of the module is installed, please check your Internet connection.'
     }
 
     if ($CurrentVersion -lt $LatestVersion) {
@@ -48,7 +48,7 @@ function Update-self {
 
                 # Temporarily allow the currently running PowerShell executables to the Controlled Folder Access allowed apps
                 # so that the script can run without interruption. This change is reverted at the end.
-                foreach ($FilePath in (Get-ChildItem -Path "$PSHOME\*.exe" -File).FullNam) {
+                foreach ($FilePath in (Get-ChildItem -Path "$PSHOME\*.exe" -File).FullName) {
                     Add-MpPreference -ControlledFolderAccessAllowedApplications $FilePath
                 }
 
@@ -93,8 +93,7 @@ Update-self
 
 # check if user's OS is Windows Home edition
 if ((Get-CimInstance -ClassName Win32_OperatingSystem).OperatingSystemSKU -eq '101') {
-    Write-Error 'Windows Home edition detected, exiting...'
-    break
+    Throw 'Windows Home edition detected, exiting...'
 }
 
 # Check if user's OS is the latest build
@@ -112,16 +111,14 @@ if ((Get-CimInstance -ClassName Win32_OperatingSystem).OperatingSystemSKU -eq '1
 
 # Make sure the current OS build is equal or greater than the required build
 if (-NOT ($FullOSBuild -ge $Requiredbuild)) {
-    Write-Error -Message "You're not using the latest build of the Windows OS. A minimum build of $Requiredbuild is required but your OS build is $FullOSBuild`nPlease go to Windows Update to install the updates and then try again."
-    break
+    Throw "You're not using the latest build of the Windows OS. A minimum build of $Requiredbuild is required but your OS build is $FullOSBuild`nPlease go to Windows Update to install the updates and then try again."
 }
 
 if (Test-IsAdmin) {
     # check to make sure TPM is available and enabled
     [System.Object]$TPM = Get-Tpm
     if (-not ($TPM.tpmpresent -and $TPM.tpmenabled)) {
-        Write-Error -Message 'TPM is not available or enabled, please enable it in UEFI settings and try again.'
-        break
+        Throw 'TPM is not available or enabled, please enable it in UEFI settings and try again.'
     }
 }
 

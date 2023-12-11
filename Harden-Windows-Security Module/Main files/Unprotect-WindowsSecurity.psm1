@@ -226,22 +226,16 @@ Function Unprotect-WindowsSecurity {
     <#
 .SYNOPSIS
     Removes the hardening measures applied by Protect-WindowsSecurity cmdlet
-
 .LINK
     https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden%E2%80%90Windows%E2%80%90Security%E2%80%90Module
-
 .DESCRIPTION
     Removes the hardening measures applied by Protect-WindowsSecurity cmdlet
-
 .COMPONENT
     PowerShell
-
 .FUNCTIONALITY
     Removes the hardening measures applied by Protect-WindowsSecurity cmdlet
-
 .PARAMETER OnlyProcessMitigations
     Only removes the Process Mitigations / Exploit Protection settings and doesn't change anything else
-
 .PARAMETER DummyParam
     To hide PowerShell common parameters that clutter parameter auto completion menu
 #>

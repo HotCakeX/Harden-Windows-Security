@@ -1243,10 +1243,14 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
             Write-Verbose -Message 'Removing the signed base policy CIP file after deployment'
             Remove-Item -Path ".\$CurrentID.cip" -Force
             
+            Write-Verbose -Message 'Making sure a policy file with the same name as the current base policy does not exist in the current working directory'
             Remove-Item -Path $PolicyFiles[$NewBasePolicyType] -Force -ErrorAction SilentlyContinue
-            Rename-Item -Path '.\BasePolicy.xml' -NewName $PolicyFiles[$NewBasePolicyType]
+            
+            Write-Verbose -Message 'Renaming the base policy XML file to match the new base policy type'
+            Rename-Item -Path '.\BasePolicy.xml' -NewName $PolicyFiles[$NewBasePolicyType] -Force
+            
             Write-ColorfulText -Color Pink -InputText "Base Policy has been successfully updated to $NewBasePolicyType"
-            Write-ColorfulText -Color Lavender -InputText 'Keep in mind that your previous policy path saved in User Configurations is no longer valid as you just changed your Base policy.'
+            Write-ColorfulText -Color Lavender -InputText 'Keep in mind that your previous policy path saved in User Configurations (if any) is no longer valid as you just changed your Base policy.'
         }
     }
 

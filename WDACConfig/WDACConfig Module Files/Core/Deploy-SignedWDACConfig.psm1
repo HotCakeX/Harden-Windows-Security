@@ -128,7 +128,7 @@ Function Deploy-SignedWDACConfig {
             if ($PolicyType -eq 'Supplemental Policy') {
 
                 Write-Verbose -Message 'Policy type is Supplemental'
-                
+
                 # Make sure -User is not added if the UMCI policy rule option doesn't exist in the policy, typically for Strict kernel mode policies
                 if ('Enabled:UMCI' -in $PolicyRuleOptions) {
                     Add-SignerRule -FilePath $PolicyPath -CertificatePath $CertPath -Update -User -Kernel
@@ -186,7 +186,7 @@ Function Deploy-SignedWDACConfig {
 
                 Write-Verbose -Message 'Deploying the policy'
                 &'C:\Windows\System32\CiTool.exe' --update-policy ".\$PolicyID.cip" -json | Out-Null
-                
+
                 Write-Host -Object "`npolicy with the following details has been Signed and Deployed in Enforced Mode:" -ForegroundColor Green
                 Write-Output -InputObject "PolicyName = $PolicyName"
                 Write-Output -InputObject "PolicyGUID = $PolicyID`n"
@@ -214,12 +214,12 @@ Function Deploy-SignedWDACConfig {
                     }
 
                     elseif (($PolicyName -like '*Strict Kernel No Flights mode policy Enforced*')) {
-                       
+
                         Write-Verbose -Message 'The deployed policy is Strict Kernel No Flights mode'
-                       
+
                         if ($StrictKernelNoFlightRootsPolicyGUID) {
                             if ($($PolicyID.TrimStart('{').TrimEnd('}')) -eq $StrictKernelNoFlightRootsPolicyGUID) {
-                                
+
                                 Write-Verbose -Message 'Removing the GUID of the deployed Strict Kernel No Flights mode policy from the User Configs'
                                 Remove-CommonWDACConfig -StrictKernelNoFlightRootsPolicyGUID | Out-Null
                             }

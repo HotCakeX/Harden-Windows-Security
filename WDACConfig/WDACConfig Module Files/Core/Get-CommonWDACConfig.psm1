@@ -21,13 +21,13 @@ Function Get-CommonWDACConfig {
         # Create User configuration folder if it doesn't already exist
         if (-NOT (Test-Path -Path "$UserAccountDirectoryPath\.WDACConfig\")) {
             New-Item -ItemType Directory -Path "$UserAccountDirectoryPath\.WDACConfig\" -Force -ErrorAction Stop | Out-Null
-            Write-Debug -Message 'The .WDACConfig folder in the current user folder has been created because it did not exist.'
+            Write-Verbose -Message 'The .WDACConfig folder in the current user folder has been created because it did not exist.'
         }
 
         # Create User configuration file if it doesn't already exist
         if (-NOT (Test-Path -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json")) {
             New-Item -ItemType File -Path "$UserAccountDirectoryPath\.WDACConfig\" -Name 'UserConfigurations.json' -Force -ErrorAction Stop | Out-Null
-            Write-Debug -Message 'The UserConfigurations.json file in \.WDACConfig\ folder has been created because it did not exist.'
+            Write-Verbose -Message 'The UserConfigurations.json file in \.WDACConfig\ folder has been created because it did not exist.'
         }
 
         if ($Open) {
@@ -35,21 +35,15 @@ Function Get-CommonWDACConfig {
             break
         }
 
-        if ($PSBoundParameters.Count -eq 0) {
-            # Display this message if User Configuration file is empty
-            if ($null -eq (Get-Content -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json")) {
-                Write-ColorfulText -Color Pink -InputText "`nYour current WDAC User Configurations is empty."
-            }
-            # Display this message if User Configuration file has content
-            else {
-                Write-ColorfulText -Color Pink -InputText "`nThis is your current WDAC User Configurations: "
-                Get-Content -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json" | ConvertFrom-Json | Format-List -Property *
-            }
+        # Display this message if User Configuration file is empty
+        if ($null -eq (Get-Content -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json")) {
+            Write-ColorfulText -Color Pink -InputText "`nYour current WDAC User Configurations is empty."
             break
         }
 
-        # Read the current user configurations
+        Write-Verbose -Message 'Reading the current user configurations'
         [PSCustomObject]$CurrentUserConfigurations = Get-Content -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json"
+
         # If the file exists but is corrupted and has bad values, rewrite it
         try {
             $CurrentUserConfigurations = $CurrentUserConfigurations | ConvertFrom-Json
@@ -73,6 +67,11 @@ Function Get-CommonWDACConfig {
             $StrictKernelNoFlightRootsPolicyGUID.IsPresent { Write-Output -InputObject $CurrentUserConfigurations.StrictKernelNoFlightRootsPolicyGUID }
             $CertPath.IsPresent { Write-Output -InputObject $CurrentUserConfigurations.CertificatePath }
             $LastUpdateCheck.IsPresent { Write-Output -InputObject $CurrentUserConfigurations.LastUpdateCheck }
+            Default {
+                # If no parameter is present, display all the values
+                Write-ColorfulText -Color Pink -InputText "`nThis is your current WDAC User Configurations: "
+                Write-Output -InputObject $CurrentUserConfigurations
+            }
         }
     }
     <#
@@ -89,11 +88,11 @@ Function Get-CommonWDACConfig {
 .PARAMETER SignedPolicyPath
     Shows the path to a Signed WDAC xml policy
 .PARAMETER UnsignedPolicyPath
-    Shows the  path to an Unsigned WDAC xml policy
+    Shows the path to an Unsigned WDAC xml policy
 .PARAMETER CertCN
     Shows the certificate common name
 .PARAMETER SignToolPath
-    Shows the  path to the SignTool.exe
+    Shows the path to the SignTool.exe
 .PARAMETER CertPath
     Shows the path to a .cer certificate file
 .PARAMETER Open
@@ -106,5 +105,8 @@ Function Get-CommonWDACConfig {
     System.Management.Automation.SwitchParameter
 .OUTPUTS
     System.Object[]
+    System.DateTime
+    System.String
+    System.Guid
 #>
 }

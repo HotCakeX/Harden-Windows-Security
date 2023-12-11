@@ -45,10 +45,8 @@ Function Set-CommonWDACConfig {
             }, ErrorMessage = 'The selected policy xml file is Unsigned, Please select a Signed policy.')]
         [parameter(Mandatory = $false)][System.String]$SignedPolicyPath,
 
-        [parameter(Mandatory = $false, DontShow = $true)][System.Guid]$StrictKernelPolicyGUID, # DontShow prevents common parameters from being displayed too
-
+        [parameter(Mandatory = $false, DontShow = $true)][System.Guid]$StrictKernelPolicyGUID,
         [parameter(Mandatory = $false, DontShow = $true)][System.Guid]$StrictKernelNoFlightRootsPolicyGUID,
-
         [parameter(Mandatory = $false, DontShow = $true)][System.DateTime]$LastUpdateCheck
     )
     begin {
@@ -180,8 +178,8 @@ Function Set-CommonWDACConfig {
         # Update the User Configurations file
         Write-Verbose -Message 'Saving the changes'
         $UserConfigurationsObject | ConvertTo-Json | Set-Content -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json"
-        Write-ColorfulText -Color Pink -InputText "`nThis is your new WDAC User Configurations: "
 
+        Write-ColorfulText -Color Pink -InputText "`nThis is your new WDAC User Configurations: "
         Write-Verbose -Message 'Displaying the current user configurations'
         Get-Content -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json" | ConvertFrom-Json | Format-List -Property *
     }

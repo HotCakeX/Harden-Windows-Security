@@ -98,7 +98,7 @@ Function New-DenyWDACConfig {
 
             Write-Verbose -Message 'Removing any possible files from previous runs'
             Remove-Item -Path '.\ProgramDir_ScanResults*.xml' -Force -ErrorAction SilentlyContinue
-            
+
             # An array to hold the temporary xml files of each user-selected folders
             [System.Object[]]$PolicyXMLFilesArray = @()
 
@@ -137,14 +137,14 @@ Function New-DenyWDACConfig {
 
             Write-Verbose -Message 'Adding the AllowAll default template policy path to the array of policy paths to merge'
             $PolicyXMLFilesArray += 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowAll.xml'
-            
+
             Write-Verbose -Message 'Creating the final Deny base policy from the xml files in the paths array'
             Merge-CIPolicy -PolicyPaths $PolicyXMLFilesArray -OutputFilePath ".\DenyPolicy $PolicyName.xml" | Out-Null
 
             Write-Verbose -Message 'Assigning a name and resetting the policy ID'
             [System.String]$PolicyID = Set-CIPolicyIdInfo -FilePath "DenyPolicy $PolicyName.xml" -ResetPolicyID -PolicyName "$PolicyName"
             [System.String]$PolicyID = $PolicyID.Substring(11)
-            
+
             Write-Verbose -Message 'Setting the policy version to 1.0.0.0'
             Set-CIPolicyVersion -FilePath "DenyPolicy $PolicyName.xml" -Version '1.0.0.0'
 
@@ -158,7 +158,7 @@ Function New-DenyWDACConfig {
 
             Write-Verbose -Message 'Setting the HVCI to Strict'
             Set-HVCIOptions -Strict -FilePath "DenyPolicy $PolicyName.xml"
-            
+
             Write-Verbose -Message 'Converting the policy XML to .CIP'
             ConvertFrom-CIPolicy -XmlFilePath "DenyPolicy $PolicyName.xml" -BinaryFilePath "$PolicyID.cip" | Out-Null
 
@@ -172,11 +172,11 @@ Function New-DenyWDACConfig {
             if ($Deploy) {
                 Write-Verbose -Message 'Deploying the policy'
                 &'C:\Windows\System32\CiTool.exe' --update-policy "$PolicyID.cip" -json | Out-Null
-               
+
                 Write-Host -NoNewline -Object "`n$PolicyID.cip for " -ForegroundColor Green
                 Write-Host -NoNewline -Object "$PolicyName" -ForegroundColor Magenta
                 Write-Host -Object ' has been deployed.' -ForegroundColor Green
-                
+
                 Write-Verbose -Message 'Removing the .CIP file after deployment'
                 Remove-Item -Path "$PolicyID.cip" -Force
             }

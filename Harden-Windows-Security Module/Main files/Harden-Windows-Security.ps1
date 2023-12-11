@@ -151,7 +151,7 @@ function Select-Option {
 
         # Make sure user only inputs a positive integer
         [System.Int64]$SelectedIndex = 0
-        $IsValid = [System.Int64]::TryParse((Read-Host 'Select an option'), [ref]$SelectedIndex)
+        $IsValid = [System.Int64]::TryParse((Read-Host -Prompt 'Select an option'), [ref]$SelectedIndex)
         if ($IsValid) {
             if ($SelectedIndex -gt 0 -and $SelectedIndex -le $Options.Length) {
                 $Selected = $Options[$SelectedIndex - 1]
@@ -411,7 +411,7 @@ function Get-AvailableRemovableDrives {
     # If there is any Writable removable drives, sort and prepare them and then add them to the array
     if ($AvailableRemovableDrives) {
         $AvailableRemovableDrives = $AvailableRemovableDrives | Sort-Object -Property DriveLetter |
-        Select-Object DriveLetter, FileSystemType, DriveType, @{Name = 'Size'; Expression = { '{0:N2}' -f ($_.Size / 1GB) + ' GB' } }
+        Select-Object -Property DriveLetter, FileSystemType, DriveType, @{Name = 'Size'; Expression = { '{0:N2}' -f ($_.Size / 1GB) + ' GB' } }
 
     }
 
@@ -440,14 +440,12 @@ function Get-AvailableRemovableDrives {
                         catch {
                             # Drive is write protected, do nothing
                         }
-
                     }
 
                     # If there is any Writable removable drives, sort and prepare them and then add them to the array
                     if ($AvailableRemovableDrives) {
                         $AvailableRemovableDrives = $AvailableRemovableDrives | Sort-Object -Property DriveLetter |
-                        Select-Object DriveLetter, FileSystemType, DriveType, @{Name = 'Size'; Expression = { '{0:N2}' -f ($_.Size / 1GB) + ' GB' } }
-
+                        Select-Object -Property DriveLetter, FileSystemType, DriveType, @{Name = 'Size'; Expression = { '{0:N2}' -f ($_.Size / 1GB) + ' GB' } }
                     }
 
                 }

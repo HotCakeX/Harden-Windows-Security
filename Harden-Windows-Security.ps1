@@ -102,7 +102,7 @@ $Host.UI.RawUI.WindowTitle = '❤️‍🔥Harden Windows Security❤️‍🔥'
 # Minimum OS build number required for the hardening measures used in this script
 [System.Decimal]$Requiredbuild = '22621.2428'
 # Fetching Temp Directory
-[System.String]$global:UserTempDirectoryPath = [System.IO.Path]::GetTempPath()
+[System.String]$global:CurrentUserTempDirectoryPath = [System.IO.Path]::GetTempPath()
 # The total number of the main categories for the parent/main progress bar to render
 [System.Int64]$TotalMainSteps = 18
 # Defining a global boolean variable to determine whether optional diagnostic data should be enabled for Smart App Control or not
@@ -151,7 +151,7 @@ function Select-Option {
 
         # Make sure user only inputs a positive integer
         [System.Int64]$SelectedIndex = 0
-        $IsValid = [System.Int64]::TryParse((Read-Host 'Select an option'), [ref]$SelectedIndex)
+        $IsValid = [System.Int64]::TryParse((Read-Host -Prompt 'Select an option'), [ref]$SelectedIndex)
         if ($IsValid) {
             if ($SelectedIndex -gt 0 -and $SelectedIndex -le $Options.Length) {
                 $Selected = $Options[$SelectedIndex - 1]
@@ -411,7 +411,7 @@ function Get-AvailableRemovableDrives {
     # If there is any Writable removable drives, sort and prepare them and then add them to the array
     if ($AvailableRemovableDrives) {
         $AvailableRemovableDrives = $AvailableRemovableDrives | Sort-Object -Property DriveLetter |
-        Select-Object DriveLetter, FileSystemType, DriveType, @{Name = 'Size'; Expression = { '{0:N2}' -f ($_.Size / 1GB) + ' GB' } }
+        Select-Object -Property DriveLetter, FileSystemType, DriveType, @{Name = 'Size'; Expression = { '{0:N2}' -f ($_.Size / 1GB) + ' GB' } }
 
     }
 
@@ -440,14 +440,12 @@ function Get-AvailableRemovableDrives {
                         catch {
                             # Drive is write protected, do nothing
                         }
-
                     }
 
                     # If there is any Writable removable drives, sort and prepare them and then add them to the array
                     if ($AvailableRemovableDrives) {
                         $AvailableRemovableDrives = $AvailableRemovableDrives | Sort-Object -Property DriveLetter |
-                        Select-Object DriveLetter, FileSystemType, DriveType, @{Name = 'Size'; Expression = { '{0:N2}' -f ($_.Size / 1GB) + ' GB' } }
-
+                        Select-Object -Property DriveLetter, FileSystemType, DriveType, @{Name = 'Size'; Expression = { '{0:N2}' -f ($_.Size / 1GB) + ' GB' } }
                     }
 
                 }
@@ -557,11 +555,11 @@ function Get-AvailableRemovableDrives {
         [System.String]$Choice = $(Write-Host -Object "Enter the number of the drive you want to select or press $ExitCodeRemovableDriveSelection to Cancel" -ForegroundColor cyan; Read-Host)
 
         # Check if the input is valid using the Confirm-Choice function
-        if (-not (Confirm-Choice $Choice)) {
+        if (-NOT (Confirm-Choice $Choice)) {
             # Write an error message in red if invalid
             Write-Host -Object "Invalid input. Please enter a number between 1 and $ExitCodeRemovableDriveSelection." -ForegroundColor Red
         }
-    } while (-not (Confirm-Choice $Choice))
+    } while (-NOT (Confirm-Choice $Choice))
 
     # Check if the user entered the exit value to break out of the loop
     if ($Choice -eq $ExitCodeRemovableDriveSelection) {
@@ -690,7 +688,7 @@ try {
 
         # check to make sure TPM is available and enabled
         [System.Object]$TPM = Get-Tpm
-        if (-not ($TPM.tpmpresent -and $TPM.tpmenabled)) {
+        if (-NOT ($TPM.tpmpresent -and $TPM.tpmenabled)) {
             Throw 'TPM is not available or enabled, please enable it in UEFI settings and try again.'
         }
 
@@ -713,16 +711,16 @@ try {
     #endregion RequirementsCheck
 
     # create our working directory
-    New-Item -ItemType Directory -Path "$global:UserTempDirectoryPath\HardeningXStuff\" -Force | Out-Null
+    New-Item -ItemType Directory -Path "$global:CurrentUserTempDirectoryPath\HardeningXStuff\" -Force | Out-Null
     # working directory assignment
-    [System.IO.DirectoryInfo]$WorkingDir = "$global:UserTempDirectoryPath\HardeningXStuff\"
+    [System.IO.DirectoryInfo]$WorkingDir = "$global:CurrentUserTempDirectoryPath\HardeningXStuff\"
     # change location to the new directory
     Set-Location -Path $WorkingDir
 
     # Clean up script block
     [System.Management.Automation.ScriptBlock]$CleanUp = {
         Set-Location -Path $HOME
-        Remove-Item -Recurse -Path "$global:UserTempDirectoryPath\HardeningXStuff\" -Force
+        Remove-Item -Recurse -Path "$global:CurrentUserTempDirectoryPath\HardeningXStuff\" -Force
         # Disable progress bars
         0..6 | ForEach-Object -Process { Write-Progress -Id $_ -Activity 'Done' -Completed }
         exit
@@ -2445,7 +2443,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                         }
                         Block-CountryIP -IPList $OFACSanctioned -ListName 'OFAC Sanctioned Countries'
                     } 'No' { break }
-                }               
+                }
             } 'No' { break }
             'Exit' { &$CleanUp }
         }
@@ -2516,7 +2514,7 @@ finally {
         }
     }
 
-    Set-Location -Path $HOME; Remove-Item -Recurse -Path "$global:UserTempDirectoryPath\HardeningXStuff\" -Force -ErrorAction SilentlyContinue
+    Set-Location -Path $HOME; Remove-Item -Recurse -Path "$global:CurrentUserTempDirectoryPath\HardeningXStuff\" -Force -ErrorAction SilentlyContinue
 
     # Disable progress bars
     0..6 | ForEach-Object -Process { Write-Progress -Id $_ -Activity 'Done' -Completed }

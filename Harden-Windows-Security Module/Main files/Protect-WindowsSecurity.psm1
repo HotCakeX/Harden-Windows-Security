@@ -17,7 +17,7 @@ Function Protect-WindowsSecurity {
 .FUNCTIONALITY
     Applies the hardening measures
 .INPUTS
-    None    
+    None
 .OUTPUTS
     System.Void
 #>

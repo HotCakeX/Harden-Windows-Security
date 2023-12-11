@@ -1261,7 +1261,7 @@ function Confirm-SystemCompliance {
                 # Append the categories in $FinalMegaObject to the array using += operator
                 $CsvOutPutFileContent += $FinalMegaObject.PSObject.Properties.Value
                 # Convert the array to a CSV file and store it in the current working directory
-                $CsvOutPutFileContent | ConvertTo-Csv | Out-File '.\Compliance Check Output.CSV' -Force
+                $CsvOutPutFileContent | ConvertTo-Csv | Out-File -FilePath '.\Compliance Check Output.CSV' -Force
             }
 
             if ($ShowAsObjectsOnly) {
@@ -1303,7 +1303,7 @@ function Confirm-SystemCompliance {
                         $color = $colors[$i % $colors.Length]
                         $Output += "$($PSStyle.Foreground.FromRGB($color.R, $color.G, $color.B))$($text[$i])$($PSStyle.Reset)"
                     }
-                    Write-Output $Output
+                    Write-Output -InputObject $Output
                 }
 
                 [scriptblock]$WriteRainbow2 = {
@@ -1327,7 +1327,7 @@ function Confirm-SystemCompliance {
                         $color = $colors[$i % $colors.Length]
                         $Output += "$($PSStyle.Foreground.FromRGB($color.R, $color.G, $color.B))$($text[$i])$($PSStyle.Reset)"
                     }
-                    Write-Output $Output
+                    Write-Output -InputObject $Output
                 }
                 #Endregion Colors
 

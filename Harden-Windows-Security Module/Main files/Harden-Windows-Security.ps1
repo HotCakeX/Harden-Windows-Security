@@ -2445,7 +2445,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                         }
                         Block-CountryIP -IPList $OFACSanctioned -ListName 'OFAC Sanctioned Countries'
                     } 'No' { break }
-                }               
+                }
             } 'No' { break }
             'Exit' { &$CleanUp }
         }

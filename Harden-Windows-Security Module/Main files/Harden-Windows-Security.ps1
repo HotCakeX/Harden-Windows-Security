@@ -1972,7 +1972,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                             Disable-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2 -NoRestart -ErrorAction Stop
                         }
                         catch {
-                            # show error
+                            # show errors in non-terminating way
                             $_
                         }
                     }
@@ -1989,7 +1989,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                             Write-Host -Object 'PowerShellv2 2nd part was successfully disabled' -ForegroundColor Green
                         }
                         catch {
-                            # show error
+                            # show errors in non-terminating way
                             $_
                         }
                     }
@@ -2023,7 +2023,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                             Write-Host -Object 'Internet Printing Client was successfully disabled' -ForegroundColor Green
                         }
                         catch {
-                            # show errors
+                            # show errors in non-terminating way
                             $_
                         }
                     }
@@ -2040,7 +2040,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                             Write-Host -Object 'Windows Media Player (legacy) has been uninstalled.' -ForegroundColor Green
                         }
                         catch {
-                            # show error
+                            # show errors in non-terminating way
                             $_
                         }
                     }
@@ -2057,7 +2057,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                             Write-Host -Object 'Microsoft Defender Application Guard was successfully enabled' -ForegroundColor Green
                         }
                         catch {
-                            # show errors
+                            # show errors in non-terminating way
                             $_
                         }
                     }
@@ -2079,7 +2079,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                             Write-Host -Object 'Windows Sandbox was successfully enabled' -ForegroundColor Green
                         }
                         catch {
-                            # show errors
+                            # show errors in non-terminating way
                             $_
                         }
                     }
@@ -2096,7 +2096,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                             Write-Host -Object 'Hyper-V was successfully enabled' -ForegroundColor Green
                         }
                         catch {
-                            # show errors
+                            # show errors in non-terminating way
                             $_
                         }
                     }
@@ -2113,7 +2113,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                             Write-Host -Object 'Virtual Machine Platform was successfully enabled' -ForegroundColor Green
                         }
                         catch {
-                            # show errors
+                            # show errors in non-terminating way
                             $_
                         }
                     }
@@ -2130,7 +2130,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                             Write-Host -Object 'VBSCRIPT has been uninstalled' -ForegroundColor Green
                         }
                         catch {
-                            # show errors
+                            # show errors in non-terminating way
                             $_
                         }
                     }
@@ -2144,7 +2144,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                             Write-Host -Object 'Internet Explorer mode functionality for Edge has been uninstalled' -ForegroundColor Green
                         }
                         catch {
-                            # show errors
+                            # show errors in non-terminating way
                             $_
                         }
                     }
@@ -2161,7 +2161,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                             Write-Host -Object 'WMIC has been uninstalled' -ForegroundColor Green
                         }
                         catch {
-                            # show error
+                            # show errors in non-terminating way
                             $_
                         }
                     }
@@ -2178,7 +2178,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                             Write-Host -Object 'Legacy Notepad has been uninstalled. The modern multi-tabbed Notepad is unaffected.' -ForegroundColor Green
                         }
                         catch {
-                            # show error
+                            # show errors in non-terminating way
                             $_
                         }
                     }
@@ -2195,7 +2195,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                             Write-Host -Object 'WordPad has been uninstalled.' -ForegroundColor Green
                         }
                         catch {
-                            # show error
+                            # show errors in non-terminating way
                             $_
                         }
                     }
@@ -2212,7 +2212,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                             Write-Host -Object 'PowerShell ISE has been uninstalled.' -ForegroundColor Green
                         }
                         catch {
-                            # show error
+                            # show errors in non-terminating way
                             $_
                         }
                     }
@@ -2232,7 +2232,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                             Write-Host -Object 'Steps Recorder has been uninstalled.' -ForegroundColor Green
                         }
                         catch {
-                            # show error
+                            # show errors in non-terminating way
                             $_
                         }
                     }

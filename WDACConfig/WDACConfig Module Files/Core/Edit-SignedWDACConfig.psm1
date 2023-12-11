@@ -331,9 +331,6 @@ Function Edit-SignedWDACConfig {
                     if (!$Debug) { $ProcessParams['RedirectStandardOutput'] = 'NUL' }
                     # Sign the files with the specified cert
                     Start-Process @ProcessParams
-
-                    # After creating signed .p7 files for each CIP, remove the old Unsigned ones
-                    Remove-Item -Path $_ -Force
                 }
 
                 Write-Verbose -Message 'Removing the unsigned CIPs'
@@ -487,7 +484,7 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
                 Write-Verbose -Message 'Setting the Supplemental policy version to 1.0.0.0'
                 Set-CIPolicyVersion -FilePath $SuppPolicyPath -Version '1.0.0.0'
 
-                Write-Verbose -Message 'Convert the Supplemental policy to a CIP file'
+                Write-Verbose -Message 'Converting the Supplemental policy to a CIP file'
                 ConvertFrom-CIPolicy -XmlFilePath $SuppPolicyPath -BinaryFilePath "$SuppPolicyID.cip" | Out-Null
 
                 # Configure the parameter splat
@@ -596,9 +593,6 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
                     if (!$Debug) { $ProcessParams['RedirectStandardOutput'] = 'NUL' }
                     # Sign the files with the specified cert
                     Start-Process @ProcessParams
-
-                    # After creating signed .p7 files for each CIP, remove the old Unsigned ones
-                    Remove-Item -Path $_ -Force
                 }
 
                 Write-Verbose -Message 'Removing the unsigned CIPs'
@@ -930,7 +924,7 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
                 Write-Verbose -Message 'Setting the Supplemental policy version to 1.0.0.0'
                 Set-CIPolicyVersion -FilePath $SuppPolicyPath -Version '1.0.0.0'
 
-                Write-Verbose -Message 'Convert the Supplemental policy to a CIP file'
+                Write-Verbose -Message 'Converting the Supplemental policy to a CIP file'
                 ConvertFrom-CIPolicy -XmlFilePath $SuppPolicyPath -BinaryFilePath "$SuppPolicyID.cip" | Out-Null
 
                 # Configure the parameter splat

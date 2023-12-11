@@ -37,7 +37,8 @@ Function Get-SignTool {
     }
     try {
         # Validate the SignTool executable
-        [System.Version]$WindowsSdkVersion = '10.0.22621.755' # Setting the minimum version of SignTool that is allowed to be executed
+        # Setting the minimum version of SignTool that is allowed to be executed
+        [System.Version]$WindowsSdkVersion = '10.0.22621.2428'
         [System.Boolean]$GreenFlag1 = (((Get-Item -Path $SignToolExePath).VersionInfo).ProductVersionRaw -ge $WindowsSdkVersion)
         [System.Boolean]$GreenFlag2 = (((Get-Item -Path $SignToolExePath).VersionInfo).FileVersionRaw -ge $WindowsSdkVersion)
         [System.Boolean]$GreenFlag3 = ((Get-Item -Path $SignToolExePath).VersionInfo).CompanyName -eq 'Microsoft Corporation'

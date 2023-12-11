@@ -719,7 +719,7 @@ Function New-WDACConfig {
                                 $_.'File Name' = $_.'File Name' -replace $pattern, $usablePath
                             }
                             if (-NOT (Test-Path -Path $_.'File Name')) {
-                                $_ | Select-Object FileVersion, 'File Name', PolicyGUID, 'SHA256 Hash', 'SHA256 Flat Hash', 'SHA1 Hash', 'SHA1 Flat Hash'
+                                $_ | Select-Object -Property FileVersion, 'File Name', PolicyGUID, 'SHA256 Hash', 'SHA256 Flat Hash', 'SHA1 Hash', 'SHA1 Flat Hash'
                             }
                         }
                     }

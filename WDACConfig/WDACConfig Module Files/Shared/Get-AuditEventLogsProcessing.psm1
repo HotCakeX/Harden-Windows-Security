@@ -56,7 +56,7 @@ Function Get-AuditEventLogsProcessing {
 
                 # If the file is not currently on the disk, extract its hashes from event log
                 else {
-                    $AuditEventLogsProcessingResults.DeletedFileHashes += $_ | Select-Object FileVersion, 'File Name', PolicyGUID, 'SHA256 Hash', 'SHA256 Flat Hash', 'SHA1 Hash', 'SHA1 Flat Hash'
+                    $AuditEventLogsProcessingResults.DeletedFileHashes += $_ | Select-Object -Property FileVersion, 'File Name', PolicyGUID, 'SHA256 Hash', 'SHA256 Flat Hash', 'SHA1 Hash', 'SHA1 Flat Hash'
                 }
             }
         }

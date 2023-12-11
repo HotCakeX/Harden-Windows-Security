@@ -72,7 +72,7 @@ Function Remove-WDACConfig {
             })]
         [Parameter(Mandatory = $false, ParameterSetName = 'Unsigned Or Supplemental')]
         [System.String[]]$PolicyNames,
-        
+
         [ArgumentCompleter({
                 param($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameters)
 

@@ -837,10 +837,10 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
                     $Supplementalxml = [System.Xml.XmlDocument](Get-Content -Path $SuppPolicyPath)
                     [System.String]$SupplementalPolicyID = $Supplementalxml.SiPolicy.PolicyID
                     [System.String]$SupplementalPolicyType = $Supplementalxml.SiPolicy.PolicyType
-                    
+
                     Write-Verbose -Message 'Getting the IDs of the currently deployed policies on the system'
                     [System.String[]]$DeployedPoliciesIDs = (&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies.PolicyID | ForEach-Object -Process { return "{$_}" }
-                    
+
                     # Check the type of the user selected Supplemental policy XML files to make sure they are indeed Supplemental policies
                     Write-Verbose -Message 'Checking the type of the policy'
                     if ($SupplementalPolicyType -ne 'Supplemental Policy') {
@@ -852,23 +852,23 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
                     if ($DeployedPoliciesIDs -notcontains $SupplementalPolicyID) {
                         Throw "The Selected Supplemental XML file with GUID $SupplementalPolicyID isn't deployed on the system."
                     }
-                }                
+                }
                 #Endregion Input-policy-verification
 
                 Write-Verbose -Message 'Merging the Supplemental policies into a single policy file'
                 Merge-CIPolicy -PolicyPaths $SuppPolicyPaths -OutputFilePath "$SuppPolicyName.xml" | Out-Null
-               
+
                 # Remove the deployed Supplemental policies that user selected from the system, because we're going to deploy the new merged policy that contains all of them
                 Write-Verbose -Message 'Removing the deployed Supplemental policies that user selected from the system'
                 foreach ($SuppPolicyPath in $SuppPolicyPaths) {
-                   
+
                     # Get the policy ID of the currently selected Supplemental policy
                     $Supplementalxml = [System.Xml.XmlDocument](Get-Content -Path $SuppPolicyPath)
                     [System.String]$SupplementalPolicyID = $Supplementalxml.SiPolicy.PolicyID
-                   
+
                     Write-Verbose -Message "Removing policy with ID: $SupplementalPolicyID"
                     &'C:\Windows\System32\CiTool.exe' --remove-policy $SupplementalPolicyID -json | Out-Null
-                    
+
                     # remove the old policy files unless user chose to keep them
                     if (!$KeepOldSupplementalPolicies) {
                         Write-Verbose -Message "Removing the old policy file: $SuppPolicyPath"
@@ -880,18 +880,18 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
                 Write-Verbose -Message 'Converting the policy to a Supplemental policy type and resetting its ID'
                 $SuppPolicyID = Set-CIPolicyIdInfo -FilePath "$SuppPolicyName.xml" -ResetPolicyID -PolicyName "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')" -BasePolicyToSupplementPath $PolicyPath
                 $SuppPolicyID = $SuppPolicyID.Substring(11)
-                
+
                 Write-Verbose -Message 'Setting HVCI to Strict'
                 Set-HVCIOptions -Strict -FilePath "$SuppPolicyName.xml"
 
                 Write-Verbose -Message 'Converting the Supplemental policy to a CIP file'
                 ConvertFrom-CIPolicy -XmlFilePath "$SuppPolicyName.xml" -BinaryFilePath "$SuppPolicyID.cip" | Out-Null
-                
+
                 Write-Verbose -Message 'Deploying the Supplemental policy'
                 &'C:\Windows\System32\CiTool.exe' --update-policy "$SuppPolicyID.cip" -json | Out-Null
-                
+
                 Write-ColorfulText -Color TeaGreen -InputText "The Supplemental policy $SuppPolicyName has been deployed on the system, replacing the old ones.`nSystem Restart Not immediately needed but eventually required to finish the removal of previous individual Supplemental policies."
-                
+
                 Write-Verbose -Message 'Removing the Supplemental policy CIP file after deployment'
                 Remove-Item -Path "$SuppPolicyID.cip" -Force
             }
@@ -906,40 +906,40 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
             switch ($NewBasePolicyType) {
                 'AllowMicrosoft_Plus_Block_Rules' {
                     Write-Verbose -Message 'The new base policy type is AllowMicrosoft_Plus_Block_Rules'
-                    
+
                     Write-Verbose -Message 'Copying the AllowMicrosoft.xml template policy file to the current working directory'
                     Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml' -Destination '.\AllowMicrosoft.xml' -Force
-                    
+
                     Write-Verbose -Message 'Merging the AllowMicrosoft.xml and Microsoft recommended block rules into a single policy file'
                     Merge-CIPolicy -PolicyPaths .\AllowMicrosoft.xml, '.\Microsoft recommended block rules.xml' -OutputFilePath .\BasePolicy.xml | Out-Null
-                    
+
                     Write-Verbose -Message 'Setting the policy name'
                     Set-CIPolicyIdInfo -FilePath .\BasePolicy.xml -PolicyName "Allow Microsoft Plus Block Rules refreshed On $(Get-Date -Format 'MM-dd-yyyy')"
-                    
+
                     Write-Verbose -Message 'Setting the policy rule options'
                     @(0, 2, 5, 6, 11, 12, 16, 17, 19, 20) | ForEach-Object -Process { Set-RuleOption -FilePath .\BasePolicy.xml -Option $_ }
-                    
+
                     Write-Verbose -Message 'Removing the unnecessary policy rule options'
                     @(3, 4, 9, 10, 13, 18) | ForEach-Object -Process { Set-RuleOption -FilePath .\BasePolicy.xml -Option $_ -Delete }
                 }
                 'Lightly_Managed_system_Policy' {
                     Write-Verbose -Message 'The new base policy type is Lightly_Managed_system_Policy'
-                    
+
                     Write-Verbose -Message 'Copying the AllowMicrosoft.xml template policy file to the current working directory'
                     Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml' -Destination '.\AllowMicrosoft.xml' -Force
-                    
+
                     Write-Verbose -Message 'Merging the AllowMicrosoft.xml and Microsoft recommended block rules into a single policy file'
                     Merge-CIPolicy -PolicyPaths .\AllowMicrosoft.xml, '.\Microsoft recommended block rules.xml' -OutputFilePath .\BasePolicy.xml | Out-Null
-                    
+
                     Write-Verbose -Message 'Setting the policy name'
                     Set-CIPolicyIdInfo -FilePath .\BasePolicy.xml -PolicyName "Signed And Reputable policy refreshed on $(Get-Date -Format 'MM-dd-yyyy')"
-                    
+
                     Write-Verbose -Message 'Setting the policy rule options'
                     @(0, 2, 5, 6, 11, 12, 14, 15, 16, 17, 19, 20) | ForEach-Object -Process { Set-RuleOption -FilePath .\BasePolicy.xml -Option $_ }
-                    
+
                     Write-Verbose -Message 'Removing the unnecessary policy rule options'
                     @(3, 4, 9, 10, 13, 18) | ForEach-Object -Process { Set-RuleOption -FilePath .\BasePolicy.xml -Option $_ -Delete }
-                    
+
                     # Configure required services for ISG authorization
                     Write-Verbose -Message 'Configuring required services for ISG authorization'
                     Start-Process -FilePath 'C:\Windows\System32\appidtel.exe' -ArgumentList 'start' -Wait -NoNewWindow
@@ -947,16 +947,15 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
                 }
                 'DefaultWindows_WithBlockRules' {
                     Write-Verbose -Message 'The new base policy type is DefaultWindows_WithBlockRules'
-                    
+
                     Write-Verbose -Message 'Copying the DefaultWindows.xml template policy file to the current working directory'
                     Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\DefaultWindows_Enforced.xml' -Destination '.\DefaultWindows_Enforced.xml' -Force
-                                        
-                    
+
                     if (Test-Path -Path 'C:\Program Files\PowerShell') {
                         Write-Verbose -Message 'Scanning the PowerShell core directory '
-                        
+
                         Write-ColorfulText -Color HotPink -InputText 'Creating allow rules for PowerShell in the DefaultWindows base policy so you can continue using this module after deploying it.'
-                                                  
+
                         New-CIPolicy -ScanPath 'C:\Program Files\PowerShell' -Level FilePublisher -NoScript -Fallback Hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -AllowFileNameFallbacks -FilePath .\AllowPowerShell.xml
 
                         Write-Verbose -Message 'Merging the DefaultWindows.xml, AllowPowerShell.xml, SignTool.xml and Microsoft recommended block rules into a single policy file'
@@ -970,10 +969,10 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
 
                     Write-Verbose -Message 'Setting the policy name'
                     Set-CIPolicyIdInfo -FilePath .\BasePolicy.xml -PolicyName "Default Windows Plus Block Rules refreshed On $(Get-Date -Format 'MM-dd-yyyy')"
-                    
+
                     Write-Verbose -Message 'Setting the policy rule options'
                     @(0, 2, 5, 6, 11, 12, 16, 17, 19, 20) | ForEach-Object -Process { Set-RuleOption -FilePath .\BasePolicy.xml -Option $_ }
-                    
+
                     Write-Verbose -Message 'Removing the unnecessary policy rule options'
                     @(3, 4, 9, 10, 13, 18) | ForEach-Object -Process { Set-RuleOption -FilePath .\BasePolicy.xml -Option $_ -Delete }
                 }
@@ -993,8 +992,8 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
             # Get the policy ID of the currently deployed base policy based on the policy name that user selected
             Write-Verbose -Message 'Getting the policy ID of the currently deployed base policy based on the policy name that user selected'
             [System.String]$CurrentID = ((&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { $_.IsSystemPolicy -ne 'True' } | Where-Object -FilterScript { $_.Friendlyname -eq $CurrentBasePolicyName }).BasePolicyID
-            $CurrentID = "{$CurrentID}"            
-            
+            $CurrentID = "{$CurrentID}"
+
             Write-Verbose -Message "This is the current ID of deployed base policy that is going to be used in the new base policy: $CurrentID"
             Write-Verbose -Message 'Reading the current base policy XML file'
             [System.Xml.XmlDocument]$Xml = Get-Content -Path '.\BasePolicy.xml'
@@ -1014,10 +1013,10 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
 
             Write-Verbose -Message 'Converting the base policy to a CIP file'
             ConvertFrom-CIPolicy -XmlFilePath '.\BasePolicy.xml' -BinaryFilePath "$CurrentID.cip" | Out-Null
-            
+
             Write-Verbose -Message 'Deploying the new base policy with the same GUID on the system'
             &'C:\Windows\System32\CiTool.exe' --update-policy "$CurrentID.cip" -json | Out-Null
-            
+
             Write-Verbose -Message 'Removing the base policy CIP file after deployment'
             Remove-Item -Path "$CurrentID.cip" -Force
 
@@ -1031,10 +1030,10 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
 
             Write-Verbose -Message 'Making sure a policy file with the same name as the current base policy does not exist in the current working directory'
             Remove-Item -Path $PolicyFiles[$NewBasePolicyType] -Force -ErrorAction SilentlyContinue
-            
+
             Write-Verbose -Message 'Renaming the base policy XML file to match the new base policy type'
             Rename-Item -Path '.\BasePolicy.xml' -NewName $PolicyFiles[$NewBasePolicyType] -Force
-            
+
             Write-ColorfulText -Color Pink -InputText "Base Policy has been successfully updated to $NewBasePolicyType"
             Write-ColorfulText -Color Lavender -InputText 'Keep in mind that your previous policy path saved in User Configurations (if any) is no longer valid as you just changed your Base policy.'
         }

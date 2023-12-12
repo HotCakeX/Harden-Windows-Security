@@ -27,7 +27,17 @@ Function Remove-CommonWDACConfig {
         }
 
         # Delete the entire User Configs if a more specific parameter wasn't used
-        if ($PSBoundParameters.Count -eq 0) {
+        # This method is better than $PSBoundParameters since it also contains common parameters
+        if (
+            !$CertCN,
+            !$CertPath,
+            !$SignToolPath,
+            !$UnsignedPolicyPath,
+            !$SignedPolicyPath,
+            !$StrictKernelPolicyGUID,
+            !$StrictKernelNoFlightRootsPolicyGUID,
+            !$LastUpdateCheck
+        ) {
             Remove-Item -Path "$UserAccountDirectoryPath\.WDACConfig\" -Recurse -Force
             Write-Verbose -Message 'User Configurations for WDACConfig module have been deleted.'
 

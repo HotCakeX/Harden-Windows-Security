@@ -143,7 +143,6 @@ Function Remove-WDACConfig {
                     catch {
                         Write-Error -Message 'User Configuration Json file is corrupted, deleting it...' -ErrorAction Continue
                         Remove-CommonWDACConfig
-                        break
                     }
                 }
             }

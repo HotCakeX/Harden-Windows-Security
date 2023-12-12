@@ -77,6 +77,9 @@ Function Update-self {
         Write-Verbose -Message 'Resetting the last update timer to the current time'
         Set-CommonWDACConfig -LastUpdateCheck $(Get-Date) | Out-Null
     }
+    else {
+        Write-Verbose -Message "Skipping online update check because the last update check was performed $TimeDiff minutes ago"
+    }
 }
 
 # Export external facing functions only, prevent internal functions from getting exported

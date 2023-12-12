@@ -37,7 +37,7 @@ Function Get-CommonWDACConfig {
 
         # Display this message if User Configuration file is empty
         if ($null -eq (Get-Content -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json")) {
-            Write-ColorfulText -Color Pink -InputText "`nYour current WDAC User Configurations is empty."
+            Write-ColorfulText -Color Pink -InputText 'Your current WDAC User Configurations is empty.'
             break
         }
 

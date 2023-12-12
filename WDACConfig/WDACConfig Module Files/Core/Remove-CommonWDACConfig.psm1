@@ -29,8 +29,12 @@ Function Remove-CommonWDACConfig {
         # Delete the entire User Configs if a more specific parameter wasn't used
         if ($PSBoundParameters.Count -eq 0) {
             Remove-Item -Path "$UserAccountDirectoryPath\.WDACConfig\" -Recurse -Force
-            Write-verbfose -Message 'User Configurations for WDACConfig module have been deleted.'
-            break
+            Write-Verbose -Message 'User Configurations for WDACConfig module have been deleted.'
+
+            # set a boolean value that returns from the Process and End blocks as well
+            [System.Boolean]$ReturnAndDone = $true
+
+            Return
         }
 
         # Read the current user configurations
@@ -57,6 +61,9 @@ Function Remove-CommonWDACConfig {
         }
     }
     process {
+
+        if ($true -eq $ReturnAndDone) { return }
+
         if ($SignedPolicyPath) {
             Write-Verbose -Message 'Removing the SignedPolicyPath'
             $UserConfigurationsObject.SignedPolicyPath = ''
@@ -122,6 +129,9 @@ Function Remove-CommonWDACConfig {
         }
     }
     end {
+
+        if ($true -eq $ReturnAndDone) { return }
+
         # Update the User Configurations file
         Write-Verbose -Message 'Saving the changes'
         $UserConfigurationsObject | ConvertTo-Json | Set-Content -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json"

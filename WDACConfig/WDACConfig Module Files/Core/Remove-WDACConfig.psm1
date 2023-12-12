@@ -43,27 +43,27 @@ Function Remove-WDACConfig {
 
                 # Create a hashtable mapping policy names to policy IDs. This will be used later to check if a policy ID already exists.
                 $NameIDMap = @{}
-                foreach ($policy in $policies) {
-                    $NameIDMap[$policy.Friendlyname] = $policy.policyID
+                foreach ($Policy in $policies) {
+                    $NameIDMap[$Policy.Friendlyname] = $Policy.policyID
                 }
 
                 # Get the IDs of existing policies that are already being used in the current command.
-                $existingIDs = $fakeBoundParameters['PolicyIDs']
+                $ExistingIDs = $fakeBoundParameters['PolicyIDs']
 
                 # Get the policy names that are currently being used in the command. This is done by looking at the abstract syntax tree (AST)
                 # of the command and finding all string literals, which are assumed to be policy names.
-                $existing = $commandAst.FindAll({
+                $Existing = $commandAst.FindAll({
                         $args[0] -is [System.Management.Automation.Language.StringConstantExpressionAst]
                     }, $false).Value
 
                 # Filter out the policy names that are already being used or whose corresponding policy IDs are already being used.
                 # The resulting list of policy names is what will be shown as autocomplete suggestions.
-                $candidates = $policies.Friendlyname | Where-Object -FilterScript { $_ -notin $existing -and $NameIDMap[$_] -notin $existingIDs }
+                $Candidates = $policies.Friendlyname | Where-Object -FilterScript { $_ -notin $Existing -and $NameIDMap[$_] -notin $ExistingIDs }
 
                 # Additionally, if the policy name contains spaces, it's enclosed in single quotes to ensure it's treated as a single argument.
                 # This is achieved using the Compare-Object cmdlet to compare the existing and candidate values, and outputting the resulting matches.
                 # For each resulting match, it checks if the match contains a space, if so, it's enclosed in single quotes, if not, it's returned as is.
-        (Compare-Object -PassThru $candidates $existing | Where-Object -FilterScript { SideIndicator -EQ '<=' }).
+        (Compare-Object -PassThru $Candidates $Existing | Where-Object -FilterScript { SideIndicator -EQ '<=' }).
                 ForEach({ if ($_ -match ' ') { "'{0}'" -f $_ } else { $_ } })
             })]
         [ValidateScript({
@@ -80,21 +80,21 @@ Function Remove-WDACConfig {
                 $policies = (&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { $_.IsOnDisk -eq 'True' } | Where-Object -FilterScript { $_.IsSystemPolicy -ne 'True' }
                 # Create a hashtable mapping policy IDs to policy names. This will be used later to check if a policy name already exists.
                 $IDNameMap = @{}
-                foreach ($policy in $policies) {
-                    $IDNameMap[$policy.policyID] = $policy.Friendlyname
+                foreach ($Policy in $policies) {
+                    $IDNameMap[$Policy.policyID] = $Policy.Friendlyname
                 }
                 # Get the names of existing policies that are already being used in the current command.
-                $existingNames = $fakeBoundParameters['PolicyNames']
+                $ExistingNames = $fakeBoundParameters['PolicyNames']
                 # Get the policy IDs that are currently being used in the command. This is done by looking at the abstract syntax tree (AST)
                 # of the command and finding all string literals, which are assumed to be policy IDs.
-                $existing = $commandAst.FindAll({
+                $Existing = $commandAst.FindAll({
                         $args[0] -is [System.Management.Automation.Language.StringConstantExpressionAst]
                     }, $false).Value
                 # Filter out the policy IDs that are already being used or whose corresponding policy names are already being used.
                 # The resulting list of policy IDs is what will be shown as autocomplete suggestions.
-                $candidates = $policies.policyID | Where-Object -FilterScript { $_ -notin $existing -and $IDNameMap[$_] -notin $existingNames }
+                $Candidates = $policies.policyID | Where-Object -FilterScript { $_ -notin $Existing -and $IDNameMap[$_] -notin $ExistingNames }
                 # Return the candidates.
-                return $candidates
+                return $Candidates
             })]
         [ValidateScript({
                 if ($_ -notin [PolicyIDzx]::new().GetValidValues()) { throw "Invalid policy ID: $_" }
@@ -203,8 +203,8 @@ Function Remove-WDACConfig {
             [System.String[]] GetValidValues() {
                 $policies = (&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { $_.IsOnDisk -eq 'True' } | Where-Object -FilterScript { $_.IsSystemPolicy -ne 'True' }
                 self::$IDNameMap = @{}
-                foreach ($policy in $policies) {
-                    self::$IDNameMap[$policy.policyID] = $policy.Friendlyname
+                foreach ($Policy in $policies) {
+                    self::$IDNameMap[$Policy.policyID] = $Policy.Friendlyname
                 }
                 # Returns an array of unique policy names.
                 return [System.String[]]($policies.Friendlyname | Select-Object -Unique)
@@ -225,8 +225,8 @@ Function Remove-WDACConfig {
             [System.String[]] GetValidValues() {
                 $policies = (&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { $_.IsOnDisk -eq 'True' } | Where-Object -FilterScript { $_.IsSystemPolicy -ne 'True' }
                 self::$NameIDMap = @{}
-                foreach ($policy in $policies) {
-                    self::$NameIDMap[$policy.Friendlyname] = $policy.policyID
+                foreach ($Policy in $policies) {
+                    self::$NameIDMap[$Policy.Friendlyname] = $Policy.policyID
                 }
                 # Returns an array of unique policy IDs.
                 return [System.String[]]($policies.policyID | Select-Object -Unique)

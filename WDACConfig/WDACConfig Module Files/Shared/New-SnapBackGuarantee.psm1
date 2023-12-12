@@ -18,6 +18,8 @@ Function New-SnapBackGuarantee {
 
     # Using CMD and Scheduled Task Method
 
+    Write-Verbose -Message 'Creating the scheduled task for Snap Back Guarantee'
+
     # Creating the scheduled task action
     [Microsoft.Management.Infrastructure.CimInstance]$TaskAction = New-ScheduledTaskAction -Execute 'cmd.exe' -Argument '/c C:\EnforcedModeSnapBack.cmd'
     # Creating the scheduled task trigger

@@ -63,7 +63,7 @@ Function Remove-WDACConfig {
                 # Additionally, if the policy name contains spaces, it's enclosed in single quotes to ensure it's treated as a single argument.
                 # This is achieved using the Compare-Object cmdlet to compare the existing and candidate values, and outputting the resulting matches.
                 # For each resulting match, it checks if the match contains a space, if so, it's enclosed in single quotes, if not, it's returned as is.
-        (Compare-Object -PassThru $Candidates $Existing | Where-Object -FilterScript { SideIndicator -EQ '<=' }).
+        (Compare-Object -PassThru $Candidates $Existing | Where-Object -Property SideIndicator -EQ '<=' ).
                 ForEach({ if ($_ -match ' ') { "'{0}'" -f $_ } else { $_ } })
             })]
         [ValidateScript({

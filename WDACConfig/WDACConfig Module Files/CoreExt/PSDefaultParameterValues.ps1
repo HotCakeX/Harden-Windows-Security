@@ -18,7 +18,6 @@ $PSDefaultParameterValues = @{
     'Get-SignTool:Verbose'                 = $Verbose
     'Move-UserModeToKernelMode:Verbose'    = $Verbose
     'New-EmptyPolicy:Verbose'              = $Verbose
-    'Remove-ZerosFromIDs:Verbose'          = $Verbose
     'Set-LogSize:Verbose'                  = $Verbose
     'Test-FilePath:Verbose'                = $Verbose
     'Update-self:Verbose'                  = $Verbose

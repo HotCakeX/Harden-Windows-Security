@@ -23,7 +23,4 @@ $PSDefaultParameterValues = @{
     'Update-self:Verbose'                  = $Verbose
     'Write-ColorfulText:Verbose'           = $Verbose
     'New-SnapBackGuarantee:Verbose'        = $Verbose
-    'Set-CommonWDACConfig:Verbose'         = $Verbose
-    'Get-CommonWDACConfig:Verbose'         = $Verbose
-    'Remove-CommonWDACConfig:Verbose'      = $Verbose
 }

@@ -386,7 +386,7 @@ Function Edit-WDACConfig {
                 Write-Verbose -Message 'Deploying the Supplemental policy'
                 &'C:\Windows\System32\CiTool.exe' --update-policy ".\$SuppPolicyID.cip" -json | Out-Null
 
-                Write-ColorfulText -Color TeaGreen -InputText 'Supplemental policy with the following details has been Deployed in Enforced Mode:'
+                Write-ColorfulText -Color TeaGreen -InputText 'Supplemental policy with the following details has been deployed in Enforced Mode:'
                 Write-Output -InputObject "SupplementalPolicyName = $SuppPolicyName"
                 Write-Output -InputObject "SupplementalPolicyGUID = $SuppPolicyID"
 
@@ -770,7 +770,7 @@ Function Edit-WDACConfig {
                 Write-Verbose -Message 'Deploying the Supplemental policy'
                 &'C:\Windows\System32\CiTool.exe' --update-policy ".\$SuppPolicyID.cip" -json | Out-Null
 
-                Write-ColorfulText -Color TeaGreen -InputText 'Supplemental policy with the following details has been Deployed in Enforced Mode:'
+                Write-ColorfulText -Color TeaGreen -InputText 'Supplemental policy with the following details has been deployed in Enforced Mode:'
                 Write-Output -InputObject "SupplementalPolicyName = $SuppPolicyName"
                 Write-Output -InputObject "SupplementalPolicyGUID = $SuppPolicyID"
 

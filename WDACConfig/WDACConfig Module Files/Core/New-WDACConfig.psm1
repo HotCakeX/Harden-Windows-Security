@@ -238,7 +238,7 @@ Function New-WDACConfig {
             )
             # Get the latest Microsoft recommended block rules
             Write-Verbose -Message 'Getting the latest Microsoft recommended block rules'
-            Get-BlockRulesMeta | Out-Null
+            Get-BlockRulesMeta 6> $null
 
             Write-Verbose -Message 'Copying the AllowMicrosoft.xml from Windows directory to the current working directory'
             Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml' -Destination 'AllowMicrosoft.xml' -Force
@@ -309,7 +309,7 @@ Function New-WDACConfig {
             param()
 
             Write-Verbose -Message 'Getting the latest Microsoft recommended block rules'
-            Get-BlockRulesMeta | Out-Null
+            Get-BlockRulesMeta 6> $null
 
             Write-Verbose -Message 'Copying the DefaultWindows_Enforced.xml from Windows directory to the current working directory'
             Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\DefaultWindows_Enforced.xml' -Destination 'DefaultWindows_Enforced.xml' -Force

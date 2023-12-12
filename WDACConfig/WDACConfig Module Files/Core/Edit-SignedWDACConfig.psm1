@@ -1046,7 +1046,7 @@ Function Edit-SignedWDACConfig {
         if ($UpdateBasePolicy) {
 
             Write-Verbose -Message 'Getting the Microsoft recommended block rules by calling the Get-BlockRulesMeta function'
-            Get-BlockRulesMeta | Out-Null
+            Get-BlockRulesMeta 6> $null
 
             Write-Verbose -Message 'Determining the type of the new base policy'
             switch ($NewBasePolicyType) {

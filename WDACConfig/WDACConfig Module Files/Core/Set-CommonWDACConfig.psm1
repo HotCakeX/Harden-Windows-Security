@@ -65,16 +65,7 @@ Function Set-CommonWDACConfig {
             Write-Verbose -Message 'The UserConfigurations.json file in \.WDACConfig\ folder has been created because it did not exist.'
         }
 
-        if (
-            !$CertCN,
-            !$CertPath,
-            !$SignToolPath,
-            !$UnsignedPolicyPath,
-            !$SignedPolicyPath,
-            !$StrictKernelPolicyGUID,
-            !$StrictKernelNoFlightRootsPolicyGUID,
-            !$LastUpdateCheck
-        ) {
+        if (!$CertCN -And !$CertPath -And !$SignToolPath -And !$UnsignedPolicyPath -And !$SignedPolicyPath -And !$StrictKernelPolicyGUID -And !$StrictKernelNoFlightRootsPolicyGUID -And !$LastUpdateCheck) {
             Throw 'No parameter was selected.'
         }
 

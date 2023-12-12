@@ -115,6 +115,7 @@ Function Edit-WDACConfig {
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Get-RuleRefs.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Get-FileRules.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Get-BlockRulesMeta.psm1" -Force
+        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\New-SnapBackGuarantee.psm1" -Force
 
         # if -SkipVersionCheck wasn't passed, run the updater
         # Redirecting the Update-Self function's information Stream to $null because Write-Host
@@ -252,44 +253,10 @@ Function Edit-WDACConfig {
 
                 #Region Snap-Back-Guarantee
                 Write-Verbose -Message 'Creating Enforced Mode SnapBack guarantee'
+                New-SnapBackGuarantee -Location (Get-Location).Path
 
-                <#
-# CMD and Scheduled Task Method
-$taskAction = New-ScheduledTaskAction -Execute 'cmd.exe' -Argument '/c C:\EnforcedModeSnapBack.cmd'
-$taskTrigger = New-ScheduledTaskTrigger -AtLogOn
-# Run the task under the system account
-$principal = New-ScheduledTaskPrincipal -UserId 'S-1-5-18' -RunLevel Highest
-# Run the task with the highest priority
-$TaskSettings = New-ScheduledTaskSettingsSet -Hidden -Compatibility Win8 -DontStopIfGoingOnBatteries -Priority 0 -AllowStartIfOnBatteries
-# Register the task
-Register-ScheduledTask -TaskName 'EnforcedModeSnapBack' -Action $taskAction -Trigger $taskTrigger -Principal $principal -Settings $TaskSettings -Force | Out-Null
-
-Set-Content -Force 'C:\EnforcedModeSnapBack.cmd' -Value @"
-REM Deploying the Enforced Mode SnapBack CI Policy
-CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json
-REM Deleting the Scheduled task responsible for running this CMD file
-schtasks /Delete /TN EnforcedModeSnapBack /F
-REM Deleting the CI Policy file
-del /f /q "$((Get-Location).Path)\EnforcedMode.cip"
-REM Deleting this CMD file itself
-del "%~f0"
-"@
-#>
-                # Using PowerShell and RunOnce Method
-
-                # Defining the registry path for RunOnce key
-                [System.String]$RegistryPath = 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce'
-                # Defining the command that will be executed by the RunOnce key in case of a reboot
-                [System.String]$Command = @"
-CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-Item -Path "$((Get-Location).Path)\EnforcedMode.cip" -Force
-"@
-                # Saving the command to a file that will be executed by the RunOnce key in case of a reboot
-                $Command | Out-File -FilePath 'C:\EnforcedModeSnapBack.ps1' -Force
-                # Saving the command that runs the EnforcedModeSnapBack.ps1 file in the next reboot to the RunOnce key
-                New-ItemProperty -Path $RegistryPath -Name '*CIPolicySnapBack' -Value "powershell.exe -WindowStyle `"Hidden`" -ExecutionPolicy `"Bypass`" -Command `"& {&`"C:\EnforcedModeSnapBack.ps1`";Remove-Item -Path 'C:\EnforcedModeSnapBack.ps1' -Force}`"" -PropertyType String -Force | Out-Null
-
-                Write-Verbose -Message 'Deploying the Audit mode CIP'
                 # Deploy the Audit mode CIP
+                Write-Verbose -Message 'Deploying the Audit mode CIP'                
                 &'C:\Windows\System32\CiTool.exe' --update-policy '.\AuditMode.cip' -json | Out-Null
 
                 Write-ColorfulText -Color TeaGreen -InputText 'The Base policy with the following details has been Re-Deployed in Audit Mode:'
@@ -345,13 +312,9 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
                     # Enforced Mode Snapback removal after base policy has already been successfully re-enforced
                     Write-Verbose -Message 'Removing the SnapBack guarantee because the base policy has been successfully re-enforced'
 
-                    # For PowerShell Method
-                    Remove-Item -Path 'C:\EnforcedModeSnapBack.ps1' -Force
-                    Remove-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce' -Name '*CIPolicySnapBack' -Force
-
                     # For CMD Method
-                    # Unregister-ScheduledTask -TaskName 'EnforcedModeSnapBack' -Confirm:$false
-                    # Remove-Item -Path 'c:\EnforcedModeSnapBack.cmd' -Force
+                    Unregister-ScheduledTask -TaskName 'EnforcedModeSnapBack' -Confirm:$false
+                    Remove-Item -Path 'C:\EnforcedModeSnapBack.cmd' -Force
                 }
 
                 Write-Host -Object 'Here are the paths you selected:' -ForegroundColor Yellow
@@ -493,20 +456,10 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
 
                 #Region Snap-Back-Guarantee
                 Write-Verbose -Message 'Creating Enforced Mode SnapBack guarantee'
+                New-SnapBackGuarantee -Location (Get-Location).Path
 
-                # Defining the registry path for RunOnce key
-                [System.String]$RegistryPath = 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce'
-                # Defining the command that will be executed by the RunOnce key in case of a reboot
-                [System.String]$Command = @"
-CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-Item -Path "$((Get-Location).Path)\EnforcedMode.cip" -Force
-"@
-                # Saving the command to a file that will be executed by the RunOnce key in case of a reboot
-                $Command | Out-File -FilePath 'C:\EnforcedModeSnapBack.ps1' -Force
-                # Saving the command that runs the EnforcedModeSnapBack.ps1 file in the next reboot to the RunOnce key
-                New-ItemProperty -Path $RegistryPath -Name '*CIPolicySnapBack' -Value "powershell.exe -WindowStyle `"Hidden`" -ExecutionPolicy `"Bypass`" -Command `"& {&`"C:\EnforcedModeSnapBack.ps1`";Remove-Item -Path 'C:\EnforcedModeSnapBack.ps1' -Force}`"" -PropertyType String -Force | Out-Null
-
-                Write-Verbose -Message 'Deploying the Audit mode CIP'
                 # Deploy the Audit mode CIP
+                Write-Verbose -Message 'Deploying the Audit mode CIP'                
                 &'C:\Windows\System32\CiTool.exe' --update-policy '.\AuditMode.cip' -json | Out-Null
 
                 Write-ColorfulText -Color TeaGreen -InputText 'The Base policy with the following details has been Re-Deployed in Audit Mode:'
@@ -789,8 +742,8 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
 
                     # Enforced Mode Snapback removal after base policy has already been successfully re-enforced
                     Write-Verbose -Message 'Removing the SnapBack guarantee because the base policy has been successfully re-enforced'
-                    Remove-Item -Path 'C:\EnforcedModeSnapBack.ps1' -Force
-                    Remove-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce' -Name '*CIPolicySnapBack' -Force
+                    Unregister-ScheduledTask -TaskName 'EnforcedModeSnapBack' -Confirm:$false
+                    Remove-Item -Path 'C:\EnforcedModeSnapBack.cmd' -Force
                 }
 
                 #Region Supplemental-policy-processing-and-deployment

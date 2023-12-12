@@ -60,7 +60,7 @@ Function Get-CommonWDACConfig {
     process {}
 
     end {
-        
+
         if ($true -eq $ReturnAndDone) { return }
 
         # Use a switch statement to check which parameter is present and output the corresponding value from the json file

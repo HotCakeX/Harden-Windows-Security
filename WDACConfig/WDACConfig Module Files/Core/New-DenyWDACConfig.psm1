@@ -172,9 +172,9 @@ Function New-DenyWDACConfig {
             if ($Deploy) {
                 Write-Verbose -Message 'Deploying the policy'
                 &'C:\Windows\System32\CiTool.exe' --update-policy "$PolicyID.cip" -json | Out-Null
-                
+
                 Write-ColorfulText -Color Pink -InputText "A Deny Base policy with the name $PolicyName has been deployed."
-                
+
                 Write-Verbose -Message 'Removing the .CIP file after deployment'
                 Remove-Item -Path "$PolicyID.cip" -Force
             }
@@ -229,7 +229,7 @@ Function New-DenyWDACConfig {
             if ($Deploy) {
                 Write-Verbose -Message 'Deploying the policy'
                 &'C:\Windows\System32\CiTool.exe' --update-policy "$PolicyID.cip" -json | Out-Null
-                
+
                 Write-ColorfulText -Color Pink -InputText "A Deny Base policy with the name $PolicyName has been deployed."
 
                 Write-Verbose -Message 'Removing the .CIP file after deployment'
@@ -285,9 +285,9 @@ Function New-DenyWDACConfig {
             if ($Deploy) {
                 Write-Verbose -Message 'Deploying the policy'
                 &'C:\Windows\System32\CiTool.exe' --update-policy "$PolicyID.cip" -json | Out-Null
-                
+
                 Write-ColorfulText -Color Pink -InputText "A Deny Base policy with the name $PolicyName has been deployed."
-                
+
                 Write-Verbose -Message 'Removing the .CIP file after deployment'
                 Remove-Item -Path "$PolicyID.cip" -Force
             }

@@ -274,7 +274,7 @@ Function Remove-WDACConfig {
 
                     # Looping over each SupplementalPolicySigner and removing it
                     $SuppSingerIDs | ForEach-Object -Process {
-                        $PolContent = Get-Content -Path -Raw -Path $PolicyPath
+                        $PolContent = Get-Content -Raw -Path $PolicyPath
                         $PolContent -match "<Signer ID=`"$_`"[\S\s]*</Signer>" | Out-Null
                         $PolContent = $PolContent -replace $Matches[0], ''
                         Set-Content -Value $PolContent -Path $PolicyPath

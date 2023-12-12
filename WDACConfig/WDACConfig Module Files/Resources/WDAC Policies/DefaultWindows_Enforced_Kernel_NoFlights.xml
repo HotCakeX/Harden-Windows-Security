@@ -98,11 +98,11 @@
   </SigningScenarios>
   <UpdatePolicySigners>
   </UpdatePolicySigners>
-  <!-- 
+  <!--
 
-    CiSigners are signers that ConfigCI asks CI to trust for all builds, include 
+    CiSigners are signers that ConfigCI asks CI to trust for all builds, include
     retail builds.
-    
+
     Normally CiSigners is empty or only includes production signers. For enterprise
     ConfigCI policy, you may need to include enterprise signers. Just make sure it
     is understood that CiSigners will be trusted by CI for all builds.

@@ -5,7 +5,7 @@ Function Get-BlockRulesMeta {
     .INPUTS
         None. You cannot pipe objects to this function.
     .OUTPUTS
-        PSCustomObject
+        System.String
     #>
     [CmdletBinding()]
     param ()
@@ -19,9 +19,9 @@ Function Get-BlockRulesMeta {
     Remove-Item -Path '.\Microsoft recommended block rules TEMP.xml' -Force
     Set-RuleOption -FilePath '.\Microsoft recommended block rules.xml' -Option 3 -Delete
     Set-HVCIOptions -Strict -FilePath '.\Microsoft recommended block rules.xml'
-    return [PSCustomObject]@{
-        PolicyFile = 'Microsoft recommended block rules.xml'
-    }
+
+    # Display the result
+    Write-Output -InputObject 'PolicyFile = Microsoft recommended block rules.xml'    
 }
 
 # Export external facing functions only, prevent internal functions from getting exported

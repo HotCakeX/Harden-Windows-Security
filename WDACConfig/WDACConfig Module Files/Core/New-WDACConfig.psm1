@@ -213,7 +213,7 @@ Function New-WDACConfig {
                 Write-Verbose -Message 'Displaying extra info about the Microsoft recommended Drivers block list'
                 Invoke-Command -ScriptBlock $DriversBlockListInfoGatheringSCRIPTBLOCK
 
-                # Display the result as object
+                # Display the result
                 Write-Output -InputObject 'PolicyFile = Microsoft recommended driver block rules.xml'
             }
         }

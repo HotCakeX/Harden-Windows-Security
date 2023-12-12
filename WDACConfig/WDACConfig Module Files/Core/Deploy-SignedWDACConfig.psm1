@@ -186,9 +186,9 @@ Function Deploy-SignedWDACConfig {
                 Write-Verbose -Message 'Deploying the policy'
                 &'C:\Windows\System32\CiTool.exe' --update-policy ".\$PolicyID.cip" -json | Out-Null
 
-                Write-Host -Object "`npolicy with the following details has been Signed and Deployed in Enforced Mode:" -ForegroundColor Green
-                Write-Output -InputObject "PolicyName = $PolicyName"
-                Write-Output -InputObject "PolicyGUID = $PolicyID`n"
+                Write-Host -Object 'policy with the following details has been Signed and Deployed in Enforced Mode:' -ForegroundColor Green
+                Write-ColorfulText -Color MintGreen -InputText "PolicyName = $PolicyName"
+                Write-ColorfulText -Color MintGreen -InputText "PolicyGUID = $PolicyID"
 
                 Write-Verbose -Message 'Removing the .CIP file after deployment'
                 Remove-Item -Path ".\$PolicyID.cip" -Force
@@ -249,9 +249,9 @@ Function Deploy-SignedWDACConfig {
             }
 
             else {
-                Write-Host -Object "`npolicy with the following details has been Signed and is ready for deployment:" -ForegroundColor Green
-                Write-Output -InputObject "PolicyName = $PolicyName"
-                Write-Output -InputObject "PolicyGUID = $PolicyID`n"
+                Write-Host -Object 'policy with the following details has been Signed and is ready for deployment:' -ForegroundColor Green
+                Write-ColorfulText -Color MintGreen -InputText "PolicyName = $PolicyName"
+                Write-ColorfulText -Color MintGreen -InputText "PolicyGUID = $PolicyID`n"
             }
         }
     }

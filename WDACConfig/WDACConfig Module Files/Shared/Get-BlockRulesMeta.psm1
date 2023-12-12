@@ -21,7 +21,7 @@ Function Get-BlockRulesMeta {
     Set-HVCIOptions -Strict -FilePath '.\Microsoft recommended block rules.xml'
 
     # Display the result
-    Write-Output -InputObject 'PolicyFile = Microsoft recommended block rules.xml'
+    Write-ColorfulText -Color MintGreen -InputText 'PolicyFile = Microsoft recommended block rules.xml'
 }
 
 # Export external facing functions only, prevent internal functions from getting exported

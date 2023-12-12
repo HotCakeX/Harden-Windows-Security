@@ -321,9 +321,9 @@ Function Remove-WDACConfig {
                 Write-Verbose -Message 'Deploying the newly signed CIP file'
                 &'C:\Windows\System32\CiTool.exe' --update-policy ".\$PolicyID.cip" -json | Out-Null
 
-                Write-Host -Object "`nPolicy with the following details has been Re-signed and Re-deployed in Unsigned mode.`nPlease restart your system." -ForegroundColor Green
-                Write-Output -InputObject "PolicyName = $PolicyName"
-                Write-Output -InputObject "PolicyGUID = $PolicyID`n"
+                Write-Host -Object "Policy with the following details has been Re-signed and Re-deployed in Unsigned mode.`nPlease restart your system." -ForegroundColor Green
+                Write-ColorfulText -Color MintGreen -InputText "PolicyName = $PolicyName"
+                Write-ColorfulText -Color MintGreen -InputText "PolicyGUID = $PolicyID"
             }
         }
 

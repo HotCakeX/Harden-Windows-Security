@@ -166,8 +166,8 @@ Function New-SupplementalWDACConfig {
             Set-HVCIOptions -Strict -FilePath "SupplementalPolicy $SuppPolicyName.xml"
             ConvertFrom-CIPolicy -XmlFilePath "SupplementalPolicy $SuppPolicyName.xml" -BinaryFilePath "$PolicyID.cip" | Out-Null
 
-            Write-Output -InputObject "SupplementalPolicyFile = SupplementalPolicy $SuppPolicyName.xml"
-            Write-Output -InputObject "SupplementalPolicyGUID = $PolicyID"
+            Write-ColorfulText -Color MintGreen -InputText "SupplementalPolicyFile = SupplementalPolicy $SuppPolicyName.xml"
+            Write-ColorfulText -Color MintGreen -InputText "SupplementalPolicyGUID = $PolicyID"
 
             if ($Deploy) {
                 &'C:\Windows\System32\CiTool.exe' --update-policy "$PolicyID.cip" -json | Out-Null
@@ -200,8 +200,8 @@ Function New-SupplementalWDACConfig {
             Set-HVCIOptions -Strict -FilePath ".\SupplementalPolicy $SuppPolicyName.xml"
             ConvertFrom-CIPolicy -XmlFilePath ".\SupplementalPolicy $SuppPolicyName.xml" -BinaryFilePath "$PolicyID.cip" | Out-Null
 
-            Write-Output -InputObject "SupplementalPolicyFile = SupplementalPolicy $SuppPolicyName.xml"
-            Write-Output -InputObject "SupplementalPolicyGUID = $PolicyID"
+            Write-ColorfulText -Color MintGreen -InputText "SupplementalPolicyFile = SupplementalPolicy $SuppPolicyName.xml"
+            Write-ColorfulText -Color MintGreen -InputText "SupplementalPolicyGUID = $PolicyID"
 
             if ($Deploy) {
                 &'C:\Windows\System32\CiTool.exe' --update-policy "$PolicyID.cip" -json | Out-Null
@@ -255,8 +255,8 @@ Function New-SupplementalWDACConfig {
             Set-HVCIOptions -Strict -FilePath ".\SupplementalPolicy $SuppPolicyName.xml"
             ConvertFrom-CIPolicy -XmlFilePath ".\SupplementalPolicy $SuppPolicyName.xml" -BinaryFilePath "$PolicyID.cip" | Out-Null
 
-            Write-Output -InputObject "SupplementalPolicyFile = SupplementalPolicy $SuppPolicyName.xml"
-            Write-Output -InputObject "SupplementalPolicyGUID = $PolicyID"
+            Write-ColorfulText -Color MintGreen -InputText "SupplementalPolicyFile = SupplementalPolicy $SuppPolicyName.xml"
+            Write-ColorfulText -Color MintGreen -InputText "SupplementalPolicyGUID = $PolicyID"
 
             if ($Deploy) {
                 &'C:\Windows\System32\CiTool.exe' --update-policy "$PolicyID.cip" -json | Out-Null

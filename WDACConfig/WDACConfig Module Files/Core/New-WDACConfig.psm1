@@ -214,7 +214,7 @@ Function New-WDACConfig {
                 Invoke-Command -ScriptBlock $DriversBlockListInfoGatheringSCRIPTBLOCK
 
                 # Display the result
-                Write-Output -InputObject 'PolicyFile = Microsoft recommended driver block rules.xml'
+                Write-ColorfulText -Color MintGreen -InputText 'PolicyFile = Microsoft recommended driver block rules.xml'
             }
         }
 
@@ -277,8 +277,8 @@ Function New-WDACConfig {
             Remove-Item -Path '.\AllowMicrosoft.xml', 'Microsoft recommended block rules.xml' -Force
 
             Write-Verbose -Message 'Displaying the outout'
-            Write-Output -InputObject 'PolicyFile = AllowMicrosoftPlusBlockRules.xml'
-            Write-Output -InputObject "BinaryFile = $PolicyID.cip"
+            Write-ColorfulText -Color MintGreen -InputText 'PolicyFile = AllowMicrosoftPlusBlockRules.xml'
+            Write-ColorfulText -Color MintGreen -InputText "BinaryFile = $PolicyID.cip"
 
             if ($Deploy -and $MakeAllowMSFTWithBlockRules) {
                 Write-Verbose -Message 'Deploying the AllowMicrosoftPlusBlockRules.xml policy'
@@ -403,8 +403,8 @@ Function New-WDACConfig {
             }
 
             Write-Verbose -Message 'Displaying the output'
-            Write-Output -InputObject 'PolicyFile = DefaultWindowsPlusBlockRules.xml'
-            Write-Output -InputObject "BinaryFile = $PolicyID.cip"
+            Write-ColorfulText -Color MintGreen -InputText 'PolicyFile = DefaultWindowsPlusBlockRules.xml'
+            Write-ColorfulText -Color MintGreen -InputText "BinaryFile = $PolicyID.cip"
 
             if ($Deploy -and $MakeDefaultWindowsWithBlockRules) {
                 Write-Verbose -Message 'Deploying the DefaultWindowsPlusBlockRules.xml policy'
@@ -763,11 +763,11 @@ Function New-WDACConfig {
 
             #Endregion Supplemental-Policy-Processing
 
-            Write-Output -InputObject "BasePolicyFile = $BasePolicy"
-            Write-Output -InputObject "BasePolicyGUID = $BasePolicyID"
+            Write-ColorfulText -Color MintGreen -InputText "BasePolicyFile = $BasePolicy"
+            Write-ColorfulText -Color MintGreen -InputText "BasePolicyGUID = $BasePolicyID"
 
-            Write-Output -InputObject 'SupplementalPolicyFile = SupplementalPolicy.xml'
-            Write-Output -InputObject "SupplementalPolicyGUID = $PolicyID"
+            Write-ColorfulText -Color MintGreen -InputText 'SupplementalPolicyFile = SupplementalPolicy.xml'
+            Write-ColorfulText -Color MintGreen -InputText "SupplementalPolicyGUID = $PolicyID"
 
             if (-NOT $Debug) {
                 Remove-Item -Path 'AuditLogsPolicy_NoDeletedFiles.xml', 'FileRulesAndFileRefs.txt', 'DeletedFilesHashes.xml' -Force -ErrorAction SilentlyContinue
@@ -859,8 +859,8 @@ Function New-WDACConfig {
             }
 
             Write-Verbose -Message 'Displaying the output'
-            Write-Output -InputObject 'BasePolicyFile = SignedAndReputable.xml'
-            Write-Output -InputObject "BasePolicyGUID = $BasePolicyID"
+            Write-ColorfulText -Color MintGreen -InputText 'BasePolicyFile = SignedAndReputable.xml'
+            Write-ColorfulText -Color MintGreen -InputText "BasePolicyGUID = $BasePolicyID"
         }
 
         # Script block that is used to supply extra information regarding Microsoft recommended driver block rules in commands that use them

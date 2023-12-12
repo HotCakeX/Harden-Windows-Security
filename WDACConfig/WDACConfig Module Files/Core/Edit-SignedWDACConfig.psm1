@@ -262,9 +262,9 @@ Function Edit-SignedWDACConfig {
 
             # Deploy Enforced mode CIP
             &'C:\Windows\System32\CiTool.exe' --update-policy '.\EnforcedMode.cip' -json | Out-Null
-            Write-ColorfulText -Color TeaGreen -InputText 'The Base policy with the following details has been Re-Signed and Re-Deployed in Enforced Mode:'
-            Write-Host -Object "PolicyName = $PolicyName"
-            Write-Host -Object "PolicyGUID = $PolicyID"
+            Write-ColorfulText -Color Lavender -InputText 'The Base policy with the following details has been Re-Signed and Re-Deployed in Enforced Mode:'
+            Write-ColorfulText -Color MintGreen -InputText "PolicyName = $PolicyName"
+            Write-ColorfulText -Color MintGreen -InputText "PolicyGUID = $PolicyID"
             # Remove Enforced Mode CIP
             Remove-Item -Path '.\EnforcedMode.cip' -Force
         }
@@ -349,9 +349,9 @@ Function Edit-SignedWDACConfig {
                 Write-Verbose -Message 'Deploying the Audit mode CIP'
                 &'C:\Windows\System32\CiTool.exe' --update-policy '.\AuditMode.cip' -json | Out-Null
 
-                Write-ColorfulText -Color TeaGreen -InputText 'The Base policy with the following details has been Re-Signed and Re-Deployed in Audit Mode:'
-                Write-Output -InputObject "PolicyName = $PolicyName"
-                Write-Output -InputObject "PolicyGUID = $PolicyID"
+                Write-ColorfulText -Color Lavender -InputText 'The Base policy with the following details has been Re-Signed and Re-Deployed in Audit Mode:'
+                Write-ColorfulText -Color MintGreen -InputText "PolicyName = $PolicyName"
+                Write-ColorfulText -Color MintGreen -InputText "PolicyGUID = $PolicyID"
 
                 # Remove the Audit Mode CIP
                 Remove-Item -Path '.\AuditMode.cip' -Force
@@ -498,9 +498,9 @@ Function Edit-SignedWDACConfig {
                 Write-Verbose -Message 'Deploying the Supplemental policy'
                 &'C:\Windows\System32\CiTool.exe' --update-policy ".\$SuppPolicyID.cip" -json | Out-Null
 
-                Write-ColorfulText -Color TeaGreen -InputText 'Supplemental policy with the following details has been Signed and Deployed in Enforced Mode:'
-                Write-Output -InputObject "SupplementalPolicyName = $SuppPolicyName"
-                Write-Output -InputObject "SupplementalPolicyGUID = $SuppPolicyID"
+                Write-ColorfulText -Color Lavender -InputText 'Supplemental policy with the following details has been Signed and Deployed in Enforced Mode:'
+                Write-ColorfulText -Color MintGreen -InputText "SupplementalPolicyName = $SuppPolicyName"
+                Write-ColorfulText -Color MintGreen -InputText "SupplementalPolicyGUID = $SuppPolicyID"
 
                 Write-Verbose -Message 'Removing the signed Supplemental policy CIP file after deployment'
                 Remove-Item -Path ".\$SuppPolicyID.cip" -Force
@@ -599,9 +599,9 @@ Function Edit-SignedWDACConfig {
                 Write-Verbose -Message 'Deploying the Audit mode CIP'
                 &'C:\Windows\System32\CiTool.exe' --update-policy '.\AuditMode.cip' -json | Out-Null
 
-                Write-ColorfulText -Color TeaGreen -InputText 'The Base policy with the following details has been Re-Signed and Re-Deployed in Audit Mode:'
-                Write-Output -InputObject "PolicyName = $PolicyName"
-                Write-Output -InputObject "PolicyGUID = $PolicyID"
+                Write-ColorfulText -Color Lavender -InputText 'The Base policy with the following details has been Re-Signed and Re-Deployed in Audit Mode:'
+                Write-ColorfulText -Color MintGreen -InputText "PolicyName = $PolicyName"
+                Write-ColorfulText -Color MintGreen -InputText "PolicyGUID = $PolicyID"
 
                 # Remove the Audit Mode CIP
                 Remove-Item -Path '.\AuditMode.cip' -Force
@@ -932,9 +932,9 @@ Function Edit-SignedWDACConfig {
                 Write-Verbose -Message 'Deploying the Supplemental policy'
                 &'C:\Windows\System32\CiTool.exe' --update-policy ".\$SuppPolicyID.cip" -json | Out-Null
 
-                Write-ColorfulText -Color TeaGreen -InputText 'Supplemental policy with the following details has been Signed and Deployed in Enforced Mode:'
-                Write-Output -InputObject "SupplementalPolicyName = $SuppPolicyName"
-                Write-Output -InputObject "SupplementalPolicyGUID = $SuppPolicyID"
+                Write-ColorfulText -Color Lavender -InputText 'Supplemental policy with the following details has been Signed and Deployed in Enforced Mode:'
+                Write-ColorfulText -Color MintGreen -InputText "SupplementalPolicyName = $SuppPolicyName"
+                Write-ColorfulText -Color MintGreen -InputText "SupplementalPolicyGUID = $SuppPolicyID"
 
                 Write-Verbose -Message 'Removing the signed Supplemental policy CIP file after deployment'
                 Remove-Item -Path ".\$SuppPolicyID.cip" -Force

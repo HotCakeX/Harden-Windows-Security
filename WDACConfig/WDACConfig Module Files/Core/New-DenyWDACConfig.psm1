@@ -241,7 +241,7 @@ Function New-DenyWDACConfig {
         if ($InstalledAppXPackages) {
             do {
                 Get-AppxPackage -Name $PackageName
-                Write-Debug -Message "This is the Selected package name $PackageName"
+                Write-Verbose -Message "This is the Selected package name $PackageName"
                 $Question = Read-Host -Prompt "`nIs this the intended results based on your Installed Appx packages? Enter 1 to continue, Enter 2 to exit`n"
             } until (
                 (($Question -eq 1) -or ($Question -eq 2))

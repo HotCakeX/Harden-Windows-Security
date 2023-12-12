@@ -47,10 +47,7 @@ Function Deploy-SignedWDACConfig {
         # Redirecting the Update-Self function's information Stream to $null because Write-Host
         # Used by Write-ColorfulText outputs to both information stream and host console
         if (-NOT $SkipVersionCheck) { Update-self 6> $null }
-
-        # Detecting if Debug switch is used, will do debugging actions based on that
-        $PSBoundParameters.Debug.IsPresent ? ([System.Boolean]$Debug = $true) : ([System.Boolean]$Debug = $false) | Out-Null
-
+        
         #Region User-Configurations-Processing-Validation
         # If any of these parameters, that are mandatory for all of the position 0 parameters, isn't supplied by user
         if (!$SignToolPath -or !$CertPath -or !$CertCN) {
@@ -168,8 +165,8 @@ Function Deploy-SignedWDACConfig {
                 'Wait'         = $true
                 'ErrorAction'  = 'Stop'
             }
-            # Hide the SignTool.exe's normal output unless -Debug parameter was used
-            if (!$Debug) { $ProcessParams['RedirectStandardOutput'] = 'NUL' }
+            # Hide the SignTool.exe's normal output unless -Verbose parameter was used
+            if (!$Verbose) { $ProcessParams['RedirectStandardOutput'] = 'NUL' }
 
             # Sign the files with the specified cert
             Write-Verbose -Message 'Signing the policy with the specified certificate'

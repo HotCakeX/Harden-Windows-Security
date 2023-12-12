@@ -327,8 +327,8 @@ Function Edit-SignedWDACConfig {
                         'NoNewWindow'  = $true
                         'Wait'         = $true
                         'ErrorAction'  = 'Stop'
-                    } # Only show the output of SignTool if Debug switch is used
-                    if (!$Debug) { $ProcessParams['RedirectStandardOutput'] = 'NUL' }
+                    } # Only show the output of SignTool if Verbose switch is used
+                    if (!$Verbose) { $ProcessParams['RedirectStandardOutput'] = 'NUL' }
                     # Sign the files with the specified cert
                     Start-Process @ProcessParams
                 }
@@ -482,8 +482,8 @@ Function Edit-SignedWDACConfig {
                     'NoNewWindow'  = $true
                     'Wait'         = $true
                     'ErrorAction'  = 'Stop'
-                } # Only show the output of SignTool if Debug switch is used
-                if (!$Debug) { $ProcessParams['RedirectStandardOutput'] = 'NUL' }
+                } # Only show the output of SignTool if Verbose switch is used
+                if (!$Verbose) { $ProcessParams['RedirectStandardOutput'] = 'NUL' }
 
                 # Sign the files with the specified cert
                 Write-Verbose -Message 'Signing the Supplemental policy with the specified cert'
@@ -577,8 +577,8 @@ Function Edit-SignedWDACConfig {
                         'NoNewWindow'  = $true
                         'Wait'         = $true
                         'ErrorAction'  = 'Stop'
-                    } # Only show the output of SignTool if Debug switch is used
-                    if (!$Debug) { $ProcessParams['RedirectStandardOutput'] = 'NUL' }
+                    } # Only show the output of SignTool if Verbose switch is used
+                    if (!$Verbose) { $ProcessParams['RedirectStandardOutput'] = 'NUL' }
                     # Sign the files with the specified cert
                     Start-Process @ProcessParams
                 }
@@ -861,7 +861,7 @@ Function Edit-SignedWDACConfig {
                     Merge-CIPolicy -PolicyPaths $PolicyXMLFilesArray -OutputFilePath ".\SupplementalPolicy $SuppPolicyName.xml" | Out-Null
 
                     # Delete these extra files unless user uses -Debug parameter
-                    if (-NOT $Debug) {
+                    if (!$Debug) {
                         Remove-Item -Path '.\RulesForFilesNotInUserSelectedPaths.xml', '.\ProgramDir_ScanResults*.xml' -Force -ErrorAction SilentlyContinue
                         Remove-Item -Path '.\KernelProtectedFiles.xml', '.\DeletedFileHashesEventsPolicy.xml' -Force -ErrorAction SilentlyContinue
                         Remove-Item -Path '.\KernelProtectedFiles.txt', '.\FileRulesAndFileRefs.txt' -Force -ErrorAction SilentlyContinue
@@ -916,8 +916,8 @@ Function Edit-SignedWDACConfig {
                     'Wait'         = $true
                     'ErrorAction'  = 'Stop'
                 }
-                # Only show the output of SignTool if Debug switch is used
-                if (!$Debug) { $ProcessParams['RedirectStandardOutput'] = 'NUL' }
+                # Only show the output of SignTool if Verbose switch is used
+                if (!$Verbose) { $ProcessParams['RedirectStandardOutput'] = 'NUL' }
 
                 # Sign the files with the specified cert
                 Write-Verbose -Message 'Signing the Supplemental policy with the specified cert'
@@ -1020,8 +1020,8 @@ Function Edit-SignedWDACConfig {
                     'NoNewWindow'  = $true
                     'Wait'         = $true
                     'ErrorAction'  = 'Stop'
-                } # Only show the output of SignTool if Debug switch is used
-                if (!$Debug) { $ProcessParams['RedirectStandardOutput'] = 'NUL' }
+                } # Only show the output of SignTool if Verbose switch is used
+                if (!$Verbose) { $ProcessParams['RedirectStandardOutput'] = 'NUL' }
 
                 # Sign the files with the specified cert
                 Write-Verbose -Message 'Signing the Supplemental policy with the specified cert'
@@ -1191,8 +1191,8 @@ Function Edit-SignedWDACConfig {
                 'NoNewWindow'  = $true
                 'Wait'         = $true
                 'ErrorAction'  = 'Stop'
-            } # Only show the output of SignTool if Debug switch is used
-            if (!$Debug) { $ProcessParams['RedirectStandardOutput'] = 'NUL' }
+            } # Only show the output of SignTool if Verbose switch is used
+            if (!$Verbose) { $ProcessParams['RedirectStandardOutput'] = 'NUL' }
 
             # Sign the files with the specified cert
             Write-Verbose -Message 'Signing the base policy with the specified cert'

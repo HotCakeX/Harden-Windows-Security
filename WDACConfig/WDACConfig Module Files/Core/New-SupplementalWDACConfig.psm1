@@ -151,7 +151,7 @@ Function New-SupplementalWDACConfig {
             if ($NoScript) { $PolicyMakerHashTable['NoScript'] = $true }
             if (!$NoUserPEs) { $PolicyMakerHashTable['UserPEs'] = $true }
 
-            Write-ColorfulText -Color HotPink -InputText "`nGenerating Supplemental policy with the following specifications:"
+            Write-ColorfulText -Color HotPink -InputText 'Generating Supplemental policy with the following specifications:'
             $PolicyMakerHashTable
             Write-Host -Object ''
             # Create the supplemental policy via parameter splatting
@@ -231,7 +231,7 @@ Function New-SupplementalWDACConfig {
                     $Rules += New-CIPolicyRule -Package $Item
                 }
 
-                # Create rules for each pacakge dependency, if any
+                # Create rules for each package dependency, if any
                 if ($PackageDependencies) {
                     foreach ($Item in $PackageDependencies) {
                         $Rules += New-CIPolicyRule -Package $Item

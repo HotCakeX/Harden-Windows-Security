@@ -184,7 +184,7 @@ Function New-WDACConfig {
             else {
                 # Downloading the latest Microsoft Recommended Driver Block Rules from the official source
                 Write-Verbose -Message 'Downloading the latest Microsoft Recommended Driver Block Rules from the official source'
-                [System.String]$DriverRules = (Invoke-WebRequest -Uri $MSFTRecommendeDriverBlockRulesURL -ProgressAction SilentlyContinue).Content -replace "(?s).*``````xml(.*)``````.*", '$1'
+                [System.String]$DriverRules = (Invoke-WebRequest -Uri $MSFTRecommendedDriverBlockRulesURL -ProgressAction SilentlyContinue).Content -replace "(?s).*``````xml(.*)``````.*", '$1'
 
                 # Remove the unnecessary rules and elements - not using this one because then during the merge there will be error - The reason is that "<FileRuleRef RuleID="ID_ALLOW_ALL_2" />" is the only FileruleRef in the xml and after removing it, the <SigningScenario> element will be empty
                 Write-Verbose -Message 'Removing the allow all rules and rule refs from the policy'
@@ -428,7 +428,7 @@ Function New-WDACConfig {
             param()
 
             Write-Verbose -Message 'Downloading the latest Microsoft recommended block rules and creating Microsoft recommended block rules TEMP.xml'
-            (Invoke-WebRequest -Uri $MSFTRecommendeBlockRulesURL -ProgressAction SilentlyContinue).Content -replace "(?s).*``````xml(.*)``````.*", '$1' | Out-File -FilePath '.\Microsoft recommended block rules TEMP.xml' -Force
+            (Invoke-WebRequest -Uri $MSFTRecommendedBlockRulesURL -ProgressAction SilentlyContinue).Content -replace "(?s).*``````xml(.*)``````.*", '$1' | Out-File -FilePath '.\Microsoft recommended block rules TEMP.xml' -Force
 
             # Remove empty lines from the policy file
             Write-Verbose -Message 'Removing any empty lines from the Temp policy file and generating the Microsoft recommended block rules.xml'
@@ -693,7 +693,7 @@ Function New-WDACConfig {
             if ($NoScript) { $PolicyMakerHashTable['NoScript'] = $true }
             if (!$NoUserPEs) { $PolicyMakerHashTable['UserPEs'] = $true }
 
-            Write-ColorfulText -Color HotPink -InputText "`nGenerating Supplemental policy with the following specifications:"
+            Write-ColorfulText -Color HotPink -InputText 'Generating Supplemental policy with the following specifications:'
             $PolicyMakerHashTable
             Write-Host -Object ''
 
@@ -874,7 +874,7 @@ Function New-WDACConfig {
             [System.DateTime]$Date = $Response[0].commit.author.date
 
             Write-ColorfulText -Color Lavender -InputText "The document containing the drivers block list on GitHub was last updated on $Date"
-            [System.String]$MicrosoftRecommendeDriverBlockRules = (Invoke-WebRequest -Uri $MSFTRecommendeDriverBlockRulesURL -ProgressAction SilentlyContinue).Content
+            [System.String]$MicrosoftRecommendeDriverBlockRules = (Invoke-WebRequest -Uri $MSFTRecommendedDriverBlockRulesURL -ProgressAction SilentlyContinue).Content
             $MicrosoftRecommendeDriverBlockRules -match '<VersionEx>(.*)</VersionEx>' | Out-Null
             Write-ColorfulText -Color Pink -InputText "The current version of Microsoft recommended drivers block list is $($Matches[1])"
         }

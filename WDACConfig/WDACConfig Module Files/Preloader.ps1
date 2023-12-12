@@ -1,3 +1,7 @@
+if (!$IsWindows) {
+    Throw 'The WDACConfig module only runs on Windows operation systems.'
+}
+
 # Specifies that the WDACConfig module requires Administrator privileges
 #Requires -RunAsAdministrator
 

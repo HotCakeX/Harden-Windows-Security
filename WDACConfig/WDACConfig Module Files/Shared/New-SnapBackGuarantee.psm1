@@ -63,7 +63,7 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
                 $Command | Out-File -FilePath 'C:\EnforcedModeSnapBack.ps1' -Force
                 # Saving the command that runs the EnforcedModeSnapBack.ps1 file in the next reboot to the RunOnce key
                 New-ItemProperty -Path $RegistryPath -Name '*CIPolicySnapBack' -Value "powershell.exe -WindowStyle `"Hidden`" -ExecutionPolicy `"Bypass`" -Command `"& {&`"C:\EnforcedModeSnapBack.ps1`";Remove-Item -Path 'C:\EnforcedModeSnapBack.ps1' -Force}`"" -PropertyType String -Force | Out-Null
-#>  
+#>
 
 # If the alternative way is used, this should be added to the Finally block under the:
 # Enforced Mode Snapback removal after base policy has already been successfully re-enforced

@@ -13,9 +13,6 @@ Function Remove-CommonWDACConfig {
     begin {
         # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
-        # Importing the required sub-modules
-        Write-Verbose -Message 'Importing the required sub-modules'
-        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Write-ColorfulText.psm1" -Force
 
         # Create User configuration folder if it doesn't already exist
         if (-NOT (Test-Path -Path "$UserAccountDirectoryPath\.WDACConfig\")) {
@@ -32,7 +29,7 @@ Function Remove-CommonWDACConfig {
         # Delete the entire User Configs if a more specific parameter wasn't used
         if ($PSBoundParameters.Count -eq 0) {
             Remove-Item -Path "$UserAccountDirectoryPath\.WDACConfig\" -Recurse -Force
-            Write-ColorfulText -Color Pink -InputText 'User Configurations for WDACConfig module have been deleted.'
+            Write-verbfose -Message 'User Configurations for WDACConfig module have been deleted.'
             break
         }
 

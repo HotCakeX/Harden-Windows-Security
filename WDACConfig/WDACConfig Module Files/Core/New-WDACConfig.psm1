@@ -108,8 +108,7 @@ Function New-WDACConfig {
                 try { $UserConfig = $UserConfig | ConvertFrom-Json }
                 catch {
                     Write-Error -Message 'User Configurations Json file is corrupted, deleting it...' -ErrorAction Continue
-                    # Calling this function with this parameter automatically does its job and breaks/stops the operation
-                    Set-CommonWDACConfig -DeleteUserConfig
+                    Remove-CommonWDACConfig
                 }
             }
         }

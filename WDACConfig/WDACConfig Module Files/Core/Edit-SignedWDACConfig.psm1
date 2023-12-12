@@ -154,8 +154,7 @@ Function Edit-SignedWDACConfig {
                 try { $UserConfig = $UserConfig | ConvertFrom-Json }
                 catch {
                     Write-Error -Message 'User Configurations Json file is corrupted, deleting it...' -ErrorAction Continue
-                    # Calling this function with this parameter automatically does its job and breaks/stops the operation
-                    Set-CommonWDACConfig -DeleteUserConfig
+                    Remove-CommonWDACConfig
                 }
             }
         }
@@ -347,7 +346,7 @@ Function Edit-SignedWDACConfig {
                 New-SnapBackGuarantee -Location (Get-Location).Path
 
                 # Deploy the Audit mode CIP
-                Write-Verbose -Message 'Deploying the Audit mode CIP'                
+                Write-Verbose -Message 'Deploying the Audit mode CIP'
                 &'C:\Windows\System32\CiTool.exe' --update-policy '.\AuditMode.cip' -json | Out-Null
 
                 Write-ColorfulText -Color TeaGreen -InputText 'The Base policy with the following details has been Re-Signed and Re-Deployed in Audit Mode:'
@@ -1226,7 +1225,11 @@ Function Edit-SignedWDACConfig {
             Rename-Item -Path '.\BasePolicy.xml' -NewName $PolicyFiles[$NewBasePolicyType] -Force
 
             Write-ColorfulText -Color Pink -InputText "Base Policy has been successfully updated to $NewBasePolicyType"
-            Write-ColorfulText -Color Lavender -InputText 'Keep in mind that your previous policy path saved in User Configurations (if any) is no longer valid as you just changed your Base policy.'
+
+            if (Get-CommonWDACConfig -SignedPolicyPath) {
+                Write-Verbose -Message 'Replacing the old signed policy path in User Configurations with the new one'
+                Set-CommonWDACConfig -SignedPolicyPath (Get-ChildItem -Path $PolicyFiles[$NewBasePolicyType]).FullName | Out-Null
+            }
         }
     }
 

@@ -53,10 +53,6 @@ Function Set-CommonWDACConfig {
         # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
-        # Importing the required sub-modules
-        Write-Verbose -Message 'Importing the required sub-modules'
-        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Write-ColorfulText.psm1" -Force
-
         # Create User configuration folder if it doesn't already exist
         if (-NOT (Test-Path -Path "$UserAccountDirectoryPath\.WDACConfig\")) {
             New-Item -ItemType Directory -Path "$UserAccountDirectoryPath\.WDACConfig\" -Force -ErrorAction Stop | Out-Null
@@ -179,8 +175,6 @@ Function Set-CommonWDACConfig {
         Write-Verbose -Message 'Saving the changes'
         $UserConfigurationsObject | ConvertTo-Json | Set-Content -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json"
 
-        Write-ColorfulText -Color Pink -InputText "`nThis is your new WDAC User Configurations: "
-        Write-Verbose -Message 'Displaying the current user configurations'
         Get-Content -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json" | ConvertFrom-Json | Format-List -Property *
     }
     <#

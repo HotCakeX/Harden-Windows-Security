@@ -12,6 +12,9 @@ Function Get-BlockRulesMeta {
     # Importing the $PSDefaultParameterValues to the current session, prior to everything else
     . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
+    # Importing the required sub-modules
+    Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Write-ColorfulText.psm1" -Force
+
     [System.String]$Rules = (Invoke-WebRequest -Uri $MSFTRecommendeBlockRulesURL -ProgressAction SilentlyContinue).Content -replace "(?s).*``````xml(.*)``````.*", '$1' -replace '<Allow\sID="ID_ALLOW_A_[12]".*/>|<FileRuleRef\sRuleID="ID_ALLOW_A_[12]".*/>', ''
     $Rules | Out-File -FilePath '.\Microsoft recommended block rules TEMP.xml' -Force
     # Removing empty lines from policy file

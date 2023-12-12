@@ -994,9 +994,9 @@ Function Edit-WDACConfig {
 
             Write-ColorfulText -Color Pink -InputText "Base Policy has been successfully updated to $NewBasePolicyType"
 
-            if (Get-CommonWDACConfig -SignedPolicyPath) {
-                Write-Verbose -Message 'Replacing the old signed policy path in User Configurations with the new one'
-                Set-CommonWDACConfig -SignedPolicyPath (Get-ChildItem -Path $PolicyFiles[$NewBasePolicyType]).FullName | Out-Null
+            if (Get-CommonWDACConfig -UnsignedPolicyPath) {
+                Write-Verbose -Message 'Replacing the old unsigned policy path in User Configurations with the new one'
+                Set-CommonWDACConfig -UnsignedPolicyPath (Get-ChildItem -Path $PolicyFiles[$NewBasePolicyType]).FullName | Out-Null
             }
         }
     }

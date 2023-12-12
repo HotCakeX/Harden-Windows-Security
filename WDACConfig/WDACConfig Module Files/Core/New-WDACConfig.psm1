@@ -818,7 +818,7 @@ Function New-WDACConfig {
             Remove-Item -Path 'SignedAndReputable.xml' -Force -ErrorAction SilentlyContinue
 
             Write-Verbose -Message 'Calling Build-AllowMSFTWithBlockRules function to create AllowMicrosoftPlusBlockRules.xml policy'
-            Build-AllowMSFTWithBlockRules -NoCIP
+            Build-AllowMSFTWithBlockRules -NoCIP | Out-Null
 
             Write-Verbose -Message 'Renaming AllowMicrosoftPlusBlockRules.xml to SignedAndReputable.xml'
             Rename-Item -Path 'AllowMicrosoftPlusBlockRules.xml' -NewName 'SignedAndReputable.xml' -Force

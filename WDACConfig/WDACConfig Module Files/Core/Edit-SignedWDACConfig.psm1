@@ -851,7 +851,7 @@ Function Edit-SignedWDACConfig {
                         }
                     }
                     else {
-                        Write-Verbose -Message 'No Kernel protected files in the user selected paths were detected.'
+                        Write-Verbose -Message 'No Kernel protected files in the user selected paths were detected'
                     }
                     #Endregion Kernel-protected-files-automatic-detection-and-allow-rule-creation
 

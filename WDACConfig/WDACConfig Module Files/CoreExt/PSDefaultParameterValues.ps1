@@ -23,4 +23,5 @@ $PSDefaultParameterValues = @{
     'Test-FilePath:Verbose'                = $Verbose
     'Update-self:Verbose'                  = $Verbose
     'Write-ColorfulText:Verbose'           = $Verbose
+    'New-SnapBackGuarantee:Verbose'        = $Verbose
 }

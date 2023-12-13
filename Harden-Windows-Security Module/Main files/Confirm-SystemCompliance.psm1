@@ -76,7 +76,7 @@ function Confirm-SystemCompliance {
         [System.Int64]$global:TotalNumberOfTrueCompliantValues = 231
 
         # Get the security group policies
-        Secedit /export /cfg .\security_policy.inf | Out-Null
+        &'C:\Windows\System32\Secedit.exe' /export /cfg .\security_policy.inf | Out-Null
 
         # Get the current configurations and preferences of the Microsoft Defender
         New-Variable -Name 'MDAVConfigCurrent' -Value (Get-MpComputerStatus) -Force

@@ -197,6 +197,4 @@ It can rebootlessly change the type of the deployed base policy. It can update t
 
 * **Optional** parameters indicate that they are not required and without using them the module will automatically run with the optimal settings.
 
-* Many cmdlets and parameters of the module support the PowerShell's built-in `-Debug` switch and when that switch is used, they display extra details and debugging messages on the console, showing you what's happening under the hood.
-
 <br>

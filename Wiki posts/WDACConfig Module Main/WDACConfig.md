@@ -1,6 +1,6 @@
 # WDACConfig (Windows Defender Application Control) Module
 
-[**WDACConfig**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig) is an advanced PowerShell module designed with the aim of automating [Application and File whitelisting in Windows](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/wdac) using Windows Defender Application Control (App Control for Business Policies). [**You can always find its source code on GitHub**](https://github.com/HotCakeX/Harden-Windows-Security/tree/main/WDACConfig) and Install it from [**PowerShell Gallery**](https://www.powershellgallery.com/packages/WDACConfig/).
+[**WDACConfig**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig) is an advanced PowerShell module designed with the aim of automating [Application and File whitelisting in Windows](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/wdac) using Windows Defender Application Control (App Control for Business Policies). [You can always find its source code on GitHub](https://github.com/HotCakeX/Harden-Windows-Security/tree/main/WDACConfig) and Install it from [**PowerShell Gallery**](https://www.powershellgallery.com/packages/WDACConfig/).
 
 This page is also available [on my website.](https://spynetgirl.github.io/WDACConfig%20Module/WDACConfig/)
 
@@ -12,7 +12,7 @@ This page is also available [on my website.](https://spynetgirl.github.io/WDACCo
 
 ## Requirements
 
-* PowerShell Core latest version  
+* PowerShell Core latest version
   
     * Install from [GitHub](https://github.com/PowerShell/PowerShell/releases/latest) or [Microsoft Store](https://www.microsoft.com/store/productid/9MZ1SNWT0N5D)
 
@@ -34,11 +34,13 @@ This page is also available [on my website.](https://spynetgirl.github.io/WDACCo
 
     - Update check can be skipped with `-SkipVersionCheck`.
 
-* Actively trying to design it with [Microsoft Security Development Lifesycle (SDL)](https://www.microsoft.com/en-us/securityengineering/sdl/) guidelines in mind.
+* Actively trying to design it with [Microsoft Security Development Lifecycle (SDL)](https://www.microsoft.com/en-us/securityengineering/sdl/) guidelines in mind.
 
 * The module goes through Extended Validation before each update is released to make sure everything works perfectly.
 
 * The module can be used for managing both local systems and systems in Azure VMs.
+
+* Use `-Verbose` common parameter with each cmdlet of the WDACConfig module to see extra details and what's happening under the hood.
 
 <br>
 

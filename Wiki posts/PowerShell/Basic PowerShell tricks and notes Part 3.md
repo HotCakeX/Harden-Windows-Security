@@ -42,7 +42,7 @@ $objects | Format-Table -AutoSize
 
 <br>
 
-Now we want to filter the result to get the unique values, but the unqieness should be based on a specific property, which here is "RandomNumber". We don't want more than 1 object with the same "RandomNumber" property.
+Now we want to filter the result to get the unique values, but the uniqueness should be based on a specific property, which here is "RandomNumber". We don't want more than 1 object with the same "RandomNumber" property.
 
 To do that, we use this method in PowerShell
 

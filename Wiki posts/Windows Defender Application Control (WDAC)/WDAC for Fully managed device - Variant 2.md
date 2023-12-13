@@ -13,7 +13,7 @@
 ```mermaid
 flowchart TD
     A(Deploy Default Windows base policy) -->B(Identify Important apps that need Supplemental policy)
-    B --> C(Create and Deploy Supplemental polices for them)
+    B --> C(Create and Deploy Supplemental policies for them)
     C --> D[Another App is getting blocked?]
     D --> E[Is it a normal app?]
     E --> F[Create Supplemental policy based on App's directory]

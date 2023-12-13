@@ -6,7 +6,7 @@ The main source for learning PowerShell is Microsoft Learn websites. There are e
 
 [PowerShell core at Microsoft Learn](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/?view=powershell-7.4)
 
-**Also Use Bing Chat for your PowerShell questions. The AI is fantastic at creating code and explaning everything.**
+**Also Use Bing Chat for your PowerShell questions. The AI is fantastic at creating code and explaining everything.**
 
 <br>
 

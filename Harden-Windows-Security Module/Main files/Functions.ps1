@@ -52,7 +52,7 @@ function Update-self {
                     Add-MpPreference -ControlledFolderAccessAllowedApplications $FilePath
                 }
 
-                # Do this if the module was installed properly using Install-moodule cmdlet
+                # Do this if the module was installed properly using Install-module cmdlet
                 Uninstall-Module -Name 'Harden-Windows-Security-Module' -AllVersions -Force
                 Install-Module -Name 'Harden-Windows-Security-Module' -RequiredVersion $LatestVersion -Force
                 Import-Module -Name 'Harden-Windows-Security-Module' -RequiredVersion $LatestVersion -Force -Global

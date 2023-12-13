@@ -1804,7 +1804,7 @@ function Confirm-SystemCompliance {
                 # Counting the number of $True Compliant values in the Final Output Object
                 [System.Int64]$TotalTrueCompliantValuesInOutPut = ($FinalMegaObject.'Microsoft Defender' | Where-Object -FilterScript { $_.Compliant -eq $True }).Count + # 49 - 4x(N/A) = 45
                 [System.Int64]($FinalMegaObject.ASR | Where-Object -FilterScript { $_.Compliant -eq $True }).Count + # 17
-                [System.Int64]($FinalMegaObject.Bitlocker | Where-Object -FilterScript { $_.Compliant -eq $True }).Count + # 22 + Number of Non-OS drives which are dynamicly increased
+                [System.Int64]($FinalMegaObject.Bitlocker | Where-Object -FilterScript { $_.Compliant -eq $True }).Count + # 22 + Number of Non-OS drives which are dynamically increased
                 [System.Int64]($FinalMegaObject.TLS | Where-Object -FilterScript { $_.Compliant -eq $True }).Count + # 21
                 [System.Int64]($FinalMegaObject.LockScreen | Where-Object -FilterScript { $_.Compliant -eq $True }).Count + # 14
                 [System.Int64]($FinalMegaObject.UAC | Where-Object -FilterScript { $_.Compliant -eq $True }).Count + # 4

@@ -190,7 +190,7 @@ It can rebootlessly change the type of the deployed signed base policy. It can u
      - [Lightly_Managed_system_Policy](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-WDACConfig#new-wdacconfig--makelightpolicy)
 
      - [DefaultWindows_WithBlockRules](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-WDACConfig#new-wdacconfig--makedefaultwindowswithblockrules)
-  
+
         - > Since the module uses PowerShell and not Windows PowerShell that is pre-installed in Windows, selecting this argument will automatically scan `C:\Program Files\PowerShell` directory and add PowerShell files to the base policy so that you will be able to continue using the module after redeploying the base policy. The scan uses ***FilePublisher*** level and ***Hash*** fallback.
 
 ### 2 Automatic Parameters
@@ -221,7 +221,7 @@ It can rebootlessly change the type of the deployed signed base policy. It can u
 
 <br>
 
-### The logic behind `-SignToolPath <String>` optional parameter 
+### The logic behind `-SignToolPath <String>` optional parameter
 
 <a name="signtool-bottom"></a>
 

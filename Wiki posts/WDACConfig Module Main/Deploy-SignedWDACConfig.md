@@ -33,7 +33,7 @@ Creates and signs a `.CIP` file that can be either deployed locally using the `-
 
 <br>
 
-### The logic behind `-SignToolPath <String>` optional parameter 
+### The logic behind `-SignToolPath <String>` optional parameter
 
 <a name="signtool-bottom"></a>
 

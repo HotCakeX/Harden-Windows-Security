@@ -37,7 +37,7 @@ No, you can use it any time.
 
 ## Do I Need to Install a 3rd Party Antivirus or Security Software?
 
-Absolutely not. 
+Absolutely not.
 
 Every security feature needed is already available in Windows. After Installing the Harden Windows Security Module, run PowerShell as Admin and use the command `Protect-WindowsSecurity` to activate them.
 

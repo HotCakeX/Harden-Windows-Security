@@ -21,7 +21,7 @@ flowchart TD
     G --> H[Is it an app that installs drivers outside app's directory?]
     H --> I[Use Event viewer logs + game/app's directory scan]
     I --> J[Edit-WDACConfig -AllowNewAppsAuditEvents]
-    I --> K[Edit-SignedWDACConfig -AllowNewAppsAuditEvents]       
+    I --> K[Edit-SignedWDACConfig -AllowNewAppsAuditEvents]
     D --> L[Want to allow an entire folder?]
     L --> M[Use folder path with one or more Wildcards]
     M --> N[New-SupplementalWDACConfig -FilePathWildCards]
@@ -91,7 +91,7 @@ If you deployed the Default Windows base policy on a system that already had app
 ### Based on signer rules, hashes, file names etc.
 
 ```powershell
-New-SupplementalWDACConfig -Normal -ScanLocation "C:\Program Files\Program" -SuppPolicyName "App's Name" -PolicyPath "C:\DefaultWindowsPlusBlockRules.xml" 
+New-SupplementalWDACConfig -Normal -ScanLocation "C:\Program Files\Program" -SuppPolicyName "App's Name" -PolicyPath "C:\DefaultWindowsPlusBlockRules.xml"
 ```
 
 * [Parameter info](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-SupplementalWDACConfig#new-supplementalwdacconfig--normal)
@@ -102,7 +102,7 @@ New-SupplementalWDACConfig -Normal -ScanLocation "C:\Program Files\Program" -Sup
 
 ```powershell
 New-SupplementalWDACConfig -FilePathWildCards -WildCardPath "C:\Program Files\Program\*" -SuppPolicyName "App's Name" -PolicyPath
-"C:\DefaultWindowsPlusBlockRules.xml" 
+"C:\DefaultWindowsPlusBlockRules.xml"
 ```
 
 * [Parameter info](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-SupplementalWDACConfig#new-supplementalwdacconfig--filepathwildcards)
@@ -112,7 +112,7 @@ New-SupplementalWDACConfig -FilePathWildCards -WildCardPath "C:\Program Files\Pr
 ### Based on an installed Windows app's name
 
 ```powershell
-New-SupplementalWDACConfig -InstalledAppXPackages -PackageName "*App's name*" -SuppPolicyName "App's name" -PolicyPath "C:\DefaultWindowsPlusBlockRules.xml" 
+New-SupplementalWDACConfig -InstalledAppXPackages -PackageName "*App's name*" -SuppPolicyName "App's name" -PolicyPath "C:\DefaultWindowsPlusBlockRules.xml"
 ```
 
 * [Parameter info](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-SupplementalWDACConfig#new-supplementalwdacconfig--installedappxpackages)

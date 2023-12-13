@@ -181,7 +181,7 @@ flowchart TD
     D --> G[Is it a game Installed using Xbox app?]
     G --> H[Is it an app that installs drivers outside app's directory?]
     H --> I[Use Event viewer logs + game/app's directory scan]
-    I --> J[Edit-WDACConfig -AllowNewAppsAuditEvents]      
+    I --> J[Edit-WDACConfig -AllowNewAppsAuditEvents]
     D --> L[Want to allow an entire folder?]
     L --> M[Use folder path with one or more Wildcards]
     M --> N[New-SupplementalWDACConfig -FilePathWildCards]

@@ -103,7 +103,7 @@ Second, there are File Reference rules for each Deny rule that only mentions the
                 <FileRulesRef>
                     <FileRuleRef RuleID="<The same ID of the Deny File rule mentioned earlier>" />
                 </FileRulesRef>
-            </ProductSigners>            
+            </ProductSigners>
         </SigningScenario>
     </SigningScenarios>
 </SiPolicy>
@@ -345,8 +345,8 @@ Find more information in [Microsoft Learn](https://learn.microsoft.com/en-us/win
 Removing these shouldn't cause any problem as long as you are using stable OS version
 
 ```powershell
-# Flight root Certs removal 
-Remove-CIPolicyRule -FilePath "DefaultWindows_Enforced.xml" -Id "ID_SIGNER_STORE_FLIGHT_ROOT"            
+# Flight root Certs removal
+Remove-CIPolicyRule -FilePath "DefaultWindows_Enforced.xml" -Id "ID_SIGNER_STORE_FLIGHT_ROOT"
 Remove-CIPolicyRule -FilePath "DefaultWindows_Enforced.xml" -Id "ID_SIGNER_WINDOWS_FLIGHT_ROOT"
 Remove-CIPolicyRule -FilePath "DefaultWindows_Enforced.xml" -Id "ID_SIGNER_ELAM_FLIGHT"
 Remove-CIPolicyRule -FilePath "DefaultWindows_Enforced.xml" -Id "ID_SIGNER_HAL_FLIGHT"
@@ -555,7 +555,7 @@ It prevents drivers that are not compatible with HVCI from loading, even if they
 
 * It prevents drivers that have been tampered with or modified from loading, even if they are signed and allowed by the WDAC policy.
 
-* Setting HVCI to Strict in a WDAC policy can help prevent malware or attackers from exploiting vulnerabilities in kernel mode drivers or bypassing the WDAC policy enforcement. 
+* Setting HVCI to Strict in a WDAC policy can help prevent malware or attackers from exploiting vulnerabilities in kernel mode drivers or bypassing the WDAC policy enforcement.
 
 <br>
 

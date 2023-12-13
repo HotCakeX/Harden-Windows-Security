@@ -102,7 +102,7 @@ Here is an example function that tries to rename files given to it with the same
 
 ```powershell
 function IsFileAccessible {
-    param ([System.String]$FullFileName)    
+    param ([System.String]$FullFileName)
     [System.Boolean]$IsAccessible = $false
     try {
         Rename-Item $FullFileName $FullFileName -ErrorVariable LockError -ErrorAction Stop
@@ -182,11 +182,11 @@ Oddly enough "Synchronously" means "using the same clock" so when two instructio
 First we create a new `EventLogConfiguration` object and pass it the name of the log we want to configure, then we set it to enabled and save the changes.
 
 ```powershell
-$logName = 'Microsoft-Windows-DNS-Client/Operational'  
+$logName = 'Microsoft-Windows-DNS-Client/Operational'
 
-$log = New-Object System.Diagnostics.Eventing.Reader.EventLogConfiguration $logName 
-$log.IsEnabled=$true 
-$log.SaveChanges() 
+$log = New-Object System.Diagnostics.Eventing.Reader.EventLogConfiguration $logName
+$log.IsEnabled=$true
+$log.SaveChanges()
 ```
 
 We can confirm the change by running this command:
@@ -202,19 +202,19 @@ Using the same method we can configure many other options of the log file, just 
 ## Find the Current User’s Username in Powershell
 
 ```powershell
-[Environment]::UserName 
+[Environment]::UserName
 ```
 
 ```powershell
-$env:username  
+$env:username
 ```
 
 ```powershell
-whoami 
+whoami
 ```
 
 ```powershell
-[System.Security.Principal.WindowsIdentity]::GetCurrent().Name 
+[System.Security.Principal.WindowsIdentity]::GetCurrent().Name
 ```
 
 *Most secure way*
@@ -233,13 +233,13 @@ $UserSID = [System.Security.Principal.WindowsIdentity]::GetCurrent().user.value
 For example, you can first assign the entire object to a variable:
 
 ```powershell
-$Preferences = Get-MpPreference 
+$Preferences = Get-MpPreference
 ```
 
 Then call properties of that variable
 
 ```powershell
-$Preferences.PUAProtection 
+$Preferences.PUAProtection
 ```
 
 Another method is this:
@@ -323,7 +323,7 @@ Write-output("The drivername {0} is vulnerable with a matching SHA256 hash of {1
 
 ## How to List All of the Positional Parameters of a Cmdlet
 
-In this example we use the 
+In this example we use the
 
 ```powershell
 Get-Help -Name "Get-ChildItem" -Parameter * |

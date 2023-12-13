@@ -1,7 +1,7 @@
 # Basic PowerShell Tricks and Notes Part 3
 
 This page is part 3 of the **Basic PowerShell tricks and notes** series.
-  
+
   * [part 1 here](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Basic-PowerShell-tricks-and-notes)
   * [part 2 here](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Basic-PowerShell-tricks-and-notes-Part-2)
 

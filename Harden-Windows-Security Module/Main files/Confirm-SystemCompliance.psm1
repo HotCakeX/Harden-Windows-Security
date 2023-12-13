@@ -693,15 +693,15 @@ function Confirm-SystemCompliance {
 
             # ECC Curves
             [System.Object[]]$ECCCurves = Get-TlsEccCurve
-            [System.Object[]]$list = ('nistP521', 'curve25519', 'NistP384', 'NistP256')
+            [System.Object[]]$List = ('nistP521', 'curve25519', 'NistP384', 'NistP256')
             # Make sure both arrays are completely identical in terms of members and their exact position
             # If this variable is empty that means both arrays are completely identical
-            $IndividualItemResult = Compare-Object $ECCCurves $list -SyncWindow 0
+            $IndividualItemResult = Compare-Object -ReferenceObject $ECCCurves -DifferenceObject $List -SyncWindow 0
 
             $NestedObjectArray += [PSCustomObject]@{
                 FriendlyName = 'ECC Curves and their positions'
                 Compliant    = [System.Boolean]($IndividualItemResult ? $false : $True)
-                Value        = $list
+                Value        = $List
                 Name         = 'ECC Curves and their positions'
                 Category     = $CatName
                 Method       = 'Cmdlet'
@@ -1092,7 +1092,7 @@ function Confirm-SystemCompliance {
 
             # Check network location of all connections to see if they are public
             $Condition = Get-NetConnectionProfile | ForEach-Object -Process { $_.NetworkCategory -eq 'public' }
-            [System.Boolean]$IndividualItemResult = -NOT ($condition -contains $false) ? $True : $false
+            [System.Boolean]$IndividualItemResult = -NOT ($Condition -contains $false) ? $True : $false
 
             # Verify a Security setting using Cmdlet
             $NestedObjectArray += [PSCustomObject]@{

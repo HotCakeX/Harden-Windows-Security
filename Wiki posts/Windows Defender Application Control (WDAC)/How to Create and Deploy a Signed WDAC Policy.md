@@ -159,7 +159,7 @@ Add-WindowsFeature Adcs-Cert-Authority -IncludeManagementTools
 We Increase the validity period of the certificates issued by the CA to 30 years:
 
 ```powershell
-certutil -setreg ca\ValidityPeriod "Years" 
+certutil -setreg ca\ValidityPeriod "Years"
 certutil -setreg ca\ValidityPeriodUnits "30"
 ```
 
@@ -168,7 +168,7 @@ certutil -setreg ca\ValidityPeriodUnits "30"
 You can verify and confirm the results using these commands:
 
 ```powershell
-certutil -getreg ca\ValidityPeriod 
+certutil -getreg ca\ValidityPeriod
 certutil -getreg ca\ValidityPeriodUnits
 ```
 

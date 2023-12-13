@@ -15,7 +15,7 @@ flowchart TD
     A(Deploy WDAC base policy with ISG) -->B(Start using your apps)
     B --> C(Did your app run without problem?)
     C -->|Yes| D[Awesome]
-    C -->|No| E[Create a Supplemental policy for it]    
+    C -->|No| E[Create a Supplemental policy for it]
 ```
 
 <br>

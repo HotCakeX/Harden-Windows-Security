@@ -220,7 +220,7 @@ Screenshot <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pic
 * Create self-signed Root and Client certificates on your local computer if you don't already have the required certificates.
 
     * Use the PowerShell Code below to automate it.
-   
+
     * [Generate and export certificates for point-to-site using PowerShell](https://learn.microsoft.com/en-us/azure/vpn-gateway/vpn-gateway-certificates-point-to-site)
 
     * [Step-By-Step: Creating an Azure Point-to-Site VPN](https://techcommunity.microsoft.com/t5/itops-talk-blog/step-by-step-creating-an-azure-point-to-site-vpn/ba-p/326264)

@@ -16,7 +16,7 @@ People who seek to obtain code signing certificates, even for Extended Validatio
 * Do not use blacklisting for highly secure workstations, sensitive environments and such; it’s ineffective and insecure for a high security level.
 * Whitelisting is the proper answer. This entire document and others in this repository, are exactly for this purpose.
 
-<br> 
+<br>
 
 <p align="center">
 <b>YOUTUBE VIDEO: How to easily protect against BYOVD attack scenarios with WDAC policy in Windows</b><br><br>

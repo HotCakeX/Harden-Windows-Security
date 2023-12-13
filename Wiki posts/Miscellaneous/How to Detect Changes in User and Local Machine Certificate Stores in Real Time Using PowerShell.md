@@ -35,7 +35,7 @@ while ($true) {
     $DifferenceUser = Compare-Object $InitialUser $CurrentUser
 
     # If there is any difference in certificates for LocalMachine, display it and update the initial variable
-    if ($DifferenceLocal) {       
+    if ($DifferenceLocal) {
         foreach ($Diff in $DifferenceLocal) {
             # Check if the change is an addition or a removal based on the side indicator
             if ($Diff.SideIndicator -eq '=>') {
@@ -45,7 +45,7 @@ while ($true) {
             }
             elseif ($Diff.SideIndicator -eq '<=') {
                 &$WriteMintGreen "Certificate Removed from LocalMachine at $(Get-Date -Format 'MM/dd/yyyy HH:mm:ss K')"
-                $PSStyle.Formatting.FormatAccent = "$($PSStyle.Foreground.FromRGB(152,255,152))"               
+                $PSStyle.Formatting.FormatAccent = "$($PSStyle.Foreground.FromRGB(152,255,152))"
                 $Diff.InputObject | Format-List -Property PSPath, EnhancedKeyUsageList, DnsNameList, SendAsTrustedIssuer, FriendlyName, HasPrivateKey, NotAfter, NotBefore, SerialNumber, Thumbprint, Issuer, Subject
             }
         }
@@ -53,7 +53,7 @@ while ($true) {
     }
 
     # If there is any difference in certificates for CurrentUser, display it and update the initial variable
-    if ($DifferenceUser) {      
+    if ($DifferenceUser) {
         foreach ($Diff in $DifferenceUser) {
             # Check if the change is an addition or a removal based on the side indicator
             if ($Diff.SideIndicator -eq '=>') {
@@ -63,7 +63,7 @@ while ($true) {
             }
             elseif ($Diff.SideIndicator -eq '<=') {
                 &$WriteMintGreen "Certificate Removed from CurrentUser at $(Get-Date -Format 'MM/dd/yyyy HH:mm:ss K')"
-                $PSStyle.Formatting.FormatAccent = "$($PSStyle.Foreground.FromRGB(152,255,152))"               
+                $PSStyle.Formatting.FormatAccent = "$($PSStyle.Foreground.FromRGB(152,255,152))"
                 $Diff.InputObject | Format-List -Property PSPath, EnhancedKeyUsageList, DnsNameList, SendAsTrustedIssuer, FriendlyName, HasPrivateKey, NotAfter, NotBefore, SerialNumber, Thumbprint, Issuer, Subject
             }
         }

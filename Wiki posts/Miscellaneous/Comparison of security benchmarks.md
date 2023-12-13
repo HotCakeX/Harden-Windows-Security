@@ -17,12 +17,12 @@ CIS 18.10.44.5 (L1) recommends allowing clipboard operation from an isolated ses
 These are their precise official words:
 
 > Rationale:
-The primary purpose of Microsoft Defender Application Guard is to present a 
-"sandboxed container" for visiting untrusted websites. If the host clipboard is made 
-available to Microsoft Defender Application Guard, a compromised Microsoft Defender 
-Application Guard session will have access to its content, potentially exposing sensitive 
-information to a malicious website or application. **However, the risk is reduced if the 
-Microsoft Defender Application Guard clipboard is made accessible to the host, and 
+The primary purpose of Microsoft Defender Application Guard is to present a
+"sandboxed container" for visiting untrusted websites. If the host clipboard is made
+available to Microsoft Defender Application Guard, a compromised Microsoft Defender
+Application Guard session will have access to its content, potentially exposing sensitive
+information to a malicious website or application. **However, the risk is reduced if the
+Microsoft Defender Application Guard clipboard is made accessible to the host, and
 indeed that functionality may often be necessary from an operational standpoint**
 
 <br>
@@ -33,13 +33,13 @@ Both CIS and STIG suggest altering the name of the built-in administrator and gu
 
 This is futile as those built-in accounts can be readily identified by PowerShell, regardless of any modifications to its name or description (which I have done).
 
-For example, the `BUILTIN\Administrator` account always has a relative identifier (RID) of `500`. 
+For example, the `BUILTIN\Administrator` account always has a relative identifier (RID) of `500`.
 
 ```powershell
 Get-LocalUser | Where-Object -FilterScript {$_.SID -like 'S-1-5-*-500'}
 ```
 
-> Thanks [Elliot Huffman](https://github.com/elliot-huffman) for suggesting the shorter command! 
+> Thanks [Elliot Huffman](https://github.com/elliot-huffman) for suggesting the shorter command!
 
 <details>
 
@@ -64,7 +64,7 @@ They argue that this is for domain accounts
 
 Their rationale, which is very wrong, is
 
-> A PIN is created from a much smaller selection of characters than a password, so in 
+> A PIN is created from a much smaller selection of characters than a password, so in
 most cases a PIN will be much less robust than a password.
 
 It is a grave security lapse to propose such a policy and then label the benchmark/guideline as “CIS Microsoft Windows 11 Stand-alone Benchmark”, highlighting that it is intended for stand-alone computers, while simultaneously suggesting to disable PIN for domain-joined devices. This is a glaring inconsistency and a perilous practice.
@@ -85,7 +85,7 @@ The benchmarks/guidelines seem to be uninformed of the fact that Windows allows 
 
 CIS in 18.9.13.1
 
-> The recommended state for this setting is: Enabled: Good, unknown and bad but 
+> The recommended state for this setting is: Enabled: Good, unknown and bad but
 critical
 
 That's not even a recommendation, that's the default value! If you use [Harden Windows Security script](https://github.com/HotCakeX/Harden-Windows-Security#miscellaneous-configurations) it sets it to **Good Only**, which is the correct recommendation for a secure environment.
@@ -144,7 +144,7 @@ There are many security measures that are missing from the benchmarks/guidelines
 
 * [Edge Browser category](https://github.com/HotCakeX/Harden-Windows-Security#edge-browser-configurations)
 
-* [TLS Security category](https://github.com/HotCakeX/Harden-Windows-Security#tls-security) 
+* [TLS Security category](https://github.com/HotCakeX/Harden-Windows-Security#tls-security)
 
 * [Lock screen category](https://github.com/HotCakeX/Harden-Windows-Security#lock-screen)
 

@@ -17,6 +17,12 @@ Function Unprotect-WindowsSecurity {
         # Import functions
         . "$psscriptroot\Functions.ps1"
 
+        # Defining default parameters for cmdlets
+        $PSDefaultParameterValues = @{
+            'Invoke-WebRequest:HttpVersion' = '3.0'
+            'Invoke-WebRequest:SslProtocol' = 'Tls12,Tls13'
+        }
+
         # Fetching Temp Directory
         [System.String]$CurrentUserTempDirectoryPath = [System.IO.Path]::GetTempPath()
 
@@ -209,7 +215,7 @@ Function Unprotect-WindowsSecurity {
                     Set-ItemProperty -Path 'Registry::\HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SCMConfig' -Name 'EnableSvchostMitigationPolicy' -Value '0' -Force -Type 'DWord' -ErrorAction SilentlyContinue
                 }
 
-                # Write in Fuchsia
+                # Write in Fuchsia color
                 Write-Host -Object "$($PSStyle.Foreground.FromRGB(236,68,155))Operation Completed, please restart your computer.$($PSStyle.Reset)"
             }
             finally {
@@ -246,6 +252,24 @@ Function Unprotect-WindowsSecurity {
     Removes the hardening measures applied by Protect-WindowsSecurity cmdlet
 .PARAMETER OnlyProcessMitigations
     Only removes the Process Mitigations / Exploit Protection settings and doesn't change anything else
+.PARAMETER Force
+    Suppresses the confirmation prompt
+.EXAMPLE
+    Unprotect-WindowsSecurity
+
+    Removes all of the security features applied by the Protect-WindowsSecurity cmdlet
+.EXAMPLE
+    Unprotect-WindowsSecurity -OnlyProcessMitigations
+
+    Removes only the Process Mitigations / Exploit Protection settings and doesn't change anything else
+.EXAMPLE
+    Unprotect-WindowsSecurity -Force
+
+    Removes all of the security features applied by the Protect-WindowsSecurity cmdlet without prompting for confirmation
+.INPUTS
+    System.Management.Automation.SwitchParameter
+.OUTPUTS
+    System.String
 #>
 }
 

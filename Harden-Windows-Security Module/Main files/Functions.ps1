@@ -21,6 +21,8 @@ function Update-self {
         Make sure the latest version of the module is installed and if not, automatically update it, clean up any old versions
     .INPUTS
         None
+    .OUTPUTS
+        System.String
     #>
 
     [System.Version]$CurrentVersion = (Test-ModuleManifest -Path "$psscriptroot\Harden-Windows-Security-Module.psd1").Version

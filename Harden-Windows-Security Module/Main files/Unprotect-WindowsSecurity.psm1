@@ -1,10 +1,12 @@
 Function Unprotect-WindowsSecurity {
-    [CmdletBinding()]
+    [CmdletBinding(
+        SupportsShouldProcess = $true,
+        PositionalBinding = $false,
+        ConfirmImpact = 'High'
+    )]
     param (
         [Parameter(Mandatory = $false)]
-        [switch]$OnlyProcessMitigations,
-        [Parameter(Mandatory = $false, DontShow = $True)]
-        $DummyParam
+        [System.Management.Automation.SwitchParameter]$OnlyProcessMitigations
     )
     # Stop the execution when there is an error
     $global:ErrorActionPreference = 'Stop'

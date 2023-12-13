@@ -38,15 +38,15 @@ For example, if you visit a website or access a server that is hosted in one of 
 
 foreach ($event in Get-WinEvent -FilterHashtable @{LogName = 'Security'; ID = 5152 }) {
     $xml = [xml]$event.toxml()
-    $xml.event.eventdata.data | 
+    $xml.event.eventdata.data |
     ForEach-Object { $hash = @{ TimeCreated = [datetime] $xml.Event.System.TimeCreated.SystemTime } } { $hash[$_.name] = $_.'#text' } { [pscustomobject]$hash } |
-    Where-Object FilterOrigin -NotMatch 'Stealth|Unknown|Query User Default|WSH Default' | ForEach-Object {      
-        if ($_.filterorigin -match ($pattern = '{.+?}')) {        
+    Where-Object FilterOrigin -NotMatch 'Stealth|Unknown|Query User Default|WSH Default' | ForEach-Object {
+        if ($_.filterorigin -match ($pattern = '{.+?}')) {
             $_.FilterOrigin = $_.FilterOrigin -replace $pattern, (Get-NetFirewallRule -Name $Matches[0]).DisplayName
         }
         $protocolName = @{ 6 = 'TCP'; 17 = 'UDP' }[[int] $_.Protocol]
         $_.Protocol = if (-not $protocolName) { $_.Protocol } else { $protocolName }
- 
+
         $_.Direction = $_.Direction -eq '%%14592' ? 'Outbound' : 'Inbound'
         $_
     }
@@ -89,7 +89,7 @@ $queryListString = $queryList.OuterXml
 
 while ($true) {
     $Events = Get-WinEvent -FilterXml $queryListString -Oldest | Sort-Object -Property TimeCreated -Descending
-          
+
     <#
     For When you don't use xml to specify the event source
 
@@ -102,7 +102,7 @@ while ($true) {
     if ($Events) {
         foreach ($Event in $Events) {
             if ($Event.TimeCreated -gt $LastEventTime) {
-                
+
                 Write-Host "`n##################################################" -ForegroundColor Yellow
 
                 $Time = $Event.TimeCreated

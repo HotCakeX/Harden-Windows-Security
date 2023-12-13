@@ -13,7 +13,7 @@
 ```mermaid
 flowchart TD
     A(Deploy Default Windows base policy) -->B(Identify Important apps that need Supplemental policy)
-    B --> C(Create and Deploy Supplemental polices for them)
+    B --> C(Create and Deploy Supplemental policies for them)
     C --> D[Another App is getting blocked?]
     D --> E[Is it a normal app?]
     E --> F[Create Supplemental policy based on App's directory]
@@ -21,7 +21,7 @@ flowchart TD
     G --> H[Is it an app that installs drivers outside app's directory?]
     H --> I[Use Event viewer logs + game/app's directory scan]
     I --> J[Edit-WDACConfig -AllowNewAppsAuditEvents]
-    I --> K[Edit-SignedWDACConfig -AllowNewAppsAuditEvents]       
+    I --> K[Edit-SignedWDACConfig -AllowNewAppsAuditEvents]
     D --> L[Want to allow an entire folder?]
     L --> M[Use folder path with one or more Wildcards]
     M --> N[New-SupplementalWDACConfig -FilePathWildCards]

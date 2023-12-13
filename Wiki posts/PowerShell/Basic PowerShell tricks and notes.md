@@ -6,7 +6,7 @@ The main source for learning PowerShell is Microsoft Learn websites. There are e
 
 [PowerShell core at Microsoft Learn](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/?view=powershell-7.4)
 
-**Also Use Bing Chat for your PowerShell questions. The AI is fantastic at creating code and explaning everything.**
+**Also Use Bing Chat for your PowerShell questions. The AI is fantastic at creating code and explaining everything.**
 
 <br>
 
@@ -27,7 +27,7 @@ The main source for learning PowerShell is Microsoft Learn websites. There are e
 Example
 
 ```powershell
-Get-PSDrive | ?{$_.free -gt 1} 
+Get-PSDrive | ?{$_.free -gt 1}
 ```
 
 <br>
@@ -41,7 +41,7 @@ If we use `*` then all of the properties will be shown and from there we can cho
 Example:
 
 ```powershell
-Get-PSDrive | ?{$_.free -gt 1} | select * 
+Get-PSDrive | ?{$_.free -gt 1} | select *
 
 Get-PSDrive | ?{$_.free -gt 1} | select root, used, free
 ```
@@ -59,11 +59,11 @@ i.e. For every item in the pipe, run this line.
 Examples:
 
 ```powershell
-Get-PSDrive | ?{$_.free -gt 1} | select root, used, free | ForEach-Object{"zebra"} 
+Get-PSDrive | ?{$_.free -gt 1} | select root, used, free | ForEach-Object{"zebra"}
 ```
 
 ```powershell
-Get-PSDrive | ?{$_.free -gt 1} | select root, used, free | ForEach-Object{ Write-Host "Free Space for " $_.Root "is" ($_.free/1gb )} 
+Get-PSDrive | ?{$_.free -gt 1} | select root, used, free | ForEach-Object{ Write-Host "Free Space for " $_.Root "is" ($_.free/1gb )}
 ```
 
 The parenthesis, `($_.free/1gb )` must be there if we want to modify one of the output strings.
@@ -109,13 +109,13 @@ Putting `*` around the word or letter finds anything that contains it.
 Example syntax:
 
 ```powershell
-Get-Service [[-Name] <System.String[]>] [-ComputerName <System.String[]>] [-DependentServices] [-Exclude <System.String[]>] [-Include <System.String[]>] [-RequiredServices] [<CommonParameters>] 
+Get-Service [[-Name] <System.String[]>] [-ComputerName <System.String[]>] [-DependentServices] [-Exclude <System.String[]>] [-Include <System.String[]>] [-RequiredServices] [<CommonParameters>]
 ```
 
 In this part
 
 ```powershell
-Get-Service [[-Name] <System.String[]>] 
+Get-Service [[-Name] <System.String[]>]
 ```
 
 The `-Name` Parameter accepts `<System.String[]>`, which is a StringList, and when [] is included, that means there can be multiple inputs/strings, separated by comma `,`.
@@ -139,7 +139,7 @@ Everything is inside a bracket except for -DisplayName, that means it is mandato
 ## How to Suppress Errors in Powershell
 
 ```powershell
--ErrorAction SilentlyContinue 
+-ErrorAction SilentlyContinue
 ```
 
 [Everything you wanted to know about exceptions](https://learn.microsoft.com/en-us/powershell/scripting/learn/deep-dives/everything-about-exceptions)
@@ -147,7 +147,7 @@ Everything is inside a bracket except for -DisplayName, that means it is mandato
 Try/Catch will only 'trigger' on a terminating exception. Most cmdlets in PowerShell, by default, won't throw terminating exceptions. You can set the error action with the -ErrorAction or -ea parameters:
 
 ```powershell
-Do-Thing 'Stuff' -ErrorAction Stop 
+Do-Thing 'Stuff' -ErrorAction Stop
 ```
 
 Careful when using `-ErrorAction Stop`, If using it in loops like with `ForEach-Object`, then it will stop the entire loop after the first encounter of error.
@@ -183,13 +183,13 @@ Get-ChildItem -Recurse -File | ForEach-Object -Parallel {Get-AuthenticodeSignatu
 ## Write Output to a File or String
 
 ```powershell
-> output.txt 
+> output.txt
 ```
 
 Example:
 
 ```powershell
-ipconfig /all > mynetworksettings.txt 
+ipconfig /all > mynetworksettings.txt
 ```
 
 [about_Redirection](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_redirection)
@@ -227,7 +227,7 @@ Stop-Process -Name "Photoshop"
 Using `taskkill.exe`
 
 ```cmd
-taskkill /IM "photoshop app.exe" /F 
+taskkill /IM "photoshop app.exe" /F
 ```
 
 [taskkill](https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/taskkill)
@@ -255,7 +255,7 @@ whoami /all
 ## Display All the Tcp and Udp Ports on Which the Computer Is Listening
 
 ```cmd
-netstat -a 
+netstat -a
 ```
 
 [netstat](https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/netstat)
@@ -283,11 +283,11 @@ rg -i -F URL: | clip
 ## How to Scan 2 Text Files for Differences and Pipe the Difference to a Third File
 
 ```powershell
-$File1 = "C:\Scripts\Txt1.txt" 
-$File2 = "C:\Scripts\Txt2.txt" 
-$Location = "C:\Scripts\Txt3.txt" 
+$File1 = "C:\Scripts\Txt1.txt"
+$File2 = "C:\Scripts\Txt2.txt"
+$Location = "C:\Scripts\Txt3.txt"
 
-Compare-Object (get-content $File1) (get-content $File2) | format-list | Out-File $Location 
+Compare-Object (get-content $File1) (get-content $File2) | format-list | Out-File $Location
 ```
 
 [Compare-Object](https://learn.microsoft.com/en-gb/powershell/module/Microsoft.PowerShell.Utility/Compare-Object)
@@ -300,7 +300,7 @@ This is Stringlist in PowerShell:
 
 `[String[]]`
 
-And this is a string  
+And this is a string
 
 `[String]`
 
@@ -338,9 +338,9 @@ pwsh.exe -File 'Path\To\Folder\OfThe\Script.ps1'
 ## Enclosing Strings That Have a Lot of Single and Double Quotation Marks
 
 ```powershell
-$string =@" 
+$string =@"
 
-Some string text 
+Some string text
 
 "@
 
@@ -358,11 +358,11 @@ Using `GetType()`
 Examples:
 
 ```powershell
-(Get-BitlockerVolume -MountPoint "C:").KeyProtector.keyprotectortype.GetType() 
+(Get-BitlockerVolume -MountPoint "C:").KeyProtector.keyprotectortype.GetType()
 ```
 
 ```powershell
-(get-nettCPConnection).GetType() 
+(get-nettCPConnection).GetType()
 ```
 
 <br>

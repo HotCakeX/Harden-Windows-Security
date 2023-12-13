@@ -124,7 +124,7 @@ If plain text DNS over port 53 is used, and you are not using a proper VPN like 
 
 ### URL
 
-The full path to a web page or web resource is sent over HTTP protocol, so if website uses HTTPS, it's all encrypted.  
+The full path to a web page or web resource is sent over HTTP protocol, so if website uses HTTPS, it's all encrypted.
 
 When using HTTPS, the path and query string (everything after TLD and slash /) is encrypted and not available to anybody but the client and server, the answer is encrypted as well.
 

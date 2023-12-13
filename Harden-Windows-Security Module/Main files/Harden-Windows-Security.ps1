@@ -1342,7 +1342,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                                         Write-SmartText -C MintGreen -G Green -I "`nPINs matched, enabling TPM and startup PIN now`n"
                                     }
                                     catch {
-                                        Write-Host -Object 'These errors occured, run Bitlocker category again after meeting the requirements' -ForegroundColor Red
+                                        Write-Host -Object 'These errors occurred, run Bitlocker category again after meeting the requirements' -ForegroundColor Red
                                         $_
                                         break BitLockerCategoryLabel
                                     }
@@ -1380,7 +1380,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                                 Enable-BitLocker -MountPoint $env:SystemDrive -EncryptionMethod 'XtsAes256' -Pin $Pin -TpmAndPinProtector -SkipHardwareTest -ErrorAction Stop *> $null
                             }
                             catch {
-                                Write-Host -Object 'These errors occured, run Bitlocker category again after meeting the requirements' -ForegroundColor Red
+                                Write-Host -Object 'These errors occurred, run Bitlocker category again after meeting the requirements' -ForegroundColor Red
                                 $_
                                 break BitLockerCategoryLabel
                             }
@@ -2496,7 +2496,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
     #endregion Non-Admin-Commands
 }
 catch {
-    # Throw whatever error that occured
+    # Throw whatever error that occurred
     Throw $_
 }
 finally {

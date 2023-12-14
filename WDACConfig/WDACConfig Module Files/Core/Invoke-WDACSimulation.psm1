@@ -1,8 +1,5 @@
 Function Invoke-WDACSimulation {
-    [CmdletBinding(
-        PositionalBinding = $false,
-        SupportsShouldProcess = $true
-    )]
+    [CmdletBinding()]
     Param(
         [ValidateScript({ Test-Path -Path $_ -PathType 'Container' }, ErrorMessage = 'The path you selected is not a folder path.')]
         [Parameter(Mandatory = $true)][System.IO.DirectoryInfo]$FolderPath,

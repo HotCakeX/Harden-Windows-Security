@@ -1966,11 +1966,11 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                             [parameter(Mandatory = $true, ParameterSetName = 'Capability')]
                             [System.String]$CapabilityName,
                             [parameter(Mandatory = $true, ParameterSetName = 'Feature')]
-                            [System.String]$FeatureName,        
+                            [System.String]$FeatureName,
                             [parameter(Mandatory = $true, ParameterSetName = 'Feature')]
                             [ValidateSet('Enabling', 'Disabling')]
                             [System.String]$FeatureAction
-                        )    
+                        )
                         switch ($Type) {
                             'Feature' {
                                 if ($FeatureAction -eq 'Enabling') {
@@ -1991,7 +1991,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                                             Disable-WindowsOptionalFeature -Online -FeatureName $FeatureName -NoRestart -ErrorAction Stop
                                         }
                                         # Shows the successful message only if the process was successful
-                                        Write-Host -Object "$FeatureName was successfully $ActionOutput" -ForegroundColor Green                                        
+                                        Write-Host -Object "$FeatureName was successfully $ActionOutput" -ForegroundColor Green
                                     }
                                     catch {
                                         # show errors in non-terminating way
@@ -2006,7 +2006,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                             'Capability' {
                                 Write-Host -Object "`nRemoving $CapabilityName" -ForegroundColor Yellow
                                 if ((Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like "*$CapabilityName*" }).state -ne 'NotPresent') {
-                                    try {                        
+                                    try {
                                         Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like "*$CapabilityName*" } | Remove-WindowsCapability -Online -ErrorAction Stop
                                         # Shows the successful message only if the process was successful
                                         Write-Host -Object "$CapabilityName was successfully removed." -ForegroundColor Green
@@ -2020,7 +2020,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                                     Write-Host -Object "$CapabilityName is already removed." -ForegroundColor Green
                                 }
                                 break
-                            }        
+                            }
                         }
                     }
                     Edit-Addons -Type Feature -FeatureAction Disabling -FeatureName 'MicrosoftWindowsPowerShellV2'
@@ -2038,7 +2038,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                     Edit-Addons -Type Capability -CapabilityName 'Microsoft.Windows.WordPad'
                     Edit-Addons -Type Capability -CapabilityName 'Microsoft.Windows.PowerShell.ISE'
                     Edit-Addons -Type Capability -CapabilityName 'App.StepsRecorder'
-                
+
                     # Uninstall VBScript that is now uninstallable as an optional features since Windows 11 insider Dev build 25309 - Won't do anything in other builds
                     if (Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like '*VBSCRIPT*' }) {
                         try {

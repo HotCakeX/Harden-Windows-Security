@@ -1,49 +1,3 @@
-# Set the progress style
-$PSStyle.Progress.Style = "$($PSStyle.Foreground.FromRGB(255,255,49))$($PSStyle.Blink)"
-function ConvertFrom-IniFile {
-    <#
-    .SYNOPSIS
-        A function to parse the ini file from the output of the "Secedit /export /cfg .\security_policy.inf"
-    .PARAMETER IniFile
-        The path to the ini file
-    .INPUTS
-        System.String
-    .OUTPUTS
-        PSCustomObject
-    #>
-    [CmdletBinding()]
-    Param ([System.String]$IniFile)
-
-    # Don't prompt to continue if '-Debug' is specified.
-    $DebugPreference = 'Continue'
-
-    [System.Collections.Hashtable]$IniObject = @{}
-    [System.String]$SectionName = ''
-
-    switch -regex -file $IniFile {
-        '^\[(.+)\]$' {
-            # Header of the section
-            $SectionName = $matches[1]
-            #Write-Debug "Section: $SectionName"
-            $IniObject[$SectionName] = @{}
-            continue
-        }
-        '^(.+?)\s*=\s*(.*)$' {
-            # Name/value pair
-            [System.String]$KeyName, [System.String]$KeyValue = $matches[1..2]
-            #Write-Debug "Name: $KeyName"
-            # Write-Debug "Value: $KeyValue"
-            $IniObject[$SectionName][$KeyName] = $KeyValue
-            continue
-        }
-        default {
-            # Ignore blank lines or comments
-            continue
-        }
-    }
-    return [PSCustomObject]$IniObject
-}
-
 function Confirm-SystemCompliance {
     [CmdletBinding()]
     param (
@@ -56,60 +10,85 @@ function Confirm-SystemCompliance {
     )
     begin {
         # Stop operation as soon as there is an error anywhere, unless explicitly specified otherwise
-        $global:ErrorActionPreference = 'Stop'
+        $ErrorActionPreference = 'Stop'
 
-        Write-Progress -Activity 'Starting' -Status 'Processing...' -PercentComplete 5
+        # Set the progress bar style to blinking yellow
+        $PSStyle.Progress.Style = "$($PSStyle.Foreground.FromRGB(255,255,49))$($PSStyle.Blink)"
+
+        # Dot-sourcing the functions.ps1 file in the current scope
+        . "$psscriptroot\Functions.ps1"
 
         # Makes sure this cmdlet is invoked with Admin privileges
-        if (![System.Boolean]([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
+        if (-NOT (Test-IsAdmin)) {
             Throw [System.Security.AccessControl.PrivilegeNotHeldException] 'Administrator'
         }
 
-        Write-Progress -Activity 'Checking for updates' -Status 'Processing...' -PercentComplete 10
-
-        # Running the functions.ps1 file in the current scope
-        . "$psscriptroot\Functions.ps1"
-
-        Write-Progress -Activity 'Gathering Security Policy Information' -Status 'Processing...' -PercentComplete 15
-
+        #Region Defining-Variables
         # Total number of Compliant values not equal to N/A
-        [System.Int64]$global:TotalNumberOfTrueCompliantValues = 231
-
-        # Get the security group policies
-        &"$Env:SystemDrive\Windows\System32\Secedit.exe" /export /cfg .\security_policy.inf | Out-Null
+        [System.Int64]$TotalNumberOfTrueCompliantValues = 231
 
         # Get the current configurations and preferences of the Microsoft Defender
         New-Variable -Name 'MDAVConfigCurrent' -Value (Get-MpComputerStatus) -Force
         New-Variable -Name 'MDAVPreferencesCurrent' -Value (Get-MpPreference) -Force
 
-        # Storing the output of the ini file parsing function
-        [PSCustomObject]$SecurityPoliciesIni = ConvertFrom-IniFile -IniFile .\security_policy.inf
-
-        Write-Progress -Activity 'Importing Registry CSV File' -Status 'Processing...' -PercentComplete 20
+        # An object to hold all the initial registry items
+        [System.Object[]]$AllRegistryItems = @()
 
         # Import the CSV file
         [System.Object[]]$CSVResource = Import-Csv -Path "$psscriptroot\Resources\Registry resources.csv"
 
-        # An object to hold all the initial registry items
-        [System.Object[]]$AllRegistryItems = @()
-
-        # Loop through each row in the CSV file
-        foreach ($Row in $CSVResource) {
-            $AllRegistryItems += [PSCustomObject]@{
-                FriendlyName = $Row.FriendlyName
-                category     = $Row.Category
-                key          = $Row.Key
-                value        = $Row.Value
-                name         = $Row.Name
-                type         = $Row.Type
-                regPath      = "Registry::$($Row.Key)" # Build the registry path
-                Method       = $Row.Origin
-            }
-        }
-
         # An object to store the FINAL results
         $FinalMegaObject = [PSCustomObject]@{}
 
+        # The total number of the steps for the parent/main progress bar to render
+        [System.Int16]$TotalMainSteps = 17
+        [System.Int16]$CurrentMainStep = 0
+        #EndRegion Defining-Variables
+
+        #Region defining-Functions
+        function ConvertFrom-IniFile {
+            <#
+            .SYNOPSIS
+                A helper function to parse the ini file from the output of the "Secedit /export /cfg .\security_policy.inf"
+            .PARAMETER IniFile
+                The path to the ini file
+            .INPUTS
+                System.String
+            .OUTPUTS
+                PSCustomObject
+            #>
+            [CmdletBinding()]
+            Param ([System.String]$IniFile)
+
+            # Don't prompt to continue if '-Debug' is specified.
+            $DebugPreference = 'Continue'
+
+            [System.Collections.Hashtable]$IniObject = @{}
+            [System.String]$SectionName = ''
+
+            switch -regex -file $IniFile {
+                '^\[(.+)\]$' {
+                    # Header of the section
+                    $SectionName = $matches[1]
+                    #Write-Debug "Section: $SectionName"
+                    $IniObject[$SectionName] = @{}
+                    continue
+                }
+                '^(.+?)\s*=\s*(.*)$' {
+                    # Name/value pair
+                    [System.String]$KeyName, [System.String]$KeyValue = $matches[1..2]
+                    #Write-Debug "Name: $KeyName"
+                    # Write-Debug "Value: $KeyValue"
+                    $IniObject[$SectionName][$KeyName] = $KeyValue
+                    continue
+                }
+                default {
+                    # Ignore blank lines or comments
+                    continue
+                }
+            }
+            return [PSCustomObject]$IniObject
+        }
         function Invoke-CategoryProcessing {
             <#
             .SYNOPSIS
@@ -194,6 +173,7 @@ function Confirm-SystemCompliance {
             }
             return $Output
         }
+        #EndRegion defining-Functions
     }
 
     process {
@@ -205,6 +185,10 @@ function Confirm-SystemCompliance {
             # backup the current allowed apps list in Controlled folder access in order to restore them at the end of the script
             # doing this so that when we Add and then Remove PowerShell executables in Controlled folder access exclusions
             # no user customization will be affected
+
+            $CurrentMainStep++
+            Write-Progress -Id 0 -Activity 'Backing up Controlled Folder Access exclusion list' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+
             [System.String[]]$CFAAllowedAppsBackup = (Get-MpPreference).ControlledFolderAccessAllowedApplications
 
             # Temporarily allow the currently running PowerShell executables to the Controlled Folder Access allowed apps
@@ -214,10 +198,37 @@ function Confirm-SystemCompliance {
             }
 
             # Give the Defender internals time to process the updated exclusions list
-            Start-Sleep -Seconds '3'
+            Start-Sleep -Seconds '5'
+
+            $CurrentMainStep++
+            Write-Progress -Id 0 -Activity 'Gathering Security Policy Information' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+
+            # Get the security group policies
+            &'C:\Windows\System32\Secedit.exe' /export /cfg .\security_policy.inf | Out-Null
+
+            # Storing the output of the ini file parsing function
+            [PSCustomObject]$SecurityPoliciesIni = ConvertFrom-IniFile -IniFile .\security_policy.inf
+
+            $CurrentMainStep++
+            Write-Progress -Id 0 -Activity 'Processing the registry CSV file' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+
+            # Loop through each row in the CSV file and add it to the $AllRegistryItems array as a custom object
+            foreach ($Row in $CSVResource) {
+                $AllRegistryItems += [PSCustomObject]@{
+                    FriendlyName = $Row.FriendlyName
+                    category     = $Row.Category
+                    key          = $Row.Key
+                    value        = $Row.Value
+                    name         = $Row.Name
+                    type         = $Row.Type
+                    regPath      = "Registry::$($Row.Key)" # Build the registry path
+                    Method       = $Row.Origin
+                }
+            }
 
             #Region Microsoft-Defender-Category
-            Write-Progress -Activity 'Validating Microsoft Defender Category' -Status 'Processing...' -PercentComplete 35
+            $CurrentMainStep++
+            Write-Progress -Id 0 -Activity 'Validating Microsoft Defender Category' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
 
             # An array to store the nested custom objects, inside the main output object
             [System.Object[]]$NestedObjectArray = @()
@@ -306,7 +317,6 @@ function Confirm-SystemCompliance {
                 Method       = 'Cmdlet'
             }
 
-
             [System.Collections.Hashtable]$DefenderPlatformUpdatesChannels = @{
                 0 = 'NotConfigured'
                 2 = 'Beta'
@@ -324,7 +334,6 @@ function Confirm-SystemCompliance {
                 Category     = $CatName
                 Method       = 'Cmdlet'
             }
-
 
             [System.Collections.Hashtable]$DefenderEngineUpdatesChannels = @{
                 0 = 'NotConfigured'
@@ -394,7 +403,9 @@ function Confirm-SystemCompliance {
             #EndRegion Microsoft-Defender-Category
 
             #Region Attack-Surface-Reduction-Rules-Category
-            Write-Progress -Activity 'Validating Attack Surface Reduction Rules Category' -Status 'Processing...' -PercentComplete 40
+            $CurrentMainStep++
+            Write-Progress -Id 0 -Activity 'Validating Attack Surface Reduction Rules Category' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+
             [System.Object[]]$NestedObjectArray = @()
             [System.String]$CatName = 'ASR'
 
@@ -465,7 +476,9 @@ function Confirm-SystemCompliance {
             #EndRegion Attack-Surface-Reduction-Rules-Category
 
             #Region Bitlocker-Category
-            Write-Progress -Activity 'Validating Bitlocker Category' -Status 'Processing...' -PercentComplete 45
+            $CurrentMainStep++
+            Write-Progress -Id 0 -Activity 'Validating Bitlocker Category' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+
             [System.Object[]]$NestedObjectArray = @()
             [System.String]$CatName = 'Bitlocker'
 
@@ -517,7 +530,7 @@ function Confirm-SystemCompliance {
       }
     }
 '@
-            Add-Type -TypeDefinition $BootDMAProtectionCheck
+            Add-Type -TypeDefinition $BootDMAProtectionCheck -Language CSharp
             # Returns true or false depending on whether Kernel DMA Protection is on or off
             [System.Boolean]$BootDMAProtection = ([SystemInfo.NativeMethods]::BootDmaCheck()) -ne 0
 
@@ -565,7 +578,7 @@ function Confirm-SystemCompliance {
                 }
             }
             else {
-                $global:TotalNumberOfTrueCompliantValues--
+                $TotalNumberOfTrueCompliantValues--
             }
 
             # OS Drive encryption verifications
@@ -656,7 +669,7 @@ function Confirm-SystemCompliance {
                 foreach ($MountPoint in $($NonOSBitLockerVolumes | Sort-Object).MountPoint) {
 
                     # Increase the number of available compliant values for each non-OS drive that was found
-                    $global:TotalNumberOfTrueCompliantValues++
+                    $TotalNumberOfTrueCompliantValues++
 
                     # If status is unknown, that means the non-OS volume is encrypted and locked, if it's on then it's on
                     if ((Get-BitLockerVolume -MountPoint $MountPoint).ProtectionStatus -in 'on', 'Unknown') {
@@ -704,7 +717,9 @@ function Confirm-SystemCompliance {
             #EndRegion Bitlocker-Category
 
             #Region TLS-Category
-            Write-Progress -Activity 'Validating TLS Category' -Status 'Processing...' -PercentComplete 50
+            $CurrentMainStep++
+            Write-Progress -Id 0 -Activity 'Validating TLS Category' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+
             [System.Object[]]$NestedObjectArray = @()
             [System.String]$CatName = 'TLS'
 
@@ -735,7 +750,9 @@ function Confirm-SystemCompliance {
             #EndRegion TLS-Category
 
             #Region LockScreen-Category
-            Write-Progress -Activity 'Validating Lock Screen Category' -Status 'Processing...' -PercentComplete 55
+            $CurrentMainStep++
+            Write-Progress -Id 0 -Activity 'Validating Lock Screen Category' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+
             [System.Object[]]$NestedObjectArray = @()
             [System.String]$CatName = 'LockScreen'
 
@@ -846,7 +863,9 @@ function Confirm-SystemCompliance {
             #EndRegion LockScreen-Category
 
             #Region User-Account-Control-Category
-            Write-Progress -Activity 'Validating User Account Control Category' -Status 'Processing...' -PercentComplete 60
+            $CurrentMainStep++
+            Write-Progress -Id 0 -Activity 'Validating User Account Control Category' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+
             [System.Object[]]$NestedObjectArray = @()
             [System.String]$CatName = 'UAC'
 
@@ -909,7 +928,9 @@ function Confirm-SystemCompliance {
             #EndRegion User-Account-Control-Category
 
             #Region Device-Guard-Category
-            Write-Progress -Activity 'Validating Device Guard Category' -Status 'Processing...' -PercentComplete 65
+            $CurrentMainStep++
+            Write-Progress -Id 0 -Activity 'Validating Device Guard Category' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+
             [System.Object[]]$NestedObjectArray = @()
             [System.String]$CatName = 'Device Guard'
 
@@ -921,7 +942,9 @@ function Confirm-SystemCompliance {
             #EndRegion Device-Guard-Category
 
             #Region Windows-Firewall-Category
-            Write-Progress -Activity 'Validating Windows Firewall Category' -Status 'Processing...' -PercentComplete 70
+            $CurrentMainStep++
+            Write-Progress -Id 0 -Activity 'Validating Windows Firewall Category' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+
             [System.Object[]]$NestedObjectArray = @()
             [System.String]$CatName = 'Windows Firewall'
 
@@ -933,7 +956,9 @@ function Confirm-SystemCompliance {
             #EndRegion Windows-Firewall-Category
 
             #Region Optional-Windows-Features-Category
-            Write-Progress -Activity 'Validating Optional Windows Features Category' -Status 'Processing...' -PercentComplete 75
+            $CurrentMainStep++
+            Write-Progress -Id 0 -Activity 'Validating Optional Windows Features Category' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+
             [System.Object[]]$NestedObjectArray = @()
             [System.String]$CatName = 'Optional Windows Features'
 
@@ -1103,7 +1128,9 @@ function Confirm-SystemCompliance {
             #EndRegion Optional-Windows-Features-Category
 
             #Region Windows-Networking-Category
-            Write-Progress -Activity 'Validating Windows Networking Category' -Status 'Processing...' -PercentComplete 80
+            $CurrentMainStep++
+            Write-Progress -Id 0 -Activity 'Validating Windows Networking Category' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+
             [System.Object[]]$NestedObjectArray = @()
             [System.String]$CatName = 'Windows Networking'
 
@@ -1167,7 +1194,9 @@ function Confirm-SystemCompliance {
             #EndRegion Windows-Networking-Category
 
             #Region Miscellaneous-Category
-            Write-Progress -Activity 'Validating Miscellaneous Category' -Status 'Processing...' -PercentComplete 85
+            $CurrentMainStep++
+            Write-Progress -Id 0 -Activity 'Validating Miscellaneous Category' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+
             [System.Object[]]$NestedObjectArray = @()
             [System.String]$CatName = 'Miscellaneous'
 
@@ -1187,7 +1216,7 @@ function Confirm-SystemCompliance {
                 }
             }
             else {
-                $global:TotalNumberOfTrueCompliantValues--
+                $TotalNumberOfTrueCompliantValues--
             }
 
             # Checking if all user accounts are part of the Hyper-V security Group
@@ -1224,7 +1253,9 @@ function Confirm-SystemCompliance {
             #EndRegion Miscellaneous-Category
 
             #Region Windows-Update-Category
-            Write-Progress -Activity 'Validating Windows Update Category' -Status 'Processing...' -PercentComplete 90
+            $CurrentMainStep++
+            Write-Progress -Id 0 -Activity 'Validating Windows Update Category' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+
             [System.Object[]]$NestedObjectArray = @()
             [System.String]$CatName = 'Windows Update'
 
@@ -1252,7 +1283,9 @@ function Confirm-SystemCompliance {
             #EndRegion Windows-Update-Category
 
             #Region Edge-Category
-            Write-Progress -Activity 'Validating Edge Browser Category' -Status 'Processing...' -PercentComplete 95
+            $CurrentMainStep++
+            Write-Progress -Id 0 -Activity 'Validating Edge Browser Category' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+
             [System.Object[]]$NestedObjectArray = @()
             [System.String]$CatName = 'Edge'
 
@@ -1264,7 +1297,9 @@ function Confirm-SystemCompliance {
             #EndRegion Edge-Category
 
             #Region Non-Admin-Category
-            Write-Progress -Activity 'Validating Non-Admin Category' -Status 'Processing...' -PercentComplete 100
+            $CurrentMainStep++
+            Write-Progress -Id 0 -Activity 'Validating Non-Admin Category' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+
             [System.Object[]]$NestedObjectArray = @()
             [System.String]$CatName = 'Non-Admin'
 
@@ -1980,18 +2015,20 @@ function Confirm-SystemCompliance {
                 #Endregion ASCII-Arts
 
                 switch ($True) {
-                    ($TotalTrueCompliantValuesInOutPut -in 1..40) { & $WriteRainbow2 "$WhenValue1To20`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $global:TotalNumberOfTrueCompliantValues!" }
-                    ($TotalTrueCompliantValuesInOutPut -in 41..80) { & $WriteRainbow1 "$WhenValue21To40`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $global:TotalNumberOfTrueCompliantValues!" }
-                    ($TotalTrueCompliantValuesInOutPut -in 81..120) { & $WriteRainbow1 "$WhenValue41To60`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $global:TotalNumberOfTrueCompliantValues!" }
-                    ($TotalTrueCompliantValuesInOutPut -in 121..160) { & $WriteRainbow2 "$WhenValue61To80`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $global:TotalNumberOfTrueCompliantValues!" }
-                    ($TotalTrueCompliantValuesInOutPut -in 161..200) { & $WriteRainbow1 "$WhenValue81To88`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $global:TotalNumberOfTrueCompliantValues!" }
-                    ($TotalTrueCompliantValuesInOutPut -gt 200) { & $WriteRainbow2 "$WhenValueAbove88`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $global:TotalNumberOfTrueCompliantValues!" }
+                    ($TotalTrueCompliantValuesInOutPut -in 1..40) { & $WriteRainbow2 "$WhenValue1To20`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $TotalNumberOfTrueCompliantValues!" }
+                    ($TotalTrueCompliantValuesInOutPut -in 41..80) { & $WriteRainbow1 "$WhenValue21To40`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $TotalNumberOfTrueCompliantValues!" }
+                    ($TotalTrueCompliantValuesInOutPut -in 81..120) { & $WriteRainbow1 "$WhenValue41To60`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $TotalNumberOfTrueCompliantValues!" }
+                    ($TotalTrueCompliantValuesInOutPut -in 121..160) { & $WriteRainbow2 "$WhenValue61To80`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $TotalNumberOfTrueCompliantValues!" }
+                    ($TotalTrueCompliantValuesInOutPut -in 161..200) { & $WriteRainbow1 "$WhenValue81To88`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $TotalNumberOfTrueCompliantValues!" }
+                    ($TotalTrueCompliantValuesInOutPut -gt 200) { & $WriteRainbow2 "$WhenValueAbove88`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $TotalNumberOfTrueCompliantValues!" }
                 }
             }
-
         }
 
         finally {
+            # End the progress bar and mark it as completed
+            Write-Progress -Id 0 -Activity 'Completed' -Completed
+
             # Reverting the PowerShell executables allow listings in Controlled folder access
             foreach ($FilePath in (Get-ChildItem -Path "$PSHOME\*.exe" -File).FullName) {
                 Remove-MpPreference -ControlledFolderAccessAllowedApplications $FilePath
@@ -2002,15 +2039,10 @@ function Confirm-SystemCompliance {
             if ($null -ne $CFAAllowedAppsBackup) {
                 Set-MpPreference -ControlledFolderAccessAllowedApplications $CFAAllowedAppsBackup
             }
+            # Clean up
+            Remove-Item -Path '.\security_policy.inf' -Force
         }
-
-    } # End of Process Block
-
-    end {
-        # Clean up
-        Remove-Item -Path '.\security_policy.inf' -Force
     }
-
     <#
 .SYNOPSIS
     Checks the compliance of a system with the Harden Windows Security script guidelines

@@ -116,11 +116,14 @@ function Select-Option {
     .INPUTS
         System.String
         System.Management.Automation.SwitchParameter
+    .OUTPUTS
+        System.String
     .PARAMETER Message
         Contains the main prompt message
     .PARAMETER ExtraMessage
         Contains any extra notes for sub-categories
     #>
+    [CmdletBinding()]
     param(
         [parameter(Mandatory = $True)][System.String]$Message,
         [parameter(Mandatory = $True)][System.String[]]$Options,
@@ -164,7 +167,7 @@ function Select-Option {
             Write-Warning -Message 'Invalid input. Please only enter a positive number.'
         }
     }
-    return $Selected
+    return [System.String]$Selected
 }
 
 function Edit-Registry {
@@ -176,6 +179,7 @@ function Edit-Registry {
     .OUTPUTS
         System.Void
     #>
+    [CmdletBinding()]
     param ([System.String]$Path, [System.String]$Key, [System.String]$Value, [System.String]$Type, [System.String]$Action)
     If (-NOT (Test-Path -Path $Path)) {
         New-Item -Path $Path -Force | Out-Null
@@ -247,11 +251,14 @@ function Compare-SecureString {
         https://stackoverflow.com/questions/48809012/compare-two-credentials-in-powershell
     .INPUTS
         System.Security.SecureString
+    .OUTPUTS
+        System.Boolean
     .PARAMETER SecureString1
         First secure string
     .PARAMETER SecureString2
         Second secure string to compare with the first secure string
     #>
+    [CmdletBinding()]
     param(
         [Security.SecureString]$SecureString1,
         [Security.SecureString]$SecureString2
@@ -857,7 +864,7 @@ try {
                 Write-Warning -Message 'Make sure to restart your device once. After restart, wait for at least 5-10 minutes and perform a 2nd restart to finish applying security measures completely.'
             } 'No' { break }
             'Exit' { &$CleanUp }
-        }        
+        }
         #endregion Windows-Boot-Manager-revocations-for-Secure-Boot KB5025885
 
         #region Microsoft-Security-Baseline
@@ -1105,7 +1112,7 @@ try {
         }
         #endregion Microsoft-Defender
 
-        #region Attack-Surface-Reduction-Rules        
+        #region Attack-Surface-Reduction-Rules
         $CurrentMainStep++
 
         # Change the title of the Windows Terminal for PowerShell tab
@@ -1315,7 +1322,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                                         [securestring]$Pin2 = $(Write-SmartText -C PinkBold -G Magenta -I 'Confirm your Bitlocker Startup Pin (between 10 to 20 characters)'; Read-Host -AsSecureString)
 
                                         # Compare the PINs and make sure they match
-                                        [System.Boolean]$TheyMatch = Compare-SecureString $Pin1 $Pin2
+                                        [System.Boolean]$TheyMatch = Compare-SecureString -SecureString1 $Pin1 -SecureString2 $Pin2
                                         # If the PINs match and they are at least 10 characters long, max 20 characters
                                         if ( $TheyMatch -and ($Pin1.Length -in 10..20) -and ($Pin2.Length -in 10..20) ) {
                                             [securestring]$Pin = $Pin1
@@ -1355,7 +1362,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                                 [securestring]$Pin1 = $(Write-SmartText -C PinkBold -G Magenta -I 'Enter a Pin for Bitlocker startup (between 10 to 20 characters)'; Read-Host -AsSecureString)
                                 [securestring]$Pin2 = $(Write-SmartText -C PinkBold -G Magenta -I 'Confirm your Bitlocker Startup Pin (between 10 to 20 characters)'; Read-Host -AsSecureString)
 
-                                [System.Boolean]$TheyMatch = Compare-SecureString $Pin1 $Pin2
+                                [System.Boolean]$TheyMatch = Compare-SecureString -SecureString1 $Pin1 -SecureString2 $Pin2
 
                                 if ( $TheyMatch -and ($Pin1.Length -in 10..20) -and ($Pin2.Length -in 10..20) ) {
                                     [securestring]$Pin = $Pin1
@@ -1456,7 +1463,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                                         [securestring]$Pin2 = $(Write-SmartText -C PinkBold -G Magenta -I 'Confirm your Bitlocker Startup Pin (between 10 to 20 characters)'; Read-Host -AsSecureString)
 
                                         # Compare the PINs and make sure they match
-                                        [System.Boolean]$TheyMatch = Compare-SecureString $Pin1 $Pin2
+                                        [System.Boolean]$TheyMatch = Compare-SecureString -SecureString1 $Pin1 -SecureString2 $Pin2
                                         # If the PINs match and they are at least 10 characters long, max 20 characters
                                         if ( $TheyMatch -and ($Pin1.Length -in 10..20) -and ($Pin2.Length -in 10..20) ) {
                                             [securestring]$Pin = $Pin1
@@ -1499,7 +1506,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                                 [securestring]$Pin2 = $(Write-SmartText -C PinkBold -G Magenta -I 'Confirm your Bitlocker Startup Pin (between 10 to 20 characters)'; Read-Host -AsSecureString)
 
                                 # Compare the PINs and make sure they match
-                                [System.Boolean]$TheyMatch = Compare-SecureString $Pin1 $Pin2
+                                [System.Boolean]$TheyMatch = Compare-SecureString -SecureString1 $Pin1 -SecureString2 $Pin2
                                 # If the PINs match and they are at least 10 characters long, max 20 characters
                                 if ( $TheyMatch -and ($Pin1.Length -in 10..20) -and ($Pin2.Length -in 10..20) ) {
                                     [securestring]$Pin = $Pin1
@@ -1774,10 +1781,10 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 }
             } 'No' { break }
             'Exit' { &$CleanUp }
-        }        
+        }
         #endregion Bitlocker-Settings
 
-        #region TLS-Security        
+        #region TLS-Security
         $CurrentMainStep++
 
         # Change the title of the Windows Terminal for PowerShell tab
@@ -1816,10 +1823,10 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 .\LGPO.exe /q /m '..\Security-Baselines-X\TLS Security\registry.pol'
             } 'No' { break }
             'Exit' { &$CleanUp }
-        }        
+        }
         #endregion TLS-Security
 
-        #region Lock-Screen        
+        #region Lock-Screen
         $CurrentMainStep++
 
         # Change the title of the Windows Terminal for PowerShell tab
@@ -1848,10 +1855,10 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
 
             } 'No' { break }
             'Exit' { &$CleanUp }
-        }        
+        }
         #endregion Lock-Screen
 
-        #region User-Account-Control        
+        #region User-Account-Control
         $CurrentMainStep++
 
         # Change the title of the Windows Terminal for PowerShell tab
@@ -1903,10 +1910,10 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
 
             } 'No' { break }
             'Exit' { &$CleanUp }
-        }        
+        }
         #endregion User-Account-Control
 
-        #region Windows-Firewall        
+        #region Windows-Firewall
         $CurrentMainStep++
 
         # Change the title of the Windows Terminal for PowerShell tab
@@ -1926,10 +1933,10 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 ForEach-Object -Process { Disable-NetFirewallRule -DisplayName $_.DisplayName }
             } 'No' { break }
             'Exit' { &$CleanUp }
-        }        
+        }
         #endregion Windows-Firewall
 
-        #region Optional-Windows-Features        
+        #region Optional-Windows-Features
         $CurrentMainStep++
 
         # Change the title of the Windows Terminal for PowerShell tab
@@ -2222,10 +2229,10 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
 
             } 'No' { break }
             'Exit' { &$CleanUp }
-        }        
+        }
         #endregion Optional-Windows-Features
 
-        #region Windows-Networking        
+        #region Windows-Networking
         $CurrentMainStep++
 
         # Change the title of the Windows Terminal for PowerShell tab
@@ -2247,10 +2254,10 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 Get-NetConnectionProfile | Set-NetConnectionProfile -NetworkCategory Public
             } 'No' { break }
             'Exit' { &$CleanUp }
-        }        
+        }
         #endregion Windows-Networking
 
-        #region Miscellaneous-Configurations        
+        #region Miscellaneous-Configurations
         $CurrentMainStep++
 
         # Change the title of the Windows Terminal for PowerShell tab
@@ -2309,10 +2316,10 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
 
             } 'No' { break }
             'Exit' { &$CleanUp }
-        }        
+        }
         #endregion Miscellaneous-Configurations
 
-        #region Windows-Update-Configurations        
+        #region Windows-Update-Configurations
         $CurrentMainStep++
 
         # Change the title of the Windows Terminal for PowerShell tab
@@ -2329,10 +2336,10 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 .\LGPO.exe /q /m '..\Security-Baselines-X\Windows Update Policies\registry.pol'
             } 'No' { break }
             'Exit' { &$CleanUp }
-        }        
+        }
         #endregion Windows-Update-Configurations
 
-        #region Edge-Browser-Configurations        
+        #region Edge-Browser-Configurations
         $CurrentMainStep++
 
         # Change the title of the Windows Terminal for PowerShell tab
@@ -2352,10 +2359,10 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 }
             } 'No' { break }
             'Exit' { &$CleanUp }
-        }        
+        }
         #endregion Edge-Browser-Configurations
 
-        #region Certificate-Checking-Commands        
+        #region Certificate-Checking-Commands
         $CurrentMainStep++
 
         # Change the title of the Windows Terminal for PowerShell tab
@@ -2382,10 +2389,10 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 Remove-Item -Path .\sigcheck64.exe -Force
             } 'No' { break }
             'Exit' { &$CleanUp }
-        }        
+        }
         #endregion Certificate-Checking-Commands
 
-        #region Country-IP-Blocking        
+        #region Country-IP-Blocking
         $CurrentMainStep++
 
         # Change the title of the Windows Terminal for PowerShell tab
@@ -2413,12 +2420,12 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 }
             } 'No' { break }
             'Exit' { &$CleanUp }
-        }        
+        }
         #endregion Country-IP-Blocking
 
     } # End of Admin test function
 
-    #region Non-Admin-Commands    
+    #region Non-Admin-Commands
     # Change the title of the Windows Terminal for PowerShell tab
     $Host.UI.RawUI.WindowTitle = 'Non-Admins'
 
@@ -2456,7 +2463,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
 
         } 'No' { &$CleanUp }
         'Exit' { &$CleanUp }
-    }    
+    }
     #endregion Non-Admin-Commands
 }
 catch {

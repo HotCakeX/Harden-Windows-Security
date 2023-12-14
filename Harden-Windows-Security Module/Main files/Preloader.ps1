@@ -1,3 +1,6 @@
+# This file is automatically imported in the PowerShell session every time a cmdlet of this module is called, without requiring to manually use the Import-Module cmdlet
+# all the variables in here persist until PowerShell (session) is closed
+
 if (!$IsWindows) {
     Throw 'The WDACConfig module only runs on Windows operation systems.'
 }

@@ -96,13 +96,13 @@ Set-ExecutionPolicy -ExecutionPolicy 'Unrestricted' -Scope Process -Force
 # Change the title of the Windows Terminal for PowerShell tab
 $Host.UI.RawUI.WindowTitle = '❤️‍🔥Harden Windows Security❤️‍🔥'
 
-# Defining global script variables
+# Defining script variables
 # Current script's version, the same as the version at the top in the script info section
 [System.DateTime]$CurrentVersion = '2023.11.23'
 # Minimum OS build number required for the hardening measures used in this script
 [System.Decimal]$Requiredbuild = '22621.2428'
 # Fetching Temp Directory
-[System.String]$global:CurrentUserTempDirectoryPath = [System.IO.Path]::GetTempPath()
+[System.String]$CurrentUserTempDirectoryPath = [System.IO.Path]::GetTempPath()
 # The total number of the main categories for the parent/main progress bar to render
 [System.Int64]$TotalMainSteps = 18
 # Defining a global boolean variable to determine whether optional diagnostic data should be enabled for Smart App Control or not
@@ -116,11 +116,14 @@ function Select-Option {
     .INPUTS
         System.String
         System.Management.Automation.SwitchParameter
+    .OUTPUTS
+        System.String
     .PARAMETER Message
         Contains the main prompt message
     .PARAMETER ExtraMessage
         Contains any extra notes for sub-categories
     #>
+    [CmdletBinding()]
     param(
         [parameter(Mandatory = $True)][System.String]$Message,
         [parameter(Mandatory = $True)][System.String[]]$Options,
@@ -164,7 +167,7 @@ function Select-Option {
             Write-Warning -Message 'Invalid input. Please only enter a positive number.'
         }
     }
-    return $Selected
+    return [System.String]$Selected
 }
 
 function Edit-Registry {
@@ -176,6 +179,7 @@ function Edit-Registry {
     .OUTPUTS
         System.Void
     #>
+    [CmdletBinding()]
     param ([System.String]$Path, [System.String]$Key, [System.String]$Value, [System.String]$Type, [System.String]$Action)
     If (-NOT (Test-Path -Path $Path)) {
         New-Item -Path $Path -Force | Out-Null
@@ -247,11 +251,14 @@ function Compare-SecureString {
         https://stackoverflow.com/questions/48809012/compare-two-credentials-in-powershell
     .INPUTS
         System.Security.SecureString
+    .OUTPUTS
+        System.Boolean
     .PARAMETER SecureString1
         First secure string
     .PARAMETER SecureString2
         Second secure string to compare with the first secure string
     #>
+    [CmdletBinding()]
     param(
         [Security.SecureString]$SecureString1,
         [Security.SecureString]$SecureString2
@@ -711,16 +718,16 @@ try {
     #endregion RequirementsCheck
 
     # create our working directory
-    New-Item -ItemType Directory -Path "$global:CurrentUserTempDirectoryPath\HardeningXStuff\" -Force | Out-Null
+    New-Item -ItemType Directory -Path "$CurrentUserTempDirectoryPath\HardeningXStuff\" -Force | Out-Null
     # working directory assignment
-    [System.IO.DirectoryInfo]$WorkingDir = "$global:CurrentUserTempDirectoryPath\HardeningXStuff\"
+    [System.IO.DirectoryInfo]$WorkingDir = "$CurrentUserTempDirectoryPath\HardeningXStuff\"
     # change location to the new directory
     Set-Location -Path $WorkingDir
 
     # Clean up script block
     [System.Management.Automation.ScriptBlock]$CleanUp = {
         Set-Location -Path $HOME
-        Remove-Item -Recurse -Path "$global:CurrentUserTempDirectoryPath\HardeningXStuff\" -Force
+        Remove-Item -Recurse -Path "$CurrentUserTempDirectoryPath\HardeningXStuff\" -Force
         # Disable progress bars
         0..6 | ForEach-Object -Process { Write-Progress -Id $_ -Activity 'Done' -Completed }
         exit
@@ -750,10 +757,10 @@ try {
             )
 
             # Get the total number of files to download
-            [System.Int64]$TotalRequiredFiles = $Files.Count
+            [System.Int16]$TotalRequiredFiles = $Files.Count
 
             # Initialize a counter for the progress bar
-            [System.Int64]$RequiredFilesCounter = 0
+            [System.Int16]$RequiredFilesCounter = 0
 
             # Start a job for each file download
             [System.Object[]]$Jobs = foreach ($File in $Files) {
@@ -842,7 +849,6 @@ try {
         [System.String]$Microsoft365SecurityBaselinePath = (Get-ChildItem -Directory -Path '.\Microsoft365SecurityBaseline\*\').FullName
 
         #region Windows-Boot-Manager-revocations-for-Secure-Boot KB5025885
-        # ============================May 9 2023 Windows Boot Manager revocations for Secure Boot =================================
         $CurrentMainStep++
 
         # Change the title of the Windows Terminal for PowerShell tab
@@ -859,11 +865,9 @@ try {
             } 'No' { break }
             'Exit' { &$CleanUp }
         }
-        # ============================End of May 9 2023 Windows Boot Manager revocations for Secure Boot===========================
         #endregion Windows-Boot-Manager-revocations-for-Secure-Boot KB5025885
 
         #region Microsoft-Security-Baseline
-        # ================================================Microsoft Security Baseline==============================================
         $CurrentMainStep++
 
         # Change the title of the Windows Terminal for PowerShell tab
@@ -906,11 +910,9 @@ try {
             'No' { break MicrosoftSecurityBaselinesCategoryLabel }
             'Exit' { &$CleanUp }
         }
-        # ==============================================End of Microsoft Security Baselines============================================
         #endregion Microsoft-Security-Baseline
 
         #region Microsoft-365-Apps-Security-Baseline
-        # ================================================Microsoft 365 Apps Security Baseline==============================================
         $CurrentMainStep++
 
         # Change the title of the Windows Terminal for PowerShell tab
@@ -932,11 +934,9 @@ try {
             } 'No' { break Microsoft365AppsSecurityBaselinesCategoryLabel }
             'Exit' { &$CleanUp }
         }
-        # ================================================End of Microsoft 365 Apps Security Baseline==============================================
         #endregion Microsoft-365-Apps-Security-Baseline
 
         #region Microsoft-Defender
-        # ================================================Microsoft Defender=======================================================
         $CurrentMainStep++
 
         # Change the title of the Windows Terminal for PowerShell tab
@@ -1026,7 +1026,7 @@ try {
                 # Old method
                 # bcdedit.exe /set '{current}' nx AlwaysOn | Out-Null
                 # New method using PowerShell cmdlets added in Windows 11
-                Set-BcdElement -Element 'nx' -Type 'Integer' -Value '3'
+                Set-BcdElement -Element 'nx' -Type 'Integer' -Value '3' -Force
 
                 # Suggest turning on Smart App Control only if it's in Eval mode
                 if ((Get-MpComputerStatus).SmartAppControlState -eq 'Eval') {
@@ -1110,11 +1110,9 @@ try {
             } 'No' { break }
             'Exit' { &$CleanUp }
         }
-        # ============================================End of Microsoft Defender====================================================
         #endregion Microsoft-Defender
 
         #region Attack-Surface-Reduction-Rules
-        # =========================================Attack Surface Reduction Rules==================================================
         $CurrentMainStep++
 
         # Change the title of the Windows Terminal for PowerShell tab
@@ -1131,11 +1129,9 @@ try {
             } 'No' { break ASRRulesCategoryLabel }
             'Exit' { &$CleanUp }
         }
-        # =========================================End of Attack Surface Reduction Rules===========================================
         #endregion Attack-Surface-Reduction-Rules
 
         #region Bitlocker-Settings
-        # ==========================================Bitlocker Settings=============================================================
         $CurrentMainStep++
 
         # Change the title of the Windows Terminal for PowerShell tab
@@ -1198,7 +1194,7 @@ try {
       }
     }
 '@
-                Add-Type -TypeDefinition $BootDMAProtectionCheck
+                Add-Type -TypeDefinition $BootDMAProtectionCheck -Language CSharp
                 # returns true or false depending on whether Kernel DMA Protection is on or off
                 [System.Boolean]$BootDMAProtection = ([SystemInfo.NativeMethods]::BootDmaCheck()) -ne 0
 
@@ -1326,7 +1322,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                                         [securestring]$Pin2 = $(Write-SmartText -C PinkBold -G Magenta -I 'Confirm your Bitlocker Startup Pin (between 10 to 20 characters)'; Read-Host -AsSecureString)
 
                                         # Compare the PINs and make sure they match
-                                        [System.Boolean]$TheyMatch = Compare-SecureString $Pin1 $Pin2
+                                        [System.Boolean]$TheyMatch = Compare-SecureString -SecureString1 $Pin1 -SecureString2 $Pin2
                                         # If the PINs match and they are at least 10 characters long, max 20 characters
                                         if ( $TheyMatch -and ($Pin1.Length -in 10..20) -and ($Pin2.Length -in 10..20) ) {
                                             [securestring]$Pin = $Pin1
@@ -1342,7 +1338,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                                         Write-SmartText -C MintGreen -G Green -I "`nPINs matched, enabling TPM and startup PIN now`n"
                                     }
                                     catch {
-                                        Write-Host -Object 'These errors occured, run Bitlocker category again after meeting the requirements' -ForegroundColor Red
+                                        Write-Host -Object 'These errors occurred, run Bitlocker category again after meeting the requirements' -ForegroundColor Red
                                         $_
                                         break BitLockerCategoryLabel
                                     }
@@ -1366,7 +1362,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                                 [securestring]$Pin1 = $(Write-SmartText -C PinkBold -G Magenta -I 'Enter a Pin for Bitlocker startup (between 10 to 20 characters)'; Read-Host -AsSecureString)
                                 [securestring]$Pin2 = $(Write-SmartText -C PinkBold -G Magenta -I 'Confirm your Bitlocker Startup Pin (between 10 to 20 characters)'; Read-Host -AsSecureString)
 
-                                [System.Boolean]$TheyMatch = Compare-SecureString $Pin1 $Pin2
+                                [System.Boolean]$TheyMatch = Compare-SecureString -SecureString1 $Pin1 -SecureString2 $Pin2
 
                                 if ( $TheyMatch -and ($Pin1.Length -in 10..20) -and ($Pin2.Length -in 10..20) ) {
                                     [securestring]$Pin = $Pin1
@@ -1380,7 +1376,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                                 Enable-BitLocker -MountPoint $env:SystemDrive -EncryptionMethod 'XtsAes256' -Pin $Pin -TpmAndPinProtector -SkipHardwareTest -ErrorAction Stop *> $null
                             }
                             catch {
-                                Write-Host -Object 'These errors occured, run Bitlocker category again after meeting the requirements' -ForegroundColor Red
+                                Write-Host -Object 'These errors occurred, run Bitlocker category again after meeting the requirements' -ForegroundColor Red
                                 $_
                                 break BitLockerCategoryLabel
                             }
@@ -1467,7 +1463,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                                         [securestring]$Pin2 = $(Write-SmartText -C PinkBold -G Magenta -I 'Confirm your Bitlocker Startup Pin (between 10 to 20 characters)'; Read-Host -AsSecureString)
 
                                         # Compare the PINs and make sure they match
-                                        [System.Boolean]$TheyMatch = Compare-SecureString $Pin1 $Pin2
+                                        [System.Boolean]$TheyMatch = Compare-SecureString -SecureString1 $Pin1 -SecureString2 $Pin2
                                         # If the PINs match and they are at least 10 characters long, max 20 characters
                                         if ( $TheyMatch -and ($Pin1.Length -in 10..20) -and ($Pin2.Length -in 10..20) ) {
                                             [securestring]$Pin = $Pin1
@@ -1510,7 +1506,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                                 [securestring]$Pin2 = $(Write-SmartText -C PinkBold -G Magenta -I 'Confirm your Bitlocker Startup Pin (between 10 to 20 characters)'; Read-Host -AsSecureString)
 
                                 # Compare the PINs and make sure they match
-                                [System.Boolean]$TheyMatch = Compare-SecureString $Pin1 $Pin2
+                                [System.Boolean]$TheyMatch = Compare-SecureString -SecureString1 $Pin1 -SecureString2 $Pin2
                                 # If the PINs match and they are at least 10 characters long, max 20 characters
                                 if ( $TheyMatch -and ($Pin1.Length -in 10..20) -and ($Pin2.Length -in 10..20) ) {
                                     [securestring]$Pin = $Pin1
@@ -1786,11 +1782,9 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
             } 'No' { break }
             'Exit' { &$CleanUp }
         }
-        # ==========================================End of Bitlocker Settings======================================================
         #endregion Bitlocker-Settings
 
         #region TLS-Security
-        # ==============================================TLS Security===============================================================
         $CurrentMainStep++
 
         # Change the title of the Windows Terminal for PowerShell tab
@@ -1830,11 +1824,9 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
             } 'No' { break }
             'Exit' { &$CleanUp }
         }
-        # ==========================================End of TLS Security============================================================
         #endregion TLS-Security
 
         #region Lock-Screen
-        # ==========================================Lock Screen====================================================================
         $CurrentMainStep++
 
         # Change the title of the Windows Terminal for PowerShell tab
@@ -1864,11 +1856,9 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
             } 'No' { break }
             'Exit' { &$CleanUp }
         }
-        # ==========================================End of Lock Screen=============================================================
         #endregion Lock-Screen
 
         #region User-Account-Control
-        # ==========================================User Account Control===========================================================
         $CurrentMainStep++
 
         # Change the title of the Windows Terminal for PowerShell tab
@@ -1921,11 +1911,9 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
             } 'No' { break }
             'Exit' { &$CleanUp }
         }
-        # ==========================================End of User Account Control====================================================
         #endregion User-Account-Control
 
         #region Windows-Firewall
-        # ====================================================Windows Firewall=====================================================
         $CurrentMainStep++
 
         # Change the title of the Windows Terminal for PowerShell tab
@@ -1946,11 +1934,9 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
             } 'No' { break }
             'Exit' { &$CleanUp }
         }
-        # =================================================End of Windows Firewall=================================================
         #endregion Windows-Firewall
 
         #region Optional-Windows-Features
-        # =================================================Optional Windows Features===============================================
         $CurrentMainStep++
 
         # Change the title of the Windows Terminal for PowerShell tab
@@ -2244,11 +2230,9 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
             } 'No' { break }
             'Exit' { &$CleanUp }
         }
-        # ==============================================End of Optional Windows Features===========================================
         #endregion Optional-Windows-Features
 
         #region Windows-Networking
-        # ====================================================Windows Networking===================================================
         $CurrentMainStep++
 
         # Change the title of the Windows Terminal for PowerShell tab
@@ -2271,11 +2255,9 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
             } 'No' { break }
             'Exit' { &$CleanUp }
         }
-        # =================================================End of Windows Networking===============================================
         #endregion Windows-Networking
 
         #region Miscellaneous-Configurations
-        # ==============================================Miscellaneous Configurations===============================================
         $CurrentMainStep++
 
         # Change the title of the Windows Terminal for PowerShell tab
@@ -2335,11 +2317,9 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
             } 'No' { break }
             'Exit' { &$CleanUp }
         }
-        # ============================================End of Miscellaneous Configurations==========================================
         #endregion Miscellaneous-Configurations
 
         #region Windows-Update-Configurations
-        # ====================================================Windows Update Configurations==============================================
         $CurrentMainStep++
 
         # Change the title of the Windows Terminal for PowerShell tab
@@ -2357,11 +2337,9 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
             } 'No' { break }
             'Exit' { &$CleanUp }
         }
-        # ====================================================End of Windows Update Configurations=======================================
         #endregion Windows-Update-Configurations
 
         #region Edge-Browser-Configurations
-        # ====================================================Edge Browser Configurations====================================================
         $CurrentMainStep++
 
         # Change the title of the Windows Terminal for PowerShell tab
@@ -2382,11 +2360,9 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
             } 'No' { break }
             'Exit' { &$CleanUp }
         }
-        # ====================================================End of Edge Browser Configurations==============================================
         #endregion Edge-Browser-Configurations
 
         #region Certificate-Checking-Commands
-        # ====================================================Certificate Checking Commands========================================
         $CurrentMainStep++
 
         # Change the title of the Windows Terminal for PowerShell tab
@@ -2414,11 +2390,9 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
             } 'No' { break }
             'Exit' { &$CleanUp }
         }
-        # ====================================================End of Certificate Checking Commands=================================
         #endregion Certificate-Checking-Commands
 
         #region Country-IP-Blocking
-        # ====================================================Country IP Blocking==================================================
         $CurrentMainStep++
 
         # Change the title of the Windows Terminal for PowerShell tab
@@ -2447,13 +2421,11 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
             } 'No' { break }
             'Exit' { &$CleanUp }
         }
-        # ====================================================End of Country IP Blocking===========================================
         #endregion Country-IP-Blocking
 
     } # End of Admin test function
 
     #region Non-Admin-Commands
-    # ====================================================Non-Admin Commands===================================================
     # Change the title of the Windows Terminal for PowerShell tab
     $Host.UI.RawUI.WindowTitle = 'Non-Admins'
 
@@ -2492,11 +2464,10 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
         } 'No' { &$CleanUp }
         'Exit' { &$CleanUp }
     }
-    # ====================================================End of Non-Admin Commands============================================
     #endregion Non-Admin-Commands
 }
 catch {
-    # Throw whatever error that occured
+    # Throw whatever error that occurred
     Throw $_
 }
 finally {
@@ -2514,7 +2485,7 @@ finally {
         }
     }
 
-    Set-Location -Path $HOME; Remove-Item -Recurse -Path "$global:CurrentUserTempDirectoryPath\HardeningXStuff\" -Force -ErrorAction SilentlyContinue
+    Set-Location -Path $HOME; Remove-Item -Recurse -Path "$CurrentUserTempDirectoryPath\HardeningXStuff\" -Force -ErrorAction SilentlyContinue
 
     # Disable progress bars
     0..6 | ForEach-Object -Process { Write-Progress -Id $_ -Activity 'Done' -Completed }

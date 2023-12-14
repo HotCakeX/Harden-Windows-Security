@@ -1946,11 +1946,10 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
             'Yes' {
                 Write-Progress -Id 0 -Activity 'Optional Windows Features' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
 
-                # since PowerShell Core (only if installed from Microsoft Store) has problem with these commands, making sure the built-in PowerShell handles them
-                # There are Github issues for it already: https://github.com/PowerShell/PowerShell/issues/13866
-                Powershell.exe -command {
-                    function Edit-Addons {
-                        <#
+                # PowerShell Core (only if installed from Microsoft Store) has problem with these commands: https://github.com/PowerShell/PowerShell/issues/13866#issuecomment-1519066710
+                Import-Module -Name 'DISM' -UseWindowsPowerShell -Force -WarningAction SilentlyContinue
+                function Edit-Addons {
+                    <#
                         .SYNOPSIS
                             A function to enable or disable Windows features and capabilities.
                         .INPUTS
@@ -1958,99 +1957,98 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                         .OUTPUTS
                             System.String
                         #>
-                        param (
-                            [CmdletBinding()]
-                            [parameter(Mandatory = $true)]
-                            [ValidateSet('Capability', 'Feature')]
-                            [System.String]$Type,
-                            [parameter(Mandatory = $true, ParameterSetName = 'Capability')]
-                            [System.String]$CapabilityName,
-                            [parameter(Mandatory = $true, ParameterSetName = 'Feature')]
-                            [System.String]$FeatureName,
-                            [parameter(Mandatory = $true, ParameterSetName = 'Feature')]
-                            [ValidateSet('Enabling', 'Disabling')]
-                            [System.String]$FeatureAction
-                        )
-                        switch ($Type) {
-                            'Feature' {
-                                if ($FeatureAction -eq 'Enabling') {
-                                    $ActionCheck = 'disabled'
-                                    $ActionOutput = 'enabled'
-                                }
-                                else {
-                                    $ActionCheck = 'enabled'
-                                    $ActionOutput = 'disabled'
-                                }
-                                Write-Host -Object "`n$FeatureAction $FeatureName" -ForegroundColor Yellow
-                                if ((Get-WindowsOptionalFeature -Online -FeatureName $FeatureName).state -eq $ActionCheck) {
-                                    try {
-                                        if ($FeatureAction -eq 'Enabling') {
-                                            Enable-WindowsOptionalFeature -Online -FeatureName $FeatureName -All -NoRestart -ErrorAction Stop
-                                        }
-                                        else {
-                                            Disable-WindowsOptionalFeature -Online -FeatureName $FeatureName -NoRestart -ErrorAction Stop
-                                        }
-                                        # Shows the successful message only if the process was successful
-                                        Write-Host -Object "$FeatureName was successfully $ActionOutput" -ForegroundColor Green
-                                    }
-                                    catch {
-                                        # show errors in non-terminating way
-                                        $_
-                                    }
-                                }
-                                else {
-                                    Write-Host -Object "$FeatureName is already $ActionOutput" -ForegroundColor Green
-                                }
-                                break
+                    param (
+                        [CmdletBinding()]
+                        [parameter(Mandatory = $true)]
+                        [ValidateSet('Capability', 'Feature')]
+                        [System.String]$Type,
+                        [parameter(Mandatory = $true, ParameterSetName = 'Capability')]
+                        [System.String]$CapabilityName,
+                        [parameter(Mandatory = $true, ParameterSetName = 'Feature')]
+                        [System.String]$FeatureName,
+                        [parameter(Mandatory = $true, ParameterSetName = 'Feature')]
+                        [ValidateSet('Enabling', 'Disabling')]
+                        [System.String]$FeatureAction
+                    )
+                    switch ($Type) {
+                        'Feature' {
+                            if ($FeatureAction -eq 'Enabling') {
+                                $ActionCheck = 'disabled'
+                                $ActionOutput = 'enabled'
                             }
-                            'Capability' {
-                                Write-Host -Object "`nRemoving $CapabilityName" -ForegroundColor Yellow
-                                if ((Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like "*$CapabilityName*" }).state -ne 'NotPresent') {
-                                    try {
-                                        Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like "*$CapabilityName*" } | Remove-WindowsCapability -Online -ErrorAction Stop
-                                        # Shows the successful message only if the process was successful
-                                        Write-Host -Object "$CapabilityName was successfully removed." -ForegroundColor Green
-                                    }
-                                    catch {
-                                        # show errors in non-terminating way
-                                        $_
-                                    }
-                                }
-                                else {
-                                    Write-Host -Object "$CapabilityName is already removed." -ForegroundColor Green
-                                }
-                                break
+                            else {
+                                $ActionCheck = 'enabled'
+                                $ActionOutput = 'disabled'
                             }
+                            Write-Host -Object "`n$FeatureAction $FeatureName" -ForegroundColor Yellow
+                            if ((Get-WindowsOptionalFeature -Online -FeatureName $FeatureName).state -eq $ActionCheck) {
+                                try {
+                                    if ($FeatureAction -eq 'Enabling') {
+                                        Enable-WindowsOptionalFeature -Online -FeatureName $FeatureName -All -NoRestart -ErrorAction Stop
+                                    }
+                                    else {
+                                        Disable-WindowsOptionalFeature -Online -FeatureName $FeatureName -NoRestart -ErrorAction Stop
+                                    }
+                                    # Shows the successful message only if the process was successful
+                                    Write-Host -Object "$FeatureName was successfully $ActionOutput" -ForegroundColor Green
+                                }
+                                catch {
+                                    # show errors in non-terminating way
+                                    $_
+                                }
+                            }
+                            else {
+                                Write-Host -Object "$FeatureName is already $ActionOutput" -ForegroundColor Green
+                            }
+                            break
+                        }
+                        'Capability' {
+                            Write-Host -Object "`nRemoving $CapabilityName" -ForegroundColor Yellow
+                            if ((Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like "*$CapabilityName*" }).state -ne 'NotPresent') {
+                                try {
+                                    Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like "*$CapabilityName*" } | Remove-WindowsCapability -Online -ErrorAction Stop
+                                    # Shows the successful message only if the process was successful
+                                    Write-Host -Object "$CapabilityName was successfully removed." -ForegroundColor Green
+                                }
+                                catch {
+                                    # show errors in non-terminating way
+                                    $_
+                                }
+                            }
+                            else {
+                                Write-Host -Object "$CapabilityName is already removed." -ForegroundColor Green
+                            }
+                            break
                         }
                     }
-                    Edit-Addons -Type Feature -FeatureAction Disabling -FeatureName 'MicrosoftWindowsPowerShellV2'
-                    Edit-Addons -Type Feature -FeatureAction Disabling -FeatureName 'MicrosoftWindowsPowerShellV2Root'
-                    Edit-Addons -Type Feature -FeatureAction Disabling -FeatureName 'WorkFolders-Client'
-                    Edit-Addons -Type Feature -FeatureAction Disabling -FeatureName 'Printing-Foundation-Features'
-                    Edit-Addons -Type Feature -FeatureAction Enabling -FeatureName 'Windows-Defender-ApplicationGuard'
-                    Edit-Addons -Type Feature -FeatureAction Enabling -FeatureName 'Containers-DisposableClientVM'
-                    Edit-Addons -Type Feature -FeatureAction Enabling -FeatureName 'Microsoft-Hyper-V'
-                    Edit-Addons -Type Feature -FeatureAction Enabling -FeatureName 'VirtualMachinePlatform'
-                    Edit-Addons -Type Capability -CapabilityName 'Media.WindowsMediaPlayer'
-                    Edit-Addons -Type Capability -CapabilityName 'Browser.InternetExplorer'
-                    Edit-Addons -Type Capability -CapabilityName 'wmic'
-                    Edit-Addons -Type Capability -CapabilityName 'Microsoft.Windows.Notepad.System'
-                    Edit-Addons -Type Capability -CapabilityName 'Microsoft.Windows.WordPad'
-                    Edit-Addons -Type Capability -CapabilityName 'Microsoft.Windows.PowerShell.ISE'
-                    Edit-Addons -Type Capability -CapabilityName 'App.StepsRecorder'
+                }
+                Edit-Addons -Type Feature -FeatureAction Disabling -FeatureName 'MicrosoftWindowsPowerShellV2'
+                Edit-Addons -Type Feature -FeatureAction Disabling -FeatureName 'MicrosoftWindowsPowerShellV2Root'
+                Edit-Addons -Type Feature -FeatureAction Disabling -FeatureName 'WorkFolders-Client'
+                Edit-Addons -Type Feature -FeatureAction Disabling -FeatureName 'Printing-Foundation-Features'
+                Edit-Addons -Type Feature -FeatureAction Enabling -FeatureName 'Windows-Defender-ApplicationGuard'
+                Edit-Addons -Type Feature -FeatureAction Enabling -FeatureName 'Containers-DisposableClientVM'
+                Edit-Addons -Type Feature -FeatureAction Enabling -FeatureName 'Microsoft-Hyper-V'
+                Edit-Addons -Type Feature -FeatureAction Enabling -FeatureName 'VirtualMachinePlatform'
+                Edit-Addons -Type Capability -CapabilityName 'Media.WindowsMediaPlayer'
+                Edit-Addons -Type Capability -CapabilityName 'Browser.InternetExplorer'
+                Edit-Addons -Type Capability -CapabilityName 'wmic'
+                Edit-Addons -Type Capability -CapabilityName 'Microsoft.Windows.Notepad.System'
+                Edit-Addons -Type Capability -CapabilityName 'Microsoft.Windows.WordPad'
+                Edit-Addons -Type Capability -CapabilityName 'Microsoft.Windows.PowerShell.ISE'
+                Edit-Addons -Type Capability -CapabilityName 'App.StepsRecorder'
 
-                    # Uninstall VBScript that is now uninstallable as an optional features since Windows 11 insider Dev build 25309 - Won't do anything in other builds
-                    if (Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like '*VBSCRIPT*' }) {
-                        try {
-                            Write-Host -Object "`nUninstalling VBSCRIPT" -ForegroundColor Yellow
-                            Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like '*VBSCRIPT*' } | Remove-WindowsCapability -Online -ErrorAction Stop
-                            # Shows the successful message only if removal process was successful
-                            Write-Host -Object 'VBSCRIPT has been uninstalled' -ForegroundColor Green
-                        }
-                        catch {
-                            # show errors in non-terminating way
-                            $_
-                        }
+                # Uninstall VBScript that is now uninstallable as an optional features since Windows 11 insider Dev build 25309 - Won't do anything in other builds
+                if (Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like '*VBSCRIPT*' }) {
+                    try {
+                        Write-Host -Object "`nUninstalling VBSCRIPT" -ForegroundColor Yellow
+                        Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like '*VBSCRIPT*' } | Remove-WindowsCapability -Online -ErrorAction Stop
+                        # Shows the successful message only if removal process was successful
+                        Write-Host -Object 'VBSCRIPT has been uninstalled' -ForegroundColor Green
+                    }
+                    catch {
+                        # show errors in non-terminating way
+                        $_
                     }
                 }
             } 'No' { break }

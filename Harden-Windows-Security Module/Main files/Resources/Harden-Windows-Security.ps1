@@ -757,10 +757,10 @@ try {
             )
 
             # Get the total number of files to download
-            [System.Int64]$TotalRequiredFiles = $Files.Count
+            [System.Int16]$TotalRequiredFiles = $Files.Count
 
             # Initialize a counter for the progress bar
-            [System.Int64]$RequiredFilesCounter = 0
+            [System.Int16]$RequiredFilesCounter = 0
 
             # Start a job for each file download
             [System.Object[]]$Jobs = foreach ($File in $Files) {

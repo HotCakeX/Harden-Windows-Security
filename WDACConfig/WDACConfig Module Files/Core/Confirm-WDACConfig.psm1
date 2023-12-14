@@ -6,9 +6,7 @@ Function Confirm-WDACConfig {
         [Alias('V')]
         [Parameter(Mandatory = $false, ParameterSetName = 'Verify WDAC Status')][System.Management.Automation.SwitchParameter]$VerifyWDACStatus,
         [Alias('S')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'Check SmartAppControl Status')][System.Management.Automation.SwitchParameter]$CheckSmartAppControlStatus,
-
-        [Parameter(Mandatory = $false, DontShow = $true)][System.Management.Automation.SwitchParameter]$DummyParameter
+        [Parameter(Mandatory = $false, ParameterSetName = 'Check SmartAppControl Status')][System.Management.Automation.SwitchParameter]$CheckSmartAppControlStatus
     )
 
     DynamicParam {
@@ -153,8 +151,6 @@ Function Confirm-WDACConfig {
     Checks the status of Smart App Control and reports the results on the console
 .PARAMETER SkipVersionCheck
     Can be used with any parameter to bypass the online version check - only to be used in rare cases
-.PARAMETER DummyParameter
-    To hide the common parameters
 .EXAMPLE
     Confirm-WDACConfig -ListActivePolicies -OnlyBasePolicies
 .EXAMPLE

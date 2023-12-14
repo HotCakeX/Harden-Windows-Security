@@ -391,6 +391,8 @@ function Get-AvailableRemovableDrives {
         Function to get a removable drive to be used by BitLocker category
     .INPUTS
         None. You cannot pipe objects to this function
+    .OUTPUTS
+        System.String
     #>
 
     # An empty array of objects that holds the final removable drives list

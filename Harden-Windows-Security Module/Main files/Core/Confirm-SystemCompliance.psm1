@@ -9,14 +9,11 @@ function Confirm-SystemCompliance {
         [System.Management.Automation.SwitchParameter]$DetailedDisplay
     )
     begin {
-        # Stop operation as soon as there is an error anywhere, unless explicitly specified otherwise
-        $ErrorActionPreference = 'Stop'
-
         # Set the progress bar style to blinking yellow
         $PSStyle.Progress.Style = "$($PSStyle.Foreground.FromRGB(255,255,49))$($PSStyle.Blink)"
 
         # Dot-sourcing the functions.ps1 file in the current scope
-        . "$psscriptroot\Functions.ps1"
+        . "$HardeningModulePath\Resources\Functions.ps1"
 
         # Makes sure this cmdlet is invoked with Admin privileges
         if (-NOT (Test-IsAdmin)) {
@@ -35,7 +32,7 @@ function Confirm-SystemCompliance {
         [System.Object[]]$AllRegistryItems = @()
 
         # Import the CSV file
-        [System.Object[]]$CSVResource = Import-Csv -Path "$psscriptroot\Resources\Registry resources.csv"
+        [System.Object[]]$CSVResource = Import-Csv -Path "$HardeningModulePath\Resources\Registry resources.csv"
 
         # An object to store the FINAL results
         $FinalMegaObject = [PSCustomObject]@{}
@@ -2075,6 +2072,3 @@ function Confirm-SystemCompliance {
     System.Object[]
 #>
 }
-
-# Set PSReadline tab completion to complete menu for easier access to available parameters - Only for the current session
-Set-PSReadLineKeyHandler -Key Tab -Function MenuComplete

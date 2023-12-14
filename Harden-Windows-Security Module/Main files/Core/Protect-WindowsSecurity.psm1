@@ -1,9 +1,9 @@
 Function Protect-WindowsSecurity {
     # Import functions
-    . "$psscriptroot\Functions.ps1"
+    . "$HardeningModulePath\Resources\Functions.ps1"
 
     # Apply the hardening measures from the local file
-    & "$psscriptroot\Harden-Windows-Security.ps1"
+    & "$HardeningModulePath\Resources\Harden-Windows-Security.ps1"
 
     <#
 .SYNOPSIS

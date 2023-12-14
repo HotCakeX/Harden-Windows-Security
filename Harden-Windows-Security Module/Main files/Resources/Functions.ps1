@@ -1,6 +1,3 @@
-# Stop the execution when there is an error
-$global:ErrorActionPreference = 'Stop'
-
 Function Test-IsAdmin {
     <#
     .SYNOPSIS
@@ -25,7 +22,7 @@ function Update-self {
         System.String
     #>
 
-    [System.Version]$CurrentVersion = (Test-ModuleManifest -Path "$psscriptroot\Harden-Windows-Security-Module.psd1").Version
+    [System.Version]$CurrentVersion = (Test-ModuleManifest -Path "$HardeningModulePath\Harden-Windows-Security-Module.psd1").Version
 
     try {
         [System.Version]$global:LatestVersion = Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security%20Module/version.txt' -ProgressAction SilentlyContinue
@@ -91,31 +88,6 @@ function Update-self {
 # Self update the module
 Update-self
 
-#Region Requirements-Check
-
-# check if user's OS is Windows Home edition
-if ((Get-CimInstance -ClassName Win32_OperatingSystem).OperatingSystemSKU -eq '101') {
-    Throw 'Windows Home edition detected, exiting...'
-}
-
-# Check if user's OS is the latest build
-# Minimum OS build number required for the hardening measures used in this script
-[System.Decimal]$Requiredbuild = '22621.2428'
-
-# Get OS build version
-[System.Decimal]$OSBuild = [System.Environment]::OSVersion.Version.Build
-
-# Get Update Build Revision (UBR) number
-[System.Decimal]$UBR = Get-ItemPropertyValue -Path 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion' -Name 'UBR'
-
-# Create full OS build number as seen in Windows Settings
-[System.Decimal]$FullOSBuild = "$OSBuild.$UBR"
-
-# Make sure the current OS build is equal or greater than the required build
-if (-NOT ($FullOSBuild -ge $Requiredbuild)) {
-    Throw "You're not using the latest build of the Windows OS. A minimum build of $Requiredbuild is required but your OS build is $FullOSBuild`nPlease go to Windows Update to install the updates and then try again."
-}
-
 if (Test-IsAdmin) {
     # check to make sure TPM is available and enabled
     [System.Object]$TPM = Get-Tpm
@@ -123,5 +95,3 @@ if (Test-IsAdmin) {
         Throw 'TPM is not available or enabled, please enable it in UEFI settings and try again.'
     }
 }
-
-#Endregion Requirements-Check

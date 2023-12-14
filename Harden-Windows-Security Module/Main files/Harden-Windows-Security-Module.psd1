@@ -1,7 +1,7 @@
 @{
 
   # Script module or binary module file associated with this manifest.
-  # RootModule = ''
+  RootModule           = 'Harden-Windows-Security-Module.psm1'
 
   # Version number of this module.
   ModuleVersion        = '0.2.7'
@@ -97,7 +97,7 @@ Harden Windows Safely, Securely, only with Official Microsoft methods
   # RequiredAssemblies = @()
 
   # Script files (.ps1) that are run in the caller's environment prior to importing this module.
-  # ScriptsToProcess = @()
+  ScriptsToProcess     = @('Preloader.ps1')
 
   # Type files (.ps1xml) to be loaded when importing this module
   # TypesToProcess = @()
@@ -106,7 +106,7 @@ Harden Windows Safely, Securely, only with Official Microsoft methods
   # FormatsToProcess = @()
 
   # Modules to import as nested modules of the module specified in RootModule/ModuleToProcess
-  NestedModules        = @('Confirm-SystemCompliance.psm1', 'Protect-WindowsSecurity.psm1', 'Unprotect-WindowsSecurity.psm1')
+  NestedModules        = @('Core\Confirm-SystemCompliance.psm1', 'Core\Protect-WindowsSecurity.psm1', 'Core\Unprotect-WindowsSecurity.psm1')
 
   # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
   FunctionsToExport    = @('Confirm-SystemCompliance', 'Protect-WindowsSecurity', 'Unprotect-WindowsSecurity')
@@ -127,14 +127,17 @@ Harden Windows Safely, Securely, only with Official Microsoft methods
   # ModuleList = @()
 
   # List of all files packaged with this module
-  FileList             = @('Harden-Windows-Security-Module.psd1',
-    'Confirm-SystemCompliance.psm1',
-    'Protect-WindowsSecurity.psm1',
-    'Unprotect-WindowsSecurity.psm1',
+  FileList             = @(
+    'Harden-Windows-Security-Module.psd1',
+    'Harden-Windows-Security-Module.psm1',
+    'Preloader.ps1',
+    'Core\Confirm-SystemCompliance.psm1',
+    'Core\Protect-WindowsSecurity.psm1',
+    'Core\Unprotect-WindowsSecurity.psm1',
     'Resources\Default Security Policy.inf',
     'Resources\Registry resources.csv',
-    'Harden-Windows-Security.ps1',
-    'Functions.ps1'
+    'Resources\Harden-Windows-Security.ps1',
+    'Resources\Functions.ps1'
   )
 
   # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.

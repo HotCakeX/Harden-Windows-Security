@@ -314,7 +314,7 @@ Function Write-SmartText {
     param (
         [Parameter(Mandatory = $True)]
         [Alias('C')]
-        [ValidateSet('Fuchsia', 'Orange', 'NeonGreen', 'MintGreen', 'PinkBoldBlink', 'PinkBold', 'Rainbow' , 'Gold', 'TeaGreenNoNewLine', 'LavenderNoNewLine', 'PinkNoNewLine', 'VioletNoNewLine', 'Violet', 'Pink')]
+        [ValidateSet('Fuchsia', 'Orange', 'NeonGreen', 'MintGreen', 'PinkBoldBlink', 'PinkBold', 'Rainbow' , 'Gold', 'TeaGreenNoNewLine', 'LavenderNoNewLine', 'PinkNoNewLine', 'VioletNoNewLine', 'Violet', 'Pink', 'Lavender')]
         [System.String]$CustomColor,
 
         [Parameter(Mandatory = $True)]
@@ -347,6 +347,7 @@ Function Write-SmartText {
             'Violet' { Write-Host -Object "$($PSStyle.Foreground.FromRGB(153,0,255))$InputText$($PSStyle.Reset)"; break }
             'Pink' { Write-Host -Object "$($PSStyle.Foreground.FromRGB(255,0,230))$InputText$($PSStyle.Reset)"; break }
             'LavenderNoNewLine' { Write-Host -Object "$($PSStyle.Foreground.FromRgb(255,179,255))$InputText$($PSStyle.Reset)" -NoNewline; break }
+            'Lavender' { Write-Host -Object "$($PSStyle.Foreground.FromRgb(255,179,255))$InputText$($PSStyle.Reset)"; break }
             'TeaGreenNoNewLine' { Write-Host -Object "$($PSStyle.Foreground.FromRgb(133, 222, 119))$InputText$($PSStyle.Reset)" -NoNewline; break }
             'Rainbow' {
                 [System.Object[]]$Colors = @(
@@ -1980,7 +1981,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                                 $ActionCheck = 'enabled'
                                 $ActionOutput = 'disabled'
                             }
-                            Write-Host -Object "`n$FeatureAction $FeatureName" -ForegroundColor Yellow
+                            Write-SmartText -CustomColor Lavender -GenericColor Yellow -InputText "`n$FeatureAction $FeatureName"
                             if ((Get-WindowsOptionalFeature -Online -FeatureName $FeatureName).state -eq $ActionCheck) {
                                 try {
                                     if ($FeatureAction -eq 'Enabling') {
@@ -1990,7 +1991,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                                         Disable-WindowsOptionalFeature -Online -FeatureName $FeatureName -NoRestart -ErrorAction Stop
                                     }
                                     # Shows the successful message only if the process was successful
-                                    Write-Host -Object "$FeatureName was successfully $ActionOutput" -ForegroundColor Green
+                                    Write-SmartText -GenericColor Green -CustomColor NeonGreen -InputText "$FeatureName was successfully $ActionOutput"
                                 }
                                 catch {
                                     # show errors in non-terminating way
@@ -1998,17 +1999,17 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                                 }
                             }
                             else {
-                                Write-Host -Object "$FeatureName is already $ActionOutput" -ForegroundColor Green
+                                Write-SmartText -GenericColor Green -CustomColor NeonGreen -InputText "$FeatureName is already $ActionOutput"
                             }
                             break
                         }
                         'Capability' {
-                            Write-Host -Object "`nRemoving $CapabilityName" -ForegroundColor Yellow
+                            Write-SmartText -CustomColor Lavender -GenericColor Yellow -InputText "`nRemoving $CapabilityName"
                             if ((Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like "*$CapabilityName*" }).state -ne 'NotPresent') {
                                 try {
                                     Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like "*$CapabilityName*" } | Remove-WindowsCapability -Online -ErrorAction Stop
                                     # Shows the successful message only if the process was successful
-                                    Write-Host -Object "$CapabilityName was successfully removed." -ForegroundColor Green
+                                    Write-SmartText -GenericColor Green -CustomColor NeonGreen -InputText "$CapabilityName was successfully removed."
                                 }
                                 catch {
                                     # show errors in non-terminating way
@@ -2016,7 +2017,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                                 }
                             }
                             else {
-                                Write-Host -Object "$CapabilityName is already removed." -ForegroundColor Green
+                                Write-SmartText -GenericColor Green -CustomColor NeonGreen -InputText "$CapabilityName is already removed."
                             }
                             break
                         }
@@ -2041,10 +2042,10 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 # Uninstall VBScript that is now uninstallable as an optional features since Windows 11 insider Dev build 25309 - Won't do anything in other builds
                 if (Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like '*VBSCRIPT*' }) {
                     try {
-                        Write-Host -Object "`nUninstalling VBSCRIPT" -ForegroundColor Yellow
+                        Write-SmartText -CustomColor Lavender -GenericColor Yellow -InputText "`nUninstalling VBSCRIPT"
                         Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like '*VBSCRIPT*' } | Remove-WindowsCapability -Online -ErrorAction Stop
                         # Shows the successful message only if removal process was successful
-                        Write-Host -Object 'VBSCRIPT has been uninstalled' -ForegroundColor Green
+                        Write-SmartText -GenericColor Green -CustomColor NeonGreen -InputText 'VBSCRIPT has been uninstalled'
                     }
                     catch {
                         # show errors in non-terminating way

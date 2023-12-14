@@ -2247,7 +2247,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
         }
         #endregion Country-IP-Blocking
 
-    } # End of Admin test function
+    }
 
     #region Non-Admin-Commands
     # Change the title of the Windows Terminal for PowerShell tab

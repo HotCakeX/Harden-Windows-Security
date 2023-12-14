@@ -1948,165 +1948,97 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
 
                 # since PowerShell Core (only if installed from Microsoft Store) has problem with these commands, making sure the built-in PowerShell handles them
                 # There are Github issues for it already: https://github.com/PowerShell/PowerShell/issues/13866
-
-                powershell.exe -Command {
-
-                    # Disable PowerShell v2 (part 1)
-                    Write-Host -Object "`nDisabling PowerShellv2 1st part" -ForegroundColor Yellow
-                    if ((Get-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2).state -eq 'enabled') {
-                        try {
-                            Disable-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2 -NoRestart -ErrorAction Stop
-                        }
-                        catch {
-                            # show errors in non-terminating way
-                            $_
-                        }
-                    }
-                    else {
-                        Write-Host -Object 'PowerShellv2 1st part is already disabled' -ForegroundColor Green
-                    }
-
-                    # Disable PowerShell v2 (part 2)
-                    Write-Host -Object "`nDisabling PowerShellv2 2nd part" -ForegroundColor Yellow
-                    if ((Get-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2Root).state -eq 'enabled') {
-                        try {
-                            Disable-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2Root -NoRestart -ErrorAction Stop
-                            # Shows the successful message only if removal process was successful
-                            Write-Host -Object 'PowerShellv2 2nd part was successfully disabled' -ForegroundColor Green
-                        }
-                        catch {
-                            # show errors in non-terminating way
-                            $_
-                        }
-                    }
-                    else {
-                        Write-Host -Object 'PowerShellv2 2nd part is already disabled' -ForegroundColor Green
-                    }
-
-                    # Disable Work Folders client
-                    Write-Host -Object "`nDisabling Work Folders" -ForegroundColor Yellow
-                    if ((Get-WindowsOptionalFeature -Online -FeatureName WorkFolders-Client).state -eq 'enabled') {
-                        try {
-                            Disable-WindowsOptionalFeature -Online -FeatureName WorkFolders-Client -NoRestart -ErrorAction Stop
-                            # Shows the successful message only if removal process was successful
-                            Write-Host -Object 'Work Folders was successfully disabled' -ForegroundColor Green
-                        }
-                        catch {
-                            #show error
-                            $_
-                        }
-                    }
-                    else {
-                        Write-Host -Object 'Work Folders is already disabled' -ForegroundColor Green
-                    }
-
-                    # Disable Internet Printing Client
-                    Write-Host -Object "`nDisabling Internet Printing Client" -ForegroundColor Yellow
-                    if ((Get-WindowsOptionalFeature -Online -FeatureName Printing-Foundation-Features).state -eq 'enabled') {
-                        try {
-                            Disable-WindowsOptionalFeature -Online -FeatureName Printing-Foundation-Features -NoRestart -ErrorAction Stop
-                            # Shows the successful message only if removal process was successful
-                            Write-Host -Object 'Internet Printing Client was successfully disabled' -ForegroundColor Green
-                        }
-                        catch {
-                            # show errors in non-terminating way
-                            $_
-                        }
-                    }
-                    else {
-                        Write-Host -Object 'Internet Printing Client is already disabled' -ForegroundColor Green
-                    }
-
-                    # Uninstall Windows Media Player (legacy)
-                    Write-Host -Object "`nUninstalling Windows Media Player (legacy)" -ForegroundColor Yellow
-                    if ((Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like '*Media.WindowsMediaPlayer*' }).state -ne 'NotPresent') {
-                        try {
-                            Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like '*Media.WindowsMediaPlayer*' } | Remove-WindowsCapability -Online -ErrorAction Stop
-                            # Shows the successful message only if removal process was successful
-                            Write-Host -Object 'Windows Media Player (legacy) has been uninstalled.' -ForegroundColor Green
-                        }
-                        catch {
-                            # show errors in non-terminating way
-                            $_
+                Powershell.exe -command {
+                    function Edit-Addons {
+                        <#
+                        .SYNOPSIS
+                            A function to enable or disable Windows features and capabilities.
+                        .INPUTS
+                            System.String
+                        .OUTPUTS
+                            System.String
+                        #>
+                        param (
+                            [CmdletBinding()]
+                            [parameter(Mandatory = $true)]
+                            [ValidateSet('Capability', 'Feature')]
+                            [System.String]$Type,
+                            [parameter(Mandatory = $true, ParameterSetName = 'Capability')]
+                            [System.String]$CapabilityName,
+                            [parameter(Mandatory = $true, ParameterSetName = 'Feature')]
+                            [System.String]$FeatureName,        
+                            [parameter(Mandatory = $true, ParameterSetName = 'Feature')]
+                            [ValidateSet('Enabling', 'Disabling')]
+                            [System.String]$FeatureAction
+                        )    
+                        switch ($Type) {
+                            'Feature' {
+                                if ($FeatureAction -eq 'Enabling') {
+                                    $ActionCheck = 'disabled'
+                                    $ActionOutput = 'enabled'
+                                }
+                                else {
+                                    $ActionCheck = 'enabled'
+                                    $ActionOutput = 'disabled'
+                                }
+                                Write-Host -Object "`n$FeatureAction $FeatureName" -ForegroundColor Yellow
+                                if ((Get-WindowsOptionalFeature -Online -FeatureName $FeatureName).state -eq $ActionCheck) {
+                                    try {
+                                        if ($FeatureAction -eq 'Enabling') {
+                                            Enable-WindowsOptionalFeature -Online -FeatureName $FeatureName -All -NoRestart -ErrorAction Stop
+                                        }
+                                        else {
+                                            Disable-WindowsOptionalFeature -Online -FeatureName $FeatureName -NoRestart -ErrorAction Stop
+                                        }
+                                        # Shows the successful message only if the process was successful
+                                        Write-Host -Object "$FeatureName was successfully $ActionOutput" -ForegroundColor Green                                        
+                                    }
+                                    catch {
+                                        # show errors in non-terminating way
+                                        $_
+                                    }
+                                }
+                                else {
+                                    Write-Host -Object "$FeatureName is already $ActionOutput" -ForegroundColor Green
+                                }
+                                break
+                            }
+                            'Capability' {
+                                Write-Host -Object "`nRemoving $CapabilityName" -ForegroundColor Yellow
+                                if ((Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like "*$CapabilityName*" }).state -ne 'NotPresent') {
+                                    try {                        
+                                        Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like "*$CapabilityName*" } | Remove-WindowsCapability -Online -ErrorAction Stop
+                                        # Shows the successful message only if the process was successful
+                                        Write-Host -Object "$CapabilityName was successfully removed." -ForegroundColor Green
+                                    }
+                                    catch {
+                                        # show errors in non-terminating way
+                                        $_
+                                    }
+                                }
+                                else {
+                                    Write-Host -Object "$CapabilityName is already removed." -ForegroundColor Green
+                                }
+                                break
+                            }        
                         }
                     }
-                    else {
-                        Write-Host -Object 'Windows Media Player (legacy) is already uninstalled.' -ForegroundColor Green
-                    }
-
-                    # Enable Microsoft Defender Application Guard
-                    Write-Host -Object "`nEnabling Microsoft Defender Application Guard" -ForegroundColor Yellow
-                    if ((Get-WindowsOptionalFeature -Online -FeatureName Windows-Defender-ApplicationGuard).state -eq 'disabled') {
-                        try {
-                            Enable-WindowsOptionalFeature -Online -FeatureName Windows-Defender-ApplicationGuard -NoRestart -ErrorAction Stop
-                            # Shows the successful message only if enablement process was successful
-                            Write-Host -Object 'Microsoft Defender Application Guard was successfully enabled' -ForegroundColor Green
-                        }
-                        catch {
-                            # show errors in non-terminating way
-                            $_
-                        }
-                    }
-                    else {
-                        Write-Host -Object 'Microsoft Defender Application Guard is already enabled' -ForegroundColor Green
-                    }
-
-                }
-
-                # Need to split the commands in 2 scriptblocks so we don't get "program PowerShell.exe failed to run: The filename or extension is too long" error
-                powershell.exe -Command {
-
-                    # Enable Windows Sandbox
-                    Write-Host -Object "`nEnabling Windows Sandbox" -ForegroundColor Yellow
-                    if ((Get-WindowsOptionalFeature -Online -FeatureName Containers-DisposableClientVM).state -eq 'disabled') {
-                        try {
-                            Enable-WindowsOptionalFeature -Online -FeatureName Containers-DisposableClientVM -All -NoRestart -ErrorAction Stop
-                            # Shows the successful message only if enablement process was successful
-                            Write-Host -Object 'Windows Sandbox was successfully enabled' -ForegroundColor Green
-                        }
-                        catch {
-                            # show errors in non-terminating way
-                            $_
-                        }
-                    }
-                    else {
-                        Write-Host -Object 'Windows Sandbox is already enabled' -ForegroundColor Green
-                    }
-
-                    # Enable Hyper-V
-                    Write-Host -Object "`nEnabling Hyper-V" -ForegroundColor Yellow
-                    if ((Get-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V).state -eq 'disabled') {
-                        try {
-                            Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All -NoRestart -ErrorAction Stop
-                            # Shows the successful message only if enablement process was successful
-                            Write-Host -Object 'Hyper-V was successfully enabled' -ForegroundColor Green
-                        }
-                        catch {
-                            # show errors in non-terminating way
-                            $_
-                        }
-                    }
-                    else {
-                        Write-Host -Object 'Hyper-V is already enabled' -ForegroundColor Green
-                    }
-
-                    # Enable Virtual Machine Platform
-                    Write-Host -Object "`nEnabling Virtual Machine Platform" -ForegroundColor Yellow
-                    if ((Get-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform).state -eq 'disabled') {
-                        try {
-                            Enable-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform -NoRestart -ErrorAction Stop
-                            # Shows the successful message only if enablement process was successful
-                            Write-Host -Object 'Virtual Machine Platform was successfully enabled' -ForegroundColor Green
-                        }
-                        catch {
-                            # show errors in non-terminating way
-                            $_
-                        }
-                    }
-                    else {
-                        Write-Host -Object 'Virtual Machine Platform is already enabled' -ForegroundColor Green
-                    }
-
+                    Edit-Addons -Type Feature -FeatureAction Disabling -FeatureName 'MicrosoftWindowsPowerShellV2'
+                    Edit-Addons -Type Feature -FeatureAction Disabling -FeatureName 'MicrosoftWindowsPowerShellV2Root'
+                    Edit-Addons -Type Feature -FeatureAction Disabling -FeatureName 'WorkFolders-Client'
+                    Edit-Addons -Type Feature -FeatureAction Disabling -FeatureName 'Printing-Foundation-Features'
+                    Edit-Addons -Type Feature -FeatureAction Enabling -FeatureName 'Windows-Defender-ApplicationGuard'
+                    Edit-Addons -Type Feature -FeatureAction Enabling -FeatureName 'Containers-DisposableClientVM'
+                    Edit-Addons -Type Feature -FeatureAction Enabling -FeatureName 'Microsoft-Hyper-V'
+                    Edit-Addons -Type Feature -FeatureAction Enabling -FeatureName 'VirtualMachinePlatform'
+                    Edit-Addons -Type Capability -CapabilityName 'Media.WindowsMediaPlayer'
+                    Edit-Addons -Type Capability -CapabilityName 'Browser.InternetExplorer'
+                    Edit-Addons -Type Capability -CapabilityName 'wmic'
+                    Edit-Addons -Type Capability -CapabilityName 'Microsoft.Windows.Notepad.System'
+                    Edit-Addons -Type Capability -CapabilityName 'Microsoft.Windows.WordPad'
+                    Edit-Addons -Type Capability -CapabilityName 'Microsoft.Windows.PowerShell.ISE'
+                    Edit-Addons -Type Capability -CapabilityName 'App.StepsRecorder'
+                
                     # Uninstall VBScript that is now uninstallable as an optional features since Windows 11 insider Dev build 25309 - Won't do anything in other builds
                     if (Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like '*VBSCRIPT*' }) {
                         try {
@@ -2120,113 +2052,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                             $_
                         }
                     }
-
-                    # Uninstall Internet Explorer mode functionality for Edge
-                    Write-Host -Object "`nUninstalling Internet Explorer mode functionality for Edge" -ForegroundColor Yellow
-                    if ((Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like '*Browser.InternetExplorer*' }).state -ne 'NotPresent') {
-                        try {
-                            Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like '*Browser.InternetExplorer*' } | Remove-WindowsCapability -Online -ErrorAction Stop
-                            # Shows the successful message only if removal process was successful
-                            Write-Host -Object 'Internet Explorer mode functionality for Edge has been uninstalled' -ForegroundColor Green
-                        }
-                        catch {
-                            # show errors in non-terminating way
-                            $_
-                        }
-                    }
-                    else {
-                        Write-Host -Object 'Internet Explorer mode functionality for Edge is already uninstalled.' -ForegroundColor Green
-                    }
-
-                    # Uninstall WMIC
-                    Write-Host -Object "`nUninstalling WMIC" -ForegroundColor Yellow
-                    if ((Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like '*wmic*' }).state -ne 'NotPresent') {
-                        try {
-                            Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like '*wmic*' } | Remove-WindowsCapability -Online -ErrorAction Stop
-                            # Shows the successful message only if removal process was successful
-                            Write-Host -Object 'WMIC has been uninstalled' -ForegroundColor Green
-                        }
-                        catch {
-                            # show errors in non-terminating way
-                            $_
-                        }
-                    }
-                    else {
-                        Write-Host -Object 'WMIC is already uninstalled.' -ForegroundColor Green
-                    }
-
-                    # Uninstall Legacy Notepad
-                    Write-Host -Object "`nUninstalling Legacy Notepad" -ForegroundColor Yellow
-                    if ((Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like '*Microsoft.Windows.Notepad.System*' }).state -ne 'NotPresent') {
-                        try {
-                            Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like '*Microsoft.Windows.Notepad.System*' } | Remove-WindowsCapability -Online -ErrorAction Stop
-                            # Shows the successful message only if removal process was successful
-                            Write-Host -Object 'Legacy Notepad has been uninstalled. The modern multi-tabbed Notepad is unaffected.' -ForegroundColor Green
-                        }
-                        catch {
-                            # show errors in non-terminating way
-                            $_
-                        }
-                    }
-                    else {
-                        Write-Host -Object 'Legacy Notepad is already uninstalled.' -ForegroundColor Green
-                    }
-
-                    # Uninstall WordPad
-                    Write-Host -Object "`nUninstalling WordPad" -ForegroundColor Yellow
-                    if ((Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like '*Microsoft.Windows.WordPad*' }).state -ne 'NotPresent') {
-                        try {
-                            Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like '*Microsoft.Windows.WordPad*' } | Remove-WindowsCapability -Online -ErrorAction Stop
-                            # Shows the successful message only if removal process was successful
-                            Write-Host -Object 'WordPad has been uninstalled.' -ForegroundColor Green
-                        }
-                        catch {
-                            # show errors in non-terminating way
-                            $_
-                        }
-                    }
-                    else {
-                        Write-Host -Object 'WordPad is already uninstalled.' -ForegroundColor Green
-                    }
-
-                    # Uninstall PowerShell ISE
-                    Write-Host -Object "`nUninstalling PowerShell ISE" -ForegroundColor Yellow
-                    if ((Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like '*Microsoft.Windows.PowerShell.ISE*' }).state -ne 'NotPresent') {
-                        try {
-                            Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like '*Microsoft.Windows.PowerShell.ISE*' } | Remove-WindowsCapability -Online -ErrorAction Stop
-                            # Shows the successful message only if removal process was successful
-                            Write-Host -Object 'PowerShell ISE has been uninstalled.' -ForegroundColor Green
-                        }
-                        catch {
-                            # show errors in non-terminating way
-                            $_
-                        }
-                    }
-                    else {
-                        Write-Host -Object 'PowerShell ISE is already uninstalled.' -ForegroundColor Green
-                    }
                 }
-
-                powershell.exe -Command {
-
-                    # Uninstall Steps Recorder
-                    Write-Host -Object "`nUninstalling Steps Recorder" -ForegroundColor Yellow
-                    if ((Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like '*App.StepsRecorder*' }).state -ne 'NotPresent') {
-                        try {
-                            Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like '*App.StepsRecorder*' } | Remove-WindowsCapability -Online -ErrorAction Stop
-                            # Shows the successful message only if removal process was successful
-                            Write-Host -Object 'Steps Recorder has been uninstalled.' -ForegroundColor Green
-                        }
-                        catch {
-                            # show errors in non-terminating way
-                            $_
-                        }
-                    }
-                    else {
-                        Write-Host -Object 'Steps Recorder is already uninstalled.' -ForegroundColor Green
-                    }
-                }
-
             } 'No' { break }
             'Exit' { &$CleanUp }
         }

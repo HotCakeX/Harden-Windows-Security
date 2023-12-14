@@ -96,13 +96,13 @@ Set-ExecutionPolicy -ExecutionPolicy 'Unrestricted' -Scope Process -Force
 # Change the title of the Windows Terminal for PowerShell tab
 $Host.UI.RawUI.WindowTitle = '❤️‍🔥Harden Windows Security❤️‍🔥'
 
-# Defining global script variables
+# Defining script variables
 # Current script's version, the same as the version at the top in the script info section
 [System.DateTime]$CurrentVersion = '2023.11.23'
 # Minimum OS build number required for the hardening measures used in this script
 [System.Decimal]$Requiredbuild = '22621.2428'
 # Fetching Temp Directory
-[System.String]$global:CurrentUserTempDirectoryPath = [System.IO.Path]::GetTempPath()
+[System.String]$CurrentUserTempDirectoryPath = [System.IO.Path]::GetTempPath()
 # The total number of the main categories for the parent/main progress bar to render
 [System.Int64]$TotalMainSteps = 18
 # Defining a global boolean variable to determine whether optional diagnostic data should be enabled for Smart App Control or not
@@ -711,16 +711,16 @@ try {
     #endregion RequirementsCheck
 
     # create our working directory
-    New-Item -ItemType Directory -Path "$global:CurrentUserTempDirectoryPath\HardeningXStuff\" -Force | Out-Null
+    New-Item -ItemType Directory -Path "$CurrentUserTempDirectoryPath\HardeningXStuff\" -Force | Out-Null
     # working directory assignment
-    [System.IO.DirectoryInfo]$WorkingDir = "$global:CurrentUserTempDirectoryPath\HardeningXStuff\"
+    [System.IO.DirectoryInfo]$WorkingDir = "$CurrentUserTempDirectoryPath\HardeningXStuff\"
     # change location to the new directory
     Set-Location -Path $WorkingDir
 
     # Clean up script block
     [System.Management.Automation.ScriptBlock]$CleanUp = {
         Set-Location -Path $HOME
-        Remove-Item -Recurse -Path "$global:CurrentUserTempDirectoryPath\HardeningXStuff\" -Force
+        Remove-Item -Recurse -Path "$CurrentUserTempDirectoryPath\HardeningXStuff\" -Force
         # Disable progress bars
         0..6 | ForEach-Object -Process { Write-Progress -Id $_ -Activity 'Done' -Completed }
         exit
@@ -842,7 +842,6 @@ try {
         [System.String]$Microsoft365SecurityBaselinePath = (Get-ChildItem -Directory -Path '.\Microsoft365SecurityBaseline\*\').FullName
 
         #region Windows-Boot-Manager-revocations-for-Secure-Boot KB5025885
-        # ============================May 9 2023 Windows Boot Manager revocations for Secure Boot =================================
         $CurrentMainStep++
 
         # Change the title of the Windows Terminal for PowerShell tab
@@ -858,12 +857,10 @@ try {
                 Write-Warning -Message 'Make sure to restart your device once. After restart, wait for at least 5-10 minutes and perform a 2nd restart to finish applying security measures completely.'
             } 'No' { break }
             'Exit' { &$CleanUp }
-        }
-        # ============================End of May 9 2023 Windows Boot Manager revocations for Secure Boot===========================
+        }        
         #endregion Windows-Boot-Manager-revocations-for-Secure-Boot KB5025885
 
         #region Microsoft-Security-Baseline
-        # ================================================Microsoft Security Baseline==============================================
         $CurrentMainStep++
 
         # Change the title of the Windows Terminal for PowerShell tab
@@ -906,11 +903,9 @@ try {
             'No' { break MicrosoftSecurityBaselinesCategoryLabel }
             'Exit' { &$CleanUp }
         }
-        # ==============================================End of Microsoft Security Baselines============================================
         #endregion Microsoft-Security-Baseline
 
         #region Microsoft-365-Apps-Security-Baseline
-        # ================================================Microsoft 365 Apps Security Baseline==============================================
         $CurrentMainStep++
 
         # Change the title of the Windows Terminal for PowerShell tab
@@ -932,11 +927,9 @@ try {
             } 'No' { break Microsoft365AppsSecurityBaselinesCategoryLabel }
             'Exit' { &$CleanUp }
         }
-        # ================================================End of Microsoft 365 Apps Security Baseline==============================================
         #endregion Microsoft-365-Apps-Security-Baseline
 
         #region Microsoft-Defender
-        # ================================================Microsoft Defender=======================================================
         $CurrentMainStep++
 
         # Change the title of the Windows Terminal for PowerShell tab
@@ -1110,11 +1103,9 @@ try {
             } 'No' { break }
             'Exit' { &$CleanUp }
         }
-        # ============================================End of Microsoft Defender====================================================
         #endregion Microsoft-Defender
 
-        #region Attack-Surface-Reduction-Rules
-        # =========================================Attack Surface Reduction Rules==================================================
+        #region Attack-Surface-Reduction-Rules        
         $CurrentMainStep++
 
         # Change the title of the Windows Terminal for PowerShell tab
@@ -1131,11 +1122,9 @@ try {
             } 'No' { break ASRRulesCategoryLabel }
             'Exit' { &$CleanUp }
         }
-        # =========================================End of Attack Surface Reduction Rules===========================================
         #endregion Attack-Surface-Reduction-Rules
 
         #region Bitlocker-Settings
-        # ==========================================Bitlocker Settings=============================================================
         $CurrentMainStep++
 
         # Change the title of the Windows Terminal for PowerShell tab
@@ -1198,7 +1187,7 @@ try {
       }
     }
 '@
-                Add-Type -TypeDefinition $BootDMAProtectionCheck
+                Add-Type -TypeDefinition $BootDMAProtectionCheck -Language CSharp
                 # returns true or false depending on whether Kernel DMA Protection is on or off
                 [System.Boolean]$BootDMAProtection = ([SystemInfo.NativeMethods]::BootDmaCheck()) -ne 0
 
@@ -1785,12 +1774,10 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 }
             } 'No' { break }
             'Exit' { &$CleanUp }
-        }
-        # ==========================================End of Bitlocker Settings======================================================
+        }        
         #endregion Bitlocker-Settings
 
-        #region TLS-Security
-        # ==============================================TLS Security===============================================================
+        #region TLS-Security        
         $CurrentMainStep++
 
         # Change the title of the Windows Terminal for PowerShell tab
@@ -1829,12 +1816,10 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 .\LGPO.exe /q /m '..\Security-Baselines-X\TLS Security\registry.pol'
             } 'No' { break }
             'Exit' { &$CleanUp }
-        }
-        # ==========================================End of TLS Security============================================================
+        }        
         #endregion TLS-Security
 
-        #region Lock-Screen
-        # ==========================================Lock Screen====================================================================
+        #region Lock-Screen        
         $CurrentMainStep++
 
         # Change the title of the Windows Terminal for PowerShell tab
@@ -1863,12 +1848,10 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
 
             } 'No' { break }
             'Exit' { &$CleanUp }
-        }
-        # ==========================================End of Lock Screen=============================================================
+        }        
         #endregion Lock-Screen
 
-        #region User-Account-Control
-        # ==========================================User Account Control===========================================================
+        #region User-Account-Control        
         $CurrentMainStep++
 
         # Change the title of the Windows Terminal for PowerShell tab
@@ -1920,12 +1903,10 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
 
             } 'No' { break }
             'Exit' { &$CleanUp }
-        }
-        # ==========================================End of User Account Control====================================================
+        }        
         #endregion User-Account-Control
 
-        #region Windows-Firewall
-        # ====================================================Windows Firewall=====================================================
+        #region Windows-Firewall        
         $CurrentMainStep++
 
         # Change the title of the Windows Terminal for PowerShell tab
@@ -1945,12 +1926,10 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 ForEach-Object -Process { Disable-NetFirewallRule -DisplayName $_.DisplayName }
             } 'No' { break }
             'Exit' { &$CleanUp }
-        }
-        # =================================================End of Windows Firewall=================================================
+        }        
         #endregion Windows-Firewall
 
-        #region Optional-Windows-Features
-        # =================================================Optional Windows Features===============================================
+        #region Optional-Windows-Features        
         $CurrentMainStep++
 
         # Change the title of the Windows Terminal for PowerShell tab
@@ -2243,12 +2222,10 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
 
             } 'No' { break }
             'Exit' { &$CleanUp }
-        }
-        # ==============================================End of Optional Windows Features===========================================
+        }        
         #endregion Optional-Windows-Features
 
-        #region Windows-Networking
-        # ====================================================Windows Networking===================================================
+        #region Windows-Networking        
         $CurrentMainStep++
 
         # Change the title of the Windows Terminal for PowerShell tab
@@ -2270,12 +2247,10 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 Get-NetConnectionProfile | Set-NetConnectionProfile -NetworkCategory Public
             } 'No' { break }
             'Exit' { &$CleanUp }
-        }
-        # =================================================End of Windows Networking===============================================
+        }        
         #endregion Windows-Networking
 
-        #region Miscellaneous-Configurations
-        # ==============================================Miscellaneous Configurations===============================================
+        #region Miscellaneous-Configurations        
         $CurrentMainStep++
 
         # Change the title of the Windows Terminal for PowerShell tab
@@ -2334,12 +2309,10 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
 
             } 'No' { break }
             'Exit' { &$CleanUp }
-        }
-        # ============================================End of Miscellaneous Configurations==========================================
+        }        
         #endregion Miscellaneous-Configurations
 
-        #region Windows-Update-Configurations
-        # ====================================================Windows Update Configurations==============================================
+        #region Windows-Update-Configurations        
         $CurrentMainStep++
 
         # Change the title of the Windows Terminal for PowerShell tab
@@ -2356,12 +2329,10 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 .\LGPO.exe /q /m '..\Security-Baselines-X\Windows Update Policies\registry.pol'
             } 'No' { break }
             'Exit' { &$CleanUp }
-        }
-        # ====================================================End of Windows Update Configurations=======================================
+        }        
         #endregion Windows-Update-Configurations
 
-        #region Edge-Browser-Configurations
-        # ====================================================Edge Browser Configurations====================================================
+        #region Edge-Browser-Configurations        
         $CurrentMainStep++
 
         # Change the title of the Windows Terminal for PowerShell tab
@@ -2381,12 +2352,10 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 }
             } 'No' { break }
             'Exit' { &$CleanUp }
-        }
-        # ====================================================End of Edge Browser Configurations==============================================
+        }        
         #endregion Edge-Browser-Configurations
 
-        #region Certificate-Checking-Commands
-        # ====================================================Certificate Checking Commands========================================
+        #region Certificate-Checking-Commands        
         $CurrentMainStep++
 
         # Change the title of the Windows Terminal for PowerShell tab
@@ -2413,12 +2382,10 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 Remove-Item -Path .\sigcheck64.exe -Force
             } 'No' { break }
             'Exit' { &$CleanUp }
-        }
-        # ====================================================End of Certificate Checking Commands=================================
+        }        
         #endregion Certificate-Checking-Commands
 
-        #region Country-IP-Blocking
-        # ====================================================Country IP Blocking==================================================
+        #region Country-IP-Blocking        
         $CurrentMainStep++
 
         # Change the title of the Windows Terminal for PowerShell tab
@@ -2446,14 +2413,12 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 }
             } 'No' { break }
             'Exit' { &$CleanUp }
-        }
-        # ====================================================End of Country IP Blocking===========================================
+        }        
         #endregion Country-IP-Blocking
 
     } # End of Admin test function
 
-    #region Non-Admin-Commands
-    # ====================================================Non-Admin Commands===================================================
+    #region Non-Admin-Commands    
     # Change the title of the Windows Terminal for PowerShell tab
     $Host.UI.RawUI.WindowTitle = 'Non-Admins'
 
@@ -2491,8 +2456,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
 
         } 'No' { &$CleanUp }
         'Exit' { &$CleanUp }
-    }
-    # ====================================================End of Non-Admin Commands============================================
+    }    
     #endregion Non-Admin-Commands
 }
 catch {
@@ -2514,7 +2478,7 @@ finally {
         }
     }
 
-    Set-Location -Path $HOME; Remove-Item -Recurse -Path "$global:CurrentUserTempDirectoryPath\HardeningXStuff\" -Force -ErrorAction SilentlyContinue
+    Set-Location -Path $HOME; Remove-Item -Recurse -Path "$CurrentUserTempDirectoryPath\HardeningXStuff\" -Force -ErrorAction SilentlyContinue
 
     # Disable progress bars
     0..6 | ForEach-Object -Process { Write-Progress -Id $_ -Activity 'Done' -Completed }

@@ -1845,17 +1845,25 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 .\LGPO.exe /q /s '..\Security-Baselines-X\Lock Screen Policies\GptTmpl.inf'
 
                 # Apply the Don't display last signed-in policy
+                Write-Progress -Id 2 -ParentId 0 -Activity 'Lock Screen' -Status "Applying the Don't display last signed-in policy" -PercentComplete 35
+                
                 switch (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nDon't display last signed-in on logon screen ?" -ExtraMessage 'Read the GitHub Readme!') {
                     'Yes' {
-                        Write-Progress -Id 2 -ParentId 0 -Activity 'Lock Screen' -Status "Applying the Don't display last signed-in policy" -PercentComplete 50
-
                         .\LGPO.exe /q /s "..\Security-Baselines-X\Lock Screen Policies\Don't display last signed-in\GptTmpl.inf"
-
-                        Write-Progress -Id 2 -Activity "Applying the Don't display last signed-in policy" -Completed
                     } 'No' { break }
                     'Exit' { &$CleanUp }
                 }
 
+                # Enable CTRL + ALT + DEL
+                Write-Progress -Id 2 -ParentId 0 -Activity 'Lock Screen' -Status "Applying the Don't display last signed-in policy" -PercentComplete 70
+
+                switch (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nEnable requiring CTRL + ALT + DEL on lock screen ?") {
+                    'Yes' {
+                        .\LGPO.exe /q /s '..\Security-Baselines-X\Lock Screen Policies\Enable CTRL + ALT + DEL\GptTmpl.inf'
+                    } 'No' { break }
+                    'Exit' { &$CleanUp }
+                }
+                Write-Progress -Id 2 -Activity "Applying the Don't display last signed-in policy" -Completed
             } 'No' { break }
             'Exit' { &$CleanUp }
         }

@@ -350,7 +350,7 @@ Function Write-SmartText {
             'Lavender' { Write-Host -Object "$($PSStyle.Foreground.FromRgb(255,179,255))$InputText$($PSStyle.Reset)"; break }
             'TeaGreenNoNewLine' { Write-Host -Object "$($PSStyle.Foreground.FromRgb(133, 222, 119))$InputText$($PSStyle.Reset)" -NoNewline; break }
             'Rainbow' {
-                [System.Object[]]$Colors = @(
+                [System.Drawing.Color[]]$Colors = @(
                     [System.Drawing.Color]::Pink,
                     [System.Drawing.Color]::HotPink,
                     [System.Drawing.Color]::SkyBlue,

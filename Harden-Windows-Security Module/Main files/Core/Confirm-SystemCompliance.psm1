@@ -1342,7 +1342,7 @@ function Confirm-SystemCompliance {
 
                 [System.Management.Automation.ScriptBlock]$WriteRainbow2 = {
                     $text = $args[0]
-                    [System.Object[]]$colors = @(
+                    [System.Drawing.Color[]]$colors = @(
                         [System.Drawing.Color]::Pink,
                         [System.Drawing.Color]::HotPink,
                         [System.Drawing.Color]::SkyBlue,

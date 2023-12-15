@@ -154,7 +154,7 @@ Make sure to use Surface products that support [Device Firmware Configuration In
 
 * Use [Strict Kernel-mode WDAC policy for complete BYOVD protection](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-policy-for-BYOVD-Kernel-mode-only-protection)
 
-<br> 
+<br>
 
 <p align="center">
 <b>YOUTUBE VIDEO: How to easily protect against BYOVD attack scenarios with WDAC policy in Windows</b><br><br>

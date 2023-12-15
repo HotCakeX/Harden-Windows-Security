@@ -653,10 +653,10 @@ function Edit-Addons {
             if ((Get-WindowsOptionalFeature -Online -FeatureName $FeatureName).state -eq $ActionCheck) {
                 try {
                     if ($FeatureAction -eq 'Enabling') {
-                        Enable-WindowsOptionalFeature -Online -FeatureName $FeatureName -All -NoRestart -ErrorAction Stop
+                        Enable-WindowsOptionalFeature -Online -FeatureName $FeatureName -All -NoRestart -ErrorAction Stop | Out-Null
                     }
                     else {
-                        Disable-WindowsOptionalFeature -Online -FeatureName $FeatureName -NoRestart -ErrorAction Stop
+                        Disable-WindowsOptionalFeature -Online -FeatureName $FeatureName -NoRestart -ErrorAction Stop | Out-Null
                     }
                     # Shows the successful message only if the process was successful
                     Write-SmartText -GenericColor Green -CustomColor NeonGreen -InputText "$FeatureName was successfully $ActionOutput"
@@ -675,7 +675,7 @@ function Edit-Addons {
             Write-SmartText -CustomColor Lavender -GenericColor Yellow -InputText "`nRemoving $CapabilityName"
             if ((Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like "*$CapabilityName*" }).state -ne 'NotPresent') {
                 try {
-                    Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like "*$CapabilityName*" } | Remove-WindowsCapability -Online -ErrorAction Stop
+                    Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like "*$CapabilityName*" } | Remove-WindowsCapability -Online -ErrorAction Stop | Out-Null
                     # Shows the successful message only if the process was successful
                     Write-SmartText -GenericColor Green -CustomColor NeonGreen -InputText "$CapabilityName was successfully removed."
                 }

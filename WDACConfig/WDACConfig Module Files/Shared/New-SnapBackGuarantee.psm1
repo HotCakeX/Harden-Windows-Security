@@ -13,7 +13,7 @@ Function New-SnapBackGuarantee {
     [CmdletBinding()]
     Param(
         [parameter(Mandatory = $true)]
-        [System.IO.DirectoryInfo]$Location
+        [System.IO.DirectoryInfo]$Path
     )
 
     # Using CMD and Scheduled Task Method
@@ -35,11 +35,11 @@ Function New-SnapBackGuarantee {
     # It contains the instructions to revert the base policy to enforced mode
     Set-Content -Force 'C:\EnforcedModeSnapBack.cmd' -Value @"
 REM Deploying the Enforced Mode SnapBack CI Policy
-CiTool --update-policy "$Location\EnforcedMode.cip" -json
+CiTool --update-policy "$Path\EnforcedMode.cip" -json
 REM Deleting the Scheduled task responsible for running this CMD file
 schtasks /Delete /TN EnforcedModeSnapBack /F
 REM Deleting the CI Policy file
-del /f /q "$Location\EnforcedMode.cip"
+del /f /q "$Path\EnforcedMode.cip"
 REM Deleting this CMD file itself
 del "%~f0"
 "@

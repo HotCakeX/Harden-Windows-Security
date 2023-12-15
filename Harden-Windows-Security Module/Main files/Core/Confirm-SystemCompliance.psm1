@@ -1851,7 +1851,6 @@ function Confirm-SystemCompliance {
                 [System.Int64]($FinalMegaObject.Edge | Where-Object -FilterScript { $_.Compliant -eq $True }).Count + # 15
                 [System.Int64]($FinalMegaObject.'Non-Admin' | Where-Object -FilterScript { $_.Compliant -eq $True }).Count # 11
 
-
                 #Region ASCII-Arts
                 [System.String]$WhenValue1To20 = @'
                 OH

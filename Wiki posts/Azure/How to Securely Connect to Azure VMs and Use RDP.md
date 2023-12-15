@@ -165,7 +165,7 @@ Screenshots <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pi
 
 Create a VM in Azure and do not allow any open ports from Internet. Do not assign any public IP to the VM.
 
-In the Virtual Network section, choose the `VirtualNetwork1` for the VM and set its `Default` Subnet accordignly.
+In the Virtual Network section, choose the `VirtualNetwork1` for the VM and set its `Default` Subnet accordingly.
 
 <br>
 

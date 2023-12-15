@@ -1875,18 +1875,6 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 Set-Location -Path "$WorkingDir\LGPO_30"
                 .\LGPO.exe /q /s '..\Security-Baselines-X\User Account Control UAC Policies\GptTmpl.inf'
 
-                # Apply the Automatically deny all UAC prompts on Standard accounts policy
-                switch (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nAutomatically deny all UAC prompts on Standard accounts ?") {
-                    'Yes' {
-                        Write-Progress -Id 3 -ParentId 0 -Activity 'User Account Control' -Status 'Automatically deny all UAC prompts on Standard accounts policy' -PercentComplete 50
-
-                        .\LGPO.exe /q /s '..\Security-Baselines-X\User Account Control UAC Policies\Automatically deny all UAC prompts on Standard accounts\GptTmpl.inf'
-
-                        Write-Progress -Id 3 -Activity 'Automatically deny all UAC prompts on Standard accounts policy' -Completed
-                    } 'No' { break }
-                    'Exit' { &$CleanUp }
-                }
-
                 # Apply the Hide the entry points for Fast User Switching policy
                 switch (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nHide the entry points for Fast User Switching ?" -ExtraMessage 'Read the GitHub Readme!') {
                     'Yes' {

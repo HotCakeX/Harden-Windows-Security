@@ -132,8 +132,8 @@ Function Unprotect-WindowsSecurity {
                     $CurrentMainStep++
                     Write-Progress -Id 0 -Activity 'Deleting all group policies' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
 
-                    if (Test-Path -Path 'C:\Windows\System32\GroupPolicy') {
-                        Remove-Item -Path 'C:\Windows\System32\GroupPolicy' -Recurse -Force
+                    if (Test-Path -Path "$env:SystemDrive\Windows\System32\GroupPolicy") {
+                        Remove-Item -Path "$env:SystemDrive\Windows\System32\GroupPolicy" -Recurse -Force
                     }
 
                     $CurrentMainStep++
@@ -204,8 +204,8 @@ Function Unprotect-WindowsSecurity {
                     ForEach-Object -Process { Enable-NetFirewallRule -DisplayName $_.DisplayName }
 
                     # Remove any custom views added by this script for Event Viewer
-                    if (Test-Path -Path 'C:\ProgramData\Microsoft\Event Viewer\Views\Hardening Script') {
-                        Remove-Item -Path 'C:\ProgramData\Microsoft\Event Viewer\Views\Hardening Script' -Recurse -Force
+                    if (Test-Path -Path "$env:SystemDrive\ProgramData\Microsoft\Event Viewer\Views\Hardening Script") {
+                        Remove-Item -Path "$env:SystemDrive\ProgramData\Microsoft\Event Viewer\Views\Hardening Script" -Recurse -Force
                     }
 
                     # Set a tattooed Group policy for Svchost.exe process mitigations back to disabled state

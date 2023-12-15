@@ -201,7 +201,7 @@ function Confirm-SystemCompliance {
             Write-Progress -Id 0 -Activity 'Gathering Security Policy Information' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
 
             # Get the security group policies
-            &'C:\Windows\System32\Secedit.exe' /export /cfg .\security_policy.inf | Out-Null
+            &"$env:SystemDrive\Windows\System32\Secedit.exe" /export /cfg .\security_policy.inf | Out-Null
 
             # Storing the output of the ini file parsing function
             [PSCustomObject]$SecurityPoliciesIni = ConvertFrom-IniFile -IniFile .\security_policy.inf

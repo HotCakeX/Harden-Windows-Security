@@ -633,7 +633,7 @@ if (Test-IsAdmin) {
     # Temporarily allow the currently running PowerShell executables to the Controlled Folder Access allowed apps
     # so that the script can run without interruption. This change is reverted at the end.
     # Adding powercfg.exe so Controlled Folder Access won't complain about it in BitLocker category when setting hibernate file size to full
-    foreach ($FilePath in (((Get-ChildItem -Path "$PSHOME\*.exe" -File).FullName) + 'C:\Windows\System32\powercfg.exe')) {
+    foreach ($FilePath in (((Get-ChildItem -Path "$PSHOME\*.exe" -File).FullName) + "$env:SystemDrive\Windows\System32\powercfg.exe")) {
         Add-MpPreference -ControlledFolderAccessAllowedApplications $FilePath
     }
 
@@ -972,7 +972,7 @@ try {
                 Set-MpPreference -EnableConvertWarnToBlock $True
 
                 # Add OneDrive folders of all user accounts (personal and work accounts) to the Controlled Folder Access for Ransomware Protection
-                Get-ChildItem 'C:\Users\*\OneDrive*\' -Directory | ForEach-Object -Process { Add-MpPreference -ControlledFolderAccessProtectedFolders $_ }
+                Get-ChildItem "$env:SystemDrive\Users\*\OneDrive*\" -Directory | ForEach-Object -Process { Add-MpPreference -ControlledFolderAccessProtectedFolders $_ }
 
                 # Enable Mandatory ASLR Exploit Protection system-wide
                 Set-ProcessMitigation -System -Enable ForceRelocateImages
@@ -1566,7 +1566,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                         Write-Progress -Id 6 -ParentId 0 -Activity 'Hibernate' -Status 'Setting Hibernate file size to full' -PercentComplete 50
 
                         # Set Hibernate mode to full
-                        &'C:\Windows\System32\powercfg.exe' /h /type full | Out-Null
+                        &"$env:SystemDrive\Windows\System32\powercfg.exe" /h /type full | Out-Null
 
                         Write-Progress -Id 6 -Activity 'Setting Hibernate file size to full' -Completed
                     }
@@ -2120,17 +2120,17 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 # Get the list of subcategories and their associated GUIDs
                 # auditpol /list /subcategory:* /r
 
-                # Event Viewer custom views are saved in "C:\ProgramData\Microsoft\Event Viewer\Views". files in there can be backed up and restored on new Windows installations.
-                New-Item -ItemType Directory -Path 'C:\ProgramData\Microsoft\Event Viewer\Views\Hardening Script\' -Force | Out-Null
+                # Event Viewer custom views are saved in "$env:SystemDrive\ProgramData\Microsoft\Event Viewer\Views". files in there can be backed up and restored on new Windows installations.
+                New-Item -ItemType Directory -Path "$env:SystemDrive\ProgramData\Microsoft\Event Viewer\Views\Hardening Script\" -Force | Out-Null
 
                 # Due to change in event viewer custom log files, making sure no old file names exist
-                if (Test-Path -Path 'C:\ProgramData\Microsoft\Event Viewer\Views\Hardening Script') {
-                    Remove-Item -Path 'C:\ProgramData\Microsoft\Event Viewer\Views\Hardening Script' -Recurse -Force
+                if (Test-Path -Path "$env:SystemDrive\ProgramData\Microsoft\Event Viewer\Views\Hardening Script") {
+                    Remove-Item -Path "$env:SystemDrive\ProgramData\Microsoft\Event Viewer\Views\Hardening Script" -Recurse -Force
                 }
                 # Creating new sub-folder to store the custom views
-                New-Item -Path 'C:\ProgramData\Microsoft\Event Viewer\Views\Hardening Script' -ItemType Directory -Force | Out-Null
+                New-Item -Path "$env:SystemDrive\ProgramData\Microsoft\Event Viewer\Views\Hardening Script" -ItemType Directory -Force | Out-Null
 
-                Expand-Archive -Path "$WorkingDir\EventViewerCustomViews.zip" -DestinationPath 'C:\ProgramData\Microsoft\Event Viewer\Views\Hardening Script' -Force -ErrorAction Stop
+                Expand-Archive -Path "$WorkingDir\EventViewerCustomViews.zip" -DestinationPath "$env:SystemDrive\ProgramData\Microsoft\Event Viewer\Views\Hardening Script" -Force -ErrorAction Stop
 
             } 'No' { break }
             'Exit' { &$CleanUp }
@@ -2292,7 +2292,7 @@ finally {
 
     if (Test-IsAdmin) {
         # Reverting the PowerShell executables and powercfg.exe allow listings in Controlled folder access
-        foreach ($FilePath in (((Get-ChildItem -Path "$PSHOME\*.exe" -File).FullName) + 'C:\Windows\System32\powercfg.exe')) {
+        foreach ($FilePath in (((Get-ChildItem -Path "$PSHOME\*.exe" -File).FullName) + "$env:SystemDrive\Windows\System32\powercfg.exe")) {
             Remove-MpPreference -ControlledFolderAccessAllowedApplications $FilePath
         }
 

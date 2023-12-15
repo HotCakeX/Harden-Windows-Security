@@ -633,7 +633,7 @@ if (Test-IsAdmin) {
     # Temporarily allow the currently running PowerShell executables to the Controlled Folder Access allowed apps
     # so that the script can run without interruption. This change is reverted at the end.
     # Adding powercfg.exe so Controlled Folder Access won't complain about it in BitLocker category when setting hibernate file size to full
-    foreach ($FilePath in (((Get-ChildItem -Path "$PSHOME\*.exe" -File).FullName) + 'C:\Windows\System32\powercfg.exe')) {
+    foreach ($FilePath in (((Get-ChildItem -Path "$PSHOME\*.exe" -File).FullName) + "$env:SystemDrive\Windows\System32\powercfg.exe")) {
         Add-MpPreference -ControlledFolderAccessAllowedApplications $FilePath
     }
 
@@ -972,7 +972,7 @@ try {
                 Set-MpPreference -EnableConvertWarnToBlock $True
 
                 # Add OneDrive folders of all user accounts (personal and work accounts) to the Controlled Folder Access for Ransomware Protection
-                Get-ChildItem 'C:\Users\*\OneDrive*\' -Directory | ForEach-Object -Process { Add-MpPreference -ControlledFolderAccessProtectedFolders $_ }
+                Get-ChildItem "$env:SystemDrive\Users\*\OneDrive*\" -Directory | ForEach-Object -Process { Add-MpPreference -ControlledFolderAccessProtectedFolders $_ }
 
                 # Enable Mandatory ASLR Exploit Protection system-wide
                 Set-ProcessMitigation -System -Enable ForceRelocateImages
@@ -1566,7 +1566,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                         Write-Progress -Id 6 -ParentId 0 -Activity 'Hibernate' -Status 'Setting Hibernate file size to full' -PercentComplete 50
 
                         # Set Hibernate mode to full
-                        &'C:\Windows\System32\powercfg.exe' /h /type full | Out-Null
+                        &"$env:SystemDrive\Windows\System32\powercfg.exe" /h /type full | Out-Null
 
                         Write-Progress -Id 6 -Activity 'Setting Hibernate file size to full' -Completed
                     }
@@ -1850,12 +1850,23 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                         Write-Progress -Id 2 -ParentId 0 -Activity 'Lock Screen' -Status "Applying the Don't display last signed-in policy" -PercentComplete 50
 
                         .\LGPO.exe /q /s "..\Security-Baselines-X\Lock Screen Policies\Don't display last signed-in\GptTmpl.inf"
-
+                    
                         Write-Progress -Id 2 -Activity "Applying the Don't display last signed-in policy" -Completed
                     } 'No' { break }
                     'Exit' { &$CleanUp }
                 }
 
+                # Enable CTRL + ALT + DEL
+                switch (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nEnable requiring CTRL + ALT + DEL on lock screen ?") {
+                    'Yes' {
+                        Write-Progress -Id 3 -ParentId 0 -Activity 'Lock Screen' -Status "Applying the Don't display last signed-in policy" -PercentComplete 50
+
+                        .\LGPO.exe /q /s '..\Security-Baselines-X\Lock Screen Policies\Enable CTRL + ALT + DEL\GptTmpl.inf'
+                    
+                        Write-Progress -Id 3 -Activity "Applying the Don't display last signed-in policy" -Completed
+                    } 'No' { break }
+                    'Exit' { &$CleanUp }
+                }                
             } 'No' { break }
             'Exit' { &$CleanUp }
         }
@@ -1874,18 +1885,6 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 # Change current working directory to the LGPO's folder
                 Set-Location -Path "$WorkingDir\LGPO_30"
                 .\LGPO.exe /q /s '..\Security-Baselines-X\User Account Control UAC Policies\GptTmpl.inf'
-
-                # Apply the Automatically deny all UAC prompts on Standard accounts policy
-                switch (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nAutomatically deny all UAC prompts on Standard accounts ?") {
-                    'Yes' {
-                        Write-Progress -Id 3 -ParentId 0 -Activity 'User Account Control' -Status 'Automatically deny all UAC prompts on Standard accounts policy' -PercentComplete 50
-
-                        .\LGPO.exe /q /s '..\Security-Baselines-X\User Account Control UAC Policies\Automatically deny all UAC prompts on Standard accounts\GptTmpl.inf'
-
-                        Write-Progress -Id 3 -Activity 'Automatically deny all UAC prompts on Standard accounts policy' -Completed
-                    } 'No' { break }
-                    'Exit' { &$CleanUp }
-                }
 
                 # Apply the Hide the entry points for Fast User Switching policy
                 switch (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nHide the entry points for Fast User Switching ?" -ExtraMessage 'Read the GitHub Readme!') {
@@ -2107,14 +2106,6 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 .\LGPO.exe /q /m '..\Security-Baselines-X\Miscellaneous Policies\registry.pol'
                 .\LGPO.exe /q /s '..\Security-Baselines-X\Miscellaneous Policies\GptTmpl.inf'
 
-                # Apply the Blocking Untrusted Fonts policy
-                switch (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nBlock Untrusted Fonts ?") {
-                    'Yes' {
-                        .\LGPO.exe /q /m '..\Security-Baselines-X\Miscellaneous Policies\Blocking Untrusted Fonts\registry.pol'
-                    } 'No' { break }
-                    'Exit' { &$CleanUp }
-                }
-
                 # Allow all Windows users to use Hyper-V and Windows Sandbox by adding all Windows users to the "Hyper-V Administrators" security group using its SID
                 Get-LocalUser | Where-Object -FilterScript { $_.enabled -eq 'True' } | ForEach-Object -Process { Add-LocalGroupMember -SID 'S-1-5-32-578' -Member "$($_.SID)" -ErrorAction SilentlyContinue }
 
@@ -2129,17 +2120,17 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 # Get the list of subcategories and their associated GUIDs
                 # auditpol /list /subcategory:* /r
 
-                # Event Viewer custom views are saved in "C:\ProgramData\Microsoft\Event Viewer\Views". files in there can be backed up and restored on new Windows installations.
-                New-Item -ItemType Directory -Path 'C:\ProgramData\Microsoft\Event Viewer\Views\Hardening Script\' -Force | Out-Null
+                # Event Viewer custom views are saved in "$env:SystemDrive\ProgramData\Microsoft\Event Viewer\Views". files in there can be backed up and restored on new Windows installations.
+                New-Item -ItemType Directory -Path "$env:SystemDrive\ProgramData\Microsoft\Event Viewer\Views\Hardening Script\" -Force | Out-Null
 
                 # Due to change in event viewer custom log files, making sure no old file names exist
-                if (Test-Path -Path 'C:\ProgramData\Microsoft\Event Viewer\Views\Hardening Script') {
-                    Remove-Item -Path 'C:\ProgramData\Microsoft\Event Viewer\Views\Hardening Script' -Recurse -Force
+                if (Test-Path -Path "$env:SystemDrive\ProgramData\Microsoft\Event Viewer\Views\Hardening Script") {
+                    Remove-Item -Path "$env:SystemDrive\ProgramData\Microsoft\Event Viewer\Views\Hardening Script" -Recurse -Force
                 }
                 # Creating new sub-folder to store the custom views
-                New-Item -Path 'C:\ProgramData\Microsoft\Event Viewer\Views\Hardening Script' -ItemType Directory -Force | Out-Null
+                New-Item -Path "$env:SystemDrive\ProgramData\Microsoft\Event Viewer\Views\Hardening Script" -ItemType Directory -Force | Out-Null
 
-                Expand-Archive -Path "$WorkingDir\EventViewerCustomViews.zip" -DestinationPath 'C:\ProgramData\Microsoft\Event Viewer\Views\Hardening Script' -Force -ErrorAction Stop
+                Expand-Archive -Path "$WorkingDir\EventViewerCustomViews.zip" -DestinationPath "$env:SystemDrive\ProgramData\Microsoft\Event Viewer\Views\Hardening Script" -Force -ErrorAction Stop
 
             } 'No' { break }
             'Exit' { &$CleanUp }
@@ -2301,7 +2292,7 @@ finally {
 
     if (Test-IsAdmin) {
         # Reverting the PowerShell executables and powercfg.exe allow listings in Controlled folder access
-        foreach ($FilePath in (((Get-ChildItem -Path "$PSHOME\*.exe" -File).FullName) + 'C:\Windows\System32\powercfg.exe')) {
+        foreach ($FilePath in (((Get-ChildItem -Path "$PSHOME\*.exe" -File).FullName) + "$env:SystemDrive\Windows\System32\powercfg.exe")) {
             Remove-MpPreference -ControlledFolderAccessAllowedApplications $FilePath
         }
 

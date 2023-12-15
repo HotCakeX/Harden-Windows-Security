@@ -9,7 +9,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thanks for taking the time to suggest a new Security measure!  
+        Thanks for taking the time to suggest a new Security measure!
   - type: checkboxes
     id: Not-Duplicate
     attributes:
@@ -25,5 +25,5 @@ body:
       description: Please explain your new Security measure suggestion and be as detailed as possible. 🙏
       placeholder: "I want to suggest..."
     validations:
-      required: true 
-      
+      required: true
+

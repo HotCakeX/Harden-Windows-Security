@@ -15,7 +15,8 @@
 	"extensions": {
 		"recommendations": [
 			"ms-vscode.powershell",
-			"mechatroner.rainbow-csv"
+			"mechatroner.rainbow-csv",
+			"streetsidesoftware.code-spell-checker"
 		]
 	},
 	"launch": {

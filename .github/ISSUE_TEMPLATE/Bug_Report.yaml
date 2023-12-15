@@ -8,18 +8,18 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thanks for taking the time to fill out this bug report!  
+        Thanks for taking the time to fill out this bug report!
   - type: dropdown
     id: version
     attributes:
       label: Tools category
       description: Which category/tool does this bug belong to?
-      options:        
+      options:
         - Harden Windows Security Module
         - WDACConfig Module
         - Harden Windows Security Script
     validations:
-      required: true 
+      required: true
   - type: checkboxes
     id: Requirements
     attributes:
@@ -43,4 +43,4 @@ body:
       description: Please explain the bug and be as detailed as possible. 🙏
       placeholder: "There is a problem with..."
     validations:
-      required: true 
+      required: true

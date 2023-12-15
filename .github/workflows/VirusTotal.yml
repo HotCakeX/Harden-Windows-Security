@@ -19,5 +19,5 @@ jobs:
           VTAPIsecret: ${{ secrets.VTAPI }}
         shell: pwsh
         run: |
-            
+
             ./.github/Workflowstuff/VirusTotal

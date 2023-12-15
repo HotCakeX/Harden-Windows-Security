@@ -1,137 +1,139 @@
-# Set the progress style
-$PSStyle.Progress.Style = "$($PSStyle.Foreground.FromRGB(255,255,49))$($PSStyle.Blink)"
-
-# To parse the ini file from the output of the "Secedit /export /cfg .\security_policy.inf"
-function ConvertFrom-IniFile {
-    [CmdletBinding()]
-    Param ([System.String]$IniFile)
-
-    # Don't prompt to continue if '-Debug' is specified.
-    $DebugPreference = 'Continue'
-          
-    [System.Collections.Hashtable]$IniObject = @{}
-    [System.String]$SectionName = ''
-
-    switch -regex -file $IniFile {
-        '^\[(.+)\]$' {
-            # Header of the section
-            $SectionName = $matches[1]
-            #Write-Debug "Section: $SectionName"
-            $IniObject[$SectionName] = @{}
-            continue
-        }
-        '^(.+?)\s*=\s*(.*)$' {
-            # Name/value pair
-            [System.String]$KeyName, [System.String]$KeyValue = $matches[1..2]
-            #Write-Debug "Name: $KeyName"
-            # Write-Debug "Value: $KeyValue"
-            $IniObject[$SectionName][$KeyName] = $KeyValue
-            continue
-        }
-        default {
-            # Ignore blank lines or comments
-            continue
-        }
-    }
-    return [PSCustomObject]$IniObject
-}
-
-# Main function
-function Confirm-SystemCompliance {   
+function Confirm-SystemCompliance {
     [CmdletBinding()]
     param (
-        [parameter(Mandatory = $false)]        
+        [parameter(Mandatory = $false)]
         [System.Management.Automation.SwitchParameter]$ExportToCSV,
-        [parameter(Mandatory = $false)]        
+        [parameter(Mandatory = $false)]
         [System.Management.Automation.SwitchParameter]$ShowAsObjectsOnly,
-        [parameter(Mandatory = $false)]        
-        [System.Management.Automation.SwitchParameter]$DetailedDisplay,
-        [Parameter(Mandatory = $false, DontShow = $True)] # To hide PowerShell common parameters that clutter parameter auto completion menu
-        $DummyParam        
+        [parameter(Mandatory = $false)]
+        [System.Management.Automation.SwitchParameter]$DetailedDisplay
     )
     begin {
-        # Stop operation as soon as there is an error anywhere, unless explicitly specified otherwise
-        $global:ErrorActionPreference = 'Stop'
+        # Set the progress bar style to blinking yellow
+        $PSStyle.Progress.Style = "$($PSStyle.Foreground.FromRGB(255,255,49))$($PSStyle.Blink)"
 
-        Write-Progress -Activity 'Starting' -Status 'Processing...' -PercentComplete 5   
+        # Dot-sourcing the functions.ps1 file in the current scope
+        . "$HardeningModulePath\Resources\Functions.ps1"
 
         # Makes sure this cmdlet is invoked with Admin privileges
-        if (![System.Boolean]([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
+        if (-NOT (Test-IsAdmin)) {
             Throw [System.Security.AccessControl.PrivilegeNotHeldException] 'Administrator'
         }
 
-        Write-Progress -Activity 'Checking for updates' -Status 'Processing...' -PercentComplete 10
-
-        . "$psscriptroot\Functions.ps1"
-           
-        Write-Progress -Activity 'Gathering Security Policy Information' -Status 'Processing...' -PercentComplete 15
-
+        #Region Defining-Variables
         # Total number of Compliant values not equal to N/A
-        [System.Int64]$global:TotalNumberOfTrueCompliantValues = 231
-
-        # Get the security group policies
-        Secedit /export /cfg .\security_policy.inf | Out-Null
+        [System.Int64]$TotalNumberOfTrueCompliantValues = 230
 
         # Get the current configurations and preferences of the Microsoft Defender
         New-Variable -Name 'MDAVConfigCurrent' -Value (Get-MpComputerStatus) -Force
         New-Variable -Name 'MDAVPreferencesCurrent' -Value (Get-MpPreference) -Force
 
-        # Storing the output of the ini file parsing function
-        [PSCustomObject]$SecurityPoliciesIni = ConvertFrom-IniFile -IniFile .\security_policy.inf
-        
-        Write-Progress -Activity 'Importing Registry CSV File' -Status 'Processing...' -PercentComplete 20
-        
-        # Import the CSV file
-        [System.Object[]]$CSVResource = Import-Csv -Path "$psscriptroot\Resources\Registry resources.csv"
-     
         # An object to hold all the initial registry items
         [System.Object[]]$AllRegistryItems = @()
 
-        # Loop through each row in the CSV file
-        foreach ($Row in $CSVResource) {
-            $AllRegistryItems += [PSCustomObject]@{
-                FriendlyName = $Row.FriendlyName
-                category     = $Row.Category
-                key          = $Row.Key                
-                value        = $Row.Value
-                name         = $Row.Name
-                type         = $Row.Type                
-                regPath      = "Registry::$($Row.Key)" # Build the registry path
-                Method       = $Row.Origin
-            }
-        }
+        # Import the CSV file
+        [System.Object[]]$CSVResource = Import-Csv -Path "$HardeningModulePath\Resources\Registry resources.csv"
 
         # An object to store the FINAL results
-        $FinalMegaObject = [PSCustomObject]@{} 
+        $FinalMegaObject = [PSCustomObject]@{}
 
-        # Function for processing each item in $AllRegistryItems for each category
+        # The total number of the steps for the parent/main progress bar to render
+        [System.Int16]$TotalMainSteps = 17
+        [System.Int16]$CurrentMainStep = 0
+        #EndRegion Defining-Variables
+
+        #Region defining-Functions
+        function ConvertFrom-IniFile {
+            <#
+            .SYNOPSIS
+                A helper function to parse the ini file from the output of the "Secedit /export /cfg .\security_policy.inf"
+            .PARAMETER IniFile
+                The path to the ini file
+            .INPUTS
+                System.String
+            .OUTPUTS
+                PSCustomObject
+            #>
+            [CmdletBinding()]
+            Param ([System.String]$IniFile)
+
+            # Don't prompt to continue if '-Debug' is specified.
+            $DebugPreference = 'Continue'
+
+            [System.Collections.Hashtable]$IniObject = @{}
+            [System.String]$SectionName = ''
+
+            switch -regex -file $IniFile {
+                '^\[(.+)\]$' {
+                    # Header of the section
+                    $SectionName = $matches[1]
+                    #Write-Debug "Section: $SectionName"
+                    $IniObject[$SectionName] = @{}
+                    continue
+                }
+                '^(.+?)\s*=\s*(.*)$' {
+                    # Name/value pair
+                    [System.String]$KeyName, [System.String]$KeyValue = $matches[1..2]
+                    #Write-Debug "Name: $KeyName"
+                    # Write-Debug "Value: $KeyValue"
+                    $IniObject[$SectionName][$KeyName] = $KeyValue
+                    continue
+                }
+                default {
+                    # Ignore blank lines or comments
+                    continue
+                }
+            }
+            return [PSCustomObject]$IniObject
+        }
         function Invoke-CategoryProcessing {
+            <#
+            .SYNOPSIS
+                A helper function for processing each item in $AllRegistryItems for each category
+            .PARAMETER CatName
+                Name of the hardening category to verify
+            .PARAMETER Method
+                The method used to verify the hardening category, which can be 'Group Policy' or 'Registry Keys'
+            .INPUTS
+                System.String
+            .OUTPUTS
+                System.Object[]
+            #>
             param(
-                [System.String]$CatName, [System.String]$Method
+                [CmdletBinding()]
+
+                [parameter(Mandatory = $true)]
+                [ValidateNotNullOrEmpty()]
+                [System.String]$CatName,
+
+                [parameter(Mandatory = $true)]
+                [ValidateSet('Group Policy', 'Registry Keys')]
+                [ValidateNotNullOrEmpty()]
+                [System.String]$Method
             )
 
             # an array to hold the output
             [System.Object[]]$Output = @()
-        
-            foreach ($Item in $AllRegistryItems | Where-Object { $_.category -eq $CatName } | Where-Object { $_.Method -eq $Method }) {
-        
+
+            foreach ($Item in $AllRegistryItems | Where-Object -FilterScript { $_.category -eq $CatName } | Where-Object -FilterScript { $_.Method -eq $Method }) {
+
                 # Initialize a flag to indicate if the key exists
                 [System.Boolean]$keyExists = $false
-            
+
                 # Initialize a flag to indicate if the value exists and matches the type
                 [System.Boolean]$ValueMatches = $false
-            
+
                 # Try to get the registry key
                 try {
                     $regKey = Get-Item -Path $Item.regPath
                     # If no error is thrown, the key exists
                     $keyExists = $true
-            
+
                     # Try to get the registry value and type
                     try {
                         $RegValue = Get-ItemPropertyValue -Path $Item.regPath -Name $Item.name
                         # If no error is thrown, the value exists
-            
+
                         # Check if the value matches the expected one
                         if ($RegValue -eq $Item.value) {
                             # If it matches, set the flag to true
@@ -147,7 +149,7 @@ function Confirm-SystemCompliance {
                     # If an error is thrown, the key does not exist or is not accessible
                     # Do nothing, the flag remains false
                 }
-            
+
                 # Create a custom object with the results for this row
                 $Output += [PSCustomObject]@{
                     # Category     = $Item.category
@@ -157,17 +159,18 @@ function Confirm-SystemCompliance {
                     # ValueMatches = $ValueMatches
                     # Type         = $Item.type
                     # Value        = $Item.value
-                    
+
                     FriendlyName = $Item.FriendlyName
                     Compliant    = $ValueMatches
-                    Value        = $Item.value  
-                    Name         = $Item.name                  
+                    Value        = $Item.value
+                    Name         = $Item.name
                     Category     = $CatName
                     Method       = $Method
                 }
             }
             return $Output
         }
+        #EndRegion defining-Functions
     }
 
     process {
@@ -179,6 +182,10 @@ function Confirm-SystemCompliance {
             # backup the current allowed apps list in Controlled folder access in order to restore them at the end of the script
             # doing this so that when we Add and then Remove PowerShell executables in Controlled folder access exclusions
             # no user customization will be affected
+
+            $CurrentMainStep++
+            Write-Progress -Id 0 -Activity 'Backing up Controlled Folder Access exclusion list' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+
             [System.String[]]$CFAAllowedAppsBackup = (Get-MpPreference).ControlledFolderAccessAllowedApplications
 
             # Temporarily allow the currently running PowerShell executables to the Controlled Folder Access allowed apps
@@ -188,82 +195,109 @@ function Confirm-SystemCompliance {
             }
 
             # Give the Defender internals time to process the updated exclusions list
-            Start-Sleep -Seconds '3'
-        
+            Start-Sleep -Seconds '5'
+
+            $CurrentMainStep++
+            Write-Progress -Id 0 -Activity 'Gathering Security Policy Information' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+
+            # Get the security group policies
+            &"$env:SystemDrive\Windows\System32\Secedit.exe" /export /cfg .\security_policy.inf | Out-Null
+
+            # Storing the output of the ini file parsing function
+            [PSCustomObject]$SecurityPoliciesIni = ConvertFrom-IniFile -IniFile .\security_policy.inf
+
+            $CurrentMainStep++
+            Write-Progress -Id 0 -Activity 'Processing the registry CSV file' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+
+            # Loop through each row in the CSV file and add it to the $AllRegistryItems array as a custom object
+            foreach ($Row in $CSVResource) {
+                $AllRegistryItems += [PSCustomObject]@{
+                    FriendlyName = $Row.FriendlyName
+                    category     = $Row.Category
+                    key          = $Row.Key
+                    value        = $Row.Value
+                    name         = $Row.Name
+                    type         = $Row.Type
+                    regPath      = "Registry::$($Row.Key)" # Build the registry path
+                    Method       = $Row.Origin
+                }
+            }
+
             #Region Microsoft-Defender-Category
-            Write-Progress -Activity 'Validating Microsoft Defender Category' -Status 'Processing...' -PercentComplete 35
+            $CurrentMainStep++
+            Write-Progress -Id 0 -Activity 'Validating Microsoft Defender Category' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
 
             # An array to store the nested custom objects, inside the main output object
-            [System.Object[]]$NestedObjectArray = @()        
-            [System.String]$CatName = 'Microsoft Defender'        
-        
+            [System.Object[]]$NestedObjectArray = @()
+            [System.String]$CatName = 'Microsoft Defender'
+
             # Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array as custom objects
-            $NestedObjectArray += [PSCustomObject](Invoke-CategoryProcessing -catname $CatName -Method 'Group Policy')       
-     
+            $NestedObjectArray += [PSCustomObject](Invoke-CategoryProcessing -catname $CatName -Method 'Group Policy')
+
             # For PowerShell Cmdlet
             $IndividualItemResult = $MDAVPreferencesCurrent.AllowSwitchToAsyncInspection
             $NestedObjectArray += [PSCustomObject]@{
-                FriendlyName = 'AllowSwitchToAsyncInspection'            
+                FriendlyName = 'AllowSwitchToAsyncInspection'
                 Compliant    = $IndividualItemResult
-                Value        = $IndividualItemResult 
-                Name         = 'AllowSwitchToAsyncInspection'           
+                Value        = $IndividualItemResult
+                Name         = 'AllowSwitchToAsyncInspection'
                 Category     = $CatName
-                Method       = 'Cmdlet'            
+                Method       = 'Cmdlet'
             }
-    
+
             # For PowerShell Cmdlet
             $IndividualItemResult = $MDAVPreferencesCurrent.oobeEnableRtpAndSigUpdate
             $NestedObjectArray += [PSCustomObject]@{
-                FriendlyName = 'oobeEnableRtpAndSigUpdate'            
+                FriendlyName = 'oobeEnableRtpAndSigUpdate'
                 Compliant    = $IndividualItemResult
-                Value        = $IndividualItemResult 
-                Name         = 'oobeEnableRtpAndSigUpdate'          
+                Value        = $IndividualItemResult
+                Name         = 'oobeEnableRtpAndSigUpdate'
                 Category     = $CatName
-                Method       = 'Cmdlet'            
+                Method       = 'Cmdlet'
             }
-    
+
             # For PowerShell Cmdlet
             $IndividualItemResult = $MDAVPreferencesCurrent.IntelTDTEnabled
             $NestedObjectArray += [PSCustomObject]@{
                 FriendlyName = 'IntelTDTEnabled'
                 Compliant    = $IndividualItemResult
-                Value        = $IndividualItemResult   
-                Name         = 'IntelTDTEnabled'         
+                Value        = $IndividualItemResult
+                Name         = 'IntelTDTEnabled'
                 Category     = $CatName
-                Method       = 'Cmdlet'            
+                Method       = 'Cmdlet'
             }
-    
+
             # For PowerShell Cmdlet
             $IndividualItemResult = $((Get-ProcessMitigation -System).aslr.ForceRelocateImages)
             $NestedObjectArray += [PSCustomObject]@{
-                FriendlyName = 'Mandatory ASLR'            
+                FriendlyName = 'Mandatory ASLR'
                 Compliant    = $IndividualItemResult -eq 'on' ? $True : $false
-                Value        = $IndividualItemResult            
+                Value        = $IndividualItemResult
                 Name         = 'Mandatory ASLR'
                 Category     = $CatName
-                Method       = 'Cmdlet'            
-            } 
-    
+                Method       = 'Cmdlet'
+            }
+
             # Verify the NX bit as shown in bcdedit /enum or Get-BcdEntry, info about numbers and values correlation: https://learn.microsoft.com/en-us/previous-versions/windows/desktop/bcd/bcdosloader-nxpolicy
-            $NestedObjectArray += [PSCustomObject]@{            
+            $NestedObjectArray += [PSCustomObject]@{
                 FriendlyName = 'Boot Configuration Data (BCD) No-eXecute (NX) Value'
-                Compliant    = (((Get-BcdEntry).elements | Where-Object { $_.name -eq 'nx' }).value -eq '3')
-                Value        = (((Get-BcdEntry).elements | Where-Object { $_.name -eq 'nx' }).value -eq '3')           
+                Compliant    = (((Get-BcdEntry).elements | Where-Object -FilterScript { $_.name -eq 'nx' }).value -eq '3')
+                Value        = (((Get-BcdEntry).elements | Where-Object -FilterScript { $_.name -eq 'nx' }).value -eq '3')
                 Name         = 'Boot Configuration Data (BCD) No-eXecute (NX) Value'
                 Category     = $CatName
-                Method       = 'Cmdlet'     
+                Method       = 'Cmdlet'
             }
-            
+
             # For PowerShell Cmdlet
             $NestedObjectArray += [PSCustomObject]@{
-                FriendlyName = 'Smart App Control State'            
+                FriendlyName = 'Smart App Control State'
                 Compliant    = 'N/A'
-                Value        = $MDAVConfigCurrent.SmartAppControlState        
+                Value        = $MDAVConfigCurrent.SmartAppControlState
                 Name         = 'Smart App Control State'
                 Category     = $CatName
-                Method       = 'Cmdlet'            
+                Method       = 'Cmdlet'
             }
-    
+
             # For PowerShell Cmdlet
             try {
                 $IndividualItemResult = $((Get-ScheduledTask -TaskPath '\MSFT Driver Block list update\' -TaskName 'MSFT Driver Block list update' -ErrorAction SilentlyContinue) ? $True : $false)
@@ -272,15 +306,14 @@ function Confirm-SystemCompliance {
                 # suppress any possible terminating errors
             }
             $NestedObjectArray += [PSCustomObject]@{
-                FriendlyName = 'Fast weekly Microsoft recommended driver block list update'            
+                FriendlyName = 'Fast weekly Microsoft recommended driver block list update'
                 Compliant    = $IndividualItemResult
-                Value        = $IndividualItemResult            
+                Value        = $IndividualItemResult
                 Name         = 'Fast weekly Microsoft recommended driver block list update'
                 Category     = $CatName
-                Method       = 'Cmdlet'           
+                Method       = 'Cmdlet'
             }
-    
-    
+
             [System.Collections.Hashtable]$DefenderPlatformUpdatesChannels = @{
                 0 = 'NotConfigured'
                 2 = 'Beta'
@@ -291,15 +324,14 @@ function Confirm-SystemCompliance {
             }
             # For PowerShell Cmdlet
             $NestedObjectArray += [PSCustomObject]@{
-                FriendlyName = 'Microsoft Defender Platform Updates Channel'            
+                FriendlyName = 'Microsoft Defender Platform Updates Channel'
                 Compliant    = 'N/A'
-                Value        = $($DefenderPlatformUpdatesChannels[[System.Int64]($MDAVPreferencesCurrent).PlatformUpdatesChannel])            
+                Value        = $($DefenderPlatformUpdatesChannels[[System.Int64]($MDAVPreferencesCurrent).PlatformUpdatesChannel])
                 Name         = 'Microsoft Defender Platform Updates Channel'
                 Category     = $CatName
-                Method       = 'Cmdlet'           
+                Method       = 'Cmdlet'
             }
-    
-    
+
             [System.Collections.Hashtable]$DefenderEngineUpdatesChannels = @{
                 0 = 'NotConfigured'
                 2 = 'Beta'
@@ -310,36 +342,36 @@ function Confirm-SystemCompliance {
             }
             # For PowerShell Cmdlet
             $NestedObjectArray += [PSCustomObject]@{
-                FriendlyName = 'Microsoft Defender Engine Updates Channel'            
+                FriendlyName = 'Microsoft Defender Engine Updates Channel'
                 Compliant    = 'N/A'
-                Value        = $($DefenderEngineUpdatesChannels[[System.Int64]($MDAVPreferencesCurrent).EngineUpdatesChannel])            
+                Value        = $($DefenderEngineUpdatesChannels[[System.Int64]($MDAVPreferencesCurrent).EngineUpdatesChannel])
                 Name         = 'Microsoft Defender Engine Updates Channel'
                 Category     = $CatName
-                Method       = 'Cmdlet'            
+                Method       = 'Cmdlet'
             }
-    
+
             # For PowerShell Cmdlet
             $NestedObjectArray += [PSCustomObject]@{
-                FriendlyName = 'Controlled Folder Access Exclusions'            
+                FriendlyName = 'Controlled Folder Access Exclusions'
                 Compliant    = 'N/A'
                 Value        = [PSCustomObject]@{
                     Count    = $MDAVPreferencesCurrent.ControlledFolderAccessAllowedApplications.count
-                    Programs = $MDAVPreferencesCurrent.ControlledFolderAccessAllowedApplications         
+                    Programs = $MDAVPreferencesCurrent.ControlledFolderAccessAllowedApplications
                 }
                 Name         = 'Controlled Folder Access Exclusions'
                 Category     = $CatName
-                Method       = 'Cmdlet'            
-            } 
-        
+                Method       = 'Cmdlet'
+            }
+
             # For PowerShell Cmdlet
             $IndividualItemResult = $MDAVPreferencesCurrent.DisableRestorePoint
             $NestedObjectArray += [PSCustomObject]@{
                 FriendlyName = 'Enable Restore Point scanning'
                 Compliant    = ($IndividualItemResult -eq $False)
-                Value        = ($IndividualItemResult -eq $False)   
+                Value        = ($IndividualItemResult -eq $False)
                 Name         = 'Enable Restore Point scanning'
                 Category     = $CatName
-                Method       = 'Cmdlet'            
+                Method       = 'Cmdlet'
             }
 
             # For PowerShell Cmdlet
@@ -347,10 +379,10 @@ function Confirm-SystemCompliance {
             $NestedObjectArray += [PSCustomObject]@{
                 FriendlyName = 'PerformanceModeStatus'
                 Compliant    = [System.Boolean]($IndividualItemResult -eq '0')
-                Value        = $IndividualItemResult   
-                Name         = 'PerformanceModeStatus'         
+                Value        = $IndividualItemResult
+                Name         = 'PerformanceModeStatus'
                 Category     = $CatName
-                Method       = 'Cmdlet'            
+                Method       = 'Cmdlet'
             }
 
             # For PowerShell Cmdlet
@@ -358,25 +390,27 @@ function Confirm-SystemCompliance {
             $NestedObjectArray += [PSCustomObject]@{
                 FriendlyName = 'EnableConvertWarnToBlock'
                 Compliant    = $IndividualItemResult
-                Value        = $IndividualItemResult   
-                Name         = 'EnableConvertWarnToBlock'         
+                Value        = $IndividualItemResult
+                Name         = 'EnableConvertWarnToBlock'
                 Category     = $CatName
-                Method       = 'Cmdlet'            
+                Method       = 'Cmdlet'
             }
             # Add the array of custom objects as a property to the $FinalMegaObject object outside the loop
             Add-Member -InputObject $FinalMegaObject -MemberType NoteProperty -Name $CatName -Value $NestedObjectArray
             #EndRegion Microsoft-Defender-Category
-    
+
             #Region Attack-Surface-Reduction-Rules-Category
-            Write-Progress -Activity 'Validating Attack Surface Reduction Rules Category' -Status 'Processing...' -PercentComplete 40
+            $CurrentMainStep++
+            Write-Progress -Id 0 -Activity 'Validating Attack Surface Reduction Rules Category' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+
             [System.Object[]]$NestedObjectArray = @()
             [System.String]$CatName = 'ASR'
 
             # Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array as custom objects
             $NestedObjectArray += [PSCustomObject](Invoke-CategoryProcessing -catname $CatName -Method 'Group Policy')
-            
-        
-            # Individual ASR rules verification      
+
+
+            # Individual ASR rules verification
             [System.String[]]$Ids = $MDAVPreferencesCurrent.AttackSurfaceReductionRules_Ids
             [System.String[]]$Actions = $MDAVPreferencesCurrent.AttackSurfaceReductionRules_Actions
 
@@ -384,7 +418,7 @@ function Confirm-SystemCompliance {
             if ($Ids) { $Ids = $Ids.tolower() }
 
             # Hashtable to store the descriptions for each ID
-            [System.Collections.Hashtable]$ASRsTable = @{    
+            [System.Collections.Hashtable]$ASRsTable = @{
                 '26190899-1602-49e8-8b27-eb1d0a1ce869' = 'Block Office communication application from creating child processes'
                 'd1e49aac-8f56-4280-b9ba-993a6d77406c' = 'Block process creations originating from PSExec and WMI commands'
                 'b2b3f03d-6a65-4f7b-a9c7-1c7ef74a9ba4' = 'Block untrusted and unsigned processes that run from USB'
@@ -427,19 +461,21 @@ function Confirm-SystemCompliance {
                 $NestedObjectArray += [PSCustomObject]@{
                     FriendlyName = $ASRsTable[$name]
                     Compliant    = [System.Boolean]($Action -eq 1) # Compare action value with 1 and cast to boolean
-                    Value        = $Action   
-                    Name         = $Name       
+                    Value        = $Action
+                    Name         = $Name
                     Category     = $CatName
-                    Method       = 'Cmdlet'  
-                }        
+                    Method       = 'Cmdlet'
+                }
             }
 
             # Add the array of custom objects as a property to the $FinalMegaObject object outside the loop
             Add-Member -InputObject $FinalMegaObject -MemberType NoteProperty -Name $CatName -Value $NestedObjectArray
             #EndRegion Attack-Surface-Reduction-Rules-Category
-    
+
             #Region Bitlocker-Category
-            Write-Progress -Activity 'Validating Bitlocker Category' -Status 'Processing...' -PercentComplete 45
+            $CurrentMainStep++
+            Write-Progress -Id 0 -Activity 'Validating Bitlocker Category' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+
             [System.Object[]]$NestedObjectArray = @()
             [System.String]$CatName = 'Bitlocker'
 
@@ -491,16 +527,16 @@ function Confirm-SystemCompliance {
       }
     }
 '@
-            Add-Type -TypeDefinition $BootDMAProtectionCheck
+            Add-Type -TypeDefinition $BootDMAProtectionCheck -Language CSharp
             # Returns true or false depending on whether Kernel DMA Protection is on or off
-            [System.Boolean]$BootDMAProtection = ([SystemInfo.NativeMethods]::BootDmaCheck()) -ne 0    
+            [System.Boolean]$BootDMAProtection = ([SystemInfo.NativeMethods]::BootDmaCheck()) -ne 0
 
-            # Get the status of Bitlocker DMA protection 
-            try {       
+            # Get the status of Bitlocker DMA protection
+            try {
                 [System.Int64]$BitlockerDMAProtectionStatus = Get-ItemPropertyValue -Path 'Registry::HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\FVE' -Name 'DisableExternalDMAUnderLock' -ErrorAction SilentlyContinue
             }
             catch {
-                # -ErrorAction SilentlyContinue wouldn't suppress the error if the path exists but property doesn't, so using try-catch 
+                # -ErrorAction SilentlyContinue wouldn't suppress the error if the path exists but property doesn't, so using try-catch
             }
             # Bitlocker DMA counter measure status
             # Returns true if only either Kernel DMA protection is on and Bitlocker DMA protection if off
@@ -509,13 +545,13 @@ function Confirm-SystemCompliance {
 
             # Create a custom object with 5 properties to store them as nested objects inside the main output object
             $NestedObjectArray += [PSCustomObject]@{
-                FriendlyName = 'DMA protection'           
+                FriendlyName = 'DMA protection'
                 Compliant    = $ItemState
-                Value        = $ItemState            
+                Value        = $ItemState
                 Name         = 'DMA protection'
                 Category     = $CatName
-                Method       = 'Group Policy'                
-            }  
+                Method       = 'Group Policy'
+            }
 
 
             # Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array as custom objects
@@ -530,7 +566,7 @@ function Confirm-SystemCompliance {
                     # suppress the errors if any
                 }
                 $NestedObjectArray += [PSCustomObject]@{
-                    FriendlyName = 'Hibernate is set to full'           
+                    FriendlyName = 'Hibernate is set to full'
                     Compliant    = [System.Boolean]($IndividualItemResult)
                     Value        = [System.Boolean]($IndividualItemResult)
                     Name         = 'Hibernate is set to full'
@@ -539,111 +575,110 @@ function Confirm-SystemCompliance {
                 }
             }
             else {
-                $global:TotalNumberOfTrueCompliantValues--
+                $TotalNumberOfTrueCompliantValues--
             }
 
             # OS Drive encryption verifications
             # Check if BitLocker is on for the OS Drive
             # The ProtectionStatus remains off while the drive is encrypting or decrypting
-            if ((Get-BitLockerVolume -MountPoint $env:SystemDrive).ProtectionStatus -eq 'on') {                                 
-           
+            if ((Get-BitLockerVolume -MountPoint $env:SystemDrive).ProtectionStatus -eq 'on') {
+
                 # Get the key protectors of the OS Drive
                 [System.String[]]$KeyProtectors = (Get-BitLockerVolume -MountPoint $env:SystemDrive).KeyProtector.keyprotectortype
-           
+
                 # Check if TPM+PIN and recovery password are being used - Normal Security level
-                if (($KeyProtectors -contains 'Tpmpin') -and ($KeyProtectors -contains 'RecoveryPassword')) {        
-            
+                if (($KeyProtectors -contains 'Tpmpin') -and ($KeyProtectors -contains 'RecoveryPassword')) {
+
                     $NestedObjectArray += [PSCustomObject]@{
-                        FriendlyName = 'Secure OS Drive encryption'            
+                        FriendlyName = 'Secure OS Drive encryption'
                         Compliant    = $True
-                        Value        = 'Normal Security Level'          
+                        Value        = 'Normal Security Level'
                         Name         = 'Secure OS Drive encryption'
                         Category     = $CatName
                         Method       = 'Cmdlet'
-        
+
                     }
                 }
-            
+
                 # Check if TPM+PIN+StartupKey and recovery password are being used - Enhanced security level
-                elseif (($KeyProtectors -contains 'TpmPinStartupKey') -and ($KeyProtectors -contains 'RecoveryPassword')) {        
-            
+                elseif (($KeyProtectors -contains 'TpmPinStartupKey') -and ($KeyProtectors -contains 'RecoveryPassword')) {
+
                     $NestedObjectArray += [PSCustomObject]@{
-                        FriendlyName = 'Secure OS Drive encryption'            
+                        FriendlyName = 'Secure OS Drive encryption'
                         Compliant    = $True
-                        Value        = 'Enhanced Security Level'          
+                        Value        = 'Enhanced Security Level'
                         Name         = 'Secure OS Drive encryption'
                         Category     = $CatName
                         Method       = 'Cmdlet'
-        
                     }
                 }
 
                 else {
                     $NestedObjectArray += [PSCustomObject]@{
-                        FriendlyName = 'Secure OS Drive encryption'            
+                        FriendlyName = 'Secure OS Drive encryption'
                         Compliant    = $false
-                        Value        = $false    
+                        Value        = $false
                         Name         = 'Secure OS Drive encryption'
                         Category     = $CatName
                         Method       = 'Cmdlet'
                     }
-                }        
+                }
             }
             else {
                 $NestedObjectArray += [PSCustomObject]@{
-                    FriendlyName = 'Secure OS Drive encryption'            
+                    FriendlyName = 'Secure OS Drive encryption'
                     Compliant    = $false
-                    Value        = $false    
+                    Value        = $false
                     Name         = 'Secure OS Drive encryption'
                     Category     = $CatName
                     Method       = 'Cmdlet'
                 }
             }
-            #region Non-OS-Drive-BitLocker-Drives-Encryption-Verification                
+            #region Non-OS-Drive-BitLocker-Drives-Encryption-Verification
             # Get the list of non OS volumes
-            [System.Object[]]$NonOSBitLockerVolumes = Get-BitLockerVolume | Where-Object {
+            [System.Object[]]$NonOSBitLockerVolumes = Get-BitLockerVolume | Where-Object -FilterScript {
                     ($_.volumeType -ne 'OperatingSystem')
             }
-                
+
             # Get all the volumes and filter out removable ones
             [System.Object[]]$RemovableVolumes = Get-Volume |
-            Where-Object { $_.DriveType -eq 'Removable' } |
-            Where-Object { $_.DriveLetter }
-                
+            Where-Object -FilterScript { $_.DriveType -eq 'Removable' } |
+            Where-Object -FilterScript { $_.DriveLetter }
+
             # Check if there is any removable volumes
             if ($RemovableVolumes) {
-                
+
                 # Get the letters of all the removable volumes
                 [System.String[]]$RemovableVolumesLetters = foreach ($RemovableVolume in $RemovableVolumes) {
                     $(($RemovableVolume).DriveLetter + ':' )
                 }
-                
+
                 # Filter out removable drives from BitLocker volumes to process
-                $NonOSBitLockerVolumes = $NonOSBitLockerVolumes | Where-Object {
+                $NonOSBitLockerVolumes = $NonOSBitLockerVolumes | Where-Object -FilterScript {
                     ($_.MountPoint -notin $RemovableVolumesLetters)
-                }                
+                }
             }
 
             # Check if there is any non-OS volumes
-            if ($NonOSBitLockerVolumes) {    
+            if ($NonOSBitLockerVolumes) {
 
                 # Loop through each non-OS volume and verify their encryption
                 foreach ($MountPoint in $($NonOSBitLockerVolumes | Sort-Object).MountPoint) {
 
                     # Increase the number of available compliant values for each non-OS drive that was found
-                    $global:TotalNumberOfTrueCompliantValues++
+                    $TotalNumberOfTrueCompliantValues++
 
                     # If status is unknown, that means the non-OS volume is encrypted and locked, if it's on then it's on
-                    if ((Get-BitLockerVolume -MountPoint $MountPoint).ProtectionStatus -in 'on', 'Unknown') {  
+                    if ((Get-BitLockerVolume -MountPoint $MountPoint).ProtectionStatus -in 'on', 'Unknown') {
 
                         # Check 1: if Recovery Password and Auto Unlock key protectors are available on the drive
-                        [System.Object[]]$KeyProtectors = (Get-BitLockerVolume -MountPoint $MountPoint).KeyProtector.keyprotectortype 
+                        [System.Object[]]$KeyProtectors = (Get-BitLockerVolume -MountPoint $MountPoint).KeyProtector.keyprotectortype
                         if (($KeyProtectors -contains 'RecoveryPassword') -or ($KeyProtectors -contains 'Password')) {
-                                                                        
+
                             $NestedObjectArray += [PSCustomObject]@{
-                                FriendlyName = "Secure Drive $MountPoint encryption"            
+                                FriendlyName = "Secure Drive $MountPoint encryption"
                                 Compliant    = $True
-                                Value        = 'Encrypted'         
+                                Value        = 'Encrypted'
                                 Name         = "Secure Drive $MountPoint encryption"
                                 Category     = $CatName
                                 Method       = 'Cmdlet'
@@ -651,24 +686,24 @@ function Confirm-SystemCompliance {
                         }
                         else {
                             $NestedObjectArray += [PSCustomObject]@{
-                                FriendlyName = "Secure Drive $MountPoint encryption"            
+                                FriendlyName = "Secure Drive $MountPoint encryption"
                                 Compliant    = $false
-                                Value        = 'Not properly encrypted'         
+                                Value        = 'Not properly encrypted'
                                 Name         = "Secure Drive $MountPoint encryption"
                                 Category     = $CatName
                                 Method       = 'Cmdlet'
-                            }   
+                            }
                         }
                     }
                     else {
                         $NestedObjectArray += [PSCustomObject]@{
-                            FriendlyName = "Secure Drive $MountPoint encryption"            
+                            FriendlyName = "Secure Drive $MountPoint encryption"
                             Compliant    = $false
-                            Value        = 'Not encrypted'         
+                            Value        = 'Not encrypted'
                             Name         = "Secure Drive $MountPoint encryption"
                             Category     = $CatName
                             Method       = 'Cmdlet'
-                        }                    
+                        }
                     }
                 }
             }
@@ -677,30 +712,32 @@ function Confirm-SystemCompliance {
             # Add the array of custom objects as a property to the $FinalMegaObject object outside the loop
             Add-Member -InputObject $FinalMegaObject -MemberType NoteProperty -Name $CatName -Value $NestedObjectArray
             #EndRegion Bitlocker-Category
-    
+
             #Region TLS-Category
-            Write-Progress -Activity 'Validating TLS Category' -Status 'Processing...' -PercentComplete 50
+            $CurrentMainStep++
+            Write-Progress -Id 0 -Activity 'Validating TLS Category' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+
             [System.Object[]]$NestedObjectArray = @()
             [System.String]$CatName = 'TLS'
-        
+
             # Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array as custom objects
             $NestedObjectArray += [PSCustomObject](Invoke-CategoryProcessing -catname $CatName -Method 'Group Policy')
-        
+
             # ECC Curves
             [System.Object[]]$ECCCurves = Get-TlsEccCurve
-            [System.Object[]]$list = ('nistP521', 'curve25519', 'NistP384', 'NistP256')
+            [System.Object[]]$List = ('nistP521', 'curve25519', 'NistP384', 'NistP256')
             # Make sure both arrays are completely identical in terms of members and their exact position
             # If this variable is empty that means both arrays are completely identical
-            $IndividualItemResult = Compare-Object $ECCCurves $list -SyncWindow 0
+            $IndividualItemResult = Compare-Object -ReferenceObject $ECCCurves -DifferenceObject $List -SyncWindow 0
 
             $NestedObjectArray += [PSCustomObject]@{
-                FriendlyName = 'ECC Curves and their positions'            
+                FriendlyName = 'ECC Curves and their positions'
                 Compliant    = [System.Boolean]($IndividualItemResult ? $false : $True)
-                Value        = $list            
+                Value        = $List
                 Name         = 'ECC Curves and their positions'
                 Category     = $CatName
                 Method       = 'Cmdlet'
-            }   
+            }
 
             # Process items in Registry resources.csv file with "Registry Keys" origin and add them to the $NestedObjectArray array as custom objects
             $NestedObjectArray += [PSCustomObject](Invoke-CategoryProcessing -catname $CatName -Method 'Registry Keys')
@@ -708,77 +745,79 @@ function Confirm-SystemCompliance {
             # Add the array of custom objects as a property to the $FinalMegaObject object outside the loop
             Add-Member -InputObject $FinalMegaObject -MemberType NoteProperty -Name $CatName -Value $NestedObjectArray
             #EndRegion TLS-Category
-    
+
             #Region LockScreen-Category
-            Write-Progress -Activity 'Validating Lock Screen Category' -Status 'Processing...' -PercentComplete 55
+            $CurrentMainStep++
+            Write-Progress -Id 0 -Activity 'Validating Lock Screen Category' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+
             [System.Object[]]$NestedObjectArray = @()
             [System.String]$CatName = 'LockScreen'
-        
+
             # Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array as custom objects
             $NestedObjectArray += [PSCustomObject](Invoke-CategoryProcessing -catname $CatName -Method 'Group Policy')
-    
+
             # Verify a Security Group Policy setting
-            $IndividualItemResult = [System.Boolean]$($SecurityPoliciesIni.'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\InactivityTimeoutSecs'] -eq '4,120') ? $True : $False   
+            $IndividualItemResult = [System.Boolean]$($SecurityPoliciesIni.'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\InactivityTimeoutSecs'] -eq '4,120') ? $True : $False
             $NestedObjectArray += [PSCustomObject]@{
                 FriendlyName = 'Machine inactivity limit'
                 Compliant    = $IndividualItemResult
-                Value        = $IndividualItemResult   
-                Name         = 'Machine inactivity limit'         
-                Category     = $CatName
-                Method       = 'Security Group Policy'
-            }
-    
-            # Verify a Security Group Policy setting
-            $IndividualItemResult = [System.Boolean]$($SecurityPoliciesIni.'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\DisableCAD'] -eq '4,0') ? $True : $False
-            $NestedObjectArray += [PSCustomObject]@{
-                FriendlyName = 'Interactive logon: Do not require CTRL+ALT+DEL'            
-                Compliant    = $IndividualItemResult
-                Value        = $IndividualItemResult  
-                Name         = 'Interactive logon: Do not require CTRL+ALT+DEL'          
-                Category     = $CatName
-                Method       = 'Security Group Policy'
-            }
-    
-            # Verify a Security Group Policy setting
-            $IndividualItemResult = [System.Boolean]$($SecurityPoliciesIni.'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\MaxDevicePasswordFailedAttempts'] -eq '4,5') ? $True : $False
-            $NestedObjectArray += [PSCustomObject]@{
-                FriendlyName = 'Interactive logon: Machine account lockout threshold'            
-                Compliant    = $IndividualItemResult
-                Value        = $IndividualItemResult  
-                Name         = 'Interactive logon: Machine account lockout threshold'          
-                Category     = $CatName
-                Method       = 'Security Group Policy'
-            }
-    
-            # Verify a Security Group Policy setting
-            $IndividualItemResult = [System.Boolean]$($SecurityPoliciesIni.'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\DontDisplayLockedUserId'] -eq '4,4') ? $True : $False
-            $NestedObjectArray += [PSCustomObject]@{
-                FriendlyName = 'Interactive logon: Display user information when the session is locked'             
-                Compliant    = $IndividualItemResult
-                Value        = $IndividualItemResult    
-                Name         = 'Interactive logon: Display user information when the session is locked'        
-                Category     = $CatName
-                Method       = 'Security Group Policy'
-            }
-    
-            # Verify a Security Group Policy setting
-            $IndividualItemResult = [System.Boolean]$($SecurityPoliciesIni.'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\DontDisplayUserName'] -eq '4,1') ? $True : $False
-            $NestedObjectArray += [PSCustomObject]@{
-                FriendlyName = "Interactive logon: Don't display username at sign-in"            
-                Compliant    = $IndividualItemResult
-                Value        = $IndividualItemResult    
-                Name         = "Interactive logon: Don't display username at sign-in"        
+                Value        = $IndividualItemResult
+                Name         = 'Machine inactivity limit'
                 Category     = $CatName
                 Method       = 'Security Group Policy'
             }
 
-            # Verify a Security Group Policy setting   
+            # Verify a Security Group Policy setting
+            $IndividualItemResult = [System.Boolean]$($SecurityPoliciesIni.'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\DisableCAD'] -eq '4,0') ? $True : $False
+            $NestedObjectArray += [PSCustomObject]@{
+                FriendlyName = 'Interactive logon: Do not require CTRL+ALT+DEL'
+                Compliant    = $IndividualItemResult
+                Value        = $IndividualItemResult
+                Name         = 'Interactive logon: Do not require CTRL+ALT+DEL'
+                Category     = $CatName
+                Method       = 'Security Group Policy'
+            }
+
+            # Verify a Security Group Policy setting
+            $IndividualItemResult = [System.Boolean]$($SecurityPoliciesIni.'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\MaxDevicePasswordFailedAttempts'] -eq '4,5') ? $True : $False
+            $NestedObjectArray += [PSCustomObject]@{
+                FriendlyName = 'Interactive logon: Machine account lockout threshold'
+                Compliant    = $IndividualItemResult
+                Value        = $IndividualItemResult
+                Name         = 'Interactive logon: Machine account lockout threshold'
+                Category     = $CatName
+                Method       = 'Security Group Policy'
+            }
+
+            # Verify a Security Group Policy setting
+            $IndividualItemResult = [System.Boolean]$($SecurityPoliciesIni.'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\DontDisplayLockedUserId'] -eq '4,4') ? $True : $False
+            $NestedObjectArray += [PSCustomObject]@{
+                FriendlyName = 'Interactive logon: Display user information when the session is locked'
+                Compliant    = $IndividualItemResult
+                Value        = $IndividualItemResult
+                Name         = 'Interactive logon: Display user information when the session is locked'
+                Category     = $CatName
+                Method       = 'Security Group Policy'
+            }
+
+            # Verify a Security Group Policy setting
+            $IndividualItemResult = [System.Boolean]$($SecurityPoliciesIni.'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\DontDisplayUserName'] -eq '4,1') ? $True : $False
+            $NestedObjectArray += [PSCustomObject]@{
+                FriendlyName = "Interactive logon: Don't display username at sign-in"
+                Compliant    = $IndividualItemResult
+                Value        = $IndividualItemResult
+                Name         = "Interactive logon: Don't display username at sign-in"
+                Category     = $CatName
+                Method       = 'Security Group Policy'
+            }
+
+            # Verify a Security Group Policy setting
             $IndividualItemResult = [System.Boolean]$($SecurityPoliciesIni.'System Access'['LockoutBadCount'] -eq '5') ? $True : $False
             $NestedObjectArray += [PSCustomObject]@{
-                FriendlyName = 'Account lockout threshold'           
+                FriendlyName = 'Account lockout threshold'
                 Compliant    = $IndividualItemResult
-                Value        = $IndividualItemResult 
-                Name         = 'Account lockout threshold'         
+                Value        = $IndividualItemResult
+                Name         = 'Account lockout threshold'
                 Category     = $CatName
                 Method       = 'Security Group Policy'
             }
@@ -786,21 +825,21 @@ function Confirm-SystemCompliance {
             # Verify a Security Group Policy setting
             $IndividualItemResult = [System.Boolean]$($SecurityPoliciesIni.'System Access'['LockoutDuration'] -eq '1440') ? $True : $False
             $NestedObjectArray += [PSCustomObject]@{
-                FriendlyName = 'Account lockout duration'            
+                FriendlyName = 'Account lockout duration'
                 Compliant    = $IndividualItemResult
                 Value        = $IndividualItemResult
-                Name         = 'Account lockout duration'            
+                Name         = 'Account lockout duration'
                 Category     = $CatName
                 Method       = 'Security Group Policy'
             }
 
-            # Verify a Security Group Policy setting   
+            # Verify a Security Group Policy setting
             $IndividualItemResult = [System.Boolean]$($SecurityPoliciesIni.'System Access'['ResetLockoutCount'] -eq '1440') ? $True : $False
             $NestedObjectArray += [PSCustomObject]@{
-                FriendlyName = 'Reset account lockout counter after'            
+                FriendlyName = 'Reset account lockout counter after'
                 Compliant    = $IndividualItemResult
-                Value        = $IndividualItemResult  
-                Name         = 'Reset account lockout counter after'          
+                Value        = $IndividualItemResult
+                Name         = 'Reset account lockout counter after'
                 Category     = $CatName
                 Method       = 'Security Group Policy'
             }
@@ -808,22 +847,24 @@ function Confirm-SystemCompliance {
             # Verify a Security Group Policy setting
             $IndividualItemResult = [System.Boolean]$($SecurityPoliciesIni.'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\DontDisplayLastUserName'] -eq '4,1') ? $True : $False
             $NestedObjectArray += [PSCustomObject]@{
-                FriendlyName = "Interactive logon: Don't display last signed-in"            
+                FriendlyName = "Interactive logon: Don't display last signed-in"
                 Compliant    = $IndividualItemResult
-                Value        = $IndividualItemResult           
+                Value        = $IndividualItemResult
                 Name         = "Interactive logon: Don't display last signed-in"
                 Category     = $CatName
                 Method       = 'Security Group Policy'
             }
-    
+
             # Add the array of custom objects as a property to the $FinalMegaObject object outside the loop
             Add-Member -InputObject $FinalMegaObject -MemberType NoteProperty -Name $CatName -Value $NestedObjectArray
             #EndRegion LockScreen-Category
-    
+
             #Region User-Account-Control-Category
-            Write-Progress -Activity 'Validating User Account Control Category' -Status 'Processing...' -PercentComplete 60
+            $CurrentMainStep++
+            Write-Progress -Id 0 -Activity 'Validating User Account Control Category' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+
             [System.Object[]]$NestedObjectArray = @()
-            [System.String]$CatName = 'UAC' 
+            [System.String]$CatName = 'UAC'
 
             # Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array as custom objects
             $NestedObjectArray += [PSCustomObject](Invoke-CategoryProcessing -catname $CatName -Method 'Group Policy')
@@ -831,87 +872,75 @@ function Confirm-SystemCompliance {
             # Verify a Security Group Policy setting
             $IndividualItemResult = [System.Boolean]$($SecurityPoliciesIni.'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\ConsentPromptBehaviorAdmin'] -eq '4,2') ? $True : $False
             $NestedObjectArray += [PSCustomObject]@{
-                FriendlyName = 'UAC: Behavior of the elevation prompt for administrators in Admin Approval Mode'            
+                FriendlyName = 'UAC: Behavior of the elevation prompt for administrators in Admin Approval Mode'
                 Compliant    = $IndividualItemResult
-                Value        = $IndividualItemResult      
-                Name         = 'UAC: Behavior of the elevation prompt for administrators in Admin Approval Mode'      
+                Value        = $IndividualItemResult
+                Name         = 'UAC: Behavior of the elevation prompt for administrators in Admin Approval Mode'
                 Category     = $CatName
                 Method       = 'Security Group Policy'
-            }
-    
-        
-            # This particular policy can have 2 values and they are both acceptable depending on whichever user selects        
-            [System.String]$ConsentPromptBehaviorUserValue = $SecurityPoliciesIni.'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\ConsentPromptBehaviorUser']
-            # This option is automatically applied when UAC category is run
-            if ($ConsentPromptBehaviorUserValue -eq '4,1') {        
-                $ConsentPromptBehaviorUserCompliance = $true
-                $IndividualItemResult = 'Prompt for credentials on the secure desktop'
-            }
-            # This option prompts for additional confirmation before it's applied
-            elseif ($ConsentPromptBehaviorUserValue -eq '4,0') {
-                $ConsentPromptBehaviorUserCompliance = $true
-                $IndividualItemResult = 'Automatically deny elevation requests'
-            }
-            # If none of them is applied then return false for compliance and N/A for value
-            else {
-                $ConsentPromptBehaviorUserCompliance = $false
-                $IndividualItemResult = 'N/A'
             }
 
             # Verify a Security Group Policy setting
+            $IndividualItemResult = [System.Boolean]$($SecurityPoliciesIni.'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\ConsentPromptBehaviorUser'] -eq '4,0') ? $True : $False
             $NestedObjectArray += [PSCustomObject]@{
-                FriendlyName = 'UAC: Behavior of the elevation prompt for standard users'            
-                Compliant    = $ConsentPromptBehaviorUserCompliance
-                Value        = $IndividualItemResult    
-                Name         = 'UAC: Behavior of the elevation prompt for standard users'        
+                FriendlyName = 'UAC: Automatically deny elevation requests on Standard accounts'
+                Compliant    = $IndividualItemResult
+                Value        = $IndividualItemResult
+                Name         = 'UAC: Automatically deny elevation requests on Standard accounts'
                 Category     = $CatName
                 Method       = 'Security Group Policy'
-            }   
+            }
 
             # Verify a Security Group Policy setting
             $IndividualItemResult = [System.Boolean]($($SecurityPoliciesIni.'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\ValidateAdminCodeSignatures'] -eq '4,1') ? $True : $False)
             $NestedObjectArray += [PSCustomObject]@{
-                FriendlyName = 'UAC: Only elevate executables that are signed and validated'            
+                FriendlyName = 'UAC: Only elevate executables that are signed and validated'
                 Compliant    = $IndividualItemResult
-                Value        = $IndividualItemResult  
-                Name         = 'UAC: Only elevate executables that are signed and validated'          
+                Value        = $IndividualItemResult
+                Name         = 'UAC: Only elevate executables that are signed and validated'
                 Category     = $CatName
                 Method       = 'Security Group Policy'
             }
-                
+
             # Add the array of custom objects as a property to the $FinalMegaObject object outside the loop
             Add-Member -InputObject $FinalMegaObject -MemberType NoteProperty -Name $CatName -Value $NestedObjectArray
             #EndRegion User-Account-Control-Category
-    
+
             #Region Device-Guard-Category
-            Write-Progress -Activity 'Validating Device Guard Category' -Status 'Processing...' -PercentComplete 65
+            $CurrentMainStep++
+            Write-Progress -Id 0 -Activity 'Validating Device Guard Category' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+
             [System.Object[]]$NestedObjectArray = @()
             [System.String]$CatName = 'Device Guard'
- 
+
             # Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array as custom objects
             $NestedObjectArray += [PSCustomObject](Invoke-CategoryProcessing -catname $CatName -Method 'Group Policy')
 
             # Add the array of custom objects as a property to the $FinalMegaObject object outside the loop
             Add-Member -InputObject $FinalMegaObject -MemberType NoteProperty -Name $CatName -Value $NestedObjectArray
             #EndRegion Device-Guard-Category
-        
+
             #Region Windows-Firewall-Category
-            Write-Progress -Activity 'Validating Windows Firewall Category' -Status 'Processing...' -PercentComplete 70
+            $CurrentMainStep++
+            Write-Progress -Id 0 -Activity 'Validating Windows Firewall Category' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+
             [System.Object[]]$NestedObjectArray = @()
             [System.String]$CatName = 'Windows Firewall'
-                  
+
             # Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array as custom objects
             $NestedObjectArray += [PSCustomObject](Invoke-CategoryProcessing -catname $CatName -Method 'Group Policy')
-    
+
             # Add the array of custom objects as a property to the $FinalMegaObject object outside the loop
             Add-Member -InputObject $FinalMegaObject -MemberType NoteProperty -Name $CatName -Value $NestedObjectArray
             #EndRegion Windows-Firewall-Category
 
             #Region Optional-Windows-Features-Category
-            Write-Progress -Activity 'Validating Optional Windows Features Category' -Status 'Processing...' -PercentComplete 75
+            $CurrentMainStep++
+            Write-Progress -Id 0 -Activity 'Validating Optional Windows Features Category' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+
             [System.Object[]]$NestedObjectArray = @()
             [System.String]$CatName = 'Optional Windows Features'
-         
+
             # Windows PowerShell handling Windows optional features verifications
             [System.Object[]]$Results = @()
             $Results = powershell.exe {
@@ -919,198 +948,200 @@ function Confirm-SystemCompliance {
                 [System.Boolean]$PowerShell2 = (Get-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2Root).State -eq 'Disabled'
                 [System.String]$WorkFoldersClient = (Get-WindowsOptionalFeature -Online -FeatureName WorkFolders-Client).state
                 [System.String]$InternetPrintingClient = (Get-WindowsOptionalFeature -Online -FeatureName Printing-Foundation-Features).state
-                [System.String]$WindowsMediaPlayer = (Get-WindowsCapability -Online | Where-Object { $_.Name -like '*Media.WindowsMediaPlayer*' }).state
+                [System.String]$WindowsMediaPlayer = (Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like '*Media.WindowsMediaPlayer*' }).state
                 [System.String]$MDAG = (Get-WindowsOptionalFeature -Online -FeatureName Windows-Defender-ApplicationGuard).state
                 [System.String]$WindowsSandbox = (Get-WindowsOptionalFeature -Online -FeatureName Containers-DisposableClientVM).state
                 [System.String]$HyperV = (Get-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V).state
                 [System.String]$VMPlatform = (Get-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform).state
-                [System.String]$WMIC = (Get-WindowsCapability -Online | Where-Object { $_.Name -like '*wmic*' }).state
-                [System.String]$IEMode = (Get-WindowsCapability -Online | Where-Object { $_.Name -like '*Browser.InternetExplorer*' }).state
-                [System.String]$LegacyNotepad = (Get-WindowsCapability -Online | Where-Object { $_.Name -like '*Microsoft.Windows.Notepad.System*' }).state
-                [System.String]$LegacyWordPad = (Get-WindowsCapability -Online | Where-Object { $_.Name -like '*Microsoft.Windows.WordPad*' }).state
-                [System.String]$PowerShellISE = (Get-WindowsCapability -Online | Where-Object { $_.Name -like '*Microsoft.Windows.PowerShell.ISE*' }).state
-                [System.String]$StepsRecorder = (Get-WindowsCapability -Online | Where-Object { $_.Name -like '*App.StepsRecorder*' }).state
+                [System.String]$WMIC = (Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like '*wmic*' }).state
+                [System.String]$IEMode = (Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like '*Browser.InternetExplorer*' }).state
+                [System.String]$LegacyNotepad = (Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like '*Microsoft.Windows.Notepad.System*' }).state
+                [System.String]$LegacyWordPad = (Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like '*Microsoft.Windows.WordPad*' }).state
+                [System.String]$PowerShellISE = (Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like '*Microsoft.Windows.PowerShell.ISE*' }).state
+                [System.String]$StepsRecorder = (Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like '*App.StepsRecorder*' }).state
                 # returning the output of the script block as an array
                 Return $PowerShell1, $PowerShell2, $WorkFoldersClient, $InternetPrintingClient, $WindowsMediaPlayer, $MDAG, $WindowsSandbox, $HyperV, $VMPlatform, $WMIC, $IEMode, $LegacyNotepad, $LegacyWordPad, $PowerShellISE, $StepsRecorder
             }
             # Verify PowerShell v2 is disabled
             $NestedObjectArray += [PSCustomObject]@{
-                FriendlyName = 'PowerShell v2 is disabled'            
+                FriendlyName = 'PowerShell v2 is disabled'
                 Compliant    = ($Results[0] -and $Results[1]) ? $True : $False
-                Value        = ($Results[0] -and $Results[1]) ? $True : $False 
-                Name         = 'PowerShell v2 is disabled'          
+                Value        = ($Results[0] -and $Results[1]) ? $True : $False
+                Name         = 'PowerShell v2 is disabled'
                 Category     = $CatName
                 Method       = 'Optional Windows Features'
             }
 
             # Verify Work folders is disabled
             $NestedObjectArray += [PSCustomObject]@{
-                FriendlyName = 'Work Folders client is disabled'            
+                FriendlyName = 'Work Folders client is disabled'
                 Compliant    = [System.Boolean]($Results[2] -eq 'Disabled')
-                Value        = [System.String]$Results[2]         
+                Value        = [System.String]$Results[2]
                 Name         = 'Work Folders client is disabled'
                 Category     = $CatName
                 Method       = 'Optional Windows Features'
             }
 
-            # Verify Internet Printing Client is disabled      
+            # Verify Internet Printing Client is disabled
             $NestedObjectArray += [PSCustomObject]@{
-                FriendlyName = 'Internet Printing Client is disabled'            
+                FriendlyName = 'Internet Printing Client is disabled'
                 Compliant    = [System.Boolean]($Results[3] -eq 'Disabled')
-                Value        = [System.String]$Results[3]   
-                Name         = 'Internet Printing Client is disabled'         
+                Value        = [System.String]$Results[3]
+                Name         = 'Internet Printing Client is disabled'
                 Category     = $CatName
                 Method       = 'Optional Windows Features'
             }
 
-            # Verify the old Windows Media Player is disabled    
+            # Verify the old Windows Media Player is disabled
             $NestedObjectArray += [PSCustomObject]@{
-                FriendlyName = 'Windows Media Player (legacy) is disabled'            
+                FriendlyName = 'Windows Media Player (legacy) is disabled'
                 Compliant    = [System.Boolean]($Results[4] -eq 'NotPresent')
                 Value        = [System.String]$Results[4]
-                Name         = 'Windows Media Player (legacy) is disabled'          
+                Name         = 'Windows Media Player (legacy) is disabled'
                 Category     = $CatName
                 Method       = 'Optional Windows Features'
             }
 
-            # Verify MDAG is enabled       
+            # Verify MDAG is enabled
             $NestedObjectArray += [PSCustomObject]@{
-                FriendlyName = 'Microsoft Defender Application Guard is enabled'            
+                FriendlyName = 'Microsoft Defender Application Guard is enabled'
                 Compliant    = [System.Boolean]($Results[5] -eq 'Enabled')
                 Value        = [System.String]$Results[5]
-                Name         = 'Microsoft Defender Application Guard is enabled'           
+                Name         = 'Microsoft Defender Application Guard is enabled'
                 Category     = $CatName
                 Method       = 'Optional Windows Features'
             }
 
-            # Verify Windows Sandbox is enabled   
+            # Verify Windows Sandbox is enabled
             $NestedObjectArray += [PSCustomObject]@{
-                FriendlyName = 'Windows Sandbox is enabled'            
+                FriendlyName = 'Windows Sandbox is enabled'
                 Compliant    = [System.Boolean]($Results[6] -eq 'Enabled')
                 Value        = [System.String]$Results[6]
-                Name         = 'Windows Sandbox is enabled'           
+                Name         = 'Windows Sandbox is enabled'
                 Category     = $CatName
                 Method       = 'Optional Windows Features'
             }
-        
-            # Verify Hyper-V is enabled     
+
+            # Verify Hyper-V is enabled
             $NestedObjectArray += [PSCustomObject]@{
-                FriendlyName = 'Hyper-V is enabled'            
+                FriendlyName = 'Hyper-V is enabled'
                 Compliant    = [System.Boolean]($Results[7] -eq 'Enabled')
                 Value        = [System.String]$Results[7]
-                Name         = 'Hyper-V is enabled'           
+                Name         = 'Hyper-V is enabled'
                 Category     = $CatName
                 Method       = 'Optional Windows Features'
             }
 
             # Verify Virtual Machine Platform is enabled
             $NestedObjectArray += [PSCustomObject]@{
-                FriendlyName = 'Virtual Machine Platform is enabled'            
+                FriendlyName = 'Virtual Machine Platform is enabled'
                 Compliant    = [System.Boolean]($Results[8] -eq 'Enabled')
                 Value        = [System.String]$Results[8]
-                Name         = 'Virtual Machine Platform is enabled'           
+                Name         = 'Virtual Machine Platform is enabled'
                 Category     = $CatName
                 Method       = 'Optional Windows Features'
             }
 
             # Verify WMIC is not present
             $NestedObjectArray += [PSCustomObject]@{
-                FriendlyName = 'WMIC is not present'            
+                FriendlyName = 'WMIC is not present'
                 Compliant    = [System.Boolean]($Results[9] -eq 'NotPresent')
-                Value        = [System.String]$Results[9] 
-                Name         = 'WMIC is not present'          
+                Value        = [System.String]$Results[9]
+                Name         = 'WMIC is not present'
                 Category     = $CatName
                 Method       = 'Optional Windows Features'
             }
 
-            # Verify Internet Explorer mode functionality for Edge is not present    
+            # Verify Internet Explorer mode functionality for Edge is not present
             $NestedObjectArray += [PSCustomObject]@{
-                FriendlyName = 'Internet Explorer mode functionality for Edge is not present'           
+                FriendlyName = 'Internet Explorer mode functionality for Edge is not present'
                 Compliant    = [System.Boolean]($Results[10] -eq 'NotPresent')
-                Value        = [System.String]$Results[10]    
-                Name         = 'Internet Explorer mode functionality for Edge is not present'                   
+                Value        = [System.String]$Results[10]
+                Name         = 'Internet Explorer mode functionality for Edge is not present'
                 Category     = $CatName
                 Method       = 'Optional Windows Features'
             }
 
-            # Verify Legacy Notepad is not present        
+            # Verify Legacy Notepad is not present
             $NestedObjectArray += [PSCustomObject]@{
-                FriendlyName = 'Legacy Notepad is not present'           
+                FriendlyName = 'Legacy Notepad is not present'
                 Compliant    = [System.Boolean]($Results[11] -eq 'NotPresent')
-                Value        = [System.String]$Results[11]  
-                Name         = 'Legacy Notepad is not present'                   
+                Value        = [System.String]$Results[11]
+                Name         = 'Legacy Notepad is not present'
                 Category     = $CatName
                 Method       = 'Optional Windows Features'
             }
-        
-            # Verify Legacy WordPad is not present        
+
+            # Verify Legacy WordPad is not present
             $NestedObjectArray += [PSCustomObject]@{
-                FriendlyName = 'WordPad is not present'           
+                FriendlyName = 'WordPad is not present'
                 Compliant    = [System.Boolean]($Results[12] -eq 'NotPresent')
-                Value        = [System.String]$Results[12]  
-                Name         = 'WordPad is not present'                   
+                Value        = [System.String]$Results[12]
+                Name         = 'WordPad is not present'
                 Category     = $CatName
                 Method       = 'Optional Windows Features'
             }
 
-            # Verify PowerShell ISE is not present        
+            # Verify PowerShell ISE is not present
             $NestedObjectArray += [PSCustomObject]@{
-                FriendlyName = 'PowerShell ISE is not present'           
+                FriendlyName = 'PowerShell ISE is not present'
                 Compliant    = [System.Boolean]($Results[13] -eq 'NotPresent')
-                Value        = [System.String]$Results[13]  
-                Name         = 'PowerShell ISE is not present'                   
+                Value        = [System.String]$Results[13]
+                Name         = 'PowerShell ISE is not present'
                 Category     = $CatName
                 Method       = 'Optional Windows Features'
             }
 
-            # Verify Steps Recorder is not present        
+            # Verify Steps Recorder is not present
             $NestedObjectArray += [PSCustomObject]@{
-                FriendlyName = 'Steps Recorder is not present'           
+                FriendlyName = 'Steps Recorder is not present'
                 Compliant    = [System.Boolean]($Results[14] -eq 'NotPresent')
-                Value        = [System.String]$Results[14]  
-                Name         = 'Steps Recorder is not present'                   
+                Value        = [System.String]$Results[14]
+                Name         = 'Steps Recorder is not present'
                 Category     = $CatName
                 Method       = 'Optional Windows Features'
             }
-    
+
             # Add the array of custom objects as a property to the $FinalMegaObject object outside the loop
             Add-Member -InputObject $FinalMegaObject -MemberType NoteProperty -Name $CatName -Value $NestedObjectArray
             #EndRegion Optional-Windows-Features-Category
 
             #Region Windows-Networking-Category
-            Write-Progress -Activity 'Validating Windows Networking Category' -Status 'Processing...' -PercentComplete 80
+            $CurrentMainStep++
+            Write-Progress -Id 0 -Activity 'Validating Windows Networking Category' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+
             [System.Object[]]$NestedObjectArray = @()
             [System.String]$CatName = 'Windows Networking'
-        
+
             # Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array as custom objects
             $NestedObjectArray += [PSCustomObject](Invoke-CategoryProcessing -catname $CatName -Method 'Group Policy')
-        
+
             # Check network location of all connections to see if they are public
-            $Condition = Get-NetConnectionProfile | ForEach-Object { $_.NetworkCategory -eq 'public' }
-            [System.Boolean]$IndividualItemResult = -not ($condition -contains $false) ? $True : $false 
-    
+            $Condition = Get-NetConnectionProfile | ForEach-Object -Process { $_.NetworkCategory -eq 'public' }
+            [System.Boolean]$IndividualItemResult = -NOT ($Condition -contains $false) ? $True : $false
+
             # Verify a Security setting using Cmdlet
             $NestedObjectArray += [PSCustomObject]@{
-                FriendlyName = 'Network Location of all connections set to Public'            
+                FriendlyName = 'Network Location of all connections set to Public'
                 Compliant    = $IndividualItemResult
                 Value        = $IndividualItemResult
-                Name         = 'Network Location of all connections set to Public'          
+                Name         = 'Network Location of all connections set to Public'
                 Category     = $CatName
                 Method       = 'Cmdlet'
             }
-    
+
             # Verify a Security setting using registry
             try {
                 $IndividualItemResult = [System.Boolean]((Get-ItemPropertyValue -Path 'Registry::HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\NetBT\Parameters' -Name 'EnableLMHOSTS' -ErrorAction SilentlyContinue) -eq '0')
             }
             catch {
-                # -ErrorAction SilentlyContinue wouldn't suppress the error if the path exists but property doesn't, so using try-catch 
+                # -ErrorAction SilentlyContinue wouldn't suppress the error if the path exists but property doesn't, so using try-catch
             }
             $NestedObjectArray += [PSCustomObject]@{
-                FriendlyName = 'Disable LMHOSTS lookup protocol on all network adapters'            
+                FriendlyName = 'Disable LMHOSTS lookup protocol on all network adapters'
                 Compliant    = $IndividualItemResult
-                Value        = $IndividualItemResult     
-                Name         = 'Disable LMHOSTS lookup protocol on all network adapters'       
+                Value        = $IndividualItemResult
+                Name         = 'Disable LMHOSTS lookup protocol on all network adapters'
                 Category     = $CatName
                 Method       = 'Registry Key'
             }
@@ -1118,7 +1149,7 @@ function Confirm-SystemCompliance {
             # Verify a Security Group Policy setting
             $IndividualItemResult = [System.Boolean]$($SecurityPoliciesIni.'Registry Values'['MACHINE\System\CurrentControlSet\Control\SecurePipeServers\Winreg\AllowedExactPaths\Machine'] -eq '7,') ? $True : $False
             $NestedObjectArray += [PSCustomObject]@{
-                FriendlyName = 'Network access: Remotely accessible registry paths'            
+                FriendlyName = 'Network access: Remotely accessible registry paths'
                 Compliant    = $IndividualItemResult
                 Value        = $IndividualItemResult
                 Name         = 'Network access: Remotely accessible registry paths'
@@ -1126,29 +1157,31 @@ function Confirm-SystemCompliance {
                 Method       = 'Security Group Policy'
             }
 
-            # Verify a Security Group Policy setting   
+            # Verify a Security Group Policy setting
             $IndividualItemResult = [System.Boolean]$($SecurityPoliciesIni.'Registry Values'['MACHINE\System\CurrentControlSet\Control\SecurePipeServers\Winreg\AllowedPaths\Machine'] -eq '7,') ? $True : $False
             $NestedObjectArray += [PSCustomObject]@{
-                FriendlyName = 'Network access: Remotely accessible registry paths and subpaths'            
+                FriendlyName = 'Network access: Remotely accessible registry paths and subpaths'
                 Compliant    = $IndividualItemResult
-                Value        = $IndividualItemResult        
-                Name         = 'Network access: Remotely accessible registry paths and subpaths'    
+                Value        = $IndividualItemResult
+                Name         = 'Network access: Remotely accessible registry paths and subpaths'
                 Category     = $CatName
                 Method       = 'Security Group Policy'
             }
-    
+
             # Add the array of custom objects as a property to the $FinalMegaObject object outside the loop
             Add-Member -InputObject $FinalMegaObject -MemberType NoteProperty -Name $CatName -Value $NestedObjectArray
             #EndRegion Windows-Networking-Category
-        
+
             #Region Miscellaneous-Category
-            Write-Progress -Activity 'Validating Miscellaneous Category' -Status 'Processing...' -PercentComplete 85
+            $CurrentMainStep++
+            Write-Progress -Id 0 -Activity 'Validating Miscellaneous Category' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+
             [System.Object[]]$NestedObjectArray = @()
             [System.String]$CatName = 'Miscellaneous'
-        
+
             # Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array as custom objects
-            $NestedObjectArray += [PSCustomObject](Invoke-CategoryProcessing -catname $CatName -Method 'Group Policy')   
-        
+            $NestedObjectArray += [PSCustomObject](Invoke-CategoryProcessing -catname $CatName -Method 'Group Policy')
+
             # Verify an Audit policy is enabled - only supports systems with English-US language
             if ((Get-Culture).name -eq 'en-US') {
                 $IndividualItemResult = [System.Boolean](((auditpol /get /subcategory:"Other Logon/Logoff Events" /r | ConvertFrom-Csv).'Inclusion Setting' -eq 'Success and Failure') ? $True : $False)
@@ -1162,12 +1195,12 @@ function Confirm-SystemCompliance {
                 }
             }
             else {
-                $global:TotalNumberOfTrueCompliantValues--
-            }            
+                $TotalNumberOfTrueCompliantValues--
+            }
 
-            # Checking if all user accounts are part of the Hyper-V security Group 
+            # Checking if all user accounts are part of the Hyper-V security Group
             # Get all the enabled user account SIDs
-            [System.Security.Principal.SecurityIdentifier[]]$EnabledUsers = (Get-LocalUser | Where-Object { $_.Enabled -eq 'True' }).SID
+            [System.Security.Principal.SecurityIdentifier[]]$EnabledUsers = (Get-LocalUser | Where-Object -FilterScript { $_.Enabled -eq 'True' }).SID
             # Get the members of the Hyper-V Administrators security group using their SID
             [System.Security.Principal.SecurityIdentifier[]]$GroupMembers = (Get-LocalGroupMember -SID 'S-1-5-32-578').SID
 
@@ -1183,107 +1216,113 @@ function Confirm-SystemCompliance {
 
             # Saving the results of the Hyper-V administrators members group to the array as an object
             $NestedObjectArray += [PSCustomObject]@{
-                FriendlyName = 'All users are part of the Hyper-V Administrators group'            
+                FriendlyName = 'All users are part of the Hyper-V Administrators group'
                 Compliant    = $IndividualItemResult
                 Value        = $IndividualItemResult
-                Name         = 'All users are part of the Hyper-V Administrators group'          
+                Name         = 'All users are part of the Hyper-V Administrators group'
                 Category     = $CatName
                 Method       = 'Cmdlet'
             }
 
             # Process items in Registry resources.csv file with "Registry Keys" origin and add them to the $NestedObjectArray array as custom objects
             $NestedObjectArray += [PSCustomObject](Invoke-CategoryProcessing -catname $CatName -Method 'Registry Keys')
-    
+
             # Add the array of custom objects as a property to the $FinalMegaObject object outside the loop
             Add-Member -InputObject $FinalMegaObject -MemberType NoteProperty -Name $CatName -Value $NestedObjectArray
             #EndRegion Miscellaneous-Category
-    
+
             #Region Windows-Update-Category
-            Write-Progress -Activity 'Validating Windows Update Category' -Status 'Processing...' -PercentComplete 90
+            $CurrentMainStep++
+            Write-Progress -Id 0 -Activity 'Validating Windows Update Category' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+
             [System.Object[]]$NestedObjectArray = @()
             [System.String]$CatName = 'Windows Update'
-        
+
             # Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array as custom objects
             $NestedObjectArray += [PSCustomObject](Invoke-CategoryProcessing -catname $CatName -Method 'Group Policy')
-    
+
             # Verify a Security setting using registry
             try {
                 $IndividualItemResult = [System.Boolean]((Get-ItemPropertyValue -Path 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings' -Name 'RestartNotificationsAllowed2' -ErrorAction SilentlyContinue) -eq '1')
             }
             catch {
-                # -ErrorAction SilentlyContinue wouldn't suppress the error if the path exists but property doesn't, so using try-catch 
+                # -ErrorAction SilentlyContinue wouldn't suppress the error if the path exists but property doesn't, so using try-catch
             }
             $NestedObjectArray += [PSCustomObject]@{
-                FriendlyName = 'Enable restart notification for Windows update'            
+                FriendlyName = 'Enable restart notification for Windows update'
                 Compliant    = $IndividualItemResult
-                Value        = $IndividualItemResult 
-                Name         = 'Enable restart notification for Windows update'           
+                Value        = $IndividualItemResult
+                Name         = 'Enable restart notification for Windows update'
                 Category     = $CatName
                 Method       = 'Registry Key'
             }
-    
+
             # Add the array of custom objects as a property to the $FinalMegaObject object outside the loop
             Add-Member -InputObject $FinalMegaObject -MemberType NoteProperty -Name $CatName -Value $NestedObjectArray
             #EndRegion Windows-Update-Category
-        
+
             #Region Edge-Category
-            Write-Progress -Activity 'Validating Edge Browser Category' -Status 'Processing...' -PercentComplete 95
+            $CurrentMainStep++
+            Write-Progress -Id 0 -Activity 'Validating Edge Browser Category' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+
             [System.Object[]]$NestedObjectArray = @()
-            [System.String]$CatName = 'Edge'  
-        
+            [System.String]$CatName = 'Edge'
+
             # Process items in Registry resources.csv file with "Registry Keys" origin and add them to the $NestedObjectArray array as custom objects
             $NestedObjectArray += [PSCustomObject](Invoke-CategoryProcessing -catname $CatName -Method 'Registry Keys')
-            
+
             # Add the array of custom objects as a property to the $FinalMegaObject object outside the loop
             Add-Member -InputObject $FinalMegaObject -MemberType NoteProperty -Name $CatName -Value $NestedObjectArray
             #EndRegion Edge-Category
-        
+
             #Region Non-Admin-Category
-            Write-Progress -Activity 'Validating Non-Admin Category' -Status 'Processing...' -PercentComplete 100
+            $CurrentMainStep++
+            Write-Progress -Id 0 -Activity 'Validating Non-Admin Category' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+
             [System.Object[]]$NestedObjectArray = @()
             [System.String]$CatName = 'Non-Admin'
-    
+
             # Process items in Registry resources.csv file with "Registry Keys" origin and add them to the $NestedObjectArray array as custom objects
             $NestedObjectArray += [PSCustomObject](Invoke-CategoryProcessing -catname $CatName -Method 'Registry Keys')
-    
+
             # Add the array of custom objects as a property to the $FinalMegaObject object outside the loop
             Add-Member -InputObject $FinalMegaObject -MemberType NoteProperty -Name $CatName -Value $NestedObjectArray
             #EndRegion Non-Admin-Category
-   
+
             if ($ExportToCSV) {
                 # An array to store the content of each category
                 $CsvOutPutFileContent = @()
                 # Append the categories in $FinalMegaObject to the array using += operator
                 $CsvOutPutFileContent += $FinalMegaObject.PSObject.Properties.Value
                 # Convert the array to a CSV file and store it in the current working directory
-                $CsvOutPutFileContent | ConvertTo-Csv | Out-File '.\Compliance Check Output.CSV' -Force
+                $CsvOutPutFileContent | ConvertTo-Csv | Out-File -FilePath '.\Compliance Check Output.CSV' -Force
             }
-        
+
             if ($ShowAsObjectsOnly) {
                 # return the main object that contains multiple nested objects
                 return $FinalMegaObject
             }
-            else {   
+            else {
 
                 #Region Colors
-                [scriptblock]$WritePlum = { Write-Output "$($PSStyle.Foreground.FromRGB(221,160,221))$($PSStyle.Reverse)$($args[0])$($PSStyle.Reset)" }
-                [scriptblock]$WriteOrchid = { Write-Output "$($PSStyle.Foreground.FromRGB(218,112,214))$($PSStyle.Reverse)$($args[0])$($PSStyle.Reset)" }
-                [scriptblock]$WriteFuchsia = { Write-Output "$($PSStyle.Foreground.FromRGB(255,0,255))$($PSStyle.Reverse)$($args[0])$($PSStyle.Reset)" }
-                [scriptblock]$WriteMediumOrchid = { Write-Output "$($PSStyle.Foreground.FromRGB(186,85,211))$($PSStyle.Reverse)$($args[0])$($PSStyle.Reset)" }
-                [scriptblock]$WriteMediumPurple = { Write-Output "$($PSStyle.Foreground.FromRGB(147,112,219))$($PSStyle.Reverse)$($args[0])$($PSStyle.Reset)" }
-                [scriptblock]$WriteBlueViolet = { Write-Output "$($PSStyle.Foreground.FromRGB(138,43,226))$($PSStyle.Reverse)$($args[0])$($PSStyle.Reset)" }
-                [scriptblock]$AndroidGreen = { Write-Output "$($PSStyle.Foreground.FromRGB(176,191,26))$($PSStyle.Reverse)$($args[0])$($PSStyle.Reset)" }
-                [scriptblock]$WritePink = { Write-Output "$($PSStyle.Foreground.FromRGB(255,192,203))$($PSStyle.Reverse)$($args[0])$($PSStyle.Reset)" }
-                [scriptblock]$WriteHotPink = { Write-Output "$($PSStyle.Foreground.FromRGB(255,105,180))$($PSStyle.Reverse)$($args[0])$($PSStyle.Reset)" }
-                [scriptblock]$WriteDeepPink = { Write-Output "$($PSStyle.Foreground.FromRGB(255,20,147))$($PSStyle.Reverse)$($args[0])$($PSStyle.Reset)" }
-                [scriptblock]$WriteMintGreen = { Write-Output "$($PSStyle.Foreground.FromRGB(152,255,152))$($PSStyle.Reverse)$($args[0])$($PSStyle.Reset)" }
-                [scriptblock]$WriteOrange = { Write-Output "$($PSStyle.Foreground.FromRGB(255,165,0))$($PSStyle.Reverse)$($args[0])$($PSStyle.Reset)" }            
-                [scriptblock]$WriteSkyBlue = { Write-Output "$($PSStyle.Foreground.FromRGB(135,206,235))$($PSStyle.Reverse)$($args[0])$($PSStyle.Reset)" }
-                [scriptblock]$Daffodil = { Write-Output "$($PSStyle.Foreground.FromRGB(255,255,49))$($PSStyle.Reverse)$($args[0])$($PSStyle.Reset)" }
+                [System.Management.Automation.ScriptBlock]$WritePlum = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(221,160,221))$($PSStyle.Reverse)$($Args[0])$($PSStyle.Reset)" }
+                [System.Management.Automation.ScriptBlock]$WriteOrchid = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(218,112,214))$($PSStyle.Reverse)$($Args[0])$($PSStyle.Reset)" }
+                [System.Management.Automation.ScriptBlock]$WriteFuchsia = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(255,0,255))$($PSStyle.Reverse)$($Args[0])$($PSStyle.Reset)" }
+                [System.Management.Automation.ScriptBlock]$WriteMediumOrchid = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(186,85,211))$($PSStyle.Reverse)$($Args[0])$($PSStyle.Reset)" }
+                [System.Management.Automation.ScriptBlock]$WriteMediumPurple = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(147,112,219))$($PSStyle.Reverse)$($Args[0])$($PSStyle.Reset)" }
+                [System.Management.Automation.ScriptBlock]$WriteBlueViolet = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(138,43,226))$($PSStyle.Reverse)$($Args[0])$($PSStyle.Reset)" }
+                [System.Management.Automation.ScriptBlock]$AndroidGreen = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(176,191,26))$($PSStyle.Reverse)$($Args[0])$($PSStyle.Reset)" }
+                [System.Management.Automation.ScriptBlock]$WritePink = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(255,192,203))$($PSStyle.Reverse)$($Args[0])$($PSStyle.Reset)" }
+                [System.Management.Automation.ScriptBlock]$WriteHotPink = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(255,105,180))$($PSStyle.Reverse)$($Args[0])$($PSStyle.Reset)" }
+                [System.Management.Automation.ScriptBlock]$WriteDeepPink = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(255,20,147))$($PSStyle.Reverse)$($Args[0])$($PSStyle.Reset)" }
+                [System.Management.Automation.ScriptBlock]$WriteMintGreen = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(152,255,152))$($PSStyle.Reverse)$($Args[0])$($PSStyle.Reset)" }
+                [System.Management.Automation.ScriptBlock]$WriteOrange = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(255,165,0))$($PSStyle.Reverse)$($Args[0])$($PSStyle.Reset)" }
+                [System.Management.Automation.ScriptBlock]$WriteSkyBlue = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(135,206,235))$($PSStyle.Reverse)$($Args[0])$($PSStyle.Reset)" }
+                [System.Management.Automation.ScriptBlock]$Daffodil = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(255,255,49))$($PSStyle.Reverse)$($Args[0])$($PSStyle.Reset)" }
 
-                [scriptblock]$WriteRainbow1 = { 
-                    $text = $args[0]
-                    $colors = @(
+                [System.Management.Automation.ScriptBlock]$WriteRainbow1 = {
+                    $Text = $Args[0]
+                    [System.Drawing.Color[]]$Colors = @(
                         [System.Drawing.Color]::Pink,
                         [System.Drawing.Color]::HotPink,
                         [System.Drawing.Color]::SkyBlue,
@@ -1294,16 +1333,16 @@ function Confirm-SystemCompliance {
                     )
 
                     $Output = ''
-                    for ($i = 0; $i -lt $text.Length; $i++) {
-                        $color = $colors[$i % $colors.Length]
-                        $Output += "$($PSStyle.Foreground.FromRGB($color.R, $color.G, $color.B))$($text[$i])$($PSStyle.Reset)"
+                    for ($i = 0; $i -lt $Text.Length; $i++) {
+                        $Color = $Colors[$i % $Colors.Length]
+                        $Output += "$($PSStyle.Foreground.FromRGB($Color.R, $Color.G, $Color.B))$($Text[$i])$($PSStyle.Reset)"
                     }
-                    Write-Output $Output
-                }          
-              
-                [scriptblock]$WriteRainbow2 = { 
-                    $text = $args[0]
-                    [System.Object[]]$colors = @(
+                    Write-Output -InputObject $Output
+                }
+
+                [System.Management.Automation.ScriptBlock]$WriteRainbow2 = {
+                    $Text = $Args[0]
+                    [System.Drawing.Color[]]$Colors = @(
                         [System.Drawing.Color]::Pink,
                         [System.Drawing.Color]::HotPink,
                         [System.Drawing.Color]::SkyBlue,
@@ -1316,145 +1355,145 @@ function Confirm-SystemCompliance {
                         [System.Drawing.Color]::Plum,
                         [System.Drawing.Color]::Gold
                     )
-              
+
                     [System.String]$Output = ''
-                    for ($i = 0; $i -lt $text.Length; $i++) {
-                        $color = $colors[$i % $colors.Length]
-                        $Output += "$($PSStyle.Foreground.FromRGB($color.R, $color.G, $color.B))$($text[$i])$($PSStyle.Reset)"
+                    for ($i = 0; $i -lt $Text.Length; $i++) {
+                        $Color = $Colors[$i % $Colors.Length]
+                        $Output += "$($PSStyle.Foreground.FromRGB($Color.R, $Color.G, $Color.B))$($Text[$i])$($PSStyle.Reset)"
                     }
-                    Write-Output $Output
+                    Write-Output -InputObject $Output
                 }
                 #Endregion Colors
-    
+
                 # Show all properties in list
                 if ($DetailedDisplay) {
 
                     # Setting the List Format Accent the same color as the category's title
-                    $PSStyle.Formatting.FormatAccent = "$($PSStyle.Foreground.FromRGB(221,160,221))"   
+                    $PSStyle.Formatting.FormatAccent = "$($PSStyle.Foreground.FromRGB(221,160,221))"
                     & $WritePlum "`n-------------Microsoft Defender Category-------------"
                     $FinalMegaObject.'Microsoft Defender' | Format-List -Property FriendlyName, @{
                         Label      = 'Compliant'
-                        Expression = 
+                        Expression =
                         { switch ($_.Compliant) {
-                                { $_ -eq $true } { $color = "$($PSStyle.Foreground.FromRGB(221,160,221))"; break } # Use PSStyle to set the color
-                                { $_ -eq $false } { $color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
-                                { $_ -eq 'N/A' } { $color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
+                                { $_ -eq $true } { $Color = "$($PSStyle.Foreground.FromRGB(221,160,221))"; break } # Use PSStyle to set the color
+                                { $_ -eq $false } { $Color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
+                                { $_ -eq 'N/A' } { $Color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
                             }
-                            "$color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                            "$Color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
                         }
-                  
+
                     }, Value, Name, Category, Method
-    
+
                     # Setting the List Format Accent the same color as the category's title
                     $PSStyle.Formatting.FormatAccent = "$($PSStyle.Foreground.FromRGB(218,112,214))"
                     & $WriteOrchid "`n-------------Attack Surface Reduction Rules Category-------------"
                     $FinalMegaObject.ASR | Format-List -Property FriendlyName, @{
                         Label      = 'Compliant'
-                        Expression = 
+                        Expression =
                         { switch ($_.Compliant) {
-                                { $_ -eq $true } { $color = "$($PSStyle.Foreground.FromRGB(218,112,214))"; break } # Use PSStyle to set the color
-                                { $_ -eq $false } { $color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
-                                { $_ -eq 'N/A' } { $color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
+                                { $_ -eq $true } { $Color = "$($PSStyle.Foreground.FromRGB(218,112,214))"; break } # Use PSStyle to set the color
+                                { $_ -eq $false } { $Color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
+                                { $_ -eq 'N/A' } { $Color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
                             }
-                            "$color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                            "$Color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
                         }
-                  
+
                     }, Value, Name, Category, Method
-    
+
                     # Setting the List Format Accent the same color as the category's title
                     $PSStyle.Formatting.FormatAccent = "$($PSStyle.Foreground.FromRGB(255,0,255))"
                     & $WriteFuchsia "`n-------------Bitlocker Category-------------"
                     $FinalMegaObject.Bitlocker | Format-List -Property FriendlyName, @{
                         Label      = 'Compliant'
-                        Expression = 
+                        Expression =
                         { switch ($_.Compliant) {
-                                { $_ -eq $true } { $color = "$($PSStyle.Foreground.FromRGB(255,0,255))"; break } # Use PSStyle to set the color
-                                { $_ -eq $false } { $color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
-                                { $_ -eq 'N/A' } { $color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
+                                { $_ -eq $true } { $Color = "$($PSStyle.Foreground.FromRGB(255,0,255))"; break } # Use PSStyle to set the color
+                                { $_ -eq $false } { $Color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
+                                { $_ -eq 'N/A' } { $Color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
                             }
-                            "$color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                            "$Color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
                         }
-                  
+
                     }, Value, Name, Category, Method
-    
+
                     # Setting the List Format Accent the same color as the category's title
                     $PSStyle.Formatting.FormatAccent = "$($PSStyle.Foreground.FromRGB(186,85,211))"
                     & $WriteMediumOrchid "`n-------------TLS Category-------------"
                     $FinalMegaObject.TLS | Format-List -Property FriendlyName, @{
                         Label      = 'Compliant'
-                        Expression = 
+                        Expression =
                         { switch ($_.Compliant) {
-                                { $_ -eq $true } { $color = "$($PSStyle.Foreground.FromRGB(186,85,211))"; break } # Use PSStyle to set the color
-                                { $_ -eq $false } { $color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
-                                { $_ -eq 'N/A' } { $color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
+                                { $_ -eq $true } { $Color = "$($PSStyle.Foreground.FromRGB(186,85,211))"; break } # Use PSStyle to set the color
+                                { $_ -eq $false } { $Color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
+                                { $_ -eq 'N/A' } { $Color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
                             }
-                            "$color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                            "$Color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
                         }
-                  
+
                     }, Value, Name, Category, Method
-    
+
                     # Setting the List Format Accent the same color as the category's title
                     $PSStyle.Formatting.FormatAccent = "$($PSStyle.Foreground.FromRGB(147,112,219))"
                     & $WriteMediumPurple "`n-------------Lock Screen Category-------------"
                     $FinalMegaObject.LockScreen | Format-List -Property FriendlyName, @{
                         Label      = 'Compliant'
-                        Expression = 
+                        Expression =
                         { switch ($_.Compliant) {
-                                { $_ -eq $true } { $color = "$($PSStyle.Foreground.FromRGB(147,112,219))"; break } # Use PSStyle to set the color
-                                { $_ -eq $false } { $color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
-                                { $_ -eq 'N/A' } { $color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
+                                { $_ -eq $true } { $Color = "$($PSStyle.Foreground.FromRGB(147,112,219))"; break } # Use PSStyle to set the color
+                                { $_ -eq $false } { $Color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
+                                { $_ -eq 'N/A' } { $Color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
                             }
-                            "$color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                            "$Color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
                         }
-                  
+
                     }, Value, Name, Category, Method
-    
+
                     # Setting the List Format Accent the same color as the category's title
                     $PSStyle.Formatting.FormatAccent = "$($PSStyle.Foreground.FromRGB(138,43,226))"
                     & $WriteBlueViolet "`n-------------User Account Control Category-------------"
                     $FinalMegaObject.UAC | Format-List -Property FriendlyName, @{
                         Label      = 'Compliant'
-                        Expression = 
+                        Expression =
                         { switch ($_.Compliant) {
-                                { $_ -eq $true } { $color = "$($PSStyle.Foreground.FromRGB(138,43,226))"; break } # Use PSStyle to set the color
-                                { $_ -eq $false } { $color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
-                                { $_ -eq 'N/A' } { $color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
+                                { $_ -eq $true } { $Color = "$($PSStyle.Foreground.FromRGB(138,43,226))"; break } # Use PSStyle to set the color
+                                { $_ -eq $false } { $Color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
+                                { $_ -eq 'N/A' } { $Color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
                             }
-                            "$color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                            "$Color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
                         }
-                  
+
                     }, Value, Name, Category, Method
-    
+
                     # Setting the List Format Accent the same color as the category's title
                     $PSStyle.Formatting.FormatAccent = "$($PSStyle.Foreground.FromRGB(176,191,26))"
                     & $AndroidGreen "`n-------------Device Guard Category-------------"
                     $FinalMegaObject.'Device Guard' | Format-List -Property FriendlyName, @{
                         Label      = 'Compliant'
-                        Expression = 
+                        Expression =
                         { switch ($_.Compliant) {
-                                { $_ -eq $true } { $color = "$($PSStyle.Foreground.FromRGB(176,191,26))"; break } # Use PSStyle to set the color
-                                { $_ -eq $false } { $color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
-                                { $_ -eq 'N/A' } { $color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
+                                { $_ -eq $true } { $Color = "$($PSStyle.Foreground.FromRGB(176,191,26))"; break } # Use PSStyle to set the color
+                                { $_ -eq $false } { $Color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
+                                { $_ -eq 'N/A' } { $Color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
                             }
-                            "$color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                            "$Color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
                         }
-                  
+
                     }, Value, Name, Category, Method
-    
+
                     # Setting the List Format Accent the same color as the category's title
                     $PSStyle.Formatting.FormatAccent = "$($PSStyle.Foreground.FromRGB(255,192,203))"
                     & $WritePink "`n-------------Windows Firewall Category-------------"
                     $FinalMegaObject.'Windows Firewall' | Format-List -Property FriendlyName, @{
                         Label      = 'Compliant'
-                        Expression = 
+                        Expression =
                         { switch ($_.Compliant) {
-                                { $_ -eq $true } { $color = "$($PSStyle.Foreground.FromRGB(255,192,203))"; break } # Use PSStyle to set the color
-                                { $_ -eq $false } { $color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
-                                { $_ -eq 'N/A' } { $color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
+                                { $_ -eq $true } { $Color = "$($PSStyle.Foreground.FromRGB(255,192,203))"; break } # Use PSStyle to set the color
+                                { $_ -eq $false } { $Color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
+                                { $_ -eq 'N/A' } { $Color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
                             }
-                            "$color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                            "$Color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
                         }
-                  
+
                     }, Value, Name, Category, Method
 
                     # Setting the List Format Accent the same color as the category's title
@@ -1462,361 +1501,360 @@ function Confirm-SystemCompliance {
                     & $WriteSkyBlue "`n-------------Optional Windows Features Category-------------"
                     $FinalMegaObject.'Optional Windows Features' | Format-List -Property FriendlyName, @{
                         Label      = 'Compliant'
-                        Expression = 
+                        Expression =
                         { switch ($_.Compliant) {
-                                { $_ -eq $true } { $color = "$($PSStyle.Foreground.FromRGB(135,206,235))"; break } # Use PSStyle to set the color
-                                { $_ -eq $false } { $color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
-                                { $_ -eq 'N/A' } { $color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
+                                { $_ -eq $true } { $Color = "$($PSStyle.Foreground.FromRGB(135,206,235))"; break } # Use PSStyle to set the color
+                                { $_ -eq $false } { $Color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
+                                { $_ -eq 'N/A' } { $Color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
                             }
-                            "$color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                            "$Color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
                         }
-                  
+
                     }, Value, Name, Category, Method
-    
+
                     # Setting the List Format Accent the same color as the category's title
                     $PSStyle.Formatting.FormatAccent = "$($PSStyle.Foreground.FromRGB(255,105,180))"
                     & $WriteHotPink "`n-------------Windows Networking Category-------------"
                     $FinalMegaObject.'Windows Networking' | Format-List -Property FriendlyName, @{
                         Label      = 'Compliant'
-                        Expression = 
+                        Expression =
                         { switch ($_.Compliant) {
-                                { $_ -eq $true } { $color = "$($PSStyle.Foreground.FromRGB(255,105,180))"; break } # Use PSStyle to set the color
-                                { $_ -eq $false } { $color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
-                                { $_ -eq 'N/A' } { $color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
+                                { $_ -eq $true } { $Color = "$($PSStyle.Foreground.FromRGB(255,105,180))"; break } # Use PSStyle to set the color
+                                { $_ -eq $false } { $Color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
+                                { $_ -eq 'N/A' } { $Color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
                             }
-                            "$color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                            "$Color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
                         }
-                  
+
                     }, Value, Name, Category, Method
-    
+
                     # Setting the List Format Accent the same color as the category's title
                     $PSStyle.Formatting.FormatAccent = "$($PSStyle.Foreground.FromRGB(255,20,147))"
                     & $WriteDeepPink "`n-------------Miscellaneous Category-------------"
                     $FinalMegaObject.Miscellaneous | Format-List -Property FriendlyName, @{
                         Label      = 'Compliant'
-                        Expression = 
+                        Expression =
                         { switch ($_.Compliant) {
-                                { $_ -eq $true } { $color = "$($PSStyle.Foreground.FromRGB(255,20,147))"; break } # Use PSStyle to set the color
-                                { $_ -eq $false } { $color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
-                                { $_ -eq 'N/A' } { $color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
+                                { $_ -eq $true } { $Color = "$($PSStyle.Foreground.FromRGB(255,20,147))"; break } # Use PSStyle to set the color
+                                { $_ -eq $false } { $Color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
+                                { $_ -eq 'N/A' } { $Color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
                             }
-                            "$color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                            "$Color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
                         }
-                  
+
                     }, Value, Name, Category, Method
-    
+
                     # Setting the List Format Accent the same color as the category's title
                     $PSStyle.Formatting.FormatAccent = "$($PSStyle.Foreground.FromRGB(152,255,152))"
                     & $WriteMintGreen "`n-------------Windows Update Category-------------"
                     $FinalMegaObject.'Windows Update' | Format-List -Property FriendlyName, @{
                         Label      = 'Compliant'
-                        Expression = 
+                        Expression =
                         { switch ($_.Compliant) {
-                                { $_ -eq $true } { $color = "$($PSStyle.Foreground.FromRGB(152,255,152))"; break } # Use PSStyle to set the color
-                                { $_ -eq $false } { $color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
-                                { $_ -eq 'N/A' } { $color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
+                                { $_ -eq $true } { $Color = "$($PSStyle.Foreground.FromRGB(152,255,152))"; break } # Use PSStyle to set the color
+                                { $_ -eq $false } { $Color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
+                                { $_ -eq 'N/A' } { $Color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
                             }
-                            "$color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                            "$Color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
                         }
-                  
+
                     }, Value, Name, Category, Method
-    
+
                     # Setting the List Format Accent the same color as the category's title
                     $PSStyle.Formatting.FormatAccent = "$($PSStyle.Foreground.FromRGB(255,165,0))"
                     & $WriteOrange "`n-------------Microsoft Edge Category-------------"
                     $FinalMegaObject.Edge | Format-List -Property FriendlyName, @{
                         Label      = 'Compliant'
-                        Expression = 
+                        Expression =
                         { switch ($_.Compliant) {
-                                { $_ -eq $true } { $color = "$($PSStyle.Foreground.FromRGB(255,165,0))"; break } # Use PSStyle to set the color
-                                { $_ -eq $false } { $color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
-                                { $_ -eq 'N/A' } { $color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
+                                { $_ -eq $true } { $Color = "$($PSStyle.Foreground.FromRGB(255,165,0))"; break } # Use PSStyle to set the color
+                                { $_ -eq $false } { $Color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
+                                { $_ -eq 'N/A' } { $Color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
                             }
-                            "$color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                            "$Color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
                         }
-                  
+
                     }, Value, Name, Category, Method
-    
+
                     # Setting the List Format Accent the same color as the category's title
                     $PSStyle.Formatting.FormatAccent = "$($PSStyle.Foreground.FromRGB(255,255,49))"
                     & $Daffodil "`n-------------Non-Admin Category-------------"
                     $FinalMegaObject.'Non-Admin' | Format-List -Property FriendlyName, @{
                         Label      = 'Compliant'
-                        Expression = 
+                        Expression =
                         { switch ($_.Compliant) {
-                                { $_ -eq $true } { $color = "$($PSStyle.Foreground.FromRGB(255,255,49))"; break } # Use PSStyle to set the color
-                                { $_ -eq $false } { $color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
-                                { $_ -eq 'N/A' } { $color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
+                                { $_ -eq $true } { $Color = "$($PSStyle.Foreground.FromRGB(255,255,49))"; break } # Use PSStyle to set the color
+                                { $_ -eq $false } { $Color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
+                                { $_ -eq 'N/A' } { $Color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
                             }
-                            "$color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                            "$Color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
                         }
-                  
+
                     }, Value, Name, Category, Method
                 }
 
                 # Show properties that matter in a table
                 else {
-                
+
                     # Setting the Table header the same color as the category's title
-                    $PSStyle.Formatting.TableHeader = "$($PSStyle.Foreground.FromRGB(221,160,221))"                
+                    $PSStyle.Formatting.TableHeader = "$($PSStyle.Foreground.FromRGB(221,160,221))"
                     & $WritePlum "`n-------------Microsoft Defender Category-------------"
-                    $FinalMegaObject.'Microsoft Defender' | Format-Table -Property FriendlyName, 
+                    $FinalMegaObject.'Microsoft Defender' | Format-Table -Property FriendlyName,
                     @{
                         Label      = 'Compliant'
-                        Expression = 
+                        Expression =
                         { switch ($_.Compliant) {
-                                { $_ -eq $true } { $color = "$($PSStyle.Foreground.FromRGB(221,160,221))"; break } # Use PSStyle to set the color
-                                { $_ -eq $false } { $color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
-                                { $_ -eq 'N/A' } { $color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
+                                { $_ -eq $true } { $Color = "$($PSStyle.Foreground.FromRGB(221,160,221))"; break } # Use PSStyle to set the color
+                                { $_ -eq $false } { $Color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
+                                { $_ -eq 'N/A' } { $Color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
                             }
-                            "$color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                            "$Color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
                         }
-                  
+
                     } , Value -AutoSize
- 
+
                     # Setting the Table header the same color as the category's title
                     $PSStyle.Formatting.TableHeader = "$($PSStyle.Foreground.FromRGB(218,112,214))"
                     & $WriteOrchid "`n-------------Attack Surface Reduction Rules Category-------------"
-                    $FinalMegaObject.ASR | Format-Table -Property FriendlyName, 
+                    $FinalMegaObject.ASR | Format-Table -Property FriendlyName,
                     @{
                         Label      = 'Compliant'
-                        Expression = 
+                        Expression =
                         { switch ($_.Compliant) {
-                                { $_ -eq $true } { $color = "$($PSStyle.Foreground.FromRGB(218,112,214))"; break } # Use PSStyle to set the color
-                                { $_ -eq $false } { $color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
-                                { $_ -eq 'N/A' } { $color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
+                                { $_ -eq $true } { $Color = "$($PSStyle.Foreground.FromRGB(218,112,214))"; break } # Use PSStyle to set the color
+                                { $_ -eq $false } { $Color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
+                                { $_ -eq 'N/A' } { $Color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
                             }
-                            "$color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                            "$Color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
                         }
-                  
-                    } , Value -AutoSize 
-        
+
+                    } , Value -AutoSize
+
                     # Setting the Table header the same color as the category's title
                     $PSStyle.Formatting.TableHeader = "$($PSStyle.Foreground.FromRGB(255,0,255))"
                     & $WriteFuchsia "`n-------------Bitlocker Category-------------"
-                    $FinalMegaObject.Bitlocker | Format-Table -Property FriendlyName, 
+                    $FinalMegaObject.Bitlocker | Format-Table -Property FriendlyName,
                     @{
                         Label      = 'Compliant'
-                        Expression = 
+                        Expression =
                         { switch ($_.Compliant) {
-                                { $_ -eq $true } { $color = "$($PSStyle.Foreground.FromRGB(255,0,255))"; break } # Use PSStyle to set the color
-                                { $_ -eq $false } { $color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
-                                { $_ -eq 'N/A' } { $color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
+                                { $_ -eq $true } { $Color = "$($PSStyle.Foreground.FromRGB(255,0,255))"; break } # Use PSStyle to set the color
+                                { $_ -eq $false } { $Color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
+                                { $_ -eq 'N/A' } { $Color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
                             }
-                            "$color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                            "$Color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
                         }
-                  
-                    } , Value -AutoSize 
-        
+
+                    } , Value -AutoSize
+
                     # Setting the Table header the same color as the category's title
                     $PSStyle.Formatting.TableHeader = "$($PSStyle.Foreground.FromRGB(186,85,211))"
                     & $WriteMediumOrchid "`n-------------TLS Category-------------"
-                    $FinalMegaObject.TLS | Format-Table -Property FriendlyName, 
+                    $FinalMegaObject.TLS | Format-Table -Property FriendlyName,
                     @{
                         Label      = 'Compliant'
-                        Expression = 
+                        Expression =
                         { switch ($_.Compliant) {
-                                { $_ -eq $true } { $color = "$($PSStyle.Foreground.FromRGB(186,85,211))"; break } # Use PSStyle to set the color
-                                { $_ -eq $false } { $color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
-                                { $_ -eq 'N/A' } { $color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
+                                { $_ -eq $true } { $Color = "$($PSStyle.Foreground.FromRGB(186,85,211))"; break } # Use PSStyle to set the color
+                                { $_ -eq $false } { $Color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
+                                { $_ -eq 'N/A' } { $Color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
                             }
-                            "$color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                            "$Color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
                         }
-                  
-                    } , Value -AutoSize 
-        
+
+                    } , Value -AutoSize
+
                     # Setting the Table header the same color as the category's title
                     $PSStyle.Formatting.TableHeader = "$($PSStyle.Foreground.FromRGB(147,112,219))"
                     & $WriteMediumPurple "`n-------------Lock Screen Category-------------"
-                    $FinalMegaObject.LockScreen | Format-Table -Property FriendlyName, 
+                    $FinalMegaObject.LockScreen | Format-Table -Property FriendlyName,
                     @{
                         Label      = 'Compliant'
-                        Expression = 
+                        Expression =
                         { switch ($_.Compliant) {
-                                { $_ -eq $true } { $color = "$($PSStyle.Foreground.FromRGB(147,112,219))"; break } # Use PSStyle to set the color
-                                { $_ -eq $false } { $color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
-                                { $_ -eq 'N/A' } { $color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
+                                { $_ -eq $true } { $Color = "$($PSStyle.Foreground.FromRGB(147,112,219))"; break } # Use PSStyle to set the color
+                                { $_ -eq $false } { $Color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
+                                { $_ -eq 'N/A' } { $Color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
                             }
-                            "$color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                            "$Color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
                         }
-                  
-                    } , Value -AutoSize 
-        
+
+                    } , Value -AutoSize
+
                     # Setting the Table header the same color as the category's title
                     $PSStyle.Formatting.TableHeader = "$($PSStyle.Foreground.FromRGB(138,43,226))"
                     & $WriteBlueViolet "`n-------------User Account Control Category-------------"
-                    $FinalMegaObject.UAC | Format-Table -Property FriendlyName, 
+                    $FinalMegaObject.UAC | Format-Table -Property FriendlyName,
                     @{
                         Label      = 'Compliant'
-                        Expression = 
+                        Expression =
                         { switch ($_.Compliant) {
-                                { $_ -eq $true } { $color = "$($PSStyle.Foreground.FromRGB(138,43,226))"; break } # Use PSStyle to set the color
-                                { $_ -eq $false } { $color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
-                                { $_ -eq 'N/A' } { $color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
+                                { $_ -eq $true } { $Color = "$($PSStyle.Foreground.FromRGB(138,43,226))"; break } # Use PSStyle to set the color
+                                { $_ -eq $false } { $Color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
+                                { $_ -eq 'N/A' } { $Color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
                             }
-                            "$color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                            "$Color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
                         }
-                  
-                    } , Value -AutoSize 
-        
+
+                    } , Value -AutoSize
+
                     # Setting the Table header the same color as the category's title
                     $PSStyle.Formatting.TableHeader = "$($PSStyle.Foreground.FromRGB(176,191,26))"
                     & $AndroidGreen "`n-------------Device Guard Category-------------"
-                    $FinalMegaObject.'Device Guard' | Format-Table -Property FriendlyName, 
+                    $FinalMegaObject.'Device Guard' | Format-Table -Property FriendlyName,
                     @{
                         Label      = 'Compliant'
-                        Expression = 
+                        Expression =
                         { switch ($_.Compliant) {
-                                { $_ -eq $true } { $color = "$($PSStyle.Foreground.FromRGB(176,191,26))"; break } # Use PSStyle to set the color
-                                { $_ -eq $false } { $color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
-                                { $_ -eq 'N/A' } { $color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
+                                { $_ -eq $true } { $Color = "$($PSStyle.Foreground.FromRGB(176,191,26))"; break } # Use PSStyle to set the color
+                                { $_ -eq $false } { $Color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
+                                { $_ -eq 'N/A' } { $Color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
                             }
-                            "$color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                            "$Color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
                         }
-                  
-                    } , Value -AutoSize 
-        
+
+                    } , Value -AutoSize
+
                     # Setting the Table header the same color as the category's title
                     $PSStyle.Formatting.TableHeader = "$($PSStyle.Foreground.FromRGB(255,192,203))"
                     & $WritePink "`n-------------Windows Firewall Category-------------"
-                    $FinalMegaObject.'Windows Firewall' | Format-Table -Property FriendlyName, 
+                    $FinalMegaObject.'Windows Firewall' | Format-Table -Property FriendlyName,
                     @{
                         Label      = 'Compliant'
-                        Expression = 
+                        Expression =
                         { switch ($_.Compliant) {
-                                { $_ -eq $true } { $color = "$($PSStyle.Foreground.FromRGB(255,192,203))"; break } # Use PSStyle to set the color
-                                { $_ -eq $false } { $color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
-                                { $_ -eq 'N/A' } { $color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
+                                { $_ -eq $true } { $Color = "$($PSStyle.Foreground.FromRGB(255,192,203))"; break } # Use PSStyle to set the color
+                                { $_ -eq $false } { $Color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
+                                { $_ -eq 'N/A' } { $Color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
                             }
-                            "$color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                            "$Color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
                         }
-                  
-                    } , Value -AutoSize 
-    
+
+                    } , Value -AutoSize
+
                     # Setting the Table header the same color as the category's title
                     $PSStyle.Formatting.TableHeader = "$($PSStyle.Foreground.FromRGB(135,206,235))"
                     & $WriteSkyBlue "`n-------------Optional Windows Features Category-------------"
-                    $FinalMegaObject.'Optional Windows Features' | Format-Table -Property FriendlyName, 
+                    $FinalMegaObject.'Optional Windows Features' | Format-Table -Property FriendlyName,
                     @{
                         Label      = 'Compliant'
-                        Expression = 
+                        Expression =
                         { switch ($_.Compliant) {
-                                { $_ -eq $true } { $color = "$($PSStyle.Foreground.FromRGB(135,206,235))"; break } # Use PSStyle to set the color
-                                { $_ -eq $false } { $color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
-                                { $_ -eq 'N/A' } { $color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
+                                { $_ -eq $true } { $Color = "$($PSStyle.Foreground.FromRGB(135,206,235))"; break } # Use PSStyle to set the color
+                                { $_ -eq $false } { $Color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
+                                { $_ -eq 'N/A' } { $Color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
                             }
-                            "$color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                            "$Color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
                         }
-                  
-                    } , Value -AutoSize 
-        
+
+                    } , Value -AutoSize
+
                     # Setting the Table header the same color as the category's title
                     $PSStyle.Formatting.TableHeader = "$($PSStyle.Foreground.FromRGB(255,105,180))"
                     & $WriteHotPink "`n-------------Windows Networking Category-------------"
-                    $FinalMegaObject.'Windows Networking' | Format-Table -Property FriendlyName, 
+                    $FinalMegaObject.'Windows Networking' | Format-Table -Property FriendlyName,
                     @{
                         Label      = 'Compliant'
-                        Expression = 
+                        Expression =
                         { switch ($_.Compliant) {
-                                { $_ -eq $true } { $color = "$($PSStyle.Foreground.FromRGB(255,105,180))"; break } # Use PSStyle to set the color
-                                { $_ -eq $false } { $color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
-                                { $_ -eq 'N/A' } { $color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
+                                { $_ -eq $true } { $Color = "$($PSStyle.Foreground.FromRGB(255,105,180))"; break } # Use PSStyle to set the color
+                                { $_ -eq $false } { $Color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
+                                { $_ -eq 'N/A' } { $Color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
                             }
-                            "$color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                            "$Color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
                         }
-                  
-                    } , Value -AutoSize 
-        
+
+                    } , Value -AutoSize
+
                     # Setting the Table header the same color as the category's title
                     $PSStyle.Formatting.TableHeader = "$($PSStyle.Foreground.FromRGB(255,20,147))"
                     & $WriteDeepPink "`n-------------Miscellaneous Category-------------"
-                    $FinalMegaObject.Miscellaneous | Format-Table -Property FriendlyName, 
+                    $FinalMegaObject.Miscellaneous | Format-Table -Property FriendlyName,
                     @{
                         Label      = 'Compliant'
-                        Expression = 
+                        Expression =
                         { switch ($_.Compliant) {
-                                { $_ -eq $true } { $color = "$($PSStyle.Foreground.FromRGB(255,20,147))"; break } # Use PSStyle to set the color
-                                { $_ -eq $false } { $color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
-                                { $_ -eq 'N/A' } { $color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
+                                { $_ -eq $true } { $Color = "$($PSStyle.Foreground.FromRGB(255,20,147))"; break } # Use PSStyle to set the color
+                                { $_ -eq $false } { $Color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
+                                { $_ -eq 'N/A' } { $Color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
                             }
-                            "$color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                            "$Color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
                         }
-                  
-                    } , Value -AutoSize 
-        
+
+                    } , Value -AutoSize
+
                     # Setting the Table header the same color as the category's title
                     $PSStyle.Formatting.TableHeader = "$($PSStyle.Foreground.FromRGB(152,255,152))"
                     & $WriteMintGreen "`n-------------Windows Update Category-------------"
-                    $FinalMegaObject.'Windows Update' | Format-Table -Property FriendlyName, 
+                    $FinalMegaObject.'Windows Update' | Format-Table -Property FriendlyName,
                     @{
                         Label      = 'Compliant'
-                        Expression = 
+                        Expression =
                         { switch ($_.Compliant) {
-                                { $_ -eq $true } { $color = "$($PSStyle.Foreground.FromRGB(152,255,152))"; break } # Use PSStyle to set the color
-                                { $_ -eq $false } { $color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
-                                { $_ -eq 'N/A' } { $color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
+                                { $_ -eq $true } { $Color = "$($PSStyle.Foreground.FromRGB(152,255,152))"; break } # Use PSStyle to set the color
+                                { $_ -eq $false } { $Color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
+                                { $_ -eq 'N/A' } { $Color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
                             }
-                            "$color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                            "$Color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
                         }
-                  
-                    } , Value -AutoSize 
-        
+
+                    } , Value -AutoSize
+
                     # Setting the Table header the same color as the category's title
                     $PSStyle.Formatting.TableHeader = "$($PSStyle.Foreground.FromRGB(255,165,0))"
                     & $WriteOrange "`n-------------Microsoft Edge Category-------------"
-                    $FinalMegaObject.Edge | Format-Table -Property FriendlyName, 
+                    $FinalMegaObject.Edge | Format-Table -Property FriendlyName,
                     @{
                         Label      = 'Compliant'
-                        Expression = 
+                        Expression =
                         { switch ($_.Compliant) {
-                                { $_ -eq $true } { $color = "$($PSStyle.Foreground.FromRGB(255,165,0))"; break } # Use PSStyle to set the color
-                                { $_ -eq $false } { $color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
-                                { $_ -eq 'N/A' } { $color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
+                                { $_ -eq $true } { $Color = "$($PSStyle.Foreground.FromRGB(255,165,0))"; break } # Use PSStyle to set the color
+                                { $_ -eq $false } { $Color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
+                                { $_ -eq 'N/A' } { $Color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
                             }
-                            "$color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                            "$Color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
                         }
-                  
-                    } , Value -AutoSize 
-        
+
+                    } , Value -AutoSize
+
                     # Setting the Table header the same color as the category's title
                     $PSStyle.Formatting.TableHeader = "$($PSStyle.Foreground.FromRGB(255,255,49))"
                     & $Daffodil "`n-------------Non-Admin Category-------------"
-                    $FinalMegaObject.'Non-Admin' | Format-Table -Property FriendlyName, 
+                    $FinalMegaObject.'Non-Admin' | Format-Table -Property FriendlyName,
                     @{
                         Label      = 'Compliant'
-                        Expression = 
+                        Expression =
                         { switch ($_.Compliant) {
-                                { $_ -eq $true } { $color = "$($PSStyle.Foreground.FromRGB(255,255,49))"; break } # Use PSStyle to set the color
-                                { $_ -eq $false } { $color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
-                                { $_ -eq 'N/A' } { $color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
+                                { $_ -eq $true } { $Color = "$($PSStyle.Foreground.FromRGB(255,255,49))"; break } # Use PSStyle to set the color
+                                { $_ -eq $false } { $Color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
+                                { $_ -eq 'N/A' } { $Color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
                             }
-                            "$color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                            "$Color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
                         }
-                  
-                    } , Value -AutoSize                
-                }
-            
-                # Counting the number of $True Compliant values in the Final Output Object
-                [System.Int64]$TotalTrueCompliantValuesInOutPut = ($FinalMegaObject.'Microsoft Defender' | Where-Object { $_.Compliant -eq $True }).Count + # 49 - 4x(N/A) = 45
-                [System.Int64]($FinalMegaObject.ASR | Where-Object { $_.Compliant -eq $True }).Count + # 17
-                [System.Int64]($FinalMegaObject.Bitlocker | Where-Object { $_.Compliant -eq $True }).Count + # 22 + Number of Non-OS drives which are dynamicly increased
-                [System.Int64]($FinalMegaObject.TLS | Where-Object { $_.Compliant -eq $True }).Count + # 21
-                [System.Int64]($FinalMegaObject.LockScreen | Where-Object { $_.Compliant -eq $True }).Count + # 14
-                [System.Int64]($FinalMegaObject.UAC | Where-Object { $_.Compliant -eq $True }).Count + # 4
-                [System.Int64]($FinalMegaObject.'Device Guard' | Where-Object { $_.Compliant -eq $True }).Count + # 8
-                [System.Int64]($FinalMegaObject.'Windows Firewall' | Where-Object { $_.Compliant -eq $True }).Count + # 19
-                [System.Int64]($FinalMegaObject.'Optional Windows Features' | Where-Object { $_.Compliant -eq $True }).Count + # 14
-                [System.Int64]($FinalMegaObject.'Windows Networking' | Where-Object { $_.Compliant -eq $True }).Count + # 9
-                [System.Int64]($FinalMegaObject.Miscellaneous | Where-Object { $_.Compliant -eq $True }).Count + # 18
-                [System.Int64]($FinalMegaObject.'Windows Update' | Where-Object { $_.Compliant -eq $True }).Count + # 14
-                [System.Int64]($FinalMegaObject.Edge | Where-Object { $_.Compliant -eq $True }).Count + # 15
-                [System.Int64]($FinalMegaObject.'Non-Admin' | Where-Object { $_.Compliant -eq $True }).Count # 11
 
+                    } , Value -AutoSize
+                }
+
+                # Counting the number of $True Compliant values in the Final Output Object
+                [System.Int64]$TotalTrueCompliantValuesInOutPut = ($FinalMegaObject.'Microsoft Defender' | Where-Object -FilterScript { $_.Compliant -eq $True }).Count + # 49 - 4x(N/A) = 45
+                [System.Int64]($FinalMegaObject.ASR | Where-Object -FilterScript { $_.Compliant -eq $True }).Count + # 17
+                [System.Int64]($FinalMegaObject.Bitlocker | Where-Object -FilterScript { $_.Compliant -eq $True }).Count + # 22 + Number of Non-OS drives which are dynamically increased
+                [System.Int64]($FinalMegaObject.TLS | Where-Object -FilterScript { $_.Compliant -eq $True }).Count + # 21
+                [System.Int64]($FinalMegaObject.LockScreen | Where-Object -FilterScript { $_.Compliant -eq $True }).Count + # 14
+                [System.Int64]($FinalMegaObject.UAC | Where-Object -FilterScript { $_.Compliant -eq $True }).Count + # 4
+                [System.Int64]($FinalMegaObject.'Device Guard' | Where-Object -FilterScript { $_.Compliant -eq $True }).Count + # 8
+                [System.Int64]($FinalMegaObject.'Windows Firewall' | Where-Object -FilterScript { $_.Compliant -eq $True }).Count + # 19
+                [System.Int64]($FinalMegaObject.'Optional Windows Features' | Where-Object -FilterScript { $_.Compliant -eq $True }).Count + # 14
+                [System.Int64]($FinalMegaObject.'Windows Networking' | Where-Object -FilterScript { $_.Compliant -eq $True }).Count + # 9
+                [System.Int64]($FinalMegaObject.Miscellaneous | Where-Object -FilterScript { $_.Compliant -eq $True }).Count + # 17
+                [System.Int64]($FinalMegaObject.'Windows Update' | Where-Object -FilterScript { $_.Compliant -eq $True }).Count + # 14
+                [System.Int64]($FinalMegaObject.Edge | Where-Object -FilterScript { $_.Compliant -eq $True }).Count + # 15
+                [System.Int64]($FinalMegaObject.'Non-Admin' | Where-Object -FilterScript { $_.Compliant -eq $True }).Count # 11
 
                 #Region ASCII-Arts
                 [System.String]$WhenValue1To20 = @'
                 OH
-                
+
                 N
                 　   O
                 　　　 O
@@ -1830,10 +1868,10 @@ function Confirm-SystemCompliance {
                 　　　.
                 　　　 .
                 　　　　.
-                
+
 '@
-                         
-                
+
+
                 [System.String]$WhenValue21To40 = @'
 
 ‎‏‏‎‏‏‎⣿⣿⣷⡁⢆⠈⠕⢕⢂⢕⢂⢕⢂⢔⢂⢕⢄⠂⣂⠂⠆⢂⢕⢂⢕⢂⢕⢂⢕⢂
@@ -1852,10 +1890,10 @@ function Confirm-SystemCompliance {
 ‎‏‏‎‏‏‎⠄⠪⣂⠁⢕⠆⠄⠂⠄⠁⡀⠂⡀⠄⢈⠉⢍⢛⢛⢛⢋⢔⢕⢕⢕⣽⣿⣿⠠⠈
 
 '@
-         
-                
+
+
                 [System.String]$WhenValue41To60 = @'
-  
+
             ⣿⡟⠙⠛⠋⠩⠭⣉⡛⢛⠫⠭⠄⠒⠄⠄⠄⠈⠉⠛⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿
             ⣿⡇⠄⠄⠄⠄⣠⠖⠋⣀⡤⠄⠒⠄⠄⠄⠄⠄⠄⠄⠄⠄⣈⡭⠭⠄⠄⠄⠉⠙
             ⣿⡇⠄⠄⢀⣞⣡⠴⠚⠁⠄⠄⢀⠠⠄⠄⠄⠄⠄⠄⠄⠉⠄⠄⠄⠄⠄⠄⠄⠄
@@ -1872,11 +1910,11 @@ function Confirm-SystemCompliance {
             ⣿⠃⠃⠄⠄⠄⠄⠄⠄⣀⢀⠄⠄⡀⡀⢀⣤⣴⣤⣤⣀⣀⠄⠄⠄⠄⠄⠄⠁⢹
 
 '@
-                
-                
-                
+
+
+
                 [System.String]$WhenValue61To80 = @'
-                
+
                 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣴⣿⣿⡷⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
                 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣴⣿⡿⠋⠈⠻⣮⣳⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
                 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣠⣴⣾⡿⠋⠀⠀⠀⠀⠙⣿⣿⣤⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
@@ -1897,12 +1935,12 @@ function Confirm-SystemCompliance {
                 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣀⠀⠀⠀⠀⠀⠀⢸⣧
                 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢻⣿⣆⠀⠀⠀⠀⠀⠀⢀⣀⣠⣤⣶⣾⣿⣿⣿⣿⣤⣄⣀⡀⠀⠀⠀⣿
                 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠻⢿⣻⣷⣶⣾⣿⣿⡿⢯⣛⣛⡋⠁⠀⠀⠉⠙⠛⠛⠿⣿⣿⡷⣶⣿
-                
+
 '@
-                
-                
+
+
                 [System.String]$WhenValue81To88 = @'
-                
+
                 ⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
                 ⠀⠀⠀⠀⠀⠔⠶⠒⠉⠈⠸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
                 ⠀⠀⠀⠀⠀⠪⣦⢄⣀⡠⠁⠀⠀⠀⠀⠀⠀⠀⢀⣀⣠⣤⣤⣤⣤⣤⣄⣀⣀⣀⣀⣀⣀⣀⠀⠀⠀⠀⠀
@@ -1925,10 +1963,10 @@ function Confirm-SystemCompliance {
                 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢹⡟⡟⢻⡟⠛⢻⡄⠀⠀⣸⠇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
                 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⡄⠀⠀⠀⠈⠷⠧⠾⠀⠀⠀⠻⣦⡴⠏⠀⠀⠀⠀⠀⠀⡀⠀⠀⠀⠀⠀⠀⠀⠀
                 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠁⠀⠀⠀⠀⠈⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-                
+
 '@
-                
-                
+
+
                 [System.String]$WhenValueAbove88 = @'
                 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
                 ⠀⠀⠀⠀⠀⠀⠀⢠⣶⣶⣶⣦⣤⣀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣴⣿⠟⠛⢿⣶⡄⠀⢀⣀⣤⣤⣦⣤⡀⠀⠀⠀⠀⠀
@@ -1950,80 +1988,68 @@ function Confirm-SystemCompliance {
                 ⠀⠀⠀⠀⠀⠀⠙⢿⣦⣄⣀⣀⣀⣀⣴⣾⣿⡁⠀⠀⠀⡉⣉⠁⠀⠀⣠⣾⠟⠉⠉⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
                 ⠀⠀⠀⠀⠀⠀⠀⠀⠈⠙⠛⠛⠛⠛⠉⠀⠹⣿⣶⣤⣤⣷⣿⣧⣴⣾⣿⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
                 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⠻⢦⣭⡽⣯⣡⡴⠟⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-                
+
 '@
                 #Endregion ASCII-Arts
-        
-                switch ($True) {
-                    ($TotalTrueCompliantValuesInOutPut -in 1..40) { & $WriteRainbow2 "$WhenValue1To20`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $global:TotalNumberOfTrueCompliantValues!" }                    
-                    ($TotalTrueCompliantValuesInOutPut -in 41..80) { & $WriteRainbow1 "$WhenValue21To40`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $global:TotalNumberOfTrueCompliantValues!" }
-                    ($TotalTrueCompliantValuesInOutPut -in 81..120) { & $WriteRainbow1 "$WhenValue41To60`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $global:TotalNumberOfTrueCompliantValues!" }
-                    ($TotalTrueCompliantValuesInOutPut -in 121..160) { & $WriteRainbow2 "$WhenValue61To80`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $global:TotalNumberOfTrueCompliantValues!" }
-                    ($TotalTrueCompliantValuesInOutPut -in 161..200) { & $WriteRainbow1 "$WhenValue81To88`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $global:TotalNumberOfTrueCompliantValues!" }
-                    ($TotalTrueCompliantValuesInOutPut -gt 200) { & $WriteRainbow2 "$WhenValueAbove88`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $global:TotalNumberOfTrueCompliantValues!" }
-                } 
-            }
 
+                switch ($True) {
+                    ($TotalTrueCompliantValuesInOutPut -in 1..40) { & $WriteRainbow2 "$WhenValue1To20`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $TotalNumberOfTrueCompliantValues!" }
+                    ($TotalTrueCompliantValuesInOutPut -in 41..80) { & $WriteRainbow1 "$WhenValue21To40`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $TotalNumberOfTrueCompliantValues!" }
+                    ($TotalTrueCompliantValuesInOutPut -in 81..120) { & $WriteRainbow1 "$WhenValue41To60`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $TotalNumberOfTrueCompliantValues!" }
+                    ($TotalTrueCompliantValuesInOutPut -in 121..160) { & $WriteRainbow2 "$WhenValue61To80`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $TotalNumberOfTrueCompliantValues!" }
+                    ($TotalTrueCompliantValuesInOutPut -in 161..200) { & $WriteRainbow1 "$WhenValue81To88`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $TotalNumberOfTrueCompliantValues!" }
+                    ($TotalTrueCompliantValuesInOutPut -gt 200) { & $WriteRainbow2 "$WhenValueAbove88`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $TotalNumberOfTrueCompliantValues!" }
+                }
+            }
         }
 
         finally {
+            # End the progress bar and mark it as completed
+            Write-Progress -Id 0 -Activity 'Completed' -Completed
+
             # Reverting the PowerShell executables allow listings in Controlled folder access
             foreach ($FilePath in (Get-ChildItem -Path "$PSHOME\*.exe" -File).FullName) {
                 Remove-MpPreference -ControlledFolderAccessAllowedApplications $FilePath
             }
-    
+
             # restoring the original Controlled folder access allow list - if user already had added PowerShell executables to the list
             # they will be restored as well, so user customization will remain intact
-            if ($null -ne $CFAAllowedAppsBackup) { 
+            if ($null -ne $CFAAllowedAppsBackup) {
                 Set-MpPreference -ControlledFolderAccessAllowedApplications $CFAAllowedAppsBackup
             }
+            # Clean up
+            Remove-Item -Path '.\security_policy.inf' -Force
         }
-    
-    } # End of Process Block
-
-    end {
-        # Clean up
-        Remove-Item -Path '.\security_policy.inf' -Force
     }
-
     <#
 .SYNOPSIS
-Checks the compliance of a system with the Harden Windows Security script guidelines
-
+    Checks the compliance of a system with the Harden Windows Security script guidelines
 .LINK
-https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden%E2%80%90Windows%E2%80%90Security%E2%80%90Module
-
+    https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden%E2%80%90Windows%E2%80%90Security%E2%80%90Module
 .DESCRIPTION
-Checks the compliance of a system with the Harden Windows Security script. Checks the applied Group policies, registry keys and PowerShell cmdlets used by the hardening script.
-
+    Checks the compliance of a system with the Harden Windows Security script. Checks the applied Group policies, registry keys and PowerShell cmdlets used by the hardening script.
 .COMPONENT
-Gpresult, Secedit, PowerShell, Registry
-
+    Gpresult, Secedit, PowerShell, Registry
 .FUNCTIONALITY
-Uses Gpresult and Secedit to first export the effective Group policies and Security policies, then goes through them and checks them against the Harden Windows Security's guidelines.
-
+    Uses Gpresult and Secedit to first export the effective Group policies and Security policies, then goes through them and checks them against the Harden Windows Security's guidelines.
 .EXAMPLE
-($result.Microsoft Defender | Where-Object {$_.name -eq 'Controlled Folder Access Exclusions'}).value.programs
+    ($result.Microsoft Defender | Where-Object -FilterScript {$_.name -eq 'Controlled Folder Access Exclusions'}).value.programs
 
-# Do this to get the Controlled Folder Access Programs list when using ShowAsObjectsOnly optional parameter to output an object
-
+    Do this to get the Controlled Folder Access Programs list when using ShowAsObjectsOnly optional parameter to output an object
 .EXAMPLE
-$result.Microsoft Defender
+    $result.Microsoft Defender
 
-# Do this to only see the result for the Microsoft Defender category when using ShowAsObjectsOnly optional parameter to output an object
-
+    Do this to only see the result for the Microsoft Defender category when using ShowAsObjectsOnly optional parameter to output an object
 .PARAMETER ExportToCSV
-Export the output to a CSV file in the current working directory
-
+    Export the output to a CSV file in the current working directory
 .PARAMETER ShowAsObjectsOnly
-Returns a nested object instead of writing strings on the PowerShell console, it can be assigned to a variable
-
+    Returns a nested object instead of writing strings on the PowerShell console, it can be assigned to a variable
 .PARAMETER DetailedDisplay
-Shows the output on the PowerShell console with more details and in the list format instead of table format
-
-#>    
-
+    Shows the output on the PowerShell console with more details and in the list format instead of table format
+.INPUTS
+    System.Management.Automation.SwitchParameter
+.OUTPUTS
+    System.String
+    System.Object[]
+#>
 }
-
-# Set PSReadline tab completion to complete menu for easier access to available parameters - Only for the current session
-Set-PSReadLineKeyHandler -Key Tab -Function MenuComplete

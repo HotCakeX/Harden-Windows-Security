@@ -11,9 +11,7 @@
 		"powershell.codeFormatting.useConstantStrings": true,
 		"powershell.codeFormatting.useCorrectCasing": true,
 		"powershell.codeFormatting.whitespaceBetweenParameters": true,
-		"json.schemas": [
-		
-		],
+		"json.schemas": [],
 		"cSpell.enableFiletypes": [
 			"*"
 		],

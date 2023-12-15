@@ -1305,24 +1305,24 @@ function Confirm-SystemCompliance {
             else {
 
                 #Region Colors
-                [System.Management.Automation.ScriptBlock]$WritePlum = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(221,160,221))$($PSStyle.Reverse)$($args[0])$($PSStyle.Reset)" }
-                [System.Management.Automation.ScriptBlock]$WriteOrchid = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(218,112,214))$($PSStyle.Reverse)$($args[0])$($PSStyle.Reset)" }
-                [System.Management.Automation.ScriptBlock]$WriteFuchsia = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(255,0,255))$($PSStyle.Reverse)$($args[0])$($PSStyle.Reset)" }
-                [System.Management.Automation.ScriptBlock]$WriteMediumOrchid = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(186,85,211))$($PSStyle.Reverse)$($args[0])$($PSStyle.Reset)" }
-                [System.Management.Automation.ScriptBlock]$WriteMediumPurple = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(147,112,219))$($PSStyle.Reverse)$($args[0])$($PSStyle.Reset)" }
-                [System.Management.Automation.ScriptBlock]$WriteBlueViolet = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(138,43,226))$($PSStyle.Reverse)$($args[0])$($PSStyle.Reset)" }
-                [System.Management.Automation.ScriptBlock]$AndroidGreen = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(176,191,26))$($PSStyle.Reverse)$($args[0])$($PSStyle.Reset)" }
-                [System.Management.Automation.ScriptBlock]$WritePink = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(255,192,203))$($PSStyle.Reverse)$($args[0])$($PSStyle.Reset)" }
-                [System.Management.Automation.ScriptBlock]$WriteHotPink = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(255,105,180))$($PSStyle.Reverse)$($args[0])$($PSStyle.Reset)" }
-                [System.Management.Automation.ScriptBlock]$WriteDeepPink = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(255,20,147))$($PSStyle.Reverse)$($args[0])$($PSStyle.Reset)" }
-                [System.Management.Automation.ScriptBlock]$WriteMintGreen = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(152,255,152))$($PSStyle.Reverse)$($args[0])$($PSStyle.Reset)" }
-                [System.Management.Automation.ScriptBlock]$WriteOrange = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(255,165,0))$($PSStyle.Reverse)$($args[0])$($PSStyle.Reset)" }
-                [System.Management.Automation.ScriptBlock]$WriteSkyBlue = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(135,206,235))$($PSStyle.Reverse)$($args[0])$($PSStyle.Reset)" }
-                [System.Management.Automation.ScriptBlock]$Daffodil = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(255,255,49))$($PSStyle.Reverse)$($args[0])$($PSStyle.Reset)" }
+                [System.Management.Automation.ScriptBlock]$WritePlum = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(221,160,221))$($PSStyle.Reverse)$($Args[0])$($PSStyle.Reset)" }
+                [System.Management.Automation.ScriptBlock]$WriteOrchid = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(218,112,214))$($PSStyle.Reverse)$($Args[0])$($PSStyle.Reset)" }
+                [System.Management.Automation.ScriptBlock]$WriteFuchsia = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(255,0,255))$($PSStyle.Reverse)$($Args[0])$($PSStyle.Reset)" }
+                [System.Management.Automation.ScriptBlock]$WriteMediumOrchid = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(186,85,211))$($PSStyle.Reverse)$($Args[0])$($PSStyle.Reset)" }
+                [System.Management.Automation.ScriptBlock]$WriteMediumPurple = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(147,112,219))$($PSStyle.Reverse)$($Args[0])$($PSStyle.Reset)" }
+                [System.Management.Automation.ScriptBlock]$WriteBlueViolet = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(138,43,226))$($PSStyle.Reverse)$($Args[0])$($PSStyle.Reset)" }
+                [System.Management.Automation.ScriptBlock]$AndroidGreen = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(176,191,26))$($PSStyle.Reverse)$($Args[0])$($PSStyle.Reset)" }
+                [System.Management.Automation.ScriptBlock]$WritePink = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(255,192,203))$($PSStyle.Reverse)$($Args[0])$($PSStyle.Reset)" }
+                [System.Management.Automation.ScriptBlock]$WriteHotPink = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(255,105,180))$($PSStyle.Reverse)$($Args[0])$($PSStyle.Reset)" }
+                [System.Management.Automation.ScriptBlock]$WriteDeepPink = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(255,20,147))$($PSStyle.Reverse)$($Args[0])$($PSStyle.Reset)" }
+                [System.Management.Automation.ScriptBlock]$WriteMintGreen = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(152,255,152))$($PSStyle.Reverse)$($Args[0])$($PSStyle.Reset)" }
+                [System.Management.Automation.ScriptBlock]$WriteOrange = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(255,165,0))$($PSStyle.Reverse)$($Args[0])$($PSStyle.Reset)" }
+                [System.Management.Automation.ScriptBlock]$WriteSkyBlue = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(135,206,235))$($PSStyle.Reverse)$($Args[0])$($PSStyle.Reset)" }
+                [System.Management.Automation.ScriptBlock]$Daffodil = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(255,255,49))$($PSStyle.Reverse)$($Args[0])$($PSStyle.Reset)" }
 
                 [System.Management.Automation.ScriptBlock]$WriteRainbow1 = {
-                    $text = $args[0]
-                    $colors = @(
+                    $Text = $Args[0]
+                    [System.Drawing.Color[]]$Colors = @(
                         [System.Drawing.Color]::Pink,
                         [System.Drawing.Color]::HotPink,
                         [System.Drawing.Color]::SkyBlue,
@@ -1333,16 +1333,16 @@ function Confirm-SystemCompliance {
                     )
 
                     $Output = ''
-                    for ($i = 0; $i -lt $text.Length; $i++) {
-                        $color = $colors[$i % $colors.Length]
-                        $Output += "$($PSStyle.Foreground.FromRGB($color.R, $color.G, $color.B))$($text[$i])$($PSStyle.Reset)"
+                    for ($i = 0; $i -lt $Text.Length; $i++) {
+                        $Color = $Colors[$i % $Colors.Length]
+                        $Output += "$($PSStyle.Foreground.FromRGB($Color.R, $Color.G, $Color.B))$($Text[$i])$($PSStyle.Reset)"
                     }
                     Write-Output -InputObject $Output
                 }
 
                 [System.Management.Automation.ScriptBlock]$WriteRainbow2 = {
-                    $text = $args[0]
-                    [System.Drawing.Color[]]$colors = @(
+                    $Text = $Args[0]
+                    [System.Drawing.Color[]]$Colors = @(
                         [System.Drawing.Color]::Pink,
                         [System.Drawing.Color]::HotPink,
                         [System.Drawing.Color]::SkyBlue,
@@ -1357,9 +1357,9 @@ function Confirm-SystemCompliance {
                     )
 
                     [System.String]$Output = ''
-                    for ($i = 0; $i -lt $text.Length; $i++) {
-                        $color = $colors[$i % $colors.Length]
-                        $Output += "$($PSStyle.Foreground.FromRGB($color.R, $color.G, $color.B))$($text[$i])$($PSStyle.Reset)"
+                    for ($i = 0; $i -lt $Text.Length; $i++) {
+                        $Color = $Colors[$i % $Colors.Length]
+                        $Output += "$($PSStyle.Foreground.FromRGB($Color.R, $Color.G, $Color.B))$($Text[$i])$($PSStyle.Reset)"
                     }
                     Write-Output -InputObject $Output
                 }
@@ -1375,11 +1375,11 @@ function Confirm-SystemCompliance {
                         Label      = 'Compliant'
                         Expression =
                         { switch ($_.Compliant) {
-                                { $_ -eq $true } { $color = "$($PSStyle.Foreground.FromRGB(221,160,221))"; break } # Use PSStyle to set the color
-                                { $_ -eq $false } { $color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
-                                { $_ -eq 'N/A' } { $color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
+                                { $_ -eq $true } { $Color = "$($PSStyle.Foreground.FromRGB(221,160,221))"; break } # Use PSStyle to set the color
+                                { $_ -eq $false } { $Color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
+                                { $_ -eq 'N/A' } { $Color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
                             }
-                            "$color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                            "$Color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
                         }
 
                     }, Value, Name, Category, Method
@@ -1391,11 +1391,11 @@ function Confirm-SystemCompliance {
                         Label      = 'Compliant'
                         Expression =
                         { switch ($_.Compliant) {
-                                { $_ -eq $true } { $color = "$($PSStyle.Foreground.FromRGB(218,112,214))"; break } # Use PSStyle to set the color
-                                { $_ -eq $false } { $color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
-                                { $_ -eq 'N/A' } { $color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
+                                { $_ -eq $true } { $Color = "$($PSStyle.Foreground.FromRGB(218,112,214))"; break } # Use PSStyle to set the color
+                                { $_ -eq $false } { $Color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
+                                { $_ -eq 'N/A' } { $Color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
                             }
-                            "$color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                            "$Color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
                         }
 
                     }, Value, Name, Category, Method
@@ -1407,11 +1407,11 @@ function Confirm-SystemCompliance {
                         Label      = 'Compliant'
                         Expression =
                         { switch ($_.Compliant) {
-                                { $_ -eq $true } { $color = "$($PSStyle.Foreground.FromRGB(255,0,255))"; break } # Use PSStyle to set the color
-                                { $_ -eq $false } { $color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
-                                { $_ -eq 'N/A' } { $color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
+                                { $_ -eq $true } { $Color = "$($PSStyle.Foreground.FromRGB(255,0,255))"; break } # Use PSStyle to set the color
+                                { $_ -eq $false } { $Color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
+                                { $_ -eq 'N/A' } { $Color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
                             }
-                            "$color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                            "$Color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
                         }
 
                     }, Value, Name, Category, Method
@@ -1423,11 +1423,11 @@ function Confirm-SystemCompliance {
                         Label      = 'Compliant'
                         Expression =
                         { switch ($_.Compliant) {
-                                { $_ -eq $true } { $color = "$($PSStyle.Foreground.FromRGB(186,85,211))"; break } # Use PSStyle to set the color
-                                { $_ -eq $false } { $color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
-                                { $_ -eq 'N/A' } { $color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
+                                { $_ -eq $true } { $Color = "$($PSStyle.Foreground.FromRGB(186,85,211))"; break } # Use PSStyle to set the color
+                                { $_ -eq $false } { $Color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
+                                { $_ -eq 'N/A' } { $Color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
                             }
-                            "$color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                            "$Color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
                         }
 
                     }, Value, Name, Category, Method
@@ -1439,11 +1439,11 @@ function Confirm-SystemCompliance {
                         Label      = 'Compliant'
                         Expression =
                         { switch ($_.Compliant) {
-                                { $_ -eq $true } { $color = "$($PSStyle.Foreground.FromRGB(147,112,219))"; break } # Use PSStyle to set the color
-                                { $_ -eq $false } { $color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
-                                { $_ -eq 'N/A' } { $color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
+                                { $_ -eq $true } { $Color = "$($PSStyle.Foreground.FromRGB(147,112,219))"; break } # Use PSStyle to set the color
+                                { $_ -eq $false } { $Color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
+                                { $_ -eq 'N/A' } { $Color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
                             }
-                            "$color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                            "$Color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
                         }
 
                     }, Value, Name, Category, Method
@@ -1455,11 +1455,11 @@ function Confirm-SystemCompliance {
                         Label      = 'Compliant'
                         Expression =
                         { switch ($_.Compliant) {
-                                { $_ -eq $true } { $color = "$($PSStyle.Foreground.FromRGB(138,43,226))"; break } # Use PSStyle to set the color
-                                { $_ -eq $false } { $color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
-                                { $_ -eq 'N/A' } { $color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
+                                { $_ -eq $true } { $Color = "$($PSStyle.Foreground.FromRGB(138,43,226))"; break } # Use PSStyle to set the color
+                                { $_ -eq $false } { $Color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
+                                { $_ -eq 'N/A' } { $Color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
                             }
-                            "$color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                            "$Color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
                         }
 
                     }, Value, Name, Category, Method
@@ -1471,11 +1471,11 @@ function Confirm-SystemCompliance {
                         Label      = 'Compliant'
                         Expression =
                         { switch ($_.Compliant) {
-                                { $_ -eq $true } { $color = "$($PSStyle.Foreground.FromRGB(176,191,26))"; break } # Use PSStyle to set the color
-                                { $_ -eq $false } { $color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
-                                { $_ -eq 'N/A' } { $color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
+                                { $_ -eq $true } { $Color = "$($PSStyle.Foreground.FromRGB(176,191,26))"; break } # Use PSStyle to set the color
+                                { $_ -eq $false } { $Color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
+                                { $_ -eq 'N/A' } { $Color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
                             }
-                            "$color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                            "$Color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
                         }
 
                     }, Value, Name, Category, Method
@@ -1487,11 +1487,11 @@ function Confirm-SystemCompliance {
                         Label      = 'Compliant'
                         Expression =
                         { switch ($_.Compliant) {
-                                { $_ -eq $true } { $color = "$($PSStyle.Foreground.FromRGB(255,192,203))"; break } # Use PSStyle to set the color
-                                { $_ -eq $false } { $color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
-                                { $_ -eq 'N/A' } { $color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
+                                { $_ -eq $true } { $Color = "$($PSStyle.Foreground.FromRGB(255,192,203))"; break } # Use PSStyle to set the color
+                                { $_ -eq $false } { $Color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
+                                { $_ -eq 'N/A' } { $Color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
                             }
-                            "$color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                            "$Color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
                         }
 
                     }, Value, Name, Category, Method
@@ -1503,11 +1503,11 @@ function Confirm-SystemCompliance {
                         Label      = 'Compliant'
                         Expression =
                         { switch ($_.Compliant) {
-                                { $_ -eq $true } { $color = "$($PSStyle.Foreground.FromRGB(135,206,235))"; break } # Use PSStyle to set the color
-                                { $_ -eq $false } { $color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
-                                { $_ -eq 'N/A' } { $color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
+                                { $_ -eq $true } { $Color = "$($PSStyle.Foreground.FromRGB(135,206,235))"; break } # Use PSStyle to set the color
+                                { $_ -eq $false } { $Color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
+                                { $_ -eq 'N/A' } { $Color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
                             }
-                            "$color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                            "$Color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
                         }
 
                     }, Value, Name, Category, Method
@@ -1519,11 +1519,11 @@ function Confirm-SystemCompliance {
                         Label      = 'Compliant'
                         Expression =
                         { switch ($_.Compliant) {
-                                { $_ -eq $true } { $color = "$($PSStyle.Foreground.FromRGB(255,105,180))"; break } # Use PSStyle to set the color
-                                { $_ -eq $false } { $color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
-                                { $_ -eq 'N/A' } { $color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
+                                { $_ -eq $true } { $Color = "$($PSStyle.Foreground.FromRGB(255,105,180))"; break } # Use PSStyle to set the color
+                                { $_ -eq $false } { $Color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
+                                { $_ -eq 'N/A' } { $Color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
                             }
-                            "$color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                            "$Color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
                         }
 
                     }, Value, Name, Category, Method
@@ -1535,11 +1535,11 @@ function Confirm-SystemCompliance {
                         Label      = 'Compliant'
                         Expression =
                         { switch ($_.Compliant) {
-                                { $_ -eq $true } { $color = "$($PSStyle.Foreground.FromRGB(255,20,147))"; break } # Use PSStyle to set the color
-                                { $_ -eq $false } { $color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
-                                { $_ -eq 'N/A' } { $color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
+                                { $_ -eq $true } { $Color = "$($PSStyle.Foreground.FromRGB(255,20,147))"; break } # Use PSStyle to set the color
+                                { $_ -eq $false } { $Color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
+                                { $_ -eq 'N/A' } { $Color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
                             }
-                            "$color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                            "$Color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
                         }
 
                     }, Value, Name, Category, Method
@@ -1551,11 +1551,11 @@ function Confirm-SystemCompliance {
                         Label      = 'Compliant'
                         Expression =
                         { switch ($_.Compliant) {
-                                { $_ -eq $true } { $color = "$($PSStyle.Foreground.FromRGB(152,255,152))"; break } # Use PSStyle to set the color
-                                { $_ -eq $false } { $color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
-                                { $_ -eq 'N/A' } { $color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
+                                { $_ -eq $true } { $Color = "$($PSStyle.Foreground.FromRGB(152,255,152))"; break } # Use PSStyle to set the color
+                                { $_ -eq $false } { $Color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
+                                { $_ -eq 'N/A' } { $Color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
                             }
-                            "$color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                            "$Color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
                         }
 
                     }, Value, Name, Category, Method
@@ -1567,11 +1567,11 @@ function Confirm-SystemCompliance {
                         Label      = 'Compliant'
                         Expression =
                         { switch ($_.Compliant) {
-                                { $_ -eq $true } { $color = "$($PSStyle.Foreground.FromRGB(255,165,0))"; break } # Use PSStyle to set the color
-                                { $_ -eq $false } { $color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
-                                { $_ -eq 'N/A' } { $color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
+                                { $_ -eq $true } { $Color = "$($PSStyle.Foreground.FromRGB(255,165,0))"; break } # Use PSStyle to set the color
+                                { $_ -eq $false } { $Color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
+                                { $_ -eq 'N/A' } { $Color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
                             }
-                            "$color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                            "$Color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
                         }
 
                     }, Value, Name, Category, Method
@@ -1583,11 +1583,11 @@ function Confirm-SystemCompliance {
                         Label      = 'Compliant'
                         Expression =
                         { switch ($_.Compliant) {
-                                { $_ -eq $true } { $color = "$($PSStyle.Foreground.FromRGB(255,255,49))"; break } # Use PSStyle to set the color
-                                { $_ -eq $false } { $color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
-                                { $_ -eq 'N/A' } { $color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
+                                { $_ -eq $true } { $Color = "$($PSStyle.Foreground.FromRGB(255,255,49))"; break } # Use PSStyle to set the color
+                                { $_ -eq $false } { $Color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
+                                { $_ -eq 'N/A' } { $Color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
                             }
-                            "$color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                            "$Color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
                         }
 
                     }, Value, Name, Category, Method
@@ -1604,11 +1604,11 @@ function Confirm-SystemCompliance {
                         Label      = 'Compliant'
                         Expression =
                         { switch ($_.Compliant) {
-                                { $_ -eq $true } { $color = "$($PSStyle.Foreground.FromRGB(221,160,221))"; break } # Use PSStyle to set the color
-                                { $_ -eq $false } { $color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
-                                { $_ -eq 'N/A' } { $color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
+                                { $_ -eq $true } { $Color = "$($PSStyle.Foreground.FromRGB(221,160,221))"; break } # Use PSStyle to set the color
+                                { $_ -eq $false } { $Color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
+                                { $_ -eq 'N/A' } { $Color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
                             }
-                            "$color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                            "$Color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
                         }
 
                     } , Value -AutoSize
@@ -1621,11 +1621,11 @@ function Confirm-SystemCompliance {
                         Label      = 'Compliant'
                         Expression =
                         { switch ($_.Compliant) {
-                                { $_ -eq $true } { $color = "$($PSStyle.Foreground.FromRGB(218,112,214))"; break } # Use PSStyle to set the color
-                                { $_ -eq $false } { $color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
-                                { $_ -eq 'N/A' } { $color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
+                                { $_ -eq $true } { $Color = "$($PSStyle.Foreground.FromRGB(218,112,214))"; break } # Use PSStyle to set the color
+                                { $_ -eq $false } { $Color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
+                                { $_ -eq 'N/A' } { $Color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
                             }
-                            "$color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                            "$Color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
                         }
 
                     } , Value -AutoSize
@@ -1638,11 +1638,11 @@ function Confirm-SystemCompliance {
                         Label      = 'Compliant'
                         Expression =
                         { switch ($_.Compliant) {
-                                { $_ -eq $true } { $color = "$($PSStyle.Foreground.FromRGB(255,0,255))"; break } # Use PSStyle to set the color
-                                { $_ -eq $false } { $color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
-                                { $_ -eq 'N/A' } { $color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
+                                { $_ -eq $true } { $Color = "$($PSStyle.Foreground.FromRGB(255,0,255))"; break } # Use PSStyle to set the color
+                                { $_ -eq $false } { $Color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
+                                { $_ -eq 'N/A' } { $Color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
                             }
-                            "$color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                            "$Color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
                         }
 
                     } , Value -AutoSize
@@ -1655,11 +1655,11 @@ function Confirm-SystemCompliance {
                         Label      = 'Compliant'
                         Expression =
                         { switch ($_.Compliant) {
-                                { $_ -eq $true } { $color = "$($PSStyle.Foreground.FromRGB(186,85,211))"; break } # Use PSStyle to set the color
-                                { $_ -eq $false } { $color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
-                                { $_ -eq 'N/A' } { $color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
+                                { $_ -eq $true } { $Color = "$($PSStyle.Foreground.FromRGB(186,85,211))"; break } # Use PSStyle to set the color
+                                { $_ -eq $false } { $Color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
+                                { $_ -eq 'N/A' } { $Color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
                             }
-                            "$color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                            "$Color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
                         }
 
                     } , Value -AutoSize
@@ -1672,11 +1672,11 @@ function Confirm-SystemCompliance {
                         Label      = 'Compliant'
                         Expression =
                         { switch ($_.Compliant) {
-                                { $_ -eq $true } { $color = "$($PSStyle.Foreground.FromRGB(147,112,219))"; break } # Use PSStyle to set the color
-                                { $_ -eq $false } { $color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
-                                { $_ -eq 'N/A' } { $color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
+                                { $_ -eq $true } { $Color = "$($PSStyle.Foreground.FromRGB(147,112,219))"; break } # Use PSStyle to set the color
+                                { $_ -eq $false } { $Color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
+                                { $_ -eq 'N/A' } { $Color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
                             }
-                            "$color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                            "$Color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
                         }
 
                     } , Value -AutoSize
@@ -1689,11 +1689,11 @@ function Confirm-SystemCompliance {
                         Label      = 'Compliant'
                         Expression =
                         { switch ($_.Compliant) {
-                                { $_ -eq $true } { $color = "$($PSStyle.Foreground.FromRGB(138,43,226))"; break } # Use PSStyle to set the color
-                                { $_ -eq $false } { $color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
-                                { $_ -eq 'N/A' } { $color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
+                                { $_ -eq $true } { $Color = "$($PSStyle.Foreground.FromRGB(138,43,226))"; break } # Use PSStyle to set the color
+                                { $_ -eq $false } { $Color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
+                                { $_ -eq 'N/A' } { $Color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
                             }
-                            "$color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                            "$Color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
                         }
 
                     } , Value -AutoSize
@@ -1706,11 +1706,11 @@ function Confirm-SystemCompliance {
                         Label      = 'Compliant'
                         Expression =
                         { switch ($_.Compliant) {
-                                { $_ -eq $true } { $color = "$($PSStyle.Foreground.FromRGB(176,191,26))"; break } # Use PSStyle to set the color
-                                { $_ -eq $false } { $color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
-                                { $_ -eq 'N/A' } { $color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
+                                { $_ -eq $true } { $Color = "$($PSStyle.Foreground.FromRGB(176,191,26))"; break } # Use PSStyle to set the color
+                                { $_ -eq $false } { $Color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
+                                { $_ -eq 'N/A' } { $Color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
                             }
-                            "$color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                            "$Color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
                         }
 
                     } , Value -AutoSize
@@ -1723,11 +1723,11 @@ function Confirm-SystemCompliance {
                         Label      = 'Compliant'
                         Expression =
                         { switch ($_.Compliant) {
-                                { $_ -eq $true } { $color = "$($PSStyle.Foreground.FromRGB(255,192,203))"; break } # Use PSStyle to set the color
-                                { $_ -eq $false } { $color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
-                                { $_ -eq 'N/A' } { $color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
+                                { $_ -eq $true } { $Color = "$($PSStyle.Foreground.FromRGB(255,192,203))"; break } # Use PSStyle to set the color
+                                { $_ -eq $false } { $Color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
+                                { $_ -eq 'N/A' } { $Color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
                             }
-                            "$color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                            "$Color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
                         }
 
                     } , Value -AutoSize
@@ -1740,11 +1740,11 @@ function Confirm-SystemCompliance {
                         Label      = 'Compliant'
                         Expression =
                         { switch ($_.Compliant) {
-                                { $_ -eq $true } { $color = "$($PSStyle.Foreground.FromRGB(135,206,235))"; break } # Use PSStyle to set the color
-                                { $_ -eq $false } { $color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
-                                { $_ -eq 'N/A' } { $color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
+                                { $_ -eq $true } { $Color = "$($PSStyle.Foreground.FromRGB(135,206,235))"; break } # Use PSStyle to set the color
+                                { $_ -eq $false } { $Color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
+                                { $_ -eq 'N/A' } { $Color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
                             }
-                            "$color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                            "$Color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
                         }
 
                     } , Value -AutoSize
@@ -1757,11 +1757,11 @@ function Confirm-SystemCompliance {
                         Label      = 'Compliant'
                         Expression =
                         { switch ($_.Compliant) {
-                                { $_ -eq $true } { $color = "$($PSStyle.Foreground.FromRGB(255,105,180))"; break } # Use PSStyle to set the color
-                                { $_ -eq $false } { $color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
-                                { $_ -eq 'N/A' } { $color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
+                                { $_ -eq $true } { $Color = "$($PSStyle.Foreground.FromRGB(255,105,180))"; break } # Use PSStyle to set the color
+                                { $_ -eq $false } { $Color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
+                                { $_ -eq 'N/A' } { $Color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
                             }
-                            "$color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                            "$Color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
                         }
 
                     } , Value -AutoSize
@@ -1774,11 +1774,11 @@ function Confirm-SystemCompliance {
                         Label      = 'Compliant'
                         Expression =
                         { switch ($_.Compliant) {
-                                { $_ -eq $true } { $color = "$($PSStyle.Foreground.FromRGB(255,20,147))"; break } # Use PSStyle to set the color
-                                { $_ -eq $false } { $color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
-                                { $_ -eq 'N/A' } { $color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
+                                { $_ -eq $true } { $Color = "$($PSStyle.Foreground.FromRGB(255,20,147))"; break } # Use PSStyle to set the color
+                                { $_ -eq $false } { $Color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
+                                { $_ -eq 'N/A' } { $Color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
                             }
-                            "$color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                            "$Color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
                         }
 
                     } , Value -AutoSize
@@ -1791,11 +1791,11 @@ function Confirm-SystemCompliance {
                         Label      = 'Compliant'
                         Expression =
                         { switch ($_.Compliant) {
-                                { $_ -eq $true } { $color = "$($PSStyle.Foreground.FromRGB(152,255,152))"; break } # Use PSStyle to set the color
-                                { $_ -eq $false } { $color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
-                                { $_ -eq 'N/A' } { $color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
+                                { $_ -eq $true } { $Color = "$($PSStyle.Foreground.FromRGB(152,255,152))"; break } # Use PSStyle to set the color
+                                { $_ -eq $false } { $Color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
+                                { $_ -eq 'N/A' } { $Color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
                             }
-                            "$color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                            "$Color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
                         }
 
                     } , Value -AutoSize
@@ -1808,11 +1808,11 @@ function Confirm-SystemCompliance {
                         Label      = 'Compliant'
                         Expression =
                         { switch ($_.Compliant) {
-                                { $_ -eq $true } { $color = "$($PSStyle.Foreground.FromRGB(255,165,0))"; break } # Use PSStyle to set the color
-                                { $_ -eq $false } { $color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
-                                { $_ -eq 'N/A' } { $color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
+                                { $_ -eq $true } { $Color = "$($PSStyle.Foreground.FromRGB(255,165,0))"; break } # Use PSStyle to set the color
+                                { $_ -eq $false } { $Color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
+                                { $_ -eq 'N/A' } { $Color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
                             }
-                            "$color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                            "$Color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
                         }
 
                     } , Value -AutoSize
@@ -1825,11 +1825,11 @@ function Confirm-SystemCompliance {
                         Label      = 'Compliant'
                         Expression =
                         { switch ($_.Compliant) {
-                                { $_ -eq $true } { $color = "$($PSStyle.Foreground.FromRGB(255,255,49))"; break } # Use PSStyle to set the color
-                                { $_ -eq $false } { $color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
-                                { $_ -eq 'N/A' } { $color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
+                                { $_ -eq $true } { $Color = "$($PSStyle.Foreground.FromRGB(255,255,49))"; break } # Use PSStyle to set the color
+                                { $_ -eq $false } { $Color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break } # Use PSStyle to set the color
+                                { $_ -eq 'N/A' } { $Color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break } # Use PSStyle to set the color
                             }
-                            "$color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                            "$Color$($_.Compliant)$($PSStyle.Reset)" # Use PSStyle to reset the color
                         }
 
                     } , Value -AutoSize

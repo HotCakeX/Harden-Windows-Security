@@ -2023,7 +2023,10 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 Write-Progress -Id 0 -Activity 'Optional Windows Features' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
 
                 # PowerShell Core (only if installed from Microsoft Store) has problem with these commands: https://github.com/PowerShell/PowerShell/issues/13866#issuecomment-1519066710
-                Import-Module -Name 'DISM' -UseWindowsPowerShell -Force -WarningAction SilentlyContinue
+                # Windows Powershell (old one) doesn't support the -UseWindowsPowerShell parameter, so only performing the import if PS Core is installed from Microsoft Store
+                if (($PSHome -like '*C:\Program Files\WindowsApps\Microsoft.PowerShell*') -and ($PSVersionTable.PSEdition -eq 'Core')) {
+                    Import-Module -Name 'DISM' -UseWindowsPowerShell -Force -WarningAction SilentlyContinue
+                }
 
                 Edit-Addons -Type Feature -FeatureAction Disabling -FeatureName 'MicrosoftWindowsPowerShellV2'
                 Edit-Addons -Type Feature -FeatureAction Disabling -FeatureName 'MicrosoftWindowsPowerShellV2Root'

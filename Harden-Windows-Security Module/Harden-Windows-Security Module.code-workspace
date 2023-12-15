@@ -11,8 +11,14 @@
 		"powershell.codeFormatting.useConstantStrings": true,
 		"powershell.codeFormatting.useCorrectCasing": true,
 		"powershell.codeFormatting.whitespaceBetweenParameters": true,
-		"json.schemas": [],
-		"cSpell.userWords": [
+		"json.schemas": [
+		
+		],
+		"cSpell.enableFiletypes": [
+			"*"
+		],
+		"cSpell.maxNumberOfProblems": 200,
+		"cSpell.words": [
 			"accepteula",
 			"ADMX",
 			"Alloc",
@@ -36,6 +42,7 @@
 			"Bstr",
 			"BYOVD",
 			"catname",
+			"CDROM",
 			"CHACHA",
 			"Cipolicy",
 			"Citool",
@@ -90,6 +97,7 @@
 			"LICENSEURI",
 			"LLMNR",
 			"LMHOSTS",
+			"lockstatus",
 			"logfiles",
 			"lsass",
 			"Mastadon",
@@ -151,6 +159,7 @@
 			"sigcheck",
 			"Signingkey",
 			"signtool",
+			"Sponsorsof",
 			"Spynet",
 			"ssllabs",
 			"SSTP",
@@ -162,6 +171,7 @@
 			"Sysmon",
 			"systemroot",
 			"taskkill",
+			"Tmpl",
 			"tolower",
 			"tpmenabled",
 			"Tpmpin",
@@ -188,11 +198,7 @@
 			"WTDS",
 			"XDRs",
 			"Zune"
-		],
-		"cSpell.enableFiletypes": [
-			"*"
-		],
-		"cSpell.maxNumberOfProblems": 200
+		]
 	},
 	"extensions": {
 		"recommendations": [

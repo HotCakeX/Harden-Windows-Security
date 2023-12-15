@@ -1,4 +1,4 @@
-# <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/PNGs/585563111520600091.png" alt="Emoji of a Windows eatting moomoo"> Rationale
+# <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/PNGs/585563111520600091.png" alt="Emoji of a Windows eating moomoo"> Rationale
 
 This document provides the justification and objective of this GitHub repository and its contents. It outlines how it addresses various threats and how to adjust your expectations for different scenarios and environments. It also supplies additional resources.
 
@@ -200,7 +200,7 @@ How to properly perform a pentest and benchmark a system hardened by this reposi
 > [!IMPORTANT]\
 > **Always Pay attention to the [Microsoft Security Servicing Criteria for Windows](https://www.microsoft.com/en-us/msrc/windows-security-servicing-criteria), specially the Security boundaries.** There is no security boundary between Administrator to Kernel.
 >
-> Some penetration testers overlook this fact, assuming it is a vulnerability that they can perform administrative tasks such as disabling security features as Administrator. This is an expected behaviour. Administrators have the power to control the security of a device and can disable security features at their discretion. This is why you need to use a Standard user account when performing a realistic penetration test.
+> Some penetration testers overlook this fact, assuming it is a vulnerability that they can perform administrative tasks such as disabling security features as Administrator. This is an expected behavior. Administrators have the power to control the security of a device and can disable security features at their discretion. This is why you need to use a Standard user account when performing a realistic penetration test.
 >
 > Another aspect to consider is the ambiguity in the word "Admin". There are at least two distinct types of Admins: Local Admin and Cloud Admin. For instance, when you are penetration testing a system that leverages enterprise cloud security solution such as Microsoft Defender for Endpoint (MDE), Admin access should be regarded as Cloud Admin since those devices use Microsoft Entra ID and lack Local Admin. In this situation, Cloud Admin can effortlessly disable security features as expected, rendering a pentest using Local Admin access utterly pointless. Conversely, when pentesting a system that only relies on personal security features such as Microsoft Defender, then Admin should be treated as Local Admin. In this case, the Admin can also disable any security feature for the same reasons stated above.
 >

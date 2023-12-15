@@ -2095,14 +2095,6 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 .\LGPO.exe /q /m '..\Security-Baselines-X\Miscellaneous Policies\registry.pol'
                 .\LGPO.exe /q /s '..\Security-Baselines-X\Miscellaneous Policies\GptTmpl.inf'
 
-                # Apply the Blocking Untrusted Fonts policy
-                switch (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nBlock Untrusted Fonts ?") {
-                    'Yes' {
-                        .\LGPO.exe /q /m '..\Security-Baselines-X\Miscellaneous Policies\Blocking Untrusted Fonts\registry.pol'
-                    } 'No' { break }
-                    'Exit' { &$CleanUp }
-                }
-
                 # Allow all Windows users to use Hyper-V and Windows Sandbox by adding all Windows users to the "Hyper-V Administrators" security group using its SID
                 Get-LocalUser | Where-Object -FilterScript { $_.enabled -eq 'True' } | ForEach-Object -Process { Add-LocalGroupMember -SID 'S-1-5-32-578' -Member "$($_.SID)" -ErrorAction SilentlyContinue }
 

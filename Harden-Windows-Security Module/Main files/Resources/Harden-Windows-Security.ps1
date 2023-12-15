@@ -1,6 +1,6 @@
 <#PSScriptInfo
 
-.VERSION 2023.11.23
+.VERSION 2023.12.15
 
 .GUID d435a293-c9ee-4217-8dc1-4ad2318a5770
 
@@ -98,7 +98,7 @@ $Host.UI.RawUI.WindowTitle = '❤️‍🔥Harden Windows Security❤️‍🔥'
 
 # Defining script variables
 # Current script's version, the same as the version at the top in the script info section
-[System.DateTime]$CurrentVersion = '2023.11.23'
+[System.DateTime]$CurrentVersion = '2023.12.15'
 # Minimum OS build number required for the hardening measures used in this script
 [System.Decimal]$Requiredbuild = '22621.2428'
 # Fetching Temp Directory
@@ -616,6 +616,80 @@ function Block-CountryIP {
 
     New-NetFirewallRule -DisplayName "$ListName IP range blocking" -Direction Inbound -Action Block -LocalAddress Any -RemoteAddress $IPList -Description "$ListName IP range blocking" -EdgeTraversalPolicy Block -PolicyStore localhost
     New-NetFirewallRule -DisplayName "$ListName IP range blocking" -Direction Outbound -Action Block -LocalAddress Any -RemoteAddress $IPList -Description "$ListName IP range blocking" -EdgeTraversalPolicy Block -PolicyStore localhost
+}
+function Edit-Addons {
+    <#
+        .SYNOPSIS
+            A function to enable or disable Windows features and capabilities.
+        .INPUTS
+            System.String
+        .OUTPUTS
+            System.String
+        #>
+    param (
+        [CmdletBinding()]
+        [parameter(Mandatory = $true)]
+        [ValidateSet('Capability', 'Feature')]
+        [System.String]$Type,
+        [parameter(Mandatory = $true, ParameterSetName = 'Capability')]
+        [System.String]$CapabilityName,
+        [parameter(Mandatory = $true, ParameterSetName = 'Feature')]
+        [System.String]$FeatureName,
+        [parameter(Mandatory = $true, ParameterSetName = 'Feature')]
+        [ValidateSet('Enabling', 'Disabling')]
+        [System.String]$FeatureAction
+    )
+    switch ($Type) {
+        'Feature' {
+            if ($FeatureAction -eq 'Enabling') {
+                $ActionCheck = 'disabled'
+                $ActionOutput = 'enabled'
+            }
+            else {
+                $ActionCheck = 'enabled'
+                $ActionOutput = 'disabled'
+            }
+            Write-SmartText -CustomColor Lavender -GenericColor Yellow -InputText "`n$FeatureAction $FeatureName"
+            if ((Get-WindowsOptionalFeature -Online -FeatureName $FeatureName).state -eq $ActionCheck) {
+                try {
+                    if ($FeatureAction -eq 'Enabling') {
+                        Enable-WindowsOptionalFeature -Online -FeatureName $FeatureName -All -NoRestart -ErrorAction Stop
+                    }
+                    else {
+                        Disable-WindowsOptionalFeature -Online -FeatureName $FeatureName -NoRestart -ErrorAction Stop
+                    }
+                    # Shows the successful message only if the process was successful
+                    Write-SmartText -GenericColor Green -CustomColor NeonGreen -InputText "$FeatureName was successfully $ActionOutput"
+                }
+                catch {
+                    # show errors in non-terminating way
+                    $_
+                }
+            }
+            else {
+                Write-SmartText -GenericColor Green -CustomColor NeonGreen -InputText "$FeatureName is already $ActionOutput"
+            }
+            break
+        }
+        'Capability' {
+            Write-SmartText -CustomColor Lavender -GenericColor Yellow -InputText "`nRemoving $CapabilityName"
+            if ((Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like "*$CapabilityName*" }).state -ne 'NotPresent') {
+                try {
+                    Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like "*$CapabilityName*" } | Remove-WindowsCapability -Online -ErrorAction Stop
+                    # Shows the successful message only if the process was successful
+                    Write-SmartText -GenericColor Green -CustomColor NeonGreen -InputText "$CapabilityName was successfully removed."
+                }
+                catch {
+                    # show errors in non-terminating way
+                    $_
+                }
+            }
+            else {
+                Write-SmartText -GenericColor Green -CustomColor NeonGreen -InputText "$CapabilityName is already removed."
+            }
+            break
+        }
+    }
 }
 #endregion functions
 
@@ -1850,7 +1924,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                         Write-Progress -Id 2 -ParentId 0 -Activity 'Lock Screen' -Status "Applying the Don't display last signed-in policy" -PercentComplete 50
 
                         .\LGPO.exe /q /s "..\Security-Baselines-X\Lock Screen Policies\Don't display last signed-in\GptTmpl.inf"
-                    
+
                         Write-Progress -Id 2 -Activity "Applying the Don't display last signed-in policy" -Completed
                     } 'No' { break }
                     'Exit' { &$CleanUp }
@@ -1862,11 +1936,11 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                         Write-Progress -Id 3 -ParentId 0 -Activity 'Lock Screen' -Status "Applying the Don't display last signed-in policy" -PercentComplete 50
 
                         .\LGPO.exe /q /s '..\Security-Baselines-X\Lock Screen Policies\Enable CTRL + ALT + DEL\GptTmpl.inf'
-                    
+
                         Write-Progress -Id 3 -Activity "Applying the Don't display last signed-in policy" -Completed
                     } 'No' { break }
                     'Exit' { &$CleanUp }
-                }                
+                }
             } 'No' { break }
             'Exit' { &$CleanUp }
         }
@@ -1950,80 +2024,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
 
                 # PowerShell Core (only if installed from Microsoft Store) has problem with these commands: https://github.com/PowerShell/PowerShell/issues/13866#issuecomment-1519066710
                 Import-Module -Name 'DISM' -UseWindowsPowerShell -Force -WarningAction SilentlyContinue
-                function Edit-Addons {
-                    <#
-                        .SYNOPSIS
-                            A function to enable or disable Windows features and capabilities.
-                        .INPUTS
-                            System.String
-                        .OUTPUTS
-                            System.String
-                        #>
-                    param (
-                        [CmdletBinding()]
-                        [parameter(Mandatory = $true)]
-                        [ValidateSet('Capability', 'Feature')]
-                        [System.String]$Type,
-                        [parameter(Mandatory = $true, ParameterSetName = 'Capability')]
-                        [System.String]$CapabilityName,
-                        [parameter(Mandatory = $true, ParameterSetName = 'Feature')]
-                        [System.String]$FeatureName,
-                        [parameter(Mandatory = $true, ParameterSetName = 'Feature')]
-                        [ValidateSet('Enabling', 'Disabling')]
-                        [System.String]$FeatureAction
-                    )
-                    switch ($Type) {
-                        'Feature' {
-                            if ($FeatureAction -eq 'Enabling') {
-                                $ActionCheck = 'disabled'
-                                $ActionOutput = 'enabled'
-                            }
-                            else {
-                                $ActionCheck = 'enabled'
-                                $ActionOutput = 'disabled'
-                            }
-                            Write-SmartText -CustomColor Lavender -GenericColor Yellow -InputText "`n$FeatureAction $FeatureName"
-                            if ((Get-WindowsOptionalFeature -Online -FeatureName $FeatureName).state -eq $ActionCheck) {
-                                try {
-                                    if ($FeatureAction -eq 'Enabling') {
-                                        Enable-WindowsOptionalFeature -Online -FeatureName $FeatureName -All -NoRestart -ErrorAction Stop
-                                    }
-                                    else {
-                                        Disable-WindowsOptionalFeature -Online -FeatureName $FeatureName -NoRestart -ErrorAction Stop
-                                    }
-                                    # Shows the successful message only if the process was successful
-                                    Write-SmartText -GenericColor Green -CustomColor NeonGreen -InputText "$FeatureName was successfully $ActionOutput"
-                                }
-                                catch {
-                                    # show errors in non-terminating way
-                                    $_
-                                }
-                            }
-                            else {
-                                Write-SmartText -GenericColor Green -CustomColor NeonGreen -InputText "$FeatureName is already $ActionOutput"
-                            }
-                            break
-                        }
-                        'Capability' {
-                            Write-SmartText -CustomColor Lavender -GenericColor Yellow -InputText "`nRemoving $CapabilityName"
-                            if ((Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like "*$CapabilityName*" }).state -ne 'NotPresent') {
-                                try {
-                                    Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like "*$CapabilityName*" } | Remove-WindowsCapability -Online -ErrorAction Stop
-                                    # Shows the successful message only if the process was successful
-                                    Write-SmartText -GenericColor Green -CustomColor NeonGreen -InputText "$CapabilityName was successfully removed."
-                                }
-                                catch {
-                                    # show errors in non-terminating way
-                                    $_
-                                }
-                            }
-                            else {
-                                Write-SmartText -GenericColor Green -CustomColor NeonGreen -InputText "$CapabilityName is already removed."
-                            }
-                            break
-                        }
-                    }
-                }
+
                 Edit-Addons -Type Feature -FeatureAction Disabling -FeatureName 'MicrosoftWindowsPowerShellV2'
                 Edit-Addons -Type Feature -FeatureAction Disabling -FeatureName 'MicrosoftWindowsPowerShellV2Root'
                 Edit-Addons -Type Feature -FeatureAction Disabling -FeatureName 'WorkFolders-Client'

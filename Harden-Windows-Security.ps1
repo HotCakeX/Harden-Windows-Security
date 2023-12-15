@@ -260,8 +260,8 @@ function Compare-SecureString {
     #>
     [CmdletBinding()]
     param(
-        [Security.SecureString]$SecureString1,
-        [Security.SecureString]$SecureString2
+        [System.Security.SecureString]$SecureString1,
+        [System.Security.SecureString]$SecureString2
     )
     try {
         $Bstr1 = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($SecureString1)
@@ -1395,14 +1395,14 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                                     Write-Host -Object "`nTPM and Start up PIN are missing, adding them now..." -ForegroundColor Cyan
 
                                     do {
-                                        [securestring]$Pin1 = $(Write-SmartText -C PinkBold -G Magenta -I "`nEnter a Pin for Bitlocker startup (between 10 to 20 characters)"; Read-Host -AsSecureString)
-                                        [securestring]$Pin2 = $(Write-SmartText -C PinkBold -G Magenta -I 'Confirm your Bitlocker Startup Pin (between 10 to 20 characters)'; Read-Host -AsSecureString)
+                                        [System.Security.SecureString]$Pin1 = $(Write-SmartText -C PinkBold -G Magenta -I "`nEnter a Pin for Bitlocker startup (between 10 to 20 characters)"; Read-Host -AsSecureString)
+                                        [System.Security.SecureString]$Pin2 = $(Write-SmartText -C PinkBold -G Magenta -I 'Confirm your Bitlocker Startup Pin (between 10 to 20 characters)'; Read-Host -AsSecureString)
 
                                         # Compare the PINs and make sure they match
                                         [System.Boolean]$TheyMatch = Compare-SecureString -SecureString1 $Pin1 -SecureString2 $Pin2
                                         # If the PINs match and they are at least 10 characters long, max 20 characters
                                         if ( $TheyMatch -and ($Pin1.Length -in 10..20) -and ($Pin2.Length -in 10..20) ) {
-                                            [securestring]$Pin = $Pin1
+                                            [System.Security.SecureString]$Pin = $Pin1
                                         }
                                         else { Write-Host -Object 'Please ensure that the PINs you entered match, and that they are between 10 to 20 characters.' -ForegroundColor red }
                                     }
@@ -1436,13 +1436,13 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                         else {
                             Write-Host -Object "`nBitlocker is not enabled for the OS Drive, activating it now..." -ForegroundColor Yellow
                             do {
-                                [securestring]$Pin1 = $(Write-SmartText -C PinkBold -G Magenta -I 'Enter a Pin for Bitlocker startup (between 10 to 20 characters)'; Read-Host -AsSecureString)
-                                [securestring]$Pin2 = $(Write-SmartText -C PinkBold -G Magenta -I 'Confirm your Bitlocker Startup Pin (between 10 to 20 characters)'; Read-Host -AsSecureString)
+                                [System.Security.SecureString]$Pin1 = $(Write-SmartText -C PinkBold -G Magenta -I 'Enter a Pin for Bitlocker startup (between 10 to 20 characters)'; Read-Host -AsSecureString)
+                                [System.Security.SecureString]$Pin2 = $(Write-SmartText -C PinkBold -G Magenta -I 'Confirm your Bitlocker Startup Pin (between 10 to 20 characters)'; Read-Host -AsSecureString)
 
                                 [System.Boolean]$TheyMatch = Compare-SecureString -SecureString1 $Pin1 -SecureString2 $Pin2
 
                                 if ( $TheyMatch -and ($Pin1.Length -in 10..20) -and ($Pin2.Length -in 10..20) ) {
-                                    [securestring]$Pin = $Pin1
+                                    [System.Security.SecureString]$Pin = $Pin1
                                 }
                                 else { Write-Host -Object 'Please ensure that the PINs you entered match, and that they are between 10 to 20 characters.' -ForegroundColor red }
                             }
@@ -1536,14 +1536,14 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                                     }
 
                                     do {
-                                        [securestring]$Pin1 = $(Write-SmartText -C PinkBold -G Magenta -I "`nEnter a Pin for Bitlocker startup (between 10 to 20 characters)"; Read-Host -AsSecureString)
-                                        [securestring]$Pin2 = $(Write-SmartText -C PinkBold -G Magenta -I 'Confirm your Bitlocker Startup Pin (between 10 to 20 characters)'; Read-Host -AsSecureString)
+                                        [System.Security.SecureString]$Pin1 = $(Write-SmartText -C PinkBold -G Magenta -I "`nEnter a Pin for Bitlocker startup (between 10 to 20 characters)"; Read-Host -AsSecureString)
+                                        [System.Security.SecureString]$Pin2 = $(Write-SmartText -C PinkBold -G Magenta -I 'Confirm your Bitlocker Startup Pin (between 10 to 20 characters)'; Read-Host -AsSecureString)
 
                                         # Compare the PINs and make sure they match
                                         [System.Boolean]$TheyMatch = Compare-SecureString -SecureString1 $Pin1 -SecureString2 $Pin2
                                         # If the PINs match and they are at least 10 characters long, max 20 characters
                                         if ( $TheyMatch -and ($Pin1.Length -in 10..20) -and ($Pin2.Length -in 10..20) ) {
-                                            [securestring]$Pin = $Pin1
+                                            [System.Security.SecureString]$Pin = $Pin1
                                         }
                                         else { Write-Host -Object 'Please ensure that the PINs you entered match, and that they are between 10 to 20 characters.' -ForegroundColor red }
                                     }
@@ -1579,14 +1579,14 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                             Write-Host -Object "`nBitlocker is not enabled for the OS Drive, activating it now..." -ForegroundColor Yellow
 
                             do {
-                                [securestring]$Pin1 = $(Write-SmartText -C PinkBold -G Magenta -I "`nEnter a Pin for Bitlocker startup (between 10 to 20 characters)"; Read-Host -AsSecureString)
-                                [securestring]$Pin2 = $(Write-SmartText -C PinkBold -G Magenta -I 'Confirm your Bitlocker Startup Pin (between 10 to 20 characters)'; Read-Host -AsSecureString)
+                                [System.Security.SecureString]$Pin1 = $(Write-SmartText -C PinkBold -G Magenta -I "`nEnter a Pin for Bitlocker startup (between 10 to 20 characters)"; Read-Host -AsSecureString)
+                                [System.Security.SecureString]$Pin2 = $(Write-SmartText -C PinkBold -G Magenta -I 'Confirm your Bitlocker Startup Pin (between 10 to 20 characters)'; Read-Host -AsSecureString)
 
                                 # Compare the PINs and make sure they match
                                 [System.Boolean]$TheyMatch = Compare-SecureString -SecureString1 $Pin1 -SecureString2 $Pin2
                                 # If the PINs match and they are at least 10 characters long, max 20 characters
                                 if ( $TheyMatch -and ($Pin1.Length -in 10..20) -and ($Pin2.Length -in 10..20) ) {
-                                    [securestring]$Pin = $Pin1
+                                    [System.Security.SecureString]$Pin = $Pin1
                                 }
                                 else { Write-Host -Object 'Please ensure that the PINs you entered match, and that they are between 10 to 20 characters.' -ForegroundColor red }
                             }

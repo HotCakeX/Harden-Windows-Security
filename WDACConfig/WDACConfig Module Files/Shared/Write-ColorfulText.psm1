@@ -39,7 +39,7 @@ Function Write-ColorfulText {
         'TeaGreen' { Write-Host "$($PSStyle.Foreground.FromRgb(133, 222, 119))$InputText$($PSStyle.Reset)"; break }
         'HotPink' { Write-Host "$($PSStyle.Foreground.FromRGB(255,105,180))$InputText$($PSStyle.Reset)"; break }
         'Rainbow' {
-            [System.Object[]]$Colors = @(
+            [System.Drawing.Color[]]$Colors = @(
                 [System.Drawing.Color]::Pink,
                 [System.Drawing.Color]::HotPink,
                 [System.Drawing.Color]::SkyBlue,

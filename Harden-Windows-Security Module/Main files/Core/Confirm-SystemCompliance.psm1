@@ -880,31 +880,13 @@ function Confirm-SystemCompliance {
                 Method       = 'Security Group Policy'
             }
 
-
-            # This particular policy can have 2 values and they are both acceptable depending on whichever user selects
-            [System.String]$ConsentPromptBehaviorUserValue = $SecurityPoliciesIni.'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\ConsentPromptBehaviorUser']
-            # This option is automatically applied when UAC category is run
-            if ($ConsentPromptBehaviorUserValue -eq '4,1') {
-                $ConsentPromptBehaviorUserCompliance = $true
-                $IndividualItemResult = 'Prompt for credentials on the secure desktop'
-            }
-            # This option prompts for additional confirmation before it's applied
-            elseif ($ConsentPromptBehaviorUserValue -eq '4,0') {
-                $ConsentPromptBehaviorUserCompliance = $true
-                $IndividualItemResult = 'Automatically deny elevation requests'
-            }
-            # If none of them is applied then return false for compliance and N/A for value
-            else {
-                $ConsentPromptBehaviorUserCompliance = $false
-                $IndividualItemResult = 'N/A'
-            }
-
             # Verify a Security Group Policy setting
+            $IndividualItemResult = [System.Boolean]$($SecurityPoliciesIni.'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\ConsentPromptBehaviorUser'] -eq '4,0') ? $True : $False
             $NestedObjectArray += [PSCustomObject]@{
-                FriendlyName = 'UAC: Behavior of the elevation prompt for standard users'
-                Compliant    = $ConsentPromptBehaviorUserCompliance
+                FriendlyName = 'UAC: Automatically deny elevation requests on Standard accounts'
+                Compliant    = $IndividualItemResult
                 Value        = $IndividualItemResult
-                Name         = 'UAC: Behavior of the elevation prompt for standard users'
+                Name         = 'UAC: Automatically deny elevation requests on Standard accounts'
                 Category     = $CatName
                 Method       = 'Security Group Policy'
             }

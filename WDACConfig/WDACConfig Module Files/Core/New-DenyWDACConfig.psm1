@@ -183,6 +183,7 @@ Function New-DenyWDACConfig {
         # Create Deny base policy for Driver files
         if ($Drivers) {
 
+            Write-Verbose -Message 'Looping through each user-selected folder paths, scanning them, creating a temp policy file based on them'
             powershell.exe -Command {
                 [System.Object[]]$DriverFilesObject = @()
                 # loop through each user-selected folder paths
@@ -207,20 +208,31 @@ Function New-DenyWDACConfig {
             } -args $ScanLocations, $Level, $Fallbacks
 
             # Merging AllowAll default policy with our Deny temp policy
+            Write-Verbose -Message 'Merging AllowAll default template policy with our Deny temp policy'
             Merge-CIPolicy -PolicyPaths 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowAll.xml', '.\DenyPolicy Temp.xml' -OutputFilePath ".\DenyPolicy $PolicyName.xml" | Out-Null
 
+            Write-Verbose -Message 'Removing the temp deny policy file after using it in the merge operation'
             Remove-Item -Path '.\DenyPolicy Temp.xml' -Force
+            
+            Write-Verbose -Message 'Assigning a name and resetting the policy ID'
             [System.String]$PolicyID = Set-CIPolicyIdInfo -FilePath "DenyPolicy $PolicyName.xml" -ResetPolicyID -PolicyName "$PolicyName"
             [System.String]$PolicyID = $PolicyID.Substring(11)
+
+            Write-Verbose -Message 'Setting the policy version to 1.0.0.0'
             Set-CIPolicyVersion -FilePath "DenyPolicy $PolicyName.xml" -Version '1.0.0.0'
 
+            Write-Verbose -Message 'Setting the policy rule options'
             @(0, 2, 5, 6, 11, 12, 16, 17, 19, 20) | ForEach-Object -Process {
                 Set-RuleOption -FilePath "DenyPolicy $PolicyName.xml" -Option $_ }
 
+            Write-Verbose -Message 'Deleting the unnecessary policy rule options from the base deny policy'
             @(3, 4, 9, 10, 13, 18) | ForEach-Object -Process {
                 Set-RuleOption -FilePath "DenyPolicy $PolicyName.xml" -Option $_ -Delete }
 
+            Write-Verbose -Message 'Setting the HVCI to Strict'
             Set-HVCIOptions -Strict -FilePath "DenyPolicy $PolicyName.xml"
+
+            Write-Verbose -Message 'Converting the policy XML to .CIP'
             ConvertFrom-CIPolicy -XmlFilePath "DenyPolicy $PolicyName.xml" -BinaryFilePath "$PolicyID.cip" | Out-Null
 
             Write-ColorfulText -Color MintGreen -InputText "DenyPolicyFile = DenyPolicy $PolicyName.xml"

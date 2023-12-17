@@ -49,6 +49,9 @@ Function New-DenyWDACConfig {
         [Parameter(Mandatory = $false)]
         [System.Management.Automation.SwitchParameter]$Deploy,
 
+        [Parameter(Mandatory = $false)]
+        [System.Management.Automation.SwitchParameter]$Force,
+
         [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SkipVersionCheck
     )
 
@@ -89,6 +92,11 @@ Function New-DenyWDACConfig {
         # Redirecting the Update-Self function's information Stream to $null because Write-Host
         # Used by Write-ColorfulText outputs to both information stream and host console
         if (-NOT $SkipVersionCheck) { Update-self 6> $null }
+
+        # Detecting if Confirm switch is used to bypass the confirmation prompts
+        if ($Force -and -Not $Confirm) {
+            $ConfirmPreference = 'None'
+        }
     }
 
     process {
@@ -213,7 +221,7 @@ Function New-DenyWDACConfig {
 
             Write-Verbose -Message 'Removing the temp deny policy file after using it in the merge operation'
             Remove-Item -Path '.\DenyPolicy Temp.xml' -Force
-            
+
             Write-Verbose -Message 'Assigning a name and resetting the policy ID'
             [System.String]$PolicyID = Set-CIPolicyIdInfo -FilePath "DenyPolicy $PolicyName.xml" -ResetPolicyID -PolicyName "$PolicyName"
             [System.String]$PolicyID = $PolicyID.Substring(11)
@@ -251,57 +259,84 @@ Function New-DenyWDACConfig {
 
         # Creating Deny rule for Appx Packages
         if ($InstalledAppXPackages) {
-            do {
-                Get-AppxPackage -Name $PackageName
-                Write-Verbose -Message "This is the Selected package name $PackageName"
-                $Question = Read-Host -Prompt "`nIs this the intended results based on your Installed Appx packages? Enter 1 to continue, Enter 2 to exit`n"
-            } until (
-                (($Question -eq 1) -or ($Question -eq 2))
-            )
-            if ($Question -eq 2) { break }
 
-            powershell.exe -Command {
-                # Get all the packages based on the supplied name
-                $Package = Get-AppxPackage -Name $args[0]
-
-                # Create rules for each package
-                foreach ($Item in $Package) {
-                    $Rules += New-CIPolicyRule -Deny -Package $Item
+            try {
+                # Backing up PS Formatting Styles
+                [System.Collections.Hashtable]$OriginalStyle = @{}
+                $PSStyle.Formatting | Get-Member -MemberType Property | ForEach-Object -Process {
+                    $OriginalStyle[$_.Name] = $PSStyle.Formatting.$($_.Name)
                 }
 
-                # Generate the supplemental policy xml file
-                New-CIPolicy -MultiplePolicyFormat -FilePath '.\AppxDenyPolicyTemp.xml' -Rules $Rules
-            } -args $PackageName
+                # Change the color for the list items to plum
+                $PSStyle.Formatting.FormatAccent = "$($PSStyle.Foreground.FromRGB(221,160,221))"
 
-            # Merging AllowAll default policy with our Deny temp policy
-            Merge-CIPolicy -PolicyPaths 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowAll.xml', '.\AppxDenyPolicyTemp.xml' -OutputFilePath ".\AppxDenyPolicy $PolicyName.xml" | Out-Null
+                Write-Verbose -Message 'Displaying the installed Appx packages based on the supplied name'
+                Get-AppxPackage -Name $PackageName | Select-Object -Property Name, Publisher, version, PackageFamilyName, PackageFullName, InstallLocation, Dependencies, SignatureKind, Status
 
-            # Removing the temp deny policy
-            Remove-Item -Path '.\AppxDenyPolicyTemp.xml' -Force
-            [System.String]$PolicyID = Set-CIPolicyIdInfo -FilePath ".\AppxDenyPolicy $PolicyName.xml" -ResetPolicyID -PolicyName "$PolicyName"
-            [System.String]$PolicyID = $PolicyID.Substring(11)
-            Set-CIPolicyVersion -FilePath ".\AppxDenyPolicy $PolicyName.xml" -Version '1.0.0.0'
+                # Prompt for confirmation before proceeding
+                if ($PSCmdlet.ShouldProcess('', 'Select No to choose another name', 'Is this the intended results based on your Installed Appx packages?')) {
 
-            @(0, 2, 6, 11, 12, 16, 17, 19, 20) | ForEach-Object -Process {
-                Set-RuleOption -FilePath ".\AppxDenyPolicy $PolicyName.xml" -Option $_ }
+                    Write-Verbose -Message 'Creating a temporary Deny policy for the supplied Appx package name'
+                    powershell.exe -Command {
+                        # Get all the packages based on the supplied name
+                        $Package = Get-AppxPackage -Name $args[0]
 
-            @(3, 4, 8, 9, 10, 13, 14, 15, 18) | ForEach-Object -Process {
-                Set-RuleOption -FilePath ".\AppxDenyPolicy $PolicyName.xml" -Option $_ -Delete }
+                        # Create rules for each package
+                        foreach ($Item in $Package) {
+                            $Rules += New-CIPolicyRule -Deny -Package $Item
+                        }
 
-            Set-HVCIOptions -Strict -FilePath ".\AppxDenyPolicy $PolicyName.xml"
-            ConvertFrom-CIPolicy -XmlFilePath ".\AppxDenyPolicy $PolicyName.xml" -BinaryFilePath "$PolicyID.cip" | Out-Null
+                        # Generate the supplemental policy xml file
+                        New-CIPolicy -MultiplePolicyFormat -FilePath '.\AppxDenyPolicyTemp.xml' -Rules $Rules
+                    } -args $PackageName
 
-            Write-ColorfulText -Color MintGreen -InputText "DenyPolicyFile = AppxDenyPolicy $PolicyName.xml"
-            Write-ColorfulText -Color MintGreen -InputText "DenyPolicyGUID = $PolicyID"
+                    # Merging AllowAll default policy with our Deny temp policy
+                    Write-Verbose -Message 'Merging AllowAll default template policy with our AppX Deny temp policy'
+                    Merge-CIPolicy -PolicyPaths 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowAll.xml', '.\AppxDenyPolicyTemp.xml' -OutputFilePath ".\AppxDenyPolicy $PolicyName.xml" | Out-Null
 
-            if ($Deploy) {
-                Write-Verbose -Message 'Deploying the policy'
-                &'C:\Windows\System32\CiTool.exe' --update-policy "$PolicyID.cip" -json | Out-Null
+                    Write-Verbose -Message 'Removing the temp deny policy file after using it in the merge operation'
+                    Remove-Item -Path '.\AppxDenyPolicyTemp.xml' -Force
 
-                Write-ColorfulText -Color Pink -InputText "A Deny Base policy with the name $PolicyName has been deployed."
+                    Write-Verbose -Message 'Assigning a name and resetting the policy ID'
+                    [System.String]$PolicyID = Set-CIPolicyIdInfo -FilePath ".\AppxDenyPolicy $PolicyName.xml" -ResetPolicyID -PolicyName "$PolicyName"
+                    [System.String]$PolicyID = $PolicyID.Substring(11)
 
-                Write-Verbose -Message 'Removing the .CIP file after deployment'
-                Remove-Item -Path "$PolicyID.cip" -Force
+                    Write-Verbose -Message 'Setting the policy version to 1.0.0.0'
+                    Set-CIPolicyVersion -FilePath ".\AppxDenyPolicy $PolicyName.xml" -Version '1.0.0.0'
+
+                    Write-Verbose -Message 'Setting the policy rule options'
+                    @(0, 2, 6, 11, 12, 16, 17, 19, 20) | ForEach-Object -Process {
+                        Set-RuleOption -FilePath ".\AppxDenyPolicy $PolicyName.xml" -Option $_ }
+
+                    Write-Verbose -Message 'Deleting the unnecessary policy rule options from the base deny policy'
+                    @(3, 4, 8, 9, 10, 13, 14, 15, 18) | ForEach-Object -Process {
+                        Set-RuleOption -FilePath ".\AppxDenyPolicy $PolicyName.xml" -Option $_ -Delete }
+
+                    Write-Verbose -Message 'Setting the HVCI to Strict'
+                    Set-HVCIOptions -Strict -FilePath ".\AppxDenyPolicy $PolicyName.xml"
+
+                    Write-Verbose -Message 'Converting the policy XML to .CIP'
+                    ConvertFrom-CIPolicy -XmlFilePath ".\AppxDenyPolicy $PolicyName.xml" -BinaryFilePath "$PolicyID.cip" | Out-Null
+
+                    Write-ColorfulText -Color MintGreen -InputText "DenyPolicyFile = AppxDenyPolicy $PolicyName.xml"
+                    Write-ColorfulText -Color MintGreen -InputText "DenyPolicyGUID = $PolicyID"
+
+                    if ($Deploy) {
+                        Write-Verbose -Message 'Deploying the policy'
+                        &'C:\Windows\System32\CiTool.exe' --update-policy "$PolicyID.cip" -json | Out-Null
+
+                        Write-ColorfulText -Color Pink -InputText "A Deny Base policy with the name $PolicyName has been deployed."
+
+                        Write-Verbose -Message 'Removing the .CIP file after deployment'
+                        Remove-Item -Path "$PolicyID.cip" -Force
+                    }
+                }
+            }
+            finally {
+                # Restore PS Formatting Styles
+                $OriginalStyle.Keys | ForEach-Object -Process {
+                    $PSStyle.Formatting.$_ = $OriginalStyle[$_]
+                }
             }
         }
     }
@@ -333,6 +368,8 @@ Function New-DenyWDACConfig {
     Creates a Deny standalone base policy for drivers only by scanning a directory for driver files. The base policy created by this parameter can be deployed side by side any other base/supplemental policy.
 .PARAMETER InstalledAppXPackages
     Creates a Deny standalone base policy for an installed App based on Appx package family names
+.PARAMETER Force
+    It's used by the entire Cmdlet. Indicates that the confirmation prompts will be bypassed.
 .PARAMETER SkipVersionCheck
     Can be used with any parameter to bypass the online version check - only to be used in rare cases
     It's used by the entire Cmdlet.

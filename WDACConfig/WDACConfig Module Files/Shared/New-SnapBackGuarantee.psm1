@@ -3,8 +3,8 @@ Function New-SnapBackGuarantee {
     .SYNOPSIS
         A function that arms the system with a snapback guarantee in case of a reboot during the base policy enforcement process.
         This will help prevent the system from being stuck in audit mode in case of a power outage or a reboot during the base policy enforcement process.
-    .PARAMETER Location
-        The directory location of the base policy file that will be enforced.
+    .PARAMETER Path
+        The directory path of the base policy file that will be enforced.
     .INPUTS
         System.IO.DirectoryInfo
     .OUTPUTS

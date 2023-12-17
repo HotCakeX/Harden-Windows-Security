@@ -26,6 +26,9 @@ Function Deploy-SignedWDACConfig {
         [parameter(Mandatory = $false, ValueFromPipelineByPropertyName = $true)]
         [System.String]$SignToolPath,
 
+        [Parameter(Mandatory = $false)]
+        [System.Management.Automation.SwitchParameter]$Force,
+
         [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SkipVersionCheck
     )
 
@@ -105,6 +108,11 @@ Function Deploy-SignedWDACConfig {
             }
         }
         #Endregion User-Configurations-Processing-Validation
+
+        # Detecting if Confirm switch is used to bypass the confirmation prompts
+        if ($Force -and -Not $Confirm) {
+            $ConfirmPreference = 'None'
+        }
     }
 
     process {
@@ -180,75 +188,57 @@ Function Deploy-SignedWDACConfig {
 
             if ($Deploy) {
 
-                Write-Verbose -Message 'Deploying the policy'
-                &'C:\Windows\System32\CiTool.exe' --update-policy ".\$PolicyID.cip" -json | Out-Null
+                # Prompt for confirmation before proceeding
+                if ($PSCmdlet.ShouldProcess('This PC', 'Deploying the signed policy')) {
 
-                Write-Host -Object 'policy with the following details has been Signed and Deployed in Enforced Mode:' -ForegroundColor Green
-                Write-ColorfulText -Color MintGreen -InputText "PolicyName = $PolicyName"
-                Write-ColorfulText -Color MintGreen -InputText "PolicyGUID = $PolicyID"
+                    Write-Verbose -Message 'Deploying the policy'
+                    &'C:\Windows\System32\CiTool.exe' --update-policy ".\$PolicyID.cip" -json | Out-Null
 
-                Write-Verbose -Message 'Removing the .CIP file after deployment'
-                Remove-Item -Path ".\$PolicyID.cip" -Force
+                    Write-ColorfulText -Color Lavender -InputText 'policy with the following details has been Signed and Deployed in Enforced Mode:'
+                    Write-ColorfulText -Color MintGreen -InputText "PolicyName = $PolicyName"
+                    Write-ColorfulText -Color MintGreen -InputText "PolicyGUID = $PolicyID"
 
-                #Region Detecting Strict Kernel mode policy and removing it from User Configs
-                if ('Enabled:UMCI' -notin $PolicyRuleOptions) {
+                    Write-Verbose -Message 'Removing the .CIP file after deployment'
+                    Remove-Item -Path ".\$PolicyID.cip" -Force
 
-                    [System.String]$StrictKernelPolicyGUID = Get-CommonWDACConfig -StrictKernelPolicyGUID
-                    [System.String]$StrictKernelNoFlightRootsPolicyGUID = Get-CommonWDACConfig -StrictKernelNoFlightRootsPolicyGUID
+                    #Region Detecting Strict Kernel mode policy and removing it from User Configs
+                    if ('Enabled:UMCI' -notin $PolicyRuleOptions) {
 
-                    if (($PolicyName -like '*Strict Kernel mode policy Enforced*')) {
+                        [System.String]$StrictKernelPolicyGUID = Get-CommonWDACConfig -StrictKernelPolicyGUID
+                        [System.String]$StrictKernelNoFlightRootsPolicyGUID = Get-CommonWDACConfig -StrictKernelNoFlightRootsPolicyGUID
 
-                        Write-Verbose -Message 'The deployed policy is Strict Kernel mode'
+                        if (($PolicyName -like '*Strict Kernel mode policy Enforced*')) {
 
-                        if ($StrictKernelPolicyGUID) {
-                            if ($($PolicyID.TrimStart('{').TrimEnd('}')) -eq $StrictKernelPolicyGUID) {
+                            Write-Verbose -Message 'The deployed policy is Strict Kernel mode'
 
-                                Write-Verbose -Message 'Removing the GUID of the deployed Strict Kernel mode policy from the User Configs'
-                                Remove-CommonWDACConfig -StrictKernelPolicyGUID | Out-Null
+                            if ($StrictKernelPolicyGUID) {
+                                if ($($PolicyID.TrimStart('{').TrimEnd('}')) -eq $StrictKernelPolicyGUID) {
+
+                                    Write-Verbose -Message 'Removing the GUID of the deployed Strict Kernel mode policy from the User Configs'
+                                    Remove-CommonWDACConfig -StrictKernelPolicyGUID | Out-Null
+                                }
+                            }
+                        }
+                        elseif (($PolicyName -like '*Strict Kernel No Flights mode policy Enforced*')) {
+
+                            Write-Verbose -Message 'The deployed policy is Strict Kernel No Flights mode'
+
+                            if ($StrictKernelNoFlightRootsPolicyGUID) {
+                                if ($($PolicyID.TrimStart('{').TrimEnd('}')) -eq $StrictKernelNoFlightRootsPolicyGUID) {
+
+                                    Write-Verbose -Message 'Removing the GUID of the deployed Strict Kernel No Flights mode policy from the User Configs'
+                                    Remove-CommonWDACConfig -StrictKernelNoFlightRootsPolicyGUID | Out-Null
+                                }
                             }
                         }
                     }
-
-                    elseif (($PolicyName -like '*Strict Kernel No Flights mode policy Enforced*')) {
-
-                        Write-Verbose -Message 'The deployed policy is Strict Kernel No Flights mode'
-
-                        if ($StrictKernelNoFlightRootsPolicyGUID) {
-                            if ($($PolicyID.TrimStart('{').TrimEnd('}')) -eq $StrictKernelNoFlightRootsPolicyGUID) {
-
-                                Write-Verbose -Message 'Removing the GUID of the deployed Strict Kernel No Flights mode policy from the User Configs'
-                                Remove-CommonWDACConfig -StrictKernelNoFlightRootsPolicyGUID | Out-Null
-                            }
-                        }
-                    }
-                }
-                #Endregion Detecting Strict Kernel mode policy and removing it from User Configs
-
-                # Show the question only for base policies. Don't show it for Strict kernel mode policies either
-                if (($PolicyType -ne 'Supplemental Policy') -and ($PolicyName -notlike '*Strict Kernel*')) {
-
-                    # Ask user question about whether or not to add the Signed policy xml file to the User Config Json for easier usage later
-                    $UserInput = ''
-                    while ($UserInput -notin 1, 2) {
-                        $UserInput = $(Write-Host -Object 'Add the Signed policy xml file path just created to the User Configurations? Please enter 1 to Confirm or 2 to Skip.' -ForegroundColor Cyan ; Read-Host)
-                        if ($UserInput -eq 1) {
-                            Set-CommonWDACConfig -SignedPolicyPath $PolicyPath
-                            Write-ColorfulText -Color HotPink -InputText "Added $PolicyPath to the User Configuration file."
-                        }
-                        elseif ($UserInput -eq 2) {
-                            Write-ColorfulText -Color Pink -InputText 'Skipping...'
-                        }
-                        else {
-                            Write-Warning -Message 'Invalid input. Please enter 1 or 2 only.'
-                        }
-                    }
+                    #Endregion Detecting Strict Kernel mode policy and removing it from User Configs
                 }
             }
-
             else {
-                Write-Host -Object 'policy with the following details has been Signed and is ready for deployment:' -ForegroundColor Green
+                Write-ColorfulText -Color Lavender -InputText 'policy with the following details has been Signed and is ready for deployment:'
                 Write-ColorfulText -Color MintGreen -InputText "PolicyName = $PolicyName"
-                Write-ColorfulText -Color MintGreen -InputText "PolicyGUID = $PolicyID`n"
+                Write-ColorfulText -Color MintGreen -InputText "PolicyGUID = $PolicyID"
             }
         }
     }
@@ -274,6 +264,8 @@ Function Deploy-SignedWDACConfig {
     Path to the SignTool.exe - optional parameter
 .PARAMETER Deploy
     Indicates that the cmdlet will deploy the signed policy on the current system
+.PARAMETER Force
+    Indicates that the cmdlet will bypass the confirmation prompts
 .PARAMETER SkipVersionCheck
     Can be used with any parameter to bypass the online version check - only to be used in rare cases
 .INPUTS

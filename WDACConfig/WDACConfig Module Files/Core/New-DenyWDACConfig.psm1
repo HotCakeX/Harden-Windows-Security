@@ -274,7 +274,7 @@ Function New-DenyWDACConfig {
                 Get-AppxPackage -Name $PackageName | Select-Object -Property Name, Publisher, version, PackageFamilyName, PackageFullName, InstallLocation, Dependencies, SignatureKind, Status
 
                 # Prompt for confirmation before proceeding
-                if ($PSCmdlet.ShouldProcess('', 'Select No to choose another name', 'Is this the intended results based on your Installed Appx packages?')) {
+                if ($PSCmdlet.ShouldProcess('', 'Select No to cancel and choose another name', 'Is this the intended results based on your Installed Appx packages?')) {
 
                     Write-Verbose -Message 'Creating a temporary Deny policy for the supplied Appx package name'
                     powershell.exe -Command {

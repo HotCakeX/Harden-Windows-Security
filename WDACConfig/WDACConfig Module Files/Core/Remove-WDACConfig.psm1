@@ -127,10 +127,9 @@ Function Remove-WDACConfig {
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Write-ColorfulText.psm1" -Force
 
         # if -SkipVersionCheck wasn't passed, run the updater
-        if (-NOT $SkipVersionCheck) { Update-self }
+        if (-NOT $SkipVersionCheck) { Update-self -InvocationStatement $MyInvocation.Statement }
 
         #Region User-Configurations-Processing-Validation
-
         Write-Verbose -Message 'Validating and processing user configurations'
 
         if ($PSCmdlet.ParameterSetName -eq 'Signed Base') {

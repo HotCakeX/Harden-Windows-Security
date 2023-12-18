@@ -2,17 +2,21 @@ Function Update-self {
     <#
     .SYNOPSIS
         Make sure the latest version of the module is installed and if not, automatically update it, clean up any old versions
+    .PARAMETER InvocationStatement
+        The command that was used to invoke the main function/cmdlet that invoked the Update-self function, this is used to re-run the command after the module has been updated
     .INPUTS
-        None. You cannot pipe objects to this function.
+        System.String
     .OUTPUTS
         System.Void
     #>
     [CmdletBinding()]
-    param()
+    param(
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true, Position = 0)]
+        [ValidatePattern('^(Confirm-WDACConfig|Deploy-SignedWDACConfig|Edit-SignedWDACConfig|Edit-WDACConfig|Invoke-WDACSimulation|New-DenyWDACConfig|New-KernelModeWDACConfig|New-SupplementalWDACConfig|New-WDACConfig|Remove-WDACConfig).*')]
+        [System.String]$InvocationStatement
+    )
     # Importing the $PSDefaultParameterValues to the current session, prior to everything else
     . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
-    # Importing the required sub-modules
-    Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Write-ColorfulText.psm1" -Force
 
     try {
         # Get the last update check time
@@ -53,9 +57,18 @@ Function Update-self {
                 Throw [System.Security.VerificationException] 'Could not verify if the latest version of the module is installed, please check your Internet connection. You can optionally bypass the online check by using -SkipVersionCheck parameter.'
             }
         }
+
+        # Reset the last update timer to the current time
+        Write-Verbose -Message 'Resetting the last update timer to the current time'
+        Set-CommonWDACConfig -LastUpdateCheck $(Get-Date) | Out-Null
+
         if ($CurrentVersion -lt $LatestVersion) {
-            Write-ColorfulText -Color Pink -InputText "The currently installed module's version is $CurrentVersion while the latest version is $LatestVersion - Auto Updating the module... 💓"
+
+            Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(255,0,230))The currently installed module's version is $CurrentVersion while the latest version is $LatestVersion - Auto Updating the module... 💓$($PSStyle.Reset)"
+
+            # Remove the old module version from the current session
             Remove-Module -Name 'WDACConfig' -Force
+
             # Do this if the module was installed properly using Install-module cmdlet
             try {
                 Uninstall-Module -Name 'WDACConfig' -AllVersions -Force -ErrorAction Stop
@@ -68,14 +81,20 @@ Function Update-self {
                 # Will not import the new module version automatically because of the constant variables
             }
             # Make sure the old version isn't run after update
-            Write-ColorfulText -Color MintGreen -InputText 'Update has been successful, the current PowerShell tab/window needs to be closed and reopened to load the new version, press enter to continue.'
+            Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(152,255,152))Update has been successful, the current PowerShell tab/window needs to be closed and reopened to load the new version, press enter to continue.$($PSStyle.Reset)"
+
             Pause
+
+            try {
+                # Try to re-run the command that invoked the Update-self function in a new tab in Windows Terminal
+                wt.exe -w 0 -p 'PowerShell' pwsh.exe -NoExit -CommandWithArgs 'Invoke-Expression -command $args[0]' $InvocationStatement
+            }
+            catch {
+                # If Windows Terminal doesn't exist then use the default PowerShell core console
+                pwsh.exe -NoExit -CommandWithArgs 'Invoke-Expression -command $args[0]' $InvocationStatement
+            }
             exit
         }
-
-        # Reset the last update timer to the current time
-        Write-Verbose -Message 'Resetting the last update timer to the current time'
-        Set-CommonWDACConfig -LastUpdateCheck $(Get-Date) | Out-Null
     }
     else {
         Write-Verbose -Message "Skipping online update check because the last update check was performed $TimeDiff minutes ago"

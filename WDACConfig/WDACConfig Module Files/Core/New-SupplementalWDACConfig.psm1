@@ -1,9 +1,7 @@
 Function New-SupplementalWDACConfig {
     [CmdletBinding(
         DefaultParameterSetName = 'Normal',
-        SupportsShouldProcess = $true,
-        PositionalBinding = $false,
-        ConfirmImpact = 'High'
+        PositionalBinding = $false
     )]
     Param(
         # Main parameters for position 0

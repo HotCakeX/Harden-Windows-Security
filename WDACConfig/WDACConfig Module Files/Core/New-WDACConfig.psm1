@@ -1,9 +1,7 @@
 Function New-WDACConfig {
     [CmdletBinding(
         DefaultParameterSetName = 'Get Block Rules',
-        SupportsShouldProcess = $true,
-        PositionalBinding = $false,
-        ConfirmImpact = 'High'
+        PositionalBinding = $false
     )]
     Param(
         # 9 Main parameters - should be used for position 0

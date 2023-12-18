@@ -1,9 +1,7 @@
 Function Edit-WDACConfig {
     [CmdletBinding(
         DefaultParameterSetName = 'Allow New Apps Audit Events',
-        SupportsShouldProcess = $true,
-        PositionalBinding = $false,
-        ConfirmImpact = 'High'
+        PositionalBinding = $false
     )]
     Param(
         [Alias('E')]

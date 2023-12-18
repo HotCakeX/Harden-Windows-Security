@@ -44,9 +44,7 @@ Function New-KernelModeWDACConfig {
         $PSBoundParameters.Debug.IsPresent ? ([System.Boolean]$Debug = $true) : ([System.Boolean]$Debug = $false) | Out-Null
 
         # if -SkipVersionCheck wasn't passed, run the updater
-        # Redirecting the Update-Self function's information Stream to $null because Write-Host
-        # Used by Write-ColorfulText outputs to both information stream and host console
-        if (-NOT $SkipVersionCheck) { Update-self 6> $null }
+        if (-NOT $SkipVersionCheck) { Update-self }
 
         # Check if the PrepMode and AuditAndEnforce parameters are used together and ensure one of them is used
         if (-not ($PSBoundParameters.ContainsKey('PrepMode') -xor $PSBoundParameters.ContainsKey('AuditAndEnforce'))) {

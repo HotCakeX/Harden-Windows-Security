@@ -33,7 +33,7 @@ Function Update-self {
         [System.Int64]$TimeDiff = ($CurrentDateTime - $UserConfigDate).TotalMinutes
     }
 
-    # Only check for updates if the last attempt occured more than 10 minutes ago or the User Config file for last update check doesn't exist
+    # Only check for updates if the last attempt occurred more than 10 minutes ago or the User Config file for last update check doesn't exist
     # This prevents the module from constantly doing an update check by fetching the version file from GitHub
     if (($TimeDiff -gt 10) -or $PerformOnlineUpdateCheck) {
 
@@ -68,7 +68,7 @@ Function Update-self {
                 # Will not import the new module version automatically because of the constant variables
             }
             # Make sure the old version isn't run after update
-            Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(152,255,152))Update has been successful, the current PowerShell tab/window needs to be closed and reopened to load the new version, press enter to continue.$($PSStyle.Reset)"
+            Write-ColorfulText -Color MintGreen -InputText 'Update has been successful, the current PowerShell tab/window needs to be closed and reopened to load the new version, press enter to continue.'
             Pause
             exit
         }

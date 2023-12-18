@@ -84,9 +84,7 @@ Function New-SupplementalWDACConfig {
         }
 
         # if -SkipVersionCheck wasn't passed, run the updater
-        # Redirecting the Update-Self function's information Stream to $null because Write-Host
-        # Used by Write-ColorfulText outputs to both information stream and host console
-        if (-NOT $SkipVersionCheck) { Update-self 6> $null }
+        if (-NOT $SkipVersionCheck) { Update-self }
 
         #Region User-Configurations-Processing-Validation
         # If any of these parameters, that are mandatory for all of the position 0 parameters, isn't supplied by user

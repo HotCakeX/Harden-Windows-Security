@@ -274,7 +274,7 @@ Function New-WDACConfig {
             Write-Verbose -Message 'Removing the extra files that were created during module operation and are no longer needed'
             Remove-Item -Path '.\AllowMicrosoft.xml', 'Microsoft recommended block rules.xml' -Force
 
-            Write-Verbose -Message 'Displaying the outout'
+            Write-Verbose -Message 'Displaying the output'
             Write-ColorfulText -Color MintGreen -InputText 'PolicyFile = AllowMicrosoftPlusBlockRules.xml'
             Write-ColorfulText -Color MintGreen -InputText "BinaryFile = $PolicyID.cip"
 
@@ -644,7 +644,7 @@ Function New-WDACConfig {
             switch ($BasePolicyType) {
                 'Allow Microsoft Base' {
                     Write-Verbose -Message 'Creating Allow Microsoft Base policy'
-                    Build-AllowMSFTWithBlockRules | Out-Null
+                    Build-AllowMSFTWithBlockRules 6> $null
                     $Xml = [System.Xml.XmlDocument](Get-Content -Path .\AllowMicrosoftPlusBlockRules.xml)
                     $BasePolicyID = $Xml.SiPolicy.PolicyID
                     # define the location of the base policy
@@ -652,7 +652,7 @@ Function New-WDACConfig {
                 }
                 'Default Windows Base' {
                     Write-Verbose -Message 'Creating Default Windows Base policy'
-                    Build-DefaultWindowsWithBlockRules | Out-Null
+                    Build-DefaultWindowsWithBlockRules 6> $null
                     $Xml = [System.Xml.XmlDocument](Get-Content -Path .\DefaultWindowsPlusBlockRules.xml)
                     $BasePolicyID = $Xml.SiPolicy.PolicyID
                     # define the location of the base policy
@@ -816,7 +816,9 @@ Function New-WDACConfig {
             Remove-Item -Path 'SignedAndReputable.xml' -Force -ErrorAction SilentlyContinue
 
             Write-Verbose -Message 'Calling Build-AllowMSFTWithBlockRules function to create AllowMicrosoftPlusBlockRules.xml policy'
-            Build-AllowMSFTWithBlockRules -NoCIP | Out-Null
+            # Redirecting the function's information Stream to $null because Write-Host
+            # Used by Write-ColorfulText outputs to both information stream and host console
+            Build-AllowMSFTWithBlockRules -NoCIP 6> $null
 
             Write-Verbose -Message 'Renaming AllowMicrosoftPlusBlockRules.xml to SignedAndReputable.xml'
             Rename-Item -Path 'AllowMicrosoftPlusBlockRules.xml' -NewName 'SignedAndReputable.xml' -Force
@@ -872,8 +874,8 @@ Function New-WDACConfig {
             [System.DateTime]$Date = $Response[0].commit.author.date
 
             Write-ColorfulText -Color Lavender -InputText "The document containing the drivers block list on GitHub was last updated on $Date"
-            [System.String]$MicrosoftRecommendeDriverBlockRules = (Invoke-WebRequest -Uri $MSFTRecommendedDriverBlockRulesURL -ProgressAction SilentlyContinue).Content
-            $MicrosoftRecommendeDriverBlockRules -match '<VersionEx>(.*)</VersionEx>' | Out-Null
+            [System.String]$MicrosoftRecommendedDriverBlockRules = (Invoke-WebRequest -Uri $MSFTRecommendedDriverBlockRulesURL -ProgressAction SilentlyContinue).Content
+            $MicrosoftRecommendedDriverBlockRules -match '<VersionEx>(.*)</VersionEx>' | Out-Null
             Write-ColorfulText -Color Pink -InputText "The current version of Microsoft recommended drivers block list is $($Matches[1])"
         }
 

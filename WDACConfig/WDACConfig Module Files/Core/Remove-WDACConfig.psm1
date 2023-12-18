@@ -106,6 +106,9 @@ Function Remove-WDACConfig {
         [parameter(Mandatory = $false, ParameterSetName = 'Signed Base', ValueFromPipelineByPropertyName = $true)]
         [System.String]$SignToolPath,
 
+        [Parameter(Mandatory = $false)]
+        [System.Management.Automation.SwitchParameter]$Force,
+
         [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SkipVersionCheck
     )
 
@@ -124,9 +127,7 @@ Function Remove-WDACConfig {
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Write-ColorfulText.psm1" -Force
 
         # if -SkipVersionCheck wasn't passed, run the updater
-        # Redirecting the Update-Self function's information Stream to $null because Write-Host
-        # Used by Write-ColorfulText outputs to both information stream and host console
-        if (-NOT $SkipVersionCheck) { Update-self 6> $null }
+        if (-NOT $SkipVersionCheck) { Update-self }
 
         #Region User-Configurations-Processing-Validation
 
@@ -191,7 +192,6 @@ Function Remove-WDACConfig {
             }
         }
 
-
         # argument tab auto-completion and ValidateSet for Policy names
         # Defines the PolicyNamez class that implements the IValidateSetValuesGenerator interface. This class is responsible for generating a list of valid values for the policy names.
         Class PolicyNamez : System.Management.Automation.IValidateSetValuesGenerator {
@@ -236,6 +236,11 @@ Function Remove-WDACConfig {
                 return self::$NameIDMap[$Name]
             }
         }
+
+        # Detecting if Confirm switch is used to bypass the confirmation prompts
+        if ($Force -and -Not $Confirm) {
+            $ConfirmPreference = 'None'
+        }
     }
 
     process {
@@ -267,7 +272,7 @@ Function Remove-WDACConfig {
                 # Extracting the SupplementalPolicySigner ID from the selected XML policy file, if any
                 $SuppSingerIDs = $Xml.SiPolicy.SupplementalPolicySigners.SupplementalPolicySigner.SignerId
                 # Extracting the policy name from the selected XML policy file
-                $PolicyName = ($Xml.SiPolicy.Settings.Setting | Where-Object -FilterScript { $_.provider -eq 'PolicyInfo' -and $_.valuename -eq 'Name' -and $_.key -eq 'Information' }).value.string
+                [System.String]$PolicyName = ($Xml.SiPolicy.Settings.Setting | Where-Object -FilterScript { $_.provider -eq 'PolicyInfo' -and $_.valuename -eq 'Name' -and $_.key -eq 'Information' }).value.string
 
                 if ($SuppSingerIDs) {
                     Write-Verbose -Message "`n$($SuppSingerIDs.count) SupplementalPolicySigners have been found in $PolicyName policy, removing them now..."
@@ -283,7 +288,7 @@ Function Remove-WDACConfig {
                     # Removing the Supplemental policy signers block from the XML file
                     $PolContent -match '<SupplementalPolicySigners>[\S\s]*</SupplementalPolicySigners>' | Out-Null
                     $PolContent = $PolContent -replace $Matches[0], ''
-                    Set-Content -Value $PolContent -Path $PolicyPath
+                    Set-Content -Value $PolContent -Path $PolicyPath -Force
 
                     # Remove empty lines from the entire policy file
                     (Get-Content -Path $PolicyPath) | Where-Object -FilterScript { $_.trim() -ne '' } | Set-Content -Path $PolicyPath -Force
@@ -318,12 +323,20 @@ Function Remove-WDACConfig {
                 Rename-Item -Path "$PolicyID.cip.p7" -NewName "$PolicyID.cip" -Force
 
                 # Deploying the newly signed CIP file
-                Write-Verbose -Message 'Deploying the newly signed CIP file'
-                &'C:\Windows\System32\CiTool.exe' --update-policy ".\$PolicyID.cip" -json | Out-Null
 
-                Write-ColorfulText -Color Lavender -InputText "Policy with the following details has been Re-signed and Re-deployed in Unsigned mode.`nPlease restart your system."
-                Write-ColorfulText -Color MintGreen -InputText "PolicyName = $PolicyName"
-                Write-ColorfulText -Color MintGreen -InputText "PolicyGUID = $PolicyID"
+                # Prompt for confirmation before proceeding
+                if ($PSCmdlet.ShouldProcess('This PC', 'Deploying the signed policy')) {
+
+                    Write-Verbose -Message 'Deploying the newly signed CIP file'
+                    &'C:\Windows\System32\CiTool.exe' --update-policy ".\$PolicyID.cip" -json | Out-Null
+
+                    Write-ColorfulText -Color Lavender -InputText "Policy with the following details has been Re-signed and Re-deployed in Unsigned mode.`nPlease restart your system."
+                    Write-ColorfulText -Color MintGreen -InputText "PolicyName = $PolicyName"
+                    Write-ColorfulText -Color MintGreen -InputText "PolicyGUID = $PolicyID"
+
+                    Write-Verbose -Message 'Removing the newly signed CIP file from the current directory after deployment'
+                    Remove-Item -Path ".\$PolicyID.cip" -Force
+                }
             }
         }
 
@@ -382,6 +395,8 @@ Function Remove-WDACConfig {
     Path to the SignTool.exe
 .PARAMETER UnsignedOrSupplemental
     Remove Unsigned deployed WDAC policies as well as Signed deployed Supplemental WDAC policies
+.PARAMETER Force
+    Bypasses the confirmation prompt
 .PARAMETER SkipVersionCheck
     Can be used with any parameter to bypass the online version check - only to be used in rare cases
 .INPUTS

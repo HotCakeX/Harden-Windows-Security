@@ -18,10 +18,16 @@ I suggest doing it using GUI because it will have a permanent effect:
 
 Or you can activate that Audit using this command, but it will only temporarily activate it and it'll be disabled again after you restart Windows.
 
-<br>
+### For Systems With English Locale Only
 
 ```powershell
 Auditpol /set /category:"System" /SubCategory:"Filtering Platform Packet Drop" /success:enable /failure:enable
+```
+
+### For Systems With Any Locale
+
+```powershell
+Auditpol /set /category:"{69979848-797A-11D9-BED3-505054503030}" /SubCategory:"{0CCE9225-69AE-11D9-BED3-505054503030}" /success:enable /failure:enable
 ```
 
 <br>

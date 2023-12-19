@@ -50,71 +50,7 @@ This code assumes you've already used the [Harden Windows Security Module](https
 
 In this example, any logs generated for Exploit Protection is displayed in real time on PowerShell console. You can modify and improve the displayed output more according to your needs.
 
-```powershell
-$LastEventTime = Get-Date
-
-# Comment this entire region if not using xml to specify event source and capture logic
-#region XML-Loading
-
-# For when QueryList isn't needed to be extracted
-#$FilterXml = Get-Content -Path ".\Exploit Protection Events.xml" -Raw
-
-# Load the XML content from a file or a string
-# For Exploit Protection Events
-$xml = [xml](Get-Content -Path 'C:\ProgramData\Microsoft\Event Viewer\Views\Hardening Script\Exploit Protection Events.xml')
-
-# Get the QueryList element using XPath
-$queryList = $xml.SelectSingleNode('//QueryList')
-
-# Convert the QueryList element to a string
-$queryListString = $queryList.OuterXml
-#endregion XML-Loading
-
-while ($true) {
-    $Events = Get-WinEvent -FilterXml $queryListString -Oldest | Sort-Object -Property TimeCreated -Descending
-
-    <#
-    For When you don't use xml to specify the event source
-
-    $Events = Get-WinEvent -FilterHashtable @{
-        'LogName' = 'Microsoft-Windows-CodeIntegrity/Operational'
-        'ID'      = 3077
-    } | Sort-Object -Property TimeCreated -Descending
-#>
-
-    if ($Events) {
-        foreach ($Event in $Events) {
-            if ($Event.TimeCreated -gt $LastEventTime) {
-
-                Write-Host "`n##################################################" -ForegroundColor Yellow
-
-                $Time = $Event.TimeCreated
-                Write-Host "Found new event at time $Time"
-                $LastEventTime = $Time
-
-                Write-Host "Message: $($Event.Message)`n" -ForegroundColor Cyan
-
-                # Convert the event to XML
-                $Xml = [xml]$Event.toxml()
-
-                # Loop over the data elements in the XML
-                $Xml.event.eventdata.data | ForEach-Object -Begin {
-                    # Create an empty hash table
-                    $DataHash = @{}
-                } -Process {
-                    # Add a new entry to the hash table with the name and text value of the current data element
-                    $DataHash[$_.name] = $_.'#text'
-                } -End {
-                    # Convert the hash table to a custom object and output it
-                    [pscustomobject]$DataHash
-                }
-                Write-Host '##################################################' -ForegroundColor Yellow
-            }
-        }
-    }
-    Start-Sleep -Milliseconds 500
-}
-```
+#### [➡️ Link to the `Get-EventData` Function](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Extras/Get-EventData.ps1)
 
 <br>
 

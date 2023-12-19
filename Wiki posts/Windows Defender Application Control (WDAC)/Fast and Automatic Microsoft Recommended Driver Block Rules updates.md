@@ -22,15 +22,17 @@ New-WDACConfig -SetAutoUpdateDriverBlockRules
 
 ```powershell
 try {
-    Invoke-WebRequest -Uri "https://aka.ms/VulnerableDriverBlockList" -OutFile VulnerableDriverBlockList.zip -ErrorAction Stop
+    Invoke-WebRequest -Uri 'https://aka.ms/VulnerableDriverBlockList' -OutFile VulnerableDriverBlockList.zip -ErrorAction Stop
 }
-catch
-{ exit }
-Expand-Archive .\VulnerableDriverBlockList.zip -DestinationPath "VulnerableDriverBlockList" -Force
-Rename-Item .\VulnerableDriverBlockList\SiPolicy_Enforced.p7b -NewName "SiPolicy.p7b" -Force
-Copy-Item .\VulnerableDriverBlockList\SiPolicy.p7b -Destination "C:\Windows\System32\CodeIntegrity"; citool --refresh -json
-Remove-Item .\VulnerableDriverBlockList -Recurse -Force
-Remove-Item .\VulnerableDriverBlockList.zip -Force
+catch {
+    exit 1
+}
+Expand-Archive -Path .\VulnerableDriverBlockList.zip -DestinationPath 'VulnerableDriverBlockList' -Force
+Rename-Item -Path .\VulnerableDriverBlockList\SiPolicy_Enforced.p7b -NewName 'SiPolicy.p7b' -Force
+Copy-Item -Path .\VulnerableDriverBlockList\SiPolicy.p7b -Destination "$env:SystemDrive\Windows\System32\CodeIntegrity"
+citool --refresh -json; Remove-Item -Path .\VulnerableDriverBlockList -Recurse -Force
+Remove-Item -Path .\VulnerableDriverBlockList.zip -Force
+exit 0
 ```
 
 </details>

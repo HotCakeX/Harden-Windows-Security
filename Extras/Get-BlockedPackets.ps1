@@ -1,4 +1,3 @@
-
 #Requires -RunAsAdministrator
 #Requires -Version 7.4
 Function Get-BlockedPackets {
@@ -13,7 +12,7 @@ Function Get-BlockedPackets {
     .OUTPUTS
         System.Object[]
     .LINK
-        https://github.com/HotCakeX/Harden-Windows-Security
+        https://github.com/HotCakeX/Harden-Windows-Security/wiki/Event-Viewer
     .NOTES
         Requires Administrator privileges and PowerShell Core
     #>

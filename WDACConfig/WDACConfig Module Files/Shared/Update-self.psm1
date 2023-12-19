@@ -81,17 +81,14 @@ Function Update-self {
                 # Will not import the new module version automatically because of the constant variables
             }
             # Make sure the old version isn't run after update
-            Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(152,255,152))Update has been successful, the current PowerShell tab/window needs to be closed and reopened to load the new version, press enter to continue.$($PSStyle.Reset)"
-
-            Pause
+            Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(152,255,152))Update has been successful, running your command now$($PSStyle.Reset)"
 
             try {
-                # Try to re-run the command that invoked the Update-self function in a new tab in Windows Terminal
-                wt.exe -w 0 -p 'PowerShell' pwsh.exe -NoExit -CommandWithArgs 'Invoke-Expression -command $args[0]' $InvocationStatement
+                # Try to re-run the command that invoked the Update-self function                
+                pwsh.exe -NoExit -CommandWithArgs 'Invoke-Expression -command $args[0]' $InvocationStatement
             }
             catch {
-                # If Windows Terminal doesn't exist then use the default PowerShell core console
-                pwsh.exe -NoExit -CommandWithArgs 'Invoke-Expression -command $args[0]' $InvocationStatement
+                Throw 'Could not relaunch PowerShell after update. Please close and reopen PowerShell to run your command again.'
             }
             exit
         }

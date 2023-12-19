@@ -30,7 +30,8 @@ catch {
 Expand-Archive -Path .\VulnerableDriverBlockList.zip -DestinationPath 'VulnerableDriverBlockList' -Force
 Rename-Item -Path .\VulnerableDriverBlockList\SiPolicy_Enforced.p7b -NewName 'SiPolicy.p7b' -Force
 Copy-Item -Path .\VulnerableDriverBlockList\SiPolicy.p7b -Destination "$env:SystemDrive\Windows\System32\CodeIntegrity"
-citool --refresh -json; Remove-Item -Path .\VulnerableDriverBlockList -Recurse -Force
+citool --refresh -json
+Remove-Item -Path .\VulnerableDriverBlockList -Recurse -Force
 Remove-Item -Path .\VulnerableDriverBlockList.zip -Force
 exit 0
 ```

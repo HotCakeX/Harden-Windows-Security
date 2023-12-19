@@ -84,12 +84,12 @@ Function Update-self {
             Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(152,255,152))Update has been successful, running your command now$($PSStyle.Reset)"
 
             try {
-                # Try to re-run the command that invoked the Update-self function                
+                # Try to re-run the command that invoked the Update-self function
                 pwsh.exe -NoExit -CommandWithArgs 'Invoke-Expression -command $args[0]' $InvocationStatement
             }
             catch {
                 Throw 'Could not relaunch PowerShell after update. Please close and reopen PowerShell to run your command again.'
-            }            
+            }
         }
     }
     else {

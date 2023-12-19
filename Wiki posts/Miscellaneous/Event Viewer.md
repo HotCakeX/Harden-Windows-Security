@@ -36,30 +36,7 @@ After the Audit is activated, running this PowerShell code will generate an outp
 
 For example, if you visit a website or access a server that is hosted in one of the countries you blocked, or a connection was made from one of those countries to your device, it will generate an event log that will be visible to you once you run this code.
 
-<br>
-
-```powershell
-#Requires -RunAsAdministrator
-#Requires -Version 7.3
-
-foreach ($event in Get-WinEvent -FilterHashtable @{LogName = 'Security'; ID = 5152 }) {
-    $xml = [xml]$event.toxml()
-    $xml.event.eventdata.data |
-    ForEach-Object { $hash = @{ TimeCreated = [datetime] $xml.Event.System.TimeCreated.SystemTime } } { $hash[$_.name] = $_.'#text' } { [pscustomobject]$hash } |
-    Where-Object FilterOrigin -NotMatch 'Stealth|Unknown|Query User Default|WSH Default' | ForEach-Object {
-        if ($_.filterorigin -match ($pattern = '{.+?}')) {
-            $_.FilterOrigin = $_.FilterOrigin -replace $pattern, (Get-NetFirewallRule -Name $Matches[0]).DisplayName
-        }
-        $protocolName = @{ 6 = 'TCP'; 17 = 'UDP' }[[int] $_.Protocol]
-        $_.Protocol = if (-not $protocolName) { $_.Protocol } else { $protocolName }
-
-        $_.Direction = $_.Direction -eq '%%14592' ? 'Outbound' : 'Inbound'
-        $_
-    }
-}
-```
-
-<br>
+#### [➡️ Link to the `Get-BlockedPackets` Function](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Extras/Get-BlockedPackets.ps1)
 
 * [Audit Filtering Platform Packet Drop](https://learn.microsoft.com/en-us/windows/security/threat-protection/auditing/audit-filtering-platform-packet-drop)
 * [Filter origin audit log improvements](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-firewall/filter-origin-documentation)

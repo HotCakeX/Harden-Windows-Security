@@ -89,8 +89,7 @@ Function Update-self {
             }
             catch {
                 Throw 'Could not relaunch PowerShell after update. Please close and reopen PowerShell to run your command again.'
-            }
-            exit
+            }            
         }
     }
     else {

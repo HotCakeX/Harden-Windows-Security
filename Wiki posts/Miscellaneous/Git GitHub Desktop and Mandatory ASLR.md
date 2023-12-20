@@ -11,7 +11,7 @@ You can use the following PowerShell commands to automatically add all Git execu
 ## For GitHub desktop Git binaries
 
 ```powershell
-Get-ChildItem -Recurse -Path "C:\Users\$env:username\AppData\Local\GitHubDesktop\*\resources\app\git\*.exe" | %{ Set-ProcessMitigation -Name $_.Name -Disable ForceRelocateImages }
+Get-ChildItem -Recurse -Path "C:\Users\$env:username\AppData\Local\GitHubDesktop\*\resources\app\git\*.exe" | ForEach-Object -Process { Set-ProcessMitigation -Name $_.Name -Disable ForceRelocateImages }
 ```
 
 <br>
@@ -19,7 +19,7 @@ Get-ChildItem -Recurse -Path "C:\Users\$env:username\AppData\Local\GitHubDesktop
 ## For Git binaries installed using standalone installer
 
 ```powershell
-Get-ChildItem -Recurse -Path "C:\Program Files\Git\*.exe" | %{ Set-ProcessMitigation -Name $_.Name -Disable ForceRelocateImages }
+Get-ChildItem -Recurse -File -Path 'C:\Program Files\Git\*.exe' | ForEach-Object -Process { Set-ProcessMitigation -Name $_.Name -Disable ForceRelocateImages }
 ```
 
 <br>

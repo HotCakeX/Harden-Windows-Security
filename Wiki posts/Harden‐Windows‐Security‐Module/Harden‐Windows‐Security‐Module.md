@@ -149,6 +149,20 @@ Based on the score that you get you will see a different ASCII art!
 
 <br>
 
+## How to Uninstall the Module
+
+<br>
+
+```powershell
+Uninstall-Module -Name 'Harden-Windows-Security-Module' -Force -AllVersions
+```
+
+<br>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+
+<br>
+
 <br>
 
 Any feedback or suggestions? Please use GitHub [issues](https://github.com/HotCakeX/Harden-Windows-Security/issues) or [discussions](https://github.com/HotCakeX/Harden-Windows-Security/discussions)

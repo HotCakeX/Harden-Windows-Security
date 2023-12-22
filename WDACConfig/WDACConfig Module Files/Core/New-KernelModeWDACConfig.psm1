@@ -133,29 +133,29 @@ Function New-KernelModeWDACConfig {
             process {
                 Write-Verbose -Message 'Copying the base policy to the current working directory'
                 Copy-Item -Path $PolicyPath -Destination "$PolicyFileName" -Force
-                
+
                 # Setting them to global so they can be accessed outside of this function's scope too
                 Write-Verbose -Message 'Resetting the policy ID and assigning a name for the policy'
                 $Global:PolicyID = Set-CIPolicyIdInfo -FilePath "$PolicyFileName" -PolicyName "$PolicyName" -ResetPolicyID
                 $Global:PolicyID = $PolicyID.Substring(11)
-                
+
                 Write-Verbose -Message 'Setting the policy version to 1.0.0.0'
                 Set-CIPolicyVersion -FilePath "$PolicyFileName" -Version '1.0.0.0'
-                
+
                 Write-Verbose -Message 'Setting policy rule options for the audit mode policy'
                 @(2, 3, 6, 16, 17, 20) | ForEach-Object -Process { Set-RuleOption -FilePath "$PolicyFileName" -Option $_ }
                 @(0, 4, 8, 9, 10, 11, 12, 13, 14, 15, 18, 19) | ForEach-Object -Process { Set-RuleOption -FilePath "$PolicyFileName" -Option $_ -Delete }
-                
+
                 # If user chooses to add EVSigners, add it to the policy
                 if ($EVSigners) {
                     Write-Verbose -Message 'Adding EVSigners policy rule option'
-                    Set-RuleOption -FilePath "$PolicyFileName" -Option 8 
+                    Set-RuleOption -FilePath "$PolicyFileName" -Option 8
                 }
-                
+
                 # If user chooses to go with no flight root certs then block flight/insider builds in policy rule options
                 if ($DefaultWindowsKernelNoFlights) {
                     Write-Verbose -Message 'Adding policy rule option 4 to block flight root certificates'
-                    Set-RuleOption -FilePath "$PolicyFileName" -Option 4 
+                    Set-RuleOption -FilePath "$PolicyFileName" -Option 4
                 }
 
                 # Set the already available and deployed GUID as the new PolicyID to prevent deploying duplicate Audit mode policies
@@ -184,10 +184,10 @@ Function New-KernelModeWDACConfig {
 
                 # Deploy the policy if Deploy parameter is used and perform additional tasks on the system
                 if ($Deploy) {
-                    
+
                     Write-Verbose -Message 'Setting the GUID of the Audit mode policy in the User Configuration file'
                     Set-CommonWDACConfig -StrictKernelPolicyGUID $PolicyID | Out-Null
-                    
+
                     Write-Verbose -Message 'Deploying the Strict Kernel mode policy'
                     &'C:\Windows\System32\CiTool.exe' --update-policy "$PolicyID.cip" -json | Out-Null
                     Write-ColorfulText -Color HotPink -InputText 'Strict Kernel mode policy has been deployed in Audit mode, please restart your system.'
@@ -212,7 +212,7 @@ Function New-KernelModeWDACConfig {
                 # This will eliminate the need for an extra reboot
                 Write-Verbose -Message 'Trying to get the GUID of Strict Kernel Audit mode policy to use for the Enforced mode policy, from the user configurations'
                 [System.String]$PolicyID = Get-CommonWDACConfig -StrictKernelPolicyGUID
-                
+
                 Write-Verbose -Message 'Verifying the Policy ID in the User Config exists and is valid'
                 $ObjectGuid = [System.Guid]::Empty
                 if ([System.Guid]::TryParse($PolicyID, [ref]$ObjectGuid)) {
@@ -250,7 +250,7 @@ Function New-KernelModeWDACConfig {
 
                 Write-Verbose -Message 'Setting the policy version to 1.0.0.0'
                 Set-CIPolicyVersion -FilePath '.\Final_DefaultWindows_Enforced_Kernel.xml' -Version '1.0.0.0'
-                
+
                 Write-Verbose -Message 'Setting policy rule options for the final Enforced mode policy'
                 @(2, 6, 16, 17, 20) | ForEach-Object -Process { Set-RuleOption -FilePath '.\Final_DefaultWindows_Enforced_Kernel.xml' -Option $_ }
                 @(0, 3, 4, 8, 9, 10, 11, 12, 13, 14, 15, 18, 19) | ForEach-Object -Process { Set-RuleOption -FilePath '.\Final_DefaultWindows_Enforced_Kernel.xml' -Option $_ -Delete }
@@ -267,7 +267,7 @@ Function New-KernelModeWDACConfig {
                 if ($Deploy) {
                     Write-Verbose -Message 'Converting the policy XML file to CIP binary'
                     ConvertFrom-CIPolicy -XmlFilePath '.\Final_DefaultWindows_Enforced_Kernel.xml' -BinaryFilePath "$PolicyID.cip" | Out-Null
-                    
+
                     Write-Verbose -Message 'Deploying the enforced mode policy with the same ID as the Audit mode policy, effectively overwriting it'
                     &'C:\Windows\System32\CiTool.exe' --update-policy "$PolicyID.cip" -json | Out-Null
                     Write-ColorfulText -Color Pink -InputText 'Strict Kernel mode policy has been deployed in Enforced mode, no restart required.'
@@ -296,7 +296,7 @@ Function New-KernelModeWDACConfig {
             if ($PrepMode) {
                 Write-Verbose -Message 'Building the Audit mode policy by calling the Build-PrepModeStrictKernelPolicy function'
                 Build-PrepModeStrictKernelPolicy -DefaultWindowsKernelNoFlights
-                
+
                 Write-Verbose -Message 'Converting the XML policy file to CIP binary'
                 ConvertFrom-CIPolicy -XmlFilePath .\DefaultWindows_Enforced_Kernel_NoFlights.xml -BinaryFilePath "$PolicyID.cip" | Out-Null
 
@@ -305,7 +305,7 @@ Function New-KernelModeWDACConfig {
 
                     Write-Verbose -Message 'Setting the GUID of the Audit mode policy in the User Configuration file'
                     Set-CommonWDACConfig -StrictKernelNoFlightRootsPolicyGUID $PolicyID | Out-Null
-                   
+
                     Write-Verbose -Message 'Deploying the Strict Kernel mode policy'
                     &'C:\Windows\System32\CiTool.exe' --update-policy "$PolicyID.cip" -json | Out-Null
                     Write-ColorfulText -Color HotPink -InputText 'Strict Kernel mode policy with no flighting root certs has been deployed in Audit mode, please restart your system.'
@@ -347,7 +347,7 @@ Function New-KernelModeWDACConfig {
                     Write-Verbose -Message 'Creating a policy xml file from the driver files'
                     New-CIPolicy -MultiplePolicyFormat -Level FilePublisher -Fallback None -FilePath '.\DriverFilesScanPolicy.xml' -DriverFiles $DriverFilesObj
                 }
-                
+
                 Write-Verbose -Message 'Not trusting the policy xml file made before restart, so building the same policy again after restart, this time in Enforced mode instead of Audit mode'
                 Copy-Item -Path "$ModuleRootPath\Resources\WDAC Policies\DefaultWindows_Enforced_Kernel_NoFlights.xml" -Destination '.\DefaultWindows_Enforced_Kernel_NoFlights.xml' -Force
 
@@ -377,7 +377,7 @@ Function New-KernelModeWDACConfig {
                     Write-Verbose -Message 'Adding EVSigners policy rule option'
                     Set-RuleOption -FilePath '.\Final_DefaultWindows_Enforced_Kernel.xml' -Option 8
                 }
-                
+
                 Write-Verbose -Message 'Setting the HVCI to Strict'
                 Set-HVCIOptions -Strict -FilePath '.\Final_DefaultWindows_Enforced_Kernel.xml'
 
@@ -385,7 +385,7 @@ Function New-KernelModeWDACConfig {
                 if ($Deploy) {
                     Write-Verbose -Message 'Converting the policy XML file to CIP binary'
                     ConvertFrom-CIPolicy -XmlFilePath '.\Final_DefaultWindows_Enforced_Kernel.xml' -BinaryFilePath "$PolicyID.cip" | Out-Null
-                    
+
                     Write-Verbose -Message 'Deploying the enforced mode policy with the same ID as the Audit mode policy, effectively overwriting it'
                     &'C:\Windows\System32\CiTool.exe' --update-policy "$PolicyID.cip" -json | Out-Null
                     Write-ColorfulText -Color Pink -InputText 'Strict Kernel mode policy with no flighting root certs has been deployed in Enforced mode, no restart required.'

@@ -5,6 +5,7 @@ Function Update-self {
     .PARAMETER InvocationStatement
         The command that was used to invoke the main function/cmdlet that invoked the Update-self function, this is used to re-run the command after the module has been updated.
         It checks to make sure the Update-self function was called by an authorized command, that is one of the main cmdlets of the WDACConfig module, otherwise it will throw an error.
+        The parameter also shouldn't contain any backtick or semicolon characters used to chain commands together.
     .INPUTS
         System.String
     .OUTPUTS
@@ -13,8 +14,7 @@ Function Update-self {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true, Position = 0)]
-        #  [ValidatePattern('^(Confirm-WDACConfig|Deploy-SignedWDACConfig|Edit-SignedWDACConfig|Edit-WDACConfig|Invoke-WDACSimulation|New-DenyWDACConfig|New-KernelModeWDACConfig|New-SupplementalWDACConfig|New-WDACConfig|Remove-WDACConfig).*', ErrorMessage = 'Update-self function was called with an unauthorized command.')]
-        [ValidatePattern('^(Confirm-WDACConfig|Deploy-SignedWDACConfig|Edit-SignedWDACConfig|Edit-WDACConfig|Invoke-WDACSimulation|New-DenyWDACConfig|New-KernelModeWDACConfig|New-SupplementalWDACConfig|New-WDACConfig|Remove-WDACConfig)(?!.*[;\r\n`]).*$', ErrorMessage = 'Update-self function was called with an unauthorized command.')]
+        [ValidatePattern('^(Confirm-WDACConfig|Deploy-SignedWDACConfig|Edit-SignedWDACConfig|Edit-WDACConfig|Invoke-WDACSimulation|New-DenyWDACConfig|New-KernelModeWDACConfig|New-SupplementalWDACConfig|New-WDACConfig|Remove-WDACConfig)(?!.*[;`]).*$', ErrorMessage = 'Either Update-self function was called with an unauthorized command or it contains semicolon and/or backtick')]
         [System.String]$InvocationStatement
     )
     # Importing the $PSDefaultParameterValues to the current session, prior to everything else
@@ -87,7 +87,8 @@ Function Update-self {
 
             try {
                 # Try to re-run the command that invoked the Update-self function
-                pwsh.exe -NoExit -CommandWithArgs 'Invoke-Expression -command $args[0]' $InvocationStatement
+                # pwsh.exe -NoExit -CommandWithArgs 'Invoke-Expression -command $args[0]' $InvocationStatement
+                pwsh.exe -NoLogo -NoExit -command $InvocationStatement
             }
             catch {
                 Throw 'Could not relaunch PowerShell after update. Please close and reopen PowerShell to run your command again.'

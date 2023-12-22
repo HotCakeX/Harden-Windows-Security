@@ -316,9 +316,6 @@ Function New-WDACConfig {
             Write-ColorfulText -Color MintGreen -InputText "BinaryFile = $PolicyID.cip"
 
             if ($Deploy -and $MakeAllowMSFTWithBlockRules) {
-                $CurrentStep++; $TotalSteps++
-                Write-Progress -Id 3 -Activity 'Deploying the policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-           
                 Write-Verbose -Message 'Deploying the AllowMicrosoftPlusBlockRules.xml policy'
                 &'C:\Windows\System32\CiTool.exe' --update-policy "$PolicyID.cip" -json | Out-Null
 
@@ -871,18 +868,13 @@ Function New-WDACConfig {
                 Remove-Item -Path 'AuditLogsPolicy_NoDeletedFiles.xml', 'FileRulesAndFileRefs.txt', 'DeletedFilesHashes.xml' -Force -ErrorAction SilentlyContinue
             }
 
-            if ($Deploy -and $MakePolicyFromAuditLogs) {
-
-                $CurrentStep++; $TotalSteps++
-                Write-Progress -Id 4 -Activity 'Deploying the policies' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
+            if ($Deploy -and $MakePolicyFromAuditLogs) {                
                 Write-Verbose -Message 'Deploying the Base policy and Supplemental policy'
                 &'C:\Windows\System32\CiTool.exe' --update-policy "$BasePolicyID.cip" -json | Out-Null
                 &'C:\Windows\System32\CiTool.exe' --update-policy "$PolicyID.cip" -json | Out-Null
 
                 Write-ColorfulText -Color Pink -InputText 'Base policy and Supplemental Policies deployed and activated.'
-
-                # Get the correct Prep mode Audit policy ID to remove from the system
+               
                 Write-Verbose -Message 'Getting the correct Prep mode Audit policy ID to remove from the system'
                 switch ($BasePolicyType) {
                     'Allow Microsoft Base' {

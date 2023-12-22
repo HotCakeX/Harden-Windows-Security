@@ -626,7 +626,15 @@ Function New-WDACConfig {
             [CmdletBinding()]
             param()
 
+            # The total number of the main steps for the progress bar to render
+            [System.Int16]$TotalSteps = 5
+            [System.Int16]$CurrentStep = 0               
+
             if ($MakePolicyFromAuditLogs -and $LogSize) {
+
+                $CurrentStep++
+                Write-Progress -Id 0 -Activity 'Setting the log size' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
                 Write-Verbose -Message 'Changing the Log size of Code Integrity Operational event log'
                 Set-LogSize -LogSize $LogSize
             }
@@ -641,6 +649,9 @@ Function New-WDACConfig {
             Set-Location "$home\WDAC"
 
             #Region Base-Policy-Processing
+            $CurrentStep++
+            Write-Progress -Id 0 -Activity 'Creating the base policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
             switch ($BasePolicyType) {
                 'Allow Microsoft Base' {
                     Write-Verbose -Message 'Creating Allow Microsoft Base policy'
@@ -672,8 +683,8 @@ Function New-WDACConfig {
             #Endregion Base-Policy-Processing
 
             #Region Supplemental-Policy-Processing
-            # Produce a policy xml file from event viewer logs
-            Write-ColorfulText -Color Lavender -InputText 'Scanning Windows Event logs and creating a policy file, please wait...'
+            $CurrentStep++
+            Write-Progress -Id 0 -Activity 'Scanning the event logs' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
             # Creating a hash table to dynamically add parameters based on user input and pass them to New-Cipolicy cmdlet
             [System.Collections.Hashtable]$PolicyMakerHashTable = @{
@@ -726,7 +737,7 @@ Function New-WDACConfig {
             if ($DeletedFileHashesArray -and !$NoDeletedFiles) {
 
                 # Save the the File Rules and File Rule Refs to the Out-File FileRulesAndFileRefs.txt in the current working directory
-                (Get-FileRules -HashesArray $DeletedFileHashesArray) + (Get-RuleRefs -HashesArray $DeletedFileHashesArray) | Out-File -FilePath FileRulesAndFileRefs.txt -Force
+                    (Get-FileRules -HashesArray $DeletedFileHashesArray) + (Get-RuleRefs -HashesArray $DeletedFileHashesArray) | Out-File -FilePath FileRulesAndFileRefs.txt -Force
 
                 # Put the Rules and RulesRefs in an empty policy file
                 New-EmptyPolicy -RulesContent (Get-FileRules -HashesArray $DeletedFileHashesArray) -RuleRefsContent (Get-RuleRefs -HashesArray $DeletedFileHashesArray) | Out-File -FilePath .\DeletedFilesHashes.xml -Force
@@ -743,6 +754,9 @@ Function New-WDACConfig {
             Set-CIPolicyVersion -FilePath 'SupplementalPolicy.xml' -Version '1.0.0.0'
 
             # Convert the SupplementalPolicy.xml policy file from base policy to supplemental policy of our base policy
+            $CurrentStep++
+            Write-Progress -Id 0 -Activity 'Adjusting the policy settings' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
             Write-Verbose -Message 'Convert the SupplementalPolicy.xml policy file from base policy to supplemental policy of our base policy'
             [System.String]$PolicyID = Set-CIPolicyIdInfo -FilePath 'SupplementalPolicy.xml' -PolicyName "Supplemental Policy made from Audit Event Logs on $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID -BasePolicyToSupplementPath $BasePolicy
             [System.String]$PolicyID = $PolicyID.Substring(11)
@@ -756,9 +770,11 @@ Function New-WDACConfig {
             Set-HVCIOptions -Strict -FilePath 'SupplementalPolicy.xml'
 
             # convert the Supplemental Policy file to .cip binary file
+            $CurrentStep++
+            Write-Progress -Id 0 -Activity 'Generating the CIP files' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
             Write-Verbose -Message 'Converting SupplementalPolicy.xml policy to .CIP binary'
             ConvertFrom-CIPolicy -XmlFilePath 'SupplementalPolicy.xml' -BinaryFilePath "$PolicyID.cip" | Out-Null
-
             #Endregion Supplemental-Policy-Processing
 
             Write-ColorfulText -Color MintGreen -InputText "BasePolicyFile = $BasePolicy"
@@ -772,6 +788,9 @@ Function New-WDACConfig {
             }
 
             if ($Deploy -and $MakePolicyFromAuditLogs) {
+
+                $CurrentStep++; $TotalSteps++
+                Write-Progress -Id 0 -Activity 'Deploying the policies' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                 Write-Verbose -Message 'Deploying the Base policy and Supplemental policy'
                 &'C:\Windows\System32\CiTool.exe' --update-policy "$BasePolicyID.cip" -json | Out-Null
@@ -795,6 +814,7 @@ Function New-WDACConfig {
                 &'C:\Windows\System32\CiTool.exe' --remove-policy "{$IDToRemove}" -json | Out-Null
                 Write-ColorfulText -Color Lavender -InputText 'System restart required to finish removing the Audit mode Prep policy'
             }
+            Write-Progress -Id 0 -Activity 'Complete.' -Completed
         }
 
         Function Build-LightPolicy {

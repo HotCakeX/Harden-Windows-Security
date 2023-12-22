@@ -255,16 +255,29 @@ Function New-WDACConfig {
             param(
                 [System.Management.Automation.SwitchParameter]$NoCIP
             )
-            # Get the latest Microsoft recommended block rules
+
+            # The total number of the main steps for the progress bar to render
+            [System.Int16]$TotalSteps = 4
+            [System.Int16]$CurrentStep = 0
+ 
+            $CurrentStep++
+            Write-Progress -Id 3 -Activity 'Getting the recommended block rules' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+            
             Write-Verbose -Message 'Getting the latest Microsoft recommended block rules'
             Get-BlockRulesMeta 6> $null
 
             Write-Verbose -Message 'Copying the AllowMicrosoft.xml from Windows directory to the current working directory'
             Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml' -Destination 'AllowMicrosoft.xml' -Force
 
+            $CurrentStep++
+            Write-Progress -Id 3 -Activity 'Merging the block rules' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+            
             Write-Verbose -Message 'Merging the AllowMicrosoft.xml with Microsoft Recommended Block rules.xml'
             Merge-CIPolicy -PolicyPaths .\AllowMicrosoft.xml, 'Microsoft recommended block rules.xml' -OutputFilePath .\AllowMicrosoftPlusBlockRules.xml | Out-Null
 
+            $CurrentStep++
+            Write-Progress -Id 3 -Activity 'Configuring the policy settings' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+           
             Write-Verbose -Message 'Resetting the policy ID and setting a name for AllowMicrosoftPlusBlockRules.xml'
             [System.String]$PolicyID = Set-CIPolicyIdInfo -FilePath .\AllowMicrosoftPlusBlockRules.xml -PolicyName "Allow Microsoft Plus Block Rules - $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID
             [System.String]$PolicyID = $PolicyID.Substring(11)
@@ -288,6 +301,9 @@ Function New-WDACConfig {
             Write-Verbose -Message 'Setting HVCI to Strict'
             Set-HVCIOptions -Strict -FilePath .\AllowMicrosoftPlusBlockRules.xml
 
+            $CurrentStep++
+            Write-Progress -Id 3 -Activity 'Creating CIP file' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+           
             Write-Verbose -Message 'Converting the AllowMicrosoftPlusBlockRules.xml policy file to .CIP binary'
             ConvertFrom-CIPolicy -XmlFilePath .\AllowMicrosoftPlusBlockRules.xml -BinaryFilePath "$PolicyID.cip" | Out-Null
 
@@ -300,6 +316,9 @@ Function New-WDACConfig {
             Write-ColorfulText -Color MintGreen -InputText "BinaryFile = $PolicyID.cip"
 
             if ($Deploy -and $MakeAllowMSFTWithBlockRules) {
+                $CurrentStep++; $TotalSteps++
+                Write-Progress -Id 3 -Activity 'Deploying the policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+           
                 Write-Verbose -Message 'Deploying the AllowMicrosoftPlusBlockRules.xml policy'
                 &'C:\Windows\System32\CiTool.exe' --update-policy "$PolicyID.cip" -json | Out-Null
 
@@ -311,6 +330,7 @@ Function New-WDACConfig {
                 Write-Verbose -Message 'Removing the generated .CIP binary file because -NoCIP parameter was used'
                 Remove-Item -Path "$PolicyID.cip" -Force
             }
+            Write-Progress -Id 3 -Activity 'Complete' -Completed
         }
 
         Function Build-DefaultWindowsWithBlockRules {
@@ -513,6 +533,13 @@ Function New-WDACConfig {
             [CmdletBinding()]
             param()
 
+            # The total number of the main steps for the progress bar to render
+            [System.Int16]$TotalSteps = 1
+            [System.Int16]$CurrentStep = 0
+
+            $CurrentStep++
+            Write-Progress -Id 2 -Activity 'Setting up the Scheduled task' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+           
             # Get the state of fast weekly Microsoft recommended driver block list update scheduled task
             Write-Verbose -Message 'Getting the state of MSFT Driver Block list update Scheduled task'
             [System.String]$BlockListScheduledTaskState = (Get-ScheduledTask -TaskName 'MSFT Driver Block list update' -TaskPath '\MSFT Driver Block list update\' -ErrorAction SilentlyContinue).State
@@ -546,6 +573,8 @@ Function New-WDACConfig {
 
             Write-Verbose -Message 'Displaying extra info about the Microsoft recommended Drivers block list'
             Invoke-Command -ScriptBlock $DriversBlockListInfoGatheringSCRIPTBLOCK
+
+            Write-Progress -Id 2 -Activity 'complete.' -Completed
         }
 
         Function Build-MSFTOnlyAudit {
@@ -688,7 +717,7 @@ Function New-WDACConfig {
             if ($MakePolicyFromAuditLogs -and $LogSize) {
 
                 $CurrentStep++
-                Write-Progress -Id 5 -Activity 'Setting the log size' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+                Write-Progress -Id 4 -Activity 'Setting the log size' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                 Write-Verbose -Message 'Changing the Log size of Code Integrity Operational event log'
                 Set-LogSize -LogSize $LogSize
@@ -705,7 +734,7 @@ Function New-WDACConfig {
 
             #Region Base-Policy-Processing
             $CurrentStep++
-            Write-Progress -Id 5 -Activity 'Creating the base policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+            Write-Progress -Id 4 -Activity 'Creating the base policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
             switch ($BasePolicyType) {
                 'Allow Microsoft Base' {
@@ -739,7 +768,7 @@ Function New-WDACConfig {
 
             #Region Supplemental-Policy-Processing
             $CurrentStep++
-            Write-Progress -Id 5 -Activity 'Scanning the event logs' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+            Write-Progress -Id 4 -Activity 'Scanning the event logs' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
             # Creating a hash table to dynamically add parameters based on user input and pass them to New-Cipolicy cmdlet
             [System.Collections.Hashtable]$PolicyMakerHashTable = @{
@@ -810,7 +839,7 @@ Function New-WDACConfig {
 
             # Convert the SupplementalPolicy.xml policy file from base policy to supplemental policy of our base policy
             $CurrentStep++
-            Write-Progress -Id 5 -Activity 'Adjusting the policy settings' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+            Write-Progress -Id 4 -Activity 'Adjusting the policy settings' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
             Write-Verbose -Message 'Convert the SupplementalPolicy.xml policy file from base policy to supplemental policy of our base policy'
             [System.String]$PolicyID = Set-CIPolicyIdInfo -FilePath 'SupplementalPolicy.xml' -PolicyName "Supplemental Policy made from Audit Event Logs on $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID -BasePolicyToSupplementPath $BasePolicy
@@ -826,7 +855,7 @@ Function New-WDACConfig {
 
             # convert the Supplemental Policy file to .cip binary file
             $CurrentStep++
-            Write-Progress -Id 5 -Activity 'Generating the CIP files' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+            Write-Progress -Id 4 -Activity 'Generating the CIP files' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
             Write-Verbose -Message 'Converting SupplementalPolicy.xml policy to .CIP binary'
             ConvertFrom-CIPolicy -XmlFilePath 'SupplementalPolicy.xml' -BinaryFilePath "$PolicyID.cip" | Out-Null
@@ -845,7 +874,7 @@ Function New-WDACConfig {
             if ($Deploy -and $MakePolicyFromAuditLogs) {
 
                 $CurrentStep++; $TotalSteps++
-                Write-Progress -Id 5 -Activity 'Deploying the policies' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+                Write-Progress -Id 4 -Activity 'Deploying the policies' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                 Write-Verbose -Message 'Deploying the Base policy and Supplemental policy'
                 &'C:\Windows\System32\CiTool.exe' --update-policy "$BasePolicyID.cip" -json | Out-Null
@@ -869,7 +898,7 @@ Function New-WDACConfig {
                 &'C:\Windows\System32\CiTool.exe' --remove-policy "{$IDToRemove}" -json | Out-Null
                 Write-ColorfulText -Color Lavender -InputText 'System restart required to finish removing the Audit mode Prep policy'
             }
-            Write-Progress -Id 5 -Activity 'Complete.' -Completed
+            Write-Progress -Id 4 -Activity 'Complete.' -Completed
         }
 
         Function Build-LightPolicy {

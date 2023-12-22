@@ -772,12 +772,12 @@ Function New-WDACConfig {
 
             # Make sure there is no leftover files from previous operations of this same command
             Write-Verbose -Message 'Make sure there is no leftover files from previous operations of this same command'
-            Remove-Item -Path "$home\WDAC\*" -Recurse -Force -ErrorAction SilentlyContinue
+            Remove-Item -Path "$Home\WDAC\*" -Recurse -Force -ErrorAction SilentlyContinue
 
             # Create a working directory in user's folder
             Write-Verbose -Message 'Create a working directory in user folder'
-            New-Item -Type Directory -Path "$home\WDAC" -Force | Out-Null
-            Set-Location "$home\WDAC"
+            New-Item -Type Directory -Path "$Home\WDAC" -Force | Out-Null
+            Set-Location "$Home\WDAC"
 
             #Region Base-Policy-Processing
             $CurrentStep++
@@ -846,14 +846,14 @@ Function New-WDACConfig {
                     foreach ($event in Get-WinEvent -FilterHashtable @{LogName = 'Microsoft-Windows-CodeIntegrity/Operational'; ID = 3076 }) {
                         $Xml = [System.Xml.XmlDocument]$event.toxml()
                         $Xml.event.eventdata.data |
-                        ForEach-Object -Begin { $Hash = @{} } -Process { $hash[$_.name] = $_.'#text' } -End { [pscustomobject]$hash } |
+                        ForEach-Object -Begin { $Hash = @{} } -Process { $Hash[$_.name] = $_.'#text' } -End { [pscustomobject]$Hash } |
                         ForEach-Object -Process {
                             if ($_.'File Name' -match ($pattern = '\\Device\\HarddiskVolume(\d+)\\(.*)$')) {
-                                $hardDiskVolumeNumber = $Matches[1]
-                                $remainingPath = $Matches[2]
-                                $getletter = Get-GlobalRootDrives | Where-Object -FilterScript { $_.devicepath -eq "\Device\HarddiskVolume$hardDiskVolumeNumber" }
-                                $usablePath = "$($getletter.DriveLetter)$remainingPath"
-                                $_.'File Name' = $_.'File Name' -replace $pattern, $usablePath
+                                $HardDiskVolumeNumber = $Matches[1]
+                                $RemainingPath = $Matches[2]
+                                $GetLetter = Get-GlobalRootDrives | Where-Object -FilterScript { $_.devicepath -eq "\Device\HarddiskVolume$HardDiskVolumeNumber" }
+                                $UsablePath = "$($GetLetter.DriveLetter)$RemainingPath"
+                                $_.'File Name' = $_.'File Name' -replace $pattern, $UsablePath
                             }
                             if (-NOT (Test-Path -Path $_.'File Name')) {
                                 $_ | Select-Object -Property FileVersion, 'File Name', PolicyGUID, 'SHA256 Hash', 'SHA256 Flat Hash', 'SHA1 Hash', 'SHA1 Flat Hash'

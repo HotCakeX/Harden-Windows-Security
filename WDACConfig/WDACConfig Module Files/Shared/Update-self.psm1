@@ -6,6 +6,11 @@ Function Update-self {
         The command that was used to invoke the main function/cmdlet that invoked the Update-self function, this is used to re-run the command after the module has been updated.
         It checks to make sure the Update-self function was called by an authorized command, that is one of the main cmdlets of the WDACConfig module, otherwise it will throw an error.
         The parameter also shouldn't contain any backtick or semicolon characters used to chain commands together.
+    .NOTES
+        Even if the main cmdlets of the module are called with semicolons like this: Get-Date;New-WDACConfig -GetDriverBlockRules -Verbose -Deploy;Get-Host
+        Since the Update-self function only receives the invocation statement from the main cmdlet/function, anything before or after the semicolons are automatically dropped and will not run after the module is auto updated.
+        So from the example above, only this part gets executed after auto update: New-WDACConfig -GetDriverBlockRules -Verbose -Deploy
+        The ValidatePattern attribute is just an extra layer of security.
     .INPUTS
         System.String
     .OUTPUTS

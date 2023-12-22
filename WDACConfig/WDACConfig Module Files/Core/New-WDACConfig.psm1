@@ -589,17 +589,27 @@ Function New-WDACConfig {
             [CmdletBinding()]
             param()
 
+            # The total number of the main steps for the progress bar to render
+            [System.Int16]$TotalSteps = 3
+            [System.Int16]$CurrentStep = 0
+             
             if ($PrepMSFTOnlyAudit -and $LogSize) {
                 Write-Verbose -Message 'Changing the Log size of Code Integrity Operational event log'
                 Set-LogSize -LogSize $LogSize
             }
 
+            $CurrentStep++
+            Write-Progress -Id 5 -Activity 'Creating the policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+          
             Write-Verbose -Message 'Copying AllowMicrosoft.xml from Windows directory to the current working directory'
             Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml' -Destination .\AllowMicrosoft.xml -Force
 
             Write-Verbose -Message 'Enabling Audit mode and disabling script enforcement'
             3, 11 | ForEach-Object -Process { Set-RuleOption -FilePath .\AllowMicrosoft.xml -Option $_ }
 
+            $CurrentStep++
+            Write-Progress -Id 5 -Activity 'Configuring the policy settings' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+          
             Write-Verbose -Message 'Resetting the Policy ID'
             [System.String]$PolicyID = Set-CIPolicyIdInfo -FilePath .\AllowMicrosoft.xml -ResetPolicyID
             [System.String]$PolicyID = $PolicyID.Substring(11)
@@ -607,6 +617,9 @@ Function New-WDACConfig {
             Write-Verbose -Message 'Assigning "PrepMSFTOnlyAudit" as the policy name'
             Set-CIPolicyIdInfo -PolicyName 'PrepMSFTOnlyAudit' -FilePath .\AllowMicrosoft.xml
 
+            $CurrentStep++
+            Write-Progress -Id 5 -Activity 'Creating the CIP file' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+          
             Write-Verbose -Message 'Converting AllowMicrosoft.xml to .CIP Binary'
             ConvertFrom-CIPolicy -XmlFilePath .\AllowMicrosoft.xml -BinaryFilePath "$PolicyID.cip" | Out-Null
 
@@ -619,6 +632,7 @@ Function New-WDACConfig {
             else {
                 Write-ColorfulText -Color HotPink -InputText 'The default AllowMicrosoft policy has been created in Audit mode and is ready for deployment.'
             }
+            Write-Progress -Id 5 -Activity 'complete.' -Completed
         }
 
         Function Build-DefaultWindowsAudit {
@@ -708,14 +722,10 @@ Function New-WDACConfig {
             param()
 
             # The total number of the main steps for the progress bar to render
-            [System.Int16]$TotalSteps = 5
+            [System.Int16]$TotalSteps = 4
             [System.Int16]$CurrentStep = 0               
 
-            if ($MakePolicyFromAuditLogs -and $LogSize) {
-
-                $CurrentStep++
-                Write-Progress -Id 4 -Activity 'Setting the log size' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
+            if ($MakePolicyFromAuditLogs -and $LogSize) {                
                 Write-Verbose -Message 'Changing the Log size of Code Integrity Operational event log'
                 Set-LogSize -LogSize $LogSize
             }
@@ -908,20 +918,33 @@ Function New-WDACConfig {
             [CmdletBinding()]
             param()
 
+            # The total number of the main steps for the progress bar to render
+            [System.Int16]$TotalSteps = 5
+            [System.Int16]$CurrentStep = 0
+
             # Delete any policy with the same name in the current working directory
             Remove-Item -Path 'SignedAndReputable.xml' -Force -ErrorAction SilentlyContinue
 
+            $CurrentStep++
+            Write-Progress -Id 6 -Activity 'Creating AllowMicrosoftPlusBlockRules policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+                      
             Write-Verbose -Message 'Calling Build-AllowMSFTWithBlockRules function to create AllowMicrosoftPlusBlockRules.xml policy'
             # Redirecting the function's information Stream to $null because Write-Host
             # Used by Write-ColorfulText outputs to both information stream and host console
             Build-AllowMSFTWithBlockRules -NoCIP 6> $null
 
+            $CurrentStep++
+            Write-Progress -Id 6 -Activity 'Configuring the policy settings' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+            
             Write-Verbose -Message 'Renaming AllowMicrosoftPlusBlockRules.xml to SignedAndReputable.xml'
             Rename-Item -Path 'AllowMicrosoftPlusBlockRules.xml' -NewName 'SignedAndReputable.xml' -Force
 
             Write-Verbose -Message 'Setting the policy rule options for the SignedAndReputable.xml policy'
             @(14, 15) | ForEach-Object -Process { Set-RuleOption -FilePath .\SignedAndReputable.xml -Option $_ }
 
+            $CurrentStep++
+            Write-Progress -Id 6 -Activity 'Configuring the policy rule options' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+            
             if ($TestMode -and $MakeLightPolicy) {
                 Write-Verbose -Message 'Setting "Boot Audit on Failure" and "Advanced Boot Options Menu" policy rule options because TestMode parameter was used'
                 9..10 | ForEach-Object -Process { Set-RuleOption -FilePath .\SignedAndReputable.xml -Option $_ }
@@ -941,10 +964,15 @@ Function New-WDACConfig {
             Write-Verbose -Message 'Setting HVCI to Strict'
             Set-HVCIOptions -Strict -FilePath .\SignedAndReputable.xml
 
+            $CurrentStep++
+            Write-Progress -Id 6 -Activity 'Creating the CIP file' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+            
             Write-Verbose -Message 'Converting SignedAndReputable.xml policy to .CIP binary'
             ConvertFrom-CIPolicy -XmlFilePath .\SignedAndReputable.xml -BinaryFilePath "$BasePolicyID.cip" | Out-Null
 
-            # Configure required services for ISG authorization
+            $CurrentStep++
+            Write-Progress -Id 6 -Activity 'Configuring Windows Services' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+            
             Write-Verbose -Message 'Configuring required services for ISG authorization'
             Start-Process -FilePath 'C:\Windows\System32\appidtel.exe' -ArgumentList 'start' -Wait -NoNewWindow
             Start-Process -FilePath 'C:\Windows\System32\sc.exe' -ArgumentList 'config', 'appidsvc', 'start= auto' -Wait -NoNewWindow
@@ -957,6 +985,8 @@ Function New-WDACConfig {
             Write-Verbose -Message 'Displaying the output'
             Write-ColorfulText -Color MintGreen -InputText 'BasePolicyFile = SignedAndReputable.xml'
             Write-ColorfulText -Color MintGreen -InputText "BasePolicyGUID = $BasePolicyID"
+        
+            Write-Progress -Id 6 -Activity 'Complete.' -Completed
         }
 
         # Script block that is used to supply extra information regarding Microsoft recommended driver block rules in commands that use them

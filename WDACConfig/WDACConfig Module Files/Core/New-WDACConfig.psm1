@@ -673,13 +673,23 @@ Function New-WDACConfig {
             [CmdletBinding()]
             param()
 
+            # The total number of the main steps for the progress bar to render
+            [System.Int16]$TotalSteps = 4
+            [System.Int16]$CurrentStep = 0
+
             if ($PrepDefaultWindowsAudit -and $LogSize) {
                 Write-Verbose -Message 'Changing the Log size of Code Integrity Operational event log'
                 Set-LogSize -LogSize $LogSize
             }
 
+            $CurrentStep++
+            Write-Progress -Id 8 -Activity 'Fetching the policy template' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
             Write-Verbose -Message 'Copying DefaultWindows_Audit.xml from Windows directory to the current working directory'
             Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\DefaultWindows_Audit.xml' -Destination .\DefaultWindows_Audit.xml -Force
+
+            $CurrentStep++
+            Write-Progress -Id 8 -Activity 'Determining whether to include PowerShell core' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
             # Making Sure neither PowerShell core nor WDACConfig module files are added to the Supplemental policy created by -MakePolicyFromAuditLogs parameter
             # by adding them first to the deployed Default Windows policy in Audit mode. Because WDACConfig module files don't need to be allowed to run since they are *.ps1 and .*psm1 files
@@ -704,6 +714,9 @@ Function New-WDACConfig {
                 Remove-Item -Path 'WDACConfigModule.xml', 'AllowPowerShell.xml' -Force
             }
 
+            $CurrentStep++
+            Write-Progress -Id 8 -Activity 'Configuring the policy settings' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
             Write-Verbose -Message 'Enabling Audit mode and disabling script enforcement'
             3, 11 | ForEach-Object -Process { Set-RuleOption -FilePath .\DefaultWindows_Audit.xml -Option $_ }
 
@@ -713,6 +726,9 @@ Function New-WDACConfig {
 
             Write-Verbose -Message 'Assigning "PrepDefaultWindowsAudit" as the policy name'
             Set-CIPolicyIdInfo -PolicyName 'PrepDefaultWindows' -FilePath .\DefaultWindows_Audit.xml
+
+            $CurrentStep++
+            Write-Progress -Id 8 -Activity 'Creating the CIP file' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
             Write-Verbose -Message 'Converting DefaultWindows_Audit.xml to .CIP Binary'
             ConvertFrom-CIPolicy -XmlFilePath .\DefaultWindows_Audit.xml -BinaryFilePath "$PolicyID.cip" | Out-Null
@@ -729,6 +745,7 @@ Function New-WDACConfig {
             else {
                 Write-ColorfulText -Color Lavender -InputText 'The defaultWindows policy has been created in Audit mode and is ready for deployment.'
             }
+            Write-Progress -Id 8 -Activity 'Complete.' -Completed
         }
 
         Function Build-PolicyFromAuditLogs {

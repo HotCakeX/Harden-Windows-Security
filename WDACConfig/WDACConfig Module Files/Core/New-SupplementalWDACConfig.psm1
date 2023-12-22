@@ -55,6 +55,9 @@ Function New-SupplementalWDACConfig {
         [parameter(Mandatory = $false, ParameterSetName = 'Normal')]
         [System.String[]]$Fallbacks = 'Hash',
 
+        [Parameter(Mandatory = $false)]
+        [System.Management.Automation.SwitchParameter]$Force,
+
         [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SkipVersionCheck
     )
 
@@ -128,6 +131,11 @@ Function New-SupplementalWDACConfig {
                 Write-Error -Message 'You are using -Deploy parameter and the selected base policy is Signed. Please use Deploy-SignedWDACConfig to deploy it.'
             }
         }
+
+        # Detecting if Confirm switch is used to bypass the confirmation prompts
+        if ($Force -and -Not $Confirm) {
+            $ConfirmPreference = 'None'
+        }
     }
 
     process {
@@ -160,17 +168,17 @@ Function New-SupplementalWDACConfig {
             Write-Verbose -Message 'Changing the policy type from base to Supplemental, assigning its name and resetting its policy ID'
             [System.String]$PolicyID = Set-CIPolicyIdInfo -FilePath "SupplementalPolicy $SuppPolicyName.xml" -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath -PolicyName "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')"
             [System.String]$PolicyID = $PolicyID.Substring(11)
-            
+
             Write-Verbose -Message 'Setting the Supplemental policy version to 1.0.0.0'
             Set-CIPolicyVersion -FilePath "SupplementalPolicy $SuppPolicyName.xml" -Version '1.0.0.0'
-            
+
             Write-Verbose -Message 'Making sure policy rule options that do not belong to a Supplemental policy do not exist'
             @(0, 1, 2, 3, 4, 9, 10, 11, 12, 15, 16, 17, 19, 20) | ForEach-Object -Process {
                 Set-RuleOption -FilePath "SupplementalPolicy $SuppPolicyName.xml" -Option $_ -Delete }
-            
+
             Write-Verbose -Message 'Setting the HVCI to Strict'
             Set-HVCIOptions -Strict -FilePath "SupplementalPolicy $SuppPolicyName.xml"
-            
+
             Write-Verbose -Message 'Converting the Supplemental policy XML file to a CIP file'
             ConvertFrom-CIPolicy -XmlFilePath "SupplementalPolicy $SuppPolicyName.xml" -BinaryFilePath "$PolicyID.cip" | Out-Null
 
@@ -181,7 +189,7 @@ Function New-SupplementalWDACConfig {
                 Write-Verbose -Message 'Deploying the Supplemental policy'
                 &'C:\Windows\System32\CiTool.exe' --update-policy "$PolicyID.cip" -json | Out-Null
                 Write-ColorfulText -Color Pink -InputText "A Supplemental policy with the name $SuppPolicyName has been deployed."
-                
+
                 Write-Verbose -Message 'Removing the CIP file after deployment'
                 Remove-Item -Path "$PolicyID.cip" -Force
             }
@@ -212,7 +220,7 @@ Function New-SupplementalWDACConfig {
 
             Write-Verbose -Message 'Setting the HVCI to Strict'
             Set-HVCIOptions -Strict -FilePath ".\SupplementalPolicy $SuppPolicyName.xml"
-            
+
             Write-Verbose -Message 'Converting the Supplemental policy XML file to a CIP file'
             ConvertFrom-CIPolicy -XmlFilePath ".\SupplementalPolicy $SuppPolicyName.xml" -BinaryFilePath "$PolicyID.cip" | Out-Null
 
@@ -223,7 +231,7 @@ Function New-SupplementalWDACConfig {
                 Write-Verbose -Message 'Deploying the Supplemental policy'
                 &'C:\Windows\System32\CiTool.exe' --update-policy "$PolicyID.cip" -json | Out-Null
                 Write-ColorfulText -Color Pink -InputText "A Supplemental policy with the name $SuppPolicyName has been deployed."
-                
+
                 Write-Verbose -Message 'Removing the CIP file after deployment'
                 Remove-Item -Path "$PolicyID.cip" -Force
             }
@@ -274,7 +282,7 @@ Function New-SupplementalWDACConfig {
                     Write-Verbose -Message 'Converting the policy type from base to Supplemental, assigning its name and resetting its policy ID'
                     [System.String]$PolicyID = Set-CIPolicyIdInfo -FilePath ".\SupplementalPolicy $SuppPolicyName.xml" -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath -PolicyName "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')"
                     [System.String]$PolicyID = $PolicyID.Substring(11)
-                    
+
                     Write-Verbose -Message 'Setting the Supplemental policy version to 1.0.0.0'
                     Set-CIPolicyVersion -FilePath ".\SupplementalPolicy $SuppPolicyName.xml" -Version '1.0.0.0'
 
@@ -284,7 +292,7 @@ Function New-SupplementalWDACConfig {
 
                     Write-Verbose -Message 'Setting the HVCI to Strict'
                     Set-HVCIOptions -Strict -FilePath ".\SupplementalPolicy $SuppPolicyName.xml"
-                    
+
                     Write-Verbose -Message 'Converting the Supplemental policy XML file to a CIP file'
                     ConvertFrom-CIPolicy -XmlFilePath ".\SupplementalPolicy $SuppPolicyName.xml" -BinaryFilePath "$PolicyID.cip" | Out-Null
 
@@ -295,18 +303,18 @@ Function New-SupplementalWDACConfig {
                         Write-Verbose -Message 'Deploying the Supplemental policy'
                         &'C:\Windows\System32\CiTool.exe' --update-policy "$PolicyID.cip" -json | Out-Null
                         Write-ColorfulText -Color Pink -InputText "A Supplemental policy with the name $SuppPolicyName has been deployed."
-                        
+
                         Write-Verbose -Message 'Removing the CIP file after deployment'
                         Remove-Item -Path "$PolicyID.cip" -Force
-                    } 
-                }      
+                    }
+                }
             }
             finally {
                 # Restore PS Formatting Styles
                 $OriginalStyle.Keys | ForEach-Object -Process {
                     $PSStyle.Formatting.$_ = $OriginalStyle[$_]
                 }
-            } 
+            }
         }
     }
 
@@ -354,6 +362,8 @@ Function New-SupplementalWDACConfig {
 .PARAMETER Fallbacks
     The fallback level(s) that determine how the selected folder will be scanned.
     The default value for it is Hash.
+.PARAMETER Force
+    It's used by the entire Cmdlet. Indicates that the confirmation prompts will be bypassed.
 .PARAMETER SkipVersionCheck
     Can be used with any parameter to bypass the online version check - only to be used in rare cases
 .INPUTS

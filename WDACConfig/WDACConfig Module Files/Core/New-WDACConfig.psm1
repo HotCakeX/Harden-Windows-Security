@@ -155,10 +155,20 @@ Function New-WDACConfig {
                 [System.Management.Automation.SwitchParameter]$Deploy
             )
 
+            # The total number of the main steps for the progress bar to render
+            [System.Int16]$TotalSteps = 3
+            [System.Int16]$CurrentStep = 0
+
             if ($Deploy) {
+                $CurrentStep++
+                Write-Progress -Id 1 -Activity 'Downloading the driver block rules' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+            
                 Write-Verbose -Message 'Downloading the Microsoft Recommended Driver Block List archive'
                 Invoke-WebRequest -Uri 'https://aka.ms/VulnerableDriverBlockList' -OutFile VulnerableDriverBlockList.zip -ProgressAction SilentlyContinue
 
+                $CurrentStep++
+                Write-Progress -Id 1 -Activity 'Expanding the archive' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+            
                 Write-Verbose -Message 'Expanding the Block list archive'
                 Expand-Archive -Path .\VulnerableDriverBlockList.zip -DestinationPath 'VulnerableDriverBlockList' -Force
 
@@ -168,6 +178,9 @@ Function New-WDACConfig {
                 Write-Verbose -Message 'Copying the new block list to the CodeIntegrity folder, replacing any old ones'
                 Copy-Item -Path .\VulnerableDriverBlockList\SiPolicy.p7b -Destination 'C:\Windows\System32\CodeIntegrity' -Force
 
+                $CurrentStep++
+                Write-Progress -Id 1 -Activity 'Refreshing the system policies' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+            
                 Write-Verbose -Message 'Refreshing the system WDAC policies using CiTool.exe'
                 &'C:\Windows\System32\CiTool.exe' --refresh -json | Out-Null
 
@@ -180,17 +193,24 @@ Function New-WDACConfig {
                 Invoke-Command -ScriptBlock $DriversBlockListInfoGatheringSCRIPTBLOCK
             }
             else {
-                # Downloading the latest Microsoft Recommended Driver Block Rules from the official source
+                $CurrentStep++
+                Write-Progress -Id 1 -Activity 'Downloading the driver block rules' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+            
                 Write-Verbose -Message 'Downloading the latest Microsoft Recommended Driver Block Rules from the official source'
                 [System.String]$DriverRules = (Invoke-WebRequest -Uri $MSFTRecommendedDriverBlockRulesURL -ProgressAction SilentlyContinue).Content -replace "(?s).*``````xml(.*)``````.*", '$1'
 
                 # Remove the unnecessary rules and elements - not using this one because then during the merge there will be error - The reason is that "<FileRuleRef RuleID="ID_ALLOW_ALL_2" />" is the only FileruleRef in the xml and after removing it, the <SigningScenario> element will be empty
+                $CurrentStep++
+                Write-Progress -Id 1 -Activity 'Removing the Allow all rules' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+                            
                 Write-Verbose -Message 'Removing the allow all rules and rule refs from the policy'
                 $DriverRules = $DriverRules -replace '<Allow\sID="ID_ALLOW_ALL_[12]"\sFriendlyName=""\sFileName="\*".*/>', ''
                 $DriverRules = $DriverRules -replace '<FileRuleRef\sRuleID="ID_ALLOW_ALL_1".*/>', ''
                 $DriverRules = $DriverRules -replace '<SigningScenario\sValue="12"\sID="ID_SIGNINGSCENARIO_WINDOWS"\sFriendlyName="Auto\sgenerated\spolicy[\S\s]*<\/SigningScenario>', ''
 
-                # Output the XML content to a file
+                $CurrentStep++
+                Write-Progress -Id 1 -Activity 'Creating the XML policy file' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+            
                 Write-Verbose -Message 'Creating XML policy file'
                 $DriverRules | Out-File -FilePath 'Microsoft recommended driver block rules TEMP.xml' -Force
 
@@ -214,6 +234,7 @@ Function New-WDACConfig {
                 # Display the result
                 Write-ColorfulText -Color MintGreen -InputText 'PolicyFile = Microsoft recommended driver block rules.xml'
             }
+            Write-Progress -Id 1 -Activity 'Complete.' -Completed
         }
 
         Function Build-AllowMSFTWithBlockRules {

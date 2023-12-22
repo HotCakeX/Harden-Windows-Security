@@ -19,7 +19,7 @@
     CompanyName          = 'SpyNetGirl'
 
     # Copyright statement for this module
-    Copyright            = '(c) 2023'
+    Copyright            = '(c) 2023-2024'
 
     # Description of the functionality provided by this module
     Description          = @'
@@ -210,19 +210,19 @@ To get help and syntax on PowerShell console, type:
         PSData = @{
 
             # Tags applied to this module. These help with module discovery in online galleries.
-            Tags                 = @('WDAC', 'Windows-Defender-Application-Control', 'Windows', 'Security', 'Microsoft', 'Application-Control', 'App-Control-for-Business', 'Application-Whitelisting', 'BYOVD')
+            Tags         = @('WDAC', 'Windows-Defender-Application-Control', 'Windows', 'Security', 'Microsoft', 'Application-Control', 'App-Control-for-Business', 'Application-Whitelisting', 'BYOVD')
 
             # A URL to the license for this module.
-            LicenseUri           = 'https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE'
+            LicenseUri   = 'https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE'
 
             # A URL to the main website for this project.
-            ProjectUri           = 'https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig'
+            ProjectUri   = 'https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig'
 
             # A URL to an icon representing this module.
-            IconUri              = 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/WDACConfig/icon.png'
+            IconUri      = 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/WDACConfig/icon.png'
 
             # ReleaseNotes of this module
-            ReleaseNotes         = @'
+            ReleaseNotes = @'
 
 Full Change log available in GitHub releases: https://github.com/HotCakeX/Harden-Windows-Security/releases
 

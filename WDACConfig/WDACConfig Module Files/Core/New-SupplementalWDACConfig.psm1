@@ -278,7 +278,6 @@ Function New-SupplementalWDACConfig {
                         New-CIPolicy -MultiplePolicyFormat -FilePath ".\SupplementalPolicy $($args[1]).xml" -Rules $Rules
                     } -args $PackageName, $SuppPolicyName
 
-                    # Giving the Supplemental policy the correct properties
                     Write-Verbose -Message 'Converting the policy type from base to Supplemental, assigning its name and resetting its policy ID'
                     [System.String]$PolicyID = Set-CIPolicyIdInfo -FilePath ".\SupplementalPolicy $SuppPolicyName.xml" -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath -PolicyName "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')"
                     [System.String]$PolicyID = $PolicyID.Substring(11)

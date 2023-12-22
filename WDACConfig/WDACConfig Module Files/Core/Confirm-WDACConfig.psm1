@@ -111,11 +111,13 @@ Function Confirm-WDACConfig {
         }
 
         if ($VerifyWDACStatus) {
+            Write-Verbose -Message 'Checking the status of WDAC using Get-CimInstance'
             Get-CimInstance -ClassName Win32_DeviceGuard -Namespace root\Microsoft\Windows\DeviceGuard | Select-Object -Property *codeintegrity* | Format-List
             Write-ColorfulText -Color Lavender -InputText "2 -> Enforced`n1 -> Audit mode`n0 -> Disabled/Not running`n"
         }
 
         if ($CheckSmartAppControlStatus) {
+            Write-Verbose -Message 'Checking the status of Smart App Control using Get-MpComputerStatus'
             Get-MpComputerStatus | Select-Object -Property SmartAppControlExpiration, SmartAppControlState
             if ((Get-MpComputerStatus).SmartAppControlState -eq 'Eval') {
                 Write-ColorfulText -Color Pink -InputText "`nSmart App Control is in Evaluation mode."

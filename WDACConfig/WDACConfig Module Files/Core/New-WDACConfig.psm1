@@ -516,8 +516,8 @@ Function New-WDACConfig {
             Write-Verbose -Message 'Copying AllowMicrosoft.xml from Windows directory to the current working directory'
             Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml' -Destination .\AllowMicrosoft.xml -Force
 
-            Write-Verbose -Message 'Enabling Audit mode'
-            Set-RuleOption -FilePath .\AllowMicrosoft.xml -Option 3
+            Write-Verbose -Message 'Enabling Audit mode and disabling script enforcement'
+            3, 11 | ForEach-Object -Process { Set-RuleOption -FilePath .\AllowMicrosoft.xml -Option $_ }
 
             Write-Verbose -Message 'Resetting the Policy ID'
             [System.String]$PolicyID = Set-CIPolicyIdInfo -FilePath .\AllowMicrosoft.xml -ResetPolicyID
@@ -586,8 +586,8 @@ Function New-WDACConfig {
                 Remove-Item -Path 'WDACConfigModule.xml', 'AllowPowerShell.xml' -Force
             }
 
-            Write-Verbose -Message 'Enabling Audit mode'
-            Set-RuleOption -FilePath .\DefaultWindows_Audit.xml -Option 3
+            Write-Verbose -Message 'Enabling Audit mode and disabling script enforcement'
+            3, 11 | ForEach-Object -Process { Set-RuleOption -FilePath .\DefaultWindows_Audit.xml -Option $_ }
 
             Write-Verbose -Message 'Resetting the Policy ID'
             [System.String]$PolicyID = Set-CIPolicyIdInfo -FilePath .\DefaultWindows_Audit.xml -ResetPolicyID
@@ -777,7 +777,7 @@ Function New-WDACConfig {
                 &'C:\Windows\System32\CiTool.exe' --update-policy "$BasePolicyID.cip" -json | Out-Null
                 &'C:\Windows\System32\CiTool.exe' --update-policy "$PolicyID.cip" -json | Out-Null
 
-                Write-ColorfulText -Color Pink -InputText "`nBase policy and Supplemental Policies deployed and activated.`n"
+                Write-ColorfulText -Color Pink -InputText 'Base policy and Supplemental Policies deployed and activated.'
 
                 # Get the correct Prep mode Audit policy ID to remove from the system
                 Write-Verbose -Message 'Getting the correct Prep mode Audit policy ID to remove from the system'
@@ -793,7 +793,7 @@ Function New-WDACConfig {
                 }
 
                 &'C:\Windows\System32\CiTool.exe' --remove-policy "{$IDToRemove}" -json | Out-Null
-                Write-ColorfulText -Color Lavender -InputText "`nSystem restart required to finish removing the Audit mode Prep policy"
+                Write-ColorfulText -Color Lavender -InputText 'System restart required to finish removing the Audit mode Prep policy'
             }
         }
 

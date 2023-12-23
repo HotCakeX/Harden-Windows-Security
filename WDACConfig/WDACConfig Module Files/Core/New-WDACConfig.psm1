@@ -695,7 +695,7 @@ Function New-WDACConfig {
             # by adding them first to the deployed Default Windows policy in Audit mode. Because WDACConfig module files don't need to be allowed to run since they are *.ps1 and .*psm1 files
             # And PowerShell core files will be added to the DefaultWindows Base policy anyway
             if ($PSHOME -notlike 'C:\Program Files\WindowsApps\*') {
-                
+
                 Write-Verbose -Message 'Scanning PowerShell core directory and creating a policy file'
                 New-CIPolicy -ScanPath $PSHOME -Level FilePublisher -NoScript -Fallback Hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -FilePath .\AllowPowerShell.xml
 

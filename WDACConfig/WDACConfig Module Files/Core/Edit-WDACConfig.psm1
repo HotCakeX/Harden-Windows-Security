@@ -208,7 +208,7 @@ Function Edit-WDACConfig {
             # The total number of the main steps for the progress bar to render
             [System.Int16]$TotalSteps = 9
             [System.Int16]$CurrentStep = 0
-            
+
             $CurrentStep++
             Write-Progress -Id 9 -Activity 'Initializing' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
@@ -317,7 +317,7 @@ Function Edit-WDACConfig {
                     # Show any extra info about any possible error that might've occurred
                     Throw $_
                 }
-                finally {                    
+                finally {
                     # Only continue the progress bar if user selected at least 1 folder path
                     if ($ProgramsPaths.count -ne 0) {
                         Write-Progress -Id 9 -Activity 'Complete.' -Completed
@@ -438,7 +438,7 @@ Function Edit-WDACConfig {
             # The total number of the main steps for the progress bar to render
             [System.Int16]$TotalSteps = 10
             [System.Int16]$CurrentStep = 0
-            
+
             $CurrentStep++
             Write-Progress -Id 10 -Activity 'Initializing' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
@@ -543,7 +543,7 @@ Function Edit-WDACConfig {
                     #Endregion User-Interaction
 
                     # Make sure User browsed for at least 1 directory, otherwise exit
-                    if ($ProgramsPaths.count -eq 0) {                  
+                    if ($ProgramsPaths.count -eq 0) {
                         # Finally block will be triggered to Re-Deploy Base policy in Enforced mode
                         Throw 'No program folder was selected, reverting the changes and quitting...'
                     }
@@ -799,7 +799,7 @@ Function Edit-WDACConfig {
                 finally {
                     # Only continue the progress bar if user selected at least 1 folder path
                     if ($ProgramsPaths.count -ne 0) {
-                        Write-Progress -Id 10 -Activity 'Complete.' -Completed                    
+                        Write-Progress -Id 10 -Activity 'Complete.' -Completed
                     }
 
                     # Deploy Enforced mode CIP
@@ -862,7 +862,7 @@ Function Edit-WDACConfig {
                 # The total number of the main steps for the progress bar to render
                 [System.Int16]$TotalSteps = 5
                 [System.Int16]$CurrentStep = 0
-            
+
                 $CurrentStep++
                 Write-Progress -Id 11 -Activity 'Verifying the input files' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
@@ -901,7 +901,7 @@ Function Edit-WDACConfig {
                 # Remove the deployed Supplemental policies that user selected from the system, because we're going to deploy the new merged policy that contains all of them
                 $CurrentStep++
                 Write-Progress -Id 11 -Activity 'Removing old policies from the system' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-                
+
                 Write-Verbose -Message 'Removing the deployed Supplemental policies that user selected from the system'
                 foreach ($SuppPolicyPath in $SuppPolicyPaths) {
 
@@ -921,7 +921,7 @@ Function Edit-WDACConfig {
 
                 $CurrentStep++
                 Write-Progress -Id 11 -Activity 'Configuring the final policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-               
+
                 Write-Verbose -Message 'Preparing the final merged Supplemental policy for deployment'
                 Write-Verbose -Message 'Converting the policy to a Supplemental policy type and resetting its ID'
                 $SuppPolicyID = Set-CIPolicyIdInfo -FilePath "$SuppPolicyName.xml" -ResetPolicyID -PolicyName "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')" -BasePolicyToSupplementPath $PolicyPath
@@ -935,7 +935,7 @@ Function Edit-WDACConfig {
 
                 $CurrentStep++
                 Write-Progress -Id 11 -Activity 'Deploying the final policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-               
+
                 Write-Verbose -Message 'Deploying the Supplemental policy'
                 &'C:\Windows\System32\CiTool.exe' --update-policy "$SuppPolicyID.cip" -json | Out-Null
 
@@ -953,7 +953,7 @@ Function Edit-WDACConfig {
             # The total number of the main steps for the progress bar to render
             [System.Int16]$TotalSteps = 5
             [System.Int16]$CurrentStep = 0
-         
+
             $CurrentStep++
             Write-Progress -Id 12 -Activity 'Getting the block rules' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 

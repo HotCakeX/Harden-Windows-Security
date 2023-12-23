@@ -389,11 +389,11 @@ Function New-WDACConfig {
             $CurrentStep++
             Write-Progress -Id 7 -Activity 'Determining whether to include PowerShell core' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-            # Scan PowerShell core directory and allow its files in the Default Windows base policy so that module can still be used once it's been deployed
-            if (Test-Path -Path 'C:\Program Files\PowerShell') {
+            # Scan PowerShell core directory (if installed using MSI only, because Microsoft Store installed version doesn't need to be allowed manually) and allow its files in the Default Windows base policy so that module can still be used once it's been deployed
+            if ($PSHOME -notlike 'C:\Program Files\WindowsApps\*') {
 
                 Write-ColorfulText -Color Lavender -InputText 'Creating allow rules for PowerShell in the DefaultWindows base policy so you can continue using this module after deploying it.'
-                New-CIPolicy -ScanPath 'C:\Program Files\PowerShell' -Level FilePublisher -NoScript -Fallback Hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -FilePath .\AllowPowerShell.xml
+                New-CIPolicy -ScanPath $PSHOME -Level FilePublisher -NoScript -Fallback Hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -FilePath .\AllowPowerShell.xml
 
                 if ($MergeSignToolPolicy) {
                     Write-Verbose -Message 'Merging the policy files, including SignTool.xml, to create the final DefaultWindowsPlusBlockRules.xml policy'
@@ -691,12 +691,13 @@ Function New-WDACConfig {
             $CurrentStep++
             Write-Progress -Id 8 -Activity 'Determining whether to include PowerShell core' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-            # Making Sure neither PowerShell core nor WDACConfig module files are added to the Supplemental policy created by -MakePolicyFromAuditLogs parameter
+            # Making Sure neither PowerShell core (Installed using MSI because Microsoft Store installed version is automatically allowed) nor WDACConfig module files are added to the Supplemental policy created by -MakePolicyFromAuditLogs parameter
             # by adding them first to the deployed Default Windows policy in Audit mode. Because WDACConfig module files don't need to be allowed to run since they are *.ps1 and .*psm1 files
             # And PowerShell core files will be added to the DefaultWindows Base policy anyway
-            if (Test-Path -Path 'C:\Program Files\PowerShell') {
+            if ($PSHOME -notlike 'C:\Program Files\WindowsApps\*') {
+                
                 Write-Verbose -Message 'Scanning PowerShell core directory and creating a policy file'
-                New-CIPolicy -ScanPath 'C:\Program Files\PowerShell' -Level FilePublisher -NoScript -Fallback Hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -FilePath .\AllowPowerShell.xml
+                New-CIPolicy -ScanPath $PSHOME -Level FilePublisher -NoScript -Fallback Hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -FilePath .\AllowPowerShell.xml
 
                 Write-Verbose -Message 'Scanning WDACConfig module directory and creating a policy file'
                 New-CIPolicy -ScanPath "$ModuleRootPath" -Level hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -FilePath .\WDACConfigModule.xml
@@ -1058,7 +1059,6 @@ Function New-WDACConfig {
             $GetBlockRules { Get-BlockRulesMeta ; break }
             # Get the latest driver block rules and Deploy them if New-WDACConfig -GetDriverBlockRules was called with -Deploy parameter
             { $GetDriverBlockRules } { Get-DriverBlockRules -Deploy:$Deploy ; break }
-
             $SetAutoUpdateDriverBlockRules { Set-AutoUpdateDriverBlockRules ; break }
             $MakeAllowMSFTWithBlockRules { Build-AllowMSFTWithBlockRules ; break }
             $MakePolicyFromAuditLogs { Build-PolicyFromAuditLogs ; break }

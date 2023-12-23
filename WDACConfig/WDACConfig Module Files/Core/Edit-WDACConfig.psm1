@@ -950,8 +950,18 @@ Function Edit-WDACConfig {
 
         if ($UpdateBasePolicy) {
 
+            # The total number of the main steps for the progress bar to render
+            [System.Int16]$TotalSteps = 5
+            [System.Int16]$CurrentStep = 0
+         
+            $CurrentStep++
+            Write-Progress -Id 12 -Activity 'Getting the block rules' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
             Write-Verbose -Message 'Getting the Microsoft recommended block rules by calling the Get-BlockRulesMeta function'
             Get-BlockRulesMeta 6> $null
+
+            $CurrentStep++
+            Write-Progress -Id 12 -Activity 'Determining the policy type' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
             Write-Verbose -Message 'Determining the type of the new base policy'
             switch ($NewBasePolicyType) {
@@ -1029,6 +1039,9 @@ Function Edit-WDACConfig {
                 }
             }
 
+            $CurrentStep++
+            Write-Progress -Id 12 -Activity 'Configuring the policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
             if ($UpdateBasePolicy -and $RequireEVSigners) {
                 Write-Verbose -Message 'Adding the EV Signers rule option to the base policy'
                 Set-RuleOption -FilePath .\BasePolicy.xml -Option 8
@@ -1065,8 +1078,14 @@ Function Edit-WDACConfig {
             Write-Verbose -Message 'Converting the base policy to a CIP file'
             ConvertFrom-CIPolicy -XmlFilePath '.\BasePolicy.xml' -BinaryFilePath "$CurrentID.cip" | Out-Null
 
+            $CurrentStep++
+            Write-Progress -Id 12 -Activity 'Deploying the policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
             Write-Verbose -Message 'Deploying the new base policy with the same GUID on the system'
             &'C:\Windows\System32\CiTool.exe' --update-policy "$CurrentID.cip" -json | Out-Null
+
+            $CurrentStep++
+            Write-Progress -Id 12 -Activity 'Cleaning up' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
             Write-Verbose -Message 'Removing the base policy CIP file after deployment'
             Remove-Item -Path "$CurrentID.cip" -Force
@@ -1091,6 +1110,7 @@ Function Edit-WDACConfig {
                 Write-Verbose -Message 'Replacing the old unsigned policy path in User Configurations with the new one'
                 Set-CommonWDACConfig -UnsignedPolicyPath (Get-ChildItem -Path $PolicyFiles[$NewBasePolicyType]).FullName | Out-Null
             }
+            Write-Progress -Id 12 -Activity 'Complete.' -Completed
         }
     }
 

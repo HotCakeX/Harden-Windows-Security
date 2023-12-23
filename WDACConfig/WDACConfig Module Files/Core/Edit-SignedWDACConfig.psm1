@@ -378,12 +378,10 @@ Function Edit-SignedWDACConfig {
                     while ($true)
                     #Endregion User-Interaction
 
-                    # Make sure User browsed for at least 1 directory
-                    # Exit the operation if user didn't select any folder paths
+                    # Make sure User browsed for at least 1 directory otherwise exit
                     if ($ProgramsPaths.count -eq 0) {
-                        Write-Host -Object 'No program folder was selected, reverting the changes and quitting...' -ForegroundColor Red
-                        # Causing break here to stop operation. Finally block will be triggered to Re-Deploy Base policy in Enforced mode
-                        break
+                        # Finally block will be triggered to Re-Deploy Base policy in Enforced mode
+                        Throw 'No program folder was selected, reverting the changes and quitting...'
                     }
                 }
                 catch {
@@ -628,12 +626,10 @@ Function Edit-SignedWDACConfig {
                     while ($true)
                     #Endregion User-Interaction
 
-                    # Make sure User browsed for at least 1 directory
-                    # Exit the operation if user didn't select any folder paths
+                    # Make sure User browsed for at least 1 directory, otherwise exit
                     if ($ProgramsPaths.count -eq 0) {
-                        Write-Host -Object 'No program folder was selected, reverting the changes and quitting...' -ForegroundColor Red
-                        # Causing break here to stop operation. Finally block will be triggered to Re-Deploy Base policy in Enforced mode
-                        break
+                        # Finally block will be triggered to Re-Deploy Base policy in Enforced mode
+                        Throw 'No program folder was selected, reverting the changes and quitting...'
                     }
 
                     Write-Host -Object 'Here are the paths you selected:' -ForegroundColor Yellow

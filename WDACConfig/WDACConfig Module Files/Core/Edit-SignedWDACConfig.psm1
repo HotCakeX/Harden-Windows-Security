@@ -339,7 +339,7 @@ Function Edit-SignedWDACConfig {
 
                 #Region Snap-Back-Guarantee
                 Write-Verbose -Message 'Creating Enforced Mode SnapBack guarantee'
-                New-SnapBackGuarantee -Location (Get-Location).Path
+                New-SnapBackGuarantee -Path (Get-Location).Path
 
                 # Deploy the Audit mode CIP
                 Write-Verbose -Message 'Deploying the Audit mode CIP'
@@ -589,7 +589,7 @@ Function Edit-SignedWDACConfig {
 
                 #Region Snap-Back-Guarantee
                 Write-Verbose -Message 'Creating Enforced Mode SnapBack guarantee'
-                New-SnapBackGuarantee -Location (Get-Location).Path
+                New-SnapBackGuarantee -Path (Get-Location).Path
 
                 # Deploy the Audit mode CIP
                 Write-Verbose -Message 'Deploying the Audit mode CIP'
@@ -675,8 +675,8 @@ Function Edit-SignedWDACConfig {
                             [System.Collections.Hashtable]$AvailableFilesOnDiskPolicyMakerHashTable = @{
                                 FilePath               = '.\RulesForFilesNotInUserSelectedPaths.xml'
                                 ScanPath               = "$UserTempDirectoryPath\TemporaryScanFolderForEventViewerFiles\"
-                                Level                  = $Level
-                                Fallback               = $Fallbacks
+                                Level                  = $Level -eq 'FilePath' ? 'FilePublisher' : $Level # Since FilePath will not be valid for files scanned in the temp directory (because they weren't in any user-selected paths), using FilePublisher as level in case user chose FilePath as level
+                                Fallback               = $Fallbacks -eq 'FilePath' ? 'Hash' : $Fallbacks # Since FilePath will not be valid for files scanned in the temp directory (because they weren't in any user-selected paths), using Hash as Fallback in case user chose FilePath as Fallback
                                 MultiplePolicyFormat   = $true
                                 UserWriteablePaths     = $true
                                 AllowFileNameFallbacks = $true

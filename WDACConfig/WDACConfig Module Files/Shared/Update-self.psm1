@@ -80,18 +80,18 @@ Function Update-self {
             try {
                 Uninstall-Module -Name 'WDACConfig' -AllVersions -Force -ErrorAction Stop
                 Install-Module -Name 'WDACConfig' -RequiredVersion $LatestVersion -Force
-                # Will not import the new module version automatically because of the constant variables
+                # Will not import the new module version in the current session because of the constant variables. New version is automatically imported when the main cmdlet is run in a new session.
             }
             # Do this if module files/folder was just copied to Documents folder and not properly installed - Should rarely happen
             catch {
                 Install-Module -Name 'WDACConfig' -RequiredVersion $LatestVersion -Force
-                # Will not import the new module version automatically because of the constant variables
+                # Will not import the new module version in the current session because of the constant variables. New version is automatically imported when the main cmdlet is run in a new session.
             }
             # Make sure the old version isn't run after update
             Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(152,255,152))Update has been successful, running your command now$($PSStyle.Reset)"
 
             try {
-                # Try to re-run the command that invoked the Update-self function
+                # Try to re-run the command that invoked the Update-self function in a new session after the module is updated.
                 # pwsh.exe -NoExit -CommandWithArgs 'Invoke-Expression -command $args[0]' $InvocationStatement
                 pwsh.exe -NoLogo -NoExit -command $InvocationStatement
             }

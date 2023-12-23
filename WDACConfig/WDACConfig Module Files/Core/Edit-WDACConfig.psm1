@@ -205,6 +205,13 @@ Function Edit-WDACConfig {
     process {
 
         if ($AllowNewApps) {
+            # The total number of the main steps for the progress bar to render
+            [System.Int16]$TotalSteps = 9
+            [System.Int16]$CurrentStep = 0
+            
+            $CurrentStep++
+            Write-Progress -Id 9 -Activity 'Initializing' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
             # remove any possible files from previous runs
             Write-Verbose -Message 'Removing any possible files from previous runs'
             Remove-Item -Path '.\ProgramDir_ScanResults*.xml' -Force -ErrorAction SilentlyContinue
@@ -216,6 +223,10 @@ Function Edit-WDACConfig {
             #Initiate Live Audit Mode
 
             foreach ($PolicyPath in $PolicyPaths) {
+
+                $CurrentStep++
+                Write-Progress -Id 9 -Activity 'Creating Audit mode policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
                 # Creating a copy of the original policy in Temp folder so that the original one will be unaffected
                 Write-Verbose -Message 'Creating a copy of the original policy in Temp folder so that the original one will be unaffected'
                 # Get the policy file name
@@ -250,7 +261,9 @@ Function Edit-WDACConfig {
                 Write-Verbose -Message 'Creating Enforced Mode SnapBack guarantee'
                 New-SnapBackGuarantee -Path (Get-Location).Path
 
-                # Deploy the Audit mode CIP
+                $CurrentStep++
+                Write-Progress -Id 9 -Activity 'Deploying the Audit mode policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
                 Write-Verbose -Message 'Deploying the Audit mode CIP'
                 &'C:\Windows\System32\CiTool.exe' --update-policy '.\AuditMode.cip' -json | Out-Null
 
@@ -265,6 +278,10 @@ Function Edit-WDACConfig {
                 # A Try-Catch-Finally block so that if any errors occur, the Base policy will be Re-deployed in enforced mode
                 Try {
                     #Region User-Interaction
+
+                    $CurrentStep++
+                    Write-Progress -Id 9 -Activity 'Waiting for user input' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
                     Write-ColorfulText -Color Pink -InputText 'Audit mode deployed, start installing your programs now'
                     Write-ColorfulText -Color HotPink -InputText 'When you have finished installing programs, Press Enter to start selecting program directories to scan'
                     Pause
@@ -287,19 +304,25 @@ Function Edit-WDACConfig {
                     while ($true)
                     #Endregion User-Interaction
 
-                    # Make sure User browsed for at least 1 directory
-                    # Exit the operation if user didn't select any folder paths
+                    # Make sure User browsed for at least 1 directory, otherwise exit
                     if ($ProgramsPaths.count -eq 0) {
-                        Write-Host -Object 'No program folder was selected, reverting the changes and quitting...' -ForegroundColor Red
-                        # Causing break here to stop operation. Finally block will be triggered to Re-Deploy Base policy in Enforced mode
-                        break
+                        # Finally block will be triggered to Re-Deploy Base policy in Enforced mode
+                        Throw 'No program folder was selected, reverting the changes and quitting...'
                     }
                 }
                 catch {
+                    # Complete the progress bar
+                    Write-Progress -Id 9 -Activity 'Complete.' -Completed
+
                     # Show any extra info about any possible error that might've occurred
                     Throw $_
                 }
-                finally {
+                finally {                    
+                    # Only continue the progress bar if user selected at least 1 folder path
+                    if ($ProgramsPaths.count -ne 0) {
+                        Write-Progress -Id 9 -Activity 'Complete.' -Completed
+                    }
+
                     # Deploy Enforced mode CIP
                     Write-Verbose -Message 'Finally Block Running'
                     Update-BasePolicyToEnforced
@@ -316,6 +339,9 @@ Function Edit-WDACConfig {
                 $ProgramsPaths | ForEach-Object -Process { $_.FullName }
 
                 # Scan each of the folder paths that user selected
+                $CurrentStep++
+                Write-Progress -Id 9 -Activity 'Scanning user selected folders' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
                 Write-Verbose -Message 'Scanning each of the folder paths that user selected'
                 for ($i = 0; $i -lt $ProgramsPaths.Count; $i++) {
 
@@ -350,6 +376,9 @@ Function Edit-WDACConfig {
                 $PolicyXMLFilesArray | ForEach-Object -Process { Write-Verbose -Message "$_" }
 
                 # Merge all of the policy XML files in the array into the final Supplemental policy
+                $CurrentStep++
+                Write-Progress -Id 9 -Activity 'Merging the policies' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
                 Write-Verbose -Message 'Merging all of the policy XML files in the array into the final Supplemental policy'
                 Merge-CIPolicy -PolicyPaths $PolicyXMLFilesArray -OutputFilePath ".\SupplementalPolicy $SuppPolicyName.xml" | Out-Null
 
@@ -357,6 +386,9 @@ Function Edit-WDACConfig {
                 Remove-Item -Path '.\ProgramDir_ScanResults*.xml' -Force
 
                 #Region Supplemental-policy-processing-and-deployment
+                $CurrentStep++
+                Write-Progress -Id 9 -Activity 'Creating Supplemental policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
                 Write-Verbose -Message 'Supplemental policy processing and deployment'
 
                 Write-Verbose -Message 'Getting the path of the Supplemental policy'
@@ -379,6 +411,9 @@ Function Edit-WDACConfig {
                 Write-Verbose -Message 'Convert the Supplemental policy to a CIP file'
                 ConvertFrom-CIPolicy -XmlFilePath $SuppPolicyPath -BinaryFilePath "$SuppPolicyID.cip" | Out-Null
 
+                $CurrentStep++
+                Write-Progress -Id 9 -Activity 'Deploying the Supplemental policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
                 Write-Verbose -Message 'Deploying the Supplemental policy'
                 &'C:\Windows\System32\CiTool.exe' --update-policy ".\$SuppPolicyID.cip" -json | Out-Null
 
@@ -394,10 +429,19 @@ Function Edit-WDACConfig {
                 Remove-Item -Path $PolicyPath -Force
 
                 #Endregion Supplemental-policy-processing-and-deployment
+
+                Write-Progress -Id 9 -Activity 'Complete.' -Completed
             }
         }
 
         if ($AllowNewAppsAuditEvents) {
+            # The total number of the main steps for the progress bar to render
+            [System.Int16]$TotalSteps = 10
+            [System.Int16]$CurrentStep = 0
+            
+            $CurrentStep++
+            Write-Progress -Id 10 -Activity 'Initializing' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
             # Change Code Integrity event logs size
             if ($AllowNewAppsAuditEvents -and $LogSize) {
                 Write-Verbose -Message 'Changing Code Integrity event logs size'
@@ -419,6 +463,9 @@ Function Edit-WDACConfig {
             #Initiate Live Audit Mode
 
             foreach ($PolicyPath in $PolicyPaths) {
+                $CurrentStep++
+                Write-Progress -Id 10 -Activity 'Creating the Audit mode policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
                 # Creating a copy of the original policy in Temp folder so that the original one will be unaffected
                 Write-Verbose -Message 'Creating a copy of the original policy in Temp folder so that the original one will be unaffected'
                 # Get the policy file name
@@ -453,7 +500,9 @@ Function Edit-WDACConfig {
                 Write-Verbose -Message 'Creating Enforced Mode SnapBack guarantee'
                 New-SnapBackGuarantee -Path (Get-Location).Path
 
-                # Deploy the Audit mode CIP
+                $CurrentStep++
+                Write-Progress -Id 10 -Activity 'Deploying the Audit mode policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
                 Write-Verbose -Message 'Deploying the Audit mode CIP'
                 &'C:\Windows\System32\CiTool.exe' --update-policy '.\AuditMode.cip' -json | Out-Null
 
@@ -468,6 +517,9 @@ Function Edit-WDACConfig {
                 # A Try-Catch-Finally block so that if any errors occur, the Base policy will be Re-deployed in enforced mode
                 Try {
                     #Region User-Interaction
+                    $CurrentStep++
+                    Write-Progress -Id 10 -Activity 'Waiting for user input' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
                     Write-ColorfulText -Color Pink -InputText 'Audit mode deployed, start installing your programs now'
                     Write-ColorfulText -Color HotPink -InputText 'When you have finished installing programs, Press Enter to start selecting program directories to scan'
                     Pause
@@ -490,18 +542,18 @@ Function Edit-WDACConfig {
                     while ($true)
                     #Endregion User-Interaction
 
-                    # Make sure User browsed for at least 1 directory
-                    # Exit the operation if user didn't select any folder paths
-                    if ($ProgramsPaths.count -eq 0) {
-                        Write-Host -Object 'No program folder was selected, reverting the changes and quitting...' -ForegroundColor Red
-                        # Causing break here to stop operation. Finally block will be triggered to Re-Deploy Base policy in Enforced mode
-                        break
+                    # Make sure User browsed for at least 1 directory, otherwise exit
+                    if ($ProgramsPaths.count -eq 0) {                  
+                        # Finally block will be triggered to Re-Deploy Base policy in Enforced mode
+                        Throw 'No program folder was selected, reverting the changes and quitting...'
                     }
 
                     Write-Host -Object 'Here are the paths you selected:' -ForegroundColor Yellow
                     $ProgramsPaths | ForEach-Object -Process { $_.FullName }
 
                     #Region EventCapturing
+                    $CurrentStep++
+                    Write-Progress -Id 10 -Activity 'Scanning event viewer logs' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                     Write-Host -Object 'Scanning Windows Event logs and creating a policy file, please wait...' -ForegroundColor Cyan
 
@@ -593,6 +645,9 @@ Function Edit-WDACConfig {
                     #Endregion EventCapturing
 
                     #Region Process-Program-Folders-From-User-input
+                    $CurrentStep++
+                    Write-Progress -Id 10 -Activity 'Scanning user selected folders' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
                     Write-Verbose -Message 'Scanning each of the folder paths that user selected'
 
                     for ($i = 0; $i -lt $ProgramsPaths.Count; $i++) {
@@ -630,6 +685,9 @@ Function Edit-WDACConfig {
                     # For these files, only Kernel can get their hashes, it passes them to event viewer and we take them from event viewer logs
                     # Any other attempts such as "Get-FileHash" or "Get-AuthenticodeSignature" fail and ConfigCI Module cmdlets totally ignore these files and do not create allow rules for them
 
+                    $CurrentStep++
+                    Write-Progress -Id 10 -Activity 'Checking for Kernel protected files' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
                     Write-Verbose -Message 'Checking for Kernel protected files'
 
                     # Finding the file(s) first and storing them in an array
@@ -657,6 +715,9 @@ Function Edit-WDACConfig {
                             }
                         }
                     }
+
+                    $CurrentStep++
+                    Write-Progress -Id 10 -Activity 'Checking for extra files' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                     # Only proceed if any kernel protected file(s) were found in any of the user-selected directory path(s)
                     if ($ExesWithNoHash) {
@@ -716,6 +777,9 @@ Function Edit-WDACConfig {
                     $PolicyXMLFilesArray | ForEach-Object -Process { Write-Verbose -Message "$_" }
 
                     # Merge all of the policy XML files in the array into the final Supplemental policy
+                    $CurrentStep++
+                    Write-Progress -Id 10 -Activity 'Merging the policies' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
                     Merge-CIPolicy -PolicyPaths $PolicyXMLFilesArray -OutputFilePath ".\SupplementalPolicy $SuppPolicyName.xml" | Out-Null
 
                     # Delete these extra files unless user uses -Debug parameter
@@ -728,9 +792,16 @@ Function Edit-WDACConfig {
                 # Unlike AllowNewApps parameter, AllowNewAppsAuditEvents parameter performs Event viewer scanning and kernel protected files detection
                 # So the base policy enforced mode snap back can't happen any sooner than this point
                 catch {
+                    # Complete the progress bar
+                    Write-Progress -Id 10 -Activity 'Complete.' -Completed
                     Throw $_
                 }
                 finally {
+                    # Only continue the progress bar if user selected at least 1 folder path
+                    if ($ProgramsPaths.count -ne 0) {
+                        Write-Progress -Id 10 -Activity 'Complete.' -Completed                    
+                    }
+
                     # Deploy Enforced mode CIP
                     Write-Verbose -Message 'Finally Block Running'
                     Update-BasePolicyToEnforced
@@ -763,6 +834,9 @@ Function Edit-WDACConfig {
                 Write-Verbose -Message 'Convert the Supplemental policy to a CIP file'
                 ConvertFrom-CIPolicy -XmlFilePath $SuppPolicyPath -BinaryFilePath "$SuppPolicyID.cip" | Out-Null
 
+                $CurrentStep++
+                Write-Progress -Id 10 -Activity 'Deploying the Supplemental policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
                 Write-Verbose -Message 'Deploying the Supplemental policy'
                 &'C:\Windows\System32\CiTool.exe' --update-policy ".\$SuppPolicyID.cip" -json | Out-Null
 
@@ -777,6 +851,8 @@ Function Edit-WDACConfig {
                 Remove-Item -Path $PolicyPath -Force
 
                 #Endregion Supplemental-policy-processing-and-deployment
+
+                Write-Progress -Id 10 -Activity 'Complete.' -Completed
             }
         }
 

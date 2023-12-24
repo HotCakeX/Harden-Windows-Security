@@ -309,18 +309,13 @@ Function Edit-WDACConfig {
                     }
                 }
                 catch {
-                    # Complete the progress bar
+                    # Complete the progress bar if there was an error, such as user not selecting any folders
                     Write-Progress -Id 9 -Activity 'Complete.' -Completed
 
                     # Show any extra info about any possible error that might've occurred
                     Throw $_
                 }
                 finally {
-                    # Only continue the progress bar if user selected at least 1 folder path
-                    if ($ProgramsPaths.count -ne 0) {
-                        Write-Progress -Id 9 -Activity 'Complete.' -Completed
-                    }
-
                     # Deploy Enforced mode CIP
                     Write-Verbose -Message 'Finally Block Running'
                     Update-BasePolicyToEnforced
@@ -550,9 +545,7 @@ Function Edit-WDACConfig {
 
                     #Region EventCapturing
                     $CurrentStep++
-                    Write-Progress -Id 10 -Activity 'Scanning event viewer logs' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-                    Write-Host -Object 'Scanning Windows Event logs and creating a policy file, please wait...' -ForegroundColor Cyan
+                    Write-Progress -Id 10 -Activity 'Scanning event logs to create policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                     # Extracting the array content from Get-AuditEventLogsProcessing function
                     $AuditEventLogsProcessingResults = Get-AuditEventLogsProcessing -Date $Date
@@ -789,16 +782,13 @@ Function Edit-WDACConfig {
                 # Unlike AllowNewApps parameter, AllowNewAppsAuditEvents parameter performs Event viewer scanning and kernel protected files detection
                 # So the base policy enforced mode snap back can't happen any sooner than this point
                 catch {
-                    # Complete the progress bar
+                    # Complete the progress bar if there was an error, such as user not selecting any folders
                     Write-Progress -Id 10 -Activity 'Complete.' -Completed
+
+                    # Show any extra info about any possible error that might've occurred
                     Throw $_
                 }
                 finally {
-                    # Only continue the progress bar if user selected at least 1 folder path
-                    if ($ProgramsPaths.count -ne 0) {
-                        Write-Progress -Id 10 -Activity 'Complete.' -Completed
-                    }
-
                     # Deploy Enforced mode CIP
                     Write-Verbose -Message 'Finally Block Running'
                     Update-BasePolicyToEnforced

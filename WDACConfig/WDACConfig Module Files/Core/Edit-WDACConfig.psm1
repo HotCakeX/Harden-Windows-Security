@@ -205,12 +205,6 @@ Function Edit-WDACConfig {
     process {
 
         if ($AllowNewApps) {
-            # The total number of the main steps for the progress bar to render
-            [System.Int16]$TotalSteps = 9
-            [System.Int16]$CurrentStep = 0
-
-            $CurrentStep++
-            Write-Progress -Id 9 -Activity 'Initializing' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
             # remove any possible files from previous runs
             Write-Verbose -Message 'Removing any possible files from previous runs'
@@ -223,6 +217,10 @@ Function Edit-WDACConfig {
             #Initiate Live Audit Mode
 
             foreach ($PolicyPath in $PolicyPaths) {
+
+                # The total number of the main steps for the progress bar to render
+                [System.Int16]$TotalSteps = 8
+                [System.Int16]$CurrentStep = 0
 
                 $CurrentStep++
                 Write-Progress -Id 9 -Activity 'Creating Audit mode policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
@@ -435,12 +433,6 @@ Function Edit-WDACConfig {
         }
 
         if ($AllowNewAppsAuditEvents) {
-            # The total number of the main steps for the progress bar to render
-            [System.Int16]$TotalSteps = 10
-            [System.Int16]$CurrentStep = 0
-
-            $CurrentStep++
-            Write-Progress -Id 10 -Activity 'Initializing' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
             # Change Code Integrity event logs size
             if ($AllowNewAppsAuditEvents -and $LogSize) {
@@ -463,6 +455,11 @@ Function Edit-WDACConfig {
             #Initiate Live Audit Mode
 
             foreach ($PolicyPath in $PolicyPaths) {
+
+                # The total number of the main steps for the progress bar to render
+                [System.Int16]$TotalSteps = 9
+                [System.Int16]$CurrentStep = 0
+
                 $CurrentStep++
                 Write-Progress -Id 10 -Activity 'Creating the Audit mode policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 

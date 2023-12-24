@@ -7,13 +7,13 @@ Function Deploy-SignedWDACConfig {
     Param(
         [ValidatePattern('\.xml$')]
         [ValidateScript({ Test-Path -Path $_ -PathType 'Leaf' }, ErrorMessage = 'The path you selected is not a file path.')]
-        [parameter(Mandatory = $true)][System.String[]]$PolicyPaths,
+        [parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ValueFromPipeline = $true)][System.IO.FileInfo[]]$PolicyPaths,
 
         [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$Deploy,
 
         [ValidatePattern('\.cer$')]
         [ValidateScript({ Test-Path -Path $_ -PathType 'Leaf' }, ErrorMessage = 'The path you selected is not a file path.')]
-        [parameter(Mandatory = $false)][System.String]$CertPath,
+        [parameter(Mandatory = $false, ValueFromPipelineByPropertyName = $true, ValueFromPipeline = $true)][System.IO.FileInfo]$CertPath,
 
         [ValidateScript({
                 [System.String[]]$Certificates = foreach ($Cert in (Get-ChildItem -Path 'Cert:\CurrentUser\my')) {
@@ -21,10 +21,12 @@ Function Deploy-SignedWDACConfig {
                 }
                 $Certificates -contains $_
             }, ErrorMessage = "A certificate with the provided common name doesn't exist in the personal store of the user certificates." )]
-        [parameter(Mandatory = $false, ValueFromPipelineByPropertyName = $true)][System.String]$CertCN,
+        [parameter(Mandatory = $false, ValueFromPipelineByPropertyName = $true, ValueFromPipeline = $true)][System.String]$CertCN,
 
-        [parameter(Mandatory = $false, ValueFromPipelineByPropertyName = $true)]
-        [System.String]$SignToolPath,
+        [ValidatePattern('\.exe$')]
+        [ValidateScript({ Test-Path -Path $_ -PathType 'Leaf' }, ErrorMessage = 'The path you selected is not a file path.')]
+        [parameter(Mandatory = $false, ValueFromPipelineByPropertyName = $true, ValueFromPipeline = $true)]
+        [System.IO.FileInfo]$SignToolPath,
 
         [Parameter(Mandatory = $false)]
         [System.Management.Automation.SwitchParameter]$Force,
@@ -115,6 +117,12 @@ Function Deploy-SignedWDACConfig {
 
     process {
         foreach ($PolicyPath in $PolicyPaths) {
+            # The total number of the main steps for the progress bar to render
+            [System.Int16]$TotalSteps = 4
+            [System.Int16]$CurrentStep = 0
+
+            $CurrentStep++
+            Write-Progress -Id 13 -Activity 'Gathering policy details' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
             Write-Verbose -Message "Gathering policy details from: $PolicyPath"
             $Xml = [System.Xml.XmlDocument](Get-Content -Path $PolicyPath)
@@ -154,6 +162,9 @@ Function Deploy-SignedWDACConfig {
                 }
             }
 
+            $CurrentStep++
+            Write-Progress -Id 13 -Activity 'Creating CIP file' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
             Write-Verbose -Message 'Setting HVCI to Strict'
             Set-HVCIOptions -Strict -FilePath $PolicyPath
 
@@ -162,6 +173,9 @@ Function Deploy-SignedWDACConfig {
 
             Write-Verbose -Message 'Converting the policy to .CIP file'
             ConvertFrom-CIPolicy -XmlFilePath $PolicyPath -BinaryFilePath "$PolicyID.cip" | Out-Null
+
+            $CurrentStep++
+            Write-Progress -Id 13 -Activity 'Signing the policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
             # Configure the parameter splat
             $ProcessParams = @{
@@ -183,6 +197,9 @@ Function Deploy-SignedWDACConfig {
 
             Write-Verbose -Message 'Renaming the .p7 file to .cip'
             Rename-Item -Path "$PolicyID.cip.p7" -NewName "$PolicyID.cip" -Force
+
+            $CurrentStep++
+            Write-Progress -Id 13 -Activity 'Deploying' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
             if ($Deploy) {
 
@@ -238,6 +255,7 @@ Function Deploy-SignedWDACConfig {
                 Write-ColorfulText -Color MintGreen -InputText "PolicyName = $PolicyName"
                 Write-ColorfulText -Color MintGreen -InputText "PolicyGUID = $PolicyID"
             }
+            Write-Progress -Id 13 -Activity 'Complete.' -Completed
         }
     }
 

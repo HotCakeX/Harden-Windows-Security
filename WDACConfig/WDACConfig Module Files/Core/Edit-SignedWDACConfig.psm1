@@ -280,7 +280,13 @@ Function Edit-SignedWDACConfig {
             #Initiate Live Audit Mode
 
             foreach ($PolicyPath in $PolicyPaths) {
-                # Creating a copy of the original policy in Temp folder so that the original one will be unaffected
+                # The total number of the main steps for the progress bar to render
+                [System.Int16]$TotalSteps = 6
+                [System.Int16]$CurrentStep = 0
+
+                $CurrentStep++
+                Write-Progress -Id 14 -Activity 'Creating Audit mode policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
                 Write-Verbose -Message 'Creating a copy of the original policy in Temp folder so that the original one will be unaffected'
                 # Get the policy file name
                 [System.String]$PolicyFileName = Split-Path -Path $PolicyPath -Leaf
@@ -341,6 +347,9 @@ Function Edit-SignedWDACConfig {
                 Write-Verbose -Message 'Creating Enforced Mode SnapBack guarantee'
                 New-SnapBackGuarantee -Path (Get-Location).Path
 
+                $CurrentStep++
+                Write-Progress -Id 14 -Activity 'Deploying the Audit mode policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
                 # Deploy the Audit mode CIP
                 Write-Verbose -Message 'Deploying the Audit mode CIP'
                 &'C:\Windows\System32\CiTool.exe' --update-policy '.\AuditMode.cip' -json | Out-Null
@@ -364,6 +373,9 @@ Function Edit-SignedWDACConfig {
                     [System.IO.DirectoryInfo[]]$ProgramsPaths = @()
                     Write-Host -Object 'Select program directories to scan' -ForegroundColor Cyan
 
+                    $CurrentStep++
+                    Write-Progress -Id 14 -Activity 'Waiting for user input' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
                     # Showing folder picker GUI to the user for folder path selection
                     do {
                         [System.Reflection.Assembly]::LoadWithPartialName('System.windows.forms') | Out-Null
@@ -385,6 +397,9 @@ Function Edit-SignedWDACConfig {
                     }
                 }
                 catch {
+                    # Complete the progress bar if there was an error, such as user not selecting any folders
+                    Write-Progress -Id 14 -Activity 'Complete.' -Completed
+
                     # Show any extra info about any possible error that might've occurred
                     Throw $_
                 }
@@ -401,6 +416,9 @@ Function Edit-SignedWDACConfig {
 
                 Write-Host -Object 'Here are the paths you selected:' -ForegroundColor Yellow
                 $ProgramsPaths | ForEach-Object -Process { $_.FullName }
+
+                $CurrentStep++
+                Write-Progress -Id 14 -Activity 'Scanning user selected folders' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                 # Scan each of the folder paths that user selected
                 Write-Verbose -Message 'Scanning each of the folder paths that user selected'
@@ -444,6 +462,9 @@ Function Edit-SignedWDACConfig {
                 Remove-Item -Path '.\ProgramDir_ScanResults*.xml' -Force
 
                 #Region Supplemental-policy-processing-and-deployment
+                $CurrentStep++
+                Write-Progress -Id 14 -Activity 'Creating Supplemental policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
                 Write-Verbose -Message 'Supplemental policy processing and deployment'
 
                 Write-Verbose -Message 'Getting the path of the Supplemental policy'
@@ -489,6 +510,9 @@ Function Edit-SignedWDACConfig {
                 Write-Verbose -Message 'Renaming the signed Supplemental policy file to remove the .p7 extension'
                 Rename-Item -Path "$SuppPolicyID.cip.p7" -NewName "$SuppPolicyID.cip" -Force
 
+                $CurrentStep++
+                Write-Progress -Id 14 -Activity 'Deploying Supplemental policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
                 Write-Verbose -Message 'Deploying the Supplemental policy'
                 &'C:\Windows\System32\CiTool.exe' --update-policy ".\$SuppPolicyID.cip" -json | Out-Null
 
@@ -503,6 +527,8 @@ Function Edit-SignedWDACConfig {
                 Remove-Item -Path $PolicyPath -Force
 
                 #Endregion Supplemental-policy-processing-and-deployment
+
+                Write-Progress -Id 14 -Activity 'Complete.' -Completed
             }
         }
 
@@ -528,6 +554,13 @@ Function Edit-SignedWDACConfig {
             #Initiate Live Audit Mode
 
             foreach ($PolicyPath in $PolicyPaths) {
+                # The total number of the main steps for the progress bar to render
+                [System.Int16]$TotalSteps = 8
+                [System.Int16]$CurrentStep = 0
+
+                $CurrentStep++
+                Write-Progress -Id 15 -Activity 'Creating Audit mode policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
                 # Creating a copy of the original policy in Temp folder so that the original one will be unaffected
                 Write-Verbose -Message 'Creating a copy of the original policy in Temp folder so that the original one will be unaffected'
                 # Get the policy file name
@@ -590,6 +623,9 @@ Function Edit-SignedWDACConfig {
                 New-SnapBackGuarantee -Path (Get-Location).Path
 
                 # Deploy the Audit mode CIP
+                $CurrentStep++
+                Write-Progress -Id 15 -Activity 'Deploying Audit mode policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
                 Write-Verbose -Message 'Deploying the Audit mode CIP'
                 &'C:\Windows\System32\CiTool.exe' --update-policy '.\AuditMode.cip' -json | Out-Null
 
@@ -611,6 +647,9 @@ Function Edit-SignedWDACConfig {
                     # Store the program paths that user browses for in an array
                     [System.IO.DirectoryInfo[]]$ProgramsPaths = @()
                     Write-Host -Object 'Select program directories to scan' -ForegroundColor Cyan
+
+                    $CurrentStep++
+                    Write-Progress -Id 15 -Activity 'waiting for user input' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                     # Showing folder picker GUI to the user for folder path selection
                     do {
@@ -636,8 +675,8 @@ Function Edit-SignedWDACConfig {
                     $ProgramsPaths | ForEach-Object -Process { $_.FullName }
 
                     #Region EventCapturing
-
-                    Write-Host -Object 'Scanning Windows Event logs and creating a policy file, please wait...' -ForegroundColor Cyan
+                    $CurrentStep++
+                    Write-Progress -Id 15 -Activity 'Scanning event logs to create policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                     # Extracting the array content from Get-AuditEventLogsProcessing function
                     $AuditEventLogsProcessingResults = Get-AuditEventLogsProcessing -Date $Date
@@ -727,6 +766,9 @@ Function Edit-SignedWDACConfig {
                     #Endregion EventCapturing
 
                     #Region Process-Program-Folders-From-User-input
+                    $CurrentStep++
+                    Write-Progress -Id 15 -Activity 'Scanning user selected folders' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
                     Write-Verbose -Message 'Scanning each of the folder paths that user selected'
 
                     for ($i = 0; $i -lt $ProgramsPaths.Count; $i++) {
@@ -763,6 +805,9 @@ Function Edit-SignedWDACConfig {
                     # This part takes care of Kernel protected files such as the main executable of the games installed through Xbox app
                     # For these files, only Kernel can get their hashes, it passes them to event viewer and we take them from event viewer logs
                     # Any other attempts such as "Get-FileHash" or "Get-AuthenticodeSignature" fail and ConfigCI Module cmdlets totally ignore these files and do not create allow rules for them
+
+                    $CurrentStep++
+                    Write-Progress -Id 15 -Activity 'Checking for Kernel protected files' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                     Write-Verbose -Message 'Checking for Kernel protected files'
 
@@ -862,6 +907,10 @@ Function Edit-SignedWDACConfig {
                 # Unlike AllowNewApps parameter, AllowNewAppsAuditEvents parameter performs Event viewer scanning and kernel protected files detection
                 # So the base policy enforced mode snap back can't happen any sooner than this point
                 catch {
+                    # Complete the progress bar if there was an error, such as user not selecting any folders
+                    Write-Progress -Id 15 -Activity 'Complete.' -Completed
+
+                    # Show any extra info about any possible error that might've occurred
                     Throw $_
                 }
                 finally {
@@ -876,6 +925,9 @@ Function Edit-SignedWDACConfig {
                 }
 
                 #Region Supplemental-policy-processing-and-deployment
+
+                $CurrentStep++
+                Write-Progress -Id 15 -Activity 'Creating supplemental policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                 Write-Verbose -Message 'Supplemental policy processing and deployment'
                 [System.String]$SuppPolicyPath = ".\SupplementalPolicy $SuppPolicyName.xml"
@@ -921,6 +973,9 @@ Function Edit-SignedWDACConfig {
                 Write-Verbose -Message 'Renaming the signed Supplemental policy file to remove the .p7 extension'
                 Rename-Item -Path "$SuppPolicyID.cip.p7" -NewName "$SuppPolicyID.cip" -Force
 
+                $CurrentStep++
+                Write-Progress -Id 15 -Activity 'Deploying Supplemental policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
                 Write-Verbose -Message 'Deploying the Supplemental policy'
                 &'C:\Windows\System32\CiTool.exe' --update-policy ".\$SuppPolicyID.cip" -json | Out-Null
 
@@ -935,11 +990,19 @@ Function Edit-SignedWDACConfig {
                 Remove-Item -Path $PolicyPath -Force
 
                 #Endregion Supplemental-policy-processing-and-deployment
+
+                Write-Progress -Id 15 -Activity 'Complete.' -Completed
             }
         }
 
         if ($MergeSupplementalPolicies) {
             foreach ($PolicyPath in $PolicyPaths) {
+                # The total number of the main steps for the progress bar to render
+                [System.Int16]$TotalSteps = 5
+                [System.Int16]$CurrentStep = 0
+
+                $CurrentStep++
+                Write-Progress -Id 16 -Activity 'Verifying the input files' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                 #Region Input-policy-verification
                 Write-Verbose -Message 'Verifying the input policy files'
@@ -967,10 +1030,16 @@ Function Edit-SignedWDACConfig {
                 }
                 #Endregion Input-policy-verification
 
+                $CurrentStep++
+                Write-Progress -Id 16 -Activity 'Merging the policies' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
                 Write-Verbose -Message 'Merging the Supplemental policies into a single policy file'
                 Merge-CIPolicy -PolicyPaths $SuppPolicyPaths -OutputFilePath "$SuppPolicyName.xml" | Out-Null
 
                 # Remove the deployed Supplemental policies that user selected from the system, because we're going to deploy the new merged policy that contains all of them
+                $CurrentStep++
+                Write-Progress -Id 16 -Activity 'Removing old policies from the system' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
                 Write-Verbose -Message 'Removing the deployed Supplemental policies that user selected from the system'
                 foreach ($SuppPolicyPath in $SuppPolicyPaths) {
 
@@ -987,6 +1056,9 @@ Function Edit-SignedWDACConfig {
                         Remove-Item -Path $SuppPolicyPath -Force
                     }
                 }
+
+                $CurrentStep++
+                Write-Progress -Id 16 -Activity 'Configuring the final policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                 Write-Verbose -Message 'Preparing the final merged Supplemental policy for deployment'
                 Write-Verbose -Message 'Converting the policy to a Supplemental policy type and resetting its ID'
@@ -1025,6 +1097,9 @@ Function Edit-SignedWDACConfig {
                 Write-Verbose -Message 'Renaming the signed Supplemental policy file to remove the .p7 extension'
                 Rename-Item -Path "$SuppPolicyID.cip.p7" -NewName "$SuppPolicyID.cip" -Force
 
+                $CurrentStep++
+                Write-Progress -Id 16 -Activity 'Deploying the final policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
                 Write-Verbose -Message 'Deploying the Supplemental policy'
                 &'C:\Windows\System32\CiTool.exe' --update-policy "$SuppPolicyID.cip" -json | Out-Null
 
@@ -1032,13 +1107,25 @@ Function Edit-SignedWDACConfig {
 
                 Write-Verbose -Message 'Removing the signed Supplemental policy CIP file after deployment'
                 Remove-Item -Path "$SuppPolicyID.cip" -Force
+
+                Write-Progress -Id 16 -Activity 'Complete.' -Completed
             }
         }
 
         if ($UpdateBasePolicy) {
 
+            # The total number of the main steps for the progress bar to render
+            [System.Int16]$TotalSteps = 5
+            [System.Int16]$CurrentStep = 0
+
+            $CurrentStep++
+            Write-Progress -Id 17 -Activity 'Getting the block rules' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
             Write-Verbose -Message 'Getting the Microsoft recommended block rules by calling the Get-BlockRulesMeta function'
             Get-BlockRulesMeta 6> $null
+
+            $CurrentStep++
+            Write-Progress -Id 17 -Activity 'Determining the policy type' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
             Write-Verbose -Message 'Determining the type of the new base policy'
             switch ($NewBasePolicyType) {
@@ -1136,6 +1223,9 @@ Function Edit-SignedWDACConfig {
                 }
             }
 
+            $CurrentStep++
+            Write-Progress -Id 17 -Activity 'Configuring the policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
             if ($UpdateBasePolicy -and $RequireEVSigners) {
                 Write-Verbose -Message 'Adding the EV Signers rule option to the base policy'
                 Set-RuleOption -FilePath .\BasePolicy.xml -Option 8
@@ -1196,8 +1286,14 @@ Function Edit-SignedWDACConfig {
             Write-Verbose -Message 'Renaming the signed base policy file to remove the .p7 extension'
             Rename-Item -Path "$CurrentID.cip.p7" -NewName "$CurrentID.cip" -Force
 
+            $CurrentStep++
+            Write-Progress -Id 17 -Activity 'Deploying the policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
             Write-Verbose -Message 'Deploying the new base policy with the same GUID on the system'
             &'C:\Windows\System32\CiTool.exe' --update-policy "$CurrentID.cip" -json | Out-Null
+
+            $CurrentStep++
+            Write-Progress -Id 17 -Activity 'Cleaning up' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
             # Keep the new base policy XML file that was just deployed, in the current directory, so user can keep it for later
             # Defining a hashtable that contains the policy names and their corresponding XML file names
@@ -1222,6 +1318,7 @@ Function Edit-SignedWDACConfig {
                 Write-Verbose -Message 'Replacing the old signed policy path in User Configurations with the new one'
                 Set-CommonWDACConfig -SignedPolicyPath (Get-ChildItem -Path $PolicyFiles[$NewBasePolicyType]).FullName | Out-Null
             }
+            Write-Progress -Id 17 -Activity 'Complete.' -Completed
         }
     }
 

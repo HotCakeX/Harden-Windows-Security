@@ -3,47 +3,53 @@ Function Set-CommonWDACConfig {
     Param(
         [ValidateScript({
                 [System.String[]]$Certificates = foreach ($cert in (Get-ChildItem -Path 'Cert:\CurrentUser\my')) {
-            (($cert.Subject -split ',' | Select-Object -First 1) -replace 'CN=', '').Trim()
+                (($cert.Subject -split ',' | Select-Object -First 1) -replace 'CN=', '').Trim()
                 }
                 $Certificates -contains $_
             }, ErrorMessage = "A certificate with the provided common name doesn't exist in the personal store of the user certificates." )]
         [parameter(Mandatory = $false)][System.String]$CertCN,
 
-        [ValidatePattern('\.cer$')]
-        [ValidateScript({ Test-Path -Path $_ -PathType 'Leaf' }, ErrorMessage = 'The path you selected is not a file path.')]
-        [parameter(Mandatory = $false)][System.String]$CertPath,
+        [ValidateScript({ (Test-Path -Path $_ -PathType 'Leaf') -and ($_.extension -eq '.cer') }, ErrorMessage = 'The path you selected is not a file path for a .cer file.')]
+        [parameter(Mandatory = $false)][System.IO.FileInfo]$CertPath,
 
-        [ValidatePattern('\.exe$')]
-        [ValidateScript({ Test-Path -Path $_ -PathType 'Leaf' }, ErrorMessage = 'The path you selected is not a file path.')]
-        [parameter(Mandatory = $false)][System.String]$SignToolPath,
+        [ValidateScript({ (Test-Path -Path $_ -PathType 'Leaf') -and ($_.extension -eq '.exe') }, ErrorMessage = 'The path you selected is not a file path for a .exe file.')]
+        [parameter(Mandatory = $false)][System.IO.FileInfo]$SignToolPath,
 
-        [ValidatePattern('\.xml$')]
         [ValidateScript({
-                $_ | ForEach-Object -Process {
+                try {
                     $XmlTest = [System.Xml.XmlDocument](Get-Content -Path $_)
-                    $RedFlag1 = $XmlTest.SiPolicy.SupplementalPolicySigners.SupplementalPolicySigner.SignerId
-                    $RedFlag2 = $XmlTest.SiPolicy.UpdatePolicySigners.UpdatePolicySigner.SignerId
-                    if (!$RedFlag1 -and !$RedFlag2) {
-                        return $True
-                    }
-                    else { throw 'The selected policy xml file is Signed, Please select an Unsigned policy.' }
+                    [System.String]$RedFlag1 = $XmlTest.SiPolicy.SupplementalPolicySigners.SupplementalPolicySigner.SignerId
+                    [System.String]$RedFlag2 = $XmlTest.SiPolicy.UpdatePolicySigners.UpdatePolicySigner.SignerId
                 }
+                catch {
+                    throw 'The selected file is not a valid WDAC XML policy.'
+                }
+
+                if (!$RedFlag1 -and !$RedFlag2) {
+                    return $True
+                }
+                else { throw 'The selected policy xml file is Signed, Please select an Unsigned policy.' }
+
             }, ErrorMessage = 'The selected policy xml file is Signed, Please select an Unsigned policy.')]
-        [parameter(Mandatory = $false)][System.String]$UnsignedPolicyPath,
+        [parameter(Mandatory = $false)][System.IO.FileInfo]$UnsignedPolicyPath,
 
-        [ValidatePattern('\.xml$')]
         [ValidateScript({
-                $_ | ForEach-Object -Process {
+                try {
                     $XmlTest = [System.Xml.XmlDocument](Get-Content -Path $_)
-                    $RedFlag1 = $XmlTest.SiPolicy.SupplementalPolicySigners.SupplementalPolicySigner.SignerId
-                    $RedFlag2 = $XmlTest.SiPolicy.UpdatePolicySigners.UpdatePolicySigner.SignerId
-                    if ($RedFlag1 -or $RedFlag2) {
-                        return $True
-                    }
-                    else { throw 'The selected policy xml file is Unsigned, Please select a Signed policy.' }
+                    [System.String]$RedFlag1 = $XmlTest.SiPolicy.SupplementalPolicySigners.SupplementalPolicySigner.SignerId
+                    [System.String]$RedFlag2 = $XmlTest.SiPolicy.UpdatePolicySigners.UpdatePolicySigner.SignerId
                 }
+                catch {
+                    throw 'The selected file is not a valid WDAC XML policy.'
+                }
+
+                if ($RedFlag1 -or $RedFlag2) {
+                    return $True
+                }
+                else { throw 'The selected policy xml file is Unsigned, Please select a Signed policy.' }
+
             }, ErrorMessage = 'The selected policy xml file is Unsigned, Please select a Signed policy.')]
-        [parameter(Mandatory = $false)][System.String]$SignedPolicyPath,
+        [parameter(Mandatory = $false)][System.IO.FileInfo]$SignedPolicyPath,
 
         [parameter(Mandatory = $false, DontShow = $true)][System.Guid]$StrictKernelPolicyGUID,
         [parameter(Mandatory = $false, DontShow = $true)][System.Guid]$StrictKernelNoFlightRootsPolicyGUID,
@@ -100,7 +106,7 @@ Function Set-CommonWDACConfig {
 
         if ($SignedPolicyPath) {
             Write-Verbose -Message 'Saving the supplied Signed Policy path in user configurations.'
-            $UserConfigurationsObject.SignedPolicyPath = $SignedPolicyPath
+            $UserConfigurationsObject.SignedPolicyPath = $SignedPolicyPath.FullName
         }
         else {
             Write-Verbose -Message 'No changes to the Signed Policy path property was detected.'
@@ -109,7 +115,7 @@ Function Set-CommonWDACConfig {
 
         if ($UnsignedPolicyPath) {
             Write-Verbose -Message 'Saving the supplied Unsigned Policy path in user configurations.'
-            $UserConfigurationsObject.UnsignedPolicyPath = $UnsignedPolicyPath
+            $UserConfigurationsObject.UnsignedPolicyPath = $UnsignedPolicyPath.FullName
         }
         else {
             Write-Verbose -Message 'No changes to the Unsigned Policy path property was detected.'
@@ -118,7 +124,7 @@ Function Set-CommonWDACConfig {
 
         if ($SignToolPath) {
             Write-Verbose -Message 'Saving the supplied SignTool path in user configurations.'
-            $UserConfigurationsObject.SignToolCustomPath = $SignToolPath
+            $UserConfigurationsObject.SignToolCustomPath = $SignToolPath.FullName
         }
         else {
             Write-Verbose -Message 'No changes to the Signtool path property was detected.'
@@ -127,7 +133,7 @@ Function Set-CommonWDACConfig {
 
         if ($CertPath) {
             Write-Verbose -Message 'Saving the supplied Certificate path in user configurations.'
-            $UserConfigurationsObject.CertificatePath = $CertPath
+            $UserConfigurationsObject.CertificatePath = $CertPath.FullName
         }
         else {
             Write-Verbose -Message 'No changes to the Certificate path property was detected.'
@@ -203,6 +209,7 @@ Function Set-CommonWDACConfig {
 .PARAMETER StrictKernelNoFlightRootsPolicyGUID
     GUID of the Strict Kernel no Flights root mode policy
 .INPUTS
+    System.IO.FileInfo
     System.DateTime
     System.Guid
     System.String

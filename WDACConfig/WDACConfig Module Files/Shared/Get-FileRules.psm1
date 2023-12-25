@@ -2,6 +2,8 @@ Function Get-FileRules {
     <#
     .SYNOPSIS
         Create File Rules based on hash of the files no longer available on the disk and store them in the $Rules variable
+    .PARAMETER HashesArray
+        The array of hashes of the files no longer available on the disk
     .INPUTS
         System.Object[]
     .OUTPUTS

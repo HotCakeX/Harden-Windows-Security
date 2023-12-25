@@ -2,6 +2,8 @@ Function Set-LogSize {
     <#
     .SYNOPSIS
         Increase Code Integrity Operational Event Logs size from the default 1MB to user defined size
+    .PARAMETER LogSize
+        Size of the Code Integrity Operational Event Log
     .INPUTS
         System.Int64
     .OUTPUTS

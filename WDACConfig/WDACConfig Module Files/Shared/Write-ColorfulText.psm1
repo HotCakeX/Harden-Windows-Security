@@ -2,6 +2,10 @@ Function Write-ColorfulText {
     <#
     .SYNOPSIS
         Function to write modern colorful text
+    .PARAMETER Color
+        Color of the text to be written using custom RGB values
+    .PARAMETER InputText
+        Text to be written
     .INPUTS
         System.String
     .OUTPUTS

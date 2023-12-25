@@ -2,6 +2,10 @@ Function New-EmptyPolicy {
     <#
     .SYNOPSIS
         Creates a policy file and requires 2 parameters to supply the file rules and rule references
+    .INPUTS
+        System.String
+    .OUTPUTS
+        System.String
     #>
     [CmdletBinding()]
     param (

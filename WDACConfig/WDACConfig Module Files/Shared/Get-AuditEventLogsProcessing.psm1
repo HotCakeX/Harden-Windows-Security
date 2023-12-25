@@ -2,6 +2,8 @@ Function Get-AuditEventLogsProcessing {
     <#
     .SYNOPSIS
         Function to separately capture FileHashes of deleted files and FilePaths of available files from Event Viewer Audit Logs
+    .PARAMETER Date
+        The date from which the Event Viewer Audit Logs should be scanned
     .INPUTS
         System.DateTime
     .OUTPUTS

@@ -3,6 +3,8 @@ Function Move-UserModeToKernelMode {
     .SYNOPSIS
         Moves all User mode AllowedSigners in the User mode signing scenario to the Kernel mode signing scenario and then
         deletes the entire User mode signing scenario block
+    .PARAMETER FilePath
+        The path to the XML file to be modified
     .INPUTS
         System.String
     .OUTPUTS

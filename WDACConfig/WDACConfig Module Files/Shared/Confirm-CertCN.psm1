@@ -2,6 +2,8 @@ Function Confirm-CertCN {
     <#
     .SYNOPSIS
         Function to check Certificate Common name - used mostly to validate values in UserConfigurations.json
+    .PARAMETER CN
+        Common name of the certificate to check
     .INPUTS
         System.String
     .OUTPUTS

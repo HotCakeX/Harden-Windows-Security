@@ -461,9 +461,9 @@ Function Get-CertificateDetails {
         if ($IntermediateOnly) {
             # ($_.SubjectCN -ne $_.IssuerCN) -> To omit Root certificate from the result
             # ($_.SubjectCN -ne $TestAgainst) -> To omit the Leaf certificate
-            
+
             $FinalObj = $Obj |
-            Where-Object -FilterScript { ($_.SubjectCN -ne $_.IssuerCN) -and ($_.SubjectCN -ne $TestAgainst) } | 
+            Where-Object -FilterScript { ($_.SubjectCN -ne $_.IssuerCN) -and ($_.SubjectCN -ne $TestAgainst) } |
             Group-Object -Property TBSValue | ForEach-Object -Process { $_.Group[0] } # To make sure the output values are unique based on TBSValue property
 
             return [System.Object[]]$FinalObj
@@ -471,9 +471,9 @@ Function Get-CertificateDetails {
         elseif ($LeafCertificate) {
             # ($_.SubjectCN -ne $_.IssuerCN) -> To omit Root certificate from the result
             # ($_.SubjectCN -eq $TestAgainst) -> To get the Leaf certificate
-            
+
             $FinalObj = $Obj |
-            Where-Object -FilterScript { ($_.SubjectCN -ne $_.IssuerCN) -and ($_.SubjectCN -eq $TestAgainst) } | 
+            Where-Object -FilterScript { ($_.SubjectCN -ne $_.IssuerCN) -and ($_.SubjectCN -eq $TestAgainst) } |
             Group-Object -Property TBSValue | ForEach-Object -Process { $_.Group[0] } # To make sure the output values are unique based on TBSValue property
 
             return [System.Object[]]$FinalObj
@@ -486,7 +486,7 @@ Function Get-CertificateDetails {
         if ($IntermediateOnly) {
             # ($_.SubjectCN -ne $_.IssuerCN) -> To omit Root certificate from the result
             # ($_.SubjectCN -ne $LeafCNOfTheNestedCertificate) -> To omit the Leaf certificate
-            
+
             $FinalObj = $Obj |
             Where-Object -FilterScript { ($_.SubjectCN -ne $_.IssuerCN) -and ($_.SubjectCN -ne $LeafCNOfTheNestedCertificate) } |
             Group-Object -Property TBSValue | ForEach-Object -Process { $_.Group[0] } # To make sure the output values are unique based on TBSValue property

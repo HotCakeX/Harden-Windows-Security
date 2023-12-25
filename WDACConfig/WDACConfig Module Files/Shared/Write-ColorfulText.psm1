@@ -58,8 +58,8 @@ Function Write-ColorfulText {
 
             [System.String]$Output = ''
             for ($I = 0; $I -lt $InputText.Length; $I++) {
-                $Color = $Colors[$I % $Colors.Length]
-                $Output += "$($PSStyle.Foreground.FromRGB($Color.R, $Color.G, $Color.B))$($PSStyle.Blink)$($InputText[$I])$($PSStyle.BlinkOff)$($PSStyle.Reset)"
+                $CurrentColor = $Colors[$I % $Colors.Length]
+                $Output += "$($PSStyle.Foreground.FromRGB($CurrentColor.R, $CurrentColor.G, $CurrentColor.B))$($PSStyle.Blink)$($InputText[$I])$($PSStyle.BlinkOff)$($PSStyle.Reset)"
             }
             Write-Output $Output
             break

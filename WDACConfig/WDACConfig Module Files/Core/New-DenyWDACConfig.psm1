@@ -102,11 +102,18 @@ Function New-DenyWDACConfig {
         # Create deny supplemental policy for general files, apps etc.
         if ($Normal) {
 
+            # The total number of the main steps for the progress bar to render
+            [System.Int16]$TotalSteps = $Deploy ? 4 : 3
+            [System.Int16]$CurrentStep = 0
+
             Write-Verbose -Message 'Removing any possible files from previous runs'
             Remove-Item -Path '.\ProgramDir_ScanResults*.xml' -Force -ErrorAction SilentlyContinue
 
             # An array to hold the temporary xml files of each user-selected folders
             [System.Object[]]$PolicyXMLFilesArray = @()
+
+            $CurrentStep++
+            Write-Progress -Id 22 -Activity 'Processing user selected Folders' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
             Write-Verbose -Message 'Processing Program Folders From User input'
             for ($i = 0; $i -lt $ScanLocations.Count; $i++) {
@@ -144,8 +151,14 @@ Function New-DenyWDACConfig {
             Write-Verbose -Message 'Adding the AllowAll default template policy path to the array of policy paths to merge'
             $PolicyXMLFilesArray += 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowAll.xml'
 
+            $CurrentStep++
+            Write-Progress -Id 22 -Activity 'Merging the policies' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
             Write-Verbose -Message 'Creating the final Deny base policy from the xml files in the paths array'
             Merge-CIPolicy -PolicyPaths $PolicyXMLFilesArray -OutputFilePath ".\DenyPolicy $PolicyName.xml" | Out-Null
+
+            $CurrentStep++
+            Write-Progress -Id 22 -Activity 'Creating the base policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
             Write-Verbose -Message 'Assigning a name and resetting the policy ID'
             [System.String]$PolicyID = Set-CIPolicyIdInfo -FilePath "DenyPolicy $PolicyName.xml" -ResetPolicyID -PolicyName "$PolicyName"
@@ -176,6 +189,9 @@ Function New-DenyWDACConfig {
             }
 
             if ($Deploy) {
+                $CurrentStep++
+                Write-Progress -Id 22 -Activity 'Deploying the base policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
                 Write-Verbose -Message 'Deploying the policy'
                 &'C:\Windows\System32\CiTool.exe' --update-policy "$PolicyID.cip" -json | Out-Null
 
@@ -184,10 +200,18 @@ Function New-DenyWDACConfig {
                 Write-Verbose -Message 'Removing the .CIP file after deployment'
                 Remove-Item -Path "$PolicyID.cip" -Force
             }
+            Write-Progress -Id 22 -Activity 'Complete.' -Completed
         }
 
         # Create Deny base policy for Driver files
         if ($Drivers) {
+
+            # The total number of the main steps for the progress bar to render
+            [System.Int16]$TotalSteps = $Deploy ? 4 : 3
+            [System.Int16]$CurrentStep = 0
+
+            $CurrentStep++
+            Write-Progress -Id 23 -Activity 'Processing user selected Folders' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
             Write-Verbose -Message 'Looping through each user-selected folder paths, scanning them, creating a temp policy file based on them'
             powershell.exe -Command {
@@ -213,12 +237,18 @@ Function New-DenyWDACConfig {
 
             } -args $ScanLocations, $Level, $Fallbacks
 
+            $CurrentStep++
+            Write-Progress -Id 23 -Activity 'Merging the policies' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
             # Merging AllowAll default policy with our Deny temp policy
             Write-Verbose -Message 'Merging AllowAll default template policy with our Deny temp policy'
             Merge-CIPolicy -PolicyPaths 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowAll.xml', '.\DenyPolicy Temp.xml' -OutputFilePath ".\DenyPolicy $PolicyName.xml" | Out-Null
 
             Write-Verbose -Message 'Removing the temp deny policy file after using it in the merge operation'
             Remove-Item -Path '.\DenyPolicy Temp.xml' -Force
+
+            $CurrentStep++
+            Write-Progress -Id 23 -Activity 'Configuring the base policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
             Write-Verbose -Message 'Assigning a name and resetting the policy ID'
             [System.String]$PolicyID = Set-CIPolicyIdInfo -FilePath "DenyPolicy $PolicyName.xml" -ResetPolicyID -PolicyName "$PolicyName"
@@ -245,6 +275,9 @@ Function New-DenyWDACConfig {
             Write-ColorfulText -Color MintGreen -InputText "DenyPolicyGUID = $PolicyID"
 
             if ($Deploy) {
+                $CurrentStep++
+                Write-Progress -Id 23 -Activity 'Deploying the base policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
                 Write-Verbose -Message 'Deploying the policy'
                 &'C:\Windows\System32\CiTool.exe' --update-policy "$PolicyID.cip" -json | Out-Null
 
@@ -253,12 +286,20 @@ Function New-DenyWDACConfig {
                 Write-Verbose -Message 'Removing the .CIP file after deployment'
                 Remove-Item -Path "$PolicyID.cip" -Force
             }
+            Write-Progress -Id 23 -Activity 'Complete.' -Completed
         }
 
         # Creating Deny rule for Appx Packages
         if ($InstalledAppXPackages) {
 
             try {
+                # The total number of the main steps for the progress bar to render
+                [System.Int16]$TotalSteps = $Deploy ? 3 : 2
+                [System.Int16]$CurrentStep = 0
+
+                $CurrentStep++
+                Write-Progress -Id 24 -Activity 'Getting the Appx package' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
                 # Backing up PS Formatting Styles
                 [System.Collections.Hashtable]$OriginalStyle = @{}
                 $PSStyle.Formatting | Get-Member -MemberType Property | ForEach-Object -Process {
@@ -273,6 +314,9 @@ Function New-DenyWDACConfig {
 
                 # Prompt for confirmation before proceeding
                 if ($PSCmdlet.ShouldProcess('', 'Select No to cancel and choose another name', 'Is this the intended results based on your Installed Appx packages?')) {
+
+                    $CurrentStep++
+                    Write-Progress -Id 24 -Activity 'Creating the base policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                     Write-Verbose -Message 'Creating a temporary Deny policy for the supplied Appx package name'
                     powershell.exe -Command {
@@ -320,6 +364,9 @@ Function New-DenyWDACConfig {
                     Write-ColorfulText -Color MintGreen -InputText "DenyPolicyGUID = $PolicyID"
 
                     if ($Deploy) {
+                        $CurrentStep++
+                        Write-Progress -Id 24 -Activity 'Deploying the base policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
                         Write-Verbose -Message 'Deploying the policy'
                         &'C:\Windows\System32\CiTool.exe' --update-policy "$PolicyID.cip" -json | Out-Null
 
@@ -335,6 +382,7 @@ Function New-DenyWDACConfig {
                 $OriginalStyle.Keys | ForEach-Object -Process {
                     $PSStyle.Formatting.$_ = $OriginalStyle[$_]
                 }
+                Write-Progress -Id 24 -Activity 'Complete.' -Completed
             }
         }
     }

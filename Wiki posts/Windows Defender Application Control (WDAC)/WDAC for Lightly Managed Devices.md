@@ -142,7 +142,7 @@ You can create a Supplemental policy for more than 1 app at a time by browsing f
 ### Based on App's install directory and Event viewer logs - Unsigned version
 
 ```powershell
-Edit-WDACConfig -AllowNewAppsAuditEvents -SuppPolicyName "App's Name" -PolicyPaths "C:\SignedAndReputable.xml" -LogSize 20MB
+Edit-WDACConfig -AllowNewAppsAuditEvents -SuppPolicyName "App's Name" -PolicyPath "C:\SignedAndReputable.xml" -LogSize 20MB
 ```
 
 * [Parameter info](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Edit-WDACConfig#edit-wdacconfig--allownewappsauditevents)
@@ -150,7 +150,7 @@ Edit-WDACConfig -AllowNewAppsAuditEvents -SuppPolicyName "App's Name" -PolicyPat
 ### Based on App's install directory only - Unsigned version
 
 ```powershell
-Edit-WDACConfig -AllowNewApps -SuppPolicyName "App's Name" -PolicyPaths "C:\SignedAndReputable.xml"
+Edit-WDACConfig -AllowNewApps -SuppPolicyName "App's Name" -PolicyPath "C:\SignedAndReputable.xml"
 ```
 
 * [Parameter info](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Edit-WDACConfig#edit-wdacconfig--allownewapps)
@@ -160,7 +160,7 @@ Edit-WDACConfig -AllowNewApps -SuppPolicyName "App's Name" -PolicyPaths "C:\Sign
 ### Based on App's install directory and Event viewer logs - Signed version
 
 ```powershell
-Edit-SignedWDACConfig -AllowNewAppsAuditEvents -CertPath "C:\Certificate.cer" -SuppPolicyName "App's Name" -PolicyPaths "C:\SignedAndReputable.xml" -CertCN "WDAC Certificate" -LogSize 20MB
+Edit-SignedWDACConfig -AllowNewAppsAuditEvents -CertPath "C:\Certificate.cer" -SuppPolicyName "App's Name" -PolicyPath "C:\SignedAndReputable.xml" -CertCN "WDAC Certificate" -LogSize 20MB
 ```
 
 * [Parameter info](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Edit-SignedWDACConfig#edit-signedwdacconfig--allownewappsauditevents)
@@ -168,7 +168,7 @@ Edit-SignedWDACConfig -AllowNewAppsAuditEvents -CertPath "C:\Certificate.cer" -S
 ### Based on App's install directory only - Signed version
 
 ```powershell
-Edit-SignedWDACConfig -AllowNewApps -CertPath "C:\Certificate.cer" -SuppPolicyName "App's Name" -PolicyPaths "C:\SignedAndReputable.xml" -CertCN "WDAC Certificate"
+Edit-SignedWDACConfig -AllowNewApps -CertPath "C:\Certificate.cer" -SuppPolicyName "App's Name" -PolicyPath "C:\SignedAndReputable.xml" -CertCN "WDAC Certificate"
 ```
 
 * [Parameter info](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Edit-SignedWDACConfig#edit-signedwdacconfig--allownewapps)
@@ -186,7 +186,7 @@ Currently, the limit for the number of policies (Base + Supplemental) that can b
 ### Unsigned version
 
 ```powershell
-Edit-WDACConfig -MergeSupplementalPolicies -SuppPolicyName "Merge of Multiple Supplementals" -PolicyPaths "C:\SignedAndReputable.xml" -SuppPolicyPaths "C:\Supplemental policy for App1.xml","C:\Supplemental policy for App 2.xml","C:\Supplemental policy for App 3.xml"
+Edit-WDACConfig -MergeSupplementalPolicies -SuppPolicyName "Merge of Multiple Supplementals" -PolicyPath "C:\SignedAndReputable.xml" -SuppPolicyPaths "C:\Supplemental policy for App1.xml","C:\Supplemental policy for App 2.xml","C:\Supplemental policy for App 3.xml"
 ```
 
 * [Parameter info](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Edit-WDACConfig#edit-wdacconfig--mergesupplementalpolicies)
@@ -196,7 +196,7 @@ Edit-WDACConfig -MergeSupplementalPolicies -SuppPolicyName "Merge of Multiple Su
 ### Signed version
 
 ```powershell
-Edit-SignedWDACConfig -MergeSupplementalPolicies -CertPath "C:\Certificate.cer" -SuppPolicyName "Merge of Multiple Supplementals" -PolicyPaths "C:\SignedAndReputable.xml" -CertCN "WDAC Certificate" -SuppPolicyPaths "C:\Supplemental policy for App1.xml","C:\Supplemental policy for App 2.xml","C:\Supplemental policy for App 3.xml"
+Edit-SignedWDACConfig -MergeSupplementalPolicies -CertPath "C:\Certificate.cer" -SuppPolicyName "Merge of Multiple Supplementals" -PolicyPath "C:\SignedAndReputable.xml" -CertCN "WDAC Certificate" -SuppPolicyPaths "C:\Supplemental policy for App1.xml","C:\Supplemental policy for App 2.xml","C:\Supplemental policy for App 3.xml"
 ```
 
 * [Parameter info](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Edit-SignedWDACConfig#edit-signedwdacconfig--mergesupplementalpolicies)

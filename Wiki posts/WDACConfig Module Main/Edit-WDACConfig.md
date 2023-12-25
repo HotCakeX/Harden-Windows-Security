@@ -5,7 +5,7 @@
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Edit-WDACConfig/Edit-WDACConfig%20-AllowNewAppsAuditEvents.apng)
 
 ```powershell
-Edit-WDACConfig [-AllowNewAppsAuditEvents] -SuppPolicyName <String> -PolicyPaths <String[]> [-Level <String>]
+Edit-WDACConfig [-AllowNewAppsAuditEvents] -SuppPolicyName <String> -PolicyPath <String> [-Level <String>]
 [-Fallbacks <String[]>] [-NoScript] [-NoUserPEs] [-SpecificFileNameLevel <String>]
 [-LogSize <Int64>] [-IncludeDeletedFiles]
 ```
@@ -38,7 +38,7 @@ This parameter is specially useful for applications that install files outside o
 
 ### 1 Automatic Parameter
 
-* `-PolicyPaths <String[]>`: Browse for the xml file of the Base policy this Supplemental policy is going to expand. Supports tab completion by showing only `.xml` files with **Base Policy** Type.
+* `-PolicyPath <String>`: Browse for the xml file of the Base policy this Supplemental policy is going to expand. Supports tab completion by showing only `.xml` files with **Base Policy** Type.
 
 ### 8 Optional Parameters
 
@@ -73,7 +73,7 @@ This parameter is specially useful for applications that install files outside o
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Edit-WDACConfig/Edit-WDACConfig%20-AllowNewApps.apng)
 
 ```powershell
-Edit-WDACConfig [-AllowNewApps] -SuppPolicyName <String> -PolicyPaths <String[]> [-Level <String>] [-Fallbacks
+Edit-WDACConfig [-AllowNewApps] -SuppPolicyName <String> -PolicyPath <String> [-Level <String>] [-Fallbacks
 <String[]>] [-NoScript] [-NoUserPEs] [-SpecificFileNameLevel <String>]
 ```
 
@@ -97,7 +97,7 @@ A new supplemental policy will be created, it will be deployed on the system. Th
 
 ### 1 Automatic Parameter
 
-* `-PolicyPaths <String[]>`: Browse for the xml file of the Base policy this Supplemental policy is going to expand. Supports tab completion by showing only `.xml` files.
+* `-PolicyPath <String>`: Browse for the xml file of the Base policy this Supplemental policy is going to expand. Supports tab completion by showing only `.xml` files.
 
 ### 5 Optional Parameters
 
@@ -122,7 +122,7 @@ A new supplemental policy will be created, it will be deployed on the system. Th
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Edit-WDACConfig/Edit-WDACConfig%20-MergeSupplementalPolicies.apng)
 
 ```powershell
-Edit-WDACConfig [-MergeSupplementalPolicies] -SuppPolicyName <String> -PolicyPaths <String[]> -SuppPolicyPaths
+Edit-WDACConfig [-MergeSupplementalPolicies] -SuppPolicyName <String> -PolicyPath <String> -SuppPolicyPaths
 <String[]> [-KeepOldSupplementalPolicies]
 ```
 
@@ -138,7 +138,7 @@ Merge multiple deployed Supplemental policies into 1 and deploy it, remove the i
 
 ### 1 Automatic Parameter
 
-* `-PolicyPaths <String[]>`: Path to the Base policy xml file the Supplemental policies belong to. Supports argument tab completion by showing only Base policy types.
+* `-PolicyPath <String>`: Path to the Base policy xml file the Supplemental policies belong to. Supports argument tab completion by showing only Base policy types.
 
 ### 1 Optional Parameter
 

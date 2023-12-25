@@ -459,20 +459,21 @@ Function Get-CertificateDetails {
         [System.String]$TestAgainst = $matches['InitialRegexTest4'] -like '*"*' ? ((Get-AuthenticodeSignature -FilePath $FilePath).SignerCertificate.Subject -split 'CN="(.+?)"')[1] : $matches['InitialRegexTest4']
 
         if ($IntermediateOnly) {
-
+            # ($_.SubjectCN -ne $_.IssuerCN) -> To omit Root certificate from the result
+            # ($_.SubjectCN -ne $TestAgainst) -> To omit the Leaf certificate
+            
             $FinalObj = $Obj |
-            Where-Object -FilterScript { $_.SubjectCN -ne $_.IssuerCN } | # To omit Root certificate from the result
-            Where-Object -FilterScript { $_.SubjectCN -ne $TestAgainst } | # To omit the Leaf certificate
+            Where-Object -FilterScript { ($_.SubjectCN -ne $_.IssuerCN) -and ($_.SubjectCN -ne $TestAgainst) } | 
             Group-Object -Property TBSValue | ForEach-Object -Process { $_.Group[0] } # To make sure the output values are unique based on TBSValue property
 
             return [System.Object[]]$FinalObj
-
         }
         elseif ($LeafCertificate) {
-
+            # ($_.SubjectCN -ne $_.IssuerCN) -> To omit Root certificate from the result
+            # ($_.SubjectCN -eq $TestAgainst) -> To get the Leaf certificate
+            
             $FinalObj = $Obj |
-            Where-Object -FilterScript { $_.SubjectCN -ne $_.IssuerCN } | # To omit Root certificate from the result
-            Where-Object -FilterScript { $_.SubjectCN -eq $TestAgainst } | # To get the Leaf certificate
+            Where-Object -FilterScript { ($_.SubjectCN -ne $_.IssuerCN) -and ($_.SubjectCN -eq $TestAgainst) } | 
             Group-Object -Property TBSValue | ForEach-Object -Process { $_.Group[0] } # To make sure the output values are unique based on TBSValue property
 
             return [System.Object[]]$FinalObj
@@ -483,20 +484,21 @@ Function Get-CertificateDetails {
     elseif ($X509Certificate2) {
 
         if ($IntermediateOnly) {
-
+            # ($_.SubjectCN -ne $_.IssuerCN) -> To omit Root certificate from the result
+            # ($_.SubjectCN -ne $LeafCNOfTheNestedCertificate) -> To omit the Leaf certificate
+            
             $FinalObj = $Obj |
-            Where-Object -FilterScript { $_.SubjectCN -ne $_.IssuerCN } | # To omit Root certificate from the result
-            Where-Object -FilterScript { $_.SubjectCN -ne $LeafCNOfTheNestedCertificate } | # To omit the Leaf certificate
+            Where-Object -FilterScript { ($_.SubjectCN -ne $_.IssuerCN) -and ($_.SubjectCN -ne $LeafCNOfTheNestedCertificate) } |
             Group-Object -Property TBSValue | ForEach-Object -Process { $_.Group[0] } # To make sure the output values are unique based on TBSValue property
 
             return [System.Object[]]$FinalObj
-
         }
         elseif ($LeafCertificate) {
+            # ($_.SubjectCN -ne $_.IssuerCN) -> To omit Root certificate from the result
+            # ($_.SubjectCN -eq $LeafCNOfTheNestedCertificate) -> To get the Leaf certificate
 
             $FinalObj = $Obj |
-            Where-Object -FilterScript { $_.SubjectCN -ne $_.IssuerCN } | # To omit Root certificate from the result
-            Where-Object -FilterScript { $_.SubjectCN -eq $LeafCNOfTheNestedCertificate } | # To get the Leaf certificate
+            Where-Object -FilterScript { ($_.SubjectCN -ne $_.IssuerCN) -and ($_.SubjectCN -eq $LeafCNOfTheNestedCertificate) } |
             Group-Object -Property TBSValue | ForEach-Object -Process { $_.Group[0] } # To make sure the output values are unique based on TBSValue property
 
             return [System.Object[]]$FinalObj
@@ -535,7 +537,7 @@ Function Compare-SignerAndCertificate {
     # An array to store the final comparison results of this function
     [System.Object[]]$ComparisonResults = @()
 
-    # Get the intermediate certificate(s) details of the Primary certficiate from the signed file using the Get-CertificateDetails function
+    # Get the intermediate certificate(s) details of the Primary certificate from the signed file using the Get-CertificateDetails function
     [System.Object[]]$PrimaryCertificateIntermediateDetails = Get-CertificateDetails -IntermediateOnly -FilePath $SignedFilePath
 
     # Get the Nested (Secondary) certificate of the signed file, if any

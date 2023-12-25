@@ -118,7 +118,7 @@ Function Deploy-SignedWDACConfig {
     process {
         foreach ($PolicyPath in $PolicyPaths) {
             # The total number of the main steps for the progress bar to render
-            [System.Int16]$TotalSteps = 4
+            [System.Int16]$TotalSteps = $Deploy ? 4 : 3
             [System.Int16]$CurrentStep = 0
 
             $CurrentStep++
@@ -197,12 +197,12 @@ Function Deploy-SignedWDACConfig {
 
             Write-Verbose -Message 'Renaming the .p7 file to .cip'
             Rename-Item -Path "$PolicyID.cip.p7" -NewName "$PolicyID.cip" -Force
-
-            $CurrentStep++
-            Write-Progress -Id 13 -Activity 'Deploying' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
+            
             if ($Deploy) {
 
+                $CurrentStep++
+                Write-Progress -Id 13 -Activity 'Deploying' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+    
                 # Prompt for confirmation before proceeding
                 if ($PSCmdlet.ShouldProcess('This PC', 'Deploying the signed policy')) {
 

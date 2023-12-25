@@ -126,7 +126,7 @@ You can create a Supplemental policy for more than 1 app at a time by browsing f
 ### Based on App's install directory and Event viewer logs
 
 ```powershell
-Edit-WDACConfig -AllowNewAppsAuditEvents -SuppPolicyName "App's Name" -PolicyPaths "C:\DefaultWindowsPlusBlockRules.xml" -LogSize 20MB
+Edit-WDACConfig -AllowNewAppsAuditEvents -SuppPolicyName "App's Name" -PolicyPath "C:\DefaultWindowsPlusBlockRules.xml" -LogSize 20MB
 ```
 
 * [Parameter info](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Edit-WDACConfig#edit-wdacconfig--allownewappsauditevents)
@@ -136,7 +136,7 @@ Edit-WDACConfig -AllowNewAppsAuditEvents -SuppPolicyName "App's Name" -PolicyPat
 ### Based on App's install directory only
 
 ```powershell
-Edit-WDACConfig -AllowNewApps -SuppPolicyName "App's Name" -PolicyPaths "C:\DefaultWindowsPlusBlockRules.xml"
+Edit-WDACConfig -AllowNewApps -SuppPolicyName "App's Name" -PolicyPath "C:\DefaultWindowsPlusBlockRules.xml"
 ```
 
 * [Parameter info](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Edit-WDACConfig#edit-wdacconfig--allownewapps)
@@ -152,7 +152,7 @@ Edit-WDACConfig -AllowNewApps -SuppPolicyName "App's Name" -PolicyPaths "C:\Defa
 Currently, the limit for the number of policies (Base + Supplemental) that can be deployed on a system at a time is 32. So if you are getting close to that limit, you can merge some or all of your Supplemental policies automatically into 1 using the command below:
 
 ```powershell
-Edit-WDACConfig -MergeSupplementalPolicies -SuppPolicyName "Merge of Multiple Supplementals" -PolicyPaths "C:\DefaultWindowsPlusBlockRules.xml" -SuppPolicyPaths "C:\Supplemental policy for App1.xml","C:\Supplemental policy for App 2.xml","C:\Supplemental policy for App 3.xml"
+Edit-WDACConfig -MergeSupplementalPolicies -SuppPolicyName "Merge of Multiple Supplementals" -PolicyPath "C:\DefaultWindowsPlusBlockRules.xml" -SuppPolicyPaths "C:\Supplemental policy for App1.xml","C:\Supplemental policy for App 2.xml","C:\Supplemental policy for App 3.xml"
 ```
 
 * [Parameter info](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Edit-WDACConfig#edit-wdacconfig--mergesupplementalpolicies)

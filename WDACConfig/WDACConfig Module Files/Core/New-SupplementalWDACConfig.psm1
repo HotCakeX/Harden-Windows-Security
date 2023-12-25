@@ -92,7 +92,7 @@ Function New-SupplementalWDACConfig {
         if (-NOT $SkipVersionCheck) { Update-self -InvocationStatement $MyInvocation.Statement }
 
         #Region User-Configurations-Processing-Validation
-        # If any of these parameters, that are mandatory for all of the position 0 parameters, isn't supplied by user
+        # If any of these parameters, that are mandatory for all of the position 0 parameters, isn't supplied by user, start validating the user config file
         if (!$PolicyPath) {
             # Read User configuration file if it exists
             $UserConfig = Get-Content -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json" -ErrorAction SilentlyContinue
@@ -128,7 +128,7 @@ Function New-SupplementalWDACConfig {
             $RedFlag1 = $XmlTest.SiPolicy.SupplementalPolicySigners.SupplementalPolicySigner.SignerId
             $RedFlag2 = $XmlTest.SiPolicy.UpdatePolicySigners.UpdatePolicySigner.SignerId
             if ($RedFlag1 -or $RedFlag2) {
-                Write-Error -Message 'You are using -Deploy parameter and the selected base policy is Signed. Please use Deploy-SignedWDACConfig to deploy it.'
+                Throw 'You are using -Deploy parameter and the selected base policy is Signed. Please use Deploy-SignedWDACConfig to deploy it.'
             }
         }
 
@@ -141,6 +141,13 @@ Function New-SupplementalWDACConfig {
     process {
 
         if ($Normal) {
+
+            # The total number of the main steps for the progress bar to render
+            [System.Int16]$TotalSteps = $Deploy ? 3 : 2
+            [System.Int16]$CurrentStep = 0
+
+            $CurrentStep++
+            Write-Progress -Id 19 -Activity 'Processing user selected folders' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
             Write-Verbose -Message 'Processing Program Folder From User input'
             # Creating a hash table to dynamically add parameters based on user input and pass them to New-Cipolicy cmdlet
@@ -165,6 +172,9 @@ Function New-SupplementalWDACConfig {
             # Create the supplemental policy via parameter splatting
             New-CIPolicy @PolicyMakerHashTable
 
+            $CurrentStep++
+            Write-Progress -Id 19 -Activity 'Configuring the Supplemental policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
             Write-Verbose -Message 'Changing the policy type from base to Supplemental, assigning its name and resetting its policy ID'
             [System.String]$PolicyID = Set-CIPolicyIdInfo -FilePath "SupplementalPolicy $SuppPolicyName.xml" -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath -PolicyName "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')"
             [System.String]$PolicyID = $PolicyID.Substring(11)
@@ -186,6 +196,9 @@ Function New-SupplementalWDACConfig {
             Write-ColorfulText -Color MintGreen -InputText "SupplementalPolicyGUID = $PolicyID"
 
             if ($Deploy) {
+                $CurrentStep++
+                Write-Progress -Id 19 -Activity 'Deploying the Supplemental policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
                 Write-Verbose -Message 'Deploying the Supplemental policy'
                 &'C:\Windows\System32\CiTool.exe' --update-policy "$PolicyID.cip" -json | Out-Null
                 Write-ColorfulText -Color Pink -InputText "A Supplemental policy with the name $SuppPolicyName has been deployed."
@@ -193,9 +206,17 @@ Function New-SupplementalWDACConfig {
                 Write-Verbose -Message 'Removing the CIP file after deployment'
                 Remove-Item -Path "$PolicyID.cip" -Force
             }
+            Write-Progress -Id 19 -Activity 'Complete.' -Completed
         }
 
         if ($PathWildCards) {
+
+            # The total number of the main steps for the progress bar to render
+            [System.Int16]$TotalSteps = $Deploy ? 2 : 1
+            [System.Int16]$CurrentStep = 0
+
+            $CurrentStep++
+            Write-Progress -Id 20 -Activity 'Creating the Supplemental policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
             # Using Windows PowerShell to handle serialized data since PowerShell core throws an error
             Write-Verbose -Message 'Creating the Supplemental policy file'
@@ -228,6 +249,9 @@ Function New-SupplementalWDACConfig {
             Write-ColorfulText -Color MintGreen -InputText "SupplementalPolicyGUID = $PolicyID"
 
             if ($Deploy) {
+                $CurrentStep++
+                Write-Progress -Id 20 -Activity 'Deploying the Supplemental policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
                 Write-Verbose -Message 'Deploying the Supplemental policy'
                 &'C:\Windows\System32\CiTool.exe' --update-policy "$PolicyID.cip" -json | Out-Null
                 Write-ColorfulText -Color Pink -InputText "A Supplemental policy with the name $SuppPolicyName has been deployed."
@@ -235,10 +259,18 @@ Function New-SupplementalWDACConfig {
                 Write-Verbose -Message 'Removing the CIP file after deployment'
                 Remove-Item -Path "$PolicyID.cip" -Force
             }
+            Write-Progress -Id 20 -Activity 'Complete.' -Completed
         }
 
         if ($InstalledAppXPackages) {
             try {
+                # The total number of the main steps for the progress bar to render
+                [System.Int16]$TotalSteps = $Deploy ? 3 : 2
+                [System.Int16]$CurrentStep = 0
+
+                $CurrentStep++
+                Write-Progress -Id 21 -Activity 'Getting the Appx package' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
                 # Backing up PS Formatting Styles
                 [System.Collections.Hashtable]$OriginalStyle = @{}
                 $PSStyle.Formatting | Get-Member -MemberType Property | ForEach-Object -Process {
@@ -253,6 +285,9 @@ Function New-SupplementalWDACConfig {
 
                 # Prompt for confirmation before proceeding
                 if ($PSCmdlet.ShouldProcess('', 'Select No to cancel and choose another name', 'Is this the intended results based on your Installed Appx packages?')) {
+
+                    $CurrentStep++
+                    Write-Progress -Id 21 -Activity 'Creating the Supplemental policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                     Write-Verbose -Message 'Creating a policy for the supplied Appx package name and its dependencies (if any)'
                     powershell.exe -Command {
@@ -299,6 +334,9 @@ Function New-SupplementalWDACConfig {
                     Write-ColorfulText -Color MintGreen -InputText "SupplementalPolicyGUID = $PolicyID"
 
                     if ($Deploy) {
+                        $CurrentStep++
+                        Write-Progress -Id 21 -Activity 'Deploying the Supplemental policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
                         Write-Verbose -Message 'Deploying the Supplemental policy'
                         &'C:\Windows\System32\CiTool.exe' --update-policy "$PolicyID.cip" -json | Out-Null
                         Write-ColorfulText -Color Pink -InputText "A Supplemental policy with the name $SuppPolicyName has been deployed."
@@ -313,6 +351,7 @@ Function New-SupplementalWDACConfig {
                 $OriginalStyle.Keys | ForEach-Object -Process {
                     $PSStyle.Formatting.$_ = $OriginalStyle[$_]
                 }
+                Write-Progress -Id 21 -Activity 'Complete.' -Completed
             }
         }
     }

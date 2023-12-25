@@ -5,8 +5,8 @@
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Edit-SignedWDACConfig/Edit-SignedWDACConfig%20-AllowNewAppsAuditEvents.apng)
 
 ```powershell
-Edit-SignedWDACConfig [-AllowNewAppsAuditEvents] -SuppPolicyName <String> [-CertPath <String>] [-PolicyPaths
-<String[]>] [-CertCN <String>] [-LogSize <Int64>] [-NoScript] [-NoUserPEs] [-SpecificFileNameLevel <String>]
+Edit-SignedWDACConfig [-AllowNewAppsAuditEvents] -SuppPolicyName <String> [-CertPath <String>] [-PolicyPath
+<String>] [-CertCN <String>] [-LogSize <Int64>] [-NoScript] [-NoUserPEs] [-SpecificFileNameLevel <String>]
 [-IncludeDeletedFiles] [-Level <String>] [-Fallbacks <String[]>] [-SignToolPath <String>]
 ```
 
@@ -75,7 +75,7 @@ This parameter is specially useful for applications that install files outside o
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Edit-SignedWDACConfig/Edit-SignedWDACConfig%20-AllowNewApps.apng)
 
 ```powershell
-Edit-SignedWDACConfig [-AllowNewApps] -SuppPolicyName <String> [-CertPath <String>] [-PolicyPaths <String[]>]
+Edit-SignedWDACConfig [-AllowNewApps] -SuppPolicyName <String> [-CertPath <String>] [-PolicyPath <String>]
 [-CertCN <String>] [-NoScript] [-NoUserPEs] [-SpecificFileNameLevel <String>] [-Level <String>] [-Fallbacks <String[]>] [-SignToolPath <String>]
 ```
 
@@ -130,8 +130,8 @@ A new supplemental policy will be created, it will be signed and deployed on the
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Edit-SignedWDACConfig/Edit-SignedWDACConfig%20-MergeSupplementalPolicies.apng)
 
 ```powershell
-Edit-SignedWDACConfig [-MergeSupplementalPolicies] -CertPath <String> -SuppPolicyName <String> -PolicyPaths
-<String[]> -CertCN <String> -SuppPolicyPaths <String[]> [-KeepOldSupplementalPolicies] [-SignToolPath <String>]
+Edit-SignedWDACConfig [-MergeSupplementalPolicies] -CertPath <String> -SuppPolicyName <String> -PolicyPath
+<String> -CertCN <String> -SuppPolicyPaths <String[]> [-KeepOldSupplementalPolicies] [-SignToolPath <String>]
 ```
 
 <br>

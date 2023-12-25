@@ -5,7 +5,7 @@
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Edit-WDACConfig/Edit-WDACConfig%20-AllowNewAppsAuditEvents.apng)
 
 ```powershell
-Edit-WDACConfig [-AllowNewAppsAuditEvents] -SuppPolicyName <String> -PolicyPaths <String[]> [-Level <String>]
+Edit-WDACConfig [-AllowNewAppsAuditEvents] -SuppPolicyName <String> -PolicyPath <String> [-Level <String>]
 [-Fallbacks <String[]>] [-NoScript] [-NoUserPEs] [-SpecificFileNameLevel <String>]
 [-LogSize <Int64>] [-IncludeDeletedFiles]
 ```
@@ -73,7 +73,7 @@ This parameter is specially useful for applications that install files outside o
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Edit-WDACConfig/Edit-WDACConfig%20-AllowNewApps.apng)
 
 ```powershell
-Edit-WDACConfig [-AllowNewApps] -SuppPolicyName <String> -PolicyPaths <String[]> [-Level <String>] [-Fallbacks
+Edit-WDACConfig [-AllowNewApps] -SuppPolicyName <String> -PolicyPath <String> [-Level <String>] [-Fallbacks
 <String[]>] [-NoScript] [-NoUserPEs] [-SpecificFileNameLevel <String>]
 ```
 
@@ -122,7 +122,7 @@ A new supplemental policy will be created, it will be deployed on the system. Th
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Edit-WDACConfig/Edit-WDACConfig%20-MergeSupplementalPolicies.apng)
 
 ```powershell
-Edit-WDACConfig [-MergeSupplementalPolicies] -SuppPolicyName <String> -PolicyPaths <String[]> -SuppPolicyPaths
+Edit-WDACConfig [-MergeSupplementalPolicies] -SuppPolicyName <String> -PolicyPath <String> -SuppPolicyPaths
 <String[]> [-KeepOldSupplementalPolicies]
 ```
 

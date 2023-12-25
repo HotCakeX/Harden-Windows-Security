@@ -179,10 +179,10 @@ Function New-KernelModeWDACConfig {
                 # The total number of the main steps for the progress bar to render
                 [System.Int16]$TotalSteps = $Deploy ? 2 : 1
                 [System.Int16]$CurrentStep = 0
- 
+
                 $CurrentStep++
                 Write-Progress -Id 25 -Activity 'Creating the prep mode policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
- 
+
                 Write-Verbose -Message 'Building the Audit mode policy by calling the Build-PrepModeStrictKernelPolicy function'
                 Build-PrepModeStrictKernelPolicy -DefaultWindowsKernel
 
@@ -194,7 +194,7 @@ Function New-KernelModeWDACConfig {
 
                     $CurrentStep++
                     Write-Progress -Id 25 -Activity 'Deploying the prep mode policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
- 
+
                     Write-Verbose -Message 'Setting the GUID of the Audit mode policy in the User Configuration file'
                     Set-CommonWDACConfig -StrictKernelPolicyGUID $PolicyID | Out-Null
 
@@ -222,7 +222,7 @@ Function New-KernelModeWDACConfig {
                 # The total number of the main steps for the progress bar to render
                 [System.Int16]$TotalSteps = $Deploy ? 3 : 2
                 [System.Int16]$CurrentStep = 0
- 
+
                 # Get the Strict Kernel Audit mode policy's GUID to use for the Enforced mode policy
                 # This will eliminate the need for an extra reboot
                 Write-Verbose -Message 'Trying to get the GUID of Strict Kernel Audit mode policy to use for the Enforced mode policy, from the user configurations'
@@ -239,7 +239,7 @@ Function New-KernelModeWDACConfig {
 
                 $CurrentStep++
                 Write-Progress -Id 26 -Activity 'Scanning the Event logs' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
- 
+
                 powershell.exe -Command {
                     Write-Verbose -Message 'Scanning the Event viewer logs for drivers'
                     $DriverFilesObj = Get-SystemDriver -Audit
@@ -250,7 +250,7 @@ Function New-KernelModeWDACConfig {
 
                 $CurrentStep++
                 Write-Progress -Id 26 -Activity 'Configuring the final policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
- 
+
                 Write-Verbose -Message 'Not trusting the policy xml file made before restart, so building the same policy again after restart, this time in Enforced mode instead of Audit mode'
                 Copy-Item -Path "$ModuleRootPath\Resources\WDAC Policies\DefaultWindows_Enforced_Kernel.xml" -Destination .\DefaultWindows_Enforced_Kernel.xml -Force
 
@@ -289,7 +289,7 @@ Function New-KernelModeWDACConfig {
 
                     $CurrentStep++
                     Write-Progress -Id 26 -Activity 'Deploying the final policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
- 
+
                     Write-Verbose -Message 'Converting the policy XML file to CIP binary'
                     ConvertFrom-CIPolicy -XmlFilePath '.\Final_DefaultWindows_Enforced_Kernel.xml' -BinaryFilePath "$PolicyID.cip" | Out-Null
 
@@ -324,10 +324,10 @@ Function New-KernelModeWDACConfig {
                 # The total number of the main steps for the progress bar to render
                 [System.Int16]$TotalSteps = $Deploy ? 2 : 1
                 [System.Int16]$CurrentStep = 0
- 
+
                 $CurrentStep++
                 Write-Progress -Id 27 -Activity 'Creating the prep mode policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
- 
+
                 Write-Verbose -Message 'Building the Audit mode policy by calling the Build-PrepModeStrictKernelPolicy function'
                 Build-PrepModeStrictKernelPolicy -DefaultWindowsKernelNoFlights
 
@@ -339,7 +339,7 @@ Function New-KernelModeWDACConfig {
 
                     $CurrentStep++
                     Write-Progress -Id 27 -Activity 'Deploying the prep mode policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
- 
+
                     Write-Verbose -Message 'Setting the GUID of the Audit mode policy in the User Configuration file'
                     Set-CommonWDACConfig -StrictKernelNoFlightRootsPolicyGUID $PolicyID | Out-Null
 
@@ -367,7 +367,7 @@ Function New-KernelModeWDACConfig {
                 # The total number of the main steps for the progress bar to render
                 [System.Int16]$TotalSteps = $Deploy ? 3 : 2
                 [System.Int16]$CurrentStep = 0
-                
+
                 # Get the Strict Kernel Audit mode policy's GUID to use for the Enforced mode policy
                 # This will eliminate the need for an extra reboot
                 Write-Verbose -Message 'Trying to get the GUID of Strict Kernel Audit mode policy to use for the Enforced mode policy, from the user configurations'
@@ -384,7 +384,7 @@ Function New-KernelModeWDACConfig {
 
                 $CurrentStep++
                 Write-Progress -Id 28 -Activity 'Scanning the Event logs' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
- 
+
                 powershell.exe -Command {
                     Write-Verbose -Message 'Scanning the Event viewer logs for drivers'
                     $DriverFilesObj = Get-SystemDriver -Audit
@@ -395,7 +395,7 @@ Function New-KernelModeWDACConfig {
 
                 $CurrentStep++
                 Write-Progress -Id 28 -Activity 'Creating the final policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
- 
+
                 Write-Verbose -Message 'Not trusting the policy xml file made before restart, so building the same policy again after restart, this time in Enforced mode instead of Audit mode'
                 Copy-Item -Path "$ModuleRootPath\Resources\WDAC Policies\DefaultWindows_Enforced_Kernel_NoFlights.xml" -Destination '.\DefaultWindows_Enforced_Kernel_NoFlights.xml' -Force
 
@@ -434,7 +434,7 @@ Function New-KernelModeWDACConfig {
 
                     $CurrentStep++
                     Write-Progress -Id 28 -Activity 'Deploying the final policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
- 
+
                     Write-Verbose -Message 'Converting the policy XML file to CIP binary'
                     ConvertFrom-CIPolicy -XmlFilePath '.\Final_DefaultWindows_Enforced_Kernel.xml' -BinaryFilePath "$PolicyID.cip" | Out-Null
 

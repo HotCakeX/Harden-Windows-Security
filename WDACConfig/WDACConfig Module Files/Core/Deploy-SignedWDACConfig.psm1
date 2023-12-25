@@ -197,12 +197,12 @@ Function Deploy-SignedWDACConfig {
 
             Write-Verbose -Message 'Renaming the .p7 file to .cip'
             Rename-Item -Path "$PolicyID.cip.p7" -NewName "$PolicyID.cip" -Force
-            
+
             if ($Deploy) {
 
                 $CurrentStep++
                 Write-Progress -Id 13 -Activity 'Deploying' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-    
+
                 # Prompt for confirmation before proceeding
                 if ($PSCmdlet.ShouldProcess('This PC', 'Deploying the signed policy')) {
 

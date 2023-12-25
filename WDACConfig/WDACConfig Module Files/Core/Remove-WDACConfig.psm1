@@ -39,7 +39,7 @@ Function Remove-WDACConfig {
 
                 # Get a list of policies using the CiTool, excluding system policies and policies that aren't on disk.
                 # by adding "| Where-Object -FilterScript { $_.FriendlyName }" we make sure the auto completion works when at least one of the policies doesn't have a friendly name
-                $Policies = (&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { $_.IsOnDisk -eq 'True' } | Where-Object -FilterScript { $_.IsSystemPolicy -ne 'True' } | Where-Object -FilterScript { $_.FriendlyName }
+                $Policies = (&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { ($_.IsOnDisk -eq 'True') -and ($_.IsSystemPolicy -ne 'True') -and $_.FriendlyName }
 
                 # Create a hashtable mapping policy names to policy IDs. This will be used later to check if a policy ID already exists.
                 $NameIDMap = @{}
@@ -77,7 +77,7 @@ Function Remove-WDACConfig {
                 param($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameters)
 
                 # Get a list of policies using the CiTool, excluding system policies and policies that aren't on disk.
-                $Policies = (&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { $_.IsOnDisk -eq 'True' } | Where-Object -FilterScript { $_.IsSystemPolicy -ne 'True' }
+                $Policies = (&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { ($_.IsOnDisk -eq 'True') -and ($_.IsSystemPolicy -ne 'True') }
                 # Create a hashtable mapping policy IDs to policy names. This will be used later to check if a policy name already exists.
                 $IDNameMap = @{}
                 foreach ($Policy in $Policies) {
@@ -177,7 +177,7 @@ Function Remove-WDACConfig {
         # ValidateSet for Policy names
         Class PolicyNamezx : System.Management.Automation.IValidateSetValuesGenerator {
             [System.String[]] GetValidValues() {
-                $PolicyNamezx = ((&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { $_.IsOnDisk -eq 'True' } | Where-Object -FilterScript { $_.IsSystemPolicy -ne 'True' }).Friendlyname | Select-Object -Unique
+                $PolicyNamezx = ((&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { ($_.IsOnDisk -eq 'True') -and ($_.IsSystemPolicy -ne 'True') }).Friendlyname | Select-Object -Unique
                 return [System.String[]]$PolicyNamezx
             }
         }
@@ -185,7 +185,7 @@ Function Remove-WDACConfig {
         # ValidateSet for Policy IDs
         Class PolicyIDzx : System.Management.Automation.IValidateSetValuesGenerator {
             [System.String[]] GetValidValues() {
-                $PolicyIDzx = ((&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { $_.IsOnDisk -eq 'True' } | Where-Object -FilterScript { $_.IsSystemPolicy -ne 'True' }).policyID
+                $PolicyIDzx = ((&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { ($_.IsOnDisk -eq 'True') -and ($_.IsSystemPolicy -ne 'True') }).policyID
 
                 return [System.String[]]$PolicyIDzx
             }
@@ -199,7 +199,7 @@ Function Remove-WDACConfig {
 
             # Defines a method to get valid policy names from the policies on disk that aren't system policies.
             [System.String[]] GetValidValues() {
-                $Policies = (&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { $_.IsOnDisk -eq 'True' } | Where-Object -FilterScript { $_.IsSystemPolicy -ne 'True' }
+                $Policies = (&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { ($_.IsOnDisk -eq 'True') -and ($_.IsSystemPolicy -ne 'True') }
                 self::$IDNameMap = @{}
                 foreach ($Policy in $Policies) {
                     self::$IDNameMap[$Policy.policyID] = $Policy.Friendlyname
@@ -221,7 +221,7 @@ Function Remove-WDACConfig {
 
             # Defines a method to get valid policy IDs from the policies on disk that aren't system policies.
             [System.String[]] GetValidValues() {
-                $Policies = (&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { $_.IsOnDisk -eq 'True' } | Where-Object -FilterScript { $_.IsSystemPolicy -ne 'True' }
+                $Policies = (&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { ($_.IsOnDisk -eq 'True') -and ($_.IsSystemPolicy -ne 'True') }
                 self::$NameIDMap = @{}
                 foreach ($Policy in $Policies) {
                     self::$NameIDMap[$Policy.Friendlyname] = $Policy.policyID
@@ -249,6 +249,13 @@ Function Remove-WDACConfig {
             Write-Verbose -Message 'Looping over each selected policy XML file'
             foreach ($PolicyPath in $PolicyPaths) {
 
+                # The total number of the main steps for the progress bar to render
+                [System.Int16]$TotalSteps = 3
+                [System.Int16]$CurrentStep = 0
+
+                $CurrentStep++
+                Write-Progress -Id 18 -Activity 'Parsing the XML Policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
                 # Convert the XML file into an XML object
                 Write-Verbose -Message 'Converting the XML file to an XML object'
                 $Xml = [System.Xml.XmlDocument](Get-Content -Path $PolicyPath)
@@ -264,6 +271,9 @@ Function Remove-WDACConfig {
                 if ($CurrentPolicyIDs -notcontains $PolicyID) {
                     Throw 'The selected policy file is not deployed on the system.'
                 }
+
+                $CurrentStep++
+                Write-Progress -Id 18 -Activity 'Processing the policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                 # Sanitize the policy file by removing SupplementalPolicySigners from it
                 Write-Verbose -Message 'Sanitizing the XML policy file by removing SupplementalPolicySigners from it'
@@ -302,6 +312,9 @@ Function Remove-WDACConfig {
                 # Converting the Policy XML file to CIP binary file
                 ConvertFrom-CIPolicy -XmlFilePath $PolicyPath -BinaryFilePath "$PolicyID.cip" | Out-Null
 
+                $CurrentStep++
+                Write-Progress -Id 18 -Activity 'Signing the policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
                 # Configure the parameter splat
                 $ProcessParams = @{
                     'ArgumentList' = 'sign', '/v' , '/n', "`"$CertCN`"", '/p7', '.', '/p7co', '1.3.6.1.4.1.311.79.1', '/fd', 'certHash', ".\$PolicyID.cip"
@@ -336,6 +349,7 @@ Function Remove-WDACConfig {
                     Write-Verbose -Message 'Removing the newly signed CIP file from the current directory after deployment'
                     Remove-Item -Path ".\$PolicyID.cip" -Force
                 }
+                Write-Progress -Id 18 -Activity 'Complete.' -Completed
             }
         }
 
@@ -345,14 +359,14 @@ Function Remove-WDACConfig {
             # If IDs were supplied by user
             foreach ($ID in $PolicyIDs ) {
                 &'C:\Windows\System32\CiTool.exe' --remove-policy "{$ID}" -json | Out-Null
-                Write-Host -Object "Policy with the ID $ID has been successfully removed." -ForegroundColor Green
+                Write-ColorfulText -Color Lavender -InputText "Policy with the ID $ID has been successfully removed."
             }
 
             # If names were supplied by user
             # Empty array to store Policy IDs based on the input name, this will take care of the situations where multiple policies with the same name are deployed
             [System.Object[]]$NameID = @()
             foreach ($PolicyName in $PolicyNames) {
-                $NameID += ((&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { $_.IsOnDisk -eq 'True' } | Where-Object -FilterScript { $_.FriendlyName -eq $PolicyName }).PolicyID
+                $NameID += ((&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { ($_.IsOnDisk -eq 'True') -and ($_.FriendlyName -eq $PolicyName) }).PolicyID
             }
 
             Write-Verbose -Message 'The Following policy IDs have been gathered from the supplied policy names and are going to be removed from the system'
@@ -360,7 +374,7 @@ Function Remove-WDACConfig {
 
             $NameID | Select-Object -Unique | ForEach-Object -Process {
                 &'C:\Windows\System32\CiTool.exe' --remove-policy "{$_}" -json | Out-Null
-                Write-Host -Object "Policy with the ID $_ has been successfully removed." -ForegroundColor Green
+                Write-ColorfulText -Color Lavender -InputText "Policy with the ID $_ has been successfully removed."
             }
         }
     }

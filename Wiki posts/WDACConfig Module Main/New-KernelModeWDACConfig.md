@@ -27,7 +27,7 @@ Hardware drivers are scanned based on their certificates so they won't require a
 The deployed base policy can have supplemental policies too so if in the future you need to allow more Kernel-mode drivers to run on your system, you can use the following command to automatically create and deploy a Supplemental policy.
 
 ```powershell
-Edit-WDACConfig -AllowNewAppsAuditEvents -SuppPolicyName "Kernel mode drivers for software X" -PolicyPaths <Path to Strict Kernel-mode policy xml file> -Fallbacks None -NoUserPEs -NoScript
+Edit-WDACConfig -AllowNewAppsAuditEvents -SuppPolicyName "Kernel mode drivers for software X" -PolicyPath <Path to Strict Kernel-mode policy xml file> -Fallbacks None -NoUserPEs -NoScript
 ```
 
 [**More info about the command above**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Edit-WDACConfig)
@@ -75,7 +75,7 @@ Hardware drivers are scanned based on their certificates so they won't require a
 The deployed base policy can have supplemental policies too so if in the future you need to allow more Kernel-mode drivers to run on your system, you can use the following command to automatically create and deploy a Supplemental policy.
 
 ```powershell
-Edit-WDACConfig -AllowNewAppsAuditEvents -SuppPolicyName "Kernel mode drivers for software X" -PolicyPaths <Path to Strict Kernel-mode policy xml file> -Fallbacks None -NoUserPEs -NoScript
+Edit-WDACConfig -AllowNewAppsAuditEvents -SuppPolicyName "Kernel mode drivers for software X" -PolicyPath <Path to Strict Kernel-mode policy xml file> -Fallbacks None -NoUserPEs -NoScript
 ```
 
 [**More info about the command above**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Edit-WDACConfig)

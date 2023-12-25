@@ -5,8 +5,8 @@
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Edit-SignedWDACConfig/Edit-SignedWDACConfig%20-AllowNewAppsAuditEvents.apng)
 
 ```powershell
-Edit-SignedWDACConfig [-AllowNewAppsAuditEvents] -SuppPolicyName <String> [-CertPath <String>] [-PolicyPaths
-<String[]>] [-CertCN <String>] [-LogSize <Int64>] [-NoScript] [-NoUserPEs] [-SpecificFileNameLevel <String>]
+Edit-SignedWDACConfig [-AllowNewAppsAuditEvents] -SuppPolicyName <String> [-CertPath <String>] [-PolicyPath
+<String>] [-CertCN <String>] [-LogSize <Int64>] [-NoScript] [-NoUserPEs] [-SpecificFileNameLevel <String>]
 [-IncludeDeletedFiles] [-Level <String>] [-Fallbacks <String[]>] [-SignToolPath <String>]
 ```
 
@@ -36,7 +36,7 @@ This parameter is specially useful for applications that install files outside o
 
 * `-CertPath <String>`: Path to the certificate `.cer` file. Supports tab completion by showing only `.cer` files.
 
-* `-PolicyPaths <String[]>`: Browse for the xml file of the Base policy this Supplemental policy is going to expand. Supports tab completion by showing only `.xml` files with **Base Policy** Type.
+* `-PolicyPath <String>`: Browse for the xml file of the Base policy this Supplemental policy is going to expand. Supports tab completion by showing only `.xml` files with **Base Policy** Type.
 
 * `-CertCN <String>`: Common name of the certificate used to sign the deployed WDAC policies - Supports argument completion so you don't have to manually enter the Certificate's CN, just make sure the certificate is installed in the personal store of the user certificates, then press TAB to auto complete the name. You can however enter it manually if you want to.
 
@@ -75,7 +75,7 @@ This parameter is specially useful for applications that install files outside o
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Edit-SignedWDACConfig/Edit-SignedWDACConfig%20-AllowNewApps.apng)
 
 ```powershell
-Edit-SignedWDACConfig [-AllowNewApps] -SuppPolicyName <String> [-CertPath <String>] [-PolicyPaths <String[]>]
+Edit-SignedWDACConfig [-AllowNewApps] -SuppPolicyName <String> [-CertPath <String>] [-PolicyPath <String>]
 [-CertCN <String>] [-NoScript] [-NoUserPEs] [-SpecificFileNameLevel <String>] [-Level <String>] [-Fallbacks <String[]>] [-SignToolPath <String>]
 ```
 
@@ -101,7 +101,7 @@ A new supplemental policy will be created, it will be signed and deployed on the
 
 * `-CertPath <String>`: Path to the certificate `.cer` file. Supports tab completion by showing only `.cer` files.
 
-* `-PolicyPaths <String[]>`: Browse for the xml file of the Base policy this Supplemental policy is going to expand. Supports tab completion by showing only `.xml` files with **Base Policy** Type.
+* `-PolicyPath <String>`: Browse for the xml file of the Base policy this Supplemental policy is going to expand. Supports tab completion by showing only `.xml` files with **Base Policy** Type.
 
 * `-CertCN <String>`: Common name of the certificate used to sign the deployed WDAC policies - Supports argument completion so you don't have to manually enter the Certificate's CN, just make sure the certificate is installed in the personal store of the user certificates, then press TAB to auto complete the name. You can however enter it manually if you want to.
 
@@ -130,8 +130,8 @@ A new supplemental policy will be created, it will be signed and deployed on the
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Edit-SignedWDACConfig/Edit-SignedWDACConfig%20-MergeSupplementalPolicies.apng)
 
 ```powershell
-Edit-SignedWDACConfig [-MergeSupplementalPolicies] -CertPath <String> -SuppPolicyName <String> -PolicyPaths
-<String[]> -CertCN <String> -SuppPolicyPaths <String[]> [-KeepOldSupplementalPolicies] [-SignToolPath <String>]
+Edit-SignedWDACConfig [-MergeSupplementalPolicies] -CertPath <String> -SuppPolicyName <String> -PolicyPath
+<String> -CertCN <String> -SuppPolicyPaths <String[]> [-KeepOldSupplementalPolicies] [-SignToolPath <String>]
 ```
 
 <br>
@@ -146,7 +146,7 @@ Merge multiple deployed **Signed** Supplemental policies into 1 and deploy it, r
 
 ### 3 Automatic parameters
 
-* `-PolicyPaths <String[]>`: Path to the Base policy xml file the Supplemental policies belong to. Supports argument tab completion by showing only Base policy types.
+* `-PolicyPath <String>`: Path to the Base policy xml file the Supplemental policies belong to. Supports argument tab completion by showing only Base policy types.
 
 * `-CertCN <String>`: Common name of the certificate used to sign the deployed WDAC policies - Supports argument completion so you don't have to manually enter the Certificate's CN, just make sure the certificate is installed in the personal store of the user certificates, then press TAB to auto complete the name. You can however enter it manually if you want to.
 

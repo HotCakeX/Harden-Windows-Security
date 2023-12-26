@@ -81,9 +81,12 @@ Function Assert-WDACConfigIntegrity {
 .SYNOPSIS
     Gets the SHA2-512 hashes of files in the WDACConfig and compares them with the ones in the cloud and shows the differences.
 .DESCRIPTION
-    The Assert-WDACConfigIntegrity function scans all the files in the WDACConfig's folder and its subfolders, calculates their SHA2-512 hashes using the Get-FileHash cmdlet.
+    The Assert-WDACConfigIntegrity function scans all the relevant files in the WDACConfig's folder and its subfolders, calculates their SHA2-512 hashes using the Get-FileHash cmdlet.
     Then it downloads the cloud CSV file from the GitHub repository and compares the hashes of the local files with the ones in the cloud.
-    This way you can make sure that the files in your local WDACConfig folder are the same as the ones in the cloud and no one has tampered with them.
+    By doing so, you can ascertain that the files in your local WDACConfig folder are identical to the ones in the cloud and devoid of any interference.
+    If there is any indication of tampering, the outcomes will be displayed on the console.
+.LINK
+    https://github.com/HotCakeX/Harden-Windows-Security/wiki/Assert-WDACConfigIntegrity
 .PARAMETER SaveLocally
     Indicates that the function should save the results to a CSV file locally.
     You don't need to use this parameter.

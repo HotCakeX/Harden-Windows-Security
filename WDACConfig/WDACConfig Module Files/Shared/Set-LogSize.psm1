@@ -13,6 +13,7 @@ Function Set-LogSize {
     #>
     [CmdletBinding()]
     param (
+        [parameter(Mandatory = $true)]
         [System.Int64]$LogSize
     )
     # Importing the $PSDefaultParameterValues to the current session, prior to everything else

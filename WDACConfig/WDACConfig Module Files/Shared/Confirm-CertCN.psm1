@@ -11,6 +11,7 @@ Function Confirm-CertCN {
     #>
     [CmdletBinding()]
     param (
+        [parameter(Mandatory = $true)]
         [System.String]$CN
     )
     # Importing the $PSDefaultParameterValues to the current session, prior to everything else

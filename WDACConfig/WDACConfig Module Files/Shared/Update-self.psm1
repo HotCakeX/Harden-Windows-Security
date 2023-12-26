@@ -92,7 +92,6 @@ Function Update-self {
 
             try {
                 # Try to re-run the command that invoked the Update-self function in a new session after the module is updated.
-                # pwsh.exe -NoExit -CommandWithArgs 'Invoke-Expression -command $args[0]' $InvocationStatement
                 pwsh.exe -NoLogo -NoExit -command $InvocationStatement
             }
             catch {

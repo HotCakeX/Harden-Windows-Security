@@ -7,4 +7,4 @@
 Import-Module -FullyQualifiedName "$ScriptFilePath\..\WDACConfig Module Files\WDACConfig.psd1" -Force
 
 # Replace with any cmdlet of the WDACConfig module that is going to be debugged
-Assert-WDACConfigIntegrity -Verbose
+Assert-WDACConfigIntegrity -Verbose -SaveLocally

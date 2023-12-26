@@ -44,12 +44,7 @@ Function Assert-WDACConfigIntegrity {
 
         Write-Verbose -Message 'Looping through all the files'
         foreach ($File in Get-ChildItem -Path $ModuleRootPath -Recurse -File -Force) {
-
-            if ($File.Name -eq $OutputFileName) {
-                Write-Verbose -Message "Skipping the output file: $($File.Name)"
-                continue
-            }
-
+          
             # Create a custom object to store the relative path, file name and the hash of the file
             $FinalOutput += [PSCustomObject]@{
                 RelativePath = ([System.IO.Path]::GetRelativePath($ModuleRootPath, $File.FullName))
@@ -78,34 +73,26 @@ Function Assert-WDACConfigIntegrity {
     <#
 .SYNOPSIS
     Gets the SHA512 hashes of files in the WDACConfig and compares them with the ones in the cloud and shows the differences.
-
 .DESCRIPTION
     The Assert-WDACConfigIntegrity function scans all the files in the WDACConfig's folder and its subfolders, calculates their SHA512 hashes using the Get-FileHash cmdlet.
     Then it downloads the cloud CSV file from the GitHub repository and compares the hashes of the local files with the ones in the cloud.
     This way you can make sure that the files in your local WDACConfig folder are the same as the ones in the cloud and no one has tampered with them.
-
 .PARAMETER SaveLocally
     Indicates that the function should save the results to a CSV file locally.
     You don't need to use this parameter.
-
 .PARAMETER Path
     Specifies the path to save the CSV file to. The default path is the Utilities folder in the WDACConfig's folder.
     This is used before uploading to GitHub to renew the hashes.
     You don't need to use this parameter.
-
 .PARAMETER SkipVersionCheck
     Indicates that the function should skip the version check and not run the updater.
-
 .INPUTS
     System.Management.Automation.SwitchParameter
     System.IO.FileInfo
-
 .OUTPUTS
     System.String
     System.Object[]
-
 .EXAMPLE
     Assert-WDACConfigIntegrity
-
 #>
 }

@@ -32,7 +32,7 @@ Function Assert-WDACConfigIntegrity {
 
         # Define the output file name and the URL of the cloud CSV file
         [System.String]$OutputFileName = 'Hashes.csv'
-        [System.Uri]$Url = 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/WDACConfig-v0.2.8/WDACConfig/WDACConfig%20Module%20Files/Hashes.csv'
+        [System.Uri]$Url = 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/WDACConfig/Utilities/Hashes.csv'
 
         # Download the cloud CSV file and convert it to an array of objects
         [System.Object[]]$CloudCSV = (Invoke-WebRequest -Uri $Url -ProgressAction SilentlyContinue).Content | ConvertFrom-Csv

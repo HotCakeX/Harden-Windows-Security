@@ -1,9 +1,16 @@
-function Assert-WDACConfigIntegrity {
-    [CmdletBinding()]
+Function Assert-WDACConfigIntegrity {
+    [CmdletBinding(
+        DefaultParameterSetName = 'SaveLocally'
+    )]
     param (
         [Alias('S')]
-        [Parameter(Mandatory = $false)]
+        [Parameter(Mandatory = $false, ParameterSetName = 'SaveLocally')]
         [System.Management.Automation.SwitchParameter]$SaveLocally,
+
+        [Alias('P')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'SaveLocally')]
+        [ValidateScript({ Test-Path -Path $_ -PathType 'Container' })]
+        [System.IO.FileInfo]$Path = "$ModuleRootPath\..\Utilities\",
 
         [Parameter(Mandatory = $false)]
         [System.Management.Automation.SwitchParameter]$SkipVersionCheck
@@ -52,8 +59,8 @@ function Assert-WDACConfigIntegrity {
         }
 
         if ($SaveLocally) {
-            # Export the array to a CSV file at the root of the folder
-            $FinalOutput | Export-Csv -Path (Join-Path -Path $ModuleRootPath -ChildPath $OutputFileName) -Force
+            Write-Verbose -Message "Saving the results to a CSV file in $($Path.FullName)"
+            $FinalOutput | Export-Csv -Path (Join-Path -Path $Path -ChildPath $OutputFileName) -Force
         }
     }
     end {
@@ -77,8 +84,21 @@ function Assert-WDACConfigIntegrity {
     Then it downloads the cloud CSV file from the GitHub repository and compares the hashes of the local files with the ones in the cloud.
     This way you can make sure that the files in your local WDACConfig folder are the same as the ones in the cloud and no one has tampered with them.
 
+.PARAMETER SaveLocally
+    Indicates that the function should save the results to a CSV file locally.
+    You don't need to use this parameter.
+
+.PARAMETER Path
+    Specifies the path to save the CSV file to. The default path is the Utilities folder in the WDACConfig's folder.
+    This is used before uploading to GitHub to renew the hashes.
+    You don't need to use this parameter.
+
+.PARAMETER SkipVersionCheck
+    Indicates that the function should skip the version check and not run the updater.
+
 .INPUTS
     System.Management.Automation.SwitchParameter
+    System.IO.FileInfo
 
 .OUTPUTS
     System.String

@@ -25,10 +25,32 @@ Function Remove-WDACConfig {
         [System.String[]]$PolicyPaths,
 
         [ValidateScript({
-                [System.String[]]$Certificates = foreach ($Cert in (Get-ChildItem -Path 'Cert:\CurrentUser\my')) {
-                (($Cert.Subject -split ',' | Select-Object -First 1) -replace 'CN=', '').Trim()
+                # Create an empty array to store the output objects
+                [System.String[]]$Output = @()
+
+                # Loop through each certificate that uses RSA algorithm (Because ECDSA is not supported for signing WDAC policies) in the current user's personal store and extract the relevant properties
+                foreach ($Cert in (Get-ChildItem -Path 'Cert:\CurrentUser\My' | Where-Object -FilterScript { $_.PublicKey.Oid.FriendlyName -eq 'RSA' })) {
+
+                    # Takes care of certificate subjects that include comma in their CN
+                    # Determine if the subject contains a comma
+                    if ($Cert.Subject -match 'CN=(?<RegexTest>.*?),.*') {
+                        # If the CN value contains double quotes, use split to get the value between the quotes
+                        if ($matches['RegexTest'] -like '*"*') {
+                            $SubjectCN = ($Element.Certificate.Subject -split 'CN="(.+?)"')[1]
+                        }
+                        # Otherwise, use the named group RegexTest to get the CN value
+                        else {
+                            $SubjectCN = $matches['RegexTest']
+                        }
+                    }
+                    # If the subject does not contain a comma, use a lookbehind to get the CN value
+                    elseif ($Cert.Subject -match '(?<=CN=).*') {
+                        $SubjectCN = $matches[0]
+                    }
+                    $Output += $SubjectCN
                 }
-                $Certificates -contains $_
+
+                $Output -contains $_
             }, ErrorMessage = "A certificate with the provided common name doesn't exist in the personal store of the user certificates." )]
         [parameter(Mandatory = $false, ParameterSetName = 'Signed Base', ValueFromPipelineByPropertyName = $true)]
         [System.String]$CertCN,

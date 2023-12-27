@@ -40,7 +40,7 @@ if (-NOT ([System.Decimal]$FullOSBuild -ge [System.Decimal]$Requiredbuild)) {
 }
 
 # Loop through all the relevant files in the module
-foreach ($File in (Get-ChildItem -Recurse -File -Path $ModuleRootPath -Include '*.ps1', '*.psm1', '*.psd1*')) {
+foreach ($File in (Get-ChildItem -Recurse -File -Path $ModuleRootPath -Include '*.ps1', '*.psm1')) {
 
     # Get the signature of the current file
     [System.Management.Automation.Signature]$Signature = Get-AuthenticodeSignature -FilePath $File
@@ -57,8 +57,8 @@ foreach ($File in (Get-ChildItem -Recurse -File -Path $ModuleRootPath -Include '
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDtCANzLUjyOmFZ
-# tAzMkCWcCb4ejs6lkISHhuup6aDDbqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDMg1DbL/rhhOcS
+# zQVMaeJj8/hpvVzv0R5WUphR3ksGI6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -105,16 +105,16 @@ foreach ($File in (Get-ChildItem -Recurse -File -Path $ModuleRootPath -Include '
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgmvReviG7NGCzlb+rQCLwBmXbYSpOQhXG2jq1Czj1cdowDQYJKoZIhvcNAQEB
-# BQAEggIAMKr2dybs1t2ckr9Y6ytGv+j0yMS7URMrWnnOvQcngETkegSOFbK0fB6i
-# ToLVk3fSfAzIel9m5t5oS6xQtlocNMvANuzYQ5MR90/TLkjPOoRB7G9KOGl2z6/V
-# c++jS0/YiU0MVaOwEkQ7vTbku26o7eMcn6fKS71dGOmrZXbSiRfWnGUK2Lz/DR7p
-# OvZ5568dp5WXUUUlQ3sSKPeEfwHAaeNmYwrWb+IDqMeKJmYMx345BdzINS2GFPy4
-# w+8N2/i8nuXmmRVLyYeMTezqi4QwxJsoyXcDsbz5wGmZkVzVS4cABinHaPWf0ak6
-# tDGPk14tmnPdnyjgYp1IVBYBLYsfL7bCuVmB3WqrqajTmdFo2WoWxrO5+72Gfo87
-# qcTNfXU6VthXR+brqA7EfRnMobG8ceT1GBU85S0uD6xqL+Qp3LRzucrnIEPdpJhw
-# 7YsCJlNdZHWPc5L0ZGDY3nyhvzafqdcAYT70Lxp6Jy7Xwi7e/rT35mD20Y2fwt4m
-# zofJcnx+tPO4aYCQWKOvth65W99SEnTOkC+HHIuoUbHeZpBT0i12sJXcqMv+Ettk
-# +p96HiRpJCivD2oLJK2qfegM1kXEG7SG1DF2/7HVidLMxhiw6vV+5zt5u9PbcvEX
-# UfHTJZOJUifY+FNxb15mBVt2TwyURWWKckE86OS6P4omrn7ex4s=
+# IgQgUplmeRqAicEvN3LDWbzqAkrsJvqCxayFqgBVpbEfLcUwDQYJKoZIhvcNAQEB
+# BQAEggIAYoN0XRAlZ4Xl+7u1/gLwm9vYyn6tNHinAuwbAVwU3Bw8bUw43QjXuoHJ
+# 43+Glfq8+Q4pfZlN5t7rZtduVQJW3CnrSKSTtTXOIo+ZiqMbYeM1WaOBhClNma0g
+# 3tU8WqSZP7Jhi8u3WhXKCHagou6kTtnyakO9WFGTbt2dvRVbPBHgIwmAjq4hHP33
+# QZvxBAhzzzqug073kEhdULqHXkcbept10CO1HrGZvc4pirMDpdyg93fFGnIJTxcl
+# AqxMQRyUIf7wrJCnccQpPUqiYMRHpRCIHDjB2T+5hu0N6nPlNg5c+UBX8m8PMQiQ
+# 6uMNybnKOVKfHDG4YHS71MPOOEG13K73aO1tMe4p4NEHwK0cfA2Uuic4QSKU181y
+# +l2CQjR99UADY8LBq0Up+tgFZy/qXgPaf36kXlMZkNhr0N6esR/seBQxhgP0h2cG
+# 6mHef7X2K+/8Ox7NYd2synLg87JE0vsR+3DKO4p+ySK1dQYI3NCbwkP5piFMrslo
+# D81gaUxTqcz87Ud41gBnb8ghANoEf1gBXNwhRk+TeUhC/NC+yff+B/EsuFWha4nM
+# 76IthWnFuOWjZb6DpNd0tuKopt3Plt6NiwI+pxsDmsUD480Fpf3iQRoAwAHXsXbw
+# 4OWYJXSTqGYd/n5r03KmhKvcR7NeyC/gRuTPXkOe3I0J2QuqZRo=
 # SIG # End signature block

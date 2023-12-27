@@ -1128,6 +1128,8 @@ Function New-WDACConfig {
     The maximum range is the maximum allowed log size by Windows Event viewer
 .PARAMETER SkipVersionCheck
     Can be used with any parameter to bypass the online version check - only to be used in rare cases
+.PARAMETER Verbose
+    Displays detailed information about the operation performed by the command
 .INPUTS
     System.Int64
     System.String[]
@@ -1145,8 +1147,8 @@ Register-ArgumentCompleter -CommandName 'New-WDACConfig' -ParameterName 'SignToo
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCpOWn6vzSP7CXX
-# EyI5YHntvboeye1qIFg/TuQz6b0hdqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDHCFIKf80hD2iQ
+# bJWlfzYF/elYYsC1mIgRBOSS4+oQqKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -1193,16 +1195,16 @@ Register-ArgumentCompleter -CommandName 'New-WDACConfig' -ParameterName 'SignToo
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgfDuRtkNnubC913LUyryWQ0uek17cQzspA4lp83R230gwDQYJKoZIhvcNAQEB
-# BQAEggIAB0M0zFtC3xVEIcegx4cEDKuBSFn/K2ATk9RsG5porvMiCTUVFIrqFXwK
-# P4fzAQcU2CfbqF1GdtvDMF7ahA7LfuDga7Ps6Lt2hPNVzJ6+Q5+Tcp0UPexa/oEh
-# AKodZUNAQ3iww5yBLXmZ3sZg1cHPxnq3lSp0+fSgDGQb2v+zEK9r9a5A4Is4jAnd
-# /w3m3VUKSFil2s4N5TFhpHV6QUsQL4xh5n0b0EI9Cj2ED/biIFucwbg7XydRpybI
-# TU51PKDTkx7AQ1ec/vKe/yKe9nCXAs+nShCILVqWSBvFWLdZHUu4+JSXJ/BYf99t
-# wJlgutvAvXaJwR5pjpvbTmBFtJepWmvssESoU7ve6ufzwW7j7YwtGX3xb4ZI84aO
-# d6dTAeDdsmY6dCuRhhPRZS4Z9VZ8IE+xx2XdroUjRggr5cijvY8+wEKKyqTk+Jbv
-# aTaFuFS73xzIGzMBDhBFCKEx1v3oUYy4S4airlps5ioyU20iaFmrLQwuagjJ7MMF
-# D6vjOusylvvstVwHUQLqHyVWY1sbO0diJU8p4HFRLLeKMBTRs/gpgbfp0JliQROk
-# nFG5BlvmBmgMEF7Lfgb1jQvb/gJ6XJjOhOlT1J4TpCvuE40UX4mW2auM5YpO0HEg
-# /18iKI5N4QI6f74aXFUYJ2AvJoXwUy/9NNncGowJ8n/uY+v8b4A=
+# IgQgIYaUWH671h/ugFHjw6kUjzBKYgHI3vgu5u/fmKfXQA8wDQYJKoZIhvcNAQEB
+# BQAEggIACJtXGG/+bxxBhGver+Jwz1Q1RwuuIPxUTIS7c73DC7tcxSwtdv6xnYiT
+# mMEJ+oqeTfuIr0F/7YiYEK2SM7gIeeDx3edDcIVF1O7C+cOyuhBvAil9YM+SEQA0
+# HpNfhMjAN9poGYWsxeJo4JIk33bv654yF6Y7LR7wmrrzOxmBqYC3o8PXyK2ofhOw
+# yl7LO87WF8xXxMh3r/suiM3DlkqioHOleACce3xBLaSS25OJiXw0bL6drZHNDDUi
+# zCPfBuARBYJlghXriJX1k9ObZwbBNrSanbfwbbbeFvcXbQMIrvgmKfXhu24hlgAU
+# xbiwyyfeCKB7JyQ3HPq5r2TOm+qWsmrLva6UQALzEhrAIK18pPVqlyx9SR6F0FMh
+# LYPSplk1mhftJBbHd5n6WmDJo7ImVC+0/ujAg86JYt4ers81pgc49E+h05Yj2T8k
+# 0xlMf3C9yEChfyyDsgbI2KPSS2OjkODueo4PEEqmh7F+TP2TBwN51ionsVYB9Ftx
+# sP5GKDnNBJ6Wc0qkdts+nTGLpN5ME4Q7vlP9lzuZ+Ul/a7L0yHK2DxRZUseuPjkG
+# /9uB1XuaOZdFgndZgoVNFR7/fwfceVYg79Hz5DsWJlKSPGMmYqaXpvLit4olAmTr
+# N1RRQrIGMvbStNq8bXiCfQ0R2ncd7nFQL3Oth84HJLzDtBKw790=
 # SIG # End signature block

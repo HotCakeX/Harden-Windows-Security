@@ -1123,6 +1123,32 @@ Function Edit-WDACConfig {
     The log size to set for Code Integrity/Operational event logs
     The accepted values are between 1024 KB and 18014398509481983 KB
     The max range is the maximum allowed log size by Windows Event viewer
+.PARAMETER SuppPolicyName
+    The name of the Supplemental policy that will be created
+.PARAMETER PolicyPath
+    The path to the base policy XML file that will be used
+.PARAMETER SuppPolicyPaths
+    The path(s) to the Supplemental policy XML file(s) that will be used
+.PARAMETER KeepOldSupplementalPolicies
+    Keep the old Supplemental policies that are going to be merged into a single policy
+.PARAMETER NoScript
+    If specified, scripts will not be scanned
+.PARAMETER NoUserPEs
+    If specified, user mode binaries will not be scanned
+.PARAMETER SpecificFileNameLevel
+    The more specific level that determines how the selected file will be scanned.
+.PARAMETER IncludeDeletedFiles
+    If specified, deleted files will be included in the scan
+.PARAMETER CurrentBasePolicyName
+    The name of the currently deployed base policy that will be used
+.PARAMETER NewBasePolicyType
+    The type of the new base policy that will be used
+.PARAMETER RequireEVSigners
+    If specified, the EV Signers rule option will be added to the base policy
+.PARAMETER Debug
+    If specified, the extra files created during module operation will not be deleted
+.PARAMETER Verbose
+    If specified, the verbose output will be shown
 .INPUTS
     System.Int64
     System.String[]
@@ -1141,8 +1167,8 @@ Register-ArgumentCompleter -CommandName 'Edit-WDACConfig' -ParameterName 'SuppPo
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBgclqJ/HWFHD1V
-# OZFUI6SVFqFgHsjsZ+9fskf9y4bYcqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCzOZ4NazMR0ljB
+# Y9ly1OiyWnUp/q1rgTCq/4CbxDxWE6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -1189,16 +1215,16 @@ Register-ArgumentCompleter -CommandName 'Edit-WDACConfig' -ParameterName 'SuppPo
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgbsbb631Qnp/akDzL8zDIwvnJF1/+QY392ZOm1GUBg5IwDQYJKoZIhvcNAQEB
-# BQAEggIAj7Mv0WjlkTFxWwP/HDi9JdVKyp1PkHF7jqj092oSQWBM+ZjgydqDbWqW
-# BIkJEtA/lXRqhiwSbLppOLPHo3YBFW9R+tPk5ZvCTZwObWJ+s+3jb8vBMdenieeg
-# +3il4b50Czro7OsTK3HhEFibhUi42Fkcnopj4vDALl/Pp0hbTdxFQ6FioRjBo9Ii
-# AwsPcGSSFnL6L1RxXt2sEhC5oef0QTzgDr1CeagUHNXbJ8QSCGctXiZ65TCtxKS5
-# mSij2+ra00OHXHap66j1EavqXEpY1rBT66fVFhUne+mm7kM0uhh0YBv0HpZBkr6e
-# Slq57Wk+O+mJTQzATOIZABJHHXwTCw3qZIooLCtF1fcsl8/7Y+mev+uuduDvqLam
-# znjIICMUnjWrFOgRgC2l55aQSno9rFfRTbAY+WGNObTPIGuOFpfDnXvMu/zggdJO
-# DoHrwJeeXxNeQ4HcDSa5QiyIGO1Vpz7JKIAsw6lnVBzNyC5aASIBGCUkJquHMJEl
-# KrqpOVT1v/wgo19JcTVqyUBoCpJwOfVgOqmRgqIA2Sz2hdpcEJvOyPnWbX4ysCju
-# xixQzpiNv5DjouNYKIXE/i6HgHh0Jq25QRbr3UomQh0kX+YISjylGzRXTOzez4lw
-# ycE91Tl9VHDbCSP1PEm7gbNxAs8nSztbx6TWm7jUiZpErjAEX34=
+# IgQgIcNqTj/UUFFWB3eKzfj/YkfRSh1dXlcDmwAsCxYma4YwDQYJKoZIhvcNAQEB
+# BQAEggIAXldAa7lPfbRCcWpiikfst3r/+eNgxml7MCvy8yo9kzzZBoT8CWqeEbJn
+# 9l3wwGcjdUHEmPpGvL0aRbsnD6z2xvHlt1cMZhu4hVHhg25ex3CS6J7JbKtVesL7
+# jvhsBihz+MQ1ui1R0wRKtS62pnKVmaVZfWIPbsw6oQVwmcYnCCUW+naif92ccBwz
+# pMlauI08ahDBsEEUqHQ3d9p57LMmaiRAjp1dBaVjv+ML9BcqjvXoe60781DG1WhV
+# F1JBqpWCBLwCRlFMKhoJg90VhhP921OC9zj2aEE/C6Rpid+mi2INrQteNzISlTco
+# G4ElKgFFTSJYOIPpPoJDZMzdAS6TPmRU/kp2zSkb4sC7Ui21cr6ZUB15wBR/6VdK
+# J1Ue2I9+fm6ngdEU1JUKaMOJUNwTkhhxWTfEJoi34REC8o09yqLob5NO9YkvqnRR
+# u8hOc49cbu65kNQzh3g60qQjSWE3Z5phTRwBJ3SX7Axy2gPRGmxQu+7Y5mOgiUhZ
+# PlDGBFTl1SVYQyr7cIqwEGiJgEQx+rD4whqBZEAaCH9klhscBNIPE234+Csx7jaB
+# ItWttpM+EEirwyBy21Nlf+Wo41ArkQ4VBrK2tZkos88wNGtZfDSSkv7Dk8liWuIz
+# nvS0+pIaiBZd7zeFCOeunrLv0eWJXUhjoJEht1/ttiYnvi8aFr0=
 # SIG # End signature block

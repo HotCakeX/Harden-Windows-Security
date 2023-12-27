@@ -404,6 +404,8 @@ Function New-SupplementalWDACConfig {
     It's used by the entire Cmdlet. Indicates that the confirmation prompts will be bypassed.
 .PARAMETER SkipVersionCheck
     Can be used with any parameter to bypass the online version check - only to be used in rare cases
+.PARAMETER Verbose
+    It's used by the entire Cmdlet. Indicates that the verbose messages will be displayed.
 .INPUTS
     System.String[]
     System.String
@@ -423,8 +425,8 @@ Register-ArgumentCompleter -CommandName 'New-SupplementalWDACConfig' -ParameterN
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCAdqdhs/OCYtMx/
-# bz8eZR6L+TkbwaA1PHTQ81r87IT4qKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDzoyVCuO46Uy/m
+# vfO6btDHKQaiMRjbsHXZYEIYv003hqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -471,16 +473,16 @@ Register-ArgumentCompleter -CommandName 'New-SupplementalWDACConfig' -ParameterN
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQghXlHebwq3vAhApGoVUda8KKWWIl0x98UgVi/cAk9P3owDQYJKoZIhvcNAQEB
-# BQAEggIAhFqRyC50B4GTvA/dy4RmyX7Lzgmvp5ua3DmSXClygcFlJjsz6mhjEBoG
-# 0/KmE0/Vh4+80KvH9/RgffkC+HyFYDKg5aPcXI0KVmaSWuiyNRRpkQbGJwnRVOyo
-# O+EvKIv7e3T/rPZAd8QWzxK/Q2KniZPg2JV/jZA93yTdjY+LKBAP7DfxZ5Io9Rlf
-# 5fAhemTjcjcLR20LZVjDAdMPzx9aD/qyppAPcNkazaWrxDOKt1FmlhDqCqjxcJ10
-# E3vda7V5vnf+ruUZAkY4r/kPwLQBlPTMt1SswCl2xwuE2b06uACj+BENOIYCvdYr
-# vf+Aq46MV1Y5zIExs9jJfIB6p77MfvM85Sq1vgjW0OF3ixmix7pQ2/262XNCoG8p
-# HMDddvSNvAdkLdYoZOr87hVdtI4ItUOGINV+NnQpmk5Nq+Rzi261vI0h9N/40Xjs
-# VCVURGsvrkz/xlixbkXa5RdNWyc+bCLmyRz6CeLEHhrdEzp/q5ob2mFUiBl7g9x4
-# GmfF6S5q0EtYh69pPTrghEShYIrMQDHsQHYIzXlszo7IxroOLTd+DYlhT48UVp0Q
-# HyvJ01FAy2IlSYtTu9lHEjcyw24vfAvvDoRdMbIKuePK2+vilwUiM+KVnX6CHDSH
-# r+a/D5/H56f7S77c3FA4eM3H50B91HC3zoGuU+hraYZPIsC09po=
+# IgQgQ/3nVuMD5Me8CXLufkccJuKhkwwRGKjFOXmKf1FgoXcwDQYJKoZIhvcNAQEB
+# BQAEggIAmBCODPay24BCC/2D4ly1N34X7dmHyM6Lvy3vcT2c4hNNqlFLodfb+vYE
+# JCr6Xr4qkna+zGTTWKrk/2pgxqL791+JmlC+YIYM+jMAhsdYFqWAVuUTfCw0xYve
+# rE3BMuAc8T+8sDSu/YgnGpc342scvMiD0Ilj9theG9OietviOGsvgJ5FqVFbCuSq
+# VQpJhDVAm4pSNLAbLCjCd/MYp8J16acDZ1pou6ppmTxp7jjD7fAVvKS+nQwW/Udm
+# rScNvw67PHysNCrCMSbNc+ckAOxAtmM5aA083bIsTVDRJH+gg2jf1Rfje25AiYiw
+# avuEUuOiHFL1sqh6qBpU60bBmHov5o5xaTzBAS4S0dnZcvQtMES6bAvtvkQBzKsl
+# YihNmMP4nTQsQb2CN9dP5PdILJoPeTzV2wxveI/A0p6KROaVoqekTuvo0+SMjkmz
+# Pxo8MDeTmtHD/MdP021ktbl0vNLAYuhtmGAzJOxVfwkHbGPGbS/JW7uD1K9hDRMr
+# s3zlsJLBLeMBV8n7l6hXHedAL/e9q3itvrZzF9gHpLa/ga2NAJDxxC9bbJi+LmtO
+# vBil4faan3HOXwSIZ/YU8cHDIxu7hA2nCwk7mEfTSOilWbmsyZ0rOpQaGEejEbqZ
+# o0ZXCfCy2tDUhF6L1j02AgWJL0p9KG8383lGspTB4i1p7mcU4VY=
 # SIG # End signature block

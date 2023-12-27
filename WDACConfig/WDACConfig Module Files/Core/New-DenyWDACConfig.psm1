@@ -419,6 +419,18 @@ Function New-DenyWDACConfig {
 .PARAMETER SkipVersionCheck
     Can be used with any parameter to bypass the online version check - only to be used in rare cases
     It's used by the entire Cmdlet.
+.PARAMETER PackageName
+    The name of the Appx package to create a Deny base policy for.
+.PARAMETER ScanLocations
+    The path(s) to scan for files to create a Deny base policy for.
+.PARAMETER SpecificFileNameLevel
+    The more specific level that determines how the selected folder will be scanned.
+.PARAMETER NoUserPEs
+    Indicates that the selected folder will not be scanned for user PE files.
+.PARAMETER NoScript
+    Indicates that the selected folder will not be scanned for script files.
+.PARAMETER Verbose
+    Indicates that the cmdlet will display detailed information about the operation.
 .INPUTS
     System.String[]
     System.String
@@ -436,8 +448,8 @@ Register-ArgumentCompleter -CommandName 'New-DenyWDACConfig' -ParameterName 'Pac
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBEGfiM3cxzTGrD
-# vzvSMtd2NhIez9q6HkkAKoNBNoG3RKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCAejOnlCJjV8D+v
+# BexWg68e2DLfsrbc/x0+23q/P7tE66CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -484,16 +496,16 @@ Register-ArgumentCompleter -CommandName 'New-DenyWDACConfig' -ParameterName 'Pac
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgZ3glNRpm19ltSN5Pgj6/FtkI+4T8Jzc301lsXOJuW1owDQYJKoZIhvcNAQEB
-# BQAEggIAERuhwme+sDlBammmGXi4xItpuXT8RR/iO9PkU1UgeoV1aTKhpFGCMJiF
-# IcJsWGupUPAt+aiBBxX34XZAaJ3dzjvWRCFqpuAoimTf8okTBbYwARdbyVT8xOhQ
-# GU0BeNBm/o64KyrE7oaGT7l1vDHnjbQGq1BADR9b+1G6Wy3616C8m5x/nHC1fY0V
-# SZbD2oxXBOacXDsuAYztS3MrWCPjLfUEKy2cddoIOIUUjt9c51KrlQQH9mJkNalj
-# VS/NrA5HHi9wLcZFBr6TabbNrFNIYwE6xIm4upMJuF0T3RYLHZVlERWKuYhkL3Ev
-# YXggep1CZWb/VCrn5Z8F8pdkRWQ5Jr56wbfLOOMrTL26cBh3YEOjjA0qPpesyZrN
-# b+cN3/DQpMgfkylE/O1TCFM+Gve9M1fTfrQfPXcpBrqv82+UuAsSFDzdnSoUwJj1
-# TdA8tqvYGgCPZzoeuRT1J4/5EfqaCBtXiVDyb/HYEa1UQNVrHrvtxXupcXv9YErb
-# Q4bqkwgTRXrqaqWm+0vUf3wGbti0riwXziOKIFw9NV1ra9JrBlw3p+sJG/kTQFeX
-# ca4wJxSwmH+zXaFXPfZpJJyAcgFZJHY3/KQz9Y/KQCWAzweBmMRcW3KzM+qzG7x+
-# e7pbp5xcogagQZQ9JzM0Z5DzJX765KDHBQ5MBeXNXV7uwyOkKaU=
+# IgQgvmP9/F1DLgg57rZHavIaG2rxSD+FrBoXAOJ0FPL84icwDQYJKoZIhvcNAQEB
+# BQAEggIAYSAYFPBSJGkwaGheL+cAMXOr6NVqD5Rwh7ADmuyr+indJ91LE1Dr2ql9
+# oSl0r3Gf/ilr+khJpF4BZmzTfrbRy6d5Sk+MgaBDgkyO1UnH1798ORiC67nwSwYW
+# oTg8P9zQ+EAK2fvxPzzopYjBBX3iDmNGoxgQt2Ihoh8cpYu9VrXxmO0orVFDHvgL
+# KjsYa7xguOSrcIBC5hTlKwfS1qIMkqq86a3B+Mc1AsJ6bsbdR6ybFZwDkq9cNH/6
+# qKqWYK5Ay3WGi+4NC1y9lWvmlGj3qAdUk/ySwvf/eSTmv/syyVKk2vivkEMXmbx5
+# 1zQGfNzTbfdwD+9rgk291kXpDXdKXn+mrb/ByWjgFx+Q6c3SagNVwFPg0aF/FeQ/
+# ivcL1UiYfDI2o+uLanTpybg7jCgWoa6iymjepeY3Z0JoGzk/VCi+avz3DeYOTwD/
+# kjsCq2JVJu6aYTfc8MOtamQy1R88eW5XL4RIfVO0TN/2cOmUlfzzUP1tVKwhAe2k
+# zeTxbW3nzCRIJ2xy7FR3pyiugeDNU0IEkKtySkxji/t3uPOsgTeu1X5gl6BhKhnL
+# HXmtWyl6K6sMb8HcRRQx/h3aVRYtQbXzjuAhEjBdrx5AtHbgsi7KISdtujGTPgKY
+# d0rnGgfnmPqWKcpeu4b+xX0NTvc9T1wLRcWPStcmkSbmUuqhZ1s=
 # SIG # End signature block

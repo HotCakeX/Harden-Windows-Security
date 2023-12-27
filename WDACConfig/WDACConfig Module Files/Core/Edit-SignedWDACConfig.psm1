@@ -1372,6 +1372,36 @@ Function Edit-SignedWDACConfig {
 .PARAMETER Fallbacks
     The fallback level(s) that determine how the selected folder will be scanned.
     The default value for it is Hash.
+.PARAMETER SuppPolicyName
+    The name of the Supplemental policy to be created
+.PARAMETER SuppPolicyPaths
+    The paths of the Supplemental policies to be merged
+.PARAMETER PolicyPath
+    The path of the base policy
+.PARAMETER KeepOldSupplementalPolicies
+    Indicates whether to keep the old Supplemental policies after merging them into a single policy
+.PARAMETER CurrentBasePolicyName
+    The name of the currently deployed base policy
+.PARAMETER NewBasePolicyType
+    The type of the new base policy to be deployed
+.PARAMETER CertPath
+    The path of the certificate used to sign and deploy the Signed WDAC policy
+.PARAMETER NoScript
+    If specified, the cmdlet will not scan script files
+.PARAMETER NoUserPEs
+    If specified, the cmdlet will not scan user-mode binaries
+.PARAMETER SpecificFileNameLevel
+    The more specific level that determines how the selected file will be scanned
+.PARAMETER IncludeDeletedFiles
+    If specified, the cmdlet will scan deleted files as well
+.PARAMETER SignToolPath
+    The path of the SignTool.exe file
+.PARAMETER RequireEVSigners
+    If specified, the cmdlet will add the EV Signers rule option to the base policy
+.PARAMETER Verbose
+    If specified, the cmdlet will show verbose output
+.PARAMETER Debug
+    If specified, the cmdlet will keep some files used during operations instead of deleting them
 .INPUTS
     System.Int64
     System.String
@@ -1393,8 +1423,8 @@ Register-ArgumentCompleter -CommandName 'Edit-SignedWDACConfig' -ParameterName '
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCB+fUvacjPaa17e
-# d8svvLOfAZHhImkYCm3EqrVK9aoDL6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCC6aTtwlerO2QkJ
+# ySY+m/djXwHd6Uf4a27yCve+eCaadKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -1441,16 +1471,16 @@ Register-ArgumentCompleter -CommandName 'Edit-SignedWDACConfig' -ParameterName '
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQg9ByjBoYkv7aLTcDeta4R0DagPCYlPc8jQMHPkDtj+IEwDQYJKoZIhvcNAQEB
-# BQAEggIAGst+ZhtMN1umYTqIB4MkGhZPGI/hSJ9d+Adx4MTkQPd1GLf7YpZxP0CO
-# 5O5gH7wSiTYo3y6OSdCfs/QU1zUM6hTt5bbeW3m+qdG+OKgUmnCcLL1/JF5Opo1K
-# UToBW2ApJiP0HvRxCPUMpKfciPk8CSLtoFkbq5xa2779axWa/ffwTzVTHdLIp4Xw
-# jx9AvizZm1oS021l91YQdtj91NSoYeGcVWOYmsqLLMN+D1bV+HG9XLciN7dCN2In
-# wirpIZqhjJp17cPJiSFbxH+J/48RwNs6P8pWJWHxaueFBTFzFFK+fapgIHG5Pl24
-# tVSQYxmaAu0QBJ3hgnenXGHnMZ0mYd0htcxdheKzAOP7Tg3sNxCH1AqYCM3ij7IK
-# +GYLakdBImKnp7qAGZAprgO/JARSOCy2zeEEPF5ja7UnoWokugNPp5Bk6/2EZ2TM
-# 32AQyyspJtZYUoTctSEfhfUF+zdKRffKK96UgXPjuZKnVOLznLXKVnT9h0xd7hTe
-# EVKI2LOoSXNKRlgAr81fs9bome4ktIfIGUU7C0Xc4PyARXB4wqpj914LKbnvHP1A
-# elxaDJxTQAtdWj5d6NV2kYZC8/gFEXGuwriQn5ur0I4ol+LvKFw8xBKnwCIzl5xk
-# Y2BWXiJAR/iyNR6RpJh4mX8QMCfA8KeqMBXqbkl2KhIMX7UUPM8=
+# IgQgTolLngKnObH0U1rk7ArojKCnAvRcjLi6m0mz/Rg7oEIwDQYJKoZIhvcNAQEB
+# BQAEggIAnKcz89OYu+Cciar9QcuWUgfQLDB8odcJd/0YKRRn50EVYqNi1f3IxZbP
+# PS4eLnMu1nsro/nR9Svft1UYd7IOL02AuLbvPsIJNgN8G9n3FigoONhHLj9dby3y
+# yWQ2LjVShhcm4c0cS2iQpWifmQWAEaeoJ9kaqzWGZZbWBYhxKX9Y7K9YacyLfu9F
+# lSKu0+dwe2jrWc4GZzpMhJ94vTX7lXq1oD5IzJm0ZTRHzsaBj1Qb7wOZmuZYCSjD
+# PsBdLZbzkFoEexcpP3JH/eGR3+ue/T6sGR9SuwGSXgVxNeIY67LezgeR0Wq4skSy
+# TV1Mal69H1zy7mbC9Ml143l/tXlQAyiEObedimxR2nLCyBcO0yrjNlU4P0l9jww7
+# 8qyZ36b/0yvm7m99YDpA90nNRWwOO5o1SzhLWygjXqy0YK8ukCYEz3nAFEDJTKEo
+# UvrS7pfDCJcICL2EEY4e9Sbv3RwgBS6PXg9VFGP6uDs8Ea1UAhiJXsGVkZztGLEJ
+# RyDH8+8ro25s2dNxQ8LqMANQrj1KKjbM3mN3sWoZP5jb/8a/uhS9QiLb8vVqeVDo
+# fPvbxYRQTdsPHMA/IhOvSUeRtQDwpofBWE9JsYDxMCPFDXXKZmwRl11I87Lyue0E
+# PV82eO95mWQaoDbTneq5NO+5Ad3kHPw64KlgdQ/joj2q1/7rEjQ=
 # SIG # End signature block

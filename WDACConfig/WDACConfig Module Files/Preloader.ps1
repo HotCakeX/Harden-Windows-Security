@@ -1,5 +1,5 @@
 if (!$IsWindows) {
-    Throw 'The WDACConfig module only runs on Windows operation systems.'
+    Throw [System.PlatformNotSupportedException] 'The WDACConfig module only runs on Windows operation systems.'
 }
 
 # Specifies that the WDACConfig module requires Administrator privileges
@@ -17,7 +17,7 @@ try {
     if ((Test-Path -Path 'Variable:\FullOSBuild') -eq $false) { New-Variable -Name 'FullOSBuild' -Value "$OSBuild.$UBR" -Option 'Constant' -Scope 'Script' -Description 'Create full OS build number as seen in Windows Settings' -Force }
 }
 catch {
-    Throw 'Could not set the required global variables.'
+    Throw [System.InvalidOperationException] 'Could not set the required global variables.'
 }
 
 # A constant variable that is automatically imported in the caller's environment and used to detect the main module's root directory
@@ -30,7 +30,7 @@ catch {
         New-Variable -Name 'ModuleRootPath' -Value ($PSScriptRoot) -Option 'Constant' -Scope 'Global' -Description 'Storing the value of $PSScriptRoot in a global constant variable to allow the internal functions to use it when navigating the module structure' -Force
     }
     catch {
-        Throw 'Could not set the ModuleRootPath required global variable.'
+        Throw [System.InvalidOperationException] 'Could not set the ModuleRootPath required global variable.'
     }
 }
 
@@ -41,24 +41,24 @@ if (-NOT ([System.Decimal]$FullOSBuild -ge [System.Decimal]$Requiredbuild)) {
 
 # Loop through all the relevant files in the module
 foreach ($File in (Get-ChildItem -Recurse -File -Path $ModuleRootPath -Include '*.ps1', '*.psm1', '*.psd1*')) {
-        
+
     # Get the signature of the current file
-    [System.Management.Automation.Signature]$Signature = Get-AuthenticodeSignature -FilePath $File 
- 
+    [System.Management.Automation.Signature]$Signature = Get-AuthenticodeSignature -FilePath $File
+
     # Ensure that they are code signed properly and have not been tampered with.
-    if (($Signature.SignerCertificate.Thumbprint -eq '1c1c9082551b43eec17c0301bfb2f27031a4d8c8') -and ($Signature.Status -ne 'HashMismatch') -and ($Signature.Status -ne 'NotSigned') ) {
+    if (($Signature.SignerCertificate.Thumbprint -eq '1c1c9082551b43eec17c0301bfb2f27031a4d8c8') -and ($Signature.Status -in 'Valid', 'UnknownError')) {
         # If the file is signed properly, then continue to the next file
     }
     else {
-        Throw 'The module has been tampered with.'
+        Throw [System.Security.SecurityException] "The module has been tampered with, signature status of the file $($File.FullName) is $($Signature.Status)"
     }
 }
 
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCAyMSbHWM0kjKLK
-# +lkiU+getau51vOSENnUa0saoYqF+KCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDtCANzLUjyOmFZ
+# tAzMkCWcCb4ejs6lkISHhuup6aDDbqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -105,16 +105,16 @@ foreach ($File in (Get-ChildItem -Recurse -File -Path $ModuleRootPath -Include '
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgSh6l4K88GONg+93IpDhOPgDwxtjb8FejmhnJtVBHWdIwDQYJKoZIhvcNAQEB
-# BQAEggIAY/L4Gi0D3853ADxXco+PnRYqE/AFiw/7MHalqQ0l/bVpogJyn9k5d9ZY
-# 7tlxEOLgRI97B04Opu6HKCRrvl3emyt/MARYp1HJyqCgEprbd1Y3fMOh2tWU2rG5
-# p1MMxALGQvA1qtZ2fTJMdClc1bfsF7XkoStrlIAvfWgCDzJj4qvDNuUpOFThY7br
-# rE/xgrrgCiSCiZn7hqTTzZK1dvdbQ9ns/GJ8aT/vr1PU6p5cgWOuHsUAwq/2bpeV
-# W5CEOdljKvfnkbFbsGVqDTELMgUD826el8t6HxNrca75cPBp7QY0rxZau0+0dt80
-# u5EM+IZli/KJIfvGek2DniyC6sZMlnSjWxM9Fqzv1VO6SIh3qtYs+fMM5RPDR8Sb
-# oi1tbXQruFn3mbQo5lnEI8FV70wwU8Iea3Db+NmglVdzQLRIv+zf8xD/ZSfDX4WA
-# vx1K/1xRJu15PA/tYm/VlhRKJR23XQj/Pyt9WQw2FkGkXhA9kBxQn5ixoW2U5RQ9
-# JNpr7MYJk1GbdOyrdifFxLtr52eR6j9US7wWHMqw4B8qDqoAuhxDD2Tltr0MW83m
-# 0cAC30FtOLm9Fm/iiNUc2LBeNISJ2q3StZEnNxrG3xUgy26deux8Gi6rUgukK/yL
-# alZH7iynWBJW+E4hBjIxPWL77r5w9PWqqmNPimSBiKCPCIE1TN8=
+# IgQgmvReviG7NGCzlb+rQCLwBmXbYSpOQhXG2jq1Czj1cdowDQYJKoZIhvcNAQEB
+# BQAEggIAMKr2dybs1t2ckr9Y6ytGv+j0yMS7URMrWnnOvQcngETkegSOFbK0fB6i
+# ToLVk3fSfAzIel9m5t5oS6xQtlocNMvANuzYQ5MR90/TLkjPOoRB7G9KOGl2z6/V
+# c++jS0/YiU0MVaOwEkQ7vTbku26o7eMcn6fKS71dGOmrZXbSiRfWnGUK2Lz/DR7p
+# OvZ5568dp5WXUUUlQ3sSKPeEfwHAaeNmYwrWb+IDqMeKJmYMx345BdzINS2GFPy4
+# w+8N2/i8nuXmmRVLyYeMTezqi4QwxJsoyXcDsbz5wGmZkVzVS4cABinHaPWf0ak6
+# tDGPk14tmnPdnyjgYp1IVBYBLYsfL7bCuVmB3WqrqajTmdFo2WoWxrO5+72Gfo87
+# qcTNfXU6VthXR+brqA7EfRnMobG8ceT1GBU85S0uD6xqL+Qp3LRzucrnIEPdpJhw
+# 7YsCJlNdZHWPc5L0ZGDY3nyhvzafqdcAYT70Lxp6Jy7Xwi7e/rT35mD20Y2fwt4m
+# zofJcnx+tPO4aYCQWKOvth65W99SEnTOkC+HHIuoUbHeZpBT0i12sJXcqMv+Ettk
+# +p96HiRpJCivD2oLJK2qfegM1kXEG7SG1DF2/7HVidLMxhiw6vV+5zt5u9PbcvEX
+# UfHTJZOJUifY+FNxb15mBVt2TwyURWWKckE86OS6P4omrn7ex4s=
 # SIG # End signature block

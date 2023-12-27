@@ -94,7 +94,7 @@ Function Set-CommonWDACConfig {
         }
 
         if (!$CertCN -And !$CertPath -And !$SignToolPath -And !$UnsignedPolicyPath -And !$SignedPolicyPath -And !$StrictKernelPolicyGUID -And !$StrictKernelNoFlightRootsPolicyGUID -And !$LastUpdateCheck) {
-            Throw 'No parameter was selected.'
+            Throw [System.ArgumentException] 'No parameter was selected.'
         }
 
         # Trying to read the current user configurations
@@ -251,8 +251,8 @@ Register-ArgumentCompleter -CommandName 'Set-CommonWDACConfig' -ParameterName 'U
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCC3UknPFlCYNLWr
-# PxC3taZHS1UAuehXoZlUnBM4tr89uaCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCAx87Fc0GvQjAhp
+# 4vIEHHFjZc2yvUydaeUCWjfS+PNPdqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -299,16 +299,16 @@ Register-ArgumentCompleter -CommandName 'Set-CommonWDACConfig' -ParameterName 'U
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgjMYRgss9eic0EWvK41WE/Vc43WbQ0RINeNW1iH9wLuowDQYJKoZIhvcNAQEB
-# BQAEggIASmT+MMOmnPpS5QOKTrBHWRZ945bqbufIaAb98x3GtfCMxHJL/J+MUBub
-# QnYJ/Od4IT8xWNQ7JdpSc5uK/UI4NXHPls+8TJbdVfR4v8gF5Jijn7cgpVJSWYQv
-# CChKA0sW7zUeN5RT5EH0vn2Jd3MYUT0dy5z1oh6bW4FlzVVcv8ZItyT5ZnuGbmdk
-# Uv+n05AiuPkm2VF2/1xRUks8Ar95Fgnmf+SKbdLtsJzBill16yurUeaZZ3YuCDiC
-# Xg5WdradwH1Bep2t4B0wvsJklPLQfpuzPp2AAawlRbmnUqnsCp8OyhTHfnocdswr
-# Om4BfaLq86WD70Ou7cyQ39KROEuhzoDskbd4WYX2N/P+IB6zT2DpE24V9Ai9lGtD
-# kR0+/NyxddnHCrNDqxqqRI+7YQSVY7ZsShDCXmjarlp+439JzS4FKbRphfHCjZzq
-# nzMwdHI02o16lphRwBmPcsXtiiAIuXH6H0AI5wAzPR1rBhW1UPKkG+ME1ueOlrvk
-# m6LCioRn0usfySMqw/GfpjGV9N0ZcQGfpo1AnMheiWgEFCjI9M6OLn/jenCx/fhY
-# /PlhrfurUuSr4mEZISM4gcXiY6tsyur3m5GYaNkRrFga17nqWVYvt+K2ztWnglqh
-# ZQetPVjmyH7/zlWeTaNKI3i/Gl7cKE/BLqd+1p+/4ilYqLzZNCk=
+# IgQg53V/SskuBByoZ+KxuS8PZWCql7Y/NBKAS/2spTKUP8gwDQYJKoZIhvcNAQEB
+# BQAEggIASFz60UstIXQLsdBKZk3I/GtIzf+xEZy1rY/Hz1RAT900+mxLfj5bNfu9
+# b0NmCPtZDFonSbxv7q5qEHneTB2JgMedfjMeCSzn/4kWmakjcbmh+HKxYDwf+CNX
+# bBPLdwAfWhs16xe19VmOKo7SNQ7opTA0K9XLp0hHe6wRT9cOf6zghDrjfLuVVF64
+# 1PuH7LxIwzRDiPNAnLeNQr4fVWzxIPlYXQP7wxY3xOCA6wlYiGd5fdb8Xf0K14SL
+# pVxzSuf0HVw+tU57cLZ7Vk9B6l/Xt4Rm5WRKsYWSMPiLfBovgUoyY2m/UfOk7WB3
+# 6XsE1+WRozhby2+kfwDbv2XDtLDXK0t/LKU64PJXRgmLxu0sACxMtETNwc9I+7IG
+# 7CQMCGY8Gyh34+g6wV3MjE5uM7uO1p5NQhwcjtJGP55qr6CyVU6HkRdsKVIxSR0F
+# TsIjRZZ/5oc7e2l3+LGIUgu3wKBUcJNanXuuEhLs4qaALbKEI8MGABd2x6vWWAlX
+# 97r53yNdSPTmZBfIojaJtVPUBj3+eYA2YIw46a/kL3FWn0MjdjxJLV95nzzy5L2c
+# LhcFEIdXf+0/iLdORcyYOG2S3KsdKC3noVR9daJ3UwUEXK+ImduAX7l6btPq2tfl
+# qxpyhL1FVBc2UiBFXcYEh1nEuzKn1JgGQMiAZg57oYj+4q645/0=
 # SIG # End signature block

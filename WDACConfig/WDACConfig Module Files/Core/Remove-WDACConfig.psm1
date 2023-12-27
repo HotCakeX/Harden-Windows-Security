@@ -25,10 +25,32 @@ Function Remove-WDACConfig {
         [System.String[]]$PolicyPaths,
 
         [ValidateScript({
-                [System.String[]]$Certificates = foreach ($Cert in (Get-ChildItem -Path 'Cert:\CurrentUser\my')) {
-                (($Cert.Subject -split ',' | Select-Object -First 1) -replace 'CN=', '').Trim()
+                # Create an empty array to store the output objects
+                [System.String[]]$Output = @()
+
+                # Loop through each certificate that uses RSA algorithm (Because ECDSA is not supported for signing WDAC policies) in the current user's personal store and extract the relevant properties
+                foreach ($Cert in (Get-ChildItem -Path 'Cert:\CurrentUser\My' | Where-Object -FilterScript { $_.PublicKey.Oid.FriendlyName -eq 'RSA' })) {
+
+                    # Takes care of certificate subjects that include comma in their CN
+                    # Determine if the subject contains a comma
+                    if ($Cert.Subject -match 'CN=(?<RegexTest>.*?),.*') {
+                        # If the CN value contains double quotes, use split to get the value between the quotes
+                        if ($matches['RegexTest'] -like '*"*') {
+                            $SubjectCN = ($Element.Certificate.Subject -split 'CN="(.+?)"')[1]
+                        }
+                        # Otherwise, use the named group RegexTest to get the CN value
+                        else {
+                            $SubjectCN = $matches['RegexTest']
+                        }
+                    }
+                    # If the subject does not contain a comma, use a lookbehind to get the CN value
+                    elseif ($Cert.Subject -match '(?<=CN=).*') {
+                        $SubjectCN = $matches[0]
+                    }
+                    $Output += $SubjectCN
                 }
-                $Certificates -contains $_
+
+                $Output -contains $_
             }, ErrorMessage = "A certificate with the provided common name doesn't exist in the personal store of the user certificates." )]
         [parameter(Mandatory = $false, ParameterSetName = 'Signed Base', ValueFromPipelineByPropertyName = $true)]
         [System.String]$CertCN,
@@ -39,7 +61,7 @@ Function Remove-WDACConfig {
 
                 # Get a list of policies using the CiTool, excluding system policies and policies that aren't on disk.
                 # by adding "| Where-Object -FilterScript { $_.FriendlyName }" we make sure the auto completion works when at least one of the policies doesn't have a friendly name
-                $Policies = (&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { $_.IsOnDisk -eq 'True' } | Where-Object -FilterScript { $_.IsSystemPolicy -ne 'True' } | Where-Object -FilterScript { $_.FriendlyName }
+                $Policies = (&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { ($_.IsOnDisk -eq 'True') -and ($_.IsSystemPolicy -ne 'True') -and $_.FriendlyName }
 
                 # Create a hashtable mapping policy names to policy IDs. This will be used later to check if a policy ID already exists.
                 $NameIDMap = @{}
@@ -77,7 +99,7 @@ Function Remove-WDACConfig {
                 param($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameters)
 
                 # Get a list of policies using the CiTool, excluding system policies and policies that aren't on disk.
-                $Policies = (&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { $_.IsOnDisk -eq 'True' } | Where-Object -FilterScript { $_.IsSystemPolicy -ne 'True' }
+                $Policies = (&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { ($_.IsOnDisk -eq 'True') -and ($_.IsSystemPolicy -ne 'True') }
                 # Create a hashtable mapping policy IDs to policy names. This will be used later to check if a policy name already exists.
                 $IDNameMap = @{}
                 foreach ($Policy in $Policies) {
@@ -106,6 +128,9 @@ Function Remove-WDACConfig {
         [parameter(Mandatory = $false, ParameterSetName = 'Signed Base', ValueFromPipelineByPropertyName = $true)]
         [System.String]$SignToolPath,
 
+        [Parameter(Mandatory = $false)]
+        [System.Management.Automation.SwitchParameter]$Force,
+
         [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SkipVersionCheck
     )
 
@@ -124,12 +149,9 @@ Function Remove-WDACConfig {
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Write-ColorfulText.psm1" -Force
 
         # if -SkipVersionCheck wasn't passed, run the updater
-        # Redirecting the Update-Self function's information Stream to $null because Write-Host
-        # Used by Write-ColorfulText outputs to both information stream and host console
-        if (-NOT $SkipVersionCheck) { Update-self 6> $null }
+        if (-NOT $SkipVersionCheck) { Update-self -InvocationStatement $MyInvocation.Statement }
 
         #Region User-Configurations-Processing-Validation
-
         Write-Verbose -Message 'Validating and processing user configurations'
 
         if ($PSCmdlet.ParameterSetName -eq 'Signed Base') {
@@ -177,7 +199,7 @@ Function Remove-WDACConfig {
         # ValidateSet for Policy names
         Class PolicyNamezx : System.Management.Automation.IValidateSetValuesGenerator {
             [System.String[]] GetValidValues() {
-                $PolicyNamezx = ((&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { $_.IsOnDisk -eq 'True' } | Where-Object -FilterScript { $_.IsSystemPolicy -ne 'True' }).Friendlyname | Select-Object -Unique
+                $PolicyNamezx = ((&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { ($_.IsOnDisk -eq 'True') -and ($_.IsSystemPolicy -ne 'True') }).Friendlyname | Select-Object -Unique
                 return [System.String[]]$PolicyNamezx
             }
         }
@@ -185,12 +207,11 @@ Function Remove-WDACConfig {
         # ValidateSet for Policy IDs
         Class PolicyIDzx : System.Management.Automation.IValidateSetValuesGenerator {
             [System.String[]] GetValidValues() {
-                $PolicyIDzx = ((&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { $_.IsOnDisk -eq 'True' } | Where-Object -FilterScript { $_.IsSystemPolicy -ne 'True' }).policyID
+                $PolicyIDzx = ((&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { ($_.IsOnDisk -eq 'True') -and ($_.IsSystemPolicy -ne 'True') }).policyID
 
                 return [System.String[]]$PolicyIDzx
             }
         }
-
 
         # argument tab auto-completion and ValidateSet for Policy names
         # Defines the PolicyNamez class that implements the IValidateSetValuesGenerator interface. This class is responsible for generating a list of valid values for the policy names.
@@ -200,7 +221,7 @@ Function Remove-WDACConfig {
 
             # Defines a method to get valid policy names from the policies on disk that aren't system policies.
             [System.String[]] GetValidValues() {
-                $Policies = (&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { $_.IsOnDisk -eq 'True' } | Where-Object -FilterScript { $_.IsSystemPolicy -ne 'True' }
+                $Policies = (&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { ($_.IsOnDisk -eq 'True') -and ($_.IsSystemPolicy -ne 'True') }
                 self::$IDNameMap = @{}
                 foreach ($Policy in $Policies) {
                     self::$IDNameMap[$Policy.policyID] = $Policy.Friendlyname
@@ -222,7 +243,7 @@ Function Remove-WDACConfig {
 
             # Defines a method to get valid policy IDs from the policies on disk that aren't system policies.
             [System.String[]] GetValidValues() {
-                $Policies = (&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { $_.IsOnDisk -eq 'True' } | Where-Object -FilterScript { $_.IsSystemPolicy -ne 'True' }
+                $Policies = (&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { ($_.IsOnDisk -eq 'True') -and ($_.IsSystemPolicy -ne 'True') }
                 self::$NameIDMap = @{}
                 foreach ($Policy in $Policies) {
                     self::$NameIDMap[$Policy.Friendlyname] = $Policy.policyID
@@ -236,6 +257,11 @@ Function Remove-WDACConfig {
                 return self::$NameIDMap[$Name]
             }
         }
+
+        # Detecting if Confirm switch is used to bypass the confirmation prompts
+        if ($Force -and -Not $Confirm) {
+            $ConfirmPreference = 'None'
+        }
     }
 
     process {
@@ -244,6 +270,13 @@ Function Remove-WDACConfig {
 
             Write-Verbose -Message 'Looping over each selected policy XML file'
             foreach ($PolicyPath in $PolicyPaths) {
+
+                # The total number of the main steps for the progress bar to render
+                [System.Int16]$TotalSteps = 3
+                [System.Int16]$CurrentStep = 0
+
+                $CurrentStep++
+                Write-Progress -Id 18 -Activity 'Parsing the XML Policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                 # Convert the XML file into an XML object
                 Write-Verbose -Message 'Converting the XML file to an XML object'
@@ -261,13 +294,16 @@ Function Remove-WDACConfig {
                     Throw 'The selected policy file is not deployed on the system.'
                 }
 
+                $CurrentStep++
+                Write-Progress -Id 18 -Activity 'Processing the policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
                 # Sanitize the policy file by removing SupplementalPolicySigners from it
                 Write-Verbose -Message 'Sanitizing the XML policy file by removing SupplementalPolicySigners from it'
 
                 # Extracting the SupplementalPolicySigner ID from the selected XML policy file, if any
                 $SuppSingerIDs = $Xml.SiPolicy.SupplementalPolicySigners.SupplementalPolicySigner.SignerId
                 # Extracting the policy name from the selected XML policy file
-                $PolicyName = ($Xml.SiPolicy.Settings.Setting | Where-Object -FilterScript { $_.provider -eq 'PolicyInfo' -and $_.valuename -eq 'Name' -and $_.key -eq 'Information' }).value.string
+                [System.String]$PolicyName = ($Xml.SiPolicy.Settings.Setting | Where-Object -FilterScript { $_.provider -eq 'PolicyInfo' -and $_.valuename -eq 'Name' -and $_.key -eq 'Information' }).value.string
 
                 if ($SuppSingerIDs) {
                     Write-Verbose -Message "`n$($SuppSingerIDs.count) SupplementalPolicySigners have been found in $PolicyName policy, removing them now..."
@@ -283,7 +319,7 @@ Function Remove-WDACConfig {
                     # Removing the Supplemental policy signers block from the XML file
                     $PolContent -match '<SupplementalPolicySigners>[\S\s]*</SupplementalPolicySigners>' | Out-Null
                     $PolContent = $PolContent -replace $Matches[0], ''
-                    Set-Content -Value $PolContent -Path $PolicyPath
+                    Set-Content -Value $PolContent -Path $PolicyPath -Force
 
                     # Remove empty lines from the entire policy file
                     (Get-Content -Path $PolicyPath) | Where-Object -FilterScript { $_.trim() -ne '' } | Set-Content -Path $PolicyPath -Force
@@ -297,6 +333,9 @@ Function Remove-WDACConfig {
                 Set-RuleOption -FilePath $PolicyPath -Option 6
                 # Converting the Policy XML file to CIP binary file
                 ConvertFrom-CIPolicy -XmlFilePath $PolicyPath -BinaryFilePath "$PolicyID.cip" | Out-Null
+
+                $CurrentStep++
+                Write-Progress -Id 18 -Activity 'Signing the policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                 # Configure the parameter splat
                 $ProcessParams = @{
@@ -318,12 +357,21 @@ Function Remove-WDACConfig {
                 Rename-Item -Path "$PolicyID.cip.p7" -NewName "$PolicyID.cip" -Force
 
                 # Deploying the newly signed CIP file
-                Write-Verbose -Message 'Deploying the newly signed CIP file'
-                &'C:\Windows\System32\CiTool.exe' --update-policy ".\$PolicyID.cip" -json | Out-Null
 
-                Write-ColorfulText -Color Lavender -InputText "Policy with the following details has been Re-signed and Re-deployed in Unsigned mode.`nPlease restart your system."
-                Write-ColorfulText -Color MintGreen -InputText "PolicyName = $PolicyName"
-                Write-ColorfulText -Color MintGreen -InputText "PolicyGUID = $PolicyID"
+                # Prompt for confirmation before proceeding
+                if ($PSCmdlet.ShouldProcess('This PC', 'Deploying the signed policy')) {
+
+                    Write-Verbose -Message 'Deploying the newly signed CIP file'
+                    &'C:\Windows\System32\CiTool.exe' --update-policy ".\$PolicyID.cip" -json | Out-Null
+
+                    Write-ColorfulText -Color Lavender -InputText "Policy with the following details has been Re-signed and Re-deployed in Unsigned mode.`nPlease restart your system."
+                    Write-ColorfulText -Color MintGreen -InputText "PolicyName = $PolicyName"
+                    Write-ColorfulText -Color MintGreen -InputText "PolicyGUID = $PolicyID"
+
+                    Write-Verbose -Message 'Removing the newly signed CIP file from the current directory after deployment'
+                    Remove-Item -Path ".\$PolicyID.cip" -Force
+                }
+                Write-Progress -Id 18 -Activity 'Complete.' -Completed
             }
         }
 
@@ -333,14 +381,14 @@ Function Remove-WDACConfig {
             # If IDs were supplied by user
             foreach ($ID in $PolicyIDs ) {
                 &'C:\Windows\System32\CiTool.exe' --remove-policy "{$ID}" -json | Out-Null
-                Write-Host -Object "Policy with the ID $ID has been successfully removed." -ForegroundColor Green
+                Write-ColorfulText -Color Lavender -InputText "Policy with the ID $ID has been successfully removed."
             }
 
             # If names were supplied by user
             # Empty array to store Policy IDs based on the input name, this will take care of the situations where multiple policies with the same name are deployed
             [System.Object[]]$NameID = @()
             foreach ($PolicyName in $PolicyNames) {
-                $NameID += ((&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { $_.IsOnDisk -eq 'True' } | Where-Object -FilterScript { $_.FriendlyName -eq $PolicyName }).PolicyID
+                $NameID += ((&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { ($_.IsOnDisk -eq 'True') -and ($_.FriendlyName -eq $PolicyName) }).PolicyID
             }
 
             Write-Verbose -Message 'The Following policy IDs have been gathered from the supplied policy names and are going to be removed from the system'
@@ -348,7 +396,7 @@ Function Remove-WDACConfig {
 
             $NameID | Select-Object -Unique | ForEach-Object -Process {
                 &'C:\Windows\System32\CiTool.exe' --remove-policy "{$_}" -json | Out-Null
-                Write-Host -Object "Policy with the ID $_ has been successfully removed." -ForegroundColor Green
+                Write-ColorfulText -Color Lavender -InputText "Policy with the ID $_ has been successfully removed."
             }
         }
     }
@@ -382,8 +430,12 @@ Function Remove-WDACConfig {
     Path to the SignTool.exe
 .PARAMETER UnsignedOrSupplemental
     Remove Unsigned deployed WDAC policies as well as Signed deployed Supplemental WDAC policies
+.PARAMETER Force
+    Bypasses the confirmation prompt
 .PARAMETER SkipVersionCheck
     Can be used with any parameter to bypass the online version check - only to be used in rare cases
+.PARAMETER Verbose
+    Shows verbose output
 .INPUTS
     System.String
     System.String[]
@@ -398,3 +450,68 @@ Function Remove-WDACConfig {
 Register-ArgumentCompleter -CommandName 'Remove-WDACConfig' -ParameterName 'CertCN' -ScriptBlock $ArgumentCompleterCertificateCN
 Register-ArgumentCompleter -CommandName 'Remove-WDACConfig' -ParameterName 'PolicyPaths' -ScriptBlock $ArgumentCompleterPolicyPathsBasePoliciesOnly
 Register-ArgumentCompleter -CommandName 'Remove-WDACConfig' -ParameterName 'SignToolPath' -ScriptBlock $ArgumentCompleterExeFilePathsPicker
+
+# SIG # Begin signature block
+# MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
+# BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCQKRoYMoLxr4u9
+# kV2Emc56u9FkcUpDDm0W+mgoBx3YiaCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
+# b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
+# C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
+# MQswCQYDVQQGEwJVSzEeMBwGA1UEAxMVSG90Q2FrZVggQ29kZSBTaWduaW5nMSMw
+# IQYJKoZIhvcNAQkBFhRob3RjYWtleEBvdXRsb29rLmNvbTElMCMGCSqGSIb3DQEJ
+# ARYWU3B5bmV0Z2lybEBvdXRsb29rLmNvbTCCAiIwDQYJKoZIhvcNAQEBBQADggIP
+# ADCCAgoCggIBAKb1BJzTrpu1ERiwr7ivp0UuJ1GmNmmZ65eckLpGSF+2r22+7Tgm
+# pEifj9NhPw0X60F9HhdSM+2XeuikmaNMvq8XRDUFoenv9P1ZU1wli5WTKHJ5ayDW
+# k2NP22G9IPRnIpizkHkQnCwctx0AFJx1qvvd+EFlG6ihM0fKGG+DwMaFqsKCGh+M
+# rb1bKKtY7UEnEVAsVi7KYGkkH+ukhyFUAdUbh/3ZjO0xWPYpkf/1ldvGes6pjK6P
+# US2PHbe6ukiupqYYG3I5Ad0e20uQfZbz9vMSTiwslLhmsST0XAesEvi+SJYz2xAQ
+# x2O4n/PxMRxZ3m5Q0WQxLTGFGjB2Bl+B+QPBzbpwb9JC77zgA8J2ncP2biEguSRJ
+# e56Ezx6YpSoRv4d1jS3tpRL+ZFm8yv6We+hodE++0tLsfpUq42Guy3MrGQ2kTIRo
+# 7TGLOLpayR8tYmnF0XEHaBiVl7u/Szr7kmOe/CfRG8IZl6UX+/66OqZeyJ12Q3m2
+# fe7ZWnpWT5sVp2sJmiuGb3atFXBWKcwNumNuy4JecjQE+7NF8rfIv94NxbBV/WSM
+# pKf6Yv9OgzkjY1nRdIS1FBHa88RR55+7Ikh4FIGPBTAibiCEJMc79+b8cdsQGOo4
+# ymgbKjGeoRNjtegZ7XE/3TUywBBFMf8NfcjF8REs/HIl7u2RHwRaUTJdAgMBAAGj
+# ggJzMIICbzA8BgkrBgEEAYI3FQcELzAtBiUrBgEEAYI3FQiG7sUghM++I4HxhQSF
+# hqV1htyhDXuG5sF2wOlDAgFkAgEIMBMGA1UdJQQMMAoGCCsGAQUFBwMDMA4GA1Ud
+# DwEB/wQEAwIHgDAMBgNVHRMBAf8EAjAAMBsGCSsGAQQBgjcVCgQOMAwwCgYIKwYB
+# BQUHAwMwHQYDVR0OBBYEFOlnnQDHNUpYoPqECFP6JAqGDFM6MB8GA1UdIwQYMBaA
+# FICT0Mhz5MfqMIi7Xax90DRKYJLSMIHUBgNVHR8EgcwwgckwgcaggcOggcCGgb1s
+# ZGFwOi8vL0NOPUhPVENBS0VYLUNBLENOPUhvdENha2VYLENOPUNEUCxDTj1QdWJs
+# aWMlMjBLZXklMjBTZXJ2aWNlcyxDTj1TZXJ2aWNlcyxDTj1Db25maWd1cmF0aW9u
+# LERDPU5vbkV4aXN0ZW50RG9tYWluLERDPWNvbT9jZXJ0aWZpY2F0ZVJldm9jYXRp
+# b25MaXN0P2Jhc2U/b2JqZWN0Q2xhc3M9Y1JMRGlzdHJpYnV0aW9uUG9pbnQwgccG
+# CCsGAQUFBwEBBIG6MIG3MIG0BggrBgEFBQcwAoaBp2xkYXA6Ly8vQ049SE9UQ0FL
+# RVgtQ0EsQ049QUlBLENOPVB1YmxpYyUyMEtleSUyMFNlcnZpY2VzLENOPVNlcnZp
+# Y2VzLENOPUNvbmZpZ3VyYXRpb24sREM9Tm9uRXhpc3RlbnREb21haW4sREM9Y29t
+# P2NBQ2VydGlmaWNhdGU/YmFzZT9vYmplY3RDbGFzcz1jZXJ0aWZpY2F0aW9uQXV0
+# aG9yaXR5MA0GCSqGSIb3DQEBDQUAA4ICAQA7JI76Ixy113wNjiJmJmPKfnn7brVI
+# IyA3ZudXCheqWTYPyYnwzhCSzKJLejGNAsMlXwoYgXQBBmMiSI4Zv4UhTNc4Umqx
+# pZSpqV+3FRFQHOG/X6NMHuFa2z7T2pdj+QJuH5TgPayKAJc+Kbg4C7edL6YoePRu
+# HoEhoRffiabEP/yDtZWMa6WFqBsfgiLMlo7DfuhRJ0eRqvJ6+czOVU2bxvESMQVo
+# bvFTNDlEcUzBM7QxbnsDyGpoJZTx6M3cUkEazuliPAw3IW1vJn8SR1jFBukKcjWn
+# aau+/BE9w77GFz1RbIfH3hJ/CUA0wCavxWcbAHz1YoPTAz6EKjIc5PcHpDO+n8Fh
+# t3ULwVjWPMoZzU589IXi+2Ol0IUWAdoQJr/Llhub3SNKZ3LlMUPNt+tXAs/vcUl0
+# 7+Dp5FpUARE2gMYA/XxfU9T6Q3pX3/NRP/ojO9m0JrKv/KMc9sCGmV9sDygCOosU
+# 5yGS4Ze/DJw6QR7xT9lMiWsfgL96Qcw4lfu1+5iLr0dnDFsGowGTKPGI0EvzK7H+
+# DuFRg+Fyhn40dOUl8fVDqYHuZJRoWJxCsyobVkrX4rA6xUTswl7xYPYWz88WZDoY
+# gI8AwuRkzJyUEA07IYtsbFCYrcUzIHME4uf8jsJhCmb0va1G2WrWuyasv3K/G8Nn
+# f60MsDbDH1mLtzGCAxgwggMUAgEBMGYwTzETMBEGCgmSJomT8ixkARkWA2NvbTEi
+# MCAGCgmSJomT8ixkARkWEkhPVENBS0VYLUNBLURvbWFpbjEUMBIGA1UEAxMLSE9U
+# Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
+# GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
+# NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
+# IgQgVNvk4K+A4FY2qJ/13x/tM7Lns/yNgcE34+fH4JySlk8wDQYJKoZIhvcNAQEB
+# BQAEggIAK9VFp2wzczaMHoEwiWy6Xq7Fystmw8aprDNFH8XWM3YxoB9ZpdrWGQ6W
+# gakt+6xoqmS605pNQ5n9q7MNadruu+Op2PviZQ2VXmUonMLpErM2fe16dFcEvJhv
+# FhgWQM4x8S8wzLJ9KHoPbOijzl/O/6MIs6GrSAfrB00dLhfwTm7OrX4CUh/DwHF8
+# HAafSbcgTGWpqBaQpoGW7heQH9UQ+dnHptrfB5pGKebV3m/pC1WbyTgncMhvc5o3
+# ElNyFvFH8FhvJDAyXHZiWmWG95upp3WsyYW4JM076zbyHdGOU9B6yyRoX46ryke5
+# HtIFCvl4bS9j3j+Rky7wG2jLUiGXrnt7u58CZ8WCyvvSpVFwzdCPO9cXUhq5gmpX
+# JV+mOzplR5dyhXgzF448lZn8QHr0ISbj+gSJXBnQ0J+8O9kG4CTd9eAX44/oTw7a
+# gKVMhGeVkCRSI7eaFI6sxP2uu43UOxunvH9pOvWL8ziO6eZpx//OG5uHcv0JSot9
+# vHATRQnx/HrH2uTie/PK5eYCm/dBJ0AKDGQvFLX4R8L46QaOlTMkrFvEOsVGhrC4
+# fops8kVa64hP50pAlkxmE7mMWuTJrOj2KfqlmFL/im8bVTJRhokDvv4LGgDTXkqv
+# wn7xRFnFYl+JCJTqENuexDANW5kZInqJbRDTjnPvJQ2pqTJelE4=
+# SIG # End signature block

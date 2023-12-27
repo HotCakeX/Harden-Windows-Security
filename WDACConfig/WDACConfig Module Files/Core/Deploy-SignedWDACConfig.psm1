@@ -7,24 +7,51 @@ Function Deploy-SignedWDACConfig {
     Param(
         [ValidatePattern('\.xml$')]
         [ValidateScript({ Test-Path -Path $_ -PathType 'Leaf' }, ErrorMessage = 'The path you selected is not a file path.')]
-        [parameter(Mandatory = $true)][System.String[]]$PolicyPaths,
+        [parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ValueFromPipeline = $true)][System.IO.FileInfo[]]$PolicyPaths,
 
         [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$Deploy,
 
         [ValidatePattern('\.cer$')]
         [ValidateScript({ Test-Path -Path $_ -PathType 'Leaf' }, ErrorMessage = 'The path you selected is not a file path.')]
-        [parameter(Mandatory = $false)][System.String]$CertPath,
+        [parameter(Mandatory = $false, ValueFromPipelineByPropertyName = $true, ValueFromPipeline = $true)][System.IO.FileInfo]$CertPath,
 
         [ValidateScript({
-                [System.String[]]$Certificates = foreach ($Cert in (Get-ChildItem -Path 'Cert:\CurrentUser\my')) {
-                (($Cert.Subject -split ',' | Select-Object -First 1) -replace 'CN=', '').Trim()
-                }
-                $Certificates -contains $_
-            }, ErrorMessage = "A certificate with the provided common name doesn't exist in the personal store of the user certificates." )]
-        [parameter(Mandatory = $false, ValueFromPipelineByPropertyName = $true)][System.String]$CertCN,
+                # Create an empty array to store the output objects
+                [System.String[]]$Output = @()
 
-        [parameter(Mandatory = $false, ValueFromPipelineByPropertyName = $true)]
-        [System.String]$SignToolPath,
+                # Loop through each certificate that uses RSA algorithm (Because ECDSA is not supported for signing WDAC policies) in the current user's personal store and extract the relevant properties
+                foreach ($Cert in (Get-ChildItem -Path 'Cert:\CurrentUser\My' | Where-Object -FilterScript { $_.PublicKey.Oid.FriendlyName -eq 'RSA' })) {
+
+                    # Takes care of certificate subjects that include comma in their CN
+                    # Determine if the subject contains a comma
+                    if ($Cert.Subject -match 'CN=(?<RegexTest>.*?),.*') {
+                        # If the CN value contains double quotes, use split to get the value between the quotes
+                        if ($matches['RegexTest'] -like '*"*') {
+                            $SubjectCN = ($Element.Certificate.Subject -split 'CN="(.+?)"')[1]
+                        }
+                        # Otherwise, use the named group RegexTest to get the CN value
+                        else {
+                            $SubjectCN = $matches['RegexTest']
+                        }
+                    }
+                    # If the subject does not contain a comma, use a lookbehind to get the CN value
+                    elseif ($Cert.Subject -match '(?<=CN=).*') {
+                        $SubjectCN = $matches[0]
+                    }
+                    $Output += $SubjectCN
+                }
+
+                $Output -contains $_
+            }, ErrorMessage = "A certificate with the provided common name doesn't exist in the personal store of the user certificates." )]
+        [parameter(Mandatory = $false, ValueFromPipelineByPropertyName = $true, ValueFromPipeline = $true)][System.String]$CertCN,
+
+        [ValidatePattern('\.exe$')]
+        [ValidateScript({ Test-Path -Path $_ -PathType 'Leaf' }, ErrorMessage = 'The path you selected is not a file path.')]
+        [parameter(Mandatory = $false, ValueFromPipelineByPropertyName = $true, ValueFromPipeline = $true)]
+        [System.IO.FileInfo]$SignToolPath,
+
+        [Parameter(Mandatory = $false)]
+        [System.Management.Automation.SwitchParameter]$Force,
 
         [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SkipVersionCheck
     )
@@ -44,9 +71,7 @@ Function Deploy-SignedWDACConfig {
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Write-ColorfulText.psm1" -Force
 
         # if -SkipVersionCheck wasn't passed, run the updater
-        # Redirecting the Update-Self function's information Stream to $null because Write-Host
-        # Used by Write-ColorfulText outputs to both information stream and host console
-        if (-NOT $SkipVersionCheck) { Update-self 6> $null }
+        if (-NOT $SkipVersionCheck) { Update-self -InvocationStatement $MyInvocation.Statement }
 
         #Region User-Configurations-Processing-Validation
         # If any of these parameters, that are mandatory for all of the position 0 parameters, isn't supplied by user
@@ -105,10 +130,21 @@ Function Deploy-SignedWDACConfig {
             }
         }
         #Endregion User-Configurations-Processing-Validation
+
+        # Detecting if Confirm switch is used to bypass the confirmation prompts
+        if ($Force -and -Not $Confirm) {
+            $ConfirmPreference = 'None'
+        }
     }
 
     process {
         foreach ($PolicyPath in $PolicyPaths) {
+            # The total number of the main steps for the progress bar to render
+            [System.Int16]$TotalSteps = $Deploy ? 4 : 3
+            [System.Int16]$CurrentStep = 0
+
+            $CurrentStep++
+            Write-Progress -Id 13 -Activity 'Gathering policy details' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
             Write-Verbose -Message "Gathering policy details from: $PolicyPath"
             $Xml = [System.Xml.XmlDocument](Get-Content -Path $PolicyPath)
@@ -148,6 +184,9 @@ Function Deploy-SignedWDACConfig {
                 }
             }
 
+            $CurrentStep++
+            Write-Progress -Id 13 -Activity 'Creating CIP file' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
             Write-Verbose -Message 'Setting HVCI to Strict'
             Set-HVCIOptions -Strict -FilePath $PolicyPath
 
@@ -156,6 +195,9 @@ Function Deploy-SignedWDACConfig {
 
             Write-Verbose -Message 'Converting the policy to .CIP file'
             ConvertFrom-CIPolicy -XmlFilePath $PolicyPath -BinaryFilePath "$PolicyID.cip" | Out-Null
+
+            $CurrentStep++
+            Write-Progress -Id 13 -Activity 'Signing the policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
             # Configure the parameter splat
             $ProcessParams = @{
@@ -180,76 +222,62 @@ Function Deploy-SignedWDACConfig {
 
             if ($Deploy) {
 
-                Write-Verbose -Message 'Deploying the policy'
-                &'C:\Windows\System32\CiTool.exe' --update-policy ".\$PolicyID.cip" -json | Out-Null
+                $CurrentStep++
+                Write-Progress -Id 13 -Activity 'Deploying' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                Write-Host -Object 'policy with the following details has been Signed and Deployed in Enforced Mode:' -ForegroundColor Green
+                # Prompt for confirmation before proceeding
+                if ($PSCmdlet.ShouldProcess('This PC', 'Deploying the signed policy')) {
+
+                    Write-Verbose -Message 'Deploying the policy'
+                    &'C:\Windows\System32\CiTool.exe' --update-policy ".\$PolicyID.cip" -json | Out-Null
+
+                    Write-ColorfulText -Color Lavender -InputText 'policy with the following details has been Signed and Deployed in Enforced Mode:'
+                    Write-ColorfulText -Color MintGreen -InputText "PolicyName = $PolicyName"
+                    Write-ColorfulText -Color MintGreen -InputText "PolicyGUID = $PolicyID"
+
+                    Write-Verbose -Message 'Removing the .CIP file after deployment'
+                    Remove-Item -Path ".\$PolicyID.cip" -Force
+
+                    #Region Detecting Strict Kernel mode policy and removing it from User Configs
+                    if ('Enabled:UMCI' -notin $PolicyRuleOptions) {
+
+                        [System.String]$StrictKernelPolicyGUID = Get-CommonWDACConfig -StrictKernelPolicyGUID
+                        [System.String]$StrictKernelNoFlightRootsPolicyGUID = Get-CommonWDACConfig -StrictKernelNoFlightRootsPolicyGUID
+
+                        if (($PolicyName -like '*Strict Kernel mode policy Enforced*')) {
+
+                            Write-Verbose -Message 'The deployed policy is Strict Kernel mode'
+
+                            if ($StrictKernelPolicyGUID) {
+                                if ($($PolicyID.TrimStart('{').TrimEnd('}')) -eq $StrictKernelPolicyGUID) {
+
+                                    Write-Verbose -Message 'Removing the GUID of the deployed Strict Kernel mode policy from the User Configs'
+                                    Remove-CommonWDACConfig -StrictKernelPolicyGUID | Out-Null
+                                }
+                            }
+                        }
+                        elseif (($PolicyName -like '*Strict Kernel No Flights mode policy Enforced*')) {
+
+                            Write-Verbose -Message 'The deployed policy is Strict Kernel No Flights mode'
+
+                            if ($StrictKernelNoFlightRootsPolicyGUID) {
+                                if ($($PolicyID.TrimStart('{').TrimEnd('}')) -eq $StrictKernelNoFlightRootsPolicyGUID) {
+
+                                    Write-Verbose -Message 'Removing the GUID of the deployed Strict Kernel No Flights mode policy from the User Configs'
+                                    Remove-CommonWDACConfig -StrictKernelNoFlightRootsPolicyGUID | Out-Null
+                                }
+                            }
+                        }
+                    }
+                    #Endregion Detecting Strict Kernel mode policy and removing it from User Configs
+                }
+            }
+            else {
+                Write-ColorfulText -Color Lavender -InputText 'policy with the following details has been Signed and is ready for deployment:'
                 Write-ColorfulText -Color MintGreen -InputText "PolicyName = $PolicyName"
                 Write-ColorfulText -Color MintGreen -InputText "PolicyGUID = $PolicyID"
-
-                Write-Verbose -Message 'Removing the .CIP file after deployment'
-                Remove-Item -Path ".\$PolicyID.cip" -Force
-
-                #Region Detecting Strict Kernel mode policy and removing it from User Configs
-                if ('Enabled:UMCI' -notin $PolicyRuleOptions) {
-
-                    [System.String]$StrictKernelPolicyGUID = Get-CommonWDACConfig -StrictKernelPolicyGUID
-                    [System.String]$StrictKernelNoFlightRootsPolicyGUID = Get-CommonWDACConfig -StrictKernelNoFlightRootsPolicyGUID
-
-                    if (($PolicyName -like '*Strict Kernel mode policy Enforced*')) {
-
-                        Write-Verbose -Message 'The deployed policy is Strict Kernel mode'
-
-                        if ($StrictKernelPolicyGUID) {
-                            if ($($PolicyID.TrimStart('{').TrimEnd('}')) -eq $StrictKernelPolicyGUID) {
-
-                                Write-Verbose -Message 'Removing the GUID of the deployed Strict Kernel mode policy from the User Configs'
-                                Remove-CommonWDACConfig -StrictKernelPolicyGUID | Out-Null
-                            }
-                        }
-                    }
-
-                    elseif (($PolicyName -like '*Strict Kernel No Flights mode policy Enforced*')) {
-
-                        Write-Verbose -Message 'The deployed policy is Strict Kernel No Flights mode'
-
-                        if ($StrictKernelNoFlightRootsPolicyGUID) {
-                            if ($($PolicyID.TrimStart('{').TrimEnd('}')) -eq $StrictKernelNoFlightRootsPolicyGUID) {
-
-                                Write-Verbose -Message 'Removing the GUID of the deployed Strict Kernel No Flights mode policy from the User Configs'
-                                Remove-CommonWDACConfig -StrictKernelNoFlightRootsPolicyGUID | Out-Null
-                            }
-                        }
-                    }
-                }
-                #Endregion Detecting Strict Kernel mode policy and removing it from User Configs
-
-                # Show the question only for base policies. Don't show it for Strict kernel mode policies either
-                if (($PolicyType -ne 'Supplemental Policy') -and ($PolicyName -notlike '*Strict Kernel*')) {
-
-                    # Ask user question about whether or not to add the Signed policy xml file to the User Config Json for easier usage later
-                    $UserInput = ''
-                    while ($UserInput -notin 1, 2) {
-                        $UserInput = $(Write-Host -Object 'Add the Signed policy xml file path just created to the User Configurations? Please enter 1 to Confirm or 2 to Skip.' -ForegroundColor Cyan ; Read-Host)
-                        if ($UserInput -eq 1) {
-                            Set-CommonWDACConfig -SignedPolicyPath $PolicyPath
-                            Write-ColorfulText -Color HotPink -InputText "Added $PolicyPath to the User Configuration file."
-                        }
-                        elseif ($UserInput -eq 2) {
-                            Write-ColorfulText -Color Pink -InputText 'Skipping...'
-                        }
-                        else {
-                            Write-Warning -Message 'Invalid input. Please enter 1 or 2 only.'
-                        }
-                    }
-                }
             }
-
-            else {
-                Write-Host -Object 'policy with the following details has been Signed and is ready for deployment:' -ForegroundColor Green
-                Write-ColorfulText -Color MintGreen -InputText "PolicyName = $PolicyName"
-                Write-ColorfulText -Color MintGreen -InputText "PolicyGUID = $PolicyID`n"
-            }
+            Write-Progress -Id 13 -Activity 'Complete.' -Completed
         }
     }
 
@@ -274,6 +302,8 @@ Function Deploy-SignedWDACConfig {
     Path to the SignTool.exe - optional parameter
 .PARAMETER Deploy
     Indicates that the cmdlet will deploy the signed policy on the current system
+.PARAMETER Force
+    Indicates that the cmdlet will bypass the confirmation prompts
 .PARAMETER SkipVersionCheck
     Can be used with any parameter to bypass the online version check - only to be used in rare cases
 .INPUTS
@@ -291,3 +321,68 @@ Register-ArgumentCompleter -CommandName 'Deploy-SignedWDACConfig' -ParameterName
 Register-ArgumentCompleter -CommandName 'Deploy-SignedWDACConfig' -ParameterName 'PolicyPaths' -ScriptBlock $ArgumentCompleterPolicyPaths
 Register-ArgumentCompleter -CommandName 'Deploy-SignedWDACConfig' -ParameterName 'CertPath' -ScriptBlock $ArgumentCompleterCerFilePathsPicker
 Register-ArgumentCompleter -CommandName 'Deploy-SignedWDACConfig' -ParameterName 'SignToolPath' -ScriptBlock $ArgumentCompleterExeFilePathsPicker
+
+# SIG # Begin signature block
+# MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
+# BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCwRTLbYR2tyMkq
+# Pwz7so9rkqBTBLu3TVqiK/UjQ3VBqKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
+# b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
+# C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
+# MQswCQYDVQQGEwJVSzEeMBwGA1UEAxMVSG90Q2FrZVggQ29kZSBTaWduaW5nMSMw
+# IQYJKoZIhvcNAQkBFhRob3RjYWtleEBvdXRsb29rLmNvbTElMCMGCSqGSIb3DQEJ
+# ARYWU3B5bmV0Z2lybEBvdXRsb29rLmNvbTCCAiIwDQYJKoZIhvcNAQEBBQADggIP
+# ADCCAgoCggIBAKb1BJzTrpu1ERiwr7ivp0UuJ1GmNmmZ65eckLpGSF+2r22+7Tgm
+# pEifj9NhPw0X60F9HhdSM+2XeuikmaNMvq8XRDUFoenv9P1ZU1wli5WTKHJ5ayDW
+# k2NP22G9IPRnIpizkHkQnCwctx0AFJx1qvvd+EFlG6ihM0fKGG+DwMaFqsKCGh+M
+# rb1bKKtY7UEnEVAsVi7KYGkkH+ukhyFUAdUbh/3ZjO0xWPYpkf/1ldvGes6pjK6P
+# US2PHbe6ukiupqYYG3I5Ad0e20uQfZbz9vMSTiwslLhmsST0XAesEvi+SJYz2xAQ
+# x2O4n/PxMRxZ3m5Q0WQxLTGFGjB2Bl+B+QPBzbpwb9JC77zgA8J2ncP2biEguSRJ
+# e56Ezx6YpSoRv4d1jS3tpRL+ZFm8yv6We+hodE++0tLsfpUq42Guy3MrGQ2kTIRo
+# 7TGLOLpayR8tYmnF0XEHaBiVl7u/Szr7kmOe/CfRG8IZl6UX+/66OqZeyJ12Q3m2
+# fe7ZWnpWT5sVp2sJmiuGb3atFXBWKcwNumNuy4JecjQE+7NF8rfIv94NxbBV/WSM
+# pKf6Yv9OgzkjY1nRdIS1FBHa88RR55+7Ikh4FIGPBTAibiCEJMc79+b8cdsQGOo4
+# ymgbKjGeoRNjtegZ7XE/3TUywBBFMf8NfcjF8REs/HIl7u2RHwRaUTJdAgMBAAGj
+# ggJzMIICbzA8BgkrBgEEAYI3FQcELzAtBiUrBgEEAYI3FQiG7sUghM++I4HxhQSF
+# hqV1htyhDXuG5sF2wOlDAgFkAgEIMBMGA1UdJQQMMAoGCCsGAQUFBwMDMA4GA1Ud
+# DwEB/wQEAwIHgDAMBgNVHRMBAf8EAjAAMBsGCSsGAQQBgjcVCgQOMAwwCgYIKwYB
+# BQUHAwMwHQYDVR0OBBYEFOlnnQDHNUpYoPqECFP6JAqGDFM6MB8GA1UdIwQYMBaA
+# FICT0Mhz5MfqMIi7Xax90DRKYJLSMIHUBgNVHR8EgcwwgckwgcaggcOggcCGgb1s
+# ZGFwOi8vL0NOPUhPVENBS0VYLUNBLENOPUhvdENha2VYLENOPUNEUCxDTj1QdWJs
+# aWMlMjBLZXklMjBTZXJ2aWNlcyxDTj1TZXJ2aWNlcyxDTj1Db25maWd1cmF0aW9u
+# LERDPU5vbkV4aXN0ZW50RG9tYWluLERDPWNvbT9jZXJ0aWZpY2F0ZVJldm9jYXRp
+# b25MaXN0P2Jhc2U/b2JqZWN0Q2xhc3M9Y1JMRGlzdHJpYnV0aW9uUG9pbnQwgccG
+# CCsGAQUFBwEBBIG6MIG3MIG0BggrBgEFBQcwAoaBp2xkYXA6Ly8vQ049SE9UQ0FL
+# RVgtQ0EsQ049QUlBLENOPVB1YmxpYyUyMEtleSUyMFNlcnZpY2VzLENOPVNlcnZp
+# Y2VzLENOPUNvbmZpZ3VyYXRpb24sREM9Tm9uRXhpc3RlbnREb21haW4sREM9Y29t
+# P2NBQ2VydGlmaWNhdGU/YmFzZT9vYmplY3RDbGFzcz1jZXJ0aWZpY2F0aW9uQXV0
+# aG9yaXR5MA0GCSqGSIb3DQEBDQUAA4ICAQA7JI76Ixy113wNjiJmJmPKfnn7brVI
+# IyA3ZudXCheqWTYPyYnwzhCSzKJLejGNAsMlXwoYgXQBBmMiSI4Zv4UhTNc4Umqx
+# pZSpqV+3FRFQHOG/X6NMHuFa2z7T2pdj+QJuH5TgPayKAJc+Kbg4C7edL6YoePRu
+# HoEhoRffiabEP/yDtZWMa6WFqBsfgiLMlo7DfuhRJ0eRqvJ6+czOVU2bxvESMQVo
+# bvFTNDlEcUzBM7QxbnsDyGpoJZTx6M3cUkEazuliPAw3IW1vJn8SR1jFBukKcjWn
+# aau+/BE9w77GFz1RbIfH3hJ/CUA0wCavxWcbAHz1YoPTAz6EKjIc5PcHpDO+n8Fh
+# t3ULwVjWPMoZzU589IXi+2Ol0IUWAdoQJr/Llhub3SNKZ3LlMUPNt+tXAs/vcUl0
+# 7+Dp5FpUARE2gMYA/XxfU9T6Q3pX3/NRP/ojO9m0JrKv/KMc9sCGmV9sDygCOosU
+# 5yGS4Ze/DJw6QR7xT9lMiWsfgL96Qcw4lfu1+5iLr0dnDFsGowGTKPGI0EvzK7H+
+# DuFRg+Fyhn40dOUl8fVDqYHuZJRoWJxCsyobVkrX4rA6xUTswl7xYPYWz88WZDoY
+# gI8AwuRkzJyUEA07IYtsbFCYrcUzIHME4uf8jsJhCmb0va1G2WrWuyasv3K/G8Nn
+# f60MsDbDH1mLtzGCAxgwggMUAgEBMGYwTzETMBEGCgmSJomT8ixkARkWA2NvbTEi
+# MCAGCgmSJomT8ixkARkWEkhPVENBS0VYLUNBLURvbWFpbjEUMBIGA1UEAxMLSE9U
+# Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
+# GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
+# NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
+# IgQg9aAt62DFk68FgRSohKMBdVvji69lOf+ictPC11HAUVIwDQYJKoZIhvcNAQEB
+# BQAEggIAg1LFclDMPHNRdb+BpL6gjEd+SfOHpFgakdnfW9VBQrAgpdL+wmRgOuCb
+# ImKNsUPE885yVWvOxz+DG6WpNriN872boD8ifZEzbjn0K6yng0NVg/f8Zglo/DXh
+# 2Onej6w2EKsJXuHLXR+QCxa4E6dt4NL1+Aylkzc0CprIoCuyftCA3p/FB21IZZO2
+# jT10J6THUnDwbh+h2wtwOyw5WaycjbeYSmgyGAbU2Ci3a44XWXhZmE016iKS2GQF
+# ovRu9n3xLpd/wd9ROLsWjTw6mCtG8nBCyS9f0RPRHgnA9T/+WTJp93cBjwCJ8ptt
+# hYOeoYzKn1xSBg1SD0WU1Db5IRf8mTIYs0zkWwma4LVujGE+4dQjt9gYqlyzLYPF
+# bWskeNuTooyCBl130H6dC6lJGim3z2LYGNp252gVrXmwx33AJxUawPD587PDVnD+
+# MSTZ0sLTDSjTpxC9/gQvqLVr4ZLWz/4L+PHqzDB04b/1zmdNNlnsHpTZ1rraPdJS
+# xCeLI4FiwIKVnqGzdH4lWqKyw4OSProWjrJLYQA2Ezgt/IWqIekftykphq+k1omr
+# bu5q45xpQx6h1PUW2A7o+WgHmHu1Ysoi4qw0s4artkS2clWxXrK8r/+BpBhFTKen
+# dntssYtVpyh9d2Qk55rwMeL42pPZvbGGEb1PakCypyaGJQUhMHM=
+# SIG # End signature block

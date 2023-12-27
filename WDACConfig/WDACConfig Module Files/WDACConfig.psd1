@@ -4,7 +4,7 @@
     RootModule           = 'WDACConfig.psm1'
 
     # Version number of this module.
-    ModuleVersion        = '0.2.7'
+    ModuleVersion        = '0.2.8'
 
     # Supported PSEditions
     CompatiblePSEditions = @('Core')
@@ -19,7 +19,7 @@
     CompanyName          = 'SpyNetGirl'
 
     # Copyright statement for this module
-    Copyright            = '(c) 2023'
+    Copyright            = '(c) 2023-2024'
 
     # Description of the functionality provided by this module
     Description          = @'
@@ -58,6 +58,8 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
 
 ✔️ Remove-CommonWDACConfig: https://github.com/HotCakeX/Harden-Windows-Security/wiki/Remove-CommonWDACConfig
 
+✔️ Assert-WDACConfigIntegrity: https://github.com/HotCakeX/Harden-Windows-Security/wiki/Assert-WDACConfigIntegrity
+
 To get help and syntax on PowerShell console, type:
 "Get-Command -Module WDACConfig"
 "Get-Help New-WDACConfig"
@@ -73,6 +75,7 @@ To get help and syntax on PowerShell console, type:
 "Get-Help Get-CommonWDACConfig"
 "Get-Help Invoke-WDACSimulation"
 "Get-Help Remove-CommonWDACConfig"
+"Get-Help Assert-WDACConfigIntegrity"
 '@
 
     # Minimum version of the PowerShell engine required by this module
@@ -121,7 +124,8 @@ To get help and syntax on PowerShell console, type:
         'Core\New-KernelModeWDACConfig.psm1',
         'Core\Invoke-WDACSimulation.psm1',
         'Core\Get-CommonWDACConfig.psm1',
-        'Core\Remove-CommonWDACConfig.psm1')
+        'Core\Remove-CommonWDACConfig.psm1',
+        'Core\Assert-WDACConfigIntegrity.psm1')
 
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
     FunctionsToExport    = @('New-WDACConfig',
@@ -136,7 +140,8 @@ To get help and syntax on PowerShell console, type:
         'New-KernelModeWDACConfig',
         'Invoke-WDACSimulation',
         'Get-CommonWDACConfig',
-        'Remove-CommonWDACConfig')
+        'Remove-CommonWDACConfig',
+        'Assert-WDACConfigIntegrity')
 
     # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
     CmdletsToExport      = @('New-WDACConfig',
@@ -151,7 +156,8 @@ To get help and syntax on PowerShell console, type:
         'New-KernelModeWDACConfig',
         'Invoke-WDACSimulation',
         'Get-CommonWDACConfig',
-        'Remove-CommonWDACConfig')
+        'Remove-CommonWDACConfig',
+        'Assert-WDACConfigIntegrity')
 
     # Variables to export from this module
     VariablesToExport    = '*'
@@ -183,6 +189,7 @@ To get help and syntax on PowerShell console, type:
         'Core\Invoke-WDACSimulation.psm1',
         'Core\Get-CommonWDACConfig.psm1',
         'Core\Remove-CommonWDACConfig.psm1',
+        'Core\Assert-WDACConfigIntegrity.psm1',
         'CoreExt\PSDefaultParameterValues.ps1',
         'Resources\Resources2.ps1',
         'Resources\ArgumentCompleters.ps1'
@@ -229,7 +236,7 @@ Full Change log available in GitHub releases: https://github.com/HotCakeX/Harden
 '@
 
             # Prerelease string of this module
-            # Prerelease = ''
+            # Prerelease   = 'Beta1'
 
             # Flag to indicate whether the module requires explicit user acceptance for install/update/save
             # RequireLicenseAcceptance = $false
@@ -248,3 +255,4 @@ Full Change log available in GitHub releases: https://github.com/HotCakeX/Harden
     # DefaultCommandPrefix = ''
 
 }
+

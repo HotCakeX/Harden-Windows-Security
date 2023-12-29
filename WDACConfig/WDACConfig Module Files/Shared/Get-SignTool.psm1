@@ -2,8 +2,11 @@ Function Get-SignTool {
     <#
     .SYNOPSIS
         Gets the path to SignTool.exe and verifies it to make sure it's not tampered
-    .PARAMETER SignToolExePath
+        If the SignTool.exe path is not provided by parameter, it will try to detect it automatically, either by checking if Windows SDK is installed or by reading the user configs (this part actually happens in the main cmdlet that calls Get-SignTool function)
+        If the SignTool.exe path is not provided by parameter and it could not be detected automatically, it will ask the user to try to download it from NuGet
+    .PARAMETER SignToolExePathInput
         Path to the SignTool.exe
+        It's optional
     .INPUTS
         System.String
     .OUTPUTS
@@ -11,49 +14,120 @@ Function Get-SignTool {
     #>
     [CmdletBinding()]
     param(
-        [parameter(Mandatory = $false)][System.String]$SignToolExePath
+        [parameter(Mandatory = $false)][System.String]$SignToolExePathInput
     )
     # Importing the $PSDefaultParameterValues to the current session, prior to everything else
     . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
-    # If Sign tool path wasn't provided by parameter, try to detect it automatically, if fails, stop the operation
-    if (!$SignToolExePath) {
-        if ($Env:PROCESSOR_ARCHITECTURE -eq 'AMD64') {
-            if ( Test-Path -Path 'C:\Program Files (x86)\Windows Kits\*\bin\*\x64\signtool.exe') {
-                $SignToolExePath = 'C:\Program Files (x86)\Windows Kits\*\bin\*\x64\signtool.exe'
+    # If Sign tool path wasn't provided by parameter, try to detect it automatically
+    if (!$SignToolExePathInput) {
+
+        Write-Verbose -Message 'SignTool.exe path was not provided by parameter, trying to detect it automatically'
+
+        try {
+            if ($Env:PROCESSOR_ARCHITECTURE -eq 'AMD64') {
+                if ( Test-Path -Path 'C:\Program Files (x86)\Windows Kits\*\bin\*\x64\signtool.exe') {
+                    $SignToolExePathOutput = 'C:\Program Files (x86)\Windows Kits\*\bin\*\x64\signtool.exe'
+                }
+                else {
+                    Throw [System.IO.FileNotFoundException] 'signtool.exe could not be found'
+                }
             }
-            else {
-                Throw [System.IO.FileNotFoundException] 'signtool.exe could not be found'
+            elseif ($Env:PROCESSOR_ARCHITECTURE -eq 'ARM64') {
+                if (Test-Path -Path 'C:\Program Files (x86)\Windows Kits\*\bin\*\arm64\signtool.exe') {
+                    $SignToolExePathOutput = 'C:\Program Files (x86)\Windows Kits\*\bin\*\arm64\signtool.exe'
+                }
+                else {
+                    Throw [System.IO.FileNotFoundException] 'signtool.exe could not be found'
+                }
             }
         }
-        elseif ($Env:PROCESSOR_ARCHITECTURE -eq 'ARM64') {
-            if (Test-Path -Path 'C:\Program Files (x86)\Windows Kits\*\bin\*\arm64\signtool.exe') {
-                $SignToolExePath = 'C:\Program Files (x86)\Windows Kits\*\bin\*\arm64\signtool.exe'
+        catch [System.IO.FileNotFoundException] {
+
+            # If Sign tool path wasn't provided by parameter and couldn't be detected automatically, try to download it from NuGet, if fails or user declines this, stop the operation
+
+            if ($PSCmdlet.ShouldContinue('Download SignTool.exe from the official Microsoft server? It will be saved in the current working directory.', 'SignTool.exe path was not provided and it could not be automatically detected on the system.')) {
+
+                try {
+
+                    Write-Verbose -Message 'Assigning a temporary location for the NuGet package'
+                    [System.IO.DirectoryInfo]$NuGetScratchLocation = "$env:Temp\NuGetScratch"
+
+                    Write-Verbose -Message 'Deleting the temporary directory if it already exists'
+                    if (Test-Path -Path $NuGetScratchLocation) { Remove-Item -Path $NuGetScratchLocation -Recurse -Force }
+
+                    Write-Verbose -Message 'Creating the temporary directory'
+                    New-Item -Path $NuGetScratchLocation -ItemType Directory -Force | Out-Null
+
+                    Write-Verbose -Message 'Finding the latest version of the Microsoft.Windows.SDK.BuildTools package from NuGet'
+                    # Use a script block to convert the Version property to a semantic version object for proper sorting based on the version number
+                    [Microsoft.PackageManagement.Packaging.SoftwareIdentity[]]$Package = Find-Package -Name 'Microsoft.Windows.SDK.BuildTools' -Source 'nuget.org' -AllVersions -Force -MinimumVersion '10.0.22621.756'
+
+                    [Microsoft.PackageManagement.Packaging.SoftwareIdentity]$Package = $Package | Sort-Object -Property { [System.Version]$_.Version } -Descending | Select-Object -First 1
+
+                    Write-Verbose -Message 'Downloading SignTool.exe from NuGet...'
+                    Save-Package -InputObject $Package -Path $NuGetScratchLocation -Force | Out-Null
+
+                    Write-Verbose -Message 'Extracting the nupkg'
+                    Expand-Archive -Path "$NuGetScratchLocation\*.nupkg" -DestinationPath $NuGetScratchLocation -Force
+
+                    Write-Verbose -Message 'Detecting the CPU Arch'
+                    switch ($Env:PROCESSOR_ARCHITECTURE) {
+                        'AMD64' { [System.String]$CPUArch = 'x64' }
+                        'ARM64' { [System.String]$CPUArch = 'arm64' }
+                        default { Throw [System.PlatformNotSupportedException] 'Only AMD64 and ARM64 architectures are supported.' }
+                    }
+
+                    Write-Verbose -Message 'Detecting the SignTool.exe path from the NuGet package'
+                    [System.IO.FileInfo]$SignToolExePathTemp = Get-ChildItem -File -Path "$NuGetScratchLocation\bin\*\$CPUArch\signtool.exe" -Force
+
+                    Write-Verbose -Message 'Copying the SignTool.exe to the current working directory'
+                    Copy-Item -Path $SignToolExePathTemp -Destination '.' -Force
+
+                    Write-Verbose -Message 'Deleting the temporary directory after the SignTool.exe was copied successfully'
+                    Remove-Item -Path $NuGetScratchLocation -Recurse -Force
+
+                    Write-Verbose -Message 'Getting the SignTool.exe path from the current working directory'
+                    $SignToolExePathOutput = Get-ChildItem -File -Path '.\signtool.exe' -Force
+                }
+
+                catch {
+                    Throw $_
+                }
             }
             else {
-                Throw [System.IO.FileNotFoundException] 'signtool.exe could not be found'
+                Throw [System.IO.FileNotFoundException] 'signtool.exe could not be found and an attempt to download it was declined.'
             }
         }
     }
+    # If Sign tool path was provided by parameter, use it
+    else {
+        Write-Verbose -Message 'SignTool.exe path was provided by parameter'
+        $SignToolExePathOutput = $SignToolExePathInput
+    }
+
+    # At this point the SignTool.exe path was either provided by user, was found in the user configs, was detected automatically or was downloaded from NuGet
     try {
         # Validate the SignTool executable
         # Setting the minimum version of SignTool that is allowed to be executed
+        Write-Verbose -Message 'Validating the SignTool executable'
         [System.Version]$WindowsSdkVersion = '10.0.22621.2428'
-        [System.Boolean]$GreenFlag1 = (((Get-Item -Path $SignToolExePath).VersionInfo).ProductVersionRaw -ge $WindowsSdkVersion)
-        [System.Boolean]$GreenFlag2 = (((Get-Item -Path $SignToolExePath).VersionInfo).FileVersionRaw -ge $WindowsSdkVersion)
-        [System.Boolean]$GreenFlag3 = ((Get-Item -Path $SignToolExePath).VersionInfo).CompanyName -eq 'Microsoft Corporation'
-        [System.Boolean]$GreenFlag4 = ((Get-AuthenticodeSignature -FilePath $SignToolExePath).Status -eq 'Valid')
-        [System.Boolean]$GreenFlag5 = ((Get-AuthenticodeSignature -FilePath $SignToolExePath).StatusMessage -eq 'Signature verified.')
+        [System.Boolean]$GreenFlag1 = (((Get-Item -Path $SignToolExePathOutput).VersionInfo).ProductVersionRaw -ge $WindowsSdkVersion)
+        [System.Boolean]$GreenFlag2 = (((Get-Item -Path $SignToolExePathOutput).VersionInfo).FileVersionRaw -ge $WindowsSdkVersion)
+        [System.Boolean]$GreenFlag3 = ((Get-Item -Path $SignToolExePathOutput).VersionInfo).CompanyName -eq 'Microsoft Corporation'
+        [System.Boolean]$GreenFlag4 = ((Get-AuthenticodeSignature -FilePath $SignToolExePathOutput).Status -eq 'Valid')
+        [System.Boolean]$GreenFlag5 = ((Get-AuthenticodeSignature -FilePath $SignToolExePathOutput).StatusMessage -eq 'Signature verified.')
     }
     catch {
-        Throw [System.Security.VerificationException] 'SignTool executable could not be verified.'
+        Throw $_
     }
     # If any of the 5 checks above fails, the operation stops
     if (!$GreenFlag1 -or !$GreenFlag2 -or !$GreenFlag3 -or !$GreenFlag4 -or !$GreenFlag5) {
         Throw [System.Security.VerificationException] 'The SignTool executable was found but could not be verified. Please download the latest Windows SDK to get the newest SignTool executable. Official download link: http://aka.ms/WinSDK'
     }
     else {
-        return $SignToolExePath
+        Write-Verbose -Message 'SignTool executable was found and verified successfully.'
+        return [System.String]$SignToolExePathOutput
     }
 }
 
@@ -63,8 +137,8 @@ Export-ModuleMember -Function 'Get-SignTool'
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBzSkVXcvwqvn6/
-# WIH+y7ZylDo+phFjzp4oGak+7y2N8KCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCB7yBwPBNTqoGXb
+# CAztGEbblNapp+2utBMbdahZsxnyHKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -111,16 +185,16 @@ Export-ModuleMember -Function 'Get-SignTool'
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgHtBa/Wv98yQAp8zhiap4AyK5+xVZA/jMy7ti59jNgU0wDQYJKoZIhvcNAQEB
-# BQAEggIAU3z+l1pz/B/vaoPj1YZ2fWpuXCSlsC0ly5IytAH+U+lEHRGOt50fKdHN
-# bnYlXNmDPPIY788eHLEu8h1RYrZvu6wnpETYqriWcnPqQwbeWp4jVhKGjl74o8VS
-# mbmdch5sBRzosLeb+l+dqQVnSRj+u6oexAHqGFxZ5gqSiF5jdPVGoOFYbSziqpYa
-# 4Iq058WbJYIAEcAGm5yJF+S/5c5rVacwTK4hYwB2mAEU0Gq2dh7fH9K3mG4GllJb
-# gyl8OhWadhvyCqHFAzGNb00e/Y5D2J/JVE5kQx5kQnpzg8LdBSQpZcXkv8Oi/Ut6
-# zJPMchuAZTr6RnXx1xfX8aYtsaj5lwZcJOPHw1KRcTEmV0/u6fLWl3/lYnzfQKof
-# XTy9dTKCiHlGfbzO7CiNM9jnYArf43afxpORG7QWlBJrpS0FQEWhroHmv8hWIDQO
-# 7G/TRu+GfSA1nK194R1q4j9sHJO7/i6TLbeK0mgUl/iGlVtpQyiftEFiaLov49bG
-# Orr9GX3KFV5Jkyf5O1oofZlF0b8kA+0mqrmnj6tDU5RjtS7M44UqcXUF5gfzGitQ
-# HdWHB4Gi1nvYgqS9PG0BThsuFYdPejqpiQaQpZUoXaCfzkzh7huDYyNanupVyH/O
-# yx/AZIDYqQT1iGoGiZTLjcxCYkthBFDdIN34+dg3jNc047CEtxE=
+# IgQgUxypjwW3dIoyTSEgs2ifVdBKHRmq4OeKOjIhvD+p2tswDQYJKoZIhvcNAQEB
+# BQAEggIAAcOkjp04jjVfr2+pLXYwm1h4H0ExeWH7wk9xdo4fdQbx5SHAzp5c16nI
+# PJjr8ClundRvdiuTATc6L/Dcl16nB/d3d3V/b8XqHhHvoyhEXcljqeeMgHF3+xRt
+# 7LpWqbcda6FeToy+Ozl2MSEksbjnl3ufKwBB2201AnTJwhaVoqCZX2etRaw333be
+# Ze3PwlMxqxaICXIRyH7vlVAEpsg+IhPiidHV8yas3n/OInUR0xdzsAKCn2I7MaE/
+# ubTlKwADiYgLx827+5aJrMxDBpFJLoJzadGGIJTdMcpckoAhIryUWV9M5EPvtDj3
+# n46rQlvWhUSfKPEZOfzErCGJVkk8xwMUcvTTxqJ7G9UzFI5lGvW52tiWcnisqDpP
+# C2lGFcxDpuQlpBH4/RZl+V4SfqFwM4PpxIWiM+KzVfk4ppJLGPJ+4gdKUz1NY/HP
+# oQ8wRbt9tKgOI2IqZDputspBWNhDUe2LNMpcHIdV+GDHA6X5w2Qa54NAOQuiK+y0
+# /dmXs/QS0+rfZVUWDxBZpgoMzYhaS+70uEYT57KlRzv1IfvXD3SiXXN9AELSfRbC
+# fzY7+1OG1nGw0sRjbj4XMHzq60FJv/JZt5YxenAThBh8iFg2R/Wa5oiCFQmTabFJ
+# ZszZ0bfKnhLpjX/sr4LfMg2zkl5IQvI8KnBvy61aGGGJ6iK7BhI=
 # SIG # End signature block

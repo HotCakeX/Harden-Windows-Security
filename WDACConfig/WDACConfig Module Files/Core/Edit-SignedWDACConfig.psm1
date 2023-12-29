@@ -178,10 +178,10 @@ Function Edit-SignedWDACConfig {
 
         # Get SignToolPath from user parameter or user config file or auto-detect it
         if ($SignToolPath) {
-            $SignToolPathFinal = Get-SignTool -SignToolExePath $SignToolPath
+            $SignToolPathFinal = Get-SignTool -SignToolExePathInput $SignToolPath
         } # If it is null, then Get-SignTool will behave the same as if it was called without any arguments.
         else {
-            $SignToolPathFinal = Get-SignTool -SignToolExePath ($UserConfig.SignToolCustomPath ?? $null)
+            $SignToolPathFinal = Get-SignTool -SignToolExePathInput ($UserConfig.SignToolCustomPath ?? $null)
         }
 
         # If CertPath parameter wasn't provided by user
@@ -1423,8 +1423,8 @@ Register-ArgumentCompleter -CommandName 'Edit-SignedWDACConfig' -ParameterName '
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCC6aTtwlerO2QkJ
-# ySY+m/djXwHd6Uf4a27yCve+eCaadKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCAQeldUp3mtZ4IQ
+# ZI6l7XJ69NOvoDSTNMgkpmlYbwhZm6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -1471,16 +1471,16 @@ Register-ArgumentCompleter -CommandName 'Edit-SignedWDACConfig' -ParameterName '
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgTolLngKnObH0U1rk7ArojKCnAvRcjLi6m0mz/Rg7oEIwDQYJKoZIhvcNAQEB
-# BQAEggIAnKcz89OYu+Cciar9QcuWUgfQLDB8odcJd/0YKRRn50EVYqNi1f3IxZbP
-# PS4eLnMu1nsro/nR9Svft1UYd7IOL02AuLbvPsIJNgN8G9n3FigoONhHLj9dby3y
-# yWQ2LjVShhcm4c0cS2iQpWifmQWAEaeoJ9kaqzWGZZbWBYhxKX9Y7K9YacyLfu9F
-# lSKu0+dwe2jrWc4GZzpMhJ94vTX7lXq1oD5IzJm0ZTRHzsaBj1Qb7wOZmuZYCSjD
-# PsBdLZbzkFoEexcpP3JH/eGR3+ue/T6sGR9SuwGSXgVxNeIY67LezgeR0Wq4skSy
-# TV1Mal69H1zy7mbC9Ml143l/tXlQAyiEObedimxR2nLCyBcO0yrjNlU4P0l9jww7
-# 8qyZ36b/0yvm7m99YDpA90nNRWwOO5o1SzhLWygjXqy0YK8ukCYEz3nAFEDJTKEo
-# UvrS7pfDCJcICL2EEY4e9Sbv3RwgBS6PXg9VFGP6uDs8Ea1UAhiJXsGVkZztGLEJ
-# RyDH8+8ro25s2dNxQ8LqMANQrj1KKjbM3mN3sWoZP5jb/8a/uhS9QiLb8vVqeVDo
-# fPvbxYRQTdsPHMA/IhOvSUeRtQDwpofBWE9JsYDxMCPFDXXKZmwRl11I87Lyue0E
-# PV82eO95mWQaoDbTneq5NO+5Ad3kHPw64KlgdQ/joj2q1/7rEjQ=
+# IgQga1wLK1Rjolq/63D+HHeWKgAkqyxd4ID8SVahz6C/feQwDQYJKoZIhvcNAQEB
+# BQAEggIAesbdMjA2d2h0wZQX5DmUqvIf4pVSVkrEcHb9gtTnuisUj0tEP4T2ozoX
+# p7ZSy02K5ydscOiNEihh2G13olsXIXkBKo9dAA8WW9ana3kHNDVj7hV50gZ6Rps6
+# Y7EKNzJC6EvXqSNy0OQxhLeD49/bt40O0xMfel5xjsFJxOC+lTaWfVhBbrjjcADT
+# hfPifzUcpBjjfPDsFS8CLH48CE7S0DVC1C3PBqwL5KRKajtRCjJh6xRsgRPTIiYL
+# JnqZlpd4GQLhRZx4qAv3D8JUPqbYeEea+7UTahJdlo6aG/ueYj3ru0XSzLcB44T7
+# LECCrZEumlYbfyfNf7XpcESQvqV+7GNNIkImhuYO9RESiaC2cGAGjTNmyb8aqGPz
+# EpuxwEfJtL9xCiKRF03mHdxpWFA0qHdzUsxxce4taTbE7hmzEhXcRg93lCG+SlOs
+# JeuV8j/Bt+b9BqJkbbseAP3tdIHvWE+7hQ5/j/W21sdLSdObWm+ai7meqZQBsanZ
+# gGA0RjroJxgmDGGfq3ikaspEIUwK/gc7OBo2fAfQKTQGMmfjWzwrllLHRo96AOzM
+# l5VQFdqajERvrcKPZQwebOsYZvnZvpXmYQkvatWAa4x99VNEO1eBcqHFEapWJCqa
+# Q5oDGg3a4THkU5tfPu0Shz8928kz1djaRcpm1GRYV9d8HbhspcE=
 # SIG # End signature block

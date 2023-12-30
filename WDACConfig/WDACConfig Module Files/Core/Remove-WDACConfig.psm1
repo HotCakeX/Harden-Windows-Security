@@ -25,6 +25,9 @@ Function Remove-WDACConfig {
         [System.String[]]$PolicyPaths,
 
         [ValidateScript({
+                # Assign the input value to a variable because $_ is going to be used to access another pipeline object
+                [System.String]$InputCN = $_
+
                 # Create an empty array to store the output objects
                 [System.String[]]$Output = @()
 
@@ -50,8 +53,25 @@ Function Remove-WDACConfig {
                     $Output += $SubjectCN
                 }
 
-                $Output -contains $_
-            }, ErrorMessage = "A certificate with the provided common name doesn't exist in the personal store of the user certificates." )]
+                # Count the number of duplicate CNs in the output array
+                [System.Int64]$NumberOfDuplicateCNs = @($Output | Where-Object { $_ -eq $InputCN }).Count
+
+                # If the certificate with the provided common name exists in the personal store of the user certificates
+                if ($Output -contains $_) {
+                    # if there are more than 1 certificate with the same common name on the system
+                    if ($NumberOfDuplicateCNs -eq 1) {
+                        # Return true if the certificate exists and there are no duplicates
+                        return $true
+                    }
+                    else {
+                        Throw "There are $NumberOfDuplicateCNs certificates with the same common name ($_) on the system, please remove the duplicate certificates and try again."
+                    }
+                }
+                else {
+                    Throw 'A certificate with the provided common name does not exist in the personal store of the user certificates.'
+                }
+
+            })]
         [parameter(Mandatory = $false, ParameterSetName = 'Signed Base', ValueFromPipelineByPropertyName = $true)]
         [System.String]$CertCN,
 

@@ -1015,8 +1015,8 @@ Function New-WDACConfig {
             Write-Progress -Id 6 -Activity 'Configuring Windows Services' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
             Write-Verbose -Message 'Configuring required services for ISG authorization'
-            Start-Process -FilePath 'C:\Windows\System32\appidtel.exe' -ArgumentList 'start' -Wait -NoNewWindow
-            Start-Process -FilePath 'C:\Windows\System32\sc.exe' -ArgumentList 'config', 'appidsvc', 'start= auto' -Wait -NoNewWindow
+            Start-Process -FilePath 'C:\Windows\System32\appidtel.exe' -ArgumentList 'start' -NoNewWindow
+            Start-Process -FilePath 'C:\Windows\System32\sc.exe' -ArgumentList 'config', 'appidsvc', 'start= auto' -NoNewWindow
 
             if ($Deploy -and $MakeLightPolicy) {
                 Write-Verbose -Message 'Deploying the SignedAndReputable.xml policy'
@@ -1147,8 +1147,8 @@ Register-ArgumentCompleter -CommandName 'New-WDACConfig' -ParameterName 'SignToo
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCALzSNhRra3Zyv+
-# kcjXO4cjfniq21g9JH2C4VdqbL7kcqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCB5m17vkx2OGL4z
+# 6xfgDiT8Iw/w02VA0jMn6tMr+COgIqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -1195,16 +1195,16 @@ Register-ArgumentCompleter -CommandName 'New-WDACConfig' -ParameterName 'SignToo
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgjuWT7ucooTkRP+3PH4qvcRvB0+1L4SJzyqqBbd+/qwcwDQYJKoZIhvcNAQEB
-# BQAEggIAUKytxwz64usHuFRdtf54LHyXssTzwUVJGlrj++kTaCAXy/zboh1jj8Ol
-# 63/eoUyuwH2msV5uPyQFZaKFbMM0qNxy2GVl6VGLT9IoFT7C1zeZ+ghtltKNtMoT
-# vTBENvqQ+c3hpqU40F4QBrZHtHI0/bs8yuN8XnZqwcuBL7da7jfd1RQrt0e2wnA3
-# 5HsKkWMrwuXyr9iLaS9Lk+bmr9qgIa2Zmew5CMaWs2c94AJwBT1yYcda5wyL/zu9
-# b3edc/EkLBQWRrOqZ+lrUer30q5zSImR9edCWkb+JgNuVLcth8S7s7NsgGJw7KNt
-# ZxtKFOCZWcdDmuAnd7+nC3TtG4AfQVqDdlNPQzvD+6KSPSpAw94fFcJxf1bX+CFl
-# G2j9Vnj50Q5Ghwzm/30cbyRPb4lKyQdDrEc+lkJqZDVA8Ps9z3Hi6iyhMun3JzKC
-# rgHTLB8pwANQcQLPX9ITvGSmbgjKETLYU59wORdlBi1c02cQYeUbKTRF7rkzXD2T
-# GoWKW4bNGqfwIlbeq5Q83edhJ4ah2slIdtNkjE2FadQ8Z4sOS+ZT7Xvd/JGoeH45
-# 4pLySYvEWS6Xonubbp8WVldr/VRguAPY1phTf776ZUAYNsBF8GeR77D17/sHiuPV
-# FEAK0HyjkXI5bGP/Di6h43F3E6+NMSg1taVeUf+cHbNdmSg2yjQ=
+# IgQg6J0es/hf08Su0cEVylU44LcUFI7XHY/INV8yg+sgSJswDQYJKoZIhvcNAQEB
+# BQAEggIATXnHiF8Oq9p3y6DRfCwKbtF94k7M2q9nzaLIum1sYDLXscpyrbT7hbWw
+# S9n6yV7BxNPpwzsGnPIlE9/keUVQta3LVhzP2fycIKtygEj8RckOr+/5ML4sZpJw
+# ZECLsifk9qiaUJNHyA1vcbm7L8SL4Z2f2UjwRfcJwnrj/qtkcYn5W+IkvBks5ZV9
+# tt9IZZc4z5D8g2tC+tLL/Mn5WZho0p8S28yZ/KUdvLpb5zJ5BcEXpUJnVxGohmel
+# C0ZIwqhJrA+B0Yijl9l69SSYrGS5mEqK4dpkoEyom5P0ZwrZAgRZJqUMct4+uhWc
+# wYhmAnaVCaR8RHnsKzdIKujD1PF1jAqj6lQ678tnztRQceyX/XiGgKbeyoxDqtEp
+# W5kfX3selK2KcorWkS4cZBH/vL1FVbrkfBeqjxCX3toavz7TBcONbmnVHJe6ySpT
+# GeosJ3pQm/V6MF0XOYr5AH7DucbNcf9jY6MUD5G/BKJoCYRyk1ikS06w5iDGkYb3
+# HyNeQXRAJ4U85UPnCI5rxvk5Cr6xpb0hbEefBqxlRl4Lb+M8JWKmTy/krf2wJj02
+# tYc0EKlkyLg0Slda0T0XShjycT8UAX6Bn4h0VGzrojyAOAaPGmlX4ksfejV66LB6
+# Y+DZAPsi5HxJ/NMZv6dCWryaNWkSe1Fe2tPaK2SAVvg2AGO/qqY=
 # SIG # End signature block

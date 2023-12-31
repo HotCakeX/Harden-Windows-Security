@@ -13,6 +13,8 @@ Function New-DenyWDACConfig {
         [Parameter(Mandatory = $false, ParameterSetName = 'Drivers')][System.Management.Automation.SwitchParameter]$Drivers,
         [Alias('P')]
         [parameter(mandatory = $false, ParameterSetName = 'Installed AppXPackages')][System.Management.Automation.SwitchParameter]$InstalledAppXPackages,
+        [Alias('W')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Folder Path With WildCards')][System.Management.Automation.SwitchParameter]$PathWildCards,
 
         [parameter(Mandatory = $true, ParameterSetName = 'Installed AppXPackages', ValueFromPipelineByPropertyName = $true)]
         [System.String]$PackageName,
@@ -21,6 +23,10 @@ Function New-DenyWDACConfig {
         [ValidatePattern('^[a-zA-Z0-9 \-]+$', ErrorMessage = 'The policy name can only contain alphanumeric, space and dash (-) characters.')]
         [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true)]
         [System.String]$PolicyName,
+
+        [ValidatePattern('\*', ErrorMessage = 'You did not supply a path that contains wildcard character (*) .')]
+        [parameter(Mandatory = $true, ParameterSetName = 'Folder Path With WildCards', ValueFromPipelineByPropertyName = $true)]
+        [System.String]$FolderPath,
 
         [ValidateScript({ Test-Path -Path $_ -PathType 'Container' }, ErrorMessage = 'The path you selected is not a folder path.')]
         [Parameter(Mandatory = $false, ParameterSetName = 'Normal')]
@@ -50,7 +56,7 @@ Function New-DenyWDACConfig {
         [Parameter(Mandatory = $false)]
         [System.Management.Automation.SwitchParameter]$Deploy,
 
-        [Parameter(Mandatory = $false)]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Installed AppXPackages')]
         [System.Management.Automation.SwitchParameter]$Force,
 
         [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SkipVersionCheck
@@ -386,6 +392,72 @@ Function New-DenyWDACConfig {
                 Write-Progress -Id 24 -Activity 'Complete.' -Completed
             }
         }
+
+        # Create Deny base policy for a folder with wildcards
+        if ($PathWildCards) {
+
+            # The total number of the main steps for the progress bar to render
+            [System.Int16]$TotalSteps = $Deploy ? 3 : 2
+            [System.Int16]$CurrentStep = 0
+
+            $CurrentStep++
+            Write-Progress -Id 29 -Activity 'Creating the wildcard deny policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
+            # Using Windows PowerShell to handle serialized data since PowerShell core throws an error
+            Write-Verbose -Message 'Creating the deny policy file'
+            powershell.exe -Command {
+                $RulesWildCards = New-CIPolicyRule -Deny -FilePathRule $args[0]
+                New-CIPolicy -MultiplePolicyFormat -FilePath '.\DenyPolicyWildcardTemp.xml' -Rules $RulesWildCards
+            } -args $FolderPath
+
+            # Merging AllowAll default policy with our Deny temp policy
+            Write-Verbose -Message 'Merging AllowAll default template policy with our Wildcard Deny temp policy'
+            Merge-CIPolicy -PolicyPaths 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowAll.xml', '.\DenyPolicyWildcardTemp.xml' -OutputFilePath ".\DenyPolicyWildcard $PolicyName.xml" | Out-Null
+
+            $CurrentStep++
+            Write-Progress -Id 29 -Activity 'Configuring the wildcard deny policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
+            Write-Verbose -Message 'Removing the temp deny policy file after using it in the merge operation'
+            Remove-Item -Path '.\DenyPolicyWildcardTemp.xml' -Force
+
+            Write-Verbose -Message 'Assigning a name and resetting the policy ID'
+            [System.String]$PolicyID = Set-CIPolicyIdInfo -FilePath ".\DenyPolicyWildcard $PolicyName.xml" -ResetPolicyID -PolicyName "$PolicyName"
+            [System.String]$PolicyID = $PolicyID.Substring(11)
+
+            Write-Verbose -Message 'Setting the policy version to 1.0.0.0'
+            Set-CIPolicyVersion -FilePath ".\DenyPolicyWildcard $PolicyName.xml" -Version '1.0.0.0'
+
+            Write-Verbose -Message 'Setting the policy rule options'
+            @(0, 2, 6, 11, 12, 16, 17, 19, 20) | ForEach-Object -Process {
+                Set-RuleOption -FilePath ".\DenyPolicyWildcard $PolicyName.xml" -Option $_ }
+
+            Write-Verbose -Message 'Deleting the unnecessary policy rule options from the base deny policy'
+            @(3, 4, 8, 9, 10, 13, 14, 15, 18) | ForEach-Object -Process {
+                Set-RuleOption -FilePath ".\DenyPolicyWildcard $PolicyName.xml" -Option $_ -Delete }
+
+            Write-Verbose -Message 'Setting the HVCI to Strict'
+            Set-HVCIOptions -Strict -FilePath ".\DenyPolicyWildcard $PolicyName.xml"
+
+            Write-Verbose -Message 'Converting the policy XML to .CIP'
+            ConvertFrom-CIPolicy -XmlFilePath ".\DenyPolicyWildcard $PolicyName.xml" -BinaryFilePath "$PolicyID.cip" | Out-Null
+
+            Write-ColorfulText -Color MintGreen -InputText "DenyPolicyFile = DenyPolicyWildcard $PolicyName.xml"
+            Write-ColorfulText -Color MintGreen -InputText "DenyPolicyGUID = $PolicyID"
+
+            if ($Deploy) {
+                $CurrentStep++
+                Write-Progress -Id 29 -Activity 'Deploying the base policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
+                Write-Verbose -Message 'Deploying the policy'
+                &'C:\Windows\System32\CiTool.exe' --update-policy "$PolicyID.cip" -json | Out-Null
+
+                Write-ColorfulText -Color Pink -InputText "A Deny Base policy with the name $PolicyName has been deployed."
+
+                Write-Verbose -Message 'Removing the .CIP file after deployment'
+                Remove-Item -Path "$PolicyID.cip" -Force
+            }
+            Write-Progress -Id 29 -Activity 'Complete.' -Completed
+        }
     }
 
     <#
@@ -432,6 +504,10 @@ Function New-DenyWDACConfig {
     Indicates that the selected folder will not be scanned for script files.
 .PARAMETER Verbose
     Indicates that the cmdlet will display detailed information about the operation.
+.PARAMETER PathWildCards
+    Creates a Deny standalone base policy for a folder using wildcards. The base policy created by this parameter can be deployed side by side any other base/supplemental policy.
+.PARAMETER FolderPath
+    The folder path to add to the deny base policy using wildcards.
 .INPUTS
     System.String[]
     System.String
@@ -445,12 +521,13 @@ Function New-DenyWDACConfig {
 . "$ModuleRootPath\Resources\ArgumentCompleters.ps1"
 Register-ArgumentCompleter -CommandName 'New-DenyWDACConfig' -ParameterName 'ScanLocations' -ScriptBlock $ArgumentCompleterFolderPathsPicker
 Register-ArgumentCompleter -CommandName 'New-DenyWDACConfig' -ParameterName 'PackageName' -ScriptBlock $ArgumentCompleterAppxPackageNames
+Register-ArgumentCompleter -CommandName 'New-DenyWDACConfig' -ParameterName 'FolderPath' -ScriptBlock $ArgumentCompleterFolderPathsPickerWildCards
 
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBoH6dCe1i+LYzI
-# JoFvQFiCsZ6NPWD6X7L+pMLgTqObbqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBMk3ny/jB0D0pe
+# 8Bsn/9V5TZeCh71uBMCfdxwC5irXSaCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -497,16 +574,16 @@ Register-ArgumentCompleter -CommandName 'New-DenyWDACConfig' -ParameterName 'Pac
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgpvJjsPLYQTfvXZYlO/uMjWxGkQ6LbBiiPOPYBZvLBg8wDQYJKoZIhvcNAQEB
-# BQAEggIAk1jHqb9GjajBmWZCvb1gk9wlspzGsxT2OiH5DwyYyjLxfwyYQaFUjmuQ
-# Yf7rBgu8TOo87Y8rJ8auQ7cfmDRb+mwe3eF04r82mlkEfJIW51GeVBcY0Q4SSyyN
-# 4+Bv+poTfRlg6GulTdHGBaezpK+pEvXOqkypBMCTC843deiqVnkw5yR9yX4L0kc5
-# G3AiVJjnafp3dK2J8oIOM5ItciV/7ukni3j9Id+PU1M2KINTqZMhmBnx0GraEtxo
-# 3lUpnf5oPSk3kttw0uow8i9zokM/5ymqWg81Eie7scJbOk5kUFzyc+3kSBa4dVUQ
-# 2/ZR+oEYFeNPztNbr5dfsoYSK+jZ0y20SeL9YOZIkPl8FHfqjW8bipml7L9iWYTf
-# klw1DDLJJ6WjG7MN1dOxN9KRgKQTgAH/aR1i7HfBegmH8fX2nDQab2JpW9SDLS1r
-# MziA8JPOCxU8C5FF+0rxRnvZYekppChzSvP2fbUqtX8TBO+W7ixYji+Y77M47bbO
-# UxgiY9mlRw3IYoNaJydpXfIIDb+XZn3CV77Kuh7XszZvgRdH3C45HPhGPsaukTp1
-# GUYz420gpFfvQddc7QsOByjn24UT34w7K94eQkhuv1/juoQNMlEttB2/gXVzT0PG
-# csln4KM6qP8dW1+luxTDofnHn3oq9JOvWNb2SN6RM+OHNEcA1Vs=
+# IgQgp1/XYFm7nDZNPRfnJ306XMVYe4s/D8BU3ptCs7Jv2VgwDQYJKoZIhvcNAQEB
+# BQAEggIAEbLSWPKNnDIPTRpYpgOIYOyznoVUPu1TDsnWc/ns0OfrZImAz3CjePt7
+# ma2zEP8lKwr7a+rexlCIqxIdKY9vaX6xc3/CkUl0tT4rREpNF9I/JPRl4hCpVvqr
+# CASFJA2vdNzPkPVlpgwVtOVVxgZKPw4HgMXJRzIbYgsZnmnWumGBja3Pp/jVB9oZ
+# n1wqckCU9iQIggbJvi7RILOaVFivRy86z2PCTG6mok1pFLefFjQjEGlysTblrbuN
+# DMCFhg+LgqJpkHz0lrjZY+umSqfMvGHJnwSINJVZht6kNaj75yDEDibCrDBbX8FT
+# 0xfL50aOqpdLWBh3sel05L+vcJ6sb5UGrmxbXQLCiLfdQG04pEe3v9yMHp5CmC8k
+# eDEGYy0gg9HBb0mtsIx181208OG+4ICgZnwL47VDgITQFWDJO9rr7n8vJ+RKRHme
+# BqxNLsGhu1xFy33e8A+zZq/klTGgwRXOn9OTcHdILkj4OVE4DpDFcU3VnY021Q4g
+# HqNA9xnNKgiPnqD0go0JmPNFqv9aZfCbxmjGNtB0/YLdumoZsL03z0+nXBsgQkrc
+# RfoJfnLSC7JNCokk/0pndz/rpEg5VYIFsUqvcWcY5iTrnPPJJgcP6uNr44LdluMz
+# CQj/dRzaniw0KDqHIpj6fBECalvj8zj7xI8h0UFNMmTDm6dHuDI=
 # SIG # End signature block

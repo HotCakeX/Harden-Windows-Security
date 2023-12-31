@@ -56,7 +56,7 @@ Function New-SupplementalWDACConfig {
         [parameter(Mandatory = $false, ParameterSetName = 'Normal')]
         [System.String[]]$Fallbacks = 'Hash',
 
-        [Parameter(Mandatory = $false)]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Installed AppXPackages')]
         [System.Management.Automation.SwitchParameter]$Force,
 
         [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SkipVersionCheck
@@ -426,8 +426,8 @@ Register-ArgumentCompleter -CommandName 'New-SupplementalWDACConfig' -ParameterN
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBdnM8YvV2ZMr1T
-# yDFsp8EEXh/xKi+UEktWyBl1JvDooaCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCPCg6cLQJBOsho
+# C6W7/qPknP73Xg3hjY1HWkxSjQvgRKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -474,16 +474,16 @@ Register-ArgumentCompleter -CommandName 'New-SupplementalWDACConfig' -ParameterN
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQghqXtqIltEwYogNItPK4OTyZCTRu8U801EWCvRolbW5EwDQYJKoZIhvcNAQEB
-# BQAEggIABOd09d3JumihjKNhLKcGekBzV20VJz6BJjuvithm3TY040tH6/ZzUwDm
-# LzidaZYD4VSAlCsHgyrcSLQroMQsuyNnXsbrbaC6mfIS8jIZfHHcyPvClfEg6ruc
-# gaHEK4bM+B9d7QZ35sZUsewkR+2/t/QybFZdYD9peWPYEb0Y27HjrRBdgeXH2IB+
-# JjcJAULGnNmjETjKbNLPuUi9y3vNR+mKOQBE6aEiyVrfFRI4ohSJ3g43pFd3iTzr
-# 01vQYv3WDpvV1EZMUS6x30wKHRafue6v5/XBb2+qu509yLJXCGOs5Ylm+p6ttL0j
-# qShytGm+y5FYwh+espxPsGl9pqZCjQ95doi1W4OquZmdN3jZitdKGDlgcJm4Qg76
-# WZMsEzUkNaQy7fEzmrNw1n18Wt4NCFmdqidWzM8+4gO+YUHg3YdFJDqroIXmaTSQ
-# KinY+LEvm6VLk5LUM315QIvpG0PrcvwvKKuFS/YM+GV8blh3OmkG03QIscPaX9aa
-# B8s253VDKIk6Vk8OVwkNMcOl5c2cWo4I5HMa0CDnYUhapd1dDeaJaVC9cahOPJ1d
-# zN804q2z0MXTWuq2ErqUOY/bR1GVCUAEd5LFPkmkg7VBIghF0+1ZUR7vcVgijAeG
-# FiovAmH+D+E0k4PTRGNisyRlx0j3iutk7dvw8ydmMfHexlCj5lI=
+# IgQg+XTVxnJnWF5uopvpP1bCyvADBGTHRIaXJSm0J1s23gEwDQYJKoZIhvcNAQEB
+# BQAEggIAnWc9Maf3M0CFCYGuyqUyDpEzomlxu6E8z0C0VVoJxaa4aio6OFyX3nQE
+# ksiIcawnDAs0a46Qqtc2dwM9FBfE7/uN+80fBMVjXP/0z8hn2ZEVsDzMqm+2fOq3
+# ifhaMCAB4oI2ijM788OJIUTjqhP761RqfZaLufrZmzIlu/RXsRMGCT5ogrCNXhnn
+# Q3oXeFlcowJM13ldHyfbMrHjPPoqu/V0tfXuKzqfxeZNSi9/vJH9l7D8pkJXKy0s
+# RFBXs8T/YTByMcDnZ4vcbO+f5HisLvrpmh8IUO0fnsMpmyM5gQNMek7jJDkwoG3P
+# ABDqvjy/c8ZDqjKF5hCq3PAlDj9YDe5QR4cmf+2nTH24s4gVpfC3tUtBS3urtYMb
+# HFEssvXMsM1RUQEP4uqUdhJ+7j5VI/F75AucpqnPdUFjg1pm8yRzoblACw6pPUFh
+# f4yWo/QRs0dG4iTZS9x6G5V9RK6Vo1pmiTwgm9agBmo4p7FI0ELnPGLRDmNX1D1R
+# O1vqlzZaVIFfGyDYrX/GeiaGWSO1F1NZjogBll+ztXCud3m05cXGCvoJThV3tEEu
+# y1deMrQq31xYd2XoMl8iV7pocmIlSVHkoeUboLc/P7nLiQUTQ3hh0dRVjx/ZXh1n
+# 403FaLmr8hY+BI9W/Fl0z3En5xojaurLyxp8epASQm9eAeEbbfg=
 # SIG # End signature block

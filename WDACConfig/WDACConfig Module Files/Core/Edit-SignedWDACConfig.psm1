@@ -218,7 +218,7 @@ Function Edit-SignedWDACConfig {
                 }
             }
             else {
-                throw 'CertPath parameter cannot be empty and no valid configuration was found for it.'
+                throw 'CertPath parameter cannot be empty and no valid configuration was found for it. Use the Build-WDACCertificate cmdlet to create one.'
             }
         }
 
@@ -1444,8 +1444,8 @@ Register-ArgumentCompleter -CommandName 'Edit-SignedWDACConfig' -ParameterName '
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCB6Qh0yfKtJL/00
-# 7Ay5Bt/NQvD/Iq0CNnT0/+CNIsN5ZaCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCAKZtyYbgXwsGFm
+# kb1PFc9PlxGcrBeH6PeQWLBWlx87aaCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -1492,16 +1492,16 @@ Register-ArgumentCompleter -CommandName 'Edit-SignedWDACConfig' -ParameterName '
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgRg06EthtBJq1KY6n6EC2Kh7L13nRIsdf/Trjb5qo2WswDQYJKoZIhvcNAQEB
-# BQAEggIAJaOq4+t+x/4sK9VAsH3h4jayhJ2S/cWK0SaOQ6rJdpzkfxso91zCLUNI
-# 520sxTZa2FPN0rjHkHh7Sc9QMutLfgImmAHUE9raMmd0KyqcOyhu0JKGVlRv43sN
-# iEbqwOrokxrYKR3ewx5sRcBj4Y8vqph5sb1cP1B/aZ9UdGqz66o1ICJ65arYQyj1
-# 6oBH3InWPRPDsaLweOY1KtuNEgP9XeQ1BLCmzQS0bhFICZtaBNTkPSydNRhVL7OD
-# xKkbUJrMg5T5DHdo+LTOFr1vN4BraD23orTm+zizmIaar9hychFhZdin3Vl6skzv
-# n8CY4CJ57jMEUxvlvfLSAlEO2ZEoxb5BFn1zLKbx34X56+lEB5pHJTk6AVOJ4E3q
-# 2o+rhdMHuHgtgnj2xWeJbMVnu0h7lAY48KUPJWxUeqr5h/8EzYYKmh+4jeZTLRR5
-# Sd3RaoxXSH3OjFUU6MlFiPTNtkwNY2UYcSRfmxvPztSp+k0VaBCDOgpNDHtF0LnK
-# dBYjePe8MsDBl541ZJDGoDzVMp1b7C3cPMb2UxKpcl8lqvn+rHe05SiiT+pMCSiB
-# IvSPjyiif/r9hmokeij6GPaq7jrIfvClIo7ipdPLIG4e/x9CUOL5yjcE0NdTLxyn
-# bWDEVaSRb7WuYmrwczBbbdBRtzinvVx3SuBv67YfZLgs0GrWypI=
+# IgQghitRSsyFHMNtZwdBSGDK9dUJKPQ9x5XZmS5N8hsMOI8wDQYJKoZIhvcNAQEB
+# BQAEggIANEm0qtHRkxdtHFYW5bRrDJbrmeyWL3PKyhkH/6ryRPfBb6n+9dxL9ADV
+# Ru/m/Ww0nali2AlofstreLnU5QpgXsfdwqYov5RKGxx3BEUK/5RO1P1E8jSYfPmZ
+# WvD/zZVeVMsqWmeBQes+fqbGCtIn39su7czIFyyz5GzVG7jgWBcZ8j4ofiVPvdGe
+# 3RH6VeGSz+wG58ZiFFa4OrOWvBIJ8og6gzyu/TE3Y2sZ1XODlPkG5jiuxGSxSZSJ
+# 5jmNL+YFI4uh/HOVzZWZ+leGxFydhrUslsCR8BWAYUa9VNB+Jd35uhjufe7hQXRe
+# jSXNc0mS92AYPG9vAq/3S+Ltnx7S8FHMELnHh0KrOKWbBxgzYLk+P7EtxC0rnQKn
+# BGVf6U0MX8J7El135E31fGWgbSw+2MqKrpE5xL9xN5yD8qAlFYrubepxMomElIQv
+# h//NHt/Qic0tyTZ6sRXaLLmMU63kEKuoNesxFpxTkG3FIpCnAeMGp7UVm1IfYfzf
+# BB8mkPiYkhxwmHVEdAUkPpQn0xhKEKdBKNB0nRxLTKey8A/iBTgh90TJ+FPclsSH
+# qMKco2y26V9vLuEen02V9rSd903dJoT5ejf4aQxdjhl+S7neHJjOBqftgJGH8Yp3
+# UaAfgw3SgNW+6yWVrl/6Qb8FdkTqOJB6zckX4H+gmm5wYJosPeU=
 # SIG # End signature block

@@ -110,7 +110,7 @@ Function Get-SignTool {
     try {
         # Validate the SignTool executable
         # Setting the minimum version of SignTool that is allowed to be executed
-        Write-Verbose -Message 'Validating the SignTool executable'
+        Write-Verbose -Message "Validating the SignTool executable: $SignToolExePathOutput"
         [System.Version]$WindowsSdkVersion = '10.0.22621.2428'
         [System.Boolean]$GreenFlag1 = (((Get-Item -Path $SignToolExePathOutput).VersionInfo).ProductVersionRaw -ge $WindowsSdkVersion)
         [System.Boolean]$GreenFlag2 = (((Get-Item -Path $SignToolExePathOutput).VersionInfo).FileVersionRaw -ge $WindowsSdkVersion)
@@ -137,8 +137,8 @@ Export-ModuleMember -Function 'Get-SignTool'
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCB7yBwPBNTqoGXb
-# CAztGEbblNapp+2utBMbdahZsxnyHKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCD5FAo3GkihdV5N
+# YztICPJukGUCUBwJZxR1eRTR6KVoL6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -185,16 +185,16 @@ Export-ModuleMember -Function 'Get-SignTool'
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgUxypjwW3dIoyTSEgs2ifVdBKHRmq4OeKOjIhvD+p2tswDQYJKoZIhvcNAQEB
-# BQAEggIAAcOkjp04jjVfr2+pLXYwm1h4H0ExeWH7wk9xdo4fdQbx5SHAzp5c16nI
-# PJjr8ClundRvdiuTATc6L/Dcl16nB/d3d3V/b8XqHhHvoyhEXcljqeeMgHF3+xRt
-# 7LpWqbcda6FeToy+Ozl2MSEksbjnl3ufKwBB2201AnTJwhaVoqCZX2etRaw333be
-# Ze3PwlMxqxaICXIRyH7vlVAEpsg+IhPiidHV8yas3n/OInUR0xdzsAKCn2I7MaE/
-# ubTlKwADiYgLx827+5aJrMxDBpFJLoJzadGGIJTdMcpckoAhIryUWV9M5EPvtDj3
-# n46rQlvWhUSfKPEZOfzErCGJVkk8xwMUcvTTxqJ7G9UzFI5lGvW52tiWcnisqDpP
-# C2lGFcxDpuQlpBH4/RZl+V4SfqFwM4PpxIWiM+KzVfk4ppJLGPJ+4gdKUz1NY/HP
-# oQ8wRbt9tKgOI2IqZDputspBWNhDUe2LNMpcHIdV+GDHA6X5w2Qa54NAOQuiK+y0
-# /dmXs/QS0+rfZVUWDxBZpgoMzYhaS+70uEYT57KlRzv1IfvXD3SiXXN9AELSfRbC
-# fzY7+1OG1nGw0sRjbj4XMHzq60FJv/JZt5YxenAThBh8iFg2R/Wa5oiCFQmTabFJ
-# ZszZ0bfKnhLpjX/sr4LfMg2zkl5IQvI8KnBvy61aGGGJ6iK7BhI=
+# IgQguXweWaS+jn1jRa113F+nhfNU6GlEIReNKWWVn1FShggwDQYJKoZIhvcNAQEB
+# BQAEggIAAIRmBSdJO1EDk58PjhgUhy1x+Yf5hlxB0hsCFIzT7HOj9TG5OBKf20qv
+# Gt726T80gnO2hnhkeJdppwa8n0R+DVgejuvWBOd0tsC1kZ3CkQYZkatpS80AYfgb
+# xn1MYHvhvLWJFKztSuG8M/Pwt0j0XPMCgsinLcZOEp/SuQSzN+e18lQE8swbx8mC
+# t1tWFtHQ/H3EQ4CfFIz9V8xxDMyBp4siqelZq236ymy5uYYKOaNLlSfUTQXbjm2l
+# rpLOzt8gpqvp6VBeuRSCvx5ARdXQTeeNVIXSSLQVlrCtkjpSgEJpH44+qfOA2Rc/
+# PbWbFlQtQeZHPLZvcYfTlOZu9gprSh4HgaYxxSkWJhTZKhYx7oX8tdWuzdbZ9UrJ
+# hUOfEpLPF51j0xIsm4XUTRS8IrCTvLpztJ45SVNTMa6ZO0OQFv0ei/Ms8aBLsumi
+# WlW4wXq81jEhklRp64MfEAx/Gygh6DHVXwN3r7AnYKYl3Yaj0Ety+ZOJz+HD8458
+# 3Bz6IqazZ35PkROyw0A2q20vHa2w81fRvqwN5uiW24jOphSJFmLzSvM0kw+BETAi
+# tf2dhILVytmDPn+zhOctZkdHtbzSj4JHU8dVaH6vFLXNrct/DJUO8cr8LpkaDQtb
+# qJULivr2/GXyyOoiAjJz2917DSXGI9bqE9ONsu3CzprzAEEycLo=
 # SIG # End signature block

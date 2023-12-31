@@ -17,7 +17,7 @@ Function New-DenyWDACConfig {
         [parameter(Mandatory = $true, ParameterSetName = 'Installed AppXPackages', ValueFromPipelineByPropertyName = $true)]
         [System.String]$PackageName,
 
-        [ValidatePattern('^[a-zA-Z0-9 ]+$', ErrorMessage = 'The Supplemental Policy Name can only contain alphanumeric characters and spaces.')]
+        [ValidatePattern('^[a-zA-Z0-9 \-]+$', ErrorMessage = 'The policy name can only contain alphanumeric, space and dash (-) characters.')]
         [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true)]
         [System.String]$PolicyName,
 
@@ -448,8 +448,8 @@ Register-ArgumentCompleter -CommandName 'New-DenyWDACConfig' -ParameterName 'Pac
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCAejOnlCJjV8D+v
-# BexWg68e2DLfsrbc/x0+23q/P7tE66CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBxjFw8H6ht4/ZF
+# CXSIA83SvxgM7TaHUYxegYLl/Lbk9aCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -496,16 +496,16 @@ Register-ArgumentCompleter -CommandName 'New-DenyWDACConfig' -ParameterName 'Pac
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgvmP9/F1DLgg57rZHavIaG2rxSD+FrBoXAOJ0FPL84icwDQYJKoZIhvcNAQEB
-# BQAEggIAYSAYFPBSJGkwaGheL+cAMXOr6NVqD5Rwh7ADmuyr+indJ91LE1Dr2ql9
-# oSl0r3Gf/ilr+khJpF4BZmzTfrbRy6d5Sk+MgaBDgkyO1UnH1798ORiC67nwSwYW
-# oTg8P9zQ+EAK2fvxPzzopYjBBX3iDmNGoxgQt2Ihoh8cpYu9VrXxmO0orVFDHvgL
-# KjsYa7xguOSrcIBC5hTlKwfS1qIMkqq86a3B+Mc1AsJ6bsbdR6ybFZwDkq9cNH/6
-# qKqWYK5Ay3WGi+4NC1y9lWvmlGj3qAdUk/ySwvf/eSTmv/syyVKk2vivkEMXmbx5
-# 1zQGfNzTbfdwD+9rgk291kXpDXdKXn+mrb/ByWjgFx+Q6c3SagNVwFPg0aF/FeQ/
-# ivcL1UiYfDI2o+uLanTpybg7jCgWoa6iymjepeY3Z0JoGzk/VCi+avz3DeYOTwD/
-# kjsCq2JVJu6aYTfc8MOtamQy1R88eW5XL4RIfVO0TN/2cOmUlfzzUP1tVKwhAe2k
-# zeTxbW3nzCRIJ2xy7FR3pyiugeDNU0IEkKtySkxji/t3uPOsgTeu1X5gl6BhKhnL
-# HXmtWyl6K6sMb8HcRRQx/h3aVRYtQbXzjuAhEjBdrx5AtHbgsi7KISdtujGTPgKY
-# d0rnGgfnmPqWKcpeu4b+xX0NTvc9T1wLRcWPStcmkSbmUuqhZ1s=
+# IgQgWl/2FfnU/knzplMeAtsg1PCI99YRiIu/zlsbnJqBtvYwDQYJKoZIhvcNAQEB
+# BQAEggIAMGqT0gfqmMjdCHTgBvo5A9cMZrZ2w+lPLjl/QiCRnBe2dmGMVD7EmI8a
+# Y6u4b2X9zUkq+iwGQ04pWrxaSFxs10120BOpMklQESFDIEVEUPEuwHw3n1niJREG
+# 57yXB15/2lSZAZQrCZrHUB8ptuqFpVSEXPvgTuhZuM5sYtKSYROePpwyo/CAHdFe
+# PZsnHPeT4PI2d3tqm2KsOJv70pOx+GD4Lj+D1dgnDEvRPpRFSPSBbSldILYldOTh
+# WYWq/ZANjZ59SYOsH8aMOzsJ79cvsDutLzU3+2eETUL3YpScp8gd2p5TYfoWxhBQ
+# CoTTEl3MreucGTupXArfVrvJjRdA6/Dj0zd8kiJRDRDMBRIfOEIyukuzPhsUOQW5
+# 1X8d1nYpa9TJmc80GtcAb6RPOERpK8Sc6RSqfsyA1skiWa6iPht2uJpXvJlY3ztD
+# GqhwRAAyDN+D39ejr9rMnqZd77yKL0FjZsAPv8DXAaks128MSlLwz6mWn0VsFKcd
+# MiHtTzgOjPbn7Iwa4ZhX/8dpExIlH0eA7a5eP0cFGyvLFTxB12G9fA0Z95evtCXV
+# LNb1z4/tny2rot0Jfr0LL7tMqHlefQSu/ujM6YVyJpPHYMzd4xCrRBTSeYVk/UqU
+# H/SNPXSHNNYOTBtSQNcUiwv1jrOoLf/PoDkNBkNu7lxhMgYwyd4=
 # SIG # End signature block

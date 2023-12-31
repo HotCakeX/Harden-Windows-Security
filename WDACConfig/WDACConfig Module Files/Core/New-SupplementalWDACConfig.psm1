@@ -25,6 +25,7 @@ Function New-SupplementalWDACConfig {
         [parameter(Mandatory = $true, ParameterSetName = 'Folder Path With WildCards', ValueFromPipelineByPropertyName = $true)]
         [System.String]$FolderPath,
 
+        [ValidateCount(1, 232)]
         [ValidatePattern('^[a-zA-Z0-9 \-]+$', ErrorMessage = 'The policy name can only contain alphanumeric, space and dash (-) characters.')]
         [parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true)]
         [System.String]$SuppPolicyName,
@@ -425,8 +426,8 @@ Register-ArgumentCompleter -CommandName 'New-SupplementalWDACConfig' -ParameterN
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBXbFPqMJltLgN8
-# 5AVGWDFQxqS3squzHLXzkNNm8ZMPYaCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBdnM8YvV2ZMr1T
+# yDFsp8EEXh/xKi+UEktWyBl1JvDooaCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -473,16 +474,16 @@ Register-ArgumentCompleter -CommandName 'New-SupplementalWDACConfig' -ParameterN
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgtyazzIz1fGYZfimBzN8Ml+FSK2f6wKYWLd6rfx0/6mYwDQYJKoZIhvcNAQEB
-# BQAEggIAKXdguahVdT4Cr0xXsuG6WIYuD8Y95zN+x7bAzuYPOXLSgd2914GzLKCV
-# nQXsRWpJHnVQwwfrY1fVHkiJVjOBHcK7/qlNmt7Tmu72Jot/Lu4l+jeJgJB8qY+w
-# GIX0fmMfWBLecCP/RdMcUDK9rD9GA8cN0K+DLZ0lK7BhVjntJ+ziF88et3UVRT1/
-# KO+LgbC8uX3kc/b0eSkNmX6VByKqTZPz9m4qFaJlBmarVtKCsjx7WKsPHsHkXHeo
-# 8D+LbyBNlrwjbFYSJ7f7Sml6fSVQevqdhsQ2ZpLvsaHCrrsuLqEHycn4nUmJLRBn
-# h/MICtmyq7BvFQIHL5ajLayM+jp7PtOb6LE1GmInCPN83/0VberT5JpxNGlQesO3
-# aK7awU3IonirA8evE+MWogcEozOHFqdbGnAm4mpBPzN12begVHCLuosOdE8z8suv
-# 0NIDYUPt2qrMMZBRnoOVE1ENXmnq8j0nT+UjfBLydSwnOrxFe7YMLx1x0e5ahcdm
-# mkqn+fNVZYgSKUN2UezZa27Hatjzn2cBs+mi4DCJE8VQWRMIVBrPd2jRjqRmfgS6
-# g3aMiJq/zthCD9FBJ5dr2Jki/2MjLHo3Dxq2fmpBVx7Q8BnKRQ12edbdvinctejW
-# ISlj+PCzVjTQUVd7r2yV+/L8c5PzSVX0jccMp+Mo7aEsP2NnyKo=
+# IgQghqXtqIltEwYogNItPK4OTyZCTRu8U801EWCvRolbW5EwDQYJKoZIhvcNAQEB
+# BQAEggIABOd09d3JumihjKNhLKcGekBzV20VJz6BJjuvithm3TY040tH6/ZzUwDm
+# LzidaZYD4VSAlCsHgyrcSLQroMQsuyNnXsbrbaC6mfIS8jIZfHHcyPvClfEg6ruc
+# gaHEK4bM+B9d7QZ35sZUsewkR+2/t/QybFZdYD9peWPYEb0Y27HjrRBdgeXH2IB+
+# JjcJAULGnNmjETjKbNLPuUi9y3vNR+mKOQBE6aEiyVrfFRI4ohSJ3g43pFd3iTzr
+# 01vQYv3WDpvV1EZMUS6x30wKHRafue6v5/XBb2+qu509yLJXCGOs5Ylm+p6ttL0j
+# qShytGm+y5FYwh+espxPsGl9pqZCjQ95doi1W4OquZmdN3jZitdKGDlgcJm4Qg76
+# WZMsEzUkNaQy7fEzmrNw1n18Wt4NCFmdqidWzM8+4gO+YUHg3YdFJDqroIXmaTSQ
+# KinY+LEvm6VLk5LUM315QIvpG0PrcvwvKKuFS/YM+GV8blh3OmkG03QIscPaX9aa
+# B8s253VDKIk6Vk8OVwkNMcOl5c2cWo4I5HMa0CDnYUhapd1dDeaJaVC9cahOPJ1d
+# zN804q2z0MXTWuq2ErqUOY/bR1GVCUAEd5LFPkmkg7VBIghF0+1ZUR7vcVgijAeG
+# FiovAmH+D+E0k4PTRGNisyRlx0j3iutk7dvw8ydmMfHexlCj5lI=
 # SIG # End signature block

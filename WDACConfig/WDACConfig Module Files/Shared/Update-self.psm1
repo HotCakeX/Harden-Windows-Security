@@ -48,7 +48,7 @@ Function Update-self {
     # This prevents the module from constantly doing an update check by fetching the version file from GitHub
     if (($TimeDiff -gt 10) -or $PerformOnlineUpdateCheck) {
 
-        Write-Verbose -Message 'Performing online update check'
+        Write-Verbose -Message "Performing online update check because the last update check was performed $TimeDiff minutes ago"
 
         [System.Version]$CurrentVersion = (Test-ModuleManifest -Path "$ModuleRootPath\WDACConfig.psd1").Version.ToString()
         try {
@@ -110,8 +110,8 @@ Export-ModuleMember -Function 'Update-self'
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBsLQorzh9dU4Vu
-# Iwn7IDdmESmO9i06zQZFbbv63uIHq6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCB3MkpGhivrGUeY
+# dBhOBptTcTJNGSlfsnreLAokY4ZqXqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -158,16 +158,16 @@ Export-ModuleMember -Function 'Update-self'
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgxxHslc1xppXmFaOchmQSOXvHSZGF2Dp3M9a3ZH152/kwDQYJKoZIhvcNAQEB
-# BQAEggIAR+KZPTvFp7kvkp11LQJTMbPu7bPgdCwMtTgaYfMQk+cb7gYRtkyqqBc8
-# Y0FE4UcZFl81BJRqXVi63yDKeowuMa5cAhAIDAvfbMatLKQe79am1NC9IIxafGro
-# /ZV9tQHjFoy5wEsSG9UqpvzFRKC1ChT9xC4Xrb0Dtlbr6BxGCPQN2O7KUWgn24Pe
-# pYkbAijFbMbpGxgkXv1T84qVzbQn9byQXLXGtJwIlFKAJONg90i0V5i1jDt7AQqo
-# 8mEBuNpIeLZ5l/AYJkVIWUIDK4f3RMO/3MUJAyPRTytaloaWwkqsEhLmRnhvMjup
-# OXHtg2j4qAaTDRN80ZNtJk18MtGoOUmzctrpMmB6py3ij4+lRW9oAKIHzibyb13Y
-# eKpzyeOiaqV/n98qQBcKHyVGWONGHQrhZCLvNVYFgy4vQ74KkYUsXTX620/4D1IS
-# E8CianyYPDu0XRIdmInrGDsG2EkaWurOo81hTXhOsgGW5/0ogqFu4a6pqgF9claE
-# Sko1A5faOHwTnnETftesofY6pSa1hW+3bVDlqRNtg45OGVsy8eLXcm6EYV6wtA8G
-# qMvnrZrIO3bf9e0nlimDTKMNMtJrk8Xl68AH0sFl1Up97Eq1xsbq+MmRiqYDXNZn
-# mAkHABb0FUx64C8xJGrc8thaMAdnuSfCJTGbpWLF/VTky9zsAM8=
+# IgQgWJ+o0jfxufIVze2gXAxoJNsr55uYRrU3JDoTHG0CdoYwDQYJKoZIhvcNAQEB
+# BQAEggIAP7tvrhByGhubAtf3KXlzFHp+OmLkHSO9pYoZme6wgpINTDgQQByfwl6D
+# RVdjl8Kbrbw3qLx6BAuNRz4POPib/yq3K6n3FDzMP445O5BdIMS7Xs566Wt5J09C
+# EhH8OmhYT520VQKJkXxcv+IODL9+nl3vh3nSqAYUjZoqOZ/qaXdieKftlqjmpg6U
+# w7QFQFGGccdqz8Ap14WP1378VslZyGL83E6vPsPH+e3CVS2OoLYRK4832cUfMNsg
+# uBEqu0W8rg2gkKztfhnOgTfhUiwcTYpmna5q/ZaOXNpzgAdWd8aJ3a+3G5G/vAh1
+# Y+UVXT3PWP+fQHrxUKt25M4g3Im8Y06a/5+MyeNYPmNvLCThT7urSeM/4YT521m2
+# 1sNz2pUG1+hZoB7504MoYgieHLW8nnIWZHacId1q8d8RR9ohZTgnlW6DL/n6K1Aq
+# Ajx8Wuzx5RdtpANrZOAeqhITnvGRUiJjilnyRbwjBiWCB7nxOlCX3g1R5tFWqW+x
+# rE0xerUCdU93+OYZRKrdK9UEroiWXoMX0P3nHeT86TXyMAggKeqJKcAUyOjGYXzr
+# uZufIy4M3Q93Gupl7tFw14l6aWFs0cfWSTUGZYUJoZVcwv+VCARl7dyQl9SBOJx2
+# J8LJhOmK4m0mDp/VffaSiHhm4D62TdS6sXWkHVC7i3+UZV30/lY=
 # SIG # End signature block

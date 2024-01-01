@@ -123,29 +123,10 @@ Function Edit-WDACConfig {
         #Region User-Configurations-Processing-Validation
         # make sure the ParameterSet being used has PolicyPath parameter - Then enforces "mandatory" attribute for the parameter
         if ($PSCmdlet.ParameterSetName -in 'Allow New Apps Audit Events', 'Allow New Apps', 'Merge Supplemental Policies') {
-            # If any of these parameters, that are mandatory for all of the position 0 parameters, isn't supplied by user
+            # If PolicyPath was not provided by user, check if a valid value exists in user configs, if so, use it, otherwise throw an error
             if (!$PolicyPath) {
-                # Read User configuration file if it exists
-                $UserConfig = Get-Content -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json" -ErrorAction SilentlyContinue
-                if ($UserConfig) {
-                    # Validate the Json file and read its content to make sure it's not corrupted
-                    try { $UserConfig = $UserConfig | ConvertFrom-Json }
-                    catch {
-                        Write-Error -Message 'User Configuration Json file is corrupted, deleting it...' -ErrorAction Continue
-                        Remove-CommonWDACConfig
-                    }
-                }
-            }
-            # If PolicyPath has no values
-            if (!$PolicyPath) {
-                if ($UserConfig.UnsignedPolicyPath) {
-                    # validate each policyPath read from user config file
-                    if (Test-Path -Path $($UserConfig.UnsignedPolicyPath)) {
-                        $PolicyPath = $UserConfig.UnsignedPolicyPath
-                    }
-                    else {
-                        throw 'The currently saved value for UnsignedPolicyPath in user configurations is invalid.'
-                    }
+                if (Test-Path -Path (Get-CommonWDACConfig -UnsignedPolicyPath)) {
+                    $PolicyPath = Get-CommonWDACConfig -UnsignedPolicyPath
                 }
                 else {
                     throw 'PolicyPath parameter cannot be empty and no valid configuration was found for UnsignedPolicyPath.'
@@ -1168,8 +1149,8 @@ Register-ArgumentCompleter -CommandName 'Edit-WDACConfig' -ParameterName 'SuppPo
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCC8NNYy0s3V5ozr
-# plseGaZRwU6N60oH5GGmAfHYCEZQsaCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDTSiYy0iLmHK+i
+# jr0mjexy9dincVJU4WnjkvY+hg79UqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -1216,16 +1197,16 @@ Register-ArgumentCompleter -CommandName 'Edit-WDACConfig' -ParameterName 'SuppPo
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQg66f0ufMf+WEYKMiqRCTV+N/Ca93mrobFYyIjzhyczpkwDQYJKoZIhvcNAQEB
-# BQAEggIAFvlsXiKDVW3l7MNNgSXWFBNZFABPkMltzwc6vlHsbrhbXtBYPiCqb2Iv
-# dGUIO21F7QdIO6UbqhZBCC21ZfZ3kbn9n0YwcUB0I6dlqZ3fUWlf5CWi4FJzVJtH
-# auwNu5dUtKDi3nknsRO7ae0IO8R9tzBdEk0h/o0ncQOpmKGs1yT43iNbewlRRIBo
-# CLGVsOnw2TH35CYrlwLq0TyyFgAXqlgvW0QIX+yppLaj6igadHzpMBzAeWixO1sj
-# VhkQHnt+hxxq5TNo95MdRm3J+eOzGhTls3l+7Pkpg9dAiLeZ0LnwmtXLMZvyivoN
-# ie31ets50GREY3WN43WSiztptTuf425jVLvQYQIIOWEf6UaBF9oD5aJaDazCLrEr
-# 2i7fQpmYR1g9hcAUqNzvmQcq/yQIUd2ywW9SWX5lqhyXsRio/WBr/jv8X064uSDP
-# jwVBOb2fcJNXiKAGgBr49gF3c6jJIh8Y9gC4LjIBeQZ5l79FcYQ9qFkkb6Nnzs/+
-# Mh2p80r1a2QQJogU5EQDqLO3rmPXAVsegN7PCZ3NtOAraGvALId69AASG02n+kFn
-# i6IQKxwwys+G2mcmtlDoHKNQZY8/JIizA6PcCJh1wGkmCCZwqHCxyPehH1URyHyZ
-# XXoB7HmO69wC4SJLGYA4eT9OzUNc335GrvNa1UKGxxAWOIEac+g=
+# IgQgvKCvEEZkhe6/iHyudbCsiM6iuERLMBNMfUgDtQwz2sUwDQYJKoZIhvcNAQEB
+# BQAEggIAh8/e0de7YVxi2WYUk/cGW3DyZrQH+cXF2zUEjMRkegUbR2356iJUdxO/
+# rf4RrUj9UEq3d3AmHuwGPR8VZfPtvteYk/VubX9pDd5eY3MuRc5JVl/Uvcyoqrye
+# MNvePSPt87DGTXCmMiNV7IcL/OU79lmQ6qXM2d7M06yet/FgsvLAbtMGJBIKlbPR
+# s4/oRitwAs4PCWLBBxkCXLWF2OpSrY3djkket5/h7fKlMOfKOT47z53/Q3B3OBPH
+# LZR5OWfwe/arsiOuiZ7De6dh4jq0MQOu3e7c8KVRxJDsu1HAc6yQgsDo6ObTz/iv
+# XjvUjINgDu9gWiueIZWPPqKt79IvgqAkZT0IeE1LruN11Rm8LAWWuI46Yr6LAB7H
+# Txp/wdbAEIsxo/P8KRScMe2QqRreP9m26cKpzGUZ3p9jOppePHCJkjqnf5BADehD
+# b5BsG70u3fDyCpCsyxhfckfvwyPZ2CSvKCQgqQMGQlFjfPH8eHOyx5yyfqxRYBF8
+# Tg958KP2TVAfHVXdhDxc1nbIQKaqp3rddJ+6VSWRvXEMJPcnRLZb61k2AM6b4AXg
+# DOT7XN6Z8CIf6BBTtbhez9HV7H/GiaomSf6g8wuygzK8FdvkGUKwd62NBtO/KwQ9
+# AL4DqK5nB4YVgfJSEUIbIXxQjAqXXCrpTX9bngaI8F10Z0oyIJ0=
 # SIG # End signature block

@@ -183,74 +183,40 @@ Function Edit-SignedWDACConfig {
         if (-NOT $SkipVersionCheck) { Update-self -InvocationStatement $MyInvocation.Statement }
 
         #Region User-Configurations-Processing-Validation
-        # If any of these parameters, that are mandatory for all of the position 0 parameters, isn't supplied by user
-        if (!$PolicyPath -or !$SignToolPath -or !$CertPath -or !$CertCN) {
-            # Read User configuration file if it exists
-            $UserConfig = Get-Content -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json" -ErrorAction SilentlyContinue
-            if ($UserConfig) {
-                # Validate the Json file and read its content to make sure it's not corrupted
-                try { $UserConfig = $UserConfig | ConvertFrom-Json }
-                catch {
-                    Write-Error -Message 'User Configurations Json file is corrupted, deleting it...' -ErrorAction Continue
-                    Remove-CommonWDACConfig
-                }
-            }
-        }
-
         # Get SignToolPath from user parameter or user config file or auto-detect it
         if ($SignToolPath) {
             $SignToolPathFinal = Get-SignTool -SignToolExePathInput $SignToolPath
         } # If it is null, then Get-SignTool will behave the same as if it was called without any arguments.
         else {
-            $SignToolPathFinal = Get-SignTool -SignToolExePathInput ($UserConfig.SignToolCustomPath ?? $null)
+            $SignToolPathFinal = Get-SignTool -SignToolExePathInput (Get-CommonWDACConfig -SignToolPath)
         }
 
-        # If CertPath parameter wasn't provided by user
-        if (!$CertPath) {
-            if ($UserConfig.CertificatePath) {
-                # validate user config values for Certificate Path
-                if (Test-Path -Path $($UserConfig.CertificatePath)) {
-                    # If the user config values are correct then use them
-                    $CertPath = $UserConfig.CertificatePath
-                }
-                else {
-                    throw 'The currently saved value for CertPath in user configurations is invalid.'
-                }
+        # If CertPath parameter wasn't provided by user, check if a valid value exists in user configs, if so, use it, otherwise throw an error
+        if (!$CertPath ) {
+            if (Test-Path -Path (Get-CommonWDACConfig -CertPath)) {
+                $CertPath = Get-CommonWDACConfig -CertPath
             }
             else {
                 throw 'CertPath parameter cannot be empty and no valid configuration was found for it. Use the Build-WDACCertificate cmdlet to create one.'
             }
         }
 
-        # If CertCN was not provided by user
+        # If CertCN was not provided by user, check if a valid value exists in user configs, if so, use it, otherwise throw an error
         if (!$CertCN) {
-            if ($UserConfig.CertificateCommonName) {
-                # Check if the value in the User configuration file exists and is valid
-                if (Confirm-CertCN -CN $($UserConfig.CertificateCommonName)) {
-                    # if it's valid then use it
-                    $CertCN = $UserConfig.CertificateCommonName
-                }
-                else {
-                    throw 'The currently saved value for CertCN in user configurations is invalid.'
-                }
-            }
-            else {
-                throw 'CertCN parameter cannot be empty and no valid configuration was found for it.'
+            if (Confirm-CertCN -CN (Get-CommonWDACConfig -CertCN)) {
+                $CertCN = Get-CommonWDACConfig -CertCN
             }
         }
+        else {
+            throw 'CertCN parameter cannot be empty and no valid configuration was found for it.'
+        }
 
-        # If PolicyPath has no values
-        if (!$PolicyPath) {
-            # make sure the ParameterSet being used has PolicyPath parameter - Then enforces "mandatory" attribute for the parameter
-            if ($PSCmdlet.ParameterSetName -in 'Allow New Apps Audit Events', 'Allow New Apps', 'Merge Supplemental Policies') {
-                if ($UserConfig.SignedPolicyPath) {
-                    # validate each policyPath read from user config file
-                    if (Test-Path -Path $($UserConfig.SignedPolicyPath)) {
-                        $PolicyPath = $UserConfig.SignedPolicyPath
-                    }
-                    else {
-                        throw 'The currently saved value for SignedPolicyPath in user configurations is invalid.'
-                    }
+        # make sure the ParameterSet being used has PolicyPath parameter - Then enforces "mandatory" attribute for the parameter
+        if ($PSCmdlet.ParameterSetName -in 'Allow New Apps Audit Events', 'Allow New Apps', 'Merge Supplemental Policies') {
+            # If PolicyPath was not provided by user, check if a valid value exists in user configs, if so, use it, otherwise throw an error
+            if (!$PolicyPath) {
+                if (Test-Path -Path (Get-CommonWDACConfig -SignedPolicyPath)) {
+                    $PolicyPath = Get-CommonWDACConfig -SignedPolicyPath
                 }
                 else {
                     throw 'PolicyPath parameter cannot be empty and no valid configuration was found for SignedPolicyPath.'
@@ -1444,8 +1410,8 @@ Register-ArgumentCompleter -CommandName 'Edit-SignedWDACConfig' -ParameterName '
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCAKZtyYbgXwsGFm
-# kb1PFc9PlxGcrBeH6PeQWLBWlx87aaCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCVodqME99wSjUZ
+# xgDb2uecUwdVlJvRNlIzof5/VJFzvKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -1492,16 +1458,16 @@ Register-ArgumentCompleter -CommandName 'Edit-SignedWDACConfig' -ParameterName '
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQghitRSsyFHMNtZwdBSGDK9dUJKPQ9x5XZmS5N8hsMOI8wDQYJKoZIhvcNAQEB
-# BQAEggIANEm0qtHRkxdtHFYW5bRrDJbrmeyWL3PKyhkH/6ryRPfBb6n+9dxL9ADV
-# Ru/m/Ww0nali2AlofstreLnU5QpgXsfdwqYov5RKGxx3BEUK/5RO1P1E8jSYfPmZ
-# WvD/zZVeVMsqWmeBQes+fqbGCtIn39su7czIFyyz5GzVG7jgWBcZ8j4ofiVPvdGe
-# 3RH6VeGSz+wG58ZiFFa4OrOWvBIJ8og6gzyu/TE3Y2sZ1XODlPkG5jiuxGSxSZSJ
-# 5jmNL+YFI4uh/HOVzZWZ+leGxFydhrUslsCR8BWAYUa9VNB+Jd35uhjufe7hQXRe
-# jSXNc0mS92AYPG9vAq/3S+Ltnx7S8FHMELnHh0KrOKWbBxgzYLk+P7EtxC0rnQKn
-# BGVf6U0MX8J7El135E31fGWgbSw+2MqKrpE5xL9xN5yD8qAlFYrubepxMomElIQv
-# h//NHt/Qic0tyTZ6sRXaLLmMU63kEKuoNesxFpxTkG3FIpCnAeMGp7UVm1IfYfzf
-# BB8mkPiYkhxwmHVEdAUkPpQn0xhKEKdBKNB0nRxLTKey8A/iBTgh90TJ+FPclsSH
-# qMKco2y26V9vLuEen02V9rSd903dJoT5ejf4aQxdjhl+S7neHJjOBqftgJGH8Yp3
-# UaAfgw3SgNW+6yWVrl/6Qb8FdkTqOJB6zckX4H+gmm5wYJosPeU=
+# IgQgARs/NQvOAL2RNPk09MUZdjIb8vNecxHS5zl+XNwgNkAwDQYJKoZIhvcNAQEB
+# BQAEggIAFlIdvTAoBVzqIygJlyeaUStFJ6BIZAY5corx3B1BZJERB89nDGZbqiXe
+# RgjPgzlSYzhMdl8kEwaAtWx+WnyZzVpiQW9xjxfzaXWRqhCIFbl4ZWjxyRuARFOR
+# /6U7aTwvvyoDQ+v3woiT3EGCAWJwbU59r87ORidK+b+2vYHa6KhMKyQcfVgMmucf
+# gQ/9yxL1uTSMKqsplCLtg4Q1dqiCjxcK+1qGlYFH5iEOx5Xckfo2OG5Umr16Fckl
+# ElhuHBEWuFCufs9BRn8jX4Y9hh8eu+TySnMzuHbXJ2kbXnb8h4I5qYpfZ4qDZR4J
+# VhcNrO6G5fV+U8UmY8rcH48g3PXTgd2pr90zK8yFaK0/P98Um4lTY18mgjPnSBIL
+# D8XkH03yQu1r7pz88/cC1zK2CoCeCit6ATEm87PnpwXb0p7/kNspSauVNn3UcEHM
+# iwd83k5drbo/CaHc+svxyjpN0xasLjNO4w3+YELcBOoTQ5gmjtBE3gGE/07oj9JE
+# X551jTTi0oPt0faRbuy7t9DeKU7geVnfvcPOGWLhqZL/PFFfAAzKqKHV1I/bldX8
+# alldsAcvI8frmGyLsswLSYZ3qWGTdKCt4GU54H/Mp+sYpOhIIcgOYL/0F/+1BP1L
+# RVtA/e72i5oyUMLcFJIcjA46L8TLtQKMEg+AQ6IfQk8TPbXL7AU=
 # SIG # End signature block

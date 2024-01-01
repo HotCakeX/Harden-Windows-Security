@@ -46,7 +46,7 @@ Function Get-SignTool {
 
             # If Sign tool path wasn't provided by parameter and couldn't be detected automatically, try to download it from NuGet, if fails or user declines this, stop the operation
 
-            if ($PSCmdlet.ShouldContinue('Download SignTool.exe from the official Microsoft server? It will be saved in the current working directory.', 'SignTool.exe path was not provided and it could not be automatically detected on the system.')) {
+            if ($PSCmdlet.ShouldContinue('Would you like to try to download it from the official Microsoft server? It will be saved in the current working directory.', 'SignTool.exe path was not provided, it could not be automatically detected on the system, nor could it be found in the common WDAC user configurations.')) {
 
                 try {
 
@@ -141,8 +141,8 @@ Export-ModuleMember -Function 'Get-SignTool'
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCxgX6BH66QKOPT
-# fyHVN5zg6hznv0LWL/gBky3LacNCLqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBWto4uAhKJKiZa
+# +sx59oLq21tJnGfUvAJ0G0wAptOLtqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -189,16 +189,16 @@ Export-ModuleMember -Function 'Get-SignTool'
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQg2/xrHgo3SAy0x9cKNOc78P3mWFCnBX3Zc+gdZwZN7cYwDQYJKoZIhvcNAQEB
-# BQAEggIAnxcRLPBx/D+cieHjuFbq6ajRceDmyE1jZjA656kRy8ebBxSGySDQqcQr
-# OJuWDvlirkEepyGpsXF/MAyZjYEtkI4lwaJjWGLoJct01yDkckIXS+H+RnWTr6iL
-# 5ZDoqSgUW9awaeaYaQr3pdtwjRaRhbH7baz492JOX5xrfkI/zgE6oFNmbEN3O0xs
-# u0uE/ILfRPaLx4LygoSgP3jm7b0/uLwFkEpzm9hmx4qq5DtEuvk1WS72BeLCVS3d
-# BiCEm2ZyM3/cZ+TPKshqVshnLrFmh33vIYtQpNdERs+joZ54yvPWZxSU10J2O2Uy
-# ZG5/0EhT2jHqcPNVQDr8ye3GXOekTYO/ZlYeV7n0glVqBJ26FPu3Dm477L9GlEpJ
-# FOO52r3779iU5CMUDCwg9fQz/mEfrmJ/2tNmqSFREAeVrxgahBs+Q8b7NqS8AZdQ
-# JPZGTnX9meSZTb3+zKmBhemSsleugoa/6xGacohKaM2zD09HeN0Ru8mUP8HVN2We
-# mJIlRGk/L8uaDsP/4a1jl5XRt9CmPCGQ6Tdh/y/RMA3IlB60fqTdGmSUwOx7MSLm
-# ejETC9na/KOro2/x2s6cb/h+faXhTFHSwI9NRDkeVanoCQILu1JKUSZteRY8n+X+
-# Td+36lOwvf3BMGnSctxTS8V7Ermy7j+jrJ5Wq2bH3hiDEIBOC+c=
+# IgQgZi27NzGWAZWBf2sFV/cQfp2rxg19fSra53CdLRpo7hMwDQYJKoZIhvcNAQEB
+# BQAEggIAP7ZeY6KUUIxIsWq5yrRN2mePOxMEmHpFqd+qN2GPWqU6IKepcq49gj/s
+# Qmz8aeiMz9aWqXOhGLl+Yfk7vFE4LpnpoUEcra1naVJMl2MDLCSRSEkHl4ZHewUs
+# ABaL+lxIizzJ8JVRqmpj6eY2wHBW8tiLjFZ73tf0vV+rH7cacHeoLotL4uwgJmg5
+# Z/IGHGzNNVDd6dmOjqsw7K0o1f6yw42FrL+QH5z8/Un3nAYVIPOmWuiRGHXWKQRA
+# fJcwF5eOGEY38WcW2pTuqr89Wxz5ojTbLIY0gf5gZ3kY8GWjCG7BTN5CwYwxu3I8
+# lMMvLCwLxNffttzBogeLqXH3wEsn0ET7C5s7fMjpGCCG8qMYxl9+8QdTbCXMtjKV
+# PbMtRqJPyO3XR7sTnJ9HCu4Crh4ahW+cjPzC1ZfLj/w1CQxlpR42ZBjCkn3cKq5e
+# acM59F+UwOBhtY5GtgFvNJCf6g58BaSWF+GZ0TmRjRcNuD7JxeO0IprUbDlCPMup
+# giGZYcWu82KWiQTTnz+YN/jacIrV6tdZzkOkfO1JulIl0jvABgoDa7EvRHFUgDqy
+# xx8KpNQbeaun7GAf9FQykVJP0tO2T1E7LvCqwJqTHH8fbkLuvCjjkZ1MEDa/GBV6
+# ciuOMPIOnnyX3K3xj7AL6Rh53hrL8le/1M1tHi16BIrAInMXKj0=
 # SIG # End signature block

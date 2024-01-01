@@ -93,29 +93,10 @@ Function New-SupplementalWDACConfig {
         if (-NOT $SkipVersionCheck) { Update-self -InvocationStatement $MyInvocation.Statement }
 
         #Region User-Configurations-Processing-Validation
-        # If any of these parameters, that are mandatory for all of the position 0 parameters, isn't supplied by user, start validating the user config file
+        # If PolicyPath was not provided by user, check if a valid value exists in user configs, if so, use it, otherwise throw an error
         if (!$PolicyPath) {
-            # Read User configuration file if it exists
-            $UserConfig = Get-Content -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json" -ErrorAction SilentlyContinue
-            if ($UserConfig) {
-                # Validate the Json file and read its content to make sure it's not corrupted
-                try { $UserConfig = $UserConfig | ConvertFrom-Json }
-                catch {
-                    Write-Error -Message 'User Configuration Json file is corrupted, deleting it...' -ErrorAction Continue
-                    Remove-CommonWDACConfig
-                }
-            }
-        }
-        # If PolicyPaths has no values
-        if (!$PolicyPath) {
-            if ($UserConfig.UnsignedPolicyPath) {
-                # validate each policyPath read from user config file
-                if (Test-Path -Path $($UserConfig.UnsignedPolicyPath)) {
-                    $PolicyPath = $UserConfig.UnsignedPolicyPath
-                }
-                else {
-                    throw 'The currently saved value for UnsignedPolicyPath in user configurations is invalid.'
-                }
+            if (Test-Path -Path (Get-CommonWDACConfig -UnsignedPolicyPath)) {
+                $PolicyPath = Get-CommonWDACConfig -UnsignedPolicyPath
             }
             else {
                 throw 'PolicyPath parameter cannot be empty and no valid configuration was found for UnsignedPolicyPath.'
@@ -426,8 +407,8 @@ Register-ArgumentCompleter -CommandName 'New-SupplementalWDACConfig' -ParameterN
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCPCg6cLQJBOsho
-# C6W7/qPknP73Xg3hjY1HWkxSjQvgRKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBd8uBDC6eELvXO
+# 0iWvwlonc7FaFCR9S4u4GUKgEyrh96CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -474,16 +455,16 @@ Register-ArgumentCompleter -CommandName 'New-SupplementalWDACConfig' -ParameterN
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQg+XTVxnJnWF5uopvpP1bCyvADBGTHRIaXJSm0J1s23gEwDQYJKoZIhvcNAQEB
-# BQAEggIAnWc9Maf3M0CFCYGuyqUyDpEzomlxu6E8z0C0VVoJxaa4aio6OFyX3nQE
-# ksiIcawnDAs0a46Qqtc2dwM9FBfE7/uN+80fBMVjXP/0z8hn2ZEVsDzMqm+2fOq3
-# ifhaMCAB4oI2ijM788OJIUTjqhP761RqfZaLufrZmzIlu/RXsRMGCT5ogrCNXhnn
-# Q3oXeFlcowJM13ldHyfbMrHjPPoqu/V0tfXuKzqfxeZNSi9/vJH9l7D8pkJXKy0s
-# RFBXs8T/YTByMcDnZ4vcbO+f5HisLvrpmh8IUO0fnsMpmyM5gQNMek7jJDkwoG3P
-# ABDqvjy/c8ZDqjKF5hCq3PAlDj9YDe5QR4cmf+2nTH24s4gVpfC3tUtBS3urtYMb
-# HFEssvXMsM1RUQEP4uqUdhJ+7j5VI/F75AucpqnPdUFjg1pm8yRzoblACw6pPUFh
-# f4yWo/QRs0dG4iTZS9x6G5V9RK6Vo1pmiTwgm9agBmo4p7FI0ELnPGLRDmNX1D1R
-# O1vqlzZaVIFfGyDYrX/GeiaGWSO1F1NZjogBll+ztXCud3m05cXGCvoJThV3tEEu
-# y1deMrQq31xYd2XoMl8iV7pocmIlSVHkoeUboLc/P7nLiQUTQ3hh0dRVjx/ZXh1n
-# 403FaLmr8hY+BI9W/Fl0z3En5xojaurLyxp8epASQm9eAeEbbfg=
+# IgQgAQSB+FPW2FlBwBvZcD32z2CWOBW7Z2+rSj1NXpahFf0wDQYJKoZIhvcNAQEB
+# BQAEggIASPZm7FmiFdjrrPODT6Qm+rqZwYoXby9WXaQxBBbwkK84kaG+s9iEWZtP
+# pA4CzHX9ncQoKt9a/fZQ6jo45uWvfBV5Qbr9ZfbtZcGMpVT8pIIr22lCBQZdxCQr
+# vzDLNqaMUudKOcDCc3Sib3q1jHlEtylJlmDhG67PIXIUBDyj6+QirELQvr7pthNY
+# KOVUjgmGkPtRzSzqJWqDOLYrb77GU3yttt4VzpU8lPTdJHsrHX2jRVs8bZlhgsKf
+# GO3JkJpXW3ShRkJjBn8/eQxCUkJbbMijraoh4Yt96/A25rOLlt9FfEjj+ZQFPw9m
+# w86RPG1MKVB6mdWLE5Z8Xa9j2qDH2tvB6Gre1h2wQY5TxHoZ7aTywbc/pz8MlDeA
+# Cmu+c11z6C8geF1XHO8nUWs6IhCKZayMlxJRitzGCErgTdLD+jOgNXu9xBhnGoLK
+# 2OvA7gfnohC9gms/RsBBIK3+2elvZMAKgDoQjnikIoVlDAvUnNH2707GGbbWkPi4
+# qFZKMLYXdJKSyxhJAs8bM41KBGCD5OjF8rsWsGLRY9YLVxLBE9VzyXUTdv16sbrn
+# cf+y2uMYrc/GUkdKxBLIoqzuDCYqIldHdekerd4m+bhPCeCQVw++nBcHmCKKbkUa
+# qTT03bL8AsqnHrX1q/ZwvjHKCAm/8bKWXtKFpWVfH/5Y/IyLtss=
 # SIG # End signature block

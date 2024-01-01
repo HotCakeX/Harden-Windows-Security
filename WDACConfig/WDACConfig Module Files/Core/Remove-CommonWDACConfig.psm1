@@ -16,13 +16,13 @@ Function Remove-CommonWDACConfig {
 
         # Create User configuration folder if it doesn't already exist
         if (-NOT (Test-Path -Path "$UserAccountDirectoryPath\.WDACConfig\")) {
-            New-Item -ItemType Directory -Path "$UserAccountDirectoryPath\.WDACConfig\" -Force -ErrorAction Stop | Out-Null
+            New-Item -ItemType Directory -Path "$UserAccountDirectoryPath\.WDACConfig\" -Force | Out-Null
             Write-Verbose -Message 'The .WDACConfig folder in the current user folder has been created because it did not exist.'
         }
 
         # Create User configuration file if it doesn't already exist
         if (-NOT (Test-Path -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json")) {
-            New-Item -ItemType File -Path "$UserAccountDirectoryPath\.WDACConfig\" -Name 'UserConfigurations.json' -Force -ErrorAction Stop | Out-Null
+            New-Item -ItemType File -Path "$UserAccountDirectoryPath\.WDACConfig\" -Name 'UserConfigurations.json' -Force | Out-Null
             Write-Verbose -Message 'The UserConfigurations.json file in \.WDACConfig\ folder has been created because it did not exist.'
         }
 
@@ -174,8 +174,8 @@ Function Remove-CommonWDACConfig {
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCD8Ja0b2wfQAshk
-# kWGiL4eeYJsMoTzOau+DerURpUBOBaCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBGvnaho9PdhBv8
+# m9YhQmIOxZ0+H1ZaMvJshnocYMmds6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -222,16 +222,16 @@ Function Remove-CommonWDACConfig {
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgxWrzX19u3JMK/mWaGKDkdfLnI5cAqQ58JZIeRHFhjJowDQYJKoZIhvcNAQEB
-# BQAEggIAFB16+mYMHB/yZqf1gRp8NQjfoiSRalZg4MylaOJ6MAhQGRO9mm7rNIv7
-# IN+JC2xxLQx3pk+o3TSVvZh9C0mZGVTMrsv6vqYVk/AlQh8C26FaNTNsx9Foph4/
-# NMy1p8BV+g+Nz9gvBskn23IzFkIvvluLR4gMiyMt8I6KFhwexEasNGHimepzHVWN
-# eiY1vyl1jDGyo+KvTjFvbJq3Lte35arJ1lQHfPBpIXiqZASbgmY9fzvjo35d6htB
-# ewAAwLJCHTlbrVRjOBNFb2C6mvQhnAewiZ2c5WGDAXsolQ9TqMUszNqQ3OFyuBtz
-# pwzaepjC4NzWKc1EFMf5EeyGqonisG0msJBxv9VY8mQyO//qvh0NIHLoNTjQ1J5z
-# YeA32DcKIEch6J/p4KpV3pxezSZRpccHc1k8avhX1bGqy3yT1xjRKs5+NU+iydrv
-# y6QkfIEioGwDHNWI1LXJLY7A97byX3jzvcujdReuM1qrSGbnm9wDtUHCMT/iIETu
-# rXEuXfhyO89YI3AE8VEn+fZKTLSZPk1mga7ivx0UDoMqzuFRurUey62EONW6FHzC
-# LlbcD6vwOQ4MzGNa0Vw39CAPpfFtQevfih8ebQGxc35bVCUjwUaY53/dqm7Bk3ii
-# 6SmGeU/dqCsAV8uhIQLqWPr+ekNX2C/ym49qLOBSWmLei5h3uKQ=
+# IgQgJpHfIVOU5e3HLlxggksqY9S5A8uETsJZ4nDb8fSKUykwDQYJKoZIhvcNAQEB
+# BQAEggIAo8FqkpjiWBx1UGDW0AkVHh7p7PBSTveHuE7o7wheUpThJU8210Tkw8g1
+# 7nYWgOAGCaxI8P/SgKUuYVBLM5fcisEa+KrTbm6Xci0TLTpfy6L4JqZKrmqN4i7B
+# ifDBBj8Zo0UY8MNH0uBEm4BIYEDpnDwdO7M2kCUO3QbDwUQgBC0xoi/YEUXii45e
+# tkOsW84A2JFb2zraMatcJqt6rw36QmQclIphtKQuVLmwJqf7mkTMWMLZoNB3Ar18
+# 4p2HOg+18OkHzO5Q8FF9zy9UkGBqUZ3Ixqo2qMGmdUZGZGmiBYqb1vCaGDMzqFXq
+# TAC262FgkBLnr7wMZBHZ2Ku4zkOOmgOZ1ovw5/ZX95PshK042LKSKic/bZ5jk0Mk
+# vyylsqunh9QEAT3xQXekYyyuGnGnb8s8xA1DpUx/0OcIvfzdGngxzXeE1YM/T/bW
+# dEDvvyvL+8x3gdaHe9tlCLz0R/bETCSGwUT1AU3hts9yGLDKsfwuLsUFayDfgULl
+# 8BEeunpM0C+3wveEGtnC9qpzL1yyaKc6JnzZRIh3vLe7Xv+yEMYeC+Qk+0FyW5Dd
+# H0CFDDvWlEEhiDuEdIYWcij7f+9zzAKe79tr7NYmVga4iFu4d3vGGctdzBidfNOm
+# JTRGBjTqTsJKlQV75D/QFNkqmFESMWDNs/ZXhVSJ1Ookioy3NOM=
 # SIG # End signature block

@@ -175,43 +175,24 @@ Function Remove-WDACConfig {
         Write-Verbose -Message 'Validating and processing user configurations'
 
         if ($PSCmdlet.ParameterSetName -eq 'Signed Base') {
-            # If any of these parameters, that are mandatory for all of the position 0 parameters, isn't supplied by user
-            if (!$SignToolPath -or !$CertCN) {
-                # Read User configuration file if it exists
-                $UserConfig = Get-Content -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json" -ErrorAction SilentlyContinue
-                if ($UserConfig) {
-                    # Validate the Json file and read its content to make sure it's not corrupted
-                    try { $UserConfig = $UserConfig | ConvertFrom-Json }
-                    catch {
-                        Write-Error -Message 'User Configuration Json file is corrupted, deleting it...' -ErrorAction Continue
-                        Remove-CommonWDACConfig
-                    }
-                }
-            }
 
             # Get SignToolPath from user parameter or user config file or auto-detect it
             if ($SignToolPath) {
                 $SignToolPathFinal = Get-SignTool -SignToolExePathInput $SignToolPath
             } # If it is null, then Get-SignTool will behave the same as if it was called without any arguments.
             else {
-                $SignToolPathFinal = Get-SignTool -SignToolExePathInput ($UserConfig.SignToolCustomPath ?? $null)
+                $SignToolPathFinal = Get-SignTool -SignToolExePathInput (Get-CommonWDACConfig -SignToolPath)
+
             }
 
-            # If CertCN was not provided by user
+            # If CertCN was not provided by user, check if a valid value exists in user configs, if so, use it, otherwise throw an error
             if (!$CertCN) {
-                if ($UserConfig.CertificateCommonName) {
-                    # Check if the value in the User configuration file exists and is valid
-                    if (Confirm-CertCN -CN $($UserConfig.CertificateCommonName)) {
-                        # if it's valid then use it
-                        $CertCN = $UserConfig.CertificateCommonName
-                    }
-                    else {
-                        throw 'The currently saved value for CertCN in user configurations is invalid.'
-                    }
+                if (Confirm-CertCN -CN (Get-CommonWDACConfig -CertCN)) {
+                    $CertCN = Get-CommonWDACConfig -CertCN
                 }
-                else {
-                    throw 'CertCN parameter cannot be empty and no valid configuration was found for it.'
-                }
+            }
+            else {
+                throw 'CertCN parameter cannot be empty and no valid configuration was found for it.'
             }
         }
         #Endregion User-Configurations-Processing-Validation
@@ -474,8 +455,8 @@ Register-ArgumentCompleter -CommandName 'Remove-WDACConfig' -ParameterName 'Sign
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBN+5mit4WCX6Ss
-# QBfiIR4xpP9bjiPXdEReVSuaivEgtqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBoN/gjDHQdeapa
+# 5u5xie6ijVNKRMzg2kA6YmIfnnfxVKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -522,16 +503,16 @@ Register-ArgumentCompleter -CommandName 'Remove-WDACConfig' -ParameterName 'Sign
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgidYl48qZlCuqJRhEvG2CwcOL5Fu4M2cd1jq98Hy+4x4wDQYJKoZIhvcNAQEB
-# BQAEggIAoatrgr67aKGf46g28kJ4CKStxKG+aMyJv6dyKQjuAE3W7eMbeSyDGpkE
-# ETKqPvnczlx0Z1m+8Q1TYnk5B3KPJmrwZJNLZ70ygJlJ4vuBaHsFf9sdK3gUPrOI
-# vg7rxyYW0b1pBRI1Qrufb0UoYWu5LJWaoFtGL5A74/84dmPdE8+tkTkfRnaxPm0w
-# PKgCKJs1VBuzopCW/XiMWeU/nXJaX9RmBXvda7Z+1eDzp2dEGGhine6EZC0M/K7p
-# 0RHywuKNh45OajP1u3Q2f+P1rr1Dfq5oXatry6zWZy2g9XwozfmFEvDWpz/CLwvV
-# FENbP94X55RIjqy+3S1N/TlMwJ8uwypB4CRR1IzSP+VjZP8IZ1Sw35DPfEUtUrZ8
-# ZqVFwbZkiVn2w8AGYLrdwlDok3+40oK3LJ3a4lQzgZ/HMvmCCuJzT8poM3nxctQL
-# +Azzw2Q2sUZgLHAnj3LnmnFFFAMx4SrnY4Y5JV4Rf5WJxH+kkF9s+mcGWIGVAyIk
-# vf9wXfk+OaRlAAAifutt8Y7HScbVCABllKr2GyD7i6VShDzHwGSQMsKtl3BGGnWd
-# 568hUCOpTOAJ5UBgvkFYjRWVTtWJVsxRxqH3O36TNgwN9lBkJFUi85Pk/PMS7UUV
-# O3bzftEpv1bqbLbb8XTPYnhK07bk0oqq1sqFfhhuDrzNNs0265o=
+# IgQgB534kQNdg4xWcnaEXV2vJFHA6PIoKuQb8vfrUj0BXuowDQYJKoZIhvcNAQEB
+# BQAEggIAM8Lv9b/zGnx3grPWJbieDPUE83O9QcGx7rtElpNNGyFBf79llztt0bjm
+# V1AvKR9NxQvXKDm3+KrZVXWDap1pxg+b5rd8xcOm030LX3C08ZmxPZdx75doep4V
+# 5lKF898IhOzG+7bJCNV4RPV04X7kMrDUq60YIl+xNptopekAuJ4uw7Mj2ZDDNpF4
+# GUe1EJu7ih1L6/SrwzsSfbWbUErNxoPWtfI3quLFdkr1EG/jMXaRDkDtzjskBZgc
+# vEVceBJoaG9ys/ooJLVF1WtrBiDysGhaSg3T9iMP3tl0Fg1srN2SMmsInzRZwLuZ
+# LEWGOz1PLXOAyjEhXhL+vKfj5/0Fj7K+SFWDrypW8dMfZM4a6I+zyhoTRtzPIQui
+# E8rm4x6uHp7xymzCwzduEqi27xvRzd8cWOI5YdQ49TISgugC0WoFMA8Ed8uSo/6K
+# aWy4CY16DQd0FF8zGDK/VJ5rbYmZOK8g13nd0vZKkynEOc2iulzLU1VauZQ+z8XI
+# 0c56GhbvQq+QDK8fBf+FQOeYik1Le94Flw2L3n/JdcgPzXSIPDfy8JpwMPK91C/a
+# WnelrLbRHyI9nBuoEGNnbs2YL6cqFziLHMUfksIXYtZLSpaYwlO67gDt1GADEj6z
+# YDDqUxW6tDYiXoxndwdPuxXOrFzMBYebZ3K2ZJeqqPdJEB9LFnw=
 # SIG # End signature block

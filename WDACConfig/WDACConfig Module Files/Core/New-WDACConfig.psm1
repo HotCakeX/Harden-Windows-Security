@@ -97,26 +97,15 @@ Function New-WDACConfig {
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Get-BlockRulesMeta.psm1" -Force
 
         #Region User-Configurations-Processing-Validation
-        # If User is creating Default Windows policy and including SignTool path
+        # If User is creating Default Windows policy and is including SignTool path
         if ($IncludeSignTool -and $MakeDefaultWindowsWithBlockRules) {
-            # Read User configuration file if it exists
-            $UserConfig = Get-Content -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json" -ErrorAction SilentlyContinue
-            if ($UserConfig) {
-                # Validate the Json file and read its content to make sure it's not corrupted
-                try { $UserConfig = $UserConfig | ConvertFrom-Json }
-                catch {
-                    Write-Error -Message 'User Configurations Json file is corrupted, deleting it...' -ErrorAction Continue
-                    Remove-CommonWDACConfig
-                }
+            # Get SignToolPath from user parameter or user config file or auto-detect it
+            if ($SignToolPath) {
+                $SignToolPathFinal = Get-SignTool -SignToolExePathInput $SignToolPath
+            } # If it is null, then Get-SignTool will behave the same as if it was called without any arguments.
+            else {
+                $SignToolPathFinal = Get-SignTool -SignToolExePathInput (Get-CommonWDACConfig -SignToolPath)
             }
-        }
-
-        # Get SignToolPath from user parameter or user config file or auto-detect it
-        if ($SignToolPath) {
-            $SignToolPathFinal = Get-SignTool -SignToolExePathInput $SignToolPath
-        } # If it is null, then Get-SignTool will behave the same as if it was called without any arguments.
-        elseif ($IncludeSignTool -and $MakeDefaultWindowsWithBlockRules) {
-            $SignToolPathFinal = Get-SignTool -SignToolExePathInput ($UserConfig.SignToolCustomPath ?? $null)
         }
         #Endregion User-Configurations-Processing-Validation
 
@@ -1147,8 +1136,8 @@ Register-ArgumentCompleter -CommandName 'New-WDACConfig' -ParameterName 'SignToo
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCB5m17vkx2OGL4z
-# 6xfgDiT8Iw/w02VA0jMn6tMr+COgIqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBQhw1iqkoTtcvi
+# zTCOw+8T06u9T5EvI+Rg1gOgH/fRa6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -1195,16 +1184,16 @@ Register-ArgumentCompleter -CommandName 'New-WDACConfig' -ParameterName 'SignToo
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQg6J0es/hf08Su0cEVylU44LcUFI7XHY/INV8yg+sgSJswDQYJKoZIhvcNAQEB
-# BQAEggIATXnHiF8Oq9p3y6DRfCwKbtF94k7M2q9nzaLIum1sYDLXscpyrbT7hbWw
-# S9n6yV7BxNPpwzsGnPIlE9/keUVQta3LVhzP2fycIKtygEj8RckOr+/5ML4sZpJw
-# ZECLsifk9qiaUJNHyA1vcbm7L8SL4Z2f2UjwRfcJwnrj/qtkcYn5W+IkvBks5ZV9
-# tt9IZZc4z5D8g2tC+tLL/Mn5WZho0p8S28yZ/KUdvLpb5zJ5BcEXpUJnVxGohmel
-# C0ZIwqhJrA+B0Yijl9l69SSYrGS5mEqK4dpkoEyom5P0ZwrZAgRZJqUMct4+uhWc
-# wYhmAnaVCaR8RHnsKzdIKujD1PF1jAqj6lQ678tnztRQceyX/XiGgKbeyoxDqtEp
-# W5kfX3selK2KcorWkS4cZBH/vL1FVbrkfBeqjxCX3toavz7TBcONbmnVHJe6ySpT
-# GeosJ3pQm/V6MF0XOYr5AH7DucbNcf9jY6MUD5G/BKJoCYRyk1ikS06w5iDGkYb3
-# HyNeQXRAJ4U85UPnCI5rxvk5Cr6xpb0hbEefBqxlRl4Lb+M8JWKmTy/krf2wJj02
-# tYc0EKlkyLg0Slda0T0XShjycT8UAX6Bn4h0VGzrojyAOAaPGmlX4ksfejV66LB6
-# Y+DZAPsi5HxJ/NMZv6dCWryaNWkSe1Fe2tPaK2SAVvg2AGO/qqY=
+# IgQgyqcs1njibY6ppOoiYWwfK5HrBUqnpcqXAfXJg4ppBsAwDQYJKoZIhvcNAQEB
+# BQAEggIAKCf4RPWR39xLXUr7TTax2xfHxKlPkHjRCLXlS3VMLsloric4r4ij+GG7
+# r/XZTolUlVaKPHzFGeqNXopovE2mFhBpU4BZpIqNIeQN2Lb+OQoPiTd7Mo024RCk
+# sHW2NNAdCkTu2mGHGdziaaCt/Z1Gwd9uO6IX8AV3+8zg9ki3sbuMAzgtx/aegT/J
+# GsF41hwwRhRjjoXQHf8MxHvYrTGcssY8LBCOUbiFG8eLHp+FauNia3Mw/wyPfacs
+# SaQsXjP9KtLvHQWywnpPSMXb/vdpeRDosZtjTYYitCXhO82f7swyr6a+Px6C/Yqn
+# Dam9oHddG6mziZSapCcxrhTUaL3IXg2B+a5rlU2pMH8XD7VL54MIHhRU0t1BmghJ
+# 1AMN7+atszXmw57/IK730K52RvsR0OvmNnK90bSMtd4diEiOXCYSsv6MyF6LwcLj
+# QhMzf3hXiQvSKeF1ZmAY4XFERLS5Gw9OJfu9b4N1RN1o32jvqmYWYReNBscOryT6
+# kPFbilnQWJaIY7sIu7jS9DdfYxDnulYhq2X7HqWimLxCctS4fpQSgOCuRawZAGS1
+# GI84JUFRfSwD2XSougW9EMeF22e4kHw8u1zFkKqlG++k+U+mBR5LZZwOypLn2013
+# ym1xuWvj3wEtG5h1VMM+EZki0zqp8wuwP2YoUfsd7Sfi1tAVqs8=
 # SIG # End signature block

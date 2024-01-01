@@ -94,60 +94,33 @@ Function Deploy-SignedWDACConfig {
         if (-NOT $SkipVersionCheck) { Update-self -InvocationStatement $MyInvocation.Statement }
 
         #Region User-Configurations-Processing-Validation
-        # If any of these parameters, that are mandatory for all of the position 0 parameters, isn't supplied by user
-        if (!$SignToolPath -or !$CertPath -or !$CertCN) {
-            # Read User configuration file if it exists
-            $UserConfig = Get-Content -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json" -ErrorAction SilentlyContinue
-            if ($UserConfig) {
-                # Validate the Json file and read its content to make sure it's not corrupted
-                try { $UserConfig = $UserConfig | ConvertFrom-Json }
-                catch {
-                    Write-Error -Message 'User Configuration Json file is corrupted, deleting it...' -ErrorAction Continue
-                    Remove-CommonWDACConfig
-                }
-            }
-        }
-
         # Get SignToolPath from user parameter or user config file or auto-detect it
         if ($SignToolPath) {
             $SignToolPathFinal = Get-SignTool -SignToolExePathInput $SignToolPath
         } # If it is null, then Get-SignTool will behave the same as if it was called without any arguments.
         else {
-            $SignToolPathFinal = Get-SignTool -SignToolExePathInput ($UserConfig.SignToolCustomPath ?? $null)
+            $SignToolPathFinal = Get-SignTool -SignToolExePathInput (Get-CommonWDACConfig -SignToolPath)
+
         }
 
-        # If CertPath parameter wasn't provided by user
-        if (!$CertPath) {
-            if ($UserConfig.CertificatePath) {
-                # validate user config values for Certificate Path
-                if (Test-Path -Path $($UserConfig.CertificatePath)) {
-                    # If the user config values are correct then use them
-                    $CertPath = $UserConfig.CertificatePath
-                }
-                else {
-                    throw 'The currently saved value for CertPath in user configurations is invalid.'
-                }
+        # If CertPath parameter wasn't provided by user, check if a valid value exists in user configs, if so, use it, otherwise throw an error
+        if (!$CertPath ) {
+            if (Test-Path -Path (Get-CommonWDACConfig -CertPath)) {
+                $CertPath = Get-CommonWDACConfig -CertPath
             }
             else {
                 throw 'CertPath parameter cannot be empty and no valid configuration was found for it. Use the Build-WDACCertificate cmdlet to create one.'
             }
         }
 
-        # If CertCN was not provided by user
+        # If CertCN was not provided by user, check if a valid value exists in user configs, if so, use it, otherwise throw an error
         if (!$CertCN) {
-            if ($UserConfig.CertificateCommonName) {
-                # Check if the value in the User configuration file exists and is valid
-                if (Confirm-CertCN -CN $($UserConfig.CertificateCommonName)) {
-                    # if it's valid then use it
-                    $CertCN = $UserConfig.CertificateCommonName
-                }
-                else {
-                    throw 'The currently saved value for CertCN in user configurations is invalid.'
-                }
+            if (Confirm-CertCN -CN (Get-CommonWDACConfig -CertCN)) {
+                $CertCN = Get-CommonWDACConfig -CertCN
             }
-            else {
-                throw 'CertCN parameter cannot be empty and no valid configuration was found for it.'
-            }
+        }
+        else {
+            throw 'CertCN parameter cannot be empty and no valid configuration was found for it.'
         }
         #Endregion User-Configurations-Processing-Validation
 
@@ -345,8 +318,8 @@ Register-ArgumentCompleter -CommandName 'Deploy-SignedWDACConfig' -ParameterName
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDjqMEAvLdcKXkC
-# 90ZEVOBfooENUipi6TY9ZtWbr4BGsqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCA33tzyYJFZFdR2
+# qDmqM1D1uBuGwCZu5g0R+ZI9mhekjqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -393,16 +366,16 @@ Register-ArgumentCompleter -CommandName 'Deploy-SignedWDACConfig' -ParameterName
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgHa8aBlsfqEMVtEScxGnp9sn5b9GmRyh5xPGpdHbYXIQwDQYJKoZIhvcNAQEB
-# BQAEggIAS+Z51GlIUaTuRP3cw3w/GaasAMRu5/Y/k7vJBkWY1a3bvNJ0lf/Qazsz
-# Qm1mlS/phn8aYMXyQN6fHGp5cfB3dYLbGRh1sVgbjpcBghfV1SHCF6l2J4nePQYb
-# yU4W7cUg7cMYVz1PfUFzHXSpIkxZM8eENJPuZfSZkz/FqBzqnnuo5IZ4cmuUpOJv
-# TE5re9jeyhY4npy2/Flzw+T6sS+x95zW4rhNfTMjFyMRCH1Av2lorJUl4oiusdjU
-# 8TSAEIPrXMPxJnJ7ujHXOWv9lo1krNElWJeeLQdqgYfJNhRXwrnMlbUhboLl6h7Y
-# 3xbSioikDsKOZlTRqcSNWtzmCeH/vrNH3zwppFb9jP3PSv49h0OyRgHiRUQ5U8M8
-# TrONxdcZAilCs6E1kaNZSm2lTuTjh9hOdI7YV9kGcZbKoi6EZvw4UhhlEzTFZe+B
-# LGocqatd6InMKEirJ5h9X73tCI4qt5eyWkELJ9HVqWdklZl//Y7jUKCTh3duZRU8
-# 0hV8cRK9Ns+v6ICjFUJOuqNHCqwryr57XtY+7KXlJNzP7d6sniZrQTQTvGhVH9Zz
-# DyUiQaQzmZg+iKw7oR7rUIQ36P85YVApoL+cdoCV+wXHm3nP285OiQJ53I/GvdMe
-# 1hfzaMfEAGxgVMQ/0+oR2/TwdD8Tf8FrVAzemAKsT7eeBTAofsU=
+# IgQg2h1zhi7vitZMLaLyUxvFt4EBO/W++BxrOWNUJquv4VwwDQYJKoZIhvcNAQEB
+# BQAEggIAGITNEddqC/6A9ia8YMLN9eNZoUg+tCNywyoyj6iweW8e+iFAjz0ReQ9z
+# GeVdaWDVOxowqC3xUQzMSGzOcDUMfvFkkNQiX49CZp7l7iJYjqvKzTBEcs59AUxK
+# zvrMnFlwP/tnjgtbSMrurh1aUpdf4UrtfO6dKtbtL669aoZFbtlAFwEI9c6YMofP
+# qb7lQfzfGV8NE2ZHmTf6/PDZe4ZvtZxS02cRor5F8Y/zYOU7tPAaxTnrMgSL1Xzl
+# K2fWYBvTya7Vwa2KUa/VFVA1/p2gSqk6pssnySMHBwmzfVhPP3bG4UwvrFgu4rlB
+# MQZKzWWjJQ8S1oFaZwsyX58KV5O2Ya8pKY8sAlvQc/GLedL2XecHbQlwqOkp77q4
+# WIfCInWucUpnmaEOQ+IyI2X8zZ1DRXrifqnRYTwYh9zT9xcquiUqmcm2AaDOe/SX
+# RkkQT5MTgBy/RR2r/EPrZhuGnqxK2eyjRror3QW0+0gkB5pm0eStmctrvvk3c7O6
+# pETAuLzm+JRTh8HTK70zbB41XtLnq34r+TjygEHK43FavdVtjHFZPgwgqmo5/znk
+# O4Vbc+s0g0ot2vJFZ5TkUSorOvpDp/sMfXTohXyZ1zyBMielfDbqR05P+3fiSMEF
+# Jn7c0CZ20uBUOnpOmaw3MmIobknkmdNflErNs4GcZfF5pCKMJT0=
 # SIG # End signature block

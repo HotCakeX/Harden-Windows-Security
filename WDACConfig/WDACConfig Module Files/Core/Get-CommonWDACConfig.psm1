@@ -20,13 +20,13 @@ Function Get-CommonWDACConfig {
 
         # Create User configuration folder if it doesn't already exist
         if (-NOT (Test-Path -Path "$UserAccountDirectoryPath\.WDACConfig\")) {
-            New-Item -ItemType Directory -Path "$UserAccountDirectoryPath\.WDACConfig\" -Force -ErrorAction Stop | Out-Null
+            New-Item -ItemType Directory -Path "$UserAccountDirectoryPath\.WDACConfig\" -Force | Out-Null
             Write-Verbose -Message 'The .WDACConfig folder in the current user folder has been created because it did not exist.'
         }
 
         # Create User configuration file if it doesn't already exist
         if (-NOT (Test-Path -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json")) {
-            New-Item -ItemType File -Path "$UserAccountDirectoryPath\.WDACConfig\" -Name 'UserConfigurations.json' -Force -ErrorAction Stop | Out-Null
+            New-Item -ItemType File -Path "$UserAccountDirectoryPath\.WDACConfig\" -Name 'UserConfigurations.json' -Force | Out-Null
             Write-Verbose -Message 'The UserConfigurations.json file in \.WDACConfig\ folder has been created because it did not exist.'
         }
 
@@ -35,8 +35,8 @@ Function Get-CommonWDACConfig {
             break
         }
 
-        # Display this message if User Configuration file is empty
-        if ($null -eq (Get-Content -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json")) {
+        # Display this message if User Configuration file is empty or only has spaces/new lines
+        if ([System.String]::IsNullOrWhiteSpace((Get-Content -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json"))) {
             Write-Verbose -Message 'Your current WDAC User Configurations is empty.'
             # set a boolean value that returns from the Process and End blocks as well
             [System.Boolean]$ReturnAndDone = $true
@@ -54,6 +54,9 @@ Function Get-CommonWDACConfig {
         catch {
             Write-Warning -Message 'The UserConfigurations.json was corrupted, clearing it.'
             Set-Content -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json" -Value ''
+            [System.Boolean]$ReturnAndDone = $true
+            # return/exit from the begin block
+            Return
         }
     }
 
@@ -132,8 +135,8 @@ Function Get-CommonWDACConfig {
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCOyuWSryeC5fZv
-# fTZcrnYA5g03GBJKkpaSpXakQXtKjqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCwf2tydbFonUJA
+# TX6XctLTkPUB92871x++AbBMLXzprKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -180,16 +183,16 @@ Function Get-CommonWDACConfig {
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgeG5h+rymfqyVsshNAUeqb2wQvknjK1AaF0rJrr9PCDYwDQYJKoZIhvcNAQEB
-# BQAEggIAHV1XSop03pLyqANL0TrpbYHxtrVVfoyYUPR9Y5ut8SS0v27kRj9+GYEo
-# XcIFvdX3PSpi7R3AMaSZoTfYRqj4P0X/gha8ebzoiukMUv1fRXmnBR0OV/tqWORD
-# /dy8fnVdY8AKEN5Z9ZGdDFmzQlQm5BlfxwvR/JAnUcU9iEiDdfkdx6xhrVigl2Ds
-# kI1RK4m0W5rGTizV/SEuzic3nXVsiVC1QT9n8yoOTZdsaBimc4tagnbB8S94IB94
-# 9X4iQlXJnEj4IL7es5XM4eBXDoWOL4BY0pKcVtrEYqqryTzs81KEZcwjRc+XjKOO
-# 66ElE9qArUxkVnE0YNlVleaoesgZHmjGxlIBUTn3cBkwiZFIln+CmNy2yQ+FZQsf
-# dpEI+R1lHtHPmO1tzaiPcEnWy/VltzcXyarTO24tVF6iBvDQq/4LoaXy6TnxaBZH
-# CgBS7rumx1FoUTznVSk/FIFG4IaDcdz2imdzU6cv+jsXx4dzdc0KFNUAVcwvYLB/
-# a9xlm72PkrnK/yO7jLK6NFhrp4kCU2Px7vlObXZMSaSkstCkLGmrDeEBkBJrAUUW
-# lPcRLIa7xozbjHUbHnxJzWYMNcFBkyRZh85M2AicrnoxS6j4AwsJI0cAAmxcdcd2
-# 9CoCVMQDZQeXfqWDUi6elRIlXObGuaF9U1BDXpIXb2++1UaB09Q=
+# IgQgwfpqrpvuYjerMY7ly1lc0evK86y333yWP91S9IsnT2EwDQYJKoZIhvcNAQEB
+# BQAEggIAj9gCB8XhPJDoQlg8Ds1RGkuBGVh09AwmFgOaN51I/JF9pf+PN+EGZLLe
+# 6c4j8VBomdksxD7LZ1vBn6QZgYQKJ+4dzmtPlEYepXa7204WQVi1qI7QhUcdcf2f
+# 9X5FGlBG3xpAWkxpH9XeDh/8AL9hafX+/niVRqAJGJitLq7B2lI3UKHyxVSJilSW
+# cHbXT/8dRe9evPRkvBluCk3tFIf90druUDqZObHygwrkWohElIe7eMR/rX8wi/UZ
+# Kayzb0r72AWs1hy4WhfEY3u/fIXU8VqxVLt+WGMws+x4qH3ZJkC8pdfV8TPJPi4m
+# UjDGruR91Mc6N7PvWZqZRLefDXhBfwNyV76uAoaqUo73bc+4tOHJi86hwd9vxjpf
+# SvV0KcCo6TStM7MybPXpMqm3keSgaIhxNm1oUasx7UgN/J9ROWdyDwSQ2mMwwc33
+# aadUe64SalGyz8e5ACBjo+JVErbZ5LjOFCTa69GkNGGZ2De0Bae8BLcSXjpCxQRt
+# jOFryDXpGCS64WdBJ+UZGXeJCArat0/jczAWii5Myll6ss2XpcPyZFn+EdHjFEJp
+# RSYKxxGfuyTm3w4jrAwUJFaEm0oy4MTLesy+FuE62fMi0vTXRMqCQaavF3fY4tAA
+# TuLEX/llPXR71FlmOmQLMFcIxMKq+RGj+ufjSMyDrtELahcW/s0=
 # SIG # End signature block

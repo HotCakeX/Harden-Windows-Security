@@ -101,6 +101,28 @@ Creates a Deny base policy for one or more installed Windows Apps (Appx) based o
 
 <br>
 
+## New-DenyWDACConfig -PathWildCards
+
+```powershell
+New-DenyWDACConfig [-PathWildCards] -PolicyName <String> -FolderPath <String> [-Deploy] [-SkipVersionCheck] [<CommonParameters>]
+```
+
+### 2 Mandatory Parameters
+
+- ` -PolicyName <String>`: Add a descriptive name for the Deny base policy. Accepts only alphanumeric and space characters.
+
+* `-FolderPath`: A folder path that includes at least one wildcard `*` character and ends with a `\`. Press TAB to open the folder picker GUI. Once you selected a folder, you will see the path will have `\*` at the end of it. You can modify the selected path by adding/removing wildcards `*` to it before proceeding.
+
+### 1 Optional Parameter
+
+- `-Deploy`: Indicates that the module will automatically deploy the Deny base policy after creation.
+
+<br>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+
+<br>
+
 ## Notes
 
 * **Mandatory** parameters indicate you always need to provide values for them.

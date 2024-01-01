@@ -204,6 +204,9 @@ ValidityPeriod = Years
         Write-Verbose -Message 'Saving the path of the .cer file of the certificate to the User configurations'
         Set-CommonWDACConfig -CertPath ".\$FileName.cer" | Out-Null
     }
+    end {
+        Write-ColorfulText -Color MintGreen -InputText "The certificate with the common name '$CommonName' has been successfully created."
+    }
     <#
 .SYNOPSIS
     Builds a self-signed certificate for use with WDAC.
@@ -283,8 +286,8 @@ ValidityPeriod = Years
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBilYbO7cKQ+TVt
-# NzpwsFeERjv7A+EB+Ur+PTUdjQb8VqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBksL2h2pFpSaOS
+# u57iUdeNz7QVZZJrm3VOUMBU/Obn9qCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -331,16 +334,16 @@ ValidityPeriod = Years
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgNGYgBB3FKkm0LVymcWP5ozDxrr+EiXCUf2xb6QGRmN0wDQYJKoZIhvcNAQEB
-# BQAEggIAZooImqWF1Kf9grq/bGvifHxRx3ec8tcfgmWGgNcKPdQBVrW/7KUiMGNG
-# r+DrMnYkGi+Q0w4ssuWJgM+CagkKmi4Naw0TNwMUc9zovyyW0SoemPEAU9lQ3eau
-# 0OIUNpPPJEg5vWj+/++9X1lw4JnjKepzFVy7L35dPsj24HH17n4aiWmpR8E1lcd1
-# 18e2vaP8Ug7P5pzzZ27MyZWgel0zqAgz8Y2VhytFBj1zlvx8a2sIjasWsz7VVDFd
-# ojpp0uQbJ1Fg87D4ZB2n6JRZZ7fHcPde4CgVj+vO9ngDDlXbaj5hh0uojDMRjvzi
-# HRzXj7w+7c09a+bbG9m+x3b964UaTiajcT6WKyx8UxFzk5uYQ1GZ1YKPj3OFUCIp
-# U2MHDG/e33mBWdqXznot601qtSZjWyWYXpACzP6AgHZ9n6E1W6I6PxBqD4JfYLxM
-# psZd8i74nz2ptfx8HlCgWLkdT2sEouTx5mC+IRLc+5QkugjdsWFGswhQ2fOpcPyj
-# l7D/rsG3v2QWeVjK1KcL2LVh7rIygj5C33xctalfltZgHvf3q5y/pDMxGswioDCA
-# F1EXzJiEQ++A9Vt52fOXiZjpETK17IW2lHPUb1lJMu7bdHL5F18drdCWhQVnNOuR
-# B4iHGQRtLHkvpSn8RpllYR0f6GHxYVCdn349E/aTKvyFU6TmkCU=
+# IgQgHjtux2hsP0oOWaG/Mb/2t95axpqnEhEpfKQ6ysTPbrMwDQYJKoZIhvcNAQEB
+# BQAEggIAiGvo9Uy1Vt1UROF9S2ecaigpkUPB0SwG6iZW8MP1mjw22AwBZ5HgCfHP
+# DqUKjqz1c7lsYOwhyt1XJ3DtOeTQMe2BNEfWm1jiFovy5u7EV3t2HT+RQJx/QGwF
+# 18qnRvrNk37tahyc5km83DqkPVjJNO79rR3JEah6HO3ns4aKN9bDQ+mR2usnSSZ9
+# 8Bce9MiUrEA/ZNNtVX5OJbKWafR3aQNRCo+UUZik6ZgSFJSIzUCtG1/F9fE+xhj5
+# tcBwG/Si2pb0FN7onlJwTJn08UmIOn7qsizluBKer+xHbPZOuqhSr8WK59T9656U
+# RWgydK/uxuv8B48saUkuOvdnIT90lJ9FhHrM79MhEMjISSqXkY7PRHY6qJOZAo8x
+# 5rqdE1NrQMjw55tK4RrLA1Cij65eSux5WcutS5p1XngP9kc1YmZ8etZMy18dzqPM
+# 34uS6hNvjFEW4+hY2p9Z07otMQigUO4m0U5yyt23tpP40pd4qCFCq+y5GPIKLqXj
+# GR3wyO6kpvG/ScQWXIHEL2JFzakHp31ctWgSfHthpGJdw1hhoxTayH4EbkQawqaz
+# P7uv8DtkKhs48JOtrabV8oXyQcqKvItAC2U5qlwcBq0AZKr2/JEdH/CulfPZ9wcx
+# WinZOv4KG/7hffjYlrwd9HdmzWF5sXfTG+SGUwhCsxAMkVlb2+I=
 # SIG # End signature block

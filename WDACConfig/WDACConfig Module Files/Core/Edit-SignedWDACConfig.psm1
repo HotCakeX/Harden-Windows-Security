@@ -1396,6 +1396,11 @@ Function Edit-SignedWDACConfig {
     System.Management.Automation.SwitchParameter
 .OUTPUTS
     System.String
+.EXAMPLE
+    Edit-SignedWDACConfig -AllowNewAppsAuditEvents -SuppPolicyName 'New Supplemental Policy' -PolicyPath 'C:\Users\HotCakeX\Desktop\BasePolicy.xml' -CertPath 'C:\Users\HotCakeX\Desktop\MyCert.cer' -SignToolPath 'C:\signtool.exe' -Verbose
+.EXAMPLE
+    Edit-SignedWDACConfig -AllowNewAppsAuditEvents -SuppPolicyName 'New Supplemental Policy'
+    This example creates a new Supplemental policy named 'New Supplemental Policy'. User configurations will be used to get the certificate, signed base policy and SignTool.exe paths as well as the certificate common name.
 #>
 }
 
@@ -1410,8 +1415,8 @@ Register-ArgumentCompleter -CommandName 'Edit-SignedWDACConfig' -ParameterName '
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCtqb+XJQWIWvxG
-# bHzfbuIqLgNoA5ZsNuWD5uO3w5y8PKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBsX+jTe9aAPugV
+# jQ6GYpMvRzxNBuhyHKpy2hxNgtCzbKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -1458,16 +1463,16 @@ Register-ArgumentCompleter -CommandName 'Edit-SignedWDACConfig' -ParameterName '
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgZ7X1ofYeodNd8uyBAHrM5JpyekL+w4dAc0U6sZw3mLwwDQYJKoZIhvcNAQEB
-# BQAEggIAUD75ObqvFaziAvQB+f9+yGB5E+VXI9PGaFGgbsXvel21+dCfn9tuFpR6
-# XzUoYygPA/ZQqNti03SKDs4Zz3x94SQAepeI0Ey1NfzS8ivyr9nFp0jQp7FmfivR
-# AtkwU/XCxO0xWyzv1YSV9TNrxtGO1X4xFRB6YcVtdy/97nrO2sZSOnbhFszj6N/0
-# N1g5a86vmIOkPxI6WibWtUmvuGvomuyrg5YhzeEj3jY9hU+IMgzoZZLdfrGXD8fJ
-# CaMrx+dagzSKW1FaUe5dxltiEMe+updGJ4/hX4Uc3OOmKPFIjow8G7Z48pQlQHk9
-# wU8XQSVDiymgc1tGJ2uxK4+aec7QACSlIyP3+Z8HwlJEvlbMLj88KN01QV9wLtCh
-# YdsFoqSpIsRHgE9Sv548fw/Y56NSDx/lNGsl8QybLAgAj6vRAK8/26oOVcmrVdci
-# lV8m4c081BmaCr4M1khsVkUGqR2TsuC8cWsOtRpuuZcZ6Q4Z98srJyYQ3yRJc1Qp
-# Q4+dMQazS4VdLrSltTWJBzseamrfHYNgzHjEo2Sj6cNVT1PMDHp9x8Jq7NJ2axOY
-# 3GEjGxyeCmmswHqhXoQCgsygCfDsDd/h1mkU+4v+CWX2fsXCQCI9etonHt6965Pi
-# ChrgWr6gs7NAHObAvcqyRzKBLydIpBGK3g32Qjxkxl1CotK5AKo=
+# IgQgKSjD2MW2Gb5VusOhuhtXcMx5q1Jfedkgq0K6OO4mH4EwDQYJKoZIhvcNAQEB
+# BQAEggIAnVNbQnr0v4dETHPzy5V27hR0HrrzHdQEbijkwwad8kZ+Tv9Z0+fUZH4l
+# pLdNo+Fg6h/DgCk2BMhEz84OECX7sa89glm3nIpZRSP55iK4M1unb3OR9/BUhgzT
+# nYMENSDAylMF5tc+nQ8F/syPCvcF80rvXm80SYf+WCvVo2QlDFUxqWI/wFngEoZ8
+# 76i1PhtJrs6j5YTeZ+9D9SlVCvCWDCxqeiKogbKXneEsv9x2l0LJMDa4PffoPHE+
+# zH2umg2LQFdzD7w08VWSRvmWJaK+nG6HNxTfAkn5rE6zP5au46756u2IDNmPT/bW
+# jmoxpnF9diaecWJrc+83XWS3CizA4dZDosIb+L6u3k/SXBEIZwiPXdhIAyw3iG1l
+# HvSaIzafred6wyB+UeMELWk4N5QryN29Cu/LEzE0/LMzr5kI3IQFwjlO1T+Pdpxi
+# MY5yhyS3BNjkGV14og98gxIU8UC0L28H9WV63doWpEjMqakaxyMUbapNM1upaC10
+# fC6PiyHWPn+v1r4dIzhqJLx6dDFZg2pWaGtFuFfLSZP9rrbtTWivNwAzn5c2AJfM
+# zTAg3XIfdYIn1NnDonV6sXjmijXhHf5Y6ONy24Aldo503/56RB6X7EBmPp9dydlJ
+# zTgrHgpuk0mc73TUreobqL/3s9XUWEvh00AwOgc4g/MYDO+qxc4=
 # SIG # End signature block

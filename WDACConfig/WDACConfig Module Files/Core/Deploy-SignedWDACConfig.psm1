@@ -305,6 +305,13 @@ Function Deploy-SignedWDACConfig {
     System.Management.Automation.SwitchParameter
 .OUTPUTS
     System.String
+.EXAMPLE
+    Deploy-SignedWDACConfig -PolicyPaths 'C:\Users\WDACConfig\Policy.xml' -CertPath 'C:\Users\WDACConfig\MyCert.cer' -CertCN 'MyCertCN' -Deploy
+    This example signs and deploys the policy.xml file using the MyCert.cer certificate and deploys it on the current system
+.EXAMPLE
+    Deploy-SignedWDACConfig -PolicyPaths 'C:\Users\WDACConfig\Policy.xml'
+    This example signs the policy.xml file using the MyCert.cer certificate but does not deploy it on the current system.
+    It accesses the user configs to get the certificate path and common name, if they are not found, it throws an error.
 #>
 }
 
@@ -318,8 +325,8 @@ Register-ArgumentCompleter -CommandName 'Deploy-SignedWDACConfig' -ParameterName
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCB6bJ8O2Q83lBVG
-# 6sd5OJmX8l4cFXbNrafcKaKIxHYhG6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCD9zseRSedgvEH/
+# UmdR8mMCozbNr5swsYhfIbgKI2SACKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -366,16 +373,16 @@ Register-ArgumentCompleter -CommandName 'Deploy-SignedWDACConfig' -ParameterName
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgylOwv0RxbsybYNFZjg/rfb9EVdMOHsDOW0PAwnMR0SIwDQYJKoZIhvcNAQEB
-# BQAEggIAb0gmSa7AbwNG4+Ewmwt852YMhJseGWQB2/UlBqogcVpF909eFfw6YTbR
-# XXu2VFZidm/SEhRV1XEl6t50XwmEtlDUSKCXZCuMgMkpSAUhLQIkQ69AkS93eCF3
-# LdV1vc9acnji5mX5qxNDe7VdByxLdDB79FrXmG72l9W6rHe8cFFUug5YMTzTo6h3
-# KI+g+9ma52FJsnqmaLJ8eS0lO/2pfuZwa2wBW/vdP2Q9OZptkKWeP/3cIHcjH3oK
-# Md0XUqTUtuIQtGz7uAWfv93ZuoFuenyOR4TFhd1x/sz5otQmKHVSY9X8wMoQ3z/N
-# 2FOUktRUxGYQmrJlV+8iIHZ7il83LJ3QPPZFhYzK/1q9BiKQRSxZBWZcPWKDBOPQ
-# fNfpv/0CeqQkIm/BQv5dvvD/Ke8IORmPIaHgAaAUkcad440qx6S2TYBkoAwYrQDi
-# uEHUVP8HVwaooPGsSlKgsWvfGAmI6NRHzajirp4l8BkCHamKNflJQmYz7Z4v5qvE
-# OqQC+A4U/bWJj1ZibFGa5bl3niODEAguavvmcB+COO2U77n1ZepbtAs4KMoJWH2k
-# moZzzGb/fu4SA7gZIXAiHroxlOYEp+TrvwpenLAFvFL7j56kwd/Sqb7qvkbaDJaP
-# XRW+5Vn27u9l6w3ifHA1GzxdwMS7BNYKsH3rLxEQ75Tu2P79hgA=
+# IgQg5WiETJONw1G0NqOHUdYMKymFHXSous2MRSuw7UicVzMwDQYJKoZIhvcNAQEB
+# BQAEggIAVm5+YhMxTotLMOqvHaMODj0JyAm418qIJIwMO0NaplA6JFTuVM4qwGM5
+# vLAMy8ojlEQZnnOo5ieGaCHi3N8+lbL/opd159/+lOHDq57uVrJoxUT3VkuEXYKB
+# cvzx+qTe9UQnh3C8VQ9TiLAcD3nictP79NPR3B0Dhsb7a8PeKJ4NRWfb+aPbucAa
+# NPzsaF6rXUOyIsWMoeOIt0AGg3FXuwslQhnBLTf5TnD//INC5WB2fHY93I2EO7ME
+# 664G9ygjY/2MuPVFW5wYe05vgqBXKkyB7dV4LzkA/U0avyEOlIuMMqqWOUKZ3yLU
+# kZZ00Op6UkXW1EO4GKiMjOk7FyuD1/48/fPxozfrXb6nZrJ4fVLqQh+GeaK351jl
+# 0psap4rV/xo5imGA+o5RWP96ykDkoZoMA4QYw1yoChG1qbiz7mwbY6pyG4Lkuw99
+# gasRVqFAazrE70N1IaPfKftkvtMeOR+WUrAEBdI5VuKR6scEPRZM/3mc1dhqE88i
+# 6lp1Zi+TJrVPAbPihGXwMiIvcXSH9QoF2qJ5acFIIzsqLSRn9HyoYhYiP4gTn8Jm
+# qZUyEdV3e6mH1A3rBqNxlFdXkmCGDJkmFoLl9pGAatvIIYtacOCdnBRg3E2t5VlK
+# /mlgVwDOmnno7gZ90CPZjmVvTeOrayUfpqO3FKRWVvaqZ6HWlc4=
 # SIG # End signature block

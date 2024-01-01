@@ -1126,6 +1126,18 @@ Function New-WDACConfig {
     System.Management.Automation.SwitchParameter
 .OUTPUTS
     System.String
+.EXAMPLE
+    New-WDACConfig -GetBlockRules -Deploy
+    This example will create a WDAC policy with Microsoft recommended block rules and deploys it on the system
+.EXAMPLE
+    New-WDACConfig -GetDriverBlockRules -Deploy
+    This example will create a WDAC policy with Microsoft recommended driver block rules and deploys it on the system
+.EXAMPLE
+    New-WDACConfig -MakeAllowMSFTWithBlockRules -Deploy
+    This example will create a WDAC policy by merging AllowMicrosoft policy with the recommended block rules and deploys it on the system
+.EXAMPLE
+    New-WDACConfig -SetAutoUpdateDriverBlockRules
+    This example will create a Scheduled Task that automatically runs every 7 days to download the newest Microsoft Recommended driver block rules
 #>
 }
 
@@ -1136,8 +1148,8 @@ Register-ArgumentCompleter -CommandName 'New-WDACConfig' -ParameterName 'SignToo
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBQhw1iqkoTtcvi
-# zTCOw+8T06u9T5EvI+Rg1gOgH/fRa6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCF0H2hgce+jDjc
+# n5MmyM59KKqtZrDIkFUXwcCINP/kB6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -1184,16 +1196,16 @@ Register-ArgumentCompleter -CommandName 'New-WDACConfig' -ParameterName 'SignToo
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgyqcs1njibY6ppOoiYWwfK5HrBUqnpcqXAfXJg4ppBsAwDQYJKoZIhvcNAQEB
-# BQAEggIAKCf4RPWR39xLXUr7TTax2xfHxKlPkHjRCLXlS3VMLsloric4r4ij+GG7
-# r/XZTolUlVaKPHzFGeqNXopovE2mFhBpU4BZpIqNIeQN2Lb+OQoPiTd7Mo024RCk
-# sHW2NNAdCkTu2mGHGdziaaCt/Z1Gwd9uO6IX8AV3+8zg9ki3sbuMAzgtx/aegT/J
-# GsF41hwwRhRjjoXQHf8MxHvYrTGcssY8LBCOUbiFG8eLHp+FauNia3Mw/wyPfacs
-# SaQsXjP9KtLvHQWywnpPSMXb/vdpeRDosZtjTYYitCXhO82f7swyr6a+Px6C/Yqn
-# Dam9oHddG6mziZSapCcxrhTUaL3IXg2B+a5rlU2pMH8XD7VL54MIHhRU0t1BmghJ
-# 1AMN7+atszXmw57/IK730K52RvsR0OvmNnK90bSMtd4diEiOXCYSsv6MyF6LwcLj
-# QhMzf3hXiQvSKeF1ZmAY4XFERLS5Gw9OJfu9b4N1RN1o32jvqmYWYReNBscOryT6
-# kPFbilnQWJaIY7sIu7jS9DdfYxDnulYhq2X7HqWimLxCctS4fpQSgOCuRawZAGS1
-# GI84JUFRfSwD2XSougW9EMeF22e4kHw8u1zFkKqlG++k+U+mBR5LZZwOypLn2013
-# ym1xuWvj3wEtG5h1VMM+EZki0zqp8wuwP2YoUfsd7Sfi1tAVqs8=
+# IgQg8swZ0z19iFKgN/ZtPtUCdkm6/LljZkGgHJ78Tgq7d9wwDQYJKoZIhvcNAQEB
+# BQAEggIAC5fDLEjnH0m66G7JoSSFXZr1kh4lhYVgXYajEZPQyFKXdB+4m1EpblpR
+# IebER6+aG3MiWQ1HJqpt488IdouDAges84JNlB1PeGDkSCDuBzDoeVmVD27+ArZ3
+# 1I0kigAhSWRygVUAfpvpChA11sJmLxgqaeiM2vznLLViEBeG8yTjttd5AoDl+HLD
+# DIAjFLJjN0TPMxzOY+Ry2NyZ9lthnCZ5KsxCVMvhtLyWpH9jSwic5sr9iMIHqJca
+# 3c60v+b5bn+axOc2gsIcgvHTj5rHzOjoQvhzlzE0HicGcTfjWkiodMQtlanCguR0
+# Qa05gbgdFlyMHxUWhVKS7qxufQ3KtX9FGkhmI+a9tDZy4LtPLojiicb/VhnRCZta
+# xITfReEqCcB+Oa/G4bqObBQ7WINvFrRtSRMcCqqkJBtk2vNpRKEdYTw4ttm/Gzo4
+# JRMFPgG2fHh2o83danp+m8ERCWGCuMYzWq/abclmxdzV3EUKpy4z46gqVJgfShlV
+# P8hXsLhx2ffc5V4GpmDNUMekT1vPoEESEcNtmpNjhg9xDgQKW9ybS0Kj7me+tZvX
+# qyIAXE9F7GJnXUW8k2WFQ8TZvXBuvXtksMWPLVTh590vRUuOewJ36iNU+67rMeNv
+# BmecXBrp2C90KnAZbgP8HwtsoZdkmUMj/V8dX+/O9pZq2bT917A=
 # SIG # End signature block

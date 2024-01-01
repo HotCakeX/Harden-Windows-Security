@@ -394,6 +394,9 @@ Function New-SupplementalWDACConfig {
     System.Management.Automation.SwitchParameter
 .OUTPUTS
     System.String
+.EXAMPLE
+    New-SupplementalWDACConfig -Normal -SuppPolicyName 'MyPolicy' -PolicyPath 'C:\MyPolicy.xml' -ScanLocation 'C:\Program Files\MyApp' -Deploy
+    This example will create a Supplemental policy named MyPolicy based on the Base policy located at C:\MyPolicy.xml and will scan the C:\Program Files\MyApp folder for files that will be allowed to run by the Supplemental policy.
 #>
 }
 
@@ -407,8 +410,8 @@ Register-ArgumentCompleter -CommandName 'New-SupplementalWDACConfig' -ParameterN
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBPsfLdpVU4bNL3
-# H/La5kj3OPmwr2CaXh4VdpaZRj6amaCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCC/7cicNa8x/anz
+# +ULL+OyoImIftYhBjFRIwjZ/GW4ztqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -455,16 +458,16 @@ Register-ArgumentCompleter -CommandName 'New-SupplementalWDACConfig' -ParameterN
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgGhty9g56kwgbfV3KUE7yYHzuBmGvmLMMRuJU/IdUtvYwDQYJKoZIhvcNAQEB
-# BQAEggIAFuE+L6P2KTubC3xVeYY1OMw4Vwyx8+QSU0RaGmkA7goxTtxGmpWl5yQg
-# 8HaERL0S/ETQNSPwTAcb3dGXT/sqtwXXLKvDbz/AroiwoPPB+nZh8upiwSYoR3HI
-# uVw6dByKrJQiBmywDMI1k440e5O31+gRTZLw8QBR6/PWcRX3X1ROn8CtjoX/1Es7
-# I5x5pkkfBItROspg2Bu6WWOC/Snt63mKCTqdbocCp4rpPoNQhNO0Fdo8iiE8DbaQ
-# wMgVEWdM8lgIcqh98D6Jms9f6K6vM05bRN+b+VqIhVnKYP+fIBRQzmXFP+bGtSs4
-# ApWX4+/5XAJ/JkoCufPI+cfgW9h7QqUQYQ+Xd6s6LVcVn6ltgLT+Y2T3BmpOohyX
-# B1tkXHksYyJbiQx6ywgrmt4HuRC2pma+dcnmqoVDG4AhJ7ZbFdY7OQL63rX3n9de
-# b2/jqPMULZ2nHT4reTaD20IB9SDC+OoNKTOEN3VIJVd59Jb1074il21t6Zdggbi1
-# JYUTLbXfpsqJwDztFV5bY6/qzJfRjMtYXl0CJQVFA/TQUwpqOWc7C1KGyFS7lAx3
-# nW6c+OTe2SWpVs5oxCRXOXICEVvgLxLEkjD44cZqakC0iDVoXnZlQKGNCh/KJgbH
-# XyWMism3RsQ+yJWxnf4fgwkX0bBcaHrIHQkC6pd6hAe6r24dpVY=
+# IgQgZoNvOpazmLb4UvHCcHFDHkP+PpoY53Sq+D5fMYBdFIEwDQYJKoZIhvcNAQEB
+# BQAEggIAB+gITTUDDzezao3etCAI5hRQJ03MGrvKXxalwoGysPPwXDi4hV9Zbqpz
+# bBMsvAXOPNyTiVYwQ3p5UcJ4OppLwVhOjP8HP4gi8+9MAS3/t+4bzTuyKmo7WzF1
+# loDxowZADFlBnhACWq5UqGX56cYMuvghYFRfqew+9bIcwSljNfgkbY2sjorEx7UI
+# aY9sAGDGfyw5TxZjUVybHfGu/+Zt4k/38eXFrlM6tTS2hx0vlR8nAYZkXAy/ue1O
+# FaTTHuWrYbS394BmTiflsJsS8bH0Ce02x7wK3oV1TUxiP9BEu+hVgx/3BmR72Ymv
+# nBOtdgiDWDloLSu4yUwEm/WY2D1dEltg+bIdCVWIoXWejtorAdMAYfz0IjqLzr3A
+# X3FKotEGI06IIPGqbrhQ8UqQ4D3BPNM2mO9DPJ4YqPqv5ebuekWI5rimoUmobtRu
+# jOHhtbRVZ3jVHQH7TU3v2PkWVL5RedPtCeLbP81gZymQiWt4b4saxfA6WBlXnOvf
+# pk1L2U78SE65prYnLroYCXLzQOTivWL6ucuM0fnaoTlR21Ee1/7V1J4mhwVXwE2z
+# rQbjAWYEICMHfGaeI4rVsgxx9znLCXxR5laFPdNmZ55kl7DGTjLlm7Qnqzgwpy2S
+# Np3sMK8P64jkOgkIZP0mMDT2PAQpDZ0vjkVVQP8SFlEZa46gYWk=
 # SIG # End signature block

@@ -99,7 +99,7 @@ Function New-SupplementalWDACConfig {
                 $PolicyPath = Get-CommonWDACConfig -UnsignedPolicyPath
             }
             else {
-                throw 'PolicyPath parameter cannot be empty and no valid configuration was found for UnsignedPolicyPath.'
+                throw 'PolicyPath parameter cannot be empty and no valid user configuration was found for UnsignedPolicyPath.'
             }
         }
         #Endregion User-Configurations-Processing-Validation
@@ -407,8 +407,8 @@ Register-ArgumentCompleter -CommandName 'New-SupplementalWDACConfig' -ParameterN
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBd8uBDC6eELvXO
-# 0iWvwlonc7FaFCR9S4u4GUKgEyrh96CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBPsfLdpVU4bNL3
+# H/La5kj3OPmwr2CaXh4VdpaZRj6amaCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -455,16 +455,16 @@ Register-ArgumentCompleter -CommandName 'New-SupplementalWDACConfig' -ParameterN
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgAQSB+FPW2FlBwBvZcD32z2CWOBW7Z2+rSj1NXpahFf0wDQYJKoZIhvcNAQEB
-# BQAEggIASPZm7FmiFdjrrPODT6Qm+rqZwYoXby9WXaQxBBbwkK84kaG+s9iEWZtP
-# pA4CzHX9ncQoKt9a/fZQ6jo45uWvfBV5Qbr9ZfbtZcGMpVT8pIIr22lCBQZdxCQr
-# vzDLNqaMUudKOcDCc3Sib3q1jHlEtylJlmDhG67PIXIUBDyj6+QirELQvr7pthNY
-# KOVUjgmGkPtRzSzqJWqDOLYrb77GU3yttt4VzpU8lPTdJHsrHX2jRVs8bZlhgsKf
-# GO3JkJpXW3ShRkJjBn8/eQxCUkJbbMijraoh4Yt96/A25rOLlt9FfEjj+ZQFPw9m
-# w86RPG1MKVB6mdWLE5Z8Xa9j2qDH2tvB6Gre1h2wQY5TxHoZ7aTywbc/pz8MlDeA
-# Cmu+c11z6C8geF1XHO8nUWs6IhCKZayMlxJRitzGCErgTdLD+jOgNXu9xBhnGoLK
-# 2OvA7gfnohC9gms/RsBBIK3+2elvZMAKgDoQjnikIoVlDAvUnNH2707GGbbWkPi4
-# qFZKMLYXdJKSyxhJAs8bM41KBGCD5OjF8rsWsGLRY9YLVxLBE9VzyXUTdv16sbrn
-# cf+y2uMYrc/GUkdKxBLIoqzuDCYqIldHdekerd4m+bhPCeCQVw++nBcHmCKKbkUa
-# qTT03bL8AsqnHrX1q/ZwvjHKCAm/8bKWXtKFpWVfH/5Y/IyLtss=
+# IgQgGhty9g56kwgbfV3KUE7yYHzuBmGvmLMMRuJU/IdUtvYwDQYJKoZIhvcNAQEB
+# BQAEggIAFuE+L6P2KTubC3xVeYY1OMw4Vwyx8+QSU0RaGmkA7goxTtxGmpWl5yQg
+# 8HaERL0S/ETQNSPwTAcb3dGXT/sqtwXXLKvDbz/AroiwoPPB+nZh8upiwSYoR3HI
+# uVw6dByKrJQiBmywDMI1k440e5O31+gRTZLw8QBR6/PWcRX3X1ROn8CtjoX/1Es7
+# I5x5pkkfBItROspg2Bu6WWOC/Snt63mKCTqdbocCp4rpPoNQhNO0Fdo8iiE8DbaQ
+# wMgVEWdM8lgIcqh98D6Jms9f6K6vM05bRN+b+VqIhVnKYP+fIBRQzmXFP+bGtSs4
+# ApWX4+/5XAJ/JkoCufPI+cfgW9h7QqUQYQ+Xd6s6LVcVn6ltgLT+Y2T3BmpOohyX
+# B1tkXHksYyJbiQx6ywgrmt4HuRC2pma+dcnmqoVDG4AhJ7ZbFdY7OQL63rX3n9de
+# b2/jqPMULZ2nHT4reTaD20IB9SDC+OoNKTOEN3VIJVd59Jb1074il21t6Zdggbi1
+# JYUTLbXfpsqJwDztFV5bY6/qzJfRjMtYXl0CJQVFA/TQUwpqOWc7C1KGyFS7lAx3
+# nW6c+OTe2SWpVs5oxCRXOXICEVvgLxLEkjD44cZqakC0iDVoXnZlQKGNCh/KJgbH
+# XyWMism3RsQ+yJWxnf4fgwkX0bBcaHrIHQkC6pd6hAe6r24dpVY=
 # SIG # End signature block

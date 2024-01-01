@@ -109,7 +109,7 @@ Function Deploy-SignedWDACConfig {
                 $CertPath = Get-CommonWDACConfig -CertPath
             }
             else {
-                throw 'CertPath parameter cannot be empty and no valid configuration was found for it. Use the Build-WDACCertificate cmdlet to create one.'
+                throw 'CertPath parameter cannot be empty and no valid user configuration was found for it. Use the Build-WDACCertificate cmdlet to create one.'
             }
         }
 
@@ -118,10 +118,10 @@ Function Deploy-SignedWDACConfig {
             if (Confirm-CertCN -CN (Get-CommonWDACConfig -CertCN)) {
                 $CertCN = Get-CommonWDACConfig -CertCN
             }
-        }
-        else {
-            throw 'CertCN parameter cannot be empty and no valid configuration was found for it.'
-        }
+            else {
+                throw 'CertCN parameter cannot be empty and no valid user configuration was found for it.'
+            }
+        }        
         #Endregion User-Configurations-Processing-Validation
 
         # Detecting if Confirm switch is used to bypass the confirmation prompts
@@ -318,8 +318,8 @@ Register-ArgumentCompleter -CommandName 'Deploy-SignedWDACConfig' -ParameterName
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCA33tzyYJFZFdR2
-# qDmqM1D1uBuGwCZu5g0R+ZI9mhekjqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBdhLLapstOQNSF
+# LOwj2wXjhgenRHpSzNOB0fDpp/EDraCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -366,16 +366,16 @@ Register-ArgumentCompleter -CommandName 'Deploy-SignedWDACConfig' -ParameterName
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQg2h1zhi7vitZMLaLyUxvFt4EBO/W++BxrOWNUJquv4VwwDQYJKoZIhvcNAQEB
-# BQAEggIAGITNEddqC/6A9ia8YMLN9eNZoUg+tCNywyoyj6iweW8e+iFAjz0ReQ9z
-# GeVdaWDVOxowqC3xUQzMSGzOcDUMfvFkkNQiX49CZp7l7iJYjqvKzTBEcs59AUxK
-# zvrMnFlwP/tnjgtbSMrurh1aUpdf4UrtfO6dKtbtL669aoZFbtlAFwEI9c6YMofP
-# qb7lQfzfGV8NE2ZHmTf6/PDZe4ZvtZxS02cRor5F8Y/zYOU7tPAaxTnrMgSL1Xzl
-# K2fWYBvTya7Vwa2KUa/VFVA1/p2gSqk6pssnySMHBwmzfVhPP3bG4UwvrFgu4rlB
-# MQZKzWWjJQ8S1oFaZwsyX58KV5O2Ya8pKY8sAlvQc/GLedL2XecHbQlwqOkp77q4
-# WIfCInWucUpnmaEOQ+IyI2X8zZ1DRXrifqnRYTwYh9zT9xcquiUqmcm2AaDOe/SX
-# RkkQT5MTgBy/RR2r/EPrZhuGnqxK2eyjRror3QW0+0gkB5pm0eStmctrvvk3c7O6
-# pETAuLzm+JRTh8HTK70zbB41XtLnq34r+TjygEHK43FavdVtjHFZPgwgqmo5/znk
-# O4Vbc+s0g0ot2vJFZ5TkUSorOvpDp/sMfXTohXyZ1zyBMielfDbqR05P+3fiSMEF
-# Jn7c0CZ20uBUOnpOmaw3MmIobknkmdNflErNs4GcZfF5pCKMJT0=
+# IgQgGA7O3i4THJKfz6iO6oldch6n1mjak7i84WUHLx3gmocwDQYJKoZIhvcNAQEB
+# BQAEggIAMV9b/Uj6ePTNapZJ415g/R12M43hVzEk/VbUcmtTSqR1AZHufDCVbyC8
+# X0ERj1I5WqDRCkvK4aK1XQrSL+NHmq+icQC9AX38n+SyV6MizOQn64qlH27QA4M5
+# b6HD/wN1ADwtSHyaSu9p1nS3Fc1r/4qvc//rSWk0kIbiEv5w+tuDQffWNTw0n5jP
+# iy7y7vnKjH+89xEjzgKkPo2FsCo9CX92a5+yITKXeVn0jVHnjQG5bElwm13dHfnz
+# LL1z4sYLReyyqno1fttbxy6699/dvGdJ8BDEHuRoKhmqOhcHhpqYQ5bpI483nekf
+# KilEMUgyk1+BfMvOahf0/YFnPVbqxqCVtesSR1bHps1gXqldDQqLPcMmzD6T5Bax
+# YHldoAo8dFMRalz9TPOml+rD1FxK8ExLPu9tzm7sejXA23SW0h9rF44di7MtjoRN
+# A0/ZYWN/Ui3eoZw5GqLc/zLII4mwSiLWFAg1Z1Ma/fGjAk0ixj79D/BV2/ywKWO5
+# 2QRuFj4Fnsnx4vwshWYRMsfWj0JdMG4ITLst5ord2P7mpOc9jUN9pPAEr4GI5Xli
+# gKqj0yeYl1QgL1zVP6ZJ1uH6bPInCsLMriE6z/2f2/eQWFNUC2R/+H1p5e6v1ZF4
+# 6xj/ydJ2if0wBhRLPKupWus7uqMQiO+H0PPrVW45m/qkE11ATQY=
 # SIG # End signature block

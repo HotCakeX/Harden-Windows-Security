@@ -190,9 +190,9 @@ Function Remove-WDACConfig {
                 if (Confirm-CertCN -CN (Get-CommonWDACConfig -CertCN)) {
                     $CertCN = Get-CommonWDACConfig -CertCN
                 }
-            }
-            else {
-                throw 'CertCN parameter cannot be empty and no valid configuration was found for it.'
+                else {
+                    throw 'CertCN parameter cannot be empty and no valid user configuration was found for it.'
+                }
             }
         }
         #Endregion User-Configurations-Processing-Validation
@@ -455,8 +455,8 @@ Register-ArgumentCompleter -CommandName 'Remove-WDACConfig' -ParameterName 'Sign
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBoN/gjDHQdeapa
-# 5u5xie6ijVNKRMzg2kA6YmIfnnfxVKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCD70x6RuO6CSBrI
+# 0NG0p76yRtaFoSYxVDoWYBG7zIR88aCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -503,16 +503,16 @@ Register-ArgumentCompleter -CommandName 'Remove-WDACConfig' -ParameterName 'Sign
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgB534kQNdg4xWcnaEXV2vJFHA6PIoKuQb8vfrUj0BXuowDQYJKoZIhvcNAQEB
-# BQAEggIAM8Lv9b/zGnx3grPWJbieDPUE83O9QcGx7rtElpNNGyFBf79llztt0bjm
-# V1AvKR9NxQvXKDm3+KrZVXWDap1pxg+b5rd8xcOm030LX3C08ZmxPZdx75doep4V
-# 5lKF898IhOzG+7bJCNV4RPV04X7kMrDUq60YIl+xNptopekAuJ4uw7Mj2ZDDNpF4
-# GUe1EJu7ih1L6/SrwzsSfbWbUErNxoPWtfI3quLFdkr1EG/jMXaRDkDtzjskBZgc
-# vEVceBJoaG9ys/ooJLVF1WtrBiDysGhaSg3T9iMP3tl0Fg1srN2SMmsInzRZwLuZ
-# LEWGOz1PLXOAyjEhXhL+vKfj5/0Fj7K+SFWDrypW8dMfZM4a6I+zyhoTRtzPIQui
-# E8rm4x6uHp7xymzCwzduEqi27xvRzd8cWOI5YdQ49TISgugC0WoFMA8Ed8uSo/6K
-# aWy4CY16DQd0FF8zGDK/VJ5rbYmZOK8g13nd0vZKkynEOc2iulzLU1VauZQ+z8XI
-# 0c56GhbvQq+QDK8fBf+FQOeYik1Le94Flw2L3n/JdcgPzXSIPDfy8JpwMPK91C/a
-# WnelrLbRHyI9nBuoEGNnbs2YL6cqFziLHMUfksIXYtZLSpaYwlO67gDt1GADEj6z
-# YDDqUxW6tDYiXoxndwdPuxXOrFzMBYebZ3K2ZJeqqPdJEB9LFnw=
+# IgQgn4jZPW2UJAdyyUQ/oKUYwjaJkB4qfNHf+TynA+MbeGEwDQYJKoZIhvcNAQEB
+# BQAEggIAmZnguxvrm9E9jRYdz+6RTAFVIvBAGLBUWMSzMv1OprsA1VPxYZGl29pn
+# zC6R74GjzBe8XqoTZbUScWZG7TV/YalziYafj5mS2TlKNVN2nGU5KGlccYT+Ro4/
+# Yf1B/+NInl3Xnu3/JbofCPf0G2Fdb8OC0SZJD6ZoLqLB4qvJdMRhU3dSAvgDaQ39
+# SExY6RqZv8nFzHFdaqTdLH1CZ0qq17zThQcY7FYs6Bc8HyOwHlc9jOTsOvq5vVS2
+# yrAv4J4ZM1mv2/7tRzIHhe8GlHBhq7tEJ4CQSvt/56CP+XdfFkdFI35B/rw1ccIP
+# Oy33u2IxaX12fQUX49DS11DNDR3PtKRW3qouM0Z3GwZ6Ikhzw5hXY54l1DtcXAh0
+# xoQw6uFkKCyIgxsNHycMppPy7ugp1ekQOgJ4UcxvxSU8VQA0trJftLIQ5xkJZ0Ex
+# nMOubVB7ee2f9Pe8WU88u95HQMCHltS2V7l+0jiKETZs/Q2fCnnJVEqiirLQscBG
+# 7nMS2gp18wmt09E+UkFBMSY7cdCOK49DsE+VF/0XycM4XnujjU6n554HpKE5lwor
+# 9T6TIQRPxKhaXnq/zWbBx4LZ8JVmM7ZdzFsyBn/t9Y+5eYZGXMdEwnLAGa7bsS+g
+# E7VGatMrOgEB/SjQy74SuE0WwIHxIO+13OxZa+lh63Sw2mY2BzY=
 # SIG # End signature block

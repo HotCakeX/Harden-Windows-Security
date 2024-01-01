@@ -119,6 +119,10 @@ Function Get-SignTool {
         [System.Boolean]$GreenFlag5 = ((Get-AuthenticodeSignature -FilePath $SignToolExePathOutput).StatusMessage -eq 'Signature verified.')
     }
     catch {
+        # Display an extra error message to provide more information to the user
+        if ($SignToolExePathInput) {
+            Write-Error -Message 'The SignTool.exe path that was provided by parameter or found in user configuration could not be validated.' -ErrorAction Continue
+        }
         Throw $_
     }
     # If any of the 5 checks above fails, the operation stops
@@ -141,8 +145,8 @@ Export-ModuleMember -Function 'Get-SignTool'
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBWto4uAhKJKiZa
-# +sx59oLq21tJnGfUvAJ0G0wAptOLtqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCE8wPkguFW0+Jn
+# mve0XCuUwZhmoOGvgZxsny7VIOl8laCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -189,16 +193,16 @@ Export-ModuleMember -Function 'Get-SignTool'
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgZi27NzGWAZWBf2sFV/cQfp2rxg19fSra53CdLRpo7hMwDQYJKoZIhvcNAQEB
-# BQAEggIAP7ZeY6KUUIxIsWq5yrRN2mePOxMEmHpFqd+qN2GPWqU6IKepcq49gj/s
-# Qmz8aeiMz9aWqXOhGLl+Yfk7vFE4LpnpoUEcra1naVJMl2MDLCSRSEkHl4ZHewUs
-# ABaL+lxIizzJ8JVRqmpj6eY2wHBW8tiLjFZ73tf0vV+rH7cacHeoLotL4uwgJmg5
-# Z/IGHGzNNVDd6dmOjqsw7K0o1f6yw42FrL+QH5z8/Un3nAYVIPOmWuiRGHXWKQRA
-# fJcwF5eOGEY38WcW2pTuqr89Wxz5ojTbLIY0gf5gZ3kY8GWjCG7BTN5CwYwxu3I8
-# lMMvLCwLxNffttzBogeLqXH3wEsn0ET7C5s7fMjpGCCG8qMYxl9+8QdTbCXMtjKV
-# PbMtRqJPyO3XR7sTnJ9HCu4Crh4ahW+cjPzC1ZfLj/w1CQxlpR42ZBjCkn3cKq5e
-# acM59F+UwOBhtY5GtgFvNJCf6g58BaSWF+GZ0TmRjRcNuD7JxeO0IprUbDlCPMup
-# giGZYcWu82KWiQTTnz+YN/jacIrV6tdZzkOkfO1JulIl0jvABgoDa7EvRHFUgDqy
-# xx8KpNQbeaun7GAf9FQykVJP0tO2T1E7LvCqwJqTHH8fbkLuvCjjkZ1MEDa/GBV6
-# ciuOMPIOnnyX3K3xj7AL6Rh53hrL8le/1M1tHi16BIrAInMXKj0=
+# IgQgUzJmUpbaNJ9R+lDFajfZ+A7KFioyHpAZ04Fah0+/st4wDQYJKoZIhvcNAQEB
+# BQAEggIAivhls+EalMcp644Kh/fQ7w6uc5QaBsINIa0uKBcyRyQ8z+9Dvji+JcCN
+# IZA0AfRVAXIkxRSAGs9gJq323Y6Mexdm6tvalVzbiJDoUtzjkFIioh79k6GX0yWj
+# bOgyyyvYzaFb+ikiMyCDIiOVT6yP9ZNPObKFTg4eLjRvsGr9zDJjJXWvh6Tub/dJ
+# tka9pnYmwc4jUDix2WpZ5cMUbvkIdcPJCtZcuN0LOidtCjjMH0PJexsQFqqDnoEt
+# 7ah1JCoUTJJz0QuEXDE6hxCu/aUJClt8Te3CTH5s5dsrSjdEA1qkgfvwByiFnf53
+# lXYDvBpBIsaCsjflpYkCPPuq8N7TAM/32NFZqjLnr1rbmm35Pkq7WsuuPdOlLruv
+# 7Uz3NmPxALm970ikxaRK010gOR+yjJHRb64SKWmzc48TAJAHT6Q8jYuHrOBe+zJ1
+# dtf7illC4obZ0+Ar8m/kB5wJBDqVi4guh26X32CxXBVIbr9RNX6Pk1UqITedQ25D
+# RXxBNZ+/RGSqn9YkiG430Ei7rw1o4rMk2KZJpLSEKcB4oQtwShmU4vVj6YRFlMWB
+# IuL/X/rYbcRG0BX6bYzMNXZjbLgER8GtvThUXq9iC2E4QtmVmuBCyBxd40TYC0Y/
+# CFQ2xSgHt1b7SH9Ft2W3Jk23zvbqATe6HveUNuTTrcObmnLK5n0=
 # SIG # End signature block

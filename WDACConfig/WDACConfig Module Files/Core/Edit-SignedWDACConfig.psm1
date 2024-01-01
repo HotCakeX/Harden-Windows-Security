@@ -197,7 +197,7 @@ Function Edit-SignedWDACConfig {
                 $CertPath = Get-CommonWDACConfig -CertPath
             }
             else {
-                throw 'CertPath parameter cannot be empty and no valid configuration was found for it. Use the Build-WDACCertificate cmdlet to create one.'
+                throw 'CertPath parameter cannot be empty and no valid user configuration was found for it. Use the Build-WDACCertificate cmdlet to create one.'
             }
         }
 
@@ -206,10 +206,10 @@ Function Edit-SignedWDACConfig {
             if (Confirm-CertCN -CN (Get-CommonWDACConfig -CertCN)) {
                 $CertCN = Get-CommonWDACConfig -CertCN
             }
-        }
-        else {
-            throw 'CertCN parameter cannot be empty and no valid configuration was found for it.'
-        }
+            else {
+                throw 'CertCN parameter cannot be empty and no valid user configuration was found for it.'
+            }
+        }        
 
         # make sure the ParameterSet being used has PolicyPath parameter - Then enforces "mandatory" attribute for the parameter
         if ($PSCmdlet.ParameterSetName -in 'Allow New Apps Audit Events', 'Allow New Apps', 'Merge Supplemental Policies') {
@@ -219,7 +219,7 @@ Function Edit-SignedWDACConfig {
                     $PolicyPath = Get-CommonWDACConfig -SignedPolicyPath
                 }
                 else {
-                    throw 'PolicyPath parameter cannot be empty and no valid configuration was found for SignedPolicyPath.'
+                    throw 'PolicyPath parameter cannot be empty and no valid user configuration was found for SignedPolicyPath.'
                 }
             }
         }
@@ -1410,8 +1410,8 @@ Register-ArgumentCompleter -CommandName 'Edit-SignedWDACConfig' -ParameterName '
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCVodqME99wSjUZ
-# xgDb2uecUwdVlJvRNlIzof5/VJFzvKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCB/hjNJ0D/4sSW7
+# 9XwD7mFLdyoDp1t9LSNxe+Z/7J7NHqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -1458,16 +1458,16 @@ Register-ArgumentCompleter -CommandName 'Edit-SignedWDACConfig' -ParameterName '
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgARs/NQvOAL2RNPk09MUZdjIb8vNecxHS5zl+XNwgNkAwDQYJKoZIhvcNAQEB
-# BQAEggIAFlIdvTAoBVzqIygJlyeaUStFJ6BIZAY5corx3B1BZJERB89nDGZbqiXe
-# RgjPgzlSYzhMdl8kEwaAtWx+WnyZzVpiQW9xjxfzaXWRqhCIFbl4ZWjxyRuARFOR
-# /6U7aTwvvyoDQ+v3woiT3EGCAWJwbU59r87ORidK+b+2vYHa6KhMKyQcfVgMmucf
-# gQ/9yxL1uTSMKqsplCLtg4Q1dqiCjxcK+1qGlYFH5iEOx5Xckfo2OG5Umr16Fckl
-# ElhuHBEWuFCufs9BRn8jX4Y9hh8eu+TySnMzuHbXJ2kbXnb8h4I5qYpfZ4qDZR4J
-# VhcNrO6G5fV+U8UmY8rcH48g3PXTgd2pr90zK8yFaK0/P98Um4lTY18mgjPnSBIL
-# D8XkH03yQu1r7pz88/cC1zK2CoCeCit6ATEm87PnpwXb0p7/kNspSauVNn3UcEHM
-# iwd83k5drbo/CaHc+svxyjpN0xasLjNO4w3+YELcBOoTQ5gmjtBE3gGE/07oj9JE
-# X551jTTi0oPt0faRbuy7t9DeKU7geVnfvcPOGWLhqZL/PFFfAAzKqKHV1I/bldX8
-# alldsAcvI8frmGyLsswLSYZ3qWGTdKCt4GU54H/Mp+sYpOhIIcgOYL/0F/+1BP1L
-# RVtA/e72i5oyUMLcFJIcjA46L8TLtQKMEg+AQ6IfQk8TPbXL7AU=
+# IgQgMzzYI6OlJ4etBGKXB3euacQJgoWtN6ec3dFV1dym7JIwDQYJKoZIhvcNAQEB
+# BQAEggIAg3tn60JgpR7+5llh7wNzHwt1jouWyJ0vs4x/YdT8xroJIZBzyIX+N+GG
+# ExkTTQ7xKPKVWi9xTYx3cgjGrrvpMlqNhaIU199V3J6rTfoqkksLELkHmqXRC8bw
+# H7gDdTxL2X9MSfWnB+FhqsA9pEZYAkS+huibIP6dbCnK7XK0J7P7wXGT3PjpiwKD
+# 6C+ThOyqKBbo0I3R1Muc9DsJD/vbXOE5qOzzS9RiDzrkvcH7usDuxQYJJLJou9lz
+# +y4OVDR6r5yDRBT1aPXlvtId/YGcKx1hYWviPgz6x5BSpZ5i6DUngk6N0d9Zn22m
+# s34c/q3rK6q5POq8DoBJA1XiTbsSSC7KGzgqqCPutasezpgR/jXfi+aIcr389TeF
+# YNNtwE1DtTzlP+dU5dxxzv/PoOnysKe0OCNCgWYXrmg/31ZUPeIFBSFdo3L1AqD0
+# GYeaxg13S1OLeFtetZbLOjFJHxYzCY54xiPqpCkv6neDTljPeuMYiSquOEUXSNt7
+# HIGEQcOly/yfPIUR2+4a0ijJ09HGZD3G3PURZizb7VS1cLbXfvhjZDWmGQCZyy0W
+# fZBHkCcxZTqtDkYx6SbzMGzJtPlk+4zDiD4TTgAt0nCrhX/drCW6icnefYv+oco5
+# xdKLtvZX8o8z8YbxuElSTfwxx8C3QRLLGnCkqEkq8eaFyiNiikI=
 # SIG # End signature block

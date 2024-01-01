@@ -40,16 +40,16 @@ Function Get-CommonWDACConfig {
             Write-Verbose -Message 'Your current WDAC User Configurations is empty.'
             # set a boolean value that returns from the Process and End blocks as well
             [System.Boolean]$ReturnAndDone = $true
-
+            # return/exit from the begin block
             Return
         }
 
         Write-Verbose -Message 'Reading the current user configurations'
-        [PSCustomObject]$CurrentUserConfigurations = Get-Content -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json"
+        [System.Object[]]$CurrentUserConfigurations = Get-Content -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json"
 
         # If the file exists but is corrupted and has bad values, rewrite it
         try {
-            $CurrentUserConfigurations = $CurrentUserConfigurations | ConvertFrom-Json
+            [System.Collections.Hashtable]$CurrentUserConfigurations = $CurrentUserConfigurations | ConvertFrom-Json -AsHashtable
         }
         catch {
             Write-Warning -Message 'The UserConfigurations.json was corrupted, clearing it.'
@@ -57,25 +57,33 @@ Function Get-CommonWDACConfig {
         }
     }
 
-    process {}
+    process {
+        # return/exit from the process block
+        if ($true -eq $ReturnAndDone) { return }
+
+        # Remove any empty values from the hashtable
+        @($CurrentUserConfigurations.keys) | ForEach-Object -Process {
+            if (!$CurrentUserConfigurations[$_]) { $CurrentUserConfigurations.Remove($_) }
+        }
+    }
 
     end {
-
+        # return/exit from the end block
         if ($true -eq $ReturnAndDone) { return }
 
         # Use a switch statement to check which parameter is present and output the corresponding value from the json file
         switch ($true) {
-            $SignedPolicyPath.IsPresent { Write-Output -InputObject $CurrentUserConfigurations.SignedPolicyPath }
-            $UnsignedPolicyPath.IsPresent { Write-Output -InputObject $CurrentUserConfigurations.UnsignedPolicyPath }
-            $SignToolPath.IsPresent { Write-Output -InputObject $CurrentUserConfigurations.SignToolCustomPath }
-            $CertCN.IsPresent { Write-Output -InputObject $CurrentUserConfigurations.CertificateCommonName }
-            $StrictKernelPolicyGUID.IsPresent { Write-Output -InputObject $CurrentUserConfigurations.StrictKernelPolicyGUID }
-            $StrictKernelNoFlightRootsPolicyGUID.IsPresent { Write-Output -InputObject $CurrentUserConfigurations.StrictKernelNoFlightRootsPolicyGUID }
-            $CertPath.IsPresent { Write-Output -InputObject $CurrentUserConfigurations.CertificatePath }
-            $LastUpdateCheck.IsPresent { Write-Output -InputObject $CurrentUserConfigurations.LastUpdateCheck }
+            $SignedPolicyPath.IsPresent { return ($CurrentUserConfigurations.SignedPolicyPath ?? $null) }
+            $UnsignedPolicyPath.IsPresent { return ($CurrentUserConfigurations.UnsignedPolicyPath ?? $null) }
+            $SignToolPath.IsPresent { return ($CurrentUserConfigurations.SignToolCustomPath ?? $null) }
+            $CertCN.IsPresent { return ($CurrentUserConfigurations.CertificateCommonName ?? $null) }
+            $StrictKernelPolicyGUID.IsPresent { return ($CurrentUserConfigurations.StrictKernelPolicyGUID ?? $null) }
+            $StrictKernelNoFlightRootsPolicyGUID.IsPresent { return ($CurrentUserConfigurations.StrictKernelNoFlightRootsPolicyGUID ?? $null) }
+            $CertPath.IsPresent { return ($CurrentUserConfigurations.CertificatePath ?? $null) }
+            $LastUpdateCheck.IsPresent { return ($CurrentUserConfigurations.LastUpdateCheck ?? $null) }
             Default {
-                # If no parameter is present, display all the values
-                Write-ColorfulText -Color Pink -InputText "`nThis is your current WDAC User Configurations: "
+                # If no parameter is present
+                Write-ColorfulText -Color Pink -InputText 'Displaying the User Configurations that have values'
                 Write-Output -InputObject $CurrentUserConfigurations
             }
         }

@@ -78,7 +78,8 @@ Creates a Deny base policy by scanning a directory, this parameter uses [DriverF
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-DenyWDACConfig/New-DenyWDACConfig%20-InstalledAppXPackages.apng)
 
 ```powershell
-New-DenyWDACConfig [-InstalledAppXPackages] -PackageName <String> -PolicyName <String> [-Deploy]
+ New-DenyWDACConfig [-InstalledAppXPackages] -PackageName <String> -PolicyName <String> [-Deploy] [-Force]
+[-SkipVersionCheck] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 <br>
@@ -91,9 +92,11 @@ Creates a Deny base policy for one or more installed Windows Apps (Appx) based o
 
 - ` -PolicyName <String>`: Add a descriptive name for the Deny base policy. Accepts only alphanumeric and space characters.
 
-### 1 Optional Parameter
+### 2 Optional Parameter
 
 - `-Deploy`: Indicates that the module will automatically deploy the Deny base policy after creation.
+
+- `-Force`: Indicates that the cmdlet won't ask for confirmation and will proceed with creating the deny policy.
 
 <br>
 

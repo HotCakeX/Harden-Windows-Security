@@ -1,5 +1,7 @@
 # Assert-WDACConfigIntegrity available parameters
 
+![Assert-WDACConfigIntegrity demo](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Assert-WDACConfigIntegrity/Assert-WDACConfigIntegrity.gif)
+
 ```powershell
 Assert-WDACConfigIntegrity [-SaveLocally] [-Path <FileInfo>] [-SkipVersionCheck] [<CommonParameters>]
 ```

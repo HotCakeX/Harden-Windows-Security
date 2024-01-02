@@ -9,7 +9,7 @@ Build-WDACCertificate [[-CommonName] <String>] [[-FileName] <String>] [[-Buildin
 
 <br>
 
-This cmdlet constructs self-signed certificates that adhere to [Microsoft's specifications]((https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/deployment/use-signed-policies-to-protect-wdac-against-tampering)) for WDAC policy signing. With this cmdlet, you can dispense with [Windows Server with a CA role](https://github.com/HotCakeX/Harden-Windows-Security/wiki/How-to-Create-and-Deploy-a-Signed-WDAC-Policy-Windows-Defender-Application-Control) to generate a certificate.
+This cmdlet constructs self-signed certificates that adhere to [Microsoft's specifications](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/deployment/use-signed-policies-to-protect-wdac-against-tampering) for WDAC policy signing. With this cmdlet, you can dispense with [Windows Server with a CA role](https://github.com/HotCakeX/Harden-Windows-Security/wiki/How-to-Create-and-Deploy-a-Signed-WDAC-Policy-Windows-Defender-Application-Control) to generate a certificate.
 
 The generated certificates type is Code Signing, they employ `SHA2-512` hashing algorithm with `RSA 4096-bit` encryption (the maximum supported key size for WDAC signing.)
 

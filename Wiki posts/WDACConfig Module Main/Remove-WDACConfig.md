@@ -5,7 +5,8 @@
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Remove-WDACConfig/Remove-WDACConfig%20-SignedBase.apng)
 
 ```powershell
-Remove-WDACConfig [-SignedBase] -PolicyPaths <String[]> -CertCN <String> [-SignToolPath <String>]
+Remove-WDACConfig [-SignedBase] -PolicyPaths <String[]> [-CertCN <String>] [-SignToolPath <String>] [-Force]
+[-SkipVersionCheck] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 <br>
@@ -21,6 +22,10 @@ Uses [the official procedure](https://learn.microsoft.com/en-us/windows/security
 * `-SignToolPath <String>`: Press TAB to open the file picker GUI and browse for SignTool.exe. [You can use it in 2 different ways](#the-logic-behind--signtoolpath-string-optional-parameter)
 
 * `-CertCN <String>`: Common name of the certificate used to sign the deployed WDAC policies - Supports argument completion so you don't have to manually enter the Certificate's CN, just make sure the certificate is installed in the personal store of the user certificates, then press TAB to auto complete the name. You can however enter it manually if you want to.
+
+### 1 Optional Parameter
+
+- `-Force`: Indicates that the cmdlet won't ask for confirmation and will proceed with redeploying the signed base policy in unsigned mode.
 
 <br>
 

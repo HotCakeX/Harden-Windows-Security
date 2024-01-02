@@ -5,9 +5,9 @@
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-SupplementalWDACConfig/New-SupplementalWDACConfig%20-Normal.apng)
 
 ```powershell
-New-SupplementalWDACConfig [-Normal] -ScanLocation <String> -SuppPolicyName <String> -PolicyPath <String>
-[-Deploy] [-SpecificFileNameLevel <String>] [-NoUserPEs] [-NoScript] [-Level <String>]
-[-Fallbacks <String[]>]
+New-SupplementalWDACConfig [-Normal] -ScanLocation <String> -SuppPolicyName <String> [-PolicyPath <String>]
+[-Deploy] [-SpecificFileNameLevel <String>] [-NoUserPEs] [-NoScript] [-Level <String>] [-Fallbacks <String[]>]
+[-SkipVersionCheck] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 <br>
@@ -54,8 +54,7 @@ Creates a normal Supplemental policy for a base policy.
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-SupplementalWDACConfig/New-SupplementalWDACConfig%20-PathWildCards.apng)
 
 ```powershell
-New-SupplementalWDACConfig [-PathWildCards] -FolderPath <String> -SuppPolicyName <String> [-PolicyPath <String>]
-[-Deploy]
+New-SupplementalWDACConfig [-PathWildCards] -FolderPath <String> -SuppPolicyName <String> [-PolicyPath <String>] [-Deploy] [-SkipVersionCheck] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 <br>

@@ -5,9 +5,9 @@
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-DenyWDACConfig/New-DenyWDACConfig%20-Normal.apng)
 
 ```powershell
-New-DenyWDACConfig [-Normal] -PolicyName <String> -ScanLocations <String[]> [-Level <String>]
-[-Fallbacks <String[]>] [-SpecificFileNameLevel <String>] [-NoUserPEs]
-[-NoScript] [-Deploy]
+New-DenyWDACConfig [-Normal] -PolicyName <String> [-ScanLocations <String[]>] [-Level <String>] [-Fallbacks
+<String[]>] [-SpecificFileNameLevel <String>] [-NoUserPEs] [-NoScript] [-Deploy] [-SkipVersionCheck] [-WhatIf]
+[-Confirm] [<CommonParameters>]
 ```
 
 <br>
@@ -45,8 +45,8 @@ Creates a Deny base policy by scanning a directory. The base policy will have 2 
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-DenyWDACConfig/New-DenyWDACConfig%20-Drivers.apng)
 
 ```powershell
-New-DenyWDACConfig [-Drivers] -PolicyName <String> -ScanLocations <String[]> [-Level <String>]
-[-Fallbacks <String[]>] [-Deploy]
+New-DenyWDACConfig [-Drivers] -PolicyName <String> [-ScanLocations <String[]>] [-Level <String>] [-Fallbacks
+<String[]>] [-Deploy] [-SkipVersionCheck] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 <br>
@@ -78,7 +78,7 @@ Creates a Deny base policy by scanning a directory, this parameter uses [DriverF
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-DenyWDACConfig/New-DenyWDACConfig%20-InstalledAppXPackages.apng)
 
 ```powershell
- New-DenyWDACConfig [-InstalledAppXPackages] -PackageName <String> -PolicyName <String> [-Deploy] [-Force]
+New-DenyWDACConfig [-InstalledAppXPackages] -PackageName <String> -PolicyName <String> [-Deploy] [-Force]
 [-SkipVersionCheck] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 

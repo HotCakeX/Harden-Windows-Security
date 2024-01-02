@@ -38,7 +38,8 @@ Uses [the official procedure](https://learn.microsoft.com/en-us/windows/security
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Remove-WDACConfig/Remove-WDACConfig%20-UnsignedOrSupplemental.apng)
 
 ```powershell
-Remove-WDACConfig [-UnsignedOrSupplemental] [-PolicyIDs <String[]>] [-PolicyNames <String[]>]
+Remove-WDACConfig [-UnsignedOrSupplemental] [-PolicyNames <String[]>] [-PolicyIDs <String[]>] [-Force]
+[-SkipVersionCheck] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 <br>

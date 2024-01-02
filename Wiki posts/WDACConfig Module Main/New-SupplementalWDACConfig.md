@@ -5,9 +5,9 @@
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-SupplementalWDACConfig/New-SupplementalWDACConfig%20-Normal.apng)
 
 ```powershell
-New-SupplementalWDACConfig [-Normal] -ScanLocation <String> -SuppPolicyName <String> -PolicyPath <String>
-[-Deploy] [-SpecificFileNameLevel <String>] [-NoUserPEs] [-NoScript] [-Level <String>]
-[-Fallbacks <String[]>]
+New-SupplementalWDACConfig [-Normal] -ScanLocation <String> -SuppPolicyName <String> [-PolicyPath <String>]
+[-Deploy] [-SpecificFileNameLevel <String>] [-NoUserPEs] [-NoScript] [-Level <String>] [-Fallbacks <String[]>]
+[-SkipVersionCheck] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 <br>
@@ -54,8 +54,7 @@ Creates a normal Supplemental policy for a base policy.
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-SupplementalWDACConfig/New-SupplementalWDACConfig%20-PathWildCards.apng)
 
 ```powershell
-New-SupplementalWDACConfig [-PathWildCards] -FolderPath <String> -SuppPolicyName <String> [-PolicyPath <String>]
-[-Deploy]
+New-SupplementalWDACConfig [-PathWildCards] -FolderPath <String> -SuppPolicyName <String> [-PolicyPath <String>] [-Deploy] [-SkipVersionCheck] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 <br>
@@ -92,8 +91,8 @@ Creates a Supplemental policy that allows a folder path that includes one or mor
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-SupplementalWDACConfig/New-SupplementalWDACConfig%20-InstalledAppXPackages.apng)
 
 ```powershell
-New-SupplementalWDACConfig [-InstalledAppXPackages] -PackageName <String> -SuppPolicyName <String> -PolicyPath
-<String> [-Deploy]
+New-SupplementalWDACConfig [-InstalledAppXPackages] -PackageName <String> -SuppPolicyName <String> [-PolicyPath
+<String>] [-Deploy] [-Force] [-SkipVersionCheck] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 <br>
@@ -112,9 +111,11 @@ More information at [Microsoft Learn](https://learn.microsoft.com/en-us/windows/
 
 * `-PolicyPath`: Browse for the xml file of the Base policy this Supplemental policy is going to expand. Supports tab completion by showing only `.xml` files with **Base Policy** Type.
 
-### 1 Optional Parameter
+### 2 Optional Parameter
 
 * `-Deploy`: Indicates that the module will automatically deploy the Supplemental policy after creation.
+
+- `-Force`: Indicates that the cmdlet won't ask for confirmation and will proceed with creating the Supplemental policy.
 
 ### The outputs of the parameter are
 

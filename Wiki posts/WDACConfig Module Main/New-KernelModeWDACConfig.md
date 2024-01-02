@@ -5,7 +5,8 @@
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-KernelModeWDACConfig/New-KernelModeWDACConfig%20-Default.apng)
 
 ```powershell
-New-KernelModeWDACConfig [-Default] [-PrepMode] [-AuditAndEnforce] [-EVSigners] [-Deploy]
+New-KernelModeWDACConfig [-Default] [-PrepMode] [-AuditAndEnforce] [-Deploy] [-EVSigners] [-SkipVersionCheck]
+[-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 <br>
@@ -55,7 +56,8 @@ Edit-WDACConfig -AllowNewAppsAuditEvents -SuppPolicyName "Kernel mode drivers fo
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-KernelModeWDACConfig/New-KernelModeWDACConfig%20-NoFlightRoots.apng)
 
 ```powershell
-New-KernelModeWDACConfig [-NoFlightRoots] [-PrepMode] [-AuditAndEnforce] [-EVSigners] [-Deploy]
+New-KernelModeWDACConfig [-NoFlightRoots] [-PrepMode] [-AuditAndEnforce] [-Deploy] [-EVSigners]
+[-SkipVersionCheck] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 <br>

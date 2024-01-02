@@ -5,9 +5,9 @@
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-DenyWDACConfig/New-DenyWDACConfig%20-Normal.apng)
 
 ```powershell
-New-DenyWDACConfig [-Normal] -PolicyName <String> -ScanLocations <String[]> [-Level <String>]
-[-Fallbacks <String[]>] [-SpecificFileNameLevel <String>] [-NoUserPEs]
-[-NoScript] [-Deploy]
+New-DenyWDACConfig [-Normal] -PolicyName <String> [-ScanLocations <String[]>] [-Level <String>] [-Fallbacks
+<String[]>] [-SpecificFileNameLevel <String>] [-NoUserPEs] [-NoScript] [-Deploy] [-SkipVersionCheck] [-WhatIf]
+[-Confirm] [<CommonParameters>]
 ```
 
 <br>
@@ -45,8 +45,8 @@ Creates a Deny base policy by scanning a directory. The base policy will have 2 
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-DenyWDACConfig/New-DenyWDACConfig%20-Drivers.apng)
 
 ```powershell
-New-DenyWDACConfig [-Drivers] -PolicyName <String> -ScanLocations <String[]> [-Level <String>]
-[-Fallbacks <String[]>] [-Deploy]
+New-DenyWDACConfig [-Drivers] -PolicyName <String> [-ScanLocations <String[]>] [-Level <String>] [-Fallbacks
+<String[]>] [-Deploy] [-SkipVersionCheck] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 <br>
@@ -78,7 +78,8 @@ Creates a Deny base policy by scanning a directory, this parameter uses [DriverF
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-DenyWDACConfig/New-DenyWDACConfig%20-InstalledAppXPackages.apng)
 
 ```powershell
-New-DenyWDACConfig [-InstalledAppXPackages] -PackageName <String> -PolicyName <String> [-Deploy]
+New-DenyWDACConfig [-InstalledAppXPackages] -PackageName <String> -PolicyName <String> [-Deploy] [-Force]
+[-SkipVersionCheck] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 <br>
@@ -90,6 +91,32 @@ Creates a Deny base policy for one or more installed Windows Apps (Appx) based o
 - `-PackageName <String>`: Enter the [package name](https://learn.microsoft.com/en-us/powershell/module/appx/get-appxpackage) of an installed app. Supports wildcard `*` character. e.g, `*Edge*` or `"*Microsoft*"`.
 
 - ` -PolicyName <String>`: Add a descriptive name for the Deny base policy. Accepts only alphanumeric and space characters.
+
+### 2 Optional Parameter
+
+- `-Deploy`: Indicates that the module will automatically deploy the Deny base policy after creation.
+
+- `-Force`: Indicates that the cmdlet won't ask for confirmation and will proceed with creating the deny policy.
+
+<br>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+
+<br>
+
+## New-DenyWDACConfig -PathWildCards
+
+![New-DenyWDACConfig -PathWildCards demo](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-DenyWDACConfig/New-DenyWDACConfig%20-PathWildCards.apng)
+
+```powershell
+New-DenyWDACConfig [-PathWildCards] -PolicyName <String> -FolderPath <String> [-Deploy] [-SkipVersionCheck] [<CommonParameters>]
+```
+
+### 2 Mandatory Parameters
+
+- ` -PolicyName <String>`: Add a descriptive name for the Deny base policy. Accepts only alphanumeric and space characters.
+
+* `-FolderPath`: A folder path that includes at least one wildcard `*` character and ends with a `\`. Press TAB to open the folder picker GUI. Once you selected a folder, you will see the path will have `\*` at the end of it. You can modify the selected path by adding/removing wildcards `*` to it before proceeding.
 
 ### 1 Optional Parameter
 

@@ -3,7 +3,8 @@
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Invoke-WDACSimulation/Invoke-WDACSimulation.apng)
 
 ```powershell
-Invoke-WDACSimulation -FolderPath <string> -XmlFilePath <string>
+Invoke-WDACSimulation [-FolderPath] <DirectoryInfo> [-XmlFilePath] <FileInfo> [-SkipVersionCheck]
+[<CommonParameters>]
 ```
 
 <br>

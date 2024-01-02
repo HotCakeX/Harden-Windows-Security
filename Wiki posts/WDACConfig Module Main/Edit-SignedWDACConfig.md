@@ -5,9 +5,10 @@
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Edit-SignedWDACConfig/Edit-SignedWDACConfig%20-AllowNewAppsAuditEvents.apng)
 
 ```powershell
-Edit-SignedWDACConfig [-AllowNewAppsAuditEvents] -SuppPolicyName <String> [-CertPath <String>] [-PolicyPath
+Edit-SignedWDACConfig [-AllowNewAppsAuditEvents] -SuppPolicyName <String> [-PolicyPath <String>] [-CertPath
 <String>] [-CertCN <String>] [-LogSize <Int64>] [-NoScript] [-NoUserPEs] [-SpecificFileNameLevel <String>]
-[-IncludeDeletedFiles] [-Level <String>] [-Fallbacks <String[]>] [-SignToolPath <String>]
+[-IncludeDeletedFiles] [-Level <String>] [-Fallbacks <String[]>] [-SignToolPath <String>] [-SkipVersionCheck]
+[<CommonParameters>]
 ```
 
 <br>
@@ -75,8 +76,9 @@ This parameter is specially useful for applications that install files outside o
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Edit-SignedWDACConfig/Edit-SignedWDACConfig%20-AllowNewApps.apng)
 
 ```powershell
-Edit-SignedWDACConfig [-AllowNewApps] -SuppPolicyName <String> [-CertPath <String>] [-PolicyPath <String>]
-[-CertCN <String>] [-NoScript] [-NoUserPEs] [-SpecificFileNameLevel <String>] [-Level <String>] [-Fallbacks <String[]>] [-SignToolPath <String>]
+Edit-SignedWDACConfig [-AllowNewApps] -SuppPolicyName <String> [-PolicyPath <String>] [-CertPath <String>]
+[-CertCN <String>] [-NoScript] [-NoUserPEs] [-SpecificFileNameLevel <String>] [-Level <String>] [-Fallbacks
+<String[]>] [-SignToolPath <String>] [-SkipVersionCheck] [<CommonParameters>]
 ```
 
 <br>
@@ -130,8 +132,9 @@ A new supplemental policy will be created, it will be signed and deployed on the
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Edit-SignedWDACConfig/Edit-SignedWDACConfig%20-MergeSupplementalPolicies.apng)
 
 ```powershell
-Edit-SignedWDACConfig [-MergeSupplementalPolicies] -CertPath <String> -SuppPolicyName <String> -PolicyPath
-<String> -CertCN <String> -SuppPolicyPaths <String[]> [-KeepOldSupplementalPolicies] [-SignToolPath <String>]
+Edit-SignedWDACConfig [-MergeSupplementalPolicies] -SuppPolicyName <String> -SuppPolicyPaths <String[]>
+[-PolicyPath <String>] [-KeepOldSupplementalPolicies] [-CertPath <String>] [-CertCN <String>] [-SignToolPath
+<String>] [-SkipVersionCheck] [<CommonParameters>]
 ```
 
 <br>
@@ -169,8 +172,7 @@ Merge multiple deployed **Signed** Supplemental policies into 1 and deploy it, r
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Edit-SignedWDACConfig/Edit-SignedWDACConfig%20-UpdateBasePolicy.apng)
 
 ```powershell
-Edit-SignedWDACConfig [-UpdateBasePolicy] -CertPath <String> -CertCN <String> -CurrentBasePolicyName <String[]>
--NewBasePolicyType <String> [-SignToolPath <String>] [-RequireEVSigners]
+Edit-SignedWDACConfig [-UpdateBasePolicy] -CurrentBasePolicyName <String[]> -NewBasePolicyType <String> [-CertPath <String>] [-CertCN <String>] [-SignToolPath <String>] [-RequireEVSigners] [-SkipVersionCheck] [<CommonParameters>]
 ```
 
 <br>
@@ -228,5 +230,9 @@ It can rebootlessly change the type of the deployed signed base policy. It can u
 1. If [Windows SDK](https://developer.microsoft.com/en-us/windows/downloads/windows-sdk/) Signing Tools for Desktop Apps components is installed in the default location `C:\Program Files (x86)\Windows Kits`, then `-SignToolPath <String>` parameter isn't necessary.
 
 2. If Windows SDK Signing Tools for Desktop Apps components is not installed in the default location or you want to manually browse for the `signtool.exe`, then make sure you either specify its path using `Set-CommonWDACConfig -SignToolPath` or use the `-SignToolPath <String>` parameter.
+
+3. If SignTool.exe path is available in user configurations then it will be used, unless the `-SignToolPath <String>` parameter is specified which takes priority over auto detection and user configurations.
+
+4. Unless you specify the `-SignToolPath <String>` parameter, or the SignTool.exe path already exists in your user configurations or on your system, you will receive a prompt to authorize the automatic download of the most recent SignTool.exe version from the official Microsoft servers. Upon confirmation, it will be saved in your user configurations and utilized by the cmdlet.
 
 <br>

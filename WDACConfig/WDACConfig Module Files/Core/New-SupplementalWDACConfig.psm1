@@ -25,7 +25,8 @@ Function New-SupplementalWDACConfig {
         [parameter(Mandatory = $true, ParameterSetName = 'Folder Path With WildCards', ValueFromPipelineByPropertyName = $true)]
         [System.String]$FolderPath,
 
-        [ValidatePattern('^[a-zA-Z0-9 ]+$', ErrorMessage = 'The Supplemental Policy Name can only contain alphanumeric and space characters.')]
+        [ValidateCount(1, 232)]
+        [ValidatePattern('^[a-zA-Z0-9 \-]+$', ErrorMessage = 'The policy name can only contain alphanumeric, space and dash (-) characters.')]
         [parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true)]
         [System.String]$SuppPolicyName,
 
@@ -55,7 +56,7 @@ Function New-SupplementalWDACConfig {
         [parameter(Mandatory = $false, ParameterSetName = 'Normal')]
         [System.String[]]$Fallbacks = 'Hash',
 
-        [Parameter(Mandatory = $false)]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Installed AppXPackages')]
         [System.Management.Automation.SwitchParameter]$Force,
 
         [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SkipVersionCheck
@@ -92,32 +93,13 @@ Function New-SupplementalWDACConfig {
         if (-NOT $SkipVersionCheck) { Update-self -InvocationStatement $MyInvocation.Statement }
 
         #Region User-Configurations-Processing-Validation
-        # If any of these parameters, that are mandatory for all of the position 0 parameters, isn't supplied by user, start validating the user config file
+        # If PolicyPath was not provided by user, check if a valid value exists in user configs, if so, use it, otherwise throw an error
         if (!$PolicyPath) {
-            # Read User configuration file if it exists
-            $UserConfig = Get-Content -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json" -ErrorAction SilentlyContinue
-            if ($UserConfig) {
-                # Validate the Json file and read its content to make sure it's not corrupted
-                try { $UserConfig = $UserConfig | ConvertFrom-Json }
-                catch {
-                    Write-Error -Message 'User Configuration Json file is corrupted, deleting it...' -ErrorAction Continue
-                    Remove-CommonWDACConfig
-                }
-            }
-        }
-        # If PolicyPaths has no values
-        if (!$PolicyPath) {
-            if ($UserConfig.UnsignedPolicyPath) {
-                # validate each policyPath read from user config file
-                if (Test-Path -Path $($UserConfig.UnsignedPolicyPath)) {
-                    $PolicyPath = $UserConfig.UnsignedPolicyPath
-                }
-                else {
-                    throw 'The currently saved value for UnsignedPolicyPath in user configurations is invalid.'
-                }
+            if (Test-Path -Path (Get-CommonWDACConfig -UnsignedPolicyPath)) {
+                $PolicyPath = Get-CommonWDACConfig -UnsignedPolicyPath
             }
             else {
-                throw 'PolicyPath parameter cannot be empty and no valid configuration was found for UnsignedPolicyPath.'
+                throw 'PolicyPath parameter cannot be empty and no valid user configuration was found for UnsignedPolicyPath.'
             }
         }
         #Endregion User-Configurations-Processing-Validation
@@ -412,6 +394,9 @@ Function New-SupplementalWDACConfig {
     System.Management.Automation.SwitchParameter
 .OUTPUTS
     System.String
+.EXAMPLE
+    New-SupplementalWDACConfig -Normal -SuppPolicyName 'MyPolicy' -PolicyPath 'C:\MyPolicy.xml' -ScanLocation 'C:\Program Files\MyApp' -Deploy
+    This example will create a Supplemental policy named MyPolicy based on the Base policy located at C:\MyPolicy.xml and will scan the C:\Program Files\MyApp folder for files that will be allowed to run by the Supplemental policy.
 #>
 }
 
@@ -425,8 +410,8 @@ Register-ArgumentCompleter -CommandName 'New-SupplementalWDACConfig' -ParameterN
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDzoyVCuO46Uy/m
-# vfO6btDHKQaiMRjbsHXZYEIYv003hqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCC/7cicNa8x/anz
+# +ULL+OyoImIftYhBjFRIwjZ/GW4ztqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -473,16 +458,16 @@ Register-ArgumentCompleter -CommandName 'New-SupplementalWDACConfig' -ParameterN
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgQ/3nVuMD5Me8CXLufkccJuKhkwwRGKjFOXmKf1FgoXcwDQYJKoZIhvcNAQEB
-# BQAEggIAmBCODPay24BCC/2D4ly1N34X7dmHyM6Lvy3vcT2c4hNNqlFLodfb+vYE
-# JCr6Xr4qkna+zGTTWKrk/2pgxqL791+JmlC+YIYM+jMAhsdYFqWAVuUTfCw0xYve
-# rE3BMuAc8T+8sDSu/YgnGpc342scvMiD0Ilj9theG9OietviOGsvgJ5FqVFbCuSq
-# VQpJhDVAm4pSNLAbLCjCd/MYp8J16acDZ1pou6ppmTxp7jjD7fAVvKS+nQwW/Udm
-# rScNvw67PHysNCrCMSbNc+ckAOxAtmM5aA083bIsTVDRJH+gg2jf1Rfje25AiYiw
-# avuEUuOiHFL1sqh6qBpU60bBmHov5o5xaTzBAS4S0dnZcvQtMES6bAvtvkQBzKsl
-# YihNmMP4nTQsQb2CN9dP5PdILJoPeTzV2wxveI/A0p6KROaVoqekTuvo0+SMjkmz
-# Pxo8MDeTmtHD/MdP021ktbl0vNLAYuhtmGAzJOxVfwkHbGPGbS/JW7uD1K9hDRMr
-# s3zlsJLBLeMBV8n7l6hXHedAL/e9q3itvrZzF9gHpLa/ga2NAJDxxC9bbJi+LmtO
-# vBil4faan3HOXwSIZ/YU8cHDIxu7hA2nCwk7mEfTSOilWbmsyZ0rOpQaGEejEbqZ
-# o0ZXCfCy2tDUhF6L1j02AgWJL0p9KG8383lGspTB4i1p7mcU4VY=
+# IgQgZoNvOpazmLb4UvHCcHFDHkP+PpoY53Sq+D5fMYBdFIEwDQYJKoZIhvcNAQEB
+# BQAEggIAB+gITTUDDzezao3etCAI5hRQJ03MGrvKXxalwoGysPPwXDi4hV9Zbqpz
+# bBMsvAXOPNyTiVYwQ3p5UcJ4OppLwVhOjP8HP4gi8+9MAS3/t+4bzTuyKmo7WzF1
+# loDxowZADFlBnhACWq5UqGX56cYMuvghYFRfqew+9bIcwSljNfgkbY2sjorEx7UI
+# aY9sAGDGfyw5TxZjUVybHfGu/+Zt4k/38eXFrlM6tTS2hx0vlR8nAYZkXAy/ue1O
+# FaTTHuWrYbS394BmTiflsJsS8bH0Ce02x7wK3oV1TUxiP9BEu+hVgx/3BmR72Ymv
+# nBOtdgiDWDloLSu4yUwEm/WY2D1dEltg+bIdCVWIoXWejtorAdMAYfz0IjqLzr3A
+# X3FKotEGI06IIPGqbrhQ8UqQ4D3BPNM2mO9DPJ4YqPqv5ebuekWI5rimoUmobtRu
+# jOHhtbRVZ3jVHQH7TU3v2PkWVL5RedPtCeLbP81gZymQiWt4b4saxfA6WBlXnOvf
+# pk1L2U78SE65prYnLroYCXLzQOTivWL6ucuM0fnaoTlR21Ee1/7V1J4mhwVXwE2z
+# rQbjAWYEICMHfGaeI4rVsgxx9znLCXxR5laFPdNmZ55kl7DGTjLlm7Qnqzgwpy2S
+# Np3sMK8P64jkOgkIZP0mMDT2PAQpDZ0vjkVVQP8SFlEZa46gYWk=
 # SIG # End signature block

@@ -2,6 +2,9 @@ Function Set-CommonWDACConfig {
     [CmdletBinding()]
     Param(
         [ValidateScript({
+                # Assign the input value to a variable because $_ is going to be used to access another pipeline object
+                [System.String]$InputCN = $_
+
                 # Create an empty array to store the output objects
                 [System.String[]]$Output = @()
 
@@ -27,8 +30,25 @@ Function Set-CommonWDACConfig {
                     $Output += $SubjectCN
                 }
 
-                $Output -contains $_
-            }, ErrorMessage = "A certificate with the provided common name doesn't exist in the personal store of the user certificates." )]
+                # Count the number of duplicate CNs in the output array
+                [System.Int64]$NumberOfDuplicateCNs = @($Output | Where-Object { $_ -eq $InputCN }).Count
+
+                # If the certificate with the provided common name exists in the personal store of the user certificates
+                if ($Output -contains $_) {
+                    # if there are more than 1 certificate with the same common name on the system
+                    if ($NumberOfDuplicateCNs -eq 1) {
+                        # Return true if the certificate exists and there are no duplicates
+                        return $true
+                    }
+                    else {
+                        Throw "There are $NumberOfDuplicateCNs certificates with the same common name ($_) on the system, please remove the duplicate certificates and try again."
+                    }
+                }
+                else {
+                    Throw 'A certificate with the provided common name does not exist in the personal store of the user certificates.'
+                }
+
+            })]
         [parameter(Mandatory = $false)][System.String]$CertCN,
 
         [ValidateScript({ (Test-Path -Path $_ -PathType 'Leaf') -and ($_.extension -eq '.cer') }, ErrorMessage = 'The path you selected is not a file path for a .cer file.')]
@@ -83,13 +103,13 @@ Function Set-CommonWDACConfig {
 
         # Create User configuration folder if it doesn't already exist
         if (-NOT (Test-Path -Path "$UserAccountDirectoryPath\.WDACConfig\")) {
-            New-Item -ItemType Directory -Path "$UserAccountDirectoryPath\.WDACConfig\" -Force -ErrorAction Stop | Out-Null
+            New-Item -ItemType Directory -Path "$UserAccountDirectoryPath\.WDACConfig\" -Force | Out-Null
             Write-Verbose -Message 'The .WDACConfig folder in the current user folder has been created because it did not exist.'
         }
 
         # Create User configuration file if it doesn't already exist
         if (-NOT (Test-Path -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json")) {
-            New-Item -ItemType File -Path "$UserAccountDirectoryPath\.WDACConfig\" -Name 'UserConfigurations.json' -Force -ErrorAction Stop | Out-Null
+            New-Item -ItemType File -Path "$UserAccountDirectoryPath\.WDACConfig\" -Name 'UserConfigurations.json' -Force | Out-Null
             Write-Verbose -Message 'The UserConfigurations.json file in \.WDACConfig\ folder has been created because it did not exist.'
         }
 
@@ -240,6 +260,12 @@ Function Set-CommonWDACConfig {
     System.String
 .OUTPUTS
     System.Object[]
+.EXAMPLE
+    Set-CommonWDACConfig -CertCN "wdac certificate"
+.EXAMPLE
+    Set-CommonWDACConfig -CertPath "C:\Users\Admin\WDACCert.cer"
+.EXAMPLE
+    Set-CommonWDACConfig -SignToolPath 'D:\Programs\signtool.exe' -CertCN 'wdac certificate' -CertPath 'C:\Users\Admin\WDACCert.cer'
 #>
 }
 
@@ -254,8 +280,8 @@ Register-ArgumentCompleter -CommandName 'Set-CommonWDACConfig' -ParameterName 'U
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCyqCS395RkC3xJ
-# LZcQEGxx5Jr+vjcdUbfKDvqP81qJsqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDw9TYS/Hu6MPJP
+# he3QlRy8osjynqdtAN8BLpePx0Q5OKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -302,16 +328,16 @@ Register-ArgumentCompleter -CommandName 'Set-CommonWDACConfig' -ParameterName 'U
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgrx7tM7u2SOXK/GL0xttA7dsZ6asCn7B2vPEECDe1s0cwDQYJKoZIhvcNAQEB
-# BQAEggIAn6Cbwsghu1gY9RzQY3O0Jk19hhDc4l1qv6hPv/7RM5XV9klGCOAf/md/
-# LSRzyprDqm0F2UlK6yvrofIG3OwPjEDxq4V4hhPcL5xdknMGoLGFETX6fPZWYEic
-# 9azy0cj198icbiulu3qKTaFIuedxUPUxFlLjSEAtSib+uY5wHpkfNQ18RUYEPrZa
-# 2C10xOcPhDNIiVQMvYX522BAWrDgDnpOGHXRfp1niZlJuyEqD++RG7VJDdPshL2B
-# LNumtNP/Py8WqZzpkDuJXv96QwdfnnrJYDUtaBghysdXLQwLnhwC1HYPDlLxS2GL
-# rbfk6gogxdDemLNPCnpH+GgX8nuvLQj3wgKh0tEpSaxNTvDZxHJ15XQErpDZURqK
-# a6xrYg19mPLKiM1dC6/lC0r8DqrUV0pp5Cfza/GzM5F4RQbi3tJujxgjnx/r+SuS
-# e1GVDG1wKh0pHJv7zHPszAGn7CY9g3FOH/bXeZnxnpSHauwSE2L3CeuaptisGx4Z
-# HbS2A+GULfqXTYfCh2pI9QNg7jNI2SaqM+TLxfLYfSrfjX64Y1n2LvaT4/KWT3oh
-# XAeIsg18e4/m5mUYhu2YlcVJJZVKlOPlnue61HeGvBBHGhkx0RbAge/IdyPJ1fLh
-# RBnWt3xnOAV20MGpGbGWE5wIuTXjfN7rrScee/7ssEDAesk5OOs=
+# IgQgZzRHhPBnvd5AMtuJem31TZ4G+oQ6Tmj3Qw5seIqiCtAwDQYJKoZIhvcNAQEB
+# BQAEggIAg7bHth51OPRwsf/zlmiJOn4ikUNWmq2mislZ+GJUQ1kXn2usoLHjDA2Y
+# r/ouC4WqVvWUgs6aN7KWNaY7239ZMEgLTGDMpTkdF7TcI+VsdokbFhjCKtPA49cd
+# w1Uu+cSQvspCROWWiyoNqdk3sJTYaOOvkCP5/2fP9Fqz/Z6KFpUZWRatx1X7RT0o
+# kiHNW7Vef9PIK84HfF3/S7fYEt2v1/WqiDAxuTWgAByZQqz5iMrLb6Bxd9eXDKn3
+# cj7/a7OdpDSTn51EYDQWZdNCm7Z4AqxJl2OACc0YKmDKT+cxpF6z0fVDlrBeGbWc
+# ZC1nUHgypjLdAU2oETI8YPl/VMic3jozKV+9sF9A7+Z+CkQXpNxCLz7fgV87bTb1
+# ZKx//CMRXo/SaRmSYI9IoXV8hSK/Pjxc4gmZ8LeRFWkyPyRXJfi3V3YNWk7zb83f
+# dLMTbsq7narzX86DPQ5lFBqleCr4tO7xaxclhfAxJyAwCNCSRJmx50cJvoHE3Cgt
+# +sVLlegzr7SW7ZAb2R58GfwNG20eurmXKJQQ86Ef+VHcCV7fI96a9zYDV3x1RBuO
+# f/wdvb4HoeZOixM54OtsPWQrUkTMPFjoLWwcNq8aqkNPCKqHyNLC2D2C3UBZS4uV
+# XP2y5JRUeEJKfvD29whNXeLHUZ+k+2+9K+J4ahRwj3qVVy+uv/Y=
 # SIG # End signature block

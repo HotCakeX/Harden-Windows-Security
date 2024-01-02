@@ -8,11 +8,13 @@ Function Confirm-CertCN {
         System.String
     .OUTPUTS
         System.Boolean
+    .NOTES
+        Can receive empty string as input as well for cases when the user configurations file does not contain a certificate CN
     #>
     [CmdletBinding()]
     param (
-        [parameter(Mandatory = $true)]
-        [System.String]$CN
+        [AllowEmptyString()]
+        [parameter(Mandatory = $true)][System.String]$CN
     )
     # Importing the $PSDefaultParameterValues to the current session, prior to everything else
     . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
@@ -58,8 +60,8 @@ Export-ModuleMember -Function 'Confirm-CertCN'
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCC2VdHP4wCDZGkL
-# CmEU/g4CZRbnceVzhVeRbvSWYaqwE6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCA7dZCJ2D4iMY7g
+# sCB59Fa1mpK7qIMs2Q9coo3Ocbob4KCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -106,16 +108,16 @@ Export-ModuleMember -Function 'Confirm-CertCN'
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQg/QX2OiJ8an2NOIBQh9Cw4REo8swetC4l7QjvNaG/L/cwDQYJKoZIhvcNAQEB
-# BQAEggIAny9DExhRuvkkm4UFMjPlNfKLdFUU0YAfuqXfo4ymxMEzq3pEqBoKcZP4
-# GhlN0TaAZeAuLTACAfWCUjRvwrSsyr6WYgJxFf2UPdYIJMnvkOVrPxCWfkIZGHj/
-# YVh8vMUtp/JQkE6sOFbJnNLfeosjVTGz+FtMKlh+0o20dl/CtSQj2cLpgNsCnsNS
-# sVrNU+x5xbN6Rr81m4LUo+/aWExvkkWvpPbrgjJCOKikMGhoeozLwjuGElz2Smcy
-# U55kdqEP1qlMflI81rE3/j4BzO36JDKrynGhi916dd4Scznk3ourt+cYQ/DniIT8
-# 1ffn1gTrtZvRxkeyVq4QEynZAOBoO2T/7bWgFO0dBeYfRrTQLMkkwd9Sp1hwnc4X
-# wlWPj8BilrkdAudJuH1FfKI5dVsNO0UJPvTrj30+9wY2eKi6QrcdEc3JHjVxAKl1
-# olmbZIa1tMldWjN/JnraqQwP/rbUBoMeH8GW7YgXNg54FzoJOvRHkL80FIZ804AQ
-# 4cEaZCvLH22BYow9bjSB/YHZYGZ8b7QflQkWahjLMsr7pe91j1Ywq+T11NGGJu5D
-# dNDDoaUugy5BhZeHF0UeEzFt34ui6bwjq2wvfjdnfMoBpkZTdvsat92aj7nyNPut
-# uojSayBxdCBxaSflBvC5CBpBsFdD2qzTLcRkkcak7//UOkuEyTw=
+# IgQg6bWHvT7HswyOrHK1Hq6QNsgSUIB55mvFkN8CmXL5fckwDQYJKoZIhvcNAQEB
+# BQAEggIAM3a3PngWd1xsi5JnJT/dMiOZFsR8c0NnZtglxYip2HtdbJ9jyyVzq9Im
+# 4Pq3TGmrwacPYw84JlpzQl4MSdhqmMaaCZVl4skIHRIjPcq3iu+E6eaL4+H7D1Cl
+# aiqlmH3E1iRTXE+I53vEiMDspZcLeHKoXkZCFhHc7adJwThZ1c2TLxHzb+lubvp8
+# gC7DIe5DZpky1gMpzwMTZY9/i/LrQq2OjpSLM+WnxEpSHi6EcrSEJfHrRt7HeMxd
+# oDbnVQ1aHdWrFq7+Dc4kMfjf1YplFd6od171V2GQeiErTYtj5TnjjC8tD/xLQKxf
+# rbDL9c3bxMK69vmRqujv5uTpHkbGcoZZ3YD65noE86lG0F5mMBxqBxn0Za0BKrD+
+# Tp2dWtSM0a1Y0uP+gyl2POV+m+M7aAzaxAJkFNrpwkHzNxmokIF7PpjC/9DwSR/X
+# ITIEi03vN4CYDK2GTMG/DvI3K2qri6eZcOjQLLed3NaLVJ9ZE+py8fybdpVJJcSq
+# 3tToF/gxhael3xxKDgvRl2M0Ad50vq+urGKBJE60nFVo6jHrmpgLWE+uNEnLzU7m
+# 1J45uVNlvuM74oxI2FuDpfsBP6F/iqkvSD4kIYzmZJHVcs7m1yj91XCtB/sp4wZ/
+# XXIVoePfHa9awwwtMcL5+Sp4KhIzXG2jjmH+9JsnKMWGS8DqC5o=
 # SIG # End signature block

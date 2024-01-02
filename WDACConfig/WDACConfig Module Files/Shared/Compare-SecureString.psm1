@@ -1,38 +1,56 @@
-# $PSDefaultParameterValues only get read from scope where invocation occurs
-# This is why this file is dot-sourced in every other component of the WDACConfig module at the beginning
-$PSDefaultParameterValues = @{
-    'Invoke-WebRequest:HttpVersion'        = '3.0'
-    'Invoke-WebRequest:SslProtocol'        = 'Tls12,Tls13'
-    'Invoke-RestMethod:HttpVersion'        = '3.0'
-    'Invoke-RestMethod:SslProtocol'        = 'Tls12,Tls13'
-    'Import-Module:Verbose'                = $false
-    'Remove-Module:Verbose'                = $false
-    'Export-ModuleMember:Verbose'          = $false
-    'Add-Type:Verbose'                     = $false
-    'Get-WinEvent:Verbose'                 = $false
-    'Confirm-CertCN:Verbose'               = $Verbose
-    'Get-AuditEventLogsProcessing:Verbose' = $Verbose
-    'Get-FileRules:Verbose'                = $Verbose
-    'Get-BlockRulesMeta:Verbose'           = $Verbose
-    'Get-GlobalRootDrives:Verbose'         = $Verbose
-    'Get-RuleRefs:Verbose'                 = $Verbose
-    'Get-SignTool:Verbose'                 = $Verbose
-    'Move-UserModeToKernelMode:Verbose'    = $Verbose
-    'New-EmptyPolicy:Verbose'              = $Verbose
-    'Set-LogSize:Verbose'                  = $Verbose
-    'Test-FilePath:Verbose'                = $Verbose
-    'Update-self:Verbose'                  = $Verbose
-    'Write-ColorfulText:Verbose'           = $Verbose
-    'New-SnapBackGuarantee:Verbose'        = $Verbose
-    'Compare-SecureStrings:Verbose'        = $Verbose
-    'Test-Path:ErrorAction'                = 'SilentlyContinue'
+function Compare-SecureString {
+    <#
+    .SYNOPSIS
+        Safely compares two SecureString objects without decrypting them.
+        Outputs $true if they are equal, or $false otherwise.
+    .INPUTS
+        System.Security.SecureString
+    .OUTPUTS
+        System.Boolean
+    .PARAMETER SecureString1
+        First secure string
+    .PARAMETER SecureString2
+        Second secure string to compare with the first secure string
+    #>
+    [CmdletBinding()]
+    param(
+        [System.Security.SecureString]$SecureString1,
+        [System.Security.SecureString]$SecureString2
+    )
+    try {
+        $Bstr1 = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($SecureString1)
+        $Bstr2 = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($SecureString2)
+        $Length1 = [Runtime.InteropServices.Marshal]::ReadInt32($Bstr1, -4)
+        $Length2 = [Runtime.InteropServices.Marshal]::ReadInt32($Bstr2, -4)
+        if ( $Length1 -ne $Length2 ) {
+            return $false
+        }
+        for ( $I = 0; $I -lt $Length1; ++$I ) {
+            $B1 = [Runtime.InteropServices.Marshal]::ReadByte($Bstr1, $I)
+            $B2 = [Runtime.InteropServices.Marshal]::ReadByte($Bstr2, $I)
+            if ( $B1 -ne $B2 ) {
+                return $false
+            }
+        }
+        return $true
+    }
+    finally {
+        if ( $Bstr1 -ne [IntPtr]::Zero ) {
+            [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($Bstr1)
+        }
+        if ( $Bstr2 -ne [IntPtr]::Zero ) {
+            [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($Bstr2)
+        }
+    }
 }
+
+Export-ModuleMember -Function 'Compare-SecureString'
 
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCAq/YkLjJjtBehP
-# sLXkIUKnijkmyTYFBvH3HE7h2gQ3laCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBpvYH/pbRmvdFS
+# UVqRhWn7fTTs7DhQhya5/JnpWLKPP6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -79,16 +97,16 @@ $PSDefaultParameterValues = @{
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgBsVei4uZFqCjRJkjIYhhDwoTfFDtLMT88a35joPnAF8wDQYJKoZIhvcNAQEB
-# BQAEggIAHEeRWySIQRkKPzBdxU9+e7tCA4h9EBxWKsoy3+gwz6Erd6F1iGJNQ5lH
-# pJVzLKO5AQB2aFK8of9x2q2aD9mzMrZSj34QvNUfN/XmW77zGZCYdGSt0wKz0Ix8
-# vUStrzhUgxioVuTJZLfSSEHohQqUJ8PI/acgqwq2C34HFREa4jjBaA6j41R20vMO
-# RipGVrAtSbzSLpfLpXeoZrmuxugaURNJjZboNf1FVz+Odll6PoaFNGyuOuwyzbGF
-# kSE/KTLt2lXpwkkLZRCyQC4KnDJ/F58HUDfh4iquS8jz9A7CzNueyI4LBkxfiadR
-# HCIx99U5lZ7HutxiNDkW6SdHcHIxxCADWDciuoX3N/fz6UibFbr98B4Oo4Z2lMKc
-# /2gYi/x7BO0ikJ5t1k5+/MA6OHTrPKpSiz1xUkeEX2bBT5stz/Qnx0sjZBLKu53h
-# J2+i+C5aM5XghJxYjl2y5wickHkIOqESqvMgmPuEAiKyU+08D4/0+lgt8HXNIq9F
-# QBJOsgA1538fEOvZaP5069JrIiHtnu6uKM+GzHnQqq9PHRyS5uTEd+9TjVueKyCj
-# ePhBhUQbVV78x7hIVN8YuYHv+AR3scopNHTkbbqxQrPeL3BAlgHKoS5ki8RUQbFU
-# Ug4dxa6QYqx7Da146FkklYBI/02EPQLnnZQ4UfTzLH62ZTmeShQ=
+# IgQgESyX95/tHfuwouveWGC7IPtNU2hFDhq6qDyLR1Sip4AwDQYJKoZIhvcNAQEB
+# BQAEggIAmQp6NvP3FgXSIs+a/pc9Eh01dhG7WG5O2BTk5uXvmvj20XOPeYM//I7d
+# 57PoOF45C4eBS5rXtbk8O/ANI1NYCYTcJqHiybbdu2nqfzxlAEMXnJIeymzThIrf
+# 9krCncacZ7jwXqfPJ5d5ZyOB8SF4pusbANqLSBUCJzDYTtXagMG0TFdRvTXJSNY5
+# rkS6yLDOTprJMS/PO7CT520fG68SbcxzOJqee9ZhZ+MAZfG+lYnGLwfYH/+x6KDt
+# nM2FlWaQnNBRc0kUZ4d0DkI3mPXE9L8TiRf5eAsSJAzVvUd5MR4hY/WAv2ZQqRka
+# cbazROtp1x+TbkHG4SyRFkSzZKGFidoJWmvMGtJeF8Ozuc57gl5y/FHlJAk0zJlb
+# bSkVh5H9ATSSib8leDfPZGBk3yE5JibQ5wcjbaPrBBsY5LEhL5j3mBPwrSi2eNBR
+# kqdVXXT8RH3yYr4Mhgm3rnAb4+qS97efSWxl9t0nvC1Qwt0IPnGhhIOPAEHv9sQX
+# N7+wI3X5GHwA15aCzaPAU6pvmAjxiSSCKaHZk3DnVyddI78ohBMPUvHMYgPhB/6+
+# hbdUTX7L1rbVrjRAcbUZNF7AP3UA8zt5OF8j24yEnHBOAEIHO6pCCMFjiD1y1APh
+# 0OmDZLR4zFcLExVShaN25qzLsBx3dv3hREPip7H+Vt9DY7Iv8ps=
 # SIG # End signature block

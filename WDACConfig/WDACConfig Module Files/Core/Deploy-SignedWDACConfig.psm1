@@ -16,6 +16,9 @@ Function Deploy-SignedWDACConfig {
         [parameter(Mandatory = $false, ValueFromPipelineByPropertyName = $true, ValueFromPipeline = $true)][System.IO.FileInfo]$CertPath,
 
         [ValidateScript({
+                # Assign the input value to a variable because $_ is going to be used to access another pipeline object
+                [System.String]$InputCN = $_
+
                 # Create an empty array to store the output objects
                 [System.String[]]$Output = @()
 
@@ -41,8 +44,25 @@ Function Deploy-SignedWDACConfig {
                     $Output += $SubjectCN
                 }
 
-                $Output -contains $_
-            }, ErrorMessage = "A certificate with the provided common name doesn't exist in the personal store of the user certificates." )]
+                # Count the number of duplicate CNs in the output array
+                [System.Int64]$NumberOfDuplicateCNs = @($Output | Where-Object { $_ -eq $InputCN }).Count
+
+                # If the certificate with the provided common name exists in the personal store of the user certificates
+                if ($Output -contains $_) {
+                    # if there are more than 1 certificate with the same common name on the system
+                    if ($NumberOfDuplicateCNs -eq 1) {
+                        # Return true if the certificate exists and there are no duplicates
+                        return $true
+                    }
+                    else {
+                        Throw "There are $NumberOfDuplicateCNs certificates with the same common name ($_) on the system, please remove the duplicate certificates and try again."
+                    }
+                }
+                else {
+                    Throw 'A certificate with the provided common name does not exist in the personal store of the user certificates.'
+                }
+
+            })]
         [parameter(Mandatory = $false, ValueFromPipelineByPropertyName = $true, ValueFromPipeline = $true)][System.String]$CertCN,
 
         [ValidatePattern('\.exe$')]
@@ -74,59 +94,32 @@ Function Deploy-SignedWDACConfig {
         if (-NOT $SkipVersionCheck) { Update-self -InvocationStatement $MyInvocation.Statement }
 
         #Region User-Configurations-Processing-Validation
-        # If any of these parameters, that are mandatory for all of the position 0 parameters, isn't supplied by user
-        if (!$SignToolPath -or !$CertPath -or !$CertCN) {
-            # Read User configuration file if it exists
-            $UserConfig = Get-Content -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json" -ErrorAction SilentlyContinue
-            if ($UserConfig) {
-                # Validate the Json file and read its content to make sure it's not corrupted
-                try { $UserConfig = $UserConfig | ConvertFrom-Json }
-                catch {
-                    Write-Error -Message 'User Configuration Json file is corrupted, deleting it...' -ErrorAction Continue
-                    Remove-CommonWDACConfig
-                }
-            }
-        }
-
         # Get SignToolPath from user parameter or user config file or auto-detect it
         if ($SignToolPath) {
-            $SignToolPathFinal = Get-SignTool -SignToolExePath $SignToolPath
+            $SignToolPathFinal = Get-SignTool -SignToolExePathInput $SignToolPath
         } # If it is null, then Get-SignTool will behave the same as if it was called without any arguments.
         else {
-            $SignToolPathFinal = Get-SignTool -SignToolExePath ($UserConfig.SignToolCustomPath ?? $null)
+            $SignToolPathFinal = Get-SignTool -SignToolExePathInput (Get-CommonWDACConfig -SignToolPath)
+
         }
 
-        # If CertPath parameter wasn't provided by user
-        if (!$CertPath) {
-            if ($UserConfig.CertificatePath) {
-                # validate user config values for Certificate Path
-                if (Test-Path -Path $($UserConfig.CertificatePath)) {
-                    # If the user config values are correct then use them
-                    $CertPath = $UserConfig.CertificatePath
-                }
-                else {
-                    throw 'The currently saved value for CertPath in user configurations is invalid.'
-                }
+        # If CertPath parameter wasn't provided by user, check if a valid value exists in user configs, if so, use it, otherwise throw an error
+        if (!$CertPath ) {
+            if (Test-Path -Path (Get-CommonWDACConfig -CertPath)) {
+                $CertPath = Get-CommonWDACConfig -CertPath
             }
             else {
-                throw 'CertPath parameter cannot be empty and no valid configuration was found for it.'
+                throw 'CertPath parameter cannot be empty and no valid user configuration was found for it. Use the Build-WDACCertificate cmdlet to create one.'
             }
         }
 
-        # If CertCN was not provided by user
+        # If CertCN was not provided by user, check if a valid value exists in user configs, if so, use it, otherwise throw an error
         if (!$CertCN) {
-            if ($UserConfig.CertificateCommonName) {
-                # Check if the value in the User configuration file exists and is valid
-                if (Confirm-CertCN -CN $($UserConfig.CertificateCommonName)) {
-                    # if it's valid then use it
-                    $CertCN = $UserConfig.CertificateCommonName
-                }
-                else {
-                    throw 'The currently saved value for CertCN in user configurations is invalid.'
-                }
+            if (Confirm-CertCN -CN (Get-CommonWDACConfig -CertCN)) {
+                $CertCN = Get-CommonWDACConfig -CertCN
             }
             else {
-                throw 'CertCN parameter cannot be empty and no valid configuration was found for it.'
+                throw 'CertCN parameter cannot be empty and no valid user configuration was found for it.'
             }
         }
         #Endregion User-Configurations-Processing-Validation
@@ -312,6 +305,13 @@ Function Deploy-SignedWDACConfig {
     System.Management.Automation.SwitchParameter
 .OUTPUTS
     System.String
+.EXAMPLE
+    Deploy-SignedWDACConfig -PolicyPaths 'C:\Users\WDACConfig\Policy.xml' -CertPath 'C:\Users\WDACConfig\MyCert.cer' -CertCN 'MyCertCN' -Deploy
+    This example signs and deploys the policy.xml file using the MyCert.cer certificate and deploys it on the current system
+.EXAMPLE
+    Deploy-SignedWDACConfig -PolicyPaths 'C:\Users\WDACConfig\Policy.xml'
+    This example signs the policy.xml file using the MyCert.cer certificate but does not deploy it on the current system.
+    It accesses the user configs to get the certificate path and common name, if they are not found, it throws an error.
 #>
 }
 
@@ -325,8 +325,8 @@ Register-ArgumentCompleter -CommandName 'Deploy-SignedWDACConfig' -ParameterName
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCwRTLbYR2tyMkq
-# Pwz7so9rkqBTBLu3TVqiK/UjQ3VBqKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCD9zseRSedgvEH/
+# UmdR8mMCozbNr5swsYhfIbgKI2SACKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -373,16 +373,16 @@ Register-ArgumentCompleter -CommandName 'Deploy-SignedWDACConfig' -ParameterName
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQg9aAt62DFk68FgRSohKMBdVvji69lOf+ictPC11HAUVIwDQYJKoZIhvcNAQEB
-# BQAEggIAg1LFclDMPHNRdb+BpL6gjEd+SfOHpFgakdnfW9VBQrAgpdL+wmRgOuCb
-# ImKNsUPE885yVWvOxz+DG6WpNriN872boD8ifZEzbjn0K6yng0NVg/f8Zglo/DXh
-# 2Onej6w2EKsJXuHLXR+QCxa4E6dt4NL1+Aylkzc0CprIoCuyftCA3p/FB21IZZO2
-# jT10J6THUnDwbh+h2wtwOyw5WaycjbeYSmgyGAbU2Ci3a44XWXhZmE016iKS2GQF
-# ovRu9n3xLpd/wd9ROLsWjTw6mCtG8nBCyS9f0RPRHgnA9T/+WTJp93cBjwCJ8ptt
-# hYOeoYzKn1xSBg1SD0WU1Db5IRf8mTIYs0zkWwma4LVujGE+4dQjt9gYqlyzLYPF
-# bWskeNuTooyCBl130H6dC6lJGim3z2LYGNp252gVrXmwx33AJxUawPD587PDVnD+
-# MSTZ0sLTDSjTpxC9/gQvqLVr4ZLWz/4L+PHqzDB04b/1zmdNNlnsHpTZ1rraPdJS
-# xCeLI4FiwIKVnqGzdH4lWqKyw4OSProWjrJLYQA2Ezgt/IWqIekftykphq+k1omr
-# bu5q45xpQx6h1PUW2A7o+WgHmHu1Ysoi4qw0s4artkS2clWxXrK8r/+BpBhFTKen
-# dntssYtVpyh9d2Qk55rwMeL42pPZvbGGEb1PakCypyaGJQUhMHM=
+# IgQg5WiETJONw1G0NqOHUdYMKymFHXSous2MRSuw7UicVzMwDQYJKoZIhvcNAQEB
+# BQAEggIAVm5+YhMxTotLMOqvHaMODj0JyAm418qIJIwMO0NaplA6JFTuVM4qwGM5
+# vLAMy8ojlEQZnnOo5ieGaCHi3N8+lbL/opd159/+lOHDq57uVrJoxUT3VkuEXYKB
+# cvzx+qTe9UQnh3C8VQ9TiLAcD3nictP79NPR3B0Dhsb7a8PeKJ4NRWfb+aPbucAa
+# NPzsaF6rXUOyIsWMoeOIt0AGg3FXuwslQhnBLTf5TnD//INC5WB2fHY93I2EO7ME
+# 664G9ygjY/2MuPVFW5wYe05vgqBXKkyB7dV4LzkA/U0avyEOlIuMMqqWOUKZ3yLU
+# kZZ00Op6UkXW1EO4GKiMjOk7FyuD1/48/fPxozfrXb6nZrJ4fVLqQh+GeaK351jl
+# 0psap4rV/xo5imGA+o5RWP96ykDkoZoMA4QYw1yoChG1qbiz7mwbY6pyG4Lkuw99
+# gasRVqFAazrE70N1IaPfKftkvtMeOR+WUrAEBdI5VuKR6scEPRZM/3mc1dhqE88i
+# 6lp1Zi+TJrVPAbPihGXwMiIvcXSH9QoF2qJ5acFIIzsqLSRn9HyoYhYiP4gTn8Jm
+# qZUyEdV3e6mH1A3rBqNxlFdXkmCGDJkmFoLl9pGAatvIIYtacOCdnBRg3E2t5VlK
+# /mlgVwDOmnno7gZ90CPZjmVvTeOrayUfpqO3FKRWVvaqZ6HWlc4=
 # SIG # End signature block

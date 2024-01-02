@@ -97,26 +97,15 @@ Function New-WDACConfig {
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Get-BlockRulesMeta.psm1" -Force
 
         #Region User-Configurations-Processing-Validation
-        # If User is creating Default Windows policy and including SignTool path
+        # If User is creating Default Windows policy and is including SignTool path
         if ($IncludeSignTool -and $MakeDefaultWindowsWithBlockRules) {
-            # Read User configuration file if it exists
-            $UserConfig = Get-Content -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json" -ErrorAction SilentlyContinue
-            if ($UserConfig) {
-                # Validate the Json file and read its content to make sure it's not corrupted
-                try { $UserConfig = $UserConfig | ConvertFrom-Json }
-                catch {
-                    Write-Error -Message 'User Configurations Json file is corrupted, deleting it...' -ErrorAction Continue
-                    Remove-CommonWDACConfig
-                }
+            # Get SignToolPath from user parameter or user config file or auto-detect it
+            if ($SignToolPath) {
+                $SignToolPathFinal = Get-SignTool -SignToolExePathInput $SignToolPath
+            } # If it is null, then Get-SignTool will behave the same as if it was called without any arguments.
+            else {
+                $SignToolPathFinal = Get-SignTool -SignToolExePathInput (Get-CommonWDACConfig -SignToolPath)
             }
-        }
-
-        # Get SignToolPath from user parameter or user config file or auto-detect it
-        if ($SignToolPath) {
-            $SignToolPathFinal = Get-SignTool -SignToolExePath $SignToolPath
-        } # If it is null, then Get-SignTool will behave the same as if it was called without any arguments.
-        elseif ($IncludeSignTool -and $MakeDefaultWindowsWithBlockRules) {
-            $SignToolPathFinal = Get-SignTool -SignToolExePath ($UserConfig.SignToolCustomPath ?? $null)
         }
         #Endregion User-Configurations-Processing-Validation
 
@@ -1015,8 +1004,8 @@ Function New-WDACConfig {
             Write-Progress -Id 6 -Activity 'Configuring Windows Services' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
             Write-Verbose -Message 'Configuring required services for ISG authorization'
-            Start-Process -FilePath 'C:\Windows\System32\appidtel.exe' -ArgumentList 'start' -Wait -NoNewWindow
-            Start-Process -FilePath 'C:\Windows\System32\sc.exe' -ArgumentList 'config', 'appidsvc', 'start= auto' -Wait -NoNewWindow
+            Start-Process -FilePath 'C:\Windows\System32\appidtel.exe' -ArgumentList 'start' -NoNewWindow
+            Start-Process -FilePath 'C:\Windows\System32\sc.exe' -ArgumentList 'config', 'appidsvc', 'start= auto' -NoNewWindow
 
             if ($Deploy -and $MakeLightPolicy) {
                 Write-Verbose -Message 'Deploying the SignedAndReputable.xml policy'
@@ -1137,6 +1126,18 @@ Function New-WDACConfig {
     System.Management.Automation.SwitchParameter
 .OUTPUTS
     System.String
+.EXAMPLE
+    New-WDACConfig -GetBlockRules -Deploy
+    This example will create a WDAC policy with Microsoft recommended block rules and deploys it on the system
+.EXAMPLE
+    New-WDACConfig -GetDriverBlockRules -Deploy
+    This example will create a WDAC policy with Microsoft recommended driver block rules and deploys it on the system
+.EXAMPLE
+    New-WDACConfig -MakeAllowMSFTWithBlockRules -Deploy
+    This example will create a WDAC policy by merging AllowMicrosoft policy with the recommended block rules and deploys it on the system
+.EXAMPLE
+    New-WDACConfig -SetAutoUpdateDriverBlockRules
+    This example will create a Scheduled Task that automatically runs every 7 days to download the newest Microsoft Recommended driver block rules
 #>
 }
 
@@ -1147,8 +1148,8 @@ Register-ArgumentCompleter -CommandName 'New-WDACConfig' -ParameterName 'SignToo
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDHCFIKf80hD2iQ
-# bJWlfzYF/elYYsC1mIgRBOSS4+oQqKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCF0H2hgce+jDjc
+# n5MmyM59KKqtZrDIkFUXwcCINP/kB6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -1195,16 +1196,16 @@ Register-ArgumentCompleter -CommandName 'New-WDACConfig' -ParameterName 'SignToo
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgIYaUWH671h/ugFHjw6kUjzBKYgHI3vgu5u/fmKfXQA8wDQYJKoZIhvcNAQEB
-# BQAEggIACJtXGG/+bxxBhGver+Jwz1Q1RwuuIPxUTIS7c73DC7tcxSwtdv6xnYiT
-# mMEJ+oqeTfuIr0F/7YiYEK2SM7gIeeDx3edDcIVF1O7C+cOyuhBvAil9YM+SEQA0
-# HpNfhMjAN9poGYWsxeJo4JIk33bv654yF6Y7LR7wmrrzOxmBqYC3o8PXyK2ofhOw
-# yl7LO87WF8xXxMh3r/suiM3DlkqioHOleACce3xBLaSS25OJiXw0bL6drZHNDDUi
-# zCPfBuARBYJlghXriJX1k9ObZwbBNrSanbfwbbbeFvcXbQMIrvgmKfXhu24hlgAU
-# xbiwyyfeCKB7JyQ3HPq5r2TOm+qWsmrLva6UQALzEhrAIK18pPVqlyx9SR6F0FMh
-# LYPSplk1mhftJBbHd5n6WmDJo7ImVC+0/ujAg86JYt4ers81pgc49E+h05Yj2T8k
-# 0xlMf3C9yEChfyyDsgbI2KPSS2OjkODueo4PEEqmh7F+TP2TBwN51ionsVYB9Ftx
-# sP5GKDnNBJ6Wc0qkdts+nTGLpN5ME4Q7vlP9lzuZ+Ul/a7L0yHK2DxRZUseuPjkG
-# /9uB1XuaOZdFgndZgoVNFR7/fwfceVYg79Hz5DsWJlKSPGMmYqaXpvLit4olAmTr
-# N1RRQrIGMvbStNq8bXiCfQ0R2ncd7nFQL3Oth84HJLzDtBKw790=
+# IgQg8swZ0z19iFKgN/ZtPtUCdkm6/LljZkGgHJ78Tgq7d9wwDQYJKoZIhvcNAQEB
+# BQAEggIAC5fDLEjnH0m66G7JoSSFXZr1kh4lhYVgXYajEZPQyFKXdB+4m1EpblpR
+# IebER6+aG3MiWQ1HJqpt488IdouDAges84JNlB1PeGDkSCDuBzDoeVmVD27+ArZ3
+# 1I0kigAhSWRygVUAfpvpChA11sJmLxgqaeiM2vznLLViEBeG8yTjttd5AoDl+HLD
+# DIAjFLJjN0TPMxzOY+Ry2NyZ9lthnCZ5KsxCVMvhtLyWpH9jSwic5sr9iMIHqJca
+# 3c60v+b5bn+axOc2gsIcgvHTj5rHzOjoQvhzlzE0HicGcTfjWkiodMQtlanCguR0
+# Qa05gbgdFlyMHxUWhVKS7qxufQ3KtX9FGkhmI+a9tDZy4LtPLojiicb/VhnRCZta
+# xITfReEqCcB+Oa/G4bqObBQ7WINvFrRtSRMcCqqkJBtk2vNpRKEdYTw4ttm/Gzo4
+# JRMFPgG2fHh2o83danp+m8ERCWGCuMYzWq/abclmxdzV3EUKpy4z46gqVJgfShlV
+# P8hXsLhx2ffc5V4GpmDNUMekT1vPoEESEcNtmpNjhg9xDgQKW9ybS0Kj7me+tZvX
+# qyIAXE9F7GJnXUW8k2WFQ8TZvXBuvXtksMWPLVTh590vRUuOewJ36iNU+67rMeNv
+# BmecXBrp2C90KnAZbgP8HwtsoZdkmUMj/V8dX+/O9pZq2bT917A=
 # SIG # End signature block

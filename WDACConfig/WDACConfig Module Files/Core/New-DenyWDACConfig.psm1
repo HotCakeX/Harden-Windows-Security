@@ -13,13 +13,20 @@ Function New-DenyWDACConfig {
         [Parameter(Mandatory = $false, ParameterSetName = 'Drivers')][System.Management.Automation.SwitchParameter]$Drivers,
         [Alias('P')]
         [parameter(mandatory = $false, ParameterSetName = 'Installed AppXPackages')][System.Management.Automation.SwitchParameter]$InstalledAppXPackages,
+        [Alias('W')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Folder Path With WildCards')][System.Management.Automation.SwitchParameter]$PathWildCards,
 
         [parameter(Mandatory = $true, ParameterSetName = 'Installed AppXPackages', ValueFromPipelineByPropertyName = $true)]
         [System.String]$PackageName,
 
-        [ValidatePattern('^[a-zA-Z0-9 ]+$', ErrorMessage = 'The Supplemental Policy Name can only contain alphanumeric characters and spaces.')]
+        [ValidateCount(1, 232)]
+        [ValidatePattern('^[a-zA-Z0-9 \-]+$', ErrorMessage = 'The policy name can only contain alphanumeric, space and dash (-) characters.')]
         [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true)]
         [System.String]$PolicyName,
+
+        [ValidatePattern('\*', ErrorMessage = 'You did not supply a path that contains wildcard character (*) .')]
+        [parameter(Mandatory = $true, ParameterSetName = 'Folder Path With WildCards', ValueFromPipelineByPropertyName = $true)]
+        [System.String]$FolderPath,
 
         [ValidateScript({ Test-Path -Path $_ -PathType 'Container' }, ErrorMessage = 'The path you selected is not a folder path.')]
         [Parameter(Mandatory = $false, ParameterSetName = 'Normal')]
@@ -49,7 +56,7 @@ Function New-DenyWDACConfig {
         [Parameter(Mandatory = $false)]
         [System.Management.Automation.SwitchParameter]$Deploy,
 
-        [Parameter(Mandatory = $false)]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Installed AppXPackages')]
         [System.Management.Automation.SwitchParameter]$Force,
 
         [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SkipVersionCheck
@@ -385,6 +392,72 @@ Function New-DenyWDACConfig {
                 Write-Progress -Id 24 -Activity 'Complete.' -Completed
             }
         }
+
+        # Create Deny base policy for a folder with wildcards
+        if ($PathWildCards) {
+
+            # The total number of the main steps for the progress bar to render
+            [System.Int16]$TotalSteps = $Deploy ? 3 : 2
+            [System.Int16]$CurrentStep = 0
+
+            $CurrentStep++
+            Write-Progress -Id 29 -Activity 'Creating the wildcard deny policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
+            # Using Windows PowerShell to handle serialized data since PowerShell core throws an error
+            Write-Verbose -Message 'Creating the deny policy file'
+            powershell.exe -Command {
+                $RulesWildCards = New-CIPolicyRule -Deny -FilePathRule $args[0]
+                New-CIPolicy -MultiplePolicyFormat -FilePath '.\DenyPolicyWildcardTemp.xml' -Rules $RulesWildCards
+            } -args $FolderPath
+
+            # Merging AllowAll default policy with our Deny temp policy
+            Write-Verbose -Message 'Merging AllowAll default template policy with our Wildcard Deny temp policy'
+            Merge-CIPolicy -PolicyPaths 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowAll.xml', '.\DenyPolicyWildcardTemp.xml' -OutputFilePath ".\DenyPolicyWildcard $PolicyName.xml" | Out-Null
+
+            $CurrentStep++
+            Write-Progress -Id 29 -Activity 'Configuring the wildcard deny policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
+            Write-Verbose -Message 'Removing the temp deny policy file after using it in the merge operation'
+            Remove-Item -Path '.\DenyPolicyWildcardTemp.xml' -Force
+
+            Write-Verbose -Message 'Assigning a name and resetting the policy ID'
+            [System.String]$PolicyID = Set-CIPolicyIdInfo -FilePath ".\DenyPolicyWildcard $PolicyName.xml" -ResetPolicyID -PolicyName "$PolicyName"
+            [System.String]$PolicyID = $PolicyID.Substring(11)
+
+            Write-Verbose -Message 'Setting the policy version to 1.0.0.0'
+            Set-CIPolicyVersion -FilePath ".\DenyPolicyWildcard $PolicyName.xml" -Version '1.0.0.0'
+
+            Write-Verbose -Message 'Setting the policy rule options'
+            @(0, 2, 6, 11, 12, 16, 17, 19, 20) | ForEach-Object -Process {
+                Set-RuleOption -FilePath ".\DenyPolicyWildcard $PolicyName.xml" -Option $_ }
+
+            Write-Verbose -Message 'Deleting the unnecessary policy rule options from the base deny policy'
+            @(3, 4, 8, 9, 10, 13, 14, 15, 18) | ForEach-Object -Process {
+                Set-RuleOption -FilePath ".\DenyPolicyWildcard $PolicyName.xml" -Option $_ -Delete }
+
+            Write-Verbose -Message 'Setting the HVCI to Strict'
+            Set-HVCIOptions -Strict -FilePath ".\DenyPolicyWildcard $PolicyName.xml"
+
+            Write-Verbose -Message 'Converting the policy XML to .CIP'
+            ConvertFrom-CIPolicy -XmlFilePath ".\DenyPolicyWildcard $PolicyName.xml" -BinaryFilePath "$PolicyID.cip" | Out-Null
+
+            Write-ColorfulText -Color MintGreen -InputText "DenyPolicyFile = DenyPolicyWildcard $PolicyName.xml"
+            Write-ColorfulText -Color MintGreen -InputText "DenyPolicyGUID = $PolicyID"
+
+            if ($Deploy) {
+                $CurrentStep++
+                Write-Progress -Id 29 -Activity 'Deploying the base policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
+                Write-Verbose -Message 'Deploying the policy'
+                &'C:\Windows\System32\CiTool.exe' --update-policy "$PolicyID.cip" -json | Out-Null
+
+                Write-ColorfulText -Color Pink -InputText "A Deny Base policy with the name $PolicyName has been deployed."
+
+                Write-Verbose -Message 'Removing the .CIP file after deployment'
+                Remove-Item -Path "$PolicyID.cip" -Force
+            }
+            Write-Progress -Id 29 -Activity 'Complete.' -Completed
+        }
     }
 
     <#
@@ -431,12 +504,19 @@ Function New-DenyWDACConfig {
     Indicates that the selected folder will not be scanned for script files.
 .PARAMETER Verbose
     Indicates that the cmdlet will display detailed information about the operation.
+.PARAMETER PathWildCards
+    Creates a Deny standalone base policy for a folder using wildcards. The base policy created by this parameter can be deployed side by side any other base/supplemental policy.
+.PARAMETER FolderPath
+    The folder path to add to the deny base policy using wildcards.
 .INPUTS
     System.String[]
     System.String
     System.Management.Automation.SwitchParameter
 .OUTPUTS
     System.String
+.EXAMPLE
+    New-DenyWDACConfig -PolicyName 'MyDenyPolicy' -Normal -ScanLocations 'C:\Program Files', 'C:\Program Files (x86)'
+    Creates a Deny standalone base policy by scanning the specified folders for files.
 #>
 }
 
@@ -444,12 +524,13 @@ Function New-DenyWDACConfig {
 . "$ModuleRootPath\Resources\ArgumentCompleters.ps1"
 Register-ArgumentCompleter -CommandName 'New-DenyWDACConfig' -ParameterName 'ScanLocations' -ScriptBlock $ArgumentCompleterFolderPathsPicker
 Register-ArgumentCompleter -CommandName 'New-DenyWDACConfig' -ParameterName 'PackageName' -ScriptBlock $ArgumentCompleterAppxPackageNames
+Register-ArgumentCompleter -CommandName 'New-DenyWDACConfig' -ParameterName 'FolderPath' -ScriptBlock $ArgumentCompleterFolderPathsPickerWildCards
 
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCAejOnlCJjV8D+v
-# BexWg68e2DLfsrbc/x0+23q/P7tE66CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCARUqNZqACY5yFZ
+# TCzbCcoHEgllpEaLx4jnZ9G6vBrb2KCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -496,16 +577,16 @@ Register-ArgumentCompleter -CommandName 'New-DenyWDACConfig' -ParameterName 'Pac
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgvmP9/F1DLgg57rZHavIaG2rxSD+FrBoXAOJ0FPL84icwDQYJKoZIhvcNAQEB
-# BQAEggIAYSAYFPBSJGkwaGheL+cAMXOr6NVqD5Rwh7ADmuyr+indJ91LE1Dr2ql9
-# oSl0r3Gf/ilr+khJpF4BZmzTfrbRy6d5Sk+MgaBDgkyO1UnH1798ORiC67nwSwYW
-# oTg8P9zQ+EAK2fvxPzzopYjBBX3iDmNGoxgQt2Ihoh8cpYu9VrXxmO0orVFDHvgL
-# KjsYa7xguOSrcIBC5hTlKwfS1qIMkqq86a3B+Mc1AsJ6bsbdR6ybFZwDkq9cNH/6
-# qKqWYK5Ay3WGi+4NC1y9lWvmlGj3qAdUk/ySwvf/eSTmv/syyVKk2vivkEMXmbx5
-# 1zQGfNzTbfdwD+9rgk291kXpDXdKXn+mrb/ByWjgFx+Q6c3SagNVwFPg0aF/FeQ/
-# ivcL1UiYfDI2o+uLanTpybg7jCgWoa6iymjepeY3Z0JoGzk/VCi+avz3DeYOTwD/
-# kjsCq2JVJu6aYTfc8MOtamQy1R88eW5XL4RIfVO0TN/2cOmUlfzzUP1tVKwhAe2k
-# zeTxbW3nzCRIJ2xy7FR3pyiugeDNU0IEkKtySkxji/t3uPOsgTeu1X5gl6BhKhnL
-# HXmtWyl6K6sMb8HcRRQx/h3aVRYtQbXzjuAhEjBdrx5AtHbgsi7KISdtujGTPgKY
-# d0rnGgfnmPqWKcpeu4b+xX0NTvc9T1wLRcWPStcmkSbmUuqhZ1s=
+# IgQg4AzmXBXcgtjOsM3v9FELFvxXzN6dvLS+GCX+ljPIIcQwDQYJKoZIhvcNAQEB
+# BQAEggIAnPsWNpSq7UIgcmdywJMeoXa0EiQyfLzYku8tfXHB3XI0WXq+SCvMpSOA
+# eQMsShHBJR9G02P/hRstRY4HisVzgJgSoO0InYrKbzaFXa4FYK+HK3cQvTstyvse
+# vQP1ryGjQfCvJzOPdaRfF0Yk+//swRDaKpGQntCGZ3wZVHvAlO47spq4R+0QLBpT
+# 41R5rFp7n7j8Q99zkWv2pSL/83iBrosuonbmkl5hnN/rcwo2ITY45WM8/A0OC1l9
+# mbBzqFhJnbMGxVDIwB45Q5la/2j19PRkOBr1o3DweoHyjs3Ia5iOrKJy+JSAJDFy
+# N3Qqvw2lRMpR1qR4z4Ya1JkdPB+DgVW+ezPTb9VCkI55k+JwTELtVFZvM7Nr24zJ
+# jSAdFl+dxqlpKi9yW73EtlZwnB+oPHhN2PRiPKRphR0lXcXM66XFs6PbE1zUXi/Q
+# 16wYieMfdxQ830EGV+SlzRkk24lf1s7tkbUToEnP44dBAgiNBaqnA16e3g5vXLVQ
+# TGu/B2FIQlTbGCpIih+lHej11u9MmZI77+hd8BdH3R11ATDD6kGrbbjjw0Yy51I/
+# CULff1RAXClpiuaqoOYHXJRXKuTKQEVPavXolPGIjQKJg107vEMuLVPQKY7EqAmI
+# 2cATB+s9DnPwudDqGfjAHZgqUG7MKZE2IdghPGaq7ySPM4t3hyY=
 # SIG # End signature block

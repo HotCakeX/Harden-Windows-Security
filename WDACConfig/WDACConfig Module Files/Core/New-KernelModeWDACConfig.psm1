@@ -491,14 +491,20 @@ Function New-KernelModeWDACConfig {
     System.Management.Automation.SwitchParameter
 .OUTPUTS
     System.String
+.EXAMPLE
+    New-KernelModeWDACConfig -Default -PrepMode -Deploy
+    This example creates the strict Kernel mode WDAC policy based off of the default Windows WDAC example policy, deploys it in Audit mode. System restart will be required after this.
+.EXAMPLE
+    New-KernelModeWDACConfig -Default -AuditAndEnforce -Deploy
+    This example creates the strict Kernel mode WDAC policy based off of the default Windows WDAC example policy, deploys it in Enforced mode. It will also contain the drivers that were blocked during the Audit mode.
 #>
 }
 
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCFTfN7PiqYeMa7
-# +zzgkfElnnnkF7EIAKjjyWpskKCYBqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBa4yo5ifQ57ro7
+# HjoaZcWuNoySXj1RawJ7KtVwM2tAbKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -545,16 +551,16 @@ Function New-KernelModeWDACConfig {
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgTGM2bUzV+1Va1jngCNS2saf4DYhDFzbeTH21PiXv/qgwDQYJKoZIhvcNAQEB
-# BQAEggIAYwXPdNWzZpI5K9Y3S/YFoagaootASj4nijc0y9Ueb4EDEUYaP2eRxJ2y
-# 3kTwL9doqA7lXk/DAXpsjcqcZ/6GRzCPhxMoaYsW0G1GPXel5IIEZt2WGj6bv/L/
-# F68f4MJPaX3cBPTfrEpxk0odiG+Kb0bYcWUJz54wa4bUPPFTCDd/ZRpT2xfWBtQq
-# MHMOwCjhslWlgjLD0nKacZsWumeWeQIQuXIgMfOq8NuBotaPjUp55zJo3gwGC96z
-# 4g63ouHaFe5enzbruF/ODoCnY2aRRukBHX/xEcskR+Ssgv/9Ve4Hgx/vDjHMBxE3
-# YYb+VjSw2UbA/iWg9Ww38u7qhIwVHtGFnyoYOz98D/FmKEY6uzSm6htO9h0EXjzw
-# scXSoQnMsl2QbGYkny3nqtwl+RViA5Ura78GUkNgrardbifWWanVfISe5gLDIImN
-# ihVrqXRKMpDfH7UX5kFh/ouF88XXFGyk8tbnGu46fgg2nhN673Y1BpdHZb1Pr/cf
-# 1BEaLngRYyCBk/gQG0sB45Y72CspSSn1ukzQMqmoUPWvdkothJYSBc920gKISofF
-# nivDXrtynaljCMewizw/NKPlknnIxMrXIo17KjDVJdq33+WWkP09Oy+oHbH9Iyuy
-# nNredRUsLXDFWFPGsLMnJN8z4RKZKY9wUuT/hRk2Wx1zXJFG2lg=
+# IgQg5YFrxDs4epjrcDsnQj5yWYjm3/If9xC3pvRf/Q905yUwDQYJKoZIhvcNAQEB
+# BQAEggIAByDHvBGbw2xEmJZLcQQ9evV6bjpuxa8c+SEEjPK6JSccR6P5/SHVTRSd
+# ZwGVphiT/apxKzqX4lV6UbVjT1T57eD/N7jwFkpGCFLB/yd8tjURSrEA3xVQhl3i
+# 4UYwmzkUe8TWAouChnT+/1hJIYFcAkq/uVFAX1PWfWXOwXZ4UQB36cpr/x0jvPk5
+# aPWfN0iPxJwy9seykLgDaBiQel40D/o6T0Umy7vpkbYM8b1Cg79jSFEYkB7DUPlT
+# sYDEmy20zxsdrIED2IZdJYj5yuFJlNiP5M+TS2YFFZVb9pR/4SNP/c0X2Px0BB1G
+# RbgmhNKRPf5EPerEHx30dEv7BlqQzT6oBglN9sdqcM13gJVeVNUMhefzTZPoZzwW
+# xPhBfvGSLlnAowIO/pti30iinDt/8BhdmxeB6UXVGJnjrdsW3xlsJGCZhgynp/6W
+# gul8FODe3kxTtkbPRjjwkgR0vAM6HryLPM5duzFWlOMTGnUxoW56oKP7TugGgzLO
+# ZcopziQSIAJyrsXIyhCE1rFIfs84JhvekBdLHOFSlwTqVV0SM5axHpDdXFAed2je
+# P4Y5SyKkdU+YY+MuaIHPyLXn8nxRw94G5Julm11cMiDJXdv+4nRtiwS/+17SSjy8
+# iXybEBNZk5YmS3+8KErJZoNiDbqxeYJcDsymlko7GJ85+zSAOus=
 # SIG # End signature block

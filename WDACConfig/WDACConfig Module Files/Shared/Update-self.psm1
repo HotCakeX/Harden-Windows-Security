@@ -19,7 +19,7 @@ Function Update-self {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true, Position = 0)]
-        [ValidatePattern('^(Confirm-WDACConfig|Deploy-SignedWDACConfig|Edit-SignedWDACConfig|Edit-WDACConfig|Invoke-WDACSimulation|New-DenyWDACConfig|New-KernelModeWDACConfig|New-SupplementalWDACConfig|New-WDACConfig|Remove-WDACConfig|Assert-WDACConfigIntegrity)(?!.*[;`]).*$', ErrorMessage = 'Either Update-self function was called with an unauthorized command or it contains semicolon and/or backtick')]
+        [ValidatePattern('^(Confirm-WDACConfig|Deploy-SignedWDACConfig|Edit-SignedWDACConfig|Edit-WDACConfig|Invoke-WDACSimulation|New-DenyWDACConfig|New-KernelModeWDACConfig|New-SupplementalWDACConfig|New-WDACConfig|Remove-WDACConfig|Assert-WDACConfigIntegrity|Build-WDACCertificate)(?!.*[;`]).*$', ErrorMessage = 'Either Update-self function was called with an unauthorized command or it contains semicolon and/or backtick')]
         [System.String]$InvocationStatement
     )
     # Importing the $PSDefaultParameterValues to the current session, prior to everything else
@@ -48,7 +48,7 @@ Function Update-self {
     # This prevents the module from constantly doing an update check by fetching the version file from GitHub
     if (($TimeDiff -gt 10) -or $PerformOnlineUpdateCheck) {
 
-        Write-Verbose -Message 'Performing online update check'
+        Write-Verbose -Message "Performing online update check because the last update check was performed $TimeDiff minutes ago"
 
         [System.Version]$CurrentVersion = (Test-ModuleManifest -Path "$ModuleRootPath\WDACConfig.psd1").Version.ToString()
         try {
@@ -110,8 +110,8 @@ Export-ModuleMember -Function 'Update-self'
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCcqaKt74nz/gtV
-# ZbdjO9C89dR1V2FIQzGidMUq4VdAe6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCB3MkpGhivrGUeY
+# dBhOBptTcTJNGSlfsnreLAokY4ZqXqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -158,16 +158,16 @@ Export-ModuleMember -Function 'Update-self'
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgPlFaz6AA4HuZdh/xuRPo81PNbNYpgb71NLvTNkDHO94wDQYJKoZIhvcNAQEB
-# BQAEggIAN/oKvTPXpcccW5OuYBC9v8ltCGKXiiYIa7h1R7pwboVi75DTIvO3D0bY
-# 1qoEXbnWouMD3QjlaSgGbC9WXRRTwTGhdKY7yln+iOVZyPtesU00cWaasaRV4p3F
-# 7SC1ILmSdbtEc7B6RckxqOlbfmWfytZwp+8/vsmf3QbIK0P8q4SdsTVZuBN17IYS
-# gvBtJHOv3Eb7j4yM0cu1tMwkzwoBau12HHmeVddaGl9zHSdXVxSLqzA4CgfGnJJL
-# lwzfLSis8Z28pB+M1KRGtUMneiYNXtT32xQP9dMrRmuK6JG0w89ijsLtS3gPboxw
-# EU1WIjMPupfAaERgDwKExF7j74sVxCpmxZVLEMKfNjv9NXw+zhOw3lZLD2/NLVAE
-# a8GkCx/cpvsQXA7PNWqVz0UsK4kqPWzS5QbLWQLfIn+2D/3esjofFMINcc8/ysMu
-# o9piTMXLKTe7X+tksJD1FvvniSTetePN3X8UYe7JnG4OnHCm1gRw2rTtjFWyMehh
-# vbnIJeEpl4aiIdcm+TJIsVKsCpjY5JPV7BcUp9Fg7HyyTLkUlSKGpelAX58DjnRd
-# fBBjCpNChUFn0dWj0+sFFH+SutyK/kJFGbucfEOOiyncW1tnaA60ElVGb83R99LV
-# 8FYutFl9MmNMw8Dm6DUfpnrHbQYo9YxMynrIYbhfKSbmv3E+rW0=
+# IgQgWJ+o0jfxufIVze2gXAxoJNsr55uYRrU3JDoTHG0CdoYwDQYJKoZIhvcNAQEB
+# BQAEggIAP7tvrhByGhubAtf3KXlzFHp+OmLkHSO9pYoZme6wgpINTDgQQByfwl6D
+# RVdjl8Kbrbw3qLx6BAuNRz4POPib/yq3K6n3FDzMP445O5BdIMS7Xs566Wt5J09C
+# EhH8OmhYT520VQKJkXxcv+IODL9+nl3vh3nSqAYUjZoqOZ/qaXdieKftlqjmpg6U
+# w7QFQFGGccdqz8Ap14WP1378VslZyGL83E6vPsPH+e3CVS2OoLYRK4832cUfMNsg
+# uBEqu0W8rg2gkKztfhnOgTfhUiwcTYpmna5q/ZaOXNpzgAdWd8aJ3a+3G5G/vAh1
+# Y+UVXT3PWP+fQHrxUKt25M4g3Im8Y06a/5+MyeNYPmNvLCThT7urSeM/4YT521m2
+# 1sNz2pUG1+hZoB7504MoYgieHLW8nnIWZHacId1q8d8RR9ohZTgnlW6DL/n6K1Aq
+# Ajx8Wuzx5RdtpANrZOAeqhITnvGRUiJjilnyRbwjBiWCB7nxOlCX3g1R5tFWqW+x
+# rE0xerUCdU93+OYZRKrdK9UEroiWXoMX0P3nHeT86TXyMAggKeqJKcAUyOjGYXzr
+# uZufIy4M3Q93Gupl7tFw14l6aWFs0cfWSTUGZYUJoZVcwv+VCARl7dyQl9SBOJx2
+# J8LJhOmK4m0mDp/VffaSiHhm4D62TdS6sXWkHVC7i3+UZV30/lY=
 # SIG # End signature block

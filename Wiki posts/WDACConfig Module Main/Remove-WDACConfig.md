@@ -84,4 +84,8 @@ For example, you can specify 2 policies by IDs and 3 policies by names, and it w
 
 2. If Windows SDK Signing Tools for Desktop Apps components is not installed in the default location or you want to manually browse for the `signtool.exe`, then make sure you either specify its path using `Set-CommonWDACConfig -SignToolPath` or use the `-SignToolPath <String>` parameter.
 
+3. If SignTool.exe path is available in user configurations then it will be used, unless the `-SignToolPath <String>` parameter is specified which takes priority over auto detection and user configurations.
+
+4. Unless you specify the `-SignToolPath <String>` parameter, or the SignTool.exe path already exists in your user configurations or on your system, you will receive a prompt to authorize the automatic download of the most recent SignTool.exe version from the official Microsoft servers. Upon confirmation, it will be saved in your user configurations and utilized by the cmdlet.
+
 <br>

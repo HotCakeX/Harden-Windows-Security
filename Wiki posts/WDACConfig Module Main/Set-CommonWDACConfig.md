@@ -13,8 +13,9 @@
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Set-CommonWDACConfig/Set-CommonWDACConfig.apng)
 
 ```powershell
-Set-CommonWDACConfig [[-CertCN] <string>] [[-CertPath] <string>] [[-SignToolPath] <string>] [[-UnsignedPolicyPath]
-<string>] [[-SignedPolicyPath] <string>]
+Set-CommonWDACConfig [[-CertCN] <String>] [[-CertPath] <FileInfo>] [[-SignToolPath] <FileInfo>]
+[[-UnsignedPolicyPath] <FileInfo>] [[-SignedPolicyPath] <FileInfo>] [[-StrictKernelPolicyGUID] <Guid>]
+[[-StrictKernelNoFlightRootsPolicyGUID] <Guid>] [[-LastUpdateCheck] <DateTime>] [<CommonParameters>]
 ```
 
 <br>

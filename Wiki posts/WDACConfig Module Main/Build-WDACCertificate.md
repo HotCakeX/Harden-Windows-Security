@@ -1,5 +1,7 @@
 # Build-WDACCertificate available parameters
 
+![Build-WDACCertificate demo](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Build-WDACCertificate/Build-WDACCertificate.gif)
+
 ```powershell
 Build-WDACCertificate [[-CommonName] <String>] [[-FileName] <String>] [[-BuildingMethod] <String>] [[-Password]
 <SecureString>] [-Force] [-SkipVersionCheck] [<CommonParameters>]

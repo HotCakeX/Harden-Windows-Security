@@ -103,7 +103,7 @@ Creates a Deny base policy for one or more installed Windows Apps (Appx) based o
 
 ## New-DenyWDACConfig -PathWildCards
 
-![Assert-WDACConfigIntegrity demo](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-DenyWDACConfig/New-DenyWDACConfig%20-PathWildCards.apng)
+![New-DenyWDACConfig -PathWildCards demo](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-DenyWDACConfig/New-DenyWDACConfig%20-PathWildCards.apng)
 
 ```powershell
 New-DenyWDACConfig [-PathWildCards] -PolicyName <String> -FolderPath <String> [-Deploy] [-SkipVersionCheck] [<CommonParameters>]

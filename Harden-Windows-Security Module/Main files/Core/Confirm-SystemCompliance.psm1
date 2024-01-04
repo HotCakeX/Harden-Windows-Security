@@ -1002,10 +1002,10 @@ function Confirm-SystemCompliance {
                 Method       = 'Optional Windows Features'
             }
 
-            # Verify MDAG is enabled
+            # Verify MDAG is disabled
             $NestedObjectArray += [PSCustomObject]@{
                 FriendlyName = 'Microsoft Defender Application Guard is enabled'
-                Compliant    = [System.Boolean]($Results[5] -eq 'Enabled')
+                Compliant    = [System.Boolean]($Results[5] -eq 'Disabled')
                 Value        = [System.String]$Results[5]
                 Name         = 'Microsoft Defender Application Guard is enabled'
                 Category     = $CatName

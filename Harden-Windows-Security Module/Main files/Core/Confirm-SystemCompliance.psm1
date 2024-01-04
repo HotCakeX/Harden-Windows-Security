@@ -527,7 +527,15 @@ function Confirm-SystemCompliance {
       }
     }
 '@
-            Add-Type -TypeDefinition $BootDMAProtectionCheck -Language CSharp
+            # if the type is not already loaded, load it
+            if (-NOT ('SystemInfo.NativeMethods' -as [System.Type])) {
+                Write-Verbose -Message 'Loading SystemInfo.NativeMethods type'
+                Add-Type -TypeDefinition $BootDMAProtectionCheck -Language CSharp -Verbose:$false
+            }
+            else {
+                Write-Verbose -Message 'SystemInfo.NativeMethods type is already loaded, skipping loading it again.'
+            }
+
             # Returns true or false depending on whether Kernel DMA Protection is on or off
             [System.Boolean]$BootDMAProtection = ([SystemInfo.NativeMethods]::BootDmaCheck()) -ne 0
 

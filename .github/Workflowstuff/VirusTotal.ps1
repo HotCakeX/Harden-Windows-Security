@@ -9,7 +9,7 @@ else {
 $VTApi = $env:VTAPIsecret
 
 # Submit
-$Output = New-VirusScan -ApiKey $VTApi -File .\Payload\Security-Baselines-X.zip
+$Output = New-VirusScan -ApiKey $VTApi -File .\Harden-Windows-Security Module\Main files\Resources\Security-Baselines-X.zip
 
 # Wait
 Do {
@@ -47,7 +47,7 @@ else {
 $SecurityBaselinesXvar = "https://www.virustotal.com/gui/file/$($OutputScan.meta.file_info.sha256)"
 
 # Submit
-$Output = New-VirusScan -ApiKey $VTApi -File .\Payload\EventViewerCustomViews.zip
+$Output = New-VirusScan -ApiKey $VTApi -File .\Harden-Windows-Security Module\Main files\Resources\EventViewerCustomViews.zip
 
 # Wait
 Do {
@@ -87,7 +87,7 @@ $EventViewerCustomViewsVT = "<a href='$($EventViewerCustomViewsvar)'>Virus Total
 $readme = Get-Content -Raw -Path 'README.md'
 $readme = $readme -replace '(?s)(?<=<!-- Security-Baselines-X-VT:START -->).*(?=<!-- Security-Baselines-X-VT:END -->)', $SecurityBaselinesXVT
 $readme = $readme -replace '(?s)(?<=<!-- EventViewer-CustomViews-VT:START -->).*(?=<!-- EventViewer-CustomViews-VT:END -->)', $EventViewerCustomViewsVT
-Set-Content -Path 'README.md' -Value $readme.TrimEnd()
+Set-Content -Path 'README.md' -Value $readme.TrimEnd() -Force
 
 # Committing the changes back to the repository
 git config --global user.email 'spynetgirl@outlook.com'

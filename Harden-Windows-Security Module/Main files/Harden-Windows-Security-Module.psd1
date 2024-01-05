@@ -4,7 +4,7 @@
   RootModule           = 'Harden-Windows-Security-Module.psm1'
 
   # Version number of this module.
-  ModuleVersion        = '0.2.7'
+  ModuleVersion        = '0.2.8'
 
   # Supported PSEditions
   CompatiblePSEditions = @('Core')
@@ -136,8 +136,11 @@ Harden Windows Safely, Securely, only with Official Microsoft methods
     'Core\Unprotect-WindowsSecurity.psm1',
     'Resources\Default Security Policy.inf',
     'Resources\Registry resources.csv',
-    'Resources\Harden-Windows-Security.ps1',
-    'Resources\Functions.ps1'
+    'Resources\Functions.ps1',
+    'Resources\EventViewerCustomViews.zip',
+    'Resources\Security-Baselines-X.zip',
+    'Resources\Registry.csv',
+    'Resources\ProcessMitigations.csv'
   )
 
   # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.

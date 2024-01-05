@@ -2,6 +2,8 @@ Function Test-IsAdmin {
     <#
     .SYNOPSIS
         Function to test if current session has administrator privileges
+    .LINK
+        https://devblogs.microsoft.com/scripting/use-function-to-determine-elevation-of-powershell-console/
     .INPUTS
         None
     .OUTPUTS

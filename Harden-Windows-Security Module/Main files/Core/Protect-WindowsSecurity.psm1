@@ -44,9 +44,14 @@ Function Protect-WindowsSecurity {
     if ($PSCommandPath) {
         if ((Split-Path -Path $PSCommandPath -Leaf) -eq 'Protect-WindowsSecurity.psm1') {
             Write-Verbose -Message 'Running Protect-WindowsSecurity function as part of the Harden-Windows-Security module'
-            # Import functions
-            . "$HardeningModulePath\Resources\Functions.ps1"
+            Write-Verbose -Message 'Importing the required sub-modules'
+            Import-Module -FullyQualifiedName "$HardeningModulePath\Shared\Update-self.psm1" -Force -Verbose:$false
+
+            # Set the flag to true to indicate that the module is running locally
             [System.Boolean]$IsLocally = $true
+
+            Write-Verbose -Message 'Checking for updates...'
+            Update-Self -InvocationStatement $MyInvocation.Statement
         }
     }
     else {

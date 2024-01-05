@@ -11,16 +11,21 @@ Function Unprotect-WindowsSecurity {
     )
 
     begin {
-        # Import functions
-        . "$HardeningModulePath\Resources\Functions.ps1"
-
-        # Fetching Temp Directory
-        [System.String]$CurrentUserTempDirectoryPath = [System.IO.Path]::GetTempPath()
+        # Importing the required sub-modules
+        Write-Verbose -Message 'Importing the required sub-modules'
+        Import-Module -FullyQualifiedName "$HardeningModulePath\Shared\Update-self.psm1" -Force -Verbose:$false
+        Import-Module -FullyQualifiedName "$HardeningModulePath\Shared\Test-IsAdmin.psm1" -Force -Verbose:$false
 
         # Makes sure this cmdlet is invoked with Admin privileges
         if (-NOT (Test-IsAdmin)) {
             Throw [System.Security.AccessControl.PrivilegeNotHeldException] 'Administrator'
         }
+
+        Write-Verbose -Message 'Checking for updates...'
+        Update-Self -InvocationStatement $MyInvocation.Statement
+
+        # Fetching Temp Directory
+        [System.String]$CurrentUserTempDirectoryPath = [System.IO.Path]::GetTempPath()
 
         # The total number of the steps for the parent/main progress bar to render
         [System.Int16]$TotalMainSteps = 6
@@ -185,7 +190,7 @@ Function Unprotect-WindowsSecurity {
             }
             finally {
                 Write-Verbose -Message 'Finally block is running'
-                
+
                 # End the progress bar and mark it as completed
                 Write-Progress -Id 0 -Activity 'Completed' -Completed
 

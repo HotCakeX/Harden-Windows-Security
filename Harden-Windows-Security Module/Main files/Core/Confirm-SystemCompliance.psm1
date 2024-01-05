@@ -12,13 +12,18 @@ function Confirm-SystemCompliance {
         # Set the progress bar style to blinking yellow
         $PSStyle.Progress.Style = "$($PSStyle.Foreground.FromRGB(255,255,49))$($PSStyle.Blink)"
 
-        # Dot-sourcing the functions.ps1 file in the current scope
-        . "$HardeningModulePath\Resources\Functions.ps1"
+        # Importing the required sub-modules
+        Write-Verbose -Message 'Importing the required sub-modules'
+        Import-Module -FullyQualifiedName "$HardeningModulePath\Shared\Update-self.psm1" -Force -Verbose:$false
+        Import-Module -FullyQualifiedName "$HardeningModulePath\Shared\Test-IsAdmin.psm1" -Force -Verbose:$false
 
         # Makes sure this cmdlet is invoked with Admin privileges
         if (-NOT (Test-IsAdmin)) {
             Throw [System.Security.AccessControl.PrivilegeNotHeldException] 'Administrator'
         }
+
+        Write-Verbose -Message 'Checking for updates...'
+        Update-Self -InvocationStatement $MyInvocation.Statement
 
         #Region Defining-Variables
         # Total number of Compliant values not equal to N/A

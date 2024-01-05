@@ -2,7 +2,7 @@
 # all the variables in here persist until PowerShell (session) is closed
 
 if (!$IsWindows) {
-    Throw 'The WDACConfig module only runs on Windows operation systems.'
+    Throw [System.PlatformNotSupportedException] 'The Harden Windows Security module only runs on Windows operation systems.'
 }
 
 # Create tamper resistant global variables (if they don't already exist)
@@ -13,7 +13,7 @@ try {
     if ((Test-Path -Path 'Variable:\FullOSBuild') -eq $false) { New-Variable -Name 'FullOSBuild' -Value "$OSBuild.$UBR" -Option 'Constant' -Scope 'Script' -Description 'Create full OS build number as seen in Windows Settings' -Force }
 }
 catch {
-    Throw 'Could not set the required global variables.'
+    Throw [System.InvalidOperationException] 'Could not set the required global variables.'
 }
 
 # A constant variable that is automatically imported in the caller's environment and used to detect the main module's root directory
@@ -26,7 +26,7 @@ catch {
         New-Variable -Name 'HardeningModulePath' -Value ($PSScriptRoot) -Option 'Constant' -Scope 'Global' -Description 'Storing the value of $PSScriptRoot in a global constant variable to allow the internal functions to use it when navigating the module structure' -Force
     }
     catch {
-        Throw 'Could not set the HardeningModulePath required global variable.'
+        Throw [System.InvalidOperationException] 'Could not set the HardeningModulePath required global variable.'
     }
 }
 
@@ -37,5 +37,5 @@ if (-NOT ([System.Decimal]$FullOSBuild -ge [System.Decimal]$Requiredbuild)) {
 
 # check if user's OS is Windows Home edition
 if ((Get-CimInstance -ClassName Win32_OperatingSystem).OperatingSystemSKU -eq '101') {
-    Throw 'Windows Home edition detected, exiting...'
+    Throw [System.PlatformNotSupportedException] 'Windows Home edition detected, exiting...'
 }

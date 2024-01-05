@@ -136,11 +136,12 @@ Harden Windows Safely, Securely, only with Official Microsoft methods
     'Core\Unprotect-WindowsSecurity.psm1',
     'Resources\Default Security Policy.inf',
     'Resources\Registry resources.csv',
-    'Resources\Functions.ps1',
     'Resources\EventViewerCustomViews.zip',
     'Resources\Security-Baselines-X.zip',
     'Resources\Registry.csv',
-    'Resources\ProcessMitigations.csv'
+    'Resources\ProcessMitigations.csv',
+    'Shared\Update-self.psm1',
+    'Shared\Test-IsAdmin.psm1'
   )
 
   # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.

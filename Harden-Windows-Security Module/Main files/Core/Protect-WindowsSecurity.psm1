@@ -791,7 +791,7 @@ Function Protect-WindowsSecurity {
         Function Invoke-WindowsBootManagerRevocations {
             param([System.Management.Automation.SwitchParameter]$RunUnattended)
             # If admin rights are not detected, break out of the function
-            if (!$IsAdmin) { break }
+            if (!$IsAdmin) { return }
 
             $CurrentMainStep++
             $Host.UI.RawUI.WindowTitle = '🫶 Category 0'
@@ -811,7 +811,7 @@ Function Protect-WindowsSecurity {
         }
         Function Invoke-MicrosoftSecurityBaselines {
             param([System.Management.Automation.SwitchParameter]$RunUnattended)
-            if (!$IsAdmin) { break }
+            if (!$IsAdmin) { return }
 
             $CurrentMainStep++
             $Host.UI.RawUI.WindowTitle = '🔐 Security Baselines'
@@ -847,7 +847,7 @@ Function Protect-WindowsSecurity {
         }
         Function Invoke-Microsoft365AppsSecurityBaselines {
             param([System.Management.Automation.SwitchParameter]$RunUnattended)
-            if (!$IsAdmin) { break }
+            if (!$IsAdmin) { return }
 
             $CurrentMainStep++
             $Host.UI.RawUI.WindowTitle = '🧁 M365 Apps Security'
@@ -868,7 +868,7 @@ Function Protect-WindowsSecurity {
         }
         Function Invoke-MicrosoftDefender {
             param([System.Management.Automation.SwitchParameter]$RunUnattended)
-            if (!$IsAdmin) { break }
+            if (!$IsAdmin) { return }
 
             $CurrentMainStep++
             $Host.UI.RawUI.WindowTitle = '🍁 MSFT Defender'
@@ -1030,7 +1030,7 @@ Function Protect-WindowsSecurity {
         }
         Function Invoke-AttackSurfaceReductionRules {
             param([System.Management.Automation.SwitchParameter]$RunUnattended)
-            if (!$IsAdmin) { break }
+            if (!$IsAdmin) { return }
 
             $CurrentMainStep++
             $Host.UI.RawUI.WindowTitle = '🪷 ASR Rules'
@@ -1047,7 +1047,7 @@ Function Protect-WindowsSecurity {
         }
         Function Invoke-BitLockerSettings {
             param([System.Management.Automation.SwitchParameter]$RunUnattended)
-            if (!$IsAdmin) { break }
+            if (!$IsAdmin) { return }
 
             $CurrentMainStep++
             $Host.UI.RawUI.WindowTitle = '🔑 BitLocker'
@@ -1695,7 +1695,7 @@ namespace SystemInfo
         }
         Function Invoke-TLSSecurity {
             param([System.Management.Automation.SwitchParameter]$RunUnattended)
-            if (!$IsAdmin) { break }
+            if (!$IsAdmin) { return }
 
             $CurrentMainStep++
             $Host.UI.RawUI.WindowTitle = '🛡️ TLS'
@@ -1732,7 +1732,7 @@ namespace SystemInfo
         }
         Function Invoke-LockScreen {
             param([System.Management.Automation.SwitchParameter]$RunUnattended)
-            if (!$IsAdmin) { break }
+            if (!$IsAdmin) { return }
 
             $CurrentMainStep++
             $Host.UI.RawUI.WindowTitle = '💻 Lock Screen'
@@ -1774,7 +1774,7 @@ namespace SystemInfo
         }
         Function Invoke-UserAccountControl {
             param([System.Management.Automation.SwitchParameter]$RunUnattended)
-            if (!$IsAdmin) { break }
+            if (!$IsAdmin) { return }
 
             $CurrentMainStep++
             $Host.UI.RawUI.WindowTitle = '💎 UAC'
@@ -1815,7 +1815,7 @@ namespace SystemInfo
         }
         Function Invoke-WindowsFirewall {
             param([System.Management.Automation.SwitchParameter]$RunUnattended)
-            if (!$IsAdmin) { break }
+            if (!$IsAdmin) { return }
 
             $CurrentMainStep++
             $Host.UI.RawUI.WindowTitle = '🔥 Firewall'
@@ -1837,7 +1837,7 @@ namespace SystemInfo
         }
         Function Invoke-OptionalWindowsFeatures {
             param([System.Management.Automation.SwitchParameter]$RunUnattended)
-            if (!$IsAdmin) { break }
+            if (!$IsAdmin) { return }
 
             $CurrentMainStep++
             $Host.UI.RawUI.WindowTitle = '🏅 Optional Features'
@@ -1888,7 +1888,7 @@ namespace SystemInfo
         }
         Function Invoke-WindowsNetworking {
             param([System.Management.Automation.SwitchParameter]$RunUnattended)
-            if (!$IsAdmin) { break }
+            if (!$IsAdmin) { return }
 
             $CurrentMainStep++
             $Host.UI.RawUI.WindowTitle = '📶 Networking'
@@ -1912,7 +1912,7 @@ namespace SystemInfo
         }
         Function Invoke-MiscellaneousConfigurations {
             param([System.Management.Automation.SwitchParameter]$RunUnattended)
-            if (!$IsAdmin) { break }
+            if (!$IsAdmin) { return }
 
             $CurrentMainStep++
             $Host.UI.RawUI.WindowTitle = '🥌 Miscellaneous'
@@ -1957,7 +1957,7 @@ namespace SystemInfo
         }
         Function Invoke-WindowsUpdateConfigurations {
             param([System.Management.Automation.SwitchParameter]$RunUnattended)
-            if (!$IsAdmin) { break }
+            if (!$IsAdmin) { return }
 
             $CurrentMainStep++
             $Host.UI.RawUI.WindowTitle = '🪟 Windows Update'
@@ -1977,7 +1977,7 @@ namespace SystemInfo
         }
         Function Invoke-EdgeBrowserConfigurations {
             param([System.Management.Automation.SwitchParameter]$RunUnattended)
-            if (!$IsAdmin) { break }
+            if (!$IsAdmin) { return }
 
             $CurrentMainStep++
             $Host.UI.RawUI.WindowTitle = '🦔 Edge'
@@ -1998,7 +1998,7 @@ namespace SystemInfo
         }
         Function Invoke-CertificateCheckingCommands {
             param([System.Management.Automation.SwitchParameter]$RunUnattended)
-            if (!$IsAdmin) { break }
+            if (!$IsAdmin) { return }
 
             $CurrentMainStep++
             $Host.UI.RawUI.WindowTitle = '🎟️ Certificates'
@@ -2029,7 +2029,7 @@ namespace SystemInfo
         }
         Function Invoke-CountryIPBlocking {
             param([System.Management.Automation.SwitchParameter]$RunUnattended)
-            if (!$IsAdmin) { break }
+            if (!$IsAdmin) { return }
 
             $CurrentMainStep++
             $Host.UI.RawUI.WindowTitle = '🧾 Country IPs'

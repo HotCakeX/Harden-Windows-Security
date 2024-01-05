@@ -347,7 +347,7 @@ Function Protect-WindowsSecurity {
 
                     }
                     'Skip encryptions altogether' { break BitLockerCategoryLabel } # Breaks from the BitLocker category and won't process Non-OS Drives
-                    'Exit' { exit }
+                    'Exit' { break MainSwitchLabel }
                 }
             }
             until ($AvailableRemovableDrives)
@@ -806,7 +806,7 @@ Function Protect-WindowsSecurity {
                     Write-Host -Object 'The required security measures have been applied to the system' -ForegroundColor Green
                     Write-Warning -Message 'Make sure to restart your device once. After restart, wait for at least 5-10 minutes and perform a 2nd restart to finish applying security measures completely.'
                 } 'No' { break Category0Label }
-                'Exit' { exit }
+                'Exit' { break MainSwitchLabel }
             }
         }
         Function Invoke-MicrosoftSecurityBaselines {
@@ -841,7 +841,7 @@ Function Protect-WindowsSecurity {
                     SCHTASKS.EXE /Change /TN \Microsoft\XblGameSave\XblGameSaveTask /Enable
                 }
                 'No' { break MicrosoftSecurityBaselinesCategoryLabel }
-                'Exit' { exit }
+                'Exit' { break MainSwitchLabel }
             }
             Pop-Location
         }
@@ -863,7 +863,7 @@ Function Protect-WindowsSecurity {
                     Pop-Location
 
                 } 'No' { break Microsoft365AppsSecurityBaselinesCategoryLabel }
-                'Exit' { exit }
+                'Exit' { break MainSwitchLabel }
             }
         }
         Function Invoke-MicrosoftDefender {
@@ -962,7 +962,7 @@ Function Protect-WindowsSecurity {
                                 # Let the optional diagnostic data be enabled automatically
                                 $ShouldEnableOptionalDiagnosticData = $True
                             } 'No' { break SmartAppControlLabel }
-                            'Exit' { exit }
+                            'Exit' { break MainSwitchLabel }
                         }
                     }
 
@@ -977,7 +977,7 @@ Function Protect-WindowsSecurity {
                                 'Yes' {
                                     &$LGPOExe /q /m "$WorkingDir\Security-Baselines-X\Microsoft Defender Policies\Optional Diagnostic Data\registry.pol"
                                 } 'No' { break SmartAppControlLabel2 }
-                                'Exit' { exit }
+                                'Exit' { break MainSwitchLabel }
                             }
                         }
                     }
@@ -1008,7 +1008,7 @@ Function Protect-WindowsSecurity {
                                 # Add the advanced settings we defined above to the scheduled task
                                 Set-ScheduledTask -TaskName 'MSFT Driver Block list update' -TaskPath 'MSFT Driver Block list update' -Settings $TaskSettings
                             } 'No' { break TaskSchedulerCreationLabel }
-                            'Exit' { exit }
+                            'Exit' { break MainSwitchLabel }
                         }
                     }
 
@@ -1020,12 +1020,12 @@ Function Protect-WindowsSecurity {
                                 Set-MpPreference -EngineUpdatesChannel beta
                                 Set-MpPreference -PlatformUpdatesChannel beta
                             } 'No' { break DefenderUpdateChannelsLabel }
-                            'Exit' { exit }
+                            'Exit' { break MainSwitchLabel }
                         }
                     }
 
                 } 'No' { break MicrosoftDefenderLabel }
-                'Exit' { exit }
+                'Exit' { break MainSwitchLabel }
             }
         }
         Function Invoke-AttackSurfaceReductionRules {
@@ -1042,7 +1042,7 @@ Function Protect-WindowsSecurity {
 
                     &$LGPOExe /q /m "$WorkingDir\Security-Baselines-X\Attack Surface Reduction Rules Policies\registry.pol"
                 } 'No' { break ASRRulesCategoryLabel }
-                'Exit' { exit }
+                'Exit' { break MainSwitchLabel }
             }
         }
         Function Invoke-BitLockerSettings {
@@ -1197,7 +1197,7 @@ namespace SystemInfo
 
                                     switch (Select-Option -SubCategory -Options 'Yes', 'Skip OS Drive' , 'Exit' -Message "`nThe OS Drive is already encrypted with Enhanced Security level." -ExtraMessage "Are you sure you want to change it to Normal Security level?`n" ) {
                                         'Skip OS Drive' { break OSDriveEncryptionLabel }
-                                        'Exit' { exit }
+                                        'Exit' { break MainSwitchLabel }
                                     }
                                 }
 
@@ -1457,7 +1457,7 @@ namespace SystemInfo
                             }
                         }
                         'Skip encryptions altogether' { break BitLockerCategoryLabel } # Exit the entire BitLocker category, only
-                        'Exit' { exit }
+                        'Exit' { break MainSwitchLabel }
                     }
 
                     # Setting Hibernate file size to full after making sure OS drive is property encrypted for holding hibernate data
@@ -1686,11 +1686,11 @@ namespace SystemInfo
                                     Write-Host -Object "Recovery password will be saved in a text file in '$($MountPoint)\Drive $($MountPoint.Remove(1)) recovery password.txt'" -ForegroundColor Cyan
                                 }
                             } 'No' { break }
-                            'Exit' { exit }
+                            'Exit' { break MainSwitchLabel }
                         }
                     }
                 } 'No' { break BitLockerCategoryLabel }
-                'Exit' { exit }
+                'Exit' { break MainSwitchLabel }
             }
         }
         Function Invoke-TLSSecurity {
@@ -1727,7 +1727,7 @@ namespace SystemInfo
 
                     &$LGPOExe /q /m "$WorkingDir\Security-Baselines-X\TLS Security\registry.pol"
                 } 'No' { break TLSSecurityLabel }
-                'Exit' { exit }
+                'Exit' { break MainSwitchLabel }
             }
         }
         Function Invoke-LockScreen {
@@ -1754,7 +1754,7 @@ namespace SystemInfo
 
                             Write-Progress -Id 2 -Activity "Applying the Don't display last signed-in policy" -Completed
                         } 'No' { break LockScreenLastSignedInLabel }
-                        'Exit' { exit }
+                        'Exit' { break MainSwitchLabel }
                     }
 
                     # Enable CTRL + ALT + DEL
@@ -1766,10 +1766,10 @@ namespace SystemInfo
 
                             Write-Progress -Id 3 -Activity "Applying the Don't display last signed-in policy" -Completed
                         } 'No' { break CtrlAltDelLabel }
-                        'Exit' { exit }
+                        'Exit' { break MainSwitchLabel }
                     }
                 } 'No' { break LockScreenLabel }
-                'Exit' { exit }
+                'Exit' { break MainSwitchLabel }
             }
         }
         Function Invoke-UserAccountControl {
@@ -1795,7 +1795,7 @@ namespace SystemInfo
 
                             Write-Progress -Id 4 -Activity 'Hide the entry points for Fast User Switching policy' -Completed
                         } 'No' { break FastUserSwitchingLabel }
-                        'Exit' { exit }
+                        'Exit' { break MainSwitchLabel }
                     }
 
                     # Apply the Only elevate executables that are signed and validated policy
@@ -1807,10 +1807,10 @@ namespace SystemInfo
 
                             Write-Progress -Id 5 -Activity 'Only elevate executables that are signed and validated' -Completed
                         } 'No' { break ElevateSignedExeLabel }
-                        'Exit' { exit }
+                        'Exit' { break MainSwitchLabel }
                     }
                 } 'No' { break UACLabel }
-                'Exit' { exit }
+                'Exit' { break MainSwitchLabel }
             }
         }
         Function Invoke-WindowsFirewall {
@@ -1832,7 +1832,7 @@ namespace SystemInfo
                     Where-Object -FilterScript { $_.RuleGroup -eq '@%SystemRoot%\system32\firewallapi.dll,-37302' -and $_.Direction -eq 'inbound' } |
                     ForEach-Object -Process { Disable-NetFirewallRule -DisplayName $_.DisplayName }
                 } 'No' { break WindowsFirewallLabel }
-                'Exit' { exit }
+                'Exit' { break MainSwitchLabel }
             }
         }
         Function Invoke-OptionalWindowsFeatures {
@@ -1883,7 +1883,7 @@ namespace SystemInfo
                         }
                     }
                 } 'No' { break OptionalFeaturesLabel }
-                'Exit' { exit }
+                'Exit' { break MainSwitchLabel }
             }
         }
         Function Invoke-WindowsNetworking {
@@ -1907,7 +1907,7 @@ namespace SystemInfo
                     # Set the Network Location of all connections to Public
                     Get-NetConnectionProfile | Set-NetConnectionProfile -NetworkCategory Public
                 } 'No' { break WindowsNetworkingLabel }
-                'Exit' { exit }
+                'Exit' { break MainSwitchLabel }
             }
         }
         Function Invoke-MiscellaneousConfigurations {
@@ -1952,7 +1952,7 @@ namespace SystemInfo
                     # Creating new sub-folder automatically and extracting the custom views
                     Expand-Archive -Path "$WorkingDir\EventViewerCustomViews.zip" -DestinationPath "$env:SystemDrive\ProgramData\Microsoft\Event Viewer\Views\Hardening Script" -Force
                 } 'No' { break MiscellaneousLabel }
-                'Exit' { exit }
+                'Exit' { break MainSwitchLabel }
             }
         }
         Function Invoke-WindowsUpdateConfigurations {
@@ -1972,7 +1972,7 @@ namespace SystemInfo
 
                     &$LGPOExe /q /m "$WorkingDir\Security-Baselines-X\Windows Update Policies\registry.pol"
                 } 'No' { break WindowsUpdateLabel }
-                'Exit' { exit }
+                'Exit' { break MainSwitchLabel }
             }
         }
         Function Invoke-EdgeBrowserConfigurations {
@@ -1993,7 +1993,7 @@ namespace SystemInfo
                         }
                     }
                 } 'No' { break MSEdgeLabel }
-                'Exit' { exit }
+                'Exit' { break MainSwitchLabel }
             }
         }
         Function Invoke-CertificateCheckingCommands {
@@ -2024,7 +2024,7 @@ namespace SystemInfo
                     # Remove the downloaded sigcheck64.exe after using it
                     Remove-Item -Path .\sigcheck64.exe -Force
                 } 'No' { break CertCheckingLabel }
-                'Exit' { exit }
+                'Exit' { break MainSwitchLabel }
             }
         }
         Function Invoke-CountryIPBlocking {
@@ -2050,7 +2050,7 @@ namespace SystemInfo
                         } 'No' { break IPBlockingOFACLabel }
                     }
                 } 'No' { break IPBlockingLabel }
-                'Exit' { exit }
+                'Exit' { break MainSwitchLabel }
             }
         }
         Function Invoke-NonAdminCommands {
@@ -2078,12 +2078,13 @@ namespace SystemInfo
                         Write-ColorfulText -C Rainbow -I "################################################################################################`r`n"
                     }
                 } 'No' { break NonAdminLabel }
-                'Exit' { exit }
+                'Exit' { break MainSwitchLabel }
             }
         }
         #Endregion Hardening-Categories-Functions
 
-        switch ($Categories) {
+        # a label to break out of the main switch statements and run the finally block when user chooses to exit
+        :MainSwitchLabel switch ($Categories) {
             'WindowsBootManagerRevocations' { Invoke-WindowsBootManagerRevocations -RunUnattended }
             'MicrosoftSecurityBaselines' { Invoke-MicrosoftSecurityBaselines -RunUnattended }
             'Microsoft365AppsSecurityBaselines' { Invoke-Microsoft365AppsSecurityBaselines -RunUnattended }

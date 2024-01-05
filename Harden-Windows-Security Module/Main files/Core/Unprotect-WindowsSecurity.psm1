@@ -14,12 +14,6 @@ Function Unprotect-WindowsSecurity {
         # Import functions
         . "$HardeningModulePath\Resources\Functions.ps1"
 
-        # Defining default parameters for cmdlets
-        $PSDefaultParameterValues = @{
-            'Invoke-WebRequest:HttpVersion' = '3.0'
-            'Invoke-WebRequest:SslProtocol' = 'Tls12,Tls13'
-        }
-
         # Fetching Temp Directory
         [System.String]$CurrentUserTempDirectoryPath = [System.IO.Path]::GetTempPath()
 
@@ -129,7 +123,7 @@ Function Unprotect-WindowsSecurity {
                     Write-Progress -Id 0 -Activity 'Restoring the default Security group policies' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
 
                     # Download LGPO program from Microsoft servers
-                    Invoke-WebRequest -Uri 'https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/LGPO.zip' -OutFile '.\LGPO.zip' -ProgressAction SilentlyContinue
+                    Invoke-WebRequest -Uri 'https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/LGPO.zip' -OutFile '.\LGPO.zip' -ProgressAction SilentlyContinue -HttpVersion '3.0' -SslProtocol 'Tls12,Tls13'
 
                     # unzip the LGPO file
                     Expand-Archive -Path .\LGPO.zip -DestinationPath .\ -Force
@@ -190,6 +184,8 @@ Function Unprotect-WindowsSecurity {
                 Write-Host -Object "$($PSStyle.Foreground.FromRGB(236,68,155))Operation Completed, please restart your computer.$($PSStyle.Reset)"
             }
             finally {
+                Write-Verbose -Message 'Finally block is running'
+                
                 # End the progress bar and mark it as completed
                 Write-Progress -Id 0 -Activity 'Completed' -Completed
 

@@ -1152,24 +1152,24 @@ namespace SystemInfo
                         param ([System.Object[]]$KeyProtectorsInputFromScriptBlock)
 
                         return @"
-    BitLocker Drive Encryption recovery key
+BitLocker Drive Encryption recovery key
 
-    To verify that this is the correct recovery key, compare the start of the following identifier with the identifier value displayed on your PC.
+To verify that this is the correct recovery key, compare the start of the following identifier with the identifier value displayed on your PC.
 
-    Identifier:
+Identifier:
 
-            $(($KeyProtectorsInputFromScriptBlock | Where-Object -FilterScript { $_.keyprotectortype -eq 'RecoveryPassword' }).KeyProtectorId.Trim('{', '}'))
+        $(($KeyProtectorsInputFromScriptBlock | Where-Object -FilterScript { $_.keyprotectortype -eq 'RecoveryPassword' }).KeyProtectorId.Trim('{', '}'))
 
-    If the above identifier matches the one displayed by your PC, then use the following key to unlock your drive.
+If the above identifier matches the one displayed by your PC, then use the following key to unlock your drive.
 
-    Recovery Key:
+Recovery Key:
 
-            $(($KeyProtectorsInputFromScriptBlock | Where-Object -FilterScript { $_.keyprotectortype -eq 'RecoveryPassword' }).RecoveryPassword)
+        $(($KeyProtectorsInputFromScriptBlock | Where-Object -FilterScript { $_.keyprotectortype -eq 'RecoveryPassword' }).RecoveryPassword)
 
-    If the above identifier doesn't match the one displayed by your PC, then this isn't the right key to unlock your drive.
-    Try another recovery key, or refer to https://learn.microsoft.com/en-us/windows/security/operating-system-security/data-protection/bitlocker/recovery-overview for additional assistance.
+If the above identifier doesn't match the one displayed by your PC, then this isn't the right key to unlock your drive.
+Try another recovery key, or refer to https://learn.microsoft.com/en-us/windows/security/operating-system-security/data-protection/bitlocker/recovery-overview for additional assistance.
 
-    IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Vault which requires additional authentication to access.
+IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Vault which requires additional authentication to access.
 
 "@
                     }

@@ -73,7 +73,7 @@ Function Unprotect-WindowsSecurity {
                 # change location to the new directory
                 Write-Verbose -Message "Changing location to $WorkingDir"
                 Set-Location -Path $WorkingDir
-                
+
                 # Disable Mandatory ASLR
                 Set-ProcessMitigation -System -Disable ForceRelocateImages
 

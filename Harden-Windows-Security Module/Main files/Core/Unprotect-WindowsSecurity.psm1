@@ -28,7 +28,7 @@ Function Unprotect-WindowsSecurity {
         [System.String]$CurrentUserTempDirectoryPath = [System.IO.Path]::GetTempPath()
 
         # The total number of the steps for the parent/main progress bar to render
-        [System.Int16]$TotalMainSteps = 6
+        [System.Int16]$TotalMainSteps = 7
         [System.Int16]$CurrentMainStep = 0
 
         # do not prompt for confirmation if the -Force switch is used
@@ -183,6 +183,21 @@ Function Unprotect-WindowsSecurity {
 
                     # Set a tattooed Group policy for Svchost.exe process mitigations back to disabled state
                     Set-ItemProperty -Path 'Registry::\HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SCMConfig' -Name 'EnableSvchostMitigationPolicy' -Value '0' -Force -Type 'DWord' -ErrorAction SilentlyContinue
+                }
+
+                $CurrentMainStep++
+                Write-Progress -Id 0 -Activity 'Removing Downloads Defense Measures' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+                
+                Write-Verbose -Message 'Getting the currently deployed base policies'
+                if (((&"$env:SystemDrive\Windows\System32\CiTool.exe" -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { ($_.IsSystemPolicy -ne 'True') -and ($_.PolicyID -eq $_.BasePolicyID) -and ($_.FriendlyName -eq 'Downloads-Defense-Measures') -and ($_.IsOnDisk -eq 'True') })) {
+
+                    if (-NOT (Get-InstalledModule -Name 'WDACConfig' -ErrorAction SilentlyContinue -Verbose:$false)) {
+                        Write-Verbose -Message 'Installing WDACConfig module because it is not installed'
+                        Install-Module -Name 'WDACConfig' -Force -Verbose:$false
+                    }
+
+                    Write-Verbose -Message 'Removing the Downloads Defense Measures WDAC policy'
+                    Remove-WDACConfig -UnsignedOrSupplemental -PolicyNames Downloads-Defense-Measures -SkipVersionCheck
                 }
 
                 # Write in Fuchsia color

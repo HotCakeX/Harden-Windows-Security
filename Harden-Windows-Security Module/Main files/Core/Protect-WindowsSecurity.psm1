@@ -2112,9 +2112,9 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 'Yes' {
                     Write-Progress -Id 0 -Activity 'Downloads Defense Measures category' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
 
-                    if (-NOT (Get-InstalledModule -Name 'WDACConfig')) {
+                    if (-NOT (Get-InstalledModule -Name 'WDACConfig' -ErrorAction SilentlyContinue -Verbose:$false)) {
                         Write-Verbose -Message 'Installing WDACConfig module because it is not installed'
-                        Install-Module -Name 'WDACConfig' -Force
+                        Install-Module -Name 'WDACConfig' -Force -Verbose:$false
                     }
 
                     Write-Verbose -Message 'Getting the currently deployed base policy names'
@@ -2129,7 +2129,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
 
                         # Getting the current user's name
                         [System.Security.Principal.SecurityIdentifier]$UserSID = [System.Security.Principal.WindowsIdentity]::GetCurrent().user.value
-                        [System.String]$UserName = (Get-LocalUser | where-object -FilterScript {$_.SID -eq $UserSID}).name
+                        [System.String]$UserName = (Get-LocalUser | Where-Object -FilterScript { $_.SID -eq $UserSID }).name
 
                         # Checking if the Edge preferences file exists
                         if (Test-Path -Path "$env:SystemDrive\Users\$UserName\AppData\Local\Microsoft\Edge\User Data\Default\Preferences") {
@@ -2146,7 +2146,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                         }
 
                         Write-Verbose -Message 'Creating and deploying the Downloads-Defense-Measures policy'
-                        New-DenyWDACConfig -PathWildCards -PolicyName 'Downloads-Defense-Measures' -FolderPath "$DownloadsPathSystem\*" -Deploy -Verbose:$Verbose
+                        New-DenyWDACConfig -PathWildCards -PolicyName 'Downloads-Defense-Measures' -FolderPath "$DownloadsPathSystem\*" -Deploy -Verbose:$Verbose -SkipVersionCheck
                     }
                     else {
                         Write-Verbose -Message 'The Downloads-Defense-Measures policy is already deployed'

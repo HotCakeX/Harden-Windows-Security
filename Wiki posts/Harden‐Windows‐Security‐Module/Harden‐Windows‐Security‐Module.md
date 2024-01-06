@@ -143,6 +143,8 @@ Protect-WindowsSecurity
 
 The following is the exact enumeration of the items that will be executed based on the user chosen categories when operating in headless/silent mode. After careful consideration, came to the conclusion that some sub-categories need to be omitted, for instance because they necessitate explicit user input.
 
+<br>
+
 <div align="center">
 
 | Indicator| Description                   |
@@ -187,6 +189,11 @@ The following is the exact enumeration of the items that will be executed based 
     - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/rainbow-planet-heart.gif" alt="planet rainbow heart indicating item that runs in Windows Hardening module" width="30"> Block State Sponsors of Terrorism IP blocks
     - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/orange-point.gif" alt="spinning random dots indicating the sub-category won't run in headless mode in Windows Hardening module" width="30"> Block OFAC Sanctioned Countries IP blocks
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/rainbow-planet-heart.gif" alt="planet rainbow heart indicating item that runs in Windows Hardening module" width="30"> Non-Admin Commands
+
+<br>
+
+> [!IMPORTANT]\
+> It is highly recommended to always include the Microsoft Security Baselines category and place it first as it forms the foundation of all subsequent categories.
 
 <br>
 

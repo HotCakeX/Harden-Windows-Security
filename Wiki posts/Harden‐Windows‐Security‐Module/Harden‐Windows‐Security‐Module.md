@@ -1,8 +1,10 @@
 # Harden Windows Security Module
 
-This module offers rigorous compliance verification and security assessment. It enables you to evaluate the conformity of your system based on the security standards and recommendations of this repository. The module employs various techniques such as Security Policy, PowerShell cmdlet and Registry keys to conduct the checks.
+This module can apply all of the hardening measures described in the readme. It also offers rigorous compliance verification and security assessment. It enables you to evaluate the conformity of your system based on the security standards and recommendations of this repository. The module employs various techniques such as Security Policy, PowerShell cmdlet and Registry keys to conduct the checks.
 
 Compliance checking strictly follows the guidelines and security measures of this GitHub repository. Any minor deviation from them will result in a `false` value for the corresponding check.
+
+The module is compatible with any system locale and language.
 
 <br>
 
@@ -10,11 +12,41 @@ Compliance checking strictly follows the guidelines and security measures of thi
 
 <br>
 
-## How It Works
+## How the Compliance Checking Works
 
 This module verifies and validates all of the security measures applied by the Harden Windows Security script. It checks registry keys if the script uses Group Policy or registry, PowerShell cmdlets if the script invokes them and Security Group Policy if the script applies them.
 
-The module is compatible with any system locale and language.
+### Security Scoring System
+
+Based on the score that you get you will see a different ASCII art!
+
+<br>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+
+<br>
+
+## How the Protection Works
+
+The `Protect-WindowsSecurity` cmdlet's hybrid design allows it to operate as a standalone script and as a module component. It allows it to operate with and without administrator privileges. You can use this cmdlet in both interactive and non-interactive modes.
+
+In Interactive mode, the cmdlet will ask you to confirm the changes before applying them. In non-interactive mode, you can pre-configure the hardening categories you want to apply and the cmdlet will apply them without asking for confirmation.
+
+<br>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+
+<br>
+
+## How the Protections Removal Works
+
+You can use the `Unprotect-WindowsSecurity` cmdlet to remove all of the hardening measures applied by the `Protect-WindowsSecurity` cmdlet.
+
+* Bitlocker Encrypted drives are not decrypted when you invoke this cmdlet.
+
+* Security features related to [Device Guard](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Device-Guard-and-Virtualization-Based-Security-in-Windows) that are activated by UEFI Lock remain enabled even after you execute this cmdlet. [Learn more here](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Device-Guard-and-Virtualization-Based-Security-in-Windows#about-uefi-lock)
+
+* Windows optional features that are enabled or disabled by `Protect-WindowsSecurity` cmdlet are not affected.
 
 <br>
 
@@ -59,7 +91,7 @@ The module checks for updates every time you run it and updates itself if there 
 
 ## How to Install and Use
 
-### You can install this module from [PowerShell gallery](https://www.powershellgallery.com/packages/Harden-Windows-Security-Module/)
+### Install the Harden Windows Security Module from [PowerShell Gallery](https://www.powershellgallery.com/packages/Harden-Windows-Security-Module/)
 
 ```powershell
 Install-Module -Name 'Harden-Windows-Security-Module' -Force
@@ -81,6 +113,12 @@ Protect-WindowsSecurity
 
 ```powershell
 Unprotect-WindowsSecurity
+```
+
+### Uninstall the Harden Windows Security Module
+
+```powershell
+Uninstall-Module -Name 'Harden-Windows-Security-Module' -Force -AllVersions
 ```
 
 <br>
@@ -118,44 +156,6 @@ Unprotect-WindowsSecurity [-OnlyProcessMitigations]
 ### 1 Optional Parameter
 
 * `[-OnlyProcessMitigations]`: Indicates that the cmdlet will only remove Process Mitigations (Exploit Protection) settings and doesn't change anything else.
-
-<br>
-
-<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
-
-<br>
-
-## Notes for Unprotect-WindowsSecurity Cmdlet
-
-1. Bitlocker Encrypted drives are not decrypted when you invoke this cmdlet.
-
-2. Security features related to [Device Guard](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Device-Guard-and-Virtualization-Based-Security-in-Windows) that are activated by UEFI Lock remain enabled even after you execute this cmdlet. [Learn more here](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Device-Guard-and-Virtualization-Based-Security-in-Windows#about-uefi-lock)
-
-3. Windows optional features that are enabled or disabled by `Protect-WindowsSecurity` cmdlet are not affected.
-
-<br>
-
-<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
-
-<br>
-
-## Security Scoring System
-
-Based on the score that you get you will see a different ASCII art!
-
-<br>
-
-<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
-
-<br>
-
-## How to Uninstall the Module
-
-<br>
-
-```powershell
-Uninstall-Module -Name 'Harden-Windows-Security-Module' -Force -AllVersions
-```
 
 <br>
 

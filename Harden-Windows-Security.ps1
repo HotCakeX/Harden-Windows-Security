@@ -1,29 +1,64 @@
 #Requires -Version 7.4
+#Requires -PSEdition Core
 Function Protect-WindowsSecurity {
     [CmdletBinding()]
     param (
         [parameter(Mandatory = $false)]
-        [ValidateSet(
-            'WindowsBootManagerRevocations',
-            'MicrosoftSecurityBaselines',
-            'Microsoft365AppsSecurityBaselines',
-            'MicrosoftDefender',
-            'AttackSurfaceReductionRules',
-            'BitLockerSettings',
-            'TLSSecurity',
-            'LockScreen',
-            'UserAccountControl',
-            'WindowsFirewall',
-            'OptionalWindowsFeatures',
-            'WindowsNetworking',
-            'MiscellaneousConfigurations',
-            'WindowsUpdateConfigurations',
-            'EdgeBrowserConfigurations',
-            'CertificateCheckingCommands',
-            'CountryIPBlocking',
-            'NonAdminCommands'
-        )][System.String[]]$Categories
+        [ArgumentCompleter({
+                # Get the current command and the already bound parameters
+                param($CommandName, $ParameterName, $WordToComplete, $CommandAst, $FakeBoundParameters)
+
+                # Find all string constants in the AST
+                $Existing = $CommandAst.FindAll(
+                    # The predicate scriptblock to define the criteria for filtering the AST nodes
+                    {
+                        $args[0] -is [System.Management.Automation.Language.StringConstantExpressionAst]
+                    },
+                    # The recurse flag, whether to search nested scriptblocks or not.
+                    $false
+                ).Value
+
+                [Categoriex]::new().GetValidValues() | ForEach-Object -Process {
+                    # Check if the item is already selected
+                    if ($_ -notin $Existing) {
+                        # Return the item
+                        $_
+                    }
+                }
+            })]
+        [ValidateScript({
+                if ($_ -notin [Categoriex]::new().GetValidValues()) { throw "Invalid Category Name: $_" }
+                $true
+            })]
+        [System.String[]]$Categories
     )
+
+    # This class provides a list of valid values for the Categories parameter of the Protect-WindowsSecurity function
+    Class Categoriex : System.Management.Automation.IValidateSetValuesGenerator {
+        [System.String[]] GetValidValues() {
+            $Categoriex = @(
+                'WindowsBootManagerRevocations',
+                'MicrosoftSecurityBaselines',
+                'Microsoft365AppsSecurityBaselines',
+                'MicrosoftDefender',
+                'AttackSurfaceReductionRules',
+                'BitLockerSettings',
+                'TLSSecurity',
+                'LockScreen',
+                'UserAccountControl',
+                'WindowsFirewall',
+                'OptionalWindowsFeatures',
+                'WindowsNetworking',
+                'MiscellaneousConfigurations',
+                'WindowsUpdateConfigurations',
+                'EdgeBrowserConfigurations',
+                'CertificateCheckingCommands',
+                'CountryIPBlocking',
+                'NonAdminCommands'
+            )
+            return [System.String[]]$Categoriex
+        }
+    }
 
     $ErrorActionPreference = 'Stop'
 
@@ -44,9 +79,15 @@ Function Protect-WindowsSecurity {
     if ($PSCommandPath) {
         if ((Split-Path -Path $PSCommandPath -Leaf) -eq 'Protect-WindowsSecurity.psm1') {
             Write-Verbose -Message 'Running Protect-WindowsSecurity function as part of the Harden-Windows-Security module'
-            # Import functions
-            . "$HardeningModulePath\Resources\Functions.ps1"
-            [System.Boolean]$IsLocally = $true
+
+            Write-Verbose -Message 'Importing the required sub-modules'
+            Import-Module -FullyQualifiedName "$HardeningModulePath\Shared\Update-self.psm1" -Force -Verbose:$false
+
+            # Set the flag to true to indicate that the module is running locally
+            $IsLocally = $true
+
+            Write-Verbose -Message 'Checking for updates...'
+            Update-Self -InvocationStatement $MyInvocation.Statement
         }
     }
     else {
@@ -347,7 +388,7 @@ Function Protect-WindowsSecurity {
 
                     }
                     'Skip encryptions altogether' { break BitLockerCategoryLabel } # Breaks from the BitLocker category and won't process Non-OS Drives
-                    'Exit' { exit }
+                    'Exit' { break MainSwitchLabel }
                 }
             }
             until ($AvailableRemovableDrives)
@@ -486,7 +527,7 @@ Function Protect-WindowsSecurity {
             [System.String[]]$IPList,
             [parameter(Mandatory = $True)][System.String]$ListName
         )
-        
+
         # converts the list from string to string array
         [System.String[]]$IPList = $IPList -split '\r?\n' -ne ''
 
@@ -592,7 +633,7 @@ Function Protect-WindowsSecurity {
     }
 
     # doing a try-catch-finally block on the entire script so that when CTRL + C is pressed to forcefully exit the script,
-    # or break is passed, clean up will still happen for secure exit. Any errors that happens will be thrown
+    # or break is passed, clean up will still happen for secure exit. Any error that happens will be thrown
     try {
 
         if (!$Categories) {
@@ -605,15 +646,15 @@ Function Protect-WindowsSecurity {
         #region RequirementsCheck
         # check if user's OS is Windows Home edition
         if ((Get-CimInstance -ClassName Win32_OperatingSystem).OperatingSystemSKU -eq '101') {
-            Throw 'Windows Home edition detected, exiting...'
+            Throw [System.PlatformNotSupportedException] 'Windows Home edition detected, exiting...'
         }
 
         # check if user's OS is the latest build
         # Get OS build version
         [System.Decimal]$OSBuild = [System.Environment]::OSVersion.Version.Build
-        # Get Update Build Revision (UBR) number
+        # Get the Update Build Revision (UBR) number
         [System.Decimal]$UBR = Get-ItemPropertyValue -Path 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion' -Name 'UBR'
-        # Create full OS build number as seen in Windows Settings
+        # Create the full OS build number as seen in Windows Settings
         [System.Decimal]$FullOSBuild = "$OSBuild.$UBR"
 
         # Make sure the current OS build is equal or greater than the required build
@@ -791,7 +832,7 @@ Function Protect-WindowsSecurity {
         Function Invoke-WindowsBootManagerRevocations {
             param([System.Management.Automation.SwitchParameter]$RunUnattended)
             # If admin rights are not detected, break out of the function
-            if (!$IsAdmin) { break }
+            if (!$IsAdmin) { return }
 
             $CurrentMainStep++
             $Host.UI.RawUI.WindowTitle = '🫶 Category 0'
@@ -806,12 +847,12 @@ Function Protect-WindowsSecurity {
                     Write-Host -Object 'The required security measures have been applied to the system' -ForegroundColor Green
                     Write-Warning -Message 'Make sure to restart your device once. After restart, wait for at least 5-10 minutes and perform a 2nd restart to finish applying security measures completely.'
                 } 'No' { break Category0Label }
-                'Exit' { exit }
+                'Exit' { break MainSwitchLabel }
             }
         }
         Function Invoke-MicrosoftSecurityBaselines {
             param([System.Management.Automation.SwitchParameter]$RunUnattended)
-            if (!$IsAdmin) { break }
+            if (!$IsAdmin) { return }
 
             $CurrentMainStep++
             $Host.UI.RawUI.WindowTitle = '🔐 Security Baselines'
@@ -822,13 +863,13 @@ Function Protect-WindowsSecurity {
                 'Yes' {
                     Write-Progress -Id 0 -Activity 'Microsoft Security Baseline' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
 
-                    # Run the official PowerShell script included in the Microsoft Security Baseline file we downloaded from Microsoft servers
+                    # Run the official PowerShell script included in the Microsoft Security Baseline file downloaded from Microsoft servers
                     .\Baseline-LocalInstall.ps1 -Win11NonDomainJoined
                 }
                 'Yes, With the Optional Overrides (Recommended)' {
                     Write-Progress -Id 0 -Activity 'Microsoft Security Baseline' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
 
-                    # Run the official PowerShell script included in the Microsoft Security Baseline file we downloaded from Microsoft servers
+                    # Run the official PowerShell script included in the Microsoft Security Baseline file downloaded from Microsoft servers
                     .\Baseline-LocalInstall.ps1 -Win11NonDomainJoined
 
                     Start-Sleep -Seconds 1
@@ -841,13 +882,13 @@ Function Protect-WindowsSecurity {
                     SCHTASKS.EXE /Change /TN \Microsoft\XblGameSave\XblGameSaveTask /Enable
                 }
                 'No' { break MicrosoftSecurityBaselinesCategoryLabel }
-                'Exit' { exit }
+                'Exit' { break MainSwitchLabel }
             }
             Pop-Location
         }
         Function Invoke-Microsoft365AppsSecurityBaselines {
             param([System.Management.Automation.SwitchParameter]$RunUnattended)
-            if (!$IsAdmin) { break }
+            if (!$IsAdmin) { return }
 
             $CurrentMainStep++
             $Host.UI.RawUI.WindowTitle = '🧁 M365 Apps Security'
@@ -858,17 +899,17 @@ Function Protect-WindowsSecurity {
                     Write-Progress -Id 0 -Activity 'Microsoft 365 Apps Security Baseline' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
 
                     Push-Location -Path "$Microsoft365SecurityBaselinePath\Scripts\"
-                    # Run the official PowerShell script included in the Microsoft Security Baseline file we downloaded from Microsoft servers
+                    # Run the official PowerShell script included in the Microsoft Security Baseline file downloaded from Microsoft servers
                     .\Baseline-LocalInstall.ps1
                     Pop-Location
 
                 } 'No' { break Microsoft365AppsSecurityBaselinesCategoryLabel }
-                'Exit' { exit }
+                'Exit' { break MainSwitchLabel }
             }
         }
         Function Invoke-MicrosoftDefender {
             param([System.Management.Automation.SwitchParameter]$RunUnattended)
-            if (!$IsAdmin) { break }
+            if (!$IsAdmin) { return }
 
             $CurrentMainStep++
             $Host.UI.RawUI.WindowTitle = '🍁 MSFT Defender'
@@ -879,7 +920,7 @@ Function Protect-WindowsSecurity {
 
                     &$LGPOExe /q /m "$WorkingDir\Security-Baselines-X\Microsoft Defender Policies\registry.pol"
 
-                    # Optimizing Network Protection Performance of Windows Defender
+                    # Optimizing Network Protection Performance of the Microsoft Defender
                     Set-MpPreference -AllowSwitchToAsyncInspection $True
 
                     # Configure whether real-time protection and Security Intelligence Updates are enabled during OOBE
@@ -897,7 +938,7 @@ Function Protect-WindowsSecurity {
                     # Network protection blocks network traffic instead of displaying a warning
                     Set-MpPreference -EnableConvertWarnToBlock $True
 
-                    # Add OneDrive folders of all user accounts (personal and work accounts) to the Controlled Folder Access for Ransomware Protection
+                    # Add the OneDrive folders of all the user accounts (personal and work accounts) to the Controlled Folder Access for Ransomware Protection
                     Get-ChildItem "$env:SystemDrive\Users\*\OneDrive*\" -Directory | ForEach-Object -Process { Add-MpPreference -ControlledFolderAccessProtectedFolders $_ }
 
                     # Enable Mandatory ASLR Exploit Protection system-wide
@@ -962,7 +1003,7 @@ Function Protect-WindowsSecurity {
                                 # Let the optional diagnostic data be enabled automatically
                                 $ShouldEnableOptionalDiagnosticData = $True
                             } 'No' { break SmartAppControlLabel }
-                            'Exit' { exit }
+                            'Exit' { break MainSwitchLabel }
                         }
                     }
 
@@ -977,7 +1018,7 @@ Function Protect-WindowsSecurity {
                                 'Yes' {
                                     &$LGPOExe /q /m "$WorkingDir\Security-Baselines-X\Microsoft Defender Policies\Optional Diagnostic Data\registry.pol"
                                 } 'No' { break SmartAppControlLabel2 }
-                                'Exit' { exit }
+                                'Exit' { break MainSwitchLabel }
                             }
                         }
                     }
@@ -986,9 +1027,11 @@ Function Protect-WindowsSecurity {
                     [System.String]$BlockListScheduledTaskState = (Get-ScheduledTask -TaskName 'MSFT Driver Block list update' -TaskPath '\MSFT Driver Block list update\' -ErrorAction SilentlyContinue).State
 
                     # Create scheduled task for fast weekly Microsoft recommended driver block list update if it doesn't exist or exists but is not Ready/Running
-                    if (-NOT (($BlockListScheduledTaskState -eq 'Ready' -or $BlockListScheduledTaskState -eq 'Running'))) {
+                    if (($BlockListScheduledTaskState -notin 'Ready', 'Running')) {
                         :TaskSchedulerCreationLabel switch ($RunUnattended ? 'Yes' : (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nCreate scheduled task for fast weekly Microsoft recommended driver block list update ?")) {
                             'Yes' {
+                                Write-Verbose -Message 'Creating scheduled task for fast weekly Microsoft recommended driver block list update'
+
                                 # Create a scheduled task action, this defines how to download and install the latest Microsoft Recommended Driver Block Rules
                                 [Microsoft.Management.Infrastructure.CimInstance]$Action = New-ScheduledTaskAction -Execute 'Powershell.exe' `
                                     -Argument '-NoProfile -WindowStyle Hidden -command "& {try {Invoke-WebRequest -Uri "https://aka.ms/VulnerableDriverBlockList" -OutFile VulnerableDriverBlockList.zip -ErrorAction Stop}catch{exit 1};Expand-Archive -Path .\VulnerableDriverBlockList.zip -DestinationPath "VulnerableDriverBlockList" -Force;Rename-Item -Path .\VulnerableDriverBlockList\SiPolicy_Enforced.p7b -NewName "SiPolicy.p7b" -Force;Copy-Item -Path .\VulnerableDriverBlockList\SiPolicy.p7b -Destination "$env:SystemDrive\Windows\System32\CodeIntegrity";citool --refresh -json;Remove-Item -Path .\VulnerableDriverBlockList -Recurse -Force;Remove-Item -Path .\VulnerableDriverBlockList.zip -Force; exit 0;}"'
@@ -1008,11 +1051,11 @@ Function Protect-WindowsSecurity {
                                 # Add the advanced settings we defined above to the scheduled task
                                 Set-ScheduledTask -TaskName 'MSFT Driver Block list update' -TaskPath 'MSFT Driver Block list update' -Settings $TaskSettings
                             } 'No' { break TaskSchedulerCreationLabel }
-                            'Exit' { exit }
+                            'Exit' { break MainSwitchLabel }
                         }
                     }
 
-                    # Only show this prompt if Engine and Platform update channels are not already set to Beta
+                    # Only display this prompt if Engine and Platform update channels are not already set to Beta
                     if ( ($MDAVPreferencesCurrent.EngineUpdatesChannel -ne '2') -or ($MDAVPreferencesCurrent.PlatformUpdatesChannel -ne '2') ) {
                         # Set Microsoft Defender engine and platform update channel to beta - Devices in the Windows Insider Program are subscribed to this channel by default.
                         :DefenderUpdateChannelsLabel switch ($RunUnattended ? 'No' : (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nSet Microsoft Defender engine and platform update channel to beta ?")) {
@@ -1020,17 +1063,17 @@ Function Protect-WindowsSecurity {
                                 Set-MpPreference -EngineUpdatesChannel beta
                                 Set-MpPreference -PlatformUpdatesChannel beta
                             } 'No' { break DefenderUpdateChannelsLabel }
-                            'Exit' { exit }
+                            'Exit' { break MainSwitchLabel }
                         }
                     }
 
                 } 'No' { break MicrosoftDefenderLabel }
-                'Exit' { exit }
+                'Exit' { break MainSwitchLabel }
             }
         }
         Function Invoke-AttackSurfaceReductionRules {
             param([System.Management.Automation.SwitchParameter]$RunUnattended)
-            if (!$IsAdmin) { break }
+            if (!$IsAdmin) { return }
 
             $CurrentMainStep++
             $Host.UI.RawUI.WindowTitle = '🪷 ASR Rules'
@@ -1042,12 +1085,12 @@ Function Protect-WindowsSecurity {
 
                     &$LGPOExe /q /m "$WorkingDir\Security-Baselines-X\Attack Surface Reduction Rules Policies\registry.pol"
                 } 'No' { break ASRRulesCategoryLabel }
-                'Exit' { exit }
+                'Exit' { break MainSwitchLabel }
             }
         }
         Function Invoke-BitLockerSettings {
             param([System.Management.Automation.SwitchParameter]$RunUnattended)
-            if (!$IsAdmin) { break }
+            if (!$IsAdmin) { return }
 
             $CurrentMainStep++
             $Host.UI.RawUI.WindowTitle = '🔑 BitLocker'
@@ -1130,8 +1173,7 @@ namespace SystemInfo
                         &$LGPOExe /q /m "$WorkingDir\Security-Baselines-X\Overrides for Microsoft Security Baseline\Bitlocker DMA\Bitlocker DMA Countermeasure ON\Registry.pol"
                     }
 
-                    # Set-up Bitlocker encryption for OS Drive with TPMandPIN and recovery password keyprotectors and Verify its implementation
-                    # check, make sure there is no CD/DVD drives in the system, because Bitlocker throws an error when there is
+                    # Make sure there is no CD/DVD drives or mounted ISO in the system, because BitLocker throws an error when there is
                     if ((Get-CimInstance -ClassName Win32_CDROMDrive -Property *).MediaLoaded) {
                         Write-Warning -Message 'Remove any CD/DVD drives or mounted images/ISO from the system and run the Bitlocker category again.'
                         # break from the entire BitLocker category and continue to the next category
@@ -1139,7 +1181,7 @@ namespace SystemInfo
                     }
 
                     # check make sure Bitlocker isn't in the middle of decryption/encryption operation (on System Drive)
-                    if ((Get-BitLockerVolume -MountPoint $env:SystemDrive).EncryptionPercentage -ne '100' -and (Get-BitLockerVolume -MountPoint $env:SystemDrive).EncryptionPercentage -ne '0') {
+                    if ((Get-BitLockerVolume -MountPoint $env:SystemDrive).EncryptionPercentage -notin '100', '0') {
                         $EncryptionPercentageVar = (Get-BitLockerVolume -MountPoint $env:SystemDrive).EncryptionPercentage
                         Write-Host -Object "`nPlease wait for Bitlocker to finish encrypting or decrypting the Operation System Drive." -ForegroundColor Yellow
                         Write-Host -Object "Drive $env:SystemDrive encryption is currently at $EncryptionPercentageVar percent." -ForegroundColor Yellow
@@ -1147,29 +1189,29 @@ namespace SystemInfo
                         break BitLockerCategoryLabel
                     }
 
-                    # A script block that generates recovery code just like the Windows does
+                    # A script block that generates recovery codes just like Windows does
                     [System.Management.Automation.ScriptBlock]$RecoveryPasswordContentGenerator = {
                         param ([System.Object[]]$KeyProtectorsInputFromScriptBlock)
 
                         return @"
-    BitLocker Drive Encryption recovery key
+BitLocker Drive Encryption recovery key
 
-    To verify that this is the correct recovery key, compare the start of the following identifier with the identifier value displayed on your PC.
+To verify that this is the correct recovery key, compare the start of the following identifier with the identifier value displayed on your PC.
 
-    Identifier:
+Identifier:
 
-            $(($KeyProtectorsInputFromScriptBlock | Where-Object -FilterScript { $_.keyprotectortype -eq 'RecoveryPassword' }).KeyProtectorId.Trim('{', '}'))
+        $(($KeyProtectorsInputFromScriptBlock | Where-Object -FilterScript { $_.keyprotectortype -eq 'RecoveryPassword' }).KeyProtectorId.Trim('{', '}'))
 
-    If the above identifier matches the one displayed by your PC, then use the following key to unlock your drive.
+If the above identifier matches the one displayed by your PC, then use the following key to unlock your drive.
 
-    Recovery Key:
+Recovery Key:
 
-            $(($KeyProtectorsInputFromScriptBlock | Where-Object -FilterScript { $_.keyprotectortype -eq 'RecoveryPassword' }).RecoveryPassword)
+        $(($KeyProtectorsInputFromScriptBlock | Where-Object -FilterScript { $_.keyprotectortype -eq 'RecoveryPassword' }).RecoveryPassword)
 
-    If the above identifier doesn't match the one displayed by your PC, then this isn't the right key to unlock your drive.
-    Try another recovery key, or refer to https://learn.microsoft.com/en-us/windows/security/operating-system-security/data-protection/bitlocker/recovery-overview for additional assistance.
+If the above identifier doesn't match the one displayed by your PC, then this isn't the right key to unlock your drive.
+Try another recovery key, or refer to https://learn.microsoft.com/en-us/windows/security/operating-system-security/data-protection/bitlocker/recovery-overview for additional assistance.
 
-    IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Vault which requires additional authentication to access.
+IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Vault which requires additional authentication to access.
 
 "@
                     }
@@ -1197,7 +1239,7 @@ namespace SystemInfo
 
                                     switch (Select-Option -SubCategory -Options 'Yes', 'Skip OS Drive' , 'Exit' -Message "`nThe OS Drive is already encrypted with Enhanced Security level." -ExtraMessage "Are you sure you want to change it to Normal Security level?`n" ) {
                                         'Skip OS Drive' { break OSDriveEncryptionLabel }
-                                        'Exit' { exit }
+                                        'Exit' { break MainSwitchLabel }
                                     }
                                 }
 
@@ -1255,6 +1297,7 @@ namespace SystemInfo
                                         }
                                         catch {
                                             Write-Host -Object 'These errors occurred, run Bitlocker category again after meeting the requirements' -ForegroundColor Red
+                                            # Display errors in non-terminating way
                                             $_
                                             break BitLockerCategoryLabel
                                         }
@@ -1457,7 +1500,7 @@ namespace SystemInfo
                             }
                         }
                         'Skip encryptions altogether' { break BitLockerCategoryLabel } # Exit the entire BitLocker category, only
-                        'Exit' { exit }
+                        'Exit' { break MainSwitchLabel }
                     }
 
                     # Setting Hibernate file size to full after making sure OS drive is property encrypted for holding hibernate data
@@ -1523,7 +1566,7 @@ namespace SystemInfo
                             'Yes' {
 
                                 # Check if the non-OS drive that the user selected to be encrypted is not in the middle of any encryption/decryption operation
-                                if ((Get-BitLockerVolume -MountPoint $MountPoint).EncryptionPercentage -ne '100' -and (Get-BitLockerVolume -MountPoint $MountPoint).EncryptionPercentage -ne '0') {
+                                if ((Get-BitLockerVolume -MountPoint $MountPoint).EncryptionPercentage -notin '100', '0') {
                                     # Check if the drive isn't already encrypted and locked
                                     if ((Get-BitLockerVolume -MountPoint $MountPoint).lockstatus -eq 'Locked') {
                                         Write-Host -Object "`nThe drive $MountPoint is already encrypted and locked." -ForegroundColor Magenta
@@ -1686,16 +1729,16 @@ namespace SystemInfo
                                     Write-Host -Object "Recovery password will be saved in a text file in '$($MountPoint)\Drive $($MountPoint.Remove(1)) recovery password.txt'" -ForegroundColor Cyan
                                 }
                             } 'No' { break }
-                            'Exit' { exit }
+                            'Exit' { break MainSwitchLabel }
                         }
                     }
                 } 'No' { break BitLockerCategoryLabel }
-                'Exit' { exit }
+                'Exit' { break MainSwitchLabel }
             }
         }
         Function Invoke-TLSSecurity {
             param([System.Management.Automation.SwitchParameter]$RunUnattended)
-            if (!$IsAdmin) { break }
+            if (!$IsAdmin) { return }
 
             $CurrentMainStep++
             $Host.UI.RawUI.WindowTitle = '🛡️ TLS'
@@ -1727,12 +1770,12 @@ namespace SystemInfo
 
                     &$LGPOExe /q /m "$WorkingDir\Security-Baselines-X\TLS Security\registry.pol"
                 } 'No' { break TLSSecurityLabel }
-                'Exit' { exit }
+                'Exit' { break MainSwitchLabel }
             }
         }
         Function Invoke-LockScreen {
             param([System.Management.Automation.SwitchParameter]$RunUnattended)
-            if (!$IsAdmin) { break }
+            if (!$IsAdmin) { return }
 
             $CurrentMainStep++
             $Host.UI.RawUI.WindowTitle = '💻 Lock Screen'
@@ -1754,7 +1797,7 @@ namespace SystemInfo
 
                             Write-Progress -Id 2 -Activity "Applying the Don't display last signed-in policy" -Completed
                         } 'No' { break LockScreenLastSignedInLabel }
-                        'Exit' { exit }
+                        'Exit' { break MainSwitchLabel }
                     }
 
                     # Enable CTRL + ALT + DEL
@@ -1766,15 +1809,15 @@ namespace SystemInfo
 
                             Write-Progress -Id 3 -Activity "Applying the Don't display last signed-in policy" -Completed
                         } 'No' { break CtrlAltDelLabel }
-                        'Exit' { exit }
+                        'Exit' { break MainSwitchLabel }
                     }
                 } 'No' { break LockScreenLabel }
-                'Exit' { exit }
+                'Exit' { break MainSwitchLabel }
             }
         }
         Function Invoke-UserAccountControl {
             param([System.Management.Automation.SwitchParameter]$RunUnattended)
-            if (!$IsAdmin) { break }
+            if (!$IsAdmin) { return }
 
             $CurrentMainStep++
             $Host.UI.RawUI.WindowTitle = '💎 UAC'
@@ -1795,7 +1838,7 @@ namespace SystemInfo
 
                             Write-Progress -Id 4 -Activity 'Hide the entry points for Fast User Switching policy' -Completed
                         } 'No' { break FastUserSwitchingLabel }
-                        'Exit' { exit }
+                        'Exit' { break MainSwitchLabel }
                     }
 
                     # Apply the Only elevate executables that are signed and validated policy
@@ -1807,15 +1850,15 @@ namespace SystemInfo
 
                             Write-Progress -Id 5 -Activity 'Only elevate executables that are signed and validated' -Completed
                         } 'No' { break ElevateSignedExeLabel }
-                        'Exit' { exit }
+                        'Exit' { break MainSwitchLabel }
                     }
                 } 'No' { break UACLabel }
-                'Exit' { exit }
+                'Exit' { break MainSwitchLabel }
             }
         }
         Function Invoke-WindowsFirewall {
             param([System.Management.Automation.SwitchParameter]$RunUnattended)
-            if (!$IsAdmin) { break }
+            if (!$IsAdmin) { return }
 
             $CurrentMainStep++
             $Host.UI.RawUI.WindowTitle = '🔥 Firewall'
@@ -1832,12 +1875,12 @@ namespace SystemInfo
                     Where-Object -FilterScript { $_.RuleGroup -eq '@%SystemRoot%\system32\firewallapi.dll,-37302' -and $_.Direction -eq 'inbound' } |
                     ForEach-Object -Process { Disable-NetFirewallRule -DisplayName $_.DisplayName }
                 } 'No' { break WindowsFirewallLabel }
-                'Exit' { exit }
+                'Exit' { break MainSwitchLabel }
             }
         }
         Function Invoke-OptionalWindowsFeatures {
             param([System.Management.Automation.SwitchParameter]$RunUnattended)
-            if (!$IsAdmin) { break }
+            if (!$IsAdmin) { return }
 
             $CurrentMainStep++
             $Host.UI.RawUI.WindowTitle = '🏅 Optional Features'
@@ -1848,7 +1891,6 @@ namespace SystemInfo
                     Write-Progress -Id 0 -Activity 'Optional Windows Features' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
 
                     # PowerShell Core (only if installed from Microsoft Store) has problem with these commands: https://github.com/PowerShell/PowerShell/issues/13866#issuecomment-1519066710
-                    # Windows Powershell (old one) doesn't support the -UseWindowsPowerShell parameter, so only performing the import if PS Core is installed from Microsoft Store
                     if (($PSHome -like "*$env:SystemDrive\Program Files\WindowsApps\Microsoft.PowerShell*") -and ($PSVersionTable.PSEdition -eq 'Core')) {
                         Import-Module -Name 'DISM' -UseWindowsPowerShell -Force -WarningAction SilentlyContinue
                     }
@@ -1883,12 +1925,12 @@ namespace SystemInfo
                         }
                     }
                 } 'No' { break OptionalFeaturesLabel }
-                'Exit' { exit }
+                'Exit' { break MainSwitchLabel }
             }
         }
         Function Invoke-WindowsNetworking {
             param([System.Management.Automation.SwitchParameter]$RunUnattended)
-            if (!$IsAdmin) { break }
+            if (!$IsAdmin) { return }
 
             $CurrentMainStep++
             $Host.UI.RawUI.WindowTitle = '📶 Networking'
@@ -1907,12 +1949,12 @@ namespace SystemInfo
                     # Set the Network Location of all connections to Public
                     Get-NetConnectionProfile | Set-NetConnectionProfile -NetworkCategory Public
                 } 'No' { break WindowsNetworkingLabel }
-                'Exit' { exit }
+                'Exit' { break MainSwitchLabel }
             }
         }
         Function Invoke-MiscellaneousConfigurations {
             param([System.Management.Automation.SwitchParameter]$RunUnattended)
-            if (!$IsAdmin) { break }
+            if (!$IsAdmin) { return }
 
             $CurrentMainStep++
             $Host.UI.RawUI.WindowTitle = '🥌 Miscellaneous'
@@ -1952,12 +1994,12 @@ namespace SystemInfo
                     # Creating new sub-folder automatically and extracting the custom views
                     Expand-Archive -Path "$WorkingDir\EventViewerCustomViews.zip" -DestinationPath "$env:SystemDrive\ProgramData\Microsoft\Event Viewer\Views\Hardening Script" -Force
                 } 'No' { break MiscellaneousLabel }
-                'Exit' { exit }
+                'Exit' { break MainSwitchLabel }
             }
         }
         Function Invoke-WindowsUpdateConfigurations {
             param([System.Management.Automation.SwitchParameter]$RunUnattended)
-            if (!$IsAdmin) { break }
+            if (!$IsAdmin) { return }
 
             $CurrentMainStep++
             $Host.UI.RawUI.WindowTitle = '🪟 Windows Update'
@@ -1972,12 +2014,12 @@ namespace SystemInfo
 
                     &$LGPOExe /q /m "$WorkingDir\Security-Baselines-X\Windows Update Policies\registry.pol"
                 } 'No' { break WindowsUpdateLabel }
-                'Exit' { exit }
+                'Exit' { break MainSwitchLabel }
             }
         }
         Function Invoke-EdgeBrowserConfigurations {
             param([System.Management.Automation.SwitchParameter]$RunUnattended)
-            if (!$IsAdmin) { break }
+            if (!$IsAdmin) { return }
 
             $CurrentMainStep++
             $Host.UI.RawUI.WindowTitle = '🦔 Edge'
@@ -1993,18 +2035,18 @@ namespace SystemInfo
                         }
                     }
                 } 'No' { break MSEdgeLabel }
-                'Exit' { exit }
+                'Exit' { break MainSwitchLabel }
             }
         }
         Function Invoke-CertificateCheckingCommands {
             param([System.Management.Automation.SwitchParameter]$RunUnattended)
-            if (!$IsAdmin) { break }
+            if (!$IsAdmin) { return }
 
             $CurrentMainStep++
             $Host.UI.RawUI.WindowTitle = '🎟️ Certificates'
             Write-Verbose -Message 'Running Certificate Checking category'
 
-            :CertCheckingLabel switch ($RunUnattended ? 'No' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Certificate Checking category ?")) {
+            :CertCheckingLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Certificate Checking category ?")) {
                 'Yes' {
                     Write-Progress -Id 0 -Activity 'Certificate Checking Commands' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
 
@@ -2015,21 +2057,21 @@ namespace SystemInfo
                         Write-Error -Message 'sigcheck64.exe could not be downloaded from https://live.sysinternals.com' -ErrorAction Continue
                         break CertCheckingLabel
                     }
-                    Write-Host -NoNewline "`nListing valid certificates not rooted to the Microsoft Certificate Trust List in the" -ForegroundColor Yellow; Write-Host -Object " User store`n" -ForegroundColor cyan
+                    Write-Host -NoNewline -Object "`nListing valid certificates not rooted to the Microsoft Certificate Trust List in the" -ForegroundColor Yellow; Write-Host -Object " Current User store`n" -ForegroundColor cyan
                     .\sigcheck64.exe -tuv -accepteula -nobanner
 
-                    Write-Host -NoNewline "`nListing valid certificates not rooted to the Microsoft Certificate Trust List in the" -ForegroundColor Yellow; Write-Host -Object " Machine Store`n" -ForegroundColor Blue
+                    Write-Host -NoNewline -Object "`nListing valid certificates not rooted to the Microsoft Certificate Trust List in the" -ForegroundColor Yellow; Write-Host -Object " Local Machine Store`n" -ForegroundColor Blue
                     .\sigcheck64.exe -tv -accepteula -nobanner
 
                     # Remove the downloaded sigcheck64.exe after using it
                     Remove-Item -Path .\sigcheck64.exe -Force
                 } 'No' { break CertCheckingLabel }
-                'Exit' { exit }
+                'Exit' { break MainSwitchLabel }
             }
         }
         Function Invoke-CountryIPBlocking {
             param([System.Management.Automation.SwitchParameter]$RunUnattended)
-            if (!$IsAdmin) { break }
+            if (!$IsAdmin) { return }
 
             $CurrentMainStep++
             $Host.UI.RawUI.WindowTitle = '🧾 Country IPs'
@@ -2050,7 +2092,7 @@ namespace SystemInfo
                         } 'No' { break IPBlockingOFACLabel }
                     }
                 } 'No' { break IPBlockingLabel }
-                'Exit' { exit }
+                'Exit' { break MainSwitchLabel }
             }
         }
         Function Invoke-NonAdminCommands {
@@ -2070,7 +2112,7 @@ namespace SystemInfo
                         }
                     }
 
-                    # Only suggest restarting the device if Admin related categories were run
+                    # Only suggest restarting the device if Admin related categories were run and the code was not running in unattended mode
                     if (!$Categories -and $IsAdmin) {
                         Write-Host -Object "`r`n"
                         Write-ColorfulText -C Rainbow -I "################################################################################################`r`n"
@@ -2078,12 +2120,13 @@ namespace SystemInfo
                         Write-ColorfulText -C Rainbow -I "################################################################################################`r`n"
                     }
                 } 'No' { break NonAdminLabel }
-                'Exit' { exit }
+                'Exit' { break MainSwitchLabel }
             }
         }
         #Endregion Hardening-Categories-Functions
 
-        switch ($Categories) {
+        # a label to break out of the main switch statements and run the finally block when user chooses to exit
+        :MainSwitchLabel switch ($Categories) {
             'WindowsBootManagerRevocations' { Invoke-WindowsBootManagerRevocations -RunUnattended }
             'MicrosoftSecurityBaselines' { Invoke-MicrosoftSecurityBaselines -RunUnattended }
             'Microsoft365AppsSecurityBaselines' { Invoke-Microsoft365AppsSecurityBaselines -RunUnattended }
@@ -2104,12 +2147,13 @@ namespace SystemInfo
             'NonAdminCommands' { Invoke-NonAdminCommands -RunUnattended }
             default {
                 # Get the values of the ValidateSet attribute of the Categories parameter of the main function
-                (Get-Command -Name Protect-WindowsSecurity).Parameters['Categories'].Attributes.ValidValues | ForEach-Object -Process {
+                [Categoriex]::new().GetValidValues() | ForEach-Object -Process {
                     # Run all of the categories' functions if the user didn't specify any
                     . "Invoke-$_"
                 }
             }
         }
+        # No code should be placed after this.
     }
     catch {
         # Throw whatever error that occurred
@@ -2162,4 +2206,3 @@ namespace SystemInfo
 #>
 }
 Protect-WindowsSecurity
-

@@ -64,22 +64,6 @@ https://github.com/HotCakeX/Harden-Windows-Security/assets/118815227/0fdbd34b-6b
 
 <br>
 
-## Requirements
-
-[Same requirements as described on the Readme](https://github.com/HotCakeX/Harden-Windows-Security#requirements-), plus:
-
-* Administrator privileges for `Confirm-SystemCompliance` and `Unprotect-WindowsSecurity`
-* Administrator OR Standard user privileges for `Protect-WindowsSecurity`
-* PowerShell Core latest version
-     * Get it from the [official GitHub repository](https://github.com/PowerShell/PowerShell/releases)
-     * Or Install it from [Microsoft Store](https://apps.microsoft.com/store/detail/powershell/9MZ1SNWT0N5D)
-
-<br>
-
-<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
-
-<br>
-
 ## Automatic Updates
 The module checks for updates every time you run it and updates itself if there is a new version available, so you don't have to manually do anything.
 

@@ -3,27 +3,61 @@ Function Protect-WindowsSecurity {
     [CmdletBinding()]
     param (
         [parameter(Mandatory = $false)]
-        [ValidateSet(
-            'WindowsBootManagerRevocations',
-            'MicrosoftSecurityBaselines',
-            'Microsoft365AppsSecurityBaselines',
-            'MicrosoftDefender',
-            'AttackSurfaceReductionRules',
-            'BitLockerSettings',
-            'TLSSecurity',
-            'LockScreen',
-            'UserAccountControl',
-            'WindowsFirewall',
-            'OptionalWindowsFeatures',
-            'WindowsNetworking',
-            'MiscellaneousConfigurations',
-            'WindowsUpdateConfigurations',
-            'EdgeBrowserConfigurations',
-            'CertificateCheckingCommands',
-            'CountryIPBlocking',
-            'NonAdminCommands'
-        )][System.String[]]$Categories
+        [ArgumentCompleter({
+                # Get the current command and the already bound parameters
+                param($CommandName, $ParameterName, $WordToComplete, $CommandAst, $FakeBoundParameters)
+
+                # Find all string constants in the AST
+                $Existing = $CommandAst.FindAll(
+                    # The predicate scriptblock to define the criteria for filtering the AST nodes
+                    {
+                        $args[0] -is [System.Management.Automation.Language.StringConstantExpressionAst]
+                    },
+                    # The recurse flag, whether to search nested scriptblocks or not.
+                    $false
+                ).Value
+
+                [Categoriex]::new().GetValidValues() | ForEach-Object -Process {
+                    # Check if the item is already selected
+                    if ($_ -notin $Existing) {
+                        # Return the item
+                        $_
+                    }
+                }
+            })]
+        [ValidateScript({
+                if ($_ -notin [Categoriex]::new().GetValidValues()) { throw "Invalid Category Name: $_" }
+                $true
+            })]
+        [System.String[]]$Categories
     )
+
+    # This class provides a list of valid values for the Categories parameter of the Protect-WindowsSecurity function
+    Class Categoriex : System.Management.Automation.IValidateSetValuesGenerator {
+        [System.String[]] GetValidValues() {
+            $Categoriex = @(
+                'WindowsBootManagerRevocations',
+                'MicrosoftSecurityBaselines',
+                'Microsoft365AppsSecurityBaselines',
+                'MicrosoftDefender',
+                'AttackSurfaceReductionRules',
+                'BitLockerSettings',
+                'TLSSecurity',
+                'LockScreen',
+                'UserAccountControl',
+                'WindowsFirewall',
+                'OptionalWindowsFeatures',
+                'WindowsNetworking',
+                'MiscellaneousConfigurations',
+                'WindowsUpdateConfigurations',
+                'EdgeBrowserConfigurations',
+                'CertificateCheckingCommands',
+                'CountryIPBlocking',
+                'NonAdminCommands'
+            )
+            return [System.String[]]$Categoriex
+        }
+    }
 
     $ErrorActionPreference = 'Stop'
 
@@ -2110,7 +2144,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
             'NonAdminCommands' { Invoke-NonAdminCommands -RunUnattended }
             default {
                 # Get the values of the ValidateSet attribute of the Categories parameter of the main function
-                (Get-Command -Name Protect-WindowsSecurity).Parameters['Categories'].Attributes.ValidValues | ForEach-Object -Process {
+                [Categoriex]::new().GetValidValues() | ForEach-Object -Process {
                     # Run all of the categories' functions if the user didn't specify any
                     . "Invoke-$_"
                 }

@@ -111,6 +111,89 @@ Uninstall-Module -Name 'Harden-Windows-Security-Module' -Force -AllVersions
 
 <br>
 
+## Available Parameters for Protect-WindowsSecurity Cmdlet
+
+```powershell
+Protect-WindowsSecurity [[-Categories] <String[]>] [<CommonParameters>]
+```
+
+### 1 Optional Parameter
+
+* `-Categories`: Specify the hardening categories that you want to apply. This will tell the module to operate in non-interactive or headless/silent mode which won't ask for confirmation before running each selected categories. You can specify multiple categories by separating them with a comma. If you don't specify any category, the cmdlet will run in interactive mode. **Use this parameter for deployments at a large scale.** If a selected category requires Administrator privileges and the module is running with Standard privileges, that category is skipped.
+
+### Example 1
+
+If you run the module like this, the 2 categories will be executed automatically without requiring any user input. The results will be displayed on the console.
+
+```powershell
+Protect-WindowsSecurity -Categories MicrosoftDefender, AttackSurfaceReductionRules
+```
+
+### Example 2
+
+If you run the module like this without specifying any categories, the module will run in interactive mode and the usual beautiful prompts will be displayed to the user.
+
+```powershell
+Protect-WindowsSecurity
+```
+
+<br>
+
+### Available Categories in Headless Mode
+
+The following is the exact enumeration of the items that will be executed based on the user chosen categories when operating in headless/silent mode. After careful consideration, came to the conclusion that some sub-categories need to be omitted, for instance because they necessitate explicit user input.
+
+<div align="center">
+
+| Indicator| Description                   |
+|:--------:|:-----------------------------:|
+| <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/rainbow-planet-heart.gif" alt="planet rainbow heart indicating item that runs in Windows Hardening module" width="30"> | Indicates the item runs |
+| <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/orange-point.gif" alt="spinning random dots indicating the sub-category won't run in headless mode in Windows Hardening module" width="30"> | Indicates the item is skipped |
+
+</div>
+
+<br>
+
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/rainbow-planet-heart.gif" alt="planet rainbow heart indicating item that runs in Windows Hardening module" width="30"> Windows Boot Manager Revocations
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/rainbow-planet-heart.gif" alt="planet rainbow heart indicating item that runs in Windows Hardening module" width="30"> Microsoft Security Baselines
+    - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/rainbow-planet-heart.gif" alt="planet rainbow heart indicating item that runs in Windows Hardening module" width="30"> Yes, With the Optional Overrides (Recommended)
+    - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/orange-point.gif" alt="spinning random dots indicating the sub-category won't run in headless mode in Windows Hardening module" width="30"> Yes
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/rainbow-planet-heart.gif" alt="planet rainbow heart indicating item that runs in Windows Hardening module" width="30"> Microsoft 365 Apps Security Baselines
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/rainbow-planet-heart.gif" alt="planet rainbow heart indicating item that runs in Windows Hardening module" width="30"> Microsoft Defender
+    - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/orange-point.gif" alt="spinning random dots indicating the sub-category won't run in headless mode in Windows Hardening module" width="30"> Smart App Control enablement
+    - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/rainbow-planet-heart.gif" alt="planet rainbow heart indicating item that runs in Windows Hardening module" width="30"> Enable advanced diagnostic data if Smart App Control is on
+    - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/rainbow-planet-heart.gif" alt="planet rainbow heart indicating item that runs in Windows Hardening module" width="30"> Scheduled task creation for fast weekly MSFT driver block list update
+    - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/orange-point.gif" alt="spinning random dots indicating the sub-category won't run in headless mode in Windows Hardening module" width="30"> Set engine and intelligence update channels to beta
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/rainbow-planet-heart.gif" alt="planet rainbow heart indicating item that runs in Windows Hardening module" width="30"> Attack Surface Reduction Rules
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/rainbow-planet-heart.gif" alt="planet rainbow heart indicating item that runs in Windows Hardening module" width="30"> BitLocker Settings
+    - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/orange-point.gif" alt="spinning random dots indicating the sub-category won't run in headless mode in Windows Hardening module" width="30"> Normal: TPM + Startup PIN + Recovery Password
+    - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/orange-point.gif" alt="spinning random dots indicating the sub-category won't run in headless mode in Windows Hardening module" width="30"> Enhanced: TPM + Startup PIN + Startup Key + Recovery Password
+    - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/rainbow-planet-heart.gif" alt="planet rainbow heart indicating item that runs in Windows Hardening module" width="30"> Skip encryptions altogether
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/rainbow-planet-heart.gif" alt="planet rainbow heart indicating item that runs in Windows Hardening module" width="30"> TLS Security
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/rainbow-planet-heart.gif" alt="planet rainbow heart indicating item that runs in Windows Hardening module" width="30"> Lock Screen
+    - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/orange-point.gif" alt="spinning random dots indicating the sub-category won't run in headless mode in Windows Hardening module" width="30"> Don't display last signed-in
+    - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/orange-point.gif" alt="spinning random dots indicating the sub-category won't run in headless mode in Windows Hardening module" width="30"> Require CTRL + ALT + DEL on lock screen
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/rainbow-planet-heart.gif" alt="planet rainbow heart indicating item that runs in Windows Hardening module" width="30"> User Account Control
+    - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/orange-point.gif" alt="spinning random dots indicating the sub-category won't run in headless mode in Windows Hardening module" width="30"> Only elevate signed and validated executables
+    - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/orange-point.gif" alt="spinning random dots indicating the sub-category won't run in headless mode in Windows Hardening module" width="30"> Hide the entry points for Fast User Switching
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/rainbow-planet-heart.gif" alt="planet rainbow heart indicating item that runs in Windows Hardening module" width="30"> Windows Firewall
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/rainbow-planet-heart.gif" alt="planet rainbow heart indicating item that runs in Windows Hardening module" width="30"> Optional Windows Features
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/rainbow-planet-heart.gif" alt="planet rainbow heart indicating item that runs in Windows Hardening module" width="30"> Windows Networking
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/rainbow-planet-heart.gif" alt="planet rainbow heart indicating item that runs in Windows Hardening module" width="30"> Miscellaneous Configurations
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/rainbow-planet-heart.gif" alt="planet rainbow heart indicating item that runs in Windows Hardening module" width="30"> Windows Update Configurations
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/rainbow-planet-heart.gif" alt="planet rainbow heart indicating item that runs in Windows Hardening module" width="30"> Edge Browser Configurations
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/rainbow-planet-heart.gif" alt="planet rainbow heart indicating item that runs in Windows Hardening module" width="30"> Certificate Checking Commands
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/rainbow-planet-heart.gif" alt="planet rainbow heart indicating item that runs in Windows Hardening module" width="30"> Country IP Blocking
+    - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/rainbow-planet-heart.gif" alt="planet rainbow heart indicating item that runs in Windows Hardening module" width="30"> Block State Sponsors of Terrorism IP blocks
+    - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/orange-point.gif" alt="spinning random dots indicating the sub-category won't run in headless mode in Windows Hardening module" width="30"> Block OFAC Sanctioned Countries IP blocks
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/rainbow-planet-heart.gif" alt="planet rainbow heart indicating item that runs in Windows Hardening module" width="30"> Non-Admin Commands
+
+<br>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+
+<br>
+
 ## Available Parameters for Confirm-SystemCompliance Cmdlet
 
 ```powershell

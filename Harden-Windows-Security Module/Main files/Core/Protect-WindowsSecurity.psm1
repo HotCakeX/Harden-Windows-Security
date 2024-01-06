@@ -78,11 +78,12 @@ Function Protect-WindowsSecurity {
     if ($PSCommandPath) {
         if ((Split-Path -Path $PSCommandPath -Leaf) -eq 'Protect-WindowsSecurity.psm1') {
             Write-Verbose -Message 'Running Protect-WindowsSecurity function as part of the Harden-Windows-Security module'
+
             Write-Verbose -Message 'Importing the required sub-modules'
             Import-Module -FullyQualifiedName "$HardeningModulePath\Shared\Update-self.psm1" -Force -Verbose:$false
 
             # Set the flag to true to indicate that the module is running locally
-            [System.Boolean]$IsLocally = $true
+            $IsLocally = $true
 
             Write-Verbose -Message 'Checking for updates...'
             Update-Self -InvocationStatement $MyInvocation.Statement
@@ -631,7 +632,7 @@ Function Protect-WindowsSecurity {
     }
 
     # doing a try-catch-finally block on the entire script so that when CTRL + C is pressed to forcefully exit the script,
-    # or break is passed, clean up will still happen for secure exit. Any errors that happens will be thrown
+    # or break is passed, clean up will still happen for secure exit. Any error that happens will be thrown
     try {
 
         if (!$Categories) {
@@ -644,15 +645,15 @@ Function Protect-WindowsSecurity {
         #region RequirementsCheck
         # check if user's OS is Windows Home edition
         if ((Get-CimInstance -ClassName Win32_OperatingSystem).OperatingSystemSKU -eq '101') {
-            Throw 'Windows Home edition detected, exiting...'
+            Throw [System.PlatformNotSupportedException] 'Windows Home edition detected, exiting...'
         }
 
         # check if user's OS is the latest build
         # Get OS build version
         [System.Decimal]$OSBuild = [System.Environment]::OSVersion.Version.Build
-        # Get Update Build Revision (UBR) number
+        # Get the Update Build Revision (UBR) number
         [System.Decimal]$UBR = Get-ItemPropertyValue -Path 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion' -Name 'UBR'
-        # Create full OS build number as seen in Windows Settings
+        # Create the full OS build number as seen in Windows Settings
         [System.Decimal]$FullOSBuild = "$OSBuild.$UBR"
 
         # Make sure the current OS build is equal or greater than the required build
@@ -861,13 +862,13 @@ Function Protect-WindowsSecurity {
                 'Yes' {
                     Write-Progress -Id 0 -Activity 'Microsoft Security Baseline' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
 
-                    # Run the official PowerShell script included in the Microsoft Security Baseline file we downloaded from Microsoft servers
+                    # Run the official PowerShell script included in the Microsoft Security Baseline file downloaded from Microsoft servers
                     .\Baseline-LocalInstall.ps1 -Win11NonDomainJoined
                 }
                 'Yes, With the Optional Overrides (Recommended)' {
                     Write-Progress -Id 0 -Activity 'Microsoft Security Baseline' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
 
-                    # Run the official PowerShell script included in the Microsoft Security Baseline file we downloaded from Microsoft servers
+                    # Run the official PowerShell script included in the Microsoft Security Baseline file downloaded from Microsoft servers
                     .\Baseline-LocalInstall.ps1 -Win11NonDomainJoined
 
                     Start-Sleep -Seconds 1
@@ -897,7 +898,7 @@ Function Protect-WindowsSecurity {
                     Write-Progress -Id 0 -Activity 'Microsoft 365 Apps Security Baseline' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
 
                     Push-Location -Path "$Microsoft365SecurityBaselinePath\Scripts\"
-                    # Run the official PowerShell script included in the Microsoft Security Baseline file we downloaded from Microsoft servers
+                    # Run the official PowerShell script included in the Microsoft Security Baseline file downloaded from Microsoft servers
                     .\Baseline-LocalInstall.ps1
                     Pop-Location
 
@@ -918,7 +919,7 @@ Function Protect-WindowsSecurity {
 
                     &$LGPOExe /q /m "$WorkingDir\Security-Baselines-X\Microsoft Defender Policies\registry.pol"
 
-                    # Optimizing Network Protection Performance of Windows Defender
+                    # Optimizing Network Protection Performance of the Microsoft Defender
                     Set-MpPreference -AllowSwitchToAsyncInspection $True
 
                     # Configure whether real-time protection and Security Intelligence Updates are enabled during OOBE
@@ -936,7 +937,7 @@ Function Protect-WindowsSecurity {
                     # Network protection blocks network traffic instead of displaying a warning
                     Set-MpPreference -EnableConvertWarnToBlock $True
 
-                    # Add OneDrive folders of all user accounts (personal and work accounts) to the Controlled Folder Access for Ransomware Protection
+                    # Add the OneDrive folders of all the user accounts (personal and work accounts) to the Controlled Folder Access for Ransomware Protection
                     Get-ChildItem "$env:SystemDrive\Users\*\OneDrive*\" -Directory | ForEach-Object -Process { Add-MpPreference -ControlledFolderAccessProtectedFolders $_ }
 
                     # Enable Mandatory ASLR Exploit Protection system-wide
@@ -1025,9 +1026,11 @@ Function Protect-WindowsSecurity {
                     [System.String]$BlockListScheduledTaskState = (Get-ScheduledTask -TaskName 'MSFT Driver Block list update' -TaskPath '\MSFT Driver Block list update\' -ErrorAction SilentlyContinue).State
 
                     # Create scheduled task for fast weekly Microsoft recommended driver block list update if it doesn't exist or exists but is not Ready/Running
-                    if (-NOT (($BlockListScheduledTaskState -eq 'Ready' -or $BlockListScheduledTaskState -eq 'Running'))) {
+                    if (($BlockListScheduledTaskState -notin 'Ready', 'Running')) {
                         :TaskSchedulerCreationLabel switch ($RunUnattended ? 'Yes' : (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nCreate scheduled task for fast weekly Microsoft recommended driver block list update ?")) {
                             'Yes' {
+                                Write-Verbose -Message 'Creating scheduled task for fast weekly Microsoft recommended driver block list update'
+
                                 # Create a scheduled task action, this defines how to download and install the latest Microsoft Recommended Driver Block Rules
                                 [Microsoft.Management.Infrastructure.CimInstance]$Action = New-ScheduledTaskAction -Execute 'Powershell.exe' `
                                     -Argument '-NoProfile -WindowStyle Hidden -command "& {try {Invoke-WebRequest -Uri "https://aka.ms/VulnerableDriverBlockList" -OutFile VulnerableDriverBlockList.zip -ErrorAction Stop}catch{exit 1};Expand-Archive -Path .\VulnerableDriverBlockList.zip -DestinationPath "VulnerableDriverBlockList" -Force;Rename-Item -Path .\VulnerableDriverBlockList\SiPolicy_Enforced.p7b -NewName "SiPolicy.p7b" -Force;Copy-Item -Path .\VulnerableDriverBlockList\SiPolicy.p7b -Destination "$env:SystemDrive\Windows\System32\CodeIntegrity";citool --refresh -json;Remove-Item -Path .\VulnerableDriverBlockList -Recurse -Force;Remove-Item -Path .\VulnerableDriverBlockList.zip -Force; exit 0;}"'
@@ -1051,7 +1054,7 @@ Function Protect-WindowsSecurity {
                         }
                     }
 
-                    # Only show this prompt if Engine and Platform update channels are not already set to Beta
+                    # Only display this prompt if Engine and Platform update channels are not already set to Beta
                     if ( ($MDAVPreferencesCurrent.EngineUpdatesChannel -ne '2') -or ($MDAVPreferencesCurrent.PlatformUpdatesChannel -ne '2') ) {
                         # Set Microsoft Defender engine and platform update channel to beta - Devices in the Windows Insider Program are subscribed to this channel by default.
                         :DefenderUpdateChannelsLabel switch ($RunUnattended ? 'No' : (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nSet Microsoft Defender engine and platform update channel to beta ?")) {
@@ -1169,8 +1172,7 @@ namespace SystemInfo
                         &$LGPOExe /q /m "$WorkingDir\Security-Baselines-X\Overrides for Microsoft Security Baseline\Bitlocker DMA\Bitlocker DMA Countermeasure ON\Registry.pol"
                     }
 
-                    # Set-up Bitlocker encryption for OS Drive with TPMandPIN and recovery password keyprotectors and Verify its implementation
-                    # check, make sure there is no CD/DVD drives in the system, because Bitlocker throws an error when there is
+                    # Make sure there is no CD/DVD drives or mounted ISO in the system, because BitLocker throws an error when there is
                     if ((Get-CimInstance -ClassName Win32_CDROMDrive -Property *).MediaLoaded) {
                         Write-Warning -Message 'Remove any CD/DVD drives or mounted images/ISO from the system and run the Bitlocker category again.'
                         # break from the entire BitLocker category and continue to the next category
@@ -1178,7 +1180,7 @@ namespace SystemInfo
                     }
 
                     # check make sure Bitlocker isn't in the middle of decryption/encryption operation (on System Drive)
-                    if ((Get-BitLockerVolume -MountPoint $env:SystemDrive).EncryptionPercentage -ne '100' -and (Get-BitLockerVolume -MountPoint $env:SystemDrive).EncryptionPercentage -ne '0') {
+                    if ((Get-BitLockerVolume -MountPoint $env:SystemDrive).EncryptionPercentage -notin '100', '0') {
                         $EncryptionPercentageVar = (Get-BitLockerVolume -MountPoint $env:SystemDrive).EncryptionPercentage
                         Write-Host -Object "`nPlease wait for Bitlocker to finish encrypting or decrypting the Operation System Drive." -ForegroundColor Yellow
                         Write-Host -Object "Drive $env:SystemDrive encryption is currently at $EncryptionPercentageVar percent." -ForegroundColor Yellow
@@ -1186,7 +1188,7 @@ namespace SystemInfo
                         break BitLockerCategoryLabel
                     }
 
-                    # A script block that generates recovery code just like the Windows does
+                    # A script block that generates recovery codes just like Windows does
                     [System.Management.Automation.ScriptBlock]$RecoveryPasswordContentGenerator = {
                         param ([System.Object[]]$KeyProtectorsInputFromScriptBlock)
 
@@ -1294,6 +1296,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                                         }
                                         catch {
                                             Write-Host -Object 'These errors occurred, run Bitlocker category again after meeting the requirements' -ForegroundColor Red
+                                            # Display errors in non-terminating way
                                             $_
                                             break BitLockerCategoryLabel
                                         }
@@ -1562,7 +1565,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                             'Yes' {
 
                                 # Check if the non-OS drive that the user selected to be encrypted is not in the middle of any encryption/decryption operation
-                                if ((Get-BitLockerVolume -MountPoint $MountPoint).EncryptionPercentage -ne '100' -and (Get-BitLockerVolume -MountPoint $MountPoint).EncryptionPercentage -ne '0') {
+                                if ((Get-BitLockerVolume -MountPoint $MountPoint).EncryptionPercentage -notin '100', '0') {
                                     # Check if the drive isn't already encrypted and locked
                                     if ((Get-BitLockerVolume -MountPoint $MountPoint).lockstatus -eq 'Locked') {
                                         Write-Host -Object "`nThe drive $MountPoint is already encrypted and locked." -ForegroundColor Magenta
@@ -1887,7 +1890,6 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                     Write-Progress -Id 0 -Activity 'Optional Windows Features' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
 
                     # PowerShell Core (only if installed from Microsoft Store) has problem with these commands: https://github.com/PowerShell/PowerShell/issues/13866#issuecomment-1519066710
-                    # Windows Powershell (old one) doesn't support the -UseWindowsPowerShell parameter, so only performing the import if PS Core is installed from Microsoft Store
                     if (($PSHome -like "*$env:SystemDrive\Program Files\WindowsApps\Microsoft.PowerShell*") -and ($PSVersionTable.PSEdition -eq 'Core')) {
                         Import-Module -Name 'DISM' -UseWindowsPowerShell -Force -WarningAction SilentlyContinue
                     }
@@ -2109,7 +2111,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                         }
                     }
 
-                    # Only suggest restarting the device if Admin related categories were run
+                    # Only suggest restarting the device if Admin related categories were run and the code was not running in unattended mode
                     if (!$Categories -and $IsAdmin) {
                         Write-Host -Object "`r`n"
                         Write-ColorfulText -C Rainbow -I "################################################################################################`r`n"
@@ -2150,6 +2152,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 }
             }
         }
+        # No code should be placed after this.
     }
     catch {
         # Throw whatever error that occurred

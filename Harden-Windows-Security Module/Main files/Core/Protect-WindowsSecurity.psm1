@@ -1,4 +1,5 @@
 #Requires -Version 7.4
+#Requires -PSEdition Core
 Function Protect-WindowsSecurity {
     [CmdletBinding()]
     param (

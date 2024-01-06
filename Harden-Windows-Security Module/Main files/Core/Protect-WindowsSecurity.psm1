@@ -54,11 +54,15 @@ Function Protect-WindowsSecurity {
                 'EdgeBrowserConfigurations',
                 'CertificateCheckingCommands',
                 'CountryIPBlocking',
+                'DownloadsDefenseMeasures',
                 'NonAdminCommands'
             )
             return [System.String[]]$Categoriex
         }
     }
+
+    # Detecting if Verbose switch is used
+    $PSBoundParameters.Verbose.IsPresent ? ([System.Boolean]$Verbose = $true) : ([System.Boolean]$Verbose = $false) | Out-Null
 
     $ErrorActionPreference = 'Stop'
 
@@ -116,7 +120,7 @@ Function Protect-WindowsSecurity {
     # Fetching Temp Directory
     [System.String]$CurrentUserTempDirectoryPath = [System.IO.Path]::GetTempPath()
     # The total number of the main categories for the parent/main progress bar to render
-    [System.Int32]$TotalMainSteps = 18
+    [System.Int32]$TotalMainSteps = 19
     # Defining a boolean variable to determine whether optional diagnostic data should be enabled for Smart App Control or not
     [System.Boolean]$ShouldEnableOptionalDiagnosticData = $false
 
@@ -913,6 +917,7 @@ Function Protect-WindowsSecurity {
 
             $CurrentMainStep++
             $Host.UI.RawUI.WindowTitle = '🍁 MSFT Defender'
+            Write-Verbose -Message 'Running Microsoft Defender category'
 
             :MicrosoftDefenderLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Microsoft Defender category ?")) {
                 'Yes' {
@@ -2095,15 +2100,71 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 'Exit' { break MainSwitchLabel }
             }
         }
+        Function Invoke-DownloadsDefenseMeasures {
+            param([System.Management.Automation.SwitchParameter]$RunUnattended)
+            if (!$IsAdmin) { return }
+
+            $CurrentMainStep++
+            $Host.UI.RawUI.WindowTitle = '🎇 Downloads Defense Measures'
+            Write-Verbose -Message 'Running Downloads Defense Measures category'
+
+            :DownloadsDefenseMeasuresLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Downloads Defense Measures category ?")) {
+                'Yes' {
+                    Write-Progress -Id 0 -Activity 'Downloads Defense Measures category' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+
+                    if (-NOT (Get-InstalledModule -Name 'WDACConfig')) {
+                        Write-Verbose -Message 'Installing WDACConfig module because it is not installed'
+                        Install-Module -Name 'WDACConfig' -Force
+                    }
+
+                    Write-Verbose -Message 'Getting the currently deployed base policy names'
+                    [System.String[]]$CurrentBasePolicyNames = ((&"$env:SystemDrive\Windows\System32\CiTool.exe" -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { ($_.IsSystemPolicy -ne 'True') -and ($_.PolicyID -eq $_.BasePolicyID) }).FriendlyName
+
+                    # Only deploy the Downloads-Defense-Measures policy if it is not already deployed
+                    if ('Downloads-Defense-Measures' -notin $CurrentBasePolicyNames) {
+
+                        Write-Verbose -Message 'Detecting the Downloads folder path on system'
+                        [System.IO.FileInfo]$DownloadsPathSystem = (New-Object -ComObject Shell.Application).NameSpace('shell:Downloads').Self.path
+                        Write-Verbose -Message "The Downloads folder path on system is $DownloadsPathSystem"
+
+                        # Getting the current user's name
+                        [System.Security.Principal.SecurityIdentifier]$UserSID = [System.Security.Principal.WindowsIdentity]::GetCurrent().user.value
+                        [System.String]$UserName = (Get-LocalUser | where-object -FilterScript {$_.SID -eq $UserSID}).name
+
+                        # Checking if the Edge preferences file exists
+                        if (Test-Path -Path "$env:SystemDrive\Users\$UserName\AppData\Local\Microsoft\Edge\User Data\Default\Preferences") {
+
+                            Write-Verbose -Message 'Detecting the Downloads path in Edge'
+                            [PSCustomObject]$CurrentUserEdgePreference = ConvertFrom-Json -InputObject (Get-Content -Raw -Path "$env:SystemDrive\Users\$UserName\AppData\Local\Microsoft\Edge\User Data\Default\Preferences")
+                            [System.IO.FileInfo]$DownloadsPathEdge = $CurrentUserEdgePreference.savefile.default_directory
+                            Write-Verbose -Message "The Downloads path in Edge is $DownloadsPathEdge"
+
+                            # Display a warning for now
+                            if ($DownloadsPathEdge.FullName -ne $DownloadsPathSystem.FullName) {
+                                Write-Warning -Message "The Downloads path in Edge ($($DownloadsPathEdge.FullName)) is different than the system's Downloads path ($($DownloadsPathSystem.FullName))"
+                            }
+                        }
+
+                        Write-Verbose -Message 'Creating and deploying the Downloads-Defense-Measures policy'
+                        New-DenyWDACConfig -PathWildCards -PolicyName 'Downloads-Defense-Measures' -FolderPath "$DownloadsPathSystem\*" -Deploy -Verbose:$Verbose
+                    }
+                    else {
+                        Write-Verbose -Message 'The Downloads-Defense-Measures policy is already deployed'
+                    }
+
+                } 'No' { break DownloadsDefenseMeasuresLabel }
+                'Exit' { break MainSwitchLabel }
+            }
+        }
         Function Invoke-NonAdminCommands {
             param([System.Management.Automation.SwitchParameter]$RunUnattended)
 
+            $CurrentMainStep = $TotalMainSteps
             $Host.UI.RawUI.WindowTitle = '🏷️ Non-Admins'
             Write-Verbose -Message 'Running Non-Admin category'
 
             :NonAdminLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Non-Admin category ?")) {
                 'Yes' {
-                    $CurrentMainStep = $TotalMainSteps
                     Write-Progress -Id 0 -Activity 'Non-Admin category' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
 
                     foreach ($Item in $RegistryCSVItems) {
@@ -2144,6 +2205,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
             'EdgeBrowserConfigurations' { Invoke-EdgeBrowserConfigurations -RunUnattended }
             'CertificateCheckingCommands' { Invoke-CertificateCheckingCommands -RunUnattended }
             'CountryIPBlocking' { Invoke-CountryIPBlocking -RunUnattended }
+            'DownloadsDefenseMeasures' { Invoke-DownloadsDefenseMeasures -RunUnattended }
             'NonAdminCommands' { Invoke-NonAdminCommands -RunUnattended }
             default {
                 # Get the values of the ValidateSet attribute of the Categories parameter of the main function

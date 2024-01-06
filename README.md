@@ -97,21 +97,6 @@ Unprotect-WindowsSecurity
 
 <br>
 
-<details>
-<summary>Old PowerShell v5.1 users that want to install as script</summary>
-
-### <img width="35" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/SVGs/powershell.svg" alt="PowerShell icon Blue"> Install It as a Standalone Script From <a href="https://www.powershellgallery.com/packages/Harden-Windows-Security/">PowerShell Gallery</a>
-
-<em> When you run it and if there is a new version, you will be notified. </em>
-
-```powershell
-Install-Script -Name 'Harden-Windows-Security' -Force
-```
-
-</details>
-
-<br>
-
 <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
 
 <br>
@@ -391,7 +376,7 @@ Add-MpPreference -ControlledFolderAccessAllowedApplications 'C:\Program Files\Ap
     - You can add Mandatory ASLR override for a trusted program using the PowerShell command below or in the Program Settings section of Exploit Protection in Microsoft Defender app.
         - `Set-ProcessMitigation -Name "C:\TrustedApp.exe" -Disable ForceRelocateImages`
 
-- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> Applies [Exploit Protections/Process Mitigations](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/enable-exploit-protection) from [**this list**](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Payload/ProcessMitigations.csv) to the following programs: <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-exploitguard)
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> Applies [Exploit Protections/Process Mitigations](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/enable-exploit-protection) from [**this list**](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden-Windows-Security%20Module/Main%20files/Resources/ProcessMitigations.csv) to the following programs: <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-exploitguard)
 
     - All channels of [Microsoft Edge](https://www.microsoft.com/en-us/edge) browser
     - [Quick Assist](https://learn.microsoft.com/en-us/windows/client-management/client-tools/quick-assist) app
@@ -1041,14 +1026,19 @@ This repository uses the simplest possible, yet effective, methods that make it 
 - You can fork this repository, verify it until that point in time, then verify any subsequent changes/updates I push to this repository, **at your own pace** (using `Sync fork` and `Compare` options on your fork), and if you are happy with the changes, allow it to be merged with your own copy/fork on your GitHub account.
 - You can [learn PowerShell which is super easy](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Basic-PowerShell-tricks-and-notes), multiplatform, and useful for the future, Microsoft Learn website teaches you everything, then you will understand everything in the module is safe, or you can ask someone that you trust and knows PowerShell to verify the module for you.
 
-- The [Payload folder](https://github.com/HotCakeX/Harden-Windows-Security/tree/main/Payload) in this repository contains the files required to run this module:
-    - [Registry.csv](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Payload/Registry.csv) includes registry data used by this module, viewable in plain text and easily verifiable.
+- #### The module uses the following files, all of them are in plain text, easily readable and verifiable:
 
-    - [ProcessMitigations.csv](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Payload/ProcessMitigations.csv) includes process mitigations data used by this module, viewable in plain text and easily verifiable.
+    - [Registry.csv](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden-Windows-Security%20Module/Main%20files/Resources/Registry.csv) includes registry data.
 
-    - [EventViewerCustomViews.zip](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Payload/EventViewerCustomViews.zip) includes XML files, in plain text, easily readable and verifiable. The module downloads and copies them to `C:\ProgramData\Microsoft\Event Viewer\Views` so that when you open [Windows Event Viewer](https://learn.microsoft.com/en-us/host-integration-server/core/windows-event-viewer1), you will find custom views as explained in the <a href="#miscellaneous-configurations">Miscellaneous Configurations</a> category.
+    - [ProcessMitigations.csv](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden-Windows-Security%20Module/Main%20files/Resources/ProcessMitigations.csv) includes the process mitigations data.
 
-    - [Security-Baselines-X.zip](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Payload/Security-Baselines-X.zip) includes Group Policies that are used by this module to apply the security measures explained in this page.
+    - [EventViewerCustomViews.zip](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden-Windows-Security%20Module/Main%20files/Resources/EventViewerCustomViews.zip) includes the XML files that are copied to `C:\ProgramData\Microsoft\Event Viewer\Views` so that when you open [Windows Event Viewer](https://learn.microsoft.com/en-us/host-integration-server/core/windows-event-viewer1), you will find custom views as explained in the <a href="#miscellaneous-configurations">Miscellaneous Configurations</a> category.
+
+    - [Security-Baselines-X.zip](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden-Windows-Security%20Module/Main%20files/Resources/Security-Baselines-X.zip) includes Group Policies that are used by this module.
+
+    - [Default Security Policy.inf](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden-Windows-Security%20Module/Main%20files/Resources/Default%20Security%20Policy.inf) contains security policy data used by the `Unprotect-WindowsSecurity` cmdlet.
+
+    - [Registry resources.csv](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden-Windows-Security%20Module/Main%20files/Resources/Registry%20resources.csv) Includes the data used by the `Confirm-SystemCompliance` cmdlet.
 
 - [How Are Group Policies Used by the Harden Windows Security Module?](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Group-Policy#how-are-group-policies-used-by-the-harden-windows-security-module)
 - [How are Group Policies for this module created and maintained?](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Group-Policy#how-are-group-policies-for-the-module-created-and-maintained)

@@ -192,6 +192,11 @@ The following is the exact enumeration of the items that will be executed based 
 
 <br>
 
+> [!NOTE]\
+> The ability to have more granular control over the sub-categories will be added in a future update.
+
+<br>
+
 > [!IMPORTANT]\
 > It is highly recommended to always include the Microsoft Security Baselines category and place it first as it forms the foundation of all subsequent categories.
 

@@ -216,7 +216,7 @@ From Top to bottom in order:
     - <a href="#edge-browser-configurations">Edge Browser configurations</a>
     - <a href="#certificate-checking-commands">Certificate Checking Commands</a>
     - <a href="#country-ip-blocking">Country IP Blocking</a>
-    - <a href="#downloads-defense-measures-">Downloads Defense Measures</a>
+    - <a href="#downloads-defense-measures-">Downloads Defense Measures <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/New.png" alt="New Label" width="25"></a>
 
 * Commands that don't require Administrator Privileges
     - <a href="#non-admin-commands">Non-Admin Commands</a>

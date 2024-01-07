@@ -216,6 +216,7 @@ From Top to bottom in order:
     - <a href="#edge-browser-configurations">Edge Browser configurations</a>
     - <a href="#certificate-checking-commands">Certificate Checking Commands</a>
     - <a href="#country-ip-blocking">Country IP Blocking</a>
+    - <a href="#downloads-defense-measures">Downloads Defense Measures</a>
 
 * Commands that don't require Administrator Privileges
     - <a href="#non-admin-commands">Non-Admin Commands</a>
@@ -941,6 +942,22 @@ Once you have those Firewall rules added, you can [use this method](https://gith
 > Threat actors can use VPN, VPS etc. to mask their originating IP address and location. So don't take this category as the perfect solution for network protection.
 
 <p align="right"><a href="#menu-back-to-top">💡 (back to categories)</a></p>
+
+<br>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+
+<br>
+
+## Downloads Defense Measures <a href="#downloads-defense-measures"><img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/DownloadsDefenseMeasures.png" alt="Downloads Defense Measures icon" width="48"></a>
+
+To combat the threat of more sophisticated malware, a preemptive measure is taken by creating and deploying a [WDAC](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Introduction) policy on the system. This policy blocks the execution of executables and [other potentially harmful file types](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/feature-availability) in the Downloads folder, using the [WDACConfig module](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig).
+
+This policy defends the system from malware that can launch itself automatically after being downloaded from the Internet. The user must ensure the file's safety and explicitly transfer it to a different folder before running it.
+
+The WDAC policy employs a wildcard pattern to prevent any file from running in the Downloads folder. Additionally, it verifies that the system downloads folder in the user directory matches the downloads folder in the Edge browser's settings. If there is a discrepancy, a warning message is displayed on the console.
+
+The policy can be removed by the [**Unprotect-WindowsSecurity**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden%E2%80%90Windows%E2%80%90Security%E2%80%90Module) or [**Remove-WDACConfig**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Remove-WDACConfig) cmdlets.
 
 <br>
 

@@ -27,7 +27,7 @@ function Confirm-SystemCompliance {
 
         #Region Defining-Variables
         # Total number of Compliant values not equal to N/A
-        [System.Int64]$TotalNumberOfTrueCompliantValues = 230
+        [System.Int64]$TotalNumberOfTrueCompliantValues = 229
 
         # Get the current configurations and preferences of the Microsoft Defender
         New-Variable -Name 'MDAVConfigCurrent' -Value (Get-MpComputerStatus) -Force
@@ -1861,7 +1861,7 @@ function Confirm-SystemCompliance {
                 [System.Int64]($FinalMegaObject.'Windows Networking' | Where-Object -FilterScript { $_.Compliant -eq $True }).Count + # 9
                 [System.Int64]($FinalMegaObject.Miscellaneous | Where-Object -FilterScript { $_.Compliant -eq $True }).Count + # 17
                 [System.Int64]($FinalMegaObject.'Windows Update' | Where-Object -FilterScript { $_.Compliant -eq $True }).Count + # 14
-                [System.Int64]($FinalMegaObject.Edge | Where-Object -FilterScript { $_.Compliant -eq $True }).Count + # 15
+                [System.Int64]($FinalMegaObject.Edge | Where-Object -FilterScript { $_.Compliant -eq $True }).Count + # 14
                 [System.Int64]($FinalMegaObject.'Non-Admin' | Where-Object -FilterScript { $_.Compliant -eq $True }).Count # 11
 
                 #Region ASCII-Arts

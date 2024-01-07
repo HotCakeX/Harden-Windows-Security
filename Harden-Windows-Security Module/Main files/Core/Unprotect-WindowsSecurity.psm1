@@ -187,7 +187,7 @@ Function Unprotect-WindowsSecurity {
 
                 $CurrentMainStep++
                 Write-Progress -Id 0 -Activity 'Removing Downloads Defense Measures' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
-                
+
                 Write-Verbose -Message 'Getting the currently deployed base policies'
                 if (((&"$env:SystemDrive\Windows\System32\CiTool.exe" -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { ($_.IsSystemPolicy -ne 'True') -and ($_.PolicyID -eq $_.BasePolicyID) -and ($_.FriendlyName -eq 'Downloads-Defense-Measures') -and ($_.IsOnDisk -eq 'True') })) {
 

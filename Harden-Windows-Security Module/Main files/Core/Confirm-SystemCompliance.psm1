@@ -120,7 +120,7 @@ function Confirm-SystemCompliance {
             # an array to hold the output
             [System.Object[]]$Output = @()
 
-            foreach ($Item in $AllRegistryItems | Where-Object -FilterScript { $_.category -eq $CatName } | Where-Object -FilterScript { $_.Method -eq $Method }) {
+            foreach ($Item in $AllRegistryItems | Where-Object -FilterScript { ($_.category -eq $CatName) -and ($_.Method -eq $Method) }) {
 
                 # Initialize a flag to indicate if the key exists
                 [System.Boolean]$keyExists = $false
@@ -157,14 +157,6 @@ function Confirm-SystemCompliance {
 
                 # Create a custom object with the results for this row
                 $Output += [PSCustomObject]@{
-                    # Category     = $Item.category
-                    # Key          = $Item.key
-                    # Name         = $Item.name
-                    # KeyExists    = $keyExists
-                    # ValueMatches = $ValueMatches
-                    # Type         = $Item.type
-                    # Value        = $Item.value
-
                     FriendlyName = $Item.FriendlyName
                     Compliant    = $ValueMatches
                     Value        = $Item.value
@@ -414,7 +406,6 @@ function Confirm-SystemCompliance {
             # Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array as custom objects
             $NestedObjectArray += [PSCustomObject](Invoke-CategoryProcessing -catname $CatName -Method 'Group Policy')
 
-
             # Individual ASR rules verification
             [System.String[]]$Ids = $MDAVPreferencesCurrent.AttackSurfaceReductionRules_Ids
             [System.String[]]$Actions = $MDAVPreferencesCurrent.AttackSurfaceReductionRules_Actions
@@ -649,14 +640,10 @@ function Confirm-SystemCompliance {
             }
             #region Non-OS-Drive-BitLocker-Drives-Encryption-Verification
             # Get the list of non OS volumes
-            [System.Object[]]$NonOSBitLockerVolumes = Get-BitLockerVolume | Where-Object -FilterScript {
-                    ($_.volumeType -ne 'OperatingSystem')
-            }
+            [System.Object[]]$NonOSBitLockerVolumes = Get-BitLockerVolume | Where-Object -FilterScript { $_.volumeType -ne 'OperatingSystem' }
 
             # Get all the volumes and filter out removable ones
-            [System.Object[]]$RemovableVolumes = Get-Volume |
-            Where-Object -FilterScript { $_.DriveType -eq 'Removable' } |
-            Where-Object -FilterScript { $_.DriveLetter }
+            [System.Object[]]$RemovableVolumes = Get-Volume | Where-Object -FilterScript { ($_.DriveType -eq 'Removable') -and $_.DriveLetter }
 
             # Check if there is any removable volumes
             if ($RemovableVolumes) {
@@ -667,9 +654,7 @@ function Confirm-SystemCompliance {
                 }
 
                 # Filter out removable drives from BitLocker volumes to process
-                $NonOSBitLockerVolumes = $NonOSBitLockerVolumes | Where-Object -FilterScript {
-                    ($_.MountPoint -notin $RemovableVolumesLetters)
-                }
+                $NonOSBitLockerVolumes = $NonOSBitLockerVolumes | Where-Object -FilterScript { $_.MountPoint -notin $RemovableVolumesLetters }
             }
 
             # Check if there is any non-OS volumes
@@ -1308,7 +1293,7 @@ function Confirm-SystemCompliance {
                 # Append the categories in $FinalMegaObject to the array using += operator
                 $CsvOutPutFileContent += $FinalMegaObject.PSObject.Properties.Value
                 # Convert the array to a CSV file and store it in the current working directory
-                $CsvOutPutFileContent | ConvertTo-Csv | Out-File -FilePath '.\Compliance Check Output.CSV' -Force
+                $CsvOutPutFileContent | ConvertTo-Csv | Out-File -FilePath ".\Compliance Check Output $(Get-Date -Format "MM-dd-yyyy 'at' HH-mm-ss").CSV" -Force
             }
 
             if ($ShowAsObjectsOnly) {
@@ -1865,7 +1850,7 @@ function Confirm-SystemCompliance {
                 )
 
                 # Counting the number of $True Compliant values in the Final Output Object
-                [System.Int64]$TotalTrueCompliantValuesInOutPut = 0                                                
+                [System.Int64]$TotalTrueCompliantValuesInOutPut = 0
                 foreach ($Category in $Categories) {
                     $TotalTrueCompliantValuesInOutPut += ($FinalMegaObject.$Category | Where-Object -FilterScript { $_.Compliant -eq $True }).Count
                 }

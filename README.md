@@ -951,7 +951,11 @@ Once you have those Firewall rules added, you can [use this method](https://gith
 
 ## Downloads Defense Measures <a href="#downloads-defense-measures"><img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/DownloadsDefenseMeasures.png" alt="Downloads Defense Measures icon" width="48"></a>
 
-To combat the threat of more sophisticated malware, a preemptive measure is taken by creating and deploying a [WDAC](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Introduction) policy on the system. This policy blocks the execution of executables and [other potentially harmful file types](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/feature-availability) in the Downloads folder, using the [WDACConfig module](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig).
+<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Bing%20AI%20generated/tgrlkdmg543.png" alt="An AI generated picture of a cat girl on the roof" width="700"></p>
+
+<br>
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> **T**o combat the threat of more sophisticated malware, a preemptive measure is taken by creating and deploying a [WDAC](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Introduction) policy on the system. This policy blocks the execution of executables and [other potentially harmful file types](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/feature-availability) in the Downloads folder, using the [WDACConfig module](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig).
 
 This policy defends the system from malware that can launch itself automatically after being downloaded from the Internet. The user must ensure the file's safety and explicitly transfer it to a different folder before running it.
 

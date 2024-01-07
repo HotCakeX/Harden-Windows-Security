@@ -216,7 +216,7 @@ From Top to bottom in order:
     - <a href="#edge-browser-configurations">Edge Browser configurations</a>
     - <a href="#certificate-checking-commands">Certificate Checking Commands</a>
     - <a href="#country-ip-blocking">Country IP Blocking</a>
-    - <a href="#downloads-defense-measures">Downloads Defense Measures</a>
+    - <a href="#downloads-defense-measures-">Downloads Defense Measures</a>
 
 * Commands that don't require Administrator Privileges
     - <a href="#non-admin-commands">Non-Admin Commands</a>
@@ -949,7 +949,7 @@ Once you have those Firewall rules added, you can [use this method](https://gith
 
 <br>
 
-## Downloads Defense Measures <a href="#downloads-defense-measures"><img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/DownloadsDefenseMeasures.png" alt="Downloads Defense Measures icon" width="48"></a>
+## Downloads Defense Measures <a href="#downloads-defense-measures-"><img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/DownloadsDefenseMeasures.png" alt="Downloads Defense Measures icon" width="48"></a>
 
 <p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Bing%20AI%20generated/tgrlkdmg543.png" alt="An AI generated picture of a cat girl on the roof" width="700"></p>
 

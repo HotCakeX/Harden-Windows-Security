@@ -963,6 +963,8 @@ The WDAC policy employs a wildcard pattern to prevent any file from running in t
 
 The policy can be removed by the [**Unprotect-WindowsSecurity**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden%E2%80%90Windows%E2%80%90Security%E2%80%90Module) or [**Remove-WDACConfig**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Remove-WDACConfig) cmdlets.
 
+<p align="right"><a href="#menu-back-to-top">💡 (back to categories)</a></p>
+
 <br>
 
 <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">

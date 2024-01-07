@@ -1848,21 +1848,27 @@ function Confirm-SystemCompliance {
                     } , Value -AutoSize
                 }
 
+                [System.String[]]$Categories = ('Microsoft Defender', # 49 - 4x(N/A) = 45
+                    'ASR', # 17
+                    'Bitlocker', # 22 + Number of Non-OS drives which are dynamically increased
+                    'TLS', # 21
+                    'LockScreen', # 14
+                    'UAC', # 4
+                    'Device Guard', # 8
+                    'Windows Firewall', # 19
+                    'Optional Windows Features', # 14
+                    'Windows Networking', # 9
+                    'Miscellaneous', # 17
+                    'Windows Update', # 14
+                    'Edge', # 14
+                    'Non-Admin' # 11
+                )
+
                 # Counting the number of $True Compliant values in the Final Output Object
-                [System.Int64]$TotalTrueCompliantValuesInOutPut = ($FinalMegaObject.'Microsoft Defender' | Where-Object -FilterScript { $_.Compliant -eq $True }).Count + # 49 - 4x(N/A) = 45
-                [System.Int64]($FinalMegaObject.ASR | Where-Object -FilterScript { $_.Compliant -eq $True }).Count + # 17
-                [System.Int64]($FinalMegaObject.Bitlocker | Where-Object -FilterScript { $_.Compliant -eq $True }).Count + # 22 + Number of Non-OS drives which are dynamically increased
-                [System.Int64]($FinalMegaObject.TLS | Where-Object -FilterScript { $_.Compliant -eq $True }).Count + # 21
-                [System.Int64]($FinalMegaObject.LockScreen | Where-Object -FilterScript { $_.Compliant -eq $True }).Count + # 14
-                [System.Int64]($FinalMegaObject.UAC | Where-Object -FilterScript { $_.Compliant -eq $True }).Count + # 4
-                [System.Int64]($FinalMegaObject.'Device Guard' | Where-Object -FilterScript { $_.Compliant -eq $True }).Count + # 8
-                [System.Int64]($FinalMegaObject.'Windows Firewall' | Where-Object -FilterScript { $_.Compliant -eq $True }).Count + # 19
-                [System.Int64]($FinalMegaObject.'Optional Windows Features' | Where-Object -FilterScript { $_.Compliant -eq $True }).Count + # 14
-                [System.Int64]($FinalMegaObject.'Windows Networking' | Where-Object -FilterScript { $_.Compliant -eq $True }).Count + # 9
-                [System.Int64]($FinalMegaObject.Miscellaneous | Where-Object -FilterScript { $_.Compliant -eq $True }).Count + # 17
-                [System.Int64]($FinalMegaObject.'Windows Update' | Where-Object -FilterScript { $_.Compliant -eq $True }).Count + # 14
-                [System.Int64]($FinalMegaObject.Edge | Where-Object -FilterScript { $_.Compliant -eq $True }).Count + # 14
-                [System.Int64]($FinalMegaObject.'Non-Admin' | Where-Object -FilterScript { $_.Compliant -eq $True }).Count # 11
+                [System.Int64]$TotalTrueCompliantValuesInOutPut = 0                                                
+                foreach ($Category in $Categories) {
+                    $TotalTrueCompliantValuesInOutPut += ($FinalMegaObject.$Category | Where-Object -FilterScript { $_.Compliant -eq $True }).Count
+                }
 
                 #Region ASCII-Arts
                 [System.String]$WhenValue1To20 = @'

@@ -1,9 +1,9 @@
 #Requires -Version 7.4
 #Requires -PSEdition Core
 Function Protect-WindowsSecurity {
-    [CmdletBinding()]
+    [CmdletBinding(DefaultParameterSetName = 'Categories')]
     param (
-        [parameter(Mandatory = $false)]
+        [parameter(Mandatory = $false, ParameterSetName = 'Categories')]
         [ArgumentCompleter({
                 # Get the current command and the already bound parameters
                 param($CommandName, $ParameterName, $WordToComplete, $CommandAst, $FakeBoundParameters)
@@ -31,35 +31,108 @@ Function Protect-WindowsSecurity {
                 $true
             })]
         [System.String[]]$Categories
-    )
+)
 
-    # This class provides a list of valid values for the Categories parameter of the Protect-WindowsSecurity function
-    Class Categoriex : System.Management.Automation.IValidateSetValuesGenerator {
-        [System.String[]] GetValidValues() {
-            $Categoriex = @(
-                'WindowsBootManagerRevocations',
-                'MicrosoftSecurityBaselines',
-                'Microsoft365AppsSecurityBaselines',
-                'MicrosoftDefender',
-                'AttackSurfaceReductionRules',
-                'BitLockerSettings',
-                'TLSSecurity',
-                'LockScreen',
-                'UserAccountControl',
-                'WindowsFirewall',
-                'OptionalWindowsFeatures',
-                'WindowsNetworking',
-                'MiscellaneousConfigurations',
-                'WindowsUpdateConfigurations',
-                'EdgeBrowserConfigurations',
-                'CertificateCheckingCommands',
-                'CountryIPBlocking',
-                'DownloadsDefenseMeasures',
-                'NonAdminCommands'
-            )
-            return [System.String[]]$Categoriex
+    DynamicParam {
+
+        # Add the dynamic parameters to the param dictionary
+        $ParamDictionary = [System.Management.Automation.RuntimeDefinedParameterDictionary]::new()
+
+        if ('MicrosoftSecurityBaselines' -in $PSBoundParameters['Categories']) {
+
+            # Create a dynamic parameter for -MicrosoftSecurityBaselines_NoOverrides
+            $MicrosoftSecurityBaselines_NoOverrides = [System.Management.Automation.ParameterAttribute]@{
+                Mandatory        = $false
+                ParameterSetName = 'Categories'
+                HelpMessage      = 'Apples the Microsoft Security Baselines without the optional overrides'
+            }
+            $ParamDictionary.Add('MicrosoftSecurityBaselines_NoOverrides', [System.Management.Automation.RuntimeDefinedParameter]::new(
+                    'MicrosoftSecurityBaselines_NoOverrides',
+                    [System.Management.Automation.SwitchParameter],
+                    [System.Management.Automation.ParameterAttribute[]]@($MicrosoftSecurityBaselines_NoOverrides)
+                ))
         }
+
+        if ('MicrosoftDefender' -in $PSBoundParameters['Categories']) {
+
+            # Create a dynamic parameter for -MicrosoftDefender_SmartAppControl
+            $MicrosoftDefender_SmartAppControl = [System.Management.Automation.ParameterAttribute]@{
+                Mandatory        = $false
+                ParameterSetName = 'Categories'
+                HelpMessage      = 'Enables Smart App Control'
+            }
+            $ParamDictionary.Add('MicrosoftDefender_SmartAppControl', [System.Management.Automation.RuntimeDefinedParameter]::new(
+                    'MicrosoftDefender_SmartAppControl',
+                    [System.Management.Automation.SwitchParameter],
+                    [System.Management.Automation.ParameterAttribute[]]@($MicrosoftDefender_SmartAppControl)
+                ))
+
+            # Create a dynamic parameter for -MicrosoftDefender_DefenderBetaChannels
+            $MicrosoftDefender_DefenderBetaChannels = [System.Management.Automation.ParameterAttribute]@{
+                Mandatory        = $false
+                ParameterSetName = 'Categories'
+                HelpMessage      = 'Set Defender Engine and Intelligence update channels to beta'
+            }
+            $ParamDictionary.Add('MicrosoftDefender_DefenderBetaChannels', [System.Management.Automation.RuntimeDefinedParameter]::new(
+                    'MicrosoftDefender_DefenderBetaChannels',
+                    [System.Management.Automation.SwitchParameter],
+                    [System.Management.Automation.ParameterAttribute[]]@($MicrosoftDefender_DefenderBetaChannels)
+                ))
+
+            # Create a dynamic parameter for -MicrosoftDefender_NoScheduledTask
+            $MicrosoftDefender_NoScheduledTask = [System.Management.Automation.ParameterAttribute]@{
+                Mandatory        = $false
+                ParameterSetName = 'Categories'
+                HelpMessage      = 'Will not create scheduled task for fast MSFT driver block rules update'
+            }
+            $ParamDictionary.Add('MicrosoftDefender_NoScheduledTask', [System.Management.Automation.RuntimeDefinedParameter]::new(
+                    'MicrosoftDefender_NoScheduledTask',
+                    [System.Management.Automation.SwitchParameter],
+                    [System.Management.Automation.ParameterAttribute[]]@($MicrosoftDefender_NoScheduledTask)
+                ))
+        }
+
+        return $ParamDictionary
     }
+
+    begin {
+
+        # This class provides a list of valid values for the Categories parameter of the Protect-WindowsSecurity function
+        Class Categoriex : System.Management.Automation.IValidateSetValuesGenerator {
+            [System.String[]] GetValidValues() {
+                $Categoriex = @(
+                    'WindowsBootManagerRevocations',
+                    'MicrosoftSecurityBaselines',
+                    'Microsoft365AppsSecurityBaselines',
+                    'MicrosoftDefender',
+                    'AttackSurfaceReductionRules',
+                    'BitLockerSettings',
+                    'TLSSecurity',
+                    'LockScreen',
+                    'UserAccountControl',
+                    'WindowsFirewall',
+                    'OptionalWindowsFeatures',
+                    'WindowsNetworking',
+                    'MiscellaneousConfigurations',
+                    'WindowsUpdateConfigurations',
+                    'EdgeBrowserConfigurations',
+                    'CertificateCheckingCommands',
+                    'CountryIPBlocking',
+                    'DownloadsDefenseMeasures',
+                    'NonAdminCommands'
+                )
+                return [System.String[]]$Categoriex
+            }
+        }
+
+        # Since Dynamic parameters are only available in the parameter dictionary, we have to access them using $PSBoundParameters or assign them manually to another variable in the function's scope
+        New-Variable -Name "MicrosoftSecurityBaselines_NoOverrides" -Value $($PSBoundParameters['MicrosoftSecurityBaselines_NoOverrides']) -Force
+        New-Variable -Name "MicrosoftDefender_SmartAppControl" -Value $($PSBoundParameters['MicrosoftDefender_SmartAppControl']) -Force
+        New-Variable -Name "MicrosoftDefender_NoScheduledTask" -Value $($PSBoundParameters['MicrosoftDefender_NoScheduledTask']) -Force
+        New-Variable -Name "MicrosoftDefender_DefenderBetaChannels" -Value $($PSBoundParameters['MicrosoftDefender_DefenderBetaChannels']) -Force
+    }
+
+    process {
 
     # Detecting if Verbose switch is used
     $PSBoundParameters.Verbose.IsPresent ? ([System.Boolean]$Verbose = $true) : ([System.Boolean]$Verbose = $false) | Out-Null
@@ -861,24 +934,26 @@ Function Protect-WindowsSecurity {
             $CurrentMainStep++
             $Host.UI.RawUI.WindowTitle = '🔐 Security Baselines'
             Write-Verbose -Message 'Running Security Baselines category'
+            # Change current directory to the Security Baselines folder
             Push-Location -Path "$MicrosoftSecurityBaselinePath\Scripts\"
 
-            :MicrosoftSecurityBaselinesCategoryLabel switch ($RunUnattended ? 'Yes, With the Optional Overrides (Recommended)' :(Select-Option -Options 'Yes', 'Yes, With the Optional Overrides (Recommended)' , 'No', 'Exit' -Message "`nApply Microsoft Security Baseline ?")) {
+            :MicrosoftSecurityBaselinesCategoryLabel switch ($RunUnattended ? ($MicrosoftSecurityBaselines_NoOverrides ? 'Yes' : 'Yes, With the Optional Overrides (Recommended)') : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nApply Microsoft Security Baseline ?")) {
                 'Yes' {
                     Write-Progress -Id 0 -Activity 'Microsoft Security Baseline' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
 
                     # Run the official PowerShell script included in the Microsoft Security Baseline file downloaded from Microsoft servers
+                    Write-Verbose -Message 'Applying the Microsoft Security Baselines without the optional overrides'
                     .\Baseline-LocalInstall.ps1 -Win11NonDomainJoined
                 }
                 'Yes, With the Optional Overrides (Recommended)' {
                     Write-Progress -Id 0 -Activity 'Microsoft Security Baseline' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
 
                     # Run the official PowerShell script included in the Microsoft Security Baseline file downloaded from Microsoft servers
+                    Write-Verbose -Message 'Applying the Microsoft Security Baselines with the optional overrides'
                     .\Baseline-LocalInstall.ps1 -Win11NonDomainJoined
 
                     Start-Sleep -Seconds 1
 
-                    # Apply the optional overrides
                     &$LGPOExe /q /m "$WorkingDir\Security-Baselines-X\Overrides for Microsoft Security Baseline\registry.pol"
                     &$LGPOExe /q /s "$WorkingDir\Security-Baselines-X\Overrides for Microsoft Security Baseline\GptTmpl.inf"
 
@@ -888,6 +963,7 @@ Function Protect-WindowsSecurity {
                 'No' { break MicrosoftSecurityBaselinesCategoryLabel }
                 'Exit' { break MainSwitchLabel }
             }
+            # Restore original directory location
             Pop-Location
         }
         Function Invoke-Microsoft365AppsSecurityBaselines {
@@ -1002,9 +1078,11 @@ Function Protect-WindowsSecurity {
 
                     # Suggest turning on Smart App Control only if it's in Eval mode
                     if ((Get-MpComputerStatus).SmartAppControlState -eq 'Eval') {
-                        :SmartAppControlLabel switch ($RunUnattended ? 'No' : (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nTurn on Smart App Control ?")) {
+                        :SmartAppControlLabel switch ($RunUnattended ? ( $MicrosoftDefender_SmartAppControl ? 'Yes' : 'No' ) : (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nTurn on Smart App Control ?")) {
                             'Yes' {
+                                Write-Verbose -Message 'Turning on Smart App Control'
                                 Edit-Registry -path 'Registry::HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\CI\Policy' -key 'VerifiedAndReputablePolicyState' -value '1' -type 'DWORD' -Action 'AddOrModify'
+
                                 # Let the optional diagnostic data be enabled automatically
                                 $ShouldEnableOptionalDiagnosticData = $True
                             } 'No' { break SmartAppControlLabel }
@@ -1021,6 +1099,7 @@ Function Protect-WindowsSecurity {
                         if ((Get-MpComputerStatus).SmartAppControlState -ne 'Off') {
                             :SmartAppControlLabel2 switch ($RunUnattended ? 'Yes' : (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nEnable Optional Diagnostic Data ?" -ExtraMessage 'Required for Smart App Control usage and evaluation, read the GitHub Readme!')) {
                                 'Yes' {
+                                    Write-Verbose -Message 'Enabling Optional Diagnostic Data'
                                     &$LGPOExe /q /m "$WorkingDir\Security-Baselines-X\Microsoft Defender Policies\Optional Diagnostic Data\registry.pol"
                                 } 'No' { break SmartAppControlLabel2 }
                                 'Exit' { break MainSwitchLabel }
@@ -1033,7 +1112,7 @@ Function Protect-WindowsSecurity {
 
                     # Create scheduled task for fast weekly Microsoft recommended driver block list update if it doesn't exist or exists but is not Ready/Running
                     if (($BlockListScheduledTaskState -notin 'Ready', 'Running')) {
-                        :TaskSchedulerCreationLabel switch ($RunUnattended ? 'Yes' : (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nCreate scheduled task for fast weekly Microsoft recommended driver block list update ?")) {
+                        :TaskSchedulerCreationLabel switch ($RunUnattended ? ($MicrosoftDefender_NoScheduledTask ? 'No' : 'Yes') : (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nCreate scheduled task for fast weekly Microsoft recommended driver block list update ?")) {
                             'Yes' {
                                 Write-Verbose -Message 'Creating scheduled task for fast weekly Microsoft recommended driver block list update'
 
@@ -1063,8 +1142,9 @@ Function Protect-WindowsSecurity {
                     # Only display this prompt if Engine and Platform update channels are not already set to Beta
                     if ( ($MDAVPreferencesCurrent.EngineUpdatesChannel -ne '2') -or ($MDAVPreferencesCurrent.PlatformUpdatesChannel -ne '2') ) {
                         # Set Microsoft Defender engine and platform update channel to beta - Devices in the Windows Insider Program are subscribed to this channel by default.
-                        :DefenderUpdateChannelsLabel switch ($RunUnattended ? 'No' : (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nSet Microsoft Defender engine and platform update channel to beta ?")) {
+                        :DefenderUpdateChannelsLabel switch ($RunUnattended ? ($MicrosoftDefender_DefenderBetaChannels ? 'Yes' : 'No') : (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nSet Microsoft Defender engine and platform update channel to beta ?")) {
                             'Yes' {
+                                Write-Verbose -Message 'Setting Microsoft Defender engine and platform update channel to beta'
                                 Set-MpPreference -EngineUpdatesChannel beta
                                 Set-MpPreference -PlatformUpdatesChannel beta
                             } 'No' { break DefenderUpdateChannelsLabel }
@@ -2245,7 +2325,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
         # Set the execution policy back to what it was prior to running the script
         Set-ExecutionPolicy -ExecutionPolicy "$CurrentExecutionPolicy" -Scope 'Process' -Force
     }
-
+}
     <#
 .SYNOPSIS
    Applies the hardening measures described in GitHub repository

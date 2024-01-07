@@ -686,6 +686,8 @@ NistP384
 
     - Windows Media Player (legacy): isn't needed anymore, [Windows 11 has a modern media player app](https://blogs.windows.com/windows-insider/2021/11/16/new-media-player-for-windows-11-begins-rolling-out-to-windows-insiders/).
 
+    - [Microsoft Defender Application Guard](https://learn.microsoft.com/en-us/windows/security/application-security/application-isolation/microsoft-defender-application-guard/md-app-guard-overview), it's [deprecated](https://learn.microsoft.com/en-us/windows/whats-new/deprecated-features#deprecated-features). Learn more about [Microsoft Edge Security Features here](https://edgestatic.azureedge.net/shared/cms/pdfs/Microsoft_Edge_Security_Whitepaper_v2.pdf).
+
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> [Uninstalls](https://learn.microsoft.com/en-us/powershell/module/dism/remove-windowscapability) these optional features (Windows Settings -> Apps -> Optional Features):
 
     - Notepad (system): legacy Notepad program. Windows 11 has multi-tabbed modern Notepad app.
@@ -703,8 +705,6 @@ NistP384
     - Steps Recorder: it's [deprecated](https://prod.support.services.microsoft.com/en-us/windows/steps-recorder-deprecation-a64888d7-8482-4965-8ce3-25fb004e975f).
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> [Enables](https://learn.microsoft.com/en-us/powershell/module/dism/enable-windowsoptionalfeature) these optional features (Control Panel):
-
-    - [Microsoft Defender Application Guard](https://learn.microsoft.com/en-us/windows/security/application-security/application-isolation/microsoft-defender-application-guard/md-app-guard-overview): which is a safe Environment to open untrusted websites. - [System Requirements](https://learn.microsoft.com/en-us/windows/security/application-security/application-isolation/microsoft-defender-application-guard/reqs-md-app-guard) - [Frequently asked questions](https://learn.microsoft.com/en-us/windows/security/application-security/application-isolation/microsoft-defender-application-guard/faq-md-app-guard) - Its behavior regarding [DNS over HTTPS in Edge](#notes-about-mdag-microsoft-defender-application-guard)
 
     - [Windows Sandbox](https://learn.microsoft.com/en-us/windows/security/application-security/application-isolation/windows-sandbox/windows-sandbox-overview): install, test and use programs in a disposable virtual operation system, completely separate from your  main OS
 
@@ -903,16 +903,6 @@ Due to security reasons, many policies cannot be used when you are signed into E
         - [Reason why the module doesn't use it.](https://github.com/HotCakeX/Harden-Windows-Security/issues/50)
 
 <br>
-
-### Notes about MDAG (Microsoft Defender Application Guard)
-
-* When DNS over HTTPS is set by user in Edge settings, Microsoft Defender Application Guard ignores that and connects directly to the Internet without using any DoH configuration.
-
-* If DNS over HTTPS is enforced on Edge by a Group Policy or registry, then MDAG fails to connect to the Internet and shows DNS errors.
-
-* **When DNS over HTTPS settings are set OS wide in Windows settings, both normal Edge and MDAG use the OS DoH settings.** *(This is the behavior set by this module)*
-
-  * Use my [WinSecureDNSMgr module](https://github.com/HotCakeX/WinSecureDNSMgr) to easily configure DNS over HTTPS in Windows
 
 ###### Edge policies reviewed until version 119.0.2151.44
 

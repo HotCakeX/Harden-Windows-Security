@@ -41,13 +41,12 @@ Function Protect-WindowsSecurity {
 
         # A script block to create and add dynamic parameters to the dictionary
         [System.Management.Automation.ScriptBlock]$DynamicParamCreator = {
-            param([System.String]$Name, [System.String]$HelpMessage)
+            param([System.String]$Name)
 
             # Create a dynamic parameter
             $CurrentDynParam = [System.Management.Automation.ParameterAttribute]@{
                 Mandatory        = $false
                 ParameterSetName = 'Categories'
-                HelpMessage      = $HelpMessage
             }
             # Add the dynamic parameter to the param dictionary
             $ParamDictionary.Add($Name, [System.Management.Automation.RuntimeDefinedParameter]::new(
@@ -59,38 +58,37 @@ Function Protect-WindowsSecurity {
 
         if ('MicrosoftSecurityBaselines' -in $PSBoundParameters['Categories']) {
             # Create a dynamic parameter for -MicrosoftSecurityBaselines_NoOverrides
-            Invoke-Command -ScriptBlock $DynamicParamCreator -ArgumentList 'MicrosoftSecurityBaselines_NoOverrides', 'Applies the Microsoft Security Baselines without the optional overrides'
+            Invoke-Command -ScriptBlock $DynamicParamCreator -ArgumentList 'MicrosoftSecurityBaselines_NoOverrides'
         }
 
         if ('MicrosoftDefender' -in $PSBoundParameters['Categories']) {
             # Create a dynamic parameter for -MicrosoftDefender_SmartAppControl
-            Invoke-Command -ScriptBlock $DynamicParamCreator -ArgumentList 'MicrosoftDefender_SmartAppControl', 'Enables Smart App Control'
+            Invoke-Command -ScriptBlock $DynamicParamCreator -ArgumentList 'MicrosoftDefender_SmartAppControl'
             # Create a dynamic parameter for -MicrosoftDefender_NoOptionalDiagnosticData
-            Invoke-Command -ScriptBlock $DynamicParamCreator -ArgumentList 'MicrosoftDefender_NoOptionalDiagnosticData', 'Will not enable optional diagnostics data required for Smart App Control'
+            Invoke-Command -ScriptBlock $DynamicParamCreator -ArgumentList 'MicrosoftDefender_NoOptionalDiagnosticData'
             # Create a dynamic parameter for -MicrosoftDefender_NoScheduledTask
-            Invoke-Command -ScriptBlock $DynamicParamCreator -ArgumentList 'MicrosoftDefender_NoScheduledTask', 'Will not create scheduled task for fast MSFT driver block rules update'
+            Invoke-Command -ScriptBlock $DynamicParamCreator -ArgumentList 'MicrosoftDefender_NoScheduledTask'
             # Create a dynamic parameter for -MicrosoftDefender_DefenderBetaChannels
-            Invoke-Command -ScriptBlock $DynamicParamCreator -ArgumentList 'MicrosoftDefender_DefenderBetaChannels', 'Set Defender Engine and Intelligence update channels to beta'
-           
+            Invoke-Command -ScriptBlock $DynamicParamCreator -ArgumentList 'MicrosoftDefender_DefenderBetaChannels'
         }
 
         if ('LockScreen' -in $PSBoundParameters['Categories']) {
             # Create a dynamic parameter for -LockScreen_DontDisplayLastSignedIn
-            Invoke-Command -ScriptBlock $DynamicParamCreator -ArgumentList 'LockScreen_DontDisplayLastSignedIn', 'Will not display the last signed in user at the lock screen'
+            Invoke-Command -ScriptBlock $DynamicParamCreator -ArgumentList 'LockScreen_DontDisplayLastSignedIn'
             # Create a dynamic parameter for -LockScreen_RequireCtrlAltDel
-            Invoke-Command -ScriptBlock $DynamicParamCreator -ArgumentList 'LockScreen_RequireCtrlAltDel', 'Require CTRL + ALT + Delete at lock screen'
+            Invoke-Command -ScriptBlock $DynamicParamCreator -ArgumentList 'LockScreen_RequireCtrlAltDel'
         }
 
         if ('UserAccountControl' -in $PSBoundParameters['Categories']) {
             # Create a dynamic parameter for -UserAccountControl_NoFastUserSwitching
-            Invoke-Command -ScriptBlock $DynamicParamCreator -ArgumentList 'UserAccountControl_NoFastUserSwitching', 'Hide entry points for fast user switching'
+            Invoke-Command -ScriptBlock $DynamicParamCreator -ArgumentList 'UserAccountControl_NoFastUserSwitching'
             # Create a dynamic parameter for -UserAccountControl_OnlyElevateSignedExe
-            Invoke-Command -ScriptBlock $DynamicParamCreator -ArgumentList 'UserAccountControl_OnlyElevateSignedExe', 'Only elevate signed and validated executables'
+            Invoke-Command -ScriptBlock $DynamicParamCreator -ArgumentList 'UserAccountControl_OnlyElevateSignedExe'
         }
 
         if ('CountryIPBlocking' -in $PSBoundParameters['Categories']) {
             # Create a dynamic parameter for -CountryIPBlocking_BlockOFACSanctionedCountries
-            Invoke-Command -ScriptBlock $DynamicParamCreator -ArgumentList 'CountryIPBlocking_BlockOFACSanctionedCountries', 'Include the IP ranges of OFAC Sanctioned Countries in the firewall block rules'
+            Invoke-Command -ScriptBlock $DynamicParamCreator -ArgumentList 'CountryIPBlocking_BlockOFACSanctionedCountries'
         }
 
         return $ParamDictionary
@@ -129,13 +127,13 @@ Function Protect-WindowsSecurity {
         # Since Dynamic parameters are only available in the parameter dictionary, we have to access them using $PSBoundParameters or assign them manually to another variable in the function's scope
         New-Variable -Name 'MicrosoftSecurityBaselines_NoOverrides' -Value $($PSBoundParameters['MicrosoftSecurityBaselines_NoOverrides']) -Force
         New-Variable -Name 'MicrosoftDefender_SmartAppControl' -Value $($PSBoundParameters['MicrosoftDefender_SmartAppControl']) -Force
-        New-Variable -Name 'MicrosoftDefender_NoOptionalDiagnosticData' -Value $($PSBoundParameters['MicrosoftDefender_NoOptionalDiagnosticData']) -Force        
+        New-Variable -Name 'MicrosoftDefender_NoOptionalDiagnosticData' -Value $($PSBoundParameters['MicrosoftDefender_NoOptionalDiagnosticData']) -Force
         New-Variable -Name 'MicrosoftDefender_NoScheduledTask' -Value $($PSBoundParameters['MicrosoftDefender_NoScheduledTask']) -Force
         New-Variable -Name 'MicrosoftDefender_DefenderBetaChannels' -Value $($PSBoundParameters['MicrosoftDefender_DefenderBetaChannels']) -Force
         New-Variable -Name 'LockScreen_RequireCtrlAltDel' -Value $($PSBoundParameters['LockScreen_RequireCtrlAltDel']) -Force
         New-Variable -Name 'LockScreen_DontDisplayLastSignedIn' -Value $($PSBoundParameters['LockScreen_DontDisplayLastSignedIn']) -Force
         New-Variable -Name 'UserAccountControl_NoFastUserSwitching' -Value $($PSBoundParameters['UserAccountControl_NoFastUserSwitching']) -Force
-        New-Variable -Name 'UserAccountControl_OnlyElevateSignedExe' -Value $($PSBoundParameters['UserAccountControl_OnlyElevateSignedExe']) -Force        
+        New-Variable -Name 'UserAccountControl_OnlyElevateSignedExe' -Value $($PSBoundParameters['UserAccountControl_OnlyElevateSignedExe']) -Force
         New-Variable -Name 'CountryIPBlocking_BlockOFACSanctionedCountries' -Value $($PSBoundParameters['CountryIPBlocking_BlockOFACSanctionedCountries']) -Force
     }
 
@@ -144,9 +142,9 @@ Function Protect-WindowsSecurity {
         # Detecting if Verbose switch is used
         $PSBoundParameters.Verbose.IsPresent ? ([System.Boolean]$Verbose = $true) : ([System.Boolean]$Verbose = $false) | Out-Null
 
-        [System.Management.Automation.ActionPreference]$ErrorActionPreference = 'Stop'
+        $ErrorActionPreference = 'Stop'
 
-        [System.Management.Automation.DefaultParameterDictionary]$PSDefaultParameterValues = @{
+        $PSDefaultParameterValues = @{
             'Invoke-WebRequest:HttpVersion'    = '3.0'
             'Invoke-WebRequest:SslProtocol'    = 'Tls12,Tls13'
             'Invoke-RestMethod:HttpVersion'    = '3.0'
@@ -1097,8 +1095,8 @@ Function Protect-WindowsSecurity {
                             }
                         }
 
-                        # If Smart App Control is on or user selected to turn it on then automatically enable optional diagnostic data
                         if (($ShouldEnableOptionalDiagnosticData -eq $True) -or ((Get-MpComputerStatus).SmartAppControlState -eq 'On')) {
+                            Write-Verbose -Message 'Enabling Optional Diagnostic Data because SAC is on or user selected to turn it on'
                             &$LGPOExe /q /m "$WorkingDir\Security-Baselines-X\Microsoft Defender Policies\Optional Diagnostic Data\registry.pol"
                         }
                         else {
@@ -1884,7 +1882,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                         :LockScreenLastSignedInLabel switch ($RunUnattended ? ($LockScreen_DontDisplayLastSignedIn ? 'Yes' : 'No') : (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nDon't display last signed-in on logon screen ?" -ExtraMessage 'Read the GitHub Readme!')) {
                             'Yes' {
                                 Write-Verbose -Message "Applying the Don't display last signed-in policy"
-                                
+
                                 Write-Progress -Id 2 -ParentId 0 -Activity 'Lock Screen' -Status "Applying the Don't display last signed-in policy" -PercentComplete 50
 
                                 &$LGPOExe /q /s "$WorkingDir\Security-Baselines-X\Lock Screen Policies\Don't display last signed-in\GptTmpl.inf"
@@ -1972,7 +1970,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
 
                         # Disables Multicast DNS (mDNS) UDP-in Firewall Rules for all 3 Firewall profiles - disables only 3 rules
                         Get-NetFirewallRule |
-                        Where-Object -FilterScript { $_.RuleGroup -eq '@%SystemRoot%\system32\firewallapi.dll,-37302' -and $_.Direction -eq 'inbound' } |
+                        Where-Object -FilterScript { ($_.RuleGroup -eq '@%SystemRoot%\system32\firewallapi.dll,-37302') -and ($_.Direction -eq 'inbound') } |
                         ForEach-Object -Process { Disable-NetFirewallRule -DisplayName $_.DisplayName }
                     } 'No' { break WindowsFirewallLabel }
                     'Exit' { break MainSwitchLabel }
@@ -2345,22 +2343,55 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
     }
     <#
 .SYNOPSIS
-   Applies the hardening measures described in GitHub repository
+    Applies the hardening measures described in the GitHub readme.
 .LINK
-   https://github.com/HotCakeX/Harden-Windows-Security
+    https://github.com/HotCakeX/Harden-Windows-Security
 .DESCRIPTION
-   Applies the hardening measures
+    Applies the hardening measures on a Windows client OS. You can run this cmdlet in interactive or headless/unattended mode.
+    In interactive mode, you will be prompted for confirmation before applying each category and sub-category.
+    In headless/unattended mode, you can specify which categories to apply without the need for user interaction.
+    When running in headless/unattended mode, you can control the sub-categories of each category by using the following switch parameters:
+
+    MicrosoftSecurityBaselines_NoOverrides -> Applies the Microsoft Security Baselines without the optional overrides
+    MicrosoftDefender_SmartAppControl -> Enables Smart App Control
+    MicrosoftDefender_NoOptionalDiagnosticData -> Will not enable optional diagnostics data required for Smart App Control (Does not have any effect if Smart App Control is already turned on)
+    MicrosoftDefender_NoScheduledTask -> Will not create scheduled task for fast MSFT driver block rules update
+    MicrosoftDefender_DefenderBetaChannels -> Set Defender Engine and Intelligence update channels to beta
+    LockScreen_RequireCtrlAltDel -> Require CTRL + ALT + Delete at lock screen
+    LockScreen_DontDisplayLastSignedIn -> Will not display the last signed in user at the lock screen
+    UserAccountControl_NoFastUserSwitching -> Hide entry points for fast user switching
+    UserAccountControl_OnlyElevateSignedExe -> Only elevate signed and validated executables
+    CountryIPBlocking_BlockOFACSanctionedCountries -> Include the IP ranges of OFAC Sanctioned Countries in the firewall block rules
+
+    Each of the switch parameters above will be dynamically generated based on the categories you choose.
+    For example, if you choose to run the Microsoft Security Baselines category, the MicrosoftSecurityBaselines_NoOverrides switch parameter will be generated and you can use it to apply the Microsoft Security Baselines without the optional overrides.
+
 .COMPONENT
-   PowerShell
+    PowerShell
 .FUNCTIONALITY
-   Applies the hardening measures described in GitHub repository
+    Applies the hardening measures described in the GitHub readme.
 .PARAMETER Categories
     The categories of hardening measures to apply. Use this to only apply specific categories.
     Use this parameter when running the script/module in headless and unattended mode to automatically apply any categories you want without user interaction.
     If not specified, there will be prompts for confirmation before running each category.
+.NOTES
+    It is highly recommended to always include the Microsoft Security Baselines category and place it first as it forms the foundation of all subsequent categories.
+.EXAMPLE
+    Protect-WindowsSecurity -Categories 'MicrosoftSecurityBaselines', 'MicrosoftDefender', 'AttackSurfaceReductionRules'
+
+    This example will apply the Microsoft Security Baselines, Microsoft Defender and Attack Surface Reduction Rules categories without the need for user interaction.
+.EXAMPLE
+    Protect-WindowsSecurity -Categories MicrosoftDefender -MicrosoftDefender_SmartAppControl -Verbose
+
+    This example will apply the Microsoft Defender category with the Smart App Control sub-category, without the need for user interaction, and will show verbose messages.
+.EXAMPLE
+    Protect-WindowsSecurity
+
+    This example will run the cmdlet in interactive mode and will prompt for confirmation before running each category and sub-category.
 .INPUTS
-   System.String[]
+    System.String[]
+    System.Management.Automation.SwitchParameter
 .OUTPUTS
-   System.String
+    System.String
 #>
 }

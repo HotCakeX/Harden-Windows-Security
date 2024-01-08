@@ -881,10 +881,10 @@ Function Protect-WindowsSecurity {
 
             # Copy the files that are shipped with the Harden Windows Security module to the working directory because they are not downloaded when running locally
             if ($IsLocally) {
-                Copy-Item -Path "$HardeningModulePath\Resources\Security-Baselines-X.zip" -Destination "$WorkingDir\Security-Baselines-X.zip" -Force 6> $null
-                Copy-Item -Path "$HardeningModulePath\Resources\Registry.csv" -Destination "$WorkingDir\Registry.csv" -Force 6> $null
-                Copy-Item -Path "$HardeningModulePath\Resources\ProcessMitigations.csv" -Destination "$WorkingDir\ProcessMitigations.csv" -Force 6> $null
-                Copy-Item -Path "$HardeningModulePath\Resources\EventViewerCustomViews.zip" -Destination "$WorkingDir\EventViewerCustomViews.zip" -Force 6> $null
+                Copy-Item -Path "$HardeningModulePath\Resources\Security-Baselines-X.zip" -Destination "$WorkingDir\Security-Baselines-X.zip" -Force -ProgressAction SilentlyContinue
+                Copy-Item -Path "$HardeningModulePath\Resources\Registry.csv" -Destination "$WorkingDir\Registry.csv" -Force -ProgressAction SilentlyContinue
+                Copy-Item -Path "$HardeningModulePath\Resources\ProcessMitigations.csv" -Destination "$WorkingDir\ProcessMitigations.csv" -Force -ProgressAction SilentlyContinue
+                Copy-Item -Path "$HardeningModulePath\Resources\EventViewerCustomViews.zip" -Destination "$WorkingDir\EventViewerCustomViews.zip" -Force -ProgressAction SilentlyContinue
             }
 
             # unzip Microsoft Security Baselines file
@@ -906,9 +906,9 @@ Function Protect-WindowsSecurity {
             [System.IO.FileInfo]$LGPOExe = Get-ChildItem -Path "$WorkingDir\LGPO_30\LGPO.exe" -File
 
             # Copying LGPO.exe from its folder to Microsoft Security Baseline folder in order to get it ready to be used by PowerShell script
-            Copy-Item -Path $LGPOExe -Destination "$MicrosoftSecurityBaselinePath\Scripts\Tools" -Force 6> $null
+            Copy-Item -Path $LGPOExe -Destination "$MicrosoftSecurityBaselinePath\Scripts\Tools" -Force -ProgressAction SilentlyContinue
             # Copying LGPO.exe from its folder to Microsoft Office 365 Apps for Enterprise Security Baseline folder in order to get it ready to be used by PowerShell script
-            Copy-Item -Path $LGPOExe -Destination "$Microsoft365SecurityBaselinePath\Scripts\Tools" -Force 6> $null
+            Copy-Item -Path $LGPOExe -Destination "$Microsoft365SecurityBaselinePath\Scripts\Tools" -Force -ProgressAction SilentlyContinue
 
             #Region Hardening-Categories-Functions
             Function Invoke-WindowsBootManagerRevocations {

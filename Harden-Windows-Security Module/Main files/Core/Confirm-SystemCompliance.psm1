@@ -27,7 +27,7 @@ function Confirm-SystemCompliance {
 
         #Region Defining-Variables
         # Total number of Compliant values not equal to N/A
-        [System.Int64]$TotalNumberOfTrueCompliantValues = 229
+        [System.Int64]$TotalNumberOfTrueCompliantValues = 230
 
         # Get the current configurations and preferences of the Microsoft Defender
         New-Variable -Name 'MDAVConfigCurrent' -Value (Get-MpComputerStatus) -Force
@@ -927,6 +927,21 @@ function Confirm-SystemCompliance {
 
             # Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array as custom objects
             $NestedObjectArray += [PSCustomObject](Invoke-CategoryProcessing -catname $CatName -Method 'Group Policy')
+
+            # Verify the 3 built-in Firewall rules (for all 3 profiles) for Multicast DNS (mDNS) UDP-in are disabled
+            $IndividualItemResult = [System.Boolean](
+                (Get-NetFirewallRule |
+                Where-Object -FilterScript { ($_.RuleGroup -eq '@%SystemRoot%\system32\firewallapi.dll,-37302') -and ($_.Direction -eq 'inbound') }).Enabled -inotcontains 'True'
+            )
+
+            $NestedObjectArray += [PSCustomObject]@{
+                FriendlyName = 'mDNS UDP-In Firewall Rules are disabled'
+                Compliant    = $IndividualItemResult
+                Value        = $IndividualItemResult
+                Name         = 'mDNS UDP-In Firewall Rules are disabled'
+                Category     = $CatName
+                Method       = 'Cmdlet'
+            }
 
             # Add the array of custom objects as a property to the $FinalMegaObject object outside the loop
             Add-Member -InputObject $FinalMegaObject -MemberType NoteProperty -Name $CatName -Value $NestedObjectArray
@@ -1840,7 +1855,7 @@ function Confirm-SystemCompliance {
                     'LockScreen', # 14
                     'UAC', # 4
                     'Device Guard', # 8
-                    'Windows Firewall', # 19
+                    'Windows Firewall', # 20
                     'Optional Windows Features', # 14
                     'Windows Networking', # 9
                     'Miscellaneous', # 17

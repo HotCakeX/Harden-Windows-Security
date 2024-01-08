@@ -44,7 +44,7 @@ Function Protect-WindowsSecurity {
             $MicrosoftSecurityBaselines_NoOverrides = [System.Management.Automation.ParameterAttribute]@{
                 Mandatory        = $false
                 ParameterSetName = 'Categories'
-                HelpMessage      = 'Apples the Microsoft Security Baselines without the optional overrides'
+                HelpMessage      = 'Applies the Microsoft Security Baselines without the optional overrides'
             }
             $ParamDictionary.Add('MicrosoftSecurityBaselines_NoOverrides', [System.Management.Automation.RuntimeDefinedParameter]::new(
                     'MicrosoftSecurityBaselines_NoOverrides',

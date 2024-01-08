@@ -121,27 +121,37 @@ Protect-WindowsSecurity [[-Categories] <String[]>] [<CommonParameters>]
 
 * `-Categories`: Specify the hardening categories that you want to apply. This will tell the module to operate in non-interactive or headless/silent mode which won't ask for confirmation before running each selected categories. You can specify multiple categories by separating them with a comma. If you don't specify any category, the cmdlet will run in interactive mode. **Use this parameter for deployments at a large scale.** If a selected category requires Administrator privileges and the module is running with Standard privileges, that category is skipped.
 
-### Example 1
+### 10 Dynamic Parameters
 
-If you run the module like this, the 2 categories will be executed automatically without requiring any user input. The results will be displayed on the console.
+When running in headless/unattended mode, you can control the sub-categories of each category by using the following switch parameters:
 
-```powershell
-Protect-WindowsSecurity -Categories MicrosoftDefender, AttackSurfaceReductionRules
-```
+* `MicrosoftSecurityBaselines_NoOverrides`: Applies the Microsoft Security Baselines without the optional overrides
 
-### Example 2
+* `MicrosoftDefender_SmartAppControl`: Enables Smart App Control
 
-If you run the module like this without specifying any categories, the module will run in interactive mode and the usual beautiful prompts will be displayed to the user.
+* `MicrosoftDefender_NoOptionalDiagnosticData`: Will not enable optional diagnostics data required for Smart App Control (Does not have any effect if Smart App Control is already turned on)
 
-```powershell
-Protect-WindowsSecurity
-```
+* `MicrosoftDefender_NoScheduledTask`: Will not create scheduled task for fast MSFT driver block rules 
+
+* `MicrosoftDefender_DefenderBetaChannels`: Set Defender Engine and Intelligence update channels to beta
+
+* `LockScreen_RequireCtrlAltDel`: Require CTRL + ALT + Delete at lock screen
+
+* `LockScreen_DontDisplayLastSignedIn`: Will not display the last signed in user at the lock screen
+
+* `UserAccountControl_NoFastUserSwitching`: Hide entry points for fast user switching
+
+* `UserAccountControl_OnlyElevateSignedExe`: Only elevate signed and validated executables
+
+* `CountryIPBlocking_BlockOFACSanctionedCountries`: Include the IP ranges of OFAC Sanctioned Countries in the firewall block rules
+
+Each of the switch parameters above will be dynamically generated based on the categories you choose. For example, if you choose to run the Microsoft Security Baselines category, the `MicrosoftSecurityBaselines_NoOverrides` switch parameter will be generated and you can use it to apply the Microsoft Security Baselines without the optional overrides.
 
 <br>
 
 ### Available Categories in Headless Mode
 
-The following is the exact enumeration of the items that will be executed based on the user chosen categories when operating in headless/silent mode. After careful consideration, came to the conclusion that some sub-categories need to be omitted, for instance because they necessitate explicit user input.
+The following is the exact enumeration of the items that will be executed based on the user chosen categories when operating in headless/silent mode. You can control the sub-categories of each category by using the dynamic switch parameters described above.
 
 <br>
 
@@ -192,13 +202,34 @@ The following is the exact enumeration of the items that will be executed based 
 
 <br>
 
-> [!NOTE]\
-> The ability to have more granular control over the sub-categories will be added in a future update.
+> [!IMPORTANT]\
+> It is highly recommended to always include the Microsoft Security Baselines category and place it first as it forms the foundation of all subsequent categories.
 
 <br>
 
-> [!IMPORTANT]\
-> It is highly recommended to always include the Microsoft Security Baselines category and place it first as it forms the foundation of all subsequent categories.
+### Example 1
+
+If you run the module like this, the 2 categories will be executed automatically without requiring any user input. The results will be displayed on the console.
+
+```powershell
+Protect-WindowsSecurity -Categories MicrosoftDefender, AttackSurfaceReductionRules
+```
+
+### Example 2
+
+If you run the module like this without specifying any categories, the module will run in interactive mode and the usual beautiful prompts will be displayed to the user.
+
+```powershell
+Protect-WindowsSecurity
+```
+
+### Example 3
+
+This example will apply the Microsoft Defender category with the Smart App Control sub-category, without the need for user interaction, and will show verbose messages.
+
+```powershell
+Protect-WindowsSecurity -Categories MicrosoftDefender -MicrosoftDefender_SmartAppControl -Verbose
+```
 
 <br>
 

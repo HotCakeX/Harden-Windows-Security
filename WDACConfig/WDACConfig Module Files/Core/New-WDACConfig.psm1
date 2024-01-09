@@ -562,7 +562,7 @@ Function New-WDACConfig {
 
                 # Create a scheduled task action, this defines how to download and install the latest Microsoft Recommended Driver Block Rules
                 [Microsoft.Management.Infrastructure.CimInstance]$Action = New-ScheduledTaskAction -Execute 'Powershell.exe' `
-                    -Argument '-NoProfile -WindowStyle Hidden -command "& {try {Invoke-WebRequest -Uri "https://aka.ms/VulnerableDriverBlockList" -OutFile VulnerableDriverBlockList.zip -ErrorAction Stop}catch{exit 1};Expand-Archive -Path .\VulnerableDriverBlockList.zip -DestinationPath "VulnerableDriverBlockList" -Force;Rename-Item -Path .\VulnerableDriverBlockList\SiPolicy_Enforced.p7b -NewName "SiPolicy.p7b" -Force;Copy-Item -Path .\VulnerableDriverBlockList\SiPolicy.p7b -Destination "$env:SystemDrive\Windows\System32\CodeIntegrity";citool --refresh -json;Remove-Item -Path .\VulnerableDriverBlockList -Recurse -Force;Remove-Item -Path .\VulnerableDriverBlockList.zip -Force; exit 0;}"'
+                    -Argument '-NoProfile -WindowStyle Hidden -command "& {try {Invoke-WebRequest -Uri "https://aka.ms/VulnerableDriverBlockList" -OutFile VulnerableDriverBlockList.zip -ErrorAction Stop}catch{exit 1};Expand-Archive -Path .\VulnerableDriverBlockList.zip -DestinationPath "VulnerableDriverBlockList" -Force;Rename-Item -Path .\VulnerableDriverBlockList\SiPolicy_Enforced.p7b -NewName "SiPolicy.p7b" -Force;Copy-Item -Path .\VulnerableDriverBlockList\SiPolicy.p7b -Destination "$env:SystemDrive\Windows\System32\CodeIntegrity" -Force;citool --refresh -json;Remove-Item -Path .\VulnerableDriverBlockList -Recurse -Force;Remove-Item -Path .\VulnerableDriverBlockList.zip -Force; exit 0;}"'
 
                 # Create a scheduled task principal and assign the SYSTEM account's SID to it so that the task will run under its context
                 [Microsoft.Management.Infrastructure.CimInstance]$TaskPrincipal = New-ScheduledTaskPrincipal -LogonType S4U -UserId $($SYSTEMSID.Value) -RunLevel Highest
@@ -1148,8 +1148,8 @@ Register-ArgumentCompleter -CommandName 'New-WDACConfig' -ParameterName 'SignToo
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCF0H2hgce+jDjc
-# n5MmyM59KKqtZrDIkFUXwcCINP/kB6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCAfrDb69NwFix6M
+# PswLnpYW+kqgyt0divbGUXmo+hk9xqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -1196,16 +1196,16 @@ Register-ArgumentCompleter -CommandName 'New-WDACConfig' -ParameterName 'SignToo
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQg8swZ0z19iFKgN/ZtPtUCdkm6/LljZkGgHJ78Tgq7d9wwDQYJKoZIhvcNAQEB
-# BQAEggIAC5fDLEjnH0m66G7JoSSFXZr1kh4lhYVgXYajEZPQyFKXdB+4m1EpblpR
-# IebER6+aG3MiWQ1HJqpt488IdouDAges84JNlB1PeGDkSCDuBzDoeVmVD27+ArZ3
-# 1I0kigAhSWRygVUAfpvpChA11sJmLxgqaeiM2vznLLViEBeG8yTjttd5AoDl+HLD
-# DIAjFLJjN0TPMxzOY+Ry2NyZ9lthnCZ5KsxCVMvhtLyWpH9jSwic5sr9iMIHqJca
-# 3c60v+b5bn+axOc2gsIcgvHTj5rHzOjoQvhzlzE0HicGcTfjWkiodMQtlanCguR0
-# Qa05gbgdFlyMHxUWhVKS7qxufQ3KtX9FGkhmI+a9tDZy4LtPLojiicb/VhnRCZta
-# xITfReEqCcB+Oa/G4bqObBQ7WINvFrRtSRMcCqqkJBtk2vNpRKEdYTw4ttm/Gzo4
-# JRMFPgG2fHh2o83danp+m8ERCWGCuMYzWq/abclmxdzV3EUKpy4z46gqVJgfShlV
-# P8hXsLhx2ffc5V4GpmDNUMekT1vPoEESEcNtmpNjhg9xDgQKW9ybS0Kj7me+tZvX
-# qyIAXE9F7GJnXUW8k2WFQ8TZvXBuvXtksMWPLVTh590vRUuOewJ36iNU+67rMeNv
-# BmecXBrp2C90KnAZbgP8HwtsoZdkmUMj/V8dX+/O9pZq2bT917A=
+# IgQg14hf2M6F3YKfWHTxS9cZtCQlYAMlxYCw6pIEjXWMeRMwDQYJKoZIhvcNAQEB
+# BQAEggIAUmu4Ste9ajEpKCdiTAaDt1llyJJ0kAtR9nsj1z45Qmxt9z1gb6l2tIZ2
+# Dn5zedSmLVY99cL4D3682cvGWz++4SPDRzzdSZ4HU64CyYr7BVQSmhz2LajKv9ev
+# bKOOaLEHO/nVl/iH1Oa+zXW4WmbfLUr8EW7QBKgxNMRm+3IViw0BvQAcTe8r9OHA
+# 8wOXDL3B/zptm0+xyJg9xOuldLK0Xl261G53zMRytYynEi+YpzBAsY1K0wd6CbR+
+# C/5RfIwdh8OLe33vHgEK60VIL/Y5RfYGDRy5FJbaw62OQ1+BEwFdvdzlbUR/Fytk
+# rWQvELyAz6eveV3iq/iRjzEgGl+yJqM6uz8AYyJgGyBT4FrCUiMZZrokiCuR74Zb
+# ADQKG8hzRshGENCYdCXt1074N/5E0UhxgRcatf5uEFcXaxpDSRiY7V2cv4EI3scd
+# ipHt2Uvl50bPLEoykWP0xRQU9d3WktkX6/4vA73LO3l2edsYsWtUtaek1giJqY+4
+# R/TMeHlRD56PY/ObkKL/xpssSO1reIF+NR80HdCh+CkPZJ3OF6utchZt7dFFgkBV
+# WQid6pST1aObgMD3B4+ZtaAORlFy1TekNeDKyusj2fRUYPeQJ2kozjjP+7XponBQ
+# MUq7XO8lz/Wq16usJ3mFzDV+ebIbkQDobAZN5evRVGFFD65Q0eo=
 # SIG # End signature block

@@ -2,7 +2,7 @@ name: Virus Total
 on:
   push:
     paths:
-      - Harden-Windows-Security Module/Main files/Resources/**
+      - "Harden-Windows-Security Module/Main files/Resources/**"
     # To filter by branches
     branches:
       - main

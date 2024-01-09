@@ -80,15 +80,15 @@ Function Protect-WindowsSecurity {
         }
 
         if ('UserAccountControl' -in $PSBoundParameters['Categories']) {
-            # Create a dynamic parameter for -UserAccountControl_NoFastUserSwitching
-            Invoke-Command -ScriptBlock $DynamicParamCreator -ArgumentList 'UserAccountControl_NoFastUserSwitching'
+            # Create a dynamic parameter for -UAC_NoFastSwitching
+            Invoke-Command -ScriptBlock $DynamicParamCreator -ArgumentList 'UAC_NoFastSwitching'
             # Create a dynamic parameter for -UAC_OnlyElevateSigned
             Invoke-Command -ScriptBlock $DynamicParamCreator -ArgumentList 'UAC_OnlyElevateSigned'
         }
 
         if ('CountryIPBlocking' -in $PSBoundParameters['Categories']) {
-            # Create a dynamic parameter for -CountryIPBlocking_BlockOFACSanctionedCountries
-            Invoke-Command -ScriptBlock $DynamicParamCreator -ArgumentList 'CountryIPBlocking_BlockOFACSanctionedCountries'
+            # Create a dynamic parameter for -CountryIPBlocking_OFAC
+            Invoke-Command -ScriptBlock $DynamicParamCreator -ArgumentList 'CountryIPBlocking_OFAC'
         }
 
         return $ParamDictionary
@@ -132,9 +132,9 @@ Function Protect-WindowsSecurity {
         New-Variable -Name 'MSFTDefender_BetaChannels' -Value $($PSBoundParameters['MSFTDefender_BetaChannels']) -Force
         New-Variable -Name 'LockScreen_CtrlAltDel' -Value $($PSBoundParameters['LockScreen_CtrlAltDel']) -Force
         New-Variable -Name 'LockScreen_NoLastSignedIn' -Value $($PSBoundParameters['LockScreen_NoLastSignedIn']) -Force
-        New-Variable -Name 'UserAccountControl_NoFastUserSwitching' -Value $($PSBoundParameters['UserAccountControl_NoFastUserSwitching']) -Force
+        New-Variable -Name 'UAC_NoFastSwitching' -Value $($PSBoundParameters['UAC_NoFastSwitching']) -Force
         New-Variable -Name 'UAC_OnlyElevateSigned' -Value $($PSBoundParameters['UAC_OnlyElevateSigned']) -Force
-        New-Variable -Name 'CountryIPBlocking_BlockOFACSanctionedCountries' -Value $($PSBoundParameters['CountryIPBlocking_BlockOFACSanctionedCountries']) -Force
+        New-Variable -Name 'CountryIPBlocking_OFAC' -Value $($PSBoundParameters['CountryIPBlocking_OFAC']) -Force
     }
 
     process {
@@ -1924,7 +1924,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                         &$LGPOExe /q /s "$WorkingDir\Security-Baselines-X\User Account Control UAC Policies\GptTmpl.inf"
 
                         # Apply the Hide the entry points for Fast User Switching policy
-                        :FastUserSwitchingLabel switch ($RunUnattended ? ($UserAccountControl_NoFastUserSwitching ? 'Yes' : 'No') : (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nHide the entry points for Fast User Switching ?" -ExtraMessage 'Read the GitHub Readme!')) {
+                        :FastUserSwitchingLabel switch ($RunUnattended ? ($UAC_NoFastSwitching ? 'Yes' : 'No') : (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nHide the entry points for Fast User Switching ?" -ExtraMessage 'Read the GitHub Readme!')) {
                             'Yes' {
                                 Write-Verbose -Message 'Applying the Hide the entry points for Fast User Switching policy'
 
@@ -2185,7 +2185,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                                 Block-CountryIP -IPList (Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/Curated-Lists/StateSponsorsOfTerrorism.txt') -ListName 'State Sponsors of Terrorism'
                             } 'No' { break IPBlockingTerrLabel }
                         }
-                        :IPBlockingOFACLabel switch ($RunUnattended ? ($CountryIPBlocking_BlockOFACSanctionedCountries ? 'Yes' : 'No') : (Select-Option -SubCategory -Options 'Yes', 'No' -Message 'Add OFAC Sanctioned Countries to the Firewall block list?')) {
+                        :IPBlockingOFACLabel switch ($RunUnattended ? ($CountryIPBlocking_OFAC ? 'Yes' : 'No') : (Select-Option -SubCategory -Options 'Yes', 'No' -Message 'Add OFAC Sanctioned Countries to the Firewall block list?')) {
                             'Yes' {
                                 Write-Verbose -Message 'Blocking IP ranges of countries in OFAC sanction list'
                                 Block-CountryIP -IPList (Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/Curated-Lists/OFACSanctioned.txt') -ListName 'OFAC Sanctioned Countries'
@@ -2359,9 +2359,9 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
     MSFTDefender_BetaChannels -> Set Defender Engine and Intelligence update channels to beta
     LockScreen_CtrlAltDel -> Require CTRL + ALT + Delete at lock screen
     LockScreen_NoLastSignedIn -> Will not display the last signed in user at the lock screen
-    UserAccountControl_NoFastUserSwitching -> Hide entry points for fast user switching
+    UAC_NoFastSwitching -> Hide entry points for fast user switching
     UAC_OnlyElevateSigned -> Only elevate signed and validated executables
-    CountryIPBlocking_BlockOFACSanctionedCountries -> Include the IP ranges of OFAC Sanctioned Countries in the firewall block rules
+    CountryIPBlocking_OFAC -> Include the IP ranges of OFAC Sanctioned Countries in the firewall block rules
 
     Each of the switch parameters above will be dynamically generated based on the categories you choose.
     For example, if you choose to run the Microsoft Security Baselines category, the SecBaselines_NoOverrides switch parameter will be generated and you can use it to apply the Microsoft Security Baselines without the optional overrides.

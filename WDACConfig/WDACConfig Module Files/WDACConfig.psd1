@@ -4,7 +4,7 @@
     RootModule           = 'WDACConfig.psm1'
 
     # Version number of this module.
-    ModuleVersion        = '0.2.9'
+    ModuleVersion        = '0.3.0'
 
     # Supported PSEditions
     CompatiblePSEditions = @('Core')

@@ -12,13 +12,18 @@ function Confirm-SystemCompliance {
         # Set the progress bar style to blinking yellow
         $PSStyle.Progress.Style = "$($PSStyle.Foreground.FromRGB(255,255,49))$($PSStyle.Blink)"
 
-        # Dot-sourcing the functions.ps1 file in the current scope
-        . "$HardeningModulePath\Resources\Functions.ps1"
+        # Importing the required sub-modules
+        Write-Verbose -Message 'Importing the required sub-modules'
+        Import-Module -FullyQualifiedName "$HardeningModulePath\Shared\Update-self.psm1" -Force -Verbose:$false
+        Import-Module -FullyQualifiedName "$HardeningModulePath\Shared\Test-IsAdmin.psm1" -Force -Verbose:$false
 
         # Makes sure this cmdlet is invoked with Admin privileges
         if (-NOT (Test-IsAdmin)) {
             Throw [System.Security.AccessControl.PrivilegeNotHeldException] 'Administrator'
         }
+
+        Write-Verbose -Message 'Checking for updates...'
+        Update-Self -InvocationStatement $MyInvocation.Statement
 
         #Region Defining-Variables
         # Total number of Compliant values not equal to N/A
@@ -115,7 +120,7 @@ function Confirm-SystemCompliance {
             # an array to hold the output
             [System.Object[]]$Output = @()
 
-            foreach ($Item in $AllRegistryItems | Where-Object -FilterScript { $_.category -eq $CatName } | Where-Object -FilterScript { $_.Method -eq $Method }) {
+            foreach ($Item in $AllRegistryItems | Where-Object -FilterScript { ($_.category -eq $CatName) -and ($_.Method -eq $Method) }) {
 
                 # Initialize a flag to indicate if the key exists
                 [System.Boolean]$keyExists = $false
@@ -152,14 +157,6 @@ function Confirm-SystemCompliance {
 
                 # Create a custom object with the results for this row
                 $Output += [PSCustomObject]@{
-                    # Category     = $Item.category
-                    # Key          = $Item.key
-                    # Name         = $Item.name
-                    # KeyExists    = $keyExists
-                    # ValueMatches = $ValueMatches
-                    # Type         = $Item.type
-                    # Value        = $Item.value
-
                     FriendlyName = $Item.FriendlyName
                     Compliant    = $ValueMatches
                     Value        = $Item.value
@@ -409,7 +406,6 @@ function Confirm-SystemCompliance {
             # Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array as custom objects
             $NestedObjectArray += [PSCustomObject](Invoke-CategoryProcessing -catname $CatName -Method 'Group Policy')
 
-
             # Individual ASR rules verification
             [System.String[]]$Ids = $MDAVPreferencesCurrent.AttackSurfaceReductionRules_Ids
             [System.String[]]$Actions = $MDAVPreferencesCurrent.AttackSurfaceReductionRules_Actions
@@ -527,7 +523,15 @@ function Confirm-SystemCompliance {
       }
     }
 '@
-            Add-Type -TypeDefinition $BootDMAProtectionCheck -Language CSharp
+            # if the type is not already loaded, load it
+            if (-NOT ('SystemInfo.NativeMethods' -as [System.Type])) {
+                Write-Verbose -Message 'Loading SystemInfo.NativeMethods type'
+                Add-Type -TypeDefinition $BootDMAProtectionCheck -Language CSharp -Verbose:$false
+            }
+            else {
+                Write-Verbose -Message 'SystemInfo.NativeMethods type is already loaded, skipping loading it again.'
+            }
+
             # Returns true or false depending on whether Kernel DMA Protection is on or off
             [System.Boolean]$BootDMAProtection = ([SystemInfo.NativeMethods]::BootDmaCheck()) -ne 0
 
@@ -636,14 +640,10 @@ function Confirm-SystemCompliance {
             }
             #region Non-OS-Drive-BitLocker-Drives-Encryption-Verification
             # Get the list of non OS volumes
-            [System.Object[]]$NonOSBitLockerVolumes = Get-BitLockerVolume | Where-Object -FilterScript {
-                    ($_.volumeType -ne 'OperatingSystem')
-            }
+            [System.Object[]]$NonOSBitLockerVolumes = Get-BitLockerVolume | Where-Object -FilterScript { $_.volumeType -ne 'OperatingSystem' }
 
             # Get all the volumes and filter out removable ones
-            [System.Object[]]$RemovableVolumes = Get-Volume |
-            Where-Object -FilterScript { $_.DriveType -eq 'Removable' } |
-            Where-Object -FilterScript { $_.DriveLetter }
+            [System.Object[]]$RemovableVolumes = Get-Volume | Where-Object -FilterScript { ($_.DriveType -eq 'Removable') -and $_.DriveLetter }
 
             # Check if there is any removable volumes
             if ($RemovableVolumes) {
@@ -654,9 +654,7 @@ function Confirm-SystemCompliance {
                 }
 
                 # Filter out removable drives from BitLocker volumes to process
-                $NonOSBitLockerVolumes = $NonOSBitLockerVolumes | Where-Object -FilterScript {
-                    ($_.MountPoint -notin $RemovableVolumesLetters)
-                }
+                $NonOSBitLockerVolumes = $NonOSBitLockerVolumes | Where-Object -FilterScript { $_.MountPoint -notin $RemovableVolumesLetters }
             }
 
             # Check if there is any non-OS volumes
@@ -930,6 +928,21 @@ function Confirm-SystemCompliance {
             # Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array as custom objects
             $NestedObjectArray += [PSCustomObject](Invoke-CategoryProcessing -catname $CatName -Method 'Group Policy')
 
+            # Verify the 3 built-in Firewall rules (for all 3 profiles) for Multicast DNS (mDNS) UDP-in are disabled
+            $IndividualItemResult = [System.Boolean](
+                (Get-NetFirewallRule |
+                Where-Object -FilterScript { ($_.RuleGroup -eq '@%SystemRoot%\system32\firewallapi.dll,-37302') -and ($_.Direction -eq 'inbound') }).Enabled -inotcontains 'True'
+            )
+
+            $NestedObjectArray += [PSCustomObject]@{
+                FriendlyName = 'mDNS UDP-In Firewall Rules are disabled'
+                Compliant    = $IndividualItemResult
+                Value        = $IndividualItemResult
+                Name         = 'mDNS UDP-In Firewall Rules are disabled'
+                Category     = $CatName
+                Method       = 'Cmdlet'
+            }
+
             # Add the array of custom objects as a property to the $FinalMegaObject object outside the loop
             Add-Member -InputObject $FinalMegaObject -MemberType NoteProperty -Name $CatName -Value $NestedObjectArray
             #EndRegion Windows-Firewall-Category
@@ -1002,10 +1015,10 @@ function Confirm-SystemCompliance {
                 Method       = 'Optional Windows Features'
             }
 
-            # Verify MDAG is enabled
+            # Verify MDAG is disabled
             $NestedObjectArray += [PSCustomObject]@{
                 FriendlyName = 'Microsoft Defender Application Guard is enabled'
-                Compliant    = [System.Boolean]($Results[5] -eq 'Enabled')
+                Compliant    = [System.Boolean]($Results[5] -eq 'Disabled')
                 Value        = [System.String]$Results[5]
                 Name         = 'Microsoft Defender Application Guard is enabled'
                 Category     = $CatName
@@ -1295,7 +1308,7 @@ function Confirm-SystemCompliance {
                 # Append the categories in $FinalMegaObject to the array using += operator
                 $CsvOutPutFileContent += $FinalMegaObject.PSObject.Properties.Value
                 # Convert the array to a CSV file and store it in the current working directory
-                $CsvOutPutFileContent | ConvertTo-Csv | Out-File -FilePath '.\Compliance Check Output.CSV' -Force
+                $CsvOutPutFileContent | ConvertTo-Csv | Out-File -FilePath ".\Compliance Check Output $(Get-Date -Format "MM-dd-yyyy 'at' HH-mm-ss").CSV" -Force
             }
 
             if ($ShowAsObjectsOnly) {
@@ -1835,21 +1848,27 @@ function Confirm-SystemCompliance {
                     } , Value -AutoSize
                 }
 
+                [System.String[]]$Categories = ('Microsoft Defender', # 49 - 4x(N/A) = 45
+                    'ASR', # 17
+                    'Bitlocker', # 22 + Number of Non-OS drives which are dynamically increased
+                    'TLS', # 21
+                    'LockScreen', # 14
+                    'UAC', # 4
+                    'Device Guard', # 8
+                    'Windows Firewall', # 20
+                    'Optional Windows Features', # 14
+                    'Windows Networking', # 9
+                    'Miscellaneous', # 17
+                    'Windows Update', # 14
+                    'Edge', # 14
+                    'Non-Admin' # 11
+                )
+
                 # Counting the number of $True Compliant values in the Final Output Object
-                [System.Int64]$TotalTrueCompliantValuesInOutPut = ($FinalMegaObject.'Microsoft Defender' | Where-Object -FilterScript { $_.Compliant -eq $True }).Count + # 49 - 4x(N/A) = 45
-                [System.Int64]($FinalMegaObject.ASR | Where-Object -FilterScript { $_.Compliant -eq $True }).Count + # 17
-                [System.Int64]($FinalMegaObject.Bitlocker | Where-Object -FilterScript { $_.Compliant -eq $True }).Count + # 22 + Number of Non-OS drives which are dynamically increased
-                [System.Int64]($FinalMegaObject.TLS | Where-Object -FilterScript { $_.Compliant -eq $True }).Count + # 21
-                [System.Int64]($FinalMegaObject.LockScreen | Where-Object -FilterScript { $_.Compliant -eq $True }).Count + # 14
-                [System.Int64]($FinalMegaObject.UAC | Where-Object -FilterScript { $_.Compliant -eq $True }).Count + # 4
-                [System.Int64]($FinalMegaObject.'Device Guard' | Where-Object -FilterScript { $_.Compliant -eq $True }).Count + # 8
-                [System.Int64]($FinalMegaObject.'Windows Firewall' | Where-Object -FilterScript { $_.Compliant -eq $True }).Count + # 19
-                [System.Int64]($FinalMegaObject.'Optional Windows Features' | Where-Object -FilterScript { $_.Compliant -eq $True }).Count + # 14
-                [System.Int64]($FinalMegaObject.'Windows Networking' | Where-Object -FilterScript { $_.Compliant -eq $True }).Count + # 9
-                [System.Int64]($FinalMegaObject.Miscellaneous | Where-Object -FilterScript { $_.Compliant -eq $True }).Count + # 17
-                [System.Int64]($FinalMegaObject.'Windows Update' | Where-Object -FilterScript { $_.Compliant -eq $True }).Count + # 14
-                [System.Int64]($FinalMegaObject.Edge | Where-Object -FilterScript { $_.Compliant -eq $True }).Count + # 15
-                [System.Int64]($FinalMegaObject.'Non-Admin' | Where-Object -FilterScript { $_.Compliant -eq $True }).Count # 11
+                [System.Int64]$TotalTrueCompliantValuesInOutPut = 0
+                foreach ($Category in $Categories) {
+                    $TotalTrueCompliantValuesInOutPut += ($FinalMegaObject.$Category | Where-Object -FilterScript { $_.Compliant -eq $True }).Count
+                }
 
                 #Region ASCII-Arts
                 [System.String]$WhenValue1To20 = @'

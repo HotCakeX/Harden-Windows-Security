@@ -11,22 +11,21 @@ Function Unprotect-WindowsSecurity {
     )
 
     begin {
-        # Import functions
-        . "$HardeningModulePath\Resources\Functions.ps1"
-
-        # Defining default parameters for cmdlets
-        $PSDefaultParameterValues = @{
-            'Invoke-WebRequest:HttpVersion' = '3.0'
-            'Invoke-WebRequest:SslProtocol' = 'Tls12,Tls13'
-        }
-
-        # Fetching Temp Directory
-        [System.String]$CurrentUserTempDirectoryPath = [System.IO.Path]::GetTempPath()
+        # Importing the required sub-modules
+        Write-Verbose -Message 'Importing the required sub-modules'
+        Import-Module -FullyQualifiedName "$HardeningModulePath\Shared\Update-self.psm1" -Force -Verbose:$false
+        Import-Module -FullyQualifiedName "$HardeningModulePath\Shared\Test-IsAdmin.psm1" -Force -Verbose:$false
 
         # Makes sure this cmdlet is invoked with Admin privileges
         if (-NOT (Test-IsAdmin)) {
             Throw [System.Security.AccessControl.PrivilegeNotHeldException] 'Administrator'
         }
+
+        Write-Verbose -Message 'Checking for updates...'
+        Update-Self -InvocationStatement $MyInvocation.Statement
+
+        # Fetching Temp Directory
+        [System.String]$CurrentUserTempDirectoryPath = [System.IO.Path]::GetTempPath()
 
         # The total number of the steps for the parent/main progress bar to render
         [System.Int16]$TotalMainSteps = 7
@@ -74,37 +73,11 @@ Function Unprotect-WindowsSecurity {
                 Write-Verbose -Message "Changing location to $WorkingDir"
                 Set-Location -Path $WorkingDir
 
-                $CurrentMainStep++
-                Write-Progress -Id 0 -Activity 'Downloading the required files' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
-
-                try {
-                    # Download Registry CSV file from GitHub or Azure DevOps
-                    try {
-                        Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Payload/Registry.csv' -OutFile '.\Registry.csv' -ProgressAction SilentlyContinue
-                    }
-                    catch {
-                        Write-Host -Object 'Using Azure DevOps...' -ForegroundColor Yellow
-                        Invoke-WebRequest -Uri 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/Registry.csv' -OutFile '.\Registry.csv' -ProgressAction SilentlyContinue
-                    }
-
-                    # Download Process Mitigations CSV file from GitHub or Azure DevOps
-                    try {
-                        Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Payload/ProcessMitigations.csv' -OutFile '.\ProcessMitigations.csv' -ProgressAction SilentlyContinue
-                    }
-                    catch {
-                        Write-Host -Object 'Using Azure DevOps...' -ForegroundColor Yellow
-                        Invoke-WebRequest -Uri 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/ProcessMitigations.csv' -OutFile '.\ProcessMitigations.csv' -ProgressAction SilentlyContinue
-                    }
-                }
-                catch {
-                    Throw 'The required files could not be downloaded, Make sure you have Internet connection.'
-                }
-
                 # Disable Mandatory ASLR
                 Set-ProcessMitigation -System -Disable ForceRelocateImages
 
                 #region Remove-Process-Mitigations
-                [System.Object[]]$ProcessMitigations = Import-Csv -Path '.\ProcessMitigations.csv' -Delimiter ','
+                [System.Object[]]$ProcessMitigations = Import-Csv -Path "$HardeningModulePath\Resources\ProcessMitigations.csv" -Delimiter ','
                 # Group the data by ProgramName
                 [System.Object[]]$GroupedMitigations = $ProcessMitigations | Group-Object -Property ProgramName
                 [System.Object[]]$AllAvailableMitigations = (Get-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\*')
@@ -139,7 +112,7 @@ Function Unprotect-WindowsSecurity {
                     $CurrentMainStep++
                     Write-Progress -Id 0 -Activity 'Deleting all the registry keys created by the Protect-WindowsSecurity cmdlet' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
 
-                    [System.Object[]]$Items = Import-Csv -Path '.\Registry.csv' -Delimiter ','
+                    [System.Object[]]$Items = Import-Csv -Path "$HardeningModulePath\Resources\Registry.csv" -Delimiter ','
                     foreach ($Item in $Items) {
                         if (Test-Path -Path $item.path) {
                             Remove-ItemProperty -Path $Item.path -Name $Item.key -Force -ErrorAction SilentlyContinue
@@ -155,7 +128,7 @@ Function Unprotect-WindowsSecurity {
                     Write-Progress -Id 0 -Activity 'Restoring the default Security group policies' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
 
                     # Download LGPO program from Microsoft servers
-                    Invoke-WebRequest -Uri 'https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/LGPO.zip' -OutFile '.\LGPO.zip' -ProgressAction SilentlyContinue
+                    Invoke-WebRequest -Uri 'https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/LGPO.zip' -OutFile '.\LGPO.zip' -ProgressAction SilentlyContinue -HttpVersion '3.0' -SslProtocol 'Tls12,Tls13'
 
                     # unzip the LGPO file
                     Expand-Archive -Path .\LGPO.zip -DestinationPath .\ -Force
@@ -212,10 +185,27 @@ Function Unprotect-WindowsSecurity {
                     Set-ItemProperty -Path 'Registry::\HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SCMConfig' -Name 'EnableSvchostMitigationPolicy' -Value '0' -Force -Type 'DWord' -ErrorAction SilentlyContinue
                 }
 
+                $CurrentMainStep++
+                Write-Progress -Id 0 -Activity 'Removing Downloads Defense Measures' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+
+                Write-Verbose -Message 'Getting the currently deployed base policies'
+                if (((&"$env:SystemDrive\Windows\System32\CiTool.exe" -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { ($_.IsSystemPolicy -ne 'True') -and ($_.PolicyID -eq $_.BasePolicyID) -and ($_.FriendlyName -eq 'Downloads-Defense-Measures') -and ($_.IsOnDisk -eq 'True') })) {
+
+                    if (-NOT (Get-InstalledModule -Name 'WDACConfig' -ErrorAction SilentlyContinue -Verbose:$false)) {
+                        Write-Verbose -Message 'Installing WDACConfig module because it is not installed'
+                        Install-Module -Name 'WDACConfig' -Force -Verbose:$false
+                    }
+
+                    Write-Verbose -Message 'Removing the Downloads Defense Measures WDAC policy'
+                    Remove-WDACConfig -UnsignedOrSupplemental -PolicyNames Downloads-Defense-Measures -SkipVersionCheck
+                }
+
                 # Write in Fuchsia color
                 Write-Host -Object "$($PSStyle.Foreground.FromRGB(236,68,155))Operation Completed, please restart your computer.$($PSStyle.Reset)"
             }
             finally {
+                Write-Verbose -Message 'Finally block is running'
+
                 # End the progress bar and mark it as completed
                 Write-Progress -Id 0 -Activity 'Completed' -Completed
 

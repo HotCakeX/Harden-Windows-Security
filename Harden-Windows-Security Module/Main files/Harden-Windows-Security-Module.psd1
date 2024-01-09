@@ -4,7 +4,7 @@
   RootModule           = 'Harden-Windows-Security-Module.psm1'
 
   # Version number of this module.
-  ModuleVersion        = '0.2.7'
+  ModuleVersion        = '0.2.8'
 
   # Supported PSEditions
   CompatiblePSEditions = @('Core')
@@ -60,11 +60,12 @@ Harden Windows Safely, Securely, only with Official Microsoft methods
   ✅ Edge Browser Configurations
   ✅ Certificate Checking Commands
   ✅ Country IP Blocking
+  ✅ Downloads Defense Measures
 ⏹ Commands that don't require Administrator Privileges
   ✅ Non-Admin Commands that only affect the current user and do not make machine-wide changes.
 
 
-💎 Note: If you have multiple accounts on your device, you only need to apply the hardening measures 1 time with Admin privileges, that will make system-wide changes. Then you can optionally run the module, without Admin privileges, for each standard user to apply the Non-Admin category.
+💎 This module has hybrid mode of operation. It can run Interactively and non-interactively (Silent/unattended mode). More info in the document: https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden%E2%80%90Windows%E2%80%90Security%E2%80%90Module
 
 🏴 If you have any questions, requests, suggestions etc. about this script, please open a new Discussion or Issue on GitHub
 
@@ -136,8 +137,12 @@ Harden Windows Safely, Securely, only with Official Microsoft methods
     'Core\Unprotect-WindowsSecurity.psm1',
     'Resources\Default Security Policy.inf',
     'Resources\Registry resources.csv',
-    'Resources\Harden-Windows-Security.ps1',
-    'Resources\Functions.ps1'
+    'Resources\EventViewerCustomViews.zip',
+    'Resources\Security-Baselines-X.zip',
+    'Resources\Registry.csv',
+    'Resources\ProcessMitigations.csv',
+    'Shared\Update-self.psm1',
+    'Shared\Test-IsAdmin.psm1'
   )
 
   # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.

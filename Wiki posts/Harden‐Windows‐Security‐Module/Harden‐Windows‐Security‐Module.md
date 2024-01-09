@@ -1,24 +1,8 @@
 # Harden Windows Security Module
 
-This module can apply all of the hardening measures described in the readme. It also offers rigorous compliance verification and security assessment. It enables you to evaluate the conformity of your system based on the security standards and recommendations of this repository. The module employs various techniques such as Security Policy, PowerShell cmdlet and Registry keys to conduct the checks.
+It is a PowerShell module that can apply all of the hardening measures described in the readme. It also offers rigorous compliance verification and security assessment. It enables you to evaluate the conformity of your system based on the security standards and recommendations of this repository. The module employs various techniques such as Security Policy, PowerShell cmdlet and Registry keys to conduct the checks.
 
-Compliance checking strictly follows the guidelines and security measures of this GitHub repository. Any minor deviation from them will result in a `false` value for the corresponding check.
-
-The module is compatible with any system locale and language.
-
-<br>
-
-<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
-
-<br>
-
-## How the Compliance Checking Works
-
-This module verifies and validates all of the security measures applied by the Harden Windows Security script. It checks registry keys if the script uses Group Policy or registry, PowerShell cmdlets if the script invokes them and Security Group Policy if the script applies them.
-
-### Security Scoring System
-
-Based on the score that you get you will see a different ASCII art!
+It is also useful for security researchers and penetration testers who want to assess their system security posture. The module works with any system locale and language.
 
 <br>
 
@@ -38,9 +22,25 @@ In Interactive mode, the cmdlet will ask you to confirm the changes before apply
 
 <br>
 
+## How the Compliance Checking Works
+
+This module verifies and validates all of the security measures applied by the `Protect-windowsSecurity` cmdlet. It checks registry keys if the script uses Group Policy or registry, PowerShell cmdlets if the script invokes them and Security Group Policy if the script applies them.
+
+Compliance checking strictly follows the guidelines and security measures of this GitHub repository. Any minor deviation from them will result in a `false` value for the corresponding check.
+
+### Security Scoring System
+
+Based on the score that you get you will see a different ASCII art!
+
+<br>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+
+<br>
+
 ## How the Protections Removal Works
 
-You can use the `Unprotect-WindowsSecurity` cmdlet to remove all of the hardening measures applied by the `Protect-WindowsSecurity` cmdlet.
+You can use the `Unprotect-WindowsSecurity` cmdlet to remove all of the hardening measures applied by the `Protect-WindowsSecurity` cmdlet, with the following exceptions:
 
 * Bitlocker Encrypted drives are not decrypted when you invoke this cmdlet.
 
@@ -81,16 +81,16 @@ The module checks for updates every time you run it and updates itself if there 
 Install-Module -Name 'Harden-Windows-Security-Module' -Force
 ```
 
-### Perform Compliance Check
-
-```powershell
-Confirm-SystemCompliance
-```
-
 ### Apply the Hardening measures described in the [Readme](https://github.com/HotCakeX/Harden-Windows-Security)
 
 ```powershell
 Protect-WindowsSecurity
+```
+
+### Perform Compliance Check
+
+```powershell
+Confirm-SystemCompliance
 ```
 
 ### Remove the Hardening Measures Described in The [Readme](https://github.com/HotCakeX/Harden-Windows-Security)
@@ -117,88 +117,88 @@ Uninstall-Module -Name 'Harden-Windows-Security-Module' -Force -AllVersions
 Protect-WindowsSecurity [[-Categories] <String[]>] [<CommonParameters>]
 ```
 
-### 1 Optional Parameter
+<br>
 
-* `-Categories`: Specify the hardening categories that you want to apply. This will tell the module to operate in non-interactive or headless/silent mode which won't ask for confirmation before running each selected categories. You can specify multiple categories by separating them with a comma. If you don't specify any category, the cmdlet will run in interactive mode. **Use this parameter for deployments at a large scale.** If a selected category requires Administrator privileges and the module is running with Standard privileges, that category is skipped.
+The following parameters are only for the headless/silent mode of operation.
 
-### 10 Dynamic Parameters
+* `-Categories`: **Optional**; Specify the hardening categories that you want to apply. This will tell the module to operate in non-interactive or headless/silent mode which won't ask for confirmation before running each selected categories. You can specify multiple categories by separating them with a comma. If you don't specify any category, the cmdlet will run in interactive mode. **Use this parameter for deployments at a large scale.** If a selected category requires Administrator privileges and the module is running with Standard privileges, that category is skipped.
+   * This parameter has automatic tab completion. You can press the `Tab` key to see the available categories.
 
-When running in headless/unattended mode, you can control the sub-categories of each category by using the following switch parameters:
-
-* `MicrosoftSecurityBaselines_NoOverrides`: Applies the Microsoft Security Baselines without the optional overrides
-
-* `MicrosoftDefender_SmartAppControl`: Enables Smart App Control
-
-* `MicrosoftDefender_NoOptionalDiagnosticData`: Will not enable optional diagnostics data required for Smart App Control (Does not have any effect if Smart App Control is already turned on)
-
-* `MicrosoftDefender_NoScheduledTask`: Will not create scheduled task for fast MSFT driver block rules 
-
-* `MicrosoftDefender_DefenderBetaChannels`: Set Defender Engine and Intelligence update channels to beta
-
-* `LockScreen_RequireCtrlAltDel`: Require CTRL + ALT + Delete at lock screen
-
-* `LockScreen_DontDisplayLastSignedIn`: Will not display the last signed in user at the lock screen
-
-* `UserAccountControl_NoFastUserSwitching`: Hide entry points for fast user switching
-
-* `UserAccountControl_OnlyElevateSignedExe`: Only elevate signed and validated executables
-
-* `CountryIPBlocking_BlockOFACSanctionedCountries`: Include the IP ranges of OFAC Sanctioned Countries in the firewall block rules
-
-Each of the switch parameters above will be dynamically generated based on the categories you choose. For example, if you choose to run the Microsoft Security Baselines category, the `MicrosoftSecurityBaselines_NoOverrides` switch parameter will be generated and you can use it to apply the Microsoft Security Baselines without the optional overrides.
+* `-Verbose`: **Optional**; Shows verbose messages on the console about what the cmdlet is doing.
 
 <br>
 
-### Available Categories in Headless Mode
+> [!NOTE]\
+> You can further control the sub-categories of each category by using the following switch parameters. Pay attention to the naming convention of them. They are named after the category they belong to. For example, the switch parameter `-MSFTDefender_SAC` belongs to the `MicrosoftDefender` category. The switch parameters are dynamic and will only appear if you specify the corresponding category in the `-Categories` parameter. For example, if you don't specify the `MicrosoftDefender` category in the `-Categories` parameter, the switch parameters related to it won't appear. The following table shows the available switch parameters and their corresponding categories.
 
-The following is the exact enumeration of the items that will be executed based on the user chosen categories when operating in headless/silent mode. You can control the sub-categories of each category by using the dynamic switch parameters described above.
+<br>
+
+|         Parameter Name                  |          Description                        | Required Category |
+|:---------------------------------------:|:-------------------------------------------:|:-----------------:|
+|-SecBaselines_NoOverrides | Applies the Microsoft Security Baselines without the optional overrides   | MicrosoftSecurityBaselines |
+|-MSFTDefender_SAC | Enables Smart App Control | MicrosoftDefender |
+|-MSFTDefender_NoDiagData | Will not enable optional diagnostics data required for Smart App Control (Does not have any effect if Smart App Control is already turned on) | MicrosoftDefender |
+|-MSFTDefender_NoScheduledTask | Will not create scheduled task for fast MSFT driver block rules  | MicrosoftDefender |
+|-MSFTDefender_BetaChannels | Set Defender Engine and Intelligence update channels to beta | MicrosoftDefender |
+|-LockScreen_CtrlAltDel | Require CTRL + ALT + Delete at lock screen | LockScreen |
+|-LockScreen_NoLastSignedIn | Will not display the last signed in user at the lock screen | LockScreen |
+|-UAC_NoFastSwitching | Hide entry points for fast user switching | UserAccountControl |
+|-UAC_OnlyElevateSigned | Only elevate signed and validated executables | UserAccountControl |
+|-CountryIPBlocking_OFAC | Include the IP ranges of OFAC Sanctioned Countries in the firewall block rules | CountryIPBlocking |
+
+<br>
+
+### What if You Don’t Configure the Sub-Categories?
+
+If you do not specify any sub-categories using the switch parameters above, the following sub-category configuration will be applied when the corresponding category exists in the `-Categories` parameter.
 
 <br>
 
 <div align="center">
 
-| Indicator| Description                   |
+| Indicator| Sub-Category Status                   |
 |:--------:|:-----------------------------:|
-| <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/rainbow-planet-heart.gif" alt="planet rainbow heart indicating item that runs in Windows Hardening module" width="30"> | Indicates the item runs |
-| <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/orange-point.gif" alt="spinning random dots indicating the sub-category won't run in headless mode in Windows Hardening module" width="30"> | Indicates the item is skipped |
+| <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/rainbow-planet-heart.gif" alt="planet rainbow heart indicating item that runs in Windows Hardening module" width="30"> | Is Applied |
+| <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/orange-point.gif" alt="spinning random dots indicating the sub-category won't run in headless mode in Windows Hardening module" width="30"> | Is Not Applied |
 
 </div>
 
 <br>
 
-- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/rainbow-planet-heart.gif" alt="planet rainbow heart indicating item that runs in Windows Hardening module" width="30"> Windows Boot Manager Revocations
-- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/rainbow-planet-heart.gif" alt="planet rainbow heart indicating item that runs in Windows Hardening module" width="30"> Microsoft Security Baselines
+- Windows Boot Manager Revocations
+- Microsoft Security Baselines
     - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/rainbow-planet-heart.gif" alt="planet rainbow heart indicating item that runs in Windows Hardening module" width="30"> Yes, With the Optional Overrides (Recommended)
     - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/orange-point.gif" alt="spinning random dots indicating the sub-category won't run in headless mode in Windows Hardening module" width="30"> Yes
-- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/rainbow-planet-heart.gif" alt="planet rainbow heart indicating item that runs in Windows Hardening module" width="30"> Microsoft 365 Apps Security Baselines
-- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/rainbow-planet-heart.gif" alt="planet rainbow heart indicating item that runs in Windows Hardening module" width="30"> Microsoft Defender
+- Microsoft 365 Apps Security Baselines
+- Microsoft Defender
     - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/orange-point.gif" alt="spinning random dots indicating the sub-category won't run in headless mode in Windows Hardening module" width="30"> Smart App Control enablement
     - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/rainbow-planet-heart.gif" alt="planet rainbow heart indicating item that runs in Windows Hardening module" width="30"> Enable advanced diagnostic data if Smart App Control is on
     - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/rainbow-planet-heart.gif" alt="planet rainbow heart indicating item that runs in Windows Hardening module" width="30"> Scheduled task creation for fast weekly MSFT driver block list update
     - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/orange-point.gif" alt="spinning random dots indicating the sub-category won't run in headless mode in Windows Hardening module" width="30"> Set engine and intelligence update channels to beta
-- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/rainbow-planet-heart.gif" alt="planet rainbow heart indicating item that runs in Windows Hardening module" width="30"> Attack Surface Reduction Rules
-- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/rainbow-planet-heart.gif" alt="planet rainbow heart indicating item that runs in Windows Hardening module" width="30"> BitLocker Settings
+- Attack Surface Reduction Rules
+- BitLocker Settings
     - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/orange-point.gif" alt="spinning random dots indicating the sub-category won't run in headless mode in Windows Hardening module" width="30"> Normal: TPM + Startup PIN + Recovery Password
     - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/orange-point.gif" alt="spinning random dots indicating the sub-category won't run in headless mode in Windows Hardening module" width="30"> Enhanced: TPM + Startup PIN + Startup Key + Recovery Password
     - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/rainbow-planet-heart.gif" alt="planet rainbow heart indicating item that runs in Windows Hardening module" width="30"> Skip encryptions altogether
-- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/rainbow-planet-heart.gif" alt="planet rainbow heart indicating item that runs in Windows Hardening module" width="30"> TLS Security
-- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/rainbow-planet-heart.gif" alt="planet rainbow heart indicating item that runs in Windows Hardening module" width="30"> Lock Screen
+- TLS Security
+- Lock Screen
     - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/orange-point.gif" alt="spinning random dots indicating the sub-category won't run in headless mode in Windows Hardening module" width="30"> Don't display last signed-in
     - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/orange-point.gif" alt="spinning random dots indicating the sub-category won't run in headless mode in Windows Hardening module" width="30"> Require CTRL + ALT + DEL on lock screen
-- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/rainbow-planet-heart.gif" alt="planet rainbow heart indicating item that runs in Windows Hardening module" width="30"> User Account Control
+- User Account Control
     - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/orange-point.gif" alt="spinning random dots indicating the sub-category won't run in headless mode in Windows Hardening module" width="30"> Only elevate signed and validated executables
     - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/orange-point.gif" alt="spinning random dots indicating the sub-category won't run in headless mode in Windows Hardening module" width="30"> Hide the entry points for Fast User Switching
-- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/rainbow-planet-heart.gif" alt="planet rainbow heart indicating item that runs in Windows Hardening module" width="30"> Windows Firewall
-- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/rainbow-planet-heart.gif" alt="planet rainbow heart indicating item that runs in Windows Hardening module" width="30"> Optional Windows Features
-- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/rainbow-planet-heart.gif" alt="planet rainbow heart indicating item that runs in Windows Hardening module" width="30"> Windows Networking
-- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/rainbow-planet-heart.gif" alt="planet rainbow heart indicating item that runs in Windows Hardening module" width="30"> Miscellaneous Configurations
-- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/rainbow-planet-heart.gif" alt="planet rainbow heart indicating item that runs in Windows Hardening module" width="30"> Windows Update Configurations
-- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/rainbow-planet-heart.gif" alt="planet rainbow heart indicating item that runs in Windows Hardening module" width="30"> Edge Browser Configurations
-- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/rainbow-planet-heart.gif" alt="planet rainbow heart indicating item that runs in Windows Hardening module" width="30"> Certificate Checking Commands
-- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/rainbow-planet-heart.gif" alt="planet rainbow heart indicating item that runs in Windows Hardening module" width="30"> Country IP Blocking
+- Windows Firewall
+- Optional Windows Features
+- Windows Networking
+- Miscellaneous Configurations
+- Windows Update Configurations
+- Edge Browser Configurations
+- Certificate Checking Commands
+- Country IP Blocking
     - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/rainbow-planet-heart.gif" alt="planet rainbow heart indicating item that runs in Windows Hardening module" width="30"> Block State Sponsors of Terrorism IP blocks
     - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/orange-point.gif" alt="spinning random dots indicating the sub-category won't run in headless mode in Windows Hardening module" width="30"> Block OFAC Sanctioned Countries IP blocks
-- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/rainbow-planet-heart.gif" alt="planet rainbow heart indicating item that runs in Windows Hardening module" width="30"> Non-Admin Commands
+- Downloads Defense Measures
+- Non-Admin Commands
 
 <br>
 
@@ -209,18 +209,18 @@ The following is the exact enumeration of the items that will be executed based 
 
 ### Example 1
 
-If you run the module like this, the 2 categories will be executed automatically without requiring any user input. The results will be displayed on the console.
-
-```powershell
-Protect-WindowsSecurity -Categories MicrosoftDefender, AttackSurfaceReductionRules
-```
-
-### Example 2
-
 If you run the module like this without specifying any categories, the module will run in interactive mode and the usual beautiful prompts will be displayed to the user.
 
 ```powershell
 Protect-WindowsSecurity
+```
+
+### Example 2
+
+If you run the module like this, the 2 categories will be executed automatically without requiring any user input. The results will be displayed on the console.
+
+```powershell
+Protect-WindowsSecurity -Categories MicrosoftDefender, AttackSurfaceReductionRules
 ```
 
 ### Example 3
@@ -228,7 +228,15 @@ Protect-WindowsSecurity
 This example will apply the Microsoft Defender category with the Smart App Control sub-category, without the need for user interaction, and will show verbose messages.
 
 ```powershell
-Protect-WindowsSecurity -Categories MicrosoftDefender -MicrosoftDefender_SmartAppControl -Verbose
+Protect-WindowsSecurity -Categories MicrosoftDefender -MSFTDefender_SAC -Verbose
+```
+
+### Example 4
+
+This example will apply the Microsoft Security Baselines, BitLocker, User Account Control, Lock Screen and Downloads Defense Measures categories. It will also apply the "Only Elevate Signed and Validated Executables" sub-category of the User Account Control category, and the "Require CTRL + ALT + DEL on Lock Screen" sub-category of the Lock Screen category.
+
+```powershell
+Protect-WindowsSecurity -Categories MicrosoftSecurityBaselines,BitLockerSettings,UserAccountControl,LockScreen,DownloadsDefenseMeasures -UAC_OnlyElevateSigned -LockScreen_CtrlAltDel
 ```
 
 <br>

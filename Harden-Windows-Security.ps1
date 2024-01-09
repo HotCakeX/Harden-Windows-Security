@@ -57,33 +57,33 @@ Function Protect-WindowsSecurity {
         }
 
         if ('MicrosoftSecurityBaselines' -in $PSBoundParameters['Categories']) {
-            # Create a dynamic parameter for -MicrosoftSecurityBaselines_NoOverrides
-            Invoke-Command -ScriptBlock $DynamicParamCreator -ArgumentList 'MicrosoftSecurityBaselines_NoOverrides'
+            # Create a dynamic parameter for -SecBaselines_NoOverrides
+            Invoke-Command -ScriptBlock $DynamicParamCreator -ArgumentList 'SecBaselines_NoOverrides'
         }
 
         if ('MicrosoftDefender' -in $PSBoundParameters['Categories']) {
-            # Create a dynamic parameter for -MicrosoftDefender_SmartAppControl
-            Invoke-Command -ScriptBlock $DynamicParamCreator -ArgumentList 'MicrosoftDefender_SmartAppControl'
-            # Create a dynamic parameter for -MicrosoftDefender_NoOptionalDiagnosticData
-            Invoke-Command -ScriptBlock $DynamicParamCreator -ArgumentList 'MicrosoftDefender_NoOptionalDiagnosticData'
-            # Create a dynamic parameter for -MicrosoftDefender_NoScheduledTask
-            Invoke-Command -ScriptBlock $DynamicParamCreator -ArgumentList 'MicrosoftDefender_NoScheduledTask'
-            # Create a dynamic parameter for -MicrosoftDefender_DefenderBetaChannels
-            Invoke-Command -ScriptBlock $DynamicParamCreator -ArgumentList 'MicrosoftDefender_DefenderBetaChannels'
+            # Create a dynamic parameter for -MSFTDefender_SAC
+            Invoke-Command -ScriptBlock $DynamicParamCreator -ArgumentList 'MSFTDefender_SAC'
+            # Create a dynamic parameter for -MSFTDefender_NoDiagData
+            Invoke-Command -ScriptBlock $DynamicParamCreator -ArgumentList 'MSFTDefender_NoDiagData'
+            # Create a dynamic parameter for -MSFTDefender_NoScheduledTask
+            Invoke-Command -ScriptBlock $DynamicParamCreator -ArgumentList 'MSFTDefender_NoScheduledTask'
+            # Create a dynamic parameter for -MSFTDefender_BetaChannels
+            Invoke-Command -ScriptBlock $DynamicParamCreator -ArgumentList 'MSFTDefender_BetaChannels'
         }
 
         if ('LockScreen' -in $PSBoundParameters['Categories']) {
-            # Create a dynamic parameter for -LockScreen_DontDisplayLastSignedIn
-            Invoke-Command -ScriptBlock $DynamicParamCreator -ArgumentList 'LockScreen_DontDisplayLastSignedIn'
-            # Create a dynamic parameter for -LockScreen_RequireCtrlAltDel
-            Invoke-Command -ScriptBlock $DynamicParamCreator -ArgumentList 'LockScreen_RequireCtrlAltDel'
+            # Create a dynamic parameter for -LockScreen_NoLastSignedIn
+            Invoke-Command -ScriptBlock $DynamicParamCreator -ArgumentList 'LockScreen_NoLastSignedIn'
+            # Create a dynamic parameter for -LockScreen_CtrlAltDel
+            Invoke-Command -ScriptBlock $DynamicParamCreator -ArgumentList 'LockScreen_CtrlAltDel'
         }
 
         if ('UserAccountControl' -in $PSBoundParameters['Categories']) {
             # Create a dynamic parameter for -UserAccountControl_NoFastUserSwitching
             Invoke-Command -ScriptBlock $DynamicParamCreator -ArgumentList 'UserAccountControl_NoFastUserSwitching'
-            # Create a dynamic parameter for -UserAccountControl_OnlyElevateSignedExe
-            Invoke-Command -ScriptBlock $DynamicParamCreator -ArgumentList 'UserAccountControl_OnlyElevateSignedExe'
+            # Create a dynamic parameter for -UAC_OnlyElevateSigned
+            Invoke-Command -ScriptBlock $DynamicParamCreator -ArgumentList 'UAC_OnlyElevateSigned'
         }
 
         if ('CountryIPBlocking' -in $PSBoundParameters['Categories']) {
@@ -125,15 +125,15 @@ Function Protect-WindowsSecurity {
         }
 
         # Since Dynamic parameters are only available in the parameter dictionary, we have to access them using $PSBoundParameters or assign them manually to another variable in the function's scope
-        New-Variable -Name 'MicrosoftSecurityBaselines_NoOverrides' -Value $($PSBoundParameters['MicrosoftSecurityBaselines_NoOverrides']) -Force
-        New-Variable -Name 'MicrosoftDefender_SmartAppControl' -Value $($PSBoundParameters['MicrosoftDefender_SmartAppControl']) -Force
-        New-Variable -Name 'MicrosoftDefender_NoOptionalDiagnosticData' -Value $($PSBoundParameters['MicrosoftDefender_NoOptionalDiagnosticData']) -Force
-        New-Variable -Name 'MicrosoftDefender_NoScheduledTask' -Value $($PSBoundParameters['MicrosoftDefender_NoScheduledTask']) -Force
-        New-Variable -Name 'MicrosoftDefender_DefenderBetaChannels' -Value $($PSBoundParameters['MicrosoftDefender_DefenderBetaChannels']) -Force
-        New-Variable -Name 'LockScreen_RequireCtrlAltDel' -Value $($PSBoundParameters['LockScreen_RequireCtrlAltDel']) -Force
-        New-Variable -Name 'LockScreen_DontDisplayLastSignedIn' -Value $($PSBoundParameters['LockScreen_DontDisplayLastSignedIn']) -Force
+        New-Variable -Name 'SecBaselines_NoOverrides' -Value $($PSBoundParameters['SecBaselines_NoOverrides']) -Force
+        New-Variable -Name 'MSFTDefender_SAC' -Value $($PSBoundParameters['MSFTDefender_SAC']) -Force
+        New-Variable -Name 'MSFTDefender_NoDiagData' -Value $($PSBoundParameters['MSFTDefender_NoDiagData']) -Force
+        New-Variable -Name 'MSFTDefender_NoScheduledTask' -Value $($PSBoundParameters['MSFTDefender_NoScheduledTask']) -Force
+        New-Variable -Name 'MSFTDefender_BetaChannels' -Value $($PSBoundParameters['MSFTDefender_BetaChannels']) -Force
+        New-Variable -Name 'LockScreen_CtrlAltDel' -Value $($PSBoundParameters['LockScreen_CtrlAltDel']) -Force
+        New-Variable -Name 'LockScreen_NoLastSignedIn' -Value $($PSBoundParameters['LockScreen_NoLastSignedIn']) -Force
         New-Variable -Name 'UserAccountControl_NoFastUserSwitching' -Value $($PSBoundParameters['UserAccountControl_NoFastUserSwitching']) -Force
-        New-Variable -Name 'UserAccountControl_OnlyElevateSignedExe' -Value $($PSBoundParameters['UserAccountControl_OnlyElevateSignedExe']) -Force
+        New-Variable -Name 'UAC_OnlyElevateSigned' -Value $($PSBoundParameters['UAC_OnlyElevateSigned']) -Force
         New-Variable -Name 'CountryIPBlocking_BlockOFACSanctionedCountries' -Value $($PSBoundParameters['CountryIPBlocking_BlockOFACSanctionedCountries']) -Force
     }
 
@@ -942,7 +942,7 @@ Function Protect-WindowsSecurity {
                 # Change current directory to the Security Baselines folder
                 Push-Location -Path "$MicrosoftSecurityBaselinePath\Scripts\"
 
-                :MicrosoftSecurityBaselinesCategoryLabel switch ($RunUnattended ? ($MicrosoftSecurityBaselines_NoOverrides ? 'Yes' : 'Yes, With the Optional Overrides (Recommended)') : (Select-Option -Options 'Yes', 'Yes, With the Optional Overrides (Recommended)' , 'No', 'Exit' -Message "`nApply Microsoft Security Baseline ?")) {
+                :MicrosoftSecurityBaselinesCategoryLabel switch ($RunUnattended ? ($SecBaselines_NoOverrides ? 'Yes' : 'Yes, With the Optional Overrides (Recommended)') : (Select-Option -Options 'Yes', 'Yes, With the Optional Overrides (Recommended)' , 'No', 'Exit' -Message "`nApply Microsoft Security Baseline ?")) {
                     'Yes' {
                         Write-Progress -Id 0 -Activity 'Microsoft Security Baseline' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
 
@@ -1083,7 +1083,7 @@ Function Protect-WindowsSecurity {
 
                         # Suggest turning on Smart App Control only if it's in Eval mode
                         if ((Get-MpComputerStatus).SmartAppControlState -eq 'Eval') {
-                            :SmartAppControlLabel switch ($RunUnattended ? ($MicrosoftDefender_SmartAppControl ? 'Yes' : 'No' ) : (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nTurn on Smart App Control ?")) {
+                            :SmartAppControlLabel switch ($RunUnattended ? ($MSFTDefender_SAC ? 'Yes' : 'No' ) : (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nTurn on Smart App Control ?")) {
                                 'Yes' {
                                     Write-Verbose -Message 'Turning on Smart App Control'
                                     Edit-Registry -path 'Registry::HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\CI\Policy' -key 'VerifiedAndReputablePolicyState' -value '1' -type 'DWORD' -Action 'AddOrModify'
@@ -1102,7 +1102,7 @@ Function Protect-WindowsSecurity {
                         else {
                             # Ask user if they want to turn on optional diagnostic data only if Smart App Control is not already turned off
                             if ((Get-MpComputerStatus).SmartAppControlState -ne 'Off') {
-                                :SmartAppControlLabel2 switch ($RunUnattended ? ($MicrosoftDefender_NoOptionalDiagnosticData ? 'No' : 'Yes') : (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nEnable Optional Diagnostic Data ?" -ExtraMessage 'Required for Smart App Control usage and evaluation, read the GitHub Readme!')) {
+                                :SmartAppControlLabel2 switch ($RunUnattended ? ($MSFTDefender_NoDiagData ? 'No' : 'Yes') : (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nEnable Optional Diagnostic Data ?" -ExtraMessage 'Required for Smart App Control usage and evaluation, read the GitHub Readme!')) {
                                     'Yes' {
                                         Write-Verbose -Message 'Enabling Optional Diagnostic Data'
                                         &$LGPOExe /q /m "$WorkingDir\Security-Baselines-X\Microsoft Defender Policies\Optional Diagnostic Data\registry.pol"
@@ -1117,7 +1117,7 @@ Function Protect-WindowsSecurity {
 
                         # Create scheduled task for fast weekly Microsoft recommended driver block list update if it doesn't exist or exists but is not Ready/Running
                         if (($BlockListScheduledTaskState -notin 'Ready', 'Running')) {
-                            :TaskSchedulerCreationLabel switch ($RunUnattended ? ($MicrosoftDefender_NoScheduledTask ? 'No' : 'Yes') : (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nCreate scheduled task for fast weekly Microsoft recommended driver block list update ?")) {
+                            :TaskSchedulerCreationLabel switch ($RunUnattended ? ($MSFTDefender_NoScheduledTask ? 'No' : 'Yes') : (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nCreate scheduled task for fast weekly Microsoft recommended driver block list update ?")) {
                                 'Yes' {
                                     Write-Verbose -Message 'Creating scheduled task for fast weekly Microsoft recommended driver block list update'
 
@@ -1147,7 +1147,7 @@ Function Protect-WindowsSecurity {
                         # Only display this prompt if Engine and Platform update channels are not already set to Beta
                         if ( ($MDAVPreferencesCurrent.EngineUpdatesChannel -ne '2') -or ($MDAVPreferencesCurrent.PlatformUpdatesChannel -ne '2') ) {
                             # Set Microsoft Defender engine and platform update channel to beta - Devices in the Windows Insider Program are subscribed to this channel by default.
-                            :DefenderUpdateChannelsLabel switch ($RunUnattended ? ($MicrosoftDefender_DefenderBetaChannels ? 'Yes' : 'No') : (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nSet Microsoft Defender engine and platform update channel to beta ?")) {
+                            :DefenderUpdateChannelsLabel switch ($RunUnattended ? ($MSFTDefender_BetaChannels ? 'Yes' : 'No') : (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nSet Microsoft Defender engine and platform update channel to beta ?")) {
                                 'Yes' {
                                     Write-Verbose -Message 'Setting Microsoft Defender engine and platform update channel to beta'
                                     Set-MpPreference -EngineUpdatesChannel beta
@@ -1879,7 +1879,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                         &$LGPOExe /q /s "$WorkingDir\Security-Baselines-X\Lock Screen Policies\GptTmpl.inf"
 
                         # Apply the Don't display last signed-in policy
-                        :LockScreenLastSignedInLabel switch ($RunUnattended ? ($LockScreen_DontDisplayLastSignedIn ? 'Yes' : 'No') : (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nDon't display last signed-in on logon screen ?" -ExtraMessage 'Read the GitHub Readme!')) {
+                        :LockScreenLastSignedInLabel switch ($RunUnattended ? ($LockScreen_NoLastSignedIn ? 'Yes' : 'No') : (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nDon't display last signed-in on logon screen ?" -ExtraMessage 'Read the GitHub Readme!')) {
                             'Yes' {
                                 Write-Verbose -Message "Applying the Don't display last signed-in policy"
 
@@ -1893,7 +1893,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                         }
 
                         # Enable CTRL + ALT + DEL
-                        :CtrlAltDelLabel switch ($RunUnattended ? ($LockScreen_RequireCtrlAltDel ? 'Yes' : 'No') : (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nEnable requiring CTRL + ALT + DEL on lock screen ?")) {
+                        :CtrlAltDelLabel switch ($RunUnattended ? ($LockScreen_CtrlAltDel ? 'Yes' : 'No') : (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nEnable requiring CTRL + ALT + DEL on lock screen ?")) {
                             'Yes' {
                                 Write-Verbose -Message 'Applying the Enable CTRL + ALT + DEL policy'
 
@@ -1938,7 +1938,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                         }
 
                         # Apply the Only elevate executables that are signed and validated policy
-                        :ElevateSignedExeLabel switch ($RunUnattended ? ($UserAccountControl_OnlyElevateSignedExe ? 'Yes' : 'No') : (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nOnly elevate executables that are signed and validated ?" -ExtraMessage 'Read the GitHub Readme!')) {
+                        :ElevateSignedExeLabel switch ($RunUnattended ? ($UAC_OnlyElevateSigned ? 'Yes' : 'No') : (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nOnly elevate executables that are signed and validated ?" -ExtraMessage 'Read the GitHub Readme!')) {
                             'Yes' {
                                 Write-Verbose -Message 'Applying the Only elevate executables that are signed and validated policy'
 
@@ -2352,19 +2352,19 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
     In headless/unattended mode, you can specify which categories to apply without the need for user interaction.
     When running in headless/unattended mode, you can control the sub-categories of each category by using the following switch parameters:
 
-    MicrosoftSecurityBaselines_NoOverrides -> Applies the Microsoft Security Baselines without the optional overrides
-    MicrosoftDefender_SmartAppControl -> Enables Smart App Control
-    MicrosoftDefender_NoOptionalDiagnosticData -> Will not enable optional diagnostics data required for Smart App Control (Does not have any effect if Smart App Control is already turned on)
-    MicrosoftDefender_NoScheduledTask -> Will not create scheduled task for fast MSFT driver block rules update
-    MicrosoftDefender_DefenderBetaChannels -> Set Defender Engine and Intelligence update channels to beta
-    LockScreen_RequireCtrlAltDel -> Require CTRL + ALT + Delete at lock screen
-    LockScreen_DontDisplayLastSignedIn -> Will not display the last signed in user at the lock screen
+    SecBaselines_NoOverrides -> Applies the Microsoft Security Baselines without the optional overrides
+    MSFTDefender_SAC -> Enables Smart App Control
+    MSFTDefender_NoDiagData -> Will not enable optional diagnostics data required for Smart App Control (Does not have any effect if Smart App Control is already turned on)
+    MSFTDefender_NoScheduledTask -> Will not create scheduled task for fast MSFT driver block rules update
+    MSFTDefender_BetaChannels -> Set Defender Engine and Intelligence update channels to beta
+    LockScreen_CtrlAltDel -> Require CTRL + ALT + Delete at lock screen
+    LockScreen_NoLastSignedIn -> Will not display the last signed in user at the lock screen
     UserAccountControl_NoFastUserSwitching -> Hide entry points for fast user switching
-    UserAccountControl_OnlyElevateSignedExe -> Only elevate signed and validated executables
+    UAC_OnlyElevateSigned -> Only elevate signed and validated executables
     CountryIPBlocking_BlockOFACSanctionedCountries -> Include the IP ranges of OFAC Sanctioned Countries in the firewall block rules
 
     Each of the switch parameters above will be dynamically generated based on the categories you choose.
-    For example, if you choose to run the Microsoft Security Baselines category, the MicrosoftSecurityBaselines_NoOverrides switch parameter will be generated and you can use it to apply the Microsoft Security Baselines without the optional overrides.
+    For example, if you choose to run the Microsoft Security Baselines category, the SecBaselines_NoOverrides switch parameter will be generated and you can use it to apply the Microsoft Security Baselines without the optional overrides.
 
 .COMPONENT
     PowerShell
@@ -2381,7 +2381,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
 
     This example will apply the Microsoft Security Baselines, Microsoft Defender and Attack Surface Reduction Rules categories without the need for user interaction.
 .EXAMPLE
-    Protect-WindowsSecurity -Categories MicrosoftDefender -MicrosoftDefender_SmartAppControl -Verbose
+    Protect-WindowsSecurity -Categories MicrosoftDefender -MSFTDefender_SAC -Verbose
 
     This example will apply the Microsoft Defender category with the Smart App Control sub-category, without the need for user interaction, and will show verbose messages.
 .EXAMPLE

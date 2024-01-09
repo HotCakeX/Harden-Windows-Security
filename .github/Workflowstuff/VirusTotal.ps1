@@ -9,7 +9,7 @@ else {
 $VTApi = $env:VTAPIsecret
 
 # Submit
-$Output = New-VirusScan -ApiKey $VTApi -File .\Harden-Windows-Security Module\Main files\Resources\Security-Baselines-X.zip
+$Output = New-VirusScan -ApiKey $VTApi -File '.\Harden-Windows-Security Module\Main files\Resources\Security-Baselines-X.zip'
 
 # Wait
 Do {
@@ -47,7 +47,7 @@ else {
 $SecurityBaselinesXvar = "https://www.virustotal.com/gui/file/$($OutputScan.meta.file_info.sha256)"
 
 # Submit
-$Output = New-VirusScan -ApiKey $VTApi -File .\Harden-Windows-Security Module\Main files\Resources\EventViewerCustomViews.zip
+$Output = New-VirusScan -ApiKey $VTApi -File '.\Harden-Windows-Security Module\Main files\Resources\EventViewerCustomViews.zip'
 
 # Wait
 Do {

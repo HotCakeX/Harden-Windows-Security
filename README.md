@@ -1057,11 +1057,11 @@ This repository uses the simplest possible, yet effective, methods that make it 
 
 <br>
 
-<!-- Security-Baselines-X-VT:START --><a href='https://www.virustotal.com/gui/file/'>Virus Total scan results of Security-Baselines-X.zip</a><!-- Security-Baselines-X-VT:END -->
+<!-- Security-Baselines-X-VT:START --><a href='https://www.virustotal.com/gui/file/9f312eb852703288868050775225bca376adf07fc722056425bbd0ed0d7220f4'>Virus Total scan results of Security-Baselines-X.zip</a><!-- Security-Baselines-X-VT:END -->
 
 <br>
 
-<!-- EventViewer-CustomViews-VT:START --><a href='https://www.virustotal.com/gui/file/'>Virus Total scan results of EventViewerCustomViews.zip</a><!-- EventViewer-CustomViews-VT:END -->
+<!-- EventViewer-CustomViews-VT:START --><a href='https://www.virustotal.com/gui/file/7895f1d4a45f0fe2fdd38d6e7f7a98ef4c83ad4b05c8fcc3aa45f8e3ffe9081d'>Virus Total scan results of EventViewerCustomViews.zip</a><!-- EventViewer-CustomViews-VT:END -->
 
 <br>
 <br>

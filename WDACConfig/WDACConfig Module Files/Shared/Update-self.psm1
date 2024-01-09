@@ -71,7 +71,7 @@ Function Update-self {
 
         if ($CurrentVersion -lt $LatestVersion) {
 
-            Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(255,0,230))The currently installed module's version is $CurrentVersion while the latest version is $LatestVersion - Auto Updating the module... 💓$($PSStyle.Reset)"
+            Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(255,0,230))The currently installed module's version is $CurrentVersion while the latest version is $LatestVersion - Auto Updating the module...$($PSStyle.Reset)"
 
             # Remove the old module version from the current session
             Remove-Module -Name 'WDACConfig' -Force
@@ -110,8 +110,8 @@ Export-ModuleMember -Function 'Update-self'
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCB3MkpGhivrGUeY
-# dBhOBptTcTJNGSlfsnreLAokY4ZqXqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCAC8tW2+h4el/tl
+# +sWC8/mBBckF9BQNyfixjKc0iwXZ+qCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -158,16 +158,16 @@ Export-ModuleMember -Function 'Update-self'
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgWJ+o0jfxufIVze2gXAxoJNsr55uYRrU3JDoTHG0CdoYwDQYJKoZIhvcNAQEB
-# BQAEggIAP7tvrhByGhubAtf3KXlzFHp+OmLkHSO9pYoZme6wgpINTDgQQByfwl6D
-# RVdjl8Kbrbw3qLx6BAuNRz4POPib/yq3K6n3FDzMP445O5BdIMS7Xs566Wt5J09C
-# EhH8OmhYT520VQKJkXxcv+IODL9+nl3vh3nSqAYUjZoqOZ/qaXdieKftlqjmpg6U
-# w7QFQFGGccdqz8Ap14WP1378VslZyGL83E6vPsPH+e3CVS2OoLYRK4832cUfMNsg
-# uBEqu0W8rg2gkKztfhnOgTfhUiwcTYpmna5q/ZaOXNpzgAdWd8aJ3a+3G5G/vAh1
-# Y+UVXT3PWP+fQHrxUKt25M4g3Im8Y06a/5+MyeNYPmNvLCThT7urSeM/4YT521m2
-# 1sNz2pUG1+hZoB7504MoYgieHLW8nnIWZHacId1q8d8RR9ohZTgnlW6DL/n6K1Aq
-# Ajx8Wuzx5RdtpANrZOAeqhITnvGRUiJjilnyRbwjBiWCB7nxOlCX3g1R5tFWqW+x
-# rE0xerUCdU93+OYZRKrdK9UEroiWXoMX0P3nHeT86TXyMAggKeqJKcAUyOjGYXzr
-# uZufIy4M3Q93Gupl7tFw14l6aWFs0cfWSTUGZYUJoZVcwv+VCARl7dyQl9SBOJx2
-# J8LJhOmK4m0mDp/VffaSiHhm4D62TdS6sXWkHVC7i3+UZV30/lY=
+# IgQgvCOwaTxDDFwG8fli+JLR6WdijNggoIEkO5WMj7W88d0wDQYJKoZIhvcNAQEB
+# BQAEggIAT2VmN6GbW5t5jkBninl0+d6Mcq1HsFMQslBvVajv2v6fcOLp5C9/dghn
+# 09XPeBigmZgGhEEq8bcrpz/q5mk9u1F5gJbbdhJGW/DN9OaiQpaE+6OsOEaCd4MG
+# rbJuxjekysq2D1VQyCVhar1W5hdcWH7KkHdzvlLU02DlSt8tLdT6qhmAszmTpVfH
+# VDCHBJJTil9gd2o8lK+gzCmuhdCoQcC9dOXdZ7NWJJMmZ/Yabq9siuTw4y2ZguTd
+# rpui80458ldn/bXGTmCvxhRnTyY2t9qo8gKkmktxt3ZzdZ6iFo0424m6PW0nAvr1
+# JpBbhhVV/4XDf/GsW8QjBI3rFRljAq7W4y1s2fBMWTbidlD/8+g/4IXnTMqJQk+z
+# yBixUophrJ2c6NWBmDhWL7Ir7BUygzYblVirOt7FPx85WeBnaAc1Btj9jOqMQTaL
+# kGTLV4ZlQ+oaVefRf7JUMo3XCuoAwvU6o7xw8rP2iQb8pFcmISgliy3jseM96FW2
+# rxosKo7x9/BiC98mU+hgT9FCR1Qw4MZSnCzwIhpbGk4/V+jRKa+KUYOoqeVtBqC7
+# qrC/Hh+vagte6N432USAJZ+VQGzJwXEplAJ1Dpx9v7Mb5KH3u7egaN3Qg1jSfW3x
+# RFRf1+694WEUNBdBJfj2ma3/tEn1EVwoTt7IPZF701jJCYfqHrI=
 # SIG # End signature block

@@ -158,8 +158,14 @@ Function Protect-WindowsSecurity {
 
         # Determining whether to use the files inside the module or download them from the GitHub repository
         [System.Boolean]$IsLocally = $false
-        if ($PSCommandPath) {
-            if ((Split-Path -Path $PSCommandPath -Leaf) -eq 'Protect-WindowsSecurity.psm1') {
+        # Test for $null or '' or all-whitespace or any stringified value being ''
+        if (-NOT [System.String]::IsNullOrWhitespace($PSCommandPath)) {
+            try {
+                # Get the name of the file that called the function
+                [System.String]$PSCommandPathToProcess = Split-Path -Path $PSCommandPath -Leaf
+            }
+            catch {}
+            if ($PSCommandPathToProcess -eq 'Protect-WindowsSecurity.psm1') {
                 Write-Verbose -Message 'Running Protect-WindowsSecurity function as part of the Harden-Windows-Security module'
 
                 Write-Verbose -Message 'Importing the required sub-modules'

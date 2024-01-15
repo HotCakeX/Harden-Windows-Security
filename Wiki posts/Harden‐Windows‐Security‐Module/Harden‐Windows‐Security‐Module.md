@@ -16,6 +16,8 @@ The `Protect-WindowsSecurity` cmdlet's hybrid design allows it to operate as a s
 
 In Interactive mode, the cmdlet will ask you to confirm the changes before applying them. In non-interactive mode, you can pre-configure the hardening categories you want to apply and the cmdlet will apply them without asking for confirmation.
 
+It possesses the ability to operate entirely in isolation, useful for systems or servers that are disconnected from the Internet.
+
 <br>
 
 <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
@@ -114,17 +116,29 @@ Uninstall-Module -Name 'Harden-Windows-Security-Module' -Force -AllVersions
 ## Available Parameters for Protect-WindowsSecurity Cmdlet
 
 ```powershell
-Protect-WindowsSecurity [[-Categories] <String[]>] [<CommonParameters>]
+Protect-WindowsSecurity [-Categories <String[]>] [-Log] [-Offline] [<CommonParameters>]
 ```
 
 <br>
 
-The following parameters are only for the headless/silent mode of operation.
+### 8 Optional Parameters
 
-* `-Categories`: **Optional**; Specify the hardening categories that you want to apply. This will tell the module to operate in non-interactive or headless/silent mode which won't ask for confirmation before running each selected categories. You can specify multiple categories by separating them with a comma. If you don't specify any category, the cmdlet will run in interactive mode. **Use this parameter for deployments at a large scale.** If a selected category requires Administrator privileges and the module is running with Standard privileges, that category is skipped.
+* `-Categories`: Specify the hardening categories that you want to apply. This will tell the module to operate in non-interactive or headless/silent mode which won't ask for confirmation before running each selected categories. You can specify multiple categories by separating them with a comma. If you don't specify any category, the cmdlet will run in interactive mode. **Use this parameter for deployments at a large scale.** If a selected category requires Administrator privileges and the module is running with Standard privileges, that category is skipped.
    * This parameter has automatic tab completion. You can press the `Tab` key to see the available categories.
 
-* `-Verbose`: **Optional**; Shows verbose messages on the console about what the cmdlet is doing.
+* `-Verbose`: Shows verbose messages on the console about what the cmdlet is doing.
+
+* `-Log`: Activates comprehensive logging by recording all the information shown on the screen and some additional data to a text file. It is strongly advised to use the -Verbose parameter when you want to enable logging.
+
+     * `-LogPath`: The path to save the log file to. If not specified, the log file will be saved in the current working directory.
+
+* `-Offline`: Indicates that the module is being run in offline mode. Will not download any files from the internet. Will not check for updates. Using this parameter will make the following 3 parameters available and mandatory: `PathToLGPO`, `PathToMSFTSecurityBaselines` and `PathToMSFT365AppsSecurityBaselines`.
+
+     * `-PathToLGPO`: The path to the 'LGPO.zip'. Make sure it's in the zip format just like it's downloaded from the Microsoft servers. File name can be anything. The parameter has argument completer so you can press tab and use the file picker GUI to select the zip file.
+
+     * `-PathToMSFTSecurityBaselines`: The path to the 'Windows Security Baseline.zip'. Make sure it's in the zip format just like it's downloaded from the Microsoft servers. File name can be anything. The parameter has argument completer so you can press tab and use the file picker GUI to select the zip file.
+
+     * `-PathToMSFT365AppsSecurityBaselines`: The path to the 'Microsoft 365 Apps for Enterprise zip'. Make sure it's in the zip format just like it's downloaded from the Microsoft servers. File name can be anything. The parameter has argument completer so you can press tab and use the file picker GUI to select the zip file.
 
 <br>
 
@@ -237,6 +251,14 @@ This example will apply the Microsoft Security Baselines, BitLocker, User Accoun
 
 ```powershell
 Protect-WindowsSecurity -Categories MicrosoftSecurityBaselines,BitLockerSettings,UserAccountControl,LockScreen,DownloadsDefenseMeasures -UAC_OnlyElevateSigned -LockScreen_CtrlAltDel
+```
+
+### Example 5
+
+This example instructs the cmdlet to run in offline mode and will not download any files from the internet. It also runs it in headless/silent mode by specifying which categories to automatically run. `-MSFTDefender_SAC` switch is used so the Smart App Control sub-category is also applied in the headless/silent mode. `-Log` switch is mentioned which will save the output of the cmdlet to a text file in the current working directory.
+
+```powershell
+Protect-WindowsSecurity -Verbose -Offline -PathToLGPO 'C:\Users\Admin\Desktop\LGPO.zip' -PathToMSFTSecurityBaselines 'C:\Users\Admin\Desktop\Baselines.zip' -PathToMSFT365AppsSecurityBaselines 'C:\Users\Admin\Desktop\M365Baselines.zip' -Log -Categories MicrosoftSecurityBaselines,MicrosoftDefender -MSFTDefender_SAC
 ```
 
 <br>

@@ -104,6 +104,8 @@ WINWORD.EXE,EnableRopCallerCheck,Enable,Word - a mitigation for return-oriented 
 lsass.exe,DisableExtensionPoints,Enable,Local Security Authority Subsystem Service - This mitigation disables various extension points for an application which might be used to establish persistence or elevate privileges of malicious content.
 lsass.exe,BlockDynamicCode,Enable,Local Security Authority Subsystem Service - (a.k.a Arbitrary code guard) protects an application from executing dynamically generated code (code that isn't loaded for example from the exe itself or a dll).
 lsass.exe,DisallowChildProcessCreation,Enable,Local Security Authority Subsystem Service
+lsass.exe,BlockRemoteImageLoads,Enable,Protecting PPL process to prevent loading of DLLs from network locations such as SMB - WebDAV - etc.
+lsass.exe,MicrosoftSignedOnly,Enable,(a.k.a Code integrity guard) ensures that all binaries loaded into a process are digitally signed by Microsoft.
 SmartScreen.exe,DisableExtensionPoints,Enable,Smart Screen process - This mitigation disables various extension points for an application which might be used to establish persistence or elevate privileges of malicious content.
 SmartScreen.exe,CFG,Enable,Smart Screen process - Enabled by default System-Wide
 SmartScreen.exe,StrictCFG,Enable,Smart Screen process - In strict mode all binaries loaded into the process must be compiled for Control Flow Guard (or have no executable code in them - such as resource dlls) in order to be loaded.
@@ -137,3 +139,5 @@ msedgewebview2.exe,DisableExtensionPoints,Enable,Edge WebView 2 - Many component
 msedgewebview2.exe,CFG,Enable,Edge WebView 2 - Many components use it such as OneDrive;Quick Assist;Teams .etc - Enabled by default System-Wide
 msedgewebview2.exe,StrictCFG,Enable,Edge WebView 2 - Many components use it such as OneDrive;Quick Assist;Teams .etc - In strict mode all binaries loaded into the process must be compiled for Control Flow Guard (or have no executable code in them - such as resource dlls) in order to be loaded.
 msedgewebview2.exe,EnforceModuleDependencySigning,Enable,Edge WebView 2 - Many components use it such as OneDrive;Quick Assist;Teams .etc - helps protect against attacks that attempt to substitute code for dlls that are statically linked by Windows binaries.
+csrss.exe,BlockRemoteImageLoads,Enable,Protecting PPL process to prevent loading of DLLs from network locations such as SMB - WebDAV - etc.
+services.exe,BlockRemoteImageLoads,Enable,Protecting PPL process to prevent loading of DLLs from network locations such as SMB - WebDAV - etc.

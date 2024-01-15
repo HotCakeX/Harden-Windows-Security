@@ -4,7 +4,7 @@
   RootModule           = 'Harden-Windows-Security-Module.psm1'
 
   # Version number of this module.
-  ModuleVersion        = '0.2.9'
+  ModuleVersion        = '0.3.0'
 
   # Supported PSEditions
   CompatiblePSEditions = @('Core')
@@ -74,7 +74,7 @@ Harden Windows Safely, Securely, only with Official Microsoft methods
 '@
 
   # Minimum version of the PowerShell engine required by this module
-  PowerShellVersion    = '7.4.0'
+  PowerShellVersion    = '7.4.1'
 
   # Name of the PowerShell host required by this module
   # PowerShellHostName = ''

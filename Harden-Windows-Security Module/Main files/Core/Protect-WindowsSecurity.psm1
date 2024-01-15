@@ -1,9 +1,10 @@
 #Requires -Version 7.4
 #Requires -PSEdition Core
 Function Protect-WindowsSecurity {
-    [CmdletBinding(DefaultParameterSetName = 'Categories')]
+    [CmdletBinding(DefaultParameterSetName = 'Online Mode')]
     param (
-        [parameter(Mandatory = $false, ParameterSetName = 'Categories')]
+        [parameter(Mandatory = $false, ParameterSetName = 'Online Mode')]
+        [parameter(Mandatory = $false, ParameterSetName = 'Offline Mode')]
         [ArgumentCompleter({
                 # Get the current command and the already bound parameters
                 param($CommandName, $ParameterName, $WordToComplete, $CommandAst, $FakeBoundParameters)
@@ -28,9 +29,17 @@ Function Protect-WindowsSecurity {
             })]
         [ValidateScript({
                 if ($_ -notin [Categoriex]::new().GetValidValues()) { throw "Invalid Category Name: $_" }
+                # Return true if everything is okay
                 $true
             })]
-        [System.String[]]$Categories
+        [System.String[]]$Categories,
+
+        [parameter(Mandatory = $false, ParameterSetName = 'Online Mode')]
+        [parameter(Mandatory = $false, ParameterSetName = 'Offline Mode')]
+        [System.Management.Automation.SwitchParameter]$Log,
+
+        [parameter(Mandatory = $false, ParameterSetName = 'Offline Mode')]
+        [System.Management.Automation.SwitchParameter]$Offline
     )
 
     # This offers granular control over sub-category automation, handles the parameter validation and correlation between selected categories and the subcategory switch parameter, doesn't populate the argument completer on the console with unrelated parameters
@@ -39,56 +48,252 @@ Function Protect-WindowsSecurity {
         # Create a new dynamic parameter dictionary
         $ParamDictionary = [System.Management.Automation.RuntimeDefinedParameterDictionary]::new()
 
-        # A script block to create and add dynamic parameters to the dictionary
-        [System.Management.Automation.ScriptBlock]$DynamicParamCreator = {
+        # A script block to create and add dynamic parameters to the dictionary for the sub-categories
+        [System.Management.Automation.ScriptBlock]$DynParamCreatorSubCategories = {
             param([System.String]$Name)
 
-            # Create a dynamic parameter
-            $CurrentDynParam = [System.Management.Automation.ParameterAttribute]@{
+            # Create a parameter attribute to add the ParameterSet for 'Online Mode'
+            $ParamAttrib1 = [System.Management.Automation.ParameterAttribute]@{
                 Mandatory        = $false
-                ParameterSetName = 'Categories'
+                ParameterSetName = 'Online Mode'
+            }
+            # Create a parameter attribute to add the ParameterSet for 'Offline Mode'
+            $ParamAttrib2 = [System.Management.Automation.ParameterAttribute]@{
+                Mandatory        = $false
+                ParameterSetName = 'Offline Mode'
             }
             # Add the dynamic parameter to the param dictionary
             $ParamDictionary.Add($Name, [System.Management.Automation.RuntimeDefinedParameter]::new(
+                    # Define parameter name
                     $Name,
+                    # Define parameter type
                     [System.Management.Automation.SwitchParameter],
-                    [System.Management.Automation.ParameterAttribute[]]@($CurrentDynParam)
+                    # Add both attributes to the parameter
+                    [System.Management.Automation.ParameterAttribute[]]@($ParamAttrib1, $ParamAttrib2)
                 ))
         }
 
         if ('MicrosoftSecurityBaselines' -in $PSBoundParameters['Categories']) {
             # Create a dynamic parameter for -SecBaselines_NoOverrides
-            Invoke-Command -ScriptBlock $DynamicParamCreator -ArgumentList 'SecBaselines_NoOverrides'
+            Invoke-Command -ScriptBlock $DynParamCreatorSubCategories -ArgumentList 'SecBaselines_NoOverrides'
         }
 
         if ('MicrosoftDefender' -in $PSBoundParameters['Categories']) {
             # Create a dynamic parameter for -MSFTDefender_SAC
-            Invoke-Command -ScriptBlock $DynamicParamCreator -ArgumentList 'MSFTDefender_SAC'
+            Invoke-Command -ScriptBlock $DynParamCreatorSubCategories -ArgumentList 'MSFTDefender_SAC'
             # Create a dynamic parameter for -MSFTDefender_NoDiagData
-            Invoke-Command -ScriptBlock $DynamicParamCreator -ArgumentList 'MSFTDefender_NoDiagData'
+            Invoke-Command -ScriptBlock $DynParamCreatorSubCategories -ArgumentList 'MSFTDefender_NoDiagData'
             # Create a dynamic parameter for -MSFTDefender_NoScheduledTask
-            Invoke-Command -ScriptBlock $DynamicParamCreator -ArgumentList 'MSFTDefender_NoScheduledTask'
+            Invoke-Command -ScriptBlock $DynParamCreatorSubCategories -ArgumentList 'MSFTDefender_NoScheduledTask'
             # Create a dynamic parameter for -MSFTDefender_BetaChannels
-            Invoke-Command -ScriptBlock $DynamicParamCreator -ArgumentList 'MSFTDefender_BetaChannels'
+            Invoke-Command -ScriptBlock $DynParamCreatorSubCategories -ArgumentList 'MSFTDefender_BetaChannels'
         }
 
         if ('LockScreen' -in $PSBoundParameters['Categories']) {
             # Create a dynamic parameter for -LockScreen_NoLastSignedIn
-            Invoke-Command -ScriptBlock $DynamicParamCreator -ArgumentList 'LockScreen_NoLastSignedIn'
+            Invoke-Command -ScriptBlock $DynParamCreatorSubCategories -ArgumentList 'LockScreen_NoLastSignedIn'
             # Create a dynamic parameter for -LockScreen_CtrlAltDel
-            Invoke-Command -ScriptBlock $DynamicParamCreator -ArgumentList 'LockScreen_CtrlAltDel'
+            Invoke-Command -ScriptBlock $DynParamCreatorSubCategories -ArgumentList 'LockScreen_CtrlAltDel'
         }
 
         if ('UserAccountControl' -in $PSBoundParameters['Categories']) {
             # Create a dynamic parameter for -UAC_NoFastSwitching
-            Invoke-Command -ScriptBlock $DynamicParamCreator -ArgumentList 'UAC_NoFastSwitching'
+            Invoke-Command -ScriptBlock $DynParamCreatorSubCategories -ArgumentList 'UAC_NoFastSwitching'
             # Create a dynamic parameter for -UAC_OnlyElevateSigned
-            Invoke-Command -ScriptBlock $DynamicParamCreator -ArgumentList 'UAC_OnlyElevateSigned'
+            Invoke-Command -ScriptBlock $DynParamCreatorSubCategories -ArgumentList 'UAC_OnlyElevateSigned'
         }
 
         if ('CountryIPBlocking' -in $PSBoundParameters['Categories']) {
             # Create a dynamic parameter for -CountryIPBlocking_OFAC
-            Invoke-Command -ScriptBlock $DynamicParamCreator -ArgumentList 'CountryIPBlocking_OFAC'
+            Invoke-Command -ScriptBlock $DynParamCreatorSubCategories -ArgumentList 'CountryIPBlocking_OFAC'
+        }
+
+        # Creating dynamic parameters for the offline mode files
+        if ($PSBoundParameters.Offline.IsPresent) {
+
+            # Opens File picker GUI so that user can select an .zip file
+            [System.Management.Automation.ScriptBlock]$ArgumentCompleterZipFilePathsPicker = {
+                # Load the System.Windows.Forms assembly
+                Add-Type -AssemblyName 'System.Windows.Forms'
+                # Create a new OpenFileDialog object
+                [System.Windows.Forms.OpenFileDialog]$Dialog = New-Object -TypeName 'System.Windows.Forms.OpenFileDialog'
+                # Set the filter to show only zip files
+                $Dialog.Filter = 'Zip files (*.zip)|*.zip'
+                # Show the dialog and get the result
+                [System.String]$Result = $Dialog.ShowDialog()
+                # If the user clicked OK, return the selected file path
+                if ($Result -eq 'OK') {
+                    return "`'$($Dialog.FileName)`'"
+                }
+            }
+
+            #Region-Dyn-Param-For-PathToLGPO
+
+            # Create a parameter attribute collection
+            $PathToLGPO_AttributesCollection = New-Object -TypeName System.Collections.ObjectModel.Collection[System.Attribute]
+
+            # Create a mandatory attribute and add it to the collection
+            [System.Management.Automation.ParameterAttribute]$PathToLGPO_MandatoryAttrib = New-Object -TypeName System.Management.Automation.ParameterAttribute
+            $PathToLGPO_MandatoryAttrib.Mandatory = $true
+            $PathToLGPO_AttributesCollection.Add($PathToLGPO_MandatoryAttrib)
+
+            [System.Management.Automation.ParameterAttribute]$PathToLGPO_ParamSetAttribute = New-Object -TypeName System.Management.Automation.ParameterAttribute
+            $PathToLGPO_ParamSetAttribute.ParameterSetName = 'Offline Mode'
+            $PathToLGPO_AttributesCollection.Add($PathToLGPO_ParamSetAttribute)
+
+            # Create a validate script attribute and add it to the collection
+            [System.Management.Automation.ValidateScriptAttribute]$PathToLGPO_ValidateScriptAttrib = New-Object -TypeName System.Management.Automation.ValidateScriptAttribute( {
+                    try {
+                        # Load the System.IO.Compression assembly
+                        [System.Reflection.Assembly]::LoadWithPartialName('System.IO.Compression.FileSystem') | Out-Null
+                        # Open the zip file in read mode
+                        [System.IO.Compression.ZipArchive]$ZipArchive = [IO.Compression.ZipFile]::OpenRead("$_")
+                        # Make sure the selected zip has the required file
+                        if (-NOT ($ZipArchive.Entries | Where-Object -FilterScript { $_.FullName -like 'LGPO_*/LGPO.exe' })) {
+                            Throw 'The selected Zip file does not contain the LGPO.exe which is required for the Protect-WindowsSecurity function to work properly'
+                        }
+                    }
+                    finally {
+                        # Close the handle whether the zip file is valid or not
+                        $ZipArchive.Dispose()
+                    }
+                    # Return true if everything is okay
+                    $true
+                })
+            # Add the validate script attribute to the collection
+            $PathToLGPO_AttributesCollection.Add($PathToLGPO_ValidateScriptAttrib)
+
+            # Create an argument completer attribute and add it to the collection
+            [System.Management.Automation.ArgumentCompleterAttribute]$PathToLGPO_ArgumentCompleterAttrib = New-Object -TypeName System.Management.Automation.ArgumentCompleterAttribute($ArgumentCompleterZipFilePathsPicker)
+            $PathToLGPO_AttributesCollection.Add($PathToLGPO_ArgumentCompleterAttrib)
+
+            # Create a dynamic parameter object with the attributes already assigned: Name, Type, and Attributes Collection
+            [System.Management.Automation.RuntimeDefinedParameter]$PathToLGPO = New-Object -TypeName System.Management.Automation.RuntimeDefinedParameter('PathToLGPO', [System.IO.FileInfo], $PathToLGPO_AttributesCollection)
+
+            # Add the dynamic parameter object to the dictionary
+            $ParamDictionary.Add('PathToLGPO', $PathToLGPO)
+
+            #Endregion-Dyn-Param-For-PathToLGPO
+
+            #Region-Dyn-Param-For-PathToMSFT365AppsSecurityBaselines
+
+            # Create a parameter attribute collection
+            $PathToMSFT365AppsSecurityBaselines_AttributesCollection = New-Object -TypeName System.Collections.ObjectModel.Collection[System.Attribute]
+
+            # Create a mandatory attribute and add it to the collection
+            [System.Management.Automation.ParameterAttribute]$PathToMSFT365AppsSecurityBaselines_MandatoryAttrib = New-Object -TypeName System.Management.Automation.ParameterAttribute
+            $PathToMSFT365AppsSecurityBaselines_MandatoryAttrib.Mandatory = $true
+            $PathToMSFT365AppsSecurityBaselines_AttributesCollection.Add($PathToMSFT365AppsSecurityBaselines_MandatoryAttrib)
+
+            [System.Management.Automation.ParameterAttribute]$PathToMSFT365AppsSecurityBaselinesParamSetAttribute = New-Object -TypeName System.Management.Automation.ParameterAttribute
+            $PathToMSFT365AppsSecurityBaselinesParamSetAttribute.ParameterSetName = 'Offline Mode'
+            $PathToMSFT365AppsSecurityBaselines_AttributesCollection.Add($PathToMSFT365AppsSecurityBaselinesParamSetAttribute)
+
+            # Create a validate script attribute and add it to the collection
+            [System.Management.Automation.ValidateScriptAttribute]$PathToMSFT365AppsSecurityBaselines_ValidateScriptAttrib = New-Object -TypeName System.Management.Automation.ValidateScriptAttribute( {
+                    try {
+                        # Load the System.IO.Compression assembly
+                        [System.Reflection.Assembly]::LoadWithPartialName('System.IO.Compression.FileSystem') | Out-Null
+                        # Open the zip file in read mode
+                        [System.IO.Compression.ZipArchive]$ZipArchive = [IO.Compression.ZipFile]::OpenRead("$_")
+                        # Make sure the selected zip has the required file
+                        if (-NOT ($ZipArchive.Entries | Where-Object -FilterScript { $_.FullName -like 'Microsoft 365 Apps for Enterprise*/Scripts/Baseline-LocalInstall.ps1' })) {
+                            Throw 'The selected Zip file does not contain the Microsoft 365 Apps for Enterprise Security Baselines Baseline-LocalInstall.ps1 which is required for the Protect-WindowsSecurity function to work properly'
+                        }
+                    }
+                    finally {
+                        # Close the handle whether the zip file is valid or not
+                        $ZipArchive.Dispose()
+                    }
+                    # Return true if everything is okay
+                    $true
+                })
+            # Add the validate script attribute to the collection
+            $PathToMSFT365AppsSecurityBaselines_AttributesCollection.Add($PathToMSFT365AppsSecurityBaselines_ValidateScriptAttrib)
+
+            # Create an argument completer attribute and add it to the collection
+            [System.Management.Automation.ArgumentCompleterAttribute]$PathToMSFT365AppsSecurityBaselines_ArgumentCompleterAttrib = New-Object -TypeName System.Management.Automation.ArgumentCompleterAttribute($ArgumentCompleterZipFilePathsPicker)
+            $PathToMSFT365AppsSecurityBaselines_AttributesCollection.Add($PathToMSFT365AppsSecurityBaselines_ArgumentCompleterAttrib)
+
+            # Create a dynamic parameter object with the attributes already assigned: Name, Type, and Attributes Collection
+            [System.Management.Automation.RuntimeDefinedParameter]$PathToMSFT365AppsSecurityBaselines = New-Object -TypeName System.Management.Automation.RuntimeDefinedParameter('PathToMSFT365AppsSecurityBaselines', [System.IO.FileInfo], $PathToMSFT365AppsSecurityBaselines_AttributesCollection)
+
+            # Add the dynamic parameter object to the dictionary
+            $ParamDictionary.Add('PathToMSFT365AppsSecurityBaselines', $PathToMSFT365AppsSecurityBaselines)
+
+            #Endregion-Dyn-Param-For-PathToMSFT365AppsSecurityBaselines
+
+            #Region-Dyn-Param-For-PathToMSFTSecurityBaselines
+
+            # Create a parameter attribute collection
+            $PathToMSFTSecurityBaselines_AttributesCollection = New-Object -TypeName System.Collections.ObjectModel.Collection[System.Attribute]
+
+            # Create a mandatory attribute and add it to the collection
+            [System.Management.Automation.ParameterAttribute]$PathToMSFTSecurityBaselines_MandatoryAttrib = New-Object -TypeName System.Management.Automation.ParameterAttribute
+            $PathToMSFTSecurityBaselines_MandatoryAttrib.Mandatory = $true
+            $PathToMSFTSecurityBaselines_AttributesCollection.Add($PathToMSFTSecurityBaselines_MandatoryAttrib)
+
+            [System.Management.Automation.ParameterAttribute]$PathToMSFTSecurityBaselines_ParamSetAttribute = New-Object -TypeName System.Management.Automation.ParameterAttribute
+            $PathToMSFTSecurityBaselines_ParamSetAttribute.ParameterSetName = 'Offline Mode'
+            $PathToMSFTSecurityBaselines_AttributesCollection.Add($PathToMSFTSecurityBaselines_ParamSetAttribute)
+
+            # Create a validate script attribute and add it to the collection
+            [System.Management.Automation.ValidateScriptAttribute]$PathToMSFTSecurityBaselines_ValidateScriptAttrib = New-Object -TypeName System.Management.Automation.ValidateScriptAttribute( {
+                    try {
+                        # Load the System.IO.Compression assembly
+                        [System.Reflection.Assembly]::LoadWithPartialName('System.IO.Compression.FileSystem') | Out-Null
+                        # Open the zip file in read mode
+                        [System.IO.Compression.ZipArchive]$ZipArchive = [IO.Compression.ZipFile]::OpenRead("$_")
+                        # Make sure the selected zip has the required file
+                        if (-NOT ($ZipArchive.Entries | Where-Object -FilterScript { $_.FullName -like 'Windows*Security Baseline/Scripts/Baseline-LocalInstall.ps1' })) {
+                            Throw 'The selected Zip file does not contain the Microsoft Security Baselines Baseline-LocalInstall.ps1 which is required for the Protect-WindowsSecurity function to work properly'
+                        }
+                    }
+                    finally {
+                        # Close the handle whether the zip file is valid or not
+                        $ZipArchive.Dispose()
+                    }
+                    # Return true if everything is okay
+                    $true
+                })
+            # Add the validate script attribute to the collection
+            $PathToMSFTSecurityBaselines_AttributesCollection.Add($PathToMSFTSecurityBaselines_ValidateScriptAttrib)
+
+            # Create an argument completer attribute and add it to the collection
+            [System.Management.Automation.ArgumentCompleterAttribute]$PathToMSFTSecurityBaselines_ArgumentCompleterAttrib = New-Object -TypeName System.Management.Automation.ArgumentCompleterAttribute($ArgumentCompleterZipFilePathsPicker)
+            $PathToMSFTSecurityBaselines_AttributesCollection.Add($PathToMSFTSecurityBaselines_ArgumentCompleterAttrib)
+
+            # Create a dynamic parameter object with the attributes already assigned: Name, Type, and Attributes Collection
+            [System.Management.Automation.RuntimeDefinedParameter]$PathToMSFTSecurityBaselines = New-Object -TypeName System.Management.Automation.RuntimeDefinedParameter('PathToMSFTSecurityBaselines', [System.IO.FileInfo], $PathToMSFTSecurityBaselines_AttributesCollection)
+
+            # Add the dynamic parameter object to the dictionary
+            $ParamDictionary.Add('PathToMSFTSecurityBaselines', $PathToMSFTSecurityBaselines)
+
+            #Endregion-Dyn-Param-For-PathToMSFTSecurityBaselines
+        }
+
+        # Creating dynamic parameters for the LogPath
+        if ($PSBoundParameters.Log.IsPresent) {
+
+            # Create a parameter attribute to add the ParameterSet for 'Online Mode'
+            $LogPath_ParamAttrib1 = [System.Management.Automation.ParameterAttribute]@{
+                Mandatory        = $false
+                ParameterSetName = 'Online Mode'
+            }
+            # Create a parameter attribute to add the ParameterSet for 'Offline Mode'
+            $LogPath_ParamAttrib2 = [System.Management.Automation.ParameterAttribute]@{
+                Mandatory        = $false
+                ParameterSetName = 'Offline Mode'
+            }
+            # Add the dynamic parameter to the param dictionary
+            $ParamDictionary.Add('LogPath', [System.Management.Automation.RuntimeDefinedParameter]::new(
+                    # Define parameter name
+                    'LogPath',
+                    # Define parameter type
+                    [System.IO.FileInfo],
+                    # Add both attributes to the parameter
+                    [System.Management.Automation.ParameterAttribute[]]@($LogPath_ParamAttrib1, $LogPath_ParamAttrib2)
+                ))
         }
 
         return $ParamDictionary
@@ -135,9 +340,11 @@ Function Protect-WindowsSecurity {
         New-Variable -Name 'UAC_NoFastSwitching' -Value $($PSBoundParameters['UAC_NoFastSwitching']) -Force
         New-Variable -Name 'UAC_OnlyElevateSigned' -Value $($PSBoundParameters['UAC_OnlyElevateSigned']) -Force
         New-Variable -Name 'CountryIPBlocking_OFAC' -Value $($PSBoundParameters['CountryIPBlocking_OFAC']) -Force
-    }
-
-    process {
+        New-Variable -Name 'PathToLGPO' -Value $($PSBoundParameters['PathToLGPO']) -Force
+        New-Variable -Name 'PathToMSFT365AppsSecurityBaselines' -Value $($PSBoundParameters['PathToMSFT365AppsSecurityBaselines']) -Force
+        New-Variable -Name 'PathToMSFTSecurityBaselines' -Value $($PSBoundParameters['PathToMSFTSecurityBaselines']) -Force
+        # Set the default value for LogPath to the current working directory if not specified
+        New-Variable -Name 'LogPath' -Value $($PSBoundParameters['LogPath'] ?? (Join-Path -Path $(Get-Location).Path -ChildPath "Log-Protect-WindowsSecurity-$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss').txt")) -Force
 
         # Detecting if Verbose switch is used
         $PSBoundParameters.Verbose.IsPresent ? ([System.Boolean]$Verbose = $true) : ([System.Boolean]$Verbose = $false) | Out-Null
@@ -154,7 +361,12 @@ Function Protect-WindowsSecurity {
             'Get-BitLockerVolume:ErrorAction'  = 'SilentlyContinue'
             'Get-CimInstance:Verbose'          = $false
             'Import-Module:Verbose'            = $false
+            'Copy-Item:Force'                  = $true
+            'Copy-Item:ProgressAction'         = 'SilentlyContinue'
         }
+    }
+
+    process {
 
         # Determining whether to use the files inside the module or download them from the GitHub repository
         [System.Boolean]$IsLocally = $false
@@ -174,12 +386,26 @@ Function Protect-WindowsSecurity {
                 # Set the flag to true to indicate that the module is running locally
                 $IsLocally = $true
 
-                Write-Verbose -Message 'Checking for updates...'
-                Update-Self -InvocationStatement $MyInvocation.Statement
+                if (!$Offline) {
+                    Write-Verbose -Message 'Checking for updates...'
+                    Update-Self -InvocationStatement $MyInvocation.Statement
+                }
+                else {
+                    Write-Verbose -Message 'Skipping update check since the -Offline switch was used'
+                }
             }
         }
         else {
             Write-Verbose -Message '$PSCommandPath was not found, Protect-WindowsSecurity function was most likely called from the GitHub repository'
+        }
+
+        # Start the transcript if the -Log switch is used
+        if ($Log) {
+            Start-Transcript -IncludeInvocationHeader -Path $LogPath
+
+            # Create a new stopwatch object to measure the execution time
+            Write-Verbose -Message 'Starting the stopwatch...'
+            [System.Diagnostics.Stopwatch]$StopWatch = [Diagnostics.Stopwatch]::StartNew()
         }
 
         # Determine whether the current session is running as Administrator or not
@@ -267,6 +493,8 @@ Function Protect-WindowsSecurity {
                     Write-Warning -Message 'Invalid input. Please only enter a positive number.'
                 }
             }
+            # Add verbose output, helpful when reviewing the log file
+            Write-Verbose -Message "Selected: $Selected"
             return [System.String]$Selected
         }
         function Edit-Registry {
@@ -703,16 +931,16 @@ Function Protect-WindowsSecurity {
         #endregion Helper-Functions
 
         if ($IsAdmin) {
-            # Get the current configurations and preferences of the Microsoft Defender
+            Write-Verbose -Message 'Getting the current configurations and preferences of the Microsoft Defender...'
             [Microsoft.Management.Infrastructure.CimInstance]$MDAVConfigCurrent = Get-MpComputerStatus
             [Microsoft.Management.Infrastructure.CimInstance]$MDAVPreferencesCurrent = Get-MpPreference
 
-            # backup the current allowed apps list in Controlled folder access in order to restore them at the end of the script
+            Write-Verbose -Message 'Backing up the current Controlled Folder Access allowed apps list in order to restore them at the end'
             # doing this so that when we Add and then Remove PowerShell executables in Controlled folder access exclusions
             # no user customization will be affected
             [System.IO.FileInfo[]]$CFAAllowedAppsBackup = $MDAVPreferencesCurrent.ControlledFolderAccessAllowedApplications
 
-            # Temporarily allow the currently running PowerShell executables to the Controlled Folder Access allowed apps
+            Write-Verbose -Message 'Temporarily adding the currently running PowerShell executables to the Controlled Folder Access allowed apps list'
             # so that the script can run without interruption. This change is reverted at the end.
             # Adding powercfg.exe so Controlled Folder Access won't complain about it in BitLocker category when setting hibernate file size to full
             foreach ($FilePath in (((Get-ChildItem -Path "$PSHOME\*.exe" -File).FullName) + "$env:SystemDrive\Windows\System32\powercfg.exe")) {
@@ -732,12 +960,11 @@ Function Protect-WindowsSecurity {
             }
 
             #region RequirementsCheck
-            # check if user's OS is Windows Home edition
+            Write-Verbose -Message 'Checking if the OS is Windows Home edition...'
             if ((Get-CimInstance -ClassName Win32_OperatingSystem).OperatingSystemSKU -eq '101') {
                 Throw [System.PlatformNotSupportedException] 'Windows Home edition detected, exiting...'
             }
 
-            # check if user's OS is the latest build
             # Get OS build version
             [System.Decimal]$OSBuild = [System.Environment]::OSVersion.Version.Build
             # Get the Update Build Revision (UBR) number
@@ -745,18 +972,18 @@ Function Protect-WindowsSecurity {
             # Create the full OS build number as seen in Windows Settings
             [System.Decimal]$FullOSBuild = "$OSBuild.$UBR"
 
-            # Make sure the current OS build is equal or greater than the required build
+            Write-Verbose -Message 'Checking if the OS build is equal or greater than the required build...'
             if (-NOT ($FullOSBuild -ge $Requiredbuild)) {
                 Throw "You're not using the latest build of the Windows OS. A minimum build of $Requiredbuild is required but your OS build is $FullOSBuild`nPlease go to Windows Update to install the updates and then try again."
             }
 
             if ($IsAdmin) {
-                # check to make sure Secure Boot is enabled
+                Write-Verbose -Message 'Checking if Secure Boot is enabled...'
                 if (-NOT (Confirm-SecureBootUEFI)) {
-                    Throw 'Secure Boot is not enabled, please go to your UEFI settings to enable it and then try again.'
+                    Throw 'Secure Boot is not enabled. Please enable it in your UEFI settings and try again.'
                 }
 
-                # check to make sure TPM is available and enabled
+                Write-Verbose -Message 'Checking if TPM is available and enabled...'
                 [System.Object]$TPM = Get-Tpm
                 if (-NOT ($TPM.tpmpresent -and $TPM.tpmenabled)) {
                     Throw 'TPM is not available or enabled, please enable it in UEFI settings and try again.'
@@ -783,8 +1010,12 @@ Function Protect-WindowsSecurity {
             # Create the working directory
             [System.IO.DirectoryInfo]$WorkingDir = New-Item -ItemType Directory -Path "$CurrentUserTempDirectoryPath\HardeningXStuff\" -Force
 
+            # Create a variable to store the current step number for the progress bar
             [System.Int64]$CurrentMainStep = 0
-            Write-Progress -Id 0 -Activity 'Downloading the required files' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete 1
+            # Create a reference variable that points to the original variable
+            [ref]$RefCurrentMainStep = $CurrentMainStep
+
+            Write-Progress -Id 0 -Activity 'Downloading the required files' -Status "Step $($RefCurrentMainStep.Value)/$TotalMainSteps" -PercentComplete 1
             # Change the title of the Windows Terminal for PowerShell tab
             $Host.UI.RawUI.WindowTitle = '⏬ Downloading'
 
@@ -813,6 +1044,15 @@ Function Protect-WindowsSecurity {
                     # If running locally, skip downloading the files that are already shipped with the Harden Windows Security module
                     if ($IsLocally) {
                         if ($File.tag -in @('Security-Baselines-X', 'Registry', 'ProcessMitigations', 'EventViewerCustomViews')) {
+                            Write-Verbose -Message "Skipping downloading the $($File.tag) because of local mode."
+                            Continue
+                        }
+                    }
+
+                    # If running in offline mode, skip downloading the files that are manually provided by the user
+                    if ($Offline) {
+                        if ($File.tag -in @('MicrosoftSecurityBaseline', 'Microsoft365SecurityBaseline', 'LGPO')) {
+                            Write-Verbose -Message "Skipping downloading the $($File.tag) because of offline mode."
                             Continue
                         }
                     }
@@ -885,21 +1125,25 @@ Function Protect-WindowsSecurity {
                 Throw 'The required files could not be downloaded, Make sure you have Internet connection.'
             }
 
-            # Copy the files that are shipped with the Harden Windows Security module to the working directory because they are not downloaded when running locally
             if ($IsLocally) {
-                Copy-Item -Path "$HardeningModulePath\Resources\Security-Baselines-X.zip" -Destination "$WorkingDir\Security-Baselines-X.zip" -Force -ProgressAction SilentlyContinue
-                Copy-Item -Path "$HardeningModulePath\Resources\Registry.csv" -Destination "$WorkingDir\Registry.csv" -Force -ProgressAction SilentlyContinue
-                Copy-Item -Path "$HardeningModulePath\Resources\ProcessMitigations.csv" -Destination "$WorkingDir\ProcessMitigations.csv" -Force -ProgressAction SilentlyContinue
-                Copy-Item -Path "$HardeningModulePath\Resources\EventViewerCustomViews.zip" -Destination "$WorkingDir\EventViewerCustomViews.zip" -Force -ProgressAction SilentlyContinue
+                Write-Verbose -Message 'Local Mode; Copying the Security-Baselines-X, Registry, ProcessMitigations and EventViewerCustomViews files from the module folder to the working directory'
+                Copy-Item -Path "$HardeningModulePath\Resources\Security-Baselines-X.zip" -Destination "$WorkingDir\Security-Baselines-X.zip"
+                Copy-Item -Path "$HardeningModulePath\Resources\Registry.csv" -Destination "$WorkingDir\Registry.csv"
+                Copy-Item -Path "$HardeningModulePath\Resources\ProcessMitigations.csv" -Destination "$WorkingDir\ProcessMitigations.csv"
+                Copy-Item -Path "$HardeningModulePath\Resources\EventViewerCustomViews.zip" -Destination "$WorkingDir\EventViewerCustomViews.zip"
             }
 
-            # unzip Microsoft Security Baselines file
+            if ($Offline) {
+                Write-Verbose -Message 'Offline Mode; Copying the Microsoft Security Baselines, Microsoft 365 Apps for Enterprise Security Baselines and LGPO files from the user provided paths to the working directory'
+                Copy-Item -Path "$PathToLGPO" -Destination "$WorkingDir\LGPO.zip"
+                Copy-Item -Path "$PathToMSFTSecurityBaselines" -Destination "$WorkingDir\MicrosoftSecurityBaseline.zip"
+                Copy-Item -Path "$PathToMSFT365AppsSecurityBaselines" -Destination "$WorkingDir\Microsoft365SecurityBaseline.zip"
+            }
+
+            Write-Verbose -Message 'Unzipping the archives'
             Expand-Archive -Path "$WorkingDir\MicrosoftSecurityBaseline.zip" -DestinationPath "$WorkingDir\MicrosoftSecurityBaseline" -Force
-            # unzip Microsoft 365 Apps Security Baselines file
             Expand-Archive -Path "$WorkingDir\Microsoft365SecurityBaseline.zip" -DestinationPath "$WorkingDir\Microsoft365SecurityBaseline" -Force
-            # unzip the LGPO file
             Expand-Archive -Path "$WorkingDir\LGPO.zip" -DestinationPath "$WorkingDir\" -Force
-            # unzip the Security-Baselines-X file which contains Windows Hardening script Group Policy Objects
             Expand-Archive -Path "$WorkingDir\Security-Baselines-X.zip" -DestinationPath "$WorkingDir\Security-Baselines-X\" -Force
 
             # capturing the Microsoft Security Baselines extracted path in a variable using wildcard and storing it in a variable so that we won't need to change anything in the code other than the download link when they are updated
@@ -912,9 +1156,9 @@ Function Protect-WindowsSecurity {
             [System.IO.FileInfo]$LGPOExe = Get-ChildItem -Path "$WorkingDir\LGPO_30\LGPO.exe" -File
 
             # Copying LGPO.exe from its folder to Microsoft Security Baseline folder in order to get it ready to be used by PowerShell script
-            Copy-Item -Path $LGPOExe -Destination "$MicrosoftSecurityBaselinePath\Scripts\Tools" -Force -ProgressAction SilentlyContinue
+            Copy-Item -Path $LGPOExe -Destination "$MicrosoftSecurityBaselinePath\Scripts\Tools"
             # Copying LGPO.exe from its folder to Microsoft Office 365 Apps for Enterprise Security Baseline folder in order to get it ready to be used by PowerShell script
-            Copy-Item -Path $LGPOExe -Destination "$Microsoft365SecurityBaselinePath\Scripts\Tools" -Force -ProgressAction SilentlyContinue
+            Copy-Item -Path $LGPOExe -Destination "$Microsoft365SecurityBaselinePath\Scripts\Tools"
 
             #Region Hardening-Categories-Functions
             Function Invoke-WindowsBootManagerRevocations {
@@ -922,17 +1166,18 @@ Function Protect-WindowsSecurity {
                 # If admin rights are not detected, break out of the function
                 if (!$IsAdmin) { return }
 
-                $CurrentMainStep++
+                $RefCurrentMainStep.Value++
                 $Host.UI.RawUI.WindowTitle = '🫶 Category 0'
-                Write-Verbose -Message 'Running Category 0 function'
+                Write-Verbose -Message 'Processing the Category 0 function'
 
                 :Category0Label switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nApply May 9 2023 Windows Boot Manager Security measures ? (If you've already run this category, don't need to do it again)")) {
                     'Yes' {
-                        Write-Progress -Id 0 -Activity 'Windows Boot Manager revocations for Secure Boot' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+                        Write-Verbose -Message 'Applying the required security measures for Windows Boot Manager'
+                        Write-Progress -Id 0 -Activity 'Windows Boot Manager revocations for Secure Boot' -Status "Step $($RefCurrentMainStep.Value)/$TotalMainSteps" -PercentComplete ($RefCurrentMainStep.Value / $TotalMainSteps * 100)
 
                         reg add HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Secureboot /v AvailableUpdates /t REG_DWORD /d 0x30 /f
 
-                        Write-Host -Object 'The required security measures have been applied to the system' -ForegroundColor Green
+                        Write-ColorfulText -Color MintGreen -InputText 'The required security measures have been applied to the system'
                         Write-Warning -Message 'Make sure to restart your device once. After restart, wait for at least 5-10 minutes and perform a 2nd restart to finish applying security measures completely.'
                     } 'No' { break Category0Label }
                     'Exit' { break MainSwitchLabel }
@@ -942,25 +1187,26 @@ Function Protect-WindowsSecurity {
                 param([System.Management.Automation.SwitchParameter]$RunUnattended)
                 if (!$IsAdmin) { return }
 
-                $CurrentMainStep++
+                $RefCurrentMainStep.Value++
                 $Host.UI.RawUI.WindowTitle = '🔐 Security Baselines'
-                Write-Verbose -Message 'Running Security Baselines category function'
-                # Change current directory to the Security Baselines folder
+                Write-Verbose -Message 'Processing the Security Baselines category function'
+
+                Write-Verbose -Message "Changing the current directory to '$MicrosoftSecurityBaselinePath\Scripts\'"
                 Push-Location -Path "$MicrosoftSecurityBaselinePath\Scripts\"
 
                 :MicrosoftSecurityBaselinesCategoryLabel switch ($RunUnattended ? ($SecBaselines_NoOverrides ? 'Yes' : 'Yes, With the Optional Overrides (Recommended)') : (Select-Option -Options 'Yes', 'Yes, With the Optional Overrides (Recommended)' , 'No', 'Exit' -Message "`nApply Microsoft Security Baseline ?")) {
                     'Yes' {
-                        Write-Progress -Id 0 -Activity 'Microsoft Security Baseline' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
-
-                        # Run the official PowerShell script included in the Microsoft Security Baseline file downloaded from Microsoft servers
                         Write-Verbose -Message 'Applying the Microsoft Security Baselines without the optional overrides'
+                        Write-Progress -Id 0 -Activity 'Microsoft Security Baseline' -Status "Step $($RefCurrentMainStep.Value)/$TotalMainSteps" -PercentComplete ($RefCurrentMainStep.Value / $TotalMainSteps * 100)
+
+                        Write-Verbose -Message 'Running the official PowerShell script included in the Microsoft Security Baseline file downloaded from Microsoft servers'
                         .\Baseline-LocalInstall.ps1 -Win11NonDomainJoined 4>$null
                     }
                     'Yes, With the Optional Overrides (Recommended)' {
-                        Write-Progress -Id 0 -Activity 'Microsoft Security Baseline' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
-
-                        # Run the official PowerShell script included in the Microsoft Security Baseline file downloaded from Microsoft servers
                         Write-Verbose -Message 'Applying the Microsoft Security Baselines with the optional overrides'
+                        Write-Progress -Id 0 -Activity 'Microsoft Security Baseline' -Status "Step $($RefCurrentMainStep.Value)/$TotalMainSteps" -PercentComplete ($RefCurrentMainStep.Value / $TotalMainSteps * 100)
+
+                        Write-Verbose -Message 'Running the official PowerShell script included in the Microsoft Security Baseline file downloaded from Microsoft servers'
                         .\Baseline-LocalInstall.ps1 -Win11NonDomainJoined 4>$null
 
                         Start-Sleep -Seconds 1
@@ -968,30 +1214,36 @@ Function Protect-WindowsSecurity {
                         &$LGPOExe /q /m "$WorkingDir\Security-Baselines-X\Overrides for Microsoft Security Baseline\registry.pol"
                         &$LGPOExe /q /s "$WorkingDir\Security-Baselines-X\Overrides for Microsoft Security Baseline\GptTmpl.inf"
 
-                        # Re-enables the XblGameSave Standby Task that gets disabled by Microsoft Security Baselines
+                        Write-Verbose -Message 'Re-enabling the XblGameSave Standby Task that gets disabled by Microsoft Security Baselines'
                         SCHTASKS.EXE /Change /TN \Microsoft\XblGameSave\XblGameSaveTask /Enable
                     }
                     'No' { break MicrosoftSecurityBaselinesCategoryLabel }
                     'Exit' { break MainSwitchLabel }
                 }
-                # Restore original directory location
+
+                Write-Verbose -Message 'Restoring the original directory location'
                 Pop-Location
             }
             Function Invoke-Microsoft365AppsSecurityBaselines {
                 param([System.Management.Automation.SwitchParameter]$RunUnattended)
                 if (!$IsAdmin) { return }
 
-                $CurrentMainStep++
+                $RefCurrentMainStep.Value++
                 $Host.UI.RawUI.WindowTitle = '🧁 M365 Apps Security'
-                Write-Verbose -Message 'Running M365 Apps Security category function'
+                Write-Verbose -Message 'Processing the M365 Apps Security category function'
 
                 :Microsoft365AppsSecurityBaselinesCategoryLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nApply Microsoft 365 Apps Security Baseline ?")) {
                     'Yes' {
-                        Write-Progress -Id 0 -Activity 'Microsoft 365 Apps Security Baseline' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+                        Write-Verbose -Message 'Applying the Microsoft 365 Apps Security Baseline'
+                        Write-Progress -Id 0 -Activity 'Microsoft 365 Apps Security Baseline' -Status "Step $($RefCurrentMainStep.Value)/$TotalMainSteps" -PercentComplete ($RefCurrentMainStep.Value / $TotalMainSteps * 100)
 
+                        Write-Verbose -Message "Changing the current directory to '$Microsoft365SecurityBaselinePath\Scripts\'"
                         Push-Location -Path "$Microsoft365SecurityBaselinePath\Scripts\"
-                        # Run the official PowerShell script included in the Microsoft Security Baseline file downloaded from Microsoft servers
+
+                        Write-Verbose -Message 'Running the official PowerShell script included in the Microsoft 365 Apps Security Baseline file downloaded from Microsoft servers'
                         .\Baseline-LocalInstall.ps1 4>$null
+
+                        Write-Verbose -Message 'Restoring the original directory location'
                         Pop-Location
 
                     } 'No' { break Microsoft365AppsSecurityBaselinesCategoryLabel }
@@ -1002,41 +1254,42 @@ Function Protect-WindowsSecurity {
                 param([System.Management.Automation.SwitchParameter]$RunUnattended)
                 if (!$IsAdmin) { return }
 
-                $CurrentMainStep++
+                $RefCurrentMainStep.Value++
                 $Host.UI.RawUI.WindowTitle = '🍁 MSFT Defender'
-                Write-Verbose -Message 'Running Microsoft Defender category function'
+                Write-Verbose -Message 'Processing the Microsoft Defender category function'
 
                 :MicrosoftDefenderLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Microsoft Defender category ?")) {
                     'Yes' {
-                        Write-Progress -Id 0 -Activity 'Microsoft Defender' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+                        Write-Verbose -Message 'Running the Microsoft Defender category'
+                        Write-Progress -Id 0 -Activity 'Microsoft Defender' -Status "Step $($RefCurrentMainStep.Value)/$TotalMainSteps" -PercentComplete ($RefCurrentMainStep.Value / $TotalMainSteps * 100)
 
                         &$LGPOExe /q /m "$WorkingDir\Security-Baselines-X\Microsoft Defender Policies\registry.pol"
 
-                        # Optimizing Network Protection Performance of the Microsoft Defender
+                        Write-Verbose -Message 'Optimizing Network Protection Performance of the Microsoft Defender'
                         Set-MpPreference -AllowSwitchToAsyncInspection $True
 
-                        # Configure whether real-time protection and Security Intelligence Updates are enabled during OOBE
+                        Write-Verbose -Message 'Enabling Real-time protection and Security Intelligence Updates during OOBE'
                         Set-MpPreference -OobeEnableRtpAndSigUpdate $True
 
-                        # Enable Intel Threat Detection Technology
+                        Write-Verbose -Message 'Enabling Intel Threat Detection Technology'
                         Set-MpPreference -IntelTDTEnabled $True
 
-                        # Enable Restore point scan
+                        Write-Verbose -Message 'Enabling Restore point scan'
                         Set-MpPreference -DisableRestorePoint $False
 
-                        # Disable Performance mode of Defender that only applies to Dev drives by lowering security
+                        Write-Verbose -Message 'Disabling Performance mode of Defender that only applies to Dev drives by lowering security'
                         Set-MpPreference -PerformanceModeStatus Disabled
 
-                        # Network protection blocks network traffic instead of displaying a warning
+                        Write-Verbose -Message 'Setting the Network Protection to block network traffic instead of displaying a warning'
                         Set-MpPreference -EnableConvertWarnToBlock $True
 
-                        # Add the OneDrive folders of all the user accounts (personal and work accounts) to the Controlled Folder Access for Ransomware Protection
+                        Write-Verbose -Message 'Adding OneDrive folders of all the user accounts (personal and work accounts) to the Controlled Folder Access for Ransomware Protection'
                         Get-ChildItem "$env:SystemDrive\Users\*\OneDrive*\" -Directory | ForEach-Object -Process { Add-MpPreference -ControlledFolderAccessProtectedFolders $_ }
 
-                        # Enable Mandatory ASLR Exploit Protection system-wide
+                        Write-Verbose -Message 'Enabling Mandatory ASLR Exploit Protection system-wide'
                         Set-ProcessMitigation -System -Enable ForceRelocateImages
 
-                        # Apply Process Mitigations
+                        Write-Verbose -Message 'Applying the Process Mitigations'
                         [System.Object[]]$ProcessMitigations = Import-Csv -Path "$WorkingDir\ProcessMitigations.csv" -Delimiter ','
 
                         # Group the data by ProgramName
@@ -1045,6 +1298,7 @@ Function Protect-WindowsSecurity {
                         [System.Object[]]$AllAvailableMitigations = (Get-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\*')
 
                         # Loop through each group to remove the mitigations, this way we apply clean set of mitigations in the next step
+                        Write-Verbose -Message 'Removing the existing process mitigations'
                         foreach ($Group in $GroupedMitigations) {
                             # To separate the filename from full path of the item in the CSV and then check whether it exists in the system registry
                             if ($Group.Name -match '\\([^\\]+)$') {
@@ -1057,16 +1311,16 @@ Function Protect-WindowsSecurity {
                             }
                         }
 
-                        # Loop through each group to add the mitigations
+                        Write-Verbose -Message 'Adding the process mitigations'
                         foreach ($Group in $GroupedMitigations) {
                             # Get the program name
-                            $ProgramName = $Group.Name
+                            [System.String]$ProgramName = $Group.Name
 
                             # Get the list of mitigations to enable
-                            $EnableMitigations = $Group.Group | Where-Object -FilterScript { $_.Action -eq 'Enable' } | Select-Object -ExpandProperty Mitigation
+                            [System.String[]]$EnableMitigations = $Group.Group | Where-Object -FilterScript { $_.Action -eq 'Enable' } | Select-Object -ExpandProperty Mitigation
 
                             # Get the list of mitigations to disable
-                            $DisableMitigations = $Group.Group | Where-Object -FilterScript { $_.Action -eq 'Disable' } | Select-Object -ExpandProperty Mitigation
+                            [System.String[]]$DisableMitigations = $Group.Group | Where-Object -FilterScript { $_.Action -eq 'Disable' } | Select-Object -ExpandProperty Mitigation
 
                             # Call the Set-ProcessMitigation cmdlet with the lists of mitigations
                             if ($null -ne $EnableMitigations) {
@@ -1082,7 +1336,7 @@ Function Protect-WindowsSecurity {
                             }
                         }
 
-                        # Turn on Data Execution Prevention (DEP) for all applications, including 32-bit programs
+                        Write-Verbose -Message 'Turning on Data Execution Prevention (DEP) for all applications, including 32-bit programs'
                         # Old method: bcdedit.exe /set '{current}' nx AlwaysOn | Out-Null
                         # New method using PowerShell cmdlets added in Windows 11
                         Set-BcdElement -Element 'nx' -Type 'Integer' -Value '3' -Force
@@ -1116,9 +1370,12 @@ Function Protect-WindowsSecurity {
                                     'Exit' { break MainSwitchLabel }
                                 }
                             }
+                            else {
+                                Write-Verbose -Message 'Smart App Control is turned off, so Optional Diagnostic Data will not be enabled'
+                            }
                         }
 
-                        # Get the state of fast weekly Microsoft recommended driver block list update scheduled task
+                        Write-Verbose -Message 'Getting the state of fast weekly Microsoft recommended driver block list update scheduled task'
                         [System.String]$BlockListScheduledTaskState = (Get-ScheduledTask -TaskName 'MSFT Driver Block list update' -TaskPath '\MSFT Driver Block list update\' -ErrorAction SilentlyContinue).State
 
                         # Create scheduled task for fast weekly Microsoft recommended driver block list update if it doesn't exist or exists but is not Ready/Running
@@ -1149,9 +1406,12 @@ Function Protect-WindowsSecurity {
                                 'Exit' { break MainSwitchLabel }
                             }
                         }
+                        else {
+                            Write-Verbose -Message "Scheduled task for fast weekly Microsoft recommended driver block list update already exists and is in $BlockListScheduledTaskState state"
+                        }
 
                         # Only display this prompt if Engine and Platform update channels are not already set to Beta
-                        if ( ($MDAVPreferencesCurrent.EngineUpdatesChannel -ne '2') -or ($MDAVPreferencesCurrent.PlatformUpdatesChannel -ne '2') ) {
+                        if (($MDAVPreferencesCurrent.EngineUpdatesChannel -ne '2') -or ($MDAVPreferencesCurrent.PlatformUpdatesChannel -ne '2')) {
                             # Set Microsoft Defender engine and platform update channel to beta - Devices in the Windows Insider Program are subscribed to this channel by default.
                             :DefenderUpdateChannelsLabel switch ($RunUnattended ? ($MSFTDefender_BetaChannels ? 'Yes' : 'No') : (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nSet Microsoft Defender engine and platform update channel to beta ?")) {
                                 'Yes' {
@@ -1162,6 +1422,9 @@ Function Protect-WindowsSecurity {
                                 'Exit' { break MainSwitchLabel }
                             }
                         }
+                        else {
+                            Write-Verbose -Message 'Microsoft Defender engine and platform update channel is already set to beta'
+                        }
 
                     } 'No' { break MicrosoftDefenderLabel }
                     'Exit' { break MainSwitchLabel }
@@ -1171,13 +1434,14 @@ Function Protect-WindowsSecurity {
                 param([System.Management.Automation.SwitchParameter]$RunUnattended)
                 if (!$IsAdmin) { return }
 
-                $CurrentMainStep++
+                $RefCurrentMainStep.Value++
                 $Host.UI.RawUI.WindowTitle = '🪷 ASR Rules'
-                Write-Verbose -Message 'Running ASR Rules category function'
+                Write-Verbose -Message 'Processing the ASR Rules category function'
 
                 :ASRRulesCategoryLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Attack Surface Reduction Rules category ?")) {
                     'Yes' {
-                        Write-Progress -Id 0 -Activity 'Attack Surface Reduction Rules' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+                        Write-Verbose -Message 'Running the Attack Surface Reduction Rules category'
+                        Write-Progress -Id 0 -Activity 'Attack Surface Reduction Rules' -Status "Step $($RefCurrentMainStep.Value)/$TotalMainSteps" -PercentComplete ($RefCurrentMainStep.Value / $TotalMainSteps * 100)
 
                         &$LGPOExe /q /m "$WorkingDir\Security-Baselines-X\Attack Surface Reduction Rules Policies\registry.pol"
                     } 'No' { break ASRRulesCategoryLabel }
@@ -1188,13 +1452,14 @@ Function Protect-WindowsSecurity {
                 param([System.Management.Automation.SwitchParameter]$RunUnattended)
                 if (!$IsAdmin) { return }
 
-                $CurrentMainStep++
+                $RefCurrentMainStep.Value++
                 $Host.UI.RawUI.WindowTitle = '🔑 BitLocker'
-                Write-Verbose -Message 'Running BitLocker category function'
+                Write-Verbose -Message 'Processing the BitLocker category function'
 
                 :BitLockerCategoryLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Bitlocker category ?")) {
                     'Yes' {
-                        Write-Progress -Id 0 -Activity 'Bitlocker Settings' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+                        Write-Verbose -Message 'Running the Bitlocker category'
+                        Write-Progress -Id 0 -Activity 'Bitlocker Settings' -Status "Step $($RefCurrentMainStep.Value)/$TotalMainSteps" -PercentComplete ($RefCurrentMainStep.Value / $TotalMainSteps * 100)
 
                         &$LGPOExe /q /m "$WorkingDir\Security-Baselines-X\Bitlocker Policies\registry.pol"
 
@@ -1612,12 +1877,12 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                             }
                             if ($HiberFileType -ne 2) {
 
-                                Write-Progress -Id 6 -ParentId 0 -Activity 'Hibernate' -Status 'Setting Hibernate file size to full' -PercentComplete 50
+                                Write-Progress -Id 2 -ParentId 0 -Activity 'Hibernate' -Status 'Setting Hibernate file size to full' -PercentComplete 50
 
                                 # Set Hibernate mode to full
                                 &"$env:SystemDrive\Windows\System32\powercfg.exe" /h /type full | Out-Null
 
-                                Write-Progress -Id 6 -Activity 'Setting Hibernate file size to full' -Completed
+                                Write-Progress -Id 2 -Activity 'Setting Hibernate file size to full' -Completed
                             }
                             else {
                                 Write-ColorfulText -C Pink -I "`nHibernate is already set to full.`n"
@@ -1836,13 +2101,14 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 param([System.Management.Automation.SwitchParameter]$RunUnattended)
                 if (!$IsAdmin) { return }
 
-                $CurrentMainStep++
+                $RefCurrentMainStep.Value++
                 $Host.UI.RawUI.WindowTitle = '🛡️ TLS'
-                Write-Verbose -Message 'Running TLS Security category function'
+                Write-Verbose -Message 'Processing the TLS Security category function'
 
                 :TLSSecurityLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun TLS Security category ?")) {
                     'Yes' {
-                        Write-Progress -Id 0 -Activity 'TLS Security' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+                        Write-Verbose -Message 'Running the TLS Security category'
+                        Write-Progress -Id 0 -Activity 'TLS Security' -Status "Step $($RefCurrentMainStep.Value)/$TotalMainSteps" -PercentComplete ($RefCurrentMainStep.Value / $TotalMainSteps * 100)
 
                         # creating these registry keys that have forward slashes in them
                         @(  'DES 56/56', # DES 56-bit
@@ -1858,12 +2124,14 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                             [Microsoft.Win32.RegistryKey]::OpenRemoteBaseKey([Microsoft.Win32.RegistryHive]::LocalMachine, $env:COMPUTERNAME).CreateSubKey("SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\$_") | Out-Null
                         }
 
+                        Write-Verbose -Message 'Applying the TLS Security registry settings'
                         foreach ($Item in $RegistryCSVItems) {
                             if ($Item.category -eq 'TLS') {
                                 Edit-Registry -path $Item.Path -key $Item.Key -value $Item.Value -type $Item.Type -Action $Item.Action
                             }
                         }
 
+                        Write-Verbose -Message 'Applying the TLS Security Group Policies'
                         &$LGPOExe /q /m "$WorkingDir\Security-Baselines-X\TLS Security\registry.pol"
                     } 'No' { break TLSSecurityLabel }
                     'Exit' { break MainSwitchLabel }
@@ -1873,13 +2141,14 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 param([System.Management.Automation.SwitchParameter]$RunUnattended)
                 if (!$IsAdmin) { return }
 
-                $CurrentMainStep++
+                $RefCurrentMainStep.Value++
                 $Host.UI.RawUI.WindowTitle = '💻 Lock Screen'
-                Write-Verbose -Message 'Running Lock Screen category function'
+                Write-Verbose -Message 'Processing the Lock Screen category function'
 
                 :LockScreenLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Lock Screen category ?")) {
                     'Yes' {
-                        Write-Progress -Id 0 -Activity 'Lock Screen' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+                        Write-Verbose -Message 'Running the Lock Screen category'
+                        Write-Progress -Id 0 -Activity 'Lock Screen' -Status "Step $($RefCurrentMainStep.Value)/$TotalMainSteps" -PercentComplete ($RefCurrentMainStep.Value / $TotalMainSteps * 100)
 
                         &$LGPOExe /q /m "$WorkingDir\Security-Baselines-X\Lock Screen Policies\registry.pol"
                         &$LGPOExe /q /s "$WorkingDir\Security-Baselines-X\Lock Screen Policies\GptTmpl.inf"
@@ -1888,12 +2157,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                         :LockScreenLastSignedInLabel switch ($RunUnattended ? ($LockScreen_NoLastSignedIn ? 'Yes' : 'No') : (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nDon't display last signed-in on logon screen ?" -ExtraMessage 'Read the GitHub Readme!')) {
                             'Yes' {
                                 Write-Verbose -Message "Applying the Don't display last signed-in policy"
-
-                                Write-Progress -Id 2 -ParentId 0 -Activity 'Lock Screen' -Status "Applying the Don't display last signed-in policy" -PercentComplete 50
-
                                 &$LGPOExe /q /s "$WorkingDir\Security-Baselines-X\Lock Screen Policies\Don't display last signed-in\GptTmpl.inf"
-
-                                Write-Progress -Id 2 -Activity "Applying the Don't display last signed-in policy" -Completed
                             } 'No' { break LockScreenLastSignedInLabel }
                             'Exit' { break MainSwitchLabel }
                         }
@@ -1902,12 +2166,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                         :CtrlAltDelLabel switch ($RunUnattended ? ($LockScreen_CtrlAltDel ? 'Yes' : 'No') : (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nEnable requiring CTRL + ALT + DEL on lock screen ?")) {
                             'Yes' {
                                 Write-Verbose -Message 'Applying the Enable CTRL + ALT + DEL policy'
-
-                                Write-Progress -Id 3 -ParentId 0 -Activity 'Lock Screen' -Status "Applying the Don't display last signed-in policy" -PercentComplete 50
-
                                 &$LGPOExe /q /s "$WorkingDir\Security-Baselines-X\Lock Screen Policies\Enable CTRL + ALT + DEL\GptTmpl.inf"
-
-                                Write-Progress -Id 3 -Activity "Applying the Don't display last signed-in policy" -Completed
                             } 'No' { break CtrlAltDelLabel }
                             'Exit' { break MainSwitchLabel }
                         }
@@ -1919,13 +2178,14 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 param([System.Management.Automation.SwitchParameter]$RunUnattended)
                 if (!$IsAdmin) { return }
 
-                $CurrentMainStep++
+                $RefCurrentMainStep.Value++
                 $Host.UI.RawUI.WindowTitle = '💎 UAC'
-                Write-Verbose -Message 'Running User Account Control category function'
+                Write-Verbose -Message 'Processing the User Account Control category function'
 
                 :UACLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun User Account Control category ?")) {
                     'Yes' {
-                        Write-Progress -Id 0 -Activity 'User Account Control' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+                        Write-Verbose -Message 'Running the User Account Control category'
+                        Write-Progress -Id 0 -Activity 'User Account Control' -Status "Step $($RefCurrentMainStep.Value)/$TotalMainSteps" -PercentComplete ($RefCurrentMainStep.Value / $TotalMainSteps * 100)
 
                         &$LGPOExe /q /s "$WorkingDir\Security-Baselines-X\User Account Control UAC Policies\GptTmpl.inf"
 
@@ -1933,12 +2193,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                         :FastUserSwitchingLabel switch ($RunUnattended ? ($UAC_NoFastSwitching ? 'Yes' : 'No') : (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nHide the entry points for Fast User Switching ?" -ExtraMessage 'Read the GitHub Readme!')) {
                             'Yes' {
                                 Write-Verbose -Message 'Applying the Hide the entry points for Fast User Switching policy'
-
-                                Write-Progress -Id 4 -ParentId 0 -Activity 'User Account Control' -Status 'Hide the entry points for Fast User Switching policy' -PercentComplete 50
-
                                 &$LGPOExe /q /m "$WorkingDir\Security-Baselines-X\User Account Control UAC Policies\Hides the entry points for Fast User Switching\registry.pol"
-
-                                Write-Progress -Id 4 -Activity 'Hide the entry points for Fast User Switching policy' -Completed
                             } 'No' { break FastUserSwitchingLabel }
                             'Exit' { break MainSwitchLabel }
                         }
@@ -1947,12 +2202,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                         :ElevateSignedExeLabel switch ($RunUnattended ? ($UAC_OnlyElevateSigned ? 'Yes' : 'No') : (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nOnly elevate executables that are signed and validated ?" -ExtraMessage 'Read the GitHub Readme!')) {
                             'Yes' {
                                 Write-Verbose -Message 'Applying the Only elevate executables that are signed and validated policy'
-
-                                Write-Progress -Id 5 -ParentId 0 -Activity 'User Account Control' -Status 'Only elevate executables that are signed and validated' -PercentComplete 50
-
                                 &$LGPOExe /q /s "$WorkingDir\Security-Baselines-X\User Account Control UAC Policies\Only elevate executables that are signed and validated\GptTmpl.inf"
-
-                                Write-Progress -Id 5 -Activity 'Only elevate executables that are signed and validated' -Completed
                             } 'No' { break ElevateSignedExeLabel }
                             'Exit' { break MainSwitchLabel }
                         }
@@ -1964,20 +2214,22 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 param([System.Management.Automation.SwitchParameter]$RunUnattended)
                 if (!$IsAdmin) { return }
 
-                $CurrentMainStep++
+                $RefCurrentMainStep.Value++
                 $Host.UI.RawUI.WindowTitle = '🔥 Firewall'
-                Write-Verbose -Message 'Running Windows Firewall category function'
+                Write-Verbose -Message 'Processing the Windows Firewall category function'
 
                 :WindowsFirewallLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Windows Firewall category ?")) {
                     'Yes' {
-                        Write-Progress -Id 0 -Activity 'Windows Firewall' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+                        Write-Verbose -Message 'Running the Windows Firewall category'
+                        Write-Progress -Id 0 -Activity 'Windows Firewall' -Status "Step $($RefCurrentMainStep.Value)/$TotalMainSteps" -PercentComplete ($RefCurrentMainStep.Value / $TotalMainSteps * 100)
 
                         &$LGPOExe /q /m "$WorkingDir\Security-Baselines-X\Windows Firewall Policies\registry.pol"
 
-                        # Disables Multicast DNS (mDNS) UDP-in Firewall Rules for all 3 Firewall profiles - disables only 3 rules
+                        Write-Verbose -Message 'Disabling Multicast DNS (mDNS) UDP-in Firewall Rules for all 3 Firewall profiles - disables only 3 rules'
                         Get-NetFirewallRule |
                         Where-Object -FilterScript { ($_.RuleGroup -eq '@%SystemRoot%\system32\firewallapi.dll,-37302') -and ($_.Direction -eq 'inbound') } |
                         ForEach-Object -Process { Disable-NetFirewallRule -DisplayName $_.DisplayName }
+
                     } 'No' { break WindowsFirewallLabel }
                     'Exit' { break MainSwitchLabel }
                 }
@@ -1986,16 +2238,18 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 param([System.Management.Automation.SwitchParameter]$RunUnattended)
                 if (!$IsAdmin) { return }
 
-                $CurrentMainStep++
+                $RefCurrentMainStep.Value++
                 $Host.UI.RawUI.WindowTitle = '🏅 Optional Features'
-                Write-Verbose -Message 'Running Optional Windows Features category function'
+                Write-Verbose -Message 'Processing the Optional Windows Features category function'
 
                 :OptionalFeaturesLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Optional Windows Features category ?")) {
                     'Yes' {
-                        Write-Progress -Id 0 -Activity 'Optional Windows Features' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+                        Write-Verbose -Message 'Running the Optional Windows Features category'
+                        Write-Progress -Id 0 -Activity 'Optional Windows Features' -Status "Step $($RefCurrentMainStep.Value)/$TotalMainSteps" -PercentComplete ($RefCurrentMainStep.Value / $TotalMainSteps * 100)
 
                         # PowerShell Core (only if installed from Microsoft Store) has problem with these commands: https://github.com/PowerShell/PowerShell/issues/13866#issuecomment-1519066710
-                        if (($PSHome -like "*$env:SystemDrive\Program Files\WindowsApps\Microsoft.PowerShell*") -and ($PSVersionTable.PSEdition -eq 'Core')) {
+                        if ($PSHome -like "*$env:SystemDrive\Program Files\WindowsApps\Microsoft.PowerShell*") {
+                            Write-Verbose -Message 'Importing DISM module to be able to run DISM commands in PowerShell Core installed from MSFT Store'
                             Import-Module -Name 'DISM' -UseWindowsPowerShell -Force -WarningAction SilentlyContinue
                         }
 
@@ -2036,21 +2290,22 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 param([System.Management.Automation.SwitchParameter]$RunUnattended)
                 if (!$IsAdmin) { return }
 
-                $CurrentMainStep++
+                $RefCurrentMainStep.Value++
                 $Host.UI.RawUI.WindowTitle = '📶 Networking'
-                Write-Verbose -Message 'Running Windows Networking category function'
+                Write-Verbose -Message 'Processing the Windows Networking category function'
 
                 :WindowsNetworkingLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Windows Networking category ?")) {
                     'Yes' {
-                        Write-Progress -Id 0 -Activity 'Windows Networking' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+                        Write-Verbose -Message 'Running the Windows Networking category'
+                        Write-Progress -Id 0 -Activity 'Windows Networking' -Status "Step $($RefCurrentMainStep.Value)/$TotalMainSteps" -PercentComplete ($RefCurrentMainStep.Value / $TotalMainSteps * 100)
 
                         &$LGPOExe /q /m "$WorkingDir\Security-Baselines-X\Windows Networking Policies\registry.pol"
                         &$LGPOExe /q /s "$WorkingDir\Security-Baselines-X\Windows Networking Policies\GptTmpl.inf"
 
-                        # Disable LMHOSTS lookup protocol on all network adapters
+                        Write-Verbose -Message 'Disabling LMHOSTS lookup protocol on all network adapters'
                         Edit-Registry -path 'Registry::HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\NetBT\Parameters' -key 'EnableLMHOSTS' -value '0' -type 'DWORD' -Action 'AddOrModify'
 
-                        # Set the Network Location of all connections to Public
+                        Write-Verbose -Message 'Setting the Network Location of all connections to Public'
                         Get-NetConnectionProfile | Set-NetConnectionProfile -NetworkCategory Public
                     } 'No' { break WindowsNetworkingLabel }
                     'Exit' { break MainSwitchLabel }
@@ -2060,14 +2315,16 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 param([System.Management.Automation.SwitchParameter]$RunUnattended)
                 if (!$IsAdmin) { return }
 
-                $CurrentMainStep++
+                $RefCurrentMainStep.Value++
                 $Host.UI.RawUI.WindowTitle = '🥌 Miscellaneous'
-                Write-Verbose -Message 'Running Miscellaneous Configurations category function'
+                Write-Verbose -Message 'Processing the Miscellaneous Configurations category function'
 
                 :MiscellaneousLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Miscellaneous Configurations category ?")) {
                     'Yes' {
-                        Write-Progress -Id 0 -Activity 'Miscellaneous Configurations' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+                        Write-Verbose -Message 'Running the Miscellaneous Configurations category'
+                        Write-Progress -Id 0 -Activity 'Miscellaneous Configurations' -Status "Step $($RefCurrentMainStep.Value)/$TotalMainSteps" -PercentComplete ($RefCurrentMainStep.Value / $TotalMainSteps * 100)
 
+                        Write-Verbose -Message 'Applying the Miscellaneous Configurations registry settings'
                         foreach ($Item in $RegistryCSVItems) {
                             if ($Item.category -eq 'Miscellaneous') {
                                 Edit-Registry -path $Item.Path -key $Item.Key -value $Item.Value -type $Item.Type -Action $Item.Action
@@ -2077,13 +2334,14 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                         &$LGPOExe /q /m "$WorkingDir\Security-Baselines-X\Miscellaneous Policies\registry.pol"
                         &$LGPOExe /q /s "$WorkingDir\Security-Baselines-X\Miscellaneous Policies\GptTmpl.inf"
 
-                        # Allow all Windows users to use Hyper-V and Windows Sandbox by adding all Windows users to the "Hyper-V Administrators" security group using its SID
+                        Write-Verbose -Message 'Adding all Windows users to the "Hyper-V Administrators" security group to be able to use Hyper-V and Windows Sandbox'
                         Get-LocalUser | Where-Object -FilterScript { $_.enabled -eq 'True' } | ForEach-Object -Process { Add-LocalGroupMember -SID 'S-1-5-32-578' -Member "$($_.SID)" -ErrorAction SilentlyContinue }
 
                         # Makes sure auditing for the "Other Logon/Logoff Events" subcategory under the Logon/Logoff category is enabled, doesn't touch affect any other sub-category
                         # For tracking Lock screen unlocks and locks
                         # auditpol /set /subcategory:"Other Logon/Logoff Events" /success:enable /failure:enable
                         # Using GUID
+                        Write-Verbose -Message 'Enabling auditing for the "Other Logon/Logoff Events" subcategory under the Logon/Logoff category'
                         auditpol /set /subcategory:"{0CCE921C-69AE-11D9-BED3-505054503030}" /success:enable /failure:enable | Out-Null
 
                         # Query all Audits status
@@ -2095,7 +2353,8 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                         if (Test-Path -Path "$env:SystemDrive\ProgramData\Microsoft\Event Viewer\Views\Hardening Script") {
                             Remove-Item -Path "$env:SystemDrive\ProgramData\Microsoft\Event Viewer\Views\Hardening Script" -Recurse -Force
                         }
-                        # Creating new sub-folder automatically and extracting the custom views
+
+                        Write-Verbose -Message 'Creating new sub-folder automatically and importing the custom views of the event viewer'
                         Expand-Archive -Path "$WorkingDir\EventViewerCustomViews.zip" -DestinationPath "$env:SystemDrive\ProgramData\Microsoft\Event Viewer\Views\Hardening Script" -Force
                     } 'No' { break MiscellaneousLabel }
                     'Exit' { break MainSwitchLabel }
@@ -2105,17 +2364,19 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 param([System.Management.Automation.SwitchParameter]$RunUnattended)
                 if (!$IsAdmin) { return }
 
-                $CurrentMainStep++
+                $RefCurrentMainStep.Value++
                 $Host.UI.RawUI.WindowTitle = '🪟 Windows Update'
-                Write-Verbose -Message 'Running Windows Update category function'
+                Write-Verbose -Message 'Processing the Windows Update category function'
 
                 :WindowsUpdateLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nApply Windows Update Policies ?")) {
                     'Yes' {
-                        Write-Progress -Id 0 -Activity 'Windows Update Configurations' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+                        Write-Verbose -Message 'Running the Windows Update category'
+                        Write-Progress -Id 0 -Activity 'Windows Update Configurations' -Status "Step $($RefCurrentMainStep.Value)/$TotalMainSteps" -PercentComplete ($RefCurrentMainStep.Value / $TotalMainSteps * 100)
 
-                        # Enable restart notification for Windows update
+                        Write-Verbose -Message 'Enabling restart notification for Windows update'
                         Edit-Registry -path 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings' -key 'RestartNotificationsAllowed2' -value '1' -type 'DWORD' -Action 'AddOrModify'
 
+                        Write-Verbose -Message 'Applying the Windows Update Group Policies'
                         &$LGPOExe /q /m "$WorkingDir\Security-Baselines-X\Windows Update Policies\registry.pol"
                     } 'No' { break WindowsUpdateLabel }
                     'Exit' { break MainSwitchLabel }
@@ -2125,14 +2386,16 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 param([System.Management.Automation.SwitchParameter]$RunUnattended)
                 if (!$IsAdmin) { return }
 
-                $CurrentMainStep++
+                $RefCurrentMainStep.Value++
                 $Host.UI.RawUI.WindowTitle = '🦔 Edge'
-                Write-Verbose -Message 'Running Edge Browser category function'
+                Write-Verbose -Message 'Processing the Edge Browser category function'
 
                 :MSEdgeLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nApply Edge Browser Configurations ?")) {
                     'Yes' {
-                        Write-Progress -Id 0 -Activity 'Edge Browser Configurations' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+                        Write-Verbose -Message 'Running the Edge Browser category'
+                        Write-Progress -Id 0 -Activity 'Edge Browser Configurations' -Status "Step $($RefCurrentMainStep.Value)/$TotalMainSteps" -PercentComplete ($RefCurrentMainStep.Value / $TotalMainSteps * 100)
 
+                        Write-Verbose -Message 'Applying the Edge Browser registry settings'
                         foreach ($Item in $RegistryCSVItems) {
                             if ($Item.category -eq 'Edge') {
                                 Edit-Registry -path $Item.Path -key $Item.Key -value $Item.Value -type $Item.Type -Action $Item.Action
@@ -2146,15 +2409,17 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 param([System.Management.Automation.SwitchParameter]$RunUnattended)
                 if (!$IsAdmin) { return }
 
-                $CurrentMainStep++
+                $RefCurrentMainStep.Value++
                 $Host.UI.RawUI.WindowTitle = '🎟️ Certificates'
-                Write-Verbose -Message 'Running Certificate Checking category function'
+                Write-Verbose -Message 'Processing the Certificate Checking category function'
 
                 :CertCheckingLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Certificate Checking category ?")) {
                     'Yes' {
-                        Write-Progress -Id 0 -Activity 'Certificate Checking Commands' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+                        Write-Verbose -Message 'Running the Certificate Checking category'
+                        Write-Progress -Id 0 -Activity 'Certificate Checking Commands' -Status "Step $($RefCurrentMainStep.Value)/$TotalMainSteps" -PercentComplete ($RefCurrentMainStep.Value / $TotalMainSteps * 100)
 
                         try {
+                            Write-Verbose -Message 'Downloading sigcheck64.exe from https://live.sysinternals.com'
                             Invoke-WebRequest -Uri 'https://live.sysinternals.com/sigcheck64.exe' -OutFile 'sigcheck64.exe'
                         }
                         catch {
@@ -2177,13 +2442,14 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 param([System.Management.Automation.SwitchParameter]$RunUnattended)
                 if (!$IsAdmin) { return }
 
-                $CurrentMainStep++
+                $RefCurrentMainStep.Value++
                 $Host.UI.RawUI.WindowTitle = '🧾 Country IPs'
-                Write-Verbose -Message 'Running Country IP Blocking category function'
+                Write-Verbose -Message 'Processing the Country IP Blocking category function'
 
                 :IPBlockingLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Country IP Blocking category ?")) {
                     'Yes' {
-                        Write-Progress -Id 0 -Activity 'Country IP Blocking' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+                        Write-Verbose -Message 'Running the Country IP Blocking category'
+                        Write-Progress -Id 0 -Activity 'Country IP Blocking' -Status "Step $($RefCurrentMainStep.Value)/$TotalMainSteps" -PercentComplete ($RefCurrentMainStep.Value / $TotalMainSteps * 100)
 
                         :IPBlockingTerrLabel switch ($RunUnattended ? 'Yes' : (Select-Option -SubCategory -Options 'Yes', 'No' -Message 'Add countries in the State Sponsors of Terrorism list to the Firewall block list?')) {
                             'Yes' {
@@ -2205,13 +2471,14 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 param([System.Management.Automation.SwitchParameter]$RunUnattended)
                 if (!$IsAdmin) { return }
 
-                $CurrentMainStep++
+                $RefCurrentMainStep.Value++
                 $Host.UI.RawUI.WindowTitle = '🎇 Downloads Defense Measures'
-                Write-Verbose -Message 'Running Downloads Defense Measures category function'
+                Write-Verbose -Message 'Processing the Downloads Defense Measures category function'
 
                 :DownloadsDefenseMeasuresLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Downloads Defense Measures category ?")) {
                     'Yes' {
-                        Write-Progress -Id 0 -Activity 'Downloads Defense Measures' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+                        Write-Verbose -Message 'Running the Downloads Defense Measures category'
+                        Write-Progress -Id 0 -Activity 'Downloads Defense Measures' -Status "Step $($RefCurrentMainStep.Value)/$TotalMainSteps" -PercentComplete ($RefCurrentMainStep.Value / $TotalMainSteps * 100)
 
                         if (-NOT (Get-InstalledModule -Name 'WDACConfig' -ErrorAction SilentlyContinue -Verbose:$false)) {
                             Write-Verbose -Message 'Installing WDACConfig module because it is not installed'
@@ -2248,6 +2515,9 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
 
                             Write-Verbose -Message 'Creating and deploying the Downloads-Defense-Measures policy'
                             New-DenyWDACConfig -PathWildCards -PolicyName 'Downloads-Defense-Measures' -FolderPath "$DownloadsPathSystem\*" -Deploy -Verbose:$Verbose -SkipVersionCheck
+
+                            Write-Verbose -Message 'Removing the Downloads-Defense-Measures policy xml file from the current working directory after deployment'
+                            Remove-Item -Path '.\DenyPolicyWildcard Downloads-Defense-Measures.xml' -Force
                         }
                         else {
                             Write-Verbose -Message 'The Downloads-Defense-Measures policy is already deployed'
@@ -2260,14 +2530,16 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
             Function Invoke-NonAdminCommands {
                 param([System.Management.Automation.SwitchParameter]$RunUnattended)
 
-                $CurrentMainStep = $TotalMainSteps
+                $RefCurrentMainStep.Value++
                 $Host.UI.RawUI.WindowTitle = '🏷️ Non-Admins'
-                Write-Verbose -Message 'Running Non-Admin category function'
+                Write-Verbose -Message 'Processing the Non-Admin category function'
 
                 :NonAdminLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Non-Admin category ?")) {
                     'Yes' {
-                        Write-Progress -Id 0 -Activity 'Non-Admin category' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+                        Write-Verbose -Message 'Running the Non-Admin category'
+                        Write-Progress -Id 0 -Activity 'Non-Admin category' -Status "Step $($RefCurrentMainStep.Value)/$TotalMainSteps" -PercentComplete ($RefCurrentMainStep.Value / $TotalMainSteps * 100)
 
+                        Write-Verbose -Message 'Applying the Non-Admin registry settings'
                         foreach ($Item in $RegistryCSVItems) {
                             if ($Item.category -eq 'NonAdmin') {
                                 Edit-Registry -path $Item.Path -key $Item.Key -value $Item.Value -type $Item.Type -Action $Item.Action
@@ -2326,7 +2598,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
             Write-Verbose -Message 'Finally block is running'
 
             if ($IsAdmin) {
-                # Reverting the PowerShell executables and powercfg.exe allow listings in Controlled folder access
+                Write-Verbose -Message 'Reverting the PowerShell executables and powercfg.exe allow listings in Controlled folder access'
                 foreach ($FilePath in (((Get-ChildItem -Path "$PSHOME\*.exe" -File).FullName) + "$env:SystemDrive\Windows\System32\powercfg.exe")) {
                     Remove-MpPreference -ControlledFolderAccessAllowedApplications $FilePath
                 }
@@ -2337,14 +2609,27 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                     Set-MpPreference -ControlledFolderAccessAllowedApplications $CFAAllowedAppsBackup
                 }
             }
-            # Remove the working directory
+
+            Write-Verbose -Message 'Removing the working directory'
             Remove-Item -Recurse -Path $WorkingDir -Force -ErrorAction SilentlyContinue
-            # Disable progress bars
-            0..6 | ForEach-Object -Process { Write-Progress -Id $_ -Activity 'Done' -Completed }
-            # Restore the title of the PowerShell back to what $it was prior to running the script/module
+
+            Write-Verbose -Message 'Disabling progress bars'
+            0..2 | ForEach-Object -Process { Write-Progress -Id $_ -Activity 'Done' -Completed }
+
+            Write-Verbose -Message 'Restoring the title of the PowerShell back to what it was prior to running the script/module'
             $Host.UI.RawUI.WindowTitle = $CurrentPowerShellTitle
-            # Set the execution policy back to what it was prior to running the script
+
+            Write-Verbose -Message 'Setting the execution policy back to what it was prior to running the script/module'
             Set-ExecutionPolicy -ExecutionPolicy "$CurrentExecutionPolicy" -Scope 'Process' -Force
+
+            if ($Log) {
+                Write-Verbose -Message 'Stopping the stopwatch'
+                $StopWatch.Stop()
+                Write-Verbose -Message "Protect-WindowsSecurity completed in $($StopWatch.Elapsed.Hours) Hours - $($StopWatch.Elapsed.Minutes) Minutes - $($StopWatch.Elapsed.Seconds) Seconds - $($StopWatch.Elapsed.Milliseconds) Milliseconds - $($StopWatch.Elapsed.Microseconds) Microseconds - $($StopWatch.Elapsed.Nanoseconds) Nanoseconds"
+
+                Write-Verbose -Message 'Stopping the transcription'
+                Stop-Transcript
+            }
         }
     }
     <#
@@ -2371,15 +2656,35 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
 
     Each of the switch parameters above will be dynamically generated based on the categories you choose.
     For example, if you choose to run the Microsoft Security Baselines category, the SecBaselines_NoOverrides switch parameter will be generated and you can use it to apply the Microsoft Security Baselines without the optional overrides.
-
 .COMPONENT
     PowerShell
 .FUNCTIONALITY
     Applies the hardening measures described in the GitHub readme.
 .PARAMETER Categories
-    The categories of hardening measures to apply. Use this to only apply specific categories.
-    Use this parameter when running the script/module in headless and unattended mode to automatically apply any categories you want without user interaction.
-    If not specified, there will be prompts for confirmation before running each category.
+    The hardening categories to implement. Use this to selectively apply certain categories.
+    Use this parameter when executing the Protect-WindowsSecurity in silent/headless mode to automatically apply any categories you desire without user intervention.
+    If not specified, there will be requests for confirmation before running each category.
+.PARAMETER Verbose
+    Activates elaborate messages by displaying extensive information about the actions of the Protect-WindowsSecurity cmdlet.
+.PARAMETER Log
+    Activates comprehensive logging by recording all the information shown on the screen and some additional data to a text file. It is strongly advised to use the -Verbose parameter when you want to enable logging.
+.PARAMETER LogPath
+    The path to save the log file to. If not specified, the log file will be saved in the current working directory.
+.PARAMETER Offline
+    Indicates that the module is being run in offline mode. Will not download any files from the internet.
+    Using this parameter will make the following 3 parameters mandatory: PathToLGPO, PathToMSFTSecurityBaselines and PathToMSFT365AppsSecurityBaselines.
+.PARAMETER PathToLGPO
+    The path to the 'LGPO.zip'. Make sure it's in the zip format just like it's downloaded from the Microsoft servers.
+    File name can be anything.
+    The parameter has argument completer so you can press tab and use the file picker GUI to select the zip file.
+.PARAMETER PathToMSFTSecurityBaselines
+    The path to the 'Windows 11 v23H2 Security Baseline.zip'. Make sure it's in the zip format just like it's downloaded from the Microsoft servers.
+    File name can be anything.
+    The parameter has argument completer so you can press tab and use the file picker GUI to select the zip file.
+.PARAMETER PathToMSFT365AppsSecurityBaselines
+    The path to the 'Microsoft 365 Apps for Enterprise 2306.zip'. Make sure it's in the zip format just like it's downloaded from the Microsoft servers.
+    File name can be anything.
+    The parameter has argument completer so you can press tab and use the file picker GUI to select the zip file.
 .NOTES
     It is highly recommended to always include the Microsoft Security Baselines category and place it first as it forms the foundation of all subsequent categories.
 .EXAMPLE
@@ -2394,8 +2699,15 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
     Protect-WindowsSecurity
 
     This example will run the cmdlet in interactive mode and will prompt for confirmation before running each category and sub-category.
+.EXAMPLE
+    Protect-WindowsSecurity -Verbose -Offline -PathToLGPO 'C:\Users\Admin\Desktop\LGPO.zip' -PathToMSFTSecurityBaselines 'C:\Users\Admin\Desktop\Baselines.zip' -PathToMSFT365AppsSecurityBaselines 'C:\Users\Admin\Desktop\M365Baselines.zip' -Log -Categories MicrosoftSecurityBaselines,MicrosoftDefender -MSFTDefender_SAC
+
+    This example instructs the cmdlet to run in offline mode and will not download any files from the internet.
+    It also runs it in headless/silent mode by specifying which categories to automatically run. -MSFTDefender_SAC switch is used so the Smart App Control sub-category is also applied in the headless/silent mode.
+    -Log switch is mentioned which will save the output of the cmdlet to a text file in the current working directory.
 .INPUTS
     System.String[]
+    System.IO.FileInfo
     System.Management.Automation.SwitchParameter
 .OUTPUTS
     System.String

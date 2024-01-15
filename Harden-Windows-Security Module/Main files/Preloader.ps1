@@ -11,23 +11,10 @@ try {
     if ((Test-Path -Path 'Variable:\OSBuild') -eq $false) { New-Variable -Name 'OSBuild' -Value ([System.Environment]::OSVersion.Version.Build) -Option 'Constant' -Scope 'Script' -Description 'Current OS build version' -Force }
     if ((Test-Path -Path 'Variable:\UBR') -eq $false) { New-Variable -Name 'UBR' -Value (Get-ItemPropertyValue -Path 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion' -Name 'UBR') -Option 'Constant' -Scope 'Script' -Description 'Update Build Revision (UBR) number' -Force }
     if ((Test-Path -Path 'Variable:\FullOSBuild') -eq $false) { New-Variable -Name 'FullOSBuild' -Value "$OSBuild.$UBR" -Option 'Constant' -Scope 'Script' -Description 'Create full OS build number as seen in Windows Settings' -Force }
+    if ((Test-Path -Path 'Variable:\HardeningModulePath') -eq $false) { New-Variable -Name 'HardeningModulePath' -Value ($PSScriptRoot) -Option 'Constant' -Scope 'Global' -Description 'Storing the value of $PSScriptRoot in a global constant variable to allow the internal functions to use it when navigating the module structure' -Force }
 }
 catch {
     Throw [System.InvalidOperationException] 'Could not set the required global variables.'
-}
-
-# A constant variable that is automatically imported in the caller's environment and used to detect the main module's root directory
-# Create it only if it's not already present, helps when user tries to import the module over and over again without closing the PowerShell session
-try {
-    Get-Variable -Name 'HardeningModulePath' -ErrorAction Stop | Out-Null
-}
-catch {
-    try {
-        New-Variable -Name 'HardeningModulePath' -Value ($PSScriptRoot) -Option 'Constant' -Scope 'Global' -Description 'Storing the value of $PSScriptRoot in a global constant variable to allow the internal functions to use it when navigating the module structure' -Force
-    }
-    catch {
-        Throw [System.InvalidOperationException] 'Could not set the HardeningModulePath required global variable.'
-    }
 }
 
 # Make sure the current OS build is equal or greater than the required build number

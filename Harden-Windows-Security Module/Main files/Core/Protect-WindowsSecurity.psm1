@@ -368,15 +368,6 @@ Function Protect-WindowsSecurity {
 
     process {
 
-        # Start the transcript if the -Log switch is used
-        if ($Log) {
-            Start-Transcript -IncludeInvocationHeader -Path $LogPath
-
-            # Create a new stopwatch object to measure the execution time
-            Write-Verbose -Message 'Starting the stopwatch...'
-            [System.Diagnostics.Stopwatch]$StopWatch = [Diagnostics.Stopwatch]::StartNew()
-        }
-
         # Determining whether to use the files inside the module or download them from the GitHub repository
         [System.Boolean]$IsLocally = $false
         # Test for $null or '' or all-whitespace or any stringified value being ''
@@ -406,6 +397,15 @@ Function Protect-WindowsSecurity {
         }
         else {
             Write-Verbose -Message '$PSCommandPath was not found, Protect-WindowsSecurity function was most likely called from the GitHub repository'
+        }
+
+        # Start the transcript if the -Log switch is used
+        if ($Log) {
+            Start-Transcript -IncludeInvocationHeader -Path $LogPath
+
+            # Create a new stopwatch object to measure the execution time
+            Write-Verbose -Message 'Starting the stopwatch...'
+            [System.Diagnostics.Stopwatch]$StopWatch = [Diagnostics.Stopwatch]::StartNew()
         }
 
         # Determine whether the current session is running as Administrator or not
@@ -2512,6 +2512,9 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
 
                             Write-Verbose -Message 'Creating and deploying the Downloads-Defense-Measures policy'
                             New-DenyWDACConfig -PathWildCards -PolicyName 'Downloads-Defense-Measures' -FolderPath "$DownloadsPathSystem\*" -Deploy -Verbose:$Verbose -SkipVersionCheck
+
+                            Write-Verbose -Message 'Removing the Downloads-Defense-Measures policy xml file from the current working directory after deployment'
+                            Remove-Item -Path '.\DenyPolicyWildcard Downloads-Defense-Measures.xml' -Force
                         }
                         else {
                             Write-Verbose -Message 'The Downloads-Defense-Measures policy is already deployed'

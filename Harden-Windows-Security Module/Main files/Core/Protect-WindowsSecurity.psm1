@@ -2617,7 +2617,6 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
 
     Each of the switch parameters above will be dynamically generated based on the categories you choose.
     For example, if you choose to run the Microsoft Security Baselines category, the SecBaselines_NoOverrides switch parameter will be generated and you can use it to apply the Microsoft Security Baselines without the optional overrides.
-
 .COMPONENT
     PowerShell
 .FUNCTIONALITY
@@ -2628,7 +2627,8 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
     If not specified, there will be prompts for confirmation before running each category.
 .PARAMETER Log
     Enables logging of the script/module's output to a text file.
-    The log file will be saved in the current working directory.
+.PARAMETER LogPath
+    The path to save the log file to. If not specified, the log file will be saved in the current working directory.
 .PARAMETER Offline
     Indicates that the module is being run in offline mode. Will not download any files from the internet.
     Using this parameter will make the following 3 parameters mandatory: PathToLGPO, PathToMSFTSecurityBaselines and PathToMSFT365AppsSecurityBaselines.

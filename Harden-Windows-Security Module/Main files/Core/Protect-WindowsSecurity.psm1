@@ -371,6 +371,10 @@ Function Protect-WindowsSecurity {
         # Start the transcript if the -Log switch is used
         if ($Log) {
             Start-Transcript -IncludeInvocationHeader -Path $LogPath
+
+            # Create a new stopwatch object to measure the execution time
+            Write-Verbose -Message 'Starting the stopwatch...'
+            [System.Diagnostics.Stopwatch]$StopWatch = [Diagnostics.Stopwatch]::StartNew()
         }
 
         # Determining whether to use the files inside the module or download them from the GitHub repository
@@ -2613,6 +2617,10 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
             Set-ExecutionPolicy -ExecutionPolicy "$CurrentExecutionPolicy" -Scope 'Process' -Force
 
             if ($Log) {
+                Write-Verbose -Message 'Stopping the stopwatch'
+                $StopWatch.Stop()
+                Write-Verbose -Message "Protect-WindowsSecurity completed in $($StopWatch.Elapsed.Hours) Hours - $($StopWatch.Elapsed.Minutes) Minutes - $($StopWatch.Elapsed.Seconds) Seconds - $($StopWatch.Elapsed.Milliseconds) Milliseconds - $($StopWatch.Elapsed.Microseconds) Microseconds - $($StopWatch.Elapsed.Nanoseconds) Nanoseconds"
+
                 Write-Verbose -Message 'Stopping the transcription'
                 Stop-Transcript
             }

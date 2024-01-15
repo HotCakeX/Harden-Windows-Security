@@ -2655,11 +2655,13 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
 .FUNCTIONALITY
     Applies the hardening measures described in the GitHub readme.
 .PARAMETER Categories
-    The categories of hardening measures to apply. Use this to only apply specific categories.
-    Use this parameter when running the script/module in headless and unattended mode to automatically apply any categories you want without user interaction.
-    If not specified, there will be prompts for confirmation before running each category.
+    The hardening categories to implement. Use this to selectively apply certain categories.
+    Use this parameter when executing the Protect-WindowsSecurity in silent/headless mode to automatically apply any categories you desire without user intervention.
+    If not specified, there will be requests for confirmation before running each category.
+.PARAMETER Verbose
+    Activates elaborate messages by displaying extensive information about the actions of the Protect-WindowsSecurity cmdlet.
 .PARAMETER Log
-    Enables logging of the script/module's output to a text file.
+    Activates comprehensive logging by recording all the information shown on the screen and some additional data to a text file. It is strongly advised to use the -Verbose parameter when you want to enable logging.
 .PARAMETER LogPath
     The path to save the log file to. If not specified, the log file will be saved in the current working directory.
 .PARAMETER Offline

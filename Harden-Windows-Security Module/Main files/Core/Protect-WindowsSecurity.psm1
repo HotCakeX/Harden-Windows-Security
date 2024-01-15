@@ -1301,13 +1301,13 @@ Function Protect-WindowsSecurity {
                         # Loop through each group to add the mitigations
                         foreach ($Group in $GroupedMitigations) {
                             # Get the program name
-                            $ProgramName = $Group.Name
+                            [System.String]$ProgramName = $Group.Name
 
                             # Get the list of mitigations to enable
-                            $EnableMitigations = $Group.Group | Where-Object -FilterScript { $_.Action -eq 'Enable' } | Select-Object -ExpandProperty Mitigation
+                            [System.String[]]$EnableMitigations = $Group.Group | Where-Object -FilterScript { $_.Action -eq 'Enable' } | Select-Object -ExpandProperty Mitigation
 
                             # Get the list of mitigations to disable
-                            $DisableMitigations = $Group.Group | Where-Object -FilterScript { $_.Action -eq 'Disable' } | Select-Object -ExpandProperty Mitigation
+                            [System.String[]]$DisableMitigations = $Group.Group | Where-Object -FilterScript { $_.Action -eq 'Disable' } | Select-Object -ExpandProperty Mitigation
 
                             # Call the Set-ProcessMitigation cmdlet with the lists of mitigations
                             if ($null -ne $EnableMitigations) {

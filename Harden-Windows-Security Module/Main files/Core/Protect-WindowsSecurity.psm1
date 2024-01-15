@@ -983,7 +983,6 @@ Function Protect-WindowsSecurity {
                     Throw 'Secure Boot is not enabled. Please enable it in your UEFI settings and try again.'
                 }
 
-
                 Write-Verbose -Message 'Checking if TPM is available and enabled...'
                 [System.Object]$TPM = Get-Tpm
                 if (-NOT ($TPM.tpmpresent -and $TPM.tpmenabled)) {
@@ -1011,8 +1010,12 @@ Function Protect-WindowsSecurity {
             # Create the working directory
             [System.IO.DirectoryInfo]$WorkingDir = New-Item -ItemType Directory -Path "$CurrentUserTempDirectoryPath\HardeningXStuff\" -Force
 
+            # Create a variable to store the current step number for the progress bar
             [System.Int64]$CurrentMainStep = 0
-            Write-Progress -Id 0 -Activity 'Downloading the required files' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete 1
+            # Create a reference variable that points to the original variable
+            [ref]$RefCurrentMainStep = $CurrentMainStep
+
+            Write-Progress -Id 0 -Activity 'Downloading the required files' -Status "Step $($RefCurrentMainStep.Value)/$TotalMainSteps" -PercentComplete 1
             # Change the title of the Windows Terminal for PowerShell tab
             $Host.UI.RawUI.WindowTitle = '⏬ Downloading'
 
@@ -1163,14 +1166,14 @@ Function Protect-WindowsSecurity {
                 # If admin rights are not detected, break out of the function
                 if (!$IsAdmin) { return }
 
-                $CurrentMainStep++
+                $RefCurrentMainStep.Value++
                 $Host.UI.RawUI.WindowTitle = '🫶 Category 0'
                 Write-Verbose -Message 'Processing the Category 0 function'
 
                 :Category0Label switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nApply May 9 2023 Windows Boot Manager Security measures ? (If you've already run this category, don't need to do it again)")) {
                     'Yes' {
                         Write-Verbose -Message 'Applying the required security measures for Windows Boot Manager'
-                        Write-Progress -Id 0 -Activity 'Windows Boot Manager revocations for Secure Boot' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+                        Write-Progress -Id 0 -Activity 'Windows Boot Manager revocations for Secure Boot' -Status "Step $($RefCurrentMainStep.Value)/$TotalMainSteps" -PercentComplete ($RefCurrentMainStep.Value / $TotalMainSteps * 100)
 
                         reg add HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Secureboot /v AvailableUpdates /t REG_DWORD /d 0x30 /f
 
@@ -1184,7 +1187,7 @@ Function Protect-WindowsSecurity {
                 param([System.Management.Automation.SwitchParameter]$RunUnattended)
                 if (!$IsAdmin) { return }
 
-                $CurrentMainStep++
+                $RefCurrentMainStep.Value++
                 $Host.UI.RawUI.WindowTitle = '🔐 Security Baselines'
                 Write-Verbose -Message 'Processing the Security Baselines category function'
 
@@ -1194,14 +1197,14 @@ Function Protect-WindowsSecurity {
                 :MicrosoftSecurityBaselinesCategoryLabel switch ($RunUnattended ? ($SecBaselines_NoOverrides ? 'Yes' : 'Yes, With the Optional Overrides (Recommended)') : (Select-Option -Options 'Yes', 'Yes, With the Optional Overrides (Recommended)' , 'No', 'Exit' -Message "`nApply Microsoft Security Baseline ?")) {
                     'Yes' {
                         Write-Verbose -Message 'Applying the Microsoft Security Baselines without the optional overrides'
-                        Write-Progress -Id 0 -Activity 'Microsoft Security Baseline' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+                        Write-Progress -Id 0 -Activity 'Microsoft Security Baseline' -Status "Step $($RefCurrentMainStep.Value)/$TotalMainSteps" -PercentComplete ($RefCurrentMainStep.Value / $TotalMainSteps * 100)
 
                         Write-Verbose -Message 'Running the official PowerShell script included in the Microsoft Security Baseline file downloaded from Microsoft servers'
                         .\Baseline-LocalInstall.ps1 -Win11NonDomainJoined 4>$null
                     }
                     'Yes, With the Optional Overrides (Recommended)' {
                         Write-Verbose -Message 'Applying the Microsoft Security Baselines with the optional overrides'
-                        Write-Progress -Id 0 -Activity 'Microsoft Security Baseline' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+                        Write-Progress -Id 0 -Activity 'Microsoft Security Baseline' -Status "Step $($RefCurrentMainStep.Value)/$TotalMainSteps" -PercentComplete ($RefCurrentMainStep.Value / $TotalMainSteps * 100)
 
                         Write-Verbose -Message 'Running the official PowerShell script included in the Microsoft Security Baseline file downloaded from Microsoft servers'
                         .\Baseline-LocalInstall.ps1 -Win11NonDomainJoined 4>$null
@@ -1225,14 +1228,14 @@ Function Protect-WindowsSecurity {
                 param([System.Management.Automation.SwitchParameter]$RunUnattended)
                 if (!$IsAdmin) { return }
 
-                $CurrentMainStep++
+                $RefCurrentMainStep.Value++
                 $Host.UI.RawUI.WindowTitle = '🧁 M365 Apps Security'
                 Write-Verbose -Message 'Processing the M365 Apps Security category function'
 
                 :Microsoft365AppsSecurityBaselinesCategoryLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nApply Microsoft 365 Apps Security Baseline ?")) {
                     'Yes' {
                         Write-Verbose -Message 'Applying the Microsoft 365 Apps Security Baseline'
-                        Write-Progress -Id 0 -Activity 'Microsoft 365 Apps Security Baseline' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+                        Write-Progress -Id 0 -Activity 'Microsoft 365 Apps Security Baseline' -Status "Step $($RefCurrentMainStep.Value)/$TotalMainSteps" -PercentComplete ($RefCurrentMainStep.Value / $TotalMainSteps * 100)
 
                         Write-Verbose -Message "Changing the current directory to '$Microsoft365SecurityBaselinePath\Scripts\'"
                         Push-Location -Path "$Microsoft365SecurityBaselinePath\Scripts\"
@@ -1251,14 +1254,14 @@ Function Protect-WindowsSecurity {
                 param([System.Management.Automation.SwitchParameter]$RunUnattended)
                 if (!$IsAdmin) { return }
 
-                $CurrentMainStep++
+                $RefCurrentMainStep.Value++
                 $Host.UI.RawUI.WindowTitle = '🍁 MSFT Defender'
                 Write-Verbose -Message 'Processing the Microsoft Defender category function'
 
                 :MicrosoftDefenderLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Microsoft Defender category ?")) {
                     'Yes' {
                         Write-Verbose -Message 'Running the Microsoft Defender category'
-                        Write-Progress -Id 0 -Activity 'Microsoft Defender' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+                        Write-Progress -Id 0 -Activity 'Microsoft Defender' -Status "Step $($RefCurrentMainStep.Value)/$TotalMainSteps" -PercentComplete ($RefCurrentMainStep.Value / $TotalMainSteps * 100)
 
                         &$LGPOExe /q /m "$WorkingDir\Security-Baselines-X\Microsoft Defender Policies\registry.pol"
 
@@ -1431,14 +1434,14 @@ Function Protect-WindowsSecurity {
                 param([System.Management.Automation.SwitchParameter]$RunUnattended)
                 if (!$IsAdmin) { return }
 
-                $CurrentMainStep++
+                $RefCurrentMainStep.Value++
                 $Host.UI.RawUI.WindowTitle = '🪷 ASR Rules'
                 Write-Verbose -Message 'Processing the ASR Rules category function'
 
                 :ASRRulesCategoryLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Attack Surface Reduction Rules category ?")) {
                     'Yes' {
                         Write-Verbose -Message 'Running the Attack Surface Reduction Rules category'
-                        Write-Progress -Id 0 -Activity 'Attack Surface Reduction Rules' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+                        Write-Progress -Id 0 -Activity 'Attack Surface Reduction Rules' -Status "Step $($RefCurrentMainStep.Value)/$TotalMainSteps" -PercentComplete ($RefCurrentMainStep.Value / $TotalMainSteps * 100)
 
                         &$LGPOExe /q /m "$WorkingDir\Security-Baselines-X\Attack Surface Reduction Rules Policies\registry.pol"
                     } 'No' { break ASRRulesCategoryLabel }
@@ -1449,14 +1452,14 @@ Function Protect-WindowsSecurity {
                 param([System.Management.Automation.SwitchParameter]$RunUnattended)
                 if (!$IsAdmin) { return }
 
-                $CurrentMainStep++
+                $RefCurrentMainStep.Value++
                 $Host.UI.RawUI.WindowTitle = '🔑 BitLocker'
                 Write-Verbose -Message 'Processing the BitLocker category function'
 
                 :BitLockerCategoryLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Bitlocker category ?")) {
                     'Yes' {
                         Write-Verbose -Message 'Running the Bitlocker category'
-                        Write-Progress -Id 0 -Activity 'Bitlocker Settings' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+                        Write-Progress -Id 0 -Activity 'Bitlocker Settings' -Status "Step $($RefCurrentMainStep.Value)/$TotalMainSteps" -PercentComplete ($RefCurrentMainStep.Value / $TotalMainSteps * 100)
 
                         &$LGPOExe /q /m "$WorkingDir\Security-Baselines-X\Bitlocker Policies\registry.pol"
 
@@ -2098,14 +2101,14 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 param([System.Management.Automation.SwitchParameter]$RunUnattended)
                 if (!$IsAdmin) { return }
 
-                $CurrentMainStep++
+                $RefCurrentMainStep.Value++
                 $Host.UI.RawUI.WindowTitle = '🛡️ TLS'
                 Write-Verbose -Message 'Processing the TLS Security category function'
 
                 :TLSSecurityLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun TLS Security category ?")) {
                     'Yes' {
                         Write-Verbose -Message 'Running the TLS Security category'
-                        Write-Progress -Id 0 -Activity 'TLS Security' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+                        Write-Progress -Id 0 -Activity 'TLS Security' -Status "Step $($RefCurrentMainStep.Value)/$TotalMainSteps" -PercentComplete ($RefCurrentMainStep.Value / $TotalMainSteps * 100)
 
                         # creating these registry keys that have forward slashes in them
                         @(  'DES 56/56', # DES 56-bit
@@ -2138,14 +2141,14 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 param([System.Management.Automation.SwitchParameter]$RunUnattended)
                 if (!$IsAdmin) { return }
 
-                $CurrentMainStep++
+                $RefCurrentMainStep.Value++
                 $Host.UI.RawUI.WindowTitle = '💻 Lock Screen'
                 Write-Verbose -Message 'Processing the Lock Screen category function'
 
                 :LockScreenLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Lock Screen category ?")) {
                     'Yes' {
                         Write-Verbose -Message 'Running the Lock Screen category'
-                        Write-Progress -Id 0 -Activity 'Lock Screen' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+                        Write-Progress -Id 0 -Activity 'Lock Screen' -Status "Step $($RefCurrentMainStep.Value)/$TotalMainSteps" -PercentComplete ($RefCurrentMainStep.Value / $TotalMainSteps * 100)
 
                         &$LGPOExe /q /m "$WorkingDir\Security-Baselines-X\Lock Screen Policies\registry.pol"
                         &$LGPOExe /q /s "$WorkingDir\Security-Baselines-X\Lock Screen Policies\GptTmpl.inf"
@@ -2175,14 +2178,14 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 param([System.Management.Automation.SwitchParameter]$RunUnattended)
                 if (!$IsAdmin) { return }
 
-                $CurrentMainStep++
+                $RefCurrentMainStep.Value++
                 $Host.UI.RawUI.WindowTitle = '💎 UAC'
                 Write-Verbose -Message 'Processing the User Account Control category function'
 
                 :UACLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun User Account Control category ?")) {
                     'Yes' {
                         Write-Verbose -Message 'Running the User Account Control category'
-                        Write-Progress -Id 0 -Activity 'User Account Control' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+                        Write-Progress -Id 0 -Activity 'User Account Control' -Status "Step $($RefCurrentMainStep.Value)/$TotalMainSteps" -PercentComplete ($RefCurrentMainStep.Value / $TotalMainSteps * 100)
 
                         &$LGPOExe /q /s "$WorkingDir\Security-Baselines-X\User Account Control UAC Policies\GptTmpl.inf"
 
@@ -2211,14 +2214,14 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 param([System.Management.Automation.SwitchParameter]$RunUnattended)
                 if (!$IsAdmin) { return }
 
-                $CurrentMainStep++
+                $RefCurrentMainStep.Value++
                 $Host.UI.RawUI.WindowTitle = '🔥 Firewall'
                 Write-Verbose -Message 'Processing the Windows Firewall category function'
 
                 :WindowsFirewallLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Windows Firewall category ?")) {
                     'Yes' {
                         Write-Verbose -Message 'Running the Windows Firewall category'
-                        Write-Progress -Id 0 -Activity 'Windows Firewall' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+                        Write-Progress -Id 0 -Activity 'Windows Firewall' -Status "Step $($RefCurrentMainStep.Value)/$TotalMainSteps" -PercentComplete ($RefCurrentMainStep.Value / $TotalMainSteps * 100)
 
                         &$LGPOExe /q /m "$WorkingDir\Security-Baselines-X\Windows Firewall Policies\registry.pol"
 
@@ -2235,14 +2238,14 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 param([System.Management.Automation.SwitchParameter]$RunUnattended)
                 if (!$IsAdmin) { return }
 
-                $CurrentMainStep++
+                $RefCurrentMainStep.Value++
                 $Host.UI.RawUI.WindowTitle = '🏅 Optional Features'
                 Write-Verbose -Message 'Processing the Optional Windows Features category function'
 
                 :OptionalFeaturesLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Optional Windows Features category ?")) {
                     'Yes' {
                         Write-Verbose -Message 'Running the Optional Windows Features category'
-                        Write-Progress -Id 0 -Activity 'Optional Windows Features' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+                        Write-Progress -Id 0 -Activity 'Optional Windows Features' -Status "Step $($RefCurrentMainStep.Value)/$TotalMainSteps" -PercentComplete ($RefCurrentMainStep.Value / $TotalMainSteps * 100)
 
                         # PowerShell Core (only if installed from Microsoft Store) has problem with these commands: https://github.com/PowerShell/PowerShell/issues/13866#issuecomment-1519066710
                         if ($PSHome -like "*$env:SystemDrive\Program Files\WindowsApps\Microsoft.PowerShell*") {
@@ -2287,14 +2290,14 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 param([System.Management.Automation.SwitchParameter]$RunUnattended)
                 if (!$IsAdmin) { return }
 
-                $CurrentMainStep++
+                $RefCurrentMainStep.Value++
                 $Host.UI.RawUI.WindowTitle = '📶 Networking'
                 Write-Verbose -Message 'Processing the Windows Networking category function'
 
                 :WindowsNetworkingLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Windows Networking category ?")) {
                     'Yes' {
                         Write-Verbose -Message 'Running the Windows Networking category'
-                        Write-Progress -Id 0 -Activity 'Windows Networking' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+                        Write-Progress -Id 0 -Activity 'Windows Networking' -Status "Step $($RefCurrentMainStep.Value)/$TotalMainSteps" -PercentComplete ($RefCurrentMainStep.Value / $TotalMainSteps * 100)
 
                         &$LGPOExe /q /m "$WorkingDir\Security-Baselines-X\Windows Networking Policies\registry.pol"
                         &$LGPOExe /q /s "$WorkingDir\Security-Baselines-X\Windows Networking Policies\GptTmpl.inf"
@@ -2312,14 +2315,14 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 param([System.Management.Automation.SwitchParameter]$RunUnattended)
                 if (!$IsAdmin) { return }
 
-                $CurrentMainStep++
+                $RefCurrentMainStep.Value++
                 $Host.UI.RawUI.WindowTitle = '🥌 Miscellaneous'
                 Write-Verbose -Message 'Processing the Miscellaneous Configurations category function'
 
                 :MiscellaneousLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Miscellaneous Configurations category ?")) {
                     'Yes' {
                         Write-Verbose -Message 'Running the Miscellaneous Configurations category'
-                        Write-Progress -Id 0 -Activity 'Miscellaneous Configurations' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+                        Write-Progress -Id 0 -Activity 'Miscellaneous Configurations' -Status "Step $($RefCurrentMainStep.Value)/$TotalMainSteps" -PercentComplete ($RefCurrentMainStep.Value / $TotalMainSteps * 100)
 
                         Write-Verbose -Message 'Applying the Miscellaneous Configurations registry settings'
                         foreach ($Item in $RegistryCSVItems) {
@@ -2361,14 +2364,14 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 param([System.Management.Automation.SwitchParameter]$RunUnattended)
                 if (!$IsAdmin) { return }
 
-                $CurrentMainStep++
+                $RefCurrentMainStep.Value++
                 $Host.UI.RawUI.WindowTitle = '🪟 Windows Update'
                 Write-Verbose -Message 'Processing the Windows Update category function'
 
                 :WindowsUpdateLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nApply Windows Update Policies ?")) {
                     'Yes' {
                         Write-Verbose -Message 'Running the Windows Update category'
-                        Write-Progress -Id 0 -Activity 'Windows Update Configurations' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+                        Write-Progress -Id 0 -Activity 'Windows Update Configurations' -Status "Step $($RefCurrentMainStep.Value)/$TotalMainSteps" -PercentComplete ($RefCurrentMainStep.Value / $TotalMainSteps * 100)
 
                         Write-Verbose -Message 'Enabling restart notification for Windows update'
                         Edit-Registry -path 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings' -key 'RestartNotificationsAllowed2' -value '1' -type 'DWORD' -Action 'AddOrModify'
@@ -2383,14 +2386,14 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 param([System.Management.Automation.SwitchParameter]$RunUnattended)
                 if (!$IsAdmin) { return }
 
-                $CurrentMainStep++
+                $RefCurrentMainStep.Value++
                 $Host.UI.RawUI.WindowTitle = '🦔 Edge'
                 Write-Verbose -Message 'Processing the Edge Browser category function'
 
                 :MSEdgeLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nApply Edge Browser Configurations ?")) {
                     'Yes' {
                         Write-Verbose -Message 'Running the Edge Browser category'
-                        Write-Progress -Id 0 -Activity 'Edge Browser Configurations' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+                        Write-Progress -Id 0 -Activity 'Edge Browser Configurations' -Status "Step $($RefCurrentMainStep.Value)/$TotalMainSteps" -PercentComplete ($RefCurrentMainStep.Value / $TotalMainSteps * 100)
 
                         Write-Verbose -Message 'Applying the Edge Browser registry settings'
                         foreach ($Item in $RegistryCSVItems) {
@@ -2406,14 +2409,14 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 param([System.Management.Automation.SwitchParameter]$RunUnattended)
                 if (!$IsAdmin) { return }
 
-                $CurrentMainStep++
+                $RefCurrentMainStep.Value++
                 $Host.UI.RawUI.WindowTitle = '🎟️ Certificates'
                 Write-Verbose -Message 'Processing the Certificate Checking category function'
 
                 :CertCheckingLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Certificate Checking category ?")) {
                     'Yes' {
                         Write-Verbose -Message 'Running the Certificate Checking category'
-                        Write-Progress -Id 0 -Activity 'Certificate Checking Commands' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+                        Write-Progress -Id 0 -Activity 'Certificate Checking Commands' -Status "Step $($RefCurrentMainStep.Value)/$TotalMainSteps" -PercentComplete ($RefCurrentMainStep.Value / $TotalMainSteps * 100)
 
                         try {
                             Write-Verbose -Message 'Downloading sigcheck64.exe from https://live.sysinternals.com'
@@ -2439,14 +2442,14 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 param([System.Management.Automation.SwitchParameter]$RunUnattended)
                 if (!$IsAdmin) { return }
 
-                $CurrentMainStep++
+                $RefCurrentMainStep.Value++
                 $Host.UI.RawUI.WindowTitle = '🧾 Country IPs'
                 Write-Verbose -Message 'Processing the Country IP Blocking category function'
 
                 :IPBlockingLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Country IP Blocking category ?")) {
                     'Yes' {
                         Write-Verbose -Message 'Running the Country IP Blocking category'
-                        Write-Progress -Id 0 -Activity 'Country IP Blocking' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+                        Write-Progress -Id 0 -Activity 'Country IP Blocking' -Status "Step $($RefCurrentMainStep.Value)/$TotalMainSteps" -PercentComplete ($RefCurrentMainStep.Value / $TotalMainSteps * 100)
 
                         :IPBlockingTerrLabel switch ($RunUnattended ? 'Yes' : (Select-Option -SubCategory -Options 'Yes', 'No' -Message 'Add countries in the State Sponsors of Terrorism list to the Firewall block list?')) {
                             'Yes' {
@@ -2468,14 +2471,14 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 param([System.Management.Automation.SwitchParameter]$RunUnattended)
                 if (!$IsAdmin) { return }
 
-                $CurrentMainStep++
+                $RefCurrentMainStep.Value++
                 $Host.UI.RawUI.WindowTitle = '🎇 Downloads Defense Measures'
                 Write-Verbose -Message 'Processing the Downloads Defense Measures category function'
 
                 :DownloadsDefenseMeasuresLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Downloads Defense Measures category ?")) {
                     'Yes' {
                         Write-Verbose -Message 'Running the Downloads Defense Measures category'
-                        Write-Progress -Id 0 -Activity 'Downloads Defense Measures' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+                        Write-Progress -Id 0 -Activity 'Downloads Defense Measures' -Status "Step $($RefCurrentMainStep.Value)/$TotalMainSteps" -PercentComplete ($RefCurrentMainStep.Value / $TotalMainSteps * 100)
 
                         if (-NOT (Get-InstalledModule -Name 'WDACConfig' -ErrorAction SilentlyContinue -Verbose:$false)) {
                             Write-Verbose -Message 'Installing WDACConfig module because it is not installed'
@@ -2527,14 +2530,14 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
             Function Invoke-NonAdminCommands {
                 param([System.Management.Automation.SwitchParameter]$RunUnattended)
 
-                $CurrentMainStep = $TotalMainSteps
+                $RefCurrentMainStep.Value++
                 $Host.UI.RawUI.WindowTitle = '🏷️ Non-Admins'
                 Write-Verbose -Message 'Processing the Non-Admin category function'
 
                 :NonAdminLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Non-Admin category ?")) {
                     'Yes' {
                         Write-Verbose -Message 'Running the Non-Admin category'
-                        Write-Progress -Id 0 -Activity 'Non-Admin category' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+                        Write-Progress -Id 0 -Activity 'Non-Admin category' -Status "Step $($RefCurrentMainStep.Value)/$TotalMainSteps" -PercentComplete ($RefCurrentMainStep.Value / $TotalMainSteps * 100)
 
                         Write-Verbose -Message 'Applying the Non-Admin registry settings'
                         foreach ($Item in $RegistryCSVItems) {

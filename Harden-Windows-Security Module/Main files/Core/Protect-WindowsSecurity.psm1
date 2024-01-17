@@ -363,6 +363,7 @@ Function Protect-WindowsSecurity {
             'Import-Module:Verbose'            = $false
             'Copy-Item:Force'                  = $true
             'Copy-Item:ProgressAction'         = 'SilentlyContinue'
+            'Test-Path:ErrorAction'            = 'SilentlyContinue'
         }
     }
 

@@ -124,7 +124,7 @@ Protect-WindowsSecurity [-Categories <String[]>] [-Log] [-Offline] [<CommonParam
 ### 8 Optional Parameters
 
 * `-Categories`: Specify the hardening categories that you want to apply. This will tell the module to operate in non-interactive or headless/silent mode which won't ask for confirmation before running each selected categories. You can specify multiple categories by separating them with a comma. If you don't specify any category, the cmdlet will run in interactive mode. **Use this parameter for deployments at a large scale.** If a selected category requires Administrator privileges and the module is running with Standard privileges, that category is skipped.
-   * This parameter has automatic tab completion. You can press the `Tab` key to see the available categories.
+    * This parameter has automatic tab completion. You can press the `Tab` key to see the available categories.
 
 * `-Verbose`: Shows verbose messages on the console about what the cmdlet is doing.
 

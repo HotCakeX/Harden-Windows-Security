@@ -363,6 +363,7 @@ Function Protect-WindowsSecurity {
             'Import-Module:Verbose'            = $false
             'Copy-Item:Force'                  = $true
             'Copy-Item:ProgressAction'         = 'SilentlyContinue'
+            'Test-Path:ErrorAction'            = 'SilentlyContinue'
         }
     }
 
@@ -2610,8 +2611,10 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 }
             }
 
-            Write-Verbose -Message 'Removing the working directory'
-            Remove-Item -Recurse -Path $WorkingDir -Force -ErrorAction SilentlyContinue
+            if (Test-Path -Path $WorkingDir) {
+                Write-Verbose -Message 'Removing the working directory'
+                Remove-Item -Recurse -Path $WorkingDir -Force
+            }
 
             Write-Verbose -Message 'Disabling progress bars'
             0..2 | ForEach-Object -Process { Write-Progress -Id $_ -Activity 'Done' -Completed }

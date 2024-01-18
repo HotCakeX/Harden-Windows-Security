@@ -46,6 +46,25 @@ BitLocker is a transparent drive encryption technology operating below the file 
 
 <br>
 
+## How Do The BitLocker Key Protectors Work?
+
+BitLocker key protectors safeguard the encryption key, which encrypts and decrypts the data on the disk. BitLocker provides various key protectors and allows using multiple key protectors simultaneously. However, some key protectors must be combined with other key protectors to attain the required level of security.
+
+Suppose you want your BitLocker encrypted drive to demand a PIN at Startup, need TPM for verification, and also necessitate a USB flash drive to be plugged in. In [this document](https://learn.microsoft.com/en-us/powershell/module/bitlocker/add-bitlockerkeyprotector), you can see there is a `-StartupKeyProtector` option for the USB flash drive, `-TPMProtector` option for TPM, and a `-Pin` option for the PIN.
+
+Using those parameters individually will not mandate all 3 key protectors to be used concurrently. It will only oblige one of them to be used. So you will have to either enter the PIN, have the disk connected to the same computer (TPM) or have the USB flash drive plugged in, but all 3 of them are not enforced.
+
+If you want to enforce a multifactor authentication, you need to use the following command
+
+```powershell
+Add-BitLockerKeyProtector -MountPoint C: -TpmAndPinAndStartupKeyProtector
+```
+
+This time, all 3 key protectors are essential to unlock the drive. You will have to enter the PIN, have the disk connected to the same computer (TPM), and have the USB flash drive plugged in.
+
+
+<br>
+
 ## Pluton, The Ultimate Security Chip
 
 One of the most formidable technologies that is impervious to tampering, jumper cable or other vulnerabilities is [the Pluton chip](https://www.microsoft.com/en-us/security/blog/2020/11/17/meet-the-microsoft-pluton-processor-the-security-chip-designed-for-the-future-of-windows-pcs/). The same technology that has been employed in Xbox to stop even the [most sophisticated physical attacks.](https://www.youtube.com/watch?v=quLa6kzzra0)

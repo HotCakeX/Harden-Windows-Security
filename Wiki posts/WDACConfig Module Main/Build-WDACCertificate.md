@@ -49,6 +49,8 @@ This video illustrates how to safeguard the Code Signing Certificate generated b
 
 These options are only accessible in GUI and they are to deter automatic scripts from utilizing the certificates without authentication, this is why the `Build-WDACCertificate` cmdlet does not activate this security feature by default.
 
+<br>
+
 <div align="center">
 <a href="https://www.youtube.com/watch?v=nrRiAJt-_6E">
 <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/How%20to%20safely%20store%20the%20WDAC%20Code%20Signing%20Certificate%20in%20Windows%20-%20WDACConfig%20module%20thumbnail.gif" alt="How to safely store the WDAC Code Signing Certificate in Windows WDACConfig module thumbnail" width="700">
@@ -57,3 +59,8 @@ These options are only accessible in GUI and they are to deter automatic scripts
 
 <br>
 
+## HSM (Hardware Security Module)
+
+The most secure method of storing code signing certificates is to use a hardware security module (HSM) or a similar device. Furthermore, obtaining certificates from a regulated or publicly trusted certificate authority (CA) requires the use of an HSM. The HSMs must also comply with the Federal Information Processing Standards (FIPS).
+
+<br>

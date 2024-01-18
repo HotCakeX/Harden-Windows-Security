@@ -4,8 +4,8 @@ This scenario involves removing the trust to any Kernel mode driver, whether the
 
 Drivers can access the Kernel which is the core of the operating system. Microsoft requires all drivers to be digitally signed:
 
-* Kernel mode Hardware drivers **need** to be signed with an **EV (Extended Validation)** certificate
-* Kernel mode virtual drivers **can** be signed with a standard certificate as well
+* Kernel mode Hardware drivers **need** to be signed with an EV (Extended Validation) certificate.
+* Kernel mode Virtual drivers (such as virtual network adapters) **can** be signed with a non-EV certificate.
 
 A BYOVD (Bring Your Own Vulnerable Driver) scenario involves exploiting one of the digitally signed drivers that harbors a security flaw to attain direct access to the core of the OS. **This attack vector applies to all OSes, not just Windows.**
 
@@ -55,7 +55,6 @@ EV signed kernel mode drivers are drivers that have been signed with an extended
 EV certificates cost more than regular code signing certificates, they require to be on an HSM (to ensure the private key is stored properly) and CAs issuing them only validate that the company of the person requesting them exists. Anyone can get EV certificate as long as they have a HSM and a company, which is not hard to come by, costs about ~100$ to set up in the US as a resident.
 
 Sometimes the issuing CA also needs you to send in your driver's license and a picture of you holding it, but things like extended background checks, criminal history check, nationality check, or [the proper checks explained in here](https://learn.microsoft.com/en-us/office365/servicedescriptions/office-365-platform-service-description/office-365-us-government/gcc-high-and-dod#background-screening) are not performed.
-
 
 <br>
 
@@ -321,6 +320,10 @@ Now the Allow all rules that exist in the first policy are neutralized. [Only ap
 
 <br>
 
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+
+<br>
+
 ## What About User-mode Binaries?
 
 So far, we've only been doing Kernel-mode administration. We can use User-mode WDAC policies as well.
@@ -340,6 +343,16 @@ So only the policy that has the least allow listings in common with all other po
 ### Supplemental policy
 
 Each of the deployed policies (except for the automatically deployed block rules by HVCI) support having supplemental policies. So, whenever you feel the need to allow additional files that are Kernel-mode drivers or User-mode binaries blocked by ISG, you can add a Supplemental policy for them.
+
+<br>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+
+<br>
+
+## About ELAM (Early Launch Anti-Malware)
+
+Anti-malware or antivirus vendors need to sign enforceable and binding legal agreements and develop an early launched anti-malware driver that Microsoft will sign. This driver includes a list of certificate hashes that enable that AV vendor to sign new versions without Microsoft’s involvement each time. When code integrity loads this ELAM driver, it permits any executables signed by the certificates in that list to run as anti-malware light.
 
 <br>
 

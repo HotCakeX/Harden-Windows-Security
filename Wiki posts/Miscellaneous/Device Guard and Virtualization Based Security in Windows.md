@@ -85,3 +85,9 @@ The only way to disable UEFI locked security measures is to have physical access
 </ol>
 
 <br>
+
+## Additional Resources
+
+* [Memory integrity and VBS enablement](https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/oem-hvci-enablement)
+
+<br>

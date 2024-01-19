@@ -354,6 +354,9 @@ Each of the deployed policies (except for the automatically deployed block rules
 
 Anti-malware or antivirus vendors need to sign enforceable and binding legal agreements and develop an early launched anti-malware driver that Microsoft will sign. This driver includes a list of certificate hashes that enable that AV vendor to sign new versions without Microsoft’s involvement each time. When code integrity loads this ELAM driver, it permits any executables signed by the certificates in that list to run as anti-malware light.
 
+* [Early Launch Anti-Malware Driver Sample](https://github.com/Microsoft/Windows-driver-samples/tree/main/security/elam)
+* [ELAM Driver Requirements](https://learn.microsoft.com/en-us/windows-hardware/drivers/install/elam-driver-requirements)
+
 <br>
 
 <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">

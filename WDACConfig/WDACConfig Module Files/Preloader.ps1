@@ -5,7 +5,7 @@ if (!$IsWindows) {
 # Specifies that the WDACConfig module requires Administrator privileges
 #Requires -RunAsAdministrator
 
-# Create tamper resistant global variables (if they don't already exist)
+# Create tamper resistant global variables (if they don't already exist) - They are automatically imported in the caller's environment
 try {
     if ((Test-Path -Path 'Variable:\MSFTRecommendedBlockRulesURL') -eq $false) { New-Variable -Name 'MSFTRecommendedBlockRulesURL' -Value 'https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/public/windows/security/application-security/application-control/windows-defender-application-control/design/applications-that-can-bypass-wdac.md' -Option 'Constant' -Scope 'Global' -Description 'User Mode block rules' -Force }
     if ((Test-Path -Path 'Variable:\MSFTRecommendedDriverBlockRulesURL') -eq $false) { New-Variable -Name 'MSFTRecommendedDriverBlockRulesURL' -Value 'https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/public/windows/security/application-security/application-control/windows-defender-application-control/design/microsoft-recommended-driver-block-rules.md' -Option 'Constant' -Scope 'Global' -Description 'Kernel Mode block rules' -Force }
@@ -15,23 +15,10 @@ try {
     if ((Test-Path -Path 'Variable:\OSBuild') -eq $false) { New-Variable -Name 'OSBuild' -Value ([System.Environment]::OSVersion.Version.Build) -Option 'Constant' -Scope 'Script' -Description 'Current OS build version' -Force }
     if ((Test-Path -Path 'Variable:\UBR') -eq $false) { New-Variable -Name 'UBR' -Value (Get-ItemPropertyValue -Path 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion' -Name 'UBR') -Option 'Constant' -Scope 'Script' -Description 'Update Build Revision (UBR) number' -Force }
     if ((Test-Path -Path 'Variable:\FullOSBuild') -eq $false) { New-Variable -Name 'FullOSBuild' -Value "$OSBuild.$UBR" -Option 'Constant' -Scope 'Script' -Description 'Create full OS build number as seen in Windows Settings' -Force }
+    if ((Test-Path -Path 'Variable:\ModuleRootPath') -eq $false) { New-Variable -Name 'ModuleRootPath' -Value ($PSScriptRoot) -Option 'Constant' -Scope 'Global' -Description 'Storing the value of $PSScriptRoot in a global constant variable to allow the internal functions to use it when navigating the module structure' -Force }
 }
 catch {
     Throw [System.InvalidOperationException] 'Could not set the required global variables.'
-}
-
-# A constant variable that is automatically imported in the caller's environment and used to detect the main module's root directory
-# Create it only if it's not already present, helps when user tries to import the same module version over and over again without closing the PowerShell session
-try {
-    Get-Variable -Name 'ModuleRootPath' -ErrorAction Stop | Out-Null
-}
-catch {
-    try {
-        New-Variable -Name 'ModuleRootPath' -Value ($PSScriptRoot) -Option 'Constant' -Scope 'Global' -Description 'Storing the value of $PSScriptRoot in a global constant variable to allow the internal functions to use it when navigating the module structure' -Force
-    }
-    catch {
-        Throw [System.InvalidOperationException] 'Could not set the ModuleRootPath required global variable.'
-    }
 }
 
 # Make sure the current OS build is equal or greater than the required build number
@@ -57,8 +44,8 @@ foreach ($File in (Get-ChildItem -Recurse -File -Path $ModuleRootPath -Include '
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDMg1DbL/rhhOcS
-# zQVMaeJj8/hpvVzv0R5WUphR3ksGI6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCC+kKF0TrvUydR3
+# RoeBV1rvokHfEf+EaUs3+W4GaAT1Q6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -105,16 +92,16 @@ foreach ($File in (Get-ChildItem -Recurse -File -Path $ModuleRootPath -Include '
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgUplmeRqAicEvN3LDWbzqAkrsJvqCxayFqgBVpbEfLcUwDQYJKoZIhvcNAQEB
-# BQAEggIAYoN0XRAlZ4Xl+7u1/gLwm9vYyn6tNHinAuwbAVwU3Bw8bUw43QjXuoHJ
-# 43+Glfq8+Q4pfZlN5t7rZtduVQJW3CnrSKSTtTXOIo+ZiqMbYeM1WaOBhClNma0g
-# 3tU8WqSZP7Jhi8u3WhXKCHagou6kTtnyakO9WFGTbt2dvRVbPBHgIwmAjq4hHP33
-# QZvxBAhzzzqug073kEhdULqHXkcbept10CO1HrGZvc4pirMDpdyg93fFGnIJTxcl
-# AqxMQRyUIf7wrJCnccQpPUqiYMRHpRCIHDjB2T+5hu0N6nPlNg5c+UBX8m8PMQiQ
-# 6uMNybnKOVKfHDG4YHS71MPOOEG13K73aO1tMe4p4NEHwK0cfA2Uuic4QSKU181y
-# +l2CQjR99UADY8LBq0Up+tgFZy/qXgPaf36kXlMZkNhr0N6esR/seBQxhgP0h2cG
-# 6mHef7X2K+/8Ox7NYd2synLg87JE0vsR+3DKO4p+ySK1dQYI3NCbwkP5piFMrslo
-# D81gaUxTqcz87Ud41gBnb8ghANoEf1gBXNwhRk+TeUhC/NC+yff+B/EsuFWha4nM
-# 76IthWnFuOWjZb6DpNd0tuKopt3Plt6NiwI+pxsDmsUD480Fpf3iQRoAwAHXsXbw
-# 4OWYJXSTqGYd/n5r03KmhKvcR7NeyC/gRuTPXkOe3I0J2QuqZRo=
+# IgQgmDpTjxwOYh1M6Y065UoecdVoRJvpEgntMRJmT/plNtYwDQYJKoZIhvcNAQEB
+# BQAEggIAU7291Emtgs+t3GrSJWprk+JNz1i4usoWfhjVoPRivTCoU9B6U0m0/Rmh
+# qHy+oQASDCG7/X/4ih14mWOGMTn2E7Y8YwX32Va23QQctgnMwiFl69LYqmihIhAx
+# 1lcYYkvMujOMOwNF0ixbwpiZ5SbwpcHHl1xpHJYGHDavB690XF46P+pBsAfVxoOP
+# cpTM7DTtvyiKFnwH5cbjkalQtARbAY5iwLSdEApsubPA8PPXbnxFHV1MVqrIuSSR
+# QoXBDCIL/79eu+BT10v0aElyG9JlLPKmuqq8RObd984Z5EWvoDq6Xmu1peBeYF+M
+# /TnL4eDYI1VMSgzIU6oHhCc+7qaK4ivScdxOPYOkVo/9aM1Q17G/FmffIuWEd3Io
+# AlcJu1AJA5sn2bx7jkWcEB2YJYbwIjBQ+YFmrJEeaBiW8rvgO/48zWotWrAFWG4p
+# iP77twapyCSgt5HpeoSyt3QtWkzbazvy6vESSpFpHOONieBMRitl+7R0pOZQC9M6
+# U/bBs1uzURb+T8ER1RQKrbK6ATc+amPPzomBwt0TKm3XPsd4lIUHhyrOKlWtLeDH
+# FEwZlWJpFRFGRwX6NeQpDx6Nl8FtH1EhVuhoMqSraOAhqQ4hbn3l440Dk9iRj1SK
+# Ui3JTnsQSqd6doTgxwxtteWeIYql6wRGh+chCyDfEishLVbOxN4=
 # SIG # End signature block

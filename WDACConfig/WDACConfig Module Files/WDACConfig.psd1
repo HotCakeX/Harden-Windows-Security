@@ -202,6 +202,7 @@ To get help and syntax on PowerShell console, type:
         'Resources\ArgumentCompleters.ps1'
         'Resources\WDAC Policies\DefaultWindows_Enforced_Kernel.xml',
         'Resources\WDAC Policies\DefaultWindows_Enforced_Kernel_NoFlights.xml',
+        'Resources\User Configurations\Schema.json',
         'Shared\Confirm-CertCN.psm1',
         'Shared\Get-AuditEventLogsProcessing.psm1',
         'Shared\Get-BlockRulesMeta.psm1',

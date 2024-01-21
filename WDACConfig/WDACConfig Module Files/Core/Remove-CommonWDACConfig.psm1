@@ -14,27 +14,30 @@ Function Remove-CommonWDACConfig {
         # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
+        # Assigning the path to the UserConfigurations.json file
+        [System.IO.FileInfo]$Path = "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json"
+
         # Create User configuration folder if it doesn't already exist
-        if (-NOT (Test-Path -Path "$UserAccountDirectoryPath\.WDACConfig\")) {
-            New-Item -ItemType Directory -Path "$UserAccountDirectoryPath\.WDACConfig\" -Force | Out-Null
+        if (-NOT (Test-Path -Path (Split-Path -Path $Path -Parent))) {
+            New-Item -ItemType Directory -Path (Split-Path -Path $Path -Parent) -Force | Out-Null
             Write-Verbose -Message 'The .WDACConfig folder in the current user folder has been created because it did not exist.'
         }
 
         # Create User configuration file if it doesn't already exist
-        if (-NOT (Test-Path -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json")) {
-            New-Item -ItemType File -Path "$UserAccountDirectoryPath\.WDACConfig\" -Name 'UserConfigurations.json' -Force | Out-Null
-            Write-Verbose -Message 'The UserConfigurations.json file in \.WDACConfig\ folder has been created because it did not exist.'
+        if (-NOT (Test-Path -Path $Path)) {
+            New-Item -ItemType File -Path (Split-Path -Path $Path -Parent) -Name (Split-Path -Path $Path -Leaf) -Force | Out-Null
+            Write-Verbose -Message 'The UserConfigurations.json file has been created because it did not exist.'
         }
 
         # Delete the entire User Configs if a more specific parameter wasn't used
         # This method is better than $PSBoundParameters since it also contains common parameters
         if (!$CertCN -And !$CertPath -And !$SignToolPath -And !$UnsignedPolicyPath -And !$SignedPolicyPath -And !$StrictKernelPolicyGUID -And !$StrictKernelNoFlightRootsPolicyGUID -And !$LastUpdateCheck) {
-            Remove-Item -Path "$UserAccountDirectoryPath\.WDACConfig\" -Recurse -Force
+            Remove-Item -Path $Path -Recurse -Force
             Write-Verbose -Message 'User Configurations for WDACConfig module have been deleted.'
 
             # set a boolean value that returns from the Process and End blocks as well
             [System.Boolean]$ReturnAndDone = $true
-
+            # Exit the begin block
             Return
         }
 
@@ -49,8 +52,8 @@ Function Remove-CommonWDACConfig {
             Set-Content -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json" -Value ''
         }
 
-        # An object to hold the User configurations
-        $UserConfigurationsObject = [PSCustomObject]@{
+        # A hashtable to hold the User configurations
+        [System.Collections.Hashtable]$UserConfigurationsObject = @{
             SignedPolicyPath                    = ''
             UnsignedPolicyPath                  = ''
             SignToolCustomPath                  = ''
@@ -62,7 +65,7 @@ Function Remove-CommonWDACConfig {
         }
     }
     process {
-
+        # Exit the process block
         if ($true -eq $ReturnAndDone) { return }
 
         if ($SignedPolicyPath) {
@@ -130,12 +133,28 @@ Function Remove-CommonWDACConfig {
         }
     }
     end {
-
+        # Exit the end block
         if ($true -eq $ReturnAndDone) { return }
 
-        # Update the User Configurations file
-        Write-Verbose -Message 'Saving the changes'
-        $UserConfigurationsObject | ConvertTo-Json | Set-Content -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json"
+        $UserConfigurationsJSON = $UserConfigurationsObject | ConvertTo-Json
+
+        try {
+            Write-Verbose -Message 'Validating the JSON against the schema'
+            [System.Boolean]$IsValid = Test-Json -Json $UserConfigurationsJSON -SchemaFile "$ModuleRootPath\Resources\User Configurations\Schema.json"
+        }
+        catch {
+            Write-Warning -Message "$_`nclearing it."
+            Set-Content -Path $Path -Value '' -Force
+        }
+
+        if ($IsValid) {
+            # Update the User Configurations file
+            Write-Verbose -Message 'Saving the changes'
+            $UserConfigurationsJSON | Set-Content -Path $Path -Force
+        }
+        else {
+            Throw 'The User Configurations file is not valid.'
+        }
     }
     <#
 .SYNOPSIS
@@ -180,8 +199,8 @@ Function Remove-CommonWDACConfig {
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDUXIFN1xFceXUU
-# qqIqj2EMWrByQtjg/BBD/HtYor8nlaCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBwnQ3yYWMpbARb
+# NpQTlcyW/3/sV8n4brBCREzm+wwO5qCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -228,16 +247,16 @@ Function Remove-CommonWDACConfig {
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgylwQco/g2hTi3QkAmWwifX9V6O/h65vusvxiZ2XEIKwwDQYJKoZIhvcNAQEB
-# BQAEggIAcDPMXUWowHy+MDkLLcOPl51H3cyqObTtta/fpfdRt2FTAEQDygjSusD8
-# D/Z3IKch1dmv1IbnRHHxPSFILsnuKbVbifk6pnfUAvXF5OZOM1+MlpHoDhJFrdkD
-# 84MGD4zzKLJFY2kXKj/qo+sj8zPwONK5+d44VTGKLVt8ySGGad/ikWlOSg6OJwIl
-# 342v8WmFOglxE3grkdzR7jIn6jTm5xMevKA+c8DdV8nPQiDrmdB9JY++Xp0udO7r
-# MIljnY64F0qPQsg/mhh8RnIYbQY9YER/5V3Rjzq/LfHmrqemdYR9sUrUO2ihVuCC
-# G55Hwu4ucJAnvRlZBQXO9zGUCzPCyIKP1JV05xPVWpqzltP6kYkLsvIWhO2UznPh
-# RsUSDyna8DeQ9T6YaxpDlsTWUYGSj4I1wrwFai0j93wAgPZ2imqFRtDqYb/+CIPO
-# yx7j3SkuMfkJmXsnqbSOIIeagtgv3IeVQoDKHGJCnTwSsszKuWA4Vj1GdLMTusat
-# sxWoFL1gHDtd9JDabDcwVQwyisdVbIWpdtq4TnYh+aK/Y6G3rsa5YCc2QitjF0cW
-# 1wbSP+w/efYPWzjPgsHumki7GM+zuU75Md8SSBy9sk5AxK+gW1q1ietUfVvqbpmg
-# FbTVmZIj9Gbny/UeGagoGmqxOoECreOuY0n7xJUBK65ByssGRrk=
+# IgQgEeoKBSE2p8Y0fmYtNTmD5YI8QU4I4klh9h3KDoRmBNIwDQYJKoZIhvcNAQEB
+# BQAEggIAM24PfG5z2FMk7JTbNl0g9PFaDDJBtd2JaZETVTww9ITuHeprHiVqA88t
+# wgKsIchLxzrg6xuiiJOPhSOrEiJ72M1e62+X565hL85fEwePLpVfQeqDAyuDHLvC
+# S1gzcQa+R3tK6U3IxRJSDF8cwQg+6Pxzz21LZcGw/YNXrV0h0KS+S+jn98/RQU3J
+# mkRCRW747jDjZZqs+ZAdBq5+FdhNk0IWN1EDYF/7ge6rnmT4OXetgsNZA0x09uhx
+# KEqjVqI6rA1TmjIwXoudYfd8jeXP7x7wPvVZxeJZQqm5yW3RHDy5TY914lU7vafN
+# +C7g9nP0yZgf2qJ9c7a1wSVo61zekSpVPJbR5g7TaxHoBcv8kDrxDnlP+bM7PHQ7
+# Mc554EIrdbGTx5AwPHzc/tcC01BPfgtGx0v2+NQr92j5DodptYEXdO/LsQn7+pQg
+# yBJEFNNTtRNwxPMQd7hiP7nZkoXsQR3QCAOz2m61K9JP/kodNd2FK9QRgYbRjqet
+# 84GtAjF9sFkDONkD/kXAeARVAWFPvRaYEP8SYDxp5ed5CQ/QiHcrWu46dOxfchHf
+# Z9Jmkmlgw0sfszsPwl6lCuhqK+lJXNsAG3jcadHgzFzwRiDCEe7/Wzrg+nIqF62m
+# ApHagvLwZHnYPfjIK3ISUDEQBLJM0DfbKE9+W/fk4gPnba0rWoE=
 # SIG # End signature block

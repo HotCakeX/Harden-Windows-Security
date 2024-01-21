@@ -101,25 +101,28 @@ Function Set-CommonWDACConfig {
         # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
-        # Create User configuration folder if it doesn't already exist
-        if (-NOT (Test-Path -Path "$UserAccountDirectoryPath\.WDACConfig\")) {
-            New-Item -ItemType Directory -Path "$UserAccountDirectoryPath\.WDACConfig\" -Force | Out-Null
-            Write-Verbose -Message 'The .WDACConfig folder in the current user folder has been created because it did not exist.'
-        }
-
-        # Create User configuration file if it doesn't already exist
-        if (-NOT (Test-Path -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json")) {
-            New-Item -ItemType File -Path "$UserAccountDirectoryPath\.WDACConfig\" -Name 'UserConfigurations.json' -Force | Out-Null
-            Write-Verbose -Message 'The UserConfigurations.json file in \.WDACConfig\ folder has been created because it did not exist.'
-        }
-
         if (!$CertCN -And !$CertPath -And !$SignToolPath -And !$UnsignedPolicyPath -And !$SignedPolicyPath -And !$StrictKernelPolicyGUID -And !$StrictKernelNoFlightRootsPolicyGUID -And !$LastUpdateCheck) {
             Throw [System.ArgumentException] 'No parameter was selected.'
         }
 
+        # Assigning the path to the UserConfigurations.json file
+        [System.IO.FileInfo]$Path = "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json"
+
+        # Create User configuration folder if it doesn't already exist
+        if (-NOT (Test-Path -Path (Split-Path -Path $Path -Parent))) {
+            New-Item -ItemType Directory -Path (Split-Path -Path $Path -Parent) -Force | Out-Null
+            Write-Verbose -Message 'The .WDACConfig folder in the current user folder has been created because it did not exist.'
+        }
+
+        # Create User configuration file if it doesn't already exist
+        if (-NOT (Test-Path -Path $Path)) {
+            New-Item -ItemType File -Path (Split-Path -Path $Path -Parent) -Name (Split-Path -Path $Path -Leaf) -Force | Out-Null
+            Write-Verbose -Message 'The UserConfigurations.json file has been created because it did not exist.'
+        }
+
         # Trying to read the current user configurations
         Write-Verbose -Message 'Trying to read the current user configurations'
-        [System.Object[]]$CurrentUserConfigurations = Get-Content -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json"
+        [System.Object[]]$CurrentUserConfigurations = Get-Content -Path $Path
 
         # If the file exists but is corrupted and has bad values, rewrite it
         try {
@@ -127,11 +130,11 @@ Function Set-CommonWDACConfig {
         }
         catch {
             Write-Verbose -Message 'The user configurations file exists but is corrupted and has bad values, rewriting it'
-            Set-Content -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json" -Value ''
+            Set-Content -Path $Path -Value ''
         }
 
-        # An object to hold the User configurations
-        $UserConfigurationsObject = [PSCustomObject]@{
+        # A hashtable to hold the User configurations
+        [System.Collections.Hashtable]$UserConfigurationsObject = @{
             SignedPolicyPath                    = ''
             UnsignedPolicyPath                  = ''
             SignToolCustomPath                  = ''
@@ -219,11 +222,29 @@ Function Set-CommonWDACConfig {
         }
     }
     end {
-        # Update the User Configurations file
-        Write-Verbose -Message 'Saving the changes'
-        $UserConfigurationsObject | ConvertTo-Json | Set-Content -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json"
 
-        Get-Content -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json" | ConvertFrom-Json | Format-List -Property *
+        $UserConfigurationsJSON = $UserConfigurationsObject | ConvertTo-Json
+
+        try {
+            Write-Verbose -Message 'Validating the JSON against the schema'
+            [System.Boolean]$IsValid = Test-Json -Json $UserConfigurationsJSON -SchemaFile "$ModuleRootPath\Resources\User Configurations\Schema.json"
+        }
+        catch {
+            Write-Warning -Message "$_`nclearing it."
+            Set-Content -Path $Path -Value '' -Force
+        }
+
+        if ($IsValid) {
+            # Update the User Configurations file
+            Write-Verbose -Message 'Saving the changes'
+            $UserConfigurationsJSON | Set-Content -Path $Path -Force
+
+            # Display the updated User Configurations
+            $UserConfigurationsObject
+        }
+        else {
+            Throw 'The User Configurations file is not valid.'
+        }
     }
     <#
 .SYNOPSIS
@@ -280,8 +301,8 @@ Register-ArgumentCompleter -CommandName 'Set-CommonWDACConfig' -ParameterName 'U
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDw9TYS/Hu6MPJP
-# he3QlRy8osjynqdtAN8BLpePx0Q5OKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCbaTPxut07ludE
+# hgrb6S0viAn6W5D1ZfiVKbk4EDmOKaCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -328,16 +349,16 @@ Register-ArgumentCompleter -CommandName 'Set-CommonWDACConfig' -ParameterName 'U
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgZzRHhPBnvd5AMtuJem31TZ4G+oQ6Tmj3Qw5seIqiCtAwDQYJKoZIhvcNAQEB
-# BQAEggIAg7bHth51OPRwsf/zlmiJOn4ikUNWmq2mislZ+GJUQ1kXn2usoLHjDA2Y
-# r/ouC4WqVvWUgs6aN7KWNaY7239ZMEgLTGDMpTkdF7TcI+VsdokbFhjCKtPA49cd
-# w1Uu+cSQvspCROWWiyoNqdk3sJTYaOOvkCP5/2fP9Fqz/Z6KFpUZWRatx1X7RT0o
-# kiHNW7Vef9PIK84HfF3/S7fYEt2v1/WqiDAxuTWgAByZQqz5iMrLb6Bxd9eXDKn3
-# cj7/a7OdpDSTn51EYDQWZdNCm7Z4AqxJl2OACc0YKmDKT+cxpF6z0fVDlrBeGbWc
-# ZC1nUHgypjLdAU2oETI8YPl/VMic3jozKV+9sF9A7+Z+CkQXpNxCLz7fgV87bTb1
-# ZKx//CMRXo/SaRmSYI9IoXV8hSK/Pjxc4gmZ8LeRFWkyPyRXJfi3V3YNWk7zb83f
-# dLMTbsq7narzX86DPQ5lFBqleCr4tO7xaxclhfAxJyAwCNCSRJmx50cJvoHE3Cgt
-# +sVLlegzr7SW7ZAb2R58GfwNG20eurmXKJQQ86Ef+VHcCV7fI96a9zYDV3x1RBuO
-# f/wdvb4HoeZOixM54OtsPWQrUkTMPFjoLWwcNq8aqkNPCKqHyNLC2D2C3UBZS4uV
-# XP2y5JRUeEJKfvD29whNXeLHUZ+k+2+9K+J4ahRwj3qVVy+uv/Y=
+# IgQg2M1oZxW8hdN+8+5K5mo9J5aaTDn6V3NZVFUm7KhICAUwDQYJKoZIhvcNAQEB
+# BQAEggIAJD+3rY25bsXsVcO6clUJiXMejCSQcVH/pZHc+4alDynKhOySVBfW40pI
+# iwVX5d2MWQW0HTD6hrL9stlLVOtZFP1fWg5lrBzF+5+Ate0zIKerY9e8kGmZq5KG
+# ZiqUS643LJWJxd6hWbAcE9M/rfBxHSke7gQ3iH12QjoMtUPFIqNubKJdndWBu/Y2
+# l0+aB+6n88d9ZDn903D6DZsmDQJSneLMiAlH37x8MXVDGQJs18GP6G9w0nP/VOjN
+# qBxQDPSOGZ1QPqzp5psbl7MiHjQCxPlub9+gZA50tO8NsXeD6zcVXtcNBCIfRcx4
+# /bMRDDbwrSjPuOj7fN3hH3R+f46BWmd6rNJSDCsPugVPQ6evrrPuB9GtyXyBa1/E
+# yB22/ztpmWkVG1fJ6fnfAelxNr4DD+VghX1icD7Eb1aQD0tc8Oakn3WB/ed5zTwz
+# PPbsKxqyCu5KWyJTGH8uhd+8Vx8VkCiMPsdY0CJ7Bya+CkasZHzml/VoIfq2qDoz
+# Vt/vVqG0k2iY4CNA7qUj/JIf4lwpTfpvbN4IX7Fvrv93RPcMVPtLxZtwlmLXGSj5
+# 8+/6H3xYXZfi58sBUUPEQP5dEZynBYPPpB3oLgH8AHq7ypf/TAyY1syEsT/5RuV6
+# aiBmcHz5VkelhHshzHnjTRVS++dJLp58P6oPgKAd8b9GCxhj67k=
 # SIG # End signature block

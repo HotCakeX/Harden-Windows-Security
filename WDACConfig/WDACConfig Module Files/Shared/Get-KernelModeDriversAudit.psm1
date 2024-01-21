@@ -1,9 +1,20 @@
 Function Get-KernelModeDriversAudit {
     <#
     .DESCRIPTION
-        This function will scan the Code Integrity event logs for kernel mode drivers that have been loaded and will return a folder containing symbolic links to the driver files.
-    .PARAMETER Date
-        The date from which to start the scan
+        This function will scan the Code Integrity event logs for kernel mode drivers that have been loaded since the audit mode policy has been deployed
+        and will return a folder containing symbolic links to the driver files.
+        It does this by:
+            1. Scanning the Code Integrity event logs for kernel mode drivers that have been loaded since the audit mode policy has been deployed
+            2. Converting the event to XML
+            3. Converting the XML to a PowerShell object
+            4. Replacing the global root file paths with the drive letters to create consumable paths
+            5. Removing duplicates based on SHA256 hash
+            6. Saving the file paths to a variable
+            7. Filtering based on files that exist with .sys extension
+            8. Removing duplicates based on file path
+            9. Creating a temporary folder to store the symbolic links to the driver files
+            10. Creating symbolic links to the driver files
+            11. Returning the folder containing the symbolic links to driver files
     .INPUTS
         None
     .OUTPUTS

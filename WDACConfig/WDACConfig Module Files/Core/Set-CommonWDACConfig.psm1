@@ -222,7 +222,7 @@ Function Set-CommonWDACConfig {
             Write-Verbose -Message 'No changes to the Last Update Check property was detected.'
             $UserConfigurationsObject.LastUpdateCheck = $CurrentUserConfigurations.LastUpdateCheck
         }
-        
+
         if ($StrictKernelModePolicyTimeOfDeployment) {
             Write-Verbose -Message 'Saving the supplied Strict Kernel-Mode Policy Time Of Deployment in user configurations.'
             $UserConfigurationsObject.StrictKernelModePolicyTimeOfDeployment = $StrictKernelModePolicyTimeOfDeployment
@@ -315,8 +315,8 @@ Register-ArgumentCompleter -CommandName 'Set-CommonWDACConfig' -ParameterName 'U
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBHxIiNU7o+q6b9
-# V1eNfRNbU7FA2dSYVsWh2gcoN1WDXaCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCA78jNLmU+iEoEy
+# h9B+CJiL2euTpXBgiYVe2FXzPc2KU6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -363,16 +363,16 @@ Register-ArgumentCompleter -CommandName 'Set-CommonWDACConfig' -ParameterName 'U
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQg5273QWtivzOloetAzDmgj/wLSqrBBkcK87O4cRxbJBUwDQYJKoZIhvcNAQEB
-# BQAEggIAY0drdjgbNpX/e8fcAsz7D1uYksXEqa/ERDzQAjZe0FY0kG1Aim/+BERi
-# UNvCGJENM4f2Vx91YtbBIGAWhUBURNnfYZXZjhaiR9awjOIg895/nPx9jMe9OBSb
-# vdZdF66TPLjPjrG+RHYHYC3bbzxGonwCXYrdgMyMbOAkCBrT4DRGYwpOwgfRxKqh
-# y3fr0YxYHhDIAOtvFkPytonNmSk99clycsyjUn3lKPqD3+AE6WMnwwgSMOjTx2Ao
-# DLew6hBMLMHakV3EKr3Fjcp7JA2uacRAoDhAfH6+YU5gLbI8WJ1InidN2xk3VnID
-# inxL07QdaZ9vpCJyzZJC58EYualO1RZz9QL7xuYuAC6UsHdZy0aLT/aqspPutQFN
-# dZSkUJDmocpKMP/RLclCctl4YG8z2SI4D2bw4kEnxjzS4JNmKlqtEm1hcg7KL16k
-# rTNbUs44pP2YYzaw4AvPdRvjqfvCIRXsco1BNidV08g6OigKnDp6RiCAvHe+a2RI
-# 5kEKeywqyfe9kFc5PzyISu0IHP2VQfmwb5Kip+D8Uqlsx4CPaSsqAG+5nrjyApgD
-# 479t2SQUutfkATez2EgT5d+tJ9DU1oI09xzd5/91Pe81WeyqOBrvP9B9O+D3uorZ
-# MXjMVmEdxyZe2P5FgCT73CQ1CBZJrDhaPvt7x8yWXTWEZnx6KK8=
+# IgQgA+wzKzO/1DYHMPgAx/OHjlgvoLv40MBS3HajFunu4HYwDQYJKoZIhvcNAQEB
+# BQAEggIAHdtSShDe9+TmPCeaCDoVGUVN4sbbDiU0SRPVIlu7AglCWBYKH5UQrrA0
+# q5ORdq73Fso4ANee84RyygJB10+qWlJxfi3c1PXpmRzZaiPMezuT+1pPnI5mtGE2
+# bXNrAVVy2hoWK9pvPKy2J0KHxwxRDER/QHUTm8931kXpvmKZcLaAcNPW2tZazyJz
+# Yn4FlPijRDLmM1BJ0poBTQl/IVH1mXgY3nKbuQZUqL0MIZiZLSX2p0RNY0YCqkeb
+# 8wKv4oLY7LMY16SeIDq9CtCqmH/aD6XvvtW+VyJCTwJWkGz+0lNFLqitiBXuonl6
+# dzS0mfg1TQkLvDJCRuLcTLlyQHAuu3Pmnb1QKRAgVG3ArnCIDZUvEiYC4x0W61Ne
+# W5BJK4vE9AIqyrEo0Uy9gH5Y+ieByNYa12Rv5i0gdIqJYeqw7vD9ogUATcb46hlf
+# E+TTfXdiDkpNYBmpKXKViOcLYhVGb6a0Ox/wpRqHhXN+hyeoIUGYPep1QwKcTjd5
+# lfwzAgoIHdeDjasjf1aqlbUjYvujr6IpIf7G+ZlQ6sC3f9BdguvAAYOWMlHfhvtN
+# fEz4aYYDUPCPXjAVeVvllNiN15WdBAxIHOuAF/YTRmZoa8nyLmRltFyTwcDcOM9y
+# gWMgsaZJUfAAh4yX684CL4kAiPJO49ktaS3kprOzzQ1BlYCnOeY=
 # SIG # End signature block

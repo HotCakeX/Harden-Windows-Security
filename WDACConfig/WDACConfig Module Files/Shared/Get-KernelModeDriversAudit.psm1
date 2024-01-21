@@ -5,14 +5,12 @@ Function Get-KernelModeDriversAudit {
     .PARAMETER Date
         The date from which to start the scan
     .INPUTS
-        System.DateTime
+        None
     .OUTPUTS
         System.IO.DirectoryInfo
     #>
     [CmdletBinding()]
-    param(
-        [Parameter(Mandatory = $true)][System.DateTime]$Date
-    )
+    param()
     begin {
         # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
@@ -26,11 +24,13 @@ Function Get-KernelModeDriversAudit {
 
         [System.IO.FileInfo[]]$KernelModeDriversPaths = @()
         [System.Object[]]$RawData = @()
+
+        [System.DateTime]$ScanStartDate = Get-CommonWDACConfig -StrictKernelModePolicyTimeOfDeployment
     }
 
     process {
         # Event Viewer Code Integrity logs scan for Audit logs based on the input date
-        foreach ($event in Get-WinEvent -FilterHashtable @{LogName = 'Microsoft-Windows-CodeIntegrity/Operational'; ID = 3076 } -ErrorAction SilentlyContinue | Where-Object -FilterScript { $_.TimeCreated -ge $Date } ) {
+        foreach ($event in Get-WinEvent -FilterHashtable @{LogName = 'Microsoft-Windows-CodeIntegrity/Operational'; ID = 3076 } -ErrorAction SilentlyContinue | Where-Object -FilterScript { $_.TimeCreated -ge $ScanStartDate } ) {
 
             # Convert the event to XML
             $Xml = [System.Xml.XmlDocument]$event.toxml()
@@ -92,8 +92,8 @@ Export-ModuleMember -Function 'Get-KernelModeDriversAudit'
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCCVwYUxeLU4oL2
-# u4Zs3B/OfgzrhUfAnEFUA+9IWd96kaCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCD/0FXBh+t97OM7
+# 4JGmyi5Xjz08jvSf+ZU1KQ6zRKHu36CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -140,16 +140,16 @@ Export-ModuleMember -Function 'Get-KernelModeDriversAudit'
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgcPlRHs4DGAT7Ypsxs7QxZt+D2uYsPGpBEHwPvNY9x6AwDQYJKoZIhvcNAQEB
-# BQAEggIAgoBr0TW0sqDUZrlMFQ+SKi5DvoRvwshfwhueYHXKiyWGT/jmhEugjWb+
-# AykKn9zUPxB/t5AVPE6nAtrb8hZvoWxxdcUfiEohjRILFTAHQIP/RvuwMDgtZtDi
-# wS16WL+rfWDDReWOuTvdDPnj45YWCs0yzx90wIg73/JTG/RqxBlc6ObK2Pkv2nzQ
-# dNA3DQwJbSBXn6BQ7pEXvj4bB0/iPIgcm7clvVjBZNiLu6aTIz7M3PpbZF28xwIb
-# SC54U+gf+HJTtbqjRkRJy/AaLZw9WAqS2Yqt04iGX9XWbzkQO9qsLTRc0geF/Aeg
-# CPRDer9nh0iaHmI1zcgkXPo7i6EGiyOAML9CspjeH+YoiA/Sfn2rUBRT+0mRIWsv
-# ehYOJHCEU2EfC4YpRY81338ndBwjzBkg4vAqUPXcopg/5mO2QNnNha9KMzxVVLOP
-# I58mNmJNX4qPRBj5jm175JZ9Cp6An247jo9eD1T/g6Kss21MwgwW8r8tmN16OFg0
-# l4dj/fmEMfyd0/zSZpgN5OVO+S1e+vpCAyy4+Q0tg8vlDdr9A/2Lm2mcO8doDHjG
-# n3PR6jhnsyvBPnGWVQsLymPvFYKrA9kms4RgkJGTbz1480qKcONg7QrlSf0fwQFT
-# 1YjAPN5Cbx6BFNRRe61kyACWUtyJc65kP1oDJZBPcA5SYZ0Omp8=
+# IgQgjmoZoj2rrsuS7Wph5ct7wINVQpO4pan/azq0IuB5tEQwDQYJKoZIhvcNAQEB
+# BQAEggIAiOJId3cYQnZ58sNiiSLXtHHYy7xNzfLkZBl93p9djIJRwcUDw4ox21dN
+# OI+eIEVYUNUruTdNb4NDLnZWVWvmOjTCfGjGOwOtqFoJbaHPQLotIXTvyxG/yen+
+# r/MklNsNBXmr8ecn3q41RzmdHMZneiDAGB3PdIua9SvvZvAT095FORyITBYWis9t
+# Eu5u9xmeccmZYAPCWq+9w7NnRXclFntyq5U4HwfuS4XTwIml+iP6ZRAzVKOjP8Ny
+# tekdJtPd1duP51buEKS4Bq9/EvDMOOYyYY/vPUqOr2eHN4egOFOYmUDWQ/ezo7yT
+# h2tRDD9+xX71b2u6dLllT0pxrIVkn6Lbbw+mdB1PR7iXrg+WqnvK1MYXvjAdSxX9
+# sEGyRbDpAoliVdslUDJsQUyj8eIFQeKbgrztOruiMBJk47qGZ4UcISQ2QKwES7vL
+# /61/3yw1N7UcEFFSsG5diD7DvGcV65mlio56Q9jXrYm2L5IkqnY/8qlP1N4WDJJk
+# AV0UCZncuMIGvv5am6VuLN73Bcv1zOTBleh/7zEosNkcyimxN1xpl9eFakOEtnE2
+# xNADstsNev/ONrgI4JNHkCkHbwubFmWvecmxCKAqzjaVZKaxNKqQO81y1FyywvuF
+# iHccsKYcpih/ysfasQTQyRfN188I2p2rSlHEDtCQY6O64ke1B7I=
 # SIG # End signature block

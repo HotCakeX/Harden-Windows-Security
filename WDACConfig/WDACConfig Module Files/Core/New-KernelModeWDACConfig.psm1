@@ -31,6 +31,9 @@ Function New-KernelModeWDACConfig {
         # Detecting if Verbose switch is used
         $PSBoundParameters.Verbose.IsPresent ? ([System.Boolean]$Verbose = $true) : ([System.Boolean]$Verbose = $false) | Out-Null
 
+        # Detecting if Debug switch is used, will do debugging actions based on that
+        $PSBoundParameters.Debug.IsPresent ? ([System.Boolean]$Debug = $true) : ([System.Boolean]$Debug = $false) | Out-Null
+
         # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
@@ -39,9 +42,7 @@ Function New-KernelModeWDACConfig {
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Update-self.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Write-ColorfulText.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Move-UserModeToKernelMode.psm1" -Force
-
-        # Detecting if Debug switch is used, will do debugging actions based on that
-        $PSBoundParameters.Debug.IsPresent ? ([System.Boolean]$Debug = $true) : ([System.Boolean]$Debug = $false) | Out-Null
+        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Get-KernelModeDriversAudit.psm1" -Force
 
         # if -SkipVersionCheck wasn't passed, run the updater
         if (-NOT $SkipVersionCheck) { Update-self -InvocationStatement $MyInvocation.Statement }
@@ -198,13 +199,12 @@ Function New-KernelModeWDACConfig {
                     Write-Verbose -Message 'Setting the GUID of the Audit mode policy in the User Configuration file'
                     Set-CommonWDACConfig -StrictKernelPolicyGUID $PolicyID | Out-Null
 
+                    Write-Verbose -Message 'Setting the time of deployment for the policy in the User Configuration file'
+                    Set-CommonWDACConfig -StrictKernelModePolicyTimeOfDeployment (Get-Date) | Out-Null
+
                     Write-Verbose -Message 'Deploying the Strict Kernel mode policy'
                     &'C:\Windows\System32\CiTool.exe' --update-policy "$PolicyID.cip" -json | Out-Null
                     Write-ColorfulText -Color HotPink -InputText 'Strict Kernel mode policy has been deployed in Audit mode, please restart your system.'
-
-                    Write-Verbose -Message 'Clearing the Code Integrity operational event logs before system restart so that after reboot it will only have the correct and new logs that belong to the kernel mode drivers'
-                    &'C:\Windows\System32\wevtutil.exe' cl 'Microsoft-Windows-CodeIntegrity/Operational'
-                    &'C:\Windows\System32\wevtutil.exe' cl 'Microsoft-Windows-AppLocker/MSI and Script'
 
                     if (!$Debug) {
                         Write-Verbose -Message 'Removing the DefaultWindows_Enforced_Kernel.xml and its CIP file after deployment since -Debug parameter was not used.'
@@ -240,13 +240,16 @@ Function New-KernelModeWDACConfig {
                 $CurrentStep++
                 Write-Progress -Id 26 -Activity 'Scanning the Event logs' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
+                # Get the kernel mode drivers directory path containing symlinks
+                [System.IO.DirectoryInfo]$KernelModeDriversDirectory = Get-KernelModeDriversAudit
+
                 powershell.exe -Command {
-                    Write-Verbose -Message 'Scanning the Event viewer logs for drivers'
-                    $DriverFilesObj = Get-SystemDriver -Audit
+                    Write-Verbose -Message 'Scanning the kernel-mode drivers detected in Event viewer logs'
+                    $DriverFilesObj = Get-SystemDriver -ScanPath $args[0]
 
                     Write-Verbose -Message 'Creating a policy xml file from the driver files'
                     New-CIPolicy -MultiplePolicyFormat -Level FilePublisher -Fallback None -FilePath '.\DriverFilesScanPolicy.xml' -DriverFiles $DriverFilesObj
-                }
+                } -args $KernelModeDriversDirectory
 
                 $CurrentStep++
                 Write-Progress -Id 26 -Activity 'Configuring the final policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
@@ -299,6 +302,9 @@ Function New-KernelModeWDACConfig {
 
                     Write-Verbose -Message 'Removing the GUID of the StrictKernelPolicy from user configuration'
                     Remove-CommonWDACConfig -StrictKernelPolicyGUID | Out-Null
+
+                    Write-Verbose -Message 'Removing the time of deployment of the StrictKernelPolicy from user configuration'
+                    Remove-CommonWDACConfig -StrictKernelModePolicyTimeOfDeployment | Out-Null
                 }
                 else {
                     # Remove the Audit mode policy from the system
@@ -309,8 +315,9 @@ Function New-KernelModeWDACConfig {
                     Write-ColorfulText -Color Pink -InputText 'Strict Kernel mode Enforced policy has been created in the current working directory.'
                 }
                 if (!$Debug) {
-                    Write-Verbose -Message 'Removing the DriverFilesScanPolicy.xml and the CIP file because -Debug parameter was not used'
+                    Write-Verbose -Message 'Removing the DriverFilesScanPolicy.xml, CIP file and KernelModeDriversDirectory in Temp folder because -Debug parameter was not used'
                     Remove-Item -Path ".\$PolicyID.cip", '.\DriverFilesScanPolicy.xml' -Force -ErrorAction SilentlyContinue
+                    Remove-Item -Path $KernelModeDriversDirectory -Recurse -Force
                 }
                 Write-Progress -Id 26 -Activity 'Complete.' -Completed
             }
@@ -503,8 +510,8 @@ Function New-KernelModeWDACConfig {
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBa4yo5ifQ57ro7
-# HjoaZcWuNoySXj1RawJ7KtVwM2tAbKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCrzXnnA29zD1E2
+# sXklFLsoPYM6Kym7BCBtyYHOEuOO8KCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -551,16 +558,16 @@ Function New-KernelModeWDACConfig {
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQg5YFrxDs4epjrcDsnQj5yWYjm3/If9xC3pvRf/Q905yUwDQYJKoZIhvcNAQEB
-# BQAEggIAByDHvBGbw2xEmJZLcQQ9evV6bjpuxa8c+SEEjPK6JSccR6P5/SHVTRSd
-# ZwGVphiT/apxKzqX4lV6UbVjT1T57eD/N7jwFkpGCFLB/yd8tjURSrEA3xVQhl3i
-# 4UYwmzkUe8TWAouChnT+/1hJIYFcAkq/uVFAX1PWfWXOwXZ4UQB36cpr/x0jvPk5
-# aPWfN0iPxJwy9seykLgDaBiQel40D/o6T0Umy7vpkbYM8b1Cg79jSFEYkB7DUPlT
-# sYDEmy20zxsdrIED2IZdJYj5yuFJlNiP5M+TS2YFFZVb9pR/4SNP/c0X2Px0BB1G
-# RbgmhNKRPf5EPerEHx30dEv7BlqQzT6oBglN9sdqcM13gJVeVNUMhefzTZPoZzwW
-# xPhBfvGSLlnAowIO/pti30iinDt/8BhdmxeB6UXVGJnjrdsW3xlsJGCZhgynp/6W
-# gul8FODe3kxTtkbPRjjwkgR0vAM6HryLPM5duzFWlOMTGnUxoW56oKP7TugGgzLO
-# ZcopziQSIAJyrsXIyhCE1rFIfs84JhvekBdLHOFSlwTqVV0SM5axHpDdXFAed2je
-# P4Y5SyKkdU+YY+MuaIHPyLXn8nxRw94G5Julm11cMiDJXdv+4nRtiwS/+17SSjy8
-# iXybEBNZk5YmS3+8KErJZoNiDbqxeYJcDsymlko7GJ85+zSAOus=
+# IgQguMbH9iotOtTas2k8+eDSlzmJ5RkuKjtGb8NlYxhrlB0wDQYJKoZIhvcNAQEB
+# BQAEggIAjKQmzqREpFV6v/HimHrN3EYxsRm1BRL37kQc8S6KaintVGup8rQptP25
+# USIWZ/aV174RHpTeDe9AmdEyifx4mHxfG/738wpykm8cJa5SbrET1i7cuGbjDArg
+# oaSZ5qpaNcURtPm1lUCodZPxw0EgbegUfZa4JQ4b2a/gr54h/bAVpaSvdNEu9M0J
+# SwwSWmm7oyM8HssQt5CLZduXOqZdS2cSKXxMRAC1J5jaPss9CpBtmbrVqv6xsJuA
+# txUc4S8IFxhAS7Q9K1R/rt/KFhhaQtk1Yez0t4DFNTI4TWcwK5ypGT76vjllcAGw
+# 8Isyb1lKlZdL3L4NYTPo0gOO8zkjDvzWnbKA3w5zTNXqXNGZcZYWanf0L4HCSd5L
+# mS8z+TOo+TkgXez9PpEy+uC64q6C+/lrksPAL1Qr5Yj+22zhkPhj2WqnVpvc6Y6E
+# INUSxlEwRTSPea+fD/ZHEb7/dOFJ1GYrFCKwcywHPAC25iIxqsJtLFfluW87mfHu
+# Sj4KdfEf3Yze8Npo42Y5tYqdlMLuQ2gSPf4qR1gMaBtvOHrs+jUT46sDxcGLNuD5
+# gj9D1NHfHidXmHGKTYhAf82AevxoYCXWWm5aTXzSdWaY9CFC7krryljMCwehdF8V
+# MHJ+/hYfTPKF4KCCgNRoyI6zHtGdTYeI90bwNyfhlNV59Iag/tI=
 # SIG # End signature block

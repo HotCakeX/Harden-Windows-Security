@@ -95,13 +95,14 @@ Function Set-CommonWDACConfig {
 
         [parameter(Mandatory = $false, DontShow = $true)][System.Guid]$StrictKernelPolicyGUID,
         [parameter(Mandatory = $false, DontShow = $true)][System.Guid]$StrictKernelNoFlightRootsPolicyGUID,
-        [parameter(Mandatory = $false, DontShow = $true)][System.DateTime]$LastUpdateCheck
+        [parameter(Mandatory = $false, DontShow = $true)][System.DateTime]$LastUpdateCheck,
+        [parameter(Mandatory = $false)][System.DateTime]$StrictKernelModePolicyTimeOfDeployment
     )
     begin {
         # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
-        if (!$CertCN -And !$CertPath -And !$SignToolPath -And !$UnsignedPolicyPath -And !$SignedPolicyPath -And !$StrictKernelPolicyGUID -And !$StrictKernelNoFlightRootsPolicyGUID -And !$LastUpdateCheck) {
+        if (!$CertCN -And !$CertPath -And !$SignToolPath -And !$UnsignedPolicyPath -And !$SignedPolicyPath -And !$StrictKernelPolicyGUID -And !$StrictKernelNoFlightRootsPolicyGUID -And !$LastUpdateCheck -And !$StrictKernelModePolicyTimeOfDeployment) {
             Throw [System.ArgumentException] 'No parameter was selected.'
         }
 
@@ -135,14 +136,15 @@ Function Set-CommonWDACConfig {
 
         # A hashtable to hold the User configurations
         [System.Collections.Hashtable]$UserConfigurationsObject = @{
-            SignedPolicyPath                    = ''
-            UnsignedPolicyPath                  = ''
-            SignToolCustomPath                  = ''
-            CertificateCommonName               = ''
-            CertificatePath                     = ''
-            StrictKernelPolicyGUID              = ''
-            StrictKernelNoFlightRootsPolicyGUID = ''
-            LastUpdateCheck                     = ''
+            SignedPolicyPath                       = ''
+            UnsignedPolicyPath                     = ''
+            SignToolCustomPath                     = ''
+            CertificateCommonName                  = ''
+            CertificatePath                        = ''
+            StrictKernelPolicyGUID                 = ''
+            StrictKernelNoFlightRootsPolicyGUID    = ''
+            LastUpdateCheck                        = ''
+            StrictKernelModePolicyTimeOfDeployment = ''
         }
     }
     process {
@@ -220,6 +222,15 @@ Function Set-CommonWDACConfig {
             Write-Verbose -Message 'No changes to the Last Update Check property was detected.'
             $UserConfigurationsObject.LastUpdateCheck = $CurrentUserConfigurations.LastUpdateCheck
         }
+        
+        if ($StrictKernelModePolicyTimeOfDeployment) {
+            Write-Verbose -Message 'Saving the supplied Strict Kernel-Mode Policy Time Of Deployment in user configurations.'
+            $UserConfigurationsObject.StrictKernelModePolicyTimeOfDeployment = $StrictKernelModePolicyTimeOfDeployment
+        }
+        else {
+            Write-Verbose -Message 'No changes to the Strict Kernel-Mode Policy Time Of Deployment property was detected.'
+            $UserConfigurationsObject.StrictKernelModePolicyTimeOfDeployment = $CurrentUserConfigurations.StrictKernelModePolicyTimeOfDeployment
+        }
     }
     end {
 
@@ -274,6 +285,9 @@ Function Set-CommonWDACConfig {
 .PARAMETER LastUpdateCheck
     Last time the Update policy was checked for updates
     Used internally by the module
+.PARAMETER StrictKernelModePolicyTimeOfDeployment
+    Time of deployment of the Strict Kernel-Mode policy
+    Used internally by the module
 .INPUTS
     System.IO.FileInfo
     System.DateTime
@@ -301,8 +315,8 @@ Register-ArgumentCompleter -CommandName 'Set-CommonWDACConfig' -ParameterName 'U
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDvydZ1B4hmnI1M
-# jXwB27oRi3S7L87lHsWYKSW5sRIc+qCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBHxIiNU7o+q6b9
+# V1eNfRNbU7FA2dSYVsWh2gcoN1WDXaCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -349,16 +363,16 @@ Register-ArgumentCompleter -CommandName 'Set-CommonWDACConfig' -ParameterName 'U
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgnYxLESlel8gN+L6YTq9gHWVrRHYNCYo6cYTiRY0iqGwwDQYJKoZIhvcNAQEB
-# BQAEggIAoORtTaM23NLSG6UGI6D6A6DEQnm4YDU0sXS54HYeHrqG0/00c+5YeGXz
-# K3uSehoI3nBIToV2PbRjoXC246D7epOpLzNDFxxIHyDgvIq0fcABiRQURMD9yKyy
-# 8WTqcTjORVyDAy3SmKnByaOvXWx9y09fxpU5DY89YgfqBJc/yJ9Z7AsTYM8wx9Oq
-# HiE1Cx1KdtZY7txLf1xnKp90xpKO7EwTdwM/OKlp22nVN6zmTVM1HWNcfUJ5Z/rQ
-# ZVEkJr1U/88G/vck9qetoG5t95u2U1NrUXgMlFM+O4lLTj835NEzGq/Dbtq7Gf4+
-# TMQnBcTMB8yjXnNslI+r33peEES/mERc4lWNcIvFvijUMCUExSSAHZcstE89Abj3
-# hVVFYZVTvUGEXHvlqr11b7snaOYjIaXlcLCclSn0766QC8nPMQzgpLTqvk2E394E
-# wzwfz+QR1ZC3bFH+Iu6NLmc/IpoTi2Sbnt2mkaN2dCLSxfZ0wtfASRRHur2yJqgT
-# PYN198CFL2lBh0gvpdfXf83CGDYSCXHfhEvEtPWgwzFViU74ZR9xw8/7Q7x25A3T
-# 79C01LFNvywN5fn90SsoDmDGoLA4fiOLC1puMeokZojxoFyP5vKJHIGY4WN0mrdW
-# Xm8YR1i4SiOoQH/ORqHJnvysC9AX9WmvbFnX7uQtA5iVSTJBHrY=
+# IgQg5273QWtivzOloetAzDmgj/wLSqrBBkcK87O4cRxbJBUwDQYJKoZIhvcNAQEB
+# BQAEggIAY0drdjgbNpX/e8fcAsz7D1uYksXEqa/ERDzQAjZe0FY0kG1Aim/+BERi
+# UNvCGJENM4f2Vx91YtbBIGAWhUBURNnfYZXZjhaiR9awjOIg895/nPx9jMe9OBSb
+# vdZdF66TPLjPjrG+RHYHYC3bbzxGonwCXYrdgMyMbOAkCBrT4DRGYwpOwgfRxKqh
+# y3fr0YxYHhDIAOtvFkPytonNmSk99clycsyjUn3lKPqD3+AE6WMnwwgSMOjTx2Ao
+# DLew6hBMLMHakV3EKr3Fjcp7JA2uacRAoDhAfH6+YU5gLbI8WJ1InidN2xk3VnID
+# inxL07QdaZ9vpCJyzZJC58EYualO1RZz9QL7xuYuAC6UsHdZy0aLT/aqspPutQFN
+# dZSkUJDmocpKMP/RLclCctl4YG8z2SI4D2bw4kEnxjzS4JNmKlqtEm1hcg7KL16k
+# rTNbUs44pP2YYzaw4AvPdRvjqfvCIRXsco1BNidV08g6OigKnDp6RiCAvHe+a2RI
+# 5kEKeywqyfe9kFc5PzyISu0IHP2VQfmwb5Kip+D8Uqlsx4CPaSsqAG+5nrjyApgD
+# 479t2SQUutfkATez2EgT5d+tJ9DU1oI09xzd5/91Pe81WeyqOBrvP9B9O+D3uorZ
+# MXjMVmEdxyZe2P5FgCT73CQ1CBZJrDhaPvt7x8yWXTWEZnx6KK8=
 # SIG # End signature block

@@ -4,8 +4,8 @@
     "type": "object",
     "title": "WDACConfig User Configurations",
     "description": "WDACConfig User Configurations",
-    "maxProperties": 8,
-    "minProperties": 8,
+    "maxProperties": 9,
+    "minProperties": 9,
     "required": [
         "SignedPolicyPath",
         "UnsignedPolicyPath",
@@ -14,7 +14,8 @@
         "CertificatePath",
         "StrictKernelPolicyGUID",
         "StrictKernelNoFlightRootsPolicyGUID",
-        "LastUpdateCheck"
+        "LastUpdateCheck",
+        "StrictKernelModePolicyTimeOfDeployment"
     ],
     "properties": {
         "SignedPolicyPath": {
@@ -103,6 +104,17 @@
             "title": "The LastUpdateCheck Schema",
             "examples": [
                 "2024-01-15T09:11:11.6918283+02:00"
+            ]
+        },
+        "StrictKernelModePolicyTimeOfDeployment": {
+            "type": [
+                "string",
+                "null"
+            ],
+            "default": "",
+            "title": "The StrictKernelModePolicyTimeOfDeployment Schema",
+            "examples": [
+                "2024-05-15T09:11:11.6918283+02:00"
             ]
         }
     }

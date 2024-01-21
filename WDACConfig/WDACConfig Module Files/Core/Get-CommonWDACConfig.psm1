@@ -9,7 +9,8 @@ Function Get-CommonWDACConfig {
         [parameter(Mandatory = $false, DontShow = $true)][System.Management.Automation.SwitchParameter]$StrictKernelPolicyGUID,
         [parameter(Mandatory = $false, DontShow = $true)][System.Management.Automation.SwitchParameter]$StrictKernelNoFlightRootsPolicyGUID,
         [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$Open,
-        [parameter(Mandatory = $false, DontShow = $true)][System.Management.Automation.SwitchParameter]$LastUpdateCheck
+        [parameter(Mandatory = $false, DontShow = $true)][System.Management.Automation.SwitchParameter]$LastUpdateCheck,
+        [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$StrictKernelModePolicyTimeOfDeployment
     )
     begin {
         # Importing the $PSDefaultParameterValues to the current session, prior to everything else
@@ -85,6 +86,7 @@ Function Get-CommonWDACConfig {
             $StrictKernelNoFlightRootsPolicyGUID.IsPresent { return ($CurrentUserConfigurations.StrictKernelNoFlightRootsPolicyGUID ?? $null) }
             $CertPath.IsPresent { return ($CurrentUserConfigurations.CertificatePath ?? $null) }
             $LastUpdateCheck.IsPresent { return ($CurrentUserConfigurations.LastUpdateCheck ?? $null) }
+            $StrictKernelModePolicyTimeOfDeployment.IsPresent { return ($CurrentUserConfigurations.StrictKernelModePolicyTimeOfDeployment ?? $null) }
             Default {
                 # If no parameter is present
                 Return $CurrentUserConfigurations
@@ -120,6 +122,8 @@ Function Get-CommonWDACConfig {
     Shows the GUID of the Strict Kernel no Flights root mode policy
 .PARAMETER LastUpdateCheck
     Shows the date of the last update check
+.PARAMETER StrictKernelModePolicyTimeOfDeployment
+    Shows the date of the last Strict Kernel mode policy deployment
 .PARAMETER Verbose
     Shows verbose messages
 .INPUTS
@@ -135,8 +139,8 @@ Function Get-CommonWDACConfig {
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCB8scDw743FvNRg
-# SVRHp4ncdlz+d6ZSFYQPG4yW4UyabaCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCC8P0XmKyElTfS/
+# K9nWI1KbxOzFTMCLdLhBmXgi1FoGYaCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -183,16 +187,16 @@ Function Get-CommonWDACConfig {
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgcci4IleKz9D3ELexV2ZgwFb5q0tPXwCuFH1vh+hl5tQwDQYJKoZIhvcNAQEB
-# BQAEggIAmMbSUG2ytAHbCHe9uIBR5mky5S1ZdG75MwMxfoO3Evs0II6Jpr+1nn3h
-# p7MWUtvhsVjcipESslErq+KEpBiiPD6JlrCMXspekD7j8Rf4RbGaEdQNu+B8KaN+
-# WPu1rwUJKMIKAkOffk6viq9J4putvXPJz6xv1q+Xn+B9mnq6bLbgQ9oinUexsC4j
-# 6bhb3ClU6I1YYD1mRzmAvr8X5NGjFYRwCaAzsG5af3ug8+YVIFUI4Doey+pkYGFK
-# HKMTpwh3sKgyB2b+cNKre8IVacP3IaD1DTfx9i1XuvW+uCtIdULAy2Ms3rV0Lj6y
-# fIWfNRhLON7+ivwyFZcnQyFY8REJP53CU+o3DkZvS/tntkZSzkm6oLzNiO6xO3M9
-# +64Z10aepoDsD7bKz++KQcmD6RCvf+YizZRRL3TQoaVwi8iZorCwBbkylgh21zMb
-# X13T1n0L4gfhr4VV2gC5FzVcG93PXKBK5B05rs7s+u9ancHBW8ZFTR9u2SSLBGO5
-# viSOz/wPQzV5YfWeZFyp/YctJeRPECejwDEArJJpYn3+8wQCnl0mn9Sde5f7mkdA
-# JIe056KGigUSad0zU2d+enHvqwgBXU4XPJUe8Bzp54Wg9D0teaJFPkBZvna1FU+U
-# M7kF2YNtSdlO4kDIRHe3/Jg+1j6nwJ1vDRJ0lJh4EwSAzi5288A=
+# IgQgLSHCTTvyins1zX+bfmyntMUfG2IvRLoBpgYiQvVrSMIwDQYJKoZIhvcNAQEB
+# BQAEggIAmQyNu1SIApHAzFADfwWf0H+mRzn1aVwLHOENIErTigU6NbhF+yIrb5BI
+# 0Q6XOzgrwz5c/0QUbrdZR4/H/empNzziS8dCpbXnRNBfvfDeoil2t7ic/+O00eQY
+# cl3vEVf5+UQcchQUBz5XaSA5FhLrT0SRmbh4huNQisbc55vZAu0hB8+7cAU26+nZ
+# KlTsIlGV+EXTWQtQ3/RbXnoGTRUyPBygdolIVv2HZS35RbAqgyIy43Zhltmn2gAl
+# zBuaNF86jMnBGAKFXkugHa2UtgVjcnuWjZinhvShzE8tfcjVK8+ODxkUgPzDVhdy
+# v/AOZKHe6Mf26wxpKPgbxgz4UjYZpLf65mx2bUIm+wFUwHvtjALJsGndlgO2ar8O
+# +RtsSBUxmnsdsvHeVClQ5+TD5IDiUgl3n4Y+Aq4VY2ooXAZV1jEtZlaYKlAJ3X7H
+# YTqxX/apowB0Blfi5wcGZui16lCUQXFE67+YZYXy2IVHAIgAYzNXCq+VlVoVJ0TE
+# KcRpTmnqTX7g0M0Y92kvq/rD3l3Rk12psemASF+5pfvlwgIfvG1aLvP01/IUVCsR
+# tPkU8L181K6/ZCGJHGhn2+BRR8aXmg1GgtJKlyNLkjJMdKnAw+HihIpG37dYq0eT
+# m+GyVura7bXCVwAF0aEAGkkBfiu14Oc4Tez0IdkqQTOgkOo8la8=
 # SIG # End signature block

@@ -8,7 +8,8 @@ Function Remove-CommonWDACConfig {
         [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SignedPolicyPath,
         [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$StrictKernelPolicyGUID,
         [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$StrictKernelNoFlightRootsPolicyGUID,
-        [parameter(Mandatory = $false, DontShow = $true)][System.Management.Automation.SwitchParameter]$LastUpdateCheck
+        [parameter(Mandatory = $false, DontShow = $true)][System.Management.Automation.SwitchParameter]$LastUpdateCheck,
+        [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$StrictKernelModePolicyTimeOfDeployment
     )
     begin {
         # Importing the $PSDefaultParameterValues to the current session, prior to everything else
@@ -31,7 +32,7 @@ Function Remove-CommonWDACConfig {
 
         # Delete the entire User Configs if a more specific parameter wasn't used
         # This method is better than $PSBoundParameters since it also contains common parameters
-        if (!$CertCN -And !$CertPath -And !$SignToolPath -And !$UnsignedPolicyPath -And !$SignedPolicyPath -And !$StrictKernelPolicyGUID -And !$StrictKernelNoFlightRootsPolicyGUID -And !$LastUpdateCheck) {
+        if (!$CertCN -And !$CertPath -And !$SignToolPath -And !$UnsignedPolicyPath -And !$SignedPolicyPath -And !$StrictKernelPolicyGUID -And !$StrictKernelNoFlightRootsPolicyGUID -And !$LastUpdateCheck -And !$StrictKernelModePolicyTimeOfDeployment) {
             Remove-Item -Path $Path -Recurse -Force
             Write-Verbose -Message 'User Configurations for WDACConfig module have been deleted.'
 
@@ -54,14 +55,15 @@ Function Remove-CommonWDACConfig {
 
         # A hashtable to hold the User configurations
         [System.Collections.Hashtable]$UserConfigurationsObject = @{
-            SignedPolicyPath                    = ''
-            UnsignedPolicyPath                  = ''
-            SignToolCustomPath                  = ''
-            CertificateCommonName               = ''
-            CertificatePath                     = ''
-            StrictKernelPolicyGUID              = ''
-            StrictKernelNoFlightRootsPolicyGUID = ''
-            LastUpdateCheck                     = ''
+            SignedPolicyPath                       = ''
+            UnsignedPolicyPath                     = ''
+            SignToolCustomPath                     = ''
+            CertificateCommonName                  = ''
+            CertificatePath                        = ''
+            StrictKernelPolicyGUID                 = ''
+            StrictKernelNoFlightRootsPolicyGUID    = ''
+            LastUpdateCheck                        = ''
+            StrictKernelModePolicyTimeOfDeployment = ''
         }
     }
     process {
@@ -131,6 +133,14 @@ Function Remove-CommonWDACConfig {
         else {
             $UserConfigurationsObject.LastUpdateCheck = $CurrentUserConfigurations.LastUpdateCheck
         }
+
+        if ($StrictKernelModePolicyTimeOfDeployment) {
+            Write-Verbose -Message 'Removing the Strict Kernel-Mode Policy Time Of Deployment'
+            $UserConfigurationsObject.StrictKernelModePolicyTimeOfDeployment = ''
+        }
+        else {
+            $UserConfigurationsObject.StrictKernelModePolicyTimeOfDeployment = $CurrentUserConfigurations.StrictKernelModePolicyTimeOfDeployment
+        }
     }
     end {
         # Exit the end block
@@ -183,6 +193,8 @@ Function Remove-CommonWDACConfig {
     Removes the StrictKernelNoFlightRootsPolicyGUID from User Configs
 .PARAMETER LastUpdateCheck
     Using DontShow for this parameter which prevents common parameters from being displayed too
+.PARAMETER StrictKernelModePolicyTimeOfDeployment
+    Removes the StrictKernelModePolicyTimeOfDeployment from User Configs
 .INPUTS
     System.Management.Automation.SwitchParameter
 .OUTPUTS
@@ -199,8 +211,8 @@ Function Remove-CommonWDACConfig {
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBwnQ3yYWMpbARb
-# NpQTlcyW/3/sV8n4brBCREzm+wwO5qCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDszwPQD8yun8YB
+# 8FSMSUrI/sSFwaoxSEk8T5BkHxJBY6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -247,16 +259,16 @@ Function Remove-CommonWDACConfig {
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgEeoKBSE2p8Y0fmYtNTmD5YI8QU4I4klh9h3KDoRmBNIwDQYJKoZIhvcNAQEB
-# BQAEggIAM24PfG5z2FMk7JTbNl0g9PFaDDJBtd2JaZETVTww9ITuHeprHiVqA88t
-# wgKsIchLxzrg6xuiiJOPhSOrEiJ72M1e62+X565hL85fEwePLpVfQeqDAyuDHLvC
-# S1gzcQa+R3tK6U3IxRJSDF8cwQg+6Pxzz21LZcGw/YNXrV0h0KS+S+jn98/RQU3J
-# mkRCRW747jDjZZqs+ZAdBq5+FdhNk0IWN1EDYF/7ge6rnmT4OXetgsNZA0x09uhx
-# KEqjVqI6rA1TmjIwXoudYfd8jeXP7x7wPvVZxeJZQqm5yW3RHDy5TY914lU7vafN
-# +C7g9nP0yZgf2qJ9c7a1wSVo61zekSpVPJbR5g7TaxHoBcv8kDrxDnlP+bM7PHQ7
-# Mc554EIrdbGTx5AwPHzc/tcC01BPfgtGx0v2+NQr92j5DodptYEXdO/LsQn7+pQg
-# yBJEFNNTtRNwxPMQd7hiP7nZkoXsQR3QCAOz2m61K9JP/kodNd2FK9QRgYbRjqet
-# 84GtAjF9sFkDONkD/kXAeARVAWFPvRaYEP8SYDxp5ed5CQ/QiHcrWu46dOxfchHf
-# Z9Jmkmlgw0sfszsPwl6lCuhqK+lJXNsAG3jcadHgzFzwRiDCEe7/Wzrg+nIqF62m
-# ApHagvLwZHnYPfjIK3ISUDEQBLJM0DfbKE9+W/fk4gPnba0rWoE=
+# IgQgTFEb5wHC6j5h0sY9HEZ2+PtB9b5b2cGJdmvIAY21JWwwDQYJKoZIhvcNAQEB
+# BQAEggIAL4FQQTPx4KtfWQddJCtBfpottBnx0Hk3dFhhQzoREAXbgTFpyJPhpUO2
+# V+1Tr3Dw/2vEMi5rX4GgJ2WLOw9wz/TxiAyFo7GY/xYvuDVJyqMeyYBo4sYM5k7X
+# rJ/Wn4uLHo182XXoFSX55dxgdbqTAC1z0IgJkFmNlWH/HS7sCU1e0afXv4b4X15p
+# s2aw3Y5F7JEFOd/Y1Ri/nOPzDJt8V2Niluo7igu1P/rdtmPDDa21WfkLb1IL1bTA
+# JmXwq8Wzm/rUWS4n4ETuckXFFHOO//ma5smCdR6BFYJZMkNL/1t2aoysxOjDESzm
+# fcG+toQUer6zZu00g2fk78Xsdtouybv6L2k+62YO80FzmH16M9xeXmPeMtptHotM
+# hBshIt9EBvSiHQtmQQCdBPNEGwwAxXG9U5OsP7pnh/UML7nPYey8nLYxg8CZVBxs
+# qzSrXGpfzg2PBCDKDJmw4nw6xGc1efpyEuH7a4Vo8tjL3SNKinyP1cB8D3djWMrZ
+# 5BAg+AdiGIofffgc7cNswdOK1kHxE5a7tWrCRjLtSqS2gp7nokdkl5HpwcLJbqlr
+# F0Rnm8tqqk0JFAkW1MYmRMY9JGXQCC9Qdr+wxsqlLbnc/aBym72E2oDXpXw3HBau
+# KZ+Yq9jl9Q069WfrFQf0ncgQZbL9dZjbi8zysTxIiK3I57HOxcA=
 # SIG # End signature block

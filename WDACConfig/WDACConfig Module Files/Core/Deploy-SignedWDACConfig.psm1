@@ -45,7 +45,7 @@ Function Deploy-SignedWDACConfig {
                 }
 
                 # Count the number of duplicate CNs in the output array
-                [System.Int64]$NumberOfDuplicateCNs = @($Output | Where-Object { $_ -eq $InputCN }).Count
+                [System.Int64]$NumberOfDuplicateCNs = @($Output | Where-Object -FilterScript { $_ -eq $InputCN }).Count
 
                 # If the certificate with the provided common name exists in the personal store of the user certificates
                 if ($Output -contains $_) {
@@ -325,8 +325,8 @@ Register-ArgumentCompleter -CommandName 'Deploy-SignedWDACConfig' -ParameterName
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCD9zseRSedgvEH/
-# UmdR8mMCozbNr5swsYhfIbgKI2SACKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCAnRwDvigOya6Sj
+# l2hIoqVyfOcnyR6nt70Hk73zv/QukKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -373,16 +373,16 @@ Register-ArgumentCompleter -CommandName 'Deploy-SignedWDACConfig' -ParameterName
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQg5WiETJONw1G0NqOHUdYMKymFHXSous2MRSuw7UicVzMwDQYJKoZIhvcNAQEB
-# BQAEggIAVm5+YhMxTotLMOqvHaMODj0JyAm418qIJIwMO0NaplA6JFTuVM4qwGM5
-# vLAMy8ojlEQZnnOo5ieGaCHi3N8+lbL/opd159/+lOHDq57uVrJoxUT3VkuEXYKB
-# cvzx+qTe9UQnh3C8VQ9TiLAcD3nictP79NPR3B0Dhsb7a8PeKJ4NRWfb+aPbucAa
-# NPzsaF6rXUOyIsWMoeOIt0AGg3FXuwslQhnBLTf5TnD//INC5WB2fHY93I2EO7ME
-# 664G9ygjY/2MuPVFW5wYe05vgqBXKkyB7dV4LzkA/U0avyEOlIuMMqqWOUKZ3yLU
-# kZZ00Op6UkXW1EO4GKiMjOk7FyuD1/48/fPxozfrXb6nZrJ4fVLqQh+GeaK351jl
-# 0psap4rV/xo5imGA+o5RWP96ykDkoZoMA4QYw1yoChG1qbiz7mwbY6pyG4Lkuw99
-# gasRVqFAazrE70N1IaPfKftkvtMeOR+WUrAEBdI5VuKR6scEPRZM/3mc1dhqE88i
-# 6lp1Zi+TJrVPAbPihGXwMiIvcXSH9QoF2qJ5acFIIzsqLSRn9HyoYhYiP4gTn8Jm
-# qZUyEdV3e6mH1A3rBqNxlFdXkmCGDJkmFoLl9pGAatvIIYtacOCdnBRg3E2t5VlK
-# /mlgVwDOmnno7gZ90CPZjmVvTeOrayUfpqO3FKRWVvaqZ6HWlc4=
+# IgQgFZecwVpcHmdKO1YFkbSeCvzEm9Mb7EB+M27hBmiHkuIwDQYJKoZIhvcNAQEB
+# BQAEggIAc3Hmq3D+n+5akVGKDhi0Rnn0emGfUhUw/yDDiGUN/ndan4AsNnWe1QPT
+# w4dkRZXgV6/bfp5ak4wr3JcixOM0oxQFutFKvYGIdP4Kv4zoDUnqN+dSm1wf6XG+
+# OvNzEtvgULzkJvfmtWS3sS5Rz9tevMw/t+oCROOUMA6xAcVSiVbPiVA27INWR5jC
+# bl2LXbwWX0tbbMIfjPEOcjq8CgpqW0K65dIYE9cNhUCjy0mZRb12Fp7krtvJejgy
+# TegxreANnHPJNjyxivdw56lGrk6rL/qLgtE/dK4sH+SAXHAZmCYdlm1k0TPfJ4Dt
+# 3JM5zkvVWFcs9rmO7yCyBg+s6qmZmd2Qtio8lzxjefe/a+mIzT08k0vzVOZ0kN9y
+# s1VslYBOQmFnTjc3hLc4mU4zfcvrCrOM+BLx64twanadX9f4WCW4cL+cFlRbwJ8j
+# LvL8O43QZYQj2svboUZiG5QQ5cu28x17+K9CCpqw+UaiI7n/78xvUzu5gP1bct1k
+# UI81Dcf+IdUu4l++jEyB9BYIu39+kgtOJP6y/DdVGYyd02kOzU2wnOOzhcxGUj/O
+# O6i5bkW6hTKlZSBsC9PCGItUmcsXM7Bzlyjrlcrth1fRGvmoXGXfaAgwa3Oqd+S3
+# xZBtIwGbi22EbbearPIUyovC+ryaqtTy0iHmWtuUqfJHF9wGXD0=
 # SIG # End signature block

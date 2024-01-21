@@ -248,7 +248,7 @@ ValidityPeriod = Years
 
 
     Get the value of the Application Policies extension
-    ($NewCertificate.Extensions | Where-Object { $_.oid.FriendlyName -eq 'Application Policies' }).Format($false)
+    ($NewCertificate.Extensions | Where-Object -FilterScript { $_.oid.FriendlyName -eq 'Application Policies' }).Format($false)
 
 
     Use certutil -dump -v '.\codesign.cer' to view the certificate properties, such as encoding of the certificate fields like the subject
@@ -287,8 +287,8 @@ ValidityPeriod = Years
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCD0Pmkq2Dq/eTYD
-# mUBJIrmyEJrkfd8ABk8OVSleUNsFkaCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCAefmwKXp6aQDQ5
+# GyFzyXuqW+XjwXh/WyLmKL17F3+8XaCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -335,16 +335,16 @@ ValidityPeriod = Years
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgyfG38dOJWH9RmcRqEoNo3WCjFPdQpeWfatq776M1gyAwDQYJKoZIhvcNAQEB
-# BQAEggIASG9efEq01lcnAWImVCRosVR/5LPE1rDPd+3fszzL8pD+7bBRQZi+T57u
-# UquSpx0XtyOd1jhyKErnTvWVyrSIPbyVmqBSjLIVZdCPsDpbuGiQnW4TCfcv9YsB
-# vminrSw2dFTQm8Lyo9VOhstZc9e5Pqa4ajViLUrrX/UMf13hJzDigvse28/VWA6O
-# euKGkz+Q9MX+b+S7R/QDrINDzE5D4kVFUA0mxLunb3ATGvpBMDpFE0hGkvNiFm8E
-# qAA0MuvdbULJpY8CuvmD/Jj7zfciPSNMlXbhNoQQ7ROrRIG1kD35/bw6ZBFpukrC
-# +n+dH/tW61ljk8aWYKdMsVzohlocq+kNvQBBvs5AVmXha1Z6dj3fQJnY2NdE8s0l
-# 1rGu7lfQFReqyd5ywwMe2xSjiaZ4/C//XHEF+yjhQxvaOcUXgcQKvV2xXN+hyIOZ
-# +BPgnn2bubfhW2RlnmmD+8HCTUAflmt5YbEERchgMZY0DE2blzW5y8V3eYTNzG8P
-# qQfwHkGmBCqY4eDsNALlIcCwIJieNXoeqIVFlU461wrqUSz2/vKd59seXF+ANVgi
-# 03WZoHXvyQYVG88+l9FTjuDEvoxs49NkjjzKrqyv1fcES7Cs/23kOhPfzy/hZZPD
-# i5oc6guG8v99WHRHbYdMc+i3v+sjCH5EJTpoGmk2Gb6FcuPV7U8=
+# IgQg1QqulqQXJmWru2WYLdhSLnMsmo+z8jsS9JS+BSTkpCUwDQYJKoZIhvcNAQEB
+# BQAEggIACx8pJxohFRFy51ygAYNCOqVihr4lO914ahXPAJFPBr10PaqXgEDyK4E2
+# KqFgcmtLEf2q7Mn02Hr8lP6azt49Lt1w4zbYvXW+HUeBKJKa6p8M+EhUH/+EGvlE
+# 4xUKr7oIjNa3KLsM1bAIsLLjYPErMWP6XDrzu8/9K+JviDUuvzboL4+y2tmAEpFH
+# G5yo5L5rAVruzTZsxWse7eQXpFgLDTpaGoBc+gtc9g+nBt3xNdijA76pvshCtv7q
+# wLTpQohxxLG19tQqOqNJbHtaE98sDE9xIbJGV1rDN3ETdyhIVqrmizurWUUIA/1N
+# HBWcVWt5YOpwsBvV9CEnvkpogBVmp6sbRO4ETNv1AyIGYF/neYX4U6tLgYr6tF5Q
+# we9fVXf565c1uve839c9gZgUvGEHy/a4Fv7vLf+nfGMsctTDUQjaluVxUdo4WxRk
+# S9rDeWZZt2MYvpor6mBAN9sGEnCtComlCN1nUQXMraMlOwO3ENCy7qNXivBCtzMd
+# Y+lKPFU1GpUFbfrItztenBm9pexqZimAW+HXCvZSKJUMa8E4bqj4yWiBi2HJFeOE
+# ovM5ran4X0RPrjnm9/A3FYy3vXbQKC43bGUZGM39Myjv63tA6/lxHXZOTLbyeuhN
+# oiMSrXYCfxZ6IDJRnH56cztOX2Rbo7/IV5k3i0Wl/ZEQhg12IQQ=
 # SIG # End signature block

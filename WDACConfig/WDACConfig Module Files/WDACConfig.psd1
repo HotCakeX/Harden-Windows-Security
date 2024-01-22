@@ -4,7 +4,7 @@
     RootModule           = 'WDACConfig.psm1'
 
     # Version number of this module.
-    ModuleVersion        = '0.3.0'
+    ModuleVersion        = '0.3.1'
 
     # Supported PSEditions
     CompatiblePSEditions = @('Core')
@@ -82,7 +82,7 @@ To get help and syntax on PowerShell console, type:
 '@
 
     # Minimum version of the PowerShell engine required by this module
-    PowerShellVersion    = '7.4.0'
+    PowerShellVersion    = '7.4.1'
 
     # Name of the PowerShell host required by this module
     # PowerShellHostName = ''
@@ -202,6 +202,10 @@ To get help and syntax on PowerShell console, type:
         'Resources\ArgumentCompleters.ps1'
         'Resources\WDAC Policies\DefaultWindows_Enforced_Kernel.xml',
         'Resources\WDAC Policies\DefaultWindows_Enforced_Kernel_NoFlights.xml',
+        'Resources\User Configurations\Schema.json',
+        'Resources\WDAC Policies-Archived\DefaultWindows_Enforced_Kernel.xml'
+        'Resources\WDAC Policies-Archived\DefaultWindows_Enforced_Kernel_NoFlights.xml'
+        'Resources\WDAC Policies-Archived\Readme.md'
         'Shared\Confirm-CertCN.psm1',
         'Shared\Get-AuditEventLogsProcessing.psm1',
         'Shared\Get-BlockRulesMeta.psm1',
@@ -216,7 +220,8 @@ To get help and syntax on PowerShell console, type:
         'Shared\Update-self.psm1',
         'Shared\Write-ColorfulText.psm1',
         'Shared\New-SnapBackGuarantee.psm1',
-        'Shared\Compare-SecureString.psm1'
+        'Shared\Compare-SecureString.psm1',
+        'Shared\Get-KernelModeDriversAudit.psm1'
     )
 
     # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.

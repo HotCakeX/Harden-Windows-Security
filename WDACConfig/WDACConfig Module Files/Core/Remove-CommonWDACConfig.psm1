@@ -8,33 +8,37 @@ Function Remove-CommonWDACConfig {
         [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SignedPolicyPath,
         [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$StrictKernelPolicyGUID,
         [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$StrictKernelNoFlightRootsPolicyGUID,
-        [parameter(Mandatory = $false, DontShow = $true)][System.Management.Automation.SwitchParameter]$LastUpdateCheck
+        [parameter(Mandatory = $false, DontShow = $true)][System.Management.Automation.SwitchParameter]$LastUpdateCheck,
+        [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$StrictKernelModePolicyTimeOfDeployment
     )
     begin {
         # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
+        # Assigning the path to the UserConfigurations.json file
+        [System.IO.FileInfo]$Path = "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json"
+
         # Create User configuration folder if it doesn't already exist
-        if (-NOT (Test-Path -Path "$UserAccountDirectoryPath\.WDACConfig\")) {
-            New-Item -ItemType Directory -Path "$UserAccountDirectoryPath\.WDACConfig\" -Force | Out-Null
+        if (-NOT (Test-Path -Path (Split-Path -Path $Path -Parent))) {
+            New-Item -ItemType Directory -Path (Split-Path -Path $Path -Parent) -Force | Out-Null
             Write-Verbose -Message 'The .WDACConfig folder in the current user folder has been created because it did not exist.'
         }
 
         # Create User configuration file if it doesn't already exist
-        if (-NOT (Test-Path -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json")) {
-            New-Item -ItemType File -Path "$UserAccountDirectoryPath\.WDACConfig\" -Name 'UserConfigurations.json' -Force | Out-Null
-            Write-Verbose -Message 'The UserConfigurations.json file in \.WDACConfig\ folder has been created because it did not exist.'
+        if (-NOT (Test-Path -Path $Path)) {
+            New-Item -ItemType File -Path (Split-Path -Path $Path -Parent) -Name (Split-Path -Path $Path -Leaf) -Force | Out-Null
+            Write-Verbose -Message 'The UserConfigurations.json file has been created because it did not exist.'
         }
 
         # Delete the entire User Configs if a more specific parameter wasn't used
         # This method is better than $PSBoundParameters since it also contains common parameters
-        if (!$CertCN -And !$CertPath -And !$SignToolPath -And !$UnsignedPolicyPath -And !$SignedPolicyPath -And !$StrictKernelPolicyGUID -And !$StrictKernelNoFlightRootsPolicyGUID -And !$LastUpdateCheck) {
-            Remove-Item -Path "$UserAccountDirectoryPath\.WDACConfig\" -Recurse -Force
+        if (!$CertCN -And !$CertPath -And !$SignToolPath -And !$UnsignedPolicyPath -And !$SignedPolicyPath -And !$StrictKernelPolicyGUID -And !$StrictKernelNoFlightRootsPolicyGUID -And !$LastUpdateCheck -And !$StrictKernelModePolicyTimeOfDeployment) {
+            Remove-Item -Path $Path -Force
             Write-Verbose -Message 'User Configurations for WDACConfig module have been deleted.'
 
             # set a boolean value that returns from the Process and End blocks as well
             [System.Boolean]$ReturnAndDone = $true
-
+            # Exit the begin block
             Return
         }
 
@@ -49,20 +53,21 @@ Function Remove-CommonWDACConfig {
             Set-Content -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json" -Value ''
         }
 
-        # An object to hold the User configurations
-        $UserConfigurationsObject = [PSCustomObject]@{
-            SignedPolicyPath                    = ''
-            UnsignedPolicyPath                  = ''
-            SignToolCustomPath                  = ''
-            CertificateCommonName               = ''
-            CertificatePath                     = ''
-            StrictKernelPolicyGUID              = ''
-            StrictKernelNoFlightRootsPolicyGUID = ''
-            LastUpdateCheck                     = ''
+        # A hashtable to hold the User configurations
+        [System.Collections.Hashtable]$UserConfigurationsObject = @{
+            SignedPolicyPath                       = ''
+            UnsignedPolicyPath                     = ''
+            SignToolCustomPath                     = ''
+            CertificateCommonName                  = ''
+            CertificatePath                        = ''
+            StrictKernelPolicyGUID                 = ''
+            StrictKernelNoFlightRootsPolicyGUID    = ''
+            LastUpdateCheck                        = ''
+            StrictKernelModePolicyTimeOfDeployment = ''
         }
     }
     process {
-
+        # Exit the process block
         if ($true -eq $ReturnAndDone) { return }
 
         if ($SignedPolicyPath) {
@@ -128,14 +133,38 @@ Function Remove-CommonWDACConfig {
         else {
             $UserConfigurationsObject.LastUpdateCheck = $CurrentUserConfigurations.LastUpdateCheck
         }
+
+        if ($StrictKernelModePolicyTimeOfDeployment) {
+            Write-Verbose -Message 'Removing the Strict Kernel-Mode Policy Time Of Deployment'
+            $UserConfigurationsObject.StrictKernelModePolicyTimeOfDeployment = ''
+        }
+        else {
+            $UserConfigurationsObject.StrictKernelModePolicyTimeOfDeployment = $CurrentUserConfigurations.StrictKernelModePolicyTimeOfDeployment
+        }
     }
     end {
-
+        # Exit the end block
         if ($true -eq $ReturnAndDone) { return }
 
-        # Update the User Configurations file
-        Write-Verbose -Message 'Saving the changes'
-        $UserConfigurationsObject | ConvertTo-Json | Set-Content -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json"
+        $UserConfigurationsJSON = $UserConfigurationsObject | ConvertTo-Json
+
+        try {
+            Write-Verbose -Message 'Validating the JSON against the schema'
+            [System.Boolean]$IsValid = Test-Json -Json $UserConfigurationsJSON -SchemaFile "$ModuleRootPath\Resources\User Configurations\Schema.json"
+        }
+        catch {
+            Write-Warning -Message "$_`nclearing it."
+            Set-Content -Path $Path -Value '' -Force
+        }
+
+        if ($IsValid) {
+            # Update the User Configurations file
+            Write-Verbose -Message 'Saving the changes'
+            $UserConfigurationsJSON | Set-Content -Path $Path -Force
+        }
+        else {
+            Throw 'The User Configurations file is not valid.'
+        }
     }
     <#
 .SYNOPSIS
@@ -164,6 +193,8 @@ Function Remove-CommonWDACConfig {
     Removes the StrictKernelNoFlightRootsPolicyGUID from User Configs
 .PARAMETER LastUpdateCheck
     Using DontShow for this parameter which prevents common parameters from being displayed too
+.PARAMETER StrictKernelModePolicyTimeOfDeployment
+    Removes the StrictKernelModePolicyTimeOfDeployment from User Configs
 .INPUTS
     System.Management.Automation.SwitchParameter
 .OUTPUTS
@@ -180,8 +211,8 @@ Function Remove-CommonWDACConfig {
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDUXIFN1xFceXUU
-# qqIqj2EMWrByQtjg/BBD/HtYor8nlaCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCOwTJyE1lilpc0
+# hd37deRoczCk1PsMUkWSPAn1RHdmpaCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -228,16 +259,16 @@ Function Remove-CommonWDACConfig {
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgylwQco/g2hTi3QkAmWwifX9V6O/h65vusvxiZ2XEIKwwDQYJKoZIhvcNAQEB
-# BQAEggIAcDPMXUWowHy+MDkLLcOPl51H3cyqObTtta/fpfdRt2FTAEQDygjSusD8
-# D/Z3IKch1dmv1IbnRHHxPSFILsnuKbVbifk6pnfUAvXF5OZOM1+MlpHoDhJFrdkD
-# 84MGD4zzKLJFY2kXKj/qo+sj8zPwONK5+d44VTGKLVt8ySGGad/ikWlOSg6OJwIl
-# 342v8WmFOglxE3grkdzR7jIn6jTm5xMevKA+c8DdV8nPQiDrmdB9JY++Xp0udO7r
-# MIljnY64F0qPQsg/mhh8RnIYbQY9YER/5V3Rjzq/LfHmrqemdYR9sUrUO2ihVuCC
-# G55Hwu4ucJAnvRlZBQXO9zGUCzPCyIKP1JV05xPVWpqzltP6kYkLsvIWhO2UznPh
-# RsUSDyna8DeQ9T6YaxpDlsTWUYGSj4I1wrwFai0j93wAgPZ2imqFRtDqYb/+CIPO
-# yx7j3SkuMfkJmXsnqbSOIIeagtgv3IeVQoDKHGJCnTwSsszKuWA4Vj1GdLMTusat
-# sxWoFL1gHDtd9JDabDcwVQwyisdVbIWpdtq4TnYh+aK/Y6G3rsa5YCc2QitjF0cW
-# 1wbSP+w/efYPWzjPgsHumki7GM+zuU75Md8SSBy9sk5AxK+gW1q1ietUfVvqbpmg
-# FbTVmZIj9Gbny/UeGagoGmqxOoECreOuY0n7xJUBK65ByssGRrk=
+# IgQgosRTn6/vjqEgVpjkQZamW7pk4mbU0ANBQHok/geB+CAwDQYJKoZIhvcNAQEB
+# BQAEggIAm5Nd50jwDmPcaRiZFlEX46z2HQqTF2VsNliZC9JDi3afpRNKG+77+Wpg
+# hcX1yMJBfelbz1P3zCSzV4HtuF/mlnWWTaUT+ggClCkO5PQQP10D7UMU/PmyNcPu
+# sywp4urfxgq/p9H1Vptyv1ERUpamDXcRRzBXln6NkImxd24JeYZlTTUJIQcJ4VzX
+# sCrJMtgdetbRV0ISJzwHm36k5LAV+rXKo8HLtlj+Ivmq6ufOoKVOlGf4sthBHnmc
+# gNtyfdq7OZQrGvpGHLh2PB11V9FC2Rz/y7ngGqgYvjToClfG4fBU/wEkSs/uNYxp
+# osYhk0yNDKDh18NvQ5B01sDFPQnLKBYzi1m2HmzUpt1CmgPUwQPWs+PB1G2ihUKX
+# ixFLl2I1Cdbqdhf1hO3UZV9d9eAtX3Wu9twlHfytT8bA+Wr6/Ugy7AUmFLE3sp4y
+# wIzAmRe3GZNI3do8uXB0rJG4hQAskfBT/P4oSFNsKDtqiCpvnaG2lWcbT3JEVXBG
+# aI3hh5WUQqEVFP8EY6w1Jtwp1PKN9RunWGHkMEBuh2Ogjj5m29tappyVWXb7lwKt
+# ED6l+79I0XcywzVtSOTCbvfBjWUshSkRF+TjeREc2HdHksS09fftmVGGNRZXoTbw
+# Rce5Wd/minc9Ss4rXd+30WjcN/KQRP7U3BxgU/JHG/ndY4aslwo=
 # SIG # End signature block

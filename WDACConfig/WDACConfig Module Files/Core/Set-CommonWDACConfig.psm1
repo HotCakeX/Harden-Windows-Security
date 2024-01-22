@@ -31,7 +31,7 @@ Function Set-CommonWDACConfig {
                 }
 
                 # Count the number of duplicate CNs in the output array
-                [System.Int64]$NumberOfDuplicateCNs = @($Output | Where-Object { $_ -eq $InputCN }).Count
+                [System.Int64]$NumberOfDuplicateCNs = @($Output | Where-Object -FilterScript { $_ -eq $InputCN }).Count
 
                 # If the certificate with the provided common name exists in the personal store of the user certificates
                 if ($Output -contains $_) {
@@ -95,31 +95,35 @@ Function Set-CommonWDACConfig {
 
         [parameter(Mandatory = $false, DontShow = $true)][System.Guid]$StrictKernelPolicyGUID,
         [parameter(Mandatory = $false, DontShow = $true)][System.Guid]$StrictKernelNoFlightRootsPolicyGUID,
-        [parameter(Mandatory = $false, DontShow = $true)][System.DateTime]$LastUpdateCheck
+        [parameter(Mandatory = $false, DontShow = $true)][System.DateTime]$LastUpdateCheck,
+        [parameter(Mandatory = $false)][System.DateTime]$StrictKernelModePolicyTimeOfDeployment
     )
     begin {
         # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
+        if (!$CertCN -And !$CertPath -And !$SignToolPath -And !$UnsignedPolicyPath -And !$SignedPolicyPath -And !$StrictKernelPolicyGUID -And !$StrictKernelNoFlightRootsPolicyGUID -And !$LastUpdateCheck -And !$StrictKernelModePolicyTimeOfDeployment) {
+            Throw [System.ArgumentException] 'No parameter was selected.'
+        }
+
+        # Assigning the path to the UserConfigurations.json file
+        [System.IO.FileInfo]$Path = "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json"
+
         # Create User configuration folder if it doesn't already exist
-        if (-NOT (Test-Path -Path "$UserAccountDirectoryPath\.WDACConfig\")) {
-            New-Item -ItemType Directory -Path "$UserAccountDirectoryPath\.WDACConfig\" -Force | Out-Null
+        if (-NOT (Test-Path -Path (Split-Path -Path $Path -Parent))) {
+            New-Item -ItemType Directory -Path (Split-Path -Path $Path -Parent) -Force | Out-Null
             Write-Verbose -Message 'The .WDACConfig folder in the current user folder has been created because it did not exist.'
         }
 
         # Create User configuration file if it doesn't already exist
-        if (-NOT (Test-Path -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json")) {
-            New-Item -ItemType File -Path "$UserAccountDirectoryPath\.WDACConfig\" -Name 'UserConfigurations.json' -Force | Out-Null
-            Write-Verbose -Message 'The UserConfigurations.json file in \.WDACConfig\ folder has been created because it did not exist.'
-        }
-
-        if (!$CertCN -And !$CertPath -And !$SignToolPath -And !$UnsignedPolicyPath -And !$SignedPolicyPath -And !$StrictKernelPolicyGUID -And !$StrictKernelNoFlightRootsPolicyGUID -And !$LastUpdateCheck) {
-            Throw [System.ArgumentException] 'No parameter was selected.'
+        if (-NOT (Test-Path -Path $Path)) {
+            New-Item -ItemType File -Path (Split-Path -Path $Path -Parent) -Name (Split-Path -Path $Path -Leaf) -Force | Out-Null
+            Write-Verbose -Message 'The UserConfigurations.json file has been created because it did not exist.'
         }
 
         # Trying to read the current user configurations
         Write-Verbose -Message 'Trying to read the current user configurations'
-        [System.Object[]]$CurrentUserConfigurations = Get-Content -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json"
+        [System.Object[]]$CurrentUserConfigurations = Get-Content -Path $Path
 
         # If the file exists but is corrupted and has bad values, rewrite it
         try {
@@ -127,19 +131,20 @@ Function Set-CommonWDACConfig {
         }
         catch {
             Write-Verbose -Message 'The user configurations file exists but is corrupted and has bad values, rewriting it'
-            Set-Content -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json" -Value ''
+            Set-Content -Path $Path -Value ''
         }
 
-        # An object to hold the User configurations
-        $UserConfigurationsObject = [PSCustomObject]@{
-            SignedPolicyPath                    = ''
-            UnsignedPolicyPath                  = ''
-            SignToolCustomPath                  = ''
-            CertificateCommonName               = ''
-            CertificatePath                     = ''
-            StrictKernelPolicyGUID              = ''
-            StrictKernelNoFlightRootsPolicyGUID = ''
-            LastUpdateCheck                     = ''
+        # A hashtable to hold the User configurations
+        [System.Collections.Hashtable]$UserConfigurationsObject = @{
+            SignedPolicyPath                       = ''
+            UnsignedPolicyPath                     = ''
+            SignToolCustomPath                     = ''
+            CertificateCommonName                  = ''
+            CertificatePath                        = ''
+            StrictKernelPolicyGUID                 = ''
+            StrictKernelNoFlightRootsPolicyGUID    = ''
+            LastUpdateCheck                        = ''
+            StrictKernelModePolicyTimeOfDeployment = ''
         }
     }
     process {
@@ -217,13 +222,40 @@ Function Set-CommonWDACConfig {
             Write-Verbose -Message 'No changes to the Last Update Check property was detected.'
             $UserConfigurationsObject.LastUpdateCheck = $CurrentUserConfigurations.LastUpdateCheck
         }
+
+        if ($StrictKernelModePolicyTimeOfDeployment) {
+            Write-Verbose -Message 'Saving the supplied Strict Kernel-Mode Policy Time Of Deployment in user configurations.'
+            $UserConfigurationsObject.StrictKernelModePolicyTimeOfDeployment = $StrictKernelModePolicyTimeOfDeployment
+        }
+        else {
+            Write-Verbose -Message 'No changes to the Strict Kernel-Mode Policy Time Of Deployment property was detected.'
+            $UserConfigurationsObject.StrictKernelModePolicyTimeOfDeployment = $CurrentUserConfigurations.StrictKernelModePolicyTimeOfDeployment
+        }
     }
     end {
-        # Update the User Configurations file
-        Write-Verbose -Message 'Saving the changes'
-        $UserConfigurationsObject | ConvertTo-Json | Set-Content -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json"
 
-        Get-Content -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json" | ConvertFrom-Json | Format-List -Property *
+        $UserConfigurationsJSON = $UserConfigurationsObject | ConvertTo-Json
+
+        try {
+            Write-Verbose -Message 'Validating the JSON against the schema'
+            [System.Boolean]$IsValid = Test-Json -Json $UserConfigurationsJSON -SchemaFile "$ModuleRootPath\Resources\User Configurations\Schema.json"
+        }
+        catch {
+            Write-Warning -Message "$_`nclearing it."
+            Set-Content -Path $Path -Value '' -Force
+        }
+
+        if ($IsValid) {
+            # Update the User Configurations file
+            Write-Verbose -Message 'Saving the changes'
+            $UserConfigurationsJSON | Set-Content -Path $Path -Force
+
+            # Display the updated User Configurations
+            $UserConfigurationsObject
+        }
+        else {
+            Throw 'The User Configurations file is not valid.'
+        }
     }
     <#
 .SYNOPSIS
@@ -253,6 +285,9 @@ Function Set-CommonWDACConfig {
 .PARAMETER LastUpdateCheck
     Last time the Update policy was checked for updates
     Used internally by the module
+.PARAMETER StrictKernelModePolicyTimeOfDeployment
+    Time of deployment of the Strict Kernel-Mode policy
+    Used internally by the module
 .INPUTS
     System.IO.FileInfo
     System.DateTime
@@ -280,8 +315,8 @@ Register-ArgumentCompleter -CommandName 'Set-CommonWDACConfig' -ParameterName 'U
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDw9TYS/Hu6MPJP
-# he3QlRy8osjynqdtAN8BLpePx0Q5OKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCA78jNLmU+iEoEy
+# h9B+CJiL2euTpXBgiYVe2FXzPc2KU6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -328,16 +363,16 @@ Register-ArgumentCompleter -CommandName 'Set-CommonWDACConfig' -ParameterName 'U
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgZzRHhPBnvd5AMtuJem31TZ4G+oQ6Tmj3Qw5seIqiCtAwDQYJKoZIhvcNAQEB
-# BQAEggIAg7bHth51OPRwsf/zlmiJOn4ikUNWmq2mislZ+GJUQ1kXn2usoLHjDA2Y
-# r/ouC4WqVvWUgs6aN7KWNaY7239ZMEgLTGDMpTkdF7TcI+VsdokbFhjCKtPA49cd
-# w1Uu+cSQvspCROWWiyoNqdk3sJTYaOOvkCP5/2fP9Fqz/Z6KFpUZWRatx1X7RT0o
-# kiHNW7Vef9PIK84HfF3/S7fYEt2v1/WqiDAxuTWgAByZQqz5iMrLb6Bxd9eXDKn3
-# cj7/a7OdpDSTn51EYDQWZdNCm7Z4AqxJl2OACc0YKmDKT+cxpF6z0fVDlrBeGbWc
-# ZC1nUHgypjLdAU2oETI8YPl/VMic3jozKV+9sF9A7+Z+CkQXpNxCLz7fgV87bTb1
-# ZKx//CMRXo/SaRmSYI9IoXV8hSK/Pjxc4gmZ8LeRFWkyPyRXJfi3V3YNWk7zb83f
-# dLMTbsq7narzX86DPQ5lFBqleCr4tO7xaxclhfAxJyAwCNCSRJmx50cJvoHE3Cgt
-# +sVLlegzr7SW7ZAb2R58GfwNG20eurmXKJQQ86Ef+VHcCV7fI96a9zYDV3x1RBuO
-# f/wdvb4HoeZOixM54OtsPWQrUkTMPFjoLWwcNq8aqkNPCKqHyNLC2D2C3UBZS4uV
-# XP2y5JRUeEJKfvD29whNXeLHUZ+k+2+9K+J4ahRwj3qVVy+uv/Y=
+# IgQgA+wzKzO/1DYHMPgAx/OHjlgvoLv40MBS3HajFunu4HYwDQYJKoZIhvcNAQEB
+# BQAEggIAHdtSShDe9+TmPCeaCDoVGUVN4sbbDiU0SRPVIlu7AglCWBYKH5UQrrA0
+# q5ORdq73Fso4ANee84RyygJB10+qWlJxfi3c1PXpmRzZaiPMezuT+1pPnI5mtGE2
+# bXNrAVVy2hoWK9pvPKy2J0KHxwxRDER/QHUTm8931kXpvmKZcLaAcNPW2tZazyJz
+# Yn4FlPijRDLmM1BJ0poBTQl/IVH1mXgY3nKbuQZUqL0MIZiZLSX2p0RNY0YCqkeb
+# 8wKv4oLY7LMY16SeIDq9CtCqmH/aD6XvvtW+VyJCTwJWkGz+0lNFLqitiBXuonl6
+# dzS0mfg1TQkLvDJCRuLcTLlyQHAuu3Pmnb1QKRAgVG3ArnCIDZUvEiYC4x0W61Ne
+# W5BJK4vE9AIqyrEo0Uy9gH5Y+ieByNYa12Rv5i0gdIqJYeqw7vD9ogUATcb46hlf
+# E+TTfXdiDkpNYBmpKXKViOcLYhVGb6a0Ox/wpRqHhXN+hyeoIUGYPep1QwKcTjd5
+# lfwzAgoIHdeDjasjf1aqlbUjYvujr6IpIf7G+ZlQ6sC3f9BdguvAAYOWMlHfhvtN
+# fEz4aYYDUPCPXjAVeVvllNiN15WdBAxIHOuAF/YTRmZoa8nyLmRltFyTwcDcOM9y
+# gWMgsaZJUfAAh4yX684CL4kAiPJO49ktaS3kprOzzQ1BlYCnOeY=
 # SIG # End signature block

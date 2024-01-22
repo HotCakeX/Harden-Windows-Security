@@ -9,43 +9,48 @@ Function Get-CommonWDACConfig {
         [parameter(Mandatory = $false, DontShow = $true)][System.Management.Automation.SwitchParameter]$StrictKernelPolicyGUID,
         [parameter(Mandatory = $false, DontShow = $true)][System.Management.Automation.SwitchParameter]$StrictKernelNoFlightRootsPolicyGUID,
         [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$Open,
-        [parameter(Mandatory = $false, DontShow = $true)][System.Management.Automation.SwitchParameter]$LastUpdateCheck
+        [parameter(Mandatory = $false, DontShow = $true)][System.Management.Automation.SwitchParameter]$LastUpdateCheck,
+        [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$StrictKernelModePolicyTimeOfDeployment
     )
     begin {
         # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
-        # Importing the required sub-modules
-        Write-Verbose -Message 'Importing the required sub-modules'
-        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Write-ColorfulText.psm1" -Force
+
+        # Assigning the path to the UserConfigurations.json file
+        [System.IO.FileInfo]$Path = "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json"
 
         # Create User configuration folder if it doesn't already exist
-        if (-NOT (Test-Path -Path "$UserAccountDirectoryPath\.WDACConfig\")) {
-            New-Item -ItemType Directory -Path "$UserAccountDirectoryPath\.WDACConfig\" -Force | Out-Null
+        if (-NOT (Test-Path -Path (Split-Path -Path $Path -Parent))) {
+            New-Item -ItemType Directory -Path (Split-Path -Path $Path -Parent) -Force | Out-Null
             Write-Verbose -Message 'The .WDACConfig folder in the current user folder has been created because it did not exist.'
         }
 
         # Create User configuration file if it doesn't already exist
-        if (-NOT (Test-Path -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json")) {
-            New-Item -ItemType File -Path "$UserAccountDirectoryPath\.WDACConfig\" -Name 'UserConfigurations.json' -Force | Out-Null
-            Write-Verbose -Message 'The UserConfigurations.json file in \.WDACConfig\ folder has been created because it did not exist.'
+        if (-NOT (Test-Path -Path $Path)) {
+            New-Item -ItemType File -Path (Split-Path -Path $Path -Parent) -Name (Split-Path -Path $Path -Leaf) -Force | Out-Null
+            Write-Verbose -Message 'The UserConfigurations.json file has been created because it did not exist.'
         }
 
         if ($Open) {
-            . "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json"
-            break
-        }
+            . $Path
 
-        # Display this message if User Configuration file is empty or only has spaces/new lines
-        if ([System.String]::IsNullOrWhiteSpace((Get-Content -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json"))) {
-            Write-Verbose -Message 'Your current WDAC User Configurations is empty.'
             # set a boolean value that returns from the Process and End blocks as well
             [System.Boolean]$ReturnAndDone = $true
             # return/exit from the begin block
             Return
         }
 
+        # Display this message if User Configuration file is empty or only has spaces/new lines
+        if ([System.String]::IsNullOrWhiteSpace((Get-Content -Path $Path))) {
+            Write-Verbose -Message 'Your current WDAC User Configurations is empty.'
+
+            [System.Boolean]$ReturnAndDone = $true
+            # return/exit from the begin block
+            Return
+        }
+
         Write-Verbose -Message 'Reading the current user configurations'
-        [System.Object[]]$CurrentUserConfigurations = Get-Content -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json"
+        [System.Object[]]$CurrentUserConfigurations = Get-Content -Path $Path -Force
 
         # If the file exists but is corrupted and has bad values, rewrite it
         try {
@@ -53,7 +58,8 @@ Function Get-CommonWDACConfig {
         }
         catch {
             Write-Warning -Message 'The UserConfigurations.json was corrupted, clearing it.'
-            Set-Content -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json" -Value ''
+            Set-Content -Path $Path -Value ''
+
             [System.Boolean]$ReturnAndDone = $true
             # return/exit from the begin block
             Return
@@ -84,10 +90,10 @@ Function Get-CommonWDACConfig {
             $StrictKernelNoFlightRootsPolicyGUID.IsPresent { return ($CurrentUserConfigurations.StrictKernelNoFlightRootsPolicyGUID ?? $null) }
             $CertPath.IsPresent { return ($CurrentUserConfigurations.CertificatePath ?? $null) }
             $LastUpdateCheck.IsPresent { return ($CurrentUserConfigurations.LastUpdateCheck ?? $null) }
+            $StrictKernelModePolicyTimeOfDeployment.IsPresent { return ($CurrentUserConfigurations.StrictKernelModePolicyTimeOfDeployment ?? $null) }
             Default {
                 # If no parameter is present
-                Write-ColorfulText -Color Pink -InputText 'Displaying the User Configurations that have values'
-                Write-Output -InputObject $CurrentUserConfigurations
+                Return $CurrentUserConfigurations
             }
         }
     }
@@ -120,6 +126,8 @@ Function Get-CommonWDACConfig {
     Shows the GUID of the Strict Kernel no Flights root mode policy
 .PARAMETER LastUpdateCheck
     Shows the date of the last update check
+.PARAMETER StrictKernelModePolicyTimeOfDeployment
+    Shows the date of the last Strict Kernel mode policy deployment
 .PARAMETER Verbose
     Shows verbose messages
 .INPUTS
@@ -135,8 +143,8 @@ Function Get-CommonWDACConfig {
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCwf2tydbFonUJA
-# TX6XctLTkPUB92871x++AbBMLXzprKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBoVCz7I2ruYbwu
+# q8diFmkQbaGDKCkez2teF5aEak0b1aCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -183,16 +191,16 @@ Function Get-CommonWDACConfig {
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgwfpqrpvuYjerMY7ly1lc0evK86y333yWP91S9IsnT2EwDQYJKoZIhvcNAQEB
-# BQAEggIAj9gCB8XhPJDoQlg8Ds1RGkuBGVh09AwmFgOaN51I/JF9pf+PN+EGZLLe
-# 6c4j8VBomdksxD7LZ1vBn6QZgYQKJ+4dzmtPlEYepXa7204WQVi1qI7QhUcdcf2f
-# 9X5FGlBG3xpAWkxpH9XeDh/8AL9hafX+/niVRqAJGJitLq7B2lI3UKHyxVSJilSW
-# cHbXT/8dRe9evPRkvBluCk3tFIf90druUDqZObHygwrkWohElIe7eMR/rX8wi/UZ
-# Kayzb0r72AWs1hy4WhfEY3u/fIXU8VqxVLt+WGMws+x4qH3ZJkC8pdfV8TPJPi4m
-# UjDGruR91Mc6N7PvWZqZRLefDXhBfwNyV76uAoaqUo73bc+4tOHJi86hwd9vxjpf
-# SvV0KcCo6TStM7MybPXpMqm3keSgaIhxNm1oUasx7UgN/J9ROWdyDwSQ2mMwwc33
-# aadUe64SalGyz8e5ACBjo+JVErbZ5LjOFCTa69GkNGGZ2De0Bae8BLcSXjpCxQRt
-# jOFryDXpGCS64WdBJ+UZGXeJCArat0/jczAWii5Myll6ss2XpcPyZFn+EdHjFEJp
-# RSYKxxGfuyTm3w4jrAwUJFaEm0oy4MTLesy+FuE62fMi0vTXRMqCQaavF3fY4tAA
-# TuLEX/llPXR71FlmOmQLMFcIxMKq+RGj+ufjSMyDrtELahcW/s0=
+# IgQgK2B2kN3kvH9A3GrhFEBbkVX1Ee0InPzwka3+h2VPB0owDQYJKoZIhvcNAQEB
+# BQAEggIAlNlbhlh4szyr8FeHXlyNaV+Y8d9xtNmxKZUpg1lDemcJDrQUEM4bDPYo
+# tvanj8YO6NXazSGnSqdVWUF0T3Fd+Sr/SCcDXuyy5P3J4qaYg2A7qLdXzjUW7KWY
+# cevrCpbqScFMi1uBZDwv9DbkH+lk9hiYJcGBDqw4HZXAGvGT4Hgz1jWyONPFJ0Y/
+# UYIGw9m4RH19cnCL8wMu32+K4r89EIlGeZ3m73WEw3JRpis+SQIcvivAepNFYvgi
+# box/v2N4GvDcs/8FdFDdoxYQxnlzp6Xu/0oGgTwokxmPonAYE5DzEBy1U8ozeix4
+# LUy8fKWUqjZGDdr+BkFLymRLk+WDFwQ4aqvb8aHOC8n6PZW+jO1jz8jwxCJ190RQ
+# fr0DsFlhU4mkzITaxld51yKxdTMYDl7p0ISeWF448yY3FqLlU3ndS9ExbpryOnwB
+# r6QiaPO94Ch5idJSugnxJgzO+JXDCEuwY1i+8Bm3h5S9md0H0NZ30mId0SD/SPK3
+# tCIbFSCvqiRugW2pFpzs/HAYSWwlDVKFzXF6fZhgufPUWZ157xTgxUWqHIeYYRtv
+# mGtFVis3jnCQHvlgxYr5DuSb82774zBaSIaKXWpoVFF5nRgafiEzFcgCVw2DJhFP
+# WzDrsKY4qVdRNuR26BUGKAqW+mt4cRsBTwk0mYkCJ198mR6kzSE=
 # SIG # End signature block

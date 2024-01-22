@@ -22,6 +22,7 @@ Function Get-KernelModeDriversAudit {
     #>
     [CmdletBinding()]
     param()
+
     begin {
         # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
@@ -41,10 +42,10 @@ Function Get-KernelModeDriversAudit {
 
     process {
         # Event Viewer Code Integrity logs scan for Audit logs based on the input date
-        foreach ($event in Get-WinEvent -FilterHashtable @{LogName = 'Microsoft-Windows-CodeIntegrity/Operational'; ID = 3076 } -ErrorAction SilentlyContinue | Where-Object -FilterScript { $_.TimeCreated -ge $ScanStartDate } ) {
+        foreach ($Event in Get-WinEvent -FilterHashtable @{LogName = 'Microsoft-Windows-CodeIntegrity/Operational'; ID = 3076 } -ErrorAction SilentlyContinue | Where-Object -FilterScript { $_.TimeCreated -ge $ScanStartDate } ) {
 
             # Convert the event to XML
-            $Xml = [System.Xml.XmlDocument]$event.toxml()
+            $Xml = [System.Xml.XmlDocument]$Event.toxml()
 
             # Convert the XML to a PowerShell object
             $Xml.event.eventdata.data | ForEach-Object -Begin { $Hash = @{} } -Process { $Hash[$_.name] = $_.'#text' } -End { [pscustomobject]$Hash } | ForEach-Object -Process {

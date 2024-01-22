@@ -199,7 +199,7 @@ Function New-KernelModeWDACConfig {
                     Write-Verbose -Message 'Setting the GUID of the Audit mode policy in the User Configuration file'
                     Set-CommonWDACConfig -StrictKernelPolicyGUID $PolicyID | Out-Null
 
-                    Write-Verbose -Message 'Setting the time of deployment for the policy in the User Configuration file'
+                    Write-Verbose -Message 'Setting the time of deployment for the audit mode policy in the User Configuration file'
                     Set-CommonWDACConfig -StrictKernelModePolicyTimeOfDeployment (Get-Date) | Out-Null
 
                     Write-Verbose -Message 'Deploying the Strict Kernel mode policy'
@@ -350,13 +350,12 @@ Function New-KernelModeWDACConfig {
                     Write-Verbose -Message 'Setting the GUID of the Audit mode policy in the User Configuration file'
                     Set-CommonWDACConfig -StrictKernelNoFlightRootsPolicyGUID $PolicyID | Out-Null
 
+                    Write-Verbose -Message 'Setting the time of deployment for the audit mode policy in the User Configuration file'
+                    Set-CommonWDACConfig -StrictKernelModePolicyTimeOfDeployment (Get-Date) | Out-Null
+
                     Write-Verbose -Message 'Deploying the Strict Kernel mode policy'
                     &'C:\Windows\System32\CiTool.exe' --update-policy "$PolicyID.cip" -json | Out-Null
                     Write-ColorfulText -Color HotPink -InputText 'Strict Kernel mode policy with no flighting root certs has been deployed in Audit mode, please restart your system.'
-
-                    Write-Verbose -Message 'Clearing the Code Integrity operational event logs before system restart so that after reboot it will only have the correct and new logs that belong to the kernel mode drivers'
-                    &'C:\Windows\System32\wevtutil.exe' cl 'Microsoft-Windows-CodeIntegrity/Operational'
-                    &'C:\Windows\System32\wevtutil.exe' cl 'Microsoft-Windows-AppLocker/MSI and Script'
 
                     if (!$Debug) {
                         Write-Verbose -Message 'Removing the DefaultWindows_Enforced_Kernel_NoFlights.xml and its CIP file after deployment since -Debug parameter was not used.'
@@ -392,13 +391,16 @@ Function New-KernelModeWDACConfig {
                 $CurrentStep++
                 Write-Progress -Id 28 -Activity 'Scanning the Event logs' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
+                # Get the kernel mode drivers directory path containing symlinks
+                [System.IO.DirectoryInfo]$KernelModeDriversDirectory = Get-KernelModeDriversAudit
+
                 powershell.exe -Command {
-                    Write-Verbose -Message 'Scanning the Event viewer logs for drivers'
-                    $DriverFilesObj = Get-SystemDriver -Audit
+                    Write-Verbose -Message 'Scanning the kernel-mode drivers detected in Event viewer logs'
+                    $DriverFilesObj = Get-SystemDriver -ScanPath $args[0]
 
                     Write-Verbose -Message 'Creating a policy xml file from the driver files'
                     New-CIPolicy -MultiplePolicyFormat -Level FilePublisher -Fallback None -FilePath '.\DriverFilesScanPolicy.xml' -DriverFiles $DriverFilesObj
-                }
+                } -args $KernelModeDriversDirectory
 
                 $CurrentStep++
                 Write-Progress -Id 28 -Activity 'Creating the final policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
@@ -461,8 +463,9 @@ Function New-KernelModeWDACConfig {
                     Write-ColorfulText -Color Pink -InputText 'Strict Kernel mode Enforced policy with no flighting root certs has been created in the current working directory.'
                 }
                 if (!$Debug) {
-                    Write-Verbose -Message 'Removing the DriverFilesScanPolicy.xml and the CIP file because -Debug parameter was not used'
+                    Write-Verbose -Message 'Removing the DriverFilesScanPolicy.xml, CIP file and KernelModeDriversDirectory in Temp folder because -Debug parameter was not used'
                     Remove-Item -Path ".\$PolicyID.cip", '.\DriverFilesScanPolicy.xml' -Force -ErrorAction SilentlyContinue
+                    Remove-Item -Path $KernelModeDriversDirectory -Recurse -Force
                 }
                 Write-Progress -Id 28 -Activity 'Complete.' -Completed
             }

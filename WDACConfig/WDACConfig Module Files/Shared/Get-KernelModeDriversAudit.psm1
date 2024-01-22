@@ -5,12 +5,12 @@ Function Get-KernelModeDriversAudit {
         and will return a folder containing symbolic links to the driver files.
         It does this by:
             1. Scanning the Code Integrity event logs for kernel mode drivers that have been loaded since the audit mode policy has been deployed
-            2. Converting the event to XML
+            2. Converting each event to XML
             3. Converting the XML to a PowerShell object
             4. Replacing the global root file paths with the drive letters to create consumable paths
             5. Removing duplicates based on SHA256 hash
             6. Saving the file paths to a variable
-            7. Filtering based on files that exist with .sys extension
+            7. Filtering based on files that exist with .sys and .dll extensions
             8. Removing duplicates based on file path
             9. Creating a temporary folder to store the symbolic links to the driver files
             10. Creating symbolic links to the driver files
@@ -75,8 +75,8 @@ Function Get-KernelModeDriversAudit {
         Write-Verbose -Message 'Saving the file paths to a variable'
         [System.IO.FileInfo[]]$KernelModeDriversPaths = $RawData.'File Name'
 
-        Write-Verbose -Message 'Filtering based on files that exist with .sys extension'
-        $KernelModeDriversPaths = $KernelModeDriversPaths | Where-Object -FilterScript { ($_.Extension -eq '.sys') -and ($_.Exists) }
+        Write-Verbose -Message 'Filtering based on files that exist with .sys and .dll extensions'
+        $KernelModeDriversPaths = $KernelModeDriversPaths | Where-Object -FilterScript { ($_.Extension -in ('.sys', '.dll')) -and ($_.Exists) }
 
         Write-Debug -Message "KernelModeDriversPaths count after filtering based on files that exist with .sys extension: $($KernelModeDriversPaths.count)"
 

@@ -13,19 +13,22 @@ New-KernelModeWDACConfig [-Default] [-PrepMode] [-AuditAndEnforce] [-Deploy] [-E
 
 ### How to use
 
-This cmdlet creates a Kernel-mode WDAC policy based on the Default Windows example policy. [You can read more about that process in here.](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-policy-for-BYOVD-Kernel-mode-only-protection)
+This cmdlet generates a Kernel-mode WDAC policy derived from the Default Windows template policy. [You can learn more about that procedure in here.](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-policy-for-BYOVD-Kernel-mode-only-protection)
 
-The default parameter indicates that the Strict Kernel-mode WDAC policy will be deployed with flight root certificates, allowing you to use insider builds of the OS.
+The **-Default** parameter signifies that the Strict Kernel-mode WDAC policy will be deployed with flight root certificates, enabling you to utilize insider builds of the OS.
 
-First you need to use the **PrepMode** parameter to deploy the base policy in Audit mode, then reboot your system, after reboot event logs are generated for Kernel-mode drivers that are running but would otherwise get blocked if the policy was not deployed in Audit mode.
+Initially, you need to use the **-PrepMode** parameter to deploy the base policy in Audit mode, then restart your system. After restarting, event logs are produced for Kernel-mode drivers that are running but would otherwise be blocked if the policy was not deployed in Audit mode.
 
-<br>
+Subsequently, you need to use the **-AuditAndEnforce** parameter to generate the final base policy. This parameter will:
 
-Now you need to use the **AuditAndEnforce** parameter to create the final base policy. This parameter will scan the event logs, create a supplemental policy for the drivers detected in event logs, merge the supplemental policy with the Strict Kernel-mode base policy and deploy it as a single base policy. **No reboot required after deploying the final enforced mode policy, reboot is only required 1 time, after deploying the Audit mode policy.**
+1. Scan all of the event logs that were produced after deploying the audit mode policy on the system
+2. Generate a supplemental policy for the drivers detected in event logs
+3. Merge the supplemental policy with the Strict Kernel-mode base policy
+4. Deploy it as a single base policy, rebootlessly.
 
-Hardware drivers are scanned based on their certificates so they won't require a policy update when they are updated as long as they are still signed with the same certificate.
+Hardware drivers are scanned based on their certificates so they will not necessitate a policy update when they are updated as long as they are still signed with the same certificate.
 
-The deployed base policy can have supplemental policies too so if in the future you need to allow more Kernel-mode drivers to run on your system, you can use the following command to automatically create and deploy a Supplemental policy.
+The deployed base policy can have supplemental policies too so if in the future you need to allow more Kernel-mode drivers to run on your system, you can use the following command to automatically generate and deploy a Supplemental policy.
 
 ```powershell
 Edit-WDACConfig -AllowNewAppsAuditEvents -SuppPolicyName "Kernel mode drivers for software X" -PolicyPath <Path to Strict Kernel-mode policy xml file> -Fallbacks None -NoUserPEs -NoScript
@@ -39,7 +42,7 @@ Edit-WDACConfig -AllowNewAppsAuditEvents -SuppPolicyName "Kernel mode drivers fo
 
 * `-PrepMode`: Deploys the Strict Kernel-mode WDAC policy in Audit mode, preparing the system for an Audit.
 
-* `-AuditAndEnforce`: Audits the system using event logs for any blocked drivers, generates and deploys the final Strict Kernel-mode WDAC policy on the system.
+* `-AuditAndEnforce`: Audits the system using event logs for any blocked drivers, generates the final Strict Kernel-mode WDAC policy.
 
 * `-EVSigners`: Uses EVSigners policy rule option. If you want to use this parameter, make sure you use it for both PrepMode and AuditAndEnforce parameters. [Read more about EV Signers](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-Notes#policies-with-requiredev-signers-rule-option)
 
@@ -64,17 +67,22 @@ New-KernelModeWDACConfig [-NoFlightRoots] [-PrepMode] [-AuditAndEnforce] [-Deplo
 
 ### How to use
 
-This cmdlet creates a Kernel-mode WDAC policy based on the Default Windows example policy. [You can read more about that process in here.](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-policy-for-BYOVD-Kernel-mode-only-protection)
+This cmdlet generates a Kernel-mode WDAC policy derived from the Default Windows template policy. [You can learn more about that procedure in here.](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-policy-for-BYOVD-Kernel-mode-only-protection)
 
-The NoFlightRoots parameter indicates that the Strict Kernel-mode WDAC policy will not be deployed with flight root certificates, disallowing you to use insider builds of the OS.
+The **-NoFlightRoots** parameter signifies that the Strict Kernel-mode WDAC policy will not be deployed with flight root certificates, disallowing you to use insider builds of the OS.
 
-First you need to use the **PrepMode** parameter to deploy the base policy in Audit mode, then reboot your system, after reboot event logs are generated for Kernel-mode drivers that are running but would otherwise get blocked if the policy was not deployed in Audit mode.
+Initially, you need to use the **-PrepMode** parameter to deploy the base policy in Audit mode, then restart your system. After restarting, event logs are produced for Kernel-mode drivers that are running but would otherwise be blocked if the policy was not deployed in Audit mode.
 
-Now you need to use the **AuditAndEnforce** parameter to create the final base policy. This parameter will scan the event logs, create a supplemental policy for the drivers detected in event logs, merge the supplemental policy with the Strict Kernel-mode base policy and deploy it as a single base policy. **No reboot required after deploying the final enforced mode policy, reboot is only required 1 time, after deploying the Audit mode policy.**
+Subsequently, you need to use the **-AuditAndEnforce** parameter to generate the final base policy. This parameter will:
 
-Hardware drivers are scanned based on their certificates so they won't require a policy update when they are updated as long as they are still signed with the same certificate.
+1. Scan all of the event logs that were produced after deploying the audit mode policy on the system
+2. Generate a supplemental policy for the drivers detected in event logs
+3. Merge the supplemental policy with the Strict Kernel-mode base policy
+4. Deploy it as a single base policy, rebootlessly.
 
-The deployed base policy can have supplemental policies too so if in the future you need to allow more Kernel-mode drivers to run on your system, you can use the following command to automatically create and deploy a Supplemental policy.
+Hardware drivers are scanned based on their certificates so they will not necessitate a policy update when they are updated as long as they are still signed with the same certificate.
+
+The deployed base policy can have supplemental policies too so if in the future you need to allow more Kernel-mode drivers to run on your system, you can use the following command to automatically generate and deploy a Supplemental policy.
 
 ```powershell
 Edit-WDACConfig -AllowNewAppsAuditEvents -SuppPolicyName "Kernel mode drivers for software X" -PolicyPath <Path to Strict Kernel-mode policy xml file> -Fallbacks None -NoUserPEs -NoScript
@@ -88,12 +96,11 @@ Edit-WDACConfig -AllowNewAppsAuditEvents -SuppPolicyName "Kernel mode drivers fo
 
 * `-PrepMode`: Deploys the Strict Kernel-mode WDAC policy in Audit mode, preparing the system for an Audit.
 
-* `-AuditAndEnforce`: Audits the system using event logs for any blocked drivers, generates and deploys the final Strict Kernel-mode WDAC policy on the system.
+* `-AuditAndEnforce`: Audits the system using event logs for any blocked drivers, generates the final Strict Kernel-mode WDAC policy.
 
 * `-EVSigners`: Uses EVSigners policy rule option. If you want to use this parameter, make sure you use it for both PrepMode and AuditAndEnforce parameters. [Read more about EV Signers](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-Notes#policies-with-requiredev-signers-rule-option)
 
-* `-Deploy`: Indicates that the policy will be deployed. If you want to deploy the final strict kernel-mode no flight roots base policy Signed, do not use this parameter with `-AuditAndEnforce`. Instead just create the policy and then use [Deploy-SignedWDACConfig](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Deploy-SignedWDACConfig) cmdlet to deploy it.
-
+* `-Deploy`: Indicates that the policy will be deployed. If you want to deploy the final strict kernel-mode base policy Signed, do not use this parameter with `-AuditAndEnforce`. Instead just create the policy and then use [Deploy-SignedWDACConfig](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Deploy-SignedWDACConfig) cmdlet to deploy it.
 <br>
 
 <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
@@ -107,17 +114,5 @@ Edit-WDACConfig -AllowNewAppsAuditEvents -SuppPolicyName "Kernel mode drivers fo
 * **Automatic** parameters indicate that if you used [Set-CommonWDACConfig](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Set-CommonWDACConfig) cmdlet to set default values for them, the module will automatically use them. This saves time and prevents repetitive tasks. However, if no value exists in User Configurations for an Automatic parameter and you didn't explicitly provide a value for that parameter either, then you will see an error asking you to provide value for it. Explicitly providing a value for an Automatic parameter in the command line overrides its default value in User Configurations, meaning the module will ignore the value of the same parameter in the User Configurations file.
 
 * **Optional** parameters indicate that they are not required and without using them the module will automatically run with the optimal settings.
-
-<br>
-
-### During the PrepModes, [the following event log categories](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/operations/event-id-explanations) are cleared
-
-* Applications and Services logs – Microsoft – Windows – CodeIntegrity – Operational includes events about Application Control policy activation and the control of executables, dlls, and drivers.
-
-* Applications and Services logs – Microsoft – Windows – AppLocker – MSI and Script includes events about the control of MSI installers, scripts, and COM objects.
-
-This behavior is required so that the audit phase will have the correct logs to scan and add to the base policy for allow listing. This behavior can be changed/improved in a future module update.
-
-Before the audit mode phase, make sure you trust all the files and programs installed on your system, otherwise you risk allow listing vulnerable or malicious drivers in your policy.
 
 <br>

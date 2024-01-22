@@ -453,6 +453,9 @@ Function New-KernelModeWDACConfig {
 
                     Write-Verbose -Message 'Removing the GUID of the StrictKernelNoFlightRootsPolicy from user configuration'
                     Remove-CommonWDACConfig -StrictKernelNoFlightRootsPolicyGUID | Out-Null
+
+                    Write-Verbose -Message 'Removing the time of deployment of the StrictKernelPolicy from user configuration'
+                    Remove-CommonWDACConfig -StrictKernelModePolicyTimeOfDeployment | Out-Null
                 }
                 else {
                     # Remove the Audit mode policy from the system
@@ -513,8 +516,8 @@ Function New-KernelModeWDACConfig {
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCYiRetnOXMCIlU
-# 25jr/1/XKzQFAb9+QJG7rIH27eBRN6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBxEju7MovYNoFz
+# T/QceA1rALlIV+PzbfOFqBVuev2WfqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -561,16 +564,16 @@ Function New-KernelModeWDACConfig {
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgiXRwvvsbe3wS1CHe2FGdxHtMv9bNhAe5prVrtCJvtJQwDQYJKoZIhvcNAQEB
-# BQAEggIAnegUfShgYbzvccCdGs6plCoj6MKKxeKKGZ3lXi/aQoB9clRa6Kt7Xjfp
-# wHHzxqX0T3szSFixNaiZrKV2shSWSijhRH8jv34h8tcME2dD5tR45xjGvc3ogB05
-# idXR0mp+cQyrE3Z+lcUkAB+ewdvsXw/jE/uwFr+ZwFlgZFfS7thHaNfL9MBJW5jP
-# RNtwYME5cVNxR2VUcUgEt9vON6h6yTqhAbzkieHBsxSZQS7xncaWHRTqyakQEzst
-# g+XpuNyot94ykhrHUBxJ1WWjxI6yfRJRWaEBTPCSi3sEguV+1acEsCNNxl7BFSNM
-# LZLSwsjSFZOR+JeOqNz49GRVf0lLn7KGdujJkteoRDKZwltZ2FSHJboLhq/M8SBa
-# 5ns/GlpwuuyepXphmtG4pPW/EjMxgxVdgo6wadur5ksjdLFUKdlqOsM+TCNoNrtH
-# +Bn51etxnGeYGK41yv4xF2WvcZCgn4SVa3bZewdjoSZDoBI0asxPdFvZkecuMz+k
-# obkaI+yqFFF8ozwowjChhfXJQIBR5yw2nRsQAgX6zf4sIrAqh5TRtRCeoJqvOTqL
-# aIuWFc6Bi+fboUCquZ8AiZwuFkGJ0TY3kbl53/jCzEtgTcx+J4BlMhs6ZxCm9hE2
-# UaUuRpX9YmnnVbEn3v1IfHonC4KEHweGFid4Nn8HzwR7JgcVyLA=
+# IgQgKKKaEAqV5G3upfp4Kntgy/vj4hPoXLK4ioEHnP5IvNMwDQYJKoZIhvcNAQEB
+# BQAEggIAa6dC4aaEXxzT7RDJE1wIy4XLdznyrcCeZ4It+BgrrfHefhZVHRpaqBqd
+# 9eSoW5WpRKfRhPf1Xc7KH/YyLrfWkbQ9ihf2t99k/mKi8lcb4tU5qCXeZP5LWJWi
+# dhRpZkMBLtsHJRvyRaWLoyhgdqQ6d6I50R6l0u4KbjtUEAlOsUNs7Ti1uPIQfBJC
+# OAbUv80iz+DNCeI3HHguA6dyy7cHjhhfQ/JhgHBMYzasUX8SVKGFD58RrIpIFS74
+# q7bcqSOwpZXyZSuZQjnHmWtgUgobOACGQgWAenidciHfSUpmG3fHfvC18iX9i/tj
+# dEJbSEBFoodCYPeI1yIn/54YlusQY+2iDwkGGp12tX2dDYB56CP5kjLkj+bILTXl
+# diEvgfJ8jnrJie3EBGX+CbBmwiKajonVW/5ihjaTYdhYxKvacqtLcHypGKJy7Pwe
+# to6LaYuwZe3wfxK2BEqN5sY6cNG7ca2cO9u6KUOnkBv3JdRlEhikox5LX1EZY9nf
+# ytF6Ft8WlU6EVpRQNWUNABSbj3Qng/1NOP1Y+nSTGZGB6OuFDaPDmn4OXQ2SXCyO
+# JbL6HB1SCqc0LKcMId+p8J7BYySOIxi3SMtjLSlGwu7GtXe1gurdHEPHNKJ69eW+
+# XUy45JKXsg8kH1SdfFjXY3dPOcrcGmFVZUkXjdQ70zD4XTzVYhg=
 # SIG # End signature block

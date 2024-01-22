@@ -73,7 +73,7 @@
   </SigningScenarios>
   <UpdatePolicySigners />
   <CiSigners />
-  <HvciOptions>0</HvciOptions>  
+  <HvciOptions>0</HvciOptions>
   <Settings>
     <Setting Provider="PolicyInfo" Key="Information" ValueName="Name">
       <Value>

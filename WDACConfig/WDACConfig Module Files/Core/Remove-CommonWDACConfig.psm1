@@ -33,7 +33,7 @@ Function Remove-CommonWDACConfig {
         # Delete the entire User Configs if a more specific parameter wasn't used
         # This method is better than $PSBoundParameters since it also contains common parameters
         if (!$CertCN -And !$CertPath -And !$SignToolPath -And !$UnsignedPolicyPath -And !$SignedPolicyPath -And !$StrictKernelPolicyGUID -And !$StrictKernelNoFlightRootsPolicyGUID -And !$LastUpdateCheck -And !$StrictKernelModePolicyTimeOfDeployment) {
-            Remove-Item -Path $Path -Recurse -Force
+            Remove-Item -Path $Path -Force
             Write-Verbose -Message 'User Configurations for WDACConfig module have been deleted.'
 
             # set a boolean value that returns from the Process and End blocks as well
@@ -211,8 +211,8 @@ Function Remove-CommonWDACConfig {
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDszwPQD8yun8YB
-# 8FSMSUrI/sSFwaoxSEk8T5BkHxJBY6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCOwTJyE1lilpc0
+# hd37deRoczCk1PsMUkWSPAn1RHdmpaCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -259,16 +259,16 @@ Function Remove-CommonWDACConfig {
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgTFEb5wHC6j5h0sY9HEZ2+PtB9b5b2cGJdmvIAY21JWwwDQYJKoZIhvcNAQEB
-# BQAEggIAL4FQQTPx4KtfWQddJCtBfpottBnx0Hk3dFhhQzoREAXbgTFpyJPhpUO2
-# V+1Tr3Dw/2vEMi5rX4GgJ2WLOw9wz/TxiAyFo7GY/xYvuDVJyqMeyYBo4sYM5k7X
-# rJ/Wn4uLHo182XXoFSX55dxgdbqTAC1z0IgJkFmNlWH/HS7sCU1e0afXv4b4X15p
-# s2aw3Y5F7JEFOd/Y1Ri/nOPzDJt8V2Niluo7igu1P/rdtmPDDa21WfkLb1IL1bTA
-# JmXwq8Wzm/rUWS4n4ETuckXFFHOO//ma5smCdR6BFYJZMkNL/1t2aoysxOjDESzm
-# fcG+toQUer6zZu00g2fk78Xsdtouybv6L2k+62YO80FzmH16M9xeXmPeMtptHotM
-# hBshIt9EBvSiHQtmQQCdBPNEGwwAxXG9U5OsP7pnh/UML7nPYey8nLYxg8CZVBxs
-# qzSrXGpfzg2PBCDKDJmw4nw6xGc1efpyEuH7a4Vo8tjL3SNKinyP1cB8D3djWMrZ
-# 5BAg+AdiGIofffgc7cNswdOK1kHxE5a7tWrCRjLtSqS2gp7nokdkl5HpwcLJbqlr
-# F0Rnm8tqqk0JFAkW1MYmRMY9JGXQCC9Qdr+wxsqlLbnc/aBym72E2oDXpXw3HBau
-# KZ+Yq9jl9Q069WfrFQf0ncgQZbL9dZjbi8zysTxIiK3I57HOxcA=
+# IgQgosRTn6/vjqEgVpjkQZamW7pk4mbU0ANBQHok/geB+CAwDQYJKoZIhvcNAQEB
+# BQAEggIAm5Nd50jwDmPcaRiZFlEX46z2HQqTF2VsNliZC9JDi3afpRNKG+77+Wpg
+# hcX1yMJBfelbz1P3zCSzV4HtuF/mlnWWTaUT+ggClCkO5PQQP10D7UMU/PmyNcPu
+# sywp4urfxgq/p9H1Vptyv1ERUpamDXcRRzBXln6NkImxd24JeYZlTTUJIQcJ4VzX
+# sCrJMtgdetbRV0ISJzwHm36k5LAV+rXKo8HLtlj+Ivmq6ufOoKVOlGf4sthBHnmc
+# gNtyfdq7OZQrGvpGHLh2PB11V9FC2Rz/y7ngGqgYvjToClfG4fBU/wEkSs/uNYxp
+# osYhk0yNDKDh18NvQ5B01sDFPQnLKBYzi1m2HmzUpt1CmgPUwQPWs+PB1G2ihUKX
+# ixFLl2I1Cdbqdhf1hO3UZV9d9eAtX3Wu9twlHfytT8bA+Wr6/Ugy7AUmFLE3sp4y
+# wIzAmRe3GZNI3do8uXB0rJG4hQAskfBT/P4oSFNsKDtqiCpvnaG2lWcbT3JEVXBG
+# aI3hh5WUQqEVFP8EY6w1Jtwp1PKN9RunWGHkMEBuh2Ogjj5m29tappyVWXb7lwKt
+# ED6l+79I0XcywzVtSOTCbvfBjWUshSkRF+TjeREc2HdHksS09fftmVGGNRZXoTbw
+# Rce5Wd/minc9Ss4rXd+30WjcN/KQRP7U3BxgU/JHG/ndY4aslwo=
 # SIG # End signature block

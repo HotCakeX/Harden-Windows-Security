@@ -33,14 +33,17 @@ Function Get-CommonWDACConfig {
 
         if ($Open) {
             . $Path
+
+            # set a boolean value that returns from the Process and End blocks as well
             [System.Boolean]$ReturnAndDone = $true
+            # return/exit from the begin block
             Return
         }
 
         # Display this message if User Configuration file is empty or only has spaces/new lines
         if ([System.String]::IsNullOrWhiteSpace((Get-Content -Path $Path))) {
             Write-Verbose -Message 'Your current WDAC User Configurations is empty.'
-            # set a boolean value that returns from the Process and End blocks as well
+
             [System.Boolean]$ReturnAndDone = $true
             # return/exit from the begin block
             Return
@@ -56,6 +59,7 @@ Function Get-CommonWDACConfig {
         catch {
             Write-Warning -Message 'The UserConfigurations.json was corrupted, clearing it.'
             Set-Content -Path $Path -Value ''
+
             [System.Boolean]$ReturnAndDone = $true
             # return/exit from the begin block
             Return
@@ -139,8 +143,8 @@ Function Get-CommonWDACConfig {
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCC8P0XmKyElTfS/
-# K9nWI1KbxOzFTMCLdLhBmXgi1FoGYaCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBoVCz7I2ruYbwu
+# q8diFmkQbaGDKCkez2teF5aEak0b1aCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -187,16 +191,16 @@ Function Get-CommonWDACConfig {
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgLSHCTTvyins1zX+bfmyntMUfG2IvRLoBpgYiQvVrSMIwDQYJKoZIhvcNAQEB
-# BQAEggIAmQyNu1SIApHAzFADfwWf0H+mRzn1aVwLHOENIErTigU6NbhF+yIrb5BI
-# 0Q6XOzgrwz5c/0QUbrdZR4/H/empNzziS8dCpbXnRNBfvfDeoil2t7ic/+O00eQY
-# cl3vEVf5+UQcchQUBz5XaSA5FhLrT0SRmbh4huNQisbc55vZAu0hB8+7cAU26+nZ
-# KlTsIlGV+EXTWQtQ3/RbXnoGTRUyPBygdolIVv2HZS35RbAqgyIy43Zhltmn2gAl
-# zBuaNF86jMnBGAKFXkugHa2UtgVjcnuWjZinhvShzE8tfcjVK8+ODxkUgPzDVhdy
-# v/AOZKHe6Mf26wxpKPgbxgz4UjYZpLf65mx2bUIm+wFUwHvtjALJsGndlgO2ar8O
-# +RtsSBUxmnsdsvHeVClQ5+TD5IDiUgl3n4Y+Aq4VY2ooXAZV1jEtZlaYKlAJ3X7H
-# YTqxX/apowB0Blfi5wcGZui16lCUQXFE67+YZYXy2IVHAIgAYzNXCq+VlVoVJ0TE
-# KcRpTmnqTX7g0M0Y92kvq/rD3l3Rk12psemASF+5pfvlwgIfvG1aLvP01/IUVCsR
-# tPkU8L181K6/ZCGJHGhn2+BRR8aXmg1GgtJKlyNLkjJMdKnAw+HihIpG37dYq0eT
-# m+GyVura7bXCVwAF0aEAGkkBfiu14Oc4Tez0IdkqQTOgkOo8la8=
+# IgQgK2B2kN3kvH9A3GrhFEBbkVX1Ee0InPzwka3+h2VPB0owDQYJKoZIhvcNAQEB
+# BQAEggIAlNlbhlh4szyr8FeHXlyNaV+Y8d9xtNmxKZUpg1lDemcJDrQUEM4bDPYo
+# tvanj8YO6NXazSGnSqdVWUF0T3Fd+Sr/SCcDXuyy5P3J4qaYg2A7qLdXzjUW7KWY
+# cevrCpbqScFMi1uBZDwv9DbkH+lk9hiYJcGBDqw4HZXAGvGT4Hgz1jWyONPFJ0Y/
+# UYIGw9m4RH19cnCL8wMu32+K4r89EIlGeZ3m73WEw3JRpis+SQIcvivAepNFYvgi
+# box/v2N4GvDcs/8FdFDdoxYQxnlzp6Xu/0oGgTwokxmPonAYE5DzEBy1U8ozeix4
+# LUy8fKWUqjZGDdr+BkFLymRLk+WDFwQ4aqvb8aHOC8n6PZW+jO1jz8jwxCJ190RQ
+# fr0DsFlhU4mkzITaxld51yKxdTMYDl7p0ISeWF448yY3FqLlU3ndS9ExbpryOnwB
+# r6QiaPO94Ch5idJSugnxJgzO+JXDCEuwY1i+8Bm3h5S9md0H0NZ30mId0SD/SPK3
+# tCIbFSCvqiRugW2pFpzs/HAYSWwlDVKFzXF6fZhgufPUWZ157xTgxUWqHIeYYRtv
+# mGtFVis3jnCQHvlgxYr5DuSb82774zBaSIaKXWpoVFF5nRgafiEzFcgCVw2DJhFP
+# WzDrsKY4qVdRNuR26BUGKAqW+mt4cRsBTwk0mYkCJ198mR6kzSE=
 # SIG # End signature block

@@ -68,12 +68,12 @@ Function Get-KernelModeDriversAudit {
             }
         }
 
-        Write-Debug -Message "RawData count without processing: $($RawData.count)"
+        Write-Verbose -Message "RawData count without processing: $($RawData.count)"
 
         Write-Verbose -Message 'Removing duplicates based on SHA256 hash'
         $RawData = $RawData | Group-Object -Property 'SHA256 Hash' | ForEach-Object -Process { $_.Group[0] }
 
-        Write-Debug -Message "RawData count after deduplication based on SHA256 hash: $($RawData.count)"
+        Write-Verbose -Message "RawData count after deduplication based on SHA256 hash: $($RawData.count)"
 
         Write-Verbose -Message 'Saving the file paths to a variable'
         [System.IO.FileInfo[]]$KernelModeDriversPaths = $RawData.'File Name'
@@ -81,12 +81,12 @@ Function Get-KernelModeDriversAudit {
         Write-Verbose -Message 'Filtering based on files that exist with .sys and .dll extensions'
         $KernelModeDriversPaths = $KernelModeDriversPaths | Where-Object -FilterScript { ($_.Extension -in ('.sys', '.dll')) -and ($_.Exists) }
 
-        Write-Debug -Message "KernelModeDriversPaths count after filtering based on files that exist with .sys and .dll extensions: $($KernelModeDriversPaths.count)"
+        Write-Verbose -Message "KernelModeDriversPaths count after filtering based on files that exist with .sys and .dll extensions: $($KernelModeDriversPaths.count)"
 
         Write-Verbose -Message 'Removing duplicates based on file path'
         $KernelModeDriversPaths = $KernelModeDriversPaths | Group-Object -Property 'FullName' | ForEach-Object -Process { $_.Group[0] }
 
-        Write-Debug -Message "KernelModeDriversPaths count after deduplication based on file path: $($KernelModeDriversPaths.count)"
+        Write-Verbose -Message "KernelModeDriversPaths count after deduplication based on file path: $($KernelModeDriversPaths.count)"
 
         Write-Verbose -Message 'Creating a temporary folder to store the symbolic links to the driver files'
         [System.IO.DirectoryInfo]$SymLinksStorage = New-Item -Path ($UserTempDirectoryPath + 'SymLinkStorage' + $(New-Guid)) -ItemType Directory -Force
@@ -106,8 +106,8 @@ Export-ModuleMember -Function 'Get-KernelModeDriversAudit'
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDFOfK0ETLQSgmo
-# 2FNRa5LBFF7irEPqHfewdPH3LTcGMKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCD8/S/0R4zso40q
+# qxSIty+DwrdilPA67ty0zmqe2hEX5qCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -154,16 +154,16 @@ Export-ModuleMember -Function 'Get-KernelModeDriversAudit'
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgsfJ1nVHY3ovcuLL+nonOJ8oeTAq40SvIw2yJG9aSvTAwDQYJKoZIhvcNAQEB
-# BQAEggIAm2C8NlNVS5gQnwGEdui7gOyxGG/OpbB8VT+0vINtQeRS3OH+g4VPXjTn
-# lqtEWYBrzvB+gmh7uW81lkWTo8ffOSstnHzzsd/znkyxIEOHNuTO71hPcY7t1zNO
-# 0mj3UqfhbnGNnUnXkG9h+tCIrN/PH+5ooLhm4td3xXK2BEy2Kt6GsoBDMMoHHhNy
-# VZFexpLMkIaFPfRNFcu4m6PeotgDcvslPc6V4mNDCEfee4+AHh/1+cD2hHM89ist
-# 6b/w2PLsgaNGOqHEZscXDsw8nSaf+cT40YEmtvOAezXn0M3LT6izW+ME9RR80t5L
-# h+K46g+lrC+6WDhGXCw2Smv0z7wTHikfKcmHbMwxm+z79XRRo8VXBzvOHBD+wAMr
-# 3ozCJtzKFBaVlh4DRPytx4pSHY2KUKvncCS2u6BamYkcd3SaOiNEPN/823uEjY2C
-# SDfO5/Dk4cNn78NSuE0AQEPmCACWLgK664LjMRxwROx7pdjzJ0My2KEjVl84skCe
-# 4egSjFmhbnK8EqMxu0lVkPmx14gm8N1T6Tvz5X5oH4lGQ/4m/87SUv/Q+DAosJk4
-# CcL7KlYSs9vsywJy92UGTJEzKfXR9KbFK6dZ/M2ZprfNrOwqy/1hDI8W7U+Pborx
-# wPXCOm/Xtyz36YzVY0WZy8jiCCT/fn/PR/tjexwMclSKNsiFBcY=
+# IgQgontjxlQbDZmplahPYMnCcaVdsRPxbkX6fM0YKC+ssCcwDQYJKoZIhvcNAQEB
+# BQAEggIAYyS9pmPhBPiLa8dmuQ1rH8plOvG1VgTuPLnEGmSBynYzA1sZ0BnWrlv6
+# MAnPubstvMqUVyd+TpCb1fdgkK/IsRMrmFc0E3XK4Z3mCPB6uq5E32GRHT6nZCCM
+# +v2up+N42eFMTHqvn3SptHsJhyBinAX0kGvrZHFnecOmCTwKrXsSSLuCriswnBZL
+# Vb5xHiD5FYvelOVrvlU4vlkAnZ1/BAsuNbIcrR0fMz0Ozbv3e5CNo178oEwd8uKD
+# q8+nFctDUboiYHtMy1yNW0j/zpEjTxnZ+RUfwY3PYzpcrmFtH1b+K3lvFIl3RxjS
+# rmlWUf+iQt2htLGCEdLvYVDWFxgduM4yVOZxVHyqeqy3/6+0KEJoW9zKBHeFPVYO
+# ZuE05xacVjYTWJlhg0JgocqSsp9Y0wMyBm4hg6/I1a6ZoNdv9HIjnCHv8mJ3ursf
+# vBWqB/Sc8GIlPdV4f4fMHP5lLF/SfYN42sFbN1z54gDUJWGNA87RFXtSF7dxrYr/
+# 964uBQ2IBoAnFVBrYrEjqXcUhTfctzwMw7zsmbM00FTleEQ9SZJo5qNDMao4KCef
+# hmSCazJWuZPbi5aHsquQLjECcEEtBiuloxWU09k9B1StxcnMcCNzZF4QnKCqvvln
+# lZID1uc7lpyjyxjVV9FjBQuDriRwI8+8EiU9PIat+hu/bjXqGis=
 # SIG # End signature block

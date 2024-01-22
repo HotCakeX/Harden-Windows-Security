@@ -19,6 +19,8 @@ Function Get-KernelModeDriversAudit {
         None
     .OUTPUTS
         System.IO.DirectoryInfo
+    .NOTES
+        Get-SystemDriver only includes .sys files, but Get-KernelModeDriversAudit function includes .dll files as well just in case since they appear in event logs when auditing kernel-mode files.
     #>
     [CmdletBinding()]
     param()
@@ -79,7 +81,7 @@ Function Get-KernelModeDriversAudit {
         Write-Verbose -Message 'Filtering based on files that exist with .sys and .dll extensions'
         $KernelModeDriversPaths = $KernelModeDriversPaths | Where-Object -FilterScript { ($_.Extension -in ('.sys', '.dll')) -and ($_.Exists) }
 
-        Write-Debug -Message "KernelModeDriversPaths count after filtering based on files that exist with .sys extension: $($KernelModeDriversPaths.count)"
+        Write-Debug -Message "KernelModeDriversPaths count after filtering based on files that exist with .sys and .dll extensions: $($KernelModeDriversPaths.count)"
 
         Write-Verbose -Message 'Removing duplicates based on file path'
         $KernelModeDriversPaths = $KernelModeDriversPaths | Group-Object -Property 'FullName' | ForEach-Object -Process { $_.Group[0] }
@@ -104,8 +106,8 @@ Export-ModuleMember -Function 'Get-KernelModeDriversAudit'
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCD/0FXBh+t97OM7
-# 4JGmyi5Xjz08jvSf+ZU1KQ6zRKHu36CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDFOfK0ETLQSgmo
+# 2FNRa5LBFF7irEPqHfewdPH3LTcGMKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -152,16 +154,16 @@ Export-ModuleMember -Function 'Get-KernelModeDriversAudit'
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgjmoZoj2rrsuS7Wph5ct7wINVQpO4pan/azq0IuB5tEQwDQYJKoZIhvcNAQEB
-# BQAEggIAiOJId3cYQnZ58sNiiSLXtHHYy7xNzfLkZBl93p9djIJRwcUDw4ox21dN
-# OI+eIEVYUNUruTdNb4NDLnZWVWvmOjTCfGjGOwOtqFoJbaHPQLotIXTvyxG/yen+
-# r/MklNsNBXmr8ecn3q41RzmdHMZneiDAGB3PdIua9SvvZvAT095FORyITBYWis9t
-# Eu5u9xmeccmZYAPCWq+9w7NnRXclFntyq5U4HwfuS4XTwIml+iP6ZRAzVKOjP8Ny
-# tekdJtPd1duP51buEKS4Bq9/EvDMOOYyYY/vPUqOr2eHN4egOFOYmUDWQ/ezo7yT
-# h2tRDD9+xX71b2u6dLllT0pxrIVkn6Lbbw+mdB1PR7iXrg+WqnvK1MYXvjAdSxX9
-# sEGyRbDpAoliVdslUDJsQUyj8eIFQeKbgrztOruiMBJk47qGZ4UcISQ2QKwES7vL
-# /61/3yw1N7UcEFFSsG5diD7DvGcV65mlio56Q9jXrYm2L5IkqnY/8qlP1N4WDJJk
-# AV0UCZncuMIGvv5am6VuLN73Bcv1zOTBleh/7zEosNkcyimxN1xpl9eFakOEtnE2
-# xNADstsNev/ONrgI4JNHkCkHbwubFmWvecmxCKAqzjaVZKaxNKqQO81y1FyywvuF
-# iHccsKYcpih/ysfasQTQyRfN188I2p2rSlHEDtCQY6O64ke1B7I=
+# IgQgsfJ1nVHY3ovcuLL+nonOJ8oeTAq40SvIw2yJG9aSvTAwDQYJKoZIhvcNAQEB
+# BQAEggIAm2C8NlNVS5gQnwGEdui7gOyxGG/OpbB8VT+0vINtQeRS3OH+g4VPXjTn
+# lqtEWYBrzvB+gmh7uW81lkWTo8ffOSstnHzzsd/znkyxIEOHNuTO71hPcY7t1zNO
+# 0mj3UqfhbnGNnUnXkG9h+tCIrN/PH+5ooLhm4td3xXK2BEy2Kt6GsoBDMMoHHhNy
+# VZFexpLMkIaFPfRNFcu4m6PeotgDcvslPc6V4mNDCEfee4+AHh/1+cD2hHM89ist
+# 6b/w2PLsgaNGOqHEZscXDsw8nSaf+cT40YEmtvOAezXn0M3LT6izW+ME9RR80t5L
+# h+K46g+lrC+6WDhGXCw2Smv0z7wTHikfKcmHbMwxm+z79XRRo8VXBzvOHBD+wAMr
+# 3ozCJtzKFBaVlh4DRPytx4pSHY2KUKvncCS2u6BamYkcd3SaOiNEPN/823uEjY2C
+# SDfO5/Dk4cNn78NSuE0AQEPmCACWLgK664LjMRxwROx7pdjzJ0My2KEjVl84skCe
+# 4egSjFmhbnK8EqMxu0lVkPmx14gm8N1T6Tvz5X5oH4lGQ/4m/87SUv/Q+DAosJk4
+# CcL7KlYSs9vsywJy92UGTJEzKfXR9KbFK6dZ/M2ZprfNrOwqy/1hDI8W7U+Pborx
+# wPXCOm/Xtyz36YzVY0WZy8jiCCT/fn/PR/tjexwMclSKNsiFBcY=
 # SIG # End signature block

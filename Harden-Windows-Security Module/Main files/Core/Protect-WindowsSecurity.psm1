@@ -1327,6 +1327,8 @@ Function Protect-WindowsSecurity {
                             # Get the program name
                             [System.String]$ProgramName = $Group.Name
 
+                            Write-Verbose -Message "Adding process mitigations for $ProgramName"
+
                             # Get the list of mitigations to enable
                             [System.String[]]$EnableMitigations = $Group.Group | Where-Object -FilterScript { $_.Action -eq 'Enable' } | Select-Object -ExpandProperty Mitigation
 

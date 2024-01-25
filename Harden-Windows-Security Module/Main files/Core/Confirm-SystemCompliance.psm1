@@ -2182,7 +2182,7 @@ function Confirm-SystemCompliance {
                     ($TotalTrueCompliantValuesInOutPut -gt 200) { & $WriteRainbow2 "$WhenValueAbove88`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $TotalNumberOfTrueCompliantValues!" }
                 }
             }
-        }        
+        }
         Catch {
             # Throw any unhandled errors in a terminating fashion
             Throw $_

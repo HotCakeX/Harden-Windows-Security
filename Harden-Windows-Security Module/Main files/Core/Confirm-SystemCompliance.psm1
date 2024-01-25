@@ -27,7 +27,7 @@ function Confirm-SystemCompliance {
 
         #Region Defining-Variables
         # Total number of Compliant values not equal to N/A
-        [System.Int64]$TotalNumberOfTrueCompliantValues = 230
+        [System.Int64]$TotalNumberOfTrueCompliantValues = 231
 
         # Get the current configurations and preferences of the Microsoft Defender
         New-Variable -Name 'MDAVConfigCurrent' -Value (Get-MpComputerStatus) -Force
@@ -288,7 +288,7 @@ function Confirm-SystemCompliance {
             # For PowerShell Cmdlet
             $NestedObjectArray += [PSCustomObject]@{
                 FriendlyName = 'Smart App Control State'
-                Compliant    = 'N/A'
+                Compliant    = ($MDAVConfigCurrent.SmartAppControlState -eq 'On') ? $True : $False
                 Value        = $MDAVConfigCurrent.SmartAppControlState
                 Name         = 'Smart App Control State'
                 Category     = $CatName
@@ -2010,7 +2010,7 @@ function Confirm-SystemCompliance {
                     } , Value -AutoSize
                 }
 
-                [System.String[]]$Categories = ('Microsoft Defender', # 49 - 4x(N/A) = 45
+                [System.String[]]$Categories = ('Microsoft Defender', # 49 - 3x(N/A) = 46
                     'ASR', # 17
                     'Bitlocker', # 22 + Number of Non-OS drives which are dynamically increased
                     'TLS', # 21

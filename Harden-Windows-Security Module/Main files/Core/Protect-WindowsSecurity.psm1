@@ -1304,11 +1304,21 @@ Function Protect-WindowsSecurity {
                             # To separate the filename from full path of the item in the CSV and then check whether it exists in the system registry
                             if ($Group.Name -match '\\([^\\]+)$') {
                                 if ($Matches[1] -in $AllAvailableMitigations.pschildname) {
-                                    Remove-Item -Path "Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\$($Matches[1])" -Recurse -Force
+                                    try {
+                                        Remove-Item -Path "Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\$($Matches[1])" -Recurse -Force
+                                    }
+                                    catch {
+                                        Write-Verbose -Message "Failed to remove $($Matches[1]), it's probably protected by the system."
+                                    }
                                 }
                             }
                             elseif ($Group.Name -in $AllAvailableMitigations.pschildname) {
-                                Remove-Item -Path "Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\$($Group.Name)" -Recurse -Force
+                                try {
+                                    Remove-Item -Path "Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\$($Group.Name)" -Recurse -Force
+                                }
+                                catch {
+                                    Write-Verbose -Message "Failed to remove $($Group.Name), it's probably protected by the system."
+                                }
                             }
                         }
 
@@ -1316,6 +1326,8 @@ Function Protect-WindowsSecurity {
                         foreach ($Group in $GroupedMitigations) {
                             # Get the program name
                             [System.String]$ProgramName = $Group.Name
+
+                            Write-Verbose -Message "Adding process mitigations for $ProgramName"
 
                             # Get the list of mitigations to enable
                             [System.String[]]$EnableMitigations = $Group.Group | Where-Object -FilterScript { $_.Action -eq 'Enable' } | Select-Object -ExpandProperty Mitigation

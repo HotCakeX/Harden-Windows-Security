@@ -27,7 +27,7 @@ function Confirm-SystemCompliance {
 
         #Region Defining-Variables
         # Total number of Compliant values not equal to N/A
-        [System.Int64]$TotalNumberOfTrueCompliantValues = 230
+        [System.Int64]$TotalNumberOfTrueCompliantValues = 231
 
         # Get the current configurations and preferences of the Microsoft Defender
         New-Variable -Name 'MDAVConfigCurrent' -Value (Get-MpComputerStatus) -Force
@@ -123,7 +123,7 @@ function Confirm-SystemCompliance {
             foreach ($Item in $AllRegistryItems | Where-Object -FilterScript { ($_.category -eq $CatName) -and ($_.Method -eq $Method) }) {
 
                 # Initialize a flag to indicate if the key exists
-                [System.Boolean]$keyExists = $false
+                [System.Boolean]$KeyExists = $false
 
                 # Initialize a flag to indicate if the value exists and matches the type
                 [System.Boolean]$ValueMatches = $false
@@ -132,11 +132,11 @@ function Confirm-SystemCompliance {
                 try {
                     $regKey = Get-Item -Path $Item.regPath
                     # If no error is thrown, the key exists
-                    $keyExists = $true
+                    $KeyExists = $true
 
                     # Try to get the registry value and type
                     try {
-                        $RegValue = Get-ItemPropertyValue -Path $Item.regPath -Name $Item.name
+                        $RegValue = Get-ItemPropertyValue -Path $Item.regPath -Name $Item.Name
                         # If no error is thrown, the value exists
 
                         # Check if the value matches the expected one
@@ -160,7 +160,7 @@ function Confirm-SystemCompliance {
                     FriendlyName = $Item.FriendlyName
                     Compliant    = $ValueMatches
                     Value        = $Item.value
-                    Name         = $Item.name
+                    Name         = $Item.Name
                     Category     = $CatName
                     Method       = $Method
                 }
@@ -173,7 +173,7 @@ function Confirm-SystemCompliance {
     process {
 
         try {
-            # A global try-finally block to revert the changes made being made to the Controlled Folder Access exclusions list
+            # A global try-Catch-finally block to revert the changes made being made to the Controlled Folder Access exclusions list
             # Which is currently required for BCD NX value verification
 
             # backup the current allowed apps list in Controlled folder access in order to restore them at the end of the script
@@ -278,8 +278,8 @@ function Confirm-SystemCompliance {
             # Verify the NX bit as shown in bcdedit /enum or Get-BcdEntry, info about numbers and values correlation: https://learn.microsoft.com/en-us/previous-versions/windows/desktop/bcd/bcdosloader-nxpolicy
             $NestedObjectArray += [PSCustomObject]@{
                 FriendlyName = 'Boot Configuration Data (BCD) No-eXecute (NX) Value'
-                Compliant    = (((Get-BcdEntry).elements | Where-Object -FilterScript { $_.name -eq 'nx' }).value -eq '3')
-                Value        = (((Get-BcdEntry).elements | Where-Object -FilterScript { $_.name -eq 'nx' }).value -eq '3')
+                Compliant    = (((Get-BcdEntry).elements | Where-Object -FilterScript { $_.Name -eq 'nx' }).value -eq '3')
+                Value        = (((Get-BcdEntry).elements | Where-Object -FilterScript { $_.Name -eq 'nx' }).value -eq '3')
                 Name         = 'Boot Configuration Data (BCD) No-eXecute (NX) Value'
                 Category     = $CatName
                 Method       = 'Cmdlet'
@@ -288,7 +288,7 @@ function Confirm-SystemCompliance {
             # For PowerShell Cmdlet
             $NestedObjectArray += [PSCustomObject]@{
                 FriendlyName = 'Smart App Control State'
-                Compliant    = 'N/A'
+                Compliant    = ($MDAVConfigCurrent.SmartAppControlState -eq 'On') ? $True : $False
                 Value        = $MDAVConfigCurrent.SmartAppControlState
                 Name         = 'Smart App Control State'
                 Category     = $CatName
@@ -351,10 +351,7 @@ function Confirm-SystemCompliance {
             $NestedObjectArray += [PSCustomObject]@{
                 FriendlyName = 'Controlled Folder Access Exclusions'
                 Compliant    = 'N/A'
-                Value        = [PSCustomObject]@{
-                    Count    = $MDAVPreferencesCurrent.ControlledFolderAccessAllowedApplications.count
-                    Programs = $MDAVPreferencesCurrent.ControlledFolderAccessAllowedApplications
-                }
+                Value        = ($MDAVPreferencesCurrent.ControlledFolderAccessAllowedApplications -join ',') # Join the array elements into a string to display them properly in the output CSV file
                 Name         = 'Controlled Folder Access Exclusions'
                 Category     = $CatName
                 Method       = 'Cmdlet'
@@ -392,6 +389,168 @@ function Confirm-SystemCompliance {
                 Category     = $CatName
                 Method       = 'Cmdlet'
             }
+
+            #Region Microsoft-Defender-Exploit-Guard-Category
+
+            # Get the current system's exploit mitigation policy XML file using the Get-ProcessMitigation cmdlet
+            [System.String]$RandomGUID = (New-Guid).Guid.ToString()
+            Get-ProcessMitigation -RegistryConfigFilePath ".\CurrentlyAppliedMitigations-$RandomGUID.xml"
+
+            # Load the XML file as an XML object
+            [System.Xml.XmlDocument]$SystemMitigationsXML = Get-Content -Path ".\CurrentlyAppliedMitigations-$RandomGUID.xml" -Force
+
+            # Delete the XML file after loading it
+            Remove-Item -Path ".\CurrentlyAppliedMitigations-$RandomGUID.xml" -Force
+
+            #Region System-Mitigations-Processing
+            # A hashtable to store the output of the current system's exploit mitigation policy XML file exported by the Get-ProcessMitigation cmdlet
+            [System.Collections.Hashtable]$ProcessMitigationsOnTheSystem = @{}
+
+            # Loop through each AppConfig element in the XML object
+            foreach ($App in $SystemMitigationsXML.MitigationPolicy.AppConfig) {
+                # Get the executable name of the app
+                [System.String]$Name = $App.Executable
+
+                # Create an empty array to store the mitigations
+                [System.String[]]$Mitigations = @()
+
+                # Loop through each child element of the app element
+                foreach ($Child in $App.ChildNodes ) {
+                    # Get the name of the mitigation
+                    [System.String]$Mitigation = $Child.Name
+
+                    # Loop through each attribute of the child element
+                    foreach ($Attribute in $Child.Attributes) {
+                        # Get the name and value of the attribute
+                        [System.String]$AttributeName = $Attribute.Name
+                        [System.String]$AttributeValue = $Attribute.Value
+
+                        # If the attribute value is true, add it to the array
+                        # We don't include the mitigations that are disabled/set to false
+                        # For example, some poorly designed git apps are incompatible with mandatory ASLR
+                        # And they pollute the output of the Get-ProcessMitigation cmdlet with items such as "<ASLR ForceRelocateImages="false" RequireInfo="false" />"
+                        if ($AttributeValue -eq 'true') {
+                            # If the attribute name is Enable, use the mitigation name instead, because we only need the names of the mitigations that are enabled for comparison with the CSV file.
+                            # Some attributes such as "<StrictHandle Enable="true" />" don't have a name so we add the mitigation's name to the array instead, which is "StrictHandle" in this case.
+                            if ($AttributeName -eq 'Enable') {
+                                $Mitigations += $Mitigation
+                            }
+                            else {
+                                $Mitigations += $AttributeName
+                            }
+                        }
+                    }
+                }
+
+                # Make sure the array isn't empty which filters out apps with no mitigations or mitigations that are all disabled/set to false
+                if ($Mitigations.Count -ne 0) {
+                    # Create a hashtable entry with the name and mitigations properties
+                    $ProcessMitigationsOnTheSystem[$Name] = $Mitigations
+                }
+            }
+
+            # Create a new empty hashtable which replaces "ControlFlowGuard" with "CFG" since the shortened name is used in the CSV file and required by the the Set-ProcessMitigation cmdlet
+            [System.Collections.Hashtable]$RevisedProcessMitigationsOnTheSystem = @{}
+
+            # Loop over the keys and values of the original hashtable
+            foreach ($Key in $ProcessMitigationsOnTheSystem.Keys) {
+                # Get the value array for the current key
+                [System.String[]]$Value = $ProcessMitigationsOnTheSystem[$Key]
+                # Replace "ControlFlowGuard" with "CFG" in the value array
+                [System.String[]]$Value = $Value -replace 'ControlFlowGuard', 'CFG'
+                # Add the modified key-value pair to the new hashtable
+                $RevisedProcessMitigationsOnTheSystem.add($Key, $Value)
+            }
+            #Endregion System-Mitigations-Processing
+
+            #Region Harden-Windows-Security-Module-CSV-Processing
+            # Import the CSV file as an object
+            [System.Object[]]$ProcessMitigations = Import-Csv -Path "$HardeningModulePath\Resources\ProcessMitigations.csv" -Delimiter ','
+
+            # Only keep the enabled mitigations in the CSV, then Group the data by ProgramName
+            [System.Object[]]$GroupedMitigations = $ProcessMitigations | Where-Object -FilterScript { $_.Action -eq 'Enable' } | Group-Object -Property ProgramName
+
+            # A hashtable to store the output of the CSV file
+            [System.Collections.Hashtable]$TargetMitigations = @{}
+
+            # Loop through each group in the grouped mitigations array and add the ProgramName and Mitigations to the hashtable
+            foreach ($Item in $GroupedMitigations) {
+                $TargetMitigations[$Item.Name] = $Item.Group.Mitigation
+            }
+            #Endregion Harden-Windows-Security-Module-CSV-Processing
+
+            #Region Comparison
+            # Compare the values of the two hashtables if the keys match
+            $TargetMitigations.GetEnumerator() | ForEach-Object -Process {
+
+                # Get the current key and value from hashtable containing the CSV data
+                [System.String]$ProcessName_Target = $_.Key
+                [System.String[]]$ProcessMitigations_Target = $_.Value
+
+                # Check if the hashtable containing the currently applied mitigations contains the same key
+                # Meaning the same executable is present in both hashtables
+                if ($RevisedProcessMitigationsOnTheSystem.ContainsKey($ProcessName_Target)) {
+
+                    # Get the value from the applied mitigations hashtable
+                    [System.String[]]$ProcessMitigations_Applied = $RevisedProcessMitigationsOnTheSystem[$ProcessName_Target]
+
+                    # Compare the values of the two hashtables to see if they are the same without the order of the elements (process mitigations) in the arrays being considered
+                    # Compare-Object produces output only if the objects are different
+                    if (Compare-Object -ReferenceObject $ProcessMitigations_Target -DifferenceObject $ProcessMitigations_Applied) {
+
+                        # If the values are different, it means the process has different mitigations applied to it than the ones in the CSV file
+                        Write-Verbose -Message "Mitigations for $ProcessName_Target were found but are not compliant"
+
+                        # Increment the total number of the verifiable compliant values for each process that has a mitigation applied to it in the CSV file
+                        $TotalNumberOfTrueCompliantValues++
+
+                        $NestedObjectArray += [PSCustomObject]@{
+                            FriendlyName = "Process Mitigations for: $ProcessName_Target"
+                            Compliant    = $False
+                            Value        = ($ProcessMitigations_Applied -join ',') # Join the array elements into a string to display them properly in the output CSV file
+                            Name         = "Process Mitigations for: $ProcessName_Target"
+                            Category     = $CatName
+                            Method       = 'Cmdlet'
+                        }
+                    }
+                    else {
+                        # If the values are the same, it means the process has the same mitigations applied to it as the ones in the CSV file
+                        Write-Verbose -Message "Mitigations for $ProcessName_Target are compliant"
+
+                        # Increment the total number of the verifiable compliant values for each process that has a mitigation applied to it in the CSV file
+                        $TotalNumberOfTrueCompliantValues++
+
+                        $NestedObjectArray += [PSCustomObject]@{
+                            FriendlyName = "Process Mitigations for: $ProcessName_Target"
+                            Compliant    = $true
+                            Value        = ($ProcessMitigations_Target -join ',') # Join the array elements into a string to display them properly in the output CSV file
+                            Name         = "Process Mitigations for: $ProcessName_Target"
+                            Category     = $CatName
+                            Method       = 'Cmdlet'
+                        }
+                    }
+                }
+                else {
+                    # If the process name is not found in the hashtable containing the currently applied mitigations, it means the process doesn't have any mitigations applied to it
+                    Write-Verbose -Message "Mitigations for $ProcessName_Target were not found"
+
+                    # Increment the total number of the verifiable compliant values for each process that has a mitigation applied to it in the CSV file
+                    $TotalNumberOfTrueCompliantValues++
+
+                    $NestedObjectArray += [PSCustomObject]@{
+                        FriendlyName = "Process Mitigations for: $ProcessName_Target"
+                        Compliant    = $False
+                        Value        = 'N/A'
+                        Name         = "Process Mitigations for: $ProcessName_Target"
+                        Category     = $CatName
+                        Method       = 'Cmdlet'
+                    }
+                }
+            }
+            #Endregion Comparison
+
+            #Endregion Microsoft-Defender-Exploit-Guard-Category
+
             # Add the array of custom objects as a property to the $FinalMegaObject object outside the loop
             Add-Member -InputObject $FinalMegaObject -MemberType NoteProperty -Name $CatName -Value $NestedObjectArray
             #EndRegion Microsoft-Defender-Category
@@ -731,7 +890,7 @@ function Confirm-SystemCompliance {
             $NestedObjectArray += [PSCustomObject]@{
                 FriendlyName = 'ECC Curves and their positions'
                 Compliant    = [System.Boolean]($IndividualItemResult ? $false : $True)
-                Value        = $List
+                Value        = ($List -join ',') # Join the array elements into a string to display them properly in the output CSV file
                 Name         = 'ECC Curves and their positions'
                 Category     = $CatName
                 Method       = 'Cmdlet'
@@ -1196,7 +1355,7 @@ function Confirm-SystemCompliance {
             $NestedObjectArray += [PSCustomObject](Invoke-CategoryProcessing -catname $CatName -Method 'Group Policy')
 
             # Verify an Audit policy is enabled - only supports systems with English-US language
-            if ((Get-Culture).name -eq 'en-US') {
+            if ((Get-Culture).Name -eq 'en-US') {
                 $IndividualItemResult = [System.Boolean](((auditpol /get /subcategory:"Other Logon/Logoff Events" /r | ConvertFrom-Csv).'Inclusion Setting' -eq 'Success and Failure') ? $True : $False)
                 $NestedObjectArray += [PSCustomObject]@{
                     FriendlyName = 'Audit policy for Other Logon/Logoff Events'
@@ -1848,7 +2007,7 @@ function Confirm-SystemCompliance {
                     } , Value -AutoSize
                 }
 
-                [System.String[]]$Categories = ('Microsoft Defender', # 49 - 4x(N/A) = 45
+                [System.String[]]$Categories = ('Microsoft Defender', # 49 - 3x(N/A) = 46
                     'ASR', # 17
                     'Bitlocker', # 22 + Number of Non-OS drives which are dynamically increased
                     'TLS', # 21
@@ -2021,7 +2180,10 @@ function Confirm-SystemCompliance {
                 }
             }
         }
-
+        Catch {
+            # Throw any unhandled errors in a terminating fashion
+            Throw $_
+        }
         finally {
             # End the progress bar and mark it as completed
             Write-Progress -Id 0 -Activity 'Completed' -Completed
@@ -2052,7 +2214,7 @@ function Confirm-SystemCompliance {
 .FUNCTIONALITY
     Uses Gpresult and Secedit to first export the effective Group policies and Security policies, then goes through them and checks them against the Harden Windows Security's guidelines.
 .EXAMPLE
-    ($result.Microsoft Defender | Where-Object -FilterScript {$_.name -eq 'Controlled Folder Access Exclusions'}).value.programs
+    ($result.Microsoft Defender | Where-Object -FilterScript {$_.Name -eq 'Controlled Folder Access Exclusions'}).value.programs
 
     Do this to get the Controlled Folder Access Programs list when using ShowAsObjectsOnly optional parameter to output an object
 .EXAMPLE

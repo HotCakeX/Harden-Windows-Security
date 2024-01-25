@@ -173,7 +173,7 @@ function Confirm-SystemCompliance {
     process {
 
         try {
-            # A global try-finally block to revert the changes made being made to the Controlled Folder Access exclusions list
+            # A global try-Catch-finally block to revert the changes made being made to the Controlled Folder Access exclusions list
             # Which is currently required for BCD NX value verification
 
             # backup the current allowed apps list in Controlled folder access in order to restore them at the end of the script
@@ -2182,8 +2182,11 @@ function Confirm-SystemCompliance {
                     ($TotalTrueCompliantValuesInOutPut -gt 200) { & $WriteRainbow2 "$WhenValueAbove88`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $TotalNumberOfTrueCompliantValues!" }
                 }
             }
+        }        
+        Catch {
+            # Throw any unhandled errors in a terminating fashion
+            Throw $_
         }
-
         finally {
             # End the progress bar and mark it as completed
             Write-Progress -Id 0 -Activity 'Completed' -Completed

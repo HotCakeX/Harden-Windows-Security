@@ -351,10 +351,7 @@ function Confirm-SystemCompliance {
             $NestedObjectArray += [PSCustomObject]@{
                 FriendlyName = 'Controlled Folder Access Exclusions'
                 Compliant    = 'N/A'
-                Value        = [PSCustomObject]@{
-                    Count    = $MDAVPreferencesCurrent.ControlledFolderAccessAllowedApplications.count
-                    Programs = $MDAVPreferencesCurrent.ControlledFolderAccessAllowedApplications
-                }
+                Value        = ($MDAVPreferencesCurrent.ControlledFolderAccessAllowedApplications -join ',') # Join the array elements into a string to display them properly in the output CSV file
                 Name         = 'Controlled Folder Access Exclusions'
                 Category     = $CatName
                 Method       = 'Cmdlet'
@@ -510,7 +507,7 @@ function Confirm-SystemCompliance {
                         $NestedObjectArray += [PSCustomObject]@{
                             FriendlyName = "Process Mitigations for: $ProcessName_Target"
                             Compliant    = $False
-                            Value        = ($ProcessMitigations_Applied -join ',')
+                            Value        = ($ProcessMitigations_Applied -join ',') # Join the array elements into a string to display them properly in the output CSV file
                             Name         = "Process Mitigations for: $ProcessName_Target"
                             Category     = $CatName
                             Method       = 'Cmdlet'
@@ -526,7 +523,7 @@ function Confirm-SystemCompliance {
                         $NestedObjectArray += [PSCustomObject]@{
                             FriendlyName = "Process Mitigations for: $ProcessName_Target"
                             Compliant    = $true
-                            Value        = ($ProcessMitigations_Target -join ',')
+                            Value        = ($ProcessMitigations_Target -join ',') # Join the array elements into a string to display them properly in the output CSV file
                             Name         = "Process Mitigations for: $ProcessName_Target"
                             Category     = $CatName
                             Method       = 'Cmdlet'
@@ -893,7 +890,7 @@ function Confirm-SystemCompliance {
             $NestedObjectArray += [PSCustomObject]@{
                 FriendlyName = 'ECC Curves and their positions'
                 Compliant    = [System.Boolean]($IndividualItemResult ? $false : $True)
-                Value        = ($List -join ',')
+                Value        = ($List -join ',') # Join the array elements into a string to display them properly in the output CSV file
                 Name         = 'ECC Curves and their positions'
                 Category     = $CatName
                 Method       = 'Cmdlet'

@@ -51,11 +51,15 @@ We can readily verify this in the subsequent example. Let's assume you have depl
 
 <br>
 
+<br>
+
 And if we open the properties of one of those signed files, we can observe that they are signed by a certificate that was issued to an individual for Code Signing function only.
 
 <br>
 
 <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/Wiki%20About%20EKUs/2.png" alt="A file in OBS software and its Certificate info" />
+
+<br>
 
 <br>
 

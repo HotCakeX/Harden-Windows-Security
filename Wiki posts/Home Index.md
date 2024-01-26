@@ -40,6 +40,7 @@
  - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/yellowwings.gif" width="35"> [How to Create and Deploy a Signed WDAC Policy](https://github.com/HotCakeX/Harden-Windows-Security/wiki/How-to-Create-and-Deploy-a-Signed-WDAC-Policy-Windows-Defender-Application-Control)
  - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/yellowwings.gif" width="35"> [Fast and Automatic Microsoft Recommended Driver Block Rules updates](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Fast-and-Automatic-Microsoft-Recommended-Driver-Block-Rules-updates)
  - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/yellowwings.gif" width="35"> [WDAC policy for BYOVD Kernel mode only protection](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-policy-for-BYOVD-Kernel-mode-only-protection)
+  - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/yellowwings.gif" width="35"> [EKUs in WDAC, App Control for Business, Policies](https://github.com/HotCakeX/Harden-Windows-Security/wiki/EKUs-in-WDAC,-App-Control-for-Business,-Policies)
 
 <br>
 

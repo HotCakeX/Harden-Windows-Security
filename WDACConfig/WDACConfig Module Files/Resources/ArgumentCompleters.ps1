@@ -209,6 +209,21 @@
     # Add quotes around the selected path and a wildcard character at the end
     return "`"$($Browser.SelectedPath)\*`""
 }
+
+# Opens File picker GUI so that user can select any files
+[System.Management.Automation.ScriptBlock]$ArgumentCompleterAnyFilePathsPicker = {
+    # Load the System.Windows.Forms assembly
+    Add-Type -AssemblyName 'System.Windows.Forms'
+    # Create a new OpenFileDialog object
+    [System.Windows.Forms.OpenFileDialog]$Dialog = New-Object -TypeName 'System.Windows.Forms.OpenFileDialog'
+    # Show the dialog and get the result
+    [System.String]$Result = $Dialog.ShowDialog()
+    # If the user clicked OK, return the selected file path
+    if ($Result -eq 'OK') {
+        return "`"$($Dialog.FileName)`""
+    }
+}
+
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG

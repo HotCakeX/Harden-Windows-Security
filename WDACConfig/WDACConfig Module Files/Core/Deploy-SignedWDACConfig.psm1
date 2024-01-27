@@ -6,8 +6,9 @@ Function Deploy-SignedWDACConfig {
     )]
     Param(
         [ValidatePattern('\.xml$')]
-        [ValidateScript({ Test-Path -Path $_ -PathType 'Leaf' }, ErrorMessage = 'The path you selected is not a file path.')]
-        [parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ValueFromPipeline = $true)][System.IO.FileInfo[]]$PolicyPaths,
+        [ValidateScript({ Test-CiPolicy -XmlFile $_ })]
+        [parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ValueFromPipeline = $true)]
+        [System.IO.FileInfo[]]$PolicyPaths,
 
         [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$Deploy,
 
@@ -325,8 +326,8 @@ Register-ArgumentCompleter -CommandName 'Deploy-SignedWDACConfig' -ParameterName
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCAnRwDvigOya6Sj
-# l2hIoqVyfOcnyR6nt70Hk73zv/QukKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCACaH2ABvWQLU0c
+# MKXkaM7HmL5DhKKA1Zp51mWn724JjqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -373,16 +374,16 @@ Register-ArgumentCompleter -CommandName 'Deploy-SignedWDACConfig' -ParameterName
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgFZecwVpcHmdKO1YFkbSeCvzEm9Mb7EB+M27hBmiHkuIwDQYJKoZIhvcNAQEB
-# BQAEggIAc3Hmq3D+n+5akVGKDhi0Rnn0emGfUhUw/yDDiGUN/ndan4AsNnWe1QPT
-# w4dkRZXgV6/bfp5ak4wr3JcixOM0oxQFutFKvYGIdP4Kv4zoDUnqN+dSm1wf6XG+
-# OvNzEtvgULzkJvfmtWS3sS5Rz9tevMw/t+oCROOUMA6xAcVSiVbPiVA27INWR5jC
-# bl2LXbwWX0tbbMIfjPEOcjq8CgpqW0K65dIYE9cNhUCjy0mZRb12Fp7krtvJejgy
-# TegxreANnHPJNjyxivdw56lGrk6rL/qLgtE/dK4sH+SAXHAZmCYdlm1k0TPfJ4Dt
-# 3JM5zkvVWFcs9rmO7yCyBg+s6qmZmd2Qtio8lzxjefe/a+mIzT08k0vzVOZ0kN9y
-# s1VslYBOQmFnTjc3hLc4mU4zfcvrCrOM+BLx64twanadX9f4WCW4cL+cFlRbwJ8j
-# LvL8O43QZYQj2svboUZiG5QQ5cu28x17+K9CCpqw+UaiI7n/78xvUzu5gP1bct1k
-# UI81Dcf+IdUu4l++jEyB9BYIu39+kgtOJP6y/DdVGYyd02kOzU2wnOOzhcxGUj/O
-# O6i5bkW6hTKlZSBsC9PCGItUmcsXM7Bzlyjrlcrth1fRGvmoXGXfaAgwa3Oqd+S3
-# xZBtIwGbi22EbbearPIUyovC+ryaqtTy0iHmWtuUqfJHF9wGXD0=
+# IgQgkNL1i0CTBlM/fxynFV+gCMWPb+26IcZ6oFTOxf0v+CEwDQYJKoZIhvcNAQEB
+# BQAEggIAKH5NblSAff2T8HYUBLqpxnAdnp36jQDr60+cjkorz7QqZ/ad681atifN
+# d/u0fGU55BlViCN4eLN8bWmeii+4n/KBh0IEsBXgayOlvjUGbKXwssXEFjHrbO8v
+# IrI/s7XzqK1Oeprnx8PQQPWf8Cz1CSY823UtHvZvWS8ojpn/AJ/ZhzM5a2kgpiX0
+# 8BFOORWk1Wpsu154DdDYBgOYrg8CSkX53FKoHVT4oonJk0eW6Zb4BPbB3c+++trJ
+# CLJPWbdfVtWL8ANEelSAtt5f3wiwvo3tujptyKxRa3mTdhhS5nOOCOGGuRVWNEIH
+# S4wE6wbQRhk88jCMQHqXRUat127Asq63etZBqlsLKD09a1Jb0d59PtkORK81yxW8
+# kLNI5/+qGnPtBPep2e0V/tnJlorCHL63W67R4YZVZtCujTH8pCmfZTz3JH2hECbC
+# HUqbuVRJGuHlAELMwgHBCRVwtlkpWaFhbgbpV0Pa5Y3R8FYWQiU1a//vDI51tJld
+# rBC1C97nkcV2yZSHXrxu/FXDNftuimmPZsnXB7HTLEFsD1xz1+i9BBS69KKHm4TJ
+# u1Elf7MdvG9L83fxx/a+Ki/zUZT4kRPkHXasg1ILv0uYJKjP48UUrvcoZzKRgRjb
+# dYEr3EZsJXFRGbXyPiu9ExE4j8URpv0CHVWsJTxagjLolrsTNGY=
 # SIG # End signature block

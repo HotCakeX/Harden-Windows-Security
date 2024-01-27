@@ -21,23 +21,30 @@ Function Edit-SignedWDACConfig {
         [System.String]$SuppPolicyName,
 
         [ValidatePattern('\.xml$')]
-        [ValidateScript({ Test-Path -Path $_ -PathType 'Leaf' }, ErrorMessage = 'The path you selected is not a file path.')]
+        [ValidateScript({ Test-CiPolicy -XmlFile $_ })]
         [Parameter(Mandatory = $true, ParameterSetName = 'Merge Supplemental Policies', ValueFromPipelineByPropertyName = $true)]
-        [System.String[]]$SuppPolicyPaths,
+        [System.IO.FileInfo[]]$SuppPolicyPaths,
 
         [ValidatePattern('\.xml$')]
         [ValidateScript({
                 # Validate the Policy file to make sure the user isn't accidentally trying to
                 # Edit an Unsigned policy using Edit-SignedWDACConfig cmdlet which is only made for Signed policies
                 $XmlTest = [System.Xml.XmlDocument](Get-Content -Path $_)
-                $RedFlag1 = $XmlTest.SiPolicy.SupplementalPolicySigners.SupplementalPolicySigner.SignerId
-                $RedFlag2 = $XmlTest.SiPolicy.UpdatePolicySigners.UpdatePolicySigner.SignerId
-                $RedFlag3 = $XmlTest.SiPolicy.PolicyID
-                $CurrentPolicyIDs = ((&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { $_.IsSystemPolicy -ne 'True' }).policyID | ForEach-Object -Process { "{$_}" }
+                [System.String]$RedFlag1 = $XmlTest.SiPolicy.SupplementalPolicySigners.SupplementalPolicySigner.SignerId
+                [System.String]$RedFlag2 = $XmlTest.SiPolicy.UpdatePolicySigners.UpdatePolicySigner.SignerId
+                [System.String]$RedFlag3 = $XmlTest.SiPolicy.PolicyID
+
+                # Get the currently deployed policy IDs
+                [System.Guid[]]$CurrentPolicyIDs = ((&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { $_.IsSystemPolicy -ne 'True' }).policyID | ForEach-Object -Process { "{$_}" }
+
                 if ($RedFlag1 -or $RedFlag2) {
                     # Ensure the selected base policy xml file is deployed
                     if ($CurrentPolicyIDs -contains $RedFlag3) {
-                        return $True
+
+                        # Ensure the selected base policy xml file is valid
+                        if ( Test-CiPolicy -XmlFile $_ ) {
+                            return $True
+                        }
                     }
                     else { throw "The currently selected policy xml file isn't deployed." }
                 }
@@ -49,7 +56,7 @@ Function Edit-SignedWDACConfig {
         [Parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps Audit Events', ValueFromPipelineByPropertyName = $true)]
         [Parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps', ValueFromPipelineByPropertyName = $true)]
         [Parameter(Mandatory = $false, ParameterSetName = 'Merge Supplemental Policies', ValueFromPipelineByPropertyName = $true)]
-        [System.String]$PolicyPath,
+        [System.IO.FileInfo]$PolicyPath,
 
         [Parameter(Mandatory = $false, ParameterSetName = 'Merge Supplemental Policies')]
         [System.Management.Automation.SwitchParameter]$KeepOldSupplementalPolicies,
@@ -1415,8 +1422,8 @@ Register-ArgumentCompleter -CommandName 'Edit-SignedWDACConfig' -ParameterName '
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCNeRmZQKTwdUTA
-# HvqKj9CxQKzjxQHJh2HG1KWrDx5zLKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBN2bSeyRe/KjDv
+# cNW5X6dD1Gwpc4Oz3tPT3CoRuEOL2qCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -1463,16 +1470,16 @@ Register-ArgumentCompleter -CommandName 'Edit-SignedWDACConfig' -ParameterName '
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgI90KwbePyo0nx7GnFzFujax0MrUWhbn3N7dTT8zJJfUwDQYJKoZIhvcNAQEB
-# BQAEggIAXMq/ceUUilX7w4E1YVjtVfMtCYcqER6N8rQkwKjaUAM+frW1v4xOqKfq
-# lrZrn0yjtRZCq5gsVPL9fLBAa4dzCSkfPG95X1zNQhoyAL7D9qfPlNI7QgebAZJH
-# i4e6Dc+O4/a92ASefmDOA++8n8LzPEdXiM/GMtpdIvTQNdodcOPLhXci5ebfk2C1
-# gilz3pDPeMZkC8hO6Nr85T/7I/BXDN2eYfvd8jeos+wta/XLbmmeWGtv7CugV/2u
-# d5KzhHbgCs6yzVuvLonHd8AO3gZ4RHn70sPSp3FpEVPMESR7aJbxjnMrNrn6JraL
-# +uGHXEbkiHlmqH/c6mgBetWjxdCCQY2mXzmrP6xA0WI4ZL5OZA+bNFp068giqouj
-# f5XIqpqa5BdHZEcdM8kfiFOcF2i3MmLwdXZMPBdO8/Kldhk9hwVyN1rI52JFgjEg
-# kgylNJKuEvph9OopOGg32rfq1BmfbNwRhYuyKw/eyMFw+HkDeIs3ODcHLZ8GNcG/
-# vMd/bRUZgDMrMwtO3blgMkZCyEb93fAcNREORgwBMw1BkbNHTn+LkvokBOVt37LU
-# pTxBKYO67uiL733sYGq8Ih9lU7ZCojoexhaQ9vgD1XlQ0uY+A+QpZ/GjuwrsjK6r
-# s97i8tUqeN3+ZE8m2D/6aOJdGzAwoIBUfpXRBx9jz/C4jmp3Z5k=
+# IgQgsiWhYygPeTBxjHRGX7IW0iQs/13NmIkqkkV2TDyDsv0wDQYJKoZIhvcNAQEB
+# BQAEggIAmYeFC+A4ulhFm4tcMxNarGFqx4Ey1Apdl2rRXXoFQWJ7uRiYnkbReuyW
+# /W0Lm0D8Qp982OpqEkVlWos5dazSz+K/KTlDE8wjL1SFxOK6059ZnaS58/U9T7np
+# AxWb06OV3GX2uoaEmmzkjthKm70XqeoHckTnc0TsaPY8NvOjgKLiA3Mn+J5s22k2
+# 8UgqFE3NsZoNTEVN/suRudnrK9+PYBkwjqF3d/tv6LKGMQ4yv2Ibafb+E8bRmBFA
+# YRRV0rxlaoG/rUtyBOIAoYiPAcPH8Z6VChgoITRPFjkIdzFP5gOgF5iLqzaoO8kE
+# DvVBV2/ZtOo5eq/CBy/SBeqVZzW5Gp83eywlamqXi/5VcsVPzEh0OrjEQQ4fLb+2
+# MZhmh6KxdyjiM7RDZW7qLFkBcbMjuWl9Dy2eziXua/Y2uwqNlnr84BkIZ7jYZO5+
+# nSEtvRVtlIjLhHNySczP2OWfceYMZDLHfKMrMBeicNWCGXn89hB3f98NSyq5H+f3
+# D14W4M1W8zZQm5RTWWn126OvtBI3MP8wlwAPCtEfcjsQttuTdNtdy0OjNQDQWHNd
+# 0aaJ7ZudSuUm5ZYSIw0iZEj/0bhQrVKI0wocqsbB2z5cS2NxmEneSW9WjQPJX4QK
+# xpZK7CyFUU/CcHgu83EFgmtfthbVWMUqF1t0HE5na3rFHSQTFmg=
 # SIG # End signature block

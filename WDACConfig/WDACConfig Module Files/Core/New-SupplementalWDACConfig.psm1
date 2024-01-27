@@ -33,7 +33,7 @@ Function New-SupplementalWDACConfig {
         [ValidatePattern('\.xml$')]
         [ValidateScript({ Test-CiPolicy -XmlFile $_ })]
         [parameter(Mandatory = $false, ValueFromPipelineByPropertyName = $true)]
-        [System.String]$PolicyPath,
+        [System.IO.FileInfo]$PolicyPath,
 
         [parameter(Mandatory = $false)]
         [System.Management.Automation.SwitchParameter]$Deploy,
@@ -410,8 +410,8 @@ Register-ArgumentCompleter -CommandName 'New-SupplementalWDACConfig' -ParameterN
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDZYAkmL0uunb3c
-# QCKXayOccq39rw36ygwBhkKH4I1T5KCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCqpxdAgR9CjOhm
+# plUyZintv9ovoMJ3glkRTkBBjUO/AKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -458,16 +458,16 @@ Register-ArgumentCompleter -CommandName 'New-SupplementalWDACConfig' -ParameterN
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgQm6WoYrWqTtu1jA5Ql9PU//dcg5dSeAw/9Nj93MA4KIwDQYJKoZIhvcNAQEB
-# BQAEggIAL/7kVgjxbxyIce0mFfCp16QcPz89FZLPZ/LdaDFspXPVwseZz2DNkcEG
-# /vIl4u+pj+r9QERbZaDN44RNqiqkFbH+o7QkvwX1EWm47UAoL0JKoxfsiF848f6Z
-# dlRHWKEOHbMgaKy0KCxr9xaBdcGMsniJ6wIghfSOwvtghkkzoT/QC2WbdZ47Y8Jf
-# ioUNaAgPBApbjkG32DMoER+fqQ0UZhitqTWwVYe4+FAZhGSyH4xx53zgOkFQKxNB
-# TjEtp/wdWt4eSgwBiWlrwrRk7bJn16tRs08sZ58X38Z9jWc++tgHIpjV4IMGDC61
-# ZbaCqcHTTahH8WoPHaFbY5QOtORP5hepuTg6DDetqv3csZolkXKFfgGq1vHnd16B
-# ROCogum8l/r6Ve14ksBlCJVFeHqfhNIiRXV6KQQEiwf25uIobBIhr3tsJAAOm76y
-# cCZuL2vo5nHNuTb8RrGSNP++t0YsMnA0jF+kV8AMaG8+bD80ojxFYZMyr5MpU8P1
-# ftvGmmC+gG8PZOdC6IC32DBJ0uTfkeRqFumaWyEOklGyZnCw1lDsc4QeJuEHMUtg
-# EiGIxYA3eO/yxvBunsNllo1KMY3kjyZ+R1eR6exvvSj8/R0ORaCGoM7AJxA9RcUY
-# 13f8ob0gTvQbS3Ac0ilyib+Q4JpY5jueOyo5uWl8Tg9Pde/OCmI=
+# IgQglf6Il8cM2GXixOw5/n37pbwIjfeGlaFmOSU5ehZcVXswDQYJKoZIhvcNAQEB
+# BQAEggIAovhyf+Cje3L5yrCpVyblV99gqHhHskC8G9COdd2qLGeSvWrdwrfTS09B
+# 3MLncY3G4vPPBkhZRnIX7UzuQ7GQMkuui9kKcqad7LYWlNjQhNWLI01E8UpnOSLu
+# vcWLpgFzcPgubHtHD3tGbUSxmV+CbyKoDpaEc4eB1lbDwI0vMfZ4qz43t2sCirRP
+# 2Ry8vGRn0+rX2yH7D7GhkBH8ny/VU1u/Dc6e6grMV76LkhuemzkEtwJpRi1dhK3g
+# 9Xc81xgLHgxLl89m5tQ/KVLJMuK5W6gV2TFxZ7a0yX2VlviqrteO7Q3s5qaank3c
+# tcbASQdqq+EWbZN0aDCk5tP4AIRkebpO+eT3N7RB6GIRTkopx/puf7nSyKURlyoK
+# Y7EvY1xnQtX/cuOQocw9u7jYa/+lsyrX//lS6D80y0Qpdlp6SICtCRpsbqWsK1iC
+# 23WvOhguR6zO+z23Z8S6pXMRAKSiny92zLkZ6Vc7LiRzfMh7G2r8RSjAjdP6WJri
+# jfU83PkH6Mm5iddl+wMaVmPdi2FeRbgXPPdSlmTOcAdKJP34ZJ8LjSCaUROCbIbQ
+# 1bqgW7ha9nFYPx4FtTtsUFqQlXu++O/hkAkHO1YaR/Zilv9dGH1UdPEL9oyPrqqM
+# 09BaBSceEvNatGcmtsj0HI1grcxGTEv7AtfewKsFLQp/1gqZHzs=
 # SIG # End signature block

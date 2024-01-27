@@ -4,7 +4,7 @@ Function Invoke-WDACSimulation {
         [ValidateScript({ Test-Path -Path $_ -PathType 'Container' }, ErrorMessage = 'The path you selected is not a valid folder path.')]
         [Parameter(Mandatory = $false)][System.IO.DirectoryInfo]$FolderPath,
 
-        [ValidateScript({ 
+        [ValidateScript({
                 # Ensure the selected path is a file path
                 if (Test-Path -Path $_ -PathType 'Leaf') {
                     # Ensure the selected file has a supported extension
@@ -14,7 +14,7 @@ Function Invoke-WDACSimulation {
                         $true
                     }
                     else {
-                        Throw 'The selected file is not supported by the WDAC engine.' 
+                        Throw 'The selected file is not supported by the WDAC engine.'
                     }
                 }
                 else { $false }
@@ -280,7 +280,7 @@ Function Invoke-WDACSimulation {
             $AllAllowedRules = $MegaOutputObject | Where-Object -FilterScript { $_.Permission -notin ('Not Allowed', 'Not Allowed - Expired or unknown', 'Not Allowed - Hash Mismatch') }
             # Get all of the blocked files
             $BlockedRules = $MegaOutputObject | Where-Object -FilterScript { $_.Permission -in ('Not Allowed', 'Not Allowed - Expired or unknown', 'Not Allowed - Hash Mismatch') }
-                        
+
             Write-Verbose -Message "Allowed files: $($AllAllowedRules.count)"
             Write-Verbose -Message "Blocked files: $($BlockedRules.count)"
 
@@ -291,7 +291,7 @@ Function Invoke-WDACSimulation {
                     Return $true
                 }
                 else {
-                    Write-Progress -Id 0 -Activity 'WDAC Simulation completed.' -Completed    
+                    Write-Progress -Id 0 -Activity 'WDAC Simulation completed.' -Completed
                     Return $false
                 }
             }

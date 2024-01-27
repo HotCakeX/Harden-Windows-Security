@@ -12,7 +12,8 @@ Function Confirm-CertCN {
         Can receive empty string as input as well for cases when the user configurations file does not contain a certificate CN
     #>
     [CmdletBinding()]
-    param (
+    [OutputType([System.Boolean])]
+    param(
         [AllowEmptyString()]
         [parameter(Mandatory = $true)][System.String]$CN
     )

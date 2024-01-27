@@ -29,12 +29,6 @@ Function New-WDACConfig {
         [Parameter(Mandatory = $false, ParameterSetName = 'Get Driver Block Rules')]
         [System.Management.Automation.SwitchParameter]$Deploy,
 
-        [Parameter(Mandatory = $false, ParameterSetName = 'Make DefaultWindows With Block Rules')]
-        [System.Management.Automation.SwitchParameter]$IncludeSignTool,
-
-        [Parameter(Mandatory = $false, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'Make DefaultWindows With Block Rules')]
-        [System.String]$SignToolPath,
-
         [Parameter(Mandatory = $false, ParameterSetName = 'Make Light Policy')]
         [Parameter(Mandatory = $false, ParameterSetName = 'Make Policy From Audit Logs')]
         [Parameter(Mandatory = $false, ParameterSetName = 'Make AllowMSFT With Block Rules')]
@@ -87,7 +81,6 @@ Function New-WDACConfig {
         # Importing the required sub-modules
         Write-Verbose -Message 'Importing the required sub-modules'
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Update-self.psm1" -Force
-        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Get-SignTool.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Get-GlobalRootDrives.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Write-ColorfulText.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Set-LogSize.psm1" -Force
@@ -95,20 +88,7 @@ Function New-WDACConfig {
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Get-RuleRefs.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Get-FileRules.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Get-BlockRulesMeta.psm1" -Force
-
-        #Region User-Configurations-Processing-Validation
-        # If User is creating Default Windows policy and is including SignTool path
-        if ($IncludeSignTool -and $MakeDefaultWindowsWithBlockRules) {
-            # Get SignToolPath from user parameter or user config file or auto-detect it
-            if ($SignToolPath) {
-                $SignToolPathFinal = Get-SignTool -SignToolExePathInput $SignToolPath
-            } # If it is null, then Get-SignTool will behave the same as if it was called without any arguments.
-            else {
-                $SignToolPathFinal = Get-SignTool -SignToolExePathInput (Get-CommonWDACConfig -SignToolPath)
-            }
-        }
-        #Endregion User-Configurations-Processing-Validation
-
+        
         # Detecting if Debug switch is used, will do debugging actions based on that
         $PSBoundParameters.Debug.IsPresent ? ([System.Boolean]$Debug = $true) : ([System.Boolean]$Debug = $false) | Out-Null
 
@@ -334,7 +314,7 @@ Function New-WDACConfig {
             param()
 
             # The total number of the main steps for the progress bar to render
-            [System.Int16]$TotalSteps = 6
+            [System.Int16]$TotalSteps = 5
             [System.Int16]$CurrentStep = 0
 
             $CurrentStep++
@@ -346,62 +326,20 @@ Function New-WDACConfig {
             Write-Verbose -Message 'Copying the DefaultWindows_Enforced.xml from Windows directory to the current working directory'
             Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\DefaultWindows_Enforced.xml' -Destination 'DefaultWindows_Enforced.xml' -Force
 
-            # Setting a flag for Scanning the SignTool.exe and merging it with the final base policy
-            [System.Boolean]$MergeSignToolPolicy = $false
-
-            $CurrentStep++
-            Write-Progress -Id 7 -Activity 'Determining whether to include SingTool' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-            if ($SignToolPathFinal) {
-                # Allowing SignTool to be able to run after Default Windows base policy is deployed in Signed scenario
-                Write-ColorfulText -Color TeaGreen -InputText "`nCreating allow rules for SignTool.exe in the DefaultWindows base policy so you can continue using it after deploying the DefaultWindows base policy."
-
-                Write-Verbose -Message 'Creating a new temporary directory in the temp directory'
-                New-Item -Path "$UserTempDirectoryPath\TemporarySignToolFile" -ItemType Directory -Force | Out-Null
-
-                Write-Verbose -Message 'Copying the SignTool.exe to the newly created directory in the temp directory'
-                Copy-Item -Path $SignToolPathFinal -Destination "$UserTempDirectoryPath\TemporarySignToolFile" -Force
-
-                Write-Verbose -Message 'Scanning the SignTool.exe in the temp directory and generating the SignTool.xml policy'
-                New-CIPolicy -ScanPath "$UserTempDirectoryPath\TemporarySignToolFile" -Level FilePublisher -Fallback Hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -AllowFileNameFallbacks -FilePath .\SignTool.xml
-
-                # Delete the Temporary folder in the TEMP folder
-                if (!$Debug) {
-                    Write-Verbose -Message 'Debug parameter was not used, removing the files created in the temp directory'
-                    Remove-Item -Recurse -Path "$UserTempDirectoryPath\TemporarySignToolFile" -Force
-                }
-
-                # Setting the flag to true so that the SignTool.xml file will be merged with the final policy
-                $MergeSignToolPolicy = $true
-            }
-
             $CurrentStep++
             Write-Progress -Id 7 -Activity 'Determining whether to include PowerShell core' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
             # Scan PowerShell core directory (if installed using MSI only, because Microsoft Store installed version doesn't need to be allowed manually) and allow its files in the Default Windows base policy so that module can still be used once it's been deployed
             if ($PSHOME -notlike 'C:\Program Files\WindowsApps\*') {
-
                 Write-ColorfulText -Color Lavender -InputText 'Creating allow rules for PowerShell in the DefaultWindows base policy so you can continue using this module after deploying it.'
                 New-CIPolicy -ScanPath $PSHOME -Level FilePublisher -NoScript -Fallback Hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -FilePath .\AllowPowerShell.xml
-
-                if ($MergeSignToolPolicy) {
-                    Write-Verbose -Message 'Merging the policy files, including SignTool.xml, to create the final DefaultWindowsPlusBlockRules.xml policy'
-                    Merge-CIPolicy -PolicyPaths .\DefaultWindows_Enforced.xml, .\AllowPowerShell.xml, 'Microsoft recommended block rules.xml', .\SignTool.xml -OutputFilePath .\DefaultWindowsPlusBlockRules.xml | Out-Null
-                }
-                else {
-                    Write-Verbose -Message 'Merging the policy files to create the final DefaultWindowsPlusBlockRules.xml policy'
-                    Merge-CIPolicy -PolicyPaths .\DefaultWindows_Enforced.xml, .\AllowPowerShell.xml, 'Microsoft recommended block rules.xml' -OutputFilePath .\DefaultWindowsPlusBlockRules.xml | Out-Null
-                }
+               
+                Write-Verbose -Message 'Merging the policy files to create the final DefaultWindowsPlusBlockRules.xml policy'
+                Merge-CIPolicy -PolicyPaths .\DefaultWindows_Enforced.xml, .\AllowPowerShell.xml, 'Microsoft recommended block rules.xml' -OutputFilePath .\DefaultWindowsPlusBlockRules.xml | Out-Null
             }
-            else {
-                if ($MergeSignToolPolicy) {
-                    Write-Verbose -Message 'Merging the policy files, including SignTool.xml, to create the final DefaultWindowsPlusBlockRules.xml policy'
-                    Merge-CIPolicy -PolicyPaths .\DefaultWindows_Enforced.xml, 'Microsoft recommended block rules.xml', .\SignTool.xml -OutputFilePath .\DefaultWindowsPlusBlockRules.xml | Out-Null
-                }
-                else {
-                    Write-Verbose -Message 'Merging the policy files to create the final DefaultWindowsPlusBlockRules.xml policy'
-                    Merge-CIPolicy -PolicyPaths .\DefaultWindows_Enforced.xml, 'Microsoft recommended block rules.xml' -OutputFilePath .\DefaultWindowsPlusBlockRules.xml | Out-Null
-                }
+            else { 
+                Write-Verbose -Message 'Merging the policy files to create the final DefaultWindowsPlusBlockRules.xml policy'
+                Merge-CIPolicy -PolicyPaths .\DefaultWindows_Enforced.xml, 'Microsoft recommended block rules.xml' -OutputFilePath .\DefaultWindowsPlusBlockRules.xml | Out-Null
             }
 
             $CurrentStep++
@@ -443,11 +381,6 @@ Function New-WDACConfig {
             Write-Verbose -Message 'Removing the extra files that were created during module operation and are no longer needed'
             Remove-Item -Path .\AllowPowerShell.xml -Force -ErrorAction SilentlyContinue
             Remove-Item -Path '.\DefaultWindows_Enforced.xml', 'Microsoft recommended block rules.xml' -Force
-
-            if ($MergeSignToolPolicy -and !$Debug) {
-                Write-Verbose -Message 'Deleting SignTool.xml'
-                Remove-Item -Path .\SignTool.xml -Force
-            }
 
             Write-Verbose -Message 'Displaying the output'
             Write-ColorfulText -Color MintGreen -InputText 'PolicyFile = DefaultWindowsPlusBlockRules.xml'
@@ -1092,10 +1025,6 @@ Function New-WDACConfig {
     Select the Base Policy Type
 .PARAMETER Deploy
     Deploys the policy that is being created
-.PARAMETER IncludeSignTool
-    Indicates that the Default Windows policy that is being created must include Allow rules for SignTool.exe - This parameter must be used when you intend to Sign and Deploy the Default Windows policy.
-.PARAMETER SignToolPath
-    Path to the SignTool.exe file - Optional
 .PARAMETER TestMode
     Indicates that the created/deployed policy will have Enabled:Boot Audit on Failure and Enabled:Advanced Boot Options Menu policy rule options
 .PARAMETER RequireEVSigners
@@ -1140,10 +1069,6 @@ Function New-WDACConfig {
     This example will create a Scheduled Task that automatically runs every 7 days to download the newest Microsoft Recommended driver block rules
 #>
 }
-
-# Importing argument completer ScriptBlocks
-. "$ModuleRootPath\Resources\ArgumentCompleters.ps1"
-Register-ArgumentCompleter -CommandName 'New-WDACConfig' -ParameterName 'SignToolPath' -ScriptBlock $ArgumentCompleterExeFilePathsPicker
 
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor

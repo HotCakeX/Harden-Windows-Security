@@ -16,7 +16,7 @@ try {
     if ((Test-Path -Path 'Variable:\UBR') -eq $false) { New-Variable -Name 'UBR' -Value (Get-ItemPropertyValue -Path 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion' -Name 'UBR') -Option 'Constant' -Scope 'Script' -Description 'Update Build Revision (UBR) number' -Force }
     if ((Test-Path -Path 'Variable:\FullOSBuild') -eq $false) { New-Variable -Name 'FullOSBuild' -Value "$OSBuild.$UBR" -Option 'Constant' -Scope 'Script' -Description 'Create full OS build number as seen in Windows Settings' -Force }
     if ((Test-Path -Path 'Variable:\ModuleRootPath') -eq $false) { New-Variable -Name 'ModuleRootPath' -Value ($PSScriptRoot) -Option 'Constant' -Scope 'Global' -Description 'Storing the value of $PSScriptRoot in a global constant variable to allow the internal functions to use it when navigating the module structure' -Force }
-    if ((Test-Path -Path 'Variable:\CISchemaPath') -eq $false) { New-Variable -Name 'CISchemaPath' -Value "$Env:SystemDrive\Windows\schemas\CodeIntegrity\cipolicy.xsd" -Option 'Constant' -Scope 'Script' -Description 'Storing the path to the WDAC Code Integrity Schema XSD file' -Force }
+    if ((Test-Path -Path 'Variable:\CISchemaPath') -eq $false) { New-Variable -Name 'CISchemaPath' -Value "$Env:SystemDrive\Windows\schemas\CodeIntegrity\cipolicy.xsd" -Option 'Constant' -Scope 'Global' -Description 'Storing the path to the WDAC Code Integrity Schema XSD file' -Force }
     
 }
 catch {
@@ -122,8 +122,8 @@ Function Test-CiPolicy {
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBMbCyqAioGXvdi
-# Tr+S7cU2hAJ/ymnkU5dJut6jbPR/iKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCApSQKxGHmkbUOz
+# +/uQGmIGBxz/Dg7SKk+YWLIegbamaKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -170,16 +170,16 @@ Function Test-CiPolicy {
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgmpvqzeBFd09uTQMeJCeDDKeO+L8nqstE3as8MFhJvdQwDQYJKoZIhvcNAQEB
-# BQAEggIADrBrn945tDmx8245Fm7jr+glEM3ZCfJ7BlVdR4Iu0+t3ukl2cFFQu1Sf
-# be46KycSNLrz2F1JOAaUGgjBN0axHu31wbFvIW18mPunmLJohe/aogVdC3q1GpGw
-# WsvD030bnX5Vb1N5jtBQaOrAUSebuBKulXn/dQIf5QV7nBXq+P1EQ7hJp3GNElKC
-# oY+2uCUxTVWftvZlrU8c1ONqkRN9QBg7mzyxDz/2ybw0XNZ5Hy1K95FRqa9azNER
-# X/IPDbo/1gWhfIF/JhKWFsX8m5P0gVcrzsVnZ+xiiqbHs6McnBuoerKCXWxoyIpZ
-# 3Iv7h2fad2c7Dn4s09BLmCL65Bd7cM6IdUDJi3mrjUFwGCq5kXXEylRBDRTfi9tX
-# 44dwITX7prCHZLuYrHfmOvtNq1mp62gMun8xW67OwK0Xx6hU+qoL8vUsxTAKLi/E
-# FHMIzDhQgtZDu0eYMi8zKjU/eIR0MKNx3jTlOTuNMQcy/FxogSZsKUWV41kC9Zki
-# wj5sasI9CKhKVwp3xquuOL9Kr0O6wFIXTOqSpX6KMFZVJNFenfL7mZkyCnPgQwtY
-# DcAroFFWU+4qhHTlf3psjgxBUxLs5Zdo+U668S1576eVYcqfVbHXIgDlANvCDZ1W
-# y27t7DZxwwkv0baIQwUktvRsHI33jQLJYrBYT73ym/eFJHmJbj8=
+# IgQg6urm/fy183cRhbNE0NkoFM2SqPs6ACfycOz4kT9TgbwwDQYJKoZIhvcNAQEB
+# BQAEggIAnJJugajEW+IsVncwyXuw+63B4m8Z351B5wxiOFbdXzOUU/zP8Sh43ZtL
+# h+Il0VEzPMZ5WWbYTBReBY04HAdv+IPR8zCAAxuAcoILGpPHjoQa+cws4U+/SZx/
+# 3p0vUIpDFJBMXsEdOiyM4GI96/QSlxWIOJLj/a3VeBSL83KXersIC5X9EW7z5yYZ
+# RzE3UWe/YdL/vxxV20VxKyzgvAtaE/+imo4azFNDre1Da6K/2IWswxIW1N3yHvN9
+# NnIzQP9+p+bXpiZw8dZBLP934oK3aBcJMw9UyhtFWnSxN43N3pjMzNGZ7XO8zfYL
+# f7GCvxNoFDDkrjjbGVllwSXeLEKZGlFGwwIYj4jJ6lQIrPyRg34bQ9SH9SNEdhaR
+# gQs8tL6gVQKW43wUeJeFJEJBg8fN+UehX2xN3TrQZKrgKLKgct+gbZ2oDw69BWHO
+# WVX+pR+Q4F4UgQ/LpFPoc9aFCpgtB/p+gQn35FINSYsXLcH9CvUnYUmiFasmPlzl
+# y8XSU2yLkVylhb/EScgVYhPWtU2ZTf1Dkkl7M8tCgyUJyIA7niFGsYIQJIU8StGT
+# fGrcUUqwSmc0yeM8P3RkqGz+wvNUm+ry7Ic/sL1QLJO4GKQHa2odZln1I1wJCNda
+# u9JL89O0vFnj18g5Dq4lX56RxdCU73G7y4iBrel3eWZUTt+4CWc=
 # SIG # End signature block

@@ -1,10 +1,27 @@
 Function Invoke-WDACSimulation {
     [CmdletBinding()]
     Param(
-        [ValidateScript({ Test-Path -Path $_ -PathType 'Container' }, ErrorMessage = 'The path you selected is not a folder path.')]
-        [Parameter(Mandatory = $true)][System.IO.DirectoryInfo]$FolderPath,
+        [ValidateScript({ Test-Path -Path $_ -PathType 'Container' }, ErrorMessage = 'The path you selected is not a valid folder path.')]
+        [Parameter(Mandatory = $false)][System.IO.DirectoryInfo]$FolderPath,
 
-        [ValidateScript({ Test-Path -Path $_ -PathType 'Leaf' }, ErrorMessage = 'The path you selected is not a file path.')]
+        [ValidateScript({ 
+                # Ensure the selected path is a file path
+                if (Test-Path -Path $_ -PathType 'Leaf') {
+                    # Ensure the selected file has a supported extension
+                    [System.IO.FileInfo]$SelectedFile = Get-ChildItem -File -Path $_ -Include '*.sys', '*.exe', '*.com', '*.dll', '*.ocx', '*.msp', '*.mst', '*.msi', '*.js', '*.vbs', '*.ps1', '*.appx'
+                    # If the selected file has a supported extension, return $true
+                    if ($SelectedFile) {
+                        $true
+                    }
+                    else {
+                        Throw 'The selected file is not supported by the WDAC engine.' 
+                    }
+                }
+                else { $false }
+            }, ErrorMessage = 'The path you selected is not a file path.')]
+        [Parameter(Mandatory = $false)][System.IO.FileInfo]$FilePath,
+
+        [ValidateScript({ Test-Path -Path $_ -PathType 'Leaf' }, ErrorMessage = 'The path you selected is not a valid file path.')]
         [Parameter(Mandatory = $true)][System.IO.FileInfo]$XmlFilePath,
 
         [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$BooleanOutput,
@@ -33,6 +50,12 @@ Function Invoke-WDACSimulation {
         # The total number of the main steps for the progress bar to render
         [System.Int16]$TotalSteps = 4
         [System.Int16]$CurrentStep = 0
+
+        # Make sure either -FolderPath or -FilePath is specified, but not both
+        if (-not ($PSBoundParameters.ContainsKey('FolderPath') -xor $PSBoundParameters.ContainsKey('FilePath'))) {
+            # Write an error message
+            Write-Error -Message 'You must specify either -FolderPath or -FilePath, but not both.' -Category InvalidArgument
+        }
     }
 
     process {
@@ -68,7 +91,12 @@ Function Invoke-WDACSimulation {
         $CurrentStep++
         Write-Progress -Id 0 -Activity "Getting the supported files' paths" -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-        [System.IO.FileInfo[]]$CollectedFiles = (Get-ChildItem -Recurse -Path $FolderPath -File -Include '*.sys', '*.exe', '*.com', '*.dll', '*.ocx', '*.msp', '*.mst', '*.msi', '*.js', '*.vbs', '*.ps1', '*.appx').FullName
+        if ($FilePath) {
+            [System.IO.FileInfo]$CollectedFiles = Get-ChildItem -File -Path $FilePath
+        }
+        else {
+            [System.IO.FileInfo[]]$CollectedFiles = (Get-ChildItem -Recurse -Path $FolderPath -File -Include '*.sys', '*.exe', '*.com', '*.dll', '*.ocx', '*.msp', '*.mst', '*.msi', '*.js', '*.vbs', '*.ps1', '*.appx').FullName
+        }
 
         # Make sure the selected directory contains files with the supported extensions
         if (!$CollectedFiles) { Throw 'There are no files in the selected directory that are supported by the WDAC engine.' }
@@ -248,12 +276,27 @@ Function Invoke-WDACSimulation {
     end {
         # If the user selected the -BooleanOutput switch, then return a boolean value and don't display any more output
         if ($BooleanOutput) {
-            # Make sure all of the files are allowed
+            # Get all of the allowed files
             $AllAllowedRules = $MegaOutputObject | Where-Object -FilterScript { $_.Permission -notin ('Not Allowed', 'Not Allowed - Expired or unknown', 'Not Allowed - Hash Mismatch') }
+            # Get all of the blocked files
+            $BlockedRules = $MegaOutputObject | Where-Object -FilterScript { $_.Permission -in ('Not Allowed', 'Not Allowed - Expired or unknown', 'Not Allowed - Hash Mismatch') }
+                        
+            Write-Verbose -Message "Allowed files: $($AllAllowedRules.count)"
+            Write-Verbose -Message "Blocked files: $($BlockedRules.count)"
+
             if (-NOT ([System.String]::IsNullOrWhiteSpace($AllAllowedRules))) {
-                Return $true
+
+                if ([System.String]::IsNullOrWhiteSpace($BlockedRules)) {
+                    Write-Progress -Id 0 -Activity 'WDAC Simulation completed.' -Completed
+                    Return $true
+                }
+                else {
+                    Write-Progress -Id 0 -Activity 'WDAC Simulation completed.' -Completed    
+                    Return $false
+                }
             }
             else {
+                Write-Progress -Id 0 -Activity 'WDAC Simulation completed.' -Completed
                 Return $false
             }
         }
@@ -327,12 +370,13 @@ Function Invoke-WDACSimulation {
 . "$ModuleRootPath\Resources\ArgumentCompleters.ps1"
 Register-ArgumentCompleter -CommandName 'Invoke-WDACSimulation' -ParameterName 'FolderPath' -ScriptBlock $ArgumentCompleterFolderPathsPicker
 Register-ArgumentCompleter -CommandName 'Invoke-WDACSimulation' -ParameterName 'XmlFilePath' -ScriptBlock $ArgumentCompleterXmlFilePathsPicker
+Register-ArgumentCompleter -CommandName 'Invoke-WDACSimulation' -ParameterName 'FilePath' -ScriptBlock $ArgumentCompleterAnyFilePathsPicker
 
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCAiJUbeYgfEGa4P
-# mv5wIlOBecvbTUdjmMUIDbQ3jMNUKKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDtSJXd4BH77Pnt
+# vioOMEGDGNR0fa4jgQj5vhl2/daBkaCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -379,16 +423,16 @@ Register-ArgumentCompleter -CommandName 'Invoke-WDACSimulation' -ParameterName '
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgWAV4JRXa7LpNHkB5YlUP+sW03XoAXbneTQjHT07SkT8wDQYJKoZIhvcNAQEB
-# BQAEggIAXdvUYkjgvBfUYBmUuxcQ3J5q0PVgIH3N48WcnPBVvbutuOs5hhab/0V2
-# aFkWqejVwqYIkGLD+F387iYThU9oeRBwJje+qLXW/agfcrUuVoydknyL65oOkCDe
-# 9G31y9Cj8d1LU8g597Gm5yw5YNFBibMNEzv7u7oGbvmdUBLi0yblYZiNawbNnola
-# K9vUh0MvRTx+EuZXR/EC3gWfDnBpsR+/qOpvahvGbt4NeJKrKErZk4hiLde4t2F0
-# pIwq6YSBfaUTK8F6J8CV3iMe18jXvuCU97wQhMES9yE02pZpSm/JrYj1v+xJp2V+
-# jEFd3x9bh4O7icwy8SC5+B5jT8kBgNbgJkB7l6aE9UkKPYZG2HW5ZJbHCwNf7EcC
-# vrz03Gsri5RPaEjPNLYWf427V5bsZUeUAqvxzbn0CxFkEPWwl+hPzJvFporSdMsr
-# XyiHPz97qfKB314N0tdCI27+/XjqVlcJU5OtNpAP4+g6oiVKHFFOcAfWca/2JRCt
-# 0kO6wKTN4fVbp0QtWGTQPHCiXduHbYhe2R4bNDXyQy75jYT4oM0zkkWrGN7xaN7B
-# sz5hEgjlSn0GituxjlIeXtcHqJ6cITfFwtbrsBc2Q6qBQp0PxqEefdIt2Ql59ww9
-# 5hgQDphVzajqluc4k4cET3BlkXrlx939mQfZwHoBYwipGGbeTRI=
+# IgQgNPFhBdgmbIpq42iG8elIe7yoFvMDxqAOdTybVGewWSUwDQYJKoZIhvcNAQEB
+# BQAEggIAmrqGDD9ftictNTV10ae1L5JWFh18o3l4mTKEBUiwbFso0QBr+HpZcPrN
+# xhMjLq/UjPQ6jXyyZGVQXcWMN271OAyQBkvWQRrJU19jJoZK7xa5PA1MHHcTzG+6
+# UhusRUUcBKAc/QEBX6kbDKpBSREATNBqTnCZe6cXQyYUpJIsQkZhTogDX2lrKHeb
+# NHY18AJUCYiHNjld+XhAdaKfnTiSK9oponeoWTyk9kHrLiI+WbfmXAm1zPMzD4X4
+# AOeb2+pnXCCJ4gMrB4Ta9eRmhZuuqo7ZB/muKQ+zm9XrKrmzh7RGD1nTLEYNZ9Iu
+# agtsRcysRMCVGofTIb7/24Wy6Gt+zI1FLbVyR6rX96cf5O2LV/1Cj4HgZA1FAOCH
+# GInQAQWw/hecV1oxlmMO8YhwYodVzNk23zWiM+cpT0OYcXX3qtykvd5YR8+Q3O6K
+# FnvnRTCDUxPB2DoXkMlEaPZTkDZ8/v4qvmgj6O4kE0ZNWHIDmlx9bj/C4NFEUFcT
+# Md3r/Om48427THFlasXluv64mcGipYXG3ZdbMO1m8cOQ/lxJPYwVGA/src+Yb+Ze
+# xcmVgOgNiv3Lth0bmFmERn2D0Lz6ACI3WIqfPnaW6YHFTeKF1IwDqL2CvUVFZ9a+
+# NDEadD3DT0RtnGOw53cvJ31YP2uADoFztC4QGDrnDcst20EzndA=
 # SIG # End signature block

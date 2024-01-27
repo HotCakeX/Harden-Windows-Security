@@ -7,6 +7,8 @@ Function Invoke-WDACSimulation {
         [ValidateScript({ Test-Path -Path $_ -PathType 'Leaf' }, ErrorMessage = 'The path you selected is not a file path.')]
         [Parameter(Mandatory = $true)][System.IO.FileInfo]$XmlFilePath,
 
+        [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$BooleanOutput,
+
         [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SkipVersionCheck
     )
 
@@ -244,6 +246,17 @@ Function Invoke-WDACSimulation {
     }
 
     end {
+        # If the user selected the -BooleanOutput switch, then return a boolean value and don't display any more output
+        if ($BooleanOutput) {
+            # Make sure all of the files are allowed
+            $AllAllowedRules = $MegaOutputObject | Where-Object -FilterScript { $_.Permission -notin ('Not Allowed', 'Not Allowed - Expired or unknown', 'Not Allowed - Hash Mismatch') }
+            if (-NOT ([System.String]::IsNullOrWhiteSpace($AllAllowedRules))) {
+                Return $true
+            }
+            else {
+                Return $false
+            }
+        }
         # Change the color of the Table header
         $PSStyle.Formatting.TableHeader = "$($PSStyle.Foreground.FromRGB(255,165,0))"
 
@@ -294,6 +307,8 @@ Function Invoke-WDACSimulation {
     It is used by the entire Cmdlet.
 .PARAMETER Verbose
     Can be used with any parameter to show verbose output
+.PARAMETER BooleanOutput
+    Can be used with any parameter to return a boolean value instead of displaying the output
 .INPUTS
     System.IO.FileInfo
     System.IO.DirectoryInfo
@@ -301,6 +316,7 @@ Function Invoke-WDACSimulation {
 .OUTPUTS
     System.Object[]
     System.String
+    System.Boolean
 .EXAMPLE
     Invoke-WDACSimulation -FolderPath 'C:\Windows\System32' -XmlFilePath 'C:\Users\HotCakeX\Desktop\Policy.xml'
     This example will simulate the deployment of the policy.xml file against the C:\Windows\System32 folder
@@ -315,8 +331,8 @@ Register-ArgumentCompleter -CommandName 'Invoke-WDACSimulation' -ParameterName '
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDGhqlAaNovnZ2W
-# //H8hGbySCgN+KVMZ3UJJA1xcWqZQaCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCAiJUbeYgfEGa4P
+# mv5wIlOBecvbTUdjmMUIDbQ3jMNUKKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -363,16 +379,16 @@ Register-ArgumentCompleter -CommandName 'Invoke-WDACSimulation' -ParameterName '
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgXHAfbUuEfCMerwApjt5EsBteFFO0nA/7RBLVhKdto2MwDQYJKoZIhvcNAQEB
-# BQAEggIAIWk2rXhVglY3QbXtexQrM7Rzb29/VWRXs0koJVHx6AwoyFDPd8vcX5KF
-# I4LSpK2Epz1R/IyQXmZRe+zHGukjNNQjBRBU99wq+kwOn1aZeLuToEu8WcYveoq4
-# E0EJg+edvXuSHpkSFLF2zYsK5AqOHjcgPgMM6EJfkpdjI+2hsrKByDCd0k9G4V3n
-# jB++bKBCkUiMuQgTK2U7rr9VHnc4tDxWnZ2UOk71ZqShNA1C6kyk5zrmXsJnlVt5
-# 0kUG6gKQhmO2EAMaZuc06DMzaIKm0rfsXUpzdDxSC3xkknXNMwm1DH7E/yW+8GAP
-# M/1G8cqME72YbRZhQrytlAEPumXr8bXHyq/QJ2Jgx4vTU32VjJOjzJeZe5P5oOf8
-# K2oFPZrWOlXMjXeq29qIRWpVnTl1Sz4XAUa+iiNN2S+WifOxb1rl0X8IbqRSZcqy
-# cxQLu1lh8+gSUilsd4ED7CMYMAh8cvkeYJMoyDTTockEtvtY3kp1Ku9j1lvJYJs7
-# r9dik0bxll94ytR1lIhmxtdfzvtzX/Zisa3r5bm7y1uH+o4aiSYr4cQt6DMzhlCj
-# VGgPAIodphrUPyyVwgHPw+kC232watc4R/jmj8r0XPNESsWAMKxWiQClkg3dOBV5
-# nkksDEkvfle19JUzA/Rd3llEq/SogH3/oNB5ZINbovmMexq9lnI=
+# IgQgWAV4JRXa7LpNHkB5YlUP+sW03XoAXbneTQjHT07SkT8wDQYJKoZIhvcNAQEB
+# BQAEggIAXdvUYkjgvBfUYBmUuxcQ3J5q0PVgIH3N48WcnPBVvbutuOs5hhab/0V2
+# aFkWqejVwqYIkGLD+F387iYThU9oeRBwJje+qLXW/agfcrUuVoydknyL65oOkCDe
+# 9G31y9Cj8d1LU8g597Gm5yw5YNFBibMNEzv7u7oGbvmdUBLi0yblYZiNawbNnola
+# K9vUh0MvRTx+EuZXR/EC3gWfDnBpsR+/qOpvahvGbt4NeJKrKErZk4hiLde4t2F0
+# pIwq6YSBfaUTK8F6J8CV3iMe18jXvuCU97wQhMES9yE02pZpSm/JrYj1v+xJp2V+
+# jEFd3x9bh4O7icwy8SC5+B5jT8kBgNbgJkB7l6aE9UkKPYZG2HW5ZJbHCwNf7EcC
+# vrz03Gsri5RPaEjPNLYWf427V5bsZUeUAqvxzbn0CxFkEPWwl+hPzJvFporSdMsr
+# XyiHPz97qfKB314N0tdCI27+/XjqVlcJU5OtNpAP4+g6oiVKHFFOcAfWca/2JRCt
+# 0kO6wKTN4fVbp0QtWGTQPHCiXduHbYhe2R4bNDXyQy75jYT4oM0zkkWrGN7xaN7B
+# sz5hEgjlSn0GituxjlIeXtcHqJ6cITfFwtbrsBc2Q6qBQp0PxqEefdIt2Ql59ww9
+# 5hgQDphVzajqluc4k4cET3BlkXrlx939mQfZwHoBYwipGGbeTRI=
 # SIG # End signature block

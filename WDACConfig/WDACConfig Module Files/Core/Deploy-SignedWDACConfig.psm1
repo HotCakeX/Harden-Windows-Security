@@ -130,7 +130,7 @@ Function Deploy-SignedWDACConfig {
         # Detecting if Confirm switch is used to bypass the confirmation prompts
         if ($Force -and -Not $Confirm) {
             $ConfirmPreference = 'None'
-        }        
+        }
     }
 
     process {
@@ -166,12 +166,40 @@ Function Deploy-SignedWDACConfig {
                     Add-SignerRule -FilePath $PolicyPath -CertificatePath $CertPath -Update -Kernel
                 }
             }
-            elseif ($PolicyType -eq "Base Policy") {
+            elseif ($PolicyType -eq 'Base Policy') {
 
                 Write-Verbose -Message 'Policy type is Base'
 
                 # Make sure -User is not added if the UMCI policy rule option doesn't exist in the policy, typically for Strict kernel mode policies
                 if ('Enabled:UMCI' -in $PolicyRuleOptions) {
+
+                    Write-Verbose -Message 'Checking whether SignTool.exe is allowed to execute in the policy or not'
+                    if (-NOT (Invoke-WDACSimulation -FilePath $SignToolPathFinal -XmlFilePath $PolicyPath -BooleanOutput)) {
+
+                        Write-Verbose -Message 'The policy type is base policy and it applies to user mode files, yet the policy prevents SignTool.exe from executing. As a precautionary measure, scanning and including the SignTool.exe in the policy before deployment so you can modify/remove the signed policy later from the system.'
+
+                        Write-Verbose -Message 'Creating a temporary folder to store the symbolic link to the SignTool.exe'
+                        [System.IO.DirectoryInfo]$SymLinksStorage = New-Item -Path ($UserTempDirectoryPath + 'SymLinkStorage' + $(New-Guid)) -ItemType Directory -Force
+
+                        Write-Verbose -Message 'Creating symbolic link to the SignTool.exe'
+                        New-Item -ItemType SymbolicLink -Path "$SymLinksStorage\SignTool.exe" -Target $SignToolPathFinal | Out-Null
+
+                        Write-Verbose -Message 'Scanning the SignTool.exe and generating the SignTool.xml policy'
+                        New-CIPolicy -ScanPath $SymLinksStorage -Level FilePublisher -Fallback None -UserPEs -UserWriteablePaths -MultiplePolicyFormat -AllowFileNameFallbacks -FilePath "$SymLinksStorage\SignTool.xml"
+
+                        Write-Verbose -Message 'Merging the SignTool.xml policy with the policy being signed'
+                        Merge-CIPolicy -PolicyPaths "$SymLinksStorage\SignTool.xml", $PolicyPath -OutputFilePath "$SymLinksStorage\$($PolicyPath.Name)" | Out-Null
+
+                        Write-Verbose -Message 'Replacing the new policy with the old one'
+                        Move-Item -Path "$SymLinksStorage\$($PolicyPath.Name)" -Destination $PolicyPath -Force
+
+                        Write-Verbose -Message 'Removing the temporary folder'
+                        Remove-Item -Path $SymLinksStorage -Recurse -Force
+                    }
+                    else {
+                        Write-Verbose -Message 'The base policy allows SignTool.exe to execute, no need to scan and include it in the policy'
+                    }
+
                     Add-SignerRule -FilePath $PolicyPath -CertificatePath $CertPath -Update -User -Kernel -Supplemental
                 }
                 else {
@@ -220,20 +248,12 @@ Function Deploy-SignedWDACConfig {
             Rename-Item -Path "$PolicyID.cip.p7" -NewName "$PolicyID.cip" -Force
 
             if ($Deploy) {
-                
+
                 $CurrentStep++
                 Write-Progress -Id 13 -Activity 'Deploying' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                 # Prompt for confirmation before proceeding
                 if ($PSCmdlet.ShouldProcess('This PC', 'Deploying the signed policy')) {
-
-                    if ($PolicyType -eq "Base Policy"){
-                        if ('Enabled:UMCI' -in $PolicyRuleOptions){
-                            if (-NOT (Invoke-WDACSimulation -FilePath $PolicyPath -XmlFilePath $SignToolPathFinal -BooleanOutput)) {
-                                Throw 'No deployment'
-                            }
-                        }
-                    }
 
                     Write-Verbose -Message 'Deploying the policy'
                     &'C:\Windows\System32\CiTool.exe' --update-policy ".\$PolicyID.cip" -json | Out-Null

@@ -130,7 +130,7 @@ Function Deploy-SignedWDACConfig {
         # Detecting if Confirm switch is used to bypass the confirmation prompts
         if ($Force -and -Not $Confirm) {
             $ConfirmPreference = 'None'
-        }
+        }        
     }
 
     process {
@@ -166,7 +166,7 @@ Function Deploy-SignedWDACConfig {
                     Add-SignerRule -FilePath $PolicyPath -CertificatePath $CertPath -Update -Kernel
                 }
             }
-            else {
+            elseif ($PolicyType -eq "Base Policy") {
 
                 Write-Verbose -Message 'Policy type is Base'
 
@@ -178,6 +178,9 @@ Function Deploy-SignedWDACConfig {
                     Write-Verbose -Message 'UMCI policy rule option does not exist in the policy, typically for Strict kernel mode policies'
                     Add-SignerRule -FilePath $PolicyPath -CertificatePath $CertPath -Update -Kernel -Supplemental
                 }
+            }
+            else {
+                Throw "Policy type is not Base or Supplemental, it is: $PolicyType"
             }
 
             $CurrentStep++
@@ -217,12 +220,20 @@ Function Deploy-SignedWDACConfig {
             Rename-Item -Path "$PolicyID.cip.p7" -NewName "$PolicyID.cip" -Force
 
             if ($Deploy) {
-
+                
                 $CurrentStep++
                 Write-Progress -Id 13 -Activity 'Deploying' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                 # Prompt for confirmation before proceeding
                 if ($PSCmdlet.ShouldProcess('This PC', 'Deploying the signed policy')) {
+
+                    if ($PolicyType -eq "Base Policy"){
+                        if ('Enabled:UMCI' -in $PolicyRuleOptions){
+                            if (-NOT (Invoke-WDACSimulation -FilePath $PolicyPath -XmlFilePath $SignToolPathFinal -BooleanOutput)) {
+                                Throw 'No deployment'
+                            }
+                        }
+                    }
 
                     Write-Verbose -Message 'Deploying the policy'
                     &'C:\Windows\System32\CiTool.exe' --update-policy ".\$PolicyID.cip" -json | Out-Null

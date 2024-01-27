@@ -2,6 +2,7 @@
 
 <p align="Center">
 <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/ef5d1.png" alt="AI generated cat girl on the root in a rainy cloudy day" height="600">
+</p>
 
 ## Introduction
 

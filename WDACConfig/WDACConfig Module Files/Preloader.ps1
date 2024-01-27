@@ -16,6 +16,8 @@ try {
     if ((Test-Path -Path 'Variable:\UBR') -eq $false) { New-Variable -Name 'UBR' -Value (Get-ItemPropertyValue -Path 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion' -Name 'UBR') -Option 'Constant' -Scope 'Script' -Description 'Update Build Revision (UBR) number' -Force }
     if ((Test-Path -Path 'Variable:\FullOSBuild') -eq $false) { New-Variable -Name 'FullOSBuild' -Value "$OSBuild.$UBR" -Option 'Constant' -Scope 'Script' -Description 'Create full OS build number as seen in Windows Settings' -Force }
     if ((Test-Path -Path 'Variable:\ModuleRootPath') -eq $false) { New-Variable -Name 'ModuleRootPath' -Value ($PSScriptRoot) -Option 'Constant' -Scope 'Global' -Description 'Storing the value of $PSScriptRoot in a global constant variable to allow the internal functions to use it when navigating the module structure' -Force }
+    if ((Test-Path -Path 'Variable:\CISchemaPath') -eq $false) { New-Variable -Name 'CISchemaPath' -Value "$Env:SystemDrive\Windows\schemas\CodeIntegrity\cipolicy.xsd" -Option 'Constant' -Scope 'Script' -Description 'Storing the path to the WDAC Code Integrity Schema XSD file' -Force }
+    
 }
 catch {
     Throw [System.InvalidOperationException] 'Could not set the required global variables.'
@@ -41,11 +43,87 @@ foreach ($File in (Get-ChildItem -Recurse -File -Path $ModuleRootPath -Include '
     }
 }
 
+Function Test-CiPolicy {
+    <#
+    .DESCRIPTION
+        Tests the Code Integrity Policy XML file against the Code Integrity Schema file.
+    .PARAMETER XmlFile
+        The Code Integrity Policy XML file to test.
+    .LINK
+        https://github.com/HotCakeX/Harden-Windows-Security
+    .INPUTS
+        [System.IO.FileInfo]
+    .OUTPUTS
+        System.Boolean
+    #>
+    [CmdletBinding()]
+    [OutputType([System.Boolean])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [ValidateScript({ Test-Path -Path $_ -PathType Leaf })]
+        [System.IO.FileInfo]$XmlFile
+    )
+   
+    begin {
+        # Check if the schema file exists in the system drive
+        if (-NOT (Test-Path -Path $CISchemaPath)) {
+            Throw "The Code Integrity Schema file could not be found at: $CISchemaPath"
+        }
+    
+        # Assign the schema file path to a variable
+        [System.IO.FileInfo]$SchemaFilePath = $CISchemaPath
+        # Define a script block to handle validation errors
+        [System.Management.Automation.ScriptBlock]$ValidationEventHandler = { Throw $args[1].Exception }
+    }
+   
+    process {
+        # Create an XML reader object from the schema file path
+        [System.Xml.XmlReader]$XmlReader = [System.Xml.XmlReader]::Create($SchemaFilePath)
+        # Read the schema object from the XML reader
+        [System.Xml.Schema.XmlSchemaObject]$XmlSchemaObject = [System.Xml.Schema.XmlSchema]::Read($XmlReader, $ValidationEventHandler)
+        
+        # Create a variable to store the validation result
+        [System.Boolean]$IsValid = $false
+
+        try {
+            # Create an XML document object
+            [System.Xml.XmlDocument]$Xml = New-Object -TypeName System.Xml.XmlDocument
+            # Add the schema object to the XML document
+            $Xml.Schemas.Add($XmlSchemaObject) | Out-Null
+            # Load the XML file to the XML document
+            $Xml.Load($XmlFile)
+            # Validate the XML document against the schema object
+            $Xml.Validate({
+                    # Throw an exception if the validation fails
+                    Throw ([PsCustomObject] @{                    
+                            XmlFile   = $XmlFile
+                            Exception = $args[1].Exception
+                        })
+                })
+
+            # If the validation succeeds, set the IsValid variable to $true
+            $IsValid = $true
+        }
+        catch {
+            # Rethrow the exception
+            Throw $_
+        }
+        finally {   
+            # Close the XML reader object
+            $XmlReader.Close()    
+        }
+    }
+    End {
+        # Return the validation result
+        Return $IsValid
+    }
+}
+
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCC+kKF0TrvUydR3
-# RoeBV1rvokHfEf+EaUs3+W4GaAT1Q6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBMbCyqAioGXvdi
+# Tr+S7cU2hAJ/ymnkU5dJut6jbPR/iKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -92,16 +170,16 @@ foreach ($File in (Get-ChildItem -Recurse -File -Path $ModuleRootPath -Include '
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgmDpTjxwOYh1M6Y065UoecdVoRJvpEgntMRJmT/plNtYwDQYJKoZIhvcNAQEB
-# BQAEggIAU7291Emtgs+t3GrSJWprk+JNz1i4usoWfhjVoPRivTCoU9B6U0m0/Rmh
-# qHy+oQASDCG7/X/4ih14mWOGMTn2E7Y8YwX32Va23QQctgnMwiFl69LYqmihIhAx
-# 1lcYYkvMujOMOwNF0ixbwpiZ5SbwpcHHl1xpHJYGHDavB690XF46P+pBsAfVxoOP
-# cpTM7DTtvyiKFnwH5cbjkalQtARbAY5iwLSdEApsubPA8PPXbnxFHV1MVqrIuSSR
-# QoXBDCIL/79eu+BT10v0aElyG9JlLPKmuqq8RObd984Z5EWvoDq6Xmu1peBeYF+M
-# /TnL4eDYI1VMSgzIU6oHhCc+7qaK4ivScdxOPYOkVo/9aM1Q17G/FmffIuWEd3Io
-# AlcJu1AJA5sn2bx7jkWcEB2YJYbwIjBQ+YFmrJEeaBiW8rvgO/48zWotWrAFWG4p
-# iP77twapyCSgt5HpeoSyt3QtWkzbazvy6vESSpFpHOONieBMRitl+7R0pOZQC9M6
-# U/bBs1uzURb+T8ER1RQKrbK6ATc+amPPzomBwt0TKm3XPsd4lIUHhyrOKlWtLeDH
-# FEwZlWJpFRFGRwX6NeQpDx6Nl8FtH1EhVuhoMqSraOAhqQ4hbn3l440Dk9iRj1SK
-# Ui3JTnsQSqd6doTgxwxtteWeIYql6wRGh+chCyDfEishLVbOxN4=
+# IgQgmpvqzeBFd09uTQMeJCeDDKeO+L8nqstE3as8MFhJvdQwDQYJKoZIhvcNAQEB
+# BQAEggIADrBrn945tDmx8245Fm7jr+glEM3ZCfJ7BlVdR4Iu0+t3ukl2cFFQu1Sf
+# be46KycSNLrz2F1JOAaUGgjBN0axHu31wbFvIW18mPunmLJohe/aogVdC3q1GpGw
+# WsvD030bnX5Vb1N5jtBQaOrAUSebuBKulXn/dQIf5QV7nBXq+P1EQ7hJp3GNElKC
+# oY+2uCUxTVWftvZlrU8c1ONqkRN9QBg7mzyxDz/2ybw0XNZ5Hy1K95FRqa9azNER
+# X/IPDbo/1gWhfIF/JhKWFsX8m5P0gVcrzsVnZ+xiiqbHs6McnBuoerKCXWxoyIpZ
+# 3Iv7h2fad2c7Dn4s09BLmCL65Bd7cM6IdUDJi3mrjUFwGCq5kXXEylRBDRTfi9tX
+# 44dwITX7prCHZLuYrHfmOvtNq1mp62gMun8xW67OwK0Xx6hU+qoL8vUsxTAKLi/E
+# FHMIzDhQgtZDu0eYMi8zKjU/eIR0MKNx3jTlOTuNMQcy/FxogSZsKUWV41kC9Zki
+# wj5sasI9CKhKVwp3xquuOL9Kr0O6wFIXTOqSpX6KMFZVJNFenfL7mZkyCnPgQwtY
+# DcAroFFWU+4qhHTlf3psjgxBUxLs5Zdo+U668S1576eVYcqfVbHXIgDlANvCDZ1W
+# y27t7DZxwwkv0baIQwUktvRsHI33jQLJYrBYT73ym/eFJHmJbj8=
 # SIG # End signature block

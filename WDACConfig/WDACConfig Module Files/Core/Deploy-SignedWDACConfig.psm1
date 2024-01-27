@@ -92,6 +92,7 @@ Function Deploy-SignedWDACConfig {
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Get-SignTool.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Confirm-CertCN.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Write-ColorfulText.psm1" -Force
+        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Copy-CiRules.psm1" -Force
 
         # if -SkipVersionCheck wasn't passed, run the updater
         if (-NOT $SkipVersionCheck) { Update-self -InvocationStatement $MyInvocation.Statement }
@@ -188,7 +189,11 @@ Function Deploy-SignedWDACConfig {
                         New-CIPolicy -ScanPath $SymLinksStorage -Level FilePublisher -Fallback None -UserPEs -UserWriteablePaths -MultiplePolicyFormat -AllowFileNameFallbacks -FilePath "$SymLinksStorage\SignTool.xml"
 
                         Write-Verbose -Message 'Merging the SignTool.xml policy with the policy being signed'
-                        Merge-CIPolicy -PolicyPaths "$SymLinksStorage\SignTool.xml", $PolicyPath -OutputFilePath "$SymLinksStorage\$($PolicyPath.Name)" | Out-Null
+                        # First policy in the array should always be the main one so that its settings will be used in the merged policy
+                        Merge-CIPolicy -PolicyPaths $PolicyPath, "$SymLinksStorage\SignTool.xml" -OutputFilePath "$SymLinksStorage\$($PolicyPath.Name)" | Out-Null
+
+                        Write-Verbose -Message 'Making sure policy rule options stay the same after merging the policies'
+                        Copy-CiRules -SourceFile $PolicyPath -DestinationFile "$SymLinksStorage\$($PolicyPath.Name)"
 
                         Write-Verbose -Message 'Replacing the new policy with the old one'
                         Move-Item -Path "$SymLinksStorage\$($PolicyPath.Name)" -Destination $PolicyPath -Force

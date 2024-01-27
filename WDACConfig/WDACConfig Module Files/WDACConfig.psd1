@@ -222,7 +222,8 @@ To get help and syntax on PowerShell console, type:
         'Shared\New-SnapBackGuarantee.psm1',
         'Shared\Compare-SecureString.psm1',
         'Shared\Get-KernelModeDriversAudit.psm1',
-        'Shared\Test-CiPolicy.psm1'
+        'Shared\Test-CiPolicy.psm1',
+        'Shared\Copy-CiRules.psm1'
     )
 
     # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.

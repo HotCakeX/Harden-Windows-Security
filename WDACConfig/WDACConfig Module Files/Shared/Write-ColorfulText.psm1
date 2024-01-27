@@ -12,6 +12,7 @@ Function Write-ColorfulText {
         System.String
     #>
     [CmdletBinding()]
+    [OutputType([System.String])]
     [Alias('WCT')]
 
     param (

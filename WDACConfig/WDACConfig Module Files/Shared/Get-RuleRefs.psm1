@@ -8,6 +8,7 @@ Function Get-RuleRefs {
         System.String
     #>
     [CmdletBinding()]
+    [OutputType([System.String])]
     param (
         [parameter(Mandatory = $true)]
         [System.Object[]]$HashesArray

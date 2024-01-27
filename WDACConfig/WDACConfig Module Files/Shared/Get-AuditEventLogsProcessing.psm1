@@ -10,6 +10,7 @@ Function Get-AuditEventLogsProcessing {
         PSCustomObject
     #>
     [CmdletBinding()]
+    [OutputType([PSCustomObject])]
     param (
         [System.DateTime]$Date
     )

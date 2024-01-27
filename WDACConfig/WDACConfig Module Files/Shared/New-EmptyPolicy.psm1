@@ -8,6 +8,7 @@ Function New-EmptyPolicy {
         System.String
     #>
     [CmdletBinding()]
+    [OutputType([System.String])]
     param (
         $RulesContent,
         $RuleRefsContent

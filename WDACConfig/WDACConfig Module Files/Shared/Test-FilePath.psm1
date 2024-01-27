@@ -9,6 +9,7 @@ Function Test-FilePath {
         System.String[]
     #>
     [CmdletBinding()]
+    [OutputType([System.String[]])]
     param (
         [Parameter(Mandatory = $true)]
         [System.String[]]$FilePath,

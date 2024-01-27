@@ -23,6 +23,7 @@ Function Get-KernelModeDriversAudit {
         Get-SystemDriver only includes .sys files, but Get-KernelModeDriversAudit function includes .dll files as well just in case since they appear in event logs when auditing kernel-mode files.
     #>
     [CmdletBinding()]
+    [OutputType([System.IO.DirectoryInfo])]
     param()
 
     begin {

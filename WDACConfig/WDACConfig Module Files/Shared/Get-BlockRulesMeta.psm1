@@ -8,6 +8,7 @@ Function Get-BlockRulesMeta {
         System.String
     #>
     [CmdletBinding()]
+    [OutputType([System.String])]
     param ()
     # Importing the $PSDefaultParameterValues to the current session, prior to everything else
     . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"

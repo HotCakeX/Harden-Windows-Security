@@ -11,6 +11,7 @@ Function Get-GlobalRootDrives {
         System.Objects[]
     #>
     [CmdletBinding()]
+    [OutputType([System.Objects[]])]
     param ()
     # Importing the $PSDefaultParameterValues to the current session, prior to everything else
     . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"

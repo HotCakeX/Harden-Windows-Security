@@ -43,87 +43,11 @@ foreach ($File in (Get-ChildItem -Recurse -File -Path $ModuleRootPath -Include '
     }
 }
 
-Function Test-CiPolicy {
-    <#
-    .DESCRIPTION
-        Tests the Code Integrity Policy XML file against the Code Integrity Schema file.
-    .PARAMETER XmlFile
-        The Code Integrity Policy XML file to test.
-    .LINK
-        https://github.com/HotCakeX/Harden-Windows-Security
-    .INPUTS
-        [System.IO.FileInfo]
-    .OUTPUTS
-        System.Boolean
-    #>
-    [CmdletBinding()]
-    [OutputType([System.Boolean])]
-    param(
-        [Parameter(Mandatory = $true)]
-        [ValidateScript({ Test-Path -Path $_ -PathType Leaf })]
-        [System.IO.FileInfo]$XmlFile
-    )
-
-    begin {
-        # Check if the schema file exists in the system drive
-        if (-NOT (Test-Path -Path $CISchemaPath)) {
-            Throw "The Code Integrity Schema file could not be found at: $CISchemaPath"
-        }
-
-        # Assign the schema file path to a variable
-        [System.IO.FileInfo]$SchemaFilePath = $CISchemaPath
-        # Define a script block to handle validation errors
-        [System.Management.Automation.ScriptBlock]$ValidationEventHandler = { Throw $args[1].Exception }
-    }
-
-    process {
-        # Create an XML reader object from the schema file path
-        [System.Xml.XmlReader]$XmlReader = [System.Xml.XmlReader]::Create($SchemaFilePath)
-        # Read the schema object from the XML reader
-        [System.Xml.Schema.XmlSchemaObject]$XmlSchemaObject = [System.Xml.Schema.XmlSchema]::Read($XmlReader, $ValidationEventHandler)
-
-        # Create a variable to store the validation result
-        [System.Boolean]$IsValid = $false
-
-        try {
-            # Create an XML document object
-            [System.Xml.XmlDocument]$Xml = New-Object -TypeName System.Xml.XmlDocument
-            # Add the schema object to the XML document
-            $Xml.Schemas.Add($XmlSchemaObject) | Out-Null
-            # Load the XML file to the XML document
-            $Xml.Load($XmlFile)
-            # Validate the XML document against the schema object
-            $Xml.Validate({
-                    # Throw an exception if the validation fails
-                    Throw ([PsCustomObject] @{
-                            XmlFile   = $XmlFile
-                            Exception = $args[1].Exception
-                        })
-                })
-
-            # If the validation succeeds, set the IsValid variable to $true
-            $IsValid = $true
-        }
-        catch {
-            # Rethrow the exception
-            Throw $_
-        }
-        finally {
-            # Close the XML reader object
-            $XmlReader.Close()
-        }
-    }
-    End {
-        # Return the validation result
-        Return $IsValid
-    }
-}
-
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCAUdA3btKqb5sZG
-# tIJ3D5ej9n7Vhp96WebYI5mpQniOiaCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCAcZZLnHenM0vGz
+# 6tIHPVXp5xPtGlHHe/9lJBjgtZCwGKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -170,16 +94,16 @@ Function Test-CiPolicy {
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgN2GFv7v0pb+E0UjLS9vNOnQgBefmtlT3DMGBBJJtoSgwDQYJKoZIhvcNAQEB
-# BQAEggIAKbE2TrdTyzTmnBp4NxkUiEi7rUeXHtaypgT0TEuwVj6Zbh+wNTFh6eH1
-# 866csV+30Yi9JGNqaXWlyokz1h9fcOMaespILrAmrF1ZbSUkrUGDzeuP0UDMGSmS
-# 4UiP89KEWt1J7ozQVVcBelyzwq3xQHaMobTFYqx7MZpAwcB7w2bWycQ7pVURAGq4
-# xCnjOTpAMLMjQOPH7GHOi05VC5w12pZR+dcgZVWiCMVuu+vvZiM9y65OXa6wr3qN
-# LXLjUagQoLuryIpiYk3I9LV3o9iET16yasAx3yqrDNXXAgGQeeoMwrXloHuvXSjy
-# MzkRBkeNLr5lvQXjjcFHHhhnNonpk9cmPZyPcuJ3RBMSOFqyZxv5KMrjs4q2z7Zh
-# 8EgFcnexwoKnjn4W6zZXy1LFv2PqZdxvaxFALjivptbYGPQFRWLYh8su/YourncT
-# cvZB8o/Ijp8DXm86m4Nu42HzjQ5TG801qxrDiJ9lCdUlV25t4B3omqgEZVDV1TpP
-# aVtS4f/BhcovJ7jz3IOooCgdx3JrjgUMonNjSFDqMiaYzMR1H3MhKv8F2lUEcaP0
-# 8W1zhqG1M/7ShsVqI9j7vlcGTveBxb8XqBiThpNqydEqO5G/tP8BTbMznqgmdA35
-# SeVawE191YKIxfqAVnnyb3lNXDV4VmKv4hLmUAR04LdLIUXxK1o=
+# IgQgzASG2c1JDl6tsmQpIBhXZgQt1e8ErSV3p/dWtSgGCJ4wDQYJKoZIhvcNAQEB
+# BQAEggIAavLaXaE8hj9ylz3yLQZT11Gt6n99h7SbTAJGW/7VoycN7rLykz9z2z9a
+# grn1psEeJP1g7eDm/7QDg7Ou7d6h9pq0Wcl19rybd0Q6M2/HwQl/EtRDpkFnvV88
+# moQPaU7J2Um7eSSysPhNubxApPl9l9rCChEJBEK+KoD5LCHJ2D9ppzZKDmSmpEZp
+# xTVIBKxpZ1XnCK3+JtAExy5dl4ovjQNQ3sjjmBq3S2fWmVXmMKo6A6SYEu4++9Mh
+# QABaGEN+jFqiA1bB/8hS6bMiZK0d96Vj0P6Ekjc8RqezJCiCP1Cw3JIVbBl1wHeK
+# /0HEdAMWpLhuUNG8i1R/0QAt3pogjiZWUC1V54gxPzarvvac6rIrFBwd2uaaSX2h
+# TqRb3Qe0u9PWAFUMUIdY3VFQnsoCJANvt/zUedn4iY+QARCQXYSN8avnw1sUNuTX
+# JGHM/ueqXTK9A3HJtpiJV0ZDKXfaBW4UhLcU4DJPeySc2bBvGDe1fKS9yK5VKRSq
+# J+/Sqh0ZbfxunaMvp3hj4o8FqKrMw9SQN+Y6MgN2RiL++cbBqJ6HE930SUVbU4FQ
+# GNP7eKe9MyR7v4AJ4uZRWX3WFoj/0+CGCF0/e0YdErF/dvIgG4t0Vjcc9tqxApsW
+# yh5AKgDPACPUy0SlQ/a7YswjvFLdddk+1hddUshL3Z9Ufqpl/eE=
 # SIG # End signature block

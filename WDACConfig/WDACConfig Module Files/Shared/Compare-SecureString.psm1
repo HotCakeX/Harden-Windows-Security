@@ -13,6 +13,7 @@ function Compare-SecureString {
         Second secure string to compare with the first secure string
     #>
     [CmdletBinding()]
+    [OutputType([System.Boolean])]
     param(
         [System.Security.SecureString]$SecureString1,
         [System.Security.SecureString]$SecureString2

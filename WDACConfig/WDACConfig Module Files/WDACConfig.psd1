@@ -270,4 +270,3 @@ Full Change log available in GitHub releases: https://github.com/HotCakeX/Harden
     # DefaultCommandPrefix = ''
 
 }
-

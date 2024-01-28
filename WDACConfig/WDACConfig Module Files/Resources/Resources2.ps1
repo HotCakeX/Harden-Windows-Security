@@ -2,7 +2,7 @@
 . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
 # Defining a custom object to store the signer information
-class Signer {
+class SignerClass {
     [System.String]$ID
     [System.String]$Name
     [System.String]$CertRoot
@@ -33,12 +33,12 @@ Function Get-SignerInfo {
         [System.Object[]]$Signers = $Xml.SiPolicy.Signers.Signer
 
         # Create an empty array to store the output
-        [Signer[]]$Output = @()
+        [SignerClass[]]$Output = @()
 
         # Loop through each Signer node and extract the information
         foreach ($Signer in $Signers) {
             # Create a new Signer object and assign the properties
-            [Signer]$SignerObj = [Signer]::new()
+            [SignerClass]$SignerObj = [SignerClass]::new()
             $SignerObj.ID = $Signer.ID
             $SignerObj.Name = $Signer.Name
             $SignerObj.CertRoot = $Signer.CertRoot.Value
@@ -526,7 +526,7 @@ Function Compare-SignerAndCertificate {
     )
 
     # Get the signer information from the XML file path using the Get-SignerInfo function
-    [Signer[]]$SignerInfo = Get-SignerInfo -XmlFilePath $XmlFilePath
+    [SignerClass[]]$SignerInfo = Get-SignerInfo -XmlFilePath $XmlFilePath
 
     # An array to store the details of the Primary certificate's Intermediate certificate(s) of the signed file
     [System.Object[]]$PrimaryCertificateIntermediateDetails = @()

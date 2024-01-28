@@ -54,6 +54,7 @@ Function Get-FileRuleOutput {
     [System.Object[]]$OutputHashInfoProcessing = $OutputHashInfoProcessing | Where-Object -FilterScript { $_.hashtype -eq 'Hash Sha256' }
 
     # Return the output array
+    Write-Verbose -Message "Get-FileRuleOutput: Returning $($OutputHashInfoProcessing.Count) file rules that are based on file hashes"
     return $OutputHashInfoProcessing
 }
 Export-ModuleMember -Function 'Get-FileRuleOutput'

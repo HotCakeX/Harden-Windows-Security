@@ -28,7 +28,7 @@ Function Compare-SignerAndCertificate {
     [OutputType([System.Object[]])]
     param(
         [Parameter(Mandatory = $true)][System.String]$XmlFilePath,
-        [Parameter(Mandatory = $true)][System.String]$SignedFilePath
+        [Parameter(Mandatory = $true)][System.IO.FileInfo]$SignedFilePath
     )
 
     # Get the signer information from the XML file path using the Get-SignerInfo function

@@ -115,7 +115,8 @@ To get help and syntax on PowerShell console, type:
     # FormatsToProcess = @()
 
     # Modules to import as nested modules of the module specified in RootModule/ModuleToProcess
-    NestedModules        = @('Core\New-WDACConfig.psm1',
+    NestedModules        = @(
+        'Core\New-WDACConfig.psm1',
         'Core\Remove-WDACConfig.psm1',
         'Core\Deploy-SignedWDACConfig.psm1',
         'Core\Confirm-WDACConfig.psm1',
@@ -132,7 +133,8 @@ To get help and syntax on PowerShell console, type:
         'Core\Build-WDACCertificate.psm1')
 
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
-    FunctionsToExport    = @('New-WDACConfig',
+    FunctionsToExport    = @(
+        'New-WDACConfig',
         'Remove-WDACConfig',
         'Deploy-SignedWDACConfig',
         'Confirm-WDACConfig',
@@ -149,7 +151,8 @@ To get help and syntax on PowerShell console, type:
         'Build-WDACCertificate')
 
     # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
-    CmdletsToExport      = @('New-WDACConfig',
+    CmdletsToExport      = @(
+        'New-WDACConfig',
         'Remove-WDACConfig',
         'Deploy-SignedWDACConfig',
         'Confirm-WDACConfig',

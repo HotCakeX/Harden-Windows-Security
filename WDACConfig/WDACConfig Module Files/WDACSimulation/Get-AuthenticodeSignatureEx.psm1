@@ -27,10 +27,10 @@ Function Get-AuthenticodeSignatureEx {
         # Load the System.Security assembly to use the SignedCms class
         Add-Type -AssemblyName 'System.Security' -ErrorAction SilentlyContinue
 
-        # Add the Crypt32.dll library functions as a type if they don't exist        
+        # Add the Crypt32.dll library functions as a type if they don't exist
         if (-NOT ('PKI.Crypt32' -as [System.Type]) ) {
             Add-Type -Path "$ModuleRootPath\C#\Crypt32dll.cs"
-        }        
+        }
 
         # Define some constants for the CryptQueryObject function parameters
         [System.Int16]$CERT_QUERY_OBJECT_FILE = 0x1
@@ -165,8 +165,8 @@ Export-ModuleMember -Function 'Get-AuthenticodeSignatureEx'
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCAL7zoA7fc/1S+o
-# flCAMcQ1KGnu3dUPl8UjcoubuDNWsqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCr3T9dq/eQt7ah
+# Hz5z/ne5IY72mfe8hgpoCYxqphtT+aCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -213,16 +213,16 @@ Export-ModuleMember -Function 'Get-AuthenticodeSignatureEx'
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgrBh2TAyE2VZZd1YAsFvva6YTVuyPu3suvnJh8HkCoAMwDQYJKoZIhvcNAQEB
-# BQAEggIAR0bzsZW3FsPmI2bt4ys0kchjqu6+Srybb4Fmg2SfHlI2Yp3TM9tgpJ9O
-# TAZNbsPgvaf9uEQngUajw2nKkn7gE8bBWdT4ZClOdy2jejGPhAOgnwfgtvAILkvJ
-# JVjIpZzcsVBjpCA1PhPN3TLWFOuzs/pmxm0UcPE4+eqKCvsUp+XAAYtnxw1A/S1u
-# JlD3iCGQH6RMtEXleM63GtPeslqVPrA7Rvjw/pkWvcr1rvWEDAd7hiDNwzSh0T43
-# gKBrpM0DOE+6IHoFAxn8OR5bQNCbNW2EZpbjcacs5c9xAB7BCFy8mrvIn5Y3qO5P
-# IWX6j1SPYGWudx2a4h60zpFtWtb2uPFNw5K4obRKhZ6VRK22B9IQJGKKqTORDXY8
-# lEBZ2SBqWxNYngygE9UUYMnPLu6YTIQ3KoN0q7aPScolC5jD9O7X9BKhFs2a+3lL
-# kbpe2V4UCiGUUIakOoo3FlXYJrjyuSQ9iyzpEwp4mLfHk4R+CWcWdX2TlyFjEUvd
-# qiPSNKlZKUhS80lVu5nmtyRXWwLb+JiJ9/BtIW+P1exHUKx258gfhCvhBtLTeA8E
-# XUENqVCn6Cm0AGLVnyjHQF8hPqLMvWuinhbIZMmraRoLoVEbVr6NOA5KfFLnxYgj
-# Wh60nTSl4G+G7hyu4t1JNfD+3y3/dRevKbbtP3AroBc3Ik6IMn8=
+# IgQgVT6t6Gy9ym3K2sbS4sBrezTq8E9Z59hlsI44yns9XJAwDQYJKoZIhvcNAQEB
+# BQAEggIAiKf9gJdlcOArzxIIdq2Zs3HO0LKheR20lJa0rYGibbaqAy24vPgC1DRP
+# D3KM6WbDx9/3ZrQssWbXfEoDYyoYuojj3aZSn8KZ/Pibcimy1/Kf4vNXK2HNIgyf
+# mxWaKQ+Dmz2Bn5NNzAwgwAWY22sz8eOMn3P1w1eoN/xQsqhYn01maisEf+uk+O6h
+# kRk4pzPQd79X403KfkZUOjjgB3MacKZUQr+gfnK5boIBXQJX3iiRmlU84pNlzTTp
+# D9DN6XWg5jHZ0D7cO4tNGFj57daKxKoqYvJJzMcj+2DSF0P8kTRecYoRZ7Pm46tN
+# +h93uQG3ZrfwbI0HTzG2EZwzp+AGzY+bjtAJ9NseHEVQYU8aAwIQN5N80gJP+k5u
+# qupv8JFrueaduOzqQTf+8zM+VGdpSU5DwV8xM16Sr9sLq1NfL4a6rC5YdiHA2HbI
+# 4IEXlPV6bXgMnrhwhXGGHgjn0Se8rCO9qCpPSAdDwm0AEN91S0WYJztaLBxRuJBV
+# jvOtrWmRkTY9pjUk210tVAwI5Cd2da2KXwno7OBtbPBASHoBp2x3VfaPCTqtnCiR
+# 2x4zlRta//UD7+PrX0AL352JfFAH1Y3JfcUsYPxHAtk5opOiZsssIc/bGwsq4nfj
+# EqY1t8RmcwT0zqJ5h6zNUYZEIcVxoUMcrJaE0k05xbwAxnpI8mk=
 # SIG # End signature block

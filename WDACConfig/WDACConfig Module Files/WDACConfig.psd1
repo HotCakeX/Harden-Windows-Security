@@ -230,6 +230,9 @@ To get help and syntax on PowerShell console, type:
         'WDACSimulation\Get-CertificateDetails.psm1',
         'WDACSimulation\Get-AuthenticodeSignatureEx.psm1',
         'WDACSimulation\Compare-SignerAndCertificate.psm1'
+        'C#\Signer.cs',
+        'C#\Kernel32dll.cs',
+        'C#\Crypt32dll.cs'
     )
 
     # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.

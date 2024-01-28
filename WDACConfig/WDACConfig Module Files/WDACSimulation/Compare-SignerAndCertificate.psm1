@@ -57,6 +57,8 @@ Function Compare-SignerAndCertificate {
         $NestedCertificate.Subject -match 'CN=(?<InitialRegexTest1>.*?),.*' | Out-Null
         $LeafCNOfTheNestedCertificate = $matches['InitialRegexTest1'] -like '*"*' ? ($NestedCertificate.Subject -split 'CN="(.+?)"')[1] : $matches['InitialRegexTest1']
 
+        Write-Verbose -Message 'Found a nested Signer in the file'
+
         # Send the nested certificate along with its Leaf certificate's CN to the Get-CertificateDetails function with -IntermediateOnly parameter in order to only get the intermediate certificates of the Nested certificate
         $NestedCertificateDetails = Get-CertificateDetails -IntermediateOnly -X509Certificate2 $NestedCertificate -LeafCNOfTheNestedCertificate $LeafCNOfTheNestedCertificate
     }

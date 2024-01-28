@@ -118,9 +118,9 @@ Function Get-CertificateDetails {
             Where-Object -FilterScript { ($_.SubjectCN -ne $_.IssuerCN) -and ($_.SubjectCN -ne $TestAgainst) } |
             Group-Object -Property TBSValue | ForEach-Object -Process { $_.Group[0] } # To make sure the output values are unique based on TBSValue property
 
-            Write-Verbose -Message "The Root Certificate common name is: $($($Obj | Where-Object -FilterScript { ($_.SubjectCN -eq $_.IssuerCN) }).SubjectCN | Select-Object -First 1)"
+            Write-Verbose -Message "The Primary Signer's Root Certificate common name is: $($($Obj | Where-Object -FilterScript { ($_.SubjectCN -eq $_.IssuerCN) }).SubjectCN | Select-Object -First 1)"
 
-            Write-Verbose -Message "There are $($FinalObj.Count) Intermediate certificates with the following common names: $($FinalObj.SubjectCN -join ', ')"
+            Write-Verbose -Message "The Primary Signer has $($FinalObj.Count) Intermediate certificate(s) with the following common name(s): $($FinalObj.SubjectCN -join ', ')"
 
             return [System.Object[]]$FinalObj
         }
@@ -132,7 +132,7 @@ Function Get-CertificateDetails {
             Where-Object -FilterScript { ($_.SubjectCN -ne $_.IssuerCN) -and ($_.SubjectCN -eq $TestAgainst) } |
             Group-Object -Property TBSValue | ForEach-Object -Process { $_.Group[0] } # To make sure the output values are unique based on TBSValue property
 
-            Write-Verbose -Message "There are $($FinalObj.Count) Leaf certificates with the following common names: $($FinalObj.SubjectCN -join ', ')"
+            Write-Verbose -Message "The Primary Signer has $($FinalObj.Count) Leaf certificate with the following common name: $($FinalObj.SubjectCN -join ', ')"
 
             return [System.Object[]]$FinalObj
         }
@@ -149,6 +149,10 @@ Function Get-CertificateDetails {
             Where-Object -FilterScript { ($_.SubjectCN -ne $_.IssuerCN) -and ($_.SubjectCN -ne $LeafCNOfTheNestedCertificate) } |
             Group-Object -Property TBSValue | ForEach-Object -Process { $_.Group[0] } # To make sure the output values are unique based on TBSValue property
 
+            Write-Verbose -Message "The Nested Signer's Root Certificate common name is: $($($Obj | Where-Object -FilterScript { ($_.SubjectCN -eq $_.IssuerCN) }).SubjectCN | Select-Object -First 1)"
+
+            Write-Verbose -Message "The Nested Signer has $($FinalObj.Count) Intermediate certificate(s) with the following common name(s): $($FinalObj.SubjectCN -join ', ')"
+
             return [System.Object[]]$FinalObj
         }
         elseif ($LeafCertificate) {
@@ -158,6 +162,8 @@ Function Get-CertificateDetails {
             $FinalObj = $Obj |
             Where-Object -FilterScript { ($_.SubjectCN -ne $_.IssuerCN) -and ($_.SubjectCN -eq $LeafCNOfTheNestedCertificate) } |
             Group-Object -Property TBSValue | ForEach-Object -Process { $_.Group[0] } # To make sure the output values are unique based on TBSValue property
+
+            Write-Verbose -Message "The Nested Signer has $($FinalObj.Count) Leaf certificate with the following common name: $($FinalObj.SubjectCN -join ', ')"
 
             return [System.Object[]]$FinalObj
         }

@@ -56,7 +56,7 @@ Function Get-TBSCertificate {
         default { throw "No handler for algorithm $AlgorithmOid" }
     }
 
-    Write-Verbose -Message "Selected hash algorithm is: $($HashFunction.GetType().BaseType.Name)"
+   # Write-Verbose -Message "Selected hash algorithm is: $($HashFunction.GetType().BaseType.Name)"
 
     # Compute the hash of the TBS value using the hash function
     [System.Byte[]]$Hash = $HashFunction.ComputeHash($TbsCertificate.ToArray())

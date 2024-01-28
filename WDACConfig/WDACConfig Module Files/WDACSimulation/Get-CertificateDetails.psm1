@@ -29,7 +29,7 @@ Function Get-CertificateDetails {
     [OutputType([System.Object[]])]
     param (
         [Parameter(ParameterSetName = 'Based on File Path', Mandatory = $true)]
-        [System.String]$FilePath,
+        [System.IO.FileInfo]$FilePath,
 
         [Parameter(ParameterSetName = 'Based on Certificate', Mandatory = $true)]
         $X509Certificate2,
@@ -53,9 +53,12 @@ Function Get-CertificateDetails {
         # Get all the certificates from the file path using the Get-SignedFileCertificates function
         $CertCollection = Get-SignedFileCertificates -FilePath $FilePath | Where-Object -FilterScript { $_.EnhancedKeyUsageList.FriendlyName -ne 'Time Stamping' }
     }
-    else {
+    elseif ($X509Certificate2) {
         # The "| Where-Object -FilterScript {$_ -ne 0}" part is used to filter the output coming from Get-AuthenticodeSignatureEx function that gets nested certificate
         $CertCollection = Get-SignedFileCertificates -X509Certificate2 $X509Certificate2 | Where-Object -FilterScript { $_.EnhancedKeyUsageList.FriendlyName -ne 'Time Stamping' } | Where-Object -FilterScript { $_ -ne 0 }
+    }
+    else {
+        throw 'Either FilePath or X509Certificate2 parameter must be specified'
     }
 
     # Loop through each certificate in the collection and call this function recursively with the certificate object as an input
@@ -115,6 +118,10 @@ Function Get-CertificateDetails {
             Where-Object -FilterScript { ($_.SubjectCN -ne $_.IssuerCN) -and ($_.SubjectCN -ne $TestAgainst) } |
             Group-Object -Property TBSValue | ForEach-Object -Process { $_.Group[0] } # To make sure the output values are unique based on TBSValue property
 
+            Write-Verbose -Message "The Root Certificate common name is: $($($Obj | Where-Object -FilterScript { ($_.SubjectCN -eq $_.IssuerCN) }).SubjectCN | Select-Object -First 1)"
+
+            Write-Verbose -Message "There are $($FinalObj.Count) Intermediate certificates with the following common names: $($FinalObj.SubjectCN -join ', ')"
+
             return [System.Object[]]$FinalObj
         }
         elseif ($LeafCertificate) {
@@ -124,6 +131,8 @@ Function Get-CertificateDetails {
             $FinalObj = $Obj |
             Where-Object -FilterScript { ($_.SubjectCN -ne $_.IssuerCN) -and ($_.SubjectCN -eq $TestAgainst) } |
             Group-Object -Property TBSValue | ForEach-Object -Process { $_.Group[0] } # To make sure the output values are unique based on TBSValue property
+
+            Write-Verbose -Message "There are $($FinalObj.Count) Leaf certificates with the following common names: $($FinalObj.SubjectCN -join ', ')"
 
             return [System.Object[]]$FinalObj
         }

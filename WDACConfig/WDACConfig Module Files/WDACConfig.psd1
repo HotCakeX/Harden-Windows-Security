@@ -198,7 +198,6 @@ To get help and syntax on PowerShell console, type:
         'Core\Assert-WDACConfigIntegrity.psm1',
         'Core\Build-WDACCertificate.psm1',
         'CoreExt\PSDefaultParameterValues.ps1',
-        'Resources\Resources2.ps1',
         'Resources\ArgumentCompleters.ps1'
         'Resources\WDAC Policies\DefaultWindows_Enforced_Kernel.xml',
         'Resources\WDAC Policies\DefaultWindows_Enforced_Kernel_NoFlights.xml',
@@ -223,7 +222,14 @@ To get help and syntax on PowerShell console, type:
         'Shared\Compare-SecureString.psm1',
         'Shared\Get-KernelModeDriversAudit.psm1',
         'Shared\Test-CiPolicy.psm1',
-        'Shared\Copy-CiRules.psm1'
+        'Shared\Copy-CiRules.psm1',
+        'WDACSimulation\Get-TBSCertificate.psm1',
+        'WDACSimulation\Get-SignerInfo.psm1',
+        'WDACSimulation\Get-SignedFileCertificates.psm1',
+        'WDACSimulation\Get-FileRuleOutput.psm1',
+        'WDACSimulation\Get-CertificateDetails.psm1',
+        'WDACSimulation\Get-AuthenticodeSignatureEx.psm1',
+        'WDACSimulation\Compare-SignerAndCertificate.psm1'
     )
 
     # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.

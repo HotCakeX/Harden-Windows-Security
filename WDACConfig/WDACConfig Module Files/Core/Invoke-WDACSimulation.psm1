@@ -36,13 +36,12 @@ Function Invoke-WDACSimulation {
         # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
-        # Importing resources such as functions by dot-sourcing so that they will run in the same scope and their variables will be usable
-        . "$ModuleRootPath\Resources\Resources2.ps1"
-
         # Importing the required sub-modules
         Write-Verbose -Message 'Importing the required sub-modules'
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Update-self.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Write-ColorfulText.psm1" -Force
+        Import-Module -FullyQualifiedName "$ModuleRootPath\WDACSimulation\Compare-SignerAndCertificate.psm1" -Force
+        Import-Module -FullyQualifiedName "$ModuleRootPath\WDACSimulation\Get-FileRuleOutput.psm1" -Force
 
         # if -SkipVersionCheck wasn't passed, run the updater
         if (-NOT $SkipVersionCheck) { Update-self -InvocationStatement $MyInvocation.Statement }
@@ -375,8 +374,8 @@ Register-ArgumentCompleter -CommandName 'Invoke-WDACSimulation' -ParameterName '
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCicizTR0aJq/9V
-# qvtOcj4JxLeMKEP4rYPxP+X4UlGUaKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBuhv9D0tzOFH0g
+# wdl4ncTJJIks2yAkKB5vMlchQKJJg6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -423,16 +422,16 @@ Register-ArgumentCompleter -CommandName 'Invoke-WDACSimulation' -ParameterName '
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgVjRgRljcujlWfFWUUi83IgOl0ZDrY0P9fjRjtJ/2sfswDQYJKoZIhvcNAQEB
-# BQAEggIAJJp9Z+ajLTKs3nBP3E9kljkCJrqfQtzSudko+Qu5CvhcGtO55dI1FNYV
-# +QThuQ+R0YAzcu+1bBoY5ijHWWGyS42hBzGhwiTxKayMnh8ycqhh2Pqw9zJ9TwRc
-# dEkoXe6+a7kavN3AXN+7+kE/DL9aNzEaVfmhxpvm2cJzqhe84jEg4ylGbY2+Riwg
-# vczQqD1h5Gvvr7lpDhl2vT6mf/Tqjq/MY4iCsNHp+LXdfA/5lAx+D7nIGFQq8n6j
-# tdILx29gLpEC0zp9s59xz13PPnnnKGcsJutVJffFMO+vXWxWJKUdClboORSerNKX
-# gMIsiV5O0br2EjcQpRXsBnFFF8L68MXFs0MfvaekWUzgtHU63XUTeIjn+Tu6Nm9Y
-# NFaJnII/8tHhsZ9UJKl40oIhip2kSzymnYQUDKQvhJHy22oNZOArPpmrsW+2QwHk
-# SsS3p8DKmCy4eL3hhi4HVdF2JL6JW6E7pClY2/2PNaTx/qmTtOS7J3nR/cm86epK
-# VXmIcLKkEy22sOQwQxm8BCDVd3UThiGkdrWkFI1u6WukG5ba0ABs3Dc3hNY/bjXK
-# K4Qq6vrGRpnvh32uS70KKrx2nD3tsrZswlbw/Yust7yZygzfTdagrMVA8fUP7VhH
-# xcvtVCv0DZ00u/oz+lAvq93vWoW4aQ/kIPbJjuhOHQz42fH0kgE=
+# IgQgZ/zTMd4vHTATZg/dbCnYHPravfGeTNOcSzqG/NrrJZowDQYJKoZIhvcNAQEB
+# BQAEggIAIexDYlsvEW+grR4STm0HpjdCPDGeMIBKgO7lw+CsxUdIXnRaB52GGmJm
+# tJolY9AdMP6O9DVMmtdN1pM/ooWDKFg91/2et4Tvzw9AWvpeq6rbEfFDphOmbx7t
+# ifFOAtexswZtycWlADi4I7qFNUDxslU21eHORfrtugEJojfcwXG9AJZsZZtzfEf7
+# xjeu2IltRpxDHUn5CQYP4OQG9GOgwnWMWF48cUc/F7oWEaoh3BjW9snXbtA8HyBN
+# /+o2jXXg6veZf1ZwmSPvB/mCL5LalcCG+SQtW/NMCjpp1i3nqnHe7PAxdLgtP2hO
+# 2JvQo8CHQWJITqRqK4rovGg7fb18oDePd0bS0AwzygcdDRjy/FlRemFTyPrupYZY
+# 23KaPmSoiH2+gcGYQWuTwO561lqLQoEyW5UhomUfJXnpXC8YsNwxKsyTPmIg8y1R
+# 8vdeJLv7LXcADuBe1la7Mz8LH5maCVFasfAkt5TejiGm45X/nqNe+IOrL/DStzcL
+# CJGYgqNNz1Z+AD/xrCWRil4m3y3CQd/gaVRy2iakF6rj4jq/ELVLTxuw5OrB7dBU
+# P8sZTQW6azz1+QqpGdUBzM1+G96uANNyGhRpslcvPH9RwgMJCDbR3Y2tqQbvE+qC
+# +9cl0UXv05uXkRwOUZjuTQoJZGJ+ukDwMGfyXN+ngJUlYjISU60=
 # SIG # End signature block

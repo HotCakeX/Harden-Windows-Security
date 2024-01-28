@@ -13,6 +13,7 @@ Function Get-TBSCertificate {
         The certificate that is going to be used to retrieve its TBS value
     #>
     [CmdletBinding()]
+    [OutputType([System.String])]
     param (
         [System.Security.Cryptography.X509Certificates.X509Certificate2]$Cert
     )

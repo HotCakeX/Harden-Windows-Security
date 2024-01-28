@@ -13,6 +13,7 @@ Function Get-FileRuleOutput {
         System.Object[]
     #>
     [CmdletBinding()]
+    [OutputType([System.Object[]])]
     param(
         [parameter(Mandatory = $true)]
         [System.IO.FileInfo]$XmlPath

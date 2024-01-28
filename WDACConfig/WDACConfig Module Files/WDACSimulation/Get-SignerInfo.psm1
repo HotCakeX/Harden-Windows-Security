@@ -12,11 +12,12 @@ Function Get-SignerInfo {
     .INPUTS
         System.IO.FileInfo
     .OUTPUTS
-        Signer[]
+        WDACConfig.Signer[]
     .PARAMETER XmlFilePath
         The XML file path that the user selected for WDAC simulation.
     #>
     [CmdletBinding()]
+    [OutputType([WDACConfig.Signer[]])]
     param(
         [Parameter(Mandatory = $true)][System.IO.FileInfo]$XmlFilePath
     )

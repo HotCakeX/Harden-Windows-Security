@@ -26,6 +26,7 @@ Function Get-CertificateDetails {
         This is used only for when -X509Certificate2 parameter is used, so that we can filter out the Leaf certificate and only get the Intermediate certificates at the end of this function
     #>
     [CmdletBinding()]
+    [OutputType([System.Object[]])]
     param (
         [Parameter(ParameterSetName = 'Based on File Path', Mandatory = $true)]
         [System.String]$FilePath,

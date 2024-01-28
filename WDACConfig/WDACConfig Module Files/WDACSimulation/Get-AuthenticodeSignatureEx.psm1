@@ -18,6 +18,7 @@ Function Get-AuthenticodeSignatureEx {
         System.Management.Automation.Signature
     #>
     [CmdletBinding()]
+    [OutputType([System.Management.Automation.Signature])]
     param(
         [Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
         [System.String[]]$FilePath

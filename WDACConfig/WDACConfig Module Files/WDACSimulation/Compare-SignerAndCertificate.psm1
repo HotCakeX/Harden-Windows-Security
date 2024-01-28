@@ -25,6 +25,7 @@ Function Compare-SignerAndCertificate {
         Path to a signed file
     #>
     [CmdletBinding()]
+    [OutputType([System.Object[]])]
     param(
         [Parameter(Mandatory = $true)][System.String]$XmlFilePath,
         [Parameter(Mandatory = $true)][System.String]$SignedFilePath

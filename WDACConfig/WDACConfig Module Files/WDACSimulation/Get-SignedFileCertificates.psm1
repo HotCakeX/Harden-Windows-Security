@@ -16,6 +16,7 @@ Function Get-SignedFileCertificates {
         System.Security.Cryptography.X509Certificates.X509Certificate2Collection
     #>
     [CmdletBinding()]
+    [OutputType([System.Security.Cryptography.X509Certificates.X509Certificate2Collection])]
     param (
         [Parameter()]
         [System.String]$FilePath,

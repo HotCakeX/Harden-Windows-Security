@@ -49,7 +49,7 @@ Function Update-self {
     # This prevents the module from constantly doing an update check by fetching the version file from GitHub
     if (($TimeDiff -gt 10) -or $PerformOnlineUpdateCheck) {
 
-        Write-Verbose -Message "Performing online update check because the last update check was performed $TimeDiff minutes ago"
+        Write-Verbose -Message "Performing online update check because the last update check was performed $($TimeDiff ?? [System.Char]::ConvertFromUtf32(8734)) minutes ago"
 
         [System.Version]$CurrentVersion = (Test-ModuleManifest -Path "$ModuleRootPath\WDACConfig.psd1").Version.ToString()
         try {

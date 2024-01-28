@@ -24,47 +24,13 @@ Function Get-AuthenticodeSignatureEx {
     )
 
     begin {
-
-        # Define the signature of the Crypt32.dll library functions to use
-        [System.String]$Signature = @'
-    [DllImport("crypt32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-    public static extern bool CryptQueryObject(
-        int dwObjectType,
-        [MarshalAs(UnmanagedType.LPWStr)]
-        string pvObject,
-        int dwExpectedContentTypeFlags,
-        int dwExpectedFormatTypeFlags,
-        int dwFlags,
-        ref int pdwMsgAndCertEncodingType,
-        ref int pdwContentType,
-        ref int pdwFormatType,
-        ref IntPtr phCertStore,
-        ref IntPtr phMsg,
-        ref IntPtr ppvContext
-    );
-    [DllImport("crypt32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-    public static extern bool CryptMsgGetParam(
-        IntPtr hCryptMsg,
-        int dwParamType,
-        int dwIndex,
-        byte[] pvData,
-        ref int pcbData
-    );
-    [DllImport("crypt32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-    public static extern bool CryptMsgClose(
-        IntPtr hCryptMsg
-    );
-    [DllImport("crypt32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-    public static extern bool CertCloseStore(
-        IntPtr hCertStore,
-        int dwFlags
-    );
-'@
-
         # Load the System.Security assembly to use the SignedCms class
         Add-Type -AssemblyName 'System.Security' -ErrorAction SilentlyContinue
-        # Add the Crypt32.dll library functions as a type
-        Add-Type -MemberDefinition $Signature -Namespace 'PKI' -Name 'Crypt32' -Language CSharp -ErrorAction SilentlyContinue
+
+        # Add the Crypt32.dll library functions as a type if they don't exist        
+        if (-NOT ('PKI.Crypt32' -as [System.Type]) ) {
+            Add-Type -Path "$ModuleRootPath\C#\Crypt32dll.cs"
+        }        
 
         # Define some constants for the CryptQueryObject function parameters
         [System.Int16]$CERT_QUERY_OBJECT_FILE = 0x1

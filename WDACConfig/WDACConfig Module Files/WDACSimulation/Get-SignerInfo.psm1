@@ -1,30 +1,10 @@
 # Importing the $PSDefaultParameterValues to the current session, prior to everything else
 . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
-# Defining the class
-Add-Type -Language CSharp -TypeDefinition @'
-namespace WDACConfig
-{
-    public class SignerClass
-    {
-        // Adding public getters and setters for the properties
-        public string ID { get; set; }
-        public string Name { get; set; }
-        public string CertRoot { get; set; }
-        public string CertPublisher { get; set; }
-
-        // Adding a constructor to initialize the properties
-        public SignerClass(string id, string name, string certRoot, string certPublisher)
-        {
-            ID = id;
-            Name = name;
-            CertRoot = certRoot;
-            CertPublisher = certPublisher;
-        }
-    }
-}
-'@
-
+# Defining the Signer class from the WDACConfig Namespace if it doesn't already exist
+if (-NOT ('WDACConfig.Signer' -as [System.Type]) ) {
+    Add-Type -Path "$ModuleRootPath\C#\Signer.cs"
+}    
 Function Get-SignerInfo {
     <#
     .SYNOPSIS
@@ -49,13 +29,13 @@ Function Get-SignerInfo {
         [System.Object[]]$Signers = $Xml.SiPolicy.Signers.Signer
 
         # Create an empty array to store the output
-        [WDACConfig.SignerClass[]]$Output = @()
+        [WDACConfig.Signer[]]$Output = @()
 
         # Loop through each Signer node and extract the information
         foreach ($Signer in $Signers) {
 
-            # Create a new instance of the SignerClass class in the WDACConfig Namespace
-            [WDACConfig.SignerClass]$SignerObj = New-Object -TypeName WDACConfig.SignerClass -ArgumentList ($Signer.ID, $Signer.Name, $Signer.CertRoot.Value, $Signer.CertPublisher.Value)
+            # Create a new instance of the Signer class in the WDACConfig Namespace
+            [WDACConfig.Signer]$SignerObj = New-Object -TypeName WDACConfig.Signer -ArgumentList ($Signer.ID, $Signer.Name, $Signer.CertRoot.Value, $Signer.CertPublisher.Value)
 
             # Add the Signer object to the output array
             $Output += $SignerObj

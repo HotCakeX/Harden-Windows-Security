@@ -16,34 +16,17 @@ Function Get-GlobalRootDrives {
     # Importing the $PSDefaultParameterValues to the current session, prior to everything else
     . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
-    # Import the kernel32.dll functions using P/Invoke
-    [System.String]$Signature = @'
-[DllImport("kernel32.dll", SetLastError=true)]
-[return: MarshalAs(UnmanagedType.Bool)]
-public static extern bool GetVolumePathNamesForVolumeNameW([MarshalAs(UnmanagedType.LPWStr)] string lpszVolumeName,
-[MarshalAs(UnmanagedType.LPWStr)] [Out] StringBuilder lpszVolumeNamePaths, uint cchBuferLength,
-ref UInt32 lpcchReturnLength);
-
-[DllImport("kernel32.dll", SetLastError = true)]
-public static extern IntPtr FindFirstVolume([Out] StringBuilder lpszVolumeName,
-uint cchBufferLength);
-
-[DllImport("kernel32.dll", SetLastError = true)]
-public static extern bool FindNextVolume(IntPtr hFindVolume, [Out] StringBuilder lpszVolumeName, uint cchBufferLength);
-
-[DllImport("kernel32.dll", SetLastError = true)]
-public static extern uint QueryDosDevice(string lpDeviceName, StringBuilder lpTargetPath, int ucchMax);
-
-'@
-    # Add the signature to the current session as a new type
-    Add-Type -ErrorAction SilentlyContinue -Language CSharp -MemberDefinition $Signature -Name 'Win32Utils' -Namespace 'PInvoke' -Using PInvoke, System.Text
+    # Import the kernel32.dll functions using P/Invoke if they don't exist
+    if (-NOT ('PInvoke.Win32Utils' -as [System.Type]) ) {
+        Add-Type -Path "$ModuleRootPath\C#\Kernel32dll.cs"
+    }
 
     # Initialize some variables for storing the volume names, paths, and mount points
     [System.UInt32]$lpcchReturnLength = 0
     [System.UInt32]$Max = 65535
-    [System.Text.StringBuilder]$SbVolumeName = New-Object -TypeName System.Text.StringBuilder($Max, $Max)
-    [System.Text.StringBuilder]$SbPathName = New-Object -TypeName System.Text.StringBuilder($Max, $Max)
-    [System.Text.StringBuilder]$SbMountPoint = New-Object -TypeName System.Text.StringBuilder($Max, $Max)
+    [System.Text.StringBuilder]$SbVolumeName = New-Object -TypeName System.Text.StringBuilder -ArgumentList ($Max, $Max)
+    [System.Text.StringBuilder]$SbPathName = New-Object -TypeName System.Text.StringBuilder -ArgumentList ($Max, $Max)
+    [System.Text.StringBuilder]$SbMountPoint = New-Object -TypeName System.Text.StringBuilder -ArgumentList ($Max, $Max)
 
     # Find the first volume in the system and get a handle to it
     [System.IntPtr]$VolumeHandle = [PInvoke.Win32Utils]::FindFirstVolume($SbVolumeName, $Max)

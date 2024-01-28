@@ -1,29 +1,10 @@
 # Importing the $PSDefaultParameterValues to the current session, prior to everything else
 . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
-# Defining the class
-Add-Type -Language CSharp -TypeDefinition @'
-namespace WDACConfig
-{
-    public class SignerClass
-    {
-        // Adding public getters and setters for the properties
-        public string ID { get; set; }
-        public string Name { get; set; }
-        public string CertRoot { get; set; }
-        public string CertPublisher { get; set; }
-
-        // Adding a constructor to initialize the properties
-        public SignerClass(string id, string name, string certRoot, string certPublisher)
-        {
-            ID = id;
-            Name = name;
-            CertRoot = certRoot;
-            CertPublisher = certPublisher;
-        }
-    }
-}
-'@
+# Defining the Signer class from the WDACConfig Namespace if it doesn't already exist
+if (-NOT ('WDACConfig.Signer' -as [System.Type]) ) {
+    Add-Type -Path "$ModuleRootPath\C#\Signer.cs"
+}  
 
 # Importing the required sub-modules
 Import-Module -FullyQualifiedName "$ModuleRootPath\WDACSimulation\Get-SignerInfo.psm1" -Force
@@ -50,7 +31,7 @@ Function Compare-SignerAndCertificate {
     )
 
     # Get the signer information from the XML file path using the Get-SignerInfo function
-    [WDACConfig.SignerClass[]]$SignerInfo = Get-SignerInfo -XmlFilePath $XmlFilePath
+    [WDACConfig.Signer[]]$SignerInfo = Get-SignerInfo -XmlFilePath $XmlFilePath
 
     # An array to store the details of the Primary certificate's Intermediate certificate(s) of the signed file
     [System.Object[]]$PrimaryCertificateIntermediateDetails = @()

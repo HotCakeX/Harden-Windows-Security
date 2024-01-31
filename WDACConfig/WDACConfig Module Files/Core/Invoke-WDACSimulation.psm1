@@ -5,9 +5,11 @@ Function Invoke-WDACSimulation {
     [CmdletBinding()]
     [OutputType([System.Object[]])]
     Param(
+        [Alias('D')]
         [ValidateScript({ Test-Path -Path $_ -PathType 'Container' }, ErrorMessage = 'The path you selected is not a valid folder path.')]
         [Parameter(Mandatory = $false)][System.IO.DirectoryInfo]$FolderPath,
 
+        [Alias('F')]
         [ValidateScript({
                 # Ensure the selected path is a file path
                 if (Test-Path -Path $_ -PathType 'Leaf') {
@@ -25,11 +27,14 @@ Function Invoke-WDACSimulation {
             }, ErrorMessage = 'The path you selected is not a file path.')]
         [Parameter(Mandatory = $false)][System.IO.FileInfo]$FilePath,
 
+        [Alias('X')]
         [ValidateScript({ Test-CiPolicy -XmlFile $_ })]
         [Parameter(Mandatory = $true)][System.IO.FileInfo]$XmlFilePath,
 
+        [Alias('B')]
         [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$BooleanOutput,
 
+        [Alias('S')]
         [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SkipVersionCheck
     )
 

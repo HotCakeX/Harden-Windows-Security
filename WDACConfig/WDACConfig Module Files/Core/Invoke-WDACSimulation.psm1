@@ -185,7 +185,7 @@ Function Invoke-WDACSimulation {
                         }
                         # If the file is signed but is tampered
                         'HashMismatch' {
-                            Write-Warning -Message 'The file has hash mismatch, it is most likely tampered.'
+                            Write-Warning -Message "The file: $CurrentFilePath has hash mismatch, it is most likely tampered."
                             if ($SignedHashMismatchFilePaths -notcontains $CurrentFilePath) {
                                 $SignedHashMismatchFilePaths += $CurrentFilePath
                             }
@@ -194,7 +194,7 @@ Function Invoke-WDACSimulation {
                         }
                         # If the file is not signed
                         'NotSigned' {
-                            Write-Warning -Message 'The file is not signed and is not allowed by hash'
+                            Write-Verbose -Message 'The file is not signed and is not allowed by hash'
                             if ($UnsignedNotAllowedFilePaths -notcontains $CurrentFilePath) {
                                 $UnsignedNotAllowedFilePaths += $CurrentFilePath
                             }

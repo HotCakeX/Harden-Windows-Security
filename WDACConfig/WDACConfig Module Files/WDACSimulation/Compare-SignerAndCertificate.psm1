@@ -96,7 +96,7 @@ Function Compare-SignerAndCertificate {
             foreach ($Certificate in $PrimaryCertificateIntermediateDetails) {
 
                 # Check if the signer's CertRoot (referring to the TBS value in the xml file which belongs to an intermediate cert of the file)...
-                # ...matches the TBSValue of the file's certificate (TBS values of one of the intermediate certificates of the file since -IntermediateOnly parameter is used earlier and that's what FilePublisher level uses)
+                # ...matches the TBSValue of the file's certificate (TBS values of one of the intermediate certificates of the file, that's what FilePublisher level uses)
                 # So this checks to see if the Signer's TBS value in xml matches any of the TBS value(s) of the file's intermediate certificate(s), if it does, that means that file is allowed to run by the WDAC engine
 
                 # Or if the Signer's CertRoot matches the TBS value of the file's primary certificate's Leaf Certificate
@@ -148,7 +148,7 @@ Function Compare-SignerAndCertificate {
                 foreach ($Certificate in $NestedCertificateDetails) {
 
                     # Check if the signer's CertRoot (referring to the TBS value in the xml file which belongs to an intermediate cert of the file)...
-                    # ...matches the TBSValue of the file's certificate (TBS values of one of the intermediate certificates of the file since -IntermediateOnly parameter is used earlier and that's what FilePublisher level uses)
+                    # ...matches the TBSValue of the file's certificate (TBS values of one of the intermediate certificates of the file, that's what FilePublisher level uses)
                     # So this checks to see if the Signer's TBS value in xml matches any of the TBS value(s) of the file's intermediate certificate(s), if yes, that means that file is allowed to run by WDAC engine
                     if ($Signer.CertRoot -eq $Certificate.TBSValue) {
 
@@ -184,13 +184,13 @@ Function Compare-SignerAndCertificate {
 
                 # check if both of the file's certificates (Nested and Main) are available in the Signers in xml policy
                 if (($CertRootMatchPart1 -eq $true) -and ($CertRootMatchPart2 -eq $true)) {
-                    $ComparisonResult.CertRootMatch = $true # meaning all of the TBS values of the double signed file's intermediate certificates exists in the xml file's signers' TBS values
+                    $ComparisonResult.CertRootMatch = $true # meaning all of the TBS values of the double signed file's intermediate certificates exist in the xml file's signers' TBS values
                 }
                 else {
                     $ComparisonResult.CertRootMatch = $false
                 }
 
-                # check if Lean certificate CN of both of the file's certificates (Nested and Main) are available in the Signers in xml policy
+                # check if Leaf certificate CN of both of the file's certificates (Nested and Main) are available in the Signers in xml policy
                 if (($CertPublisherMatchPart1 -eq $true) -and ($CertPublisherMatchPart2 -eq $true)) {
                     $ComparisonResult.CertPublisherMatch = $true
                 }

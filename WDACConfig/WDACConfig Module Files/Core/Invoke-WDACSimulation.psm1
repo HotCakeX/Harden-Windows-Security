@@ -1,3 +1,6 @@
+# Import a sub-module required for ValidateScript Blocks
+Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Test-CiPolicy.psm1" -Force
+
 Function Invoke-WDACSimulation {
     [CmdletBinding()]
     [OutputType([System.Object[]])]
@@ -22,7 +25,7 @@ Function Invoke-WDACSimulation {
             }, ErrorMessage = 'The path you selected is not a file path.')]
         [Parameter(Mandatory = $false)][System.IO.FileInfo]$FilePath,
 
-        [ValidateScript({ Test-Path -Path $_ -PathType 'Leaf' }, ErrorMessage = 'The path you selected is not a valid file path.')]
+        [ValidateScript({ Test-CiPolicy -XmlFile $_ })]
         [Parameter(Mandatory = $true)][System.IO.FileInfo]$XmlFilePath,
 
         [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$BooleanOutput,
@@ -236,7 +239,7 @@ Function Invoke-WDACSimulation {
                 [System.Collections.Hashtable]$Object = @{
                     FilePath     = $Path
                     Source       = 'Hash'
-                    Permission   = 'Allowed'
+                    Permission   = 'Allowed - Hash Level'
                     IsAuthorized = $true
                 }
                 # Convert the hash table to a PSObject and add it to the output array
@@ -321,7 +324,7 @@ Function Invoke-WDACSimulation {
                 [System.Collections.Hashtable]$Object = @{
                     FilePath     = $Path
                     Source       = 'Unsigned'
-                    Permission   = 'Not Allowed'
+                    Permission   = 'Not Allowed - Not Signed'
                     IsAuthorized = $false
                 }
                 # Convert the hash table to a PSObject and add it to the output array
@@ -365,22 +368,33 @@ Function Invoke-WDACSimulation {
 
         Write-Progress -Id 0 -Activity 'WDAC Simulation completed.' -Completed
 
-        # Change the color of the Table header
-        $PSStyle.Formatting.TableHeader = "$($PSStyle.Foreground.FromRGB(255,165,0))"
+        # Change the color of the Table header to SkyBlue
+        $PSStyle.Formatting.TableHeader = "$($PSStyle.Foreground.FromRGB(135,206,235))"
 
         # Return the final main output array as a table
         Return $MegaOutputObject | Select-Object -Property FilePath,
         @{
             Label      = 'Source'
             Expression =
-            { switch ($_.source) {
+            { switch ($_.Source) {
                     { $_ -eq 'Signer' } { $color = "$($PSStyle.Foreground.FromRGB(152,255,152))" }
                     { $_ -eq 'Hash' } { $color = "$($PSStyle.Foreground.FromRGB(255,255,49))" }
                     { $_ -eq 'Unsigned' } { $color = "$($PSStyle.Foreground.FromRGB(255,20,147))" }
                 }
-                "$color$($_.source)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                "$color$($_.Source)$($PSStyle.Reset)" # Use PSStyle to reset the color
             }
-        }, Permission, IsAuthorized | Sort-Object -Property Permission
+        }, Permission,
+        @{
+            Label      = 'IsAuthorized'
+            Expression =
+            {
+                switch ($_.IsAuthorized) {
+                    { $_ -eq $true } { $Color = "$($PSStyle.Foreground.FromRGB(255,0,255))"; break }
+                    { $_ -eq $false } { $Color = "$($PSStyle.Foreground.FromRGB(255,165,0))$($PSStyle.Blink)"; break }
+                }
+                "$Color$($_.IsAuthorized)$($PSStyle.Reset)" # Use PSStyle to reset the color
+            }
+        } | Sort-Object -Property Permission
     }
 
     <#
@@ -396,7 +410,9 @@ Function Invoke-WDACSimulation {
 .FUNCTIONALITY
     Simulates the deployment of the WDAC policy
 .PARAMETER FolderPath
-    Provide path to a folder where you want WDAC simulation to take place
+    Provide path to a folder that you want WDAC simulation to run against
+.PARAMETER FilePath
+    Provide path to a file that you want WDAC simulation to run against
 .PARAMETER XmlFilePath
     Provide path to a policy xml file that you want the cmdlet to simulate its deployment and running files against it
 .PARAMETER SkipVersionCheck
@@ -405,7 +421,7 @@ Function Invoke-WDACSimulation {
 .PARAMETER Verbose
     Can be used with any parameter to show verbose output
 .PARAMETER BooleanOutput
-    Can be used with any parameter to return a boolean value instead of displaying the output
+    Can be used with any parameter to return a boolean value instead of displaying the object output
 .INPUTS
     System.IO.FileInfo
     System.IO.DirectoryInfo

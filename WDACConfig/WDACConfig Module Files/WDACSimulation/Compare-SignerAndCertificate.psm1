@@ -1,15 +1,7 @@
-# Importing the $PSDefaultParameterValues to the current session, prior to everything else
-. "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
-
 # Defining the Signer class from the WDACConfig Namespace if it doesn't already exist
 if (-NOT ('WDACConfig.Signer' -as [System.Type]) ) {
     Add-Type -Path "$ModuleRootPath\C#\Signer.cs"
 }
-
-# Importing the required sub-modules
-Import-Module -FullyQualifiedName "$ModuleRootPath\WDACSimulation\Get-SignerInfo.psm1" -Force
-Import-Module -FullyQualifiedName "$ModuleRootPath\WDACSimulation\Get-AuthenticodeSignatureEx.psm1" -Force
-Import-Module -FullyQualifiedName "$ModuleRootPath\WDACSimulation\Get-CertificateDetails.psm1" -Force
 
 Function Compare-SignerAndCertificate {
     <#
@@ -32,6 +24,14 @@ Function Compare-SignerAndCertificate {
     )
 
     begin {
+        # Importing the $PSDefaultParameterValues to the current session, prior to everything else
+        . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
+
+        # Importing the required sub-modules
+        Import-Module -FullyQualifiedName "$ModuleRootPath\WDACSimulation\Get-SignerInfo.psm1" -Force
+        Import-Module -FullyQualifiedName "$ModuleRootPath\WDACSimulation\Get-AuthenticodeSignatureEx.psm1" -Force
+        Import-Module -FullyQualifiedName "$ModuleRootPath\WDACSimulation\Get-CertificateDetails.psm1" -Force
+
         # Get the signer information from the XML file path using the Get-SignerInfo function
         [WDACConfig.Signer[]]$SignerInfo = Get-SignerInfo -XmlFilePath $XmlFilePath
 

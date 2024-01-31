@@ -1,6 +1,3 @@
-# Importing the $PSDefaultParameterValues to the current session, prior to everything else
-. "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
-
 Function Get-SignedFileCertificates {
     <#
     .SYNOPSIS
@@ -25,6 +22,9 @@ Function Get-SignedFileCertificates {
     )
 
     begin {
+        # Importing the $PSDefaultParameterValues to the current session, prior to everything else
+        . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
+
         # Create an X509Certificate2Collection object
         [System.Security.Cryptography.X509Certificates.X509Certificate2Collection]$CertCollection = New-Object -TypeName System.Security.Cryptography.X509Certificates.X509Certificate2Collection
     }

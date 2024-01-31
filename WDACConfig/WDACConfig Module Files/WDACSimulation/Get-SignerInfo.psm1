@@ -1,6 +1,3 @@
-# Importing the $PSDefaultParameterValues to the current session, prior to everything else
-. "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
-
 # Defining the Signer class from the WDACConfig Namespace if it doesn't already exist
 if (-NOT ('WDACConfig.Signer' -as [System.Type]) ) {
     Add-Type -Path "$ModuleRootPath\C#\Signer.cs"
@@ -22,6 +19,9 @@ Function Get-SignerInfo {
         [Parameter(Mandatory = $true)][System.IO.FileInfo]$XmlFilePath
     )
     begin {
+        # Importing the $PSDefaultParameterValues to the current session, prior to everything else
+        . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
+
         # Load the XML file
         $Xml = [System.Xml.XmlDocument](Get-Content -Path $XmlFilePath)
     }

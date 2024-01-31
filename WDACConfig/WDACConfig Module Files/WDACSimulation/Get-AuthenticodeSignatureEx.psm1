@@ -1,6 +1,3 @@
-# Importing the $PSDefaultParameterValues to the current session, prior to everything else
-. "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
-
 Function Get-AuthenticodeSignatureEx {
     <#
     .SYNOPSIS
@@ -25,6 +22,9 @@ Function Get-AuthenticodeSignatureEx {
     )
 
     begin {
+        # Importing the $PSDefaultParameterValues to the current session, prior to everything else
+        . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
+
         # Load the System.Security assembly to use the SignedCms class
         Add-Type -AssemblyName 'System.Security' -ErrorAction SilentlyContinue
 

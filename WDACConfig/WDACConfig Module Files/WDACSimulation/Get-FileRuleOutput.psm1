@@ -1,5 +1,3 @@
-# Importing the $PSDefaultParameterValues to the current session, prior to everything else
-. "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
 Function Get-FileRuleOutput {
     <#
@@ -18,44 +16,53 @@ Function Get-FileRuleOutput {
         [parameter(Mandatory = $true)]
         [System.IO.FileInfo]$XmlPath
     )
+    Begin {
+        # Importing the $PSDefaultParameterValues to the current session, prior to everything else
+        . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
-    # Load the xml file into a variable
-    $Xml = [System.Xml.XmlDocument](Get-Content -Path $XmlPath)
+        # Load the xml file into a variable
+        $Xml = [System.Xml.XmlDocument](Get-Content -Path $XmlPath)
 
-    # Create an empty array to store the output
-    [System.Object[]]$OutputHashInfoProcessing = @()
-
-    # Loop through each file rule in the xml file
-    foreach ($FileRule in $Xml.SiPolicy.FileRules.Allow) {
-
-        # Extract the hash value from the Hash attribute
-        [System.String]$Hashvalue = $FileRule.Hash
-
-        # Extract the hash type from the FriendlyName attribute using regex
-        [System.String]$HashType = $FileRule.FriendlyName -replace '.* (Hash (Sha1|Sha256|Page Sha1|Page Sha256|Authenticode SIP Sha256))$', '$1'
-
-        # Extract the file path from the FriendlyName attribute using regex
-        [System.IO.FileInfo]$FilePathForHash = $FileRule.FriendlyName -replace ' (Hash (Sha1|Sha256|Page Sha1|Page Sha256|Authenticode SIP Sha256))$', ''
-
-        # Create a custom object with the three properties
-        $Object = [PSCustomObject]@{
-            HashValue       = $Hashvalue
-            HashType        = $HashType
-            FilePathForHash = $FilePathForHash
-        }
-
-        # Add the object to the output array if it is not a duplicate hash value
-        if ($OutputHashInfoProcessing.HashValue -notcontains $Hashvalue) {
-            $OutputHashInfoProcessing += $Object
-        }
+        # Create an empty array to store the output
+        [System.Object[]]$OutputHashInfoProcessing = @()
     }
 
-    # Only show the Authenticode Hash SHA256
-    [System.Object[]]$OutputHashInfoProcessing = $OutputHashInfoProcessing | Where-Object -FilterScript { $_.hashtype -eq 'Hash Sha256' }
+    Process {
 
-    # Return the output array
-    Write-Verbose -Message "Get-FileRuleOutput: Returning $($OutputHashInfoProcessing.Count) file rules that are based on file hashes"
-    return $OutputHashInfoProcessing
+        # Loop through each file rule in the xml file
+        foreach ($FileRule in $Xml.SiPolicy.FileRules.Allow) {
+
+            # Extract the hash value from the Hash attribute
+            [System.String]$Hashvalue = $FileRule.Hash
+
+            # Extract the hash type from the FriendlyName attribute using regex
+            [System.String]$HashType = $FileRule.FriendlyName -replace '.* (Hash (Sha1|Sha256|Page Sha1|Page Sha256|Authenticode SIP Sha256))$', '$1'
+
+            # Extract the file path from the FriendlyName attribute using regex
+            [System.IO.FileInfo]$FilePathForHash = $FileRule.FriendlyName -replace ' (Hash (Sha1|Sha256|Page Sha1|Page Sha256|Authenticode SIP Sha256))$', ''
+
+            # Create a custom object with the three properties
+            $Object = [PSCustomObject]@{
+                HashValue       = $Hashvalue
+                HashType        = $HashType
+                FilePathForHash = $FilePathForHash
+            }
+
+            # Add the object to the output array if it is not a duplicate hash value
+            if ($OutputHashInfoProcessing.HashValue -notcontains $Hashvalue) {
+                $OutputHashInfoProcessing += $Object
+            }
+        }
+
+        # Only show the Authenticode Hash SHA256
+        [System.Object[]]$OutputHashInfoProcessing = $OutputHashInfoProcessing | Where-Object -FilterScript { $_.hashtype -eq 'Hash Sha256' }
+    }
+
+    End {
+        # Return the output array
+        Write-Verbose -Message "Get-FileRuleOutput: Returning $($OutputHashInfoProcessing.Count) file rules that are based on file hashes"
+        return $OutputHashInfoProcessing
+    }
 }
 Export-ModuleMember -Function 'Get-FileRuleOutput'
 

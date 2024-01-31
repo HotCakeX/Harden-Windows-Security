@@ -34,17 +34,14 @@ Function Compare-SignerAndCertificate {
     # Get the signer information from the XML file path using the Get-SignerInfo function
     [WDACConfig.Signer[]]$SignerInfo = Get-SignerInfo -XmlFilePath $XmlFilePath
 
-    # An array to store the details of the Primary certificate's Intermediate certificate(s) of the signed file
-    [System.Object[]]$PrimaryCertificateIntermediateDetails = @()
-
-    # An array to store the details of the Nested certificate of the signed file
-    [System.Object[]]$NestedCertificateDetails = @()
-
     # An array to store the final comparison results of this function
     [System.Object[]]$ComparisonResults = @()
 
-    # Get the intermediate certificate(s) details of the Primary certificate from the signed file using the Get-CertificateDetails function
-    [System.Object[]]$PrimaryCertificateIntermediateDetails = Get-CertificateDetails -IntermediateOnly -FilePath $SignedFilePath
+    # Get details of the intermediate and leaf certificates of the primary certificate of the signed file
+    [System.Object[]]$AllPrimaryCertificateDetails = Get-CertificateDetails -FilePath $SignedFilePath
+
+    # Store the intermediate certificate(s) details of the Primary certificate of the signed file
+    [System.Object[]]$PrimaryCertificateIntermediateDetails = $AllPrimaryCertificateDetails.IntermediateCertificates
 
     # Get the Nested (Secondary) certificate of the signed file, if any
     [System.Management.Automation.Signature]$ExtraCertificateDetails = Get-AuthenticodeSignatureEx -FilePath $SignedFilePath
@@ -59,17 +56,20 @@ Function Compare-SignerAndCertificate {
 
         Write-Verbose -Message 'Found a nested Signer in the file'
 
-        # Send the nested certificate along with its Leaf certificate's CN to the Get-CertificateDetails function with -IntermediateOnly parameter in order to only get the intermediate certificates of the Nested certificate
-        $NestedCertificateDetails = Get-CertificateDetails -IntermediateOnly -X509Certificate2 $NestedCertificate -LeafCNOfTheNestedCertificate $LeafCNOfTheNestedCertificate
+        # Send the nested certificate along with its Leaf certificate's CN to the Get-CertificateDetails function in order to get the intermediate and leaf certificates details of the Nested certificate
+        [System.Object[]]$AllNestedCertificateDetails = Get-CertificateDetails -X509Certificate2 $NestedCertificate -LeafCNOfTheNestedCertificate $LeafCNOfTheNestedCertificate
+        
+        # Store the intermediate certificate(s) details of the Nested certificate from the signed file
+        [System.Object[]]$NestedCertificateDetails = $AllNestedCertificateDetails.IntermediateCertificates
     }
 
     # Get the leaf certificate details of the Main Certificate from the signed file path
-    [System.Object]$LeafCertificateDetails = Get-CertificateDetails -LeafCertificate -FilePath $SignedFilePath
+    [System.Object]$LeafCertificateDetails = $AllPrimaryCertificateDetails.LeafCertificate
 
     # Get the leaf certificate details of the Nested Certificate from the signed file path, if it exists
     if ($null -ne $NestedCertificate) {
         # append an X509Certificate2 object to the array
-        $NestedLeafCertificateDetails = Get-CertificateDetails -LeafCertificate -X509Certificate2 $NestedCertificate -LeafCNOfTheNestedCertificate $LeafCNOfTheNestedCertificate
+        [System.Object]$NestedLeafCertificateDetails = $AllNestedCertificateDetails.LeafCertificate
     }
 
     # Loop through each signer in the signer information array

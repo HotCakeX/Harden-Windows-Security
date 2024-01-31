@@ -71,13 +71,13 @@ Function Get-CertificateDetails {
         # https://learn.microsoft.com/en-us/dotnet/api/system.security.cryptography.x509certificates.x509verificationflags
 
         # https://learn.microsoft.com/en-us/dotnet/api/system.security.cryptography.x509certificates.x509revocationmode
-        $Chain.ChainPolicy.RevocationMode = 'Online'
+        $chain.ChainPolicy.RevocationMode = 'NoCheck'
 
         # https://learn.microsoft.com/en-us/dotnet/api/system.security.cryptography.x509certificates.x509revocationflag
-        $Chain.ChainPolicy.RevocationFlag = 'ExcludeRoot'
+        $chain.ChainPolicy.RevocationFlag = 'EndCertificateOnly'
 
         # https://learn.microsoft.com/en-us/dotnet/api/system.security.cryptography.x509certificates.x509verificationflags
-        # $Chain.ChainPolicy.VerificationFlags = 'NoFlag'
+        $Chain.ChainPolicy.VerificationFlags = 'NoFlag'
 
         [void]$Chain.Build($Cert)
 

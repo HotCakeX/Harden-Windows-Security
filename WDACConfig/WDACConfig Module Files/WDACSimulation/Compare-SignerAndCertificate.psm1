@@ -58,7 +58,7 @@ Function Compare-SignerAndCertificate {
 
         # Send the nested certificate along with its Leaf certificate's CN to the Get-CertificateDetails function in order to get the intermediate and leaf certificates details of the Nested certificate
         [System.Object[]]$AllNestedCertificateDetails = Get-CertificateDetails -X509Certificate2 $NestedCertificate -LeafCNOfTheNestedCertificate $LeafCNOfTheNestedCertificate
-        
+
         # Store the intermediate certificate(s) details of the Nested certificate from the signed file
         [System.Object[]]$NestedCertificateDetails = $AllNestedCertificateDetails.IntermediateCertificates
     }

@@ -9,9 +9,11 @@ Function Get-CertificateDetails {
     <#
     .SYNOPSIS
         A function to detect Root, Intermediate and Leaf certificates
+        It returns a compound object that contains 2 nested objects for Intermediate and Leaf certificates
     .INPUTS
+        System.Security.Cryptography.X509Certificates.X509Certificate2
+        System.IO.FileInfo
         System.String
-        System.Management.Automation.SwitchParameter
     .OUTPUTS
         System.Object[]
     .PARAMETER FilePath
@@ -28,7 +30,7 @@ Function Get-CertificateDetails {
         [System.IO.FileInfo]$FilePath,
 
         [Parameter(ParameterSetName = 'Based on Certificate', Mandatory = $true)]
-        $X509Certificate2,
+        [System.Security.Cryptography.X509Certificates.X509Certificate2]$X509Certificate2,
 
         [Parameter(ParameterSetName = 'Based on Certificate')]
         [System.String]$LeafCNOfTheNestedCertificate
@@ -41,7 +43,7 @@ Function Get-CertificateDetails {
         }
         elseif ($X509Certificate2) {
             # The "| Where-Object -FilterScript {$_ -ne 0}" part is used to filter the output coming from Get-AuthenticodeSignatureEx function that gets nested certificate
-            [System.Security.Cryptography.X509Certificates.X509Certificate2[]]$CertCollection = Get-SignedFileCertificates -X509Certificate2 $X509Certificate2 | Where-Object -FilterScript { $_.EnhancedKeyUsageList.FriendlyName -ne 'Time Stamping' } | Where-Object -FilterScript { $_ -ne 0 }
+            [System.Security.Cryptography.X509Certificates.X509Certificate2[]]$CertCollection = Get-SignedFileCertificates -X509Certificate2 $X509Certificate2 | Where-Object -FilterScript { ($_.EnhancedKeyUsageList.FriendlyName -ne 'Time Stamping') -and ($_ -ne 0) }
         }
         else {
             throw 'Either FilePath or X509Certificate2 parameter must be specified'
@@ -79,12 +81,11 @@ Function Get-CertificateDetails {
                 Write-Verbose -Message "WARNING: The certificate $($Cert.Subject) is not valid"
             }
 
-            # If AllCertificates is present, loop through all chain elements and display all certificates
+            # Loop through all chain elements and display all certificates
             foreach ($Element in $Chain.ChainElements) {
-                # Create a custom object with the certificate properties
 
                 # Extract the data after CN= in the subject and issuer properties
-                # When a common name contains a comma ',' then it will automatically be wrapped around double quotes. E.g., "Skylum Software USA, Inc."
+                # When a common name contains a comma ',' then it will automatically be wrapped around double quotes. E.g., "App Software USA, Inc."
                 # The methods below are conditional regex. Different patterns are used based on the availability of at least one double quote in the CN field, indicating that it had comma in it so it had been enclosed with double quotes by system
 
                 $Element.Certificate.Subject -match 'CN=(?<InitialRegexTest2>.*?),.*' | Out-Null
@@ -93,9 +94,10 @@ Function Get-CertificateDetails {
                 $Element.Certificate.Issuer -match 'CN=(?<InitialRegexTest3>.*?),.*' | Out-Null
                 [System.String]$IssuerCN = $matches['InitialRegexTest3'] -like '*"*' ? ($Element.Certificate.Issuer -split 'CN="(.+?)"')[1] : $matches['InitialRegexTest3']
 
-                # Get the TBS value of the certificate using the Get-TBSCertificate function
+                # Get the TBS value of the certificate
                 [System.String]$TbsValue = Get-TBSCertificate -cert $Element.Certificate
-                # Create a custom object with the extracted properties and the TBS value
+
+                # Create a custom object with the extracted properties and the TBS value and add it to the array
                 $Obj += [pscustomobject]@{
                     SubjectCN = $SubjectCN
                     IssuerCN  = $IssuerCN
@@ -106,7 +108,6 @@ Function Get-CertificateDetails {
         }
 
         # An object to hold the final output that will be returned by the function
-        # It contains 2 nested objects for Intermediate and Leaf certificates
         $FinalObj = [PSCustomObject]@{}
 
         # An array to hold the Intermediate certificates
@@ -127,8 +128,10 @@ Function Get-CertificateDetails {
             # ($_.SubjectCN -ne $_.IssuerCN) -> To omit Root certificate from the result
             # ($_.SubjectCN -ne $TestAgainst) -> To omit the Leaf certificate
             $Obj | Where-Object -FilterScript { ($_.SubjectCN -ne $_.IssuerCN) -and ($_.SubjectCN -ne $TestAgainst) } |
+
             # To make sure the output values are unique based on TBSValue property
             Group-Object -Property TBSValue | ForEach-Object -Process { $_.Group[0] } |
+
             # Add each intermediate certificate to the nested object of the final object
             ForEach-Object -Process {
                 $IntermediateCerts += [PSCustomObject]@{
@@ -151,6 +154,7 @@ Function Get-CertificateDetails {
             # ($_.SubjectCN -ne $_.IssuerCN) -> To omit Root certificate from the result
             # ($_.SubjectCN -eq $TestAgainst) -> To get the Leaf certificate
             $TempLeafCertObj = $Obj | Where-Object -FilterScript { ($_.SubjectCN -ne $_.IssuerCN) -and ($_.SubjectCN -eq $TestAgainst) } |
+
             # To make sure the output values are unique based on TBSValue property
             Group-Object -Property TBSValue | ForEach-Object -Process { $_.Group[0] }
 
@@ -177,8 +181,10 @@ Function Get-CertificateDetails {
             # ($_.SubjectCN -ne $LeafCNOfTheNestedCertificate) -> To omit the Leaf certificate
             $Obj | Where-Object -FilterScript { ($_.SubjectCN -ne $_.IssuerCN) -and ($_.SubjectCN -ne $LeafCNOfTheNestedCertificate) } |
             # To make sure the output values are unique based on TBSValue property
+
             Group-Object -Property TBSValue | ForEach-Object -Process { $_.Group[0] } |
             # Add each intermediate certificate to the nested object of the final object
+
             ForEach-Object -Process {
                 $IntermediateCerts += [PSCustomObject]@{
                     SubjectCN = $_.SubjectCN
@@ -201,6 +207,7 @@ Function Get-CertificateDetails {
             # ($_.SubjectCN -ne $_.IssuerCN) -> To omit Root certificate from the result
             # ($_.SubjectCN -eq $LeafCNOfTheNestedCertificate) -> To get the Leaf certificate
             $TempLeafCertObj = $Obj | Where-Object -FilterScript { ($_.SubjectCN -ne $_.IssuerCN) -and ($_.SubjectCN -eq $LeafCNOfTheNestedCertificate) } |
+
             # To make sure the output values are unique based on TBSValue property
             Group-Object -Property TBSValue | ForEach-Object -Process { $_.Group[0] }
 
@@ -219,7 +226,7 @@ Function Get-CertificateDetails {
             #Endregion Leaf-Certificate-Processing
         }
     }
-    
+
     end {
         # Return the final object with the 2 nested objects
         return [System.Object[]]$FinalObj

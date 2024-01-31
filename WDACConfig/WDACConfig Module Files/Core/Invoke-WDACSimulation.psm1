@@ -437,6 +437,9 @@ Function Invoke-WDACSimulation {
 .EXAMPLE
     Invoke-WDACSimulation -FolderPath 'C:\Windows\System32' -XmlFilePath 'C:\Users\HotCakeX\Desktop\Policy.xml'
     This example will simulate the deployment of the policy.xml file against the C:\Windows\System32 folder
+.NOTES
+    WDAC templates such as 'Default Windows' and 'Allow Microsoft' don't have CertPublisher element in their Signers because they don't target a leaf certificate,
+    thus they weren't created using FilePublisher level, they were created using Publisher or Root certificate levels to allow Microsoft's wellknown certificates.
 #>
 }
 

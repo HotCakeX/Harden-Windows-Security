@@ -1,6 +1,3 @@
-# Importing the $PSDefaultParameterValues to the current session, prior to everything else
-. "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
-
 Function Get-TBSCertificate {
     <#
     .SYNOPSIS
@@ -17,55 +14,63 @@ Function Get-TBSCertificate {
     param (
         [System.Security.Cryptography.X509Certificates.X509Certificate2]$Cert
     )
+    Begin {
+        # Importing the $PSDefaultParameterValues to the current session, prior to everything else
+        . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
-    # Get the raw data of the certificate
-    [System.Byte[]]$RawData = $Cert.RawData
-
-    # Create an ASN.1 reader to parse the certificate
-    [System.Formats.Asn1.AsnReader]$AsnReader = New-Object -TypeName System.Formats.Asn1.AsnReader -ArgumentList $RawData, ([System.Formats.Asn1.AsnEncodingRules]::DER)
-
-    # Read the certificate sequence
-    [System.Formats.Asn1.AsnReader]$Certificate = $AsnReader.ReadSequence()
-
-    # Read the TBS (To be signed) value of the certificate
-    $TbsCertificate = $Certificate.ReadEncodedValue()
-
-    # Read the signature algorithm sequence
-    [System.Formats.Asn1.AsnReader]$SignatureAlgorithm = $Certificate.ReadSequence()
-
-    # Read the algorithm OID of the signature
-    [System.String]$AlgorithmOid = $SignatureAlgorithm.ReadObjectIdentifier()
-
-    # Define a hash function based on the algorithm OID
-    switch ($AlgorithmOid) {
-        '1.2.840.113549.1.1.4' { $HashFunction = [System.Security.Cryptography.MD5]::Create() ; break }
-        '1.2.840.10040.4.3' { $HashFunction = [System.Security.Cryptography.SHA1]::Create() ; break }
-        '2.16.840.1.101.3.4.3.2' { $HashFunction = [System.Security.Cryptography.SHA256]::Create() ; break }
-        '2.16.840.1.101.3.4.3.3' { $HashFunction = [System.Security.Cryptography.SHA384]::Create() ; break }
-        '2.16.840.1.101.3.4.3.4' { $HashFunction = [System.Security.Cryptography.SHA512]::Create() ; break }
-        '1.2.840.10045.4.1' { $HashFunction = [System.Security.Cryptography.SHA1]::Create() ; break }
-        '1.2.840.10045.4.3.2' { $HashFunction = [System.Security.Cryptography.SHA256]::Create() ; break }
-        '1.2.840.10045.4.3.3' { $HashFunction = [System.Security.Cryptography.SHA384]::Create() ; break }
-        '1.2.840.10045.4.3.4' { $HashFunction = [System.Security.Cryptography.SHA512]::Create() ; break }
-        '1.2.840.113549.1.1.5' { $HashFunction = [System.Security.Cryptography.SHA1]::Create() ; break }
-        '1.2.840.113549.1.1.11' { $HashFunction = [System.Security.Cryptography.SHA256]::Create() ; break }
-        '1.2.840.113549.1.1.12' { $HashFunction = [System.Security.Cryptography.SHA384]::Create() ; break }
-        '1.2.840.113549.1.1.13' { $HashFunction = [System.Security.Cryptography.SHA512]::Create() ; break }
-        # sha-1WithRSAEncryption
-        '1.3.14.3.2.29' { $HashFunction = [System.Security.Cryptography.SHA1]::Create() ; break }
-        default { throw "No handler for algorithm $AlgorithmOid" }
+        # Get the raw data of the certificate
+        [System.Byte[]]$RawData = $Cert.RawData
     }
 
-   # Write-Verbose -Message "Selected hash algorithm is: $($HashFunction.GetType().BaseType.Name)"
+    Process {
+        # Create an ASN.1 reader to parse the certificate
+        [System.Formats.Asn1.AsnReader]$AsnReader = New-Object -TypeName System.Formats.Asn1.AsnReader -ArgumentList $RawData, ([System.Formats.Asn1.AsnEncodingRules]::DER)
 
-    # Compute the hash of the TBS value using the hash function
-    [System.Byte[]]$Hash = $HashFunction.ComputeHash($TbsCertificate.ToArray())
+        # Read the certificate sequence
+        [System.Formats.Asn1.AsnReader]$Certificate = $AsnReader.ReadSequence()
 
-    # Convert the hash to a hex string
-    [System.String]$HexStringOutput = [System.BitConverter]::ToString($Hash) -replace '-', ''
+        # Read the TBS (To be signed) value of the certificate
+        $TbsCertificate = $Certificate.ReadEncodedValue()
 
-    # Return the output
-    return $HexStringOutput
+        # Read the signature algorithm sequence
+        [System.Formats.Asn1.AsnReader]$SignatureAlgorithm = $Certificate.ReadSequence()
+
+        # Read the algorithm OID of the signature
+        [System.String]$AlgorithmOid = $SignatureAlgorithm.ReadObjectIdentifier()
+
+        # Define a hash function based on the algorithm OID
+        switch ($AlgorithmOid) {
+            '1.2.840.113549.1.1.4' { $HashFunction = [System.Security.Cryptography.MD5]::Create() ; break }
+            '1.2.840.10040.4.3' { $HashFunction = [System.Security.Cryptography.SHA1]::Create() ; break }
+            '2.16.840.1.101.3.4.3.2' { $HashFunction = [System.Security.Cryptography.SHA256]::Create() ; break }
+            '2.16.840.1.101.3.4.3.3' { $HashFunction = [System.Security.Cryptography.SHA384]::Create() ; break }
+            '2.16.840.1.101.3.4.3.4' { $HashFunction = [System.Security.Cryptography.SHA512]::Create() ; break }
+            '1.2.840.10045.4.1' { $HashFunction = [System.Security.Cryptography.SHA1]::Create() ; break }
+            '1.2.840.10045.4.3.2' { $HashFunction = [System.Security.Cryptography.SHA256]::Create() ; break }
+            '1.2.840.10045.4.3.3' { $HashFunction = [System.Security.Cryptography.SHA384]::Create() ; break }
+            '1.2.840.10045.4.3.4' { $HashFunction = [System.Security.Cryptography.SHA512]::Create() ; break }
+            '1.2.840.113549.1.1.5' { $HashFunction = [System.Security.Cryptography.SHA1]::Create() ; break }
+            '1.2.840.113549.1.1.11' { $HashFunction = [System.Security.Cryptography.SHA256]::Create() ; break }
+            '1.2.840.113549.1.1.12' { $HashFunction = [System.Security.Cryptography.SHA384]::Create() ; break }
+            '1.2.840.113549.1.1.13' { $HashFunction = [System.Security.Cryptography.SHA512]::Create() ; break }
+            # sha-1WithRSAEncryption
+            '1.3.14.3.2.29' { $HashFunction = [System.Security.Cryptography.SHA1]::Create() ; break }
+            default { throw "No handler for algorithm $AlgorithmOid" }
+        }
+
+        # Write-Verbose -Message "Selected hash algorithm is: $($HashFunction.GetType().BaseType.Name)"
+
+        # Compute the hash of the TBS value using the hash function
+        [System.Byte[]]$Hash = $HashFunction.ComputeHash($TbsCertificate.ToArray())
+
+        # Convert the hash to a hex string
+        [System.String]$HexStringOutput = [System.BitConverter]::ToString($Hash) -replace '-', ''
+    }
+
+    End {
+        # Return the output
+        return $HexStringOutput
+    }
 }
 Export-ModuleMember -Function 'Get-TBSCertificate'
 

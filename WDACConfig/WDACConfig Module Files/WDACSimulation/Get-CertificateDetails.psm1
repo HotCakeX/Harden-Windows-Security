@@ -68,11 +68,25 @@ Function Get-CertificateDetails {
         [System.Security.Cryptography.X509Certificates.X509Chain]$Chain = New-Object -TypeName System.Security.Cryptography.X509Certificates.X509Chain
 
         # Set the chain policy properties
-        $chain.ChainPolicy.RevocationMode = 'NoCheck'
-        $chain.ChainPolicy.RevocationFlag = 'EndCertificateOnly'
-        $chain.ChainPolicy.VerificationFlags = 'NoFlag'
+        # https://learn.microsoft.com/en-us/dotnet/api/system.security.cryptography.x509certificates.x509verificationflags
+
+        # https://learn.microsoft.com/en-us/dotnet/api/system.security.cryptography.x509certificates.x509revocationmode
+        $Chain.ChainPolicy.RevocationMode = 'Online'
+
+        # https://learn.microsoft.com/en-us/dotnet/api/system.security.cryptography.x509certificates.x509revocationflag
+        $Chain.ChainPolicy.RevocationFlag = 'ExcludeRoot'
+
+        # https://learn.microsoft.com/en-us/dotnet/api/system.security.cryptography.x509certificates.x509verificationflags
+        # $Chain.ChainPolicy.VerificationFlags = 'NoFlag'
 
         [void]$Chain.Build($Cert)
+
+        # Verify the certificate using the base policy
+        [System.Boolean]$Result = $Cert.Verify()
+
+        if ($Result -ne $true) {
+            Throw "The certificate $($Cert.Subject) is not valid"
+        }
 
         # If AllCertificates is present, loop through all chain elements and display all certificates
         foreach ($Element in $Chain.ChainElements) {

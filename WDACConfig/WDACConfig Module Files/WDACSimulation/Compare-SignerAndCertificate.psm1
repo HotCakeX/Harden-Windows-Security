@@ -16,7 +16,7 @@ Function Compare-SignerAndCertificate {
     .SYNOPSIS
         a function that takes WDAC XML policy file path and a Signed file path as inputs and compares the output of the Get-SignerInfo and Get-CertificateDetails functions
     .INPUTS
-        System.String
+        System.IO.FileInfo
     .OUTPUTS
         System.Object[]
     .PARAMETER XmlFilePath
@@ -27,183 +27,187 @@ Function Compare-SignerAndCertificate {
     [CmdletBinding()]
     [OutputType([System.Object[]])]
     param(
-        [Parameter(Mandatory = $true)][System.String]$XmlFilePath,
+        [Parameter(Mandatory = $true)][System.IO.FileInfo]$XmlFilePath,
         [Parameter(Mandatory = $true)][System.IO.FileInfo]$SignedFilePath
     )
 
-    # Get the signer information from the XML file path using the Get-SignerInfo function
-    [WDACConfig.Signer[]]$SignerInfo = Get-SignerInfo -XmlFilePath $XmlFilePath
+    begin {
+        # Get the signer information from the XML file path using the Get-SignerInfo function
+        [WDACConfig.Signer[]]$SignerInfo = Get-SignerInfo -XmlFilePath $XmlFilePath
 
-    # An array to store the final comparison results of this function
-    [System.Object[]]$ComparisonResults = @()
+        # An array to store the final comparison results of this function
+        [System.Object[]]$ComparisonResults = @()
 
-    # Get details of the intermediate and leaf certificates of the primary certificate of the signed file
-    [System.Object[]]$AllPrimaryCertificateDetails = Get-CertificateDetails -FilePath $SignedFilePath
+        # Get details of the intermediate and leaf certificates of the primary certificate of the signed file
+        [System.Object[]]$AllPrimaryCertificateDetails = Get-CertificateDetails -FilePath $SignedFilePath
 
-    # Store the intermediate certificate(s) details of the Primary certificate of the signed file
-    [System.Object[]]$PrimaryCertificateIntermediateDetails = $AllPrimaryCertificateDetails.IntermediateCertificates
+        # Store the intermediate certificate(s) details of the Primary certificate of the signed file
+        [System.Object[]]$PrimaryCertificateIntermediateDetails = $AllPrimaryCertificateDetails.IntermediateCertificates
 
-    # Get the Nested (Secondary) certificate of the signed file, if any
-    [System.Management.Automation.Signature]$ExtraCertificateDetails = Get-AuthenticodeSignatureEx -FilePath $SignedFilePath
+        # Get the Nested (Secondary) certificate of the signed file, if any
+        [System.Management.Automation.Signature]$ExtraCertificateDetails = Get-AuthenticodeSignatureEx -FilePath $SignedFilePath
 
-    # Extract the Nested (Secondary) certificate from the nested property, if any
-    $NestedCertificate = ($ExtraCertificateDetails).NestedSignature.SignerCertificate
+        # Extract the Nested (Secondary) certificate from the nested property, if any
+        $NestedCertificate = ($ExtraCertificateDetails).NestedSignature.SignerCertificate
 
-    if ($null -ne [System.Security.Cryptography.X509Certificates.X509Certificate2]$NestedCertificate) {
-        # First get the CN of the leaf certificate of the nested Certificate
-        $NestedCertificate.Subject -match 'CN=(?<InitialRegexTest1>.*?),.*' | Out-Null
-        $LeafCNOfTheNestedCertificate = $matches['InitialRegexTest1'] -like '*"*' ? ($NestedCertificate.Subject -split 'CN="(.+?)"')[1] : $matches['InitialRegexTest1']
+        if ($null -ne [System.Security.Cryptography.X509Certificates.X509Certificate2]$NestedCertificate) {
+            # First get the CN of the leaf certificate of the nested Certificate
+            $NestedCertificate.Subject -match 'CN=(?<InitialRegexTest1>.*?),.*' | Out-Null
+            $LeafCNOfTheNestedCertificate = $matches['InitialRegexTest1'] -like '*"*' ? ($NestedCertificate.Subject -split 'CN="(.+?)"')[1] : $matches['InitialRegexTest1']
 
-        Write-Verbose -Message 'Found a nested Signer in the file'
+            Write-Verbose -Message 'Found a nested Signer in the file'
 
-        # Send the nested certificate along with its Leaf certificate's CN to the Get-CertificateDetails function in order to get the intermediate and leaf certificates details of the Nested certificate
-        [System.Object[]]$AllNestedCertificateDetails = Get-CertificateDetails -X509Certificate2 $NestedCertificate -LeafCNOfTheNestedCertificate $LeafCNOfTheNestedCertificate
+            # Send the nested certificate along with its Leaf certificate's CN to the Get-CertificateDetails function in order to get the intermediate and leaf certificates details of the Nested certificate
+            [System.Object[]]$AllNestedCertificateDetails = Get-CertificateDetails -X509Certificate2 $NestedCertificate -LeafCNOfTheNestedCertificate $LeafCNOfTheNestedCertificate
 
-        # Store the intermediate certificate(s) details of the Nested certificate from the signed file
-        [System.Object[]]$NestedCertificateDetails = $AllNestedCertificateDetails.IntermediateCertificates
-    }
-
-    # Get the leaf certificate details of the Main Certificate from the signed file path
-    [System.Object]$LeafCertificateDetails = $AllPrimaryCertificateDetails.LeafCertificate
-
-    # Get the leaf certificate details of the Nested Certificate from the signed file path, if it exists
-    if ($null -ne $NestedCertificate) {
-        # append an X509Certificate2 object to the array
-        [System.Object]$NestedLeafCertificateDetails = $AllNestedCertificateDetails.LeafCertificate
-    }
-
-    # Loop through each signer in the signer information array
-    foreach ($Signer in $SignerInfo) {
-        # Create a custom object to store the comparison result for this signer
-        $ComparisonResult = [pscustomobject]@{
-            SignerID            = $Signer.ID
-            SignerName          = $Signer.Name
-            SignerCertRoot      = $Signer.CertRoot
-            SignerCertPublisher = $Signer.CertPublisher
-            CertSubjectCN       = $null
-            CertIssuerCN        = $null
-            CertNotAfter        = $null
-            CertTBSValue        = $null
-            CertRootMatch       = $false
-            CertNameMatch       = $false
-            CertPublisherMatch  = $false
-            FilePath            = $SignedFilePath # Add the file path to the object
+            # Store the intermediate certificate(s) details of the Nested certificate from the signed file
+            [System.Object[]]$NestedCertificateDetails = $AllNestedCertificateDetails.IntermediateCertificates
         }
 
-        # Loop through each certificate in the certificate details array of the Main Cert
-        foreach ($Certificate in $PrimaryCertificateIntermediateDetails) {
+        # Get the leaf certificate details of the Main Certificate from the signed file path
+        [System.Object]$LeafCertificateDetails = $AllPrimaryCertificateDetails.LeafCertificate
 
-            # Check if the signer's CertRoot (referring to the TBS value in the xml file which belongs to an intermediate cert of the file)...
-            # ...matches the TBSValue of the file's certificate (TBS values of one of the intermediate certificates of the file since -IntermediateOnly parameter is used earlier and that's what FilePublisher level uses)
-            # So this checks to see if the Signer's TBS value in xml matches any of the TBS value(s) of the file's intermediate certificate(s), if it does, that means that file is allowed to run by the WDAC engine
-
-            # Or if the Signer's CertRoot matches the TBS value of the file's primary certificate's Leaf Certificate
-            # This can happen with other rules than FilePublisher etc.
-            if (($Signer.CertRoot -eq $Certificate.TBSValue) -or ($Signer.CertRoot -eq $LeafCertificateDetails.TBSValue)) {
-
-                # Assign the certificate properties to the comparison result object and set the CertRootMatch to true based on further conditions
-                $ComparisonResult.CertSubjectCN = $Certificate.SubjectCN
-                $ComparisonResult.CertIssuerCN = $Certificate.IssuerCN
-                $ComparisonResult.CertNotAfter = $Certificate.NotAfter
-                $ComparisonResult.CertTBSValue = $Certificate.TBSValue
-
-                # if the signed file has nested certificate, only set a flag instead of setting the entire CertRootMatch property to true
-                if ($null -ne $NestedCertificate) {
-                    $CertRootMatchPart1 = $true
-                }
-                else {
-                    # meaning one of the TBS values of the file's intermediate certs or File's Primary Leaf Certificate's TBS value is in the xml file signers' TBS values
-                    $ComparisonResult.CertRootMatch = $true
-                }
-
-                # Check if the signer's name (Referring to the one in the XML file) matches the Intermediate certificate's SubjectCN or Leaf Certificate's SubjectCN
-                if (($Signer.Name -eq $Certificate.SubjectCN) -or ($Signer.Name -eq $LeafCertificateDetails.SubjectCN)) {
-                    # Set the CertNameMatch to true
-                    $ComparisonResult.CertNameMatch = $true # this should naturally be always true like the CertRootMatch because this is the CN of the same cert that has its TBS value in the xml file in signers
-                }
-
-                # Check if the signer's CertPublisher (aka Leaf Certificate's CN used in the xml policy) matches the leaf certificate's SubjectCN (of the file)
-                if ($Signer.CertPublisher -eq $LeafCertificateDetails.SubjectCN) {
-
-                    # if the signed file has nested certificate, only set a flag instead of setting the entire CertPublisherMatch property to true
-                    if ($null -ne $NestedCertificate) {
-                        $CertPublisherMatchPart1 = $true
-                    }
-                    else {
-                        $ComparisonResult.CertPublisherMatch = $true
-                    }
-                }
-
-                # Break out of the inner loop whether we found a match for this signer or not
-                break
-            }
-        }
-
-        # Nested Certificate TBS processing, if it exists
+        # Get the leaf certificate details of the Nested Certificate from the signed file path, if it exists
         if ($null -ne $NestedCertificate) {
+            [System.Object]$NestedLeafCertificateDetails = $AllNestedCertificateDetails.LeafCertificate
+        }
+    }
 
-            # Loop through each certificate in the NESTED certificate details array
-            foreach ($Certificate in $NestedCertificateDetails) {
+    Process {
+        # Loop through each signer in the signer information array
+        foreach ($Signer in $SignerInfo) {
+            # Create a custom object to store the comparison result for this signer
+            $ComparisonResult = [pscustomobject]@{
+                SignerID            = $Signer.ID
+                SignerName          = $Signer.Name
+                SignerCertRoot      = $Signer.CertRoot
+                SignerCertPublisher = $Signer.CertPublisher
+                CertSubjectCN       = $null
+                CertIssuerCN        = $null
+                CertNotAfter        = $null
+                CertTBSValue        = $null
+                CertRootMatch       = $false
+                CertNameMatch       = $false
+                CertPublisherMatch  = $false
+                FilePath            = $SignedFilePath # Add the file path to the object
+            }
+
+            # Loop through each certificate in the certificate details array of the Main Cert
+            foreach ($Certificate in $PrimaryCertificateIntermediateDetails) {
 
                 # Check if the signer's CertRoot (referring to the TBS value in the xml file which belongs to an intermediate cert of the file)...
                 # ...matches the TBSValue of the file's certificate (TBS values of one of the intermediate certificates of the file since -IntermediateOnly parameter is used earlier and that's what FilePublisher level uses)
-                # So this checks to see if the Signer's TBS value in xml matches any of the TBS value(s) of the file's intermediate certificate(s), if yes, that means that file is allowed to run by WDAC engine
-                if ($Signer.CertRoot -eq $Certificate.TBSValue) {
+                # So this checks to see if the Signer's TBS value in xml matches any of the TBS value(s) of the file's intermediate certificate(s), if it does, that means that file is allowed to run by the WDAC engine
 
-                    # Assign the certificate properties to the comparison result object and set the CertRootMatch to true
+                # Or if the Signer's CertRoot matches the TBS value of the file's primary certificate's Leaf Certificate
+                # This can happen with other rules than FilePublisher etc.
+                if (($Signer.CertRoot -eq $Certificate.TBSValue) -or ($Signer.CertRoot -eq $LeafCertificateDetails.TBSValue)) {
+
+                    # Assign the certificate properties to the comparison result object and set the CertRootMatch to true based on further conditions
                     $ComparisonResult.CertSubjectCN = $Certificate.SubjectCN
                     $ComparisonResult.CertIssuerCN = $Certificate.IssuerCN
                     $ComparisonResult.CertNotAfter = $Certificate.NotAfter
                     $ComparisonResult.CertTBSValue = $Certificate.TBSValue
 
-                    # When file has nested signature, only set a flag instead of setting the entire property to true
-                    $CertRootMatchPart2 = $true
+                    # if the signed file has nested certificate, only set a flag instead of setting the entire CertRootMatch property to true
+                    if ($null -ne $NestedCertificate) {
+                        $CertRootMatchPart1 = $true
+                    }
+                    else {
+                        # meaning one of the TBS values of the file's intermediate certs or File's Primary Leaf Certificate's TBS value is in the xml file signers' TBS values
+                        $ComparisonResult.CertRootMatch = $true
+                    }
 
-                    # Check if the signer's Name matches the Intermediate certificate's SubjectCN
-                    if ($Signer.Name -eq $Certificate.SubjectCN) {
+                    # Check if the signer's name (Referring to the one in the XML file) matches the Intermediate certificate's SubjectCN or Leaf Certificate's SubjectCN
+                    if (($Signer.Name -eq $Certificate.SubjectCN) -or ($Signer.Name -eq $LeafCertificateDetails.SubjectCN)) {
                         # Set the CertNameMatch to true
                         $ComparisonResult.CertNameMatch = $true # this should naturally be always true like the CertRootMatch because this is the CN of the same cert that has its TBS value in the xml file in signers
                     }
 
                     # Check if the signer's CertPublisher (aka Leaf Certificate's CN used in the xml policy) matches the leaf certificate's SubjectCN (of the file)
-                    if ($Signer.CertPublisher -eq $LeafCNOfTheNestedCertificate) {
-                        # If yes, set the CertPublisherMatch to true for this comparison result object
-                        $CertPublisherMatchPart2 = $true
+                    if ($Signer.CertPublisher -eq $LeafCertificateDetails.SubjectCN) {
+
+                        # if the signed file has nested certificate, only set a flag instead of setting the entire CertPublisherMatch property to true
+                        if ($null -ne $NestedCertificate) {
+                            $CertPublisherMatchPart1 = $true
+                        }
+                        else {
+                            $ComparisonResult.CertPublisherMatch = $true
+                        }
                     }
 
                     # Break out of the inner loop whether we found a match for this signer or not
                     break
                 }
             }
+
+            # Nested Certificate TBS processing, if it exists
+            if ($null -ne $NestedCertificate) {
+
+                # Loop through each certificate in the NESTED certificate details array
+                foreach ($Certificate in $NestedCertificateDetails) {
+
+                    # Check if the signer's CertRoot (referring to the TBS value in the xml file which belongs to an intermediate cert of the file)...
+                    # ...matches the TBSValue of the file's certificate (TBS values of one of the intermediate certificates of the file since -IntermediateOnly parameter is used earlier and that's what FilePublisher level uses)
+                    # So this checks to see if the Signer's TBS value in xml matches any of the TBS value(s) of the file's intermediate certificate(s), if yes, that means that file is allowed to run by WDAC engine
+                    if ($Signer.CertRoot -eq $Certificate.TBSValue) {
+
+                        # Assign the certificate properties to the comparison result object and set the CertRootMatch to true
+                        $ComparisonResult.CertSubjectCN = $Certificate.SubjectCN
+                        $ComparisonResult.CertIssuerCN = $Certificate.IssuerCN
+                        $ComparisonResult.CertNotAfter = $Certificate.NotAfter
+                        $ComparisonResult.CertTBSValue = $Certificate.TBSValue
+
+                        # When file has nested signature, only set a flag instead of setting the entire property to true
+                        $CertRootMatchPart2 = $true
+
+                        # Check if the signer's Name matches the Intermediate certificate's SubjectCN
+                        if ($Signer.Name -eq $Certificate.SubjectCN) {
+                            # Set the CertNameMatch to true
+                            $ComparisonResult.CertNameMatch = $true # this should naturally be always true like the CertRootMatch because this is the CN of the same cert that has its TBS value in the xml file in signers
+                        }
+
+                        # Check if the signer's CertPublisher (aka Leaf Certificate's CN used in the xml policy) matches the leaf certificate's SubjectCN (of the file)
+                        if ($Signer.CertPublisher -eq $LeafCNOfTheNestedCertificate) {
+                            # If yes, set the CertPublisherMatch to true for this comparison result object
+                            $CertPublisherMatchPart2 = $true
+                        }
+
+                        # Break out of the inner loop whether we found a match for this signer or not
+                        break
+                    }
+                }
+            }
+
+            # if the signed file has nested certificate
+            if ($null -ne $NestedCertificate) {
+
+                # check if both of the file's certificates (Nested and Main) are available in the Signers in xml policy
+                if (($CertRootMatchPart1 -eq $true) -and ($CertRootMatchPart2 -eq $true)) {
+                    $ComparisonResult.CertRootMatch = $true # meaning all of the TBS values of the double signed file's intermediate certificates exists in the xml file's signers' TBS values
+                }
+                else {
+                    $ComparisonResult.CertRootMatch = $false
+                }
+
+                # check if Lean certificate CN of both of the file's certificates (Nested and Main) are available in the Signers in xml policy
+                if (($CertPublisherMatchPart1 -eq $true) -and ($CertPublisherMatchPart2 -eq $true)) {
+                    $ComparisonResult.CertPublisherMatch = $true
+                }
+                else {
+                    $ComparisonResult.CertPublisherMatch = $false
+                }
+            }
+
+            # Add the comparison result object to the comparison results array
+            [System.Object[]]$ComparisonResults += $ComparisonResult
         }
-
-        # if the signed file has nested certificate
-        if ($null -ne $NestedCertificate) {
-
-            # check if both of the file's certificates (Nested and Main) are available in the Signers in xml policy
-            if (($CertRootMatchPart1 -eq $true) -and ($CertRootMatchPart2 -eq $true)) {
-                $ComparisonResult.CertRootMatch = $true # meaning all of the TBS values of the double signed file's intermediate certificates exists in the xml file's signers' TBS values
-            }
-            else {
-                $ComparisonResult.CertRootMatch = $false
-            }
-
-            # check if Lean certificate CN of both of the file's certificates (Nested and Main) are available in the Signers in xml policy
-            if (($CertPublisherMatchPart1 -eq $true) -and ($CertPublisherMatchPart2 -eq $true)) {
-                $ComparisonResult.CertPublisherMatch = $true
-            }
-            else {
-                $ComparisonResult.CertPublisherMatch = $false
-            }
-        }
-
-        # Add the comparison result object to the comparison results array
-        [System.Object[]]$ComparisonResults += $ComparisonResult
     }
 
-    # Return the comparison results array
-    return $ComparisonResults
-
+    End {
+        # Return the comparison results array
+        return $ComparisonResults
+    }
 }
 Export-ModuleMember -Function 'Compare-SignerAndCertificate'
 

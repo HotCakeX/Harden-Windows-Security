@@ -189,7 +189,7 @@ Function Convert-OIDToHex {
 <EKU ID="ID_EKU_WHQL" FriendlyName="Windows Hardware Quality Labs (WHQL) - 1.3.6.1.4.1.311.10.3.5" Value="010A2B0601040182370A0305" />
 <EKU ID="ID_EKU_ELAM" FriendlyName="Early Launch Anti Malware - 1.3.6.1.4.1.311.61.4.1" Value="010A2B0601040182373D0401" />
 <EKU ID="ID_EKU_HAL_EXT" FriendlyName="HAL Extension - 1.3.6.1.4.1.311.61.5.1" Value="010A2B0601040182373D0501" />
-<EKU ID="ID_EKU_RT_EXT" FriendlyName="Windows RT - OID ?" Value="010a2b0601040182370a0315" />
+<EKU ID="ID_EKU_RT_EXT" FriendlyName="Windows RT - 1.3.6.1.4.1.311.10.3.21" Value="010a2b0601040182370a0315" />
 <EKU ID="ID_EKU_STORE" FriendlyName="Windows Store - 1.3.6.1.4.1.311.76.3.1" Value="010a2b0601040182374c0301" />
 <EKU ID="ID_EKU_DCODEGEN" FriendlyName="Dynamic Code Generation - 1.3.6.1.4.1.311.76.5.1" Value="010A2B0601040182374C0501" />
 <EKU ID="ID_EKU_AM" FriendlyName="AntiMalware - 1.3.6.1.4.1.311.76.11.1" Value="010a2b0601040182374c0b01" />

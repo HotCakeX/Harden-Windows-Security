@@ -1,7 +1,8 @@
 Function Get-BlockRulesMeta {
     <#
     .SYNOPSIS
-        Gets the latest Microsoft Recommended block rules, removes its allow all rules and sets HVCI to strict
+        Gets the latest Microsoft Recommended block rules, removes its allow all rules, removes the audit mode policy rule option and sets HVCI to strict
+        It generates a XML file compliant with CI Policies Schema
     .INPUTS
         None. You cannot pipe objects to this function.
     .OUTPUTS

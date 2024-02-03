@@ -62,6 +62,8 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
 
 ✔️ Build-WDACCertificate: https://github.com/HotCakeX/Harden-Windows-Security/wiki/Build-WDACCertificate
 
+✔️ Test-CiPolicy: https://github.com/HotCakeX/Harden-Windows-Security/wiki/Test-CiPolicy
+
 To get help and syntax on PowerShell console, type:
 "Get-Command -Module WDACConfig"
 "Get-Help New-WDACConfig"
@@ -79,6 +81,7 @@ To get help and syntax on PowerShell console, type:
 "Get-Help Remove-CommonWDACConfig"
 "Get-Help Assert-WDACConfigIntegrity"
 "Get-Help Build-WDACCertificate"
+"Get-Help Test-CiPolicy"
 '@
 
     # Minimum version of the PowerShell engine required by this module
@@ -130,7 +133,8 @@ To get help and syntax on PowerShell console, type:
         'Core\Get-CommonWDACConfig.psm1',
         'Core\Remove-CommonWDACConfig.psm1',
         'Core\Assert-WDACConfigIntegrity.psm1',
-        'Core\Build-WDACCertificate.psm1')
+        'Core\Build-WDACCertificate.psm1',
+        'Core\Test-CiPolicy.psm1')
 
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
     FunctionsToExport    = @(
@@ -148,7 +152,8 @@ To get help and syntax on PowerShell console, type:
         'Get-CommonWDACConfig',
         'Remove-CommonWDACConfig',
         'Assert-WDACConfigIntegrity',
-        'Build-WDACCertificate')
+        'Build-WDACCertificate',
+        'Test-CiPolicy')
 
     # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
     CmdletsToExport      = @(
@@ -166,7 +171,8 @@ To get help and syntax on PowerShell console, type:
         'Get-CommonWDACConfig',
         'Remove-CommonWDACConfig',
         'Assert-WDACConfigIntegrity',
-        'Build-WDACCertificate')
+        'Build-WDACCertificate',
+        'Test-CiPolicy')
 
     # Variables to export from this module
     VariablesToExport    = '*'
@@ -200,6 +206,7 @@ To get help and syntax on PowerShell console, type:
         'Core\Remove-CommonWDACConfig.psm1',
         'Core\Assert-WDACConfigIntegrity.psm1',
         'Core\Build-WDACCertificate.psm1',
+        'Core\Test-CiPolicy.psm1',
         'CoreExt\PSDefaultParameterValues.ps1',
         'Resources\ArgumentCompleters.ps1'
         'Resources\WDAC Policies\DefaultWindows_Enforced_Kernel.xml',
@@ -224,7 +231,6 @@ To get help and syntax on PowerShell console, type:
         'Shared\New-SnapBackGuarantee.psm1',
         'Shared\Compare-SecureString.psm1',
         'Shared\Get-KernelModeDriversAudit.psm1',
-        'Shared\Test-CiPolicy.psm1',
         'Shared\Copy-CiRules.psm1',
         'WDACSimulation\Get-TBSCertificate.psm1',
         'WDACSimulation\Get-SignerInfo.psm1',

@@ -1,16 +1,4 @@
 Function Test-CiPolicy {
-    <#
-    .DESCRIPTION
-        Tests the Code Integrity Policy XML file against the Code Integrity Schema file.
-    .PARAMETER XmlFile
-        The Code Integrity Policy XML file to test.
-    .LINK
-        https://github.com/HotCakeX/Harden-Windows-Security
-    .INPUTS
-        [System.IO.FileInfo]
-    .OUTPUTS
-        System.Boolean
-    #>
     [CmdletBinding()]
     [OutputType([System.Boolean])]
     param(
@@ -20,6 +8,9 @@ Function Test-CiPolicy {
     )
 
     begin {
+        # Detecting if Verbose switch is used
+        $PSBoundParameters.Verbose.IsPresent ? ([System.Boolean]$Verbose = $true) : ([System.Boolean]$Verbose = $false) | Out-Null
+        
         # Check if the schema file exists in the system drive
         if (-NOT (Test-Path -Path $CISchemaPath)) {
             Throw "The Code Integrity Schema file could not be found at: $CISchemaPath"
@@ -72,13 +63,32 @@ Function Test-CiPolicy {
         # Return the validation result
         Return $IsValid
     }
+    <#
+.SYNOPSIS
+    Tests the Code Integrity Policy XML file against the Code Integrity Schema file.
+.PARAMETER XmlFile
+    The Code Integrity Policy XML file to test. Supports file picker GUI.
+.LINK
+    https://github.com/HotCakeX/Harden-Windows-Security/wiki/Test-CiPolicy
+.INPUTS
+    [System.IO.FileInfo]
+.OUTPUTS
+    System.Boolean
+.EXAMPLE
+    Test-CiPolicy -XmlFile "C:\path\to\policy.xml"
+    #>
 }
-Export-ModuleMember -Function Test-CiPolicy
+
+# Importing argument completer ScriptBlocks
+. "$ModuleRootPath\Resources\ArgumentCompleters.ps1"
+
+Register-ArgumentCompleter -CommandName 'Test-CiPolicy' -ParameterName 'XmlFile' -ScriptBlock $ArgumentCompleterXmlFilePathsPicker
+
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBeV0fZygOjw1Gz
-# dj4breYpS1xEKfMX3m76GJLCyBN4YqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDZl8yYCNRU2fdk
+# O429hUnCZoYD//+otXyNQ/SZZDQhhKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -125,16 +135,16 @@ Export-ModuleMember -Function Test-CiPolicy
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQg/ZYAtkjmjEclLMmeoF8yn+BG/NQ/oP+qr5nCsjNJzV0wDQYJKoZIhvcNAQEB
-# BQAEggIAkka4QHF5QxSrxHZhak5HSvhrVz8oRH/fSZ2Jyvkf9elPFClmK3ruTvcR
-# e/A2TRpXrHJbWhK7R6fDS6CLYaEX10R/Opy900LIcnUOM3nfmI9YOkCvdoty1B7b
-# tlV6B4B++EA4JpG9QtZIs7Imtl+YpZ3GwjBH2e/+YWMBAyOuPELHpsOeV9tZ1e2g
-# oB0PpZtajm7Oa/MrD1zwX1pz6BD6PTysZnV0bJQdg/OXUHNIwNiSG0e3+peWo3Gc
-# hPnyE9sTRKikanGyMS8j1JM+FpZCt5g9eie8Ta5yfVFAETDydCKGzhVTdRXkpmms
-# zqfzl+ymkGHKdD3ctmmHgCwKvVhWlOz/p0A2nK1OXGUYANVaATFsvu7eLCqCqMpb
-# PsyUXbJ26zKbP3HEsL1BHwVQE8N1yLOO5M5ZJBBn0t+XSThwnTu1h6tP7nrz4nN5
-# WRN1Q9XuHMMTDxM1txyu2H/yrsCseES7PhazdgZYUihFxpfDutTJ7afOmmeQDaW8
-# ERIaYIxYBQc2sF7R7aZrnE/XPGmGeBxTASTaU4zCRh3huGaEWA0jA8tIUroGP203
-# kBwcgLhv1h225hYYL8Sy3In6xKoiAKoPbXfIDOlPOcIh5BoBULZ+EBcrk14+6C/e
-# Y9ZgcvlGgVJJ8egY8wNjzpmQqqhDE8jBj+BOndoEelTUQxC6MOs=
+# IgQgq/5/8FCoby+iqSpBilh5ky6i8g9AlbJsMj0f01/iWWAwDQYJKoZIhvcNAQEB
+# BQAEggIAnKxvt/8WKRvOv4hzj+CtUdBBUh16Fv4rgWEb3nQ2CyJkErRVULeXUHuq
+# o3vTYkc2qB9BzdXYwSM6Sy8bJDlSQsNVXy715ihE44tR8Op87AxvG5Nkfy4nQ/s7
+# hQxcXmedGXOMJmy+AuVmUIXE8BW/QDSg/ME4v1vmstcm/antQPJWzKTwLUpfgtYC
+# g9bjllvP8YbPNhyI/jS9mMAnQRR01c++85+uiy3/dWVb/7J/PgnT74J/Tv8RbcY7
+# M2cFUu3eO6krAv2MIVyLdKETtgJwRafB5L8zYK6MXX1Xlu2cNB0Vjt3XvEOB+PKE
+# Rgzk69CuaeZEx3iJDV3QdFL0hZhh38U3mr89k3yRWZgnlKxg1Pe2YkQRKffvNj+R
+# vyQNHlIzLlfglVYDZIX2XjSSFcAy28YAHXliKtM7HndHczSB+DAJ21i3eKco85gJ
+# WMIqfHC/CVreMeoWqZjRZdXt6ztAhfsi+FphaLhUnZX0LnOnEnt5IkfKBjrEQFVl
+# xJpeEEFImt6uw3bgn+UQz+uv7NezSKcZyZ3ESGmdsQ8NJi8fEu0e84Na3OaJ6Lk9
+# 0IDccONP5V4D4KN5tRPZWQI1oP59gj0s0bje3MI+hJ6idhLUWbTjuTT0fnMezCcR
+# jJKPqkTTt7soDtPxW8DfDh+s3To4bBHs5kU4FAIKc3pOZFQcIOs=
 # SIG # End signature block

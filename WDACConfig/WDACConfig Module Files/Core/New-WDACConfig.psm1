@@ -400,6 +400,8 @@ Function New-WDACConfig {
             <#
             .SYNOPSIS
                 A helper function that downloads the latest Microsoft recommended block rules
+                and deploys it as a standalone WDAC base policy on the system.
+                The deployed policy contains the 2 Allow All rules so it acts as a blocklist.
             .INPUTS
                 None. You cannot pipe objects to this function.
             .OUTPUTS
@@ -409,23 +411,20 @@ Function New-WDACConfig {
             param()
 
             # The total number of the main steps for the progress bar to render
-            [System.Int16]$TotalSteps = 4
+            [System.Int16]$TotalSteps = 3
             [System.Int16]$CurrentStep = 0
 
             $CurrentStep++
             Write-Progress -Id 0 -Activity 'Downloading the latest block rules' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-            Write-Verbose -Message 'Downloading the latest Microsoft recommended block rules and creating Microsoft recommended block rules TEMP.xml'
-            (Invoke-WebRequest -Uri $MSFTRecommendedBlockRulesURL -ProgressAction SilentlyContinue).Content -replace "(?s).*``````xml(.*)``````.*", '$1' | Out-File -FilePath '.\Microsoft recommended block rules TEMP.xml' -Force
+            Write-Verbose -Message 'Downloading the latest Microsoft recommended block rules'
+            [System.String]$MSFTRecommendedBlockRulesAsString = (Invoke-WebRequest -Uri $MSFTRecommendedBlockRulesURL -ProgressAction SilentlyContinue).Content
 
-            $CurrentStep++
-            Write-Progress -Id 0 -Activity 'Removing the empty lines' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+            # Load the Block Rules as XML into a variable after extracting them from the markdown string
+            [System.Xml.XmlDocument]$BlockRulesXML = ($MSFTRecommendedBlockRulesAsString -replace "(?s).*``````xml(.*)``````.*", '$1').Trim()
 
-            Write-Verbose -Message 'Removing any empty lines from the Temp policy file and generating the Microsoft recommended block rules.xml'
-            Get-Content -Path '.\Microsoft recommended block rules TEMP.xml' | Where-Object -FilterScript { $_.trim() -ne '' } | Out-File -FilePath '.\Microsoft recommended block rules.xml' -Force
-
-            Write-Verbose -Message 'Removing the temp XML file'
-            Remove-Item -Path '.\Microsoft recommended block rules TEMP.xml' -Force
+            # Save the XML content to a file
+            $BlockRulesXML.Save('.\Microsoft recommended block rules.xml')
 
             $CurrentStep++
             Write-Progress -Id 0 -Activity 'Configuring the policy settings' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
@@ -453,6 +452,7 @@ Function New-WDACConfig {
 
             Write-Verbose -Message 'Deploying the Microsoft recommended block rules policy'
             &'C:\Windows\System32\CiTool.exe' --update-policy "$PolicyID.cip" -json | Out-Null
+
             Write-ColorfulText -Color Lavender -InputText 'The Microsoft recommended block rules policy has been deployed in enforced mode.'
 
             Write-Verbose -Message 'Removing the generated .CIP binary file after deploying it'
@@ -975,12 +975,12 @@ Function New-WDACConfig {
     process {
 
         switch ($true) {
-            # Deploy the latest block rules
+            # Deploy the latest block rules if 'New-WDACConfig -GetBlockRules -Deploy' is passed
             { $GetBlockRules -and $Deploy } { Deploy-LatestBlockRules ; break }
-            # Get the latest block rules
+            # Get the latest block rules if 'New-WDACConfig -GetBlockRules' is passed
             $GetBlockRules { Get-BlockRulesMeta ; break }
-            # Get the latest driver block rules and Deploy them if New-WDACConfig -GetDriverBlockRules was called with -Deploy parameter
-            { $GetDriverBlockRules } { Get-DriverBlockRules -Deploy:$Deploy ; break }
+            # Get the latest driver block rules and only Deploy them if New-WDACConfig -GetDriverBlockRules was called with -Deploy parameter
+            $GetDriverBlockRules { Get-DriverBlockRules -Deploy:$Deploy ; break }
             $SetAutoUpdateDriverBlockRules { Set-AutoUpdateDriverBlockRules ; break }
             $MakeAllowMSFTWithBlockRules { Build-AllowMSFTWithBlockRules ; break }
             $MakePolicyFromAuditLogs { Build-PolicyFromAuditLogs ; break }

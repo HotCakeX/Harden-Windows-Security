@@ -21,12 +21,12 @@ Function Get-BlockRulesMeta {
     }
 
     Process {
-        # Download the markdown page from GitHub containing the latest Microsoft recommended block rules 
+        # Download the markdown page from GitHub containing the latest Microsoft recommended block rules
         [System.String]$MSFTRecommendedBlockRulesAsString = (Invoke-WebRequest -Uri $MSFTRecommendedBlockRulesURL -ProgressAction SilentlyContinue).Content
 
         # Load the Block Rules as XML into a variable after extracting them from the markdown string
         [System.Xml.XmlDocument]$BlockRulesXML = ($MSFTRecommendedBlockRulesAsString -replace "(?s).*``````xml(.*)``````.*", '$1').Trim()
-        
+
         # Get the SiPolicy node
         [System.Xml.XmlElement]$SiPolicyNode = $BlockRulesXML.SiPolicy
 
@@ -44,7 +44,7 @@ Function Get-BlockRulesMeta {
         foreach ($Node in $NodesToRemove) {
             # Get the parent node of the node to remove
             [System.Xml.XmlElement]$ParentNode = $Node.ParentNode
-  
+
             # Check if the parent node has more than one child node, if it does then only remove the child node
             if ($ParentNode.ChildNodes.Count -gt 1) {
                 # Remove the node from the parent node
@@ -57,17 +57,17 @@ Function Get-BlockRulesMeta {
                 [System.Xml.XmlElement]$NewNode = $BlockRulesXML.CreateElement($ParentNode.Name, $ParentNode.NamespaceURI)
                 # Replace the parent node with the new node
                 $ParentNode.ParentNode.ReplaceChild($NewNode, $ParentNode) | Out-Null
-    
+
                 # Check if the new node has any sibling nodes, if not then replace its parent node with an empty node
                 # We do this because the built-in PowerShell cmdlets would throw errors if empty <FileRulesRef /> exists inside <ProductSigners> node
                 if ($null -eq $NewNode.PreviousSibling -and $null -eq $NewNode.NextSibling) {
-                
+
                     # Get the grandparent node of the new node
                     [System.Xml.XmlElement]$GrandParentNode = $NewNode.ParentNode
-                
+
                     # Create a new node with the same name and namespace as the grandparent node
                     [System.Xml.XmlElement]$NewGrandNode = $BlockRulesXML.CreateElement($GrandParentNode.Name, $GrandParentNode.NamespaceURI)
-                
+
                     # Replace the grandparent node with the new node
                     $GrandParentNode.ParentNode.ReplaceChild($NewGrandNode, $GrandParentNode) | Out-Null
                 }
@@ -75,7 +75,7 @@ Function Get-BlockRulesMeta {
         }
 
         # Save the modified XML content to a file
-        $BlockRulesXML.Save('.\Microsoft recommended block rules.xml') 
+        $BlockRulesXML.Save('.\Microsoft recommended block rules.xml')
 
         # Remove the audit mode rule option
         Set-RuleOption -FilePath '.\Microsoft recommended block rules.xml' -Option 3 -Delete

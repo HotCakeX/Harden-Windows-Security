@@ -12,7 +12,7 @@ Function Remove-SupplementalSigners {
 .NOTES
     It doesn't do anything if the input policy file has no SupplementalPolicySigners block.
     It will also always check if the Signers node is not empty, like
-   <Signers>     
+   <Signers>
    </Signers>
 
    if it is then it will close it: <Signers />
@@ -27,7 +27,7 @@ Function Remove-SupplementalSigners {
 #>
 
     begin {
-        
+
         # Make sure the input file is compliant with the CI policy schema
         Test-CiPolicy -XmlFile $Path | Out-Null
 
@@ -47,7 +47,7 @@ Function Remove-SupplementalSigners {
 
         # Check if the SupplementalPolicySigners node exists and has child nodes
         if ($SiPolicyNode.SupplementalPolicySigners -and $SiPolicyNode.SupplementalPolicySigners.HasChildNodes) {
-   
+
             # Select the SupplementalPolicySigners node using XPath and the namespace manager
             [System.Xml.XmlElement[]]$NodesToRemove_SupplementalPolicySigners = $SiPolicyNode.SelectNodes('//ns:SupplementalPolicySigners', $NameSpace)
 
@@ -61,7 +61,7 @@ Function Remove-SupplementalSigners {
             [System.Xml.XmlElement[]]$NodesToRemove_Signers = @()
 
             # Select all the Signer nodes in <Signers>...</Signers> that have the same ID as the SignerIds of the SupplementalPolicySigners nodes
-            foreach ($SignerID in $SupplementalPolicySignerIDs) {    
+            foreach ($SignerID in $SupplementalPolicySignerIDs) {
                 $NodesToRemove_Signers += $SiPolicyNode.Signers.SelectNodes("//ns:Signer[@ID='$SignerID']", $NameSpace)
             }
 
@@ -73,7 +73,7 @@ Function Remove-SupplementalSigners {
 
             # Loop through the <SupplementalPolicySigners>..</SupplementalPolicySigners> nodes to remove, in case there are multiple!
             foreach ($Node in $NodesToRemove_SupplementalPolicySigners) {
-   
+
                 # Remove the <SupplementalPolicySigners> node from the parent node which is $SiPolicyNode
                 $SiPolicyNode.RemoveChild($Node) | Out-Null
             }
@@ -81,17 +81,17 @@ Function Remove-SupplementalSigners {
 
         # Check if the Signers node is empty
         if (-NOT $SiPolicyNode.Signers.HasChildNodes) {
-    
+
             # Create a new self-closing element with the same name and attributes as the old one
             [System.Xml.XmlElement]$NewSignersNode = $XMLContent.CreateElement('Signers', 'urn:schemas-microsoft-com:sipolicy')
-            
+
             foreach ($Attribute in $SiPolicyNode.Signers.Attributes) {
                 $NewSignersNode.SetAttribute($Attribute.Name, $Attribute.Value)
             }
 
             # Select the Signers node using XPath and the namespace manager
             [System.Xml.XmlElement]$OldSignersNode = $XMLContent.SelectSingleNode('//ns:Signers', $NameSpace)
-    
+
             # Replace the old element with the new one
             $SiPolicyNode.ReplaceChild($NewSignersNode, $OldSignersNode) | Out-Null
         }

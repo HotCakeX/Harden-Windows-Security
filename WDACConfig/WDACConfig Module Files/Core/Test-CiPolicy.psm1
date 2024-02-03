@@ -10,7 +10,7 @@ Function Test-CiPolicy {
     begin {
         # Detecting if Verbose switch is used
         $PSBoundParameters.Verbose.IsPresent ? ([System.Boolean]$Verbose = $true) : ([System.Boolean]$Verbose = $false) | Out-Null
-        
+
         # Check if the schema file exists in the system drive
         if (-NOT (Test-Path -Path $CISchemaPath)) {
             Throw "The Code Integrity Schema file could not be found at: $CISchemaPath"

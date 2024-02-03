@@ -111,7 +111,9 @@ Function New-WDACConfig {
             <#
             .SYNOPSIS
                 Gets the latest Microsoft Recommended Driver Block rules and processes them
-                Can optionally deploy them
+                Can optionally deploy them.
+                If the -Deploy switch is used, the drivers block list will contain the 2 allow all rules,
+                otherwise, the allow all rules will be removed from the policy
             .INPUTS
                 System.Management.Automation.SwitchParameter
             .OUTPUTS
@@ -120,6 +122,7 @@ Function New-WDACConfig {
                 Indicates that the function will deploy the latest Microsoft recommended drivers block list
             #>
             [CmdletBinding()]
+            [OutputType([System.String])]
             param (
                 [System.Management.Automation.SwitchParameter]$Deploy
             )
@@ -165,36 +168,73 @@ Function New-WDACConfig {
                 $CurrentStep++
                 Write-Progress -Id 1 -Activity 'Downloading the driver block rules' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                Write-Verbose -Message 'Downloading the latest Microsoft Recommended Driver Block Rules from the official source'
-                [System.String]$DriverRules = (Invoke-WebRequest -Uri $MSFTRecommendedDriverBlockRulesURL -ProgressAction SilentlyContinue).Content -replace "(?s).*``````xml(.*)``````.*", '$1'
-
-                # Remove the unnecessary rules and elements - not using this one because then during the merge there will be error - The reason is that "<FileRuleRef RuleID="ID_ALLOW_ALL_2" />" is the only FileruleRef in the xml and after removing it, the <SigningScenario> element will be empty
-                $CurrentStep++
-                Write-Progress -Id 1 -Activity 'Removing the Allow all rules' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-                Write-Verbose -Message 'Removing the allow all rules and rule refs from the policy'
-                $DriverRules = $DriverRules -replace '<Allow\sID="ID_ALLOW_ALL_[12]"\sFriendlyName=""\sFileName="\*".*/>', ''
-                $DriverRules = $DriverRules -replace '<FileRuleRef\sRuleID="ID_ALLOW_ALL_1".*/>', ''
-                $DriverRules = $DriverRules -replace '<SigningScenario\sValue="12"\sID="ID_SIGNINGSCENARIO_WINDOWS"\sFriendlyName="Auto\sgenerated\spolicy[\S\s]*<\/SigningScenario>', ''
+                # Download the markdown page from GitHub containing the latest Microsoft recommended driver block rules
+                [System.String]$MSFTDriverBlockRulesAsString = (Invoke-WebRequest -Uri $MSFTRecommendedDriverBlockRulesURL -ProgressAction SilentlyContinue).Content
 
                 $CurrentStep++
-                Write-Progress -Id 1 -Activity 'Creating the XML policy file' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+                Write-Progress -Id 1 -Activity 'Removing the `Allow all rules` from the policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                Write-Verbose -Message 'Creating XML policy file'
-                $DriverRules | Out-File -FilePath 'Microsoft recommended driver block rules TEMP.xml' -Force
+                # Load the Driver Block Rules as XML into a variable after extracting them from the markdown string
+                [System.Xml.XmlDocument]$DriverBlockRulesXML = ($MSFTDriverBlockRulesAsString -replace "(?s).*``````xml(.*)``````.*", '$1').Trim()
 
-                # Remove empty lines from the policy file
-                Write-Verbose -Message 'Removing the empty lines from the policy XML file'
-                Get-Content -Path 'Microsoft recommended driver block rules TEMP.xml' | Where-Object -FilterScript { $_.trim() -ne '' } | Out-File -FilePath 'Microsoft recommended driver block rules.xml' -Force
+                # Get the SiPolicy node
+                [System.Xml.XmlElement]$SiPolicyNode = $DriverBlockRulesXML.SiPolicy
 
-                Write-Verbose -Message 'Removing the temp XML file'
-                Remove-Item -Path 'Microsoft recommended driver block rules TEMP.xml' -Force
+                # Declare the namespace manager and add the default namespace with a prefix
+                [System.Xml.XmlNamespaceManager]$NameSpace = New-Object -TypeName System.Xml.XmlNamespaceManager -ArgumentList $DriverBlockRulesXML.NameTable
+                $NameSpace.AddNamespace('ns', 'urn:schemas-microsoft-com:sipolicy')
+
+                # Select the FileRuleRef nodes that have a RuleID attribute that starts with ID_ALLOW_
+                [System.Object[]]$NodesToRemove = $SiPolicyNode.FileRules.SelectNodes("//ns:FileRuleRef[starts-with(@RuleID, 'ID_ALLOW_')]", $NameSpace)
+
+                # Append the Allow nodes that have an ID attribute that starts with ID_ALLOW_ to the array
+                $NodesToRemove += $SiPolicyNode.FileRules.SelectNodes("//ns:Allow[starts-with(@ID, 'ID_ALLOW_')]", $NameSpace)
+
+                # Loop through the nodes to remove
+                foreach ($Node in $NodesToRemove) {
+                    # Get the parent node of the node to remove
+                    [System.Xml.XmlElement]$ParentNode = $Node.ParentNode
+
+                    # Check if the parent node has more than one child node, if it does then only remove the child node
+                    if ($ParentNode.ChildNodes.Count -gt 1) {
+                        # Remove the node from the parent node
+                        $ParentNode.RemoveChild($Node) | Out-Null
+                    }
+
+                    # If the parent node only has one child node then replace the parent node with an empty node
+                    else {
+                        # Create a new node with the same name and namespace as the parent node
+                        [System.Xml.XmlElement]$NewNode = $DriverBlockRulesXML.CreateElement($ParentNode.Name, $ParentNode.NamespaceURI)
+                        # Replace the parent node with the new node
+                        $ParentNode.ParentNode.ReplaceChild($NewNode, $ParentNode) | Out-Null
+
+                        # Check if the new node has any sibling nodes, if not then replace its parent node with an empty node
+                        # We do this because the built-in PowerShell cmdlets would throw errors if empty <FileRulesRef /> exists inside <ProductSigners> node
+                        if ($null -eq $NewNode.PreviousSibling -and $null -eq $NewNode.NextSibling) {
+
+                            # Get the grandparent node of the new node
+                            [System.Xml.XmlElement]$GrandParentNode = $NewNode.ParentNode
+
+                            # Create a new node with the same name and namespace as the grandparent node
+                            [System.Xml.XmlElement]$NewGrandNode = $DriverBlockRulesXML.CreateElement($GrandParentNode.Name, $GrandParentNode.NamespaceURI)
+
+                            # Replace the grandparent node with the new node
+                            $GrandParentNode.ParentNode.ReplaceChild($NewGrandNode, $GrandParentNode) | Out-Null
+                        }
+                    }
+                }
+
+                # Save the modified XML content to a file
+                $DriverBlockRulesXML.Save('.\Microsoft recommended driver block rules.xml')
+
+                $CurrentStep++
+                Write-Progress -Id 1 -Activity 'Configuring the policy settings' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                 Write-Verbose -Message 'Removing the Audit mode policy rule option'
-                Set-RuleOption -FilePath 'Microsoft recommended driver block rules.xml' -Option 3 -Delete
+                Set-RuleOption -FilePath '.\Microsoft recommended driver block rules.xml' -Option 3 -Delete
 
                 Write-Verbose -Message 'Setting the HVCI option to strict'
-                Set-HVCIOptions -Strict -FilePath 'Microsoft recommended driver block rules.xml'
+                Set-HVCIOptions -Strict -FilePath '.\Microsoft recommended driver block rules.xml'
 
                 # Display extra info about the Microsoft recommended Drivers block list
                 Write-Verbose -Message 'Displaying extra info about the Microsoft recommended Drivers block list'

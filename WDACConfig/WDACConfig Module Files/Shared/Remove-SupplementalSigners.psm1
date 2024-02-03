@@ -79,7 +79,7 @@ Function Remove-SupplementalSigners {
             }
         }
 
-        # Check if the Signers node is empty
+        # Check if the Signers node is empty, if it is then close it
         if (-NOT $SiPolicyNode.Signers.HasChildNodes) {
 
             # Create a new self-closing element with the same name and attributes as the old one
@@ -105,4 +105,4 @@ Function Remove-SupplementalSigners {
 
 }
 
-Export-ModuleMember -Function Remove-SupplementalSigners
+Export-ModuleMember -Function 'Remove-SupplementalSigners'

@@ -27,7 +27,6 @@ $PSDefaultParameterValues = @{
     'Compare-SecureStrings:Verbose'        = $Verbose
     'Get-KernelModeDriversAudit:Verbose'   = $Verbose
     'Test-Path:ErrorAction'                = 'SilentlyContinue'
-    'Test-CiPolicy:Verbose'                = $Verbose
     'Copy-CiRules:Verbose'                 = $Verbose
     'Get-TBSCertificate:Verbose'           = $Verbose
     'Get-SignerInfo:Verbose'               = $Verbose
@@ -36,6 +35,7 @@ $PSDefaultParameterValues = @{
     'Get-CertificateDetails:Verbose'       = $Verbose
     'Get-AuthenticodeSignatureEx:Verbose'  = $Verbose
     'Compare-SignerAndCertificate:Verbose' = $Verbose
+    'Remove-SupplementalSigners:Verbose'   = $Verbose
 }
 
 # SIG # Begin signature block

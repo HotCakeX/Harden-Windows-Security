@@ -11,76 +11,83 @@ Function Get-BlockRulesMeta {
     [CmdletBinding()]
     [OutputType([System.String])]
     param ()
-    # Importing the $PSDefaultParameterValues to the current session, prior to everything else
-    . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
-    # Importing the required sub-modules
-    Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Write-ColorfulText.psm1" -Force
-   
-    # Download the markdown page from GitHub containing the latest Microsoft recommended block rules 
-    [System.String]$MSFTRecommendedBlockRulesAsString = (Invoke-WebRequest -Uri $MSFTRecommendedBlockRulesURL -ProgressAction SilentlyContinue).Content
+    Begin {
+        # Importing the $PSDefaultParameterValues to the current session, prior to everything else
+        . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
-    # Load the Block Rules as XML into a variable after extracting them from the markdown string
-    [System.Xml.XmlDocument]$BlockRulesXML = ($MSFTRecommendedBlockRulesAsString -replace "(?s).*``````xml(.*)``````.*", '$1').Trim()
-        
-    # Get the SiPolicy node
-    [System.Xml.XmlElement]$SiPolicyNode = $BlockRulesXML.SiPolicy
-
-    # Declare the namespace manager and add the default namespace with a prefix
-    [System.Xml.XmlNamespaceManager]$NameSpace = New-Object -TypeName System.Xml.XmlNamespaceManager -ArgumentList $BlockRulesXML.NameTable
-    $NameSpace.AddNamespace('ns', 'urn:schemas-microsoft-com:sipolicy')
-
-    # Select the FileRuleRef nodes that have a RuleID attribute that starts with ID_ALLOW_
-    [System.Object[]]$NodesToRemove = $SiPolicyNode.FileRules.SelectNodes("//ns:FileRuleRef[starts-with(@RuleID, 'ID_ALLOW_')]", $NameSpace)
-
-    # Append the Allow nodes that have an ID attribute that starts with ID_ALLOW_ to the array
-    $NodesToRemove += $SiPolicyNode.FileRules.SelectNodes("//ns:Allow[starts-with(@ID, 'ID_ALLOW_')]", $NameSpace)
-
-    # Loop through the nodes to remove
-    foreach ($Node in $NodesToRemove) {
-        # Get the parent node of the node to remove
-        [System.Xml.XmlElement]$ParentNode = $Node.ParentNode
-  
-        # Check if the parent node has more than one child node, if it does then only remove the child node
-        if ($ParentNode.ChildNodes.Count -gt 1) {
-            # Remove the node from the parent node
-            $ParentNode.RemoveChild($Node) | Out-Null
-        }
-
-        # If the parent node only has one child node then replace the parent node with an empty node
-        else {
-            # Create a new node with the same name and namespace as the parent node
-            [System.Xml.XmlElement]$NewNode = $BlockRulesXML.CreateElement($ParentNode.Name, $ParentNode.NamespaceURI)
-            # Replace the parent node with the new node
-            $ParentNode.ParentNode.ReplaceChild($NewNode, $ParentNode) | Out-Null
-    
-            # Check if the new node has any sibling nodes, if not then replace its parent node with an empty node
-            # We do this because the built-in PowerShell cmdlets would throw errors if empty <FileRulesRef /> exists inside <ProductSigners> node
-            if ($null -eq $NewNode.PreviousSibling -and $null -eq $NewNode.NextSibling) {
-                
-                # Get the grandparent node of the new node
-                [System.Xml.XmlElement]$GrandParentNode = $NewNode.ParentNode
-                
-                # Create a new node with the same name and namespace as the grandparent node
-                [System.Xml.XmlElement]$NewGrandNode = $BlockRulesXML.CreateElement($GrandParentNode.Name, $GrandParentNode.NamespaceURI)
-                
-                # Replace the grandparent node with the new node
-                $GrandParentNode.ParentNode.ReplaceChild($NewGrandNode, $GrandParentNode) | Out-Null
-            }
-        }
+        # Importing the required sub-modules
+        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Write-ColorfulText.psm1" -Force
     }
 
-    # Save the modified XML content to a file
-    $BlockRulesXML.Save('.\Microsoft recommended block rules.xml') 
+    Process {
+        # Download the markdown page from GitHub containing the latest Microsoft recommended block rules 
+        [System.String]$MSFTRecommendedBlockRulesAsString = (Invoke-WebRequest -Uri $MSFTRecommendedBlockRulesURL -ProgressAction SilentlyContinue).Content
 
-    # Remove the audit mode rule option
-    Set-RuleOption -FilePath '.\Microsoft recommended block rules.xml' -Option 3 -Delete
+        # Load the Block Rules as XML into a variable after extracting them from the markdown string
+        [System.Xml.XmlDocument]$BlockRulesXML = ($MSFTRecommendedBlockRulesAsString -replace "(?s).*``````xml(.*)``````.*", '$1').Trim()
+        
+        # Get the SiPolicy node
+        [System.Xml.XmlElement]$SiPolicyNode = $BlockRulesXML.SiPolicy
 
-    # Set HVCI to Strict
-    Set-HVCIOptions -Strict -FilePath '.\Microsoft recommended block rules.xml'
+        # Declare the namespace manager and add the default namespace with a prefix
+        [System.Xml.XmlNamespaceManager]$NameSpace = New-Object -TypeName System.Xml.XmlNamespaceManager -ArgumentList $BlockRulesXML.NameTable
+        $NameSpace.AddNamespace('ns', 'urn:schemas-microsoft-com:sipolicy')
 
-    # Display the result
-    Write-ColorfulText -Color MintGreen -InputText 'PolicyFile = Microsoft recommended block rules.xml'
+        # Select the FileRuleRef nodes that have a RuleID attribute that starts with ID_ALLOW_
+        [System.Object[]]$NodesToRemove = $SiPolicyNode.FileRules.SelectNodes("//ns:FileRuleRef[starts-with(@RuleID, 'ID_ALLOW_')]", $NameSpace)
+
+        # Append the Allow nodes that have an ID attribute that starts with ID_ALLOW_ to the array
+        $NodesToRemove += $SiPolicyNode.FileRules.SelectNodes("//ns:Allow[starts-with(@ID, 'ID_ALLOW_')]", $NameSpace)
+
+        # Loop through the nodes to remove
+        foreach ($Node in $NodesToRemove) {
+            # Get the parent node of the node to remove
+            [System.Xml.XmlElement]$ParentNode = $Node.ParentNode
+  
+            # Check if the parent node has more than one child node, if it does then only remove the child node
+            if ($ParentNode.ChildNodes.Count -gt 1) {
+                # Remove the node from the parent node
+                $ParentNode.RemoveChild($Node) | Out-Null
+            }
+
+            # If the parent node only has one child node then replace the parent node with an empty node
+            else {
+                # Create a new node with the same name and namespace as the parent node
+                [System.Xml.XmlElement]$NewNode = $BlockRulesXML.CreateElement($ParentNode.Name, $ParentNode.NamespaceURI)
+                # Replace the parent node with the new node
+                $ParentNode.ParentNode.ReplaceChild($NewNode, $ParentNode) | Out-Null
+    
+                # Check if the new node has any sibling nodes, if not then replace its parent node with an empty node
+                # We do this because the built-in PowerShell cmdlets would throw errors if empty <FileRulesRef /> exists inside <ProductSigners> node
+                if ($null -eq $NewNode.PreviousSibling -and $null -eq $NewNode.NextSibling) {
+                
+                    # Get the grandparent node of the new node
+                    [System.Xml.XmlElement]$GrandParentNode = $NewNode.ParentNode
+                
+                    # Create a new node with the same name and namespace as the grandparent node
+                    [System.Xml.XmlElement]$NewGrandNode = $BlockRulesXML.CreateElement($GrandParentNode.Name, $GrandParentNode.NamespaceURI)
+                
+                    # Replace the grandparent node with the new node
+                    $GrandParentNode.ParentNode.ReplaceChild($NewGrandNode, $GrandParentNode) | Out-Null
+                }
+            }
+        }
+
+        # Save the modified XML content to a file
+        $BlockRulesXML.Save('.\Microsoft recommended block rules.xml') 
+
+        # Remove the audit mode rule option
+        Set-RuleOption -FilePath '.\Microsoft recommended block rules.xml' -Option 3 -Delete
+
+        # Set HVCI to Strict
+        Set-HVCIOptions -Strict -FilePath '.\Microsoft recommended block rules.xml'
+    }
+
+    End {
+        # Display the result
+        Write-ColorfulText -Color MintGreen -InputText 'PolicyFile = Microsoft recommended block rules.xml'
+    }
 }
 
 # Export external facing functions only, prevent internal functions from getting exported

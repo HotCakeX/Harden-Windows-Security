@@ -9,6 +9,15 @@ Function Remove-SupplementalSigners {
     Removes the entire SupplementalPolicySigners block
     and any Signer in Signers node that have the same ID as the SignerIds of the SupplementalPolicySigner(s) in <SupplementalPolicySigners>...</SupplementalPolicySigners> node
     from a CI policy XML file
+.NOTES
+    It doesn't do anything if the input policy file has no SupplementalPolicySigners block.
+    It will also always check if the Signers node is not empty, like
+   <Signers>     
+   </Signers>
+
+   if it is then it will close it: <Signers />
+
+   The function can run infinite number of times on the same file.
 .PARAMETER Path
     The path to the CI policy XML file
 .INPUTS

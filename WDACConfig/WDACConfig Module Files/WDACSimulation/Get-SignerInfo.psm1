@@ -129,14 +129,29 @@ Function Get-SignerInfo {
                 $EKUAndValuesCorrelation[$Signer.CertEKU.ID] | ForEach-Object -Process {
                     $EKUOIDs += Convert-HexToOID -Hex $_
                 }
+
+                # Get the EKU OIDs of the file's signer certificate (Leaf certificate)
+                [System.String[]]$FileEKUOIDs = (Get-AuthenticodeSignature -FilePath $SignedFilePath).SignerCertificate.EnhancedKeyUsageList.ObjectId
+
+                # Check if the array of EKU OIDs of the file's signer certificate contains all the EKU OIDs of the signer defined in the WDAC policy
+                if (-NOT ($EKUOIDs | Where-Object -FilterScript { $FileEKUOIDs -notcontains $_ })) {
+
+                    # Set the flag to indicate that the EKUs match
+                    [System.Boolean]$EKUsMatch = $true
+                }
+                else {
+                    # Set the flag to indicate that the EKUs don't match
+                    [System.Boolean]$EKUsMatch = $false
+                }
             }
             else {
                 [System.Boolean]$HasEKU = $false
                 [System.String[]]$EKUOIDs = '0'
+                [System.Boolean]$EKUsMatch = $false
             }
 
             # Create a new instance of the Signer class in the WDACConfig Namespace
-            [WDACConfig.Signer]$SignerObj = New-Object -TypeName WDACConfig.Signer -ArgumentList ($Signer.ID, $Signer.Name, $Signer.CertRoot.Value, $Signer.CertPublisher.Value, $HasEKU, $EKUOIDs)
+            [WDACConfig.Signer]$SignerObj = New-Object -TypeName WDACConfig.Signer -ArgumentList ($Signer.ID, $Signer.Name, $Signer.CertRoot.Value, $Signer.CertPublisher.Value, $HasEKU, $EKUOIDs, $EKUsMatch)
 
             # Add the Signer object to the output array
             $Output += $SignerObj

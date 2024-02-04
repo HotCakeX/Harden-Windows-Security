@@ -8,14 +8,18 @@ namespace WDACConfig
         public string Name { get; set; }
         public string CertRoot { get; set; }
         public string CertPublisher { get; set; }
+        public bool HasEKU { get; set; }
+        public string[] EKUOID { get; set; }
 
         // Adding a constructor to initialize the properties
-        public Signer(string id, string name, string certRoot, string certPublisher)
+        public Signer(string id, string name, string certRoot, string certPublisher, bool haseku, string[] ekuOID)
         {
             ID = id;
             Name = name;
             CertRoot = certRoot;
             CertPublisher = certPublisher;
+            HasEKU = haseku;
+            EKUOID = ekuOID;
         }
     }
 }

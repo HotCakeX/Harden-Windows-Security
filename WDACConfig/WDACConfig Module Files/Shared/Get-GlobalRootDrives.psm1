@@ -8,10 +8,10 @@ Function Get-GlobalRootDrives {
     .INPUTS
         None. You cannot pipe objects to this function.
     .OUTPUTS
-        System.Objects[]
+        System.Object[]
     #>
     [CmdletBinding()]
-    [OutputType([System.Objects[]])]
+    [OutputType([System.Object[]])]
     param ()
     # Importing the $PSDefaultParameterValues to the current session, prior to everything else
     . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"

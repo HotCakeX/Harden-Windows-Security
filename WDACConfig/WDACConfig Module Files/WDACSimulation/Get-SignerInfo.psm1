@@ -16,7 +16,8 @@ Function Get-SignerInfo {
     [CmdletBinding()]
     [OutputType([WDACConfig.Signer[]])]
     param(
-        [Parameter(Mandatory = $true)][System.IO.FileInfo]$XmlFilePath
+        [Parameter(Mandatory = $true)][System.IO.FileInfo]$XmlFilePath,
+        [parameter(Mandatory = $true)][System.IO.FileInfo]$SignedFilePath
     )
     begin {
         # Detecting if Verbose switch is used
@@ -25,12 +26,28 @@ Function Get-SignerInfo {
         # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
+        # Importing the required sub-modules
+        Write-Verbose -Message 'Importing the required sub-modules'
+        Import-Module -FullyQualifiedName "$ModuleRootPath\WDACSimulation\Convert-HexToOID.psm1" -Force
+
         # Load the XML file
-        $Xml = [System.Xml.XmlDocument](Get-Content -Path $XmlFilePath)
+        [System.Xml.XmlDocument]$Xml = Get-Content -Path $XmlFilePath
     }
     process {
         # Select the Signer nodes
         [System.Object[]]$Signers = $Xml.SiPolicy.Signers.Signer
+
+        # Select the EKU nodes if they exist
+        if ($Xml.SiPolicy.EKUs.EKU) {
+
+            # Create a hashtable to store the correlation between the EKU IDs and their values
+            [hashtable]$EKUAndValuesCorrelation = @{}
+
+            # Add the EKU IDs and their values to the hashtable
+            $Xml.SiPolicy.EKUs.EKU | ForEach-Object -Process {
+                $EKUAndValuesCorrelation.Add($_.ID, $_.Value)
+            }
+        }
 
         # Create an empty array to store the output
         [WDACConfig.Signer[]]$Output = @()
@@ -99,8 +116,26 @@ Function Get-SignerInfo {
                 }
             }
 
+            # Check if the Signer has an EKU
+            if ($Signer.CertEKU) {
+
+                # Flag indicating the signer has an EKU
+                [System.Boolean]$HasEKU = $true
+
+                # an array to store the EKU OIDs
+                [System.String[]]$EKUOIDs = @()
+
+                $EKUAndValuesCorrelation[$Signer.CertEKU.ID] | ForEach-Object -Process {
+                    $EKUOIDs += Convert-HexToOID -Hex $_
+                }
+            }
+            else {
+                [System.Boolean]$HasEKU = $false
+                [System.String[]]$EKUOIDs = '0'
+            }
+
             # Create a new instance of the Signer class in the WDACConfig Namespace
-            [WDACConfig.Signer]$SignerObj = New-Object -TypeName WDACConfig.Signer -ArgumentList ($Signer.ID, $Signer.Name, $Signer.CertRoot.Value, $Signer.CertPublisher.Value)
+            [WDACConfig.Signer]$SignerObj = New-Object -TypeName WDACConfig.Signer -ArgumentList ($Signer.ID, $Signer.Name, $Signer.CertRoot.Value, $Signer.CertPublisher.Value, $HasEKU, $EKUOIDs)
 
             # Add the Signer object to the output array
             $Output += $SignerObj

@@ -48,6 +48,8 @@ Function Remove-SupplementalSigners {
         # Check if the SupplementalPolicySigners node exists and has child nodes
         if ($SiPolicyNode.SupplementalPolicySigners -and $SiPolicyNode.SupplementalPolicySigners.HasChildNodes) {
 
+            Write-Verbose -Message 'Removing the SupplementalPolicySigners block and their corresponding Signers'
+
             # Select the SupplementalPolicySigners node using XPath and the namespace manager
             [System.Xml.XmlElement[]]$NodesToRemove_SupplementalPolicySigners = $SiPolicyNode.SelectNodes('//ns:SupplementalPolicySigners', $NameSpace)
 

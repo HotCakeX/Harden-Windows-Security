@@ -280,18 +280,20 @@ Function Remove-WDACConfig {
                 $CurrentStep++
                 Write-Progress -Id 18 -Activity 'Parsing the XML Policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                # Convert the XML file into an XML object
                 Write-Verbose -Message 'Converting the XML file to an XML object'
-                $Xml = [System.Xml.XmlDocument](Get-Content -Path $PolicyPath)
+                [System.Xml.XmlDocument]$Xml = Get-Content -Path $PolicyPath
 
-                # Extract the Policy ID from the XML object
                 Write-Verbose -Message 'Extracting the Policy ID from the XML object'
                 [System.String]$PolicyID = $Xml.SiPolicy.PolicyID
                 Write-Verbose -Message "The policy ID of the currently processing xml file is $PolicyID"
 
+                # Extracting the policy name from the selected XML policy file
+                [System.String]$PolicyName = ($Xml.SiPolicy.Settings.Setting | Where-Object -FilterScript { $_.provider -eq 'PolicyInfo' -and $_.valuename -eq 'Name' -and $_.key -eq 'Information' }).value.string
+
                 # Prevent users from accidentally attempting to remove policies that aren't even deployed on the system
                 Write-Verbose -Message 'Making sure the selected XML policy is deployed on the system'
                 [System.Guid[]]$CurrentPolicyIDs = ((&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { $_.IsSystemPolicy -ne 'True' }).policyID | ForEach-Object -Process { "{$_}" }
+
                 if ($CurrentPolicyIDs -notcontains $PolicyID) {
                     Throw 'The selected policy file is not deployed on the system.'
                 }
@@ -299,40 +301,12 @@ Function Remove-WDACConfig {
                 $CurrentStep++
                 Write-Progress -Id 18 -Activity 'Processing the policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                # Sanitize the policy file by removing SupplementalPolicySigners from it
-                Write-Verbose -Message 'Sanitizing the XML policy file by removing SupplementalPolicySigners from it'
-
-                # Extracting the SupplementalPolicySigner ID from the selected XML policy file, if any
-                $SuppSingerIDs = $Xml.SiPolicy.SupplementalPolicySigners.SupplementalPolicySigner.SignerId
-                # Extracting the policy name from the selected XML policy file
-                [System.String]$PolicyName = ($Xml.SiPolicy.Settings.Setting | Where-Object -FilterScript { $_.provider -eq 'PolicyInfo' -and $_.valuename -eq 'Name' -and $_.key -eq 'Information' }).value.string
-
-                if ($SuppSingerIDs) {
-                    Write-Verbose -Message "`n$($SuppSingerIDs.count) SupplementalPolicySigners have been found in $PolicyName policy, removing them now..."
-
-                    # Looping over each SupplementalPolicySigner and removing it
-                    $SuppSingerIDs | ForEach-Object -Process {
-                        $PolContent = Get-Content -Raw -Path $PolicyPath
-                        $PolContent -match "<Signer ID=`"$_`"[\S\s]*</Signer>" | Out-Null
-                        $PolContent = $PolContent -replace $Matches[0], ''
-                        Set-Content -Value $PolContent -Path $PolicyPath
-                    }
-
-                    # Removing the Supplemental policy signers block from the XML file
-                    $PolContent -match '<SupplementalPolicySigners>[\S\s]*</SupplementalPolicySigners>' | Out-Null
-                    $PolContent = $PolContent -replace $Matches[0], ''
-                    Set-Content -Value $PolContent -Path $PolicyPath -Force
-
-                    # Remove empty lines from the entire policy file
-                    (Get-Content -Path $PolicyPath) | Where-Object -FilterScript { $_.trim() -ne '' } | Set-Content -Path $PolicyPath -Force
-                    Write-Verbose -Message 'Policy successfully sanitized and all SupplementalPolicySigners have been removed.'
-                }
-                else {
-                    Write-Verbose -Message "`nNo sanitization required because no SupplementalPolicySigners have been found in $PolicyName policy."
-                }
+                Write-Verbose -Message 'Making sure SupplementalPolicySigners do not exist in the XML policy'
+                Remove-SupplementalSigners -Path $PolicyPath
 
                 # Adding policy rule option "Unsigned System Integrity Policy" to the selected XML policy file
                 Set-RuleOption -FilePath $PolicyPath -Option 6
+
                 # Converting the Policy XML file to CIP binary file
                 ConvertFrom-CIPolicy -XmlFilePath $PolicyPath -BinaryFilePath "$PolicyID.cip" | Out-Null
 
@@ -355,6 +329,7 @@ Function Remove-WDACConfig {
 
                 # Removing the unsigned CIP file
                 Remove-Item -Path ".\$PolicyID.cip" -Force
+
                 # Fixing the extension name of the newly signed CIP file
                 Rename-Item -Path "$PolicyID.cip.p7" -NewName "$PolicyID.cip" -Force
 
@@ -389,6 +364,7 @@ Function Remove-WDACConfig {
             # If names were supplied by user
             # Empty array to store Policy IDs based on the input name, this will take care of the situations where multiple policies with the same name are deployed
             [System.Object[]]$NameID = @()
+
             foreach ($PolicyName in $PolicyNames) {
                 $NameID += ((&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { ($_.IsOnDisk -eq 'True') -and ($_.FriendlyName -eq $PolicyName) }).PolicyID
             }

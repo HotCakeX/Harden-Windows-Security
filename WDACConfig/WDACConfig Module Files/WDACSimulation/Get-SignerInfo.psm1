@@ -122,9 +122,10 @@ Function Get-SignerInfo {
                 # Flag indicating the signer has an EKU
                 [System.Boolean]$HasEKU = $true
 
-                # an array to store the EKU OIDs
+                # an array to store the EKU OIDs of the signer (in case the signer has multiple EKUs)
                 [System.String[]]$EKUOIDs = @()
 
+                # Loop through each EKU ID (hex value) and convert it to an OID
                 $EKUAndValuesCorrelation[$Signer.CertEKU.ID] | ForEach-Object -Process {
                     $EKUOIDs += Convert-HexToOID -Hex $_
                 }

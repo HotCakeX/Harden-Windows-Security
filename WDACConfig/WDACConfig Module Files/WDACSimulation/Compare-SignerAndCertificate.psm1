@@ -47,14 +47,14 @@ Function Compare-SignerAndCertificate {
             HasEKU                    = $false
             EKUOID                    = @()
             EKUsMatch                 = $false
-            MatchCriteria             = @()
+            MatchCriteria             = ''
             CertSubjectCN             = ''
             CertIssuerCN              = ''
             CertNotAfter              = ''
             CertTBSValue              = ''
             CertRootMatch             = $false
             CertNameMatch             = $false
-            CertPublisherMatch        = $false            
+            CertPublisherMatch        = $false
             HasNestedCert             = $false
             NestedSignerID            = ''
             NestedSignerName          = ''
@@ -63,7 +63,7 @@ Function Compare-SignerAndCertificate {
             NestedHasEKU              = $false
             NestedEKUOID              = @()
             NestedEKUsMatch           = $false
-            NestedMatchCriteria       = @()
+            NestedMatchCriteria       = ''
             NestedCertSubjectCN       = ''
             NestedCertIssuerCN        = ''
             NestedCertNotAfter        = ''
@@ -137,7 +137,7 @@ Function Compare-SignerAndCertificate {
                     $CurrentFileInfo.HasEKU = $Signer.HasEKU
                     $CurrentFileInfo.EKUOID = $Signer.EKUOID
                     $CurrentFileInfo.EKUsMatch = $Signer.EKUsMatch
-                    $CurrentFileInfo.MatchCriteria = ('FilePublisher', 'Publisher')
+                    $CurrentFileInfo.MatchCriteria = 'FilePublisher/Publisher'
                     $CurrentFileInfo.CertSubjectCN = $Certificate.SubjectCN
                     $CurrentFileInfo.CertIssuerCN = $Certificate.IssuerCN
                     $CurrentFileInfo.CertNotAfter = $Certificate.NotAfter
@@ -163,7 +163,7 @@ Function Compare-SignerAndCertificate {
                     $CurrentFileInfo.HasEKU = $Signer.HasEKU
                     $CurrentFileInfo.EKUOID = $Signer.EKUOID
                     $CurrentFileInfo.EKUsMatch = $Signer.EKUsMatch
-                    $CurrentFileInfo.MatchCriteria = ('PcaCertificate', 'RootCertificate')
+                    $CurrentFileInfo.MatchCriteria = 'PcaCertificate/RootCertificate'
                     $CurrentFileInfo.CertSubjectCN = $Certificate.SubjectCN
                     $CurrentFileInfo.CertIssuerCN = $Certificate.IssuerCN
                     $CurrentFileInfo.CertNotAfter = $Certificate.NotAfter
@@ -189,7 +189,7 @@ Function Compare-SignerAndCertificate {
                     $CurrentFileInfo.HasEKU = $Signer.HasEKU
                     $CurrentFileInfo.EKUOID = $Signer.EKUOID
                     $CurrentFileInfo.EKUsMatch = $Signer.EKUsMatch
-                    $CurrentFileInfo.MatchCriteria = ('LeafCertificate')
+                    $CurrentFileInfo.MatchCriteria = 'LeafCertificate'
                     $CurrentFileInfo.CertSubjectCN = $PrimaryCertificateLeafDetails.SubjectCN
                     $CurrentFileInfo.CertIssuerCN = $PrimaryCertificateLeafDetails.IssuerCN
                     $CurrentFileInfo.CertNotAfter = $PrimaryCertificateLeafDetails.NotAfter
@@ -215,7 +215,7 @@ Function Compare-SignerAndCertificate {
                         $CurrentFileInfo.NestedHasEKU = $Signer.HasEKU
                         $CurrentFileInfo.NestedEKUOID = $Signer.EKUOID
                         $CurrentFileInfo.NestedEKUsMatch = $Signer.EKUsMatch
-                        $CurrentFileInfo.NestedMatchCriteria = ('FilePublisher', 'Publisher')            
+                        $CurrentFileInfo.NestedMatchCriteria = 'FilePublisher/Publisher'
                         $CurrentFileInfo.NestedCertSubjectCN = $NestedCertificate.SubjectCN
                         $CurrentFileInfo.NestedCertIssuerCN = $NestedCertificate.IssuerCN
                         $CurrentFileInfo.NestedCertNotAfter = $NestedCertificate.NotAfter
@@ -227,7 +227,7 @@ Function Compare-SignerAndCertificate {
 
                     # PcaCertificate, RootCertificate levels eligibility check
                     elseif (($Signer.CertRoot -eq $NestedCertificate.TBSValue) -and ($Signer.Name -eq $NestedCertificate.SubjectCN)) {
-                        
+
                         $CurrentFileInfo.NestedSignerID = $Signer.ID
                         $CurrentFileInfo.NestedSignerName = $Signer.Name
                         $CurrentFileInfo.NestedSignerCertRoot = $Signer.CertRoot
@@ -235,7 +235,7 @@ Function Compare-SignerAndCertificate {
                         $CurrentFileInfo.NestedHasEKU = $Signer.HasEKU
                         $CurrentFileInfo.NestedEKUOID = $Signer.EKUOID
                         $CurrentFileInfo.NestedEKUsMatch = $Signer.EKUsMatch
-                        $CurrentFileInfo.NestedMatchCriteria = ('PcaCertificate', 'RootCertificate')
+                        $CurrentFileInfo.NestedMatchCriteria = 'PcaCertificate/RootCertificate'
                         $CurrentFileInfo.NestedCertSubjectCN = $NestedCertificate.SubjectCN
                         $CurrentFileInfo.NestedCertIssuerCN = $NestedCertificate.IssuerCN
                         $CurrentFileInfo.NestedCertNotAfter = $NestedCertificate.NotAfter
@@ -255,7 +255,7 @@ Function Compare-SignerAndCertificate {
                         $CurrentFileInfo.NestedHasEKU = $Signer.HasEKU
                         $CurrentFileInfo.NestedEKUOID = $Signer.EKUOID
                         $CurrentFileInfo.NestedEKUsMatch = $Signer.EKUsMatch
-                        $CurrentFileInfo.NestedMatchCriteria = ('LeafCertificate')
+                        $CurrentFileInfo.NestedMatchCriteria = 'LeafCertificate'
                         $CurrentFileInfo.NestedCertSubjectCN = $NestedCertificateLeafDetails.SubjectCN
                         $CurrentFileInfo.NestedCertIssuerCN = $NestedCertificateLeafDetails.IssuerCN
                         $CurrentFileInfo.NestedCertNotAfter = $NestedCertificateLeafDetails.NotAfter
@@ -270,7 +270,7 @@ Function Compare-SignerAndCertificate {
     }
 
     End {
-        
+
         # if the file's primary signer is authorized at least by one criteria
         if ($CurrentFileInfo.MatchCriteria.Count -gt 0) {
 

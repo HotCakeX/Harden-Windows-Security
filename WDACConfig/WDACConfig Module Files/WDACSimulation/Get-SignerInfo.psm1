@@ -153,8 +153,11 @@ Function Get-SignerInfo {
             # Create a new instance of the Signer class in the WDACConfig Namespace
             [WDACConfig.Signer]$SignerObj = New-Object -TypeName WDACConfig.Signer -ArgumentList ($Signer.ID, $Signer.Name, $Signer.CertRoot.Value, $Signer.CertPublisher.Value, $HasEKU, $EKUOIDs, $EKUsMatch)
 
-            # Add the Signer object to the output array
-            $Output += $SignerObj
+            # Add the Signer object to the output array if it doesn't already exist with another ID, typically for files that are allowed in both User and Kernel mode signing scenarios so they have 2 identical signers with different IDs
+            if (-NOT ($Output | Where-Object { ($_.Name -eq $SignerObj.Name) -and ($_.CertRoot -eq $SignerObj.CertRoot) -and ($_.CertPublisher -eq $SignerObj.CertPublisher) -and ($_.HasEKU -eq $SignerObj.HasEKU) -and ($_.EKUOIDs -eq $SignerObj.EKUOIDs) -and ($_.EKUsMatch -eq $SignerObj.EKUsMatch) })) {
+
+                $Output += $SignerObj
+            }
         }
     }
     end {

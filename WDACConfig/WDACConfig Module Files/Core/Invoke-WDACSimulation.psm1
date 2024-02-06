@@ -85,6 +85,9 @@ Function Invoke-WDACSimulation {
         # Store the paths of Signed files with EKU mismatch
         [System.IO.FileInfo[]]$SignedButEKUMismatch = @()
 
+        # Store the paths of Signed files that are not allowed
+        [System.IO.FileInfo[]]$SignedButNotAllowed = @()
+
         # Store the paths of Unsigned files that are not allowed by hash
         [System.IO.FileInfo[]]$UnsignedNotAllowedFilePaths = @()
 
@@ -168,7 +171,7 @@ Function Invoke-WDACSimulation {
                             # If there is no comparison result then the file is not allowed by the policy
                             if (!$ComparisonResult) {
                                 Write-Verbose -Message 'The file is signed and valid, but not allowed by the policy'
-                                $SignedButUnknownFilePaths += $CurrentFilePath
+                                $SignedButNotAllowed += $CurrentFilePath
                             }
 
                             # If the file's signer requires the file to have specific EKU(s) but the file doesn't meet it
@@ -311,6 +314,22 @@ Function Invoke-WDACSimulation {
                 # Convert the hash table to a PSObject and add it to the output array
                 $MegaOutputObject += New-Object -TypeName PSObject -Property $Object
             }
+        }        
+
+        if ($SignedButNotAllowed) {
+            Write-Verbose -Message 'Looping through the array of signed files that are not allowed'
+            Write-Verbose -Message "$($SignedButNotAllowed.count) File(s) are signed but NOT allowed." -Verbose
+            foreach ($Path in $SignedButNotAllowed) {
+                # Create a hash table with the file path and source properties
+                [System.Collections.Hashtable]$Object = @{
+                    FilePath     = $Path
+                    Source       = 'Signer'
+                    Permission   = 'Not Allowed'
+                    IsAuthorized = $false
+                }
+                # Convert the hash table to a PSObject and add it to the output array
+                $MegaOutputObject += New-Object -TypeName PSObject -Property $Object
+            }
         }
 
         if ($SignedButEKUMismatch) {
@@ -369,7 +388,7 @@ Function Invoke-WDACSimulation {
                 [System.Collections.Hashtable]$Object = @{
                     FilePath     = $Path
                     Source       = 'Unsigned'
-                    Permission   = 'Not Allowed - Not Signed'
+                    Permission   = 'Not Allowed'
                     IsAuthorized = $false
                 }
                 # Convert the hash table to a PSObject and add it to the output array
@@ -446,6 +465,13 @@ Function Invoke-WDACSimulation {
 .SYNOPSIS
     Simulates the deployment of the WDAC policy. It returns an object that contains the file path, source, permission, and whether the file is allowed or not.
     You can use the object returned by this cmdlet to filter the results and perform other checks.
+
+    Properties explanation:
+   
+    FilePath:       The path of the file
+    Source:         The source of the file's permission, e.g., 'Signer' (For signed files only), 'Hash' (For signed and unsigned files), 'Unsigned' (For unsigned files only)
+    Permission:     Consists of 2 parts, e.g., 'Allowed - Hash Level', the first part displays whether the file is allowed or not, and the second part displays the reason why the file is allowed or not. The 2nd part doesn't exist if the file is not allowed without any reason.
+    IsAuthorized:   A boolean value that indicates whether the file is allowed or not.
 .LINK
     https://github.com/HotCakeX/Harden-Windows-Security/wiki/Invoke-WDACSimulation
 .DESCRIPTION

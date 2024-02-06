@@ -170,21 +170,21 @@ Function Get-SignerInfo {
                 Throw "The signer with ID $($Signer.ID) is not allowed in any of the signing scenarios defined in the WDAC policy."
             }
 
-            # Determine the type of the signer, if it points to a file then it uses FilePublisher level
+            # Determine whether the signer has a FileAttribRef, if it points to a file then it uses FilePublisher level
             if ($Signer.FileAttribRef.RuleID) {
-                [System.String]$SignerType = 'HasFileAttrib'
+                [System.Boolean]$HasFileAttrib = $true
 
-                # If the signer has a FilaAttrib but there is no file rule that points to it, then throw an error
+                # If the signer has a FilaAttrib but there is no file rule in the policy XML file that points to it, then throw an error
                 if (($Signer.FileAttribRef.RuleID -notin $FileAttribIDs)) {
                     Throw "The signer with ID $($Signer.ID) has a file attribute but is not allowed in any of the file rules defined in the WDAC policy."
                 }
             }
             else {
-                [System.String]$SignerType = 'NoFileAttrib'
+                [System.Boolean]$HasFileAttrib = $false
             }
 
             # Create a new instance of the Signer class in the WDACConfig Namespace
-            [WDACConfig.Signer]$SignerObj = New-Object -TypeName WDACConfig.Signer -ArgumentList ($Signer.ID, $Signer.Name, $Signer.CertRoot.Value, $Signer.CertPublisher.Value, $HasEKU, $EKUOIDs, $EKUsMatch, $SignerScope, $SignerType)
+            [WDACConfig.Signer]$SignerObj = New-Object -TypeName WDACConfig.Signer -ArgumentList ($Signer.ID, $Signer.Name, $Signer.CertRoot.Value, $Signer.CertPublisher.Value, $HasEKU, $EKUOIDs, $EKUsMatch, $SignerScope, $HasFileAttrib)
 
             # Add the Signer object to the output array if it doesn't already exist with another ID, typically for files that are allowed in both User and Kernel mode signing scenarios so they have 2 identical signers with different IDs
             if (-NOT ($Output | Where-Object { ($_.Name -eq $SignerObj.Name) -and ($_.CertRoot -eq $SignerObj.CertRoot) -and ($_.CertPublisher -eq $SignerObj.CertPublisher) -and ($_.HasEKU -eq $SignerObj.HasEKU) -and ($_.EKUOIDs -eq $SignerObj.EKUOIDs) -and ($_.EKUsMatch -eq $SignerObj.EKUsMatch) })) {

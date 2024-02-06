@@ -47,6 +47,8 @@ Function Compare-SignerAndCertificate {
             HasEKU                    = $false
             EKUOID                    = @()
             EKUsMatch                 = $false
+            SignerScope               = ''
+            HasFileAttrib             = $false
             MatchCriteria             = ''
             CertSubjectCN             = ''
             CertIssuerCN              = ''
@@ -63,6 +65,8 @@ Function Compare-SignerAndCertificate {
             NestedHasEKU              = $false
             NestedEKUOID              = @()
             NestedEKUsMatch           = $false
+            NestedSignerScope         = ''
+            NestedHasFileAttrib       = $false
             NestedMatchCriteria       = ''
             NestedCertSubjectCN       = ''
             NestedCertIssuerCN        = ''
@@ -137,6 +141,8 @@ Function Compare-SignerAndCertificate {
                     $CurrentFileInfo.HasEKU = $Signer.HasEKU
                     $CurrentFileInfo.EKUOID = $Signer.EKUOID
                     $CurrentFileInfo.EKUsMatch = $Signer.EKUsMatch
+                    $CurrentFileInfo.SignerScope = $Signer.SignerScope
+                    $CurrentFileInfo.HasFileAttrib = $Signer.HasFileAttrib
                     $CurrentFileInfo.MatchCriteria = 'FilePublisher/Publisher'
                     $CurrentFileInfo.CertSubjectCN = $Certificate.SubjectCN
                     $CurrentFileInfo.CertIssuerCN = $Certificate.IssuerCN
@@ -163,6 +169,8 @@ Function Compare-SignerAndCertificate {
                     $CurrentFileInfo.HasEKU = $Signer.HasEKU
                     $CurrentFileInfo.EKUOID = $Signer.EKUOID
                     $CurrentFileInfo.EKUsMatch = $Signer.EKUsMatch
+                    $CurrentFileInfo.SignerScope = $Signer.SignerScope
+                    $CurrentFileInfo.HasFileAttrib = $Signer.HasFileAttrib
                     $CurrentFileInfo.MatchCriteria = 'PcaCertificate/RootCertificate'
                     $CurrentFileInfo.CertSubjectCN = $Certificate.SubjectCN
                     $CurrentFileInfo.CertIssuerCN = $Certificate.IssuerCN
@@ -190,6 +198,8 @@ Function Compare-SignerAndCertificate {
                     $CurrentFileInfo.EKUOID = $Signer.EKUOID
                     $CurrentFileInfo.EKUsMatch = $Signer.EKUsMatch
                     $CurrentFileInfo.MatchCriteria = 'LeafCertificate'
+                    $CurrentFileInfo.SignerScope = $Signer.SignerScope
+                    $CurrentFileInfo.HasFileAttrib = $Signer.HasFileAttrib
                     $CurrentFileInfo.CertSubjectCN = $PrimaryCertificateLeafDetails.SubjectCN
                     $CurrentFileInfo.CertIssuerCN = $PrimaryCertificateLeafDetails.IssuerCN
                     $CurrentFileInfo.CertNotAfter = $PrimaryCertificateLeafDetails.NotAfter
@@ -215,6 +225,8 @@ Function Compare-SignerAndCertificate {
                         $CurrentFileInfo.NestedHasEKU = $Signer.HasEKU
                         $CurrentFileInfo.NestedEKUOID = $Signer.EKUOID
                         $CurrentFileInfo.NestedEKUsMatch = $Signer.EKUsMatch
+                        $CurrentFileInfo.NestedSignerScope = $Signer.SignerScope
+                        $CurrentFileInfo.NestedHasFileAttrib = $Signer.HasFileAttrib
                         $CurrentFileInfo.NestedMatchCriteria = 'FilePublisher/Publisher'
                         $CurrentFileInfo.NestedCertSubjectCN = $NestedCertificate.SubjectCN
                         $CurrentFileInfo.NestedCertIssuerCN = $NestedCertificate.IssuerCN
@@ -235,6 +247,8 @@ Function Compare-SignerAndCertificate {
                         $CurrentFileInfo.NestedHasEKU = $Signer.HasEKU
                         $CurrentFileInfo.NestedEKUOID = $Signer.EKUOID
                         $CurrentFileInfo.NestedEKUsMatch = $Signer.EKUsMatch
+                        $CurrentFileInfo.NestedSignerScope = $Signer.SignerScope
+                        $CurrentFileInfo.NestedHasFileAttrib = $Signer.HasFileAttrib
                         $CurrentFileInfo.NestedMatchCriteria = 'PcaCertificate/RootCertificate'
                         $CurrentFileInfo.NestedCertSubjectCN = $NestedCertificate.SubjectCN
                         $CurrentFileInfo.NestedCertIssuerCN = $NestedCertificate.IssuerCN
@@ -255,6 +269,8 @@ Function Compare-SignerAndCertificate {
                         $CurrentFileInfo.NestedHasEKU = $Signer.HasEKU
                         $CurrentFileInfo.NestedEKUOID = $Signer.EKUOID
                         $CurrentFileInfo.NestedEKUsMatch = $Signer.EKUsMatch
+                        $CurrentFileInfo.NestedSignerScope = $Signer.SignerScope
+                        $CurrentFileInfo.NestedHasFileAttrib = $Signer.HasFileAttrib
                         $CurrentFileInfo.NestedMatchCriteria = 'LeafCertificate'
                         $CurrentFileInfo.NestedCertSubjectCN = $NestedCertificateLeafDetails.SubjectCN
                         $CurrentFileInfo.NestedCertIssuerCN = $NestedCertificateLeafDetails.IssuerCN
@@ -271,14 +287,26 @@ Function Compare-SignerAndCertificate {
 
     End {
 
-        # if the file's primary signer is authorized at least by one criteria
-        if ($CurrentFileInfo.MatchCriteria.Count -gt 0) {
+        # if the file's primary signer is authorized at least by one criteria and its criteria is not empty
+        if (-NOT ([System.String]::IsNullOrWhiteSpace($CurrentFileInfo.MatchCriteria))) {
+
+            # If the signer has FileAttrib indicating that it was generated with FilePublisher rule, but the criteria is not FilePublisher/Publisher
+            if ($CurrentFileInfo.HasFileAttrib -eq $true -and ($CurrentFileInfo.MatchCriteria -ne 'FilePublisher/Publisher')) {
+                Write-Verbose -Message "The file's primary signer is authorized and has FileAttrib but the criteria is not FilePublisher/Publisher"
+                break
+            }
 
             # If the file has a nested signer
             if ($CurrentFileInfo.HasNestedCert -eq $true) {
 
-                # If the nested signer is authorized at least by one criteria
-                if ($CurrentFileInfo.NestedMatchCriteria.Count -gt 0) {
+                # If the nested signer is authorized at least by one criteria and its criteria is not empty
+                if (-NOT ([System.String]::IsNullOrWhiteSpace($CurrentFileInfo.NestedMatchCriteria))) {
+
+                    # If the signer has FileAttrib indicating that it was generated with FilePublisher rule, but the criteria is not FilePublisher/Publisher
+                    if ($CurrentFileInfo.HasFileAttrib -eq $true -and ($CurrentFileInfo.MatchCriteria -ne 'FilePublisher/Publisher')) {
+                        Write-Verbose -Message "The file's Nested signer is authorized and has FileAttrib but the criteria is not FilePublisher/Publisher"
+                        break
+                    }
 
                     # Return the comparison result of the given file
                     Return $CurrentFileInfo

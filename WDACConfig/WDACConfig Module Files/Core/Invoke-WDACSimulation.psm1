@@ -169,7 +169,8 @@ Function Invoke-WDACSimulation {
                             $ComparisonResult = Compare-SignerAndCertificate -XmlFilePath $XmlFilePath -SignedFilePath $CurrentFilePath
 
                             # If there is no comparison result then the file is not allowed by the policy
-                            if (!$ComparisonResult) {
+                            if (([System.String]::IsNullOrWhiteSpace($ComparisonResult))) {
+                                
                                 Write-Verbose -Message 'The file is signed and valid, but not allowed by the policy'
                                 $SignedButNotAllowed += $CurrentFilePath
                             }

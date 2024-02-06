@@ -1,3 +1,5 @@
+using System;
+
 // Used by WDAC Simulations
 namespace WDACConfig
 {
@@ -13,9 +15,11 @@ namespace WDACConfig
         public bool EKUsMatch { get; set; }
         public string SignerScope { get; set; }
         public bool HasFileAttrib { get; set; }
+        public string FileAttribName { get; set; }
+        public Version FileAttribMinimumVersion { get; set; }
 
         // Adding a constructor to initialize the properties
-        public Signer(string id, string name, string certRoot, string certPublisher, bool haseku, string[] ekuOID, bool ekusMatch, string signerScope, bool hasFileAttrib)
+        public Signer(string id, string name, string certRoot, string certPublisher, bool haseku, string[] ekuOID, bool ekusMatch, string signerScope, bool hasFileAttrib, string fileAttribName, Version fileAttribMinimumVersion)
         {
             ID = id;
             Name = name;
@@ -26,6 +30,8 @@ namespace WDACConfig
             EKUsMatch = ekusMatch;
             SignerScope = signerScope;
             HasFileAttrib = hasFileAttrib;
+            FileAttribName = fileAttribName;
+            FileAttribMinimumVersion = fileAttribMinimumVersion;
         }
     }
 }

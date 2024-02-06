@@ -6,12 +6,16 @@ Function Get-SignerInfo {
     <#
     .SYNOPSIS
         Function that takes an XML file path as input and returns an array of Signer objects
+        The output contains as much info as possible about the signer
     .INPUTS
         System.IO.FileInfo
     .OUTPUTS
         WDACConfig.Signer[]
     .PARAMETER XmlFilePath
         The XML file path that the user selected for WDAC simulation.
+    .PARAMETER SignedFilePath
+        The signed file path that the user selected for WDAC simulation
+        This is used for cross-referencing some of the signers' properties with the file's properties
     #>
     [CmdletBinding()]
     [OutputType([WDACConfig.Signer[]])]
@@ -50,7 +54,7 @@ Function Get-SignerInfo {
         if ($Xml.SiPolicy.EKUs.EKU) {
 
             # Create a hashtable to store the correlation between the EKU IDs and their values
-            [hashtable]$EKUAndValuesCorrelation = @{}
+            [System.Collections.Hashtable]$EKUAndValuesCorrelation = @{}
 
             # Add the EKU IDs and their values to the hashtable
             $Xml.SiPolicy.EKUs.EKU | ForEach-Object -Process {
@@ -167,26 +171,40 @@ Function Get-SignerInfo {
                 [System.String]$SignerScope = 'KernelMode'
             }
             else {
-                Throw "The signer with ID $($Signer.ID) is not allowed in any of the signing scenarios defined in the WDAC policy."
+                Write-Warning -Message "The signer with ID $($Signer.ID) is not allowed in any of the signing scenarios defined in the WDAC policy. The policy XML file may be corrupted."
             }
 
             # Determine whether the signer has a FileAttribRef, if it points to a file then it uses FilePublisher level
             if ($Signer.FileAttribRef.RuleID) {
-                [System.Boolean]$HasFileAttrib = $true
 
                 # If the signer has a FilaAttrib but there is no file rule in the policy XML file that points to it, then throw an error
                 if (($Signer.FileAttribRef.RuleID -notin $FileAttribIDs)) {
-                    Throw "The signer with ID $($Signer.ID) has a file attribute but is not allowed in any of the file rules defined in the WDAC policy."
+                    Write-Warning -Message "The signer with ID $($Signer.ID) has a file attribute but is not allowed in any of the file rules defined in the WDAC policy. The policy XML file may be corrupted."
                 }
+
+                [System.Boolean]$HasFileAttrib = $true
+
+                # Get the corresponding file rule's name if it exists
+                [System.String]$FileAttribName = ($Xml.SiPolicy.FileRules.FileAttrib | Where-Object -FilterScript { $_.ID -eq $Signer.FileAttribRef.RuleID }).FileName
+
+                # Get the corresponding file rule's minimum version
+                [System.Version]$FileAttribMinimumVersion = ($Xml.SiPolicy.FileRules.FileAttrib | Where-Object -FilterScript { $_.ID -eq $Signer.FileAttribRef.RuleID }).MinimumFileVersion
             }
             else {
                 [System.Boolean]$HasFileAttrib = $false
+
+                # If the corresponding file rule's name doesn't exist then set it to N/A
+                [System.String]$FileAttribName = 'N/A'
+
+                # If the corresponding file rule's minimum version doesn't exist then set it to '0.0.0.0'
+                [System.Version]$FileAttribMinimumVersion = '0.0.0.0'
             }
 
             # Create a new instance of the Signer class in the WDACConfig Namespace
-            [WDACConfig.Signer]$SignerObj = New-Object -TypeName WDACConfig.Signer -ArgumentList ($Signer.ID, $Signer.Name, $Signer.CertRoot.Value, $Signer.CertPublisher.Value, $HasEKU, $EKUOIDs, $EKUsMatch, $SignerScope, $HasFileAttrib)
+            [WDACConfig.Signer]$SignerObj = New-Object -TypeName WDACConfig.Signer -ArgumentList ($Signer.ID, $Signer.Name, $Signer.CertRoot.Value, $Signer.CertPublisher.Value, $HasEKU, $EKUOIDs, $EKUsMatch, $SignerScope, $HasFileAttrib, $FileAttribName, $FileAttribMinimumVersion)
 
             # Add the Signer object to the output array if it doesn't already exist with another ID, typically for files that are allowed in both User and Kernel mode signing scenarios so they have 2 identical signers with different IDs
+            # Does not affect the simulation outcome because the signers and their related file rules are identical and it's up to the WDAC engine and native cmdlets whether a file is considered kernel mode or user mode
             if (-NOT ($Output | Where-Object { ($_.Name -eq $SignerObj.Name) -and ($_.CertRoot -eq $SignerObj.CertRoot) -and ($_.CertPublisher -eq $SignerObj.CertPublisher) -and ($_.HasEKU -eq $SignerObj.HasEKU) -and ($_.EKUOIDs -eq $SignerObj.EKUOIDs) -and ($_.EKUsMatch -eq $SignerObj.EKUsMatch) })) {
 
                 $Output += $SignerObj

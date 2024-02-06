@@ -7,6 +7,8 @@ Function Compare-SignerAndCertificate {
     .SYNOPSIS
         A function that takes a WDAC policy XML file path and a Signed file path as inputs and compares the output of the Get-SignerInfo and Get-CertificateDetails functions
         Also checks if the file has nested (2nd) signer and will process it accordingly
+
+        Only returns the result if the file is authorized by the policy using one of the singers
     .INPUTS
         System.IO.FileInfo
     .OUTPUTS
@@ -40,42 +42,46 @@ Function Compare-SignerAndCertificate {
 
         # An ordered hashtable that holds the details of the current file
         $CurrentFileInfo = [ordered]@{
-            SignerID                  = ''
-            SignerName                = ''
-            SignerCertRoot            = ''
-            SignerCertPublisher       = ''
-            HasEKU                    = $false
-            EKUOID                    = @()
-            EKUsMatch                 = $false
-            SignerScope               = ''
-            HasFileAttrib             = $false
-            MatchCriteria             = ''
-            CertSubjectCN             = ''
-            CertIssuerCN              = ''
-            CertNotAfter              = ''
-            CertTBSValue              = ''
-            CertRootMatch             = $false
-            CertNameMatch             = $false
-            CertPublisherMatch        = $false
-            HasNestedCert             = $false
-            NestedSignerID            = ''
-            NestedSignerName          = ''
-            NestedSignerCertRoot      = ''
-            NestedSignerCertPublisher = ''
-            NestedHasEKU              = $false
-            NestedEKUOID              = @()
-            NestedEKUsMatch           = $false
-            NestedSignerScope         = ''
-            NestedHasFileAttrib       = $false
-            NestedMatchCriteria       = ''
-            NestedCertSubjectCN       = ''
-            NestedCertIssuerCN        = ''
-            NestedCertNotAfter        = ''
-            NestedCertTBSValue        = ''
-            NestedCertRootMatch       = $false
-            NestedCertNameMatch       = $false
-            NestedCertPublisherMatch  = $false
-            FilePath                  = $SignedFilePath
+            SignerID                       = ''
+            SignerName                     = ''
+            SignerCertRoot                 = ''
+            SignerCertPublisher            = ''
+            HasEKU                         = $false
+            EKUOID                         = @()
+            EKUsMatch                      = $false
+            SignerScope                    = ''
+            HasFileAttrib                  = $false
+            FileAttribName                 = ''
+            FileAttribMinimumVersion       = ''
+            MatchCriteria                  = ''
+            CertSubjectCN                  = ''
+            CertIssuerCN                   = ''
+            CertNotAfter                   = ''
+            CertTBSValue                   = ''
+            CertRootMatch                  = $false
+            CertNameMatch                  = $false
+            CertPublisherMatch             = $false
+            HasNestedCert                  = $false
+            NestedSignerID                 = ''
+            NestedSignerName               = ''
+            NestedSignerCertRoot           = ''
+            NestedSignerCertPublisher      = ''
+            NestedHasEKU                   = $false
+            NestedEKUOID                   = @()
+            NestedEKUsMatch                = $false
+            NestedSignerScope              = ''
+            NestedHasFileAttrib            = $false
+            NestedFileAttribName           = ''
+            NestedFileAttribMinimumVersion = ''
+            NestedMatchCriteria            = ''
+            NestedCertSubjectCN            = ''
+            NestedCertIssuerCN             = ''
+            NestedCertNotAfter             = ''
+            NestedCertTBSValue             = ''
+            NestedCertRootMatch            = $false
+            NestedCertNameMatch            = $false
+            NestedCertPublisherMatch       = $false
+            FilePath                       = $SignedFilePath
         }
 
         # Get details of the intermediate and leaf certificates of the primary certificate of the signed file
@@ -143,6 +149,8 @@ Function Compare-SignerAndCertificate {
                     $CurrentFileInfo.EKUsMatch = $Signer.EKUsMatch
                     $CurrentFileInfo.SignerScope = $Signer.SignerScope
                     $CurrentFileInfo.HasFileAttrib = $Signer.HasFileAttrib
+                    $CurrentFileInfo.FileAttribName = $Signer.FileAttribName
+                    $CurrentFileInfo.FileAttribMinimumVersion = $Signer.FileAttribMinimumVersion
                     $CurrentFileInfo.MatchCriteria = 'FilePublisher/Publisher'
                     $CurrentFileInfo.CertSubjectCN = $Certificate.SubjectCN
                     $CurrentFileInfo.CertIssuerCN = $Certificate.IssuerCN
@@ -171,6 +179,8 @@ Function Compare-SignerAndCertificate {
                     $CurrentFileInfo.EKUsMatch = $Signer.EKUsMatch
                     $CurrentFileInfo.SignerScope = $Signer.SignerScope
                     $CurrentFileInfo.HasFileAttrib = $Signer.HasFileAttrib
+                    $CurrentFileInfo.FileAttribName = $Signer.FileAttribName
+                    $CurrentFileInfo.FileAttribMinimumVersion = $Signer.FileAttribMinimumVersion
                     $CurrentFileInfo.MatchCriteria = 'PcaCertificate/RootCertificate'
                     $CurrentFileInfo.CertSubjectCN = $Certificate.SubjectCN
                     $CurrentFileInfo.CertIssuerCN = $Certificate.IssuerCN
@@ -197,6 +207,8 @@ Function Compare-SignerAndCertificate {
                     $CurrentFileInfo.HasEKU = $Signer.HasEKU
                     $CurrentFileInfo.EKUOID = $Signer.EKUOID
                     $CurrentFileInfo.EKUsMatch = $Signer.EKUsMatch
+                    $CurrentFileInfo.FileAttribName = $Signer.FileAttribName
+                    $CurrentFileInfo.FileAttribMinimumVersion = $Signer.FileAttribMinimumVersion
                     $CurrentFileInfo.MatchCriteria = 'LeafCertificate'
                     $CurrentFileInfo.SignerScope = $Signer.SignerScope
                     $CurrentFileInfo.HasFileAttrib = $Signer.HasFileAttrib
@@ -227,6 +239,8 @@ Function Compare-SignerAndCertificate {
                         $CurrentFileInfo.NestedEKUsMatch = $Signer.EKUsMatch
                         $CurrentFileInfo.NestedSignerScope = $Signer.SignerScope
                         $CurrentFileInfo.NestedHasFileAttrib = $Signer.HasFileAttrib
+                        $CurrentFileInfo.NestedFileAttribName = $Signer.FileAttribName
+                        $CurrentFileInfo.NestedFileAttribMinimumVersion = $Signer.FileAttribMinimumVersion
                         $CurrentFileInfo.NestedMatchCriteria = 'FilePublisher/Publisher'
                         $CurrentFileInfo.NestedCertSubjectCN = $NestedCertificate.SubjectCN
                         $CurrentFileInfo.NestedCertIssuerCN = $NestedCertificate.IssuerCN
@@ -249,6 +263,8 @@ Function Compare-SignerAndCertificate {
                         $CurrentFileInfo.NestedEKUsMatch = $Signer.EKUsMatch
                         $CurrentFileInfo.NestedSignerScope = $Signer.SignerScope
                         $CurrentFileInfo.NestedHasFileAttrib = $Signer.HasFileAttrib
+                        $CurrentFileInfo.NestedFileAttribName = $Signer.FileAttribName
+                        $CurrentFileInfo.NestedFileAttribMinimumVersion = $Signer.FileAttribMinimumVersion
                         $CurrentFileInfo.NestedMatchCriteria = 'PcaCertificate/RootCertificate'
                         $CurrentFileInfo.NestedCertSubjectCN = $NestedCertificate.SubjectCN
                         $CurrentFileInfo.NestedCertIssuerCN = $NestedCertificate.IssuerCN
@@ -271,6 +287,8 @@ Function Compare-SignerAndCertificate {
                         $CurrentFileInfo.NestedEKUsMatch = $Signer.EKUsMatch
                         $CurrentFileInfo.NestedSignerScope = $Signer.SignerScope
                         $CurrentFileInfo.NestedHasFileAttrib = $Signer.HasFileAttrib
+                        $CurrentFileInfo.NestedFileAttribName = $Signer.FileAttribName
+                        $CurrentFileInfo.NestedFileAttribMinimumVersion = $Signer.FileAttribMinimumVersion
                         $CurrentFileInfo.NestedMatchCriteria = 'LeafCertificate'
                         $CurrentFileInfo.NestedCertSubjectCN = $NestedCertificateLeafDetails.SubjectCN
                         $CurrentFileInfo.NestedCertIssuerCN = $NestedCertificateLeafDetails.IssuerCN
@@ -290,10 +308,49 @@ Function Compare-SignerAndCertificate {
         # if the file's primary signer is authorized at least by one criteria and its criteria is not empty
         if (-NOT ([System.String]::IsNullOrWhiteSpace($CurrentFileInfo.MatchCriteria))) {
 
-            # If the signer has FileAttrib indicating that it was generated with FilePublisher rule, but the criteria is not FilePublisher/Publisher
-            if ($CurrentFileInfo.HasFileAttrib -eq $true -and ($CurrentFileInfo.MatchCriteria -ne 'FilePublisher/Publisher')) {
-                Write-Verbose -Message "The file's primary signer is authorized and has FileAttrib but the criteria is not FilePublisher/Publisher"
-                break
+            Write-Verbose -Message "The primary signer is authorized by the criteria: $($CurrentFileInfo.MatchCriteria) by the following SignerID: $($CurrentFileInfo.SignerID)"
+
+            # If the signer has FileAttrib indicating that it was generated with FilePublisher rule
+            if ($CurrentFileInfo.HasFileAttrib -eq $true) {
+
+                # but the criteria is not FilePublisher/Publisher
+                if ($CurrentFileInfo.MatchCriteria -ne 'FilePublisher/Publisher') {
+                    Write-Verbose -Message "The file's primary signer is authorized and has FileAttrib but the criteria is not FilePublisher/Publisher"
+                    Return
+                }
+
+                # If the signer's FileAttribName is not empty and it's not 'N/A' which is a place holder assigned by the Get-SignerInfo function if the file doesn't have OriginalFileName attribute
+                if ((-NOT ([System.String]::IsNullOrWhiteSpace($CurrentFileInfo.FileAttribName))) -or ( $CurrentFileInfo.FileAttribName -ne 'N/A')) {
+
+                    # and it is not equal to the file's name then the file is not authorized
+                    if ($CurrentFileInfo.FilePath.Name -ne $CurrentFileInfo.FileAttribName) {
+                        Write-Verbose -Message 'The file is not authorized because the FileAttribName does not match the file name'
+                        Return
+                    }
+                }
+                else {
+                    # If the signer's FileAttribName is empty then there is no need to perform other checks. Maybe the file doesn't have OriginalFileName attribute
+                }
+
+                # If the signer's FileAttribMinimumVersion is not '0.0.0.0' which is either set by WDAC if version can't be determined or it's set by Get-SignerInfo function if version does not exist, as a place holder
+                if (($CurrentFileInfo.FileAttribMinimumVersion -ne '0.0.0.0')) {
+
+                    # If the file's version is not empty
+                    if (-NOT ([System.String]::IsNullOrWhiteSpace((Get-Item -Path $CurrentFileInfo.FilePath).VersionInfo.FileVersIonRaw)) ) {
+
+                        # If the file's version is less than the FileAttribMinimumVersion then the file is not authorized
+                        if (-NOT ([System.Version]::Parse((Get-Item -Path $CurrentFileInfo.FilePath).VersionInfo.FileVersIonRaw) -ge [System.Version]::Parse($CurrentFileInfo.FileAttribMinimumVersion))) {
+                            Write-Verbose -Message 'The file is not authorized because the FileAttribMinimumVersion is greater than the file version'
+                            Return
+                        }
+                    }
+                    else {
+                        # If the file's version is empty then there is no need to perform other checks. Maybe the file doesn't have Version attribute
+                    }
+                }
+            }
+            else {
+                # If the signer doesn't have FileAttrib then no need to perform other checks since the signer wasn't generated based on FilePublisher level
             }
 
             # If the file has a nested signer
@@ -302,24 +359,68 @@ Function Compare-SignerAndCertificate {
                 # If the nested signer is authorized at least by one criteria and its criteria is not empty
                 if (-NOT ([System.String]::IsNullOrWhiteSpace($CurrentFileInfo.NestedMatchCriteria))) {
 
-                    # If the signer has FileAttrib indicating that it was generated with FilePublisher rule, but the criteria is not FilePublisher/Publisher
-                    if ($CurrentFileInfo.HasFileAttrib -eq $true -and ($CurrentFileInfo.MatchCriteria -ne 'FilePublisher/Publisher')) {
-                        Write-Verbose -Message "The file's Nested signer is authorized and has FileAttrib but the criteria is not FilePublisher/Publisher"
-                        break
+                    Write-Verbose -Message "The nested signer is authorized by the criteria: $($CurrentFileInfo.NestedMatchCriteria) by the following SignerID: $($CurrentFileInfo.NestedSignerID)"
+
+                    # If the signer has FileAttrib indicating that it was generated with FilePublisher rule
+                    if ($CurrentFileInfo.NestedHasFileAttrib -eq $true) {
+
+                        # but the criteria is not FilePublisher/Publisher
+                        if ($CurrentFileInfo.NestedMatchCriteria -ne 'FilePublisher/Publisher') {
+                            Write-Verbose -Message "The file's Nested signer is authorized and has FileAttrib but the criteria is not FilePublisher/Publisher"
+                            Return
+                        }
                     }
 
-                    # Return the comparison result of the given file
+                    # If the Nested signer's FileAttribName is not empty and it's not 'N/A' which is a place holder assigned by the Get-SignerInfo function if the file doesn't have OriginalFileName attribute
+                    if ((-NOT ([System.String]::IsNullOrWhiteSpace($CurrentFileInfo.NestedFileAttribName))) -and ( $CurrentFileInfo.NestedFileAttribName -ne 'N/A')) {
+
+                        # and it is not equal to the file's name then the file is not authorized
+                        if ($CurrentFileInfo.FilePath.Name -ne $CurrentFileInfo.NestedFileAttribName) {
+                            Write-Verbose -Message 'The file is not authorized by the nested signer because the FileAttribName does not match the file name'
+                            Return
+                        }
+                    }
+                    else {
+                        # If the nested signer's FileAttribName is empty then there is no need to perform other checks. Maybe the file doesn't have OriginalFileName attribute
+                    }
+
+                    # If the nested signer's FileAttribMinimumVersion is not empty and it's not '0.0.0.0' which is either set by WDAC if version can't be determined or it's set by Get-SignerInfo function if version does not exist, as a place holder
+                    if ((-NOT ([System.String]::IsNullOrWhiteSpace($CurrentFileInfo.NestedFileAttribMinimumVersion))) -and ($CurrentFileInfo.NestedFileAttribMinimumVersion -ne '0.0.0.0')) {
+
+                        # If the file's version is not empty
+                        if (-NOT ([System.String]::IsNullOrWhiteSpace((Get-Item -Path $CurrentFileInfo.FilePath).VersionInfo.FileVersIonRaw)) ) {
+
+                            # If the file's version is less than the FileAttribMinimumVersion then the file is not authorized
+                            if (-NOT ([System.Version]::Parse((Get-Item -Path $CurrentFileInfo.FilePath).VersionInfo.FileVersIonRaw) -ge [System.Version]::Parse($CurrentFileInfo.NestedFileAttribMinimumVersion))) {
+                                Write-Verbose -Message 'The file is not authorized by the nested signer because the FileAttribMinimumVersion is greater than the file version'
+                                Return
+                            }
+                        }
+                        else {
+                            # If the file's version is empty then there is no need to perform other checks. Maybe the file doesn't have Version attribute
+                        }
+                    }
+
+                    else {
+                        # If the nested signer doesn't have FileAttrib then no need to perform other checks since the nested signer wasn't generated based on FilePublisher level
+                    }
+
+                    # Return the comparison result of the given file after all the checks have been passed for both primary and nested signers
                     Return $CurrentFileInfo
 
                 }
                 else {
                     Write-Verbose -Message "The file's primary signer is authorized but the nested signer is not authorized"
+                    Return
                 }
             }
             else {
-                # Return the comparison result of the given file
+                # Return the comparison result of the given file if there is no nested signer
                 Return $CurrentFileInfo
             }
+        }
+        else {
+            # Do nothing since the file's primary signer is not authorized, let alone the nested signer
         }
     }
 }

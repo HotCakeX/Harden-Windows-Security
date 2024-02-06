@@ -81,7 +81,7 @@ Function Get-CertificateDetails {
             [System.Boolean]$Result = $Cert.Verify()
 
             if ($Result -ne $true) {
-                Write-Verbose -Message "WARNING: The certificate $($Cert.Subject) is not valid"
+                Write-Verbose -Message "WARNING: The certificate $($Cert.Subject) could not be validated."
             }
 
             # Loop through all chain elements and display all certificates

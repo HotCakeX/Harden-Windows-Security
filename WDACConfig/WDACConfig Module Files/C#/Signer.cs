@@ -12,9 +12,10 @@ namespace WDACConfig
         public string[] EKUOID { get; set; }
         public bool EKUsMatch { get; set; }
         public string SignerScope { get; set; }
+        public string SignerType { get; set; }
 
         // Adding a constructor to initialize the properties
-        public Signer(string id, string name, string certRoot, string certPublisher, bool haseku, string[] ekuOID, bool ekusMatch, string signerScope)
+        public Signer(string id, string name, string certRoot, string certPublisher, bool haseku, string[] ekuOID, bool ekusMatch, string signerScope, string signerType)
         {
             ID = id;
             Name = name;
@@ -24,6 +25,7 @@ namespace WDACConfig
             EKUOID = ekuOID;
             EKUsMatch = ekusMatch;
             SignerScope = signerScope;
+            SignerType = signerType;
         }
     }
 }

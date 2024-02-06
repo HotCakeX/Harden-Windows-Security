@@ -185,26 +185,25 @@ Function Get-SignerInfo {
                     }
                 }
 
+                # Flag indicating the signer has a FileAttribRef
                 [System.Boolean]$HasFileAttrib = $true
 
-                # Get the corresponding file rule's name if it exists
-                [System.String]$FileAttribName = ($Xml.SiPolicy.FileRules.FileAttrib | Where-Object -FilterScript { $_.ID -eq $Signer.FileAttribRef.RuleID }).FileName
+                # an array to store the FileAttribRef IDs of the signer
+                [System.String[]]$SignerFileAttributeIDs = $Signer.FileAttribRef.RuleID
 
-                # Get the corresponding file rule's minimum version
-                [System.Version]$FileAttribMinimumVersion = ($Xml.SiPolicy.FileRules.FileAttrib | Where-Object -FilterScript { $_.ID -eq $Signer.FileAttribRef.RuleID }).MinimumFileVersion
             }
             else {
+                # Flag indicating the signer has no FileAttribRef
                 [System.Boolean]$HasFileAttrib = $false
+            }
 
-                # If the corresponding file rule's name doesn't exist then set it to N/A
-                [System.String]$FileAttribName = 'N/A'
-
-                # If the corresponding file rule's minimum version doesn't exist then set it to '0.0.0.0'
-                [System.Version]$FileAttribMinimumVersion = '0.0.0.0'
+            # If the signer has no FileAttribRef, then set it to N/A
+            if ([System.String]::IsNullOrWhiteSpace($SignerFileAttributeIDs)) {
+                $SignerFileAttributeIDs = 'N/A'
             }
 
             # Create a new instance of the Signer class in the WDACConfig Namespace
-            [WDACConfig.Signer]$SignerObj = New-Object -TypeName WDACConfig.Signer -ArgumentList ($Signer.ID, $Signer.Name, $Signer.CertRoot.Value, $Signer.CertPublisher.Value, $HasEKU, $EKUOIDs, $EKUsMatch, $SignerScope, $HasFileAttrib, $FileAttribName, $FileAttribMinimumVersion)
+            [WDACConfig.Signer]$SignerObj = New-Object -TypeName WDACConfig.Signer -ArgumentList ($Signer.ID, $Signer.Name, $Signer.CertRoot.Value, $Signer.CertPublisher.Value, $HasEKU, $EKUOIDs, $EKUsMatch, $SignerScope, $HasFileAttrib, $SignerFileAttributeIDs)
 
             # Add the Signer object to the output array if it doesn't already exist with another ID, typically for files that are allowed in both User and Kernel mode signing scenarios so they have 2 identical signers with different IDs
             # Does not affect the simulation outcome because the signers and their related file rules are identical and it's up to the WDAC engine and native cmdlets whether a file is considered kernel mode or user mode

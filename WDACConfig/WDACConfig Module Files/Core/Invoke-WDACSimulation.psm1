@@ -64,8 +64,11 @@ Function Invoke-WDACSimulation {
     }
 
     process {
-        # Store the file paths of valid Allowed Signed files - FilePublisher and Publisher levels
-        [System.IO.FileInfo[]]$SignedFile_PublisherAndFilePublisher_FilePaths = @()
+        # Store the file paths of valid Allowed Signed files - FilePublisher level
+        [System.IO.FileInfo[]]$SignedFile_FilePublisher_FilePaths = @()
+
+        # Store the file paths of valid Allowed Signed files - Publisher level
+        [System.IO.FileInfo[]]$SignedFile_Publisher_FilePaths = @()
 
         # Store the file paths of valid Allowed Signed files - PcaCertificate and RootCertificate levels
         [System.IO.FileInfo[]]$SignedFile_PcaCertificateAndRootCertificate_FilePaths = @()
@@ -186,13 +189,22 @@ Function Invoke-WDACSimulation {
                             else {
 
                                 :Level2SwitchLabel switch ($ComparisonResult.MatchCriteria) {
-                                    'FilePublisher/Publisher' {
-                                        Write-Verbose -Message 'The file is signed and valid, and allowed by the policy using FilePublisher/Publisher levels'
+                                    'FilePublisher' {
+                                        Write-Verbose -Message 'The file is signed and valid, and allowed by the policy using FilePublisher level'
 
-                                        $SignedFile_PublisherAndFilePublisher_FilePaths += $CurrentFilePath
+                                        $SignedFile_FilePublisher_FilePaths += $CurrentFilePath
 
                                         break Level2SwitchLabel
                                     }
+
+                                    'Publisher' {
+                                        Write-Verbose -Message 'The file is signed and valid, and allowed by the policy using Publisher level'
+
+                                        $SignedFile_Publisher_FilePaths += $CurrentFilePath
+
+                                        break Level2SwitchLabel
+                                    }
+
                                     'PcaCertificate/RootCertificate' {
                                         Write-Verbose -Message 'The file is signed and valid, and allowed by the policy using PcaCertificate/RootCertificate levels'
 
@@ -270,15 +282,31 @@ Function Invoke-WDACSimulation {
             }
         }
 
-        if ($SignedFile_PublisherAndFilePublisher_FilePaths) {
-            Write-Verbose -Message 'Looping through the array of files allowed by valid signature - FilePublisher/Publisher Levels'
-            Write-Verbose -Message "$($SignedFile_PublisherAndFilePublisher_FilePaths.count) File(s) are allowed by FilePublisher/Publisher signer levels." -Verbose
-            foreach ($Path in $SignedFile_PublisherAndFilePublisher_FilePaths) {
+        if ($SignedFile_FilePublisher_FilePaths) {
+            Write-Verbose -Message 'Looping through the array of files allowed by valid signature - FilePublisher Level'
+            Write-Verbose -Message "$($SignedFile_FilePublisher_FilePaths.count) File(s) are allowed by FilePublisher signer level." -Verbose
+            foreach ($Path in $SignedFile_FilePublisher_FilePaths) {
                 # Create a hash table with the file path and source properties
                 [System.Collections.Hashtable]$Object = @{
                     FilePath     = $Path
                     Source       = 'Signer'
-                    Permission   = 'Allowed - FilePublisher / Publisher Level'
+                    Permission   = 'Allowed - FilePublisher Level'
+                    IsAuthorized = $true
+                }
+                # Convert the hash table to a PSObject and add it to the output array
+                $MegaOutputObject += New-Object -TypeName PSObject -Property $Object
+            }
+        }
+
+        if ($SignedFile_Publisher_FilePaths) {
+            Write-Verbose -Message 'Looping through the array of files allowed by valid signature - Publisher Level'
+            Write-Verbose -Message "$($SignedFile_Publisher_FilePaths.count) File(s) are allowed by Publisher signer level." -Verbose
+            foreach ($Path in $SignedFile_Publisher_FilePaths) {
+                # Create a hash table with the file path and source properties
+                [System.Collections.Hashtable]$Object = @{
+                    FilePath     = $Path
+                    Source       = 'Signer'
+                    Permission   = 'Allowed - Publisher Level'
                     IsAuthorized = $true
                 }
                 # Convert the hash table to a PSObject and add it to the output array

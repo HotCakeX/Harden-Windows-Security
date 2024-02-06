@@ -233,6 +233,7 @@ To get help and syntax on PowerShell console, type:
         'Shared\Get-KernelModeDriversAudit.psm1',
         'Shared\Copy-CiRules.psm1',
         'Shared\Remove-SupplementalSigners.psm1',
+        'Shared\Get-ExtendedFileInfo.psm1',
         'WDACSimulation\Get-TBSCertificate.psm1',
         'WDACSimulation\Get-SignerInfo.psm1',
         'WDACSimulation\Get-SignedFileCertificates.psm1',

@@ -159,6 +159,7 @@ Function Invoke-WDACSimulation {
                 }
                 # If the file's hash does not exist in the supplied XML file, then check its signature
                 else {
+
                     # Get the status of file's signature
                     :MainSwitchLabel switch ((Get-AuthenticodeSignature -FilePath $CurrentFilePath).Status) {
 
@@ -170,7 +171,7 @@ Function Invoke-WDACSimulation {
 
                             # If there is no comparison result then the file is not allowed by the policy
                             if (([System.String]::IsNullOrWhiteSpace($ComparisonResult))) {
-                                
+
                                 Write-Verbose -Message 'The file is signed and valid, but not allowed by the policy'
                                 $SignedButNotAllowed += $CurrentFilePath
                             }

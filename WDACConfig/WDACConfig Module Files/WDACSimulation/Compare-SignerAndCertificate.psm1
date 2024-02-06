@@ -322,24 +322,32 @@ Function Compare-SignerAndCertificate {
                 # If the signer's FileAttribName is not empty and it's not 'N/A' which is a place holder assigned by the Get-SignerInfo function if the file doesn't have OriginalFileName attribute
                 if ((-NOT ([System.String]::IsNullOrWhiteSpace($CurrentFileInfo.FileAttribName))) -or ( $CurrentFileInfo.FileAttribName -ne 'N/A')) {
 
-                    # and it is not equal to the file's name then the file is not authorized
-                    if ($CurrentFileInfo.FilePath.Name -ne $CurrentFileInfo.FileAttribName) {
-                        Write-Verbose -Message 'The file is not authorized because the FileAttribName does not match the file name'
+                    # If the file has original file name attribute
+                    if (-NOT ([System.String]::IsNullOrWhiteSpace((Get-Item -Path $CurrentFileInfo.FilePath).VersionInfo.OriginalFilename)) ) {
+
+                        # If the file's original name is not equal to the FileAttribName then the file is not authorized
+                        if ((Get-Item -Path $CurrentFileInfo.FilePath).VersionInfo.OriginalFilename -ne $CurrentFileInfo.FileAttribName) {
+                            Write-Verbose -Message "The file is not authorized because the FileAttribName does not match the file's OriginalFilename attribute"
+                            Return
+                        }
+                    }
+                    else {
+                        Write-Verbose -Message 'The file is not authorized because it does not have an OriginalFilename attribute. The signer requires one.'
                         Return
                     }
                 }
                 else {
-                    # If the signer's FileAttribName is empty then there is no need to perform other checks. Maybe the file doesn't have OriginalFileName attribute
+                    # If the signer's FileAttribName is empty then there is no need to perform other checks. Maybe file's OriginalFilename wasn't considered for file rule
                 }
 
-                # If the signer's FileAttribMinimumVersion is not '0.0.0.0' which is either set by WDAC if version can't be determined or it's set by Get-SignerInfo function if version does not exist, as a place holder
-                if (($CurrentFileInfo.FileAttribMinimumVersion -ne '0.0.0.0')) {
+                # If the signer's FileAttribMinimumVersion is not empty and is not '0.0.0.0' which is either set by WDAC if version can't be determined or it's set by Get-SignerInfo function if version does not exist, as a place holder
+                if ((-NOT ([System.String]::IsNullOrWhiteSpace($CurrentFileInfo.FileAttribMinimumVersion))) -and ($CurrentFileInfo.FileAttribMinimumVersion -ne '0.0.0.0')) {
 
                     # If the file's version is not empty
-                    if (-NOT ([System.String]::IsNullOrWhiteSpace((Get-Item -Path $CurrentFileInfo.FilePath).VersionInfo.FileVersIonRaw)) ) {
+                    if (-NOT ([System.String]::IsNullOrWhiteSpace((Get-Item -Path $CurrentFileInfo.FilePath).VersionInfo.FileVersionRaw)) ) {
 
                         # If the file's version is less than the FileAttribMinimumVersion then the file is not authorized
-                        if (-NOT ([System.Version]::Parse((Get-Item -Path $CurrentFileInfo.FilePath).VersionInfo.FileVersIonRaw) -ge [System.Version]::Parse($CurrentFileInfo.FileAttribMinimumVersion))) {
+                        if (-NOT ([System.Version]::Parse((Get-Item -Path $CurrentFileInfo.FilePath).VersionInfo.FileVersionRaw) -ge [System.Version]::Parse($CurrentFileInfo.FileAttribMinimumVersion))) {
                             Write-Verbose -Message 'The file is not authorized because the FileAttribMinimumVersion is greater than the file version'
                             Return
                         }
@@ -361,7 +369,7 @@ Function Compare-SignerAndCertificate {
 
                     Write-Verbose -Message "The nested signer is authorized by the criteria: $($CurrentFileInfo.NestedMatchCriteria) by the following SignerID: $($CurrentFileInfo.NestedSignerID)"
 
-                    # If the signer has FileAttrib indicating that it was generated with FilePublisher rule
+                    # If the nested signer has FileAttrib indicating that it was generated with FilePublisher rule
                     if ($CurrentFileInfo.NestedHasFileAttrib -eq $true) {
 
                         # but the criteria is not FilePublisher/Publisher
@@ -369,45 +377,51 @@ Function Compare-SignerAndCertificate {
                             Write-Verbose -Message "The file's Nested signer is authorized and has FileAttrib but the criteria is not FilePublisher/Publisher"
                             Return
                         }
-                    }
 
-                    # If the Nested signer's FileAttribName is not empty and it's not 'N/A' which is a place holder assigned by the Get-SignerInfo function if the file doesn't have OriginalFileName attribute
-                    if ((-NOT ([System.String]::IsNullOrWhiteSpace($CurrentFileInfo.NestedFileAttribName))) -and ( $CurrentFileInfo.NestedFileAttribName -ne 'N/A')) {
+                        # If the Nested signer's FileAttribName is not empty and it's not 'N/A' which is a place holder assigned by the Get-SignerInfo function if the file doesn't have OriginalFileName attribute
+                        if ((-NOT ([System.String]::IsNullOrWhiteSpace($CurrentFileInfo.NestedFileAttribName))) -and ($CurrentFileInfo.NestedFileAttribName -ne 'N/A')) {
 
-                        # and it is not equal to the file's name then the file is not authorized
-                        if ($CurrentFileInfo.FilePath.Name -ne $CurrentFileInfo.NestedFileAttribName) {
-                            Write-Verbose -Message 'The file is not authorized by the nested signer because the FileAttribName does not match the file name'
-                            Return
-                        }
-                    }
-                    else {
-                        # If the nested signer's FileAttribName is empty then there is no need to perform other checks. Maybe the file doesn't have OriginalFileName attribute
-                    }
+                            # If the file has original file name attribute
+                            if (-NOT ([System.String]::IsNullOrWhiteSpace((Get-Item -Path $CurrentFileInfo.FilePath).VersionInfo.OriginalFilename))) {
 
-                    # If the nested signer's FileAttribMinimumVersion is not empty and it's not '0.0.0.0' which is either set by WDAC if version can't be determined or it's set by Get-SignerInfo function if version does not exist, as a place holder
-                    if ((-NOT ([System.String]::IsNullOrWhiteSpace($CurrentFileInfo.NestedFileAttribMinimumVersion))) -and ($CurrentFileInfo.NestedFileAttribMinimumVersion -ne '0.0.0.0')) {
-
-                        # If the file's version is not empty
-                        if (-NOT ([System.String]::IsNullOrWhiteSpace((Get-Item -Path $CurrentFileInfo.FilePath).VersionInfo.FileVersIonRaw)) ) {
-
-                            # If the file's version is less than the FileAttribMinimumVersion then the file is not authorized
-                            if (-NOT ([System.Version]::Parse((Get-Item -Path $CurrentFileInfo.FilePath).VersionInfo.FileVersIonRaw) -ge [System.Version]::Parse($CurrentFileInfo.NestedFileAttribMinimumVersion))) {
-                                Write-Verbose -Message 'The file is not authorized by the nested signer because the FileAttribMinimumVersion is greater than the file version'
+                                # If the file's original name is not equal to the NestedFileAttribName then the file is not authorized
+                                if ((Get-Item -Path $CurrentFileInfo.FilePath).VersionInfo.OriginalFilename -ne $CurrentFileInfo.NestedFileAttribName) {
+                                    Write-Verbose -Message "The file is not authorized by the nested signer because the NestedFileAttribName does not match the file's OriginalFilename attribute"
+                                    Return
+                                }
+                            }
+                            else {
+                                Write-Verbose -Message 'The file is not authorized because it does not have an OriginalFilename attribute. The signer requires one.'
                                 Return
                             }
                         }
                         else {
-                            # If the file's version is empty then there is no need to perform other checks. Maybe the file doesn't have Version attribute
+                            # If the nested signer's FileAttribName is empty then there is no need to perform other checks. Maybe file's version wasn't considered for file rule
+                        }
+
+                        # If the nested signer's FileAttribMinimumVersion is not empty and it's not '0.0.0.0' which is either set by WDAC if version can't be determined or it's set by Get-SignerInfo function if version does not exist, as a place holder
+                        if ((-NOT ([System.String]::IsNullOrWhiteSpace($CurrentFileInfo.NestedFileAttribMinimumVersion))) -and ($CurrentFileInfo.NestedFileAttribMinimumVersion -ne '0.0.0.0')) {
+
+                            # If the file's version is not empty
+                            if (-NOT ([System.String]::IsNullOrWhiteSpace((Get-Item -Path $CurrentFileInfo.FilePath).VersionInfo.FileVersionRaw)) ) {
+
+                                # If the file's version is less than the FileAttribMinimumVersion then the file is not authorized
+                                if (-NOT ([System.Version]::Parse((Get-Item -Path $CurrentFileInfo.FilePath).VersionInfo.FileVersionRaw) -ge [System.Version]::Parse($CurrentFileInfo.NestedFileAttribMinimumVersion))) {
+                                    Write-Verbose -Message 'The file is not authorized by the nested signer because the NestedFileAttribMinimumVersion is greater than the file version'
+                                    Return
+                                }
+                            }
+                            else {
+                                # If the file's version is empty then there is no need to perform other checks. Maybe the file doesn't have Version attribute
+                            }
                         }
                     }
-
                     else {
                         # If the nested signer doesn't have FileAttrib then no need to perform other checks since the nested signer wasn't generated based on FilePublisher level
                     }
 
                     # Return the comparison result of the given file after all the checks have been passed for both primary and nested signers
                     Return $CurrentFileInfo
-
                 }
                 else {
                     Write-Verbose -Message "The file's primary signer is authorized but the nested signer is not authorized"

@@ -314,7 +314,7 @@ Function Invoke-WDACSimulation {
                 # Convert the hash table to a PSObject and add it to the output array
                 $MegaOutputObject += New-Object -TypeName PSObject -Property $Object
             }
-        }        
+        }
 
         if ($SignedButNotAllowed) {
             Write-Verbose -Message 'Looping through the array of signed files that are not allowed'
@@ -467,7 +467,7 @@ Function Invoke-WDACSimulation {
     You can use the object returned by this cmdlet to filter the results and perform other checks.
 
     Properties explanation:
-   
+
     FilePath:       The path of the file
     Source:         The source of the file's permission, e.g., 'Signer' (For signed files only), 'Hash' (For signed and unsigned files), 'Unsigned' (For unsigned files only)
     Permission:     Consists of 2 parts, e.g., 'Allowed - Hash Level', the first part displays whether the file is allowed or not, and the second part displays the reason why the file is allowed or not. The 2nd part doesn't exist if the file is not allowed without any reason.

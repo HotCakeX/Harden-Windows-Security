@@ -320,14 +320,14 @@ Function Compare-SignerAndCertificate {
                 }
 
                 # If the signer's FileAttribName is not empty and it's not 'N/A' which is a place holder assigned by the Get-SignerInfo function if the file doesn't have OriginalFileName attribute
-                if ((-NOT ([System.String]::IsNullOrWhiteSpace($CurrentFileInfo.FileAttribName))) -or ( $CurrentFileInfo.FileAttribName -ne 'N/A')) {
+                if ((-NOT ([System.String]::IsNullOrWhiteSpace($CurrentFileInfo.FileAttribName))) -or ($CurrentFileInfo.FileAttribName -ne 'N/A')) {
 
                     # If the file has original file name attribute
                     if (-NOT ([System.String]::IsNullOrWhiteSpace((Get-Item -Path $CurrentFileInfo.FilePath).VersionInfo.OriginalFilename)) ) {
 
                         # If the file's original name is not equal to the FileAttribName then the file is not authorized
                         if ((Get-Item -Path $CurrentFileInfo.FilePath).VersionInfo.OriginalFilename -ne $CurrentFileInfo.FileAttribName) {
-                            Write-Verbose -Message "The file is not authorized because the FileAttribName does not match the file's OriginalFilename attribute"
+                            Write-Verbose -Message "The file is not authorized because the FileAttribName '$($CurrentFileInfo.FileAttribName)' does not match the file's OriginalFilename attribute '$((Get-Item -Path $CurrentFileInfo.FilePath).VersionInfo.OriginalFilename)'"
                             Return
                         }
                     }
@@ -386,7 +386,7 @@ Function Compare-SignerAndCertificate {
 
                                 # If the file's original name is not equal to the NestedFileAttribName then the file is not authorized
                                 if ((Get-Item -Path $CurrentFileInfo.FilePath).VersionInfo.OriginalFilename -ne $CurrentFileInfo.NestedFileAttribName) {
-                                    Write-Verbose -Message "The file is not authorized by the nested signer because the NestedFileAttribName does not match the file's OriginalFilename attribute"
+                                    Write-Verbose -Message "The file is not authorized by the nested signer because the NestedFileAttribName '$($CurrentFileInfo.NestedFileAttribName)' does not match the file's OriginalFilename attribute '$((Get-Item -Path $CurrentFileInfo.FilePath).VersionInfo.OriginalFilename)'"
                                     Return
                                 }
                             }

@@ -177,9 +177,12 @@ Function Get-SignerInfo {
             # Determine whether the signer has a FileAttribRef, if it points to a file then it uses FilePublisher level
             if ($Signer.FileAttribRef.RuleID) {
 
-                # If the signer has a FilaAttrib but there is no file rule in the policy XML file that points to it, then throw an error
-                if (($Signer.FileAttribRef.RuleID -notin $FileAttribIDs)) {
-                    Write-Warning -Message "The signer with ID $($Signer.ID) has a file attribute but is not allowed in any of the file rules defined in the WDAC policy. The policy XML file may be corrupted."
+                # If the signer has FilaAttrib(s) but there is no file rule in the policy XML file that points to it, then display a warning
+                # Using a loop here for when there are multiple FileAttribRef nodes assigned to a single signer
+                $Signer.FileAttribRef.RuleID | ForEach-Object {
+                    if ($_ -notin $FileAttribIDs) {
+                        Write-Warning -Message "The signer with ID $($Signer.ID) has a file attribute but is not allowed in any of the file rules defined in the WDAC policy. The policy XML file may be corrupted."
+                    }
                 }
 
                 [System.Boolean]$HasFileAttrib = $true

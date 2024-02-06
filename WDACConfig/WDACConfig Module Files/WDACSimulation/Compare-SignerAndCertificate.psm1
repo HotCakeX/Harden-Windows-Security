@@ -320,7 +320,7 @@ Function Compare-SignerAndCertificate {
                 }
 
                 # If the signer's FileAttribName is not empty and it's not 'N/A' which is a place holder assigned by the Get-SignerInfo function if the file doesn't have OriginalFileName attribute
-                if ((-NOT ([System.String]::IsNullOrWhiteSpace($CurrentFileInfo.FileAttribName))) -or ($CurrentFileInfo.FileAttribName -ne 'N/A')) {
+                if ((-NOT ([System.String]::IsNullOrWhiteSpace($CurrentFileInfo.FileAttribName))) -and ($CurrentFileInfo.FileAttribName -ne 'N/A')) {
 
                     # If the file has original file name attribute
                     if (-NOT ([System.String]::IsNullOrWhiteSpace((Get-Item -Path $CurrentFileInfo.FilePath).VersionInfo.OriginalFilename)) ) {
@@ -329,6 +329,9 @@ Function Compare-SignerAndCertificate {
                         if ((Get-Item -Path $CurrentFileInfo.FilePath).VersionInfo.OriginalFilename -ne $CurrentFileInfo.FileAttribName) {
                             Write-Verbose -Message "The file is not authorized because the FileAttribName '$($CurrentFileInfo.FileAttribName)' does not match the file's OriginalFilename attribute '$((Get-Item -Path $CurrentFileInfo.FilePath).VersionInfo.OriginalFilename)'"
                             Return
+                        }
+                        else {
+                            Write-Verbose -Message "The FileAttribName '$($CurrentFileInfo.FileAttribName)' matches the file's OriginalFilename attribute '$((Get-Item -Path $CurrentFileInfo.FilePath).VersionInfo.OriginalFilename)'"
                         }
                     }
                     else {
@@ -350,6 +353,9 @@ Function Compare-SignerAndCertificate {
                         if (-NOT ([System.Version]::Parse((Get-Item -Path $CurrentFileInfo.FilePath).VersionInfo.FileVersionRaw) -ge [System.Version]::Parse($CurrentFileInfo.FileAttribMinimumVersion))) {
                             Write-Verbose -Message 'The file is not authorized because the FileAttribMinimumVersion is greater than the file version'
                             Return
+                        }
+                        else {
+                            Write-Verbose -Message "The file's version '$((Get-Item -Path $CurrentFileInfo.FilePath).VersionInfo.FileVersionRaw)' is greater than or equal to the FileAttribMinimumVersion '$($CurrentFileInfo.FileAttribMinimumVersion)'"
                         }
                     }
                     else {
@@ -389,6 +395,9 @@ Function Compare-SignerAndCertificate {
                                     Write-Verbose -Message "The file is not authorized by the nested signer because the NestedFileAttribName '$($CurrentFileInfo.NestedFileAttribName)' does not match the file's OriginalFilename attribute '$((Get-Item -Path $CurrentFileInfo.FilePath).VersionInfo.OriginalFilename)'"
                                     Return
                                 }
+                                else {
+                                    Write-Verbose -Message "The NestedFileAttribName '$($CurrentFileInfo.NestedFileAttribName)' matches the file's OriginalFilename attribute '$((Get-Item -Path $CurrentFileInfo.FilePath).VersionInfo.OriginalFilename)'"
+                                }
                             }
                             else {
                                 Write-Verbose -Message 'The file is not authorized because it does not have an OriginalFilename attribute. The signer requires one.'
@@ -409,6 +418,9 @@ Function Compare-SignerAndCertificate {
                                 if (-NOT ([System.Version]::Parse((Get-Item -Path $CurrentFileInfo.FilePath).VersionInfo.FileVersionRaw) -ge [System.Version]::Parse($CurrentFileInfo.NestedFileAttribMinimumVersion))) {
                                     Write-Verbose -Message 'The file is not authorized by the nested signer because the NestedFileAttribMinimumVersion is greater than the file version'
                                     Return
+                                }
+                                else {
+                                    Write-Verbose -Message "The file's version '$((Get-Item -Path $CurrentFileInfo.FilePath).VersionInfo.FileVersionRaw)' is greater than or equal to the NestedFileAttribMinimumVersion '$($CurrentFileInfo.NestedFileAttribMinimumVersion)'"
                                 }
                             }
                             else {

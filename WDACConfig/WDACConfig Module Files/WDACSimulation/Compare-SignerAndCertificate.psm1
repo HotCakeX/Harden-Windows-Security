@@ -8,7 +8,7 @@ Function Compare-SignerAndCertificate {
         A function that takes a WDAC policy XML file path and a Signed file path as inputs and compares the output of the Get-SignerInfo and Get-CertificateDetails functions
         Also checks if the file has nested (2nd) signer and will process it accordingly
 
-        Only returns the result if the file is authorized by the policy using one of the singers
+        Only returns the result if the file is authorized by the policy using one of the signers
     .INPUTS
         System.IO.FileInfo
     .OUTPUTS
@@ -136,7 +136,7 @@ Function Compare-SignerAndCertificate {
 
     Process {
 
-        # Loop through each signer in the signer information array, These are the singers in the XML policy file
+        # Loop through each signer in the signer information array, These are the signers in the XML policy file
         foreach ($Signer in $SignerInfo) {
 
             # Loop through each of the file's primary signer certificate's intermediate certificates
@@ -174,7 +174,7 @@ Function Compare-SignerAndCertificate {
                                     Write-Verbose -Message "The SpecificFileNameLevel is $KeyItem"
 
                                     # If there was a match then assign the $KeyItem which is the name of the SpecificFileNameLevel option to the $CurrentFileInfo.SpecificFileNameLevelMatchCriteria
-                                    # And break out of the loop by validating the singer as suitable for FilePublisher level
+                                    # And break out of the loop by validating the signer as suitable for FilePublisher level
 
                                     $CurrentFileInfo.SignerID = $Signer.ID
                                     $CurrentFileInfo.SignerName = $Signer.Name
@@ -305,7 +305,7 @@ Function Compare-SignerAndCertificate {
                                         Write-Verbose -Message "The SpecificFileNameLevel is $KeyItem"
 
                                         # If there was a match then assign the $KeyItem which is the name of the SpecificFileNameLevel option to the $CurrentFileInfo.SpecificFileNameLevelMatchCriteria
-                                        # And break out of the loop by validating the singer as suitable for FilePublisher level
+                                        # And break out of the loop by validating the signer as suitable for FilePublisher level
 
                                         $CurrentFileInfo.NestedSignerID = $Signer.ID
                                         $CurrentFileInfo.NestedSignerName = $Signer.Name

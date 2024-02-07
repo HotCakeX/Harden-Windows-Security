@@ -175,7 +175,7 @@ Function Invoke-WDACSimulation {
                 # So here we prioritize being authorized by file hash over being authorized by Signature
                 try {
                     Write-Verbose -Message 'Using Get-AppLockerFileInformation to retrieve the hashes of the file'
-                    [System.String]$CurrentFilePathHash = (Get-AppLockerFileInformation -LiteralPath $CurrentFilePath -ErrorAction Stop).hash -replace 'SHA256 0x', ''
+                    [System.String]$CurrentFilePathHash = (Get-AppLockerFileInformation -Path $CurrentFilePath -ErrorAction Stop).hash -replace 'SHA256 0x', ''
                 }
                 catch {
                     Write-Verbose -Message 'Get-AppLockerFileInformation failed, using New-CIPolicyRule cmdlet...'

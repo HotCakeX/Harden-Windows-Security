@@ -66,6 +66,9 @@ Function Test-CiPolicy {
     <#
 .SYNOPSIS
     Tests the Code Integrity Policy XML file against the Code Integrity Schema file.
+.DESCRIPTION
+    The Test-CiPolicy cmdlet tests a Code Integrity (WDAC) Policy XML file against the Schema file located at: "$Env:SystemDrive\Windows\schemas\CodeIntegrity\cipolicy.xsd"
+    It returns a boolean value indicating whether the XML file is valid or not.
 .PARAMETER XmlFile
     The Code Integrity Policy XML file to test. Supports file picker GUI.
 .LINK

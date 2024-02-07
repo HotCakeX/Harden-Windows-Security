@@ -31,6 +31,9 @@ Function Invoke-WDACSimulation {
         [Alias('B')]
         [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$BooleanOutput,
 
+        [Alias('L')]
+        [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$Log,
+
         [Alias('S')]
         [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SkipVersionCheck
     )
@@ -51,6 +54,33 @@ Function Invoke-WDACSimulation {
 
         # if -SkipVersionCheck wasn't passed, run the updater
         if (-NOT $SkipVersionCheck) { Update-self -InvocationStatement $MyInvocation.Statement }
+
+        # Start the transcript if the -Log switch is used and create a function to stop the transcript and the stopwatch at the end
+        if ($Log) {
+            Start-Transcript -IncludeInvocationHeader -Path ".\WDAC Simulation Log $(Get-Date -Format "MM-dd-yyyy 'at' HH-mm-ss").txt"
+
+            # Create a new stopwatch object to measure the execution time
+            Write-Verbose -Message 'Starting the stopwatch...'
+            [System.Diagnostics.Stopwatch]$StopWatch = [Diagnostics.Stopwatch]::StartNew()        
+            Function Stop-Log { 
+                [CmdletBinding()]
+                param()
+                <#
+                .SYNOPSIS
+                    Stops the stopwatch and the transcription when the -Log switch is used with the Invoke-WDACSimulation cmdlet
+                .inputs
+                    None
+                .outputs
+                    None
+                #>
+                Write-Verbose -Message 'Stopping the stopwatch'
+                $StopWatch.Stop()
+                Write-Verbose -Message "WDAC Simulation completed in $($StopWatch.Elapsed.Hours) Hours - $($StopWatch.Elapsed.Minutes) Minutes - $($StopWatch.Elapsed.Seconds) Seconds - $($StopWatch.Elapsed.Milliseconds) Milliseconds - $($StopWatch.Elapsed.Microseconds) Microseconds - $($StopWatch.Elapsed.Nanoseconds) Nanoseconds"
+
+                Write-Verbose -Message 'Stopping the transcription'
+                Stop-Transcript               
+            }
+        }
 
         # The total number of the main steps for the progress bar to render
         [System.Int16]$TotalSteps = 4
@@ -255,6 +285,10 @@ Function Invoke-WDACSimulation {
         catch {
             # Complete the main progress bar because there was an error
             Write-Progress -Id 0 -Activity 'WDAC Simulation interrupted.' -Completed
+
+            # If the -Log switch is used, then stop the stopwatch and the transcription
+            if ($Log) { Stop-Log }
+
             # Throw whatever error that was encountered
             throw $_
         }
@@ -444,15 +478,27 @@ Function Invoke-WDACSimulation {
                 # If the array of blocked files is empty
                 if ([System.String]::IsNullOrWhiteSpace($BlockedRules)) {
                     Write-Progress -Id 0 -Activity 'WDAC Simulation completed.' -Completed
+                    
+                    # If the -Log switch is used, then stop the stopwatch and the transcription
+                    if ($Log) { Stop-Log }
+                    
                     Return $true
                 }
                 else {
                     Write-Progress -Id 0 -Activity 'WDAC Simulation completed.' -Completed
+                    
+                    # If the -Log switch is used, then stop the stopwatch and the transcription
+                    if ($Log) { Stop-Log }
+                    
                     Return $false
                 }
             }
             else {
                 Write-Progress -Id 0 -Activity 'WDAC Simulation completed.' -Completed
+                
+                # If the -Log switch is used, then stop the stopwatch and the transcription
+                if ($Log) { Stop-Log }                
+               
                 Return $false
             }
         }
@@ -464,6 +510,9 @@ Function Invoke-WDACSimulation {
 
         # Change the color of the Table header to SkyBlue
         $PSStyle.Formatting.TableHeader = "$($PSStyle.Foreground.FromRGB(135,206,235))"
+
+        # If the -Log switch is used, then stop the stopwatch and the transcription
+        if ($Log) { Stop-Log }
 
         # Return the final main output array as a table
         Return $MegaOutputObject | Select-Object -Property FilePath,
@@ -516,6 +565,8 @@ Function Invoke-WDACSimulation {
     Provide path to a file that you want WDAC simulation to run against
 .PARAMETER XmlFilePath
     Provide path to a policy xml file that you want the cmdlet to simulate its deployment and running files against it
+.PARAMETER Log  
+    Use this switch to start a transcript of the WDAC simulation and log everything displayed on the screen. Highly recommended to use the -Verbose parameter with this switch to log the verbose output as well.
 .PARAMETER SkipVersionCheck
     Can be used with any parameter to bypass the online version check - only to be used in rare cases
     It is used by the entire Cmdlet.

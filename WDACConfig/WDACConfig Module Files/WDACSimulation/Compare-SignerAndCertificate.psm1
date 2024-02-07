@@ -426,8 +426,6 @@ Function Compare-SignerAndCertificate {
                     Write-Verbose -Message 'The primary signer is authorized but the nested signer is not authorized'
                     Return
                 }
-
-
             }
             else {
                 # Return the comparison result of the given file with primary signer only, if there is no nested signer

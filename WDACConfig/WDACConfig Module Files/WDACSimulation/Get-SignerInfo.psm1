@@ -206,11 +206,12 @@ Function Get-SignerInfo {
             [WDACConfig.Signer]$SignerObj = New-Object -TypeName WDACConfig.Signer -ArgumentList ($Signer.ID, $Signer.Name, $Signer.CertRoot.Value, $Signer.CertPublisher.Value, $HasEKU, $EKUOIDs, $EKUsMatch, $SignerScope, $HasFileAttrib, $SignerFileAttributeIDs)
 
             # Add the Signer object to the output array if it doesn't already exist with another ID, typically for files that are allowed in both User and Kernel mode signing scenarios so they have 2 identical signers with different IDs
-            # Does not affect the simulation outcome because the signers and their related file rules are identical and it's up to the WDAC engine and native cmdlets whether a file is considered kernel mode or user mode
-            if (-NOT ($Output | Where-Object { ($_.Name -eq $SignerObj.Name) -and ($_.CertRoot -eq $SignerObj.CertRoot) -and ($_.CertPublisher -eq $SignerObj.CertPublisher) -and ($_.HasEKU -eq $SignerObj.HasEKU) -and ($_.EKUOIDs -eq $SignerObj.EKUOIDs) -and ($_.EKUsMatch -eq $SignerObj.EKUsMatch) })) {
+            # Commenting it because it causes slight inaccuracies in the detected level of an allowed file
+            # if (-NOT ($Output | Where-Object { ($_.Name -eq $SignerObj.Name) -and ($_.CertRoot -eq $SignerObj.CertRoot) -and ($_.CertPublisher -eq $SignerObj.CertPublisher) -and ($_.HasEKU -eq $SignerObj.HasEKU) -and ($_.EKUOIDs -eq $SignerObj.EKUOIDs) -and ($_.EKUsMatch -eq $SignerObj.EKUsMatch) })) {
 
-                $Output += $SignerObj
-            }
+            $Output += $SignerObj
+
+            #  }
         }
     }
     end {

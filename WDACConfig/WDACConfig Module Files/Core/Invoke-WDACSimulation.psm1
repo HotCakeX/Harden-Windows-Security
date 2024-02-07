@@ -112,8 +112,8 @@ Function Invoke-WDACSimulation {
         # Store the paths of Signed files with HashMismatch Status
         [System.IO.FileInfo[]]$SignedHashMismatchFilePaths = @()
 
-        # Store the paths of Signed files with a status that doesn't fall into any other category
-        [System.IO.FileInfo[]]$SignedButUnknownFilePaths = @()
+        # Store the PSCustomObjects that contain file paths of Signed files with a status that doesn't fall into any other category and their exact signature status
+        [System.Object[]]$SignedButUnknownObjects = @()
 
         # Store the paths of Signed files with EKU mismatch
         [System.IO.FileInfo[]]$SignedButEKUMismatch = @()
@@ -175,7 +175,8 @@ Function Invoke-WDACSimulation {
                 # So here we prioritize being authorized by file hash over being authorized by Signature
                 try {
                     Write-Verbose -Message 'Using Get-AppLockerFileInformation to retrieve the hashes of the file'
-                    [System.String]$CurrentFilePathHash = (Get-AppLockerFileInformation -Path $CurrentFilePath -ErrorAction Stop).hash -replace 'SHA256 0x', ''
+                    # Since Get-AppLockerFileInformation doesn't support special characters such as [ and ], and it doesn't have -LiteralPath parameter, we need to escape them ourselves
+                    [System.String]$CurrentFilePathHash = (Get-AppLockerFileInformation -Path $($CurrentFilePath -match '\[|\]' ? ($CurrentFilePath -replace '(\[|\])', '`$1') : $CurrentFilePath) -ErrorAction Stop).hash -replace 'SHA256 0x', ''
                 }
                 catch {
                     Write-Verbose -Message 'Get-AppLockerFileInformation failed, using New-CIPolicyRule cmdlet...'
@@ -186,18 +187,17 @@ Function Invoke-WDACSimulation {
                 # if the file's hash exists in the XML file then add the file's path to the allowed files and do not check anymore that whether the file is signed or not
                 if ($CurrentFilePathHash -in $SHA256HashesFromXML) {
                     Write-Verbose -Message 'Hash of the file exists in the supplied XML file'
-                    if ($AllowedByHashFilePaths -notcontains $CurrentFilePath) {
-                        $AllowedByHashFilePaths += $CurrentFilePath
-                    }
+
+                    $AllowedByHashFilePaths += $CurrentFilePath
                 }
                 # If the file's hash does not exist in the supplied XML file, then check its signature
                 else {
 
                     # Get the status of file's signature
-                    :MainSwitchLabel switch ((Get-AuthenticodeSignature -LiteralPath $CurrentFilePath).Status) {
+                    :MainSwitchLabel switch (Get-AuthenticodeSignature -LiteralPath $CurrentFilePath) {
 
                         # If the file is signed and valid
-                        'valid' {
+                        { $_.Status -eq 'valid' } {
 
                             # Use the Compare-SignerAndCertificate function to process it
                             $ComparisonResult = Compare-SignerAndCertificate -XmlFilePath $XmlFilePath -SignedFilePath $CurrentFilePath
@@ -206,12 +206,14 @@ Function Invoke-WDACSimulation {
                             if (([System.String]::IsNullOrWhiteSpace($ComparisonResult))) {
 
                                 Write-Verbose -Message 'The file is signed and valid, but not allowed by the policy'
+
                                 $SignedButNotAllowed += $CurrentFilePath
                             }
 
                             # If the file's signer requires the file to have specific EKU(s) but the file doesn't meet it
                             elseif ($ComparisonResult.HasEKU -and (-NOT $ComparisonResult.EKUsMatch)) {
                                 Write-Verbose -Message 'The file is signed and valid, but does not meet the EKU requirements'
+
                                 $SignedButEKUMismatch += $CurrentFilePath
                             }
 
@@ -259,16 +261,18 @@ Function Invoke-WDACSimulation {
                         }
 
                         # If the file is signed but is tampered
-                        'HashMismatch' {
+                        { $_.Status -eq 'HashMismatch' } {
                             Write-Warning -Message "The file: $CurrentFilePath has hash mismatch, it is most likely tampered."
+
                             $SignedHashMismatchFilePaths += $CurrentFilePath
 
                             break MainSwitchLabel
                         }
 
                         # If the file is not signed
-                        'NotSigned' {
+                        { $_.Status -eq 'NotSigned' } {
                             Write-Verbose -Message 'The file is not signed and is not allowed by hash'
+
                             $UnsignedNotAllowedFilePaths += $CurrentFilePath
 
                             break MainSwitchLabel
@@ -277,7 +281,12 @@ Function Invoke-WDACSimulation {
                         # If the file is signed but has unknown signature status
                         default {
                             Write-Verbose -Message 'The file has unknown signature status'
-                            $SignedButUnknownFilePaths += $CurrentFilePath
+
+                            # Store the filepath and reason for the unknown status
+                            $SignedButUnknownObjects += [PSCustomObject]@{
+                                FilePath      = [System.IO.FileInfo]$CurrentFilePath
+                                FailureReason = $_.StatusMessage
+                            }
 
                             break MainSwitchLabel
                         }
@@ -431,15 +440,15 @@ Function Invoke-WDACSimulation {
             }
         }
 
-        if ($SignedButUnknownFilePaths) {
+        if ($SignedButUnknownObjects) {
             Write-Verbose -Message 'Looping through the array of files with unknown signature status'
-            Write-Verbose -Message "$($SignedButUnknownFilePaths.count) File(s) have unknown signature status and are NOT allowed." -Verbose
-            foreach ($Path in $SignedButUnknownFilePaths) {
+            Write-Verbose -Message "$($SignedButUnknownObjects.count) File(s) have unknown signature status and are NOT allowed." -Verbose
+            foreach ($Item in $SignedButUnknownObjects) {
                 # Create a hash table with the file path and source properties
                 [System.Collections.Hashtable]$Object = @{
-                    FilePath     = $Path
+                    FilePath     = $Item.FilePath
                     Source       = 'Signer'
-                    Permission   = 'Expired or Unknown'
+                    Permission   = "UnknownError, $($Item.FailureReason)"
                     IsAuthorized = $false
                 }
                 # Convert the hash table to a PSObject and add it to the output array
@@ -507,7 +516,7 @@ Function Invoke-WDACSimulation {
         }
 
         # Export the output as CSV
-        $MegaOutputObject | Select-Object -Property FilePath, Source, Permission, IsAuthorized | Sort-Object -Property Permission | Export-Csv -LiteralPath ".\WDAC Simulation Output $(Get-Date -Format "MM-dd-yyyy 'at' HH-mm-ss").csv" -Force
+        $MegaOutputObject | Select-Object -Property FilePath, Source, IsAuthorized, Permission | Sort-Object -Property IsAuthorized | Export-Csv -LiteralPath ".\WDAC Simulation Output $(Get-Date -Format "MM-dd-yyyy 'at' HH-mm-ss").csv" -Force
 
         Write-Progress -Id 0 -Activity 'WDAC Simulation completed.' -Completed
 
@@ -518,7 +527,10 @@ Function Invoke-WDACSimulation {
         if ($Log) { Stop-Log }
 
         # Return the final main output array as a table
-        Return $MegaOutputObject | Select-Object -Property FilePath,
+        Return $MegaOutputObject | Select-Object -Property @{
+            Label      = 'FilePath'
+            Expression = { (Get-Item -LiteralPath $_.FilePath).Name } # Truncate the FilePath string to only show the File name. The full File path will be displayed in the CSV output file
+        },
         @{
             Label      = 'Source'
             Expression =
@@ -529,7 +541,7 @@ Function Invoke-WDACSimulation {
                 }
                 "$color$($_.Source)$($PSStyle.Reset)" # Use PSStyle to reset the color
             }
-        }, Permission,
+        },
         @{
             Label      = 'IsAuthorized'
             Expression =
@@ -540,7 +552,14 @@ Function Invoke-WDACSimulation {
                 }
                 "$Color$($_.IsAuthorized)$($PSStyle.Reset)" # Use PSStyle to reset the color
             }
-        } | Sort-Object -Property Permission
+        },
+        @{
+            Label      = 'Permission'
+            Expression = {
+                # If the Permission starts with 'UnknownError', truncate it to 50 characters. The full string will be displayed in the CSV output file. If it does not then just display it as it is
+                $_.Permission -match 'UnknownError' ? $_.Permission.Substring(0, 50) + '...' : $_.Permission
+            }
+        } | Sort-Object -Property IsAuthorized
     }
 
     <#

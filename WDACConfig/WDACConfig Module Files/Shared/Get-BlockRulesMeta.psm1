@@ -74,8 +74,8 @@ Function Get-BlockRulesMeta {
             }
         }
 
-        # Save the modified XML content to a file
-        $BlockRulesXML.Save('.\Microsoft recommended block rules.xml')
+        # Save the modified XML content to a file - The Save method requires full file path
+        $BlockRulesXML.Save("$((Get-Location).path)\Microsoft recommended block rules.xml")
 
         # Remove the audit mode rule option
         Set-RuleOption -FilePath '.\Microsoft recommended block rules.xml' -Option 3 -Delete

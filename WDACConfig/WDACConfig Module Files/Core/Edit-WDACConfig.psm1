@@ -1026,7 +1026,7 @@ Function Edit-WDACConfig {
             $Xml.SiPolicy.BasePolicyID = $CurrentID
 
             Write-Verbose -Message 'Saving the updated XML file'
-            $Xml.Save('.\BasePolicy.xml')
+            $Xml.Save("$((Get-Location).path)\BasePolicy.xml")
 
             Write-Verbose -Message 'Setting the policy version to 1.0.0.1'
             Set-CIPolicyVersion -FilePath .\BasePolicy.xml -Version '1.0.0.1'

@@ -225,7 +225,7 @@ Function New-WDACConfig {
                 }
 
                 # Save the modified XML content to a file
-                $DriverBlockRulesXML.Save('.\Microsoft recommended driver block rules.xml')
+                $DriverBlockRulesXML.Save("$((Get-Location).path)\Microsoft recommended driver block rules.xml")
 
                 $CurrentStep++
                 Write-Progress -Id 1 -Activity 'Configuring the policy settings' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
@@ -464,7 +464,7 @@ Function New-WDACConfig {
             [System.Xml.XmlDocument]$BlockRulesXML = ($MSFTRecommendedBlockRulesAsString -replace "(?s).*``````xml(.*)``````.*", '$1').Trim()
 
             # Save the XML content to a file
-            $BlockRulesXML.Save('.\Microsoft recommended block rules.xml')
+            $BlockRulesXML.Save("$((Get-Location).path)\Microsoft recommended block rules.xml")
 
             $CurrentStep++
             Write-Progress -Id 0 -Activity 'Configuring the policy settings' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)

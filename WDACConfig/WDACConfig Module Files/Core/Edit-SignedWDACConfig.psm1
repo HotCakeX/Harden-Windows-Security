@@ -1261,7 +1261,7 @@ Function Edit-SignedWDACConfig {
             $Xml.SiPolicy.BasePolicyID = $CurrentID
 
             Write-Verbose -Message 'Saving the updated XML file'
-            $Xml.Save('.\BasePolicy.xml')
+            $Xml.Save("$((Get-Location).path)\BasePolicy.xml")
 
             Write-Verbose -Message 'Adding signer rules to the base policy'
             Add-SignerRule -FilePath .\BasePolicy.xml -CertificatePath $CertPath -Update -User -Kernel -Supplemental

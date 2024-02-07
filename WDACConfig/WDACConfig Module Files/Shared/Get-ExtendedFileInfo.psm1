@@ -18,7 +18,8 @@ function Get-ExtendedFileInfo {
 
   Begin {
     # Get the file object
-    [System.IO.FileInfo]$File = Get-Item -Path $Path
+    [System.IO.FileInfo]$File = Get-Item -LiteralPath $Path
+
     # Create an ordered hashtable to store the file properties
     $FileInfo = [ordered]@{}
   }
@@ -32,7 +33,6 @@ function Get-ExtendedFileInfo {
     $FileInfo['Filepath'] = $Path
   }
   End {
-
     # Remove any empty values from the hashtable
     @($FileInfo.keys) | ForEach-Object -Process {
       if (!$FileInfo[$_]) { $FileInfo.Remove($_) }

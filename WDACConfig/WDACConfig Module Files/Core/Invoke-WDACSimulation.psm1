@@ -507,7 +507,7 @@ Function Invoke-WDACSimulation {
         }
 
         # Export the output as CSV
-        $MegaOutputObject | Select-Object -Property FilePath, Source, Permission, IsAuthorized | Sort-Object -Property Permission | Export-Csv -LiteralPath .\WDACSimulationOutput.csv -Force
+        $MegaOutputObject | Select-Object -Property FilePath, Source, Permission, IsAuthorized | Sort-Object -Property Permission | Export-Csv -LiteralPath ".\WDAC Simulation Output $(Get-Date -Format "MM-dd-yyyy 'at' HH-mm-ss").csv" -Force
 
         Write-Progress -Id 0 -Activity 'WDAC Simulation completed.' -Completed
 
@@ -569,7 +569,7 @@ Function Invoke-WDACSimulation {
 
     Uses LiteralPath to take the path exactly as typed including Special characters such as [ and ]
 
-    Does not support wildcards    
+    Does not support wildcards
 .PARAMETER FilePath
     Provide path to a file that you want WDAC simulation to run against
 

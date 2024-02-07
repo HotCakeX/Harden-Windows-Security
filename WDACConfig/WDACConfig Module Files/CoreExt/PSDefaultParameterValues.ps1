@@ -36,6 +36,7 @@ $PSDefaultParameterValues = @{
     'Get-AuthenticodeSignatureEx:Verbose'  = $Verbose
     'Compare-SignerAndCertificate:Verbose' = $Verbose
     'Remove-SupplementalSigners:Verbose'   = $Verbose
+    'Get-ExtendedFileInfo:Verbose'         = $Verbose
 }
 
 # SIG # Begin signature block

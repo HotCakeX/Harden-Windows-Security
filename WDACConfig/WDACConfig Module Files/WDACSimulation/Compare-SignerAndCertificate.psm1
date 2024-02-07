@@ -159,7 +159,7 @@ Function Compare-SignerAndCertificate {
                     if ($Signer.HasFileAttrib) {
 
                         # Get the extended file attributes as ordered hashtable
-                        $ExtendedFileInfo = Get-ExtendedFileInfo -LiteralPath $SignedFilePath
+                        $ExtendedFileInfo = Get-ExtendedFileInfo -Path $SignedFilePath
 
                         # Get the current file's version
                         [System.Version]$FileVersion = (Get-Item -LiteralPath $SignedFilePath).VersionInfo.FileVersionRaw

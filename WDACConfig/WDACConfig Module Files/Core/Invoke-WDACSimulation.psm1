@@ -194,7 +194,7 @@ Function Invoke-WDACSimulation {
                 else {
 
                     # Get the status of file's signature
-                    :MainSwitchLabel switch ((Get-AuthenticodeSignature -FilePath $CurrentFilePath).Status) {
+                    :MainSwitchLabel switch ((Get-AuthenticodeSignature -LiteralPath $CurrentFilePath).Status) {
 
                         # If the file is signed and valid
                         'valid' {

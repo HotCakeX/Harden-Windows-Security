@@ -144,7 +144,7 @@ Function Get-SignerInfo {
                 }
 
                 # Get the EKU OIDs of the file's signer certificate (Leaf certificate)
-                [System.String[]]$FileEKUOIDs = (Get-AuthenticodeSignature -FilePath $SignedFilePath).SignerCertificate.EnhancedKeyUsageList.ObjectId
+                [System.String[]]$FileEKUOIDs = (Get-AuthenticodeSignature -LiteralPath $SignedFilePath).SignerCertificate.EnhancedKeyUsageList.ObjectId
 
                 # Check if the array of EKU OIDs of the file's signer certificate contains all the EKU OIDs of the signer defined in the WDAC policy
                 if (-NOT ($EKUOIDs | Where-Object -FilterScript { $FileEKUOIDs -notcontains $_ })) {

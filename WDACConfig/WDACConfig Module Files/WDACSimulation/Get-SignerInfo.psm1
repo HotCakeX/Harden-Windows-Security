@@ -35,7 +35,7 @@ Function Get-SignerInfo {
         Import-Module -FullyQualifiedName "$ModuleRootPath\WDACSimulation\Convert-HexToOID.psm1" -Force
 
         # Load the XML file
-        [System.Xml.XmlDocument]$Xml = Get-Content -Path $XmlFilePath
+        [System.Xml.XmlDocument]$Xml = Get-Content -LiteralPath $XmlFilePath
     }
     process {
         # Select the Signer nodes

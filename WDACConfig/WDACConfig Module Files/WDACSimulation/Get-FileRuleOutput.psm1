@@ -24,7 +24,7 @@ Function Get-FileRuleOutput {
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
         # Load the xml file into a variable
-        $Xml = [System.Xml.XmlDocument](Get-Content -Path $XmlPath)
+        $Xml = [System.Xml.XmlDocument](Get-Content -LiteralPath $XmlPath)
 
         # Create an empty array to store the output
         [System.Object[]]$OutputHashInfoProcessing = @()

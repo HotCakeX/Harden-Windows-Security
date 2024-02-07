@@ -42,7 +42,7 @@ Function Compare-SignerAndCertificate {
         [WDACConfig.Signer[]]$SignerInfo = Get-SignerInfo -XmlFilePath $XmlFilePath -SignedFilePath $SignedFilePath
 
         # Load the XML file as an XML document object
-        [System.Xml.XmlDocument]$Xml = Get-Content -Path $XmlFilePath
+        [System.Xml.XmlDocument]$Xml = Get-Content -LiteralPath $XmlFilePath
 
         # Select the FileAttrib nodes of the XML file
         [System.Object[]]$PolicyFileAttributes = $Xml.SiPolicy.FileRules.FileAttrib
@@ -159,10 +159,10 @@ Function Compare-SignerAndCertificate {
                     if ($Signer.HasFileAttrib) {
 
                         # Get the extended file attributes as ordered hashtable
-                        $ExtendedFileInfo = Get-ExtendedFileInfo -Path $SignedFilePath
+                        $ExtendedFileInfo = Get-ExtendedFileInfo -LiteralPath $SignedFilePath
 
                         # Get the current file's version
-                        [System.Version]$FileVersion = (Get-Item -Path $SignedFilePath).VersionInfo.FileVersionRaw
+                        [System.Version]$FileVersion = (Get-Item -LiteralPath $SignedFilePath).VersionInfo.FileVersionRaw
 
                         # Loop over all of the file attributes in the policy XML file whose IDs are in the Signer's file attrib IDs array and the file's version is equal or greater than the minimum version of the file attribute
                         :BreaklLoopLabel1 foreach ($FileAttrib in ($PolicyFileAttributes | Where-Object -FilterScript { ($Signer.SignerFileAttributeIDs -contains $_.ID) -and ($FileVersion -ge [system.version]$_.MinimumFileVersion) })) {

@@ -3,15 +3,15 @@ Function Invoke-WDACSimulation {
     [OutputType([System.Object[]])]
     Param(
         [Alias('D')]
-        [ValidateScript({ Test-Path -Path $_ -PathType 'Container' }, ErrorMessage = 'The path you selected is not a valid folder path.')]
+        [ValidateScript({ Test-Path -LiteralPath $_ -PathType 'Container' }, ErrorMessage = 'The path you selected is not a valid folder path.')]
         [Parameter(Mandatory = $false)][System.IO.DirectoryInfo]$FolderPath,
 
         [Alias('F')]
         [ValidateScript({
                 # Ensure the selected path is a file path
-                if (Test-Path -Path $_ -PathType 'Leaf') {
+                if (Test-Path -LiteralPath $_ -PathType 'Leaf') {
                     # Ensure the selected file has a supported extension
-                    [System.IO.FileInfo]$SelectedFile = Get-ChildItem -File -Path $_ -Include '*.sys', '*.exe', '*.com', '*.dll', '*.rll', '*.ocx', '*.msp', '*.mst', '*.msi', '*.js', '*.vbs', '*.ps1', '*.appx', '*.bin', '*.bat', '*.hxs', '*.mui', '*.lex', '*.mof'
+                    [System.IO.FileInfo]$SelectedFile = Get-ChildItem -File -LiteralPath $_ -Include '*.sys', '*.exe', '*.com', '*.dll', '*.rll', '*.ocx', '*.msp', '*.mst', '*.msi', '*.js', '*.vbs', '*.ps1', '*.appx', '*.bin', '*.bat', '*.hxs', '*.mui', '*.lex', '*.mof'
                     # If the selected file has a supported extension, return $true
                     if ($SelectedFile) {
                         $true
@@ -57,7 +57,7 @@ Function Invoke-WDACSimulation {
 
         # Start the transcript if the -Log switch is used and create a function to stop the transcript and the stopwatch at the end
         if ($Log) {
-            Start-Transcript -IncludeInvocationHeader -Path ".\WDAC Simulation Log $(Get-Date -Format "MM-dd-yyyy 'at' HH-mm-ss").txt"
+            Start-Transcript -IncludeInvocationHeader -LiteralPath ".\WDAC Simulation Log $(Get-Date -Format "MM-dd-yyyy 'at' HH-mm-ss").txt"
 
             # Create a new stopwatch object to measure the execution time
             Write-Verbose -Message 'Starting the stopwatch...'
@@ -142,10 +142,10 @@ Function Invoke-WDACSimulation {
         Write-Progress -Id 0 -Activity "Getting the supported files' paths" -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
         if ($FilePath) {
-            [System.IO.FileInfo]$CollectedFiles = Get-ChildItem -File -Path $FilePath
+            [System.IO.FileInfo]$CollectedFiles = Get-ChildItem -File -LiteralPath $FilePath
         }
         else {
-            [System.IO.FileInfo[]]$CollectedFiles = (Get-ChildItem -Recurse -Path $FolderPath -File -Include '*.sys', '*.exe', '*.com', '*.dll', '*.rll', '*.ocx', '*.msp', '*.mst', '*.msi', '*.js', '*.vbs', '*.ps1', '*.appx', '*.bin', '*.bat', '*.hxs', '*.mui', '*.lex', '*.mof').FullName
+            [System.IO.FileInfo[]]$CollectedFiles = (Get-ChildItem -Recurse -LiteralPath $FolderPath -File -Include '*.sys', '*.exe', '*.com', '*.dll', '*.rll', '*.ocx', '*.msp', '*.mst', '*.msi', '*.js', '*.vbs', '*.ps1', '*.appx', '*.bin', '*.bat', '*.hxs', '*.mui', '*.lex', '*.mof').FullName
         }
 
         # Make sure the selected directory contains files with the supported extensions
@@ -175,7 +175,7 @@ Function Invoke-WDACSimulation {
                 # So here we prioritize being authorized by file hash over being authorized by Signature
                 try {
                     Write-Verbose -Message 'Using Get-AppLockerFileInformation to retrieve the hashes of the file'
-                    [System.String]$CurrentFilePathHash = (Get-AppLockerFileInformation -Path $CurrentFilePath -ErrorAction Stop).hash -replace 'SHA256 0x', ''
+                    [System.String]$CurrentFilePathHash = (Get-AppLockerFileInformation -LiteralPath $CurrentFilePath -ErrorAction Stop).hash -replace 'SHA256 0x', ''
                 }
                 catch {
                     Write-Verbose -Message 'Get-AppLockerFileInformation failed, using New-CIPolicyRule cmdlet...'
@@ -507,7 +507,7 @@ Function Invoke-WDACSimulation {
         }
 
         # Export the output as CSV
-        $MegaOutputObject | Select-Object -Property FilePath, Source, Permission, IsAuthorized | Sort-Object -Property Permission | Export-Csv -Path .\WDACSimulationOutput.csv -Force
+        $MegaOutputObject | Select-Object -Property FilePath, Source, Permission, IsAuthorized | Sort-Object -Property Permission | Export-Csv -LiteralPath .\WDACSimulationOutput.csv -Force
 
         Write-Progress -Id 0 -Activity 'WDAC Simulation completed.' -Completed
 
@@ -558,16 +558,30 @@ Function Invoke-WDACSimulation {
     https://github.com/HotCakeX/Harden-Windows-Security/wiki/Invoke-WDACSimulation
 .DESCRIPTION
     Simulates the deployment of the WDAC policy by analyzing a folder and checking which of the files in the folder are allowed by a user selected policy xml file
+
+    All of the components of the Invoke-WDACSimulation use LiteralPath
 .COMPONENT
     Windows Defender Application Control, ConfigCI PowerShell module
 .FUNCTIONALITY
     Simulates the deployment of the WDAC policy
 .PARAMETER FolderPath
     Provide path to a folder that you want WDAC simulation to run against
+
+    Uses LiteralPath to take the path exactly as typed including Special characters such as [ and ]
+
+    Does not support wildcards    
 .PARAMETER FilePath
     Provide path to a file that you want WDAC simulation to run against
+
+    Uses LiteralPath to take the path exactly as typed including Special characters such as [ and ]
+
+    Does not support wildcards
 .PARAMETER XmlFilePath
     Provide path to a policy xml file that you want the cmdlet to simulate its deployment and running files against it
+
+    Uses LiteralPath to take the path exactly as typed including Special characters such as [ and ]
+
+    Does not support wildcards
 .PARAMETER Log
     Use this switch to start a transcript of the WDAC simulation and log everything displayed on the screen. Highly recommended to use the -Verbose parameter with this switch to log the verbose output as well.
 .PARAMETER SkipVersionCheck

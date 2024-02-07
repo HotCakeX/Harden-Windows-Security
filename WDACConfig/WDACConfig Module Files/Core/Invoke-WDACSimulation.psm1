@@ -61,8 +61,8 @@ Function Invoke-WDACSimulation {
 
             # Create a new stopwatch object to measure the execution time
             Write-Verbose -Message 'Starting the stopwatch...'
-            [System.Diagnostics.Stopwatch]$StopWatch = [Diagnostics.Stopwatch]::StartNew()        
-            Function Stop-Log { 
+            [System.Diagnostics.Stopwatch]$StopWatch = [Diagnostics.Stopwatch]::StartNew()
+            Function Stop-Log {
                 [CmdletBinding()]
                 param()
                 <#
@@ -78,7 +78,7 @@ Function Invoke-WDACSimulation {
                 Write-Verbose -Message "WDAC Simulation completed in $($StopWatch.Elapsed.Hours) Hours - $($StopWatch.Elapsed.Minutes) Minutes - $($StopWatch.Elapsed.Seconds) Seconds - $($StopWatch.Elapsed.Milliseconds) Milliseconds - $($StopWatch.Elapsed.Microseconds) Microseconds - $($StopWatch.Elapsed.Nanoseconds) Nanoseconds"
 
                 Write-Verbose -Message 'Stopping the transcription'
-                Stop-Transcript               
+                Stop-Transcript
             }
         }
 
@@ -94,8 +94,8 @@ Function Invoke-WDACSimulation {
     }
 
     process {
-        # Store the file paths of valid Allowed Signed files - FilePublisher level
-        [System.IO.FileInfo[]]$SignedFile_FilePublisher_FilePaths = @()
+        # Store the PSCustomObjects that contain file paths and SpecificFileNameLevel options of valid Allowed Signed files - FilePublisher level
+        [System.Object[]]$SignedFile_FilePublisher_Objects = @()
 
         # Store the file paths of valid Allowed Signed files - Publisher level
         [System.IO.FileInfo[]]$SignedFile_Publisher_FilePaths = @()
@@ -222,7 +222,10 @@ Function Invoke-WDACSimulation {
                                     'FilePublisher' {
                                         Write-Verbose -Message 'The file is signed and valid, and allowed by the policy using FilePublisher level'
 
-                                        $SignedFile_FilePublisher_FilePaths += $CurrentFilePath
+                                        $SignedFile_FilePublisher_Objects += [PSCustomObject]@{
+                                            FilePath              = [System.IO.FileInfo]$CurrentFilePath
+                                            SpecificFileNameLevel = [System.String]$ComparisonResult.SpecificFileNameLevelMatchCriteria
+                                        }
 
                                         break Level2SwitchLabel
                                     }
@@ -308,7 +311,7 @@ Function Invoke-WDACSimulation {
                 [System.Collections.Hashtable]$Object = @{
                     FilePath     = $Path
                     Source       = 'Hash'
-                    Permission   = 'Allowed - Hash Level'
+                    Permission   = 'Hash Level'
                     IsAuthorized = $true
                 }
                 # Convert the hash table to a PSObject and add it to the output array
@@ -316,15 +319,15 @@ Function Invoke-WDACSimulation {
             }
         }
 
-        if ($SignedFile_FilePublisher_FilePaths) {
+        if ($SignedFile_FilePublisher_Objects) {
             Write-Verbose -Message 'Looping through the array of files allowed by valid signature - FilePublisher Level'
-            Write-Verbose -Message "$($SignedFile_FilePublisher_FilePaths.count) File(s) are allowed by FilePublisher signer level." -Verbose
-            foreach ($Path in $SignedFile_FilePublisher_FilePaths) {
+            Write-Verbose -Message "$($SignedFile_FilePublisher_Objects.count) File(s) are allowed by FilePublisher signer level." -Verbose
+            foreach ($Item in $SignedFile_FilePublisher_Objects) {
                 # Create a hash table with the file path and source properties
                 [System.Collections.Hashtable]$Object = @{
-                    FilePath     = $Path
+                    FilePath     = $Item.FilePath
                     Source       = 'Signer'
-                    Permission   = 'Allowed - FilePublisher Level'
+                    Permission   = "FilePublisher Level - $($Item.SpecificFileNameLevel)"
                     IsAuthorized = $true
                 }
                 # Convert the hash table to a PSObject and add it to the output array
@@ -340,7 +343,7 @@ Function Invoke-WDACSimulation {
                 [System.Collections.Hashtable]$Object = @{
                     FilePath     = $Path
                     Source       = 'Signer'
-                    Permission   = 'Allowed - Publisher Level'
+                    Permission   = 'Publisher Level'
                     IsAuthorized = $true
                 }
                 # Convert the hash table to a PSObject and add it to the output array
@@ -356,7 +359,7 @@ Function Invoke-WDACSimulation {
                 [System.Collections.Hashtable]$Object = @{
                     FilePath     = $Path
                     Source       = 'Signer'
-                    Permission   = 'Allowed - PcaCertificate / RootCertificate Levels'
+                    Permission   = 'PcaCertificate / RootCertificate Levels'
                     IsAuthorized = $true
                 }
                 # Convert the hash table to a PSObject and add it to the output array
@@ -372,7 +375,7 @@ Function Invoke-WDACSimulation {
                 [System.Collections.Hashtable]$Object = @{
                     FilePath     = $Path
                     Source       = 'Signer'
-                    Permission   = 'Allowed - LeafCertificate Level'
+                    Permission   = 'LeafCertificate Level'
                     IsAuthorized = $true
                 }
                 # Convert the hash table to a PSObject and add it to the output array
@@ -404,7 +407,7 @@ Function Invoke-WDACSimulation {
                 [System.Collections.Hashtable]$Object = @{
                     FilePath     = $Path
                     Source       = 'Signer'
-                    Permission   = 'Not Allowed - EKU requirements not met'
+                    Permission   = 'EKU requirements not met'
                     IsAuthorized = $false
                 }
                 # Convert the hash table to a PSObject and add it to the output array
@@ -420,7 +423,7 @@ Function Invoke-WDACSimulation {
                 [System.Collections.Hashtable]$Object = @{
                     FilePath     = $Path
                     Source       = 'Signer'
-                    Permission   = 'Not Allowed - Hash Mismatch'
+                    Permission   = 'Hash Mismatch'
                     IsAuthorized = $false
                 }
                 # Convert the hash table to a PSObject and add it to the output array
@@ -436,7 +439,7 @@ Function Invoke-WDACSimulation {
                 [System.Collections.Hashtable]$Object = @{
                     FilePath     = $Path
                     Source       = 'Signer'
-                    Permission   = 'Not Allowed - Expired or Unknown'
+                    Permission   = 'Expired or Unknown'
                     IsAuthorized = $false
                 }
                 # Convert the hash table to a PSObject and add it to the output array
@@ -478,27 +481,27 @@ Function Invoke-WDACSimulation {
                 # If the array of blocked files is empty
                 if ([System.String]::IsNullOrWhiteSpace($BlockedRules)) {
                     Write-Progress -Id 0 -Activity 'WDAC Simulation completed.' -Completed
-                    
+
                     # If the -Log switch is used, then stop the stopwatch and the transcription
                     if ($Log) { Stop-Log }
-                    
+
                     Return $true
                 }
                 else {
                     Write-Progress -Id 0 -Activity 'WDAC Simulation completed.' -Completed
-                    
+
                     # If the -Log switch is used, then stop the stopwatch and the transcription
                     if ($Log) { Stop-Log }
-                    
+
                     Return $false
                 }
             }
             else {
                 Write-Progress -Id 0 -Activity 'WDAC Simulation completed.' -Completed
-                
+
                 # If the -Log switch is used, then stop the stopwatch and the transcription
-                if ($Log) { Stop-Log }                
-               
+                if ($Log) { Stop-Log }
+
                 Return $false
             }
         }
@@ -549,7 +552,7 @@ Function Invoke-WDACSimulation {
 
     FilePath:       The path of the file
     Source:         The source of the file's permission, e.g., 'Signer' (For signed files only), 'Hash' (For signed and unsigned files), 'Unsigned' (For unsigned files only)
-    Permission:     Consists of 2 parts, e.g., 'Allowed - Hash Level', the first part displays whether the file is allowed or not, and the second part displays the reason why the file is allowed or not. The 2nd part doesn't exist if the file is not allowed without any reason.
+    Permission:     The reason the file is allowed or not. For files authorized by FilePublisher level, it will show the specific file name level that the file is authorized by. (https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/select-types-of-rules-to-create#table-3--specificfilenamelevel-options)
     IsAuthorized:   A boolean value that indicates whether the file is allowed or not.
 .LINK
     https://github.com/HotCakeX/Harden-Windows-Security/wiki/Invoke-WDACSimulation
@@ -565,7 +568,7 @@ Function Invoke-WDACSimulation {
     Provide path to a file that you want WDAC simulation to run against
 .PARAMETER XmlFilePath
     Provide path to a policy xml file that you want the cmdlet to simulate its deployment and running files against it
-.PARAMETER Log  
+.PARAMETER Log
     Use this switch to start a transcript of the WDAC simulation and log everything displayed on the screen. Highly recommended to use the -Verbose parameter with this switch to log the verbose output as well.
 .PARAMETER SkipVersionCheck
     Can be used with any parameter to bypass the online version check - only to be used in rare cases

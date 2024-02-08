@@ -31,7 +31,7 @@ Function New-DenyWDACConfig {
         [ValidateScript({ Test-Path -Path $_ -PathType 'Container' }, ErrorMessage = 'The path you selected is not a folder path.')]
         [Parameter(Mandatory = $false, ParameterSetName = 'Normal')]
         [Parameter(Mandatory = $false, ParameterSetName = 'Drivers')]
-        [System.String[]]$ScanLocations,
+        [System.IO.DirectoryInfo[]]$ScanLocations,
 
         [ValidateSet([Levelz])]
         [Parameter(Mandatory = $false, ParameterSetName = 'Normal')]

@@ -50,7 +50,7 @@ Function Edit-SignedWDACConfig {
                 }
                 # This throw is shown only when User added a Signed policy xml file for Unsigned policy file path property in user configuration file
                 # Without this, the error shown would be vague: The variable cannot be validated because the value System.String[] is not a valid value for the PolicyPath variable.
-                else { 
+                else {
                     'The policy xml file in User Configurations for SignedPolicyPath is Unsigned policy.'
                 }
             }, ErrorMessage = 'The selected policy xml file is Unsigned. Please use Edit-WDACConfig cmdlet to edit Unsigned policies.')]

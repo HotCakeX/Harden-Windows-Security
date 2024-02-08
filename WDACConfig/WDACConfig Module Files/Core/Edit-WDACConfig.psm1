@@ -27,20 +27,20 @@ Function Edit-WDACConfig {
                 [System.String]$RedFlag1 = $XmlTest.SiPolicy.SupplementalPolicySigners.SupplementalPolicySigner.SignerId
                 [System.String]$RedFlag2 = $XmlTest.SiPolicy.UpdatePolicySigners.UpdatePolicySigner.SignerId
                 [System.String]$RedFlag3 = $XmlTest.SiPolicy.PolicyID
-                
+
                 # Get the currently deployed policy IDs
                 [System.Guid[]]$CurrentPolicyIDs = ((&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { $_.IsSystemPolicy -ne 'True' }).policyID | ForEach-Object -Process { "{$_}" }
-                
-                if (!$RedFlag1 -and !$RedFlag2) {                    
+
+                if (!$RedFlag1 -and !$RedFlag2) {
                     # Ensure the selected base policy xml file is deployed
                     if ($CurrentPolicyIDs -contains $RedFlag3) {
 
                         # Ensure the selected base policy xml file is valid
                         if ( Test-CiPolicy -XmlFile $_ ) {
                             return $True
-                        }                        
+                        }
                     }
-                    else { 
+                    else {
                         throw 'The currently selected policy xml file is not deployed.'
                     }
                 }
@@ -48,7 +48,7 @@ Function Edit-WDACConfig {
                 # Without this, the error shown would be vague: The variable cannot be validated because the value System.String[] is not a valid value for the PolicyPath variable.
                 else {
                     throw 'The policy xml file in User Configurations for UnsignedPolicyPath is a Signed policy.'
-                }            
+                }
             }, ErrorMessage = 'The selected policy xml file is Signed. Please use Edit-SignedWDACConfig cmdlet to edit Signed policies.')]
         [Parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps Audit Events', ValueFromPipelineByPropertyName = $true)]
         [Parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps', ValueFromPipelineByPropertyName = $true)]

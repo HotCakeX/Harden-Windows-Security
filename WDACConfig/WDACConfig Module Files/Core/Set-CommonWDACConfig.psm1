@@ -14,18 +14,19 @@ Function Set-CommonWDACConfig {
                     # Takes care of certificate subjects that include comma in their CN
                     # Determine if the subject contains a comma
                     if ($Cert.Subject -match 'CN=(?<RegexTest>.*?),.*') {
+
                         # If the CN value contains double quotes, use split to get the value between the quotes
-                        if ($matches['RegexTest'] -like '*"*') {
+                        if ($Matches['RegexTest'] -like '*"*') {
                             $SubjectCN = ($Element.Certificate.Subject -split 'CN="(.+?)"')[1]
                         }
                         # Otherwise, use the named group RegexTest to get the CN value
                         else {
-                            $SubjectCN = $matches['RegexTest']
+                            $SubjectCN = $Matches['RegexTest']
                         }
                     }
                     # If the subject does not contain a comma, use a lookbehind to get the CN value
                     elseif ($Cert.Subject -match '(?<=CN=).*') {
-                        $SubjectCN = $matches[0]
+                        $SubjectCN = $Matches[0]
                     }
                     $Output += $SubjectCN
                 }
@@ -67,11 +68,17 @@ Function Set-CommonWDACConfig {
                     throw 'The selected file is not a valid WDAC XML policy.'
                 }
 
+                # If no indicators of a signed policy are found, proceed to the next validation
                 if (!$RedFlag1 -and !$RedFlag2) {
-                    return $True
-                }
-                else { throw 'The selected policy xml file is Signed, Please select an Unsigned policy.' }
 
+                    # Ensure the selected base policy xml file is valid
+                    if ( Test-CiPolicy -XmlFile $_ ) {
+                        return $True
+                    }
+                }
+                else {
+                    throw 'The selected policy xml file is Signed, Please select an Unsigned policy.'
+                }
             }, ErrorMessage = 'The selected policy xml file is Signed, Please select an Unsigned policy.')]
         [parameter(Mandatory = $false)][System.IO.FileInfo]$UnsignedPolicyPath,
 
@@ -85,11 +92,17 @@ Function Set-CommonWDACConfig {
                     throw 'The selected file is not a valid WDAC XML policy.'
                 }
 
+                # If indicators of a signed policy are found, proceed to the next validation
                 if ($RedFlag1 -or $RedFlag2) {
-                    return $True
-                }
-                else { throw 'The selected policy xml file is Unsigned, Please select a Signed policy.' }
 
+                    # Ensure the selected base policy xml file is valid
+                    if ( Test-CiPolicy -XmlFile $_ ) {
+                        return $True
+                    }
+                }
+                else {
+                    throw 'The selected policy xml file is Unsigned, Please select a Signed policy.'
+                }
             }, ErrorMessage = 'The selected policy xml file is Unsigned, Please select a Signed policy.')]
         [parameter(Mandatory = $false)][System.IO.FileInfo]$SignedPolicyPath,
 

@@ -38,18 +38,26 @@ Function Get-NestedSignerSignature {
         [System.Int32]$CERT_QUERY_CONTENT_FLAG_PKCS7_SIGNED_EMBED = 0x400
         [System.Int16]$CERT_QUERY_FORMAT_FLAG_BINARY = 0x2
 
-        # Define a helper function to get the timestamps of the CounterSigner
         function Get-TimeStamps {
+            <#
+            .SYNOPSIS
+                Helper function to get the timestamps of the CounterSigner
+            .INPUTS
+                System.Security.Cryptography.Pkcs.SignerInfo
+            .OUTPUTS
+                System.Object[]
+            #>
             param (
                 [System.Security.Cryptography.Pkcs.SignerInfo]$SignerInfo
             )
 
+            # Initialize an array to store the custom objects with CounterSigner info
             [System.Object[]]$RetValue = @()
 
             foreach ($CounterSignerInfos in $Infos.CounterSignerInfos) {
 
                 # Get the signing time attribute from the CounterSigner info object
-                $STime = ($CounterSignerInfos.SignedAttributes | Where-Object -FilterScript { ($_.Oid.Value -eq '1.2.840.113549.1.9.5') -and ($null -ne $_.SigningTime) }).Values
+                $STime = ($CounterSignerInfos.SignedAttributes | Where-Object -FilterScript { $_.Oid.Value -eq '1.2.840.113549.1.9.5' }).Values | Where-Object -FilterScript { $null -ne $_.SigningTime }
 
                 # Create a custom object with the CounterSigner certificate and signing time properties
                 $TsObject = New-Object 'psobject' -Property @{
@@ -60,9 +68,9 @@ Function Get-NestedSignerSignature {
                 # Add the custom object to the return value array
                 $RetValue += $TsObject
             }
-            # Return the array of custom objects with CounterSigner info
-            $RetValue
 
+            # Return the array of custom objects with CounterSigner info
+            Return $RetValue
         }
     }
     process {

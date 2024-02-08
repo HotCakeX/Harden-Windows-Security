@@ -1,6 +1,6 @@
 Function Invoke-WDACSimulation {
     [CmdletBinding()]
-    [OutputType([System.Object[]])]
+    [OutputType([System.Object[]], [System.Boolean])]
     Param(
         [Alias('X')]
         [ValidateScript({ Test-CiPolicy -XmlFile $_ })]

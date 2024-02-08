@@ -43,6 +43,17 @@ Function Build-WDACCertificate {
         # if -SkipVersionCheck wasn't passed, run the updater
         if (-NOT $SkipVersionCheck) { Update-self -InvocationStatement $MyInvocation.Statement }
 
+        # If user entered a common name that is not 'Code Signing Certificate' (which is the default value)
+        if ($CommonName -ne 'Code Signing Certificate') {
+
+            # If user did not select a $FileName and it's set to the default value of 'Code Signing Certificate'
+            if ($FileName -eq 'Code Signing Certificate') {
+
+                # Set the $FileName to the same value as the $CommonName that the user entered for better user experience
+                [System.String]$FileName = $CommonName
+            }
+        }
+
         if (!$Password) {
 
             Write-Verbose -Message 'Prompting the user to enter a password for the certificate because it was not passed as a parameter.'

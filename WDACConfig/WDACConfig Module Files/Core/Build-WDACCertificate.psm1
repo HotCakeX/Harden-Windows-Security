@@ -228,6 +228,8 @@ ValidityPeriod = Years
     The common name of the certificate. Defaults to 'Code Signing Certificate'.
     If a certificate with the same common name already exists on the system, the user will be asked whether to automatically remove all of them and continue with creating a new certificate.
     This can be automated by passing the -Force switch.
+
+    If you enter a CommonName but do not enter a FileName, the FileName will be set to the same value as the CommonName for better user experience.
 .PARAMETER FileName
     The name of the certificate file. Defaults to 'Code Signing Certificate'.
     Selected name should not contain any of the following characters \|/:*?"<>

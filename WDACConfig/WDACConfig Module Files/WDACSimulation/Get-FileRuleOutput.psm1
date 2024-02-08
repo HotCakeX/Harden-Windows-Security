@@ -5,6 +5,8 @@ Function Get-FileRuleOutput {
         a function to load an xml file and create an output array of custom objects that contain the file rules that are based on file hashes
     .PARAMETER XmlPath
         Path to the XML file that user selected for WDAC simulation
+    .NOTES
+        The function is intentionally not made to handle Allow all rules since checking for their existence happens in the main cmdlet
     .INPUTS
         System.IO.FileInfo
     .OUTPUTS

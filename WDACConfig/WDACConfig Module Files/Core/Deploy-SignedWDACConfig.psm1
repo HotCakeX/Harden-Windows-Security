@@ -5,7 +5,6 @@ Function Deploy-SignedWDACConfig {
         ConfirmImpact = 'High'
     )]
     Param(
-        [ValidatePattern('\.xml$')]
         [ValidateScript({ Test-CiPolicy -XmlFile $_ })]
         [parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ValueFromPipeline = $true)]
         [System.IO.FileInfo[]]$PolicyPaths,

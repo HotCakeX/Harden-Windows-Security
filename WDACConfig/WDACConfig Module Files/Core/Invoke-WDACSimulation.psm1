@@ -91,9 +91,25 @@ Function Invoke-WDACSimulation {
             # Write an error message
             Write-Error -Message 'You must specify either -FolderPath or -FilePath, but not both.' -Category InvalidArgument
         }
+
+        # Check if the supplied XML file contains Allow all rule
+        [System.Boolean]$ShouldExit = $false
+
+        if ((Get-Content -LiteralPath $XmlFilePath -Raw) -match '<Allow ID=".*" FriendlyName=".*" FileName="\*".*/>') {
+            Write-Verbose -Message 'The supplied XML file contains a rule that allows all files.' -Verbose
+
+            # Set a flag to exit the subsequent blocks
+            $ShouldExit = $true
+
+            # Exit the Begin block
+            Return
+        }
     }
 
     process {
+        # Exit the Process block
+        if ($ShouldExit) { Return }
+
         # Store the PSCustomObjects that contain file paths and SpecificFileNameLevel options of valid Allowed Signed files - FilePublisher level
         [System.Object[]]$SignedFile_FilePublisher_Objects = @()
 
@@ -474,6 +490,9 @@ Function Invoke-WDACSimulation {
     }
 
     end {
+        # If the policy contains a rule that allows all files, then return $true and exit
+        if ($ShouldExit) { Return $true }
+
         # If the user selected the -BooleanOutput switch, then return a boolean value and don't display any more output
         if ($BooleanOutput) {
             # Get all of the allowed files

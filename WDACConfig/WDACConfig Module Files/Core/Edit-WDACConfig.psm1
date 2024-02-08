@@ -20,35 +20,44 @@ Function Edit-WDACConfig {
         [Parameter(Mandatory = $true, ParameterSetName = 'Merge Supplemental Policies', ValueFromPipelineByPropertyName = $true)]
         [System.String]$SuppPolicyName,
 
-        [ValidatePattern('\.xml$')]
         [ValidateScript({
                 # Validate the Policy file to make sure the user isn't accidentally trying to
                 # Edit a Signed policy using Edit-WDACConfig cmdlet which is only made for Unsigned policies
-                $XmlTest = [System.Xml.XmlDocument](Get-Content -Path $_)
-                $RedFlag1 = $XmlTest.SiPolicy.SupplementalPolicySigners.SupplementalPolicySigner.SignerId
-                $RedFlag2 = $XmlTest.SiPolicy.UpdatePolicySigners.UpdatePolicySigner.SignerId
-                $RedFlag3 = $XmlTest.SiPolicy.PolicyID
-                $CurrentPolicyIDs = ((&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { $_.IsSystemPolicy -ne 'True' }).policyID | ForEach-Object -Process { "{$_}" }
-                if (!$RedFlag1 -and !$RedFlag2) {
+                [System.Xml.XmlDocument]$XmlTest = Get-Content -Path $_
+                [System.String]$RedFlag1 = $XmlTest.SiPolicy.SupplementalPolicySigners.SupplementalPolicySigner.SignerId
+                [System.String]$RedFlag2 = $XmlTest.SiPolicy.UpdatePolicySigners.UpdatePolicySigner.SignerId
+                [System.String]$RedFlag3 = $XmlTest.SiPolicy.PolicyID
+                
+                # Get the currently deployed policy IDs
+                [System.Guid[]]$CurrentPolicyIDs = ((&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { $_.IsSystemPolicy -ne 'True' }).policyID | ForEach-Object -Process { "{$_}" }
+                
+                if (!$RedFlag1 -and !$RedFlag2) {                    
                     # Ensure the selected base policy xml file is deployed
                     if ($CurrentPolicyIDs -contains $RedFlag3) {
-                        return $True
+
+                        # Ensure the selected base policy xml file is valid
+                        if ( Test-CiPolicy -XmlFile $_ ) {
+                            return $True
+                        }                        
                     }
-                    else { throw "The currently selected policy xml file isn't deployed." }
+                    else { 
+                        throw 'The currently selected policy xml file is not deployed.'
+                    }
                 }
                 # This throw is shown only when User added a Signed policy xml file for Unsigned policy file path property in user configuration file
                 # Without this, the error shown would be vague: The variable cannot be validated because the value System.String[] is not a valid value for the PolicyPath variable.
-                else { throw 'The policy xml file in User Configurations for UnsignedPolicyPath is a Signed policy.' }
+                else {
+                    throw 'The policy xml file in User Configurations for UnsignedPolicyPath is a Signed policy.'
+                }            
             }, ErrorMessage = 'The selected policy xml file is Signed. Please use Edit-SignedWDACConfig cmdlet to edit Signed policies.')]
         [Parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps Audit Events', ValueFromPipelineByPropertyName = $true)]
         [Parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps', ValueFromPipelineByPropertyName = $true)]
         [Parameter(Mandatory = $false, ParameterSetName = 'Merge Supplemental Policies', ValueFromPipelineByPropertyName = $true)]
-        [System.String]$PolicyPath,
+        [System.IO.FileInfo]$PolicyPath,
 
-        [ValidatePattern('\.xml$')]
-        [ValidateScript({ Test-Path -Path $_ -PathType 'Leaf' }, ErrorMessage = 'The path you selected is not a file path.')]
+        [ValidateScript({ Test-CiPolicy -XmlFile $_ })]
         [Parameter(Mandatory = $true, ParameterSetName = 'Merge Supplemental Policies', ValueFromPipelineByPropertyName = $true)]
-        [System.String[]]$SuppPolicyPaths,
+        [System.IO.FileInfo[]]$SuppPolicyPaths,
 
         [Parameter(Mandatory = $false, ParameterSetName = 'Merge Supplemental Policies')]
         [System.Management.Automation.SwitchParameter]$KeepOldSupplementalPolicies,
@@ -213,7 +222,7 @@ Function Edit-WDACConfig {
             [System.String]$PolicyPath = "$UserTempDirectoryPath\$PolicyFileName"
 
             Write-Verbose -Message 'Retrieving the Base policy name and ID'
-            $Xml = [System.Xml.XmlDocument](Get-Content -Path $PolicyPath)
+            [System.Xml.XmlDocument]$Xml = Get-Content -Path $PolicyPath
             [System.String]$PolicyID = $Xml.SiPolicy.PolicyID
             [System.String]$PolicyName = ($Xml.SiPolicy.Settings.Setting | Where-Object -FilterScript { $_.provider -eq 'PolicyInfo' -and $_.valuename -eq 'Name' -and $_.key -eq 'Information' }).value.string
 
@@ -443,7 +452,7 @@ Function Edit-WDACConfig {
             [System.String]$PolicyPath = "$UserTempDirectoryPath\$PolicyFileName"
 
             Write-Verbose -Message 'Retrieving the Base policy name and ID'
-            $Xml = [System.Xml.XmlDocument](Get-Content -Path $PolicyPath)
+            [System.Xml.XmlDocument]$Xml = Get-Content -Path $PolicyPath
             [System.String]$PolicyID = $Xml.SiPolicy.PolicyID
             [System.String]$PolicyName = ($Xml.SiPolicy.Settings.Setting | Where-Object -FilterScript { $_.provider -eq 'PolicyInfo' -and $_.valuename -eq 'Name' -and $_.key -eq 'Information' }).value.string
 
@@ -831,7 +840,7 @@ Function Edit-WDACConfig {
             foreach ($SuppPolicyPath in $SuppPolicyPaths) {
 
                 Write-Verbose -Message "Getting policy ID and type of: $SuppPolicyPath"
-                $Supplementalxml = [System.Xml.XmlDocument](Get-Content -Path $SuppPolicyPath)
+                [System.Xml.XmlDocument]$Supplementalxml = Get-Content -Path $SuppPolicyPath
                 [System.String]$SupplementalPolicyID = $Supplementalxml.SiPolicy.PolicyID
                 [System.String]$SupplementalPolicyType = $Supplementalxml.SiPolicy.PolicyType
 
@@ -866,7 +875,7 @@ Function Edit-WDACConfig {
             foreach ($SuppPolicyPath in $SuppPolicyPaths) {
 
                 # Get the policy ID of the currently selected Supplemental policy
-                $Supplementalxml = [System.Xml.XmlDocument](Get-Content -Path $SuppPolicyPath)
+                [System.Xml.XmlDocument]$Supplementalxml = Get-Content -Path $SuppPolicyPath
                 [System.String]$SupplementalPolicyID = $Supplementalxml.SiPolicy.PolicyID
 
                 Write-Verbose -Message "Removing policy with ID: $SupplementalPolicyID"

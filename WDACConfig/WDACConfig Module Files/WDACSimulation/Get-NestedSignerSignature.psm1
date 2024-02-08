@@ -3,7 +3,7 @@ Function Get-NestedSignerSignature {
     .SYNOPSIS
         Helps to get the 2nd aka nested signer/signature of the dual signed files
     .NOTES
-        This function is used in a very minimum capacity by the WDACConfig module and it's modified to meet the WDACConfig's requirements
+        This function is used in a very minimum capacity by the WDACConfig module and it's been modified to meet the WDACConfig's requirements
     .PARAMETER FilePath
         The path of the file to get the nested signature of
     .INPUTS

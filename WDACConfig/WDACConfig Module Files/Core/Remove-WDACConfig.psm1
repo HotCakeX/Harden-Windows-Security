@@ -314,7 +314,7 @@ Function Remove-WDACConfig {
                 Write-Progress -Id 18 -Activity 'Signing the policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                 # Configure the parameter splat
-                $ProcessParams = @{
+                [System.Collections.Hashtable]$ProcessParams = @{
                     'ArgumentList' = 'sign', '/v' , '/n', "`"$CertCN`"", '/p7', '.', '/p7co', '1.3.6.1.4.1.311.79.1', '/fd', 'certHash', ".\$PolicyID.cip"
                     'FilePath'     = $SignToolPathFinal
                     'NoNewWindow'  = $true

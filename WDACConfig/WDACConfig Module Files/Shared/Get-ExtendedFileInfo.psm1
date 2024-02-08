@@ -8,6 +8,9 @@ function Get-ExtendedFileInfo {
   <#
   .DESCRIPTION
     This function returns the file properties of a file for SpecificFileNameLevel in FilePublisher WDAC rule level
+  .NOTES
+    All the returned properties must be strings because Compare-SignerAndCertificate performs string comparison with the Signers' info from the XML file
+    For example, FileInfo object for the FilePath property should be flattened to string
   .PARAMETER Path
     The path to the file
   .OUTPUTS
@@ -25,12 +28,12 @@ function Get-ExtendedFileInfo {
   }
   process {
     # Add the properties to the hashtable
-    $FileInfo['FileDescription'] = $File.VersionInfo.FileDescription
-    $FileInfo['InternalName'] = $File.VersionInfo.InternalName
-    $FileInfo['FileName'] = $File.VersionInfo.OriginalFilename
-    $FileInfo['PackageFamilyName'] = $File.PackageFamilyName
-    $FileInfo['ProductName'] = $File.VersionInfo.ProductName
-    $FileInfo['Filepath'] = $Path
+    $FileInfo['FileDescription'] = [System.String]$File.VersionInfo.FileDescription
+    $FileInfo['InternalName'] = [System.String]$File.VersionInfo.InternalName
+    $FileInfo['FileName'] = [System.String]$File.VersionInfo.OriginalFilename
+    $FileInfo['PackageFamilyName'] = [System.String]$File.PackageFamilyName
+    $FileInfo['ProductName'] = [System.String]$File.VersionInfo.ProductName
+    $FileInfo['FilePath'] = [System.String]$Path
   }
   End {
     # Remove any empty values from the hashtable
@@ -55,9 +58,9 @@ function Get-ExtendedFileInfo {
 
       # Get the properties from the ShellFile object using their property ID
       # Null coalescing operator can't be used because the hashtable values are not null, just empty
-      $FileInfo['FileDescription'] = $FileInfo['FileDescription'] ? $FileInfo['FileDescription'] : $ShellFolder.GetDetailsOf($ShellFile, 34)
-      $FileInfo['FileName'] = $FileInfo['FileName'] ? $FileInfo['FileName'] : $ShellFolder.GetDetailsOf($ShellFile, 165)
-      $FileInfo['ProductName'] = $FileInfo['ProductName'] ? $FileInfo['ProductName'] : $ShellFolder.GetDetailsOf($ShellFile, 297)
+      $FileInfo['FileDescription'] = $FileInfo['FileDescription'] ? $FileInfo['FileDescription'] : [System.String]$ShellFolder.GetDetailsOf($ShellFile, 34)
+      $FileInfo['FileName'] = $FileInfo['FileName'] ? $FileInfo['FileName'] : [System.String]$ShellFolder.GetDetailsOf($ShellFile, 165)
+      $FileInfo['ProductName'] = $FileInfo['ProductName'] ? $FileInfo['ProductName'] : [System.String]$ShellFolder.GetDetailsOf($ShellFile, 297)
 
       # Release the Shell.Application object
       [Runtime.InteropServices.Marshal]::ReleaseComObject($Shell) | Out-Null

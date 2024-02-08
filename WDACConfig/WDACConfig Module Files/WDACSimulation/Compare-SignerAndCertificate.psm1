@@ -205,7 +205,7 @@ Function Compare-SignerAndCertificate {
                             }
 
                             # Loop over all of the file attributes in the policy XML file whose IDs are in the Signer's file attrib IDs array and the file's version is equal or greater than the minimum version of the file attribute
-                            foreach ($FileAttrib in ($PolicyFileAttributes | Where-Object -FilterScript { $Signer.SignerFileAttributeIDs -contains $_.ID })) {
+                            foreach ($FileAttrib in ($PolicyFileAttributes | Where-Object -FilterScript { $Signer.SignerFileAttributeIDs -contains $_.ID -and ($FileVersion -ge [system.version]$_.MinimumFileVersion) })) {
 
                                 # Loop over all of the keys in the extended file info to see which one of them is a match, to determine the SpecificFileNameLevel option
                                 foreach ($KeyItem in $ExtendedFileInfo.Keys) {

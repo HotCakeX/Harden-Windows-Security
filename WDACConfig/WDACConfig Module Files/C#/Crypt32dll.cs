@@ -1,9 +1,9 @@
-// Used by Get-AuthenticodeSignatureEx function
+// Used by Get-NestedSignerSignature function
 using System.Runtime.InteropServices;
 
-namespace PKI
+namespace WDACConfig
 {
-    public class Crypt32
+    public class Crypt32DLL
     {
         [DllImport("crypt32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         public static extern bool CryptQueryObject(

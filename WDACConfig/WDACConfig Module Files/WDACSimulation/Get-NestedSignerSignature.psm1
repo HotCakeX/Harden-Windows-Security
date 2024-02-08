@@ -1,16 +1,13 @@
-Function Get-AuthenticodeSignatureEx {
+Function Get-NestedSignerSignature {
     <#
     .SYNOPSIS
         Helps to get the 2nd aka nested signer/signature of the dual signed files
     .NOTES
         This function is used in a very minimum capacity by the WDACConfig module and it's modified to meet the WDACConfig's requirements
-    .LINK
-        https://www.sysadmins.lv/blog-en/reading-multiple-signatures-from-signed-file-with-powershell.aspx
-        https://www.sysadmins.lv/disclaimer.aspx
     .PARAMETER FilePath
-        The path of the file(s) to get the signature of
+        The path of the file to get the nested signature of
     .INPUTS
-        System.String[]
+        System.IO.FileInfo
     .OUTPUTS
         System.Management.Automation.Signature
     #>
@@ -18,7 +15,7 @@ Function Get-AuthenticodeSignatureEx {
     [OutputType([System.Management.Automation.Signature])]
     param(
         [Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
-        [System.String[]]$FilePath
+        [System.IO.FileInfo]$FilePath
     )
 
     begin {
@@ -32,7 +29,7 @@ Function Get-AuthenticodeSignatureEx {
         Add-Type -AssemblyName 'System.Security' -ErrorAction SilentlyContinue
 
         # Add the Crypt32.dll library functions as a type if they don't exist
-        if (-NOT ('PKI.Crypt32' -as [System.Type]) ) {
+        if (-NOT ('WDACConfig.Crypt32DLL' -as [System.Type]) ) {
             Add-Type -Path "$ModuleRootPath\C#\Crypt32dll.cs"
         }
 
@@ -41,34 +38,36 @@ Function Get-AuthenticodeSignatureEx {
         [System.Int32]$CERT_QUERY_CONTENT_FLAG_PKCS7_SIGNED_EMBED = 0x400
         [System.Int16]$CERT_QUERY_FORMAT_FLAG_BINARY = 0x2
 
-        # Define a helper function to get the timestamps of the countersigners
+        # Define a helper function to get the timestamps of the CounterSigner
         function Get-TimeStamps {
             param (
-                $SignerInfo
+                [System.Security.Cryptography.Pkcs.SignerInfo]$SignerInfo
             )
 
             [System.Object[]]$RetValue = @()
 
             foreach ($CounterSignerInfos in $Infos.CounterSignerInfos) {
-                # Get the signing time attribute from the countersigner info object
-                $STime = ($CounterSignerInfos.SignedAttributes | Where-Object -FilterScript { $_.Oid.Value -eq '1.2.840.113549.1.9.5' }).Values | `
-                    Where-Object -FilterScript { $null -ne $_.SigningTime }
-                # Create a custom object with the countersigner certificate and signing time properties
-                $TsObject = New-Object psobject -Property @{
+
+                # Get the signing time attribute from the CounterSigner info object
+                $STime = ($CounterSignerInfos.SignedAttributes | Where-Object -FilterScript { ($_.Oid.Value -eq '1.2.840.113549.1.9.5') -and ($null -ne $_.SigningTime) }).Values
+
+                # Create a custom object with the CounterSigner certificate and signing time properties
+                $TsObject = New-Object 'psobject' -Property @{
                     Certificate = $CounterSignerInfos.Certificate
                     SigningTime = $STime.SigningTime.ToLocalTime()
                 }
+
                 # Add the custom object to the return value array
                 $RetValue += $TsObject
             }
-            # Return the array of custom objects with countersigner info
+            # Return the array of custom objects with CounterSigner info
             $RetValue
 
         }
     }
     process {
         # For each file path, get the authenticode signature using the built-in cmdlet
-        foreach ($Output in Get-AuthenticodeSignature $FilePath) {
+        foreach ($Output in Get-AuthenticodeSignature -LiteralPath $FilePath) {
 
             # Initialize some variables to store the output parameters of the CryptQueryObject function
             [System.Int64]$PdwMsgAndCertEncodingType = 0
@@ -79,7 +78,7 @@ Function Get-AuthenticodeSignatureEx {
             [System.IntPtr]$PpvContext = [System.IntPtr]::Zero
 
             # Call the CryptQueryObject function to get the handle of the PKCS #7 message from the file path
-            $Return = [PKI.Crypt32]::CryptQueryObject(
+            $Return = [WDACConfig.Crypt32DLL]::CryptQueryObject(
                 $CERT_QUERY_OBJECT_FILE,
                 $Output.Path,
                 $CERT_QUERY_CONTENT_FLAG_PKCS7_SIGNED_EMBED,
@@ -92,6 +91,7 @@ Function Get-AuthenticodeSignatureEx {
                 [ref]$phMsg,
                 [ref]$ppvContext
             )
+
             # If the function fails, return nothing
             if (!$Return) { return }
 
@@ -99,16 +99,16 @@ Function Get-AuthenticodeSignatureEx {
             [System.Int64]$PcbData = 0
 
             # Call the CryptMsgGetParam function to get the size of the PKCS #7 message data
-            $Return = [PKI.Crypt32]::CryptMsgGetParam($phMsg, 29, 0, $null, [ref]$PcbData)
+            $Return = [WDACConfig.Crypt32DLL]::CryptMsgGetParam($phMsg, 29, 0, $null, [ref]$PcbData)
 
             # If the function fails, return nothing
             if (!$Return) { return }
 
             # Create a byte array to store the PKCS #7 message data
-            $PvData = New-Object -TypeName 'System.Byte[]' -ArgumentList $PcbData
+            [System.Byte[]]$PvData = New-Object -TypeName 'System.Byte[]' -ArgumentList $PcbData
 
             # Call the CryptMsgGetParam function again to get the PKCS #7 message data
-            $Return = [PKI.Crypt32]::CryptMsgGetParam($PhMsg, 29, 0, $PvData, [System.Management.Automation.PSReference]$PcbData)
+            $Return = [WDACConfig.Crypt32DLL]::CryptMsgGetParam($PhMsg, 29, 0, $PvData, [System.Management.Automation.PSReference]$PcbData)
 
             # Create a SignedCms object to decode the PKCS #7 message data
             [System.Security.Cryptography.Pkcs.SignedCms]$SignedCms = New-Object -TypeName 'Security.Cryptography.Pkcs.SignedCms'
@@ -123,23 +123,23 @@ Function Get-AuthenticodeSignatureEx {
             $Output | Add-Member -MemberType NoteProperty -Name TimeStamps -Value $null
             $Output | Add-Member -MemberType NoteProperty -Name DigestAlgorithm -Value $Infos.DigestAlgorithm.FriendlyName
 
-            # Call the helper function to get the timestamps of the countersigners and assign it to the TimeStamps property
+            # Call the helper function to get the timestamps of the CounterSigner and assign it to the TimeStamps property
             $Output.TimeStamps = Get-TimeStamps -SignerInfo $Infos
 
             # Check if there is a nested signature attribute in the signer info object by looking for the OID 1.3.6.1.4.1.311.2.4.1
-            $second = $Infos.UnsignedAttributes | Where-Object -FilterScript { $_.Oid.Value -eq '1.3.6.1.4.1.311.2.4.1' }
+            $Second = $Infos.UnsignedAttributes | Where-Object -FilterScript { $_.Oid.Value -eq '1.3.6.1.4.1.311.2.4.1' }
 
             if ($Second) {
 
                 # If there is a nested signature attribute
                 # Get the value of the nested signature attribute as a raw data byte array
-                $value = $Second.Values | Where-Object -FilterScript { $_.Oid.Value -eq '1.3.6.1.4.1.311.2.4.1' }
+                $Value = $Second.Values | Where-Object -FilterScript { $_.Oid.Value -eq '1.3.6.1.4.1.311.2.4.1' }
 
                 # Create another SignedCms object to decode the nested signature data
                 [System.Security.Cryptography.Pkcs.SignedCms]$SignedCms2 = New-Object -TypeName 'Security.Cryptography.Pkcs.SignedCms'
 
                 # Decode the nested signature data and populate the SignedCms object properties
-                $SignedCms2.Decode($value.RawData)
+                $SignedCms2.Decode($Value.RawData)
                 $Output | Add-Member -MemberType NoteProperty -Name NestedSignature -Value $null
 
                 # Get the first signer info object from the nested signature SignedCms object
@@ -154,17 +154,18 @@ Function Get-AuthenticodeSignatureEx {
                 # Assign the custom object to the NestedSignature property of the output object
                 $Output.NestedSignature = $Nested
             }
-            # Return the output object with the added properties
-            $Output
 
             # Close the handles of the PKCS #7 message and the certificate store
-            [void][PKI.Crypt32]::CryptMsgClose($PhMsg)
-            [void][PKI.Crypt32]::CertCloseStore($PhCertStore, 0)
+            [System.Void][WDACConfig.Crypt32DLL]::CryptMsgClose($PhMsg)
+            [System.Void][WDACConfig.Crypt32DLL]::CertCloseStore($PhCertStore, 0)
         }
     }
-    end {}
+    End {
+        # Return the output object with the added properties
+        Return $Output
+    }
 }
-Export-ModuleMember -Function 'Get-AuthenticodeSignatureEx'
+Export-ModuleMember -Function 'Get-NestedSignerSignature'
 
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor

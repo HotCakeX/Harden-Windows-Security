@@ -34,7 +34,7 @@ Function Compare-SignerAndCertificate {
 
         # Importing the required sub-modules
         Import-Module -FullyQualifiedName "$ModuleRootPath\WDACSimulation\Get-SignerInfo.psm1" -Force
-        Import-Module -FullyQualifiedName "$ModuleRootPath\WDACSimulation\Get-AuthenticodeSignatureEx.psm1" -Force
+        Import-Module -FullyQualifiedName "$ModuleRootPath\WDACSimulation\Get-NestedSignerSignature.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\WDACSimulation\Get-CertificateDetails.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\WDACSimulation\Get-ExtendedFileInfo.psm1" -Force
 
@@ -107,7 +107,7 @@ Function Compare-SignerAndCertificate {
         [System.Object]$PrimaryCertificateLeafDetails = $AllPrimaryCertificateDetails.LeafCertificate
 
         # Get the Nested (Secondary) certificate of the signed file, if any
-        [System.Management.Automation.Signature]$ExtraCertificateDetails = Get-AuthenticodeSignatureEx -FilePath $SignedFilePath
+        [System.Management.Automation.Signature]$ExtraCertificateDetails = Get-NestedSignerSignature -FilePath $SignedFilePath
 
         # Extract the Nested (Secondary) certificate from the nested property, if any
         $NestedCertificate = ($ExtraCertificateDetails).NestedSignature.SignerCertificate

@@ -238,7 +238,7 @@ To get help and syntax on PowerShell console, type:
         'WDACSimulation\Get-SignedFileCertificates.psm1',
         'WDACSimulation\Get-FileRuleOutput.psm1',
         'WDACSimulation\Get-CertificateDetails.psm1',
-        'WDACSimulation\Get-AuthenticodeSignatureEx.psm1',
+        'WDACSimulation\Get-NestedSignerSignature.psm1',
         'WDACSimulation\Compare-SignerAndCertificate.psm1'
         'WDACSimulation\Convert-HexToOID.psm1',
         'WDACSimulation\Get-ExtendedFileInfo.psm1',

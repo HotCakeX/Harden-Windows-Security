@@ -343,7 +343,7 @@ Function Compare-SignerAndCertificate {
                             if ($Signer.NestedHasFileAttrib) {
 
                                 # Loop over all of the file attributes in the policy XML file whose IDs are in the Signer's file attrib IDs array and the file's version is equal or greater than the minimum version of the file attribute
-                                # The File version and ExtendedFileInfo are the same as the primary signer's, so we don't need to reassign them since both signers are being validated for the same file and the primary singer loop always runs first before nested signer loop
+                                # The File version and ExtendedFileInfo are the same as the primary signer's, so we don't need to reassign them since both signers are being validated for the same file and the primary signer loop always runs first before nested signer loop
                                 foreach ($FileAttrib in ($PolicyFileAttributes | Where-Object -FilterScript { ($Signer.SignerFileAttributeIDs -contains $_.ID) -and ($FileVersion -ge [system.version]$_.MinimumFileVersion) })) {
 
                                     # Loop over all of the keys in the extended file info to see which one of them is a match, to determine the SpecificFileNameLevel option

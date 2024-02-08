@@ -47,6 +47,12 @@ Function Get-SignerInfo {
         # Get Kernel Mode Signers IDs
         [System.String[]]$KMSigners = ($Xml.SiPolicy.SigningScenarios.SigningScenario | Where-Object -FilterScript { $_.value -eq '131' }).ProductSigners.AllowedSigners.AllowedSigner.SignerId
 
+        # Get UpdatePolicySigners IDs
+        [System.String[]]$UPSigners = $Xml.SiPolicy.UpdatePolicySigners.UpdatePolicySigner.SignerId
+
+        # Get SupplementalPolicySigners IDs
+        [System.String[]]$SPSigners = $Xml.SiPolicy.SupplementalPolicySigners.SupplementalPolicySigner.SignerId
+
         # Get all of the File Attrib IDs in the <FileRules> node
         [System.String[]]$FileAttribIDs = $Xml.SiPolicy.FileRules.FileAttrib.ID
 
@@ -68,7 +74,7 @@ Function Get-SignerInfo {
         # Loop through each Signer node and extract the information
         foreach ($Signer in $Signers) {
 
-            # Replacing Wellknown root IDs with their corresponding TBS values
+            # Replacing Wellknown root IDs with their corresponding TBS values and Names (Common Names)
             if ($Signer.CertRoot.Value -in ('03', '04', '05', '06', '07', '09', '0A', '0E', '0G', '0H', '0I')) {
                 switch ($Signer.CertRoot.Value) {
                     '03' {
@@ -170,8 +176,14 @@ Function Get-SignerInfo {
             elseif ($Signer.ID -in $KMSigners) {
                 [System.String]$SignerScope = 'KernelMode'
             }
+            elseif ($Signer.ID -in $UPSigners) {
+                [System.String]$SignerScope = 'UpdatePolicy'
+            }
+            elseif ($Signer.ID -in $SPSigners) {
+                [System.String]$SignerScope = 'SupplementalPolicy'
+            }
             else {
-                Write-Warning -Message "The signer with ID $($Signer.ID) is not allowed in any of the signing scenarios defined in the WDAC policy. The policy XML file may be corrupted."
+                Write-Warning -Message "The signer with the ID $($Signer.ID) is not associated with any signing scenarios, Update policy signers or Supplemental policy signers defined in the WDAC policy. The policy XML file might be corrupted."
             }
 
             # Determine whether the signer has a FileAttribRef, if it points to a file then it uses FilePublisher level
@@ -198,12 +210,13 @@ Function Get-SignerInfo {
             }
 
             # If the signer has no FileAttribRef, then set it to N/A
+            # The value doesn't matter if $HasFileAttrib is false
             if ([System.String]::IsNullOrWhiteSpace($SignerFileAttributeIDs)) {
                 $SignerFileAttributeIDs = 'N/A'
             }
 
             # Create a new instance of the Signer class in the WDACConfig Namespace
-            [WDACConfig.Signer]$SignerObj = New-Object -TypeName WDACConfig.Signer -ArgumentList ($Signer.ID, $Signer.Name, $Signer.CertRoot.Value, $Signer.CertPublisher.Value, $HasEKU, $EKUOIDs, $EKUsMatch, $SignerScope, $HasFileAttrib, $SignerFileAttributeIDs)
+            [WDACConfig.Signer]$SignerObj = New-Object -TypeName 'WDACConfig.Signer' -ArgumentList ($Signer.ID, $Signer.Name, $Signer.CertRoot.Value, $Signer.CertPublisher.Value, $HasEKU, $EKUOIDs, $EKUsMatch, $SignerScope, $HasFileAttrib, $SignerFileAttributeIDs)
 
             # Add the Signer object to the output array if it doesn't already exist with another ID, typically for files that are allowed in both User and Kernel mode signing scenarios so they have 2 identical signers with different IDs
             # Commenting it because it causes slight inaccuracies in the detected level of an allowed file

@@ -34,8 +34,7 @@ function Get-ExtendedFileInfo {
     $FileInfo['PackageFamilyName'] = [System.String]$File.PackageFamilyName
     $FileInfo['ProductName'] = [System.String]$File.VersionInfo.ProductName
     $FileInfo['FilePath'] = [System.String]$Path
-  }
-  End {
+
     # Remove any empty values from the hashtable
     @($FileInfo.keys) | ForEach-Object -Process {
       if (!$FileInfo[$_]) { $FileInfo.Remove($_) }
@@ -103,10 +102,11 @@ function Get-ExtendedFileInfo {
       }
       catch {
         # Gracefully handle the error since it should not stop the execution
-        Write-Verbose -Message "There was an error while trying to get the OriginalFileName property using Get-AppLockerFileInformation. Error: $($_.Exception.Message)"
+        Write-Verbose -Message "There was an error while trying to get the OriginalFileName property using Get-AppLockerFileInformation cmdlet: $($_.Exception.Message)"
       }
     }
-
+  }
+  End {
     # Return the ordered hashtable
     return $FileInfo
   }

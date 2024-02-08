@@ -36,7 +36,7 @@ Function Compare-SignerAndCertificate {
         Import-Module -FullyQualifiedName "$ModuleRootPath\WDACSimulation\Get-SignerInfo.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\WDACSimulation\Get-AuthenticodeSignatureEx.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\WDACSimulation\Get-CertificateDetails.psm1" -Force
-        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Get-ExtendedFileInfo.psm1" -Force
+        Import-Module -FullyQualifiedName "$ModuleRootPath\WDACSimulation\Get-ExtendedFileInfo.psm1" -Force
 
         # Get the signer information from the XML file path using the Get-SignerInfo function
         [WDACConfig.Signer[]]$SignerInfo = Get-SignerInfo -XmlFilePath $XmlFilePath -SignedFilePath $SignedFilePath

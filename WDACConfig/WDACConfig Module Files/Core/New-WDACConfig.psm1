@@ -3,6 +3,7 @@ Function New-WDACConfig {
         DefaultParameterSetName = 'Get Block Rules',
         PositionalBinding = $false
     )]
+    [OutputType([System.String])]
     Param(
         # 9 Main parameters - should be used for position 0
         [Parameter(Mandatory = $false, ParameterSetName = 'Get Block Rules')][System.Management.Automation.SwitchParameter]$GetBlockRules,
@@ -513,6 +514,7 @@ Function New-WDACConfig {
                 System.Void
             #>
             [CmdletBinding()]
+            [OutputType([System.Void])]
             param()
 
             # The total number of the main steps for the progress bar to render
@@ -572,6 +574,7 @@ Function New-WDACConfig {
                 System.Void
             #>
             [CmdletBinding()]
+            [OutputType([System.Void])]
             param()
 
             # The total number of the main steps for the progress bar to render
@@ -633,6 +636,7 @@ Function New-WDACConfig {
                 System.Void
             #>
             [CmdletBinding()]
+            [OutputType([System.Void])]
             param()
 
             # The total number of the main steps for the progress bar to render

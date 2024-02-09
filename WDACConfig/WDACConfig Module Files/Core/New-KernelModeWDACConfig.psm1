@@ -4,6 +4,7 @@ Function New-KernelModeWDACConfig {
         PositionalBinding = $false,
         ConfirmImpact = 'High'
     )]
+    [OutputType([System.String])]
     Param(
         [Parameter(Mandatory = $false, ParameterSetName = 'Default Strict Kernel')][System.Management.Automation.SwitchParameter]$Default,
         [Parameter(Mandatory = $false, ParameterSetName = 'No Flight Roots')][System.Management.Automation.SwitchParameter]$NoFlightRoots,
@@ -63,6 +64,7 @@ Function New-KernelModeWDACConfig {
                 System.Void
             #>
             [CmdletBinding()]
+            [OutputType([System.Void])]
             param(
                 [System.String]$PolicyIDInput,
                 [System.String]$PolicyFilePathInput

@@ -11,6 +11,7 @@ Function Move-UserModeToKernelMode {
         System.Void
     #>
     [CmdletBinding()]
+    [OutputType([System.Void])]
     param(
         [Parameter(Mandatory = $true)]
         [ValidateScript({ Test-Path -Path $_ -PathType Leaf })]

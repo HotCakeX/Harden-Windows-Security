@@ -4,6 +4,7 @@ Function Deploy-SignedWDACConfig {
         PositionalBinding = $false,
         ConfirmImpact = 'High'
     )]
+    [OutputType([System.String])]
     Param(
         [ValidateScript({ Test-CiPolicy -XmlFile $_ })]
         [parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ValueFromPipeline = $true)]

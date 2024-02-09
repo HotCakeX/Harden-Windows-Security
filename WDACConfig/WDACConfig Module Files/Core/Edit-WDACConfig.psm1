@@ -3,6 +3,7 @@ Function Edit-WDACConfig {
         DefaultParameterSetName = 'Allow New Apps Audit Events',
         PositionalBinding = $false
     )]
+    [OutputType([System.String])]
     Param(
         [Alias('E')]
         [Parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps Audit Events')][System.Management.Automation.SwitchParameter]$AllowNewAppsAuditEvents,

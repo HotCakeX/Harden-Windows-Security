@@ -5,6 +5,7 @@ Function New-DenyWDACConfig {
         SupportsShouldProcess = $true,
         ConfirmImpact = 'High'
     )]
+    [OutputType([System.String])]
     Param(
         # Main parameters for position 0
         [Alias('N')]

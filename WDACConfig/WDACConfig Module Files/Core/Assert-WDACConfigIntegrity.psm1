@@ -2,6 +2,7 @@ Function Assert-WDACConfigIntegrity {
     [CmdletBinding(
         DefaultParameterSetName = 'SaveLocally'
     )]
+    [OutputType([System.String], [System.Object[]])]
     param (
         [Alias('S')]
         [Parameter(Mandatory = $false, ParameterSetName = 'SaveLocally')]

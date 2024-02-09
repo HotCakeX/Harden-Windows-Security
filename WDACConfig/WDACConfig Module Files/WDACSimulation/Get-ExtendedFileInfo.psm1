@@ -13,10 +13,10 @@ function Get-ExtendedFileInfo {
     For example, FileInfo object for the FilePath property should be flattened to string
   .PARAMETER Path
     The path to the file
-  .OUTPUTS
-    Ordered
   .INPUTS
     System.IO.FileInfo
+  .OUTPUTS
+    Ordered
   #>
 
   Begin {

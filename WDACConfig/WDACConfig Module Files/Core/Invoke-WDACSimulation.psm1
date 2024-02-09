@@ -63,16 +63,18 @@ Function Invoke-WDACSimulation {
             Write-Verbose -Message 'Starting the stopwatch...'
             [System.Diagnostics.Stopwatch]$StopWatch = [Diagnostics.Stopwatch]::StartNew()
             Function Stop-Log {
-                [CmdletBinding()]
-                param()
                 <#
                 .SYNOPSIS
                     Stops the stopwatch and the transcription when the -Log switch is used with the Invoke-WDACSimulation cmdlet
-                .inputs
+                .Inputs
                     None
-                .outputs
-                    None
+                .Outputs
+                    System.Void
                 #>
+                [CmdletBinding()]
+                [OutputType([System.Void])]
+                param()
+                
                 Write-Verbose -Message 'Stopping the stopwatch'
                 $StopWatch.Stop()
                 Write-Verbose -Message "WDAC Simulation for $TotalSubSteps files completed in $($StopWatch.Elapsed.Hours) Hours - $($StopWatch.Elapsed.Minutes) Minutes - $($StopWatch.Elapsed.Seconds) Seconds - $($StopWatch.Elapsed.Milliseconds) Milliseconds - $($StopWatch.Elapsed.Microseconds) Microseconds - $($StopWatch.Elapsed.Nanoseconds) Nanoseconds"

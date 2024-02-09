@@ -11,6 +11,7 @@ Function New-SnapBackGuarantee {
         System.Void
     #>
     [CmdletBinding()]
+    [OutputType([System.Void])]
     Param(
         [parameter(Mandatory = $true)]
         [System.IO.DirectoryInfo]$Path

@@ -9,9 +9,10 @@ Function Copy-CiRules {
     .INPUTS
         System.IO.FileInfo
     .OUTPUTS
-        None
+        System.Void
     #>
-    [CmdletBinding ()]
+    [CmdletBinding()]
+    [OutputType([System.Void])]
     Param (
         [Parameter (Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
         [System.IO.FileInfo]$SourceFile,

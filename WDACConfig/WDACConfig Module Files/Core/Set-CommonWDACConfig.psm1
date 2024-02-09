@@ -1,5 +1,6 @@
 Function Set-CommonWDACConfig {
     [CmdletBinding()]
+    [OutputType([System.Object[]])]
     Param(
         [ValidateScript({
                 # Assign the input value to a variable because $_ is going to be used to access another pipeline object

@@ -1,5 +1,6 @@
 Function Get-CommonWDACConfig {
     [CmdletBinding()]
+    [OutputType([System.Object[]], [System.DateTime], [System.String], [System.Guid])]
     Param(
         [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$CertCN,
         [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$CertPath,

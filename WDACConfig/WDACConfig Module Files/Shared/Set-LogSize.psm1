@@ -12,6 +12,7 @@ Function Set-LogSize {
         Size of the Code Integrity Operational Event Log
     #>
     [CmdletBinding()]
+    [OutputType([System.Void])]
     param (
         [parameter(Mandatory = $true)]
         [System.Int64]$LogSize

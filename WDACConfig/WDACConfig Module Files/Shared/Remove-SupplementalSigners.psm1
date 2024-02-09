@@ -1,9 +1,4 @@
 Function Remove-SupplementalSigners {
-    [CmdletBinding()]
-    param (
-        [Parameter(Mandatory = $true, ValueFromPipeline = $true, Position = 0)]
-        [System.IO.FileInfo]$Path
-    )
     <#
 .SYNOPSIS
     Removes the entire SupplementalPolicySigners block
@@ -23,8 +18,14 @@ Function Remove-SupplementalSigners {
 .INPUTS
     System.IO.FileInfo
 .OUTPUTS
-    None
+    System.Void
 #>
+    [CmdletBinding()]
+    [OutputType([System.Void])]
+    param (
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true, Position = 0)]
+        [System.IO.FileInfo]$Path
+    )
 
     begin {
 

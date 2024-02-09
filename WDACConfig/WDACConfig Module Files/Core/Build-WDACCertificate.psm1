@@ -1,5 +1,6 @@
 Function Build-WDACCertificate {
     [CmdletBinding()]
+    [OutputType([System.String])]
     param (
         [ValidatePattern('^[a-zA-Z0-9 ]+$', ErrorMessage = 'Only use alphanumeric and space characters.')]
         [Parameter(Mandatory = $false)]

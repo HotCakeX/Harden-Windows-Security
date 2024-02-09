@@ -5,6 +5,7 @@ Function Remove-WDACConfig {
         PositionalBinding = $false,
         ConfirmImpact = 'High'
     )]
+    [OutputType([System.String])]
     Param(
         [Alias('S')]
         [Parameter(Mandatory = $false, ParameterSetName = 'Signed Base')][System.Management.Automation.SwitchParameter]$SignedBase,

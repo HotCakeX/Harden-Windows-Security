@@ -1,5 +1,6 @@
 Function Confirm-WDACConfig {
     [CmdletBinding(DefaultParameterSetName = 'List Active Policies')]
+    [OutputType([System.String], [System.Object])]
     Param(
         [Alias('L')]
         [Parameter(Mandatory = $false, ParameterSetName = 'List Active Policies')][System.Management.Automation.SwitchParameter]$ListActivePolicies,

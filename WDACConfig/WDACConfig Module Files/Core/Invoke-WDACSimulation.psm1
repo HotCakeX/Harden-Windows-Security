@@ -118,6 +118,9 @@ Function Invoke-WDACSimulation {
         # Store the file paths of valid Allowed Signed files - Publisher level
         [System.IO.FileInfo[]]$SignedFile_Publisher_FilePaths = @()
 
+        # Store the file paths of valid Allowed Signed files - SignedVersion level
+        [System.IO.FileInfo[]]$SignedFile_SignedVersion_FilePaths = @()
+
         # Store the file paths of valid Allowed Signed files - PcaCertificate and RootCertificate levels
         [System.IO.FileInfo[]]$SignedFile_PcaCertificateAndRootCertificate_FilePaths = @()
 
@@ -258,6 +261,14 @@ Function Invoke-WDACSimulation {
                                         break Level2SwitchLabel
                                     }
 
+                                    'SignedVersion' {
+                                        Write-Verbose -Message 'The file is signed and valid, and allowed by the policy using SignedVersion level'
+
+                                        $SignedFile_SignedVersion_FilePaths += $CurrentFilePath
+
+                                        break Level2SwitchLabel
+                                    }
+
                                     'PcaCertificate/RootCertificate' {
                                         Write-Verbose -Message 'The file is signed and valid, and allowed by the policy using PcaCertificate/RootCertificate levels'
 
@@ -371,6 +382,22 @@ Function Invoke-WDACSimulation {
                     FilePath     = $Path
                     Source       = 'Signer'
                     Permission   = 'Publisher Level'
+                    IsAuthorized = $true
+                }
+                # Convert the hash table to a PSObject and add it to the output array
+                $MegaOutputObject += New-Object -TypeName PSObject -Property $Object
+            }
+        }
+
+        if ($SignedFile_SignedVersion_FilePaths) {
+            Write-Verbose -Message 'Looping through the array of files allowed by valid signature - SignedVersion Level'
+            Write-Verbose -Message "$($SignedFile_SignedVersion_FilePaths.count) File(s) are allowed by SignedVersion signer level." -Verbose
+            foreach ($Path in $SignedFile_SignedVersion_FilePaths) {
+                # Create a hash table with the file path and source properties
+                [System.Collections.Hashtable]$Object = @{
+                    FilePath     = $Path
+                    Source       = 'Signer'
+                    Permission   = 'SignedVersion Level'
                     IsAuthorized = $true
                 }
                 # Convert the hash table to a PSObject and add it to the output array
@@ -656,8 +683,8 @@ Register-ArgumentCompleter -CommandName 'Invoke-WDACSimulation' -ParameterName '
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCAAZ+4sVstFTkfv
-# g58Mnjocm/tfzSd9jUkOM0y3Y5ORTqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDMbh37JF7AnBsc
+# 9UR0gTwjhjkWg5+22GTRvgPE5tOC36CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -704,16 +731,16 @@ Register-ArgumentCompleter -CommandName 'Invoke-WDACSimulation' -ParameterName '
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgS/q2ghczgcBN+gfe3kpykzprHfGlWLTWMm1GIxoJpI4wDQYJKoZIhvcNAQEB
-# BQAEggIAV6huEDJLlO4RYJtdM43fZSAew8mEPsZvnWEUt2fgj/1jPVMj9JP0eIWK
-# eq18VzeLoHIR+2HWMWdTs69o9K4r9yVHwCTYfemMhykF9yQd5T8QEbU3REaBu1pR
-# F8hlb9KUIhj0CrAFarG3OVBNnNz2hooSWmcBsi1vwHYlL89mjVsKUVZ5bVRf6WwJ
-# z7GtKZ7RWNJy82dnnm9LDjjlcqTrKwXlwe3d5/k6QnEZdzImvl/lZEcg6Ic2ys2W
-# jCl4mj/rEY4cRiOtAUlC+nXCMY0QsJts1Ge5zLwX0mUqF5fiPZGXsrcRElYM8P6t
-# qcY2EbA2sXK3j/f1a+0taPGn1Nj0Qh+bZdbTkteEfG5EoCC7wAIpLicVCw2AeuHj
-# aOLaIKrnH66wzaq7tnJh/IKjBdfmvw7dZ5YneYVJ54mlT/Tgea0w1f6/mS0zWdZL
-# A0EE3jmUQuygY6654uWqjPqLDROFPSrtZ6bxxeVo5f6xptYVz/cP/cmTa9c2L4Bs
-# mZfnMol/H+HOs7NYIhSRSE+tk4q1NG4LZNX/9NtE/u6GaSLcT0RUdgwC8Vp9cgvw
-# NI7yl89kCX7t628e5qHArKkCvCEi0/S1Y3YvQBl7yxYoq/eNWV6r/toXj4wZl9PD
-# fddbH1oKv7I37dSMyRg21UCmvxxgT3cInfzxM2PfiHfn75SNWok=
+# IgQg8/Kn/N8nt38j4grjt6yvuXAWHUbxOKdg/HWhvk8hUbgwDQYJKoZIhvcNAQEB
+# BQAEggIApAm/5TmRK0+M618VMME6Ny8MrhW+jYj8p7Sz++yJF1IolGwRwu/tmgAB
+# aSBY09ykxLS4yP6YewQwI7+iAq6CVQ3u4in5NWXpKSjXN4KuKOixDCJTO9dxcd43
+# W4u1rQvR8ZK8tm87jDk6ZomuwAhn56uMAQX4UU+dSX+z6uBJGdMdpDn6KFuwj1+P
+# TI48BjYVwR0R051uWu4bGSpzlHwVQKtS/m7EI0V4wyvkNXHQKPr4RYXl4MQrD8FI
+# vz5r/Vw4mSUoD8cPDevO1FOMMjgw/42PP4ChXdF39c1cEX7lr+ZK8eTuy0v6HKRw
+# l72kCy0ohyKZnP1bKgGbaANIyONyZxv8s7ZrzeYutvZ4IgcRRWxy9pcqLq75DJqN
+# hpzNBV4rLEzX0z7Pp62/4Mt5Ei83+tvQH8MFe4fwFcrST5ieLUg7eiqKpcGNnWJX
+# wa7V4DhkA9tL1hEN7sNONuYiAwOjIxjBtYMQjpNi0TuQs2nmmgMtbp+Deic3C33u
+# TFAsOgbznsIBNN1Wf+yfmYBHu4nWFw2F3DGN9ZMjcWfdbXS4GgC3/WT6BFaeN44S
+# ZjCS4vE195QG+Fl41LH56pQOoxrarbfifne8qtlQdwGvZRzJ7CScQVixm0FBQ+++
+# iWTjthfZdR02RSpZXI1N2MyNISvc53i9upnlBojsUYoUeu/2G1E=
 # SIG # End signature block

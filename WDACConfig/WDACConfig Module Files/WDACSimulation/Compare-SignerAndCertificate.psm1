@@ -48,6 +48,7 @@ Function Compare-SignerAndCertificate {
         [System.Object[]]$PolicyFileAttributes = $Xml.SiPolicy.FileRules.FileAttrib
 
         # An ordered hashtable that holds the details of the current file
+        # Values marked as "Gathered from the Get-SignerInfo function" are identical for both primary and nested signers since that function can't know which signer is going to be matched with the primary or nested certificate of a file
         $CurrentFileInfo = [ordered]@{
             #Region Primary Signer
             SignerID                                 = ''       # Gathered from the Get-SignerInfo function
@@ -61,7 +62,7 @@ Function Compare-SignerAndCertificate {
             HasFileAttrib                            = $false   # Gathered from the Get-SignerInfo function
             SignerFileAttributeIDs                   = @()      # Gathered from the Get-SignerInfo function
             MatchCriteria                            = ''
-            SpecificFileNameLevelMatchCriteria       = ''       # Only those eligible for FilePublisher level assign this value, otherwise it stays empty
+            SpecificFileNameLevelMatchCriteria       = ''       # Only those eligible for FilePublisher or SignedVersion levels assign this value, otherwise it stays empty
             CertSubjectCN                            = ''
             CertIssuerCN                             = ''
             CertNotAfter                             = ''
@@ -84,7 +85,7 @@ Function Compare-SignerAndCertificate {
             NestedHasFileAttrib                      = $false   # Gathered from the Get-SignerInfo function
             NestedSignerFileAttributeIDs             = @()      # Gathered from the Get-SignerInfo function
             NestedMatchCriteria                      = ''
-            NestedSpecificFileNameLevelMatchCriteria = ''       # Only those eligible for FilePublisher level assign this value, otherwise it stays empty
+            NestedSpecificFileNameLevelMatchCriteria = ''       # Only those eligible for FilePublisher or SignedVersion levels assign this value, otherwise it stays empty
             NestedCertSubjectCN                      = ''
             NestedCertIssuerCN                       = ''
             NestedCertNotAfter                       = ''
@@ -133,7 +134,7 @@ Function Compare-SignerAndCertificate {
             # Set the flag for the file having nested certificate to $false because the WDAC policy only creates signer for one of them and checking for 2nd signer naturally causes inaccurate results
             if ($NestedCertificateLeafDetails.TBSValue -eq $PrimaryCertificateLeafDetails.TBSValue) {
 
-                Write-Verbose -Message 'The Leaf Certificates of the primary and nester signers are the same'
+                Write-Verbose -Message 'The Leaf Certificates of the primary and nested signers are the same'
 
                 $CurrentFileInfo.HasNestedCert = $false
             }
@@ -144,10 +145,23 @@ Function Compare-SignerAndCertificate {
         }
 
         # Assign indicators/flags to ascertain if a primary or nested signer was located, thereby avoiding redundant iterations of their loops
-        # Initialize them to $False until a nested loop of the FilePublisher identifies a match for SpecificFileNameLevel
+        # Initialize them to $False until a nested loop identifies a match
         # Owing to the complexity of the loops in those regions, a label is employed to exit multiple loops simultaneously
         [System.Boolean]$FoundMatchPrimary = $false
         [System.Boolean]$FoundMatchNested = $false
+
+        # Initialize the flag to indicate if the file's extended info is available in the current session
+        [System.Boolean]$FileExtendedInfoAvailable = $false
+
+        # Due to the fuzzy searching nature of signers and matching them with the file's certificates, it's possible that a signer can match at multiple levels
+        # The following flags are used to indicate that if a match was not already found for the primary signer in a 3-way match (FilePublisher, Publisher or SignedVersion levels)
+        # Then the loop must keep going and only once it's exhausted all the signers for those 3 levels then it can move to other levels
+        # This improves the accuracy in policies where SignedVersion level is used. A file could be prematurely matched with PCA/Root certificate levels while it could've been matched with higher levels had the loop continued
+
+        # Initialize the flag to indicate if a match was found for the primary signer in a 3-way match (FilePublisher, Publisher or SignedVersion levels)
+        [System.Boolean]$FoundMatchPrimary3Way = $false
+        # Initialize the flag to indicate if a match was found for the nested signer in a 3-way match (FilePublisher, Publisher or SignedVersion levels)
+        [System.Boolean]$FoundMatchNested3Way = $false
     }
 
     Process {
@@ -155,26 +169,30 @@ Function Compare-SignerAndCertificate {
         # Loop through each signer in the signer information array, These are the signers in the XML policy file
         foreach ($Signer in $SignerInfo) {
 
-            # If a match wasn't already found for the primary signer based on the FilePublisher level
-            if (-NOT $FoundMatchPrimary) {
+            if ($FoundMatchPrimary3Way -and $FoundMatchNested3Way) {
+                # Exit the process block if a match was already found for both the primary and nested signers, and stop trying other signers
+                Return
+            }
+
+            # If a match wasn't already found for the primary signer
+            if (-NOT $FoundMatchPrimary3Way) {
 
                 # Loop through each of the file's primary signer certificate's intermediate certificates
                 :PrimaryCertLoopLabel foreach ($Certificate in $PrimaryCertificateIntermediateDetails) {
 
-                    <#         Checking for FilePublisher, Publisher levels eligibility
+                    # Checking for FilePublisher, Publisher or SignedVersion levels eligibility
 
-                    1)  Check if the Signer's CertRoot (referring to the TBS value in the xml file which belongs to an intermediate cert of the file)
-                        Matches the TBSValue of one of the file's intermediate certificates
+                    # 1) Check if the Signer's CertRoot (referring to the TBS value in the xml file which belongs to an intermediate cert of the file)
+                    # Matches the TBSValue of one of the file's intermediate certificates
 
-                    2) check if the signer's name (Referring to the one in the XML file) matches the same Intermediate certificate's SubjectCN
+                    # 2) Check if the signer's name (Referring to the one in the XML file) matches the same Intermediate certificate's SubjectCN
 
-                    3) Check if the signer's CertPublisher (aka Leaf Certificate's CN used in the xml policy) matches the leaf certificate's SubjectCN (of the file)
-                #>
+                    # 3) Check if the signer's CertPublisher (aka Leaf Certificate's CN used in the xml policy) matches the leaf certificate's SubjectCN (of the file)
                     if (($Signer.CertRoot -eq $Certificate.TBSValue) -and ($Signer.Name -eq $Certificate.SubjectCN) -and ($Signer.CertPublisher -eq $PrimaryCertificateLeafDetails.SubjectCN)) {
 
-                        # At this point we know the Signer is either FilePublisher or Publisher level, but we need to narrow it down
+                        # At this point we know the Signer is either FilePublisher, Publisher or SignedVersion level, but we need to narrow it down
 
-                        # Check if the signer has FileAttrib indicating that it was generated with FilePublisher rule
+                        # Check if the signer has FileAttrib indicating that it was generated either with FilePublisher or SignedVersion level
                         if ($Signer.HasFileAttrib) {
 
                             # Get the extended file attributes as ordered hashtable
@@ -204,8 +222,47 @@ Function Compare-SignerAndCertificate {
                                 [Runtime.InteropServices.Marshal]::ReleaseComObject($Shell) | Out-Null
                             }
 
-                            # Loop over all of the file attributes in the policy XML file whose IDs are in the Signer's file attrib IDs array and the file's version is equal or greater than the minimum version of the file attribute
-                            foreach ($FileAttrib in ($PolicyFileAttributes | Where-Object -FilterScript { $Signer.SignerFileAttributeIDs -contains $_.ID -and ($FileVersion -ge [system.version]$_.MinimumFileVersion) })) {
+                            # Set the flag to indicate that the file's extended info have has collected and are available in the current session
+                            $FileExtendedInfoAvailable = $True
+
+                            # Get all of the file attributes in the policy XML file whose IDs are in the Signer's FileAttribRef IDs array and the file's version is equal or greater than the minimum version specified in the FileAttrib
+                            [System.Xml.XmlElement[]]$PrimaryCandidatePolicyFileAttributes = ($PolicyFileAttributes | Where-Object -FilterScript { ($Signer.SignerFileAttributeIDs -contains $_.ID) -and ($FileVersion -ge [system.version]$_.MinimumFileVersion) })
+
+                            # If the signer has a file attribute with a wildcard file name, then it's a SignedVersion level signer
+                            # These signers have only 1 FileAttribRef and only point to a single FileAttrib
+                            # If a SignedVersion signer applies to multiple files, the version number of the FileAttrib is set to the minimum version of the files
+                            if (($PrimaryCandidatePolicyFileAttributes.count -eq 1) -and ($PrimaryCandidatePolicyFileAttributes.FileName -eq '*')) {
+
+                                $CurrentFileInfo.SignerID = $Signer.ID
+                                $CurrentFileInfo.SignerName = $Signer.Name
+                                $CurrentFileInfo.SignerCertRoot = $Signer.CertRoot
+                                $CurrentFileInfo.SignerCertPublisher = $Signer.CertPublisher
+                                $CurrentFileInfo.HasEKU = $Signer.HasEKU
+                                $CurrentFileInfo.EKUOID = $Signer.EKUOID
+                                $CurrentFileInfo.EKUsMatch = $Signer.EKUsMatch
+                                $CurrentFileInfo.SignerScope = $Signer.SignerScope
+                                $CurrentFileInfo.HasFileAttrib = $Signer.HasFileAttrib
+                                $CurrentFileInfo.SignerFileAttributeIDs = $Signer.SignerFileAttributeIDs
+                                $CurrentFileInfo.SpecificFileNameLevelMatchCriteria = 'Version'
+                                $CurrentFileInfo.MatchCriteria = 'SignedVersion'
+                                $CurrentFileInfo.CertSubjectCN = $Certificate.SubjectCN
+                                $CurrentFileInfo.CertIssuerCN = $Certificate.IssuerCN
+                                $CurrentFileInfo.CertNotAfter = $Certificate.NotAfter
+                                $CurrentFileInfo.CertTBSValue = $Certificate.TBSValue
+                                $CurrentFileInfo.CertRootMatch = $true
+                                $CurrentFileInfo.CertNameMatch = $true
+                                $CurrentFileInfo.CertPublisherMatch = $true
+
+                                # Set the flag to indicate that a match was found
+                                $FoundMatchPrimary = $true
+                                # Set a flag to indicate that a match was found for the nested signer in a 3-way match
+                                $FoundMatchPrimary3Way = $true
+
+                                break PrimaryCertLoopLabel
+                            }
+
+                            # Loop over all of the candidate file attributes to find a match with the file's extended info
+                            foreach ($FileAttrib in $PrimaryCandidatePolicyFileAttributes) {
 
                                 # Loop over all of the keys in the extended file info to see which one of them is a match, to determine the SpecificFileNameLevel option
                                 foreach ($KeyItem in $ExtendedFileInfo.Keys) {
@@ -238,6 +295,8 @@ Function Compare-SignerAndCertificate {
 
                                         # Set the flag to indicate that a match was found
                                         $FoundMatchPrimary = $true
+                                        # Set a flag to indicate that a match was found for the nested signer in a 3-way match
+                                        $FoundMatchPrimary3Way = $true
 
                                         break PrimaryCertLoopLabel
                                     }
@@ -263,16 +322,22 @@ Function Compare-SignerAndCertificate {
                             $CurrentFileInfo.CertRootMatch = $true
                             $CurrentFileInfo.CertNameMatch = $true
                             $CurrentFileInfo.CertPublisherMatch = $true
+
+                            # Set the flag to indicate that a match was found
+                            $FoundMatchPrimary = $true
+                            # Set a flag to indicate that a match was found for the nested signer in a 3-way match
+                            $FoundMatchPrimary3Way = $true
+
+                            break PrimaryCertLoopLabel
                         }
                     }
 
-                    <#         Checking for PcaCertificate, RootCertificate levels eligibility
+                    # Checking for PcaCertificate, RootCertificate levels eligibility
 
-                    1)  Check if the Signer's CertRoot (referring to the TBS value in the xml file which belongs to an intermediate cert of the file)
-                        Matches the TBSValue of one of the file's intermediate certificates
+                    # Check if the Signer's CertRoot (referring to the TBS value in the xml file which belongs to an intermediate cert of the file)
+                    # Matches the TBSValue of one of the file's intermediate certificates
 
-                    2) check if the signer's name (Referring to the one in the XML file) matches the same Intermediate certificate's SubjectCN
-                 #>
+                    # Check if the signer's name (Referring to the one in the XML file) matches the same Intermediate certificate's SubjectCN
                     elseif (($Signer.CertRoot -eq $Certificate.TBSValue) -and ($Signer.Name -eq $Certificate.SubjectCN)) {
 
                         $CurrentFileInfo.SignerID = $Signer.ID
@@ -293,15 +358,19 @@ Function Compare-SignerAndCertificate {
                         $CurrentFileInfo.CertRootMatch = $true
                         $CurrentFileInfo.CertNameMatch = $true
                         $CurrentFileInfo.CertPublisherMatch = $false
+
+                        # Set the flag to indicate that a match was found
+                        $FoundMatchPrimary = $true
+
+                        break PrimaryCertLoopLabel
                     }
 
-                    <#         Checking for LeafCertificate level eligibility
+                    #  Checking for LeafCertificate level eligibility
 
-                    1)  Check if the Signer's CertRoot (referring to the TBS value in the xml file, which belongs to the leaf certificate of the file when LeafCertificate level is used)
-                        Matches the TBSValue of the file's Leaf certificate certificates
+                    #  Check if the Signer's CertRoot (referring to the TBS value in the xml file, which belongs to the leaf certificate of the file when LeafCertificate level is used)
+                    #  Matches the TBSValue of the file's Leaf certificate certificates
 
-                    2) Check if the signer's name (Referring to the one in the XML file) matches the Leaf certificate's SubjectCN
-                 #>
+                    #  Check if the signer's name (Referring to the one in the XML file) matches the Leaf certificate's SubjectCN
                     elseif (($Signer.CertRoot -eq $PrimaryCertificateLeafDetails.TBSValue) -and ($Signer.Name -eq $PrimaryCertificateLeafDetails.SubjectCN)) {
 
                         $CurrentFileInfo.SignerID = $Signer.ID
@@ -322,6 +391,11 @@ Function Compare-SignerAndCertificate {
                         $CurrentFileInfo.CertRootMatch = $true
                         $CurrentFileInfo.CertNameMatch = $true
                         $CurrentFileInfo.CertPublisherMatch = $false
+
+                        # Set the flag to indicate that a match was found
+                        $FoundMatchPrimary = $true
+
+                        break PrimaryCertLoopLabel
                     }
                 }
             }
@@ -329,22 +403,88 @@ Function Compare-SignerAndCertificate {
             # if the file has a nested certificate
             if ($CurrentFileInfo.HasNestedCert) {
 
-                # If a match wasn't already found for the nested signer based on the FilePublisher level
-                if (-NOT $FoundMatchNested) {
+                # If a match wasn't already found for the nested signer
+                if (-NOT $FoundMatchNested3Way) {
 
                     :NestedCertLoopLabel foreach ($NestedCertificate in $NestedCertificateIntermediateDetails) {
 
-                        # FilePublisher, Publisher levels eligibility check
+                        # FilePublisher, Publisher and SignedVersion levels eligibility check
                         if (($Signer.CertRoot -eq $NestedCertificate.TBSValue) -and ($Signer.Name -eq $NestedCertificate.SubjectCN) -and ($Signer.CertPublisher -eq $NestedCertificateLeafDetails.SubjectCN)) {
 
-                            # At this point we know the Signer is either FilePublisher or Publisher level, but we need to narrow it down
+                            # At this point we know the Nested Signer is either FilePublisher, Publisher or SignedVersion level, but we need to narrow it down
 
-                            # Check if the signer has FileAttrib indicating that it was generated with FilePublisher rule
-                            if ($Signer.NestedHasFileAttrib) {
+                            # Check if the signer has FileAttrib indicating that it was generated either with FilePublisher or SignedVersion level
+                            if ($Signer.HasFileAttrib) {
 
-                                # Loop over all of the file attributes in the policy XML file whose IDs are in the Signer's file attrib IDs array and the file's version is equal or greater than the minimum version of the file attribute
-                                # The File version and ExtendedFileInfo are the same as the primary signer's, so we don't need to reassign them since both signers are being validated for the same file and the primary signer loop always runs first before nested signer loop
-                                foreach ($FileAttrib in ($PolicyFileAttributes | Where-Object -FilterScript { ($Signer.SignerFileAttributeIDs -contains $_.ID) -and ($FileVersion -ge [system.version]$_.MinimumFileVersion) })) {
+                                # If the file's extended info is not available in the current session then get them
+                                if (-NOT $FileExtendedInfoAvailable) {
+
+                                    # Get the extended file attributes as ordered hashtable
+                                    $ExtendedFileInfo = Get-ExtendedFileInfo -Path $SignedFilePath
+
+                                    # Get the current file's version
+                                    [System.Version]$FileVersion = (Get-Item -LiteralPath $SignedFilePath).VersionInfo.FileVersionRaw
+
+                                    # If the file version couldn't be retrieved from the file using Get-Item cmdlet
+                                    if (-NOT $FileVersion) {
+
+                                        # Create a Shell.Application object
+                                        [System.__ComObject]$Shell = New-Object -ComObject Shell.Application
+
+                                        # Get the folder and file names from the path
+                                        [System.String]$Folder = Split-Path $Path
+                                        [System.String]$File = Split-Path $Path -Leaf
+
+                                        # Get the ShellFolder and ShellFile objects from the Shell.Application object
+                                        [System.__ComObject]$ShellFolder = $Shell.Namespace($Folder)
+                                        [System.__ComObject]$ShellFile = $ShellFolder.ParseName($File)
+
+                                        # Get the file version from the ShellFile object using the 166th property ID
+                                        [System.Version]$FileVersion = $ShellFolder.GetDetailsOf($ShellFile, 166)
+
+                                        # Release the Shell.Application object
+                                        [Runtime.InteropServices.Marshal]::ReleaseComObject($Shell) | Out-Null
+                                    }
+                                }
+
+                                # Get all of the file attributes in the policy XML file whose IDs are in the Nested Signer's FileAttribRef IDs array and the file's version is equal or greater than the minimum version specified in the FileAttrib
+                                [System.Xml.XmlElement[]]$NestedCandidatePolicyFileAttributes = ($PolicyFileAttributes | Where-Object -FilterScript { ($Signer.SignerFileAttributeIDs -contains $_.ID) })
+
+                                # If the signer has a file attribute with a wildcard file name, then it's a SignedVersion level signer
+                                # These signers have only 1 FileAttribRef and only point to a single FileAttrib
+                                # If a SignedVersion signer applies to multiple files, the version number of the FileAttrib is set to the minimum version of the files
+                                if (($NestedCandidatePolicyFileAttributes.count -eq 1) -and ($NestedCandidatePolicyFileAttributes.FileName -eq '*')) {
+
+                                    $CurrentFileInfo.NestedSignerID = $Signer.ID
+                                    $CurrentFileInfo.NestedSignerName = $Signer.Name
+                                    $CurrentFileInfo.NestedSignerCertRoot = $Signer.CertRoot
+                                    $CurrentFileInfo.NestedSignerCertPublisher = $Signer.CertPublisher
+                                    $CurrentFileInfo.NestedHasEKU = $Signer.HasEKU
+                                    $CurrentFileInfo.NestedEKUOID = $Signer.EKUOID
+                                    $CurrentFileInfo.NestedEKUsMatch = $Signer.EKUsMatch
+                                    $CurrentFileInfo.NestedSignerScope = $Signer.SignerScope
+                                    $CurrentFileInfo.NestedHasFileAttrib = $Signer.HasFileAttrib
+                                    $CurrentFileInfo.NestedSignerFileAttributeIDs = $Signer.SignerFileAttributeIDs
+                                    $CurrentFileInfo.NestedSpecificFileNameLevelMatchCriteria = 'Version'
+                                    $CurrentFileInfo.NestedMatchCriteria = 'SignedVersion'
+                                    $CurrentFileInfo.NestedCertSubjectCN = $NestedCertificate.SubjectCN
+                                    $CurrentFileInfo.NestedCertIssuerCN = $NestedCertificate.IssuerCN
+                                    $CurrentFileInfo.NestedCertNotAfter = $NestedCertificate.NotAfter
+                                    $CurrentFileInfo.NestedCertTBSValue = $NestedCertificate.TBSValue
+                                    $CurrentFileInfo.NestedCertRootMatch = $true
+                                    $CurrentFileInfo.NestedCertNameMatch = $true
+                                    $CurrentFileInfo.NestedCertPublisherMatch = $true
+
+                                    # Set the flag to indicate that a match was found
+                                    $FoundMatchNested = $true
+                                    # Set a flag to indicate that a match was found for the nested signer in a 3-way match
+                                    $FoundMatchNested3Way = $true
+
+                                    break NestedCertLoopLabel
+                                }
+
+                                # Loop over all of the candidate file attributes to find a match with the file's extended info
+                                foreach ($FileAttrib in $NestedCandidatePolicyFileAttributes) {
 
                                     # Loop over all of the keys in the extended file info to see which one of them is a match, to determine the SpecificFileNameLevel option
                                     foreach ($KeyItem in $ExtendedFileInfo.Keys) {
@@ -352,7 +492,7 @@ Function Compare-SignerAndCertificate {
                                         if ($ExtendedFileInfo.$KeyItem -eq $FileAttrib.$KeyItem) {
                                             Write-Verbose -Message "The SpecificFileNameLevel is $KeyItem"
 
-                                            # If there was a match then assign the $KeyItem which is the name of the SpecificFileNameLevel option to the $CurrentFileInfo.SpecificFileNameLevelMatchCriteria
+                                            # If there was a match then assign the $KeyItem which is the name of the SpecificFileNameLevel option to the $CurrentFileInfo.NestedSpecificFileNameLevelMatchCriteria
                                             # And break out of the loop by validating the signer as suitable for FilePublisher level
 
                                             $CurrentFileInfo.NestedSignerID = $Signer.ID
@@ -377,6 +517,8 @@ Function Compare-SignerAndCertificate {
 
                                             # Set the flag to indicate that a match was found
                                             $FoundMatchNested = $true
+                                            # Set a flag to indicate that a match was found for the nested signer in a 3-way match
+                                            $FoundMatchNested3Way = $true
 
                                             break NestedCertLoopLabel
                                         }
@@ -402,6 +544,13 @@ Function Compare-SignerAndCertificate {
                                 $CurrentFileInfo.NestedCertRootMatch = $true
                                 $CurrentFileInfo.NestedCertNameMatch = $true
                                 $CurrentFileInfo.NestedCertPublisherMatch = $true
+
+                                # Set the flag to indicate that a match was found
+                                $FoundMatchNested = $true
+                                # Set a flag to indicate that a match was found for the nested signer in a 3-way match
+                                $FoundMatchNested3Way = $true
+
+                                break NestedCertLoopLabel
                             }
                         }
 
@@ -426,6 +575,11 @@ Function Compare-SignerAndCertificate {
                             $CurrentFileInfo.NestedCertRootMatch = $true
                             $CurrentFileInfo.NestedCertNameMatch = $true
                             $CurrentFileInfo.NestedCertPublisherMatch = $false
+
+                            # Set the flag to indicate that a match was found
+                            $FoundMatchNested = $true
+
+                            break NestedCertLoopLabel
                         }
 
                         # LeafCertificate level eligibility check
@@ -449,6 +603,11 @@ Function Compare-SignerAndCertificate {
                             $CurrentFileInfo.NestedCertRootMatch = $true
                             $CurrentFileInfo.NestedCertNameMatch = $true
                             $CurrentFileInfo.NestedCertPublisherMatch = $false
+
+                            # Set the flag to indicate that a match was found
+                            $FoundMatchNested = $true
+
+                            break NestedCertLoopLabel
                         }
                     }
                 }
@@ -496,8 +655,8 @@ Export-ModuleMember -Function 'Compare-SignerAndCertificate'
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDL/L6xVRfQRngS
-# NoQcpputdtUGBaCDlDP1qstApVufUKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCA8eSQ/B9NSaAgQ
+# 9tIZtQB3p+XCKHYb0e4XUCD8H+WJ5KCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -544,16 +703,16 @@ Export-ModuleMember -Function 'Compare-SignerAndCertificate'
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQg99yj5jX5/u/JTKGzBxgKeOqy98RnUh3zQFjDaINBphIwDQYJKoZIhvcNAQEB
-# BQAEggIAJUHfAw13wc9KQVO2FtBz2+TVdgwLDGxBzFwn3htCIPzqV6vFFUxvluTt
-# sRE6ntIUcxSVx1tbPoZM2wpV1il4MtOzUTmHGqqtcRNem0EsW7993z4EnxgShH/v
-# cciKgb7IIZ5NV5mtTI888CZOyIn7GHA4HX8/6z1vMJMk8pKsTwi2FdKtc2SLh62v
-# xrfJc2NSEJMX6MPPeP57hXpZnz9Jj5TpzIwYNHjP0BQrJyJaR6ocx8/3sfl49/UV
-# A+S6NUYajygGbnYTuKna7AfodUYjyBSeW6NsQMKEK1QOp7/H7UCsj7v1maFdv0oi
-# MSCar/sMMe+OF3sIzFGCVRA2757ekkmnXR8DQ6inKc+ZzqefHU2REuOQip892kui
-# 3eEbKPQXRjnLmOmdxpCjDWz84QVx6Md+Dn1zBCPST60LDqI9ALW0XBPcWyfyGzvI
-# a5sxWyIHXFjp4R+Ski5Lnp7umlYahsX/hrKezrZpDAH2+37TwrgJn7A7RzY7Kgca
-# oQXcnWC6G5FI+dF82nHLJE0F2RhMK72orWc6WeyiJB/xk99hX4V83pTbemvtiFnJ
-# WLHHbGkPudFYEL/E/mrRw5gEWAmwDQnZbJQKDzuKh7SsKNGole8DqNAFntLS0OIt
-# MCH22LDwlAY9srrROwq+bTpTdF+VyNybc43Pp9h7Ad4yzvJEh6Q=
+# IgQgzXk9BGXF72OyvyldWjSgh84sZHomS2oAHFSlGkobfugwDQYJKoZIhvcNAQEB
+# BQAEggIAovIr1ulYVmpw97zSN8TovCTcvNHXl59cHO0lRKeMuUd5LBtpRXxW+4ms
+# vX8GpTpiwlDAhd8O34PsuZBrH1LxSpvHyYrRZek5RLwNhqbmfv03aoI2OJ+mGg24
+# y/hOMieIkRaofEUoixB1/4GVdqjpRiphYf89mHL/yTSJggczq9N9uEfYSBGl+Ho5
+# HZiJmczpcW1vj+sBGB94MzIB0FE0NKyPWyis2Hp2fWLtrVRH14YJ4y+LiItkDuCK
+# PlPciNuf9s492GvpGA0n0+CDeHYJ15sQSFQXK8UEIkQkKjAQ2oGnWLN1Ip4bJgkb
+# O2CtoNARekljljX/PcItZDbEZsBN7fLiZLcRRdW/gdmFOPA2ysIOEVzzWRMgTY2m
+# CuYrrp2/yn0Ecx/1831hOI+mz9RQmBsk7R3P5wzVIzRiPpjarwCXXWYjp2yZ7RQ5
+# H4KCzoeiUow907htgF8d9u7tuePnB5FqII2a7gcTcNahCZXc/nRARecGu+oUN0Zv
+# hwfRAGdDvSg2XctFVTYWWyrDlcTS//2wbeZbxHGKGmOf5Zjy6kK0VcHRja5sj32h
+# rzB8EkXsKaK41bp96sesNMOfd3ntIXMSYKe2XfmohompTiSlhUH8Uksntj4rmCUh
+# 1O3Nd+T3KQvaRlUfYISPKrXiYipE/1muhVW1cWx8XDl5zU2wnTk=
 # SIG # End signature block

@@ -2,8 +2,7 @@ Function Test-CiPolicy {
     [CmdletBinding()]
     [OutputType([System.Boolean])]
     param(
-        [Parameter(Mandatory = $true)]
-        [ValidateScript({ Test-Path -Path $_ -PathType Leaf })]
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
         [System.IO.FileInfo]$XmlFile
     )
 
@@ -14,6 +13,11 @@ Function Test-CiPolicy {
         # Check if the schema file exists in the system drive
         if (-NOT (Test-Path -Path $CISchemaPath)) {
             Throw "The Code Integrity Schema file could not be found at: $CISchemaPath"
+        }
+
+        # Check if the XML file exists - performing this check here instead of ValidateScript of the parameter produces a better error message when this function is called from within other main cmdlets' parameters.
+        if (-NOT (Test-Path -Path $XmlFile -PathType 'Leaf')) {
+            Throw "The file $XmlFile does not exist."
         }
 
         # Assign the schema file path to a variable
@@ -90,8 +94,8 @@ Register-ArgumentCompleter -CommandName 'Test-CiPolicy' -ParameterName 'XmlFile'
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCunc20Y0oRamES
-# XR1ugOWia+xaCq+5AILKQwQsmJ/uPKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCA2udxV9Wna8Fdg
+# 6Q5zgk1lQptJ+D/iKIuCjSaiTLMTDKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -138,16 +142,16 @@ Register-ArgumentCompleter -CommandName 'Test-CiPolicy' -ParameterName 'XmlFile'
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgU3+FYocKqq/tcc2hSJ+2S2u/Y+P+blWBOSXErAd2ty4wDQYJKoZIhvcNAQEB
-# BQAEggIAYcAmKHFs+lk0S8ZFWgMH7mErGe7kIxWfnX8fh0WQHd7s9XdYwPcDnhuW
-# cs0rKDHRbB3GSy99QH+t8t7qHUEWJEpB8sxxWGRL1aPa8+TYGlQDeXoMxM1qZTYZ
-# zu0Lefy+tddAgK83BaL90NHcTi3CR8MW1rCPInSzkaI6V7xnRgO5qpXnBEV8j+9+
-# jFdefo4Ws/L0gK7uEySb/m41w8izRTBz+d7rpmhjKmMiooGL5u+R5AwWg7emSSRp
-# vvGsZk+DZ9WoCMGltRmzedOtzJh5dlyphFoc7sYWtTjjzUXtD4scB4hfR2+FqPI/
-# R2UrmxUzIiQXv9g63e6lhZkXt1Z0hvspA45zdyHbrJba6SrlesVYjkV5Ldq/BrEf
-# 7d6uLp6SxGVYO7+CRuEIQiTQSuTZJOmmePGQL1uHztQAx9q/J1vyuCxpzcNUA8jd
-# LRNnc2ilgh4hdad4KYVKk/nm9Fu2TV0xSXesBTBbwmZa+X9MgT+MS2dKHoG9Avpf
-# BMMQGo05+TbHLLVg2ZUOfZkPr02NO6e3clmI5lv3ZFRuToZ2hG0yzeLPiVeFZN50
-# 5LdUcLZvlSQ+9aQF1T+IsekYSf1MKNipwal6m5B0Ynw9y030oHjJw/oahyWgjxxm
-# jS5LKtIuIwaM/EDv195T3Rm22yu18d89wR428n7WOkP7MVDrurg=
+# IgQgfBjW2Sjdf8whMXzhend7BLI1igmfL1z2BOhNrbxvlVgwDQYJKoZIhvcNAQEB
+# BQAEggIAc3AWQ9eOXptdLm5VXwcdl4tHZrxAp+MGXONFziUnQkQQ1peZjBUtih5n
+# Vp5IQvME+u89VxI2qhp/C2qfJLnA/CJtnuUCZfQWY8gp7nmRKT2wwI7ISC5Q5SVG
+# A0BMrFmsasPjN4JjxKvhzh6sWjs/IE092yz+TQThR4jLQABJxFotnDwPW32jN1Ka
+# 1rlvM1fxSlmFcvaaHNN1mceAC7pdI9iyBlyi1jgOHLc1jjNhbIND/xuqLaQF8oIU
+# zmuPHM+BYjYJqNAV8aq29wUicVNw/uBmoGjInmwUU8JRkSKHO8q1DJs4877m/gtL
+# 9Kv1b/0rbVVYftt421N0u9kU3rrxS4zAHI3lZvMaWOk7NzpN7vYG0VNJeyLAfolB
+# WuXshsJiS+/kZSfYrjDh4GSGefZWjRQ+U2c5sXsEHtkFtpQEbq9rRvcL/aEZkOlO
+# nIR3hRDG0sBEyCdrz4GTk6cVotnhCW3YUFFnSfhRz2I69QYQNodjfGKmTz4oY82S
+# GFZrcE0F391GqAG963V+aEl7WQMljuYYBUl1IyaSlqJfpasg1rliuDti+hh2w+bg
+# OHxLGd5Oh2p7Mdhh4oFmiDlbBJUb9G4wLUJkGR6MHwSWwcGVVCRp0+ARS5w28UMO
+# qpWJ5QTVSvCaFEkUfF2v7qCHZTdXUV5rCD5S5R1Mn34krv0tB+k=
 # SIG # End signature block

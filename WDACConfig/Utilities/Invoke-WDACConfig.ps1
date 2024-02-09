@@ -15,7 +15,5 @@ foreach ($File in $Files) {
     Set-AuthenticodeSignature -FilePath $File -Certificate $Certificate | Format-List -Property *
 }
 
-
-
 # Replace with any cmdlet of the WDACConfig module that is going to be debugged
-# Assert-WDACConfigIntegrity -SaveLocally -Verbose
+Assert-WDACConfigIntegrity -SaveLocally -Verbose

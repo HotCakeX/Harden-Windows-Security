@@ -737,14 +737,10 @@ Function New-WDACConfig {
                 Set-LogSize -LogSize $LogSize
             }
 
-            # Make sure there is no leftover files from previous operations of this same command
-            Write-Verbose -Message 'Make sure there is no leftover files from previous operations of this same command'
-            Remove-Item -Path "$Home\WDAC\*" -Recurse -Force -ErrorAction SilentlyContinue
-
             # Create a working directory in user's folder
             Write-Verbose -Message 'Create a working directory in user folder'
-            New-Item -Type Directory -Path "$Home\WDAC" -Force | Out-Null
-            Set-Location "$Home\WDAC"
+            [System.IO.DirectoryInfo]$WorkingDir = New-Item -Type Directory -Path "$Home\WDAC Policy from Audit Logs $(Get-Date -Format "MM-dd-yyyy 'at' HH-mm-ss")" -Force
+            Set-Location -Path $WorkingDir
 
             #Region Base-Policy-Processing
             $CurrentStep++
@@ -1117,8 +1113,8 @@ Function New-WDACConfig {
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCA0/whJh6M4dfxl
-# rWyZnvdkpKlOFK/1J4xh4BSjGUK3pqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBLUQcymyZBe4BC
+# kvm4yJH0aGhriHuQ6fm/jgmN6coWSKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -1165,16 +1161,16 @@ Function New-WDACConfig {
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgslQCfBwGH7SsrT8qcoosCc0QbY2zcIG94Wavt22eJoQwDQYJKoZIhvcNAQEB
-# BQAEggIAHwLrCLbfxPDxQXP6/h11pXeRN/Bfteyi7OraWt11GVcS6ojGvn3rUQf/
-# 8iIRvKbNTU0o33B3j3QrWUBvD/z9Pla9KYnjeboXWRiLX5nqgpvOLopQbRjNZSqB
-# mQpbuVIvseEoRKPYtgYALGLimz+hLiNpHxBhYjlK6Og3qpynPNXMPY9F1+ZoaSdu
-# EVe54JGAUEEUhQ5Nm+Vmk2c3VVK862s6MHljWz+ZAQxtUzR1CJBx5KjzoSYqiViu
-# wpykjHeKhEIb+C7L6yVBLN0xC4vYZ70ehcFcd2JW2E8jkDNAFlz/pSQ0YZJo/feB
-# 8WEMHJVR++kcBej5myIBrPEu9FD9YK+144gCYAsVkOXHxeyUwC88X5gBF4OeaXu/
-# hnw//qOxCeGEwsdvDqKIqLjXPgKVLhUQcIX08tH3isytII4L2wZhTpjs+cOYI2Z7
-# C8wEV+XJ9dC5TlK5/dOLELDQTB5rJqfY75AuIuf2Bs2pBouV62KNMNqB9CRbqcZK
-# 7FLabzqOsFLDsf6OlZ+B7nMRcikfQkLrZ7SQ3ktK+3Pp6TNcu0iQP7+81Q2SuBgv
-# 0aPLuR7RYni1TZ004yUf0A+SVjLc4ArrpoAwU1gJrJt3xLp7HMXnMB8xr2Jr6U9f
-# jtDRg6PMjXT841EA0y9BkbFchZDP/ye4NiN0KS6DqJgoSAk+CnQ=
+# IgQgcNRyDsZcCauDG4WUym0FfAueeEvdd/X4gj+MLGfEW30wDQYJKoZIhvcNAQEB
+# BQAEggIAi0IssB4FwnRtCU/XV69dQFvqK+X4kmXIcVCs4MyWanc8Ryw4Yiw0KnPs
+# aWsVP3Fqgk6/AwnR47IyRgZ4SZkWihstky2Ebk+Nh/VZ3byXE/E8rblzd589ds6p
+# s6y7o9MxaSE2uQ1yYagusHa7lax3ay6CXAf1jpLAL5LiZFIi9IIsSi441quhf2RO
+# tRE67+eWKKYpAWV4XvjyigeeLksYH9P73b+TJRGspMo1KBWh0nTV7DvPxz1koKKd
+# wGk0ei2G3OTkNwtZElXIPAScHukSA5xcJxDt0PM5A4/ql1c/W/VwZEcH23P9DcT2
+# ja5W11IdaQAqfw1S6YKLmqDXpDx6MpUnIzVq42KEyYQ4XcNWfLwt7kHTnaWfCgKQ
+# uXVM+wz6lzaEBAbtVo/02f+HeJtvhTQkL44ZmN6h3W9PPpQKutk0wnQSM5ObQ9mQ
+# RhIxZ9EwvFqbGmjsCFDRg+RNifuZN44s+o0T1tZdDGlqtvPumIcgx/Rtcs1mhGWH
+# JVdY1p3OoqgX0VC8v8Ev58xs3lapldI/DkGga/NNcT1EG0modwQza1ceIDpWy9Px
+# nm8trJmiFlZfd+K0z7atCS4RTkgO3H3ZW5rQoT77HiO5QmgJxs6Abl6YoEhN/Gx+
+# 0ruaun0SvYsNY7cxpDcG1ITZtE+TPWpe8MMCjmsj2dXlBoB1fyY=
 # SIG # End signature block

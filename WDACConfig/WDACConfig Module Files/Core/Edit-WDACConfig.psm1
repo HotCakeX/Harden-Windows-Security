@@ -30,7 +30,12 @@ Function Edit-WDACConfig {
                 [System.String]$RedFlag3 = $XmlTest.SiPolicy.PolicyID
 
                 # Get the currently deployed policy IDs
-                [System.Guid[]]$CurrentPolicyIDs = ((&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { $_.IsSystemPolicy -ne 'True' }).policyID | ForEach-Object -Process { "{$_}" }
+                Try {
+                    [System.Guid[]]$CurrentPolicyIDs = ((&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { $_.IsSystemPolicy -ne 'True' }).policyID | ForEach-Object -Process { "{$_}" }
+                }
+                catch {
+                    Throw 'No policy is deployed on the system.'
+                }
 
                 if (!$RedFlag1 -and !$RedFlag2) {
                     # Ensure the selected base policy xml file is deployed
@@ -1159,8 +1164,8 @@ Register-ArgumentCompleter -CommandName 'Edit-WDACConfig' -ParameterName 'SuppPo
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCC8V/Qn4hutJurf
-# GIi9JQKK65X6zj9N9Z/iBATT/UITDKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDHuHEn4hlFdC4v
+# f/R30S3v1wc4cZrIj80RZ6GT1M2NqaCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -1207,16 +1212,16 @@ Register-ArgumentCompleter -CommandName 'Edit-WDACConfig' -ParameterName 'SuppPo
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgaoFvot/7hufDMmmqYh8GFJdHdsTaDiGJytowfmjKmFwwDQYJKoZIhvcNAQEB
-# BQAEggIAGocSEoEfbMnXwQCzdwKuanUFT0W89FBRrKpIRL63IOBaHXvVgHQkajj7
-# b2puv9p8hzOFooeWSrhfLXgsgPfMZI614cUdKlTMy/Eo0Ph11YxstjzCq3uedQig
-# 0m/msyLfEleX1qv/2C7MgSNAT6ys4OeCusS7FnuKjnhpIHGN/8WnaxNUx4KaS8eO
-# A81cSiVmc+iJ91VIw9Fyp8VP013LFNXk0csJpf/l2smPbR6VmgFxemb40OXn/kr5
-# 0MmL5S7psU7TDrmvlXwHPpVCR1GyyNoTyK2PfKVGaY14kEyIblaUelsjhD9F2jY8
-# Gs+96ewvrlrchxNwmXWB34utqjkwfh/EHIgZM6Dj4hbr3DBc8ZBvq8iDf2ASsp6B
-# kb2/8cPoIU/YLMLfX/L4AqygTLtXBslmLyOAfFnr3w4a8Uo3Z1IGLEUlgWs4WLaE
-# jCEfHjiz04oP9Sdh5PbfJElZ2Hy/8Z/jM6Z2guhlCjN4ryug4vVF0ffdnFjAKpko
-# 3tOKjFu5kAgjrr2+3GTjgcXEq97TbQFvIO/xGCSNGSDpZLCQPiWpyfRhNHLJ+6Yl
-# t60l2O8NA/3IQDPPRrG2DWykm/9ckP4V6eLSM8UssQ9eSFphTb3+QKrqTYnTiiT6
-# r8BVxWXE3PfzZKkTBK6TG5uUyWLA740Lo2gDAFb1W+nSc1Kv9CY=
+# IgQg27onwCspKD+qJkIpWhp/sBQy12DrgKtD4P2vDIHgiGkwDQYJKoZIhvcNAQEB
+# BQAEggIACQh3EOOdW/SermmTy1W2W0irIOpWhnlrdNZfq5L7FnamI/vY+W7QOL9j
+# zKv6RXYI7oCPUjJuhRy5ASn5UEExtPXGnVva+QOXPaUA1BEZpb4mbu4bJNTY0ivq
+# h9jw39hGOX1rVy6NK7UCbh5CP3SPgYQ60HkFn/H9nBizKyEwERq/p2mFD38HrMA7
+# 61t+0NSjF4iV2zdXxk6eqnfxdbc1ar0zstOAEGVMzvihAkJdohEshjSpBmygT5qd
+# IcG75viviCIqZgELJ0B6y273Hno4vK48/yRaf1ZWRkKS4NsHTmmaDL+Ve61OMenr
+# cLBl0yZahZnIwfW9KXP0eKJprDNKReorr75UYBYbNW6S8OGCeCdPLJ72btgxsUe+
+# QKmnel0v7AjCE8U3sti/69mf6lSGJ1B5InmKLcaMAJcLUlHXxNqsYmmRveMUY/FN
+# /E01JpHueVMwdaU9hExWbiRV1qt/bizWo+TD9q3B5qo05zlkr+m+ZRUjD82ZhGVU
+# BYBizDWh1izGfQuKH5gA3lId+pIz8hzGyQGq7YAFegOLDkMRD/iXdSHFFKJWNmCl
+# 6Gll5fZuaTijAnOlXuwdj/lD4y8bd4CDlekhsMWmng1VR6aMcfGWq5Ehu03zAFYY
+# 0qKpZHTejVR6aSpAoIyP059bTPnkU8QuMVwA7wXlpRnf18g8UYs=
 # SIG # End signature block

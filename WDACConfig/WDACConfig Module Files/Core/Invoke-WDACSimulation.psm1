@@ -74,7 +74,7 @@ Function Invoke-WDACSimulation {
                 [CmdletBinding()]
                 [OutputType([System.Void])]
                 param()
-                
+
                 Write-Verbose -Message 'Stopping the stopwatch'
                 $StopWatch.Stop()
                 Write-Verbose -Message "WDAC Simulation for $TotalSubSteps files completed in $($StopWatch.Elapsed.Hours) Hours - $($StopWatch.Elapsed.Minutes) Minutes - $($StopWatch.Elapsed.Seconds) Seconds - $($StopWatch.Elapsed.Milliseconds) Milliseconds - $($StopWatch.Elapsed.Microseconds) Microseconds - $($StopWatch.Elapsed.Nanoseconds) Nanoseconds"
@@ -656,8 +656,8 @@ Register-ArgumentCompleter -CommandName 'Invoke-WDACSimulation' -ParameterName '
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBNrzl6h1Po44kR
-# XwuL4BGDcuY1LBhJGv8X5q4/9X45+aCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCAAZ+4sVstFTkfv
+# g58Mnjocm/tfzSd9jUkOM0y3Y5ORTqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -704,16 +704,16 @@ Register-ArgumentCompleter -CommandName 'Invoke-WDACSimulation' -ParameterName '
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgkb47XY5oVT/1ypNQE+HRWfD+KFVh+LHheLWIMvGL2MEwDQYJKoZIhvcNAQEB
-# BQAEggIAk8VnzbN6lkm0wjigvBr1RxnHJ3TdC3jgEGXHJaDFtrfYKo+L8IaG3BGO
-# bFnQK3aVujkQT6VQsIyYZmrYS85dRx2IhLmR82nZAmmhjTLqYzXSglffePk657bt
-# wQHYjlSjNQywusqEX2ZZVL4zVPIYs23mtKYSwZ9vOvT91cuxk7eo46th9E3KExev
-# v896kIvjozOsnEGTzljFhTPOXcKIIeXCvf3dGMUxbprUntTQe7uFrRidVHyoJsYI
-# tt/ZbLp5jNs2/nOnF8YHQAYSyUJwYiB/aF2lETF4VuxUQjebp2bG649oekTanJU2
-# /rkfthWEg3jgwxsNDX14jwSdMhzkGy0qNBlb2R38P449l2hOrMudCBzMNrh1c3A2
-# LQk2feEa08+H8TtoMvn5EwiXKlvK2Ram2MEqzl56z96lNdSte55PAI8QQtwMRMkF
-# sBss3rbTV0GkUx7EV249q3GQ+HGu3YsYTqI8vSM4ODYsUa9yLUcvPUWzXJXqgQIW
-# yp5ManSEnyzx5FJe3InJ+1vQkfvwOmszdWjqDpEFeyX3b3W4juefYhI2X4WgpkTq
-# dojmT7BEKYTt+PVObnCDSRrQkTkvTq+yylcExV//DF9sn5dR1txOhVKCcQcuRv2+
-# mJOWKUDZp7MEJuvoZEkwu35oG12IC0fXaGyHeVcFUg3U3dJZX/o=
+# IgQgS/q2ghczgcBN+gfe3kpykzprHfGlWLTWMm1GIxoJpI4wDQYJKoZIhvcNAQEB
+# BQAEggIAV6huEDJLlO4RYJtdM43fZSAew8mEPsZvnWEUt2fgj/1jPVMj9JP0eIWK
+# eq18VzeLoHIR+2HWMWdTs69o9K4r9yVHwCTYfemMhykF9yQd5T8QEbU3REaBu1pR
+# F8hlb9KUIhj0CrAFarG3OVBNnNz2hooSWmcBsi1vwHYlL89mjVsKUVZ5bVRf6WwJ
+# z7GtKZ7RWNJy82dnnm9LDjjlcqTrKwXlwe3d5/k6QnEZdzImvl/lZEcg6Ic2ys2W
+# jCl4mj/rEY4cRiOtAUlC+nXCMY0QsJts1Ge5zLwX0mUqF5fiPZGXsrcRElYM8P6t
+# qcY2EbA2sXK3j/f1a+0taPGn1Nj0Qh+bZdbTkteEfG5EoCC7wAIpLicVCw2AeuHj
+# aOLaIKrnH66wzaq7tnJh/IKjBdfmvw7dZ5YneYVJ54mlT/Tgea0w1f6/mS0zWdZL
+# A0EE3jmUQuygY6654uWqjPqLDROFPSrtZ6bxxeVo5f6xptYVz/cP/cmTa9c2L4Bs
+# mZfnMol/H+HOs7NYIhSRSE+tk4q1NG4LZNX/9NtE/u6GaSLcT0RUdgwC8Vp9cgvw
+# NI7yl89kCX7t628e5qHArKkCvCEi0/S1Y3YvQBl7yxYoq/eNWV6r/toXj4wZl9PD
+# fddbH1oKv7I37dSMyRg21UCmvxxgT3cInfzxM2PfiHfn75SNWok=
 # SIG # End signature block

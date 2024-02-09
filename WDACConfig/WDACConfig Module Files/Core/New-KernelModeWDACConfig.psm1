@@ -250,7 +250,7 @@ Function New-KernelModeWDACConfig {
                     $DriverFilesObj = Get-SystemDriver -ScanPath $args[0]
 
                     Write-Verbose -Message 'Creating a policy xml file from the driver files'
-                    New-CIPolicy -MultiplePolicyFormat -Level WHQLFilePublisher -Fallback FilePublisher -FilePath '.\DriverFilesScanPolicy.xml' -DriverFiles $DriverFilesObj
+                    New-CIPolicy -MultiplePolicyFormat -Level WHQLFilePublisher -Fallback None -AllowFileNameFallbacks -FilePath '.\DriverFilesScanPolicy.xml' -DriverFiles $DriverFilesObj
                 } -args $KernelModeDriversDirectory
 
                 $CurrentStep++
@@ -401,7 +401,7 @@ Function New-KernelModeWDACConfig {
                     $DriverFilesObj = Get-SystemDriver -ScanPath $args[0]
 
                     Write-Verbose -Message 'Creating a policy xml file from the driver files'
-                    New-CIPolicy -MultiplePolicyFormat -Level WHQLFilePublisher -Fallback FilePublisher -FilePath '.\DriverFilesScanPolicy.xml' -DriverFiles $DriverFilesObj
+                    New-CIPolicy -MultiplePolicyFormat -Level WHQLFilePublisher -Fallback None -AllowFileNameFallbacks -FilePath '.\DriverFilesScanPolicy.xml' -DriverFiles $DriverFilesObj
                 } -args $KernelModeDriversDirectory
 
                 $CurrentStep++

@@ -250,11 +250,11 @@ Function New-KernelModeWDACConfig {
                     $DriverFilesObj = Get-SystemDriver -ScanPath $args[0]
 
                     Write-Verbose -Message 'Creating a policy xml file from the driver files'
-                    New-CIPolicy -MultiplePolicyFormat -Level FilePublisher -Fallback None -FilePath '.\DriverFilesScanPolicy.xml' -DriverFiles $DriverFilesObj
+                    New-CIPolicy -MultiplePolicyFormat -Level WHQLFilePublisher -Fallback FilePublisher -FilePath '.\DriverFilesScanPolicy.xml' -DriverFiles $DriverFilesObj
                 } -args $KernelModeDriversDirectory
 
                 $CurrentStep++
-                Write-Progress -Id 26 -Activity 'Configuring the final policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+                Write-Progress -Id 26 -Activity 'Creating the final policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                 Write-Verbose -Message 'Not trusting the policy xml file made before restart, so building the same policy again after restart, this time in Enforced mode instead of Audit mode'
                 Copy-Item -Path "$ModuleRootPath\Resources\WDAC Policies\DefaultWindows_Enforced_Kernel.xml" -Destination .\DefaultWindows_Enforced_Kernel.xml -Force
@@ -401,7 +401,7 @@ Function New-KernelModeWDACConfig {
                     $DriverFilesObj = Get-SystemDriver -ScanPath $args[0]
 
                     Write-Verbose -Message 'Creating a policy xml file from the driver files'
-                    New-CIPolicy -MultiplePolicyFormat -Level FilePublisher -Fallback None -FilePath '.\DriverFilesScanPolicy.xml' -DriverFiles $DriverFilesObj
+                    New-CIPolicy -MultiplePolicyFormat -Level WHQLFilePublisher -Fallback FilePublisher -FilePath '.\DriverFilesScanPolicy.xml' -DriverFiles $DriverFilesObj
                 } -args $KernelModeDriversDirectory
 
                 $CurrentStep++
@@ -518,8 +518,8 @@ Function New-KernelModeWDACConfig {
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCAzb4KL2upXuuby
-# d+whq0roo6kcRj0KW39UOgNeSbgroqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCfneE57M1UXxt2
+# o37OS4nhj6C96zecby9zjH8vsmP7/6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -566,16 +566,16 @@ Function New-KernelModeWDACConfig {
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQg8QWJEwjKZIM8gz3OLSxgj+0WZ0UrAI1wlswrZV4i8OIwDQYJKoZIhvcNAQEB
-# BQAEggIAL9r+mPro71TZoK7L9nuVnfQC/Alqi/NNJVuW77/F3mWJW3HXhilOvkLP
-# SoJKHk4Edo3GqJ7DdqLX33iy1r79/S/Un3finxV7/uml3eWFMp6syaxigKjDMyqH
-# F/mDwna9EcKSdM2fLJetTD0j8fSyAzdq4AfpH557dFq9DxVdUAIpUwF0L0ts5HDO
-# 50WEX23rUQI8AIBMafzVThKsEShho6JqTKLo1tWllTzu/NuBn6t9q3gIYbigXKTA
-# FuF/7QHAKBX5s5Emk1i0c95jh2t6cGU7wDIpIlCKf3iEfmCuVv/Iga7rw3X4evtg
-# iGUY8FFVYwT/d+GptZStEZKvRXBLw8gTXE7chr9mI9CHY+deQC4N1zbm6uK12hSj
-# tENeasXxPDVtFgK5DFhYwLhWYHC1ya7jfryyQ8o+IX68WpIvEKCyrd6B01Ope7c4
-# dRmqyFLfjGf2IMMPNnnNHd9opJyxfYrH1HvpJs4AsvM8sn0RcqHHfzSY3oG3VGqj
-# 9CdRK9KBiAeNYWy1d8DtXjJh9N5kafMgqxJVQFpzQQofOD/ctJ+hFmrPwdkWJX7l
-# jLXUKb0b+g8JunAnEhmhtF/NZfxNJvw8EFzRlR/3l87AWr62iBK95Isp/H6ypMz3
-# YmaDITrAugjfbkZXJ5h16cxdw2KwRLjXp1v0t/Vx3kZExwB8er8=
+# IgQgIcgRF/D/6ko0VTjqU2z0sNHrf2xc3H19bN4UF6mOZRQwDQYJKoZIhvcNAQEB
+# BQAEggIAeKgCAX6BTes+WPtcAU0A2Nxwn90RWs/vLSliZCH9nwuzhpM37sTGqXnX
+# bwWxbsYvSRIVhWZVphB85fPCIZ2sfmtv/Is/AwkzwmZCbRiSQ7CQ2GfC1nJTCAvb
+# XlwudIC2Gm6Zz+XKtM5Jqi8wPLBoIKjbP2DHqEhuAC+ZC830c/m87WxYUGP6GrtE
+# +IA3SQVtH58NfAeWcyLa4oaHt7PUllGZ6CdcOjKziSwGjDqn0mW+20UZN5qHtTVz
+# YDXUxpzkgcbFigZaYPvM0LTpfMkExZX+hCo0fdbz0hka5rrqKDgv0T9dkKjxfhHK
+# P8ANB6xBSKcow5nk43yNRHbihnDsSyO9iBxKgTfOZT8xuOOvjTJA9RD/d+mUedqQ
+# Mt0nVjq5ZLLpp8oacGuXoNkq2ByVX51ldEBHAX5Q8SVAN7/StoilPI7m24uZN3a2
+# IAZGjTKAWdQRr0e4j/RVMoe2retx3fdAIROSTdolmVPXWnHKs5/ZqH2IfcRfAvJz
+# 6H05r0BkhWjTHe76zNezU5eDFideTCiodzbxYuPc5/KlaABVZ88DPCFtpD/cXKep
+# Eu04DrAKUcFad6swqmf69ekzG87WLhqxe9NGK/vdzM+rAAnsH05mK1ex+a/9k9lI
+# vGr8K4PbHaQuAhTUqjRaZnBSHRTQEbjBY5eo14aQORn5Kc1fSmE=
 # SIG # End signature block

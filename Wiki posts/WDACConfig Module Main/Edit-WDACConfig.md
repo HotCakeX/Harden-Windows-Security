@@ -45,23 +45,54 @@ This parameter is specially useful for applications that install files outside o
 
 ## Parameters
 
-### 1 Mandatory Parameter
+### -SuppPolicyName
 
-* `-SuppPolicyName <String>`: Add a descriptive name for the Supplemental policy.
+Add a descriptive name for the Supplemental policy.
 
-### 1 Automatic Parameter
+<div align='center'>
 
-* `-PolicyPath <String>`: Browse for the xml file of the Base policy this Supplemental policy is going to expand. Supports tab completion by showing only `.xml` files with **Base Policy** Type.
+| Type: |[String](https://learn.microsoft.com/en-us/dotnet/api/system.string)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | True |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
 
-### 8 Optional Parameters
+</div>
+
+<br>
+
+### -PolicyPath
+
+Browse for the xml file of the Base policy this Supplemental policy is going to expand. Supports tab completion by showing only `.xml` files with **Base Policy** Type.
+
+<div align='center'>
+
+| Type: |[FileInfo](https://learn.microsoft.com/en-us/dotnet/api/system.io.fileinfo)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| [Automatic:](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig#about-automatic-parameters) | True |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+<br>
 
 ### -Debug
 
 Indicates that the module will output these additional files for debugging purposes and also show debug messages on the console:
-     - *FileRulesAndFileRefs.txt* - Contains the File Rules and Rule refs for the Hash of the files that no longer exist on the disk.
-     - *DeletedFileHashesEventsPolicy.xml* - If `-IncludeDeletedFiles` was used and if there were any files detected that were in audit event logs that are no longer on the disk, this file will include allow rules for them based on their hashes.
-     - *ProgramDir_ScanResults*.xml* - xml policy files for each program path that is selected by user, contains allow rules.
-     - *RulesForFilesNotInUserSelectedPaths.xml* - xml policy file that has allow rules for files that do not reside in any of the user-selected program paths, but have been detected in audit event logs.
+
+* *FileRulesAndFileRefs.txt* - Contains the File Rules and Rule refs for the Hash of the files that no longer exist on the disk.
+
+* *DeletedFileHashesEventsPolicy.xml* - If `-IncludeDeletedFiles` was used and if there were any files detected that were in audit event logs that are no longer on the disk, this file will include allow rules for them based on their hashes.
+
+* *ProgramDir_ScanResults*.xml* - xml policy files for each program path that is selected by user, contains allow rules.
+
+* *RulesForFilesNotInUserSelectedPaths.xml* - xml policy file that has allow rules for files that do not reside in any of the user-selected program paths, but have been detected in audit event logs.
 
 <div align='center'>
 
@@ -76,7 +107,6 @@ Indicates that the module will output these additional files for debugging purpo
 </div>
 
 <br>
-
 
 ### -LogSize
 
@@ -158,7 +188,24 @@ You can choose one of the following options:
 
 <br>
 
-* `-IncludeDeletedFiles`: Indicates that hashes of the files that were run during Audit phase but then were deleted and are no longer on the disk, will be added to the Supplemental policy. *If you created a Supplemental policy for your program and it's still getting blocked, try using this parameter. Chances are your program writes and then deletes some files during runtime that are necessary to be included in the Supplemental policy.*
+### -IncludeDeletedFiles
+
+Indicates that hashes of the files that were run during Audit phase but then were deleted and are no longer on the disk, will be added to the Supplemental policy.
+
+> [!NOTE]\
+> If you created a Supplemental policy for your program and it's still getting blocked, try using this parameter. Chances are your program writes and then deletes some files during runtime that are necessary to be included in the Supplemental policy.
+
+<div align='center'>
+
+| Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
 
 ### -NoUserPEs
 
@@ -193,8 +240,6 @@ By default, the module includes user PEs in the scan. When you use this switch p
 | Accept wildcard characters: | False |
 
 </div>
-
-<br>
 
 <br>
 
@@ -236,15 +281,42 @@ A new supplemental policy will be created, it will be deployed on the system. Th
 
 ## Parameters
 
-### 1 Mandatory Parameter
+### -SuppPolicyName
 
-* `-SuppPolicyName <String>`: Add a descriptive name for the Supplemental policy.
+Add a descriptive name for the Supplemental policy.
 
-### 1 Automatic Parameter
+<div align='center'>
 
-* `-PolicyPath <String>`: Browse for the xml file of the Base policy this Supplemental policy is going to expand. Supports tab completion by showing only `.xml` files.
+| Type: |[String](https://learn.microsoft.com/en-us/dotnet/api/system.string)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | True |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
 
-### 5 Optional Parameters
+</div>
+
+<br>
+
+### -PolicyPath
+
+Browse for the xml file of the Base policy this Supplemental policy is going to expand. Supports tab completion by showing only `.xml` files.
+
+<div align='center'>
+
+| Type: |[FileInfo](https://learn.microsoft.com/en-us/dotnet/api/system.io.fileinfo)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| [Automatic:](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig#about-automatic-parameters) | True |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+<br>
 
 ### -Levels
 
@@ -344,8 +416,6 @@ By default, the module includes user PEs in the scan. When you use this switch p
 
 <br>
 
-<br>
-
 <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
 
 <br>
@@ -371,17 +441,60 @@ Merge multiple deployed Supplemental policies into 1 and deploy it, remove the i
 
 ## Parameters
 
-### 2 Mandatory Parameters
+### -SuppPolicyName
 
-* `-SuppPolicyName <String>`: Choose a descriptive name for the Supplemental policy that is going to be the merge of multiple policies.
+Choose a descriptive name for the Supplemental policy that is going to be the merge of multiple policies.
 
-* `-SuppPolicyPaths <String[]>`: Path to the Supplemental policies xml files. Supports argument tab completion by showing only Supplemental policy types.
+<div align='center'>
 
-### 1 Automatic Parameter
+| Type: |[String](https://learn.microsoft.com/en-us/dotnet/api/system.string)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | True |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
 
-* `-PolicyPath <String>`: Path to the Base policy xml file the Supplemental policies belong to. Supports argument tab completion by showing only Base policy types.
+</div>
 
-### 1 Optional Parameter
+<br>
+
+### -SuppPolicyPaths
+
+Path to the Supplemental policies xml files. Supports argument tab completion by showing only Supplemental policy types.
+
+<div align='center'>
+
+| Type: |[FileInfo](https://learn.microsoft.com/en-us/dotnet/api/system.io.fileinfo)[]|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | True |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+<br>
+
+### -PolicyPath
+
+Path to the Base policy xml file the Supplemental policies belong to. Supports argument tab completion by showing only Base policy types.
+
+<div align='center'>
+
+| Type: |[FileInfo](https://learn.microsoft.com/en-us/dotnet/api/system.io.fileinfo)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| [Automatic:](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig#about-automatic-parameters) | True |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+<br>
 
 ### -KeepOldSupplementalPolicies
 
@@ -398,8 +511,6 @@ Indicates that the module will not remove the old Supplemental policy xml files 
 | Accept wildcard characters: | False |
 
 </div>
-
-<br>
 
 <br>
 
@@ -425,29 +536,59 @@ Edit-WDACConfig
 
 It can rebootlessly change the type of the deployed base policy. It can update the recommended block rules and/or change policy rule options in the deployed base policy. The deployed Supplemental policies will stay intact and continue to work with the new Base policy.
 
-**Hint:** When switching from a more permissive base policy type to a more restrictive one, make sure your Supplemental policies will continue to work. E.g., if your current base policy type is *Allow Microsoft* and the one you are switching to is *Default Windows*, there *might* be files that will get blocked as a result of this switch if you created a Supplemental policy using Event viewer capturing. That's simply because they were allowed by the more permissive *Allow Microsoft* policy type so they didn't trigger audit logs thus weren't needed to be included in the Supplemental policy. You will need to update those Supplemental policies if that happens by deleting and recreating them, no immediate reboot required.
+> [!NOTE]\
+> When switching from a more permissive base policy type to a more restrictive one, make sure your Supplemental policies will continue to work. E.g., if your current base policy type is *Allow Microsoft* and the one you are switching to is *Default Windows*, there *might* be files that will get blocked as a result of this switch if you created a Supplemental policy using Event viewer capturing. That's simply because they were allowed by the more permissive *Allow Microsoft* policy type so they didn't trigger audit logs thus weren't needed to be included in the Supplemental policy. You will need to update those Supplemental policies if that happens by deleting and recreating them, no immediate reboot required.
 
 ## Parameters
 
-### 2 Mandatory Parameters
+### -CurrentBasePolicyName
 
-* `-CurrentBasePolicyName <String[]>`: The name of the currently deployed base policy. It supports tab completion so just press tab to autofill it.
+The name of the currently deployed base policy. It supports tab completion so just press tab to autofill it.
 
-* `-NewBasePolicyType <String>`: The type of the base policy to deploy. It supports tab completion so just press tab to autofill it. Supports all 3 Base policy types:
+<div align='center'>
 
-     - [AllowMicrosoft_Plus_Block_Rules](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-WDACConfig#new-wdacconfig--makeallowmsftwithblockrules)
+| Type: |[String](https://learn.microsoft.com/en-us/dotnet/api/system.string)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
 
-     - [Lightly_Managed_system_Policy](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-WDACConfig#new-wdacconfig--makelightpolicy)
+</div>
 
-     - [DefaultWindows_WithBlockRules](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-WDACConfig#new-wdacconfig--makedefaultwindowswithblockrules)
+<br>
 
-         - > Since the module uses PowerShell and not Windows PowerShell that is pre-installed in Windows, selecting this argument will automatically scan `C:\Program Files\PowerShell` directory and add PowerShell files to the base policy so that you will be able to continue using the module after redeploying the base policy. The scan uses ***FilePublisher*** level and ***Hash*** fallback.
+### -NewBasePolicyType
+
+The type of the base policy to deploy. It supports tab completion so just press tab to autofill it. Supports all 3 Base policy types:
+
+* [AllowMicrosoft_Plus_Block_Rules](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-WDACConfig#new-wdacconfig--makeallowmsftwithblockrules)
+* [Lightly_Managed_system_Policy](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-WDACConfig#new-wdacconfig--makelightpolicy)
+* [DefaultWindows_WithBlockRules](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-WDACConfig#new-wdacconfig--makedefaultwindowswithblockrules)
+
+> [!NOTE]\
+>  Since the module uses PowerShell and not Windows PowerShell that is pre-installed in Windows, selecting this argument will automatically scan `C:\Program Files\PowerShell` directory and add PowerShell files to the base policy (If the module detects that the PowerShell is not installed from Microsoft Store) so that you will be able to continue using the module after redeploying the base policy. The scan uses ***FilePublisher*** level and ***Hash*** fallback.
+
+<div align='center'>
+
+| Type: |[String](https://learn.microsoft.com/en-us/dotnet/api/system.string)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+<br>
 
 ### -RequireEVSigners
 
 Indicates that the created/deployed policy will have [Require EV Signers](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/wdac-wizard-create-base-policy#advanced-policy-rules-description) policy rule option.
 
- * In addition to being WHQL signed, this rule requires that drivers must have been submitted by a partner that has an Extended Verification (EV) certificate. All Windows 10 and later, or Windows 11 drivers will meet this requirement.
+* In addition to being WHQL signed, this rule requires that drivers must have been submitted by a partner that has an Extended Verification (EV) certificate. All Windows 10 and later, or Windows 11 drivers will meet this requirement.
 
 <br>
 

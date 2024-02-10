@@ -5,8 +5,17 @@
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Deploy-SignedWDACConfig/Deploy-SignedWDACConfig.apng)
 
 ```powershell
-Deploy-SignedWDACConfig -PolicyPaths <FileInfo[]> [-Deploy] [-CertPath <FileInfo>] [-CertCN <String>]
-[-SignToolPath <FileInfo>] [-Force] [-SkipVersionCheck] [-WhatIf] [-Confirm] [<CommonParameters>]
+Deploy-SignedWDACConfig 
+    [-PolicyPaths <FileInfo[]>]
+    [-Deploy] 
+    [-CertPath <FileInfo>] 
+    [-CertCN <String>]
+    [-SignToolPath <FileInfo>] 
+    [-Force] 
+    [-SkipVersionCheck] 
+    [-WhatIf] 
+    [-Confirm] 
+    [<CommonParameters>]
 ```
 
 <br>

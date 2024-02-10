@@ -5,10 +5,22 @@
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Edit-SignedWDACConfig/Edit-SignedWDACConfig%20-AllowNewAppsAuditEvents.apng)
 
 ```powershell
-Edit-SignedWDACConfig [-AllowNewAppsAuditEvents] -SuppPolicyName <String> [-PolicyPath <String>] [-CertPath
-<String>] [-CertCN <String>] [-LogSize <Int64>] [-NoScript] [-NoUserPEs] [-SpecificFileNameLevel <String>]
-[-IncludeDeletedFiles] [-Level <String>] [-Fallbacks <String[]>] [-SignToolPath <String>] [-SkipVersionCheck]
-[<CommonParameters>]
+Edit-SignedWDACConfig 
+     [-AllowNewAppsAuditEvents] 
+     -SuppPolicyName <String> 
+     [-PolicyPath <String>] 
+     [-CertPath <String>] 
+     [-CertCN <String>] 
+     [-LogSize <Int64>] 
+     [-NoScript] 
+     [-NoUserPEs] 
+     [-SpecificFileNameLevel <String>]
+     [-IncludeDeletedFiles] 
+     [-Level <String>] 
+     [-Fallbacks <String[]>] 
+     [-SignToolPath <String>] 
+     [-SkipVersionCheck]
+     [<CommonParameters>]
 ```
 
 <br>
@@ -76,9 +88,20 @@ This parameter is specially useful for applications that install files outside o
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Edit-SignedWDACConfig/Edit-SignedWDACConfig%20-AllowNewApps.apng)
 
 ```powershell
-Edit-SignedWDACConfig [-AllowNewApps] -SuppPolicyName <String> [-PolicyPath <String>] [-CertPath <String>]
-[-CertCN <String>] [-NoScript] [-NoUserPEs] [-SpecificFileNameLevel <String>] [-Level <String>] [-Fallbacks
-<String[]>] [-SignToolPath <String>] [-SkipVersionCheck] [<CommonParameters>]
+Edit-SignedWDACConfig 
+     [-AllowNewApps] 
+     -SuppPolicyName <String> 
+     [-PolicyPath <String>] 
+     [-CertPath <String>]
+     [-CertCN <String>] 
+     [-NoScript] 
+     [-NoUserPEs] 
+     [-SpecificFileNameLevel <String>] 
+     [-Level <String>] 
+     [-Fallbacks <String[]>] 
+     [-SignToolPath <String>] 
+     [-SkipVersionCheck] 
+     [<CommonParameters>]
 ```
 
 <br>
@@ -132,9 +155,17 @@ A new supplemental policy will be created, it will be signed and deployed on the
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Edit-SignedWDACConfig/Edit-SignedWDACConfig%20-MergeSupplementalPolicies.apng)
 
 ```powershell
-Edit-SignedWDACConfig [-MergeSupplementalPolicies] -SuppPolicyName <String> -SuppPolicyPaths <String[]>
-[-PolicyPath <String>] [-KeepOldSupplementalPolicies] [-CertPath <String>] [-CertCN <String>] [-SignToolPath
-<String>] [-SkipVersionCheck] [<CommonParameters>]
+Edit-SignedWDACConfig 
+     [-MergeSupplementalPolicies] 
+     -SuppPolicyName <String> 
+     -SuppPolicyPaths <String[]>
+     [-PolicyPath <String>] 
+     [-KeepOldSupplementalPolicies] 
+     [-CertPath <String>] 
+     [-CertCN <String>] 
+     [-SignToolPath <String>] 
+     [-SkipVersionCheck] 
+     [<CommonParameters>]
 ```
 
 <br>
@@ -172,7 +203,16 @@ Merge multiple deployed **Signed** Supplemental policies into 1 and deploy it, r
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Edit-SignedWDACConfig/Edit-SignedWDACConfig%20-UpdateBasePolicy.apng)
 
 ```powershell
-Edit-SignedWDACConfig [-UpdateBasePolicy] -CurrentBasePolicyName <String[]> -NewBasePolicyType <String> [-CertPath <String>] [-CertCN <String>] [-SignToolPath <String>] [-RequireEVSigners] [-SkipVersionCheck] [<CommonParameters>]
+Edit-SignedWDACConfig 
+     [-UpdateBasePolicy] 
+     -CurrentBasePolicyName <String[]> 
+     -NewBasePolicyType <String> 
+     [-CertPath <String>] 
+     [-CertCN <String>] 
+     [-SignToolPath <String>] 
+     [-RequireEVSigners] 
+     [-SkipVersionCheck] 
+     [<CommonParameters>]
 ```
 
 <br>

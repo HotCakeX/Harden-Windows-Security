@@ -5,7 +5,11 @@
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-WDACConfig/New-WDACConfig%20-GetBlockRules.apng)
 
 ```powershell
-New-WDACConfig [-GetBlockRules] [-Deploy] [-SkipVersionCheck] [<CommonParameters>]
+New-WDACConfig 
+     [-GetBlockRules] 
+     [-Deploy] 
+     [-SkipVersionCheck] 
+     [<CommonParameters>]
 ```
 
 <br>
@@ -27,7 +31,11 @@ Creates a WDAC policy file called ***Microsoft recommended block rules.xml*** fr
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-WDACConfig/New-WDACConfig%20-GetDriverBlockRules.apng)
 
 ```powershell
-New-WDACConfig [-GetDriverBlockRules] [-Deploy] [-SkipVersionCheck] [<CommonParameters>]
+New-WDACConfig
+     [-GetDriverBlockRules] 
+     [-Deploy] 
+     [-SkipVersionCheck] 
+     [<CommonParameters>]
 ```
 
 <br>
@@ -49,8 +57,13 @@ Creates a WDAC policy file called ***Microsoft recommended driver block rules.xm
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-WDACConfig/New-WDACConfig%20-MakeAllowMSFTWithBlockRules.apng)
 
 ```powershell
-New-WDACConfig [-MakeAllowMSFTWithBlockRules] [-Deploy] [-TestMode] [-RequireEVSigners] [-SkipVersionCheck]
-[<CommonParameters>]
+New-WDACConfig 
+     [-MakeAllowMSFTWithBlockRules] 
+     [-Deploy] 
+     [-TestMode] 
+     [-RequireEVSigners] 
+     [-SkipVersionCheck]
+     [<CommonParameters>]
 ```
 
 <br>
@@ -102,7 +115,10 @@ Calls the [-GetBlockRules](#new-wdacconfig--getblockrules) parameter to get the 
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-WDACConfig/New-WDACConfig%20-SetAutoUpdateDriverBlockRules.apng)
 
 ```powershell
-New-WDACConfig [-SetAutoUpdateDriverBlockRules] [-SkipVersionCheck] [<CommonParameters>]
+New-WDACConfig 
+     [-SetAutoUpdateDriverBlockRules]
+     [-SkipVersionCheck] 
+     [<CommonParameters>]
 ```
 
 <br>
@@ -120,7 +136,12 @@ Creates a scheduled task that runs every 7 days to automatically perform [the of
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-WDACConfig/New-WDACConfig%20-PrepMSFTOnlyAudit.apng)
 
 ```powershell
-New-WDACConfig [-PrepMSFTOnlyAudit] [-Deploy] [-LogSize <Int64>] [-SkipVersionCheck] [<CommonParameters>]
+New-WDACConfig 
+     [-PrepMSFTOnlyAudit] 
+     [-Deploy] 
+     [-LogSize <Int64>] 
+     [-SkipVersionCheck] 
+     [<CommonParameters>]
 ```
 
 <br>
@@ -148,7 +169,12 @@ It's recommended to use the optional parameter below to increase the log size of
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-WDACConfig/New-WDACConfig%20-PrepDefaultWindowsAudit.apng)
 
 ```powershell
-New-WDACConfig [-PrepDefaultWindowsAudit] [-Deploy] [-LogSize <Int64>] [-SkipVersionCheck] [<CommonParameters>]
+New-WDACConfig 
+     [-PrepDefaultWindowsAudit] 
+     [-Deploy] 
+     [-LogSize <Int64>] 
+     [-SkipVersionCheck] 
+     [<CommonParameters>]
 ```
 
 <br>
@@ -176,9 +202,20 @@ It's recommended to use the optional parameter below to increase the log size of
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-WDACConfig/New-WDACConfig%20-MakePolicyFromAuditLogs%20-BasePolicyType%20'Allow%20Microsoft%20Base'.apng)
 
 ```powershell
-New-WDACConfig [-MakePolicyFromAuditLogs] -BasePolicyType <String> [-Deploy] [-TestMode] [-RequireEVSigners]
-[-SpecificFileNameLevel <String>] [-NoDeletedFiles] [-NoUserPEs] [-NoScript] [-Level <String>] [-Fallbacks
-<String[]>] [-LogSize <Int64>] [-SkipVersionCheck] [<CommonParameters>]
+New-WDACConfig 
+     [-MakePolicyFromAuditLogs] 
+     [-BasePolicyType <String>] 
+     [-Deploy] 
+     [-TestMode] 
+     [-RequireEVSigners]
+     [-SpecificFileNameLevel <String>] [-NoDeletedFiles] 
+     [-NoUserPEs] 
+     [-NoScript] 
+     [-Level <String>] 
+     [-Fallbacks <String[]>] 
+     [-LogSize <Int64>] 
+     [-SkipVersionCheck] 
+     [<CommonParameters>]
 ```
 
 <br>
@@ -243,8 +280,13 @@ All of the outputs are saved in a folder named "WDAC" inside the current working
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-WDACConfig/New-WDACConfig%20-MakeLightPolicy.apng)
 
 ```powershell
-New-WDACConfig [-MakeLightPolicy] [-Deploy] [-TestMode] [-RequireEVSigners] [-SkipVersionCheck]
-[<CommonParameters>]
+New-WDACConfig 
+     [-MakeLightPolicy] 
+     [-Deploy] 
+     [-TestMode] 
+     [-RequireEVSigners] 
+     [-SkipVersionCheck]
+     [<CommonParameters>]
 ```
 
 <br>
@@ -286,8 +328,15 @@ Creates a WDAC policy for a [Lightly managed system](https://github.com/HotCakeX
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-WDACConfig/New-WDACConfig%20-MakeDefaultWindowsWithBlockRules.apng)
 
 ```powershell
-New-WDACConfig [-MakeDefaultWindowsWithBlockRules] [-Deploy] [-IncludeSignTool] [-SignToolPath <String>]
-[-TestMode] [-RequireEVSigners] [-SkipVersionCheck] [<CommonParameters>]
+New-WDACConfig 
+     [-MakeDefaultWindowsWithBlockRules] 
+     [-Deploy] 
+     [-IncludeSignTool] 
+     [-SignToolPath <String>]
+     [-TestMode] 
+     [-RequireEVSigners] 
+     [-SkipVersionCheck] 
+     [<CommonParameters>]
 ```
 
 <br>

@@ -224,6 +224,7 @@ Specifies the log size for ***Microsoft-Windows-CodeIntegrity/Operational*** eve
 ### -SpecificFileNameLevel
 
 You can choose one of the following options:
+
 * OriginalFileName
 * InternalName
 * FileDescription
@@ -442,7 +443,7 @@ Press TAB to open the file picker GUI and browse for SignTool.exe
 
 ### -Levels
 
-Offers the same official [Levels](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-level) for scanning of event logs.
+Offers the same official [Levels](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-level) for scanning of the specified directory path.
 
 <div align='center'>
 
@@ -515,6 +516,7 @@ By default, the module includes user PEs in the scan. When you use this switch p
 ### -SpecificFileNameLevel
 
 You can choose one of the following options:
+
 * OriginalFileName
 * InternalName
 * FileDescription

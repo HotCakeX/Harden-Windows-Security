@@ -84,8 +84,6 @@ Indicates that the module will automatically deploy the Deny base policy after c
 
 Offers the same official [Levels](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-level) for scanning of the specified directory path.
 
-Offers the same official [Levels](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-level) for scanning of event logs.
-
 <div align='center'>
 
 | Type: |[String](https://learn.microsoft.com/en-us/dotnet/api/system.string)|
@@ -121,6 +119,7 @@ Offers the same official [Fallbacks](https://learn.microsoft.com/en-us/powershel
 ### -SpecificFileNameLevel
 
 You can choose one of the following options:
+
 * OriginalFileName
 * InternalName
 * FileDescription
@@ -263,7 +262,7 @@ Indicates that the module will automatically deploy the Deny base policy after c
 
 ### -Levels
 
-Offers the same official [Levels](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-level) for scanning of event logs.
+Offers the same official [Levels](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-level) for scanning of the specified directory path.
 
 <div align='center'>
 

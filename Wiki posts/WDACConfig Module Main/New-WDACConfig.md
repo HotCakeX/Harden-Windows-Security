@@ -441,9 +441,9 @@ Indicates that the created/deployed policy will have [Require EV Signers](https:
 
 Indicates that the module will output 3 additional files for debugging purposes and also write debug messages on the console:
 
- - *FileRulesAndFileRefs.txt* - Contains the File Rules and Rule refs for the Hash of the files that no longer exist on the disk.
- - *DeletedFilesHashes.xml* - Policy file that contains File Rules and Rule refs for the files that no longer exist on the disk.
- - *AuditLogsPolicy_NoDeletedFiles.xml* - The policy file generated from Audit Event logs based on the specified Level and Fallback parameters.
+- *FileRulesAndFileRefs.txt* - Contains the File Rules and Rule refs for the Hash of the files that no longer exist on the disk.
+- *DeletedFilesHashes.xml* - Policy file that contains File Rules and Rule refs for the files that no longer exist on the disk.
+- *AuditLogsPolicy_NoDeletedFiles.xml* - The policy file generated from Audit Event logs based on the specified Level and Fallback parameters.
 
 <div align='center'>
 
@@ -516,6 +516,7 @@ Offers the same official [Fallbacks](https://learn.microsoft.com/en-us/powershel
 ### -SpecificFileNameLevel
 
 You can choose one of the following options:
+
 * OriginalFileName
 * InternalName
 * FileDescription

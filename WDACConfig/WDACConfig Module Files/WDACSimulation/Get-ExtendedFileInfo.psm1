@@ -77,8 +77,9 @@ function Get-ExtendedFileInfo {
         if ((-NOT ([System.String]::IsNullOrWhiteSpace($OriginalFileNameRaw)))) {
 
           # Split the input by the backslash (\) characters
-          [System.String[]]$Parts = $OriginalFileNameRaw.Split('\')
+          $Parts = $OriginalFileNameRaw.Split('\')
 
+          # Check if the split string is an array and has at least one element
           if (($Parts -is [System.String[]]) -and ($Parts.Count -gt 0)) {
 
             # Get the last part of the split string which contains OriginalFileName and Version

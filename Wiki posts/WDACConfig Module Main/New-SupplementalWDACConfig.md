@@ -5,19 +5,19 @@
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-SupplementalWDACConfig/New-SupplementalWDACConfig%20-Normal.apng)
 
 ```powershell
-New-SupplementalWDACConfig 
-    [-Normal] 
-    -ScanLocation <String> 
-    -SuppPolicyName <String> 
-    [-PolicyPath <FileInfo>] 
-    [-Deploy] 
+New-SupplementalWDACConfig
+    [-Normal]
+    -ScanLocation <String>
+    -SuppPolicyName <String>
+    [-PolicyPath <FileInfo>]
+    [-Deploy]
     [-SpecificFileNameLevel <String>]
-    [-NoUserPEs] 
-    [-NoScript] 
-    [-Level <String>] 
+    [-NoUserPEs]
+    [-NoScript]
+    [-Level <String>]
     [-Fallbacks <String[]>]
     [-SkipVersionCheck]
-    [-Confirm] 
+    [-Confirm]
     [<CommonParameters>]
 ```
 
@@ -83,6 +83,7 @@ Browse for the xml file of the Base policy this Supplemental policy is going to 
 ### -Deploy
 
 Indicates that the module will automatically deploy the Supplemental policy after creation.
+
 <div align='center'>
 
 | Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|
@@ -211,14 +212,14 @@ By default, the module includes user PEs in the scan. When you use this switch p
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-SupplementalWDACConfig/New-SupplementalWDACConfig%20-PathWildCards.apng)
 
 ```powershell
-New-SupplementalWDACConfig 
-    [-PathWildCards] 
+New-SupplementalWDACConfig
+    [-PathWildCards]
     -FolderPath <DirectoryInfo>
-    -SuppPolicyName <String> 
+    -SuppPolicyName <String>
     [-PolicyPath <FileInfo>]
-    [-Deploy] 
+    [-Deploy]
     [-SkipVersionCheck]
-    [-Confirm] 
+    [-Confirm]
     [<CommonParameters>]
 ```
 
@@ -316,15 +317,15 @@ Indicates that the module will automatically deploy the Supplemental policy afte
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-SupplementalWDACConfig/New-SupplementalWDACConfig%20-InstalledAppXPackages.apng)
 
 ```powershell
-New-SupplementalWDACConfig 
-    [-InstalledAppXPackages] 
-    -PackageName <String> 
-    -SuppPolicyName <String> 
-    [-PolicyPath <FileInfo>] 
-    [-Deploy] 
-    [-Force] 
-    [-SkipVersionCheck] 
-    [-Confirm] 
+New-SupplementalWDACConfig
+    [-InstalledAppXPackages]
+    -PackageName <String>
+    -SuppPolicyName <String>
+    [-PolicyPath <FileInfo>]
+    [-Deploy]
+    [-Force]
+    [-SkipVersionCheck]
+    [-Confirm]
     [<CommonParameters>]
 ```
 

@@ -33,27 +33,79 @@ Subsequently, you need to use the **-AuditAndEnforce** parameter to generate the
 3. Merge the supplemental policy with the Strict Kernel-mode base policy
 4. Deploy it as a single base policy, rebootlessly.
 
-Hardware drivers are scanned based on their certificates so they will not necessitate a policy update when they are updated as long as they are still signed with the same certificate.
-
-The deployed base policy can have supplemental policies too so if in the future you need to allow more Kernel-mode drivers to run on your system, you can use the following command to automatically generate and deploy a Supplemental policy.
-
-```powershell
-Edit-WDACConfig -AllowNewAppsAuditEvents -SuppPolicyName "Kernel mode drivers for software X" -PolicyPath <Path to Strict Kernel-mode policy xml file> -Fallbacks None -NoUserPEs -NoScript
-```
-
-[**More info about the command above**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Edit-WDACConfig)
+Hardware drivers are scanned with [WHQLFilePublisher](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/select-types-of-rules-to-create#table-2-windows-defender-application-control-policy---file-rule-levels) level. so they will not necessitate a policy update when they are updated.
 
 <br>
 
-### 4 Optional Parameters
+### -PrepMode
 
-* `-PrepMode`: Deploys the Strict Kernel-mode WDAC policy in Audit mode, preparing the system for an Audit.
+Deploys the Strict Kernel-mode WDAC policy in Audit mode, preparing the system for an Audit.
 
-* `-AuditAndEnforce`: Audits the system using event logs for any blocked drivers, generates the final Strict Kernel-mode WDAC policy.
+<div align='center'>
 
-* `-EVSigners`: Uses EVSigners policy rule option. If you want to use this parameter, make sure you use it for both PrepMode and AuditAndEnforce parameters. [Read more about EV Signers](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-Notes#policies-with-requiredev-signers-rule-option)
+| Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
 
-* `-Deploy`: Indicates that the policy will be deployed. If you want to deploy the final strict kernel-mode base policy Signed, do not use this parameter with `-AuditAndEnforce`. Instead just create the policy and then use [Deploy-SignedWDACConfig](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Deploy-SignedWDACConfig) cmdlet to deploy it.
+</div>
+
+<br>
+
+### -AuditAndEnforce
+
+Audits the system using event logs for any blocked drivers, generates the final Strict Kernel-mode WDAC policy.
+
+<div align='center'>
+
+| Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+<br>
+
+### -EVSigners
+
+Uses EVSigners policy rule option. If you want to use this parameter, make sure you use it for both PrepMode and AuditAndEnforce parameters. [Read more about EV Signers](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-Notes#policies-with-requiredev-signers-rule-option)
+
+<div align='center'>
+
+| Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+<br>
+
+### -Deploy
+
+Indicates that the policy will be deployed. If you want to deploy the final strict kernel-mode base policy Signed, do not use this parameter with `-AuditAndEnforce`. Instead just create the policy and then use [Deploy-SignedWDACConfig](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Deploy-SignedWDACConfig) cmdlet to deploy it.
+
+<div align='center'>
+
+| Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
 
 <br>
 
@@ -95,39 +147,78 @@ Subsequently, you need to use the **-AuditAndEnforce** parameter to generate the
 3. Merge the supplemental policy with the Strict Kernel-mode base policy
 4. Deploy it as a single base policy, rebootlessly.
 
-Hardware drivers are scanned based on their certificates so they will not necessitate a policy update when they are updated as long as they are still signed with the same certificate.
-
-The deployed base policy can have supplemental policies too so if in the future you need to allow more Kernel-mode drivers to run on your system, you can use the following command to automatically generate and deploy a Supplemental policy.
-
-```powershell
-Edit-WDACConfig -AllowNewAppsAuditEvents -SuppPolicyName "Kernel mode drivers for software X" -PolicyPath <Path to Strict Kernel-mode policy xml file> -Fallbacks None -NoUserPEs -NoScript
-```
-
-[**More info about the command above**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Edit-WDACConfig)
+Hardware drivers are scanned with [WHQLFilePublisher](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/select-types-of-rules-to-create#table-2-windows-defender-application-control-policy---file-rule-levels) level so they will not necessitate a policy update when they are updated.
 
 <br>
 
-### 4 Optional Parameters
+### -PrepMode
 
-* `-PrepMode`: Deploys the Strict Kernel-mode WDAC policy in Audit mode, preparing the system for an Audit.
+Deploys the Strict Kernel-mode WDAC policy in Audit mode, preparing the system for an Audit.
 
-* `-AuditAndEnforce`: Audits the system using event logs for any blocked drivers, generates the final Strict Kernel-mode WDAC policy.
+<div align='center'>
 
-* `-EVSigners`: Uses EVSigners policy rule option. If you want to use this parameter, make sure you use it for both PrepMode and AuditAndEnforce parameters. [Read more about EV Signers](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-Notes#policies-with-requiredev-signers-rule-option)
+| Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
 
-* `-Deploy`: Indicates that the policy will be deployed. If you want to deploy the final strict kernel-mode base policy Signed, do not use this parameter with `-AuditAndEnforce`. Instead just create the policy and then use [Deploy-SignedWDACConfig](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Deploy-SignedWDACConfig) cmdlet to deploy it.
+</div>
+
 <br>
 
-<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+### -AuditAndEnforce
+
+Audits the system using event logs for any blocked drivers, generates the final Strict Kernel-mode WDAC policy.
+
+<div align='center'>
+
+| Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
 
 <br>
 
-## Notes
+### -EVSigners
 
-* **Mandatory** parameters indicate you always need to provide values for them.
+Uses EVSigners policy rule option. If you want to use this parameter, make sure you use it for both PrepMode and AuditAndEnforce parameters. [Read more about EV Signers](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-Notes#policies-with-requiredev-signers-rule-option)
 
-* **Automatic** parameters indicate that if you used [Set-CommonWDACConfig](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Set-CommonWDACConfig) cmdlet to set default values for them, the module will automatically use them. This saves time and prevents repetitive tasks. However, if no value exists in User Configurations for an Automatic parameter and you didn't explicitly provide a value for that parameter either, then you will see an error asking you to provide value for it. Explicitly providing a value for an Automatic parameter in the command line overrides its default value in User Configurations, meaning the module will ignore the value of the same parameter in the User Configurations file.
+<div align='center'>
 
-* **Optional** parameters indicate that they are not required and without using them the module will automatically run with the optimal settings.
+| Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+<br>
+
+### -Deploy
+
+Indicates that the policy will be deployed. If you want to deploy the final strict kernel-mode base policy Signed, do not use this parameter with `-AuditAndEnforce`. Instead just create the policy and then use [Deploy-SignedWDACConfig](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Deploy-SignedWDACConfig) cmdlet to deploy it.
+
+<div align='center'>
+
+| Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
 
 <br>

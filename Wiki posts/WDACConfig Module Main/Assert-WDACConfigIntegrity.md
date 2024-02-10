@@ -20,15 +20,42 @@ By doing so, you can ascertain that the files in your local WDACConfig folder ar
 
 If there is any indication of tampering, the outcomes will be displayed on the console.
 
+
+### -SaveLocally
+
+This parameter is used to generate hashes of the final modules files prior to publishing them to the GitHub. This parameter shouldn't be used.
+
+<div align='center'>
+
+| Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
 <br>
 
-### 3 Optional Parameters
+### -Path
 
-* `-SaveLocally`: This parameter is used to generate hashes of the final modules files prior to publishing them to the GitHub. This parameter shouldn't be used.
+Can define a different path for the `Hashes.csv` file. This parameter shouldn't be used.
 
-* `-Path`: Can define a different path for the `Hashes.csv` file. This parameter shouldn't be used.
+<div align='center'>
 
-* `-SkipVersionCheck`: Skips the check for new module version.
+| Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+<br>
 
 <br>
 

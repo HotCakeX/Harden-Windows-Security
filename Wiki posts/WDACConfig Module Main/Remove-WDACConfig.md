@@ -40,7 +40,7 @@ Path to xml file(s) of the currently deployed policy that you want to remove. Su
 
 ### -CertCN
 
-Common name of the certificate - Supports argument completion so you don't have to manually enter the Certificate's CN, just make sure the `-CertPath` is specified and the certificate is installed in the personal store of the user certificates, then press TAB to auto complete the name. You can however enter it manually if you want to.
+Common name of the certificate - Supports argument completion so you don't have to manually enter the Certificate's CN. Make sure the certificate is installed in the personal store of the user certificates, then press TAB to auto complete the name. You can however enter it manually if you want to.
 
 <div align='center'>
 

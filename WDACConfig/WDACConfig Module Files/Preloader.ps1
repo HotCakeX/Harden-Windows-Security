@@ -16,6 +16,8 @@ try {
     if ((Test-Path -Path 'Variable:\UBR') -eq $false) { New-Variable -Name 'UBR' -Value (Get-ItemPropertyValue -Path 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion' -Name 'UBR') -Option 'Constant' -Scope 'Script' -Description 'Update Build Revision (UBR) number' -Force }
     if ((Test-Path -Path 'Variable:\FullOSBuild') -eq $false) { New-Variable -Name 'FullOSBuild' -Value "$OSBuild.$UBR" -Option 'Constant' -Scope 'Script' -Description 'Create full OS build number as seen in Windows Settings' -Force }
     if ((Test-Path -Path 'Variable:\ModuleRootPath') -eq $false) { New-Variable -Name 'ModuleRootPath' -Value ($PSScriptRoot) -Option 'Constant' -Scope 'Global' -Description 'Storing the value of $PSScriptRoot in a global constant variable to allow the internal functions to use it when navigating the module structure' -Force }
+    if ((Test-Path -Path 'Variable:\CISchemaPath') -eq $false) { New-Variable -Name 'CISchemaPath' -Value "$Env:SystemDrive\Windows\schemas\CodeIntegrity\cipolicy.xsd" -Option 'Constant' -Scope 'Global' -Description 'Storing the path to the WDAC Code Integrity Schema XSD file' -Force }
+
 }
 catch {
     Throw [System.InvalidOperationException] 'Could not set the required global variables.'
@@ -44,8 +46,8 @@ foreach ($File in (Get-ChildItem -Recurse -File -Path $ModuleRootPath -Include '
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCC+kKF0TrvUydR3
-# RoeBV1rvokHfEf+EaUs3+W4GaAT1Q6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCAcZZLnHenM0vGz
+# 6tIHPVXp5xPtGlHHe/9lJBjgtZCwGKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -92,16 +94,16 @@ foreach ($File in (Get-ChildItem -Recurse -File -Path $ModuleRootPath -Include '
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgmDpTjxwOYh1M6Y065UoecdVoRJvpEgntMRJmT/plNtYwDQYJKoZIhvcNAQEB
-# BQAEggIAU7291Emtgs+t3GrSJWprk+JNz1i4usoWfhjVoPRivTCoU9B6U0m0/Rmh
-# qHy+oQASDCG7/X/4ih14mWOGMTn2E7Y8YwX32Va23QQctgnMwiFl69LYqmihIhAx
-# 1lcYYkvMujOMOwNF0ixbwpiZ5SbwpcHHl1xpHJYGHDavB690XF46P+pBsAfVxoOP
-# cpTM7DTtvyiKFnwH5cbjkalQtARbAY5iwLSdEApsubPA8PPXbnxFHV1MVqrIuSSR
-# QoXBDCIL/79eu+BT10v0aElyG9JlLPKmuqq8RObd984Z5EWvoDq6Xmu1peBeYF+M
-# /TnL4eDYI1VMSgzIU6oHhCc+7qaK4ivScdxOPYOkVo/9aM1Q17G/FmffIuWEd3Io
-# AlcJu1AJA5sn2bx7jkWcEB2YJYbwIjBQ+YFmrJEeaBiW8rvgO/48zWotWrAFWG4p
-# iP77twapyCSgt5HpeoSyt3QtWkzbazvy6vESSpFpHOONieBMRitl+7R0pOZQC9M6
-# U/bBs1uzURb+T8ER1RQKrbK6ATc+amPPzomBwt0TKm3XPsd4lIUHhyrOKlWtLeDH
-# FEwZlWJpFRFGRwX6NeQpDx6Nl8FtH1EhVuhoMqSraOAhqQ4hbn3l440Dk9iRj1SK
-# Ui3JTnsQSqd6doTgxwxtteWeIYql6wRGh+chCyDfEishLVbOxN4=
+# IgQgzASG2c1JDl6tsmQpIBhXZgQt1e8ErSV3p/dWtSgGCJ4wDQYJKoZIhvcNAQEB
+# BQAEggIAavLaXaE8hj9ylz3yLQZT11Gt6n99h7SbTAJGW/7VoycN7rLykz9z2z9a
+# grn1psEeJP1g7eDm/7QDg7Ou7d6h9pq0Wcl19rybd0Q6M2/HwQl/EtRDpkFnvV88
+# moQPaU7J2Um7eSSysPhNubxApPl9l9rCChEJBEK+KoD5LCHJ2D9ppzZKDmSmpEZp
+# xTVIBKxpZ1XnCK3+JtAExy5dl4ovjQNQ3sjjmBq3S2fWmVXmMKo6A6SYEu4++9Mh
+# QABaGEN+jFqiA1bB/8hS6bMiZK0d96Vj0P6Ekjc8RqezJCiCP1Cw3JIVbBl1wHeK
+# /0HEdAMWpLhuUNG8i1R/0QAt3pogjiZWUC1V54gxPzarvvac6rIrFBwd2uaaSX2h
+# TqRb3Qe0u9PWAFUMUIdY3VFQnsoCJANvt/zUedn4iY+QARCQXYSN8avnw1sUNuTX
+# JGHM/ueqXTK9A3HJtpiJV0ZDKXfaBW4UhLcU4DJPeySc2bBvGDe1fKS9yK5VKRSq
+# J+/Sqh0ZbfxunaMvp3hj4o8FqKrMw9SQN+Y6MgN2RiL++cbBqJ6HE930SUVbU4FQ
+# GNP7eKe9MyR7v4AJ4uZRWX3WFoj/0+CGCF0/e0YdErF/dvIgG4t0Vjcc9tqxApsW
+# yh5AKgDPACPUy0SlQ/a7YswjvFLdddk+1hddUshL3Z9Ufqpl/eE=
 # SIG # End signature block

@@ -209,11 +209,26 @@
     # Add quotes around the selected path and a wildcard character at the end
     return "`"$($Browser.SelectedPath)\*`""
 }
+
+# Opens File picker GUI so that user can select any files
+[System.Management.Automation.ScriptBlock]$ArgumentCompleterAnyFilePathsPicker = {
+    # Load the System.Windows.Forms assembly
+    Add-Type -AssemblyName 'System.Windows.Forms'
+    # Create a new OpenFileDialog object
+    [System.Windows.Forms.OpenFileDialog]$Dialog = New-Object -TypeName 'System.Windows.Forms.OpenFileDialog'
+    # Show the dialog and get the result
+    [System.String]$Result = $Dialog.ShowDialog()
+    # If the user clicked OK, return the selected file path
+    if ($Result -eq 'OK') {
+        return "`"$($Dialog.FileName)`""
+    }
+}
+
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCACQVo42pIDlP//
-# hc3sso4pGXKcc7j7FtBlqDgHV6T5l6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCC7GLKdyDvHyPBw
+# 8Wae4Jgop8zUP4SAYzM8v+DhqVdl1qCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -260,16 +275,16 @@
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQg7MQMaZTl51atqz8nhBzT0CXoT51gzjRrpjpaOSZ3+CswDQYJKoZIhvcNAQEB
-# BQAEggIAbdncpaN6OUf7f9Itk+4Un9BXzakEdEqm6UZnge/WQZ1vQnRN3In5Iu11
-# 4OpxGswodZ02976NrNA/M0YpoPauwRY/BEkc6ge14TExvHM/FVMp3PoE1zBI9P/M
-# 7vCFIQwGrsOzhJwi9hPiBPkdwHMcjWmz3Maqb4qBRFLiKPxmvZfO3Td6flh1SCXD
-# O6E4n/DyLRqEbDH9wG+d6RUaEvGZyLNrAXeTXz0XLW3VlFnN6YsT/7hdvnAUYFVy
-# TXWSs6hKz0+neAQcFBnlPTB09KU/HORvTUsKGmD9Jo8NREl0h/YIAUrWOtPkUXSq
-# bMpexuThTuBQ/qT/BxFoWyCeB1+qKd10IPOjeT6nji7bdvC3BYv6bVcJm9iIod69
-# +mtQANBBNdtwCyfSk06ckaDh/oXWIy+E1nWuADN0xRxRFO28szEWjoW+UQfLeE4N
-# V+VCda9SXhK42jdG9B8w1cNYNKGCTuJiidcGhUEaNmAQZ1SdgepApZHfDyooNw2h
-# BGC+h4GnI1XG7d+2zYmgYicqtumXnNMevJjtWLpDirl9wXCpqzC66gFjBK8ezF10
-# 1j9pmjV9B8MpBS2kGCFk/d9J48dzLp/ChwmPse1MQ5FB1cObkh1/Q2AzzTev+ILg
-# XxKhW0HJOZbzZYaj7IhwYUuP5RidqGrLnT+mezi0MIlMjKChNQA=
+# IgQg33BVZ5QVOBpTkz+Mw0SiHGKvq6auues+WxWxSCyXKfwwDQYJKoZIhvcNAQEB
+# BQAEggIAagKR6818lPp8QNQhXj6U/0bk2iJjbUzfewJMHQ/sIvdWx6ceqieq+R3M
+# eRDXtWq4osINlUN+cylxu8Mz/bBYMIK68kpfLAx3iBIsdMM6GCrcuKxJdH6BxGhL
+# IqDaghVw5kyFdynIbAmr2w82L/ZZd++GP+NlNRLv5f7y4xxmmmmfWZZVSr5/UMrV
+# aZIMqMDD1yANSZWKKHam7UgdvY7rqi2rREkPZBOOmKroO2KalDPks1Cl5rJ2Q4Xz
+# 8leUySrs6xw33nbR+2pOHBAjoTE12Y/gkoCyZ2uwY6fTo9BskCjsEKyzXzJV5Tct
+# U2/xuv+JW1wdSua9Q9zU7B/0g3BufBt8i6IHt8F6jtcwpjLbn2BXsjMTj4rZe3Te
+# WYn/b1vmU9dx1YapjDJxyIHzeQer6e+WC8F38DSGkLdhNPg6UPm2iVUP97BhyFaT
+# uue7fr6NDABettAj0nROZFWFiupxUAGYYco24h/rsj+igPpNsb++hd+dCKzzCQJ+
+# iqsrgAILzN5nE9JGU3pHqjCXJ7hGAiZpB4p5dak9Nwvg1Nu4V+cHyiO1ys66LusE
+# t8XX7/JXrJuWNt0K1ZCcRoSQ+4wIB5CsaRzUxtUnQ0yuivrWUyWQjzIYiaOL9F6q
+# gQMgMpDYi4uBJGdSAlmHAV1nfBG6uQHVtlKuVOXtZ5HGGyXugQM=
 # SIG # End signature block

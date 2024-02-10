@@ -79,6 +79,35 @@ Install-Module -Name 'WDACConfig' -Force
 | [Remove-CommonWDACConfig](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Remove-CommonWDACConfig) | To remove user configurations for common WDACConfig parameters | `Get-Help Remove-CommonWDACConfig` |
 | [Assert-WDACConfigIntegrity](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Assert-WDACConfigIntegrity) | To ascertain that the files in your local WDACConfig folder are identical to the ones in the cloud | `Get-Help Assert-WDACConfigIntegrity` |
 | [Build-WDACCertificate](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Build-WDACCertificate) | To create proper code signing certificates for WDAC policy signing | `Get-Help Build-WDACCertificate` |
+| [Test-CiPolicy](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Test-CiPolicy) | Tests a Code Integrity (WDAC) Policy XML file against the Schema | `Get-Help Test-CiPolicy` |
+
+<br>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+
+<br>
+
+## About Automatic Parameters
+
+If a parameter's **Automatic** value is set to True in the parameter description, it indicate that if you used [Set-CommonWDACConfig](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Set-CommonWDACConfig) cmdlet to set default value for it, the module will automatically use it. This saves time and prevents repetitive tasks. However, if no value exists in User Configurations for an Automatic parameter and you didn't explicitly provide a value for that parameter either, then you will see an error asking you to provide value for it. Explicitly providing a value for an Automatic parameter in the command line overrides its default value in the User Configurations, meaning the module will ignore the value of the same parameter in the User Configurations file.
+
+<br>
+
+### The Logic Behind The -SignToolPath Parameter in the Module
+
+1. If [Windows SDK](https://developer.microsoft.com/en-us/windows/downloads/windows-sdk/) Signing Tools for Desktop Apps components is installed in the default location `C:\Program Files (x86)\Windows Kits`, then specifying `-SignToolPath` parameter isn't necessary as the SignTool.exe will be detected automatically.
+
+2. If Windows SDK Signing Tools for Desktop Apps components is not installed in the default location or you want to manually browse for the signtool.exe, then make sure you either specify its path using `Set-CommonWDACConfig -SignToolPath` or use the `-SignToolPath` parameter.
+
+3. If SignTool.exe path is available in user configurations then it will be automatically used.
+
+4. Specifying `-SignToolPath` parameter explicitly on the command line takes priority over auto detection and value in the user configurations.
+
+5. If SignTool.exe cannot be auto-detected and the user didn't specify it on the command line, you will receive a prompt to authorize the automatic download of the most recent SignTool.exe version from the official Microsoft servers. Upon confirmation, it will be saved in your user configurations and utilized by the cmdlet. The file itself will be saved in the current working directory.
+
+<br>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
 
 <br>
 

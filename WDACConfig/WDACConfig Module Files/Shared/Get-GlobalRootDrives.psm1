@@ -8,41 +8,25 @@ Function Get-GlobalRootDrives {
     .INPUTS
         None. You cannot pipe objects to this function.
     .OUTPUTS
-        System.Objects[]
+        System.Object[]
     #>
     [CmdletBinding()]
+    [OutputType([System.Object[]])]
     param ()
     # Importing the $PSDefaultParameterValues to the current session, prior to everything else
     . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
-    # Import the kernel32.dll functions using P/Invoke
-    [System.String]$Signature = @'
-[DllImport("kernel32.dll", SetLastError=true)]
-[return: MarshalAs(UnmanagedType.Bool)]
-public static extern bool GetVolumePathNamesForVolumeNameW([MarshalAs(UnmanagedType.LPWStr)] string lpszVolumeName,
-[MarshalAs(UnmanagedType.LPWStr)] [Out] StringBuilder lpszVolumeNamePaths, uint cchBuferLength,
-ref UInt32 lpcchReturnLength);
-
-[DllImport("kernel32.dll", SetLastError = true)]
-public static extern IntPtr FindFirstVolume([Out] StringBuilder lpszVolumeName,
-uint cchBufferLength);
-
-[DllImport("kernel32.dll", SetLastError = true)]
-public static extern bool FindNextVolume(IntPtr hFindVolume, [Out] StringBuilder lpszVolumeName, uint cchBufferLength);
-
-[DllImport("kernel32.dll", SetLastError = true)]
-public static extern uint QueryDosDevice(string lpDeviceName, StringBuilder lpTargetPath, int ucchMax);
-
-'@
-    # Add the signature to the current session as a new type
-    Add-Type -ErrorAction SilentlyContinue -Language CSharp -MemberDefinition $Signature -Name 'Win32Utils' -Namespace 'PInvoke' -Using PInvoke, System.Text
+    # Import the kernel32.dll functions using P/Invoke if they don't exist
+    if (-NOT ('PInvoke.Win32Utils' -as [System.Type]) ) {
+        Add-Type -Path "$ModuleRootPath\C#\Kernel32dll.cs"
+    }
 
     # Initialize some variables for storing the volume names, paths, and mount points
     [System.UInt32]$lpcchReturnLength = 0
     [System.UInt32]$Max = 65535
-    [System.Text.StringBuilder]$SbVolumeName = New-Object -TypeName System.Text.StringBuilder($Max, $Max)
-    [System.Text.StringBuilder]$SbPathName = New-Object -TypeName System.Text.StringBuilder($Max, $Max)
-    [System.Text.StringBuilder]$SbMountPoint = New-Object -TypeName System.Text.StringBuilder($Max, $Max)
+    [System.Text.StringBuilder]$SbVolumeName = New-Object -TypeName System.Text.StringBuilder -ArgumentList ($Max, $Max)
+    [System.Text.StringBuilder]$SbPathName = New-Object -TypeName System.Text.StringBuilder -ArgumentList ($Max, $Max)
+    [System.Text.StringBuilder]$SbMountPoint = New-Object -TypeName System.Text.StringBuilder -ArgumentList ($Max, $Max)
 
     # Find the first volume in the system and get a handle to it
     [System.IntPtr]$VolumeHandle = [PInvoke.Win32Utils]::FindFirstVolume($SbVolumeName, $Max)
@@ -81,8 +65,8 @@ Export-ModuleMember -Function 'Get-GlobalRootDrives'
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBhKOTbUX+aXzbG
-# hWj1JIG/78XwTpDsFEovIkl/Y3eyiaCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCsZLhPfuFuafao
+# Cy3eCO5I05uYUQ1MLaC9l+ZmvHnnIKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -129,16 +113,16 @@ Export-ModuleMember -Function 'Get-GlobalRootDrives'
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQg1nCz/i3Murcm+kjQ9rnuWqDh9opDTUsOI0tLy/FPlqMwDQYJKoZIhvcNAQEB
-# BQAEggIAdr+ugI9/IB7SV2RX5/J+T+QHh6i0uaivIDR+gCYEjEIr51TOmHBOfxBH
-# Se1Zm2ZIeKB67vkiasTjTDgFyglkxfnBuNR3JdIJ8r8WtiZUSj+4xlch3I//6pjl
-# A02xoxMoXUWWTga2BqPbF//baVaum64eAomsYZWV+xd2rgIE8zuPToLq88rvzayB
-# XhPelcfymoATb3dhR01U4SdNOjTAHB1Zo4TLsgRPWE35+qISSb0OUJu25aq0usVW
-# Kuoqv4c8KSWSIb8mI0yZSKxIJIwLapII6ilMD5uFB7EvbJ12CxT1B4jQA1/j+yam
-# PeSZM7Coja8KDhQcMGTWGh2zYm+t8af/9XOuCNipiTx/32f/haN5PwEWFBvS5SDE
-# BWu5tqKALsQKidPAH5wW5Qq4zzCXpHS6EdXA1Dg0TGNoBgcnWlq4OYkEYOC0MNHO
-# DPtQNXB+0TUvoa0Q+bVeFNkulASeT0vL+KuyBMl/UvVY+ToZIgRyo1IsrlbAYiph
-# Jp4yYCfKSA55HX3Px86K27Fp96oHfwJjaA9tAFt05MDq+moFAZ71X4S14VWaSzv/
-# FXCBwFMv8+LWtpRrXRBD36gmgI5DiZuE8WHjNQuQY8eQBaI2bLvOrcVPlStFUmf/
-# lanZ8d32LB/qpKHvY7sShI2/SGs0jz/dYRjSuXFizl1uKTwRlBU=
+# IgQgBI6wkocU9PPziLyIRibs18HkFJKEoabhvtqax4mDZbwwDQYJKoZIhvcNAQEB
+# BQAEggIAH87UuBGqthftVE12vx7vjd2qPo7CqWViQbSG/NIfDNlzeub6SeRkQXE7
+# mZInuFiHE5LjpoQFGN6WqjDprvI0XzKKOkKyKapHoDdAQyX0YihL1P7LZaJzO5D0
+# 1AQW0ij9euyCW4Sw/Q+13cardvfZupoIXISUATbQCss+QP4fQ6gZvdSmZ10NgoZA
+# kbbTxmCSnW34wxEMh1tdS+ZGpcYffGKpWuCyY/VlENNjVuddZtFGfCRfcf4oQSqb
+# Xi1yt2MWlasD14lfYy64xjcwUO3Wpki5QGt/PNUhOjY2J8UwjHzf1lfyUsp/3fif
+# 7lJ1yx5A2W4CITYwsPy6Vdhf0V+jtZpUKpsF425QSMJib0hWhBq6fV3B+v6PzDIT
+# niJsRJVa4nfsBzRb2xTPkZ3LXd7dkW9A+zR15BmUDXMcNOZEfwUM9DwpHEUOMohk
+# slKHRey32pjGPoNhHxsQqPGp2pRT/Iufyaa3OOhzoBuKp5ktnS2hJOO+VWCVmRt+
+# FKKXlvCq0mwh8K5GwvdDnDaZAKeFjLF8PThFrzgs1DB1MjN77FgW5HdhAl9bSxUu
+# le1YTQHnFcElZB5e0gpXVZKAQqpPEBiwgC1mdKwKtnUHtVlbvxYP6VK+voivvYrh
+# 4ClbHNOiN4TKwX73ERLm+6iIiYSua2z5fhfU/kbmJ+YpXIbIRnM=
 # SIG # End signature block

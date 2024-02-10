@@ -1,5 +1,6 @@
 Function Build-WDACCertificate {
     [CmdletBinding()]
+    [OutputType([System.String])]
     param (
         [ValidatePattern('^[a-zA-Z0-9 ]+$', ErrorMessage = 'Only use alphanumeric and space characters.')]
         [Parameter(Mandatory = $false)]
@@ -42,6 +43,17 @@ Function Build-WDACCertificate {
 
         # if -SkipVersionCheck wasn't passed, run the updater
         if (-NOT $SkipVersionCheck) { Update-self -InvocationStatement $MyInvocation.Statement }
+
+        # If user entered a common name that is not 'Code Signing Certificate' (which is the default value)
+        if ($CommonName -ne 'Code Signing Certificate') {
+
+            # If user did not select a $FileName and it's set to the default value of 'Code Signing Certificate'
+            if ($FileName -eq 'Code Signing Certificate') {
+
+                # Set the $FileName to the same value as the $CommonName that the user entered for better user experience
+                [System.String]$FileName = $CommonName
+            }
+        }
 
         if (!$Password) {
 
@@ -217,6 +229,8 @@ ValidityPeriod = Years
     The common name of the certificate. Defaults to 'Code Signing Certificate'.
     If a certificate with the same common name already exists on the system, the user will be asked whether to automatically remove all of them and continue with creating a new certificate.
     This can be automated by passing the -Force switch.
+
+    If you enter a CommonName but do not enter a FileName, the FileName will be set to the same value as the CommonName for better user experience.
 .PARAMETER FileName
     The name of the certificate file. Defaults to 'Code Signing Certificate'.
     Selected name should not contain any of the following characters \|/:*?"<>
@@ -287,8 +301,8 @@ ValidityPeriod = Years
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCAefmwKXp6aQDQ5
-# GyFzyXuqW+XjwXh/WyLmKL17F3+8XaCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCjJgGxXBSNWztZ
+# FF2INOOBBVOAe55M358pe+ViXqboRKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -335,16 +349,16 @@ ValidityPeriod = Years
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQg1QqulqQXJmWru2WYLdhSLnMsmo+z8jsS9JS+BSTkpCUwDQYJKoZIhvcNAQEB
-# BQAEggIACx8pJxohFRFy51ygAYNCOqVihr4lO914ahXPAJFPBr10PaqXgEDyK4E2
-# KqFgcmtLEf2q7Mn02Hr8lP6azt49Lt1w4zbYvXW+HUeBKJKa6p8M+EhUH/+EGvlE
-# 4xUKr7oIjNa3KLsM1bAIsLLjYPErMWP6XDrzu8/9K+JviDUuvzboL4+y2tmAEpFH
-# G5yo5L5rAVruzTZsxWse7eQXpFgLDTpaGoBc+gtc9g+nBt3xNdijA76pvshCtv7q
-# wLTpQohxxLG19tQqOqNJbHtaE98sDE9xIbJGV1rDN3ETdyhIVqrmizurWUUIA/1N
-# HBWcVWt5YOpwsBvV9CEnvkpogBVmp6sbRO4ETNv1AyIGYF/neYX4U6tLgYr6tF5Q
-# we9fVXf565c1uve839c9gZgUvGEHy/a4Fv7vLf+nfGMsctTDUQjaluVxUdo4WxRk
-# S9rDeWZZt2MYvpor6mBAN9sGEnCtComlCN1nUQXMraMlOwO3ENCy7qNXivBCtzMd
-# Y+lKPFU1GpUFbfrItztenBm9pexqZimAW+HXCvZSKJUMa8E4bqj4yWiBi2HJFeOE
-# ovM5ran4X0RPrjnm9/A3FYy3vXbQKC43bGUZGM39Myjv63tA6/lxHXZOTLbyeuhN
-# oiMSrXYCfxZ6IDJRnH56cztOX2Rbo7/IV5k3i0Wl/ZEQhg12IQQ=
+# IgQgOU5Bnw2rmxx6Bxws93xvMNgSpjndkOxku88Y9YXo3gAwDQYJKoZIhvcNAQEB
+# BQAEggIAAiOOyZO4N8HG2wNpamNlG7WsYTzyhSuQyGw0SoHqnLMg1DK2eGMr0z5V
+# Aw1KOHTBNh/wCkLeKUMFyrJY2uywTDX8RTTQtkwF7lVeUXnTRvUhuOuQ/EqwO/PO
+# qB36m2FGVfez4/EOfnfWWvZ3kOyi6K0BQqojG3AdUSVlVnkuMW8JgjuXWsrUPXTX
+# Zs08sd1NQm81IYgJOlXwHkAV0kcUeZDcXCSij37N5eIfsBE0Qrat60nSxh2IDL9q
+# lpvev7p7dfjp7tsCATrTiV8UVc2Zaw6tOJWRUFBjWPi36t+NtBK5+VmQDWyFjfYi
+# Oloo4cB0Jyua2Fyfz1c38WAMVRS6uoau6s5+ql6xIk8EL7z2Q2+u68ty4RJ1qAEX
+# ZBPGSb7pLntYj9oAQ5/oq3LlPovwbzepdzjcOo7TfY1h7WrMTKEpMXBskSVlADN8
+# /0dWl3/PDUt4MB7EikLzx9MYrj0Cr1YjmevhH3nzRZwhedeCcFQv/stMIC3PMXyc
+# srt9Ak1a6el3IHiCDL9K/6F9bm9266AQXBC1OlYF0LtfQn46FwLE5Q+hfBWAw7EK
+# a5N+M6jz+kaSQZjTqHnA6OcEDdJl+IMTJTbx9T8vydKGt2Z3rMXXSuIwxCd6q5Ze
+# VZzO5HPIG3ry5Fm9aLLIjdi8P3qYHXIYOOSp9G6HXfMe53GfoYw=
 # SIG # End signature block

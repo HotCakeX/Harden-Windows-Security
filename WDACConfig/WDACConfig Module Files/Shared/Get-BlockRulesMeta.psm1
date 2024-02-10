@@ -1,30 +1,93 @@
 Function Get-BlockRulesMeta {
     <#
     .SYNOPSIS
-        Gets the latest Microsoft Recommended block rules, removes its allow all rules and sets HVCI to strict
+        Gets the latest Microsoft Recommended block rules, removes its allow all rules, removes the audit mode policy rule option and sets HVCI to strict
+        It generates a XML file compliant with CI Policies Schema
     .INPUTS
         None. You cannot pipe objects to this function.
     .OUTPUTS
         System.String
     #>
     [CmdletBinding()]
+    [OutputType([System.String])]
     param ()
-    # Importing the $PSDefaultParameterValues to the current session, prior to everything else
-    . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
-    # Importing the required sub-modules
-    Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Write-ColorfulText.psm1" -Force
+    Begin {
+        # Importing the $PSDefaultParameterValues to the current session, prior to everything else
+        . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
-    [System.String]$Rules = (Invoke-WebRequest -Uri $MSFTRecommendedBlockRulesURL -ProgressAction SilentlyContinue).Content -replace "(?s).*``````xml(.*)``````.*", '$1' -replace '<Allow\sID="ID_ALLOW_A_[12]".*/>|<FileRuleRef\sRuleID="ID_ALLOW_A_[12]".*/>', ''
-    $Rules | Out-File -FilePath '.\Microsoft recommended block rules TEMP.xml' -Force
-    # Removing empty lines from policy file
-    Get-Content -Path '.\Microsoft recommended block rules TEMP.xml' | Where-Object -FilterScript { $_.trim() -ne '' } | Out-File -FilePath '.\Microsoft recommended block rules.xml' -Force
-    Remove-Item -Path '.\Microsoft recommended block rules TEMP.xml' -Force
-    Set-RuleOption -FilePath '.\Microsoft recommended block rules.xml' -Option 3 -Delete
-    Set-HVCIOptions -Strict -FilePath '.\Microsoft recommended block rules.xml'
+        # Importing the required sub-modules
+        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Write-ColorfulText.psm1" -Force
+    }
 
-    # Display the result
-    Write-ColorfulText -Color MintGreen -InputText 'PolicyFile = Microsoft recommended block rules.xml'
+    Process {
+        # Download the markdown page from GitHub containing the latest Microsoft recommended block rules
+        [System.String]$MSFTRecommendedBlockRulesAsString = (Invoke-WebRequest -Uri $MSFTRecommendedBlockRulesURL -ProgressAction SilentlyContinue).Content
+
+        # Load the Block Rules as XML into a variable after extracting them from the markdown string
+        [System.Xml.XmlDocument]$BlockRulesXML = ($MSFTRecommendedBlockRulesAsString -replace "(?s).*``````xml(.*)``````.*", '$1').Trim()
+
+        # Get the SiPolicy node
+        [System.Xml.XmlElement]$SiPolicyNode = $BlockRulesXML.SiPolicy
+
+        # Declare the namespace manager and add the default namespace with a prefix
+        [System.Xml.XmlNamespaceManager]$NameSpace = New-Object -TypeName System.Xml.XmlNamespaceManager -ArgumentList $BlockRulesXML.NameTable
+        $NameSpace.AddNamespace('ns', 'urn:schemas-microsoft-com:sipolicy')
+
+        # Select the FileRuleRef nodes that have a RuleID attribute that starts with ID_ALLOW_
+        [System.Object[]]$NodesToRemove = $SiPolicyNode.FileRules.SelectNodes("//ns:FileRuleRef[starts-with(@RuleID, 'ID_ALLOW_')]", $NameSpace)
+
+        # Append the Allow nodes that have an ID attribute that starts with ID_ALLOW_ to the array
+        $NodesToRemove += $SiPolicyNode.FileRules.SelectNodes("//ns:Allow[starts-with(@ID, 'ID_ALLOW_')]", $NameSpace)
+
+        # Loop through the nodes to remove
+        foreach ($Node in $NodesToRemove) {
+            # Get the parent node of the node to remove
+            [System.Xml.XmlElement]$ParentNode = $Node.ParentNode
+
+            # Check if the parent node has more than one child node, if it does then only remove the child node
+            if ($ParentNode.ChildNodes.Count -gt 1) {
+                # Remove the node from the parent node
+                $ParentNode.RemoveChild($Node) | Out-Null
+            }
+
+            # If the parent node only has one child node then replace the parent node with an empty node
+            else {
+                # Create a new node with the same name and namespace as the parent node
+                [System.Xml.XmlElement]$NewNode = $BlockRulesXML.CreateElement($ParentNode.Name, $ParentNode.NamespaceURI)
+                # Replace the parent node with the new node
+                $ParentNode.ParentNode.ReplaceChild($NewNode, $ParentNode) | Out-Null
+
+                # Check if the new node has any sibling nodes, if not then replace its parent node with an empty node
+                # We do this because the built-in PowerShell cmdlets would throw errors if empty <FileRulesRef /> exists inside <ProductSigners> node
+                if ($null -eq $NewNode.PreviousSibling -and $null -eq $NewNode.NextSibling) {
+
+                    # Get the grandparent node of the new node
+                    [System.Xml.XmlElement]$GrandParentNode = $NewNode.ParentNode
+
+                    # Create a new node with the same name and namespace as the grandparent node
+                    [System.Xml.XmlElement]$NewGrandNode = $BlockRulesXML.CreateElement($GrandParentNode.Name, $GrandParentNode.NamespaceURI)
+
+                    # Replace the grandparent node with the new node
+                    $GrandParentNode.ParentNode.ReplaceChild($NewGrandNode, $GrandParentNode) | Out-Null
+                }
+            }
+        }
+
+        # Save the modified XML content to a file - The Save method requires full file path
+        $BlockRulesXML.Save("$((Get-Location).path)\Microsoft recommended block rules.xml")
+
+        # Remove the audit mode rule option
+        Set-RuleOption -FilePath '.\Microsoft recommended block rules.xml' -Option 3 -Delete
+
+        # Set HVCI to Strict
+        Set-HVCIOptions -Strict -FilePath '.\Microsoft recommended block rules.xml'
+    }
+
+    End {
+        # Display the result
+        Write-ColorfulText -Color MintGreen -InputText 'PolicyFile = Microsoft recommended block rules.xml'
+    }
 }
 
 # Export external facing functions only, prevent internal functions from getting exported
@@ -33,8 +96,8 @@ Export-ModuleMember -Function 'Get-BlockRulesMeta'
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCD/i7lNVrCmeAE7
-# 8+rFg5rrOHYALL2ob6sjBGn2AzBLYKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCA8rTwIhnDXFlsG
+# TdHMcGtk+nxF+bPUXEtPvoi94OMx06CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -81,16 +144,16 @@ Export-ModuleMember -Function 'Get-BlockRulesMeta'
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgNFfpg98hvmOuCmEGsQLSvF8YcXXo9pUogh06WPPk1BUwDQYJKoZIhvcNAQEB
-# BQAEggIAkhXBIb4DjJ65otxPIx+xI32p2jmTjQpk+TCQwqN3H6zG4wW9tu6A8L5M
-# iXnntZ5rqiZ+WjShd7/Oc3HT9gbKW9EnjG3NhrUpmnNVYGR+ILamXRG4oOBQPmmf
-# 4E3iQHYvCkNR9SrtI21bGvVQ4jdYTErKzPRzXMeJSqHnFk+q/cEW7HyLH3eYW5kL
-# bK7OhxCwwyMVNHThoEcM8IQR/2DWES/BeM47yrYdp5jgPKKXGw5aCiSN5iIU6tnW
-# WXOk/DFWBoEWepZzryiTE3kIClnAGqnmFTjwIHPpILJD0P/fbCYPP3rVxQSRDZJe
-# 28/Koxj3uXNsHIXx+nbq34dCMRDyZPv9FQc8eg2Bd1dTKbryj/yHJf+fN1Q2xqOK
-# YpJ6QUOvOfaXZ7vr/cXaWeI4tli/adSTgO8x7sR5l+ckvwQRq4dNRnFZjjKfUEBF
-# kG0NITBwoBUlbIXonNUUYPNgmPWwzgKQgBzAwTmlKc3p52ESQ02YixmDH5W/t/VC
-# 5qWbjwBuow4vimr+fzzyRknzhraAcrZehLzyo5jsZT0guFiP8oNzSlDthboeZtEk
-# gDUZMbM5hZjEmPOUHTQxUsBJ4z8DSb6uyJRwbVHpjTFnRbBl9EVNzdBbYA40aLZp
-# nai6sy785Cz/Z5RakEFzcgiG1j0IjBi+cZZSgYiHVjjznQFjdTY=
+# IgQgwCTullPsJUW+c5lO286e58VSd1qxg3jFj6UAA+BRytowDQYJKoZIhvcNAQEB
+# BQAEggIApGqDe8x5jr6D8nQp5bpfxsEYRlgot93DjEcBothNEI3YtgcOVL7C87W9
+# bfkf7fX7YhxZiVDh8KGcYLbAKwafUbxk1h24qN6OMDDCXAHuUVSCt38DhvNBDg02
+# nMURVBGF3LEaui4qhypAIC/Ms8ePviQSRf8IjtkQU2pJheyWOHx+DGLwZbmcYqTG
+# JqCh9IRHzhqOUwZ9dxppIDB0AZ4dYJJXlW7/hq9Rwu1gpqmuj8xZqzKi/35IZ13z
+# JZqb9jpnfIZgXGAOvMG7VWntt1nZKluSDzi2hQZIaxjH1MJV9BPI6ll1rP/0ca6u
+# wEsupebBtFVWG+jArpbNOZ3E5/tbSC67g1aKaOcwbr/3AR16n2IQOATstzO+860x
+# ilITND/9H6tO5peWpVdL9mQ7GSrmuVfToDyH82KTWAxVtUHAqruwchYd4RIBKbIE
+# w1XTDsf0QCd1ouPTpu+h7m50YyyF7m84UTCerp0K0M2A7EBkntOGFZxfcrwk0OpE
+# Yu+hMsPaWtq+2/hVXdj8EDSnWB9zcrnuu+2rZKuaQTZN/cdJ9586RvE2+LRXWBFZ
+# I0msU0OXyVaBOwIwd8vLGAUL2W7dlwkLX0ahvFyjfuuinHRzMy9pjz846qsxJfeu
+# ujZfY59eMwEV5XK1zKJE/8D95EkVWffpf66VKjclFT1OXapt+FA=
 # SIG # End signature block

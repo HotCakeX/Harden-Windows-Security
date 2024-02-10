@@ -1,5 +1,6 @@
 Function Set-CommonWDACConfig {
     [CmdletBinding()]
+    [OutputType([System.Object[]])]
     Param(
         [ValidateScript({
                 # Assign the input value to a variable because $_ is going to be used to access another pipeline object
@@ -14,18 +15,19 @@ Function Set-CommonWDACConfig {
                     # Takes care of certificate subjects that include comma in their CN
                     # Determine if the subject contains a comma
                     if ($Cert.Subject -match 'CN=(?<RegexTest>.*?),.*') {
+
                         # If the CN value contains double quotes, use split to get the value between the quotes
-                        if ($matches['RegexTest'] -like '*"*') {
+                        if ($Matches['RegexTest'] -like '*"*') {
                             $SubjectCN = ($Element.Certificate.Subject -split 'CN="(.+?)"')[1]
                         }
                         # Otherwise, use the named group RegexTest to get the CN value
                         else {
-                            $SubjectCN = $matches['RegexTest']
+                            $SubjectCN = $Matches['RegexTest']
                         }
                     }
                     # If the subject does not contain a comma, use a lookbehind to get the CN value
                     elseif ($Cert.Subject -match '(?<=CN=).*') {
-                        $SubjectCN = $matches[0]
+                        $SubjectCN = $Matches[0]
                     }
                     $Output += $SubjectCN
                 }
@@ -67,11 +69,17 @@ Function Set-CommonWDACConfig {
                     throw 'The selected file is not a valid WDAC XML policy.'
                 }
 
+                # If no indicators of a signed policy are found, proceed to the next validation
                 if (!$RedFlag1 -and !$RedFlag2) {
-                    return $True
-                }
-                else { throw 'The selected policy xml file is Signed, Please select an Unsigned policy.' }
 
+                    # Ensure the selected base policy xml file is valid
+                    if ( Test-CiPolicy -XmlFile $_ ) {
+                        return $True
+                    }
+                }
+                else {
+                    throw 'The selected policy xml file is Signed, Please select an Unsigned policy.'
+                }
             }, ErrorMessage = 'The selected policy xml file is Signed, Please select an Unsigned policy.')]
         [parameter(Mandatory = $false)][System.IO.FileInfo]$UnsignedPolicyPath,
 
@@ -85,11 +93,17 @@ Function Set-CommonWDACConfig {
                     throw 'The selected file is not a valid WDAC XML policy.'
                 }
 
+                # If indicators of a signed policy are found, proceed to the next validation
                 if ($RedFlag1 -or $RedFlag2) {
-                    return $True
-                }
-                else { throw 'The selected policy xml file is Unsigned, Please select a Signed policy.' }
 
+                    # Ensure the selected base policy xml file is valid
+                    if ( Test-CiPolicy -XmlFile $_ ) {
+                        return $True
+                    }
+                }
+                else {
+                    throw 'The selected policy xml file is Unsigned, Please select a Signed policy.'
+                }
             }, ErrorMessage = 'The selected policy xml file is Unsigned, Please select a Signed policy.')]
         [parameter(Mandatory = $false)][System.IO.FileInfo]$SignedPolicyPath,
 
@@ -315,8 +329,8 @@ Register-ArgumentCompleter -CommandName 'Set-CommonWDACConfig' -ParameterName 'U
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCA78jNLmU+iEoEy
-# h9B+CJiL2euTpXBgiYVe2FXzPc2KU6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDPoEJWiaLcWNDR
+# QkS+7UUDXzm2esJDpTg1Qy6nSGZQVqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -363,16 +377,16 @@ Register-ArgumentCompleter -CommandName 'Set-CommonWDACConfig' -ParameterName 'U
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgA+wzKzO/1DYHMPgAx/OHjlgvoLv40MBS3HajFunu4HYwDQYJKoZIhvcNAQEB
-# BQAEggIAHdtSShDe9+TmPCeaCDoVGUVN4sbbDiU0SRPVIlu7AglCWBYKH5UQrrA0
-# q5ORdq73Fso4ANee84RyygJB10+qWlJxfi3c1PXpmRzZaiPMezuT+1pPnI5mtGE2
-# bXNrAVVy2hoWK9pvPKy2J0KHxwxRDER/QHUTm8931kXpvmKZcLaAcNPW2tZazyJz
-# Yn4FlPijRDLmM1BJ0poBTQl/IVH1mXgY3nKbuQZUqL0MIZiZLSX2p0RNY0YCqkeb
-# 8wKv4oLY7LMY16SeIDq9CtCqmH/aD6XvvtW+VyJCTwJWkGz+0lNFLqitiBXuonl6
-# dzS0mfg1TQkLvDJCRuLcTLlyQHAuu3Pmnb1QKRAgVG3ArnCIDZUvEiYC4x0W61Ne
-# W5BJK4vE9AIqyrEo0Uy9gH5Y+ieByNYa12Rv5i0gdIqJYeqw7vD9ogUATcb46hlf
-# E+TTfXdiDkpNYBmpKXKViOcLYhVGb6a0Ox/wpRqHhXN+hyeoIUGYPep1QwKcTjd5
-# lfwzAgoIHdeDjasjf1aqlbUjYvujr6IpIf7G+ZlQ6sC3f9BdguvAAYOWMlHfhvtN
-# fEz4aYYDUPCPXjAVeVvllNiN15WdBAxIHOuAF/YTRmZoa8nyLmRltFyTwcDcOM9y
-# gWMgsaZJUfAAh4yX684CL4kAiPJO49ktaS3kprOzzQ1BlYCnOeY=
+# IgQgSkgwbbkI11XtGOwKOOV2O/HGXuwYong9UODAlzabBeIwDQYJKoZIhvcNAQEB
+# BQAEggIALILJZVJGYI9QRLOcwvKPhi3ZJMUvSWc/Ewc2EKRwWoc0kom2K1InG+M3
+# 7cZQVbE3+WhNzlgVGUR0p4u6oL+DaHbYu4vi960oI1aLYlCuIYbHeBAs4fzCwjqT
+# L2wBaRbOb6Wye/AZIKNzAar5pHntkkm2/Kl+6GApaAtusu9BRapXdnOZ01coty0Q
+# FyX0eYokgi2rGv4oKxS0TB2sCs87pDdtwTsxhC5I30rublfYbMkC1ovZrYye83fT
+# 0jMy5nZjYZy7IerBAfCTdUKfJkfDg1htr9CQAgAm+40WtC71itPsAft3oSVhgu5n
+# 54flC/AuhuFBiV7uxVVDi4jYcZKTxga6tfjs8xwlqhl8oQQu3W7xcaomT8OF4Lv4
+# X+YBBj+L/1dBa2O449xy+NUNcT05zpbV5a2EjWIz141PztxRembVHJBbpsG/GdiS
+# Dw7OKIfZBkTTnIkWx3eK9DaF27P7e+WD0K4rIqpif6adgNZOicRDqgFOoBudQehy
+# ItPfx5fGX0ukbIbLIjUiyaSt6jARvPVAYMJ1nhMbSF5zBaTaVsTOF89fZ6r5L2kq
+# Me+K4caiGWh7DrtZmnIZovm97YAFsROK+l4cojVptCcXGit+4hbFPs6fTDhC7YPC
+# Mz7Rc1pYG/gDo+MHsCHgFPtdV9LxzsX0nzrvAF9T7UizRTqdUJ0=
 # SIG # End signature block

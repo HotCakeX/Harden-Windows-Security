@@ -4,10 +4,11 @@ Function Deploy-SignedWDACConfig {
         PositionalBinding = $false,
         ConfirmImpact = 'High'
     )]
+    [OutputType([System.String])]
     Param(
-        [ValidatePattern('\.xml$')]
-        [ValidateScript({ Test-Path -Path $_ -PathType 'Leaf' }, ErrorMessage = 'The path you selected is not a file path.')]
-        [parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ValueFromPipeline = $true)][System.IO.FileInfo[]]$PolicyPaths,
+        [ValidateScript({ Test-CiPolicy -XmlFile $_ })]
+        [parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ValueFromPipeline = $true)]
+        [System.IO.FileInfo[]]$PolicyPaths,
 
         [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$Deploy,
 
@@ -89,6 +90,7 @@ Function Deploy-SignedWDACConfig {
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Get-SignTool.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Confirm-CertCN.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Write-ColorfulText.psm1" -Force
+        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Copy-CiRules.psm1" -Force
 
         # if -SkipVersionCheck wasn't passed, run the updater
         if (-NOT $SkipVersionCheck) { Update-self -InvocationStatement $MyInvocation.Statement }
@@ -163,18 +165,53 @@ Function Deploy-SignedWDACConfig {
                     Add-SignerRule -FilePath $PolicyPath -CertificatePath $CertPath -Update -Kernel
                 }
             }
-            else {
+            elseif ($PolicyType -eq 'Base Policy') {
 
                 Write-Verbose -Message 'Policy type is Base'
 
                 # Make sure -User is not added if the UMCI policy rule option doesn't exist in the policy, typically for Strict kernel mode policies
                 if ('Enabled:UMCI' -in $PolicyRuleOptions) {
+
+                    Write-Verbose -Message 'Checking whether SignTool.exe is allowed to execute in the policy or not'
+                    if (-NOT (Invoke-WDACSimulation -FilePath $SignToolPathFinal -XmlFilePath $PolicyPath -BooleanOutput)) {
+
+                        Write-Verbose -Message 'The policy type is base policy and it applies to user mode files, yet the policy prevents SignTool.exe from executing. As a precautionary measure, scanning and including the SignTool.exe in the policy before deployment so you can modify/remove the signed policy later from the system.'
+
+                        Write-Verbose -Message 'Creating a temporary folder to store the symbolic link to the SignTool.exe'
+                        [System.IO.DirectoryInfo]$SymLinksStorage = New-Item -Path ($UserTempDirectoryPath + 'SymLinkStorage' + $(New-Guid)) -ItemType Directory -Force
+
+                        Write-Verbose -Message 'Creating symbolic link to the SignTool.exe'
+                        New-Item -ItemType SymbolicLink -Path "$SymLinksStorage\SignTool.exe" -Target $SignToolPathFinal | Out-Null
+
+                        Write-Verbose -Message 'Scanning the SignTool.exe and generating the SignTool.xml policy'
+                        New-CIPolicy -ScanPath $SymLinksStorage -Level FilePublisher -Fallback None -UserPEs -UserWriteablePaths -MultiplePolicyFormat -AllowFileNameFallbacks -FilePath "$SymLinksStorage\SignTool.xml"
+
+                        Write-Verbose -Message 'Merging the SignTool.xml policy with the policy being signed'
+                        # First policy in the array should always be the main one so that its settings will be used in the merged policy
+                        Merge-CIPolicy -PolicyPaths $PolicyPath, "$SymLinksStorage\SignTool.xml" -OutputFilePath "$SymLinksStorage\$($PolicyPath.Name)" | Out-Null
+
+                        Write-Verbose -Message 'Making sure policy rule options stay the same after merging the policies'
+                        Copy-CiRules -SourceFile $PolicyPath -DestinationFile "$SymLinksStorage\$($PolicyPath.Name)"
+
+                        Write-Verbose -Message 'Replacing the new policy with the old one'
+                        Move-Item -Path "$SymLinksStorage\$($PolicyPath.Name)" -Destination $PolicyPath -Force
+
+                        Write-Verbose -Message 'Removing the temporary folder'
+                        Remove-Item -Path $SymLinksStorage -Recurse -Force
+                    }
+                    else {
+                        Write-Verbose -Message 'The base policy allows SignTool.exe to execute, no need to scan and include it in the policy'
+                    }
+
                     Add-SignerRule -FilePath $PolicyPath -CertificatePath $CertPath -Update -User -Kernel -Supplemental
                 }
                 else {
                     Write-Verbose -Message 'UMCI policy rule option does not exist in the policy, typically for Strict kernel mode policies'
                     Add-SignerRule -FilePath $PolicyPath -CertificatePath $CertPath -Update -Kernel -Supplemental
                 }
+            }
+            else {
+                Throw "Policy type is not Base or Supplemental, it is: $PolicyType"
             }
 
             $CurrentStep++
@@ -193,7 +230,7 @@ Function Deploy-SignedWDACConfig {
             Write-Progress -Id 13 -Activity 'Signing the policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
             # Configure the parameter splat
-            $ProcessParams = @{
+            [System.Collections.Hashtable]$ProcessParams = @{
                 'ArgumentList' = 'sign', '/v' , '/n', "`"$CertCN`"", '/p7', '.', '/p7co', '1.3.6.1.4.1.311.79.1', '/fd', 'certHash', ".\$PolicyID.cip"
                 'FilePath'     = $SignToolPathFinal
                 'NoNewWindow'  = $true
@@ -325,8 +362,8 @@ Register-ArgumentCompleter -CommandName 'Deploy-SignedWDACConfig' -ParameterName
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCAnRwDvigOya6Sj
-# l2hIoqVyfOcnyR6nt70Hk73zv/QukKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBg/nVPitB7VwWX
+# 07agJakGl5rEkGFNvCJfozabibMojKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -373,16 +410,16 @@ Register-ArgumentCompleter -CommandName 'Deploy-SignedWDACConfig' -ParameterName
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgFZecwVpcHmdKO1YFkbSeCvzEm9Mb7EB+M27hBmiHkuIwDQYJKoZIhvcNAQEB
-# BQAEggIAc3Hmq3D+n+5akVGKDhi0Rnn0emGfUhUw/yDDiGUN/ndan4AsNnWe1QPT
-# w4dkRZXgV6/bfp5ak4wr3JcixOM0oxQFutFKvYGIdP4Kv4zoDUnqN+dSm1wf6XG+
-# OvNzEtvgULzkJvfmtWS3sS5Rz9tevMw/t+oCROOUMA6xAcVSiVbPiVA27INWR5jC
-# bl2LXbwWX0tbbMIfjPEOcjq8CgpqW0K65dIYE9cNhUCjy0mZRb12Fp7krtvJejgy
-# TegxreANnHPJNjyxivdw56lGrk6rL/qLgtE/dK4sH+SAXHAZmCYdlm1k0TPfJ4Dt
-# 3JM5zkvVWFcs9rmO7yCyBg+s6qmZmd2Qtio8lzxjefe/a+mIzT08k0vzVOZ0kN9y
-# s1VslYBOQmFnTjc3hLc4mU4zfcvrCrOM+BLx64twanadX9f4WCW4cL+cFlRbwJ8j
-# LvL8O43QZYQj2svboUZiG5QQ5cu28x17+K9CCpqw+UaiI7n/78xvUzu5gP1bct1k
-# UI81Dcf+IdUu4l++jEyB9BYIu39+kgtOJP6y/DdVGYyd02kOzU2wnOOzhcxGUj/O
-# O6i5bkW6hTKlZSBsC9PCGItUmcsXM7Bzlyjrlcrth1fRGvmoXGXfaAgwa3Oqd+S3
-# xZBtIwGbi22EbbearPIUyovC+ryaqtTy0iHmWtuUqfJHF9wGXD0=
+# IgQgDxI8DE8BqOVu6jjUfE5ONtIc4PXOj6t46C58NsQ5FOUwDQYJKoZIhvcNAQEB
+# BQAEggIAWEw2G4fn04JPNK25N7D5zEgVpH8msd+8qU4JLCIGkG1jvQbviYvf31gr
+# oM9psCsD7ltgrl4JVxA+tfIDy/oaI5aaJFfySctFNh0YiIFwEAsFGoCeycryQfMg
+# LAMrzPLgklCYDNoLeiK5jbCCNgULhg0H9Lmh4FPg0r/EaFfEALL13X/XO2i7su6e
+# fzk9ThOe1Mj6HKKD0wnd8twfZayTybvmrh/0Xrk1seImlK79iisfSqIn/VYsxvU+
+# 0mohW/gpVm+G+j6w+Ssl8R8IJtlAbvQYml6YnixfN/K0PwWJVlksizt8mb8GFaH0
+# A4iIoU0zicU1QwDhxjNZIMsetNTSE6XOTEq1giEB8m25w9hVixD6j+/gGWc/tC2D
+# lGxzdcF6nW/etlkQqaw9+PdOzS+9VKvJVf2xJQC+IhFQ0VAoRRPOdb5CH7HGOqvL
+# xN0iGAZ2s8Sz2jhG/mNO5R6cnDiAdcz36lYlSjX0TuVsXvXSM6ltOkuloLkIRdnZ
+# hh2iQDBhb0DpWWI5yjzCoJKjxBb5Lkle37C3axCcMHNYSioXyiylDf0HiABRjc8A
+# eyy/FpgsR18/sjLczGFSb69wZ6oesaTNAzCZ7kBo1xE50SUZYDdo1SR5wfEQL1uP
+# FjKcYYYQR752e1322a662XIvQiEaW+jwDT8pY6Kc8TtlFRAll1g=
 # SIG # End signature block

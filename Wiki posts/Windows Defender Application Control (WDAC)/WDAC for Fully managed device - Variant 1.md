@@ -22,7 +22,7 @@
 
 * This variant helps you create and deploy a WDAC policy for fully managed device ***using only Event Viewer audit logs.***
 
-* This scenario includes using explicit Allow rules for files and certificates/singers, anything not allowed by the policies we are going to make are automatically denied/blocked.
+* This scenario includes using explicit Allow rules for files and certificates/signers, anything not allowed by the policies we are going to make are automatically denied/blocked.
 
 <br>
 

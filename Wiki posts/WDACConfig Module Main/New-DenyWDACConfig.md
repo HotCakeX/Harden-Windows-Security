@@ -5,34 +5,178 @@
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-DenyWDACConfig/New-DenyWDACConfig%20-Normal.apng)
 
 ```powershell
-New-DenyWDACConfig [-Normal] -PolicyName <String> [-ScanLocations <String[]>] [-Level <String>] [-Fallbacks
-<String[]>] [-SpecificFileNameLevel <String>] [-NoUserPEs] [-NoScript] [-Deploy] [-SkipVersionCheck] [-WhatIf]
-[-Confirm] [<CommonParameters>]
+New-DenyWDACConfig
+    [-Normal]
+    -PolicyName <String>
+    [-ScanLocations <DirectoryInfo[]>]
+    [-Level <String>]
+    [-Fallbacks <String[]>]
+    [-SpecificFileNameLevel <String>]
+    [-NoUserPEs]
+    [-NoScript]
+    [-Deploy]
+    [-SkipVersionCheck]
+    [-Confirm]
+    [<CommonParameters>]
 ```
 
 <br>
 
 Creates a Deny base policy by scanning a directory. The base policy will have 2 allow all rules, meaning it can be deployed as a standalone base policy, side-by-side any other Base/Supplemental policies.
 
-### 2 Mandatory Parameters
+## Parameters
 
-- `-PolicyName <String>`: Add a descriptive name for the Deny base policy. Accepts only alphanumeric and space characters.
+### -PolicyName
 
-- `ScanLocations <String[]>`: Accepts one or more comma separated folder paths. Supports argument completion, when you press tab, folder picker GUI will open allowing you to easily select a folder, you can then add a comma `,` and press tab again to select another folder path or paste a folder path manually, works both ways.
+Add a descriptive name for the Deny base policy. Accepts only alphanumeric and space characters.
 
-### 6 Optional Parameters
+<div align='center'>
 
-* `-Deploy`: Indicates that the module will automatically deploy the Deny base policy after creation.
+| Type: |[String](https://learn.microsoft.com/en-us/dotnet/api/system.string)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | True |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
 
-* `-Levels <String>`: Offers the same official [Levels](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-level) for scanning of the specified directory path. If no level is specified the default, which is set to ***FilePublisher*** in this module, will be used.
+</div>
 
-* `-Fallbacks <String[]>`: Offers the same official [Fallbacks](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-fallback) for scanning of the specified directory path. If no fallbacks is specified the default, which is set to ***Hash*** in this module, will be used.
+<br>
 
-* `-SpecificFileNameLevel`: You can choose one of the following options: "OriginalFileName", "InternalName", "FileDescription", "ProductName", "PackageFamilyName", "FilePath". [More info available on Microsoft Learn](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-specificfilenamelevel)
+### -ScanLocations
 
-* `-NoUserPEs`: By default the module includes user PEs in the scan, but when you use this switch parameter, they won't be included. [More info available on Microsoft Learn](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-userpes)
+Accepts one or more comma separated folder paths. Supports argument completion, when you press tab, folder picker GUI will open allowing you to easily select a folder, you can then add a comma `,` and press tab again to select another folder path or paste a folder path manually, works both ways.
 
-* `-NoScript`: [More info available on Microsoft Learn](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-noscript)
+<div align='center'>
+
+| Type: |[DirectoryInfo](https://learn.microsoft.com/en-us/dotnet/api/system.io.directoryinfo)[]|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | True |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+<br>
+
+### -Deploy
+
+Indicates that the module will automatically deploy the Deny base policy after creation.
+
+<div align='center'>
+
+| Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+<br>
+
+### -Levels
+
+Offers the same official [Levels](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-level) for scanning of the specified directory path.
+
+Offers the same official [Levels](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-level) for scanning of event logs.
+
+<div align='center'>
+
+| Type: |[String](https://learn.microsoft.com/en-us/dotnet/api/system.string)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | FilePublisher |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+<br>
+
+### -Fallbacks
+
+Offers the same official [Fallbacks](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-fallback) for scanning of the specified directory path.
+
+<div align='center'>
+
+| Type: |[String](https://learn.microsoft.com/en-us/dotnet/api/system.string)[]|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | Hash |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+<br>
+
+### -SpecificFileNameLevel
+
+You can choose one of the following options:
+* OriginalFileName
+* InternalName
+* FileDescription
+* ProductName
+* PackageFamilyName
+* FilePath
+
+[More info available on Microsoft Learn](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-specificfilenamelevel)
+
+<div align='center'>
+
+| Type: |[String](https://learn.microsoft.com/en-us/dotnet/api/system.string)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+<br>
+
+### -NoUserPEs
+
+By default the module includes user PEs in the scan, but when you use this switch parameter, they won't be included. [More info available on Microsoft Learn](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-userpes)
+
+<div align='center'>
+
+| Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+<br>
+
+### -NoScript
+
+[More info available on Microsoft Learn](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-noscript)
+
+<div align='center'>
+
+| Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
 
 <br>
 
@@ -45,27 +189,111 @@ Creates a Deny base policy by scanning a directory. The base policy will have 2 
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-DenyWDACConfig/New-DenyWDACConfig%20-Drivers.apng)
 
 ```powershell
-New-DenyWDACConfig [-Drivers] -PolicyName <String> [-ScanLocations <String[]>] [-Level <String>] [-Fallbacks
-<String[]>] [-Deploy] [-SkipVersionCheck] [-WhatIf] [-Confirm] [<CommonParameters>]
+New-DenyWDACConfig
+    [-Drivers]
+    -PolicyName <String>
+    [-ScanLocations <DirectoryInfo[]>]
+    [-Level <String>]
+    [-Fallbacks <String[]>]
+    [-Deploy]
+    [-SkipVersionCheck]
+    [-Confirm]
+    [<CommonParameters>]
 ```
 
 <br>
 
 Creates a Deny base policy by scanning a directory, this parameter uses [DriverFile objects](https://learn.microsoft.com/en-us/powershell/module/configci/get-systemdriver) so it's best suitable for driver files. The base policy will have 2 allow all rules, meaning it can be deployed as a standalone base policy, side-by-side any other Base/Supplemental policies.
 
-### 2 Mandatory Parameters
+## Parameters
 
-- `-PolicyName <String>`: Add a descriptive name for the Deny base policy. Accepts only alphanumeric and space characters.
+### -PolicyName
 
-- `ScanLocations <String[]>`: Accepts one or more comma separated folder paths. Supports argument completion, when you press tab, folder picker GUI will open allowing you to easily select a folder, you can then add a comma `,` and press tab again to select another folder path or paste a folder path manually, works both ways.
+Add a descriptive name for the Deny base policy. Accepts only alphanumeric and space characters.
 
-### 3 Optional Parameters
+<div align='center'>
 
-* `-Deploy`: Indicates that the module will automatically deploy the Deny base policy after creation.
+| Type: |[String](https://learn.microsoft.com/en-us/dotnet/api/system.string)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | True |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
 
-* `-Levels <String>`: Offers the same official [Levels](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-level) for scanning of the specified directory path. If no level is specified the default, which is set to ***FilePublisher*** in this module, will be used.
+</div>
 
-* `-Fallbacks <String[]>`: Offers the same official [Fallbacks](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-fallback) for scanning of the specified directory path. If no fallbacks is specified the default, which is set to ***Hash*** in this module, will be used.
+<br>
+
+### -ScanLocations
+
+Accepts one or more comma separated folder paths. Supports argument completion, when you press tab, folder picker GUI will open allowing you to easily select a folder, you can then add a comma `,` and press tab again to select another folder path or paste a folder path manually, works both ways.
+
+<div align='center'>
+
+| Type: |[DirectoryInfo](https://learn.microsoft.com/en-us/dotnet/api/system.io.directoryinfo)[]|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | True |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+<br>
+
+### -Deploy
+
+Indicates that the module will automatically deploy the Deny base policy after creation.
+
+<div align='center'>
+
+| Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+<br>
+
+### -Levels
+
+Offers the same official [Levels](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-level) for scanning of event logs.
+
+<div align='center'>
+
+| Type: |[String](https://learn.microsoft.com/en-us/dotnet/api/system.string)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | FilePublisher |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+<br>
+
+### -Fallbacks
+
+Offers the same official [Fallbacks](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-fallback) for scanning of event logs.
+
+<div align='center'>
+
+| Type: |[String](https://learn.microsoft.com/en-us/dotnet/api/system.string)[]|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | Hash |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
 
 <br>
 
@@ -78,25 +306,92 @@ Creates a Deny base policy by scanning a directory, this parameter uses [DriverF
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-DenyWDACConfig/New-DenyWDACConfig%20-InstalledAppXPackages.apng)
 
 ```powershell
-New-DenyWDACConfig [-InstalledAppXPackages] -PackageName <String> -PolicyName <String> [-Deploy] [-Force]
-[-SkipVersionCheck] [-WhatIf] [-Confirm] [<CommonParameters>]
+New-DenyWDACConfig
+    [-InstalledAppXPackages]
+    -PackageName <String>
+    -PolicyName <String>
+    [-Deploy]
+    [-Force]
+    [-SkipVersionCheck]
+    [-Confirm]
+    [<CommonParameters>]
 ```
 
 <br>
 
 Creates a Deny base policy for one or more installed Windows Apps (Appx) based on their PFN (Package Family Name). The base policy will have 2 allow all rules, meaning it can be deployed as a standalone base policy, side-by-side any other Base/Supplemental policies.
 
-### 2 Mandatory Parameters
+## Parameters
 
-- `-PackageName <String>`: Enter the [package name](https://learn.microsoft.com/en-us/powershell/module/appx/get-appxpackage) of an installed app. Supports wildcard `*` character. e.g, `*Edge*` or `"*Microsoft*"`.
+### -PackageName
 
-- ` -PolicyName <String>`: Add a descriptive name for the Deny base policy. Accepts only alphanumeric and space characters.
+Enter the [package name](https://learn.microsoft.com/en-us/powershell/module/appx/get-appxpackage) of an installed app. Supports wildcard `*` character. e.g, `*Edge*` or `"*Microsoft*"`.
 
-### 2 Optional Parameter
+<div align='center'>
 
-- `-Deploy`: Indicates that the module will automatically deploy the Deny base policy after creation.
+| Type: |[String](https://learn.microsoft.com/en-us/dotnet/api/system.string)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | True |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | True |
 
-- `-Force`: Indicates that the cmdlet won't ask for confirmation and will proceed with creating the deny policy.
+</div>
+
+<br>
+
+### -PolicyName
+
+Add a descriptive name for the Deny base policy. Accepts only alphanumeric and space characters.
+
+<div align='center'>
+
+| Type: |[String](https://learn.microsoft.com/en-us/dotnet/api/system.string)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | True |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+<br>
+
+### -Deploy
+
+Indicates that the module will automatically deploy the Deny base policy after creation.
+
+<div align='center'>
+
+| Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+<br>
+
+### -Force
+
+Indicates that the cmdlet won't ask for confirmation and will proceed with creating the deny policy.
+
+<div align='center'>
+
+| Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
 
 <br>
 
@@ -109,31 +404,68 @@ Creates a Deny base policy for one or more installed Windows Apps (Appx) based o
 ![New-DenyWDACConfig -PathWildCards demo](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-DenyWDACConfig/New-DenyWDACConfig%20-PathWildCards.apng)
 
 ```powershell
-New-DenyWDACConfig [-PathWildCards] -PolicyName <String> -FolderPath <String> [-Deploy] [-SkipVersionCheck] [<CommonParameters>]
+New-DenyWDACConfig
+    [-PathWildCards]
+    -PolicyName <String>
+    -FolderPath <String>
+    [-Deploy]
+    [-SkipVersionCheck]
+    [-Confirm]
+    [<CommonParameters>]
 ```
 
-### 2 Mandatory Parameters
+## Parameters
 
-- ` -PolicyName <String>`: Add a descriptive name for the Deny base policy. Accepts only alphanumeric and space characters.
+### -PolicyName
 
-* `-FolderPath`: A folder path that includes at least one wildcard `*` character and ends with a `\`. Press TAB to open the folder picker GUI. Once you selected a folder, you will see the path will have `\*` at the end of it. You can modify the selected path by adding/removing wildcards `*` to it before proceeding.
+Add a descriptive name for the Deny base policy. Accepts only alphanumeric and space characters.
 
-### 1 Optional Parameter
+<div align='center'>
 
-- `-Deploy`: Indicates that the module will automatically deploy the Deny base policy after creation.
+| Type: |[String](https://learn.microsoft.com/en-us/dotnet/api/system.string)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | True |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
 
 <br>
 
-<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+### -FolderPath
+
+A folder path that includes at least one wildcard `*` character. Press TAB to open the folder picker GUI. Once you selected a folder, you will see the path will have `\*` at the end of it. You can modify the selected path by adding/removing wildcards `*` to it before proceeding.
+
+<div align='center'>
+
+| Type: |[DirectoryInfo](https://learn.microsoft.com/en-us/dotnet/api/system.io.directoryinfo)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | True |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | True |
+
+</div>
 
 <br>
 
-## Notes
+### -Deploy
 
-* **Mandatory** parameters indicate you always need to provide values for them.
+Indicates that the module will automatically deploy the Deny base policy after creation.
 
-* **Automatic** parameters indicate that if you used [Set-CommonWDACConfig](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Set-CommonWDACConfig) cmdlet to set default values for them, the module will automatically use them. This saves time and prevents repetitive tasks. However, if no value exists in User Configurations for an Automatic parameter and you didn't explicitly provide a value for that parameter either, then you will see an error asking you to provide value for it. Explicitly providing a value for an Automatic parameter in the command line overrides its default value in User Configurations, meaning the module will ignore the value of the same parameter in the User Configurations file.
+<div align='center'>
 
-* **Optional** parameters indicate that they are not required and without using them the module will automatically run with the optimal settings.
+| Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
 
 <br>

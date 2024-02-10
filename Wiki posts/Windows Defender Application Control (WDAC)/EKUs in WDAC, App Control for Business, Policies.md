@@ -295,6 +295,67 @@ Function Convert-HexToOID {
 
 <br>
 
+## How EKUs Are Used by the WDAC Engine for Validation
+
+Regarding the incorporation of EKUs in file validation, WDAC verifies:
+
+1. Either one of the file's intermediate certificates or the file's root certificate, corresponds to a signer's TBS hash and Name. The TBS hash is the To-Be-Signed hash of the certificate and the Signer name denotes the common name of that certificate.
+
+2. **The file's leaf certificate (File's signer) possesses identical EKUs as the signer element's EKUs.**
+
+For example, in the Default Windows template policy, the `Kernel32.dll` is authorized by the following signer:
+
+```xml
+<Signer ID="ID_SIGNER_WINDOWS_PRODUCTION" Name="Microsoft Product Root 2010 Windows EKU">
+  <CertRoot Type="Wellknown" Value="06" />
+  <CertEKU ID="ID_EKU_WINDOWS" />
+</Signer>
+```
+
+<br>
+
+* `Microsoft Product Root 2010 Windows EKU`: Matches the common name of the file's root certificate (`Microsoft Root Certificate Authority 2010`) through well known roots.
+
+* `CertRoot`: Matches the TBS and Common name of the file's root certificate using well known roots.
+
+* `CertEKU`: Only requires the file's signer, the leaf certificate, to have an EKU with the OID of `1.3.6.1.4.1.311.10.3.6`.
+
+<br>
+
+#### You can see the details in the screenshots below
+
+<br>
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/Wiki%20About%20EKUs/9.png" alt="Windows kernel32dll certificates">
+
+<br>
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/Wiki%20About%20EKUs/10.png" alt="Windows kernel32dll EKUs">
+
+<br>
+
+### The Placement of the CertEKU Elements
+
+In every Signer, the `CertEKU` node should only be placed directly after `CertRoot`. It is against the Code Integrity schema for any other nodes to exist between them. Below is a example of such configuration
+
+```xml
+<Signer ID="ID_SIGNER_F_1" Name="Microsoft Windows Production PCA 2011">
+  <CertRoot Type="TBS" Value="TBS Hash" />
+  <CertEKU ID="ID_EKU_WINDOWS" />
+  <CertEKU ID="ID_EKU_RT_EXT" />
+  <CertEKU ID="ID_EKU_ELAM" />
+  <CertEKU ID="ID_EKU_WHQL" />
+  <CertPublisher Value="Microsoft Windows" />
+  <FileAttribRef RuleID="ID_FILEATTRIB_F_1" />
+</Signer>
+```
+
+<br>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+
+<br>
+
 ## Continue Reading
 
 * [WDAC Policy for BYOVD Kernel Mode Only Protection](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-policy-for-BYOVD-Kernel-mode-only-protection)

@@ -5,6 +5,7 @@ Function New-SupplementalWDACConfig {
         SupportsShouldProcess = $true,
         ConfirmImpact = 'High'
     )]
+    [OutputType([System.String])]
     Param(
         # Main parameters for position 0
         [Alias('N')]
@@ -23,17 +24,16 @@ Function New-SupplementalWDACConfig {
 
         [ValidatePattern('\*', ErrorMessage = 'You did not supply a path that contains wildcard character (*) .')]
         [parameter(Mandatory = $true, ParameterSetName = 'Folder Path With WildCards', ValueFromPipelineByPropertyName = $true)]
-        [System.String]$FolderPath,
+        [System.IO.DirectoryInfo]$FolderPath,
 
         [ValidateCount(1, 232)]
         [ValidatePattern('^[a-zA-Z0-9 \-]+$', ErrorMessage = 'The policy name can only contain alphanumeric, space and dash (-) characters.')]
         [parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true)]
         [System.String]$SuppPolicyName,
 
-        [ValidatePattern('\.xml$')]
-        [ValidateScript({ Test-Path -Path $_ -PathType 'Leaf' }, ErrorMessage = 'The path you selected is not a file path.')]
+        [ValidateScript({ Test-CiPolicy -XmlFile $_ })]
         [parameter(Mandatory = $false, ValueFromPipelineByPropertyName = $true)]
-        [System.String]$PolicyPath,
+        [System.IO.FileInfo]$PolicyPath,
 
         [parameter(Mandatory = $false)]
         [System.Management.Automation.SwitchParameter]$Deploy,
@@ -410,8 +410,8 @@ Register-ArgumentCompleter -CommandName 'New-SupplementalWDACConfig' -ParameterN
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCC/7cicNa8x/anz
-# +ULL+OyoImIftYhBjFRIwjZ/GW4ztqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCAain8VnG2e8IlX
+# UzzBY0nxPCrp7HuYW1nJAQIc3lGsmaCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -458,16 +458,16 @@ Register-ArgumentCompleter -CommandName 'New-SupplementalWDACConfig' -ParameterN
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgZoNvOpazmLb4UvHCcHFDHkP+PpoY53Sq+D5fMYBdFIEwDQYJKoZIhvcNAQEB
-# BQAEggIAB+gITTUDDzezao3etCAI5hRQJ03MGrvKXxalwoGysPPwXDi4hV9Zbqpz
-# bBMsvAXOPNyTiVYwQ3p5UcJ4OppLwVhOjP8HP4gi8+9MAS3/t+4bzTuyKmo7WzF1
-# loDxowZADFlBnhACWq5UqGX56cYMuvghYFRfqew+9bIcwSljNfgkbY2sjorEx7UI
-# aY9sAGDGfyw5TxZjUVybHfGu/+Zt4k/38eXFrlM6tTS2hx0vlR8nAYZkXAy/ue1O
-# FaTTHuWrYbS394BmTiflsJsS8bH0Ce02x7wK3oV1TUxiP9BEu+hVgx/3BmR72Ymv
-# nBOtdgiDWDloLSu4yUwEm/WY2D1dEltg+bIdCVWIoXWejtorAdMAYfz0IjqLzr3A
-# X3FKotEGI06IIPGqbrhQ8UqQ4D3BPNM2mO9DPJ4YqPqv5ebuekWI5rimoUmobtRu
-# jOHhtbRVZ3jVHQH7TU3v2PkWVL5RedPtCeLbP81gZymQiWt4b4saxfA6WBlXnOvf
-# pk1L2U78SE65prYnLroYCXLzQOTivWL6ucuM0fnaoTlR21Ee1/7V1J4mhwVXwE2z
-# rQbjAWYEICMHfGaeI4rVsgxx9znLCXxR5laFPdNmZ55kl7DGTjLlm7Qnqzgwpy2S
-# Np3sMK8P64jkOgkIZP0mMDT2PAQpDZ0vjkVVQP8SFlEZa46gYWk=
+# IgQg8PSyWQoIzZhXFqoCtFMHOrZGaqTiTsLH2XZpPC8y2xUwDQYJKoZIhvcNAQEB
+# BQAEggIARQfcwNRVQiJ1HtkWv7l5OpsMaNXmli1JahH2brCm1Gbhh4FDwsrJSsos
+# cDSZ5eQ20CKp5WzzN/J2y4BifeOUo1n7UImuA126DWQrQkLmSYjuIvdeSz/i9zh/
+# 9QeNklzAmquJcf8ujEkAKMpmrZ2gF6sbsydH97z/RQsEUOht+sxFP2S+PAE9F+Gq
+# 3t0Ldr6DalmAyCC5U3QSMoV+oyFxm7ikUrFCI61W/EFjauZ8ajeEN6IsbwzeK8mD
+# D6XNVovhfFr6YCu5OesJIitW34jCL2dqrUtCBHLDSj0CG8uIIGIRt5DAfxeWrql1
+# 2l1QROhTQ6JgHTB+FhM1DseAhIeQ+E6TNOkIhNg3savCKX/01wQis9Mo2hsxKrn5
+# IyvSdxNlajP7sZxlO80kb/U4zWAb9IhQmmQul0E48cZkt2E7S9tA5lGI+ZL5g6WH
+# g0shUf+sbskAP6bkyXJSfXpQO68Bjpq5QktbG6JHImUcnHBljBrPdc1W6zoqMtk4
+# +pgPLuhc1cPSmZ9X/FjFzE0sMsTmsOdqGx7JeLm0Wx2yRYR2V5mJES/d11ZXQ60m
+# DcZxT2EhKLQkgEFIxv/AqNQPUV9dIBxMFKF+fnyCyo2Dl4RuiBXzxvupmZeBVleT
+# yQfZfCVOM0UYhrQz90X+xZOJDCmsY4IX0mwymT+kmucBN6Mr9GY=
 # SIG # End signature block

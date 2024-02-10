@@ -3,6 +3,7 @@ Function New-WDACConfig {
         DefaultParameterSetName = 'Get Block Rules',
         PositionalBinding = $false
     )]
+    [OutputType([System.String])]
     Param(
         # 9 Main parameters - should be used for position 0
         [Parameter(Mandatory = $false, ParameterSetName = 'Get Block Rules')][System.Management.Automation.SwitchParameter]$GetBlockRules,
@@ -28,12 +29,6 @@ Function New-WDACConfig {
         [Parameter(Mandatory = $false, ParameterSetName = 'Get Block Rules')]
         [Parameter(Mandatory = $false, ParameterSetName = 'Get Driver Block Rules')]
         [System.Management.Automation.SwitchParameter]$Deploy,
-
-        [Parameter(Mandatory = $false, ParameterSetName = 'Make DefaultWindows With Block Rules')]
-        [System.Management.Automation.SwitchParameter]$IncludeSignTool,
-
-        [Parameter(Mandatory = $false, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'Make DefaultWindows With Block Rules')]
-        [System.String]$SignToolPath,
 
         [Parameter(Mandatory = $false, ParameterSetName = 'Make Light Policy')]
         [Parameter(Mandatory = $false, ParameterSetName = 'Make Policy From Audit Logs')]
@@ -87,7 +82,6 @@ Function New-WDACConfig {
         # Importing the required sub-modules
         Write-Verbose -Message 'Importing the required sub-modules'
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Update-self.psm1" -Force
-        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Get-SignTool.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Get-GlobalRootDrives.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Write-ColorfulText.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Set-LogSize.psm1" -Force
@@ -95,19 +89,6 @@ Function New-WDACConfig {
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Get-RuleRefs.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Get-FileRules.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Get-BlockRulesMeta.psm1" -Force
-
-        #Region User-Configurations-Processing-Validation
-        # If User is creating Default Windows policy and is including SignTool path
-        if ($IncludeSignTool -and $MakeDefaultWindowsWithBlockRules) {
-            # Get SignToolPath from user parameter or user config file or auto-detect it
-            if ($SignToolPath) {
-                $SignToolPathFinal = Get-SignTool -SignToolExePathInput $SignToolPath
-            } # If it is null, then Get-SignTool will behave the same as if it was called without any arguments.
-            else {
-                $SignToolPathFinal = Get-SignTool -SignToolExePathInput (Get-CommonWDACConfig -SignToolPath)
-            }
-        }
-        #Endregion User-Configurations-Processing-Validation
 
         # Detecting if Debug switch is used, will do debugging actions based on that
         $PSBoundParameters.Debug.IsPresent ? ([System.Boolean]$Debug = $true) : ([System.Boolean]$Debug = $false) | Out-Null
@@ -131,7 +112,9 @@ Function New-WDACConfig {
             <#
             .SYNOPSIS
                 Gets the latest Microsoft Recommended Driver Block rules and processes them
-                Can optionally deploy them
+                Can optionally deploy them.
+                If the -Deploy switch is used, the drivers block list will contain the 2 allow all rules,
+                otherwise, the allow all rules will be removed from the policy
             .INPUTS
                 System.Management.Automation.SwitchParameter
             .OUTPUTS
@@ -140,6 +123,7 @@ Function New-WDACConfig {
                 Indicates that the function will deploy the latest Microsoft recommended drivers block list
             #>
             [CmdletBinding()]
+            [OutputType([System.String])]
             param (
                 [System.Management.Automation.SwitchParameter]$Deploy
             )
@@ -185,36 +169,73 @@ Function New-WDACConfig {
                 $CurrentStep++
                 Write-Progress -Id 1 -Activity 'Downloading the driver block rules' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                Write-Verbose -Message 'Downloading the latest Microsoft Recommended Driver Block Rules from the official source'
-                [System.String]$DriverRules = (Invoke-WebRequest -Uri $MSFTRecommendedDriverBlockRulesURL -ProgressAction SilentlyContinue).Content -replace "(?s).*``````xml(.*)``````.*", '$1'
-
-                # Remove the unnecessary rules and elements - not using this one because then during the merge there will be error - The reason is that "<FileRuleRef RuleID="ID_ALLOW_ALL_2" />" is the only FileruleRef in the xml and after removing it, the <SigningScenario> element will be empty
-                $CurrentStep++
-                Write-Progress -Id 1 -Activity 'Removing the Allow all rules' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-                Write-Verbose -Message 'Removing the allow all rules and rule refs from the policy'
-                $DriverRules = $DriverRules -replace '<Allow\sID="ID_ALLOW_ALL_[12]"\sFriendlyName=""\sFileName="\*".*/>', ''
-                $DriverRules = $DriverRules -replace '<FileRuleRef\sRuleID="ID_ALLOW_ALL_1".*/>', ''
-                $DriverRules = $DriverRules -replace '<SigningScenario\sValue="12"\sID="ID_SIGNINGSCENARIO_WINDOWS"\sFriendlyName="Auto\sgenerated\spolicy[\S\s]*<\/SigningScenario>', ''
+                # Download the markdown page from GitHub containing the latest Microsoft recommended driver block rules
+                [System.String]$MSFTDriverBlockRulesAsString = (Invoke-WebRequest -Uri $MSFTRecommendedDriverBlockRulesURL -ProgressAction SilentlyContinue).Content
 
                 $CurrentStep++
-                Write-Progress -Id 1 -Activity 'Creating the XML policy file' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+                Write-Progress -Id 1 -Activity 'Removing the `Allow all rules` from the policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                Write-Verbose -Message 'Creating XML policy file'
-                $DriverRules | Out-File -FilePath 'Microsoft recommended driver block rules TEMP.xml' -Force
+                # Load the Driver Block Rules as XML into a variable after extracting them from the markdown string
+                [System.Xml.XmlDocument]$DriverBlockRulesXML = ($MSFTDriverBlockRulesAsString -replace "(?s).*``````xml(.*)``````.*", '$1').Trim()
 
-                # Remove empty lines from the policy file
-                Write-Verbose -Message 'Removing the empty lines from the policy XML file'
-                Get-Content -Path 'Microsoft recommended driver block rules TEMP.xml' | Where-Object -FilterScript { $_.trim() -ne '' } | Out-File -FilePath 'Microsoft recommended driver block rules.xml' -Force
+                # Get the SiPolicy node
+                [System.Xml.XmlElement]$SiPolicyNode = $DriverBlockRulesXML.SiPolicy
 
-                Write-Verbose -Message 'Removing the temp XML file'
-                Remove-Item -Path 'Microsoft recommended driver block rules TEMP.xml' -Force
+                # Declare the namespace manager and add the default namespace with a prefix
+                [System.Xml.XmlNamespaceManager]$NameSpace = New-Object -TypeName System.Xml.XmlNamespaceManager -ArgumentList $DriverBlockRulesXML.NameTable
+                $NameSpace.AddNamespace('ns', 'urn:schemas-microsoft-com:sipolicy')
+
+                # Select the FileRuleRef nodes that have a RuleID attribute that starts with ID_ALLOW_
+                [System.Object[]]$NodesToRemove = $SiPolicyNode.FileRules.SelectNodes("//ns:FileRuleRef[starts-with(@RuleID, 'ID_ALLOW_')]", $NameSpace)
+
+                # Append the Allow nodes that have an ID attribute that starts with ID_ALLOW_ to the array
+                $NodesToRemove += $SiPolicyNode.FileRules.SelectNodes("//ns:Allow[starts-with(@ID, 'ID_ALLOW_')]", $NameSpace)
+
+                # Loop through the nodes to remove
+                foreach ($Node in $NodesToRemove) {
+                    # Get the parent node of the node to remove
+                    [System.Xml.XmlElement]$ParentNode = $Node.ParentNode
+
+                    # Check if the parent node has more than one child node, if it does then only remove the child node
+                    if ($ParentNode.ChildNodes.Count -gt 1) {
+                        # Remove the node from the parent node
+                        $ParentNode.RemoveChild($Node) | Out-Null
+                    }
+
+                    # If the parent node only has one child node then replace the parent node with an empty node
+                    else {
+                        # Create a new node with the same name and namespace as the parent node
+                        [System.Xml.XmlElement]$NewNode = $DriverBlockRulesXML.CreateElement($ParentNode.Name, $ParentNode.NamespaceURI)
+                        # Replace the parent node with the new node
+                        $ParentNode.ParentNode.ReplaceChild($NewNode, $ParentNode) | Out-Null
+
+                        # Check if the new node has any sibling nodes, if not then replace its parent node with an empty node
+                        # We do this because the built-in PowerShell cmdlets would throw errors if empty <FileRulesRef /> exists inside <ProductSigners> node
+                        if ($null -eq $NewNode.PreviousSibling -and $null -eq $NewNode.NextSibling) {
+
+                            # Get the grandparent node of the new node
+                            [System.Xml.XmlElement]$GrandParentNode = $NewNode.ParentNode
+
+                            # Create a new node with the same name and namespace as the grandparent node
+                            [System.Xml.XmlElement]$NewGrandNode = $DriverBlockRulesXML.CreateElement($GrandParentNode.Name, $GrandParentNode.NamespaceURI)
+
+                            # Replace the grandparent node with the new node
+                            $GrandParentNode.ParentNode.ReplaceChild($NewGrandNode, $GrandParentNode) | Out-Null
+                        }
+                    }
+                }
+
+                # Save the modified XML content to a file
+                $DriverBlockRulesXML.Save("$((Get-Location).path)\Microsoft recommended driver block rules.xml")
+
+                $CurrentStep++
+                Write-Progress -Id 1 -Activity 'Configuring the policy settings' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                 Write-Verbose -Message 'Removing the Audit mode policy rule option'
-                Set-RuleOption -FilePath 'Microsoft recommended driver block rules.xml' -Option 3 -Delete
+                Set-RuleOption -FilePath '.\Microsoft recommended driver block rules.xml' -Option 3 -Delete
 
                 Write-Verbose -Message 'Setting the HVCI option to strict'
-                Set-HVCIOptions -Strict -FilePath 'Microsoft recommended driver block rules.xml'
+                Set-HVCIOptions -Strict -FilePath '.\Microsoft recommended driver block rules.xml'
 
                 # Display extra info about the Microsoft recommended Drivers block list
                 Write-Verbose -Message 'Displaying extra info about the Microsoft recommended Drivers block list'
@@ -334,7 +355,7 @@ Function New-WDACConfig {
             param()
 
             # The total number of the main steps for the progress bar to render
-            [System.Int16]$TotalSteps = 6
+            [System.Int16]$TotalSteps = 5
             [System.Int16]$CurrentStep = 0
 
             $CurrentStep++
@@ -346,62 +367,20 @@ Function New-WDACConfig {
             Write-Verbose -Message 'Copying the DefaultWindows_Enforced.xml from Windows directory to the current working directory'
             Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\DefaultWindows_Enforced.xml' -Destination 'DefaultWindows_Enforced.xml' -Force
 
-            # Setting a flag for Scanning the SignTool.exe and merging it with the final base policy
-            [System.Boolean]$MergeSignToolPolicy = $false
-
-            $CurrentStep++
-            Write-Progress -Id 7 -Activity 'Determining whether to include SingTool' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-            if ($SignToolPathFinal) {
-                # Allowing SignTool to be able to run after Default Windows base policy is deployed in Signed scenario
-                Write-ColorfulText -Color TeaGreen -InputText "`nCreating allow rules for SignTool.exe in the DefaultWindows base policy so you can continue using it after deploying the DefaultWindows base policy."
-
-                Write-Verbose -Message 'Creating a new temporary directory in the temp directory'
-                New-Item -Path "$UserTempDirectoryPath\TemporarySignToolFile" -ItemType Directory -Force | Out-Null
-
-                Write-Verbose -Message 'Copying the SignTool.exe to the newly created directory in the temp directory'
-                Copy-Item -Path $SignToolPathFinal -Destination "$UserTempDirectoryPath\TemporarySignToolFile" -Force
-
-                Write-Verbose -Message 'Scanning the SignTool.exe in the temp directory and generating the SignTool.xml policy'
-                New-CIPolicy -ScanPath "$UserTempDirectoryPath\TemporarySignToolFile" -Level FilePublisher -Fallback Hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -AllowFileNameFallbacks -FilePath .\SignTool.xml
-
-                # Delete the Temporary folder in the TEMP folder
-                if (!$Debug) {
-                    Write-Verbose -Message 'Debug parameter was not used, removing the files created in the temp directory'
-                    Remove-Item -Recurse -Path "$UserTempDirectoryPath\TemporarySignToolFile" -Force
-                }
-
-                # Setting the flag to true so that the SignTool.xml file will be merged with the final policy
-                $MergeSignToolPolicy = $true
-            }
-
             $CurrentStep++
             Write-Progress -Id 7 -Activity 'Determining whether to include PowerShell core' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
             # Scan PowerShell core directory (if installed using MSI only, because Microsoft Store installed version doesn't need to be allowed manually) and allow its files in the Default Windows base policy so that module can still be used once it's been deployed
             if ($PSHOME -notlike 'C:\Program Files\WindowsApps\*') {
-
                 Write-ColorfulText -Color Lavender -InputText 'Creating allow rules for PowerShell in the DefaultWindows base policy so you can continue using this module after deploying it.'
                 New-CIPolicy -ScanPath $PSHOME -Level FilePublisher -NoScript -Fallback Hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -FilePath .\AllowPowerShell.xml
 
-                if ($MergeSignToolPolicy) {
-                    Write-Verbose -Message 'Merging the policy files, including SignTool.xml, to create the final DefaultWindowsPlusBlockRules.xml policy'
-                    Merge-CIPolicy -PolicyPaths .\DefaultWindows_Enforced.xml, .\AllowPowerShell.xml, 'Microsoft recommended block rules.xml', .\SignTool.xml -OutputFilePath .\DefaultWindowsPlusBlockRules.xml | Out-Null
-                }
-                else {
-                    Write-Verbose -Message 'Merging the policy files to create the final DefaultWindowsPlusBlockRules.xml policy'
-                    Merge-CIPolicy -PolicyPaths .\DefaultWindows_Enforced.xml, .\AllowPowerShell.xml, 'Microsoft recommended block rules.xml' -OutputFilePath .\DefaultWindowsPlusBlockRules.xml | Out-Null
-                }
+                Write-Verbose -Message 'Merging the policy files to create the final DefaultWindowsPlusBlockRules.xml policy'
+                Merge-CIPolicy -PolicyPaths .\DefaultWindows_Enforced.xml, .\AllowPowerShell.xml, 'Microsoft recommended block rules.xml' -OutputFilePath .\DefaultWindowsPlusBlockRules.xml | Out-Null
             }
             else {
-                if ($MergeSignToolPolicy) {
-                    Write-Verbose -Message 'Merging the policy files, including SignTool.xml, to create the final DefaultWindowsPlusBlockRules.xml policy'
-                    Merge-CIPolicy -PolicyPaths .\DefaultWindows_Enforced.xml, 'Microsoft recommended block rules.xml', .\SignTool.xml -OutputFilePath .\DefaultWindowsPlusBlockRules.xml | Out-Null
-                }
-                else {
-                    Write-Verbose -Message 'Merging the policy files to create the final DefaultWindowsPlusBlockRules.xml policy'
-                    Merge-CIPolicy -PolicyPaths .\DefaultWindows_Enforced.xml, 'Microsoft recommended block rules.xml' -OutputFilePath .\DefaultWindowsPlusBlockRules.xml | Out-Null
-                }
+                Write-Verbose -Message 'Merging the policy files to create the final DefaultWindowsPlusBlockRules.xml policy'
+                Merge-CIPolicy -PolicyPaths .\DefaultWindows_Enforced.xml, 'Microsoft recommended block rules.xml' -OutputFilePath .\DefaultWindowsPlusBlockRules.xml | Out-Null
             }
 
             $CurrentStep++
@@ -444,11 +423,6 @@ Function New-WDACConfig {
             Remove-Item -Path .\AllowPowerShell.xml -Force -ErrorAction SilentlyContinue
             Remove-Item -Path '.\DefaultWindows_Enforced.xml', 'Microsoft recommended block rules.xml' -Force
 
-            if ($MergeSignToolPolicy -and !$Debug) {
-                Write-Verbose -Message 'Deleting SignTool.xml'
-                Remove-Item -Path .\SignTool.xml -Force
-            }
-
             Write-Verbose -Message 'Displaying the output'
             Write-ColorfulText -Color MintGreen -InputText 'PolicyFile = DefaultWindowsPlusBlockRules.xml'
             Write-ColorfulText -Color MintGreen -InputText "BinaryFile = $PolicyID.cip"
@@ -467,6 +441,8 @@ Function New-WDACConfig {
             <#
             .SYNOPSIS
                 A helper function that downloads the latest Microsoft recommended block rules
+                and deploys it as a standalone WDAC base policy on the system.
+                The deployed policy contains the 2 Allow All rules so it acts as a blocklist.
             .INPUTS
                 None. You cannot pipe objects to this function.
             .OUTPUTS
@@ -476,23 +452,20 @@ Function New-WDACConfig {
             param()
 
             # The total number of the main steps for the progress bar to render
-            [System.Int16]$TotalSteps = 4
+            [System.Int16]$TotalSteps = 3
             [System.Int16]$CurrentStep = 0
 
             $CurrentStep++
             Write-Progress -Id 0 -Activity 'Downloading the latest block rules' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-            Write-Verbose -Message 'Downloading the latest Microsoft recommended block rules and creating Microsoft recommended block rules TEMP.xml'
-            (Invoke-WebRequest -Uri $MSFTRecommendedBlockRulesURL -ProgressAction SilentlyContinue).Content -replace "(?s).*``````xml(.*)``````.*", '$1' | Out-File -FilePath '.\Microsoft recommended block rules TEMP.xml' -Force
+            Write-Verbose -Message 'Downloading the latest Microsoft recommended block rules'
+            [System.String]$MSFTRecommendedBlockRulesAsString = (Invoke-WebRequest -Uri $MSFTRecommendedBlockRulesURL -ProgressAction SilentlyContinue).Content
 
-            $CurrentStep++
-            Write-Progress -Id 0 -Activity 'Removing the empty lines' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+            # Load the Block Rules as XML into a variable after extracting them from the markdown string
+            [System.Xml.XmlDocument]$BlockRulesXML = ($MSFTRecommendedBlockRulesAsString -replace "(?s).*``````xml(.*)``````.*", '$1').Trim()
 
-            Write-Verbose -Message 'Removing any empty lines from the Temp policy file and generating the Microsoft recommended block rules.xml'
-            Get-Content -Path '.\Microsoft recommended block rules TEMP.xml' | Where-Object -FilterScript { $_.trim() -ne '' } | Out-File -FilePath '.\Microsoft recommended block rules.xml' -Force
-
-            Write-Verbose -Message 'Removing the temp XML file'
-            Remove-Item -Path '.\Microsoft recommended block rules TEMP.xml' -Force
+            # Save the XML content to a file
+            $BlockRulesXML.Save("$((Get-Location).path)\Microsoft recommended block rules.xml")
 
             $CurrentStep++
             Write-Progress -Id 0 -Activity 'Configuring the policy settings' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
@@ -520,6 +493,7 @@ Function New-WDACConfig {
 
             Write-Verbose -Message 'Deploying the Microsoft recommended block rules policy'
             &'C:\Windows\System32\CiTool.exe' --update-policy "$PolicyID.cip" -json | Out-Null
+
             Write-ColorfulText -Color Lavender -InputText 'The Microsoft recommended block rules policy has been deployed in enforced mode.'
 
             Write-Verbose -Message 'Removing the generated .CIP binary file after deploying it'
@@ -540,6 +514,7 @@ Function New-WDACConfig {
                 System.Void
             #>
             [CmdletBinding()]
+            [OutputType([System.Void])]
             param()
 
             # The total number of the main steps for the progress bar to render
@@ -599,6 +574,7 @@ Function New-WDACConfig {
                 System.Void
             #>
             [CmdletBinding()]
+            [OutputType([System.Void])]
             param()
 
             # The total number of the main steps for the progress bar to render
@@ -660,6 +636,7 @@ Function New-WDACConfig {
                 System.Void
             #>
             [CmdletBinding()]
+            [OutputType([System.Void])]
             param()
 
             # The total number of the main steps for the progress bar to render
@@ -760,14 +737,10 @@ Function New-WDACConfig {
                 Set-LogSize -LogSize $LogSize
             }
 
-            # Make sure there is no leftover files from previous operations of this same command
-            Write-Verbose -Message 'Make sure there is no leftover files from previous operations of this same command'
-            Remove-Item -Path "$Home\WDAC\*" -Recurse -Force -ErrorAction SilentlyContinue
-
             # Create a working directory in user's folder
             Write-Verbose -Message 'Create a working directory in user folder'
-            New-Item -Type Directory -Path "$Home\WDAC" -Force | Out-Null
-            Set-Location "$Home\WDAC"
+            [System.IO.DirectoryInfo]$WorkingDir = New-Item -Type Directory -Path "$Home\WDAC Policy from Audit Logs $(Get-Date -Format "MM-dd-yyyy 'at' HH-mm-ss")" -Force
+            Set-Location -Path $WorkingDir
 
             #Region Base-Policy-Processing
             $CurrentStep++
@@ -1042,12 +1015,12 @@ Function New-WDACConfig {
     process {
 
         switch ($true) {
-            # Deploy the latest block rules
+            # Deploy the latest block rules if 'New-WDACConfig -GetBlockRules -Deploy' is passed
             { $GetBlockRules -and $Deploy } { Deploy-LatestBlockRules ; break }
-            # Get the latest block rules
+            # Get the latest block rules if 'New-WDACConfig -GetBlockRules' is passed
             $GetBlockRules { Get-BlockRulesMeta ; break }
-            # Get the latest driver block rules and Deploy them if New-WDACConfig -GetDriverBlockRules was called with -Deploy parameter
-            { $GetDriverBlockRules } { Get-DriverBlockRules -Deploy:$Deploy ; break }
+            # Get the latest driver block rules and only Deploy them if New-WDACConfig -GetDriverBlockRules was called with -Deploy parameter
+            $GetDriverBlockRules { Get-DriverBlockRules -Deploy:$Deploy ; break }
             $SetAutoUpdateDriverBlockRules { Set-AutoUpdateDriverBlockRules ; break }
             $MakeAllowMSFTWithBlockRules { Build-AllowMSFTWithBlockRules ; break }
             $MakePolicyFromAuditLogs { Build-PolicyFromAuditLogs ; break }
@@ -1092,10 +1065,6 @@ Function New-WDACConfig {
     Select the Base Policy Type
 .PARAMETER Deploy
     Deploys the policy that is being created
-.PARAMETER IncludeSignTool
-    Indicates that the Default Windows policy that is being created must include Allow rules for SignTool.exe - This parameter must be used when you intend to Sign and Deploy the Default Windows policy.
-.PARAMETER SignToolPath
-    Path to the SignTool.exe file - Optional
 .PARAMETER TestMode
     Indicates that the created/deployed policy will have Enabled:Boot Audit on Failure and Enabled:Advanced Boot Options Menu policy rule options
 .PARAMETER RequireEVSigners
@@ -1141,15 +1110,11 @@ Function New-WDACConfig {
 #>
 }
 
-# Importing argument completer ScriptBlocks
-. "$ModuleRootPath\Resources\ArgumentCompleters.ps1"
-Register-ArgumentCompleter -CommandName 'New-WDACConfig' -ParameterName 'SignToolPath' -ScriptBlock $ArgumentCompleterExeFilePathsPicker
-
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCAfrDb69NwFix6M
-# PswLnpYW+kqgyt0divbGUXmo+hk9xqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBLUQcymyZBe4BC
+# kvm4yJH0aGhriHuQ6fm/jgmN6coWSKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -1196,16 +1161,16 @@ Register-ArgumentCompleter -CommandName 'New-WDACConfig' -ParameterName 'SignToo
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQg14hf2M6F3YKfWHTxS9cZtCQlYAMlxYCw6pIEjXWMeRMwDQYJKoZIhvcNAQEB
-# BQAEggIAUmu4Ste9ajEpKCdiTAaDt1llyJJ0kAtR9nsj1z45Qmxt9z1gb6l2tIZ2
-# Dn5zedSmLVY99cL4D3682cvGWz++4SPDRzzdSZ4HU64CyYr7BVQSmhz2LajKv9ev
-# bKOOaLEHO/nVl/iH1Oa+zXW4WmbfLUr8EW7QBKgxNMRm+3IViw0BvQAcTe8r9OHA
-# 8wOXDL3B/zptm0+xyJg9xOuldLK0Xl261G53zMRytYynEi+YpzBAsY1K0wd6CbR+
-# C/5RfIwdh8OLe33vHgEK60VIL/Y5RfYGDRy5FJbaw62OQ1+BEwFdvdzlbUR/Fytk
-# rWQvELyAz6eveV3iq/iRjzEgGl+yJqM6uz8AYyJgGyBT4FrCUiMZZrokiCuR74Zb
-# ADQKG8hzRshGENCYdCXt1074N/5E0UhxgRcatf5uEFcXaxpDSRiY7V2cv4EI3scd
-# ipHt2Uvl50bPLEoykWP0xRQU9d3WktkX6/4vA73LO3l2edsYsWtUtaek1giJqY+4
-# R/TMeHlRD56PY/ObkKL/xpssSO1reIF+NR80HdCh+CkPZJ3OF6utchZt7dFFgkBV
-# WQid6pST1aObgMD3B4+ZtaAORlFy1TekNeDKyusj2fRUYPeQJ2kozjjP+7XponBQ
-# MUq7XO8lz/Wq16usJ3mFzDV+ebIbkQDobAZN5evRVGFFD65Q0eo=
+# IgQgcNRyDsZcCauDG4WUym0FfAueeEvdd/X4gj+MLGfEW30wDQYJKoZIhvcNAQEB
+# BQAEggIAi0IssB4FwnRtCU/XV69dQFvqK+X4kmXIcVCs4MyWanc8Ryw4Yiw0KnPs
+# aWsVP3Fqgk6/AwnR47IyRgZ4SZkWihstky2Ebk+Nh/VZ3byXE/E8rblzd589ds6p
+# s6y7o9MxaSE2uQ1yYagusHa7lax3ay6CXAf1jpLAL5LiZFIi9IIsSi441quhf2RO
+# tRE67+eWKKYpAWV4XvjyigeeLksYH9P73b+TJRGspMo1KBWh0nTV7DvPxz1koKKd
+# wGk0ei2G3OTkNwtZElXIPAScHukSA5xcJxDt0PM5A4/ql1c/W/VwZEcH23P9DcT2
+# ja5W11IdaQAqfw1S6YKLmqDXpDx6MpUnIzVq42KEyYQ4XcNWfLwt7kHTnaWfCgKQ
+# uXVM+wz6lzaEBAbtVo/02f+HeJtvhTQkL44ZmN6h3W9PPpQKutk0wnQSM5ObQ9mQ
+# RhIxZ9EwvFqbGmjsCFDRg+RNifuZN44s+o0T1tZdDGlqtvPumIcgx/Rtcs1mhGWH
+# JVdY1p3OoqgX0VC8v8Ev58xs3lapldI/DkGga/NNcT1EG0modwQza1ceIDpWy9Px
+# nm8trJmiFlZfd+K0z7atCS4RTkgO3H3ZW5rQoT77HiO5QmgJxs6Abl6YoEhN/Gx+
+# 0ruaun0SvYsNY7cxpDcG1ITZtE+TPWpe8MMCjmsj2dXlBoB1fyY=
 # SIG # End signature block

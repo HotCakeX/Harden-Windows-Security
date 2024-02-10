@@ -5,16 +5,34 @@
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-WDACConfig/New-WDACConfig%20-GetBlockRules.apng)
 
 ```powershell
-New-WDACConfig [-GetBlockRules] [-Deploy] [-SkipVersionCheck] [<CommonParameters>]
+New-WDACConfig
+     [-GetBlockRules]
+     [-Deploy]
+     [-SkipVersionCheck]
+     [<CommonParameters>]
 ```
 
 <br>
 
 Creates a WDAC policy file called ***Microsoft recommended block rules.xml*** from [the official source](https://github.com/MicrosoftDocs/windows-itpro-docs/blob/public/windows/security/application-security/application-control/windows-defender-application-control/design/applications-that-can-bypass-wdac.md) for [Microsoft recommended block rules](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/applications-that-can-bypass-wdac), with *AllowAll* rules and audit mode rule option removed. The policy sets [HVCI to strict](https://learn.microsoft.com/en-us/powershell/module/configci/set-hvcioptions).
 
-### 1 Optional Parameter
+## Parameters
 
-* `-Deploy`: Deploys the [latest Microsoft recommended block rules](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/applications-that-can-bypass-wdac) (For User Mode binaries). It has the 2 default AllowAll rules so it can be deployed as a standalone base policy. Uses [Strict HVCI](https://learn.microsoft.com/en-us/powershell/module/configci/set-hvcioptions).
+### -Deploy
+
+Deploys the [latest Microsoft recommended block rules](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/applications-that-can-bypass-wdac) (For User Mode binaries). It has the 2 default AllowAll rules so it can be deployed as a standalone base policy. Uses [Strict HVCI](https://learn.microsoft.com/en-us/powershell/module/configci/set-hvcioptions).
+
+<div align='center'>
+
+| Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
 
 <br>
 
@@ -27,16 +45,34 @@ Creates a WDAC policy file called ***Microsoft recommended block rules.xml*** fr
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-WDACConfig/New-WDACConfig%20-GetDriverBlockRules.apng)
 
 ```powershell
-New-WDACConfig [-GetDriverBlockRules] [-Deploy] [-SkipVersionCheck] [<CommonParameters>]
+New-WDACConfig
+     [-GetDriverBlockRules]
+     [-Deploy]
+     [-SkipVersionCheck]
+     [<CommonParameters>]
 ```
 
 <br>
 
 Creates a WDAC policy file called ***Microsoft recommended driver block rules.xml*** from [the official source](https://github.com/MicrosoftDocs/windows-itpro-docs/blob/public/windows/security/application-security/application-control/windows-defender-application-control/design/microsoft-recommended-driver-block-rules.md) for [Microsoft recommended driver block rules](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/microsoft-recommended-driver-block-rules), with *AllowAll* rules and audit mode rule option removed. The policy sets [HVCI to strict](https://learn.microsoft.com/en-us/powershell/module/configci/set-hvcioptions). Extra information regarding the version and last updated date of [the GitHub document](https://github.com/MicrosoftDocs/windows-itpro-docs/commits/public/windows/security/application-security/application-control/windows-defender-application-control/design/microsoft-recommended-driver-block-rules.md) containing block rules will also be displayed.
 
-### 1 Optional Parameter
+## Parameters
 
-* `-Deploy`: With the help of PowerShell, uses [the official method](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/microsoft-recommended-driver-block-rules#steps-to-download-and-apply-the-vulnerable-driver-blocklist-binary) to deploy the latest version of [Microsoft recommended driver block rules](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/microsoft-recommended-driver-block-rules).
+###  -Deploy
+
+With the help of PowerShell, uses [the official method](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/microsoft-recommended-driver-block-rules#steps-to-download-and-apply-the-vulnerable-driver-blocklist-binary) to deploy the latest version of [Microsoft recommended driver block rules](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/microsoft-recommended-driver-block-rules).
+
+<div align='center'>
+
+| Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
 
 <br>
 
@@ -49,8 +85,13 @@ Creates a WDAC policy file called ***Microsoft recommended driver block rules.xm
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-WDACConfig/New-WDACConfig%20-MakeAllowMSFTWithBlockRules.apng)
 
 ```powershell
-New-WDACConfig [-MakeAllowMSFTWithBlockRules] [-Deploy] [-TestMode] [-RequireEVSigners] [-SkipVersionCheck]
-[<CommonParameters>]
+New-WDACConfig
+     [-MakeAllowMSFTWithBlockRules]
+     [-Deploy]
+     [-TestMode]
+     [-RequireEVSigners]
+     [-SkipVersionCheck]
+     [<CommonParameters>]
 ```
 
 <br>
@@ -58,6 +99,8 @@ New-WDACConfig [-MakeAllowMSFTWithBlockRules] [-Deploy] [-TestMode] [-RequireEVS
 Calls the [-GetBlockRules](#new-wdacconfig--getblockrules) parameter to get the Microsoft recommended block rules, and merges them with [*AllowMicrosoft default policy*](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/example-wdac-base-policies). The Policy uses [strict HVCI](https://learn.microsoft.com/en-us/powershell/module/configci/set-hvcioptions) and has the following [rule options](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/select-types-of-rules-to-create#table-1-windows-defender-application-control-policy---policy-rule-options):
 
 <br>
+
+<div align='center'>
 
 | Rule number | Rule option |
 | ------------- | ------------- |
@@ -72,17 +115,65 @@ Calls the [-GetBlockRules](#new-wdacconfig--getblockrules) parameter to get the 
 | 19 | Enabled:Dynamic Code Security |
 | 20 | Enabled:Revoked Expired As Unsigned |
 
+</div>
+
 <br>
 
-### 3 Optional Parameters
+## Parameters
 
-* `-Deploy`: Indicates that the module will automatically deploy the ***AllowMicrosoftPlusBlockRules*** policy after creation.
+### -Deploy
 
-* `-TestMode`: Indicates that the created/deployed policy will have ***Enabled:Boot Audit on Failure*** and ***Enabled:Advanced Boot Options Menu*** [policy rule options](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/select-types-of-rules-to-create#table-1-windows-defender-application-control-policy---policy-rule-options).
+Indicates that the module will automatically deploy the ***AllowMicrosoftPlusBlockRules*** policy after creation.
 
-* `-RequireEVSigners`: Indicates that the created/deployed policy will have [Require EV Signers](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/wdac-wizard-create-base-policy#advanced-policy-rules-description) policy rule option.
+<div align='center'>
 
-     - > In addition to being WHQL signed, this rule requires that drivers must have been submitted by a partner that has an Extended Verification (EV) certificate. All Windows 10 and later, or Windows 11 drivers will meet this requirement.
+| Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+<br>
+
+### -TestMode
+
+Indicates that the created/deployed policy will have ***Enabled:Boot Audit on Failure*** and ***Enabled:Advanced Boot Options Menu*** [policy rule options](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/select-types-of-rules-to-create#table-1-windows-defender-application-control-policy---policy-rule-options).
+
+<div align='center'>
+
+| Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+### -RequireEVSigners
+
+Indicates that the created/deployed policy will have [Require EV Signers](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/wdac-wizard-create-base-policy#advanced-policy-rules-description) policy rule option.
+
+ * In addition to being WHQL signed, this rule requires that drivers must have been submitted by a partner that has an Extended Verification (EV) certificate. All Windows 10 and later, or Windows 11 drivers will meet this requirement.
+
+<br>
+
+<div align='center'>
+
+| Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
 
 <br>
 
@@ -102,7 +193,10 @@ Calls the [-GetBlockRules](#new-wdacconfig--getblockrules) parameter to get the 
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-WDACConfig/New-WDACConfig%20-SetAutoUpdateDriverBlockRules.apng)
 
 ```powershell
-New-WDACConfig [-SetAutoUpdateDriverBlockRules] [-SkipVersionCheck] [<CommonParameters>]
+New-WDACConfig
+     [-SetAutoUpdateDriverBlockRules]
+     [-SkipVersionCheck]
+     [<CommonParameters>]
 ```
 
 <br>
@@ -120,7 +214,12 @@ Creates a scheduled task that runs every 7 days to automatically perform [the of
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-WDACConfig/New-WDACConfig%20-PrepMSFTOnlyAudit.apng)
 
 ```powershell
-New-WDACConfig [-PrepMSFTOnlyAudit] [-Deploy] [-LogSize <Int64>] [-SkipVersionCheck] [<CommonParameters>]
+New-WDACConfig
+     [-PrepMSFTOnlyAudit]
+     [-Deploy]
+     [-LogSize <UInt64>]
+     [-SkipVersionCheck]
+     [<CommonParameters>]
 ```
 
 <br>
@@ -131,11 +230,41 @@ After deployment, audit event logs will start to be created for any file that is
 
 It's recommended to use the optional parameter below to increase the log size of Code Integrity events category so that new events won't overwrite the older ones and everything will be captured.
 
-### 2 Optional Parameters
+## Parameters
 
-* `-LogSize <Int64>`: Specifies the log size for ***Microsoft-Windows-CodeIntegrity/Operational*** events. The values must be in the form of `<Digit + Data measurement unit>`. e.g., 2MB, 10MB, 1GB, 1TB. The minimum accepted value is 1MB which is the default.
+### -LogSize
 
-* `-Deploy`: Deploys the policy instead of just creating it.
+Specifies the log size for ***Microsoft-Windows-CodeIntegrity/Operational*** events. The values must be in the form of `<Digit + Data measurement unit>`. e.g., 2MB, 10MB, 1GB, 1TB. The minimum accepted value is 1MB which is the default.
+
+<div align='center'>
+
+| Type: |[UInt64](https://learn.microsoft.com/en-us/dotnet/api/system.uint64)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+<br>
+
+### -Deploy
+
+Deploys the policy instead of just creating it.
+
+<div align='center'>
+
+| Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
 
 <br>
 
@@ -148,7 +277,12 @@ It's recommended to use the optional parameter below to increase the log size of
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-WDACConfig/New-WDACConfig%20-PrepDefaultWindowsAudit.apng)
 
 ```powershell
-New-WDACConfig [-PrepDefaultWindowsAudit] [-Deploy] [-LogSize <Int64>] [-SkipVersionCheck] [<CommonParameters>]
+New-WDACConfig
+     [-PrepDefaultWindowsAudit]
+     [-Deploy]
+     [-LogSize <UInt64>]
+     [-SkipVersionCheck]
+     [<CommonParameters>]
 ```
 
 <br>
@@ -159,11 +293,41 @@ This parameter also scans the WDACConfig module files and PowerShell core files,
 
 It's recommended to use the optional parameter below to increase the log size of Code Integrity events category so that new events won't overwrite the older ones, and everything will be captured.
 
-### 2 Optional Parameters
+## Parameters
 
-* `-LogSize <Int64>`: Specifies the log size for ***Microsoft-Windows-CodeIntegrity/Operational*** events. The values must be in the form of `<Digit + Data measurement unit>`. e.g., 2MB, 10MB, 1GB, 1TB. The minimum accepted value is 1MB which is the default.
+### -LogSize
 
-* `-Deploy`: Deploys the policy instead of just creating it.
+Specifies the log size for ***Microsoft-Windows-CodeIntegrity/Operational*** events. The values must be in the form of `<Digit + Data measurement unit>`. e.g., 2MB, 10MB, 1GB, 1TB. The minimum accepted value is 1MB which is the default.
+
+<div align='center'>
+
+| Type: |[UInt64](https://learn.microsoft.com/en-us/dotnet/api/system.uint64)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+<br>
+
+### -Deploy
+
+Deploys the policy instead of just creating it.
+
+<div align='center'>
+
+| Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
 
 <br>
 
@@ -176,47 +340,256 @@ It's recommended to use the optional parameter below to increase the log size of
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-WDACConfig/New-WDACConfig%20-MakePolicyFromAuditLogs%20-BasePolicyType%20'Allow%20Microsoft%20Base'.apng)
 
 ```powershell
-New-WDACConfig [-MakePolicyFromAuditLogs] -BasePolicyType <String> [-Deploy] [-TestMode] [-RequireEVSigners]
-[-SpecificFileNameLevel <String>] [-NoDeletedFiles] [-NoUserPEs] [-NoScript] [-Level <String>] [-Fallbacks
-<String[]>] [-LogSize <Int64>] [-SkipVersionCheck] [<CommonParameters>]
+New-WDACConfig
+     [-MakePolicyFromAuditLogs]
+     [-BasePolicyType <String>]
+     [-Deploy]
+     [-TestMode]
+     [-RequireEVSigners]
+     [-SpecificFileNameLevel <String>]
+     [-NoDeletedFiles]
+     [-NoUserPEs]
+     [-NoScript]
+     [-Level <String>]
+     [-Fallbacks <String[]>]
+     [-LogSize <UInt64>]
+     [-SkipVersionCheck]
+     [<CommonParameters>]
 ```
 
 <br>
 
 Creates a WDAC policy using the Audit event logs generated [for a fully managed device](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-for-Fully-Managed-Devices).
 
-### 1 Mandatory Parameter
+## Parameters
 
-* `-BasePolicyType <String>`: You need to select between **[Allow Microsoft Base](#new-wdacconfig--makeallowmsftwithblockrules)** and **[Default Windows Base](#new-wdacconfig--makedefaultwindowswithblockrules)**, based on which prep audit mode base policy deployed on the system.
+### -BasePolicyType
 
-### 11 Optional Parameters
+You need to select between **[Allow Microsoft Base](#new-wdacconfig--makeallowmsftwithblockrules)** and **[Default Windows Base](#new-wdacconfig--makedefaultwindowswithblockrules)**, based on which prep audit mode base policy deployed on the system.
 
-* `-Deploy`: Indicates that the module will automatically remove the WDAC policy deployed using either [-PrepMSFTOnlyAudit](#new-wdacconfig--prepmsftonlyaudit) or [-PrepDefaultWindowsAudit](#new-wdacconfig--prepdefaultwindowsaudit) parameters, then deploys the supplemental policy created from Audit event logs along with the selected base policy type, both in enforced mode.
+<div align='center'>
 
-* `-TestMode`: Indicates that the created/deployed policy will have ***Enabled:Boot Audit on Failure*** and ***Enabled:Advanced Boot Options Menu*** [policy rule options](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/select-types-of-rules-to-create#table-1-windows-defender-application-control-policy---policy-rule-options).
+| Type: |[String](https://learn.microsoft.com/en-us/dotnet/api/system.string)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | True |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
 
-* `-RequireEVSigners`: Indicates that the created/deployed policy will have [Require EV Signers](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/wdac-wizard-create-base-policy#advanced-policy-rules-description) policy rule option.
+</div>
 
-     - > In addition to being WHQL signed, this rule requires that drivers must have been submitted by a partner that has an Extended Verification (EV) certificate. All Windows 10 and later, or Windows 11 drivers will meet this requirement.
+<br>
 
-* `-Debug`: Indicates that the module will output 3 additional files for debugging purposes and also write debug messages on the console:
-     - *FileRulesAndFileRefs.txt* - Contains the File Rules and Rule refs for the Hash of the files that no longer exist on the disk.
-     - *DeletedFilesHashes.xml* - Policy file that contains File Rules and Rule refs for the files that no longer exist on the disk.
-     - *AuditLogsPolicy_NoDeletedFiles.xml* - The policy file generated from Audit Event logs based on the specified Level and Fallback parameters.
+### -Deploy
 
-* `-LogSize <Int64>`: Specifies the log size for ***Microsoft-Windows-CodeIntegrity/Operational*** events. The values must be in the form of `<Digit + Data measurement unit>`. e.g., 2MB, 10MB, 1GB, 1TB. The minimum accepted value is 1MB which is the default.
+Indicates that the module will automatically remove the WDAC policy deployed using either [-PrepMSFTOnlyAudit](#new-wdacconfig--prepmsftonlyaudit) or [-PrepDefaultWindowsAudit](#new-wdacconfig--prepdefaultwindowsaudit) parameters, then deploys the supplemental policy created from Audit event logs along with the selected base policy type, both in enforced mode.
 
-* `-Levels <String>`: Offers the same official [Levels](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-level) for scanning of event logs. If no level is specified the default, which is set to ***FilePublisher*** in this module, will be used.
+<div align='center'>
 
-* `-Fallbacks <String[]>`: Offers the same official [Fallbacks](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-fallback) for scanning of event logs. If no fallbacks are specified the default, which is set to ***Hash*** in this module, will be used.
+| Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
 
-* `-SpecificFileNameLevel`: You can choose one of the following options: "OriginalFileName", "InternalName", "FileDescription", "ProductName", "PackageFamilyName", "FilePath". [More info available on Microsoft Learn](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-specificfilenamelevel)
+</div>
 
-* `-NoDeletedFiles`: Indicates that files that were run during program installations but then were deleted and are no longer on the disk, won't be added to the supplemental policy. This can mean the programs you installed will be allowed to run but installation/reinstallation might not be allowed once the policies are deployed.
+<br>
 
-* `-NoUserPEs`: By default, the module includes user PEs in the scan. When you use this switch parameter, they won't be included. [More info available on Microsoft Learn](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-userpes)
+### -TestMode
 
-* `-NoScript`: [More info available on Microsoft Learn](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-noscript)
+Indicates that the created/deployed policy will have ***Enabled:Boot Audit on Failure*** and ***Enabled:Advanced Boot Options Menu*** [policy rule options](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/select-types-of-rules-to-create#table-1-windows-defender-application-control-policy---policy-rule-options).
+
+<div align='center'>
+
+| Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+<br>
+
+### -RequireEVSigners
+
+Indicates that the created/deployed policy will have [Require EV Signers](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/wdac-wizard-create-base-policy#advanced-policy-rules-description) policy rule option.
+
+ * In addition to being WHQL signed, this rule requires that drivers must have been submitted by a partner that has an Extended Verification (EV) certificate. All Windows 10 and later, or Windows 11 drivers will meet this requirement.
+
+<div align='center'>
+
+| Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+<br>
+
+### -Debug
+
+Indicates that the module will output 3 additional files for debugging purposes and also write debug messages on the console:
+
+ - *FileRulesAndFileRefs.txt* - Contains the File Rules and Rule refs for the Hash of the files that no longer exist on the disk.
+ - *DeletedFilesHashes.xml* - Policy file that contains File Rules and Rule refs for the files that no longer exist on the disk.
+ - *AuditLogsPolicy_NoDeletedFiles.xml* - The policy file generated from Audit Event logs based on the specified Level and Fallback parameters.
+
+<div align='center'>
+
+| Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+<br>
+
+### -LogSize
+
+Specifies the log size for ***Microsoft-Windows-CodeIntegrity/Operational*** events. The values must be in the form of `<Digit + Data measurement unit>`. e.g., 2MB, 10MB, 1GB, 1TB. The minimum accepted value is 1MB which is the default.
+
+<div align='center'>
+
+| Type: |[UInt64](https://learn.microsoft.com/en-us/dotnet/api/system.uint64)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+<br>
+
+### -Levels
+
+Offers the same official [Levels](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-level) for scanning of event logs.
+
+<div align='center'>
+
+| Type: |[String](https://learn.microsoft.com/en-us/dotnet/api/system.string)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | FilePublisher |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+<br>
+
+### -Fallbacks
+
+Offers the same official [Fallbacks](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-fallback) for scanning of event logs.
+
+<div align='center'>
+
+| Type: |[String](https://learn.microsoft.com/en-us/dotnet/api/system.string)[]|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | Hash |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+<br>
+
+### -SpecificFileNameLevel
+
+You can choose one of the following options:
+* OriginalFileName
+* InternalName
+* FileDescription
+* ProductName
+* PackageFamilyName
+* FilePath
+
+[More info available on Microsoft Learn](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-specificfilenamelevel)
+
+<div align='center'>
+
+| Type: |[String](https://learn.microsoft.com/en-us/dotnet/api/system.string)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+<br>
+
+### -NoDeletedFiles
+
+Indicates that files that were run during program installations but then were deleted and are no longer on the disk, won't be added to the supplemental policy. This can mean the programs you installed will be allowed to run but installation/reinstallation might not be allowed once the policies are deployed.
+
+<div align='center'>
+
+| Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+<br>
+
+### -NoUserPEs
+
+By default, the module includes user PEs in the scan. When you use this switch parameter, they won't be included. [More info available on Microsoft Learn](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-userpes)
+
+<div align='center'>
+
+| Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+<br>
+
+### -NoScript
+
+[More info available on Microsoft Learn](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-noscript)
+
+<div align='center'>
+
+| Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
 
 <br>
 
@@ -243,8 +616,13 @@ All of the outputs are saved in a folder named "WDAC" inside the current working
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-WDACConfig/New-WDACConfig%20-MakeLightPolicy.apng)
 
 ```powershell
-New-WDACConfig [-MakeLightPolicy] [-Deploy] [-TestMode] [-RequireEVSigners] [-SkipVersionCheck]
-[<CommonParameters>]
+New-WDACConfig
+     [-MakeLightPolicy]
+     [-Deploy]
+     [-TestMode]
+     [-RequireEVSigners]
+     [-SkipVersionCheck]
+     [<CommonParameters>]
 ```
 
 <br>
@@ -253,22 +631,74 @@ Creates a WDAC policy for a [Lightly managed system](https://github.com/HotCakeX
 
 <br>
 
+<div align='center'>
+
 | Rule number | Rule option |
 | ------------- | ------------- |
 | 14 | Enabled:Intelligent Security Graph Authorization |
 | 15 | Enabled:Invalidate EAs on Reboot |
 
+</div>
+
 <br>
 
-### 3 Optional Parameters
+## Parameters
 
-* `-Deploy`: Indicates that the module will automatically deploy the ***SignedAndReputable.xml*** policy file after creation.
+### -Deploy
 
-* `-TestMode`: Indicates that the created/deployed policy will have ***Enabled:Boot Audit on Failure*** and ***Enabled:Advanced Boot Options Menu*** [policy rule options](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/select-types-of-rules-to-create#table-1-windows-defender-application-control-policy---policy-rule-options).
+Indicates that the module will automatically deploy the ***SignedAndReputable.xml*** policy file after creation.
 
-* `-RequireEVSigners`: Indicates that the created/deployed policy will have [Require EV Signers](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/wdac-wizard-create-base-policy#advanced-policy-rules-description) policy rule option.
+<div align='center'>
 
-     - > In addition to being WHQL signed, this rule requires that drivers must have been submitted by a partner that has an Extended Verification (EV) certificate. All Windows 10 and later, or Windows 11 drivers will meet this requirement.
+| Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+<br>
+
+### -TestMode
+
+Indicates that the created/deployed policy will have ***Enabled:Boot Audit on Failure*** and ***Enabled:Advanced Boot Options Menu*** [policy rule options](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/select-types-of-rules-to-create#table-1-windows-defender-application-control-policy---policy-rule-options).
+
+<div align='center'>
+
+| Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+<br>
+
+### -RequireEVSigners
+
+Indicates that the created/deployed policy will have [Require EV Signers](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/wdac-wizard-create-base-policy#advanced-policy-rules-description) policy rule option.
+
+ * In addition to being WHQL signed, this rule requires that drivers must have been submitted by a partner that has an Extended Verification (EV) certificate. All Windows 10 and later, or Windows 11 drivers will meet this requirement.
+
+<div align='center'>
+
+| Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+<br>
 
 ### The outputs of the parameter are
 
@@ -286,8 +716,13 @@ Creates a WDAC policy for a [Lightly managed system](https://github.com/HotCakeX
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-WDACConfig/New-WDACConfig%20-MakeDefaultWindowsWithBlockRules.apng)
 
 ```powershell
-New-WDACConfig [-MakeDefaultWindowsWithBlockRules] [-Deploy] [-IncludeSignTool] [-SignToolPath <String>]
-[-TestMode] [-RequireEVSigners] [-SkipVersionCheck] [<CommonParameters>]
+New-WDACConfig
+     [-MakeDefaultWindowsWithBlockRules]
+     [-Deploy]
+     [-TestMode]
+     [-RequireEVSigners]
+     [-SkipVersionCheck]
+     [<CommonParameters>]
 ```
 
 <br>
@@ -296,21 +731,63 @@ Calls the [-GetBlockRules](#new-wdacconfig--getblockrules) parameter to get the 
 
 <br>
 
-> Since the module uses PowerShell and not Windows PowerShell that is pre-installed in Windows, this parameter will automatically scan `C:\Program Files\PowerShell` directory and add PowerShell files to the ***DefaultWindowsPlusBlockRules.xml*** policy file so that you will be able to continue using the module after deploying the policy. The scan uses ***FilePublisher*** level and ***Hash*** fallback.
+* Since the module uses PowerShell and not Windows PowerShell that is pre-installed in Windows, this parameter will automatically scan `C:\Program Files\PowerShell` directory (if it detects the PowerShell is not installed from Microsoft Store) and add PowerShell files to the ***DefaultWindowsPlusBlockRules.xml*** policy file so that you will be able to continue using the module after deploying the policy. The scan uses ***FilePublisher*** level and ***Hash*** fallback.
 
-### 5 Optional Parameters
+## Parameters
 
-* `-Deploy`: Indicates that the module will automatically deploy the ***DefaultWindowsPlusBlockRules*** policy after creation.
+### -Deploy
 
-* `-TestMode`: Indicates that the created/deployed policy will have ***Enabled:Boot Audit on Failure*** and ***Enabled:Advanced Boot Options Menu*** [policy rule options](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/select-types-of-rules-to-create#table-1-windows-defender-application-control-policy---policy-rule-options).
+Indicates that the module will automatically deploy the ***DefaultWindowsPlusBlockRules*** policy after creation.
 
-* `-RequireEVSigners`: Indicates that the created/deployed policy will have [Require EV Signers](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/wdac-wizard-create-base-policy#advanced-policy-rules-description) policy rule option.
+<div align='center'>
 
-     - > In addition to being WHQL signed, this rule requires that drivers must have been submitted by a partner that has an Extended Verification (EV) certificate. All Windows 10 and later, or Windows 11 drivers will meet this requirement.
+| Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
 
-* `-IncludeSignTool`: Indicates that the Default Windows policy that is being created must include Allow rules for `SignTool.exe`. This parameter must be used when you intend to Sign and Deploy the Default Windows policy.
+</div>
 
-* `-SignToolPath <String>`: [How to use it](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Deploy-SignedWDACConfig#you-can-use-it-in-2-different-ways)
+<br>
+
+### -TestMode
+
+Indicates that the created/deployed policy will have ***Enabled:Boot Audit on Failure*** and ***Enabled:Advanced Boot Options Menu*** [policy rule options](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/select-types-of-rules-to-create#table-1-windows-defender-application-control-policy---policy-rule-options).
+
+<div align='center'>
+
+| Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+<br>
+
+### -RequireEVSigners
+
+Indicates that the created/deployed policy will have [Require EV Signers](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/wdac-wizard-create-base-policy#advanced-policy-rules-description) policy rule option.
+
+ * In addition to being WHQL signed, this rule requires that drivers must have been submitted by a partner that has an Extended Verification (EV) certificate. All Windows 10 and later, or Windows 11 drivers will meet this requirement.
+
+<div align='center'>
+
+| Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
 
 <br>
 
@@ -318,19 +795,5 @@ Calls the [-GetBlockRules](#new-wdacconfig--getblockrules) parameter to get the 
 
 * ***DefaultWindowsPlusBlockRules.xml*** policy file
 * ***{GUID}.cip*** for the policy above
-
-<br>
-
-<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
-
-<br>
-
-## Notes
-
-* **Mandatory** parameters indicate you always need to provide values for them.
-
-* **Automatic** parameters indicate that if you used [Set-CommonWDACConfig](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Set-CommonWDACConfig) cmdlet to set default values for them, the module will automatically use them. This saves time and prevents repetitive tasks. However, if no value exists in User Configurations for an Automatic parameter and you didn't explicitly provide a value for that parameter either, then you will see an error asking you to provide value for it. Explicitly providing a value for an Automatic parameter in the command line overrides its default value in User Configurations, meaning the module will ignore the value of the same parameter in the User Configurations file.
-
-* **Optional** parameters indicate that they are not required and without using them the module will automatically run with the optimal settings.
 
 <br>

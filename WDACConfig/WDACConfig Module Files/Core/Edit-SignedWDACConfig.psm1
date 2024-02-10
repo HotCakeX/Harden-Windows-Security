@@ -3,6 +3,7 @@ Function Edit-SignedWDACConfig {
         DefaultParameterSetName = 'Allow New Apps Audit Events',
         PositionalBinding = $false
     )]
+    [OutputType([System.String])]
     Param(
         [Alias('E')]
         [Parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps Audit Events')][System.Management.Automation.SwitchParameter]$AllowNewAppsAuditEvents,
@@ -20,36 +21,49 @@ Function Edit-SignedWDACConfig {
         [Parameter(Mandatory = $true, ParameterSetName = 'Merge Supplemental Policies', ValueFromPipelineByPropertyName = $true)]
         [System.String]$SuppPolicyName,
 
-        [ValidatePattern('\.xml$')]
-        [ValidateScript({ Test-Path -Path $_ -PathType 'Leaf' }, ErrorMessage = 'The path you selected is not a file path.')]
+        [ValidateScript({ Test-CiPolicy -XmlFile $_ })]
         [Parameter(Mandatory = $true, ParameterSetName = 'Merge Supplemental Policies', ValueFromPipelineByPropertyName = $true)]
-        [System.String[]]$SuppPolicyPaths,
+        [System.IO.FileInfo[]]$SuppPolicyPaths,
 
-        [ValidatePattern('\.xml$')]
         [ValidateScript({
                 # Validate the Policy file to make sure the user isn't accidentally trying to
                 # Edit an Unsigned policy using Edit-SignedWDACConfig cmdlet which is only made for Signed policies
-                $XmlTest = [System.Xml.XmlDocument](Get-Content -Path $_)
-                $RedFlag1 = $XmlTest.SiPolicy.SupplementalPolicySigners.SupplementalPolicySigner.SignerId
-                $RedFlag2 = $XmlTest.SiPolicy.UpdatePolicySigners.UpdatePolicySigner.SignerId
-                $RedFlag3 = $XmlTest.SiPolicy.PolicyID
-                $CurrentPolicyIDs = ((&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { $_.IsSystemPolicy -ne 'True' }).policyID | ForEach-Object -Process { "{$_}" }
+                [System.Xml.XmlDocument]$XmlTest = Get-Content -Path $_
+                [System.String]$RedFlag1 = $XmlTest.SiPolicy.SupplementalPolicySigners.SupplementalPolicySigner.SignerId
+                [System.String]$RedFlag2 = $XmlTest.SiPolicy.UpdatePolicySigners.UpdatePolicySigner.SignerId
+                [System.String]$RedFlag3 = $XmlTest.SiPolicy.PolicyID
+
+                # Get the currently deployed policy IDs
+                Try {
+                    [System.Guid[]]$CurrentPolicyIDs = ((&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { $_.IsSystemPolicy -ne 'True' }).policyID | ForEach-Object -Process { "{$_}" }
+                }
+                catch {
+                    Throw 'No policy is deployed on the system.'
+                }
+
                 if ($RedFlag1 -or $RedFlag2) {
                     # Ensure the selected base policy xml file is deployed
                     if ($CurrentPolicyIDs -contains $RedFlag3) {
-                        return $True
+
+                        # Ensure the selected base policy xml file is valid
+                        if ( Test-CiPolicy -XmlFile $_ ) {
+                            return $True
+                        }
                     }
-                    else { throw "The currently selected policy xml file isn't deployed." }
+                    else {
+                        throw 'The currently selected policy xml file is not deployed.'
+                    }
                 }
                 # This throw is shown only when User added a Signed policy xml file for Unsigned policy file path property in user configuration file
                 # Without this, the error shown would be vague: The variable cannot be validated because the value System.String[] is not a valid value for the PolicyPath variable.
-                else { throw 'The policy xml file in User Configurations for SignedPolicyPath is Unsigned policy.' }
-
+                else {
+                    'The policy xml file in User Configurations for SignedPolicyPath is Unsigned policy.'
+                }
             }, ErrorMessage = 'The selected policy xml file is Unsigned. Please use Edit-WDACConfig cmdlet to edit Unsigned policies.')]
         [Parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps Audit Events', ValueFromPipelineByPropertyName = $true)]
         [Parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps', ValueFromPipelineByPropertyName = $true)]
         [Parameter(Mandatory = $false, ParameterSetName = 'Merge Supplemental Policies', ValueFromPipelineByPropertyName = $true)]
-        [System.String]$PolicyPath,
+        [System.IO.FileInfo]$PolicyPath,
 
         [Parameter(Mandatory = $false, ParameterSetName = 'Merge Supplemental Policies')]
         [System.Management.Automation.SwitchParameter]$KeepOldSupplementalPolicies,
@@ -65,7 +79,7 @@ Function Edit-SignedWDACConfig {
         [ValidatePattern('\.cer$')]
         [ValidateScript({ Test-Path -Path $_ -PathType 'Leaf' }, ErrorMessage = 'The path you selected is not a file path.')]
         [Parameter(Mandatory = $false, ValueFromPipelineByPropertyName = $true)]
-        [System.String]$CertPath,
+        [System.IO.FileInfo]$CertPath,
 
         [ValidateScript({
                 # Assign the input value to a variable because $_ is going to be used to access another pipeline object
@@ -147,7 +161,7 @@ Function Edit-SignedWDACConfig {
         [System.String[]]$Fallbacks = 'Hash',
 
         [Parameter(Mandatory = $false, ValueFromPipelineByPropertyName = $true)]
-        [System.String]$SignToolPath,
+        [System.IO.FileInfo]$SignToolPath,
 
         [Parameter(Mandatory = $false, ParameterSetName = 'Update Base Policy')]
         [System.Management.Automation.SwitchParameter]$RequireEVSigners,
@@ -303,7 +317,7 @@ Function Edit-SignedWDACConfig {
             [System.String]$PolicyPath = "$UserTempDirectoryPath\$PolicyFileName"
 
             Write-Verbose -Message 'Retrieving the Base policy name and ID'
-            $Xml = [System.Xml.XmlDocument](Get-Content -Path $PolicyPath)
+            [System.Xml.XmlDocument]$Xml = Get-Content -Path $PolicyPath
             [System.String]$PolicyID = $Xml.SiPolicy.PolicyID
             [System.String]$PolicyName = ($Xml.SiPolicy.Settings.Setting | Where-Object -FilterScript { $_.provider -eq 'PolicyInfo' -and $_.valuename -eq 'Name' -and $_.key -eq 'Information' }).value.string
 
@@ -330,7 +344,7 @@ Function Edit-SignedWDACConfig {
             # Sign both CIPs
             '.\AuditMode.cip', '.\EnforcedMode.cip' | ForEach-Object -Process {
                 # Configure the parameter splat
-                $ProcessParams = @{
+                [System.Collections.Hashtable]$ProcessParams = @{
                     'ArgumentList' = 'sign', '/v' , '/n', "`"$CertCN`"", '/p7', '.', '/p7co', '1.3.6.1.4.1.311.79.1', '/fd', 'certHash', "`"$_`""
                     'FilePath'     = $SignToolPathFinal
                     'NoNewWindow'  = $true
@@ -498,7 +512,7 @@ Function Edit-SignedWDACConfig {
             ConvertFrom-CIPolicy -XmlFilePath $SuppPolicyPath -BinaryFilePath "$SuppPolicyID.cip" | Out-Null
 
             # Configure the parameter splat
-            $ProcessParams = @{
+            [System.Collections.Hashtable]$ProcessParams = @{
                 'ArgumentList' = 'sign', '/v' , '/n', "`"$CertCN`"", '/p7', '.', '/p7co', '1.3.6.1.4.1.311.79.1', '/fd', 'certHash', ".\$SuppPolicyID.cip"
                 'FilePath'     = $SignToolPathFinal
                 'NoNewWindow'  = $true
@@ -576,7 +590,7 @@ Function Edit-SignedWDACConfig {
             [System.String]$PolicyPath = "$UserTempDirectoryPath\$PolicyFileName"
 
             Write-Verbose -Message 'Retrieving the Base policy name and ID'
-            $Xml = [System.Xml.XmlDocument](Get-Content -Path $PolicyPath)
+            [System.Xml.XmlDocument]$Xml = Get-Content -Path $PolicyPath
             [System.String]$PolicyID = $Xml.SiPolicy.PolicyID
             [System.String]$PolicyName = ($Xml.SiPolicy.Settings.Setting | Where-Object -FilterScript { $_.provider -eq 'PolicyInfo' -and $_.valuename -eq 'Name' -and $_.key -eq 'Information' }).value.string
 
@@ -603,7 +617,7 @@ Function Edit-SignedWDACConfig {
             # Sign both CIPs
             '.\AuditMode.cip', '.\EnforcedMode.cip' | ForEach-Object -Process {
                 # Configure the parameter splat
-                $ProcessParams = @{
+                [System.Collections.Hashtable]$ProcessParams = @{
                     'ArgumentList' = 'sign', '/v' , '/n', "`"$CertCN`"", '/p7', '.', '/p7co', '1.3.6.1.4.1.311.79.1', '/fd', 'certHash', "`"$_`""
                     'FilePath'     = $SignToolPathFinal
                     'NoNewWindow'  = $true
@@ -958,7 +972,7 @@ Function Edit-SignedWDACConfig {
             ConvertFrom-CIPolicy -XmlFilePath $SuppPolicyPath -BinaryFilePath "$SuppPolicyID.cip" | Out-Null
 
             # Configure the parameter splat
-            $ProcessParams = @{
+            [System.Collections.Hashtable]$ProcessParams = @{
                 'ArgumentList' = 'sign', '/v' , '/n', "`"$CertCN`"", '/p7', '.', '/p7co', '1.3.6.1.4.1.311.79.1', '/fd', 'certHash', ".\$SuppPolicyID.cip"
                 'FilePath'     = $SignToolPathFinal
                 'NoNewWindow'  = $true
@@ -1012,7 +1026,7 @@ Function Edit-SignedWDACConfig {
             foreach ($SuppPolicyPath in $SuppPolicyPaths) {
 
                 Write-Verbose -Message "Getting policy ID and type of: $SuppPolicyPath"
-                $Supplementalxml = [System.Xml.XmlDocument](Get-Content -Path $SuppPolicyPath)
+                [System.Xml.XmlDocument]$Supplementalxml = Get-Content -Path $SuppPolicyPath
                 [System.String]$SupplementalPolicyID = $Supplementalxml.SiPolicy.PolicyID
                 [System.String]$SupplementalPolicyType = $Supplementalxml.SiPolicy.PolicyType
 
@@ -1047,7 +1061,7 @@ Function Edit-SignedWDACConfig {
             foreach ($SuppPolicyPath in $SuppPolicyPaths) {
 
                 # Get the policy ID of the currently selected Supplemental policy
-                $Supplementalxml = [System.Xml.XmlDocument](Get-Content -Path $SuppPolicyPath)
+                [System.Xml.XmlDocument]$Supplementalxml = Get-Content -Path $SuppPolicyPath
                 [System.String]$SupplementalPolicyID = $Supplementalxml.SiPolicy.PolicyID
 
                 Write-Verbose -Message "Removing policy with ID: $SupplementalPolicyID"
@@ -1081,7 +1095,7 @@ Function Edit-SignedWDACConfig {
             ConvertFrom-CIPolicy -XmlFilePath "$SuppPolicyName.xml" -BinaryFilePath "$SuppPolicyID.cip" | Out-Null
 
             # Configure the parameter splat
-            $ProcessParams = @{
+            [System.Collections.Hashtable]$ProcessParams = @{
                 'ArgumentList' = 'sign', '/v' , '/n', "`"$CertCN`"", '/p7', '.', '/p7co', '1.3.6.1.4.1.311.79.1', '/fd', 'certHash', ".\$SuppPolicyID.cip"
                 'FilePath'     = $SignToolPathFinal
                 'NoNewWindow'  = $true
@@ -1254,7 +1268,7 @@ Function Edit-SignedWDACConfig {
             $Xml.SiPolicy.BasePolicyID = $CurrentID
 
             Write-Verbose -Message 'Saving the updated XML file'
-            $Xml.Save('.\BasePolicy.xml')
+            $Xml.Save("$((Get-Location).path)\BasePolicy.xml")
 
             Write-Verbose -Message 'Adding signer rules to the base policy'
             Add-SignerRule -FilePath .\BasePolicy.xml -CertificatePath $CertPath -Update -User -Kernel -Supplemental
@@ -1269,7 +1283,7 @@ Function Edit-SignedWDACConfig {
             ConvertFrom-CIPolicy -XmlFilePath '.\BasePolicy.xml' -BinaryFilePath "$CurrentID.cip" | Out-Null
 
             # Configure the parameter splat
-            $ProcessParams = @{
+            [System.Collections.Hashtable]$ProcessParams = @{
                 'ArgumentList' = 'sign', '/v' , '/n', "`"$CertCN`"", '/p7', '.', '/p7co', '1.3.6.1.4.1.311.79.1', '/fd', 'certHash', ".\$CurrentID.cip"
                 'FilePath'     = $SignToolPathFinal
                 'NoNewWindow'  = $true
@@ -1415,8 +1429,8 @@ Register-ArgumentCompleter -CommandName 'Edit-SignedWDACConfig' -ParameterName '
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCNeRmZQKTwdUTA
-# HvqKj9CxQKzjxQHJh2HG1KWrDx5zLKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCD4vzg3gHpCWXPA
+# d1kwkDWcPdggdwx1RkuI+ZGOh1CG0qCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -1463,16 +1477,16 @@ Register-ArgumentCompleter -CommandName 'Edit-SignedWDACConfig' -ParameterName '
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgI90KwbePyo0nx7GnFzFujax0MrUWhbn3N7dTT8zJJfUwDQYJKoZIhvcNAQEB
-# BQAEggIAXMq/ceUUilX7w4E1YVjtVfMtCYcqER6N8rQkwKjaUAM+frW1v4xOqKfq
-# lrZrn0yjtRZCq5gsVPL9fLBAa4dzCSkfPG95X1zNQhoyAL7D9qfPlNI7QgebAZJH
-# i4e6Dc+O4/a92ASefmDOA++8n8LzPEdXiM/GMtpdIvTQNdodcOPLhXci5ebfk2C1
-# gilz3pDPeMZkC8hO6Nr85T/7I/BXDN2eYfvd8jeos+wta/XLbmmeWGtv7CugV/2u
-# d5KzhHbgCs6yzVuvLonHd8AO3gZ4RHn70sPSp3FpEVPMESR7aJbxjnMrNrn6JraL
-# +uGHXEbkiHlmqH/c6mgBetWjxdCCQY2mXzmrP6xA0WI4ZL5OZA+bNFp068giqouj
-# f5XIqpqa5BdHZEcdM8kfiFOcF2i3MmLwdXZMPBdO8/Kldhk9hwVyN1rI52JFgjEg
-# kgylNJKuEvph9OopOGg32rfq1BmfbNwRhYuyKw/eyMFw+HkDeIs3ODcHLZ8GNcG/
-# vMd/bRUZgDMrMwtO3blgMkZCyEb93fAcNREORgwBMw1BkbNHTn+LkvokBOVt37LU
-# pTxBKYO67uiL733sYGq8Ih9lU7ZCojoexhaQ9vgD1XlQ0uY+A+QpZ/GjuwrsjK6r
-# s97i8tUqeN3+ZE8m2D/6aOJdGzAwoIBUfpXRBx9jz/C4jmp3Z5k=
+# IgQguR+qwP9Ehca4IsULsl7maZwNdeQj/8WvEKJlZa9uS/EwDQYJKoZIhvcNAQEB
+# BQAEggIANf6DO0my+OhoMbppVx9G7fTaJntZ4/C34vUUE8ECA+0RR90IY4jCnNNb
+# O7GW9G1SXEwTHdCNaH3/lSZ8TA/by0W4j6y0qXoa9q9Mq8sLZskiVhinqUtFjON1
+# 7+3V/Qr/pF0YfDVbmC4600dkSs4tAPRaDPQqIRXW2kunr5g8kng7bL4V7hH31mGz
+# kJa1mJmhAqpqPITZbRw03Kz81VtUVbBJVYDB+FMsWM5G3Hs9RcLNmEWIO74EOxNr
+# sW8cQpWBT4lBKW12Ob1JcxwQgFSy2zmFPPqt0CkIDHN/JPrzXufL7HqAl1+pDRe6
+# 7nmISkGwGs493NxKJowZhrstbWwKIZpB4RibNi5VEeRty1saOotAJHXtDNVTwNCy
+# JU12mP3FvQOEwK2ADwbtOo2nOn5D8VpvNVcVicLtrJ9iYQPPAuOP37+rEMUt1qIp
+# FvUE8DFZn3Peh/O8b4iXWWVOmHl5pAJVS1WLo+9kn8dLOHNqILyiWXoXVrKPb1UN
+# wSBcKyGmM1zIHUlm/YyPeOgCCy+gfWzdaalDZhiBRt27KKsruDzueANJHUxOH7Wv
+# uFwoK7ynrd+f+rNrSPzabJXMO7IwYcAxpWcs9B+hnFHw87SUV2HDx6sK78UQF+nu
+# WHTYqBnoNbf7CAZ0oo7nHBjEcvRbzc/4lJVxsfiQrYwjp9gYdaM=
 # SIG # End signature block

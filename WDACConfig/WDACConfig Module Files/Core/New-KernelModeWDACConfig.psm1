@@ -4,6 +4,7 @@ Function New-KernelModeWDACConfig {
         PositionalBinding = $false,
         ConfirmImpact = 'High'
     )]
+    [OutputType([System.String])]
     Param(
         [Parameter(Mandatory = $false, ParameterSetName = 'Default Strict Kernel')][System.Management.Automation.SwitchParameter]$Default,
         [Parameter(Mandatory = $false, ParameterSetName = 'No Flight Roots')][System.Management.Automation.SwitchParameter]$NoFlightRoots,
@@ -63,6 +64,7 @@ Function New-KernelModeWDACConfig {
                 System.Void
             #>
             [CmdletBinding()]
+            [OutputType([System.Void])]
             param(
                 [System.String]$PolicyIDInput,
                 [System.String]$PolicyFilePathInput
@@ -248,11 +250,11 @@ Function New-KernelModeWDACConfig {
                     $DriverFilesObj = Get-SystemDriver -ScanPath $args[0]
 
                     Write-Verbose -Message 'Creating a policy xml file from the driver files'
-                    New-CIPolicy -MultiplePolicyFormat -Level FilePublisher -Fallback None -FilePath '.\DriverFilesScanPolicy.xml' -DriverFiles $DriverFilesObj
+                    New-CIPolicy -MultiplePolicyFormat -Level WHQLFilePublisher -Fallback None -AllowFileNameFallbacks -FilePath '.\DriverFilesScanPolicy.xml' -DriverFiles $DriverFilesObj
                 } -args $KernelModeDriversDirectory
 
                 $CurrentStep++
-                Write-Progress -Id 26 -Activity 'Configuring the final policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+                Write-Progress -Id 26 -Activity 'Creating the final policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                 Write-Verbose -Message 'Not trusting the policy xml file made before restart, so building the same policy again after restart, this time in Enforced mode instead of Audit mode'
                 Copy-Item -Path "$ModuleRootPath\Resources\WDAC Policies\DefaultWindows_Enforced_Kernel.xml" -Destination .\DefaultWindows_Enforced_Kernel.xml -Force
@@ -399,7 +401,7 @@ Function New-KernelModeWDACConfig {
                     $DriverFilesObj = Get-SystemDriver -ScanPath $args[0]
 
                     Write-Verbose -Message 'Creating a policy xml file from the driver files'
-                    New-CIPolicy -MultiplePolicyFormat -Level FilePublisher -Fallback None -FilePath '.\DriverFilesScanPolicy.xml' -DriverFiles $DriverFilesObj
+                    New-CIPolicy -MultiplePolicyFormat -Level WHQLFilePublisher -Fallback None -AllowFileNameFallbacks -FilePath '.\DriverFilesScanPolicy.xml' -DriverFiles $DriverFilesObj
                 } -args $KernelModeDriversDirectory
 
                 $CurrentStep++
@@ -516,8 +518,8 @@ Function New-KernelModeWDACConfig {
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBxEju7MovYNoFz
-# T/QceA1rALlIV+PzbfOFqBVuev2WfqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCAgCK1krXuFHbcy
+# ZuPzcaYqsZxIt1B2PnXYilzhe1RiC6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -564,16 +566,16 @@ Function New-KernelModeWDACConfig {
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgKKKaEAqV5G3upfp4Kntgy/vj4hPoXLK4ioEHnP5IvNMwDQYJKoZIhvcNAQEB
-# BQAEggIAa6dC4aaEXxzT7RDJE1wIy4XLdznyrcCeZ4It+BgrrfHefhZVHRpaqBqd
-# 9eSoW5WpRKfRhPf1Xc7KH/YyLrfWkbQ9ihf2t99k/mKi8lcb4tU5qCXeZP5LWJWi
-# dhRpZkMBLtsHJRvyRaWLoyhgdqQ6d6I50R6l0u4KbjtUEAlOsUNs7Ti1uPIQfBJC
-# OAbUv80iz+DNCeI3HHguA6dyy7cHjhhfQ/JhgHBMYzasUX8SVKGFD58RrIpIFS74
-# q7bcqSOwpZXyZSuZQjnHmWtgUgobOACGQgWAenidciHfSUpmG3fHfvC18iX9i/tj
-# dEJbSEBFoodCYPeI1yIn/54YlusQY+2iDwkGGp12tX2dDYB56CP5kjLkj+bILTXl
-# diEvgfJ8jnrJie3EBGX+CbBmwiKajonVW/5ihjaTYdhYxKvacqtLcHypGKJy7Pwe
-# to6LaYuwZe3wfxK2BEqN5sY6cNG7ca2cO9u6KUOnkBv3JdRlEhikox5LX1EZY9nf
-# ytF6Ft8WlU6EVpRQNWUNABSbj3Qng/1NOP1Y+nSTGZGB6OuFDaPDmn4OXQ2SXCyO
-# JbL6HB1SCqc0LKcMId+p8J7BYySOIxi3SMtjLSlGwu7GtXe1gurdHEPHNKJ69eW+
-# XUy45JKXsg8kH1SdfFjXY3dPOcrcGmFVZUkXjdQ70zD4XTzVYhg=
+# IgQgIlSujP7031f8jEFGI3JzIchKfWRsGBMuY0SVsYDiHugwDQYJKoZIhvcNAQEB
+# BQAEggIAAyE6rVi5zeFDkUjx6e+GgkGNp96rJtH5ed6PP6vJC83hxnSWMzwrztdD
+# EzVVegv0VWeEbcgQ6ekj4Fh2yZHQzejwgQxNvhi/UX6SFxDBaWn5nWT+kWTslRrd
+# J1QGB6Brql5S06/dhZW9IhMWBmeDBN3t3+Z0Ejg5uugA0j/akxo9ExI1ihh4iNWT
+# +RamgDrIyrpSZpY9OHlCah8m1YG0ocgbbhwNBBUw/lko5DmpsHmPcc8lCCBvP8fu
+# PaGdUb9NYX2iF37oeqH3RN4Wm1XHF5xjAFnQ+2wNYhYQ/nF8klvzyG9DoAP54M1i
+# g281q/fehIsZ33VviWrxRNL5X0a2QBfrcVidALTyL+MxpaNYCwsr9y4SuBQXu7O7
+# si/tkfm/XVo7jXPQgSGPtEAxjXAzWFCd+eGEelzP2mMJgH+imL8HWa6o9soGaKCh
+# tP23XnOJmbOLRtr1dXa9p3zw9rrZtrgCDNAq5HoAdn41LAXYRZvS+C3H5kRdIoX1
+# yXPTNVM2muNDm5KegwbhJykZkilPdrXZlkARW9aOgaFlpaEUF4CVtNbGdp34Agta
+# V0F2xX5ZASPcikypG/ukw5MY+xwA3PdVTBHkw3W/GLUS8bUXo3glfzgaVlTtqo43
+# tmi7LIUbcmb2336ssoD9sXrosCE83ZCYHk+a5vPTwBN2w3WnRf8=
 # SIG # End signature block

@@ -2,6 +2,7 @@ Function Assert-WDACConfigIntegrity {
     [CmdletBinding(
         DefaultParameterSetName = 'SaveLocally'
     )]
+    [OutputType([System.String], [System.Object[]])]
     param (
         [Alias('S')]
         [Parameter(Mandatory = $false, ParameterSetName = 'SaveLocally')]
@@ -51,11 +52,30 @@ Function Assert-WDACConfigIntegrity {
                 continue
             }
 
+            # Create a SHA512 object
+            [System.Security.Cryptography.SHA512]$Sha512 = [System.Security.Cryptography.SHA512]::Create()
+
+            # Read the file as a byte array - This way we can get hashes of a file in use by another process where Get-FileHash would fail
+            [System.Byte[]]$Bytes = [System.IO.File]::ReadAllBytes($File)
+
+            # Compute the hash of the byte array
+            [System.Byte[]]$HashBytes = $Sha512.ComputeHash($Bytes)
+
+            # Dispose the SHA512 object
+            $Sha512.Dispose()
+
+            # Convert the hash bytes to a hexadecimal string to make it look like the output of the Get-FileHash which produces hexadecimals (0-9 and A-F)
+            # If [System.Convert]::ToBase64String was used, it'd return the hash in base64 format, which uses 64 symbols (A-Z, a-z, 0-9, + and /) to represent each byte
+            [System.String]$HashString = [System.BitConverter]::ToString($HashBytes)
+
+            # Remove the dashes from the hexadecimal string
+            $HashString = $HashString.Replace('-', '')
+
             # Create a custom object to store the relative path, file name and the hash of the file
             $FinalOutput += [PSCustomObject]@{
                 RelativePath = [System.String]([System.IO.Path]::GetRelativePath($ModuleRootPath, $File.FullName))
                 FileName     = [System.String]$File.Name
-                FileHash     = [System.String](Get-FileHash -Path $File.FullName -Algorithm 'SHA512').Hash
+                FileHash     = [System.String]$HashString
             }
         }
 
@@ -81,7 +101,7 @@ Function Assert-WDACConfigIntegrity {
 .SYNOPSIS
     Gets the SHA2-512 hashes of files in the WDACConfig and compares them with the ones in the cloud and shows the differences.
 .DESCRIPTION
-    The Assert-WDACConfigIntegrity function scans all the relevant files in the WDACConfig's folder and its subfolders, calculates their SHA2-512 hashes using the Get-FileHash cmdlet.
+    The Assert-WDACConfigIntegrity function scans all the relevant files in the WDACConfig's folder and its subfolders, calculates their SHA2-512 hashes in hexadecimal format,
     Then it downloads the cloud CSV file from the GitHub repository and compares the hashes of the local files with the ones in the cloud.
     By doing so, you can ascertain that the files in your local WDACConfig folder are identical to the ones in the cloud and devoid of any interference.
     If there is any indication of tampering, the outcomes will be displayed on the console.
@@ -109,11 +129,12 @@ Function Assert-WDACConfigIntegrity {
 #>
 }
 
+
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCEKJVfNmtfJu8w
-# S9zg2vD96+aJ7KQPNG8iNogA7d5cpKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCD7yRZqb/jaGS0t
+# bYn8yicS/i3+mXQM6rVA8CrSdW5TE6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -160,16 +181,16 @@ Function Assert-WDACConfigIntegrity {
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgcrBrGPzB3QAIJGTsG/+lzZITaBWn7IvyNZntOYwAjj8wDQYJKoZIhvcNAQEB
-# BQAEggIATJ8XgzT7gYlSzaEB3XypydbNll3zxlj2g08Hxwt6UypiOIeMhgUKImfs
-# EDjHPLet3fk60Tcjvf+w4QrxlXyaaGx/FZeRb1Mtp5/dxGt+qYKgNldl2mwK1zrc
-# VecVK3QgzKzgGYVG9fcwsAfdXrc+VbHtZIyly+pSsirdeqGy6ezS0EdA0r6Oci5B
-# Jkj/+5BTU9Lg67SM6EsZfOQKkOcSI9VeGy/KloGUdpqn07zAI/7R0G55VTCTELO0
-# 75Utl1KK9+pHeY0hYUEVpxtxCSvfJZThsDIHT3Mi3bP7JX/zfL3yW/4ayiJHKrC4
-# X1l99Gq+E1oubcYryLb9jkdZPKu4DZ+WC4ic6xnH+2+VSNbNP6BTNw8qtMCreHYy
-# xPf4NuHaAyWrgEHZNgtohnDZNmUQYdXcko9SJxAOPh0sO+lwWAa/Zg3spX5Lusna
-# 9IPhV9O9H7Jp2ow7JnoBIz2kqKhRwde55rYxE571NaZ3scnR/bvf3t2cV3Vr6Drv
-# xyOltieyoUHqJkeLgWQVHOI84YHx7SR0srbMQaNuT5ZqdfeAsUf+rJluRNAJvYOe
-# cfjXb0bIQIs0cPRachNQF9hrcFKnj82JENN77kF8G672qC4IPyulkMvywLFEPIHw
-# QrvEOP2LDFjYa7nY9UUf9ZTzof2ao4D/E+prvJ00+l1rhaju0z4=
+# IgQguHCZsh7pJFI8AuZ6dWdByb00I4DoCPcwotbhKRqufK0wDQYJKoZIhvcNAQEB
+# BQAEggIAf7ItJKw9IvkJJnnT42qySLhKyKv4d7vF2P+I9E/WVAhFZDZ7oyLenBIu
+# FB0vsLxc3URGZIrRCX6FjcYVFg0Cd5aRARAbSFGmoU0hNrdpmzbbHm5vDo7v3oNB
+# 5N5DECVMW84txYl3tKDhfcHkUT5J3R1M5Zw7GcZw4LVcr0LsF5paFje5aNlfDaZj
+# GE4RL9ordvN0kcLK+tW1+BIC60Gf1i01NrDL/ThmWyNIOGQ+rnE0epU1SnI2JLBy
+# VJpm+vkAx0Utiu4O5lJqr45qahZAmrRUyWuZT8UgAdNlCM2NaAfCmdMqlhYJolDE
+# rZgjfZaQVLckoMDtLLj26tYcvn+RWu/dDm/vX1zD/17xrod1xQfjWZSM5OeCe1YG
+# fR7y9dbUrj1DzrH1bNPoIDuMAKWiMs8Yovvnf4A/AYQESqvouEn/B9psHctjCo/Q
+# xxZS2zXkB7PoKnqn/o11bwc6e0UhAXVBZRZlzICF8r+o3Jh+OX3MbwGfooSWQ0KG
+# SpgBWn/syHpCqjnAkGjWoLeZl3fR3tQsOgbwMPHVyTujhFiNqt3vhAQo2bYQIlPw
+# twPSh62glliyHxNWVBJ/itdPE8iaoDhQYShzGIb2HiuJiMSIOpqn4LwXQdkiuB1b
+# yZGzP5P2c2srYejpV8Nm9nrKT4QmYxs41tU055Z4cVSPI3fsd3I=
 # SIG # End signature block

@@ -5,9 +5,19 @@
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Edit-WDACConfig/Edit-WDACConfig%20-AllowNewAppsAuditEvents.apng)
 
 ```powershell
-Edit-WDACConfig [-AllowNewAppsAuditEvents] -SuppPolicyName <String> [-PolicyPath <String>] [-Level <String>]
-[-Fallbacks <String[]>] [-NoScript] [-NoUserPEs] [-SpecificFileNameLevel <String>] [-LogSize <Int64>]
-[-IncludeDeletedFiles] [-SkipVersionCheck] [<CommonParameters>]
+Edit-WDACConfig
+     [-AllowNewAppsAuditEvents]
+     -SuppPolicyName <String>
+     [-PolicyPath <FileInfo>]
+     [-Level <String>]
+     [-Fallbacks <String[]>]
+     [-NoScript]
+     [-NoUserPEs]
+     [-SpecificFileNameLevel <String>]
+     [-LogSize <Int64>]
+     [-IncludeDeletedFiles]
+     [-SkipVersionCheck]
+     [<CommonParameters>]
 ```
 
 <br>
@@ -30,37 +40,206 @@ A new supplemental policy will be created, it will be deployed on the system. Th
 
 This parameter is specially useful for applications that install files outside of their main install directory, such as system drivers. **Make sure you run those applications after installation (and before starting to browse for their install directories) so that Audit logs will capture and create allow rules for them.**
 
-**This parameter can also detect and create allow rules for Kernel protected files, such as the executables of games installed using Xbox app. Make sure you run the game while the base policy is deployed in Audit mode, using this parameter, so that it can capture those executables.**
+> [!NOTE]\
+> This parameter can also detect and create allow rules for Kernel protected files, such as the executables of games installed using Xbox app. Make sure you run the game while the base policy is deployed in Audit mode so that it can capture those executables.
 
-### 1 Mandatory Parameter
+## Parameters
 
-* `-SuppPolicyName <String>`: Add a descriptive name for the Supplemental policy.
+### -SuppPolicyName
 
-### 1 Automatic Parameter
+Add a descriptive name for the Supplemental policy.
 
-* `-PolicyPath <String>`: Browse for the xml file of the Base policy this Supplemental policy is going to expand. Supports tab completion by showing only `.xml` files with **Base Policy** Type.
+<div align='center'>
 
-### 8 Optional Parameters
+| Type: |[String](https://learn.microsoft.com/en-us/dotnet/api/system.string)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | True |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
 
-* `-Debug`: Indicates that the module will output these additional files for debugging purposes and also show debug messages on the console:
-     - *FileRulesAndFileRefs.txt* - Contains the File Rules and Rule refs for the Hash of the files that no longer exist on the disk.
-     - *DeletedFileHashesEventsPolicy.xml* - If `-IncludeDeletedFiles` was used and if there were any files detected that were in audit event logs that are no longer on the disk, this file will include allow rules for them based on their hashes.
-     - *ProgramDir_ScanResults*.xml* - xml policy files for each program path that is selected by user, contains allow rules.
-     - *RulesForFilesNotInUserSelectedPaths.xml* - xml policy file that has allow rules for files that do not reside in any of the user-selected program paths, but have been detected in audit event logs.
+</div>
 
-* `-LogSize <Int64>` - Specifies the log size for ***Microsoft-Windows-CodeIntegrity/Operational*** events. The values must be in the form of `<Digit + Data measurement unit>`. e.g., 2MB, 10MB, 1GB, 1TB. The minimum accepted value is 1MB which is the default.
+<br>
 
-* `-Levels <String>`: Offers the same official [Levels](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-level) for scanning of the specified directory paths and Event viewer audit logs. The Default value is ***FilePublisher***.
+### -PolicyPath
 
-* `-Fallbacks <String[]>`: Offers the same official [Fallbacks](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-fallback) for scanning of the specified directory paths and Event viewer audit logs. The Default value is ***Hash***.
+Browse for the xml file of the Base policy this Supplemental policy is going to expand. Supports tab completion by showing only `.xml` files with **Base Policy** Type.
 
-* `-SpecificFileNameLevel`: You can choose one of the following options: "OriginalFileName", "InternalName", "FileDescription", "ProductName", "PackageFamilyName", "FilePath". [More info available on Microsoft Learn](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-specificfilenamelevel)
+<div align='center'>
 
-* `-IncludeDeletedFiles`: Indicates that hashes of the files that were run during Audit phase but then were deleted and are no longer on the disk, will be added to the Supplemental policy. *If you created a Supplemental policy for your program and it's still getting blocked, try using this parameter. Chances are your program writes and then deletes some files during runtime that are necessary to be included in the Supplemental policy.*
+| Type: |[FileInfo](https://learn.microsoft.com/en-us/dotnet/api/system.io.fileinfo)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| [Automatic:](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig#about-automatic-parameters) | True |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
 
-* `-NoUserPEs`: By default the module includes user PEs in the scans. When you use this switch parameter, they won't be included. [More info available on Microsoft Learn](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-userpes)
+</div>
 
-* `-NoScript`: [More info available on Microsoft Learn](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-noscript)
+<br>
+
+### -Debug
+
+Indicates that the module will output these additional files for debugging purposes and also show debug messages on the console:
+
+* *FileRulesAndFileRefs.txt* - Contains the File Rules and Rule refs for the Hash of the files that no longer exist on the disk.
+
+* *DeletedFileHashesEventsPolicy.xml* - If `-IncludeDeletedFiles` was used and if there were any files detected that were in audit event logs that are no longer on the disk, this file will include allow rules for them based on their hashes.
+
+* *ProgramDir_ScanResults*.xml* - xml policy files for each program path that is selected by user, contains allow rules.
+
+* *RulesForFilesNotInUserSelectedPaths.xml* - xml policy file that has allow rules for files that do not reside in any of the user-selected program paths, but have been detected in audit event logs.
+
+<div align='center'>
+
+| Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+<br>
+
+### -LogSize
+
+Specifies the log size for ***Microsoft-Windows-CodeIntegrity/Operational*** events. The values must be in the form of `<Digit + Data measurement unit>`. e.g., 2MB, 10MB, 1GB, 1TB. The minimum accepted value is 1MB which is the default.
+
+<div align='center'>
+
+| Type: |[UInt64](https://learn.microsoft.com/en-us/dotnet/api/system.uint64)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+<br>
+
+### -Levels
+
+Offers the same official [Levels](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-level) for scanning of event logs.
+
+<div align='center'>
+
+| Type: |[String](https://learn.microsoft.com/en-us/dotnet/api/system.string)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | FilePublisher |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+<br>
+
+### -Fallbacks
+
+Offers the same official [Fallbacks](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-fallback) for scanning of event logs.
+
+<div align='center'>
+
+| Type: |[String](https://learn.microsoft.com/en-us/dotnet/api/system.string)[]|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | Hash |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+<br>
+
+### -SpecificFileNameLevel
+
+You can choose one of the following options:
+* OriginalFileName
+* InternalName
+* FileDescription
+* ProductName
+* PackageFamilyName
+* FilePath
+
+[More info available on Microsoft Learn](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-specificfilenamelevel)
+
+<div align='center'>
+
+| Type: |[String](https://learn.microsoft.com/en-us/dotnet/api/system.string)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+<br>
+
+### -IncludeDeletedFiles
+
+Indicates that hashes of the files that were run during Audit phase but then were deleted and are no longer on the disk, will be added to the Supplemental policy.
+
+> [!NOTE]\
+> If you created a Supplemental policy for your program and it's still getting blocked, try using this parameter. Chances are your program writes and then deletes some files during runtime that are necessary to be included in the Supplemental policy.
+
+<div align='center'>
+
+| Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+### -NoUserPEs
+
+By default, the module includes user PEs in the scan. When you use this switch parameter, they won't be included. [More info available on Microsoft Learn](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-userpes)
+
+<div align='center'>
+
+| Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+<br>
+
+### -NoScript
+
+[More info available on Microsoft Learn](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-noscript)
+
+<div align='center'>
+
+| Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
 
 <br>
 
@@ -73,8 +252,17 @@ This parameter is specially useful for applications that install files outside o
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Edit-WDACConfig/Edit-WDACConfig%20-AllowNewApps.apng)
 
 ```powershell
-Edit-WDACConfig [-AllowNewApps] -SuppPolicyName <String> [-PolicyPath <String>] [-Level <String>] [-Fallbacks
-<String[]>] [-NoScript] [-NoUserPEs] [-SpecificFileNameLevel <String>] [-SkipVersionCheck] [<CommonParameters>]
+Edit-WDACConfig
+     [-AllowNewApps]
+     -SuppPolicyName <String>
+     [-PolicyPath <FileInfo>]
+     [-Level <String>]
+     [-Fallbacks <String[]>]
+     [-NoScript]
+     [-NoUserPEs]
+     [-SpecificFileNameLevel <String>]
+     [-SkipVersionCheck]
+     [<CommonParameters>]
 ```
 
 <br>
@@ -91,25 +279,140 @@ While an unsigned WDAC policy is already deployed on the system, rebootlessly tu
 
 A new supplemental policy will be created, it will be deployed on the system. The base policy that was initially set to Audit mode will also revert back to enforced mode. The entire process happens without the need for reboot. If something like a power outage occurs during the time Audit mode is deployed, on the next reboot, the enforced mode base policy will be automatically deployed.
 
-### 1 Mandatory Parameter
+## Parameters
 
-* `-SuppPolicyName <String>`: Add a descriptive name for the Supplemental policy.
+### -SuppPolicyName
 
-### 1 Automatic Parameter
+Add a descriptive name for the Supplemental policy.
 
-* `-PolicyPath <String>`: Browse for the xml file of the Base policy this Supplemental policy is going to expand. Supports tab completion by showing only `.xml` files.
+<div align='center'>
 
-### 5 Optional Parameters
+| Type: |[String](https://learn.microsoft.com/en-us/dotnet/api/system.string)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | True |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
 
-* `-Levels <String>`: Offers the same official [Levels](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-level) for scanning of the specified directory paths. If no level is specified the default, which is set to ***FilePublisher*** in this module, will be used.
+</div>
 
-* `-Fallbacks <String[]>`: Offers the same official [Fallbacks](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-fallback) for scanning of the specified directory paths. If no fallbacks is specified the default, which is set to ***Hash*** in this module, will be used.
+<br>
 
-* `-SpecificFileNameLevel`: You can choose one of the following options: "OriginalFileName", "InternalName", "FileDescription", "ProductName", "PackageFamilyName", "FilePath". [More info available on Microsoft Learn](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-specificfilenamelevel)
+### -PolicyPath
 
-* `-NoUserPEs`: By default the module includes user PEs in the scans. When you use this switch parameter, they won't be included. [More info available on Microsoft Learn](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-userpes)
+Browse for the xml file of the Base policy this Supplemental policy is going to expand. Supports tab completion by showing only `.xml` files.
 
-* `-NoScript`: [More info available on Microsoft Learn](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-noscript)
+<div align='center'>
+
+| Type: |[FileInfo](https://learn.microsoft.com/en-us/dotnet/api/system.io.fileinfo)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| [Automatic:](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig#about-automatic-parameters) | True |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+<br>
+
+### -Levels
+
+Offers the same official [Levels](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-level) for scanning of event logs.
+
+<div align='center'>
+
+| Type: |[String](https://learn.microsoft.com/en-us/dotnet/api/system.string)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | FilePublisher |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+<br>
+
+### -Fallbacks
+
+Offers the same official [Fallbacks](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-fallback) for scanning of event logs.
+
+<div align='center'>
+
+| Type: |[String](https://learn.microsoft.com/en-us/dotnet/api/system.string)[]|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | Hash |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+<br>
+
+### -SpecificFileNameLevel
+
+You can choose one of the following options:
+* OriginalFileName
+* InternalName
+* FileDescription
+* ProductName
+* PackageFamilyName
+* FilePath
+
+[More info available on Microsoft Learn](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-specificfilenamelevel)
+
+<div align='center'>
+
+| Type: |[String](https://learn.microsoft.com/en-us/dotnet/api/system.string)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+<br>
+
+### -NoUserPEs
+
+By default, the module includes user PEs in the scan. When you use this switch parameter, they won't be included. [More info available on Microsoft Learn](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-userpes)
+
+<div align='center'>
+
+| Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+<br>
+
+### -NoScript
+
+[More info available on Microsoft Learn](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-noscript)
+
+<div align='center'>
+
+| Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
 
 <br>
 
@@ -122,27 +425,92 @@ A new supplemental policy will be created, it will be deployed on the system. Th
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Edit-WDACConfig/Edit-WDACConfig%20-MergeSupplementalPolicies.apng)
 
 ```powershell
-Edit-WDACConfig [-MergeSupplementalPolicies] -SuppPolicyName <String> [-PolicyPath <String>] -SuppPolicyPaths
-<String[]> [-KeepOldSupplementalPolicies] [-SkipVersionCheck] [<CommonParameters>]
+Edit-WDACConfig
+     [-MergeSupplementalPolicies]
+     -SuppPolicyName <String>
+     [-PolicyPath <FileInfo>]
+     -SuppPolicyPaths <FileInfo[]>
+     [-KeepOldSupplementalPolicies]
+     [-SkipVersionCheck]
+     [<CommonParameters>]
 ```
 
 <br>
 
 Merge multiple deployed Supplemental policies into 1 and deploy it, remove the individual ones, all happening automatically. Very useful to keep Supplemental policies below 32 since that's the limit.
 
-### 2 Mandatory Parameters
+## Parameters
 
-* `-SuppPolicyName <String>`: Choose a descriptive name for the Supplemental policy that is going to be the merge of multiple policies.
+### -SuppPolicyName
 
-* `-SuppPolicyPaths <String[]>`: Path to the Supplemental policies xml files. Supports argument tab completion by showing only Supplemental policy types.
+Choose a descriptive name for the Supplemental policy that is going to be the merge of multiple policies.
 
-### 1 Automatic Parameter
+<div align='center'>
 
-* `-PolicyPath <String>`: Path to the Base policy xml file the Supplemental policies belong to. Supports argument tab completion by showing only Base policy types.
+| Type: |[String](https://learn.microsoft.com/en-us/dotnet/api/system.string)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | True |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
 
-### 1 Optional Parameter
+</div>
 
-* `-KeepOldSupplementalPolicies`: Indicates that the module will not remove the old Supplemental policy xml files after creating and deploying the new merged one.
+<br>
+
+### -SuppPolicyPaths
+
+Path to the Supplemental policies xml files. Supports argument tab completion by showing only Supplemental policy types.
+
+<div align='center'>
+
+| Type: |[FileInfo](https://learn.microsoft.com/en-us/dotnet/api/system.io.fileinfo)[]|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | True |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+<br>
+
+### -PolicyPath
+
+Path to the Base policy xml file the Supplemental policies belong to. Supports argument tab completion by showing only Base policy types.
+
+<div align='center'>
+
+| Type: |[FileInfo](https://learn.microsoft.com/en-us/dotnet/api/system.io.fileinfo)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| [Automatic:](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig#about-automatic-parameters) | True |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+<br>
+
+### -KeepOldSupplementalPolicies
+
+Indicates that the module will not remove the old Supplemental policy xml files after creating and deploying the new merged one.
+
+<div align='center'>
+
+| Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
 
 <br>
 
@@ -155,46 +523,85 @@ Merge multiple deployed Supplemental policies into 1 and deploy it, remove the i
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Edit-WDACConfig/Edit-WDACConfig%20-UpdateBasePolicy.apng)
 
 ```powershell
-Edit-WDACConfig [-UpdateBasePolicy] -CurrentBasePolicyName <String[]> -NewBasePolicyType <String>
-[-RequireEVSigners] [-SkipVersionCheck] [<CommonParameters>]
+Edit-WDACConfig
+     [-UpdateBasePolicy]
+     -CurrentBasePolicyName <String[]>
+     -NewBasePolicyType <String>
+    [-RequireEVSigners]
+    [-SkipVersionCheck]
+    [<CommonParameters>]
 ```
 
 <br>
 
 It can rebootlessly change the type of the deployed base policy. It can update the recommended block rules and/or change policy rule options in the deployed base policy. The deployed Supplemental policies will stay intact and continue to work with the new Base policy.
 
-**Hint:** When switching from a more permissive base policy type to a more restrictive one, make sure your Supplemental policies will continue to work. E.g., if your current base policy type is *Allow Microsoft* and the one you are switching to is *Default Windows*, there *might* be files that will get blocked as a result of this switch if you created a Supplemental policy using Event viewer capturing. That's simply because they were allowed by the more permissive *Allow Microsoft* policy type so they didn't trigger audit logs thus weren't needed to be included in the Supplemental policy. You will need to update those Supplemental policies if that happens by deleting and recreating them, no immediate reboot required.
+> [!NOTE]\
+> When switching from a more permissive base policy type to a more restrictive one, make sure your Supplemental policies will continue to work. E.g., if your current base policy type is *Allow Microsoft* and the one you are switching to is *Default Windows*, there *might* be files that will get blocked as a result of this switch if you created a Supplemental policy using Event viewer capturing. That's simply because they were allowed by the more permissive *Allow Microsoft* policy type so they didn't trigger audit logs thus weren't needed to be included in the Supplemental policy. You will need to update those Supplemental policies if that happens by deleting and recreating them, no immediate reboot required.
 
-### 2 Mandatory Parameters
+## Parameters
 
-* `-CurrentBasePolicyName <String[]>`: The name of the currently deployed base policy. It supports tab completion so just press tab to autofill it.
+### -CurrentBasePolicyName
 
-* `-NewBasePolicyType <String>`: The type of the base policy to deploy. It supports tab completion so just press tab to autofill it. Supports all 3 Base policy types:
+The name of the currently deployed base policy. It supports tab completion so just press tab to autofill it.
 
-     - [AllowMicrosoft_Plus_Block_Rules](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-WDACConfig#new-wdacconfig--makeallowmsftwithblockrules)
+<div align='center'>
 
-     - [Lightly_Managed_system_Policy](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-WDACConfig#new-wdacconfig--makelightpolicy)
+| Type: |[String](https://learn.microsoft.com/en-us/dotnet/api/system.string)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
 
-     - [DefaultWindows_WithBlockRules](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-WDACConfig#new-wdacconfig--makedefaultwindowswithblockrules)
-
-         - > Since the module uses PowerShell and not Windows PowerShell that is pre-installed in Windows, selecting this argument will automatically scan `C:\Program Files\PowerShell` directory and add PowerShell files to the base policy so that you will be able to continue using the module after redeploying the base policy. The scan uses ***FilePublisher*** level and ***Hash*** fallback.
-
-### 1 Optional Parameter
-
-* `-RequireEVSigners`: Indicates that the base policy will have [Require EV Signers](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/wdac-wizard-create-base-policy#advanced-policy-rules-description) policy rule option.
-
-<br>
-
-<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+</div>
 
 <br>
 
-## Notes
+### -NewBasePolicyType
 
-* **Mandatory** parameters indicate you always need to provide values for them.
+The type of the base policy to deploy. It supports tab completion so just press tab to autofill it. Supports all 3 Base policy types:
 
-* **Automatic** parameters indicate that if you used [Set-CommonWDACConfig](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Set-CommonWDACConfig) cmdlet to set default values for them, the module will automatically use them. This saves time and prevents repetitive tasks. However, if no value exists in User Configurations for an Automatic parameter and you didn't explicitly provide a value for that parameter either, then you will see an error asking you to provide value for it. Explicitly providing a value for an Automatic parameter in the command line overrides its default value in User Configurations, meaning the module will ignore the value of the same parameter in the User Configurations file.
+* [AllowMicrosoft_Plus_Block_Rules](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-WDACConfig#new-wdacconfig--makeallowmsftwithblockrules)
+* [Lightly_Managed_system_Policy](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-WDACConfig#new-wdacconfig--makelightpolicy)
+* [DefaultWindows_WithBlockRules](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-WDACConfig#new-wdacconfig--makedefaultwindowswithblockrules)
 
-* **Optional** parameters indicate that they are not required and without using them the module will automatically run with the optimal settings.
+> [!NOTE]\
+>  Since the module uses PowerShell and not Windows PowerShell that is pre-installed in Windows, selecting this argument will automatically scan `C:\Program Files\PowerShell` directory and add PowerShell files to the base policy (If the module detects that the PowerShell is not installed from Microsoft Store) so that you will be able to continue using the module after redeploying the base policy. The scan uses ***FilePublisher*** level and ***Hash*** fallback.
+
+<div align='center'>
+
+| Type: |[String](https://learn.microsoft.com/en-us/dotnet/api/system.string)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+<br>
+
+### -RequireEVSigners
+
+Indicates that the created/deployed policy will have [Require EV Signers](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/wdac-wizard-create-base-policy#advanced-policy-rules-description) policy rule option.
+
+* In addition to being WHQL signed, this rule requires that drivers must have been submitted by a partner that has an Extended Verification (EV) certificate. All Windows 10 and later, or Windows 11 drivers will meet this requirement.
+
+<br>
+
+<div align='center'>
+
+| Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
 
 <br>

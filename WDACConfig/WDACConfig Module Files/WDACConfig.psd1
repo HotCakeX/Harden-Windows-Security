@@ -4,7 +4,7 @@
     RootModule           = 'WDACConfig.psm1'
 
     # Version number of this module.
-    ModuleVersion        = '0.3.1'
+    ModuleVersion        = '0.3.2'
 
     # Supported PSEditions
     CompatiblePSEditions = @('Core')
@@ -62,6 +62,8 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
 
 ✔️ Build-WDACCertificate: https://github.com/HotCakeX/Harden-Windows-Security/wiki/Build-WDACCertificate
 
+✔️ Test-CiPolicy: https://github.com/HotCakeX/Harden-Windows-Security/wiki/Test-CiPolicy
+
 To get help and syntax on PowerShell console, type:
 "Get-Command -Module WDACConfig"
 "Get-Help New-WDACConfig"
@@ -79,6 +81,7 @@ To get help and syntax on PowerShell console, type:
 "Get-Help Remove-CommonWDACConfig"
 "Get-Help Assert-WDACConfigIntegrity"
 "Get-Help Build-WDACCertificate"
+"Get-Help Test-CiPolicy"
 '@
 
     # Minimum version of the PowerShell engine required by this module
@@ -129,7 +132,8 @@ To get help and syntax on PowerShell console, type:
         'Core\Get-CommonWDACConfig.psm1',
         'Core\Remove-CommonWDACConfig.psm1',
         'Core\Assert-WDACConfigIntegrity.psm1',
-        'Core\Build-WDACCertificate.psm1')
+        'Core\Build-WDACCertificate.psm1',
+        'Core\Test-CiPolicy.psm1')
 
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
     FunctionsToExport    = @('New-WDACConfig',
@@ -146,7 +150,8 @@ To get help and syntax on PowerShell console, type:
         'Get-CommonWDACConfig',
         'Remove-CommonWDACConfig',
         'Assert-WDACConfigIntegrity',
-        'Build-WDACCertificate')
+        'Build-WDACCertificate',
+        'Test-CiPolicy')
 
     # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
     CmdletsToExport      = @('New-WDACConfig',
@@ -163,7 +168,8 @@ To get help and syntax on PowerShell console, type:
         'Get-CommonWDACConfig',
         'Remove-CommonWDACConfig',
         'Assert-WDACConfigIntegrity',
-        'Build-WDACCertificate')
+        'Build-WDACCertificate',
+        'Test-CiPolicy')
 
     # Variables to export from this module
     VariablesToExport    = '*'
@@ -178,8 +184,7 @@ To get help and syntax on PowerShell console, type:
     # ModuleList = @()
 
     # List of all files packaged with this module
-    FileList             = @(
-        'WDACConfig.psd1',
+    FileList             = @('WDACConfig.psd1',
         'WDACConfig.psm1',
         'Preloader.ps1',
         'Core\New-WDACConfig.psm1',
@@ -197,8 +202,8 @@ To get help and syntax on PowerShell console, type:
         'Core\Remove-CommonWDACConfig.psm1',
         'Core\Assert-WDACConfigIntegrity.psm1',
         'Core\Build-WDACCertificate.psm1',
+        'Core\Test-CiPolicy.psm1',
         'CoreExt\PSDefaultParameterValues.ps1',
-        'Resources\Resources2.ps1',
         'Resources\ArgumentCompleters.ps1'
         'Resources\WDAC Policies\DefaultWindows_Enforced_Kernel.xml',
         'Resources\WDAC Policies\DefaultWindows_Enforced_Kernel_NoFlights.xml',
@@ -221,7 +226,21 @@ To get help and syntax on PowerShell console, type:
         'Shared\Write-ColorfulText.psm1',
         'Shared\New-SnapBackGuarantee.psm1',
         'Shared\Compare-SecureString.psm1',
-        'Shared\Get-KernelModeDriversAudit.psm1'
+        'Shared\Get-KernelModeDriversAudit.psm1',
+        'Shared\Copy-CiRules.psm1',
+        'Shared\Remove-SupplementalSigners.psm1',
+        'WDACSimulation\Get-TBSCertificate.psm1',
+        'WDACSimulation\Get-SignerInfo.psm1',
+        'WDACSimulation\Get-SignedFileCertificates.psm1',
+        'WDACSimulation\Get-FileRuleOutput.psm1',
+        'WDACSimulation\Get-CertificateDetails.psm1',
+        'WDACSimulation\Get-NestedSignerSignature.psm1',
+        'WDACSimulation\Compare-SignerAndCertificate.psm1'
+        'WDACSimulation\Convert-HexToOID.psm1',
+        'WDACSimulation\Get-ExtendedFileInfo.psm1',
+        'C#\Signer.cs',
+        'C#\Kernel32dll.cs',
+        'C#\Crypt32dll.cs'
     )
 
     # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.
@@ -268,4 +287,3 @@ Full Change log available in GitHub releases: https://github.com/HotCakeX/Harden
     # DefaultCommandPrefix = ''
 
 }
-

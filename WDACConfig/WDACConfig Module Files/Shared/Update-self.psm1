@@ -17,6 +17,7 @@ Function Update-self {
         System.String
     #>
     [CmdletBinding()]
+    [OutputType([System.String])]
     param(
         [Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true, Position = 0)]
         [ValidatePattern('^(Confirm-WDACConfig|Deploy-SignedWDACConfig|Edit-SignedWDACConfig|Edit-WDACConfig|Invoke-WDACSimulation|New-DenyWDACConfig|New-KernelModeWDACConfig|New-SupplementalWDACConfig|New-WDACConfig|Remove-WDACConfig|Assert-WDACConfigIntegrity|Build-WDACCertificate)(?!.*[;`]).*$', ErrorMessage = 'Either Update-self function was called with an unauthorized command or it contains semicolon and/or backtick')]
@@ -48,7 +49,7 @@ Function Update-self {
     # This prevents the module from constantly doing an update check by fetching the version file from GitHub
     if (($TimeDiff -gt 10) -or $PerformOnlineUpdateCheck) {
 
-        Write-Verbose -Message "Performing online update check because the last update check was performed $TimeDiff minutes ago"
+        Write-Verbose -Message "Performing online update check because the last update check was performed $($TimeDiff ?? [System.Char]::ConvertFromUtf32(8734)) minutes ago"
 
         [System.Version]$CurrentVersion = (Test-ModuleManifest -Path "$ModuleRootPath\WDACConfig.psd1").Version.ToString()
         try {
@@ -110,8 +111,8 @@ Export-ModuleMember -Function 'Update-self'
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCAC8tW2+h4el/tl
-# +sWC8/mBBckF9BQNyfixjKc0iwXZ+qCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDsdaguuukyjzxr
+# JMH2cY5WoERUynKg4h0bk6Hhw7okY6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -158,16 +159,16 @@ Export-ModuleMember -Function 'Update-self'
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgvCOwaTxDDFwG8fli+JLR6WdijNggoIEkO5WMj7W88d0wDQYJKoZIhvcNAQEB
-# BQAEggIAT2VmN6GbW5t5jkBninl0+d6Mcq1HsFMQslBvVajv2v6fcOLp5C9/dghn
-# 09XPeBigmZgGhEEq8bcrpz/q5mk9u1F5gJbbdhJGW/DN9OaiQpaE+6OsOEaCd4MG
-# rbJuxjekysq2D1VQyCVhar1W5hdcWH7KkHdzvlLU02DlSt8tLdT6qhmAszmTpVfH
-# VDCHBJJTil9gd2o8lK+gzCmuhdCoQcC9dOXdZ7NWJJMmZ/Yabq9siuTw4y2ZguTd
-# rpui80458ldn/bXGTmCvxhRnTyY2t9qo8gKkmktxt3ZzdZ6iFo0424m6PW0nAvr1
-# JpBbhhVV/4XDf/GsW8QjBI3rFRljAq7W4y1s2fBMWTbidlD/8+g/4IXnTMqJQk+z
-# yBixUophrJ2c6NWBmDhWL7Ir7BUygzYblVirOt7FPx85WeBnaAc1Btj9jOqMQTaL
-# kGTLV4ZlQ+oaVefRf7JUMo3XCuoAwvU6o7xw8rP2iQb8pFcmISgliy3jseM96FW2
-# rxosKo7x9/BiC98mU+hgT9FCR1Qw4MZSnCzwIhpbGk4/V+jRKa+KUYOoqeVtBqC7
-# qrC/Hh+vagte6N432USAJZ+VQGzJwXEplAJ1Dpx9v7Mb5KH3u7egaN3Qg1jSfW3x
-# RFRf1+694WEUNBdBJfj2ma3/tEn1EVwoTt7IPZF701jJCYfqHrI=
+# IgQgCpZ3rLMEQzruevN76ayjNyBSa29J2JYrkZ55r/Y9aV0wDQYJKoZIhvcNAQEB
+# BQAEggIAGCjWYHF9e9bFmPkcOaZvfvYkhjkCHZnaUdG5T2iidkz1iGVK65/+xktJ
+# MzaiwaxYuzpnPxzpZC4PM8ufdJIFy5sD8NBjDofP4xElx5x6eHiBbbUxtZkUTOpC
+# /anj4L9ajNS/DHfWSnOqwa4BlA3JDPndsQurKmtc2jX5fD7JIbgqielk9rxkwak7
+# 2lP2SudZnKj/g2it4QjHRoATok4gfkhLavMeWA+rPY31i5PFxE5f67pHx8phBGtu
+# xQHrAFTr4y6IEVfdGxAA0N+PUMpyu8eBerQ38BTk5/aywlC1Dk2wdz4uzLSONZJH
+# YOy1OqKtAGjrPawNbkAdDbFmqpPaa+6WhHK43G9lNJp3tp7lEXsSlkGDGLf2+kRs
+# oEpe769GaFrvTWDULBVbp074ihmq+jIScjWvuLpP8JDQD11+Uke2/0CjO+/j9tje
+# JeSJwpNbsc1cTcmXS88BDinJRQergk9+wWCW1SejoYaDpuxGUvAY6xTVJcTjNmYN
+# FyMNefJ2R1NA8pHtYh4zjBnx2tQ8a/7GodZKzcbPl7HDvxqkHfqjtIutwKkNlWez
+# T198BFMjzT4eLK4zQCZRWMU1Cc+d8OFrWjNh5Wfz7tRxmZW6ALHhHQuxHbk5QckE
+# OEE7zUOsGRxuB8J3kwc91wCA7VKCQMYZUeFTivibqHIjHaKGeTw=
 # SIG # End signature block

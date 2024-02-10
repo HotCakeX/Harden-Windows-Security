@@ -224,7 +224,7 @@ After deployment, audit event logs will start to be created for any file that is
 
 It's recommended to use the optional parameter below to increase the log size of Code Integrity events category so that new events won't overwrite the older ones and everything will be captured.
 
-### -LogSize <Int64>
+### -LogSize
 
 Specifies the log size for ***Microsoft-Windows-CodeIntegrity/Operational*** events. The values must be in the form of `<Digit + Data measurement unit>`. e.g., 2MB, 10MB, 1GB, 1TB. The minimum accepted value is 1MB which is the default.
 
@@ -387,11 +387,9 @@ Indicates that the module will automatically remove the WDAC policy deployed usi
 
 <br>
 
-
 ### -TestMode
 
 Indicates that the created/deployed policy will have ***Enabled:Boot Audit on Failure*** and ***Enabled:Advanced Boot Options Menu*** [policy rule options](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/select-types-of-rules-to-create#table-1-windows-defender-application-control-policy---policy-rule-options).
-
 
 <div align='center'>
 
@@ -434,7 +432,6 @@ Indicates that the module will output 3 additional files for debugging purposes 
  - *FileRulesAndFileRefs.txt* - Contains the File Rules and Rule refs for the Hash of the files that no longer exist on the disk.
  - *DeletedFilesHashes.xml* - Policy file that contains File Rules and Rule refs for the files that no longer exist on the disk.
  - *AuditLogsPolicy_NoDeletedFiles.xml* - The policy file generated from Audit Event logs based on the specified Level and Fallback parameters.
-
 
 <div align='center'>
 
@@ -486,11 +483,9 @@ Offers the same official [Levels](https://learn.microsoft.com/en-us/powershell/m
 
 <br>
 
-
 ### -Fallbacks
 
 Offers the same official [Fallbacks](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-fallback) for scanning of event logs.
-
 
 <div align='center'>
 
@@ -517,7 +512,6 @@ You can choose one of the following options:
 * FilePath
 
 [More info available on Microsoft Learn](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-specificfilenamelevel)
-
 
 <div align='center'>
 
@@ -587,8 +581,6 @@ By default, the module includes user PEs in the scan. When you use this switch p
 
 <br>
 
-<br>
-
 ### The outputs of the parameter are
 
 All of the outputs are saved in a folder named "WDAC" inside the current working directory.
@@ -638,7 +630,6 @@ Creates a WDAC policy for a [Lightly managed system](https://github.com/HotCakeX
 
 <br>
 
-
 ### -Deploy
 
 Indicates that the module will automatically deploy the ***SignedAndReputable.xml*** policy file after creation.
@@ -674,7 +665,6 @@ Indicates that the created/deployed policy will have ***Enabled:Boot Audit on Fa
 </div>
 
 <br>
-
 
 ### -RequireEVSigners
 
@@ -746,7 +736,6 @@ Indicates that the module will automatically deploy the ***DefaultWindowsPlusBlo
 </div>
 
 <br>
-
 
 ### -TestMode
 

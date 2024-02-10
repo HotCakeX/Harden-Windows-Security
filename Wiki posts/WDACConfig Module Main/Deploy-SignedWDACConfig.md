@@ -3,15 +3,15 @@
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Deploy-SignedWDACConfig/Deploy-SignedWDACConfig.apng)
 
 ```powershell
-Deploy-SignedWDACConfig 
-    -PolicyPaths <FileInfo[]> 
-    [-Deploy] 
-    [-CertPath <FileInfo>] 
-    [-CertCN <String>] 
-    [-SignToolPath <FileInfo>] 
-    [-Force] 
-    [-SkipVersionCheck] 
-    [-Confirm] 
+Deploy-SignedWDACConfig
+    -PolicyPaths <FileInfo[]>
+    [-Deploy]
+    [-CertPath <FileInfo>]
+    [-CertCN <String>]
+    [-SignToolPath <FileInfo>]
+    [-Force]
+    [-SkipVersionCheck]
+    [-Confirm]
     [<CommonParameters>]
 ```
 
@@ -61,7 +61,6 @@ Path to the certificate `.cer` file. Press TAB to open the file picker GUI and b
 ### -CertCN
 
 Common name of the certificate - Supports argument completion so you don't have to manually enter the Certificate's CN, just make sure the `-CertPath` is specified and the certificate is installed in the personal store of the user certificates, then press TAB to auto complete the name. You can however enter it manually if you want to.
-
 
 <div align='center'>
 

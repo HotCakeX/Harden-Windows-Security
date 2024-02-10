@@ -24,6 +24,8 @@ New-DenyWDACConfig
 
 Creates a Deny base policy by scanning a directory. The base policy will have 2 allow all rules, meaning it can be deployed as a standalone base policy, side-by-side any other Base/Supplemental policies.
 
+## Parameters
+
 ### -PolicyName
 
 Add a descriptive name for the Deny base policy. Accepts only alphanumeric and space characters.
@@ -203,6 +205,8 @@ New-DenyWDACConfig
 
 Creates a Deny base policy by scanning a directory, this parameter uses [DriverFile objects](https://learn.microsoft.com/en-us/powershell/module/configci/get-systemdriver) so it's best suitable for driver files. The base policy will have 2 allow all rules, meaning it can be deployed as a standalone base policy, side-by-side any other Base/Supplemental policies.
 
+## Parameters
+
 ### -PolicyName
 
 Add a descriptive name for the Deny base policy. Accepts only alphanumeric and space characters.
@@ -317,6 +321,8 @@ New-DenyWDACConfig
 
 Creates a Deny base policy for one or more installed Windows Apps (Appx) based on their PFN (Package Family Name). The base policy will have 2 allow all rules, meaning it can be deployed as a standalone base policy, side-by-side any other Base/Supplemental policies.
 
+## Parameters
+
 ### -PackageName
 
 Enter the [package name](https://learn.microsoft.com/en-us/powershell/module/appx/get-appxpackage) of an installed app. Supports wildcard `*` character. e.g, `*Edge*` or `"*Microsoft*"`.
@@ -407,6 +413,8 @@ New-DenyWDACConfig
     [-Confirm]
     [<CommonParameters>]
 ```
+
+## Parameters
 
 ### -PolicyName
 

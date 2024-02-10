@@ -23,7 +23,7 @@ Upon constructing a certificate, the cmdlet stores it in the Current User's pers
 
 The PFX file is encrypted with `SHA-256` encryption and safeguarded with the password supplied by the user. After the 2 files are exported, the cmdlet eliminates the certificate from Current Users personal store and then re-imports it using the PFX file, but this time it will store the private key using [VSM](https://learn.microsoft.com/en-us/virtualization/hyper-v-on-windows/tlfs/vsm) (Virtual Secure Mode). In this method, the private keys are stored in the TPM and are highly secured with [VBS](https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/oem-vbs) (Virtualized-Based Security). The entire process happens in just few seconds.
 
-<br>
+## Parameters
 
 ### -CommonName
 

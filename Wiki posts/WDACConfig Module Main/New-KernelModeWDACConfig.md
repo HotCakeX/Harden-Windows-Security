@@ -35,7 +35,7 @@ Subsequently, you need to use the **-AuditAndEnforce** parameter to generate the
 
 Hardware drivers are scanned with [WHQLFilePublisher](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/select-types-of-rules-to-create#table-2-windows-defender-application-control-policy---file-rule-levels) level. so they will not necessitate a policy update when they are updated.
 
-<br>
+## Parameters
 
 ### -PrepMode
 
@@ -148,7 +148,7 @@ Subsequently, you need to use the **-AuditAndEnforce** parameter to generate the
 
 Hardware drivers are scanned with [WHQLFilePublisher](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/select-types-of-rules-to-create#table-2-windows-defender-application-control-policy---file-rule-levels) level so they will not necessitate a policy update when they are updated.
 
-<br>
+## Parameters
 
 ### -PrepMode
 

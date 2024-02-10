@@ -19,7 +19,7 @@ Deploy-SignedWDACConfig
 
 Creates and signs a `.CIP` file that can be either deployed locally using the `-Deploy` parameter or you can deploy the signed policy binary on a different machine later using the built-in [Citool](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/operations/citool-commands), Intune etc.
 
-<br>
+## Parameters
 
 ### -PolicyPaths
 

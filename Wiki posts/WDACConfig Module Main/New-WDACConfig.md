@@ -16,6 +16,8 @@ New-WDACConfig
 
 Creates a WDAC policy file called ***Microsoft recommended block rules.xml*** from [the official source](https://github.com/MicrosoftDocs/windows-itpro-docs/blob/public/windows/security/application-security/application-control/windows-defender-application-control/design/applications-that-can-bypass-wdac.md) for [Microsoft recommended block rules](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/applications-that-can-bypass-wdac), with *AllowAll* rules and audit mode rule option removed. The policy sets [HVCI to strict](https://learn.microsoft.com/en-us/powershell/module/configci/set-hvcioptions).
 
+## Parameters
+
 ### -Deploy
 
 Deploys the [latest Microsoft recommended block rules](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/applications-that-can-bypass-wdac) (For User Mode binaries). It has the 2 default AllowAll rules so it can be deployed as a standalone base policy. Uses [Strict HVCI](https://learn.microsoft.com/en-us/powershell/module/configci/set-hvcioptions).
@@ -53,6 +55,8 @@ New-WDACConfig
 <br>
 
 Creates a WDAC policy file called ***Microsoft recommended driver block rules.xml*** from [the official source](https://github.com/MicrosoftDocs/windows-itpro-docs/blob/public/windows/security/application-security/application-control/windows-defender-application-control/design/microsoft-recommended-driver-block-rules.md) for [Microsoft recommended driver block rules](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/microsoft-recommended-driver-block-rules), with *AllowAll* rules and audit mode rule option removed. The policy sets [HVCI to strict](https://learn.microsoft.com/en-us/powershell/module/configci/set-hvcioptions). Extra information regarding the version and last updated date of [the GitHub document](https://github.com/MicrosoftDocs/windows-itpro-docs/commits/public/windows/security/application-security/application-control/windows-defender-application-control/design/microsoft-recommended-driver-block-rules.md) containing block rules will also be displayed.
+
+## Parameters
 
 ###  -Deploy
 
@@ -114,6 +118,8 @@ Calls the [-GetBlockRules](#new-wdacconfig--getblockrules) parameter to get the 
 </div>
 
 <br>
+
+## Parameters
 
 ### -Deploy
 
@@ -224,6 +230,8 @@ After deployment, audit event logs will start to be created for any file that is
 
 It's recommended to use the optional parameter below to increase the log size of Code Integrity events category so that new events won't overwrite the older ones and everything will be captured.
 
+## Parameters
+
 ### -LogSize
 
 Specifies the log size for ***Microsoft-Windows-CodeIntegrity/Operational*** events. The values must be in the form of `<Digit + Data measurement unit>`. e.g., 2MB, 10MB, 1GB, 1TB. The minimum accepted value is 1MB which is the default.
@@ -284,6 +292,8 @@ Creates a WDAC policy that once deployed, prepares the system for Default Window
 This parameter also scans the WDACConfig module files and PowerShell core files, adds them to the Prep audit mode base policy that it deploys, so that the final Supplemental policy generated from Event viewer audit logs won't include those files.
 
 It's recommended to use the optional parameter below to increase the log size of Code Integrity events category so that new events won't overwrite the older ones, and everything will be captured.
+
+## Parameters
 
 ### -LogSize
 
@@ -350,6 +360,8 @@ New-WDACConfig
 <br>
 
 Creates a WDAC policy using the Audit event logs generated [for a fully managed device](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-for-Fully-Managed-Devices).
+
+## Parameters
 
 ### -BasePolicyType
 
@@ -630,6 +642,8 @@ Creates a WDAC policy for a [Lightly managed system](https://github.com/HotCakeX
 
 <br>
 
+## Parameters
+
 ### -Deploy
 
 Indicates that the module will automatically deploy the ***SignedAndReputable.xml*** policy file after creation.
@@ -718,6 +732,8 @@ Calls the [-GetBlockRules](#new-wdacconfig--getblockrules) parameter to get the 
 <br>
 
 * Since the module uses PowerShell and not Windows PowerShell that is pre-installed in Windows, this parameter will automatically scan `C:\Program Files\PowerShell` directory (if it detects the PowerShell is not installed from Microsoft Store) and add PowerShell files to the ***DefaultWindowsPlusBlockRules.xml*** policy file so that you will be able to continue using the module after deploying the policy. The scan uses ***FilePublisher*** level and ***Hash*** fallback.
+
+## Parameters
 
 ### -Deploy
 

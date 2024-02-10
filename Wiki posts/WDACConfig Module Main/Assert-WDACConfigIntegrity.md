@@ -20,6 +20,8 @@ By doing so, you can ascertain that the files in your local WDACConfig folder ar
 
 If there is any indication of tampering, the outcomes will be displayed on the console.
 
+## Parameters
+
 ### -SaveLocally
 
 This parameter is used to generate hashes of the final modules files prior to publishing them to the GitHub. This parameter shouldn't be used.

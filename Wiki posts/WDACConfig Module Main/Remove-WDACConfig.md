@@ -20,6 +20,8 @@ Remove-WDACConfig
 
 Uses [the official procedure](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/deployment/disable-wdac-policies) to Re-Deploy the Signed base WDAC policies with ***Enabled:Unsigned System Integrity Policy*** rule option.
 
+## Parameters
+
 ### -PolicyPaths
 
 Path to xml file(s) of the currently deployed policy that you want to remove. Supports tab completion by showing only `.xml` files.
@@ -125,6 +127,8 @@ Removes Unsigned deployed WDAC policies as well as [Signed deployed Supplemental
 
 > [!NOTE]\
 > The auto-completion in these 2 parameters are smart. E.g., if there are 10 policies deployed on the system, you can press Tab to select 5 of them by IDs, but when you try to select the other 5 by their names, the name of the policies that you already selected by IDs don't show up anymore. This greatly reduces user error and simplifies the workflow for end user.
+
+## Parameters
 
 ### -PolicyIDs
 

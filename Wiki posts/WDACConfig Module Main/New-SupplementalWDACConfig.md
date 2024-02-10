@@ -25,6 +25,8 @@ New-SupplementalWDACConfig
 
 Creates a Supplemental policy for a base policy based on a folder path.
 
+## Parameters
+
 ### -ScanLocation
 
 The directory or drive that you want to scan for files that will be allowed to run by the Supplemental policy.
@@ -227,6 +229,8 @@ New-SupplementalWDACConfig
 
 Creates a Supplemental policy that allows a folder path that includes one or more wildcard `*` character in it.
 
+## Parameters
+
 ### -FolderPath
 
 A folder path that includes at least one wildcard `*` character. Press TAB to open the folder picker GUI. Once you selected a folder, you will see the path will have `\*` at the end of it. You can modify the selected path by adding/removing wildcards `*` to it before proceeding.
@@ -332,6 +336,8 @@ New-SupplementalWDACConfig
 <br>
 
 Creates a Supplemental policy based on the package name of an installed app. More information at [Microsoft Learn](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/manage-packaged-apps-with-wdac)
+
+## Parameters
 
 ### PackageName
 

@@ -64,7 +64,7 @@ Upon completion of the simulation, you will obtain a CSV file in the current wor
 
 * And many more.
 
-<br>
+## Parameters
 
 ### -FolderPath
 

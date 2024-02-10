@@ -22,9 +22,9 @@ Use this cmdlet to query and display the values for common and frequently used p
 
 All of the applicable cmdlets of the module automatically check the User Configuration file for any available input, if you don't specify values for their parameters.
 
-<br>
+## Parameters
 
-### CertCN
+### -CertCN
 
 Displays the Common Name of an installed certificate.
 
@@ -42,7 +42,7 @@ Displays the Common Name of an installed certificate.
 
 <br>
 
-### CertPath
+### -CertPath
 
 Displays the path to a certificate `.cer` file.
 
@@ -60,7 +60,7 @@ Displays the path to a certificate `.cer` file.
 
 <br>
 
-### SignToolPath
+### -SignToolPath
 
 Displays the path to the SignTool executable.
 
@@ -78,7 +78,7 @@ Displays the path to the SignTool executable.
 
 <br>
 
-### SignedPolicyPath
+### -SignedPolicyPath
 
 Displays the path to the xml file of a Signed policy.
 
@@ -96,7 +96,7 @@ Displays the path to the xml file of a Signed policy.
 
 <br>
 
-### UnSignedPolicyPath
+### -UnSignedPolicyPath
 
 Displays the path to the xml file of an Unsigned policy.
 
@@ -114,7 +114,7 @@ Displays the path to the xml file of an Unsigned policy.
 
 <br>
 
-### Open
+### -Open
 
 Opens the User Config Json file in the default editor.
 
@@ -132,7 +132,7 @@ Opens the User Config Json file in the default editor.
 
 <br>
 
-### LastUpdateCheck
+### -LastUpdateCheck
 
 Displays the last time online update check was performed.
 

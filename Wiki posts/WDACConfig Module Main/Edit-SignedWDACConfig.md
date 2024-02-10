@@ -25,7 +25,7 @@ Edit-SignedWDACConfig
 
 <br>
 
-### How to use
+### How to Use
 
 1. Using the provided syntax, run the command and supply values for the parameters.
 
@@ -39,7 +39,10 @@ A new supplemental policy will be created, it will be signed and deployed on the
 
 This parameter is specially useful for applications that install files outside of their main install directory, such as system drivers. **Make sure you run those applications after installation (and before starting to browse for their install directories) so that Audit logs will capture and create allow rules for them.**
 
-**This parameter can also detect and create allow rules for Kernel protected files, such as the executables of games installed using Xbox app. Make sure you run the game while the base policy is deployed in Audit mode, using this parameter, so that it can capture those executables.**
+> [!NOTE]\
+> This parameter can also detect and create allow rules for Kernel protected files, such as the executables of games installed using Xbox app. Make sure you run the game while the base policy is deployed in Audit mode so that it can capture those executables.
+
+## Parameters
 
 ### -SuppPolicyName
 
@@ -321,6 +324,8 @@ While a Signed Windows Defender Application Control (WDAC) policy is already dep
 
 A new supplemental policy will be created, it will be signed and deployed on the system. The base policy that was initially set to Audit mode will also revert back to enforced mode. The entire process happens without the need for reboot. If something like a power outage occurs during the time Audit mode is deployed, on the next reboot, the enforced mode base policy will be automatically deployed.
 
+## Parameters
+
 ### -SuppPolicyName
 
 Add a descriptive name for the Supplemental policy.
@@ -546,6 +551,8 @@ Edit-SignedWDACConfig
 
 Merge multiple deployed **Signed** Supplemental policies into 1 and deploy it, remove the individual ones, all happening automatically. Very useful to keep Supplemental policies below 32 since that's the limit.
 
+## Parameters
+
 ### 2 Mandatory Parameters
 
 ### -SuppPolicyName 
@@ -695,6 +702,8 @@ Edit-SignedWDACConfig
 It can rebootlessly change the type of the deployed signed base policy. It can update the recommended block rules and/or change policy rule options in the deployed base policy. The deployed Supplemental policies will stay intact and continue to work with the new Base policy.
 
 **Hint:** When switching from a more permissive base policy type to a more restrictive one, make sure your Supplemental policies will continue to work. E.g., if your current base policy type is *Allow Microsoft* and the one you are switching to is *Default Windows*, there *might* be files that will get blocked as a result of this switch if you created a Supplemental policy using Event viewer capturing. That's simply because they were allowed by the more permissive *Allow Microsoft* policy type so they didn't trigger audit logs thus weren't needed to be included in the Supplemental policy. You will need to update those Supplemental policies if that happens by deleting and recreating them, no immediate reboot required.
+
+## Parameters
 
 ### 2 Mandatory Parameters
 

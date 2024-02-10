@@ -17,7 +17,7 @@ Remove-CommonWDACConfig
 
 Use this cmdlet to remove the values stored in the User Configurations JSON file. If you use it without any parameters it will delete the User configuration folder and everything in it, which is located in `C:\Users\UserName\.WDACConfig`
 
-<br>
+## Parameters
 
 ### -CertCN
 

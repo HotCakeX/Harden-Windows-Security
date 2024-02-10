@@ -40,7 +40,7 @@ Edit-SignedWDACConfig -AllowNewApps -SuppPolicyName "App 1"
 
 If correct and valid values for the missing parameters exist in User Configuration file, the cmdlet will automatically detect and use them seamlessly.
 
-<br>
+## Parameters
 
 ### -CertCN
 

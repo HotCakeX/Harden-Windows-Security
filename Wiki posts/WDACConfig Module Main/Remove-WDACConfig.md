@@ -5,14 +5,14 @@
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Remove-WDACConfig/Remove-WDACConfig%20-SignedBase.apng)
 
 ```powershell
-Remove-WDACConfig 
-    [-SignedBase] 
-    -PolicyPaths <String[]> 
-    [-CertCN <String>] 
-    [-SignToolPath <String>] 
+Remove-WDACConfig
+    [-SignedBase]
+    -PolicyPaths <String[]>
+    [-CertCN <String>]
+    [-SignToolPath <String>]
     [-Force]
     [-SkipVersionCheck]
-    [-Confirm] 
+    [-Confirm]
     [<CommonParameters>]
 ```
 
@@ -45,13 +45,13 @@ Uses [the official procedure](https://learn.microsoft.com/en-us/windows/security
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Remove-WDACConfig/Remove-WDACConfig%20-UnsignedOrSupplemental.apng)
 
 ```powershell
-Remove-WDACConfig 
-    [-UnsignedOrSupplemental] 
-    [-PolicyNames <String[]>] 
-    [-PolicyIDs <String[]>] 
+Remove-WDACConfig
+    [-UnsignedOrSupplemental]
+    [-PolicyNames <String[]>]
+    [-PolicyIDs <String[]>]
     [-Force]
-    [-SkipVersionCheck] 
-    [-Confirm] 
+    [-SkipVersionCheck]
+    [-Confirm]
     [<CommonParameters>]
 ```
 

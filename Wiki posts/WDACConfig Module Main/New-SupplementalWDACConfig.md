@@ -5,19 +5,19 @@
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-SupplementalWDACConfig/New-SupplementalWDACConfig%20-Normal.apng)
 
 ```powershell
-New-SupplementalWDACConfig 
-    [-Normal] 
-    -ScanLocation <String> 
-    -SuppPolicyName <String> 
+New-SupplementalWDACConfig
+    [-Normal]
+    -ScanLocation <String>
+    -SuppPolicyName <String>
     [-PolicyPath <String>]
-    [-Deploy] 
-    [-SpecificFileNameLevel <String>] 
-    [-NoUserPEs] 
-    [-NoScript] 
-    [-Level <String>] 
+    [-Deploy]
+    [-SpecificFileNameLevel <String>]
+    [-NoUserPEs]
+    [-NoScript]
+    [-Level <String>]
     [-Fallbacks <String[]>]
-    [-SkipVersionCheck] 
-    [-Confirm] 
+    [-SkipVersionCheck]
+    [-Confirm]
     [<CommonParameters>]
 ```
 
@@ -65,14 +65,14 @@ Creates a normal Supplemental policy for a base policy.
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-SupplementalWDACConfig/New-SupplementalWDACConfig%20-PathWildCards.apng)
 
 ```powershell
-New-SupplementalWDACConfig 
-    [-PathWildCards] 
-    -FolderPath <String> 
-    -SuppPolicyName <String> 
-    [-PolicyPath <String>] 
-    [-Deploy] 
+New-SupplementalWDACConfig
+    [-PathWildCards]
+    -FolderPath <String>
+    -SuppPolicyName <String>
+    [-PolicyPath <String>]
+    [-Deploy]
     [-SkipVersionCheck]
-    [-Confirm] 
+    [-Confirm]
     [<CommonParameters>]
 ```
 
@@ -110,15 +110,15 @@ Creates a Supplemental policy that allows a folder path that includes one or mor
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-SupplementalWDACConfig/New-SupplementalWDACConfig%20-InstalledAppXPackages.apng)
 
 ```powershell
-New-SupplementalWDACConfig 
-    [-InstalledAppXPackages] 
-    -PackageName <String> 
-    -SuppPolicyName <String> 
-    [-PolicyPath <String>] 
-    [-Deploy] 
-    [-Force] 
-    [-SkipVersionCheck] 
-    [-Confirm] 
+New-SupplementalWDACConfig
+    [-InstalledAppXPackages]
+    -PackageName <String>
+    -SuppPolicyName <String>
+    [-PolicyPath <String>]
+    [-Deploy]
+    [-Force]
+    [-SkipVersionCheck]
+    [-Confirm]
     [<CommonParameters>]
 ```
 

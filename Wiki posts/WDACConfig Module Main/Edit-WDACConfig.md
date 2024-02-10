@@ -5,18 +5,18 @@
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Edit-WDACConfig/Edit-WDACConfig%20-AllowNewAppsAuditEvents.apng)
 
 ```powershell
-Edit-WDACConfig 
-     [-AllowNewAppsAuditEvents] 
-     -SuppPolicyName <String> 
-     [-PolicyPath <String>] 
+Edit-WDACConfig
+     [-AllowNewAppsAuditEvents]
+     -SuppPolicyName <String>
+     [-PolicyPath <String>]
      [-Level <String>]
-     [-Fallbacks <String[]>] 
-     [-NoScript] 
-     [-NoUserPEs] 
-     [-SpecificFileNameLevel <String>] 
+     [-Fallbacks <String[]>]
+     [-NoScript]
+     [-NoUserPEs]
+     [-SpecificFileNameLevel <String>]
      [-LogSize <Int64>]
-     [-IncludeDeletedFiles] 
-     [-SkipVersionCheck] 
+     [-IncludeDeletedFiles]
+     [-SkipVersionCheck]
      [<CommonParameters>]
 ```
 
@@ -83,16 +83,16 @@ This parameter is specially useful for applications that install files outside o
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Edit-WDACConfig/Edit-WDACConfig%20-AllowNewApps.apng)
 
 ```powershell
-Edit-WDACConfig 
-     [-AllowNewApps] 
-     -SuppPolicyName <String> 
-     [-PolicyPath <String>] 
-     [-Level <String>] 
-     [-Fallbacks <String[]>] 
-     [-NoScript] 
-     [-NoUserPEs] 
-     [-SpecificFileNameLevel <String>] 
-     [-SkipVersionCheck] 
+Edit-WDACConfig
+     [-AllowNewApps]
+     -SuppPolicyName <String>
+     [-PolicyPath <String>]
+     [-Level <String>]
+     [-Fallbacks <String[]>]
+     [-NoScript]
+     [-NoUserPEs]
+     [-SpecificFileNameLevel <String>]
+     [-SkipVersionCheck]
      [<CommonParameters>]
 ```
 
@@ -141,13 +141,13 @@ A new supplemental policy will be created, it will be deployed on the system. Th
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Edit-WDACConfig/Edit-WDACConfig%20-MergeSupplementalPolicies.apng)
 
 ```powershell
-Edit-WDACConfig 
-     [-MergeSupplementalPolicies] 
-     -SuppPolicyName <String> 
-     [-PolicyPath <String>] 
-     -SuppPolicyPaths <String[]> 
-     [-KeepOldSupplementalPolicies] 
-     [-SkipVersionCheck] 
+Edit-WDACConfig
+     [-MergeSupplementalPolicies]
+     -SuppPolicyName <String>
+     [-PolicyPath <String>]
+     -SuppPolicyPaths <String[]>
+     [-KeepOldSupplementalPolicies]
+     [-SkipVersionCheck]
      [<CommonParameters>]
 ```
 
@@ -180,12 +180,12 @@ Merge multiple deployed Supplemental policies into 1 and deploy it, remove the i
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Edit-WDACConfig/Edit-WDACConfig%20-UpdateBasePolicy.apng)
 
 ```powershell
-Edit-WDACConfig 
-     [-UpdateBasePolicy] 
-     -CurrentBasePolicyName <String[]> 
+Edit-WDACConfig
+     [-UpdateBasePolicy]
+     -CurrentBasePolicyName <String[]>
      -NewBasePolicyType <String>
-     [-RequireEVSigners] 
-     [-SkipVersionCheck] 
+     [-RequireEVSigners]
+     [-SkipVersionCheck]
      [<CommonParameters>]
 ```
 

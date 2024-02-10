@@ -5,9 +5,9 @@
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Confirm-WDACConfig/Confirm-WDACConfig%20-ListActivePolicies.apng)
 
 ```powershell
-Confirm-WDACConfig 
-    [-ListActivePolicies] 
-    [-OnlyBasePolicies] 
+Confirm-WDACConfig
+    [-ListActivePolicies]
+    [-OnlyBasePolicies]
     [-OnlySupplementalPolicies]
 ```
 
@@ -32,7 +32,7 @@ Lists the non-System Base and Supplemental WDAC Policies using [CITool](https://
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Confirm-WDACConfig/Confirm-WDACConfig%20-VerifyWDACStatus.apng)
 
 ```powershell
-Confirm-WDACConfig 
+Confirm-WDACConfig
     [-VerifyWDACStatus]
 ```
 
@@ -51,7 +51,7 @@ Shows the [status](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Confirm-WDACConfig/Confirm-WDACConfig%20-CheckSmartAppControlStatus.apng)
 
 ```powershell
-Confirm-WDACConfig 
+Confirm-WDACConfig
     [-CheckSmartAppControlStatus]
 ```
 

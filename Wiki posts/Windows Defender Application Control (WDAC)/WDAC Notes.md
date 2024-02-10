@@ -61,7 +61,7 @@ Deny rules are ignored in supplemental policies by WDAC engine. Supplemental pol
 
 Suppose you have a base policy and this base policy will have supplemental policies later on. To add the details of the code signing certificate to the base policy in order to get it ready for signing, you need to use the `-Supplemental` switch parameter with the [Add-SignerRule](https://learn.microsoft.com/en-us/powershell/module/configci/add-signerrule) cmdlet. If you don't do that, the signed base policy after deployment won't accept any signed **supplemental** policies. The `-Supplemental` parameter can only be used for a base policy.
 
-* **Using `-Supplemental` parameter with `Add-SignerRule` cmdlet on a Supplemental policy will cause boot failure after deploying it, because that parameter should only be used when adding singer rules to a base policy.**
+* **Using `-Supplemental` parameter with `Add-SignerRule` cmdlet on a Supplemental policy will cause boot failure after deploying it, because that parameter should only be used when adding signer rules to a base policy.**
 
 <br>
 
@@ -111,9 +111,9 @@ Second, there are File Reference rules for each Deny rule that only mentions the
 
 <br>
 
-### Denied Certificates/Singers
+### Denied Certificates/Signer
 
-Denied certificates/singers are first mentioned in `<SiPolicy` => `<Signers>` with the following syntax:
+Denied certificates/signers are first mentioned in `<SiPolicy` => `<Signers>` with the following syntax:
 
 ```xml
 <Signer ID="ID_SIGNER_VERISIGN_2010" Name="VeriSign Class 3 Code Signing 2010 CA">
@@ -121,9 +121,9 @@ Denied certificates/singers are first mentioned in `<SiPolicy` => `<Signers>` wi
 </Signer>
 ```
 
-Unlike file rules, this first part doesn't specify whether the certificate/singer must be allowed or blocked by the WDAC policy.
+Unlike file rules, this first part doesn't specify whether the certificate/signer must be allowed or blocked by the WDAC policy.
 
-In order to specify whether a certificate/singer should be denied/allowed, the ID of each signer must be specified in the second part of the XML policy file in `<DeniedSigners>` element:
+In order to specify whether a certificate/signer should be denied/allowed, the ID of each signer must be specified in the second part of the XML policy file in `<DeniedSigners>` element:
 
 ```xml
 <SigningScenarios>
@@ -194,13 +194,13 @@ This makes sense because apps that have been previously allowed to run by a poli
 
 It consists of 2 elements:
 
-This one contains the Certificates/Singers of the Kernel-mode drivers
+This one contains the Certificates/Signers of the Kernel-mode drivers
 
 ```xml
 <SigningScenario Value="131" ID="ID_SIGNINGSCENARIO_DRIVERS_1" FriendlyName="Driver Signing Scenarios">
 ```
 
-And this one contains the Certificates/Singers of the User-mode binaries
+And this one contains the Certificates/Signers of the User-mode binaries
 
 ```xml
 <SigningScenario Value="12" ID="ID_SIGNINGSCENARIO_WINDOWS" FriendlyName="User Mode Signing Scenarios">
@@ -479,7 +479,7 @@ In order to automatically remove unnecessary things from a policy file, such as 
 Merge-CIPolicy .\Policy.xml -OutputFilePath .\Policy1.xml
 ```
 
-It essentially merges a policy with itself, adding `_0` to each ID and SingerID of the xml nodes which is easily removable using WDACConfig module, **although it's not necessary to remove them at all, they are perfectly fine.**
+It essentially merges a policy with itself, adding `_0` to each ID and SignerID of the xml nodes which is easily removable using WDACConfig module, **although it's not necessary to remove them at all, they are perfectly fine.**
 
 <br>
 
@@ -506,7 +506,7 @@ When you use `-Audit` parameter of ConfigCI cmdlets such as [Get-SystemDriver](h
 
 Sometimes there are files that are signed by 2 certificates, aka double signed files.
 
-When FilePublisher level is used, WDAC creates rules for both of the intermediate certificates of those files, and each rule will have a singer assigned to it. If the file is either User mode only or Kernel mode only, then 2 Signers will be created for it, one for each certificate.
+When FilePublisher level is used, WDAC creates rules for both of the intermediate certificates of those files, and each rule will have a signer assigned to it. If the file is either User mode only or Kernel mode only, then 2 Signers will be created for it, one for each certificate.
 
 Depending on Kernel or use mode, 2 Allowed Signers are created for the file in either UMCI or KMCI Signing scenario sections.
 

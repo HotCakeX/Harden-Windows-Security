@@ -5,18 +5,18 @@
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Edit-WDACConfig/Edit-WDACConfig%20-AllowNewAppsAuditEvents.apng)
 
 ```powershell
-Edit-WDACConfig
-     [-AllowNewAppsAuditEvents]
-     -SuppPolicyName <String>
-     [-PolicyPath <String>]
+Edit-WDACConfig 
+     [-AllowNewAppsAuditEvents] 
+     -SuppPolicyName <String> 
+     [-PolicyPath <FileInfo>] 
      [-Level <String>]
-     [-Fallbacks <String[]>]
-     [-NoScript]
-     [-NoUserPEs]
-     [-SpecificFileNameLevel <String>]
+     [-Fallbacks <String[]>] 
+     [-NoScript] 
+     [-NoUserPEs] 
+     [-SpecificFileNameLevel <String>] 
      [-LogSize <Int64>]
      [-IncludeDeletedFiles]
-     [-SkipVersionCheck]
+     [-SkipVersionCheck] 
      [<CommonParameters>]
 ```
 
@@ -83,16 +83,16 @@ This parameter is specially useful for applications that install files outside o
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Edit-WDACConfig/Edit-WDACConfig%20-AllowNewApps.apng)
 
 ```powershell
-Edit-WDACConfig
-     [-AllowNewApps]
-     -SuppPolicyName <String>
-     [-PolicyPath <String>]
-     [-Level <String>]
-     [-Fallbacks <String[]>]
-     [-NoScript]
-     [-NoUserPEs]
-     [-SpecificFileNameLevel <String>]
-     [-SkipVersionCheck]
+Edit-WDACConfig 
+     [-AllowNewApps] 
+     -SuppPolicyName <String> 
+     [-PolicyPath <FileInfo>] 
+     [-Level <String>] 
+     [-Fallbacks <String[]>] 
+     [-NoScript] 
+     [-NoUserPEs] 
+     [-SpecificFileNameLevel <String>] 
+     [-SkipVersionCheck] 
      [<CommonParameters>]
 ```
 
@@ -141,13 +141,13 @@ A new supplemental policy will be created, it will be deployed on the system. Th
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Edit-WDACConfig/Edit-WDACConfig%20-MergeSupplementalPolicies.apng)
 
 ```powershell
-Edit-WDACConfig
-     [-MergeSupplementalPolicies]
-     -SuppPolicyName <String>
-     [-PolicyPath <String>]
-     -SuppPolicyPaths <String[]>
-     [-KeepOldSupplementalPolicies]
-     [-SkipVersionCheck]
+Edit-WDACConfig 
+     [-MergeSupplementalPolicies] 
+     -SuppPolicyName <String> 
+     [-PolicyPath <FileInfo>] 
+     -SuppPolicyPaths <FileInfo[]> 
+     [-KeepOldSupplementalPolicies] 
+     [-SkipVersionCheck] 
      [<CommonParameters>]
 ```
 
@@ -180,13 +180,13 @@ Merge multiple deployed Supplemental policies into 1 and deploy it, remove the i
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Edit-WDACConfig/Edit-WDACConfig%20-UpdateBasePolicy.apng)
 
 ```powershell
-Edit-WDACConfig
-     [-UpdateBasePolicy]
-     -CurrentBasePolicyName <String[]>
+Edit-WDACConfig 
+     [-UpdateBasePolicy] 
+     -CurrentBasePolicyName <String[]> 
      -NewBasePolicyType <String>
-     [-RequireEVSigners]
-     [-SkipVersionCheck]
-     [<CommonParameters>]
+    [-RequireEVSigners] 
+    [-SkipVersionCheck] 
+    [<CommonParameters>]
 ```
 
 <br>
@@ -212,19 +212,5 @@ It can rebootlessly change the type of the deployed base policy. It can update t
 ### 1 Optional Parameter
 
 * `-RequireEVSigners`: Indicates that the base policy will have [Require EV Signers](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/wdac-wizard-create-base-policy#advanced-policy-rules-description) policy rule option.
-
-<br>
-
-<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
-
-<br>
-
-## Notes
-
-* **Mandatory** parameters indicate you always need to provide values for them.
-
-* **Automatic** parameters indicate that if you used [Set-CommonWDACConfig](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Set-CommonWDACConfig) cmdlet to set default values for them, the module will automatically use them. This saves time and prevents repetitive tasks. However, if no value exists in User Configurations for an Automatic parameter and you didn't explicitly provide a value for that parameter either, then you will see an error asking you to provide value for it. Explicitly providing a value for an Automatic parameter in the command line overrides its default value in User Configurations, meaning the module will ignore the value of the same parameter in the User Configurations file.
-
-* **Optional** parameters indicate that they are not required and without using them the module will automatically run with the optimal settings.
 
 <br>

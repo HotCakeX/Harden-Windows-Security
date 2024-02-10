@@ -8,7 +8,7 @@ Assert-WDACConfigIntegrity [-SaveLocally] [-Path <FileInfo>] [-SkipVersionCheck]
 
 <br>
 
-This cmdlet scans all the relevant files in the WDACConfig module's folder and its subfolders, calculates their SHA2-512 hashes using the [Get-FileHash cmdlet](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/get-filehash).
+This cmdlet scans all of the relevant files in the WDACConfig module's folder and computes their SHA2-512 hashes.
 
 Then it downloads the [cloud CSV file](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/WDACConfig/Utilities/Hashes.csv) from the GitHub repository and compares the hashes of the local files with the ones in the cloud.
 
@@ -28,9 +28,10 @@ If there is any indication of tampering, the outcomes will be displayed on the c
 
 <br>
 
+## Note
+
 The WDACConfig module comprises of `.ps1` and `.psm1` files that bear the cryptographic signature of my local certificate authority's (CA) certificate. The module incorporates mechanisms to automatically ascertain the integrity of the module files and prevent any unauthorized modifications. The module manifest, `.psd1` file, on the other hand, lacks a signature due to the installation error that arises from the PowerShell gallery when it is signed with a self-signed certificate.
 
 The public key of the certificate used to sign the module files can be obtained from [here](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/WDACConfig/Utilities/Certificate/HotCakeX%20Root%20CA.cer).
 
 <br>
-

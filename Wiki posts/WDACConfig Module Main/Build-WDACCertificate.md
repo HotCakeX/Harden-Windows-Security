@@ -13,13 +13,16 @@ This cmdlet constructs self-signed certificates that adhere to [Microsoft's spec
 
 The generated certificates type is Code Signing, they employ `SHA2-512` hashing algorithm with `RSA 4096-bit` encryption (the maximum supported key size for WDAC signing.)
 
-Upon constructing a certificate, the cmdlet stores it in the Current User's personal store, then it exports that certificate in 2 files. One of the files has a `.cer` extension and encompasses only the public key, the other file has a `.pfx` extension and encompasses both public and private keys. The PFX file is encrypted with `SHA-256` encryption and safeguarded with the password supplied by the user. After the 2 files are exported, the cmdlet eliminates the certificate from Current Users personal store and then re-imports it using the PFX file, but this time it will store the private key using [VSM](https://learn.microsoft.com/en-us/virtualization/hyper-v-on-windows/tlfs/vsm) (Virtual Secure Mode). In this method, the private keys are stored in the TPM and are highly secured with [VBS](https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/oem-vbs) (Virtualized-Based Security). The entire process happens in just few seconds.
-https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/oem-hvci-enablement
+Upon constructing a certificate, the cmdlet stores it in the Current User's personal store, then it exports that certificate in 2 files. One of the files has a `.cer` extension and encompasses only the public key, the other file has a `.pfx` extension and encompasses both public and private keys. 
+
+The PFX file is encrypted with `SHA-256` encryption and safeguarded with the password supplied by the user. After the 2 files are exported, the cmdlet eliminates the certificate from Current Users personal store and then re-imports it using the PFX file, but this time it will store the private key using [VSM](https://learn.microsoft.com/en-us/virtualization/hyper-v-on-windows/tlfs/vsm) (Virtual Secure Mode). In this method, the private keys are stored in the TPM and are highly secured with [VBS](https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/oem-vbs) (Virtualized-Based Security). The entire process happens in just few seconds.
+
 <br>
 
 ### 5 Optional Parameters
 
 * `-CommonName`: The common name of the certificate, it will also be assigned as the friendly name of the certificate. If it's not provided, the default value of `Code Signing Certificate` will be used.
+    * If you enter a CommonName but do not enter a FileName, the FileName will be set to the same value as the CommonName for better user experience.
 
 * `-FileName`: The name of the `.cer` and `.pfx` files that will be generated. If it's not provided, the default value of `Code Signing Certificate` will be used. The files are saved in the current working directory.
 

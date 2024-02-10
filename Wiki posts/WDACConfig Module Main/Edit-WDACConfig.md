@@ -339,7 +339,7 @@ Offers the same official [Levels](https://learn.microsoft.com/en-us/powershell/m
 
 ### -Fallbacks
 
-Offers the same official [Fallbacks](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-fallback) for scanning of event logs.
+Offers the same official [Fallbacks](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-fallback) for scanning of the specified directory path.
 
 <div align='center'>
 

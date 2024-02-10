@@ -92,6 +92,20 @@ If a parameter's **Automatic** value is set to True in the parameter description
 
 <br>
 
+### The Logic Behind The -SignToolPath Parameter in the Module
+
+1. If [Windows SDK](https://developer.microsoft.com/en-us/windows/downloads/windows-sdk/) Signing Tools for Desktop Apps components is installed in the default location `C:\Program Files (x86)\Windows Kits`, then specifying `-SignToolPath` parameter isn't necessary as the SignTool.exe will be detected automatically.
+
+2. If Windows SDK Signing Tools for Desktop Apps components is not installed in the default location or you want to manually browse for the signtool.exe, then make sure you either specify its path using `Set-CommonWDACConfig -SignToolPath` or use the `-SignToolPath` parameter.
+
+3. If SignTool.exe path is available in user configurations then it will be automatically used.
+
+4. Specifying `-SignToolPath` parameter explicitly on the command line takes priority over auto detection and value in the user configurations.
+
+5. If SignTool.exe cannot be auto-detected and the user didn't specify it on the command line, you will receive a prompt to authorize the automatic download of the most recent SignTool.exe version from the official Microsoft servers. Upon confirmation, it will be saved in your user configurations and utilized by the cmdlet. The file itself will be saved in the current working directory.
+
+<br>
+
 <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
 
 <br>

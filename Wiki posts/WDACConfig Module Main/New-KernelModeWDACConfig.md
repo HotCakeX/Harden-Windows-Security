@@ -125,7 +125,6 @@ New-KernelModeWDACConfig
     [-Deploy]
     [-EVSigners]
     [-SkipVersionCheck]
-    [-WhatIf]
     [-Confirm]
     [<CommonParameters>]
 ```

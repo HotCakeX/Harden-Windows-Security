@@ -3,8 +3,14 @@
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Remove-CommonWDACConfig/Remove-CommonWDACConfig.apng)
 
 ```powershell
-Remove-CommonWDACConfig [-CertCN] [-CertPath] [-SignToolPath] [-UnsignedPolicyPath] [-SignedPolicyPath]
-[-StrictKernelPolicyGUID] [-StrictKernelNoFlightRootsPolicyGUID]
+Remove-CommonWDACConfig 
+    [-CertCN] 
+    [-CertPath] 
+    [-SignToolPath] 
+    [-UnsignedPolicyPath] 
+    [-SignedPolicyPath]
+    [-StrictKernelPolicyGUID] 
+    [-StrictKernelNoFlightRootsPolicyGUID]
 ```
 
 <br>

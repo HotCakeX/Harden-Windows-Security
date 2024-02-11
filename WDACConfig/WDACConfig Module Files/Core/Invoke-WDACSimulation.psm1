@@ -181,8 +181,8 @@ Function Invoke-WDACSimulation {
             Write-Progress -Id 0 -Activity 'Looping through each supported file' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
             # The total number of the sub steps for the progress bar to render
-            [System.Int64]$TotalSubSteps = $CollectedFiles.Count
-            [System.Int64]$CurrentSubStep = 0
+            [System.UInt64]$TotalSubSteps = $CollectedFiles.Count
+            [System.UInt64]$CurrentSubStep = 0
 
             foreach ($CurrentFilePath in $CollectedFiles) {
 

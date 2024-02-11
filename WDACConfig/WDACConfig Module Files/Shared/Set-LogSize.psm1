@@ -15,7 +15,7 @@ Function Set-LogSize {
     [OutputType([System.Void])]
     param (
         [parameter(Mandatory = $true)]
-        [System.Int64]$LogSize
+        [System.UInt64]$LogSize
     )
     # Importing the $PSDefaultParameterValues to the current session, prior to everything else
     . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"

@@ -62,7 +62,7 @@ Function Remove-WDACConfig {
                 }
 
                 # Count the number of duplicate CNs in the output array
-                [System.Int64]$NumberOfDuplicateCNs = @($Output | Where-Object -FilterScript { $_ -eq $InputCN }).Count
+                [System.UInt64]$NumberOfDuplicateCNs = @($Output | Where-Object -FilterScript { $_ -eq $InputCN }).Count
 
                 # If the certificate with the provided common name exists in the personal store of the user certificates
                 if ($Output -contains $_) {

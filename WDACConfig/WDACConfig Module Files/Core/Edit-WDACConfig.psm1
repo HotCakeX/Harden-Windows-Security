@@ -93,7 +93,7 @@ Function Edit-WDACConfig {
 
         [ValidateRange(1024KB, 18014398509481983KB)]
         [Parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps Audit Events')]
-        [System.Int64]$LogSize,
+        [System.UInt64]$LogSize,
 
         [parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps Audit Events')][System.Management.Automation.SwitchParameter]$IncludeDeletedFiles,
 
@@ -1147,7 +1147,7 @@ Function Edit-WDACConfig {
 .PARAMETER Verbose
     If specified, the verbose output will be shown
 .INPUTS
-    System.Int64
+    System.UInt64
     System.String[]
     System.String
     System.Management.Automation.SwitchParameter

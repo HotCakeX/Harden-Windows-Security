@@ -111,7 +111,7 @@ Function Edit-SignedWDACConfig {
                 }
 
                 # Count the number of duplicate CNs in the output array
-                [System.Int64]$NumberOfDuplicateCNs = @($Output | Where-Object -FilterScript { $_ -eq $InputCN }).Count
+                [System.UInt64]$NumberOfDuplicateCNs = @($Output | Where-Object -FilterScript { $_ -eq $InputCN }).Count
 
                 # If the certificate with the provided common name exists in the personal store of the user certificates
                 if ($Output -contains $_) {
@@ -133,7 +133,7 @@ Function Edit-SignedWDACConfig {
         [System.String]$CertCN,
 
         [ValidateRange(1024KB, 18014398509481983KB)][Parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps Audit Events')]
-        [System.Int64]$LogSize,
+        [System.UInt64]$LogSize,
 
         [parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps Audit Events')]
         [parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps')]
@@ -1404,7 +1404,7 @@ Function Edit-SignedWDACConfig {
 .PARAMETER Debug
     If specified, the cmdlet will keep some files used during operations instead of deleting them
 .INPUTS
-    System.Int64
+    System.UInt64
     System.String
     System.String[]
     System.Management.Automation.SwitchParameter

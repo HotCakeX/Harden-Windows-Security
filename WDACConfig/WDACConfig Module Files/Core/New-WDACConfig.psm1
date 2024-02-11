@@ -67,7 +67,7 @@ Function New-WDACConfig {
         [Parameter(Mandatory = $false, ParameterSetName = 'Prep MSFT Only Audit')]
         [Parameter(Mandatory = $false, ParameterSetName = 'Prep Default Windows Audit')]
         [Parameter(Mandatory = $false, ParameterSetName = 'Make Policy From Audit Logs')]
-        [System.Int64]$LogSize,
+        [System.UInt64]$LogSize,
 
         [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SkipVersionCheck
     )
@@ -1089,7 +1089,7 @@ Function New-WDACConfig {
 .PARAMETER Verbose
     Displays detailed information about the operation performed by the command
 .INPUTS
-    System.Int64
+    System.UInt64
     System.String[]
     System.String
     System.Management.Automation.SwitchParameter

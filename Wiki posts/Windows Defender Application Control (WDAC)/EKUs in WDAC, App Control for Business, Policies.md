@@ -297,11 +297,7 @@ Function Convert-HexToOID {
 
 ## How EKUs Are Used by the WDAC Engine for Validation
 
-Regarding the incorporation of EKUs in file validation, WDAC verifies:
-
-1. Either one of the file's intermediate certificates or the file's root certificate, corresponds to a signer's TBS hash and Name. The TBS hash is the To-Be-Signed hash of the certificate and the Signer name denotes the common name of that certificate.
-
-2. **The file's leaf certificate (File's signer) possesses identical EKUs as the signer element's EKUs.**
+Regarding the incorporation of EKUs in file validation, WDAC verifies that the file's leaf certificate (File's signer) possesses identical EKUs as the signer element's EKUs. Regardless of whether the Signer's CertRoot (TBS value) and name (CN of the certificate) match with file's root, intermediate or leaf certificates, the EKUs only need to match with the leaf certificate.
 
 For example, in the Default Windows template policy, the `Kernel32.dll` is authorized by the following signer:
 

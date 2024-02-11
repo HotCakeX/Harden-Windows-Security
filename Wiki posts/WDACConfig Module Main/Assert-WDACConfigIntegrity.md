@@ -24,7 +24,7 @@ If there is any indication of tampering, the outcomes will be displayed on the c
 
 ### -SaveLocally
 
-This parameter is used to generate hashes of the final modules files prior to publishing them to the GitHub. This parameter shouldn't be used.
+This parameter is used to generate hashes of the final module's files prior to publishing them to the GitHub. This parameter shouldn't be used.
 
 <div align='center'>
 
@@ -46,7 +46,7 @@ Can define a different path for the `Hashes.csv` file. This parameter shouldn't 
 
 <div align='center'>
 
-| Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|
+| Type: |[FileInfo](https://learn.microsoft.com/en-us/dotnet/api/system.io.fileinfo)|
 | :-------------: | :-------------: |
 | Position: | Named |
 | Default value: | Module's Root Directory |

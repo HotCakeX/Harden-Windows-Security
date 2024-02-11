@@ -439,7 +439,7 @@ Indicates that the created/deployed policy will have [Require EV Signers](https:
 
 ### -Debug
 
-Indicates that the module will output 3 additional files for debugging purposes and also write debug messages on the console:
+Indicates that the module will output 3 additional files for debugging purposes:
 
 - *FileRulesAndFileRefs.txt* - Contains the File Rules and Rule refs for the Hash of the files that no longer exist on the disk.
 - *DeletedFilesHashes.xml* - Policy file that contains File Rules and Rule refs for the files that no longer exist on the disk.
@@ -479,7 +479,7 @@ Specifies the log size for ***Microsoft-Windows-CodeIntegrity/Operational*** eve
 
 ### -Levels
 
-Offers the same official [Levels](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-level) for scanning of event logs.
+Offers the same official [Levels](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-level) for scanning event logs.
 
 <div align='center'>
 
@@ -497,7 +497,7 @@ Offers the same official [Levels](https://learn.microsoft.com/en-us/powershell/m
 
 ### -Fallbacks
 
-Offers the same official [Fallbacks](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-fallback) for scanning of event logs.
+Offers the same official [Fallbacks](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-fallback) for scanning event logs.
 
 <div align='center'>
 
@@ -594,17 +594,17 @@ By default, the module includes user PEs in the scan. When you use this switch p
 
 <br>
 
-### The outputs of the parameter are
+### The outputs of the parameter
 
-All of the outputs are saved in a folder named "WDAC" inside the current working directory.
+All of the outputs are saved in an easily identified folder inside the current working directory.
 
-* ***AllowMicrosoftPlusBlockRules.xml***: base policy created using [-MakeAllowMSFTWithBlockRules](#new-wdacconfig--makeallowmsftwithblockrules) parameter
+* The base policy XML file
 
-* ***SupplementalPolicy.xml***: The supplemental policy created using the script.
+* The supplemental policy XML file
 
-* ***{GUID}.cip***: Binary file for AllowMicrosoft Policy, ready for deployment.
+* `{GUID}.cip` Binary file for the base Policy, ready for deployment.
 
-* ***{GUID}.cip***: Binary file for SupplementalPolicy policy, ready for deployment.
+* `{GUID}.cip` Binary file for the supplemental Policy, ready for deployment.
 
 <br>
 
@@ -732,7 +732,8 @@ Calls the [-GetBlockRules](#new-wdacconfig--getblockrules) parameter to get the 
 
 <br>
 
-* Since the module uses PowerShell and not Windows PowerShell that is pre-installed in Windows, this parameter will automatically scan `C:\Program Files\PowerShell` directory (if it detects the PowerShell is not installed from Microsoft Store) and add PowerShell files to the ***DefaultWindowsPlusBlockRules.xml*** policy file so that you will be able to continue using the module after deploying the policy. The scan uses ***FilePublisher*** level and ***Hash*** fallback.
+> [!NOTE]\
+> Since the module uses PowerShell and not Windows PowerShell that is pre-installed in Windows, this parameter will automatically scan `C:\Program Files\PowerShell` directory (if it detects the PowerShell is not installed from Microsoft Store) and add PowerShell files to the ***DefaultWindowsPlusBlockRules.xml*** policy file so that you will be able to continue using the module after deploying the policy. The scan uses ***FilePublisher*** level and ***Hash*** fallback.
 
 ## Parameters
 

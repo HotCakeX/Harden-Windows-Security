@@ -126,7 +126,7 @@ New-WDACConfig -MakePolicyFromAuditLogs -BasePolicyType 'Default Windows Base' -
 
 <br>
 
-All of the outputs are saved in a folder named "WDAC" inside the current working directory.
+All of the outputs are saved in an easily identified folder inside the current working directory.
 
 **If you use the `-Deploy` optional switch parameter with the commands above, 3 things will automatically happen:**
 

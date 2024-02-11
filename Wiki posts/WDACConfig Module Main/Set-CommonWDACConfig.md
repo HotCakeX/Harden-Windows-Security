@@ -20,7 +20,7 @@ Set-CommonWDACConfig
 
 Use this cmdlet to store the values for common and frequently used parameters so that you won't have to specify them again every time.
 
-All of the applicable cmdlets of the module automatically check the User Configuration file for any available input, if you don't specify values for their parameters.
+All of the applicable cmdlets of the module automatically check the User Configuration file for any available input, if you don't specify values for their parameters. Learn more about the User Configuration file [here](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig#about-automatic-parameters).
 
 <br>
 

@@ -22,7 +22,8 @@ New-KernelModeWDACConfig
 
 This cmdlet generates a Kernel-mode WDAC policy derived from the Default Windows template policy. [You can learn more about that procedure in here.](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-policy-for-BYOVD-Kernel-mode-only-protection)
 
-The **-Default** parameter signifies that the Strict Kernel-mode WDAC policy will be deployed with flight root certificates, enabling you to utilize insider builds of the OS.
+> [!NOTE]\
+> The **-Default** parameter signifies that the Strict Kernel-mode WDAC policy will be deployed with flight root certificates, enabling you to utilize insider builds of the OS in the Dev and Canary channels. Insider builds in the Beta and Release Preview channels are signed with production root certificates and will work either way.
 
 Initially, you need to use the **-PrepMode** parameter to deploy the base policy in Audit mode, then restart your system. After restarting, event logs are produced for Kernel-mode drivers that are running but would otherwise be blocked if the policy was not deployed in Audit mode.
 
@@ -33,7 +34,8 @@ Subsequently, you need to use the **-AuditAndEnforce** parameter to generate the
 3. Merge the supplemental policy with the Strict Kernel-mode base policy
 4. Deploy it as a single base policy, rebootlessly.
 
-Hardware drivers are scanned with [WHQLFilePublisher](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/select-types-of-rules-to-create#table-2-windows-defender-application-control-policy---file-rule-levels) level. so they will not necessitate a policy update when they are updated.
+> [!IMPORTANT]\
+> Hardware drivers are scanned with [WHQLFilePublisher](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/select-types-of-rules-to-create#table-2-windows-defender-application-control-policy---file-rule-levels) level, so they will not necessitate a policy update when they are updated.
 
 ## Parameters
 
@@ -135,7 +137,8 @@ New-KernelModeWDACConfig
 
 This cmdlet generates a Kernel-mode WDAC policy derived from the Default Windows template policy. [You can learn more about that procedure in here.](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-policy-for-BYOVD-Kernel-mode-only-protection)
 
-The **-NoFlightRoots** parameter signifies that the Strict Kernel-mode WDAC policy will not be deployed with flight root certificates, disallowing you to use insider builds of the OS.
+> [!NOTE]\
+> The **-NoFlightRoots** parameter signifies that the Strict Kernel-mode WDAC policy will not be deployed with flight root certificates, disallowing you to use insider builds of the OS in the Dev and Canary channels. Insider builds in the Beta and Release Preview channels are signed with production root certificates and will work either way.
 
 Initially, you need to use the **-PrepMode** parameter to deploy the base policy in Audit mode, then restart your system. After restarting, event logs are produced for Kernel-mode drivers that are running but would otherwise be blocked if the policy was not deployed in Audit mode.
 
@@ -146,7 +149,8 @@ Subsequently, you need to use the **-AuditAndEnforce** parameter to generate the
 3. Merge the supplemental policy with the Strict Kernel-mode base policy
 4. Deploy it as a single base policy, rebootlessly.
 
-Hardware drivers are scanned with [WHQLFilePublisher](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/select-types-of-rules-to-create#table-2-windows-defender-application-control-policy---file-rule-levels) level so they will not necessitate a policy update when they are updated.
+> [!IMPORTANT]\
+> Hardware drivers are scanned with [WHQLFilePublisher](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/select-types-of-rules-to-create#table-2-windows-defender-application-control-policy---file-rule-levels) level, so they will not necessitate a policy update when they are updated.
 
 ## Parameters
 

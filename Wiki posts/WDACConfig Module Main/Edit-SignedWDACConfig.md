@@ -143,7 +143,7 @@ Press TAB to open the file picker GUI and browse for SignTool.exe
 
 ### -Debug
 
-Indicates that the module will output these additional files for debugging purposes and also show debug messages on the console:
+Indicates that the module will output these additional files for debugging purposes:
 
 * *FileRulesAndFileRefs.txt* - Contains the File Rules and Rule refs for the Hash of the files that no longer exist on the disk.
 
@@ -169,7 +169,7 @@ Indicates that the module will output these additional files for debugging purpo
 
 ### -Levels
 
-Offers the same official [Levels](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-level) for scanning event logs.
+Offers the same official [Levels](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-level) for scanning event logs and the specified directory path(s).
 
 <div align='center'>
 
@@ -187,7 +187,7 @@ Offers the same official [Levels](https://learn.microsoft.com/en-us/powershell/m
 
 ### -Fallbacks
 
-Offers the same official [Fallbacks](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-fallback) for scanning event logs.
+Offers the same official [Fallbacks](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-fallback) for scanning event logs and the specified directory path(s).
 
 <div align='center'>
 
@@ -443,7 +443,7 @@ Press TAB to open the file picker GUI and browse for SignTool.exe
 
 ### -Levels
 
-Offers the same official [Levels](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-level) to scan the specified directory path.
+Offers the same official [Levels](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-level) to scan the specified directory path(s).
 
 <div align='center'>
 
@@ -461,7 +461,7 @@ Offers the same official [Levels](https://learn.microsoft.com/en-us/powershell/m
 
 ### -Fallbacks
 
-Offers the same official [Fallbacks](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-fallback) to scan the specified directory path.
+Offers the same official [Fallbacks](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-fallback) to scan the specified directory path(s).
 
 <div align='center'>
 

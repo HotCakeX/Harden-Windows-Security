@@ -84,7 +84,7 @@ Browse for the xml file of the Base policy this Supplemental policy is going to 
 
 ### -Debug
 
-Indicates that the module will output these additional files for debugging purposes and also show debug messages on the console:
+Indicates that the module will output these additional files for debugging purposes:
 
 * *FileRulesAndFileRefs.txt* - Contains the File Rules and Rule refs for the Hash of the files that no longer exist on the disk.
 
@@ -128,7 +128,7 @@ Specifies the log size for ***Microsoft-Windows-CodeIntegrity/Operational*** eve
 
 ### -Levels
 
-Offers the same official [Levels](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-level) for scanning event logs.
+Offers the same official [Levels](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-level) for scanning event logs and the specified directory path(s).
 
 <div align='center'>
 
@@ -146,7 +146,7 @@ Offers the same official [Levels](https://learn.microsoft.com/en-us/powershell/m
 
 ### -Fallbacks
 
-Offers the same official [Fallbacks](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-fallback) for scanning event logs.
+Offers the same official [Fallbacks](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-fallback) for scanning event logs and the specified directory path(s).
 
 <div align='center'>
 
@@ -321,7 +321,7 @@ Browse for the xml file of the Base policy this Supplemental policy is going to 
 
 ### -Levels
 
-Offers the same official [Levels](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-level) to scan the specified directory path.
+Offers the same official [Levels](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-level) to scan the specified directory path(s).
 
 <div align='center'>
 
@@ -339,7 +339,7 @@ Offers the same official [Levels](https://learn.microsoft.com/en-us/powershell/m
 
 ### -Fallbacks
 
-Offers the same official [Fallbacks](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-fallback) to scan the specified directory path.
+Offers the same official [Fallbacks](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-fallback) to scan the specified directory path(s).
 
 <div align='center'>
 
@@ -553,7 +553,7 @@ The name of the currently deployed base policy. It supports tab completion so ju
 | :-------------: | :-------------: |
 | Position: | Named |
 | Default value: | None |
-| Required: | False |
+| Required: | True |
 | Accept pipeline input: | False |
 | Accept wildcard characters: | False |
 
@@ -578,7 +578,7 @@ The type of the base policy to deploy. It supports tab completion so just press 
 | :-------------: | :-------------: |
 | Position: | Named |
 | Default value: | None |
-| Required: | False |
+| Required: | True |
 | Accept pipeline input: | False |
 | Accept wildcard characters: | False |
 

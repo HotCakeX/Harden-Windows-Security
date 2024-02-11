@@ -89,7 +89,7 @@ Install-Module -Name 'WDACConfig' -Force
 
 ## About Automatic Parameters
 
-If a parameter's **Automatic** value is set to True in the parameter description, it indicate that if you used [Set-CommonWDACConfig](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Set-CommonWDACConfig) cmdlet to set default value for it, the module will automatically use it. This saves time and prevents repetitive tasks. However, if no value exists in User Configurations for an Automatic parameter and you didn't explicitly provide a value for that parameter either, then you will see an error asking you to provide value for it. Explicitly providing a value for an Automatic parameter in the command line overrides its default value in the User Configurations, meaning the module will ignore the value of the same parameter in the User Configurations file.
+A parameter with an **Automatic** value of True in the description means that the module will use its default value set by the [Set-CommonWDACConfig](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Set-CommonWDACConfig) cmdlet. This simplifies the process and avoids redundancy. However, if an Automatic parameter has no value in User Configurations and you do not specify one in the command line, you will encounter an error requesting a value. Specifying a value for an Automatic parameter in the command line supersedes its default value in User Configurations, so the module will disregard the value of that parameter in the User Configurations file.
 
 <br>
 

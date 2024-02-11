@@ -2,7 +2,7 @@
 
 ```powershell
 Test-CiPolicy
-    [-XmlFile] <FileInfo> 
+    [-XmlFile] <FileInfo>
     [<CommonParameters>]
 ```
 

@@ -102,7 +102,7 @@ Indicates that the module will automatically deploy the Supplemental policy afte
 
 ### -Levels
 
-Offers the same official [Levels](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-level) for scanning of event logs.
+Offers the same official [Levels](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-level) to scan the specified directory path.
 
 <div align='center'>
 
@@ -120,7 +120,7 @@ Offers the same official [Levels](https://learn.microsoft.com/en-us/powershell/m
 
 ### -Fallbacks
 
-Offers the same official [Fallbacks](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-fallback) for scanning of event logs.
+Offers the same official [Fallbacks](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-fallback) to scan the specified directory path.
 
 <div align='center'>
 
@@ -139,6 +139,7 @@ Offers the same official [Fallbacks](https://learn.microsoft.com/en-us/powershel
 ### -SpecificFileNameLevel
 
 You can choose one of the following options:
+
 * OriginalFileName
 * InternalName
 * FileDescription
@@ -278,7 +279,6 @@ Browse for the xml file of the Base policy this Supplemental policy is going to 
 | Position: | Named |
 | Default value: | None |
 | Required: | False |
-| Required: | False |
 | [Automatic:](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig#about-automatic-parameters) | True |
 | Accept pipeline input: | False |
 | Accept wildcard characters: | False |
@@ -385,7 +385,6 @@ Browse for the xml file of the Base policy this Supplemental policy is going to 
 | :-------------: | :-------------: |
 | Position: | Named |
 | Default value: | None |
-| Required: | False |
 | Required: | False |
 | [Automatic:](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig#about-automatic-parameters) | True |
 | Accept pipeline input: | False |

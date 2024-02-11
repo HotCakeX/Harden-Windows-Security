@@ -104,7 +104,7 @@ Function Compare-SignerAndCertificate {
         # Store the intermediate certificate(s) details of the Primary certificate of the signed file
         [System.Object[]]$PrimaryCertificateIntermediateDetails = $AllPrimaryCertificateDetails.IntermediateCertificates
 
-        # Store th leaf certificate details of the Primary Certificate of the signed file
+        # Store the leaf certificate details of the Primary Certificate of the signed file
         [System.Object]$PrimaryCertificateLeafDetails = $AllPrimaryCertificateDetails.LeafCertificate
 
         # Get the Nested (Secondary) certificate of the signed file, if any

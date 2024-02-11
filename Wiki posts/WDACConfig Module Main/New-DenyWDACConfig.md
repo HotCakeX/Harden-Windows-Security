@@ -82,7 +82,7 @@ Indicates that the module will automatically deploy the Deny base policy after c
 
 ### -Levels
 
-Offers the same official [Levels](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-level) to scan the specified directory path.
+Offers the same official [Levels](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-level) to scan the specified directory path(s).
 
 <div align='center'>
 
@@ -100,7 +100,7 @@ Offers the same official [Levels](https://learn.microsoft.com/en-us/powershell/m
 
 ### -Fallbacks
 
-Offers the same official [Fallbacks](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-fallback) to scan the specified directory path.
+Offers the same official [Fallbacks](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-fallback) to scan the specified directory path(s).
 
 <div align='center'>
 
@@ -262,7 +262,7 @@ Indicates that the module will automatically deploy the Deny base policy after c
 
 ### -Levels
 
-Offers the same official [Levels](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-level) to scan the specified directory path.
+Offers the same official [Levels](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-level) to scan the specified directory path(s).
 
 <div align='center'>
 
@@ -280,7 +280,7 @@ Offers the same official [Levels](https://learn.microsoft.com/en-us/powershell/m
 
 ### -Fallbacks
 
-Offers the same official [Fallbacks](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-fallback) to scan the specified directory path.
+Offers the same official [Fallbacks](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-fallback) to scan the specified directory path(s).
 
 <div align='center'>
 
@@ -406,7 +406,7 @@ Indicates that the cmdlet won't ask for confirmation and will proceed with creat
 New-DenyWDACConfig
     [-PathWildCards]
     -PolicyName <String>
-    -FolderPath <String>
+    -FolderPath <DirectoryInfo>
     [-Deploy]
     [-SkipVersionCheck]
     [-Confirm]

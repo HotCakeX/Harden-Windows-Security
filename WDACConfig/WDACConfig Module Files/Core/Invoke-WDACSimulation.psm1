@@ -211,6 +211,14 @@ Function Invoke-WDACSimulation {
 
                     $AllowedByHashFilePaths += $CurrentFilePath
                 }
+
+                # If the file's extension is not supported by Authenticode and it wasn't allowed by file hash then it's not allowed and no reason to check its signature
+                elseif ($CurrentFilePath.Extension -in @('.ocx', '.bat')) {
+                    Write-Verbose -Message 'The file is not signed and is not allowed by hash'
+
+                    $UnsignedNotAllowedFilePaths += $CurrentFilePath
+                }
+
                 # If the file's hash does not exist in the supplied XML file, then check its signature
                 else {
 

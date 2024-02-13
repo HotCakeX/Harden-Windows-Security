@@ -6,8 +6,7 @@ Function New-SupplementalWDACConfig {
         ConfirmImpact = 'High'
     )]
     [OutputType([System.String])]
-    Param(
-        # Main parameters for position 0
+    Param(        
         [Alias('N')]
         [Parameter(Mandatory = $false, ParameterSetName = 'Normal')][System.Management.Automation.SwitchParameter]$Normal,
         [Alias('W')]
@@ -391,6 +390,7 @@ Function New-SupplementalWDACConfig {
 .INPUTS
     System.String[]
     System.String
+    System.IO.DirectoryInfo
     System.Management.Automation.SwitchParameter
 .OUTPUTS
     System.String

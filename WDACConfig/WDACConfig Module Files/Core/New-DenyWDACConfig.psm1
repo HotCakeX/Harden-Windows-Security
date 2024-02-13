@@ -7,7 +7,6 @@ Function New-DenyWDACConfig {
     )]
     [OutputType([System.String])]
     Param(
-        # Main parameters for position 0
         [Alias('N')]
         [Parameter(Mandatory = $false, ParameterSetName = 'Normal')][System.Management.Automation.SwitchParameter]$Normal,
         [Alias('D')]
@@ -27,7 +26,7 @@ Function New-DenyWDACConfig {
 
         [ValidatePattern('\*', ErrorMessage = 'You did not supply a path that contains wildcard character (*) .')]
         [parameter(Mandatory = $true, ParameterSetName = 'Folder Path With WildCards', ValueFromPipelineByPropertyName = $true)]
-        [System.String]$FolderPath,
+        [System.IO.DirectoryInfo]$FolderPath,
 
         [ValidateScript({ Test-Path -Path $_ -PathType 'Container' }, ErrorMessage = 'The path you selected is not a folder path.')]
         [Parameter(Mandatory = $false, ParameterSetName = 'Normal')]
@@ -512,6 +511,8 @@ Function New-DenyWDACConfig {
 .INPUTS
     System.String[]
     System.String
+    System.IO.DirectoryInfo
+    System.IO.DirectoryInfo[]
     System.Management.Automation.SwitchParameter
 .OUTPUTS
     System.String

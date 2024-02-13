@@ -130,7 +130,7 @@ This document lists all of the levels of WDAC rules. **From Top to bottom, from 
 
 <br>
 
-## <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/Neon%20numbers%20and%20letters/number1.gif" width="30" alt="Neon number"> <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/Neon%20numbers%20and%20letters/number0.gif" width="30" alt="Neon number"> FileName
+## <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/Neon%20numbers%20and%20letters/Reduced%20padding/number1.gif" width="20" alt="Neon number"> <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/Neon%20numbers%20and%20letters/Reduced%20padding/number0.gif" width="25" alt="Neon number"> FileName
 
 * One of the attributes of the file (FileDescription, InternalName, OriginalFileName, PackageFamilyName, ProductName, Filepath)
 
@@ -143,7 +143,7 @@ This document lists all of the levels of WDAC rules. **From Top to bottom, from 
 
 <br>
 
-## <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/Neon%20numbers%20and%20letters/number1.gif" width="30" alt="Neon number"> <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/Neon%20numbers%20and%20letters/number1.gif" width="30" alt="Neon number"> FilePath
+## <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/Neon%20numbers%20and%20letters/Reduced%20padding/number1.gif" width="20" alt="Neon number"> <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/Neon%20numbers%20and%20letters/Reduced%20padding/number1.gif" width="20" alt="Neon number"> FilePath
 
 * Path of the file on disk
 

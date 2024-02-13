@@ -35,12 +35,10 @@ Function New-DenyWDACConfig {
 
         [ValidateSet([Levelz])]
         [Parameter(Mandatory = $false, ParameterSetName = 'Normal')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'Drivers')]
         [System.String]$Level = 'FilePublisher',
 
         [ValidateSet([Fallbackz])]
         [Parameter(Mandatory = $false, ParameterSetName = 'Normal')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'Drivers')]
         [System.String[]]$Fallbacks = 'Hash',
 
         [ValidateSet('OriginalFileName', 'InternalName', 'FileDescription', 'ProductName', 'PackageFamilyName', 'FilePath')]
@@ -222,9 +220,12 @@ Function New-DenyWDACConfig {
 
             Write-Verbose -Message 'Looping through each user-selected folder paths, scanning them, creating a temp policy file based on them'
             powershell.exe -Command {
+
                 [System.Object[]]$DriverFilesObject = @()
+
                 # loop through each user-selected folder paths
                 foreach ($ScanLocation in $args[0]) {
+
                     # DriverFile object holds the full details of all of the scanned drivers - This scan is greedy, meaning it stores as much information as it can find
                     # about each driver file, any available info about digital signature, hash, FileName, Internal Name etc. of each driver is saved and nothing is left out
                     $DriverFilesObject += Get-SystemDriver -ScanPath $ScanLocation -UserPEs
@@ -233,8 +234,8 @@ Function New-DenyWDACConfig {
                 [System.Collections.Hashtable]$PolicyMakerHashTable = @{
                     FilePath             = '.\DenyPolicy Temp.xml'
                     DriverFiles          = $DriverFilesObject
-                    Level                = $args[1]
-                    Fallback             = $args[2]
+                    Level                = 'WHQLFilePublisher'
+                    Fallback             = 'None'
                     MultiplePolicyFormat = $true
                     UserWriteablePaths   = $true
                     Deny                 = $true
@@ -242,7 +243,7 @@ Function New-DenyWDACConfig {
                 # Creating a base policy using the DriverFile object and specifying which detail about each driver should be used in the policy file
                 New-CIPolicy @PolicyMakerHashTable
 
-            } -args $ScanLocations, $Level, $Fallbacks
+            } -args $ScanLocations
 
             $CurrentStep++
             Write-Progress -Id 23 -Activity 'Merging the policies' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)

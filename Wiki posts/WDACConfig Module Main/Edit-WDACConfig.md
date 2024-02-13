@@ -14,7 +14,7 @@ Edit-WDACConfig
      [-NoScript]
      [-NoUserPEs]
      [-SpecificFileNameLevel <String>]
-     [-LogSize <Int64>]
+     [-LogSize <UInt64>]
      [-IncludeDeletedFiles]
      [-SkipVersionCheck]
      [<CommonParameters>]

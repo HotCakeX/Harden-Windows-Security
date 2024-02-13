@@ -232,13 +232,14 @@ Function New-DenyWDACConfig {
                 }
 
                 [System.Collections.Hashtable]$PolicyMakerHashTable = @{
-                    FilePath             = '.\DenyPolicy Temp.xml'
-                    DriverFiles          = $DriverFilesObject
-                    Level                = 'WHQLFilePublisher'
-                    Fallback             = 'None'
-                    MultiplePolicyFormat = $true
-                    UserWriteablePaths   = $true
-                    Deny                 = $true
+                    FilePath               = '.\DenyPolicy Temp.xml'
+                    DriverFiles            = $DriverFilesObject
+                    Level                  = 'WHQLFilePublisher'
+                    Fallback               = 'None'
+                    MultiplePolicyFormat   = $true
+                    UserWriteablePaths     = $true
+                    Deny                   = $true
+                    AllowFileNameFallbacks = $true
                 }
                 # Creating a base policy using the DriverFile object and specifying which detail about each driver should be used in the policy file
                 New-CIPolicy @PolicyMakerHashTable

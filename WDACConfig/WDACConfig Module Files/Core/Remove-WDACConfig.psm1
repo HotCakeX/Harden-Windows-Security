@@ -440,6 +440,8 @@ Function Remove-WDACConfig {
 .INPUTS
     System.String
     System.String[]
+    System.IO.FileInfo
+    System.IO.FileInfo[]
     System.Management.Automation.SwitchParameter
 .OUTPUTS
     System.String

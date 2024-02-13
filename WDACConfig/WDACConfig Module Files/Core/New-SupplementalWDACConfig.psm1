@@ -6,7 +6,7 @@ Function New-SupplementalWDACConfig {
         ConfirmImpact = 'High'
     )]
     [OutputType([System.String])]
-    Param(        
+    Param(
         [Alias('N')]
         [Parameter(Mandatory = $false, ParameterSetName = 'Normal')][System.Management.Automation.SwitchParameter]$Normal,
         [Alias('W')]

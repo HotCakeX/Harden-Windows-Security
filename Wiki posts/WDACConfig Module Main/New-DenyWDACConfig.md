@@ -192,8 +192,6 @@ New-DenyWDACConfig
     [-Drivers]
     -PolicyName <String>
     [-ScanLocations <DirectoryInfo[]>]
-    [-Level <String>]
-    [-Fallbacks <String[]>]
     [-Deploy]
     [-SkipVersionCheck]
     [-Confirm]
@@ -203,6 +201,9 @@ New-DenyWDACConfig
 <br>
 
 Creates a Deny base policy by scanning a directory, this parameter uses [DriverFile objects](https://learn.microsoft.com/en-us/powershell/module/configci/get-systemdriver) so it's best suitable for driver files. The base policy will have 2 allow all rules, meaning it can be deployed as a standalone base policy, side-by-side any other Base/Supplemental policies.
+
+> [!NOTE]\
+> The scan uses **WHQLFilePublisher** level without any fallbacks, and includes both usermode and kernel mode drivers.
 
 ## Parameters
 
@@ -252,42 +253,6 @@ Indicates that the module will automatically deploy the Deny base policy after c
 | :-------------: | :-------------: |
 | Position: | Named |
 | Default value: | None |
-| Required: | False |
-| Accept pipeline input: | False |
-| Accept wildcard characters: | False |
-
-</div>
-
-<br>
-
-### -Levels
-
-Offers the same official [Levels](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-level) to scan the specified directory path(s).
-
-<div align='center'>
-
-| Type: |[String](https://learn.microsoft.com/en-us/dotnet/api/system.string)|
-| :-------------: | :-------------: |
-| Position: | Named |
-| Default value: | FilePublisher |
-| Required: | False |
-| Accept pipeline input: | False |
-| Accept wildcard characters: | False |
-
-</div>
-
-<br>
-
-### -Fallbacks
-
-Offers the same official [Fallbacks](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-fallback) to scan the specified directory path(s).
-
-<div align='center'>
-
-| Type: |[String](https://learn.microsoft.com/en-us/dotnet/api/system.string)[]|
-| :-------------: | :-------------: |
-| Position: | Named |
-| Default value: | Hash |
 | Required: | False |
 | Accept pipeline input: | False |
 | Accept wildcard characters: | False |

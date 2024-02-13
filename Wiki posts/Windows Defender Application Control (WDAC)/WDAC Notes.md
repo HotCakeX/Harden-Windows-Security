@@ -319,27 +319,6 @@ New-CIPolicy -FilePath ".\store.xml" -Rules $Rules
 
 <br>
 
-## File Rule Levels Security
-(For User Mode binaries only)
-
-* Hash (Best for any files, especially unsigned files)
-
-* FilePublisher (Best for Signed files)
-
-* SignedVersion (More permissive than FilePublisher, usable only for signed files)
-
-The rest are less secure and more permissive than the 3 file rule levels mentioned above.
-
-P.S FileName relies on the original filename for each binary, which can be [modified.](https://security.stackexchange.com/questions/210843/is-it-possible-to-change-original-filename-of-an-exe)
-
-Find more information in [Microsoft Learn](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/select-types-of-rules-to-create)
-
-<br>
-
-<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
-
-<br>
-
 ## How to Remove Flight Signing Certificates From Default Example Policies
 
 Removing these shouldn't cause any problem as long as you are using stable OS version
@@ -504,7 +483,7 @@ When you use `-Audit` parameter of ConfigCI cmdlets such as [Get-SystemDriver](h
 
 ## About Double-Signed Files and Filepublisher Level
 
-Sometimes there are files that are signed by 2 certificates, aka double signed files.
+Sometimes there are files that are signed by 2 or more certificates, aka double signed files.
 
 When FilePublisher level is used, WDAC creates rules for both of the intermediate certificates of those files, and each rule will have a signer assigned to it. If the file is either User mode only or Kernel mode only, then 2 Signers will be created for it, one for each certificate.
 

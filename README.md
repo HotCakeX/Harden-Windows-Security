@@ -1080,7 +1080,7 @@ This repository uses the simplest possible, yet effective, methods that make it 
 
 ## Support<a href="#support">![SupportIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Support.png)</a>
 
-<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/FwMF2jGaAAANLDc.png" alt="A beautiful pink laptop Windows 11, located on the table with coffee on the side" width="550"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Bing%20AI%20generated/rfsfdiol.png" alt="A beautiful pink laptop Windows 11, located on the table with coffee on the side" width="550"></p>
 
 <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/WebP/Heart%20Microsoft.webp" width="28" alt="If you have any questions, requests, suggestions etc"> If you have any questions, requests, suggestions etc. about this GitHub repository and its content, please open [a new discussion](https://github.com/HotCakeX/Harden-Windows-Security/discussions) or [Issue](https://github.com/HotCakeX/Harden-Windows-Security/issues).
 

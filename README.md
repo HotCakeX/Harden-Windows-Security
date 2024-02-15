@@ -244,7 +244,7 @@ From Top to bottom in order:
 
 ## May 9 2023 Windows Boot Manager CVE-2023-24932<a href="#may-9-2023-windows-boot-manager-cve-2023-24932"><img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/ExcMark.gif" width="35" alt="Rotating pink checkmark denoting registry or cmdlet"></a>
 
-<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/FwMIuw5aQAM2oXP.png" alt="An AI generated picture of a cat girl working in a server farm" width="550"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Bing%20AI%20generated/fsfds.png" alt="An AI generated picture of a cat girl working in a server farm" width="550"></p>
 
 <br>
 

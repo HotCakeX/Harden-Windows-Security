@@ -855,7 +855,7 @@ In Windows by default, devices will scan daily, automatically download and insta
 
 ## Edge Browser configurations<a href="#edge-browser-configurations">![EdgeBrowser](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/EdgeBrowser.png)</a>
 
-<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/1%20(2).jpg" alt="An AI generated picture of a cat girl working in a server farm" width="550"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Bing%20AI%20generated/fsdfds.png" alt="An AI generated picture of a cat girl working in a server farm" width="600"></p>
 
 <br>
 
@@ -950,7 +950,7 @@ Once you have those Firewall rules added, you can [use this method](https://gith
 
 ## Downloads Defense Measures <a href="#downloads-defense-measures-"><img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/DownloadsDefenseMeasures.png" alt="Downloads Defense Measures icon" width="48"></a>
 
-<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Bing%20AI%20generated/tgrlkdmg543.png" alt="An AI generated picture of a cat girl on the roof" width="600"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Bing%20AI%20generated/tgrlkdmg543.png" alt="An AI generated picture of a cat girl on the roof" width="500"></p>
 
 <br>
 

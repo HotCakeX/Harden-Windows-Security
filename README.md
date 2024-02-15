@@ -913,7 +913,7 @@ Due to security reasons, many policies cannot be used when you are signed into E
 
 ## Certificate Checking Commands<a href="#certificate-checking-commands">![CertificateIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Certificate.png)</a>
 
-<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/1%20(1).jpg" alt="An AI generated picture of a cat girl working in a server farm" width="550"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Bing%20AI%20generated/fdfdf.jpg" alt="An AI generated picture of a cat girl working in a server farm" width="650"></p>
 
 <br>
 

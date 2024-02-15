@@ -1022,7 +1022,7 @@ You don't need Admin privileges to run this category, because no system-wide cha
 
 ## Trust<a href="#trust">![TrustIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Trust.png)</a>
 
-<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/FwMP8ybaUAAm860.png" alt="An AI generated picture of a cat girl working in a server farm" width="550"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Bing%20AI%20generated/fdsf.png" alt="An AI generated picture of a cat girl working in a server farm" width="550"></p>
 
 ### How can you 100% trust this repository and know that nothing shady is going on?
 

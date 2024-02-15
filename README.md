@@ -244,7 +244,7 @@ From Top to bottom in order:
 
 ## May 9 2023 Windows Boot Manager CVE-2023-24932<a href="#may-9-2023-windows-boot-manager-cve-2023-24932"><img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/ExcMark.gif" width="35" alt="Rotating pink checkmark denoting registry or cmdlet"></a>
 
-<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/FwMIuw5aQAM2oXP.png" alt="An AI generated picture of a cat girl working in a server farm" width="600"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/FwMIuw5aQAM2oXP.png" alt="An AI generated picture of a cat girl working in a server farm" width="550"></p>
 
 <br>
 
@@ -268,7 +268,7 @@ You will need to restart your device once. After restart, wait at least for 5-10
 
 ## Microsoft Security Baselines<a href="#microsoft-security-baselines">![MicrosoftSecurityBaseline](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Microsoft-Security-Baseline.png)</a>
 
-<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/FwMGoa0aMAAw4-Y.png" alt="An AI generated picture of a cat girl working in a server farm" width="600"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/FwMGoa0aMAAw4-Y.png" alt="An AI generated picture of a cat girl working in a server farm" width="550"></p>
 
 <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> A security baseline is a group of Microsoft-recommended configuration settings that explains their security implications. These settings are based on feedback from Microsoft security engineering teams, product groups, partners, and customers.
 
@@ -288,7 +288,7 @@ You will need to restart your device once. After restart, wait at least for 5-10
 
 ## Microsoft 365 Apps Security Baselines<a href="#microsoft-365-apps-security-baselines">![Microsoft365AppsSecurityBaselines](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Microsoft-365-Apps-Security-Baselines.png)</a>
 
-<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/6456346.png" alt="AI generated picture" width="1000"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Bing%20AI%20generated/fdss%20(1).png" alt="AI generated picture" width="500"></p>
 
 <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> The security baseline for Microsoft 365 Apps for enterprise is published twice a year, usually in June and December.
 
@@ -422,7 +422,7 @@ Add-MpPreference -ControlledFolderAccessAllowedApplications 'C:\Program Files\Ap
 
 ## Attack surface reduction rules<a href="#attack-surface-reduction-rules">![ASRrulesIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/ASRrules.png)</a>
 
-<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/53453.png" alt="AI generated image" width="900"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Bing%20AI%20generated/fdss%20(2).png" alt="AI generated image" width="500"></p>
 
 <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> [Reducing your attack surface](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/attack-surface-reduction) means protecting your devices and network, which leaves attackers with fewer ways to perform attacks. Configuring attack surface reduction rules in Windows can help!
 
@@ -446,7 +446,7 @@ Such software behaviors are sometimes seen in legitimate applications. However, 
 
 ## Bitlocker Settings<a href="#bitlocker-settings">![BitlockerIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Bitlocker.png)</a>
 
-<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/2152165465461.png" alt="AI generated image" width="650"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/2152165465461.png" alt="AI generated image" width="550"></p>
 
 <br>
 
@@ -649,7 +649,7 @@ NistP384
 
 ## Windows Firewall<a href="#windows-firewall">![FirewallIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Firewall.png)</a>
 
-<p align="center"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Bing%20AI%20generated/Selected%20photo%20(4).jpg" alt="An AI generated picture of a cat girl working in a server farm" width="600"></p>
+<p align="center"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Bing%20AI%20generated/Selected%20photo%20(4).jpg" alt="An AI generated picture of a cat girl working in a server farm" width="550"></p>
 
 <br>
 
@@ -672,7 +672,7 @@ NistP384
 
 ## Optional Windows Features<a href="#optional-windows-features">![OptionalFeaturesIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/OptionalFeatures.png)</a>
 
-<p align="center"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Bing%20AI%20generated/Ft8V6bfX0AwVr7a.jpg" alt="An AI generated picture of a cat girl working in a server farm" width="600"></p>
+<p align="center"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Bing%20AI%20generated/Ft8V6bfX0AwVr7a.jpg" alt="An AI generated picture of a cat girl working in a server farm" width="550"></p>
 
 <br>
 
@@ -722,7 +722,7 @@ NistP384
 
 ## Windows Networking<a href="#windows-networking">![NetworkingIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Networking.png)</a>
 
-<p align="center"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Bing%20AI%20generated/Ft8TCOwX0AQgKN-.jpg" alt="An AI generated picture of a cat girl working in a server farm" width="600"></p>
+<p align="center"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Bing%20AI%20generated/Ft8TCOwX0AQgKN-.jpg" alt="An AI generated picture of a cat girl working in a server farm" width="550"></p>
 
 <br>
 
@@ -855,7 +855,7 @@ In Windows by default, devices will scan daily, automatically download and insta
 
 ## Edge Browser configurations<a href="#edge-browser-configurations">![EdgeBrowser](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/EdgeBrowser.png)</a>
 
-<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/1%20(2).jpg" alt="An AI generated picture of a cat girl working in a server farm" width="600"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/1%20(2).jpg" alt="An AI generated picture of a cat girl working in a server farm" width="550"></p>
 
 <br>
 
@@ -913,7 +913,7 @@ Due to security reasons, many policies cannot be used when you are signed into E
 
 ## Certificate Checking Commands<a href="#certificate-checking-commands">![CertificateIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Certificate.png)</a>
 
-<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/1%20(1).jpg" alt="An AI generated picture of a cat girl working in a server farm" width="600"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/1%20(1).jpg" alt="An AI generated picture of a cat girl working in a server farm" width="550"></p>
 
 <br>
 
@@ -929,7 +929,7 @@ Due to security reasons, many policies cannot be used when you are signed into E
 
 ## Country IP Blocking<a href="#country-ip-blocking">![CountryIPBlockingIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/CountryIPBlocking.png)</a>
 
-<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/3.jpg" alt="An AI generated picture of a cat girl working in a server farm" width="600"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/3.jpg" alt="An AI generated picture of a cat girl working in a server farm" width="550"></p>
 
 <br>
 
@@ -950,7 +950,7 @@ Once you have those Firewall rules added, you can [use this method](https://gith
 
 ## Downloads Defense Measures <a href="#downloads-defense-measures-"><img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/DownloadsDefenseMeasures.png" alt="Downloads Defense Measures icon" width="48"></a>
 
-<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Bing%20AI%20generated/tgrlkdmg543.png" alt="An AI generated picture of a cat girl on the roof" width="700"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Bing%20AI%20generated/tgrlkdmg543.png" alt="An AI generated picture of a cat girl on the roof" width="600"></p>
 
 <br>
 
@@ -972,7 +972,7 @@ The policy can be removed by the [**Unprotect-WindowsSecurity**](https://github.
 
 ## Non-Admin Commands<a href="#non-admin-commands">![NonAdminIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/NonAdmin.png)</a>
 
-<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/6.jpg" alt="An AI generated picture of a cat girl working in a server farm" width="600"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/6.jpg" alt="An AI generated picture of a cat girl working in a server farm" width="550"></p>
 
 <br>
 
@@ -998,7 +998,7 @@ You don't need Admin privileges to run this category, because no system-wide cha
 
 ## Related<a href="#related">![RelatedIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Related.png)</a>
 
-<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/5.jpg" alt="An AI generated picture of a cat girl working in a server farm" width="600"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/5.jpg" alt="An AI generated picture of a cat girl working in a server farm" width="550"></p>
 
 <br>
 
@@ -1022,7 +1022,7 @@ You don't need Admin privileges to run this category, because no system-wide cha
 
 ## Trust<a href="#trust">![TrustIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Trust.png)</a>
 
-<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/FwMP8ybaUAAm860.png" alt="An AI generated picture of a cat girl working in a server farm" width="600"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/FwMP8ybaUAAm860.png" alt="An AI generated picture of a cat girl working in a server farm" width="550"></p>
 
 ### How can you 100% trust this repository and know that nothing shady is going on?
 
@@ -1080,7 +1080,7 @@ This repository uses the simplest possible, yet effective, methods that make it 
 
 ## Support<a href="#support">![SupportIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Support.png)</a>
 
-<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/FwMF2jGaAAANLDc.png" alt="A beautiful pink laptop Windows 11, located on the table with coffee on the side" width="600"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/FwMF2jGaAAANLDc.png" alt="A beautiful pink laptop Windows 11, located on the table with coffee on the side" width="550"></p>
 
 <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/WebP/Heart%20Microsoft.webp" width="28" alt="If you have any questions, requests, suggestions etc"> If you have any questions, requests, suggestions etc. about this GitHub repository and its content, please open [a new discussion](https://github.com/HotCakeX/Harden-Windows-Security/discussions) or [Issue](https://github.com/HotCakeX/Harden-Windows-Security/issues).
 

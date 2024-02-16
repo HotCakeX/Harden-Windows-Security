@@ -30,7 +30,7 @@ Function Get-KernelModeDriversAudit {
     process {
 
         # Get the Code Integrity event logs for kernel mode drivers that have been loaded since the audit mode policy has been deployed
-        [System.Object[]]$RawData = Receive-CodeIntegrityLogs -Date (Get-CommonWDACConfig -StrictKernelModePolicyTimeOfDeployment) -Type 'Audit'
+        [System.Object[]]$RawData = Receive-CodeIntegrityLogs -Date (Get-CommonWDACConfig -StrictKernelModePolicyTimeOfDeployment)
 
         Write-Verbose -Message "RawData count without processing: $($RawData.count)"
 

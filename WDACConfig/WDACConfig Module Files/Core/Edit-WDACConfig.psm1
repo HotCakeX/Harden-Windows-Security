@@ -118,7 +118,6 @@ Function Edit-WDACConfig {
         # Importing the required sub-modules
         Write-Verbose -Message 'Importing the required sub-modules'
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Update-self.psm1" -Force
-        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Get-GlobalRootDrives.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Write-ColorfulText.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Set-LogSize.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Test-FilePath.psm1" -Force
@@ -705,30 +704,8 @@ Function Edit-WDACConfig {
                     Write-Verbose -Message 'The following Kernel protected files detected, creating allow rules for them:'
                     $ExesWithNoHash | ForEach-Object -Process { Write-Verbose -Message "$_" }
 
-                    [System.Management.Automation.ScriptBlock]$KernelProtectedHashesBlock = {
-                        foreach ($event in Get-WinEvent -FilterHashtable @{LogName = 'Microsoft-Windows-CodeIntegrity/Operational'; ID = 3076 } -ErrorAction SilentlyContinue | Where-Object -FilterScript { $_.TimeCreated -ge $Date } ) {
-                            $Xml = [System.Xml.XmlDocument]$event.toxml()
-                            $Xml.event.eventdata.data |
-                            ForEach-Object -Begin { $Hash = @{} } -Process { $hash[$_.name] = $_.'#text' } -End { [pscustomobject]$hash } |
-                            ForEach-Object -Process {
-                                if ($_.'File Name' -match ($pattern = '\\Device\\HarddiskVolume(\d+)\\(.*)$')) {
-                                    $hardDiskVolumeNumber = $Matches[1]
-                                    $remainingPath = $Matches[2]
-                                    $getletter = Get-GlobalRootDrives | Where-Object -FilterScript { $_.devicepath -eq "\Device\HarddiskVolume$hardDiskVolumeNumber" }
-                                    $usablePath = "$($getletter.DriveLetter)$remainingPath"
-                                    $_.'File Name' = $_.'File Name' -replace $pattern, $usablePath
-                                } # Check if file is currently on the disk
-                                if (Test-Path -Path $_.'File Name') {
-                                    # Check if the file exits in the $ExesWithNoHash array
-                                    if ($ExesWithNoHash -contains $_.'File Name') {
-                                        $_ | Select-Object -Property FileVersion, 'File Name', PolicyGUID, 'SHA256 Hash', 'SHA256 Flat Hash', 'SHA1 Hash', 'SHA1 Flat Hash'
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    $KernelProtectedHashesBlockResults = Invoke-Command -ScriptBlock $KernelProtectedHashesBlock
+                    # Check if the file exits in the $ExesWithNoHash array
+                    $KernelProtectedHashesBlockResults = Receive-CodeIntegrityLogs -Date $Date -PostProcessing 'OnlyExisting' | Where-Object -FilterScript { $ExesWithNoHash -contains $_.'File Name' } | Select-Object -Property FileVersion, 'File Name', PolicyGUID, 'SHA256 Hash', 'SHA256 Flat Hash', 'SHA1 Hash', 'SHA1 Flat Hash'
 
                     # Only proceed further if any hashes belonging to the detected kernel protected files were found in Event viewer
                     # If none is found then skip this part, because user didn't run those files/programs when audit mode was turned on in base policy, so no hash was found in audit logs

@@ -111,6 +111,9 @@ Function Receive-CodeIntegrityLogs {
             # Loop over each event data object
             foreach ($Log in $ProcessedEvents) {
 
+                # Add the TimeCreated property to the $Log object
+                $Log | Add-Member -NotePropertyName 'TimeCreated' -NotePropertyValue $Event.TimeCreated
+
                 # Filter the logs based on the policy that generated them
                 if (-NOT ([System.String]::IsNullOrWhiteSpace($PolicyNames))) {
                     if ($Log.PolicyName -notin $PolicyNames) {

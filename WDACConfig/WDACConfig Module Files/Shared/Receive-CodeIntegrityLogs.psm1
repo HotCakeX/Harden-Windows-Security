@@ -5,6 +5,7 @@ Function Receive-CodeIntegrityLogs {
         Then processes the output based on different criteria
     .PARAMETER Date
         The date from which the logs should be collected. If not specified, all logs will be collected.
+        It accepts empty strings, nulls, and whitespace and they are treated as not specified.
     .PARAMETER Type
         The type of logs to be collected. The default value is 'Audit'
     .PARAMETER PostProcessing
@@ -15,7 +16,6 @@ Function Receive-CodeIntegrityLogs {
     .PARAMETER PolicyNames
         The names of the policies to filter the logs by
     .INPUTS
-        System.DateTime
         System.String
     .OUTPUTS
         PSCustomObject
@@ -23,8 +23,10 @@ Function Receive-CodeIntegrityLogs {
     [CmdletBinding()]
     [OutputType([PSCustomObject[]])]
     param(
+        [AllowEmptyString()]
+        [AllowNull()]
         [Parameter(Mandatory = $false)]
-        [System.DateTime]$Date,
+        [System.String]$Date,
 
         [ValidateSet('Audit', 'Blocked')]
         [Parameter(Mandatory = $false)]
@@ -49,6 +51,13 @@ Function Receive-CodeIntegrityLogs {
 
         # Determine the ID of the events to collect
         [System.UInt32]$EventID = 'Audit' ? '3076' : '3077'
+
+        # Validate the date provided if it's not null or empty or whitespace
+        if (-NOT ([System.String]::IsNullOrWhiteSpace($Date))) {
+            if (-NOT ([System.DateTime]::TryParse($Date, [ref]$Date))) {
+                Throw 'The date provided is not in a valid DateTime type.'
+            }
+        }
 
         Try {
             # Set a flag indicating that the alternative drive letter mapping method is not necessary unless the primary method fails

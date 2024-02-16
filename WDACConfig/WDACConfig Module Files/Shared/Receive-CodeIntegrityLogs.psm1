@@ -9,6 +9,11 @@ Function Receive-CodeIntegrityLogs {
         The type of logs to be collected. The default value is 'Audit'
     .PARAMETER PostProcessing
         How to process the output for different scenarios
+        OnlyExisting: Returns only the logs of files that exist on the disk
+        OnlyDeleted: Returns only the hash details of files that do not exist on the disk
+        Separate: Returns the file paths of files that exist on the disk and the hash details of files that do not exist on the disk, separately in a nested object
+    .PARAMETER PolicyNames
+        The names of the policies to filter the logs by
     .INPUTS
         System.DateTime
         System.String
@@ -27,7 +32,12 @@ Function Receive-CodeIntegrityLogs {
 
         [ValidateSet('OnlyExisting', 'OnlyDeleted' , 'Separate')]
         [parameter(mandatory = $false)]
-        [System.String]$PostProcessing
+        [System.String]$PostProcessing,
+
+        [AllowEmptyString()]
+        [AllowNull()]
+        [parameter(mandatory = $false)]
+        [System.String[]]$PolicyNames
     )
 
     Begin {
@@ -100,6 +110,13 @@ Function Receive-CodeIntegrityLogs {
 
             # Loop over each event data object
             foreach ($Log in $ProcessedEvents) {
+
+                # Filter the logs based on the policy that generated them
+                if (-NOT ([System.String]::IsNullOrWhiteSpace($PolicyNames))) {
+                    if ($Log.PolicyName -notin $PolicyNames) {
+                        continue
+                    }
+                }
 
                 # Define the regex pattern for the device path
                 [System.Text.RegularExpressions.Regex]$Pattern = '\\Device\\HarddiskVolume(?<HardDiskVolumeNumber>\d+)\\(?<RemainingPath>.*)$'

@@ -82,7 +82,6 @@ Function New-WDACConfig {
         # Importing the required sub-modules
         Write-Verbose -Message 'Importing the required sub-modules'
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Update-self.psm1" -Force
-        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Get-GlobalRootDrives.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Write-ColorfulText.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Set-LogSize.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\New-EmptyPolicy.psm1" -Force
@@ -804,28 +803,8 @@ Function New-WDACConfig {
             New-CIPolicy @PolicyMakerHashTable
 
             if (!$NoDeletedFiles) {
-                # Get Event viewer logs for code integrity - check the file path of all of the files in the log, resolve them using the command above - show files that are no longer available on the disk
-                [System.Management.Automation.ScriptBlock]$AuditEventLogsDeletedFilesScriptBlock = {
-                    foreach ($event in Get-WinEvent -FilterHashtable @{LogName = 'Microsoft-Windows-CodeIntegrity/Operational'; ID = 3076 }) {
-                        $Xml = [System.Xml.XmlDocument]$event.toxml()
-                        $Xml.event.eventdata.data |
-                        ForEach-Object -Begin { $Hash = @{} } -Process { $Hash[$_.name] = $_.'#text' } -End { [pscustomobject]$Hash } |
-                        ForEach-Object -Process {
-                            if ($_.'File Name' -match ($pattern = '\\Device\\HarddiskVolume(\d+)\\(.*)$')) {
-                                $HardDiskVolumeNumber = $Matches[1]
-                                $RemainingPath = $Matches[2]
-                                $GetLetter = Get-GlobalRootDrives | Where-Object -FilterScript { $_.devicepath -eq "\Device\HarddiskVolume$HardDiskVolumeNumber" }
-                                $UsablePath = "$($GetLetter.DriveLetter)$RemainingPath"
-                                $_.'File Name' = $_.'File Name' -replace $pattern, $UsablePath
-                            }
-                            if (-NOT (Test-Path -Path $_.'File Name')) {
-                                $_ | Select-Object -Property FileVersion, 'File Name', PolicyGUID, 'SHA256 Hash', 'SHA256 Flat Hash', 'SHA1 Hash', 'SHA1 Flat Hash'
-                            }
-                        }
-                    }
-                }
-                # storing the output from the scriptblock above in a variable
-                $DeletedFileHashesArray = Invoke-Command -ScriptBlock $AuditEventLogsDeletedFilesScriptBlock
+                # Get the hashes of the files no longer available on the disk
+                $DeletedFileHashesArray = Receive-CodeIntegrityLogs -PostProcessing OnlyDeleted
             }
             # run the following only if there are any event logs for files no longer on the disk and if -NoDeletedFiles switch parameter wasn't used
             if ($DeletedFileHashesArray -and !$NoDeletedFiles) {

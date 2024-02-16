@@ -122,7 +122,7 @@ Function Edit-WDACConfig {
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Write-ColorfulText.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Set-LogSize.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Test-FilePath.psm1" -Force
-        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Get-AuditEventLogsProcessing.psm1" -Force
+        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Receive-CodeIntegrityLogs.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\New-EmptyPolicy.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Get-RuleRefs.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Get-FileRules.psm1" -Force
@@ -537,8 +537,8 @@ Function Edit-WDACConfig {
                 $CurrentStep++
                 Write-Progress -Id 10 -Activity 'Scanning event logs to create policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                # Extracting the array content from Get-AuditEventLogsProcessing function
-                $AuditEventLogsProcessingResults = Get-AuditEventLogsProcessing -Date $Date
+                # Extracting the array content from the function
+                $AuditEventLogsProcessingResults = Receive-CodeIntegrityLogs -Date $Date -PostProcessing 'Separate'
 
                 # Only create policy for files that are available on the disk (based on Event viewer logs)
                 # but weren't in user-selected program path(s), if there are any

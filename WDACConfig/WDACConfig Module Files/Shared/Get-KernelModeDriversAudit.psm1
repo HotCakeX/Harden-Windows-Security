@@ -3,24 +3,14 @@ Function Get-KernelModeDriversAudit {
     .DESCRIPTION
         This function will scan the Code Integrity event logs for kernel mode drivers that have been loaded since the audit mode policy has been deployed
         and will return a folder containing symbolic links to the driver files.
-        It does this by:
-            1. Scanning the Code Integrity event logs for kernel mode drivers that have been loaded since the audit mode policy has been deployed
-            2. Converting each event to XML
-            3. Converting the XML to a PowerShell object
-            4. Replacing the global root file paths with the drive letters to create consumable paths
-            5. Removing duplicates based on SHA256 hash
-            6. Saving the file paths to a variable
-            7. Filtering based on files that exist with .sys and .dll extensions
-            8. Removing duplicates based on file path
-            9. Creating a temporary folder to store the symbolic links to the driver files
-            10. Creating symbolic links to the driver files
-            11. Returning the folder containing the symbolic links to driver files
     .INPUTS
         None
     .OUTPUTS
         System.IO.DirectoryInfo
     .NOTES
-        Get-SystemDriver only includes .sys files, but Get-KernelModeDriversAudit function includes .dll files as well just in case since they appear in event logs when auditing kernel-mode files.
+        Get-SystemDriver only includes .sys files when -UserPEs parameter is not used, but Get-KernelModeDriversAudit function includes .dll files as well just in case
+
+        When Get-SystemDriver -UserPEs is used, Dlls and .exe files are included as well
     #>
     [CmdletBinding()]
     [OutputType([System.IO.DirectoryInfo])]
@@ -32,42 +22,15 @@ Function Get-KernelModeDriversAudit {
 
         # Importing the required sub-modules
         Write-Verbose -Message 'Importing the required sub-modules'
-        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Get-GlobalRootDrives.psm1" -Force
-
-        # Get the local disks mappings
-        [System.Object[]]$DriveLettersGlobalRootFix = Get-GlobalRootDrives
+        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Receive-CodeIntegrityLogs.psm1" -Force
 
         [System.IO.FileInfo[]]$KernelModeDriversPaths = @()
-        [System.Object[]]$RawData = @()
-
-        [System.DateTime]$ScanStartDate = Get-CommonWDACConfig -StrictKernelModePolicyTimeOfDeployment
     }
 
     process {
-        # Event Viewer Code Integrity logs scan for Audit logs based on the input date
-        foreach ($Event in Get-WinEvent -FilterHashtable @{LogName = 'Microsoft-Windows-CodeIntegrity/Operational'; ID = 3076 } -ErrorAction SilentlyContinue | Where-Object -FilterScript { $_.TimeCreated -ge $ScanStartDate } ) {
 
-            # Convert the event to XML
-            $Xml = [System.Xml.XmlDocument]$Event.toxml()
-
-            # Convert the XML to a PowerShell object
-            $Xml.event.eventdata.data | ForEach-Object -Begin { $Hash = @{} } -Process { $Hash[$_.name] = $_.'#text' } -End { [pscustomobject]$Hash } | ForEach-Object -Process {
-
-                # Define the regex pattern
-                [System.String]$Pattern = '\\Device\\HarddiskVolume(\d+)\\(.*)$'
-
-                # Replace the global root file paths with the drive letters to create consumable paths
-                if ($_.'File Name' -match $Pattern) {
-                    [System.Int64]$HardDiskVolumeNumber = $Matches[1]
-                    [System.String]$RemainingPath = $Matches[2]
-                    [PSCustomObject]$GetLetter = $DriveLettersGlobalRootFix | Where-Object -FilterScript { $_.devicepath -eq "\Device\HarddiskVolume$HardDiskVolumeNumber" }
-                    [System.IO.FileInfo]$UsablePath = "$($GetLetter.DriveLetter)$RemainingPath"
-                    $_.'File Name' = $_.'File Name' -replace $Pattern, $UsablePath
-                }
-                # Add the processed object to the array of raw data
-                $RawData += $_
-            }
-        }
+        # Get the Code Integrity event logs for kernel mode drivers that have been loaded since the audit mode policy has been deployed
+        [System.Object[]]$RawData = Receive-CodeIntegrityLogs -Date (Get-CommonWDACConfig -StrictKernelModePolicyTimeOfDeployment) -Type 'Audit'
 
         Write-Verbose -Message "RawData count without processing: $($RawData.count)"
 

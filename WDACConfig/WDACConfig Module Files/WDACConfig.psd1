@@ -212,7 +212,6 @@ To get help and syntax on PowerShell console, type:
         'Resources\WDAC Policies-Archived\DefaultWindows_Enforced_Kernel_NoFlights.xml'
         'Resources\WDAC Policies-Archived\Readme.md'
         'Shared\Confirm-CertCN.psm1',
-        'Shared\Get-AuditEventLogsProcessing.psm1',
         'Shared\Get-BlockRulesMeta.psm1',
         'Shared\Get-FileRules.psm1',
         'Shared\Get-GlobalRootDrives.psm1',
@@ -229,6 +228,7 @@ To get help and syntax on PowerShell console, type:
         'Shared\Get-KernelModeDriversAudit.psm1',
         'Shared\Copy-CiRules.psm1',
         'Shared\Remove-SupplementalSigners.psm1',
+        'Shared\Receive-CodeIntegrityLogs.psm1',
         'WDACSimulation\Get-TBSCertificate.psm1',
         'WDACSimulation\Get-SignerInfo.psm1',
         'WDACSimulation\Get-SignedFileCertificates.psm1',

@@ -52,6 +52,22 @@ Function Receive-CodeIntegrityLogs {
         # Determine the ID of the events to collect
         [System.UInt32]$EventID = 'Audit' ? '3076' : '3077'
 
+        # Requested and Validated Signing Level Mappings : https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/operations/event-tag-explanations#requested-and-validated-signing-level
+        [System.Collections.Hashtable]$ReqValSigningLevels = @{
+            [System.UInt16]0  = "Signing level hasn't yet been checked"
+            [System.UInt16]1  = 'File is unsigned or has no signature that passes the active policies'
+            [System.UInt16]2  = 'Trusted by Windows Defender Application Control policy'
+            [System.UInt16]3  = 'Developer signed code'
+            [System.UInt16]4  = 'Authenticode signed'
+            [System.UInt16]5  = 'Microsoft Store signed app PPL (Protected Process Light)'
+            [System.UInt16]6  = 'Microsoft Store-signed'
+            [System.UInt16]7  = 'Signed by an Antimalware vendor whose product is using AMPPL'
+            [System.UInt16]8  = 'Microsoft signed'
+            [System.UInt16]11 = 'Only used for signing of the .NET NGEN compiler'
+            [System.UInt16]12 = 'Windows signed'
+            [System.UInt16]14 = 'Windows Trusted Computing Base signed'
+        }
+
         # Validate the date provided if it's not null or empty or whitespace
         if (-NOT ([System.String]::IsNullOrWhiteSpace($Date))) {
             if (-NOT ([System.DateTime]::TryParse($Date, [ref]$Date))) {
@@ -154,6 +170,10 @@ Function Receive-CodeIntegrityLogs {
                     $Log.'File Name' = Join-Path -Path $Env:WinDir -ChildPath ($Log.'File Name')
                 }
 
+                # Replace these numbers in the logs with user-friendly strings that represent the signature level at which the code was verified
+                $Log.'Requested Signing Level' = $ReqValSigningLevels[[System.UInt16]$Log.'Requested Signing Level']
+                $Log.'Validated Signing Level' = $ReqValSigningLevels[[System.UInt16]$Log.'Validated Signing Level']
+
                 # Process the logs if the PostProcessing parameter was used
                 if ($PostProcessing) {
                     if (Test-Path -Path $Log.'File Name') {
@@ -176,6 +196,7 @@ Function Receive-CodeIntegrityLogs {
     }
 
     End {
+
         if ($PostProcessing -eq 'Separate') {
             Write-Verbose -Message "Receive-CodeIntegrityLogs: Returning $($SeparatedOutput.AvailableFilesPaths.Count) Code Integrity logs for files on the disk."
             Write-Verbose -Message "Receive-CodeIntegrityLogs: Returning $($SeparatedOutput.DeletedFileHashes.Count) Code Integrity logs for files not on the disk."

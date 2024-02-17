@@ -174,6 +174,9 @@ Function Receive-CodeIntegrityLogs {
                 $Log.'Requested Signing Level' = $ReqValSigningLevels[[System.UInt16]$Log.'Requested Signing Level']
                 $Log.'Validated Signing Level' = $ReqValSigningLevels[[System.UInt16]$Log.'Validated Signing Level']
 
+                # Replace the SI Signing Scenario numbers with a user-friendly string
+                $Log.'SI Signing Scenario' = $Log.'SI Signing Scenario' -eq '0' ? 'Kernel-Mode' : 'User-Mode'
+
                 # Process the logs if the PostProcessing parameter was used
                 if ($PostProcessing) {
                     if (Test-Path -Path $Log.'File Name') {

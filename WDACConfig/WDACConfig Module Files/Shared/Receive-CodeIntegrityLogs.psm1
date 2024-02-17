@@ -165,8 +165,14 @@ Function Receive-CodeIntegrityLogs {
             # Loop over each event data object
             foreach ($Log in $ProcessedEvents) {
 
+                # Adding the following properties to the $Log object by getting them directly from the unprocessed event
+
                 # Add the TimeCreated property to the $Log object
                 $Log | Add-Member -NotePropertyName 'TimeCreated' -NotePropertyValue $Event.TimeCreated
+                # Add the ActivityId property to the $Log object
+                $Log | Add-Member -NotePropertyName 'ActivityId' -NotePropertyValue $Event.ActivityId
+                # Add the UserId property to the $Log object
+                $Log | Add-Member -NotePropertyName 'UserId' -NotePropertyValue $Event.UserId
 
                 # Filter the logs based on the policy that generated them
                 if (-NOT ([System.String]::IsNullOrWhiteSpace($PolicyNames))) {
@@ -207,6 +213,15 @@ Function Receive-CodeIntegrityLogs {
 
                 # Replace the SI Signing Scenario numbers with a user-friendly string
                 $Log.'SI Signing Scenario' = $Log.'SI Signing Scenario' -eq '0' ? 'Kernel-Mode' : 'User-Mode'
+
+                # Translate the SID to a username
+                Try {
+                    [System.Security.Principal.SecurityIdentifier]$ObjSID = New-Object -TypeName System.Security.Principal.SecurityIdentifier($Log.UserId)
+                    $Log.UserId = [System.String]($ObjSID.Translate([System.Security.Principal.NTAccount])).Value
+                }
+                Catch {
+                    Write-Verbose -Message "Receive-CodeIntegrityLogs: Could not translate the SID $($Log.UserId) to a username."
+                }
 
                 # Process the logs if the PostProcessing parameter was used
                 if ($PostProcessing) {

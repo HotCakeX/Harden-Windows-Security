@@ -49,9 +49,6 @@ Function Receive-CodeIntegrityLogs {
         # Importing the required sub-modules
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Get-GlobalRootDrives.psm1" -Force
 
-        # Determine the ID of the events to collect
-        [System.UInt32]$EventID = 'Audit' ? '3076' : '3077'
-
         # Requested and Validated Signing Level Mappings : https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/operations/event-tag-explanations#requested-and-validated-signing-level
         [System.Collections.Hashtable]$ReqValSigningLevels = @{
             [System.UInt16]0  = "Signing level hasn't yet been checked"
@@ -83,7 +80,7 @@ Function Receive-CodeIntegrityLogs {
             [System.Object[]]$DriveLettersGlobalRootFix = Get-GlobalRootDrives
         }
         catch {
-            Write-Verbose -Verbose -Message 'Could not get the drive mappings from the system using the primary method, trying the alternative method now'
+            Write-Verbose -Verbose -Message 'Receive-CodeIntegrityLogs: Could not get the drive mappings from the system using the primary method, trying the alternative method now'
 
             # Set the flag to true indicating the alternative method is being used
             $AlternativeDriveLetterFix = $true
@@ -97,13 +94,45 @@ Function Receive-CodeIntegrityLogs {
             }
         }
 
+        Try {
+            Write-Verbose -Message 'Receive-CodeIntegrityLogs: Collecting the Code Integrity Operational logs'
+            [System.Diagnostics.Eventing.Reader.EventLogRecord[]]$RawEventLogs = Get-WinEvent -FilterHashtable @{LogName = 'Microsoft-Windows-CodeIntegrity/Operational' }
+        }
+        catch {
+            Throw "Receive-CodeIntegrityLogs: Could not collect the Code Integrity Operational logs, the number of logs collected is $($RawEventLogs.Count)"
+        }
+
+        # A variable to store the events after filtering
+        [System.Diagnostics.Eventing.Reader.EventLogRecord[]]$EventLogs = @()
+
+        # For performance reasons, only use one pass to filter the logs based on the date and the type
         if ($Date) {
-            # Collect the Code Integrity Operational events after the specified date
-            [System.Diagnostics.Eventing.Reader.EventLogRecord[]]$EventLogs = Get-WinEvent -FilterHashtable @{LogName = 'Microsoft-Windows-CodeIntegrity/Operational'; ID = $EventID } -ErrorAction SilentlyContinue | Where-Object -FilterScript { $_.TimeCreated -ge $Date }
+            if ($Type -eq 'Audit') {
+                $EventLogs = $RawEventLogs | Where-Object -FilterScript { ($_.TimeCreated -ge $Date) -and ($_.Id -eq '3076') }
+                Write-Verbose -Message "Receive-CodeIntegrityLogs: Collected $($EventLogs.Count) Audit logs from the Code Integrity Operational since $Date"
+            }
+            elseif ($Type -eq 'Blocked') {
+                $EventLogs = $RawEventLogs | Where-Object -FilterScript { ($_.TimeCreated -ge $Date) -and ($_.Id -eq '3077') }
+                Write-Verbose -Message "Receive-CodeIntegrityLogs: Collected $($EventLogs.Count) Blocked logs from the Code Integrity Operational since $Date"
+            }
+            else {
+                $EventLogs = $RawEventLogs | Where-Object -FilterScript { $_.TimeCreated -ge $Date }
+                Write-Verbose -Message "Receive-CodeIntegrityLogs: Collected $($EventLogs.Count) logs from the Code Integrity Operational since $Date"
+            }
         }
         else {
-            # Collect all Code Integrity Operational events
-            [System.Diagnostics.Eventing.Reader.EventLogRecord[]]$EventLogs = Get-WinEvent -FilterHashtable @{LogName = 'Microsoft-Windows-CodeIntegrity/Operational'; ID = $EventID } -ErrorAction SilentlyContinue
+            if ($Type -eq 'Audit') {
+                $EventLogs = $RawEventLogs | Where-Object -FilterScript { $_.Id -eq '3076' }
+                Write-Verbose -Message "Receive-CodeIntegrityLogs: Collected $($EventLogs.Count) Audit logs from the Code Integrity Operational."
+            }
+            elseif ($Type -eq 'Blocked') {
+                $EventLogs = $RawEventLogs | Where-Object -FilterScript { $_.Id -eq '3077' }
+                Write-Verbose -Message "Receive-CodeIntegrityLogs: Collected $($EventLogs.Count) Blocked logs from the Code Integrity Operational."
+            }
+            else {
+                $EventLogs = $RawEventLogs
+                Write-Verbose -Message "Receive-CodeIntegrityLogs: Collected $($EventLogs.Count) logs from the Code Integrity Operational."
+            }
         }
 
         # Output object to return including all the logs

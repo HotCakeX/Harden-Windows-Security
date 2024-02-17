@@ -181,6 +181,7 @@ Function Receive-CodeIntegrityLogs {
                 # replace the device path with the drive letter if it matches the pattern
                 if ($Log.'File Name' -match $Pattern) {
 
+                    # Use the primary method to fix the drive letter mappings
                     if ($AlternativeDriveLetterFix -eq $false) {
 
                         [System.UInt32]$HardDiskVolumeNumber = $Matches['HardDiskVolumeNumber']
@@ -189,6 +190,7 @@ Function Receive-CodeIntegrityLogs {
                         [System.IO.FileInfo]$UsablePath = "$($GetLetter.DriveLetter)$RemainingPath"
                         $Log.'File Name' = $Log.'File Name' -replace $Pattern, $UsablePath
                     }
+                    # Use the alternative method to fix the drive letter mappings
                     else {
                         $Log.'File Name' = $Log.'File Name' -replace "\\Device\\HarddiskVolume$($Matches['HardDiskVolumeNumber'])", "$($DriveLetterMappings[$Matches['HardDiskVolumeNumber']]):"
                     }

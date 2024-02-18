@@ -32,12 +32,7 @@ Function Get-KernelModeDriversAudit {
         # Get the Code Integrity event logs for kernel mode drivers that have been loaded since the audit mode policy has been deployed
         [System.Object[]]$RawData = Receive-CodeIntegrityLogs -Date (Get-CommonWDACConfig -StrictKernelModePolicyTimeOfDeployment)
 
-        Write-Verbose -Message "RawData count without processing: $($RawData.count)"
-
-        Write-Verbose -Message 'Removing duplicates based on SHA256 hash'
-        $RawData = $RawData | Group-Object -Property 'SHA256 Hash' | ForEach-Object -Process { $_.Group[0] }
-
-        Write-Verbose -Message "RawData count after deduplication based on SHA256 hash: $($RawData.count)"
+        Write-Verbose -Message "RawData count: $($RawData.count)"
 
         Write-Verbose -Message 'Saving the file paths to a variable'
         [System.IO.FileInfo[]]$KernelModeDriversPaths = $RawData.'File Name'

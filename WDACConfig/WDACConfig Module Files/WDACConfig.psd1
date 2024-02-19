@@ -64,24 +64,10 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
 
 ✔️ Test-CiPolicy: https://github.com/HotCakeX/Harden-Windows-Security/wiki/Test-CiPolicy
 
-To get help and syntax on PowerShell console, type:
-"Get-Command -Module WDACConfig"
-"Get-Help New-WDACConfig"
-"Get-Help New-SupplementalWDACConfig"
-"Get-Help Remove-WDACConfig"
-"Get-Help Edit-WDACConfig"
-"Get-Help Edit-SignedWDACConfig"
-"Get-Help Deploy-SignedWDACConfig"
-"Get-Help Confirm-WDACConfig"
-"Get-Help New-DenyWDACConfig"
-"Get-Help Set-CommonWDACConfig"
-"Get-Help New-KernelModeWDACConfig"
-"Get-Help Get-CommonWDACConfig"
-"Get-Help Invoke-WDACSimulation"
-"Get-Help Remove-CommonWDACConfig"
-"Get-Help Assert-WDACConfigIntegrity"
-"Get-Help Build-WDACCertificate"
-"Get-Help Test-CiPolicy"
+✔️ ConvertTo-WDACPolicy: https://github.com/HotCakeX/Harden-Windows-Security/wiki/ConvertTo-WDACPolicy
+
+✔️ Get-CiFileHashes: https://github.com/HotCakeX/Harden-Windows-Security/wiki/Get-CiFileHashes
+
 '@
 
     # Minimum version of the PowerShell engine required by this module
@@ -133,7 +119,9 @@ To get help and syntax on PowerShell console, type:
         'Core\Remove-CommonWDACConfig.psm1',
         'Core\Assert-WDACConfigIntegrity.psm1',
         'Core\Build-WDACCertificate.psm1',
-        'Core\Test-CiPolicy.psm1')
+        'Core\Test-CiPolicy.psm1',
+        'Core\ConvertTo-WDACPolicy.psm1',
+        'Core\Get-CiFileHashes.psm1')
 
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
     FunctionsToExport    = @('New-WDACConfig',
@@ -151,7 +139,9 @@ To get help and syntax on PowerShell console, type:
         'Remove-CommonWDACConfig',
         'Assert-WDACConfigIntegrity',
         'Build-WDACCertificate',
-        'Test-CiPolicy')
+        'Test-CiPolicy',
+        'ConvertTo-WDACPolicy',
+        'Get-CiFileHashes')
 
     # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
     CmdletsToExport      = @('New-WDACConfig',
@@ -169,7 +159,9 @@ To get help and syntax on PowerShell console, type:
         'Remove-CommonWDACConfig',
         'Assert-WDACConfigIntegrity',
         'Build-WDACCertificate',
-        'Test-CiPolicy')
+        'Test-CiPolicy',
+        'ConvertTo-WDACPolicy',
+        'Get-CiFileHashes')
 
     # Variables to export from this module
     VariablesToExport    = '*'
@@ -203,6 +195,8 @@ To get help and syntax on PowerShell console, type:
         'Core\Assert-WDACConfigIntegrity.psm1',
         'Core\Build-WDACCertificate.psm1',
         'Core\Test-CiPolicy.psm1',
+        'Core\ConvertTo-WDACPolicy.psm1',
+        'Core\Get-CiFileHashes.psm1',
         'CoreExt\PSDefaultParameterValues.ps1',
         'Resources\ArgumentCompleters.ps1'
         'Resources\WDAC Policies\DefaultWindows_Enforced_Kernel.xml',
@@ -229,6 +223,7 @@ To get help and syntax on PowerShell console, type:
         'Shared\Copy-CiRules.psm1',
         'Shared\Remove-SupplementalSigners.psm1',
         'Shared\Receive-CodeIntegrityLogs.psm1',
+        'Shared\Edit-CiPolicyRuleOptions.psm1',
         'WDACSimulation\Get-TBSCertificate.psm1',
         'WDACSimulation\Get-SignerInfo.psm1',
         'WDACSimulation\Get-SignedFileCertificates.psm1',
@@ -240,7 +235,9 @@ To get help and syntax on PowerShell console, type:
         'WDACSimulation\Get-ExtendedFileInfo.psm1',
         'C#\Signer.cs',
         'C#\Kernel32dll.cs',
-        'C#\Crypt32dll.cs'
+        'C#\Crypt32dll.cs',
+        'C#\AuthenticodeHashCalc.cs',
+        'C#\PageHashCalc.cs'
     )
 
     # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.

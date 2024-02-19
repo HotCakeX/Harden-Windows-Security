@@ -2,6 +2,15 @@ Function Edit-CiPolicyRuleOptions {
     <#
     .SYNOPSIS
         Configures the Policy rule options in a given XML file
+    .PARAMETER Action
+        The type of policy to configure the rule options for
+    .PARAMETER XMLFile
+        The XML file to configure the rule options for
+    .INPUTS
+        System.String
+        System.IO.FileInfo
+    .OUTPUTS
+        System.Void
     #>
     [CmdletBinding()]
     [OutputType([System.Void])]

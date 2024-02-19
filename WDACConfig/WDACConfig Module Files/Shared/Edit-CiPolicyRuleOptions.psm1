@@ -1,7 +1,7 @@
 Function Edit-CiPolicyRuleOptions {
     <#
     .SYNOPSIS
-        Configures the Policy rule options in a given XML file
+        Configures the Policy rule options in a given XML file and sets the HVCI to Strict
     .PARAMETER Action
         The type of policy to configure the rule options for
     .PARAMETER XMLFile

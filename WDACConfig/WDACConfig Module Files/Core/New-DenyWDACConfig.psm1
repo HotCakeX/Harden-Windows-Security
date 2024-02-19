@@ -71,7 +71,8 @@ Function New-DenyWDACConfig {
         Write-Verbose -Message 'Importing the required sub-modules'
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Update-self.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Write-ColorfulText.psm1" -Force
-
+        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Edit-CiPolicyRuleOptions.psm1" -Force
+        
         # Detecting if Debug switch is used, will do debugging actions based on that
         $PSBoundParameters.Debug.IsPresent ? ([System.Boolean]$Debug = $true) : ([System.Boolean]$Debug = $false) | Out-Null
 
@@ -172,16 +173,7 @@ Function New-DenyWDACConfig {
             Write-Verbose -Message 'Setting the policy version to 1.0.0.0'
             Set-CIPolicyVersion -FilePath "DenyPolicy $PolicyName.xml" -Version '1.0.0.0'
 
-            Write-Verbose -Message 'Setting the policy rule options'
-            @(0, 2, 5, 6, 11, 12, 16, 17, 19, 20) | ForEach-Object -Process {
-                Set-RuleOption -FilePath "DenyPolicy $PolicyName.xml" -Option $_ }
-
-            Write-Verbose -Message 'Deleting the unnecessary policy rule options'
-            @(3, 4, 9, 10, 13, 18) | ForEach-Object -Process {
-                Set-RuleOption -FilePath "DenyPolicy $PolicyName.xml" -Option $_ -Delete }
-
-            Write-Verbose -Message 'Setting the HVCI to Strict'
-            Set-HVCIOptions -Strict -FilePath "DenyPolicy $PolicyName.xml"
+            Edit-CiPolicyRuleOptions -Action Base -XMLFile "DenyPolicy $PolicyName.xml"
 
             Write-Verbose -Message 'Converting the policy XML to .CIP'
             ConvertFrom-CIPolicy -XmlFilePath "DenyPolicy $PolicyName.xml" -BinaryFilePath "$PolicyID.cip" | Out-Null
@@ -266,16 +258,7 @@ Function New-DenyWDACConfig {
             Write-Verbose -Message 'Setting the policy version to 1.0.0.0'
             Set-CIPolicyVersion -FilePath "DenyPolicy $PolicyName.xml" -Version '1.0.0.0'
 
-            Write-Verbose -Message 'Setting the policy rule options'
-            @(0, 2, 5, 6, 11, 12, 16, 17, 19, 20) | ForEach-Object -Process {
-                Set-RuleOption -FilePath "DenyPolicy $PolicyName.xml" -Option $_ }
-
-            Write-Verbose -Message 'Deleting the unnecessary policy rule options from the base deny policy'
-            @(3, 4, 9, 10, 13, 18) | ForEach-Object -Process {
-                Set-RuleOption -FilePath "DenyPolicy $PolicyName.xml" -Option $_ -Delete }
-
-            Write-Verbose -Message 'Setting the HVCI to Strict'
-            Set-HVCIOptions -Strict -FilePath "DenyPolicy $PolicyName.xml"
+            Edit-CiPolicyRuleOptions -Action Base -XMLFile "DenyPolicy $PolicyName.xml"
 
             Write-Verbose -Message 'Converting the policy XML to .CIP'
             ConvertFrom-CIPolicy -XmlFilePath "DenyPolicy $PolicyName.xml" -BinaryFilePath "$PolicyID.cip" | Out-Null
@@ -355,16 +338,7 @@ Function New-DenyWDACConfig {
                     Write-Verbose -Message 'Setting the policy version to 1.0.0.0'
                     Set-CIPolicyVersion -FilePath ".\AppxDenyPolicy $PolicyName.xml" -Version '1.0.0.0'
 
-                    Write-Verbose -Message 'Setting the policy rule options'
-                    @(0, 2, 6, 11, 12, 16, 17, 19, 20) | ForEach-Object -Process {
-                        Set-RuleOption -FilePath ".\AppxDenyPolicy $PolicyName.xml" -Option $_ }
-
-                    Write-Verbose -Message 'Deleting the unnecessary policy rule options from the base deny policy'
-                    @(3, 4, 8, 9, 10, 13, 14, 15, 18) | ForEach-Object -Process {
-                        Set-RuleOption -FilePath ".\AppxDenyPolicy $PolicyName.xml" -Option $_ -Delete }
-
-                    Write-Verbose -Message 'Setting the HVCI to Strict'
-                    Set-HVCIOptions -Strict -FilePath ".\AppxDenyPolicy $PolicyName.xml"
+                    Edit-CiPolicyRuleOptions -Action Base -XMLFile ".\AppxDenyPolicy $PolicyName.xml"
 
                     Write-Verbose -Message 'Converting the policy XML to .CIP'
                     ConvertFrom-CIPolicy -XmlFilePath ".\AppxDenyPolicy $PolicyName.xml" -BinaryFilePath "$PolicyID.cip" | Out-Null
@@ -429,16 +403,7 @@ Function New-DenyWDACConfig {
             Write-Verbose -Message 'Setting the policy version to 1.0.0.0'
             Set-CIPolicyVersion -FilePath ".\DenyPolicyWildcard $PolicyName.xml" -Version '1.0.0.0'
 
-            Write-Verbose -Message 'Setting the policy rule options'
-            @(0, 2, 6, 11, 12, 16, 17, 19, 20) | ForEach-Object -Process {
-                Set-RuleOption -FilePath ".\DenyPolicyWildcard $PolicyName.xml" -Option $_ }
-
-            Write-Verbose -Message 'Deleting the unnecessary policy rule options from the base deny policy'
-            @(3, 4, 8, 9, 10, 13, 14, 15, 18) | ForEach-Object -Process {
-                Set-RuleOption -FilePath ".\DenyPolicyWildcard $PolicyName.xml" -Option $_ -Delete }
-
-            Write-Verbose -Message 'Setting the HVCI to Strict'
-            Set-HVCIOptions -Strict -FilePath ".\DenyPolicyWildcard $PolicyName.xml"
+            Edit-CiPolicyRuleOptions -Action Base -XMLFile ".\DenyPolicyWildcard $PolicyName.xml"
 
             Write-Verbose -Message 'Converting the policy XML to .CIP'
             ConvertFrom-CIPolicy -XmlFilePath ".\DenyPolicyWildcard $PolicyName.xml" -BinaryFilePath "$PolicyID.cip" | Out-Null

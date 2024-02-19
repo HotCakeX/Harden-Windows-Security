@@ -88,6 +88,7 @@ Function New-WDACConfig {
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Get-RuleRefs.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Get-FileRules.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Get-BlockRulesMeta.psm1" -Force
+        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Edit-CiPolicyRuleOptions.psm1" -Force
 
         # Detecting if Debug switch is used, will do debugging actions based on that
         $PSBoundParameters.Debug.IsPresent ? ([System.Boolean]$Debug = $true) : ([System.Boolean]$Debug = $false) | Out-Null
@@ -294,9 +295,7 @@ Function New-WDACConfig {
             Write-Verbose -Message 'Setting AllowMicrosoftPlusBlockRules.xml policy version to 1.0.0.0'
             Set-CIPolicyVersion -FilePath .\AllowMicrosoftPlusBlockRules.xml -Version '1.0.0.0'
 
-            Write-Verbose -Message 'Configuring the policy rule options'
-            @(0, 2, 5, 6, 11, 12, 16, 17, 19, 20) | ForEach-Object -Process { Set-RuleOption -FilePath .\AllowMicrosoftPlusBlockRules.xml -Option $_ }
-            @(3, 4, 9, 10, 13, 18) | ForEach-Object -Process { Set-RuleOption -FilePath .\AllowMicrosoftPlusBlockRules.xml -Option $_ -Delete }
+            Edit-CiPolicyRuleOptions -Action Base -XMLFile .\AllowMicrosoftPlusBlockRules.xml
 
             if ($TestMode -and $MakeAllowMSFTWithBlockRules) {
                 Write-Verbose -Message 'Setting "Boot Audit on Failure" and "Advanced Boot Options Menu" policy rule options for the AllowMicrosoftPlusBlockRules.xml policy because TestMode parameter was used'
@@ -306,9 +305,6 @@ Function New-WDACConfig {
                 Write-Verbose -Message 'Setting "Required:EV Signers" policy rule option for the AllowMicrosoftPlusBlockRules.xml policy because RequireEVSigners parameter was used'
                 Set-RuleOption -FilePath .\AllowMicrosoftPlusBlockRules.xml -Option 8
             }
-
-            Write-Verbose -Message 'Setting HVCI to Strict'
-            Set-HVCIOptions -Strict -FilePath .\AllowMicrosoftPlusBlockRules.xml
 
             $CurrentStep++
             Write-Progress -Id 3 -Activity 'Creating CIP file' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
@@ -392,9 +388,7 @@ Function New-WDACConfig {
             Write-Verbose -Message 'Setting the version of DefaultWindowsPlusBlockRules.xml policy to 1.0.0.0'
             Set-CIPolicyVersion -FilePath .\DefaultWindowsPlusBlockRules.xml -Version '1.0.0.0'
 
-            Write-Verbose -Message 'Configuring the policy rule options'
-            @(0, 2, 5, 6, 11, 12, 16, 17, 19, 20) | ForEach-Object -Process { Set-RuleOption -FilePath .\DefaultWindowsPlusBlockRules.xml -Option $_ }
-            @(3, 4, 9, 10, 13, 18) | ForEach-Object -Process { Set-RuleOption -FilePath .\DefaultWindowsPlusBlockRules.xml -Option $_ -Delete }
+            Edit-CiPolicyRuleOptions -Action Base -XMLFile .\DefaultWindowsPlusBlockRules.xml
 
             if ($TestMode -and $MakeDefaultWindowsWithBlockRules) {
                 Write-Verbose -Message 'Setting "Boot Audit on Failure" and "Advanced Boot Options Menu" policy rule options for the DefaultWindowsPlusBlockRules.xml policy because TestMode parameter was used'
@@ -405,9 +399,6 @@ Function New-WDACConfig {
                 Write-Verbose -Message 'Setting "Required:EV Signers" policy rule option for the DefaultWindowsPlusBlockRules.xml policy because RequireEVSigners parameter was used'
                 Set-RuleOption -FilePath .\DefaultWindowsPlusBlockRules.xml -Option 8
             }
-
-            Write-Verbose -Message 'Setting HVCI to Strict'
-            Set-HVCIOptions -Strict -FilePath .\DefaultWindowsPlusBlockRules.xml
 
             $CurrentStep++
             Write-Progress -Id 7 -Activity 'Creating the CIP file' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
@@ -469,14 +460,7 @@ Function New-WDACConfig {
             $CurrentStep++
             Write-Progress -Id 0 -Activity 'Configuring the policy settings' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-            Write-Verbose -Message 'Removing the Audit mode policy rule option'
-            Set-RuleOption -FilePath '.\Microsoft recommended block rules.xml' -Option 3 -Delete
-
-            Write-Verbose -Message 'Adding the required policy rule options'
-            @(0, 2, 6, 11, 12, 16, 19, 20) | ForEach-Object -Process { Set-RuleOption -FilePath '.\Microsoft recommended block rules.xml' -Option $_ }
-
-            Write-Verbose -Message 'Setting the HVCI option to strict'
-            Set-HVCIOptions -Strict -FilePath '.\Microsoft recommended block rules.xml'
+            Edit-CiPolicyRuleOptions -Action Base -XMLFile '.\Microsoft recommended block rules.xml'
 
             Write-Verbose -Message 'Resetting the policy ID and saving it to a variable'
             [System.String]$PolicyID = (Set-CIPolicyIdInfo -FilePath '.\Microsoft recommended block rules.xml' -ResetPolicyID).Substring(11)
@@ -834,13 +818,7 @@ Function New-WDACConfig {
             [System.String]$PolicyID = Set-CIPolicyIdInfo -FilePath 'SupplementalPolicy.xml' -PolicyName "Supplemental Policy made from Audit Event Logs on $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID -BasePolicyToSupplementPath $BasePolicy
             [System.String]$PolicyID = $PolicyID.Substring(11)
 
-            # Make sure policy rule options that don't belong to a Supplemental policy don't exist
-            Write-Verbose -Message 'Setting the policy rule options for the Supplemental policy by making sure policy rule options that do not belong to a Supplemental policy do not exist'
-            @(0, 1, 2, 3, 4, 8, 9, 10, 11, 12, 15, 16, 17, 19, 20) | ForEach-Object -Process { Set-RuleOption -FilePath 'SupplementalPolicy.xml' -Option $_ -Delete }
-
-            # Set the hypervisor Code Integrity option for Supplemental policy to Strict
-            Write-Verbose -Message 'Setting HVCI to strict for SupplementalPolicy.xml'
-            Set-HVCIOptions -Strict -FilePath 'SupplementalPolicy.xml'
+            Edit-CiPolicyRuleOptions -Action Supplemental -XMLFile 'SupplementalPolicy.xml'
 
             # convert the Supplemental Policy file to .cip binary file
             $CurrentStep++

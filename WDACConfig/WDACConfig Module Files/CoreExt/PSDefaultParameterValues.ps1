@@ -10,6 +10,7 @@ $PSDefaultParameterValues = @{
     'Export-ModuleMember:Verbose'          = $false
     'Add-Type:Verbose'                     = $false
     'Get-WinEvent:Verbose'                 = $false
+    'Test-Path:ErrorAction'                = 'SilentlyContinue'
     'Confirm-CertCN:Verbose'               = $Verbose
     'Receive-CodeIntegrityLogs:Verbose'    = $Verbose
     'Get-FileRules:Verbose'                = $Verbose
@@ -26,7 +27,6 @@ $PSDefaultParameterValues = @{
     'New-SnapBackGuarantee:Verbose'        = $Verbose
     'Compare-SecureStrings:Verbose'        = $Verbose
     'Get-KernelModeDriversAudit:Verbose'   = $Verbose
-    'Test-Path:ErrorAction'                = 'SilentlyContinue'
     'Copy-CiRules:Verbose'                 = $Verbose
     'Get-TBSCertificate:Verbose'           = $Verbose
     'Get-SignerInfo:Verbose'               = $Verbose
@@ -37,6 +37,7 @@ $PSDefaultParameterValues = @{
     'Compare-SignerAndCertificate:Verbose' = $Verbose
     'Remove-SupplementalSigners:Verbose'   = $Verbose
     'Get-ExtendedFileInfo:Verbose'         = $Verbose
+    'Edit-CiPolicyRuleOptions:Verbose'     = $Verbose
 }
 
 # SIG # Begin signature block

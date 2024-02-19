@@ -72,6 +72,7 @@ Function New-SupplementalWDACConfig {
         Write-Verbose -Message 'Importing the required sub-modules'
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Update-self.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Write-ColorfulText.psm1" -Force
+        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Edit-CiPolicyRuleOptions.psm1" -Force
 
         # argument tab auto-completion and ValidateSet for Fallbacks
         Class Fallbackz : System.Management.Automation.IValidateSetValuesGenerator {
@@ -163,12 +164,7 @@ Function New-SupplementalWDACConfig {
             Write-Verbose -Message 'Setting the Supplemental policy version to 1.0.0.0'
             Set-CIPolicyVersion -FilePath "SupplementalPolicy $SuppPolicyName.xml" -Version '1.0.0.0'
 
-            Write-Verbose -Message 'Making sure policy rule options that do not belong to a Supplemental policy do not exist'
-            @(0, 1, 2, 3, 4, 9, 10, 11, 12, 15, 16, 17, 19, 20) | ForEach-Object -Process {
-                Set-RuleOption -FilePath "SupplementalPolicy $SuppPolicyName.xml" -Option $_ -Delete }
-
-            Write-Verbose -Message 'Setting the HVCI to Strict'
-            Set-HVCIOptions -Strict -FilePath "SupplementalPolicy $SuppPolicyName.xml"
+            Edit-CiPolicyRuleOptions -Action Supplemental -XMLFile "SupplementalPolicy $SuppPolicyName.xml"
 
             Write-Verbose -Message 'Converting the Supplemental policy XML file to a CIP file'
             ConvertFrom-CIPolicy -XmlFilePath "SupplementalPolicy $SuppPolicyName.xml" -BinaryFilePath "$PolicyID.cip" | Out-Null
@@ -213,15 +209,7 @@ Function New-SupplementalWDACConfig {
             Write-Verbose -Message 'Setting the Supplemental policy version to 1.0.0.0'
             Set-CIPolicyVersion -FilePath ".\SupplementalPolicy $SuppPolicyName.xml" -Version '1.0.0.0'
 
-            Write-Verbose -Message 'Making sure policy rule options that do not belong to a Supplemental policy do not exist'
-            @(0, 1, 2, 3, 4, 9, 10, 11, 12, 15, 16, 17, 19, 20) | ForEach-Object -Process {
-                Set-RuleOption -FilePath ".\SupplementalPolicy $SuppPolicyName.xml" -Option $_ -Delete }
-
-            Write-Verbose -Message 'Adding policy rule option 18 Disabled:Runtime FilePath Rule Protection'
-            Set-RuleOption -FilePath ".\SupplementalPolicy $SuppPolicyName.xml" -Option 18
-
-            Write-Verbose -Message 'Setting the HVCI to Strict'
-            Set-HVCIOptions -Strict -FilePath ".\SupplementalPolicy $SuppPolicyName.xml"
+            Edit-CiPolicyRuleOptions -Action Supplemental -XMLFile ".\SupplementalPolicy $SuppPolicyName.xml"
 
             Write-Verbose -Message 'Converting the Supplemental policy XML file to a CIP file'
             ConvertFrom-CIPolicy -XmlFilePath ".\SupplementalPolicy $SuppPolicyName.xml" -BinaryFilePath "$PolicyID.cip" | Out-Null
@@ -301,12 +289,7 @@ Function New-SupplementalWDACConfig {
                     Write-Verbose -Message 'Setting the Supplemental policy version to 1.0.0.0'
                     Set-CIPolicyVersion -FilePath ".\SupplementalPolicy $SuppPolicyName.xml" -Version '1.0.0.0'
 
-                    Write-Verbose -Message 'Making sure the policy rule options that do not belong to a Supplemental policy do not exist'
-                    @(0, 1, 2, 3, 4, 9, 10, 11, 12, 15, 16, 17, 18, 19, 20) | ForEach-Object -Process {
-                        Set-RuleOption -FilePath ".\SupplementalPolicy $SuppPolicyName.xml" -Option $_ -Delete }
-
-                    Write-Verbose -Message 'Setting the HVCI to Strict'
-                    Set-HVCIOptions -Strict -FilePath ".\SupplementalPolicy $SuppPolicyName.xml"
+                    Edit-CiPolicyRuleOptions -Action Supplemental -XMLFile ".\SupplementalPolicy $SuppPolicyName.xml"
 
                     Write-Verbose -Message 'Converting the Supplemental policy XML file to a CIP file'
                     ConvertFrom-CIPolicy -XmlFilePath ".\SupplementalPolicy $SuppPolicyName.xml" -BinaryFilePath "$PolicyID.cip" | Out-Null

@@ -127,6 +127,7 @@ Function Edit-WDACConfig {
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Get-FileRules.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Get-BlockRulesMeta.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\New-SnapBackGuarantee.psm1" -Force
+        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Edit-CiPolicyRuleOptions.psm1" -Force
 
         # if -SkipVersionCheck wasn't passed, run the updater
         if (-NOT $SkipVersionCheck) { Update-self -InvocationStatement $MyInvocation.Statement }
@@ -383,12 +384,7 @@ Function Edit-WDACConfig {
             [System.String]$SuppPolicyID = Set-CIPolicyIdInfo -FilePath $SuppPolicyPath -PolicyName "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath
             $SuppPolicyID = $SuppPolicyID.Substring(11)
 
-            # Make sure policy rule options that don't belong to a Supplemental policy don't exist
-            Write-Verbose -Message 'Making sure policy rule options that do not belong to a Supplemental policy do not exist'
-            @(0, 1, 2, 3, 4, 8, 9, 10, 11, 12, 15, 16, 17, 19, 20) | ForEach-Object -Process { Set-RuleOption -FilePath $SuppPolicyPath -Option $_ -Delete }
-
-            Write-Verbose -Message 'Setting HVCI to Strict'
-            Set-HVCIOptions -Strict -FilePath $SuppPolicyPath
+            Edit-CiPolicyRuleOptions -Action Supplemental -XMLFile $SuppPolicyPath
 
             Write-Verbose -Message 'Setting the Supplemental policy version to 1.0.0.0'
             Set-CIPolicyVersion -FilePath $SuppPolicyPath -Version '1.0.0.0'
@@ -775,12 +771,7 @@ Function Edit-WDACConfig {
             [System.String]$SuppPolicyID = Set-CIPolicyIdInfo -FilePath $SuppPolicyPath -PolicyName "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath
             $SuppPolicyID = $SuppPolicyID.Substring(11)
 
-            # Make sure policy rule options that don't belong to a Supplemental policy don't exist
-            Write-Verbose -Message 'Making sure policy rule options that do not belong to a Supplemental policy do not exist'
-            @(0, 1, 2, 3, 4, 8, 9, 10, 11, 12, 15, 16, 17, 19, 20) | ForEach-Object -Process { Set-RuleOption -FilePath $SuppPolicyPath -Option $_ -Delete }
-
-            Write-Verbose -Message 'Setting HVCI to Strict'
-            Set-HVCIOptions -Strict -FilePath $SuppPolicyPath
+            Edit-CiPolicyRuleOptions -Action Supplemental -XMLFile $SuppPolicyPath
 
             Write-Verbose -Message 'Setting the Supplemental policy version to 1.0.0.0'
             Set-CIPolicyVersion -FilePath $SuppPolicyPath -Version '1.0.0.0'
@@ -928,11 +919,7 @@ Function Edit-WDACConfig {
                     Write-Verbose -Message 'Setting the policy name'
                     Set-CIPolicyIdInfo -FilePath .\BasePolicy.xml -PolicyName "Allow Microsoft Plus Block Rules refreshed On $(Get-Date -Format 'MM-dd-yyyy')"
 
-                    Write-Verbose -Message 'Setting the policy rule options'
-                    @(0, 2, 5, 6, 11, 12, 16, 17, 19, 20) | ForEach-Object -Process { Set-RuleOption -FilePath .\BasePolicy.xml -Option $_ }
-
-                    Write-Verbose -Message 'Removing the unnecessary policy rule options'
-                    @(3, 4, 9, 10, 13, 18) | ForEach-Object -Process { Set-RuleOption -FilePath .\BasePolicy.xml -Option $_ -Delete }
+                    Edit-CiPolicyRuleOptions -Action Base -XMLFile .\BasePolicy.xml
                 }
                 'Lightly_Managed_system_Policy' {
                     Write-Verbose -Message 'The new base policy type is Lightly_Managed_system_Policy'
@@ -946,11 +933,7 @@ Function Edit-WDACConfig {
                     Write-Verbose -Message 'Setting the policy name'
                     Set-CIPolicyIdInfo -FilePath .\BasePolicy.xml -PolicyName "Signed And Reputable policy refreshed on $(Get-Date -Format 'MM-dd-yyyy')"
 
-                    Write-Verbose -Message 'Setting the policy rule options'
-                    @(0, 2, 5, 6, 11, 12, 14, 15, 16, 17, 19, 20) | ForEach-Object -Process { Set-RuleOption -FilePath .\BasePolicy.xml -Option $_ }
-
-                    Write-Verbose -Message 'Removing the unnecessary policy rule options'
-                    @(3, 4, 9, 10, 13, 18) | ForEach-Object -Process { Set-RuleOption -FilePath .\BasePolicy.xml -Option $_ -Delete }
+                    Edit-CiPolicyRuleOptions -Action Base-ISG -XMLFile .\BasePolicy.xml
 
                     # Configure required services for ISG authorization
                     Write-Verbose -Message 'Configuring required services for ISG authorization'
@@ -982,11 +965,7 @@ Function Edit-WDACConfig {
                     Write-Verbose -Message 'Setting the policy name'
                     Set-CIPolicyIdInfo -FilePath .\BasePolicy.xml -PolicyName "Default Windows Plus Block Rules refreshed On $(Get-Date -Format 'MM-dd-yyyy')"
 
-                    Write-Verbose -Message 'Setting the policy rule options'
-                    @(0, 2, 5, 6, 11, 12, 16, 17, 19, 20) | ForEach-Object -Process { Set-RuleOption -FilePath .\BasePolicy.xml -Option $_ }
-
-                    Write-Verbose -Message 'Removing the unnecessary policy rule options'
-                    @(3, 4, 9, 10, 13, 18) | ForEach-Object -Process { Set-RuleOption -FilePath .\BasePolicy.xml -Option $_ -Delete }
+                    Edit-CiPolicyRuleOptions -Action Base -XMLFile .\BasePolicy.xml
                 }
             }
 
@@ -1022,9 +1001,6 @@ Function Edit-WDACConfig {
 
             Write-Verbose -Message 'Setting the policy version to 1.0.0.1'
             Set-CIPolicyVersion -FilePath .\BasePolicy.xml -Version '1.0.0.1'
-
-            Write-Verbose -Message 'Setting HVCI to Strict'
-            Set-HVCIOptions -Strict -FilePath .\BasePolicy.xml
 
             Write-Verbose -Message 'Converting the base policy to a CIP file'
             ConvertFrom-CIPolicy -XmlFilePath '.\BasePolicy.xml' -BinaryFilePath "$CurrentID.cip" | Out-Null

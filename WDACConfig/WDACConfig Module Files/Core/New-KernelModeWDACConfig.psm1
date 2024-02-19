@@ -44,6 +44,7 @@ Function New-KernelModeWDACConfig {
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Write-ColorfulText.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Move-UserModeToKernelMode.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Get-KernelModeDriversAudit.psm1" -Force
+        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Edit-CiPolicyRuleOptions.psm1" -Force
 
         # if -SkipVersionCheck wasn't passed, run the updater
         if (-NOT $SkipVersionCheck) { Update-self -InvocationStatement $MyInvocation.Statement }
@@ -145,9 +146,10 @@ Function New-KernelModeWDACConfig {
                 Write-Verbose -Message 'Setting the policy version to 1.0.0.0'
                 Set-CIPolicyVersion -FilePath "$PolicyFileName" -Version '1.0.0.0'
 
-                Write-Verbose -Message 'Setting policy rule options for the audit mode policy'
-                @(2, 3, 6, 16, 17, 20) | ForEach-Object -Process { Set-RuleOption -FilePath "$PolicyFileName" -Option $_ }
-                @(0, 4, 8, 9, 10, 11, 12, 13, 14, 15, 18, 19) | ForEach-Object -Process { Set-RuleOption -FilePath "$PolicyFileName" -Option $_ -Delete }
+                Edit-CiPolicyRuleOptions Base-KernelMode -XMLFile "$PolicyFileName"
+
+                # Enabling Audit mode
+                Set-RuleOption -FilePath "$PolicyFileName" -Option 3
 
                 # If user chooses to add EVSigners, add it to the policy
                 if ($EVSigners) {
@@ -166,9 +168,6 @@ Function New-KernelModeWDACConfig {
                     Edit-GUIDs -PolicyIDInput $CurrentStrictKernelPolicyGUIDConfirmation -PolicyFilePathInput "$PolicyFileName"
                     $Global:PolicyID = $CurrentStrictKernelPolicyGUIDConfirmation
                 }
-
-                Write-Verbose -Message 'Setting the HVCI to Strict'
-                Set-HVCIOptions -Strict -FilePath "$PolicyFileName"
             }
         }
     }
@@ -277,17 +276,12 @@ Function New-KernelModeWDACConfig {
                 Write-Verbose -Message 'Setting the policy version to 1.0.0.0'
                 Set-CIPolicyVersion -FilePath '.\Final_DefaultWindows_Enforced_Kernel.xml' -Version '1.0.0.0'
 
-                Write-Verbose -Message 'Setting policy rule options for the final Enforced mode policy'
-                @(2, 6, 16, 17, 20) | ForEach-Object -Process { Set-RuleOption -FilePath '.\Final_DefaultWindows_Enforced_Kernel.xml' -Option $_ }
-                @(0, 3, 4, 8, 9, 10, 11, 12, 13, 14, 15, 18, 19) | ForEach-Object -Process { Set-RuleOption -FilePath '.\Final_DefaultWindows_Enforced_Kernel.xml' -Option $_ -Delete }
+                Edit-CiPolicyRuleOptions -Action Base-KernelMode -XMLFile '.\Final_DefaultWindows_Enforced_Kernel.xml'
 
                 if ($EVSigners) {
                     Write-Verbose -Message 'Adding EVSigners policy rule option'
                     Set-RuleOption -FilePath '.\Final_DefaultWindows_Enforced_Kernel.xml' -Option 8
                 }
-
-                Write-Verbose -Message 'Setting the HVCI to Strict'
-                Set-HVCIOptions -Strict -FilePath '.\Final_DefaultWindows_Enforced_Kernel.xml'
 
                 # Deploy the policy if Deploy parameter is used
                 if ($Deploy) {
@@ -428,17 +422,15 @@ Function New-KernelModeWDACConfig {
                 Write-Verbose -Message 'Setting the policy version to 1.0.0.0'
                 Set-CIPolicyVersion -FilePath '.\Final_DefaultWindows_Enforced_Kernel.xml' -Version '1.0.0.0'
 
-                Write-Verbose -Message 'Setting policy rule options for the final Enforced mode policy'
-                @(2, 4, 6, 16, 17, 20) | ForEach-Object -Process { Set-RuleOption -FilePath '.\Final_DefaultWindows_Enforced_Kernel.xml' -Option $_ }
-                @(0, 3, 8, 9, 10, 11, 12, 13, 14, 15, 18, 19) | ForEach-Object -Process { Set-RuleOption -FilePath '.\Final_DefaultWindows_Enforced_Kernel.xml' -Option $_ -Delete }
+                Edit-CiPolicyRuleOptions -Action Base-KernelMode -XMLFile '.\Final_DefaultWindows_Enforced_Kernel.xml'
+
+                # Add policy rule option 4 to block flight root certs
+                Set-RuleOption -FilePath '.\Final_DefaultWindows_Enforced_Kernel.xml' -Option 4
 
                 if ($EVSigners) {
                     Write-Verbose -Message 'Adding EVSigners policy rule option'
                     Set-RuleOption -FilePath '.\Final_DefaultWindows_Enforced_Kernel.xml' -Option 8
                 }
-
-                Write-Verbose -Message 'Setting the HVCI to Strict'
-                Set-HVCIOptions -Strict -FilePath '.\Final_DefaultWindows_Enforced_Kernel.xml'
 
                 # Deploy the policy if Deploy parameter is used
                 if ($Deploy) {

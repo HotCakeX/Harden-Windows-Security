@@ -14,7 +14,6 @@ Function Edit-CiPolicyRuleOptions {
     #>
     [CmdletBinding()]
     [OutputType([System.Void])]
-
     param (
         [ValidateSet('Base', 'Supplemental', 'TestMode', 'Base-KernelMode', 'Base-ISG')]
         [Parameter(Mandatory = $true)]
@@ -23,14 +22,12 @@ Function Edit-CiPolicyRuleOptions {
         [Parameter(Mandatory = $true)]
         [System.IO.FileInfo]$XMLFile
     )
-
     Begin {
         # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
         Write-Verbose -Message 'Configuring the policy rule options'
     }
-
     Process {
         Switch ($Action) {
             'Base' {

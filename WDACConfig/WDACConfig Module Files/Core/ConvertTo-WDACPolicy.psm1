@@ -391,6 +391,9 @@ Function ConvertTo-WDACPolicy {
         elseif ($null -ne $PolicyToAddLogsTo) {
             Set-CIPolicyIdInfo -FilePath $WDACPolicyPath -PolicyName "Supplemental Policy from event logs - $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID | Out-Null
 
+            # Remove all policy rule option prior to merging the policies since we don't need to add/remove any policy rule options to/from the user input policy
+            Edit-CiPolicyRuleOptions -Action RemoveAll -XMLFile $WDACPolicyPath
+
             Merge-CIPolicy -PolicyPaths "$PolicyToAddLogsTo", "$WDACPolicyPath" -OutputFilePath "$PolicyToAddLogsTo" | Out-Null
 
             # Set HVCI to Strict

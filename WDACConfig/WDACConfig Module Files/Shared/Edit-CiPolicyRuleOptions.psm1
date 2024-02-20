@@ -15,7 +15,7 @@ Function Edit-CiPolicyRuleOptions {
     [CmdletBinding()]
     [OutputType([System.Void])]
     param (
-        [ValidateSet('Base', 'Supplemental', 'TestMode', 'Base-KernelMode', 'Base-ISG')]
+        [ValidateSet('Base', 'Supplemental', 'TestMode', 'Base-KernelMode', 'Base-ISG', 'RemoveAll')]
         [Parameter(Mandatory = $true)]
         [System.String]$Action,
 
@@ -52,6 +52,10 @@ Function Edit-CiPolicyRuleOptions {
             }
             'TestMode' {
                 9..10 | ForEach-Object -Process { Set-RuleOption -FilePath $XMLFile -Option $_ }
+                break
+            }
+            'RemoveAll' {
+                0..20 | ForEach-Object -Process { Set-RuleOption -FilePath $XMLFile -Option $_ -Delete }
                 break
             }
         }

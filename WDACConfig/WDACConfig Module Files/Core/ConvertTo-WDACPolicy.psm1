@@ -25,11 +25,6 @@ Function ConvertTo-WDACPolicy {
         [Parameter(Mandatory = $false, ParameterSetName = 'Base-Policy GUID Association')]
         [System.Guid]$BasePolicyGUID,
 
-        [Parameter(Mandatory = $false, ParameterSetName = 'In-Place Upgrade')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'Base-Policy GUID Association')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'Base-Policy File Association')]
-        [System.Management.Automation.SwitchParameter]$AlternateDisplay,
-
         [ArgumentCompleter({
                 param($CommandName, $parameterName, $wordToComplete, $CommandAst, $fakeBoundParameters)
 
@@ -75,7 +70,12 @@ Function ConvertTo-WDACPolicy {
         [Parameter(Mandatory = $false, ParameterSetName = 'In-Place Upgrade')]
         [Parameter(Mandatory = $false, ParameterSetName = 'Base-Policy GUID Association')]
         [Parameter(Mandatory = $false, ParameterSetName = 'Base-Policy File Association')]
-        [System.Management.Automation.SwitchParameter]$Deploy
+        [System.Management.Automation.SwitchParameter]$Deploy,
+
+        [Parameter(Mandatory = $false, ParameterSetName = 'In-Place Upgrade')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Base-Policy GUID Association')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Base-Policy File Association')]
+        [System.Management.Automation.SwitchParameter]$ExtremeVisibility
     )
 
     begin {
@@ -116,6 +116,8 @@ Function ConvertTo-WDACPolicy {
 
         # Save the current date in a variable as string
         [System.String]$CurrentDate = $(Get-Date -Format "MM-dd-yyyy 'at' HH-mm-ss")
+
+        [System.Boolean]$ShouldExit = $false
     }
 
     Process {
@@ -126,7 +128,7 @@ Function ConvertTo-WDACPolicy {
             Expression = {
                 # Can't use Get-Item or Get-ChildItem because the file might not exist on the disk
                 # Can't use Split-Path -LiteralPath with -Leaf parameter because not supported
-                $TempPath = Split-Path -LiteralPath $_.'File Name'
+                [System.String]$TempPath = Split-Path -LiteralPath $_.'File Name'
                 $_.'File Name'.Replace($TempPath, '').TrimStart('\')
             }
         },
@@ -147,7 +149,6 @@ Function ConvertTo-WDACPolicy {
         'SI Signing Scenario',
         'UserId',
         'Publishers',
-        'SignerInfo',
         'SHA256 Hash',
         'SHA256 Flat Hash',
         'SHA1 Hash',
@@ -159,7 +160,8 @@ Function ConvertTo-WDACPolicy {
         'UserWriteable',
         'PolicyID',
         'Status',
-        'USN'
+        'USN',
+        'SignerInfo'
 
         # If the KernelModeOnly switch is used, then filter the events by the 'Requested Signing Level' property
         if ($KernelModeOnly) {
@@ -167,25 +169,34 @@ Function ConvertTo-WDACPolicy {
         }
 
         # Sort the events by TimeCreated in descending order
-        $EventsToDisplay = $EventsToDisplay | Sort-Object -Property TimeCreated -Descending
+        [PSCustomObject[]]$EventsToDisplay = $EventsToDisplay | Sort-Object -Property TimeCreated -Descending
 
         #Region Out-GridView properties visibility settings
 
-        # Create a PSPropertySet object that contains the names of the properties to be visible
-        # Used for Out-GridView display
-        # https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.pspropertyset
-        # https://learn.microsoft.com/en-us/powershell/scripting/learn/deep-dives/everything-about-pscustomobject#using-defaultpropertyset-the-long-way
-        $Visible = [System.Management.Automation.PSPropertySet]::new(
-            'DefaultDisplayPropertySet', # the name of the property set
-            [System.String[]]@('File Name', 'TimeCreated', 'PolicyName', 'ProductName', 'FileVersion', 'OriginalFileName', 'FileDescription', 'InternalName', 'PackageFamilyName', 'Full Path', 'SI Signing Scenario', 'UserId', 'Publishers') # the names of the properties to be visible
-        )
+        # If the ExtremeVisibility switch is used, then display all the properties of the logs without any filtering
+        if (-NOT $ExtremeVisibility) {
 
-        # Add the PSPropertySet object to the PSStandardMembers member set of each element of the $EventsToDisplay array
-        foreach ($Element in $EventsToDisplay) {
-            $Element | Add-Member -MemberType 'MemberSet' -Name 'PSStandardMembers' -Value $Visible
+            [System.String[]]$PropertiesToDisplay = @('File Name', 'TimeCreated', 'PolicyName', 'ProductName', 'FileVersion', 'OriginalFileName', 'FileDescription', 'InternalName', 'PackageFamilyName', 'Full Path', 'SI Signing Scenario', 'UserId', 'Publishers')
+
+            # Create a PSPropertySet object that contains the names of the properties to be visible
+            # Used for Out-GridView display
+            # https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.pspropertyset
+            # https://learn.microsoft.com/en-us/powershell/scripting/learn/deep-dives/everything-about-pscustomobject#using-defaultpropertyset-the-long-way
+            $Visible = [System.Management.Automation.PSPropertySet]::new(
+                'DefaultDisplayPropertySet', # the name of the property set
+                $PropertiesToDisplay # the names of the properties to be visible
+            )
+
+            # Add the PSPropertySet object to the PSStandardMembers member set of each element of the $EventsToDisplay array
+            foreach ($Element in $EventsToDisplay) {
+                $Element | Add-Member -MemberType 'MemberSet' -Name 'PSStandardMembers' -Value $Visible
+            }
         }
 
         #Endregion Out-GridView properties visibility settings
+
+        <#
+        Will enable this section once this issue has been fixed: https://github.com/PowerShell/GraphicalTools/issues/235
 
         if ($AlternateDisplay) {
 
@@ -197,15 +208,17 @@ Function ConvertTo-WDACPolicy {
             # Display the logs in a console grid view using outside module
             $SelectedLogs = $EventsToDisplay | Out-ConsoleGridView -Title "$($EventsToDisplay.count) $LogType Code Integrity Logs" -OutputMode Multiple
         }
-        else {
-            # Display the logs in a grid view using the build-in cmdlet
-            $SelectedLogs = $EventsToDisplay | Out-GridView -OutputMode Multiple -Title "$($EventsToDisplay.count) $LogType Code Integrity Logs"
-        }
+        #>
+
+        # Display the logs in a grid view using the build-in cmdlet
+        $SelectedLogs = $EventsToDisplay | Out-GridView -OutputMode Multiple -Title "$($EventsToDisplay.count) $LogType Code Integrity Logs"
 
         Write-Verbose -Message "ConvertTo-WDACPolicy: Selected logs count: $($SelectedLogs.count)"
 
         if (!$BasePolicyGUID -and !$BasePolicyFile -and !$PolicyToAddLogsTo) {
             Write-ColorfulText -Color HotPink -InputText 'A more specific parameter was not provided to define what to do with the selected logs. Exiting...'
+
+            $ShouldExit = $true
             return
         }
 
@@ -404,6 +417,8 @@ Function ConvertTo-WDACPolicy {
     }
 
     End {
+        if ($ShouldExit -eq $true) { return }
+
         Write-Verbose -Message 'ConvertTo-WDACPolicy: Removing the temporary folder and its content'
         Remove-Item -Path $SymLinksStorage -Recurse -Force
     }
@@ -411,11 +426,10 @@ Function ConvertTo-WDACPolicy {
     <#
 .SYNOPSIS
     Displays the Code Integrity logs in a GUI and allows the user to select the logs to convert to a Supplemental WDAC policy
+    It's a multi-purpose cmdlet that offers a wide range of functionalities that can either be used separately or mixed together for very detailed and specific tasks
 .DESCRIPTION
     You can filter the logs by the policy name and the time
     You can add the logs to an existing WDAC policy or create a new one
-.PARAMETER AlternateDisplay
-   Will render the GUI in the PowerShell console instead of opening a new window
 .PARAMETER PolicyNames
    The names of the policies to filter the logs by.
    Supports auto-completion, press TAB key to view the list of policies to choose from.
@@ -441,6 +455,31 @@ Function ConvertTo-WDACPolicy {
     If used, will deploy the policy on the system
 .NOTES
     The biggest specified time unit is used for filtering the logs if more than one time unit is specified.
+.EXAMPLE
+    ConvertTo-WDACPolicy -PolicyToAddLogsTo "C:\Users\Admin\AllowMicrosoftPlusBlockRules.xml" -Verbose
+
+    This example will display the Code Integrity logs in a GUI and allow the user to select the logs to add to the specified policy file.
+.EXAMPLE
+    ConvertTo-WDACPolicy -Verbose -BasePolicyGUID '{ACE9058C-8A24-47F4-86F0-A33FAB5073E3}'
+
+    This example will display the Code Integrity logs in a GUI and allow the user to select the logs to create a new supplemental policy and associate it with the specified base policy GUID.
+.EXAMPLE
+    ConvertTo-WDACPolicy -BasePolicyFile "C:\Users\Admin\AllowMicrosoftPlusBlockRules.xml"
+
+    This example will display the Code Integrity logs in a GUI and allow the user to select the logs to create a new supplemental policy and associate it with the specified base policy file.
+.EXAMPLE
+    ConvertTo-WDACPolicy
+
+    This example will display the Code Integrity logs in a GUI and takes no further action.
+.EXAMPLE
+    ConvertTo-WDACPolicy -PolicyNames 'VerifiedAndReputableDesktopFlightSupplemental','WindowsE_Lockdown_Flight_Policy_Supplemental' -Verbose
+
+    This example will filter the Code Integrity logs by the specified policy names and display them in a GUI. It will also display verbose messages on the console.
+.EXAMPLE
+    ConvertTo-WDACPolicy -PolicyNames 'Microsoft Windows Driver Policy - Enforced' -MinutesAgo 10
+
+    This example will filter the Code Integrity logs by the specified policy name and the number of minutes ago from the current time and display them in a GUI.
+    So, it will display the logs that are 10 minutes old and are associated with the specified policy name.
 #>
 
 }

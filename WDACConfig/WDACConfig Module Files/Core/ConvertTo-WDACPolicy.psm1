@@ -223,7 +223,10 @@ Function ConvertTo-WDACPolicy {
         }
 
         # If the user has selected any logs, then create a WDAC policy for them, otherwise return
-        if ($null -eq $SelectedLogs) { return }
+        if ($null -eq $SelectedLogs) {
+            $ShouldExit = $true
+            return
+        }
 
         Write-Verbose -Message 'ConvertTo-WDACPolicy: Creating a temporary folder to store the symbolic links to the files and WDAC polices'
         [System.IO.DirectoryInfo]$SymLinksStorage = New-Item -Path ($UserTempDirectoryPath + 'SymLinkStorage' + $(New-Guid)) -ItemType Directory -Force
@@ -371,6 +374,8 @@ Function ConvertTo-WDACPolicy {
         # If there are no files in the selected logs
         else {
             Write-ColorfulText -Color HotPink -InputText 'No logs were selected to create a WDAC policy from. Exiting...'
+
+            $ShouldExit = $true
             return
         }
 

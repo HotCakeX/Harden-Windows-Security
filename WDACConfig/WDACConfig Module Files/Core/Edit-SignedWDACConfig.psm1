@@ -841,7 +841,7 @@ Function Edit-SignedWDACConfig {
                                 # Testing each executable to find the protected ones
                                 Get-FileHash -Path $Exe -ErrorAction Stop | Out-Null
                             }
-                            # If the executable is protected, it will throw an exception and the script will continue to the next one
+                            # If the executable is protected, it will throw an exception and the module will continue to the next one
                             # Making sure only the right file is captured by narrowing down the error type.
                             # E.g., when get-filehash can't get a file's hash because its open by another program, the exception is different: System.IO.IOException
                             catch [System.UnauthorizedAccessException] {

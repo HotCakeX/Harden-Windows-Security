@@ -38,6 +38,7 @@ $PSDefaultParameterValues = @{
     'Remove-SupplementalSigners:Verbose'   = $Verbose
     'Get-ExtendedFileInfo:Verbose'         = $Verbose
     'Edit-CiPolicyRuleOptions:Verbose'     = $Verbose
+    'New-AppxPackageCiPolicy:Verbose'      = $Verbose
 }
 
 # SIG # Begin signature block

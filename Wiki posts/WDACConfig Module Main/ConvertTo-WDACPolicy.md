@@ -58,6 +58,9 @@ This cmdlet allows you to perform an in-place upgrade of a deployed base/supplem
 
 The policy to add the selected logs to, it can either be a base or supplemental policy.
 
+> [!IMPORTANT]\
+> Only select one of the following three parameters: `-PolicyToAddLogsTo`, `-BasePolicyFile`, or `-BasePolicyGUID`.
+
 <div align='center'>
 
 | Type: |[FileInfo](https://learn.microsoft.com/en-us/dotnet/api/system.io.fileinfo)|
@@ -76,6 +79,9 @@ The policy to add the selected logs to, it can either be a base or supplemental 
 
 The base policy file to associate the supplemental policy with.
 
+> [!IMPORTANT]\
+> Only select one of the following three parameters: `-PolicyToAddLogsTo`, `-BasePolicyFile`, or `-BasePolicyGUID`.
+
 <div align='center'>
 
 | Type: |[FileInfo](https://learn.microsoft.com/en-us/dotnet/api/system.io.fileinfo)|
@@ -93,6 +99,9 @@ The base policy file to associate the supplemental policy with.
 ### -BasePolicyGUID
 
 The GUID of the base policy to associate the supplemental policy with.
+
+> [!IMPORTANT]\
+> Only select one of the following three parameters: `-PolicyToAddLogsTo`, `-BasePolicyFile`, or `-BasePolicyGUID`.
 
 <div align='center'>
 

@@ -14,6 +14,10 @@ Function Get-CiFileHashes {
         # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
+        # Importing the required sub-modules
+        Write-Verbose -Message 'Importing the required sub-modules'
+        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Update-self.psm1" -Force
+        
         # if -SkipVersionCheck wasn't passed, run the updater
         if (-NOT $SkipVersionCheck) { Update-self -InvocationStatement $MyInvocation.Statement }
 
@@ -229,3 +233,7 @@ Function Get-CiFileHashes {
     And return them as the Authenticode hashes. This is compliant with how the WDAC engine in Windows works.
 #>
 }
+# Importing argument completer ScriptBlocks
+. "$ModuleRootPath\Resources\ArgumentCompleters.ps1"
+
+Register-ArgumentCompleter -CommandName 'Get-CiFileHashes' -ParameterName 'FilePath' -ScriptBlock $ArgumentCompleterAnyFilePathsPicker

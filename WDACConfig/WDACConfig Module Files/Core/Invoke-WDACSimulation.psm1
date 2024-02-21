@@ -200,9 +200,8 @@ Function Invoke-WDACSimulation {
                     [System.String]$CurrentFilePathHash = (Get-AppLockerFileInformation -Path $($CurrentFilePath -match '\[|\]' ? ($CurrentFilePath -replace '(\[|\])', '`$1') : $CurrentFilePath) -ErrorAction Stop).hash -replace 'SHA256 0x', ''
                 }
                 catch {
-                    Write-Verbose -Message 'Get-AppLockerFileInformation failed, using New-CIPolicyRule cmdlet...'
-                    [System.Collections.ArrayList]$CurrentHashOutput = New-CIPolicyRule -Level hash -Fallback none -AllowFileNameFallbacks -UserWriteablePaths -DriverFilePath $CurrentFilePath
-                    [System.String]$CurrentFilePathHash = ($CurrentHashOutput | Where-Object -FilterScript { $_.name -like '*Hash Sha256*' }).attributes.hash
+                    Write-Verbose -Message 'Get-AppLockerFileInformation failed because the file is non-conformant, getting the flat file hash instead'
+                    [System.String]$CurrentFilePathHash = (Get-CiFileHashes -FilePath $CurrentFilePath).SHA256Authenticode
                 }
 
                 # if the file's hash exists in the XML file then add the file's path to the allowed files and do not check anymore that whether the file is signed or not

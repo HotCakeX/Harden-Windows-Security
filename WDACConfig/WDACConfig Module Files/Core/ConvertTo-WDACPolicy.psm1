@@ -28,7 +28,7 @@ Function ConvertTo-WDACPolicy {
         [ArgumentCompleter({
                 param($CommandName, $parameterName, $wordToComplete, $CommandAst, $fakeBoundParameters)
 
-                [System.String[]]$Policies = ((&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { $_.FriendlyName }).FriendlyName
+                [System.String[]]$Policies = ((&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { ($_.FriendlyName) -and ($_.PolicyID -eq $_.BasePolicyID) }).FriendlyName
 
                 $Existing = $CommandAst.FindAll({
                         $args[0] -is [System.Management.Automation.Language.StringConstantExpressionAst]
@@ -39,7 +39,7 @@ Function ConvertTo-WDACPolicy {
         [Parameter(Mandatory = $false, ParameterSetName = 'In-Place Upgrade')]
         [Parameter(Mandatory = $false, ParameterSetName = 'Base-Policy GUID Association')]
         [Parameter(Mandatory = $false, ParameterSetName = 'Base-Policy File Association')]
-        [System.String[]]$PolicyNames,
+        [System.String[]]$FilterByPolicyNames,
 
         [Parameter(Mandatory = $false, ParameterSetName = 'In-Place Upgrade')]
         [Parameter(Mandatory = $false, ParameterSetName = 'Base-Policy GUID Association')]
@@ -128,7 +128,7 @@ Function ConvertTo-WDACPolicy {
 
     Process {
 
-        [PSCustomObject[]]$EventsToDisplay = Receive-CodeIntegrityLogs -PostProcessing OnlyExisting -PolicyName:$PolicyNames -Date:$StartTime -Type:$LogType |
+        [PSCustomObject[]]$EventsToDisplay = Receive-CodeIntegrityLogs -PostProcessing OnlyExisting -PolicyName:$FilterByPolicyNames -Date:$StartTime -Type:$LogType |
         Select-Object -Property @{
             Label      = 'File Name'
             Expression = {
@@ -478,11 +478,11 @@ Function ConvertTo-WDACPolicy {
 .DESCRIPTION
     You can filter the logs by the policy name and the time
     You can add the logs to an existing WDAC policy or create a new one
-.PARAMETER PolicyNames
+.PARAMETER FilterByPolicyNames
    The names of the policies to filter the logs by.
-   Supports auto-completion, press TAB key to view the list of policies to choose from.
-   It will not display the policies that are already selected.
-   You can enter the name of the policies that are no longer available in the system.
+   Supports auto-completion, press TAB key to view the list of the deployed base policy names to choose from.
+   It will not display the policies that are already selected on the command line.
+   You can manually enter the name of the policies that are no longer available on the system.
 .PARAMETER PolicyToAddLogsTo
     The policy to add the selected logs to, it can either be a base or supplemental policy.
 .PARAMETER BasePolicyFile
@@ -522,11 +522,11 @@ Function ConvertTo-WDACPolicy {
 
     This example will display the Code Integrity logs in a GUI and takes no further action.
 .EXAMPLE
-    ConvertTo-WDACPolicy -PolicyNames 'VerifiedAndReputableDesktopFlightSupplemental','WindowsE_Lockdown_Flight_Policy_Supplemental' -Verbose
+    ConvertTo-WDACPolicy -FilterByPolicyNames 'VerifiedAndReputableDesktopFlightSupplemental','WindowsE_Lockdown_Flight_Policy_Supplemental' -Verbose
 
     This example will filter the Code Integrity logs by the specified policy names and display them in a GUI. It will also display verbose messages on the console.
 .EXAMPLE
-    ConvertTo-WDACPolicy -PolicyNames 'Microsoft Windows Driver Policy - Enforced' -MinutesAgo 10
+    ConvertTo-WDACPolicy -FilterByPolicyNames 'Microsoft Windows Driver Policy - Enforced' -MinutesAgo 10
 
     This example will filter the Code Integrity logs by the specified policy name and the number of minutes ago from the current time and display them in a GUI.
     So, it will display the logs that are 10 minutes old and are associated with the specified policy name.

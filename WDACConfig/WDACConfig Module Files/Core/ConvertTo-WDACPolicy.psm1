@@ -75,7 +75,9 @@ Function ConvertTo-WDACPolicy {
         [Parameter(Mandatory = $false, ParameterSetName = 'In-Place Upgrade')]
         [Parameter(Mandatory = $false, ParameterSetName = 'Base-Policy GUID Association')]
         [Parameter(Mandatory = $false, ParameterSetName = 'Base-Policy File Association')]
-        [System.Management.Automation.SwitchParameter]$ExtremeVisibility
+        [System.Management.Automation.SwitchParameter]$ExtremeVisibility,
+
+        [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SkipVersionCheck
     )
 
     begin {
@@ -95,6 +97,9 @@ Function ConvertTo-WDACPolicy {
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\New-EmptyPolicy.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Get-RuleRefs.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Get-FileRules.psm1" -Force
+
+        # if -SkipVersionCheck wasn't passed, run the updater
+        if (-NOT $SkipVersionCheck) { Update-self -InvocationStatement $MyInvocation.Statement }
 
         if ($MinutesAgo -or $HoursAgo -or $DaysAgo) {
             # Convert MinutesAgo, HoursAgo, and DaysAgo to DateTime objects
@@ -117,6 +122,7 @@ Function ConvertTo-WDACPolicy {
         # Save the current date in a variable as string
         [System.String]$CurrentDate = $(Get-Date -Format "MM-dd-yyyy 'at' HH-mm-ss")
 
+        # Initialize the flag indicating whether the cmdlet should exit
         [System.Boolean]$ShouldExit = $false
     }
 
@@ -495,6 +501,8 @@ Function ConvertTo-WDACPolicy {
     The type of logs to display: Audit or Blocked
 .PARAMETER Deploy
     If used, will deploy the policy on the system
+.PARAMETER SkipVersionCheck
+    Can be used with any parameter to bypass the online version check - only to be used in rare cases
 .NOTES
     The biggest specified time unit is used for filtering the logs if more than one time unit is specified.
 .EXAMPLE

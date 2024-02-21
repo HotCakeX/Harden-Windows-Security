@@ -106,13 +106,11 @@ As an individual user you can still utilize these features and services, they ad
 
 * [List of all Azure security services for Enterprises, Businesses etc.](https://learn.microsoft.com/en-us/azure/security/fundamentals/services-technologies)
 
-* [**Moot Security Management**](https://mootinc.com/) - Automate your Security Fabric. All in a few seconds. Create Top Secure PAWs and more with the same products mentioned above, automatically, using 1st party solutions. **Suitable for the most sensitive and important tasks.**
-
 <br>
 
 ## <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/PNGs/673731848341553152.png" alt="head patting"> Important Considerations
 
-* Avoid using any 3rd party security solutions when using Harden Windows Security module or Windows Defender Application Control (WDAC). 3rd party solutions are weak, incompatible and unnecessary, they also increase your attack surface.
+* Avoid using any 3rd party security solutions when using Harden Windows Security module or Windows Defender Application Control (WDAC). 3rd party solutions are weak, incompatible and unnecessary, **they also increase your attack surface**.
 
 * Use Virtual machines for any questionable or unsafe software. Use [Windows Sandbox or Hyper-V VM](https://github.com/HotCakeX/Privacy-Anonymity-Compartmentalization). Also consider using Virtual machines or Microsoft Defender Application Guard (MDAG) for browsing on highly secure workstations.
 
@@ -193,12 +191,12 @@ How to properly perform a pentest and benchmark a system hardened by this reposi
 1. Use a physical machine if possible, it should have Windows 11 certified hardware, [Standard user account](https://learn.microsoft.com/en-us/windows-server/remote/multipoint-services/create-a-standard-user-account).
    * If you can't use a physical machine, use Hyper-V hypervisor. Your host (aka physical machine) must have Windows 11 certified hardware and meet all the hardware and UEFI security requirements explained in the Readme. VMs however are prone to side channel attacks, so don't use that attack vector in pentests if you want more realistic results.
 
-2. **First apply the [Harden Windows Security script](https://github.com/HotCakeX/Harden-Windows-Security) *(All categories of it)* and then use the [WDACConfig module](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig) to deploy a suitable [Signed](https://github.com/HotCakeX/Harden-Windows-Security/wiki/How-to-Create-and-Deploy-a-Signed-WDAC-Policy-Windows-Defender-Application-Control#system-behavior) WDAC policy.**
+2. First apply the [Harden Windows Security module](https://github.com/HotCakeX/Harden-Windows-Security) *(All categories of it)* and then use the [WDACConfig module](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig) to deploy a suitable [Signed](https://github.com/HotCakeX/Harden-Windows-Security/wiki/How-to-Create-and-Deploy-a-Signed-WDAC-Policy-Windows-Defender-Application-Control#system-behavior) WDAC policy.
 
 <br>
 
 > [!IMPORTANT]\
-> **Always Pay attention to the [Microsoft Security Servicing Criteria for Windows](https://www.microsoft.com/en-us/msrc/windows-security-servicing-criteria), specially the Security boundaries.** There is no security boundary between Administrator to Kernel.
+> Always Pay attention to the [Microsoft Security Servicing Criteria for Windows](https://www.microsoft.com/en-us/msrc/windows-security-servicing-criteria), specially the Security boundaries. There is no security boundary between Administrator to Kernel.
 >
 > Some penetration testers overlook this fact, assuming it is a vulnerability that they can perform administrative tasks such as disabling security features as Administrator. This is an expected behavior. Administrators have the power to control the security of a device and can disable security features at their discretion. This is why you need to use a Standard user account when performing a realistic penetration test.
 >

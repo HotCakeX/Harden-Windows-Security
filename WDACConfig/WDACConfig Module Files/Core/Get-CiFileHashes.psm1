@@ -3,7 +3,9 @@ Function Get-CiFileHashes {
     [OutputType([ordered])]
     param (
         [Parameter(Mandatory = $true, Position = 0, valueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
-        [System.IO.FileInfo]$FilePath
+        [System.IO.FileInfo]$FilePath,
+
+        [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SkipVersionCheck
     )
     Begin {
         # Detecting if Verbose switch is used
@@ -11,6 +13,9 @@ Function Get-CiFileHashes {
 
         # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
+
+        # if -SkipVersionCheck wasn't passed, run the updater
+        if (-NOT $SkipVersionCheck) { Update-self -InvocationStatement $MyInvocation.Statement }
 
         # Defining the WinTrust class from the WDACConfig Namespace if it doesn't already exist
         if (-NOT ('WDACConfig.WinTrust' -as [System.Type]) ) {
@@ -208,6 +213,8 @@ Function Get-CiFileHashes {
     https://github.com/HotCakeX/Harden-Windows-Security/wiki/Get-CiFileHashes
 .PARAMETER Path
     The path to the file for which the hashes are to be calculated.
+.PARAMETER SkipVersionCheck
+    Can be used with any parameter to bypass the online version check - only to be used in rare cases
 .INPUTS
     System.IO.FileInfo
 .OUTPUTS

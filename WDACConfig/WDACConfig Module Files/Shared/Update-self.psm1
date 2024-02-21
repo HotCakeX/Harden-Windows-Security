@@ -20,7 +20,7 @@ Function Update-self {
     [OutputType([System.String])]
     param(
         [Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true, Position = 0)]
-        [ValidatePattern('^(Confirm-WDACConfig|Deploy-SignedWDACConfig|Edit-SignedWDACConfig|Edit-WDACConfig|Invoke-WDACSimulation|New-DenyWDACConfig|New-KernelModeWDACConfig|New-SupplementalWDACConfig|New-WDACConfig|Remove-WDACConfig|Assert-WDACConfigIntegrity|Build-WDACCertificate)(?!.*[;`]).*$', ErrorMessage = 'Either Update-self function was called with an unauthorized command or it contains semicolon and/or backtick')]
+        [ValidatePattern('^(Confirm-WDACConfig|Deploy-SignedWDACConfig|Edit-SignedWDACConfig|Edit-WDACConfig|Invoke-WDACSimulation|New-DenyWDACConfig|New-KernelModeWDACConfig|New-SupplementalWDACConfig|New-WDACConfig|Remove-WDACConfig|Assert-WDACConfigIntegrity|Build-WDACCertificate|Get-CiFileHashes|ConvertTo-WDACPolicy)(?!.*[;`]).*$', ErrorMessage = 'Either Update-self function was called with an unauthorized command or it contains semicolon and/or backtick')]
         [System.String]$InvocationStatement
     )
     # Importing the $PSDefaultParameterValues to the current session, prior to everything else
@@ -111,8 +111,8 @@ Export-ModuleMember -Function 'Update-self'
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDsdaguuukyjzxr
-# JMH2cY5WoERUynKg4h0bk6Hhw7okY6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDjCxrFbEuQXKCX
+# k7Yz+iPtdP7mPEHQ4wE4JJkdND/cs6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -159,16 +159,16 @@ Export-ModuleMember -Function 'Update-self'
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgCpZ3rLMEQzruevN76ayjNyBSa29J2JYrkZ55r/Y9aV0wDQYJKoZIhvcNAQEB
-# BQAEggIAGCjWYHF9e9bFmPkcOaZvfvYkhjkCHZnaUdG5T2iidkz1iGVK65/+xktJ
-# MzaiwaxYuzpnPxzpZC4PM8ufdJIFy5sD8NBjDofP4xElx5x6eHiBbbUxtZkUTOpC
-# /anj4L9ajNS/DHfWSnOqwa4BlA3JDPndsQurKmtc2jX5fD7JIbgqielk9rxkwak7
-# 2lP2SudZnKj/g2it4QjHRoATok4gfkhLavMeWA+rPY31i5PFxE5f67pHx8phBGtu
-# xQHrAFTr4y6IEVfdGxAA0N+PUMpyu8eBerQ38BTk5/aywlC1Dk2wdz4uzLSONZJH
-# YOy1OqKtAGjrPawNbkAdDbFmqpPaa+6WhHK43G9lNJp3tp7lEXsSlkGDGLf2+kRs
-# oEpe769GaFrvTWDULBVbp074ihmq+jIScjWvuLpP8JDQD11+Uke2/0CjO+/j9tje
-# JeSJwpNbsc1cTcmXS88BDinJRQergk9+wWCW1SejoYaDpuxGUvAY6xTVJcTjNmYN
-# FyMNefJ2R1NA8pHtYh4zjBnx2tQ8a/7GodZKzcbPl7HDvxqkHfqjtIutwKkNlWez
-# T198BFMjzT4eLK4zQCZRWMU1Cc+d8OFrWjNh5Wfz7tRxmZW6ALHhHQuxHbk5QckE
-# OEE7zUOsGRxuB8J3kwc91wCA7VKCQMYZUeFTivibqHIjHaKGeTw=
+# IgQg7BVLp08ng1vLsFyykZ1s0LdPV3dUwdZVig5Lzw4ZicswDQYJKoZIhvcNAQEB
+# BQAEggIAGQ88s3agTSv8H6fcglyvXQsx/HYs5K3C8oCsQ8n8XzddkM5OPH4zwGXW
+# BLpr5TFnok+S2rIGBEl+OKSVe5FULO/BDmY3yUw8cMEELtceQsclHcRQwGDwyXur
+# kQYUL0l6tm0laUht16fSA+a0sRk2GLk7wheWA/IYjrJz2G4942e7QMTwS17RNt+y
+# P1AZsYsCTji0rUf9Lbatny0zfD34qmZEJy4DwRB35OBBlEctqB8S54Zf2NepZ+zG
+# 5e7/P1CEDagCMzVrewYdepYt96j+cJAFKwi4iqz1qzX/2oHpanWBG1a3MBowleHD
+# mCQvhwZ+sfyz+VngBWWVWdgt/5cY676PHM3ENBB5JA15m6LQiYlLOSflc35YlqEy
+# b7DRUBPV/NBXcXO1KU3SuTVdExMHhfw4fi/HayeQthS+VapHlN9rTv7IQg3PrLC3
+# HAeWVeo99m7aofQCt3hKbyhMKw4Y46Urh64Qc4d4JQ0tQ6HhtaoKchT1vPwC45BY
+# QowPmYJlqiPyRFPr0sfTfQN3cYo4ynw8zV/pA+cLENQpcTJT1/tpcnnY40h4xET+
+# fdHowjEEEFfmOGUNSxnmh4ORgGavDQ6Lt4L6QKjkpGL2a3a7/oGPVs1FQHNZPZkv
+# 8ivRw4cPKwjLg2f9DB8BlIug4OyYexLHq5D6JQF4uA2Un6BV6wg=
 # SIG # End signature block

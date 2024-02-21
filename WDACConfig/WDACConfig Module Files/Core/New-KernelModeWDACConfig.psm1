@@ -44,6 +44,7 @@ Function New-KernelModeWDACConfig {
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Write-ColorfulText.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Move-UserModeToKernelMode.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Get-KernelModeDriversAudit.psm1" -Force
+        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Edit-CiPolicyRuleOptions.psm1" -Force
 
         # if -SkipVersionCheck wasn't passed, run the updater
         if (-NOT $SkipVersionCheck) { Update-self -InvocationStatement $MyInvocation.Statement }
@@ -145,9 +146,10 @@ Function New-KernelModeWDACConfig {
                 Write-Verbose -Message 'Setting the policy version to 1.0.0.0'
                 Set-CIPolicyVersion -FilePath "$PolicyFileName" -Version '1.0.0.0'
 
-                Write-Verbose -Message 'Setting policy rule options for the audit mode policy'
-                @(2, 3, 6, 16, 17, 20) | ForEach-Object -Process { Set-RuleOption -FilePath "$PolicyFileName" -Option $_ }
-                @(0, 4, 8, 9, 10, 11, 12, 13, 14, 15, 18, 19) | ForEach-Object -Process { Set-RuleOption -FilePath "$PolicyFileName" -Option $_ -Delete }
+                Edit-CiPolicyRuleOptions Base-KernelMode -XMLFile "$PolicyFileName"
+
+                # Enabling Audit mode
+                Set-RuleOption -FilePath "$PolicyFileName" -Option 3
 
                 # If user chooses to add EVSigners, add it to the policy
                 if ($EVSigners) {
@@ -166,9 +168,6 @@ Function New-KernelModeWDACConfig {
                     Edit-GUIDs -PolicyIDInput $CurrentStrictKernelPolicyGUIDConfirmation -PolicyFilePathInput "$PolicyFileName"
                     $Global:PolicyID = $CurrentStrictKernelPolicyGUIDConfirmation
                 }
-
-                Write-Verbose -Message 'Setting the HVCI to Strict'
-                Set-HVCIOptions -Strict -FilePath "$PolicyFileName"
             }
         }
     }
@@ -277,17 +276,12 @@ Function New-KernelModeWDACConfig {
                 Write-Verbose -Message 'Setting the policy version to 1.0.0.0'
                 Set-CIPolicyVersion -FilePath '.\Final_DefaultWindows_Enforced_Kernel.xml' -Version '1.0.0.0'
 
-                Write-Verbose -Message 'Setting policy rule options for the final Enforced mode policy'
-                @(2, 6, 16, 17, 20) | ForEach-Object -Process { Set-RuleOption -FilePath '.\Final_DefaultWindows_Enforced_Kernel.xml' -Option $_ }
-                @(0, 3, 4, 8, 9, 10, 11, 12, 13, 14, 15, 18, 19) | ForEach-Object -Process { Set-RuleOption -FilePath '.\Final_DefaultWindows_Enforced_Kernel.xml' -Option $_ -Delete }
+                Edit-CiPolicyRuleOptions -Action Base-KernelMode -XMLFile '.\Final_DefaultWindows_Enforced_Kernel.xml'
 
                 if ($EVSigners) {
                     Write-Verbose -Message 'Adding EVSigners policy rule option'
                     Set-RuleOption -FilePath '.\Final_DefaultWindows_Enforced_Kernel.xml' -Option 8
                 }
-
-                Write-Verbose -Message 'Setting the HVCI to Strict'
-                Set-HVCIOptions -Strict -FilePath '.\Final_DefaultWindows_Enforced_Kernel.xml'
 
                 # Deploy the policy if Deploy parameter is used
                 if ($Deploy) {
@@ -428,17 +422,15 @@ Function New-KernelModeWDACConfig {
                 Write-Verbose -Message 'Setting the policy version to 1.0.0.0'
                 Set-CIPolicyVersion -FilePath '.\Final_DefaultWindows_Enforced_Kernel.xml' -Version '1.0.0.0'
 
-                Write-Verbose -Message 'Setting policy rule options for the final Enforced mode policy'
-                @(2, 4, 6, 16, 17, 20) | ForEach-Object -Process { Set-RuleOption -FilePath '.\Final_DefaultWindows_Enforced_Kernel.xml' -Option $_ }
-                @(0, 3, 8, 9, 10, 11, 12, 13, 14, 15, 18, 19) | ForEach-Object -Process { Set-RuleOption -FilePath '.\Final_DefaultWindows_Enforced_Kernel.xml' -Option $_ -Delete }
+                Edit-CiPolicyRuleOptions -Action Base-KernelMode -XMLFile '.\Final_DefaultWindows_Enforced_Kernel.xml'
+
+                # Add policy rule option 4 to block flight root certs
+                Set-RuleOption -FilePath '.\Final_DefaultWindows_Enforced_Kernel.xml' -Option 4
 
                 if ($EVSigners) {
                     Write-Verbose -Message 'Adding EVSigners policy rule option'
                     Set-RuleOption -FilePath '.\Final_DefaultWindows_Enforced_Kernel.xml' -Option 8
                 }
-
-                Write-Verbose -Message 'Setting the HVCI to Strict'
-                Set-HVCIOptions -Strict -FilePath '.\Final_DefaultWindows_Enforced_Kernel.xml'
 
                 # Deploy the policy if Deploy parameter is used
                 if ($Deploy) {
@@ -518,8 +510,8 @@ Function New-KernelModeWDACConfig {
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCAgCK1krXuFHbcy
-# ZuPzcaYqsZxIt1B2PnXYilzhe1RiC6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDceBGCq8uIHU/N
+# GzR4P9Tjyq3sSiMoA6HbqI4KGNHSqKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -566,16 +558,16 @@ Function New-KernelModeWDACConfig {
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgIlSujP7031f8jEFGI3JzIchKfWRsGBMuY0SVsYDiHugwDQYJKoZIhvcNAQEB
-# BQAEggIAAyE6rVi5zeFDkUjx6e+GgkGNp96rJtH5ed6PP6vJC83hxnSWMzwrztdD
-# EzVVegv0VWeEbcgQ6ekj4Fh2yZHQzejwgQxNvhi/UX6SFxDBaWn5nWT+kWTslRrd
-# J1QGB6Brql5S06/dhZW9IhMWBmeDBN3t3+Z0Ejg5uugA0j/akxo9ExI1ihh4iNWT
-# +RamgDrIyrpSZpY9OHlCah8m1YG0ocgbbhwNBBUw/lko5DmpsHmPcc8lCCBvP8fu
-# PaGdUb9NYX2iF37oeqH3RN4Wm1XHF5xjAFnQ+2wNYhYQ/nF8klvzyG9DoAP54M1i
-# g281q/fehIsZ33VviWrxRNL5X0a2QBfrcVidALTyL+MxpaNYCwsr9y4SuBQXu7O7
-# si/tkfm/XVo7jXPQgSGPtEAxjXAzWFCd+eGEelzP2mMJgH+imL8HWa6o9soGaKCh
-# tP23XnOJmbOLRtr1dXa9p3zw9rrZtrgCDNAq5HoAdn41LAXYRZvS+C3H5kRdIoX1
-# yXPTNVM2muNDm5KegwbhJykZkilPdrXZlkARW9aOgaFlpaEUF4CVtNbGdp34Agta
-# V0F2xX5ZASPcikypG/ukw5MY+xwA3PdVTBHkw3W/GLUS8bUXo3glfzgaVlTtqo43
-# tmi7LIUbcmb2336ssoD9sXrosCE83ZCYHk+a5vPTwBN2w3WnRf8=
+# IgQgljcyXg12gq8xfGVzpiU8cczwNJjOu7LM9JACVqCHDtMwDQYJKoZIhvcNAQEB
+# BQAEggIAGBR02czTCk60lfQk7Ih5HsyErqa943J3B1Zsa/W67BLxuXk7J5BZqulC
+# TscnfwlHSFXIGDTiifFjFvVDQOJFJK79nPiUPtim/4fjrBxqGODqkMs6LMOHvOEA
+# OAXZBQtK3N++yVsJf+Egy/u2Ez6aWXvVP6EGEOizGTb5VcSfHvfyjqWGyllp16B2
+# 3+vKF0n8TzFldbwY/Vu4te0UiOHdbIvrIN3F0lHZc+T/stpWb62Gm8vhuaHoykp5
+# s0taxZQhBLLxNPVKK/5i/hGBUo9br1wRcd9d71p98I7/8wqBXPtLG3vmP00yyUdG
+# Ya0T67BukNHHSDH7lom+7MMpA5vjhCRuuPdqx/FaZEiSGotfo8VSQ2v/kXiTWvur
+# aEsWdCupPS91lhiRhBS6dvw/fsUxIojrUV5tC/jrLXJvKf90k8dJgkoI4iUYbN2x
+# hQFvjecb0WgmhqUq17LJIO7jOKzVVKj21OAemDJu3YiETLR1H5VEcj+tFLvIdHS3
+# manTpe5IqeiT/QonhcG6reVllG1jXwj2oXVdwpLVzryj3pdufJ/sAGq9WRqiF9Y5
+# Gt13xvi6dKPcbKyKQjrgTOeNo5+XqVohW3PSzKZjcJQ5nsuFkhaYPU4ASAjZw+sL
+# v3SKBoLcJvNL1sOQX8DDNV1EGDq3SycXVxgZeoHy3Kt6jmp82dU=
 # SIG # End signature block

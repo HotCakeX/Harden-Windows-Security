@@ -7,7 +7,6 @@ Function New-SupplementalWDACConfig {
     )]
     [OutputType([System.String])]
     Param(
-        # Main parameters for position 0
         [Alias('N')]
         [Parameter(Mandatory = $false, ParameterSetName = 'Normal')][System.Management.Automation.SwitchParameter]$Normal,
         [Alias('W')]
@@ -73,6 +72,7 @@ Function New-SupplementalWDACConfig {
         Write-Verbose -Message 'Importing the required sub-modules'
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Update-self.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Write-ColorfulText.psm1" -Force
+        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Edit-CiPolicyRuleOptions.psm1" -Force
 
         # argument tab auto-completion and ValidateSet for Fallbacks
         Class Fallbackz : System.Management.Automation.IValidateSetValuesGenerator {
@@ -164,12 +164,7 @@ Function New-SupplementalWDACConfig {
             Write-Verbose -Message 'Setting the Supplemental policy version to 1.0.0.0'
             Set-CIPolicyVersion -FilePath "SupplementalPolicy $SuppPolicyName.xml" -Version '1.0.0.0'
 
-            Write-Verbose -Message 'Making sure policy rule options that do not belong to a Supplemental policy do not exist'
-            @(0, 1, 2, 3, 4, 9, 10, 11, 12, 15, 16, 17, 19, 20) | ForEach-Object -Process {
-                Set-RuleOption -FilePath "SupplementalPolicy $SuppPolicyName.xml" -Option $_ -Delete }
-
-            Write-Verbose -Message 'Setting the HVCI to Strict'
-            Set-HVCIOptions -Strict -FilePath "SupplementalPolicy $SuppPolicyName.xml"
+            Edit-CiPolicyRuleOptions -Action Supplemental -XMLFile "SupplementalPolicy $SuppPolicyName.xml"
 
             Write-Verbose -Message 'Converting the Supplemental policy XML file to a CIP file'
             ConvertFrom-CIPolicy -XmlFilePath "SupplementalPolicy $SuppPolicyName.xml" -BinaryFilePath "$PolicyID.cip" | Out-Null
@@ -214,15 +209,7 @@ Function New-SupplementalWDACConfig {
             Write-Verbose -Message 'Setting the Supplemental policy version to 1.0.0.0'
             Set-CIPolicyVersion -FilePath ".\SupplementalPolicy $SuppPolicyName.xml" -Version '1.0.0.0'
 
-            Write-Verbose -Message 'Making sure policy rule options that do not belong to a Supplemental policy do not exist'
-            @(0, 1, 2, 3, 4, 9, 10, 11, 12, 15, 16, 17, 19, 20) | ForEach-Object -Process {
-                Set-RuleOption -FilePath ".\SupplementalPolicy $SuppPolicyName.xml" -Option $_ -Delete }
-
-            Write-Verbose -Message 'Adding policy rule option 18 Disabled:Runtime FilePath Rule Protection'
-            Set-RuleOption -FilePath ".\SupplementalPolicy $SuppPolicyName.xml" -Option 18
-
-            Write-Verbose -Message 'Setting the HVCI to Strict'
-            Set-HVCIOptions -Strict -FilePath ".\SupplementalPolicy $SuppPolicyName.xml"
+            Edit-CiPolicyRuleOptions -Action Supplemental -XMLFile ".\SupplementalPolicy $SuppPolicyName.xml"
 
             Write-Verbose -Message 'Converting the Supplemental policy XML file to a CIP file'
             ConvertFrom-CIPolicy -XmlFilePath ".\SupplementalPolicy $SuppPolicyName.xml" -BinaryFilePath "$PolicyID.cip" | Out-Null
@@ -302,12 +289,7 @@ Function New-SupplementalWDACConfig {
                     Write-Verbose -Message 'Setting the Supplemental policy version to 1.0.0.0'
                     Set-CIPolicyVersion -FilePath ".\SupplementalPolicy $SuppPolicyName.xml" -Version '1.0.0.0'
 
-                    Write-Verbose -Message 'Making sure the policy rule options that do not belong to a Supplemental policy do not exist'
-                    @(0, 1, 2, 3, 4, 9, 10, 11, 12, 15, 16, 17, 18, 19, 20) | ForEach-Object -Process {
-                        Set-RuleOption -FilePath ".\SupplementalPolicy $SuppPolicyName.xml" -Option $_ -Delete }
-
-                    Write-Verbose -Message 'Setting the HVCI to Strict'
-                    Set-HVCIOptions -Strict -FilePath ".\SupplementalPolicy $SuppPolicyName.xml"
+                    Edit-CiPolicyRuleOptions -Action Supplemental -XMLFile ".\SupplementalPolicy $SuppPolicyName.xml"
 
                     Write-Verbose -Message 'Converting the Supplemental policy XML file to a CIP file'
                     ConvertFrom-CIPolicy -XmlFilePath ".\SupplementalPolicy $SuppPolicyName.xml" -BinaryFilePath "$PolicyID.cip" | Out-Null
@@ -391,6 +373,7 @@ Function New-SupplementalWDACConfig {
 .INPUTS
     System.String[]
     System.String
+    System.IO.DirectoryInfo
     System.Management.Automation.SwitchParameter
 .OUTPUTS
     System.String
@@ -410,8 +393,8 @@ Register-ArgumentCompleter -CommandName 'New-SupplementalWDACConfig' -ParameterN
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCAain8VnG2e8IlX
-# UzzBY0nxPCrp7HuYW1nJAQIc3lGsmaCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBTH/1UcwpCcfWp
+# 2Lf6zZ5e0qZh0CJlI3gB5ORQlmz446CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -458,16 +441,16 @@ Register-ArgumentCompleter -CommandName 'New-SupplementalWDACConfig' -ParameterN
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQg8PSyWQoIzZhXFqoCtFMHOrZGaqTiTsLH2XZpPC8y2xUwDQYJKoZIhvcNAQEB
-# BQAEggIARQfcwNRVQiJ1HtkWv7l5OpsMaNXmli1JahH2brCm1Gbhh4FDwsrJSsos
-# cDSZ5eQ20CKp5WzzN/J2y4BifeOUo1n7UImuA126DWQrQkLmSYjuIvdeSz/i9zh/
-# 9QeNklzAmquJcf8ujEkAKMpmrZ2gF6sbsydH97z/RQsEUOht+sxFP2S+PAE9F+Gq
-# 3t0Ldr6DalmAyCC5U3QSMoV+oyFxm7ikUrFCI61W/EFjauZ8ajeEN6IsbwzeK8mD
-# D6XNVovhfFr6YCu5OesJIitW34jCL2dqrUtCBHLDSj0CG8uIIGIRt5DAfxeWrql1
-# 2l1QROhTQ6JgHTB+FhM1DseAhIeQ+E6TNOkIhNg3savCKX/01wQis9Mo2hsxKrn5
-# IyvSdxNlajP7sZxlO80kb/U4zWAb9IhQmmQul0E48cZkt2E7S9tA5lGI+ZL5g6WH
-# g0shUf+sbskAP6bkyXJSfXpQO68Bjpq5QktbG6JHImUcnHBljBrPdc1W6zoqMtk4
-# +pgPLuhc1cPSmZ9X/FjFzE0sMsTmsOdqGx7JeLm0Wx2yRYR2V5mJES/d11ZXQ60m
-# DcZxT2EhKLQkgEFIxv/AqNQPUV9dIBxMFKF+fnyCyo2Dl4RuiBXzxvupmZeBVleT
-# yQfZfCVOM0UYhrQz90X+xZOJDCmsY4IX0mwymT+kmucBN6Mr9GY=
+# IgQg1GccTJSNncEnUOu3WEsirNLnG9iQvu+1WPoAp6/TrnIwDQYJKoZIhvcNAQEB
+# BQAEggIABVKuHgcRjd/xnc6X0XjNblb9jDlw6AOAjgVeF3+tqw28syKYHP2dV258
+# nHBxrapkzYDXpQwRT0LsCMWoq+jy4NHe0J2siX/cRG3Zb/K19y/gYaP+L2e8OClm
+# ypyIWhBrxH5cSnm+bzISSPTBCVyWf7vBpwslj/BRH4wC8hBa6mS2APk9aZh8Lf+S
+# cY/U0XiNjPpKFKkTZrJ866lxQPDAh8mFd0jlyIRRbNXdRxeYTLnCmv0Tc3gI3CyR
+# dlqxDrJ0GPUjZwZG2tG0ptpZrEs6v8NhwMIoFIFQV/2D3dJ2nhCSfs1zmFUTpE7C
+# CbgBcve+wFPAqBwnsPOfsn1p2hlmRnItv/5gFxanjFy8qKJlj9YFfZCVWvi6QkiV
+# TuLipZ6Ftpn8CxwxoIlDY+rRQ+L1qxleiVMfy2xv4r4y6s+Zam4Q4XL46ImWraP3
+# 3KIhhcaM4GH2eSIA8opMg7MRVRYRl1aU2vEx+EwUWRTJvJsRYRHNVagGy2hlE34R
+# YKOMevphj68tQBdbxhsxO4VeKdD59ZMEvDn1b57EJReBf29opPPkPg1MUHNwqzy3
+# XnTabPVNUxPvlHL1CUfmklFMWEDtlsYpsv8bYeieSwKay6U9dL8WSF8uMB5E9LS7
+# jdWFlitcbf0APLzl4n0sLFxs4aNBt6V85IW5TD0B7ddupV7lwCk=
 # SIG # End signature block

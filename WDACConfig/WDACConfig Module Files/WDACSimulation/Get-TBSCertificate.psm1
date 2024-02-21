@@ -43,7 +43,15 @@ Function Get-TBSCertificate {
 
         # Define a hash function based on the algorithm OID
         switch ($AlgorithmOid) {
+            # These OIDs are officially supported by ConfigCI
             '1.2.840.113549.1.1.4' { $HashFunction = [System.Security.Cryptography.MD5]::Create() ; break }
+            '1.2.840.113549.1.1.5' { $HashFunction = [System.Security.Cryptography.SHA1]::Create() ; break }
+            '1.3.14.3.2.29' { $HashFunction = [System.Security.Cryptography.SHA1]::Create() ; break } # sha-1WithRSAEncryption
+            '1.2.840.113549.1.1.11' { $HashFunction = [System.Security.Cryptography.SHA256]::Create() ; break }
+            '1.2.840.113549.1.1.12' { $HashFunction = [System.Security.Cryptography.SHA384]::Create() ; break }
+            '1.2.840.113549.1.1.13' { $HashFunction = [System.Security.Cryptography.SHA512]::Create() ; break }
+
+            # These are less likely to be used since ConfigCI doesn't support their OIDs
             '1.2.840.10040.4.3' { $HashFunction = [System.Security.Cryptography.SHA1]::Create() ; break }
             '2.16.840.1.101.3.4.3.2' { $HashFunction = [System.Security.Cryptography.SHA256]::Create() ; break }
             '2.16.840.1.101.3.4.3.3' { $HashFunction = [System.Security.Cryptography.SHA384]::Create() ; break }
@@ -52,12 +60,6 @@ Function Get-TBSCertificate {
             '1.2.840.10045.4.3.2' { $HashFunction = [System.Security.Cryptography.SHA256]::Create() ; break }
             '1.2.840.10045.4.3.3' { $HashFunction = [System.Security.Cryptography.SHA384]::Create() ; break }
             '1.2.840.10045.4.3.4' { $HashFunction = [System.Security.Cryptography.SHA512]::Create() ; break }
-            '1.2.840.113549.1.1.5' { $HashFunction = [System.Security.Cryptography.SHA1]::Create() ; break }
-            '1.2.840.113549.1.1.11' { $HashFunction = [System.Security.Cryptography.SHA256]::Create() ; break }
-            '1.2.840.113549.1.1.12' { $HashFunction = [System.Security.Cryptography.SHA384]::Create() ; break }
-            '1.2.840.113549.1.1.13' { $HashFunction = [System.Security.Cryptography.SHA512]::Create() ; break }
-            # sha-1WithRSAEncryption
-            '1.3.14.3.2.29' { $HashFunction = [System.Security.Cryptography.SHA1]::Create() ; break }
             default { throw "No handler for algorithm $AlgorithmOid" }
         }
 
@@ -80,8 +82,8 @@ Export-ModuleMember -Function 'Get-TBSCertificate'
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBGX5+j52PXEfx2
-# AuIRPENP72h+onaIVr1PAW1wB9qsIaCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBIQLtX3DWCgjqJ
+# 6OA0qYLUp5bzxZ1PXNYKMkt1VKAsjaCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -128,16 +130,16 @@ Export-ModuleMember -Function 'Get-TBSCertificate'
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgQZJBz9imjnGCtS1pAXdrroRojGr9QJyCselQCG87Ek8wDQYJKoZIhvcNAQEB
-# BQAEggIAALaJ2LRXxfp+SsHV/rBOb/41XBQIwBtMnXAkWzjCHboJL7kUZaEiUDAc
-# 5JAnirlSHPyI8Nf2X94eVHcPgm9NtPCN5h+V5rsvkCILtAh0l6RlCIGpcgodFEMY
-# K/uuA2ejoxU4BaTN0N6Cq6zYKJe/tXVYtSg0uufb6xZjQaFZJ+8yJJ04drdxc24i
-# YU0ao5cXXmU3NysjjpyBmJ58Is+g8xumluc8BryT8Iuvcb4bFziuj4LC+hsXwRz6
-# Jx33fEeGLHnuyucQuDd3eDIxHI+cb5ukNV10aUo5Hqjh71IymVeZuE4VUItRvZBQ
-# cqtTM97sMw3tqEj2YA+vWCOWgfPIRPVZuGg+vhQteXEl5p+fDLaAuL1kV3ihwDYw
-# SVywYWR4EGSqZucJlBeZk3+FXk9MSGUNYcXm8+Wt6eOmd1HauJvl5OOXb8dKoEgV
-# lf4MqLbJujktWbqAoyseg1fdLWo1HdaY7CacWlN6Y6rVjaL03wdDWRZMxEscAarb
-# RQFImxi+9iBuq+aNOKYbZ+ixyCMRhWRSbsMcuol4aDse2vToQOicFrMTokFXVccO
-# KD5lwHRNA2evwwCGleM/LzbcwNOZ9ihdqpyvT/IHGa0kDjJx+VI21Ob2L9g5NQSM
-# 78zyND4XFBzcOaF+3LVt7MHRWj1Gj2m9y1YHtPIuyV0ARO91fMQ=
+# IgQgCmVEPcqbesuFBibLCCIS7M1HlzSjuSN5nd9cwSd8BfIwDQYJKoZIhvcNAQEB
+# BQAEggIAja3WUR8PMindjaL4f3ybwrrv4WSrV3aFQUSzWmWIA+qm2IV7hJTnldeo
+# NBsyc/CZjZOzcbl2xjM/npn98AKGaoh9+HTYtEzY0gQqXP9P1o3bm31Qkt7/GYMI
+# UG6dDJ5/tXxGRueOTTKVB+cQWFXmx7i0R5zvbME/ch0KLCa8PesYuQTKFVP143Oz
+# p2DamyDEWlathoctFuXXFxmU7iI7P3cshBuxhArMLmFJqup+3uADxAtTZ+vOdkat
+# t8WT234o0F1nbUixJX+UZsN5KRM0N5PaxpVoxrpHSfTw/Itv7jHSjU5RoTQxOyli
+# xypq8DRc4PKmhKpnb96yvCAypBS3a+v1lRzxLAU0dZ+YDjAY2S5gFyuk7vWONfI6
+# XIiak6rcZ8iujypVq7MrddpPdLzNCLCI1A9FLh7DTZkR/j9keGl7+F0CW8wxN6Ud
+# 8nRXLuUUsWM0LF2wIZDhwF0H2Il7dc/KIwz8eWRzfzNgjzOfocgD3ci21yUMC5RX
+# E3kkxkaDbtpG/HmLrnncROzxkCKUcDfegPd7/fdcGA+ft3RtL6mkhqFmXE/W/UJE
+# s/jTiD2lLCf71ww1uc21qB4fKo2gvfhtcZ/buuf4eg43XJ3y7QbWsu+Earr9+TA4
+# z0C8xCKd6xX5OGGRQJVm+b11jE7Gu3EhpaNaHKN/QATboxxZWsY=
 # SIG # End signature block

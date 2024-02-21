@@ -3,24 +3,14 @@ Function Get-KernelModeDriversAudit {
     .DESCRIPTION
         This function will scan the Code Integrity event logs for kernel mode drivers that have been loaded since the audit mode policy has been deployed
         and will return a folder containing symbolic links to the driver files.
-        It does this by:
-            1. Scanning the Code Integrity event logs for kernel mode drivers that have been loaded since the audit mode policy has been deployed
-            2. Converting each event to XML
-            3. Converting the XML to a PowerShell object
-            4. Replacing the global root file paths with the drive letters to create consumable paths
-            5. Removing duplicates based on SHA256 hash
-            6. Saving the file paths to a variable
-            7. Filtering based on files that exist with .sys and .dll extensions
-            8. Removing duplicates based on file path
-            9. Creating a temporary folder to store the symbolic links to the driver files
-            10. Creating symbolic links to the driver files
-            11. Returning the folder containing the symbolic links to driver files
     .INPUTS
         None
     .OUTPUTS
         System.IO.DirectoryInfo
     .NOTES
-        Get-SystemDriver only includes .sys files, but Get-KernelModeDriversAudit function includes .dll files as well just in case since they appear in event logs when auditing kernel-mode files.
+        Get-SystemDriver only includes .sys files when -UserPEs parameter is not used, but Get-KernelModeDriversAudit function includes .dll files as well just in case
+
+        When Get-SystemDriver -UserPEs is used, Dlls and .exe files are included as well
     #>
     [CmdletBinding()]
     [OutputType([System.IO.DirectoryInfo])]
@@ -32,49 +22,17 @@ Function Get-KernelModeDriversAudit {
 
         # Importing the required sub-modules
         Write-Verbose -Message 'Importing the required sub-modules'
-        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Get-GlobalRootDrives.psm1" -Force
-
-        # Get the local disks mappings
-        [System.Object[]]$DriveLettersGlobalRootFix = Get-GlobalRootDrives
+        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Receive-CodeIntegrityLogs.psm1" -Force
 
         [System.IO.FileInfo[]]$KernelModeDriversPaths = @()
-        [System.Object[]]$RawData = @()
-
-        [System.DateTime]$ScanStartDate = Get-CommonWDACConfig -StrictKernelModePolicyTimeOfDeployment
     }
 
     process {
-        # Event Viewer Code Integrity logs scan for Audit logs based on the input date
-        foreach ($Event in Get-WinEvent -FilterHashtable @{LogName = 'Microsoft-Windows-CodeIntegrity/Operational'; ID = 3076 } -ErrorAction SilentlyContinue | Where-Object -FilterScript { $_.TimeCreated -ge $ScanStartDate } ) {
 
-            # Convert the event to XML
-            $Xml = [System.Xml.XmlDocument]$Event.toxml()
+        # Get the Code Integrity event logs for kernel mode drivers that have been loaded since the audit mode policy has been deployed
+        [System.Object[]]$RawData = Receive-CodeIntegrityLogs -Date (Get-CommonWDACConfig -StrictKernelModePolicyTimeOfDeployment)
 
-            # Convert the XML to a PowerShell object
-            $Xml.event.eventdata.data | ForEach-Object -Begin { $Hash = @{} } -Process { $Hash[$_.name] = $_.'#text' } -End { [pscustomobject]$Hash } | ForEach-Object -Process {
-
-                # Define the regex pattern
-                [System.String]$Pattern = '\\Device\\HarddiskVolume(\d+)\\(.*)$'
-
-                # Replace the global root file paths with the drive letters to create consumable paths
-                if ($_.'File Name' -match $Pattern) {
-                    [System.Int64]$HardDiskVolumeNumber = $Matches[1]
-                    [System.String]$RemainingPath = $Matches[2]
-                    [PSCustomObject]$GetLetter = $DriveLettersGlobalRootFix | Where-Object -FilterScript { $_.devicepath -eq "\Device\HarddiskVolume$HardDiskVolumeNumber" }
-                    [System.IO.FileInfo]$UsablePath = "$($GetLetter.DriveLetter)$RemainingPath"
-                    $_.'File Name' = $_.'File Name' -replace $Pattern, $UsablePath
-                }
-                # Add the processed object to the array of raw data
-                $RawData += $_
-            }
-        }
-
-        Write-Verbose -Message "RawData count without processing: $($RawData.count)"
-
-        Write-Verbose -Message 'Removing duplicates based on SHA256 hash'
-        $RawData = $RawData | Group-Object -Property 'SHA256 Hash' | ForEach-Object -Process { $_.Group[0] }
-
-        Write-Verbose -Message "RawData count after deduplication based on SHA256 hash: $($RawData.count)"
+        Write-Verbose -Message "RawData count: $($RawData.count)"
 
         Write-Verbose -Message 'Saving the file paths to a variable'
         [System.IO.FileInfo[]]$KernelModeDriversPaths = $RawData.'File Name'
@@ -107,8 +65,8 @@ Export-ModuleMember -Function 'Get-KernelModeDriversAudit'
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBCVfJrtRtlVWfu
-# 72ql1DCpN08F7tIw3vMNzAxh6Wrk7qCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCD0+GCu9qoVzNTu
+# yVOOCDea8QxQx6yXcFJ/3kM5IA7aSqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -155,16 +113,16 @@ Export-ModuleMember -Function 'Get-KernelModeDriversAudit'
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgcGDcakLIH1SHCsv9s6eqjhdzHjZ+KkE2HIEhRIDu0wAwDQYJKoZIhvcNAQEB
-# BQAEggIAB2jw2uzZs9cKhJDnMQC4t81RtDwDz6p3qabTlDWkdKVGqs4RQ+rs5755
-# ZAtAzovJhy0FykplZwDQJ3DuR0SLA0+DlYObX2Lawk5FnFaZSx5Hi92C85OlwALf
-# BqDU2/7+hATArzvKLZc4VJkWd4Gr4mZH7xYHU/9vg4NfA4wdgP8E1vn5Vco4XSMm
-# FLT13E+lWuc0lMLUA7E5CkzcFPXio7JmfQOAnGppnb/YWM0fEFZuDeSUgW9sO/20
-# OHzhsnoHQhaa6W4G5ge4ObAcIAs24P1jXrSfPWlDjWzXo/lb2jdeBOqhY9G917sC
-# oKdMLN9lCaTwuRq/Bg53Atxke1c6u9ypk1VXp0OqfmHQG8WQs7D1BPjkIW8hHnLS
-# FMjjf/gcS0c/sqD1kbUP510iQcrTY19ExJKdhmzTd3zVNSgy1X6MmXfaED6m73nh
-# xEwFOA4/5mMPU4+iQj3T/RmzHUAUVg9Bn54urYRZ7HnVPew4RmvlkIAUGM/6fPVM
-# 9TTArzQd7QttPxQwb+KaxfjTX8rW3q3owVF7Up9NSDSQ5ohNJO4uSX+ddmQtzvrq
-# upsmje//fWFN469AiQ49ZrNtebB4P+kkmX8t/9VgRqotuE9Ch1l1hDR0Z4GPmmXK
-# MG/hoNXBg3MA1G52FD9UAkBujiwN+gKTn3XY6SzNioXb0OvBST0=
+# IgQgkshB9w369+5KJWGjiUM/aOAxKjDIl0mvFvcJt4aquvgwDQYJKoZIhvcNAQEB
+# BQAEggIAZsaZruNsmpaYTn83ft9xTThhd4Tikh71PshCSyZrVoTSWCuP5QB69BK5
+# fPMoWUn+f1TaPMwyCzvp9AOzLESSs4UDtBKVjpZoeWRrC6M/DMewZXlnj70efzPI
+# v0G7VFHAIA8PjRdwToe2PR6OxVANNIjn5Vm4Rt+qhO8tSoyLKcUVVT3geUtvcIcy
+# ZXvty4SRTBzRL3UEuFR4ch0bCt0BfhBK9knUSQprDaS3q1z3WXo8STtcHDoEG1Fl
+# Y0ONofussvtPgAvUwzfAwWYy1YVIGrPwnH7CuRuQUwjg/scAeswAFIU5jK2DnM85
+# WobBWOq4Q8BUAezPKw6stRPUZM+RV03efRWI08bLfwCNeJioUkcG1IjBkkwxyWhJ
+# ePvAzz58eXIa3pN0/NgXo4skKIBty4saJqhR3au6/zqc2Mu2ln0Ua2lVVDM7kSVb
+# 1z3jahd2J2OitE4PhVuQ5sTIOe7j7d14CjZOvY77uLhBtMmihHjmA9Nuo7eZ5+ej
+# hUqPRi0DCxvi343Uumc31vSbv9jEKcwuz86XApcsKYx96mCGeq9Zq5/62IGMR5Ci
+# FJz3nKYg/wGVPKPAxJ/W79ubbtuGDi1ydLijMBvJ2iRMe/Z6ucnAAghxJ/DnUW1Q
+# u/ydCDntW1K3QVrRIjP9PW4FcpOl9HRn5TmUV/IbQ9XLwFvwiTM=
 # SIG # End signature block

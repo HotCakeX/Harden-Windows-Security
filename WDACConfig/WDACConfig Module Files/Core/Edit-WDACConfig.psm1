@@ -93,7 +93,7 @@ Function Edit-WDACConfig {
 
         [ValidateRange(1024KB, 18014398509481983KB)]
         [Parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps Audit Events')]
-        [System.Int64]$LogSize,
+        [System.UInt64]$LogSize,
 
         [parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps Audit Events')][System.Management.Automation.SwitchParameter]$IncludeDeletedFiles,
 
@@ -118,16 +118,16 @@ Function Edit-WDACConfig {
         # Importing the required sub-modules
         Write-Verbose -Message 'Importing the required sub-modules'
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Update-self.psm1" -Force
-        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Get-GlobalRootDrives.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Write-ColorfulText.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Set-LogSize.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Test-FilePath.psm1" -Force
-        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Get-AuditEventLogsProcessing.psm1" -Force
+        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Receive-CodeIntegrityLogs.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\New-EmptyPolicy.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Get-RuleRefs.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Get-FileRules.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Get-BlockRulesMeta.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\New-SnapBackGuarantee.psm1" -Force
+        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Edit-CiPolicyRuleOptions.psm1" -Force
 
         # if -SkipVersionCheck wasn't passed, run the updater
         if (-NOT $SkipVersionCheck) { Update-self -InvocationStatement $MyInvocation.Statement }
@@ -384,12 +384,7 @@ Function Edit-WDACConfig {
             [System.String]$SuppPolicyID = Set-CIPolicyIdInfo -FilePath $SuppPolicyPath -PolicyName "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath
             $SuppPolicyID = $SuppPolicyID.Substring(11)
 
-            # Make sure policy rule options that don't belong to a Supplemental policy don't exist
-            Write-Verbose -Message 'Making sure policy rule options that do not belong to a Supplemental policy do not exist'
-            @(0, 1, 2, 3, 4, 8, 9, 10, 11, 12, 15, 16, 17, 19, 20) | ForEach-Object -Process { Set-RuleOption -FilePath $SuppPolicyPath -Option $_ -Delete }
-
-            Write-Verbose -Message 'Setting HVCI to Strict'
-            Set-HVCIOptions -Strict -FilePath $SuppPolicyPath
+            Edit-CiPolicyRuleOptions -Action Supplemental -XMLFile $SuppPolicyPath
 
             Write-Verbose -Message 'Setting the Supplemental policy version to 1.0.0.0'
             Set-CIPolicyVersion -FilePath $SuppPolicyPath -Version '1.0.0.0'
@@ -537,8 +532,8 @@ Function Edit-WDACConfig {
                 $CurrentStep++
                 Write-Progress -Id 10 -Activity 'Scanning event logs to create policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                # Extracting the array content from Get-AuditEventLogsProcessing function
-                $AuditEventLogsProcessingResults = Get-AuditEventLogsProcessing -Date $Date
+                # Extracting the array content from the function
+                $AuditEventLogsProcessingResults = Receive-CodeIntegrityLogs -Date $Date -PostProcessing 'Separate'
 
                 # Only create policy for files that are available on the disk (based on Event viewer logs)
                 # but weren't in user-selected program path(s), if there are any
@@ -686,7 +681,7 @@ Function Edit-WDACConfig {
                                 # Testing each executable to find the protected ones
                                 Get-FileHash -Path $Exe -ErrorAction Stop | Out-Null
                             }
-                            # If the executable is protected, it will throw an exception and the script will continue to the next one
+                            # If the executable is protected, it will throw an exception and the module will continue to the next one
                             # Making sure only the right file is captured by narrowing down the error type.
                             # E.g., when get-filehash can't get a file's hash because its open by another program, the exception is different: System.IO.IOException
                             catch [System.UnauthorizedAccessException] {
@@ -705,37 +700,15 @@ Function Edit-WDACConfig {
                     Write-Verbose -Message 'The following Kernel protected files detected, creating allow rules for them:'
                     $ExesWithNoHash | ForEach-Object -Process { Write-Verbose -Message "$_" }
 
-                    [System.Management.Automation.ScriptBlock]$KernelProtectedHashesBlock = {
-                        foreach ($event in Get-WinEvent -FilterHashtable @{LogName = 'Microsoft-Windows-CodeIntegrity/Operational'; ID = 3076 } -ErrorAction SilentlyContinue | Where-Object -FilterScript { $_.TimeCreated -ge $Date } ) {
-                            $Xml = [System.Xml.XmlDocument]$event.toxml()
-                            $Xml.event.eventdata.data |
-                            ForEach-Object -Begin { $Hash = @{} } -Process { $hash[$_.name] = $_.'#text' } -End { [pscustomobject]$hash } |
-                            ForEach-Object -Process {
-                                if ($_.'File Name' -match ($pattern = '\\Device\\HarddiskVolume(\d+)\\(.*)$')) {
-                                    $hardDiskVolumeNumber = $Matches[1]
-                                    $remainingPath = $Matches[2]
-                                    $getletter = Get-GlobalRootDrives | Where-Object -FilterScript { $_.devicepath -eq "\Device\HarddiskVolume$hardDiskVolumeNumber" }
-                                    $usablePath = "$($getletter.DriveLetter)$remainingPath"
-                                    $_.'File Name' = $_.'File Name' -replace $pattern, $usablePath
-                                } # Check if file is currently on the disk
-                                if (Test-Path -Path $_.'File Name') {
-                                    # Check if the file exits in the $ExesWithNoHash array
-                                    if ($ExesWithNoHash -contains $_.'File Name') {
-                                        $_ | Select-Object -Property FileVersion, 'File Name', PolicyGUID, 'SHA256 Hash', 'SHA256 Flat Hash', 'SHA1 Hash', 'SHA1 Flat Hash'
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    $KernelProtectedHashesBlockResults = Invoke-Command -ScriptBlock $KernelProtectedHashesBlock
+                    # Check if the file exits in the $ExesWithNoHash array
+                    $KernelProtectedHashesBlockResults = Receive-CodeIntegrityLogs -Date $Date -PostProcessing 'OnlyExisting' | Where-Object -FilterScript { $ExesWithNoHash -contains $_.'File Name' } | Select-Object -Property FileVersion, 'File Name', PolicyGUID, 'SHA256 Hash', 'SHA256 Flat Hash', 'SHA1 Hash', 'SHA1 Flat Hash'
 
                     # Only proceed further if any hashes belonging to the detected kernel protected files were found in Event viewer
                     # If none is found then skip this part, because user didn't run those files/programs when audit mode was turned on in base policy, so no hash was found in audit logs
                     if ($KernelProtectedHashesBlockResults) {
 
                         # Save the File Rules and File Rule Refs in the FileRulesAndFileRefs.txt in the current working directory for debugging purposes
-                            (Get-FileRules -HashesArray $KernelProtectedHashesBlockResults) + (Get-RuleRefs -HashesArray $KernelProtectedHashesBlockResults) | Out-File -FilePath KernelProtectedFiles.txt -Force
+                        (Get-FileRules -HashesArray $KernelProtectedHashesBlockResults) + (Get-RuleRefs -HashesArray $KernelProtectedHashesBlockResults) | Out-File -FilePath KernelProtectedFiles.txt -Force
 
                         # Put the Rules and RulesRefs in an empty policy file
                         New-EmptyPolicy -RulesContent (Get-FileRules -HashesArray $KernelProtectedHashesBlockResults) -RuleRefsContent (Get-RuleRefs -HashesArray $KernelProtectedHashesBlockResults) | Out-File -FilePath .\KernelProtectedFiles.xml -Force
@@ -798,12 +771,7 @@ Function Edit-WDACConfig {
             [System.String]$SuppPolicyID = Set-CIPolicyIdInfo -FilePath $SuppPolicyPath -PolicyName "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath
             $SuppPolicyID = $SuppPolicyID.Substring(11)
 
-            # Make sure policy rule options that don't belong to a Supplemental policy don't exist
-            Write-Verbose -Message 'Making sure policy rule options that do not belong to a Supplemental policy do not exist'
-            @(0, 1, 2, 3, 4, 8, 9, 10, 11, 12, 15, 16, 17, 19, 20) | ForEach-Object -Process { Set-RuleOption -FilePath $SuppPolicyPath -Option $_ -Delete }
-
-            Write-Verbose -Message 'Setting HVCI to Strict'
-            Set-HVCIOptions -Strict -FilePath $SuppPolicyPath
+            Edit-CiPolicyRuleOptions -Action Supplemental -XMLFile $SuppPolicyPath
 
             Write-Verbose -Message 'Setting the Supplemental policy version to 1.0.0.0'
             Set-CIPolicyVersion -FilePath $SuppPolicyPath -Version '1.0.0.0'
@@ -951,11 +919,7 @@ Function Edit-WDACConfig {
                     Write-Verbose -Message 'Setting the policy name'
                     Set-CIPolicyIdInfo -FilePath .\BasePolicy.xml -PolicyName "Allow Microsoft Plus Block Rules refreshed On $(Get-Date -Format 'MM-dd-yyyy')"
 
-                    Write-Verbose -Message 'Setting the policy rule options'
-                    @(0, 2, 5, 6, 11, 12, 16, 17, 19, 20) | ForEach-Object -Process { Set-RuleOption -FilePath .\BasePolicy.xml -Option $_ }
-
-                    Write-Verbose -Message 'Removing the unnecessary policy rule options'
-                    @(3, 4, 9, 10, 13, 18) | ForEach-Object -Process { Set-RuleOption -FilePath .\BasePolicy.xml -Option $_ -Delete }
+                    Edit-CiPolicyRuleOptions -Action Base -XMLFile .\BasePolicy.xml
                 }
                 'Lightly_Managed_system_Policy' {
                     Write-Verbose -Message 'The new base policy type is Lightly_Managed_system_Policy'
@@ -969,11 +933,7 @@ Function Edit-WDACConfig {
                     Write-Verbose -Message 'Setting the policy name'
                     Set-CIPolicyIdInfo -FilePath .\BasePolicy.xml -PolicyName "Signed And Reputable policy refreshed on $(Get-Date -Format 'MM-dd-yyyy')"
 
-                    Write-Verbose -Message 'Setting the policy rule options'
-                    @(0, 2, 5, 6, 11, 12, 14, 15, 16, 17, 19, 20) | ForEach-Object -Process { Set-RuleOption -FilePath .\BasePolicy.xml -Option $_ }
-
-                    Write-Verbose -Message 'Removing the unnecessary policy rule options'
-                    @(3, 4, 9, 10, 13, 18) | ForEach-Object -Process { Set-RuleOption -FilePath .\BasePolicy.xml -Option $_ -Delete }
+                    Edit-CiPolicyRuleOptions -Action Base-ISG -XMLFile .\BasePolicy.xml
 
                     # Configure required services for ISG authorization
                     Write-Verbose -Message 'Configuring required services for ISG authorization'
@@ -1005,11 +965,7 @@ Function Edit-WDACConfig {
                     Write-Verbose -Message 'Setting the policy name'
                     Set-CIPolicyIdInfo -FilePath .\BasePolicy.xml -PolicyName "Default Windows Plus Block Rules refreshed On $(Get-Date -Format 'MM-dd-yyyy')"
 
-                    Write-Verbose -Message 'Setting the policy rule options'
-                    @(0, 2, 5, 6, 11, 12, 16, 17, 19, 20) | ForEach-Object -Process { Set-RuleOption -FilePath .\BasePolicy.xml -Option $_ }
-
-                    Write-Verbose -Message 'Removing the unnecessary policy rule options'
-                    @(3, 4, 9, 10, 13, 18) | ForEach-Object -Process { Set-RuleOption -FilePath .\BasePolicy.xml -Option $_ -Delete }
+                    Edit-CiPolicyRuleOptions -Action Base -XMLFile .\BasePolicy.xml
                 }
             }
 
@@ -1045,9 +1001,6 @@ Function Edit-WDACConfig {
 
             Write-Verbose -Message 'Setting the policy version to 1.0.0.1'
             Set-CIPolicyVersion -FilePath .\BasePolicy.xml -Version '1.0.0.1'
-
-            Write-Verbose -Message 'Setting HVCI to Strict'
-            Set-HVCIOptions -Strict -FilePath .\BasePolicy.xml
 
             Write-Verbose -Message 'Converting the base policy to a CIP file'
             ConvertFrom-CIPolicy -XmlFilePath '.\BasePolicy.xml' -BinaryFilePath "$CurrentID.cip" | Out-Null
@@ -1147,9 +1100,11 @@ Function Edit-WDACConfig {
 .PARAMETER Verbose
     If specified, the verbose output will be shown
 .INPUTS
-    System.Int64
+    System.UInt64
     System.String[]
     System.String
+    System.IO.FileInfo
+    System.IO.FileInfo[]
     System.Management.Automation.SwitchParameter
 .OUTPUTS
     System.String
@@ -1164,8 +1119,8 @@ Register-ArgumentCompleter -CommandName 'Edit-WDACConfig' -ParameterName 'SuppPo
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDHuHEn4hlFdC4v
-# f/R30S3v1wc4cZrIj80RZ6GT1M2NqaCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCAuuqjseXL2RSfD
+# j73rqa+0tPYwSh/ZFIQihvKceqpiZKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -1212,16 +1167,16 @@ Register-ArgumentCompleter -CommandName 'Edit-WDACConfig' -ParameterName 'SuppPo
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQg27onwCspKD+qJkIpWhp/sBQy12DrgKtD4P2vDIHgiGkwDQYJKoZIhvcNAQEB
-# BQAEggIACQh3EOOdW/SermmTy1W2W0irIOpWhnlrdNZfq5L7FnamI/vY+W7QOL9j
-# zKv6RXYI7oCPUjJuhRy5ASn5UEExtPXGnVva+QOXPaUA1BEZpb4mbu4bJNTY0ivq
-# h9jw39hGOX1rVy6NK7UCbh5CP3SPgYQ60HkFn/H9nBizKyEwERq/p2mFD38HrMA7
-# 61t+0NSjF4iV2zdXxk6eqnfxdbc1ar0zstOAEGVMzvihAkJdohEshjSpBmygT5qd
-# IcG75viviCIqZgELJ0B6y273Hno4vK48/yRaf1ZWRkKS4NsHTmmaDL+Ve61OMenr
-# cLBl0yZahZnIwfW9KXP0eKJprDNKReorr75UYBYbNW6S8OGCeCdPLJ72btgxsUe+
-# QKmnel0v7AjCE8U3sti/69mf6lSGJ1B5InmKLcaMAJcLUlHXxNqsYmmRveMUY/FN
-# /E01JpHueVMwdaU9hExWbiRV1qt/bizWo+TD9q3B5qo05zlkr+m+ZRUjD82ZhGVU
-# BYBizDWh1izGfQuKH5gA3lId+pIz8hzGyQGq7YAFegOLDkMRD/iXdSHFFKJWNmCl
-# 6Gll5fZuaTijAnOlXuwdj/lD4y8bd4CDlekhsMWmng1VR6aMcfGWq5Ehu03zAFYY
-# 0qKpZHTejVR6aSpAoIyP059bTPnkU8QuMVwA7wXlpRnf18g8UYs=
+# IgQg5yQ/letHjdPt1ny7d0BqoVS8WlwY5oVk4eIi5OPTU2AwDQYJKoZIhvcNAQEB
+# BQAEggIASNqg2/ILyMcoEvSvWfed46Ej+eVFCctPc3JwWWVDKR0EeS3zyxC0RCiL
+# L39iNaIVlXNt2W1b1SQP6wJmJPUPtOUCzf7WZ+S268zRML4g51SSP1SUa66Fxh80
+# /gK5q6s3AbfUIR68F6kzckFd+zOn/u+tY19e4i3bJaBZQoRITaXTjuj/yVV9e3Ud
+# GIR6jbJpHNHnMKfq/QseuSNOA3QdyKAyG7srI5bKIdQ+xMmmuD0yo1vZgvQOhh4z
+# zjwPbcAWAqTr6uFpNg8TfQCi2sjj1nlBg1lDQB5amtEoY6V+2HGNVecQ45tV67fo
+# E1Qf+djuRUeyrU5q3ygSz0DsVvVhhhTkhskCR836r6TwGTfdQScl1zeSNfA9a53V
+# CffWRSrYF/c6pZGIHiFCzw8/R5fxaGQY/hnezGGuQ9tpQpo8sIKiF0D+Ab+A+lo9
+# uqH8TIrUgRcc3kXuSDVoXcvRJ1I7EV2pSJMeE5OUu/Ll4SLOvxnoTCVQpH48ybwq
+# MUchr2eXAjj1kzvPxfH55OiwmUP09AavIVZDTP8N1bjIyBWcz3Fn3dbJ48lH63JB
+# OuD+ducoV3qKmPhl7SaxDu3CEanXKo1QSgVrcT1ji9fxJrHDQnBXrEjUBboM6zLr
+# XSm96rCJohRiK5Piy1ASmeTM0rkje/x2FZdDG6bl7grHAB8+F2A=
 # SIG # End signature block

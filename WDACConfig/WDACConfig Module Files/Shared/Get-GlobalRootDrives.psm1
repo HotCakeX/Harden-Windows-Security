@@ -17,7 +17,7 @@ Function Get-GlobalRootDrives {
     . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
     # Import the kernel32.dll functions using P/Invoke if they don't exist
-    if (-NOT ('PInvoke.Win32Utils' -as [System.Type]) ) {
+    if (-NOT ('WDACConfig.Win32Utils' -as [System.Type]) ) {
         Add-Type -Path "$ModuleRootPath\C#\Kernel32dll.cs"
     }
 
@@ -29,16 +29,16 @@ Function Get-GlobalRootDrives {
     [System.Text.StringBuilder]$SbMountPoint = New-Object -TypeName System.Text.StringBuilder -ArgumentList ($Max, $Max)
 
     # Find the first volume in the system and get a handle to it
-    [System.IntPtr]$VolumeHandle = [PInvoke.Win32Utils]::FindFirstVolume($SbVolumeName, $Max)
+    [System.IntPtr]$VolumeHandle = [WDACConfig.Win32Utils]::FindFirstVolume($SbVolumeName, $Max)
 
     # Loop through all the volumes in the system
     do {
         # Get the volume name as a string
         [System.String]$Volume = $SbVolumeName.toString()
         # Get the mount point for the volume, if any
-        [System.Boolean]$unused = [PInvoke.Win32Utils]::GetVolumePathNamesForVolumeNameW($Volume, $SbMountPoint, $Max, [System.Management.Automation.PSReference]$lpcchReturnLength)
+        [System.Boolean]$unused = [WDACConfig.Win32Utils]::GetVolumePathNamesForVolumeNameW($Volume, $SbMountPoint, $Max, [System.Management.Automation.PSReference]$lpcchReturnLength)
         # Get the device path for the volume, if any
-        [System.UInt32]$ReturnLength = [PInvoke.Win32Utils]::QueryDosDevice($Volume.Substring(4, $Volume.Length - 1 - 4), $SbPathName, [System.UInt32]$Max)
+        [System.UInt32]$ReturnLength = [WDACConfig.Win32Utils]::QueryDosDevice($Volume.Substring(4, $Volume.Length - 1 - 4), $SbPathName, [System.UInt32]$Max)
 
         # If the device path is found, create a custom object with the drive mapping information
         if ($ReturnLength) {
@@ -55,7 +55,7 @@ Function Get-GlobalRootDrives {
             Write-Output -InputObject 'No mountpoint found for: ' + $Volume
         }
         # Find the next volume in the system and repeat the loop
-    } while ([PInvoke.Win32Utils]::FindNextVolume([System.IntPtr]$VolumeHandle, $SbVolumeName, $Max))
+    } while ([WDACConfig.Win32Utils]::FindNextVolume([System.IntPtr]$VolumeHandle, $SbVolumeName, $Max))
 
 }
 
@@ -65,8 +65,8 @@ Export-ModuleMember -Function 'Get-GlobalRootDrives'
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCsZLhPfuFuafao
-# Cy3eCO5I05uYUQ1MLaC9l+ZmvHnnIKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCY80BUksqhWkl3
+# tTnVOKu9rW+oMV3WkN3pzlBRCSH/3KCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -113,16 +113,16 @@ Export-ModuleMember -Function 'Get-GlobalRootDrives'
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgBI6wkocU9PPziLyIRibs18HkFJKEoabhvtqax4mDZbwwDQYJKoZIhvcNAQEB
-# BQAEggIAH87UuBGqthftVE12vx7vjd2qPo7CqWViQbSG/NIfDNlzeub6SeRkQXE7
-# mZInuFiHE5LjpoQFGN6WqjDprvI0XzKKOkKyKapHoDdAQyX0YihL1P7LZaJzO5D0
-# 1AQW0ij9euyCW4Sw/Q+13cardvfZupoIXISUATbQCss+QP4fQ6gZvdSmZ10NgoZA
-# kbbTxmCSnW34wxEMh1tdS+ZGpcYffGKpWuCyY/VlENNjVuddZtFGfCRfcf4oQSqb
-# Xi1yt2MWlasD14lfYy64xjcwUO3Wpki5QGt/PNUhOjY2J8UwjHzf1lfyUsp/3fif
-# 7lJ1yx5A2W4CITYwsPy6Vdhf0V+jtZpUKpsF425QSMJib0hWhBq6fV3B+v6PzDIT
-# niJsRJVa4nfsBzRb2xTPkZ3LXd7dkW9A+zR15BmUDXMcNOZEfwUM9DwpHEUOMohk
-# slKHRey32pjGPoNhHxsQqPGp2pRT/Iufyaa3OOhzoBuKp5ktnS2hJOO+VWCVmRt+
-# FKKXlvCq0mwh8K5GwvdDnDaZAKeFjLF8PThFrzgs1DB1MjN77FgW5HdhAl9bSxUu
-# le1YTQHnFcElZB5e0gpXVZKAQqpPEBiwgC1mdKwKtnUHtVlbvxYP6VK+voivvYrh
-# 4ClbHNOiN4TKwX73ERLm+6iIiYSua2z5fhfU/kbmJ+YpXIbIRnM=
+# IgQghUTkNqOG40SWbFi67HmHufoI92omSG2hhvOI2kJtHKkwDQYJKoZIhvcNAQEB
+# BQAEggIAO5NHqtVTVp4azYXypWIWJourLFbPLVhkkia/7s4n8pGIrk+bSpJr6BmJ
+# jbRJuYS9b8EwLkie7eFD0Sv0bd3JaR/H29Ez4xIa8PjV3Gygl1n6Mu492rlD5c13
+# YEnHgb+yLuU0wOTCKQMJ0Z9JA2X9Jbu8B7RLwoqDjsRkhpZeuAiNgM7LatRzK9du
+# nmYRj0McmPoVu4YExq6Afym7HOzYXjQvRyKFGv540r6u6Kd2ErHade4EEx53ZW0+
+# RQgiIFdZZP5GmZLUnzaHTZ7WJO5fPJUp2UFxH6z572ogPkJv/0mnEzbTInmE1S9L
+# 9zHFx0vC3Kqe1VTM+WhZrKaeNOT0wnMRWik/CThQ5v+OlWQKk7vOG/J5HKlojwP2
+# 9C1wESizZkr9kRzapVrx6EnTvL/Irscn0R8Wd1UvKUcyfMfMs/6eIbAbLDTruaJg
+# GmgOn2x7eW1fBBSc9oY4y3+zIBsF2d5gJbK79OZTCcL4ORzJNd6uAlC+BwBm+5VI
+# 4vjXbhJsi7XLByZmu614F7g0FWmNPee4Fy4azwc2yAvvSywfWNPhY6o5Ig9fViBQ
+# Z52Yuvs0yIYfPVyZVxtLFBHxMkTEM3/2a3kijz0uFKewloFfc/PBAMjUe69+qZ3A
+# tS9NtokNEdG3v+nRDKkck1xrjX5YtYiNCsyig39jX9zylkR9IFI=
 # SIG # End signature block

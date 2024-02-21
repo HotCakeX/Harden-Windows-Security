@@ -11,7 +11,7 @@ Edit-SignedWDACConfig
      [-PolicyPath <FileInfo>]
      [-CertPath <FileInfo>]
      [-CertCN <String>]
-     [-LogSize <Int64>]
+     [-LogSize <UInt64>]
      [-NoScript]
      [-NoUserPEs]
      [-SpecificFileNameLevel <String>]

@@ -7,7 +7,6 @@ Function New-DenyWDACConfig {
     )]
     [OutputType([System.String])]
     Param(
-        # Main parameters for position 0
         [Alias('N')]
         [Parameter(Mandatory = $false, ParameterSetName = 'Normal')][System.Management.Automation.SwitchParameter]$Normal,
         [Alias('D')]
@@ -27,7 +26,7 @@ Function New-DenyWDACConfig {
 
         [ValidatePattern('\*', ErrorMessage = 'You did not supply a path that contains wildcard character (*) .')]
         [parameter(Mandatory = $true, ParameterSetName = 'Folder Path With WildCards', ValueFromPipelineByPropertyName = $true)]
-        [System.String]$FolderPath,
+        [System.IO.DirectoryInfo]$FolderPath,
 
         [ValidateScript({ Test-Path -Path $_ -PathType 'Container' }, ErrorMessage = 'The path you selected is not a folder path.')]
         [Parameter(Mandatory = $false, ParameterSetName = 'Normal')]
@@ -36,12 +35,10 @@ Function New-DenyWDACConfig {
 
         [ValidateSet([Levelz])]
         [Parameter(Mandatory = $false, ParameterSetName = 'Normal')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'Drivers')]
         [System.String]$Level = 'FilePublisher',
 
         [ValidateSet([Fallbackz])]
         [Parameter(Mandatory = $false, ParameterSetName = 'Normal')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'Drivers')]
         [System.String[]]$Fallbacks = 'Hash',
 
         [ValidateSet('OriginalFileName', 'InternalName', 'FileDescription', 'ProductName', 'PackageFamilyName', 'FilePath')]
@@ -74,6 +71,7 @@ Function New-DenyWDACConfig {
         Write-Verbose -Message 'Importing the required sub-modules'
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Update-self.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Write-ColorfulText.psm1" -Force
+        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Edit-CiPolicyRuleOptions.psm1" -Force
 
         # Detecting if Debug switch is used, will do debugging actions based on that
         $PSBoundParameters.Debug.IsPresent ? ([System.Boolean]$Debug = $true) : ([System.Boolean]$Debug = $false) | Out-Null
@@ -175,16 +173,7 @@ Function New-DenyWDACConfig {
             Write-Verbose -Message 'Setting the policy version to 1.0.0.0'
             Set-CIPolicyVersion -FilePath "DenyPolicy $PolicyName.xml" -Version '1.0.0.0'
 
-            Write-Verbose -Message 'Setting the policy rule options'
-            @(0, 2, 5, 6, 11, 12, 16, 17, 19, 20) | ForEach-Object -Process {
-                Set-RuleOption -FilePath "DenyPolicy $PolicyName.xml" -Option $_ }
-
-            Write-Verbose -Message 'Deleting the unnecessary policy rule options'
-            @(3, 4, 9, 10, 13, 18) | ForEach-Object -Process {
-                Set-RuleOption -FilePath "DenyPolicy $PolicyName.xml" -Option $_ -Delete }
-
-            Write-Verbose -Message 'Setting the HVCI to Strict'
-            Set-HVCIOptions -Strict -FilePath "DenyPolicy $PolicyName.xml"
+            Edit-CiPolicyRuleOptions -Action Base -XMLFile "DenyPolicy $PolicyName.xml"
 
             Write-Verbose -Message 'Converting the policy XML to .CIP'
             ConvertFrom-CIPolicy -XmlFilePath "DenyPolicy $PolicyName.xml" -BinaryFilePath "$PolicyID.cip" | Out-Null
@@ -223,27 +212,31 @@ Function New-DenyWDACConfig {
 
             Write-Verbose -Message 'Looping through each user-selected folder paths, scanning them, creating a temp policy file based on them'
             powershell.exe -Command {
+
                 [System.Object[]]$DriverFilesObject = @()
+
                 # loop through each user-selected folder paths
                 foreach ($ScanLocation in $args[0]) {
+
                     # DriverFile object holds the full details of all of the scanned drivers - This scan is greedy, meaning it stores as much information as it can find
                     # about each driver file, any available info about digital signature, hash, FileName, Internal Name etc. of each driver is saved and nothing is left out
                     $DriverFilesObject += Get-SystemDriver -ScanPath $ScanLocation -UserPEs
                 }
 
                 [System.Collections.Hashtable]$PolicyMakerHashTable = @{
-                    FilePath             = '.\DenyPolicy Temp.xml'
-                    DriverFiles          = $DriverFilesObject
-                    Level                = $args[1]
-                    Fallback             = $args[2]
-                    MultiplePolicyFormat = $true
-                    UserWriteablePaths   = $true
-                    Deny                 = $true
+                    FilePath               = '.\DenyPolicy Temp.xml'
+                    DriverFiles            = $DriverFilesObject
+                    Level                  = 'WHQLFilePublisher'
+                    Fallback               = 'None'
+                    MultiplePolicyFormat   = $true
+                    UserWriteablePaths     = $true
+                    Deny                   = $true
+                    AllowFileNameFallbacks = $true
                 }
                 # Creating a base policy using the DriverFile object and specifying which detail about each driver should be used in the policy file
                 New-CIPolicy @PolicyMakerHashTable
 
-            } -args $ScanLocations, $Level, $Fallbacks
+            } -args $ScanLocations
 
             $CurrentStep++
             Write-Progress -Id 23 -Activity 'Merging the policies' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
@@ -265,16 +258,7 @@ Function New-DenyWDACConfig {
             Write-Verbose -Message 'Setting the policy version to 1.0.0.0'
             Set-CIPolicyVersion -FilePath "DenyPolicy $PolicyName.xml" -Version '1.0.0.0'
 
-            Write-Verbose -Message 'Setting the policy rule options'
-            @(0, 2, 5, 6, 11, 12, 16, 17, 19, 20) | ForEach-Object -Process {
-                Set-RuleOption -FilePath "DenyPolicy $PolicyName.xml" -Option $_ }
-
-            Write-Verbose -Message 'Deleting the unnecessary policy rule options from the base deny policy'
-            @(3, 4, 9, 10, 13, 18) | ForEach-Object -Process {
-                Set-RuleOption -FilePath "DenyPolicy $PolicyName.xml" -Option $_ -Delete }
-
-            Write-Verbose -Message 'Setting the HVCI to Strict'
-            Set-HVCIOptions -Strict -FilePath "DenyPolicy $PolicyName.xml"
+            Edit-CiPolicyRuleOptions -Action Base -XMLFile "DenyPolicy $PolicyName.xml"
 
             Write-Verbose -Message 'Converting the policy XML to .CIP'
             ConvertFrom-CIPolicy -XmlFilePath "DenyPolicy $PolicyName.xml" -BinaryFilePath "$PolicyID.cip" | Out-Null
@@ -354,16 +338,7 @@ Function New-DenyWDACConfig {
                     Write-Verbose -Message 'Setting the policy version to 1.0.0.0'
                     Set-CIPolicyVersion -FilePath ".\AppxDenyPolicy $PolicyName.xml" -Version '1.0.0.0'
 
-                    Write-Verbose -Message 'Setting the policy rule options'
-                    @(0, 2, 6, 11, 12, 16, 17, 19, 20) | ForEach-Object -Process {
-                        Set-RuleOption -FilePath ".\AppxDenyPolicy $PolicyName.xml" -Option $_ }
-
-                    Write-Verbose -Message 'Deleting the unnecessary policy rule options from the base deny policy'
-                    @(3, 4, 8, 9, 10, 13, 14, 15, 18) | ForEach-Object -Process {
-                        Set-RuleOption -FilePath ".\AppxDenyPolicy $PolicyName.xml" -Option $_ -Delete }
-
-                    Write-Verbose -Message 'Setting the HVCI to Strict'
-                    Set-HVCIOptions -Strict -FilePath ".\AppxDenyPolicy $PolicyName.xml"
+                    Edit-CiPolicyRuleOptions -Action Base -XMLFile ".\AppxDenyPolicy $PolicyName.xml"
 
                     Write-Verbose -Message 'Converting the policy XML to .CIP'
                     ConvertFrom-CIPolicy -XmlFilePath ".\AppxDenyPolicy $PolicyName.xml" -BinaryFilePath "$PolicyID.cip" | Out-Null
@@ -428,16 +403,7 @@ Function New-DenyWDACConfig {
             Write-Verbose -Message 'Setting the policy version to 1.0.0.0'
             Set-CIPolicyVersion -FilePath ".\DenyPolicyWildcard $PolicyName.xml" -Version '1.0.0.0'
 
-            Write-Verbose -Message 'Setting the policy rule options'
-            @(0, 2, 6, 11, 12, 16, 17, 19, 20) | ForEach-Object -Process {
-                Set-RuleOption -FilePath ".\DenyPolicyWildcard $PolicyName.xml" -Option $_ }
-
-            Write-Verbose -Message 'Deleting the unnecessary policy rule options from the base deny policy'
-            @(3, 4, 8, 9, 10, 13, 14, 15, 18) | ForEach-Object -Process {
-                Set-RuleOption -FilePath ".\DenyPolicyWildcard $PolicyName.xml" -Option $_ -Delete }
-
-            Write-Verbose -Message 'Setting the HVCI to Strict'
-            Set-HVCIOptions -Strict -FilePath ".\DenyPolicyWildcard $PolicyName.xml"
+            Edit-CiPolicyRuleOptions -Action Base -XMLFile ".\DenyPolicyWildcard $PolicyName.xml"
 
             Write-Verbose -Message 'Converting the policy XML to .CIP'
             ConvertFrom-CIPolicy -XmlFilePath ".\DenyPolicyWildcard $PolicyName.xml" -BinaryFilePath "$PolicyID.cip" | Out-Null
@@ -512,6 +478,8 @@ Function New-DenyWDACConfig {
 .INPUTS
     System.String[]
     System.String
+    System.IO.DirectoryInfo
+    System.IO.DirectoryInfo[]
     System.Management.Automation.SwitchParameter
 .OUTPUTS
     System.String
@@ -530,8 +498,8 @@ Register-ArgumentCompleter -CommandName 'New-DenyWDACConfig' -ParameterName 'Fol
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDnxboxqUSdEI0k
-# WOFkto03DyPJfnjLA+sIUl2OtSeIaKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCA2zqfkDX3Wxl7x
+# 2vO+CW08/Kd+AoN3xH9L+Psz7YrXYKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -578,16 +546,16 @@ Register-ArgumentCompleter -CommandName 'New-DenyWDACConfig' -ParameterName 'Fol
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgsuGuTvvJ0OrtigIv8FGM1O1C8lailoOgBHbBzSFQrIEwDQYJKoZIhvcNAQEB
-# BQAEggIAZ3zTKXYHiYiJM/V4m6Y8gHOkoz4somfTyKn8HCtNifB/SK7u/Al6kLvo
-# 4O+dwPRJ72Ji3PMYQhhBcI7+nSAkHa2rAHot0eYW872GTzOcXSKa+QmsmYLX3EBA
-# /JCVx9Hrhg2O3sA1l1bVCP+C0n4Ct053bv2tdia2OgFdkqeZ/ZQSvqf40lahhHY6
-# WDXB5hu2xD7A+V4gF/cAf27wO0YGQoot803HVXAL2eiqKKlZzIGOAHJy6kSmJY0Q
-# bXe03lWZ3RvxxnnB6dAXuVDqgOfWlQawVQiFUWYBh/w5ioRcfTKTLSVB7gvYN9Bh
-# ftnRr/K/vpiW5Xn86bKnDMwCsi+mDXCKa6UjxSlhX9agrj3EJG7bIpwVEZgwPD4p
-# uEW9uePMoR4QBBYURJiSnUzLiwZEhqL355bzKCIP1Zgxv8OCK5ln96U//eFSoGgs
-# 6PnhzGiTsUJjsM1DLDB880Q7WUPCoAEyrmRrSavIKwpuvyf/nFnRXkUhYSsHiTNF
-# VvDjur58iC5WRZHSrm2XcaJq4M+aNTzBf++vIfLwlP/SmwSoV6Ihkr3pJtaB7OtG
-# 4kYU+UkwQjP12yIxCZoXuPRy8szlKiMCchActkpZ11clUtmxUcwTCFTgGYLVWqqY
-# 2NZzEhCGQYhdJzWAxDH1besFfzzZrpBRylhUFLUdX+ESqakmU0I=
+# IgQgDmpQiw6ztU58x4kvnOg1/wk0QxwXKHHwwGS0k5z2GjowDQYJKoZIhvcNAQEB
+# BQAEggIAmEVMMM3yI/I9dxV97hLmrwwGdE/jJ+V5weWeZzz+4/t+fWbHd0lEK4o3
+# T7rY07B6sGrxh9i4gaPcAYDN/m1l/3U9G9MYnbcqY3SgKbIar4Bl1dmH4K5pEXsA
+# UohQOVvz9NovvTevQqgvf0ojK0rFEDKLBQ5J0WnmtOka+cFEIo9LwCjBBKPWltaU
+# V2N90kqgil0PMtLGKy2dkL67hbei/IQSubK4eNkyYYk0gxfT6Rl85HoTTGnwt2ZN
+# BPGDwtcaL9cPGWDSdcBr2PefAQQQk4US4QoT8JJUI+k8nFUGNRi9w4R/xE8oTj6d
+# WoMY5M8xLAFb1JVr5091IUwyI6T538yEDOqqJhUZXdXcsjfQvAEIcjqLNwDJJOr2
+# xqHCHb4+A1+cnaSpIjOp5UhS40RxmgFnERwlBz28iG6Vkkyi7fsfXAz5apZse1/k
+# hXeeK0KZAfzxQjZhye1EwJSP9yBskdksjLviaMO2lWU0jaD+CjIbX3XfpTQ5CCzG
+# WVB3pkpcJZHRTYPfkzrFjnKqp8U/pZyDqX4W23SlQ8Seof3MY3i2o+GyMdtIEx3B
+# dwqLHI0ripjN7U1xV3DISWiPQmP+ZTkChVtaVzWwl2G8izbPWYb8qRpvLtvlEmLa
+# f7EKa79wF3TlgPcDY+wQm1Kbym3z/UJtQ4l5qcfkGJtgrfaVSR4=
 # SIG # End signature block

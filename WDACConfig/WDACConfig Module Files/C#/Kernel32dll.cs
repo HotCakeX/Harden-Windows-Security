@@ -3,7 +3,7 @@ using System;
 using System.Text;
 using System.Runtime.InteropServices;
 
-namespace PInvoke
+namespace WDACConfig
 {
     public class Win32Utils
     {

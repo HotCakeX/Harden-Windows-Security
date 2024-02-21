@@ -111,7 +111,7 @@ Function Edit-SignedWDACConfig {
                 }
 
                 # Count the number of duplicate CNs in the output array
-                [System.Int64]$NumberOfDuplicateCNs = @($Output | Where-Object -FilterScript { $_ -eq $InputCN }).Count
+                [System.UInt64]$NumberOfDuplicateCNs = @($Output | Where-Object -FilterScript { $_ -eq $InputCN }).Count
 
                 # If the certificate with the provided common name exists in the personal store of the user certificates
                 if ($Output -contains $_) {
@@ -133,7 +133,7 @@ Function Edit-SignedWDACConfig {
         [System.String]$CertCN,
 
         [ValidateRange(1024KB, 18014398509481983KB)][Parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps Audit Events')]
-        [System.Int64]$LogSize,
+        [System.UInt64]$LogSize,
 
         [parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps Audit Events')]
         [parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps')]
@@ -182,16 +182,16 @@ Function Edit-SignedWDACConfig {
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Update-self.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Get-SignTool.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Confirm-CertCN.psm1" -Force
-        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Get-GlobalRootDrives.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Write-ColorfulText.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Set-LogSize.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Test-FilePath.psm1" -Force
-        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Get-AuditEventLogsProcessing.psm1" -Force
+        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Receive-CodeIntegrityLogs.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\New-EmptyPolicy.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Get-RuleRefs.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Get-FileRules.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Get-BlockRulesMeta.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\New-SnapBackGuarantee.psm1" -Force
+        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Edit-CiPolicyRuleOptions.psm1" -Force
 
         # if -SkipVersionCheck wasn't passed, run the updater
         if (-NOT $SkipVersionCheck) { Update-self -InvocationStatement $MyInvocation.Statement }
@@ -498,12 +498,7 @@ Function Edit-SignedWDACConfig {
             Write-Verbose -Message 'Adding signer rule to the Supplemental policy'
             Add-SignerRule -FilePath $SuppPolicyPath -CertificatePath $CertPath -Update -User -Kernel
 
-            # Make sure policy rule options that don't belong to a Supplemental policy don't exist
-            Write-Verbose -Message 'Making sure policy rule options that do not belong to a Supplemental policy do not exist'
-            @(0, 1, 2, 3, 4, 6, 8, 9, 10, 11, 12, 15, 16, 17, 19, 20) | ForEach-Object -Process { Set-RuleOption -FilePath $SuppPolicyPath -Option $_ -Delete }
-
-            Write-Verbose -Message 'Setting HVCI to Strict'
-            Set-HVCIOptions -Strict -FilePath $SuppPolicyPath
+            Edit-CiPolicyRuleOptions -Action Supplemental -XMLFile $SuppPolicyPath
 
             Write-Verbose -Message 'Setting the Supplemental policy version to 1.0.0.0'
             Set-CIPolicyVersion -FilePath $SuppPolicyPath -Version '1.0.0.0'
@@ -697,8 +692,8 @@ Function Edit-SignedWDACConfig {
                 $CurrentStep++
                 Write-Progress -Id 15 -Activity 'Scanning event logs to create policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                # Extracting the array content from Get-AuditEventLogsProcessing function
-                $AuditEventLogsProcessingResults = Get-AuditEventLogsProcessing -Date $Date
+                # Extracting the array content from the function
+                $AuditEventLogsProcessingResults = Receive-CodeIntegrityLogs -Date $Date -PostProcessing 'Separate'
 
                 # Only create policy for files that are available on the disk (based on Event viewer logs)
                 # but weren't in user-selected program path(s), if there are any
@@ -846,7 +841,7 @@ Function Edit-SignedWDACConfig {
                                 # Testing each executable to find the protected ones
                                 Get-FileHash -Path $Exe -ErrorAction Stop | Out-Null
                             }
-                            # If the executable is protected, it will throw an exception and the script will continue to the next one
+                            # If the executable is protected, it will throw an exception and the module will continue to the next one
                             # Making sure only the right file is captured by narrowing down the error type.
                             # E.g., when get-filehash can't get a file's hash because its open by another program, the exception is different: System.IO.IOException
                             catch [System.UnauthorizedAccessException] {
@@ -862,37 +857,15 @@ Function Edit-SignedWDACConfig {
                     Write-Verbose -Message 'The following Kernel protected files detected, creating allow rules for them:'
                     $ExesWithNoHash | ForEach-Object -Process { Write-Verbose -Message "$_" }
 
-                    [System.Management.Automation.ScriptBlock]$KernelProtectedHashesBlock = {
-                        foreach ($event in Get-WinEvent -FilterHashtable @{LogName = 'Microsoft-Windows-CodeIntegrity/Operational'; ID = 3076 } -ErrorAction SilentlyContinue | Where-Object -FilterScript { $_.TimeCreated -ge $Date } ) {
-                            $Xml = [System.Xml.XmlDocument]$event.toxml()
-                            $Xml.event.eventdata.data |
-                            ForEach-Object -Begin { $Hash = @{} } -Process { $hash[$_.name] = $_.'#text' } -End { [pscustomobject]$hash } |
-                            ForEach-Object -Process {
-                                if ($_.'File Name' -match ($pattern = '\\Device\\HarddiskVolume(\d+)\\(.*)$')) {
-                                    $hardDiskVolumeNumber = $Matches[1]
-                                    $remainingPath = $Matches[2]
-                                    $getletter = Get-GlobalRootDrives | Where-Object -FilterScript { $_.devicepath -eq "\Device\HarddiskVolume$hardDiskVolumeNumber" }
-                                    $usablePath = "$($getletter.DriveLetter)$remainingPath"
-                                    $_.'File Name' = $_.'File Name' -replace $pattern, $usablePath
-                                } # Check if file is currently on the disk
-                                if (Test-Path -Path $_.'File Name') {
-                                    # Check if the file exits in the $ExesWithNoHash array
-                                    if ($ExesWithNoHash -contains $_.'File Name') {
-                                        $_ | Select-Object -Property FileVersion, 'File Name', PolicyGUID, 'SHA256 Hash', 'SHA256 Flat Hash', 'SHA1 Hash', 'SHA1 Flat Hash'
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    $KernelProtectedHashesBlockResults = Invoke-Command -ScriptBlock $KernelProtectedHashesBlock
+                    # Check if the file exits in the $ExesWithNoHash array
+                    $KernelProtectedHashesBlockResults = Receive-CodeIntegrityLogs -Date $Date -PostProcessing 'OnlyExisting' | Where-Object -FilterScript { $ExesWithNoHash -contains $_.'File Name' } | Select-Object -Property FileVersion, 'File Name', PolicyGUID, 'SHA256 Hash', 'SHA256 Flat Hash', 'SHA1 Hash', 'SHA1 Flat Hash'
 
                     # Only proceed further if any hashes belonging to the detected kernel protected files were found in Event viewer
                     # If none is found then skip this part, because user didn't run those files/programs when audit mode was turned on in base policy, so no hash was found in audit logs
                     if ($KernelProtectedHashesBlockResults) {
 
                         # Save the File Rules and File Rule Refs in the FileRulesAndFileRefs.txt in the current working directory for debugging purposes
-                            (Get-FileRules -HashesArray $KernelProtectedHashesBlockResults) + (Get-RuleRefs -HashesArray $KernelProtectedHashesBlockResults) | Out-File -FilePath KernelProtectedFiles.txt -Force
+                        (Get-FileRules -HashesArray $KernelProtectedHashesBlockResults) + (Get-RuleRefs -HashesArray $KernelProtectedHashesBlockResults) | Out-File -FilePath KernelProtectedFiles.txt -Force
 
                         # Put the Rules and RulesRefs in an empty policy file
                         New-EmptyPolicy -RulesContent (Get-FileRules -HashesArray $KernelProtectedHashesBlockResults) -RuleRefsContent (Get-RuleRefs -HashesArray $KernelProtectedHashesBlockResults) | Out-File -FilePath .\KernelProtectedFiles.xml -Force
@@ -958,12 +931,7 @@ Function Edit-SignedWDACConfig {
             Write-Verbose -Message 'Adding signer rule to the Supplemental policy'
             Add-SignerRule -FilePath $SuppPolicyPath -CertificatePath $CertPath -Update -User -Kernel
 
-            # Make sure policy rule options that don't belong to a Supplemental policy don't exist
-            Write-Verbose -Message 'Making sure policy rule options that do not belong to a Supplemental policy do not exist'
-            @(0, 1, 2, 3, 4, 6, 8, 9, 10, 11, 12, 15, 16, 17, 19, 20) | ForEach-Object -Process { Set-RuleOption -FilePath $SuppPolicyPath -Option $_ -Delete }
-
-            Write-Verbose -Message 'Setting HVCI to Strict'
-            Set-HVCIOptions -Strict -FilePath $SuppPolicyPath
+            Edit-CiPolicyRuleOptions -Action Supplemental -XMLFile $SuppPolicyPath
 
             Write-Verbose -Message 'Setting the Supplemental policy version to 1.0.0.0'
             Set-CIPolicyVersion -FilePath $SuppPolicyPath -Version '1.0.0.0'
@@ -1158,11 +1126,7 @@ Function Edit-SignedWDACConfig {
                     Write-Verbose -Message 'Setting the policy name'
                     Set-CIPolicyIdInfo -FilePath .\BasePolicy.xml -PolicyName "Allow Microsoft Plus Block Rules refreshed On $(Get-Date -Format 'MM-dd-yyyy')"
 
-                    Write-Verbose -Message 'Setting the policy rule options'
-                    @(0, 2, 5, 11, 12, 16, 17, 19, 20) | ForEach-Object -Process { Set-RuleOption -FilePath .\BasePolicy.xml -Option $_ }
-
-                    Write-Verbose -Message 'Removing the unnecessary policy rule options'
-                    @(3, 4, 6, 9, 10, 13, 18) | ForEach-Object -Process { Set-RuleOption -FilePath .\BasePolicy.xml -Option $_ -Delete }
+                    Edit-CiPolicyRuleOptions -Action Base -XMLFile .\BasePolicy.xml
                 }
 
                 'Lightly_Managed_system_Policy' {
@@ -1177,11 +1141,7 @@ Function Edit-SignedWDACConfig {
                     Write-Verbose -Message 'Setting the policy name'
                     Set-CIPolicyIdInfo -FilePath .\BasePolicy.xml -PolicyName "Signed And Reputable policy refreshed on $(Get-Date -Format 'MM-dd-yyyy')"
 
-                    Write-Verbose -Message 'Setting the policy rule options'
-                    @(0, 2, 5, 11, 12, 14, 15, 16, 17, 19, 20) | ForEach-Object -Process { Set-RuleOption -FilePath .\BasePolicy.xml -Option $_ }
-
-                    Write-Verbose -Message 'Removing the unnecessary policy rule options'
-                    @(3, 4, 6, 9, 10, 13, 18) | ForEach-Object -Process { Set-RuleOption -FilePath .\BasePolicy.xml -Option $_ -Delete }
+                    Edit-CiPolicyRuleOptions -Action Base-ISG -XMLFile .\BasePolicy.xml
 
                     # Configure required services for ISG authorization
                     Write-Verbose -Message 'Configuring required services for ISG authorization'
@@ -1231,11 +1191,7 @@ Function Edit-SignedWDACConfig {
                     Write-Verbose -Message 'Setting the policy name'
                     Set-CIPolicyIdInfo -FilePath .\BasePolicy.xml -PolicyName "Default Windows Plus Block Rules refreshed On $(Get-Date -Format 'MM-dd-yyyy')"
 
-                    Write-Verbose -Message 'Setting the policy rule options'
-                    @(0, 2, 5, 11, 12, 16, 17, 19, 20) | ForEach-Object -Process { Set-RuleOption -FilePath .\BasePolicy.xml -Option $_ }
-
-                    Write-Verbose -Message 'Removing the unnecessary policy rule options'
-                    @(3, 4, 6, 9, 10, 13, 18) | ForEach-Object -Process { Set-RuleOption -FilePath .\BasePolicy.xml -Option $_ -Delete }
+                    Edit-CiPolicyRuleOptions -Action Base -XMLFile .\BasePolicy.xml
                 }
             }
 
@@ -1275,6 +1231,9 @@ Function Edit-SignedWDACConfig {
 
             Write-Verbose -Message 'Setting the policy version to 1.0.0.1'
             Set-CIPolicyVersion -FilePath .\BasePolicy.xml -Version '1.0.0.1'
+
+            # Removing unsigned policy rule option
+            Set-RuleOption -FilePath $XMLFile -Option 6 -Delete
 
             Write-Verbose -Message 'Setting HVCI to Strict'
             Set-HVCIOptions -Strict -FilePath .\BasePolicy.xml
@@ -1404,9 +1363,11 @@ Function Edit-SignedWDACConfig {
 .PARAMETER Debug
     If specified, the cmdlet will keep some files used during operations instead of deleting them
 .INPUTS
-    System.Int64
+    System.UInt64
     System.String
     System.String[]
+    System.IO.FileInfo
+    System.IO.FileInfo[]
     System.Management.Automation.SwitchParameter
 .OUTPUTS
     System.String
@@ -1429,8 +1390,8 @@ Register-ArgumentCompleter -CommandName 'Edit-SignedWDACConfig' -ParameterName '
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCD4vzg3gHpCWXPA
-# d1kwkDWcPdggdwx1RkuI+ZGOh1CG0qCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCB/opS7xlUX+v7X
+# CIUBA0ruGM+FTH1PYPj7eHtMcuGejaCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -1477,16 +1438,16 @@ Register-ArgumentCompleter -CommandName 'Edit-SignedWDACConfig' -ParameterName '
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQguR+qwP9Ehca4IsULsl7maZwNdeQj/8WvEKJlZa9uS/EwDQYJKoZIhvcNAQEB
-# BQAEggIANf6DO0my+OhoMbppVx9G7fTaJntZ4/C34vUUE8ECA+0RR90IY4jCnNNb
-# O7GW9G1SXEwTHdCNaH3/lSZ8TA/by0W4j6y0qXoa9q9Mq8sLZskiVhinqUtFjON1
-# 7+3V/Qr/pF0YfDVbmC4600dkSs4tAPRaDPQqIRXW2kunr5g8kng7bL4V7hH31mGz
-# kJa1mJmhAqpqPITZbRw03Kz81VtUVbBJVYDB+FMsWM5G3Hs9RcLNmEWIO74EOxNr
-# sW8cQpWBT4lBKW12Ob1JcxwQgFSy2zmFPPqt0CkIDHN/JPrzXufL7HqAl1+pDRe6
-# 7nmISkGwGs493NxKJowZhrstbWwKIZpB4RibNi5VEeRty1saOotAJHXtDNVTwNCy
-# JU12mP3FvQOEwK2ADwbtOo2nOn5D8VpvNVcVicLtrJ9iYQPPAuOP37+rEMUt1qIp
-# FvUE8DFZn3Peh/O8b4iXWWVOmHl5pAJVS1WLo+9kn8dLOHNqILyiWXoXVrKPb1UN
-# wSBcKyGmM1zIHUlm/YyPeOgCCy+gfWzdaalDZhiBRt27KKsruDzueANJHUxOH7Wv
-# uFwoK7ynrd+f+rNrSPzabJXMO7IwYcAxpWcs9B+hnFHw87SUV2HDx6sK78UQF+nu
-# WHTYqBnoNbf7CAZ0oo7nHBjEcvRbzc/4lJVxsfiQrYwjp9gYdaM=
+# IgQgp8t1U7WtYb+wwxQ72DzH9JOqA0pXFwEiETrjEv1MgJgwDQYJKoZIhvcNAQEB
+# BQAEggIAoHBup2UFbLCd1VG/Q3TrWtomNVNjhnT9f7UhVeZ3s/z9JLKcgLI5fq4z
+# CMD5QoWMBok3KNeGuOaWX8vNA2DGAXkfELIFgV4EWIdSeFJXk+8YVjyQ27LuF8Uq
+# cUgQmHIusuPC828Wn8N6XnO//CQPhxLfXfHvCPUKupqTKy7AGrspumFlZjCJ2BPY
+# oIYVRlDUaP8BfoKv7J9+2qKIhZXy+kVr3f6RxeUUtFKeIFdy2U2alZQRdksgNTek
+# x7E8GkVolxFh+0xeRxYRwwXOahoe/dctSd82spClb6p37/OsYUi/fPtiIHDnT8vC
+# zD2RbzS5x6gH1IozTaZHHihxanNO7scgUhDJQfWoWdKQtU6nWLMe9JKATinjbbfO
+# zj3pffBgZhO4KsL9R6fAF1DeH8IibJwLpYEQa/UcNiF5+7dvGCeDkc/pA0/s0t8t
+# nCzNBZeKswPr1WPeayxDmMMtM72IAClY8P/TolLKEpfWv6oTcGrkB4p4yfcAcFA5
+# jiPJQeIlmU+FvYJgQoeN3cIHU2Le2HmL9ekMM0aC2Edi0wM1nav8Inv+ndvaLaty
+# 5kTFNZEzN5o1qnWG8tQWJ2eLAMa/wJzQNARuhibaO37gqQqMHWOFwpS3na5qqZYD
+# oufhNtqyTOfpuvusiDeNQMIdzuJQj+1RWhGSOA3Rp8hP/rs23oY=
 # SIG # End signature block

@@ -181,8 +181,8 @@ Function Invoke-WDACSimulation {
             Write-Progress -Id 0 -Activity 'Looping through each supported file' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
             # The total number of the sub steps for the progress bar to render
-            [System.Int64]$TotalSubSteps = $CollectedFiles.Count
-            [System.Int64]$CurrentSubStep = 0
+            [System.UInt64]$TotalSubSteps = $CollectedFiles.Count
+            [System.UInt64]$CurrentSubStep = 0
 
             foreach ($CurrentFilePath in $CollectedFiles) {
 
@@ -200,9 +200,8 @@ Function Invoke-WDACSimulation {
                     [System.String]$CurrentFilePathHash = (Get-AppLockerFileInformation -Path $($CurrentFilePath -match '\[|\]' ? ($CurrentFilePath -replace '(\[|\])', '`$1') : $CurrentFilePath) -ErrorAction Stop).hash -replace 'SHA256 0x', ''
                 }
                 catch {
-                    Write-Verbose -Message 'Get-AppLockerFileInformation failed, using New-CIPolicyRule cmdlet...'
-                    [System.Collections.ArrayList]$CurrentHashOutput = New-CIPolicyRule -Level hash -Fallback none -AllowFileNameFallbacks -UserWriteablePaths -DriverFilePath $CurrentFilePath
-                    [System.String]$CurrentFilePathHash = ($CurrentHashOutput | Where-Object -FilterScript { $_.name -like '*Hash Sha256*' }).attributes.hash
+                    Write-Verbose -Message 'Get-AppLockerFileInformation failed because the file is non-conformant, getting the flat file hash instead'
+                    [System.String]$CurrentFilePathHash = (Get-CiFileHashes -FilePath $CurrentFilePath).SHA256Authenticode
                 }
 
                 # if the file's hash exists in the XML file then add the file's path to the allowed files and do not check anymore that whether the file is signed or not
@@ -211,6 +210,14 @@ Function Invoke-WDACSimulation {
 
                     $AllowedByHashFilePaths += $CurrentFilePath
                 }
+
+                # If the file's extension is not supported by Authenticode and it wasn't allowed by file hash then it's not allowed and no reason to check its signature
+                elseif ($CurrentFilePath.Extension -in @('.ocx', '.bat')) {
+                    Write-Verbose -Message 'The file is not signed and is not allowed by hash'
+
+                    $UnsignedNotAllowedFilePaths += $CurrentFilePath
+                }
+
                 # If the file's hash does not exist in the supplied XML file, then check its signature
                 else {
 
@@ -683,8 +690,8 @@ Register-ArgumentCompleter -CommandName 'Invoke-WDACSimulation' -ParameterName '
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDMbh37JF7AnBsc
-# 9UR0gTwjhjkWg5+22GTRvgPE5tOC36CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCB5r4xv5Vj0giWR
+# hESxE8qbam4cmqHFg0HJDHmrbNBy56CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -731,16 +738,16 @@ Register-ArgumentCompleter -CommandName 'Invoke-WDACSimulation' -ParameterName '
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQg8/Kn/N8nt38j4grjt6yvuXAWHUbxOKdg/HWhvk8hUbgwDQYJKoZIhvcNAQEB
-# BQAEggIApAm/5TmRK0+M618VMME6Ny8MrhW+jYj8p7Sz++yJF1IolGwRwu/tmgAB
-# aSBY09ykxLS4yP6YewQwI7+iAq6CVQ3u4in5NWXpKSjXN4KuKOixDCJTO9dxcd43
-# W4u1rQvR8ZK8tm87jDk6ZomuwAhn56uMAQX4UU+dSX+z6uBJGdMdpDn6KFuwj1+P
-# TI48BjYVwR0R051uWu4bGSpzlHwVQKtS/m7EI0V4wyvkNXHQKPr4RYXl4MQrD8FI
-# vz5r/Vw4mSUoD8cPDevO1FOMMjgw/42PP4ChXdF39c1cEX7lr+ZK8eTuy0v6HKRw
-# l72kCy0ohyKZnP1bKgGbaANIyONyZxv8s7ZrzeYutvZ4IgcRRWxy9pcqLq75DJqN
-# hpzNBV4rLEzX0z7Pp62/4Mt5Ei83+tvQH8MFe4fwFcrST5ieLUg7eiqKpcGNnWJX
-# wa7V4DhkA9tL1hEN7sNONuYiAwOjIxjBtYMQjpNi0TuQs2nmmgMtbp+Deic3C33u
-# TFAsOgbznsIBNN1Wf+yfmYBHu4nWFw2F3DGN9ZMjcWfdbXS4GgC3/WT6BFaeN44S
-# ZjCS4vE195QG+Fl41LH56pQOoxrarbfifne8qtlQdwGvZRzJ7CScQVixm0FBQ+++
-# iWTjthfZdR02RSpZXI1N2MyNISvc53i9upnlBojsUYoUeu/2G1E=
+# IgQgMK08Y3IGIxGOmWCPhDF02W/2Y6vzmwCOZPCkh/6nipgwDQYJKoZIhvcNAQEB
+# BQAEggIAJziEtMtc+EbAroHe6nfRpwuXEO8YQUtUQcUSlmKsWqwEmh9/ZvwQ3Lh0
+# Ax4oF0MYTNZ+0JY88HD5phg0pYZVH8oi8ikTXAE195mDbx+WqTMHnpTO9j0QcJ0d
+# qtpKMleepDTTJ2jE/ebPIcooz0JpltZrNWI5JSSUSxqlOmEWiJNhTjabvKWdjOBy
+# cgPya5o15MCdXhoEZBlkr/8kjWbJcvqTmmDXF0ctTjphZaDYlk9lz4T0YYynMR4A
+# pDBOtDNcyoAYmN/GLANzlZvThqaEQQj3iHI0TGZ5zWkhYG/bryD+US/U0et774fe
+# K8jgkgB2bx5/DWDdmW1SQzc0x/NYGu6h8JLK82KRj9yH8INUVkRPWz/CDTKKs6rK
+# 5hMFaEo3FmcMXpz3ZVUyOSKgoDgVQLwdXjIQ5Yl9aroyALQD0raIDF3LxkvcjXWn
+# ojgG4nyfdtitMRCqZrqYmLjwkBYZ4QeIDhOaiV4nLYLCSZVIurkKVB8pSSEIwgTK
+# FLup22w1oATB1DRVFkly06KATsh53p5wbbHx4DHhFl3AvwwuFaIgBsZ8Ip2lDd9y
+# RGS5x/oD0LieMYK7wGY845jks8gUVRZxydlfgVgwsJ4W0r9UGchaxBmW80pjfOOj
+# I6GD/PDWv3y7oO/FYtMOPwMVRtix/JFcPcY5FULejJDvEfB14Mg=
 # SIG # End signature block

@@ -501,6 +501,8 @@ Function ConvertTo-WDACPolicy {
     The type of logs to display: Audit or Blocked
 .PARAMETER Deploy
     If used, will deploy the policy on the system
+.PARAMETER ExtremeVisibility
+    If used, will display all the properties of the logs without any filtering.
 .PARAMETER SkipVersionCheck
     Can be used with any parameter to bypass the online version check - only to be used in rare cases
 .NOTES
@@ -542,8 +544,8 @@ Register-ArgumentCompleter -CommandName 'ConvertTo-WDACPolicy' -ParameterName 'B
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCAmcLxZLgQ8hiRt
-# YV/TxXsAArKM2J7mrYUn+lB7ddVGi6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCA9SHYe+D0CXNIZ
+# iFfH8Ckg7DPkaa+PYCAsK67xbL1SQ6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -590,16 +592,16 @@ Register-ArgumentCompleter -CommandName 'ConvertTo-WDACPolicy' -ParameterName 'B
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgBlFapicpDqmlF5fW+oWJe2K8/HiLaL6itpAuodLsAFgwDQYJKoZIhvcNAQEB
-# BQAEggIApCFMMK22HQeIm2vuNXiXlSP3mZlGNKLCaXYdIZJfMG1Zjsv+5iJqnswv
-# +Ua3ZKRppVOor5oMQS12EnwN2CFOqG82KEFcUpvp0fxV+0cd5+ZlW5q4s0GzC+m2
-# EalYBCZqgrtcDKiLmiwyh2ztmA1/aPzdjWaN8NpGu1uLiIN8Zyb+wpMI0SwFPNdn
-# UdHxsoapumUDFbW8XpHl+naZcYGtLQI9Dv29RXdJF9tdo1WBEeDPwKQIzkfYnpY5
-# ggePDVZuE6PJCpBS16/7W1JKIz39B8wmmEx4u66KR8CDE6mT5Zb9SbSqSBl8MMFN
-# HRDoowX1+I5YRIsRVz12i0nULuxOl4XfLLApDZCTf2fAr91OmhnSVSCAdyqZ78p4
-# BqOK0YQCpOgbFYXgN+SuDcekrFPj2WzTFLo1SB+ePM2UtGk/yaAt/tFD7XrxAIEU
-# KD1D2RZIJHTlW0vadZB/LVCGgB208imXD1CJMzv2pIyF2gLwiHNGoW6Dbf6sARcv
-# oY/wZoDiUHloBtm5JoHgt723PuFVyp6PBgHGff7qsKwA+6gRxFtQW9alFTve6yV1
-# JawV9yT5HkxNsmhhBbxbUH2zHVigJ4N4JFhX7Wh56qKo5hE4AUssvbBDNmJ01jfO
-# TRXosGg2g8srMsDRFekfD38g531L4URrf4XUZlnYPOLxNwfCO1w=
+# IgQgQhBFpsh5/S5fGDp2nOpQ7g0YxihUShIyhtjy25SedZIwDQYJKoZIhvcNAQEB
+# BQAEggIAom8Eb8pcgTHFPUqJwyQ4SSZhmDOO2LaHzLdnNFa4nLrXqzFvHyCcZOse
+# oOZVPHjzsYn5qSjREARnMFBy5oFav/ko0A3bMCcszYZRZmZnjq0H2DBlisFflXZW
+# Py18CPdyzHz5q47rjuWH9d82zNcmF+r1QjbOGdIYMqge6iZHWor3oMLPymgbCUGe
+# Hol/t2WeQo2kIffRarPWgltB8sLr82NNiNCQPhBNDe8UVXe/A2dyXYJnDQ1ItmEp
+# B7dFJCtbvlQvRRvkGEZHC/vDA66D4LFlNCRN9my3cGC8ljcg3Vdw4ey+IY+RCkCf
+# m4XoelbCXzKNTsOm4rky6YYBUHJVcro7GbNo/IgfXQMmIl7fo5LEPytBlAeNyWwl
+# aYuyqpJU1iDuep4oghNzADYI6psFwXwN813S4if/dT3ulz2k1lOGxdplXqIhg2hk
+# +akF6t2QwvlmdhR2THxA1gPDE566vdAUyic3SVd5l3tgeCMS2du77Q6Ih09CGijr
+# 54BPUazcTPItMwycUs81Vts2rsrsc+SLag7lZEweTw/nYK2ehgmdqslsGhZMBy4e
+# ZeI0xx81wOqfrHe/moYsVL2BKviYj2T4lR4ca8xPkgC8en5yAVUZsl71MtooFNun
+# hOpD5DQ3ZJ2pVnsdY2FPR8Od0iE4gqwPq0+8l55W/BPQrt+xJq4=
 # SIG # End signature block

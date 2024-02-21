@@ -19,6 +19,7 @@ Function New-AppxPackageCiPolicy {
         The path to the directory to store the policy file
     .INPUTS
         PSCustomObject[]
+        System.IO.DirectoryInfo
     .OUTPUTS
         PSCustomObject
     #>

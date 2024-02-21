@@ -171,6 +171,13 @@ Function ConvertTo-WDACPolicy {
         # Sort the events by TimeCreated in descending order
         [PSCustomObject[]]$EventsToDisplay = $EventsToDisplay | Sort-Object -Property TimeCreated -Descending
 
+        if (($null -eq $EventsToDisplay) -and ($EventsToDisplay.Count -eq 0)) {
+            Write-ColorfulText -Color HotPink -InputText 'No logs were found to display. Exiting...'
+
+            $ShouldExit = $true
+            return
+        }
+
         #Region Out-GridView properties visibility settings
 
         # If the ExtremeVisibility switch is used, then display all the properties of the logs without any filtering
@@ -379,7 +386,7 @@ Function ConvertTo-WDACPolicy {
             return
         }
 
-        #Region Base To Supplemental Policy Association
+        #Region Base To Supplemental Policy Association and Deployment
 
         # If -BasePolicyFile parameter was used then associate the supplemental policy with the user input base policy
         if ($null -ne $BasePolicyFile) {
@@ -387,26 +394,48 @@ Function ConvertTo-WDACPolicy {
             # Objectify the user input base policy file to extract its Base policy ID
             $InputXMLObj = [System.Xml.XmlDocument](Get-Content -Path $BasePolicyFile)
 
-            Set-CIPolicyIdInfo -FilePath $WDACPolicyPath -PolicyName "Supplemental Policy from event logs - $(Get-Date -Format 'MM-dd-yyyy')" -SupplementsBasePolicyID $InputXMLObj.SiPolicy.BasePolicyID -ResetPolicyID | Out-Null
+            [System.String]$SupplementalPolicyID = Set-CIPolicyIdInfo -FilePath $WDACPolicyPath -PolicyName "Supplemental Policy from event logs - $(Get-Date -Format 'MM-dd-yyyy')" -SupplementsBasePolicyID $InputXMLObj.SiPolicy.BasePolicyID -ResetPolicyID
+            [System.String]$SupplementalPolicyID = $SupplementalPolicyID.Substring(11)
 
             # Configure policy rule options
             Edit-CiPolicyRuleOptions -Action Supplemental -XMLFile $WDACPolicyPath
 
             Write-Verbose -Message 'ConvertTo-WDACPolicy: Copying the policy file to the current directory'
             Copy-Item -Path $WDACPolicyPath -Destination '.\' -Force
+
+            if ($Deploy) {
+                ConvertFrom-CIPolicy -XmlFilePath $WDACPolicyPath -BinaryFilePath "$SupplementalPolicyID.cip" | Out-Null
+
+                Write-Verbose -Message 'ConvertTo-WDACPolicy: Deploying the Supplemental policy'
+
+                &'C:\Windows\System32\CiTool.exe' --update-policy "$SupplementalPolicyID.cip" -json | Out-Null
+            }
         }
         # If -BasePolicyGUID parameter was used then use it by setting it as the Base policy ID in the supplemental policy
         elseif ($null -ne $BasePolicyGUID) {
-            Set-CIPolicyIdInfo -FilePath $WDACPolicyPath -PolicyName "Supplemental Policy from event logs - $(Get-Date -Format 'MM-dd-yyyy')" -SupplementsBasePolicyID $BasePolicyGUID -ResetPolicyID | Out-Null
+            [System.String]$SupplementalPolicyID = Set-CIPolicyIdInfo -FilePath $WDACPolicyPath -PolicyName "Supplemental Policy from event logs - $(Get-Date -Format 'MM-dd-yyyy')" -SupplementsBasePolicyID $BasePolicyGUID -ResetPolicyID
+            [System.String]$SupplementalPolicyID = $SupplementalPolicyID.Substring(11)
 
             # Configure policy rule options
             Edit-CiPolicyRuleOptions -Action Supplemental -XMLFile $WDACPolicyPath
 
             Write-Verbose -Message 'ConvertTo-WDACPolicy: Copying the policy file to the current directory'
             Copy-Item -Path $WDACPolicyPath -Destination '.\' -Force
+
+            if ($Deploy) {
+                ConvertFrom-CIPolicy -XmlFilePath $WDACPolicyPath -BinaryFilePath "$SupplementalPolicyID.cip" | Out-Null
+
+                Write-Verbose -Message 'ConvertTo-WDACPolicy: Deploying the Supplemental policy'
+
+                &'C:\Windows\System32\CiTool.exe' --update-policy "$SupplementalPolicyID.cip" -json | Out-Null
+            }
         }
-        # If -PolicyToAddLogsTo parameter was used then merge the supplemental policy with the user input base policy
+        # If -PolicyToAddLogsTo parameter was used then merge the supplemental policy with the user input policy
         elseif ($null -ne $PolicyToAddLogsTo) {
+
+            # Objectify the user input policy file to extract its policy ID
+            $InputXMLObj = [System.Xml.XmlDocument](Get-Content -Path $PolicyToAddLogsTo)
+
             Set-CIPolicyIdInfo -FilePath $WDACPolicyPath -PolicyName "Supplemental Policy from event logs - $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID | Out-Null
 
             # Remove all policy rule option prior to merging the policies since we don't need to add/remove any policy rule options to/from the user input policy
@@ -416,9 +445,17 @@ Function ConvertTo-WDACPolicy {
 
             # Set HVCI to Strict
             Set-HVCIOptions -Strict -FilePath "$PolicyToAddLogsTo"
+
+            if ($Deploy) {
+                ConvertFrom-CIPolicy -XmlFilePath $PolicyToAddLogsTo -BinaryFilePath "$($InputXMLObj.SiPolicy.PolicyID).cip" | Out-Null
+
+                Write-Verbose -Message 'ConvertTo-WDACPolicy: Deploying the policy that user selected to add the logs to'
+
+                &'C:\Windows\System32\CiTool.exe' --update-policy "$($InputXMLObj.SiPolicy.PolicyID).cip" -json | Out-Null
+            }
         }
 
-        #Endregion Base To Supplemental Policy Association
+        #Endregion Base To Supplemental Policy Association and Deployment
     }
 
     End {

@@ -3,44 +3,44 @@
 ## Syntax
 
 ```powershell
-ConvertTo-WDACPolicy 
-    [-PolicyToAddLogsTo <FileInfo>] 
-    [-FilterByPolicyNames <String[]>] 
-    [-MinutesAgo <UInt64>] 
-    [-HoursAgo <UInt64>] 
-    [-DaysAgo <UInt64>] 
+ConvertTo-WDACPolicy
+    [-PolicyToAddLogsTo <FileInfo>]
+    [-FilterByPolicyNames <String[]>]
+    [-MinutesAgo <UInt64>]
+    [-HoursAgo <UInt64>]
+    [-DaysAgo <UInt64>]
     [-KernelModeOnly]
-    [-LogType <String>] 
-    [-Deploy] 
-    [-ExtremeVisibility] 
-    [<CommonParameters>]
-```
-
-```powershell
-ConvertTo-WDACPolicy 
-    [-BasePolicyFile <FileInfo>] 
-    [-FilterByPolicyNames <String[]>] 
-    [-MinutesAgo <UInt64>] 
-    [-HoursAgo <UInt64>] 
-    [-DaysAgo <UInt64>] 
-    [-KernelModeOnly]
-    [-LogType <String>] 
-    [-Deploy] 
-    [-ExtremeVisibility] 
+    [-LogType <String>]
+    [-Deploy]
+    [-ExtremeVisibility]
     [<CommonParameters>]
 ```
 
 ```powershell
 ConvertTo-WDACPolicy
-    [-BasePolicyGUID <Guid>] 
-    [-FilterByPolicyNames <String[]>] 
-    [-MinutesAgo <UInt64>] 
-    [-HoursAgo <UInt64>] 
-    [-DaysAgo <UInt64>] 
-    [-KernelModeOnly] 
-    [-LogType <String>] 
-    [-Deploy] 
-    [-ExtremeVisibility] 
+    [-BasePolicyFile <FileInfo>]
+    [-FilterByPolicyNames <String[]>]
+    [-MinutesAgo <UInt64>]
+    [-HoursAgo <UInt64>]
+    [-DaysAgo <UInt64>]
+    [-KernelModeOnly]
+    [-LogType <String>]
+    [-Deploy]
+    [-ExtremeVisibility]
+    [<CommonParameters>]
+```
+
+```powershell
+ConvertTo-WDACPolicy
+    [-BasePolicyGUID <Guid>]
+    [-FilterByPolicyNames <String[]>]
+    [-MinutesAgo <UInt64>]
+    [-HoursAgo <UInt64>]
+    [-DaysAgo <UInt64>]
+    [-KernelModeOnly]
+    [-LogType <String>]
+    [-Deploy]
+    [-ExtremeVisibility]
     [<CommonParameters>]
 ```
 

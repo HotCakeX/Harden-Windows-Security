@@ -153,12 +153,12 @@ Function Edit-SignedWDACConfig {
         [ValidateSet([Levelz])]
         [parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps Audit Events')]
         [parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps')]
-        [System.String]$Level = 'FilePublisher',
+        [System.String]$Level = 'WHQLFilePublisher',
 
         [ValidateSet([Fallbackz])]
         [parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps Audit Events')]
         [parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps')]
-        [System.String[]]$Fallbacks = 'Hash',
+        [System.String[]]$Fallbacks = ('FilePublisher', 'Hash'),
 
         [Parameter(Mandatory = $false, ValueFromPipelineByPropertyName = $true)]
         [System.IO.FileInfo]$SignToolPath,

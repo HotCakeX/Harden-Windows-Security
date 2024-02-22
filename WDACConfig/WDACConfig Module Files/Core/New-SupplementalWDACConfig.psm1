@@ -49,11 +49,11 @@ Function New-SupplementalWDACConfig {
 
         [ValidateSet([Levelz])]
         [parameter(Mandatory = $false, ParameterSetName = 'Normal')]
-        [System.String]$Level = 'FilePublisher',
+        [System.String]$Level = 'WHQLFilePublisher',
 
         [ValidateSet([Fallbackz])]
         [parameter(Mandatory = $false, ParameterSetName = 'Normal')]
-        [System.String[]]$Fallbacks = 'Hash',
+        [System.String[]]$Fallbacks = ('FilePublisher', 'Hash'),
 
         [Parameter(Mandatory = $false, ParameterSetName = 'Installed AppXPackages')]
         [System.Management.Automation.SwitchParameter]$Force,

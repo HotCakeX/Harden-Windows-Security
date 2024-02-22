@@ -57,11 +57,11 @@ Function New-WDACConfig {
 
         [ValidateSet([Levelz])]
         [parameter(Mandatory = $false, ParameterSetName = 'Make Policy From Audit Logs')]
-        [System.String]$Level = 'FilePublisher',
+        [System.String]$Level = 'WHQLFilePublisher',
 
         [ValidateSet([Fallbackz])]
         [parameter(Mandatory = $false, ParameterSetName = 'Make Policy From Audit Logs')]
-        [System.String[]]$Fallbacks = 'Hash',
+        [System.String[]]$Fallbacks = ('FilePublisher', 'Hash'),
 
         [ValidateRange(1024KB, 18014398509481983KB)]
         [Parameter(Mandatory = $false, ParameterSetName = 'Prep MSFT Only Audit')]

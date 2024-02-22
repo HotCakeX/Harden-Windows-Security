@@ -71,12 +71,12 @@ Function Edit-WDACConfig {
         [ValidateSet([Levelz])]
         [parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps Audit Events')]
         [parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps')]
-        [System.String]$Level = 'FilePublisher',
+        [System.String]$Level = 'WHQLFilePublisher',
 
         [ValidateSet([Fallbackz])]
         [parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps Audit Events')]
         [parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps')]
-        [System.String[]]$Fallbacks = 'Hash',
+        [System.String[]]$Fallbacks = ('FilePublisher', 'Hash'),
 
         [parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps Audit Events')]
         [parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps')]

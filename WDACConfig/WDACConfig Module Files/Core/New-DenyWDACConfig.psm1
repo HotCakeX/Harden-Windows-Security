@@ -35,11 +35,11 @@ Function New-DenyWDACConfig {
 
         [ValidateSet([Levelz])]
         [Parameter(Mandatory = $false, ParameterSetName = 'Normal')]
-        [System.String]$Level = 'FilePublisher',
+        [System.String]$Level = 'WHQLFilePublisher',
 
         [ValidateSet([Fallbackz])]
         [Parameter(Mandatory = $false, ParameterSetName = 'Normal')]
-        [System.String[]]$Fallbacks = 'Hash',
+        [System.String[]]$Fallbacks = ('FilePublisher', 'Hash'),
 
         [ValidateSet('OriginalFileName', 'InternalName', 'FileDescription', 'ProductName', 'PackageFamilyName', 'FilePath')]
         [Parameter(Mandatory = $false, ParameterSetName = 'Normal')]

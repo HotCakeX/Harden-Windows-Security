@@ -75,7 +75,7 @@ STIG commits the same error, as it only provides a generic Windows 11 guideline/
 
 You can [read this Microsoft document](https://learn.microsoft.com/en-us/windows/security/identity-protection/hello-for-business/hello-why-pin-is-better-than-password) to find out why a PIN is better than an online password
 
-There are proper policies regarding anti-hammering features that can enhance the security of PINs over passwords. I utilize them in my script and [you can find them here](https://github.com/HotCakeX/Harden-Windows-Security#lock-screen).
+There are proper policies regarding anti-hammering features that can enhance the security of PINs over passwords. I utilize them in my module and [you can find them here](https://github.com/HotCakeX/Harden-Windows-Security#lock-screen).
 
 The benchmarks/guidelines seem to be uninformed of the fact that Windows allows [multi-factor unlock](https://learn.microsoft.com/en-us/windows/security/identity-protection/hello-for-business/feature-multifactor-unlock), which can enforce a combination of PIN and biometric factors (plus more), to enforce **PIN + Facial recognition** OR **PIN + Fingerprint** etc.
 
@@ -88,7 +88,7 @@ CIS in 18.9.13.1
 > The recommended state for this setting is: Enabled: Good, unknown and bad but
 critical
 
-That's not even a recommendation, that's the default value! If you use [Harden Windows Security script](https://github.com/HotCakeX/Harden-Windows-Security#miscellaneous-configurations) it sets it to **Good Only**, which is the correct recommendation for a secure environment.
+That's not even a recommendation, that's the default value! If you use [Harden Windows Security module](https://github.com/HotCakeX/Harden-Windows-Security#miscellaneous-configurations) it sets it to **Good Only**, which is the correct recommendation for a secure environment.
 
 <br>
 
@@ -130,9 +130,9 @@ These benchmarks or guidelines have numerous flaws and I have only examined two 
 
 ## [Aspects that are lacking](#aspects-that-are-lacking-) <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/gothwink.gif" width="50" alt="Aspects that are lacking">
 
-The benchmarks omit many new security features that the [Harden Windows Security script](https://github.com/HotCakeX/Harden-Windows-Security) implements.
+The benchmarks omit many new security features that the [Harden Windows Security module](https://github.com/HotCakeX/Harden-Windows-Security) implements.
 
-Everything in the repository is carefully researched, evaluated and tested. The script ensures that nothing is redundant or incompatible with the latest version of Windows. Older versions of the OS are obsolete and insecure, and should be avoided in any environment that requires protection. Threat actors can exploit vulnerabilities and use PoCs even on the same day that an update is released, this applies to any OS.
+Everything in the repository is carefully researched, evaluated and tested. The module ensures that nothing is redundant or incompatible with the latest version of Windows. Older versions of the OS are obsolete and insecure, and should be avoided in any environment that requires protection. Threat actors can exploit vulnerabilities and use PoCs even on the same day that an update is released, this applies to any OS.
 
 The security measures in the Harden Windows Security repository are also perfectly suitable for regular home users.
 

@@ -184,3 +184,17 @@ Computer Configuration\Administrative Templates\System\LAPS
 ```
 
 <br>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+
+<br>
+
+## 11. Enabled "Apply UAC restrictions to local accounts on network logons"
+
+A [Security feature](https://learn.microsoft.com/en-US/troubleshoot/windows-server/windows-security/user-account-control-and-remote-restriction) that is enabled by default and should stay enabled.
+
+```
+Computer Configuration\Administrative Templates\MS Security Guide
+```
+
+<br>

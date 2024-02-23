@@ -67,7 +67,7 @@ Harden Windows Safely, Securely, only with Official Microsoft methods
 
 💎 This module has hybrid mode of operation. It can run Interactively and non-interactively (Silent/unattended mode). More info in the document: https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden%E2%80%90Windows%E2%80%90Security%E2%80%90Module
 
-🏴 If you have any questions, requests, suggestions etc. about this script, please open a new Discussion or Issue on GitHub
+🏴 If you have any questions, requests, suggestions etc. about this module, please open a new Discussion or Issue on GitHub
 
 🟡 The module generates a nice output on the screen as well as giving users an option to export the results in a CSV file.
 

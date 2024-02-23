@@ -1,5 +1,6 @@
 #Requires -Version 7.4
 #Requires -PSEdition Core
+$PSStyle.Progress.UseOSCIndicator = $true
 Function Protect-WindowsSecurity {
     [CmdletBinding(DefaultParameterSetName = 'Online Mode')]
     param (

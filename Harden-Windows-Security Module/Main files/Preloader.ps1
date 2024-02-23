@@ -26,6 +26,3 @@ if (-NOT ([System.Decimal]$FullOSBuild -ge [System.Decimal]$Requiredbuild)) {
 if ((Get-CimInstance -ClassName Win32_OperatingSystem).OperatingSystemSKU -eq '101') {
     Throw [System.PlatformNotSupportedException] 'Windows Home edition detected, exiting...'
 }
-
-# Set the UseOSCIndicator to true. Will offer richer experience. For example in Windows Terminal it will display the progress on taskbar
-$PSStyle.Progress.UseOSCIndicator = $true

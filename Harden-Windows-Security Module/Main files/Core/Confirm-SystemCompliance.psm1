@@ -1,5 +1,6 @@
 function Confirm-SystemCompliance {
     [CmdletBinding()]
+    [OutputType([System.String], [System.Object[]])]
     param (
         [parameter(Mandatory = $false)]
         [System.Management.Automation.SwitchParameter]$ExportToCSV,
@@ -24,7 +25,7 @@ function Confirm-SystemCompliance {
 
         #Region Defining-Variables
         # Total number of Compliant values not equal to N/A
-        [System.Int64]$TotalNumberOfTrueCompliantValues = 231
+        [System.UInt16]$TotalNumberOfTrueCompliantValues = 231
 
         # Get the current configurations and preferences of the Microsoft Defender
         New-Variable -Name 'MDAVConfigCurrent' -Value (Get-MpComputerStatus) -Force
@@ -40,8 +41,8 @@ function Confirm-SystemCompliance {
         $FinalMegaObject = [PSCustomObject]@{}
 
         # The total number of the steps for the parent/main progress bar to render
-        [System.Int16]$TotalMainSteps = 17
-        [System.Int16]$CurrentMainStep = 0
+        [System.UInt16]$TotalMainSteps = 17
+        [System.UInt16]$CurrentMainStep = 0
         #EndRegion Defining-Variables
 
         #Region defining-Functions
@@ -388,7 +389,7 @@ function Confirm-SystemCompliance {
             $NestedObjectArray += [PSCustomObject]@{
                 FriendlyName = 'Microsoft Defender Platform Updates Channel'
                 Compliant    = 'N/A'
-                Value        = $($DefenderPlatformUpdatesChannels[[System.Int64]($MDAVPreferencesCurrent).PlatformUpdatesChannel])
+                Value        = $($DefenderPlatformUpdatesChannels[[System.UInt16]($MDAVPreferencesCurrent).PlatformUpdatesChannel])
                 Name         = 'Microsoft Defender Platform Updates Channel'
                 Category     = $CatName
                 Method       = 'Cmdlet'
@@ -406,7 +407,7 @@ function Confirm-SystemCompliance {
             $NestedObjectArray += [PSCustomObject]@{
                 FriendlyName = 'Microsoft Defender Engine Updates Channel'
                 Compliant    = 'N/A'
-                Value        = $($DefenderEngineUpdatesChannels[[System.Int64]($MDAVPreferencesCurrent).EngineUpdatesChannel])
+                Value        = $($DefenderEngineUpdatesChannels[[System.UInt16]($MDAVPreferencesCurrent).EngineUpdatesChannel])
                 Name         = 'Microsoft Defender Engine Updates Channel'
                 Category     = $CatName
                 Method       = 'Cmdlet'
@@ -761,7 +762,7 @@ function Confirm-SystemCompliance {
 
             # Get the status of Bitlocker DMA protection
             try {
-                [System.Int64]$BitlockerDMAProtectionStatus = Get-ItemPropertyValue -Path 'Registry::HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\FVE' -Name 'DisableExternalDMAUnderLock' -ErrorAction SilentlyContinue
+                [System.Int32]$BitlockerDMAProtectionStatus = Get-ItemPropertyValue -Path 'Registry::HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\FVE' -Name 'DisableExternalDMAUnderLock' -ErrorAction SilentlyContinue
             }
             catch {
                 # -ErrorAction SilentlyContinue wouldn't suppress the error if the path exists but property doesn't, so using try-catch
@@ -780,7 +781,6 @@ function Confirm-SystemCompliance {
                 Category     = $CatName
                 Method       = 'Group Policy'
             }
-
 
             # Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array as custom objects
             $NestedObjectArray += [PSCustomObject](Invoke-CategoryProcessing -catname $CatName -Method 'Group Policy')
@@ -2028,7 +2028,7 @@ function Confirm-SystemCompliance {
                 )
 
                 # Counting the number of $True Compliant values in the Final Output Object
-                [System.Int64]$TotalTrueCompliantValuesInOutPut = 0
+                [System.UInt32]$TotalTrueCompliantValuesInOutPut = 0
                 foreach ($Category in $Categories) {
                     $TotalTrueCompliantValuesInOutPut += ($FinalMegaObject.$Category | Where-Object -FilterScript { $_.Compliant -eq $True }).Count
                 }

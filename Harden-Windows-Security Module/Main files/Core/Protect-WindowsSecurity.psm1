@@ -4,6 +4,7 @@
 $PSStyle.Progress.UseOSCIndicator = $true
 Function Protect-WindowsSecurity {
     [CmdletBinding(DefaultParameterSetName = 'Online Mode')]
+    [OutputType([System.String])]
     param (
         [parameter(Mandatory = $false, ParameterSetName = 'Online Mode')]
         [parameter(Mandatory = $false, ParameterSetName = 'Offline Mode')]

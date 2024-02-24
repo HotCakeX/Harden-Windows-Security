@@ -10,6 +10,7 @@ Function Test-IsAdmin {
         System.Boolean
     #>
     [CmdletBinding()]
+    [OutputType([System.Boolean])]
     param()
     [System.Security.Principal.WindowsIdentity]$Identity = [Security.Principal.WindowsIdentity]::GetCurrent()
     [System.Security.Principal.WindowsPrincipal]$Principal = New-Object -TypeName 'Security.Principal.WindowsPrincipal' -ArgumentList $Identity

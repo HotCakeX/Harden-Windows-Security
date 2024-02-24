@@ -34,6 +34,9 @@ Function Invoke-WDACSimulation {
         [Alias('L')]
         [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$Log,
 
+        [Alias('C')]
+        [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$CSVOutput,
+
         [Alias('S')]
         [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SkipVersionCheck
     )
@@ -630,8 +633,10 @@ Function Invoke-WDACSimulation {
         }
 
         # Export the output as CSV
-        $MegaOutputObject | Select-Object -Property FilePath, Source, IsAuthorized, Permission | Sort-Object -Property IsAuthorized | Export-Csv -LiteralPath ".\WDAC Simulation Output $(Get-Date -Format "MM-dd-yyyy 'at' HH-mm-ss").csv" -Force
-
+        if ($CSVOutput) {
+            $MegaOutputObject | Select-Object -Property FilePath, Source, IsAuthorized, Permission | Sort-Object -Property IsAuthorized | Export-Csv -LiteralPath ".\WDAC Simulation Output $(Get-Date -Format "MM-dd-yyyy 'at' HH-mm-ss").csv" -Force
+        }
+    
         Write-Progress -Id 0 -Activity 'WDAC Simulation completed.' -Completed
 
         # Change the color of the Table header to SkyBlue
@@ -718,12 +723,14 @@ Function Invoke-WDACSimulation {
 .PARAMETER Log
     Use this switch to start a transcript of the WDAC simulation and log everything displayed on the screen. Highly recommended to use the -Verbose parameter with this switch to log the verbose output as well.
 .PARAMETER SkipVersionCheck
-    Can be used with any parameter to bypass the online version check - only to be used in rare cases
+    Bypass the online version check - only to be used in rare cases
     It is used by the entire Cmdlet.
 .PARAMETER Verbose
-    Can be used with any parameter to show verbose output
+    Shows verbose output
 .PARAMETER BooleanOutput
-    Can be used with any parameter to return a boolean value instead of displaying the object output
+    Returns a boolean value instead of displaying the object output
+.PARAMETER CSVOutput
+    Exports the output to a CSV file
 .INPUTS
     System.IO.FileInfo
     System.IO.DirectoryInfo

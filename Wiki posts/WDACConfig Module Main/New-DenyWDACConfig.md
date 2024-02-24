@@ -386,6 +386,13 @@ New-DenyWDACConfig
     [<CommonParameters>]
 ```
 
+## Description
+
+Creates a Deny standalone base policy for a folder using wildcards. The base policy created by this parameter can be deployed side by side any other base/supplemental policy.
+
+> [!NOTE]\
+> This feature is also used internally by [the Harden Windows Security Module](https://github.com/HotCakeX/Harden-Windows-Security?tab=readme-ov-file#downloads-defense-measures-).
+
 ## Parameters
 
 ### -PolicyName

@@ -1,5 +1,6 @@
 function Confirm-SystemCompliance {
     [CmdletBinding()]
+    [OutputType([System.String], [System.Object[]])]
     param (
         [parameter(Mandatory = $false)]
         [System.Management.Automation.SwitchParameter]$ExportToCSV,
@@ -9,9 +10,6 @@ function Confirm-SystemCompliance {
         [System.Management.Automation.SwitchParameter]$DetailedDisplay
     )
     begin {
-        # Set the progress bar style to blinking yellow
-        $PSStyle.Progress.Style = "$($PSStyle.Foreground.FromRGB(255,255,49))$($PSStyle.Blink)"
-
         # Importing the required sub-modules
         Write-Verbose -Message 'Importing the required sub-modules'
         Import-Module -FullyQualifiedName "$HardeningModulePath\Shared\Update-self.psm1" -Force -Verbose:$false
@@ -27,7 +25,7 @@ function Confirm-SystemCompliance {
 
         #Region Defining-Variables
         # Total number of Compliant values not equal to N/A
-        [System.Int64]$TotalNumberOfTrueCompliantValues = 231
+        [System.UInt16]$TotalNumberOfTrueCompliantValues = 231
 
         # Get the current configurations and preferences of the Microsoft Defender
         New-Variable -Name 'MDAVConfigCurrent' -Value (Get-MpComputerStatus) -Force
@@ -43,8 +41,8 @@ function Confirm-SystemCompliance {
         $FinalMegaObject = [PSCustomObject]@{}
 
         # The total number of the steps for the parent/main progress bar to render
-        [System.Int16]$TotalMainSteps = 17
-        [System.Int16]$CurrentMainStep = 0
+        [System.UInt16]$TotalMainSteps = 17
+        [System.UInt16]$CurrentMainStep = 0
         #EndRegion Defining-Variables
 
         #Region defining-Functions
@@ -168,6 +166,45 @@ function Confirm-SystemCompliance {
             return $Output
         }
         #EndRegion defining-Functions
+
+        #Region Colors
+        [System.Management.Automation.ScriptBlock]$WritePlum = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(221,160,221))$($PSStyle.Reverse)$($Args[0])$($PSStyle.Reset)" }
+        [System.Management.Automation.ScriptBlock]$WriteOrchid = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(218,112,214))$($PSStyle.Reverse)$($Args[0])$($PSStyle.Reset)" }
+        [System.Management.Automation.ScriptBlock]$WriteFuchsia = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(255,0,255))$($PSStyle.Reverse)$($Args[0])$($PSStyle.Reset)" }
+        [System.Management.Automation.ScriptBlock]$WriteMediumOrchid = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(186,85,211))$($PSStyle.Reverse)$($Args[0])$($PSStyle.Reset)" }
+        [System.Management.Automation.ScriptBlock]$WriteMediumPurple = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(147,112,219))$($PSStyle.Reverse)$($Args[0])$($PSStyle.Reset)" }
+        [System.Management.Automation.ScriptBlock]$WriteBlueViolet = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(138,43,226))$($PSStyle.Reverse)$($Args[0])$($PSStyle.Reset)" }
+        [System.Management.Automation.ScriptBlock]$AndroidGreen = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(176,191,26))$($PSStyle.Reverse)$($Args[0])$($PSStyle.Reset)" }
+        [System.Management.Automation.ScriptBlock]$WritePink = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(255,192,203))$($PSStyle.Reverse)$($Args[0])$($PSStyle.Reset)" }
+        [System.Management.Automation.ScriptBlock]$WriteHotPink = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(255,105,180))$($PSStyle.Reverse)$($Args[0])$($PSStyle.Reset)" }
+        [System.Management.Automation.ScriptBlock]$WriteDeepPink = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(255,20,147))$($PSStyle.Reverse)$($Args[0])$($PSStyle.Reset)" }
+        [System.Management.Automation.ScriptBlock]$WriteMintGreen = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(152,255,152))$($PSStyle.Reverse)$($Args[0])$($PSStyle.Reset)" }
+        [System.Management.Automation.ScriptBlock]$WriteOrange = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(255,165,0))$($PSStyle.Reverse)$($Args[0])$($PSStyle.Reset)" }
+        [System.Management.Automation.ScriptBlock]$WriteSkyBlue = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(135,206,235))$($PSStyle.Reverse)$($Args[0])$($PSStyle.Reset)" }
+        [System.Management.Automation.ScriptBlock]$Daffodil = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(255,255,49))$($PSStyle.Reverse)$($Args[0])$($PSStyle.Reset)" }
+
+        # An array of colors used in multiple places
+        [System.Drawing.Color[]]$Global:Colors = @(
+            [System.Drawing.Color]::SkyBlue,
+            [System.Drawing.Color]::Pink,
+            [System.Drawing.Color]::HotPink,
+            [System.Drawing.Color]::Lavender,
+            [System.Drawing.Color]::LightGreen,
+            [System.Drawing.Color]::Coral,
+            [System.Drawing.Color]::Plum,
+            [System.Drawing.Color]::Gold
+        )
+
+        [System.Management.Automation.ScriptBlock]$WriteRainbow = {
+            $Text = $Args[0]
+            [System.String]$Output = ''
+            for ($i = 0; $i -lt $Text.Length; $i++) {
+                $Color = $Global:Colors[$i % $Global:Colors.Length]
+                $Output += "$($PSStyle.Foreground.FromRGB($Color.R, $Color.G, $Color.B))$($Text[$i])$($PSStyle.Reset)"
+            }
+            Write-Output -InputObject $Output
+        }
+        #Endregion Colors
     }
 
     process {
@@ -179,6 +216,35 @@ function Confirm-SystemCompliance {
             # backup the current allowed apps list in Controlled folder access in order to restore them at the end of the script
             # doing this so that when we Add and then Remove PowerShell executables in Controlled folder access exclusions
             # no user customization will be affected
+
+            #Region Rainbow Progress Bar
+
+            # Define a variable to store the current color index
+            [System.UInt16]$Global:ColorIndex = 0
+
+            # Create a timer object that fires every 2 seconds
+            [System.Timers.Timer]$RainbowTimer = New-Object System.Timers.Timer
+            $RainbowTimer.Interval = 2000 # milliseconds
+            $RainbowTimer.AutoReset = $true # repeat until stopped
+
+            # Register an event handler that changes Write-Progress' style every time the timer elapses
+            [System.Management.Automation.PSEventJob]$EventHandler = Register-ObjectEvent -InputObject $RainbowTimer -EventName Elapsed -Action {
+
+                $Global:ColorIndex++
+                if ($Global:ColorIndex -ge $Global:Colors.Length) {
+                    $Global:ColorIndex = 0
+                }
+
+                # Get the current color from the array
+                [System.Drawing.Color]$CurrentColor = $Global:Colors[$Global:ColorIndex]
+                # Set the progress bar style to use the current color and the blink effect
+                $PSStyle.Progress.Style = "$($PSStyle.Foreground.FromRGB($CurrentColor.R, $CurrentColor.G, $CurrentColor.B))$($PSStyle.Blink)"
+            }
+
+            # Start the timer
+            $RainbowTimer.Start()
+
+            #Endregion Rainbow Progress Bar
 
             $CurrentMainStep++
             Write-Progress -Id 0 -Activity 'Backing up Controlled Folder Access exclusion list' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
@@ -323,7 +389,7 @@ function Confirm-SystemCompliance {
             $NestedObjectArray += [PSCustomObject]@{
                 FriendlyName = 'Microsoft Defender Platform Updates Channel'
                 Compliant    = 'N/A'
-                Value        = $($DefenderPlatformUpdatesChannels[[System.Int64]($MDAVPreferencesCurrent).PlatformUpdatesChannel])
+                Value        = $($DefenderPlatformUpdatesChannels[[System.UInt16]($MDAVPreferencesCurrent).PlatformUpdatesChannel])
                 Name         = 'Microsoft Defender Platform Updates Channel'
                 Category     = $CatName
                 Method       = 'Cmdlet'
@@ -341,7 +407,7 @@ function Confirm-SystemCompliance {
             $NestedObjectArray += [PSCustomObject]@{
                 FriendlyName = 'Microsoft Defender Engine Updates Channel'
                 Compliant    = 'N/A'
-                Value        = $($DefenderEngineUpdatesChannels[[System.Int64]($MDAVPreferencesCurrent).EngineUpdatesChannel])
+                Value        = $($DefenderEngineUpdatesChannels[[System.UInt16]($MDAVPreferencesCurrent).EngineUpdatesChannel])
                 Name         = 'Microsoft Defender Engine Updates Channel'
                 Category     = $CatName
                 Method       = 'Cmdlet'
@@ -696,7 +762,7 @@ function Confirm-SystemCompliance {
 
             # Get the status of Bitlocker DMA protection
             try {
-                [System.Int64]$BitlockerDMAProtectionStatus = Get-ItemPropertyValue -Path 'Registry::HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\FVE' -Name 'DisableExternalDMAUnderLock' -ErrorAction SilentlyContinue
+                [System.Int32]$BitlockerDMAProtectionStatus = Get-ItemPropertyValue -Path 'Registry::HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\FVE' -Name 'DisableExternalDMAUnderLock' -ErrorAction SilentlyContinue
             }
             catch {
                 # -ErrorAction SilentlyContinue wouldn't suppress the error if the path exists but property doesn't, so using try-catch
@@ -715,7 +781,6 @@ function Confirm-SystemCompliance {
                 Category     = $CatName
                 Method       = 'Group Policy'
             }
-
 
             # Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array as custom objects
             $NestedObjectArray += [PSCustomObject](Invoke-CategoryProcessing -catname $CatName -Method 'Group Policy')
@@ -1476,67 +1541,6 @@ function Confirm-SystemCompliance {
             }
             else {
 
-                #Region Colors
-                [System.Management.Automation.ScriptBlock]$WritePlum = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(221,160,221))$($PSStyle.Reverse)$($Args[0])$($PSStyle.Reset)" }
-                [System.Management.Automation.ScriptBlock]$WriteOrchid = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(218,112,214))$($PSStyle.Reverse)$($Args[0])$($PSStyle.Reset)" }
-                [System.Management.Automation.ScriptBlock]$WriteFuchsia = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(255,0,255))$($PSStyle.Reverse)$($Args[0])$($PSStyle.Reset)" }
-                [System.Management.Automation.ScriptBlock]$WriteMediumOrchid = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(186,85,211))$($PSStyle.Reverse)$($Args[0])$($PSStyle.Reset)" }
-                [System.Management.Automation.ScriptBlock]$WriteMediumPurple = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(147,112,219))$($PSStyle.Reverse)$($Args[0])$($PSStyle.Reset)" }
-                [System.Management.Automation.ScriptBlock]$WriteBlueViolet = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(138,43,226))$($PSStyle.Reverse)$($Args[0])$($PSStyle.Reset)" }
-                [System.Management.Automation.ScriptBlock]$AndroidGreen = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(176,191,26))$($PSStyle.Reverse)$($Args[0])$($PSStyle.Reset)" }
-                [System.Management.Automation.ScriptBlock]$WritePink = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(255,192,203))$($PSStyle.Reverse)$($Args[0])$($PSStyle.Reset)" }
-                [System.Management.Automation.ScriptBlock]$WriteHotPink = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(255,105,180))$($PSStyle.Reverse)$($Args[0])$($PSStyle.Reset)" }
-                [System.Management.Automation.ScriptBlock]$WriteDeepPink = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(255,20,147))$($PSStyle.Reverse)$($Args[0])$($PSStyle.Reset)" }
-                [System.Management.Automation.ScriptBlock]$WriteMintGreen = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(152,255,152))$($PSStyle.Reverse)$($Args[0])$($PSStyle.Reset)" }
-                [System.Management.Automation.ScriptBlock]$WriteOrange = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(255,165,0))$($PSStyle.Reverse)$($Args[0])$($PSStyle.Reset)" }
-                [System.Management.Automation.ScriptBlock]$WriteSkyBlue = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(135,206,235))$($PSStyle.Reverse)$($Args[0])$($PSStyle.Reset)" }
-                [System.Management.Automation.ScriptBlock]$Daffodil = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(255,255,49))$($PSStyle.Reverse)$($Args[0])$($PSStyle.Reset)" }
-
-                [System.Management.Automation.ScriptBlock]$WriteRainbow1 = {
-                    $Text = $Args[0]
-                    [System.Drawing.Color[]]$Colors = @(
-                        [System.Drawing.Color]::Pink,
-                        [System.Drawing.Color]::HotPink,
-                        [System.Drawing.Color]::SkyBlue,
-                        [System.Drawing.Color]::Pink,
-                        [System.Drawing.Color]::HotPink,
-                        [System.Drawing.Color]::SkyBlue,
-                        [System.Drawing.Color]::Pink
-                    )
-
-                    $Output = ''
-                    for ($i = 0; $i -lt $Text.Length; $i++) {
-                        $Color = $Colors[$i % $Colors.Length]
-                        $Output += "$($PSStyle.Foreground.FromRGB($Color.R, $Color.G, $Color.B))$($Text[$i])$($PSStyle.Reset)"
-                    }
-                    Write-Output -InputObject $Output
-                }
-
-                [System.Management.Automation.ScriptBlock]$WriteRainbow2 = {
-                    $Text = $Args[0]
-                    [System.Drawing.Color[]]$Colors = @(
-                        [System.Drawing.Color]::Pink,
-                        [System.Drawing.Color]::HotPink,
-                        [System.Drawing.Color]::SkyBlue,
-                        [System.Drawing.Color]::HotPink,
-                        [System.Drawing.Color]::SkyBlue,
-                        [System.Drawing.Color]::LightSkyBlue,
-                        [System.Drawing.Color]::Lavender,
-                        [System.Drawing.Color]::LightGreen,
-                        [System.Drawing.Color]::Coral,
-                        [System.Drawing.Color]::Plum,
-                        [System.Drawing.Color]::Gold
-                    )
-
-                    [System.String]$Output = ''
-                    for ($i = 0; $i -lt $Text.Length; $i++) {
-                        $Color = $Colors[$i % $Colors.Length]
-                        $Output += "$($PSStyle.Foreground.FromRGB($Color.R, $Color.G, $Color.B))$($Text[$i])$($PSStyle.Reset)"
-                    }
-                    Write-Output -InputObject $Output
-                }
-                #Endregion Colors
-
                 # Show all properties in list
                 if ($DetailedDisplay) {
 
@@ -2024,7 +2028,7 @@ function Confirm-SystemCompliance {
                 )
 
                 # Counting the number of $True Compliant values in the Final Output Object
-                [System.Int64]$TotalTrueCompliantValuesInOutPut = 0
+                [System.UInt32]$TotalTrueCompliantValuesInOutPut = 0
                 foreach ($Category in $Categories) {
                     $TotalTrueCompliantValuesInOutPut += ($FinalMegaObject.$Category | Where-Object -FilterScript { $_.Compliant -eq $True }).Count
                 }
@@ -2171,12 +2175,12 @@ function Confirm-SystemCompliance {
                 #Endregion ASCII-Arts
 
                 switch ($True) {
-                    ($TotalTrueCompliantValuesInOutPut -in 1..40) { & $WriteRainbow2 "$WhenValue1To20`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $TotalNumberOfTrueCompliantValues!" }
-                    ($TotalTrueCompliantValuesInOutPut -in 41..80) { & $WriteRainbow1 "$WhenValue21To40`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $TotalNumberOfTrueCompliantValues!" }
-                    ($TotalTrueCompliantValuesInOutPut -in 81..120) { & $WriteRainbow1 "$WhenValue41To60`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $TotalNumberOfTrueCompliantValues!" }
-                    ($TotalTrueCompliantValuesInOutPut -in 121..160) { & $WriteRainbow2 "$WhenValue61To80`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $TotalNumberOfTrueCompliantValues!" }
-                    ($TotalTrueCompliantValuesInOutPut -in 161..200) { & $WriteRainbow1 "$WhenValue81To88`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $TotalNumberOfTrueCompliantValues!" }
-                    ($TotalTrueCompliantValuesInOutPut -gt 200) { & $WriteRainbow2 "$WhenValueAbove88`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $TotalNumberOfTrueCompliantValues!" }
+                    ($TotalTrueCompliantValuesInOutPut -in 1..40) { & $WriteRainbow "$WhenValue1To20`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $TotalNumberOfTrueCompliantValues!" }
+                    ($TotalTrueCompliantValuesInOutPut -in 41..80) { & $WriteRainbow "$WhenValue21To40`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $TotalNumberOfTrueCompliantValues!" }
+                    ($TotalTrueCompliantValuesInOutPut -in 81..120) { & $WriteRainbow "$WhenValue41To60`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $TotalNumberOfTrueCompliantValues!" }
+                    ($TotalTrueCompliantValuesInOutPut -in 121..160) { & $WriteRainbow "$WhenValue61To80`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $TotalNumberOfTrueCompliantValues!" }
+                    ($TotalTrueCompliantValuesInOutPut -in 161..200) { & $WriteRainbow "$WhenValue81To88`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $TotalNumberOfTrueCompliantValues!" }
+                    ($TotalTrueCompliantValuesInOutPut -gt 200) { & $WriteRainbow "$WhenValueAbove88`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $TotalNumberOfTrueCompliantValues!" }
                 }
             }
         }
@@ -2192,6 +2196,16 @@ function Confirm-SystemCompliance {
             foreach ($FilePath in (Get-ChildItem -Path "$PSHOME\*.exe" -File).FullName) {
                 Remove-MpPreference -ControlledFolderAccessAllowedApplications $FilePath
             }
+
+            #Region stopping rainbow progress bar
+
+            # Stop the timer
+            $RainbowTimer.Stop()
+
+            # Unregister the event handler
+            Unregister-Event -SourceIdentifier $EventHandler.Name -Force
+
+            #Endregion stopping rainbow progress bar
 
             # restoring the original Controlled folder access allow list - if user already had added PowerShell executables to the list
             # they will be restored as well, so user customization will remain intact

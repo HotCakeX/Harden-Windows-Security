@@ -12,6 +12,7 @@ function Update-self {
         System.String
     #>
     [CmdletBinding()]
+    [OutputType([System.String])]
     param(
         [Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true, Position = 0)]
         [ValidatePattern('^(Protect-WindowsSecurity|Unprotect-WindowsSecurity|Confirm-SystemCompliance)(?!.*[;`]).*$', ErrorMessage = 'Either Update-self function was called with an unauthorized command or it contains semicolon and/or backtick')]

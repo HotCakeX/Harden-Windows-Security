@@ -1,7 +1,10 @@
 #Requires -Version 7.4
 #Requires -PSEdition Core
+# Applies the style to the Protect-WindowsSecurity when running as script straight from the GitHub, as well as all of the cmdlets of the Harden Windows Security module
+$PSStyle.Progress.UseOSCIndicator = $true
 Function Protect-WindowsSecurity {
     [CmdletBinding(DefaultParameterSetName = 'Online Mode')]
+    [OutputType([System.String])]
     param (
         [parameter(Mandatory = $false, ParameterSetName = 'Online Mode')]
         [parameter(Mandatory = $false, ParameterSetName = 'Offline Mode')]

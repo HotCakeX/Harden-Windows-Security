@@ -1,8 +1,9 @@
 # Optional overrides for Microsoft Security Baseline
 
-Since Microsoft Security Baselines are geared towards Enterprise level security, some functionalities that home users might require are disabled. Use the following overrides in the Harden Windows Security script and/or module to bring back those functionalities. **Some of these are necessary when using the module and/or script in Azure VMs.**
+Since Microsoft Security Baselines are geared towards Enterprise level security, some functionalities that home users might require are disabled. Use the following overrides in the Harden Windows Security module to bring back those functionalities. **Some of these are necessary when using the module in Azure VMs.**
 
-All of the features and functionalities listed below are enabled by default in Windows.
+> [!IMPORTANT]\
+> All of the features and functionalities listed below are enabled by default in Windows.
 
 <br>
 
@@ -150,6 +151,50 @@ This [policy](https://learn.microsoft.com/en-us/windows/client-management/mdm/de
 
 ```
 Computer Configuration\Administrative Templates\Windows Components\Microsoft Defender Antivirus\Control whether or not exclusions are visible to Local Admins
+```
+
+<br>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+
+<br>
+
+## 9. Disabled "Turn off Microsoft Consumer Experiences"
+
+It disables some important features in Windows Settings -> Bluetooth & Devices -> Mobile Devices
+
+More info in this [PR](https://github.com/HotCakeX/Harden-Windows-Security/pull/207)
+
+```
+Computer Configuration\Administrative Templates\Windows Components\Cloud Content
+```
+
+<br>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+
+<br>
+
+## 10. Disabled "Configure password backup directory"
+
+Microsoft Security Baselines set its value to "Active Directory", but since the Harden Windows Security module does not apply to computers managed by domain controllers or Entra ID, there is no need for this policy to be active.
+
+```
+Computer Configuration\Administrative Templates\System\LAPS
+```
+
+<br>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+
+<br>
+
+## 11. Enabled "Apply UAC restrictions to local accounts on network logons"
+
+A [Security feature](https://learn.microsoft.com/en-US/troubleshoot/windows-server/windows-security/user-account-control-and-remote-restriction) that is enabled by default and should stay enabled.
+
+```
+Computer Configuration\Administrative Templates\MS Security Guide
 ```
 
 <br>

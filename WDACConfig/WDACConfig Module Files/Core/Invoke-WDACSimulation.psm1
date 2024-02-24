@@ -235,6 +235,8 @@ Function Invoke-WDACSimulation {
                 # Check see if the file's hash exists in the XML file regardless of whether it's signed or not
                 # This is because WDAC policies sometimes have hash rules for signed files too
                 # So here we prioritize being authorized by file hash over being authorized by Signature
+
+                <#
                 try {
                     Write-Verbose -Message 'Using Get-AppLockerFileInformation to retrieve the hashes of the file'
                     # Since Get-AppLockerFileInformation doesn't support special characters such as [ and ], and it doesn't have -LiteralPath parameter, we need to escape them ourselves
@@ -242,8 +244,13 @@ Function Invoke-WDACSimulation {
                 }
                 catch {
                     Write-Verbose -Message 'Get-AppLockerFileInformation failed because the file is non-conformant, getting the flat file hash instead'
-                    [System.String]$CurrentFilePathHash = (Get-CiFileHashes -FilePath $CurrentFilePath).SHA256Authenticode
+                    [System.String]$CurrentFilePathHash = (Get-CiFileHashes -FilePath $CurrentFilePath -SkipVersionCheck).SHA256Authenticode
                 }
+                #>
+
+                Write-Verbose -Message 'Calculating the file hashes'
+                # Get-CiFileHashes is faster, natively supports -LiteralPath for special characters in file path, and also supports non-conformant files by automatically getting their flat hashes
+                [System.String]$CurrentFilePathHash = (Get-CiFileHashes -FilePath $CurrentFilePath -SkipVersionCheck).SHA256Authenticode
 
                 # if the file's hash exists in the XML file then add the file's path to the allowed files and do not check anymore that whether the file is signed or not
                 if ($CurrentFilePathHash -in $SHA256HashesFromXML) {

@@ -14,11 +14,13 @@ Function Get-CiFileHashes {
         # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
-        # Importing the required sub-modules
-        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Update-self.psm1" -Force
-
         # if -SkipVersionCheck wasn't passed, run the updater
-        if (-NOT $SkipVersionCheck) { Update-self -InvocationStatement $MyInvocation.Statement }
+        if (-NOT $SkipVersionCheck) {
+            # Importing the required sub-module for update checking
+            Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Update-self.psm1" -Force
+
+            Update-self -InvocationStatement $MyInvocation.Statement
+        }
 
         # Defining the WinTrust class from the WDACConfig Namespace if it doesn't already exist
         if (-NOT ('WDACConfig.WinTrust' -as [System.Type]) ) {

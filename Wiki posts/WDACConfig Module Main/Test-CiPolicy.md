@@ -1,12 +1,14 @@
 # Test-CiPolicy available parameters
 
+## Syntax
+
 ```powershell
 Test-CiPolicy
     [-XmlFile] <FileInfo>
     [<CommonParameters>]
 ```
 
-<br>
+## Description
 
 Tests a Code Integrity (WDAC) Policy XML file against the Schema file located at:
 

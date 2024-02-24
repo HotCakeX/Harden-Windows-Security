@@ -4,6 +4,8 @@
 
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-KernelModeWDACConfig/New-KernelModeWDACConfig%20-Default.apng)
 
+## Syntax
+
 ```powershell
 New-KernelModeWDACConfig
     [-Default]
@@ -16,9 +18,7 @@ New-KernelModeWDACConfig
     [<CommonParameters>]
 ```
 
-<br>
-
-### How to use
+## Description
 
 This cmdlet generates a Kernel-mode WDAC policy derived from the Default Windows template policy. [You can learn more about that procedure in here.](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-policy-for-BYOVD-Kernel-mode-only-protection)
 
@@ -119,6 +119,8 @@ Indicates that the policy will be deployed. If you want to deploy the final stri
 
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-KernelModeWDACConfig/New-KernelModeWDACConfig%20-NoFlightRoots.apng)
 
+## Syntax
+
 ```powershell
 New-KernelModeWDACConfig
     [-NoFlightRoots]
@@ -131,9 +133,7 @@ New-KernelModeWDACConfig
     [<CommonParameters>]
 ```
 
-<br>
-
-### How to use
+## Description
 
 This cmdlet generates a Kernel-mode WDAC policy derived from the Default Windows template policy. [You can learn more about that procedure in here.](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-policy-for-BYOVD-Kernel-mode-only-protection)
 

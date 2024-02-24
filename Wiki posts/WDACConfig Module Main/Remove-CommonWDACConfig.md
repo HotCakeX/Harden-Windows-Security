@@ -2,6 +2,8 @@
 
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Remove-CommonWDACConfig/Remove-CommonWDACConfig.apng)
 
+## Syntax
+
 ```powershell
 Remove-CommonWDACConfig
     [-CertCN]
@@ -13,7 +15,7 @@ Remove-CommonWDACConfig
     [-StrictKernelNoFlightRootsPolicyGUID]
 ```
 
-<br>
+## Description
 
 Use this cmdlet to remove the values stored in the User Configurations JSON file. If you use it without any parameters it will delete the User configuration folder and everything in it, which is located in `C:\Users\UserName\.WDACConfig`
 

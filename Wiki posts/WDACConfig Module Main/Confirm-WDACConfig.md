@@ -4,6 +4,8 @@
 
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Confirm-WDACConfig/Confirm-WDACConfig%20-ListActivePolicies.apng)
 
+## Syntax
+
 ```powershell
 Confirm-WDACConfig
     [-ListActivePolicies]
@@ -11,7 +13,7 @@ Confirm-WDACConfig
     [-OnlySupplementalPolicies]
 ```
 
-<br>
+## Description
 
 Lists the non-System Base and Supplemental WDAC Policies using [CITool](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/operations/citool-commands) and displays their counts.
 
@@ -61,12 +63,14 @@ Using this will only display Supplemental policies.
 
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Confirm-WDACConfig/Confirm-WDACConfig%20-VerifyWDACStatus.apng)
 
+## Syntax
+
 ```powershell
 Confirm-WDACConfig
     [-VerifyWDACStatus]
 ```
 
-<br>
+## Description
 
 Shows the [status](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-Notes#how-to-verify-the-status-of-user-mode-and-kernel-mode-wdac-on-a-system) of User-mode and Kernel-mode application control.
 
@@ -80,12 +84,14 @@ Shows the [status](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC
 
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Confirm-WDACConfig/Confirm-WDACConfig%20-CheckSmartAppControlStatus.apng)
 
+## Syntax
+
 ```powershell
 Confirm-WDACConfig
     [-CheckSmartAppControlStatus]
 ```
 
-<br>
+## Description
 
 Checks the status of Smart App Control and reports the results on the console, including the evaluation mode expiration date.
 

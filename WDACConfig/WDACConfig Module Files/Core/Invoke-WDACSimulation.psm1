@@ -174,6 +174,47 @@ Function Invoke-WDACSimulation {
 
         try {
 
+            #Region Cyan/Violet Progress Bar
+
+            # Backing up PS Formatting Styles
+            [System.Collections.Hashtable]$OriginalStyle = @{}
+            $PSStyle.Progress | Get-Member -MemberType Property | ForEach-Object -Process {
+                $OriginalStyle[$_.Name] = $PSStyle.Progress.$($_.Name)
+            }
+
+            # Define a global variable to store the current color index
+            [System.UInt16]$Global:ColorIndex = 0
+
+            # Create a timer object that fires every 3 seconds
+            [System.Timers.Timer]$RainbowTimer = New-Object System.Timers.Timer
+            $RainbowTimer.Interval = 3000 # milliseconds
+            $RainbowTimer.AutoReset = $true # repeat until stopped
+
+            # Register an event handler that changes Write-Progress' style every time the timer elapses
+            [System.Management.Automation.PSEventJob]$EventHandler = Register-ObjectEvent -InputObject $RainbowTimer -EventName Elapsed -Action {
+
+                # An array of colors
+                [System.Drawing.Color[]]$Colors = @(
+                    [System.Drawing.Color]::Cyan
+                    [System.Drawing.Color]::Violet
+                )
+
+                $Global:ColorIndex++
+                if ($Global:ColorIndex -ge $Colors.Length) {
+                    $Global:ColorIndex = 0
+                }
+
+                # Get the current color from the array
+                [System.Drawing.Color]$CurrentColor = $Colors[$Global:ColorIndex]
+                # Set the progress bar style to use the current color
+                $PSStyle.Progress.Style = "$($PSStyle.Foreground.FromRGB($CurrentColor.R, $CurrentColor.G, $CurrentColor.B))"
+            }
+
+            # Start the timer
+            $RainbowTimer.Start()
+
+            #Endregion Cyan/Violet Progress Bar
+
             # Loop through each file
             Write-Verbose -Message 'Looping through each supported file'
 
@@ -343,6 +384,17 @@ Function Invoke-WDACSimulation {
         finally {
             # Complete the nested progress bar whether there was an error or not
             Write-Progress -Id 1 -Activity 'All of the files have been processed.' -Completed
+
+            # Stop the timer for progress bar color
+            $RainbowTimer.Stop()
+
+            # Unregister the event handler for progress bar color
+            Unregister-Event -SourceIdentifier $EventHandler.Name -Force
+
+            # Restore PS Formatting Styles for progress bar
+            $OriginalStyle.Keys | ForEach-Object -Process {
+                $PSStyle.Progress.$_ = $OriginalStyle[$_]
+            }
         }
 
         $CurrentStep++

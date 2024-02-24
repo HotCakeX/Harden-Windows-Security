@@ -2,7 +2,7 @@ Function Get-CiFileHashes {
     [CmdletBinding()]
     [OutputType([ordered])]
     param (
-        [Parameter(Mandatory = $true, Position = 0, valueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
+        [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
         [System.IO.FileInfo]$FilePath,
 
         [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SkipVersionCheck
@@ -15,7 +15,6 @@ Function Get-CiFileHashes {
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
         # Importing the required sub-modules
-        Write-Verbose -Message 'Importing the required sub-modules'
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Update-self.psm1" -Force
 
         # if -SkipVersionCheck wasn't passed, run the updater
@@ -69,34 +68,6 @@ Function Get-CiFileHashes {
 
                 # Initializing a pointer to zero, which will be used to store the handle of the file stream
                 [System.IntPtr]$FileStreamHandle = [System.IntPtr]::Zero
-
-                Function Get-FlatFileHash {
-                    <#
-                    .SYNOPSIS
-                        This is a nested function that calculates the flat hash of a file using a specified hash algorithm
-                        This only runs as a fallback method when normal Authenticode hashes cannot be calculated because the file is Non-conformant
-                    .NOTES
-                        This function acts as a 2nd fallback.
-                        The first fallback is defined and handled by the AuthenticodeHashCalc.cs
-                    .PARAMETER FilePath
-                        The path to the file for which the hash is to be calculated
-                    .PARAMETER Algorithm
-                        The hash algorithm to be used
-                    .INPUTS
-                        System.IO.FileInfo
-                        System.String
-                    .OUTPUTS
-                        System.String
-                    #>
-                    param(
-                        [parameter(Mandatory = $true)]
-                        [System.IO.FileInfo]$FilePath,
-
-                        [parameter(Mandatory = $true)]
-                        [System.String]$Algorithm
-                    )
-                    Return [System.String](Get-FileHash -Algorithm $Algorithm -Path $FilePath).Hash
-                }
             }
 
             Process {
@@ -126,7 +97,8 @@ Function Get-CiFileHashes {
 
                         Write-Verbose -Message "Could not acquire context for $HashAlgorithm"
 
-                        Return [System.String](Get-FlatFileHash -FilePath $FilePath -Algorithm $HashAlgorithm)
+                        # This acts as a 2nd fallback, the first fallback is defined and handled by the AuthenticodeHashCalc.cs
+                        Return [System.String](Get-FileHash -LiteralPath $FilePath -Algorithm $HashAlgorithm).Hash
                     }
 
                     # Initializing a variable to store the size of the hash in bytes
@@ -140,7 +112,7 @@ Function Get-CiFileHashes {
 
                         Write-Verbose -Message "Could not hash $FilePath using $HashAlgorithm"
 
-                        Return [System.String](Get-FlatFileHash -FilePath $FilePath -Algorithm $HashAlgorithm)
+                        Return [System.String](Get-FileHash -LiteralPath $FilePath -Algorithm $HashAlgorithm).Hash
                     }
 
                     # Initializing a pointer to zero, which will be used to store the hash value
@@ -157,7 +129,7 @@ Function Get-CiFileHashes {
 
                             Write-Verbose -Message "Could not hash $FilePath using $HashAlgorithm"
 
-                            Return [System.String](Get-FlatFileHash -FilePath $FilePath -Algorithm $HashAlgorithm)
+                            Return [System.String](Get-FileHash -LiteralPath $FilePath -Algorithm $HashAlgorithm).Hash
                         }
 
                         # Looping through the hash value byte by byte

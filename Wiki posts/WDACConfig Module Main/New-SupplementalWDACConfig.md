@@ -4,6 +4,8 @@
 
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-SupplementalWDACConfig/New-SupplementalWDACConfig%20-Normal.apng)
 
+## Syntax
+
 ```powershell
 New-SupplementalWDACConfig
     [-Normal]
@@ -21,7 +23,7 @@ New-SupplementalWDACConfig
     [<CommonParameters>]
 ```
 
-<br>
+## Description
 
 Creates a Supplemental policy for a base policy based on a folder path.
 
@@ -214,6 +216,8 @@ By default, the module includes user PEs in the scan. When you use this switch p
 
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-SupplementalWDACConfig/New-SupplementalWDACConfig%20-PathWildCards.apng)
 
+## Syntax
+
 ```powershell
 New-SupplementalWDACConfig
     [-PathWildCards]
@@ -226,7 +230,7 @@ New-SupplementalWDACConfig
     [<CommonParameters>]
 ```
 
-<br>
+## Description
 
 Creates a Supplemental policy that allows a folder path that includes one or more wildcard `*` character in it.
 
@@ -320,6 +324,8 @@ Indicates that the module will automatically deploy the Supplemental policy afte
 
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-SupplementalWDACConfig/New-SupplementalWDACConfig%20-InstalledAppXPackages.apng)
 
+## Syntax
+
 ```powershell
 New-SupplementalWDACConfig
     [-InstalledAppXPackages]
@@ -333,7 +339,7 @@ New-SupplementalWDACConfig
     [<CommonParameters>]
 ```
 
-<br>
+## Description
 
 Creates a Supplemental policy based on the package name of an installed app. More information at [Microsoft Learn](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/manage-packaged-apps-with-wdac)
 

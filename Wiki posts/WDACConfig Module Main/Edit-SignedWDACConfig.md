@@ -4,6 +4,8 @@
 
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Edit-SignedWDACConfig/Edit-SignedWDACConfig%20-AllowNewAppsAuditEvents.apng)
 
+## Syntax
+
 ```powershell
 Edit-SignedWDACConfig
      [-AllowNewAppsAuditEvents]
@@ -23,7 +25,7 @@ Edit-SignedWDACConfig
      [<CommonParameters>]
 ```
 
-<br>
+## Description
 
 ### How to Use
 
@@ -31,7 +33,7 @@ Edit-SignedWDACConfig
 
 2. When prompted to start installing your apps, do so and once you're done, press Enter to continue. The rest is automated.
 
-### Description
+<br>
 
 While a Signed Windows Defender Application Control (WDAC) policy is already deployed on the system, rebootlessly turns on Audit mode in it, which will allow you to install a new app that was otherwise getting blocked. After installation, you will need to browse for the path(s) of the installed app(s) for scanning. The Audit logs that will be included in the scan are only the ones created from the time you ran the module with [-AllowNewAppsAuditEvents](#edit-signedwdacconfig--allownewappsauditevents) parameter till the time you finished app installations and browsed for folders to scan. This parameter can also be used for apps that are already installed on the system.
 
@@ -311,6 +313,8 @@ By default, the module includes user PEs in the scan. When you use this switch p
 
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Edit-SignedWDACConfig/Edit-SignedWDACConfig%20-AllowNewApps.apng)
 
+## Syntax
+
 ```powershell
 Edit-SignedWDACConfig
      [-AllowNewApps]
@@ -328,7 +332,7 @@ Edit-SignedWDACConfig
      [<CommonParameters>]
 ```
 
-<br>
+## Description
 
 ### How to use
 
@@ -336,7 +340,7 @@ Edit-SignedWDACConfig
 
 2. When prompted to start installing your apps, do so and once you're done, press Enter to continue. The rest is automated.
 
-### Description
+<br>
 
 While a Signed Windows Defender Application Control (WDAC) policy is already deployed on the system, rebootlessly turns on Audit mode in it, which will allow you to install a new app that was otherwise getting blocked. After installation, you will need to browse for the path(s) of the installed app(s) for scanning. This parameter can also be used for apps that are already installed on the system.
 
@@ -548,6 +552,8 @@ You can choose one of the following options:
 
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Edit-SignedWDACConfig/Edit-SignedWDACConfig%20-MergeSupplementalPolicies.apng)
 
+## Syntax
+
 ```powershell
 Edit-SignedWDACConfig
      [-MergeSupplementalPolicies]
@@ -562,7 +568,7 @@ Edit-SignedWDACConfig
     [<CommonParameters>]
 ```
 
-<br>
+## Description
 
 Merge multiple deployed **Signed** Supplemental policies into 1 and deploy it, remove the individual ones, all happening automatically. Very useful to keep Supplemental policies below 32 since that's the limit.
 
@@ -708,6 +714,8 @@ Indicates that the module will not remove the old Supplemental policy xml files 
 
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Edit-SignedWDACConfig/Edit-SignedWDACConfig%20-UpdateBasePolicy.apng)
 
+## Syntax
+
 ```powershell
 Edit-SignedWDACConfig
      [-UpdateBasePolicy]
@@ -721,7 +729,7 @@ Edit-SignedWDACConfig
      [<CommonParameters>]
 ```
 
-<br>
+## Description
 
 It can rebootlessly change the type of the deployed signed base policy. It can update the recommended block rules and/or change policy rule options in the deployed base policy. The deployed Supplemental policies will stay intact and continue to work with the new Base policy.
 

@@ -2,6 +2,8 @@
 
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Set-CommonWDACConfig/Set-CommonWDACConfig.apng)
 
+## Syntax
+
 ```powershell
 Set-CommonWDACConfig
     [[-CertCN] <String>]
@@ -16,7 +18,7 @@ Set-CommonWDACConfig
     [<CommonParameters>]
 ```
 
-<br>
+## Description
 
 Use this cmdlet to store the values for common and frequently used parameters so that you won't have to specify them again every time.
 

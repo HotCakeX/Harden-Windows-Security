@@ -2,6 +2,8 @@
 
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Deploy-SignedWDACConfig/Deploy-SignedWDACConfig.apng)
 
+## Syntax
+
 ```powershell
 Deploy-SignedWDACConfig
     -PolicyPaths <FileInfo[]>
@@ -15,7 +17,7 @@ Deploy-SignedWDACConfig
     [<CommonParameters>]
 ```
 
-<br>
+## Description
 
 Creates and signs a `.CIP` file that can be either deployed locally using the `-Deploy` parameter or you can deploy the signed policy binary on a different machine later using the built-in [Citool](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/operations/citool-commands), Intune etc.
 

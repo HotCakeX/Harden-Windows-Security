@@ -2,6 +2,8 @@
 
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Invoke-WDACSimulation/Invoke-WDACSimulation.apng)
 
+## Syntax
+
 ```powershell
 Invoke-WDACSimulation
     [-XmlFilePath] <FileInfo>
@@ -13,7 +15,7 @@ Invoke-WDACSimulation
     [<CommonParameters>]
 ```
 
-<br>
+## Description
 
 This cmdlet allows you to simulate a WDAC (App Control for Business) policy deployment. Simply select a folder or file and a policy XML file, it will show you whether the selected files would be allowed or blocked by your WDAC policy if it was actually deployed on a system and those files were run.
 

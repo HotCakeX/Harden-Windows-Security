@@ -2,6 +2,8 @@
 
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Get-CommonWDACConfig/Get-CommonWDACConfig.apng)
 
+## Syntax
+
 ```powershell
 Get-CommonWDACConfig
     [-CertCN]
@@ -16,7 +18,7 @@ Get-CommonWDACConfig
     [<CommonParameters>]
 ```
 
-<br>
+## Description
 
 Use this cmdlet to query and display the values for common and frequently used parameters in the User Configurations Json file.
 

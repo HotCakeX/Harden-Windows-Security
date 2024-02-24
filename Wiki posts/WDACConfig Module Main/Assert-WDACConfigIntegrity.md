@@ -2,6 +2,8 @@
 
 ![Assert-WDACConfigIntegrity demo](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Assert-WDACConfigIntegrity/Assert-WDACConfigIntegrity.gif)
 
+## Syntax
+
 ```powershell
 Assert-WDACConfigIntegrity
     [-SaveLocally]
@@ -10,7 +12,7 @@ Assert-WDACConfigIntegrity
     [<CommonParameters>]
 ```
 
-<br>
+## Description
 
 This cmdlet scans all of the relevant files in the WDACConfig module's folder and computes their SHA2-512 hashes.
 

@@ -4,6 +4,8 @@
 
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Edit-WDACConfig/Edit-WDACConfig%20-AllowNewAppsAuditEvents.apng)
 
+## Syntax
+
 ```powershell
 Edit-WDACConfig
      [-AllowNewAppsAuditEvents]
@@ -20,7 +22,7 @@ Edit-WDACConfig
      [<CommonParameters>]
 ```
 
-<br>
+## Description
 
 ### How to use
 
@@ -28,7 +30,7 @@ Edit-WDACConfig
 
 2. When prompted to start installing your apps, do so and once you're done, press Enter to continue. The rest is automated.
 
-### Description
+<br>
 
 While an unsigned Windows Defender Application Control (WDAC) policy is already deployed on the system, rebootlessly turns on Audit mode in it, which will allow you to install a new app that was otherwise getting blocked.
 
@@ -252,6 +254,8 @@ By default, the module includes user PEs in the scan. When you use this switch p
 
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Edit-WDACConfig/Edit-WDACConfig%20-AllowNewApps.apng)
 
+## Syntax
+
 ```powershell
 Edit-WDACConfig
      [-AllowNewApps]
@@ -266,7 +270,7 @@ Edit-WDACConfig
      [<CommonParameters>]
 ```
 
-<br>
+## Description
 
 ### How to use
 
@@ -274,7 +278,7 @@ Edit-WDACConfig
 
 2. When prompted to start installing your apps, do so and once you're done, press Enter to continue. The rest is automated.
 
-### Description
+<br>
 
 While an unsigned WDAC policy is already deployed on the system, rebootlessly turn on Audit mode in it, which will allow you to install a new app that was otherwise getting blocked. After installation, you will need to browse for the path(s) of the installed app(s) for scanning. This parameter can also be used for apps that are already installed on the system.
 
@@ -426,6 +430,8 @@ By default, the module includes user PEs in the scan. When you use this switch p
 
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Edit-WDACConfig/Edit-WDACConfig%20-MergeSupplementalPolicies.apng)
 
+## Syntax
+
 ```powershell
 Edit-WDACConfig
      [-MergeSupplementalPolicies]
@@ -437,7 +443,7 @@ Edit-WDACConfig
      [<CommonParameters>]
 ```
 
-<br>
+## Description
 
 Merge multiple deployed Supplemental policies into 1 and deploy it, remove the individual ones, all happening automatically. Very useful to keep Supplemental policies below 32 since that's the limit.
 
@@ -524,6 +530,8 @@ Indicates that the module will not remove the old Supplemental policy xml files 
 
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Edit-WDACConfig/Edit-WDACConfig%20-UpdateBasePolicy.apng)
 
+## Syntax
+
 ```powershell
 Edit-WDACConfig
      [-UpdateBasePolicy]
@@ -534,7 +542,7 @@ Edit-WDACConfig
     [<CommonParameters>]
 ```
 
-<br>
+## Description
 
 It can rebootlessly change the type of the deployed base policy. It can update the recommended block rules and/or change policy rule options in the deployed base policy. The deployed Supplemental policies will stay intact and continue to work with the new Base policy.
 

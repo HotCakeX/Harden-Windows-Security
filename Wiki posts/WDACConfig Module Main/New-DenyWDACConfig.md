@@ -4,6 +4,8 @@
 
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-DenyWDACConfig/New-DenyWDACConfig%20-Normal.apng)
 
+## Syntax
+
 ```powershell
 New-DenyWDACConfig
     [-Normal]
@@ -20,7 +22,7 @@ New-DenyWDACConfig
     [<CommonParameters>]
 ```
 
-<br>
+## Description
 
 Creates a Deny base policy by scanning a directory. The base policy will have 2 allow all rules, meaning it can be deployed as a standalone base policy, side-by-side any other Base/Supplemental policies.
 
@@ -187,6 +189,8 @@ By default the module includes user PEs in the scan, but when you use this switc
 
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-DenyWDACConfig/New-DenyWDACConfig%20-Drivers.apng)
 
+## Syntax
+
 ```powershell
 New-DenyWDACConfig
     [-Drivers]
@@ -198,7 +202,7 @@ New-DenyWDACConfig
     [<CommonParameters>]
 ```
 
-<br>
+## Description
 
 Creates a Deny base policy by scanning a directory, this parameter uses [DriverFile objects](https://learn.microsoft.com/en-us/powershell/module/configci/get-systemdriver) so it's best suitable for driver files. The base policy will have 2 allow all rules, meaning it can be deployed as a standalone base policy, side-by-side any other Base/Supplemental policies.
 
@@ -269,6 +273,8 @@ Indicates that the module will automatically deploy the Deny base policy after c
 
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-DenyWDACConfig/New-DenyWDACConfig%20-InstalledAppXPackages.apng)
 
+## Syntax
+
 ```powershell
 New-DenyWDACConfig
     [-InstalledAppXPackages]
@@ -281,7 +287,7 @@ New-DenyWDACConfig
     [<CommonParameters>]
 ```
 
-<br>
+## Description
 
 Creates a Deny base policy for one or more installed Windows Apps (Appx) based on their PFN (Package Family Name). The base policy will have 2 allow all rules, meaning it can be deployed as a standalone base policy, side-by-side any other Base/Supplemental policies.
 
@@ -367,6 +373,8 @@ Indicates that the cmdlet won't ask for confirmation and will proceed with creat
 
 ![New-DenyWDACConfig -PathWildCards demo](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-DenyWDACConfig/New-DenyWDACConfig%20-PathWildCards.apng)
 
+## Syntax
+
 ```powershell
 New-DenyWDACConfig
     [-PathWildCards]
@@ -377,6 +385,13 @@ New-DenyWDACConfig
     [-Confirm]
     [<CommonParameters>]
 ```
+
+## Description
+
+Creates a Deny standalone base policy for a folder using wildcards. The base policy created by this parameter can be deployed side by side any other base/supplemental policy.
+
+> [!NOTE]\
+> This feature is also used internally by [the Harden Windows Security Module](https://github.com/HotCakeX/Harden-Windows-Security?tab=readme-ov-file#downloads-defense-measures-).
 
 ## Parameters
 

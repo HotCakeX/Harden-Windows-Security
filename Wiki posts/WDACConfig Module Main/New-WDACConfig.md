@@ -4,6 +4,8 @@
 
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-WDACConfig/New-WDACConfig%20-GetBlockRules.apng)
 
+## Syntax
+
 ```powershell
 New-WDACConfig
      [-GetBlockRules]
@@ -12,7 +14,7 @@ New-WDACConfig
      [<CommonParameters>]
 ```
 
-<br>
+## Description
 
 Creates a WDAC policy file called ***Microsoft recommended block rules.xml*** from [the official source](https://github.com/MicrosoftDocs/windows-itpro-docs/blob/public/windows/security/application-security/application-control/windows-defender-application-control/design/applications-that-can-bypass-wdac.md) for [Microsoft recommended block rules](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/applications-that-can-bypass-wdac), with *AllowAll* rules and audit mode rule option removed. The policy sets [HVCI to strict](https://learn.microsoft.com/en-us/powershell/module/configci/set-hvcioptions).
 
@@ -44,6 +46,8 @@ Deploys the [latest Microsoft recommended block rules](https://learn.microsoft.c
 
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-WDACConfig/New-WDACConfig%20-GetDriverBlockRules.apng)
 
+## Syntax
+
 ```powershell
 New-WDACConfig
      [-GetDriverBlockRules]
@@ -52,13 +56,13 @@ New-WDACConfig
      [<CommonParameters>]
 ```
 
-<br>
+## Description
 
 Creates a WDAC policy file called ***Microsoft recommended driver block rules.xml*** from [the official source](https://github.com/MicrosoftDocs/windows-itpro-docs/blob/public/windows/security/application-security/application-control/windows-defender-application-control/design/microsoft-recommended-driver-block-rules.md) for [Microsoft recommended driver block rules](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/microsoft-recommended-driver-block-rules), with *AllowAll* rules and audit mode rule option removed. The policy sets [HVCI to strict](https://learn.microsoft.com/en-us/powershell/module/configci/set-hvcioptions). Extra information regarding the version and last updated date of [the GitHub document](https://github.com/MicrosoftDocs/windows-itpro-docs/commits/public/windows/security/application-security/application-control/windows-defender-application-control/design/microsoft-recommended-driver-block-rules.md) containing block rules will also be displayed.
 
 ## Parameters
 
-###  -Deploy
+### -Deploy
 
 With the help of PowerShell, uses [the official method](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/microsoft-recommended-driver-block-rules#steps-to-download-and-apply-the-vulnerable-driver-blocklist-binary) to deploy the latest version of [Microsoft recommended driver block rules](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/microsoft-recommended-driver-block-rules).
 
@@ -84,6 +88,8 @@ With the help of PowerShell, uses [the official method](https://learn.microsoft.
 
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-WDACConfig/New-WDACConfig%20-MakeAllowMSFTWithBlockRules.apng)
 
+## Syntax
+
 ```powershell
 New-WDACConfig
      [-MakeAllowMSFTWithBlockRules]
@@ -94,7 +100,7 @@ New-WDACConfig
      [<CommonParameters>]
 ```
 
-<br>
+## Description
 
 Calls the [-GetBlockRules](#new-wdacconfig--getblockrules) parameter to get the Microsoft recommended block rules, and merges them with [*AllowMicrosoft default policy*](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/example-wdac-base-policies). The Policy uses [strict HVCI](https://learn.microsoft.com/en-us/powershell/module/configci/set-hvcioptions) and has the following [rule options](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/select-types-of-rules-to-create#table-1-windows-defender-application-control-policy---policy-rule-options):
 
@@ -192,6 +198,8 @@ Indicates that the created/deployed policy will have [Require EV Signers](https:
 
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-WDACConfig/New-WDACConfig%20-SetAutoUpdateDriverBlockRules.apng)
 
+## Syntax
+
 ```powershell
 New-WDACConfig
      [-SetAutoUpdateDriverBlockRules]
@@ -199,7 +207,7 @@ New-WDACConfig
      [<CommonParameters>]
 ```
 
-<br>
+## Description
 
 Creates a scheduled task that runs every 7 days to automatically perform [the official method](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/microsoft-recommended-driver-block-rules#steps-to-download-and-apply-the-vulnerable-driver-blocklist-binary) for updating Microsoft recommended driver block rules.
 
@@ -213,6 +221,8 @@ Creates a scheduled task that runs every 7 days to automatically perform [the of
 
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-WDACConfig/New-WDACConfig%20-PrepMSFTOnlyAudit.apng)
 
+## Syntax
+
 ```powershell
 New-WDACConfig
      [-PrepMSFTOnlyAudit]
@@ -222,7 +232,7 @@ New-WDACConfig
      [<CommonParameters>]
 ```
 
-<br>
+## Description
 
 Creates a WDAC policy using the default AllowMicrosoft policy in Audit mode that once deployed, prepares the system for generating Audit event logs [for a fully managed device](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-for-Fully-Managed-Devices). No reboot required.
 
@@ -276,6 +286,8 @@ Deploys the policy instead of just creating it.
 
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-WDACConfig/New-WDACConfig%20-PrepDefaultWindowsAudit.apng)
 
+## Syntax
+
 ```powershell
 New-WDACConfig
      [-PrepDefaultWindowsAudit]
@@ -285,7 +297,7 @@ New-WDACConfig
      [<CommonParameters>]
 ```
 
-<br>
+## Description
 
 Creates a WDAC policy that once deployed, prepares the system for Default Windows auditing. It will trigger audit logs to be created for any file that is run but is not part of the Windows; Unlike [-PrepMSFTOnlyAudit](#new-wdacconfig--prepmsftonlyaudit) parameter that triggers audit logs for any file that is not signed by Microsoft's trusted root certificate.
 
@@ -339,6 +351,8 @@ Deploys the policy instead of just creating it.
 
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-WDACConfig/New-WDACConfig%20-MakePolicyFromAuditLogs%20-BasePolicyType%20'Allow%20Microsoft%20Base'.apng)
 
+## Syntax
+
 ```powershell
 New-WDACConfig
      [-MakePolicyFromAuditLogs]
@@ -357,7 +371,7 @@ New-WDACConfig
      [<CommonParameters>]
 ```
 
-<br>
+## Description
 
 Creates a WDAC policy using the Audit event logs generated [for a fully managed device](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-for-Fully-Managed-Devices).
 
@@ -616,6 +630,8 @@ All of the outputs are saved in an easily identified folder inside the current w
 
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-WDACConfig/New-WDACConfig%20-MakeLightPolicy.apng)
 
+## Syntax
+
 ```powershell
 New-WDACConfig
      [-MakeLightPolicy]
@@ -626,7 +642,7 @@ New-WDACConfig
      [<CommonParameters>]
 ```
 
-<br>
+## Description
 
 Creates a WDAC policy for a [Lightly managed system](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-for-Lightly-Managed-Devices). The Policy uses has the same specifications as [-MakeAllowMSFTWithBlockRules](#new-wdacconfig--makeallowmsftwithblockrules), with the following additional [rule options](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/select-types-of-rules-to-create#table-1-windows-defender-application-control-policy---policy-rule-options):
 
@@ -716,6 +732,8 @@ Indicates that the created/deployed policy will have [Require EV Signers](https:
 
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-WDACConfig/New-WDACConfig%20-MakeDefaultWindowsWithBlockRules.apng)
 
+## Syntax
+
 ```powershell
 New-WDACConfig
      [-MakeDefaultWindowsWithBlockRules]
@@ -726,7 +744,7 @@ New-WDACConfig
      [<CommonParameters>]
 ```
 
-<br>
+## Description
 
 Calls the [-GetBlockRules](#new-wdacconfig--getblockrules) parameter to get the Microsoft recommended block rules, and merges them with [*DefaultWindows_Enforced policy*](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/example-wdac-base-policies). The Policy uses [strict HVCI](https://learn.microsoft.com/en-us/powershell/module/configci/set-hvcioptions) and uses the [same policy rule options as -MakeAllowMSFTWithBlockRules](#new-wdacconfig--makeallowmsftwithblockrules) parameter.
 

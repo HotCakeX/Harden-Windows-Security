@@ -4,6 +4,8 @@
 
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Remove-WDACConfig/Remove-WDACConfig%20-SignedBase.apng)
 
+## Syntax
+
 ```powershell
 Remove-WDACConfig
     [-SignedBase]
@@ -16,7 +18,7 @@ Remove-WDACConfig
     [<CommonParameters>]
 ```
 
-<br>
+## Description
 
 Uses [the official procedure](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/deployment/disable-wdac-policies) to Re-Deploy the Signed base WDAC policies with ***Enabled:Unsigned System Integrity Policy*** rule option.
 
@@ -107,6 +109,8 @@ Indicates that the cmdlet won't ask for confirmation and will proceed with redep
 
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Remove-WDACConfig/Remove-WDACConfig%20-UnsignedOrSupplemental.apng)
 
+## Syntax
+
 ```powershell
 Remove-WDACConfig
     [-UnsignedOrSupplemental]
@@ -118,7 +122,7 @@ Remove-WDACConfig
     [<CommonParameters>]
 ```
 
-<br>
+## Description
 
 Removes Unsigned deployed WDAC policies as well as [Signed deployed Supplemental WDAC policies](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-Notes#removing-supplemental-policies)
 

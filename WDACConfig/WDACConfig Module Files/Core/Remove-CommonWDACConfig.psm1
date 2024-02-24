@@ -1,5 +1,9 @@
 Function Remove-CommonWDACConfig {
-    [CmdletBinding()]
+    [CmdletBinding(
+        SupportsShouldProcess = $true,
+        PositionalBinding = $false,
+        ConfirmImpact = 'High'
+    )]
     [OutputType([System.String])]
     Param(
         [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$CertCN,
@@ -10,7 +14,8 @@ Function Remove-CommonWDACConfig {
         [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$StrictKernelPolicyGUID,
         [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$StrictKernelNoFlightRootsPolicyGUID,
         [parameter(Mandatory = $false, DontShow = $true)][System.Management.Automation.SwitchParameter]$LastUpdateCheck,
-        [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$StrictKernelModePolicyTimeOfDeployment
+        [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$StrictKernelModePolicyTimeOfDeployment,
+        [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$Force
     )
     begin {
         # Importing the $PSDefaultParameterValues to the current session, prior to everything else
@@ -31,11 +36,21 @@ Function Remove-CommonWDACConfig {
             Write-Verbose -Message 'The UserConfigurations.json file has been created because it did not exist.'
         }
 
+        # Detecting if Confirm switch is used to bypass the confirmation prompts
+        if ($Force -and -Not $Confirm) {
+            $ConfirmPreference = 'None'
+        }
+
         # Delete the entire User Configs if a more specific parameter wasn't used
         # This method is better than $PSBoundParameters since it also contains common parameters
         if (!$CertCN -And !$CertPath -And !$SignToolPath -And !$UnsignedPolicyPath -And !$SignedPolicyPath -And !$StrictKernelPolicyGUID -And !$StrictKernelNoFlightRootsPolicyGUID -And !$LastUpdateCheck -And !$StrictKernelModePolicyTimeOfDeployment) {
-            Remove-Item -Path $Path -Force
-            Write-Verbose -Message 'User Configurations for WDACConfig module have been deleted.'
+
+            # Prompt for confirmation before deleting the entire User Configurations
+            if ($PSCmdlet.ShouldProcess('This PC', 'Delete the entire User Configurations for WDACConfig module')) {
+
+                Remove-Item -Path $Path -Force
+                Write-Verbose -Message 'User Configurations for WDACConfig module have been deleted.'
+            }
 
             # set a boolean value that returns from the Process and End blocks as well
             [System.Boolean]$ReturnAndDone = $true

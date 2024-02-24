@@ -636,7 +636,7 @@ Function Invoke-WDACSimulation {
         if ($CSVOutput) {
             $MegaOutputObject | Select-Object -Property FilePath, Source, IsAuthorized, Permission | Sort-Object -Property IsAuthorized | Export-Csv -LiteralPath ".\WDAC Simulation Output $(Get-Date -Format "MM-dd-yyyy 'at' HH-mm-ss").csv" -Force
         }
-    
+
         Write-Progress -Id 0 -Activity 'WDAC Simulation completed.' -Completed
 
         # Change the color of the Table header to SkyBlue

@@ -102,7 +102,6 @@ Function Deploy-SignedWDACConfig {
         } # If it is null, then Get-SignTool will behave the same as if it was called without any arguments.
         else {
             $SignToolPathFinal = Get-SignTool -SignToolExePathInput (Get-CommonWDACConfig -SignToolPath)
-
         }
 
         # If CertPath parameter wasn't provided by user, check if a valid value exists in user configs, if so, use it, otherwise throw an error

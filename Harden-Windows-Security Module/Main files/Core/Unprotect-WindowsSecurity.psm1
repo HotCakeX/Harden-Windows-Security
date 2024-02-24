@@ -3,6 +3,7 @@ Function Unprotect-WindowsSecurity {
         SupportsShouldProcess = $true,
         ConfirmImpact = 'High'
     )]
+    [OutputType([System.String])]
     param (
         [Parameter(Mandatory = $false)]
         [System.Management.Automation.SwitchParameter]$OnlyProcessMitigations,

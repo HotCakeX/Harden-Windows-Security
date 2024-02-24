@@ -26,7 +26,7 @@ It possesses the ability to operate entirely in isolation, useful for systems or
 
 ## How the Compliance Checking Works
 
-This module verifies and validates all of the security measures applied by the `Protect-windowsSecurity` cmdlet. It checks registry keys if the script uses Group Policy or registry, PowerShell cmdlets if the script invokes them and Security Group Policy if the script applies them.
+This module verifies and validates all of the security measures applied by the `Protect-windowsSecurity` cmdlet. It checks registry keys if the module uses Group Policy or registry, PowerShell cmdlets if the module invokes them and Security Group Policy if the module applies them.
 
 Compliance checking strictly follows the guidelines and security measures of this GitHub repository. Any minor deviation from them will result in a `false` value for the corresponding check.
 

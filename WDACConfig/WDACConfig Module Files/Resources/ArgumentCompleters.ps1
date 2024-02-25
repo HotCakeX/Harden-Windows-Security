@@ -158,6 +158,7 @@
     [System.Windows.Forms.OpenFileDialog]$Dialog = New-Object -TypeName 'System.Windows.Forms.OpenFileDialog'
     # Set the filter to show only executable files
     $Dialog.Filter = 'Executable files (*.exe)|*.exe'
+    $Dialog.Title = 'Select the SignTool executable file'
     # Show the dialog and get the result
     [System.String]$Result = $Dialog.ShowDialog()
     # If the user clicked OK, return the selected file path
@@ -174,6 +175,7 @@
     [System.Windows.Forms.OpenFileDialog]$Dialog = New-Object -TypeName 'System.Windows.Forms.OpenFileDialog'
     # Set the filter to show only certificate files
     $Dialog.Filter = 'Certificate files (*.cer)|*.cer'
+    $Dialog.Title = 'Select a certificate file'
     # Show the dialog and get the result
     [System.String]$Result = $Dialog.ShowDialog()
     # If the user clicked OK, return the selected file path
@@ -190,6 +192,7 @@
     [System.Windows.Forms.OpenFileDialog]$Dialog = New-Object -TypeName 'System.Windows.Forms.OpenFileDialog'
     # Set the filter to show only XML files
     $Dialog.Filter = 'XML files (*.xml)|*.xml'
+    $Dialog.Title = 'Select XML files'
     # Show the dialog and get the result
     [System.String]$Result = $Dialog.ShowDialog()
     # If the user clicked OK, return the selected file path
@@ -221,6 +224,26 @@
     # If the user clicked OK, return the selected file path
     if ($Result -eq 'OK') {
         return "`"$($Dialog.FileName)`""
+    }
+}
+
+# Opens File picker GUI so that user can select multiple .xml files
+[System.Management.Automation.ScriptBlock]$ArgumentCompleterMultipleXmlFilePathsPicker = {
+    # Load the System.Windows.Forms assembly
+    Add-Type -AssemblyName 'System.Windows.Forms'
+    # Create a new OpenFileDialog object
+    [System.Windows.Forms.OpenFileDialog]$Dialog = New-Object -TypeName 'System.Windows.Forms.OpenFileDialog'
+    # Set the filter to show only XML files
+    $Dialog.Filter = 'XML files (*.xml)|*.xml'
+    # Set the MultiSelect property to true
+    $Dialog.MultiSelect = $true
+    $Dialog.ShowPreview = $true
+    $Dialog.Title = 'Select Supplemental Policies to merge'
+    # Show the dialog and get the result
+    [System.String]$Result = $Dialog.ShowDialog()
+    # If the user clicked OK, return the selected file paths
+    if ($Result -eq 'OK') {
+        return "`"$($Dialog.FileNames -join '","')`""
     }
 }
 

@@ -177,7 +177,7 @@ Function Deploy-SignedWDACConfig {
                         Write-Verbose -Message 'The policy type is base policy and it applies to user mode files, yet the policy prevents SignTool.exe from executing. As a precautionary measure, scanning and including the SignTool.exe in the policy before deployment so you can modify/remove the signed policy later from the system.'
 
                         Write-Verbose -Message 'Creating a temporary folder to store the symbolic link to the SignTool.exe'
-                        [System.IO.DirectoryInfo]$SymLinksStorage = New-Item -Path ($UserTempDirectoryPath + 'SymLinkStorage' + $(New-Guid)) -ItemType Directory -Force
+                        [System.IO.DirectoryInfo]$SymLinksStorage = New-Item -Path (Join-Path -Path $UserConfigDir -ChildPath 'StagingArea' -AdditionalChildPath 'SymLinkStorage-Deploy-SignedWDACConfig', (New-Guid)) -ItemType Directory -Force
 
                         Write-Verbose -Message 'Creating symbolic link to the SignTool.exe'
                         New-Item -ItemType SymbolicLink -Path "$SymLinksStorage\SignTool.exe" -Target $SignToolPathFinal | Out-Null

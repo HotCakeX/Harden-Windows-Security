@@ -241,8 +241,8 @@ Function ConvertTo-WDACPolicy {
             return
         }
 
-        Write-Verbose -Message 'ConvertTo-WDACPolicy: Creating a temporary folder to store the symbolic links to the files and WDAC polices'
-        [System.IO.DirectoryInfo]$SymLinksStorage = New-Item -Path ($UserTempDirectoryPath + 'SymLinkStorage' + $(New-Guid)) -ItemType Directory -Force
+        Write-Verbose -Message 'ConvertTo-WDACPolicy: Creating a temporary folder to store the symbolic links to the files and for WDAC polices'
+        [System.IO.DirectoryInfo]$SymLinksStorage = New-Item -Path (Join-Path -Path $UserConfigDir -ChildPath 'StagingArea' -AdditionalChildPath 'SymLinkStorage-ConvertTo-WDACPolicy', (New-Guid)) -ItemType Directory -Force
 
         # The path to the TEMP Supplemental WDAC Policy file
         [System.IO.FileInfo]$WDACPolicyPathTemp = (Join-Path -Path $SymLinksStorage -ChildPath 'TEMP CiPolicy From Logs.xml')

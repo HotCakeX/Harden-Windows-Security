@@ -48,7 +48,7 @@ Function Get-KernelModeDriversAudit {
         Write-Verbose -Message "KernelModeDriversPaths count after deduplication based on file path: $($KernelModeDriversPaths.count)"
 
         Write-Verbose -Message 'Creating a temporary folder to store the symbolic links to the driver files'
-        [System.IO.DirectoryInfo]$SymLinksStorage = New-Item -Path ($UserTempDirectoryPath + 'SymLinkStorage' + $(New-Guid)) -ItemType Directory -Force
+        [System.IO.DirectoryInfo]$SymLinksStorage = New-Item -Path (Join-Path -Path $UserConfigDir -ChildPath 'StagingArea' -AdditionalChildPath 'SymLinkStorage-Get-KernelModeDriversAudit', (New-Guid)) -ItemType Directory -Force
 
         Write-Verbose -Message 'Creating symbolic links to the driver files'
         Foreach ($File in $KernelModeDriversPaths) {

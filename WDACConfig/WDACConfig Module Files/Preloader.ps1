@@ -17,7 +17,8 @@ try {
     if ((Test-Path -Path 'Variable:\FullOSBuild') -eq $false) { New-Variable -Name 'FullOSBuild' -Value "$OSBuild.$UBR" -Option 'Constant' -Scope 'Script' -Description 'Create full OS build number as seen in Windows Settings' -Force }
     if ((Test-Path -Path 'Variable:\ModuleRootPath') -eq $false) { New-Variable -Name 'ModuleRootPath' -Value ($PSScriptRoot) -Option 'Constant' -Scope 'Global' -Description 'Storing the value of $PSScriptRoot in a global constant variable to allow the internal functions to use it when navigating the module structure' -Force }
     if ((Test-Path -Path 'Variable:\CISchemaPath') -eq $false) { New-Variable -Name 'CISchemaPath' -Value "$Env:SystemDrive\Windows\schemas\CodeIntegrity\cipolicy.xsd" -Option 'Constant' -Scope 'Global' -Description 'Storing the path to the WDAC Code Integrity Schema XSD file' -Force }
-    if ((Test-Path -Path 'Variable:\UserConfigDir') -eq $false) { New-Variable -Name 'UserConfigDir' -Value "$Env:ProgramFiles\WDACConfig" -Option 'Constant' -Scope 'Global' -Description 'Storing the path to the WDACConfig user configurations in the Program Files' -Force }
+    if ((Test-Path -Path 'Variable:\UserConfigDir') -eq $false) { New-Variable -Name 'UserConfigDir' -Value "$Env:ProgramFiles\WDACConfig" -Option 'Constant' -Scope 'Global' -Description 'Storing the path to the WDACConfig folder in the Program Files' -Force }
+    if ((Test-Path -Path 'Variable:\UserConfigJson') -eq $false) { New-Variable -Name 'UserConfigJson' -Value "$UserConfigDir\UserConfigurations.json" -Option 'Constant' -Scope 'Global' -Description 'Storing the path to User Config JSON file in the WDACConfig folder in the Program Files' -Force }
 }
 catch {
     Throw [System.InvalidOperationException] 'Could not set the required global variables.'
@@ -43,6 +44,32 @@ foreach ($File in (Get-ChildItem -Recurse -File -Path $ModuleRootPath -Include '
     }
     else {
         Throw [System.Security.SecurityException] "The module has been tampered with, signature status of the file $($File.FullName) is $($Signature.Status)"
+    }
+}
+
+# Move the UserConfigurations.json file from the old location to the new location for smooth transition
+# Will be removed in a future release once all the users have moved to the new location
+if (Test-Path -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json" -PathType Leaf) {
+
+    # Create the new directory if it doesn't exist
+    if (-NOT (Test-Path -Path $UserConfigDir -PathType Container)) {
+
+        New-Item -ItemType Directory -Path $UserConfigDir -Force
+    }
+
+    # Only move the file if it doesn't already exist in the new location
+    if (-NOT (Test-Path -Path $UserConfigJson -PathType Leaf)) {
+
+        # Move the file to the new location
+        Move-Item -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json" -Destination $UserConfigJson -Force
+
+        # Remove the old directory
+        Remove-Item -Path "$UserAccountDirectoryPath\.WDACConfig" -Force -Recurse
+    }
+    # If the file already exists in the new location, then remove the old directory
+    else {
+        # Remove the old directory
+        Remove-Item -Path "$UserAccountDirectoryPath\.WDACConfig" -Force -Recurse
     }
 }
 

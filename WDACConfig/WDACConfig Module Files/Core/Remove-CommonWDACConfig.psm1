@@ -24,7 +24,7 @@ Function Remove-CommonWDACConfig {
         # Create User configuration folder if it doesn't already exist
         if (-NOT (Test-Path -Path (Split-Path -Path $UserConfigJson -Parent))) {
             New-Item -ItemType Directory -Path (Split-Path -Path $UserConfigJson -Parent) -Force | Out-Null
-            Write-Verbose -Message 'The .WDACConfig folder in the current user folder has been created because it did not exist.'
+            Write-Verbose -Message 'The WDACConfig folder in Program Files has been created because it did not exist.'
         }
 
         # Create User configuration file if it doesn't already exist

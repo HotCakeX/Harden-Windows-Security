@@ -208,7 +208,7 @@ Function Edit-SignedWDACConfig {
         }
 
         # Create the staging area for the Edit-SignedWDACConfig cmdlet
-        New-Item -Path $StagingArea -ItemType Directory | Out-Null
+        New-Item -Path $StagingArea -ItemType Directory -Force | Out-Null
 
         #Region User-Configurations-Processing-Validation
         # Get SignToolPath from user parameter or user config file or auto-detect it

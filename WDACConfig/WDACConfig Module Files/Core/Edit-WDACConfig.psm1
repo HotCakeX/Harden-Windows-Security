@@ -134,7 +134,7 @@ Function Edit-WDACConfig {
 
         # if -SkipVersionCheck wasn't passed, run the updater
         if (-NOT $SkipVersionCheck) { Update-self -InvocationStatement $MyInvocation.Statement }
-       
+
         #Define a staging area for Edit-WDACConfig cmdlet
         [System.IO.DirectoryInfo]$StagingArea = (Join-Path -Path $UserConfigDir -ChildPath 'StagingArea' -AdditionalChildPath 'Edit-WDACConfig')
 
@@ -233,7 +233,7 @@ Function Edit-WDACConfig {
             Write-Verbose -Message 'Creating a copy of the original policy in Temp folder so that the original one will be unaffected'
             # Get the policy file name
             [System.String]$PolicyFileName = Split-Path -Path $PolicyPath -Leaf
-            
+
             Copy-Item -Path $PolicyPath -Destination $StagingArea -Force
             [System.String]$PolicyPath = "$StagingArea\$PolicyFileName"
 
@@ -457,7 +457,7 @@ Function Edit-WDACConfig {
             Write-Verbose -Message 'Creating a copy of the original policy in Temp folder so that the original one will be unaffected'
             # Get the policy file name
             [System.String]$PolicyFileName = Split-Path -Path $PolicyPath -Leaf
-            
+
             Copy-Item -Path $PolicyPath -Destination $StagingArea -Force
             [System.String]$PolicyPath = "$StagingArea\$PolicyFileName"
 

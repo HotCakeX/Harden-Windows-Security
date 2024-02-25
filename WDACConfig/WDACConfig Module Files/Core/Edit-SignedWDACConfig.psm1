@@ -251,7 +251,7 @@ Function Edit-SignedWDACConfig {
                 }
             }
         }
-        #Endregion User-Configurations-Processing-Validation        
+        #Endregion User-Configurations-Processing-Validation
 
         # argument tab auto-completion and ValidateSet for Policy names
         Class BasePolicyNamez : System.Management.Automation.IValidateSetValuesGenerator {
@@ -322,7 +322,7 @@ Function Edit-SignedWDACConfig {
             Write-Verbose -Message 'Creating a copy of the original policy in Temp folder so that the original one will be unaffected'
             # Get the policy file name
             [System.String]$PolicyFileName = Split-Path -Path $PolicyPath -Leaf
-            
+
             Copy-Item -Path $PolicyPath -Destination $StagingArea -Force
             [System.String]$PolicyPath = "$StagingArea\$PolicyFileName"
 
@@ -589,7 +589,7 @@ Function Edit-SignedWDACConfig {
             Write-Verbose -Message 'Creating a copy of the original policy in Temp folder so that the original one will be unaffected'
             # Get the policy file name
             [System.String]$PolicyFileName = Split-Path -Path $PolicyPath -Leaf
-            
+
             Copy-Item -Path $PolicyPath -Destination $StagingArea -Force
             [System.String]$PolicyPath = "$StagingArea\$PolicyFileName"
 

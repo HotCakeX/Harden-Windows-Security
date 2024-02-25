@@ -80,12 +80,12 @@ Function Update-self {
             # Do this if the module was installed properly using Install-module cmdlet
             try {
                 Uninstall-Module -Name 'WDACConfig' -AllVersions -Force -ErrorAction Stop
-                Install-Module -Name 'WDACConfig' -RequiredVersion $LatestVersion -Force
+                Install-Module -Name 'WDACConfig' -RequiredVersion $LatestVersion -Scope AllUsers -Force
                 # Will not import the new module version in the current session because of the constant variables. New version is automatically imported when the main cmdlet is run in a new session.
             }
             # Do this if module files/folder was just copied to Documents folder and not properly installed - Should rarely happen
             catch {
-                Install-Module -Name 'WDACConfig' -RequiredVersion $LatestVersion -Force
+                Install-Module -Name 'WDACConfig' -RequiredVersion $LatestVersion -Scope AllUsers -Force
                 # Will not import the new module version in the current session because of the constant variables. New version is automatically imported when the main cmdlet is run in a new session.
             }
             # Make sure the old version isn't run after update

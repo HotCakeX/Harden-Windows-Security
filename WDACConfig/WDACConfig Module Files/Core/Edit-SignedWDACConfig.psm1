@@ -174,6 +174,9 @@ Function Edit-SignedWDACConfig {
         # Detecting if Verbose switch is used
         $PSBoundParameters.Verbose.IsPresent ? ([System.Boolean]$Verbose = $true) : ([System.Boolean]$Verbose = $false) | Out-Null
 
+        # Detecting if Debug switch is used, will do debugging actions based on that
+        $PSBoundParameters.Debug.IsPresent ? ([System.Boolean]$Debug = $true) : ([System.Boolean]$Debug = $false) | Out-Null
+
         # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
@@ -195,6 +198,17 @@ Function Edit-SignedWDACConfig {
 
         # if -SkipVersionCheck wasn't passed, run the updater
         if (-NOT $SkipVersionCheck) { Update-self -InvocationStatement $MyInvocation.Statement }
+
+        # Define a staging area for Edit-SignedWDACConfig cmdlet
+        [System.IO.DirectoryInfo]$StagingArea = (Join-Path -Path $UserConfigDir -ChildPath 'StagingArea' -AdditionalChildPath 'Edit-SignedWDACConfig')
+
+        # Delete it if it exists already with possible content with previous runs
+        if (Test-Path -PathType Container -Path $StagingArea) {
+            Remove-Item -Path $StagingArea -Recurse -Force
+        }
+
+        # Create the staging area for the Edit-SignedWDACConfig cmdlet
+        New-Item -Path $StagingArea -ItemType Directory | Out-Null
 
         #Region User-Configurations-Processing-Validation
         # Get SignToolPath from user parameter or user config file or auto-detect it
@@ -237,10 +251,7 @@ Function Edit-SignedWDACConfig {
                 }
             }
         }
-        #Endregion User-Configurations-Processing-Validation
-
-        # Detecting if Debug switch is used, will do debugging actions based on that
-        $PSBoundParameters.Debug.IsPresent ? ([System.Boolean]$Debug = $true) : ([System.Boolean]$Debug = $false) | Out-Null
+        #Endregion User-Configurations-Processing-Validation        
 
         # argument tab auto-completion and ValidateSet for Policy names
         Class BasePolicyNamez : System.Management.Automation.IValidateSetValuesGenerator {
@@ -311,10 +322,9 @@ Function Edit-SignedWDACConfig {
             Write-Verbose -Message 'Creating a copy of the original policy in Temp folder so that the original one will be unaffected'
             # Get the policy file name
             [System.String]$PolicyFileName = Split-Path -Path $PolicyPath -Leaf
-            # make sure no file with the same name already exists in Temp folder
-            Remove-Item -Path "$UserTempDirectoryPath\$PolicyFileName" -Force -ErrorAction SilentlyContinue
-            Copy-Item -Path $PolicyPath -Destination $UserTempDirectoryPath -Force
-            [System.String]$PolicyPath = "$UserTempDirectoryPath\$PolicyFileName"
+            
+            Copy-Item -Path $PolicyPath -Destination $StagingArea -Force
+            [System.String]$PolicyPath = "$StagingArea\$PolicyFileName"
 
             Write-Verbose -Message 'Retrieving the Base policy name and ID'
             [System.Xml.XmlDocument]$Xml = Get-Content -Path $PolicyPath
@@ -579,10 +589,9 @@ Function Edit-SignedWDACConfig {
             Write-Verbose -Message 'Creating a copy of the original policy in Temp folder so that the original one will be unaffected'
             # Get the policy file name
             [System.String]$PolicyFileName = Split-Path -Path $PolicyPath -Leaf
-            # make sure no file with the same name already exists in Temp folder
-            Remove-Item -Path "$UserTempDirectoryPath\$PolicyFileName" -Force -ErrorAction SilentlyContinue
-            Copy-Item -Path $PolicyPath -Destination $UserTempDirectoryPath -Force
-            [System.String]$PolicyPath = "$UserTempDirectoryPath\$PolicyFileName"
+            
+            Copy-Item -Path $PolicyPath -Destination $StagingArea -Force
+            [System.String]$PolicyPath = "$StagingArea\$PolicyFileName"
 
             Write-Verbose -Message 'Retrieving the Base policy name and ID'
             [System.Xml.XmlDocument]$Xml = Get-Content -Path $PolicyPath
@@ -710,12 +719,12 @@ Function Edit-SignedWDACConfig {
 
                         # Create a folder in Temp directory to copy the files that are not included in user-selected program path(s)
                         # but detected in Event viewer audit logs, scan that folder, and in the end delete it
-                        New-Item -Path "$UserTempDirectoryPath\TemporaryScanFolderForEventViewerFiles" -ItemType Directory -Force | Out-Null
+                        New-Item -Path "$StagingArea\TemporaryScanFolderForEventViewerFiles" -ItemType Directory -Force | Out-Null
 
                         Write-Verbose -Message 'The following file(s) are being copied to the TEMP directory for scanning because they were found in event logs but did not exist in any of the user-selected paths:'
                         $TestFilePathResults | ForEach-Object -Process {
                             Write-Verbose -Message "$_"
-                            Copy-Item -Path $_ -Destination "$UserTempDirectoryPath\TemporaryScanFolderForEventViewerFiles\" -Force -ErrorAction SilentlyContinue
+                            Copy-Item -Path $_ -Destination "$StagingArea\TemporaryScanFolderForEventViewerFiles\" -Force -ErrorAction SilentlyContinue
                         }
 
                         # Create a policy XML file for available files on the disk
@@ -723,7 +732,7 @@ Function Edit-SignedWDACConfig {
                         # Creating a hash table to dynamically add parameters based on user input and pass them to New-Cipolicy cmdlet
                         [System.Collections.Hashtable]$AvailableFilesOnDiskPolicyMakerHashTable = @{
                             FilePath               = '.\RulesForFilesNotInUserSelectedPaths.xml'
-                            ScanPath               = "$UserTempDirectoryPath\TemporaryScanFolderForEventViewerFiles\"
+                            ScanPath               = "$StagingArea\TemporaryScanFolderForEventViewerFiles\"
                             Level                  = $Level -eq 'FilePath' ? 'FilePublisher' : $Level # Since FilePath will not be valid for files scanned in the temp directory (because they weren't in any user-selected paths), using FilePublisher as level in case user chose FilePath as level
                             Fallback               = $Fallbacks -eq 'FilePath' ? 'Hash' : $Fallbacks # Since FilePath will not be valid for files scanned in the temp directory (because they weren't in any user-selected paths), using Hash as Fallback in case user chose FilePath as Fallback
                             MultiplePolicyFormat   = $true
@@ -744,7 +753,7 @@ Function Edit-SignedWDACConfig {
 
                         # Delete the Temporary folder in the TEMP folder
                         Write-Verbose -Message 'Deleting the Temporary folder in the TEMP folder'
-                        Remove-Item -Recurse -Path "$UserTempDirectoryPath\TemporaryScanFolderForEventViewerFiles\" -Force
+                        Remove-Item -Recurse -Path "$StagingArea\TemporaryScanFolderForEventViewerFiles\" -Force
                     }
                 }
 
@@ -1159,18 +1168,18 @@ Function Edit-SignedWDACConfig {
                     Write-ColorfulText -Color TeaGreen -InputText 'Creating allow rules for SignTool.exe in the DefaultWindows base policy so you can continue using it after deploying the DefaultWindows base policy.'
 
                     Write-Verbose -Message 'Creating a new folder in the TEMP directory to copy SignTool.exe to it'
-                    New-Item -Path "$UserTempDirectoryPath\TemporarySignToolFile" -ItemType Directory -Force | Out-Null
+                    New-Item -Path "$StagingArea\TemporarySignToolFile" -ItemType Directory -Force | Out-Null
 
                     Write-Verbose -Message 'Copying SignTool.exe to the folder in the TEMP directory'
-                    Copy-Item -Path $SignToolPathFinal -Destination "$UserTempDirectoryPath\TemporarySignToolFile" -Force
+                    Copy-Item -Path $SignToolPathFinal -Destination "$StagingArea\TemporarySignToolFile" -Force
 
                     Write-Verbose -Message 'Scanning the folder in the TEMP directory to create a policy for SignTool.exe'
-                    New-CIPolicy -ScanPath "$UserTempDirectoryPath\TemporarySignToolFile" -Level FilePublisher -Fallback Hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -AllowFileNameFallbacks -FilePath .\SignTool.xml
+                    New-CIPolicy -ScanPath "$StagingArea\TemporarySignToolFile" -Level FilePublisher -Fallback Hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -AllowFileNameFallbacks -FilePath .\SignTool.xml
 
                     # Delete the Temporary folder in the TEMP folder
                     if (!$Debug) {
                         Write-Verbose -Message 'Deleting the Temporary folder in the TEMP directory'
-                        Remove-Item -Recurse -Path "$UserTempDirectoryPath\TemporarySignToolFile" -Force
+                        Remove-Item -Recurse -Path "$StagingArea\TemporarySignToolFile" -Force
                     }
 
                     if ($PSHOME -notlike 'C:\Program Files\WindowsApps\*') {

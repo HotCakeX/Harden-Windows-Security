@@ -112,6 +112,9 @@ Function Edit-WDACConfig {
         # Detecting if Verbose switch is used
         $PSBoundParameters.Verbose.IsPresent ? ([System.Boolean]$Verbose = $true) : ([System.Boolean]$Verbose = $false) | Out-Null
 
+        # Detecting if Debug switch is used, will do debugging actions based on that
+        $PSBoundParameters.Debug.IsPresent ? ([System.Boolean]$Debug = $true) : ([System.Boolean]$Debug = $false) | Out-Null
+
         # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
@@ -131,9 +134,17 @@ Function Edit-WDACConfig {
 
         # if -SkipVersionCheck wasn't passed, run the updater
         if (-NOT $SkipVersionCheck) { Update-self -InvocationStatement $MyInvocation.Statement }
+       
+        #Define a staging area for Edit-WDACConfig cmdlet
+        [System.IO.DirectoryInfo]$StagingArea = (Join-Path -Path $UserConfigDir -ChildPath 'StagingArea' -AdditionalChildPath 'Edit-WDACConfig')
 
-        # Detecting if Debug switch is used, will do debugging actions based on that
-        $PSBoundParameters.Debug.IsPresent ? ([System.Boolean]$Debug = $true) : ([System.Boolean]$Debug = $false) | Out-Null
+        # Delete it if it exists already with possible content with previous runs
+        if (Test-Path -PathType Container -Path $StagingArea) {
+            Remove-Item -Path $StagingArea -Recurse -Force
+        }
+
+        # Create the staging area for the Edit-WDACConfig cmdlet
+        New-Item -Path $StagingArea -ItemType Directory | Out-Null
 
         #Region User-Configurations-Processing-Validation
         # make sure the ParameterSet being used has PolicyPath parameter - Then enforces "mandatory" attribute for the parameter
@@ -222,10 +233,9 @@ Function Edit-WDACConfig {
             Write-Verbose -Message 'Creating a copy of the original policy in Temp folder so that the original one will be unaffected'
             # Get the policy file name
             [System.String]$PolicyFileName = Split-Path -Path $PolicyPath -Leaf
-            # make sure no file with the same name already exists in Temp folder
-            Remove-Item -Path "$UserTempDirectoryPath\$PolicyFileName" -Force -ErrorAction SilentlyContinue
-            Copy-Item -Path $PolicyPath -Destination $UserTempDirectoryPath -Force
-            [System.String]$PolicyPath = "$UserTempDirectoryPath\$PolicyFileName"
+            
+            Copy-Item -Path $PolicyPath -Destination $StagingArea -Force
+            [System.String]$PolicyPath = "$StagingArea\$PolicyFileName"
 
             Write-Verbose -Message 'Retrieving the Base policy name and ID'
             [System.Xml.XmlDocument]$Xml = Get-Content -Path $PolicyPath
@@ -447,10 +457,9 @@ Function Edit-WDACConfig {
             Write-Verbose -Message 'Creating a copy of the original policy in Temp folder so that the original one will be unaffected'
             # Get the policy file name
             [System.String]$PolicyFileName = Split-Path -Path $PolicyPath -Leaf
-            # make sure no file with the same name already exists in Temp folder
-            Remove-Item -Path "$UserTempDirectoryPath\$PolicyFileName" -Force -ErrorAction SilentlyContinue
-            Copy-Item -Path $PolicyPath -Destination $UserTempDirectoryPath -Force
-            [System.String]$PolicyPath = "$UserTempDirectoryPath\$PolicyFileName"
+            
+            Copy-Item -Path $PolicyPath -Destination $StagingArea -Force
+            [System.String]$PolicyPath = "$StagingArea\$PolicyFileName"
 
             Write-Verbose -Message 'Retrieving the Base policy name and ID'
             [System.Xml.XmlDocument]$Xml = Get-Content -Path $PolicyPath
@@ -550,12 +559,12 @@ Function Edit-WDACConfig {
 
                         # Create a folder in Temp directory to copy the files that are not included in user-selected program path(s)
                         # but detected in Event viewer audit logs, scan that folder, and in the end delete it
-                        New-Item -Path "$UserTempDirectoryPath\TemporaryScanFolderForEventViewerFiles" -ItemType Directory -Force | Out-Null
+                        New-Item -Path "$StagingArea\TemporaryScanFolderForEventViewerFiles" -ItemType Directory -Force | Out-Null
 
                         Write-Verbose -Message 'The following file(s) are being copied to the TEMP directory for scanning because they were found in event logs but did not exist in any of the user-selected paths:'
                         $TestFilePathResults | ForEach-Object -Process {
                             Write-Verbose -Message "$_"
-                            Copy-Item -Path $_ -Destination "$UserTempDirectoryPath\TemporaryScanFolderForEventViewerFiles\" -Force -ErrorAction SilentlyContinue
+                            Copy-Item -Path $_ -Destination "$StagingArea\TemporaryScanFolderForEventViewerFiles\" -Force -ErrorAction SilentlyContinue
                         }
 
                         # Create a policy XML file for available files on the disk
@@ -563,7 +572,7 @@ Function Edit-WDACConfig {
                         # Creating a hash table to dynamically add parameters based on user input and pass them to New-Cipolicy cmdlet
                         [System.Collections.Hashtable]$AvailableFilesOnDiskPolicyMakerHashTable = @{
                             FilePath               = '.\RulesForFilesNotInUserSelectedPaths.xml'
-                            ScanPath               = "$UserTempDirectoryPath\TemporaryScanFolderForEventViewerFiles\"
+                            ScanPath               = "$StagingArea\TemporaryScanFolderForEventViewerFiles\"
                             Level                  = $Level -eq 'FilePath' ? 'FilePublisher' : $Level # Since FilePath will not be valid for files scanned in the temp directory (because they weren't in any user-selected paths), using FilePublisher as level in case user chose FilePath as level
                             Fallback               = $Fallbacks -eq 'FilePath' ? 'Hash' : $Fallbacks # Since FilePath will not be valid for files scanned in the temp directory (because they weren't in any user-selected paths), using Hash as Fallback in case user chose FilePath as Fallback
                             MultiplePolicyFormat   = $true
@@ -584,7 +593,7 @@ Function Edit-WDACConfig {
 
                         # Delete the Temporary folder in the TEMP folder
                         Write-Verbose -Message 'Deleting the Temporary folder in the TEMP folder'
-                        Remove-Item -Recurse -Path "$UserTempDirectoryPath\TemporaryScanFolderForEventViewerFiles\" -Force
+                        Remove-Item -Recurse -Path "$StagingArea\TemporaryScanFolderForEventViewerFiles\" -Force
                     }
                 }
 

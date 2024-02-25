@@ -21,18 +21,15 @@ Function Remove-CommonWDACConfig {
         # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
-        # Assigning the path to the UserConfigurations.json file
-        [System.IO.FileInfo]$Path = "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json"
-
         # Create User configuration folder if it doesn't already exist
-        if (-NOT (Test-Path -Path (Split-Path -Path $Path -Parent))) {
-            New-Item -ItemType Directory -Path (Split-Path -Path $Path -Parent) -Force | Out-Null
+        if (-NOT (Test-Path -Path (Split-Path -Path $UserConfigJson -Parent))) {
+            New-Item -ItemType Directory -Path (Split-Path -Path $UserConfigJson -Parent) -Force | Out-Null
             Write-Verbose -Message 'The .WDACConfig folder in the current user folder has been created because it did not exist.'
         }
 
         # Create User configuration file if it doesn't already exist
-        if (-NOT (Test-Path -Path $Path)) {
-            New-Item -ItemType File -Path (Split-Path -Path $Path -Parent) -Name (Split-Path -Path $Path -Leaf) -Force | Out-Null
+        if (-NOT (Test-Path -Path $UserConfigJson)) {
+            New-Item -ItemType File -Path (Split-Path -Path $UserConfigJson -Parent) -Name (Split-Path -Path $UserConfigJson -Leaf) -Force | Out-Null
             Write-Verbose -Message 'The UserConfigurations.json file has been created because it did not exist.'
         }
 
@@ -48,7 +45,7 @@ Function Remove-CommonWDACConfig {
             # Prompt for confirmation before deleting the entire User Configurations
             if ($PSCmdlet.ShouldProcess('This PC', 'Delete the entire User Configurations for WDACConfig module')) {
 
-                Remove-Item -Path $Path -Force
+                Remove-Item -Path $UserConfigJson -Force
                 Write-Verbose -Message 'User Configurations for WDACConfig module have been deleted.'
             }
 
@@ -59,14 +56,14 @@ Function Remove-CommonWDACConfig {
         }
 
         # Read the current user configurations
-        [System.Object[]]$CurrentUserConfigurations = Get-Content -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json"
+        [System.Object[]]$CurrentUserConfigurations = Get-Content -Path "$UserConfigDir\UserConfigurations.json"
 
         # If the file exists but is corrupted and has bad values, rewrite it
         try {
             $CurrentUserConfigurations = $CurrentUserConfigurations | ConvertFrom-Json
         }
         catch {
-            Set-Content -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json" -Value ''
+            Set-Content -Path "$UserConfigDir\UserConfigurations.json" -Value ''
         }
 
         # A hashtable to hold the User configurations
@@ -170,13 +167,13 @@ Function Remove-CommonWDACConfig {
         }
         catch {
             Write-Warning -Message "$_`nclearing it."
-            Set-Content -Path $Path -Value '' -Force
+            Set-Content -Path $UserConfigJson -Value '' -Force
         }
 
         if ($IsValid) {
             # Update the User Configurations file
             Write-Verbose -Message 'Saving the changes'
-            $UserConfigurationsJSON | Set-Content -Path $Path -Force
+            $UserConfigurationsJSON | Set-Content -Path $UserConfigJson -Force
         }
         else {
             Throw 'The User Configurations file is not valid.'

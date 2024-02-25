@@ -17,23 +17,20 @@ Function Get-CommonWDACConfig {
         # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
-        # Assigning the path to the UserConfigurations.json file
-        [System.IO.FileInfo]$Path = "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json"
-
         # Create User configuration folder if it doesn't already exist
-        if (-NOT (Test-Path -Path (Split-Path -Path $Path -Parent))) {
-            New-Item -ItemType Directory -Path (Split-Path -Path $Path -Parent) -Force | Out-Null
+        if (-NOT (Test-Path -Path (Split-Path -Path $UserConfigJson -Parent))) {
+            New-Item -ItemType Directory -Path (Split-Path -Path $UserConfigJson -Parent) -Force | Out-Null
             Write-Verbose -Message 'The .WDACConfig folder in the current user folder has been created because it did not exist.'
         }
 
         # Create User configuration file if it doesn't already exist
-        if (-NOT (Test-Path -Path $Path)) {
-            New-Item -ItemType File -Path (Split-Path -Path $Path -Parent) -Name (Split-Path -Path $Path -Leaf) -Force | Out-Null
+        if (-NOT (Test-Path -Path $UserConfigJson)) {
+            New-Item -ItemType File -Path (Split-Path -Path $UserConfigJson -Parent) -Name (Split-Path -Path $UserConfigJson -Leaf) -Force | Out-Null
             Write-Verbose -Message 'The UserConfigurations.json file has been created because it did not exist.'
         }
 
         if ($Open) {
-            . $Path
+            . $UserConfigJson
 
             # set a boolean value that returns from the Process and End blocks as well
             [System.Boolean]$ReturnAndDone = $true
@@ -42,7 +39,7 @@ Function Get-CommonWDACConfig {
         }
 
         # Display this message if User Configuration file is empty or only has spaces/new lines
-        if ([System.String]::IsNullOrWhiteSpace((Get-Content -Path $Path))) {
+        if ([System.String]::IsNullOrWhiteSpace((Get-Content -Path $UserConfigJson))) {
             Write-Verbose -Message 'Your current WDAC User Configurations is empty.'
 
             [System.Boolean]$ReturnAndDone = $true
@@ -51,7 +48,7 @@ Function Get-CommonWDACConfig {
         }
 
         Write-Verbose -Message 'Reading the current user configurations'
-        [System.Object[]]$CurrentUserConfigurations = Get-Content -Path $Path -Force
+        [System.Object[]]$CurrentUserConfigurations = Get-Content -Path $UserConfigJson -Force
 
         # If the file exists but is corrupted and has bad values, rewrite it
         try {
@@ -59,7 +56,7 @@ Function Get-CommonWDACConfig {
         }
         catch {
             Write-Warning -Message 'The UserConfigurations.json was corrupted, clearing it.'
-            Set-Content -Path $Path -Value ''
+            Set-Content -Path $UserConfigJson -Value ''
 
             [System.Boolean]$ReturnAndDone = $true
             # return/exit from the begin block

@@ -120,24 +120,21 @@ Function Set-CommonWDACConfig {
             Throw [System.ArgumentException] 'No parameter was selected.'
         }
 
-        # Assigning the path to the UserConfigurations.json file
-        [System.IO.FileInfo]$Path = "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json"
-
         # Create User configuration folder if it doesn't already exist
-        if (-NOT (Test-Path -Path (Split-Path -Path $Path -Parent))) {
-            New-Item -ItemType Directory -Path (Split-Path -Path $Path -Parent) -Force | Out-Null
+        if (-NOT (Test-Path -Path (Split-Path -Path $UserConfigJson -Parent))) {
+            New-Item -ItemType Directory -Path (Split-Path -Path $UserConfigJson -Parent) -Force | Out-Null
             Write-Verbose -Message 'The .WDACConfig folder in the current user folder has been created because it did not exist.'
         }
 
         # Create User configuration file if it doesn't already exist
-        if (-NOT (Test-Path -Path $Path)) {
-            New-Item -ItemType File -Path (Split-Path -Path $Path -Parent) -Name (Split-Path -Path $Path -Leaf) -Force | Out-Null
+        if (-NOT (Test-Path -Path $UserConfigJson)) {
+            New-Item -ItemType File -Path (Split-Path -Path $UserConfigJson -Parent) -Name (Split-Path -Path $UserConfigJson -Leaf) -Force | Out-Null
             Write-Verbose -Message 'The UserConfigurations.json file has been created because it did not exist.'
         }
 
         # Trying to read the current user configurations
         Write-Verbose -Message 'Trying to read the current user configurations'
-        [System.Object[]]$CurrentUserConfigurations = Get-Content -Path $Path
+        [System.Object[]]$CurrentUserConfigurations = Get-Content -Path $UserConfigJson
 
         # If the file exists but is corrupted and has bad values, rewrite it
         try {
@@ -145,7 +142,7 @@ Function Set-CommonWDACConfig {
         }
         catch {
             Write-Verbose -Message 'The user configurations file exists but is corrupted and has bad values, rewriting it'
-            Set-Content -Path $Path -Value ''
+            Set-Content -Path $UserConfigJson -Value ''
         }
 
         # A hashtable to hold the User configurations
@@ -256,13 +253,13 @@ Function Set-CommonWDACConfig {
         }
         catch {
             Write-Warning -Message "$_`nclearing it."
-            Set-Content -Path $Path -Value '' -Force
+            Set-Content -Path $UserConfigJson -Value '' -Force
         }
 
         if ($IsValid) {
             # Update the User Configurations file
             Write-Verbose -Message 'Saving the changes'
-            $UserConfigurationsJSON | Set-Content -Path $Path -Force
+            $UserConfigurationsJSON | Set-Content -Path $UserConfigJson -Force
 
             # Display the updated User Configurations
             $UserConfigurationsObject

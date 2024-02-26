@@ -165,20 +165,14 @@ Function Edit-WDACConfig {
             .SYNOPSIS
                 A helper function used to redeploy the base policy in Enforced mode
             .INPUTS
-                None. This function uses the global variables $PolicyName and $PolicyID
+                None. This function uses the global variables: $PolicyName, $PolicyID and $EnforcedModeCIPPath
             .OUTPUTS
                 System.String
             #>
-            [CmdletBinding()]
-            param()
-
-            # Deploy Enforced mode CIP
-            &'C:\Windows\System32\CiTool.exe' --update-policy '.\EnforcedMode.cip' -json | Out-Null
+            &'C:\Windows\System32\CiTool.exe' --update-policy $EnforcedModeCIPPath -json | Out-Null
             Write-ColorfulText -Color Lavender -InputText 'The Base policy with the following details has been Re-Deployed in Enforced Mode:'
             Write-ColorfulText -Color MintGreen -InputText "PolicyName = $PolicyName"
             Write-ColorfulText -Color MintGreen -InputText "PolicyGUID = $PolicyID"
-            # Remove Enforced Mode CIP
-            Remove-Item -Path '.\EnforcedMode.cip' -Force
         }
     }
 
@@ -200,7 +194,7 @@ Function Edit-WDACConfig {
                 $CurrentStep++
                 Write-Progress -Id 9 -Activity 'Creating Audit mode policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                Write-Verbose -Message 'Creating a copy of the original policy in Temp folder so that the original one will be unaffected'
+                Write-Verbose -Message 'Creating a copy of the original policy in the Staging Area so that the original one will be unaffected'
 
                 Copy-Item -LiteralPath $PolicyPath -Destination $StagingArea -Force
                 [System.IO.FileInfo]$PolicyPath = Join-Path -Path $StagingArea -ChildPath (Split-Path -Path $PolicyPath -Leaf)
@@ -307,7 +301,7 @@ Function Edit-WDACConfig {
 
                     # Creating a hash table to dynamically add parameters based on user input and pass them to New-Cipolicy cmdlet
                     [System.Collections.Hashtable]$UserInputProgramFoldersPolicyMakerHashTable = @{
-                        FilePath               = ".\ProgramDir_ScanResults$($i).xml"
+                        FilePath               = "$StagingArea\ProgramDir_ScanResults$($i).xml"
                         ScanPath               = $ProgramsPaths[$i]
                         Level                  = $Level
                         Fallback               = $Fallbacks
@@ -325,31 +319,28 @@ Function Edit-WDACConfig {
                     New-CIPolicy @UserInputProgramFoldersPolicyMakerHashTable
                 }
 
-                # Merge-CiPolicy accepts arrays - collecting all the policy files created by scanning user specified folders
                 Write-Verbose -Message 'Collecting all the policy files created by scanning user specified folders'
 
-                foreach ($file in (Get-ChildItem -File -Path '.\' -Filter 'ProgramDir_ScanResults*.xml')) {
-                    $PolicyXMLFilesArray += $file.FullName
+                foreach ($File in (Get-ChildItem -File -Path $StagingArea -Filter 'ProgramDir_ScanResults*.xml')) {
+                    $PolicyXMLFilesArray += $File.FullName
                 }
 
                 Write-Verbose -Message 'The following policy xml files are going to be merged into the final Supplemental policy and be deployed on the system:'
                 $PolicyXMLFilesArray | ForEach-Object -Process { Write-Verbose -Message "$_" }
+
+                # Define the path for the final Supplemental policy XML
+                [System.IO.FileInfo]$SuppPolicyPath = Join-Path -Path $StagingArea -ChildPath "SupplementalPolicy $SuppPolicyName.xml"
 
                 # Merge all of the policy XML files in the array into the final Supplemental policy
                 $CurrentStep++
                 Write-Progress -Id 9 -Activity 'Merging the policies' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                 Write-Verbose -Message 'Merging all of the policy XML files in the array into the final Supplemental policy'
-                Merge-CIPolicy -PolicyPaths $PolicyXMLFilesArray -OutputFilePath ".\SupplementalPolicy $SuppPolicyName.xml" | Out-Null
+                Merge-CIPolicy -PolicyPaths $PolicyXMLFilesArray -OutputFilePath $SuppPolicyPath | Out-Null
 
                 #Region Supplemental-policy-processing-and-deployment
                 $CurrentStep++
                 Write-Progress -Id 9 -Activity 'Creating Supplemental policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-                Write-Verbose -Message 'Supplemental policy processing and deployment'
-
-                Write-Verbose -Message 'Getting the path of the Supplemental policy'
-                [System.String]$SuppPolicyPath = ".\SupplementalPolicy $SuppPolicyName.xml"
 
                 Write-Verbose -Message 'Converting the policy to a Supplemental policy type and resetting its ID'
                 [System.String]$SuppPolicyID = Set-CIPolicyIdInfo -FilePath $SuppPolicyPath -PolicyName "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath
@@ -360,20 +351,26 @@ Function Edit-WDACConfig {
                 Write-Verbose -Message 'Setting the Supplemental policy version to 1.0.0.0'
                 Set-CIPolicyVersion -FilePath $SuppPolicyPath -Version '1.0.0.0'
 
+                # Define the path for the final Supplemental policy CIP
+                [System.IO.FileInfo]$SupplementalCIPPath = Join-Path -Path $StagingArea -ChildPath "$SuppPolicyID.cip"
+
                 Write-Verbose -Message 'Convert the Supplemental policy to a CIP file'
-                ConvertFrom-CIPolicy -XmlFilePath $SuppPolicyPath -BinaryFilePath "$SuppPolicyID.cip" | Out-Null
+                ConvertFrom-CIPolicy -XmlFilePath $SuppPolicyPath -BinaryFilePath $SupplementalCIPPath | Out-Null
 
                 $CurrentStep++
                 Write-Progress -Id 9 -Activity 'Deploying the Supplemental policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                 Write-Verbose -Message 'Deploying the Supplemental policy'
-                &'C:\Windows\System32\CiTool.exe' --update-policy ".\$SuppPolicyID.cip" -json | Out-Null
+                &'C:\Windows\System32\CiTool.exe' --update-policy $SupplementalCIPPath -json | Out-Null
 
                 Write-ColorfulText -Color Lavender -InputText 'Supplemental policy with the following details has been deployed in Enforced Mode:'
                 Write-ColorfulText -Color MintGreen -InputText "SupplementalPolicyName = $SuppPolicyName"
                 Write-ColorfulText -Color MintGreen -InputText "SupplementalPolicyGUID = $SuppPolicyID"
 
                 #Endregion Supplemental-policy-processing-and-deployment
+
+                # Copy the Supplemental policy to the user's config directory since Staging Area is a temporary location
+                Copy-Item -Path $SuppPolicyPath -Destination $UserConfigDir -Force
 
                 Write-Progress -Id 9 -Activity 'Complete.' -Completed
             }
@@ -391,7 +388,7 @@ Function Edit-WDACConfig {
                 [System.DateTime]$Date = Get-Date
 
                 # An empty array that holds the Policy XML files - This array will eventually be used to create the final Supplemental policy
-                [System.Object[]]$PolicyXMLFilesArray = @()
+                [System.IO.FileInfo[]]$PolicyXMLFilesArray = @()
 
                 #Initiate Live Audit Mode
 
@@ -402,30 +399,29 @@ Function Edit-WDACConfig {
                 $CurrentStep++
                 Write-Progress -Id 10 -Activity 'Creating the Audit mode policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                # Creating a copy of the original policy in Temp folder so that the original one will be unaffected
-                Write-Verbose -Message 'Creating a copy of the original policy in Temp folder so that the original one will be unaffected'
-                # Get the policy file name
-                [System.String]$PolicyFileName = Split-Path -Path $PolicyPath -Leaf
+                Write-Verbose -Message 'Creating a copy of the original policy in the Staging Area so that the original one will be unaffected'
 
                 Copy-Item -Path $PolicyPath -Destination $StagingArea -Force
-                [System.String]$PolicyPath = "$StagingArea\$PolicyFileName"
+                [System.IO.FileInfo]$PolicyPath = Join-Path -Path $StagingArea -ChildPath (Split-Path -Path $PolicyPath -Leaf)
 
                 Write-Verbose -Message 'Retrieving the Base policy name and ID'
                 [System.Xml.XmlDocument]$Xml = Get-Content -Path $PolicyPath
                 [System.String]$PolicyID = $Xml.SiPolicy.PolicyID
-                [System.String]$PolicyName = ($Xml.SiPolicy.Settings.Setting | Where-Object -FilterScript { $_.provider -eq 'PolicyInfo' -and $_.valuename -eq 'Name' -and $_.key -eq 'Information' }).value.string
+                [System.String]$PolicyName = ($Xml.SiPolicy.Settings.Setting | Where-Object -FilterScript { $_.provider -eq 'PolicyInfo' -and $_.valuename -eq 'Name' -and $_.key -eq 'Information' }).Value.String
 
                 Write-Verbose -Message 'Creating Audit Mode CIP'
+                [System.IO.FileInfo]$AuditModeCIPPath = Join-Path -Path $StagingArea -ChildPath 'AuditMode.cip'
                 # Add Audit mode policy rule option
                 Set-RuleOption -FilePath $PolicyPath -Option 3
                 # Create CIP for Audit Mode
-                ConvertFrom-CIPolicy -XmlFilePath $PolicyPath -BinaryFilePath '.\AuditMode.cip' | Out-Null
+                ConvertFrom-CIPolicy -XmlFilePath $PolicyPath -BinaryFilePath $AuditModeCIPPath | Out-Null
 
                 Write-Verbose -Message 'Creating Enforced Mode CIP'
+                [System.IO.FileInfo]$EnforcedModeCIPPath = Join-Path -Path $StagingArea -ChildPath 'EnforcedMode.cip'
                 # Remove Audit mode policy rule option
                 Set-RuleOption -FilePath $PolicyPath -Option 3 -Delete
                 # Create CIP for Enforced Mode
-                ConvertFrom-CIPolicy -XmlFilePath $PolicyPath -BinaryFilePath '.\EnforcedMode.cip' | Out-Null
+                ConvertFrom-CIPolicy -XmlFilePath $PolicyPath -BinaryFilePath $EnforcedModeCIPPath | Out-Null
 
                 #Region Snap-Back-Guarantee
                 Write-Verbose -Message 'Creating Enforced Mode SnapBack guarantee'
@@ -435,7 +431,7 @@ Function Edit-WDACConfig {
                 Write-Progress -Id 10 -Activity 'Deploying the Audit mode policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                 Write-Verbose -Message 'Deploying the Audit mode CIP'
-                &'C:\Windows\System32\CiTool.exe' --update-policy '.\AuditMode.cip' -json | Out-Null
+                &'C:\Windows\System32\CiTool.exe' --update-policy $AuditModeCIPPath -json | Out-Null
 
                 Write-ColorfulText -Color Lavender -InputText 'The Base policy with the following details has been Re-Deployed in Audit Mode:'
                 Write-ColorfulText -Color MintGreen -InputText "PolicyName = $PolicyName"
@@ -502,20 +498,20 @@ Function Edit-WDACConfig {
 
                             # Create a folder in Staging Area to copy the files that are not included in user-selected program path(s)
                             # but detected in Event viewer audit logs, scan that folder, and in the end delete it
-                            New-Item -Path "$StagingArea\TemporaryScanFolderForEventViewerFiles" -ItemType Directory -Force | Out-Null
+                            [System.IO.DirectoryInfo]$TemporaryScanFolderForEventViewerFiles = New-Item -Path "$StagingArea\TemporaryScanFolderForEventViewerFiles" -ItemType Directory -Force
 
                             Write-Verbose -Message 'The following file(s) are being copied to the Staging Area for scanning because they were found in event logs but did not exist in any of the user-selected paths:'
                             $TestFilePathResults | ForEach-Object -Process {
                                 Write-Verbose -Message "$_"
-                                Copy-Item -Path $_ -Destination "$StagingArea\TemporaryScanFolderForEventViewerFiles\" -Force -ErrorAction SilentlyContinue
+                                Copy-Item -Path $_ -Destination $TemporaryScanFolderForEventViewerFiles -Force -ErrorAction SilentlyContinue
                             }
 
                             # Create a policy XML file for available files on the disk
 
                             # Creating a hash table to dynamically add parameters based on user input and pass them to New-Cipolicy cmdlet
                             [System.Collections.Hashtable]$AvailableFilesOnDiskPolicyMakerHashTable = @{
-                                FilePath               = '.\RulesForFilesNotInUserSelectedPaths.xml'
-                                ScanPath               = "$StagingArea\TemporaryScanFolderForEventViewerFiles\"
+                                FilePath               = (Join-Path -Path $StagingArea -ChildPath 'RulesForFilesNotInUserSelectedPaths.xml')
+                                ScanPath               = $TemporaryScanFolderForEventViewerFiles
                                 Level                  = $Level -eq 'FilePath' ? 'FilePublisher' : $Level # Since FilePath will not be valid for files scanned in the Staging Area (because they weren't in any user-selected paths), using FilePublisher as level in case user chose FilePath as level
                                 Fallback               = $Fallbacks -eq 'FilePath' ? 'Hash' : $Fallbacks # Since FilePath will not be valid for files scanned in the Staging Area (because they weren't in any user-selected paths), using Hash as Fallback in case user chose FilePath as Fallback
                                 MultiplePolicyFormat   = $true
@@ -532,11 +528,10 @@ Function Edit-WDACConfig {
                             New-CIPolicy @AvailableFilesOnDiskPolicyMakerHashTable
 
                             # Add the policy XML file to the array that holds policy XML files
-                            $PolicyXMLFilesArray += '.\RulesForFilesNotInUserSelectedPaths.xml'
+                            $PolicyXMLFilesArray += (Join-Path -Path $StagingArea -ChildPath 'RulesForFilesNotInUserSelectedPaths.xml')
 
-                            # Delete the Temporary folder in the TEMP folder
-                            Write-Verbose -Message 'Deleting the Temporary folder in the TEMP folder'
-                            Remove-Item -Recurse -Path "$StagingArea\TemporaryScanFolderForEventViewerFiles\" -Force
+                            Write-Verbose -Message 'Deleting the Temporary folder in the Staging Area'
+                            Remove-Item -Recurse -Path $TemporaryScanFolderForEventViewerFiles -Force
                         }
                     }
 
@@ -557,17 +552,14 @@ Function Edit-WDACConfig {
                         [System.String]$FileRulesHashesResults = Get-FileRules -HashesArray $AuditEventLogsProcessingResults.DeletedFileHashes
                         [System.String]$RuleRefsHashesResults = (Get-RuleRefs -HashesArray $AuditEventLogsProcessingResults.DeletedFileHashes).Trim()
 
-                        # Save the File Rules and File Rule Refs in the FileRulesAndFileRefs.txt in the current working directory for debugging purposes
                         Write-Verbose -Message 'Saving the File Rules and File Rule Refs in the FileRulesAndFileRefs.txt in the current working directory for debugging purposes'
-                        $FileRulesHashesResults + $RuleRefsHashesResults | Out-File -FilePath FileRulesAndFileRefs.txt -Force
+                        $FileRulesHashesResults + $RuleRefsHashesResults | Out-File -FilePath (Join-Path -Path $StagingArea -ChildPath 'FileRulesAndFileRefs.txt') -Force
 
-                        # Put the Rules and RulesRefs in an empty policy file
                         Write-Verbose -Message 'Putting the Rules and RulesRefs in an empty policy file'
-                        New-EmptyPolicy -RulesContent $FileRulesHashesResults -RuleRefsContent $RuleRefsHashesResults | Out-File -FilePath .\DeletedFileHashesEventsPolicy.xml -Force
+                        New-EmptyPolicy -RulesContent $FileRulesHashesResults -RuleRefsContent $RuleRefsHashesResults | Out-File -FilePath (Join-Path -Path $StagingArea -ChildPath 'DeletedFileHashesEventsPolicy.xml') -Force
 
-                        # adding the policy file that consists of rules from audit even logs, to the array
                         Write-Verbose -Message 'Adding the policy file (DeletedFileHashesEventsPolicy.xml) that consists of rules from audit even logs, to the array of XML files'
-                        $PolicyXMLFilesArray += '.\DeletedFileHashesEventsPolicy.xml'
+                        $PolicyXMLFilesArray += (Join-Path -Path $StagingArea -ChildPath 'DeletedFileHashesEventsPolicy.xml')
                     }
                     #Endregion EventCapturing
 
@@ -581,7 +573,7 @@ Function Edit-WDACConfig {
 
                         # Creating a hash table to dynamically add parameters based on user input and pass them to New-Cipolicy cmdlet
                         [System.Collections.Hashtable]$UserInputProgramFoldersPolicyMakerHashTable = @{
-                            FilePath               = ".\ProgramDir_ScanResults$($i).xml"
+                            FilePath               = "$StagingArea\ProgramDir_ScanResults$($i).xml"
                             ScanPath               = $ProgramsPaths[$i]
                             Level                  = $Level
                             Fallback               = $Fallbacks
@@ -599,11 +591,10 @@ Function Edit-WDACConfig {
                         New-CIPolicy @UserInputProgramFoldersPolicyMakerHashTable
                     }
 
-                    # Merge-CiPolicy accepts arrays - collecting all the policy files created by scanning user specified folders
                     Write-Verbose -Message 'Collecting all the policy files created by scanning user specified folders'
 
-                    foreach ($file in (Get-ChildItem -File -Path '.\' -Filter 'ProgramDir_ScanResults*.xml')) {
-                        $PolicyXMLFilesArray += $file.FullName
+                    foreach ($File in (Get-ChildItem -File -Path $StagingArea -Filter 'ProgramDir_ScanResults*.xml')) {
+                        $PolicyXMLFilesArray += $File.FullName
                     }
                     #Endregion Process-Program-Folders-From-User-input
 
@@ -660,13 +651,13 @@ Function Edit-WDACConfig {
                         if ($KernelProtectedHashesBlockResults) {
 
                             # Save the File Rules and File Rule Refs in the FileRulesAndFileRefs.txt in the current working directory for debugging purposes
-                        (Get-FileRules -HashesArray $KernelProtectedHashesBlockResults) + (Get-RuleRefs -HashesArray $KernelProtectedHashesBlockResults) | Out-File -FilePath KernelProtectedFiles.txt -Force
+                        (Get-FileRules -HashesArray $KernelProtectedHashesBlockResults) + (Get-RuleRefs -HashesArray $KernelProtectedHashesBlockResults) | Out-File -FilePath (Join-Path -Path $StagingArea -ChildPath 'KernelProtectedFiles.txt') -Force
 
                             # Put the Rules and RulesRefs in an empty policy file
-                            New-EmptyPolicy -RulesContent (Get-FileRules -HashesArray $KernelProtectedHashesBlockResults) -RuleRefsContent (Get-RuleRefs -HashesArray $KernelProtectedHashesBlockResults) | Out-File -FilePath .\KernelProtectedFiles.xml -Force
+                            New-EmptyPolicy -RulesContent (Get-FileRules -HashesArray $KernelProtectedHashesBlockResults) -RuleRefsContent (Get-RuleRefs -HashesArray $KernelProtectedHashesBlockResults) | Out-File -FilePath (Join-Path -Path $StagingArea -ChildPath 'KernelProtectedFiles.xml') -Force
 
                             # adding the policy file  to the array of xml files
-                            $PolicyXMLFilesArray += '.\KernelProtectedFiles.xml'
+                            $PolicyXMLFilesArray += (Join-Path -Path $StagingArea -ChildPath 'KernelProtectedFiles.xml')
                         }
                         else {
                             Write-Warning -Message "The following Kernel protected files detected, but no hash was found for them in Event viewer logs.`nThis means you didn't run those files/programs when Audit mode was turned on."
@@ -681,11 +672,14 @@ Function Edit-WDACConfig {
                     Write-Verbose -Message 'The following policy xml files are going to be merged into the final Supplemental policy and be deployed on the system:'
                     $PolicyXMLFilesArray | ForEach-Object -Process { Write-Verbose -Message "$_" }
 
+                    # Define the path for the final Supplemental policy XML
+                    [System.IO.FileInfo]$SuppPolicyPath = Join-Path -Path $StagingArea -ChildPath "SupplementalPolicy $SuppPolicyName.xml"
+
                     # Merge all of the policy XML files in the array into the final Supplemental policy
                     $CurrentStep++
                     Write-Progress -Id 10 -Activity 'Merging the policies' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                    Merge-CIPolicy -PolicyPaths $PolicyXMLFilesArray -OutputFilePath ".\SupplementalPolicy $SuppPolicyName.xml" | Out-Null
+                    Merge-CIPolicy -PolicyPaths $PolicyXMLFilesArray -OutputFilePath $SuppPolicyPath | Out-Null
 
                 }
                 # Unlike AllowNewApps parameter, AllowNewAppsAuditEvents parameter performs Event viewer scanning and kernel protected files detection
@@ -711,7 +705,6 @@ Function Edit-WDACConfig {
                 #Region Supplemental-policy-processing-and-deployment
 
                 Write-Verbose -Message 'Supplemental policy processing and deployment'
-                [System.String]$SuppPolicyPath = ".\SupplementalPolicy $SuppPolicyName.xml"
 
                 Write-Verbose -Message 'Converting the policy to a Supplemental policy type and resetting its ID'
                 [System.String]$SuppPolicyID = Set-CIPolicyIdInfo -FilePath $SuppPolicyPath -PolicyName "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath
@@ -722,20 +715,26 @@ Function Edit-WDACConfig {
                 Write-Verbose -Message 'Setting the Supplemental policy version to 1.0.0.0'
                 Set-CIPolicyVersion -FilePath $SuppPolicyPath -Version '1.0.0.0'
 
+                # Define the path for the final Supplemental policy CIP
+                [System.IO.FileInfo]$SupplementalCIPPath = Join-Path -Path $StagingArea -ChildPath "$SuppPolicyID.cip"
+
                 Write-Verbose -Message 'Convert the Supplemental policy to a CIP file'
-                ConvertFrom-CIPolicy -XmlFilePath $SuppPolicyPath -BinaryFilePath "$SuppPolicyID.cip" | Out-Null
+                ConvertFrom-CIPolicy -XmlFilePath $SuppPolicyPath -BinaryFilePath $SupplementalCIPPath | Out-Null
 
                 $CurrentStep++
                 Write-Progress -Id 10 -Activity 'Deploying the Supplemental policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                 Write-Verbose -Message 'Deploying the Supplemental policy'
-                &'C:\Windows\System32\CiTool.exe' --update-policy ".\$SuppPolicyID.cip" -json | Out-Null
+                &'C:\Windows\System32\CiTool.exe' --update-policy $SupplementalCIPPath -json | Out-Null
 
                 Write-ColorfulText -Color Lavender -InputText 'Supplemental policy with the following details has been deployed in Enforced Mode:'
                 Write-ColorfulText -Color MintGreen -InputText "SupplementalPolicyName = $SuppPolicyName"
                 Write-ColorfulText -Color MintGreen -InputText "SupplementalPolicyGUID = $SuppPolicyID"
 
                 #Endregion Supplemental-policy-processing-and-deployment
+
+                # Copy the Supplemental policy to the user's config directory since Staging Area is a temporary location
+                Copy-Item -Path $SuppPolicyPath -Destination $UserConfigDir -Force
 
                 Write-Progress -Id 10 -Activity 'Complete.' -Completed
             }
@@ -778,8 +777,10 @@ Function Edit-WDACConfig {
                 $CurrentStep++
                 Write-Progress -Id 11 -Activity 'Merging the policies' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
+                [System.IO.FileInfo]$FinalSupplementalPath = Join-Path -Path $StagingArea -ChildPath "$SuppPolicyName.xml"
+
                 Write-Verbose -Message 'Merging the Supplemental policies into a single policy file'
-                Merge-CIPolicy -PolicyPaths $SuppPolicyPaths -OutputFilePath "$SuppPolicyName.xml" | Out-Null
+                Merge-CIPolicy -PolicyPaths $SuppPolicyPaths -OutputFilePath $FinalSupplementalPath | Out-Null
 
                 # Remove the deployed Supplemental policies that user selected from the system, because we're going to deploy the new merged policy that contains all of them
                 $CurrentStep++
@@ -807,22 +808,25 @@ Function Edit-WDACConfig {
 
                 Write-Verbose -Message 'Preparing the final merged Supplemental policy for deployment'
                 Write-Verbose -Message 'Converting the policy to a Supplemental policy type and resetting its ID'
-                $SuppPolicyID = Set-CIPolicyIdInfo -FilePath "$SuppPolicyName.xml" -ResetPolicyID -PolicyName "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')" -BasePolicyToSupplementPath $PolicyPath
-                $SuppPolicyID = $SuppPolicyID.Substring(11)
+                [System.String]$SuppPolicyID = Set-CIPolicyIdInfo -FilePath $FinalSupplementalPath -ResetPolicyID -PolicyName "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')" -BasePolicyToSupplementPath $PolicyPath
+                [System.String]$SuppPolicyID = $SuppPolicyID.Substring(11)
 
                 Write-Verbose -Message 'Setting HVCI to Strict'
-                Set-HVCIOptions -Strict -FilePath "$SuppPolicyName.xml"
+                Set-HVCIOptions -Strict -FilePath $FinalSupplementalPath 
 
                 Write-Verbose -Message 'Converting the Supplemental policy to a CIP file'
-                ConvertFrom-CIPolicy -XmlFilePath "$SuppPolicyName.xml" -BinaryFilePath "$SuppPolicyID.cip" | Out-Null
+                ConvertFrom-CIPolicy -XmlFilePath $FinalSupplementalPath -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$SuppPolicyID.cip") | Out-Null
 
                 $CurrentStep++
                 Write-Progress -Id 11 -Activity 'Deploying the final policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                 Write-Verbose -Message 'Deploying the Supplemental policy'
-                &'C:\Windows\System32\CiTool.exe' --update-policy "$SuppPolicyID.cip" -json | Out-Null
+                &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$SuppPolicyID.cip") -json | Out-Null
 
                 Write-ColorfulText -Color TeaGreen -InputText "The Supplemental policy $SuppPolicyName has been deployed on the system, replacing the old ones.`nSystem Restart is not immediately needed but eventually required to finish the removal of the previous individual Supplemental policies."
+
+                # Copying the final Supplemental policy to the user's config directory since Staging Area is a temporary location
+                Copy-Item -Path $FinalSupplementalPath -Destination $UserConfigDir -Force
 
                 Write-Progress -Id 11 -Activity 'Complete.' -Completed
             }
@@ -837,10 +841,16 @@ Function Edit-WDACConfig {
                 Write-Progress -Id 12 -Activity 'Getting the block rules' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                 Write-Verbose -Message 'Getting the Microsoft recommended block rules by calling the Get-BlockRulesMeta function'
+                Push-Location -LiteralPath $StagingArea
                 Get-BlockRulesMeta 6> $null
+                Pop-Location
 
                 $CurrentStep++
                 Write-Progress -Id 12 -Activity 'Determining the policy type' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
+                [System.IO.FileInfo]$BasePolicyPath = Join-Path -Path $StagingArea -ChildPath 'BasePolicy.xml'
+                [System.IO.FileInfo]$AllowMicrosoftTemplatePath = Join-Path -Path $StagingArea -ChildPath 'AllowMicrosoft.xml'
+                [System.IO.FileInfo]$DefaultWindowsTemplatePath = Join-Path -Path $StagingArea -ChildPath 'DefaultWindows_Enforced.xml'
 
                 Write-Verbose -Message 'Determining the type of the new base policy'
                 switch ($NewBasePolicyType) {
@@ -848,29 +858,29 @@ Function Edit-WDACConfig {
                         Write-Verbose -Message 'The new base policy type is AllowMicrosoft_Plus_Block_Rules'
 
                         Write-Verbose -Message 'Copying the AllowMicrosoft.xml template policy file to the current working directory'
-                        Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml' -Destination '.\AllowMicrosoft.xml' -Force
+                        Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml' -Destination $AllowMicrosoftTemplatePath -Force
 
                         Write-Verbose -Message 'Merging the AllowMicrosoft.xml and Microsoft recommended block rules into a single policy file'
-                        Merge-CIPolicy -PolicyPaths .\AllowMicrosoft.xml, '.\Microsoft recommended block rules.xml' -OutputFilePath .\BasePolicy.xml | Out-Null
+                        Merge-CIPolicy -PolicyPaths $AllowMicrosoftTemplatePath, (Join-Path -Path $StagingArea -ChildPath 'Microsoft recommended block rules.xml') -OutputFilePath $BasePolicyPath | Out-Null
 
                         Write-Verbose -Message 'Setting the policy name'
-                        Set-CIPolicyIdInfo -FilePath .\BasePolicy.xml -PolicyName "Allow Microsoft Plus Block Rules refreshed On $(Get-Date -Format 'MM-dd-yyyy')"
+                        Set-CIPolicyIdInfo -FilePath $BasePolicyPath -PolicyName "Allow Microsoft Plus Block Rules refreshed On $(Get-Date -Format 'MM-dd-yyyy')"
 
-                        Edit-CiPolicyRuleOptions -Action Base -XMLFile .\BasePolicy.xml
+                        Edit-CiPolicyRuleOptions -Action Base -XMLFile $BasePolicyPath
                     }
                     'Lightly_Managed_system_Policy' {
                         Write-Verbose -Message 'The new base policy type is Lightly_Managed_system_Policy'
 
                         Write-Verbose -Message 'Copying the AllowMicrosoft.xml template policy file to the current working directory'
-                        Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml' -Destination '.\AllowMicrosoft.xml' -Force
+                        Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml' -Destination $AllowMicrosoftTemplatePath -Force
 
                         Write-Verbose -Message 'Merging the AllowMicrosoft.xml and Microsoft recommended block rules into a single policy file'
-                        Merge-CIPolicy -PolicyPaths .\AllowMicrosoft.xml, '.\Microsoft recommended block rules.xml' -OutputFilePath .\BasePolicy.xml | Out-Null
+                        Merge-CIPolicy -PolicyPaths $AllowMicrosoftTemplatePath, '.\Microsoft recommended block rules.xml' -OutputFilePath $BasePolicyPath | Out-Null
 
                         Write-Verbose -Message 'Setting the policy name'
-                        Set-CIPolicyIdInfo -FilePath .\BasePolicy.xml -PolicyName "Signed And Reputable policy refreshed on $(Get-Date -Format 'MM-dd-yyyy')"
+                        Set-CIPolicyIdInfo -FilePath $BasePolicyPath -PolicyName "Signed And Reputable policy refreshed on $(Get-Date -Format 'MM-dd-yyyy')"
 
-                        Edit-CiPolicyRuleOptions -Action Base-ISG -XMLFile .\BasePolicy.xml
+                        Edit-CiPolicyRuleOptions -Action Base-ISG -XMLFile $BasePolicyPath
 
                         # Configure required services for ISG authorization
                         Write-Verbose -Message 'Configuring required services for ISG authorization'
@@ -881,7 +891,7 @@ Function Edit-WDACConfig {
                         Write-Verbose -Message 'The new base policy type is DefaultWindows_WithBlockRules'
 
                         Write-Verbose -Message 'Copying the DefaultWindows.xml template policy file to the current working directory'
-                        Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\DefaultWindows_Enforced.xml' -Destination '.\DefaultWindows_Enforced.xml' -Force
+                        Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\DefaultWindows_Enforced.xml' -Destination $DefaultWindowsTemplatePath -Force
 
                         if ($PSHOME -notlike 'C:\Program Files\WindowsApps\*') {
                             Write-Verbose -Message 'Scanning the PowerShell core directory '
@@ -891,18 +901,18 @@ Function Edit-WDACConfig {
                             New-CIPolicy -ScanPath $PSHOME -Level FilePublisher -NoScript -Fallback Hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -AllowFileNameFallbacks -FilePath .\AllowPowerShell.xml
 
                             Write-Verbose -Message 'Merging the DefaultWindows.xml, AllowPowerShell.xml, SignTool.xml and Microsoft recommended block rules into a single policy file'
-                            Merge-CIPolicy -PolicyPaths .\DefaultWindows_Enforced.xml, .\AllowPowerShell.xml, '.\Microsoft recommended block rules.xml' -OutputFilePath .\BasePolicy.xml | Out-Null
+                            Merge-CIPolicy -PolicyPaths $DefaultWindowsTemplatePath, .\AllowPowerShell.xml, '.\Microsoft recommended block rules.xml' -OutputFilePath $BasePolicyPath | Out-Null
                         }
                         else {
                             Write-Verbose -Message 'Not including the PowerShell core directory in the policy'
                             Write-Verbose -Message 'Merging the DefaultWindows.xml, SignTool.xml and Microsoft recommended block rules into a single policy file'
-                            Merge-CIPolicy -PolicyPaths .\DefaultWindows_Enforced.xml, '.\Microsoft recommended block rules.xml' -OutputFilePath .\BasePolicy.xml | Out-Null
+                            Merge-CIPolicy -PolicyPaths $DefaultWindowsTemplatePath, '.\Microsoft recommended block rules.xml' -OutputFilePath $BasePolicyPath | Out-Null
                         }
 
                         Write-Verbose -Message 'Setting the policy name'
-                        Set-CIPolicyIdInfo -FilePath .\BasePolicy.xml -PolicyName "Default Windows Plus Block Rules refreshed On $(Get-Date -Format 'MM-dd-yyyy')"
+                        Set-CIPolicyIdInfo -FilePath $BasePolicyPath -PolicyName "Default Windows Plus Block Rules refreshed On $(Get-Date -Format 'MM-dd-yyyy')"
 
-                        Edit-CiPolicyRuleOptions -Action Base -XMLFile .\BasePolicy.xml
+                        Edit-CiPolicyRuleOptions -Action Base -XMLFile $BasePolicyPath
                     }
                 }
 
@@ -911,7 +921,7 @@ Function Edit-WDACConfig {
 
                 if ($UpdateBasePolicy -and $RequireEVSigners) {
                     Write-Verbose -Message 'Adding the EV Signers rule option to the base policy'
-                    Set-RuleOption -FilePath .\BasePolicy.xml -Option 8
+                    Set-RuleOption -FilePath $BasePolicyPath -Option 8
                 }
 
                 # Get the policy ID of the currently deployed base policy based on the policy name that user selected
@@ -921,20 +931,20 @@ Function Edit-WDACConfig {
 
                 Write-Verbose -Message "This is the current ID of deployed base policy that is going to be used in the new base policy: $CurrentID"
                 Write-Verbose -Message 'Reading the current base policy XML file'
-                [System.Xml.XmlDocument]$Xml = Get-Content -Path '.\BasePolicy.xml'
+                [System.Xml.XmlDocument]$Xml = Get-Content -Path $BasePolicyPath
 
                 Write-Verbose -Message 'Setting the policy ID and Base policy ID to the current base policy ID in the generated XML file'
                 $Xml.SiPolicy.PolicyID = $CurrentID
                 $Xml.SiPolicy.BasePolicyID = $CurrentID
 
                 Write-Verbose -Message 'Saving the updated XML file'
-                $Xml.Save("$((Get-Location).path)\BasePolicy.xml")
+                $Xml.Save($BasePolicyPath)
 
                 Write-Verbose -Message 'Setting the policy version to 1.0.0.1'
-                Set-CIPolicyVersion -FilePath .\BasePolicy.xml -Version '1.0.0.1'
+                Set-CIPolicyVersion -FilePath $BasePolicyPath -Version '1.0.0.1'
 
                 Write-Verbose -Message 'Converting the base policy to a CIP file'
-                ConvertFrom-CIPolicy -XmlFilePath '.\BasePolicy.xml' -BinaryFilePath "$CurrentID.cip" | Out-Null
+                ConvertFrom-CIPolicy -XmlFilePath $BasePolicyPath -BinaryFilePath "$CurrentID.cip" | Out-Null
 
                 $CurrentStep++
                 Write-Progress -Id 12 -Activity 'Deploying the policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
@@ -957,7 +967,7 @@ Function Edit-WDACConfig {
                 Remove-Item -Path $PolicyFiles[$NewBasePolicyType] -Force -ErrorAction SilentlyContinue
 
                 Write-Verbose -Message 'Renaming the base policy XML file to match the new base policy type'
-                Rename-Item -Path '.\BasePolicy.xml' -NewName $PolicyFiles[$NewBasePolicyType] -Force
+                Rename-Item -Path $BasePolicyPath -NewName $PolicyFiles[$NewBasePolicyType] -Force
 
                 Write-ColorfulText -Color Pink -InputText "Base Policy has been successfully updated to $NewBasePolicyType"
 

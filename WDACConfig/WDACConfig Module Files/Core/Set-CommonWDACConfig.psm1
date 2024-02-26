@@ -2,21 +2,6 @@ Function Set-CommonWDACConfig {
     [CmdletBinding()]
     [OutputType([System.Object[]])]
     Param(
-        [ValidateScript({
-                # Assign the input value to a variable
-                [System.String]$InputCN = $_
-                # Count the number of duplicate CNs
-                [System.UInt64]$NumberOfDuplicateCNs = @([CertCNz]::new().GetValidValues() | Where-Object -FilterScript { $_ -eq $InputCN }).Count
-
-                # if there are more than 1 certificate with the same common name on the system
-                if ($NumberOfDuplicateCNs -eq 1) {
-                    # Return true if the certificate exists and there are no duplicates
-                    return $true
-                }
-                else {
-                    Throw "There are $NumberOfDuplicateCNs certificates with the same common name ($_) on the system, please remove the duplicate certificates and try again."
-                }
-            })]
         [ValidateSet([CertCNz])]
         [parameter(Mandatory = $false)][System.String]$CertCN,
 

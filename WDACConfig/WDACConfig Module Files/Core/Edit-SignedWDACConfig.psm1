@@ -81,21 +81,6 @@ Function Edit-SignedWDACConfig {
         [Parameter(Mandatory = $false, ValueFromPipelineByPropertyName = $true)]
         [System.IO.FileInfo]$CertPath,
 
-        [ValidateScript({
-            # Assign the input value to a variable
-            [System.String]$InputCN = $_
-            # Count the number of duplicate CNs
-            [System.UInt64]$NumberOfDuplicateCNs = @([CertCNz]::new().GetValidValues() | Where-Object -FilterScript { $_ -eq $InputCN }).Count
-
-            # if there are more than 1 certificate with the same common name on the system
-            if ($NumberOfDuplicateCNs -eq 1) {
-                # Return true if the certificate exists and there are no duplicates
-                return $true
-            }
-            else {
-                Throw "There are $NumberOfDuplicateCNs certificates with the same common name ($_) on the system, please remove the duplicate certificates and try again."
-            }
-        })]
         [ValidateSet([CertCNz])]
         [Parameter(Mandatory = $false, ValueFromPipelineByPropertyName = $true)]
         [System.String]$CertCN,
@@ -118,12 +103,12 @@ Function Edit-SignedWDACConfig {
 
         [parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps Audit Events')][System.Management.Automation.SwitchParameter]$IncludeDeletedFiles,
 
-        [ValidateSet([Levelz])]
+        [ValidateSet([ScanLevelz])]
         [parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps Audit Events')]
         [parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps')]
         [System.String]$Level = 'WHQLFilePublisher',
 
-        [ValidateSet([Levelz])]
+        [ValidateSet([ScanLevelz])]
         [parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps Audit Events')]
         [parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps')]
         [System.String[]]$Fallbacks = ('FilePublisher', 'Hash'),

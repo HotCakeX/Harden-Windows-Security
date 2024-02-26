@@ -47,11 +47,11 @@ Function New-SupplementalWDACConfig {
         [Parameter(Mandatory = $false, ParameterSetName = 'Normal')]
         [System.Management.Automation.SwitchParameter]$NoScript,
 
-        [ValidateSet([Levelz])]
+        [ValidateSet([ScanLevelz])]
         [parameter(Mandatory = $false, ParameterSetName = 'Normal')]
         [System.String]$Level = 'WHQLFilePublisher',
 
-        [ValidateSet([Levelz])]
+        [ValidateSet([ScanLevelz])]
         [parameter(Mandatory = $false, ParameterSetName = 'Normal')]
         [System.String[]]$Fallbacks = ('FilePublisher', 'Hash'),
 

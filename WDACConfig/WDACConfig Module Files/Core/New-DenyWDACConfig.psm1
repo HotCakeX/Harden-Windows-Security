@@ -33,11 +33,11 @@ Function New-DenyWDACConfig {
         [Parameter(Mandatory = $false, ParameterSetName = 'Drivers')]
         [System.IO.DirectoryInfo[]]$ScanLocations,
 
-        [ValidateSet([Levelz])]
+        [ValidateSet([ScanLevelz])]
         [Parameter(Mandatory = $false, ParameterSetName = 'Normal')]
         [System.String]$Level = 'WHQLFilePublisher',
 
-        [ValidateSet([Levelz])]
+        [ValidateSet([ScanLevelz])]
         [Parameter(Mandatory = $false, ParameterSetName = 'Normal')]
         [System.String[]]$Fallbacks = ('FilePublisher', 'Hash'),
 

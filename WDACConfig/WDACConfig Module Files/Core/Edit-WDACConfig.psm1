@@ -68,12 +68,12 @@ Function Edit-WDACConfig {
         [Parameter(Mandatory = $false, ParameterSetName = 'Merge Supplemental Policies')]
         [System.Management.Automation.SwitchParameter]$KeepOldSupplementalPolicies,
 
-        [ValidateSet([Levelz])]
+        [ValidateSet([ScanLevelz])]
         [parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps Audit Events')]
         [parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps')]
         [System.String]$Level = 'WHQLFilePublisher',
 
-        [ValidateSet([Levelz])]
+        [ValidateSet([ScanLevelz])]
         [parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps Audit Events')]
         [parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps')]
         [System.String[]]$Fallbacks = ('FilePublisher', 'Hash'),

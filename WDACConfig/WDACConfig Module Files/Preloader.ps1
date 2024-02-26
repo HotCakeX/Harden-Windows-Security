@@ -69,10 +69,10 @@ if (Test-Path -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.js
 }
 
 # argument tab auto-completion and ValidateSet for Levels and Fallbacks parameters in the entire module
-Class Levelz : System.Management.Automation.IValidateSetValuesGenerator {
+Class ScanLevelz : System.Management.Automation.IValidateSetValuesGenerator {
     [System.String[]] GetValidValues() {
-        $Levelz = ('Hash', 'FileName', 'SignedVersion', 'Publisher', 'FilePublisher', 'LeafCertificate', 'PcaCertificate', 'RootCertificate', 'WHQL', 'WHQLPublisher', 'WHQLFilePublisher', 'PFN', 'FilePath', 'None')
-        return [System.String[]]$Levelz
+        $ScanLevelz = ('Hash', 'FileName', 'SignedVersion', 'Publisher', 'FilePublisher', 'LeafCertificate', 'PcaCertificate', 'RootCertificate', 'WHQL', 'WHQLPublisher', 'WHQLFilePublisher', 'PFN', 'FilePath', 'None')
+        return [System.String[]]$ScanLevelz
     }
 }
 
@@ -87,24 +87,38 @@ Class BasePolicyNamez : System.Management.Automation.IValidateSetValuesGenerator
 # Argument completer and ValidateSet for CertCNs
 Class CertCNz : System.Management.Automation.IValidateSetValuesGenerator {
     [System.String[]] GetValidValues() {
+        # Cannot define the custom type 'WDACConfig.CryptoAPI' since we're in a class definition and it does not support it, hence using Add-Type with -PassThru
+        $CryptoAPI = Add-Type -Path "$global:ModuleRootPath\C#\Crypt32CertCN.cs" -PassThru
 
         [System.String[]]$Output = @()
 
         # Loop through each certificate that uses RSA algorithm (Because ECDSA is not supported for signing WDAC policies) in the current user's personal store and extract the relevant properties
         foreach ($Cert in (Get-ChildItem -Path 'Cert:\CurrentUser\My' | Where-Object -FilterScript { $_.PublicKey.Oid.FriendlyName -eq 'RSA' })) {
 
-            # Extract the data after CN=
-            # When a common name contains a comma ',' then it will automatically be wrapped around double quotes. E.g., "App Software USA, Inc."
-            # The methods below are conditional regex. Different patterns are used based on the availability of at least one double quote in the CN field, indicating that it had comma in it so it had been enclosed with double quotes by system
-            $Cert.Subject -match 'CN=(?<InitialRegexTest2>.*?),.*' | Out-Null
-            [System.String]$SubjectCN = $matches['InitialRegexTest2'] -like '*"*' ? ($Cert.Subject -split 'CN="(.+?)"')[1] : $matches['InitialRegexTest2']
+            # Create a buffer to store the name string
+            [System.Text.StringBuilder]$NameString = New-Object -TypeName System.Text.StringBuilder -ArgumentList 256
 
-            $Output += $SubjectCN
+            [System.Boolean]$Result = $CryptoAPI::CertGetNameString(
+                $Cert.Handle, # the handle property of the certificate object
+                4, # the name type constant
+                0, # zero, which means no flags are set
+                [IntPtr]::Zero, # a null pointer, which means no additional parameter is needed
+                $NameString, # the name string buffer
+                $NameString.Capacity # the capacity of the name string buffer
+            )
+            # If the result is true
+            if ($Result) {
+                if ($NameString.ToString() -in $Output) {
+                    Write-Warning -Message "There are more than 1 certificates with the common name '$($NameString.ToString())' in the Personal certificate store of the Current User, delete one of them if you want to use it."
+                }
+                $Output += $NameString.ToString()
+            }
         }
-
-        Return $Output
+        # The ValidateSet attribute expects a unique set of values, and it will throw an error if there are duplicates
+        Return ($Output | Select-Object -Unique)
     }
 }
+
 
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor

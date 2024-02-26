@@ -239,7 +239,8 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
         'C#\Kernel32dll.cs',
         'C#\Crypt32dll.cs',
         'C#\AuthenticodeHashCalc.cs',
-        'C#\PageHashCalc.cs'
+        'C#\PageHashCalc.cs',
+        'C#\Crypt32CertCN.cs'
     )
 
     # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.

@@ -55,11 +55,11 @@ Function New-WDACConfig {
         [Parameter(Mandatory = $false, ParameterSetName = 'Make Policy From Audit Logs')]
         [System.Management.Automation.SwitchParameter]$NoScript,
 
-        [ValidateSet([Levelz])]
+        [ValidateSet([ScanLevelz])]
         [parameter(Mandatory = $false, ParameterSetName = 'Make Policy From Audit Logs')]
         [System.String]$Level = 'WHQLFilePublisher',
 
-        [ValidateSet([Levelz])]
+        [ValidateSet([ScanLevelz])]
         [parameter(Mandatory = $false, ParameterSetName = 'Make Policy From Audit Logs')]
         [System.String[]]$Fallbacks = ('FilePublisher', 'Hash'),
 

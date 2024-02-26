@@ -1282,10 +1282,10 @@ Function Edit-SignedWDACConfig {
     It is Used by the entire Cmdlet
 .PARAMETER Level
     The level that determines how the selected folder will be scanned.
-    The default value for it is FilePublisher.
+    The default value for it is WHQLFilePublisher.
 .PARAMETER Fallbacks
     The fallback level(s) that determine how the selected folder will be scanned.
-    The default value for it is Hash.
+    The default value for it is (FilePublisher, Hash).
 .PARAMETER SuppPolicyName
     The name of the Supplemental policy to be created
 .PARAMETER SuppPolicyPaths

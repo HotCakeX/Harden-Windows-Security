@@ -1011,10 +1011,10 @@ Function Edit-WDACConfig {
     It is used by the entire Cmdlet.
 .PARAMETER Level
     The level that determines how the selected folder will be scanned.
-    The default value for it is FilePublisher.
+    The default value for it is WHQLFilePublisher.
 .PARAMETER Fallbacks
     The fallback level(s) that determine how the selected folder will be scanned.
-    The default value for it is Hash.
+    The default value for it is (FilePublisher, Hash).
 .PARAMETER LogSize
     The log size to set for Code Integrity/Operational event logs
     The accepted values are between 1024 KB and 18014398509481983 KB

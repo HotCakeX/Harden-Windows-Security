@@ -1206,9 +1206,6 @@ Function Edit-SignedWDACConfig {
                 # Defining paths for the final Base policy CIP
                 [System.IO.FileInfo]$BasePolicyCIPPath = Join-Path -Path $StagingArea -ChildPath "$CurrentID.cip"
 
-                Write-Verbose -Message 'Making sure there is not a .CIP file with the same name as the current base policy ID in the current working directory'
-                Remove-Item -Path $BasePolicyCIPPath -Force -ErrorAction SilentlyContinue
-
                 Write-Verbose -Message 'Reading the current base policy XML file'
                 [System.Xml.XmlDocument]$Xml = Get-Content -Path $BasePolicyPath
 

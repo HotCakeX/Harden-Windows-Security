@@ -159,6 +159,7 @@
     # Set the filter to show only executable files
     $Dialog.Filter = 'Executable files (*.exe)|*.exe'
     $Dialog.Title = 'Select the SignTool executable file'
+    $Dialog.InitialDirectory = $UserConfigDir
     # Show the dialog and get the result
     [System.String]$Result = $Dialog.ShowDialog()
     # If the user clicked OK, return the selected file path
@@ -176,6 +177,7 @@
     # Set the filter to show only certificate files
     $Dialog.Filter = 'Certificate files (*.cer)|*.cer'
     $Dialog.Title = 'Select a certificate file'
+    $Dialog.InitialDirectory = $UserConfigDir
     # Show the dialog and get the result
     [System.String]$Result = $Dialog.ShowDialog()
     # If the user clicked OK, return the selected file path
@@ -193,6 +195,7 @@
     # Set the filter to show only XML files
     $Dialog.Filter = 'XML files (*.xml)|*.xml'
     $Dialog.Title = 'Select XML files'
+    $Dialog.InitialDirectory = $UserConfigDir
     # Show the dialog and get the result
     [System.String]$Result = $Dialog.ShowDialog()
     # If the user clicked OK, return the selected file path
@@ -239,6 +242,7 @@
     $Dialog.MultiSelect = $true
     $Dialog.ShowPreview = $true
     $Dialog.Title = 'Select Supplemental Policies to merge'
+    $Dialog.InitialDirectory = $UserConfigDir
     # Show the dialog and get the result
     [System.String]$Result = $Dialog.ShowDialog()
     # If the user clicked OK, return the selected file paths

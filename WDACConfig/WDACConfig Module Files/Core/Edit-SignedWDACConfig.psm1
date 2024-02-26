@@ -199,16 +199,7 @@ Function Edit-SignedWDACConfig {
         # if -SkipVersionCheck wasn't passed, run the updater
         if (-NOT $SkipVersionCheck) { Update-self -InvocationStatement $MyInvocation.Statement }
 
-        # Define a staging area for Edit-SignedWDACConfig cmdlet
-        [System.IO.DirectoryInfo]$StagingArea = Join-Path -Path $UserConfigDir -ChildPath 'StagingArea' -AdditionalChildPath 'Edit-SignedWDACConfig'
-
-        # Delete it if it exists already with possible content with previous runs
-        if (Test-Path -PathType Container -LiteralPath $StagingArea) {
-            Remove-Item -LiteralPath $StagingArea -Recurse -Force
-        }
-
-        # Create the staging area for the Edit-SignedWDACConfig cmdlet
-        New-Item -Path $StagingArea -ItemType Directory -Force | Out-Null
+        [System.IO.DirectoryInfo]$StagingArea = New-StagingArea -CmdletName 'Edit-SignedWDACConfig'
 
         #Region User-Configurations-Processing-Validation
         # Get SignToolPath from user parameter or user config file or auto-detect it

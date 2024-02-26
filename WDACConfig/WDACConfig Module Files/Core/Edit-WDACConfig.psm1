@@ -135,16 +135,7 @@ Function Edit-WDACConfig {
         # if -SkipVersionCheck wasn't passed, run the updater
         if (-NOT $SkipVersionCheck) { Update-self -InvocationStatement $MyInvocation.Statement }
 
-        #Define a staging area for Edit-WDACConfig cmdlet
-        [System.IO.DirectoryInfo]$StagingArea = (Join-Path -Path $UserConfigDir -ChildPath 'StagingArea' -AdditionalChildPath 'Edit-WDACConfig')
-
-        # Delete it if it exists already with possible content with previous runs
-        if (Test-Path -PathType Container -Path $StagingArea) {
-            Remove-Item -Path $StagingArea -Recurse -Force
-        }
-
-        # Create the staging area for the Edit-WDACConfig cmdlet
-        New-Item -Path $StagingArea -ItemType Directory | Out-Null
+        [System.IO.DirectoryInfo]$StagingArea = New-StagingArea -CmdletName 'Edit-WDACConfig'
 
         #Region User-Configurations-Processing-Validation
         # make sure the ParameterSet being used has PolicyPath parameter - Then enforces "mandatory" attribute for the parameter

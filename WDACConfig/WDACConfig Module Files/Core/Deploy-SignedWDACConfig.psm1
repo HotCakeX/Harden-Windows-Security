@@ -95,6 +95,8 @@ Function Deploy-SignedWDACConfig {
         # if -SkipVersionCheck wasn't passed, run the updater
         if (-NOT $SkipVersionCheck) { Update-self -InvocationStatement $MyInvocation.Statement }
 
+        [System.IO.DirectoryInfo]$StagingArea = New-StagingArea -CmdletName 'Deploy-SignedWDACConfig'
+
         #Region User-Configurations-Processing-Validation
         # Get SignToolPath from user parameter or user config file or auto-detect it
         if ($SignToolPath) {
@@ -132,181 +134,176 @@ Function Deploy-SignedWDACConfig {
     }
 
     process {
-        foreach ($PolicyPath in $PolicyPaths) {
-            # The total number of the main steps for the progress bar to render
-            [System.Int16]$TotalSteps = $Deploy ? 4 : 3
-            [System.Int16]$CurrentStep = 0
 
-            $CurrentStep++
-            Write-Progress -Id 13 -Activity 'Gathering policy details' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+        Try {
 
-            Write-Verbose -Message "Gathering policy details from: $PolicyPath"
-            $Xml = [System.Xml.XmlDocument](Get-Content -Path $PolicyPath)
-            [System.String]$PolicyType = $Xml.SiPolicy.PolicyType
-            [System.String]$PolicyID = $Xml.SiPolicy.PolicyID
-            [System.String]$PolicyName = ($Xml.SiPolicy.Settings.Setting | Where-Object -FilterScript { $_.provider -eq 'PolicyInfo' -and $_.valuename -eq 'Name' -and $_.key -eq 'Information' }).value.string
-            [System.String[]]$PolicyRuleOptions = $Xml.SiPolicy.Rules.Rule.Option
-
-            Write-Verbose -Message 'Removing any existing .CIP file of the same policy being signed and deployed if any in the current working directory'
-            Remove-Item -Path ".\$PolicyID.cip" -ErrorAction SilentlyContinue
-
-            Write-Verbose -Message 'Checking if the policy type is Supplemental and if so, removing the -Supplemental parameter from the SignerRule command'
-            if ($PolicyType -eq 'Supplemental Policy') {
-
-                Write-Verbose -Message 'Policy type is Supplemental'
-
-                # Make sure -User is not added if the UMCI policy rule option doesn't exist in the policy, typically for Strict kernel mode policies
-                if ('Enabled:UMCI' -in $PolicyRuleOptions) {
-                    Add-SignerRule -FilePath $PolicyPath -CertificatePath $CertPath -Update -User -Kernel
-                }
-                else {
-                    Write-Verbose -Message 'UMCI policy rule option does not exist in the policy, typically for Strict kernel mode policies'
-                    Add-SignerRule -FilePath $PolicyPath -CertificatePath $CertPath -Update -Kernel
-                }
-            }
-            elseif ($PolicyType -eq 'Base Policy') {
-
-                Write-Verbose -Message 'Policy type is Base'
-
-                # Make sure -User is not added if the UMCI policy rule option doesn't exist in the policy, typically for Strict kernel mode policies
-                if ('Enabled:UMCI' -in $PolicyRuleOptions) {
-
-                    Write-Verbose -Message 'Checking whether SignTool.exe is allowed to execute in the policy or not'
-                    if (-NOT (Invoke-WDACSimulation -FilePath $SignToolPathFinal -XmlFilePath $PolicyPath -BooleanOutput)) {
-
-                        Write-Verbose -Message 'The policy type is base policy and it applies to user mode files, yet the policy prevents SignTool.exe from executing. As a precautionary measure, scanning and including the SignTool.exe in the policy before deployment so you can modify/remove the signed policy later from the system.'
-
-                        Write-Verbose -Message 'Creating a temporary folder to store the symbolic link to the SignTool.exe'
-                        [System.IO.DirectoryInfo]$SymLinksStorage = New-Item -Path (Join-Path -Path $UserConfigDir -ChildPath 'StagingArea' -AdditionalChildPath 'SymLinkStorage-Deploy-SignedWDACConfig', (New-Guid)) -ItemType Directory -Force
-
-                        Write-Verbose -Message 'Creating symbolic link to the SignTool.exe'
-                        New-Item -ItemType SymbolicLink -Path "$SymLinksStorage\SignTool.exe" -Target $SignToolPathFinal | Out-Null
-
-                        Write-Verbose -Message 'Scanning the SignTool.exe and generating the SignTool.xml policy'
-                        New-CIPolicy -ScanPath $SymLinksStorage -Level FilePublisher -Fallback None -UserPEs -UserWriteablePaths -MultiplePolicyFormat -AllowFileNameFallbacks -FilePath "$SymLinksStorage\SignTool.xml"
-
-                        Write-Verbose -Message 'Merging the SignTool.xml policy with the policy being signed'
-                        # First policy in the array should always be the main one so that its settings will be used in the merged policy
-                        Merge-CIPolicy -PolicyPaths $PolicyPath, "$SymLinksStorage\SignTool.xml" -OutputFilePath "$SymLinksStorage\$($PolicyPath.Name)" | Out-Null
-
-                        Write-Verbose -Message 'Making sure policy rule options stay the same after merging the policies'
-                        Copy-CiRules -SourceFile $PolicyPath -DestinationFile "$SymLinksStorage\$($PolicyPath.Name)"
-
-                        Write-Verbose -Message 'Replacing the new policy with the old one'
-                        Move-Item -Path "$SymLinksStorage\$($PolicyPath.Name)" -Destination $PolicyPath -Force
-
-                        Write-Verbose -Message 'Removing the temporary folder'
-                        Remove-Item -Path $SymLinksStorage -Recurse -Force
-                    }
-                    else {
-                        Write-Verbose -Message 'The base policy allows SignTool.exe to execute, no need to scan and include it in the policy'
-                    }
-
-                    Add-SignerRule -FilePath $PolicyPath -CertificatePath $CertPath -Update -User -Kernel -Supplemental
-                }
-                else {
-                    Write-Verbose -Message 'UMCI policy rule option does not exist in the policy, typically for Strict kernel mode policies'
-                    Add-SignerRule -FilePath $PolicyPath -CertificatePath $CertPath -Update -Kernel -Supplemental
-                }
-            }
-            else {
-                Throw "Policy type is not Base or Supplemental, it is: $PolicyType"
-            }
-
-            $CurrentStep++
-            Write-Progress -Id 13 -Activity 'Creating CIP file' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-            Write-Verbose -Message 'Setting HVCI to Strict'
-            Set-HVCIOptions -Strict -FilePath $PolicyPath
-
-            Write-Verbose -Message 'Removing the Unsigned mode option from the policy rules'
-            Set-RuleOption -FilePath $PolicyPath -Option 6 -Delete
-
-            Write-Verbose -Message 'Converting the policy to .CIP file'
-            ConvertFrom-CIPolicy -XmlFilePath $PolicyPath -BinaryFilePath "$PolicyID.cip" | Out-Null
-
-            $CurrentStep++
-            Write-Progress -Id 13 -Activity 'Signing the policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-            # Configure the parameter splat
-            [System.Collections.Hashtable]$ProcessParams = @{
-                'ArgumentList' = 'sign', '/v' , '/n', "`"$CertCN`"", '/p7', '.', '/p7co', '1.3.6.1.4.1.311.79.1', '/fd', 'certHash', ".\$PolicyID.cip"
-                'FilePath'     = $SignToolPathFinal
-                'NoNewWindow'  = $true
-                'Wait'         = $true
-                'ErrorAction'  = 'Stop'
-            }
-            # Hide the SignTool.exe's normal output unless -Verbose parameter was used
-            if (!$Verbose) { $ProcessParams['RedirectStandardOutput'] = 'NUL' }
-
-            # Sign the files with the specified cert
-            Write-Verbose -Message 'Signing the policy with the specified certificate'
-            Start-Process @ProcessParams
-
-            Write-Verbose -Message 'Making sure a .CIP file with the same name is not present in the current working directory'
-            Remove-Item -Path ".\$PolicyID.cip" -Force
-
-            Write-Verbose -Message 'Renaming the .p7 file to .cip'
-            Rename-Item -Path "$PolicyID.cip.p7" -NewName "$PolicyID.cip" -Force
-
-            if ($Deploy) {
+            foreach ($PolicyPath in $PolicyPaths) {
+                # The total number of the main steps for the progress bar to render
+                [System.UInt16]$TotalSteps = $Deploy ? 4 : 3
+                [System.UInt16]$CurrentStep = 0
 
                 $CurrentStep++
-                Write-Progress -Id 13 -Activity 'Deploying' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+                Write-Progress -Id 13 -Activity 'Gathering policy details' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                # Prompt for confirmation before proceeding
-                if ($PSCmdlet.ShouldProcess('This PC', 'Deploying the signed policy')) {
+                Write-Verbose -Message "Gathering policy details from: $PolicyPath"
+                $Xml = [System.Xml.XmlDocument](Get-Content -Path $PolicyPath)
+                [System.String]$PolicyType = $Xml.SiPolicy.PolicyType
+                [System.String]$PolicyID = $Xml.SiPolicy.PolicyID
+                [System.String]$PolicyName = ($Xml.SiPolicy.Settings.Setting | Where-Object -FilterScript { $_.provider -eq 'PolicyInfo' -and $_.valuename -eq 'Name' -and $_.key -eq 'Information' }).value.string
+                [System.String[]]$PolicyRuleOptions = $Xml.SiPolicy.Rules.Rule.Option
 
-                    Write-Verbose -Message 'Deploying the policy'
-                    &'C:\Windows\System32\CiTool.exe' --update-policy ".\$PolicyID.cip" -json | Out-Null
+                Write-Verbose -Message 'Checking if the policy type is Supplemental and if so, removing the -Supplemental parameter from the SignerRule command'
+                if ($PolicyType -eq 'Supplemental Policy') {
 
-                    Write-ColorfulText -Color Lavender -InputText 'policy with the following details has been Signed and Deployed in Enforced Mode:'
+                    Write-Verbose -Message 'Policy type is Supplemental'
+
+                    # Make sure -User is not added if the UMCI policy rule option doesn't exist in the policy, typically for Strict kernel mode policies
+                    if ('Enabled:UMCI' -in $PolicyRuleOptions) {
+                        Add-SignerRule -FilePath $PolicyPath -CertificatePath $CertPath -Update -User -Kernel
+                    }
+                    else {
+                        Write-Verbose -Message 'UMCI policy rule option does not exist in the policy, typically for Strict kernel mode policies'
+                        Add-SignerRule -FilePath $PolicyPath -CertificatePath $CertPath -Update -Kernel
+                    }
+                }
+                elseif ($PolicyType -eq 'Base Policy') {
+
+                    Write-Verbose -Message 'Policy type is Base'
+
+                    # Make sure -User is not added if the UMCI policy rule option doesn't exist in the policy, typically for Strict kernel mode policies
+                    if ('Enabled:UMCI' -in $PolicyRuleOptions) {
+
+                        Write-Verbose -Message 'Checking whether SignTool.exe is allowed to execute in the policy or not'
+                        if (-NOT (Invoke-WDACSimulation -FilePath $SignToolPathFinal -XmlFilePath $PolicyPath -BooleanOutput)) {
+
+                            Write-Verbose -Message 'The policy type is base policy and it applies to user mode files, yet the policy prevents SignTool.exe from executing. As a precautionary measure, scanning and including the SignTool.exe in the policy before deployment so you can modify/remove the signed policy later from the system.'
+
+                            Write-Verbose -Message 'Creating a temporary folder to store the symbolic link to the SignTool.exe'
+                            [System.IO.DirectoryInfo]$SymLinksStorage = New-Item -Path (Join-Path -Path $UserConfigDir -ChildPath 'StagingArea' -AdditionalChildPath 'SymLinkStorage-Deploy-SignedWDACConfig', (New-Guid)) -ItemType Directory -Force
+
+                            Write-Verbose -Message 'Creating symbolic link to the SignTool.exe'
+                            New-Item -ItemType SymbolicLink -Path "$SymLinksStorage\SignTool.exe" -Target $SignToolPathFinal | Out-Null
+
+                            Write-Verbose -Message 'Scanning the SignTool.exe and generating the SignTool.xml policy'
+                            New-CIPolicy -ScanPath $SymLinksStorage -Level FilePublisher -Fallback None -UserPEs -UserWriteablePaths -MultiplePolicyFormat -AllowFileNameFallbacks -FilePath "$SymLinksStorage\SignTool.xml"
+
+                            Write-Verbose -Message 'Merging the SignTool.xml policy with the policy being signed'
+                            # First policy in the array should always be the main one so that its settings will be used in the merged policy
+                            Merge-CIPolicy -PolicyPaths $PolicyPath, "$SymLinksStorage\SignTool.xml" -OutputFilePath "$SymLinksStorage\$($PolicyPath.Name)" | Out-Null
+
+                            Write-Verbose -Message 'Making sure policy rule options stay the same after merging the policies'
+                            Copy-CiRules -SourceFile $PolicyPath -DestinationFile "$SymLinksStorage\$($PolicyPath.Name)"
+
+                            Write-Verbose -Message 'Replacing the new policy with the old one'
+                            Move-Item -Path "$SymLinksStorage\$($PolicyPath.Name)" -Destination $PolicyPath -Force
+                        }
+                        else {
+                            Write-Verbose -Message 'The base policy allows SignTool.exe to execute, no need to scan and include it in the policy'
+                        }
+
+                        Add-SignerRule -FilePath $PolicyPath -CertificatePath $CertPath -Update -User -Kernel -Supplemental
+                    }
+                    else {
+                        Write-Verbose -Message 'UMCI policy rule option does not exist in the policy, typically for Strict kernel mode policies'
+                        Add-SignerRule -FilePath $PolicyPath -CertificatePath $CertPath -Update -Kernel -Supplemental
+                    }
+                }
+                else {
+                    Throw "Policy type is not Base or Supplemental, it is: $PolicyType"
+                }
+
+                $CurrentStep++
+                Write-Progress -Id 13 -Activity 'Creating CIP file' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
+                Write-Verbose -Message 'Setting HVCI to Strict'
+                Set-HVCIOptions -Strict -FilePath $PolicyPath
+
+                Write-Verbose -Message 'Removing the Unsigned mode option from the policy rules'
+                Set-RuleOption -FilePath $PolicyPath -Option 6 -Delete
+
+                Write-Verbose -Message 'Converting the policy to .CIP file'
+                ConvertFrom-CIPolicy -XmlFilePath $PolicyPath -BinaryFilePath "$PolicyID.cip" | Out-Null
+
+                $CurrentStep++
+                Write-Progress -Id 13 -Activity 'Signing the policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
+                # Configure the parameter splat
+                [System.Collections.Hashtable]$ProcessParams = @{
+                    'ArgumentList' = 'sign', '/v' , '/n', "`"$CertCN`"", '/p7', '.', '/p7co', '1.3.6.1.4.1.311.79.1', '/fd', 'certHash', ".\$PolicyID.cip"
+                    'FilePath'     = $SignToolPathFinal
+                    'NoNewWindow'  = $true
+                    'Wait'         = $true
+                    'ErrorAction'  = 'Stop'
+                }
+                # Hide the SignTool.exe's normal output unless -Verbose parameter was used
+                if (!$Verbose) { $ProcessParams['RedirectStandardOutput'] = 'NUL' }
+
+                # Sign the files with the specified cert
+                Write-Verbose -Message 'Signing the policy with the specified certificate'
+                Start-Process @ProcessParams
+
+                Write-Verbose -Message 'Renaming the .p7 file to .cip'
+                Rename-Item -Path "$PolicyID.cip.p7" -NewName "$PolicyID.cip" -Force
+
+                if ($Deploy) {
+
+                    $CurrentStep++
+                    Write-Progress -Id 13 -Activity 'Deploying' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
+                    # Prompt for confirmation before proceeding
+                    if ($PSCmdlet.ShouldProcess('This PC', 'Deploying the signed policy')) {
+
+                        Write-Verbose -Message 'Deploying the policy'
+                        &'C:\Windows\System32\CiTool.exe' --update-policy ".\$PolicyID.cip" -json | Out-Null
+
+                        Write-ColorfulText -Color Lavender -InputText 'policy with the following details has been Signed and Deployed in Enforced Mode:'
+                        Write-ColorfulText -Color MintGreen -InputText "PolicyName = $PolicyName"
+                        Write-ColorfulText -Color MintGreen -InputText "PolicyGUID = $PolicyID"
+
+                        #Region Detecting Strict Kernel mode policy and removing it from User Configs
+                        if ('Enabled:UMCI' -notin $PolicyRuleOptions) {
+
+                            [System.String]$StrictKernelPolicyGUID = Get-CommonWDACConfig -StrictKernelPolicyGUID
+                            [System.String]$StrictKernelNoFlightRootsPolicyGUID = Get-CommonWDACConfig -StrictKernelNoFlightRootsPolicyGUID
+
+                            if (($PolicyName -like '*Strict Kernel mode policy Enforced*')) {
+
+                                Write-Verbose -Message 'The deployed policy is Strict Kernel mode'
+
+                                if ($StrictKernelPolicyGUID) {
+                                    if ($($PolicyID.TrimStart('{').TrimEnd('}')) -eq $StrictKernelPolicyGUID) {
+
+                                        Write-Verbose -Message 'Removing the GUID of the deployed Strict Kernel mode policy from the User Configs'
+                                        Remove-CommonWDACConfig -StrictKernelPolicyGUID | Out-Null
+                                    }
+                                }
+                            }
+                            elseif (($PolicyName -like '*Strict Kernel No Flights mode policy Enforced*')) {
+
+                                Write-Verbose -Message 'The deployed policy is Strict Kernel No Flights mode'
+
+                                if ($StrictKernelNoFlightRootsPolicyGUID) {
+                                    if ($($PolicyID.TrimStart('{').TrimEnd('}')) -eq $StrictKernelNoFlightRootsPolicyGUID) {
+
+                                        Write-Verbose -Message 'Removing the GUID of the deployed Strict Kernel No Flights mode policy from the User Configs'
+                                        Remove-CommonWDACConfig -StrictKernelNoFlightRootsPolicyGUID | Out-Null
+                                    }
+                                }
+                            }
+                        }
+                        #Endregion Detecting Strict Kernel mode policy and removing it from User Configs
+                    }
+                }
+                else {
+                    Write-ColorfulText -Color Lavender -InputText 'policy with the following details has been Signed and is ready for deployment:'
                     Write-ColorfulText -Color MintGreen -InputText "PolicyName = $PolicyName"
                     Write-ColorfulText -Color MintGreen -InputText "PolicyGUID = $PolicyID"
-
-                    Write-Verbose -Message 'Removing the .CIP file after deployment'
-                    Remove-Item -Path ".\$PolicyID.cip" -Force
-
-                    #Region Detecting Strict Kernel mode policy and removing it from User Configs
-                    if ('Enabled:UMCI' -notin $PolicyRuleOptions) {
-
-                        [System.String]$StrictKernelPolicyGUID = Get-CommonWDACConfig -StrictKernelPolicyGUID
-                        [System.String]$StrictKernelNoFlightRootsPolicyGUID = Get-CommonWDACConfig -StrictKernelNoFlightRootsPolicyGUID
-
-                        if (($PolicyName -like '*Strict Kernel mode policy Enforced*')) {
-
-                            Write-Verbose -Message 'The deployed policy is Strict Kernel mode'
-
-                            if ($StrictKernelPolicyGUID) {
-                                if ($($PolicyID.TrimStart('{').TrimEnd('}')) -eq $StrictKernelPolicyGUID) {
-
-                                    Write-Verbose -Message 'Removing the GUID of the deployed Strict Kernel mode policy from the User Configs'
-                                    Remove-CommonWDACConfig -StrictKernelPolicyGUID | Out-Null
-                                }
-                            }
-                        }
-                        elseif (($PolicyName -like '*Strict Kernel No Flights mode policy Enforced*')) {
-
-                            Write-Verbose -Message 'The deployed policy is Strict Kernel No Flights mode'
-
-                            if ($StrictKernelNoFlightRootsPolicyGUID) {
-                                if ($($PolicyID.TrimStart('{').TrimEnd('}')) -eq $StrictKernelNoFlightRootsPolicyGUID) {
-
-                                    Write-Verbose -Message 'Removing the GUID of the deployed Strict Kernel No Flights mode policy from the User Configs'
-                                    Remove-CommonWDACConfig -StrictKernelNoFlightRootsPolicyGUID | Out-Null
-                                }
-                            }
-                        }
-                    }
-                    #Endregion Detecting Strict Kernel mode policy and removing it from User Configs
                 }
+                Write-Progress -Id 13 -Activity 'Complete.' -Completed
             }
-            else {
-                Write-ColorfulText -Color Lavender -InputText 'policy with the following details has been Signed and is ready for deployment:'
-                Write-ColorfulText -Color MintGreen -InputText "PolicyName = $PolicyName"
-                Write-ColorfulText -Color MintGreen -InputText "PolicyGUID = $PolicyID"
-            }
-            Write-Progress -Id 13 -Activity 'Complete.' -Completed
+        }
+        Finally {
+            Remove-Item -Path $StagingArea -Recurse -Force
         }
     }
 

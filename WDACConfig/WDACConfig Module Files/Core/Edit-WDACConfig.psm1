@@ -812,7 +812,7 @@ Function Edit-WDACConfig {
                 [System.String]$SuppPolicyID = $SuppPolicyID.Substring(11)
 
                 Write-Verbose -Message 'Setting HVCI to Strict'
-                Set-HVCIOptions -Strict -FilePath $FinalSupplementalPath 
+                Set-HVCIOptions -Strict -FilePath $FinalSupplementalPath
 
                 Write-Verbose -Message 'Converting the Supplemental policy to a CIP file'
                 ConvertFrom-CIPolicy -XmlFilePath $FinalSupplementalPath -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$SuppPolicyID.cip") | Out-Null
@@ -851,6 +851,7 @@ Function Edit-WDACConfig {
                 [System.IO.FileInfo]$BasePolicyPath = Join-Path -Path $StagingArea -ChildPath 'BasePolicy.xml'
                 [System.IO.FileInfo]$AllowMicrosoftTemplatePath = Join-Path -Path $StagingArea -ChildPath 'AllowMicrosoft.xml'
                 [System.IO.FileInfo]$DefaultWindowsTemplatePath = Join-Path -Path $StagingArea -ChildPath 'DefaultWindows_Enforced.xml'
+                [System.IO.FileInfo]$MSFTRecommendedBlockRulesPath = Join-Path -Path $StagingArea -ChildPath 'Microsoft recommended block rules.xml'
 
                 Write-Verbose -Message 'Determining the type of the new base policy'
                 switch ($NewBasePolicyType) {
@@ -861,7 +862,7 @@ Function Edit-WDACConfig {
                         Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml' -Destination $AllowMicrosoftTemplatePath -Force
 
                         Write-Verbose -Message 'Merging the AllowMicrosoft.xml and Microsoft recommended block rules into a single policy file'
-                        Merge-CIPolicy -PolicyPaths $AllowMicrosoftTemplatePath, (Join-Path -Path $StagingArea -ChildPath 'Microsoft recommended block rules.xml') -OutputFilePath $BasePolicyPath | Out-Null
+                        Merge-CIPolicy -PolicyPaths $AllowMicrosoftTemplatePath, $MSFTRecommendedBlockRulesPath -OutputFilePath $BasePolicyPath | Out-Null
 
                         Write-Verbose -Message 'Setting the policy name'
                         Set-CIPolicyIdInfo -FilePath $BasePolicyPath -PolicyName "Allow Microsoft Plus Block Rules refreshed On $(Get-Date -Format 'MM-dd-yyyy')"
@@ -875,7 +876,7 @@ Function Edit-WDACConfig {
                         Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml' -Destination $AllowMicrosoftTemplatePath -Force
 
                         Write-Verbose -Message 'Merging the AllowMicrosoft.xml and Microsoft recommended block rules into a single policy file'
-                        Merge-CIPolicy -PolicyPaths $AllowMicrosoftTemplatePath, '.\Microsoft recommended block rules.xml' -OutputFilePath $BasePolicyPath | Out-Null
+                        Merge-CIPolicy -PolicyPaths $AllowMicrosoftTemplatePath, $MSFTRecommendedBlockRulesPath -OutputFilePath $BasePolicyPath | Out-Null
 
                         Write-Verbose -Message 'Setting the policy name'
                         Set-CIPolicyIdInfo -FilePath $BasePolicyPath -PolicyName "Signed And Reputable policy refreshed on $(Get-Date -Format 'MM-dd-yyyy')"
@@ -898,15 +899,15 @@ Function Edit-WDACConfig {
 
                             Write-ColorfulText -Color HotPink -InputText 'Creating allow rules for PowerShell in the DefaultWindows base policy so you can continue using this module after deploying it.'
 
-                            New-CIPolicy -ScanPath $PSHOME -Level FilePublisher -NoScript -Fallback Hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -AllowFileNameFallbacks -FilePath .\AllowPowerShell.xml
+                            New-CIPolicy -ScanPath $PSHOME -Level FilePublisher -NoScript -Fallback Hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -AllowFileNameFallbacks -FilePath (Join-Path -Path $StagingArea -ChildPath 'AllowPowerShell.xml')
 
                             Write-Verbose -Message 'Merging the DefaultWindows.xml, AllowPowerShell.xml, SignTool.xml and Microsoft recommended block rules into a single policy file'
-                            Merge-CIPolicy -PolicyPaths $DefaultWindowsTemplatePath, .\AllowPowerShell.xml, '.\Microsoft recommended block rules.xml' -OutputFilePath $BasePolicyPath | Out-Null
+                            Merge-CIPolicy -PolicyPaths $DefaultWindowsTemplatePath, (Join-Path -Path $StagingArea -ChildPath 'AllowPowerShell.xml'), $MSFTRecommendedBlockRulesPath -OutputFilePath $BasePolicyPath | Out-Null
                         }
                         else {
                             Write-Verbose -Message 'Not including the PowerShell core directory in the policy'
                             Write-Verbose -Message 'Merging the DefaultWindows.xml, SignTool.xml and Microsoft recommended block rules into a single policy file'
-                            Merge-CIPolicy -PolicyPaths $DefaultWindowsTemplatePath, '.\Microsoft recommended block rules.xml' -OutputFilePath $BasePolicyPath | Out-Null
+                            Merge-CIPolicy -PolicyPaths $DefaultWindowsTemplatePath, $MSFTRecommendedBlockRulesPath -OutputFilePath $BasePolicyPath | Out-Null
                         }
 
                         Write-Verbose -Message 'Setting the policy name'
@@ -955,25 +956,23 @@ Function Edit-WDACConfig {
                 $CurrentStep++
                 Write-Progress -Id 12 -Activity 'Cleaning up' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                # Keep the new base policy XML file that was just deployed, in the current directory, so user can keep it for later
-                # Defining a hashtable that contains the policy names and their corresponding XML file names
+                # Keep the new base policy XML file that was just deployed for user to keep it
+                # Defining a hashtable that contains the policy names and their corresponding XML file names + paths
                 [System.Collections.Hashtable]$PolicyFiles = @{
-                    'AllowMicrosoft_Plus_Block_Rules' = 'AllowMicrosoftPlusBlockRules.xml'
-                    'Lightly_Managed_system_Policy'   = 'SignedAndReputable.xml'
-                    'DefaultWindows_WithBlockRules'   = 'DefaultWindowsPlusBlockRules.xml'
+                    'AllowMicrosoft_Plus_Block_Rules' = (Join-Path -Path $UserConfigDir -ChildPath 'AllowMicrosoftPlusBlockRules.xml')
+                    'Lightly_Managed_system_Policy'   = (Join-Path -Path $UserConfigDir -ChildPath 'SignedAndReputable.xml')
+                    'DefaultWindows_WithBlockRules'   = (Join-Path -Path $UserConfigDir -ChildPath 'DefaultWindowsPlusBlockRules.xml')
                 }
 
-                Write-Verbose -Message 'Making sure a policy file with the same name as the current base policy does not exist in the current working directory'
-                Remove-Item -Path $PolicyFiles[$NewBasePolicyType] -Force -ErrorAction SilentlyContinue
-
                 Write-Verbose -Message 'Renaming the base policy XML file to match the new base policy type'
-                Rename-Item -Path $BasePolicyPath -NewName $PolicyFiles[$NewBasePolicyType] -Force
+                # Copy the new base policy to the user's config directory since Staging Area is a temporary location
+                Move-Item -Path $BasePolicyPath -Destination $PolicyFiles[$NewBasePolicyType] -Force
 
                 Write-ColorfulText -Color Pink -InputText "Base Policy has been successfully updated to $NewBasePolicyType"
 
                 if (Get-CommonWDACConfig -UnsignedPolicyPath) {
                     Write-Verbose -Message 'Replacing the old unsigned policy path in User Configurations with the new one'
-                    Set-CommonWDACConfig -UnsignedPolicyPath (Get-ChildItem -Path $PolicyFiles[$NewBasePolicyType]).FullName | Out-Null
+                    Set-CommonWDACConfig -UnsignedPolicyPath $PolicyFiles[$NewBasePolicyType] | Out-Null
                 }
                 Write-Progress -Id 12 -Activity 'Complete.' -Completed
             }

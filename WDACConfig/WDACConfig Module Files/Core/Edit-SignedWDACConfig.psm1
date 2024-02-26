@@ -1069,6 +1069,7 @@ Function Edit-SignedWDACConfig {
                 [System.IO.FileInfo]$BasePolicyPath = Join-Path -Path $StagingArea -ChildPath 'BasePolicy.xml'
                 [System.IO.FileInfo]$AllowMicrosoftTemplatePath = Join-Path -Path $StagingArea -ChildPath 'AllowMicrosoft.xml'
                 [System.IO.FileInfo]$DefaultWindowsTemplatePath = Join-Path -Path $StagingArea -ChildPath 'DefaultWindows_Enforced.xml'
+                [System.IO.FileInfo]$MSFTRecommendedBlockRulesPath = Join-Path -Path $StagingArea -ChildPath 'Microsoft recommended block rules.xml'
 
                 Write-Verbose -Message 'Determining the type of the new base policy'
                 switch ($NewBasePolicyType) {
@@ -1080,7 +1081,7 @@ Function Edit-SignedWDACConfig {
                         Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml' -Destination $AllowMicrosoftTemplatePath -Force
 
                         Write-Verbose -Message 'Merging the AllowMicrosoft.xml and Microsoft recommended block rules into a single policy file'
-                        Merge-CIPolicy -PolicyPaths $AllowMicrosoftTemplatePath, (Join-Path -Path $StagingArea -ChildPath 'Microsoft recommended block rules.xml') -OutputFilePath $BasePolicyPath | Out-Null
+                        Merge-CIPolicy -PolicyPaths $AllowMicrosoftTemplatePath, $MSFTRecommendedBlockRulesPath -OutputFilePath $BasePolicyPath | Out-Null
 
                         Write-Verbose -Message 'Setting the policy name'
                         Set-CIPolicyIdInfo -FilePath $BasePolicyPath -PolicyName "Allow Microsoft Plus Block Rules refreshed On $(Get-Date -Format 'MM-dd-yyyy')"
@@ -1095,7 +1096,7 @@ Function Edit-SignedWDACConfig {
                         Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml' -Destination $AllowMicrosoftTemplatePath -Force
 
                         Write-Verbose -Message 'Merging the AllowMicrosoft.xml and Microsoft recommended block rules into a single policy file'
-                        Merge-CIPolicy -PolicyPaths $AllowMicrosoftTemplatePath, (Join-Path -Path $StagingArea -ChildPath 'Microsoft recommended block rules.xml') -OutputFilePath $BasePolicyPath | Out-Null
+                        Merge-CIPolicy -PolicyPaths $AllowMicrosoftTemplatePath, $MSFTRecommendedBlockRulesPath -OutputFilePath $BasePolicyPath | Out-Null
 
                         Write-Verbose -Message 'Setting the policy name'
                         Set-CIPolicyIdInfo -FilePath $BasePolicyPath -PolicyName "Signed And Reputable policy refreshed on $(Get-Date -Format 'MM-dd-yyyy')"
@@ -1133,12 +1134,12 @@ Function Edit-SignedWDACConfig {
                             New-CIPolicy -ScanPath $PSHOME -Level FilePublisher -NoScript -Fallback Hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -AllowFileNameFallbacks -FilePath (Join-Path -Path $StagingArea -ChildPath 'AllowPowerShell.xml')
 
                             Write-Verbose -Message 'Merging the DefaultWindows.xml, AllowPowerShell.xml, SignTool.xml and Microsoft recommended block rules into a single policy file'
-                            Merge-CIPolicy -PolicyPaths $DefaultWindowsTemplatePath, (Join-Path -Path $StagingArea -ChildPath 'AllowPowerShell.xml'), (Join-Path -Path $StagingArea -ChildPath 'SignTool.xml'), (Join-Path -Path $StagingArea -ChildPath 'Microsoft recommended block rules.xml') -OutputFilePath $BasePolicyPath | Out-Null
+                            Merge-CIPolicy -PolicyPaths $DefaultWindowsTemplatePath, (Join-Path -Path $StagingArea -ChildPath 'AllowPowerShell.xml'), (Join-Path -Path $StagingArea -ChildPath 'SignTool.xml'), $MSFTRecommendedBlockRulesPath -OutputFilePath $BasePolicyPath | Out-Null
                         }
                         else {
                             Write-Verbose -Message 'Not including the PowerShell core directory in the policy'
                             Write-Verbose -Message 'Merging the DefaultWindows.xml, SignTool.xml and Microsoft recommended block rules into a single policy file'
-                            Merge-CIPolicy -PolicyPaths $DefaultWindowsTemplatePath, (Join-Path -Path $StagingArea -ChildPath 'SignTool.xml'), (Join-Path -Path $StagingArea -ChildPath 'Microsoft recommended block rules.xml') -OutputFilePath $BasePolicyPath | Out-Null
+                            Merge-CIPolicy -PolicyPaths $DefaultWindowsTemplatePath, (Join-Path -Path $StagingArea -ChildPath 'SignTool.xml'), $MSFTRecommendedBlockRulesPath -OutputFilePath $BasePolicyPath | Out-Null
                         }
 
                         Write-Verbose -Message 'Setting the policy name'

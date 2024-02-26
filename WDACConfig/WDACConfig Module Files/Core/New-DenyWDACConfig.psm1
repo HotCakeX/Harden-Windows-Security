@@ -37,7 +37,7 @@ Function New-DenyWDACConfig {
         [Parameter(Mandatory = $false, ParameterSetName = 'Normal')]
         [System.String]$Level = 'WHQLFilePublisher',
 
-        [ValidateSet([Fallbackz])]
+        [ValidateSet([Levelz])]
         [Parameter(Mandatory = $false, ParameterSetName = 'Normal')]
         [System.String[]]$Fallbacks = ('FilePublisher', 'Hash'),
 
@@ -75,24 +75,6 @@ Function New-DenyWDACConfig {
 
         # Detecting if Debug switch is used, will do debugging actions based on that
         $PSBoundParameters.Debug.IsPresent ? ([System.Boolean]$Debug = $true) : ([System.Boolean]$Debug = $false) | Out-Null
-
-        # argument tab auto-completion and ValidateSet for Fallbacks
-        Class Fallbackz : System.Management.Automation.IValidateSetValuesGenerator {
-            [System.String[]] GetValidValues() {
-                $Fallbackz = ('Hash', 'FileName', 'SignedVersion', 'Publisher', 'FilePublisher', 'LeafCertificate', 'PcaCertificate', 'RootCertificate', 'WHQL', 'WHQLPublisher', 'WHQLFilePublisher', 'PFN', 'FilePath', 'None')
-
-                return [System.String[]]$Fallbackz
-            }
-        }
-
-        # argument tab auto-completion and ValidateSet for level
-        Class Levelz : System.Management.Automation.IValidateSetValuesGenerator {
-            [System.String[]] GetValidValues() {
-                $Levelz = ('Hash', 'FileName', 'SignedVersion', 'Publisher', 'FilePublisher', 'LeafCertificate', 'PcaCertificate', 'RootCertificate', 'WHQL', 'WHQLPublisher', 'WHQLFilePublisher', 'PFN', 'FilePath', 'None')
-
-                return [System.String[]]$Levelz
-            }
-        }
 
         # if -SkipVersionCheck wasn't passed, run the updater
         if (-NOT $SkipVersionCheck) { Update-self -InvocationStatement $MyInvocation.Statement }

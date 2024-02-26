@@ -9,7 +9,6 @@ if (!$IsWindows) {
 try {
     if ((Test-Path -Path 'Variable:\MSFTRecommendedBlockRulesURL') -eq $false) { New-Variable -Name 'MSFTRecommendedBlockRulesURL' -Value 'https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/public/windows/security/application-security/application-control/windows-defender-application-control/design/applications-that-can-bypass-wdac.md' -Option 'Constant' -Scope 'Global' -Description 'User Mode block rules' -Force }
     if ((Test-Path -Path 'Variable:\MSFTRecommendedDriverBlockRulesURL') -eq $false) { New-Variable -Name 'MSFTRecommendedDriverBlockRulesURL' -Value 'https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/public/windows/security/application-security/application-control/windows-defender-application-control/design/microsoft-recommended-driver-block-rules.md' -Option 'Constant' -Scope 'Global' -Description 'Kernel Mode block rules' -Force }
-    # if ((Test-Path -Path 'Variable:\UserTempDirectoryPath') -eq $false) { New-Variable -Name 'UserTempDirectoryPath' -Value ([System.IO.Path]::GetTempPath()) -Option 'Constant' -Scope 'Global' -Description 'Properly and securely retrieved Temp Directory' -Force }
     if ((Test-Path -Path 'Variable:\UserAccountDirectoryPath') -eq $false) { New-Variable -Name 'UserAccountDirectoryPath' -Value ((Get-CimInstance Win32_UserProfile -Filter "SID = '$([System.Security.Principal.WindowsIdentity]::GetCurrent().User.Value)'").LocalPath) -Option 'Constant' -Scope 'Script' -Description 'Securely retrieved User profile directory' -Force }
     if ((Test-Path -Path 'Variable:\Requiredbuild') -eq $false) { New-Variable -Name 'Requiredbuild' -Value '22621.2428' -Option 'Constant' -Scope 'Script' -Description 'Minimum required OS build number' -Force }
     if ((Test-Path -Path 'Variable:\OSBuild') -eq $false) { New-Variable -Name 'OSBuild' -Value ([System.Environment]::OSVersion.Version.Build) -Option 'Constant' -Scope 'Script' -Description 'Current OS build version' -Force }
@@ -18,7 +17,7 @@ try {
     if ((Test-Path -Path 'Variable:\ModuleRootPath') -eq $false) { New-Variable -Name 'ModuleRootPath' -Value ($PSScriptRoot) -Option 'Constant' -Scope 'Global' -Description 'Storing the value of $PSScriptRoot in a global constant variable to allow the internal functions to use it when navigating the module structure' -Force }
     if ((Test-Path -Path 'Variable:\CISchemaPath') -eq $false) { New-Variable -Name 'CISchemaPath' -Value "$Env:SystemDrive\Windows\schemas\CodeIntegrity\cipolicy.xsd" -Option 'Constant' -Scope 'Global' -Description 'Storing the path to the WDAC Code Integrity Schema XSD file' -Force }
     if ((Test-Path -Path 'Variable:\UserConfigDir') -eq $false) { New-Variable -Name 'UserConfigDir' -Value "$Env:ProgramFiles\WDACConfig" -Option 'Constant' -Scope 'Global' -Description 'Storing the path to the WDACConfig folder in the Program Files' -Force }
-    if ((Test-Path -Path 'Variable:\UserConfigJson') -eq $false) { New-Variable -Name 'UserConfigJson' -Value "$UserConfigDir\UserConfigurations.json" -Option 'Constant' -Scope 'Global' -Description 'Storing the path to User Config JSON file in the WDACConfig folder in the Program Files' -Force }
+    if ((Test-Path -Path 'Variable:\UserConfigJson') -eq $false) { New-Variable -Name 'UserConfigJson' -Value "$UserConfigDir\UserConfigurations\UserConfigurations.json" -Option 'Constant' -Scope 'Global' -Description 'Storing the path to User Config JSON file in the WDACConfig folder in the Program Files' -Force }
 }
 catch {
     Throw [System.InvalidOperationException] 'Could not set the required global variables.'
@@ -34,10 +33,8 @@ $PSStyle.Progress.UseOSCIndicator = $true
 
 # Loop through all the relevant files in the module
 foreach ($File in (Get-ChildItem -Recurse -File -Path $ModuleRootPath -Include '*.ps1', '*.psm1')) {
-
     # Get the signature of the current file
     [System.Management.Automation.Signature]$Signature = Get-AuthenticodeSignature -FilePath $File
-
     # Ensure that they are code signed properly and have not been tampered with.
     if (($Signature.SignerCertificate.Thumbprint -eq '1c1c9082551b43eec17c0301bfb2f27031a4d8c8') -and ($Signature.Status -in 'Valid', 'UnknownError')) {
         # If the file is signed properly, then continue to the next file
@@ -53,10 +50,8 @@ if (Test-Path -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.js
 
     # Create the new directory if it doesn't exist
     if (-NOT (Test-Path -Path $UserConfigDir -PathType Container)) {
-
         New-Item -ItemType Directory -Path $UserConfigDir -Force
     }
-
     # Only move the file if it doesn't already exist in the new location
     if (-NOT (Test-Path -Path $UserConfigJson -PathType Leaf)) {
 
@@ -70,6 +65,14 @@ if (Test-Path -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.js
     else {
         # Remove the old directory
         Remove-Item -Path "$UserAccountDirectoryPath\.WDACConfig" -Force -Recurse
+    }
+}
+
+# argument tab auto-completion and ValidateSet for Levels and Fallbacks parameters in the entire module
+Class Levelz : System.Management.Automation.IValidateSetValuesGenerator {
+    [System.String[]] GetValidValues() {
+        $Levelz = ('Hash', 'FileName', 'SignedVersion', 'Publisher', 'FilePublisher', 'LeafCertificate', 'PcaCertificate', 'RootCertificate', 'WHQL', 'WHQLPublisher', 'WHQLFilePublisher', 'PFN', 'FilePath', 'None')
+        return [System.String[]]$Levelz
     }
 }
 

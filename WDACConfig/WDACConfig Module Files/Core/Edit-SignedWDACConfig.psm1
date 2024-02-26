@@ -155,7 +155,7 @@ Function Edit-SignedWDACConfig {
         [parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps')]
         [System.String]$Level = 'WHQLFilePublisher',
 
-        [ValidateSet([Fallbackz])]
+        [ValidateSet([Levelz])]
         [parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps Audit Events')]
         [parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps')]
         [System.String[]]$Fallbacks = ('FilePublisher', 'Hash'),
@@ -261,21 +261,7 @@ Function Edit-SignedWDACConfig {
             }
         }
 
-        # argument tab auto-completion and ValidateSet for Fallbacks
-        Class Fallbackz : System.Management.Automation.IValidateSetValuesGenerator {
-            [System.String[]] GetValidValues() {
-                $Fallbackz = ('Hash', 'FileName', 'SignedVersion', 'Publisher', 'FilePublisher', 'LeafCertificate', 'PcaCertificate', 'RootCertificate', 'WHQL', 'WHQLPublisher', 'WHQLFilePublisher', 'PFN', 'FilePath', 'None')
-                return [System.String[]]$Fallbackz
-            }
-        }
 
-        # argument tab auto-completion and ValidateSet for level
-        Class Levelz : System.Management.Automation.IValidateSetValuesGenerator {
-            [System.String[]] GetValidValues() {
-                $Levelz = ('Hash', 'FileName', 'SignedVersion', 'Publisher', 'FilePublisher', 'LeafCertificate', 'PcaCertificate', 'RootCertificate', 'WHQL', 'WHQLPublisher', 'WHQLFilePublisher', 'PFN', 'FilePath', 'None')
-                return [System.String[]]$Levelz
-            }
-        }
 
         function Update-BasePolicyToEnforced {
             <#
@@ -384,8 +370,6 @@ Function Edit-SignedWDACConfig {
                 Write-ColorfulText -Color MintGreen -InputText "PolicyName = $PolicyName"
                 Write-ColorfulText -Color MintGreen -InputText "PolicyGUID = $PolicyID"
 
-                # Remove the Audit Mode CIP
-                Remove-Item -LiteralPath $AuditModeCIPPath -Force
                 #Endregion Snap-Back-Guarantee
 
                 # A Try-Catch-Finally block so that if any errors occur, the Base policy will be Re-deployed in enforced mode
@@ -641,8 +625,6 @@ Function Edit-SignedWDACConfig {
                 Write-ColorfulText -Color MintGreen -InputText "PolicyName = $PolicyName"
                 Write-ColorfulText -Color MintGreen -InputText "PolicyGUID = $PolicyID"
 
-                # Remove the Audit Mode CIP
-                Remove-Item -Path $AuditModeCIPPath -Force
                 #Endregion Snap-Back-Guarantee
 
                 # A Try-Catch-Finally block so that if any errors occur, the Base policy will be Re-deployed in enforced mode

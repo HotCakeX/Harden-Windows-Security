@@ -51,7 +51,7 @@ Function New-SupplementalWDACConfig {
         [parameter(Mandatory = $false, ParameterSetName = 'Normal')]
         [System.String]$Level = 'WHQLFilePublisher',
 
-        [ValidateSet([Fallbackz])]
+        [ValidateSet([Levelz])]
         [parameter(Mandatory = $false, ParameterSetName = 'Normal')]
         [System.String[]]$Fallbacks = ('FilePublisher', 'Hash'),
 
@@ -73,21 +73,6 @@ Function New-SupplementalWDACConfig {
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Update-self.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Write-ColorfulText.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Edit-CiPolicyRuleOptions.psm1" -Force
-
-        # argument tab auto-completion and ValidateSet for Fallbacks
-        Class Fallbackz : System.Management.Automation.IValidateSetValuesGenerator {
-            [System.String[]] GetValidValues() {
-                $Fallbackz = ('Hash', 'FileName', 'SignedVersion', 'Publisher', 'FilePublisher', 'LeafCertificate', 'PcaCertificate', 'RootCertificate', 'WHQL', 'WHQLPublisher', 'WHQLFilePublisher', 'PFN', 'FilePath', 'None')
-                return [System.String[]]$Fallbackz
-            }
-        }
-        # argument tab auto-completion and ValidateSet for level
-        Class Levelz : System.Management.Automation.IValidateSetValuesGenerator {
-            [System.String[]] GetValidValues() {
-                $Levelz = ('Hash', 'FileName', 'SignedVersion', 'Publisher', 'FilePublisher', 'LeafCertificate', 'PcaCertificate', 'RootCertificate', 'WHQL', 'WHQLPublisher', 'WHQLFilePublisher', 'PFN', 'FilePath', 'None')
-                return [System.String[]]$Levelz
-            }
-        }
 
         # if -SkipVersionCheck wasn't passed, run the updater
         if (-NOT $SkipVersionCheck) { Update-self -InvocationStatement $MyInvocation.Statement }

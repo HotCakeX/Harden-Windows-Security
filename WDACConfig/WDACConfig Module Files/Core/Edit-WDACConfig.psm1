@@ -73,7 +73,7 @@ Function Edit-WDACConfig {
         [parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps')]
         [System.String]$Level = 'WHQLFilePublisher',
 
-        [ValidateSet([Fallbackz])]
+        [ValidateSet([Levelz])]
         [parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps Audit Events')]
         [parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps')]
         [System.String[]]$Fallbacks = ('FilePublisher', 'Hash'),
@@ -170,22 +170,6 @@ Function Edit-WDACConfig {
             }
         }
 
-        # argument tab auto-completion and ValidateSet for Fallbacks
-        Class Fallbackz : System.Management.Automation.IValidateSetValuesGenerator {
-            [System.String[]] GetValidValues() {
-                $Fallbackz = ('Hash', 'FileName', 'SignedVersion', 'Publisher', 'FilePublisher', 'LeafCertificate', 'PcaCertificate', 'RootCertificate', 'WHQL', 'WHQLPublisher', 'WHQLFilePublisher', 'PFN', 'FilePath', 'None')
-                return [System.String[]]$Fallbackz
-            }
-        }
-
-        # argument tab auto-completion and ValidateSet for level
-        Class Levelz : System.Management.Automation.IValidateSetValuesGenerator {
-            [System.String[]] GetValidValues() {
-                $Levelz = ('Hash', 'FileName', 'SignedVersion', 'Publisher', 'FilePublisher', 'LeafCertificate', 'PcaCertificate', 'RootCertificate', 'WHQL', 'WHQLPublisher', 'WHQLFilePublisher', 'PFN', 'FilePath', 'None')
-                return [System.String[]]$Levelz
-            }
-        }
-
         function Update-BasePolicyToEnforced {
             <#
             .SYNOPSIS
@@ -212,44 +196,43 @@ Function Edit-WDACConfig {
 
         try {
 
-            if ($AllowNewApps) {                
+            if ($AllowNewApps) {
 
                 # An empty array that holds the Policy XML files - This array will eventually be used to create the final Supplemental policy
-                [System.Object[]]$PolicyXMLFilesArray = @()
+                [System.IO.FileInfo[]]$PolicyXMLFilesArray = @()
 
                 #Initiate Live Audit Mode
 
                 # The total number of the main steps for the progress bar to render
-                [System.Int16]$TotalSteps = 8
-                [System.Int16]$CurrentStep = 0
+                [System.UInt16]$TotalSteps = 8
+                [System.UInt16]$CurrentStep = 0
 
                 $CurrentStep++
                 Write-Progress -Id 9 -Activity 'Creating Audit mode policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                # Creating a copy of the original policy in Temp folder so that the original one will be unaffected
                 Write-Verbose -Message 'Creating a copy of the original policy in Temp folder so that the original one will be unaffected'
-                # Get the policy file name
-                [System.String]$PolicyFileName = Split-Path -Path $PolicyPath -Leaf
 
-                Copy-Item -Path $PolicyPath -Destination $StagingArea -Force
-                [System.String]$PolicyPath = "$StagingArea\$PolicyFileName"
+                Copy-Item -LiteralPath $PolicyPath -Destination $StagingArea -Force
+                [System.IO.FileInfo]$PolicyPath = Join-Path -Path $StagingArea -ChildPath (Split-Path -Path $PolicyPath -Leaf)
 
                 Write-Verbose -Message 'Retrieving the Base policy name and ID'
                 [System.Xml.XmlDocument]$Xml = Get-Content -Path $PolicyPath
                 [System.String]$PolicyID = $Xml.SiPolicy.PolicyID
-                [System.String]$PolicyName = ($Xml.SiPolicy.Settings.Setting | Where-Object -FilterScript { $_.provider -eq 'PolicyInfo' -and $_.valuename -eq 'Name' -and $_.key -eq 'Information' }).value.string
-             
+                [System.String]$PolicyName = ($Xml.SiPolicy.Settings.Setting | Where-Object -FilterScript { $_.provider -eq 'PolicyInfo' -and $_.valuename -eq 'Name' -and $_.key -eq 'Information' }).Value.String
+
                 Write-Verbose -Message 'Creating Audit Mode CIP'
+                [System.IO.FileInfo]$AuditModeCIPPath = Join-Path -Path $StagingArea -ChildPath 'AuditMode.cip'
                 # Add Audit mode policy rule option
                 Set-RuleOption -FilePath $PolicyPath -Option 3
                 # Create CIP for Audit Mode
-                ConvertFrom-CIPolicy -XmlFilePath $PolicyPath -BinaryFilePath '.\AuditMode.cip' | Out-Null
+                ConvertFrom-CIPolicy -XmlFilePath $PolicyPath -BinaryFilePath $AuditModeCIPPath | Out-Null
 
                 Write-Verbose -Message 'Creating Enforced Mode CIP'
+                [System.IO.FileInfo]$EnforcedModeCIPPath = Join-Path -Path $StagingArea -ChildPath 'EnforcedMode.cip'
                 # Remove Audit mode policy rule option
                 Set-RuleOption -FilePath $PolicyPath -Option 3 -Delete
                 # Create CIP for Enforced Mode
-                ConvertFrom-CIPolicy -XmlFilePath $PolicyPath -BinaryFilePath '.\EnforcedMode.cip' | Out-Null
+                ConvertFrom-CIPolicy -XmlFilePath $PolicyPath -BinaryFilePath $EnforcedModeCIPPath | Out-Null
 
                 #Region Snap-Back-Guarantee
                 Write-Verbose -Message 'Creating Enforced Mode SnapBack guarantee'
@@ -259,14 +242,12 @@ Function Edit-WDACConfig {
                 Write-Progress -Id 9 -Activity 'Deploying the Audit mode policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                 Write-Verbose -Message 'Deploying the Audit mode CIP'
-                &'C:\Windows\System32\CiTool.exe' --update-policy '.\AuditMode.cip' -json | Out-Null
+                &'C:\Windows\System32\CiTool.exe' --update-policy $AuditModeCIPPath -json | Out-Null
 
                 Write-ColorfulText -Color Lavender -InputText 'The Base policy with the following details has been Re-Deployed in Audit Mode:'
                 Write-ColorfulText -Color MintGreen -InputText "PolicyName = $PolicyName"
                 Write-ColorfulText -Color MintGreen -InputText "PolicyGUID = $PolicyID"
 
-                # Remove Audit Mode CIP
-                Remove-Item -Path '.\AuditMode.cip' -Force
                 #Endregion Snap-Back-Guarantee
 
                 # A Try-Catch-Finally block so that if any errors occur, the Base policy will be Re-deployed in enforced mode
@@ -425,8 +406,8 @@ Function Edit-WDACConfig {
                 #Initiate Live Audit Mode
 
                 # The total number of the main steps for the progress bar to render
-                [System.Int16]$TotalSteps = 9
-                [System.Int16]$CurrentStep = 0
+                [System.UInt16]$TotalSteps = 9
+                [System.UInt16]$CurrentStep = 0
 
                 $CurrentStep++
                 Write-Progress -Id 10 -Activity 'Creating the Audit mode policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
@@ -443,7 +424,7 @@ Function Edit-WDACConfig {
                 [System.Xml.XmlDocument]$Xml = Get-Content -Path $PolicyPath
                 [System.String]$PolicyID = $Xml.SiPolicy.PolicyID
                 [System.String]$PolicyName = ($Xml.SiPolicy.Settings.Setting | Where-Object -FilterScript { $_.provider -eq 'PolicyInfo' -and $_.valuename -eq 'Name' -and $_.key -eq 'Information' }).value.string
-               
+
                 Write-Verbose -Message 'Creating Audit Mode CIP'
                 # Add Audit mode policy rule option
                 Set-RuleOption -FilePath $PolicyPath -Option 3
@@ -470,8 +451,6 @@ Function Edit-WDACConfig {
                 Write-ColorfulText -Color MintGreen -InputText "PolicyName = $PolicyName"
                 Write-ColorfulText -Color MintGreen -InputText "PolicyGUID = $PolicyID"
 
-                # Remove Audit Mode CIP
-                Remove-Item -Path '.\AuditMode.cip' -Force
                 #Endregion Snap-Back-Guarantee
 
                 # A Try-Catch-Finally block so that if any errors occur, the Base policy will be Re-deployed in enforced mode
@@ -717,7 +696,7 @@ Function Edit-WDACConfig {
                     Write-Progress -Id 10 -Activity 'Merging the policies' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                     Merge-CIPolicy -PolicyPaths $PolicyXMLFilesArray -OutputFilePath ".\SupplementalPolicy $SuppPolicyName.xml" | Out-Null
-                   
+
                 }
                 # Unlike AllowNewApps parameter, AllowNewAppsAuditEvents parameter performs Event viewer scanning and kernel protected files detection
                 # So the base policy enforced mode snap back can't happen any sooner than this point
@@ -774,8 +753,8 @@ Function Edit-WDACConfig {
             if ($MergeSupplementalPolicies) {
 
                 # The total number of the main steps for the progress bar to render
-                [System.Int16]$TotalSteps = 5
-                [System.Int16]$CurrentStep = 0
+                [System.UInt16]$TotalSteps = 5
+                [System.UInt16]$CurrentStep = 0
 
                 $CurrentStep++
                 Write-Progress -Id 11 -Activity 'Verifying the input files' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
@@ -861,8 +840,8 @@ Function Edit-WDACConfig {
             if ($UpdateBasePolicy) {
 
                 # The total number of the main steps for the progress bar to render
-                [System.Int16]$TotalSteps = 5
-                [System.Int16]$CurrentStep = 0
+                [System.UInt16]$TotalSteps = 5
+                [System.UInt16]$CurrentStep = 0
 
                 $CurrentStep++
                 Write-Progress -Id 12 -Activity 'Getting the block rules' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
@@ -1078,8 +1057,8 @@ Function Edit-WDACConfig {
 
 # Importing argument completer ScriptBlocks
 . "$ModuleRootPath\Resources\ArgumentCompleters.ps1"
-Register-ArgumentCompleter -CommandName 'Edit-WDACConfig' -ParameterName 'PolicyPath' -ScriptBlock $ArgumentCompleterPolicyPathsBasePoliciesOnly
-Register-ArgumentCompleter -CommandName 'Edit-WDACConfig' -ParameterName 'SuppPolicyPaths' -ScriptBlock $ArgumentCompleterPolicyPathsSupplementalPoliciesOnly
+Register-ArgumentCompleter -CommandName 'Edit-WDACConfig' -ParameterName 'PolicyPath' -ScriptBlock $ArgumentCompleterXmlFilePathsPicker
+Register-ArgumentCompleter -CommandName 'Edit-WDACConfig' -ParameterName 'SuppPolicyPaths' -ScriptBlock $ArgumentCompleterMultipleXmlFilePathsPicker
 
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor

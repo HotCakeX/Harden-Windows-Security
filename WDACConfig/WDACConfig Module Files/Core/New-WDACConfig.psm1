@@ -59,7 +59,7 @@ Function New-WDACConfig {
         [parameter(Mandatory = $false, ParameterSetName = 'Make Policy From Audit Logs')]
         [System.String]$Level = 'WHQLFilePublisher',
 
-        [ValidateSet([Fallbackz])]
+        [ValidateSet([Levelz])]
         [parameter(Mandatory = $false, ParameterSetName = 'Make Policy From Audit Logs')]
         [System.String[]]$Fallbacks = ('FilePublisher', 'Hash'),
 
@@ -93,21 +93,6 @@ Function New-WDACConfig {
         # Detecting if Debug switch is used, will do debugging actions based on that
         $PSBoundParameters.Debug.IsPresent ? ([System.Boolean]$Debug = $true) : ([System.Boolean]$Debug = $false) | Out-Null
 
-        # argument tab auto-completion and ValidateSet for Fallbacks
-        Class Fallbackz : System.Management.Automation.IValidateSetValuesGenerator {
-            [System.String[]] GetValidValues() {
-                $Fallbackz = ('Hash', 'FileName', 'SignedVersion', 'Publisher', 'FilePublisher', 'LeafCertificate', 'PcaCertificate', 'RootCertificate', 'WHQL', 'WHQLPublisher', 'WHQLFilePublisher', 'PFN', 'FilePath', 'None')
-                return [System.String[]]$Fallbackz
-            }
-        }
-
-        # argument tab auto-completion and ValidateSet for level
-        Class Levelz : System.Management.Automation.IValidateSetValuesGenerator {
-            [System.String[]] GetValidValues() {
-                $Levelz = ('Hash', 'FileName', 'SignedVersion', 'Publisher', 'FilePublisher', 'LeafCertificate', 'PcaCertificate', 'RootCertificate', 'WHQL', 'WHQLPublisher', 'WHQLFilePublisher', 'PFN', 'FilePath', 'None')
-                return [System.String[]]$Levelz
-            }
-        }
         Function Get-DriverBlockRules {
             <#
             .SYNOPSIS

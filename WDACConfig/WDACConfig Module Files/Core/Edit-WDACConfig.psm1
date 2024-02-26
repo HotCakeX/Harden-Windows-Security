@@ -160,16 +160,6 @@ Function Edit-WDACConfig {
             }
         }
         #Endregion User-Configurations-Processing-Validation
-
-        # argument tab auto-completion and ValidateSet for Policy names
-        Class BasePolicyNamez : System.Management.Automation.IValidateSetValuesGenerator {
-            [System.String[]] GetValidValues() {
-                $BasePolicyNamez = ((&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { $_.IsSystemPolicy -ne 'True' } | Where-Object -FilterScript { $_.PolicyID -eq $_.BasePolicyID }).Friendlyname
-
-                return [System.String[]]$BasePolicyNamez
-            }
-        }
-
         function Update-BasePolicyToEnforced {
             <#
             .SYNOPSIS

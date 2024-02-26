@@ -76,6 +76,14 @@ Class Levelz : System.Management.Automation.IValidateSetValuesGenerator {
     }
 }
 
+# argument tab auto-completion and ValidateSet for Non-System Policy names
+Class BasePolicyNamez : System.Management.Automation.IValidateSetValuesGenerator {
+    [System.String[]] GetValidValues() {
+        $BasePolicyNamez = ((&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { $_.IsSystemPolicy -ne 'True' } | Where-Object -FilterScript { $_.PolicyID -eq $_.BasePolicyID }).Friendlyname
+        return [System.String[]]$BasePolicyNamez
+    }
+}
+
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG

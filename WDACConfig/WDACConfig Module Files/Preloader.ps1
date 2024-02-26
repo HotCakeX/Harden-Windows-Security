@@ -84,22 +84,6 @@ Class BasePolicyNamez : System.Management.Automation.IValidateSetValuesGenerator
     }
 }
 
-Function New-StagingArea {
-    param(
-        [Parameter(Mandatory = $true, ValueFromPipeline = $true)][System.String]$CmdletName
-    )
-    # Define a staging area for the cmdlet
-    [System.IO.DirectoryInfo]$StagingArea = Join-Path -Path $UserConfigDir -ChildPath 'StagingArea' -AdditionalChildPath $CmdletName
-
-    # Delete it if it exists already with possible content with previous runs
-    if (Test-Path -PathType Container -LiteralPath $StagingArea) {
-        Remove-Item -LiteralPath $StagingArea -Recurse -Force
-    }
-    # Create the staging area for the cmdlet
-    New-Item -Path $StagingArea -ItemType Directory -Force | Out-Null
-    return $StagingArea
-}
-
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG

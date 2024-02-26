@@ -257,20 +257,14 @@ Function Edit-SignedWDACConfig {
             .SYNOPSIS
                 A helper function used to redeploy the base policy in Enforced mode
             .INPUTS
-                None. This function uses the global variables $PolicyName and $PolicyID
+                None. This function uses the global variables: $PolicyName, $PolicyID and $EnforcedModeCIPPath
             .OUTPUTS
                 System.String
             #>
-            [CmdletBinding()]
-            param()
-
-            # Deploy Enforced mode CIP
             &'C:\Windows\System32\CiTool.exe' --update-policy $EnforcedModeCIPPath -json | Out-Null
             Write-ColorfulText -Color Lavender -InputText 'The Base policy with the following details has been Re-Signed and Re-Deployed in Enforced Mode:'
             Write-ColorfulText -Color MintGreen -InputText "PolicyName = $PolicyName"
             Write-ColorfulText -Color MintGreen -InputText "PolicyGUID = $PolicyID"
-            # Remove Enforced Mode CIP
-            Remove-Item -LiteralPath $EnforcedModeCIPPath -Force
         }
     }
 
@@ -281,7 +275,7 @@ Function Edit-SignedWDACConfig {
             if ($AllowNewApps) {
 
                 # An empty array that holds the Policy XML files - This array will eventually be used to create the final Supplemental policy
-                [System.String[]]$PolicyXMLFilesArray = @()
+                [System.IO.FileInfo[]]$PolicyXMLFilesArray = @()
 
                 #Initiate Live Audit Mode
 
@@ -443,11 +437,10 @@ Function Edit-SignedWDACConfig {
                     New-CIPolicy @UserInputProgramFoldersPolicyMakerHashTable
                 }
 
-                # Merge-CiPolicy accepts arrays - collecting all the policy files created by scanning user specified folders
                 Write-Verbose -Message 'Collecting all the policy files created by scanning user specified folders'
 
-                foreach ($file in (Get-ChildItem -File -Path $StagingArea -Filter 'ProgramDir_ScanResults*.xml')) {
-                    $PolicyXMLFilesArray += $file.FullName
+                foreach ($File in (Get-ChildItem -File -Path $StagingArea -Filter 'ProgramDir_ScanResults*.xml')) {
+                    $PolicyXMLFilesArray += $File.FullName
                 }
 
                 Write-Verbose -Message 'The following policy xml files are going to be merged into the final Supplemental policy and be deployed on the system:'
@@ -463,8 +456,6 @@ Function Edit-SignedWDACConfig {
                 #Region Supplemental-policy-processing-and-deployment
                 $CurrentStep++
                 Write-Progress -Id 14 -Activity 'Creating Supplemental policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-                Write-Verbose -Message 'Supplemental policy processing and deployment'
 
                 Write-Verbose -Message 'Converting the policy to a Supplemental policy type and resetting its ID'
                 [System.String]$SuppPolicyID = Set-CIPolicyIdInfo -FilePath $SuppPolicyPath -PolicyName "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath
@@ -535,7 +526,7 @@ Function Edit-SignedWDACConfig {
                 [System.DateTime]$Date = Get-Date
 
                 # An empty array that holds the Policy XML files - This array will eventually be used to create the final Supplemental policy
-                [System.String[]]$PolicyXMLFilesArray = @()
+                [System.IO.FileInfo[]]$PolicyXMLFilesArray = @()
 
                 #Initiate Live Audit Mode
 
@@ -546,7 +537,6 @@ Function Edit-SignedWDACConfig {
                 $CurrentStep++
                 Write-Progress -Id 15 -Activity 'Creating Audit mode policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                # Creating a copy of the original policy in the Staging Area so that the original one will be unaffected
                 Write-Verbose -Message 'Creating a copy of the original policy in the Staging Area so that the original one will be unaffected'
 
                 Copy-Item -Path $PolicyPath -Destination $StagingArea -Force
@@ -675,20 +665,20 @@ Function Edit-SignedWDACConfig {
 
                             # Create a folder in Staging Area to copy the files that are not included in user-selected program path(s)
                             # but detected in Event viewer audit logs, scan that folder, and in the end delete it
-                            New-Item -Path "$StagingArea\TemporaryScanFolderForEventViewerFiles" -ItemType Directory -Force | Out-Null
+                            [System.IO.DirectoryInfo]$TemporaryScanFolderForEventViewerFiles = New-Item -Path "$StagingArea\TemporaryScanFolderForEventViewerFiles" -ItemType Directory -Force
 
                             Write-Verbose -Message 'The following file(s) are being copied to the Staging Area for scanning because they were found in event logs but did not exist in any of the user-selected paths:'
                             $TestFilePathResults | ForEach-Object -Process {
                                 Write-Verbose -Message "$_"
-                                Copy-Item -Path $_ -Destination "$StagingArea\TemporaryScanFolderForEventViewerFiles\" -Force -ErrorAction SilentlyContinue
+                                Copy-Item -Path $_ -Destination $TemporaryScanFolderForEventViewerFiles -Force -ErrorAction SilentlyContinue
                             }
 
                             # Create a policy XML file for available files on the disk
 
                             # Creating a hash table to dynamically add parameters based on user input and pass them to New-Cipolicy cmdlet
                             [System.Collections.Hashtable]$AvailableFilesOnDiskPolicyMakerHashTable = @{
-                                FilePath               = "$StagingArea\RulesForFilesNotInUserSelectedPaths.xml"
-                                ScanPath               = "$StagingArea\TemporaryScanFolderForEventViewerFiles\"
+                                FilePath               = (Join-Path -Path $StagingArea -ChildPath 'RulesForFilesNotInUserSelectedPaths.xml')
+                                ScanPath               = $TemporaryScanFolderForEventViewerFiles
                                 Level                  = $Level -eq 'FilePath' ? 'FilePublisher' : $Level # Since FilePath will not be valid for files scanned in the Staging Area (because they weren't in any user-selected paths), using FilePublisher as level in case user chose FilePath as level
                                 Fallback               = $Fallbacks -eq 'FilePath' ? 'Hash' : $Fallbacks # Since FilePath will not be valid for files scanned in the Staging Area (because they weren't in any user-selected paths), using Hash as Fallback in case user chose FilePath as Fallback
                                 MultiplePolicyFormat   = $true
@@ -709,7 +699,7 @@ Function Edit-SignedWDACConfig {
 
                             # Delete the Temporary folder in the Staging Area
                             Write-Verbose -Message 'Deleting the Temporary folder in the Staging Area'
-                            Remove-Item -Recurse -Path "$StagingArea\TemporaryScanFolderForEventViewerFiles\" -Force
+                            Remove-Item -Recurse -Path $TemporaryScanFolderForEventViewerFiles -Force
                         }
                     }
 
@@ -730,18 +720,14 @@ Function Edit-SignedWDACConfig {
                         [System.String]$FileRulesHashesResults = Get-FileRules -HashesArray $AuditEventLogsProcessingResults.DeletedFileHashes
                         [System.String]$RuleRefsHashesResults = (Get-RuleRefs -HashesArray $AuditEventLogsProcessingResults.DeletedFileHashes).Trim()
 
-                        # Save the File Rules and File Rule Refs in the FileRulesAndFileRefs.txt in the Staging Area for debugging purposes
                         Write-Verbose -Message 'Saving the File Rules and File Rule Refs in the FileRulesAndFileRefs.txt in the Staging Area for debugging purposes'
                         $FileRulesHashesResults + $RuleRefsHashesResults | Out-File -FilePath (Join-Path -Path $StagingArea -ChildPath 'FileRulesAndFileRefs.txt') -Force
 
-                        # Put the Rules and RulesRefs in an empty policy file
                         Write-Verbose -Message 'Putting the Rules and RulesRefs in an empty policy file'
-                        [System.IO.FileInfo]$DeletedFileHashesEventsPolicyPath = Join-Path -Path $StagingArea -ChildPath 'DeletedFileHashesEventsPolicy.xml'
-                        New-EmptyPolicy -RulesContent $FileRulesHashesResults -RuleRefsContent $RuleRefsHashesResults | Out-File -FilePath $DeletedFileHashesEventsPolicyPath -Force
+                        New-EmptyPolicy -RulesContent $FileRulesHashesResults -RuleRefsContent $RuleRefsHashesResults | Out-File -FilePath (Join-Path -Path $StagingArea -ChildPath 'DeletedFileHashesEventsPolicy.xml') -Force
 
-                        # adding the policy file that consists of rules from audit even logs, to the array
                         Write-Verbose -Message 'Adding the policy file (DeletedFileHashesEventsPolicy.xml) that consists of rules from audit even logs, to the array of XML files'
-                        $PolicyXMLFilesArray += $DeletedFileHashesEventsPolicyPath
+                        $PolicyXMLFilesArray += (Join-Path -Path $StagingArea -ChildPath 'DeletedFileHashesEventsPolicy.xml')
                     }
                     #Endregion EventCapturing
 
@@ -773,7 +759,6 @@ Function Edit-SignedWDACConfig {
                         New-CIPolicy @UserInputProgramFoldersPolicyMakerHashTable
                     }
 
-                    # Merge-CiPolicy accepts arrays - collecting all the policy files created by scanning user specified folders
                     Write-Verbose -Message 'Collecting all the policy files created by scanning user specified folders'
 
                     foreach ($file in (Get-ChildItem -File -Path $StagingArea -Filter 'ProgramDir_ScanResults*.xml')) {

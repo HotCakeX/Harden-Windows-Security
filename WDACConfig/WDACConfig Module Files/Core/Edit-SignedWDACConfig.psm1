@@ -82,53 +82,21 @@ Function Edit-SignedWDACConfig {
         [System.IO.FileInfo]$CertPath,
 
         [ValidateScript({
-                # Assign the input value to a variable because $_ is going to be used to access another pipeline object
-                [System.String]$InputCN = $_
+            # Assign the input value to a variable
+            [System.String]$InputCN = $_
+            # Count the number of duplicate CNs
+            [System.UInt64]$NumberOfDuplicateCNs = @([CertCNz]::new().GetValidValues() | Where-Object -FilterScript { $_ -eq $InputCN }).Count
 
-                # Create an empty array to store the output objects
-                [System.String[]]$Output = @()
-
-                # Loop through each certificate that uses RSA algorithm (Because ECDSA is not supported for signing WDAC policies) in the current user's personal store and extract the relevant properties
-                foreach ($Cert in (Get-ChildItem -Path 'Cert:\CurrentUser\My' | Where-Object -FilterScript { $_.PublicKey.Oid.FriendlyName -eq 'RSA' })) {
-
-                    # Takes care of certificate subjects that include comma in their CN
-                    # Determine if the subject contains a comma
-                    if ($Cert.Subject -match 'CN=(?<RegexTest>.*?),.*') {
-                        # If the CN value contains double quotes, use split to get the value between the quotes
-                        if ($matches['RegexTest'] -like '*"*') {
-                            $SubjectCN = ($Element.Certificate.Subject -split 'CN="(.+?)"')[1]
-                        }
-                        # Otherwise, use the named group RegexTest to get the CN value
-                        else {
-                            $SubjectCN = $matches['RegexTest']
-                        }
-                    }
-                    # If the subject does not contain a comma, use a lookbehind to get the CN value
-                    elseif ($Cert.Subject -match '(?<=CN=).*') {
-                        $SubjectCN = $matches[0]
-                    }
-                    $Output += $SubjectCN
-                }
-
-                # Count the number of duplicate CNs in the output array
-                [System.UInt64]$NumberOfDuplicateCNs = @($Output | Where-Object -FilterScript { $_ -eq $InputCN }).Count
-
-                # If the certificate with the provided common name exists in the personal store of the user certificates
-                if ($Output -contains $_) {
-                    # if there are more than 1 certificate with the same common name on the system
-                    if ($NumberOfDuplicateCNs -eq 1) {
-                        # Return true if the certificate exists and there are no duplicates
-                        return $true
-                    }
-                    else {
-                        Throw "There are $NumberOfDuplicateCNs certificates with the same common name ($_) on the system, please remove the duplicate certificates and try again."
-                    }
-                }
-                else {
-                    Throw 'A certificate with the provided common name does not exist in the personal store of the user certificates.'
-                }
-
-            })]
+            # if there are more than 1 certificate with the same common name on the system
+            if ($NumberOfDuplicateCNs -eq 1) {
+                # Return true if the certificate exists and there are no duplicates
+                return $true
+            }
+            else {
+                Throw "There are $NumberOfDuplicateCNs certificates with the same common name ($_) on the system, please remove the duplicate certificates and try again."
+            }
+        })]
+        [ValidateSet([CertCNz])]
         [Parameter(Mandatory = $false, ValueFromPipelineByPropertyName = $true)]
         [System.String]$CertCN,
 
@@ -1327,7 +1295,6 @@ Function Edit-SignedWDACConfig {
 
 # Importing argument completer ScriptBlocks
 . "$ModuleRootPath\Resources\ArgumentCompleters.ps1"
-Register-ArgumentCompleter -CommandName 'Edit-SignedWDACConfig' -ParameterName 'CertCN' -ScriptBlock $ArgumentCompleterCertificateCN
 Register-ArgumentCompleter -CommandName 'Edit-SignedWDACConfig' -ParameterName 'CertPath' -ScriptBlock $ArgumentCompleterCerFilePathsPicker
 Register-ArgumentCompleter -CommandName 'Edit-SignedWDACConfig' -ParameterName 'SignToolPath' -ScriptBlock $ArgumentCompleterExeFilePathsPicker
 Register-ArgumentCompleter -CommandName 'Edit-SignedWDACConfig' -ParameterName 'PolicyPath' -ScriptBlock $ArgumentCompleterXmlFilePathsPicker

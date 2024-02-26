@@ -84,6 +84,28 @@ Class BasePolicyNamez : System.Management.Automation.IValidateSetValuesGenerator
     }
 }
 
+# Argument completer and ValidateSet for CertCNs
+Class CertCNz : System.Management.Automation.IValidateSetValuesGenerator {
+    [System.String[]] GetValidValues() {
+
+        [System.String[]]$Output = @()
+
+        # Loop through each certificate that uses RSA algorithm (Because ECDSA is not supported for signing WDAC policies) in the current user's personal store and extract the relevant properties
+        foreach ($Cert in (Get-ChildItem -Path 'Cert:\CurrentUser\My' | Where-Object -FilterScript { $_.PublicKey.Oid.FriendlyName -eq 'RSA' })) {
+
+            # Extract the data after CN=
+            # When a common name contains a comma ',' then it will automatically be wrapped around double quotes. E.g., "App Software USA, Inc."
+            # The methods below are conditional regex. Different patterns are used based on the availability of at least one double quote in the CN field, indicating that it had comma in it so it had been enclosed with double quotes by system
+            $Cert.Subject -match 'CN=(?<InitialRegexTest2>.*?),.*' | Out-Null
+            [System.String]$SubjectCN = $matches['InitialRegexTest2'] -like '*"*' ? ($Cert.Subject -split 'CN="(.+?)"')[1] : $matches['InitialRegexTest2']
+
+            $Output += $SubjectCN
+        }
+
+        Return $Output
+    }
+}
+
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG

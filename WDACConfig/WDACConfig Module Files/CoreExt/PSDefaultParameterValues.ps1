@@ -39,6 +39,7 @@ $PSDefaultParameterValues = @{
     'Get-ExtendedFileInfo:Verbose'         = $Verbose
     'Edit-CiPolicyRuleOptions:Verbose'     = $Verbose
     'New-AppxPackageCiPolicy:Verbose'      = $Verbose
+    'New-StagingArea:Verbose'              = $Verbose
 }
 
 # SIG # Begin signature block

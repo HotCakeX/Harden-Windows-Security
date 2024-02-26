@@ -991,6 +991,8 @@ Function Edit-WDACConfig {
     https://github.com/HotCakeX/Harden-Windows-Security/wiki/Edit-WDACConfig
 .DESCRIPTION
     Using official Microsoft methods, Edits non-signed WDAC policies deployed on the system
+
+    All of the files the cmdlet creates and interacts with are stored in the following directory: C:\Program Files\WDACConfig\StagingArea\Edit-WDACConfig
 .COMPONENT
     Windows Defender Application Control, ConfigCI PowerShell module
 .FUNCTIONALITY

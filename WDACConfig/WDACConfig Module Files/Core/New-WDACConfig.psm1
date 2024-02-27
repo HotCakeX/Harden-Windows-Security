@@ -242,12 +242,12 @@ Function New-WDACConfig {
                 System.Management.Automation.SwitchParameter
             .OUTPUTS
                 System.String
-            .PARAMETER Deploy
-                Indicates that the function will deploy the AllowMicrosoftPlusBlockRules policy
             #>
             [CmdletBinding()]
             param (
-                [System.Management.Automation.SwitchParameter]$Deploy
+                [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$Deploy,
+                [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$RequireEVSigners,
+                [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$TestMode
             )
 
             # The total number of the main steps for the progress bar to render
@@ -283,24 +283,24 @@ Function New-WDACConfig {
 
             Edit-CiPolicyRuleOptions -Action Base -XMLFile $FinalPolicyPath
 
-            if ($TestMode -and $MakeAllowMSFTWithBlockRules) {
+            if ($TestMode) {
                 Write-Verbose -Message 'Setting "Boot Audit on Failure" and "Advanced Boot Options Menu" policy rule options for the AllowMicrosoftPlusBlockRules.xml policy because TestMode parameter was used'
                 9..10 | ForEach-Object -Process { Set-RuleOption -FilePath $FinalPolicyPath -Option $_ }
             }
-            if ($RequireEVSigners -and $MakeAllowMSFTWithBlockRules) {
+            if ($RequireEVSigners) {
                 Write-Verbose -Message 'Setting "Required:EV Signers" policy rule option for the AllowMicrosoftPlusBlockRules.xml policy because RequireEVSigners parameter was used'
                 Set-RuleOption -FilePath $FinalPolicyPath -Option 8
             }
 
-            if ($Deploy -and $MakeAllowMSFTWithBlockRules) {
+            if ($Deploy) {
                 $CurrentStep++
                 Write-Progress -Id 3 -Activity 'Creating CIP file' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                 Write-Verbose -Message 'Converting the AllowMicrosoftPlusBlockRules.xml policy file to .CIP binary'
-                ConvertFrom-CIPolicy -XmlFilePath $FinalPolicyPath -BinaryFilePath "$PolicyID.cip" | Out-Null
+                ConvertFrom-CIPolicy -XmlFilePath $FinalPolicyPath -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$PolicyID.cip") | Out-Null
 
                 Write-Verbose -Message 'Deploying the AllowMicrosoftPlusBlockRules.xml policy'
-                &'C:\Windows\System32\CiTool.exe' --update-policy "$PolicyID.cip" -json | Out-Null
+                &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$PolicyID.cip") -json | Out-Null
             }
 
             Write-Verbose -Message 'Displaying the output'
@@ -320,15 +320,15 @@ Function New-WDACConfig {
                 and merges them with the DefaultWindows_Enforced template policy.
                 It can also deploy the policy on the system.
             .INPUTS
-                None. You cannot pipe objects to this function.
+                System.Management.Automation.SwitchParameter
             .OUTPUTS
                 System.String
-            .PARAMETER Deploy
-                Indicates that the function will deploy the DefaultWindowsPlusBlockRules policy
             #>
             [CmdletBinding()]
             param (
-                [System.Management.Automation.SwitchParameter]$Deploy
+                [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$Deploy,
+                [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$RequireEVSigners,
+                [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$TestMode
             )
 
             # The total number of the main steps for the progress bar to render
@@ -375,17 +375,17 @@ Function New-WDACConfig {
 
             Edit-CiPolicyRuleOptions -Action Base -XMLFile $FinalPolicyPath
 
-            if ($TestMode -and $MakeDefaultWindowsWithBlockRules) {
+            if ($TestMode) {
                 Write-Verbose -Message 'Setting "Boot Audit on Failure" and "Advanced Boot Options Menu" policy rule options because TestMode parameter was used'
                 9..10 | ForEach-Object -Process { Set-RuleOption -FilePath $FinalPolicyPath -Option $_ }
             }
 
-            if ($RequireEVSigners -and $MakeDefaultWindowsWithBlockRules) {
+            if ($RequireEVSigners) {
                 Write-Verbose -Message 'Setting "Required:EV Signers" policy rule option because RequireEVSigners parameter was used'
                 Set-RuleOption -FilePath $FinalPolicyPath -Option 8
             }
 
-            if ($Deploy -and $MakeDefaultWindowsWithBlockRules) {
+            if ($Deploy) {
 
                 $CurrentStep++
                 Write-Progress -Id 7 -Activity 'Creating the CIP file' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
@@ -412,7 +412,7 @@ Function New-WDACConfig {
             .SYNOPSIS
                 A helper function that downloads the latest Microsoft recommended block rules
                 and deploys it as a standalone WDAC base policy on the system.
-                The deployed policy contains the 2 Allow All rules so it acts as a blocklist.
+                The deployed policy contains the 2 Allow All rules so it acts as a blocklist and is made in a way to be suitable for side-by-side deployment with other policies.
             .INPUTS
                 None. You cannot pipe objects to this function.
             .OUTPUTS
@@ -443,6 +443,8 @@ Function New-WDACConfig {
             Write-Progress -Id 0 -Activity 'Configuring the policy settings' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
             Edit-CiPolicyRuleOptions -Action Base -XMLFile $FinalPolicyPath
+            # Remove WHQL requirement since it's a user mode policy and doesn't need to enforce it
+            Set-RuleOption -FilePath $FinalPolicyPath -Option 2 -Delete
 
             Write-Verbose -Message 'Resetting the policy ID and saving it to a variable'
             [System.String]$PolicyID = (Set-CIPolicyIdInfo -FilePath $FinalPolicyPath -ResetPolicyID).Substring(11)
@@ -597,7 +599,7 @@ Function New-WDACConfig {
                 It can also call the Set-LogSize function to modify the size of Code Integrity Operational event log
                 It uses the $LogSize variable available in the New-WDACConfig's scope to do that.
             .INPUTS
-                None. You cannot pipe objects to this function.
+                System.Management.Automation.SwitchParameter
             .OUTPUTS
                 System.Void
             #>
@@ -683,12 +685,15 @@ Function New-WDACConfig {
                 A helper function that creates 2 WDAC policies. A bas policy from one of the standard templates
                 and a Supplemental policy based on the Code Integrity Operational audit logs
             .INPUTS
-                None. You cannot pipe objects to this function.
+                System.Management.Automation.SwitchParameter
             .OUTPUTS
                 System.String
             #>
             [CmdletBinding()]
-            param()
+            param(
+                [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$RequireEVSigners,
+                [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$TestMode
+            )
 
             # The total number of the main steps for the progress bar to render
             [System.UInt16]$TotalSteps = 4
@@ -732,12 +737,12 @@ Function New-WDACConfig {
                 }
             }
 
-            if ($TestMode -and $MakePolicyFromAuditLogs) {
+            if ($TestMode) {
                 Write-Verbose -Message 'Setting "Boot Audit on Failure" and "Advanced Boot Options Menu" policy rule options because TestMode parameter was used'
                 9..10 | ForEach-Object -Process { Set-RuleOption -FilePath $FinalPolicyPath -Option $_ }
             }
 
-            if ($RequireEVSigners -and $MakePolicyFromAuditLogs) {
+            if ($RequireEVSigners) {
                 Write-Verbose -Message 'Setting "Required:EV Signers" policy rule option because RequireEVSigners parameter was used'
                 Set-RuleOption -FilePath $FinalPolicyPath -Option 8
             }
@@ -856,15 +861,15 @@ Function New-WDACConfig {
                 It includes Microsoft Recommended Block rules.
                 It uses ISG to authorize files with good reputation.
             .INPUTS
-                None. You cannot pipe objects to this function.
+                System.Management.Automation.SwitchParameter
             .OUTPUTS
                 System.String
-            .PARAMETER Deploy
-                A switch parameter that deploys the policy on the system if used
             #>
             [CmdletBinding()]
             param (
-                [System.Management.Automation.SwitchParameter]$Deploy
+                [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$Deploy,
+                [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$RequireEVSigners,
+                [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$TestMode
             )
 
             # The total number of the main steps for the progress bar to render
@@ -885,44 +890,46 @@ Function New-WDACConfig {
             Build-AllowMSFTWithBlockRules 6> $null
             Pop-Location
 
+            [System.IO.FileInfo]$FinalPolicyPath = Join-Path -Path $StagingArea -ChildPath 'SignedAndReputable.xml'
+
             $CurrentStep++
             Write-Progress -Id 6 -Activity 'Configuring the policy settings' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
             Write-Verbose -Message 'Renaming AllowMicrosoftPlusBlockRules.xml to SignedAndReputable.xml'
-            Rename-Item -Path 'AllowMicrosoftPlusBlockRules.xml' -NewName 'SignedAndReputable.xml' -Force
-
-            Write-Verbose -Message 'Setting the policy rule options for the SignedAndReputable.xml policy'
-            @(14, 15) | ForEach-Object -Process { Set-RuleOption -FilePath .\SignedAndReputable.xml -Option $_ }
+            Move-Item -Path (Join-Path -Path $StagingArea -ChildPath 'AllowMicrosoftPlusBlockRules.xml') -NewName $FinalPolicyPath -Force
+            
+            Write-Verbose -Message 'Setting the policy rule options'
+            @(14, 15) | ForEach-Object -Process { Set-RuleOption -FilePath $FinalPolicyPath -Option $_ }
 
             $CurrentStep++
             Write-Progress -Id 6 -Activity 'Configuring the policy rule options' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-            if ($TestMode -and $MakeLightPolicy) {
+            if ($TestMode) {
                 Write-Verbose -Message 'Setting "Boot Audit on Failure" and "Advanced Boot Options Menu" policy rule options because TestMode parameter was used'
-                9..10 | ForEach-Object -Process { Set-RuleOption -FilePath .\SignedAndReputable.xml -Option $_ }
+                9..10 | ForEach-Object -Process { Set-RuleOption -FilePath $FinalPolicyPath -Option $_ }
             }
-            if ($RequireEVSigners -and $MakeLightPolicy) {
+            if ($RequireEVSigners) {
                 Write-Verbose -Message 'Setting "Required:EV Signers" policy rule option because RequireEVSigners parameter was used'
-                Set-RuleOption -FilePath .\SignedAndReputable.xml -Option 8
+                Set-RuleOption -FilePath $FinalPolicyPath -Option 8
             }
 
-            Write-Verbose -Message 'Resetting the policy ID and setting a name for SignedAndReputable.xml'
-            $BasePolicyID = Set-CIPolicyIdInfo -FilePath .\SignedAndReputable.xml -ResetPolicyID -PolicyName "Signed And Reputable policy - $(Get-Date -Format 'MM-dd-yyyy')"
+            Write-Verbose -Message 'Resetting the policy ID and setting a name for the policy'
+            $BasePolicyID = Set-CIPolicyIdInfo -FilePath $FinalPolicyPath -ResetPolicyID -PolicyName "Signed And Reputable policy - $(Get-Date -Format 'MM-dd-yyyy')"
             $BasePolicyID = $BasePolicyID.Substring(11)
 
-            Write-Verbose -Message 'Setting the version of SignedAndReputable.xml policy to 1.0.0.0'
-            Set-CIPolicyVersion -FilePath .\SignedAndReputable.xml -Version '1.0.0.0'
+            Write-Verbose -Message 'Setting the policy version to 1.0.0.0'
+            Set-CIPolicyVersion -FilePath $FinalPolicyPath -Version '1.0.0.0'
 
             Write-Verbose -Message 'Setting HVCI to Strict'
-            Set-HVCIOptions -Strict -FilePath .\SignedAndReputable.xml
+            Set-HVCIOptions -Strict -FilePath $FinalPolicyPath
 
-            if ($Deploy -and $MakeLightPolicy) {
+            if ($Deploy) {
 
                 $CurrentStep++
                 Write-Progress -Id 6 -Activity 'Creating the CIP file' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                Write-Verbose -Message 'Converting SignedAndReputable.xml policy to .CIP binary'
-                ConvertFrom-CIPolicy -XmlFilePath .\SignedAndReputable.xml -BinaryFilePath "$BasePolicyID.cip" | Out-Null
+                Write-Verbose -Message 'Converting the policy to .CIP binary'
+                ConvertFrom-CIPolicy -XmlFilePath $FinalPolicyPath -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$BasePolicyID.cip") | Out-Null
 
                 $CurrentStep++
                 Write-Progress -Id 6 -Activity 'Configuring Windows Services' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
@@ -931,8 +938,8 @@ Function New-WDACConfig {
                 Start-Process -FilePath 'C:\Windows\System32\appidtel.exe' -ArgumentList 'start' -NoNewWindow
                 Start-Process -FilePath 'C:\Windows\System32\sc.exe' -ArgumentList 'config', 'appidsvc', 'start= auto' -NoNewWindow
 
-                Write-Verbose -Message 'Deploying the SignedAndReputable.xml policy'
-                &'C:\Windows\System32\CiTool.exe' --update-policy "$BasePolicyID.cip" -json | Out-Null
+                Write-Verbose -Message 'Deploying the policy'
+                &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$BasePolicyID.cip") -json | Out-Null
             }
 
             Write-Verbose -Message 'Displaying the output'
@@ -968,15 +975,15 @@ Function New-WDACConfig {
                 # Deploy the latest block rules if 'New-WDACConfig -GetBlockRules -Deploy' is passed
                 { $GetBlockRules -and $Deploy } { Deploy-LatestBlockRules ; break }
                 # Get the latest block rules if 'New-WDACConfig -GetBlockRules' is passed
-                $GetBlockRules { Get-BlockRulesMeta ; break }
+                $GetBlockRules { Get-BlockRulesMeta -SaveDirectory $UserConfigDir ; break }
                 # Get the latest driver block rules and only Deploy them if New-WDACConfig -GetDriverBlockRules was called with -Deploy parameter
                 $GetDriverBlockRules { Get-DriverBlockRules -Deploy:$Deploy ; break }
                 $SetAutoUpdateDriverBlockRules { Set-AutoUpdateDriverBlockRules ; break }
-                $MakeAllowMSFTWithBlockRules { Build-AllowMSFTWithBlockRules -Deploy:$Deploy ; break }
-                $MakePolicyFromAuditLogs { Build-PolicyFromAuditLogs ; break }
-                $PrepMSFTOnlyAudit { Build-MSFTOnlyAudit ; break }
-                $MakeLightPolicy { Build-LightPolicy -Deploy:$Deploy ; break }
-                $MakeDefaultWindowsWithBlockRules { Build-DefaultWindowsWithBlockRules -Deploy:$Deploy; break }
+                $MakeAllowMSFTWithBlockRules { Build-AllowMSFTWithBlockRules -Deploy:$Deploy -RequireEVSigners:$RequireEVSigners -TestMode:$TestMode ; break }
+                $MakePolicyFromAuditLogs { Build-PolicyFromAuditLogs -RequireEVSigners:$RequireEVSigners -TestMode:$TestMode ; break }
+                $PrepMSFTOnlyAudit { Build-MSFTOnlyAudit -Deploy:$Deploy ; break }
+                $MakeLightPolicy { Build-LightPolicy -Deploy:$Deploy -RequireEVSigners:$RequireEVSigners -TestMode:$TestMode ; break }
+                $MakeDefaultWindowsWithBlockRules { Build-DefaultWindowsWithBlockRules -Deploy:$Deploy -RequireEVSigners:$RequireEVSigners -TestMode:$TestMode ; break }
                 $PrepDefaultWindowsAudit { Build-DefaultWindowsAudit ; break }
                 default { Write-Warning -Message 'None of the main parameters were selected.'; break }
             }

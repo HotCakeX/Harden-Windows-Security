@@ -244,6 +244,8 @@ Function New-WDACConfig {
                 System.IO.FileInfo
             .OUTPUTS
                 System.String
+            .PARAMETER SavePath
+                The path to save the policy file to. If not used, the final policy file will be saved to the User Config directory
             #>
             [CmdletBinding()]
             param (
@@ -278,8 +280,7 @@ Function New-WDACConfig {
             Write-Progress -Id 3 -Activity 'Configuring the policy settings' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
             Write-Verbose -Message 'Resetting the policy ID and setting a name for AllowMicrosoftPlusBlockRules.xml'
-            [System.String]$PolicyID = Set-CIPolicyIdInfo -FilePath $FinalPolicyPath -PolicyName "Allow Microsoft Plus Block Rules - $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID
-            [System.String]$PolicyID = $PolicyID.Substring(11)
+            Set-CIPolicyIdInfo -FilePath $FinalPolicyPath -PolicyName "Allow Microsoft Plus Block Rules - $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID | Out-Null
 
             Write-Verbose -Message 'Setting AllowMicrosoftPlusBlockRules.xml policy version to 1.0.0.0'
             Set-CIPolicyVersion -FilePath $FinalPolicyPath -Version '1.0.0.0'
@@ -300,10 +301,10 @@ Function New-WDACConfig {
                 Write-Progress -Id 3 -Activity 'Creating CIP file' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                 Write-Verbose -Message 'Converting the AllowMicrosoftPlusBlockRules.xml policy file to .CIP binary'
-                ConvertFrom-CIPolicy -XmlFilePath $FinalPolicyPath -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$PolicyID.cip") | Out-Null
+                ConvertFrom-CIPolicy -XmlFilePath $FinalPolicyPath -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath 'AllowMicrosoftPlusBlockRules.cip') | Out-Null
 
                 Write-Verbose -Message 'Deploying the AllowMicrosoftPlusBlockRules.xml policy'
-                &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$PolicyID.cip") -json | Out-Null
+                &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath 'AllowMicrosoftPlusBlockRules.cip') -json | Out-Null
             }
 
             # Copy the result to the User Config directory at the end if -SavePath is not used indicating this function is being called from another function
@@ -312,7 +313,6 @@ Function New-WDACConfig {
 
                 Write-Verbose -Message 'Displaying the output'
                 Write-ColorfulText -Color MintGreen -InputText 'PolicyFile = AllowMicrosoftPlusBlockRules.xml'
-                Write-ColorfulText -Color MintGreen -InputText "BinaryFile = $PolicyID.cip"
             }
 
             Write-Progress -Id 3 -Activity 'Complete' -Completed
@@ -329,6 +329,8 @@ Function New-WDACConfig {
                 System.IO.FileInfo
             .OUTPUTS
                 System.String
+            .PARAMETER SavePath
+                The path to save the policy file to. If not used, the final policy file will be saved to the User Config directory
             #>
             [CmdletBinding()]
             param (
@@ -375,8 +377,7 @@ Function New-WDACConfig {
             Write-Progress -Id 7 -Activity 'Configuring policy settings' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
             Write-Verbose -Message 'Resetting the policy ID and setting a name'
-            [System.String]$PolicyID = Set-CIPolicyIdInfo -FilePath $FinalPolicyPath -PolicyName "Default Windows Plus Block Rules - $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID
-            [System.String]$PolicyID = $PolicyID.Substring(11)
+            Set-CIPolicyIdInfo -FilePath $FinalPolicyPath -PolicyName "Default Windows Plus Block Rules - $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID | Out-Null
 
             Write-Verbose -Message 'Setting the policy version to 1.0.0.0'
             Set-CIPolicyVersion -FilePath $FinalPolicyPath -Version '1.0.0.0'
@@ -394,21 +395,19 @@ Function New-WDACConfig {
             }
 
             if ($Deploy) {
-
                 $CurrentStep++
                 Write-Progress -Id 7 -Activity 'Creating the CIP file' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                 Write-Verbose -Message 'Converting the policy file to .CIP binary'
-                ConvertFrom-CIPolicy -XmlFilePath $FinalPolicyPath -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$PolicyID.cip") | Out-Null
+                ConvertFrom-CIPolicy -XmlFilePath $FinalPolicyPath -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath 'BasePolicy.cip') | Out-Null
 
                 Write-Verbose -Message 'Deploying the policy'
-                &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$PolicyID.cip") -json | Out-Null
+                &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath 'BasePolicy.cip') -json | Out-Null
             }
 
             if (-NOT $SavePath) {
                 Write-Verbose -Message 'Displaying the output'
                 Write-ColorfulText -Color MintGreen -InputText 'PolicyFile = DefaultWindowsPlusBlockRules.xml'
-                Write-ColorfulText -Color MintGreen -InputText "BinaryFile = $PolicyID.cip"
 
                 # Copy the result to the User Config directory at the end
                 Copy-Item -Path $FinalPolicyPath -Destination $UserConfigDir -Force
@@ -456,20 +455,20 @@ Function New-WDACConfig {
             # Remove WHQL requirement since it's a user mode policy and doesn't need to enforce it
             Set-RuleOption -FilePath $FinalPolicyPath -Option 2 -Delete
 
-            Write-Verbose -Message 'Resetting the policy ID and saving it to a variable'
-            [System.String]$PolicyID = (Set-CIPolicyIdInfo -FilePath $FinalPolicyPath -ResetPolicyID).Substring(11)
+            Write-Verbose -Message 'Resetting the policy ID'
+            Set-CIPolicyIdInfo -FilePath $FinalPolicyPath -ResetPolicyID | Out-Null
 
             Write-Verbose -Message 'Assigning a name to the policy'
             Set-CIPolicyIdInfo -PolicyName "Microsoft Windows User Mode Policy - Enforced - $(Get-Date -Format 'MM-dd-yyyy')" -FilePath $FinalPolicyPath
 
             Write-Verbose -Message 'Converting the policy file to .CIP binary'
-            ConvertFrom-CIPolicy -XmlFilePath $FinalPolicyPath -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$PolicyID.cip") | Out-Null
+            ConvertFrom-CIPolicy -XmlFilePath $FinalPolicyPath -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath 'UserModeBlockRules.cip') | Out-Null
 
             $CurrentStep++
             Write-Progress -Id 0 -Activity 'Deploying the policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
             Write-Verbose -Message 'Deploying the Microsoft recommended block rules policy'
-            &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$PolicyID.cip") -json | Out-Null
+            &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath 'UserModeBlockRules.cip') -json | Out-Null
 
             Write-ColorfulText -Color Lavender -InputText 'The Microsoft recommended block rules policy has been deployed in enforced mode.'
 
@@ -663,8 +662,7 @@ Function New-WDACConfig {
             3, 11 | ForEach-Object -Process { Set-RuleOption -FilePath $FinalPolicyPath -Option $_ }
 
             Write-Verbose -Message 'Resetting the Policy ID'
-            [System.String]$PolicyID = Set-CIPolicyIdInfo -FilePath $FinalPolicyPath -ResetPolicyID
-            [System.String]$PolicyID = $PolicyID.Substring(11)
+            Set-CIPolicyIdInfo -FilePath $FinalPolicyPath -ResetPolicyID | Out-Null
 
             Write-Verbose -Message 'Assigning "PrepDefaultWindowsAudit" as the policy name'
             Set-CIPolicyIdInfo -PolicyName 'PrepDefaultWindows' -FilePath $FinalPolicyPath
@@ -674,10 +672,10 @@ Function New-WDACConfig {
                 Write-Progress -Id 8 -Activity 'Creating the CIP file' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                 Write-Verbose -Message 'Converting the policy to .CIP Binary'
-                ConvertFrom-CIPolicy -XmlFilePath $FinalPolicyPath -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$PolicyID.cip") | Out-Null
+                ConvertFrom-CIPolicy -XmlFilePath $FinalPolicyPath -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath 'DefaultWindowsAudit.cip') | Out-Null
 
                 Write-Verbose -Message 'Deploying the policy on the system'
-                &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$PolicyID.cip") -json | Out-Null
+                &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath 'DefaultWindowsAudit.cip') -json | Out-Null
 
                 Write-ColorfulText -Color Lavender -InputText 'The defaultWindows policy has been deployed in Audit mode. No reboot required.'
             }

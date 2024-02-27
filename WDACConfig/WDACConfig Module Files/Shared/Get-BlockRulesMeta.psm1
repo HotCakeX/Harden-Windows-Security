@@ -2,22 +2,24 @@ Function Get-BlockRulesMeta {
     <#
     .SYNOPSIS
         Gets the latest Microsoft Recommended block rules, removes its allow all rules, removes the audit mode policy rule option and sets HVCI to strict
-        It generates a XML file compliant with CI Policies Schema
+        It generates a XML file compliant with CI Policies Schema.
+        Receives a directory path to save the xml file in and returns a System.IO.FileInfo object for the path of the saved file.
     .INPUTS
-        None. You cannot pipe objects to this function.
+        System.IO.DirectoryInfo
     .OUTPUTS
-        System.String
+        System.IO.FileInfo
     #>
     [CmdletBinding()]
-    [OutputType([System.String])]
-    param ()
+    [OutputType([System.IO.FileInfo])]
+    param (
+        [Parameter(Mandatory = $true)][System.IO.DirectoryInfo]$SaveDirectory
+    )
 
     Begin {
         # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
-        # Importing the required sub-modules
-        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Write-ColorfulText.psm1" -Force
+        [System.IO.FileInfo]$FinalPolicyPath = Join-Path -Path $SaveDirectory -ChildPath 'Microsoft recommended block rules.xml'
     }
 
     Process {
@@ -75,18 +77,15 @@ Function Get-BlockRulesMeta {
         }
 
         # Save the modified XML content to a file - The Save method requires full file path
-        $BlockRulesXML.Save("$((Get-Location).path)\Microsoft recommended block rules.xml")
+        $BlockRulesXML.Save($FinalPolicyPath)
 
         # Remove the audit mode rule option
-        Set-RuleOption -FilePath '.\Microsoft recommended block rules.xml' -Option 3 -Delete
+        Set-RuleOption -FilePath $FinalPolicyPath -Option 3 -Delete
 
-        # Set HVCI to Strict
-        Set-HVCIOptions -Strict -FilePath '.\Microsoft recommended block rules.xml'
+        Set-HVCIOptions -Strict -FilePath $FinalPolicyPath
     }
-
     End {
-        # Display the result
-        Write-ColorfulText -Color MintGreen -InputText 'PolicyFile = Microsoft recommended block rules.xml'
+        Return $FinalPolicyPath
     }
 }
 

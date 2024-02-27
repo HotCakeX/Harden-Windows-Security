@@ -258,9 +258,7 @@ Function New-WDACConfig {
             Write-Progress -Id 3 -Activity 'Getting the recommended block rules' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
             Write-Verbose -Message 'Getting the latest Microsoft recommended block rules'
-            Push-Location -Path $StagingArea
-            Get-BlockRulesMeta 6> $null
-            Pop-Location
+            [System.IO.FileInfo]$UserModeBlockRules = Get-BlockRulesMeta -SaveDirectory $StagingArea
 
             Write-Verbose -Message 'Copying the AllowMicrosoft.xml from Windows directory to the current working directory'
             Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml' -Destination (Join-Path -Path $StagingArea -ChildPath 'AllowMicrosoft.xml') -Force
@@ -270,8 +268,8 @@ Function New-WDACConfig {
 
             [System.IO.FileInfo]$FinalPolicyPath = Join-Path -Path $StagingArea -ChildPath 'AllowMicrosoftPlusBlockRules.xml'
 
-            Write-Verbose -Message 'Merging the AllowMicrosoft.xml with Microsoft Recommended Block rules.xml'
-            Merge-CIPolicy -PolicyPaths (Join-Path -Path $StagingArea -ChildPath 'AllowMicrosoft.xml'), (Join-Path -Path $StagingArea -ChildPath 'Microsoft recommended block rules.xml') -OutputFilePath $FinalPolicyPath | Out-Null
+            Write-Verbose -Message 'Merging the AllowMicrosoft.xml with User-Mode block rules'
+            Merge-CIPolicy -PolicyPaths (Join-Path -Path $StagingArea -ChildPath 'AllowMicrosoft.xml'), $UserModeBlockRules -OutputFilePath $FinalPolicyPath | Out-Null
 
             $CurrentStep++
             Write-Progress -Id 3 -Activity 'Configuring the policy settings' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
@@ -341,9 +339,7 @@ Function New-WDACConfig {
             Write-Progress -Id 7 -Activity 'Getting the recommended block rules' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
             Write-Verbose -Message 'Getting the latest Microsoft recommended block rules'
-            Push-Location -Path $StagingArea
-            Get-BlockRulesMeta 6> $null
-            Pop-Location
+            [System.IO.FileInfo]$UserModeBlockRules = Get-BlockRulesMeta -SaveDirectory $StagingArea
 
             [System.IO.FileInfo]$BaseTemplatePath = Join-Path -Path $StagingArea -ChildPath 'DefaultWindows_Enforced.xml'
             [System.IO.FileInfo]$FinalPolicyPath = Join-Path -Path $StagingArea -ChildPath 'DefaultWindowsPlusBlockRules.xml'
@@ -360,11 +356,11 @@ Function New-WDACConfig {
                 New-CIPolicy -ScanPath $PSHOME -Level FilePublisher -NoScript -Fallback Hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -FilePath (Join-Path -Path $StagingArea -ChildPath 'AllowPowerShell.xml')
 
                 Write-Verbose -Message 'Merging the policy files to create the final DefaultWindowsPlusBlockRules.xml policy'
-                Merge-CIPolicy -PolicyPaths $BaseTemplatePath, (Join-Path -Path $StagingArea -ChildPath 'AllowPowerShell.xml'), (Join-Path -Path $StagingArea -ChildPath 'Microsoft recommended block rules.xml') -OutputFilePath $FinalPolicyPath | Out-Null
+                Merge-CIPolicy -PolicyPaths $BaseTemplatePath, (Join-Path -Path $StagingArea -ChildPath 'AllowPowerShell.xml'), $UserModeBlockRules -OutputFilePath $FinalPolicyPath | Out-Null
             }
             else {
                 Write-Verbose -Message 'Merging the policy files to create the final DefaultWindowsPlusBlockRules.xml policy'
-                Merge-CIPolicy -PolicyPaths $BaseTemplatePath, (Join-Path -Path $StagingArea -ChildPath 'Microsoft recommended block rules.xml') -OutputFilePath $FinalPolicyPath | Out-Null
+                Merge-CIPolicy -PolicyPaths $BaseTemplatePath, $UserModeBlockRules -OutputFilePath $FinalPolicyPath | Out-Null
             }
 
             $CurrentStep++
@@ -452,7 +448,7 @@ Function New-WDACConfig {
             [System.String]$PolicyID = (Set-CIPolicyIdInfo -FilePath $FinalPolicyPath -ResetPolicyID).Substring(11)
 
             Write-Verbose -Message 'Assigning a name to the policy'
-            Set-CIPolicyIdInfo -PolicyName "Microsoft Windows User Mode Policy - Enforced - $(Get-Date -Format 'MM-dd-yyyy')" -FilePath '.\Microsoft recommended block rules.xml'
+            Set-CIPolicyIdInfo -PolicyName "Microsoft Windows User Mode Policy - Enforced - $(Get-Date -Format 'MM-dd-yyyy')" -FilePath $FinalPolicyPath
 
             Write-Verbose -Message 'Converting the policy file to .CIP binary'
             ConvertFrom-CIPolicy -XmlFilePath $FinalPolicyPath -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$PolicyID.cip") | Out-Null

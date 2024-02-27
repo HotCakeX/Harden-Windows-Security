@@ -1003,10 +1003,8 @@ Function Edit-SignedWDACConfig {
                 $CurrentStep++
                 Write-Progress -Id 17 -Activity 'Getting the block rules' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                Write-Verbose -Message 'Getting the Microsoft recommended block rules by calling the Get-BlockRulesMeta function'
-                Push-Location -LiteralPath $StagingArea
-                Get-BlockRulesMeta 6> $null
-                Pop-Location
+                Write-Verbose -Message 'Getting the Use-Mode Block Rules by calling the Get-BlockRulesMeta function'
+                [System.IO.FileInfo]$MSFTRecommendedBlockRulesPath = Get-BlockRulesMeta -SaveDirectory $StagingArea
 
                 $CurrentStep++
                 Write-Progress -Id 17 -Activity 'Determining the policy type' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
@@ -1014,7 +1012,6 @@ Function Edit-SignedWDACConfig {
                 [System.IO.FileInfo]$BasePolicyPath = Join-Path -Path $StagingArea -ChildPath 'BasePolicy.xml'
                 [System.IO.FileInfo]$AllowMicrosoftTemplatePath = Join-Path -Path $StagingArea -ChildPath 'AllowMicrosoft.xml'
                 [System.IO.FileInfo]$DefaultWindowsTemplatePath = Join-Path -Path $StagingArea -ChildPath 'DefaultWindows_Enforced.xml'
-                [System.IO.FileInfo]$MSFTRecommendedBlockRulesPath = Join-Path -Path $StagingArea -ChildPath 'Microsoft recommended block rules.xml'
 
                 Write-Verbose -Message 'Determining the type of the new base policy'
                 switch ($NewBasePolicyType) {
@@ -1025,7 +1022,7 @@ Function Edit-SignedWDACConfig {
                         Write-Verbose -Message 'Copying the AllowMicrosoft.xml template policy file to the current working directory'
                         Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml' -Destination $AllowMicrosoftTemplatePath -Force
 
-                        Write-Verbose -Message 'Merging the AllowMicrosoft.xml and Microsoft recommended block rules into a single policy file'
+                        Write-Verbose -Message 'Merging the AllowMicrosoft.xml and Use-Mode Block Rules into a single policy file'
                         Merge-CIPolicy -PolicyPaths $AllowMicrosoftTemplatePath, $MSFTRecommendedBlockRulesPath -OutputFilePath $BasePolicyPath | Out-Null
 
                         Write-Verbose -Message 'Setting the policy name'
@@ -1040,7 +1037,7 @@ Function Edit-SignedWDACConfig {
                         Write-Verbose -Message 'Copying the AllowMicrosoft.xml template policy file to the current working directory'
                         Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml' -Destination $AllowMicrosoftTemplatePath -Force
 
-                        Write-Verbose -Message 'Merging the AllowMicrosoft.xml and Microsoft recommended block rules into a single policy file'
+                        Write-Verbose -Message 'Merging the AllowMicrosoft.xml and Use-Mode Block Rules into a single policy file'
                         Merge-CIPolicy -PolicyPaths $AllowMicrosoftTemplatePath, $MSFTRecommendedBlockRulesPath -OutputFilePath $BasePolicyPath | Out-Null
 
                         Write-Verbose -Message 'Setting the policy name'
@@ -1078,12 +1075,12 @@ Function Edit-SignedWDACConfig {
                             Write-ColorfulText -Color HotPink -InputText 'Creating allow rules for PowerShell in the DefaultWindows base policy so you can continue using this module after deploying it.'
                             New-CIPolicy -ScanPath $PSHOME -Level FilePublisher -NoScript -Fallback Hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -AllowFileNameFallbacks -FilePath (Join-Path -Path $StagingArea -ChildPath 'AllowPowerShell.xml')
 
-                            Write-Verbose -Message 'Merging the DefaultWindows.xml, AllowPowerShell.xml, SignTool.xml and Microsoft recommended block rules into a single policy file'
+                            Write-Verbose -Message 'Merging the DefaultWindows.xml, AllowPowerShell.xml, SignTool.xml and Use-Mode Block Rules into a single policy file'
                             Merge-CIPolicy -PolicyPaths $DefaultWindowsTemplatePath, (Join-Path -Path $StagingArea -ChildPath 'AllowPowerShell.xml'), (Join-Path -Path $StagingArea -ChildPath 'SignTool.xml'), $MSFTRecommendedBlockRulesPath -OutputFilePath $BasePolicyPath | Out-Null
                         }
                         else {
                             Write-Verbose -Message 'Not including the PowerShell core directory in the policy'
-                            Write-Verbose -Message 'Merging the DefaultWindows.xml, SignTool.xml and Microsoft recommended block rules into a single policy file'
+                            Write-Verbose -Message 'Merging the DefaultWindows.xml, SignTool.xml and Use-Mode Block Rules into a single policy file'
                             Merge-CIPolicy -PolicyPaths $DefaultWindowsTemplatePath, (Join-Path -Path $StagingArea -ChildPath 'SignTool.xml'), $MSFTRecommendedBlockRulesPath -OutputFilePath $BasePolicyPath | Out-Null
                         }
 

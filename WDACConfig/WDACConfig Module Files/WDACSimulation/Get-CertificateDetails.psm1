@@ -1,3 +1,7 @@
+# Defining the CryptoAPI class from the WDACConfig Namespace if it doesn't already exist
+if (-NOT ('WDACConfig.CryptoAPI' -as [System.Type]) ) {
+    Add-Type -Path "$ModuleRootPath\C#\Crypt32CertCN.cs"
+}
 Function Get-CertificateDetails {
     <#
     .SYNOPSIS
@@ -87,15 +91,23 @@ Function Get-CertificateDetails {
             # Loop through all chain elements and display all certificates
             foreach ($Element in $Chain.ChainElements) {
 
+                # Get the issuer common name
+                [System.String]$IssuerCN = [WDACConfig.CryptoAPI]::GetNameString($Element.Certificate.Handle, [WDACConfig.CryptoAPI]::CERT_NAME_SIMPLE_DISPLAY_TYPE, $null, $true)
+
+                # Get the subject common name
+                [System.String]$SubjectCN = [WDACConfig.CryptoAPI]::GetNameString($Element.Certificate.Handle, [WDACConfig.CryptoAPI]::CERT_NAME_SIMPLE_DISPLAY_TYPE, $null, $false)
+
+                #Region Old way of getting common names
                 # Extract the data after CN= in the subject and issuer properties
                 # When a common name contains a comma ',' then it will automatically be wrapped around double quotes. E.g., "App Software USA, Inc."
                 # The methods below are conditional regex. Different patterns are used based on the availability of at least one double quote in the CN field, indicating that it had comma in it so it had been enclosed with double quotes by system
 
-                $Element.Certificate.Subject -match 'CN=(?<InitialRegexTest2>.*?),.*' | Out-Null
-                [System.String]$SubjectCN = $matches['InitialRegexTest2'] -like '*"*' ? ($Element.Certificate.Subject -split 'CN="(.+?)"')[1] : $matches['InitialRegexTest2']
+                #   $Element.Certificate.Subject -match 'CN=(?<InitialRegexTest2>.*?),.*' | Out-Null
+                #   [System.String]$SubjectCN = $matches['InitialRegexTest2'] -like '*"*' ? ($Element.Certificate.Subject -split 'CN="(.+?)"')[1] : $matches['InitialRegexTest2']
 
-                $Element.Certificate.Issuer -match 'CN=(?<InitialRegexTest3>.*?),.*' | Out-Null
-                [System.String]$IssuerCN = $matches['InitialRegexTest3'] -like '*"*' ? ($Element.Certificate.Issuer -split 'CN="(.+?)"')[1] : $matches['InitialRegexTest3']
+                #   $Element.Certificate.Issuer -match 'CN=(?<InitialRegexTest3>.*?),.*' | Out-Null
+                #   [System.String]$IssuerCN = $matches['InitialRegexTest3'] -like '*"*' ? ($Element.Certificate.Issuer -split 'CN="(.+?)"')[1] : $matches['InitialRegexTest3']
+                #Endregion Old way of getting common names
 
                 # Get the TBS value of the certificate
                 [System.String]$TbsValue = Get-TBSCertificate -cert $Element.Certificate

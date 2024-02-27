@@ -95,24 +95,12 @@ Class CertCNz : System.Management.Automation.IValidateSetValuesGenerator {
         # Loop through each certificate that uses RSA algorithm (Because ECDSA is not supported for signing WDAC policies) in the current user's personal store and extract the relevant properties
         foreach ($Cert in (Get-ChildItem -Path 'Cert:\CurrentUser\My' | Where-Object -FilterScript { $_.PublicKey.Oid.FriendlyName -eq 'RSA' })) {
 
-            # Create a buffer to store the name string
-            [System.Text.StringBuilder]$NameString = New-Object -TypeName System.Text.StringBuilder -ArgumentList 256
+            $CN = $CryptoAPI::GetNameString($Cert.Handle, $CryptoAPI::CERT_NAME_SIMPLE_DISPLAY_TYPE, $null, $false)
 
-            [System.Boolean]$Result = $CryptoAPI::CertGetNameString(
-                $Cert.Handle, # the handle property of the certificate object
-                4, # the name type constant
-                0, # zero, which means no flags are set
-                [IntPtr]::Zero, # a null pointer, which means no additional parameter is needed
-                $NameString, # the name string buffer
-                $NameString.Capacity # the capacity of the name string buffer
-            )
-            # If the result is true
-            if ($Result) {
-                if ($NameString.ToString() -in $Output) {
-                    Write-Warning -Message "There are more than 1 certificates with the common name '$($NameString.ToString())' in the Personal certificate store of the Current User, delete one of them if you want to use it."
-                }
-                $Output += $NameString.ToString()
+            if ($CN -in $Output) {
+                Write-Warning -Message "There are more than 1 certificates with the common name '$CN' in the Personal certificate store of the Current User, delete one of them if you want to use it."
             }
+            $Output += $CN
         }
         # The ValidateSet attribute expects a unique set of values, and it will throw an error if there are duplicates
         Return ($Output | Select-Object -Unique)

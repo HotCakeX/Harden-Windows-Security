@@ -577,8 +577,7 @@ Function New-WDACConfig {
             Write-Progress -Id 5 -Activity 'Configuring the policy settings' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
             Write-Verbose -Message 'Resetting the Policy ID'
-            [System.String]$PolicyID = Set-CIPolicyIdInfo -FilePath $FinalPolicyPath -ResetPolicyID
-            [System.String]$PolicyID = $PolicyID.Substring(11)
+            Set-CIPolicyIdInfo -FilePath $FinalPolicyPath -ResetPolicyID | Out-Null
 
             Write-Verbose -Message 'Assigning "PrepMSFTOnlyAudit" as the policy name'
             Set-CIPolicyIdInfo -PolicyName 'PrepMSFTOnlyAudit' -FilePath $FinalPolicyPath
@@ -588,10 +587,10 @@ Function New-WDACConfig {
                 Write-Progress -Id 5 -Activity 'Creating the CIP file' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                 Write-Verbose -Message 'Converting the policy to .CIP Binary'
-                ConvertFrom-CIPolicy -XmlFilePath $FinalPolicyPath -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$PolicyID.cip") | Out-Null
+                ConvertFrom-CIPolicy -XmlFilePath $FinalPolicyPath -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath 'AllowMicrosoftAudit.cip') | Out-Null
 
                 Write-Verbose -Message 'Deploying the policy on the system'
-                &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$PolicyID.cip") -json | Out-Null
+                &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath 'AllowMicrosoftAudit.cip') -json | Out-Null
                 Write-ColorfulText -Color HotPink -InputText 'The default AllowMicrosoft policy has been deployed in Audit mode. No reboot required.'
             }
             else {
@@ -881,9 +880,6 @@ Function New-WDACConfig {
             [System.UInt16]$TotalSteps = $Deploy ? 5 : 3
             [System.UInt16]$CurrentStep = 0
 
-            # Delete any policy with the same name in the current working directory
-            Remove-Item -Path 'SignedAndReputable.xml' -Force -ErrorAction SilentlyContinue
-
             $CurrentStep++
             Write-Progress -Id 6 -Activity 'Creating AllowMicrosoftPlusBlockRules policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
@@ -912,8 +908,7 @@ Function New-WDACConfig {
             }
 
             Write-Verbose -Message 'Resetting the policy ID and setting a name for the policy'
-            $BasePolicyID = Set-CIPolicyIdInfo -FilePath $FinalPolicyPath -ResetPolicyID -PolicyName "Signed And Reputable policy - $(Get-Date -Format 'MM-dd-yyyy')"
-            $BasePolicyID = $BasePolicyID.Substring(11)
+            Set-CIPolicyIdInfo -FilePath $FinalPolicyPath -ResetPolicyID -PolicyName "Signed And Reputable policy - $(Get-Date -Format 'MM-dd-yyyy')" | Out-Null
 
             Write-Verbose -Message 'Setting the policy version to 1.0.0.0'
             Set-CIPolicyVersion -FilePath $FinalPolicyPath -Version '1.0.0.0'
@@ -927,7 +922,7 @@ Function New-WDACConfig {
                 Write-Progress -Id 6 -Activity 'Creating the CIP file' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                 Write-Verbose -Message 'Converting the policy to .CIP binary'
-                ConvertFrom-CIPolicy -XmlFilePath $FinalPolicyPath -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$BasePolicyID.cip") | Out-Null
+                ConvertFrom-CIPolicy -XmlFilePath $FinalPolicyPath -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath 'BasePolicy.cip') | Out-Null
 
                 $CurrentStep++
                 Write-Progress -Id 6 -Activity 'Configuring Windows Services' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
@@ -937,23 +932,24 @@ Function New-WDACConfig {
                 Start-Process -FilePath 'C:\Windows\System32\sc.exe' -ArgumentList 'config', 'appidsvc', 'start= auto' -NoNewWindow
 
                 Write-Verbose -Message 'Deploying the policy'
-                &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$BasePolicyID.cip") -json | Out-Null
+                &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath 'BasePolicy.cip') -json | Out-Null
             }
 
             Write-Verbose -Message 'Displaying the output'
-            Write-ColorfulText -Color MintGreen -InputText 'BasePolicyFile = SignedAndReputable.xml'
-            Write-ColorfulText -Color MintGreen -InputText "BasePolicyGUID = $BasePolicyID"
+            Write-ColorfulText -Color MintGreen -InputText "BasePolicyFile = $FinalPolicyPath"
+
+            Copy-Item -Path $FinalPolicyPath -Destination $UserConfigDir -Force
 
             Write-Progress -Id 6 -Activity 'Complete.' -Completed
         }
 
         # Script block that is used to supply extra information regarding Microsoft recommended driver block rules in commands that use them
         [System.Management.Automation.ScriptBlock]$DriversBlockListInfoGatheringSCRIPTBLOCK = {
-            [System.String]$owner = 'MicrosoftDocs'
-            [System.String]$repo = 'windows-itpro-docs'
-            [System.String]$path = 'windows/security/application-security/application-control/windows-defender-application-control/design/microsoft-recommended-driver-block-rules.md'
+            [System.String]$Owner = 'MicrosoftDocs'
+            [System.String]$Repo = 'windows-itpro-docs'
+            [System.String]$Path = 'windows/security/application-security/application-control/windows-defender-application-control/design/microsoft-recommended-driver-block-rules.md'
 
-            [System.String]$ApiUrl = "https://api.github.com/repos/$owner/$repo/commits?path=$path"
+            [System.String]$ApiUrl = "https://api.github.com/repos/$Owner/$Repo/commits?path=$Path"
             [System.Object[]]$Response = Invoke-RestMethod -Uri $ApiUrl -ProgressAction SilentlyContinue
             [System.DateTime]$Date = $Response[0].commit.author.date
 

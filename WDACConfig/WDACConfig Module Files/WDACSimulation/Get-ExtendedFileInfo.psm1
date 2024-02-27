@@ -88,7 +88,7 @@ function Get-ExtendedFileInfo {
             if ((-NOT ([System.String]::IsNullOrWhiteSpace($VersionAndName)))) {
 
               # Split the last part by the comma (,) characters and get the first part which contains OriginalFileName
-              [System.String]$ExtractedOriginalFileNameAttrib = $VersionAndName.Split(',')[0]
+              [System.String]$ExtractedOriginalFileNameAttrib = $VersionAndName.Split(',') | Select-Object -First 1
 
               if ((-NOT ([System.String]::IsNullOrWhiteSpace($ExtractedOriginalFileNameAttrib)))) {
 

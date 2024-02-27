@@ -133,7 +133,7 @@ Function Deploy-SignedWDACConfig {
                             Write-Verbose -Message 'The policy type is base policy and it applies to user mode files, yet the policy prevents SignTool.exe from executing. As a precautionary measure, scanning and including the SignTool.exe in the policy before deployment so you can modify/remove the signed policy later from the system.'
 
                             Write-Verbose -Message 'Creating a temporary folder to store the symbolic link to the SignTool.exe'
-                            [System.IO.DirectoryInfo]$SymLinksStorage = New-Item -Path (Join-Path -Path $UserConfigDir -ChildPath 'StagingArea' -AdditionalChildPath 'SymLinkStorage-Deploy-SignedWDACConfig', (New-Guid)) -ItemType Directory -Force
+                            [System.IO.DirectoryInfo]$SymLinksStorage = New-Item -Path (Join-Path -Path $StagingArea -ChildPath 'SymLinkStorage') -ItemType Directory -Force
 
                             Write-Verbose -Message 'Creating symbolic link to the SignTool.exe'
                             New-Item -ItemType SymbolicLink -Path "$SymLinksStorage\SignTool.exe" -Target $SignToolPathFinal | Out-Null
@@ -141,15 +141,17 @@ Function Deploy-SignedWDACConfig {
                             Write-Verbose -Message 'Scanning the SignTool.exe and generating the SignTool.xml policy'
                             New-CIPolicy -ScanPath $SymLinksStorage -Level FilePublisher -Fallback None -UserPEs -UserWriteablePaths -MultiplePolicyFormat -AllowFileNameFallbacks -FilePath "$SymLinksStorage\SignTool.xml"
 
+                            [System.IO.FileInfo]$AugmentedPolicyPath = Join-Path -Path $SymLinksStorage -ChildPath $PolicyPath.Name
+
                             Write-Verbose -Message 'Merging the SignTool.xml policy with the policy being signed'
                             # First policy in the array should always be the main one so that its settings will be used in the merged policy
-                            Merge-CIPolicy -PolicyPaths $PolicyPath, "$SymLinksStorage\SignTool.xml" -OutputFilePath "$SymLinksStorage\$($PolicyPath.Name)" | Out-Null
+                            Merge-CIPolicy -PolicyPaths $PolicyPath, "$SymLinksStorage\SignTool.xml" -OutputFilePath $AugmentedPolicyPath | Out-Null
 
                             Write-Verbose -Message 'Making sure policy rule options stay the same after merging the policies'
-                            Copy-CiRules -SourceFile $PolicyPath -DestinationFile "$SymLinksStorage\$($PolicyPath.Name)"
+                            Copy-CiRules -SourceFile $PolicyPath -DestinationFile $AugmentedPolicyPath
 
                             Write-Verbose -Message 'Replacing the new policy with the old one'
-                            Move-Item -Path "$SymLinksStorage\$($PolicyPath.Name)" -Destination $PolicyPath -Force
+                            Move-Item -Path $AugmentedPolicyPath -Destination $PolicyPath -Force
                         }
                         else {
                             Write-Verbose -Message 'The base policy allows SignTool.exe to execute, no need to scan and include it in the policy'
@@ -175,15 +177,18 @@ Function Deploy-SignedWDACConfig {
                 Write-Verbose -Message 'Removing the Unsigned mode option from the policy rules'
                 Set-RuleOption -FilePath $PolicyPath -Option 6 -Delete
 
+                [system.io.FileInfo]$PolicyCIPPath = Join-Path -Path $StagingArea -ChildPath "$PolicyID.cip"
+
                 Write-Verbose -Message 'Converting the policy to .CIP file'
-                ConvertFrom-CIPolicy -XmlFilePath $PolicyPath -BinaryFilePath "$PolicyID.cip" | Out-Null
+                ConvertFrom-CIPolicy -XmlFilePath $PolicyPath -BinaryFilePath $PolicyCIPPath | Out-Null
 
                 $CurrentStep++
                 Write-Progress -Id 13 -Activity 'Signing the policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
+                Push-Location -Path $StagingArea
                 # Configure the parameter splat
                 [System.Collections.Hashtable]$ProcessParams = @{
-                    'ArgumentList' = 'sign', '/v' , '/n', "`"$CertCN`"", '/p7', '.', '/p7co', '1.3.6.1.4.1.311.79.1', '/fd', 'certHash', ".\$PolicyID.cip"
+                    'ArgumentList' = 'sign', '/v' , '/n', "`"$CertCN`"", '/p7', '.', '/p7co', '1.3.6.1.4.1.311.79.1', '/fd', 'certHash', "$PolicyCIPPath"
                     'FilePath'     = $SignToolPathFinal
                     'NoNewWindow'  = $true
                     'Wait'         = $true
@@ -196,8 +201,10 @@ Function Deploy-SignedWDACConfig {
                 Write-Verbose -Message 'Signing the policy with the specified certificate'
                 Start-Process @ProcessParams
 
+                Pop-Location
+
                 Write-Verbose -Message 'Renaming the .p7 file to .cip'
-                Rename-Item -Path "$PolicyID.cip.p7" -NewName "$PolicyID.cip" -Force
+                Move-Item -LiteralPath "$StagingArea\$PolicyID.cip.p7" -Destination $PolicyCIPPath -Force
 
                 if ($Deploy) {
 
@@ -208,7 +215,7 @@ Function Deploy-SignedWDACConfig {
                     if ($PSCmdlet.ShouldProcess('This PC', 'Deploying the signed policy')) {
 
                         Write-Verbose -Message 'Deploying the policy'
-                        &'C:\Windows\System32\CiTool.exe' --update-policy ".\$PolicyID.cip" -json | Out-Null
+                        &'C:\Windows\System32\CiTool.exe' --update-policy $PolicyCIPPath -json | Out-Null
 
                         Write-ColorfulText -Color Lavender -InputText 'policy with the following details has been Signed and Deployed in Enforced Mode:'
                         Write-ColorfulText -Color MintGreen -InputText "PolicyName = $PolicyName"
@@ -249,6 +256,8 @@ Function Deploy-SignedWDACConfig {
                     }
                 }
                 else {
+                    Copy-Item -Path $PolicyCIPPath -Destination $UserConfigDir -Force
+
                     Write-ColorfulText -Color Lavender -InputText 'policy with the following details has been Signed and is ready for deployment:'
                     Write-ColorfulText -Color MintGreen -InputText "PolicyName = $PolicyName"
                     Write-ColorfulText -Color MintGreen -InputText "PolicyGUID = $PolicyID"

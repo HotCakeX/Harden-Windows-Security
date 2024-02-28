@@ -252,10 +252,12 @@ Function New-SupplementalWDACConfig {
                         Write-Verbose -Message 'Creating a policy for the supplied Appx package name and its dependencies (if any)'
                         powershell.exe -Command {
                             # Get all the packages based on the supplied name
-                            $Package = Get-AppxPackage -Name $args[0]
+                            [Microsoft.Windows.Appx.PackageManager.Commands.AppxPackage[]]$Package = Get-AppxPackage -Name $args[0]
 
                             # Get package dependencies if any
                             $PackageDependencies = $Package.Dependencies
+
+                            $Rules = @()
 
                             # Create rules for each package
                             foreach ($Item in $Package) {

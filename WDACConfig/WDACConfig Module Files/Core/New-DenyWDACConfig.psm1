@@ -202,7 +202,7 @@ Function New-DenyWDACConfig {
                     }
 
                     [System.Collections.Hashtable]$PolicyMakerHashTable = @{
-                        FilePath               = $TempPolicyPath
+                        FilePath               = $args[1]
                         DriverFiles            = $DriverFilesObject
                         Level                  = 'WHQLFilePublisher'
                         Fallback               = 'None'
@@ -214,7 +214,7 @@ Function New-DenyWDACConfig {
                     # Creating a base policy using the DriverFile object and specifying which detail about each driver should be used in the policy file
                     New-CIPolicy @PolicyMakerHashTable
 
-                } -args $ScanLocations
+                } -args $ScanLocations, $TempPolicyPath
 
                 $CurrentStep++
                 Write-Progress -Id 23 -Activity 'Merging the policies' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)

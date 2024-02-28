@@ -58,7 +58,7 @@ Function Get-SignTool {
 
                     # If Sign tool path wasn't provided by parameter and couldn't be detected automatically, try to download it from NuGet, if fails or user declines this, stop the operation
 
-                    if ($PSCmdlet.ShouldContinue('Would you like to try to download it from the official Microsoft server? It will be saved in the current working directory.', 'SignTool.exe path was not provided, it could not be automatically detected on the system, nor could it be found in the common WDAC user configurations.')) {
+                    if ($PSCmdlet.ShouldContinue('Would you like to try to download it from the official Microsoft server? It will be saved in the WDACConfig directory in Program Files.', 'SignTool.exe path was not provided, it could not be automatically detected on the system, nor could it be found in the common WDAC user configurations.')) {
 
                         Write-Verbose -Message 'Finding the latest version of the Microsoft.Windows.SDK.BuildTools package from NuGet'
                         # Use a script block to convert the Version property to a semantic version object for proper sorting based on the version number

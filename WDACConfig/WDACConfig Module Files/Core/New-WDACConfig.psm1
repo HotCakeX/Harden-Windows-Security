@@ -264,7 +264,7 @@ Function New-WDACConfig {
             Write-Verbose -Message 'Getting the latest Microsoft recommended block rules'
             [System.IO.FileInfo]$UserModeBlockRules = Get-BlockRulesMeta -SaveDirectory $StagingArea
 
-            Write-Verbose -Message 'Copying the AllowMicrosoft.xml from Windows directory to the current working directory'
+            Write-Verbose -Message 'Copying the AllowMicrosoft.xml from Windows directory to the Staging Area'
             Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml' -Destination (Join-Path -Path $StagingArea -ChildPath 'AllowMicrosoft.xml') -Force
 
             $CurrentStep++
@@ -353,7 +353,7 @@ Function New-WDACConfig {
             [System.IO.FileInfo]$BaseTemplatePath = Join-Path -Path $StagingArea -ChildPath 'DefaultWindows_Enforced.xml'
             [System.IO.FileInfo]$FinalPolicyPath = $SavePath ?? (Join-Path -Path $StagingArea -ChildPath 'DefaultWindowsPlusBlockRules.xml')
 
-            Write-Verbose -Message 'Copying the DefaultWindows_Enforced.xml from Windows directory to the current working directory'
+            Write-Verbose -Message 'Copying the DefaultWindows_Enforced.xml from Windows directory to the Staging Area'
             Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\DefaultWindows_Enforced.xml' -Destination $BaseTemplatePath -Force
 
             $CurrentStep++
@@ -565,7 +565,7 @@ Function New-WDACConfig {
 
             [System.IO.FileInfo]$FinalPolicyPath = Join-Path -Path $StagingArea -ChildPath 'AllowMicrosoft.xml'
 
-            Write-Verbose -Message 'Copying AllowMicrosoft.xml from Windows directory to the current working directory'
+            Write-Verbose -Message 'Copying AllowMicrosoft.xml from Windows directory to the Staging Area'
             Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml' -Destination $FinalPolicyPath -Force
 
             Write-Verbose -Message 'Enabling Audit mode and disabling script enforcement'
@@ -630,7 +630,7 @@ Function New-WDACConfig {
 
             [System.IO.FileInfo]$FinalPolicyPath = Join-Path -Path $StagingArea -ChildPath 'DefaultWindows_Audit.xml'
 
-            Write-Verbose -Message 'Copying DefaultWindows_Audit.xml from Windows directory to the current working directory'
+            Write-Verbose -Message 'Copying DefaultWindows_Audit.xml from Windows directory to the Staging Area'
             Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\DefaultWindows_Audit.xml' -Destination $FinalPolicyPath -Force
 
             $CurrentStep++
@@ -784,7 +784,7 @@ Function New-WDACConfig {
             # run the following only if there are any event logs for files no longer on the disk and if -NoDeletedFiles switch parameter wasn't used
             if ($DeletedFileHashesArray -and !$NoDeletedFiles) {
 
-                # Save the the File Rules and File Rule Refs to the Out-File FileRulesAndFileRefs.txt in the current working directory
+                # Save the the File Rules and File Rule Refs to the Out-File FileRulesAndFileRefs.txt in the Staging Area
                 (Get-FileRules -HashesArray $DeletedFileHashesArray) + (Get-RuleRefs -HashesArray $DeletedFileHashesArray) | Out-File -FilePath (Join-Path -Path $StagingArea -ChildPath 'FileRulesAndFileRefs.txt') -Force
 
                 # Put the Rules and RulesRefs in an empty policy file

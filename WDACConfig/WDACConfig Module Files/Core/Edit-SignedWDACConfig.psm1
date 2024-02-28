@@ -759,7 +759,7 @@ Function Edit-SignedWDACConfig {
                         # If none is found then skip this part, because user didn't run those files/programs when audit mode was turned on in base policy, so no hash was found in audit logs
                         if ($KernelProtectedHashesBlockResults) {
 
-                            # Save the File Rules and File Rule Refs in the FileRulesAndFileRefs.txt in the current working directory for debugging purposes
+                            # Save the File Rules and File Rule Refs in the FileRulesAndFileRefs.txt for debugging purposes
                         (Get-FileRules -HashesArray $KernelProtectedHashesBlockResults) + (Get-RuleRefs -HashesArray $KernelProtectedHashesBlockResults) | Out-File -FilePath (Join-Path -Path $StagingArea -ChildPath 'KernelProtectedFiles.txt') -Force
 
                             # Put the Rules and RulesRefs in an empty policy file
@@ -1018,7 +1018,7 @@ Function Edit-SignedWDACConfig {
                     'AllowMicrosoft_Plus_Block_Rules' {
                         Write-Verbose -Message 'The new base policy type is AllowMicrosoft_Plus_Block_Rules'
 
-                        Write-Verbose -Message 'Copying the AllowMicrosoft.xml template policy file to the current working directory'
+                        Write-Verbose -Message 'Copying the AllowMicrosoft.xml template policy file to the Staging Area'
                         Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml' -Destination $AllowMicrosoftTemplatePath -Force
 
                         Write-Verbose -Message 'Merging the AllowMicrosoft.xml and Use-Mode Block Rules into a single policy file'
@@ -1033,7 +1033,7 @@ Function Edit-SignedWDACConfig {
                     'Lightly_Managed_system_Policy' {
                         Write-Verbose -Message 'The new base policy type is Lightly_Managed_system_Policy'
 
-                        Write-Verbose -Message 'Copying the AllowMicrosoft.xml template policy file to the current working directory'
+                        Write-Verbose -Message 'Copying the AllowMicrosoft.xml template policy file to the Staging Area'
                         Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml' -Destination $AllowMicrosoftTemplatePath -Force
 
                         Write-Verbose -Message 'Merging the AllowMicrosoft.xml and Use-Mode Block Rules into a single policy file'
@@ -1053,7 +1053,7 @@ Function Edit-SignedWDACConfig {
                     'DefaultWindows_WithBlockRules' {
                         Write-Verbose -Message 'The new base policy type is DefaultWindows_WithBlockRules'
 
-                        Write-Verbose -Message 'Copying the DefaultWindows.xml template policy file to the current working directory'
+                        Write-Verbose -Message 'Copying the DefaultWindows.xml template policy file to the Staging Area'
                         Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\DefaultWindows_Enforced.xml' -Destination $DefaultWindowsTemplatePath -Force
 
                         # Allowing SignTool to be able to run after Default Windows base policy is deployed

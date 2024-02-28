@@ -56,14 +56,14 @@ Function Remove-CommonWDACConfig {
         }
 
         # Read the current user configurations
-        [System.Object[]]$CurrentUserConfigurations = Get-Content -Path "$UserConfigDir\UserConfigurations.json"
+        [System.Object[]]$CurrentUserConfigurations = Get-Content -Path $UserConfigJson
 
         # If the file exists but is corrupted and has bad values, rewrite it
         try {
             $CurrentUserConfigurations = $CurrentUserConfigurations | ConvertFrom-Json
         }
         catch {
-            Set-Content -Path "$UserConfigDir\UserConfigurations.json" -Value ''
+            Set-Content -Path $UserConfigJson -Value ''
         }
 
         # A hashtable to hold the User configurations

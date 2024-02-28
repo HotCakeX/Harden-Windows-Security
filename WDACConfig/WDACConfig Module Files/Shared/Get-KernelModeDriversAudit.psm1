@@ -2,19 +2,23 @@ Function Get-KernelModeDriversAudit {
     <#
     .DESCRIPTION
         This function will scan the Code Integrity event logs for kernel mode drivers that have been loaded since the audit mode policy has been deployed
-        and will return a folder containing symbolic links to the driver files.
+        It will save them in a folder containing symbolic links to the driver files.
     .INPUTS
-        None
-    .OUTPUTS
         System.IO.DirectoryInfo
+    .OUTPUTS
+        System.Void
+    .PARAMETER SavePath
+        The directory path to save the folder containing the symbolic links to the driver files
     .NOTES
         Get-SystemDriver only includes .sys files when -UserPEs parameter is not used, but Get-KernelModeDriversAudit function includes .dll files as well just in case
 
         When Get-SystemDriver -UserPEs is used, Dlls and .exe files are included as well
     #>
     [CmdletBinding()]
-    [OutputType([System.IO.DirectoryInfo])]
-    param()
+    [OutputType([System.Void])]
+    param(
+        [Parameter(Mandatory = $true)][System.IO.DirectoryInfo]$SavePath
+    )
 
     begin {
         # Importing the $PSDefaultParameterValues to the current session, prior to everything else
@@ -46,17 +50,10 @@ Function Get-KernelModeDriversAudit {
 
         Write-Verbose -Message "KernelModeDriversPaths count after deduplication based on file path: $($KernelModeDriversPaths.count)"
 
-        Write-Verbose -Message 'Creating a temporary folder to store the symbolic links to the driver files'
-        [System.IO.DirectoryInfo]$SymLinksStorage = New-Item -Path (Join-Path -Path $UserConfigDir -ChildPath 'StagingArea' -AdditionalChildPath 'SymLinkStorage-Get-KernelModeDriversAudit', (New-Guid)) -ItemType Directory -Force
-
         Write-Verbose -Message 'Creating symbolic links to the driver files'
         Foreach ($File in $KernelModeDriversPaths) {
-            New-Item -ItemType SymbolicLink -Path "$SymLinksStorage\$($File.Name)" -Target $File.FullName | Out-Null
+            New-Item -ItemType SymbolicLink -Path (Join-Path -Path $SavePath -ChildPath $File.Name) -Target $File.FullName | Out-Null
         }
-    }
-    end {
-        Write-Verbose -Message 'Returning the folder containing the symbolic links to driver files'
-        return [System.IO.DirectoryInfo]$SymLinksStorage
     }
 }
 Export-ModuleMember -Function 'Get-KernelModeDriversAudit'

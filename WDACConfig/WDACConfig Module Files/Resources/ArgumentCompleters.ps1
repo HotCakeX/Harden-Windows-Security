@@ -210,7 +210,7 @@
     # Set the MultiSelect property to true
     $Dialog.MultiSelect = $true
     $Dialog.ShowPreview = $true
-    $Dialog.Title = 'Select Supplemental Policies to merge'
+    $Dialog.Title = 'Select WDAC Policy XML files'
     $Dialog.InitialDirectory = $UserConfigDir
     # Show the dialog and get the result
     [System.String]$Result = $Dialog.ShowDialog()

@@ -14,6 +14,8 @@
 # Importing the $PSDefaultParameterValues to the current session, prior to everything else
 . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
+<#
+
 # argument tab auto-completion for Policy Paths to show only .xml files and only suggest files that haven't been already selected by user
 # https://stackoverflow.com/questions/76141864/how-to-make-a-powershell-argument-completer-that-only-suggests-files-not-already/76142865
 [System.Management.Automation.ScriptBlock]$ArgumentCompleterPolicyPaths = {
@@ -38,6 +40,8 @@
     }
 }
 
+#>
+
 # Argument tab auto-completion for installed Appx package names
 [System.Management.Automation.ScriptBlock]$ArgumentCompleterAppxPackageNames = {
     # Get the current command and the already bound parameters
@@ -47,6 +51,8 @@
         "`"$($_.Name)`""
     }
 }
+
+<#
 
 # argument tab auto-completion for Base Policy Paths to show only .xml files and only suggest files that haven't been already selected by user
 [System.Management.Automation.ScriptBlock]$ArgumentCompleterPolicyPathsBasePoliciesOnly = {
@@ -78,6 +84,10 @@
     }
 }
 
+#>
+
+<#
+
 # argument tab auto-completion for Supplemental Policy Paths to show only .xml files and only suggest files that haven't been already selected by user
 [System.Management.Automation.ScriptBlock]$ArgumentCompleterPolicyPathsSupplementalPoliciesOnly = {
     # Get the current command and the already bound parameters
@@ -107,6 +117,8 @@
         }
     }
 }
+
+#>
 
 # Opens Folder picker GUI so that user can select folders to be processed
 [System.Management.Automation.ScriptBlock]$ArgumentCompleterFolderPathsPicker = {

@@ -112,6 +112,9 @@ Function New-SupplementalWDACConfig {
         # Defining path for the final Supplemental policy XML and CIP files - used by the entire Cmdlet
         [System.IO.FileInfo]$FinalSupplementalPath = Join-Path -Path $StagingArea -ChildPath "SupplementalPolicy $SuppPolicyName.xml"
         [System.IO.FileInfo]$FinalSupplementalCIPPath = Join-Path -Path $StagingArea -ChildPath "SupplementalPolicy $SuppPolicyName.cip"
+
+        # Flag indicating the final files should not be copied to the main user config directory
+        [System.Boolean]$NoCopy = $false
     }
 
     process {
@@ -293,6 +296,9 @@ Function New-SupplementalWDACConfig {
                             Write-ColorfulText -Color Pink -InputText "A Supplemental policy with the name $SuppPolicyName has been deployed."
                         }
                     }
+                    else {
+                        $NoCopy = $true
+                    }
                 }
                 finally {
                     # Restore PS Formatting Styles
@@ -304,6 +310,10 @@ Function New-SupplementalWDACConfig {
             }
         }
         finally {
+            # Copy the final files to the user config directory
+            if (-NOT $NoCopy) {
+                Copy-Item -Path ($Deploy ? $FinalSupplementalPath : $FinalSupplementalPath, $FinalSupplementalCIPPath) -Destination $UserConfigDir -Force
+            }
             if (-NOT $Debug) {
                 Remove-Item -Path $StagingArea -Recurse -Force
             }

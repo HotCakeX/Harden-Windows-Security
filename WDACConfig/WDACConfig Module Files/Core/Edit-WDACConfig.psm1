@@ -831,7 +831,7 @@ Function Edit-WDACConfig {
                 $CurrentStep++
                 Write-Progress -Id 12 -Activity 'Getting the block rules' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                Write-Verbose -Message 'Getting the Use-Mode Block Rules by calling the Get-BlockRulesMeta function'
+                Write-Verbose -Message 'Getting the Use-Mode Block Rules'
                 [System.IO.FileInfo]$MSFTRecommendedBlockRulesPath = Get-BlockRulesMeta -SaveDirectory $StagingArea
 
                 $CurrentStep++

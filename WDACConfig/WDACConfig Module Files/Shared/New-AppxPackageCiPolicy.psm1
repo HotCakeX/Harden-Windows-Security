@@ -36,7 +36,6 @@ Function New-AppxPackageCiPolicy {
         # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
-        # Importing the required sub-modules
         Write-Verbose -Message 'New-AppxPackageCiPolicy: Importing the required sub-modules'
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\New-EmptyPolicy.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Get-RuleRefs.psm1" -Force

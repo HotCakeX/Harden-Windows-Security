@@ -300,7 +300,7 @@ Function Remove-WDACConfig {
                     Push-Location -Path $StagingArea
                     # Configure the parameter splat
                     [System.Collections.Hashtable]$ProcessParams = @{
-                        'ArgumentList' = 'sign', '/v' , '/n', "`"$CertCN`"", '/p7', '.', '/p7co', '1.3.6.1.4.1.311.79.1', '/fd', 'certHash', "$PolicyCIPPath"
+                        'ArgumentList' = 'sign', '/v' , '/n', "`"$CertCN`"", '/p7', '.', '/p7co', '1.3.6.1.4.1.311.79.1', '/fd', 'certHash', "$($PolicyCIPPath.Name)"
                         'FilePath'     = $SignToolPathFinal
                         'NoNewWindow'  = $true
                         'Wait'         = $true

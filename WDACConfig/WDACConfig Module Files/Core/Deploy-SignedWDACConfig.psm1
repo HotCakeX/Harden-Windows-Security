@@ -33,6 +33,8 @@ Function Deploy-SignedWDACConfig {
     begin {
         # Detecting if Verbose switch is used
         $PSBoundParameters.Verbose.IsPresent ? ([System.Boolean]$Verbose = $true) : ([System.Boolean]$Verbose = $false) | Out-Null
+        # Detecting if Debug switch is used, will do debugging actions based on that
+        $PSBoundParameters.Debug.IsPresent ? ([System.Boolean]$Debug = $true) : ([System.Boolean]$Debug = $false) | Out-Null
 
         # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
@@ -188,7 +190,7 @@ Function Deploy-SignedWDACConfig {
                 Push-Location -Path $StagingArea
                 # Configure the parameter splat
                 [System.Collections.Hashtable]$ProcessParams = @{
-                    'ArgumentList' = 'sign', '/v' , '/n', "`"$CertCN`"", '/p7', '.', '/p7co', '1.3.6.1.4.1.311.79.1', '/fd', 'certHash', "$PolicyCIPPath"
+                    'ArgumentList' = 'sign', '/v' , '/n', "`"$CertCN`"", '/p7', '.', '/p7co', '1.3.6.1.4.1.311.79.1', '/fd', 'certHash', "$($PolicyCIPPath.Name)"
                     'FilePath'     = $SignToolPathFinal
                     'NoNewWindow'  = $true
                     'Wait'         = $true
@@ -266,7 +268,9 @@ Function Deploy-SignedWDACConfig {
             }
         }
         Finally {
-            Remove-Item -Path $StagingArea -Recurse -Force
+            if (-NOT $Debug) {
+                Remove-Item -Path $StagingArea -Recurse -Force
+            }
         }
     }
 

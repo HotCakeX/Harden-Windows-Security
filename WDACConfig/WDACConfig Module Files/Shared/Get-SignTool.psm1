@@ -127,7 +127,7 @@ Function Get-SignTool {
                 return [System.String]$SignToolExePathOutput
             }
         }
-        Catch {
+        Finally {
             Remove-Item -Path $StagingArea -Recurse -Force
         }
     }

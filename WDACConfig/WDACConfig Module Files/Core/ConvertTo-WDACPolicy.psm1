@@ -188,7 +188,7 @@ Function ConvertTo-WDACPolicy {
             [PSCustomObject[]]$EventsToDisplay = $EventsToDisplay | Sort-Object -Property TimeCreated -Descending
 
             if (($null -eq $EventsToDisplay) -and ($EventsToDisplay.Count -eq 0)) {
-                Write-ColorfulText -Color HotPink -InputText 'No logs were found to display. Exiting...'
+                Write-ColorfulText -Color HotPink -InputText 'No logs were found to display based on the current filters. Exiting...'
                 return
             }
 

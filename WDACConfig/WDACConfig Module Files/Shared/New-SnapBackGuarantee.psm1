@@ -4,9 +4,9 @@ Function New-SnapBackGuarantee {
         A function that arms the system with a snapback guarantee in case of a reboot during the base policy enforcement process.
         This will help prevent the system from being stuck in audit mode in case of a power outage or a reboot during the base policy enforcement process.
     .PARAMETER Path
-        The directory path of the base policy file that will be enforced.
+        The path to the EnforcedMode.cip file that will be used to revert the base policy to enforced mode in case of a reboot.
     .INPUTS
-        System.IO.DirectoryInfo
+        System.IO.FileInfo
     .OUTPUTS
         System.Void
     #>
@@ -14,7 +14,7 @@ Function New-SnapBackGuarantee {
     [OutputType([System.Void])]
     Param(
         [parameter(Mandatory = $true)]
-        [System.IO.DirectoryInfo]$Path
+        [System.IO.FileInfo]$Path
     )
 
     # Using CMD and Scheduled Task Method
@@ -22,7 +22,7 @@ Function New-SnapBackGuarantee {
     Write-Verbose -Message 'Creating the scheduled task for Snap Back Guarantee'
 
     # Creating the scheduled task action
-    [Microsoft.Management.Infrastructure.CimInstance]$TaskAction = New-ScheduledTaskAction -Execute 'cmd.exe' -Argument '/c C:\EnforcedModeSnapBack.cmd'
+    [Microsoft.Management.Infrastructure.CimInstance]$TaskAction = New-ScheduledTaskAction -Execute 'cmd.exe' -Argument "/c $UserConfigDir\EnforcedModeSnapBack.cmd"
     # Creating the scheduled task trigger
     [Microsoft.Management.Infrastructure.CimInstance]$TaskTrigger = New-ScheduledTaskTrigger -AtLogOn
     # Creating the scheduled task principal, will run the task under the system account using its well-known SID
@@ -34,13 +34,13 @@ Function New-SnapBackGuarantee {
 
     # Saving the EnforcedModeSnapBack.cmd file to the root of C drive
     # It contains the instructions to revert the base policy to enforced mode
-    Set-Content -Force 'C:\EnforcedModeSnapBack.cmd' -Value @"
+    Set-Content -Force (Join-Path -Path $UserConfigDir 'EnforcedModeSnapBack.cmd') -Value @"
 REM Deploying the Enforced Mode SnapBack CI Policy
-CiTool --update-policy "$Path\EnforcedMode.cip" -json
+CiTool --update-policy "$Path" -json
 REM Deleting the Scheduled task responsible for running this CMD file
 schtasks /Delete /TN EnforcedModeSnapBack /F
 REM Deleting the CI Policy file
-del /f /q "$Path\EnforcedMode.cip"
+del /f /q "$Path"
 REM Deleting this CMD file itself
 del "%~f0"
 "@

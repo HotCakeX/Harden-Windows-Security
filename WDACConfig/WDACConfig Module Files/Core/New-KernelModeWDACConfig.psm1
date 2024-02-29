@@ -4,16 +4,17 @@ Function New-KernelModeWDACConfig {
     )]
     [OutputType([System.String])]
     Param(
-        [ValidateSet('Default', 'NoFlightRoots')]
-        [Parameter(Mandatory = $false)]
-        [System.String]$Base = 'Default',
-
         [ValidateSet('Prep', 'AuditAndEnforce')]
         [Parameter(Mandatory = $true)]
         [System.String]$Mode,
 
         [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$Deploy,
         [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$EVSigners,
+
+        [ValidateSet('Default', 'NoFlightRoots')]
+        [Parameter(Mandatory = $false)]
+        [System.String]$Base = 'Default',
+
         [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SkipVersionCheck
     )
 

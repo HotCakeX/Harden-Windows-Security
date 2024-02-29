@@ -211,7 +211,7 @@ Function Edit-WDACConfig {
 
                 #Region Snap-Back-Guarantee
                 Write-Verbose -Message 'Creating Enforced Mode SnapBack guarantee'
-                New-SnapBackGuarantee -Path (Get-Location).Path
+                New-SnapBackGuarantee -Path $EnforcedModeCIPPath
 
                 $CurrentStep++
                 Write-Progress -Id 9 -Activity 'Deploying the Audit mode policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
@@ -272,12 +272,11 @@ Function Edit-WDACConfig {
                     Write-Verbose -Message 'Finally Block Running'
                     Update-BasePolicyToEnforced
 
-                    # Enforced Mode Snapback removal after base policy has already been successfully re-enforced
                     Write-Verbose -Message 'Removing the SnapBack guarantee because the base policy has been successfully re-enforced'
 
                     # For CMD Method
                     Unregister-ScheduledTask -TaskName 'EnforcedModeSnapBack' -Confirm:$false
-                    Remove-Item -Path 'C:\EnforcedModeSnapBack.cmd' -Force
+                    Remove-Item -Path (Join-Path -Path $UserConfigDir -ChildPath 'EnforcedModeSnapBack.cmd') -Force
                 }
 
                 Write-Host -Object 'Here are the paths you selected:' -ForegroundColor Yellow
@@ -416,7 +415,7 @@ Function Edit-WDACConfig {
 
                 #Region Snap-Back-Guarantee
                 Write-Verbose -Message 'Creating Enforced Mode SnapBack guarantee'
-                New-SnapBackGuarantee -Path (Get-Location).Path
+                New-SnapBackGuarantee -Path $EnforcedModeCIPPath
 
                 $CurrentStep++
                 Write-Progress -Id 10 -Activity 'Deploying the Audit mode policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
@@ -687,10 +686,10 @@ Function Edit-WDACConfig {
                     Write-Verbose -Message 'Finally Block Running'
                     Update-BasePolicyToEnforced
 
-                    # Enforced Mode Snapback removal after base policy has already been successfully re-enforced
                     Write-Verbose -Message 'Removing the SnapBack guarantee because the base policy has been successfully re-enforced'
+
                     Unregister-ScheduledTask -TaskName 'EnforcedModeSnapBack' -Confirm:$false
-                    Remove-Item -Path 'C:\EnforcedModeSnapBack.cmd' -Force
+                    Remove-Item -Path (Join-Path -Path $UserConfigDir -ChildPath 'EnforcedModeSnapBack.cmd') -Force
                 }
 
                 #Region Supplemental-policy-processing-and-deployment

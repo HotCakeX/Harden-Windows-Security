@@ -4,7 +4,7 @@ Function New-KernelModeWDACConfig {
     )]
     [OutputType([System.String])]
     Param(
-        [ValidateSet('Default', 'No Flight Roots')]
+        [ValidateSet('Default', 'NoFlightRoots')]
         [Parameter(Mandatory = $false)]
         [System.String]$Base = 'Default',
 
@@ -118,11 +118,11 @@ Function New-KernelModeWDACConfig {
                 }
 
                 if ($NoFlights) {
-                    # Check if there is a pending Audit mode Kernel mode WDAC No Flight Roots policy already available in User Config file
+                    # Check if there is a pending Audit mode Kernel mode WDAC NoFlightRoots policy already available in User Config file
                     [System.String]$CurrentStrictKernelNoFlightRootsPolicyGUID = Get-CommonWDACConfig -StrictKernelNoFlightRootsPolicyGUID
 
                     If ($null -ne $CurrentStrictKernelNoFlightRootsPolicyGUID) {
-                        # Check if the pending Audit mode Kernel mode WDAC No Flight Roots policy is deployed on the system
+                        # Check if the pending Audit mode Kernel mode WDAC NoFlightRoots policy is deployed on the system
                         [System.String]$CurrentStrictKernelPolicyGUIDConfirmation = ((&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { $_.PolicyID -eq $CurrentStrictKernelNoFlightRootsPolicyGUID }).policyID
                     }
                 }
@@ -316,7 +316,7 @@ Function New-KernelModeWDACConfig {
                     }
                 }
 
-                'No Flight Roots' {
+                'NoFlightRoots' {
 
                     Switch ($Mode) {
 
@@ -488,7 +488,7 @@ Function New-KernelModeWDACConfig {
 .PARAMETER Base
     The base policy to use for creating the strict Kernel mode WDAC policy, offers 2 options:
     Default: meaning flight root certs will be allowed, suitable for most users.
-    No Flight Roots: is for users who don't want to allow flighting/insider builds from Dev/Canary channels.
+    NoFlightRoots: is for users who don't want to allow flighting/insider builds from Dev/Canary channels.
     If not specified, Default will be used.
 .PARAMETER Mode
     The mode to use for creating the strict Kernel mode WDAC policy, offers 2 options:

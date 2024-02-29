@@ -59,7 +59,7 @@ Function Invoke-WDACSimulation {
 
         # Start the transcript if the -Log switch is used and create a function to stop the transcript and the stopwatch at the end
         if ($Log) {
-            Start-Transcript -IncludeInvocationHeader -LiteralPath ".\WDAC Simulation Log $(Get-Date -Format "MM-dd-yyyy 'at' HH-mm-ss").txt"
+            Start-Transcript -IncludeInvocationHeader -LiteralPath (Join-Path -Path $UserConfigDir -ChildPath "WDAC Simulation Log $(Get-Date -Format "MM-dd-yyyy 'at' HH-mm-ss").txt")
 
             # Create a new stopwatch object to measure the execution time
             Write-Verbose -Message 'Starting the stopwatch...'
@@ -633,7 +633,7 @@ Function Invoke-WDACSimulation {
 
         # Export the output as CSV
         if ($CSVOutput) {
-            $MegaOutputObject | Select-Object -Property FilePath, Source, IsAuthorized, Permission | Sort-Object -Property IsAuthorized | Export-Csv -LiteralPath ".\WDAC Simulation Output $(Get-Date -Format "MM-dd-yyyy 'at' HH-mm-ss").csv" -Force
+            $MegaOutputObject | Select-Object -Property FilePath, Source, IsAuthorized, Permission | Sort-Object -Property IsAuthorized | Export-Csv -LiteralPath (Join-Path -Path $UserConfigDir -ChildPath "WDAC Simulation Output $(Get-Date -Format "MM-dd-yyyy 'at' HH-mm-ss").csv") -Force
         }
 
         Write-Progress -Id 0 -Activity 'WDAC Simulation completed.' -Completed

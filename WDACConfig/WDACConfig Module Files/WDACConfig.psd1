@@ -203,10 +203,9 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
         'Resources\WDAC Policies\DefaultWindows_Enforced_Kernel.xml',
         'Resources\WDAC Policies\DefaultWindows_Enforced_Kernel_NoFlights.xml',
         'Resources\User Configurations\Schema.json',
-        'Resources\WDAC Policies-Archived\DefaultWindows_Enforced_Kernel.xml'
-        'Resources\WDAC Policies-Archived\DefaultWindows_Enforced_Kernel_NoFlights.xml'
-        'Resources\WDAC Policies-Archived\Readme.md'
-        'Shared\Confirm-CertCN.psm1',
+        'Resources\WDAC Policies-Archived\DefaultWindows_Enforced_Kernel.xml',
+        'Resources\WDAC Policies-Archived\DefaultWindows_Enforced_Kernel_NoFlights.xml',
+        'Resources\WDAC Policies-Archived\Readme.md',
         'Shared\Get-BlockRulesMeta.psm1',
         'Shared\Get-FileRules.psm1',
         'Shared\Get-GlobalRootDrives.psm1',

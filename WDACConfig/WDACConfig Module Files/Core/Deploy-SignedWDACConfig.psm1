@@ -42,7 +42,6 @@ Function Deploy-SignedWDACConfig {
         Write-Verbose -Message 'Importing the required sub-modules'
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Update-self.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Get-SignTool.psm1" -Force
-        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Confirm-CertCN.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Write-ColorfulText.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Copy-CiRules.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\New-StagingArea.psm1" -Force
@@ -73,8 +72,8 @@ Function Deploy-SignedWDACConfig {
 
         # If CertCN was not provided by user, check if a valid value exists in user configs, if so, use it, otherwise throw an error
         if (!$CertCN) {
-            if (Confirm-CertCN -CN (Get-CommonWDACConfig -CertCN)) {
-                $CertCN = Get-CommonWDACConfig -CertCN
+            if ([CertCNz]::new().GetValidValues() -contains (Get-CommonWDACConfig -CertCN)) {
+                [System.String]$CertCN = Get-CommonWDACConfig -CertCN
             }
             else {
                 throw 'CertCN parameter cannot be empty and no valid user configuration was found for it.'

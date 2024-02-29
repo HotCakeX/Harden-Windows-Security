@@ -479,7 +479,6 @@ Function ConvertTo-WDACPolicy {
             #Endregion Base To Supplemental Policy Association and Deployment
         }
         Finally {
-            $CurrentStep++
             Write-Progress -Id 30 -Activity 'Complete.' -Completed
 
             if (-NOT $Debug) {

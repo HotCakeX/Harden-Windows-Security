@@ -480,7 +480,7 @@ Function Edit-WDACConfig {
 
                         # Using the function to find out which files are not in the user-selected path(s), if any, to only scan those by first copying them to another directory
                         # this prevents duplicate rule creation and double file copying
-                        $TestFilePathResults = (Test-FilePath -FilePath $AuditEventLogsProcessingResults.AvailableFilesPaths -DirectoryPath $ProgramsPaths).path | Select-Object -Unique
+                        [System.IO.FileInfo[]]$TestFilePathResults = Test-FilePath -FilePath $AuditEventLogsProcessingResults.AvailableFilesPaths -DirectoryPath $ProgramsPaths
 
                         Write-Verbose -Message "$($TestFilePathResults.count) file(s) have been found in event viewer logs that don't exist in any of the folder paths you selected."
 

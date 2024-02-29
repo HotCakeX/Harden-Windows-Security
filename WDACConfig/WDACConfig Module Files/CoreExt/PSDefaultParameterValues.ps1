@@ -11,7 +11,6 @@ $PSDefaultParameterValues = @{
     'Add-Type:Verbose'                     = $false
     'Get-WinEvent:Verbose'                 = $false
     'Test-Path:ErrorAction'                = 'SilentlyContinue'
-    'Confirm-CertCN:Verbose'               = $Verbose
     'Receive-CodeIntegrityLogs:Verbose'    = $Verbose
     'Get-FileRules:Verbose'                = $Verbose
     'Get-BlockRulesMeta:Verbose'           = $Verbose

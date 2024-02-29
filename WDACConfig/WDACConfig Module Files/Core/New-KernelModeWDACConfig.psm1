@@ -60,7 +60,7 @@ Function New-KernelModeWDACConfig {
         [System.IO.FileInfo]$FinalEnforcedPolicyPath = Join-Path -Path $StagingArea -ChildPath 'DefaultWindows_Enforced_Kernel.xml'
 
         # Defining the paths to the kernel-mode template policies for each mode
-        [System.IO.FileInfo]$TemplatePolicyPath = $Normal ? "$ModuleRootPath\Resources\WDAC Policies\DefaultWindows_Enforced_Kernel.xml" : "$ModuleRootPath\Resources\WDAC Policies\DefaultWindows_Enforced_Kernel_NoFlights.xml"
+        [System.IO.FileInfo]$TemplatePolicyPath = $Default ? "$ModuleRootPath\Resources\WDAC Policies\DefaultWindows_Enforced_Kernel.xml" : "$ModuleRootPath\Resources\WDAC Policies\DefaultWindows_Enforced_Kernel_NoFlights.xml"
 
         # Check if the PrepMode and AuditAndEnforce parameters are used together and ensure one of them is used
         if (-not ($PSBoundParameters.ContainsKey('PrepMode') -xor $PSBoundParameters.ContainsKey('AuditAndEnforce'))) {
@@ -117,7 +117,7 @@ Function New-KernelModeWDACConfig {
             begin {
                 Write-Verbose -Message 'Executing the Build-PrepModeStrictKernelPolicy helper function'
 
-                [System.IO.FileInfo]$OutputPolicyPath = Join-Path -Path $StagingArea -ChildPath ($Normal ? 'DefaultWindows_Enforced_Kernel.xml' : 'DefaultWindows_Enforced_Kernel_NoFlights.xml')
+                [System.IO.FileInfo]$OutputPolicyPath = Join-Path -Path $StagingArea -ChildPath ($Normal ? 'DefaultWindows_Audit_Kernel.xml' : 'DefaultWindows_Audit_Kernel_NoFlights.xml')
                 [System.String]$PolicyName = $Normal ? 'Strict Kernel mode policy Audit' : 'Strict Kernel No Flights mode policy Audit'
 
                 if ($Normal) {
@@ -204,13 +204,13 @@ Function New-KernelModeWDACConfig {
                     [System.String]$PolicyID = $AuditPolicy.PolicyID
                     [System.IO.FileInfo]$AuditPolicyPath = $AuditPolicy.PolicyPath
 
+                    [System.IO.FileInfo]$FinalAuditCIPPath = Join-Path -Path $StagingArea -ChildPath "$PolicyID.cip"
+
+                    Write-Verbose -Message 'Converting the XML policy file to CIP binary'
+                    ConvertFrom-CIPolicy -XmlFilePath $AuditPolicyPath -BinaryFilePath $FinalAuditCIPPath | Out-Null
+
                     # Deploy the policy if Deploy parameter is used and perform additional tasks on the system
                     if ($Deploy) {
-
-                        [System.IO.FileInfo]$FinalAuditCIPPath = Join-Path -Path $StagingArea -ChildPath "$PolicyID.cip"
-
-                        Write-Verbose -Message 'Converting the XML policy file to CIP binary'
-                        ConvertFrom-CIPolicy -XmlFilePath $AuditPolicyPath -BinaryFilePath $FinalAuditCIPPath | Out-Null
 
                         $CurrentStep++
                         Write-Progress -Id 25 -Activity 'Deploying the prep mode policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
@@ -290,16 +290,16 @@ Function New-KernelModeWDACConfig {
                         Set-RuleOption -FilePath $FinalEnforcedPolicyPath -Option 8
                     }
 
+                    [System.IO.FileInfo]$FinalEnforcedCIPPath = Join-Path -Path $StagingArea -ChildPath "$PolicyID.cip"
+
+                    Write-Verbose -Message 'Converting the policy XML file to CIP binary'
+                    ConvertFrom-CIPolicy -XmlFilePath $FinalEnforcedPolicyPath -BinaryFilePath $FinalEnforcedCIPPath | Out-Null
+
                     # Deploy the policy if Deploy parameter is used
                     if ($Deploy) {
 
-                        [System.IO.FileInfo]$FinalEnforcedCIPPath = Join-Path -Path $StagingArea -ChildPath "$PolicyID.cip"
-
                         $CurrentStep++
                         Write-Progress -Id 26 -Activity 'Deploying the final policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-                        Write-Verbose -Message 'Converting the policy XML file to CIP binary'
-                        ConvertFrom-CIPolicy -XmlFilePath $FinalEnforcedPolicyPath -BinaryFilePath $FinalEnforcedCIPPath | Out-Null
 
                         Write-Verbose -Message 'Deploying the enforced mode policy with the same ID as the Audit mode policy, effectively overwriting it'
                         &'C:\Windows\System32\CiTool.exe' --update-policy $FinalEnforcedCIPPath -json | Out-Null
@@ -314,7 +314,7 @@ Function New-KernelModeWDACConfig {
                         # And instead wants to first Sign and then deploy it using the Deploy-SignedWDACConfig cmdlet
                         Write-Verbose -Message 'Removing the deployed Audit mode policy from the system since -Deploy parameter was not used to overwrite it with the enforced mode policy.'
                         &'C:\Windows\System32\CiTool.exe' --remove-policy "{$PolicyID}" -json | Out-Null
-                        Write-ColorfulText -Color Pink -InputText 'Strict Kernel mode Enforced policy has been created in the Staging Area.'
+                        Write-ColorfulText -Color Pink -InputText "Strict Kernel mode Enforced policy has been created: $FinalEnforcedPolicyPath"
                     }
                     Write-Progress -Id 26 -Activity 'Complete.' -Completed
                 }
@@ -337,13 +337,13 @@ Function New-KernelModeWDACConfig {
                     [System.String]$PolicyID = $AuditPolicy.PolicyID
                     [System.IO.FileInfo]$AuditPolicyPath = $AuditPolicy.PolicyPath
 
+                    [System.IO.FileInfo]$FinalAuditCIPPath = Join-Path -Path $StagingArea -ChildPath "$PolicyID.cip"
+
+                    Write-Verbose -Message 'Converting the XML policy file to CIP binary'
+                    ConvertFrom-CIPolicy -XmlFilePath $AuditPolicyPath -BinaryFilePath $FinalAuditCIPPath | Out-Null
+
                     # Deploy the policy if Deploy parameter is used and perform additional tasks on the system
                     if ($Deploy) {
-
-                        [System.IO.FileInfo]$FinalAuditCIPPath = Join-Path -Path $StagingArea -ChildPath "$PolicyID.cip"
-
-                        Write-Verbose -Message 'Converting the XML policy file to CIP binary'
-                        ConvertFrom-CIPolicy -XmlFilePath $AuditPolicyPath -BinaryFilePath $FinalAuditCIPPath | Out-Null
 
                         $CurrentStep++
                         Write-Progress -Id 27 -Activity 'Deploying the prep mode policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
@@ -426,16 +426,16 @@ Function New-KernelModeWDACConfig {
                         Set-RuleOption -FilePath $FinalEnforcedPolicyPath -Option 8
                     }
 
+                    [System.IO.FileInfo]$FinalEnforcedCIPPath = Join-Path -Path $StagingArea -ChildPath "$PolicyID.cip"
+
+                    Write-Verbose -Message 'Converting the policy XML file to CIP binary'
+                    ConvertFrom-CIPolicy -XmlFilePath $FinalEnforcedPolicyPath -BinaryFilePath $FinalEnforcedCIPPath | Out-Null
+
                     # Deploy the policy if Deploy parameter is used
                     if ($Deploy) {
 
-                        [System.IO.FileInfo]$FinalEnforcedCIPPath = Join-Path -Path $StagingArea -ChildPath "$PolicyID.cip"
-
                         $CurrentStep++
                         Write-Progress -Id 28 -Activity 'Deploying the final policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-                        Write-Verbose -Message 'Converting the policy XML file to CIP binary'
-                        ConvertFrom-CIPolicy -XmlFilePath $FinalEnforcedPolicyPath -BinaryFilePath $FinalEnforcedCIPPath | Out-Null
 
                         Write-Verbose -Message 'Deploying the enforced mode policy with the same ID as the Audit mode policy, effectively overwriting it'
                         &'C:\Windows\System32\CiTool.exe' --update-policy $FinalEnforcedCIPPath -json | Out-Null
@@ -450,7 +450,7 @@ Function New-KernelModeWDACConfig {
                         # And instead wants to first Sign and then deploy it using the Deploy-SignedWDACConfig cmdlet
                         Write-Verbose -Message 'Removing the deployed Audit mode policy from the system since -Deploy parameter was not used to overwrite it with the enforced mode policy.'
                         &'C:\Windows\System32\CiTool.exe' --remove-policy "{$PolicyID}" -json | Out-Null
-                        Write-ColorfulText -Color Pink -InputText 'Strict Kernel mode Enforced policy with no flighting root certs has been created in the Staging Area.'
+                        Write-ColorfulText -Color Pink -InputText "Strict Kernel mode Enforced policy with no flighting root certs has been created: $FinalEnforcedPolicyPath"
                     }
                     Write-Progress -Id 28 -Activity 'Complete.' -Completed
                 }

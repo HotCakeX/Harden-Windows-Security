@@ -4,25 +4,16 @@ Function New-KernelModeWDACConfig {
     )]
     [OutputType([System.String])]
     Param(
-        [Parameter(Mandatory = $false, ParameterSetName = 'Default Strict Kernel')][System.Management.Automation.SwitchParameter]$Default,
-        [Parameter(Mandatory = $false, ParameterSetName = 'No Flight Roots')][System.Management.Automation.SwitchParameter]$NoFlightRoots,
+        [ValidateSet('Default', 'No Flight Roots')]
+        [Parameter(Mandatory = $false)]
+        [System.String]$Base = 'Default',
 
-        [Parameter(Mandatory = $false, ParameterSetName = 'Default Strict Kernel')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'No Flight Roots')]
-        [System.Management.Automation.SwitchParameter]$PrepMode,
+        [ValidateSet('Prep', 'AuditAndEnforce')]
+        [Parameter(Mandatory = $true)]
+        [System.String]$Mode,
 
-        [Parameter(Mandatory = $false, ParameterSetName = 'Default Strict Kernel')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'No Flight Roots')]
-        [System.Management.Automation.SwitchParameter]$AuditAndEnforce,
-
-        [Parameter(Mandatory = $false, ParameterSetName = 'Default Strict Kernel')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'No Flight Roots')]
-        [System.Management.Automation.SwitchParameter]$Deploy,
-
-        [Parameter(Mandatory = $false, ParameterSetName = 'Default Strict Kernel')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'No Flight Roots')]
-        [System.Management.Automation.SwitchParameter]$EVSigners,
-
+        [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$Deploy,
+        [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$EVSigners,
         [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SkipVersionCheck
     )
 
@@ -58,12 +49,7 @@ Function New-KernelModeWDACConfig {
         [System.IO.FileInfo]$FinalEnforcedPolicyPath = Join-Path -Path $StagingArea -ChildPath 'DefaultWindows_Enforced_Kernel.xml'
 
         # Defining the paths to the kernel-mode template policies for each mode
-        [System.IO.FileInfo]$TemplatePolicyPath = $Default ? "$ModuleRootPath\Resources\WDAC Policies\DefaultWindows_Enforced_Kernel.xml" : "$ModuleRootPath\Resources\WDAC Policies\DefaultWindows_Enforced_Kernel_NoFlights.xml"
-
-        # Check if the PrepMode and AuditAndEnforce parameters are used together and ensure one of them is used
-        if (-not ($PSBoundParameters.ContainsKey('PrepMode') -xor $PSBoundParameters.ContainsKey('AuditAndEnforce'))) {
-            Write-Error -Message 'You must specify either -PrepMode or -AuditAndEnforce, but not both.' -Category InvalidArgument
-        }
+        [System.IO.FileInfo]$TemplatePolicyPath = $Base -eq 'Default' ? "$ModuleRootPath\Resources\WDAC Policies\DefaultWindows_Enforced_Kernel.xml" : "$ModuleRootPath\Resources\WDAC Policies\DefaultWindows_Enforced_Kernel_NoFlights.xml"
 
         # A flag that will be set to true if errors occur
         [System.Boolean]$NoCopy = $false
@@ -189,271 +175,287 @@ Function New-KernelModeWDACConfig {
 
         Try {
 
-            if ($PSCmdlet.ParameterSetName -eq 'Default Strict Kernel' -and $PSBoundParameters.ContainsKey('Default')) {
+            :MainSwitch Switch ($Base) {
 
-                if ($PrepMode) {
+                'Default' {
 
-                    # The total number of the main steps for the progress bar to render
-                    [System.UInt16]$TotalSteps = $Deploy ? 2 : 1
-                    [System.UInt16]$CurrentStep = 0
+                    Switch ($Mode) {
 
-                    $CurrentStep++
-                    Write-Progress -Id 25 -Activity 'Creating the prep mode policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+                        'Prep' {
 
-                    Write-Verbose -Message 'Building the Audit mode policy'
-                    [PSCustomObject]$AuditPolicy = Build-PrepModeStrictKernelPolicy -Normal
-                    [System.String]$PolicyID = $AuditPolicy.PolicyID
-                    [System.IO.FileInfo]$AuditPolicyPath = $AuditPolicy.PolicyPath
+                            # The total number of the main steps for the progress bar to render
+                            [System.UInt16]$TotalSteps = $Deploy ? 2 : 1
+                            [System.UInt16]$CurrentStep = 0
 
-                    [System.IO.FileInfo]$FinalAuditCIPPath = Join-Path -Path $StagingArea -ChildPath "$PolicyID.cip"
+                            $CurrentStep++
+                            Write-Progress -Id 25 -Activity 'Creating the prep mode policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                    Write-Verbose -Message 'Converting the XML policy file to CIP binary'
-                    ConvertFrom-CIPolicy -XmlFilePath $AuditPolicyPath -BinaryFilePath $FinalAuditCIPPath | Out-Null
+                            Write-Verbose -Message 'Building the Audit mode policy'
+                            [PSCustomObject]$AuditPolicy = Build-PrepModeStrictKernelPolicy -Normal
+                            [System.String]$PolicyID = $AuditPolicy.PolicyID
+                            [System.IO.FileInfo]$AuditPolicyPath = $AuditPolicy.PolicyPath
 
-                    # Deploy the policy if Deploy parameter is used and perform additional tasks on the system
-                    if ($Deploy) {
+                            [System.IO.FileInfo]$FinalAuditCIPPath = Join-Path -Path $StagingArea -ChildPath "$PolicyID.cip"
 
-                        $CurrentStep++
-                        Write-Progress -Id 25 -Activity 'Deploying the prep mode policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+                            Write-Verbose -Message 'Converting the XML policy file to CIP binary'
+                            ConvertFrom-CIPolicy -XmlFilePath $AuditPolicyPath -BinaryFilePath $FinalAuditCIPPath | Out-Null
 
-                        Write-Verbose -Message 'Setting the GUID and time of deployment of the Audit mode policy in the User Configuration file'
-                        Set-CommonWDACConfig -StrictKernelPolicyGUID $PolicyID -StrictKernelModePolicyTimeOfDeployment (Get-Date) | Out-Null
+                            # Deploy the policy if Deploy parameter is used and perform additional tasks on the system
+                            if ($Deploy) {
 
-                        Write-Verbose -Message 'Deploying the Strict Kernel mode policy'
-                        &'C:\Windows\System32\CiTool.exe' --update-policy $FinalAuditCIPPath -json | Out-Null
-                        Write-ColorfulText -Color HotPink -InputText 'Strict Kernel mode policy has been deployed in Audit mode, please restart your system.'
+                                $CurrentStep++
+                                Write-Progress -Id 25 -Activity 'Deploying the prep mode policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
+                                Write-Verbose -Message 'Setting the GUID and time of deployment of the Audit mode policy in the User Configuration file'
+                                Set-CommonWDACConfig -StrictKernelPolicyGUID $PolicyID -StrictKernelModePolicyTimeOfDeployment (Get-Date) | Out-Null
+
+                                Write-Verbose -Message 'Deploying the Strict Kernel mode policy'
+                                &'C:\Windows\System32\CiTool.exe' --update-policy $FinalAuditCIPPath -json | Out-Null
+                                Write-ColorfulText -Color HotPink -InputText 'Strict Kernel mode policy has been deployed in Audit mode, please restart your system.'
+                            }
+                            else {
+                                Write-ColorfulText -Color HotPink -InputText 'Strict Kernel mode Audit policy has been created in the Staging Area.'
+                            }
+                            Write-Progress -Id 25 -Activity 'Done' -Completed
+
+                            break MainSwitch
+                        }
+
+                        'AuditAndEnforce' {
+
+                            # The total number of the main steps for the progress bar to render
+                            [System.UInt16]$TotalSteps = $Deploy ? 3 : 2
+                            [System.UInt16]$CurrentStep = 0
+
+                            # Get the Strict Kernel Audit mode policy's GUID to use for the Enforced mode policy
+                            # This will eliminate the need for an extra reboot
+                            Write-Verbose -Message 'Trying to get the GUID of Strict Kernel Audit mode policy to use for the Enforced mode policy, from the user configurations'
+                            [System.String]$PolicyID = Get-CommonWDACConfig -StrictKernelPolicyGUID
+
+                            Write-Verbose -Message 'Verifying the Policy ID in the User Config exists and is valid'
+                            $ObjectGuid = [System.Guid]::Empty
+                            if ([System.Guid]::TryParse($PolicyID, [ref]$ObjectGuid)) {
+                                Write-Verbose -Message 'Valid GUID found in User Configs for Audit mode policy'
+                            }
+                            else {
+                                Throw 'Invalid or nonexistent GUID in User Configs for Audit mode policy, Use the -PrepMode parameter first.'
+                            }
+
+                            $CurrentStep++
+                            Write-Progress -Id 26 -Activity 'Scanning the Event logs' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
+                            # Get the kernel mode drivers directory path containing symlinks
+                            Get-KernelModeDriversAudit -SavePath $KernelModeDriversDirectory
+
+                            powershell.exe -Command {
+                                Write-Verbose -Message 'Scanning the kernel-mode drivers detected in Event viewer logs'
+                                [System.Collections.ArrayList]$DriverFilesObj = Get-SystemDriver -ScanPath $args[0]
+
+                                Write-Verbose -Message 'Creating a policy xml file from the driver files'
+                                New-CIPolicy -MultiplePolicyFormat -Level WHQLFilePublisher -Fallback None -AllowFileNameFallbacks -FilePath $args[1] -DriverFiles $DriverFilesObj
+                            } -args $KernelModeDriversDirectory, $DriverFilesScanPolicyPath
+
+                            $CurrentStep++
+                            Write-Progress -Id 26 -Activity 'Creating the final policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
+                            Write-Verbose -Message 'Not trusting the policy xml file made before restart, so building the same policy again after restart, this time in Enforced mode instead of Audit mode'
+                            Copy-Item -Path $TemplatePolicyPath -Destination (Join-Path -Path $StagingArea -ChildPath 'Raw_Normal.xml') -Force
+
+                            Write-Verbose -Message 'Merging the base policy with the policy made from driver files, to deploy them as one policy'
+                            Merge-CIPolicy -PolicyPaths (Join-Path -Path $StagingArea -ChildPath 'Raw_Normal.xml'), $DriverFilesScanPolicyPath -OutputFilePath $FinalEnforcedPolicyPath | Out-Null
+
+                            Write-Verbose -Message 'Moving all AllowedSigners from Usermode to Kernel mode signing scenario'
+                            Move-UserModeToKernelMode -FilePath $FinalEnforcedPolicyPath | Out-Null
+
+                            Write-Verbose -Message 'Setting the GUIDs for the XML policy file'
+                            Edit-GUIDs -PolicyIDInput $PolicyID -PolicyFilePathInput $FinalEnforcedPolicyPath
+
+                            Write-Verbose -Message 'Setting a new policy name with the current date attached to it'
+                            Set-CIPolicyIdInfo -FilePath $FinalEnforcedPolicyPath -PolicyName "Strict Kernel mode policy Enforced - $(Get-Date -Format 'MM-dd-yyyy')"
+
+                            Write-Verbose -Message 'Setting the policy version to 1.0.0.0'
+                            Set-CIPolicyVersion -FilePath $FinalEnforcedPolicyPath -Version '1.0.0.0'
+
+                            Edit-CiPolicyRuleOptions -Action Base-KernelMode -XMLFile $FinalEnforcedPolicyPath
+
+                            if ($EVSigners) {
+                                Write-Verbose -Message 'Adding EVSigners policy rule option'
+                                Set-RuleOption -FilePath $FinalEnforcedPolicyPath -Option 8
+                            }
+
+                            [System.IO.FileInfo]$FinalEnforcedCIPPath = Join-Path -Path $StagingArea -ChildPath "$PolicyID.cip"
+
+                            Write-Verbose -Message 'Converting the policy XML file to CIP binary'
+                            ConvertFrom-CIPolicy -XmlFilePath $FinalEnforcedPolicyPath -BinaryFilePath $FinalEnforcedCIPPath | Out-Null
+
+                            # Deploy the policy if Deploy parameter is used
+                            if ($Deploy) {
+
+                                $CurrentStep++
+                                Write-Progress -Id 26 -Activity 'Deploying the final policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
+                                Write-Verbose -Message 'Deploying the enforced mode policy with the same ID as the Audit mode policy, effectively overwriting it'
+                                &'C:\Windows\System32\CiTool.exe' --update-policy $FinalEnforcedCIPPath -json | Out-Null
+                                Write-ColorfulText -Color HotPink -InputText 'Strict Kernel mode policy has been deployed in Enforced mode, no restart required.'
+
+                                Write-Verbose -Message 'Removing the GUID and time of deployment of the StrictKernelPolicy from user configuration'
+                                Remove-CommonWDACConfig -StrictKernelPolicyGUID -StrictKernelModePolicyTimeOfDeployment | Out-Null
+                            }
+                            else {
+                                # Remove the Audit mode policy from the system
+                                # This step is necessary if user didn't use the -Deploy parameter
+                                # And instead wants to first Sign and then deploy it using the Deploy-SignedWDACConfig cmdlet
+                                Write-Verbose -Message 'Removing the deployed Audit mode policy from the system since -Deploy parameter was not used to overwrite it with the enforced mode policy.'
+                                &'C:\Windows\System32\CiTool.exe' --remove-policy "{$PolicyID}" -json | Out-Null
+                                Write-ColorfulText -Color HotPink -InputText "Strict Kernel mode Enforced policy has been created`n$FinalEnforcedPolicyPath"
+                            }
+                            Write-Progress -Id 26 -Activity 'Complete.' -Completed
+
+                            break MainSwitch
+                        }
                     }
-                    else {
-                        Write-ColorfulText -Color HotPink -InputText 'Strict Kernel mode Audit policy has been created in the Staging Area.'
-                    }
-                    Write-Progress -Id 25 -Activity 'Done' -Completed
                 }
 
-                if ($AuditAndEnforce) {
+                'No Flight Roots' {
 
-                    # The total number of the main steps for the progress bar to render
-                    [System.UInt16]$TotalSteps = $Deploy ? 3 : 2
-                    [System.UInt16]$CurrentStep = 0
+                    Switch ($Mode) {
 
-                    # Get the Strict Kernel Audit mode policy's GUID to use for the Enforced mode policy
-                    # This will eliminate the need for an extra reboot
-                    Write-Verbose -Message 'Trying to get the GUID of Strict Kernel Audit mode policy to use for the Enforced mode policy, from the user configurations'
-                    [System.String]$PolicyID = Get-CommonWDACConfig -StrictKernelPolicyGUID
+                        'Prep' {
 
-                    Write-Verbose -Message 'Verifying the Policy ID in the User Config exists and is valid'
-                    $ObjectGuid = [System.Guid]::Empty
-                    if ([System.Guid]::TryParse($PolicyID, [ref]$ObjectGuid)) {
-                        Write-Verbose -Message 'Valid GUID found in User Configs for Audit mode policy'
+                            # The total number of the main steps for the progress bar to render
+                            [System.UInt16]$TotalSteps = $Deploy ? 2 : 1
+                            [System.UInt16]$CurrentStep = 0
+
+                            $CurrentStep++
+                            Write-Progress -Id 27 -Activity 'Creating the prep mode policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
+                            Write-Verbose -Message 'Building the Audit mode policy'
+                            [PSCustomObject]$AuditPolicy = Build-PrepModeStrictKernelPolicy -NoFlights
+                            [System.String]$PolicyID = $AuditPolicy.PolicyID
+                            [System.IO.FileInfo]$AuditPolicyPath = $AuditPolicy.PolicyPath
+
+                            [System.IO.FileInfo]$FinalAuditCIPPath = Join-Path -Path $StagingArea -ChildPath "$PolicyID.cip"
+
+                            Write-Verbose -Message 'Converting the XML policy file to CIP binary'
+                            ConvertFrom-CIPolicy -XmlFilePath $AuditPolicyPath -BinaryFilePath $FinalAuditCIPPath | Out-Null
+
+                            # Deploy the policy if Deploy parameter is used and perform additional tasks on the system
+                            if ($Deploy) {
+
+                                $CurrentStep++
+                                Write-Progress -Id 27 -Activity 'Deploying the prep mode policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
+                                Write-Verbose -Message 'Setting the GUID and time of deployment of the Audit mode policy in the User Configuration file'
+                                Set-CommonWDACConfig -StrictKernelNoFlightRootsPolicyGUID $PolicyID -StrictKernelModePolicyTimeOfDeployment (Get-Date) | Out-Null
+
+                                Write-Verbose -Message 'Deploying the Strict Kernel mode policy'
+                                &'C:\Windows\System32\CiTool.exe' --update-policy $FinalAuditCIPPath -json | Out-Null
+                                Write-ColorfulText -Color HotPink -InputText 'Strict Kernel mode policy with no flighting root certs has been deployed in Audit mode, please restart your system.'
+                            }
+                            else {
+                                Write-ColorfulText -Color HotPink -InputText 'Strict Kernel mode Audit policy with no flighting root certs has been created in the Staging Area.'
+                            }
+                            Write-Progress -Id 27 -Activity 'Complete.' -Completed
+
+                            break MainSwitch
+                        }
+
+                        'AuditAndEnforce' {
+
+                            # The total number of the main steps for the progress bar to render
+                            [System.UInt16]$TotalSteps = $Deploy ? 3 : 2
+                            [System.UInt16]$CurrentStep = 0
+
+                            # Get the Strict Kernel Audit mode policy's GUID to use for the Enforced mode policy
+                            # This will eliminate the need for an extra reboot
+                            Write-Verbose -Message 'Trying to get the GUID of Strict Kernel Audit mode policy to use for the Enforced mode policy, from the user configurations'
+                            [System.String]$PolicyID = Get-CommonWDACConfig -StrictKernelNoFlightRootsPolicyGUID
+
+                            Write-Verbose -Message 'Verifying the Policy ID in the User Config exists and is valid'
+                            $ObjectGuid = [System.Guid]::Empty
+                            if ([System.Guid]::TryParse($PolicyID, [ref]$ObjectGuid)) {
+                                Write-Verbose -Message 'Valid GUID found in User Configs for Audit mode policy'
+                            }
+                            else {
+                                Throw 'Invalid or nonexistent GUID in User Configs for Audit mode policy, Use the -PrepMode parameter first.'
+                            }
+
+                            $CurrentStep++
+                            Write-Progress -Id 28 -Activity 'Scanning the Event logs' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
+                            # Get the kernel mode drivers directory path containing symlinks
+                            Get-KernelModeDriversAudit -SavePath $KernelModeDriversDirectory
+
+                            powershell.exe -Command {
+                                Write-Verbose -Message 'Scanning the kernel-mode drivers detected in Event viewer logs'
+                                [System.Collections.ArrayList]$DriverFilesObj = Get-SystemDriver -ScanPath $args[0]
+
+                                Write-Verbose -Message 'Creating a policy xml file from the driver files'
+                                New-CIPolicy -MultiplePolicyFormat -Level WHQLFilePublisher -Fallback None -AllowFileNameFallbacks -FilePath $args[1] -DriverFiles $DriverFilesObj
+                            } -args $KernelModeDriversDirectory, $DriverFilesScanPolicyPath
+
+                            $CurrentStep++
+                            Write-Progress -Id 28 -Activity 'Creating the final policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
+                            Write-Verbose -Message 'Not trusting the policy xml file made before restart, so building the same policy again after restart, this time in Enforced mode instead of Audit mode'
+                            Copy-Item -Path $TemplatePolicyPath -Destination (Join-Path -Path $StagingArea -ChildPath 'Raw_NoFlights.xml') -Force
+
+                            Write-Verbose -Message 'Merging the base policy with the policy made from driver files, to deploy them as one policy'
+                            Merge-CIPolicy -PolicyPaths (Join-Path -Path $StagingArea -ChildPath 'Raw_NoFlights.xml'), $DriverFilesScanPolicyPath -OutputFilePath $FinalEnforcedPolicyPath | Out-Null
+
+                            Write-Verbose -Message 'Moving all AllowedSigners from Usermode to Kernel mode signing scenario'
+                            Move-UserModeToKernelMode -FilePath $FinalEnforcedPolicyPath | Out-Null
+
+                            Write-Verbose -Message 'Setting the GUIDs for the XML policy file'
+                            Edit-GUIDs -PolicyIDInput $PolicyID -PolicyFilePathInput $FinalEnforcedPolicyPath
+
+                            Write-Verbose -Message 'Setting a new policy name with the current date attached to it'
+                            Set-CIPolicyIdInfo -FilePath $FinalEnforcedPolicyPath -PolicyName "Strict Kernel No Flights mode policy Enforced - $(Get-Date -Format 'MM-dd-yyyy')"
+
+                            Write-Verbose -Message 'Setting the policy version to 1.0.0.0'
+                            Set-CIPolicyVersion -FilePath $FinalEnforcedPolicyPath -Version '1.0.0.0'
+
+                            Edit-CiPolicyRuleOptions -Action Base-KernelMode -XMLFile $FinalEnforcedPolicyPath
+
+                            # Add policy rule option 4 to block flight root certs
+                            Set-RuleOption -FilePath $FinalEnforcedPolicyPath -Option 4
+
+                            if ($EVSigners) {
+                                Write-Verbose -Message 'Adding EVSigners policy rule option'
+                                Set-RuleOption -FilePath $FinalEnforcedPolicyPath -Option 8
+                            }
+
+                            [System.IO.FileInfo]$FinalEnforcedCIPPath = Join-Path -Path $StagingArea -ChildPath "$PolicyID.cip"
+
+                            Write-Verbose -Message 'Converting the policy XML file to CIP binary'
+                            ConvertFrom-CIPolicy -XmlFilePath $FinalEnforcedPolicyPath -BinaryFilePath $FinalEnforcedCIPPath | Out-Null
+
+                            # Deploy the policy if Deploy parameter is used
+                            if ($Deploy) {
+
+                                $CurrentStep++
+                                Write-Progress -Id 28 -Activity 'Deploying the final policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
+                                Write-Verbose -Message 'Deploying the enforced mode policy with the same ID as the Audit mode policy, effectively overwriting it'
+                                &'C:\Windows\System32\CiTool.exe' --update-policy $FinalEnforcedCIPPath -json | Out-Null
+                                Write-ColorfulText -Color HotPink -InputText 'Strict Kernel mode policy with no flighting root certs has been deployed in Enforced mode, no restart required.'
+
+                                Write-Verbose -Message 'Removing the GUID and time of deployment of the StrictKernelNoFlightRootsPolicy from user configuration'
+                                Remove-CommonWDACConfig -StrictKernelNoFlightRootsPolicyGUID -StrictKernelModePolicyTimeOfDeployment | Out-Null
+                            }
+                            else {
+                                # Remove the Audit mode policy from the system
+                                # This step is necessary if user didn't use the -Deploy parameter
+                                # And instead wants to first Sign and then deploy it using the Deploy-SignedWDACConfig cmdlet
+                                Write-Verbose -Message 'Removing the deployed Audit mode policy from the system since -Deploy parameter was not used to overwrite it with the enforced mode policy.'
+                                &'C:\Windows\System32\CiTool.exe' --remove-policy "{$PolicyID}" -json | Out-Null
+                                Write-ColorfulText -Color HotPink -InputText "Strict Kernel mode Enforced policy with no flighting root certs has been created`n$FinalEnforcedPolicyPath"
+                            }
+                            Write-Progress -Id 28 -Activity 'Complete.' -Completed
+
+                            break MainSwitch
+                        }
                     }
-                    else {
-                        Throw 'Invalid or nonexistent GUID in User Configs for Audit mode policy, Use the -PrepMode parameter first.'
-                    }
-
-                    $CurrentStep++
-                    Write-Progress -Id 26 -Activity 'Scanning the Event logs' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-                    # Get the kernel mode drivers directory path containing symlinks
-                    Get-KernelModeDriversAudit -SavePath $KernelModeDriversDirectory
-
-                    powershell.exe -Command {
-                        Write-Verbose -Message 'Scanning the kernel-mode drivers detected in Event viewer logs'
-                        [System.Collections.ArrayList]$DriverFilesObj = Get-SystemDriver -ScanPath $args[0]
-
-                        Write-Verbose -Message 'Creating a policy xml file from the driver files'
-                        New-CIPolicy -MultiplePolicyFormat -Level WHQLFilePublisher -Fallback None -AllowFileNameFallbacks -FilePath $args[1] -DriverFiles $DriverFilesObj
-                    } -args $KernelModeDriversDirectory, $DriverFilesScanPolicyPath
-
-                    $CurrentStep++
-                    Write-Progress -Id 26 -Activity 'Creating the final policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-                    Write-Verbose -Message 'Not trusting the policy xml file made before restart, so building the same policy again after restart, this time in Enforced mode instead of Audit mode'
-                    Copy-Item -Path $TemplatePolicyPath -Destination (Join-Path -Path $StagingArea -ChildPath 'Raw_Normal.xml') -Force
-
-                    Write-Verbose -Message 'Merging the base policy with the policy made from driver files, to deploy them as one policy'
-                    Merge-CIPolicy -PolicyPaths (Join-Path -Path $StagingArea -ChildPath 'Raw_Normal.xml'), $DriverFilesScanPolicyPath -OutputFilePath $FinalEnforcedPolicyPath | Out-Null
-
-                    Write-Verbose -Message 'Moving all AllowedSigners from Usermode to Kernel mode signing scenario'
-                    Move-UserModeToKernelMode -FilePath $FinalEnforcedPolicyPath | Out-Null
-
-                    Write-Verbose -Message 'Setting the GUIDs for the XML policy file'
-                    Edit-GUIDs -PolicyIDInput $PolicyID -PolicyFilePathInput $FinalEnforcedPolicyPath
-
-                    Write-Verbose -Message 'Setting a new policy name with the current date attached to it'
-                    Set-CIPolicyIdInfo -FilePath $FinalEnforcedPolicyPath -PolicyName "Strict Kernel mode policy Enforced - $(Get-Date -Format 'MM-dd-yyyy')"
-
-                    Write-Verbose -Message 'Setting the policy version to 1.0.0.0'
-                    Set-CIPolicyVersion -FilePath $FinalEnforcedPolicyPath -Version '1.0.0.0'
-
-                    Edit-CiPolicyRuleOptions -Action Base-KernelMode -XMLFile $FinalEnforcedPolicyPath
-
-                    if ($EVSigners) {
-                        Write-Verbose -Message 'Adding EVSigners policy rule option'
-                        Set-RuleOption -FilePath $FinalEnforcedPolicyPath -Option 8
-                    }
-
-                    [System.IO.FileInfo]$FinalEnforcedCIPPath = Join-Path -Path $StagingArea -ChildPath "$PolicyID.cip"
-
-                    Write-Verbose -Message 'Converting the policy XML file to CIP binary'
-                    ConvertFrom-CIPolicy -XmlFilePath $FinalEnforcedPolicyPath -BinaryFilePath $FinalEnforcedCIPPath | Out-Null
-
-                    # Deploy the policy if Deploy parameter is used
-                    if ($Deploy) {
-
-                        $CurrentStep++
-                        Write-Progress -Id 26 -Activity 'Deploying the final policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-                        Write-Verbose -Message 'Deploying the enforced mode policy with the same ID as the Audit mode policy, effectively overwriting it'
-                        &'C:\Windows\System32\CiTool.exe' --update-policy $FinalEnforcedCIPPath -json | Out-Null
-                        Write-ColorfulText -Color HotPink -InputText 'Strict Kernel mode policy has been deployed in Enforced mode, no restart required.'
-
-                        Write-Verbose -Message 'Removing the GUID and time of deployment of the StrictKernelPolicy from user configuration'
-                        Remove-CommonWDACConfig -StrictKernelPolicyGUID -StrictKernelModePolicyTimeOfDeployment | Out-Null
-                    }
-                    else {
-                        # Remove the Audit mode policy from the system
-                        # This step is necessary if user didn't use the -Deploy parameter
-                        # And instead wants to first Sign and then deploy it using the Deploy-SignedWDACConfig cmdlet
-                        Write-Verbose -Message 'Removing the deployed Audit mode policy from the system since -Deploy parameter was not used to overwrite it with the enforced mode policy.'
-                        &'C:\Windows\System32\CiTool.exe' --remove-policy "{$PolicyID}" -json | Out-Null
-                        Write-ColorfulText -Color HotPink -InputText "Strict Kernel mode Enforced policy has been created`n$FinalEnforcedPolicyPath"
-                    }
-                    Write-Progress -Id 26 -Activity 'Complete.' -Completed
-                }
-            }
-
-            # For Strict Kernel mode WDAC policy without allowing Flight root certs (i.e. not allowing insider builds)
-            if ($PSCmdlet.ParameterSetName -eq 'No Flight Roots' -and $PSBoundParameters.ContainsKey('NoFlightRoots')) {
-
-                if ($PrepMode) {
-
-                    # The total number of the main steps for the progress bar to render
-                    [System.UInt16]$TotalSteps = $Deploy ? 2 : 1
-                    [System.UInt16]$CurrentStep = 0
-
-                    $CurrentStep++
-                    Write-Progress -Id 27 -Activity 'Creating the prep mode policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-                    Write-Verbose -Message 'Building the Audit mode policy'
-                    [PSCustomObject]$AuditPolicy = Build-PrepModeStrictKernelPolicy -NoFlights
-                    [System.String]$PolicyID = $AuditPolicy.PolicyID
-                    [System.IO.FileInfo]$AuditPolicyPath = $AuditPolicy.PolicyPath
-
-                    [System.IO.FileInfo]$FinalAuditCIPPath = Join-Path -Path $StagingArea -ChildPath "$PolicyID.cip"
-
-                    Write-Verbose -Message 'Converting the XML policy file to CIP binary'
-                    ConvertFrom-CIPolicy -XmlFilePath $AuditPolicyPath -BinaryFilePath $FinalAuditCIPPath | Out-Null
-
-                    # Deploy the policy if Deploy parameter is used and perform additional tasks on the system
-                    if ($Deploy) {
-
-                        $CurrentStep++
-                        Write-Progress -Id 27 -Activity 'Deploying the prep mode policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-                        Write-Verbose -Message 'Setting the GUID and time of deployment of the Audit mode policy in the User Configuration file'
-                        Set-CommonWDACConfig -StrictKernelNoFlightRootsPolicyGUID $PolicyID -StrictKernelModePolicyTimeOfDeployment (Get-Date) | Out-Null
-
-                        Write-Verbose -Message 'Deploying the Strict Kernel mode policy'
-                        &'C:\Windows\System32\CiTool.exe' --update-policy $FinalAuditCIPPath -json | Out-Null
-                        Write-ColorfulText -Color HotPink -InputText 'Strict Kernel mode policy with no flighting root certs has been deployed in Audit mode, please restart your system.'
-                    }
-                    else {
-                        Write-ColorfulText -Color HotPink -InputText 'Strict Kernel mode Audit policy with no flighting root certs has been created in the Staging Area.'
-                    }
-                    Write-Progress -Id 27 -Activity 'Complete.' -Completed
-                }
-
-                if ($AuditAndEnforce) {
-
-                    # The total number of the main steps for the progress bar to render
-                    [System.UInt16]$TotalSteps = $Deploy ? 3 : 2
-                    [System.UInt16]$CurrentStep = 0
-
-                    # Get the Strict Kernel Audit mode policy's GUID to use for the Enforced mode policy
-                    # This will eliminate the need for an extra reboot
-                    Write-Verbose -Message 'Trying to get the GUID of Strict Kernel Audit mode policy to use for the Enforced mode policy, from the user configurations'
-                    [System.String]$PolicyID = Get-CommonWDACConfig -StrictKernelNoFlightRootsPolicyGUID
-
-                    Write-Verbose -Message 'Verifying the Policy ID in the User Config exists and is valid'
-                    $ObjectGuid = [System.Guid]::Empty
-                    if ([System.Guid]::TryParse($PolicyID, [ref]$ObjectGuid)) {
-                        Write-Verbose -Message 'Valid GUID found in User Configs for Audit mode policy'
-                    }
-                    else {
-                        Throw 'Invalid or nonexistent GUID in User Configs for Audit mode policy, Use the -PrepMode parameter first.'
-                    }
-
-                    $CurrentStep++
-                    Write-Progress -Id 28 -Activity 'Scanning the Event logs' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-                    # Get the kernel mode drivers directory path containing symlinks
-                    Get-KernelModeDriversAudit -SavePath $KernelModeDriversDirectory
-
-                    powershell.exe -Command {
-                        Write-Verbose -Message 'Scanning the kernel-mode drivers detected in Event viewer logs'
-                        [System.Collections.ArrayList]$DriverFilesObj = Get-SystemDriver -ScanPath $args[0]
-
-                        Write-Verbose -Message 'Creating a policy xml file from the driver files'
-                        New-CIPolicy -MultiplePolicyFormat -Level WHQLFilePublisher -Fallback None -AllowFileNameFallbacks -FilePath $args[1] -DriverFiles $DriverFilesObj
-                    } -args $KernelModeDriversDirectory, $DriverFilesScanPolicyPath
-
-                    $CurrentStep++
-                    Write-Progress -Id 28 -Activity 'Creating the final policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-                    Write-Verbose -Message 'Not trusting the policy xml file made before restart, so building the same policy again after restart, this time in Enforced mode instead of Audit mode'
-                    Copy-Item -Path $TemplatePolicyPath -Destination (Join-Path -Path $StagingArea -ChildPath 'Raw_NoFlights.xml') -Force
-
-                    Write-Verbose -Message 'Merging the base policy with the policy made from driver files, to deploy them as one policy'
-                    Merge-CIPolicy -PolicyPaths (Join-Path -Path $StagingArea -ChildPath 'Raw_NoFlights.xml'), $DriverFilesScanPolicyPath -OutputFilePath $FinalEnforcedPolicyPath | Out-Null
-
-                    Write-Verbose -Message 'Moving all AllowedSigners from Usermode to Kernel mode signing scenario'
-                    Move-UserModeToKernelMode -FilePath $FinalEnforcedPolicyPath | Out-Null
-
-                    Write-Verbose -Message 'Setting the GUIDs for the XML policy file'
-                    Edit-GUIDs -PolicyIDInput $PolicyID -PolicyFilePathInput $FinalEnforcedPolicyPath
-
-                    Write-Verbose -Message 'Setting a new policy name with the current date attached to it'
-                    Set-CIPolicyIdInfo -FilePath $FinalEnforcedPolicyPath -PolicyName "Strict Kernel No Flights mode policy Enforced - $(Get-Date -Format 'MM-dd-yyyy')"
-
-                    Write-Verbose -Message 'Setting the policy version to 1.0.0.0'
-                    Set-CIPolicyVersion -FilePath $FinalEnforcedPolicyPath -Version '1.0.0.0'
-
-                    Edit-CiPolicyRuleOptions -Action Base-KernelMode -XMLFile $FinalEnforcedPolicyPath
-
-                    # Add policy rule option 4 to block flight root certs
-                    Set-RuleOption -FilePath $FinalEnforcedPolicyPath -Option 4
-
-                    if ($EVSigners) {
-                        Write-Verbose -Message 'Adding EVSigners policy rule option'
-                        Set-RuleOption -FilePath $FinalEnforcedPolicyPath -Option 8
-                    }
-
-                    [System.IO.FileInfo]$FinalEnforcedCIPPath = Join-Path -Path $StagingArea -ChildPath "$PolicyID.cip"
-
-                    Write-Verbose -Message 'Converting the policy XML file to CIP binary'
-                    ConvertFrom-CIPolicy -XmlFilePath $FinalEnforcedPolicyPath -BinaryFilePath $FinalEnforcedCIPPath | Out-Null
-
-                    # Deploy the policy if Deploy parameter is used
-                    if ($Deploy) {
-
-                        $CurrentStep++
-                        Write-Progress -Id 28 -Activity 'Deploying the final policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-                        Write-Verbose -Message 'Deploying the enforced mode policy with the same ID as the Audit mode policy, effectively overwriting it'
-                        &'C:\Windows\System32\CiTool.exe' --update-policy $FinalEnforcedCIPPath -json | Out-Null
-                        Write-ColorfulText -Color HotPink -InputText 'Strict Kernel mode policy with no flighting root certs has been deployed in Enforced mode, no restart required.'
-
-                        Write-Verbose -Message 'Removing the GUID and time of deployment of the StrictKernelNoFlightRootsPolicy from user configuration'
-                        Remove-CommonWDACConfig -StrictKernelNoFlightRootsPolicyGUID -StrictKernelModePolicyTimeOfDeployment | Out-Null
-                    }
-                    else {
-                        # Remove the Audit mode policy from the system
-                        # This step is necessary if user didn't use the -Deploy parameter
-                        # And instead wants to first Sign and then deploy it using the Deploy-SignedWDACConfig cmdlet
-                        Write-Verbose -Message 'Removing the deployed Audit mode policy from the system since -Deploy parameter was not used to overwrite it with the enforced mode policy.'
-                        &'C:\Windows\System32\CiTool.exe' --remove-policy "{$PolicyID}" -json | Out-Null
-                        Write-ColorfulText -Color HotPink -InputText "Strict Kernel mode Enforced policy with no flighting root certs has been created`n$FinalEnforcedPolicyPath"
-                    }
-                    Write-Progress -Id 28 -Activity 'Complete.' -Completed
                 }
             }
         }
@@ -464,7 +466,7 @@ Function New-KernelModeWDACConfig {
         finally {
             # Copy the final policy files to the User Config directory
             if (-NOT $NoCopy) {
-                Copy-Item -Path ($PrepMode ? ($Deploy ? $AuditPolicyPath : $AuditPolicyPath, $FinalAuditCIPPath) : ($Deploy ? $FinalEnforcedPolicyPath : $FinalEnforcedPolicyPath, $FinalEnforcedCIPPath)) -Destination $UserConfigDir -Force
+                Copy-Item -Path ($Mode -eq 'Prep' ? ($Deploy ? $AuditPolicyPath : $AuditPolicyPath, $FinalAuditCIPPath) : ($Deploy ? $FinalEnforcedPolicyPath : $FinalEnforcedPolicyPath, $FinalEnforcedCIPPath)) -Destination $UserConfigDir -Force
             }
             if (-NOT $Debug) {
                 Remove-Item -Path $StagingArea -Recurse -Force
@@ -483,14 +485,15 @@ Function New-KernelModeWDACConfig {
     Windows Defender Application Control, ConfigCI PowerShell module
 .FUNCTIONALITY
     Creates Kernel only mode WDAC policy capable of protecting against BYOVD attacks category
-.PARAMETER Default
-    Creates the strict Kernel mode WDAC policy based off of the default Windows WDAC example policy.
-.PARAMETER NoFlightRoots
-    Creates the strict Kernel mode WDAC policy based off of the default Windows WDAC example policy, doesn't allow flighting/insider builds.
-.PARAMETER PrepMode
-    Deploys the Kernel mode WDAC policy in Audit mode so that you can restart your system and start capturing any blocked drivers to be automatically allowed.
-.PARAMETER AuditAndEnforce
-    Deploys the final Kernel mode WDAC policy in Enforced mode
+.PARAMETER Base
+    The base policy to use for creating the strict Kernel mode WDAC policy, offers 2 options:
+    Default: meaning flight root certs will be allowed, suitable for most users.
+    No Flight Roots: is for users who don't want to allow flighting/insider builds from Dev/Canary channels.
+    If not specified, Default will be used.
+.PARAMETER Mode
+    The mode to use for creating the strict Kernel mode WDAC policy, offers 2 options:
+    Prep: Deploys the Kernel mode WDAC policy in Audit mode so that you can restart your system and start capturing any blocked drivers to be automatically allowed.
+    AuditAndEnforce: Deploys the final Kernel mode WDAC policy in Enforced mode
 .PARAMETER EVSigners
     Adds EVSigners policy rule option to the deployed policy. Applicable for both Audit and Enforced modes. Drivers not EV (Extended Validation) signed cannot run nor can they be allowed in a Supplemental policy.
 .PARAMETER Deploy

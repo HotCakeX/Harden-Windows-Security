@@ -1,8 +1,6 @@
 Function New-KernelModeWDACConfig {
     [CmdletBinding(
-        SupportsShouldProcess = $true,
-        PositionalBinding = $false,
-        ConfirmImpact = 'High'
+        PositionalBinding = $false
     )]
     [OutputType([System.String])]
     Param(

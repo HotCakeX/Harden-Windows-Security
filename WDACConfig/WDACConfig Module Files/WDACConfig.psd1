@@ -198,7 +198,8 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
         'Core\ConvertTo-WDACPolicy.psm1',
         'Core\Get-CiFileHashes.psm1',
         'CoreExt\PSDefaultParameterValues.ps1',
-        'Resources\ArgumentCompleters.ps1'
+        'CoreExt\ArgumentCompleters.ps1',
+        'CoreExt\Classes.psm1',
         'Resources\WDAC Policies\DefaultWindows_Enforced_Kernel.xml',
         'Resources\WDAC Policies\DefaultWindows_Enforced_Kernel_NoFlights.xml',
         'Resources\User Configurations\Schema.json',

@@ -634,7 +634,7 @@ Function Edit-SignedWDACConfig {
                             if (!$NoUserPEs) { $AvailableFilesOnDiskPolicyMakerHashTable['UserPEs'] = $true }
 
                             # Create the supplemental policy via parameter splatting
-                            Write-Verbose -Message 'Creating a policy file for files that are available on the disk but were not in user-selected program path(s)'
+                            Write-Verbose -Message 'Creating a policy for files that are available on the disk but were not in user-selected program path(s)'
                             New-CIPolicy @AvailableFilesOnDiskPolicyMakerHashTable
 
                             # Add the policy XML file to the array that holds policy XML files

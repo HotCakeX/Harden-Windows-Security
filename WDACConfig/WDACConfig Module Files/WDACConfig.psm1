@@ -4,6 +4,9 @@ $global:ErrorActionPreference = 'Stop'
 # Set PSReadline tab completion to complete menu for easier access to available parameters - Only for the current session
 Set-PSReadLineKeyHandler -Key 'Tab' -Function 'MenuComplete'
 
+# Import the classes globally to be available to the entire module
+Import-Module -FullyQualifiedName "$ModuleRootPath\CoreExt\Classes.psm1" -Force
+
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG

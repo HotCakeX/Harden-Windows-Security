@@ -68,9 +68,6 @@ if (Test-Path -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.js
     }
 }
 
-# Import the classes globally to be available to the entire module
-Import-Module -FullyQualifiedName "$ModuleRootPath\CoreExt\Classes.psm1" -Force
-
 
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor

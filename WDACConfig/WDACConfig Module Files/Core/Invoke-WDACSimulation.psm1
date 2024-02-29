@@ -747,7 +747,7 @@ Function Invoke-WDACSimulation {
 }
 
 # Importing argument completer ScriptBlocks
-. "$ModuleRootPath\Resources\ArgumentCompleters.ps1"
+. "$ModuleRootPath\CoreExt\ArgumentCompleters.ps1"
 Register-ArgumentCompleter -CommandName 'Invoke-WDACSimulation' -ParameterName 'FolderPath' -ScriptBlock $ArgumentCompleterFolderPathsPicker
 Register-ArgumentCompleter -CommandName 'Invoke-WDACSimulation' -ParameterName 'XmlFilePath' -ScriptBlock $ArgumentCompleterXmlFilePathsPicker
 Register-ArgumentCompleter -CommandName 'Invoke-WDACSimulation' -ParameterName 'FilePath' -ScriptBlock $ArgumentCompleterAnyFilePathsPicker

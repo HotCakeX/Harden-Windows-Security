@@ -130,7 +130,7 @@ Function Test-CiPolicy {
 }
 
 # Importing argument completer ScriptBlocks
-. "$ModuleRootPath\Resources\ArgumentCompleters.ps1"
+. "$ModuleRootPath\CoreExt\ArgumentCompleters.ps1"
 
 Register-ArgumentCompleter -CommandName 'Test-CiPolicy' -ParameterName 'XmlFile' -ScriptBlock $ArgumentCompleterXmlFilePathsPicker
 Register-ArgumentCompleter -CommandName 'Test-CiPolicy' -ParameterName 'CipFile' -ScriptBlock $ArgumentCompleterAnyFilePathsPicker

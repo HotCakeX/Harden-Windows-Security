@@ -411,7 +411,7 @@ Function Remove-WDACConfig {
 }
 
 # Importing argument completer ScriptBlocks
-. "$ModuleRootPath\Resources\ArgumentCompleters.ps1"
+. "$ModuleRootPath\CoreExt\ArgumentCompleters.ps1"
 Register-ArgumentCompleter -CommandName 'Remove-WDACConfig' -ParameterName 'PolicyPaths' -ScriptBlock $ArgumentCompleterMultipleXmlFilePathsPicker
 Register-ArgumentCompleter -CommandName 'Remove-WDACConfig' -ParameterName 'SignToolPath' -ScriptBlock $ArgumentCompleterExeFilePathsPicker
 

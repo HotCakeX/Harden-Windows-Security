@@ -1275,7 +1275,7 @@ Function Edit-SignedWDACConfig {
 }
 
 # Importing argument completer ScriptBlocks
-. "$ModuleRootPath\Resources\ArgumentCompleters.ps1"
+. "$ModuleRootPath\CoreExt\ArgumentCompleters.ps1"
 Register-ArgumentCompleter -CommandName 'Edit-SignedWDACConfig' -ParameterName 'CertPath' -ScriptBlock $ArgumentCompleterCerFilePathsPicker
 Register-ArgumentCompleter -CommandName 'Edit-SignedWDACConfig' -ParameterName 'SignToolPath' -ScriptBlock $ArgumentCompleterExeFilePathsPicker
 Register-ArgumentCompleter -CommandName 'Edit-SignedWDACConfig' -ParameterName 'PolicyPath' -ScriptBlock $ArgumentCompleterXmlFilePathsPicker

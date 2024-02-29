@@ -208,7 +208,7 @@ Function Get-CiFileHashes {
 #>
 }
 # Importing argument completer ScriptBlocks
-. "$ModuleRootPath\Resources\ArgumentCompleters.ps1"
+. "$ModuleRootPath\CoreExt\ArgumentCompleters.ps1"
 
 Register-ArgumentCompleter -CommandName 'Get-CiFileHashes' -ParameterName 'FilePath' -ScriptBlock $ArgumentCompleterAnyFilePathsPicker
 

@@ -67,6 +67,9 @@ Function New-KernelModeWDACConfig {
             Write-Error -Message 'You must specify either -PrepMode or -AuditAndEnforce, but not both.' -Category InvalidArgument
         }
 
+        # A flag that will be set to true if errors occur
+        [System.Boolean]$NoCopy = $false
+
         Function Edit-GUIDs {
             <#
             .SYNOPSIS
@@ -303,7 +306,7 @@ Function New-KernelModeWDACConfig {
 
                         Write-Verbose -Message 'Deploying the enforced mode policy with the same ID as the Audit mode policy, effectively overwriting it'
                         &'C:\Windows\System32\CiTool.exe' --update-policy $FinalEnforcedCIPPath -json | Out-Null
-                        Write-ColorfulText -Color Pink -InputText 'Strict Kernel mode policy has been deployed in Enforced mode, no restart required.'
+                        Write-ColorfulText -Color HotPink -InputText 'Strict Kernel mode policy has been deployed in Enforced mode, no restart required.'
 
                         Write-Verbose -Message 'Removing the GUID and time of deployment of the StrictKernelPolicy from user configuration'
                         Remove-CommonWDACConfig -StrictKernelPolicyGUID -StrictKernelModePolicyTimeOfDeployment | Out-Null
@@ -314,7 +317,7 @@ Function New-KernelModeWDACConfig {
                         # And instead wants to first Sign and then deploy it using the Deploy-SignedWDACConfig cmdlet
                         Write-Verbose -Message 'Removing the deployed Audit mode policy from the system since -Deploy parameter was not used to overwrite it with the enforced mode policy.'
                         &'C:\Windows\System32\CiTool.exe' --remove-policy "{$PolicyID}" -json | Out-Null
-                        Write-ColorfulText -Color Pink -InputText "Strict Kernel mode Enforced policy has been created: $FinalEnforcedPolicyPath"
+                        Write-ColorfulText -Color HotPink -InputText "Strict Kernel mode Enforced policy has been created`n$FinalEnforcedPolicyPath"
                     }
                     Write-Progress -Id 26 -Activity 'Complete.' -Completed
                 }
@@ -439,7 +442,7 @@ Function New-KernelModeWDACConfig {
 
                         Write-Verbose -Message 'Deploying the enforced mode policy with the same ID as the Audit mode policy, effectively overwriting it'
                         &'C:\Windows\System32\CiTool.exe' --update-policy $FinalEnforcedCIPPath -json | Out-Null
-                        Write-ColorfulText -Color Pink -InputText 'Strict Kernel mode policy with no flighting root certs has been deployed in Enforced mode, no restart required.'
+                        Write-ColorfulText -Color HotPink -InputText 'Strict Kernel mode policy with no flighting root certs has been deployed in Enforced mode, no restart required.'
 
                         Write-Verbose -Message 'Removing the GUID and time of deployment of the StrictKernelNoFlightRootsPolicy from user configuration'
                         Remove-CommonWDACConfig -StrictKernelNoFlightRootsPolicyGUID -StrictKernelModePolicyTimeOfDeployment | Out-Null
@@ -450,15 +453,21 @@ Function New-KernelModeWDACConfig {
                         # And instead wants to first Sign and then deploy it using the Deploy-SignedWDACConfig cmdlet
                         Write-Verbose -Message 'Removing the deployed Audit mode policy from the system since -Deploy parameter was not used to overwrite it with the enforced mode policy.'
                         &'C:\Windows\System32\CiTool.exe' --remove-policy "{$PolicyID}" -json | Out-Null
-                        Write-ColorfulText -Color Pink -InputText "Strict Kernel mode Enforced policy with no flighting root certs has been created: $FinalEnforcedPolicyPath"
+                        Write-ColorfulText -Color HotPink -InputText "Strict Kernel mode Enforced policy with no flighting root certs has been created`n$FinalEnforcedPolicyPath"
                     }
                     Write-Progress -Id 28 -Activity 'Complete.' -Completed
                 }
             }
         }
+        catch {
+            $NoCopy = $true
+            Throw $_
+        }
         finally {
             # Copy the final policy files to the User Config directory
-            Copy-Item -Path ($PrepMode ? ($Deploy ? $AuditPolicyPath : $AuditPolicyPath, $FinalAuditCIPPath) : ($Deploy ? $FinalEnforcedPolicyPath : $FinalEnforcedPolicyPath, $FinalEnforcedCIPPath)) -Destination $UserConfigDir -Force
+            if (-NOT $NoCopy) {
+                Copy-Item -Path ($PrepMode ? ($Deploy ? $AuditPolicyPath : $AuditPolicyPath, $FinalAuditCIPPath) : ($Deploy ? $FinalEnforcedPolicyPath : $FinalEnforcedPolicyPath, $FinalEnforcedCIPPath)) -Destination $UserConfigDir -Force
+            }
             if (-NOT $Debug) {
                 Remove-Item -Path $StagingArea -Recurse -Force
             }

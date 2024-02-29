@@ -387,6 +387,10 @@ Function New-DenyWDACConfig {
                 Write-Progress -Id 29 -Activity 'Complete.' -Completed
             }
         }
+        Catch {
+            $NoCopy = $true
+            Throw $_
+        }
         finally {
             # Copy the final policy files to the user config directory
             if (-NOT $NoCopy) {

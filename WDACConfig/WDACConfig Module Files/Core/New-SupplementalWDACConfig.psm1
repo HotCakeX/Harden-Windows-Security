@@ -310,6 +310,10 @@ Function New-SupplementalWDACConfig {
                 }
             }
         }
+        Catch {
+            $NoCopy = $true
+            Throw $_
+        }
         finally {
             # Copy the final files to the user config directory
             if (-NOT $NoCopy) {

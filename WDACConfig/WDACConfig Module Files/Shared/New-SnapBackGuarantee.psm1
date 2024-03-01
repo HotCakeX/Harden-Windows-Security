@@ -32,9 +32,9 @@ Function New-SnapBackGuarantee {
     # Register the scheduled task
     Register-ScheduledTask -TaskName 'EnforcedModeSnapBack' -Action $TaskAction -Trigger $TaskTrigger -Principal $Principal -Settings $TaskSettings -Force | Out-Null
 
-    # Saving the EnforcedModeSnapBack.cmd file to the root of C drive
+    # Saving the EnforcedModeSnapBack.cmd file to the UserConfig directory in Program Files
     # It contains the instructions to revert the base policy to enforced mode
-    Set-Content -Force (Join-Path -Path $UserConfigDir 'EnforcedModeSnapBack.cmd') -Value @"
+    Set-Content -Force -LiteralPath (Join-Path -Path $UserConfigDir 'EnforcedModeSnapBack.cmd') -Value @"
 REM Deploying the Enforced Mode SnapBack CI Policy
 CiTool --update-policy "$Path" -json
 REM Deleting the Scheduled task responsible for running this CMD file

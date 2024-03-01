@@ -22,7 +22,7 @@ Function New-SnapBackGuarantee {
     Write-Verbose -Message 'Creating the scheduled task for Snap Back Guarantee'
 
     # Creating the scheduled task action
-    [Microsoft.Management.Infrastructure.CimInstance]$TaskAction = New-ScheduledTaskAction -Execute 'cmd.exe' -Argument "/c $UserConfigDir\EnforcedModeSnapBack.cmd"
+    [Microsoft.Management.Infrastructure.CimInstance]$TaskAction = New-ScheduledTaskAction -Execute 'cmd.exe' -Argument "/c `"$UserConfigDir\EnforcedModeSnapBack.cmd`""
     # Creating the scheduled task trigger
     [Microsoft.Management.Infrastructure.CimInstance]$TaskTrigger = New-ScheduledTaskTrigger -AtLogOn
     # Creating the scheduled task principal, will run the task under the system account using its well-known SID

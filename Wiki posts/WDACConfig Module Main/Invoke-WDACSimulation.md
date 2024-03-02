@@ -6,20 +6,19 @@
 
 ```powershell
 Invoke-WDACSimulation
-    [-XmlFilePath] <FileInfo>
-    [[-FolderPath] <DirectoryInfo>]
-    [[-FilePath] <FileInfo>]
-    [-BooleanOutput]
-    [-Log]
-    [-SkipVersionCheck]
-    [<CommonParameters>]
+  [-XmlFilePath] <FileInfo> 
+  [[-FolderPath] <DirectoryInfo>] 
+  [[-FilePath] <FileInfo>]
+  [-BooleanOutput] 
+  [-Log] 
+  [-CSVOutput] 
+  [-SkipVersionCheck] 
+  [<CommonParameters>]
 ```
 
 ## Description
 
 This cmdlet allows you to simulate a WDAC (App Control for Business) policy deployment. Simply select a folder or file and a policy XML file, it will show you whether the selected files would be allowed or blocked by your WDAC policy if it was actually deployed on a system and those files were run.
-
-Upon completion of the simulation, you will obtain a CSV file in the current working directory containing the output of the simulation with exhaustive details of each file that would be blocked/allowed by the selected policy.
 
 <br>
 
@@ -154,6 +153,24 @@ Use this switch to start a transcript of the WDAC simulation and log everything 
 
 > [!IMPORTANT]\
 > Highly recommended to use the `-Verbose` parameter with this switch to log the verbose output as well.
+
+<div align='center'>
+
+| Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+<br>
+
+### -CSVOutput
+
+Upon completion of the simulation, you will obtain a CSV file containing the output of the simulation with exhaustive details of each file that would be blocked/allowed by the selected policy.
 
 <div align='center'>
 

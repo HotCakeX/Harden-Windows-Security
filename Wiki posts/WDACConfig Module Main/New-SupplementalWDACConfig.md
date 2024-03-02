@@ -8,18 +8,17 @@
 
 ```powershell
 New-SupplementalWDACConfig
-    [-Normal]
-    -ScanLocation <String>
-    -SuppPolicyName <String>
-    [-PolicyPath <FileInfo>]
-    [-Deploy]
-    [-SpecificFileNameLevel <String>]
-    [-NoUserPEs]
-    [-NoScript]
-    [-Level <String>]
-    [-Fallbacks <String[]>]
+    [-Normal] 
+    -ScanLocation <DirectoryInfo> 
+    -SuppPolicyName <String> 
+    [-PolicyPath <FileInfo>] 
+    [-Deploy] 
+    [-SpecificFileNameLevel <String>] 
+    [-NoUserPEs] 
+    [-NoScript] 
+    [-Level <String>] 
+    [-Fallbacks <String[]>] 
     [-SkipVersionCheck]
-    [-Confirm]
     [<CommonParameters>]
 ```
 
@@ -35,7 +34,7 @@ The directory or drive that you want to scan for files that will be allowed to r
 
 <div align='center'>
 
-| Type: |[String](https://learn.microsoft.com/en-us/dotnet/api/system.string)|
+| Type: |[DirectoryInfo](https://learn.microsoft.com/en-us/dotnet/api/system.io.directoryinfo)|
 | :-------------: | :-------------: |
 | Position: | Named |
 | Default value: | None |

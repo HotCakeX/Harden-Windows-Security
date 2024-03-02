@@ -33,6 +33,9 @@ Function New-DenyWDACConfig {
         [Parameter(Mandatory = $false, ParameterSetName = 'Drivers')]
         [System.IO.DirectoryInfo[]]$ScanLocations,
 
+        [Parameter(Mandatory = $false)]
+        [System.Management.Automation.SwitchParameter]$Deploy,
+
         [ValidateSet([ScanLevelz])]
         [Parameter(Mandatory = $false, ParameterSetName = 'Normal')]
         [System.String]$Level = 'WHQLFilePublisher',
@@ -49,10 +52,7 @@ Function New-DenyWDACConfig {
         [System.Management.Automation.SwitchParameter]$NoUserPEs,
 
         [Parameter(Mandatory = $false, ParameterSetName = 'Normal')]
-        [System.Management.Automation.SwitchParameter]$NoScript,
-
-        [Parameter(Mandatory = $false)]
-        [System.Management.Automation.SwitchParameter]$Deploy,
+        [System.Management.Automation.SwitchParameter]$NoScript,        
 
         [Parameter(Mandatory = $false, ParameterSetName = 'Installed AppXPackages')]
         [System.Management.Automation.SwitchParameter]$Force,

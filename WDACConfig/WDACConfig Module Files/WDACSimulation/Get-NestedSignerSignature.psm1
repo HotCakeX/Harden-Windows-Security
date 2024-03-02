@@ -25,9 +25,6 @@ Function Get-NestedSignerSignature {
         # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
-        # Load the System.Security assembly to use the SignedCms class
-        Add-Type -AssemblyName 'System.Security' -ErrorAction SilentlyContinue
-
         # Add the Crypt32.dll library functions as a type if they don't exist
         if (-NOT ('WDACConfig.Crypt32DLL' -as [System.Type]) ) {
             Add-Type -Path "$ModuleRootPath\C#\Crypt32dll.cs"

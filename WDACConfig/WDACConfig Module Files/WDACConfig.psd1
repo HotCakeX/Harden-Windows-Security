@@ -79,20 +79,15 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
     # Minimum version of the PowerShell host required by this module
     # PowerShellHostVersion = ''
 
-    # Minimum version of Microsoft .NET Framework required by this module. This prerequisite is valid for the PowerShell Desktop edition only.
-    # DotNetFrameworkVersion = ''
-
-    # Minimum version of the common language runtime (CLR) required by this module. This prerequisite is valid for the PowerShell Desktop edition only.
-    # ClrVersion = ''
-
     # Processor architecture (None, X86, Amd64) required by this module
     # ProcessorArchitecture = ''
 
     # Modules that must be imported into the global environment prior to importing this module
-    # RequiredModules = @()
+    # RequiredModules      = @()
 
     # Assemblies that must be loaded prior to importing this module
-    # RequiredAssemblies = @()
+    # Required for File/Folder picker GUI, and Get-NestedSignerSignature function to use the SignedCms class
+    RequiredAssemblies   = @('System.Windows.Forms', 'System.Security')
 
     # Script files (.ps1) that are run in the caller's environment prior to importing this module.
     ScriptsToProcess     = @('Preloader.ps1')

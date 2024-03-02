@@ -122,8 +122,6 @@
 
 # Opens Folder picker GUI so that user can select folders to be processed
 [System.Management.Automation.ScriptBlock]$ArgumentCompleterFolderPathsPicker = {
-    # Load the System.Windows.Forms assembly
-    Add-Type -AssemblyName 'System.Windows.Forms'
     # non-top-most, works better with window focus
     [System.Windows.Forms.FolderBrowserDialog]$Browser = New-Object -TypeName 'System.Windows.Forms.FolderBrowserDialog'
     $null = $Browser.ShowDialog()
@@ -133,8 +131,6 @@
 
 # Opens File picker GUI so that user can select an .exe file - for SignTool.exe
 [System.Management.Automation.ScriptBlock]$ArgumentCompleterExeFilePathsPicker = {
-    # Load the System.Windows.Forms assembly
-    Add-Type -AssemblyName 'System.Windows.Forms'
     # Create a new OpenFileDialog object
     [System.Windows.Forms.OpenFileDialog]$Dialog = New-Object -TypeName 'System.Windows.Forms.OpenFileDialog'
     # Set the filter to show only executable files
@@ -151,8 +147,6 @@
 
 # Opens File picker GUI so that user can select a .cer file
 [System.Management.Automation.ScriptBlock]$ArgumentCompleterCerFilePathsPicker = {
-    # Load the System.Windows.Forms assembly
-    Add-Type -AssemblyName 'System.Windows.Forms'
     # Create a new OpenFileDialog object
     [System.Windows.Forms.OpenFileDialog]$Dialog = New-Object -TypeName 'System.Windows.Forms.OpenFileDialog'
     # Set the filter to show only certificate files
@@ -169,8 +163,6 @@
 
 # Opens File picker GUI so that user can select a .xml file
 [System.Management.Automation.ScriptBlock]$ArgumentCompleterXmlFilePathsPicker = {
-    # Load the System.Windows.Forms assembly
-    Add-Type -AssemblyName 'System.Windows.Forms'
     # Create a new OpenFileDialog object
     [System.Windows.Forms.OpenFileDialog]$Dialog = New-Object -TypeName 'System.Windows.Forms.OpenFileDialog'
     # Set the filter to show only XML files
@@ -188,8 +180,6 @@
 # Opens Folder picker GUI so that user can select folders to be processed
 # WildCard file paths
 [System.Management.Automation.ScriptBlock]$ArgumentCompleterFolderPathsPickerWildCards = {
-    # Load the System.Windows.Forms assembly
-    Add-Type -AssemblyName 'System.Windows.Forms'
     # non-top-most, works better with window focus
     [System.Windows.Forms.FolderBrowserDialog]$Browser = New-Object -TypeName 'System.Windows.Forms.FolderBrowserDialog'
     $null = $Browser.ShowDialog()
@@ -199,8 +189,6 @@
 
 # Opens File picker GUI so that user can select any files
 [System.Management.Automation.ScriptBlock]$ArgumentCompleterAnyFilePathsPicker = {
-    # Load the System.Windows.Forms assembly
-    Add-Type -AssemblyName 'System.Windows.Forms'
     # Create a new OpenFileDialog object
     [System.Windows.Forms.OpenFileDialog]$Dialog = New-Object -TypeName 'System.Windows.Forms.OpenFileDialog'
     # Show the dialog and get the result
@@ -213,8 +201,6 @@
 
 # Opens File picker GUI so that user can select multiple .xml files
 [System.Management.Automation.ScriptBlock]$ArgumentCompleterMultipleXmlFilePathsPicker = {
-    # Load the System.Windows.Forms assembly
-    Add-Type -AssemblyName 'System.Windows.Forms'
     # Create a new OpenFileDialog object
     [System.Windows.Forms.OpenFileDialog]$Dialog = New-Object -TypeName 'System.Windows.Forms.OpenFileDialog'
     # Set the filter to show only XML files
@@ -231,6 +217,7 @@
         return "`"$($Dialog.FileNames -join '","')`""
     }
 }
+
 
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor

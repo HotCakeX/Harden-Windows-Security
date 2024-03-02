@@ -52,7 +52,7 @@ Function New-DenyWDACConfig {
         [System.Management.Automation.SwitchParameter]$NoUserPEs,
 
         [Parameter(Mandatory = $false, ParameterSetName = 'Normal')]
-        [System.Management.Automation.SwitchParameter]$NoScript,        
+        [System.Management.Automation.SwitchParameter]$NoScript,
 
         [Parameter(Mandatory = $false, ParameterSetName = 'Installed AppXPackages')]
         [System.Management.Automation.SwitchParameter]$Force,

@@ -100,7 +100,7 @@ Press TAB to open the file picker GUI and browse for SignTool.exe
 
 ### -UnSignedPolicyPath
 
-Path to the xml file of an Unsigned policy. Supports tab completion by showing only the base policies in the current working directory.
+Path to the xml file of an Unsigned policy. Supports file picker GUI.
 
 <div align='center'>
 
@@ -118,7 +118,7 @@ Path to the xml file of an Unsigned policy. Supports tab completion by showing o
 
 ### -SignedPolicyPath
 
-Path to the xml file of a Signed policy. Supports tab completion by showing only the base policies in the current working directory.
+Path to the xml file of a Signed policy. Supports file picker GUI.
 
 <div align='center'>
 

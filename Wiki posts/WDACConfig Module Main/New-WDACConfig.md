@@ -610,8 +610,6 @@ By default, the module includes user PEs in the scan. When you use this switch p
 
 ### The outputs of the parameter
 
-All of the outputs are saved in an easily identified folder inside the current working directory.
-
 * The base policy XML file
 
 * The supplemental policy XML file

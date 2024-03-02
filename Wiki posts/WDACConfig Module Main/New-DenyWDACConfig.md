@@ -7,17 +7,17 @@
 ## Syntax
 
 ```powershell
-New-DenyWDACConfig 
-    [-Normal] 
-    -PolicyName <String> 
-    [-ScanLocations <DirectoryInfo[]>] 
-    [-Deploy] 
+New-DenyWDACConfig
+    [-Normal]
+    -PolicyName <String>
+    [-ScanLocations <DirectoryInfo[]>]
+    [-Deploy]
     [-Level <String>]
-    [-Fallbacks <String[]>] 
-    [-SpecificFileNameLevel <String>] 
-    [-NoUserPEs] 
-    [-NoScript] 
-    [-SkipVersionCheck] 
+    [-Fallbacks <String[]>]
+    [-SpecificFileNameLevel <String>]
+    [-NoUserPEs]
+    [-NoScript]
+    [-SkipVersionCheck]
     [-WhatIf]
     [-Confirm]
     [<CommonParameters>]

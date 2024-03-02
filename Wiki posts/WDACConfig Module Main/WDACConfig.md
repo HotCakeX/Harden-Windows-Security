@@ -51,7 +51,7 @@ This page is also available [on my website.](https://spynetgirl.github.io/WDACCo
 ## Install The Module
 
 ```powershell
-Install-Module -Name 'WDACConfig' -Force
+Install-Module -Name 'WDACConfig' -Scope 'AllUsers' -Force
 ```
 
 <br>
@@ -79,7 +79,34 @@ Install-Module -Name 'WDACConfig' -Force
 | [Remove-CommonWDACConfig](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Remove-CommonWDACConfig) | To remove user configurations for common WDACConfig parameters | `Get-Help Remove-CommonWDACConfig` |
 | [Assert-WDACConfigIntegrity](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Assert-WDACConfigIntegrity) | To ascertain that the files in your local WDACConfig folder are identical to the ones in the cloud | `Get-Help Assert-WDACConfigIntegrity` |
 | [Build-WDACCertificate](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Build-WDACCertificate) | To create proper code signing certificates for WDAC policy signing | `Get-Help Build-WDACCertificate` |
-| [Test-CiPolicy](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Test-CiPolicy) | Tests a Code Integrity (WDAC) Policy XML file against the Schema | `Get-Help Test-CiPolicy` |
+| [Test-CiPolicy](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Test-CiPolicy) | Tests a Code Integrity (WDAC) Policy XML file against the Schema and shows the signers in a signed `.CIP` files | `Get-Help Test-CiPolicy` |
+
+
+<br>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+
+<br>
+
+## User Configurations Directory
+
+The module stores user configurations and all of the outputs only in the following directory:
+
+```
+C:\Program Files\WDACConfig
+```
+
+It's an Admin-protected path that provides security against non-elevated users and processes.
+
+<br>
+
+### The Temporary Files Are Stored in the Following Directory
+
+```
+C:\Program Files\WDACConfig\StagingArea
+```
+
+Each cmdlet of the module creates a subdirectory in the StagingArea to store its temporary files. The subdirectory is named after the cmdlet's name. At the end of the cmdlet's execution, the temporary subdirectory is deleted, unless the `-Debug` parameter is used.
 
 <br>
 
@@ -103,7 +130,7 @@ A parameter with an **Automatic** value of True in the description means that th
 
 4. Specifying `-SignToolPath` parameter explicitly on the command line takes priority over auto detection and value in the user configurations.
 
-5. If SignTool.exe cannot be auto-detected and the user didn't specify it on the command line, you will receive a prompt to authorize the automatic download of the most recent SignTool.exe version from the official Microsoft servers. Upon confirmation, it will be saved in your user configurations and utilized by the cmdlet. The file itself will be saved in the current working directory.
+5. If SignTool.exe cannot be auto-detected and the user didn't specify it on the command line, you will receive a prompt to authorize the automatic download of the most recent SignTool.exe version from the official Microsoft servers. Upon confirmation, it will be saved in your user configurations and utilized by the cmdlet.
 
 <br>
 

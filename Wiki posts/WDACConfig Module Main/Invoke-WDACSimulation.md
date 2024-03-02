@@ -6,13 +6,13 @@
 
 ```powershell
 Invoke-WDACSimulation
-  [-XmlFilePath] <FileInfo> 
-  [[-FolderPath] <DirectoryInfo>] 
+  [-XmlFilePath] <FileInfo>
+  [[-FolderPath] <DirectoryInfo>]
   [[-FilePath] <FileInfo>]
-  [-BooleanOutput] 
-  [-Log] 
-  [-CSVOutput] 
-  [-SkipVersionCheck] 
+  [-BooleanOutput]
+  [-Log]
+  [-CSVOutput]
+  [-SkipVersionCheck]
   [<CommonParameters>]
 ```
 

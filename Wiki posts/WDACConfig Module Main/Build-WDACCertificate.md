@@ -49,7 +49,7 @@ The common name of the certificate, it will also be assigned as the friendly nam
 
 ### -FileName
 
-The name of the `.cer` and `.pfx` files that will be generated. The files are saved in the current working directory.
+The name of the `.cer` and `.pfx` files that will be generated.
 
 <div align='center'>
 

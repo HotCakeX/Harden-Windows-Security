@@ -3,7 +3,7 @@
 ## Syntax
 
 ```powershell
-Test-CiPolicy 
+Test-CiPolicy
     -XmlFile <FileInfo>
     -CipFile <FileInfo>
     [<CommonParameters>]

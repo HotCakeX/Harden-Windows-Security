@@ -8,14 +8,14 @@ Function Get-SignTool {
         Path to the SignTool.exe
         It's optional
     .INPUTS
-        System.String
+        System.IO.FileInfo
     .OUTPUTS
-        System.String
+        System.IO.FileInfo
     #>
     [CmdletBinding()]
-    [OutputType([System.String])]
+    [OutputType([System.IO.FileInfo])]
     param(
-        [parameter(Mandatory = $false)][System.String]$SignToolExePathInput
+        [parameter(Mandatory = $false)][System.IO.FileInfo]$SignToolExePathInput
     )
 
     Begin {
@@ -94,12 +94,15 @@ Function Get-SignTool {
                 Write-Verbose -Message 'SignTool.exe path was provided by parameter'
                 $SignToolExePathOutput = $SignToolExePathInput
             }
+            
+            # Since WDAC Simulation doesn't support path with wildcards and accepts them literally, doing this to make sure the path is valid when automatically detected from Windows SDK installations which is a wildcard path
+            [System.IO.FileInfo]$SignToolExePathOutput = (Resolve-Path -Path $SignToolExePathOutput).Path
 
             # At this point the SignTool.exe path was either provided by user, was found in the user configs, was detected automatically or was downloaded from NuGet
             try {
                 # Validate the SignTool executable
-                # Setting the minimum version of SignTool that is allowed to be executed
                 Write-Verbose -Message "Validating the SignTool executable: $SignToolExePathOutput"
+                # Setting the minimum version of SignTool that is allowed to be executed
                 [System.Version]$WindowsSdkVersion = '10.0.22621.2428'
                 [System.Boolean]$GreenFlag1 = (((Get-Item -Path $SignToolExePathOutput).VersionInfo).ProductVersionRaw -ge $WindowsSdkVersion)
                 [System.Boolean]$GreenFlag2 = (((Get-Item -Path $SignToolExePathOutput).VersionInfo).FileVersionRaw -ge $WindowsSdkVersion)
@@ -122,9 +125,9 @@ Function Get-SignTool {
                 Write-Verbose -Message 'SignTool executable was found and verified successfully.'
 
                 Write-Verbose -Message 'Setting the SignTool path in the common WDAC user configurations'
-                Set-CommonWDACConfig -SignToolPath "$SignToolExePathOutput" | Out-Null
+                Set-CommonWDACConfig -SignToolPath $SignToolExePathOutput | Out-Null
 
-                return [System.String]$SignToolExePathOutput
+                return $SignToolExePathOutput
             }
         }
         Finally {

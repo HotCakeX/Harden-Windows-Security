@@ -145,10 +145,10 @@ Function Remove-WDACConfig {
 
             # Get SignToolPath from user parameter or user config file or auto-detect it
             if ($SignToolPath) {
-                $SignToolPathFinal = Get-SignTool -SignToolExePathInput $SignToolPath
+                [System.IO.FileInfo]$SignToolPathFinal = Get-SignTool -SignToolExePathInput $SignToolPath
             } # If it is null, then Get-SignTool will behave the same as if it was called without any arguments.
             else {
-                $SignToolPathFinal = Get-SignTool -SignToolExePathInput (Get-CommonWDACConfig -SignToolPath)
+                [System.IO.FileInfo]$SignToolPathFinal = Get-SignTool -SignToolExePathInput (Get-CommonWDACConfig -SignToolPath)
 
             }
 

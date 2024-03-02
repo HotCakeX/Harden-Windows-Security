@@ -1,46 +1,5 @@
-<#
-# argument tab auto-completion for CertPath param to show only .cer files in current directory and 2 sub-directories recursively
-[System.Management.Automation.ScriptBlock]$ArgumentCompleterCertPath = {
-    # Note the use of -Depth 1
-    # Enclosing the $Results = ... assignment in (...) also passes the value through.
-    ($Results = Get-ChildItem -Depth 2 -Filter *.cer | ForEach-Object -Process { "`"$_`"" })
-    if (-not $Results) {
-        # No results?
-        $null # Dummy response that prevents fallback to the default file-name completion.
-    }
-}
-#>
-
 # Importing the $PSDefaultParameterValues to the current session, prior to everything else
 . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
-
-<#
-
-# argument tab auto-completion for Policy Paths to show only .xml files and only suggest files that haven't been already selected by user
-# https://stackoverflow.com/questions/76141864/how-to-make-a-powershell-argument-completer-that-only-suggests-files-not-already/76142865
-[System.Management.Automation.ScriptBlock]$ArgumentCompleterPolicyPaths = {
-    # Get the current command and the already bound parameters
-    param($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameters)
-
-    # Find all string constants in the AST that end in ".xml"
-    $Existing = $commandAst.FindAll({
-            $args[0] -is [System.Management.Automation.Language.StringConstantExpressionAst] -and
-            $args[0].Value -like '*.xml'
-        },
-        $false
-    ).Value
-
-    # Get the xml files in the current directory
-    Get-ChildItem -File -Filter *.xml | ForEach-Object -Process {
-        # Check if the file is already selected
-        if ($_.FullName -notin $Existing) {
-            # Return the file name with quotes
-            "`"$_`""
-        }
-    }
-}
-
-#>
 
 # Argument tab auto-completion for installed Appx package names
 [System.Management.Automation.ScriptBlock]$ArgumentCompleterAppxPackageNames = {
@@ -51,74 +10,6 @@
         "`"$($_.Name)`""
     }
 }
-
-<#
-
-# argument tab auto-completion for Base Policy Paths to show only .xml files and only suggest files that haven't been already selected by user
-[System.Management.Automation.ScriptBlock]$ArgumentCompleterPolicyPathsBasePoliciesOnly = {
-    # Get the current command and the already bound parameters
-    param($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameters)
-
-    # Find all string constants in the AST that end in ".xml"
-    $Existing = $commandAst.FindAll({
-            $args[0] -is [System.Management.Automation.Language.StringConstantExpressionAst] -and
-            $args[0].Value -like '*.xml'
-        },
-        $false
-    ).Value
-
-    # Get the xml files in the current directory
-    Get-ChildItem -File | Where-Object -FilterScript { $_.extension -like '*.xml' } | ForEach-Object -Process {
-
-        $XmlItem = [System.Xml.XmlDocument](Get-Content -Path $_)
-        $PolicyType = $XmlItem.SiPolicy.PolicyType
-
-        if ($PolicyType -eq 'Base Policy') {
-
-            # Check if the file is already selected
-            if ($_.FullName -notin $Existing) {
-                # Return the file name with quotes
-                "`"$_`""
-            }
-        }
-    }
-}
-
-#>
-
-<#
-
-# argument tab auto-completion for Supplemental Policy Paths to show only .xml files and only suggest files that haven't been already selected by user
-[System.Management.Automation.ScriptBlock]$ArgumentCompleterPolicyPathsSupplementalPoliciesOnly = {
-    # Get the current command and the already bound parameters
-    param($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameters)
-
-    # Find all string constants in the AST that end in ".xml"
-    $Existing = $commandAst.FindAll({
-            $args[0] -is [System.Management.Automation.Language.StringConstantExpressionAst] -and
-            $args[0].Value -like '*.xml'
-        },
-        $false
-    ).Value
-
-    # Get the xml files in the current directory
-    Get-ChildItem -File | Where-Object -FilterScript { $_.extension -like '*.xml' } | ForEach-Object -Process {
-
-        $XmlItem = [System.Xml.XmlDocument](Get-Content -Path $_)
-        $PolicyType = $XmlItem.SiPolicy.PolicyType
-
-        if ($PolicyType -eq 'Supplemental Policy') {
-
-            # Check if the file is already selected
-            if ($_.FullName -notin $Existing) {
-                # Return the file name with quotes
-                "`"$_`""
-            }
-        }
-    }
-}
-
-#>
 
 # Opens Folder picker GUI so that user can select folders to be processed
 [System.Management.Automation.ScriptBlock]$ArgumentCompleterFolderPathsPicker = {
@@ -222,8 +113,8 @@
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCB2qKysHxVMKds0
-# JL38JQ/XtqAbHtWRaYDkCFIquTTx6KCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCAB1DbIBf+Guv7X
+# QkNqjwq3M17rFLiMLQYYqsWU71pl26CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -270,16 +161,16 @@
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgBwte2VmXJYBfpuyMfUov6I1cj00zDe1ZvOJkSiHC39QwDQYJKoZIhvcNAQEB
-# BQAEggIAGp5LbqffDJJJoZgjypPrES6VUWSY+0FlEq8hzpHiZO8gwzr6bdzBgnq7
-# eB3JFP6N+fiQJ1j9hcqlyoJ5O+bbdfAhuTPC+rxcZYRSoEv+orLfQsJC0EfODkoG
-# TVaISEiWFdS1aHfKBSznMb7REuORpQcitDOlpJpxhrnxspZcN7BiY7FXBIRMdhNo
-# KdCVFLv/jf99FKK+mHKXaU8nkV+zN5UV0urm4lnzyXyFGGtuT2h5IlP/4zvWwhJT
-# ZZv+9i1vaUk1OK1I+72iVElcibb0Z+ky+4y1Jzls+mZbebAgiDdi6JxilOYBaYyO
-# ZIDaJqNC/uPVpdYa0lHDsLOjzUauCtLxnY1iMou3V5BtRA3OlOi/UxC0sUjKJ1s2
-# +Hpw10szKzNFnSvRGE6ZmeKmjX1cnPWiFnUoVM9p3Nv44JxTca/RQkswRMsERaU5
-# yecmhjeq7uws51JIYvIAoJUhm+ZaP/uNHzvVuzVMsLKYrHPVBVB1G0o+wuLxXIKR
-# 5BS02ZVka1e9UdJ4aRShs9WVQuRPhjVJcE93z4aG8XUNx5JjGBDjlbcrdql6tneQ
-# jqkoP7NoN7Z1oOjv+mmaxGratmF0Db3788QxbSq+NQynkx2Bo7oiEXTSvqL+FjGr
-# IaN+lWK9HFwJ9/x9WhyQ1xpYF8nvLsITVvWIxEmEcOUyfLsstSE=
+# IgQg28CcrFgl6tFBp9lN1eMMm2PfI+8yTgUPdn0DLrMmOvswDQYJKoZIhvcNAQEB
+# BQAEggIAfJgA7+sLh/hQa1PgwjRR5NH5ggEW9FPgUdXCG8qPy3u5en1Vdk6CDL39
+# 4tbs3H8EB2mqAUfRaMQ5aKGZGMF34MEmAe4uGCA8g9PEdr/hMp1zSRDXEdvsJYEk
+# Qr8IKlYoVdMjky4pxZfZmSlhLHOsGNsySPrWTekEryMqgbjVyfIQfCdkDvRDMwVQ
+# FoqBTthPU7O8pOaSyLs9JtWP7N4XyUHtf2Rlquji+w5RlSYqpXdSsqGXiby0nCHj
+# OVZuYnffN0SM05JUnfd9uksYvRpw7Ls6XuuK6uMP89XLuemR5EYv/PF8Xm2nUX1/
+# xvjd/eH+sOhvR64Or+vxIE78GDFxDQ980uugL2NPAEqzpez4/nx4ws7q0D2G3lus
+# hCuaIBNCLkDNaemWeKRgfspXFNYY8X/vuslu6cREjzFjgEspYpvt5Zm76oyXxhF1
+# P4uGH1/gQcSgLVhweF8sflp2lnNFrmJdYZUrkg5sl8vjrNfqoS7wG59sf/S66Kph
+# 6Aymqhbaee0XPT23KKRsijYmGKbVtCqlIxwvUoux62WTsKwzlNu+rH5eYNHOtStM
+# UUkHT3zpOq3sq4lW1laweP2asb3hOLweQrWA08DxpqYAX/xXg/fxs34gsMFw84mu
+# Oztr9lwyGFj4PzO+EQozOZntRgO5lfQERTXcZt1iDC1mrg8OFRc=
 # SIG # End signature block

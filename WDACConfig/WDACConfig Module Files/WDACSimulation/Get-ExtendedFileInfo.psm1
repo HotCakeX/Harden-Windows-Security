@@ -11,6 +11,19 @@ function Get-ExtendedFileInfo {
   .NOTES
     All the returned properties must be strings because Compare-SignerAndCertificate performs string comparison with the Signers' info from the XML file
     For example, FileInfo object for the FilePath property should be flattened to string
+
+    Correlation between the properties name and numbers:
+
+    [System.__ComObject]$Folder = (New-Object -ComObject Shell.Application).Namespace('C:\')
+    $Output = [ordered]@{}
+    0..499 | ForEach-Object -Process {
+      [System.String]$Name = $Folder.GetDetailsOf($Folder.Items, $_)
+      if ($Name) {
+      $Output[$Name] = [System.UInt64]$_
+      }
+    }
+    Return $Output
+
   .PARAMETER Path
     The path to the file
   .INPUTS

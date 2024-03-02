@@ -25,7 +25,7 @@ Creates and signs a `.CIP` file that can be either deployed locally using the `-
 
 ### -PolicyPaths
 
-The XML Policies to deploy. Supports tab completion by showing only `.xml` files in the current working directory.
+The XML Policies to deploy. Supports File picker GUI.
 
 <div align='center'>
 

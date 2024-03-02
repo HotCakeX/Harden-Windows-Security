@@ -2,55 +2,7 @@ Function Set-CommonWDACConfig {
     [CmdletBinding()]
     [OutputType([System.Object[]])]
     Param(
-        [ValidateScript({
-                # Assign the input value to a variable because $_ is going to be used to access another pipeline object
-                [System.String]$InputCN = $_
-
-                # Create an empty array to store the output objects
-                [System.String[]]$Output = @()
-
-                # Loop through each certificate that uses RSA algorithm (Because ECDSA is not supported for signing WDAC policies) in the current user's personal store and extract the relevant properties
-                foreach ($Cert in (Get-ChildItem -Path 'Cert:\CurrentUser\My' | Where-Object -FilterScript { $_.PublicKey.Oid.FriendlyName -eq 'RSA' })) {
-
-                    # Takes care of certificate subjects that include comma in their CN
-                    # Determine if the subject contains a comma
-                    if ($Cert.Subject -match 'CN=(?<RegexTest>.*?),.*') {
-
-                        # If the CN value contains double quotes, use split to get the value between the quotes
-                        if ($Matches['RegexTest'] -like '*"*') {
-                            $SubjectCN = ($Element.Certificate.Subject -split 'CN="(.+?)"')[1]
-                        }
-                        # Otherwise, use the named group RegexTest to get the CN value
-                        else {
-                            $SubjectCN = $Matches['RegexTest']
-                        }
-                    }
-                    # If the subject does not contain a comma, use a lookbehind to get the CN value
-                    elseif ($Cert.Subject -match '(?<=CN=).*') {
-                        $SubjectCN = $Matches[0]
-                    }
-                    $Output += $SubjectCN
-                }
-
-                # Count the number of duplicate CNs in the output array
-                [System.UInt64]$NumberOfDuplicateCNs = @($Output | Where-Object -FilterScript { $_ -eq $InputCN }).Count
-
-                # If the certificate with the provided common name exists in the personal store of the user certificates
-                if ($Output -contains $_) {
-                    # if there are more than 1 certificate with the same common name on the system
-                    if ($NumberOfDuplicateCNs -eq 1) {
-                        # Return true if the certificate exists and there are no duplicates
-                        return $true
-                    }
-                    else {
-                        Throw "There are $NumberOfDuplicateCNs certificates with the same common name ($_) on the system, please remove the duplicate certificates and try again."
-                    }
-                }
-                else {
-                    Throw 'A certificate with the provided common name does not exist in the personal store of the user certificates.'
-                }
-
-            })]
+        [ValidateSet([CertCNz])]
         [parameter(Mandatory = $false)][System.String]$CertCN,
 
         [ValidateScript({ (Test-Path -Path $_ -PathType 'Leaf') -and ($_.extension -eq '.cer') }, ErrorMessage = 'The path you selected is not a file path for a .cer file.')]
@@ -120,24 +72,21 @@ Function Set-CommonWDACConfig {
             Throw [System.ArgumentException] 'No parameter was selected.'
         }
 
-        # Assigning the path to the UserConfigurations.json file
-        [System.IO.FileInfo]$Path = "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json"
-
         # Create User configuration folder if it doesn't already exist
-        if (-NOT (Test-Path -Path (Split-Path -Path $Path -Parent))) {
-            New-Item -ItemType Directory -Path (Split-Path -Path $Path -Parent) -Force | Out-Null
-            Write-Verbose -Message 'The .WDACConfig folder in the current user folder has been created because it did not exist.'
+        if (-NOT (Test-Path -Path (Split-Path -Path $UserConfigJson -Parent))) {
+            New-Item -ItemType Directory -Path (Split-Path -Path $UserConfigJson -Parent) -Force | Out-Null
+            Write-Verbose -Message 'The WDACConfig folder in Program Files has been created because it did not exist.'
         }
 
         # Create User configuration file if it doesn't already exist
-        if (-NOT (Test-Path -Path $Path)) {
-            New-Item -ItemType File -Path (Split-Path -Path $Path -Parent) -Name (Split-Path -Path $Path -Leaf) -Force | Out-Null
+        if (-NOT (Test-Path -Path $UserConfigJson)) {
+            New-Item -ItemType File -Path (Split-Path -Path $UserConfigJson -Parent) -Name (Split-Path -Path $UserConfigJson -Leaf) -Force | Out-Null
             Write-Verbose -Message 'The UserConfigurations.json file has been created because it did not exist.'
         }
 
         # Trying to read the current user configurations
         Write-Verbose -Message 'Trying to read the current user configurations'
-        [System.Object[]]$CurrentUserConfigurations = Get-Content -Path $Path
+        [System.Object[]]$CurrentUserConfigurations = Get-Content -Path $UserConfigJson
 
         # If the file exists but is corrupted and has bad values, rewrite it
         try {
@@ -145,7 +94,7 @@ Function Set-CommonWDACConfig {
         }
         catch {
             Write-Verbose -Message 'The user configurations file exists but is corrupted and has bad values, rewriting it'
-            Set-Content -Path $Path -Value ''
+            Set-Content -Path $UserConfigJson -Value ''
         }
 
         # A hashtable to hold the User configurations
@@ -256,13 +205,13 @@ Function Set-CommonWDACConfig {
         }
         catch {
             Write-Warning -Message "$_`nclearing it."
-            Set-Content -Path $Path -Value '' -Force
+            Set-Content -Path $UserConfigJson -Value '' -Force
         }
 
         if ($IsValid) {
             # Update the User Configurations file
             Write-Verbose -Message 'Saving the changes'
-            $UserConfigurationsJSON | Set-Content -Path $Path -Force
+            $UserConfigurationsJSON | Set-Content -Path $UserConfigJson -Force
 
             # Display the updated User Configurations
             $UserConfigurationsObject
@@ -319,18 +268,17 @@ Function Set-CommonWDACConfig {
 }
 
 # Importing argument completer ScriptBlocks
-. "$ModuleRootPath\Resources\ArgumentCompleters.ps1"
-Register-ArgumentCompleter -CommandName 'Set-CommonWDACConfig' -ParameterName 'CertCN' -ScriptBlock $ArgumentCompleterCertificateCN
+. "$ModuleRootPath\CoreExt\ArgumentCompleters.ps1"
 Register-ArgumentCompleter -CommandName 'Set-CommonWDACConfig' -ParameterName 'CertPath' -ScriptBlock $ArgumentCompleterCerFilePathsPicker
 Register-ArgumentCompleter -CommandName 'Set-CommonWDACConfig' -ParameterName 'SignToolPath' -ScriptBlock $ArgumentCompleterExeFilePathsPicker
-Register-ArgumentCompleter -CommandName 'Set-CommonWDACConfig' -ParameterName 'SignedPolicyPath' -ScriptBlock $ArgumentCompleterPolicyPathsBasePoliciesOnly
-Register-ArgumentCompleter -CommandName 'Set-CommonWDACConfig' -ParameterName 'UnsignedPolicyPath' -ScriptBlock $ArgumentCompleterPolicyPathsBasePoliciesOnly
+Register-ArgumentCompleter -CommandName 'Set-CommonWDACConfig' -ParameterName 'SignedPolicyPath' -ScriptBlock $ArgumentCompleterXmlFilePathsPicker
+Register-ArgumentCompleter -CommandName 'Set-CommonWDACConfig' -ParameterName 'UnsignedPolicyPath' -ScriptBlock $ArgumentCompleterXmlFilePathsPicker
 
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDQ2L+X3U/X6Bvb
-# gmiIu16ZR2AjerDbWBs76wx9pl/nOaCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCAA5VMVrXcwVaqO
+# kTGRNirazDPR7Ch7o0t4hhRQdsNdvqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -377,16 +325,16 @@ Register-ArgumentCompleter -CommandName 'Set-CommonWDACConfig' -ParameterName 'U
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQg64kaR2s5eRX4PO1OHLs1qbbfU+0kH03MYsS1q6Z37IQwDQYJKoZIhvcNAQEB
-# BQAEggIAaEvy1BPfdtMlMXEvxWPnJAwKLm+39sOzgli4QPs/RdpyL1nAr7+Vsp59
-# sQfVjAeqTyr2x9FqNIHKen6fFWUHVfF88hbBCgDX8UKyHmMNdTnyY6ZJEaWdEsbF
-# 0P0Qr8MXko9puYDfUndaCmm4glUMno1hTolloSJK2Q+O7TKt1HapDAI5mbWT9j7/
-# ZAbPOMq5yWAqd5bt8d8o9+4PhvpJshbW3sqMiBDUrIawvmU7VVFoE3K/xzgyopcV
-# GmkL+fQLG5gii1xXPhrMnboRrGVytV2dO8wdnZoFvWP7Py71mq9OSU5bZ23Uc+wZ
-# 5nENtJ4YJwUBP/gaMHtOq5qTxyeEF40dLYn0yaTGx0kWOin9w7FsHV1023g7H8xW
-# jFIcZHvqxCXo0ltFMIKoQBzb/Sk9DJ0GYCzXkTIYiiVWC9/UXe9VyAC+zGpHDu95
-# LHqBolPtexELSLen/eJrDorSrw5Kc8HDhqlqTy3AsZws9MjFyN+gZMQBsi9DwtrT
-# Tso4zFxMSaYMvEfzL3QsKSf0YEb/483ESMYSlS08WHUTmQ4DN1dKLHwsoKqxN+DB
-# u2UQRqsQxhQ+TVWbx2Rq3Ly0SJCA71qhbEQzxIxsDQCdBTNwWH8l1lSfsQKvL4I8
-# LcsYOQB+9I/eWeYc7vN5Ci037F/umMcARlXcYpZY1H95deB8B1I=
+# IgQg9qoon0LYXgRoANxS/VQTOlH8Ep9sxMoqdDUfyQzLv2YwDQYJKoZIhvcNAQEB
+# BQAEggIACv5F9dpCv5xpI9xt4KOG8vYCfELiNlcLH5Tn9paTzFEZ4Et1xAhA8JcN
+# gRsN8HF7UC3+4qTt5/wzsQBozhRonnt7oG6MsjqmL3md5FGYl7lXPFnXdwLOGPc+
+# h2VqBuxCWYMId3cShzGVs10hBbdu9pdiPqQzR9CocY0bqZzOq0vKzGj3TvSmc76n
+# Aovh8LKA6cGYB4MnsCrxJZvl38JQxe5djgvRVn1JYct2SYRMT2Ylgzs2Avr3wvh8
+# MavbS832JY0sdHFDt2Sxw0eVJDqCbcw5rzVDmQVnEri0jGuPmEE7LVH6Smku7ExU
+# fWM2fIA4+SkBZlUYU9/l6LDIlHRBZ6r/Ff+f0y22br+5qlZ0dmj+nSPSnvrTTUDO
+# JhUqAbNdl5DJ7vEtm3MmJeqcOH+081SkaKTWr/hUZskwt8FohYD0Cjjs5RKy/nKb
+# jq4RBUDLkNKQxOONFytRmRn7GMRCBWnIPjkvCoH990BzP4+sMVmZyr6TFymgiliU
+# VGvA9Q/0rzU3wdKXRbB9xxjZT6t1btiZpBM9rSavy43gm7leBgZ/SU/euPrviAmm
+# xJl68ZR+3jhtH+jZ5/gYmOk7isaeS911MiyJewrjpSv6il++95mdWK+QqpImYqvv
+# QHoAPVhTjwULMsxbTT8FohpxF5FIfveLsyCciLN74gprQvwqLEQ=
 # SIG # End signature block

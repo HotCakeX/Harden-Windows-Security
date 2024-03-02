@@ -1,101 +1,145 @@
 Function Test-CiPolicy {
     [CmdletBinding()]
-    [OutputType([System.Boolean])]
+    [OutputType([System.Boolean], [System.Security.Cryptography.X509Certificates.X509Certificate2[]])]
     param(
-        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
-        [System.IO.FileInfo]$XmlFile
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true, ParameterSetName = 'XML File')]
+        [System.IO.FileInfo]$XmlFile,
+
+        [ValidateScript({ Test-Path -LiteralPath $_ -PathType 'Leaf' })]
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true, ParameterSetName = 'CIP File')]
+        [System.IO.FileInfo]$CipFile
     )
 
     begin {
         # Detecting if Verbose switch is used
         $PSBoundParameters.Verbose.IsPresent ? ([System.Boolean]$Verbose = $true) : ([System.Boolean]$Verbose = $false) | Out-Null
 
-        # Check if the schema file exists in the system drive
-        if (-NOT (Test-Path -Path $CISchemaPath)) {
-            Throw "The Code Integrity Schema file could not be found at: $CISchemaPath"
-        }
-
-        # Check if the XML file exists - performing this check here instead of ValidateScript of the parameter produces a better error message when this function is called from within other main cmdlets' parameters.
-        if (-NOT (Test-Path -Path $XmlFile -PathType 'Leaf')) {
-            Throw "The file $XmlFile does not exist."
-        }
-
-        # Assign the schema file path to a variable
-        [System.IO.FileInfo]$SchemaFilePath = $CISchemaPath
-        # Define a script block to handle validation errors
-        [System.Management.Automation.ScriptBlock]$ValidationEventHandler = { Throw $args[1].Exception }
+        # Importing the $PSDefaultParameterValues to the current session, prior to everything else
+        . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
     }
 
     process {
-        # Create an XML reader object from the schema file path
-        [System.Xml.XmlReader]$XmlReader = [System.Xml.XmlReader]::Create($SchemaFilePath)
-        # Read the schema object from the XML reader
-        [System.Xml.Schema.XmlSchemaObject]$XmlSchemaObject = [System.Xml.Schema.XmlSchema]::Read($XmlReader, $ValidationEventHandler)
 
-        # Create a variable to store the validation result
-        [System.Boolean]$IsValid = $false
+        # If a CI XML file is being tested
+        if ($PSCmdlet.ParameterSetName -eq 'XML File' -and $PSBoundParameters.ContainsKey('XmlFile')) {
 
-        try {
-            # Create an XML document object
-            [System.Xml.XmlDocument]$Xml = New-Object -TypeName System.Xml.XmlDocument
-            # Add the schema object to the XML document
-            $Xml.Schemas.Add($XmlSchemaObject) | Out-Null
-            # Load the XML file to the XML document
-            $Xml.Load($XmlFile)
-            # Validate the XML document against the schema object
-            $Xml.Validate({
-                    # Throw an exception if the validation fails
-                    Throw ([PsCustomObject] @{
-                            XmlFile   = $XmlFile
-                            Exception = $args[1].Exception
-                        })
-                })
+            # Check if the schema file exists in the system drive
+            if (-NOT (Test-Path -LiteralPath $CISchemaPath)) {
+                Throw "The Code Integrity Schema file could not be found at: $CISchemaPath"
+            }
 
-            # If the validation succeeds, set the IsValid variable to $true
-            $IsValid = $true
+            # Check if the XML file exists - performing this check here instead of ValidateScript of the parameter produces a better error message when this function is called from within other main cmdlets' parameters.
+            if (-NOT (Test-Path -LiteralPath $XmlFile -PathType 'Leaf')) {
+                Throw "The file $XmlFile does not exist."
+            }
+
+            # Assign the schema file path to a variable
+            [System.IO.FileInfo]$SchemaFilePath = $CISchemaPath
+            # Define a script block to handle validation errors
+            [System.Management.Automation.ScriptBlock]$ValidationEventHandler = { Throw $args[1].Exception }
+
+            # Create an XML reader object from the schema file path
+            [System.Xml.XmlReader]$XmlReader = [System.Xml.XmlReader]::Create($SchemaFilePath)
+            # Read the schema object from the XML reader
+            [System.Xml.Schema.XmlSchemaObject]$XmlSchemaObject = [System.Xml.Schema.XmlSchema]::Read($XmlReader, $ValidationEventHandler)
+
+            # Create a variable to store the validation result
+            [System.Boolean]$IsValid = $false
+
+            try {
+                # Create an XML document object
+                [System.Xml.XmlDocument]$Xml = New-Object -TypeName System.Xml.XmlDocument
+                # Add the schema object to the XML document
+                $Xml.Schemas.Add($XmlSchemaObject) | Out-Null
+                # Load the XML file to the XML document
+                $Xml.Load($XmlFile)
+                # Validate the XML document against the schema object
+                $Xml.Validate({
+                        # Throw an exception if the validation fails
+                        Throw ([PsCustomObject] @{
+                                XmlFile   = $XmlFile
+                                Exception = $args[1].Exception
+                            })
+                    })
+
+                # If the validation succeeds, set the IsValid variable to $true
+                $IsValid = $true
+            }
+            catch {
+                # Rethrow the exception
+                Throw $_
+            }
+            finally {
+                # Close the XML reader object
+                $XmlReader.Close()
+            }
+
+            # Return the validation result
+            Return $IsValid
         }
-        catch {
-            # Rethrow the exception
-            Throw $_
+
+        # If a CI binary is being tested
+        elseif ($PSCmdlet.ParameterSetName -eq 'CIP File' -and $PSBoundParameters.ContainsKey('CipFile')) {
+
+            try {
+
+                # Create a new SignedCms object to store the signed message
+                [System.Security.Cryptography.Pkcs.SignedCms]$SignedCryptoMsgSyntax = New-Object -TypeName System.Security.Cryptography.Pkcs.SignedCms
+
+                # Decode the signed message from the file specified by $CipFile
+                # The file is read as a byte array because the SignedCms.Decode() method expects a byte array as input
+                # https://learn.microsoft.com/en-us/dotnet/api/system.security.cryptography.pkcs.signedcms.decode
+                $SignedCryptoMsgSyntax.Decode((Get-Content -LiteralPath $CipFile -AsByteStream -Raw))
+
+                # Return an array of X509Certificate2 objects that represent the certificates used to sign the message
+                Return [System.Security.Cryptography.X509Certificates.X509Certificate2[]]$SignedCryptoMsgSyntax.Certificates
+
+            }
+            catch {
+                Write-Verbose -Message "The file $CipFile does not contain a valid signature." -Verbose
+                Return $null
+            }
         }
-        finally {
-            # Close the XML reader object
-            $XmlReader.Close()
-        }
-    }
-    End {
-        # Return the validation result
-        Return $IsValid
     }
     <#
 .SYNOPSIS
-    Tests the Code Integrity Policy XML file against the Code Integrity Schema file.
+    Tests the Code Integrity Policy XML file against the Code Integrity Schema.
+    It can also display the signer information from a signed Code Integrity policy .CIP binary file. Get-AuthenticodeSignature cmdlet does not show signers in .CIP files.
 .DESCRIPTION
-    The Test-CiPolicy cmdlet tests a Code Integrity (WDAC) Policy XML file against the Schema file located at: "$Env:SystemDrive\Windows\schemas\CodeIntegrity\cipolicy.xsd"
-    It returns a boolean value indicating whether the XML file is valid or not.
+    The Test-CiPolicy cmdlet can test a Code Integrity (WDAC) Policy.
+    If you input a XML file, it will validate it against the Schema file located at: "$Env:SystemDrive\Windows\schemas\CodeIntegrity\cipolicy.xsd"
+    and returns a boolean value indicating whether the XML file is valid or not.
+
+    If you input a signed binary Code Integrity Policy file, it will return the signer information from the file.
 .PARAMETER XmlFile
     The Code Integrity Policy XML file to test. Supports file picker GUI.
+.PARAMETER CipFile
+    The binary Code Integrity Policy file to test for signers. Supports file picker GUI.
 .LINK
     https://github.com/HotCakeX/Harden-Windows-Security/wiki/Test-CiPolicy
 .INPUTS
     [System.IO.FileInfo]
 .OUTPUTS
     System.Boolean
+    System.Security.Cryptography.X509Certificates.X509Certificate2[]
 .EXAMPLE
     Test-CiPolicy -XmlFile "C:\path\to\policy.xml"
+.EXAMPLE
+    Test-CiPolicy -CipFile "C:\Users\Admin\{C5F45D1A-97F7-42CF-84F1-40755F1AEB97}.cip"
     #>
 }
 
 # Importing argument completer ScriptBlocks
-. "$ModuleRootPath\Resources\ArgumentCompleters.ps1"
+. "$ModuleRootPath\CoreExt\ArgumentCompleters.ps1"
 
 Register-ArgumentCompleter -CommandName 'Test-CiPolicy' -ParameterName 'XmlFile' -ScriptBlock $ArgumentCompleterXmlFilePathsPicker
+Register-ArgumentCompleter -CommandName 'Test-CiPolicy' -ParameterName 'CipFile' -ScriptBlock $ArgumentCompleterAnyFilePathsPicker
 
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCA2udxV9Wna8Fdg
-# 6Q5zgk1lQptJ+D/iKIuCjSaiTLMTDKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDMfKjVgLv27ENN
+# FnUvpteDMPklp+tOxL2ji9KEGWhi4qCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -142,16 +186,16 @@ Register-ArgumentCompleter -CommandName 'Test-CiPolicy' -ParameterName 'XmlFile'
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgfBjW2Sjdf8whMXzhend7BLI1igmfL1z2BOhNrbxvlVgwDQYJKoZIhvcNAQEB
-# BQAEggIAc3AWQ9eOXptdLm5VXwcdl4tHZrxAp+MGXONFziUnQkQQ1peZjBUtih5n
-# Vp5IQvME+u89VxI2qhp/C2qfJLnA/CJtnuUCZfQWY8gp7nmRKT2wwI7ISC5Q5SVG
-# A0BMrFmsasPjN4JjxKvhzh6sWjs/IE092yz+TQThR4jLQABJxFotnDwPW32jN1Ka
-# 1rlvM1fxSlmFcvaaHNN1mceAC7pdI9iyBlyi1jgOHLc1jjNhbIND/xuqLaQF8oIU
-# zmuPHM+BYjYJqNAV8aq29wUicVNw/uBmoGjInmwUU8JRkSKHO8q1DJs4877m/gtL
-# 9Kv1b/0rbVVYftt421N0u9kU3rrxS4zAHI3lZvMaWOk7NzpN7vYG0VNJeyLAfolB
-# WuXshsJiS+/kZSfYrjDh4GSGefZWjRQ+U2c5sXsEHtkFtpQEbq9rRvcL/aEZkOlO
-# nIR3hRDG0sBEyCdrz4GTk6cVotnhCW3YUFFnSfhRz2I69QYQNodjfGKmTz4oY82S
-# GFZrcE0F391GqAG963V+aEl7WQMljuYYBUl1IyaSlqJfpasg1rliuDti+hh2w+bg
-# OHxLGd5Oh2p7Mdhh4oFmiDlbBJUb9G4wLUJkGR6MHwSWwcGVVCRp0+ARS5w28UMO
-# qpWJ5QTVSvCaFEkUfF2v7qCHZTdXUV5rCD5S5R1Mn34krv0tB+k=
+# IgQgVAXKogo5Xc1nHh3Mm7BOT8UUflAIv+7955zRtjDDHPgwDQYJKoZIhvcNAQEB
+# BQAEggIAcXlr1yXtmmpYliJ+WHEqzzrU4mU98c16/WIBUZzbtH8BYMM12IdhH16h
+# u9HO/GEF+WKT+7ikqo/xMcQXx9yByOSV58Coe/0FhWrFYoSb8LKL8ZlSv+5UozT0
+# 3IiE7TIswrL0BXWJ9/jtjNRbV3lfEQh5Gtb/uy5F+TOHqx16rQJwLlKdsDRd0Ub3
+# QADyzLzY57gJKNpx274ndYOXTpfORFkRbLXggH51Kg2ZpL5JZI424BUeu8eRn3Or
+# m3UQpYvXycsthT+nwOwYifSDc5eiF/Em6TeCzybnOVvXxYV7RYpv5ne1edhZ/e/R
+# 8eAT+Z/9usskQ2ynmp2M5r3wF2RqZxRilnWzecDtSBl9ncGpI2RhdGPP6ng6OWEl
+# mrab59aCa4paJDKZCF1Z+GtxO5KvmS/HlL/DkVyvOqd6V6heuFPeJVBoqNQAJRT/
+# GUD+KQ2H7qa2ZA2b01qtmey0WB6lLsRIuKRhNWwm+RT2q++PDb6dnChnHZAkPTSW
+# y3Zf9fnSt24Ae3+i4KkclH8WBHLjAm7DuoPZ3+tNPwMpgCQos71bqbYxwG7JY/3L
+# XZpmVJMKapeCxG+xP9fUilKK6H8RTF8Gf85qjJI+OCxtA5cK2zx4jD2FwhTVGGOQ
+# LqmDdAE6u9km1Z2hQlIylCSYAgFu5i6aPbAv9WLsCYxWVkDwJ6Y=
 # SIG # End signature block

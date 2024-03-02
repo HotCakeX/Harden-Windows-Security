@@ -1,5 +1,9 @@
 Function Remove-CommonWDACConfig {
-    [CmdletBinding()]
+    [CmdletBinding(
+        SupportsShouldProcess = $true,
+        PositionalBinding = $false,
+        ConfirmImpact = 'High'
+    )]
     [OutputType([System.String])]
     Param(
         [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$CertCN,
@@ -10,32 +14,40 @@ Function Remove-CommonWDACConfig {
         [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$StrictKernelPolicyGUID,
         [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$StrictKernelNoFlightRootsPolicyGUID,
         [parameter(Mandatory = $false, DontShow = $true)][System.Management.Automation.SwitchParameter]$LastUpdateCheck,
-        [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$StrictKernelModePolicyTimeOfDeployment
+        [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$StrictKernelModePolicyTimeOfDeployment,
+        [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$Force
     )
     begin {
         # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
-        # Assigning the path to the UserConfigurations.json file
-        [System.IO.FileInfo]$Path = "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json"
-
         # Create User configuration folder if it doesn't already exist
-        if (-NOT (Test-Path -Path (Split-Path -Path $Path -Parent))) {
-            New-Item -ItemType Directory -Path (Split-Path -Path $Path -Parent) -Force | Out-Null
-            Write-Verbose -Message 'The .WDACConfig folder in the current user folder has been created because it did not exist.'
+        if (-NOT (Test-Path -Path (Split-Path -Path $UserConfigJson -Parent))) {
+            New-Item -ItemType Directory -Path (Split-Path -Path $UserConfigJson -Parent) -Force | Out-Null
+            Write-Verbose -Message 'The WDACConfig folder in Program Files has been created because it did not exist.'
         }
 
         # Create User configuration file if it doesn't already exist
-        if (-NOT (Test-Path -Path $Path)) {
-            New-Item -ItemType File -Path (Split-Path -Path $Path -Parent) -Name (Split-Path -Path $Path -Leaf) -Force | Out-Null
+        if (-NOT (Test-Path -Path $UserConfigJson)) {
+            New-Item -ItemType File -Path (Split-Path -Path $UserConfigJson -Parent) -Name (Split-Path -Path $UserConfigJson -Leaf) -Force | Out-Null
             Write-Verbose -Message 'The UserConfigurations.json file has been created because it did not exist.'
+        }
+
+        # Detecting if Confirm switch is used to bypass the confirmation prompts
+        if ($Force -and -Not $Confirm) {
+            $ConfirmPreference = 'None'
         }
 
         # Delete the entire User Configs if a more specific parameter wasn't used
         # This method is better than $PSBoundParameters since it also contains common parameters
         if (!$CertCN -And !$CertPath -And !$SignToolPath -And !$UnsignedPolicyPath -And !$SignedPolicyPath -And !$StrictKernelPolicyGUID -And !$StrictKernelNoFlightRootsPolicyGUID -And !$LastUpdateCheck -And !$StrictKernelModePolicyTimeOfDeployment) {
-            Remove-Item -Path $Path -Force
-            Write-Verbose -Message 'User Configurations for WDACConfig module have been deleted.'
+
+            # Prompt for confirmation before deleting the entire User Configurations
+            if ($PSCmdlet.ShouldProcess('This PC', 'Delete the entire User Configurations for WDACConfig module')) {
+
+                Remove-Item -Path $UserConfigJson -Force
+                Write-Verbose -Message 'User Configurations for WDACConfig module have been deleted.'
+            }
 
             # set a boolean value that returns from the Process and End blocks as well
             [System.Boolean]$ReturnAndDone = $true
@@ -44,14 +56,14 @@ Function Remove-CommonWDACConfig {
         }
 
         # Read the current user configurations
-        [System.Object[]]$CurrentUserConfigurations = Get-Content -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json"
+        [System.Object[]]$CurrentUserConfigurations = Get-Content -Path $UserConfigJson
 
         # If the file exists but is corrupted and has bad values, rewrite it
         try {
             $CurrentUserConfigurations = $CurrentUserConfigurations | ConvertFrom-Json
         }
         catch {
-            Set-Content -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json" -Value ''
+            Set-Content -Path $UserConfigJson -Value ''
         }
 
         # A hashtable to hold the User configurations
@@ -155,13 +167,13 @@ Function Remove-CommonWDACConfig {
         }
         catch {
             Write-Warning -Message "$_`nclearing it."
-            Set-Content -Path $Path -Value '' -Force
+            Set-Content -Path $UserConfigJson -Value '' -Force
         }
 
         if ($IsValid) {
             # Update the User Configurations file
             Write-Verbose -Message 'Saving the changes'
-            $UserConfigurationsJSON | Set-Content -Path $Path -Force
+            $UserConfigurationsJSON | Set-Content -Path $UserConfigJson -Force
         }
         else {
             Throw 'The User Configurations file is not valid.'
@@ -212,8 +224,8 @@ Function Remove-CommonWDACConfig {
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCC5bzuqnU27rtXb
-# n2csui2LgxE2FmoLn8URsm0DtN4SD6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCD9UapAHgbq0ac2
+# 2W6lJ1q25PzYYhF8wfuGB8x9rfNtyaCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -260,16 +272,16 @@ Function Remove-CommonWDACConfig {
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgZnNZ/Dju/Mx7Rm721ByHotRNT71y4CPbzZZNbKl8a1AwDQYJKoZIhvcNAQEB
-# BQAEggIAOz84QzioQIm6xH0gAY9po86UlLO3PE2FeKYNkJjxfa9aW4bCvgcn/ZNS
-# DXjxmpAd4/GaAn3apvHqB5wnLemta/zvY8zSVetQ+/Who312tRj6K+E/7thimwS6
-# z5fGhmAcREGG9chSJutzUr3jQXwSJBn2McHJE2LVexF9xiEAdzPbf8KVE33ETFT0
-# +zTC8aR52BNDyfcHdRVmM3ziRvEJS65/eDbsjbvhwmrd6+S7Ya2XXnbz0Cmwcc3U
-# xNwCQuq6xAVb9olwaE5tFIuCLiB4S+vfn6r8O0CsdMLBQTXP6hzAUPHMUaojMMjA
-# WVK2Em+OtDyN8f4rpJZ91uQ4b5dG6cV8F/u4frdUB0cKau/TcGPSIBsCkn3fysAT
-# jE/QfseKSayQyxUaCuNrxG/PT3WM1HLbU3BtSAMp+zyPn9R7jBvF6pCqIvp0KW2v
-# C4mqVp7fRvb0pN47sqZl+uu0NDExEEsrhw3r08Yorw06tCzy7j6R8cZ3HX5oP/XI
-# g+gatIiXJuv6htR+lUsgIhepE0i1Y/fX1rHiRJ2OODj5GFc3eUxXYYxtj7wD6tSw
-# uSPgVjtHKVazgeg+ommDUFDF2EVBXwmRzxZwKwAuF9xJ4bNM18CtrGJYKm2XHWoQ
-# /CAX+GY30VlrzRecdB8TSxomUx6syeEyhpwg8g2+zKyQBE3ScL0=
+# IgQge/JBHIC7cTNRqG41mFg0TH7eAQdWGsgmi6tFzXPhuE8wDQYJKoZIhvcNAQEB
+# BQAEggIApfQFrSpYxl1cHVA/SkzLRUbVtujVsTFtXAJDRHO8riHdpMD0wLOp5LOu
+# X1qgouiDH3UucLrDMZZS4B9udkWWgJo8VuWVc1UayA6kzOyd5lrfF4YswgxHmGv7
+# sd2EMcLb0lArpjPaPjVzVfmQyuL68kargbFE8ZomXoIO0JPukwISfPpXMj0YkOcM
+# N8ABT4uRHXgZI+/i7yJ2g9hrQMbLeAWVvH+l92qjwun+futV8gHrLjnRwOdISsu5
+# PErn56LYBry+eWgCbwrv99hUQ2OPH1yxih06xXNb/6B7I+ifiI+M1Ik8HdFnjgY1
+# XHi7Gb1nA6MiCZl0dTtliCAN8G2AhfxPady7W7j4d4pb/hEAjDJ3q+asLTjOKWQF
+# 33X6PiSpYRP5rrKx6mM1C/O9gBBZhx2Ccqz0u0bCLVttWTcb7qI8IFrrosPDCn1m
+# hyd5VOmqUyoDDpCyMy0nGR1iIRlMQyJGy8npTtTVdqQxNsVWd6dtP8pjJFhG/DAw
+# iWUuyR7ruT90+dBMr4zVwVsae6H3LPfb8mo8z0YED3eUGePDWv1Fyh6ghrbSAHw5
+# wnC8Mjvwi+ppGd3u5zxyhy29E0XPHzb31dDNFuzZSQLUgvWG60/sDlJ7ViIh0E9m
+# SB9Ul0+dYuvlZ8kiI1HChTQhpBS6jVtyHH10Fmd4ljhvLPYhLXE=
 # SIG # End signature block

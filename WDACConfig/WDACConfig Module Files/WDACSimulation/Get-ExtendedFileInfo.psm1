@@ -11,6 +11,19 @@ function Get-ExtendedFileInfo {
   .NOTES
     All the returned properties must be strings because Compare-SignerAndCertificate performs string comparison with the Signers' info from the XML file
     For example, FileInfo object for the FilePath property should be flattened to string
+
+    Correlation between the properties name and numbers:
+
+    [System.__ComObject]$Folder = (New-Object -ComObject Shell.Application).Namespace('C:\')
+    $Output = [ordered]@{}
+    0..499 | ForEach-Object -Process {
+      [System.String]$Name = $Folder.GetDetailsOf($Folder.Items, $_)
+      if ($Name) {
+      $Output[$Name] = [System.UInt64]$_
+      }
+    }
+    Return $Output
+
   .PARAMETER Path
     The path to the file
   .INPUTS
@@ -88,7 +101,7 @@ function Get-ExtendedFileInfo {
             if ((-NOT ([System.String]::IsNullOrWhiteSpace($VersionAndName)))) {
 
               # Split the last part by the comma (,) characters and get the first part which contains OriginalFileName
-              [System.String]$ExtractedOriginalFileNameAttrib = $VersionAndName.Split(',')[0]
+              [System.String]$ExtractedOriginalFileNameAttrib = $VersionAndName.Split(',') | Select-Object -First 1
 
               if ((-NOT ([System.String]::IsNullOrWhiteSpace($ExtractedOriginalFileNameAttrib)))) {
 
@@ -118,8 +131,8 @@ Export-ModuleMember -Function 'Get-ExtendedFileInfo'
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCD63VsMLTfE5tNz
-# 9HKEiEyPjkZsHBiuZRcaoHOP5sf0DqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDKaDXlUHwrzHzh
+# 0jT5NAYuL5wwzAEnrTWJT88jFYi+jqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -166,16 +179,16 @@ Export-ModuleMember -Function 'Get-ExtendedFileInfo'
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQg7KzjRyzgTVj6a2ihiocb19tAW9IX2IRyoDj4AWE6EegwDQYJKoZIhvcNAQEB
-# BQAEggIAIY64FHdgjxgdUSBZ7RJb4OLqagPLOzYr4TtG0umBA7szFwq9VjRJsQOZ
-# 4PCKdBZE+j9vfotZHZCUlCJX+5Pse02wy03YAf909wO99oX+fGLAiJ+guhqIQG0D
-# RsXKdW5R7B0SRI/2mZHCfWqfcxYVaFoJHJYizYX69sQZrTvB5A7WeKVSS6qPqtmH
-# WiqCq8Ysgof+MKa6DTqYow6OZCNbR4Q460hQp1zaPA8KmRBj5eTsFpF9FAwCNN5i
-# 9L5i031raD9CvyUYsQPDUnvb7xg444TBZQoerIcPCMnFbrb7LT97MIlLSMhTlNbu
-# qJ6vqQp/qckTCO6NPIPUguo1v7z/lYxV1AEFmSTvJn52bOPuwXwc90a1Z2i/M3aE
-# TvcvRqx8r6bVjmLh3EOCKb36PjFoX6VXleuYItv+GZqzlD9tP3K6rnlsOpxqYHzB
-# cmOQxdxZ5mkmD1S5Pnmzv2Q2fop9K3OiMpHLz4vEiF37KQ8l1RtSjf62e+ubh9tZ
-# Bb9yc2koduFvS3vYlqHBN015SSFWat3LZrOlHJqIqsWSF5BtpEqtPGqv/TFF9b95
-# tgHsUjcTUHOTC+s6F7LrjH7nQAQThbTpmw9BhiedkVzyW6Vjvy0PXwD7tOKlJMlN
-# m2cU4jDyeQbwiJ+ueoFnTOnzwpyP5djGWi0QohnRo0mZBu6pc90=
+# IgQgb98Pz9UsG9PGBsbtY/3AmubkprP8oG4viLXg82cpc3MwDQYJKoZIhvcNAQEB
+# BQAEggIAV4EQko2umlnIEICOipUVx2U+9h2Be4ZPL0e/F5GjryN00sSFgFQmLZ2x
+# e7/o5IIQtDRfFCBWWxcE9G5AegT/r+EgQLfwKX01G6C2iLV3YpLEASl5ElcV0KhF
+# 4tiMHgEagewfrHlXMaJ/T4qhis03pY94YuM92SEsoSRAqape9AY+2xrhLAwRgvEM
+# Mwl+IOYGgNW3bWYZ1ZxprB2PNZIGrvuV5cgbLKIa1erXdT45/3sMo5bQoMCwI7TV
+# ePKv20YosOvqQ2bk4YhMZN7g1vZ4qAdueB8Se/Rh336bpSqZrZgnt4apSRSqURWt
+# X9pdVvb28e9kM9DjkypfaYvDXDXtPyi2jLHHUo+EJcH54tvsG+WeaQIMg4FPYYSf
+# Evm5D7pHpSL56J/M/4N94tFxlwdv/GS+5batNBfo7HvKW/iQsqPbE/QCkUyGVAFt
+# H2YA4g8G3UddZhSq8bJbaXJdbSlLKJ6nDRY9VP8JWwG0eYzcrwozIy87OBC/MREY
+# Vw2ZHQBeD1nk9w+Efq1gHZmpGWl+3bWd8ru6cXGvqeh4lrW3UBU2h+Fn5g34ifni
+# 2s9I/mHnw5ZPIXWSGKokNs4IaMBIYsW6JpV5Q/H5NDwjPgsdLyIBSOs2qqWICULb
+# OJXl/juV4dr8aurj6dNtVhCdVXltLJe+NroXQtVNkksPylJXRz0=
 # SIG # End signature block

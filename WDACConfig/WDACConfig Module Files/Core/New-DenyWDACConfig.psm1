@@ -33,13 +33,16 @@ Function New-DenyWDACConfig {
         [Parameter(Mandatory = $false, ParameterSetName = 'Drivers')]
         [System.IO.DirectoryInfo[]]$ScanLocations,
 
-        [ValidateSet([Levelz])]
-        [Parameter(Mandatory = $false, ParameterSetName = 'Normal')]
-        [System.String]$Level = 'FilePublisher',
+        [Parameter(Mandatory = $false)]
+        [System.Management.Automation.SwitchParameter]$Deploy,
 
-        [ValidateSet([Fallbackz])]
+        [ValidateSet([ScanLevelz])]
         [Parameter(Mandatory = $false, ParameterSetName = 'Normal')]
-        [System.String[]]$Fallbacks = 'Hash',
+        [System.String]$Level = 'WHQLFilePublisher',
+
+        [ValidateSet([ScanLevelz])]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Normal')]
+        [System.String[]]$Fallbacks = ('FilePublisher', 'Hash'),
 
         [ValidateSet('OriginalFileName', 'InternalName', 'FileDescription', 'ProductName', 'PackageFamilyName', 'FilePath')]
         [Parameter(Mandatory = $false, ParameterSetName = 'Normal')]
@@ -51,9 +54,6 @@ Function New-DenyWDACConfig {
         [Parameter(Mandatory = $false, ParameterSetName = 'Normal')]
         [System.Management.Automation.SwitchParameter]$NoScript,
 
-        [Parameter(Mandatory = $false)]
-        [System.Management.Automation.SwitchParameter]$Deploy,
-
         [Parameter(Mandatory = $false, ParameterSetName = 'Installed AppXPackages')]
         [System.Management.Automation.SwitchParameter]$Force,
 
@@ -63,367 +63,342 @@ Function New-DenyWDACConfig {
     begin {
         # Detecting if Verbose switch is used
         $PSBoundParameters.Verbose.IsPresent ? ([System.Boolean]$Verbose = $true) : ([System.Boolean]$Verbose = $false) | Out-Null
+        # Detecting if Debug switch is used, will do debugging actions based on that
+        $PSBoundParameters.Debug.IsPresent ? ([System.Boolean]$Debug = $true) : ([System.Boolean]$Debug = $false) | Out-Null
 
         # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
-        # Importing the required sub-modules
         Write-Verbose -Message 'Importing the required sub-modules'
-        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Update-self.psm1" -Force
+        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Update-Self.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Write-ColorfulText.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Edit-CiPolicyRuleOptions.psm1" -Force
-
-        # Detecting if Debug switch is used, will do debugging actions based on that
-        $PSBoundParameters.Debug.IsPresent ? ([System.Boolean]$Debug = $true) : ([System.Boolean]$Debug = $false) | Out-Null
-
-        # argument tab auto-completion and ValidateSet for Fallbacks
-        Class Fallbackz : System.Management.Automation.IValidateSetValuesGenerator {
-            [System.String[]] GetValidValues() {
-                $Fallbackz = ('Hash', 'FileName', 'SignedVersion', 'Publisher', 'FilePublisher', 'LeafCertificate', 'PcaCertificate', 'RootCertificate', 'WHQL', 'WHQLPublisher', 'WHQLFilePublisher', 'PFN', 'FilePath', 'None')
-
-                return [System.String[]]$Fallbackz
-            }
-        }
-
-        # argument tab auto-completion and ValidateSet for level
-        Class Levelz : System.Management.Automation.IValidateSetValuesGenerator {
-            [System.String[]] GetValidValues() {
-                $Levelz = ('Hash', 'FileName', 'SignedVersion', 'Publisher', 'FilePublisher', 'LeafCertificate', 'PcaCertificate', 'RootCertificate', 'WHQL', 'WHQLPublisher', 'WHQLFilePublisher', 'PFN', 'FilePath', 'None')
-
-                return [System.String[]]$Levelz
-            }
-        }
+        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\New-StagingArea.psm1" -Force
 
         # if -SkipVersionCheck wasn't passed, run the updater
-        if (-NOT $SkipVersionCheck) { Update-self -InvocationStatement $MyInvocation.Statement }
+        if (-NOT $SkipVersionCheck) { Update-Self -InvocationStatement $MyInvocation.Statement }
+
+        [System.IO.DirectoryInfo]$StagingArea = New-StagingArea -CmdletName 'New-DenyWDACConfig'
 
         # Detecting if Confirm switch is used to bypass the confirmation prompts
         if ($Force -and -Not $Confirm) {
             $ConfirmPreference = 'None'
         }
+
+        [System.IO.FileInfo]$FinalDenyPolicyPath = Join-Path -Path $StagingArea -ChildPath "DenyPolicy $PolicyName.xml"
+        [System.IO.FileInfo]$FinalDenyPolicyCIPPath = Join-Path -Path $StagingArea -ChildPath "DenyPolicy $PolicyName.cip"
+        [System.IO.FileInfo]$AllowAllPolicyPath = 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowAll.xml'
+        [System.IO.FileInfo]$TempPolicyPath = Join-Path -Path $StagingArea -ChildPath 'DenyPolicy Temp.xml'
+
+        # Flag indicating the final files should not be copied to the main user config directory
+        [System.Boolean]$NoCopy = $false
     }
 
     process {
 
-        # Create deny supplemental policy for general files, apps etc.
-        if ($Normal) {
+        Try {
 
-            # The total number of the main steps for the progress bar to render
-            [System.Int16]$TotalSteps = $Deploy ? 4 : 3
-            [System.Int16]$CurrentStep = 0
+            # Create deny supplemental policy for general files, apps etc.
+            if ($Normal) {
 
-            Write-Verbose -Message 'Removing any possible files from previous runs'
-            Remove-Item -Path '.\ProgramDir_ScanResults*.xml' -Force -ErrorAction SilentlyContinue
+                # The total number of the main steps for the progress bar to render
+                [System.Int16]$TotalSteps = $Deploy ? 4 : 3
+                [System.Int16]$CurrentStep = 0
 
-            # An array to hold the temporary xml files of each user-selected folders
-            [System.Object[]]$PolicyXMLFilesArray = @()
+                # An array to hold the temporary xml files of each user-selected folders
+                [System.IO.FileInfo[]]$PolicyXMLFilesArray = @()
 
-            $CurrentStep++
-            Write-Progress -Id 22 -Activity 'Processing user selected Folders' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-            Write-Verbose -Message 'Processing Program Folders From User input'
-            for ($i = 0; $i -lt $ScanLocations.Count; $i++) {
-
-                # Creating a hash table to dynamically add parameters based on user input and pass them to New-Cipolicy cmdlet
-                [System.Collections.Hashtable]$UserInputProgramFoldersPolicyMakerHashTable = @{
-                    FilePath               = ".\ProgramDir_ScanResults$($i).xml"
-                    ScanPath               = $ScanLocations[$i]
-                    Level                  = $Level
-                    Fallback               = $Fallbacks
-                    MultiplePolicyFormat   = $true
-                    UserWriteablePaths     = $true
-                    Deny                   = $true
-                    AllowFileNameFallbacks = $true
-                }
-                # Assess user input parameters and add the required parameters to the hash table
-                if ($SpecificFileNameLevel) { $UserInputProgramFoldersPolicyMakerHashTable['SpecificFileNameLevel'] = $SpecificFileNameLevel }
-                if ($NoScript) { $UserInputProgramFoldersPolicyMakerHashTable['NoScript'] = $true }
-                if (!$NoUserPEs) { $UserInputProgramFoldersPolicyMakerHashTable['UserPEs'] = $true }
-
-                # Create the supplemental policy via parameter splatting
-                Write-Verbose -Message "Currently scanning and creating a deny policy for the folder: $($ScanLocations[$i])"
-                New-CIPolicy @UserInputProgramFoldersPolicyMakerHashTable
-            }
-
-            Write-ColorfulText -Color Pink -InputText 'The Deny policy with the following configuration is being created'
-            $UserInputProgramFoldersPolicyMakerHashTable
-
-            # Merge-CiPolicy accepts arrays - collecting all the policy files created by scanning user specified folders
-            Write-Verbose -Message 'Collecting all the policy files created by scanning user specified folders'
-            foreach ($file in (Get-ChildItem -File -Path '.\' -Filter 'ProgramDir_ScanResults*.xml')) {
-                $PolicyXMLFilesArray += $file.FullName
-            }
-
-            Write-Verbose -Message 'Adding the AllowAll default template policy path to the array of policy paths to merge'
-            $PolicyXMLFilesArray += 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowAll.xml'
-
-            $CurrentStep++
-            Write-Progress -Id 22 -Activity 'Merging the policies' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-            Write-Verbose -Message 'Creating the final Deny base policy from the xml files in the paths array'
-            Merge-CIPolicy -PolicyPaths $PolicyXMLFilesArray -OutputFilePath ".\DenyPolicy $PolicyName.xml" | Out-Null
-
-            $CurrentStep++
-            Write-Progress -Id 22 -Activity 'Creating the base policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-            Write-Verbose -Message 'Assigning a name and resetting the policy ID'
-            [System.String]$PolicyID = Set-CIPolicyIdInfo -FilePath "DenyPolicy $PolicyName.xml" -ResetPolicyID -PolicyName "$PolicyName"
-            [System.String]$PolicyID = $PolicyID.Substring(11)
-
-            Write-Verbose -Message 'Setting the policy version to 1.0.0.0'
-            Set-CIPolicyVersion -FilePath "DenyPolicy $PolicyName.xml" -Version '1.0.0.0'
-
-            Edit-CiPolicyRuleOptions -Action Base -XMLFile "DenyPolicy $PolicyName.xml"
-
-            Write-Verbose -Message 'Converting the policy XML to .CIP'
-            ConvertFrom-CIPolicy -XmlFilePath "DenyPolicy $PolicyName.xml" -BinaryFilePath "$PolicyID.cip" | Out-Null
-
-            Write-ColorfulText -Color MintGreen -InputText "DenyPolicyFile = DenyPolicy $PolicyName.xml"
-            Write-ColorfulText -Color MintGreen -InputText "DenyPolicyGUID = $PolicyID"
-
-            if (!$Debug) {
-                Remove-Item -Path '.\ProgramDir_ScanResults*.xml' -Force
-            }
-
-            if ($Deploy) {
                 $CurrentStep++
-                Write-Progress -Id 22 -Activity 'Deploying the base policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+                Write-Progress -Id 22 -Activity 'Processing user selected Folders' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                Write-Verbose -Message 'Deploying the policy'
-                &'C:\Windows\System32\CiTool.exe' --update-policy "$PolicyID.cip" -json | Out-Null
+                Write-Verbose -Message 'Processing Program Folders From User input'
+                for ($i = 0; $i -lt $ScanLocations.Count; $i++) {
 
-                Write-ColorfulText -Color Pink -InputText "A Deny Base policy with the name $PolicyName has been deployed."
+                    # Creating a hash table to dynamically add parameters based on user input and pass them to New-Cipolicy cmdlet
+                    [System.Collections.Hashtable]$UserInputProgramFoldersPolicyMakerHashTable = @{
+                        FilePath               = (Join-Path -Path $StagingArea -ChildPath "ProgramDir_ScanResults$($i).xml")
+                        ScanPath               = $ScanLocations[$i]
+                        Level                  = $Level
+                        Fallback               = $Fallbacks
+                        MultiplePolicyFormat   = $true
+                        UserWriteablePaths     = $true
+                        Deny                   = $true
+                        AllowFileNameFallbacks = $true
+                    }
+                    # Assess user input parameters and add the required parameters to the hash table
+                    if ($SpecificFileNameLevel) { $UserInputProgramFoldersPolicyMakerHashTable['SpecificFileNameLevel'] = $SpecificFileNameLevel }
+                    if ($NoScript) { $UserInputProgramFoldersPolicyMakerHashTable['NoScript'] = $true }
+                    if (!$NoUserPEs) { $UserInputProgramFoldersPolicyMakerHashTable['UserPEs'] = $true }
 
-                Write-Verbose -Message 'Removing the .CIP file after deployment'
-                Remove-Item -Path "$PolicyID.cip" -Force
-            }
-            Write-Progress -Id 22 -Activity 'Complete.' -Completed
-        }
+                    Write-Verbose -Message "Currently scanning and creating a deny policy for the folder: $($ScanLocations[$i])"
+                    New-CIPolicy @UserInputProgramFoldersPolicyMakerHashTable
 
-        # Create Deny base policy for Driver files
-        if ($Drivers) {
-
-            # The total number of the main steps for the progress bar to render
-            [System.Int16]$TotalSteps = $Deploy ? 4 : 3
-            [System.Int16]$CurrentStep = 0
-
-            $CurrentStep++
-            Write-Progress -Id 23 -Activity 'Processing user selected Folders' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-            Write-Verbose -Message 'Looping through each user-selected folder paths, scanning them, creating a temp policy file based on them'
-            powershell.exe -Command {
-
-                [System.Object[]]$DriverFilesObject = @()
-
-                # loop through each user-selected folder paths
-                foreach ($ScanLocation in $args[0]) {
-
-                    # DriverFile object holds the full details of all of the scanned drivers - This scan is greedy, meaning it stores as much information as it can find
-                    # about each driver file, any available info about digital signature, hash, FileName, Internal Name etc. of each driver is saved and nothing is left out
-                    $DriverFilesObject += Get-SystemDriver -ScanPath $ScanLocation -UserPEs
+                    $PolicyXMLFilesArray += (Join-Path -Path $StagingArea -ChildPath "ProgramDir_ScanResults$($i).xml")
                 }
 
-                [System.Collections.Hashtable]$PolicyMakerHashTable = @{
-                    FilePath               = '.\DenyPolicy Temp.xml'
-                    DriverFiles            = $DriverFilesObject
-                    Level                  = 'WHQLFilePublisher'
-                    Fallback               = 'None'
-                    MultiplePolicyFormat   = $true
-                    UserWriteablePaths     = $true
-                    Deny                   = $true
-                    AllowFileNameFallbacks = $true
-                }
-                # Creating a base policy using the DriverFile object and specifying which detail about each driver should be used in the policy file
-                New-CIPolicy @PolicyMakerHashTable
+                Write-ColorfulText -Color Pink -InputText 'The Deny policy with the following configuration is being created'
+                $UserInputProgramFoldersPolicyMakerHashTable
 
-            } -args $ScanLocations
+                Write-Verbose -Message 'Adding the AllowAll default template policy path to the array of policy paths to merge'
+                $PolicyXMLFilesArray += $AllowAllPolicyPath
 
-            $CurrentStep++
-            Write-Progress -Id 23 -Activity 'Merging the policies' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-            # Merging AllowAll default policy with our Deny temp policy
-            Write-Verbose -Message 'Merging AllowAll default template policy with our Deny temp policy'
-            Merge-CIPolicy -PolicyPaths 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowAll.xml', '.\DenyPolicy Temp.xml' -OutputFilePath ".\DenyPolicy $PolicyName.xml" | Out-Null
-
-            Write-Verbose -Message 'Removing the temp deny policy file after using it in the merge operation'
-            Remove-Item -Path '.\DenyPolicy Temp.xml' -Force
-
-            $CurrentStep++
-            Write-Progress -Id 23 -Activity 'Configuring the base policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-            Write-Verbose -Message 'Assigning a name and resetting the policy ID'
-            [System.String]$PolicyID = Set-CIPolicyIdInfo -FilePath "DenyPolicy $PolicyName.xml" -ResetPolicyID -PolicyName "$PolicyName"
-            [System.String]$PolicyID = $PolicyID.Substring(11)
-
-            Write-Verbose -Message 'Setting the policy version to 1.0.0.0'
-            Set-CIPolicyVersion -FilePath "DenyPolicy $PolicyName.xml" -Version '1.0.0.0'
-
-            Edit-CiPolicyRuleOptions -Action Base -XMLFile "DenyPolicy $PolicyName.xml"
-
-            Write-Verbose -Message 'Converting the policy XML to .CIP'
-            ConvertFrom-CIPolicy -XmlFilePath "DenyPolicy $PolicyName.xml" -BinaryFilePath "$PolicyID.cip" | Out-Null
-
-            Write-ColorfulText -Color MintGreen -InputText "DenyPolicyFile = DenyPolicy $PolicyName.xml"
-            Write-ColorfulText -Color MintGreen -InputText "DenyPolicyGUID = $PolicyID"
-
-            if ($Deploy) {
                 $CurrentStep++
-                Write-Progress -Id 23 -Activity 'Deploying the base policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+                Write-Progress -Id 22 -Activity 'Merging the policies' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                Write-Verbose -Message 'Deploying the policy'
-                &'C:\Windows\System32\CiTool.exe' --update-policy "$PolicyID.cip" -json | Out-Null
+                Write-Verbose -Message 'Creating the final Deny base policy from the xml files in the paths array'
+                Merge-CIPolicy -PolicyPaths $PolicyXMLFilesArray -OutputFilePath $FinalDenyPolicyPath | Out-Null
 
-                Write-ColorfulText -Color Pink -InputText "A Deny Base policy with the name $PolicyName has been deployed."
+                $CurrentStep++
+                Write-Progress -Id 22 -Activity 'Creating the base policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                Write-Verbose -Message 'Removing the .CIP file after deployment'
-                Remove-Item -Path "$PolicyID.cip" -Force
+                Write-Verbose -Message 'Assigning a name and resetting the policy ID'
+                Set-CIPolicyIdInfo -FilePath $FinalDenyPolicyPath -ResetPolicyID -PolicyName $PolicyName | Out-Null
+
+                Write-Verbose -Message 'Setting the policy version to 1.0.0.0'
+                Set-CIPolicyVersion -FilePath $FinalDenyPolicyPath -Version '1.0.0.0'
+
+                Edit-CiPolicyRuleOptions -Action Base -XMLFile $FinalDenyPolicyPath
+
+                Write-Verbose -Message 'Converting the policy XML to .CIP'
+                ConvertFrom-CIPolicy -XmlFilePath $FinalDenyPolicyPath -BinaryFilePath $FinalDenyPolicyCIPPath | Out-Null
+
+                Write-ColorfulText -Color MintGreen -InputText "DenyPolicyFile = $FinalDenyPolicyPath"
+                Write-ColorfulText -Color MintGreen -InputText "DenyPolicyGUID = $FinalDenyPolicyCIPPath"
+
+                if ($Deploy) {
+                    $CurrentStep++
+                    Write-Progress -Id 22 -Activity 'Deploying the base policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
+                    Write-Verbose -Message 'Deploying the policy'
+                    &'C:\Windows\System32\CiTool.exe' --update-policy $FinalDenyPolicyCIPPath -json | Out-Null
+
+                    Write-ColorfulText -Color Pink -InputText "A Deny Base policy with the name $PolicyName has been deployed."
+                }
+                Write-Progress -Id 22 -Activity 'Complete.' -Completed
             }
-            Write-Progress -Id 23 -Activity 'Complete.' -Completed
-        }
 
-        # Creating Deny rule for Appx Packages
-        if ($InstalledAppXPackages) {
+            # Create Deny base policy for Driver files
+            if ($Drivers) {
 
-            try {
+                # The total number of the main steps for the progress bar to render
+                [System.Int16]$TotalSteps = $Deploy ? 4 : 3
+                [System.Int16]$CurrentStep = 0
+
+                $CurrentStep++
+                Write-Progress -Id 23 -Activity 'Processing user selected Folders' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
+                Write-Verbose -Message 'Looping through each user-selected folder paths, scanning them, creating a temp policy file based on them'
+                powershell.exe -Command {
+
+                    [System.Collections.ArrayList]$DriverFilesObject = @()
+
+                    # loop through each user-selected folder paths
+                    foreach ($ScanLocation in $args[0]) {
+
+                        # DriverFile object holds the full details of all of the scanned drivers - This scan is greedy, meaning it stores as much information as it can find
+                        # about each driver file, any available info about digital signature, hash, FileName, Internal Name etc. of each driver is saved and nothing is left out
+                        $DriverFilesObject += Get-SystemDriver -ScanPath $ScanLocation -UserPEs
+                    }
+
+                    [System.Collections.Hashtable]$PolicyMakerHashTable = @{
+                        FilePath               = $args[1]
+                        DriverFiles            = $DriverFilesObject
+                        Level                  = 'WHQLFilePublisher'
+                        Fallback               = 'None'
+                        MultiplePolicyFormat   = $true
+                        UserWriteablePaths     = $true
+                        Deny                   = $true
+                        AllowFileNameFallbacks = $true
+                    }
+                    # Creating a base policy using the DriverFile object and specifying which detail about each driver should be used in the policy file
+                    New-CIPolicy @PolicyMakerHashTable
+
+                } -args $ScanLocations, $TempPolicyPath
+
+                $CurrentStep++
+                Write-Progress -Id 23 -Activity 'Merging the policies' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
+                # Merging AllowAll default policy with our Deny temp policy
+                Write-Verbose -Message 'Merging AllowAll default template policy with our Deny temp policy'
+                Merge-CIPolicy -PolicyPaths $AllowAllPolicyPath, $TempPolicyPath -OutputFilePath $FinalDenyPolicyPath | Out-Null
+
+                $CurrentStep++
+                Write-Progress -Id 23 -Activity 'Configuring the base policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
+                Write-Verbose -Message 'Assigning a name and resetting the policy ID'
+                Set-CIPolicyIdInfo -FilePath $FinalDenyPolicyPath -ResetPolicyID -PolicyName $PolicyName | Out-Null
+
+                Write-Verbose -Message 'Setting the policy version to 1.0.0.0'
+                Set-CIPolicyVersion -FilePath $FinalDenyPolicyPath -Version '1.0.0.0'
+
+                Edit-CiPolicyRuleOptions -Action Base -XMLFile $FinalDenyPolicyPath
+
+                Write-Verbose -Message 'Converting the policy XML to .CIP'
+                ConvertFrom-CIPolicy -XmlFilePath $FinalDenyPolicyPath -BinaryFilePath $FinalDenyPolicyCIPPath | Out-Null
+
+                Write-ColorfulText -Color MintGreen -InputText "DenyPolicyFile = $FinalDenyPolicyPath"
+                Write-ColorfulText -Color MintGreen -InputText "DenyPolicyGUID = $FinalDenyPolicyCIPPath"
+
+                if ($Deploy) {
+                    $CurrentStep++
+                    Write-Progress -Id 23 -Activity 'Deploying the base policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
+                    Write-Verbose -Message 'Deploying the policy'
+                    &'C:\Windows\System32\CiTool.exe' --update-policy $FinalDenyPolicyCIPPath -json | Out-Null
+
+                    Write-ColorfulText -Color Pink -InputText "A Deny Base policy with the name $PolicyName has been deployed."
+                }
+                Write-Progress -Id 23 -Activity 'Complete.' -Completed
+            }
+
+            # Creating Deny rule for Appx Packages
+            if ($InstalledAppXPackages) {
+
+                try {
+                    # The total number of the main steps for the progress bar to render
+                    [System.Int16]$TotalSteps = $Deploy ? 3 : 2
+                    [System.Int16]$CurrentStep = 0
+
+                    $CurrentStep++
+                    Write-Progress -Id 24 -Activity 'Getting the Appx package' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
+                    # Backing up PS Formatting Styles
+                    [System.Collections.Hashtable]$OriginalStyle = @{}
+                    $PSStyle.Formatting | Get-Member -MemberType Property | ForEach-Object -Process {
+                        $OriginalStyle[$_.Name] = $PSStyle.Formatting.$($_.Name)
+                    }
+
+                    # Change the color for the list items to plum
+                    $PSStyle.Formatting.FormatAccent = "$($PSStyle.Foreground.FromRGB(221,160,221))"
+
+                    Write-Verbose -Message 'Displaying the installed Appx packages based on the supplied name'
+                    Get-AppxPackage -Name $PackageName | Select-Object -Property Name, Publisher, version, PackageFamilyName, PackageFullName, InstallLocation, Dependencies, SignatureKind, Status
+
+                    # Prompt for confirmation before proceeding
+                    if ($PSCmdlet.ShouldProcess('', 'Select No to cancel and choose another name', 'Is this the intended results based on your Installed Appx packages?')) {
+
+                        $CurrentStep++
+                        Write-Progress -Id 24 -Activity 'Creating the base policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
+                        Write-Verbose -Message 'Creating a temporary Deny policy for the supplied Appx package name'
+                        powershell.exe -Command {
+                            # Get all the packages based on the supplied name
+                            [Microsoft.Windows.Appx.PackageManager.Commands.AppxPackage[]]$Package = Get-AppxPackage -Name $args[0]
+
+                            $Rules = @()
+
+                            # Create rules for each package
+                            foreach ($Item in $Package) {
+                                $Rules += New-CIPolicyRule -Deny -Package $Item
+                            }
+
+                            # Generate the supplemental policy xml file
+                            New-CIPolicy -MultiplePolicyFormat -FilePath $args[1] -Rules $Rules
+                        } -args $PackageName, $TempPolicyPath
+
+                        # Merging AllowAll default policy with our Deny temp policy
+                        Write-Verbose -Message 'Merging AllowAll default template policy with our AppX Deny temp policy'
+                        Merge-CIPolicy -PolicyPaths $AllowAllPolicyPath, $TempPolicyPath -OutputFilePath $FinalDenyPolicyPath | Out-Null
+
+                        Write-Verbose -Message 'Assigning a name and resetting the policy ID'
+                        Set-CIPolicyIdInfo -FilePath $FinalDenyPolicyPath -ResetPolicyID -PolicyName $PolicyName | Out-Null
+
+                        Write-Verbose -Message 'Setting the policy version to 1.0.0.0'
+                        Set-CIPolicyVersion -FilePath $FinalDenyPolicyPath -Version '1.0.0.0'
+
+                        Edit-CiPolicyRuleOptions -Action Base -XMLFile $FinalDenyPolicyPath
+
+                        Write-Verbose -Message 'Converting the policy XML to .CIP'
+                        ConvertFrom-CIPolicy -XmlFilePath $FinalDenyPolicyPath -BinaryFilePath $FinalDenyPolicyCIPPath | Out-Null
+
+                        Write-ColorfulText -Color MintGreen -InputText "DenyPolicyFile = $FinalDenyPolicyPath"
+                        Write-ColorfulText -Color MintGreen -InputText "DenyPolicyGUID = $FinalDenyPolicyCIPPath"
+
+                        if ($Deploy) {
+                            $CurrentStep++
+                            Write-Progress -Id 24 -Activity 'Deploying the base policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
+                            Write-Verbose -Message 'Deploying the policy'
+                            &'C:\Windows\System32\CiTool.exe' --update-policy $FinalDenyPolicyCIPPath -json | Out-Null
+
+                            Write-ColorfulText -Color Pink -InputText "A Deny Base policy with the name $PolicyName has been deployed."
+                        }
+                    }
+                    else {
+                        $NoCopy = $true
+                    }
+                }
+                finally {
+                    # Restore PS Formatting Styles
+                    $OriginalStyle.Keys | ForEach-Object -Process {
+                        $PSStyle.Formatting.$_ = $OriginalStyle[$_]
+                    }
+                    Write-Progress -Id 24 -Activity 'Complete.' -Completed
+                }
+            }
+
+            # Create Deny base policy for a folder with wildcards
+            if ($PathWildCards) {
+
                 # The total number of the main steps for the progress bar to render
                 [System.Int16]$TotalSteps = $Deploy ? 3 : 2
                 [System.Int16]$CurrentStep = 0
 
                 $CurrentStep++
-                Write-Progress -Id 24 -Activity 'Getting the Appx package' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+                Write-Progress -Id 29 -Activity 'Creating the wildcard deny policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                # Backing up PS Formatting Styles
-                [System.Collections.Hashtable]$OriginalStyle = @{}
-                $PSStyle.Formatting | Get-Member -MemberType Property | ForEach-Object -Process {
-                    $OriginalStyle[$_.Name] = $PSStyle.Formatting.$($_.Name)
-                }
+                # Using Windows PowerShell to handle serialized data since PowerShell core throws an error
+                Write-Verbose -Message 'Creating the deny policy file'
+                powershell.exe -Command {
+                    $RulesWildCards = New-CIPolicyRule -Deny -FilePathRule $args[0]
+                    New-CIPolicy -MultiplePolicyFormat -FilePath $args[1] -Rules $RulesWildCards
+                } -args $FolderPath, $TempPolicyPath
 
-                # Change the color for the list items to plum
-                $PSStyle.Formatting.FormatAccent = "$($PSStyle.Foreground.FromRGB(221,160,221))"
+                # Merging AllowAll default policy with our Deny temp policy
+                Write-Verbose -Message 'Merging AllowAll default template policy with our Wildcard Deny temp policy'
+                Merge-CIPolicy -PolicyPaths $AllowAllPolicyPath, $TempPolicyPath -OutputFilePath $FinalDenyPolicyPath | Out-Null
 
-                Write-Verbose -Message 'Displaying the installed Appx packages based on the supplied name'
-                Get-AppxPackage -Name $PackageName | Select-Object -Property Name, Publisher, version, PackageFamilyName, PackageFullName, InstallLocation, Dependencies, SignatureKind, Status
+                $CurrentStep++
+                Write-Progress -Id 29 -Activity 'Configuring the wildcard deny policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                # Prompt for confirmation before proceeding
-                if ($PSCmdlet.ShouldProcess('', 'Select No to cancel and choose another name', 'Is this the intended results based on your Installed Appx packages?')) {
+                Write-Verbose -Message 'Assigning a name and resetting the policy ID'
+                Set-CIPolicyIdInfo -FilePath $FinalDenyPolicyPath -ResetPolicyID -PolicyName $PolicyName | Out-Null
 
+                Write-Verbose -Message 'Setting the policy version to 1.0.0.0'
+                Set-CIPolicyVersion -FilePath $FinalDenyPolicyPath -Version '1.0.0.0'
+
+                Edit-CiPolicyRuleOptions -Action Base -XMLFile $FinalDenyPolicyPath
+
+                Write-Verbose -Message 'Converting the policy XML to .CIP'
+                ConvertFrom-CIPolicy -XmlFilePath $FinalDenyPolicyPath -BinaryFilePath $FinalDenyPolicyCIPPath | Out-Null
+
+                Write-ColorfulText -Color MintGreen -InputText "DenyPolicyFile = $FinalDenyPolicyPath"
+                Write-ColorfulText -Color MintGreen -InputText "DenyPolicyGUID = $FinalDenyPolicyCIPPath"
+
+                if ($Deploy) {
                     $CurrentStep++
-                    Write-Progress -Id 24 -Activity 'Creating the base policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+                    Write-Progress -Id 29 -Activity 'Deploying the base policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                    Write-Verbose -Message 'Creating a temporary Deny policy for the supplied Appx package name'
-                    powershell.exe -Command {
-                        # Get all the packages based on the supplied name
-                        $Package = Get-AppxPackage -Name $args[0]
+                    Write-Verbose -Message 'Deploying the policy'
+                    &'C:\Windows\System32\CiTool.exe' --update-policy $FinalDenyPolicyCIPPath -json | Out-Null
 
-                        # Create rules for each package
-                        foreach ($Item in $Package) {
-                            $Rules += New-CIPolicyRule -Deny -Package $Item
-                        }
-
-                        # Generate the supplemental policy xml file
-                        New-CIPolicy -MultiplePolicyFormat -FilePath '.\AppxDenyPolicyTemp.xml' -Rules $Rules
-                    } -args $PackageName
-
-                    # Merging AllowAll default policy with our Deny temp policy
-                    Write-Verbose -Message 'Merging AllowAll default template policy with our AppX Deny temp policy'
-                    Merge-CIPolicy -PolicyPaths 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowAll.xml', '.\AppxDenyPolicyTemp.xml' -OutputFilePath ".\AppxDenyPolicy $PolicyName.xml" | Out-Null
-
-                    Write-Verbose -Message 'Removing the temp deny policy file after using it in the merge operation'
-                    Remove-Item -Path '.\AppxDenyPolicyTemp.xml' -Force
-
-                    Write-Verbose -Message 'Assigning a name and resetting the policy ID'
-                    [System.String]$PolicyID = Set-CIPolicyIdInfo -FilePath ".\AppxDenyPolicy $PolicyName.xml" -ResetPolicyID -PolicyName "$PolicyName"
-                    [System.String]$PolicyID = $PolicyID.Substring(11)
-
-                    Write-Verbose -Message 'Setting the policy version to 1.0.0.0'
-                    Set-CIPolicyVersion -FilePath ".\AppxDenyPolicy $PolicyName.xml" -Version '1.0.0.0'
-
-                    Edit-CiPolicyRuleOptions -Action Base -XMLFile ".\AppxDenyPolicy $PolicyName.xml"
-
-                    Write-Verbose -Message 'Converting the policy XML to .CIP'
-                    ConvertFrom-CIPolicy -XmlFilePath ".\AppxDenyPolicy $PolicyName.xml" -BinaryFilePath "$PolicyID.cip" | Out-Null
-
-                    Write-ColorfulText -Color MintGreen -InputText "DenyPolicyFile = AppxDenyPolicy $PolicyName.xml"
-                    Write-ColorfulText -Color MintGreen -InputText "DenyPolicyGUID = $PolicyID"
-
-                    if ($Deploy) {
-                        $CurrentStep++
-                        Write-Progress -Id 24 -Activity 'Deploying the base policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-                        Write-Verbose -Message 'Deploying the policy'
-                        &'C:\Windows\System32\CiTool.exe' --update-policy "$PolicyID.cip" -json | Out-Null
-
-                        Write-ColorfulText -Color Pink -InputText "A Deny Base policy with the name $PolicyName has been deployed."
-
-                        Write-Verbose -Message 'Removing the .CIP file after deployment'
-                        Remove-Item -Path "$PolicyID.cip" -Force
-                    }
+                    Write-ColorfulText -Color Pink -InputText "A Deny Base policy with the name $PolicyName has been deployed."
                 }
-            }
-            finally {
-                # Restore PS Formatting Styles
-                $OriginalStyle.Keys | ForEach-Object -Process {
-                    $PSStyle.Formatting.$_ = $OriginalStyle[$_]
-                }
-                Write-Progress -Id 24 -Activity 'Complete.' -Completed
+                Write-Progress -Id 29 -Activity 'Complete.' -Completed
             }
         }
-
-        # Create Deny base policy for a folder with wildcards
-        if ($PathWildCards) {
-
-            # The total number of the main steps for the progress bar to render
-            [System.Int16]$TotalSteps = $Deploy ? 3 : 2
-            [System.Int16]$CurrentStep = 0
-
-            $CurrentStep++
-            Write-Progress -Id 29 -Activity 'Creating the wildcard deny policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-            # Using Windows PowerShell to handle serialized data since PowerShell core throws an error
-            Write-Verbose -Message 'Creating the deny policy file'
-            powershell.exe -Command {
-                $RulesWildCards = New-CIPolicyRule -Deny -FilePathRule $args[0]
-                New-CIPolicy -MultiplePolicyFormat -FilePath '.\DenyPolicyWildcardTemp.xml' -Rules $RulesWildCards
-            } -args $FolderPath
-
-            # Merging AllowAll default policy with our Deny temp policy
-            Write-Verbose -Message 'Merging AllowAll default template policy with our Wildcard Deny temp policy'
-            Merge-CIPolicy -PolicyPaths 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowAll.xml', '.\DenyPolicyWildcardTemp.xml' -OutputFilePath ".\DenyPolicyWildcard $PolicyName.xml" | Out-Null
-
-            $CurrentStep++
-            Write-Progress -Id 29 -Activity 'Configuring the wildcard deny policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-            Write-Verbose -Message 'Removing the temp deny policy file after using it in the merge operation'
-            Remove-Item -Path '.\DenyPolicyWildcardTemp.xml' -Force
-
-            Write-Verbose -Message 'Assigning a name and resetting the policy ID'
-            [System.String]$PolicyID = Set-CIPolicyIdInfo -FilePath ".\DenyPolicyWildcard $PolicyName.xml" -ResetPolicyID -PolicyName "$PolicyName"
-            [System.String]$PolicyID = $PolicyID.Substring(11)
-
-            Write-Verbose -Message 'Setting the policy version to 1.0.0.0'
-            Set-CIPolicyVersion -FilePath ".\DenyPolicyWildcard $PolicyName.xml" -Version '1.0.0.0'
-
-            Edit-CiPolicyRuleOptions -Action Base -XMLFile ".\DenyPolicyWildcard $PolicyName.xml"
-
-            Write-Verbose -Message 'Converting the policy XML to .CIP'
-            ConvertFrom-CIPolicy -XmlFilePath ".\DenyPolicyWildcard $PolicyName.xml" -BinaryFilePath "$PolicyID.cip" | Out-Null
-
-            Write-ColorfulText -Color MintGreen -InputText "DenyPolicyFile = DenyPolicyWildcard $PolicyName.xml"
-            Write-ColorfulText -Color MintGreen -InputText "DenyPolicyGUID = $PolicyID"
-
-            if ($Deploy) {
-                $CurrentStep++
-                Write-Progress -Id 29 -Activity 'Deploying the base policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-                Write-Verbose -Message 'Deploying the policy'
-                &'C:\Windows\System32\CiTool.exe' --update-policy "$PolicyID.cip" -json | Out-Null
-
-                Write-ColorfulText -Color Pink -InputText "A Deny Base policy with the name $PolicyName has been deployed."
-
-                Write-Verbose -Message 'Removing the .CIP file after deployment'
-                Remove-Item -Path "$PolicyID.cip" -Force
+        Catch {
+            $NoCopy = $true
+            Throw $_
+        }
+        finally {
+            # Copy the final policy files to the user config directory
+            if (-NOT $NoCopy) {
+                Copy-Item -Path ($Deploy ? $FinalDenyPolicyPath : $FinalDenyPolicyPath, $FinalDenyPolicyCIPPath) -Destination $UserConfigDir -Force
             }
-            Write-Progress -Id 29 -Activity 'Complete.' -Completed
+            if (-NOT $Debug) {
+                Remove-Item -Path $StagingArea -Recurse -Force
+            }
         }
     }
 
@@ -490,7 +465,7 @@ Function New-DenyWDACConfig {
 }
 
 # Importing argument completer ScriptBlocks
-. "$ModuleRootPath\Resources\ArgumentCompleters.ps1"
+. "$ModuleRootPath\CoreExt\ArgumentCompleters.ps1"
 Register-ArgumentCompleter -CommandName 'New-DenyWDACConfig' -ParameterName 'ScanLocations' -ScriptBlock $ArgumentCompleterFolderPathsPicker
 Register-ArgumentCompleter -CommandName 'New-DenyWDACConfig' -ParameterName 'PackageName' -ScriptBlock $ArgumentCompleterAppxPackageNames
 Register-ArgumentCompleter -CommandName 'New-DenyWDACConfig' -ParameterName 'FolderPath' -ScriptBlock $ArgumentCompleterFolderPathsPickerWildCards
@@ -498,8 +473,8 @@ Register-ArgumentCompleter -CommandName 'New-DenyWDACConfig' -ParameterName 'Fol
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCA2zqfkDX3Wxl7x
-# 2vO+CW08/Kd+AoN3xH9L+Psz7YrXYKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCDhx8vCKc14W2L
+# sFN7dYix6g/5ucF9B6zLWIMF2yJkF6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -546,16 +521,16 @@ Register-ArgumentCompleter -CommandName 'New-DenyWDACConfig' -ParameterName 'Fol
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgDmpQiw6ztU58x4kvnOg1/wk0QxwXKHHwwGS0k5z2GjowDQYJKoZIhvcNAQEB
-# BQAEggIAmEVMMM3yI/I9dxV97hLmrwwGdE/jJ+V5weWeZzz+4/t+fWbHd0lEK4o3
-# T7rY07B6sGrxh9i4gaPcAYDN/m1l/3U9G9MYnbcqY3SgKbIar4Bl1dmH4K5pEXsA
-# UohQOVvz9NovvTevQqgvf0ojK0rFEDKLBQ5J0WnmtOka+cFEIo9LwCjBBKPWltaU
-# V2N90kqgil0PMtLGKy2dkL67hbei/IQSubK4eNkyYYk0gxfT6Rl85HoTTGnwt2ZN
-# BPGDwtcaL9cPGWDSdcBr2PefAQQQk4US4QoT8JJUI+k8nFUGNRi9w4R/xE8oTj6d
-# WoMY5M8xLAFb1JVr5091IUwyI6T538yEDOqqJhUZXdXcsjfQvAEIcjqLNwDJJOr2
-# xqHCHb4+A1+cnaSpIjOp5UhS40RxmgFnERwlBz28iG6Vkkyi7fsfXAz5apZse1/k
-# hXeeK0KZAfzxQjZhye1EwJSP9yBskdksjLviaMO2lWU0jaD+CjIbX3XfpTQ5CCzG
-# WVB3pkpcJZHRTYPfkzrFjnKqp8U/pZyDqX4W23SlQ8Seof3MY3i2o+GyMdtIEx3B
-# dwqLHI0ripjN7U1xV3DISWiPQmP+ZTkChVtaVzWwl2G8izbPWYb8qRpvLtvlEmLa
-# f7EKa79wF3TlgPcDY+wQm1Kbym3z/UJtQ4l5qcfkGJtgrfaVSR4=
+# IgQgU56Q5x6eh0MWg5wJvtSN6rh+gJGwzLy2obeFdOHPdkwwDQYJKoZIhvcNAQEB
+# BQAEggIAGa48lIJqNO+T2vn8HAPLhxgJHwWg+JXnATBt3Rezt0sM5r2OWaSf3xeo
+# 2iHTJQ8x5SrwBjTE08m2Q2NZiK28bWMyk8YIEjDNa/YInsYXFdB+W/r0qRfxymfM
+# 4pSR8R+ihaFjOh7DJPNLmLC28auRYwoGjrCDIUGFdwhbm0bxxIlOr10Vo7CcMoY5
+# seXhTbigBuRijwXn7xdPKPq7HOeWGI93c8+y7PD06wA6Z3HxyzbzrsPoA46vj17C
+# GpTg6vonXbLBrJOH06LFsk4qo/4+NE5aEjw34Uvdg1sL93UKdZ6TDX1bCD+gkiyH
+# G72QoT9Y7+wgl5MZ1UGWPI4DPU0nkWU/murBQ1Oc6qwds5RKvapLqkvFxWDJ8ho4
+# WQsBbD41hPoXyjQfneJI3+rHRo9TUr599EEQZsHEwaZ04Y+76tAHPGPsw4ePV36j
+# OBe2CdWHU0gmUSvwrbO/WBWDyxKU5oW4ngOET+byetJH2Q28bj5/71RFTny0dq94
+# 91qAXuVFCvrIokBDmCe0YzqQBtOfanyQLA6FZtOlSkuJqfOz4FS2Vxo8DgM2ZLX4
+# khtnQgqAXliUup0C6uQ+Yl2IK3P6Xv3wndlR7sBqGJOA8Ltp3bTedH+BksARj4nz
+# 8gtAgf8a4S43mfYG9bESCYgbs92W+h8tseD9kT9J+thoRat5tEA=
 # SIG # End signature block

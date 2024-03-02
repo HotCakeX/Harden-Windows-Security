@@ -2,25 +2,28 @@ Function Get-KernelModeDriversAudit {
     <#
     .DESCRIPTION
         This function will scan the Code Integrity event logs for kernel mode drivers that have been loaded since the audit mode policy has been deployed
-        and will return a folder containing symbolic links to the driver files.
+        It will save them in a folder containing symbolic links to the driver files.
     .INPUTS
-        None
-    .OUTPUTS
         System.IO.DirectoryInfo
+    .OUTPUTS
+        System.Void
+    .PARAMETER SavePath
+        The directory path to save the folder containing the symbolic links to the driver files
     .NOTES
         Get-SystemDriver only includes .sys files when -UserPEs parameter is not used, but Get-KernelModeDriversAudit function includes .dll files as well just in case
 
         When Get-SystemDriver -UserPEs is used, Dlls and .exe files are included as well
     #>
     [CmdletBinding()]
-    [OutputType([System.IO.DirectoryInfo])]
-    param()
+    [OutputType([System.Void])]
+    param(
+        [Parameter(Mandatory = $true)][System.IO.DirectoryInfo]$SavePath
+    )
 
     begin {
         # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
-        # Importing the required sub-modules
         Write-Verbose -Message 'Importing the required sub-modules'
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Receive-CodeIntegrityLogs.psm1" -Force
 
@@ -47,17 +50,10 @@ Function Get-KernelModeDriversAudit {
 
         Write-Verbose -Message "KernelModeDriversPaths count after deduplication based on file path: $($KernelModeDriversPaths.count)"
 
-        Write-Verbose -Message 'Creating a temporary folder to store the symbolic links to the driver files'
-        [System.IO.DirectoryInfo]$SymLinksStorage = New-Item -Path ($UserTempDirectoryPath + 'SymLinkStorage' + $(New-Guid)) -ItemType Directory -Force
-
         Write-Verbose -Message 'Creating symbolic links to the driver files'
         Foreach ($File in $KernelModeDriversPaths) {
-            New-Item -ItemType SymbolicLink -Path "$SymLinksStorage\$($File.Name)" -Target $File.FullName | Out-Null
+            New-Item -ItemType SymbolicLink -Path (Join-Path -Path $SavePath -ChildPath $File.Name) -Target $File.FullName | Out-Null
         }
-    }
-    end {
-        Write-Verbose -Message 'Returning the folder containing the symbolic links to driver files'
-        return [System.IO.DirectoryInfo]$SymLinksStorage
     }
 }
 Export-ModuleMember -Function 'Get-KernelModeDriversAudit'
@@ -65,8 +61,8 @@ Export-ModuleMember -Function 'Get-KernelModeDriversAudit'
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCD0+GCu9qoVzNTu
-# yVOOCDea8QxQx6yXcFJ/3kM5IA7aSqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCrTp5tre18JkZ/
+# mVrKZJuHAO2xvekTmYM3xw+wYWPodaCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -113,16 +109,16 @@ Export-ModuleMember -Function 'Get-KernelModeDriversAudit'
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgkshB9w369+5KJWGjiUM/aOAxKjDIl0mvFvcJt4aquvgwDQYJKoZIhvcNAQEB
-# BQAEggIAZsaZruNsmpaYTn83ft9xTThhd4Tikh71PshCSyZrVoTSWCuP5QB69BK5
-# fPMoWUn+f1TaPMwyCzvp9AOzLESSs4UDtBKVjpZoeWRrC6M/DMewZXlnj70efzPI
-# v0G7VFHAIA8PjRdwToe2PR6OxVANNIjn5Vm4Rt+qhO8tSoyLKcUVVT3geUtvcIcy
-# ZXvty4SRTBzRL3UEuFR4ch0bCt0BfhBK9knUSQprDaS3q1z3WXo8STtcHDoEG1Fl
-# Y0ONofussvtPgAvUwzfAwWYy1YVIGrPwnH7CuRuQUwjg/scAeswAFIU5jK2DnM85
-# WobBWOq4Q8BUAezPKw6stRPUZM+RV03efRWI08bLfwCNeJioUkcG1IjBkkwxyWhJ
-# ePvAzz58eXIa3pN0/NgXo4skKIBty4saJqhR3au6/zqc2Mu2ln0Ua2lVVDM7kSVb
-# 1z3jahd2J2OitE4PhVuQ5sTIOe7j7d14CjZOvY77uLhBtMmihHjmA9Nuo7eZ5+ej
-# hUqPRi0DCxvi343Uumc31vSbv9jEKcwuz86XApcsKYx96mCGeq9Zq5/62IGMR5Ci
-# FJz3nKYg/wGVPKPAxJ/W79ubbtuGDi1ydLijMBvJ2iRMe/Z6ucnAAghxJ/DnUW1Q
-# u/ydCDntW1K3QVrRIjP9PW4FcpOl9HRn5TmUV/IbQ9XLwFvwiTM=
+# IgQgDNYq/RmXSyxXs4VzZGCcN40+l0ZSAIG/plvFEH2q9FcwDQYJKoZIhvcNAQEB
+# BQAEggIAYcztyeiKU9NwJ3Qnzhq/HoJx6Nboj5fulo/sQMCVBAzEa3TAaNLnELjD
+# thEJb94rvRgqJIYKP98m/Zk10JzyH876T6jQ1POdRRuvf5PPfnEJaOBDkDlcSefW
+# cq68d+/dEm2hoUkTqm/+k/i5wC/qdyD6RtlWG1pORAZP3RY8ZK1F/iHYtKj+ClXj
+# 3NwL4CEzFA1S1LojTZBvK1IgBbdec2ciw98Yb3Nfn8VttXveQbJIgpKzleQ0zfNv
+# 7pJjVnmqmsfRNpRyHuzPpbFRnx5RfCvahpNGEHdmxqfqMlY8Eo/2mZSm49pywfeo
+# b+OjZrAtqzpSAccUgrPHdlmTP0S8QTA/L2QXZbIpGi3v1uWABQEp2ubCUe3Fvza7
+# VZ8YgZ//fXYW0KkBytmiJYYS/SB45aqtWD1kxPgCIDrklKJWfde3nfeCQVhtFrej
+# F8MSOxezXODzZy2VvI0OuFEf4OYl1NPklFk/NF/43m1/4pikG4jO3rGNWuPFSnPa
+# /Wt5FUog4tigfUhNU7jJQEeFFpKJUL507NpQvyfwCTdKTs2li/Tq2Gjlb0lxs0E5
+# 9hlAo9bIdiogPhsMbheTOk2xhSgtBmQ7T5QDKyPujbLXdbS7XKZ9qgBY/NnjjNK3
+# 9sqv1AocRnlVslliYNhHyEszInmkWl0R4pnXXHKmwxzTuB2L/Us=
 # SIG # End signature block

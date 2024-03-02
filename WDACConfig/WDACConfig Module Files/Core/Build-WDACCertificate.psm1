@@ -35,14 +35,24 @@ Function Build-WDACCertificate {
         # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
-        # Importing the required sub-modules
         Write-Verbose -Message 'Importing the required sub-modules'
-        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Update-self.psm1" -Force
+        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Update-Self.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Write-ColorfulText.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Compare-SecureString.psm1" -Force
 
         # if -SkipVersionCheck wasn't passed, run the updater
-        if (-NOT $SkipVersionCheck) { Update-self -InvocationStatement $MyInvocation.Statement }
+        if (-NOT $SkipVersionCheck) { Update-Self -InvocationStatement $MyInvocation.Statement }
+
+        # Define a staging area for Build-WDACCertificate cmdlet
+        [System.IO.DirectoryInfo]$StagingArea = Join-Path -Path $UserConfigDir -ChildPath 'StagingArea' -AdditionalChildPath 'Build-WDACCertificate'
+
+        # Delete it if it exists already with possible content with previous runs
+        if (Test-Path -PathType Container -LiteralPath $StagingArea) {
+            Remove-Item -LiteralPath $StagingArea -Recurse -Force
+        }
+
+        # Create the staging area for the Build-WDACCertificate cmdlet
+        New-Item -Path $StagingArea -ItemType Directory -Force | Out-Null
 
         # If user entered a common name that is not 'Code Signing Certificate' (which is the default value)
         if ($CommonName -ne 'Code Signing Certificate') {
@@ -94,11 +104,13 @@ Function Build-WDACCertificate {
     }
     process {
 
-        if ($BuildingMethod -eq 'Method1') {
+        Try {
 
-            Write-Verbose -Message 'Building the certificate using Method1.'
+            if ($BuildingMethod -eq 'Method1') {
 
-            [System.String]$Inf = @"
+                Write-Verbose -Message 'Building the certificate using Method1.'
+
+                [System.String]$Inf = @"
 [Version]
 Signature="$Windows NT$"
 
@@ -126,96 +138,97 @@ ValidityPeriod = Years
 2.5.29.19 = {text}ca=0pathlength=0
 "@
 
-            [System.Guid]$RandomGUID = [System.Guid]::NewGuid()
+                # Save the INF content to a random temporary file
+                $Inf | Out-File -FilePath (Join-Path -Path $StagingArea -ChildPath 'CertificateCreator.inf') -Force
 
-            # Save the INF content to a random temporary file
-            $Inf | Out-File -FilePath ".\$RandomGUID.inf" -Force
+                # Generate a certificate request using CertReq
+                [System.String[]]$CertReqOutput = certreq.exe -new (Join-Path -Path $StagingArea -ChildPath 'CertificateCreator.inf') (Join-Path -Path $StagingArea -ChildPath 'CertificateCreator.req')
 
-            # Generate a certificate request using CertReq
-            [System.String[]]$CertReqOutput = certreq.exe -new ".\$RandomGUID.inf" ".\$RandomGUID.req"
+                #Region parse-certificate-request-output
 
-            # Remove the temporary files after the certificate has been generated
-            Remove-Item -Path ".\$RandomGUID.req", ".\$RandomGUID.inf" -Force
+                # Split the output by newlines and trim the whitespace
+                [System.String[]]$Lines = $CertReqOutput -split "`n" | ForEach-Object -Process { $_.Trim() }
 
-            #Region parse-certificate-request-output
+                # Create a hashtable to store the parsed properties
+                [System.Collections.Hashtable]$Properties = @{}
 
-            # Split the output by newlines and trim the whitespace
-            [System.String[]]$Lines = $CertReqOutput -split "`n" | ForEach-Object -Process { $_.Trim() }
-
-            # Create a hashtable to store the parsed properties
-            [System.Collections.Hashtable]$Properties = @{}
-
-            # Loop through the lines and extract the key-value pairs
-            foreach ($Line in $Lines) {
-                # Skip the first line
-                if ($Line -eq 'Installed Certificate:') {
-                    continue
+                # Loop through the lines and extract the key-value pairs
+                foreach ($Line in $Lines) {
+                    # Skip the first line
+                    if ($Line -eq 'Installed Certificate:') {
+                        continue
+                    }
+                    # Check if the line has a colon
+                    if ($Line -match ':') {
+                        # Split the line by colon with a limit of 2 and trim the whitespace
+                        [System.String[]]$Parts = $Line -split ':', 2 | ForEach-Object -Process { $_.Trim() }
+                        # Assign the first part as the key and the second part as the value
+                        [System.String]$Key = $Parts[0]
+                        [System.String]$Value = $Parts[1]
+                        # Add the key-value pair to the hashtable
+                        $Properties[$Key] = $Value
+                    }
                 }
-                # Check if the line has a colon
-                if ($Line -match ':') {
-                    # Split the line by colon with a limit of 2 and trim the whitespace
-                    [System.String[]]$Parts = $Line -split ':', 2 | ForEach-Object -Process { $_.Trim() }
-                    # Assign the first part as the key and the second part as the value
-                    [System.String]$Key = $Parts[0]
-                    [System.String]$Value = $Parts[1]
-                    # Add the key-value pair to the hashtable
-                    $Properties[$Key] = $Value
-                }
-            }
-            #Endregion parse-certificate-request-output
+                #Endregion parse-certificate-request-output
 
-            # Save the thumbprint of the certificate to a variable
-            [System.String]$NewCertificateThumbprint = $Properties['Thumbprint']
-        }
-
-        elseif ($BuildingMethod -eq 'Method2') {
-
-            Write-Verbose -Message 'Building the certificate using Method2.'
-
-            # Create a hashtable of parameter names and values
-            [System.Collections.Hashtable]$Params = @{
-                Subject           = "CN=$CommonName"
-                FriendlyName      = $CommonName
-                CertStoreLocation = 'Cert:\CurrentUser\My'
-                KeyExportPolicy   = 'ExportableEncrypted'
-                KeyLength         = '4096'
-                KeyAlgorithm      = 'RSA'
-                HashAlgorithm     = 'sha512'
-                KeySpec           = 'Signature'
-                KeyUsage          = 'DigitalSignature'
-                KeyUsageProperty  = 'Sign'
-                Type              = 'CodeSigningCert'
-                NotAfter          = [System.DateTime](Get-Date).AddYears(100)
-                TextExtension     = @('2.5.29.19={text}CA:FALSE', '2.5.29.37={text}1.3.6.1.5.5.7.3.3', '1.3.6.1.4.1.311.21.10={text}oid=1.3.6.1.5.5.7.3.3')
+                # Save the thumbprint of the certificate to a variable
+                [System.String]$NewCertificateThumbprint = $Properties['Thumbprint']
             }
 
-            # Pass the splatting variable to the command
-            [System.Security.Cryptography.X509Certificates.X509Certificate2]$NewCertificate = New-SelfSignedCertificate @params
+            elseif ($BuildingMethod -eq 'Method2') {
 
-            # Save the thumbprint of the certificate to a variable
-            [System.String]$NewCertificateThumbprint = $NewCertificate.Thumbprint
+                Write-Verbose -Message 'Building the certificate using Method2.'
+
+                # Create a hashtable of parameter names and values
+                [System.Collections.Hashtable]$Params = @{
+                    Subject           = "CN=$CommonName"
+                    FriendlyName      = $CommonName
+                    CertStoreLocation = 'Cert:\CurrentUser\My'
+                    KeyExportPolicy   = 'ExportableEncrypted'
+                    KeyLength         = '4096'
+                    KeyAlgorithm      = 'RSA'
+                    HashAlgorithm     = 'sha512'
+                    KeySpec           = 'Signature'
+                    KeyUsage          = 'DigitalSignature'
+                    KeyUsageProperty  = 'Sign'
+                    Type              = 'CodeSigningCert'
+                    NotAfter          = [System.DateTime](Get-Date).AddYears(100)
+                    TextExtension     = @('2.5.29.19={text}CA:FALSE', '2.5.29.37={text}1.3.6.1.5.5.7.3.3', '1.3.6.1.4.1.311.21.10={text}oid=1.3.6.1.5.5.7.3.3')
+                }
+
+                # Pass the splatting variable to the command
+                [System.Security.Cryptography.X509Certificates.X509Certificate2]$NewCertificate = New-SelfSignedCertificate @params
+
+                # Save the thumbprint of the certificate to a variable
+                [System.String]$NewCertificateThumbprint = $NewCertificate.Thumbprint
+            }
+
+            Write-Verbose -Message 'Finding the certificate that was just created by its thumbprint'
+            [System.Security.Cryptography.X509Certificates.X509Certificate2]$TheCert = Get-ChildItem -Path 'Cert:\CurrentUser\My' -CodeSigningCert | Where-Object -FilterScript { $_.Thumbprint -eq $NewCertificateThumbprint }
+
+            [System.IO.FileInfo]$CertificateOutputPath = Join-Path -Path $UserConfigDir -ChildPath "$FileName.cer"
+
+            Write-Verbose -Message "Exporting the certificate (public key only) to $FileName.cer"
+            Export-Certificate -Cert $TheCert -FilePath $CertificateOutputPath -Type 'CERT' -Force | Out-Null
+
+            Write-Verbose -Message "Exporting the certificate (public and private keys) to $FileName.pfx"
+            Export-PfxCertificate -Cert $TheCert -CryptoAlgorithmOption 'AES256_SHA256' -Password $Password -ChainOption 'BuildChain' -FilePath (Join-Path -Path $UserConfigDir -ChildPath "$FileName.pfx") -Force | Out-Null
+
+            Write-Verbose -Message 'Removing the certificate from the certificate store'
+            $TheCert | Remove-Item -Force
+
+            Write-Verbose -Message 'Importing the certificate to the certificate store again, this time with the private key protected by VSM (Virtual Secure Mode - Virtualization Based Security)'
+            Import-PfxCertificate -ProtectPrivateKey 'VSM' -FilePath (Join-Path -Path $UserConfigDir -ChildPath "$FileName.pfx") -CertStoreLocation 'Cert:\CurrentUser\My' -Password $Password | Out-Null
+
+            Write-Verbose -Message 'Saving the common name of the certificate to the User configurations'
+            Set-CommonWDACConfig -CertCN $CommonName | Out-Null
+
+            Write-Verbose -Message 'Saving the path of the .cer file of the certificate to the User configurations'
+            Set-CommonWDACConfig -CertPath $CertificateOutputPath | Out-Null
         }
-
-        Write-Verbose -Message 'Finding the certificate that was just created by its thumbprint'
-        [System.Security.Cryptography.X509Certificates.X509Certificate2]$TheCert = Get-ChildItem -Path 'Cert:\CurrentUser\My' -CodeSigningCert | Where-Object -FilterScript { $_.Thumbprint -eq $NewCertificateThumbprint }
-
-        Write-Verbose -Message "Exporting the certificate (public key only) to $FileName.cer"
-        Export-Certificate -Cert $TheCert -FilePath ".\$FileName.cer" -Type 'CERT' -Force | Out-Null
-
-        Write-Verbose -Message "Exporting the certificate (public and private keys) to $FileName.pfx"
-        Export-PfxCertificate -Cert $TheCert -CryptoAlgorithmOption 'AES256_SHA256' -Password $Password -ChainOption 'BuildChain' -FilePath ".\$FileName.pfx" -Force | Out-Null
-
-        Write-Verbose -Message 'Removing the certificate from the certificate store'
-        $TheCert | Remove-Item -Force
-
-        Write-Verbose -Message 'Importing the certificate to the certificate store again, this time with the private key protected by VSM (Virtual Secure Mode - Virtualization Based Security)'
-        Import-PfxCertificate -ProtectPrivateKey 'VSM' -FilePath ".\$FileName.pfx" -CertStoreLocation 'Cert:\CurrentUser\My' -Password $Password | Out-Null
-
-        Write-Verbose -Message 'Saving the common name of the certificate to the User configurations'
-        Set-CommonWDACConfig -CertCN $CommonName | Out-Null
-
-        Write-Verbose -Message 'Saving the path of the .cer file of the certificate to the User configurations'
-        Set-CommonWDACConfig -CertPath ".\$FileName.cer" | Out-Null
+        Finally {
+            Remove-Item -LiteralPath $StagingArea -Recurse -Force
+        }
     }
     end {
         Write-ColorfulText -Color MintGreen -InputText "The certificate with the common name '$CommonName' has been successfully created."
@@ -223,6 +236,8 @@ ValidityPeriod = Years
     <#
 .SYNOPSIS
     Builds a self-signed certificate for use with WDAC.
+
+    All of the outputs are saved in: C:\Program Files\WDACConfig
 .LINK
     https://github.com/HotCakeX/Harden-Windows-Security/wiki/Build-WDACCertificate
 .PARAMETER CommonName
@@ -301,8 +316,8 @@ ValidityPeriod = Years
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCjJgGxXBSNWztZ
-# FF2INOOBBVOAe55M358pe+ViXqboRKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBJS+4zoTjVPoEz
+# vz7VyXn6kvPn2UO55Q22Sg1IKtG4AqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -349,16 +364,16 @@ ValidityPeriod = Years
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgOU5Bnw2rmxx6Bxws93xvMNgSpjndkOxku88Y9YXo3gAwDQYJKoZIhvcNAQEB
-# BQAEggIAAiOOyZO4N8HG2wNpamNlG7WsYTzyhSuQyGw0SoHqnLMg1DK2eGMr0z5V
-# Aw1KOHTBNh/wCkLeKUMFyrJY2uywTDX8RTTQtkwF7lVeUXnTRvUhuOuQ/EqwO/PO
-# qB36m2FGVfez4/EOfnfWWvZ3kOyi6K0BQqojG3AdUSVlVnkuMW8JgjuXWsrUPXTX
-# Zs08sd1NQm81IYgJOlXwHkAV0kcUeZDcXCSij37N5eIfsBE0Qrat60nSxh2IDL9q
-# lpvev7p7dfjp7tsCATrTiV8UVc2Zaw6tOJWRUFBjWPi36t+NtBK5+VmQDWyFjfYi
-# Oloo4cB0Jyua2Fyfz1c38WAMVRS6uoau6s5+ql6xIk8EL7z2Q2+u68ty4RJ1qAEX
-# ZBPGSb7pLntYj9oAQ5/oq3LlPovwbzepdzjcOo7TfY1h7WrMTKEpMXBskSVlADN8
-# /0dWl3/PDUt4MB7EikLzx9MYrj0Cr1YjmevhH3nzRZwhedeCcFQv/stMIC3PMXyc
-# srt9Ak1a6el3IHiCDL9K/6F9bm9266AQXBC1OlYF0LtfQn46FwLE5Q+hfBWAw7EK
-# a5N+M6jz+kaSQZjTqHnA6OcEDdJl+IMTJTbx9T8vydKGt2Z3rMXXSuIwxCd6q5Ze
-# VZzO5HPIG3ry5Fm9aLLIjdi8P3qYHXIYOOSp9G6HXfMe53GfoYw=
+# IgQgkfJwnNNGInLycQgHbW8/ypANRPhBTXvgRgI6Sq+aFfAwDQYJKoZIhvcNAQEB
+# BQAEggIAhw/H2X+ENOgRYWmnm7zV8QPtdURN7PRR2DjpLmVzOo8N4VeofUJ1+w0/
+# y3bbV01AkqcVCLO6jcg8koFWuwpkRJ4ZIGzSeuwlnnCmM9oWiNdKRfxBBeNt/kP0
+# 1g9GQUmaUNmNXXStBNsMyehFo4xLgFCiQoqJoLz19eBMZxidS5x8fQDq420mvVh0
+# v5qa16zkIKr0CHHe9HvGwF+4J7wvOQLq2RTw8Wceflg71PGMeE99IyuLytoy/1CL
+# TIkx6hACvNDMp0UCSoGyazj5uuL+5/XQ1X+eXrlTcrcUzpoyIE7ZJUoWAgnLP4Iw
+# UOkoMkOwG9d5si/fuIixpaFyuGpQPSZvhup0zUA7V9zGjZp87pFCWHxadP5cFEdH
+# 6SxULwqHDHRL2etMmcUhPMO7YJEsc8Vi9601neVlQBSr3gHhapyyWFfKx73dtsAM
+# 1hEtQl8qoxo9CD6xn/3FYw2Prz1fH2/eNYvSU2Otyf49TjdGq82CkQZtB4z8Idju
+# 7/c3M3r9Hi0jCaXGOzhyL4rVL0j1NT1E6MsE2Wu5pj1Tjbj+bWFQ/+6Py95OBUMT
+# o9JZzQiwj2e+lI2lbmp+GhDge0wxi5WuC4+i/VPjOCw7JyUurb90TfVQmdKQV3T3
+# DTpQP9peVod1qUDB9L3tr1C5m5tbBwwrfC5jeLy6/mFUhPEFE8E=
 # SIG # End signature block

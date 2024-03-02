@@ -1,17 +1,35 @@
-# Stopping the module process if any error occurs
-$global:ErrorActionPreference = 'Stop'
+Function New-StagingArea {
+    <#
+    .SYNOPSIS
+        Creates a staging area for a cmdlet to store temporary files
+    .PARAMETER CmdletName
+        The name of the cmdlet for which the staging area is created
+    .INPUTS
+        System.String
+    .OUTPUTS
+        System.IO.DirectoryInfo
+    #>
+    param(
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)][System.String]$CmdletName
+    )
+    # Define a staging area for the cmdlet
+    [System.IO.DirectoryInfo]$StagingArea = Join-Path -Path $UserConfigDir -ChildPath 'StagingArea' -AdditionalChildPath $CmdletName
 
-# Set PSReadline tab completion to complete menu for easier access to available parameters - Only for the current session
-Set-PSReadLineKeyHandler -Key 'Tab' -Function 'MenuComplete'
-
-# Import the classes globally to be available to the entire module
-Import-Module -FullyQualifiedName "$ModuleRootPath\CoreExt\Classes.psm1" -Force
+    # Delete it if it already exists with possible content from previous runs
+    if (Test-Path -PathType Container -LiteralPath $StagingArea) {
+        Remove-Item -LiteralPath $StagingArea -Recurse -Force
+    }
+    # Create the staging area for the cmdlet
+    New-Item -Path $StagingArea -ItemType Directory -Force | Out-Null
+    return $StagingArea
+}
+Export-ModuleMember -Function 'New-StagingArea'
 
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCB5kw+TUPmVYUAU
-# NU3wY7ltVWV6D/sRdhn6+jhAoLXgeqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDEE+MX2ej3ZZBq
+# z0+ru1bilLbFOw2c25EjDyDKTvHzkaCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -58,16 +76,16 @@ Import-Module -FullyQualifiedName "$ModuleRootPath\CoreExt\Classes.psm1" -Force
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgerzQNaxdRETqM2mkSNUHursSs/Da+U1BtCIqENXjPrQwDQYJKoZIhvcNAQEB
-# BQAEggIAA+oaC3Bd33ap9xaAWkMvo26mczwSII1kJ8ZtAoc6lus553clRqqbfPI5
-# ietgRTcgEKWM+GuX28r764JPSqjIKlAmfS+q5sZ+z9Bn4Kk+ixcfyXLUtpr4Lk+C
-# Dy5aUJDRSYGoMUEgQ3LdS79iU6Ju9vuQCNpFC8ZDfmA27GPFLwqm2reQifb8Ryeb
-# NC9Q593XEZXeFL2t+uIYhBGD99dmuVMLn+tNpFclXoKriFakSVEolEBw6Tkd1soP
-# o+2/gqJoZvRQvggcMKwQw3I/P9EpUUe40jGFdFvI2DWmTtnBWx6hA2CIRwuPcRtw
-# mg+/HxvzOiOS/6/inkbRRwfOKSDZOaprCntI/sVqkf7x50C8Wl5rlksARWYpbzM1
-# mFlMrrbOiXgIhClq3DkXM133L2sS02PvyNh+ebKu9wCgQbGUq4DnhL0rB0IAVJ7Y
-# BYgImPcLwh2G5J9Jky3oWhimYmUZP+1c/2WAIrCz84+pQ4cHXyrgG4oFNaBShT6H
-# 32A9/68pyYewpuOaewxpC5o/SKZDkWu3grEHBFMMR8UnRTkLeIDkVt8zLs6sAWP2
-# 7nZkTTBNYMGySxlJJnTORahaT5V5JsQjMKR5s3z5PuIYR4u4rL+ZHhLswjdgeG8E
-# 6q4kO7r9MwjKgpzMU+Wh3vfmx1fO97tAcAjwtYHMV7hKsCgui4o=
+# IgQgnYucG9Iow0Q12pOOzd2ocr5PQtk+YTtCdDt00943KKUwDQYJKoZIhvcNAQEB
+# BQAEggIAIWDvDPGSkwUBa9XTt4zDMRq8/qNu6oovO+3pXrSLed5Y73xi52zGhjUn
+# DkmuwrVCOiw/yRaa5IEsEx65nKh9UdFvqao8Oi5TEcZTdL0oufMKHcKqRb5fbjY5
+# UH84hdmbqVXJw5QyJGosqFpDKXW1Xk5kRjSLxsfSY3RUunkZAXdYD91S5VXzZrQ9
+# a7jgcAfVmZX29vDHuXXtK5SpzFkEPhv3DhMoKVmexTkKNRLFA7Yg0eJyNN87Txst
+# e5+XDvw7siZmzNLvP8prmWxBv8UvWAljDKgg7WDNho9apkm4T5yVjPYqjFCJIpIV
+# XfpPIliGNjJXAn6OVAHH8PIGxrGMpT2MQtebh7kVepNfR0dDf/EwDEa0Gbf2IQou
+# /DZlwJJtEzpU7rCn4Jw7Z1bmXtO7uJNhIOMqR/0QsTQ3/Zkhm21QeTfVvcp1YfXV
+# b3CXhRbEG0Cel/dt/UnbewvqRkMt5SWPM/GxcwsRlZGMT2lP07wwegVA2Uklto4L
+# Ge00qqGS3AEVkG/IhFRtiLwz7oA7E/yv8lu/8If2prq9laSwXZf/BvQIG9E9xptj
+# lNx7tpK2T+NAP6g/UilLn9UV0DaMiP6273gWhXHAA8oErrXlx6DkflEm3wxAu2iA
+# BbOT2K51sL3yD58HC+GmvjVVkYGLijGsuXqpqPRPO8PYarOpSBY=
 # SIG # End signature block

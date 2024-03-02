@@ -1,3 +1,7 @@
+# Defining the CryptoAPI class from the WDACConfig Namespace if it doesn't already exist
+if (-NOT ('WDACConfig.CryptoAPI' -as [System.Type]) ) {
+    Add-Type -Path "$ModuleRootPath\C#\Crypt32CertCN.cs"
+}
 Function Get-CertificateDetails {
     <#
     .SYNOPSIS
@@ -87,15 +91,23 @@ Function Get-CertificateDetails {
             # Loop through all chain elements and display all certificates
             foreach ($Element in $Chain.ChainElements) {
 
+                # Get the issuer common name
+                [System.String]$IssuerCN = [WDACConfig.CryptoAPI]::GetNameString($Element.Certificate.Handle, [WDACConfig.CryptoAPI]::CERT_NAME_SIMPLE_DISPLAY_TYPE, $null, $true)
+
+                # Get the subject common name
+                [System.String]$SubjectCN = [WDACConfig.CryptoAPI]::GetNameString($Element.Certificate.Handle, [WDACConfig.CryptoAPI]::CERT_NAME_SIMPLE_DISPLAY_TYPE, $null, $false)
+
+                #Region Old way of getting common names
                 # Extract the data after CN= in the subject and issuer properties
                 # When a common name contains a comma ',' then it will automatically be wrapped around double quotes. E.g., "App Software USA, Inc."
                 # The methods below are conditional regex. Different patterns are used based on the availability of at least one double quote in the CN field, indicating that it had comma in it so it had been enclosed with double quotes by system
 
-                $Element.Certificate.Subject -match 'CN=(?<InitialRegexTest2>.*?),.*' | Out-Null
-                [System.String]$SubjectCN = $matches['InitialRegexTest2'] -like '*"*' ? ($Element.Certificate.Subject -split 'CN="(.+?)"')[1] : $matches['InitialRegexTest2']
+                #   $Element.Certificate.Subject -match 'CN=(?<InitialRegexTest2>.*?),.*' | Out-Null
+                #   [System.String]$SubjectCN = $matches['InitialRegexTest2'] -like '*"*' ? ($Element.Certificate.Subject -split 'CN="(.+?)"')[1] : $matches['InitialRegexTest2']
 
-                $Element.Certificate.Issuer -match 'CN=(?<InitialRegexTest3>.*?),.*' | Out-Null
-                [System.String]$IssuerCN = $matches['InitialRegexTest3'] -like '*"*' ? ($Element.Certificate.Issuer -split 'CN="(.+?)"')[1] : $matches['InitialRegexTest3']
+                #   $Element.Certificate.Issuer -match 'CN=(?<InitialRegexTest3>.*?),.*' | Out-Null
+                #   [System.String]$IssuerCN = $matches['InitialRegexTest3'] -like '*"*' ? ($Element.Certificate.Issuer -split 'CN="(.+?)"')[1] : $matches['InitialRegexTest3']
+                #Endregion Old way of getting common names
 
                 # Get the TBS value of the certificate
                 [System.String]$TbsValue = Get-TBSCertificate -cert $Element.Certificate
@@ -240,8 +252,8 @@ Export-ModuleMember -Function 'Get-CertificateDetails'
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCHuqXd1FbjeW3N
-# begavoD0bSWMMBeRyxYS7LyUpLmjDaCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDycPpWzwR0cPeZ
+# YOVi0UI2HfVRL4XyTuaPEBwMYehaw6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -288,16 +300,16 @@ Export-ModuleMember -Function 'Get-CertificateDetails'
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQg/+U4B/zPMIAPvvxjDfdu9H52Z7zsJaH/JH4X7OrWpqUwDQYJKoZIhvcNAQEB
-# BQAEggIAFqQn4Hf0DIpSVx++AiDVPI2p3ZSEfX2xNxYIablq03Igos1rE4RP0NX+
-# ZiFziftv4hXemPPbPn2fREVNHzQTshg6LmdGke/zkljjKkoNY5S4uoduIrsgMxCu
-# to7HtmjQWAQJwY7WKwgjdZJInHAX3TxhQ3/PcGqizYe3wdBi1YtN/3d8Rp2BmyJg
-# QIluo2mtALb6PmB2I4S236boPUZh4+hKcuS88h8DCw01cXtIdkzflbUH7sNo6Oor
-# 2igt3qeeEvzUW1mgBKapqCZuq0Taawu+yjGYxUwRA8wF2hj/VGyIvS+rQnIOnJap
-# R20aiIlveUBXZcyN9K2kNIPq/QAMd5rlhW6GakSuitAwXm/J71CmVrYqs8mTX6lj
-# IVlkhi4QcHhzagERqezfVJlTT9ylnZIQNadcTrCRNZyhmON3rlNFzryyShDhdGC7
-# Gmx5aMDtjHPKFs9nOyNb698hj514lqZ2+Uk7W3wsmdVOFFdqj5N69+G1Xeu1G5UL
-# eaNB2lXNZWfeqyp7FBSovaZOBaNVC/bUkB8Mnuw2ZvChiHl+tjhvhH3xMSZ25VDd
-# 5icT3R/D3Pu7YyVIhpZ2ZJbvWeTUbJjvCO24tlCeKr/knxZlI5DLeChjA9a8qFyZ
-# O+RrXj7+5oRlSM2JZjJeU4JZEdeLlpV7oM0cEgZ+kc5GBVvL3Zs=
+# IgQgQ1nJsAZ13y81k1aXUk8ZUIF1RwjPaiOptClTaF6yzrowDQYJKoZIhvcNAQEB
+# BQAEggIAQwrgPfLS4W39ph3scrTWrluuhFlkRfAYz1L3GkohdVSbajGuWsVG3Jfx
+# 4L2MhVLE5ktp82sHFFErghhBzmz2asNplD2Sxm3+e1tQmkEA59tp/GT/Za0vQ2Qu
+# RhFJySo9c0u5/Pl0d84JLiB4YIyCA0pZICGjnOs8JO7AtPBGXhT76Ro+tqZRdmaL
+# h1c98USBedRgkAiTD7KJmjHTWl+Mcjguecs1g1gUs2q1l7ydyInk1zZxwJaxY8MU
+# xvAte8fco3Ad86TwNGiRkC7Lwx+W3v7TKnxxTrAN0rGQ1NumyQkMNO4uSzlekEPV
+# ba9zeecCIU7mEnIbe8SxyOFQjZtoJk/7oHtTig+CnSNlA3ipic7rzov2yNOTvobF
+# l8A+VLJHBlQLwML02PeT8GaNur2ddX/RwXFp5CCNLxOeo73jX0h+CZOViZdN0Scf
+# 2ZcymPvJM/Z+Par2Q5J+MYKA87No1Eq6HF1DHN9Dy6RLuaVCX25ahHxX/1m+UluY
+# Z3H027yAY6vie3fZudAe/zh9cRb6VgxUvUsmyIzWw+PsVY4RauLKH6dev7gUp8Yz
+# XZH/r64dgrOy33wWLzhA7MyBopk6dZpUJFD+5vuIS/8YSrqqoI4bexlJMXry55Zw
+# OZ3e1nkbOI/CgfSFIj3b2Bdcb17nbv7o5Xb0e89LCe4Bthd18TA=
 # SIG # End signature block

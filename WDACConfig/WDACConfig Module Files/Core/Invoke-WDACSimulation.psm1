@@ -34,6 +34,9 @@ Function Invoke-WDACSimulation {
         [Alias('L')]
         [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$Log,
 
+        [Alias('C')]
+        [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$CSVOutput,
+
         [Alias('S')]
         [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SkipVersionCheck
     )
@@ -45,19 +48,18 @@ Function Invoke-WDACSimulation {
         # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
-        # Importing the required sub-modules
         Write-Verbose -Message 'Importing the required sub-modules'
-        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Update-self.psm1" -Force
+        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Update-Self.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Write-ColorfulText.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\WDACSimulation\Compare-SignerAndCertificate.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\WDACSimulation\Get-FileRuleOutput.psm1" -Force
 
         # if -SkipVersionCheck wasn't passed, run the updater
-        if (-NOT $SkipVersionCheck) { Update-self -InvocationStatement $MyInvocation.Statement }
+        if (-NOT $SkipVersionCheck) { Update-Self -InvocationStatement $MyInvocation.Statement }
 
         # Start the transcript if the -Log switch is used and create a function to stop the transcript and the stopwatch at the end
         if ($Log) {
-            Start-Transcript -IncludeInvocationHeader -LiteralPath ".\WDAC Simulation Log $(Get-Date -Format "MM-dd-yyyy 'at' HH-mm-ss").txt"
+            Start-Transcript -IncludeInvocationHeader -LiteralPath (Join-Path -Path $UserConfigDir -ChildPath "WDAC Simulation Log $(Get-Date -Format "MM-dd-yyyy 'at' HH-mm-ss").txt")
 
             # Create a new stopwatch object to measure the execution time
             Write-Verbose -Message 'Starting the stopwatch...'
@@ -174,6 +176,47 @@ Function Invoke-WDACSimulation {
 
         try {
 
+            #Region Cyan/Violet Progress Bar
+
+            # Backing up PS Formatting Styles
+            [System.Collections.Hashtable]$OriginalStyle = @{}
+            $PSStyle.Progress | Get-Member -MemberType Property | ForEach-Object -Process {
+                $OriginalStyle[$_.Name] = $PSStyle.Progress.$($_.Name)
+            }
+
+            # Define a global variable to store the current color index
+            [System.UInt16]$Global:ColorIndex = 0
+
+            # Create a timer object that fires every 3 seconds
+            [System.Timers.Timer]$RainbowTimer = New-Object System.Timers.Timer
+            $RainbowTimer.Interval = 3000 # milliseconds
+            $RainbowTimer.AutoReset = $true # repeat until stopped
+
+            # Register an event handler that changes Write-Progress' style every time the timer elapses
+            [System.Management.Automation.PSEventJob]$EventHandler = Register-ObjectEvent -InputObject $RainbowTimer -EventName Elapsed -Action {
+
+                # An array of colors
+                [System.Drawing.Color[]]$Colors = @(
+                    [System.Drawing.Color]::Cyan
+                    [System.Drawing.Color]::Violet
+                )
+
+                $Global:ColorIndex++
+                if ($Global:ColorIndex -ge $Colors.Length) {
+                    $Global:ColorIndex = 0
+                }
+
+                # Get the current color from the array
+                [System.Drawing.Color]$CurrentColor = $Colors[$Global:ColorIndex]
+                # Set the progress bar style to use the current color
+                $PSStyle.Progress.Style = "$($PSStyle.Foreground.FromRGB($CurrentColor.R, $CurrentColor.G, $CurrentColor.B))"
+            }
+
+            # Start the timer
+            $RainbowTimer.Start()
+
+            #Endregion Cyan/Violet Progress Bar
+
             # Loop through each file
             Write-Verbose -Message 'Looping through each supported file'
 
@@ -194,6 +237,8 @@ Function Invoke-WDACSimulation {
                 # Check see if the file's hash exists in the XML file regardless of whether it's signed or not
                 # This is because WDAC policies sometimes have hash rules for signed files too
                 # So here we prioritize being authorized by file hash over being authorized by Signature
+
+                <#
                 try {
                     Write-Verbose -Message 'Using Get-AppLockerFileInformation to retrieve the hashes of the file'
                     # Since Get-AppLockerFileInformation doesn't support special characters such as [ and ], and it doesn't have -LiteralPath parameter, we need to escape them ourselves
@@ -201,8 +246,13 @@ Function Invoke-WDACSimulation {
                 }
                 catch {
                     Write-Verbose -Message 'Get-AppLockerFileInformation failed because the file is non-conformant, getting the flat file hash instead'
-                    [System.String]$CurrentFilePathHash = (Get-CiFileHashes -FilePath $CurrentFilePath).SHA256Authenticode
+                    [System.String]$CurrentFilePathHash = (Get-CiFileHashes -FilePath $CurrentFilePath -SkipVersionCheck).SHA256Authenticode
                 }
+                #>
+
+                Write-Verbose -Message 'Calculating the file hashes'
+                # Get-CiFileHashes is faster, natively supports -LiteralPath for special characters in file path, and also supports non-conformant files by automatically getting their flat hashes
+                [System.String]$CurrentFilePathHash = (Get-CiFileHashes -FilePath $CurrentFilePath -SkipVersionCheck).SHA256Authenticode
 
                 # if the file's hash exists in the XML file then add the file's path to the allowed files and do not check anymore that whether the file is signed or not
                 if ($CurrentFilePathHash -in $SHA256HashesFromXML) {
@@ -343,6 +393,17 @@ Function Invoke-WDACSimulation {
         finally {
             # Complete the nested progress bar whether there was an error or not
             Write-Progress -Id 1 -Activity 'All of the files have been processed.' -Completed
+
+            # Stop the timer for progress bar color
+            $RainbowTimer.Stop()
+
+            # Unregister the event handler for progress bar color
+            Unregister-Event -SourceIdentifier $EventHandler.Name -Force
+
+            # Restore PS Formatting Styles for progress bar
+            $OriginalStyle.Keys | ForEach-Object -Process {
+                $PSStyle.Progress.$_ = $OriginalStyle[$_]
+            }
         }
 
         $CurrentStep++
@@ -571,7 +632,9 @@ Function Invoke-WDACSimulation {
         }
 
         # Export the output as CSV
-        $MegaOutputObject | Select-Object -Property FilePath, Source, IsAuthorized, Permission | Sort-Object -Property IsAuthorized | Export-Csv -LiteralPath ".\WDAC Simulation Output $(Get-Date -Format "MM-dd-yyyy 'at' HH-mm-ss").csv" -Force
+        if ($CSVOutput) {
+            $MegaOutputObject | Select-Object -Property FilePath, Source, IsAuthorized, Permission | Sort-Object -Property IsAuthorized | Export-Csv -LiteralPath (Join-Path -Path $UserConfigDir -ChildPath "WDAC Simulation Output $(Get-Date -Format "MM-dd-yyyy 'at' HH-mm-ss").csv") -Force
+        }
 
         Write-Progress -Id 0 -Activity 'WDAC Simulation completed.' -Completed
 
@@ -659,12 +722,14 @@ Function Invoke-WDACSimulation {
 .PARAMETER Log
     Use this switch to start a transcript of the WDAC simulation and log everything displayed on the screen. Highly recommended to use the -Verbose parameter with this switch to log the verbose output as well.
 .PARAMETER SkipVersionCheck
-    Can be used with any parameter to bypass the online version check - only to be used in rare cases
+    Bypass the online version check - only to be used in rare cases
     It is used by the entire Cmdlet.
 .PARAMETER Verbose
-    Can be used with any parameter to show verbose output
+    Shows verbose output
 .PARAMETER BooleanOutput
-    Can be used with any parameter to return a boolean value instead of displaying the object output
+    Returns a boolean value instead of displaying the object output
+.PARAMETER CSVOutput
+    Exports the output to a CSV file
 .INPUTS
     System.IO.FileInfo
     System.IO.DirectoryInfo
@@ -682,7 +747,7 @@ Function Invoke-WDACSimulation {
 }
 
 # Importing argument completer ScriptBlocks
-. "$ModuleRootPath\Resources\ArgumentCompleters.ps1"
+. "$ModuleRootPath\CoreExt\ArgumentCompleters.ps1"
 Register-ArgumentCompleter -CommandName 'Invoke-WDACSimulation' -ParameterName 'FolderPath' -ScriptBlock $ArgumentCompleterFolderPathsPicker
 Register-ArgumentCompleter -CommandName 'Invoke-WDACSimulation' -ParameterName 'XmlFilePath' -ScriptBlock $ArgumentCompleterXmlFilePathsPicker
 Register-ArgumentCompleter -CommandName 'Invoke-WDACSimulation' -ParameterName 'FilePath' -ScriptBlock $ArgumentCompleterAnyFilePathsPicker
@@ -690,8 +755,8 @@ Register-ArgumentCompleter -CommandName 'Invoke-WDACSimulation' -ParameterName '
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCB5r4xv5Vj0giWR
-# hESxE8qbam4cmqHFg0HJDHmrbNBy56CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCn8E3ZeFPqV8VL
+# WajIcDXn1bbq39TVTDOlwyfHMz9haaCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -738,16 +803,16 @@ Register-ArgumentCompleter -CommandName 'Invoke-WDACSimulation' -ParameterName '
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgMK08Y3IGIxGOmWCPhDF02W/2Y6vzmwCOZPCkh/6nipgwDQYJKoZIhvcNAQEB
-# BQAEggIAJziEtMtc+EbAroHe6nfRpwuXEO8YQUtUQcUSlmKsWqwEmh9/ZvwQ3Lh0
-# Ax4oF0MYTNZ+0JY88HD5phg0pYZVH8oi8ikTXAE195mDbx+WqTMHnpTO9j0QcJ0d
-# qtpKMleepDTTJ2jE/ebPIcooz0JpltZrNWI5JSSUSxqlOmEWiJNhTjabvKWdjOBy
-# cgPya5o15MCdXhoEZBlkr/8kjWbJcvqTmmDXF0ctTjphZaDYlk9lz4T0YYynMR4A
-# pDBOtDNcyoAYmN/GLANzlZvThqaEQQj3iHI0TGZ5zWkhYG/bryD+US/U0et774fe
-# K8jgkgB2bx5/DWDdmW1SQzc0x/NYGu6h8JLK82KRj9yH8INUVkRPWz/CDTKKs6rK
-# 5hMFaEo3FmcMXpz3ZVUyOSKgoDgVQLwdXjIQ5Yl9aroyALQD0raIDF3LxkvcjXWn
-# ojgG4nyfdtitMRCqZrqYmLjwkBYZ4QeIDhOaiV4nLYLCSZVIurkKVB8pSSEIwgTK
-# FLup22w1oATB1DRVFkly06KATsh53p5wbbHx4DHhFl3AvwwuFaIgBsZ8Ip2lDd9y
-# RGS5x/oD0LieMYK7wGY845jks8gUVRZxydlfgVgwsJ4W0r9UGchaxBmW80pjfOOj
-# I6GD/PDWv3y7oO/FYtMOPwMVRtix/JFcPcY5FULejJDvEfB14Mg=
+# IgQgszcX8IhVikY7ngQcwU5MRcSCFQJV34ynFBARiRCAP0kwDQYJKoZIhvcNAQEB
+# BQAEggIASj/eja7u640ip1kUwFnKuuLPKk4rBrtrDSwtmfsWysocgaP8nOOGKVAh
+# S3SSNgavBaauLKjJ7PFM2aJ6dk03mCIQYwNnUlb6FwXsVwzSiHyvBAV+NkPz/nEz
+# KcqK26APAuOjhOAk1lhDs+wwr1J6Ik0BgUXgy+CCgvlrb47XQ2PykshlLZGynPXa
+# KSZ39gthepEfkLOnX2ig4X4hWzXLEOEqti8XTdjB9/u6nlBF8RDQeDzCjToX1zbE
+# RDHxVIoNRMH+s6hDJR0lOowUrTP2yamhswlJpUrtkRFKsR0HCMBkkwt0GFYh+yGZ
+# ZMZpkgcz5EhVieZwIwKr21sVOXK4M2HkHIRf24urcqTHjYBZzb4evmoyylZ6yw40
+# ouy9YId2/0eyF3JoRflZbESzGqpvlXUH51vQv/5efKgdU2h8zrxldWiDWpt+CjHm
+# a5z+Dnh8ZGhFML5nLeCrtwyE+zQdqEg9nef19wm8KpBZ03n4eytNGqUaInFK5GwX
+# oO2zpVHaZE11i9ZtfSXzL6Y3z/Olse6AAlK8zQXDC4xoidv/gVFFtpjeKPvqbGuN
+# 8f5jGOVg5NtomelkXp6eOeoyC+lS2XlpfKBmzdn+tvyPJm+oUnbn9esPrfZ6s+sb
+# gkvddRDDakhm/OWYmftyHuKGHJNz1ITnwTBglGhz1l5gXnJ8D4I=
 # SIG # End signature block

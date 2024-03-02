@@ -32,54 +32,7 @@ Function Remove-WDACConfig {
         [parameter(Mandatory = $true, ParameterSetName = 'Signed Base', ValueFromPipelineByPropertyName = $true)]
         [System.IO.FileInfo[]]$PolicyPaths,
 
-        [ValidateScript({
-                # Assign the input value to a variable because $_ is going to be used to access another pipeline object
-                [System.String]$InputCN = $_
-
-                # Create an empty array to store the output objects
-                [System.String[]]$Output = @()
-
-                # Loop through each certificate that uses RSA algorithm (Because ECDSA is not supported for signing WDAC policies) in the current user's personal store and extract the relevant properties
-                foreach ($Cert in (Get-ChildItem -Path 'Cert:\CurrentUser\My' | Where-Object -FilterScript { $_.PublicKey.Oid.FriendlyName -eq 'RSA' })) {
-
-                    # Takes care of certificate subjects that include comma in their CN
-                    # Determine if the subject contains a comma
-                    if ($Cert.Subject -match 'CN=(?<RegexTest>.*?),.*') {
-                        # If the CN value contains double quotes, use split to get the value between the quotes
-                        if ($matches['RegexTest'] -like '*"*') {
-                            $SubjectCN = ($Element.Certificate.Subject -split 'CN="(.+?)"')[1]
-                        }
-                        # Otherwise, use the named group RegexTest to get the CN value
-                        else {
-                            $SubjectCN = $matches['RegexTest']
-                        }
-                    }
-                    # If the subject does not contain a comma, use a lookbehind to get the CN value
-                    elseif ($Cert.Subject -match '(?<=CN=).*') {
-                        $SubjectCN = $matches[0]
-                    }
-                    $Output += $SubjectCN
-                }
-
-                # Count the number of duplicate CNs in the output array
-                [System.UInt64]$NumberOfDuplicateCNs = @($Output | Where-Object -FilterScript { $_ -eq $InputCN }).Count
-
-                # If the certificate with the provided common name exists in the personal store of the user certificates
-                if ($Output -contains $_) {
-                    # if there are more than 1 certificate with the same common name on the system
-                    if ($NumberOfDuplicateCNs -eq 1) {
-                        # Return true if the certificate exists and there are no duplicates
-                        return $true
-                    }
-                    else {
-                        Throw "There are $NumberOfDuplicateCNs certificates with the same common name ($_) on the system, please remove the duplicate certificates and try again."
-                    }
-                }
-                else {
-                    Throw 'A certificate with the provided common name does not exist in the personal store of the user certificates.'
-                }
-
-            })]
+        [ValidateSet([CertCNz])]
         [parameter(Mandatory = $false, ParameterSetName = 'Signed Base', ValueFromPipelineByPropertyName = $true)]
         [System.String]$CertCN,
 
@@ -173,16 +126,17 @@ Function Remove-WDACConfig {
         # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
-        # Importing the required sub-modules
         Write-Verbose -Message 'Importing the required sub-modules'
-        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Update-self.psm1" -Force
+        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Update-Self.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Get-SignTool.psm1" -Force
-        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Confirm-CertCN.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Write-ColorfulText.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Remove-SupplementalSigners.psm1" -Force
+        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\New-StagingArea.psm1" -Force
 
         # if -SkipVersionCheck wasn't passed, run the updater
-        if (-NOT $SkipVersionCheck) { Update-self -InvocationStatement $MyInvocation.Statement }
+        if (-NOT $SkipVersionCheck) { Update-Self -InvocationStatement $MyInvocation.Statement }
+
+        [System.IO.DirectoryInfo]$StagingArea = New-StagingArea -CmdletName 'Remove-WDACConfig'
 
         #Region User-Configurations-Processing-Validation
         Write-Verbose -Message 'Validating and processing user configurations'
@@ -200,8 +154,8 @@ Function Remove-WDACConfig {
 
             # If CertCN was not provided by user, check if a valid value exists in user configs, if so, use it, otherwise throw an error
             if (!$CertCN) {
-                if (Confirm-CertCN -CN (Get-CommonWDACConfig -CertCN)) {
-                    $CertCN = Get-CommonWDACConfig -CertCN
+                if ([CertCNz]::new().GetValidValues() -contains (Get-CommonWDACConfig -CertCN)) {
+                    [System.String]$CertCN = Get-CommonWDACConfig -CertCN
                 }
                 else {
                     throw 'CertCN parameter cannot be empty and no valid user configuration was found for it.'
@@ -284,121 +238,128 @@ Function Remove-WDACConfig {
     }
 
     process {
-        # If a signed policy is being removed
-        if ($SignedBase) {
 
-            Write-Verbose -Message 'Looping over each selected policy XML file'
-            foreach ($PolicyPath in $PolicyPaths) {
+        Try {
 
-                # The total number of the main steps for the progress bar to render
-                [System.Int16]$TotalSteps = 3
-                [System.Int16]$CurrentStep = 0
+            # If a signed policy is being removed
+            if ($SignedBase) {
 
-                $CurrentStep++
-                Write-Progress -Id 18 -Activity 'Parsing the XML Policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+                Write-Verbose -Message 'Looping over each selected policy XML file'
+                foreach ($PolicyPath in $PolicyPaths) {
 
-                Write-Verbose -Message 'Converting the XML file to an XML object'
-                [System.Xml.XmlDocument]$Xml = Get-Content -Path $PolicyPath
+                    # The total number of the main steps for the progress bar to render
+                    [System.Int16]$TotalSteps = 3
+                    [System.Int16]$CurrentStep = 0
 
-                Write-Verbose -Message 'Extracting the Policy ID from the XML object'
-                [System.String]$PolicyID = $Xml.SiPolicy.PolicyID
-                Write-Verbose -Message "The policy ID of the currently processing xml file is $PolicyID"
+                    $CurrentStep++
+                    Write-Progress -Id 18 -Activity 'Parsing the XML Policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                # Extracting the policy name from the selected XML policy file
-                [System.String]$PolicyName = ($Xml.SiPolicy.Settings.Setting | Where-Object -FilterScript { $_.provider -eq 'PolicyInfo' -and $_.valuename -eq 'Name' -and $_.key -eq 'Information' }).value.string
+                    Write-Verbose -Message 'Converting the XML file to an XML object'
+                    [System.Xml.XmlDocument]$Xml = Get-Content -Path $PolicyPath
 
-                # Prevent users from accidentally attempting to remove policies that aren't even deployed on the system
-                Write-Verbose -Message 'Making sure the selected XML policy is deployed on the system'
+                    Write-Verbose -Message 'Extracting the Policy ID from the XML object'
+                    [System.String]$PolicyID = $Xml.SiPolicy.PolicyID
+                    Write-Verbose -Message "The policy ID of the currently processing xml file is $PolicyID"
 
-                Try {
-                    [System.Guid[]]$CurrentPolicyIDs = ((&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { $_.IsSystemPolicy -ne 'True' }).policyID | ForEach-Object -Process { "{$_}" }
+                    # Extracting the policy name from the selected XML policy file
+                    [System.String]$PolicyName = ($Xml.SiPolicy.Settings.Setting | Where-Object -FilterScript { $_.provider -eq 'PolicyInfo' -and $_.valuename -eq 'Name' -and $_.key -eq 'Information' }).value.string
+
+                    # Prevent users from accidentally attempting to remove policies that aren't even deployed on the system
+                    Write-Verbose -Message 'Making sure the selected XML policy is deployed on the system'
+
+                    Try {
+                        [System.Guid[]]$CurrentPolicyIDs = ((&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { $_.IsSystemPolicy -ne 'True' }).policyID | ForEach-Object -Process { "{$_}" }
+                    }
+                    catch {
+                        Throw 'No policy is deployed on the system.'
+                    }
+
+                    if ($CurrentPolicyIDs -notcontains $PolicyID) {
+                        Throw 'The selected policy file is not deployed on the system.'
+                    }
+
+                    $CurrentStep++
+                    Write-Progress -Id 18 -Activity 'Processing the policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
+                    Write-Verbose -Message 'Making sure SupplementalPolicySigners do not exist in the XML policy'
+                    Remove-SupplementalSigners -Path $PolicyPath
+
+                    # Adding policy rule option "Unsigned System Integrity Policy" to the selected XML policy file
+                    Set-RuleOption -FilePath $PolicyPath -Option 6
+
+                    [System.IO.FileInfo]$PolicyCIPPath = Join-Path -Path $StagingArea -ChildPath "$PolicyID.cip"
+
+                    # Converting the Policy XML file to CIP binary file
+                    ConvertFrom-CIPolicy -XmlFilePath $PolicyPath -BinaryFilePath $PolicyCIPPath | Out-Null
+
+                    $CurrentStep++
+                    Write-Progress -Id 18 -Activity 'Signing the policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
+                    Push-Location -Path $StagingArea
+                    # Configure the parameter splat
+                    [System.Collections.Hashtable]$ProcessParams = @{
+                        'ArgumentList' = 'sign', '/v' , '/n', "`"$CertCN`"", '/p7', '.', '/p7co', '1.3.6.1.4.1.311.79.1', '/fd', 'certHash', "$($PolicyCIPPath.Name)"
+                        'FilePath'     = $SignToolPathFinal
+                        'NoNewWindow'  = $true
+                        'Wait'         = $true
+                        'ErrorAction'  = 'Stop'
+                    }
+                    if (!$Verbose) { $ProcessParams['RedirectStandardOutput'] = 'NUL' }
+
+                    # Sign the files with the specified cert
+                    Write-Verbose -Message 'Signing the new CIP binary'
+                    Start-Process @ProcessParams
+
+                    Pop-Location
+
+                    # Fixing the extension name of the newly signed CIP file
+                    Move-Item -Path (Join-Path -Path $StagingArea -ChildPath "$PolicyID.cip.p7") -Destination $PolicyCIPPath -Force
+
+                    # Deploying the newly signed CIP file
+
+                    # Prompt for confirmation before proceeding
+                    if ($PSCmdlet.ShouldProcess('This PC', 'Deploying the signed policy')) {
+
+                        Write-Verbose -Message 'Deploying the newly signed CIP file'
+                        &'C:\Windows\System32\CiTool.exe' --update-policy $PolicyCIPPath -json | Out-Null
+
+                        Write-ColorfulText -Color Lavender -InputText "Policy with the following details has been Re-signed and Re-deployed in Unsigned mode.`nPlease restart your system."
+                        Write-ColorfulText -Color MintGreen -InputText "PolicyName = $PolicyName"
+                        Write-ColorfulText -Color MintGreen -InputText "PolicyGUID = $PolicyID"
+                    }
+                    Write-Progress -Id 18 -Activity 'Complete.' -Completed
                 }
-                catch {
-                    Throw 'No policy is deployed on the system.'
+            }
+
+            # If an unsigned policy is being removed
+            if ($UnsignedOrSupplemental) {
+
+                # If IDs were supplied by user
+                foreach ($ID in $PolicyIDs ) {
+                    &'C:\Windows\System32\CiTool.exe' --remove-policy "{$ID}" -json | Out-Null
+                    Write-ColorfulText -Color Lavender -InputText "Policy with the ID $ID has been successfully removed."
                 }
 
-                if ($CurrentPolicyIDs -notcontains $PolicyID) {
-                    Throw 'The selected policy file is not deployed on the system.'
+                # If names were supplied by user
+                # Empty array to store Policy IDs based on the input name, this will take care of the situations where multiple policies with the same name are deployed
+                [System.Object[]]$NameID = @()
+
+                foreach ($PolicyName in $PolicyNames) {
+                    $NameID += ((&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { ($_.IsOnDisk -eq 'True') -and ($_.FriendlyName -eq $PolicyName) }).PolicyID
                 }
 
-                $CurrentStep++
-                Write-Progress -Id 18 -Activity 'Processing the policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+                Write-Verbose -Message 'The Following policy IDs have been gathered from the supplied policy names and are going to be removed from the system'
+                $NameID | Select-Object -Unique | ForEach-Object -Process { Write-Verbose -Message "$_" }
 
-                Write-Verbose -Message 'Making sure SupplementalPolicySigners do not exist in the XML policy'
-                Remove-SupplementalSigners -Path $PolicyPath
-
-                # Adding policy rule option "Unsigned System Integrity Policy" to the selected XML policy file
-                Set-RuleOption -FilePath $PolicyPath -Option 6
-
-                # Converting the Policy XML file to CIP binary file
-                ConvertFrom-CIPolicy -XmlFilePath $PolicyPath -BinaryFilePath "$PolicyID.cip" | Out-Null
-
-                $CurrentStep++
-                Write-Progress -Id 18 -Activity 'Signing the policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-                # Configure the parameter splat
-                [System.Collections.Hashtable]$ProcessParams = @{
-                    'ArgumentList' = 'sign', '/v' , '/n', "`"$CertCN`"", '/p7', '.', '/p7co', '1.3.6.1.4.1.311.79.1', '/fd', 'certHash', ".\$PolicyID.cip"
-                    'FilePath'     = $SignToolPathFinal
-                    'NoNewWindow'  = $true
-                    'Wait'         = $true
-                    'ErrorAction'  = 'Stop'
+                $NameID | Select-Object -Unique | ForEach-Object -Process {
+                    &'C:\Windows\System32\CiTool.exe' --remove-policy "{$_}" -json | Out-Null
+                    Write-ColorfulText -Color Lavender -InputText "Policy with the ID $_ has been successfully removed."
                 }
-                if (!$Verbose) { $ProcessParams['RedirectStandardOutput'] = 'NUL' }
-
-                # Sign the files with the specified cert
-                Write-Verbose -Message 'Signing the new CIP binary'
-                Start-Process @ProcessParams
-
-                # Removing the unsigned CIP file
-                Remove-Item -Path ".\$PolicyID.cip" -Force
-
-                # Fixing the extension name of the newly signed CIP file
-                Rename-Item -Path "$PolicyID.cip.p7" -NewName "$PolicyID.cip" -Force
-
-                # Deploying the newly signed CIP file
-
-                # Prompt for confirmation before proceeding
-                if ($PSCmdlet.ShouldProcess('This PC', 'Deploying the signed policy')) {
-
-                    Write-Verbose -Message 'Deploying the newly signed CIP file'
-                    &'C:\Windows\System32\CiTool.exe' --update-policy ".\$PolicyID.cip" -json | Out-Null
-
-                    Write-ColorfulText -Color Lavender -InputText "Policy with the following details has been Re-signed and Re-deployed in Unsigned mode.`nPlease restart your system."
-                    Write-ColorfulText -Color MintGreen -InputText "PolicyName = $PolicyName"
-                    Write-ColorfulText -Color MintGreen -InputText "PolicyGUID = $PolicyID"
-
-                    Write-Verbose -Message 'Removing the newly signed CIP file from the current directory after deployment'
-                    Remove-Item -Path ".\$PolicyID.cip" -Force
-                }
-                Write-Progress -Id 18 -Activity 'Complete.' -Completed
             }
         }
-
-        # If an unsigned policy is being removed
-        if ($UnsignedOrSupplemental) {
-
-            # If IDs were supplied by user
-            foreach ($ID in $PolicyIDs ) {
-                &'C:\Windows\System32\CiTool.exe' --remove-policy "{$ID}" -json | Out-Null
-                Write-ColorfulText -Color Lavender -InputText "Policy with the ID $ID has been successfully removed."
-            }
-
-            # If names were supplied by user
-            # Empty array to store Policy IDs based on the input name, this will take care of the situations where multiple policies with the same name are deployed
-            [System.Object[]]$NameID = @()
-
-            foreach ($PolicyName in $PolicyNames) {
-                $NameID += ((&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { ($_.IsOnDisk -eq 'True') -and ($_.FriendlyName -eq $PolicyName) }).PolicyID
-            }
-
-            Write-Verbose -Message 'The Following policy IDs have been gathered from the supplied policy names and are going to be removed from the system'
-            $NameID | Select-Object -Unique | ForEach-Object -Process { Write-Verbose -Message "$_" }
-
-            $NameID | Select-Object -Unique | ForEach-Object -Process {
-                &'C:\Windows\System32\CiTool.exe' --remove-policy "{$_}" -json | Out-Null
-                Write-ColorfulText -Color Lavender -InputText "Policy with the ID $_ has been successfully removed."
-            }
+        Finally {
+            # Clean up the staging area
+            Remove-Item -Path $StagingArea -Recurse -Force
         }
     }
 
@@ -449,16 +410,15 @@ Function Remove-WDACConfig {
 }
 
 # Importing argument completer ScriptBlocks
-. "$ModuleRootPath\Resources\ArgumentCompleters.ps1"
-Register-ArgumentCompleter -CommandName 'Remove-WDACConfig' -ParameterName 'CertCN' -ScriptBlock $ArgumentCompleterCertificateCN
-Register-ArgumentCompleter -CommandName 'Remove-WDACConfig' -ParameterName 'PolicyPaths' -ScriptBlock $ArgumentCompleterPolicyPathsBasePoliciesOnly
+. "$ModuleRootPath\CoreExt\ArgumentCompleters.ps1"
+Register-ArgumentCompleter -CommandName 'Remove-WDACConfig' -ParameterName 'PolicyPaths' -ScriptBlock $ArgumentCompleterMultipleXmlFilePathsPicker
 Register-ArgumentCompleter -CommandName 'Remove-WDACConfig' -ParameterName 'SignToolPath' -ScriptBlock $ArgumentCompleterExeFilePathsPicker
 
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCAPDKpEAwEX1cEU
-# ufXWw6HEY8jtoMrDZns2MmzxpKLnYqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCPivjcnTIswDET
+# 9yT+dsdID/aGdG/HHl38DQgvmtez3KCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -505,16 +465,16 @@ Register-ArgumentCompleter -CommandName 'Remove-WDACConfig' -ParameterName 'Sign
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgXPsJfqyJlYcbzP+/oaCzwio1CgH3ACMubJK/7hWmvvAwDQYJKoZIhvcNAQEB
-# BQAEggIATQfOcCY/dIbH5ffxnzvxyQVPfOC3f0VLXc4Cq6MUd3sQ3hxzp1fSu2hq
-# BHXjrHFiZOzr5bDbzEOujCHqDFcalGVggxzvL1orW4CnjIbyEzc8fgRcddwJsvNo
-# qUt+eRuW+l0bQ7iVqGXIZNw0DnmsJoRC7E1Y+48dmx5fjyA/EK/xXycyJ0SpfJbK
-# 4/wsjy0jwDmmEzZ1nKXgc6q0YX0sRsFVCtqkUYLZ1tOZDpuzVYr1rHLsxIVevbnu
-# XnfSfwPwsC3/REhIFwvip1hScjckJHrjvvwhhmBPUxUd6iUiZXjTlpkSVb1HrXET
-# wGhhCaQOtSRZyzy6Tz5VK/vWHeq5dZvc+PcdzmYxUEvCEQC2cDfxeRfI5TXIQLUd
-# jFunM2Sez2mY8SyoTzB+5/yd/e6Gq65UmYVub91eXIzYAYsPwylx47gXp1vSiEVG
-# YzxdUyvIwAAV+kB8DF2dcp9SO3AqTHilUvSMyb9KJLM7jCOpYXm+Lw5+QvVJNK/6
-# m6tpzaquOsAMN5Xetm4wdteRwA3tCng8dAromXDbsOatlshK0feUYTowh6JKHspG
-# vhyMfB+fQhZYsFxkfSxqfMNAUQxP5ITKzNwPpO1n7T/lw5aUi7VmcsvdNC4HoF3Z
-# sr0EYTv5tQyH6dPlx07it1WPGs0AXNmnMwfhubpcRSQV7DPxQ+I=
+# IgQgTzolvqsBJINxY7njXPFBsuVc33kx2MZfdof19VLjhwkwDQYJKoZIhvcNAQEB
+# BQAEggIASq+an+pQBF4CcGX/c2/lek7sZU/EsG8jGPwLwgMwmDR618R7zPqWSmVY
+# C/cvvvsPjzYGsefry2rrs8zoPnd6cEtpsNwFHrAOUaKCG24IkMgd7pRN2sPxoqkO
+# 36LMegR9+SE+VTT8Jvk9/bZRT0TDxxkbQuGoSNW18Gk8ppUmRxGEUkP8ULR8alLr
+# Gh3UFiSIZ8HzFtjm8AUNPjD0We/4JQx0QklAjG6Tpbi0nxnmiSbVwFglcPHKSp78
+# oGOmHk3RgLTPc/e/GeXT34lxzWJS38I2ynAmeqwZMAlPSCnqfBoBiyFJfJ/n6LK7
+# isxL6QETy4PmS4T4Zne6B2wJKOmEfn5/FtVNsrGFvdn6Pi9ZrNX5vb3EWwJeXRXZ
+# FmnHEzEoMyl5Fp2CQEmrFFI6YrSihab/BOyy7rTpKSWevUYEGWx6aGaVinJFHiaU
+# PKW3/ch4fDuKSmG643lD0WAwPk4UxNHoi0WsRB9+RHRIZyPZ0AX3sI8iRfRbMD93
+# vibXUC2of/C5UWmPJGdEI0bzCuQeNdje6xVNCWVSxYNwbNl/ubm4TwrW+RUzEE+5
+# vdPwtCQZKu87fds2xr7aTyq3rta7Vjep1wkPIJNHRNlaIKnEbJecFW2NWTBseULk
+# yh1Wu63FmOj0vUi/pgwQmq8/8JLkzlUjA/6w+3a0n6hdlG3Kg6Y=
 # SIG # End signature block

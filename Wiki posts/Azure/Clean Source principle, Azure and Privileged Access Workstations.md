@@ -100,8 +100,6 @@ PAW is the highest security configuration designed for extremely sensitive roles
 
 Often, the servers are considerably less secure than the PAW itself. Likewise with intermediaries, they are usually less secure than the PAW itself. Consequently, the session host and/or client is not the weakest chain link. Which also implies that the clean source principle is kept at least on the start of the chain.
 
-Setting up a PAW properly is challenging because there are lots of parts involved, however, you can use a solution like [Moot Security Management](https://mootinc.com). They offer multiple solutions such as PAW, Identity Management, and general user security baselining. **Unlike other solutions, Moot only uses existing tools to get the job done, such as 1st party Microsoft products.** Unlike 3rd party solutions that create new software for AVs, CASBs, EDRs, MDMs, XDRs, etc.
-
 For more of a do-it-your-self experience, check out my harden windows security repository over at [GitHub](https://github.com/HotCakeX/Harden-Windows-Security).
 
 <br>

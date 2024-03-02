@@ -1,63 +1,55 @@
 Function Test-FilePath {
     <#
     .SYNOPSIS
-        function that takes 2 arrays, one contains file paths and the other contains folder paths. It checks them and shows file paths
-        that are not in any of the folder paths. Performs this check recursively too so works if the filepath is in a sub-directory of a folder path
+        Function that takes 2 arrays, one contains file paths and the other contains folder paths. It checks them and returns the unique file paths
+        that are not in any of the folder paths. Performs this check recursively too so works if a filepath is in a sub-directory of a folder path.
     .INPUTS
-        System.String[]
+        System.IO.DirectoryInfo[]
+        System.IO.FileInfo[]
     .OUTPUTS
-        System.String[]
+        System.IO.FileInfo[]
     #>
     [CmdletBinding()]
-    [OutputType([System.String[]])]
+    [OutputType([System.IO.FileInfo[]])]
     param (
+        [ValidateScript({ Test-Path -Path $_ -PathType Leaf })]
         [Parameter(Mandatory = $true)]
-        [System.String[]]$FilePath,
-        [Parameter(Mandatory = $true)]
-        [System.String[]]$DirectoryPath
-    )
-    # Importing the $PSDefaultParameterValues to the current session, prior to everything else
-    . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
+        [System.IO.FileInfo[]]$FilePath,
 
-    # Loop through each file path
-    foreach ($file in $FilePath) {
-        # Check if the file path is valid
-        if (Test-Path -Path $file -PathType 'Leaf') {
-            # Get the full path of the file
-            $FileFullPath = Resolve-Path -Path $file
+        [ValidateScript({ Test-Path -Path $_ -PathType Container })]
+        [Parameter(Mandatory = $true)]
+        [System.IO.DirectoryInfo[]]$DirectoryPath
+    )
+    Begin {
+        # Importing the $PSDefaultParameterValues to the current session, prior to everything else
+        . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
+
+        [System.IO.FileInfo[]]$Output = @()
+    }
+    Process {
+        # Loop through each file path
+        foreach ($File in $FilePath) {
 
             # Initialize a variable to store the result
             [System.Boolean]$Result = $false
 
             # Loop through each directory path
             foreach ($Directory in $DirectoryPath) {
-                # Check if the directory path is valid
-                if (Test-Path -Path $Directory -PathType 'Container') {
-                    # Get the full path of the directory
-                    $DirectoryFullPath = Resolve-Path -Path $Directory
-
-                    # Check if the file path starts with the directory path
-                    if ($FileFullPath -like "$DirectoryFullPath\*") {
-                        # The file is inside the directory or its sub-directories
-                        $Result = $true
-                        break # Exit the inner loop
-                    }
-                }
-                else {
-                    # The directory path is not valid
-                    Write-Warning -Message "The directory path '$Directory' is not valid."
+                # Check if the file path starts with the directory path
+                if ($File -like "$Directory\*") {
+                    # The file is inside the directory or its sub-directories
+                    $Result = $true
+                    break # Exit the inner loop
                 }
             }
-
             # Output the file path if it is not inside any of the directory paths
-            if (-not $Result) {
-                Write-Output -InputObject $FileFullPath
+            if (-NOT $Result) {
+                $Output += $File
             }
         }
-        else {
-            # The file path is not valid
-            Write-Warning -Message "The file path '$file' is not valid."
-        }
+    }
+    End {
+        Return ($Output | Select-Object -Unique)
     }
 }
 
@@ -67,8 +59,8 @@ Export-ModuleMember -Function 'Test-FilePath'
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCAjsY0oIsATmjf3
-# SiujWa96IMeDk1uAck9n5gbijjuRTqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDrQ3AuE4O5yVy9
+# g+KfiCzeeslBVjLSerW79k/w8eFHuKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -115,16 +107,16 @@ Export-ModuleMember -Function 'Test-FilePath'
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgu9e1syv058XOfcr99nmoofG0e9CPgtLa+rFdndV4GxkwDQYJKoZIhvcNAQEB
-# BQAEggIAOGspksQWLql450cTQv+TGJ7zOIVPu1kk9bQHKbM4FCYHA6KxDIKnjXSJ
-# N7K8JQjqpDJfFpLQL3dIQHLDqosXACp1XyhaSfSLssMOkMHQwH5uK4yjrgu+zTjc
-# J7SbwQZJ2LSEV6XGzRjLaMii2DksgF8y70yXp4//6gW1/FysUPEMSmPgW3JzDng2
-# rB0dmA9NCn/NcBHzWhAj6igCvzH9TCG8L6EXzwrjDW09YDT0b+3IejQYQGFcxity
-# IWFuJSjfQJftXa5Sv8icKtKrqZkSZBfPvKPyqzHjdbkYr4+Qu45XM7Be8qhcYfHr
-# Rphd1t+kijQOtJ64eFic5+bhj5fxIconOCG1k0dmVYe7TdO4ynEnC43KOBj1g0Yl
-# 0MF+feuZumz19ZUf6IFRFQImJiYOPcUX1knpn0X99bkvJRoIURg7YVkU7I0DJd6S
-# ASidh3ljve5xL8VchZU/WttM8WBtv1TalKLY2QCKjurPSQSMajzdS2DQ7599+E+3
-# +yWHtSs/CNY+h3QidpUfT9h3amR2IWgjlFpTraFVhrlN2862dwHuoClSmWbn+rd4
-# vH28vrCsUkk2wQVc+mawa/6/5KkKq5wnFEjjyDNQwDLhV7dOsMCZOYmUOlL5qVV4
-# koINyNLY/9o+vIO5Zs98kV8EYkT9E67AUO7uFiZr3RVBY6CrOQs=
+# IgQg5xylSGfQKbRINzsDrsyeI1ZRg/uVEW+LzjF/6LmkTmswDQYJKoZIhvcNAQEB
+# BQAEggIAOw9mxP5WA9wgIax6ntgaLhW3g/AJFneBlWElGFWDknYp3ZWsBa4YKDpF
+# 2+uUoHnWQgOEbLYVMTv/Ebp5iKdwJkHYKuxkMA9F06Dlt9MnWeESB3wQ4IVZimkn
+# ARB7LPhl8ZUvtuaKcFRWcpex2Pdr9wLUwmz3CVNp5X9RwwhCc3M/joLsN/lWSAQZ
+# tw2X3Oy2Lajuv9YCB5818fhR5spEkz00xnn1EVY07n1IX4Mq2y03YMmuc4TI0Kow
+# 6bpRG8H/8UN3bic78WDqSarWjnDiY0iBLcs4bcEtmN9ay0VHLLPH+XOs2RKj6dTt
+# gFQ1c7je7U8jM+hQOWpQcDGAE5HK1XVn90xm7PZv+YvJE2LmdcLinttQyEsRUEu1
+# WRSJTNB0cjldS3F+Vt6PjISb/QIUbYYdBUk/TDgWcRR2anAnDzC0I6rT54bqaMr+
+# 0zG+glWjbkAs/xxnAf49LkWKf+IKL7k8e0aYdfYN+Q4R7sYb0lw8x6Pj6Sb5CCIw
+# KqQNprXxkjMK/SvRvGLMDG2MxF2Uxoho/D3RMiaNX29b4VNbgGI8aJd9egYcEUQY
+# /0HVixgaYK4TicZ3kYjM1IxM4v74AukabJSBWwH+8KDwoq73mrN7GAZrlop4ZM6F
+# iIkZmbITL2AARIEeRbR1tZzbHGVYBkytqC3gdssLrSoq+s22FZU=
 # SIG # End signature block

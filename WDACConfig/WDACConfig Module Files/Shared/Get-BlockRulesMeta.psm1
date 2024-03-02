@@ -2,22 +2,24 @@ Function Get-BlockRulesMeta {
     <#
     .SYNOPSIS
         Gets the latest Microsoft Recommended block rules, removes its allow all rules, removes the audit mode policy rule option and sets HVCI to strict
-        It generates a XML file compliant with CI Policies Schema
+        It generates a XML file compliant with CI Policies Schema.
+        Receives a directory path to save the xml file in and returns a System.IO.FileInfo object for the path of the saved file.
     .INPUTS
-        None. You cannot pipe objects to this function.
+        System.IO.DirectoryInfo
     .OUTPUTS
-        System.String
+        System.IO.FileInfo
     #>
     [CmdletBinding()]
-    [OutputType([System.String])]
-    param ()
+    [OutputType([System.IO.FileInfo])]
+    param (
+        [Parameter(Mandatory = $true)][System.IO.DirectoryInfo]$SaveDirectory
+    )
 
     Begin {
         # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
-        # Importing the required sub-modules
-        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Write-ColorfulText.psm1" -Force
+        [System.IO.FileInfo]$FinalPolicyPath = Join-Path -Path $SaveDirectory -ChildPath 'Microsoft recommended block rules.xml'
     }
 
     Process {
@@ -75,18 +77,15 @@ Function Get-BlockRulesMeta {
         }
 
         # Save the modified XML content to a file - The Save method requires full file path
-        $BlockRulesXML.Save("$((Get-Location).path)\Microsoft recommended block rules.xml")
+        $BlockRulesXML.Save($FinalPolicyPath)
 
         # Remove the audit mode rule option
-        Set-RuleOption -FilePath '.\Microsoft recommended block rules.xml' -Option 3 -Delete
+        Set-RuleOption -FilePath $FinalPolicyPath -Option 3 -Delete
 
-        # Set HVCI to Strict
-        Set-HVCIOptions -Strict -FilePath '.\Microsoft recommended block rules.xml'
+        Set-HVCIOptions -Strict -FilePath $FinalPolicyPath
     }
-
     End {
-        # Display the result
-        Write-ColorfulText -Color MintGreen -InputText 'PolicyFile = Microsoft recommended block rules.xml'
+        Return $FinalPolicyPath
     }
 }
 
@@ -96,8 +95,8 @@ Export-ModuleMember -Function 'Get-BlockRulesMeta'
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCA8rTwIhnDXFlsG
-# TdHMcGtk+nxF+bPUXEtPvoi94OMx06CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBx6G9ysfqiUBAU
+# mo+kAWTEE7ckLLXGVvkagAHgbBwzg6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -144,16 +143,16 @@ Export-ModuleMember -Function 'Get-BlockRulesMeta'
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgwCTullPsJUW+c5lO286e58VSd1qxg3jFj6UAA+BRytowDQYJKoZIhvcNAQEB
-# BQAEggIApGqDe8x5jr6D8nQp5bpfxsEYRlgot93DjEcBothNEI3YtgcOVL7C87W9
-# bfkf7fX7YhxZiVDh8KGcYLbAKwafUbxk1h24qN6OMDDCXAHuUVSCt38DhvNBDg02
-# nMURVBGF3LEaui4qhypAIC/Ms8ePviQSRf8IjtkQU2pJheyWOHx+DGLwZbmcYqTG
-# JqCh9IRHzhqOUwZ9dxppIDB0AZ4dYJJXlW7/hq9Rwu1gpqmuj8xZqzKi/35IZ13z
-# JZqb9jpnfIZgXGAOvMG7VWntt1nZKluSDzi2hQZIaxjH1MJV9BPI6ll1rP/0ca6u
-# wEsupebBtFVWG+jArpbNOZ3E5/tbSC67g1aKaOcwbr/3AR16n2IQOATstzO+860x
-# ilITND/9H6tO5peWpVdL9mQ7GSrmuVfToDyH82KTWAxVtUHAqruwchYd4RIBKbIE
-# w1XTDsf0QCd1ouPTpu+h7m50YyyF7m84UTCerp0K0M2A7EBkntOGFZxfcrwk0OpE
-# Yu+hMsPaWtq+2/hVXdj8EDSnWB9zcrnuu+2rZKuaQTZN/cdJ9586RvE2+LRXWBFZ
-# I0msU0OXyVaBOwIwd8vLGAUL2W7dlwkLX0ahvFyjfuuinHRzMy9pjz846qsxJfeu
-# ujZfY59eMwEV5XK1zKJE/8D95EkVWffpf66VKjclFT1OXapt+FA=
+# IgQgzh+eP57DR6XN6mZCbJopwej8zba7OjBTiNgXlW5WdYMwDQYJKoZIhvcNAQEB
+# BQAEggIAGBpCKdvX9wbOztiIGQM1Wt7fb8S6mprUnmAyOTih8f7s4P26uZGcXyX1
+# 2EGcLLg9kQfyJZjJNFwCHcsiRSpEsyk4mT53aRTPvB0/hTtbKAef6JwNDTAWrAOK
+# 9aS6Z7dtMuacbBAQU7Q7yY1GStEU4CjthHLnXG03iJj3McQGqnXrNx+b9XXqI9cZ
+# kRstvLKv/oYm0Fe7oxMApnfqcTljcANxyNCctcd/+HTRwU+mE6ITktP2J+gBo6XE
+# qWhS4cS4CmLn+WfOfOZL3Lv9/0SkYp2NzBJoopWiUZ6Snx5xo+zGV7oHumNuh79k
+# kJKvLqE7oQhjMp6QO2sT0GBp7TIOG+j1zk2zII9Q58ZusIUkAkgJbCidKQL2/Cnn
+# jA03sSbNzn0AYJKpYwKXSRk6qyeFicUMeGfXJ4hTvPFScTYiDYSEfCGv5iQT4TOv
+# rYmdzh1hO9a/1pnABiP+t2cQ/vyApzqWIAM450WqXF6bTm0FBvPSONY1/dtu9klh
+# 6TeVdrCTQTtl2gfXMGL7nJSjVdDKm71rwLxLfYWXu9XagfEeaGNjJ4IyKlKyY0og
+# +uL50bxbVn/xldmqufKa/YkSCwqUodpTrH3KV1sdbf+k6e/KSlOOUSfOCZPCAWO8
+# W+B6bBzDMxHmCoAv/uaB5R0dFb9CV5fsCWR8xeecvDeHbvHNgls=
 # SIG # End signature block

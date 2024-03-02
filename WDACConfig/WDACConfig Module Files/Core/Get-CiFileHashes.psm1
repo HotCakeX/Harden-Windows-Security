@@ -2,7 +2,7 @@ Function Get-CiFileHashes {
     [CmdletBinding()]
     [OutputType([ordered])]
     param (
-        [Parameter(Mandatory = $true, Position = 0, valueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
+        [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
         [System.IO.FileInfo]$FilePath,
 
         [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SkipVersionCheck
@@ -14,12 +14,13 @@ Function Get-CiFileHashes {
         # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
-        # Importing the required sub-modules
-        Write-Verbose -Message 'Importing the required sub-modules'
-        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Update-self.psm1" -Force
-
         # if -SkipVersionCheck wasn't passed, run the updater
-        if (-NOT $SkipVersionCheck) { Update-self -InvocationStatement $MyInvocation.Statement }
+        if (-NOT $SkipVersionCheck) {
+            # Importing the required sub-module for update checking
+            Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Update-Self.psm1" -Force
+
+            Update-Self -InvocationStatement $MyInvocation.Statement
+        }
 
         # Defining the WinTrust class from the WDACConfig Namespace if it doesn't already exist
         if (-NOT ('WDACConfig.WinTrust' -as [System.Type]) ) {
@@ -69,34 +70,6 @@ Function Get-CiFileHashes {
 
                 # Initializing a pointer to zero, which will be used to store the handle of the file stream
                 [System.IntPtr]$FileStreamHandle = [System.IntPtr]::Zero
-
-                Function Get-FlatFileHash {
-                    <#
-                    .SYNOPSIS
-                        This is a nested function that calculates the flat hash of a file using a specified hash algorithm
-                        This only runs as a fallback method when normal Authenticode hashes cannot be calculated because the file is Non-conformant
-                    .NOTES
-                        This function acts as a 2nd fallback.
-                        The first fallback is defined and handled by the AuthenticodeHashCalc.cs
-                    .PARAMETER FilePath
-                        The path to the file for which the hash is to be calculated
-                    .PARAMETER Algorithm
-                        The hash algorithm to be used
-                    .INPUTS
-                        System.IO.FileInfo
-                        System.String
-                    .OUTPUTS
-                        System.String
-                    #>
-                    param(
-                        [parameter(Mandatory = $true)]
-                        [System.IO.FileInfo]$FilePath,
-
-                        [parameter(Mandatory = $true)]
-                        [System.String]$Algorithm
-                    )
-                    Return [System.String](Get-FileHash -Algorithm $Algorithm -Path $FilePath).Hash
-                }
             }
 
             Process {
@@ -126,7 +99,8 @@ Function Get-CiFileHashes {
 
                         Write-Verbose -Message "Could not acquire context for $HashAlgorithm"
 
-                        Return [System.String](Get-FlatFileHash -FilePath $FilePath -Algorithm $HashAlgorithm)
+                        # This acts as a 2nd fallback, the first fallback is defined and handled by the AuthenticodeHashCalc.cs
+                        Return [System.String](Get-FileHash -LiteralPath $FilePath -Algorithm $HashAlgorithm).Hash
                     }
 
                     # Initializing a variable to store the size of the hash in bytes
@@ -140,7 +114,7 @@ Function Get-CiFileHashes {
 
                         Write-Verbose -Message "Could not hash $FilePath using $HashAlgorithm"
 
-                        Return [System.String](Get-FlatFileHash -FilePath $FilePath -Algorithm $HashAlgorithm)
+                        Return [System.String](Get-FileHash -LiteralPath $FilePath -Algorithm $HashAlgorithm).Hash
                     }
 
                     # Initializing a pointer to zero, which will be used to store the hash value
@@ -157,7 +131,7 @@ Function Get-CiFileHashes {
 
                             Write-Verbose -Message "Could not hash $FilePath using $HashAlgorithm"
 
-                            Return [System.String](Get-FlatFileHash -FilePath $FilePath -Algorithm $HashAlgorithm)
+                            Return [System.String](Get-FileHash -LiteralPath $FilePath -Algorithm $HashAlgorithm).Hash
                         }
 
                         # Looping through the hash value byte by byte
@@ -234,15 +208,15 @@ Function Get-CiFileHashes {
 #>
 }
 # Importing argument completer ScriptBlocks
-. "$ModuleRootPath\Resources\ArgumentCompleters.ps1"
+. "$ModuleRootPath\CoreExt\ArgumentCompleters.ps1"
 
 Register-ArgumentCompleter -CommandName 'Get-CiFileHashes' -ParameterName 'FilePath' -ScriptBlock $ArgumentCompleterAnyFilePathsPicker
 
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBXmh2vPAbaEcyw
-# yf8k5evB9keTrV+C9AZV5KGICMItl6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBAAUnvQYJKv0iB
+# S0R9ZMS3zidsec/ilThkafRUZoehpqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -289,16 +263,16 @@ Register-ArgumentCompleter -CommandName 'Get-CiFileHashes' -ParameterName 'FileP
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgNIWui26fmCs2qNiWFbHatpbAYnN9ang62+pxi8V+v3YwDQYJKoZIhvcNAQEB
-# BQAEggIAeG/EKdFhHNkD7toDhP1v9EF5EEnAq+G0qXKzZ8bvvVRgTYe6jGLf58hV
-# vGeVEby7wI12jZ89+L1QBXySJ+6/KsObl1H142FxZ/E94tix376pxV8iUNjySl/B
-# KnWXtZIT9AY9Yrpqve+HZqWwyZhy7hBTapqsY2lBH5QDxBG/PX7pKS87hVklYnwj
-# wwWFinOBoXmx5hP9e2SE+fSey7qQ6DPrRwp9cC9N2tHkycfx2+t7Z7NRbkWqajEg
-# 7UqKpynLTT8zY6PrOqStUkNTu0zVJ65/BzoVVnDesIQhVXFWLXRr7GgRtEXoitRR
-# gWCc9K6ofrCB1kp3bzoQ5b2QqdgdKLms0OIqJrb61EHg7Q81LkFOil56S1wmx3Sp
-# LQtxrwS0wV1uYeMConF1PSLMukG+dTQCbAweqceWinxrOl3bWEWEWlUCrHp9Kazz
-# /g3BcpJe0NQLttcof8lw8snFqSktJLfJhBjf5cDKi0rwqspcCE/xrz9OMbgbn2IO
-# GMFNBBQOKlf2lTzHee6OQly87IQ8tMflNq7rNyfx93jg9gvQhFfFylgdJJBeVF0e
-# xFA2gGH1cadhDl1a6T5+hCf5vf6Jxp0gFvKWgLDUxVdjb26Mm1ANxtA3oWad/4Fh
-# wPkrydr1nidWLfC+Fr2zbAWMj3AwCZWa/mDroBif6V4GxU9glXM=
+# IgQg+1YGoEZK/BvzzbSbY6TAREhyyzh1YZsdUnQ3Kpq52qEwDQYJKoZIhvcNAQEB
+# BQAEggIAan2PBn64jvy1Q8QbhGl1888t8nwcxN+xQ88v8CTFz3osnGYmLnSCZttO
+# UbRQ3ZdhBD6scJqOZrcicKK+eCpbR2I4I9N8cCW+r1GEJc0hACBkjZptkcehzgIq
+# mrVtpmPa75ExJNpWH0Ik2W3JmZY5tXmajyrbRS8tbCwRkPEQDAuGsd8Zl+iOOFrm
+# 0JlvnpduXPLuABuRoVQ182Pnu9mwV2G0Yei1+2kyaNlcQz41NiZ1+mVVhcJtey3k
+# wWREHvn4/axPUBWL5b8VY0OMKiLL21NPI0v+qHi+CYmdh4vpWyla41xnovrZ+YIl
+# s89JWnCN9zrYzGg42C5YlkODeRvksYyND2xAnDm227znNPHb07hCVqZeNhUo6tzl
+# Upl+PFZYm00p80xCTq129lBBVKhRuj0ySKB6bInigQ2F486PoUA8EI6KVfMr1ojQ
+# NTuS79ss9C48R6lyiJUMZ8Rm7EJnhgfnjYwAD+afWG5vlzb3EKM82rhHfiJcSgrd
+# gihcgiIzlkHbDCEaU0cOFAgqN1ESmgAnBvtRed9px0Szvx2bFFt6kRS1lAeG8NNl
+# bXTJqG5bCwIOHBYtVCCAPBhfOJawAGL9OEOsIA5w7WsPNJBM3BC0/aab8qotXQlR
+# l1Il5W9Fub85IMmr2ejkpENEwGUtKYkNulb4ADGkwfTqYXzFg8g=
 # SIG # End signature block

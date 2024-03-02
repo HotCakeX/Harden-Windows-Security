@@ -5,19 +5,19 @@ if (!$IsWindows) {
 # Specifies that the WDACConfig module requires Administrator privileges
 #Requires -RunAsAdministrator
 
-# Create tamper resistant global variables (if they don't already exist) - They are automatically imported in the caller's environment
+# Create tamper resistant global/script variables (if they don't already exist) - They are automatically imported in the caller's environment
 try {
     if ((Test-Path -Path 'Variable:\MSFTRecommendedBlockRulesURL') -eq $false) { New-Variable -Name 'MSFTRecommendedBlockRulesURL' -Value 'https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/public/windows/security/application-security/application-control/windows-defender-application-control/design/applications-that-can-bypass-wdac.md' -Option 'Constant' -Scope 'Global' -Description 'User Mode block rules' -Force }
     if ((Test-Path -Path 'Variable:\MSFTRecommendedDriverBlockRulesURL') -eq $false) { New-Variable -Name 'MSFTRecommendedDriverBlockRulesURL' -Value 'https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/public/windows/security/application-security/application-control/windows-defender-application-control/design/microsoft-recommended-driver-block-rules.md' -Option 'Constant' -Scope 'Global' -Description 'Kernel Mode block rules' -Force }
-    if ((Test-Path -Path 'Variable:\UserTempDirectoryPath') -eq $false) { New-Variable -Name 'UserTempDirectoryPath' -Value ([System.IO.Path]::GetTempPath()) -Option 'Constant' -Scope 'Global' -Description 'Properly and securely retrieved Temp Directory' -Force }
-    if ((Test-Path -Path 'Variable:\UserAccountDirectoryPath') -eq $false) { New-Variable -Name 'UserAccountDirectoryPath' -Value ((Get-CimInstance Win32_UserProfile -Filter "SID = '$([System.Security.Principal.WindowsIdentity]::GetCurrent().User.Value)'").LocalPath) -Option 'Constant' -Scope 'Global' -Description 'Securely retrieved User profile directory' -Force }
+    if ((Test-Path -Path 'Variable:\UserAccountDirectoryPath') -eq $false) { New-Variable -Name 'UserAccountDirectoryPath' -Value ((Get-CimInstance Win32_UserProfile -Filter "SID = '$([System.Security.Principal.WindowsIdentity]::GetCurrent().User.Value)'").LocalPath) -Option 'Constant' -Scope 'Script' -Description 'Securely retrieved User profile directory' -Force }
     if ((Test-Path -Path 'Variable:\Requiredbuild') -eq $false) { New-Variable -Name 'Requiredbuild' -Value '22621.2428' -Option 'Constant' -Scope 'Script' -Description 'Minimum required OS build number' -Force }
     if ((Test-Path -Path 'Variable:\OSBuild') -eq $false) { New-Variable -Name 'OSBuild' -Value ([System.Environment]::OSVersion.Version.Build) -Option 'Constant' -Scope 'Script' -Description 'Current OS build version' -Force }
     if ((Test-Path -Path 'Variable:\UBR') -eq $false) { New-Variable -Name 'UBR' -Value (Get-ItemPropertyValue -Path 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion' -Name 'UBR') -Option 'Constant' -Scope 'Script' -Description 'Update Build Revision (UBR) number' -Force }
     if ((Test-Path -Path 'Variable:\FullOSBuild') -eq $false) { New-Variable -Name 'FullOSBuild' -Value "$OSBuild.$UBR" -Option 'Constant' -Scope 'Script' -Description 'Create full OS build number as seen in Windows Settings' -Force }
     if ((Test-Path -Path 'Variable:\ModuleRootPath') -eq $false) { New-Variable -Name 'ModuleRootPath' -Value ($PSScriptRoot) -Option 'Constant' -Scope 'Global' -Description 'Storing the value of $PSScriptRoot in a global constant variable to allow the internal functions to use it when navigating the module structure' -Force }
     if ((Test-Path -Path 'Variable:\CISchemaPath') -eq $false) { New-Variable -Name 'CISchemaPath' -Value "$Env:SystemDrive\Windows\schemas\CodeIntegrity\cipolicy.xsd" -Option 'Constant' -Scope 'Global' -Description 'Storing the path to the WDAC Code Integrity Schema XSD file' -Force }
-
+    if ((Test-Path -Path 'Variable:\UserConfigDir') -eq $false) { New-Variable -Name 'UserConfigDir' -Value "$Env:ProgramFiles\WDACConfig" -Option 'Constant' -Scope 'Global' -Description 'Storing the path to the WDACConfig folder in the Program Files' -Force }
+    if ((Test-Path -Path 'Variable:\UserConfigJson') -eq $false) { New-Variable -Name 'UserConfigJson' -Value "$UserConfigDir\UserConfigurations\UserConfigurations.json" -Option 'Constant' -Scope 'Global' -Description 'Storing the path to User Config JSON file in the WDACConfig folder in the Program Files' -Force }
 }
 catch {
     Throw [System.InvalidOperationException] 'Could not set the required global variables.'
@@ -28,12 +28,13 @@ if (-NOT ([System.Decimal]$FullOSBuild -ge [System.Decimal]$Requiredbuild)) {
     Throw [System.PlatformNotSupportedException] "You are not using the latest build of the Windows OS. A minimum build of $Requiredbuild is required but your OS build is $FullOSBuild`nPlease go to Windows Update to install the updates and then try again."
 }
 
+# Enables additional progress indicators for Windows Terminal and Windows
+$PSStyle.Progress.UseOSCIndicator = $true
+
 # Loop through all the relevant files in the module
 foreach ($File in (Get-ChildItem -Recurse -File -Path $ModuleRootPath -Include '*.ps1', '*.psm1')) {
-
     # Get the signature of the current file
     [System.Management.Automation.Signature]$Signature = Get-AuthenticodeSignature -FilePath $File
-
     # Ensure that they are code signed properly and have not been tampered with.
     if (($Signature.SignerCertificate.Thumbprint -eq '1c1c9082551b43eec17c0301bfb2f27031a4d8c8') -and ($Signature.Status -in 'Valid', 'UnknownError')) {
         # If the file is signed properly, then continue to the next file
@@ -43,11 +44,36 @@ foreach ($File in (Get-ChildItem -Recurse -File -Path $ModuleRootPath -Include '
     }
 }
 
+# Move the UserConfigurations.json file from the old location to the new location for smooth transition
+# Will be removed in a future release once all the users have moved to the new location
+if (Test-Path -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json" -PathType Leaf) {
+
+    # Create the new directory if it doesn't exist
+    if (-NOT (Test-Path -Path $UserConfigDir -PathType Container)) {
+        New-Item -ItemType Directory -Path $UserConfigDir -Force
+    }
+    # Only move the file if it doesn't already exist in the new location
+    if (-NOT (Test-Path -Path $UserConfigJson -PathType Leaf)) {
+
+        # Move the file to the new location
+        Move-Item -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json" -Destination $UserConfigJson -Force
+
+        # Remove the old directory
+        Remove-Item -Path "$UserAccountDirectoryPath\.WDACConfig" -Force -Recurse
+    }
+    # If the file already exists in the new location, then remove the old directory
+    else {
+        # Remove the old directory
+        Remove-Item -Path "$UserAccountDirectoryPath\.WDACConfig" -Force -Recurse
+    }
+}
+
+
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCAcZZLnHenM0vGz
-# 6tIHPVXp5xPtGlHHe/9lJBjgtZCwGKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCAbvAqxhPR4trEN
+# H0UrKeyINPB98lK5c/VyvK1Uk4P44qCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -94,16 +120,16 @@ foreach ($File in (Get-ChildItem -Recurse -File -Path $ModuleRootPath -Include '
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgzASG2c1JDl6tsmQpIBhXZgQt1e8ErSV3p/dWtSgGCJ4wDQYJKoZIhvcNAQEB
-# BQAEggIAavLaXaE8hj9ylz3yLQZT11Gt6n99h7SbTAJGW/7VoycN7rLykz9z2z9a
-# grn1psEeJP1g7eDm/7QDg7Ou7d6h9pq0Wcl19rybd0Q6M2/HwQl/EtRDpkFnvV88
-# moQPaU7J2Um7eSSysPhNubxApPl9l9rCChEJBEK+KoD5LCHJ2D9ppzZKDmSmpEZp
-# xTVIBKxpZ1XnCK3+JtAExy5dl4ovjQNQ3sjjmBq3S2fWmVXmMKo6A6SYEu4++9Mh
-# QABaGEN+jFqiA1bB/8hS6bMiZK0d96Vj0P6Ekjc8RqezJCiCP1Cw3JIVbBl1wHeK
-# /0HEdAMWpLhuUNG8i1R/0QAt3pogjiZWUC1V54gxPzarvvac6rIrFBwd2uaaSX2h
-# TqRb3Qe0u9PWAFUMUIdY3VFQnsoCJANvt/zUedn4iY+QARCQXYSN8avnw1sUNuTX
-# JGHM/ueqXTK9A3HJtpiJV0ZDKXfaBW4UhLcU4DJPeySc2bBvGDe1fKS9yK5VKRSq
-# J+/Sqh0ZbfxunaMvp3hj4o8FqKrMw9SQN+Y6MgN2RiL++cbBqJ6HE930SUVbU4FQ
-# GNP7eKe9MyR7v4AJ4uZRWX3WFoj/0+CGCF0/e0YdErF/dvIgG4t0Vjcc9tqxApsW
-# yh5AKgDPACPUy0SlQ/a7YswjvFLdddk+1hddUshL3Z9Ufqpl/eE=
+# IgQg34B2Ovgdv+uMHMDoocXyxp4nfKIK8ozcQSRn1f9ai08wDQYJKoZIhvcNAQEB
+# BQAEggIACT4bjozT3TLgJ39ZcwITpkJJbiCeEA7qQyXzAvrPWrbPehfLksuxnqCb
+# 4x8LBsOiWm22ag2SFXPkyYZHHxL6ZZstmgSqCa84DjZBOAL4H/sNAwEDJY0IKD4X
+# fJLzFQvNz3bgp83Qm+smGIZe4mEK+dhwcswDDXcfOT26eTfwfp3PIlfvxeJBV3Wa
+# 9+xw1cfvV6YYh9yAWSRf13y7SbpdnXs8LuItNEx591s7rRO68ySfKfEkcA/Tj0TX
+# hdIERP/gyH765YtzYVFx5PhhbejC62zdah0tK6Jcd/23Tbevjvv0p5UWZd8ojIPa
+# lCp1ErUgt/hnvPmu07TUsogcxbdmXyruU/klvJjszfKDOxn39E+17pdl7k5fmQAH
+# KmkZxrR2EnR0vdlkr7A7ArZlGzAw+oHSLGaNF8hiKV3Pigx/94jRQZ5khHqYn3+/
+# QUTKP+H+Kyl5s6smWBXqYSnsIaZdOGh1CTjdARYcVS5K+so7io4//txAZoSb+bb2
+# rdJAEvFGiQ3uYObUxlVFZqRhVjL8q1sH7vN5AuxSG6LOySJS0qi7LkGrU/1fNajI
+# 0Xn3kYqTbg3I+NBRi1iTgcScETNzq1QhwotlUYU0u5tdfck0xv+Hue7pdsl+oWAX
+# RE7rSoQ99W8MsLaNYl1g144t7Za67RQWPZFWhq7zRGstx69b68A=
 # SIG # End signature block

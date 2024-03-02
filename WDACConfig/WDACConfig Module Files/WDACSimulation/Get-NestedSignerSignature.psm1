@@ -25,9 +25,6 @@ Function Get-NestedSignerSignature {
         # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
-        # Load the System.Security assembly to use the SignedCms class
-        Add-Type -AssemblyName 'System.Security' -ErrorAction SilentlyContinue
-
         # Add the Crypt32.dll library functions as a type if they don't exist
         if (-NOT ('WDACConfig.Crypt32DLL' -as [System.Type]) ) {
             Add-Type -Path "$ModuleRootPath\C#\Crypt32dll.cs"
@@ -178,8 +175,8 @@ Export-ModuleMember -Function 'Get-NestedSignerSignature'
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCwG/qIkwoxGi1v
-# AY70GdZI8htbl9J1IpskXi4hnc4fGaCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDscdkaSQZWJgKM
+# KzKo5odqz2dIrdEnKKCsCx+cqbcZF6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -226,16 +223,16 @@ Export-ModuleMember -Function 'Get-NestedSignerSignature'
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgPti7rGaGdt/b735AkAeA4QVEZ1NsB+bPFaKweh9IHDswDQYJKoZIhvcNAQEB
-# BQAEggIAghWhefd87gkodrLMsrt115GIZpa5U/9AbgM3JnKO/fqGJoIudAIFQjeW
-# qSfKc9MFIa/qadgAKGhEC5GmOo1mrKiK3/CV+8SFVmEgyH4yolKZeX1rrSyzdTA0
-# pCdOgjpm04h7SC/a/OTYr1GiQ/u/jgy7LZgpvJEhHtoRrlOwXRxNRBRz13MqS0U+
-# 61Ykgiflu7kTdXbsCMIwIk1jSspBdgZFPhQs9svBG1wsxxWS5Tb1lBDn7xASEkzJ
-# rAYLGGM2RTM6IzD/CC2KIVHHeU606doTUeXg0YDuxKv4nbJF41YfNlli0zt4iJ8N
-# UOzYxJeTBLHeTDWgWdbYsiAmxdveLbgyUeL+lylkxoeI5I3CWWm1hwrgHTgtBM90
-# +Vext6URSgpeYZkQ0hxU2VGWprKiS3SpT+/iFplYLp13cqeBwUnuTOjnL5GfFziU
-# Z0f07f8HwF2RvrHrsQrkSz40c32AOSHNaXzhqiz/cCfdhy3Dx28U69ilPPM4Selx
-# irr4u5wB4cMSW56ZwMsQwI2jx7aR37wT1/rcVkUtM9izGPGycpSiRKDLrIYrYqRO
-# VQMsy4H7Nh7mdZPPrw6iRgOp1eWfe4THfpohfUBuaAZF/O4Lw4fTl4V1T+mN1UaJ
-# RLaWpOV8NiLNSnmgiaydH2s/Nsk6VTwHH9fAZ1uQ2K8Ypo13v8A=
+# IgQgmIEM6NXzB/7vYq343TA1t2NYoGMPznuW1XnX9rhnkXkwDQYJKoZIhvcNAQEB
+# BQAEggIAcUzyXpNgqcqJ13NJIkjvHTY58/6z6MpAoVzmns/CiJZEHkJUQuSTc72X
+# X8bxhUzh6lt+m+vRDUBdHiyZsktZV6mQNDvlZmBoamdv2ttYqDf//P2P9Pq/fj3d
+# jQ0YkwHEDLjcrx9YE6F7Jz2A0xuMelVR70u3cSB/Dk7SCH/GbWpCeOemjOPAgds5
+# mzoJG7KYgFbLKLfZ2XULsaDFBaxbXHA4GBqdJ+Bp/OcB1SlCFg2KtYgNy05Pcj1+
+# /IwhZUbZEIPpSvRSIGUCTBEQofAAmjoQtuUR/Q1NrUs/Gcn4htVNGylAbxVb4Mid
+# qmw31N4T/z91KgcS+MGCCKhC2wcNdUld81GmuwB85so7w0NAsW2a0MPEGjd59jAE
+# rmjptMVc8TuQHHPSStqmDfSD+DxxCeNXMEDop2J3EJlrohULzWIaF+r6HFO/AWIp
+# 5Nz3XEtLYOre61u9N8gpeIfzJ0/wvm5SWUmJDbdlMVZYWdjRAbJzPQnJafBD2Nbj
+# WWoMQwIp1ynvAMc0peZXTbm1OGitf2s26rvcCyXihNwGAj/oT8y1YuRVAXe6w1q1
+# YT5BpB2OiP6/PfhDJjKrOGVfdOdNw0oTQJ+xaYThOwhk/ixLvBvGQMZLOQt2DemR
+# cNv5MFieKgqmYdA9YAYhLBcl+9NloPeVj+kLKAFOSpTRYurcHMg=
 # SIG # End signature block

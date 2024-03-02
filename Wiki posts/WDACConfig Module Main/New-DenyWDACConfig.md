@@ -11,13 +11,14 @@ New-DenyWDACConfig
     [-Normal]
     -PolicyName <String>
     [-ScanLocations <DirectoryInfo[]>]
+    [-Deploy]
     [-Level <String>]
     [-Fallbacks <String[]>]
     [-SpecificFileNameLevel <String>]
     [-NoUserPEs]
     [-NoScript]
-    [-Deploy]
     [-SkipVersionCheck]
+    [-WhatIf]
     [-Confirm]
     [<CommonParameters>]
 ```
@@ -91,7 +92,7 @@ Offers the same official [Levels](https://learn.microsoft.com/en-us/powershell/m
 | Type: |[String](https://learn.microsoft.com/en-us/dotnet/api/system.string)|
 | :-------------: | :-------------: |
 | Position: | Named |
-| Default value: | FilePublisher |
+| Default value: | `WHQLFilePublisher` |
 | Required: | False |
 | Accept pipeline input: | False |
 | Accept wildcard characters: | False |
@@ -109,7 +110,7 @@ Offers the same official [Fallbacks](https://learn.microsoft.com/en-us/powershel
 | Type: |[String](https://learn.microsoft.com/en-us/dotnet/api/system.string)[]|
 | :-------------: | :-------------: |
 | Position: | Named |
-| Default value: | Hash |
+| Default value: | `FilePublisher`,`Hash` |
 | Required: | False |
 | Accept pipeline input: | False |
 | Accept wildcard characters: | False |

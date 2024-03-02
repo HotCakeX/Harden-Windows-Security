@@ -19,6 +19,7 @@ Function New-AppxPackageCiPolicy {
         The path to the directory to store the policy file
     .INPUTS
         PSCustomObject[]
+        System.IO.DirectoryInfo
     .OUTPUTS
         PSCustomObject
     #>
@@ -35,7 +36,6 @@ Function New-AppxPackageCiPolicy {
         # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
-        # Importing the required sub-modules
         Write-Verbose -Message 'New-AppxPackageCiPolicy: Importing the required sub-modules'
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\New-EmptyPolicy.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Get-RuleRefs.psm1" -Force
@@ -111,8 +111,8 @@ Export-ModuleMember -Function 'New-AppxPackageCiPolicy'
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDC/E0JpW6Q1E0V
-# xp4fY+ID9Z8VMkBYF92fmFVV3OtkRaCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCAng320/Ertmn5C
+# uwaHPzhu693zGAsEGsGWOH2fo+TY26CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -159,16 +159,16 @@ Export-ModuleMember -Function 'New-AppxPackageCiPolicy'
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgxr3HBGlGejOpWGKUMzo/tol5tHiihEdSo4hGZKzWw9swDQYJKoZIhvcNAQEB
-# BQAEggIAWqjq/+7x1qnEQpe/b6YhacEkzdmO+cMRmvZbIVXytcIAabOM68U/z7a2
-# euNIwfIRhgG3o8Nn+reeQPJ3VWdYgzPTFayhBDBi6FaAgVzAntJVjVRovrZD+a0e
-# oR6zK6oFMnB6/jUW5ufA+PY4g7e1/9zhmLk9dm8RImmw6VWPEavLRbLiy0UZQdaE
-# mQHIvwdssWl0yDU/+F04v/gDcMWLe/pZ2x8yolPz8i9iGJJVAI4bErpSy2VrvyXS
-# AI+CHPVRWIv1Jfm7sBXBadqOrYuuB5b/0oFtGDqt+U2GHK6rcd/zn1OGYjOrlQqd
-# 8H/zcSjsDKKR00fI/yQJ6ZbKj3VEqQMbsKm76fSZaQDLbs91+ssGrCD5Ox5T1kQ1
-# ARBxaexNA6Zq5PGh7pBU0cwwI3sbrVpD1aaCnZuoGNFM+Xbp8M4DwfLgcz3Aakgm
-# U+X676hAUrU6Qf/ZxSX2JLzwA3BSatLREwqnVeoFCMtiUPYw1TSVnVcGR1e2bf6+
-# UzCw6WP3now1ioIhRSaTszzyJWYQBEs0eS//UoegTUGvu61sQdI8vjMsbFQGfoxd
-# oAVWsYz+rQ3WkLeOh65c35DQBMFrF1zG51fICRpaGt8JcqDh81TGQ1jsbvVUml2g
-# yPu0qBzyUFxODk3/oFLv9ytLaX0PoYlwmNlSEXtTCxBwlP0Xnek=
+# IgQgXsIPT7IsLqmepKNGQw+X+uTF0mQDPz8JZV8ZYWQW5C4wDQYJKoZIhvcNAQEB
+# BQAEggIAWSKnvZDMBCs8niB56rbJT3ywQLG922rnul0cC5Vci+YnmodJwI1PQZKU
+# PDJvPi9lYgx6AUE17VsN6+A7KJd6KAy7TAmS4zizwIi3tvhMGATfGN2PI+4QfxZL
+# Pfn4U3czdfjH0KT++3V3RyZywvjJt0VdGkta/ktnQ1WbNXc2inmqsjuZJphfMWw1
+# HXH0QJdC42q7WAf1U6Z5B4ORgTBwG9Z9iF6+/VZXKE08a2hw8RPk2cZYbxVj4qgI
+# G+rDcQ7zMXR+h1DPsnw2xUX8fxRwvL02VTh6IYaY1zRvttSTIEYWGZWZ3+KkPZDb
+# Uw1wi7ytnEYZYtFVMYuyq3vQkKEUt0rr6J9pGPGCpZ1ZiR12cH2HYvtZ6oeviBRO
+# MQDZfTFgGR6zYrUHj5gUzocaAnFPYphiUAycVq1UjJSYbxb4eAMlIRh3Yml9E2uA
+# kqRpDtvjPu+dhma8wHxdqgaQ+ZP7r78YKzzH69oOicRn7KaJdnIzfl7REnvMkzCT
+# VqW3mZWBFmU1feSRUlPVOApNN0/mBFiH7lM2tvU4xRMSmmnxywvyCgBdV6yVKJ9B
+# lShbdJT/JdVES10ZDte+P4wbcxYvrasZkrzbOHXvFYar4/UrEMMyCkkoSWV/oFds
+# w0InFRmJRvIbjNWGAYo8vIeKCkuq+fqdp/QSFaQ7/qVXN1mNNwM=
 # SIG # End signature block

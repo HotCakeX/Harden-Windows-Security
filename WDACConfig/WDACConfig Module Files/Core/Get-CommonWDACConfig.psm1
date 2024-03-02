@@ -17,23 +17,20 @@ Function Get-CommonWDACConfig {
         # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
-        # Assigning the path to the UserConfigurations.json file
-        [System.IO.FileInfo]$Path = "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json"
-
         # Create User configuration folder if it doesn't already exist
-        if (-NOT (Test-Path -Path (Split-Path -Path $Path -Parent))) {
-            New-Item -ItemType Directory -Path (Split-Path -Path $Path -Parent) -Force | Out-Null
-            Write-Verbose -Message 'The .WDACConfig folder in the current user folder has been created because it did not exist.'
+        if (-NOT (Test-Path -Path (Split-Path -Path $UserConfigJson -Parent))) {
+            New-Item -ItemType Directory -Path (Split-Path -Path $UserConfigJson -Parent) -Force | Out-Null
+            Write-Verbose -Message 'The WDACConfig folder in Program Files has been created because it did not exist.'
         }
 
         # Create User configuration file if it doesn't already exist
-        if (-NOT (Test-Path -Path $Path)) {
-            New-Item -ItemType File -Path (Split-Path -Path $Path -Parent) -Name (Split-Path -Path $Path -Leaf) -Force | Out-Null
+        if (-NOT (Test-Path -Path $UserConfigJson)) {
+            New-Item -ItemType File -Path (Split-Path -Path $UserConfigJson -Parent) -Name (Split-Path -Path $UserConfigJson -Leaf) -Force | Out-Null
             Write-Verbose -Message 'The UserConfigurations.json file has been created because it did not exist.'
         }
 
         if ($Open) {
-            . $Path
+            . $UserConfigJson
 
             # set a boolean value that returns from the Process and End blocks as well
             [System.Boolean]$ReturnAndDone = $true
@@ -42,7 +39,7 @@ Function Get-CommonWDACConfig {
         }
 
         # Display this message if User Configuration file is empty or only has spaces/new lines
-        if ([System.String]::IsNullOrWhiteSpace((Get-Content -Path $Path))) {
+        if ([System.String]::IsNullOrWhiteSpace((Get-Content -Path $UserConfigJson))) {
             Write-Verbose -Message 'Your current WDAC User Configurations is empty.'
 
             [System.Boolean]$ReturnAndDone = $true
@@ -51,7 +48,7 @@ Function Get-CommonWDACConfig {
         }
 
         Write-Verbose -Message 'Reading the current user configurations'
-        [System.Object[]]$CurrentUserConfigurations = Get-Content -Path $Path -Force
+        [System.Object[]]$CurrentUserConfigurations = Get-Content -Path $UserConfigJson -Force
 
         # If the file exists but is corrupted and has bad values, rewrite it
         try {
@@ -59,7 +56,7 @@ Function Get-CommonWDACConfig {
         }
         catch {
             Write-Warning -Message 'The UserConfigurations.json was corrupted, clearing it.'
-            Set-Content -Path $Path -Value ''
+            Set-Content -Path $UserConfigJson -Value ''
 
             [System.Boolean]$ReturnAndDone = $true
             # return/exit from the begin block
@@ -144,8 +141,8 @@ Function Get-CommonWDACConfig {
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCAn1KXYPGANV9BK
-# Z2q5ovJssLrXyTtkJGLe+dzPPvkg1qCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDZHjBc5IJBe+mg
+# DuOfUio92+nYX5oiNp1WkoFDkDa7HqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -192,16 +189,16 @@ Function Get-CommonWDACConfig {
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgnweqCjwKzTKlAyaOsBw44tk+SLD3/kKKAUQf7WgEKTYwDQYJKoZIhvcNAQEB
-# BQAEggIAIj674zHd8Xdp6v8/y1zzG3L4wZJXWHtrXDACtsw95Lrb8mNBEnsInpPr
-# n8lM3EzS4PtTJyJjc/Z31g0NOR+YqQxAavekiky0D73sXCzcpbmMW24ko+kfH2vP
-# u0uU4+1jB3hCR+AmRPCMxgwLWFSMO385Y7btK/3k4GYWnNjAv+9R/HAf81HZGNGt
-# 9rzWDVNU7vMmYOHha3rjMq4mCHSxmZrdfQJoBQh03F0gj1/h6SWZQC2JUny8VW1d
-# eN0LqVMPEO0MimvtuQuyydiByHY9DiL/IHTpNnflU36nyr/2Z5cHQ9tbnmDGTR1B
-# TOI+TTnsS1T28Z/kDGEvPANIxzUK+cQFs9rndElx7PVWW598aEpD7IjxNS1DdxMm
-# K7jQDf8ZQ+pqqSm2RKAOTkphsKX3etDFNF1FkY5rt+2r/rnZ1Hee318F4dQmsL53
-# Wj1VutIf4bn8otzXpJW9pE/Ymf5SLIRhKyPwmydWoeJwLgNxW6N1uj1tjF8oJFhC
-# Wkw5mDZDt2xLlfapF2E76YdNsW7IaiRYhotObNnVyMwADjc7U2Fi1vWRGe/muTL5
-# X5mMSn57CTVauZ2XvSXWd+KUokpJI29l1PDjFjGgpk2LTApOGGFzQ36jLmQV7+Ck
-# K3UkqWNCoo6QmhLQlmcC7WYf4Bv3KCHhz+5HAtHBaEuVXX5L+Rg=
+# IgQg5opHbaczdlooqaxF1xv+a34nm6cWiVvmnG8jelTTgqIwDQYJKoZIhvcNAQEB
+# BQAEggIAdy0jzm7YjDVPiOY703ADtXyiPmpO2LH5A6EoOuWDIRw026957RZ5GuKH
+# 0OLMUU9CaoRH3Ww8c+OaLpIZ2LMKKb/6hfFITY6yYhbexlPLFUOMz1qGGnIUbiLN
+# s5SdqRkF55lDnusjKJqbQpxb6UXF9940q4bR7Od5l9QcpgK+9zca2tnXHrvxxljm
+# hN45yLngLMcMvCwDCf/bzNffNQPppPgQ452RY00cnEt9LWpKWBhXj8QkZ/ItYz0e
+# p8PABk9fGCp35eex2u6adwAEA4oXyiCqoWMNPthp8nwKiFNUR5m/CSmdwUtYHOnx
+# qESfdx5JoLwySZOXDhLaBD9rpkhZUWpzIBgC3mHsCMhuAqD4wdpt+jq5/2iEIel0
+# T8G+Cr3Pd/afuIqHNmw2R240OaDzwgyOJhLC+S4Iah4m9CDJYgWBfENGeEKLhKb8
+# I2M/AmsytxAx/DJIVOUHp/4Y1EOxrsO1WZK2jzCFUHgdxyIQRv+3avscxZT9Wayz
+# It6vg4iAsqqTirQMgUn4k8VOaarAbZRBbQJSVbg4bAVZIH0hnnSzsRte2hq4EWEN
+# NgzhdO6O7zuOGWiFo1iWlQStjqzVaz5FpY1OIgLGD+Y0wee6uVFZ+E5KhwBdZamM
+# IuNDyhFiHE1IvYf39So9oVXdXTNlxzXYvdrWQlw4RSLbj9SP/Es=
 # SIG # End signature block

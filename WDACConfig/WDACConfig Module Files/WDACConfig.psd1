@@ -4,7 +4,7 @@
     RootModule           = 'WDACConfig.psm1'
 
     # Version number of this module.
-    ModuleVersion        = '0.3.3'
+    ModuleVersion        = '0.3.4'
 
     # Supported PSEditions
     CompatiblePSEditions = @('Core')
@@ -79,20 +79,15 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
     # Minimum version of the PowerShell host required by this module
     # PowerShellHostVersion = ''
 
-    # Minimum version of Microsoft .NET Framework required by this module. This prerequisite is valid for the PowerShell Desktop edition only.
-    # DotNetFrameworkVersion = ''
-
-    # Minimum version of the common language runtime (CLR) required by this module. This prerequisite is valid for the PowerShell Desktop edition only.
-    # ClrVersion = ''
-
     # Processor architecture (None, X86, Amd64) required by this module
     # ProcessorArchitecture = ''
 
     # Modules that must be imported into the global environment prior to importing this module
-    # RequiredModules = @()
+    # RequiredModules      = @()
 
     # Assemblies that must be loaded prior to importing this module
-    # RequiredAssemblies = @()
+    # Required for File/Folder picker GUI, and Get-NestedSignerSignature function to use the SignedCms class
+    RequiredAssemblies   = @('System.Windows.Forms', 'System.Security')
 
     # Script files (.ps1) that are run in the caller's environment prior to importing this module.
     ScriptsToProcess     = @('Preloader.ps1')
@@ -198,14 +193,14 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
         'Core\ConvertTo-WDACPolicy.psm1',
         'Core\Get-CiFileHashes.psm1',
         'CoreExt\PSDefaultParameterValues.ps1',
-        'Resources\ArgumentCompleters.ps1'
+        'CoreExt\ArgumentCompleters.ps1',
+        'CoreExt\Classes.psm1',
         'Resources\WDAC Policies\DefaultWindows_Enforced_Kernel.xml',
         'Resources\WDAC Policies\DefaultWindows_Enforced_Kernel_NoFlights.xml',
         'Resources\User Configurations\Schema.json',
-        'Resources\WDAC Policies-Archived\DefaultWindows_Enforced_Kernel.xml'
-        'Resources\WDAC Policies-Archived\DefaultWindows_Enforced_Kernel_NoFlights.xml'
-        'Resources\WDAC Policies-Archived\Readme.md'
-        'Shared\Confirm-CertCN.psm1',
+        'Resources\WDAC Policies-Archived\DefaultWindows_Enforced_Kernel.xml',
+        'Resources\WDAC Policies-Archived\DefaultWindows_Enforced_Kernel_NoFlights.xml',
+        'Resources\WDAC Policies-Archived\Readme.md',
         'Shared\Get-BlockRulesMeta.psm1',
         'Shared\Get-FileRules.psm1',
         'Shared\Get-GlobalRootDrives.psm1',
@@ -215,7 +210,7 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
         'Shared\New-EmptyPolicy.psm1',
         'Shared\Set-LogSize.psm1',
         'Shared\Test-FilePath.psm1',
-        'Shared\Update-self.psm1',
+        'Shared\Update-Self.psm1',
         'Shared\Write-ColorfulText.psm1',
         'Shared\New-SnapBackGuarantee.psm1',
         'Shared\Compare-SecureString.psm1',
@@ -225,20 +220,22 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
         'Shared\Receive-CodeIntegrityLogs.psm1',
         'Shared\Edit-CiPolicyRuleOptions.psm1',
         'Shared\New-AppxPackageCiPolicy.psm1',
+        'Shared\New-StagingArea.psm1',
         'WDACSimulation\Get-TBSCertificate.psm1',
         'WDACSimulation\Get-SignerInfo.psm1',
         'WDACSimulation\Get-SignedFileCertificates.psm1',
         'WDACSimulation\Get-FileRuleOutput.psm1',
         'WDACSimulation\Get-CertificateDetails.psm1',
         'WDACSimulation\Get-NestedSignerSignature.psm1',
-        'WDACSimulation\Compare-SignerAndCertificate.psm1'
+        'WDACSimulation\Compare-SignerAndCertificate.psm1',
         'WDACSimulation\Convert-HexToOID.psm1',
         'WDACSimulation\Get-ExtendedFileInfo.psm1',
         'C#\Signer.cs',
         'C#\Kernel32dll.cs',
         'C#\Crypt32dll.cs',
         'C#\AuthenticodeHashCalc.cs',
-        'C#\PageHashCalc.cs'
+        'C#\PageHashCalc.cs',
+        'C#\Crypt32CertCN.cs'
     )
 
     # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.

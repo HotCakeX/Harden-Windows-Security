@@ -19,7 +19,7 @@ Function New-SupplementalWDACConfig {
 
         [ValidateScript({ Test-Path -Path $_ -PathType 'Container' }, ErrorMessage = 'The path you selected is not a folder path.')]
         [parameter(Mandatory = $true, ParameterSetName = 'Normal', ValueFromPipelineByPropertyName = $true)]
-        [System.String]$ScanLocation,
+        [System.IO.DirectoryInfo]$ScanLocation,
 
         [ValidatePattern('\*', ErrorMessage = 'You did not supply a path that contains wildcard character (*) .')]
         [parameter(Mandatory = $true, ParameterSetName = 'Folder Path With WildCards', ValueFromPipelineByPropertyName = $true)]
@@ -47,13 +47,13 @@ Function New-SupplementalWDACConfig {
         [Parameter(Mandatory = $false, ParameterSetName = 'Normal')]
         [System.Management.Automation.SwitchParameter]$NoScript,
 
-        [ValidateSet([Levelz])]
+        [ValidateSet([ScanLevelz])]
         [parameter(Mandatory = $false, ParameterSetName = 'Normal')]
-        [System.String]$Level = 'FilePublisher',
+        [System.String]$Level = 'WHQLFilePublisher',
 
-        [ValidateSet([Fallbackz])]
+        [ValidateSet([ScanLevelz])]
         [parameter(Mandatory = $false, ParameterSetName = 'Normal')]
-        [System.String[]]$Fallbacks = 'Hash',
+        [System.String[]]$Fallbacks = ('FilePublisher', 'Hash'),
 
         [Parameter(Mandatory = $false, ParameterSetName = 'Installed AppXPackages')]
         [System.Management.Automation.SwitchParameter]$Force,
@@ -64,33 +64,22 @@ Function New-SupplementalWDACConfig {
     begin {
         # Detecting if Verbose switch is used
         $PSBoundParameters.Verbose.IsPresent ? ([System.Boolean]$Verbose = $true) : ([System.Boolean]$Verbose = $false) | Out-Null
+        # Detecting if Debug switch is used, will do debugging actions based on that
+        $PSBoundParameters.Debug.IsPresent ? ([System.Boolean]$Debug = $true) : ([System.Boolean]$Debug = $false) | Out-Null
 
         # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
-        # Importing the required sub-modules
         Write-Verbose -Message 'Importing the required sub-modules'
-        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Update-self.psm1" -Force
+        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Update-Self.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Write-ColorfulText.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Edit-CiPolicyRuleOptions.psm1" -Force
-
-        # argument tab auto-completion and ValidateSet for Fallbacks
-        Class Fallbackz : System.Management.Automation.IValidateSetValuesGenerator {
-            [System.String[]] GetValidValues() {
-                $Fallbackz = ('Hash', 'FileName', 'SignedVersion', 'Publisher', 'FilePublisher', 'LeafCertificate', 'PcaCertificate', 'RootCertificate', 'WHQL', 'WHQLPublisher', 'WHQLFilePublisher', 'PFN', 'FilePath', 'None')
-                return [System.String[]]$Fallbackz
-            }
-        }
-        # argument tab auto-completion and ValidateSet for level
-        Class Levelz : System.Management.Automation.IValidateSetValuesGenerator {
-            [System.String[]] GetValidValues() {
-                $Levelz = ('Hash', 'FileName', 'SignedVersion', 'Publisher', 'FilePublisher', 'LeafCertificate', 'PcaCertificate', 'RootCertificate', 'WHQL', 'WHQLPublisher', 'WHQLFilePublisher', 'PFN', 'FilePath', 'None')
-                return [System.String[]]$Levelz
-            }
-        }
+        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\New-StagingArea.psm1" -Force
 
         # if -SkipVersionCheck wasn't passed, run the updater
-        if (-NOT $SkipVersionCheck) { Update-self -InvocationStatement $MyInvocation.Statement }
+        if (-NOT $SkipVersionCheck) { Update-Self -InvocationStatement $MyInvocation.Statement }
+
+        [System.IO.DirectoryInfo]$StagingArea = New-StagingArea -CmdletName 'New-SupplementalWDACConfig'
 
         #Region User-Configurations-Processing-Validation
         # If PolicyPath was not provided by user, check if a valid value exists in user configs, if so, use it, otherwise throw an error
@@ -118,204 +107,220 @@ Function New-SupplementalWDACConfig {
         if ($Force -and -Not $Confirm) {
             $ConfirmPreference = 'None'
         }
+
+        # Defining path for the final Supplemental policy XML and CIP files - used by the entire Cmdlet
+        [System.IO.FileInfo]$FinalSupplementalPath = Join-Path -Path $StagingArea -ChildPath "SupplementalPolicy $SuppPolicyName.xml"
+        [System.IO.FileInfo]$FinalSupplementalCIPPath = Join-Path -Path $StagingArea -ChildPath "SupplementalPolicy $SuppPolicyName.cip"
+
+        # Flag indicating the final files should not be copied to the main user config directory
+        [System.Boolean]$NoCopy = $false
     }
 
     process {
 
-        if ($Normal) {
+        try {
 
-            # The total number of the main steps for the progress bar to render
-            [System.Int16]$TotalSteps = $Deploy ? 3 : 2
-            [System.Int16]$CurrentStep = 0
+            if ($Normal) {
 
-            $CurrentStep++
-            Write-Progress -Id 19 -Activity 'Processing user selected folders' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-            Write-Verbose -Message 'Processing Program Folder From User input'
-            # Creating a hash table to dynamically add parameters based on user input and pass them to New-Cipolicy cmdlet
-            [System.Collections.Hashtable]$PolicyMakerHashTable = @{
-                FilePath               = "SupplementalPolicy $SuppPolicyName.xml"
-                ScanPath               = $ScanLocation
-                Level                  = $Level
-                Fallback               = $Fallbacks
-                MultiplePolicyFormat   = $true
-                UserWriteablePaths     = $true
-                AllowFileNameFallbacks = $true
-            }
-            # Assess user input parameters and add the required parameters to the hash table
-            if ($SpecificFileNameLevel) { $PolicyMakerHashTable['SpecificFileNameLevel'] = $SpecificFileNameLevel }
-            if ($NoScript) { $PolicyMakerHashTable['NoScript'] = $true }
-            if (!$NoUserPEs) { $PolicyMakerHashTable['UserPEs'] = $true }
-
-            Write-ColorfulText -Color HotPink -InputText 'Generating Supplemental policy with the following specifications:'
-            $PolicyMakerHashTable
-            Write-Host -Object ''
-
-            # Create the supplemental policy via parameter splatting
-            New-CIPolicy @PolicyMakerHashTable
-
-            $CurrentStep++
-            Write-Progress -Id 19 -Activity 'Configuring the Supplemental policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-            Write-Verbose -Message 'Changing the policy type from base to Supplemental, assigning its name and resetting its policy ID'
-            [System.String]$PolicyID = Set-CIPolicyIdInfo -FilePath "SupplementalPolicy $SuppPolicyName.xml" -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath -PolicyName "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')"
-            [System.String]$PolicyID = $PolicyID.Substring(11)
-
-            Write-Verbose -Message 'Setting the Supplemental policy version to 1.0.0.0'
-            Set-CIPolicyVersion -FilePath "SupplementalPolicy $SuppPolicyName.xml" -Version '1.0.0.0'
-
-            Edit-CiPolicyRuleOptions -Action Supplemental -XMLFile "SupplementalPolicy $SuppPolicyName.xml"
-
-            Write-Verbose -Message 'Converting the Supplemental policy XML file to a CIP file'
-            ConvertFrom-CIPolicy -XmlFilePath "SupplementalPolicy $SuppPolicyName.xml" -BinaryFilePath "$PolicyID.cip" | Out-Null
-
-            Write-ColorfulText -Color MintGreen -InputText "SupplementalPolicyFile = SupplementalPolicy $SuppPolicyName.xml"
-            Write-ColorfulText -Color MintGreen -InputText "SupplementalPolicyGUID = $PolicyID"
-
-            if ($Deploy) {
-                $CurrentStep++
-                Write-Progress -Id 19 -Activity 'Deploying the Supplemental policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-                Write-Verbose -Message 'Deploying the Supplemental policy'
-                &'C:\Windows\System32\CiTool.exe' --update-policy "$PolicyID.cip" -json | Out-Null
-                Write-ColorfulText -Color Pink -InputText "A Supplemental policy with the name $SuppPolicyName has been deployed."
-
-                Write-Verbose -Message 'Removing the CIP file after deployment'
-                Remove-Item -Path "$PolicyID.cip" -Force
-            }
-            Write-Progress -Id 19 -Activity 'Complete.' -Completed
-        }
-
-        if ($PathWildCards) {
-
-            # The total number of the main steps for the progress bar to render
-            [System.Int16]$TotalSteps = $Deploy ? 2 : 1
-            [System.Int16]$CurrentStep = 0
-
-            $CurrentStep++
-            Write-Progress -Id 20 -Activity 'Creating the Supplemental policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-            # Using Windows PowerShell to handle serialized data since PowerShell core throws an error
-            Write-Verbose -Message 'Creating the Supplemental policy file'
-            powershell.exe -Command {
-                $RulesWildCards = New-CIPolicyRule -FilePathRule $args[0]
-                New-CIPolicy -MultiplePolicyFormat -FilePath ".\SupplementalPolicy $($args[1]).xml" -Rules $RulesWildCards
-            } -args $FolderPath, $SuppPolicyName
-
-            Write-Verbose -Message 'Changing the policy type from base to Supplemental, assigning its name and resetting its policy ID'
-            [System.String]$PolicyID = Set-CIPolicyIdInfo -FilePath ".\SupplementalPolicy $SuppPolicyName.xml" -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath -PolicyName "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')"
-            [System.String]$PolicyID = $PolicyID.Substring(11)
-
-            Write-Verbose -Message 'Setting the Supplemental policy version to 1.0.0.0'
-            Set-CIPolicyVersion -FilePath ".\SupplementalPolicy $SuppPolicyName.xml" -Version '1.0.0.0'
-
-            Edit-CiPolicyRuleOptions -Action Supplemental -XMLFile ".\SupplementalPolicy $SuppPolicyName.xml"
-
-            Write-Verbose -Message 'Converting the Supplemental policy XML file to a CIP file'
-            ConvertFrom-CIPolicy -XmlFilePath ".\SupplementalPolicy $SuppPolicyName.xml" -BinaryFilePath "$PolicyID.cip" | Out-Null
-
-            Write-ColorfulText -Color MintGreen -InputText "SupplementalPolicyFile = SupplementalPolicy $SuppPolicyName.xml"
-            Write-ColorfulText -Color MintGreen -InputText "SupplementalPolicyGUID = $PolicyID"
-
-            if ($Deploy) {
-                $CurrentStep++
-                Write-Progress -Id 20 -Activity 'Deploying the Supplemental policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-                Write-Verbose -Message 'Deploying the Supplemental policy'
-                &'C:\Windows\System32\CiTool.exe' --update-policy "$PolicyID.cip" -json | Out-Null
-                Write-ColorfulText -Color Pink -InputText "A Supplemental policy with the name $SuppPolicyName has been deployed."
-
-                Write-Verbose -Message 'Removing the CIP file after deployment'
-                Remove-Item -Path "$PolicyID.cip" -Force
-            }
-            Write-Progress -Id 20 -Activity 'Complete.' -Completed
-        }
-
-        if ($InstalledAppXPackages) {
-            try {
                 # The total number of the main steps for the progress bar to render
                 [System.Int16]$TotalSteps = $Deploy ? 3 : 2
                 [System.Int16]$CurrentStep = 0
 
                 $CurrentStep++
-                Write-Progress -Id 21 -Activity 'Getting the Appx package' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+                Write-Progress -Id 19 -Activity 'Processing user selected folders' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                # Backing up PS Formatting Styles
-                [System.Collections.Hashtable]$OriginalStyle = @{}
-                $PSStyle.Formatting | Get-Member -MemberType Property | ForEach-Object -Process {
-                    $OriginalStyle[$_.Name] = $PSStyle.Formatting.$($_.Name)
+                Write-Verbose -Message 'Processing Program Folder From User input'
+                # Creating a hash table to dynamically add parameters based on user input and pass them to New-Cipolicy cmdlet
+                [System.Collections.Hashtable]$PolicyMakerHashTable = @{
+                    FilePath               = $FinalSupplementalPath
+                    ScanPath               = $ScanLocation
+                    Level                  = $Level
+                    Fallback               = $Fallbacks
+                    MultiplePolicyFormat   = $true
+                    UserWriteablePaths     = $true
+                    AllowFileNameFallbacks = $true
                 }
+                # Assess user input parameters and add the required parameters to the hash table
+                if ($SpecificFileNameLevel) { $PolicyMakerHashTable['SpecificFileNameLevel'] = $SpecificFileNameLevel }
+                if ($NoScript) { $PolicyMakerHashTable['NoScript'] = $true }
+                if (!$NoUserPEs) { $PolicyMakerHashTable['UserPEs'] = $true }
 
-                # Change the color for the list items to plum
-                $PSStyle.Formatting.FormatAccent = "$($PSStyle.Foreground.FromRGB(221,160,221))"
+                Write-ColorfulText -Color HotPink -InputText 'Generating Supplemental policy with the following specifications:'
+                $PolicyMakerHashTable
+                Write-Host -Object ''
 
-                Write-Verbose -Message 'Displaying the installed Appx packages based on the supplied name'
-                Get-AppxPackage -Name $PackageName | Select-Object -Property Name, Publisher, version, PackageFamilyName, PackageFullName, InstallLocation, Dependencies, SignatureKind, Status
+                # Create the supplemental policy via parameter splatting
+                New-CIPolicy @PolicyMakerHashTable
 
-                # Prompt for confirmation before proceeding
-                if ($PSCmdlet.ShouldProcess('', 'Select No to cancel and choose another name', 'Is this the intended results based on your Installed Appx packages?')) {
+                $CurrentStep++
+                Write-Progress -Id 19 -Activity 'Configuring the Supplemental policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
+                Write-Verbose -Message 'Changing the policy type from base to Supplemental, assigning its name and resetting its policy ID'
+                Set-CIPolicyIdInfo -FilePath $FinalSupplementalPath -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath -PolicyName "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')" | Out-Null
+
+                Write-Verbose -Message 'Setting the Supplemental policy version to 1.0.0.0'
+                Set-CIPolicyVersion -FilePath $FinalSupplementalPath -Version '1.0.0.0'
+
+                Edit-CiPolicyRuleOptions -Action Supplemental -XMLFile $FinalSupplementalPath
+
+                Write-Verbose -Message 'Converting the Supplemental policy XML file to a CIP file'
+                ConvertFrom-CIPolicy -XmlFilePath $FinalSupplementalPath -BinaryFilePath $FinalSupplementalCIPPath | Out-Null
+
+                Write-ColorfulText -Color MintGreen -InputText "SupplementalPolicyFile = $FinalSupplementalPath"
+                Write-ColorfulText -Color MintGreen -InputText "SupplementalPolicyGUID = $FinalSupplementalCIPPath"
+
+                if ($Deploy) {
+                    $CurrentStep++
+                    Write-Progress -Id 19 -Activity 'Deploying the Supplemental policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
+                    Write-Verbose -Message 'Deploying the Supplemental policy'
+                    &'C:\Windows\System32\CiTool.exe' --update-policy $FinalSupplementalCIPPath -json | Out-Null
+                    Write-ColorfulText -Color Pink -InputText "A Supplemental policy with the name $SuppPolicyName has been deployed."
+                }
+                Write-Progress -Id 19 -Activity 'Complete.' -Completed
+            }
+
+            if ($PathWildCards) {
+
+                # The total number of the main steps for the progress bar to render
+                [System.Int16]$TotalSteps = $Deploy ? 2 : 1
+                [System.Int16]$CurrentStep = 0
+
+                $CurrentStep++
+                Write-Progress -Id 20 -Activity 'Creating the Supplemental policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
+                # Using Windows PowerShell to handle serialized data since PowerShell core throws an error
+                Write-Verbose -Message 'Creating the Supplemental policy file'
+                powershell.exe -Command {
+                    $RulesWildCards = New-CIPolicyRule -FilePathRule $args[0]
+                    New-CIPolicy -MultiplePolicyFormat -FilePath "$($args[2])\SupplementalPolicy $($args[1]).xml" -Rules $RulesWildCards
+                } -args $FolderPath, $SuppPolicyName, $StagingArea
+
+                Write-Verbose -Message 'Changing the policy type from base to Supplemental, assigning its name and resetting its policy ID'
+                Set-CIPolicyIdInfo -FilePath $FinalSupplementalPath -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath -PolicyName "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')" | Out-Null
+
+                Write-Verbose -Message 'Setting the Supplemental policy version to 1.0.0.0'
+                Set-CIPolicyVersion -FilePath $FinalSupplementalPath -Version '1.0.0.0'
+
+                Edit-CiPolicyRuleOptions -Action Supplemental -XMLFile $FinalSupplementalPath
+
+                Write-Verbose -Message 'Converting the Supplemental policy XML file to a CIP file'
+                ConvertFrom-CIPolicy -XmlFilePath $FinalSupplementalPath -BinaryFilePath $FinalSupplementalCIPPath | Out-Null
+
+                Write-ColorfulText -Color MintGreen -InputText "SupplementalPolicyFile = $FinalSupplementalPath"
+                Write-ColorfulText -Color MintGreen -InputText "SupplementalPolicyGUID = $FinalSupplementalCIPPath"
+
+                if ($Deploy) {
+                    $CurrentStep++
+                    Write-Progress -Id 20 -Activity 'Deploying the Supplemental policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
+                    Write-Verbose -Message 'Deploying the Supplemental policy'
+                    &'C:\Windows\System32\CiTool.exe' --update-policy $FinalSupplementalCIPPath -json | Out-Null
+                    Write-ColorfulText -Color Pink -InputText "A Supplemental policy with the name $SuppPolicyName has been deployed."
+                }
+                Write-Progress -Id 20 -Activity 'Complete.' -Completed
+            }
+
+            if ($InstalledAppXPackages) {
+                try {
+                    # The total number of the main steps for the progress bar to render
+                    [System.Int16]$TotalSteps = $Deploy ? 3 : 2
+                    [System.Int16]$CurrentStep = 0
 
                     $CurrentStep++
-                    Write-Progress -Id 21 -Activity 'Creating the Supplemental policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+                    Write-Progress -Id 21 -Activity 'Getting the Appx package' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                    Write-Verbose -Message 'Creating a policy for the supplied Appx package name and its dependencies (if any)'
-                    powershell.exe -Command {
-                        # Get all the packages based on the supplied name
-                        $Package = Get-AppxPackage -Name $args[0]
+                    # Backing up PS Formatting Styles
+                    [System.Collections.Hashtable]$OriginalStyle = @{}
+                    $PSStyle.Formatting | Get-Member -MemberType Property | ForEach-Object -Process {
+                        $OriginalStyle[$_.Name] = $PSStyle.Formatting.$($_.Name)
+                    }
 
-                        # Get package dependencies if any
-                        $PackageDependencies = $Package.Dependencies
+                    # Change the color for the list items to plum
+                    $PSStyle.Formatting.FormatAccent = "$($PSStyle.Foreground.FromRGB(221,160,221))"
 
-                        # Create rules for each package
-                        foreach ($Item in $Package) {
-                            $Rules += New-CIPolicyRule -Package $Item
-                        }
+                    Write-Verbose -Message 'Displaying the installed Appx packages based on the supplied name'
+                    Get-AppxPackage -Name $PackageName | Select-Object -Property Name, Publisher, version, PackageFamilyName, PackageFullName, InstallLocation, Dependencies, SignatureKind, Status
 
-                        # Create rules for each package dependency, if any
-                        if ($PackageDependencies) {
-                            foreach ($Item in $PackageDependencies) {
+                    # Prompt for confirmation before proceeding
+                    if ($PSCmdlet.ShouldProcess('', 'Select No to cancel and choose another name', 'Is this the intended results based on your Installed Appx packages?')) {
+
+                        $CurrentStep++
+                        Write-Progress -Id 21 -Activity 'Creating the Supplemental policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
+                        Write-Verbose -Message 'Creating a policy for the supplied Appx package name and its dependencies (if any)'
+                        powershell.exe -Command {
+                            # Get all the packages based on the supplied name
+                            [Microsoft.Windows.Appx.PackageManager.Commands.AppxPackage[]]$Package = Get-AppxPackage -Name $args[0]
+
+                            # Get package dependencies if any
+                            $PackageDependencies = $Package.Dependencies
+
+                            $Rules = @()
+
+                            # Create rules for each package
+                            foreach ($Item in $Package) {
                                 $Rules += New-CIPolicyRule -Package $Item
                             }
+
+                            # Create rules for each package dependency, if any
+                            if ($PackageDependencies) {
+                                foreach ($Item in $PackageDependencies) {
+                                    $Rules += New-CIPolicyRule -Package $Item
+                                }
+                            }
+
+                            # Generate the supplemental policy xml file
+                            New-CIPolicy -MultiplePolicyFormat -FilePath "$($args[2])\SupplementalPolicy $($args[1]).xml" -Rules $Rules
+                        } -args $PackageName, $SuppPolicyName, $StagingArea
+
+                        Write-Verbose -Message 'Converting the policy type from base to Supplemental, assigning its name and resetting its policy ID'
+                        Set-CIPolicyIdInfo -FilePath $FinalSupplementalPath -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath -PolicyName "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')" | Out-Null
+
+                        Write-Verbose -Message 'Setting the Supplemental policy version to 1.0.0.0'
+                        Set-CIPolicyVersion -FilePath $FinalSupplementalPath -Version '1.0.0.0'
+
+                        Edit-CiPolicyRuleOptions -Action Supplemental -XMLFile $FinalSupplementalPath
+
+                        Write-Verbose -Message 'Converting the Supplemental policy XML file to a CIP file'
+                        ConvertFrom-CIPolicy -XmlFilePath $FinalSupplementalPath -BinaryFilePath $FinalSupplementalCIPPath | Out-Null
+
+                        Write-ColorfulText -Color MintGreen -InputText "SupplementalPolicyFile = $FinalSupplementalPath"
+                        Write-ColorfulText -Color MintGreen -InputText "SupplementalPolicyGUID = $FinalSupplementalCIPPath"
+
+                        if ($Deploy) {
+                            $CurrentStep++
+                            Write-Progress -Id 21 -Activity 'Deploying the Supplemental policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
+                            Write-Verbose -Message 'Deploying the Supplemental policy'
+                            &'C:\Windows\System32\CiTool.exe' --update-policy $FinalSupplementalCIPPath -json | Out-Null
+                            Write-ColorfulText -Color Pink -InputText "A Supplemental policy with the name $SuppPolicyName has been deployed."
                         }
-
-                        # Generate the supplemental policy xml file
-                        New-CIPolicy -MultiplePolicyFormat -FilePath ".\SupplementalPolicy $($args[1]).xml" -Rules $Rules
-                    } -args $PackageName, $SuppPolicyName
-
-                    Write-Verbose -Message 'Converting the policy type from base to Supplemental, assigning its name and resetting its policy ID'
-                    [System.String]$PolicyID = Set-CIPolicyIdInfo -FilePath ".\SupplementalPolicy $SuppPolicyName.xml" -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath -PolicyName "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')"
-                    [System.String]$PolicyID = $PolicyID.Substring(11)
-
-                    Write-Verbose -Message 'Setting the Supplemental policy version to 1.0.0.0'
-                    Set-CIPolicyVersion -FilePath ".\SupplementalPolicy $SuppPolicyName.xml" -Version '1.0.0.0'
-
-                    Edit-CiPolicyRuleOptions -Action Supplemental -XMLFile ".\SupplementalPolicy $SuppPolicyName.xml"
-
-                    Write-Verbose -Message 'Converting the Supplemental policy XML file to a CIP file'
-                    ConvertFrom-CIPolicy -XmlFilePath ".\SupplementalPolicy $SuppPolicyName.xml" -BinaryFilePath "$PolicyID.cip" | Out-Null
-
-                    Write-ColorfulText -Color MintGreen -InputText "SupplementalPolicyFile = SupplementalPolicy $SuppPolicyName.xml"
-                    Write-ColorfulText -Color MintGreen -InputText "SupplementalPolicyGUID = $PolicyID"
-
-                    if ($Deploy) {
-                        $CurrentStep++
-                        Write-Progress -Id 21 -Activity 'Deploying the Supplemental policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-                        Write-Verbose -Message 'Deploying the Supplemental policy'
-                        &'C:\Windows\System32\CiTool.exe' --update-policy "$PolicyID.cip" -json | Out-Null
-                        Write-ColorfulText -Color Pink -InputText "A Supplemental policy with the name $SuppPolicyName has been deployed."
-
-                        Write-Verbose -Message 'Removing the CIP file after deployment'
-                        Remove-Item -Path "$PolicyID.cip" -Force
+                    }
+                    else {
+                        $NoCopy = $true
                     }
                 }
-            }
-            finally {
-                # Restore PS Formatting Styles
-                $OriginalStyle.Keys | ForEach-Object -Process {
-                    $PSStyle.Formatting.$_ = $OriginalStyle[$_]
+                finally {
+                    # Restore PS Formatting Styles
+                    $OriginalStyle.Keys | ForEach-Object -Process {
+                        $PSStyle.Formatting.$_ = $OriginalStyle[$_]
+                    }
+                    Write-Progress -Id 21 -Activity 'Complete.' -Completed
                 }
-                Write-Progress -Id 21 -Activity 'Complete.' -Completed
+            }
+        }
+        Catch {
+            $NoCopy = $true
+            Throw $_
+        }
+        finally {
+            # Copy the final files to the user config directory
+            if (-NOT $NoCopy) {
+                Copy-Item -Path ($Deploy ? $FinalSupplementalPath : $FinalSupplementalPath, $FinalSupplementalCIPPath) -Destination $UserConfigDir -Force
+            }
+            if (-NOT $Debug) {
+                Remove-Item -Path $StagingArea -Recurse -Force
             }
         }
     }
@@ -384,8 +389,8 @@ Function New-SupplementalWDACConfig {
 }
 
 # Importing argument completer ScriptBlocks
-. "$ModuleRootPath\Resources\ArgumentCompleters.ps1"
-Register-ArgumentCompleter -CommandName 'New-SupplementalWDACConfig' -ParameterName 'PolicyPath' -ScriptBlock $ArgumentCompleterPolicyPathsBasePoliciesOnly
+. "$ModuleRootPath\CoreExt\ArgumentCompleters.ps1"
+Register-ArgumentCompleter -CommandName 'New-SupplementalWDACConfig' -ParameterName 'PolicyPath' -ScriptBlock $ArgumentCompleterXmlFilePathsPicker
 Register-ArgumentCompleter -CommandName 'New-SupplementalWDACConfig' -ParameterName 'PackageName' -ScriptBlock $ArgumentCompleterAppxPackageNames
 Register-ArgumentCompleter -CommandName 'New-SupplementalWDACConfig' -ParameterName 'ScanLocation' -ScriptBlock $ArgumentCompleterFolderPathsPicker
 Register-ArgumentCompleter -CommandName 'New-SupplementalWDACConfig' -ParameterName 'FolderPath' -ScriptBlock $ArgumentCompleterFolderPathsPickerWildCards
@@ -393,8 +398,8 @@ Register-ArgumentCompleter -CommandName 'New-SupplementalWDACConfig' -ParameterN
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBTH/1UcwpCcfWp
-# 2Lf6zZ5e0qZh0CJlI3gB5ORQlmz446CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBqb1srH0UF/Niz
+# 6AtrlQ4g9Wof4VkMTnWZOnNuASnEt6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -441,16 +446,16 @@ Register-ArgumentCompleter -CommandName 'New-SupplementalWDACConfig' -ParameterN
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQg1GccTJSNncEnUOu3WEsirNLnG9iQvu+1WPoAp6/TrnIwDQYJKoZIhvcNAQEB
-# BQAEggIABVKuHgcRjd/xnc6X0XjNblb9jDlw6AOAjgVeF3+tqw28syKYHP2dV258
-# nHBxrapkzYDXpQwRT0LsCMWoq+jy4NHe0J2siX/cRG3Zb/K19y/gYaP+L2e8OClm
-# ypyIWhBrxH5cSnm+bzISSPTBCVyWf7vBpwslj/BRH4wC8hBa6mS2APk9aZh8Lf+S
-# cY/U0XiNjPpKFKkTZrJ866lxQPDAh8mFd0jlyIRRbNXdRxeYTLnCmv0Tc3gI3CyR
-# dlqxDrJ0GPUjZwZG2tG0ptpZrEs6v8NhwMIoFIFQV/2D3dJ2nhCSfs1zmFUTpE7C
-# CbgBcve+wFPAqBwnsPOfsn1p2hlmRnItv/5gFxanjFy8qKJlj9YFfZCVWvi6QkiV
-# TuLipZ6Ftpn8CxwxoIlDY+rRQ+L1qxleiVMfy2xv4r4y6s+Zam4Q4XL46ImWraP3
-# 3KIhhcaM4GH2eSIA8opMg7MRVRYRl1aU2vEx+EwUWRTJvJsRYRHNVagGy2hlE34R
-# YKOMevphj68tQBdbxhsxO4VeKdD59ZMEvDn1b57EJReBf29opPPkPg1MUHNwqzy3
-# XnTabPVNUxPvlHL1CUfmklFMWEDtlsYpsv8bYeieSwKay6U9dL8WSF8uMB5E9LS7
-# jdWFlitcbf0APLzl4n0sLFxs4aNBt6V85IW5TD0B7ddupV7lwCk=
+# IgQgAWh9slXWZIBaKdwRe7Qexa58oQ9DZpehwmL1FyNkONYwDQYJKoZIhvcNAQEB
+# BQAEggIAf4e+zQ+S7T5eaR1BAO9BgeZ/+hVR8dcXpBrxOgpyypEALeFdNCHMoSem
+# 6JCXvNOirTt2Vv+Ot9NdeBBWJYo73t740bNRXsvw/9QbDaFHnsfIcBoeRBA6xfES
+# /HANyoKnZO86BT7S8pzsua6CCmi4t3wWNWoyPcct5RDTNiUw2/56OLz6Uk2r54xV
+# wCd7YeME9yNbxfRmn4s4DhFInG9/wHQUX1M/pdqPJRsXAI08Zax4A+k9NT4v0BOU
+# 5i8Mk1dy4J+7X6y9yCgIbRsynoxhLWlFCUR0cMZNeG5L76GI8ZKUv8uejJ2i5SD0
+# GMpKKQO4VKsjGWZMUMtt2sVi40jHSP1hJKjS3aynTB+egGewNgjkEN4umeqiQ2p2
+# MECLqnbnSgF3/NWBGr8KJwVMjlnQEdVzDPqzJcA4lsNKzE5iccnDHJvJMYYFWmDN
+# Z2CM/QQysDOY/Zn/LPKHtVDeyRaV+X3ao6/SKO+16WFjYD4lkiOJ+U1Q0zuG0oMD
+# sW7uIHOTfiuxOLQ3AL6lLF6Kg3ORD9qow+G9HYrzlTS72lm1yGroJGISm0vpaBiR
+# o202/0gy69GmEDsX/BO+ICtZrf/PZniJS/Vw7PXr9qP7ImwhYkP4fMyojy4QHMbK
+# tKJeRmcS+kyCD0xKHDUeoB5d809D0HYCY1ahW6+vcsGJwbZMIIw=
 # SIG # End signature block

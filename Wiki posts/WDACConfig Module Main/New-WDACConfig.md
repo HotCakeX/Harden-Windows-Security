@@ -500,7 +500,7 @@ Offers the same official [Levels](https://learn.microsoft.com/en-us/powershell/m
 | Type: |[String](https://learn.microsoft.com/en-us/dotnet/api/system.string)|
 | :-------------: | :-------------: |
 | Position: | Named |
-| Default value: | FilePublisher |
+| Default value: | `WHQLFilePublisher` |
 | Required: | False |
 | Accept pipeline input: | False |
 | Accept wildcard characters: | False |
@@ -518,7 +518,7 @@ Offers the same official [Fallbacks](https://learn.microsoft.com/en-us/powershel
 | Type: |[String](https://learn.microsoft.com/en-us/dotnet/api/system.string)[]|
 | :-------------: | :-------------: |
 | Position: | Named |
-| Default value: | Hash |
+| Default value: | `FilePublisher`,`Hash` |
 | Required: | False |
 | Accept pipeline input: | False |
 | Accept wildcard characters: | False |
@@ -609,8 +609,6 @@ By default, the module includes user PEs in the scan. When you use this switch p
 <br>
 
 ### The outputs of the parameter
-
-All of the outputs are saved in an easily identified folder inside the current working directory.
 
 * The base policy XML file
 

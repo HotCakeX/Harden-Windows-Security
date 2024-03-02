@@ -1,73 +1,5 @@
-<#
-# argument tab auto-completion for CertPath param to show only .cer files in current directory and 2 sub-directories recursively
-[System.Management.Automation.ScriptBlock]$ArgumentCompleterCertPath = {
-    # Note the use of -Depth 1
-    # Enclosing the $Results = ... assignment in (...) also passes the value through.
-    ($Results = Get-ChildItem -Depth 2 -Filter *.cer | ForEach-Object -Process { "`"$_`"" })
-    if (-not $Results) {
-        # No results?
-        $null # Dummy response that prevents fallback to the default file-name completion.
-    }
-}
-#>
-
 # Importing the $PSDefaultParameterValues to the current session, prior to everything else
 . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
-
-# argument tab auto-completion for Policy Paths to show only .xml files and only suggest files that haven't been already selected by user
-# https://stackoverflow.com/questions/76141864/how-to-make-a-powershell-argument-completer-that-only-suggests-files-not-already/76142865
-[System.Management.Automation.ScriptBlock]$ArgumentCompleterPolicyPaths = {
-    # Get the current command and the already bound parameters
-    param($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameters)
-
-    # Find all string constants in the AST that end in ".xml"
-    $Existing = $commandAst.FindAll({
-            $args[0] -is [System.Management.Automation.Language.StringConstantExpressionAst] -and
-            $args[0].Value -like '*.xml'
-        },
-        $false
-    ).Value
-
-    # Get the xml files in the current directory
-    Get-ChildItem -File -Filter *.xml | ForEach-Object -Process {
-        # Check if the file is already selected
-        if ($_.FullName -notin $Existing) {
-            # Return the file name with quotes
-            "`"$_`""
-        }
-    }
-}
-
-# argument tab auto-completion for Certificate common name
-[System.Management.Automation.ScriptBlock]$ArgumentCompleterCertificateCN = {
-    # Create an empty array to store the output objects
-    [System.String[]]$Output = @()
-
-    # Loop through each certificate that uses RSA algorithm (Because ECDSA is not supported for signing WDAC policies) in the current user's personal store and extract the relevant properties
-    foreach ($Cert in (Get-ChildItem -Path 'Cert:\CurrentUser\My' | Where-Object -FilterScript { $_.PublicKey.Oid.FriendlyName -eq 'RSA' })) {
-
-        # Takes care of certificate subjects that include comma in their CN
-        # Determine if the subject contains a comma
-        if ($Cert.Subject -match 'CN=(?<RegexTest>.*?),.*') {
-            # If the CN value contains double quotes, use split to get the value between the quotes
-            if ($matches['RegexTest'] -like '*"*') {
-                $SubjectCN = ($Element.Certificate.Subject -split 'CN="(.+?)"')[1]
-            }
-            # Otherwise, use the named group RegexTest to get the CN value
-            else {
-                $SubjectCN = $matches['RegexTest']
-            }
-        }
-        # If the subject does not contain a comma, use a lookbehind to get the CN value
-        elseif ($Cert.Subject -match '(?<=CN=).*') {
-            $SubjectCN = $matches[0]
-        }
-
-        $Output += $SubjectCN
-    }
-
-    $Output | ForEach-Object -Process { return "`"$_`"" }
-}
 
 # Argument tab auto-completion for installed Appx package names
 [System.Management.Automation.ScriptBlock]$ArgumentCompleterAppxPackageNames = {
@@ -79,70 +11,8 @@
     }
 }
 
-# argument tab auto-completion for Base Policy Paths to show only .xml files and only suggest files that haven't been already selected by user
-[System.Management.Automation.ScriptBlock]$ArgumentCompleterPolicyPathsBasePoliciesOnly = {
-    # Get the current command and the already bound parameters
-    param($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameters)
-
-    # Find all string constants in the AST that end in ".xml"
-    $Existing = $commandAst.FindAll({
-            $args[0] -is [System.Management.Automation.Language.StringConstantExpressionAst] -and
-            $args[0].Value -like '*.xml'
-        },
-        $false
-    ).Value
-
-    # Get the xml files in the current directory
-    Get-ChildItem -File | Where-Object -FilterScript { $_.extension -like '*.xml' } | ForEach-Object -Process {
-
-        $XmlItem = [System.Xml.XmlDocument](Get-Content -Path $_)
-        $PolicyType = $XmlItem.SiPolicy.PolicyType
-
-        if ($PolicyType -eq 'Base Policy') {
-
-            # Check if the file is already selected
-            if ($_.FullName -notin $Existing) {
-                # Return the file name with quotes
-                "`"$_`""
-            }
-        }
-    }
-}
-
-# argument tab auto-completion for Supplemental Policy Paths to show only .xml files and only suggest files that haven't been already selected by user
-[System.Management.Automation.ScriptBlock]$ArgumentCompleterPolicyPathsSupplementalPoliciesOnly = {
-    # Get the current command and the already bound parameters
-    param($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameters)
-
-    # Find all string constants in the AST that end in ".xml"
-    $Existing = $commandAst.FindAll({
-            $args[0] -is [System.Management.Automation.Language.StringConstantExpressionAst] -and
-            $args[0].Value -like '*.xml'
-        },
-        $false
-    ).Value
-
-    # Get the xml files in the current directory
-    Get-ChildItem -File | Where-Object -FilterScript { $_.extension -like '*.xml' } | ForEach-Object -Process {
-
-        $XmlItem = [System.Xml.XmlDocument](Get-Content -Path $_)
-        $PolicyType = $XmlItem.SiPolicy.PolicyType
-
-        if ($PolicyType -eq 'Supplemental Policy') {
-
-            # Check if the file is already selected
-            if ($_.FullName -notin $Existing) {
-                # Return the file name with quotes
-                "`"$_`""
-            }
-        }
-    }
-}
-
 # Opens Folder picker GUI so that user can select folders to be processed
 [System.Management.Automation.ScriptBlock]$ArgumentCompleterFolderPathsPicker = {
-    # Load the System.Windows.Forms assembly
-    Add-Type -AssemblyName 'System.Windows.Forms'
     # non-top-most, works better with window focus
     [System.Windows.Forms.FolderBrowserDialog]$Browser = New-Object -TypeName 'System.Windows.Forms.FolderBrowserDialog'
     $null = $Browser.ShowDialog()
@@ -152,12 +22,12 @@
 
 # Opens File picker GUI so that user can select an .exe file - for SignTool.exe
 [System.Management.Automation.ScriptBlock]$ArgumentCompleterExeFilePathsPicker = {
-    # Load the System.Windows.Forms assembly
-    Add-Type -AssemblyName 'System.Windows.Forms'
     # Create a new OpenFileDialog object
     [System.Windows.Forms.OpenFileDialog]$Dialog = New-Object -TypeName 'System.Windows.Forms.OpenFileDialog'
     # Set the filter to show only executable files
     $Dialog.Filter = 'Executable files (*.exe)|*.exe'
+    $Dialog.Title = 'Select the SignTool executable file'
+    $Dialog.InitialDirectory = $UserConfigDir
     # Show the dialog and get the result
     [System.String]$Result = $Dialog.ShowDialog()
     # If the user clicked OK, return the selected file path
@@ -168,12 +38,12 @@
 
 # Opens File picker GUI so that user can select a .cer file
 [System.Management.Automation.ScriptBlock]$ArgumentCompleterCerFilePathsPicker = {
-    # Load the System.Windows.Forms assembly
-    Add-Type -AssemblyName 'System.Windows.Forms'
     # Create a new OpenFileDialog object
     [System.Windows.Forms.OpenFileDialog]$Dialog = New-Object -TypeName 'System.Windows.Forms.OpenFileDialog'
     # Set the filter to show only certificate files
     $Dialog.Filter = 'Certificate files (*.cer)|*.cer'
+    $Dialog.Title = 'Select a certificate file'
+    $Dialog.InitialDirectory = $UserConfigDir
     # Show the dialog and get the result
     [System.String]$Result = $Dialog.ShowDialog()
     # If the user clicked OK, return the selected file path
@@ -184,12 +54,12 @@
 
 # Opens File picker GUI so that user can select a .xml file
 [System.Management.Automation.ScriptBlock]$ArgumentCompleterXmlFilePathsPicker = {
-    # Load the System.Windows.Forms assembly
-    Add-Type -AssemblyName 'System.Windows.Forms'
     # Create a new OpenFileDialog object
     [System.Windows.Forms.OpenFileDialog]$Dialog = New-Object -TypeName 'System.Windows.Forms.OpenFileDialog'
     # Set the filter to show only XML files
     $Dialog.Filter = 'XML files (*.xml)|*.xml'
+    $Dialog.Title = 'Select XML files'
+    $Dialog.InitialDirectory = $UserConfigDir
     # Show the dialog and get the result
     [System.String]$Result = $Dialog.ShowDialog()
     # If the user clicked OK, return the selected file path
@@ -201,8 +71,6 @@
 # Opens Folder picker GUI so that user can select folders to be processed
 # WildCard file paths
 [System.Management.Automation.ScriptBlock]$ArgumentCompleterFolderPathsPickerWildCards = {
-    # Load the System.Windows.Forms assembly
-    Add-Type -AssemblyName 'System.Windows.Forms'
     # non-top-most, works better with window focus
     [System.Windows.Forms.FolderBrowserDialog]$Browser = New-Object -TypeName 'System.Windows.Forms.FolderBrowserDialog'
     $null = $Browser.ShowDialog()
@@ -212,8 +80,6 @@
 
 # Opens File picker GUI so that user can select any files
 [System.Management.Automation.ScriptBlock]$ArgumentCompleterAnyFilePathsPicker = {
-    # Load the System.Windows.Forms assembly
-    Add-Type -AssemblyName 'System.Windows.Forms'
     # Create a new OpenFileDialog object
     [System.Windows.Forms.OpenFileDialog]$Dialog = New-Object -TypeName 'System.Windows.Forms.OpenFileDialog'
     # Show the dialog and get the result
@@ -224,11 +90,31 @@
     }
 }
 
+# Opens File picker GUI so that user can select multiple .xml files
+[System.Management.Automation.ScriptBlock]$ArgumentCompleterMultipleXmlFilePathsPicker = {
+    # Create a new OpenFileDialog object
+    [System.Windows.Forms.OpenFileDialog]$Dialog = New-Object -TypeName 'System.Windows.Forms.OpenFileDialog'
+    # Set the filter to show only XML files
+    $Dialog.Filter = 'XML files (*.xml)|*.xml'
+    # Set the MultiSelect property to true
+    $Dialog.MultiSelect = $true
+    $Dialog.ShowPreview = $true
+    $Dialog.Title = 'Select WDAC Policy XML files'
+    $Dialog.InitialDirectory = $UserConfigDir
+    # Show the dialog and get the result
+    [System.String]$Result = $Dialog.ShowDialog()
+    # If the user clicked OK, return the selected file paths
+    if ($Result -eq 'OK') {
+        return "`"$($Dialog.FileNames -join '","')`""
+    }
+}
+
+
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCC7GLKdyDvHyPBw
-# 8Wae4Jgop8zUP4SAYzM8v+DhqVdl1qCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCAB1DbIBf+Guv7X
+# QkNqjwq3M17rFLiMLQYYqsWU71pl26CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -275,16 +161,16 @@
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQg33BVZ5QVOBpTkz+Mw0SiHGKvq6auues+WxWxSCyXKfwwDQYJKoZIhvcNAQEB
-# BQAEggIAagKR6818lPp8QNQhXj6U/0bk2iJjbUzfewJMHQ/sIvdWx6ceqieq+R3M
-# eRDXtWq4osINlUN+cylxu8Mz/bBYMIK68kpfLAx3iBIsdMM6GCrcuKxJdH6BxGhL
-# IqDaghVw5kyFdynIbAmr2w82L/ZZd++GP+NlNRLv5f7y4xxmmmmfWZZVSr5/UMrV
-# aZIMqMDD1yANSZWKKHam7UgdvY7rqi2rREkPZBOOmKroO2KalDPks1Cl5rJ2Q4Xz
-# 8leUySrs6xw33nbR+2pOHBAjoTE12Y/gkoCyZ2uwY6fTo9BskCjsEKyzXzJV5Tct
-# U2/xuv+JW1wdSua9Q9zU7B/0g3BufBt8i6IHt8F6jtcwpjLbn2BXsjMTj4rZe3Te
-# WYn/b1vmU9dx1YapjDJxyIHzeQer6e+WC8F38DSGkLdhNPg6UPm2iVUP97BhyFaT
-# uue7fr6NDABettAj0nROZFWFiupxUAGYYco24h/rsj+igPpNsb++hd+dCKzzCQJ+
-# iqsrgAILzN5nE9JGU3pHqjCXJ7hGAiZpB4p5dak9Nwvg1Nu4V+cHyiO1ys66LusE
-# t8XX7/JXrJuWNt0K1ZCcRoSQ+4wIB5CsaRzUxtUnQ0yuivrWUyWQjzIYiaOL9F6q
-# gQMgMpDYi4uBJGdSAlmHAV1nfBG6uQHVtlKuVOXtZ5HGGyXugQM=
+# IgQg28CcrFgl6tFBp9lN1eMMm2PfI+8yTgUPdn0DLrMmOvswDQYJKoZIhvcNAQEB
+# BQAEggIAfJgA7+sLh/hQa1PgwjRR5NH5ggEW9FPgUdXCG8qPy3u5en1Vdk6CDL39
+# 4tbs3H8EB2mqAUfRaMQ5aKGZGMF34MEmAe4uGCA8g9PEdr/hMp1zSRDXEdvsJYEk
+# Qr8IKlYoVdMjky4pxZfZmSlhLHOsGNsySPrWTekEryMqgbjVyfIQfCdkDvRDMwVQ
+# FoqBTthPU7O8pOaSyLs9JtWP7N4XyUHtf2Rlquji+w5RlSYqpXdSsqGXiby0nCHj
+# OVZuYnffN0SM05JUnfd9uksYvRpw7Ls6XuuK6uMP89XLuemR5EYv/PF8Xm2nUX1/
+# xvjd/eH+sOhvR64Or+vxIE78GDFxDQ980uugL2NPAEqzpez4/nx4ws7q0D2G3lus
+# hCuaIBNCLkDNaemWeKRgfspXFNYY8X/vuslu6cREjzFjgEspYpvt5Zm76oyXxhF1
+# P4uGH1/gQcSgLVhweF8sflp2lnNFrmJdYZUrkg5sl8vjrNfqoS7wG59sf/S66Kph
+# 6Aymqhbaee0XPT23KKRsijYmGKbVtCqlIxwvUoux62WTsKwzlNu+rH5eYNHOtStM
+# UUkHT3zpOq3sq4lW1laweP2asb3hOLweQrWA08DxpqYAX/xXg/fxs34gsMFw84mu
+# Oztr9lwyGFj4PzO+EQozOZntRgO5lfQERTXcZt1iDC1mrg8OFRc=
 # SIG # End signature block

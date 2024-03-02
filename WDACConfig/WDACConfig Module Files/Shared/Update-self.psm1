@@ -1,14 +1,14 @@
-Function Update-self {
+Function Update-Self {
     <#
     .SYNOPSIS
         Make sure the latest version of the module is installed and if not, automatically update it, clean up any old versions
     .PARAMETER InvocationStatement
-        The command that was used to invoke the main function/cmdlet that invoked the Update-self function, this is used to re-run the command after the module has been updated.
-        It checks to make sure the Update-self function was called by an authorized command, that is one of the main cmdlets of the WDACConfig module, otherwise it will throw an error.
+        The command that was used to invoke the main function/cmdlet that invoked the Update-Self function, this is used to re-run the command after the module has been updated.
+        It checks to make sure the Update-Self function was called by an authorized command, that is one of the main cmdlets of the WDACConfig module, otherwise it will throw an error.
         The parameter also shouldn't contain any backtick or semicolon characters used to chain commands together.
     .NOTES
         Even if the main cmdlets of the module are called with semicolons like this: Get-Date;New-WDACConfig -GetDriverBlockRules -Verbose -Deploy;Get-Host
-        Since the Update-self function only receives the invocation statement from the main cmdlet/function, anything before or after the semicolons are automatically dropped and will not run after the module is auto updated.
+        Since the Update-Self function only receives the invocation statement from the main cmdlet/function, anything before or after the semicolons are automatically dropped and will not run after the module is auto updated.
         So from the example above, only this part gets executed after auto update: New-WDACConfig -GetDriverBlockRules -Verbose -Deploy
         The ValidatePattern attribute is just an extra layer of security.
     .INPUTS
@@ -20,7 +20,7 @@ Function Update-self {
     [OutputType([System.String])]
     param(
         [Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true, Position = 0)]
-        [ValidatePattern('^(Confirm-WDACConfig|Deploy-SignedWDACConfig|Edit-SignedWDACConfig|Edit-WDACConfig|Invoke-WDACSimulation|New-DenyWDACConfig|New-KernelModeWDACConfig|New-SupplementalWDACConfig|New-WDACConfig|Remove-WDACConfig|Assert-WDACConfigIntegrity|Build-WDACCertificate|Get-CiFileHashes|ConvertTo-WDACPolicy)(?!.*[;`]).*$', ErrorMessage = 'Either Update-self function was called with an unauthorized command or it contains semicolon and/or backtick')]
+        [ValidatePattern('^(Confirm-WDACConfig|Deploy-SignedWDACConfig|Edit-SignedWDACConfig|Edit-WDACConfig|Invoke-WDACSimulation|New-DenyWDACConfig|New-KernelModeWDACConfig|New-SupplementalWDACConfig|New-WDACConfig|Remove-WDACConfig|Assert-WDACConfigIntegrity|Build-WDACCertificate|Get-CiFileHashes|ConvertTo-WDACPolicy)(?!.*[;`]).*$', ErrorMessage = 'Either Update-Self function was called with an unauthorized command or it contains semicolon and/or backtick')]
         [System.String]$InvocationStatement
     )
     # Importing the $PSDefaultParameterValues to the current session, prior to everything else
@@ -80,19 +80,19 @@ Function Update-self {
             # Do this if the module was installed properly using Install-module cmdlet
             try {
                 Uninstall-Module -Name 'WDACConfig' -AllVersions -Force -ErrorAction Stop
-                Install-Module -Name 'WDACConfig' -RequiredVersion $LatestVersion -Force
+                Install-Module -Name 'WDACConfig' -RequiredVersion $LatestVersion -Scope AllUsers -Force
                 # Will not import the new module version in the current session because of the constant variables. New version is automatically imported when the main cmdlet is run in a new session.
             }
             # Do this if module files/folder was just copied to Documents folder and not properly installed - Should rarely happen
             catch {
-                Install-Module -Name 'WDACConfig' -RequiredVersion $LatestVersion -Force
+                Install-Module -Name 'WDACConfig' -RequiredVersion $LatestVersion -Scope AllUsers -Force
                 # Will not import the new module version in the current session because of the constant variables. New version is automatically imported when the main cmdlet is run in a new session.
             }
             # Make sure the old version isn't run after update
             Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(152,255,152))Update has been successful, running your command now$($PSStyle.Reset)"
 
             try {
-                # Try to re-run the command that invoked the Update-self function in a new session after the module is updated.
+                # Try to re-run the command that invoked the Update-Self function in a new session after the module is updated.
                 pwsh.exe -NoLogo -NoExit -command $InvocationStatement
             }
             catch {
@@ -106,13 +106,13 @@ Function Update-self {
 }
 
 # Export external facing functions only, prevent internal functions from getting exported
-Export-ModuleMember -Function 'Update-self'
+Export-ModuleMember -Function 'Update-Self'
 
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDjCxrFbEuQXKCX
-# k7Yz+iPtdP7mPEHQ4wE4JJkdND/cs6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCAh3DXuGdyMpjKW
+# YlosHiFXyXBgrtC0NyjhDlUiJ0tEw6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -159,16 +159,16 @@ Export-ModuleMember -Function 'Update-self'
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQg7BVLp08ng1vLsFyykZ1s0LdPV3dUwdZVig5Lzw4ZicswDQYJKoZIhvcNAQEB
-# BQAEggIAGQ88s3agTSv8H6fcglyvXQsx/HYs5K3C8oCsQ8n8XzddkM5OPH4zwGXW
-# BLpr5TFnok+S2rIGBEl+OKSVe5FULO/BDmY3yUw8cMEELtceQsclHcRQwGDwyXur
-# kQYUL0l6tm0laUht16fSA+a0sRk2GLk7wheWA/IYjrJz2G4942e7QMTwS17RNt+y
-# P1AZsYsCTji0rUf9Lbatny0zfD34qmZEJy4DwRB35OBBlEctqB8S54Zf2NepZ+zG
-# 5e7/P1CEDagCMzVrewYdepYt96j+cJAFKwi4iqz1qzX/2oHpanWBG1a3MBowleHD
-# mCQvhwZ+sfyz+VngBWWVWdgt/5cY676PHM3ENBB5JA15m6LQiYlLOSflc35YlqEy
-# b7DRUBPV/NBXcXO1KU3SuTVdExMHhfw4fi/HayeQthS+VapHlN9rTv7IQg3PrLC3
-# HAeWVeo99m7aofQCt3hKbyhMKw4Y46Urh64Qc4d4JQ0tQ6HhtaoKchT1vPwC45BY
-# QowPmYJlqiPyRFPr0sfTfQN3cYo4ynw8zV/pA+cLENQpcTJT1/tpcnnY40h4xET+
-# fdHowjEEEFfmOGUNSxnmh4ORgGavDQ6Lt4L6QKjkpGL2a3a7/oGPVs1FQHNZPZkv
-# 8ivRw4cPKwjLg2f9DB8BlIug4OyYexLHq5D6JQF4uA2Un6BV6wg=
+# IgQgPsr7mha1uvo8aMFJiwvG1SgrN65IJiwMMA/d4bdFgyMwDQYJKoZIhvcNAQEB
+# BQAEggIAVq0i/NE7AxL11WwN3+A6m5eqRrbqGjf6Tk6pFC+Xi+6PGlPOaAZOUGaI
+# GgRBr6L0EEHirYUkkovYL9u3nwIEVe+4s1+L436SzSj9ufaMR+Uj4K8tBrKBgYVO
+# EESvkc/2MzbCmqrw9R/BAZw0NP8DK1GNWGOYyV7WkzklUiHApHxrJc0W8MY7/uKa
+# 9ETwbu7fKDsbTzIZSDys6Ep6wPe4Gsgg3m5QIQ6BTJ0D5NQLWAieHaGoVeEHM2ct
+# mDxaKXk5JlRBzXyTWgOfGBFcGoFI66qtU85G8tXfhLAh7So8ybTgh+wTQzNx2m/S
+# L46OzXvUYWSNAbDPSIRV7FkrLKYgueEC9nsGAt8bh57pv1B38eV2qbP4/RCOg6u7
+# m41/lAQYmp63J6nYua/0vGsFM4S3FhNZqsEIZvg3in69/6T3WwF5e3pPCU2UtIBa
+# MnMB42A9F3xEHQob5+nsv3TgP3rAIdtws36OOACEDaoqenhyKyy8sQL9hArBdn7c
+# Ay8zjYIIjIx4yt4hHHHqlaVlQnNmCItrtFETxsI/Qy64KQpD2aqy57rXAsldIf7k
+# ESbB9h+me34YYliJjJl3QG6qcBQvn+1gsSYX0iRjL3b+iHJAAWdBF7jITkjZ+mFG
+# DD7aUj2U6aXHNyw4SDwFsGKdB28ZINdAOTwW2iNSvPVUJyeqE68=
 # SIG # End signature block

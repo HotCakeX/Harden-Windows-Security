@@ -69,7 +69,7 @@ Function Confirm-WDACConfig {
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
         Write-Verbose -Message 'Importing the required sub-modules'
-        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Update-self.psm1" -Force
+        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Update-Self.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Write-ColorfulText.psm1" -Force
 
         # Regular parameters are automatically bound to variables in the function scope
@@ -80,7 +80,7 @@ Function Confirm-WDACConfig {
         [System.Management.Automation.SwitchParameter]$SkipVersionCheck = $($PSBoundParameters['SkipVersionCheck'])
 
         # if -SkipVersionCheck wasn't passed, run the updater
-        if (-NOT $SkipVersionCheck) { Update-self -InvocationStatement $MyInvocation.Statement }
+        if (-NOT $SkipVersionCheck) { Update-Self -InvocationStatement $MyInvocation.Statement }
 
         # Script block to show only non-system Base policies
         [System.Management.Automation.ScriptBlock]$OnlyBasePoliciesBLOCK = {
@@ -168,8 +168,8 @@ Function Confirm-WDACConfig {
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCAK3GTSF53HIifb
-# LovuJzWlLw0fDwR5oDgF4oWzNVLBT6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCB0d15yGVrV1www
+# gVxsYzF0BdtKGg7DUmCKln9PTVxg+aCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -216,16 +216,16 @@ Function Confirm-WDACConfig {
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgQmxa58VEDi36USlyV2pmYMdC6Hn7udeNtEi4p3Y57FgwDQYJKoZIhvcNAQEB
-# BQAEggIAIO38HIW8baFfV1RIQzm7ZTW26RLyHgosGAqF0lS7XAsZiOkM2h6p9lcD
-# IeEYMIcDJ87bD3O0L8M3K4cqHp7DvtIhiZZ55LPn75BbaFWwzBPQfxvtxNi7f+SV
-# xwlT3pJA/1AxLAmN3n9nzAD/rvpIYaLlt3K622QozVzhQuwKS68RnOGddmDpPIQr
-# XX1LHrhhl0mp8wudvP9nTaCX/PLw+mdnPscTIrUvHqiKg6bTQzsPayFHIeWCvGho
-# 900m6EOIp2mqZPci8EE3eGISGAhEUBx+DLOCGG+4w4+aeh3k31gC1tC+RErUQdlw
-# 2QQxVMndC1c03aPXqZQy/Y6jdYqT1uA6K0lzyZERJ2TAw1CebwNECI6J4k3cpHZa
-# g7D9mVsLyWaL+HM4PcuOAP6xu1sKPZKUXcr0NIadTM97kzacbDvkK0zS7cLZf7e5
-# 8l2+TX9/2XxhLOoPzk7MKCxD3OuJnOyTOZmbM+uz1aNPzDY6MdsibI8qLx0T6XIe
-# DsUWDPBHZCgl/V27UD6YGmvZhcyUJLyn67aIlLyy/1OU0467qA60xBbRie9Vt8Hl
-# pULjE7lYj0NELW95zR6aitYogbLAVd44HbGyQEypWyVl/pCWykmo7oicq9Ysgjyj
-# cT6RpveVg9+jCFHOKebNuLyUZ6438zyNn/CV3UIToblLZ6ebFrs=
+# IgQgsfscZyfBCLkYDaInaWFArQaVaAzDT2yf6+08LKEfVG0wDQYJKoZIhvcNAQEB
+# BQAEggIAjRl7yRqIqP1C2YfOgHNi7x9L02j0qTAiAa0rukpJyR9+aafbNsQD5c/u
+# 1IhDzdU0pbs72zyKD+NqVVDxkkTUP4kGj1gkx6P9SFO59Sa97iHv4KklW5f5VHdY
+# iIGG5QkUVKiepK59rIEJZzrNPxc2xYZiCG4IOjp6aN5s/KI3PyAVvnUTQVkYUSIX
+# /HX+fTm1nb/IdiFpWl6j422fhzRtJ6GtPxYA8bWd/ElRbO/fBNmmdyD1/wMT6xiE
+# V0h0SO3EWNvuzRzVXI+8QqL3I9HYIWIciXAKFPWazn6PRgVGd2KdCqySyXA6o0ls
+# EFxhMXmuomC//pBpebpDWjb5zkObbAlDB3JhoApBTCSkGuEsN0oaeurnyOKdcoAZ
+# DWJCFf5sPEjhXn+fSEkOZASa2/++vhw9hE5Wz3GYw4KoC3TJjxQgJAY6UJDGQ44v
+# VLkH+n+ASLJ76vs6oNzz/WoruQZqFmf1K0FAI8pOUwmCqerKz2q42L9mQhfLULMd
+# xjghlDhBm2SyUdReqpzCtFndLpuVvs5AqA6K2wkT7s53IXvtM/yVdWWa5RDGBgQC
+# SshJvrGB6G1Rzz4SdZjUeGAIA5ZKsAZJ3jw6QNgcWJHpGR4LbSv7NzlAxV8+HMoW
+# zRA1W86lTCV9CcbvZvH/R/d7X2WG9HMBAnVZRxnVgJhiIoSoS38=
 # SIG # End signature block

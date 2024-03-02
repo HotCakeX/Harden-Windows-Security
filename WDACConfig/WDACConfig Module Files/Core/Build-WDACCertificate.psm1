@@ -36,12 +36,12 @@ Function Build-WDACCertificate {
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
         Write-Verbose -Message 'Importing the required sub-modules'
-        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Update-self.psm1" -Force
+        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Update-Self.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Write-ColorfulText.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Compare-SecureString.psm1" -Force
 
         # if -SkipVersionCheck wasn't passed, run the updater
-        if (-NOT $SkipVersionCheck) { Update-self -InvocationStatement $MyInvocation.Statement }
+        if (-NOT $SkipVersionCheck) { Update-Self -InvocationStatement $MyInvocation.Statement }
 
         # Define a staging area for Build-WDACCertificate cmdlet
         [System.IO.DirectoryInfo]$StagingArea = Join-Path -Path $UserConfigDir -ChildPath 'StagingArea' -AdditionalChildPath 'Build-WDACCertificate'
@@ -316,8 +316,8 @@ ValidityPeriod = Years
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCWNDIVdWlZ3awx
-# 0x21UJuOuvqZdzzpMeTMDm12iRJeHqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBJS+4zoTjVPoEz
+# vz7VyXn6kvPn2UO55Q22Sg1IKtG4AqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -364,16 +364,16 @@ ValidityPeriod = Years
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgY9zWKDebWxSRqGJoVall0PpXDoavhC/K7f8NfQt1InUwDQYJKoZIhvcNAQEB
-# BQAEggIAhqk1IIwL2zXFlxDnTQ04XIDtVviPbFCSwVpNnL7NxzE/A5gpS3sIV7Q9
-# ogDHEvlBlrNd/COKQxcPtm67A0ljh4WUFwglJlotvVv9dovXU0v81au7PQyQoWAc
-# pkiPmSH2mC3/NHq466jrOwL6JN0MMMXyWpLYaFMpgBiNPC/7CG16wz/8sTZGq7ux
-# HWGyt87w1JKbzZv4Szma1an+S5pPBJM8ifhrYXlu6fbqEmd/rmGVudhTeuEoxbn+
-# ryQ/6v4HkNS1lRqp4ZZ3IWZo2Do1CXU9yfLY7gJj3z6f/sW46R67dEqhas+KKVHf
-# Dv3etjE+JNvscC1en7cMsBxFbircn7Fgg67bmtbamXaO14JSGdhgb00mBCq8RfCZ
-# SpwTR1nXlU+WdGAGueMCQphhKjjOHCXxoWTJuoIQCix0tibjiiROictbtR15DgQv
-# vjGINSWNIDHui/OZcbr4SR7Rn8jzbtx6+ZQLenjq3QY0rek2xIOG7BojuRTUqc7S
-# /QTLRFuo0bdNyzpSE5D52zXM0bzBVTSTE7gNPT3dDUUaLOv12jprg4WPwHB0huiw
-# p0zZwtvbbC1oRAbX1+i5MnUm+vLXdDVNtqXAmQILkknK0+DAj44VNfeKeGR3AqLl
-# XKbfG5NJcVuX4kd3QRKwk8mh49+7Z0HaTT3C17aKFD86YxF/t2c=
+# IgQgkfJwnNNGInLycQgHbW8/ypANRPhBTXvgRgI6Sq+aFfAwDQYJKoZIhvcNAQEB
+# BQAEggIAhw/H2X+ENOgRYWmnm7zV8QPtdURN7PRR2DjpLmVzOo8N4VeofUJ1+w0/
+# y3bbV01AkqcVCLO6jcg8koFWuwpkRJ4ZIGzSeuwlnnCmM9oWiNdKRfxBBeNt/kP0
+# 1g9GQUmaUNmNXXStBNsMyehFo4xLgFCiQoqJoLz19eBMZxidS5x8fQDq420mvVh0
+# v5qa16zkIKr0CHHe9HvGwF+4J7wvOQLq2RTw8Wceflg71PGMeE99IyuLytoy/1CL
+# TIkx6hACvNDMp0UCSoGyazj5uuL+5/XQ1X+eXrlTcrcUzpoyIE7ZJUoWAgnLP4Iw
+# UOkoMkOwG9d5si/fuIixpaFyuGpQPSZvhup0zUA7V9zGjZp87pFCWHxadP5cFEdH
+# 6SxULwqHDHRL2etMmcUhPMO7YJEsc8Vi9601neVlQBSr3gHhapyyWFfKx73dtsAM
+# 1hEtQl8qoxo9CD6xn/3FYw2Prz1fH2/eNYvSU2Otyf49TjdGq82CkQZtB4z8Idju
+# 7/c3M3r9Hi0jCaXGOzhyL4rVL0j1NT1E6MsE2Wu5pj1Tjbj+bWFQ/+6Py95OBUMT
+# o9JZzQiwj2e+lI2lbmp+GhDge0wxi5WuC4+i/VPjOCw7JyUurb90TfVQmdKQV3T3
+# DTpQP9peVod1qUDB9L3tr1C5m5tbBwwrfC5jeLy6/mFUhPEFE8E=
 # SIG # End signature block

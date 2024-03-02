@@ -1,14 +1,14 @@
-Function Update-self {
+Function Update-Self {
     <#
     .SYNOPSIS
         Make sure the latest version of the module is installed and if not, automatically update it, clean up any old versions
     .PARAMETER InvocationStatement
-        The command that was used to invoke the main function/cmdlet that invoked the Update-self function, this is used to re-run the command after the module has been updated.
-        It checks to make sure the Update-self function was called by an authorized command, that is one of the main cmdlets of the WDACConfig module, otherwise it will throw an error.
+        The command that was used to invoke the main function/cmdlet that invoked the Update-Self function, this is used to re-run the command after the module has been updated.
+        It checks to make sure the Update-Self function was called by an authorized command, that is one of the main cmdlets of the WDACConfig module, otherwise it will throw an error.
         The parameter also shouldn't contain any backtick or semicolon characters used to chain commands together.
     .NOTES
         Even if the main cmdlets of the module are called with semicolons like this: Get-Date;New-WDACConfig -GetDriverBlockRules -Verbose -Deploy;Get-Host
-        Since the Update-self function only receives the invocation statement from the main cmdlet/function, anything before or after the semicolons are automatically dropped and will not run after the module is auto updated.
+        Since the Update-Self function only receives the invocation statement from the main cmdlet/function, anything before or after the semicolons are automatically dropped and will not run after the module is auto updated.
         So from the example above, only this part gets executed after auto update: New-WDACConfig -GetDriverBlockRules -Verbose -Deploy
         The ValidatePattern attribute is just an extra layer of security.
     .INPUTS
@@ -20,7 +20,7 @@ Function Update-self {
     [OutputType([System.String])]
     param(
         [Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true, Position = 0)]
-        [ValidatePattern('^(Confirm-WDACConfig|Deploy-SignedWDACConfig|Edit-SignedWDACConfig|Edit-WDACConfig|Invoke-WDACSimulation|New-DenyWDACConfig|New-KernelModeWDACConfig|New-SupplementalWDACConfig|New-WDACConfig|Remove-WDACConfig|Assert-WDACConfigIntegrity|Build-WDACCertificate|Get-CiFileHashes|ConvertTo-WDACPolicy)(?!.*[;`]).*$', ErrorMessage = 'Either Update-self function was called with an unauthorized command or it contains semicolon and/or backtick')]
+        [ValidatePattern('^(Confirm-WDACConfig|Deploy-SignedWDACConfig|Edit-SignedWDACConfig|Edit-WDACConfig|Invoke-WDACSimulation|New-DenyWDACConfig|New-KernelModeWDACConfig|New-SupplementalWDACConfig|New-WDACConfig|Remove-WDACConfig|Assert-WDACConfigIntegrity|Build-WDACCertificate|Get-CiFileHashes|ConvertTo-WDACPolicy)(?!.*[;`]).*$', ErrorMessage = 'Either Update-Self function was called with an unauthorized command or it contains semicolon and/or backtick')]
         [System.String]$InvocationStatement
     )
     # Importing the $PSDefaultParameterValues to the current session, prior to everything else
@@ -92,7 +92,7 @@ Function Update-self {
             Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(152,255,152))Update has been successful, running your command now$($PSStyle.Reset)"
 
             try {
-                # Try to re-run the command that invoked the Update-self function in a new session after the module is updated.
+                # Try to re-run the command that invoked the Update-Self function in a new session after the module is updated.
                 pwsh.exe -NoLogo -NoExit -command $InvocationStatement
             }
             catch {
@@ -106,13 +106,13 @@ Function Update-self {
 }
 
 # Export external facing functions only, prevent internal functions from getting exported
-Export-ModuleMember -Function 'Update-self'
+Export-ModuleMember -Function 'Update-Self'
 
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCB9XQIBrnCtwfev
-# nsMko2THiQ07WN7ntMBPvzaf+jxyr6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCAh3DXuGdyMpjKW
+# YlosHiFXyXBgrtC0NyjhDlUiJ0tEw6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -159,16 +159,16 @@ Export-ModuleMember -Function 'Update-self'
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgFuxq08yA2Mru/Pm/q18zPmC6w9w5dG3g/Fl5ly9XuBowDQYJKoZIhvcNAQEB
-# BQAEggIATt5AwFry8LWcKh+UQRf9DgEkonaSfaenkbrUsb0EdHWVEpjJKhFfqrOU
-# mdJG583x+JVxUjldpuCxGK4jNcRWaadlbO8X5o0T2+8GqG3ueapMzfvxDprLwWst
-# cvoWMhhoCTA432QedSA/NKj9uC8+achpbJPMz0up1SklWYd0jamyZRJ8NkY6LWOi
-# nGVKma6blhJDkZWDJmXt4vO3GneIqhroKFRfLmjzbZIh66yJJvNS/z7B7bfMuf6/
-# 2dO9SOC0eSPEUly8MQxyUB/ohoA9ewe3py2qaqsGDH6MKni6L2kXCpMxsuaXqc22
-# i7Qc6f7d4B6jCr3VgQqfM3fAN/18DGf0AIye179qEdzblAItSg5e5slytUwdYPUJ
-# VMot+p9onKEOvOln0a0aI+BNhT3tHUnoN+17Jm7FAVrmb1rWo2ioGTzjYwPsjjSG
-# jEam2bHflF6PPw7m8YiQ1aXuPoSRmIyzlZM9qqx6T0boU2UOZ/mbxTPbLGhDaCMe
-# ndPmZ44JuwAnAAMvR0nY2GB2LQYbPkP05EOjOdVo/jCd6gdfpG+xI15GSKdnO9lu
-# aVyJ29sngbU2YpQ1/4/zwqEPR/P94cd87f+vHbgMw7gK3a7HFxBO8eWKwmT5Zt0E
-# yvkIVi9yNofkjzgfkBwmQ5jkAYW7EErE1IqM3/iMVbP1GSt16rY=
+# IgQgPsr7mha1uvo8aMFJiwvG1SgrN65IJiwMMA/d4bdFgyMwDQYJKoZIhvcNAQEB
+# BQAEggIAVq0i/NE7AxL11WwN3+A6m5eqRrbqGjf6Tk6pFC+Xi+6PGlPOaAZOUGaI
+# GgRBr6L0EEHirYUkkovYL9u3nwIEVe+4s1+L436SzSj9ufaMR+Uj4K8tBrKBgYVO
+# EESvkc/2MzbCmqrw9R/BAZw0NP8DK1GNWGOYyV7WkzklUiHApHxrJc0W8MY7/uKa
+# 9ETwbu7fKDsbTzIZSDys6Ep6wPe4Gsgg3m5QIQ6BTJ0D5NQLWAieHaGoVeEHM2ct
+# mDxaKXk5JlRBzXyTWgOfGBFcGoFI66qtU85G8tXfhLAh7So8ybTgh+wTQzNx2m/S
+# L46OzXvUYWSNAbDPSIRV7FkrLKYgueEC9nsGAt8bh57pv1B38eV2qbP4/RCOg6u7
+# m41/lAQYmp63J6nYua/0vGsFM4S3FhNZqsEIZvg3in69/6T3WwF5e3pPCU2UtIBa
+# MnMB42A9F3xEHQob5+nsv3TgP3rAIdtws36OOACEDaoqenhyKyy8sQL9hArBdn7c
+# Ay8zjYIIjIx4yt4hHHHqlaVlQnNmCItrtFETxsI/Qy64KQpD2aqy57rXAsldIf7k
+# ESbB9h+me34YYliJjJl3QG6qcBQvn+1gsSYX0iRjL3b+iHJAAWdBF7jITkjZ+mFG
+# DD7aUj2U6aXHNyw4SDwFsGKdB28ZINdAOTwW2iNSvPVUJyeqE68=
 # SIG # End signature block

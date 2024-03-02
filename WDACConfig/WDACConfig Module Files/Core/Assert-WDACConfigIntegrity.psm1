@@ -25,10 +25,10 @@ Function Assert-WDACConfigIntegrity {
 
         Write-Verbose -Message 'Importing the required sub-modules'
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Write-ColorfulText.psm1" -Force
-        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Update-self.psm1" -Force
+        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Update-Self.psm1" -Force
 
         # if -SkipVersionCheck wasn't passed, run the updater
-        if (-NOT $SkipVersionCheck) { Update-self -InvocationStatement $MyInvocation.Statement }
+        if (-NOT $SkipVersionCheck) { Update-Self -InvocationStatement $MyInvocation.Statement }
 
         # Define the output file name and the URL of the cloud CSV file
         [System.String]$OutputFileName = 'Hashes.csv'
@@ -132,8 +132,8 @@ Function Assert-WDACConfigIntegrity {
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCAGYwvChUdzJoLZ
-# iNmrRnRm674jZZWszLbZ+gj6BtZUFaCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCAFF4HKnQ2IEFYX
+# nEQ9v9zymIo2ZJ+PYob+Gyp1W8P3YaCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -180,16 +180,16 @@ Function Assert-WDACConfigIntegrity {
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQg6bjf65+bNlUeXfXcr8p1qeCUfDoU0vFvqImOweUKZSIwDQYJKoZIhvcNAQEB
-# BQAEggIAkt1gii1GfcB8zf+S+e0Oq4EO7U8nMrrejlan6nfxVUDhQ+L0IhLSIAZL
-# sKYJ8j5zdSadAAPUmayhn6ZiuFbiJJ6Nzz+CvEBjDbqIJY5wEnWrEkgFd1q6/wkX
-# QEIP8v3Wl2FMpGa1vIv6YojtsXFneNp7jmJ9k+bPlf+RQgb0xNzt5noozpbZdAeh
-# lxw+qB3qSHQLHnGeV4AqF/ULx1tBY3oljrsrjB7+JsY8pbispPDuJWL3f5+YocN0
-# YVGrCMMYRufhZuHBayMZtpTzfSpQXzT0C3Hk9iCNhsuhSOn73FbnWzRJTgWcrN1r
-# 0GO0vuZZskTFK1VC/HHsYfo7ti2aIMB5IJeJVS4FaSjsD1yps4m+XV9IguygMhf/
-# 1J6Xr1uhYF2YEQfCqTaZp44dKda/Lq0U/iOfcsRz26vS/AmJ/qjG4hYp96jrgE6u
-# JTtPKrvwx2/UEgsXLqIm1GRw5POrTqi1cDU2vSanR0aRNlxjIndBtCxQiRgMMRxN
-# OwPy8aI0EWwU+vIDkCFpnYrpF0FgIByAsHGcPgaRYx4xYqnEeU64Ch0rac8aSMit
-# yWiJVb7OZHs1DB2goysoPnuAxv8H+LjSTlTVBCqyAQScvJEAdNytE/+SsFJro2W6
-# ySyMx63BOdTve2LDV7zgKfW7KANrOakuqcXt0FmyFW/KSL84AzI=
+# IgQgGs6IBMiClYHy/u3UANL34WVyVxjJp0hTsV9Xvnif8NkwDQYJKoZIhvcNAQEB
+# BQAEggIAjAxZ1njPam0pAnD1ZMOMw7ttuRWzgPOnTs2eZvV1wt2DRKftsHiFl1X0
+# 1xyFkZVlYTmVdACzeY9LRZ0mLLgOL24md3sXaL34BIUNcJPjg7fazURXsXqekkSM
+# qfWWveEkbp57OldUHZRU0dGtvvLzZ72yYCAY0FIUV9eFoQQf0Rj+7bu+ot5K9Vvu
+# fue99yJzDB7eqr9TiO2r9G/gsdd6A7iAEhcJ3uZYcsjZNx7KlaJ4Wx/mbutsgEsj
+# lfFSipYejutl9X6qLaQkLXeB9mBe2o33QNOylX71Zu6x1NZoGsXtq5ZqJ8dOe2fY
+# 6OXhADfFQb4lfGf9t5Oi0FAp69Vx3lT+repx534NQeB4hthU2TYUPN23LyTEFnWd
+# 8YYzFos7hT8VA0NNA0YjN6bH2Xa3JkVbkLUTFvS+KpE5ZivKg6lJDmHw74SIzX3U
+# C5bfAs7bZktbyHF0Fdcr4YsE+/kgxevinNjF+IFFmPcpCzhIeF1ZWgzCXXUe4h3Y
+# 59L8wbdkvwbWdcm9RNb00S8BmEKcKy1qY4mCzCz1c3pfrQZUBqAdMqwKXlgvIfr5
+# Vr30wttFMhPxB/dGDi+fxGIeXf9673WLTuSx0//Fr28wT5Pf5nFuN85Q6NfT54cd
+# bmi0uGjRA7q7ATM/GZSbsVd9dWFcuiP+YqZ9oJmh8SttwbFLDhA=
 # SIG # End signature block

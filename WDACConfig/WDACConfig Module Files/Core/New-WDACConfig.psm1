@@ -80,7 +80,7 @@ Function New-WDACConfig {
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
         Write-Verbose -Message 'Importing the required sub-modules'
-        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Update-self.psm1" -Force
+        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Update-Self.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Write-ColorfulText.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Set-LogSize.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\New-EmptyPolicy.psm1" -Force
@@ -957,7 +957,7 @@ Function New-WDACConfig {
         }
 
         # if -SkipVersionCheck wasn't passed, run the updater
-        if (-NOT $SkipVersionCheck) { Update-self -InvocationStatement $MyInvocation.Statement }
+        if (-NOT $SkipVersionCheck) { Update-Self -InvocationStatement $MyInvocation.Statement }
     }
 
     process {
@@ -1067,8 +1067,8 @@ Function New-WDACConfig {
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCAJtE6sXm8fL+MV
-# DLAdRx0QvdlDvRWgas0gVzDmX83MQqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCA1l56P0xGP4H4g
+# j5tUqbADvOAaIOViqdugqVCUVPI8OqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -1115,16 +1115,16 @@ Function New-WDACConfig {
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgcVYwFa/c7ym2ViPa42PVkZ3e9JLkS3OfMGOoPQ9gXQQwDQYJKoZIhvcNAQEB
-# BQAEggIAfqTj+enjWcfimpSPywAlopVpBeI0fsHwz9XeAKldowqgVjaRteU3lut1
-# Xa5Um9Hib1E8im+Ic593RlRNP7qwJTq9iMJ+jGT7VbmZrbSj3YBltw3+qCFnjjGN
-# +SKubHUWY/Po8EeDY7IXet9udqXWaKjCNoQVO0yNezZVazllFICCHAYxwhBI/yp8
-# 4G7xg9N0LocsNsNSHA7K/E4Wzsd436/rI1fCCiIO8f/mId9b1OsO5cgA8kJRHEAU
-# 1xxBuGw74EH7nNcbGpDoaH435ilgF8ldVDYn7jjdvE6NAZXFdOlFdJPkvT86uJvV
-# yhmo00ZNZaM0G2J0oo5CbhTNvvBRl55gF2AO8xMgp2yubpqxKB/l/IfGxT606KQI
-# flv1IBhpfMyiRbjs02R4QeS+B+RBB2gtUDIpbdcB8b3eR0Mb2rZXF1crV3tSDSb0
-# l2d5FLxNFPhbsLF30ksbOMeVtKsOsuWqndVJOKAG2GD4RDYdePYX6hEw3o0E/dZo
-# gPUCjCdNWSAoN3fZkg+lITeAAWk52Ul82U6L5TxjzI6fmE7CpZREYiVxrQI5gffe
-# fYI6HcrMm1jm9UQQLdcSQD7p6Utb16awzqIZJ8JQx4OOUMSFr4j4L5KI+VXdHWnK
-# Bc+FuKyI98F9g913cNiAqqyzQBlUopwpiayAj0fXhxdhBeBg2xU=
+# IgQgxT+ZnBvuZ+8FFvvIMgx7cGJ227jCxXNn3QIDnNc6mqAwDQYJKoZIhvcNAQEB
+# BQAEggIAae9D1QZcGSHtA0+ZWXJUMo3XBoqJT0han02+vqUoCDX0HszhwFub7kd5
+# jenPFvngORsJfCJVFumCw2I0IS/zyM9Igid3Uijvr8JxB87kxT/BT5QeXTUDZsRN
+# Dn/lNIgRXtENBCxLk4hKlSXaVgb2cGYtXh2UvdlBXH+ULXOCEXyCsP28b0RlKNWJ
+# sHoAbSEe0Iw30RR57iHDF4gcjmy/ktW93TcN1C+HdPSlPP+/bq8Qt6m9U45Toe7x
+# dMEbI4xLus469fnItI7kyKLJIeUTSqEKujQ88PzJC7/htNlXJ7JKwpE+7pWFPOXO
+# 6qZbVdBCRj92dO5OnX3p6y/hhyEDC4wKm/Dr1zQTHAknGAh1/AJXFae8cF4JTNPz
+# /59WXJIAFfIKpSoe17nY+c5s6mCJEV4Mdi7nLNQKBTC2vdNGoOv0RgDVTZj7qyqD
+# 8S46xPf8NvxxKn8pbhJiItguD1aWhFQml3DV9Ite5pvt8KEp7WeL1Qt/WgERyYEV
+# /j1dv9Cdr7Zfiak7sr9bKBBf0oACe0c09ybLy3FfihJdTZl4K06lJLM5S6wrlrW3
+# 1zEhpTAKa72czRJTiocXZIo+Cv0D54Y9av34UD8iEGD8tKKEwlsZw4xiool48WpN
+# xYgagkOWb6zCvyDKwfyor/tdu0JcB8t3KwaOfbEZF4DKt8Z0kL0=
 # SIG # End signature block

@@ -90,7 +90,7 @@ Function ConvertTo-WDACPolicy {
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
         Write-Verbose -Message 'ConvertTo-WDACPolicy: Importing the required sub-modules'
-        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Update-self.psm1" -Force
+        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Update-Self.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Write-ColorfulText.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Receive-CodeIntegrityLogs.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Edit-CiPolicyRuleOptions.psm1" -Force
@@ -101,7 +101,7 @@ Function ConvertTo-WDACPolicy {
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\New-StagingArea.psm1" -Force
 
         # if -SkipVersionCheck wasn't passed, run the updater
-        if (-NOT $SkipVersionCheck) { Update-self -InvocationStatement $MyInvocation.Statement }
+        if (-NOT $SkipVersionCheck) { Update-Self -InvocationStatement $MyInvocation.Statement }
 
         [System.IO.DirectoryInfo]$StagingArea = New-StagingArea -CmdletName 'ConvertTo-WDACPolicy'
 
@@ -560,8 +560,8 @@ Register-ArgumentCompleter -CommandName 'ConvertTo-WDACPolicy' -ParameterName 'B
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCD9tbo8/8PUjpFJ
-# 76u9HMdooavTW8uO8No7SsHrwg/k6aCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCD4HJypadSyR78y
+# 86vxRiB9QqEHtGsGww1ktgERFqI2NKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -608,16 +608,16 @@ Register-ArgumentCompleter -CommandName 'ConvertTo-WDACPolicy' -ParameterName 'B
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgDZHKaRpggC1XsbQtVkBxRl5evAKFDfneqwOQuqWp/lMwDQYJKoZIhvcNAQEB
-# BQAEggIAHJFSVVg2DrpPMlq7eQklcuoe0mmCuDKiSf0yUrHmc5N/j0QKOZ6mKWm8
-# gy/mmtJVKAKLMaxelb54gMOxRvl4aPA1dYX/6O9J78lGn358QOHsQEXW/QAwaCTj
-# O4igQrFLM/sjQpgXOepSxNZcM+8MbRryCx0lmr1dqoAP8vwiRUwVacw87oNlblBg
-# pS2wtzZHNtcGHe/afTw1nEpBNgAIGb9zC50i0r5qkF2Z/ymLMDliV8yxwr7lmxvL
-# 5C1vOGMmNvcEtj0tCfdgnSQU1DiwZAyMQ8y6tNzwiF7XVa3cJWnMt2afNCzVZDXR
-# QGakBCnj+hXudzyuMC7Qo/n+UjU+uP3g3q24R1KgxmlhRKsZRmb6pGTZMNtrOmMD
-# E9uAxp3OExlmGzvvwKoDP3U1vEIv4I+2DmfH/4y14vfl7rHcIf84pkWh7q0kCRJk
-# n5KYnc0PEUA46FeQIR5YSoh2Eq7CPuzpFBgAvU8pYM2RMWUN/X/UqFG4XTOQ65NL
-# 1RU7fiZYoEYs6Gx/Jopq9l7Lg2W0dXsagzlhQs4EQcTVcMAVxY7ssJh4haoFmVHE
-# xEIv4tgmw8ineUdVXI9wTPkd5yARBlQvWP502/1QioBLSO5HQ3HjJRU2TybZjVmL
-# 72iGpHBGjepbFAW0IoRSF8xOVktyFixhs7hWSS7qEAzmB1wcD3g=
+# IgQgljYyT46uy4YCV+Bdtdulj4DdBN9vht6+CgFWliXsZE0wDQYJKoZIhvcNAQEB
+# BQAEggIAFslKjSdqBdIj84qKOYDLRAKx5x3uiGxQ9f8tgT+lI5Oac7tg/od5JzuO
+# r9G0ZNzBPKg7jWioLaZE2tetbs08JZ0SgGUwEFANnrbi6evp5MVMLojsMcNKCgac
+# b8jZuZJ8FCtRIu00Wa5XZuPsZVT3ZNiT5N/OrOA4BygJ/qaTdk/kkHXANnagsaGL
+# aPl24s9wadL8T10A5ZMqBMdOFHe7tM7pnrRpK39Ovfc6ZKuBqBvHIPr7OZXxq3hG
+# RUVZbuniT90xoYNjhua6ZbvwoFIbxzrbyMLHxS1tLL0NAC95BnEB9ZzuxrMVNLFM
+# +cx67HldXFaU7tUWQIFotrLlR0uTukmFuLvP7bhgw21qAcLIwr5UcG0u8fwMUeeo
+# LuW7fYyNlFnbhk1qwhHLPvTwfHpjacdy5PgEkUo9+CLpoPrvhBSxxtjEeHp7ZIhB
+# 1ODC9LkWJH+YKmjpo3g+Zt+43XTO8dHMWOW1+H8gNS1o7yULgrjf0jlsywU0FtKK
+# qYYgxN7WyesOoRNlpAIMcGIgJKm3mfzbJPMziwgNPw241+qSmIsD5iItlVEiNUiI
+# gzP/JEZ+Pa7j07FpV48f8tEY4QXosBJ1ny2GCGeFsJZQVZOqG6cTz1kCeFFpPOX8
+# 6i4QKhSYlfAiiBNDRZDbWrMniItz/ZBjimtlWE21WBVbmXuoYxk=
 # SIG # End signature block

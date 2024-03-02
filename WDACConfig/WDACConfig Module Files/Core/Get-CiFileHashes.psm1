@@ -17,9 +17,9 @@ Function Get-CiFileHashes {
         # if -SkipVersionCheck wasn't passed, run the updater
         if (-NOT $SkipVersionCheck) {
             # Importing the required sub-module for update checking
-            Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Update-self.psm1" -Force
+            Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Update-Self.psm1" -Force
 
-            Update-self -InvocationStatement $MyInvocation.Statement
+            Update-Self -InvocationStatement $MyInvocation.Statement
         }
 
         # Defining the WinTrust class from the WDACConfig Namespace if it doesn't already exist
@@ -215,8 +215,8 @@ Register-ArgumentCompleter -CommandName 'Get-CiFileHashes' -ParameterName 'FileP
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBTp4KKdo77ozm7
-# Dw0kWrqfQAij/ZAAyX0/mMK7dOPQRKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBAAUnvQYJKv0iB
+# S0R9ZMS3zidsec/ilThkafRUZoehpqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -263,16 +263,16 @@ Register-ArgumentCompleter -CommandName 'Get-CiFileHashes' -ParameterName 'FileP
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgU2oG0fVgKr6ii+X24VMMk2svghnbCI+I8S5BflNw8K4wDQYJKoZIhvcNAQEB
-# BQAEggIAZpDTtAMJm8+Os4dKSmTCTXRH3OTNEy/rHu71jOfvup2JcNnzwOe+4rnb
-# ClLEqkZAg+2UYXzoTtA2TcAtwmSiOcSy/1mKT8MDgVu0yITyrx2yDSXpkQmRzJXT
-# ky3q7E7E6o8xu3Na1T0fnpuW8zfiSv1s01nXxqnQn0xfsY8nBOvIOu6wWNac0XV7
-# aTZnYUqsaj//L0AHXIdw8/vHxGmj+ImRdz7OPq7ybBM1bdwSoLBZNXkjSLyEJ/d6
-# AANd/nx/fHDwhvM8S/gzgJ1wvIA8O0E8xE84+9S3R7lbIL9VoGeX01ax5KKNtPuZ
-# L1hmAEDBJGYIv+Da7EnvF7+2yUFkmNcEtD9vchj/yI8EGd1UrwtKek7p5cum5rne
-# SBCpUyLBDlOikR0B8gu9FKF9mAukWUhfc+AR2JoQPNxqZzGOmKfEIIg4WMAlVFU/
-# EQ/rWceu8BCWIXXUMaKrozGV8EQ0BqR2OJ6YcCB2DVDUN5eh5PRrbHvq2TTFJ7f+
-# yRyvOoYdKCZ+uJY9TIwzK4bhnlbv8tsFdy8WrnVLXbnYO2b7yMcdYKgfwWkLLt/j
-# 8PFmgMy8O55WLIH1op5mBRh09ia4AJw9LkdYgFyK77EFfkwaZgF+9E4qSFalKcdB
-# /Lzmfc8kdMDz52dD+miqNaomUVjahrjpwDhgH5GE5NlZM2+vv6s=
+# IgQg+1YGoEZK/BvzzbSbY6TAREhyyzh1YZsdUnQ3Kpq52qEwDQYJKoZIhvcNAQEB
+# BQAEggIAan2PBn64jvy1Q8QbhGl1888t8nwcxN+xQ88v8CTFz3osnGYmLnSCZttO
+# UbRQ3ZdhBD6scJqOZrcicKK+eCpbR2I4I9N8cCW+r1GEJc0hACBkjZptkcehzgIq
+# mrVtpmPa75ExJNpWH0Ik2W3JmZY5tXmajyrbRS8tbCwRkPEQDAuGsd8Zl+iOOFrm
+# 0JlvnpduXPLuABuRoVQ182Pnu9mwV2G0Yei1+2kyaNlcQz41NiZ1+mVVhcJtey3k
+# wWREHvn4/axPUBWL5b8VY0OMKiLL21NPI0v+qHi+CYmdh4vpWyla41xnovrZ+YIl
+# s89JWnCN9zrYzGg42C5YlkODeRvksYyND2xAnDm227znNPHb07hCVqZeNhUo6tzl
+# Upl+PFZYm00p80xCTq129lBBVKhRuj0ySKB6bInigQ2F486PoUA8EI6KVfMr1ojQ
+# NTuS79ss9C48R6lyiJUMZ8Rm7EJnhgfnjYwAD+afWG5vlzb3EKM82rhHfiJcSgrd
+# gihcgiIzlkHbDCEaU0cOFAgqN1ESmgAnBvtRed9px0Szvx2bFFt6kRS1lAeG8NNl
+# bXTJqG5bCwIOHBYtVCCAPBhfOJawAGL9OEOsIA5w7WsPNJBM3BC0/aab8qotXQlR
+# l1Il5W9Fub85IMmr2ejkpENEwGUtKYkNulb4ADGkwfTqYXzFg8g=
 # SIG # End signature block

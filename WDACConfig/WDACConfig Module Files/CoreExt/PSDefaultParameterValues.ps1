@@ -21,7 +21,7 @@ $PSDefaultParameterValues = @{
     'New-EmptyPolicy:Verbose'              = $Verbose
     'Set-LogSize:Verbose'                  = $Verbose
     'Test-FilePath:Verbose'                = $Verbose
-    'Update-self:Verbose'                  = $Verbose
+    'Update-Self:Verbose'                  = $Verbose
     'Write-ColorfulText:Verbose'           = $Verbose
     'New-SnapBackGuarantee:Verbose'        = $Verbose
     'Compare-SecureStrings:Verbose'        = $Verbose
@@ -44,8 +44,8 @@ $PSDefaultParameterValues = @{
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCtPGpzxX0LtqkE
-# KoKHqc4Xb6bhD/hoe1Mesjy23/X0vqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCqYVA6Zd0TTgfG
+# twEjuYlwv6iubUUgT46kEc1Fa9IXGqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -92,16 +92,16 @@ $PSDefaultParameterValues = @{
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgfsiQSXidBuTQWN11/JgqmoaLFHMkkwZwbsaVGSzH7kIwDQYJKoZIhvcNAQEB
-# BQAEggIApAWZgeMf7zTBZJno8phiugH/XpfmCmioMWrCr0E3B6DVqfXEvDiyIadR
-# dlmENLXlbsBX893FcwRQRIyFBc4bqxvC7kzEedAzHWfsiHSeNWkhtjeyHPbl8Jeg
-# HcQVw0XqYz8+iUd7UN5APXcQmw135IkDpRZ6RCz1yeHbaybRuc6vLVqQ1j+XUwdo
-# dfagS8O4pYiB+nx1kjhoruY387Lauuh4EdvgwT6LZTNAJNlAdXGdUK89iTKoRx7O
-# /mGM0N2q9V/x03s5Yf+WBsEqieuFilaF8yesnp261G6+oN3fkpyIlGN2DplMJ1hb
-# hfgnmvv/FWUaCyYLSGRs4RPlBcQuL7hi77rFZQvwQcsquC5gOAfWhMvij2NqXuB0
-# ifD7s7UDVa4hXsrPSfARqLBmBdMOizYautQ0tcg/D463G5UZ7GEt+JviVZle9Y8z
-# Jc9Gtg7outWpwoUNIc94oZYPHG7Sn8Hjjw3lMguf0TfG3oaGqbiGbO7YB2I7ozzM
-# sytTFCUMGNKIAIApgQA0/cA7pyrOGdphduB5z4/qUnBVfTOeeO0c8Qapmh/luQbu
-# LfzNusT9O9DMzeMP/wgN751tFG79Re86GJG934Q2D7ewrUKZIE06wXfBl+l+o6pV
-# EoK6wUuKIIYDm5huP1hvw9MOLYCRTRf3kdErUHuni5Ou308rqjA=
+# IgQgXCI5qzhzLrTsNdbjFIpMi7yrXdH6NitIg7+26mu7CxQwDQYJKoZIhvcNAQEB
+# BQAEggIAEm76QwtGGReBQ2V2PLgnNWE9nVerOUU4pwOKwSDm36gqF80KWdlAaXW8
+# Xx8YwZvnCuy0UIlKPSmQFPfmRqCYQrycLJloosdNqFCZv/ao9L/GQxPYSZeRyVox
+# u5lcaCidCvi9NRi5UeO71lpTRjjiCQgkMeverwIh9c+wScdhup531Rbj3lpcqiwQ
+# BWYXrBVs4Gni9/XxkeHAT8X3M5DqISbSQdgJK4OIru/TaWoI+3Sh6rJD0E5zaZre
+# 7E7mInZUX3PquWzWCK2+6aNEdyEcqLzd4q8cLek/cudilbiav9XL+hSz6oBbwAwC
+# sgcol8EPz7/HlzD76RAKXrbJ672xY5gKUAjp2fiyzHIAYU+QLV2+KGbtYVcm28TV
+# qAqYW9MkOao6MCDsn44/2vA9+2M7OMAqM2o+Pj6NolSVk/fLhJo5tX0CNObXbLJm
+# OamRRifuOV4xM8I4R/O7IHCczu+7jQhCpR9wQ2f2ZGfxoJD8jNb3SkkEYBfjxYaQ
+# PNuJX7SiN5N8VVU/RzyZmRNbREj3mXUQT2xW3h7cibrNCWWwae1sKFFkSzsfGbht
+# SgIBJV9+RPUbVn0pxRYPobkyCm4o2yBYshMZQPFaY+MOCBT5ZIStw2gLewIjngLX
+# e0qgni8Zn+Tr1Fw+FLf2qs/o6nYFLkuVffAT0iult42lpI1pp9c=
 # SIG # End signature block

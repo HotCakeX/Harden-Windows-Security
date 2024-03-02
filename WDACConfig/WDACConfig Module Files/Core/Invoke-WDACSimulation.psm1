@@ -49,13 +49,13 @@ Function Invoke-WDACSimulation {
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
         Write-Verbose -Message 'Importing the required sub-modules'
-        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Update-self.psm1" -Force
+        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Update-Self.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Write-ColorfulText.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\WDACSimulation\Compare-SignerAndCertificate.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\WDACSimulation\Get-FileRuleOutput.psm1" -Force
 
         # if -SkipVersionCheck wasn't passed, run the updater
-        if (-NOT $SkipVersionCheck) { Update-self -InvocationStatement $MyInvocation.Statement }
+        if (-NOT $SkipVersionCheck) { Update-Self -InvocationStatement $MyInvocation.Statement }
 
         # Start the transcript if the -Log switch is used and create a function to stop the transcript and the stopwatch at the end
         if ($Log) {
@@ -755,8 +755,8 @@ Register-ArgumentCompleter -CommandName 'Invoke-WDACSimulation' -ParameterName '
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCAvBNJ8bLX7DKgR
-# M1C1SMaCVW9Gn1FifO2IFTjBbUgmDKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCn8E3ZeFPqV8VL
+# WajIcDXn1bbq39TVTDOlwyfHMz9haaCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -803,16 +803,16 @@ Register-ArgumentCompleter -CommandName 'Invoke-WDACSimulation' -ParameterName '
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgoaXJ/FC5ceNyc4LrJX9VaWZCw7nqEuqCRZcaPy9G1X8wDQYJKoZIhvcNAQEB
-# BQAEggIARxRamfRxhSnOhDK9fnNCPBGnJgBx6oQKg1mxCN+ialmpjAlwPzC9oRCE
-# +9y0gSCeRNvY+t1ITkhQ1EaD4tfUM9LXFdKYJI9DuAoN1ZtS5YBkS1YOPfx2HEjj
-# caRlKlVZEsvF0KMUD83KA7HZ15kGbbwRPw7bL1CaF+cWx9h+gMDJsn/Tnd5AV2+x
-# k+Vi0JknTpv4I7mbdzYN1Xji4vkKPoSUtCK2J1NlhXhYfKaEnoJ1xSgn6cjLR27o
-# /rbtNogULEWbZHPMDud/Y/Xaoj5kBDc6Ojv6tcyqi0T5wZNMCCF7jSP7FNMBIBwo
-# erQ9aKNLh+sJgOiWSrf8X8yXieAGZ0OpSmLoP6E4TsrJtq/1OMSqxzb8Fa8r5y4b
-# bIJPWAurnFxWm9ZO/hHgwS45vxDSHVORJ8jZHdjOP9PH8W4TyJKVQcw03e8hhxLX
-# 2VLXdn0/ymwccjtd/wpq2eM0mjIKhzLaCaI5/n3ZQrzb6Mg1v8L4xvT/tkgj5YSV
-# Gm301RiCFAXc6pZlKKLA1twD5ZabouQ6NONkWXy0hm8z6VeUSuSdbThHr6sgFAVJ
-# kIYlnZVWy04nK5BM59J48Spx1SLH/M0cdGN874tzP9nZwBE9ekbipzUO7Usf8ww+
-# IzOXPPN3usMdoGhsVaMmuGDeo01UHi8fcxUOAtb3lFtXnMBdF/4=
+# IgQgszcX8IhVikY7ngQcwU5MRcSCFQJV34ynFBARiRCAP0kwDQYJKoZIhvcNAQEB
+# BQAEggIASj/eja7u640ip1kUwFnKuuLPKk4rBrtrDSwtmfsWysocgaP8nOOGKVAh
+# S3SSNgavBaauLKjJ7PFM2aJ6dk03mCIQYwNnUlb6FwXsVwzSiHyvBAV+NkPz/nEz
+# KcqK26APAuOjhOAk1lhDs+wwr1J6Ik0BgUXgy+CCgvlrb47XQ2PykshlLZGynPXa
+# KSZ39gthepEfkLOnX2ig4X4hWzXLEOEqti8XTdjB9/u6nlBF8RDQeDzCjToX1zbE
+# RDHxVIoNRMH+s6hDJR0lOowUrTP2yamhswlJpUrtkRFKsR0HCMBkkwt0GFYh+yGZ
+# ZMZpkgcz5EhVieZwIwKr21sVOXK4M2HkHIRf24urcqTHjYBZzb4evmoyylZ6yw40
+# ouy9YId2/0eyF3JoRflZbESzGqpvlXUH51vQv/5efKgdU2h8zrxldWiDWpt+CjHm
+# a5z+Dnh8ZGhFML5nLeCrtwyE+zQdqEg9nef19wm8KpBZ03n4eytNGqUaInFK5GwX
+# oO2zpVHaZE11i9ZtfSXzL6Y3z/Olse6AAlK8zQXDC4xoidv/gVFFtpjeKPvqbGuN
+# 8f5jGOVg5NtomelkXp6eOeoyC+lS2XlpfKBmzdn+tvyPJm+oUnbn9esPrfZ6s+sb
+# gkvddRDDakhm/OWYmftyHuKGHJNz1ITnwTBglGhz1l5gXnJ8D4I=
 # SIG # End signature block

@@ -210,7 +210,7 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
         'Shared\New-EmptyPolicy.psm1',
         'Shared\Set-LogSize.psm1',
         'Shared\Test-FilePath.psm1',
-        'Shared\Update-self.psm1',
+        'Shared\Update-Self.psm1',
         'Shared\Write-ColorfulText.psm1',
         'Shared\New-SnapBackGuarantee.psm1',
         'Shared\Compare-SecureString.psm1',
@@ -227,7 +227,7 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
         'WDACSimulation\Get-FileRuleOutput.psm1',
         'WDACSimulation\Get-CertificateDetails.psm1',
         'WDACSimulation\Get-NestedSignerSignature.psm1',
-        'WDACSimulation\Compare-SignerAndCertificate.psm1'
+        'WDACSimulation\Compare-SignerAndCertificate.psm1',
         'WDACSimulation\Convert-HexToOID.psm1',
         'WDACSimulation\Get-ExtendedFileInfo.psm1',
         'C#\Signer.cs',

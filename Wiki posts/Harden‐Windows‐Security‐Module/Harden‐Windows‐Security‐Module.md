@@ -497,6 +497,8 @@ Indicates that the cmdlet will only remove the[ Downloads Defense Measures](http
 
 <br>
 
+<br>
+
 Any feedback or suggestions? Please use GitHub [issues](https://github.com/HotCakeX/Harden-Windows-Security/issues) or [discussions](https://github.com/HotCakeX/Harden-Windows-Security/discussions)
 
 <br>

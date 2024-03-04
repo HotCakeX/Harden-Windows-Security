@@ -430,7 +430,7 @@ Function Protect-WindowsSecurity {
         $Host.UI.RawUI.WindowTitle = '❤️‍🔥Harden Windows Security❤️‍🔥'
 
         # Minimum OS build number required for the hardening measures
-        [System.Decimal]$Requiredbuild = '22621.2428'
+        [System.Decimal]$Requiredbuild = '22621.3155'
         # Fetching Temp Directory
         [System.String]$CurrentUserTempDirectoryPath = [System.IO.Path]::GetTempPath()
         # The total number of the main categories for the parent/main progress bar to render

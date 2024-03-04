@@ -2539,19 +2539,21 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                                 Write-Verbose -Message 'Detecting the Downloads path in Edge'
                                 [PSCustomObject]$CurrentUserEdgePreference = ConvertFrom-Json -InputObject (Get-Content -Raw -Path "$env:SystemDrive\Users\$UserName\AppData\Local\Microsoft\Edge\User Data\Default\Preferences")
                                 [System.IO.FileInfo]$DownloadsPathEdge = $CurrentUserEdgePreference.savefile.default_directory
-                                Write-Verbose -Message "The Downloads path in Edge is $DownloadsPathEdge"
+                                
+                                # Ensure there is an Edge browser profile and it was initialized
+                                if ((-NOT [System.String]::IsNullOrWhitespace($DownloadsPathEdge.FullName))) {
 
-                                # Display a warning for now
-                                if ($DownloadsPathEdge.FullName -ne $DownloadsPathSystem.FullName) {
-                                    Write-Warning -Message "The Downloads path in Edge ($($DownloadsPathEdge.FullName)) is different than the system's Downloads path ($($DownloadsPathSystem.FullName))"
+                                    Write-Verbose -Message "The Downloads path in Edge is $DownloadsPathEdge"
+
+                                    # Display a warning for now
+                                    if ($DownloadsPathEdge.FullName -ne $DownloadsPathSystem.FullName) {
+                                        Write-Warning -Message "The Downloads path in Edge ($($DownloadsPathEdge.FullName)) is different than the system's Downloads path ($($DownloadsPathSystem.FullName))"
+                                    }
                                 }
                             }
 
                             Write-Verbose -Message 'Creating and deploying the Downloads-Defense-Measures policy'
                             New-DenyWDACConfig -PathWildCards -PolicyName 'Downloads-Defense-Measures' -FolderPath "$DownloadsPathSystem\*" -Deploy -Verbose:$Verbose -SkipVersionCheck
-
-                            Write-Verbose -Message 'Removing the Downloads-Defense-Measures policy xml file from the current working directory after deployment'
-                            Remove-Item -Path '.\DenyPolicyWildcard Downloads-Defense-Measures.xml' -Force
                         }
                         else {
                             Write-Verbose -Message 'The Downloads-Defense-Measures policy is already deployed'

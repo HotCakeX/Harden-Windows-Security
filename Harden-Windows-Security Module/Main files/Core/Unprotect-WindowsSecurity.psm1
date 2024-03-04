@@ -84,7 +84,8 @@ Function Unprotect-WindowsSecurity {
             # Disable Mandatory ASLR
             Set-ProcessMitigation -System -Disable ForceRelocateImages
 
-            [System.Object[]]$ProcessMitigations = Import-Csv -Path "$HardeningModulePath\Resources\ProcessMitigations.csv" -Delimiter ','
+            # Only keep the mitigations that are allowed to be removed because they are not important system components with possible preexisting configurations
+            [System.Object[]]$ProcessMitigations = Import-Csv -Path "$HardeningModulePath\Resources\ProcessMitigations.csv" -Delimiter ',' | Where-Object -FilterScript { $_.RemovalAllowed -eq 'True' }
             # Group the data by ProgramName
             [System.Object[]]$GroupedMitigations = $ProcessMitigations | Group-Object -Property ProgramName
             [System.Object[]]$AllAvailableMitigations = (Get-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\*')

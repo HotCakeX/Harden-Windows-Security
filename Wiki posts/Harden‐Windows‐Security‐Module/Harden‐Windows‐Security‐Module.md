@@ -69,9 +69,9 @@ https://github.com/HotCakeX/Harden-Windows-Security/assets/118815227/0fdbd34b-6b
 
 ```powershell
 Protect-WindowsSecurity
-    [-Categories <String[]>] 
-    [-Log] 
-    [-Offline] 
+    [-Categories <String[]>]
+    [-Log]
+    [-Offline]
     [<CommonParameters>]
 ```
 
@@ -366,14 +366,14 @@ Protect-WindowsSecurity -Verbose -Offline -PathToLGPO 'C:\Users\Admin\Desktop\LG
 
 ```powershell
 Confirm-SystemCompliance
-    [-ExportToCSV] 
-    [-ShowAsObjectsOnly] 
+    [-ExportToCSV]
+    [-ShowAsObjectsOnly]
     [-DetailedDisplay]
 ```
 
 ## Description
 
-This module verifies and validates all of the security measures applied by the `Protect-windowsSecurity` cmdlet. It checks registry keys if the module uses Group Policy or registry, PowerShell cmdlets if the module invokes them and Security Group Policy if the module applies them.
+This cmdlet verifies and validates all of the applied security measures. It checks registry keys if the module uses Group Policy or registry, PowerShell cmdlets if the module invokes them and Security Group Policy if the module applies them.
 
 Compliance checking strictly follows the guidelines and security measures of this GitHub repository. Any minor deviation from them will result in a `false` value for the corresponding check.
 
@@ -443,13 +443,13 @@ Shows the output on the PowerShell console with more details and in the list for
 ```powershell
 Unprotect-WindowsSecurity
     [-OnlyProcessMitigations]
-    [-OnlyDownloadsDefenseMeasures] 
+    [-OnlyDownloadsDefenseMeasures]
     [-Force]
 ```
 
 ## Description
 
-You can use the `Unprotect-WindowsSecurity` cmdlet to remove all of the hardening measures applied by the `Protect-WindowsSecurity` cmdlet, with the following exceptions:
+You can use this cmdlet to remove all of the applied hardening measures, with the following exceptions:
 
 * Bitlocker Encrypted drives are not decrypted when you invoke this cmdlet.
 

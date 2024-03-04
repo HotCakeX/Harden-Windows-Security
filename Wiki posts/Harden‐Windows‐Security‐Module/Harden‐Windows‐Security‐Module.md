@@ -116,7 +116,11 @@ Uninstall-Module -Name 'Harden-Windows-Security-Module' -Force -AllVersions
 ## Available Parameters for Protect-WindowsSecurity Cmdlet
 
 ```powershell
-Protect-WindowsSecurity [-Categories <String[]>] [-Log] [-Offline] [<CommonParameters>]
+Protect-WindowsSecurity
+    [-Categories <String[]>] 
+    [-Log] 
+    [-Offline] 
+    [<CommonParameters>]
 ```
 
 <br>
@@ -270,7 +274,10 @@ Protect-WindowsSecurity -Verbose -Offline -PathToLGPO 'C:\Users\Admin\Desktop\LG
 ## Available Parameters for Confirm-SystemCompliance Cmdlet
 
 ```powershell
-Confirm-SystemCompliance [-ExportToCSV] [-ShowAsObjectsOnly] [-DetailedDisplay]
+Confirm-SystemCompliance
+    [-ExportToCSV] 
+    [-ShowAsObjectsOnly] 
+    [-DetailedDisplay]
 ```
 
 ### 3 Optional Parameters, They Can Be Used Together or Individually.
@@ -290,12 +297,17 @@ Confirm-SystemCompliance [-ExportToCSV] [-ShowAsObjectsOnly] [-DetailedDisplay]
 ## Available Parameters for Unprotect-WindowsSecurity Cmdlet
 
 ```powershell
-Unprotect-WindowsSecurity [-OnlyProcessMitigations]
+Unprotect-WindowsSecurity
+    [-OnlyProcessMitigations]
+    [-OnlyDownloadsDefenseMeasures] 
+    [-Force]
 ```
 
-### 1 Optional Parameter
+### 2 Optional Parameter
 
-* `[-OnlyProcessMitigations]`: Indicates that the cmdlet will only remove Process Mitigations (Exploit Protection) settings and doesn't change anything else.
+* `-OnlyProcessMitigations`: Indicates that the cmdlet will only remove Process Mitigations (Exploit Protection) settings and doesn't change anything else.
+
+* `-OnlyDownloadsDefenseMeasures`: Indicates that the cmdlet will only remove the[ Downloads Defense Measures](https://github.com/HotCakeX/Harden-Windows-Security?tab=readme-ov-file#downloads-defense-measures-) WDAC policy from the system and doesn't change anything else.
 
 <br>
 

@@ -2539,7 +2539,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                                 Write-Verbose -Message 'Detecting the Downloads path in Edge'
                                 [PSCustomObject]$CurrentUserEdgePreference = ConvertFrom-Json -InputObject (Get-Content -Raw -Path "$env:SystemDrive\Users\$UserName\AppData\Local\Microsoft\Edge\User Data\Default\Preferences")
                                 [System.IO.FileInfo]$DownloadsPathEdge = $CurrentUserEdgePreference.savefile.default_directory
-                                
+
                                 # Ensure there is an Edge browser profile and it was initialized
                                 if ((-NOT [System.String]::IsNullOrWhitespace($DownloadsPathEdge.FullName))) {
 

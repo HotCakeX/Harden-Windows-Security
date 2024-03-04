@@ -430,7 +430,7 @@ Function Protect-WindowsSecurity {
         $Host.UI.RawUI.WindowTitle = '❤️‍🔥Harden Windows Security❤️‍🔥'
 
         # Minimum OS build number required for the hardening measures
-        [System.Decimal]$Requiredbuild = '22621.2428'
+        [System.Decimal]$Requiredbuild = '22621.3155'
         # Fetching Temp Directory
         [System.String]$CurrentUserTempDirectoryPath = [System.IO.Path]::GetTempPath()
         # The total number of the main categories for the parent/main progress bar to render
@@ -1287,8 +1287,26 @@ Function Protect-WindowsSecurity {
                         Write-Verbose -Message 'Setting the Network Protection to block network traffic instead of displaying a warning'
                         Set-MpPreference -EnableConvertWarnToBlock $True
 
+                        Write-Verbose -Message 'Setting the Brute-Force Protection to use cloud aggregation to block IP addresses that are over 99% likely malicious'
+                        Set-MpPreference -BruteForceProtectionAggressiveness 1 # 2nd level aggression will come after further testing
+
+                        Write-Verbose -Message 'Setting the Brute-Force Protection to prevent suspicious and malicious behaviors'
+                        Set-MpPreference -BruteForceProtectionConfiguredState 1
+
+                        Write-Verbose -Message 'Setting the internal feature logic to determine blocking time for the Brute-Force Protections'
+                        Set-MpPreference -BruteForceProtectionMaxBlockTime 0
+
+                        Write-Verbose -Message 'Setting the Remote Encryption Protection to use cloud intel and context, and block when confidence level is above 90%'
+                        Set-MpPreference -RemoteEncryptionProtectionAggressiveness 2
+
+                        Write-Verbose -Message 'Setting the Remote Encryption Protection to prevent suspicious and malicious behaviors'
+                        Set-MpPreference -RemoteEncryptionProtectionConfiguredState 1
+
+                        Write-Verbose -Message 'Setting the internal feature logic to determine blocking time for the Remote Encryption Protection'
+                        Set-MpPreference -RemoteEncryptionProtectionMaxBlockTime 0
+
                         Write-Verbose -Message 'Adding OneDrive folders of all the user accounts (personal and work accounts) to the Controlled Folder Access for Ransomware Protection'
-                        Get-ChildItem "$env:SystemDrive\Users\*\OneDrive*\" -Directory | ForEach-Object -Process { Add-MpPreference -ControlledFolderAccessProtectedFolders $_ }
+                        Get-ChildItem -Path "$env:SystemDrive\Users\*\OneDrive*\" -Directory | ForEach-Object -Process { Add-MpPreference -ControlledFolderAccessProtectedFolders $_ }
 
                         Write-Verbose -Message 'Enabling Mandatory ASLR Exploit Protection system-wide'
                         Set-ProcessMitigation -System -Enable ForceRelocateImages
@@ -2521,19 +2539,21 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                                 Write-Verbose -Message 'Detecting the Downloads path in Edge'
                                 [PSCustomObject]$CurrentUserEdgePreference = ConvertFrom-Json -InputObject (Get-Content -Raw -Path "$env:SystemDrive\Users\$UserName\AppData\Local\Microsoft\Edge\User Data\Default\Preferences")
                                 [System.IO.FileInfo]$DownloadsPathEdge = $CurrentUserEdgePreference.savefile.default_directory
-                                Write-Verbose -Message "The Downloads path in Edge is $DownloadsPathEdge"
 
-                                # Display a warning for now
-                                if ($DownloadsPathEdge.FullName -ne $DownloadsPathSystem.FullName) {
-                                    Write-Warning -Message "The Downloads path in Edge ($($DownloadsPathEdge.FullName)) is different than the system's Downloads path ($($DownloadsPathSystem.FullName))"
+                                # Ensure there is an Edge browser profile and it was initialized
+                                if ((-NOT [System.String]::IsNullOrWhitespace($DownloadsPathEdge.FullName))) {
+
+                                    Write-Verbose -Message "The Downloads path in Edge is $DownloadsPathEdge"
+
+                                    # Display a warning for now
+                                    if ($DownloadsPathEdge.FullName -ne $DownloadsPathSystem.FullName) {
+                                        Write-Warning -Message "The Downloads path in Edge ($($DownloadsPathEdge.FullName)) is different than the system's Downloads path ($($DownloadsPathSystem.FullName))"
+                                    }
                                 }
                             }
 
                             Write-Verbose -Message 'Creating and deploying the Downloads-Defense-Measures policy'
                             New-DenyWDACConfig -PathWildCards -PolicyName 'Downloads-Defense-Measures' -FolderPath "$DownloadsPathSystem\*" -Deploy -Verbose:$Verbose -SkipVersionCheck
-
-                            Write-Verbose -Message 'Removing the Downloads-Defense-Measures policy xml file from the current working directory after deployment'
-                            Remove-Item -Path '.\DenyPolicyWildcard Downloads-Defense-Measures.xml' -Force
                         }
                         else {
                             Write-Verbose -Message 'The Downloads-Defense-Measures policy is already deployed'

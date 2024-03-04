@@ -4,7 +4,7 @@
   RootModule           = 'Harden-Windows-Security-Module.psm1'
 
   # Version number of this module.
-  ModuleVersion        = '0.3.2'
+  ModuleVersion        = '0.3.3'
 
   # Supported PSEditions
   CompatiblePSEditions = @('Core')
@@ -81,12 +81,6 @@ Harden Windows Safely, Securely, only with Official Microsoft methods
 
   # Minimum version of the PowerShell host required by this module
   # PowerShellHostVersion = ''
-
-  # Minimum version of Microsoft .NET Framework required by this module. This prerequisite is valid for the PowerShell Desktop edition only.
-  # DotNetFrameworkVersion = ''
-
-  # Minimum version of the common language runtime (CLR) required by this module. This prerequisite is valid for the PowerShell Desktop edition only.
-  # ClrVersion = ''
 
   # Processor architecture (None, X86, Amd64) required by this module
   # ProcessorArchitecture = ''

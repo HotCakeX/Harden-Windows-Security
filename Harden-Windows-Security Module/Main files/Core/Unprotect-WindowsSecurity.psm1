@@ -1,14 +1,15 @@
 Function Unprotect-WindowsSecurity {
     [CmdletBinding(
         SupportsShouldProcess = $true,
-        ConfirmImpact = 'High'
+        ConfirmImpact = 'High',
+        DefaultParameterSetName = 'All'
     )]
     [OutputType([System.String])]
     param (
-        [Parameter(Mandatory = $false)]
+        [Parameter(Mandatory = $false, ParameterSetName = 'OnlyProcessMitigations')]
         [System.Management.Automation.SwitchParameter]$OnlyProcessMitigations,
 
-        [Parameter(Mandatory = $false)]
+        [Parameter(Mandatory = $false, ParameterSetName = 'OnlyDownloadsDefenseMeasures')]
         [System.Management.Automation.SwitchParameter]$OnlyDownloadsDefenseMeasures,
 
         [Parameter(Mandatory = $false)]
@@ -78,6 +79,8 @@ Function Unprotect-WindowsSecurity {
                 System.Void
             #>
 
+            Write-Verbose -Message 'Removing the Process Mitigations / Exploit Protection settings'
+
             # Disable Mandatory ASLR
             Set-ProcessMitigation -System -Disable ForceRelocateImages
 
@@ -135,7 +138,9 @@ Function Unprotect-WindowsSecurity {
                     Return
                 }
                 else {
-                    Remove-DownloadsDefenseMeasures
+                    if (-NOT $OnlyProcessMitigations) {
+                        Remove-DownloadsDefenseMeasures
+                    }
                 }
 
                 # Create the working directory
@@ -158,7 +163,9 @@ Function Unprotect-WindowsSecurity {
                     return
                 }
                 else {
-                    Remove-ProcessMitigations
+                    if (-NOT $OnlyDownloadsDefenseMeasures) {
+                        Remove-ProcessMitigations
+                    }
                 }
 
                 $CurrentMainStep++

@@ -4,69 +4,8 @@ It is a PowerShell module that can apply all of the hardening measures described
 
 It is also useful for security researchers and penetration testers who want to assess their system security posture. The module works with any system locale and language.
 
-<br>
+### Automatic Updates
 
-<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
-
-<br>
-
-## How the Protection Works
-
-The `Protect-WindowsSecurity` cmdlet's hybrid design allows it to operate as a standalone script and as a module component. It allows it to operate with and without administrator privileges. You can use this cmdlet in both interactive and non-interactive modes.
-
-In Interactive mode, the cmdlet will ask you to confirm the changes before applying them. In non-interactive mode, you can pre-configure the hardening categories you want to apply and the cmdlet will apply them without asking for confirmation.
-
-It possesses the ability to operate entirely in isolation, useful for systems or servers that are disconnected from the Internet.
-
-<br>
-
-<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
-
-<br>
-
-## How the Compliance Checking Works
-
-This module verifies and validates all of the security measures applied by the `Protect-windowsSecurity` cmdlet. It checks registry keys if the module uses Group Policy or registry, PowerShell cmdlets if the module invokes them and Security Group Policy if the module applies them.
-
-Compliance checking strictly follows the guidelines and security measures of this GitHub repository. Any minor deviation from them will result in a `false` value for the corresponding check.
-
-### Security Scoring System
-
-Based on the score that you get you will see a different ASCII art!
-
-<br>
-
-<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
-
-<br>
-
-## How the Protections Removal Works
-
-You can use the `Unprotect-WindowsSecurity` cmdlet to remove all of the hardening measures applied by the `Protect-WindowsSecurity` cmdlet, with the following exceptions:
-
-* Bitlocker Encrypted drives are not decrypted when you invoke this cmdlet.
-
-* Security features related to [Device Guard](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Device-Guard-and-Virtualization-Based-Security-in-Windows) that are activated by UEFI Lock remain enabled even after you execute this cmdlet. [Learn more here](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Device-Guard-and-Virtualization-Based-Security-in-Windows#about-uefi-lock)
-
-* Windows optional features that are enabled or disabled by `Protect-WindowsSecurity` cmdlet are not affected.
-
-<br>
-
-<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
-
-<br>
-
-## Quick Demo
-
-https://github.com/HotCakeX/Harden-Windows-Security/assets/118815227/0fdbd34b-6bf6-4eae-b081-83b43d60bd0d
-
-<br>
-
-<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
-
-<br>
-
-## Automatic Updates
 The module checks for updates every time you run it and updates itself if there is a new version available, so you don't have to manually do anything.
 
 <br>
@@ -113,7 +52,20 @@ Uninstall-Module -Name 'Harden-Windows-Security-Module' -Force -AllVersions
 
 <br>
 
-## Available Parameters for Protect-WindowsSecurity Cmdlet
+## Quick Demo
+
+https://github.com/HotCakeX/Harden-Windows-Security/assets/118815227/0fdbd34b-6bf6-4eae-b081-83b43d60bd0d
+
+
+<br>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+
+<br>
+
+## Protect-WindowsSecurity
+
+## Syntax
 
 ```powershell
 Protect-WindowsSecurity
@@ -123,26 +75,161 @@ Protect-WindowsSecurity
     [<CommonParameters>]
 ```
 
-<br>
+## Description
 
-### 8 Optional Parameters
+The `Protect-WindowsSecurity` cmdlet's hybrid design allows it to operate as a standalone script and as a module component. It allows it to operate with and without administrator privileges. You can use this cmdlet in both interactive and non-interactive modes.
 
-* `-Categories`: Specify the hardening categories that you want to apply. This will tell the module to operate in non-interactive or headless/silent mode which won't ask for confirmation before running each selected categories. You can specify multiple categories by separating them with a comma. If you don't specify any category, the cmdlet will run in interactive mode. **Use this parameter for deployments at a large scale.** If a selected category requires Administrator privileges and the module is running with Standard privileges, that category is skipped.
-    * This parameter has automatic tab completion. You can press the `Tab` key to see the available categories.
+In Interactive mode, the cmdlet will ask you to confirm the changes before applying them. In non-interactive mode, you can pre-configure the hardening categories you want to apply and the cmdlet will apply them without asking for confirmation.
 
-* `-Verbose`: Shows verbose messages on the console about what the cmdlet is doing.
+It possesses the ability to operate entirely in isolation, useful for systems or servers that are disconnected from the Internet.
 
-* `-Log`: Activates comprehensive logging by recording all the information shown on the screen and some additional data to a text file. It is strongly advised to use the -Verbose parameter when you want to enable logging.
+## Parameters
 
-     * `-LogPath`: The path to save the log file to. If not specified, the log file will be saved in the current working directory.
+### -Categories
 
-* `-Offline`: Indicates that the module is being run in offline mode. Will not download any files from the internet. Will not check for updates. Using this parameter will make the following 3 parameters available and mandatory: `PathToLGPO`, `PathToMSFTSecurityBaselines` and `PathToMSFT365AppsSecurityBaselines`.
+Specify the hardening categories that you want to apply. This will tell the module to operate in non-interactive or headless/silent mode which won't ask for confirmation before running each selected categories.
 
-     * `-PathToLGPO`: The path to the 'LGPO.zip'. Make sure it's in the zip format just like it's downloaded from the Microsoft servers. File name can be anything. The parameter has argument completer so you can press tab and use the file picker GUI to select the zip file.
+You can specify multiple categories by separating them with a comma. If you don't specify any category, the cmdlet will run in interactive mode. **Use this parameter for deployments at a large scale.**
 
-     * `-PathToMSFTSecurityBaselines`: The path to the 'Windows Security Baseline.zip'. Make sure it's in the zip format just like it's downloaded from the Microsoft servers. File name can be anything. The parameter has argument completer so you can press tab and use the file picker GUI to select the zip file.
+If a selected category requires Administrator privileges and the module is running with Standard privileges, that category is skipped.
 
-     * `-PathToMSFT365AppsSecurityBaselines`: The path to the 'Microsoft 365 Apps for Enterprise zip'. Make sure it's in the zip format just like it's downloaded from the Microsoft servers. File name can be anything. The parameter has argument completer so you can press tab and use the file picker GUI to select the zip file.
+This parameter has automatic tab completion. You can press the `Tab` key to see the available categories.
+
+<div align='center'>
+
+| Type: |[String](https://learn.microsoft.com/en-us/dotnet/api/system.string)[]|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+### -Verbose
+
+Shows verbose messages on the console about what the cmdlet is doing.
+
+<div align='center'>
+
+| Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+### -Log
+
+Activates comprehensive logging by recording all the information shown on the screen and some additional data to a text file. It is strongly advised to use the -Verbose parameter when you want to enable logging.
+
+<div align='center'>
+
+| Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+### -LogPath
+
+The path to save the log file to. If not specified, the log file will be saved in the current working directory.
+
+> [!NOTE]\
+> Only available if the `-Log` switch is used.
+
+<div align='center'>
+
+| Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+### -Offline
+
+Indicates that the module is being run in offline mode. Will not download any files from the internet. Will not check for updates. Using this parameter will make the following 3 parameters available and mandatory: `PathToLGPO`, `PathToMSFTSecurityBaselines` and `PathToMSFT365AppsSecurityBaselines`.
+
+<div align='center'>
+
+| Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+### -PathToLGPO
+
+The path to the 'LGPO.zip'. Make sure it's in the zip format just like it's downloaded from the Microsoft servers. File name can be anything. The parameter has argument completer so you can press tab and use the file picker GUI to select the zip file.
+
+> [!NOTE]\
+> Only available if the `-Offline` switch is used.
+
+<div align='center'>
+
+| Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+### -PathToMSFTSecurityBaselines
+
+The path to the 'Windows Security Baseline.zip'. Make sure it's in the zip format just like it's downloaded from the Microsoft servers. File name can be anything. The parameter has argument completer so you can press tab and use the file picker GUI to select the zip file.
+
+> [!NOTE]\
+> Only available if the `-Offline` switch is used.
+
+<div align='center'>
+
+| Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+### -PathToMSFT365AppsSecurityBaselines
+
+The path to the 'Microsoft 365 Apps for Enterprise zip'. Make sure it's in the zip format just like it's downloaded from the Microsoft servers. File name can be anything. The parameter has argument completer so you can press tab and use the file picker GUI to select the zip file.
+
+> [!NOTE]\
+> Only available if the `-Offline` switch is used.
+
+<div align='center'>
+
+| Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
 
 <br>
 
@@ -225,6 +312,8 @@ If you do not specify any sub-categories using the switch parameters above, the 
 
 <br>
 
+## Examples
+
 ### Example 1
 
 If you run the module like this without specifying any categories, the module will run in interactive mode and the usual beautiful prompts will be displayed to the user.
@@ -271,7 +360,9 @@ Protect-WindowsSecurity -Verbose -Offline -PathToLGPO 'C:\Users\Admin\Desktop\LG
 
 <br>
 
-## Available Parameters for Confirm-SystemCompliance Cmdlet
+## Confirm-SystemCompliance
+
+## Syntax
 
 ```powershell
 Confirm-SystemCompliance
@@ -280,13 +371,64 @@ Confirm-SystemCompliance
     [-DetailedDisplay]
 ```
 
-### 3 Optional Parameters, They Can Be Used Together or Individually.
+## Description
 
-* `[-ExportToCSV]`: In addition to displaying the results on the screen, also exports them in a nicely formatted CSV for easier viewing. The CSV is fully compatible with GitHub too so you can upload it to GitHub and view it.
+This module verifies and validates all of the security measures applied by the `Protect-windowsSecurity` cmdlet. It checks registry keys if the module uses Group Policy or registry, PowerShell cmdlets if the module invokes them and Security Group Policy if the module applies them.
 
-* `[-ShowAsObjectsOnly]`: Instead of displaying strings on the console, outputs actionable objects and properties. You can use this parameter for when you need to store the output of the function in a variable and use it that way. This provides a very detailed nested object and suppresses the normal string output on the console.
+Compliance checking strictly follows the guidelines and security measures of this GitHub repository. Any minor deviation from them will result in a `false` value for the corresponding check.
 
-* `[-DetailedDisplay]`: Shows the output on the PowerShell console with more details and in the list format instead of table format
+> [!NOTE]\
+> Based on the score that you get you will see a different ASCII art!
+
+## Parameters
+
+### -ExportToCSV
+
+In addition to displaying the results on the screen, also exports them in a nicely formatted CSV for easier viewing. The CSV is fully compatible with GitHub too so you can upload it to GitHub and view it.
+
+<div align='center'>
+
+| Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+### -ShowAsObjectsOnly
+
+Instead of displaying strings on the console, outputs actionable objects and properties. You can use this parameter for when you need to store the output of the function in a variable and use it that way. This provides a very detailed nested object and suppresses the normal string output on the console.
+
+<div align='center'>
+
+| Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+### -DetailedDisplay
+
+Shows the output on the PowerShell console with more details and in the list format instead of table format
+
+<div align='center'>
+
+| Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
 
 <br>
 
@@ -294,7 +436,9 @@ Confirm-SystemCompliance
 
 <br>
 
-## Available Parameters for Unprotect-WindowsSecurity Cmdlet
+## Unprotect-WindowsSecurity Cmdlet
+
+## Syntax
 
 ```powershell
 Unprotect-WindowsSecurity
@@ -303,17 +447,53 @@ Unprotect-WindowsSecurity
     [-Force]
 ```
 
-### 2 Optional Parameter
+## Description
 
-* `-OnlyProcessMitigations`: Indicates that the cmdlet will only remove Process Mitigations (Exploit Protection) settings and doesn't change anything else.
+You can use the `Unprotect-WindowsSecurity` cmdlet to remove all of the hardening measures applied by the `Protect-WindowsSecurity` cmdlet, with the following exceptions:
 
-* `-OnlyDownloadsDefenseMeasures`: Indicates that the cmdlet will only remove the[ Downloads Defense Measures](https://github.com/HotCakeX/Harden-Windows-Security?tab=readme-ov-file#downloads-defense-measures-) WDAC policy from the system and doesn't change anything else.
+* Bitlocker Encrypted drives are not decrypted when you invoke this cmdlet.
+
+* Security features related to [Device Guard](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Device-Guard-and-Virtualization-Based-Security-in-Windows) that are activated by UEFI Lock remain enabled even after you execute this cmdlet. [Learn more here](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Device-Guard-and-Virtualization-Based-Security-in-Windows#about-uefi-lock)
+
+* Windows optional features that are enabled or disabled by `Protect-WindowsSecurity` cmdlet are not affected.
+
+## Parameters
+
+### -OnlyProcessMitigations
+
+Indicates that the cmdlet will only remove Process Mitigations (Exploit Protection) settings and doesn't change anything else.
+
+<div align='center'>
+
+| Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+### -OnlyDownloadsDefenseMeasures
+
+Indicates that the cmdlet will only remove the[ Downloads Defense Measures](https://github.com/HotCakeX/Harden-Windows-Security?tab=readme-ov-file#downloads-defense-measures-) WDAC policy from the system and doesn't change anything else.
+
+<div align='center'>
+
+| Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
 
 <br>
 
 <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
-
-<br>
 
 <br>
 

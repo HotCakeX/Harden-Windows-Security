@@ -1287,26 +1287,26 @@ Function Protect-WindowsSecurity {
                         Write-Verbose -Message 'Setting the Network Protection to block network traffic instead of displaying a warning'
                         Set-MpPreference -EnableConvertWarnToBlock $True
 
-                        Write-Verbose -Message 'Setting the Brute-Force Protection to use cloud aggregation to block IP addresses that are over 99% likely malicious.'
+                        Write-Verbose -Message 'Setting the Brute-Force Protection to use cloud aggregation to block IP addresses that are over 99% likely malicious'
                         Set-MpPreference -BruteForceProtectionAggressiveness 1 # 2nd level aggression will come after further testing
 
-                        Write-Verbose -Message 'Setting the Brute-Force Protection to prevent suspicious and malicious behaviors.'
+                        Write-Verbose -Message 'Setting the Brute-Force Protection to prevent suspicious and malicious behaviors'
                         Set-MpPreference -BruteForceProtectionConfiguredState 1
 
-                        Write-Verbose -Message 'Setting internal feature logic to determine blocking time for the Brute-Force Protections'
+                        Write-Verbose -Message 'Setting the internal feature logic to determine blocking time for the Brute-Force Protections'
                         Set-MpPreference -BruteForceProtectionMaxBlockTime 0
 
-                        Write-Verbose -Message 'Setting the Remote Encryption Protection to use cloud aggregation and block when confidence level is above 99%.'
-                        Set-MpPreference -RemoteEncryptionProtectionAggressiveness 1 # 2nd level aggression will come after further testing
+                        Write-Verbose -Message 'Setting the Remote Encryption Protection to use cloud intel and context, and block when confidence level is above 90%'
+                        Set-MpPreference -RemoteEncryptionProtectionAggressiveness 2
 
-                        Write-Verbose -Message 'Setting the Remote Encryption Protection to prevent suspicious and malicious behaviors.'
+                        Write-Verbose -Message 'Setting the Remote Encryption Protection to prevent suspicious and malicious behaviors'
                         Set-MpPreference -RemoteEncryptionProtectionConfiguredState 1
 
-                        Write-Verbose -Message 'Setting internal feature logic to determine blocking time for the Remote Encryption Protection'
+                        Write-Verbose -Message 'Setting the internal feature logic to determine blocking time for the Remote Encryption Protection'
                         Set-MpPreference -RemoteEncryptionProtectionMaxBlockTime 0
 
                         Write-Verbose -Message 'Adding OneDrive folders of all the user accounts (personal and work accounts) to the Controlled Folder Access for Ransomware Protection'
-                        Get-ChildItem "$env:SystemDrive\Users\*\OneDrive*\" -Directory | ForEach-Object -Process { Add-MpPreference -ControlledFolderAccessProtectedFolders $_ }
+                        Get-ChildItem -Path "$env:SystemDrive\Users\*\OneDrive*\" -Directory | ForEach-Object -Process { Add-MpPreference -ControlledFolderAccessProtectedFolders $_ }
 
                         Write-Verbose -Message 'Enabling Mandatory ASLR Exploit Protection system-wide'
                         Set-ProcessMitigation -System -Enable ForceRelocateImages

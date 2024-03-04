@@ -25,7 +25,7 @@ function Confirm-SystemCompliance {
 
         #Region Defining-Variables
         # Total number of Compliant values not equal to N/A
-        [System.UInt16]$TotalNumberOfTrueCompliantValues = 231
+        [System.UInt16]$TotalNumberOfTrueCompliantValues = 237
 
         # Get the current configurations and preferences of the Microsoft Defender
         New-Variable -Name 'MDAVConfigCurrent' -Value (Get-MpComputerStatus) -Force
@@ -423,7 +423,6 @@ function Confirm-SystemCompliance {
                 Method       = 'Cmdlet'
             }
 
-            # For PowerShell Cmdlet
             $IndividualItemResult = $MDAVPreferencesCurrent.DisableRestorePoint
             $NestedObjectArray += [PSCustomObject]@{
                 FriendlyName = 'Enable Restore Point scanning'
@@ -434,7 +433,6 @@ function Confirm-SystemCompliance {
                 Method       = 'Cmdlet'
             }
 
-            # For PowerShell Cmdlet
             $IndividualItemResult = $MDAVPreferencesCurrent.PerformanceModeStatus
             $NestedObjectArray += [PSCustomObject]@{
                 FriendlyName = 'PerformanceModeStatus'
@@ -445,13 +443,72 @@ function Confirm-SystemCompliance {
                 Method       = 'Cmdlet'
             }
 
-            # For PowerShell Cmdlet
             $IndividualItemResult = $MDAVPreferencesCurrent.EnableConvertWarnToBlock
             $NestedObjectArray += [PSCustomObject]@{
                 FriendlyName = 'EnableConvertWarnToBlock'
                 Compliant    = $IndividualItemResult
                 Value        = $IndividualItemResult
                 Name         = 'EnableConvertWarnToBlock'
+                Category     = $CatName
+                Method       = 'Cmdlet'
+            }
+
+            $IndividualItemResult = $MDAVPreferencesCurrent.BruteForceProtectionAggressiveness
+            $NestedObjectArray += [PSCustomObject]@{
+                FriendlyName = 'BruteForceProtectionAggressiveness'
+                Compliant    = [System.Boolean]($IndividualItemResult -in ('1', '2'))
+                Value        = $IndividualItemResult
+                Name         = 'BruteForceProtectionAggressiveness'
+                Category     = $CatName
+                Method       = 'Cmdlet'
+            }
+
+            $IndividualItemResult = $MDAVPreferencesCurrent.BruteForceProtectionConfiguredState
+            $NestedObjectArray += [PSCustomObject]@{
+                FriendlyName = 'BruteForceProtectionConfiguredState'
+                Compliant    = [System.Boolean]($IndividualItemResult -eq '1')
+                Value        = $IndividualItemResult
+                Name         = 'BruteForceProtectionConfiguredState'
+                Category     = $CatName
+                Method       = 'Cmdlet'
+            }
+
+            $IndividualItemResult = $MDAVPreferencesCurrent.BruteForceProtectionMaxBlockTime
+            $NestedObjectArray += [PSCustomObject]@{
+                FriendlyName = 'BruteForceProtectionMaxBlockTime'
+                Compliant    = [System.Boolean]($IndividualItemResult -in ('0', '4294967295'))
+                Value        = $IndividualItemResult
+                Name         = 'BruteForceProtectionMaxBlockTime'
+                Category     = $CatName
+                Method       = 'Cmdlet'
+            }
+
+            $IndividualItemResult = $MDAVPreferencesCurrent.RemoteEncryptionProtectionAggressiveness
+            $NestedObjectArray += [PSCustomObject]@{
+                FriendlyName = 'RemoteEncryptionProtectionAggressiveness'
+                Compliant    = [System.Boolean]($IndividualItemResult -eq '2')
+                Value        = $IndividualItemResult
+                Name         = 'RemoteEncryptionProtectionAggressiveness'
+                Category     = $CatName
+                Method       = 'Cmdlet'
+            }
+
+            $IndividualItemResult = $MDAVPreferencesCurrent.RemoteEncryptionProtectionConfiguredState
+            $NestedObjectArray += [PSCustomObject]@{
+                FriendlyName = 'RemoteEncryptionProtectionConfiguredState'
+                Compliant    = [System.Boolean]($IndividualItemResult -eq '1')
+                Value        = $IndividualItemResult
+                Name         = 'RemoteEncryptionProtectionConfiguredState'
+                Category     = $CatName
+                Method       = 'Cmdlet'
+            }
+
+            $IndividualItemResult = $MDAVPreferencesCurrent.RemoteEncryptionProtectionMaxBlockTime
+            $NestedObjectArray += [PSCustomObject]@{
+                FriendlyName = 'RemoteEncryptionProtectionMaxBlockTime'
+                Compliant    = [System.Boolean]($IndividualItemResult -in ('0', '4294967295'))
+                Value        = $IndividualItemResult
+                Name         = 'RemoteEncryptionProtectionMaxBlockTime'
                 Category     = $CatName
                 Method       = 'Cmdlet'
             }
@@ -2011,7 +2068,7 @@ function Confirm-SystemCompliance {
                     } , Value -AutoSize
                 }
 
-                [System.String[]]$Categories = ('Microsoft Defender', # 49 - 3x(N/A) = 46
+                [System.String[]]$Categories = ('Microsoft Defender', # 55 - 3x(N/A) = 46
                     'ASR', # 17
                     'Bitlocker', # 22 + Number of Non-OS drives which are dynamically increased
                     'TLS', # 21

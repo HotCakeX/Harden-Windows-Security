@@ -45,7 +45,7 @@
 >
 > ### <img width="50" src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/tada-purple.gif" alt="Indicator for The WDACConfig Module for Windows Defender Application Control"> <a href="https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig"> The WDACConfig Module for Windows Defender Application Control </a>
 >
-> ### <img width="50" src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/colorful-heart.gif"> <a href="https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Rationale.md" alt="Indicator for the Rationale Behind This GitHub Repository"> Read the Rationale Behind This GitHub Repository </a>
+> ### <img width="50" src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/colorful-heart.gif" alt="Indicator for the Rationale Behind This GitHub Repository"> <a href="https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Rationale.md"> Read the Rationale Behind This GitHub Repository </a>
 
 <img src="https://raw.githubusercontent.com/HotCakeX/.github/febfcc2b3be66ef0d5ecd74694157622a7fde865/Pictures/SVG/SVG%20line%20wave%20yellow%20pink.svg" width= "300000" alt="horizontal super thin rainbow RGB line">
 
@@ -913,7 +913,7 @@ Due to security reasons, many policies cannot be used when you are signed into E
     - [Microsoft Edge Security baselines](https://www.microsoft.com/en-us/download/details.aspx?id=55319) - Work without ingesting [ADMX policy files](https://www.microsoft.com/en-us/edge/business/download) first
         - [Reason why the module doesn't use it.](https://github.com/HotCakeX/Harden-Windows-Security/issues/50)
 
-###### Edge policies reviewed until version 120.0.2210.121
+###### Edge policies reviewed until version 123.0.2420.10
 
 <p align="right"><a href="#menu-back-to-top">💡 (back to categories)</a></p>
 

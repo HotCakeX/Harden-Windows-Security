@@ -102,8 +102,8 @@ Unprotect-WindowsSecurity
 <br>
 
 <p align="center">
-  <a href="https://www.youtube.com/watch?v=Ty_NoguyMhc">
-    <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/YouTubeVideoLogo.png" width="500"
+  <a href="https://youtu.be/AksQ0NACRxY?si=b4L1lA4VGsZJsfV7">
+    <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/Harden%20Windows%20Security%20Module%20Demo.png" width="500"
          alt="YouTube Video showcase">
   </a>
 </p>

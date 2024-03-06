@@ -45,7 +45,7 @@
 >
 > ### <img width="50" src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/tada-purple.gif" alt="Indicator for The WDACConfig Module for Windows Defender Application Control"> <a href="https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig"> The WDACConfig Module for Windows Defender Application Control </a>
 >
-> ### <img width="50" src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/colorful-heart.gif"> <a href="https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Rationale.md" alt="Indicator for the Rationale Behind This GitHub Repository"> Read the Rationale Behind This GitHub Repository </a>
+> ### <img width="50" src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/colorful-heart.gif" alt="Indicator for the Rationale Behind This GitHub Repository"> <a href="https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Rationale.md"> Read the Rationale Behind This GitHub Repository </a>
 
 <img src="https://raw.githubusercontent.com/HotCakeX/.github/febfcc2b3be66ef0d5ecd74694157622a7fde865/Pictures/SVG/SVG%20line%20wave%20yellow%20pink.svg" width= "300000" alt="horizontal super thin rainbow RGB line">
 
@@ -102,8 +102,8 @@ Unprotect-WindowsSecurity
 <br>
 
 <p align="center">
-  <a href="https://www.youtube.com/watch?v=Ty_NoguyMhc">
-    <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/YouTubeVideoLogo.png" width="500"
+  <a href="https://youtu.be/AksQ0NACRxY?si=b4L1lA4VGsZJsfV7">
+    <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/Harden%20Windows%20Security%20Module%20Demo.png" width="500"
          alt="YouTube Video showcase">
   </a>
 </p>
@@ -913,7 +913,7 @@ Due to security reasons, many policies cannot be used when you are signed into E
     - [Microsoft Edge Security baselines](https://www.microsoft.com/en-us/download/details.aspx?id=55319) - Work without ingesting [ADMX policy files](https://www.microsoft.com/en-us/edge/business/download) first
         - [Reason why the module doesn't use it.](https://github.com/HotCakeX/Harden-Windows-Security/issues/50)
 
-###### Edge policies reviewed until version 120.0.2210.121
+###### Edge policies reviewed until version 123.0.2420.10
 
 <p align="right"><a href="#menu-back-to-top">💡 (back to categories)</a></p>
 

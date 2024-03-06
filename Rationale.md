@@ -12,7 +12,7 @@ This document provides the justification and objective of this GitHub repository
 2. Checking and Auditing the Compliance of the system with the hardening measures
 3. Removing the hardening measures described in the [Readme](https://github.com/HotCakeX/Harden-Windows-Security)
 
-Use Harden Windows Security module to secure your personal devices against the majority of advanced threats.
+Use the Harden Windows Security module to secure your personal devices against the majority of advanced threats.
 
 The module is suitable to be used by everyone, as long as your device is not managed, for example by a Domain Controller or as part of the [Microsoft Entra ID](https://www.microsoft.com/en-gb/security/business/microsoft-entra), because those devices are already controlled in different manners and different set of policies are applied to them.
 
@@ -48,7 +48,7 @@ First use the Harden Windows Security Module to apply the hardening measures des
 
 2. Use [WDACConfig module](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig) to deploy a WDAC policy and have even more control over the operation of the Windows Defender Application Control.
 
-These methods will create multiple layers of security; also known as defense in depth. Additionally, you can create [Kernel-level Zero-Trust strategy](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-policy-for-BYOVD-Kernel-mode-only-protection) for your system.
+These methods will create multiple layers of security; also known as defense in depth. Additionally, you can create [**Kernel-level Zero-Trust strategy**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-policy-for-BYOVD-Kernel-mode-only-protection) for your system.
 
 If there will ever be a zero-day vulnerability in one or even some of the security layers at the same time, there will still be enough layers left to protect your device. It's impossible to penetrate all of them.
 

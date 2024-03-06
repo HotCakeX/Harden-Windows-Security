@@ -54,8 +54,11 @@ Uninstall-Module -Name 'Harden-Windows-Security-Module' -Force -AllVersions
 
 ## Quick Demo
 
-https://github.com/HotCakeX/Harden-Windows-Security/assets/118815227/0fdbd34b-6bf6-4eae-b081-83b43d60bd0d
+<div align="center">
 
+https://github.com/HotCakeX/Harden-Windows-Security/assets/118815227/51259ec0-aba3-45c4-9e4a-d1923f905cc8
+
+</div>
 
 <br>
 

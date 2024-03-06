@@ -25,7 +25,7 @@ function Confirm-SystemCompliance {
 
         #Region Defining-Variables
         # Total number of Compliant values not equal to N/A
-        [System.UInt16]$TotalNumberOfTrueCompliantValues = 237
+        [System.UInt16]$TotalNumberOfTrueCompliantValues = 239
 
         # Get the current configurations and preferences of the Microsoft Defender
         New-Variable -Name 'MDAVConfigCurrent' -Value (Get-MpComputerStatus) -Force
@@ -389,7 +389,7 @@ function Confirm-SystemCompliance {
             $NestedObjectArray += [PSCustomObject]@{
                 FriendlyName = 'Microsoft Defender Platform Updates Channel'
                 Compliant    = 'N/A'
-                Value        = $($DefenderPlatformUpdatesChannels[[System.UInt16]($MDAVPreferencesCurrent).PlatformUpdatesChannel])
+                Value        = ($DefenderPlatformUpdatesChannels[[System.Int32]($MDAVPreferencesCurrent).PlatformUpdatesChannel])
                 Name         = 'Microsoft Defender Platform Updates Channel'
                 Category     = $CatName
                 Method       = 'Cmdlet'
@@ -407,7 +407,7 @@ function Confirm-SystemCompliance {
             $NestedObjectArray += [PSCustomObject]@{
                 FriendlyName = 'Microsoft Defender Engine Updates Channel'
                 Compliant    = 'N/A'
-                Value        = $($DefenderEngineUpdatesChannels[[System.UInt16]($MDAVPreferencesCurrent).EngineUpdatesChannel])
+                Value        = ($DefenderEngineUpdatesChannels[[System.Int32]($MDAVPreferencesCurrent).EngineUpdatesChannel])
                 Name         = 'Microsoft Defender Engine Updates Channel'
                 Category     = $CatName
                 Method       = 'Cmdlet'
@@ -713,6 +713,8 @@ function Confirm-SystemCompliance {
                 '56a863a9-875e-4185-98a7-b882c64b5ce5' = 'Block abuse of exploited vulnerable signed drivers'
                 'c1db55ab-c21a-4637-bb3f-a12568109d35' = 'Use advanced protection against ransomware'
                 'd3e037e1-3eb8-44c8-a917-57927947596d' = 'Block JavaScript or VBScript from launching downloaded executable content'
+                '33ddedf1-c6e0-47cb-833e-de6133960387' = 'Block rebooting machine in Safe Mode'
+                'c0033c00-d16d-4114-a5a0-dc9b3a7d2ceb' = 'Block use of copied or impersonated system tools'
             }
 
             # Loop over each ID in the hashtable
@@ -2069,7 +2071,7 @@ function Confirm-SystemCompliance {
                 }
 
                 [System.String[]]$Categories = ('Microsoft Defender', # 55 - 3x(N/A) = 46
-                    'ASR', # 17
+                    'ASR', # 19
                     'Bitlocker', # 22 + Number of Non-OS drives which are dynamically increased
                     'TLS', # 21
                     'LockScreen', # 14

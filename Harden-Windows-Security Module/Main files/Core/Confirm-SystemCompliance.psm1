@@ -25,7 +25,7 @@ function Confirm-SystemCompliance {
 
         #Region Defining-Variables
         # Total number of Compliant values not equal to N/A
-        [System.UInt16]$TotalNumberOfTrueCompliantValues = 239
+        [System.UInt16]$TotalNumberOfTrueCompliantValues = 238
 
         # Get the current configurations and preferences of the Microsoft Defender
         New-Variable -Name 'MDAVConfigCurrent' -Value (Get-MpComputerStatus) -Force
@@ -1238,7 +1238,7 @@ function Confirm-SystemCompliance {
             [System.String]$CatName = 'Optional Windows Features'
 
             # Windows PowerShell handling Windows optional features verifications
-            [System.Object[]]$Results = @()
+            [System.String[]]$Results = @()
             $Results = powershell.exe {
                 [System.Boolean]$PowerShell1 = (Get-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2).State -eq 'Disabled'
                 [System.Boolean]$PowerShell2 = (Get-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2Root).State -eq 'Disabled'
@@ -2067,7 +2067,7 @@ function Confirm-SystemCompliance {
                     'UAC', # 4
                     'Device Guard', # 8
                     'Windows Firewall', # 20
-                    'Optional Windows Features', # 14
+                    'Optional Windows Features', # 13
                     'Windows Networking', # 9
                     'Miscellaneous', # 17
                     'Windows Update', # 14

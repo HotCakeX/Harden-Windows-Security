@@ -25,7 +25,7 @@ function Confirm-SystemCompliance {
 
         #Region Defining-Variables
         # Total number of Compliant values not equal to N/A
-        [System.UInt16]$TotalNumberOfTrueCompliantValues = 237
+        [System.UInt16]$TotalNumberOfTrueCompliantValues = 238
 
         # Get the current configurations and preferences of the Microsoft Defender
         New-Variable -Name 'MDAVConfigCurrent' -Value (Get-MpComputerStatus) -Force
@@ -389,7 +389,7 @@ function Confirm-SystemCompliance {
             $NestedObjectArray += [PSCustomObject]@{
                 FriendlyName = 'Microsoft Defender Platform Updates Channel'
                 Compliant    = 'N/A'
-                Value        = $($DefenderPlatformUpdatesChannels[[System.UInt16]($MDAVPreferencesCurrent).PlatformUpdatesChannel])
+                Value        = ($DefenderPlatformUpdatesChannels[[System.Int32]($MDAVPreferencesCurrent).PlatformUpdatesChannel])
                 Name         = 'Microsoft Defender Platform Updates Channel'
                 Category     = $CatName
                 Method       = 'Cmdlet'
@@ -407,7 +407,7 @@ function Confirm-SystemCompliance {
             $NestedObjectArray += [PSCustomObject]@{
                 FriendlyName = 'Microsoft Defender Engine Updates Channel'
                 Compliant    = 'N/A'
-                Value        = $($DefenderEngineUpdatesChannels[[System.UInt16]($MDAVPreferencesCurrent).EngineUpdatesChannel])
+                Value        = ($DefenderEngineUpdatesChannels[[System.Int32]($MDAVPreferencesCurrent).EngineUpdatesChannel])
                 Name         = 'Microsoft Defender Engine Updates Channel'
                 Category     = $CatName
                 Method       = 'Cmdlet'
@@ -713,6 +713,8 @@ function Confirm-SystemCompliance {
                 '56a863a9-875e-4185-98a7-b882c64b5ce5' = 'Block abuse of exploited vulnerable signed drivers'
                 'c1db55ab-c21a-4637-bb3f-a12568109d35' = 'Use advanced protection against ransomware'
                 'd3e037e1-3eb8-44c8-a917-57927947596d' = 'Block JavaScript or VBScript from launching downloaded executable content'
+                '33ddedf1-c6e0-47cb-833e-de6133960387' = 'Block rebooting machine in Safe Mode'
+                'c0033c00-d16d-4114-a5a0-dc9b3a7d2ceb' = 'Block use of copied or impersonated system tools'
             }
 
             # Loop over each ID in the hashtable
@@ -1236,7 +1238,7 @@ function Confirm-SystemCompliance {
             [System.String]$CatName = 'Optional Windows Features'
 
             # Windows PowerShell handling Windows optional features verifications
-            [System.Object[]]$Results = @()
+            [System.String[]]$Results = @()
             $Results = powershell.exe {
                 [System.Boolean]$PowerShell1 = (Get-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2).State -eq 'Disabled'
                 [System.Boolean]$PowerShell2 = (Get-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2Root).State -eq 'Disabled'
@@ -1246,7 +1248,6 @@ function Confirm-SystemCompliance {
                 [System.String]$MDAG = (Get-WindowsOptionalFeature -Online -FeatureName Windows-Defender-ApplicationGuard).state
                 [System.String]$WindowsSandbox = (Get-WindowsOptionalFeature -Online -FeatureName Containers-DisposableClientVM).state
                 [System.String]$HyperV = (Get-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V).state
-                [System.String]$VMPlatform = (Get-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform).state
                 [System.String]$WMIC = (Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like '*wmic*' }).state
                 [System.String]$IEMode = (Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like '*Browser.InternetExplorer*' }).state
                 [System.String]$LegacyNotepad = (Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like '*Microsoft.Windows.Notepad.System*' }).state
@@ -1254,7 +1255,7 @@ function Confirm-SystemCompliance {
                 [System.String]$PowerShellISE = (Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like '*Microsoft.Windows.PowerShell.ISE*' }).state
                 [System.String]$StepsRecorder = (Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like '*App.StepsRecorder*' }).state
                 # returning the output of the script block as an array
-                Return $PowerShell1, $PowerShell2, $WorkFoldersClient, $InternetPrintingClient, $WindowsMediaPlayer, $MDAG, $WindowsSandbox, $HyperV, $VMPlatform, $WMIC, $IEMode, $LegacyNotepad, $LegacyWordPad, $PowerShellISE, $StepsRecorder
+                Return $PowerShell1, $PowerShell2, $WorkFoldersClient, $InternetPrintingClient, $WindowsMediaPlayer, $MDAG, $WindowsSandbox, $HyperV, $WMIC, $IEMode, $LegacyNotepad, $LegacyWordPad, $PowerShellISE, $StepsRecorder
             }
             # Verify PowerShell v2 is disabled
             $NestedObjectArray += [PSCustomObject]@{
@@ -1326,21 +1327,11 @@ function Confirm-SystemCompliance {
                 Method       = 'Optional Windows Features'
             }
 
-            # Verify Virtual Machine Platform is enabled
-            $NestedObjectArray += [PSCustomObject]@{
-                FriendlyName = 'Virtual Machine Platform is enabled'
-                Compliant    = [System.Boolean]($Results[8] -eq 'Enabled')
-                Value        = [System.String]$Results[8]
-                Name         = 'Virtual Machine Platform is enabled'
-                Category     = $CatName
-                Method       = 'Optional Windows Features'
-            }
-
             # Verify WMIC is not present
             $NestedObjectArray += [PSCustomObject]@{
                 FriendlyName = 'WMIC is not present'
-                Compliant    = [System.Boolean]($Results[9] -eq 'NotPresent')
-                Value        = [System.String]$Results[9]
+                Compliant    = [System.Boolean]($Results[8] -eq 'NotPresent')
+                Value        = [System.String]$Results[8]
                 Name         = 'WMIC is not present'
                 Category     = $CatName
                 Method       = 'Optional Windows Features'
@@ -1349,8 +1340,8 @@ function Confirm-SystemCompliance {
             # Verify Internet Explorer mode functionality for Edge is not present
             $NestedObjectArray += [PSCustomObject]@{
                 FriendlyName = 'Internet Explorer mode functionality for Edge is not present'
-                Compliant    = [System.Boolean]($Results[10] -eq 'NotPresent')
-                Value        = [System.String]$Results[10]
+                Compliant    = [System.Boolean]($Results[9] -eq 'NotPresent')
+                Value        = [System.String]$Results[9]
                 Name         = 'Internet Explorer mode functionality for Edge is not present'
                 Category     = $CatName
                 Method       = 'Optional Windows Features'
@@ -1359,8 +1350,8 @@ function Confirm-SystemCompliance {
             # Verify Legacy Notepad is not present
             $NestedObjectArray += [PSCustomObject]@{
                 FriendlyName = 'Legacy Notepad is not present'
-                Compliant    = [System.Boolean]($Results[11] -eq 'NotPresent')
-                Value        = [System.String]$Results[11]
+                Compliant    = [System.Boolean]($Results[10] -eq 'NotPresent')
+                Value        = [System.String]$Results[10]
                 Name         = 'Legacy Notepad is not present'
                 Category     = $CatName
                 Method       = 'Optional Windows Features'
@@ -1369,8 +1360,8 @@ function Confirm-SystemCompliance {
             # Verify Legacy WordPad is not present
             $NestedObjectArray += [PSCustomObject]@{
                 FriendlyName = 'WordPad is not present'
-                Compliant    = [System.Boolean]($Results[12] -eq 'NotPresent')
-                Value        = [System.String]$Results[12]
+                Compliant    = [System.Boolean]($Results[11] -eq 'NotPresent')
+                Value        = [System.String]$Results[11]
                 Name         = 'WordPad is not present'
                 Category     = $CatName
                 Method       = 'Optional Windows Features'
@@ -1379,8 +1370,8 @@ function Confirm-SystemCompliance {
             # Verify PowerShell ISE is not present
             $NestedObjectArray += [PSCustomObject]@{
                 FriendlyName = 'PowerShell ISE is not present'
-                Compliant    = [System.Boolean]($Results[13] -eq 'NotPresent')
-                Value        = [System.String]$Results[13]
+                Compliant    = [System.Boolean]($Results[12] -eq 'NotPresent')
+                Value        = [System.String]$Results[12]
                 Name         = 'PowerShell ISE is not present'
                 Category     = $CatName
                 Method       = 'Optional Windows Features'
@@ -1389,8 +1380,8 @@ function Confirm-SystemCompliance {
             # Verify Steps Recorder is not present
             $NestedObjectArray += [PSCustomObject]@{
                 FriendlyName = 'Steps Recorder is not present'
-                Compliant    = [System.Boolean]($Results[14] -eq 'NotPresent')
-                Value        = [System.String]$Results[14]
+                Compliant    = [System.Boolean]($Results[13] -eq 'NotPresent')
+                Value        = [System.String]$Results[13]
                 Name         = 'Steps Recorder is not present'
                 Category     = $CatName
                 Method       = 'Optional Windows Features'
@@ -2069,14 +2060,14 @@ function Confirm-SystemCompliance {
                 }
 
                 [System.String[]]$Categories = ('Microsoft Defender', # 55 - 3x(N/A) = 46
-                    'ASR', # 17
+                    'ASR', # 19
                     'Bitlocker', # 22 + Number of Non-OS drives which are dynamically increased
                     'TLS', # 21
                     'LockScreen', # 14
                     'UAC', # 4
                     'Device Guard', # 8
                     'Windows Firewall', # 20
-                    'Optional Windows Features', # 14
+                    'Optional Windows Features', # 13
                     'Windows Networking', # 9
                     'Miscellaneous', # 17
                     'Windows Update', # 14

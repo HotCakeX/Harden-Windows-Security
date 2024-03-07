@@ -1248,7 +1248,6 @@ function Confirm-SystemCompliance {
                 [System.String]$MDAG = (Get-WindowsOptionalFeature -Online -FeatureName Windows-Defender-ApplicationGuard).state
                 [System.String]$WindowsSandbox = (Get-WindowsOptionalFeature -Online -FeatureName Containers-DisposableClientVM).state
                 [System.String]$HyperV = (Get-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V).state
-                [System.String]$VMPlatform = (Get-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform).state
                 [System.String]$WMIC = (Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like '*wmic*' }).state
                 [System.String]$IEMode = (Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like '*Browser.InternetExplorer*' }).state
                 [System.String]$LegacyNotepad = (Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like '*Microsoft.Windows.Notepad.System*' }).state
@@ -1256,7 +1255,7 @@ function Confirm-SystemCompliance {
                 [System.String]$PowerShellISE = (Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like '*Microsoft.Windows.PowerShell.ISE*' }).state
                 [System.String]$StepsRecorder = (Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like '*App.StepsRecorder*' }).state
                 # returning the output of the script block as an array
-                Return $PowerShell1, $PowerShell2, $WorkFoldersClient, $InternetPrintingClient, $WindowsMediaPlayer, $MDAG, $WindowsSandbox, $HyperV, $VMPlatform, $WMIC, $IEMode, $LegacyNotepad, $LegacyWordPad, $PowerShellISE, $StepsRecorder
+                Return $PowerShell1, $PowerShell2, $WorkFoldersClient, $InternetPrintingClient, $WindowsMediaPlayer, $MDAG, $WindowsSandbox, $HyperV, $WMIC, $IEMode, $LegacyNotepad, $LegacyWordPad, $PowerShellISE, $StepsRecorder
             }
             # Verify PowerShell v2 is disabled
             $NestedObjectArray += [PSCustomObject]@{
@@ -1328,21 +1327,11 @@ function Confirm-SystemCompliance {
                 Method       = 'Optional Windows Features'
             }
 
-            # Verify Virtual Machine Platform is enabled
-            $NestedObjectArray += [PSCustomObject]@{
-                FriendlyName = 'Virtual Machine Platform is enabled'
-                Compliant    = [System.Boolean]($Results[8] -eq 'Enabled')
-                Value        = [System.String]$Results[8]
-                Name         = 'Virtual Machine Platform is enabled'
-                Category     = $CatName
-                Method       = 'Optional Windows Features'
-            }
-
             # Verify WMIC is not present
             $NestedObjectArray += [PSCustomObject]@{
                 FriendlyName = 'WMIC is not present'
-                Compliant    = [System.Boolean]($Results[9] -eq 'NotPresent')
-                Value        = [System.String]$Results[9]
+                Compliant    = [System.Boolean]($Results[8] -eq 'NotPresent')
+                Value        = [System.String]$Results[8]
                 Name         = 'WMIC is not present'
                 Category     = $CatName
                 Method       = 'Optional Windows Features'
@@ -1351,8 +1340,8 @@ function Confirm-SystemCompliance {
             # Verify Internet Explorer mode functionality for Edge is not present
             $NestedObjectArray += [PSCustomObject]@{
                 FriendlyName = 'Internet Explorer mode functionality for Edge is not present'
-                Compliant    = [System.Boolean]($Results[10] -eq 'NotPresent')
-                Value        = [System.String]$Results[10]
+                Compliant    = [System.Boolean]($Results[9] -eq 'NotPresent')
+                Value        = [System.String]$Results[9]
                 Name         = 'Internet Explorer mode functionality for Edge is not present'
                 Category     = $CatName
                 Method       = 'Optional Windows Features'
@@ -1361,8 +1350,8 @@ function Confirm-SystemCompliance {
             # Verify Legacy Notepad is not present
             $NestedObjectArray += [PSCustomObject]@{
                 FriendlyName = 'Legacy Notepad is not present'
-                Compliant    = [System.Boolean]($Results[11] -eq 'NotPresent')
-                Value        = [System.String]$Results[11]
+                Compliant    = [System.Boolean]($Results[10] -eq 'NotPresent')
+                Value        = [System.String]$Results[10]
                 Name         = 'Legacy Notepad is not present'
                 Category     = $CatName
                 Method       = 'Optional Windows Features'
@@ -1371,8 +1360,8 @@ function Confirm-SystemCompliance {
             # Verify Legacy WordPad is not present
             $NestedObjectArray += [PSCustomObject]@{
                 FriendlyName = 'WordPad is not present'
-                Compliant    = [System.Boolean]($Results[12] -eq 'NotPresent')
-                Value        = [System.String]$Results[12]
+                Compliant    = [System.Boolean]($Results[11] -eq 'NotPresent')
+                Value        = [System.String]$Results[11]
                 Name         = 'WordPad is not present'
                 Category     = $CatName
                 Method       = 'Optional Windows Features'
@@ -1381,8 +1370,8 @@ function Confirm-SystemCompliance {
             # Verify PowerShell ISE is not present
             $NestedObjectArray += [PSCustomObject]@{
                 FriendlyName = 'PowerShell ISE is not present'
-                Compliant    = [System.Boolean]($Results[13] -eq 'NotPresent')
-                Value        = [System.String]$Results[13]
+                Compliant    = [System.Boolean]($Results[12] -eq 'NotPresent')
+                Value        = [System.String]$Results[12]
                 Name         = 'PowerShell ISE is not present'
                 Category     = $CatName
                 Method       = 'Optional Windows Features'
@@ -1391,8 +1380,8 @@ function Confirm-SystemCompliance {
             # Verify Steps Recorder is not present
             $NestedObjectArray += [PSCustomObject]@{
                 FriendlyName = 'Steps Recorder is not present'
-                Compliant    = [System.Boolean]($Results[14] -eq 'NotPresent')
-                Value        = [System.String]$Results[14]
+                Compliant    = [System.Boolean]($Results[13] -eq 'NotPresent')
+                Value        = [System.String]$Results[13]
                 Name         = 'Steps Recorder is not present'
                 Category     = $CatName
                 Method       = 'Optional Windows Features'

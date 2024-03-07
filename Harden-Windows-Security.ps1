@@ -2294,7 +2294,6 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                         Edit-Addons -Type Feature -FeatureAction Disabling -FeatureName 'Windows-Defender-ApplicationGuard'
                         Edit-Addons -Type Feature -FeatureAction Enabling -FeatureName 'Containers-DisposableClientVM'
                         Edit-Addons -Type Feature -FeatureAction Enabling -FeatureName 'Microsoft-Hyper-V'
-                        Edit-Addons -Type Feature -FeatureAction Enabling -FeatureName 'VirtualMachinePlatform'
                         Edit-Addons -Type Capability -CapabilityName 'Media.WindowsMediaPlayer'
                         Edit-Addons -Type Capability -CapabilityName 'Browser.InternetExplorer'
                         Edit-Addons -Type Capability -CapabilityName 'wmic'

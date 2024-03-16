@@ -8,14 +8,14 @@ Function Get-SignTool {
         Path to the SignTool.exe
         It's optional
     .INPUTS
-        System.String
+        System.IO.FileInfo
     .OUTPUTS
-        System.String
+        System.IO.FileInfo
     #>
     [CmdletBinding()]
-    [OutputType([System.String])]
+    [OutputType([System.IO.FileInfo])]
     param(
-        [parameter(Mandatory = $false)][System.String]$SignToolExePathInput
+        [parameter(Mandatory = $false)][System.IO.FileInfo]$SignToolExePathInput
     )
 
     Begin {
@@ -95,11 +95,14 @@ Function Get-SignTool {
                 $SignToolExePathOutput = $SignToolExePathInput
             }
 
+            # Since WDAC Simulation doesn't support path with wildcards and accepts them literally, doing this to make sure the path is valid when automatically detected from Windows SDK installations which is a wildcard path
+            [System.IO.FileInfo]$SignToolExePathOutput = (Resolve-Path -Path $SignToolExePathOutput).Path
+
             # At this point the SignTool.exe path was either provided by user, was found in the user configs, was detected automatically or was downloaded from NuGet
             try {
                 # Validate the SignTool executable
-                # Setting the minimum version of SignTool that is allowed to be executed
                 Write-Verbose -Message "Validating the SignTool executable: $SignToolExePathOutput"
+                # Setting the minimum version of SignTool that is allowed to be executed
                 [System.Version]$WindowsSdkVersion = '10.0.22621.2428'
                 [System.Boolean]$GreenFlag1 = (((Get-Item -Path $SignToolExePathOutput).VersionInfo).ProductVersionRaw -ge $WindowsSdkVersion)
                 [System.Boolean]$GreenFlag2 = (((Get-Item -Path $SignToolExePathOutput).VersionInfo).FileVersionRaw -ge $WindowsSdkVersion)
@@ -122,9 +125,9 @@ Function Get-SignTool {
                 Write-Verbose -Message 'SignTool executable was found and verified successfully.'
 
                 Write-Verbose -Message 'Setting the SignTool path in the common WDAC user configurations'
-                Set-CommonWDACConfig -SignToolPath "$SignToolExePathOutput" | Out-Null
+                Set-CommonWDACConfig -SignToolPath $SignToolExePathOutput | Out-Null
 
-                return [System.String]$SignToolExePathOutput
+                return $SignToolExePathOutput
             }
         }
         Finally {
@@ -138,8 +141,8 @@ Export-ModuleMember -Function 'Get-SignTool'
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCztaoYVZs/Dwmw
-# cpzzNcDRo1PcAwT9uaVmzkBmkoa3NqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCC7Ohj2RL7d+Q72
+# /mH5zdoioBtdShv/ACSHi/jCgjQMV6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -186,16 +189,16 @@ Export-ModuleMember -Function 'Get-SignTool'
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQghnECjPBfdv/g8Ss+JTHkKpXbRgscOQUOqkJCyTpKRNgwDQYJKoZIhvcNAQEB
-# BQAEggIAcDiMde5dTIyDVO3uSAqsDjy4GRui5/fIx+6Teun8pHOrxG2hmpKuGkGD
-# yHp5m0v8VYbgb/Ti9GuDtR/vv7TsmTpiC+jwLWuqilY0oIoP4W7BQ03FDHggKh05
-# QplB9bf0TKEN2lux4BS65O5qos5I4nRba83sVOufjki5Mxd+BAfLvEnwcTcSSoJN
-# 0DxUHqr5iHIj31SqFjoSVMOIxm9XnQz80lfpaSrScnk5R5bO9Mckc1/hkNwBIg+a
-# S2DfY0RRTvS18KIzH1WKeiPjVxJWJa4SFOpvuhB9Ah6ukrR3WyQ9UwDwppRNkcan
-# Fa57/94XsuHZe4ovYyb6JFS4ZFJYENMwZvg5Rb+z1YolmwQmJgdX1IyR2ZvW7iY+
-# 4eTzcQy0V6UdVWEJq3y9VFkmRuQljwxaY5WqqbEN2ds0r4yoPC4xk6BMpYDPhzVl
-# /K3cPz+lp84e+duaFsM/DnIn0EKSFry7DN89VuJXLTvn9bYcyS1ycG7oIt7pvEPr
-# gdNZCAaRbjVRAdrpYsA9CE6relWL30+60zhvRSEErM0nfczVjLoKbNncI7zU0wNX
-# vSof1VIsxfCKUD+WSqrXp5ZONDS0OaD7RlU+s/TYx0AHf0xPV/kHoJdzcq/UnUh5
-# D/uZO4SVCuA0ULWBgX98kcicYDo2YbHig6l9YhQ5Pj0clj4k6pI=
+# IgQg/C31DRlK7qa/spMf96XcDI0lT2i3SEAj29T4+9XKAAkwDQYJKoZIhvcNAQEB
+# BQAEggIAfPr5bRwNIBFDfOgufktuCu8vc4vUjrtRpcoAkDGLPCKtJDiA5vGh2T9m
+# X9q2u3GEQamBYk3HBZVatFf55UMJ8xBiQalQ10m0jbutxhofbkQQnm598obLhQiV
+# gMs3dtjvd3w/JV7bywr2KYlVHoT1qW+VWgCQKd3MfGPs1wpELz7jCZdZ9wsCg6Ny
+# UhDfmVBYFmwf9KsSKY1YBIIl1I1L6Lr1khTdddj63GgnL+CcAfiQiLCFvcIYSIU5
+# 3soINB4smvASNbO8o2SO7qSA8C40I0E+BTxNcg1KqeS6EoSHSzWcMeFzcozjIETx
+# Sfd4jLyx05/kgSm9nYI4PeN9oSSCeUF/oIy2c0C1a/Pj8z+71repzhYRG1rI2+eE
+# MtR8pj/o6zssC5xiMXSZBJeBMjpDrydExBjy82TG/jaYc8ypFr5/QOLPWcegeP4o
+# QnXT7yqcyG9Jkjg4Z6cPtG0xpfv2ePnp71n85bkNHYxDRr13ZLpoplM9PFrCtfwf
+# Yzt1YUF3fM2aLhFZ0jGAdVqJG7QT5UYmr7WE+WV9eMiukQtVU5Hns1+ATS8Lprwg
+# ah24UCnfA38DCzCmDNwS/WugBdDPmj948REJmSDbs9vRN0db+rlSub1gCCVoVHpi
+# rL93fV5vWeGL1jVP9t0NeCLe7cFzXkgLq906wJ/g/nA+O2HMkO0=
 # SIG # End signature block

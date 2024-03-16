@@ -9,7 +9,7 @@ if (!$IsWindows) {
 try {
     if ((Test-Path -Path 'Variable:\MSFTRecommendedBlockRulesURL') -eq $false) { New-Variable -Name 'MSFTRecommendedBlockRulesURL' -Value 'https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/public/windows/security/application-security/application-control/windows-defender-application-control/design/applications-that-can-bypass-wdac.md' -Option 'Constant' -Scope 'Global' -Description 'User Mode block rules' -Force }
     if ((Test-Path -Path 'Variable:\MSFTRecommendedDriverBlockRulesURL') -eq $false) { New-Variable -Name 'MSFTRecommendedDriverBlockRulesURL' -Value 'https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/public/windows/security/application-security/application-control/windows-defender-application-control/design/microsoft-recommended-driver-block-rules.md' -Option 'Constant' -Scope 'Global' -Description 'Kernel Mode block rules' -Force }
-    if ((Test-Path -Path 'Variable:\UserAccountDirectoryPath') -eq $false) { New-Variable -Name 'UserAccountDirectoryPath' -Value ((Get-CimInstance Win32_UserProfile -Filter "SID = '$([System.Security.Principal.WindowsIdentity]::GetCurrent().User.Value)'").LocalPath) -Option 'Constant' -Scope 'Script' -Description 'Securely retrieved User profile directory' -Force }
+    # if ((Test-Path -Path 'Variable:\UserAccountDirectoryPath') -eq $false) { New-Variable -Name 'UserAccountDirectoryPath' -Value ((Get-CimInstance Win32_UserProfile -Filter "SID = '$([System.Security.Principal.WindowsIdentity]::GetCurrent().User.Value)'").LocalPath) -Option 'Constant' -Scope 'Script' -Description 'Securely retrieved User profile directory' -Force }
     if ((Test-Path -Path 'Variable:\Requiredbuild') -eq $false) { New-Variable -Name 'Requiredbuild' -Value '22621.2428' -Option 'Constant' -Scope 'Script' -Description 'Minimum required OS build number' -Force }
     if ((Test-Path -Path 'Variable:\OSBuild') -eq $false) { New-Variable -Name 'OSBuild' -Value ([System.Environment]::OSVersion.Version.Build) -Option 'Constant' -Scope 'Script' -Description 'Current OS build version' -Force }
     if ((Test-Path -Path 'Variable:\UBR') -eq $false) { New-Variable -Name 'UBR' -Value (Get-ItemPropertyValue -Path 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion' -Name 'UBR') -Option 'Constant' -Scope 'Script' -Description 'Update Build Revision (UBR) number' -Force }
@@ -44,36 +44,12 @@ foreach ($File in (Get-ChildItem -Recurse -File -Path $ModuleRootPath -Include '
     }
 }
 
-# Move the UserConfigurations.json file from the old location to the new location for smooth transition
-# Will be removed in a future release once all the users have moved to the new location
-if (Test-Path -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json" -PathType Leaf) {
-
-    # Create the new directory if it doesn't exist
-    if (-NOT (Test-Path -Path $UserConfigDir -PathType Container)) {
-        New-Item -ItemType Directory -Path $UserConfigDir -Force
-    }
-    # Only move the file if it doesn't already exist in the new location
-    if (-NOT (Test-Path -Path $UserConfigJson -PathType Leaf)) {
-
-        # Move the file to the new location
-        Move-Item -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.json" -Destination $UserConfigJson -Force
-
-        # Remove the old directory
-        Remove-Item -Path "$UserAccountDirectoryPath\.WDACConfig" -Force -Recurse
-    }
-    # If the file already exists in the new location, then remove the old directory
-    else {
-        # Remove the old directory
-        Remove-Item -Path "$UserAccountDirectoryPath\.WDACConfig" -Force -Recurse
-    }
-}
-
 
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCAbvAqxhPR4trEN
-# H0UrKeyINPB98lK5c/VyvK1Uk4P44qCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCA/cPKNrqU/exWm
+# 637JKcRteGOOgrP2redJ9G5nfDAO8qCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -120,16 +96,16 @@ if (Test-Path -Path "$UserAccountDirectoryPath\.WDACConfig\UserConfigurations.js
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQg34B2Ovgdv+uMHMDoocXyxp4nfKIK8ozcQSRn1f9ai08wDQYJKoZIhvcNAQEB
-# BQAEggIACT4bjozT3TLgJ39ZcwITpkJJbiCeEA7qQyXzAvrPWrbPehfLksuxnqCb
-# 4x8LBsOiWm22ag2SFXPkyYZHHxL6ZZstmgSqCa84DjZBOAL4H/sNAwEDJY0IKD4X
-# fJLzFQvNz3bgp83Qm+smGIZe4mEK+dhwcswDDXcfOT26eTfwfp3PIlfvxeJBV3Wa
-# 9+xw1cfvV6YYh9yAWSRf13y7SbpdnXs8LuItNEx591s7rRO68ySfKfEkcA/Tj0TX
-# hdIERP/gyH765YtzYVFx5PhhbejC62zdah0tK6Jcd/23Tbevjvv0p5UWZd8ojIPa
-# lCp1ErUgt/hnvPmu07TUsogcxbdmXyruU/klvJjszfKDOxn39E+17pdl7k5fmQAH
-# KmkZxrR2EnR0vdlkr7A7ArZlGzAw+oHSLGaNF8hiKV3Pigx/94jRQZ5khHqYn3+/
-# QUTKP+H+Kyl5s6smWBXqYSnsIaZdOGh1CTjdARYcVS5K+so7io4//txAZoSb+bb2
-# rdJAEvFGiQ3uYObUxlVFZqRhVjL8q1sH7vN5AuxSG6LOySJS0qi7LkGrU/1fNajI
-# 0Xn3kYqTbg3I+NBRi1iTgcScETNzq1QhwotlUYU0u5tdfck0xv+Hue7pdsl+oWAX
-# RE7rSoQ99W8MsLaNYl1g144t7Za67RQWPZFWhq7zRGstx69b68A=
+# IgQgcNQvb8VJvZ1j8qhOrVDRBcHlT0AkEo2pHZo9S7781hAwDQYJKoZIhvcNAQEB
+# BQAEggIAVTTKuxFRVuCuK1z3zBtuQokL++5jJgBe5KVsklrk2YXS9+cvIWbEyIuI
+# V2x9HjWBkINmtV7r8GlN4sB45+wsIhbCf6ybnHSl3dA9MW02AYKdeHI19S4m88gJ
+# 9aHLLBROliQwQKzO7NlFdlCTqKJRKlNo/bfooWqvttO+zITQPf5PcMMmmHqQJIuM
+# BLwyu5dydg/5ONVKrNF+Bm73Oiec2fZl7DXCmItAHnI7Gj1IzdkHLOVIz2BMfcLM
+# L5AutW/8Fo6ukeE43QcifjXPGaa0cJ+NFoBBmM+74FB4Lql3EGE4EQ/8eqbv1LVo
+# /wRBF6XfCEVCT0rV7OCWB9I9Wq2WjljugjqnO5lqLnHJRhCRtvrmckunukdWqmSj
+# /jglNX4VQ6N5U0QLXB496sMnfJImcTedUl2r/8S0hv3YHZEowhGjDn9LlNK0MWJY
+# zQHcwpiyEcWUKHXm3UKVV0VR6ZvQLrDr4IKYu2GGdoUhq3AgGpDcQDy6zqc4f4QX
+# afdkIZsHfb/RJ29FzzFbtFlqOVwM09nJUQjKYl2tYMJcNwJieKSveuBOlzN0fGKL
+# ro+e1elyTc5YDYD/DDvpzqXmKHaloALyZo2AjqyZNc4Ewv+F58DyMKRw4toBaGil
+# ApC6lpnbIoePSomsoHlxlCsknCjb+HLwqEe5M2773m0MpLl+Kl4=
 # SIG # End signature block

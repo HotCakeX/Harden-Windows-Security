@@ -54,16 +54,16 @@ Function Deploy-SignedWDACConfig {
         #Region User-Configurations-Processing-Validation
         # Get SignToolPath from user parameter or user config file or auto-detect it
         if ($SignToolPath) {
-            $SignToolPathFinal = Get-SignTool -SignToolExePathInput $SignToolPath
+            [System.IO.FileInfo]$SignToolPathFinal = Get-SignTool -SignToolExePathInput $SignToolPath
         } # If it is null, then Get-SignTool will behave the same as if it was called without any arguments.
         else {
-            $SignToolPathFinal = Get-SignTool -SignToolExePathInput (Get-CommonWDACConfig -SignToolPath)
+            [System.IO.FileInfo]$SignToolPathFinal = Get-SignTool -SignToolExePathInput (Get-CommonWDACConfig -SignToolPath)
         }
 
         # If CertPath parameter wasn't provided by user, check if a valid value exists in user configs, if so, use it, otherwise throw an error
         if (!$CertPath ) {
             if (Test-Path -Path (Get-CommonWDACConfig -CertPath)) {
-                $CertPath = Get-CommonWDACConfig -CertPath
+                [System.IO.FileInfo]$CertPath = Get-CommonWDACConfig -CertPath
             }
             else {
                 throw 'CertPath parameter cannot be empty and no valid user configuration was found for it. Use the Build-WDACCertificate cmdlet to create one.'
@@ -322,8 +322,8 @@ Register-ArgumentCompleter -CommandName 'Deploy-SignedWDACConfig' -ParameterName
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCAr9zkcAKhAK41r
-# EL4g9PQy3/xRLLvMsj9pqRI4IAFYKaCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCAfCfQJqiGUxvfo
+# 1rrqH4STmRIzU1kcbZwO2BaccS1r16CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -370,16 +370,16 @@ Register-ArgumentCompleter -CommandName 'Deploy-SignedWDACConfig' -ParameterName
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgE6jp/7kqrVC0vvANjPkQvLEshbwkxr0Acz3mG0cPHoswDQYJKoZIhvcNAQEB
-# BQAEggIAWGdF3o2+QAsfQAPlJ9cjMhyzi+HjASXRhS6JUJDJ2zrDvYZxe6poccKS
-# x0CWbPYyec2IGlxJqdDFgbup5AEvrdqDcI3hV8oBswTyM7p2WPLDXqDFAL9WraGy
-# utMpn61PN9o8jn7srPyqLvpyPVhqlc6LMxZzaITr5iqtD5W1l3adYSZ9nVD1E++c
-# 1FWUq15rfDVJOqPBcwPVrtWfnFhaNxR2sZRPC6ADaabBm8DCPRiV9Eqda0YIFjuE
-# 6gi+UsH9JmJFRaWN/o5R2WHOpFMImBx8Z9qLh49Pie8pHkEmyfU3LbBSe7k/eAGG
-# 5FM+qYfcqNmmf7y3sFRfcIhRYqbKjCzfvYY8kf220HGe9mz1oV71zurq7dz/nffv
-# M8IF4jlTM1FieEQOWRTkduWwkn4XmyvCagpt2pMzsMiJ0LN7ZlgvuQ0zAnRTuh07
-# UJbmHgYzUEkMCxW7WuMcFSPjEq3ooXs5yMp6GVtc08O7HczAq0ScXCU3rC/YkV7K
-# a5TWTNrkZiv4SaV34eBMQEv5VVrEt5gXv9/xXDCbW95+L58B/kcC55tP5c7O7B/Q
-# M15+DuU5tyveQ2bA87nn/beJxR2uMKb2gJMm9+k4ZhTGAZ8pZgJ47iUo2ftAQQC3
-# wJ1gq21H0FN4jarCHYJKyvBz8Q7EsUWK/gE5Rs8IAv/xcHsyYuM=
+# IgQgTkawqEgV9UnM/qiNU9F0MyXVygkBQgZQFLt+1AvCqWowDQYJKoZIhvcNAQEB
+# BQAEggIAgaPxvPjQZ3qdefS8fpzOGb9PNcgchIY+VzfBsFwwa/N7Uuh9LgQTTAAD
+# HRM31ECXlKdCgt261uQlBHkoAAtbZQNbt6y3MgPdmZVPW8C74rQ3MHA61bARsvlR
+# Vgmz2tBuzyq98P5PA/lg6NwQKlj5Zx9Q+Ix82Eux2+NemxEvHNGdMHpETPreQjXf
+# XG1l6iEhWJwfJYy57Y6eL4wEBfTt1FppXCObPig0iQfufO6OGgwd/M9xAJDx6umV
+# H53PNFDhKe7i+fY7yr5aTKLDzFaNWXtpaPEPeewBuAJVEzopepXYJKCdCxtC62Wv
+# YYMG5P1ZOqScMXNfUt8RhhHXQ9aVCV/8gbRSe75H5DK3vTHJn7Lkb7dTVfThSvmf
+# 8SB1ASKVSh2vnYR0pslrRtMzKvkaEdE3d/Pe9Q+fN5Kkrz+EZmr5G4EPHGlDCHJr
+# 2yXkdLnnT16LGL5Y/UPvoJJyRUJjPLnmSkN+gA5KIN41Otyd0nNK+dR3kxXSrQ54
+# 3jm5aQeWrQlf9t0OumwMvbtUAyvou266OsoHEmfpvCmSs1H+Sg4F6Am96OEtSnuH
+# Jct+iHyGn3AOwSdznszpWZTaeAowp+BKeNK7cEO9BCb+VX6smwqOyOQWBCWA+DZs
+# MtfxHo0bbRRTOGbgdgPFVEk6mYiVFJIZcxFIXNuehOy6kdly2nQ=
 # SIG # End signature block

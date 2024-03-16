@@ -171,8 +171,8 @@ Function Receive-CodeIntegrityLogs {
             # Process Audit events
             if ($RawLogGroup.Group.Id -contains '3076') {
 
-                # Finding the main event in the group
-                [System.Diagnostics.Eventing.Reader.EventLogRecord]$AuditTemp = $RawLogGroup.Group | Where-Object -FilterScript { $_.Id -eq '3076' }
+                # Finding the main event in the group - If there are more than 1, selecting the first one because that means the same event was triggered by multiple deployed policies
+                [System.Diagnostics.Eventing.Reader.EventLogRecord]$AuditTemp = $RawLogGroup.Group | Where-Object -FilterScript { $_.Id -eq '3076' } | Select-Object -First 1
 
                 # If the main event is older than the specified date, skip it
                 if (-NOT ([System.String]::IsNullOrWhiteSpace($Date))) {
@@ -192,8 +192,8 @@ Function Receive-CodeIntegrityLogs {
             # Process Blocked events
             if ($RawLogGroup.Group.Id -contains '3077') {
 
-                # Finding the main event in the group
-                [System.Diagnostics.Eventing.Reader.EventLogRecord]$BlockedTemp = $RawLogGroup.Group | Where-Object -FilterScript { $_.Id -eq '3077' }
+                # Finding the main event in the group - If there are more than 1, selecting the first one because that means the same event was triggered by multiple deployed policies
+                [System.Diagnostics.Eventing.Reader.EventLogRecord]$BlockedTemp = $RawLogGroup.Group | Where-Object -FilterScript { $_.Id -eq '3077' } | Select-Object -First 1
 
                 # If the main event is older than the specified date, skip it
                 if (-NOT ([System.String]::IsNullOrWhiteSpace($Date))) {

@@ -94,7 +94,7 @@ Function Get-SignTool {
                 Write-Verbose -Message 'SignTool.exe path was provided by parameter'
                 $SignToolExePathOutput = $SignToolExePathInput
             }
-            
+
             # Since WDAC Simulation doesn't support path with wildcards and accepts them literally, doing this to make sure the path is valid when automatically detected from Windows SDK installations which is a wildcard path
             [System.IO.FileInfo]$SignToolExePathOutput = (Resolve-Path -Path $SignToolExePathOutput).Path
 

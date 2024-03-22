@@ -737,14 +737,31 @@ function Confirm-SystemCompliance {
                     $Action = 0
                 }
 
-                # Create a custom object with properties
-                $NestedObjectArray += [PSCustomObject]@{
-                    FriendlyName = $ASRsTable[$name]
-                    Compliant    = [System.Boolean]($Action -eq 1) # Compare action value with 1 and cast to boolean
-                    Value        = $Action
-                    Name         = $Name
-                    Category     = $CatName
-                    Method       = 'Cmdlet'
+                # An exception for the ASR rule with ID 'c0033c00-d16d-4114-a5a0-dc9b3a7d2ceb'
+                # 'Block use of copied or impersonated system tools'
+                # Because it's in preview and is set to 6 for Warn instead of 1 for block
+                if ($Name -eq 'c0033c00-d16d-4114-a5a0-dc9b3a7d2ceb') {
+                    # Create a custom object with properties
+                    $NestedObjectArray += [PSCustomObject]@{
+                        FriendlyName = $ASRsTable[$name]
+                        Compliant    = [System.Boolean]($Action -in '6', '1') # Either 6 or 1 is compliant and acceptable
+                        Value        = $Action
+                        Name         = $Name
+                        Category     = $CatName
+                        Method       = 'Cmdlet'
+                    }
+
+                }
+                else {
+                    # Create a custom object with properties
+                    $NestedObjectArray += [PSCustomObject]@{
+                        FriendlyName = $ASRsTable[$name]
+                        Compliant    = [System.Boolean]($Action -eq 1) # Compare action value with 1 and cast to boolean
+                        Value        = $Action
+                        Name         = $Name
+                        Category     = $CatName
+                        Method       = 'Cmdlet'
+                    }
                 }
             }
 
